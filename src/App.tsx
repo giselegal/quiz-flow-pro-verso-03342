@@ -124,7 +124,9 @@ function App() {
 
               {/* Editor - ordem importante: mais específico primeiro */}
               {/* 🚀 NOVO: Editor Visual Headless com integração JSON ↔ Painel */}
-              <Route path="/headless-editor/:funnelId?" component={({ params, search }: { params: { funnelId?: string }, search: string }) => {
+              <Route path="/headless-editor/:funnelId?" component={(props: any) => {
+                const { params } = props;
+                const search = window.location.search;
                 console.log('🎯 Rota /headless-editor ativada com params:', params);
                 const urlParams = new URLSearchParams(search);
                 const templateId = urlParams.get('template');

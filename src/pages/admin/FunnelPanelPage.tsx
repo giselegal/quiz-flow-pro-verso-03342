@@ -470,9 +470,8 @@ const FunnelPanelPage: React.FC = () => {
   };
 
   const finalTemplates: UnifiedTemplate[] = React.useMemo(() => {
-    // ⚠️ MODO DESENVOLVIMENTO: Mostrando apenas quiz21StepsComplete para edição focada
-    // Para desenvolvimento e validação das configurações JSON
-    const developmentMode = true;
+    // ✅ MODO PRODUÇÃO: Mostrando todos os templates únicos disponíveis
+    const developmentMode = false;
 
     if (developmentMode) {
       // Filtra para mostrar APENAS o funil principal para edição
@@ -583,17 +582,17 @@ const FunnelPanelPage: React.FC = () => {
           </h1>
           <p className="text-[#8F7A6A] mt-2 text-lg">Escolha um modelo otimizado ou crie do zero</p>
 
-          {/* Indicators de modo desenvolvimento */}
+          {/* Indicators de modo produção */}
           <div className="flex items-center gap-2 mt-4">
-            <Badge variant="outline" className="bg-blue-50 border-blue-200 text-blue-700">
-              🎯 Modo Desenvolvimento: Funil Único Ativo
-            </Badge>
             <Badge variant="outline" className="bg-green-50 border-green-200 text-green-700">
+              ✅ Todos os Templates Disponíveis
+            </Badge>
+            <Badge variant="outline" className="bg-blue-50 border-blue-200 text-blue-700">
               ✨ UniversalStepEditor Ativo
             </Badge>
           </div>
           <p className="text-[#8F7A6A] mt-2 text-sm">
-            Sistema configurado para exibir apenas o funil principal, editável com o novo UniversalStepEditor.
+            Sistema configurado para exibir todos os templates únicos disponíveis no registry.
           </p>
         </div>
         <div className="flex gap-3">

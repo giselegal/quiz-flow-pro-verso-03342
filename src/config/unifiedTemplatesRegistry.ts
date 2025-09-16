@@ -53,49 +53,7 @@ export const UNIFIED_TEMPLATE_REGISTRY: Record<string, UnifiedTemplate> = {
         updatedAt: '2025-09-11T14:30:00.000Z',
     },
 
-    'quiz-estilo-21-steps': {
-        id: 'quiz-estilo-21-steps',
-        name: 'Quiz de Estilo Completo (21 Etapas)',
-        description: 'Funil completo para descoberta de estilo pessoal com todas as 21 etapas otimizadas',
-        category: 'quiz-style',
-        theme: 'modern-chic',
-        stepCount: 21,
-        isOfficial: true,
-        usageCount: 1247,
-        tags: ['estilo', 'moda', 'personalidade', 'completo'],
-        features: [
-            '21 Etapas Otimizadas',
-            'Quiz Interativo',
-            'Resultado Personalizado',
-            'Oferta Integrada',
-        ],
-        conversionRate: '87%',
-        image: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
-        createdAt: '2025-01-01T00:00:00.000Z',
-        updatedAt: '2025-09-09T12:00:00.000Z',
-    },
 
-    'quiz-estilo-otimizado': {
-        id: 'quiz-estilo-otimizado',
-        name: 'Quiz 21 Etapas (Otimizado)',
-        description: 'Versão otimizada com blocos core, perguntas sincronizadas e pesos de pontuação',
-        category: 'quiz-style',
-        theme: 'fashion-optimized',
-        stepCount: 21,
-        isOfficial: true,
-        usageCount: 892,
-        tags: ['estilo', 'otimizado', 'conversão', 'pontuação'],
-        features: [
-            'Perguntas Sincronizadas',
-            'Pesos de Pontuação',
-            'Componentes Core',
-            'Resultado + Oferta',
-        ],
-        conversionRate: '90%',
-        image: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
-        createdAt: '2025-02-01T00:00:00.000Z',
-        updatedAt: '2025-09-09T12:00:00.000Z',
-    },
 
     'com-que-roupa-eu-vou': {
         id: 'com-que-roupa-eu-vou',
@@ -295,27 +253,7 @@ export const UNIFIED_TEMPLATE_REGISTRY: Record<string, UnifiedTemplate> = {
         updatedAt: '2025-09-09T12:00:00.000Z',
     },
 
-    'personality-assessment': {
-        id: 'personality-assessment',
-        name: 'Avaliação de Personalidade',
-        description: 'Teste psicológico com 15 etapas para análise comportamental detalhada',
-        category: 'personality-test',
-        theme: 'wellness-soft',
-        stepCount: 15,
-        isOfficial: true,
-        usageCount: 378,
-        tags: ['personalidade', 'psicologia', 'comportamento', 'análise'],
-        features: [
-            'Base Científica',
-            'Relatório Detalhado',
-            'Insights Personalizados',
-            'Recomendações',
-        ],
-        conversionRate: '72%',
-        image: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
-        createdAt: '2025-06-01T00:00:00.000Z',
-        updatedAt: '2025-09-09T12:00:00.000Z',
-    },
+
 };
 
 /**
