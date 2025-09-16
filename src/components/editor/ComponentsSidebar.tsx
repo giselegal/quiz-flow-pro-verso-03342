@@ -4,6 +4,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
 import { useEditor } from '@/context/EditorContext';
 import { BlockType } from '@/types/editor';
+import { Step20ComponentsButton } from './Step20ComponentsButton';
 import {
   Award,
   Box,
@@ -18,6 +19,12 @@ import {
   Text,
   Type,
   Video,
+  Trophy,
+  User,
+  Target,
+  Palette,
+  Star,
+  Heart,
 } from 'lucide-react';
 import React from 'react';
 
@@ -127,13 +134,75 @@ const blockCategories: BlockCategory[] = [
       },
     ],
   },
+  {
+    title: 'Resultado Step 20',
+    items: [
+      {
+        type: 'step20-result-header',
+        label: 'Header Resultado',
+        icon: <Trophy className="h-4 w-4" />,
+        description: 'Cabeçalho comemorativo do resultado',
+      },
+      {
+        type: 'step20-user-greeting',
+        label: 'Saudação Usuario',
+        icon: <User className="h-4 w-4" />,
+        description: 'Saudação personalizada com nome',
+      },
+      {
+        type: 'step20-style-reveal',
+        label: 'Revelação Estilo',
+        icon: <Palette className="h-4 w-4" />,
+        description: 'Revelação do estilo descoberto',
+      },
+      {
+        type: 'step20-compatibility',
+        label: 'Compatibilidade',
+        icon: <Target className="h-4 w-4" />,
+        description: 'Indicador de compatibilidade animado',
+      },
+      {
+        type: 'step20-secondary-styles',
+        label: 'Estilos Secundários',
+        icon: <Star className="h-4 w-4" />,
+        description: 'Grid de estilos complementares',
+      },
+      {
+        type: 'step20-personalized-offer',
+        label: 'Oferta Personalizada',
+        icon: <Heart className="h-4 w-4" />,
+        description: 'CTA e ofertas baseadas no resultado',
+      },
+      {
+        type: 'step20-complete-template',
+        label: 'Template Completo',
+        icon: <Award className="h-4 w-4" />,
+        description: 'Template completo da Step 20',
+      },
+    ],
+  },
 ];
 
 export const ComponentsSidebar: React.FC = () => {
-  const { addBlock } = useEditor();
+  const { addBlock, activeStageId } = useEditor();
 
   const handleAddBlock = (type: BlockType) => {
     addBlock(type);
+  };
+
+  // Filtrar componentes baseado na etapa ativa
+  const getFilteredCategories = () => {
+    const isStep20 = activeStageId === 'step-20' || activeStageId === 'step20' || activeStageId?.includes('20');
+    
+    if (isStep20) {
+      // Na etapa 20, mostrar apenas componentes relevantes
+      return blockCategories.filter(category => 
+        category.title === 'Resultado Step 20' || category.title === 'Conteúdo'
+      );
+    }
+    
+    // Em outras etapas, mostrar todos exceto Step 20
+    return blockCategories.filter(category => category.title !== 'Resultado Step 20');
   };
 
   return (
@@ -144,7 +213,18 @@ export const ComponentsSidebar: React.FC = () => {
       <CardContent className="p-0">
         <ScrollArea className="h-[calc(100vh-5rem)]">
           <div className="space-y-4 p-4">
-            {blockCategories.map((category, index) => (
+            {/* Componentes Step 20 - Especiais */}
+            <Step20ComponentsButton />
+            
+            {/* Indicador da etapa atual */}
+            {activeStageId === 'step-20' && (
+              <div className="bg-gradient-to-r from-primary/10 to-secondary/10 p-3 rounded-lg mb-4">
+                <div className="text-sm font-medium text-primary">🎉 Etapa 20 - Resultado</div>
+                <div className="text-xs text-muted-foreground">Componentes para página de resultado</div>
+              </div>
+            )}
+            
+            {getFilteredCategories().map((category, index) => (
               <div key={category.title} className="space-y-2">
                 {index > 0 && <Separator />}
                 <h3 className="text-xs font-medium text-muted-foreground px-2 py-1">
