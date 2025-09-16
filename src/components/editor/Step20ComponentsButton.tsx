@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { useEditor } from '@/context/EditorContext';
+import { useEditor } from '@/components/editor/EditorProvider';
 import { BlockType } from '@/types/editor';
 import { Trophy, User, Palette, Target, Star, Heart, Award } from 'lucide-react';
 
@@ -59,12 +59,10 @@ const step20Components: Step20Component[] = [
 ];
 
 export const Step20ComponentsButton: React.FC = () => {
-  const { addBlock, activeStageId } = useEditor();
+  const { state, actions } = useEditor();
 
-  // Detectar se estamos na etapa 20 (múltiplos formatos possíveis)
-  const isStep20 = activeStageId === 'step-20' || 
-                   activeStageId === 'step20' || 
-                   activeStageId?.includes('20') ||
+  // Detectar se estamos na etapa 20
+  const isStep20 = state.currentStep === 20 ||
                    window.location.pathname.includes('step20') ||
                    window.location.pathname.includes('step-20');
 
@@ -73,12 +71,36 @@ export const Step20ComponentsButton: React.FC = () => {
     return null;
   }
 
-  const handleAddComponent = (type: BlockType) => {
-    addBlock(type);
+  const handleAddComponent = async (type: BlockType) => {
+    try {
+      const stepKey = `step-${state.currentStep}`;
+      const newBlock = {
+        id: `${type}-${Date.now()}`,
+        type,
+        order: 0,
+        content: {},
+        properties: {},
+      };
+      await actions.addBlock(stepKey, newBlock);
+    } catch (error) {
+      console.error('Erro ao adicionar componente Step 20:', error);
+    }
   };
 
-  const handleAddCompleteTemplate = () => {
-    addBlock('step20-complete-template');
+  const handleAddCompleteTemplate = async () => {
+    try {
+      const stepKey = `step-${state.currentStep}`;
+      const templateBlock = {
+        id: `step20-complete-template-${Date.now()}`,
+        type: 'step20-complete-template' as BlockType,
+        order: 0,
+        content: {},
+        properties: {},
+      };
+      await actions.addBlock(stepKey, templateBlock);
+    } catch (error) {
+      console.error('Erro ao adicionar template completo Step 20:', error);
+    }
   };
 
   return (

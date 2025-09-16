@@ -3,7 +3,7 @@ import { DraftPersistence } from '@/services/editor/DraftPersistence';
 import { useEditorSupabaseIntegration } from '@/hooks/useEditorSupabaseIntegration';
 import { useHistoryState } from '@/hooks/useHistoryState';
 import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
-import { Block } from '@/types/editor';
+import { Block, BlockType } from '@/types/editor';
 import { extractStepNumberFromKey } from '@/utils/supabaseMapper';
 import { arrayMove } from '@dnd-kit/sortable';
 import React, { createContext, ReactNode, useCallback, useContext, useEffect } from 'react';
@@ -110,13 +110,53 @@ export interface EditorProviderProps {
   enableSupabase?: boolean;
 }
 
-const mapSupabaseRecordToBlock = (c: any): Block => ({
-  id: c.id,
-  type: c.component_type_key || c.type || 'text',
-  order: c.order_index ?? 0,
-  content: c.properties?.content ?? {},
-  properties: c.properties ?? {},
-});
+const mapSupabaseRecordToBlock = (c: any): Block => {
+  // 🛡️ VALIDAÇÃO ROBUSTA: Prevenir erro "i.replace is not a function"
+  if (!c || typeof c !== 'object') {
+    console.error('❌ mapSupabaseRecordToBlock: registro inválido:', c);
+    throw new Error(`Invalid Supabase record: expected object, got ${typeof c}`);
+  }
+
+  // Garantir que ID é sempre string válida
+  const id = c.id ? String(c.id) : `fallback-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+  
+  // Garantir que type é sempre BlockType válido
+  const type = c.component_type_key || c.type;
+  const validType = (typeof type === 'string' && type.length > 0) ? type as BlockType : 'text' as BlockType;
+  
+  // Garantir que order é número
+  const order = Number.isFinite(c.order_index) ? c.order_index : 
+                Number.isFinite(c.order) ? c.order : 0;
+
+  // Validar properties e content como objetos
+  const properties = (c.properties && typeof c.properties === 'object') ? c.properties : {};
+  const content = (properties.content && typeof properties.content === 'object') ? properties.content : {};
+
+  const block: Block = {
+    id,
+    type: validType,
+    order,
+    content,
+    properties,
+  };
+
+  // 🔍 LOG DIAGNÓSTICO: Para debugging
+  if (process.env.NODE_ENV === 'development') {
+    console.log('🔍 mapSupabaseRecordToBlock:', {
+      input: c,
+      output: block,
+      validations: {
+        idValid: typeof id === 'string' && id.length > 0,
+        typeValid: typeof validType === 'string' && validType.length > 0,
+        orderValid: Number.isFinite(order),
+        propertiesValid: typeof properties === 'object' && properties !== null,
+        contentValid: typeof content === 'object' && content !== null,
+      }
+    });
+  }
+
+  return block;
+};
 
 const groupByStepKey = (components: any[]): Record<string, Block[]> =>
   components.reduce<Record<string, Block[]>>((acc, comp) => {
