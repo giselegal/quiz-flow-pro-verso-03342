@@ -323,15 +323,15 @@ const ResultHeaderInlineBlock = ({
   }
 
   // Capturar nome de forma robusta (incluindo UnifiedQuizStorage) e sanitizar para exibição
-  const storedName = getBestUserName(block);
+  const storedName = getBestUserName(block) || '';
   const displayName = useMemo(() => {
-    const s = (storedName || '').trim();
+    const s = storedName.trim();
     if (s.length <= 1) return '';
     return s
       .split(/\s+/)
       .map(w => (w ? w.charAt(0).toUpperCase() + w.slice(1) : w))
       .join(' ');
-  }, [storedName || '']);
+  }, [storedName]);
 
   const {
     title = 'Seu Estilo Predominante',
@@ -360,10 +360,11 @@ const ResultHeaderInlineBlock = ({
   const styleKey = (primaryStyle as any)?.style || (primaryStyle as any)?.category || '';
   const styleLabel = mapToFriendlyStyle((primaryStyle as any)?.category || styleKey || 'Natural') || 'Natural';
 
+  const safeDeps = [displayName || '', styleLabel || ''];
   const vars = useMemo(() => ({
     userName: displayName || '',
     resultStyle: styleLabel || '',
-  }), [displayName || '', styleLabel || '']);
+  }), safeDeps);
 
   // Percentual exibido: usa o calculado (primaryStyle.percentage) se não houver override explícito na prop
   const computedPercentage = typeof percentageProp === 'number' && !Number.isNaN(percentageProp)
@@ -381,10 +382,11 @@ const ResultHeaderInlineBlock = ({
     : 0;
 
   // Flags de variante
+  const safeVariant = mobileVariant || 'stack';
   const variant: VariantFlags = useMemo(() => ({
-    isCompact: mobileVariant === 'compact',
-    isMinimal: mobileVariant === 'minimal'
-  }), [mobileVariant || 'stack']);
+    isCompact: safeVariant === 'compact',
+    isMinimal: safeVariant === 'minimal'
+  }), [safeVariant]);
 
   // Defaults vindos de configuração de estilo
   const styleInfo = getStyleConfig(styleLabel) || {};
