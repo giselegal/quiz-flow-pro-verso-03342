@@ -457,7 +457,7 @@ const EditorInitializerUnified: React.FC<{
                     if (useUniversalEditor) {
                         console.log('🎯 [EDITOR] Carregando UniversalStepEditor DIRETAMENTE...');
 
-                        // Carregar DIRETAMENTE o UniversalStepEditor (versão completa e funcional)
+                        // Carregar DIRETAMENTE o UniversalStepEditor
                         const universalMod = await import('../components/editor/universal/UniversalStepEditor');
                         const UniversalComp = universalMod.default || universalMod.UniversalStepEditor;
 
@@ -678,7 +678,7 @@ const EditorInitializerUnified: React.FC<{
                     <div className="h-screen w-screen">
                         <div className="bg-green-50 border-b border-green-200 px-4 py-2">
                             <p className="text-sm text-green-800 text-center">
-                                🎯 UniversalStepEditor COMPLETO - Editor Funcional de 4 Colunas com 21 Etapas
+                                🎯 UniversalStepEditor DIRETO - Editor Completo de 4 Colunas
                             </p>
                         </div>
                         <div className="h-[calc(100vh-40px)]">

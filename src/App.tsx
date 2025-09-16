@@ -15,6 +15,8 @@ const Home = lazy(() => import('./pages/Home'));
 const AuthPage = lazy(() => import('./pages/AuthPage'));
 // 🏗️ EDITOR PRINCIPAL - EditorPro com fundo preto e 4 colunas
 const EditorPro = lazy(() => import('./legacy/editor/EditorPro'));
+// 🏗️ EDITOR PRINCIPAL PROFISSIONAL ALTERNATIVO
+const MainEditor = lazy(() => import('./pages/MainEditor'));
 // 🚀 NOVO: Editor Visual Headless
 const HeadlessVisualEditor = lazy(() => import('./core/editor/HeadlessVisualEditor'));
 const DashboardPage = lazy(() => import('./pages/admin/DashboardPage'));
@@ -148,6 +150,13 @@ function App() {
                   </div>
                 );
               }} />
+              
+              {/* 🎯 EDITOR ALTERNATIVO - MainEditor */}
+              <Route path="/editor-main" component={() =>
+                <Suspense fallback={<LoadingFallback />}>
+                  <MainEditor />
+                </Suspense>
+              } />
 
               {/* Autenticação */}
               <Route path="/auth" component={() =>
