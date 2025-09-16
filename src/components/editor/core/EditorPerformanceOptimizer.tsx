@@ -9,10 +9,10 @@
  */
 
 import React, { memo, useMemo, useCallback, lazy, Suspense } from 'react';
-import type { 
-  PerformanceConfig, 
+import type {
+  PerformanceConfig,
   PerformanceMetrics,
-  EditorComponentConfig 
+  EditorComponentConfig
 } from './EditorArchitecture';
 
 // =====================================================
@@ -40,7 +40,7 @@ export const createLazyComponent = (
   fallback?: React.ReactNode
 ) => {
   const LazyComp = lazy(importFn);
-  
+
   const WrappedComponent = (props: any) => (
     <Suspense fallback={fallback || <ComponentLoadingSkeleton />}>
       <LazyComp {...props} />
@@ -67,13 +67,14 @@ const ComponentLoadingSkeleton: React.FC = memo(() => (
 
 /**
  * Editor Principal com lazy loading otimizado
+ * CORRIGIDO: Agora usa UniversalStepEditorPro em vez do legacy EditorPro
  */
 export const OptimizedEditorCore = createLazyComponent(
-  () => import('@/legacy/editor/EditorPro'),
+  () => import('@/components/editor/universal/UniversalStepEditorPro'),
   <div className="h-96 flex items-center justify-center">
     <div className="text-center space-y-4">
       <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
-      <div className="text-sm text-muted-foreground">Carregando editor...</div>
+      <div className="text-sm text-muted-foreground">Carregando editor UniversalStepEditorPro...</div>
     </div>
   </div>
 );
@@ -112,7 +113,7 @@ export const OptimizedStep20Components = createLazyComponent(
 export const useOptimizedBlocks = (blocks: any[], dependencies: any[] = []) => {
   return useMemo(() => {
     if (!Array.isArray(blocks)) return [];
-    
+
     // Processar apenas blocos que mudaram
     return blocks.map(block => ({
       ...block,
@@ -128,11 +129,11 @@ export const useOptimizedBlocks = (blocks: any[], dependencies: any[] = []) => {
 export const useOptimizedCallbacks = (handlers: Record<string, any>) => {
   return useMemo(() => {
     const optimizedHandlers: Record<string, any> = {};
-    
+
     Object.entries(handlers).forEach(([key, handler]) => {
       optimizedHandlers[key] = useCallback(handler, [handler]);
     });
-    
+
     return optimizedHandlers;
   }, [handlers]);
 };
@@ -160,11 +161,11 @@ export const usePerformanceMonitoring = (componentName: string) => {
     const renderTime = performance.now() - startTime;
     metrics.renderTime = renderTime;
     metrics.lastUpdate = new Date();
-    
+
     if (process.env.NODE_ENV === 'development') {
       console.log(`⚡ ${componentName} render time: ${renderTime.toFixed(2)}ms`);
     }
-    
+
     return renderTime;
   }, [componentName, metrics]);
 
@@ -228,9 +229,9 @@ export const OptimizedEditorWrapper: React.FC<OptimizedEditorWrapperProps> = mem
     return (
       <div className={`optimized-editor-wrapper ${className}`}>
         <OptimizedEditorCore {...optimizedProps} />
-        
+
         {debugMode && (
-          <PerformanceDebugPanel 
+          <PerformanceDebugPanel
             metrics={metrics}
             config={config}
           />
@@ -260,9 +261,9 @@ interface PerformanceDebugPanelProps {
   config: PerformanceConfig;
 }
 
-const PerformanceDebugPanel: React.FC<PerformanceDebugPanelProps> = memo(({ 
-  metrics, 
-  config 
+const PerformanceDebugPanel: React.FC<PerformanceDebugPanelProps> = memo(({
+  metrics,
+  config
 }) => (
   <div className="fixed top-4 right-4 z-50 bg-background/95 border border-border rounded-lg p-3 text-xs space-y-2 max-w-xs shadow-lg">
     <div className="font-semibold text-primary">⚡ Performance</div>
@@ -272,7 +273,7 @@ const PerformanceDebugPanel: React.FC<PerformanceDebugPanelProps> = memo(({
       <div>Memory: {(metrics.memoryUsage / 1024 / 1024).toFixed(2)}MB</div>
       <div>Updated: {metrics.lastUpdate.toLocaleTimeString()}</div>
     </div>
-    
+
     <div className="pt-2 border-t space-y-1">
       <div className="flex items-center gap-2">
         <div className={`w-2 h-2 rounded-full ${config.enableLazyLoading ? 'bg-green-500' : 'bg-red-500'}`}></div>
