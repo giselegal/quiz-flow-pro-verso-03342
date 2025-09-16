@@ -65,9 +65,9 @@ const ProductionPreviewMode: React.FC<{
     // Calcular resultado baseado nas respostas
     const calculateResult = useCallback(() => {
         const styleCount: Record<string, number> = {};
-        
+
         Object.values(selectedAnswers).forEach(answerId => {
-            const question = mockQuestions.find(q => 
+            const question = mockQuestions.find(q =>
                 q.options.some(opt => opt.id === answerId)
             );
             const option = question?.options.find(opt => opt.id === answerId);
@@ -77,9 +77,9 @@ const ProductionPreviewMode: React.FC<{
         });
 
         const dominantStyle = Object.entries(styleCount)
-            .sort(([,a], [,b]) => b - a)[0]?.[0] || 'Natural';
-        
-        const percentage = Math.max(60, Math.min(95, 
+            .sort(([, a], [, b]) => b - a)[0]?.[0] || 'Natural';
+
+        const percentage = Math.max(60, Math.min(95,
             (styleCount[dominantStyle] / mockQuestions.length) * 100 + Math.random() * 15
         ));
 
@@ -119,7 +119,7 @@ const ProductionPreviewMode: React.FC<{
             ...prev,
             [currentStep]: answerId
         }));
-        
+
         // Auto avanço após seleção
         setTimeout(() => {
             handleAutoAdvance();
@@ -133,7 +133,7 @@ const ProductionPreviewMode: React.FC<{
             <CardHeader className="pb-3 border-b">
                 <div className="flex items-center justify-between">
                     <CardTitle className="text-base flex items-center gap-2">
-                        <Play className="h-4 w-4 text-green-600" /> 
+                        <Play className="h-4 w-4 text-green-600" />
                         Preview de Produção
                         <Badge variant="outline" className="bg-green-50 text-green-700">
                             Funcional
@@ -158,7 +158,7 @@ const ProductionPreviewMode: React.FC<{
                         <p className="text-[#6B4F43] max-w-sm mx-auto">
                             Responda 3 perguntas rápidas e descubra qual estilo combina perfeitamente com você.
                         </p>
-                        <Button 
+                        <Button
                             onClick={() => setQuizStarted(true)}
                             className="bg-gradient-to-r from-[#B89B7A] to-[#aa6b5d] text-white px-8 py-3"
                         >
@@ -174,13 +174,12 @@ const ProductionPreviewMode: React.FC<{
                             <span>Pergunta {currentStep} de {mockQuestions.length}</span>
                             <div className="flex gap-1">
                                 {mockQuestions.map((_, i) => (
-                                    <div 
-                                        key={i} 
-                                        className={`w-2 h-2 rounded-full ${
-                                            i < currentStep - 1 ? 'bg-green-500' :
-                                            i === currentStep - 1 ? 'bg-[#B89B7A]' : 
-                                            'bg-gray-200'
-                                        }`} 
+                                    <div
+                                        key={i}
+                                        className={`w-2 h-2 rounded-full ${i < currentStep - 1 ? 'bg-green-500' :
+                                                i === currentStep - 1 ? 'bg-[#B89B7A]' :
+                                                    'bg-gray-200'
+                                            }`}
                                     />
                                 ))}
                             </div>
@@ -188,7 +187,7 @@ const ProductionPreviewMode: React.FC<{
 
                         <div className="bg-[#F3E8E6] rounded-xl p-4 mb-6">
                             <div className="w-full bg-gray-200 rounded-full h-2 mb-4">
-                                <div 
+                                <div
                                     className="bg-gradient-to-r from-[#B89B7A] to-[#aa6b5d] h-2 rounded-full transition-all duration-300"
                                     style={{ width: `${(currentStep / mockQuestions.length) * 100}%` }}
                                 />
@@ -202,17 +201,16 @@ const ProductionPreviewMode: React.FC<{
                             {mockQuestions[currentStep - 1]?.options.map((option) => {
                                 const isSelected = selectedAnswers[currentStep] === option.id;
                                 const isAdvancing = isSelected && isAutoAdvancing;
-                                
+
                                 return (
                                     <button
                                         key={option.id}
                                         onClick={() => handleAnswerSelect(option.id)}
                                         disabled={selectedAnswers[currentStep] || isAutoAdvancing}
-                                        className={`w-full p-4 text-left border-2 rounded-xl transition-all duration-300 ${
-                                            isSelected 
-                                                ? 'border-[#B89B7A] bg-[#B89B7A]/10' 
+                                        className={`w-full p-4 text-left border-2 rounded-xl transition-all duration-300 ${isSelected
+                                                ? 'border-[#B89B7A] bg-[#B89B7A]/10'
                                                 : 'border-gray-200 hover:border-[#B89B7A]/50 hover:bg-[#B89B7A]/5'
-                                        } ${isAdvancing ? 'animate-pulse' : ''}`}
+                                            } ${isAdvancing ? 'animate-pulse' : ''}`}
                                     >
                                         <div className="flex items-center justify-between">
                                             <span className="text-[#432818]">{option.text}</span>
@@ -258,7 +256,7 @@ const ProductionPreviewMode: React.FC<{
                                 <span className="text-sm text-[#6B4F43]">Compatibilidade:</span>
                                 <div className="flex items-center gap-2">
                                     <div className="w-24 bg-gray-200 rounded-full h-2">
-                                        <div 
+                                        <div
                                             className="bg-gradient-to-r from-[#B89B7A] to-[#aa6b5d] h-2 rounded-full"
                                             style={{ width: `${result.percentage}%` }}
                                         />
@@ -284,9 +282,9 @@ const ProductionPreviewMode: React.FC<{
                                 </div>
                             </div>
 
-                            <Button 
-                                variant="outline" 
-                                size="sm" 
+                            <Button
+                                variant="outline"
+                                size="sm"
                                 className="w-full"
                                 onClick={() => {
                                     // Aplicar resultado ao componente
@@ -303,9 +301,9 @@ const ProductionPreviewMode: React.FC<{
                             </Button>
                         </div>
 
-                        <Button 
-                            variant="outline" 
-                            className="w-full" 
+                        <Button
+                            variant="outline"
+                            className="w-full"
                             onClick={() => {
                                 setQuizStarted(false);
                                 setShowResults(false);
@@ -375,7 +373,7 @@ export const ResultCommonPropertyEditor: React.FC<PropertyEditorProps> = ({
     // Se está no modo preview de produção, mostrar o componente funcional
     if (showProductionPreview) {
         return (
-            <ProductionPreviewMode 
+            <ProductionPreviewMode
                 block={block}
                 onBack={() => setShowProductionPreview(false)}
                 onUpdate={update}
@@ -394,9 +392,9 @@ export const ResultCommonPropertyEditor: React.FC<PropertyEditorProps> = ({
                     <CardTitle className="text-base flex items-center gap-2">
                         <Zap className="h-4 w-4 text-primary" /> Editor de Resultado
                     </CardTitle>
-                    <Button 
-                        variant="outline" 
-                        size="sm" 
+                    <Button
+                        variant="outline"
+                        size="sm"
                         onClick={() => setShowProductionPreview(true)}
                         className="gap-2 bg-green-50 border-green-200 text-green-700 hover:bg-green-100"
                     >
