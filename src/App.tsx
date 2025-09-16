@@ -14,7 +14,7 @@ const ComQueRoupaEuVouPage = lazy(() => import('./pages/ComQueRoupaEuVouPage'));
 const Home = lazy(() => import('./pages/Home'));
 const AuthPage = lazy(() => import('./pages/AuthPage'));
 // 🏗️ EDITOR PRINCIPAL PROFISSIONAL
-const MainEditor = lazy(() => import('./pages/MainEditorUnified'));
+const MainEditor = lazy(() => import('./pages/MainEditor'));
 // 🚀 NOVO: Editor Visual Headless
 const HeadlessVisualEditor = lazy(() => import('./core/editor/HeadlessVisualEditor'));
 const DashboardPage = lazy(() => import('./pages/admin/DashboardPage'));
@@ -130,15 +130,20 @@ function App() {
                 );
               }} />
 
-              {/* 🎯 EDITOR PRINCIPAL PROFISSIONAL - CONSOLIDADO */}
-              <Route path="/editor/:funnelId?" component={({ params }: { params: { funnelId?: string } }) => {
-                console.log('🔗 Rota /editor consolidada ativada com params:', params);
+              {/* 🎯 EDITOR PRINCIPAL PROFISSIONAL */}
+              <Route path="/editor/:funnelId" component={({ params }: { params: { funnelId: string } }) => {
+                console.log('🔗 Rota /editor/:funnelId ativada com params:', params);
                 return (
                   <Suspense fallback={<LoadingFallback />}>
                     <MainEditor />
                   </Suspense>
                 );
               }} />
+              <Route path="/editor" component={() =>
+                <Suspense fallback={<LoadingFallback />}>
+                  <MainEditor />
+                </Suspense>
+              } />
 
               {/* Autenticação */}
               <Route path="/auth" component={() =>
