@@ -28,23 +28,24 @@ const MentorSectionInlineBlock: React.FC<MentorSectionInlineBlockProps> = ({
   className,
 }) => {
   const properties = block.properties || {};
-  const mentorName = properties.mentorName || 'Juliana Estilo';
-  const mentorTitle = properties.mentorTitle || 'Consultora de Imagem e Estilo';
+  const mentorName = properties.mentorName || 'Gisele Galvão';
+  const mentorTitle = properties.mentorTitle || 'Consultora de Imagem e Estilo, Personal Branding';
   const mentorImage =
-    properties.mentorImage || 'https://placehold.co/200x200/cccccc/333333?text=Mentora';
+    properties.mentorImage || 'https://res.cloudinary.com/dqljyf76t/image/upload/v1745347467/GISELE-GALV%C3%83O-POSE-ACESSIBILIDADE_i23qvj.webp';
   const mentorBio =
     properties.mentorBio ||
-    'Com mais de 10 anos de experiência, já transformei a vida de mais de 5.000 mulheres através da consultoria de imagem personalizada.';
+    'Advogada de formação, mãe e esposa. Apaixonada por ajudar mulheres a descobrirem seu estilo autêntico e transformarem sua relação com a imagem pessoal. Especialista em coloração pessoal com certificação internacional.';
   const achievements = properties.achievements || [
-    '+ 5.000 clientes transformadas',
-    '+ 10 anos de experiência',
-    'Certificada internacionalmente',
-    'Featured na Vogue e Marie Claire',
+    'Consultora de Imagem e Estilo certificada',
+    'Especialista em Personal Branding',
+    'Certificação Internacional em Coloração Pessoal',
+    'Advogada de formação',
   ];
   const credentials = properties.credentials || [
-    'Certificação Internacional em Personal Styling',
-    'Pós-graduação em Consultoria de Imagem',
-    'Mentora de outros consultores',
+    'Certificação Internacional em Coloração Pessoal',
+    'Especialista em Personal Branding',
+    'Estrategista de Marca Pessoal',
+    'Formação em Direito',
   ];
 
   // Edição inline está desativada por padrão neste bloco

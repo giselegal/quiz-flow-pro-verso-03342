@@ -76,8 +76,8 @@ const MentorBlock: React.FC<MentorBlockProps> = ({
     title = 'Conheça Gisele Galvão',
     showCredentials = true,
     showImage = true,
-    mentorImage = 'https://res.cloudinary.com/dqljyf76t/image/upload/v1746838118/20250509_2137_Desordem_e_Reflex%C3%A3o_simple_compose_01jtvszf8sfaytz493z9f16rf2_z1c2up.jpg',
-    mentorName = 'Gisele Galvão - Consultora de Imagem',
+    mentorImage = 'https://res.cloudinary.com/dqljyf76t/image/upload/v1745347467/GISELE-GALV%C3%83O-POSE-ACESSIBILIDADE_i23qvj.webp',
+    mentorName = 'Gisele Galvão',
   } = block?.properties || {};
 
   const handlePropertyChange = (key: string, value: any) => {

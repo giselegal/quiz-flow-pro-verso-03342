@@ -376,7 +376,7 @@ const ResultHeaderInlineBlock = ({
   const vars = useMemo(() => ({
     userName: displayName || '',
     resultStyle: styleLabel || '',
-  }), [displayName, styleLabel]);
+  }), [displayName || '', styleLabel || '']);
 
   // Percentual exibido: usa o calculado (primaryStyle.percentage) se não houver override explícito na prop
   const computedPercentage = typeof percentageProp === 'number' && !Number.isNaN(percentageProp)

@@ -260,9 +260,9 @@ function getDefaultPropertiesForBlockType(type: BlockType): Record<string, any> 
         },
         'mentor-section-inline': {
             mentorName: 'Gisele Galvão',
-            mentorTitle: 'Consultora de Estilo',
-            mentorImage: '',
-            testimonial: 'Depoimento do mentor'
+            mentorTitle: 'Consultora de Imagem e Estilo, Personal Branding',
+            mentorImage: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1745347467/GISELE-GALV%C3%83O-POSE-ACESSIBILIDADE_i23qvj.webp',
+            testimonial: 'Advogada de formação, mãe e esposa. Apaixonada por ajudar mulheres a descobrirem seu estilo autêntico e transformarem sua relação com a imagem pessoal.'
         },
 
         // Blocos gerais

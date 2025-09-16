@@ -826,19 +826,19 @@ export const blockDefinitions: BlockDefinition[] = [
       },
       mentorTitle: {
         type: 'string',
-        default: 'Consultora de Imagem & Personal Stylist',
+        default: 'Consultora de Imagem e Estilo, Personal Branding',
         label: 'Título do Mentor',
       },
       mentorImage: {
         type: 'string',
         default:
-          'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/GISELE_MENTOR_FOTO_PROFISSIONAL_r14oz2.webp',
+          'https://res.cloudinary.com/dqljyf76t/image/upload/v1745347467/GISELE-GALV%C3%83O-POSE-ACESSIBILIDADE_i23qvj.webp',
         label: 'Imagem do Mentor',
       },
       mentorDescription: {
         type: 'textarea',
         default:
-          'Com mais de 10 anos de experiência em consultoria de imagem, Gisele já transformou a vida de mais de 2.000 mulheres, ajudando-as a descobrir seu estilo único e elevar sua autoestima.',
+          'Advogada de formação, mãe e esposa. Apaixonada por ajudar mulheres a descobrirem seu estilo autêntico e transformarem sua relação com a imagem pessoal. Especialista em coloração pessoal com certificação internacional.',
         label: 'Descrição do Mentor',
       },
       showCredentials: {
