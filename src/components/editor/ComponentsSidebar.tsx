@@ -2,7 +2,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
-import { useEditor } from '@/context/EditorContext';
+import { useUnifiedEditor } from '@/hooks/useUnifiedEditor';
 import { BlockType } from '@/types/editor';
 import { Step20ComponentsButton } from './Step20ComponentsButton';
 import {
@@ -184,7 +184,7 @@ const blockCategories: BlockCategory[] = [
 ];
 
 export const ComponentsSidebar: React.FC = () => {
-  const { addBlock, activeStageId } = useEditor();
+  const { addBlock, activeStageId } = useUnifiedEditor();
 
   const handleAddBlock = (type: BlockType) => {
     addBlock(type);

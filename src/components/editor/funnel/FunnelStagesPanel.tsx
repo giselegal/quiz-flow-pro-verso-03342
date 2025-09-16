@@ -2,7 +2,7 @@ import { StepNavigationPropertyEditor } from '@/components/editor/properties/edi
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { useEditor } from '@/context/EditorContext';
+import { useUnifiedEditor } from '@/hooks/useUnifiedEditor';
 import { useFunnels } from '@/context/FunnelsContext';
 import { cn } from '@/lib/utils';
 import { useStepNavigationStore } from '@/stores/useStepNavigationStore';
@@ -59,12 +59,10 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
   // ✅ FASE 3: Adaptar stages legacy para interface unificada
   const stages: AdaptedFunnelStage[] = rawStages ? rawStages.map(adaptLegacyStage) : [];
 
-  // Get editor functionality for blocks and UI (optional properties)
-  const editorContext = useEditor();
+  // Get editor functionality for blocks and UI (unified hook)
+  const editorContext = useUnifiedEditor();
   const activeStageId = editorContext.activeStageId || 'step-1';
-  const setActiveStage =
-    editorContext.stageActions?.setActiveStage ||
-    (() => console.log('setActiveStage not available'));
+  const setActiveStage = editorContext.setActiveStage || (() => console.log('setActiveStage not available'));
 
   // 🔍 DEBUG: Status das etapas no painel
   console.log('🏗️ FunnelStagesPanel:', {
