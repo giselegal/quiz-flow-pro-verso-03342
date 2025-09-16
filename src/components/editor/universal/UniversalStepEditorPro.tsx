@@ -33,12 +33,12 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
     onStepChange
 }) => {
     console.log('🚀 UniversalStepEditorPro renderizado:', { stepNumber, className });
-    
+
     // Hooks
     const editorContext = useEditor();
     const { state, actions } = editorContext;
-    console.log('🎮 Estado do editor:', { 
-        currentStep: state.currentStep, 
+    console.log('🎮 Estado do editor:', {
+        currentStep: state.currentStep,
         selectedBlockId: state.selectedBlockId,
         hasStepBlocks: !!state.stepBlocks,
         stepBlocksKeys: state.stepBlocks ? Object.keys(state.stepBlocks) : []

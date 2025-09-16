@@ -31,7 +31,7 @@ describe('ResultCacheService', () => {
     it('should store and retrieve cached results', () => {
       const selections = { 'step-3': ['option1'], 'step-4': ['option2'] };
       const testResult = { primaryStyle: { style: 'Classic' } };
-      
+
       // Calcular hash real baseado na lógica do serviço
       const generateTestHash = (data: Record<string, string[]>): string => {
         const sortedKeys = Object.keys(data).sort();
@@ -39,7 +39,7 @@ describe('ResultCacheService', () => {
           const values = data[key] || [];
           return `${key}:${values.sort().join(',')}`;
         }).join('|');
-        
+
         let hash = 0;
         for (let i = 0; i < combined.length; i++) {
           const char = combined.charCodeAt(i);
@@ -48,10 +48,10 @@ describe('ResultCacheService', () => {
         }
         return Math.abs(hash).toString(16);
       };
-      
+
       const realHash = generateTestHash(selections);
       const cacheKey = `${realHash}_testuser`;
-      
+
       // Mock cache retrieval
       mockStorageService.safeGetJSON.mockReturnValue({
         [cacheKey]: {
@@ -68,7 +68,7 @@ describe('ResultCacheService', () => {
 
     it('should return null for expired cache entries', () => {
       const selections = { 'step-3': ['option1'] };
-      
+
       // Mock expired cache
       mockStorageService.safeGetJSON.mockReturnValue({
         'mockHash_testuser': {
@@ -86,10 +86,10 @@ describe('ResultCacheService', () => {
     it('should store cache entries successfully', () => {
       const selections = { 'step-3': ['option1'] };
       const testResult = { primaryStyle: { style: 'Classic' } };
-      
+
       const success = resultCacheService.set(selections, testResult, 'testUser');
       expect(success).toBe(true);
-      
+
       expect(mockStorageService.safeSetJSON).toHaveBeenCalled();
     });
   });
@@ -122,7 +122,7 @@ describe('ResultCacheService', () => {
     it('should clear all cache entries', () => {
       const success = resultCacheService.clear();
       expect(success).toBe(true);
-      
+
       expect(mockStorageService.safeRemove).toHaveBeenCalled();
     });
   });
