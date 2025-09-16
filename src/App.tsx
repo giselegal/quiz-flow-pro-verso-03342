@@ -5,6 +5,7 @@ import { ThemeProvider } from './components/theme-provider';
 import { LoadingFallback } from './components/ui/loading-fallback';
 import { Toaster } from './components/ui/toaster';
 import { AuthProvider } from './context/AuthContext';
+import { EditorProvider } from './components/editor/EditorProvider';
 import { performanceManager } from './utils/performanceManager';
 
 const EditorTemplatesPage = lazy(() => import('./pages/editor-templates'));
@@ -145,7 +146,9 @@ function App() {
                         </div>
                       </div>
                     }>
-                      <EditorPro />
+                      <EditorProvider funnelId={params.funnelId} enableSupabase={false}>
+                        <EditorPro />
+                      </EditorProvider>
                     </Suspense>
                   </div>
                 );
