@@ -495,7 +495,10 @@ export const SinglePropertiesPanel: React.FC<SinglePropertiesPanelProps> = memo(
             'form-container', 'form-input', 'lead-form',
             'navigation', 'nav', 'menu',
             'testimonial', 'testimonials', 'testimonial-card-inline',
-            'pricing', 'pricing-card-inline'
+            'pricing', 'pricing-card-inline',
+            // ✅ RESULT COMPONENTS - Componentes de resultado
+            'result-header-inline', 'modular-result-header', 'quiz-result-header',
+            'quiz-result-style', 'quiz-result-secondary', 'result-card'
         ];
         return supportedTypes.includes(selectedBlock.type);
     }, [selectedBlock?.type]);

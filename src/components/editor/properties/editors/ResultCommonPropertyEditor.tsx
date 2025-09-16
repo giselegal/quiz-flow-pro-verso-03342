@@ -7,8 +7,320 @@ import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
-import { Palette, Image as ImageIcon, Layout, Settings, Zap, Wand2 } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { Separator } from '@/components/ui/separator';
+import { Palette, Image as ImageIcon, Layout, Settings, Zap, Wand2, Eye, Edit3, Play, ArrowRight, CheckCircle } from 'lucide-react';
 import type { PropertyEditorProps } from '../interfaces/PropertyEditor';
+
+/**
+ * ProductionPreviewMode - Componente de preview funcional com simulação de produção
+ */
+const ProductionPreviewMode: React.FC<{
+    block: any;
+    onBack: () => void;
+    onUpdate: (patch: Record<string, any>) => void;
+}> = ({ block, onBack, onUpdate }) => {
+    const [currentStep, setCurrentStep] = useState(1);
+    const [isAutoAdvancing, setIsAutoAdvancing] = useState(false);
+    const [selectedAnswers, setSelectedAnswers] = useState<Record<number, string>>({});
+    const [quizStarted, setQuizStarted] = useState(false);
+    const [showResults, setShowResults] = useState(false);
+
+    const props = block?.properties || {};
+
+    // Simulação de perguntas do quiz
+    const mockQuestions = [
+        {
+            id: 1,
+            question: "Qual estilo mais combina com você?",
+            options: [
+                { id: 'natural', text: 'Natural e despojado', style: 'Natural' },
+                { id: 'elegante', text: 'Elegante e sofisticado', style: 'Elegante' },
+                { id: 'boho', text: 'Boho e descontraído', style: 'Boho' },
+                { id: 'moderno', text: 'Moderno e minimalista', style: 'Moderno' }
+            ]
+        },
+        {
+            id: 2,
+            question: "Em qual ambiente você se sente mais à vontade?",
+            options: [
+                { id: 'casa', text: 'Em casa, relaxando', style: 'Natural' },
+                { id: 'evento', text: 'Em eventos sociais', style: 'Elegante' },
+                { id: 'natureza', text: 'Na natureza', style: 'Boho' },
+                { id: 'cidade', text: 'Na cidade urbana', style: 'Moderno' }
+            ]
+        },
+        {
+            id: 3,
+            question: "Qual cor predomina no seu guarda-roupa?",
+            options: [
+                { id: 'neutras', text: 'Cores neutras e terrosas', style: 'Natural' },
+                { id: 'escuras', text: 'Preto, cinza e navy', style: 'Elegante' },
+                { id: 'quentes', text: 'Cores quentes e vibrantes', style: 'Boho' },
+                { id: 'clean', text: 'Branco e cores clean', style: 'Moderno' }
+            ]
+        }
+    ];
+
+    // Calcular resultado baseado nas respostas
+    const calculateResult = useCallback(() => {
+        const styleCount: Record<string, number> = {};
+        
+        Object.values(selectedAnswers).forEach(answerId => {
+            const question = mockQuestions.find(q => 
+                q.options.some(opt => opt.id === answerId)
+            );
+            const option = question?.options.find(opt => opt.id === answerId);
+            if (option) {
+                styleCount[option.style] = (styleCount[option.style] || 0) + 1;
+            }
+        });
+
+        const dominantStyle = Object.entries(styleCount)
+            .sort(([,a], [,b]) => b - a)[0]?.[0] || 'Natural';
+        
+        const percentage = Math.max(60, Math.min(95, 
+            (styleCount[dominantStyle] / mockQuestions.length) * 100 + Math.random() * 15
+        ));
+
+        return {
+            style: dominantStyle,
+            percentage: Math.round(percentage),
+            description: getStyleDescription(dominantStyle)
+        };
+    }, [selectedAnswers]);
+
+    const getStyleDescription = (style: string) => {
+        const descriptions = {
+            Natural: "Você tem um estilo natural e autêntico, priorizando o conforto sem abrir mão da elegância.",
+            Elegante: "Seu estilo é sofisticado e clássico, com peças atemporais e bem estruturadas.",
+            Boho: "Você expressa criatividade através do estilo boêmio, com peças únicas e descontraídas.",
+            Moderno: "Seu estilo é clean e contemporâneo, com linhas simples e cores neutras."
+        };
+        return descriptions[style] || descriptions.Natural;
+    };
+
+    // Auto avanço
+    const handleAutoAdvance = useCallback(() => {
+        if (currentStep < mockQuestions.length) {
+            setIsAutoAdvancing(true);
+            setTimeout(() => {
+                setCurrentStep(prev => prev + 1);
+                setIsAutoAdvancing(false);
+            }, 1500);
+        } else {
+            setShowResults(true);
+        }
+    }, [currentStep]);
+
+    // Seleção de resposta
+    const handleAnswerSelect = (answerId: string) => {
+        setSelectedAnswers(prev => ({
+            ...prev,
+            [currentStep]: answerId
+        }));
+        
+        // Auto avanço após seleção
+        setTimeout(() => {
+            handleAutoAdvance();
+        }, 800);
+    };
+
+    const result = showResults ? calculateResult() : null;
+
+    return (
+        <Card className="h-full flex flex-col">
+            <CardHeader className="pb-3 border-b">
+                <div className="flex items-center justify-between">
+                    <CardTitle className="text-base flex items-center gap-2">
+                        <Play className="h-4 w-4 text-green-600" /> 
+                        Preview de Produção
+                        <Badge variant="outline" className="bg-green-50 text-green-700">
+                            Funcional
+                        </Badge>
+                    </CardTitle>
+                    <Button variant="outline" size="sm" onClick={onBack}>
+                        <Edit3 className="h-3 w-3 mr-1" />
+                        Voltar ao Editor
+                    </Button>
+                </div>
+            </CardHeader>
+
+            <CardContent className="flex-1 overflow-auto p-0">
+                {!quizStarted && (
+                    <div className="p-6 text-center space-y-4">
+                        <div className="w-16 h-16 bg-gradient-to-r from-[#B89B7A] to-[#aa6b5d] rounded-full mx-auto flex items-center justify-center">
+                            <Zap className="h-8 w-8 text-white" />
+                        </div>
+                        <h3 className="text-xl font-semibold text-[#432818]">
+                            Descubra Seu Estilo Pessoal
+                        </h3>
+                        <p className="text-[#6B4F43] max-w-sm mx-auto">
+                            Responda 3 perguntas rápidas e descubra qual estilo combina perfeitamente com você.
+                        </p>
+                        <Button 
+                            onClick={() => setQuizStarted(true)}
+                            className="bg-gradient-to-r from-[#B89B7A] to-[#aa6b5d] text-white px-8 py-3"
+                        >
+                            Começar Quiz
+                            <ArrowRight className="h-4 w-4 ml-2" />
+                        </Button>
+                    </div>
+                )}
+
+                {quizStarted && !showResults && (
+                    <div className="p-6 space-y-6">
+                        <div className="flex items-center justify-between text-sm text-[#6B4F43]">
+                            <span>Pergunta {currentStep} de {mockQuestions.length}</span>
+                            <div className="flex gap-1">
+                                {mockQuestions.map((_, i) => (
+                                    <div 
+                                        key={i} 
+                                        className={`w-2 h-2 rounded-full ${
+                                            i < currentStep - 1 ? 'bg-green-500' :
+                                            i === currentStep - 1 ? 'bg-[#B89B7A]' : 
+                                            'bg-gray-200'
+                                        }`} 
+                                    />
+                                ))}
+                            </div>
+                        </div>
+
+                        <div className="bg-[#F3E8E6] rounded-xl p-4 mb-6">
+                            <div className="w-full bg-gray-200 rounded-full h-2 mb-4">
+                                <div 
+                                    className="bg-gradient-to-r from-[#B89B7A] to-[#aa6b5d] h-2 rounded-full transition-all duration-300"
+                                    style={{ width: `${(currentStep / mockQuestions.length) * 100}%` }}
+                                />
+                            </div>
+                            <h3 className="text-lg font-semibold text-[#432818] mb-4">
+                                {mockQuestions[currentStep - 1]?.question}
+                            </h3>
+                        </div>
+
+                        <div className="space-y-3">
+                            {mockQuestions[currentStep - 1]?.options.map((option) => {
+                                const isSelected = selectedAnswers[currentStep] === option.id;
+                                const isAdvancing = isSelected && isAutoAdvancing;
+                                
+                                return (
+                                    <button
+                                        key={option.id}
+                                        onClick={() => handleAnswerSelect(option.id)}
+                                        disabled={selectedAnswers[currentStep] || isAutoAdvancing}
+                                        className={`w-full p-4 text-left border-2 rounded-xl transition-all duration-300 ${
+                                            isSelected 
+                                                ? 'border-[#B89B7A] bg-[#B89B7A]/10' 
+                                                : 'border-gray-200 hover:border-[#B89B7A]/50 hover:bg-[#B89B7A]/5'
+                                        } ${isAdvancing ? 'animate-pulse' : ''}`}
+                                    >
+                                        <div className="flex items-center justify-between">
+                                            <span className="text-[#432818]">{option.text}</span>
+                                            {isSelected && (
+                                                <CheckCircle className="h-5 w-5 text-[#B89B7A]" />
+                                            )}
+                                        </div>
+                                    </button>
+                                );
+                            })}
+                        </div>
+
+                        {isAutoAdvancing && (
+                            <div className="text-center py-4">
+                                <div className="inline-flex items-center gap-2 text-[#6B4F43]">
+                                    <div className="animate-spin rounded-full h-4 w-4 border-2 border-[#B89B7A] border-t-transparent" />
+                                    <span className="text-sm">Próxima pergunta...</span>
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                )}
+
+                {showResults && result && (
+                    <div className="p-6 space-y-6">
+                        <div className="text-center space-y-4">
+                            <div className="w-20 h-20 bg-gradient-to-r from-[#B89B7A] to-[#aa6b5d] rounded-full mx-auto flex items-center justify-center">
+                                <CheckCircle className="h-10 w-10 text-white" />
+                            </div>
+                            <div>
+                                <h2 className="text-2xl font-bold text-[#432818] mb-2">
+                                    Parabéns! 🎉
+                                </h2>
+                                <p className="text-[#6B4F43]">Descobrimos seu estilo pessoal</p>
+                            </div>
+                        </div>
+
+                        <div className="bg-gradient-to-r from-[#B89B7A]/10 to-[#aa6b5d]/10 rounded-2xl p-6 text-center">
+                            <h3 className="text-xl font-bold text-[#432818] mb-2">
+                                Seu estilo é: <span className="text-[#B89B7A]">{result.style}</span>
+                            </h3>
+                            <div className="flex items-center justify-center gap-4 mb-4">
+                                <span className="text-sm text-[#6B4F43]">Compatibilidade:</span>
+                                <div className="flex items-center gap-2">
+                                    <div className="w-24 bg-gray-200 rounded-full h-2">
+                                        <div 
+                                            className="bg-gradient-to-r from-[#B89B7A] to-[#aa6b5d] h-2 rounded-full"
+                                            style={{ width: `${result.percentage}%` }}
+                                        />
+                                    </div>
+                                    <span className="font-semibold text-[#B89B7A]">{result.percentage}%</span>
+                                </div>
+                            </div>
+                            <p className="text-[#6B4F43] text-sm">{result.description}</p>
+                        </div>
+
+                        <Separator />
+
+                        <div className="space-y-4">
+                            <h4 className="font-semibold text-[#432818]">🎯 Configurações do Componente</h4>
+                            <div className="grid grid-cols-2 gap-3 text-sm">
+                                <div>
+                                    <Label className="text-xs text-[#6B4F43]">Título Atual</Label>
+                                    <p className="text-[#432818] truncate">{props.title || "Seu Estilo Predominante"}</p>
+                                </div>
+                                <div>
+                                    <Label className="text-xs text-[#6B4F43]">Resultado Simulado</Label>
+                                    <p className="text-[#B89B7A] font-medium">{result.style} ({result.percentage}%)</p>
+                                </div>
+                            </div>
+
+                            <Button 
+                                variant="outline" 
+                                size="sm" 
+                                className="w-full"
+                                onClick={() => {
+                                    // Aplicar resultado ao componente
+                                    onUpdate({
+                                        title: `Seu estilo é ${result.style}!`,
+                                        subtitle: `${result.percentage}% de compatibilidade`,
+                                        percentage: result.percentage,
+                                        description: result.description
+                                    });
+                                }}
+                            >
+                                <Wand2 className="h-3 w-3 mr-2" />
+                                Aplicar Resultado ao Componente
+                            </Button>
+                        </div>
+
+                        <Button 
+                            variant="outline" 
+                            className="w-full" 
+                            onClick={() => {
+                                setQuizStarted(false);
+                                setShowResults(false);
+                                setCurrentStep(1);
+                                setSelectedAnswers({});
+                            }}
+                        >
+                            🔄 Refazer Quiz
+                        </Button>
+                    </div>
+                )}
+            </CardContent>
+        </Card>
+    );
+};
 
 /**
  * ResultCommonPropertyEditor
@@ -25,6 +337,7 @@ export const ResultCommonPropertyEditor: React.FC<PropertyEditorProps> = ({
     isPreviewMode = false,
 }) => {
     const [tab, setTab] = useState('content');
+    const [showProductionPreview, setShowProductionPreview] = useState(false);
 
     const props = block?.properties || {};
 
@@ -59,6 +372,17 @@ export const ResultCommonPropertyEditor: React.FC<PropertyEditorProps> = ({
         }
     ]), [props.guideImageUrl, props.styleGuideImageUrl]);
 
+    // Se está no modo preview de produção, mostrar o componente funcional
+    if (showProductionPreview) {
+        return (
+            <ProductionPreviewMode 
+                block={block}
+                onBack={() => setShowProductionPreview(false)}
+                onUpdate={update}
+            />
+        );
+    }
+
     if (isPreviewMode) {
         return <div className="p-4 text-sm text-muted-foreground">Modo preview - edição desativada</div>;
     }
@@ -66,9 +390,20 @@ export const ResultCommonPropertyEditor: React.FC<PropertyEditorProps> = ({
     return (
         <Card className="h-full flex flex-col">
             <CardHeader className="pb-3">
-                <CardTitle className="text-base flex items-center gap-2">
-                    <Zap className="h-4 w-4 text-primary" /> Editor de Resultado
-                </CardTitle>
+                <div className="flex items-center justify-between">
+                    <CardTitle className="text-base flex items-center gap-2">
+                        <Zap className="h-4 w-4 text-primary" /> Editor de Resultado
+                    </CardTitle>
+                    <Button 
+                        variant="outline" 
+                        size="sm" 
+                        onClick={() => setShowProductionPreview(true)}
+                        className="gap-2 bg-green-50 border-green-200 text-green-700 hover:bg-green-100"
+                    >
+                        <Eye className="h-3 w-3" />
+                        Preview Funcional
+                    </Button>
+                </div>
                 <div className="flex flex-wrap gap-2 mt-2">
                     {presets.map(p => (
                         <Button key={p.key} size="xs" variant="outline" onClick={() => update(p.patch)} className="h-6 text-[11px] px-2">
