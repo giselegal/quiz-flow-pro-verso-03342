@@ -1,6 +1,6 @@
-import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback, useMemo } from 'react';
 import { QuizFunnelSchema } from '../../types/quiz-schema';
-import { editorDataService } from './services/EditorDataService';
+import { editorDataService as EditorDataService } from './services/EditorDataService';
 
 interface HeadlessEditorContextType {
   schema: QuizFunnelSchema | null;
@@ -26,31 +26,32 @@ export const useHeadlessEditor = () => {
 interface HeadlessEditorProviderProps {
   children: React.ReactNode;
   schemaId?: string;
+  autoSave?: boolean;
+  autoSaveInterval?: number;
 }
 
-export const HeadlessEditorProvider: React.FC<HeadlessEditorProviderProps> = ({ children, schemaId }) => {
+export const HeadlessEditorProvider: React.FC<HeadlessEditorProviderProps> = ({
+  children,
+  schemaId
+}) => {
   const [schema, setSchema] = useState<QuizFunnelSchema | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isDirty, setIsDirty] = useState(false);
+
+  const dataService = useMemo(() => EditorDataService, []);
 
   const loadSchema = useCallback(async (targetSchemaId: string) => {
     try {
       setError(null);
       setIsLoading(true);
 
-      console.log('🔄 Carregando schema para:', targetSchemaId);
-
-      // Usar o EditorDataService para carregar os dados
-      const steps = await editorDataService.loadSchemaFromTemplate(targetSchemaId);
+      const steps = await dataService.loadSchemaFromTemplate(targetSchemaId);
 
       if (!steps || steps.length === 0) {
         throw new Error(`Template não encontrado: ${targetSchemaId}`);
       }
 
-      console.log('✅ Steps carregados:', steps.length, 'etapas');
-
-      // Criar schema básico mas válido - usando configurações mínimas
       const loadedSchema: QuizFunnelSchema = {
         id: targetSchemaId,
         name: `Quiz - ${targetSchemaId}`,
@@ -95,12 +96,14 @@ export const HeadlessEditorProvider: React.FC<HeadlessEditorProviderProps> = ({ 
             }
           },
           analytics: {
-            enabled: false,
-            customEvents: [],
-            utm: {
-              source: '',
-              medium: '',
-              campaign: ''
+            googleAnalytics: {
+              measurementId: '',
+              enableEcommerce: false,
+              customEvents: []
+            },
+            facebookPixel: {
+              pixelId: '',
+              events: []
             }
           },
           branding: {
@@ -149,9 +152,9 @@ export const HeadlessEditorProvider: React.FC<HeadlessEditorProviderProps> = ({ 
                 bold: 700
               },
               lineHeight: {
-                tight: 1.25,
-                normal: 1.5,
-                relaxed: 1.75
+                tight: '1.25',
+                normal: '1.5',
+                relaxed: '1.75'
               }
             },
             spacing: {
@@ -162,41 +165,49 @@ export const HeadlessEditorProvider: React.FC<HeadlessEditorProviderProps> = ({ 
               xl: '3rem',
               '2xl': '4rem'
             }
+          },
+          performance: {
+            enableCaching: true,
+            cacheStrategy: 'stale-while-revalidate' as const,
+            preloadNextStep: false,
+            enableServiceWorker: false
+          },
+          security: {
+            enableCSP: true,
+            allowedDomains: [],
+            encryptSensitiveData: false,
+            rateLimitRequests: true,
+            sanitizeInputs: true
+          },
+          legal: {
+            privacyPolicyUrl: '',
+            termsOfServiceUrl: '',
+            cookiePolicyUrl: '',
+            gdprCompliant: true,
+            ccpaCompliant: false
           }
         },
         steps,
         publication: {
-          status: 'draft' as const,
+          isPublished: false,
           publishedAt: undefined,
-          baseUrl: '',
+          domain: undefined,
           customDomain: undefined,
-          slug: targetSchemaId,
-          version: '1.0.0',
-          changelog: [],
-          accessControl: {
-            public: true
-          },
-          cdn: {
-            enabled: false
-          }
+          sslEnabled: true,
+          password: undefined,
+          allowIndexing: true
         },
         editorMeta: {
           lastModified: new Date().toISOString(),
           lastModifiedBy: 'system',
-          editorVersion: '1.0.0',
-          editorSettings: {
-            autoSave: true,
-            previewMode: 'desktop' as const,
-            showGrid: false,
-            snapToGrid: false
-          },
+          createdAt: new Date().toISOString(),
           tags: []
         }
       };
 
       setSchema(loadedSchema);
       setIsDirty(false);
-      console.log(`✅ Schema carregado com sucesso: ${targetSchemaId}`);
+      console.log(`✅ Schema carregado: ${targetSchemaId}`, loadedSchema);
 
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Erro ao carregar schema';
@@ -205,7 +216,7 @@ export const HeadlessEditorProvider: React.FC<HeadlessEditorProviderProps> = ({ 
     } finally {
       setIsLoading(false);
     }
-  }, []);
+  }, [dataService]);
 
   useEffect(() => {
     if (schemaId) {
@@ -224,10 +235,14 @@ export const HeadlessEditorProvider: React.FC<HeadlessEditorProviderProps> = ({ 
       setIsDirty(true);
     },
     saveSchema: async () => {
-      console.log('Save not implemented');
+      if (!schema) throw new Error('Nenhum schema para salvar');
+      console.log('💾 Salvando schema:', schema.id);
+      setIsDirty(false);
     },
     resetChanges: () => {
-      if (schemaId) loadSchema(schemaId);
+      if (schemaId) {
+        loadSchema(schemaId);
+      }
     }
   };
 

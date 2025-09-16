@@ -1,502 +1,257 @@
 /**
- * 📊 EDITOR DATA SERVICE
+ * 🔗 EditorDataService - Conecta Templates com Arquivos JSON
  * 
- * Serviço para conectar fontes de dados JSON com o painel de propriedades,
- * permitindo edição bi-direcional e sincronização em tempo real.
+ * Serviço responsável por conectar os IDs dos templates do registry
+ * com os arquivos JSON reais das etapas (step-01-template.json, etc.)
  */
 
-import { QuizFunnelSchema, FunnelStep } from '../../../types/quiz-schema';
+import { FunnelStep } from '../../../types/quiz-schema';
 
-// ============================================================================
-// CONFIGURAÇÃO DO SERVIÇO
-// ============================================================================
+export type TemplateSource = 'template' | 'saved' | 'file';
 
-interface EditorDataServiceConfig {
-    autoSave: boolean;
-    autoSaveInterval: number;
-    enableCache: boolean;
-    enableValidation: boolean;
+export interface LoadOptions {
+    templateId?: string;
+    stepNumber?: number;
+    source?: TemplateSource;
 }
 
-interface DataChangeEvent {
-    type: 'schema-updated' | 'step-updated' | 'global-settings-updated' | 'publication-updated';
-    schemaId: string;
-    timestamp: string;
-    data?: any;
-}
+/**
+ * Mapeamento de IDs de templates para arquivos JSON das etapas
+ */
+const TEMPLATE_TO_STEPS_MAPPING: Record<string, number[]> = {
+    'quiz21StepsComplete': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21],
+    'com-que-roupa-eu-vou': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21],
+    'personal-branding-quiz': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
+    'lead-magnet-fashion': [1, 2, 3, 4, 5],
+    'quiz-tipo-corpo': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+    'consultoria-imagem-premium': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
+    'capsule-wardrobe-guide': [1, 2, 3, 4, 5, 6, 7, 8],
+    'masterclass-combinacoes': [1, 2, 3, 4, 5, 6],
+    'quiz-cores-perfeitas': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+    'shopping-inteligente': [1, 2, 3, 4, 5, 6, 7],
+};
 
-type DataChangeListener = (event: DataChangeEvent) => void;
-
-interface SaveResult {
-    success: boolean;
-    location: 'localStorage' | 'supabase' | 'file';
-    timestamp: string;
-    error?: string;
-}
-
-// ============================================================================
-// SERVIÇO PRINCIPAL
-// ============================================================================
-
+/**
+ * EditorDataService - Singleton para gerenciamento de dados
+ */
 class EditorDataService {
     private static instance: EditorDataService;
-    private config: EditorDataServiceConfig;
-    private currentSchema: QuizFunnelSchema | null = null;
-    private isDirty: boolean = false;
-    private listeners: DataChangeListener[] = [];
+    private cache = new Map<string, any>();
+    private eventListeners: Array<(event: string, data: any) => void> = [];
 
-    private constructor(config: EditorDataServiceConfig) {
-        this.config = config;
-    }
+    private constructor() { }
 
-    public static getInstance(config: EditorDataServiceConfig): EditorDataService {
+    static getInstance(): EditorDataService {
         if (!EditorDataService.instance) {
-            EditorDataService.instance = new EditorDataService(config);
+            EditorDataService.instance = new EditorDataService();
         }
         return EditorDataService.instance;
     }
 
-    // ============================================================================
-    // CARREGAMENTO DE DADOS JSON
-    // ============================================================================
+    /**
+     * Carrega schema de template baseado no ID
+     */
+    async loadSchemaFromTemplate(templateId: string, stepNumber?: number): Promise<FunnelStep[] | null> {
+        const cacheKey = `${templateId}-${stepNumber || 'all'}`;
 
-    public async loadSchemaFromJson(
-        source: 'template' | 'saved' | 'file',
-        schemaId: string
-    ): Promise<QuizFunnelSchema> {
-        console.log(`🔄 Carregando schema de ${source}: ${schemaId}`);
-
-        let schema: QuizFunnelSchema;
+        if (this.cache.has(cacheKey)) {
+            console.log(`📋 [EditorDataService] Cache hit para ${cacheKey}`);
+            return this.cache.get(cacheKey);
+        }
 
         try {
-            switch (source) {
-                case 'template':
-                    schema = await this.loadFromTemplate(schemaId);
-                    break;
-                case 'saved':
-                    schema = await this.loadFromLocalStorage(schemaId);
-                    break;
-                case 'file':
-                    schema = await this.loadFromFile(schemaId);
-                    break;
-                default:
-                    throw new Error(`Fonte não suportada: ${source}`);
+            const steps = TEMPLATE_TO_STEPS_MAPPING[templateId];
+            if (!steps) {
+                console.warn(`⚠️ Template ID '${templateId}' não encontrado no mapeamento`);
+                return null;
             }
 
-            this.currentSchema = schema;
-            this.isDirty = false;
-            this.notifyListeners({
-                type: 'schema-updated',
-                schemaId: schema.id,
-                timestamp: new Date().toISOString(),
-                data: schema
-            });
+            const stepsToLoad = stepNumber ? [stepNumber] : steps;
+            const loadedSteps: FunnelStep[] = [];
 
-            console.log('✅ Schema carregado com sucesso via EditorDataService');
-            return schema;
+            for (const stepNum of stepsToLoad) {
+                const stepData = await this.loadStepJson(stepNum);
+                if (stepData) {
+                    loadedSteps.push(stepData);
+                }
+            }
+
+            // Cache do resultado
+            this.cache.set(cacheKey, loadedSteps);
+
+            // Notificar ouvintes
+            this.emit('schema-loaded', { templateId, stepNumber, steps: loadedSteps });
+
+            console.log(`✅ [EditorDataService] Schema carregado: ${templateId} com ${loadedSteps.length} etapas`);
+            return loadedSteps;
 
         } catch (error) {
-            console.error('❌ Erro ao carregar schema:', error);
-            throw error;
+            console.error(`❌ [EditorDataService] Erro ao carregar schema:`, error);
+            return null;
         }
     }
 
-    // ============================================================================
-    // SALVAMENTO DE DADOS
-    // ============================================================================
-
-    public async saveSchema(): Promise<SaveResult[]> {
-        if (!this.currentSchema) {
-            return [{ success: false, location: 'localStorage', timestamp: new Date().toISOString(), error: 'Nenhum schema ativo' }];
-        }
-
-        console.log('💾 Salvando schema...');
-
-        const results: SaveResult[] = [];
-
-        // Salvar no localStorage
+    /**
+     * Carrega JSON de uma etapa específica
+     */
+    private async loadStepJson(stepNumber: number): Promise<FunnelStep | null> {
         try {
-            await this.saveToLocalStorage(this.currentSchema);
-            results.push({
-                success: true,
-                location: 'localStorage',
-                timestamp: new Date().toISOString()
-            });
-        } catch (error) {
-            results.push({
-                success: false,
-                location: 'localStorage',
-                timestamp: new Date().toISOString(),
-                error: String(error)
-            });
-        }
+            const stepId = String(stepNumber).padStart(2, '0');
+            const templatePath = `/templates/step-${stepId}-template.json`;
 
-        // Tentar salvar no Supabase se configurado
+            const response = await fetch(templatePath);
+            if (!response.ok) {
+                console.warn(`⚠️ Template step-${stepId} não encontrado`);
+                return null;
+            }
+
+            const jsonData = await response.json();
+
+            // Converter formato do JSON para FunnelStep
+            const step: FunnelStep = {
+                id: String(stepNumber),
+                name: jsonData.metadata?.name || `Etapa ${stepNumber}`,
+                description: jsonData.metadata?.description || '',
+                order: stepNumber,
+                type: this.inferStepType(jsonData),
+                settings: {
+                    showProgress: true,
+                    progressStyle: 'bar' as const,
+                    showBackButton: stepNumber > 1,
+                    showNextButton: true,
+                    allowSkip: false,
+                    trackTimeOnStep: false,
+                    trackInteractions: false,
+                    customEvents: []
+                },
+                blocks: jsonData.blocks || [],
+                navigation: {
+                    nextStep: stepNumber < 21 ? String(stepNumber + 1) : undefined,
+                    prevStep: stepNumber > 1 ? String(stepNumber - 1) : undefined,
+                    conditions: [],
+                    actions: []
+                },
+                validation: jsonData.validation || {
+                    required: true,
+                    rules: []
+                }
+            };
+
+            return step;
+
+        } catch (error) {
+            console.error(`❌ Erro ao carregar step ${stepNumber}:`, error);
+            return null;
+        }
+    }
+
+    /**
+     * Infere o tipo da etapa baseado no conteúdo JSON
+     */
+    private inferStepType(jsonData: any): 'intro' | 'lead-capture' | 'quiz-question' | 'strategic-question' | 'transition' | 'result' | 'offer' | 'thank-you' | 'custom' {
+        if (!jsonData.blocks) return 'custom';
+
+        const blockTypes = jsonData.blocks.map((block: any) => block.type);
+
+        if (blockTypes.includes('quiz-question')) return 'quiz-question';
+        if (blockTypes.includes('form-input')) return 'lead-capture';
+        if (blockTypes.includes('result-display')) return 'result';
+        if (blockTypes.includes('offer-card')) return 'offer';
+        if (blockTypes.includes('thank-you')) return 'thank-you';
+
+        return 'custom';
+    }
+
+    /**
+     * Atualiza dados do schema
+     */
+    async updateSchema(templateId: string, stepNumber: number, updates: Partial<FunnelStep>): Promise<boolean> {
         try {
-            await this.saveToSupabase(this.currentSchema);
-            results.push({
-                success: true,
-                location: 'supabase',
-                timestamp: new Date().toISOString()
-            });
+            const cacheKey = `${templateId}-${stepNumber}`;
+            const currentSteps = await this.loadSchemaFromTemplate(templateId, stepNumber);
+
+            if (currentSteps && currentSteps.length > 0) {
+                const updatedStep = { ...currentSteps[0], ...updates };
+
+                // Atualizar cache
+                this.cache.set(cacheKey, [updatedStep]);
+
+                // Salvar no localStorage como backup
+                localStorage.setItem(`editor-${cacheKey}`, JSON.stringify([updatedStep]));
+
+                // Notificar mudanças
+                this.emit('schema-updated', { templateId, stepNumber, updates });
+
+                console.log(`✅ [EditorDataService] Schema atualizado: ${templateId} step ${stepNumber}`);
+                return true;
+            }
+
+            return false;
         } catch (error) {
-            console.warn('⚠️ Falha ao salvar no Supabase (continuando...)', error);
-        }
-
-        this.isDirty = false;
-
-        return results;
-    }
-
-    // ============================================================================
-    // ATUALIZAÇÕES DE DADOS
-    // ============================================================================
-
-    public updateStep(stepId: string, updates: Partial<FunnelStep>): void {
-        if (!this.currentSchema) return;
-
-        const stepIndex = this.currentSchema.steps.findIndex(step => step.id === stepId);
-        if (stepIndex === -1) return;
-
-        // Aplicar as atualizações
-        this.currentSchema.steps[stepIndex] = {
-            ...this.currentSchema.steps[stepIndex],
-            ...updates
-        };
-
-        this.markAsDirty();
-        this.notifyListeners({
-            type: 'step-updated',
-            schemaId: this.currentSchema.id,
-            timestamp: new Date().toISOString(),
-            data: { stepId, updates }
-        });
-    }
-
-    public updateGlobalSettings(updates: Partial<QuizFunnelSchema['settings']>): void {
-        if (!this.currentSchema) return;
-
-        this.currentSchema.settings = {
-            ...this.currentSchema.settings,
-            ...updates
-        };
-
-        this.markAsDirty();
-        this.notifyListeners({
-            type: 'global-settings-updated',
-            schemaId: this.currentSchema.id,
-            timestamp: new Date().toISOString(),
-            data: updates
-        });
-    }
-
-    public updatePublicationSettings(updates: Partial<QuizFunnelSchema['publication']>): void {
-        if (!this.currentSchema) return;
-
-        this.currentSchema.publication = {
-            ...this.currentSchema.publication,
-            ...updates
-        };
-
-        this.markAsDirty();
-        this.notifyListeners({
-            type: 'publication-updated',
-            schemaId: this.currentSchema.id,
-            timestamp: new Date().toISOString(),
-            data: updates
-        });
-    }
-
-    // ============================================================================
-    // GESTÃO DE ESTADO
-    // ============================================================================
-
-    public getCurrentSchema(): QuizFunnelSchema | null {
-        return this.currentSchema;
-    }
-
-    public isDirtySchema(): boolean {
-        return this.isDirty;
-    }
-
-    public addChangeListener(listener: DataChangeListener): () => void {
-        this.listeners.push(listener);
-
-        // Retorna função para remover o listener
-        return () => {
-            const index = this.listeners.indexOf(listener);
-            if (index > -1) {
-                this.listeners.splice(index, 1);
-            }
-        };
-    }
-
-    // ============================================================================
-    // MÉTODOS PRIVADOS
-    // ============================================================================
-
-    private markAsDirty(): void {
-        this.isDirty = true;
-        if (this.currentSchema) {
-            this.currentSchema.editorMeta.lastModified = new Date().toISOString();
+            console.error(`❌ [EditorDataService] Erro ao atualizar schema:`, error);
+            return false;
         }
     }
 
-    private notifyListeners(event: DataChangeEvent): void {
-        this.listeners.forEach(listener => {
-            try {
-                listener(event);
-            } catch (error) {
-                console.error('❌ Erro ao executar listener:', error);
-            }
+    /**
+     * Salva dados em múltiplos destinos
+     */
+    async saveToMultipleDestinations(templateId: string, data: any): Promise<void> {
+        const promises = [
+            this.saveToLocalStorage(templateId, data),
+            this.saveToSupabase(templateId, data).catch(() => console.log('Supabase não disponível')),
+        ];
+
+        await Promise.allSettled(promises);
+        this.emit('multi-save-completed', { templateId, data });
+    }
+
+    private async saveToLocalStorage(templateId: string, data: any): Promise<void> {
+        localStorage.setItem(`editor-template-${templateId}`, JSON.stringify(data));
+        console.log(`💾 Salvo no localStorage: ${templateId}`);
+    }
+
+    private async saveToSupabase(templateId: string, _data: any): Promise<void> {
+        // TODO: Implementar salvamento no Supabase quando disponível
+        console.log(`🔗 Supabase save simulado para: ${templateId}`);
+    }
+
+    /**
+     * Sistema de eventos
+     */
+    on(event: string, listener: (data: any) => void): void {
+        this.eventListeners.push((e, data) => {
+            if (e === event) listener(data);
         });
     }
 
-    // ============================================================================
-    // CARREGAMENTO DE DADOS
-    // ============================================================================
-
-    private async loadFromTemplate(templateId: string): Promise<QuizFunnelSchema> {
-        console.log(`📋 Carregando template: ${templateId}`);
-
-        // Simular carregamento de template
-        // Em implementação real, carregaria de arquivos JSON ou API
-        const mockSchema: QuizFunnelSchema = {
-            id: templateId,
-            name: `Template ${templateId}`,
-            description: 'Template carregado via EditorDataService',
-            version: '1.0.0',
-            category: 'quiz',
-            templateType: 'quiz-complete',
-
-            steps: [
-                {
-                    id: 'step-1',
-                    name: 'Introdução',
-                    description: 'Etapa inicial do quiz',
-                    type: 'intro',
-                    order: 1,
-                    blocks: [],
-                    settings: {
-                        showProgress: true,
-                        progressStyle: 'bar',
-                        showBackButton: false,
-                        showNextButton: true,
-                        allowSkip: false,
-                        trackTimeOnStep: true,
-                        trackInteractions: true,
-                        customEvents: []
-                    },
-                    navigation: {
-                        nextButton: { text: 'Começar', visible: true, conditions: [] },
-                        backButton: { text: 'Voltar', visible: false },
-                        skipButton: { text: 'Pular', visible: false, conditions: [] }
-                    },
-                    validation: {
-                        required: false,
-                        rules: [],
-                        errorMessages: {}
-                    }
-                }
-            ],
-
-            settings: {
-                seo: {
-                    title: `Template ${templateId}`,
-                    description: 'Template carregado via EditorDataService',
-                    keywords: ['template', 'quiz'],
-                    robots: 'index,follow',
-                    openGraph: {
-                        title: `Template ${templateId}`,
-                        description: 'Template carregado via EditorDataService',
-                        image: '',
-                        imageAlt: '',
-                        type: 'website',
-                        url: '',
-                        siteName: 'Quiz Quest'
-                    },
-                    twitter: {
-                        card: 'summary_large_image',
-                        title: `Template ${templateId}`,
-                        description: 'Template carregado via EditorDataService',
-                        image: '',
-                        creator: '@quizquest',
-                        site: '@quizquest'
-                    },
-                    structuredData: {
-                        '@type': 'Quiz',
-                        name: `Template ${templateId}`,
-                        description: 'Template carregado via EditorDataService',
-                        provider: {
-                            '@type': 'Organization',
-                            name: 'Quiz Quest',
-                            url: 'https://quizquest.com',
-                            logo: 'https://quizquest.com/logo.png'
-                        },
-                        category: ['quiz', 'education'],
-                        dateCreated: new Date().toISOString(),
-                        dateModified: new Date().toISOString()
-                    }
-                },
-                analytics: {
-                    enabled: false,
-                    googleAnalytics: {
-                        measurementId: '',
-                        enableEcommerce: false,
-                        customEvents: []
-                    }
-                },
-                branding: {
-                    colors: {
-                        primary: '#B89B7A',
-                        secondary: '#D4C2A8',
-                        accent: '#4CAF50',
-                        background: '#F9F5F1',
-                        surface: '#FFFFFF',
-                        text: {
-                            primary: '#333333',
-                            secondary: '#666666',
-                            disabled: '#CCCCCC'
-                        },
-                        error: '#F44336',
-                        warning: '#FF9800',
-                        success: '#4CAF50'
-                    },
-                    typography: {
-                        fontFamily: {
-                            primary: 'Inter, system-ui, sans-serif',
-                            secondary: 'Poppins, sans-serif',
-                            monospace: 'Monaco, Consolas, monospace'
-                        },
-                        fontSize: {
-                            xs: '0.75rem',
-                            sm: '0.875rem',
-                            base: '1rem',
-                            lg: '1.125rem',
-                            xl: '1.25rem',
-                            '2xl': '1.5rem'
-                        }
-                    },
-                    brand: {
-                        logo: {
-                            primary: '',
-                            secondary: '',
-                            favicon: '',
-                            appleTouchIcon: ''
-                        }
-                    },
-                    spacing: {
-                        xs: '0.5rem',
-                        sm: '1rem',
-                        md: '1.5rem',
-                        lg: '2rem',
-                        xl: '3rem',
-                        '2xl': '4rem'
-                    },
-                    borderRadius: {
-                        none: '0px',
-                        sm: '0.25rem',
-                        md: '0.5rem',
-                        lg: '0.75rem',
-                        xl: '1rem',
-                        full: '50%'
-                    },
-                    shadows: {
-                        sm: '0 1px 2px rgba(0,0,0,0.05)',
-                        md: '0 4px 6px rgba(0,0,0,0.1)',
-                        lg: '0 10px 15px rgba(0,0,0,0.1)',
-                        xl: '0 20px 25px rgba(0,0,0,0.1)'
-                    }
-                },
-                persistence: {
-                    enabled: true,
-                    storage: ['localStorage', 'supabase'],
-                    autoSave: true,
-                    autoSaveInterval: 30000,
-                    compression: false,
-                    encryption: false,
-                    backupEnabled: true
-                },
-                integrations: {},
-                performance: {
-                    lazyLoading: true,
-                    cacheEnabled: true,
-                    compressionEnabled: false,
-                    preloadNextStep: true
-                },
-                legal: {
-                    privacyPolicyUrl: '',
-                    termsOfServiceUrl: '',
-                    cookieConsentRequired: false
-                }
-            },
-
-            publication: {
-                status: 'draft',
-                baseUrl: '',
-                slug: templateId,
-                version: '1.0.0',
-                accessControl: {
-                    public: true,
-                    password: undefined,
-                    allowedDomains: [],
-                    ipWhitelist: []
-                },
-                cdn: {
-                    enabled: false
-                },
-                meta: {
-                    publishedAt: undefined,
-                    lastPublished: undefined,
-                    version: '1.0.0'
-                }
-            },
-
-            editorMeta: {
-                version: '1.0.0',
-                created: new Date().toISOString(),
-                lastModified: new Date().toISOString(),
-                stats: {
-                    totalBlocks: 1,
-                    totalSteps: 1,
-                    estimatedCompletionTime: 300,
-                    lastTestRun: undefined
-                }
-            }
-        };
-
-        return mockSchema;
+    private emit(event: string, data: any): void {
+        this.eventListeners.forEach(listener => listener(event, data));
     }
 
-    private async loadFromLocalStorage(schemaId: string): Promise<QuizFunnelSchema> {
-        const stored = localStorage.getItem(`quiz-schema-${schemaId}`);
-        if (!stored) {
-            throw new Error(`Schema não encontrado no localStorage: ${schemaId}`);
-        }
-
-        return JSON.parse(stored);
+    /**
+     * Lista templates disponíveis
+     */
+    getAvailableTemplates(): string[] {
+        return Object.keys(TEMPLATE_TO_STEPS_MAPPING);
     }
 
-    private async loadFromFile(filePath: string): Promise<QuizFunnelSchema> {
-        // Implementação para carregar de arquivo seria feita aqui
-        throw new Error('Carregamento de arquivo não implementado ainda');
+    /**
+     * Obtém quantidade de etapas de um template
+     */
+    getTemplateStepCount(templateId: string): number {
+        return TEMPLATE_TO_STEPS_MAPPING[templateId]?.length || 0;
     }
 
-    // ============================================================================
-    // SALVAMENTO DE DADOS
-    // ============================================================================
-
-    private async saveToLocalStorage(schema: QuizFunnelSchema): Promise<void> {
-        const key = `quiz-schema-${schema.id}`;
-        localStorage.setItem(key, JSON.stringify(schema));
-        console.log(`💾 Schema salvo no localStorage: ${key}`);
-    }
-
-    private async saveToSupabase(schema: QuizFunnelSchema): Promise<void> {
-        // Implementação do Supabase seria feita aqui
-        console.log('📤 Salvamento no Supabase ainda não implementado');
-        throw new Error('Supabase não configurado');
+    /**
+     * Limpa cache
+     */
+    clearCache(): void {
+        this.cache.clear();
+        console.log('🗑️ Cache do EditorDataService limpo');
     }
 }
 
-export default EditorDataService;
+// Exportar instância singleton
+export const editorDataService = EditorDataService.getInstance();
+export default editorDataService;

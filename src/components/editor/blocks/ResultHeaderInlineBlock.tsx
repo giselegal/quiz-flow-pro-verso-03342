@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo, memo } from 'react';
 import { InlineEditableText } from './InlineEditableText';
 import { Progress } from '@/components/ui/progress';
 import { Card } from '@/components/ui/card';
@@ -12,6 +12,9 @@ import { computeEffectivePrimaryPercentage } from '@/core/result/percentage';
 import { getBestUserName } from '@/core/user/name';
 import { safePlaceholder, safeStylePlaceholder } from '@/utils/placeholder';
 
+// =====================================
+// Utils & Helpers
+// =====================================
 const interpolate = (text: string, vars: Record<string, any>) => {
   if (!text) return '';
   return text
@@ -19,31 +22,273 @@ const interpolate = (text: string, vars: Record<string, any>) => {
     .replace(/\{resultStyle\}/g, vars.resultStyle || '');
 };
 
+interface VariantFlags {
+  isCompact: boolean;
+  isMinimal: boolean;
+}
 
-const ResultHeaderInlineBlock: React.FC<BlockComponentProps> = ({
-  block,
-  isSelected = false,
-  onPropertyChange,
-  className = '',
-}) => {
-  const { primaryStyle, secondaryStyles, isLoading, error, retry, hasResult } = useQuizResult();
+// Aplica classes utilitárias baseadas na variante
+const variantPadding = (variant: VariantFlags) => variant.isMinimal ? 'p-4' : variant.isCompact ? 'p-5' : 'p-6';
+const variantGapY = (variant: VariantFlags) => variant.isMinimal ? 'space-y-4' : variant.isCompact ? 'space-y-6' : 'space-y-8';
+const variantTitleSize = (variant: VariantFlags) => variant.isMinimal ? 'text-xl' : variant.isCompact ? 'text-2xl' : 'text-2xl';
+const variantCelebrationEmoji = (variant: VariantFlags) => variant.isMinimal ? '🎯' : '🎉';
+
+// =====================================
+// Subcomponentes (memoizados onde útil)
+// =====================================
+interface CelebrationHeaderProps {
+  displayName: string;
+  styleLabel: string;
+  styleInfo: any;
+  variant: VariantFlags;
+}
+const CelebrationHeader = memo(({ displayName, styleLabel, styleInfo, variant }: CelebrationHeaderProps) => {
+  return (
+    <div className={cn('text-center', variantGapY(variant))}>
+      <div className="flex items-center justify-center mb-2">
+        <div className={cn('mr-2 text-3xl')}>{variantCelebrationEmoji(variant)}</div>
+        <h1 className={cn('font-bold text-[#432818]', variantTitleSize(variant))}>
+          Parabéns! Descobrimos o seu Estilo Pessoal
+        </h1>
+      </div>
+      {displayName && !variant.isMinimal && (
+        <p className={cn('text-[#6B4F43]', variant.isCompact ? 'text-base' : 'text-lg')}>
+          Olá, <span className="font-semibold text-[#432818]">{displayName}</span>! ✨
+        </p>
+      )}
+      {styleLabel && (
+        <div className={cn(
+          'rounded-2xl p-4 md:p-6',
+          'bg-gradient-to-r from-[#B89B7A]/10 to-[#aa6b5d]/10',
+          variant.isMinimal && 'p-3'
+        )}>
+          <h2 className={cn('font-bold text-[#432818] mb-1', variant.isMinimal ? 'text-lg' : 'text-2xl')}>
+            Estilo Predominante: <span className="text-[#B89B7A]">{styleLabel}</span>
+          </h2>
+          {!variant.isMinimal && (styleInfo as any)?.category && (
+            <p className="text-[#6B4F43] text-sm">{(styleInfo as any).category}</p>
+          )}
+        </div>
+      )}
+    </div>
+  );
+});
+CelebrationHeader.displayName = 'CelebrationHeader';
+
+interface ProgressSectionProps {
+  title: string;
+  subtitle: string;
+  vars: Record<string, any>;
+  displayPercentage: number;
+  progressColor: string;
+  styleLabel: string;
+  displayName: string;
+  alignClass: string;
+  onChange: (k: string, v: any) => void;
+  variant: VariantFlags;
+}
+const ProgressSection = ({ title, subtitle, vars, displayPercentage, progressColor, styleLabel, displayName, alignClass, onChange, variant }: ProgressSectionProps) => (
+  <div className={cn('mb-6', alignClass)}>
+    <div className={cn('mx-auto', variant.isMinimal ? 'max-w-sm' : 'max-w-md', variant.isMinimal ? 'mb-4' : 'mb-6')}>
+      <div className={cn('flex justify-between items-center', variant.isMinimal ? 'mb-1' : 'mb-2')}>
+        <span className={cn('text-[#8F7A6A]', variant.isMinimal ? 'text-xs' : 'text-sm')}>
+          <InlineEditableText
+            value={interpolate(title, vars)}
+            onChange={value => onChange('title', value)}
+            placeholder="Título do resultado"
+            className={cn(variant.isMinimal ? 'text-xs' : 'text-sm', 'text-[#8F7A6A]')}
+          />
+        </span>
+        <span
+          className={cn('text-[#aa6b5d] font-medium cursor-pointer', variant.isMinimal ? 'text-xs' : 'text-sm')}
+          onClick={() => {
+            const newPercentage = prompt('Nova porcentagem (0-100):', String(displayPercentage));
+            if (newPercentage !== null && !isNaN(Number(newPercentage))) {
+              onChange('percentage', Math.max(0, Math.min(100, Number(newPercentage))));
+            }
+          }}
+        >
+          {displayPercentage}%
+        </span>
+      </div>
+      {styleLabel && (
+        <div className={cn('font-semibold text-[#432818] mb-1', variant.isMinimal ? 'text-sm' : 'text-base')}>
+          Compatibilidade: {displayPercentage}%
+          {displayName ? (
+            <span className="ml-1 text-[#6B4F43] font-normal">• {vars.userName}</span>
+          ) : null}
+        </div>
+      )}
+      <Progress
+        value={displayPercentage}
+        className={cn('bg-[#F3E8E6] rounded-full', variant.isMinimal ? 'h-2' : 'h-3')}
+        style={{ '--progress-color': progressColor } as React.CSSProperties}
+      />
+    </div>
+    {subtitle && !variant.isMinimal && (
+      <div className={cn('mt-2 text-[#432818] font-semibold', alignClass)}>
+        <InlineEditableText
+          value={interpolate(subtitle, vars)}
+          onChange={value => onChange('subtitle', value)}
+          placeholder="Subtítulo do resultado"
+          className="text-[#432818]"
+        />
+      </div>
+    )}
+  </div>
+);
+
+interface StyleImageProps {
+  imageUrl: string;
+  fallbackText: string;
+  label?: string;
+  onClick?: () => void;
+  onError: (e: any) => void;
+  width?: string | number;
+  height?: string | number;
+  variant: VariantFlags;
+}
+const StyleImage = ({ imageUrl, fallbackText, label, onClick, onError, width, height, variant }: StyleImageProps) => (
+  <div className="text-center">
+    {label && <h3 className={cn('font-semibold text-[#432818] mb-3', variant.isMinimal ? 'text-base' : 'text-lg')}>{label}</h3>}
+    <div className="relative">
+      <img
+        src={imageUrl}
+        alt={label || 'Imagem'}
+        className={cn(
+          'w-full h-auto rounded-xl shadow-lg transition-transform duration-300 cursor-pointer object-cover',
+          !variant.isMinimal && 'hover:scale-105'
+        )}
+        onClick={onClick}
+        onError={onError}
+        style={{
+          ...(width ? { maxWidth: typeof width === 'number' ? `${width}px` : width } : {}),
+          ...(height ? { maxHeight: typeof height === 'number' ? `${height}px` : height } : {}),
+        }}
+      />
+      {!variant.isMinimal && (
+        <>
+          <div className="absolute -top-2 -right-2 w-8 h-8 border-t-2 border-r-2 border-[#B89B7A]" />
+          <div className="absolute -bottom-2 -left-2 w-8 h-8 border-b-2 border-l-2 border-[#B89B7A]" />
+        </>
+      )}
+    </div>
+  </div>
+);
+
+interface DescriptionSectionProps {
+  description: string;
+  vars: Record<string, any>;
+  styleLabel: string;
+  onChange: (k: string, v: any) => void;
+  variant: VariantFlags;
+}
+const DescriptionSection = ({ description, vars, styleLabel, onChange, variant }: DescriptionSectionProps) => (
+  <div>
+    <h3 className={cn('font-semibold text-[#432818] mb-3', variant.isMinimal ? 'text-base' : 'text-lg')}>Sua Personalidade Estilística</h3>
+    <p className={cn('text-[#432818] leading-relaxed', variant.isMinimal && 'text-sm')}>
+      <InlineEditableText
+        value={sanitizeStyleMentions(interpolate(description, vars), styleLabel)}
+        onChange={value => onChange('description', value)}
+        placeholder="Descrição do estilo predominante..."
+        className={cn('text-[#432818] leading-relaxed', variant.isMinimal && 'text-sm')}
+        multiline
+      />
+    </p>
+  </div>
+);
+
+interface GuideSectionProps {
+  guideImageUrl: string;
+  badgeText: string;
+  variant: VariantFlags;
+  onChange: (k: string, v: any) => void;
+  onError: (e: any) => void;
+}
+const GuideSection = ({ guideImageUrl, badgeText, variant, onChange, onError }: GuideSectionProps) => (
+  <div className="mt-8">
+    <h3 className={cn('font-semibold text-[#432818] mb-4 text-center', variant.isMinimal ? 'text-base' : 'text-lg')}>Guia de Aplicação do Seu Estilo</h3>
+    <div className="max-w-2xl mx-auto relative">
+      <img
+        src={guideImageUrl}
+        alt="Guia de Estilo"
+        className="w-full h-auto rounded-xl shadow-lg hover:scale-105 transition-transform duration-300 cursor-pointer"
+        onClick={() => {
+          const newUrl = prompt('Nova URL da imagem do guia:', guideImageUrl);
+          if (newUrl !== null) onChange('guideImageUrl', newUrl);
+        }}
+        onError={onError}
+      />
+      {!variant.isMinimal && (
+        <div
+          className="absolute -top-4 -right-4 bg-gradient-to-r from-[#B89B7A] to-[#aa6b5d] text-white px-4 py-2 rounded-full shadow-lg text-sm font-medium transform rotate-12 cursor-pointer"
+          onClick={() => {
+            const newBadge = prompt('Novo texto do badge:', badgeText);
+            if (newBadge !== null) onChange('badgeText', newBadge);
+          }}
+        >
+          {badgeText}
+        </div>
+      )}
+    </div>
+  </div>
+);
+
+interface TipsSectionProps {
+  styleLabel: string;
+  styleInfo: any;
+  variant: VariantFlags;
+}
+const TipsSection = ({ styleLabel, styleInfo, variant }: TipsSectionProps) => {
+  if (!styleInfo || !(styleInfo as any).specialTips || !(styleInfo as any).specialTips.length) return null;
+  if (variant.isMinimal) return null; // minimal não mostra dicas
+  return (
+    <div className="mt-8">
+      <SpecialTipsCard
+        styleName={styleLabel}
+        tips={(styleInfo as any).specialTips}
+        title="💎 Dicas Especiais para Seu Estilo"
+        accentColor="text-[#B89B7A]"
+        className="border-[#B89B7A]/20"
+      />
+    </div>
+  );
+};
+
+// Componente CTACard (faltava no original)
+interface CTACardProps {
+  styleLabel: string;
+  variant: VariantFlags;
+}
+const CTACard = ({ styleLabel, variant }: CTACardProps) => {
+  if (variant.isMinimal) return null;
+  return (
+    <div className="mt-8 bg-[#F3E8E6] rounded-xl p-6 text-center">
+      <h3 className="font-semibold text-[#432818] mb-3">Aproveite seu Estilo {styleLabel}</h3>
+      <p className="text-[#6B4F43] mb-4">Veja mais opções e recomendações personalizadas para seu estilo único.</p>
+      <button className="bg-gradient-to-r from-[#B89B7A] to-[#aa6b5d] text-white px-6 py-3 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 font-medium">
+        Ver Recomendações
+      </button>
+    </div>
+  );
+};
+
+// Componente principal corrigido
+interface ResultHeaderInlineBlockProps extends BlockComponentProps {
+  className?: string;
+  isSelected?: boolean;
+}
+
+const ResultHeaderInlineBlock = ({ 
+  block, 
+  onPropertyChange, 
+  className = '', 
+  isSelected = false 
+}: ResultHeaderInlineBlockProps) => {
   const [imageError, setImageError] = useState(false);
   const [guideImageError, setGuideImageError] = useState(false);
-
-  // ✅ CORREÇÃO CRÍTICA: Estados de loading, erro e retry
-  if (isLoading) {
-    return (
-      <div className={cn("text-center p-8", className)}>
-        <div className="animate-pulse space-y-4">
-          <div className="h-8 bg-gray-200 rounded w-3/4 mx-auto"></div>
-          <div className="h-4 bg-gray-200 rounded w-1/2 mx-auto"></div>
-          <div className="h-32 bg-gray-200 rounded mx-auto w-64"></div>
-        </div>
-        <p className="text-sm text-gray-500 mt-4">Calculando seu resultado...</p>
-      </div>
-    );
-  }
-
+  const { primaryStyle, secondaryStyles, hasResult, error, retry } = useQuizResult(block);
+  
   if (error) {
     return (
       <div className={cn("text-center p-8", className)}>
@@ -80,15 +325,14 @@ const ResultHeaderInlineBlock: React.FC<BlockComponentProps> = ({
 
   // Capturar nome de forma robusta (incluindo UnifiedQuizStorage) e sanitizar para exibição
   const storedName = getBestUserName(block);
-  const normalizeName = (name?: string) => {
-    const s = (name || '').trim();
+  const displayName = useMemo(() => {
+    const s = (storedName || '').trim();
     if (s.length <= 1) return '';
     return s
       .split(/\s+/)
       .map(w => (w ? w.charAt(0).toUpperCase() + w.slice(1) : w))
       .join(' ');
-  };
-  const displayName = normalizeName(storedName);
+  }, [storedName]);
 
   const {
     title = 'Seu Estilo Predominante',
@@ -118,6 +362,7 @@ const ResultHeaderInlineBlock: React.FC<BlockComponentProps> = ({
     spacing = 'normal', // 'small' | 'normal' | 'large'
     marginTop = 0,
     marginBottom = 0,
+    mobileVariant = 'stack', // variantes: stack | compact | minimal
   } = block?.properties || {};
 
   // Compatibilidade: aceitar styleGuideImageUrl do template
@@ -147,7 +392,13 @@ const ResultHeaderInlineBlock: React.FC<BlockComponentProps> = ({
     ? effectivePercentage
     : 0;
 
-  // Defaults vindos do styleConfig, quando props do bloco estiverem ausentes
+  // Flags de variante
+  const variant: VariantFlags = useMemo(() => ({
+    isCompact: mobileVariant === 'compact',
+    isMinimal: mobileVariant === 'minimal'
+  }), [mobileVariant]);
+
+  // Defaults vindos de configuração de estilo
   const styleInfo = getStyleConfig(styleLabel) || {};
   const effectiveImageUrl = imageUrl || (styleInfo as any)?.image || safeStylePlaceholder(styleLabel, 238, 320);
   const effectiveGuideImageUrl = guideImageUrl || (styleInfo as any)?.guideImage || safePlaceholder(540, 300, 'Guia de Estilo');
@@ -156,28 +407,9 @@ const ResultHeaderInlineBlock: React.FC<BlockComponentProps> = ({
     : ((styleInfo as any)?.description || description || 'Descrição não disponível');
 
   const handlePropertyChange = (key: string, value: any) => {
-    if (onPropertyChange) {
-      onPropertyChange(key, value);
-    }
+    if (onPropertyChange) onPropertyChange(key, value);
   };
-
   const alignClass = textAlign === 'left' ? 'text-left' : textAlign === 'right' ? 'text-right' : 'text-center';
-
-  // Compat: classes/estilo para faixa de header simples (se logoUrl estiver presente)
-  const legacyContainerClasses = (() => {
-    const widthCls = containerWidth === 'small' ? 'max-w-sm' : containerWidth === 'medium' ? 'max-w-md' : containerWidth === 'large' ? 'max-w-lg' : 'max-w-full';
-    const padCls = spacing === 'small' ? 'py-2' : spacing === 'large' ? 'py-6' : 'py-4';
-    const mtCls = marginTop <= 0 ? 'mt-0' : marginTop <= 8 ? 'mt-2' : marginTop <= 16 ? 'mt-4' : marginTop <= 24 ? 'mt-6' : 'mt-8';
-    const mbCls = marginBottom <= 0 ? 'mb-0' : marginBottom <= 8 ? 'mb-2' : marginBottom <= 16 ? 'mb-4' : marginBottom <= 24 ? 'mb-6' : 'mb-8';
-    return cn('w-full mx-auto', widthCls, padCls, mtCls, mbCls);
-  })();
-
-  const legacyHeaderStyle: React.CSSProperties = (() => {
-    const style: React.CSSProperties = {};
-    if (backgroundColor) style.backgroundColor = backgroundColor as any;
-    if (showBorder && borderColor) Object.assign(style, { borderColor, borderWidth: '1px', borderStyle: 'solid' });
-    return style;
-  })();
 
   return (
     <div
@@ -190,224 +422,75 @@ const ResultHeaderInlineBlock: React.FC<BlockComponentProps> = ({
       )}
       style={{ backgroundColor }}
     >
-      {/* Faixa de header simples (compat) */}
-      {logoUrl && (
-        <div className={legacyContainerClasses} style={legacyHeaderStyle}>
-          <div className="flex items-center justify-between gap-4">
-            <img
-              src={logoUrl}
-              alt={logoAlt}
-              style={{ height: typeof logoHeight === 'number' ? `${logoHeight}px` : logoHeight, width: logoWidth as any }}
-              className="object-contain"
-            />
-            {showUserName && storedName && (
-              <div className="text-sm text-[#432818]">{storedName}</div>
-            )}
-          </div>
-        </div>
-      )}
-
       <Card
-        className={cn('p-6 shadow-md border border-[#B89B7A]/20', alignClass)}
+        className={cn('shadow-md border border-[#B89B7A]/20', alignClass, variantPadding(variant))}
         style={{ backgroundColor: backgroundColor ? backgroundColor : undefined }}
       >
-        {/* ✅ NOVA SEÇÃO: Cabeçalho Comemorativo */}
-        <div className={cn('mb-8 text-center')}>
-          <div className="flex items-center justify-center mb-4">
-            <div className="text-3xl mr-2">🎉</div>
-            <h1 className="text-2xl font-bold text-[#432818]">
-              Parabéns! Descobrimos o seu Estilo Pessoal
-            </h1>
-          </div>
-
-          {displayName && (
-            <p className="text-lg text-[#6B4F43] mb-4">
-              Olá, <span className="font-semibold text-[#432818]">{displayName}</span>! ✨
-            </p>
-          )}
-
-          {/* Estilo Predominante em Destaque */}
-          {styleLabel && (
-            <div className="bg-gradient-to-r from-[#B89B7A]/10 to-[#aa6b5d]/10 rounded-2xl p-6 mb-6">
-              <h2 className="text-2xl font-bold text-[#432818] mb-2">
-                Estilo Predominante: <span className="text-[#B89B7A]">{styleLabel}</span>
-              </h2>
-              {(styleInfo as any)?.category && (
-                <p className="text-[#6B4F43] text-sm">{(styleInfo as any).category}</p>
-              )}
-            </div>
-          )}
-        </div>
-
-        <div className={cn('mb-8', alignClass)}>
-          <div className="max-w-md mx-auto mb-6">
-            <div className="flex justify-between items-center mb-2">
-              <span className="text-sm text-[#8F7A6A]">
-                <InlineEditableText
-                  value={interpolate(title, vars)}
-                  onChange={value => handlePropertyChange('title', value)}
-                  placeholder="Título do resultado"
-                  className="text-sm text-[#8F7A6A]"
-                />
-              </span>
-              <span
-                className="text-[#aa6b5d] font-medium cursor-pointer"
-                onClick={() => {
-                  const newPercentage = prompt('Nova porcentagem (0-100):', String(displayPercentage));
-                  if (newPercentage !== null && !isNaN(Number(newPercentage))) {
-                    handlePropertyChange(
-                      'percentage',
-                      Math.max(0, Math.min(100, Number(newPercentage)))
-                    );
-                  }
-                }}
-              >
-                {displayPercentage}%
-              </span>
-            </div>
-            {/* Mostrar o nome do estilo atual quando disponível */}
-            {styleLabel && (
-              <div className="text-base font-semibold text-[#432818] mb-2">
-                Compatibilidade: {displayPercentage}%
-                {displayName ? (
-                  <span className="ml-1 text-[#6B4F43] font-normal">• {vars.userName}</span>
-                ) : null}
-              </div>
-            )}
-            <Progress
-              value={displayPercentage}
-              className="h-3 bg-[#F3E8E6] rounded-full"
-              style={{
-                '--progress-color': progressColor,
-              } as React.CSSProperties}
-            />
-          </div>
-          {/* Subtítulo opcional com variáveis interpoladas */}
-          {subtitle && (
-            <div className={cn('mt-2 text-[#432818] font-semibold', alignClass)}>
-              <InlineEditableText
-                value={interpolate(subtitle, vars)}
-                onChange={value => handlePropertyChange('subtitle', value)}
-                placeholder="Subtítulo do resultado"
-                className="text-[#432818]"
-              />
-            </div>
-          )}
-        </div>
-        <div className="grid md:grid-cols-2 gap-8 items-center">
-          {/* Seção da Imagem do Estilo */}
-          <div className="text-center">
-            <h3 className="text-lg font-semibold text-[#432818] mb-4">Seu Estilo</h3>
-            <div className="relative">
-              <img
-                src={imageError ? safePlaceholder(300, 400, 'Imagem indisponível') : effectiveImageUrl}
-                alt="Estilo"
-                className="w-full h-auto rounded-xl shadow-lg hover:scale-105 transition-transform duration-300 cursor-pointer"
-                onClick={() => {
-                  const newUrl = prompt('Nova URL da imagem:', effectiveImageUrl);
-                  if (newUrl !== null) handlePropertyChange('imageUrl', newUrl);
-                }}
-                onError={(e) => {
-                  if (!imageError) {
-                    setImageError(true);
-                    try { (e.currentTarget as HTMLImageElement).src = safePlaceholder(300, 400, 'Imagem indisponível'); } catch { }
-                  }
-                }}
-                style={{
-                  ...(imageWidth ? { maxWidth: typeof imageWidth === 'number' ? `${imageWidth}px` : imageWidth } : {}),
-                  ...(imageHeight ? { maxHeight: typeof imageHeight === 'number' ? `${imageHeight}px` : imageHeight } : {}),
-                }}
-              />
-              {/* Cantos decorativos */}
-              <div className="absolute -top-2 -right-2 w-8 h-8 border-t-2 border-r-2 border-[#B89B7A]"></div>
-              <div className="absolute -bottom-2 -left-2 w-8 h-8 border-b-2 border-l-2 border-[#B89B7A]"></div>
-            </div>
-          </div>
-
-          {/* Seção da Descrição */}
-          <div className="space-y-6">
-            <div>
-              <h3 className="text-lg font-semibold text-[#432818] mb-4">Sua Personalidade Estilística</h3>
-              <p className="text-[#432818] leading-relaxed">
-                <InlineEditableText
-                  value={sanitizeStyleMentions(interpolate(effectiveDescription, vars), styleLabel)}
-                  onChange={value => handlePropertyChange('description', value)}
-                  placeholder="Descrição do estilo predominante..."
-                  className="text-[#432818] leading-relaxed"
-                  multiline
-                />
-              </p>
-            </div>
-          </div>
-        </div>
-        {showBothImages && (
-          <div className="mt-8">
-            <h3 className="text-lg font-semibold text-[#432818] mb-4 text-center">Guia de Aplicação do Seu Estilo</h3>
-            <div className="max-w-2xl mx-auto relative">
-              <img
-                src={guideImageError ? safePlaceholder(600, 400, 'Guia indisponível') : effectiveGuideImageUrl}
-                alt="Guia de Estilo"
-                className="w-full h-auto rounded-xl shadow-lg hover:scale-105 transition-transform duration-300 cursor-pointer"
-                onClick={() => {
-                  const newUrl = prompt('Nova URL da imagem do guia:', effectiveGuideImageUrl);
-                  if (newUrl !== null) handlePropertyChange('guideImageUrl', newUrl);
-                }}
-                onError={(e) => {
-                  if (!guideImageError) {
-                    setGuideImageError(true);
-                    try { (e.currentTarget as HTMLImageElement).src = safePlaceholder(600, 400, 'Guia indisponível'); } catch { }
-                  }
-                }}
-              />
-              {/* Badge */}
-              <div
-                className="absolute -top-4 -right-4 bg-gradient-to-r from-[#B89B7A] to-[#aa6b5d] text-white px-4 py-2 rounded-full shadow-lg text-sm font-medium transform rotate-12 cursor-pointer"
-                onClick={() => {
-                  const newBadge = prompt('Novo texto do badge:', badgeText);
-                  if (newBadge !== null) handlePropertyChange('badgeText', newBadge);
-                }}
-              >
-                {badgeText}
-              </div>
-            </div>
-          </div>
+        {!variant.isMinimal && (
+          <CelebrationHeader
+            displayName={displayName}
+            styleLabel={styleLabel}
+            styleInfo={styleInfo}
+            variant={variant}
+          />
         )}
-
-        {/* ✅ NOVA SEÇÃO: Dicas Especiais */}
-        {showSpecialTips && styleInfo && (styleInfo as any).specialTips && (styleInfo as any).specialTips.length > 0 && (
-          <div className="mt-8">
-            <SpecialTipsCard
-              styleName={styleLabel}
-              tips={(styleInfo as any).specialTips}
-              title="💎 Dicas Especiais para Seu Estilo"
-              accentColor="text-[#B89B7A]"
-              className="border-[#B89B7A]/20"
-            />
-          </div>
-        )}
-
-        {/* ✅ NOVA SEÇÃO: CTA Estratégico */}
-        <div className="mt-8 text-center">
-          <div className="bg-gradient-to-br from-[#B89B7A]/10 to-[#aa6b5d]/10 rounded-2xl p-6">
-            <h3 className="text-lg font-bold text-[#432818] mb-3">
-              Pronto para Transformar Sua Imagem?
-            </h3>
-            <p className="text-[#6B4F43] mb-4 text-sm">
-              Agora que você conhece seu estilo {styleLabel}, descubra como aplicá-lo no seu dia a dia.
-            </p>
-
-            <button
-              onClick={() => {
-                // Navegação para próxima etapa ou abertura de link externo
-                const ctaUrl = "https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912";
-                window.open(ctaUrl, '_blank');
-              }}
-              className="bg-gradient-to-r from-[#B89B7A] to-[#aa6b5d] text-white px-6 py-3 text-sm font-semibold rounded-xl shadow-lg hover:from-[#A08966] hover:to-[#9A5A4D] transition-all duration-300 hover:scale-105"
-            >
-              👉 Quero Aprimorar Meu Estilo
-            </button>
-          </div>
+        <ProgressSection
+          title={title}
+          subtitle={subtitle}
+          vars={vars}
+          displayPercentage={displayPercentage}
+          progressColor={progressColor}
+          styleLabel={styleLabel}
+          displayName={displayName}
+          alignClass={alignClass}
+          onChange={handlePropertyChange}
+          variant={variant}
+        />
+        <div className={cn('grid items-start', variant.isMinimal ? 'gap-6' : 'gap-8', 'md:grid-cols-2')}>
+          <StyleImage
+            imageUrl={imageError ? safePlaceholder(300, 400, 'Imagem indisponível') : effectiveImageUrl}
+            fallbackText="Imagem indisponível"
+            label={variant.isMinimal ? undefined : 'Seu Estilo'}
+            onClick={() => {
+              const newUrl = prompt('Nova URL da imagem:', effectiveImageUrl);
+              if (newUrl !== null) handlePropertyChange('imageUrl', newUrl);
+            }}
+            onError={(e) => {
+              if (!imageError) {
+                setImageError(true);
+                try { (e.currentTarget as HTMLImageElement).src = safePlaceholder(300, 400, 'Imagem indisponível'); } catch { }
+              }
+            }}
+            width={imageWidth}
+            height={imageHeight}
+            variant={variant}
+          />
+          <DescriptionSection
+            description={effectiveDescription}
+            vars={vars}
+            styleLabel={styleLabel}
+            onChange={handlePropertyChange}
+            variant={variant}
+          />
         </div>
+        {(showBothImages && !variant.isMinimal) && (
+          <GuideSection
+            guideImageUrl={guideImageError ? safePlaceholder(600, 400, 'Guia indisponível') : effectiveGuideImageUrl}
+            badgeText={badgeText}
+            variant={variant}
+            onChange={handlePropertyChange}
+            onError={(e) => {
+              if (!guideImageError) {
+                setGuideImageError(true);
+                try { (e.currentTarget as HTMLImageElement).src = safePlaceholder(600, 400, 'Guia indisponível'); } catch { }
+              }
+            }}
+          />
+        )}
+        {showSpecialTips && (
+          <TipsSection styleLabel={styleLabel} styleInfo={styleInfo} variant={variant} />
+        )}
+        <CTACard styleLabel={styleLabel} variant={variant} />
       </Card>
     </div>
   );
