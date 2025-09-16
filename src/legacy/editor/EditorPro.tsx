@@ -5,7 +5,7 @@ import React, { useCallback, useMemo, useRef, useState, useEffect, Suspense } fr
 import { useNotification } from '@/components/ui/Notification';
 import { Block } from '@/types/editor';
 import { HeadlessEditorProvider } from '@/core/editor/HeadlessEditorProvider';
-import { DynamicPropertiesPanel } from '@/core/editor/DynamicPropertiesPanel';
+import { SinglePropertiesPanel } from '@/components/editor/properties/SinglePropertiesPanel';
 // drag/drop utils usados dentro do hook dedicado
 import { createBlockFromComponent, devLog } from '@/utils/editorUtils';
 import { getBlocksForStep } from '@/config/quizStepsComplete';
@@ -797,7 +797,28 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
   }, [actions, currentStepData, currentStepKey]);
 
   const MemoPropertiesPanel = React.memo(() => {
-    return <DynamicPropertiesPanel />;
+    const selectedBlock = currentStepData.find((block: Block) => block.id === (editorContext as any).state.selectedBlockId);
+    
+    return (
+      <SinglePropertiesPanel
+        selectedBlock={selectedBlock || null}
+        onUpdate={(updates) => {
+          if (selectedBlock) {
+            actions.updateBlock(currentStepKey, selectedBlock.id, updates);
+          }
+        }}
+        onDelete={() => {
+          if (selectedBlock) {
+            actions.removeBlock(currentStepKey, selectedBlock.id);
+          }
+        }}
+        onDuplicate={() => {
+          if (selectedBlock) {
+            handleDuplicateSelected();
+          }
+        }}
+      />
+    );
   });
 
   return (
