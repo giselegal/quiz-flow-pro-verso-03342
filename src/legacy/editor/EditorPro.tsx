@@ -4,6 +4,8 @@ import React, { useCallback, useMemo, useRef, useState, useEffect, Suspense } fr
 // import { sortableKeyboardCoordinates } from '@dnd-kit/sortable';
 import { useNotification } from '@/components/ui/Notification';
 import { Block } from '@/types/editor';
+import { HeadlessEditorProvider } from '@/core/editor/HeadlessEditorProvider';
+import { DynamicPropertiesPanel } from '@/core/editor/DynamicPropertiesPanel';
 // drag/drop utils usados dentro do hook dedicado
 import { createBlockFromComponent, devLog } from '@/utils/editorUtils';
 import { getBlocksForStep } from '@/config/quizStepsComplete';
@@ -34,7 +36,6 @@ import { useEditorDragAndDrop } from '@/hooks/editor/useEditorDragAndDrop';
 // );
 const StepSidebar = React.lazy(() => import('@/components/editor/sidebars/StepSidebar'));
 const ComponentsSidebar = React.lazy(() => import('@/components/editor/sidebars/ComponentsSidebar'));
-const PropertiesColumn = React.lazy(() => import('@/components/editor/properties/PropertiesColumn'));
 
 // Lazy loading dos componentes pesados (mantidos em arquivo modular index.tsx)
 
@@ -795,26 +796,12 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
     actions.updateBlock(currentStepKey, selectedBlock.id, { properties: {} });
   }, [actions, currentStepData, currentStepKey]);
 
-  const MemoPropertiesColumn = React.memo(() => {
-    const selectedBlock = currentStepData.find((block: Block) => block.id === (editorContext as any).state.selectedBlockId);
-    return (
-      <PropertiesColumn
-        selectedBlock={selectedBlock as any}
-        onUpdate={(updates: Record<string, any>) =>
-          selectedBlock ? actions.updateBlock(currentStepKey, selectedBlock.id, updates) : undefined
-        }
-        onClose={() => actions.setSelectedBlockId(null)}
-        onDelete={() => selectedBlock ? actions.removeBlock(currentStepKey, selectedBlock.id) : undefined}
-        onDuplicate={handleDuplicateSelected}
-        onReset={handleResetSelected}
-        previewMode={previewDevice}
-        onPreviewModeChange={setPreviewDevice}
-      />
-    );
+  const MemoPropertiesPanel = React.memo(() => {
+    return <DynamicPropertiesPanel />;
   });
 
   return (
-    <>
+    <HeadlessEditorProvider>
       {/* 🎯 Cabeçalho do Funil */}
       <FunnelHeader
         viewportMode={previewDevice}
@@ -889,7 +876,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
               </div>
               <div className="mobile-overlay-content">
                 <Suspense fallback={<div className="p-4">Properties…</div>}>
-                  <MemoPropertiesColumn />
+                  <MemoPropertiesPanel />
                 </Suspense>
               </div>
             </div>
@@ -925,14 +912,14 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
           </div>
 
           {/* DESKTOP LAYOUT - Hidden on mobile */}
-          <ResizablePanelGroup 
-            direction="horizontal" 
+          <ResizablePanelGroup
+            direction="horizontal"
             className="hidden lg:flex w-full h-full min-h-0"
           >
             {/* 1) Etapas - Resizable width */}
-            <ResizablePanel 
-              defaultSize={18} 
-              minSize={12} 
+            <ResizablePanel
+              defaultSize={18}
+              minSize={12}
               maxSize={25}
               className="min-w-0 min-h-0"
             >
@@ -951,16 +938,16 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
                 </Suspense>
               </div>
             </ResizablePanel>
-            
-            <ResizableHandle 
-              withHandle 
+
+            <ResizableHandle
+              withHandle
               className="w-2 bg-border hover:bg-primary/50 transition-colors cursor-col-resize flex items-center justify-center group relative"
             />
 
             {/* 2) Componentes - Resizable width */}
-            <ResizablePanel 
-              defaultSize={22} 
-              minSize={15} 
+            <ResizablePanel
+              defaultSize={22}
+              minSize={15}
               maxSize={45}
               className="min-w-0 min-h-0"
             >
@@ -975,15 +962,15 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
               </div>
             </ResizablePanel>
 
-            <ResizableHandle 
-              withHandle 
+            <ResizableHandle
+              withHandle
               className="w-2 bg-border hover:bg-primary/50 transition-colors cursor-col-resize flex items-center justify-center group relative"
             />
 
             {/* 3) Canvas - Flexible main area */}
-            <ResizablePanel 
-              defaultSize={40} 
-              minSize={25} 
+            <ResizablePanel
+              defaultSize={40}
+              minSize={25}
               maxSize={65}
               className="min-w-0 min-h-0"
             >
@@ -1007,20 +994,20 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
               />
             </ResizablePanel>
 
-            <ResizableHandle 
-              withHandle 
+            <ResizableHandle
+              withHandle
               className="w-2 bg-border hover:bg-primary/50 transition-colors cursor-col-resize flex items-center justify-center group relative"
             />
 
             {/* 4) Propriedades - Resizable width */}
-            <ResizablePanel 
-              defaultSize={20} 
-              minSize={15} 
+            <ResizablePanel
+              defaultSize={20}
+              minSize={15}
               maxSize={35}
               className="min-w-0 min-h-0"
             >
               <Suspense fallback={<div className="p-4 bg-gray-900 border-l border-gray-800/50">Properties…</div>}>
-                <MemoPropertiesColumn />
+                <MemoPropertiesPanel />
               </Suspense>
             </ResizablePanel>
           </ResizablePanelGroup>
@@ -1029,7 +1016,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
 
       {NotificationContainer ? <NotificationContainer /> : null}
       {mark('EditorPro:render:end')}
-    </>
+    </HeadlessEditorProvider>
   );
 };
 

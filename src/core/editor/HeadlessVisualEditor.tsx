@@ -6,12 +6,26 @@ import { InstantPublishingSystem } from './InstantPublishingSystem';
 
 type EditorView = 'canvas' | 'preview' | 'publish';
 
-export const HeadlessVisualEditor: React.FC = () => {
+interface HeadlessVisualEditorProps {
+  funnelId?: string;
+  templateId?: string;
+}
+
+export const HeadlessVisualEditor: React.FC<HeadlessVisualEditorProps> = ({
+  funnelId,
+  templateId
+}) => {
   const [activeView, setActiveView] = useState<EditorView>('canvas');
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
+  console.log('🎯 HeadlessVisualEditor inicializado com:', { funnelId, templateId });
+
   return (
-    <HeadlessEditorProvider>
+    <HeadlessEditorProvider
+      schemaId={funnelId || templateId || 'default-template'}
+      autoSave={true}
+      autoSaveInterval={30000}
+    >
       <div className="h-screen flex flex-col bg-gray-50">
         <EditorHeader
           activeView={activeView}
