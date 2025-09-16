@@ -798,7 +798,7 @@ export const EditorPro: React.FC<EditorProProps> = ({ className = '' }) => {
 
   const MemoPropertiesPanel = React.memo(() => {
     const selectedBlock = currentStepData.find((block: Block) => block.id === (editorContext as any).state.selectedBlockId);
-    
+
     return (
       <SinglePropertiesPanel
         selectedBlock={selectedBlock || null}
