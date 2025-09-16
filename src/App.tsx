@@ -14,7 +14,7 @@ const ComQueRoupaEuVouPage = lazy(() => import('./pages/ComQueRoupaEuVouPage'));
 const Home = lazy(() => import('./pages/Home'));
 const AuthPage = lazy(() => import('./pages/AuthPage'));
 // 🏗️ EDITOR PRINCIPAL PROFISSIONAL
-const MainEditor = lazy(() => import('./pages/MainEditor'));
+const MainEditor = lazy(() => import('./pages/MainEditorUnified'));
 // 🚀 NOVO: Editor Visual Headless
 const HeadlessVisualEditor = lazy(() => import('./core/editor/HeadlessVisualEditor'));
 const DashboardPage = lazy(() => import('./pages/admin/DashboardPage'));
