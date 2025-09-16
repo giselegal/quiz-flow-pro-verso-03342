@@ -2,7 +2,7 @@ import React from 'react';
 import { ErrorBoundary } from '@/components/editor/ErrorBoundary';
 import { EditorProvider } from '@/components/editor/EditorProvider';
 import { FunnelsProvider } from '@/context/FunnelsContext';
-import { EditorPro } from '@/legacy/editor/EditorPro';
+import { EditorPhaseTwoPro } from '@/components/editor/EditorPhaseTwoPro';
 
 /**
  * 🎯 MAIN EDITOR - ESTRUTURA ROBUSTA E PROFISSIONAL
@@ -42,7 +42,7 @@ const MainEditor: React.FC = () => {
               databaseMode: 'supabase'
             }}
           >
-            <EditorPro className="h-full w-full" />
+            <EditorPhaseTwoPro className="h-full w-full" />
           </EditorProvider>
         </FunnelsProvider>
       </ErrorBoundary>

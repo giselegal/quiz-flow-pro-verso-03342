@@ -68,16 +68,33 @@ export const useEditorSupabaseIntegration = (
     }
   }, [editorSupabase, funnelId, quizId, loadSupabaseComponents]);
 
+  // 🔧 CORREÇÃO CRÍTICA: Type guard para stepKey
+  const normalizeStepKey = (key: any): string => {
+    if (typeof key === 'string') return key;
+    if (typeof key === 'number') return `step-${key}`;
+    return `step-${String(key)}`;
+  };
+
+  const extractStepNumber = (stepKey: any): number => {
+    const normalized = normalizeStepKey(stepKey);
+    const match = normalized.match(/step-(\d+)/);
+    return match ? parseInt(match[1], 10) : 1;
+  };
+
   // Adicionar bloco com update otimista
   const addBlockToStep = useCallback(
-    async (stepKey: string, blockData: Block): Promise<void> => {
+    async (stepKey: string | number, blockData: Block): Promise<void> => {
+      // 🚨 VALIDAÇÃO CRÍTICA: Garantir que stepKey é válido
+      const normalizedStepKey = normalizeStepKey(stepKey);
+      const stepNumber = extractStepNumber(stepKey);
+
       if (!editorSupabase) {
         console.warn('⚠️ Supabase not available, falling back to local mode');
         setState({
           ...rawState,
           stepBlocks: {
             ...rawState.stepBlocks,
-            [stepKey]: [...(rawState.stepBlocks[stepKey] || []), blockData],
+            [normalizedStepKey]: [...(rawState.stepBlocks[normalizedStepKey] || []), blockData],
           },
         });
         return;
@@ -91,14 +108,13 @@ export const useEditorSupabaseIntegration = (
         ...rawState,
         stepBlocks: {
           ...rawState.stepBlocks,
-          [stepKey]: [...(rawState.stepBlocks[stepKey] || []), tempBlock],
+          [normalizedStepKey]: [...(rawState.stepBlocks[normalizedStepKey] || []), tempBlock],
         },
         isLoading: true,
       });
 
       try {
         // 2. Persistir no Supabase
-        const stepNumber = parseInt(stepKey.replace('step-', '')) || 1;
         const supabaseData = mapBlockToSupabaseComponent(blockData, stepNumber, funnelId, quizId);
 
         const created = await editorSupabase.addComponent(
@@ -110,12 +126,12 @@ export const useEditorSupabaseIntegration = (
 
         if (created) {
           // 3. Substituir bloco temporário pelo real do servidor
-          const currentBlocks = rawState.stepBlocks[stepKey] || [];
+          const currentBlocks = rawState.stepBlocks[normalizedStepKey] || [];
           setState({
             ...rawState,
             stepBlocks: {
               ...rawState.stepBlocks,
-              [stepKey]: currentBlocks.map((b: Block) =>
+              [normalizedStepKey]: currentBlocks.map((b: Block) =>
                 b.id === tempId ? { ...blockData, id: created.id } : b
               ),
             },
@@ -129,12 +145,12 @@ export const useEditorSupabaseIntegration = (
         console.error('❌ Erro ao salvar block no Supabase, rollback optimistic update', err);
 
         // 4. Rollback - remover bloco temporário
-        const currentBlocks = rawState.stepBlocks[stepKey] || [];
+        const currentBlocks = rawState.stepBlocks[normalizedStepKey] || [];
         setState({
           ...rawState,
           stepBlocks: {
             ...rawState.stepBlocks,
-            [stepKey]: currentBlocks.filter((b: Block) => b.id !== tempId),
+            [normalizedStepKey]: currentBlocks.filter((b: Block) => b.id !== tempId),
           },
           isLoading: false,
         });

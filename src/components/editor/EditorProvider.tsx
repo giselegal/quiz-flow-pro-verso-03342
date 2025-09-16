@@ -110,13 +110,27 @@ export interface EditorProviderProps {
   enableSupabase?: boolean;
 }
 
-const mapSupabaseRecordToBlock = (c: any): Block => ({
-  id: c.id,
-  type: c.component_type_key || c.type || 'text',
-  order: c.order_index ?? 0,
-  content: c.properties?.content ?? {},
-  properties: c.properties ?? {},
-});
+// 🔧 VALIDAÇÃO ROBUSTA: Type guard para registros do Supabase
+const mapSupabaseRecordToBlock = (c: any): Block => {
+  if (!c || typeof c !== 'object') {
+    console.warn('⚠️ Invalid Supabase record:', c);
+    return {
+      id: `invalid-${Date.now()}`,
+      type: 'text',
+      order: 0,
+      content: {},
+      properties: {},
+    };
+  }
+
+  return {
+    id: String(c.id || `block-${Date.now()}`),
+    type: String(c.component_type_key || c.type || 'text') as any,
+    order: typeof c.order_index === 'number' ? c.order_index : 0,
+    content: (c.properties?.content && typeof c.properties.content === 'object') ? c.properties.content : {},
+    properties: (c.properties && typeof c.properties === 'object') ? c.properties : {},
+  };
+};
 
 const groupByStepKey = (components: any[]): Record<string, Block[]> =>
   components.reduce<Record<string, Block[]>>((acc, comp) => {
