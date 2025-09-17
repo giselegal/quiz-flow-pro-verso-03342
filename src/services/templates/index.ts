@@ -32,32 +32,70 @@
  */
 
 // =============================================
-// DYNAMIC EXPORTS (Para otimização do bundle)
+// MASTER SERVICE (RECOMENDADO)
+// =============================================
+export {
+    masterTemplateService,
+    MasterTemplateService,
+    type UnifiedTemplate,
+    type TemplateStep,
+    type TemplateSource,
+    type TemplateLoadOptions,
+    type TemplateContext
+} from './MasterTemplateService';
+
+// =============================================
+// LEGACY SERVICES (COMPATIBILIDADE)
+// =============================================
+export {
+    // Legacy service adapters
+    unifiedTemplateService,
+    templateLibraryService,
+    funnelTemplateService,
+    contextualFunnelService,
+    funnelComponentsService,
+    funnelDataMigration,
+    funnelUnifiedService,
+
+    // Adapter classes (para casos avançados)
+    UnifiedTemplateServiceAdapter,
+    TemplateLibraryServiceAdapter,
+    FunnelTemplateServiceAdapter,
+    ContextualFunnelServiceAdapter,
+    FunnelComponentsServiceAdapter,
+    FunnelDataMigrationAdapter,
+    FunnelUnifiedServiceAdapter,
+
+    // Migration utilities
+    checkLegacyUsage,
+    migrateExistingTemplates,
+
+    // Legacy type exports
+    type ContextualFunnelData,
+    type FunnelTemplate
+} from './LegacyTemplateAdapters';
+
+// =============================================
+// CONVENIENCE EXPORTS
 // =============================================
 
 /**
- * 🎯 MASTER TEMPLATE SERVICE - Dynamic Export
- * Use this for all new code - loaded on demand
+ * 🎯 QUICK ACCESS - Master Template Service
+ * Use this for all new code
  */
-export async function getMasterTemplateService() {
-    const { masterTemplateService } = await import('./MasterTemplateService');
-    return masterTemplateService;
-}
+export { masterTemplateService as templateService } from './MasterTemplateService';
 
 /**
- * 🎯 MASTER TEMPLATE SERVICE TYPES - Dynamic Export
+ * 🎯 LEGACY SHORTCUTS
+ * @deprecated Use masterTemplateService instead
  */
-export async function getMasterTemplateTypes() {
-    return await import('./MasterTemplateService');
-}
-
-/**
- * 🎯 LEGACY SERVICES - Dynamic Export
- * @deprecated Use getMasterTemplateService() instead
- */
-export async function getLegacyTemplateServices() {
-    return await import('./LegacyTemplateAdapters');
-}
+export {
+    unifiedTemplateService as templateUnified,
+    templateLibraryService as templateLibrary,
+    funnelTemplateService as templateFunnel,
+    contextualFunnelService as templateContextual,
+    funnelComponentsService as templateComponents
+} from './LegacyTemplateAdapters';
 
 // =============================================
 // UTILITY FUNCTIONS
