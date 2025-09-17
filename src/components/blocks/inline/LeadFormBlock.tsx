@@ -43,7 +43,7 @@ const LeadFormBlock: React.FC<LeadFormBlockProps> = ({
   fields = ['name', 'email'],
   submitText = 'Receber Guia Gratuito',
   containerWidth = 'full',
-  spacing = 'small',
+  // spacing = 'small', // Remove unused parameter
   backgroundColor = '#FFFFFF',
   borderColor = '#E5E7EB',
   textColor = '#374151',
@@ -57,10 +57,10 @@ const LeadFormBlock: React.FC<LeadFormBlockProps> = ({
   onSubmitAction = 'show-message',
   redirectUrl = '',
   successMessage = 'Obrigado! Você receberá seu guia por email.',
-  // Mobile-first defaults
-  mobileColumns = 1,
-  tabletColumns = 1,
-  desktopColumns = 1,
+  // Remove unused variables to fix TypeScript warnings
+  // const mobileColumns = responsiveSettings?.mobileColumns || 1;
+  // const tabletColumns = responsiveSettings?.tabletColumns || 2;
+  // const desktopColumns = responsiveSettings?.desktopColumns || 3;
   mobilePadding = 16,
   tabletPadding = 24,
   desktopPadding = 32,
@@ -74,7 +74,7 @@ const LeadFormBlock: React.FC<LeadFormBlockProps> = ({
   const finalFields = blockProps.fields || fields;
   const finalSubmitText = blockProps.submitText || submitText;
   const finalContainerWidth = blockProps.containerWidth || containerWidth;
-  const finalSpacing = blockProps.spacing || spacing;
+  // const finalSpacing = blockProps.spacing || spacing; // Unused
   const finalBackgroundColor = blockProps.backgroundColor || backgroundColor;
   const finalBorderColor = blockProps.borderColor || borderColor;
   const finalTextColor = blockProps.textColor || textColor;
@@ -145,7 +145,7 @@ const LeadFormBlock: React.FC<LeadFormBlockProps> = ({
 
     const newErrors: Record<string, string> = {};
 
-    finalFields.forEach(field => {
+    finalFields.forEach((field: any) => {
       const value = formData[field]?.trim() || '';
 
       if (!value) {
@@ -280,7 +280,7 @@ const LeadFormBlock: React.FC<LeadFormBlockProps> = ({
             // Desktop breakpoint  
             finalFields.length > 4 && 'lg:grid-cols-3'
           )}>
-            {finalFields.map((field, index) => (
+            {finalFields.map((field: any, index: number) => (
               <div key={field} className="space-y-2">
                 <Label
                   htmlFor={field}

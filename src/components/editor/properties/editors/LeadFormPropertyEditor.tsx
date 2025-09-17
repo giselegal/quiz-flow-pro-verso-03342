@@ -125,8 +125,8 @@ export const LeadFormPropertyEditor: React.FC<PropertyEditorProps> = ({
                                             checked={currentFields.includes(field)}
                                             onCheckedChange={checked => {
                                                 const newFields = checked
-                                                    ? [...currentFields, field]
-                                                    : currentFields.filter(f => f !== field);
+                                                     ? [...currentFields, field]
+                                                     : currentFields.filter((f: any) => f !== field);
                                                 handlePropertyChange('fields', newFields);
                                             }}
                                         />
@@ -155,7 +155,7 @@ export const LeadFormPropertyEditor: React.FC<PropertyEditorProps> = ({
                             <Label className="text-sm font-medium">Mensagem de Sucesso</Label>
                             <Textarea
                                 value={block.properties?.successMessage || ''}
-                                onChange={e => handlePropertyChange('successMessage', e.target.value)}
+                                onChange={(e: any) => handlePropertyChange('successMessage', e.target.value)}
                                 placeholder="Ex: Obrigado! Você receberá seu guia por email."
                                 className="mt-1 resize-none"
                                 rows={2}
@@ -477,7 +477,7 @@ export const LeadFormPropertyEditor: React.FC<PropertyEditorProps> = ({
                                 fontSize: `${fontSize}px`
                             }}
                         >
-                            {currentFields.map(field => (
+                            {currentFields.map((field: any) => (
                                 <div key={field} className="space-y-1">
                                     <label className="text-xs font-medium" style={{ color: textColor }}>
                                         {field === 'name' ? 'Nome Completo' :

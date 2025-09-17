@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
 import { useEditor } from '@/components/editor/EditorProvider';
-import { BlockType } from '@/types/editor';
+import { Block, BlockType } from '@/types/editor';
 import { Step20ComponentsButton } from './Step20ComponentsButton';
 import {
   Award,
@@ -184,14 +184,22 @@ const blockCategories: BlockCategory[] = [
 ];
 
 export const ComponentsSidebar: React.FC = () => {
-  const { addBlock, activeStageId } = useEditor();
-
+  const { actions, state } = useEditor();
+  
   const handleAddBlock = (type: BlockType) => {
-    addBlock(type);
+    const stepKey = `step-${state.currentStep}`;
+    const newBlock: Block = {
+      id: `block-${Date.now()}`,
+      type,
+      content: {},
+      order: 0
+    };
+    actions.addBlock(stepKey, newBlock);
   };
 
   // Filtrar componentes baseado na etapa ativa
   const getFilteredCategories = () => {
+    const activeStageId = `step-${state.currentStep}`;
     const isStep20 = activeStageId === 'step-20' || activeStageId === 'step20' || activeStageId?.includes('20');
 
     if (isStep20) {
@@ -217,7 +225,7 @@ export const ComponentsSidebar: React.FC = () => {
             <Step20ComponentsButton />
 
             {/* Indicador da etapa atual */}
-            {activeStageId === 'step-20' && (
+            {state.currentStep === 20 && (
               <div className="bg-gradient-to-r from-primary/10 to-secondary/10 p-3 rounded-lg mb-4">
                 <div className="text-sm font-medium text-primary">🎉 Etapa 20 - Resultado</div>
                 <div className="text-xs text-muted-foreground">Componentes para página de resultado</div>
