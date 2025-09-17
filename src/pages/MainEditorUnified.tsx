@@ -325,7 +325,6 @@ const EditorInitializerUnified: React.FC<{
     funnelId?: string;
     debugMode?: boolean;
     useUniversalEditor?: boolean;
-    forceUniversal?: boolean;
     initialStep?: number;
     validatedFunnel?: any;
     canEdit?: boolean;
@@ -334,7 +333,6 @@ const EditorInitializerUnified: React.FC<{
     funnelId,
     debugMode = false,
     useUniversalEditor = true,
-    forceUniversal = false,
     initialStep,
 }) => {
         const [UnifiedEditorComp, setUnifiedEditorComp] = React.useState<React.ComponentType | null>(null);
