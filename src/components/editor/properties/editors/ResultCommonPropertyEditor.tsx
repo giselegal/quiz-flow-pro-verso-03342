@@ -11,21 +11,40 @@ import { Badge } from '@/components/ui/badge';
 import { Zap, Wand2, Eye, ArrowRight, CheckCircle } from 'lucide-react';
 import type { PropertyEditorProps } from '../interfaces/PropertyEditor';
 
-// Interface para as etapas do funil
-interface FunnelStepData {
+// Interfaces específicas para cada tipo de etapa do funil
+interface BaseFunnelStep {
     type: string;
     title: string;
     category: string;
     progress: number;
-    description?: string;
-    question?: string;
-    options?: Array<{ id: string; text: string; style?: string }>;
-    requiredSelections?: number;
-    requiresInput?: boolean;
-    inputType?: string;
-    placeholder?: string;
-    autoAdvance?: boolean;
 }
+
+interface IntroStep extends BaseFunnelStep {
+    type: 'intro';
+    description: string;
+    requiresInput: boolean;
+    inputType: string;
+    placeholder: string;
+}
+
+interface QuizStep extends BaseFunnelStep {
+    type: 'quiz' | 'strategic';
+    question: string;
+    options: Array<{ id: string; text: string; style?: string }>;
+    requiredSelections: number;
+}
+
+interface TransitionStep extends BaseFunnelStep {
+    type: 'transition' | 'processing';
+    description: string;
+}
+
+interface ResultStep extends BaseFunnelStep {
+    type: 'result' | 'offer';
+    description: string;
+}
+
+type FunnelStepData = IntroStep | QuizStep | TransitionStep | ResultStep;
 
 /**
  * FullFunnelPreview - Preview completo do fluxo do funil com 21 etapas
@@ -34,20 +53,15 @@ const FullFunnelPreview: React.FC<{
     block: any;
     onBack: () => void;
     onUpdate: (patch: Record<string, any>) => void;
-}> = ({ block, onBack, onUpdate }) => {
+}> = ({ block: _block, onBack, onUpdate }) => {
     const [currentStep, setCurrentStep] = useState(1);
     const [userName, setUserName] = useState('');
-    const [isAutoAdvancing, setIsAutoAdvancing] = useState(false);
     const [answers, setAnswers] = useState<Record<string, any>>({});
     const [strategicAnswers, setStrategicAnswers] = useState<Record<string, string>>({});
-    const [showResults, setShowResults] = useState(false);
     const [quizResult, setQuizResult] = useState<any>(null);
-    const [isProcessing, setIsProcessing] = useState(false);
-
-    const props = block?.properties || {};
 
     // Estrutura completa das 21 etapas baseada no template
-    const funnelSteps = useMemo(() => ({
+    const funnelSteps = useMemo((): Record<number, FunnelStepData> => ({
         1: {
             type: 'intro',
             title: 'Bem-vinda!',
@@ -57,7 +71,7 @@ const FullFunnelPreview: React.FC<{
             inputType: 'text',
             placeholder: 'Digite seu primeiro nome...',
             progress: 0
-        },
+        } as IntroStep,
         2: {
             type: 'quiz',
             title: 'Questão 1 de 10',
@@ -75,7 +89,7 @@ const FullFunnelPreview: React.FC<{
             ],
             requiredSelections: 3,
             progress: 10
-        },
+        } as QuizStep,
         3: {
             type: 'quiz',
             title: 'Questão 2 de 10',
@@ -93,7 +107,7 @@ const FullFunnelPreview: React.FC<{
             ],
             requiredSelections: 3,
             progress: 20
-        },
+        } as QuizStep,
         4: {
             type: 'quiz',
             title: 'Questão 3 de 10',
@@ -244,9 +258,8 @@ const FullFunnelPreview: React.FC<{
             title: 'Enquanto calculamos o seu resultado...',
             description: 'Queremos te fazer algumas perguntas que vão tornar sua experiência ainda mais completa.',
             category: 'Transição',
-            autoAdvance: true,
             progress: 55
-        },
+        } as TransitionStep,
         // Questões estratégicas (13-18)
         13: {
             type: 'strategic',
@@ -338,9 +351,8 @@ const FullFunnelPreview: React.FC<{
             title: 'Processando seu resultado...',
             description: 'Estamos analisando suas respostas e preparando um resultado personalizado para você.',
             category: 'Processamento',
-            autoAdvance: true,
             progress: 95
-        },
+        } as TransitionStep,
         20: {
             type: 'result',
             title: 'Seu Estilo Predominante',
@@ -364,7 +376,7 @@ const FullFunnelPreview: React.FC<{
         const styleCount: Record<string, number> = {};
 
         // Contar pontos por estilo das questões do quiz principal (etapas 2-11)
-        Object.entries(answers).forEach(([questionId, selectedOptions]) => {
+        Object.entries(answers).forEach(([, selectedOptions]) => {
             if (Array.isArray(selectedOptions)) {
                 selectedOptions.forEach((optionId: string) => {
                     // Extrair o estilo da opção (ex: 'natural_q1' -> 'Natural')
@@ -416,7 +428,7 @@ const FullFunnelPreview: React.FC<{
     }, [answers]);
 
     const getStyleDescription = (style: string) => {
-        const descriptions = {
+        const descriptions: Record<string, string> = {
             Natural: "Seu estilo é autêntico e descomplicado. Você valoriza o conforto sem abrir mão da elegância, preferindo peças versáteis que reflitam sua personalidade espontânea.",
             Clássico: "Você tem um estilo atemporal e refinado. Prefere qualidade à quantidade, investindo em peças que nunca saem de moda e transmitem seriedade e organização.",
             Contemporâneo: "Seu estilo é moderno e prático. Você gosta de estar atualizada com as tendências, mas sempre priorizando a funcionalidade e o conforto no dia a dia.",
@@ -444,12 +456,9 @@ const FullFunnelPreview: React.FC<{
 
             // Calcular resultado na etapa 20
             if (newStep === 20) {
-                setIsProcessing(true);
                 setTimeout(() => {
                     const result = calculateResult();
                     setQuizResult(result);
-                    setShowResults(true);
-                    setIsProcessing(false);
                 }, 2000);
             }
         }
@@ -532,15 +541,16 @@ const FullFunnelPreview: React.FC<{
 
         // Etapa 1: Entrada de nome
         if (stepData.type === 'intro') {
+            const introStep = stepData as IntroStep;
             return (
                 <div className="text-center space-y-6">
                     <div className="space-y-4">
-                        <h2 className="text-3xl font-bold text-gray-800">{stepData.title}</h2>
-                        <p className="text-gray-600">{stepData.description}</p>
+                        <h2 className="text-3xl font-bold text-gray-800">{introStep.title}</h2>
+                        <p className="text-gray-600">{introStep.description}</p>
                     </div>
                     <div className="max-w-md mx-auto space-y-4">
                         <Input
-                            placeholder={stepData.placeholder}
+                            placeholder={introStep.placeholder}
                             value={userName}
                             onChange={(e) => setUserName(e.target.value)}
                             className="text-center text-lg py-3"
@@ -560,33 +570,34 @@ const FullFunnelPreview: React.FC<{
 
         // Etapas de quiz (2-11)
         if (stepData.type === 'quiz') {
+            const quizStep = stepData as QuizStep;
             const questionId = `q${currentStep - 1}`;
             const currentSelections = answers[questionId] || [];
 
             return (
                 <div className="space-y-6">
                     <div className="text-center space-y-2">
-                        <h2 className="text-2xl font-bold text-gray-800">{stepData.title}</h2>
-                        <p className="text-sm text-gray-500">{stepData.category}</p>
+                        <h2 className="text-2xl font-bold text-gray-800">{quizStep.title}</h2>
+                        <p className="text-sm text-gray-500">{quizStep.category}</p>
                     </div>
 
                     <div className="space-y-4">
                         <h3 className="text-lg font-semibold text-center text-gray-700">
-                            {stepData.question}
+                            {quizStep.question}
                         </h3>
                         <p className="text-sm text-center text-gray-500">
-                            Selecione {stepData.requiredSelections} opções ({currentSelections.length}/{stepData.requiredSelections})
+                            Selecione {quizStep.requiredSelections} opções ({currentSelections.length}/{quizStep.requiredSelections})
                         </p>
                     </div>
 
                     <div className="grid gap-3">
-                        {stepData.options?.map((option: any) => (
+                        {quizStep.options?.map((option: any) => (
                             <button
                                 key={option.id}
-                                onClick={() => handleOptionSelect(option.id, stepData)}
+                                onClick={() => handleOptionSelect(option.id, quizStep)}
                                 className={`p-4 text-left border-2 rounded-lg transition-all hover:bg-blue-50 ${currentSelections.includes(option.id)
-                                        ? 'border-blue-500 bg-blue-50 shadow-md'
-                                        : 'border-gray-200 bg-white'
+                                    ? 'border-blue-500 bg-blue-50 shadow-md'
+                                    : 'border-gray-200 bg-white'
                                     }`}
                             >
                                 <div className="flex items-center justify-between">
@@ -604,11 +615,12 @@ const FullFunnelPreview: React.FC<{
 
         // Etapas de transição (12, 19)
         if (stepData.type === 'transition' || stepData.type === 'processing') {
+            const transitionStep = stepData as TransitionStep;
             return (
                 <div className="text-center space-y-6">
                     <div className="animate-pulse space-y-4">
-                        <h2 className="text-2xl font-bold text-gray-800">{stepData.title}</h2>
-                        <p className="text-gray-600">{stepData.description}</p>
+                        <h2 className="text-2xl font-bold text-gray-800">{transitionStep.title}</h2>
+                        <p className="text-gray-600">{transitionStep.description}</p>
                     </div>
                     <div className="flex justify-center">
                         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#B89B7A]"></div>
@@ -619,30 +631,31 @@ const FullFunnelPreview: React.FC<{
 
         // Etapas estratégicas (13-18)
         if (stepData.type === 'strategic') {
+            const strategicStep = stepData as QuizStep; // strategic usa a mesma estrutura que quiz
             const questionId = `qs${currentStep - 12}`;
             const currentSelection = strategicAnswers[questionId];
 
             return (
                 <div className="space-y-6">
                     <div className="text-center space-y-2">
-                        <h2 className="text-2xl font-bold text-gray-800">{stepData.title}</h2>
-                        <p className="text-sm text-gray-500">{stepData.category}</p>
+                        <h2 className="text-2xl font-bold text-gray-800">{strategicStep.title}</h2>
+                        <p className="text-sm text-gray-500">{strategicStep.category}</p>
                     </div>
 
                     <div className="space-y-4">
                         <h3 className="text-lg font-semibold text-center text-gray-700">
-                            {stepData.question}
+                            {strategicStep.question}
                         </h3>
                     </div>
 
                     <div className="grid gap-3">
-                        {stepData.options?.map((option: any) => (
+                        {strategicStep.options?.map((option: any) => (
                             <button
                                 key={option.id}
-                                onClick={() => handleOptionSelect(option.id, stepData)}
+                                onClick={() => handleOptionSelect(option.id, strategicStep)}
                                 className={`p-4 text-left border-2 rounded-lg transition-all hover:bg-green-50 ${currentSelection === option.id
-                                        ? 'border-green-500 bg-green-50 shadow-md'
-                                        : 'border-gray-200 bg-white'
+                                    ? 'border-green-500 bg-green-50 shadow-md'
+                                    : 'border-gray-200 bg-white'
                                     }`}
                             >
                                 <div className="flex items-center justify-between">
@@ -710,11 +723,12 @@ const FullFunnelPreview: React.FC<{
 
         // Etapa de oferta/conversão (21)
         if (stepData.type === 'offer') {
+            const offerStep = stepData as ResultStep;
             return (
                 <div className="text-center space-y-6">
                     <div className="space-y-4">
-                        <h2 className="text-3xl font-bold text-gray-800">{stepData.title}</h2>
-                        <p className="text-gray-600">{stepData.description}</p>
+                        <h2 className="text-3xl font-bold text-gray-800">{offerStep.title}</h2>
+                        <p className="text-gray-600">{offerStep.description}</p>
                     </div>
 
                     <div className="bg-gradient-to-br from-[#B89B7A] to-[#A08969] text-white p-6 rounded-lg">
