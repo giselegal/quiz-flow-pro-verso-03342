@@ -1,8 +1,7 @@
 import React, { Suspense } from 'react';
 import { Block } from '@/types/editor';
 import { cn } from '@/lib/utils';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { UniversalNoCodePanel } from './UniversalNoCodePanel';
+import { UltraUnifiedPropertiesPanel } from './UltraUnifiedPropertiesPanel';
 
 export interface PropertiesColumnProps {
   selectedBlock: Block | undefined;
@@ -20,10 +19,10 @@ export const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
   selectedBlock,
   onUpdate,
   onDelete,
-  onDuplicate: _onDuplicate,
-  onReset: _onReset,
-  previewMode: _previewMode,
-  onPreviewModeChange: _onPreviewModeChange,
+  onDuplicate,
+  onReset,
+  previewMode,
+  onPreviewModeChange,
   className = '',
 }) => {
   // Debug logs
@@ -35,55 +34,53 @@ export const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
     });
   }, [selectedBlock]);
 
+  const handleUpdate = React.useCallback((updates: Record<string, any>) => {
+    console.log('🔄 PropertiesColumn -> UltraUnifiedPropertiesPanel update:', updates);
+    onUpdate(updates);
+  }, [onUpdate]);
+
+  const handleDelete = React.useCallback(() => {
+    console.log('🗑️  PropertiesColumn -> Delete selected block');
+    onDelete();
+  }, [onDelete]);
+
+  const handleDuplicate = React.useCallback(() => {
+    console.log('📋 PropertiesColumn -> Duplicate selected block');
+    onDuplicate?.();
+  }, [onDuplicate]);
+
+  const handleReset = React.useCallback(() => {
+    console.log('🔄 PropertiesColumn -> Reset selected block');
+    onReset?.();
+  }, [onReset]);
+
   return (
     <div
       className={cn(
-        'h-full bg-gray-900/80 backdrop-blur-sm border-l border-gray-700/50 flex flex-col',
-        'w-full', // Use full width within its container
+        'h-full bg-background border-l border-border flex flex-col',
+        'w-full',
         className
       )}
     >
-      <ScrollArea className="h-full w-full">
-        {selectedBlock ? (
-          <Suspense fallback={
-            <div className="p-4 text-sm text-gray-300 animate-pulse flex items-center gap-2">
-              <svg className="w-4 h-4 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-              </svg>
-              Carregando painel NOCODE avançado…
-            </div>
-          }>
-            {/* UniversalNoCodePanel - Painel completo com todas as configurações */}
-            <UniversalNoCodePanel
-              selectedBlock={selectedBlock}
-              activeStageId="current-step"
-              onUpdate={(blockId: string, updates: Record<string, any>) => {
-                console.log('🔄 PropertiesColumn -> UniversalNoCodePanel update:', { blockId, updates });
-                console.log('🔄 Chamando onUpdate com:', updates);
-                onUpdate(updates);
-              }}
-              onDelete={onDelete}
-            />
-          </Suspense>
-        ) : (
-          <Suspense fallback={
-            <div className="p-4 text-sm text-gray-300 animate-pulse flex items-center gap-2">
-              <svg className="w-4 h-4 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-              </svg>
-              Carregando configurações do canvas…
-            </div>
-          }>
-            {/* UniversalNoCodePanel - Estado vazio quando nenhum bloco selecionado */}
-            <UniversalNoCodePanel
-              selectedBlock={null}
-              activeStageId="current-step"
-              onUpdate={() => { }}
-              onDelete={() => { }}
-            />
-          </Suspense>
-        )}
-      </ScrollArea>
+      <Suspense fallback={
+        <div className="p-4 text-sm text-muted-foreground animate-pulse flex items-center gap-2">
+          <svg className="w-4 h-4 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+          </svg>
+          Carregando painel unificado...
+        </div>
+      }>
+        <UltraUnifiedPropertiesPanel
+          selectedBlock={selectedBlock}
+          onUpdate={handleUpdate}
+          onDelete={handleDelete}
+          onDuplicate={handleDuplicate}
+          onReset={handleReset}
+          previewMode={previewMode}
+          onPreviewModeChange={onPreviewModeChange}
+          className="flex-1"
+        />
+      </Suspense>
     </div>
   );
 };
