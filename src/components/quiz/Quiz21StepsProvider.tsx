@@ -3,7 +3,6 @@ import { useQuizAnalytics } from '@/hooks/useQuizAnalytics';
 import { useQuizLogic } from '@/hooks/useQuizLogic';
 import { useSupabaseQuiz } from '@/hooks/useSupabaseQuiz';
 import { useStepNavigationStore } from '@/stores/useStepNavigationStore';
-import { trackQuizStarted, trackStepViewed, trackOptionSelected } from '@/services/compatibleAnalytics';
 import React, { createContext, useCallback, useContext, useState } from 'react';
 
 // ✅ FASE 3: Interface adaptadora para compatibilidade entre core e legacy
@@ -261,7 +260,9 @@ export const Quiz21StepsProvider: React.FC<Quiz21StepsProviderProps> = ({
       }
 
       // 📊 ANALYTICS: Track step viewed
-      trackStepViewed(step).catch(err => console.warn('Analytics error:', err));
+      import('@/services/compatibleAnalytics')
+        .then(({ trackStepViewed }) => trackStepViewed(step))
+        .catch(err => console.warn('Analytics error:', err));
 
       // 📊 ANALYTICS: Track step completion antes de mudar
       if (step > currentStep) {
@@ -328,7 +329,9 @@ export const Quiz21StepsProvider: React.FC<Quiz21StepsProviderProps> = ({
       }
 
       // 📊 ANALYTICS: Rastrear início do quiz
-      trackQuizStarted(name);
+      import('@/services/compatibleAnalytics')
+        .then(({ trackQuizStarted }) => trackQuizStarted(name))
+        .catch(err => console.warn('Analytics error:', err));
 
       // Salvar em session data
       setSessionData(prev => ({
@@ -359,7 +362,9 @@ export const Quiz21StepsProvider: React.FC<Quiz21StepsProviderProps> = ({
       saveSupabaseAnswer({ questionId, optionId });
 
       // 📊 ANALYTICS: Rastrear seleção de opção
-      trackOptionSelected(currentStep, optionId);
+      import('@/services/compatibleAnalytics')
+        .then(({ trackOptionSelected }) => trackOptionSelected(currentStep, optionId))
+        .catch(err => console.warn('Analytics error:', err));
 
       // Atualizar seleções da etapa atual
       setCurrentStepSelections(prev => ({
