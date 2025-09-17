@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useState, useRef } from 'react';
 import { useEditor } from '@/components/editor/EditorProvider';
 import { useOptimizedScheduler } from '@/hooks/useOptimizedScheduler';
 import { useNotification } from '@/components/ui/Notification';
@@ -11,6 +11,145 @@ import EditorCanvas from './EditorCanvas';
 import StepSidebar from '@/components/editor/sidebars/StepSidebar';
 import ComponentsSidebar from '@/components/editor/sidebars/ComponentsSidebar';
 import PropertiesColumn from '@/components/editor/properties/PropertiesColumn';
+
+/**
+ * Hook para controlar larguras redimensionáveis das colunas
+ */
+const useResizableColumns = () => {
+  const [columnWidths, setColumnWidths] = useState(() => {
+    // Verificar se há larguras salvas no localStorage
+    const saved = localStorage.getItem('editor-column-widths');
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        return {
+          steps: Math.max(200, Math.min(400, parsed.steps || 256)),
+          components: Math.max(280, Math.min(500, parsed.components || 320)),
+          properties: Math.max(280, Math.min(500, parsed.properties || 320))
+        };
+      } catch {
+        // Se não conseguir fazer parse, usar valores padrão
+      }
+    }
+    return {
+      steps: 256,      // 16rem padrão
+      components: 320, // 20rem padrão
+      properties: 320  // 20rem padrão
+    };
+  });
+
+  const minWidths = {
+    steps: 200,      // 12.5rem mínimo
+    components: 280, // 17.5rem mínimo
+    properties: 280  // 17.5rem mínimo
+  };
+
+  const maxWidths = {
+    steps: 400,      // 25rem máximo
+    components: 500, // 31.25rem máximo
+    properties: 500  // 31.25rem máximo
+  };
+
+  const handleResize = useCallback((column: 'steps' | 'components' | 'properties', width: number) => {
+    const clampedWidth = Math.max(minWidths[column], Math.min(maxWidths[column], width));
+    setColumnWidths(prev => {
+      const newWidths = {
+        ...prev,
+        [column]: clampedWidth
+      };
+      // Salvar no localStorage
+      localStorage.setItem('editor-column-widths', JSON.stringify(newWidths));
+      return newWidths;
+    });
+  }, [minWidths, maxWidths]);
+
+  // Função para resetar larguras para valores padrão
+  const resetWidths = useCallback(() => {
+    const defaultWidths = {
+      steps: 256,
+      components: 320,
+      properties: 320
+    };
+    setColumnWidths(defaultWidths);
+    localStorage.setItem('editor-column-widths', JSON.stringify(defaultWidths));
+  }, []);
+
+  return { columnWidths, handleResize, minWidths, maxWidths, resetWidths };
+};
+
+/**
+ * Componente divisor redimensionável
+ */
+const ResizeHandle: React.FC<{
+  onResize: (width: number) => void;
+  className?: string;
+  label?: string;
+}> = ({ onResize, className = "", label }) => {
+  const [isDragging, setIsDragging] = useState(false);
+  const [showTooltip, setShowTooltip] = useState(false);
+  const startX = useRef(0);
+  const startWidth = useRef(0);
+  const currentWidth = useRef(0);
+
+  const handleMouseDown = useCallback((e: React.MouseEvent) => {
+    setIsDragging(true);
+    setShowTooltip(true);
+    startX.current = e.clientX;
+    const parent = (e.currentTarget as HTMLElement).previousElementSibling as HTMLElement;
+    if (parent) {
+      startWidth.current = parent.getBoundingClientRect().width;
+      currentWidth.current = startWidth.current;
+    }
+    document.body.style.cursor = 'col-resize';
+    document.body.style.userSelect = 'none';
+  }, []);
+
+  const handleMouseMove = useCallback((e: MouseEvent) => {
+    if (!isDragging) return;
+    const deltaX = e.clientX - startX.current;
+    const newWidth = startWidth.current + deltaX;
+    currentWidth.current = newWidth;
+    onResize(newWidth);
+  }, [isDragging, onResize]);
+
+  const handleMouseUp = useCallback(() => {
+    setIsDragging(false);
+    setShowTooltip(false);
+    document.body.style.cursor = '';
+    document.body.style.userSelect = '';
+  }, []);
+
+  React.useEffect(() => {
+    if (isDragging) {
+      document.addEventListener('mousemove', handleMouseMove);
+      document.addEventListener('mouseup', handleMouseUp);
+      return () => {
+        document.removeEventListener('mousemove', handleMouseMove);
+        document.removeEventListener('mouseup', handleMouseUp);
+      };
+    }
+  }, [isDragging, handleMouseMove, handleMouseUp]);
+
+  return (
+    <div
+      className={`relative w-1 bg-border hover:bg-blue-500 cursor-col-resize transition-colors duration-200 group ${className} ${isDragging ? 'bg-blue-500' : ''}`}
+      onMouseDown={handleMouseDown}
+      onMouseEnter={() => setShowTooltip(true)}
+      onMouseLeave={() => !isDragging && setShowTooltip(false)}
+      title={label ? `Redimensionar ${label}` : 'Redimensionar coluna'}
+    >
+      {/* Indicador visual quando hover */}
+      <div className="absolute inset-0 w-1 bg-blue-500 opacity-0 group-hover:opacity-50 transition-opacity duration-200" />
+
+      {/* Tooltip com largura atual (opcional) */}
+      {showTooltip && isDragging && label && (
+        <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-black text-white text-xs px-2 py-1 rounded whitespace-nowrap">
+          {Math.round(currentWidth.current)}px
+        </div>
+      )}
+    </div>
+  );
+};
 
 /**
  * 🚀 EDITOR PRO MODULAR E OTIMIZADO
@@ -26,6 +165,7 @@ const ModularEditorPro: React.FC = () => {
   const { state, actions } = useEditor();
   const { schedule } = useOptimizedScheduler();
   const { addNotification } = useNotification();
+  const { columnWidths, handleResize } = useResizableColumns();
 
   // Estados locais para UI (removidos os não utilizados)
   const [isPreviewMode, setIsPreviewMode] = useState(false);
@@ -253,10 +393,13 @@ const ModularEditorPro: React.FC = () => {
           onOpenSettings={() => console.log('Configurações')}
         />
 
-        {/* Layout principal de 4 colunas */}
+        {/* Layout principal de 4 colunas com controles de largura */}
         <div className="flex-1 flex overflow-hidden">
           {/* Sidebar de etapas */}
-          <div className="w-64 border-r border-border bg-muted/30">
+          <div
+            className="border-r border-border bg-muted/30 flex-shrink-0"
+            style={{ width: `${columnWidths.steps}px` }}
+          >
             <StepSidebar
               currentStep={state.currentStep}
               stepHasBlocks={stepHasBlocksRecord}
@@ -266,31 +409,60 @@ const ModularEditorPro: React.FC = () => {
             />
           </div>
 
+          {/* Divisor redimensionável - Steps */}
+          <ResizeHandle
+            onResize={(width) => handleResize('steps', width)}
+            className="hover:shadow-lg"
+            label="Etapas"
+          />
+
           {/* Sidebar de componentes */}
-          <div className="w-80 border-r border-border bg-background">
+          <div
+            className="border-r border-border bg-background flex-shrink-0"
+            style={{ width: `${columnWidths.components}px` }}
+          >
             <ComponentsSidebar
               groupedComponents={groupedComponents}
               renderIcon={(icon: string) => <div>{icon}</div>}
             />
           </div>
 
-          {/* Canvas principal */}
-          <div className="flex-1 min-w-0">
-            <EditorCanvas
-              blocks={currentStepBlocks}
-              selectedBlock={selectedBlock}
-              currentStep={state.currentStep}
-              onSelectBlock={handleSelectBlock}
-              onUpdateBlock={handleUpdateBlock}
-              onDeleteBlock={handleDeleteBlock}
-              onReorderBlocks={handleReorderBlocks}
-              isPreviewMode={isPreviewMode}
-              onStepChange={actions.setCurrentStep} // Para navegação no preview
-            />
+          {/* Divisor redimensionável - Components */}
+          <ResizeHandle
+            onResize={(width) => handleResize('components', width)}
+            className="hover:shadow-lg"
+            label="Componentes"
+          />
+
+          {/* Canvas principal com scroll vertical */}
+          <div className="flex-1 min-w-0 overflow-hidden">
+            <div className="h-full overflow-y-auto">
+              <EditorCanvas
+                blocks={currentStepBlocks}
+                selectedBlock={selectedBlock}
+                currentStep={state.currentStep}
+                onSelectBlock={handleSelectBlock}
+                onUpdateBlock={handleUpdateBlock}
+                onDeleteBlock={handleDeleteBlock}
+                onReorderBlocks={handleReorderBlocks}
+                isPreviewMode={isPreviewMode}
+                onStepChange={actions.setCurrentStep} // Para navegação no preview
+              />
+            </div>
           </div>
 
+          {/* Divisor redimensionável - Properties */}
+          <ResizeHandle
+            onResize={(width) => handleResize('properties', width)}
+            className="hover:shadow-lg"
+            label="Propriedades"
+          />
+
           {/* Propriedades */}
-          <div className="w-80 border-l border-border bg-muted/30">
+          <div
+            className="border-l border-border bg-muted/30 flex-shrink-0"
+            style={{ width: `${columnWidths.properties}px` }}
+          >
             <PropertiesColumn
               selectedBlock={selectedBlock || undefined}
               onUpdate={handleUpdateSelectedBlock}

@@ -85,8 +85,8 @@ const EditorCanvas: React.FC<EditorCanvasProps> = memo(({
 
   if (isPreviewMode) {
     return (
-      <div className="flex-1 min-h-0 overflow-auto bg-gradient-to-br from-[#FAF9F7] via-[#F5F2E9] to-[#EEEBE1]">
-        <div className="h-full w-full">
+      <div className="flex-1 min-h-0 bg-gradient-to-br from-[#FAF9F7] via-[#F5F2E9] to-[#EEEBE1]">
+        <div className="h-full w-full overflow-y-auto">
           <QuizRenderer
             mode="preview"
             currentStepOverride={currentStep}
@@ -103,22 +103,24 @@ const EditorCanvas: React.FC<EditorCanvasProps> = memo(({
   return (
     <div
       key={canvasKey}
-      className="flex-1 min-h-0 relative overflow-auto editor-canvas"
+      className="flex-1 min-h-0 relative bg-gradient-to-br from-[#FAF9F7] via-[#F5F2E9] to-[#EEEBE1]"
     >
-      <StepDndProvider
-        stepNumber={currentStep}
-        onDragStart={handleDragStart}
-        onDragEnd={handleDragEnd}
-      >
-        <CanvasDropZone
-          blocks={blocks}
-          selectedBlockId={selectedBlock?.id || null}
-          onSelectBlock={handleBlockSelection}
-          onUpdateBlock={onUpdateBlock}
-          onDeleteBlock={onDeleteBlock}
-          scopeId={currentStep}
-        />
-      </StepDndProvider>
+      <div className="h-full w-full overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
+        <StepDndProvider
+          stepNumber={currentStep}
+          onDragStart={handleDragStart}
+          onDragEnd={handleDragEnd}
+        >
+          <CanvasDropZone
+            blocks={blocks}
+            selectedBlockId={selectedBlock?.id || null}
+            onSelectBlock={handleBlockSelection}
+            onUpdateBlock={onUpdateBlock}
+            onDeleteBlock={onDeleteBlock}
+            scopeId={currentStep}
+          />
+        </StepDndProvider>
+      </div>
     </div>
   );
 });
