@@ -43,7 +43,7 @@ export const createMockEditorContext = () => ({
         isLoading: false,
     },
     actions: {
-        updateBlock: vi.fn().mockImplementation((stepId, blockId, properties) => {
+        updateBlock: vi.fn().mockImplementation((_stepId, blockId, properties) => {
             return Promise.resolve({ success: true, blockId, properties });
         }),
         setSelectedBlockId: vi.fn(),
@@ -118,7 +118,7 @@ export const createTestBlock = (type: BlockType, properties: Record<string, any>
 
 // Propriedades padrão por tipo de bloco
 function getDefaultPropertiesForBlockType(type: BlockType): Record<string, any> {
-    const defaults: Record<BlockType, Record<string, any>> = {
+    const defaults: Partial<Record<BlockType, Record<string, any>>> = {
         // ETAPA 1 - Introdução
         'quiz-intro-header': {
             title: 'Descubra Seu Estilo',
