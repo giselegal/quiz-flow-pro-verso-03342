@@ -203,7 +203,10 @@ export const QuizRenderer: React.FC<QuizRendererProps> = React.memo(({
   });
 
   const isStepValid = !!quizState.stepValidation?.[currentStep];
-  const mustBeValid = stepConfig?.enableButtonOnlyWhenValid !== false;
+  // ✅ CORREÇÃO: Aplicar validação em modo preview igual à produção
+  const mustBeValid = (mode === 'production' || mode === 'preview')
+    ? (stepConfig?.enableButtonOnlyWhenValid !== false)
+    : false;
   const nextDisabled = (currentStep === totalSteps) || (mustBeValid && !isStepValid);
   const nextLabel = currentStep === totalSteps
     ? 'Finalizado'
