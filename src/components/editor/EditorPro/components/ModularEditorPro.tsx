@@ -341,10 +341,10 @@ const ModularEditorPro: React.FC = () => {
       return;
     }
 
-    // Verificar se é reordenação dentro do canvas
+    // Verificar se é reordenação dentro do canvas (delegado para canvas interno)
     if (active.data.current.type === 'canvas-block') {
-      // Já tratado pelo StepDndProvider interno
-      console.log('🔄 Reordenação de bloco no canvas');
+      console.log('🔄 Reordenação de bloco no canvas - delegado para EditorCanvas');
+      // Não interferir - deixar o EditorCanvas lidar com isso
       return;
     }
 

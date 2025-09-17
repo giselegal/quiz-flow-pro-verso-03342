@@ -1,10 +1,9 @@
-import React, { memo, useCallback, useMemo } from 'react';
+import React, { memo, useMemo } from 'react';
 import { Block } from '@/types/editor';
 import { QuizRenderer } from '@/components/core/QuizRenderer';
 import CanvasDropZone from '@/components/editor/canvas/CanvasDropZone.simple';
-import { StepDndProvider } from '@/components/editor/dnd/StepDndProvider';
+import { SortableContext } from '@dnd-kit/sortable';
 import { useStepSelection } from '@/hooks/useStepSelection';
-import { DragEndEvent, DragStartEvent } from '@dnd-kit/core';
 import { generateStableKey } from '@/utils/generateUniqueId';
 
 /**
@@ -20,7 +19,6 @@ interface EditorCanvasProps {
   onSelectBlock: (id: string) => void;
   onUpdateBlock: (blockId: string, updates: Partial<Block>) => void;
   onDeleteBlock: (blockId: string) => void;
-  onReorderBlocks: (oldIndex: number, newIndex: number) => void;
   isPreviewMode: boolean;
   onStepChange?: (step: number) => void;
 }
@@ -32,7 +30,6 @@ const EditorCanvas: React.FC<EditorCanvasProps> = memo(({
   onSelectBlock,
   onUpdateBlock,
   onDeleteBlock,
-  onReorderBlocks,
   isPreviewMode,
   onStepChange
 }) => {
@@ -42,37 +39,6 @@ const EditorCanvas: React.FC<EditorCanvasProps> = memo(({
     onSelectBlock,
     debounceMs: 50
   });
-
-  // Handlers do DnD otimizados
-  const handleDragStart = useCallback((event: DragStartEvent) => {
-    const { active } = event;
-    if (active?.data?.current?.blockId) {
-      handleBlockSelection(active.data.current.blockId);
-    }
-  }, [handleBlockSelection]);
-
-  const handleDragEnd = useCallback((event: DragEndEvent) => {
-    const { active, over } = event;
-
-    if (!over || !active) return;
-
-    const activeId = active.id;
-    const overId = over.id;
-
-    if (activeId === overId) return;
-
-    // Encontrar índices para reordenação
-    const activeIndex = blocks.findIndex(block =>
-      `dnd-block-${currentStep}-${block.id}` === activeId
-    );
-    const overIndex = blocks.findIndex(block =>
-      `dnd-block-${currentStep}-${block.id}` === overId
-    );
-
-    if (activeIndex !== -1 && overIndex !== -1 && activeIndex !== overIndex) {
-      onReorderBlocks(activeIndex, overIndex);
-    }
-  }, [blocks, currentStep, onReorderBlocks]);
 
   // Key estável para forçar remount ao trocar etapa
   const canvasKey = useMemo(() =>
@@ -107,11 +73,8 @@ const EditorCanvas: React.FC<EditorCanvasProps> = memo(({
       className="flex-1 min-h-0 relative bg-gradient-to-br from-[#FAF9F7] via-[#F5F2E9] to-[#EEEBE1]"
     >
       <div className="h-full w-full overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
-        <StepDndProvider
-          stepNumber={currentStep}
-          onDragStart={handleDragStart}
-          onDragEnd={handleDragEnd}
-        >
+        {/* ✅ CORREÇÃO: Remover StepDndProvider aninhado - usar apenas SortableContext */}
+        <SortableContext items={blocks.map(block => `dnd-block-${currentStep}-${block.id}`)}>
           <CanvasDropZone
             blocks={blocks}
             selectedBlockId={selectedBlock?.id || null}
@@ -120,7 +83,7 @@ const EditorCanvas: React.FC<EditorCanvasProps> = memo(({
             onDeleteBlock={onDeleteBlock}
             scopeId={currentStep}
           />
-        </StepDndProvider>
+        </SortableContext>
       </div>
     </div>
   );
