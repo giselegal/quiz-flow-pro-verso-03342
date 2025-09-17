@@ -34,6 +34,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Switch } from '@/components/ui/switch';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Textarea } from '@/components/ui/textarea';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import {
     Search,
@@ -66,15 +67,23 @@ import { useOptimizedScheduler } from '@/hooks/useOptimizedScheduler';
 interface PropertyField {
     path: string;
     label: string;
-    type: 'text' | 'number' | 'boolean' | 'color' | 'select' | 'textarea' | 'range';
+    type: 'text' | 'number' | 'boolean' | 'color' | 'select' | 'textarea' | 'range' | 'string' | 'object' | 'array';
     category?: string;
     value?: any;
+    currentValue?: any;
     options?: { label: string; value: any }[];
     min?: number;
     max?: number;
     step?: number;
     placeholder?: string;
     description?: string;
+    unit?: string;
+    isRequired?: boolean;
+    supportsInterpolation?: boolean;
+    validation?: {
+        isValid: boolean;
+        message?: string;
+    };
 }
 
 // Lazy loaded components

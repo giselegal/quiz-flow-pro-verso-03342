@@ -28,22 +28,25 @@ export const TextPropertyEditor: React.FC<TextPropertyEditorProps> = ({
   onUpdate,
   isPreviewMode = false,
 }) => {
+  // Garantir que content existe e tem valores padrão
+  const content = block.content || {};
+
   // Propriedades específicas do texto
-  const text = block.content?.text || '';
-  const textType = block.content?.textType || 'paragraph';
-  const fontSize = block.content?.fontSize || 16;
-  const fontWeight = block.content?.fontWeight || 'normal';
-  const textAlign = block.content?.textAlign || 'left';
-  const color = block.content?.color || '#000000';
-  const backgroundColor = block.content?.backgroundColor || 'transparent';
-  const isMarkdown = block.content?.isMarkdown || false;
-  const maxLength = block.content?.maxLength || 1000;
-  const placeholder = block.content?.placeholder || '';
+  const text = content.text || '';
+  const textType = content.textType || 'paragraph';
+  const fontSize = content.fontSize || 16;
+  const fontWeight = content.fontWeight || 'normal';
+  const textAlign = content.textAlign || 'left';
+  const color = content.color || '#000000';
+  const backgroundColor = content.backgroundColor || 'transparent';
+  const isMarkdown = content.isMarkdown || false;
+  const maxLength = content.maxLength || 1000;
+  const placeholder = content.placeholder || '';
 
   const handleContentUpdate = (field: string, value: any) => {
     const updates = {
       content: {
-        ...block.content,
+        ...content,
         [field]: value,
       },
     };
@@ -251,8 +254,8 @@ export const TextPropertyEditor: React.FC<TextPropertyEditorProps> = ({
                 key={value}
                 onClick={() => handleContentUpdate('textAlign', value)}
                 className={`flex items-center justify-center p-2 rounded border transition-colors ${textAlign === value
-                    ? 'border-[#B89B7A] bg-[#B89B7A]/10 text-[#B89B7A]'
-                    : 'border-gray-300 hover:bg-gray-50'
+                  ? 'border-[#B89B7A] bg-[#B89B7A]/10 text-[#B89B7A]'
+                  : 'border-gray-300 hover:bg-gray-50'
                   }`}
                 title={label}
               >
