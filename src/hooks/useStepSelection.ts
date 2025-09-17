@@ -25,17 +25,17 @@ export const useStepSelection = ({
   // Handler otimizado com debounce e deduplicação aprimorada
   const handleBlockSelection = useCallback((blockId: string) => {
     const now = performance.now();
-    
+
     // ✅ OTIMIZAÇÃO: Early return mais eficiente
     // Evita seleções redundantes e chamadas muito próximas (< 50ms)
-    if (lastSelectedRef.current === blockId && 
-        now - lastSelectionTimeRef.current < 50) {
+    if (lastSelectedRef.current === blockId &&
+      now - lastSelectionTimeRef.current < 50) {
       return;
     }
-    
+
     lastSelectedRef.current = blockId;
     lastSelectionTimeRef.current = now;
-    
+
     // Debounce para evitar multiple calls durante drag/click rápido
     const cleanup = debounce(
       `step-${stepNumber}-selection`,

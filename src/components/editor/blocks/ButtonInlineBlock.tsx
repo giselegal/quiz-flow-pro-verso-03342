@@ -144,11 +144,11 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
         setExternalDisabled(!!detail.disabled);
       }
     };
-    
+
     // Usar o gerenciador central ao invés de window.addEventListener direto
     const cleanup1 = addEventListener('quiz-button-state-change', onButtonState);
     const cleanup2 = addEventListener('step01-button-state-change', onButtonState);
-    
+
     return () => {
       cleanup1();
       cleanup2();

@@ -120,7 +120,7 @@ const FormContainerBlock: React.FC<BlockComponentProps> = ({ block }) => {
         );
       }
     };
-    
+
     // Usar o gerenciador central também para quiz-input-change
     const cleanup3 = addEventListener('quiz-input-change', onQuizInput);
 

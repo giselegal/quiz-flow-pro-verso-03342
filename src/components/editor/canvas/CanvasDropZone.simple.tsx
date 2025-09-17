@@ -28,7 +28,7 @@ const EditorNavigationControls: React.FC<{
     };
 
     updateStep();
-    
+
     // Usar o gerenciador central ao invés de window.addEventListener direto
     const cleanup1 = addEventListener('navigate-to-step', updateStep);
     const cleanup2 = addEventListener('quiz-navigate-to-step', updateStep);
