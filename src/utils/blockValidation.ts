@@ -1,17 +1,14 @@
 /**
  * 🧪 UTILITÁRIOS DE VALIDAÇÃO DE BLOCOS
  * Funções auxiliares para validação e sanitização das propriedades dos blocos
+ * 
+ * 🔄 CONSOLIDATION UPDATE:
+ * - ValidationResult agora usa tipos unificados de @/types/core
+ * - Mantém funcionalidades existentes com tipos consolidados
  */
 
 import { BlockType } from '@/types/editor';
-
-export interface ValidationResult {
-    isValid: boolean;
-    errors: string[];
-    warnings: string[];
-    sanitized?: Record<string, any>;
-    dataBindings?: string[];
-}
+import { ValidationResult } from '@/types/core';
 
 /**
  * Valida propriedades de um bloco específico
@@ -107,7 +104,7 @@ export function sanitizeBlockProperties(
 // =============================================
 
 function getValidatorForBlockType(blockType: BlockType) {
-    const validators: Record<BlockType, (props: any, options?: any) => ValidationResult> = {
+    const validators: Partial<Record<BlockType, (props: any, options?: any) => ValidationResult>> = {
 
         // ETAPA 1
         'quiz-intro-header': validateQuizIntroHeader,
@@ -338,7 +335,7 @@ function validateValueAnchoring(props: any): ValidationResult {
 }
 
 // Validators genéricos para outros tipos
-function validateGeneric(props: any): ValidationResult {
+function validateGeneric(_props: any): ValidationResult {
     return { isValid: true, errors: [], warnings: [] };
 }
 
@@ -376,20 +373,20 @@ function validateOptionsGrid(props: any): ValidationResult {
     return { isValid: errors.length === 0, errors, warnings };
 }
 
-function validateQuizNavigation(props: any): ValidationResult { return { isValid: true, errors: [], warnings: [] }; }
-function validateHeadingInline(props: any): ValidationResult { return { isValid: true, errors: [], warnings: [] }; }
-function validateProgressInline(props: any): ValidationResult { return { isValid: true, errors: [], warnings: [] }; }
-function validateStep20ResultHeader(props: any): ValidationResult { return { isValid: true, errors: [], warnings: [] }; }
-function validateStep20StyleReveal(props: any): ValidationResult { return { isValid: true, errors: [], warnings: [] }; }
-function validateStep20UserGreeting(props: any): ValidationResult { return { isValid: true, errors: [], warnings: [] }; }
-function validateStep20SecondaryStyles(props: any): ValidationResult { return { isValid: true, errors: [], warnings: [] }; }
-function validateBeforeAfter(props: any): ValidationResult { return { isValid: true, errors: [], warnings: [] }; }
-function validateBonus(props: any): ValidationResult { return { isValid: true, errors: [], warnings: [] }; }
-function validateSecurePurchase(props: any): ValidationResult { return { isValid: true, errors: [], warnings: [] }; }
-function validateMentorSection(props: any): ValidationResult { return { isValid: true, errors: [], warnings: [] }; }
-function validateImageInline(props: any): ValidationResult { return { isValid: true, errors: [], warnings: [] }; }
-function validateSpacerInline(props: any): ValidationResult { return { isValid: true, errors: [], warnings: [] }; }
-function validateLegalNotice(props: any): ValidationResult { return { isValid: true, errors: [], warnings: [] }; }
+function validateQuizNavigation(_props: any): ValidationResult { return { isValid: true, errors: [], warnings: [] }; }
+function validateHeadingInline(_props: any): ValidationResult { return { isValid: true, errors: [], warnings: [] }; }
+function validateProgressInline(_props: any): ValidationResult { return { isValid: true, errors: [], warnings: [] }; }
+function validateStep20ResultHeader(_props: any): ValidationResult { return { isValid: true, errors: [], warnings: [] }; }
+function validateStep20StyleReveal(_props: any): ValidationResult { return { isValid: true, errors: [], warnings: [] }; }
+function validateStep20UserGreeting(_props: any): ValidationResult { return { isValid: true, errors: [], warnings: [] }; }
+function validateStep20SecondaryStyles(_props: any): ValidationResult { return { isValid: true, errors: [], warnings: [] }; }
+function validateBeforeAfter(_props: any): ValidationResult { return { isValid: true, errors: [], warnings: [] }; }
+function validateBonus(_props: any): ValidationResult { return { isValid: true, errors: [], warnings: [] }; }
+function validateSecurePurchase(_props: any): ValidationResult { return { isValid: true, errors: [], warnings: [] }; }
+function validateMentorSection(_props: any): ValidationResult { return { isValid: true, errors: [], warnings: [] }; }
+function validateImageInline(_props: any): ValidationResult { return { isValid: true, errors: [], warnings: [] }; }
+function validateSpacerInline(_props: any): ValidationResult { return { isValid: true, errors: [], warnings: [] }; }
+function validateLegalNotice(_props: any): ValidationResult { return { isValid: true, errors: [], warnings: [] }; }
 
 // =============================================
 // FUNÇÕES AUXILIARES
@@ -470,7 +467,7 @@ function sanitizeUrl(url: string): string {
     return url;
 }
 
-function normalizeNumericValues(props: Record<string, any>, blockType: BlockType) {
+function normalizeNumericValues(props: Record<string, any>, _blockType: BlockType) {
     // Converter strings numéricas para números
     ['percentage', 'maxSelections', 'minSelections', 'order', 'level'].forEach(key => {
         if (props[key] && typeof props[key] === 'string') {

@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react';
 import { useToast } from '../../components/ui/use-toast';
-import { ContextualFunnelService, type ContextualFunnelData } from '../../services/contextualFunnelService';
+import { type ContextualFunnelData } from '@/services/templates';
 import { FunnelContext } from '../../core/contexts/FunnelContext';
 
 // Interface para compatibilidade com o editor existente
@@ -32,7 +32,7 @@ export const useEditorPersistence = (context: FunnelContext = FunnelContext.EDIT
   const { toast } = useToast();
 
   // 🎯 Criar uma instância do serviço contextual
-  const contextualFunnelService = new ContextualFunnelService(context);
+  const contextualFunnelService = contextualFunnelService;
 
   const saveFunnel = useCallback(
     async (data: FunnelData) => {

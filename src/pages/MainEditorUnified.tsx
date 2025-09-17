@@ -1,6 +1,6 @@
 // @ts-nocheck
 import { QuizFlowProvider } from '@/context/QuizFlowProvider';
-import { templateLibraryService } from '@/services/templateLibraryService';
+import { templateLibraryService } from '@/services/templates';
 import React from 'react';
 import { useLocation, useParams } from 'wouter';
 import { ErrorBoundary } from '../components/editor/ErrorBoundary';

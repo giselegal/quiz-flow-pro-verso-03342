@@ -1,9 +1,13 @@
 // @ts-nocheck
-export interface SchemaValidationError {
-  field: string;
-  message: string;
-  severity: 'error' | 'warning';
-}
+/**
+ * 🔄 CONSOLIDATION UPDATE:
+ * - SchemaValidationError agora usa tipos unificados de @/types/core  
+ * - Mantém funcionalidades existentes com tipos consolidados
+ */
+import { DetailedValidationError } from '@/types/core';
+
+// Re-export for backward compatibility
+export type SchemaValidationError = DetailedValidationError;
 
 export class SchemaValidator {
   static validateFunnelPage(page: any): SchemaValidationError[] {

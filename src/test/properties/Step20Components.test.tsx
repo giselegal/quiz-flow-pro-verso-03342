@@ -3,19 +3,21 @@
  * Validação específica dos componentes modulares do Step 20
  */
 
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { vi, describe, it, expect, beforeEach } from 'vitest';
 import { EditorProvider } from '@/components/editor/EditorProvider';
 import { Block } from '@/types/editor';
 
 // Importação dos componentes Step 20
-import { Step20ResultHeader } from '@/components/editor/blocks/Step20/Step20ResultHeader';
-import { Step20StyleReveal } from '@/components/editor/blocks/Step20/Step20StyleReveal';
-import { Step20UserGreeting } from '@/components/editor/blocks/Step20/Step20UserGreeting';
-import { Step20Compatibility } from '@/components/editor/blocks/Step20/Step20Compatibility';
-import { Step20SecondaryStyles } from '@/components/editor/blocks/Step20/Step20SecondaryStyles';
-import { Step20PersonalizedOffer } from '@/components/editor/blocks/Step20/Step20PersonalizedOffer';
+import {
+    Step20ResultHeaderBlock,
+    Step20StyleRevealBlock,
+    Step20UserGreetingBlock,
+    Step20CompatibilityBlock,
+    Step20SecondaryStylesBlock,
+    Step20PersonalizedOfferBlock
+} from '@/components/editor/blocks/Step20ModularBlocks';
 
 const mockEditorContext = {
     state: {
@@ -197,7 +199,7 @@ describe('Step 20 - Componentes Modulares', () => {
         };
 
         // Mock do contexto do usuário
-        const mockUserContext = {
+        const _mockUserContext = {
             userName: 'Maria Silva',
             userAvatar: '/avatars/maria.jpg'
         };
@@ -366,7 +368,7 @@ describe('Step 20 - Componentes Modulares', () => {
                     ...defaultBlock.properties,
                     maxSecondaryStyles: 1,
                     secondaryStyles: [
-                        ...defaultBlock.properties.secondaryStyles,
+                        ...(defaultBlock.properties?.secondaryStyles || []),
                         {
                             name: 'Terceiro Estilo',
                             percentage: 55,

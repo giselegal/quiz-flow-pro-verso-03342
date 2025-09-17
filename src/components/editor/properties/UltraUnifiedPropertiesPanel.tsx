@@ -23,23 +23,15 @@
  * - Acessibilidade completa
  */
 
-import React, { useState, useMemo, useCallback, useEffect, useRef, Suspense, lazy } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import React, { useState, useMemo, useCallback, useEffect, Suspense, lazy } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Badge } from '@/components/ui/badge';
-import { Separator } from '@/components/ui/separator';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Switch } from '@/components/ui/switch';
-import { Slider } from '@/components/ui/slider';
-import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from '@/components/ui/command';
 import {
     Search,
     Settings,
@@ -47,32 +39,15 @@ import {
     Type,
     Layout,
     Zap,
-    Eye,
     Copy,
     Sparkles,
-    Filter,
-    Code,
     AlertCircle,
-    Save,
     Undo,
     Redo,
-    Star,
-    Lock,
-    Unlock,
     ChevronDown,
-    ChevronRight,
-    Grid,
-    List,
-    Maximize2,
-    Minimize2,
-    MoreVertical,
-    Pin,
-    PinOff,
-    Info,
     Trash2,
     RotateCcw,
     Shield,
-    Paintbrush,
     Monitor,
     Smartphone,
     Tablet
@@ -81,10 +56,27 @@ import { cn } from '@/lib/utils';
 import { Block } from '@/types/editor';
 import { useOptimizedScheduler } from '@/hooks/useOptimizedScheduler';
 
+// =============================================
+// TYPE DEFINITIONS
+// =============================================
+
+interface PropertyField {
+    path: string;
+    label: string;
+    type: 'text' | 'number' | 'boolean' | 'color' | 'select' | 'textarea' | 'range';
+    category?: string;
+    value?: any;
+    options?: { label: string; value: any }[];
+    min?: number;
+    max?: number;
+    step?: number;
+    placeholder?: string;
+    description?: string;
+}
+
 // Lazy loaded components
 const ColorPicker = lazy(() => import('@/components/visual-controls/ColorPicker'));
 const SizeSlider = lazy(() => import('@/components/visual-controls/SizeSlider'));
-const AlignmentButtons = lazy(() => import('@/components/visual-controls/AlignmentButtons'));
 
 // Lazy loaded specialized editors
 const HeaderPropertyEditor = lazy(() => import('./editors/HeaderPropertyEditor').then(m => ({ default: m.HeaderPropertyEditor })));
@@ -92,14 +84,7 @@ const QuestionPropertyEditor = lazy(() => import('./editors/QuestionPropertyEdit
 const ButtonPropertyEditor = lazy(() => import('./editors/ButtonPropertyEditor').then(m => ({ default: m.ButtonPropertyEditor })));
 const TextPropertyEditor = lazy(() => import('./editors/TextPropertyEditor'));
 const OptionsGridPropertyEditor = lazy(() => import('./editors/OptionsGridPropertyEditor').then(m => ({ default: m.OptionsGridPropertyEditor })));
-const OptionsPropertyEditor = lazy(() => import('./editors/OptionsPropertyEditor').then(m => ({ default: m.OptionsPropertyEditor })));
 const ImagePropertyEditor = lazy(() => import('./editors/ImagePropertyEditor'));
-const FormContainerPropertyEditor = lazy(() => import('./editors/FormContainerPropertyEditor').then(m => ({ default: m.FormContainerPropertyEditor })));
-const LeadFormPropertyEditor = lazy(() => import('./editors/LeadFormPropertyEditor').then(m => ({ default: m.LeadFormPropertyEditor })));
-const NavigationPropertyEditor = lazy(() => import('./editors/NavigationPropertyEditor').then(m => ({ default: m.NavigationPropertyEditor })));
-const TestimonialPropertyEditor = lazy(() => import('./editors/TestimonialPropertyEditor').then(m => ({ default: m.TestimonialPropertyEditor })));
-const PricingPropertyEditor = lazy(() => import('./editors/PricingPropertyEditor').then(m => ({ default: m.PricingPropertyEditor })));
-const ResultCommonPropertyEditor = lazy(() => import('./editors/ResultCommonPropertyEditor').then(m => ({ default: m.ResultCommonPropertyEditor })));
 
 // Mock service para extração de propriedades
 const mockPropertyExtractionService = {
@@ -480,7 +465,6 @@ export const UltraUnifiedPropertiesPanel: React.FC<UltraUnifiedPropertiesPanelPr
     onUpdate,
     onDelete,
     onDuplicate,
-    onClose,
     onReset,
     previewMode = 'desktop',
     onPreviewModeChange,
@@ -534,6 +518,7 @@ export const UltraUnifiedPropertiesPanel: React.FC<UltraUnifiedPropertiesPanelPr
     }, [selectedBlock]);
 
     // Filtrar propriedades
+    // Filtra propriedades baseadas no searchTerm e categoria selecionada
     const filteredProperties = useMemo(() => {
         let filtered = extractedProperties;
 
@@ -803,7 +788,8 @@ export const UltraUnifiedPropertiesPanel: React.FC<UltraUnifiedPropertiesPanelPr
                     </TabsList>
 
                     {PROPERTY_CATEGORIES.map(category => {
-                        const categoryProperties = categorizedProperties[category.key] || [];
+                        const categoryProperties = (categorizedProperties[category.key] || [])
+                            .filter(prop => filteredProperties.includes(prop));
                         if (categoryProperties.length === 0) return null;
 
                         return (
@@ -840,7 +826,8 @@ export const UltraUnifiedPropertiesPanel: React.FC<UltraUnifiedPropertiesPanelPr
                         .filter(category => categorizedProperties[category.key]?.length > 0)
                         .sort((a, b) => a.priority - b.priority)
                         .map(category => {
-                            const categoryProperties = categorizedProperties[category.key] || [];
+                            const categoryProperties = (categorizedProperties[category.key] || [])
+                                .filter(prop => filteredProperties.includes(prop));
 
                             return (
                                 <Collapsible key={category.key} defaultOpen={category.priority <= 2}>

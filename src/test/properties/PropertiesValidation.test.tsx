@@ -3,11 +3,10 @@
  * Validação dos schemas e configurações das propriedades dos componentes
  */
 
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import {
     validateBlockProperties,
     getDefaultPropertiesForBlock,
-    validatePropertySchema,
     sanitizeBlockProperties
 } from '@/utils/blockValidation';
 import { BlockType, Block } from '@/types/editor';
@@ -386,7 +385,7 @@ describe('Validação de Propriedades dos Blocos', () => {
             };
 
             const crossValidation = validateBlockProperties('quiz-question-inline',
-                questionBlock.properties,
+                questionBlock.properties || null,
                 { relatedBlocks: [optionsBlock] }
             );
 
@@ -417,7 +416,7 @@ describe('Validação de Propriedades dos Blocos', () => {
             };
 
             const dataFlowValidation = validateBlockProperties('step20-result-header',
-                resultHeaderBlock.properties,
+                resultHeaderBlock.properties || null,
                 { relatedBlocks: [styleRevealBlock] }
             );
 

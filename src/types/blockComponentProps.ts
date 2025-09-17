@@ -1,40 +1,29 @@
-import React from 'react';
+/**
+ * 🔄 LEGACY COMPATIBILITY - DEPRECATED
+ * 
+ * Este arquivo foi consolidado em src/types/core/
+ * 
+ * ⚠️ MIGRATION NOTICE:
+ * - Use: import { BlockComponentProps } from '@/types/core';
+ * - Este arquivo será removido na Fase 2 da consolidação
+ * - Tipos movidos para src/types/core/BlockInterfaces.ts
+ */
 
-// Universal interface for all block components to fix TypeScript errors
-export interface BlockComponentProps {
-  block?: any;
-  properties?: Record<string, any>;
-  isSelected?: boolean;
-  onClick?: () => void;
-  onPropertyChange?: (key: string, value: any) => void;
-  className?: string;
+// Re-export from unified core types for backward compatibility
+export type {
+  UnifiedBlockComponentProps as BlockComponentProps,
+  BlockComponent
+} from './core';
 
-  // Quiz-specific props
-  isPreviewMode?: boolean;
-  onNext?: () => void;
-  onPrevious?: () => void;
-  canProceed?: boolean;
-  sessionId?: string;
+export {
+  asBlockComponent,
+  createBlockComponent
+} from './core';
 
-  // Layout props
-  containerWidth?: 'full' | 'large' | 'medium' | 'small';
-  containerPosition?: 'center' | 'left' | 'right';
-  spacing?: string;
-  marginTop?: number;
-  marginBottom?: number;
-  paddingTop?: number;
-  paddingBottom?: number;
-  backgroundColor?: string;
-  borderRadius?: number;
-  shadow?: string;
-  scale?: number;
-
-  // Allow any additional props for flexibility
-  [key: string]: any;
+// Legacy warning for developers
+if (process.env.NODE_ENV === 'development') {
+  console.warn(
+    '⚠️ DEPRECATION WARNING: src/types/blockComponentProps.ts is deprecated. ' +
+    'Please import from "@/types/core" instead.'
+  );
 }
-
-// Type definition for components that accept these props
-export type BlockComponent = React.ComponentType<BlockComponentProps>;
-
-// Type assertion helper for lazy components
-export const asBlockComponent = (component: any): BlockComponent => component as BlockComponent;

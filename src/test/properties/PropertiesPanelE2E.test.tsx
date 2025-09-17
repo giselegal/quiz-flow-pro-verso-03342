@@ -4,13 +4,11 @@
  */
 
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { renderWithProviders, createTestBlock, TestHelpers } from '@/test/test-utils';
-import { EditorProvider } from '@/components/editor/EditorProvider';
+import { createTestBlock, TestHelpers } from '@/test/test-utils';
 import { PropertiesColumn } from '@/components/editor/properties/PropertiesColumn';
 import { ComponentsSidebar } from '@/components/editor/ComponentsSidebar';
-import { Block } from '@/types/editor';
 
 // Mock do Supabase para testes E2E
 const mockSupabaseClient = {
@@ -51,7 +49,7 @@ describe('Painel de Propriedades - Testes E2E', () => {
                     selectedBlockId: null
                 },
                 actions: {
-                    addBlock: vi.fn().mockImplementation((stepId, blockData) => {
+                    addBlock: vi.fn().mockImplementation((_stepId, blockData) => {
                         return Promise.resolve({
                             success: true,
                             blockId: 'new-block-id',
@@ -92,7 +90,7 @@ describe('Painel de Propriedades - Testes E2E', () => {
                 subtitle: 'Descrição inicial'
             });
 
-            const { rerender } = render(
+            render(
                 <PropertiesColumn selectedBlock={createdBlock} />,
                 { initialState }
             );
@@ -173,7 +171,7 @@ describe('Painel de Propriedades - Testes E2E', () => {
             );
 
             // 2. Mudar para próximo componente
-            const { rerender } = render(
+            render(
                 <PropertiesColumn selectedBlock={step20Blocks[2]} />,
                 { initialState: mockContext }
             );

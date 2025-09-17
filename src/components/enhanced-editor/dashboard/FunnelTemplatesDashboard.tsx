@@ -1,7 +1,7 @@
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { funnelTemplateService, type FunnelTemplate } from '@/services/funnelTemplateService';
+import { funnelTemplateService, type UnifiedTemplate as FunnelTemplate } from '@/services/templates';
 import { handleEditTemplate } from '@/utils/templateToFunnelCreator';
 import {
   Copy,
@@ -382,8 +382,8 @@ const FunnelTemplatesDashboard: React.FC<FunnelTemplatesDashboardProps> = ({
             variant={selectedCategory === 'all' ? 'default' : 'outline'}
             onClick={() => setSelectedCategory('all')}
             className={`h-auto p-4 flex flex-col items-center space-y-2 ${selectedCategory === 'all'
-                ? 'bg-[#B89B7A] hover:bg-[#A38A69]'
-                : 'border-[#B89B7A] text-[#6B4F43] hover:bg-[#B89B7A]/10'
+              ? 'bg-[#B89B7A] hover:bg-[#A38A69]'
+              : 'border-[#B89B7A] text-[#6B4F43] hover:bg-[#B89B7A]/10'
               }`}
           >
             <FileText className="w-6 h-6" />
@@ -398,8 +398,8 @@ const FunnelTemplatesDashboard: React.FC<FunnelTemplatesDashboardProps> = ({
                 variant={selectedCategory === key ? 'default' : 'outline'}
                 onClick={() => setSelectedCategory(key)}
                 className={`h-auto p-4 flex flex-col items-center space-y-2 ${selectedCategory === key
-                    ? 'bg-[#B89B7A] hover:bg-[#A38A69]'
-                    : 'border-[#B89B7A] text-[#6B4F43] hover:bg-[#B89B7A]/10'
+                  ? 'bg-[#B89B7A] hover:bg-[#A38A69]'
+                  : 'border-[#B89B7A] text-[#6B4F43] hover:bg-[#B89B7A]/10'
                   }`}
                 style={selectedCategory === key ? {} : { borderColor: theme.color }}
               >

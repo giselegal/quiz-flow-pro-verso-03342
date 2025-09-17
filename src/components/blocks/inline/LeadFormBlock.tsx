@@ -3,12 +3,11 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
-import type { BlockComponentProps } from '@/types/blocks';
+import type { UnifiedBlockComponentProps } from '@/types/core';
 
-interface LeadFormBlockProps extends BlockComponentProps {
+interface LeadFormBlockProps extends UnifiedBlockComponentProps {
   fields?: string[];
   submitText?: string;
-  containerWidth?: string;
   spacing?: string;
   backgroundColor?: string;
   borderColor?: string;

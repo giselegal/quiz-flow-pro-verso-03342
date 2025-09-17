@@ -1,37 +1,21 @@
 import { generateSemanticId } from '../utils/semanticIdGenerator';
 import { Block, BlockType } from './editor';
 
-export interface BlockData {
-  id: string;
-  type: string;
-  properties: Record<string, any>;
-  content: Record<string, any>;
-  order: number;
-}
+/**
+ * 🔄 PARTIAL MIGRATION - CONSOLIDATED TYPES MOVED
+ * 
+ * BlockComponentProps foi movido para src/types/core/BlockInterfaces.ts
+ * Este arquivo mantém apenas tipos específicos não consolidados ainda.
+ * 
+ * ⚠️ NEXT PHASE: Outros tipos serão analisados para consolidação na Fase 2
+ */
 
-export interface BlockDefinition {
-  type: string;
-  name: string;
-  description: string;
-  category: string;
-  icon: any;
-  defaultProps: Record<string, any>;
-  properties: Record<string, any>;
-  subBlocks?: string[]; // Lista de tipos de blocos que podem ser usados como subcomponentes
-}
-
-export interface BlockComponentProps {
-  id?: string;
-  block: BlockData;
-  type?: string;
-  properties?: Record<string, any>;
-  isSelected?: boolean;
-  isEditing?: boolean;
-  onClick?: () => void;
-  onPropertyChange?: (key: string, value: any) => void;
-  onValidate?: (isValid: boolean) => void;
-  className?: string;
-}
+// Re-export consolidated types from core
+export type {
+  BlockData,
+  BlockDefinition,
+  UnifiedBlockComponentProps as BlockComponentProps
+} from './core';
 
 // Extended FAQ Item interface with all properties
 export interface ExtendedFAQItem {
@@ -93,6 +77,8 @@ export const createDefaultBlock = (type: BlockType, stageId: string): Block => {
 };
 
 // Extended interfaces for specific block types - all properly extending BlockData
+import type { BlockData } from './core';
+
 export interface CountdownTimerBlock extends BlockData {
   type: 'countdown-timer';
   content: {

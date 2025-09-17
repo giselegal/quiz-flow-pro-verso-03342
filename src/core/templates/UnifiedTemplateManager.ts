@@ -11,7 +11,7 @@
  */
 
 import { TemplateRegistry, UnifiedTemplate, TEMPLATE_CATEGORIES } from '../../config/unifiedTemplatesRegistry';
-import { funnelTemplateService } from '../../services/funnelTemplateService';
+import { funnelTemplateService } from '@/services/templates';
 import { customTemplateService, CustomTemplate } from '../../services/customTemplateService';
 import { templateService } from '../funnel/services/TemplateService';
 

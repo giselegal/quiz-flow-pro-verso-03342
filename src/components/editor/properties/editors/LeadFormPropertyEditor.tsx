@@ -10,7 +10,6 @@ import {
     SelectValue,
 } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Textarea } from '@/components/ui/textarea';
 import { FileText, Palette, Settings, Smartphone } from 'lucide-react';
 import React, { useCallback, useState } from 'react';
@@ -125,8 +124,8 @@ export const LeadFormPropertyEditor: React.FC<PropertyEditorProps> = ({
                                             checked={currentFields.includes(field)}
                                             onCheckedChange={checked => {
                                                 const newFields = checked
-                                                     ? [...currentFields, field]
-                                                     : currentFields.filter((f: any) => f !== field);
+                                                    ? [...currentFields, field]
+                                                    : currentFields.filter((f: any) => f !== field);
                                                 handlePropertyChange('fields', newFields);
                                             }}
                                         />
