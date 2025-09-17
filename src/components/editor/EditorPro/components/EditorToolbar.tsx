@@ -39,13 +39,20 @@ const EditorToolbar: React.FC<EditorToolbarProps> = memo(({
   onOpenSettings
 }) => {
   return (
-    <div className="bg-background border-b border-border p-3 flex items-center justify-between">
+    <div className={cn(
+      "bg-background border-b border-border p-3 flex items-center justify-between transition-colors",
+      isPreviewMode && "bg-green-50 border-green-200"
+    )}>
       {/* Info da etapa */}
       <div className="flex items-center gap-4">
-        <div className="text-sm font-medium text-muted-foreground">
-          Etapa {currentStep} de {totalSteps}
+        <div className={cn(
+          "text-sm font-medium transition-colors",
+          isPreviewMode ? "text-green-700" : "text-muted-foreground"
+        )}>
+          {isPreviewMode ? "🎯 Preview - Etapa" : "Etapa"} {currentStep} de {totalSteps}
+          {isPreviewMode && <span className="ml-2 text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full">Visualização de Produção</span>}
         </div>
-        
+
         {/* Indicador de progresso */}
         <div className="flex items-center gap-1">
           {Array.from({ length: Math.min(totalSteps, 5) }, (_, i) => (
@@ -53,10 +60,10 @@ const EditorToolbar: React.FC<EditorToolbarProps> = memo(({
               key={i}
               className={cn(
                 'w-2 h-2 rounded-full transition-all',
-                i < currentStep 
-                  ? 'bg-primary' 
-                  : i === currentStep - 1 
-                    ? 'bg-primary/60' 
+                i < currentStep
+                  ? 'bg-primary'
+                  : i === currentStep - 1
+                    ? 'bg-primary/60'
                     : 'bg-muted'
               )}
             />

@@ -14,8 +14,8 @@ const ComQueRoupaEuVouPage = lazy(() => import('./pages/ComQueRoupaEuVouPage'));
 // 🎯 PÁGINAS ESSENCIAIS - SEM CONFLITOS
 const Home = lazy(() => import('./pages/Home'));
 const AuthPage = lazy(() => import('./pages/AuthPage'));
-// 🏗️ EDITOR PRINCIPAL - EditorPro com fundo preto e 4 colunas
-const EditorPro = lazy(() => import('./legacy/editor/EditorPro'));
+// 🏗️ EDITOR PRINCIPAL - ModularEditorPro moderno com UniversalNoCodePanel
+const EditorPro = lazy(() => import('./components/editor/EditorPro/components/ModularEditorPro'));
 // 🏗️ EDITOR PRINCIPAL PROFISSIONAL ALTERNATIVO
 const MainEditor = lazy(() => import('./pages/MainEditor'));
 // 🚀 NOVO: Editor Visual Headless

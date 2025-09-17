@@ -80,12 +80,12 @@ const ModularEditorPro: React.FC = () => {
   const handleDeleteBlock = useCallback((blockId: string) => {
     const stepKey = `step-${state.currentStep}`;
     actions.removeBlock(stepKey, blockId);
-    
+
     // Limpar seleção se deletar bloco selecionado
     if (state.selectedBlockId === blockId) {
       actions.setSelectedBlockId(null);
     }
-    
+
     addNotification('Componente foi removido da etapa');
   }, [state.currentStep, state.selectedBlockId, actions, addNotification]);
 
@@ -140,7 +140,7 @@ const ModularEditorPro: React.FC = () => {
       <div className="flex-1 flex overflow-hidden">
         {/* Sidebar de etapas */}
         <div className="w-64 border-r border-border bg-muted/30">
-          <StepSidebar 
+          <StepSidebar
             currentStep={state.currentStep}
             stepHasBlocks={stepHasBlocksRecord}
             onSelectStep={actions.setCurrentStep}
@@ -151,7 +151,7 @@ const ModularEditorPro: React.FC = () => {
 
         {/* Sidebar de componentes */}
         <div className="w-80 border-r border-border bg-background">
-          <ComponentsSidebar 
+          <ComponentsSidebar
             groupedComponents={groupedComponents}
             renderIcon={(icon: string) => <div>{icon}</div>}
           />
@@ -168,12 +168,13 @@ const ModularEditorPro: React.FC = () => {
             onDeleteBlock={handleDeleteBlock}
             onReorderBlocks={handleReorderBlocks}
             isPreviewMode={isPreviewMode}
+            onStepChange={actions.setCurrentStep} // Para navegação no preview
           />
         </div>
 
         {/* Propriedades */}
         <div className="w-80 border-l border-border bg-muted/30">
-          <PropertiesColumn 
+          <PropertiesColumn
             selectedBlock={selectedBlock || undefined}
             onUpdate={handleUpdateSelectedBlock}
             onClose={() => actions.setSelectedBlockId(null)}

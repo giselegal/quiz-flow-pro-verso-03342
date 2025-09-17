@@ -67,6 +67,14 @@ export const QuizRenderer: React.FC<QuizRendererProps> = React.memo(({
     return canUseOverrides ? (blocksOverride as Block[]) : getStepData();
   }, [canUseOverrides, blocksOverride, getStepData]);
 
+  // Em modo preview do editor, sempre usar blocksOverride se disponível
+  const finalStepBlocks = useMemo(() => {
+    if (mode === 'preview' && Array.isArray(blocksOverride)) {
+      return blocksOverride as Block[];
+    }
+    return stepBlocks;
+  }, [mode, blocksOverride, stepBlocks]);
+
   // Stable step synchronization (handled via effect below)
 
   // 🔄 Sincronizar passo interno com o passo do Editor/Preview
@@ -182,7 +190,7 @@ export const QuizRenderer: React.FC<QuizRendererProps> = React.memo(({
   }, [currentStep, setStepValid]); // Added setStepValid to dependencies
 
   // Memoize stepBlocks to prevent infinite re-renders
-  const stableStepBlocks = useMemo(() => stepBlocks || [], [stepBlocks]);
+  const stableStepBlocks = useMemo(() => finalStepBlocks || [], [finalStepBlocks]);
   // Memoizar o wrapper de stepBlocks por chave de etapa para estabilidade de identidade
   const validationBlocks = useMemo(() => ({ [`step-${currentStep}`]: stableStepBlocks } as any), [currentStep, stableStepBlocks]);
 
@@ -355,7 +363,7 @@ export const QuizRenderer: React.FC<QuizRendererProps> = React.memo(({
 
     return (
       <div className="step-content p-8 space-y-6 bg-white/95 backdrop-blur-sm rounded-2xl shadow-xl shadow-stone-200/40 border border-stone-200/30 ring-1 ring-stone-100/20 overflow-hidden">
-        {stepBlocks.map((block: any, index: number) => {
+        {finalStepBlocks.map((block: any, index: number) => {
           const isSelectable = mode === 'editor' || (mode === 'preview' && previewEditable);
           const isSelected = isSelectable && selectedBlockId === block.id;
           // Injeção de callbacks/session para preview com comportamento real
@@ -429,7 +437,10 @@ export const QuizRenderer: React.FC<QuizRendererProps> = React.memo(({
       <div className={cn(
         "container mx-auto py-8 max-w-4xl",
         // No preview do editor, ajustar padding para responsividade
-        mode === 'preview' ? "px-2 sm:px-4" : "px-6"
+        mode === 'preview' ? "px-2 sm:px-4" : "px-6",
+        // Se está sendo usado em editor, otimizar para viewport menor
+        mode === 'preview' && typeof window !== 'undefined' &&
+        window.location.pathname.includes('/editor') && "max-w-3xl py-4"
       )}>
         {/* Apenas mostrar cabeçalho em modo production, não no editor nem no preview do editor */}
         {mode === 'production' && renderHeader()}

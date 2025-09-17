@@ -22,6 +22,7 @@ interface EditorCanvasProps {
   onDeleteBlock: (blockId: string) => void;
   onReorderBlocks: (oldIndex: number, newIndex: number) => void;
   isPreviewMode: boolean;
+  onStepChange?: (step: number) => void;
 }
 
 const EditorCanvas: React.FC<EditorCanvasProps> = memo(({
@@ -32,7 +33,8 @@ const EditorCanvas: React.FC<EditorCanvasProps> = memo(({
   onUpdateBlock,
   onDeleteBlock,
   onReorderBlocks,
-  isPreviewMode
+  isPreviewMode,
+  onStepChange
 }) => {
   // Sistema de seleção otimizado
   const { handleBlockSelection } = useStepSelection({
@@ -51,19 +53,19 @@ const EditorCanvas: React.FC<EditorCanvasProps> = memo(({
 
   const handleDragEnd = useCallback((event: DragEndEvent) => {
     const { active, over } = event;
-    
+
     if (!over || !active) return;
-    
+
     const activeId = active.id;
     const overId = over.id;
-    
+
     if (activeId === overId) return;
 
     // Encontrar índices para reordenação
-    const activeIndex = blocks.findIndex(block => 
+    const activeIndex = blocks.findIndex(block =>
       `dnd-block-${currentStep}-${block.id}` === activeId
     );
-    const overIndex = blocks.findIndex(block => 
+    const overIndex = blocks.findIndex(block =>
       `dnd-block-${currentStep}-${block.id}` === overId
     );
 
@@ -73,29 +75,33 @@ const EditorCanvas: React.FC<EditorCanvasProps> = memo(({
   }, [blocks, currentStep, onReorderBlocks]);
 
   // Key estável para forçar remount ao trocar etapa
-  const canvasKey = useMemo(() => 
-    generateStableKey({ 
-      stepNumber: currentStep, 
-      type: 'block' 
-    }), 
+  const canvasKey = useMemo(() =>
+    generateStableKey({
+      stepNumber: currentStep,
+      type: 'block'
+    }),
     [currentStep]
   );
 
   if (isPreviewMode) {
     return (
-      <div className="flex-1 min-h-0 overflow-auto">
-        <QuizRenderer
-          mode="preview"
-          currentStepOverride={currentStep}
-          blocksOverride={blocks}
-          previewEditable={false}
-        />
+      <div className="flex-1 min-h-0 overflow-auto bg-gradient-to-br from-[#FAF9F7] via-[#F5F2E9] to-[#EEEBE1]">
+        <div className="h-full w-full">
+          <QuizRenderer
+            mode="preview"
+            currentStepOverride={currentStep}
+            blocksOverride={blocks}
+            previewEditable={false}
+            onStepChange={onStepChange}
+            className="preview-mode-canvas"
+          />
+        </div>
       </div>
     );
   }
 
   return (
-    <div 
+    <div
       key={canvasKey}
       className="flex-1 min-h-0 relative overflow-auto editor-canvas"
     >
