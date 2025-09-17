@@ -16,7 +16,7 @@
  * ✅ Memory leak prevention
  */
 
-import { useCallback, useEffect, useRef, useState, useMemo } from 'react';
+import { useEffect, useRef, useMemo } from 'react';
 import { create } from 'zustand';
 import { devtools, subscribeWithSelector } from 'zustand/middleware';
 
@@ -202,7 +202,7 @@ const useGlobalStore = create<GlobalStore>()(
           const savedConfig = localStorage.getItem('global-app-config');
           if (savedConfig) {
             const parsedConfig = JSON.parse(savedConfig);
-            set((state) => ({
+            set((_state) => ({
               config: { ...defaultConfig, ...parsedConfig },
               lastUpdated: new Date(),
             }));

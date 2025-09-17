@@ -533,12 +533,16 @@ export class TreeShakingAnalyzerPlugin {
                 const report = await analyzeProjectTreeShaking();
                 generateOptimizationReport(report);
 
-                // Salva relatório em arquivo
-                const fs = require('fs');
-                fs.writeFileSync(
-                    'tree-shaking-report.json',
-                    JSON.stringify(report, null, 2)
-                );
+                // Salva relatório usando dynamic import para Node.js
+                try {
+                    const fs = await import('fs');
+                    fs.writeFileSync(
+                        'tree-shaking-report.json',
+                        JSON.stringify(report, null, 2)
+                    );
+                } catch (error) {
+                    console.warn('Could not save tree-shaking report:', error);
+                }
             }
         });
     }

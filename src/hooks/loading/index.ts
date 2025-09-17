@@ -132,7 +132,8 @@ export function getGlobalLoadingState(): {
     warnings: string[];
 } {
     try {
-        const { masterLoadingService } = require('./MasterLoadingService');
+        // Use dynamic import instead of require
+        const masterLoadingService = await import('./MasterLoadingService').then(m => m.masterLoadingService);
         const currentState = masterLoadingService.getCurrentState();
         const allStates = masterLoadingService.getAllComponentStates();
 
@@ -160,8 +161,8 @@ export function getGlobalLoadingState(): {
 /**
  * Clear all loading states
  */
-export function clearAllLoadingStates(): void {
-    const { masterLoadingService } = require('./MasterLoadingService');
+export async function clearAllLoadingStates(): Promise<void> {
+    const masterLoadingService = await import('./MasterLoadingService').then(m => m.masterLoadingService);
     masterLoadingService.clearAllStates();
     console.log('🧹 All loading states cleared');
 }
@@ -169,8 +170,8 @@ export function clearAllLoadingStates(): void {
 /**
  * Reset loading performance metrics
  */
-export function resetLoadingMetrics(): void {
-    const { masterLoadingService } = require('./MasterLoadingService');
+export async function resetLoadingMetrics(): Promise<void> {
+    const masterLoadingService = await import('./MasterLoadingService').then(m => m.masterLoadingService);
     masterLoadingService.resetPerformanceMetrics();
     console.log('📊 Loading performance metrics reset');
 }
@@ -178,14 +179,14 @@ export function resetLoadingMetrics(): void {
 /**
  * Get loading performance summary
  */
-export function getLoadingPerformanceSummary(): {
+export async function getLoadingPerformanceSummary(): Promise<{
     totalLoadings: number;
     averageLoadingTime: number;
     errorCount: number;
     longestLoadingTime: number;
     currentActiveLoadings: number;
 } {
-    const { masterLoadingService } = require('./MasterLoadingService');
+    const masterLoadingService = await import('./MasterLoadingService').then(m => m.masterLoadingService);
     const metrics = masterLoadingService.getPerformanceMetrics();
     const allStates = masterLoadingService.getAllComponentStates();
     const currentActiveLoadings = Array.from(allStates.values()).filter((s: any) => s.isLoading).length;

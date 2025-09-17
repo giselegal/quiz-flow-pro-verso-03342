@@ -177,7 +177,7 @@ export const DEFAULT_GUARDS: NavigationGuard[] = [
         onBlock: (targetPath) => {
             console.log('Navigation blocked due to unsaved changes:', targetPath);
         },
-        onAllow: (targetPath) => {
+        onAllow: (_targetPath) => {
             localStorage.removeItem('editor-unsaved-changes');
         }
     },
@@ -204,7 +204,7 @@ export const DEFAULT_MIDDLEWARE: NavigationMiddleware[] = [
     {
         id: 'redirect-to-editor',
         condition: (path) => path === '/editor-main',
-        handler: (path) => {
+        handler: (_path) => {
             console.log('Redirecting /editor-main to /editor');
             return '/editor'; // Redirect to /editor
         }
@@ -283,7 +283,7 @@ const matchRoute = (pattern: string, path: string): boolean => {
 
 export const useNavigation = () => {
     const [location, setLocation] = useLocation();
-    const [, params] = useRoute('/:path*');
+    const [, _params] = useRoute('/:path*');
 
     const [state, setState] = useState<NavigationState>({
         currentPath: location,

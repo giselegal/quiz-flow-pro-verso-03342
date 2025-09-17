@@ -20,18 +20,10 @@ import React from 'react';
 import { z } from 'zod';
 import { LucideIcon } from 'lucide-react';
 import {
-  AlignLeft,
   Heading,
-  Image,
   Minus,
-  Square,
   Type,
   HelpCircle,
-  FileText,
-  Tag,
-  Layout,
-  Gift,
-  Shield,
 } from 'lucide-react';
 
 // Import key components for initial implementation
@@ -618,7 +610,7 @@ export function getBlockDefaultProperties(type: string): Record<string, any> {
 /**
  * Convert legacy block definition to master schema
  */
-export function convertLegacyBlockDefinition(legacyDef: any): MasterBlockDefinition {
+export function convertLegacyBlockDefinition(_legacyDef: any): MasterBlockDefinition {
   // Implementation will be added in migration phase
   throw new Error('Migration helper not implemented yet');
 }
@@ -626,7 +618,7 @@ export function convertLegacyBlockDefinition(legacyDef: any): MasterBlockDefinit
 /**
  * Convert legacy property schema to master property
  */
-export function convertLegacyPropertySchema(legacyProp: any): MasterPropertySchema {
+export function convertLegacyPropertySchema(_legacyProp: any): MasterPropertySchema {
   // Implementation will be added in migration phase
   throw new Error('Migration helper not implemented yet');
 }

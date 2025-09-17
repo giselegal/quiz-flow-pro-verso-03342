@@ -73,8 +73,9 @@ export { PropertyExtractionService } from './PropertyExtractionService';
  */
 export function initializeCoreServices() {
     // Obtém instâncias singleton
-    const editorService = getUnifiedEditorService(new (require('./StorageService').StorageService)());
-    const globalStateService = getGlobalStateService();
+    // Simplified service initialization without require()
+    const editorService = new UnifiedEditorService();
+    const globalStateService = new GlobalStateService();
     const validationService = getUnifiedValidationService();
     const navigationService = getNavigationService();
     const loadingService = getMasterLoadingService();

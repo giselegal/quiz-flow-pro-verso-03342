@@ -207,8 +207,10 @@ export const quickValidate = {
      * Validates color value
      */
     color: (color: string) => {
-        const { isValidColor } = require('./SanitizationUtils');
-        const isValid = isValidColor(color);
+        // Simplified color validation without require()
+        const isValid = /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/.test(color) ||
+            /^rgb\(\s*\d+\s*,\s*\d+\s*,\s*\d+\s*\)$/.test(color) ||
+            /^rgba\(\s*\d+\s*,\s*\d+\s*,\s*\d+\s*,\s*[\d.]+\s*\)$/.test(color);
 
         return {
             isValid,

@@ -18,8 +18,7 @@
  * ✅ Real-time validation
  */
 
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { z } from 'zod';
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 
 // =============================================================================
 // TYPES AND INTERFACES
@@ -246,15 +245,6 @@ export const useUnifiedValidation = () => {
     });
 
     const asyncTimeoutRef = useRef<NodeJS.Timeout>();
-
-    // Performance optimization: debounce validation
-    const debouncedValidation = useCallback((fn: () => void, delay = 300) => {
-        if (asyncTimeoutRef.current) {
-            clearTimeout(asyncTimeoutRef.current);
-        }
-
-        asyncTimeoutRef.current = setTimeout(fn, delay);
-    }, []);
 
     // Cleanup on unmount
     useEffect(() => {

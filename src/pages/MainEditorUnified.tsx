@@ -13,7 +13,6 @@ import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { useFunnelContext } from '@/hooks/useFunnelLoader';
 import FunnelFallback from '@/components/editor/FunnelFallback';
 import { UnifiedFunnelProvider } from '@/context/UnifiedFunnelContext';
-import EditorFallback from '@/components/editor/EditorFallback';
 import { EditorRuntimeProviders } from '@/context/EditorRuntimeProviders';
 
 /**
@@ -238,7 +237,6 @@ const FunnelValidatedEditor: React.FC<{
                     funnelId={undefined}
                     debugMode={debugMode}
                     useUniversalEditor={useUniversalEditor}
-                    forceUniversal={forceUniversal}
                     initialStep={initialStep}
                 />
             );
@@ -287,7 +285,6 @@ const FunnelValidatedEditor: React.FC<{
                     funnelId={funnelId}
                     debugMode={debugMode}
                     useUniversalEditor={useUniversalEditor}
-                    forceUniversal={forceUniversal}
                     initialStep={initialStep}
                     validatedFunnel={funnelContext.funnel}
                     canEdit={funnelContext.canEdit}
