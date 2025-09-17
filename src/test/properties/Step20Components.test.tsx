@@ -47,7 +47,6 @@ const TestWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => (
 describe('Step 20 - Componentes Modulares', () => {
     beforeEach(() => {
         vi.clearAllMocks();
-        });
     });
 });
 
@@ -571,3 +570,4 @@ describe('Step20ResultHeaderBlock', () => {
             expect(screen.getAllByText(/userName/)).toHaveLength(2);
         });
     });
+});
