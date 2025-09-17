@@ -1,19 +1,21 @@
 /**
- * 🔧 LEGACY TEMPLATE ADAPTERS - COMPATIBILIDADE TOTAL
+ * � LEGACY TEMPLATE ADAPTERS
  * 
- * Adaptadores que garantem compatibilidade com os serviços legados:
- * - UnifiedTemplateService.ts (mantém interface pública)
- * - templateLibraryService.ts (preserva métodos existentes)
- * - funnelTemplateService.ts (mantém funcionalidade Supabase)
- * - contextualFunnelService.ts (preserva context isolation)
- * - funnelComponentsService.ts (mantém component management)
+ * Este arquivo fornece adapters para manter compatibilidade total
+ * com os serviços de template legados, redirecionando todas as
+ * chamadas para o novo MasterTemplateService.
  * 
- * ✅ ESTRATÉGIA:
+ * ✅ CARACTERÍSTICAS:
+ * - Interceptação automática de chamadas legacy
+ * - Warnings de deprecação informativos
  * - Re-exports que redirecionam para MasterTemplateService
- * - Adapters que convertem interfaces antigas para novas
- * - Deprecated warnings para migração gradual
+ * - Migração automática de dados quando necessário
  * - 100% backward compatibility
  */
+
+// Import types statically (safe for bundle optimization)
+import type { UnifiedTemplate, TemplateLoadOptions } from './MasterTemplateService';
+import { Block } from '@/types/editor';
 
 import { masterTemplateService, UnifiedTemplate, TemplateLoadOptions } from './MasterTemplateService';
 import { Block } from '@/types/editor';
@@ -37,28 +39,33 @@ export class UnifiedTemplateServiceAdapter {
         return this.instance;
     }
 
-    async loadTemplate(templateId: string, options?: any): Promise<UnifiedTemplate | null> {
+    async loadTemplate(templateId: string, options?: TemplateLoadOptions): Promise<UnifiedTemplate | null> {
         console.warn('🚨 UnifiedTemplateService.loadTemplate is deprecated. Use masterTemplateService.loadTemplate instead.');
+        const { masterTemplateService } = await import('./MasterTemplateService');
         return masterTemplateService.loadTemplate(templateId, options);
     }
 
-    async loadStepBlocks(stepId: string, options?: any): Promise<Block[]> {
+    async loadStepBlocks(stepId: string, options?: TemplateLoadOptions): Promise<Block[]> {
         console.warn('🚨 UnifiedTemplateService.loadStepBlocks is deprecated. Use masterTemplateService.loadStepBlocks instead.');
+        const { masterTemplateService } = await import('./MasterTemplateService');
         return masterTemplateService.loadStepBlocks(stepId, options);
     }
 
     async listTemplates(category?: string): Promise<UnifiedTemplate[]> {
         console.warn('🚨 UnifiedTemplateService.listTemplates is deprecated. Use masterTemplateService.listTemplates instead.');
+        const { masterTemplateService } = await import('./MasterTemplateService');
         return masterTemplateService.listTemplates(category);
     }
 
-    async saveTemplate(template: Partial<UnifiedTemplate>): Promise<boolean> {
+    async saveTemplate(template: UnifiedTemplate): Promise<boolean> {
         console.warn('🚨 UnifiedTemplateService.saveTemplate is deprecated. Use masterTemplateService.saveTemplate instead.');
+        const { masterTemplateService } = await import('./MasterTemplateService');
         return masterTemplateService.saveTemplate(template);
     }
 
-    clearCache(): void {
+    async clearCache(): Promise<void> {
         console.warn('🚨 UnifiedTemplateService.clearCache is deprecated. Use masterTemplateService.clearCache instead.');
+        const { masterTemplateService } = await import('./MasterTemplateService');
         masterTemplateService.clearCache();
     }
 }
@@ -84,11 +91,13 @@ export class TemplateLibraryServiceAdapter {
 
     async getById(templateId: string): Promise<UnifiedTemplate | null> {
         console.warn('🚨 templateLibraryService.getById is deprecated. Use masterTemplateService.loadTemplate instead.');
+        const { masterTemplateService } = await import('./MasterTemplateService');
         return masterTemplateService.loadTemplate(templateId);
     }
 
     async listBuiltins(): Promise<UnifiedTemplate[]> {
         console.warn('🚨 templateLibraryService.listBuiltins is deprecated. Use masterTemplateService.listTemplates instead.');
+        const { masterTemplateService } = await import('./MasterTemplateService');
         return masterTemplateService.listTemplates('builtin');
     }
 
