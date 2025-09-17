@@ -801,7 +801,7 @@ export const UltraUnifiedPropertiesPanel: React.FC<UltraUnifiedPropertiesPanelPr
 
                     {PROPERTY_CATEGORIES.map(category => {
                         const categoryProperties = (categorizedProperties[category.key] || [])
-                            .filter(prop => filteredProperties.includes(prop));
+                            .filter((prop: PropertyField) => filteredProperties.some((filtered: PropertyField) => filtered.path === prop.path));
                         if (categoryProperties.length === 0) return null;
 
                         return (
@@ -815,7 +815,7 @@ export const UltraUnifiedPropertiesPanel: React.FC<UltraUnifiedPropertiesPanelPr
                                 </div>
 
                                 <div className="space-y-4">
-                                    {categoryProperties.map(property => (
+                                    {categoryProperties.map((property: PropertyField) => (
                                         <UniversalPropertyRenderer
                                             key={property.path}
                                             property={property}
@@ -839,7 +839,7 @@ export const UltraUnifiedPropertiesPanel: React.FC<UltraUnifiedPropertiesPanelPr
                         .sort((a, b) => a.priority - b.priority)
                         .map(category => {
                             const categoryProperties = (categorizedProperties[category.key] || [])
-                                .filter(prop => filteredProperties.includes(prop));
+                                .filter((prop: PropertyField) => filteredProperties.some((filtered: PropertyField) => filtered.path === prop.path));
 
                             return (
                                 <Collapsible key={category.key} defaultOpen={category.priority <= 2}>
@@ -858,7 +858,7 @@ export const UltraUnifiedPropertiesPanel: React.FC<UltraUnifiedPropertiesPanelPr
                                     <CollapsibleContent className="px-3 pb-3">
                                         <p className="text-xs text-muted-foreground mb-3">{category.description}</p>
                                         <div className="space-y-4">
-                                            {categoryProperties.map(property => (
+                                            {categoryProperties.map((property: PropertyField) => (
                                                 <UniversalPropertyRenderer
                                                     key={property.path}
                                                     property={property}
