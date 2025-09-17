@@ -168,7 +168,7 @@ const ModularEditorPro: React.FC = () => {
 
   const handleGlobalDragEnd = useCallback((event: DragEndEvent) => {
     const { active, over } = event;
-    
+
     if (!over || !active.data.current) {
       console.log('❌ Drag end sem target válido');
       return;
@@ -178,9 +178,9 @@ const ModularEditorPro: React.FC = () => {
     if (active.data.current.type === 'sidebar-component' && over.data.current?.type === 'dropzone') {
       const componentType = active.data.current.blockType;
       const stepKey = `step-${state.currentStep}`;
-      
+
       console.log('✅ Adicionando componente ao canvas:', componentType);
-      
+
       // Criar novo bloco
       const newBlockId = `${componentType}-${Date.now()}`;
       const newBlock: Block = {
@@ -193,10 +193,10 @@ const ModularEditorPro: React.FC = () => {
 
       // Adicionar bloco à etapa atual
       actions.addBlock(stepKey, newBlock);
-      
+
       // Selecionar o novo bloco
       actions.setSelectedBlockId(newBlockId);
-      
+
       addNotification(`Componente ${active.data.current.title} adicionado`);
       return;
     }
@@ -230,7 +230,7 @@ const ModularEditorPro: React.FC = () => {
   }, [addNotification]);
 
   return (
-    <DndContext 
+    <DndContext
       sensors={sensors}
       collisionDetection={closestCenter}
       onDragStart={handleGlobalDragStart}
