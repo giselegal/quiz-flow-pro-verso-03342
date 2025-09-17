@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { QuizFlowProvider } from '@/context/QuizFlowProvider';
 import { templateLibraryService } from '@/services/templates';
 import React from 'react';
@@ -682,25 +681,25 @@ const EditorInitializerUnified: React.FC<{
                             </p>
                         </div>
                         <div className="h-[calc(100vh-40px)]">
-                            <UnifiedEditorComp
-                                stepId={initialStep ? `step-${initialStep}` : 'step-1'}
-                                stepNumber={initialStep || 1}
-                                funnelId={funnelId || 'quiz-21-steps-complete'}
-                                onStepChange={(stepId: string) => {
+                            {UnifiedEditorComp && React.createElement(UnifiedEditorComp as React.ComponentType<any>, {
+                                stepId: initialStep ? `step-${initialStep}` : 'step-1',
+                                stepNumber: initialStep || 1,
+                                funnelId: funnelId || 'quiz-21-steps-complete',
+                                onStepChange: (stepId: string) => {
                                     console.log('🔄 Step mudou:', stepId);
                                     // Atualizar URL se necessário
                                     const stepNumber = stepId.replace('step-', '');
                                     const url = new URL(window.location.href);
                                     url.searchParams.set('step', stepNumber);
                                     window.history.replaceState({}, '', url.toString());
-                                }}
-                                onSave={(stepId: string, data: any) => {
+                                },
+                                onSave: (stepId: string, data: any) => {
                                     console.log('💾 Step salvo:', stepId, data);
                                     // Implementar lógica de salvamento real
-                                }}
-                                readOnly={readOnly}
-                                showNavigation={true}
-                            />
+                                },
+                                readOnly: readOnly,
+                                showNavigation: true
+                            })}
                         </div>
                     </div>
                 );
@@ -717,11 +716,11 @@ const EditorInitializerUnified: React.FC<{
                         </div>
                     )}
                     <div className={`editor-main-content ${fallbackMode ? 'h-[calc(100vh-40px)]' : 'h-screen'}`}>
-                        <UnifiedEditorComp
-                            stepId={initialStep ? `step-${initialStep}` : 'step-1'}
-                            stepNumber={initialStep || 1}
-                            funnelId={funnelId}
-                            onStepChange={(stepId: string) => {
+                        {UnifiedEditorComp && React.createElement(UnifiedEditorComp as React.ComponentType<any>, {
+                            stepId: initialStep ? `step-${initialStep}` : 'step-1',
+                            stepNumber: initialStep || 1,
+                            funnelId: funnelId,
+                            onStepChange: (stepId: string) => {
                                 console.log('🔄 Step mudou:', stepId);
                                 // Atualizar URL se necessário
                                 const stepNumber = stepId.replace('step-', '');
@@ -730,12 +729,12 @@ const EditorInitializerUnified: React.FC<{
                                     url.searchParams.set('step', stepNumber);
                                     window.history.replaceState({}, '', url.toString());
                                 }
-                            }}
-                            onSave={(stepId: string, data: any) => {
+                            },
+                            onSave: (stepId: string, data: any) => {
                                 console.log('💾 Step salvo:', stepId, data);
                                 // Implementar lógica de salvamento
-                            }}
-                        />
+                            }
+                        })}
                     </div>
                 </div>
             );
