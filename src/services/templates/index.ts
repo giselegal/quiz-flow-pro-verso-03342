@@ -149,7 +149,7 @@ export async function getServiceHealth(): Promise<{
     } catch (error) {
         return {
             masterService: 'error',
-            legacyServices: 'error',
+            legacyServices: 'deprecated' as const,
             cacheSize: 0,
             recommendations: ['Fix MasterTemplateService errors']
         };
