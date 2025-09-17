@@ -182,8 +182,8 @@ const SortableBlockWrapperBase: React.FC<SortableBlockWrapperProps> = ({
               isSelected={false} // Evita bordas duplas
               isPreviewing={false}
               mode="editor"
-              onUpdate={(blockId, updates) => onUpdate(updates)}
-              onDelete={(blockId) => onDelete()}
+              onUpdate={(_, updates) => onUpdate(updates)}
+              onDelete={(_) => onDelete()}
               onPropertyChange={(key, value) => {
                 onUpdate({ properties: { ...block.properties, [key]: value } });
               }}

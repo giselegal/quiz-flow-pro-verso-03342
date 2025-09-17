@@ -255,11 +255,6 @@ const ModularEditorPro: React.FC = () => {
     }
   }, [selectedBlock, handleDeleteBlock]);
 
-  const handleReorderBlocks = useCallback((oldIndex: number, newIndex: number) => {
-    const stepKey = `step-${state.currentStep}`;
-    actions.reorderBlocks(stepKey, oldIndex, newIndex);
-  }, [state.currentStep, actions]);
-
   // 🔧 FUNÇÕES AUXILIARES: Conteúdo padrão para novos componentes
   const getDefaultContentForType = useCallback((type: string) => {
     switch (type) {
