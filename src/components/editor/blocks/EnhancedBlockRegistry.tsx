@@ -15,7 +15,8 @@ import OptionsGridBlock from '@/components/editor/blocks/OptionsGridBlock';
 import QuizIntroHeaderBlock from '@/components/editor/blocks/QuizIntroHeaderBlock';
 import TextInlineBlock from '@/components/editor/blocks/TextInlineBlock';
 import SalesHeroBlock from '@/components/editor/blocks/SalesHeroBlock';
-import { 
+import DecorativeBarInlineBlock from '@/components/editor/blocks/DecorativeBarInlineBlock';
+import {
     Step20ResultHeaderBlock,
     Step20StyleRevealBlock,
     Step20UserGreetingBlock,
@@ -30,10 +31,8 @@ export const ENHANCED_BLOCK_REGISTRY: Record<string, ComponentType<any>> = {
     // ✅ STEP 01 - COMPONENTES BÁSICOS
     // Preferir versões estáticas para tipos críticos usados no template
     'quiz-intro-header': QuizIntroHeaderBlock,
-    'decorative-bar': lazy(() => import('@/components/editor/blocks/DecorativeBarInlineBlock')),
-    'decorative-bar-inline': lazy(
-        () => import('@/components/editor/blocks/DecorativeBarInlineBlock')
-    ),
+    'decorative-bar': DecorativeBarInlineBlock,
+    'decorative-bar-inline': DecorativeBarInlineBlock,
     text: TextInlineBlock,
     'text-inline': TextInlineBlock,
     image: ImageInlineBlock,
