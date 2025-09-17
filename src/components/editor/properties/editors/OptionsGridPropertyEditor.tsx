@@ -559,3 +559,5 @@ export const OptionsGridPropertyEditor: React.FC<PropertyEditorProps> = ({
     </Card>
   );
 };
+
+export default OptionsGridPropertyEditor;

@@ -95,7 +95,7 @@ const HeaderPropertyEditor = lazy(() => import('./editors/HeaderPropertyEditor')
 const QuestionPropertyEditor = lazy(() => import('./editors/QuestionPropertyEditor').then(m => ({ default: m.QuestionPropertyEditor })));
 const ButtonPropertyEditor = lazy(() => import('./editors/ButtonPropertyEditor').then(m => ({ default: m.ButtonPropertyEditor })));
 const TextPropertyEditor = lazy(() => import('./editors/TextPropertyEditor'));
-const OptionsGridPropertyEditor = lazy(() => import('./editors/OptionsGridPropertyEditor').then(m => ({ default: m.OptionsGridPropertyEditor })));
+import OptionsGridPropertyEditor from './editors/OptionsGridPropertyEditor';
 const ImagePropertyEditor = lazy(() => import('./editors/ImagePropertyEditor'));
 
 // Mock service para extração de propriedades
