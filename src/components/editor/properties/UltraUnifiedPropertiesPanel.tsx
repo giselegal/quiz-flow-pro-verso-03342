@@ -529,7 +529,7 @@ export const UltraUnifiedPropertiesPanel: React.FC<UltraUnifiedPropertiesPanelPr
             );
         }
 
-        if (viewState.selectedCategory) {
+        if (viewState.selectedCategory && viewState.selectedCategory !== 'all') {
             filtered = filtered.filter(prop => prop.category === viewState.selectedCategory);
         }
 
@@ -713,7 +713,7 @@ export const UltraUnifiedPropertiesPanel: React.FC<UltraUnifiedPropertiesPanelPr
                         <SelectValue placeholder="Todas as categorias" />
                     </SelectTrigger>
                     <SelectContent>
-                        <SelectItem value="">Todas as categorias</SelectItem>
+                        <SelectItem value="all">Todas as categorias</SelectItem>
                         {PROPERTY_CATEGORIES.map(category => (
                             <SelectItem key={category.key} value={category.key}>
                                 <div className="flex items-center gap-2">
