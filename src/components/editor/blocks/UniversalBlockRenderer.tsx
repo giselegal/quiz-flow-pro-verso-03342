@@ -7,6 +7,7 @@
 
 import React, { memo, useMemo, useCallback } from 'react';
 import { cn } from '@/lib/utils';
+import { getEnhancedBlockComponent } from './EnhancedBlockRegistry';
 
 // 🎯 INTERFACES (EXPORTADAS)
 export interface Block {
@@ -30,13 +31,13 @@ export interface UniversalBlockRendererProps {
 }
 
 // 🎨 COMPONENTES DE BLOCOS BÁSICOS
-const TextBlock: React.FC<{ block: Block; isSelected?: boolean; onUpdate?: (updates: any) => void }> = memo(({ 
-  block, 
-  isSelected, 
-  onUpdate 
+const TextBlock: React.FC<{ block: Block; isSelected?: boolean; onUpdate?: (updates: any) => void }> = memo(({
+  block,
+  isSelected,
+  onUpdate
 }) => {
   const text = block.properties?.text || 'Digite seu texto aqui...';
-  
+
   const handleTextChange = useCallback((e: React.ChangeEvent<HTMLDivElement>) => {
     onUpdate?.({ properties: { ...block.properties, text: e.currentTarget.textContent } });
   }, [onUpdate, block.properties]);
@@ -47,8 +48,8 @@ const TextBlock: React.FC<{ block: Block; isSelected?: boolean; onUpdate?: (upda
       onBlur={handleTextChange}
       className={cn(
         'min-h-[2rem] p-2 rounded border-2 transition-all',
-        isSelected 
-          ? 'border-primary bg-primary/5' 
+        isSelected
+          ? 'border-primary bg-primary/5'
           : 'border-transparent hover:border-muted-foreground/20'
       )}
       suppressContentEditableWarning
@@ -58,21 +59,21 @@ const TextBlock: React.FC<{ block: Block; isSelected?: boolean; onUpdate?: (upda
   );
 });
 
-const ButtonBlock: React.FC<{ block: Block; isSelected?: boolean; onUpdate?: (updates: any) => void }> = memo(({ 
-  block, 
+const ButtonBlock: React.FC<{ block: Block; isSelected?: boolean; onUpdate?: (updates: any) => void }> = memo(({
+  block,
   isSelected
 }) => {
   const text = block.properties?.text || 'Botão';
   const url = block.properties?.url || '#';
-  
+
   return (
     <div className={cn(
       'inline-block p-2 rounded border-2 transition-all',
-      isSelected 
-        ? 'border-primary bg-primary/5' 
+      isSelected
+        ? 'border-primary bg-primary/5'
         : 'border-transparent hover:border-muted-foreground/20'
     )}>
-      <button 
+      <button
         className="px-4 py-2 bg-primary text-primary-foreground rounded hover:bg-primary/90 transition-colors"
         onClick={(e) => {
           e.preventDefault();
@@ -87,22 +88,22 @@ const ButtonBlock: React.FC<{ block: Block; isSelected?: boolean; onUpdate?: (up
   );
 });
 
-const ImageBlock: React.FC<{ block: Block; isSelected?: boolean }> = memo(({ 
-  block, 
-  isSelected 
+const ImageBlock: React.FC<{ block: Block; isSelected?: boolean }> = memo(({
+  block,
+  isSelected
 }) => {
   const src = block.properties?.src || 'https://via.placeholder.com/300x200';
   const alt = block.properties?.alt || 'Imagem';
-  
+
   return (
     <div className={cn(
       'inline-block p-2 rounded border-2 transition-all',
-      isSelected 
-        ? 'border-primary bg-primary/5' 
+      isSelected
+        ? 'border-primary bg-primary/5'
         : 'border-transparent hover:border-muted-foreground/20'
     )}>
-      <img 
-        src={src} 
+      <img
+        src={src}
         alt={alt}
         className="max-w-full h-auto rounded"
         style={{ maxHeight: '400px' }}
@@ -111,21 +112,21 @@ const ImageBlock: React.FC<{ block: Block; isSelected?: boolean }> = memo(({
   );
 });
 
-const FormBlock: React.FC<{ block: Block; isSelected?: boolean }> = memo(({ 
-  block, 
-  isSelected 
+const FormBlock: React.FC<{ block: Block; isSelected?: boolean }> = memo(({
+  block,
+  isSelected
 }) => {
   const title = block.properties?.title || 'Formulário';
   const fields = block.properties?.fields || [
     { type: 'text', label: 'Nome', placeholder: 'Digite seu nome' },
     { type: 'email', label: 'Email', placeholder: 'seu@email.com' }
   ];
-  
+
   return (
     <div className={cn(
       'p-4 rounded border-2 transition-all bg-background',
-      isSelected 
-        ? 'border-primary bg-primary/5' 
+      isSelected
+        ? 'border-primary bg-primary/5'
         : 'border-muted hover:border-muted-foreground/20'
     )}>
       <h3 className="font-semibold mb-4">{title}</h3>
@@ -149,14 +150,6 @@ const FormBlock: React.FC<{ block: Block; isSelected?: boolean }> = memo(({
     </div>
   );
 });
-
-// 🎯 REGISTRY DE BLOCOS
-const BLOCK_COMPONENTS = {
-  text: TextBlock,
-  button: ButtonBlock,
-  image: ImageBlock,
-  form: FormBlock,
-} as const;
 
 /**
  * 🎨 Universal Block Renderer v3.0
@@ -182,10 +175,15 @@ export const UniversalBlockRenderer: React.FC<UniversalBlockRendererProps> = mem
 }) => {
   // 🚩 FEATURE FLAGS (mock por enquanto)
   const featureFlags = { useCleanArchitecture: true };
-  
-  // 🎯 COMPONENT RESOLUTION
+
+  // 🎯 COMPONENT RESOLUTION - Usando Enhanced Block Registry
   const BlockComponent = useMemo(() => {
-    return BLOCK_COMPONENTS[block.type as keyof typeof BLOCK_COMPONENTS] || null;
+    const component = getEnhancedBlockComponent(block.type);
+    console.log(`🔍 UniversalBlockRenderer resolving: "${block.type}" →`, {
+      found: !!component,
+      name: component?.name || component?.displayName || 'Unknown'
+    });
+    return component;
   }, [block.type]);
 
   // 🎯 HANDLERS COM COMPATIBILIDADE LEGACY
@@ -222,7 +220,7 @@ export const UniversalBlockRenderer: React.FC<UniversalBlockRendererProps> = mem
   // 🎨 FALLBACK PARA TIPOS DESCONHECIDOS
   if (!BlockComponent) {
     return (
-      <div 
+      <div
         className={cn(
           'p-4 border-2 border-dashed border-muted-foreground/20 rounded-lg',
           'bg-muted/10 text-center text-muted-foreground',
@@ -294,8 +292,8 @@ export const UniversalBlockRenderer: React.FC<UniversalBlockRendererProps> = mem
       )}
 
       {/* Componente do bloco */}
-      <BlockComponent 
-        block={block} 
+      <BlockComponent
+        block={block}
         isSelected={isSelected}
         onUpdate={handleUpdate}
       />
