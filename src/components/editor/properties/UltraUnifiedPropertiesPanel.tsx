@@ -118,11 +118,11 @@ const mockPropertyExtractionService = {
             });
         }
 
-        // Extrair propriedades do data
-        if (block.data) {
-            Object.entries(block.data).forEach(([key, value]) => {
+        // Extrair propriedades do properties
+        if (block.properties) {
+            Object.entries(block.properties).forEach(([key, value]) => {
                 properties.push({
-                    path: `data.${key}`,
+                    path: `properties.${key}`,
                     label: key.charAt(0).toUpperCase() + key.slice(1),
                     type: typeof value === 'boolean' ? 'boolean' :
                         typeof value === 'number' ? 'number' :
@@ -311,7 +311,7 @@ const SpecializedEditorRenderer: React.FC<{
             return (
                 <Suspense fallback={<div className="p-4 text-center text-sm text-muted-foreground">Carregando editor de texto...</div>}>
                     <TextPropertyEditor
-                        selectedBlock={selectedBlock}
+                        block={selectedBlock}
                         onUpdate={onUpdate}
                     />
                 </Suspense>
@@ -329,7 +329,7 @@ const SpecializedEditorRenderer: React.FC<{
             return (
                 <Suspense fallback={<div className="p-4 text-center text-sm text-muted-foreground">Carregando editor de imagem...</div>}>
                     <ImagePropertyEditor
-                        selectedBlock={selectedBlock}
+                        block={selectedBlock}
                         onUpdate={onUpdate}
                     />
                 </Suspense>
