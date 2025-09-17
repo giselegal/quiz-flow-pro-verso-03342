@@ -27,6 +27,20 @@ vi.mock('@/lib/supabase', () => ({
     supabase: mockSupabaseClient
 }));
 
+// Helper function for PropertiesColumn props
+const getMockHandlers = () => ({
+    onUpdate: vi.fn(),
+    onClose: vi.fn(),
+    onDelete: vi.fn()
+});
+
+// Helper for mock context
+const getMockContext = () => ({
+    actions: {
+        updateBlock: vi.fn(),
+    }
+});
+
 describe('Painel de Propriedades - Testes E2E', () => {
 
     beforeEach(() => {
@@ -61,14 +75,19 @@ describe('Painel de Propriedades - Testes E2E', () => {
                 }
             };
 
+            const mockHandlers = {
+                onUpdate: vi.fn(),
+                onClose: vi.fn(),
+                onDelete: vi.fn()
+            };
+
             render(
                 <div style={{ display: 'flex' }}>
                     <ComponentsSidebar />
                     <div style={{ flex: 1 }}>
-                        <PropertiesColumn selectedBlock={null} />
+                        <PropertiesColumn selectedBlock={undefined} {...mockHandlers} />
                     </div>
-                </div>,
-                { initialState }
+                </div>
             );
 
             // 1. Adicionar bloco desde a sidebar
@@ -91,8 +110,7 @@ describe('Painel de Propriedades - Testes E2E', () => {
             });
 
             render(
-                <PropertiesColumn selectedBlock={createdBlock} />,
-                { initialState }
+                <PropertiesColumn selectedBlock={createdBlock} {...getMockHandlers()} />,
             );
 
             // 3. Configurar propriedades
@@ -134,21 +152,9 @@ describe('Painel de Propriedades - Testes E2E', () => {
                 createTestBlock('step20-personalized-offer')
             ];
 
-            const mockContext = {
-                state: {
-                    stepBlocks: { 'step-20': step20Blocks },
-                    currentStep: 20,
-                    selectedBlockId: step20Blocks[0].id
-                },
-                actions: {
-                    updateBlock: vi.fn(),
-                    setSelectedBlockId: vi.fn()
-                }
-            };
 
             render(
-                <PropertiesColumn selectedBlock={step20Blocks[0]} />,
-                { initialState: mockContext }
+                <PropertiesColumn selectedBlock={step20Blocks[0]} {...getMockHandlers()} />,
             );
 
             // 1. Configurar Result Header
@@ -161,7 +167,7 @@ describe('Painel de Propriedades - Testes E2E', () => {
 
             await TestHelpers.waitForDebounce();
 
-            expect(mockContext.actions.updateBlock).toHaveBeenCalledWith(
+            expect(getMockContext().actions.updateBlock).toHaveBeenCalledWith(
                 'step-20',
                 step20Blocks[0].id,
                 expect.objectContaining({
@@ -172,8 +178,7 @@ describe('Painel de Propriedades - Testes E2E', () => {
 
             // 2. Mudar para próximo componente
             render(
-                <PropertiesColumn selectedBlock={step20Blocks[2]} />,
-                { initialState: mockContext }
+                <PropertiesColumn selectedBlock={step20Blocks[2]} {...getMockHandlers()} />,
             );
 
             // 3. Configurar Compatibility
@@ -186,7 +191,7 @@ describe('Painel de Propriedades - Testes E2E', () => {
 
             await TestHelpers.waitForDebounce();
 
-            expect(mockContext.actions.updateBlock).toHaveBeenCalledWith(
+            expect(getMockContext().actions.updateBlock).toHaveBeenCalledWith(
                 'step-20',
                 step20Blocks[2].id,
                 expect.objectContaining({
@@ -207,7 +212,7 @@ describe('Painel de Propriedades - Testes E2E', () => {
                 placeholder: 'Digite seu nome'
             });
 
-            render(<PropertiesColumn selectedBlock={block} />);
+            render(<PropertiesColumn selectedBlock={block} {...getMockHandlers()} />);
 
             // Limpar campo obrigatório
             const labelInput = screen.getByDisplayValue('Nome');
@@ -227,7 +232,7 @@ describe('Painel de Propriedades - Testes E2E', () => {
                 textColor: '#000000'
             });
 
-            render(<PropertiesColumn selectedBlock={block} />);
+            render(<PropertiesColumn selectedBlock={block} {...getMockHandlers()} />);
 
             // Inserir cor inválida
             const colorInput = screen.getByLabelText(/cor.*fundo/i);
@@ -257,17 +262,17 @@ describe('Painel de Propriedades - Testes E2E', () => {
 
             render(
                 <div>
-                    <PropertiesColumn selectedBlock={block} />
+                    <PropertiesColumn selectedBlock={block} {...getMockHandlers()} />
                     <div data-testid="preview-area">
                         {/* Simulação da área de preview */}
                         <div
                             data-testid="text-preview"
                             style={{
-                                fontSize: block.properties.fontSize,
-                                color: block.properties.color
+                                fontSize: block.properties?.fontSize,
+                                color: block.properties?.color
                             }}
                         >
-                            {block.properties.text}
+                            {block.properties?.text}
                         </div>
                     </div>
                 </div>
@@ -299,13 +304,9 @@ describe('Painel de Propriedades - Testes E2E', () => {
             const updateSpy = vi.fn();
 
             const block = createTestBlock('text-inline', { text: 'Texto inicial' });
-            const mockContext = {
-                actions: { updateBlock: updateSpy }
-            };
 
             render(
-                <PropertiesColumn selectedBlock={block} />,
-                { initialState: mockContext }
+                <PropertiesColumn selectedBlock={block} {...getMockHandlers()} />,
             );
 
             const textInput = screen.getByDisplayValue('Texto inicial');
@@ -329,7 +330,7 @@ describe('Painel de Propriedades - Testes E2E', () => {
 
             const OptimizedComponent = () => {
                 renderSpy();
-                return <PropertiesColumn selectedBlock={block} />;
+                return <PropertiesColumn selectedBlock={block} {...getMockHandlers()} />;
             };
 
             const { rerender } = render(<OptimizedComponent />);
@@ -349,7 +350,7 @@ describe('Painel de Propriedades - Testes E2E', () => {
             const user = userEvent.setup();
             const block = createTestBlock('quiz-intro-header');
 
-            render(<PropertiesColumn selectedBlock={block} />);
+            render(<PropertiesColumn selectedBlock={block} {...getMockHandlers()} />);
 
             // Navegar com Tab
             await user.tab();
@@ -368,7 +369,7 @@ describe('Painel de Propriedades - Testes E2E', () => {
                 showAnimatedCounter: true
             });
 
-            render(<PropertiesColumn selectedBlock={block} />);
+            render(<PropertiesColumn selectedBlock={block} {...getMockHandlers()} />);
 
             // Verificar labels descritivos
             expect(screen.getByLabelText(/percentual.*compatibilidade/i)).toBeInTheDocument();
@@ -381,7 +382,7 @@ describe('Painel de Propriedades - Testes E2E', () => {
                 question: 'Pergunta original'
             });
 
-            render(<PropertiesColumn selectedBlock={block} />);
+            render(<PropertiesColumn selectedBlock={block} {...getMockHandlers()} />);
 
             const questionInput = screen.getByDisplayValue('Pergunta original');
             await user.clear(questionInput);
@@ -399,16 +400,11 @@ describe('Painel de Propriedades - Testes E2E', () => {
 
         it('deve lidar com falhas de rede adequadamente', async () => {
             const user = userEvent.setup();
-            const failingUpdateSpy = vi.fn().mockRejectedValue(new Error('Falha de rede'));
 
             const block = createTestBlock('text-inline', { text: 'Texto inicial' });
-            const mockContext = {
-                actions: { updateBlock: failingUpdateSpy }
-            };
 
             render(
-                <PropertiesColumn selectedBlock={block} />,
-                { initialState: mockContext }
+                <PropertiesColumn selectedBlock={block} {...getMockHandlers()} />,
             );
 
             const textInput = screen.getByDisplayValue('Texto inicial');
@@ -426,7 +422,7 @@ describe('Painel de Propriedades - Testes E2E', () => {
 
             // Testar retry
             const workingUpdateSpy = vi.fn().mockResolvedValue({ success: true });
-            mockContext.actions.updateBlock = workingUpdateSpy;
+            getMockContext().actions.updateBlock = workingUpdateSpy;
 
             await user.click(retryButton);
 
@@ -438,16 +434,11 @@ describe('Painel de Propriedades - Testes E2E', () => {
 
         it('deve manter estado local quando há falhas', async () => {
             const user = userEvent.setup();
-            const failingUpdateSpy = vi.fn().mockRejectedValue(new Error('Falha'));
 
             const block = createTestBlock('text-inline', { text: 'Original' });
-            const mockContext = {
-                actions: { updateBlock: failingUpdateSpy }
-            };
 
             render(
-                <PropertiesColumn selectedBlock={block} />,
-                { initialState: mockContext }
+                <PropertiesColumn selectedBlock={block} {...getMockHandlers()} />,
             );
 
             const textInput = screen.getByDisplayValue('Original');

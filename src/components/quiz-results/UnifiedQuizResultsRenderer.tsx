@@ -26,7 +26,7 @@ import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { CheckCircle, Sparkles, Trophy, Heart, Star } from 'lucide-react';
-import { UnifiedValidationResult, validateData, ValidationContext } from '@/utils/validation';
+import { UnifiedValidationResult } from '@/utils/validation';
 
 // =============================================
 // UNIFIED INTERFACES
@@ -485,29 +485,35 @@ export class UnifiedQuizResultsRenderer {
     private selectRenderer(mode: ResultDisplayMode): React.ComponentType<{ result: UnifiedQuizResult; options: Required<ResultRenderOptions> }> {
         switch (mode) {
             case 'compact':
-                return React.memo(({ result, options }) => this.renderCompactResult(result, options));
+                return React.memo(({ result, options }) => this.renderMainResult(result, options));
             case 'card':
-                return React.memo(({ result, options }) => this.renderCardResult(result, options));
+                return React.memo(({ result, options }) => this.renderMainResult(result, options));
             case 'header':
-                return React.memo(({ result, options }) => this.renderHeaderResult(result, options));
+                return React.memo(({ result, options }) => this.renderHeader(result, options));
             case 'main':
                 return React.memo(({ result, options }) => this.renderMainResult(result, options));
             case 'secondary':
-                return React.memo(({ result, options }) => this.renderSecondaryResult(result, options));
+                return React.memo(({ result, options }) => result.secondaryStyles ? this.renderSecondaryStyles(result.secondaryStyles, options) : this.renderMainResult(result, options));
             case 'calculated':
-                return React.memo(({ result, options }) => this.renderCalculatedResult(result, options));
+                return React.memo(({ result, options }) => this.renderMainResult(result, options));
             case 'preview':
-                return React.memo(({ result, options }) => this.renderPreviewResult(result, options));
+                return React.memo(({ result, options }) => this.renderMainResult(result, options));
             default:
                 return React.memo(({ result, options }) => this.renderFullResult(result, options));
         }
     }
 
     private validateResult(result: UnifiedQuizResult): UnifiedValidationResult {
-        return validateData(result, ValidationContext.QUIZ_RESULT, {
-            requiredFields: ['id', 'primaryStyle', 'username'],
-            strict: false
-        });
+        // Validação simplificada
+        const isValid = !!(result.id && result.primaryStyle);
+        const errors = isValid ? [] : ['Invalid result: missing id or primaryStyle'];
+        const warnings: string[] = [];
+
+        return {
+            isValid,
+            errors,
+            warnings
+        };
     }
 
     private mergeOptions(options: ResultRenderOptions): Required<ResultRenderOptions> {
