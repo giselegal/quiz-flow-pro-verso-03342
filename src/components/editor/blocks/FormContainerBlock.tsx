@@ -1,6 +1,7 @@
 import { getEnhancedBlockComponent } from '@/components/editor/blocks/EnhancedBlockRegistry';
 import type { BlockComponentProps, BlockData } from '@/types/blocks';
 import React, { useEffect } from 'react';
+import { useGlobalEventManager } from '@/hooks/useGlobalEventManager';
 
 /**
  * FormContainerBlock
@@ -9,6 +10,7 @@ import React, { useEffect } from 'react';
 const FormContainerBlock: React.FC<BlockComponentProps> = ({ block }) => {
   const { properties = {} } = block || {};
   const { elementId, className, marginTop, marginBottom } = (properties as any) || {};
+  const { addEventListener } = useGlobalEventManager();
 
   // Fonte única de verdade para children: prioriza block.children e faz fallback para properties.children
   const childrenList = (block as any)?.children || (properties as any)?.children || [];
@@ -83,8 +85,9 @@ const FormContainerBlock: React.FC<BlockComponentProps> = ({ block }) => {
       applyDisabled(!detail.enabled, detail.buttonId);
     };
 
-    window.addEventListener('step01-button-state-change', handler as EventListener);
-    window.addEventListener('quiz-button-state-change', handler as EventListener);
+    // Usar o gerenciador central ao invés de window.addEventListener direto
+    const cleanup1 = addEventListener('step01-button-state-change', handler);
+    const cleanup2 = addEventListener('quiz-button-state-change', handler);
 
     // Integração direta com mudanças do input (Etapa 1)
     const onQuizInput = (e: Event) => {
@@ -117,14 +120,16 @@ const FormContainerBlock: React.FC<BlockComponentProps> = ({ block }) => {
         );
       }
     };
-    window.addEventListener('quiz-input-change', onQuizInput as EventListener);
+    
+    // Usar o gerenciador central também para quiz-input-change
+    const cleanup3 = addEventListener('quiz-input-change', onQuizInput);
 
     return () => {
-      window.removeEventListener('step01-button-state-change', handler as EventListener);
-      window.removeEventListener('quiz-button-state-change', handler as EventListener);
-      window.removeEventListener('quiz-input-change', onQuizInput as EventListener);
+      cleanup1();
+      cleanup2();
+      cleanup3();
     };
-  }, [properties]);
+  }, [properties, addEventListener]);
 
   return (
     <div id={elementId} className={combinedClassName} style={containerStyle}>

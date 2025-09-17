@@ -7,6 +7,7 @@ import { userResponseService } from '../../../services/userResponseService';
 import { trackQuizStart } from '../../../utils/analytics';
 import { useOptimizedScheduler } from '@/hooks/useOptimizedScheduler';
 import { StorageService } from '@/services/core/StorageService';
+import { useGlobalEventManager } from '@/hooks/useGlobalEventManager';
 
 /**
  * ButtonInlineBlock - Componente modular inline horizontal
@@ -130,6 +131,7 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
   const buttonId =
     (block?.id as string) || (block?.properties as any)?.buttonId || 'cta-button-modular';
   const [externalDisabled, setExternalDisabled] = useState<boolean | null>(null);
+  const { addEventListener } = useGlobalEventManager();
 
   useEffect(() => {
     const onButtonState = (e: Event) => {
@@ -142,13 +144,16 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
         setExternalDisabled(!!detail.disabled);
       }
     };
-    window.addEventListener('quiz-button-state-change', onButtonState as EventListener);
-    window.addEventListener('step01-button-state-change', onButtonState as EventListener);
+    
+    // Usar o gerenciador central ao invés de window.addEventListener direto
+    const cleanup1 = addEventListener('quiz-button-state-change', onButtonState);
+    const cleanup2 = addEventListener('step01-button-state-change', onButtonState);
+    
     return () => {
-      window.removeEventListener('quiz-button-state-change', onButtonState as EventListener);
-      window.removeEventListener('step01-button-state-change', onButtonState as EventListener);
+      cleanup1();
+      cleanup2();
     };
-  }, [buttonId]);
+  }, [buttonId, addEventListener]);
 
   const [isValidated, setIsValidated] = useState(false);
   const [isSelectionValid, setIsSelectionValid] = useState(!requiresValidSelection);
@@ -186,24 +191,22 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
       setIsValidated(ok);
     };
 
+    // Usar o gerenciador central
+    let cleanup1: (() => void) | null = null;
+    let cleanup2: (() => void) | null = null;
+
     if (requiresValidSelection) {
-      window.addEventListener('quiz-selection-change', handleQuizSelectionChange as EventListener);
+      cleanup1 = addEventListener('quiz-selection-change', handleQuizSelectionChange);
     }
     if (requiresValidInput) {
-      window.addEventListener('quiz-input-change', handleQuizInputChange as EventListener);
+      cleanup2 = addEventListener('quiz-input-change', handleQuizInputChange);
     }
+
     return () => {
-      if (requiresValidSelection) {
-        window.removeEventListener(
-          'quiz-selection-change',
-          handleQuizSelectionChange as EventListener
-        );
-      }
-      if (requiresValidInput) {
-        window.removeEventListener('quiz-input-change', handleQuizInputChange as EventListener);
-      }
+      cleanup1?.();
+      cleanup2?.();
     };
-  }, [requiresValidSelection, requiresValidInput]);
+  }, [requiresValidSelection, requiresValidInput, addEventListener]);
 
   // Determinar se o botão deve estar desabilitado
   const isButtonDisabled =

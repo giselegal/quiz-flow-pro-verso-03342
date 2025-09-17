@@ -10,6 +10,7 @@ import { generateUniqueId } from '@/utils/generateUniqueId';
 import { SortableBlockWrapper } from './SortableBlockWrapper.simple';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { useCanvasContainerStyles } from '@/hooks/useCanvasContainerStyles';
+import { useGlobalEventManager } from '@/hooks/useGlobalEventManager';
 
 // Componente de controles de navegação para aparecer no final dos blocos do editor
 const EditorNavigationControls: React.FC<{
@@ -17,8 +18,9 @@ const EditorNavigationControls: React.FC<{
 }> = () => {
   const [currentStep, setCurrentStep] = React.useState(1);
   const totalSteps = 21;
+  const { addEventListener } = useGlobalEventManager();
 
-  // Escutar mudanças de etapa globais
+  // Escutar mudanças de etapa globais usando o gerenciador central
   React.useEffect(() => {
     const updateStep = () => {
       const step = (window as any).__quizCurrentStep || 1;
@@ -26,14 +28,16 @@ const EditorNavigationControls: React.FC<{
     };
 
     updateStep();
-    window.addEventListener('navigate-to-step', updateStep);
-    window.addEventListener('quiz-navigate-to-step', updateStep);
+    
+    // Usar o gerenciador central ao invés de window.addEventListener direto
+    const cleanup1 = addEventListener('navigate-to-step', updateStep);
+    const cleanup2 = addEventListener('quiz-navigate-to-step', updateStep);
 
     return () => {
-      window.removeEventListener('navigate-to-step', updateStep);
-      window.removeEventListener('quiz-navigate-to-step', updateStep);
+      cleanup1();
+      cleanup2();
     };
-  }, []);
+  }, [addEventListener]);
 
   // Funções de navegação
   const handlePrevious = () => {

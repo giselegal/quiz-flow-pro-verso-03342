@@ -31,19 +31,10 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/component
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import { getPropertiesForComponentType } from './core/PropertyDiscovery';
-import {
-    DndContext,
-    closestCenter,
-    KeyboardSensor,
-    PointerSensor,
-    useSensor,
-    useSensors,
-} from '@dnd-kit/core';
+// ✅ CORREÇÃO: Removido DndContext aninhado para evitar conflitos
+// Mantém apenas as funcionalidades de sortable sem contexto próprio
 import {
     arrayMove,
-    SortableContext,
-    sortableKeyboardCoordinates,
-    verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
 import {
     useSortable,
@@ -61,6 +52,7 @@ import {
     RotateCcw,
     Check,
     ChevronDown,
+    ChevronUp,
     ChevronRight,
     Grid,
     AlignLeft,
@@ -139,6 +131,9 @@ interface SortableOptionItemProps {
     onImageChange: (id: string, image: string) => void;
     onDelete: (id: string) => void;
     layout: LayoutConfig;
+    onReorder?: (fromIndex: number, toIndex: number) => void;
+    index: number;
+    totalItems: number;
 }
 
 const SortableOptionItem: React.FC<SortableOptionItemProps> = ({
@@ -146,26 +141,18 @@ const SortableOptionItem: React.FC<SortableOptionItemProps> = ({
     onEdit,
     onImageChange,
     onDelete,
-    layout
+    layout,
+    onReorder,
+    index,
+    totalItems
 }) => {
     const [isEditing, setIsEditing] = useState(false);
     const [tempText, setTempText] = useState(option.text);
     const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-    const {
-        attributes,
-        listeners,
-        setNodeRef,
-        transform,
-        transition,
-        isDragging,
-    } = useSortable({ id: option.id });
-
-    const style = {
-        transform: CSS.Transform.toString(transform),
-        transition,
-    };
-
+    // ✅ CORREÇÃO: Removido useSortable hook para evitar conflito com DnD principal
+    // Adicionado botões de reordenação simples como alternativa
+    
     const handleSaveEdit = useCallback(() => {
         onEdit(option.id, tempText);
         setIsEditing(false);
@@ -176,6 +163,18 @@ const SortableOptionItem: React.FC<SortableOptionItemProps> = ({
         setIsEditing(false);
     }, [option.text]);
 
+    const handleMoveUp = useCallback(() => {
+        if (index > 0 && onReorder) {
+            onReorder(index, index - 1);
+        }
+    }, [index, onReorder]);
+
+    const handleMoveDown = useCallback(() => {
+        if (index < totalItems - 1 && onReorder) {
+            onReorder(index, index + 1);
+        }
+    }, [index, totalItems, onReorder]);
+
     useEffect(() => {
         if (isEditing && textareaRef.current) {
             textareaRef.current.focus();
@@ -185,24 +184,34 @@ const SortableOptionItem: React.FC<SortableOptionItemProps> = ({
 
     return (
         <div
-            ref={setNodeRef}
-            style={style}
             className={cn(
-                "group relative bg-white border rounded-lg p-3 transition-all duration-200",
-                isDragging ? "shadow-lg rotate-2 z-50" : "hover:shadow-md",
+                "group relative bg-white border rounded-lg p-3 transition-all duration-200 hover:shadow-md",
                 "border-gray-200 hover:border-gray-300"
             )}
         >
-            {/* Drag Handle */}
-            <div
-                {...attributes}
-                {...listeners}
-                className="absolute left-1 top-1/2 transform -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity cursor-grab active:cursor-grabbing"
-            >
-                <GripVertical className="w-4 h-4 text-gray-400" />
+            {/* ✅ CORREÇÃO: Substituído drag handle por botões de reordenação */}
+            <div className="absolute left-1 top-1/2 transform -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col gap-1">
+                <Button
+                    size="sm"
+                    variant="ghost"
+                    onClick={handleMoveUp}
+                    disabled={index === 0}
+                    className="h-4 w-4 p-0"
+                >
+                    <ChevronUp className="w-3 h-3 text-gray-400" />
+                </Button>
+                <Button
+                    size="sm"
+                    variant="ghost"
+                    onClick={handleMoveDown}
+                    disabled={index === totalItems - 1}
+                    className="h-4 w-4 p-0"
+                >
+                    <ChevronDown className="w-3 h-3 text-gray-400" />
+                </Button>
             </div>
 
-            <div className="ml-6">
+            <div className="ml-8">
                 {/* Option Header */}
                 <div className="flex items-center justify-between mb-2">
                     <Badge variant="secondary" className="text-xs">
@@ -415,13 +424,8 @@ export const MultipleChoiceOptionsPanel: React.FC<MultipleChoiceOptionsPanelProp
         }
     }, [discoveredProperties]);
 
-    // ===== SENSORS FOR DRAG AND DROP =====
-    const sensors = useSensors(
-        useSensor(PointerSensor),
-        useSensor(KeyboardSensor, {
-            coordinateGetter: sortableKeyboardCoordinates,
-        })
-    );
+    // ✅ CORREÇÃO: Removidos sensors do DnD aninhado
+    // Drag and drop agora será gerenciado pelo contexto principal se necessário
 
     // ===== COMPUTED VALUES =====
     const sortedOptions = useMemo(() => {
@@ -429,19 +433,14 @@ export const MultipleChoiceOptionsPanel: React.FC<MultipleChoiceOptionsPanelProp
     }, [data.options]);
 
     // ===== HANDLERS =====
-    const handleDragEnd = useCallback((event: any) => {
-        const { active, over } = event;
+    // ✅ CORREÇÃO: Simplificado para reordenação básica sem DnD
+    const handleReorderOptions = useCallback((fromIndex: number, toIndex: number) => {
+        const reorderedOptions = arrayMove(sortedOptions, fromIndex, toIndex).map((option, index) => ({
+            ...option,
+            order: index
+        }));
 
-        if (active.id !== over.id) {
-            const oldIndex = sortedOptions.findIndex(option => option.id === active.id);
-            const newIndex = sortedOptions.findIndex(option => option.id === over.id);
-
-            const reorderedOptions = arrayMove(sortedOptions, oldIndex, newIndex).map((option, index) => ({
-                ...option,
-                order: index
-            }));
-
-            setData(prev => ({ ...prev, options: reorderedOptions }));
+        setData(prev => ({ ...prev, options: reorderedOptions }));
             onUpdate?.({ options: reorderedOptions });
         }
     }, [sortedOptions, onUpdate]);
@@ -692,30 +691,22 @@ export const MultipleChoiceOptionsPanel: React.FC<MultipleChoiceOptionsPanelProp
                                     Adicionar Opção
                                 </Button>
 
-                                {/* Options List */}
-                                <DndContext
-                                    sensors={sensors}
-                                    collisionDetection={closestCenter}
-                                    onDragEnd={handleDragEnd}
-                                >
-                                    <SortableContext
-                                        items={sortedOptions.map(option => option.id)}
-                                        strategy={verticalListSortingStrategy}
-                                    >
-                                        <div className="space-y-3">
-                                            {sortedOptions.map((option) => (
-                                                <SortableOptionItem
-                                                    key={option.id}
-                                                    option={option}
-                                                    onEdit={handleEditOption}
-                                                    onImageChange={handleImageChange}
-                                                    onDelete={handleDeleteOption}
-                                                    layout={data.layout}
-                                                />
-                                            ))}
-                                        </div>
-                                    </SortableContext>
-                                </DndContext>
+                                {/* Options List - ✅ CORREÇÃO: Removido DnD aninhado */}
+                                <div className="space-y-3">
+                                    {sortedOptions.map((option, index) => (
+                                        <SortableOptionItem
+                                            key={option.id}
+                                            option={option}
+                                            onEdit={handleEditOption}
+                                            onImageChange={handleImageChange}
+                                            onDelete={handleDeleteOption}
+                                            layout={data.layout}
+                                            onReorder={handleReorderOptions}
+                                            index={index}
+                                            totalItems={sortedOptions.length}
+                                        />
+                                    ))}
+                                </div>
 
                                 <Separator />
 
