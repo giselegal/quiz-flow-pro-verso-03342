@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { Block } from '@/types/editor';
-import { getOptimizedBlockComponent, normalizeBlockProps } from '@/utils/optimizedRegistry';
+import UniversalBlockRenderer from '@/components/editor/blocks/UniversalBlockRenderer';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { GripVertical, Trash2 } from 'lucide-react';
@@ -24,84 +24,12 @@ const SortableBlockWrapperBase: React.FC<SortableBlockWrapperProps> = ({
   block,
   isSelected,
   onSelect,
-  onUpdate: _onUpdate,
+  onUpdate,
   onDelete,
   scopeId,
 }) => {
-  // Normalizar bloco para unificar content/properties (mesma lógica do UniversalBlockRenderer)
-  const normalizedBlock = normalizeBlockProps(block);
-
   // Hook para aplicar estilos dinâmicos
   useCanvasContainerStyles();
-
-  // 🔍 DEBUG: Log block details to identify the issue
-  React.useEffect(() => {
-    if (process.env.NODE_ENV === 'development') {
-      console.log('🔍 SortableBlockWrapper block details:', {
-        blockId: block?.id,
-        originalBlockType: block?.type,
-        normalizedBlockType: normalizedBlock?.type,
-        hasOriginalType: !!block?.type,
-        hasNormalizedType: !!normalizedBlock?.type,
-        blockProperties: block?.properties,
-        normalizedProperties: normalizedBlock?.properties,
-        scopeId
-      });
-
-      // DEBUG EXTRA: Teste manual do registry
-      if (normalizedBlock?.type) {
-        console.log('🧪 Teste manual do registry para:', normalizedBlock.type);
-        try {
-          const testComponent = getOptimizedBlockComponent(normalizedBlock.type);
-          console.log('🎯 Resultado do teste:', testComponent ? 'SUCESSO' : 'FALHOU');
-
-          // Teste adicional: verificar se o componente tem as propriedades esperadas
-          if (testComponent) {
-            console.log('📋 Propriedades do componente:', {
-              name: testComponent.name || testComponent.displayName || 'Anônimo',
-              type: typeof testComponent,
-              isReactComponent: typeof testComponent === 'function'
-            });
-          }
-        } catch (error) {
-          console.error('❌ Erro no teste manual:', error);
-        }
-      }
-    }
-  }, [block, normalizedBlock, scopeId]);
-
-  // Buscar componente no registry simplificado
-  const Component = React.useMemo(() => {
-    try {
-      return getOptimizedBlockComponent(normalizedBlock.type);
-    } catch (error) {
-      console.error('❌ Erro fatal ao buscar componente, usando fallback direto:', error);
-
-      // Fallback direto baseado no tipo
-      const type = normalizedBlock.type;
-      if (type === 'quiz-intro-header') {
-        const QuizIntroHeaderBlock = require('@/components/editor/blocks/QuizIntroHeaderBlock').default;
-        return QuizIntroHeaderBlock;
-      }
-      if (type === 'text') {
-        const TextInlineBlock = require('@/components/editor/blocks/TextInlineBlock').default;
-        return TextInlineBlock;
-      }
-      if (type === 'image') {
-        const ImageInlineBlock = require('@/components/editor/blocks/ImageInlineBlock').default;
-        return ImageInlineBlock;
-      }
-
-      // Fallback visual final
-      return ({ block }: { block?: any }) => (
-        <div className="border border-red-200 bg-red-50 p-4 rounded">
-          <p className="text-red-600 font-medium">Erro: Componente não encontrado</p>
-          <p className="text-red-500 text-sm">Tipo: {type}</p>
-          <p className="text-red-500 text-sm">ID: {block?.id}</p>
-        </div>
-      );
-    }
-  }, [normalizedBlock.type]);
 
   // Make block draggable for reordering
   const {
@@ -138,28 +66,6 @@ const SortableBlockWrapperBase: React.FC<SortableBlockWrapperProps> = ({
     zIndex: isDragging ? 50 : 'auto',
   };
 
-  // Fallback se componente não for encontrado
-  if (!Component) {
-    return (
-      <div className="my-1">
-        <div
-          ref={setNodeRef}
-          style={style}
-          className="border border-dashed border-gray-300 rounded"
-        >
-          <div className="p-4 text-center text-gray-600">
-            <p className="font-medium">Componente não encontrado: {block.type}</p>
-            <p className="text-xs mt-1">Verifique se o tipo está registrado</p>
-            <pre className="text-xs mt-2 text-left bg-gray-100 p-2 rounded overflow-auto">
-              {JSON.stringify(block, null, 2)}
-            </pre>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  // Mantido para futura detecção de elementos interativos (não utilizado atualmente)
   // Seleção centralizada com debounce por etapa
   const numericStep = typeof scopeId === 'number' ? scopeId : Number(scopeId) || 0;
   const { handleBlockSelection } = useStepSelection({
@@ -181,7 +87,6 @@ const SortableBlockWrapperBase: React.FC<SortableBlockWrapperProps> = ({
     try {
       const g: any = typeof globalThis !== 'undefined' ? (globalThis as any) : undefined;
       if (g?.__DND_DEBUG) {
-        // eslint-disable-next-line no-console
         console.log('🖱️ onPointerDownCapture -> selecionar bloco', {
           step: numericStep,
           blockId: String(block.id),
@@ -206,7 +111,6 @@ const SortableBlockWrapperBase: React.FC<SortableBlockWrapperProps> = ({
     try {
       const g: any = typeof globalThis !== 'undefined' ? (globalThis as any) : undefined;
       if (g?.__DND_DEBUG) {
-        // eslint-disable-next-line no-console
         console.log('🖱️ onClick -> selecionar bloco (fallback)', {
           step: numericStep,
           blockId: String(block.id),
@@ -264,7 +168,7 @@ const SortableBlockWrapperBase: React.FC<SortableBlockWrapperProps> = ({
           </Button>
         </div>
 
-        {/* Component content (canvas é somente visual; edição ocorre no painel de propriedades) */}
+        {/* 🎯 RENDERIZAÇÃO UNIFICADA: Usando UniversalBlockRenderer como na produção */}
         <div className="pointer-events-none select-none" aria-disabled>
           <React.Suspense
             fallback={
@@ -273,14 +177,16 @@ const SortableBlockWrapperBase: React.FC<SortableBlockWrapperProps> = ({
               </div>
             }
           >
-            <Component
-              block={normalizedBlock}
+            <UniversalBlockRenderer
+              block={block}
               isSelected={false} // Evita bordas duplas
-              onPropertyChange={() => { /* edição via painel de propriedades */ }}
-              isPreviewMode={false}
               isPreviewing={false}
-              previewMode="editor"
-              properties={(normalizedBlock as any)?.properties}
+              mode="editor"
+              onUpdate={(blockId, updates) => onUpdate(updates)}
+              onDelete={(blockId) => onDelete()}
+              onPropertyChange={(key, value) => {
+                onUpdate({ properties: { ...block.properties, [key]: value } });
+              }}
             />
           </React.Suspense>
         </div>

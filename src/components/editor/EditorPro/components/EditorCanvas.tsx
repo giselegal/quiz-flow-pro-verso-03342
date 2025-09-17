@@ -77,6 +77,7 @@ const EditorCanvas: React.FC<EditorCanvasProps> = memo(({
   // Key estável para forçar remount ao trocar etapa
   const canvasKey = useMemo(() =>
     generateStableKey({
+
       stepNumber: currentStep,
       type: 'block'
     }),
