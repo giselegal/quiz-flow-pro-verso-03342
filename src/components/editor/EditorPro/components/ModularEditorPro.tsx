@@ -444,7 +444,6 @@ const ModularEditorPro: React.FC = () => {
                 onSelectBlock={handleSelectBlock}
                 onUpdateBlock={handleUpdateBlock}
                 onDeleteBlock={handleDeleteBlock}
-                onReorderBlocks={handleReorderBlocks}
                 isPreviewMode={isPreviewMode}
                 onStepChange={actions.setCurrentStep} // Para navegação no preview
               />
