@@ -47,6 +47,7 @@ export interface UnifiedTemplate {
     isOfficial: boolean;
     isPublished: boolean;
     usageCount: number;
+    theme?: string;
 
     // Data
     templateData?: any;

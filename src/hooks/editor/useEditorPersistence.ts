@@ -1,7 +1,7 @@
 import { useCallback, useState } from 'react';
 import { useToast } from '../../components/ui/use-toast';
-import { type ContextualFunnelData } from '@/services/templates';
 import { FunnelContext } from '../../core/contexts/FunnelContext';
+import { ContextualFunnelService, type ContextualFunnelData } from '../../services/contextualFunnelService';
 
 // Interface para compatibilidade com o editor existente
 export interface FunnelData {
@@ -32,7 +32,7 @@ export const useEditorPersistence = (context: FunnelContext = FunnelContext.EDIT
   const { toast } = useToast();
 
   // 🎯 Criar uma instância do serviço contextual
-  const contextualFunnelService = contextualFunnelService;
+  const contextualFunnelService = new ContextualFunnelService(context || 'default');
 
   const saveFunnel = useCallback(
     async (data: FunnelData) => {
@@ -43,32 +43,14 @@ export const useEditorPersistence = (context: FunnelContext = FunnelContext.EDIT
           id: data.id,
           name: data.name,
           description: data.description || null,
-          theme: 'default',
+          pages: data.pages || [],
+          context: context || 'default',
+          user_id: data.userId,
           isPublished: data.isPublished,
-          pages: data.pages.map((page: any) => ({
-            id: page.id,
-            funnel_id: data.id,
-            page_type: page.pageType || 'step',
-            page_order: page.pageOrder || 1,
-            title: page.title || null,
-            blocks: page.blocks || [],
-            metadata: page.metadata || {},
-            created_at: new Date().toISOString(),
-            updated_at: new Date().toISOString(),
-          })),
-          config: {
-            name: data.name,
-            description: data.description || '',
-            isPublished: data.isPublished,
-            theme: 'default',
-            primaryColor: '#B89B7A',
-            secondaryColor: '#432818',
-            fontFamily: 'Inter, sans-serif',
-          },
           version: data.version,
-          lastModified: new Date(),
-          createdAt: data.createdAt ? new Date(data.createdAt) : new Date(),
-          context
+          config: data.settings,
+          createdAt: new Date(),
+          lastModified: new Date()
         };
 
         // 🎯 Usar o serviço contextual para isolamento completo

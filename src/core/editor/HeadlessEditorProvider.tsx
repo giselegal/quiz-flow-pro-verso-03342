@@ -161,6 +161,76 @@ export const HeadlessEditorProvider: React.FC<HeadlessEditorProviderProps> = ({ 
               lg: '1.5rem',
               xl: '3rem',
               '2xl': '4rem'
+            },
+            borderRadius: {
+              none: '0',
+              sm: '0.125rem',
+              md: '0.375rem',
+              lg: '0.5rem',
+              xl: '0.75rem',
+              full: '9999px'
+            },
+            shadows: {
+              sm: '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
+              md: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
+              lg: '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
+              xl: '0 20px 25px -5px rgba(0, 0, 0, 0.1)'
+            }
+          },
+          persistence: {
+            enabled: true,
+            storage: ['localStorage'],
+            autoSave: true,
+            autoSaveInterval: 30000,
+            compression: false,
+            encryption: false,
+            backupEnabled: false
+          },
+          integrations: {
+            email: undefined,
+            crm: undefined,
+            payment: undefined,
+            webhooks: []
+          },
+          performance: {
+            cache: {
+              enabled: true,
+              strategy: 'stale-while-revalidate',
+              ttl: 3600
+            },
+            lazyLoading: {
+              images: true,
+              components: true,
+              threshold: 100
+            },
+            preload: {
+              criticalResources: [],
+              nextStep: true
+            },
+            compression: {
+              images: true,
+              scripts: true,
+              styles: true
+            }
+          },
+          legal: {
+            privacy: {
+              enabled: false,
+              policyUrl: '',
+              consentRequired: false,
+              cookieNotice: false
+            },
+            terms: {
+              enabled: false,
+              termsUrl: '',
+              acceptanceRequired: false
+            },
+            dataProcessing: {
+              purpose: [],
+              legalBasis: 'consent',
+              retentionPeriod: 365,
+              rightToDelete: true,
+              rightToPortability: true
             }
           }
         },
@@ -190,7 +260,15 @@ export const HeadlessEditorProvider: React.FC<HeadlessEditorProviderProps> = ({ 
             showGrid: false,
             snapToGrid: false
           },
-          tags: []
+          tags: [],
+          variations: [],
+          collaborators: [],
+          categories: [],
+          stats: {
+            totalBlocks: 0,
+            totalSteps: steps.length,
+            estimatedCompletionTime: 5
+          }
         }
       };
 

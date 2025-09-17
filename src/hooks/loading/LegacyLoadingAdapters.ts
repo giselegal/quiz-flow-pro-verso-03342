@@ -205,7 +205,12 @@ export const useFunnelLoadingState = (
     console.warn('🚨 useFunnelLoadingState is deprecated. Use masterLoadingService.createComponentManager() instead.');
 
     const componentId = useRef(`funnel-${Date.now()}-${Math.random()}`).current;
-    const [state, setState] = useState({
+    const [state, setState] = useState<{
+        isLoading: boolean;
+        error: string | null;
+        funnel: any | null;
+        funnelId: string | null;
+    }>({
         isLoading: false,
         error: null,
         funnel: null,

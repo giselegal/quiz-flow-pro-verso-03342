@@ -1,0 +1,120 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e3]:
+  - generic [ref=e4]:
+    - banner [ref=e5]:
+      - generic [ref=e7]:
+        - generic [ref=e8]:
+          - img [ref=e9]
+          - generic [ref=e19]:
+            - generic [ref=e20]: QuizFlow Pro
+            - paragraph [ref=e21]: Interactive Marketing
+        - generic [ref=e23]:
+          - button "Entrar" [ref=e24] [cursor=pointer]
+          - button "Começar Grátis" [ref=e25] [cursor=pointer]
+    - main [ref=e26]:
+      - generic [ref=e27]:
+        - img [ref=e35]
+        - generic [ref=e61]:
+          - generic [ref=e63]:
+            - img [ref=e64]
+            - generic [ref=e74]:
+              - generic [ref=e75]: QuizFlow Pro
+              - paragraph [ref=e76]: Interactive Marketing
+          - generic [ref=e77]:
+            - img [ref=e78]
+            - text: Plataforma de Marketing Interativo
+          - heading "Transforme Visitantes em Clientes Engajados" [level=2] [ref=e80]:
+            - text: Transforme Visitantes em
+            - generic [ref=e81]: Clientes Engajados
+          - paragraph [ref=e82]: Crie quizzes interativos, funnels de conversão e experiências personalizadas que capturam leads qualificados e aumentam suas vendas.
+          - generic [ref=e83]:
+            - button "Começar Agora" [ref=e84] [cursor=pointer]:
+              - img [ref=e85] [cursor=pointer]
+              - text: Começar Agora
+              - img [ref=e87] [cursor=pointer]
+            - button "Ver Demo" [ref=e89] [cursor=pointer]:
+              - img [ref=e90] [cursor=pointer]
+              - text: Ver Demo
+          - generic [ref=e93]:
+            - generic [ref=e94]:
+              - img [ref=e95]
+              - generic [ref=e100]: +10.000 empresas confiam
+            - generic [ref=e101]:
+              - img [ref=e102]
+              - generic [ref=e105]: +300% aumento em conversões
+            - generic [ref=e106]:
+              - img [ref=e107]
+              - generic [ref=e109]: LGPD Compliant
+      - generic [ref=e112]:
+        - generic [ref=e113]:
+          - img [ref=e115]
+          - heading "85%" [level=3] [ref=e119]
+          - paragraph [ref=e120]: Taxa de Conversão Média
+        - generic [ref=e121]:
+          - img [ref=e123]
+          - heading "12x" [level=3] [ref=e126]
+          - paragraph [ref=e127]: Mais Engajamento
+        - generic [ref=e128]:
+          - img [ref=e130]
+          - heading "5min" [level=3] [ref=e135]
+          - paragraph [ref=e136]: Para Criar seu Primeiro Quiz
+      - generic [ref=e137]:
+        - img [ref=e145]
+        - generic [ref=e170]:
+          - generic [ref=e171]:
+            - heading "Tudo que você precisa para converter mais" [level=3] [ref=e172]:
+              - text: Tudo que você precisa para
+              - generic [ref=e173]: converter mais
+            - paragraph [ref=e174]: Ferramentas poderosas e intuitivas para criar experiências que seus clientes vão amar
+          - generic [ref=e175]:
+            - article [ref=e176]:
+              - img [ref=e178]
+              - heading "Criação Rápida" [level=4] [ref=e180]
+              - paragraph [ref=e181]: Crie quizzes profissionais em minutos com nossos templates inteligentes e editor visual.
+            - article [ref=e182]:
+              - img [ref=e184]
+              - heading "Segmentação Inteligente" [level=4] [ref=e188]
+              - paragraph [ref=e189]: Qualifique leads automaticamente e direcione ofertas personalizadas baseadas nas respostas.
+            - article [ref=e190]:
+              - img [ref=e192]
+              - heading "Analytics Avançado" [level=4] [ref=e195]
+              - paragraph [ref=e196]: Acompanhe métricas detalhadas e otimize suas campanhas com insights em tempo real.
+      - generic [ref=e197]:
+        - img [ref=e205]
+        - generic [ref=e230]:
+          - heading "Pronto para revolucionar suas vendas?" [level=3] [ref=e231]:
+            - text: Pronto para
+            - generic [ref=e232]: revolucionar
+            - text: suas vendas?
+          - paragraph [ref=e233]: Junte-se a milhares de empreendedores que já transformaram seus negócios com o QuizFlow Pro
+          - generic [ref=e234]:
+            - button "Começar Gratuitamente" [ref=e235] [cursor=pointer]:
+              - img [ref=e236] [cursor=pointer]
+              - text: Começar Gratuitamente
+              - img [ref=e241] [cursor=pointer]
+            - button "Ver Demonstração" [ref=e243] [cursor=pointer]:
+              - text: Ver Demonstração
+              - img [ref=e244] [cursor=pointer]
+    - contentinfo [ref=e246]:
+      - generic [ref=e247]:
+        - generic [ref=e248]:
+          - generic [ref=e250]:
+            - img [ref=e251]
+            - generic [ref=e261]:
+              - generic [ref=e262]: QuizFlow Pro
+              - paragraph [ref=e263]: Interactive Marketing
+          - navigation [ref=e264]:
+            - link "Privacidade" [ref=e265] [cursor=pointer]:
+              - /url: "#"
+            - link "Termos" [ref=e266] [cursor=pointer]:
+              - /url: "#"
+            - link "Suporte" [ref=e267] [cursor=pointer]:
+              - /url: "#"
+            - link "Blog" [ref=e268] [cursor=pointer]:
+              - /url: "#"
+        - paragraph [ref=e270]: © 2025 QuizFlow Pro. Todos os direitos reservados.
+  - region "Notifications (F8)":
+    - list
+```

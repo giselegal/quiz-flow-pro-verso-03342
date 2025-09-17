@@ -1,0 +1,324 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e3]:
+  - generic [ref=e5]:
+    - generic [ref=e6]:
+      - generic [ref=e7]:
+        - generic [ref=e8]:
+          - text: 🎯 Preview - Etapa 1 de 21
+          - generic [ref=e9]: Visualização de Produção
+        - generic [ref=e16]: ...+16
+      - generic [ref=e17]:
+        - generic [ref=e18]:
+          - button "Desfazer (Ctrl+Z)" [ref=e19] [cursor=pointer]:
+            - img [ref=e20] [cursor=pointer]
+          - button "Refazer (Ctrl+Y)" [disabled]:
+            - img
+        - button "Sair do Preview" [active] [ref=e23] [cursor=pointer]:
+          - img [ref=e24] [cursor=pointer]
+          - text: Sair do Preview
+        - button "Salvar" [ref=e29] [cursor=pointer]:
+          - img [ref=e30] [cursor=pointer]
+          - text: Salvar
+        - button "Configurações" [ref=e34] [cursor=pointer]:
+          - img [ref=e35] [cursor=pointer]
+        - button "Publicar" [ref=e38] [cursor=pointer]:
+          - img [ref=e39] [cursor=pointer]
+          - text: Publicar
+    - generic [ref=e41]:
+      - navigation "Quiz Steps Navigation" [ref=e43]:
+        - generic [ref=e44]:
+          - heading "Etapas do Quiz" [level=3] [ref=e45]
+          - paragraph [ref=e46]: 21 steps configured
+        - list "Etapas do Quiz" [ref=e47]:
+          - generic [ref=e48]:
+            - 'listitem "Navigate to step 1: Etapa" [ref=e49] [cursor=pointer]':
+              - generic [ref=e50] [cursor=pointer]:
+                - generic [ref=e51] [cursor=pointer]:
+                  - generic [ref=e53] [cursor=pointer]: note
+                  - generic [ref=e54] [cursor=pointer]: Step 1
+                - status "Step has content" [ref=e56] [cursor=pointer]
+              - generic [ref=e57] [cursor=pointer]:
+                - generic [ref=e58] [cursor=pointer]: Etapa
+                - generic [ref=e59] [cursor=pointer]: Configurar
+            - 'listitem "Navigate to step 2: Etapa" [ref=e60] [cursor=pointer]':
+              - generic [ref=e61] [cursor=pointer]:
+                - generic [ref=e62] [cursor=pointer]:
+                  - generic [ref=e64] [cursor=pointer]: note
+                  - generic [ref=e65] [cursor=pointer]: Step 2
+                - status "Step has content" [ref=e67] [cursor=pointer]
+              - generic [ref=e68] [cursor=pointer]:
+                - generic [ref=e69] [cursor=pointer]: Etapa
+                - generic [ref=e70] [cursor=pointer]: Configurar
+            - 'listitem "Navigate to step 3: Etapa" [ref=e71] [cursor=pointer]':
+              - generic [ref=e72] [cursor=pointer]:
+                - generic [ref=e73] [cursor=pointer]:
+                  - generic [ref=e75] [cursor=pointer]: note
+                  - generic [ref=e76] [cursor=pointer]: Step 3
+                - status "Step has content" [ref=e78] [cursor=pointer]
+              - generic [ref=e79] [cursor=pointer]:
+                - generic [ref=e80] [cursor=pointer]: Etapa
+                - generic [ref=e81] [cursor=pointer]: Configurar
+            - 'listitem "Navigate to step 4: Etapa" [ref=e82] [cursor=pointer]':
+              - generic [ref=e83] [cursor=pointer]:
+                - generic [ref=e84] [cursor=pointer]:
+                  - generic [ref=e86] [cursor=pointer]: note
+                  - generic [ref=e87] [cursor=pointer]: Step 4
+                - status "Step has content" [ref=e89] [cursor=pointer]
+              - generic [ref=e90] [cursor=pointer]:
+                - generic [ref=e91] [cursor=pointer]: Etapa
+                - generic [ref=e92] [cursor=pointer]: Configurar
+            - 'listitem "Navigate to step 5: Etapa" [ref=e93] [cursor=pointer]':
+              - generic [ref=e94] [cursor=pointer]:
+                - generic [ref=e95] [cursor=pointer]:
+                  - generic [ref=e97] [cursor=pointer]: note
+                  - generic [ref=e98] [cursor=pointer]: Step 5
+                - status "Step has content" [ref=e100] [cursor=pointer]
+              - generic [ref=e101] [cursor=pointer]:
+                - generic [ref=e102] [cursor=pointer]: Etapa
+                - generic [ref=e103] [cursor=pointer]: Configurar
+            - 'listitem "Navigate to step 6: Etapa" [ref=e104] [cursor=pointer]':
+              - generic [ref=e105] [cursor=pointer]:
+                - generic [ref=e106] [cursor=pointer]:
+                  - generic [ref=e108] [cursor=pointer]: note
+                  - generic [ref=e109] [cursor=pointer]: Step 6
+                - status "Step has content" [ref=e111] [cursor=pointer]
+              - generic [ref=e112] [cursor=pointer]:
+                - generic [ref=e113] [cursor=pointer]: Etapa
+                - generic [ref=e114] [cursor=pointer]: Configurar
+            - 'listitem "Navigate to step 7: Etapa" [ref=e115] [cursor=pointer]':
+              - generic [ref=e116] [cursor=pointer]:
+                - generic [ref=e117] [cursor=pointer]:
+                  - generic [ref=e119] [cursor=pointer]: note
+                  - generic [ref=e120] [cursor=pointer]: Step 7
+                - status "Step has content" [ref=e122] [cursor=pointer]
+              - generic [ref=e123] [cursor=pointer]:
+                - generic [ref=e124] [cursor=pointer]: Etapa
+                - generic [ref=e125] [cursor=pointer]: Configurar
+            - 'listitem "Navigate to step 8: Etapa" [ref=e126] [cursor=pointer]':
+              - generic [ref=e127] [cursor=pointer]:
+                - generic [ref=e128] [cursor=pointer]:
+                  - generic [ref=e130] [cursor=pointer]: note
+                  - generic [ref=e131] [cursor=pointer]: Step 8
+                - status "Step has content" [ref=e133] [cursor=pointer]
+              - generic [ref=e134] [cursor=pointer]:
+                - generic [ref=e135] [cursor=pointer]: Etapa
+                - generic [ref=e136] [cursor=pointer]: Configurar
+            - 'listitem "Navigate to step 9: Etapa" [ref=e137] [cursor=pointer]':
+              - generic [ref=e138] [cursor=pointer]:
+                - generic [ref=e139] [cursor=pointer]:
+                  - generic [ref=e141] [cursor=pointer]: note
+                  - generic [ref=e142] [cursor=pointer]: Step 9
+                - status "Step has content" [ref=e144] [cursor=pointer]
+              - generic [ref=e145] [cursor=pointer]:
+                - generic [ref=e146] [cursor=pointer]: Etapa
+                - generic [ref=e147] [cursor=pointer]: Configurar
+            - 'listitem "Navigate to step 10: Etapa" [ref=e148] [cursor=pointer]':
+              - generic [ref=e149] [cursor=pointer]:
+                - generic [ref=e150] [cursor=pointer]:
+                  - generic [ref=e152] [cursor=pointer]: note
+                  - generic [ref=e153] [cursor=pointer]: Step 10
+                - status "Step has content" [ref=e155] [cursor=pointer]
+              - generic [ref=e156] [cursor=pointer]:
+                - generic [ref=e157] [cursor=pointer]: Etapa
+                - generic [ref=e158] [cursor=pointer]: Configurar
+            - 'listitem "Navigate to step 11: Etapa" [ref=e159] [cursor=pointer]':
+              - generic [ref=e160] [cursor=pointer]:
+                - generic [ref=e161] [cursor=pointer]:
+                  - generic [ref=e163] [cursor=pointer]: note
+                  - generic [ref=e164] [cursor=pointer]: Step 11
+                - status "Step has content" [ref=e166] [cursor=pointer]
+              - generic [ref=e167] [cursor=pointer]:
+                - generic [ref=e168] [cursor=pointer]: Etapa
+                - generic [ref=e169] [cursor=pointer]: Configurar
+            - 'listitem "Navigate to step 12: Etapa" [ref=e170] [cursor=pointer]':
+              - generic [ref=e171] [cursor=pointer]:
+                - generic [ref=e172] [cursor=pointer]:
+                  - generic [ref=e174] [cursor=pointer]: note
+                  - generic [ref=e175] [cursor=pointer]: Step 12
+                - status "Step has content" [ref=e177] [cursor=pointer]
+              - generic [ref=e178] [cursor=pointer]:
+                - generic [ref=e179] [cursor=pointer]: Etapa
+                - generic [ref=e180] [cursor=pointer]: Configurar
+            - 'listitem "Navigate to step 13: Etapa" [ref=e181] [cursor=pointer]':
+              - generic [ref=e182] [cursor=pointer]:
+                - generic [ref=e183] [cursor=pointer]:
+                  - generic [ref=e185] [cursor=pointer]: note
+                  - generic [ref=e186] [cursor=pointer]: Step 13
+                - status "Step has content" [ref=e188] [cursor=pointer]
+              - generic [ref=e189] [cursor=pointer]:
+                - generic [ref=e190] [cursor=pointer]: Etapa
+                - generic [ref=e191] [cursor=pointer]: Configurar
+            - 'listitem "Navigate to step 14: Etapa" [ref=e192] [cursor=pointer]':
+              - generic [ref=e193] [cursor=pointer]:
+                - generic [ref=e194] [cursor=pointer]:
+                  - generic [ref=e196] [cursor=pointer]: note
+                  - generic [ref=e197] [cursor=pointer]: Step 14
+                - status "Step has content" [ref=e199] [cursor=pointer]
+              - generic [ref=e200] [cursor=pointer]:
+                - generic [ref=e201] [cursor=pointer]: Etapa
+                - generic [ref=e202] [cursor=pointer]: Configurar
+            - 'listitem "Navigate to step 15: Etapa" [ref=e203] [cursor=pointer]':
+              - generic [ref=e204] [cursor=pointer]:
+                - generic [ref=e205] [cursor=pointer]:
+                  - generic [ref=e207] [cursor=pointer]: note
+                  - generic [ref=e208] [cursor=pointer]: Step 15
+                - status "Step has content" [ref=e210] [cursor=pointer]
+              - generic [ref=e211] [cursor=pointer]:
+                - generic [ref=e212] [cursor=pointer]: Etapa
+                - generic [ref=e213] [cursor=pointer]: Configurar
+            - 'listitem "Navigate to step 16: Etapa" [ref=e214] [cursor=pointer]':
+              - generic [ref=e215] [cursor=pointer]:
+                - generic [ref=e216] [cursor=pointer]:
+                  - generic [ref=e218] [cursor=pointer]: note
+                  - generic [ref=e219] [cursor=pointer]: Step 16
+                - status "Step has content" [ref=e221] [cursor=pointer]
+              - generic [ref=e222] [cursor=pointer]:
+                - generic [ref=e223] [cursor=pointer]: Etapa
+                - generic [ref=e224] [cursor=pointer]: Configurar
+            - 'listitem "Navigate to step 17: Etapa" [ref=e225] [cursor=pointer]':
+              - generic [ref=e226] [cursor=pointer]:
+                - generic [ref=e227] [cursor=pointer]:
+                  - generic [ref=e229] [cursor=pointer]: note
+                  - generic [ref=e230] [cursor=pointer]: Step 17
+                - status "Step has content" [ref=e232] [cursor=pointer]
+              - generic [ref=e233] [cursor=pointer]:
+                - generic [ref=e234] [cursor=pointer]: Etapa
+                - generic [ref=e235] [cursor=pointer]: Configurar
+            - 'listitem "Navigate to step 18: Etapa" [ref=e236] [cursor=pointer]':
+              - generic [ref=e237] [cursor=pointer]:
+                - generic [ref=e238] [cursor=pointer]:
+                  - generic [ref=e240] [cursor=pointer]: note
+                  - generic [ref=e241] [cursor=pointer]: Step 18
+                - status "Step has content" [ref=e243] [cursor=pointer]
+              - generic [ref=e244] [cursor=pointer]:
+                - generic [ref=e245] [cursor=pointer]: Etapa
+                - generic [ref=e246] [cursor=pointer]: Configurar
+            - 'listitem "Navigate to step 19: Etapa" [ref=e247] [cursor=pointer]':
+              - generic [ref=e248] [cursor=pointer]:
+                - generic [ref=e249] [cursor=pointer]:
+                  - generic [ref=e251] [cursor=pointer]: note
+                  - generic [ref=e252] [cursor=pointer]: Step 19
+                - status "Step has content" [ref=e254] [cursor=pointer]
+              - generic [ref=e255] [cursor=pointer]:
+                - generic [ref=e256] [cursor=pointer]: Etapa
+                - generic [ref=e257] [cursor=pointer]: Configurar
+            - 'listitem "Navigate to step 20: Etapa" [ref=e258] [cursor=pointer]':
+              - generic [ref=e259] [cursor=pointer]:
+                - generic [ref=e260] [cursor=pointer]:
+                  - generic [ref=e262] [cursor=pointer]: note
+                  - generic [ref=e263] [cursor=pointer]: Step 20
+                - status "Step has content" [ref=e265] [cursor=pointer]
+              - generic [ref=e266] [cursor=pointer]:
+                - generic [ref=e267] [cursor=pointer]: Etapa
+                - generic [ref=e268] [cursor=pointer]: Configurar
+            - 'listitem "Navigate to step 21: Etapa" [ref=e269] [cursor=pointer]':
+              - generic [ref=e270] [cursor=pointer]:
+                - generic [ref=e271] [cursor=pointer]:
+                  - generic [ref=e273] [cursor=pointer]: note
+                  - generic [ref=e274] [cursor=pointer]: Step 21
+                - status "Step has content" [ref=e276] [cursor=pointer]
+              - generic [ref=e277] [cursor=pointer]:
+                - generic [ref=e278] [cursor=pointer]: Etapa
+                - generic [ref=e279] [cursor=pointer]: Configurar
+        - status [ref=e280]:
+          - generic [ref=e281]:
+            - generic [ref=e282]: "Current step:"
+            - generic "Step 1 of 21" [ref=e283]: 1/21
+      - generic [ref=e285]:
+        - generic [ref=e286]:
+          - generic [ref=e287]:
+            - img [ref=e289]
+            - generic [ref=e291]:
+              - heading "Components" [level=3] [ref=e292]
+              - paragraph [ref=e293]: 3 blocks available
+          - generic [ref=e294]:
+            - img [ref=e295]
+            - textbox "Search components..." [ref=e297]
+        - generic [ref=e298]:
+          - generic [ref=e299]:
+            - generic [ref=e300]:
+              - generic [ref=e301]:
+                - heading "Conteúdo" [level=4] [ref=e303]
+                - generic [ref=e305]: "2"
+              - generic [ref=e306]:
+                - button "note Título Conteúdo Título principal" [ref=e307]:
+                  - generic [ref=e308]:
+                    - generic [ref=e310]: note
+                    - generic [ref=e311]:
+                      - heading "Título" [level=4] [ref=e313]
+                      - generic [ref=e314]: Conteúdo
+                  - paragraph [ref=e315]: Título principal
+                - button "doc Texto Conteúdo Parágrafo de texto" [ref=e316]:
+                  - generic [ref=e317]:
+                    - generic [ref=e319]: doc
+                    - generic [ref=e320]:
+                      - heading "Texto" [level=4] [ref=e322]
+                      - generic [ref=e323]: Conteúdo
+                  - paragraph [ref=e324]: Parágrafo de texto
+            - generic [ref=e325]:
+              - generic [ref=e326]:
+                - heading "Formulários" [level=4] [ref=e328]
+                - generic [ref=e330]: "1"
+              - button "button Formulário Formulários Formulário de contato" [ref=e332]:
+                - generic [ref=e333]:
+                  - generic [ref=e335]: button
+                  - generic [ref=e336]:
+                    - heading "Formulário" [level=4] [ref=e338]
+                    - generic [ref=e339]: Formulários
+                - paragraph [ref=e340]: Formulário de contato
+          - generic [ref=e342]:
+            - img [ref=e343]
+            - text: Drag components to canvas
+      - generic [ref=e349]:
+        - generic [ref=e350]:
+          - generic [ref=e352]:
+            - generic [ref=e353]: "Tipo desconhecido: quiz-intro-header"
+            - generic [ref=e354]: Componente não registrado no sistema
+            - generic [ref=e355]: Clean Architecture v3.0
+          - generic [ref=e357] [cursor=pointer]:
+            - generic [ref=e359] [cursor=pointer]:
+              - generic [ref=e360] [cursor=pointer]: v3.0
+              - button "×" [ref=e361] [cursor=pointer]
+            - generic [ref=e362] [cursor=pointer]: Digite seu texto aqui...
+          - generic [ref=e364] [cursor=pointer]:
+            - generic [ref=e366] [cursor=pointer]:
+              - generic [ref=e367] [cursor=pointer]: v3.0
+              - button "×" [ref=e368] [cursor=pointer]
+            - generic [ref=e369] [cursor=pointer]: Digite seu texto aqui...
+          - generic [ref=e371] [cursor=pointer]:
+            - generic [ref=e373] [cursor=pointer]:
+              - generic [ref=e374] [cursor=pointer]: v3.0
+              - button "×" [ref=e375] [cursor=pointer]
+            - img "Descubra seu estilo predominante" [ref=e377] [cursor=pointer]
+          - generic [ref=e379]:
+            - generic [ref=e380]: "Tipo desconhecido: decorative-bar"
+            - generic [ref=e381]: Componente não registrado no sistema
+            - generic [ref=e382]: Clean Architecture v3.0
+          - generic [ref=e384]:
+            - generic [ref=e385]: "Tipo desconhecido: form-container"
+            - generic [ref=e386]: Componente não registrado no sistema
+            - generic [ref=e387]: Clean Architecture v3.0
+          - generic [ref=e389]:
+            - generic [ref=e390]: "Tipo desconhecido: legal-notice"
+            - generic [ref=e391]: Componente não registrado no sistema
+            - generic [ref=e392]: Clean Architecture v3.0
+          - generic [ref=e394] [cursor=pointer]:
+            - generic [ref=e396] [cursor=pointer]:
+              - generic [ref=e397] [cursor=pointer]: v3.0
+              - button "×" [ref=e398] [cursor=pointer]
+            - generic [ref=e399] [cursor=pointer]: Digite seu texto aqui...
+        - generic [ref=e401]:
+          - button "← Anterior" [disabled] [ref=e402]
+          - generic [ref=e403]:
+            - generic [ref=e404]: Etapa 1 de 21
+            - generic [ref=e407]: 5%
+          - button "Complete a etapa →" [disabled] [ref=e408]
+      - generic [ref=e412]:
+        - img [ref=e414]
+        - heading "Nenhum bloco selecionado" [level=3] [ref=e417]
+        - paragraph [ref=e418]: Selecione um bloco no canvas para editar suas propriedades
+  - region "Notifications (F8)":
+    - list
+```

@@ -23,8 +23,6 @@ export const HeadlessVisualEditor: React.FC<HeadlessVisualEditorProps> = ({
   return (
     <HeadlessEditorProvider
       schemaId={funnelId || templateId || 'default-template'}
-      autoSave={true}
-      autoSaveInterval={30000}
     >
       <div className="h-screen flex flex-col bg-gray-50">
         <EditorHeader

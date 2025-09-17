@@ -47,83 +47,82 @@ const TestWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => (
 describe('Step 20 - Componentes Modulares', () => {
     beforeEach(() => {
         vi.clearAllMocks();
+        });
+    });
+});
+
+describe('Step20ResultHeaderBlock', () => {
+    const defaultBlock: Block = {
+        id: 'test-result-header',
+        type: 'step20-result-header',
+        order: 0,
+        content: {},
+        properties: {
+            celebrationText: 'Parabéns!',
+            resultTitle: 'Seu Estilo é...',
+            showConfetti: true,
+            backgroundColor: '#f8f9fa',
+            textColor: '#333333'
+        }
+    };
+
+    it('deve renderizar header com texto de celebração', () => {
+        render(
+            <TestWrapper>
+                <Step20ResultHeaderBlock block={defaultBlock} />
+            </TestWrapper>
+        );
+
+        expect(screen.getByText('Parabéns!')).toBeInTheDocument();
+        expect(screen.getByText('Seu Estilo é...')).toBeInTheDocument();
     });
 
-    describe('Step20ResultHeader', () => {
-        const defaultBlock: Block = {
-            id: 'test-result-header',
-            type: 'step20-result-header',
-            order: 0,
-            content: {},
+    it('deve mostrar confetti quando habilitado', () => {
+        render(
+            <TestWrapper>
+                <Step20ResultHeaderBlock block={defaultBlock} />
+            </TestWrapper>
+        );
+
+        // Verificar se o componente de confetti está presente
+        expect(screen.getByTestId('confetti-animation')).toBeInTheDocument();
+    });
+
+    it('deve renderizar sem confetti quando desabilitado', () => {
+        const blockWithoutConfetti = {
+            ...defaultBlock,
+            content: { ...defaultBlock.content, showConfetti: false }
+        };
+
+        render(
+            <TestWrapper>
+                <Step20ResultHeaderBlock block={blockWithoutConfetti} />
+            </TestWrapper>
+        );
+    });
+
+    it('deve aplicar cores customizadas', () => {
+        const customColorBlock = {
+            ...defaultBlock,
             properties: {
-                celebrationText: 'Parabéns!',
-                resultTitle: 'Seu Estilo é...',
-                showConfetti: true,
-                backgroundColor: '#f8f9fa',
-                textColor: '#333333'
+                ...defaultBlock.properties,
+                backgroundColor: '#ff0000',
+                textColor: '#ffffff'
             }
         };
 
-        it('deve renderizar header com texto de celebração', () => {
-            render(
-                <TestWrapper>
-                    <Step20ResultHeader block={defaultBlock} />
-                </TestWrapper>
-            );
+        render(
+            <TestWrapper>
+                <Step20ResultHeaderBlock block={customColorBlock} />
+            </TestWrapper>
+        );
 
-            expect(screen.getByText('Parabéns!')).toBeInTheDocument();
-            expect(screen.getByText('Seu Estilo é...')).toBeInTheDocument();
-        });
-
-        it('deve mostrar confetti quando habilitado', () => {
-            render(
-                <TestWrapper>
-                    <Step20ResultHeader block={defaultBlock} />
-                </TestWrapper>
-            );
-
-            // Verificar se o componente de confetti está presente
-            expect(screen.getByTestId('confetti-animation')).toBeInTheDocument();
-        });
-
-        it('deve ocultar confetti quando desabilitado', () => {
-            const blockWithoutConfetti = {
-                ...defaultBlock,
-                properties: { ...defaultBlock.properties, showConfetti: false }
-            };
-
-            render(
-                <TestWrapper>
-                    <Step20ResultHeader block={blockWithoutConfetti} />
-                </TestWrapper>
-            );
-
-            expect(screen.queryByTestId('confetti-animation')).not.toBeInTheDocument();
-        });
-
-        it('deve aplicar cores customizadas', () => {
-            const customColorBlock = {
-                ...defaultBlock,
-                properties: {
-                    ...defaultBlock.properties,
-                    backgroundColor: '#ff0000',
-                    textColor: '#ffffff'
-                }
-            };
-
-            render(
-                <TestWrapper>
-                    <Step20ResultHeader block={customColorBlock} />
-                </TestWrapper>
-            );
-
-            const headerElement = screen.getByTestId('result-header');
-            expect(headerElement).toHaveStyle('background-color: #ff0000');
-            expect(headerElement).toHaveStyle('color: #ffffff');
-        });
+        const headerElement = screen.getByTestId('result-header');
+        expect(headerElement).toHaveStyle('background-color: #ff0000');
+        expect(headerElement).toHaveStyle('color: #ffffff');
     });
 
-    describe('Step20StyleReveal', () => {
+    describe('Step20StyleRevealBlock', () => {
         const defaultBlock: Block = {
             id: 'test-style-reveal',
             type: 'step20-style-reveal',
@@ -141,7 +140,7 @@ describe('Step 20 - Componentes Modulares', () => {
         it('deve exibir nome e descrição do estilo', () => {
             render(
                 <TestWrapper>
-                    <Step20StyleReveal block={defaultBlock} />
+                    <Step20StyleRevealBlock block={defaultBlock} />
                 </TestWrapper>
             );
 
@@ -152,7 +151,7 @@ describe('Step 20 - Componentes Modulares', () => {
         it('deve renderizar imagem do estilo', () => {
             render(
                 <TestWrapper>
-                    <Step20StyleReveal block={defaultBlock} />
+                    <Step20StyleRevealBlock block={defaultBlock} />
                 </TestWrapper>
             );
 
@@ -164,7 +163,7 @@ describe('Step 20 - Componentes Modulares', () => {
         it('deve aplicar animação quando habilitada', () => {
             render(
                 <TestWrapper>
-                    <Step20StyleReveal block={defaultBlock} />
+                    <Step20StyleRevealBlock block={defaultBlock} />
                 </TestWrapper>
             );
 
@@ -175,7 +174,7 @@ describe('Step 20 - Componentes Modulares', () => {
         it('deve aplicar estilo de cartão correto', () => {
             render(
                 <TestWrapper>
-                    <Step20StyleReveal block={defaultBlock} />
+                    <Step20StyleRevealBlock block={defaultBlock} />
                 </TestWrapper>
             );
 
@@ -184,7 +183,7 @@ describe('Step 20 - Componentes Modulares', () => {
         });
     });
 
-    describe('Step20UserGreeting', () => {
+    describe('Step20UserGreetingBlock', () => {
         const defaultBlock: Block = {
             id: 'test-user-greeting',
             type: 'step20-user-greeting',
@@ -198,18 +197,12 @@ describe('Step 20 - Componentes Modulares', () => {
             }
         };
 
-        // Mock do contexto do usuário
-        const _mockUserContext = {
-            userName: 'Maria Silva',
-            userAvatar: '/avatars/maria.jpg'
-        };
-
         it('deve personalizar saudação com nome do usuário', () => {
             // Mock do contexto que fornece dados do usuário
             const GreetingWithContext = () => (
                 <TestWrapper>
                     <div data-user-name="Maria Silva">
-                        <Step20UserGreeting block={defaultBlock} />
+                        <Step20UserGreetingBlock block={defaultBlock} />
                     </div>
                 </TestWrapper>
             );
@@ -227,7 +220,7 @@ describe('Step 20 - Componentes Modulares', () => {
 
             render(
                 <TestWrapper>
-                    <Step20UserGreeting block={blockWithAvatar} />
+                    <Step20UserGreetingBlock block={blockWithAvatar} />
                 </TestWrapper>
             );
 
@@ -237,7 +230,7 @@ describe('Step 20 - Componentes Modulares', () => {
         it('deve ocultar avatar quando desabilitado', () => {
             render(
                 <TestWrapper>
-                    <Step20UserGreeting block={defaultBlock} />
+                    <Step20UserGreetingBlock block={defaultBlock} />
                 </TestWrapper>
             );
 
@@ -245,7 +238,7 @@ describe('Step 20 - Componentes Modulares', () => {
         });
     });
 
-    describe('Step20Compatibility', () => {
+    describe('Step20CompatibilityBlock', () => {
         const defaultBlock: Block = {
             id: 'test-compatibility',
             type: 'step20-compatibility',
@@ -263,7 +256,7 @@ describe('Step 20 - Componentes Modulares', () => {
         it('deve exibir percentual de compatibilidade', () => {
             render(
                 <TestWrapper>
-                    <Step20Compatibility block={defaultBlock} />
+                    <Step20CompatibilityBlock block={defaultBlock} />
                 </TestWrapper>
             );
 
@@ -274,7 +267,7 @@ describe('Step 20 - Componentes Modulares', () => {
         it('deve animar contador quando habilitado', async () => {
             render(
                 <TestWrapper>
-                    <Step20Compatibility block={defaultBlock} />
+                    <Step20CompatibilityBlock block={defaultBlock} />
                 </TestWrapper>
             );
 
@@ -288,7 +281,7 @@ describe('Step 20 - Componentes Modulares', () => {
         it('deve aplicar cor personalizada', () => {
             render(
                 <TestWrapper>
-                    <Step20Compatibility block={defaultBlock} />
+                    <Step20CompatibilityBlock block={defaultBlock} />
                 </TestWrapper>
             );
 
@@ -311,7 +304,7 @@ describe('Step 20 - Componentes Modulares', () => {
 
                 const { unmount } = render(
                     <TestWrapper>
-                        <Step20Compatibility block={testBlock} />
+                        <Step20CompatibilityBlock block={testBlock} />
                     </TestWrapper>
                 );
 
@@ -321,7 +314,7 @@ describe('Step 20 - Componentes Modulares', () => {
         });
     });
 
-    describe('Step20SecondaryStyles', () => {
+    describe('Step20SecondaryStylesBlock', () => {
         const defaultBlock: Block = {
             id: 'test-secondary-styles',
             type: 'step20-secondary-styles',
@@ -351,7 +344,7 @@ describe('Step 20 - Componentes Modulares', () => {
         it('deve renderizar estilos secundários quando habilitados', () => {
             render(
                 <TestWrapper>
-                    <Step20SecondaryStyles block={defaultBlock} />
+                    <Step20SecondaryStylesBlock block={defaultBlock} />
                 </TestWrapper>
             );
 
@@ -381,7 +374,7 @@ describe('Step 20 - Componentes Modulares', () => {
 
             render(
                 <TestWrapper>
-                    <Step20SecondaryStyles block={blockWithManyStyles} />
+                    <Step20SecondaryStylesBlock block={blockWithManyStyles} />
                 </TestWrapper>
             );
 
@@ -394,7 +387,7 @@ describe('Step 20 - Componentes Modulares', () => {
         it('deve aplicar layout de grid', () => {
             render(
                 <TestWrapper>
-                    <Step20SecondaryStyles block={defaultBlock} />
+                    <Step20SecondaryStylesBlock block={defaultBlock} />
                 </TestWrapper>
             );
 
@@ -410,7 +403,7 @@ describe('Step 20 - Componentes Modulares', () => {
 
             render(
                 <TestWrapper>
-                    <Step20SecondaryStyles block={blockWithoutSecondary} />
+                    <Step20SecondaryStylesBlock block={blockWithoutSecondary} />
                 </TestWrapper>
             );
 
@@ -419,7 +412,7 @@ describe('Step 20 - Componentes Modulares', () => {
         });
     });
 
-    describe('Step20PersonalizedOffer', () => {
+    describe('Step20PersonalizedOfferBlock', () => {
         const defaultBlock: Block = {
             id: 'test-personalized-offer',
             type: 'step20-personalized-offer',
@@ -441,7 +434,7 @@ describe('Step 20 - Componentes Modulares', () => {
         it('deve renderizar oferta personalizada completa', () => {
             render(
                 <TestWrapper>
-                    <Step20PersonalizedOffer block={defaultBlock} />
+                    <Step20PersonalizedOfferBlock block={defaultBlock} />
                 </TestWrapper>
             );
 
@@ -453,7 +446,7 @@ describe('Step 20 - Componentes Modulares', () => {
         it('deve mostrar desconto quando habilitado', () => {
             render(
                 <TestWrapper>
-                    <Step20PersonalizedOffer block={defaultBlock} />
+                    <Step20PersonalizedOfferBlock block={defaultBlock} />
                 </TestWrapper>
             );
 
@@ -470,7 +463,7 @@ describe('Step 20 - Componentes Modulares', () => {
 
             render(
                 <TestWrapper>
-                    <Step20PersonalizedOffer block={blockWithoutDiscount} />
+                    <Step20PersonalizedOfferBlock block={blockWithoutDiscount} />
                 </TestWrapper>
             );
 
@@ -481,7 +474,7 @@ describe('Step 20 - Componentes Modulares', () => {
         it('deve mostrar urgência quando habilitado', () => {
             render(
                 <TestWrapper>
-                    <Step20PersonalizedOffer block={defaultBlock} />
+                    <Step20PersonalizedOfferBlock block={defaultBlock} />
                 </TestWrapper>
             );
 
@@ -493,7 +486,7 @@ describe('Step 20 - Componentes Modulares', () => {
 
             render(
                 <TestWrapper>
-                    <Step20PersonalizedOffer block={defaultBlock} />
+                    <Step20PersonalizedOfferBlock block={defaultBlock} />
                 </TestWrapper>
             );
 
@@ -507,7 +500,7 @@ describe('Step 20 - Componentes Modulares', () => {
         it('deve ser responsivo', () => {
             render(
                 <TestWrapper>
-                    <Step20PersonalizedOffer block={defaultBlock} />
+                    <Step20PersonalizedOfferBlock block={defaultBlock} />
                 </TestWrapper>
             );
 
@@ -538,8 +531,8 @@ describe('Step 20 - Componentes Modulares', () => {
             render(
                 <TestWrapper>
                     <div data-testid="step20-integration">
-                        <Step20ResultHeader block={blocks[0]} />
-                        <Step20StyleReveal block={blocks[1]} />
+                        <Step20ResultHeaderBlock block={blocks[0]} />
+                        <Step20StyleRevealBlock block={blocks[1]} />
                     </div>
                 </TestWrapper>
             );
@@ -551,18 +544,17 @@ describe('Step 20 - Componentes Modulares', () => {
 
         it('deve sincronizar dados entre componentes', async () => {
             // Teste de sincronização de dados entre componentes
-            const user = userEvent.setup();
 
             render(
                 <TestWrapper>
-                    <Step20UserGreeting block={{
+                    <Step20UserGreetingBlock block={{
                         id: 'greeting',
                         type: 'step20-user-greeting',
                         order: 0,
                         content: {},
                         properties: { greetingText: 'Olá, {userName}!' }
                     }} />
-                    <Step20PersonalizedOffer block={{
+                    <Step20PersonalizedOfferBlock block={{
                         id: 'offer',
                         type: 'step20-personalized-offer',
                         order: 1,
@@ -579,4 +571,3 @@ describe('Step 20 - Componentes Modulares', () => {
             expect(screen.getAllByText(/userName/)).toHaveLength(2);
         });
     });
-});
