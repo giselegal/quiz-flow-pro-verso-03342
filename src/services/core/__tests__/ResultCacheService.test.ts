@@ -22,12 +22,12 @@ describe('ResultCacheService', () => {
       expect(result).toBeNull();
     });
 
-    it('should store and retrieve cached results', () => {
+    it('should store and retrieve cached results', async () => {
       const selections = { 'step-3': ['option1'], 'step-4': ['option2'] };
       const testResult = { primaryStyle: { style: 'Classic' } };
-      
+
       // Mock cache retrieval
-      const { StorageService } = require('../StorageService');
+      const { StorageService } = await import('../StorageService');
       StorageService.safeGetJSON.mockReturnValue({
         'mockHash_testuser': {
           result: testResult,
@@ -43,7 +43,7 @@ describe('ResultCacheService', () => {
 
     it('should return null for expired cache entries', () => {
       const selections = { 'step-3': ['option1'] };
-      
+
       // Mock expired cache
       const { StorageService } = require('../StorageService');
       StorageService.safeGetJSON.mockReturnValue({
@@ -62,10 +62,10 @@ describe('ResultCacheService', () => {
     it('should store cache entries successfully', () => {
       const selections = { 'step-3': ['option1'] };
       const testResult = { primaryStyle: { style: 'Classic' } };
-      
+
       const success = resultCacheService.set(selections, testResult, 'testUser');
       expect(success).toBe(true);
-      
+
       const { StorageService } = require('../StorageService');
       expect(StorageService.safeSetJSON).toHaveBeenCalled();
     });
@@ -100,7 +100,7 @@ describe('ResultCacheService', () => {
     it('should clear all cache entries', () => {
       const success = resultCacheService.clear();
       expect(success).toBe(true);
-      
+
       const { StorageService } = require('../StorageService');
       expect(StorageService.safeRemove).toHaveBeenCalled();
     });

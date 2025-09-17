@@ -120,6 +120,55 @@ export class FunnelError extends Error {
         // Obter definição do código
         const definition = getErrorDefinition(code);
 
+        // Se não encontrar definição, usar valores padrão
+        if (!definition) {
+            console.warn(`FunnelError: Unknown error code ${code}, using defaults`);
+            super(message || 'Unknown error');
+            this.name = 'FunnelError';
+            this.code = code;
+            this.definition = {
+                code,
+                userMessage: message || 'An unknown error occurred',
+                technicalMessage: message || 'Unknown error',
+                severity: ErrorSeverity.MEDIUM,
+                category: 'unknown',
+                retryable: false,
+                logLevel: 'error',
+                recoveryStrategy: RecoveryStrategy.NONE,
+                autoRetryCount: 0,
+                autoRetryDelay: 0,
+                userActions: [],
+                tags: []
+            };
+            this.occurredAt = new Date();
+            this.isRecoverable = false;
+            this.originalError = originalError;
+            this.context = {
+                timestamp: this.occurredAt.toISOString(),
+                userAgent: typeof navigator !== 'undefined' ? navigator.userAgent : 'Unknown',
+                ...context
+            };
+            this.recoveryInfo = {
+                strategy: RecoveryStrategy.NONE,
+                autoRetryCount: 0,
+                autoRetryDelay: 0,
+                userActions: [],
+                technicalSuggestions: [],
+                requiresUserInput: false
+            };
+            this.metadata = {
+                errorId: this.generateErrorId(),
+                logLevel: 'error',
+                category: 'unknown',
+                tags: [],
+                severity: ErrorSeverity.MEDIUM,
+                reportable: true,
+                component: 'unknown'
+            };
+            this.retryCount = 0;
+            return;
+        }
+
         // Usar mensagem customizada ou padrão
         const finalMessage = message || definition.userMessage;
 
@@ -356,6 +405,11 @@ export class FunnelError extends Error {
      * Determinar se erro deve ser reportado para analytics
      */
     private shouldBeReported(): boolean {
+        // Verificar se metadata existe
+        if (!this.metadata || !this.metadata.severity) {
+            return true; // Reportar por segurança se metadata está malformado
+        }
+
         // Não reportar erros de validação simples
         if (this.code === FunnelErrorCode.VALIDATION_ERROR) return false;
 
