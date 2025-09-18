@@ -11,6 +11,7 @@ import EditorCanvas from './EditorCanvas';
 import StepSidebar from '@/components/editor/sidebars/StepSidebar';
 import ComponentsSidebar from '@/components/editor/sidebars/ComponentsSidebar';
 import RegistryPropertiesPanel from '@/components/universal/RegistryPropertiesPanel';
+import APIPropertiesPanel from '@/components/editor/properties/APIPropertiesPanel';
 
 /**
  * Hook para controlar larguras redimensionáveis das colunas
@@ -169,6 +170,7 @@ const ModularEditorPro: React.FC = () => {
 
   // Estados locais para UI (removidos os não utilizados)
   const [isPreviewMode, setIsPreviewMode] = useState(false);
+  const [useAPIPanel, setUseAPIPanel] = useState(false); // Toggle para testar API Panel
 
   // Sensores do DnD otimizados
   const sensors = useSensors(
@@ -528,27 +530,69 @@ const ModularEditorPro: React.FC = () => {
             label="Propriedades"
           />
 
-          {/* Propriedades */}
+          {/* Propriedades com Toggle API/Registry */}
           <div
-            className="border-l border-border bg-muted/30 flex-shrink-0"
+            className="border-l border-border bg-muted/30 flex-shrink-0 flex flex-col"
             style={{ width: `${columnWidths.properties}px` }}
           >
-            <RegistryPropertiesPanel
-              selectedBlock={selectedBlock || null}
-              onUpdate={(blockId: string, updates: Record<string, any>) => {
-                console.log('🔄 RegistryPropertiesPanel update:', { blockId, updates });
-                if (selectedBlock && blockId === selectedBlock.id) {
-                  handleUpdateBlock(selectedBlock.id, updates);
-                }
-              }}
-              onClose={() => actions.setSelectedBlockId(null)}
-              onDelete={(blockId: string) => {
-                console.log('🗑️ RegistryPropertiesPanel delete:', blockId);
-                if (selectedBlock && blockId === selectedBlock.id) {
-                  handleDeleteSelectedBlock();
-                }
-              }}
-            />
+            {/* Header com Toggle */}
+            <div className="p-2 border-b bg-background">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-medium">Propriedades</span>
+                <button
+                  onClick={() => setUseAPIPanel(!useAPIPanel)}
+                  className="px-2 py-1 text-xs bg-primary/10 hover:bg-primary/20 rounded transition-colors"
+                  title={`Alternar para ${useAPIPanel ? 'Registry' : 'API'} Panel`}
+                >
+                  {useAPIPanel ? '🚀 API' : '📋 Registry'}
+                </button>
+              </div>
+            </div>
+
+            {/* Panel Content */}
+            <div className="flex-1 overflow-auto">
+              {useAPIPanel && selectedBlock ? (
+                <APIPropertiesPanel
+                  blockId={selectedBlock.id}
+                  blockType={selectedBlock.type}
+                  initialProperties={selectedBlock.properties || {}}
+                  onPropertyChange={(key: string, value: any, isValid: boolean) => {
+                    console.log('🚀 APIPropertiesPanel change:', { key, value, isValid });
+                    if (selectedBlock && isValid) {
+                      handleUpdateBlock(selectedBlock.id, {
+                        properties: {
+                          ...selectedBlock.properties,
+                          [key]: value
+                        }
+                      });
+                    }
+                  }}
+                  onClose={() => actions.setSelectedBlockId(null)}
+                  onDelete={() => {
+                    if (selectedBlock) {
+                      handleDeleteSelectedBlock();
+                    }
+                  }}
+                />
+              ) : (
+                <RegistryPropertiesPanel
+                  selectedBlock={selectedBlock || null}
+                  onUpdate={(blockId: string, updates: Record<string, any>) => {
+                    console.log('� RegistryPropertiesPanel update:', { blockId, updates });
+                    if (selectedBlock && blockId === selectedBlock.id) {
+                      handleUpdateBlock(selectedBlock.id, updates);
+                    }
+                  }}
+                  onClose={() => actions.setSelectedBlockId(null)}
+                  onDelete={(blockId: string) => {
+                    console.log('🗑️ RegistryPropertiesPanel delete:', blockId);
+                    if (selectedBlock && blockId === selectedBlock.id) {
+                      handleDeleteSelectedBlock();
+                    }
+                  }}
+                />
+              )}
+            </div>
           </div>
         </div>
       </div>
