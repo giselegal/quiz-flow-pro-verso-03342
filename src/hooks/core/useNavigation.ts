@@ -43,16 +43,21 @@ export interface NavigationMiddleware {
 
 // Interfaces adicionais para compatibilidade com NavigationService
 export interface NavigationContext {
+    from: string;
+    to: string;
     path: string;
     params: Record<string, any>;
     query: Record<string, any>;
     state?: any;
     metadata?: Record<string, any>;
+    user?: any;
 }
 
 export interface GuardResult {
     allow: boolean;
+    allowed?: boolean; // Para compatibilidade
     message?: string;
+    reason?: string;
     redirectTo?: string;
     metadata?: Record<string, any>;
 }
@@ -60,6 +65,7 @@ export interface GuardResult {
 export interface MiddlewareResult {
     continue: boolean;
     redirectTo?: string;
+    redirect?: string; // Para compatibilidade
     modifyContext?: Partial<NavigationContext>;
     metadata?: Record<string, any>;
 }

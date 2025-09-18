@@ -301,14 +301,15 @@ export class NavigationService {
                     user: this.getCurrentUser()
                 };
 
-                const result = await guard.check(context);
-                if (!result.allowed) {
+                const result = guard.check ? await guard.check(context) :
+                    { allow: await guard.condition(), allowed: await guard.condition() };
+                if (!result.allow && !result.allowed) {
                     return result;
                 }
             }
         }
 
-        return { allowed: true };
+        return { allow: true, allowed: true };
     }
 
     // === GESTÃO DE MIDDLEWARE ===
@@ -345,13 +346,15 @@ export class NavigationService {
                 const context: NavigationContext = {
                     from: transaction.from,
                     to: transaction.to,
+                    path: path,
                     params: transaction.params || {},
                     query: transaction.query || {},
                     metadata: transaction.metadata || {},
                     user: this.getCurrentUser()
                 };
 
-                const result = await middleware.handle(context);
+                const result = middleware.handle ? await middleware.handle(context) :
+                    { continue: middleware.handler ? middleware.handler(path, transaction.params || {}) !== null : true };
                 if (!result.continue) {
                     return result;
                 }
@@ -532,41 +535,52 @@ export class NavigationService {
     private initializeDefaultGuards(): void {
         // Guard de autenticação
         this.registerGuard('auth', {
+            id: 'auth',
+            condition: () => true, // Implementação básica
+            message: 'Usuário não autenticado',
             check: async (context: NavigationContext): Promise<GuardResult> => {
                 const isAuthenticated = context.user?.isAuthenticated || false;
 
                 if (!isAuthenticated) {
                     return {
+                        allow: false,
                         allowed: false,
                         reason: 'Usuário não autenticado',
                         redirectTo: '/login'
                     };
                 }
 
-                return { allowed: true };
+                return { allow: true, allowed: true };
             }
         });
 
         // Guard de permissões
         this.registerGuard('permission', {
+            id: 'permission',
+            condition: () => true, // Implementação básica
+            message: 'Permissão insuficiente',
             check: async (context: NavigationContext): Promise<GuardResult> => {
                 const requiredPermission = context.metadata?.requiredPermission;
                 const userPermissions = context.user?.permissions || [];
 
                 if (requiredPermission && !userPermissions.includes(requiredPermission)) {
                     return {
+                        allow: false,
                         allowed: false,
                         reason: 'Permissão insuficiente',
                         redirectTo: '/unauthorized'
                     };
                 }
 
-                return { allowed: true };
+                return { allow: true, allowed: true };
             }
         });
 
         // Middleware de analytics
         this.registerMiddleware('analytics', {
+            id: 'analytics',
+            condition: () => true,
+            handler: (path: string) => path, // Implementação básica
             handle: async (context: NavigationContext): Promise<MiddlewareResult> => {
                 // Envia evento de navegação para analytics
                 if (typeof window !== 'undefined' && (window as any).gtag) {
@@ -582,6 +596,9 @@ export class NavigationService {
 
         // Middleware de carregamento de funnel
         this.registerMiddleware('loadFunnel', {
+            id: 'loadFunnel',
+            condition: () => true,
+            handler: (path: string) => path, // Implementação básica
             handle: async (context: NavigationContext): Promise<MiddlewareResult> => {
                 const funnelId = context.params.funnelId;
 
