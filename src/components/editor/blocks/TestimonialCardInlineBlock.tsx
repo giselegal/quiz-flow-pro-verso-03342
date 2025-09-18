@@ -56,6 +56,7 @@ const getMarginClass = (value: number | string, type: 'top' | 'bottom' | 'left' 
 const TestimonialCardInlineBlock: React.FC<BlockComponentProps> = ({
     block,
     isSelected = false,
+    isPreviewing = false,
     onClick,
     onPropertyChange,
     className = '',
@@ -144,7 +145,8 @@ const TestimonialCardInlineBlock: React.FC<BlockComponentProps> = ({
     // Memoized container classes
     const containerClasses = useMemo(() => cn(
         'relative group p-6 transition-all duration-300',
-        'hover:shadow-lg hover:-translate-y-1',
+        !isPreviewing && 'hover:shadow-lg hover:-translate-y-1 cursor-pointer',
+        isPreviewing && 'cursor-default',
         cardStyleClasses[cardStyle as keyof typeof cardStyleClasses],
         borderRadiusClasses[borderRadius as keyof typeof borderRadiusClasses],
         shadowClasses[shadowIntensity as keyof typeof shadowClasses],
@@ -155,7 +157,7 @@ const TestimonialCardInlineBlock: React.FC<BlockComponentProps> = ({
         getMarginClass(marginBottom, 'bottom'),
         getMarginClass(marginLeft, 'left'),
         getMarginClass(marginRight, 'right')
-    ), [cardStyle, borderRadius, shadowIntensity, isSelected, className, marginTop, marginBottom, marginLeft, marginRight]);
+    ), [cardStyle, borderRadius, shadowIntensity, isSelected, isPreviewing, className, marginTop, marginBottom, marginLeft, marginRight]);
 
     return (
         <div

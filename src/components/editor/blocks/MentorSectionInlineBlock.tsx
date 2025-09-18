@@ -6,6 +6,7 @@ import { Award, Crown, Quote, Star } from 'lucide-react';
 interface MentorSectionInlineBlockProps {
   block: BlockData;
   isSelected?: boolean;
+  isPreviewing?: boolean;
   onClick?: () => void;
   onPropertyChange?: (key: string, value: any) => void;
   disabled?: boolean;
@@ -22,6 +23,7 @@ interface MentorSectionInlineBlockProps {
 const MentorSectionInlineBlock: React.FC<MentorSectionInlineBlockProps> = ({
   block,
   isSelected = false,
+  isPreviewing = false,
   onClick,
   onPropertyChange: _onPropertyChange,
   disabled = false,
@@ -62,7 +64,8 @@ const MentorSectionInlineBlock: React.FC<MentorSectionInlineBlockProps> = ({
         'w-full p-4 md:p-6 transition-all duration-200',
         'bg-gradient-to-br from-purple-50 to-indigo-50 rounded-lg',
         isSelected && 'ring-2 ring-purple-400 bg-[#B89B7A]/10',
-        !disabled && 'cursor-pointer hover:bg-[#B89B7A]/80',
+        !disabled && !isPreviewing && 'cursor-pointer hover:bg-[#B89B7A]/80',
+        isPreviewing && 'cursor-default',
         className,
         // Margens universais com controles deslizantes
         getMarginClass(marginTop, 'top'),

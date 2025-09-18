@@ -62,6 +62,7 @@ export interface UnifiedBlockComponentProps {
     // ===== INTERACTION PROPS =====  
     isSelected?: boolean;
     isEditing?: boolean;
+    isPreviewing?: boolean; // Alias para isPreviewMode para compatibilidade
     onClick?: () => void;
     onPropertyChange?: (key: string, value: any) => void;
     onValidate?: (isValid: boolean) => void;

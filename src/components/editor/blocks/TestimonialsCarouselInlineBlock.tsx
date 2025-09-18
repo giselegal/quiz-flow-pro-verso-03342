@@ -86,6 +86,7 @@ const getMarginClass = (value: number | string, type: 'top' | 'bottom' | 'left' 
 const TestimonialsCarouselInlineBlock: React.FC<BlockComponentProps> = ({
     block,
     isSelected = false,
+    isPreviewing = false,
     onClick,
     onPropertyChange,
     className = '',
@@ -171,7 +172,8 @@ const TestimonialsCarouselInlineBlock: React.FC<BlockComponentProps> = ({
     const containerClasses = useMemo(() => cn(
         'relative group p-6 md:p-8',
         'border border-transparent transition-all duration-200',
-        'hover:border-gray-200',
+        !isPreviewing && 'hover:border-gray-200 cursor-pointer',
+        isPreviewing && 'cursor-default',
         isSelected && 'border-[#B89B7A] bg-[#B89B7A]/10',
         borderRadiusClasses[borderRadius as keyof typeof borderRadiusClasses],
         className,
@@ -180,7 +182,7 @@ const TestimonialsCarouselInlineBlock: React.FC<BlockComponentProps> = ({
         getMarginClass(marginBottom, 'bottom'),
         getMarginClass(marginLeft, 'left'),
         getMarginClass(marginRight, 'right')
-    ), [isSelected, className, borderRadius, marginTop, marginBottom, marginLeft, marginRight]);
+    ), [isSelected, isPreviewing, className, borderRadius, marginTop, marginBottom, marginLeft, marginRight]);
 
     // Calcular depoimentos visíveis
     const visibleTestimonials = useMemo(() => {

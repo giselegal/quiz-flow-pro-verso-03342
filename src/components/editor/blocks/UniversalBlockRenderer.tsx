@@ -31,9 +31,15 @@ export interface UniversalBlockRendererProps {
 }
 
 // 🎨 COMPONENTES DE BLOCOS BÁSICOS
-const TextBlock: React.FC<{ block: Block; isSelected?: boolean; onUpdate?: (updates: any) => void }> = memo(({
+const TextBlock: React.FC<{
+  block: Block;
+  isSelected?: boolean;
+  isPreviewing?: boolean;
+  onUpdate?: (updates: any) => void
+}> = memo(({
   block,
   isSelected,
+  isPreviewing = false,
   onUpdate
 }) => {
   const text = block.properties?.text || 'Digite seu texto aqui...';
@@ -44,7 +50,7 @@ const TextBlock: React.FC<{ block: Block; isSelected?: boolean; onUpdate?: (upda
 
   return (
     <div
-      contentEditable={!isSelected ? false : true}
+      contentEditable={isPreviewing ? false : isSelected}
       onBlur={handleTextChange}
       className={cn(
         'min-h-[2rem] p-2 rounded border-2 transition-all',
@@ -141,6 +147,7 @@ const FormBlock: React.FC<{ block: Block; isSelected?: boolean }> = memo(({
               placeholder={field.placeholder}
               className="w-full px-3 py-2 border border-muted rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20"
             />
+
           </div>
         ))}
         <button className="w-full px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors">
@@ -295,6 +302,7 @@ export const UniversalBlockRenderer: React.FC<UniversalBlockRendererProps> = mem
       <BlockComponent
         block={block}
         isSelected={isSelected}
+        isPreviewing={isPreviewing}
         onUpdate={handleUpdate}
       />
     </div>
