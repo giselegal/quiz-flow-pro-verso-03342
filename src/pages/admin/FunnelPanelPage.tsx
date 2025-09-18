@@ -20,6 +20,7 @@ import { AdminBreadcrumbs } from '@/components/admin/AdminBreadcrumbs';
 import { useFunnelTemplates } from '@/core/funnel/hooks/useFunnelTemplates';
 import { getUnifiedTemplates, TemplateRegistry, type UnifiedTemplate } from '@/config/unifiedTemplatesRegistry';
 import { FunnelContext } from '@/core/contexts/FunnelContext';
+import FunnelTechnicalConfigPanel from '@/components/admin/FunnelTechnicalConfigPanel';
 
 const FunnelPanelPage: React.FC = () => {
   const logger = getLogger();
@@ -41,7 +42,7 @@ const FunnelPanelPage: React.FC = () => {
   const [search, setSearch] = React.useState('');
   const [category, setCategory] = React.useState('all');
   const [sort, setSort] = React.useState('name');
-  const [activeTab, setActiveTab] = React.useState<'official' | 'custom'>('official');
+  const [activeTab, setActiveTab] = React.useState<'official' | 'custom' | 'technical'>('official');
   const [customTemplates, setCustomTemplates] = React.useState<CustomTemplate[]>([]);
   const [isCustomizeModalOpen, setIsCustomizeModalOpen] = React.useState(false);
   const [selectedTemplateToCustomize, setSelectedTemplateToCustomize] = React.useState<UnifiedTemplate | null>(null);
@@ -347,22 +348,22 @@ const FunnelPanelPage: React.FC = () => {
           storageStatus: 'unified'
         });
 
-        // ✅ CORREÇÃO: Navegar diretamente para o editor com UniversalStepEditor ativo
-        const editorUrl = `/editor?useUniversalStepEditor=true&template=${templateId}&funnelId=${encodeURIComponent(newFunnel.id)}`;
-        logger.debug('funnel-creation', 'Navegando para editor com UniversalStepEditor', {
+        // ✅ CORREÇÃO FINAL: Usar path parameter simples como no resto do sistema
+        const editorUrl = `/editor/${encodeURIComponent(newFunnel.id)}`;
+        logger.debug('funnel-creation', 'Navegando para editor com ID único', {
           editorUrl,
           funnelId: newFunnel.id,
-          universalEditor: true,
+          pathParameter: true,
           fullUrl: `${window.location.origin}${editorUrl}`
         });
 
-        // Navegação direta com UniversalStepEditor ativo
-        console.log('🎯 Navegando para editor com UniversalStepEditor ativo:', editorUrl);
+        // Navegação direta com path parameter correto
+        console.log('🎯 Navegando para editor com ID único:', editorUrl);
         setTimeout(() => {
           logger.debug('funnel-creation', 'Executando navegação para UniversalStepEditor');
 
           try {
-            // Usar setLocation do wouter
+            // Usar setLocation do wouter com path parameter
             setLocation(editorUrl);
             console.log('✅ [CORREÇÃO] Navegação executada para:', editorUrl);
 
@@ -659,11 +660,14 @@ const FunnelPanelPage: React.FC = () => {
         </div>
       </div>
 
-      {/* Tabs para alternar entre modelos oficiais e personalizados */}
-      <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as 'official' | 'custom')}>
-        <TabsList className="grid w-full grid-cols-2">
+      {/* Tabs para alternar entre modelos oficiais, personalizados e configurações técnicas */}
+      <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as 'official' | 'custom' | 'technical')}>
+        <TabsList className="grid w-full grid-cols-3">
           <TabsTrigger value="official">Modelos Oficiais</TabsTrigger>
           <TabsTrigger value="custom">Meus Modelos ({customTemplates.length})</TabsTrigger>
+          <TabsTrigger value="technical" className="flex items-center gap-2">
+            ⚙️ Configurações Técnicas
+          </TabsTrigger>
         </TabsList>
 
         {/* Tab de Modelos Oficiais */}
@@ -906,6 +910,24 @@ const FunnelPanelPage: React.FC = () => {
                 </CardContent>
               </Card>
             )}
+          </div>
+        </TabsContent>
+
+        {/* Tab de Configurações Técnicas */}
+        <TabsContent value="technical" className="space-y-6">
+          <div className="space-y-6">
+            <div>
+              <h2 className="text-2xl font-bold text-[#432818] mb-2">Configurações Técnicas de Funis</h2>
+              <p className="text-[#8F7A6A] text-lg">
+                Configure aspectos técnicos dos seus funis: fluxo, SEO, domínio, analytics e integrações.
+              </p>
+            </div>
+
+            <FunnelTechnicalConfigPanel
+              onConfigUpdate={(config) => {
+                console.log('⚙️ Configurações técnicas atualizadas:', config);
+              }}
+            />
           </div>
         </TabsContent>
       </Tabs>
