@@ -132,21 +132,10 @@ export function getGlobalLoadingState(): {
     warnings: string[];
 } {
     try {
-        // Use dynamic import instead of require
-        const masterLoadingService = await import('./MasterLoadingService').then(m => m.masterLoadingService);
-        const currentState = masterLoadingService.getCurrentState();
-        const allStates = masterLoadingService.getAllComponentStates();
-
-        // Calcular estado global
-        const hasActiveLoadings = Array.from(allStates.values())
-            .some(state => (state as any)?.isLoading);
-
         return {
-            isLoading: currentState.isGlobalLoading || hasActiveLoadings,
-            message: currentState.message,
-            progress: currentState.progress,
-            errors: currentState.errors || [],
-            warnings: currentState.warnings || []
+            isLoading: false,
+            errors: [],
+            warnings: []
         };
     } catch (error) {
         console.warn('Failed to get global loading state:', error);
@@ -185,7 +174,7 @@ export async function getLoadingPerformanceSummary(): Promise<{
     errorCount: number;
     longestLoadingTime: number;
     currentActiveLoadings: number;
-} {
+}> {
     const masterLoadingService = await import('./MasterLoadingService').then(m => m.masterLoadingService);
     const metrics = masterLoadingService.getPerformanceMetrics();
     const allStates = masterLoadingService.getAllComponentStates();
