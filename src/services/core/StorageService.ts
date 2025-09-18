@@ -82,6 +82,43 @@ export class StorageService implements StorageServiceInterface {
       console.warn('Failed to safely set JSON:', key, error);
     }
   }
+
+  // Additional static methods for compatibility
+  static async getUserData(): Promise<any> {
+    try {
+      const data = localStorage.getItem('quiz_user_data');
+      return data ? JSON.parse(data) : {};
+    } catch (error) {
+      console.error('Error getting user data:', error);
+      return {};
+    }
+  }
+
+  static async getCalculatedStyles(): Promise<any[]> {
+    try {
+      const data = localStorage.getItem('quiz_calculated_styles');
+      return data ? JSON.parse(data) : [];
+    } catch (error) {
+      console.error('Error getting calculated styles:', error);
+      return [];
+    }
+  }
+
+  static async setUserData(userData: any): Promise<void> {
+    try {
+      localStorage.setItem('quiz_user_data', JSON.stringify(userData));
+    } catch (error) {
+      console.error('Error saving user data:', error);
+    }
+  }
+
+  static async setCalculatedStyles(styles: any[]): Promise<void> {
+    try {
+      localStorage.setItem('quiz_calculated_styles', JSON.stringify(styles));
+    } catch (error) {
+      console.error('Error saving calculated styles:', error);
+    }
+  }
 }
 
 export const storageService = new StorageService();

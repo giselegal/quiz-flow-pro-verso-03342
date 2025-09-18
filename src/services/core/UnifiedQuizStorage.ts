@@ -72,6 +72,35 @@ export class UnifiedQuizStorage {
     const data = this.getQuizData(quizId) || { id: quizId, answers: {}, currentStep: 1, isCompleted: false };
     this.saveQuizData(quizId, { ...data, result, isCompleted: true });
   }
+
+  // Static methods for compatibility
+  static async getQuizData(): Promise<any> {
+    try {
+      const data = localStorage.getItem('unified_quiz_data');
+      return data ? JSON.parse(data) : {
+        currentStep: 1,
+        responses: {},
+        calculatedStyles: [],
+        userName: ''
+      };
+    } catch (error) {
+      console.error('Error getting quiz data:', error);
+      return {
+        currentStep: 1,
+        responses: {},
+        calculatedStyles: [],
+        userName: ''
+      };
+    }
+  }
+
+  static async saveQuizData(quizData: any): Promise<void> {
+    try {
+      localStorage.setItem('unified_quiz_data', JSON.stringify(quizData));
+    } catch (error) {
+      console.error('Error saving quiz data:', error);
+    }
+  }
 }
 
 export const unifiedQuizStorage = new UnifiedQuizStorage();

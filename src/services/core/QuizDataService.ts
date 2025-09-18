@@ -4,7 +4,7 @@
  * Manages quiz data operations
  */
 
-import { unifiedQuizStorage, QuizData } from './UnifiedQuizStorage';
+import { unifiedQuizStorage } from './UnifiedQuizStorage';
 
 export interface QuizSession {
   id: string;
@@ -63,6 +63,28 @@ export class QuizDataService {
       answers: data?.answers || {},
       isCompleted: data?.currentStep ? data.currentStep > stepNumber : false
     };
+  }
+
+  // Static methods for compatibility
+  static async saveResponse(stepId: string, response: any): Promise<void> {
+    try {
+      const existingData = JSON.parse(localStorage.getItem('quiz_responses') || '{}');
+      existingData[stepId] = response;
+      localStorage.setItem('quiz_responses', JSON.stringify(existingData));
+    } catch (error) {
+      console.error('Error saving response:', error);
+      throw error;
+    }
+  }
+
+  static async getAll(): Promise<any> {
+    try {
+      const responses = JSON.parse(localStorage.getItem('quiz_responses') || '{}');
+      return { responses };
+    } catch (error) {
+      console.error('Error getting all data:', error);
+      return { responses: {} };
+    }
   }
 }
 
