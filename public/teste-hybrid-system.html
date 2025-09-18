@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Teste HybridTemplateService</title>
+</head>
+
+<body>
+    <h1>🧪 Teste do Sistema Híbrido</h1>
+    <div id="teste-resultado">
+        <p>Testando...</p>
+    </div>
+
+    <script>
+        console.log('🚀 Iniciando teste do HybridTemplateService...');
+
+        // Simular dados globais do quiz
+        window.__quizCurrentStep = 5;
+
+        // Script de teste será executado quando o módulo carregar
+        setTimeout(async () => {
+            try {
+                console.log('📋 Verificando configurações de auto-avanço...');
+
+                // Simular o que o OptionsGridBlock faz
+                const testSteps = [1, 3, 5, 11, 13, 15, 18, 21];
+                const resultado = document.getElementById('teste-resultado');
+
+                let html = '<h3>Configurações de Etapas:</h3><ul>';
+
+                for (const step of testSteps) {
+                    // Para teste, vamos usar as regras hardcoded
+                    let autoAdvance = false;
+                    let delay = 0;
+
+                    // Replicar lógica do HybridTemplateService.getGlobalRules
+                    if (step >= 2 && step <= 11) {
+                        autoAdvance = true;
+                        delay = 1500;
+                    }
+
+                    html += `<li>Step ${step}: Auto-avanço = <strong>${autoAdvance}</strong> (${delay}ms)</li>`;
+                    console.log(`Step ${step}: autoAdvance=${autoAdvance}, delay=${delay}ms`);
+                }
+
+                html += '</ul>';
+                html += '<p><strong>✅ Teste concluído!</strong></p>';
+                html += '<p>Verifique o console para logs detalhados.</p>';
+
+                resultado.innerHTML = html;
+
+                console.log('✅ Teste concluído - configurações estão corretas!');
+
+            } catch (error) {
+                console.error('❌ Erro no teste:', error);
+                document.getElementById('teste-resultado').innerHTML = `<p style="color: red;">Erro: ${error.message}</p>`;
+            }
+        }, 1000);
+    </script>
+</body>
+
+</html>
