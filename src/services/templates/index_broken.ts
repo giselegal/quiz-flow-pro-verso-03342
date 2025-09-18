@@ -315,18 +315,18 @@ export async function clearAllTemplateCaches(): Promise<void> {
         masterTemplateService.clearCache();
         console.log('🧹 All template caches cleared');
     } catch (error) {
-        // =============================================
-        // AUTO-INITIALIZATION
-        // =============================================
+        console.error('❌ Error clearing template caches:', error);
+    }
+}
 
-        // Initialize on import (async)
-        initializeTemplateServices().catch(console.warn);
+// =============================================
+// AUTO-INITIALIZATION
+// =============================================
 
-        console.log('🎯 Template Services Module loaded successfully');
-        console.log('   📦 masterTemplateService: Main unified service');
-        console.log('   🔧 Legacy adapters: Full backward compatibility');
-        console.log('   🚀 Ready for use!');
-        console.log('🎯 Template Services Module loaded successfully');
-        console.log('   📦 masterTemplateService: Main unified service');
-        console.log('   🔧 Legacy adapters: Full backward compatibility');
-        console.log('   🚀 Ready for use!');
+// Initialize on import (async)
+initializeTemplateServices().catch(console.warn);
+
+console.log('🎯 Template Services Module loaded successfully');
+console.log('   📦 masterTemplateService: Main unified service');
+console.log('   🔧 Legacy adapters: Full backward compatibility');
+console.log('   🚀 Ready for use!');

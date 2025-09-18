@@ -185,7 +185,7 @@ export async function getLoadingPerformanceSummary(): Promise<{
     errorCount: number;
     longestLoadingTime: number;
     currentActiveLoadings: number;
-} {
+}> {
     const masterLoadingService = await import('./MasterLoadingService').then(m => m.masterLoadingService);
     const metrics = masterLoadingService.getPerformanceMetrics();
     const allStates = masterLoadingService.getAllComponentStates();
