@@ -1,92 +1,49 @@
-/**
- * 📊 QUIZ DATA SERVICE - STUB IMPLEMENTATION
- * 
- * Manages quiz data operations
- */
-
-import { unifiedQuizStorage } from './UnifiedQuizStorage';
-
-export interface QuizSession {
-  id: string;
-  startedAt: Date;
-  currentStep: number;
-  answers: Record<string, any>;
-  isCompleted: boolean;
-}
+// 📊 QUIZ DATA SERVICE
+import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
 
 export class QuizDataService {
-  createSession(quizId: string): QuizSession {
-    const session: QuizSession = {
-      id: quizId,
-      startedAt: new Date(),
-      currentStep: 1,
-      answers: {},
-      isCompleted: false
-    };
-
-    unifiedQuizStorage.saveQuizData(quizId, {
-      id: quizId,
-      answers: {},
-      currentStep: 1,
-      isCompleted: false
-    });
-
-    return session;
+  /**
+   * Buscar dados de uma etapa específica
+   */
+  static getStepData(stepNumber: number) {
+    const stepKey = `step-${stepNumber}`;
+    return QUIZ_STYLE_21_STEPS_TEMPLATE[stepKey] || [];
   }
 
-  saveAnswer(quizId: string, questionId: string, answer: any): void {
-    const existingData = unifiedQuizStorage.getQuizData(quizId);
-    if (existingData) {
-      const updatedAnswers = { ...existingData.answers, [questionId]: answer };
-      unifiedQuizStorage.saveQuizData(quizId, { answers: updatedAnswers });
-    }
+  /**
+   * Buscar todas as etapas
+   */
+  static getAllSteps() {
+    return QUIZ_STYLE_21_STEPS_TEMPLATE;
   }
 
-  getSession(quizId: string): QuizSession | null {
-    const data = unifiedQuizStorage.getQuizData(quizId);
-    if (!data) return null;
+  /**
+   * Obter configuração de uma etapa
+   */
+  static getStepConfig(stepNumber: number) {
+    const blocks = this.getStepData(stepNumber);
 
-    return {
-      id: data.id,
-      startedAt: new Date(),
-      currentStep: data.currentStep,
-      answers: data.answers,
-      isCompleted: data.isCompleted
-    };
-  }
-
-  // Additional method for compatibility
-  getStepData(quizId: string, stepNumber: number): any {
-    const data = unifiedQuizStorage.getQuizData(quizId);
     return {
       stepNumber,
-      answers: data?.answers || {},
-      isCompleted: data?.currentStep ? data.currentStep > stepNumber : false
+      totalBlocks: blocks.length,
+      hasForm: blocks.some(b => b.type === 'form-container'),
+      hasQuestion: blocks.some(b => b.type === 'options-grid'),
+      hasTransition: blocks.some(b => b.type === 'hero'),
+      blockTypes: [...new Set(blocks.map(b => b.type))],
     };
   }
 
-  // Static methods for compatibility
-  static async saveResponse(stepId: string, response: any): Promise<void> {
-    try {
-      const existingData = JSON.parse(localStorage.getItem('quiz_responses') || '{}');
-      existingData[stepId] = response;
-      localStorage.setItem('quiz_responses', JSON.stringify(existingData));
-    } catch (error) {
-      console.error('Error saving response:', error);
-      throw error;
-    }
-  }
+  /**
+   * Validar estrutura de uma etapa
+   */
+  static validateStep(stepNumber: number) {
+    const blocks = this.getStepData(stepNumber);
 
-  static async getAll(): Promise<any> {
-    try {
-      const responses = JSON.parse(localStorage.getItem('quiz_responses') || '{}');
-      return { responses };
-    } catch (error) {
-      console.error('Error getting all data:', error);
-      return { responses: {} };
-    }
+    return {
+      isValid: blocks.length > 0,
+      hasContent: blocks.some(b => b.content && Object.keys(b.content).length > 0),
+      hasProperties: blocks.some(b => b.properties && Object.keys(b.properties).length > 0),
+      errors: [],
+    };
   }
 }
-
-export const quizDataService = new QuizDataService();
-export default quizDataService;

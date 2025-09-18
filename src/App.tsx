@@ -1,93 +1,334 @@
-// @ts-nocheck
-import { ThemeProvider } from '@/components/theme-provider';
-import { LoadingFallback } from '@/components/ui/loading-fallback';
-import { Toaster } from '@/components/ui/toaster';
-import { AuthProvider } from '@/context/AuthContext';
-import { EditorProvider } from '@/context/EditorContext';
-import { Suspense, lazy } from 'react';
+import { Suspense, lazy, useEffect } from 'react';
 import { Route, Router, Switch } from 'wouter';
+import { ProtectedRoute } from './components/auth/ProtectedRoute';
+import { ThemeProvider } from './components/theme-provider';
+import { LoadingFallback } from './components/ui/loading-fallback';
+import { Toaster } from './components/ui/toaster';
+import { AuthProvider } from './context/AuthContext';
+import { EditorProvider } from './components/editor/EditorProvider';
+import { performanceManager } from './utils/performanceManager';
 
-// Main pages - using existing files that work
-import DashboardPage from './pages/admin/DashboardPage';
-import EditorPage from './pages/admin/EditorPage';
-import Home from './pages/Home';
-import QuizFlowPage from './pages/QuizFlowPage';
-import ResultPage from './pages/ResultPage';
+const EditorTemplatesPage = lazy(() => import('./pages/editor-templates'));
+const ComQueRoupaEuVouPage = lazy(() => import('./pages/ComQueRoupaEuVouPage'));
 
-// 🎨 EDITOR MODERNO - Schema-Driven responsivo
-const SchemaDrivenEditorResponsive = lazy(
-  () => import('./components/editor/SchemaDrivenEditorResponsive')
+// 🎯 PÁGINAS ESSENCIAIS - SEM CONFLITOS
+const Home = lazy(() => import('./pages/Home'));
+const AuthPage = lazy(() => import('./pages/AuthPage'));
+// 🏗️ EDITOR PRINCIPAL - ModularEditorPro moderno com UniversalNoCodePanel
+const EditorPro = lazy(() => import('./components/editor/EditorPro/components/ModularEditorPro'));
+// 🏗️ EDITOR PRINCIPAL PROFISSIONAL ALTERNATIVO
+const MainEditor = lazy(() => import('./pages/MainEditor'));
+// 🚀 NOVO: Editor Visual Headless
+const HeadlessVisualEditor = lazy(() => import('./core/editor/HeadlessVisualEditor'));
+const DashboardPage = lazy(() => import('./pages/admin/DashboardPage'));
+const StepPage = lazy(() => import('./pages/StepPage'));
+// ✅ Página de produção modular limpa (cliente final)
+const QuizModularPage = lazy(() => import('./pages/QuizModularPage'));
+
+// Lazy loading para páginas admin
+const AnalyticsPage = lazy(() => import('./pages/admin/AnalyticsPage'));
+const MetricsPage = lazy(() => import('./pages/admin/MetricsPage'));
+const ParticipantsPage = lazy(() => import('./pages/admin/ParticipantsPage'));
+const SettingsPage = lazy(() => import('./pages/admin/SettingsPage'));
+const OverviewPage = lazy(() => import('./pages/admin/OverviewPage'));
+const CreativesPage = lazy(() => import('./pages/admin/CreativesPage'));
+const ABTestPage = lazy(() => import('./pages/admin/ABTestPage'));
+const NoCodeConfigPage = lazy(() => import('./pages/admin/NoCodeConfigPage'));
+
+// Página de teste do sistema de configuração
+const ConfigurationTest = lazy(() => import('./pages/ConfigurationTest'));
+
+// Lazy loading para páginas de teste
+const AgentStyleFunnelTestPage = lazy(() => import('./pages/AgentStyleFunnelTestPage'));
+const StepsShowcasePage = lazy(() => import('./pages/StepsShowcase'));
+const SchemaEditorPage = lazy(() => import('./pages/SchemaEditorPage'));
+const EnhancedPropertiesPanelDemo = lazy(() => import('./components/demo/EnhancedPropertiesPanelDemo'));
+const FunnelDashboardPage = lazy(() => import('./pages/FunnelDashboardPage'));
+const TestParticipantsPage = lazy(() => import('./pages/TestParticipantsPage'));
+const TestDataPanel = lazy(() => import('./components/TestDataPanel'));
+
+// 🎯 NOVO: Editor Pro Consolidado (substitui UniversalStepEditorProDemo)
+const EditorProConsolidatedPage = lazy(() => import('./pages/EditorProConsolidatedPage'));
+
+// Teste simples do navegador
+const SimpleEditorTest = lazy(() => import('./components/test/SimpleEditorTest'));
+
+// Loading component
+const PageLoading = () => (
+  <div className="min-h-screen flex items-center justify-center">
+    <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary"></div>
+  </div>
 );
-const ImprovedEditor = lazy(() => import('./components/editor/ImprovedEditor'));
 
-const App = () => {
+/**
+ * 🎯 APLICAÇÃO PRINCIPAL - TODAS AS ROTAS ATIVAS
+ *
+ * Estrutura completa:
+ * ✅ Editor Principal (/editor)
+ * ✅ Sistema de lazy loading
+ * ✅ Todas as páginas admin
+ * ✅ Quiz modular completo
+ * ✅ Drag & Drop otimizado
+ */
+function App() {
+  // 🚀 Inicializar performance manager
+  useEffect(() => {
+    performanceManager.initialize();
+  }, []);
+
   return (
-    <AuthProvider>
-      <EditorProvider>
-        <ThemeProvider defaultTheme="light" storageKey="ui-theme">
-          <Router>
-            <Suspense fallback={<LoadingFallback />}>
-              <Switch>
-                {/* 🏠 Página Inicial */}
-                <Route path="/" component={Home} />
+    <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
+      <AuthProvider>
+        <Router>
+          <Suspense fallback={<PageLoading />}>
+            <Switch>
+              {/* Rota principal - Home */}
+              <Route path="/" component={() =>
+                <Suspense fallback={<LoadingFallback />}>
+                  <Home />
+                </Suspense>
+              } />
 
-                {/* 🎯 Quiz Principal */}
-                <Route path="/quiz" component={QuizFlowPage} />
+              {/* Quiz modular - página principal de produção */}
+              <Route path="/quiz" component={() =>
+                <Suspense fallback={<LoadingFallback />}>
+                  <QuizModularPage />
+                </Suspense>
+              } />
+              {/* Encaminha o parâmetro :step para QuizModularPage */}
+              <Route path="/quiz/:step" component={(params: any) =>
+                <Suspense fallback={<LoadingFallback />}>
+                  <QuizModularPage initialStep={Number(params.step)} />
+                </Suspense>
+              } />
+              {/* Compat extra: /step20 redireciona para etapa 20 */}
+              <Route path="/step20" component={() =>
+                <Suspense fallback={<LoadingFallback />}>
+                  <QuizModularPage initialStep={20} />
+                </Suspense>
+              } />
 
-                {/* 📊 Resultados */}
-                <Route path="/result" component={ResultPage} />
-                <Route path="/result-test" component={ResultPage} />
+              {/* 🎯 NOVO: Editor Pro Consolidado - Arquitetura Final */}
+              <Route path="/editor-pro" component={() =>
+                <Suspense fallback={<LoadingFallback />}>
+                  <EditorProConsolidatedPage />
+                </Suspense>
+              } />
 
-                {/* 🎯 EDITOR CORRETO - Principal (Schema-Driven com 21 etapas) */}
-                <Route path="/editor">
-                  <div className="h-screen w-full">
-                    <SchemaDrivenEditorResponsive />
-                  </div>
-                </Route>
+              {/* Teste simples do navegador */}
+              <Route path="/test-simple" component={() =>
+                <Suspense fallback={<LoadingFallback />}>
+                  <SimpleEditorTest />
+                </Suspense>
+              } />
 
-                {/* 🏆 EDITOR CORRETO - Rota alternativa (Schema-Driven) */}
-                <Route path="/editor-fixed">
-                  <div className="h-screen w-full">
-                    <SchemaDrivenEditorResponsive />
-                  </div>
-                </Route>
+              {/* Editor - ordem importante: mais específico primeiro */}
+              {/* 🚀 NOVO: Editor Visual Headless com integração JSON ↔ Painel */}
+              <Route path="/headless-editor/:funnelId?" component={(props: any) => {
+                const { params } = props;
+                const search = window.location.search;
+                console.log('🎯 Rota /headless-editor ativada com params:', params);
+                const urlParams = new URLSearchParams(search);
+                const templateId = urlParams.get('template');
+                console.log('📋 Template ID extraído da URL:', templateId);
+                return (
+                  <Suspense fallback={<LoadingFallback />}>
+                    <HeadlessVisualEditor
+                      funnelId={params.funnelId}
+                      templateId={templateId || undefined}
+                    />
+                  </Suspense>
+                );
+              }} />
 
-                {/* 🎨 EDITORES ALTERNATIVOS */}
-                <Route path="/editor-improved">
-                  <div className="h-screen w-full">
-                    <ImprovedEditor />
-                  </div>
-                </Route>
-
-                {/* ⚙️ Admin/Editor */}
-                <Route path="/admin/editor" component={EditorPage} />
-                <Route path="/admin" component={DashboardPage} />
-
-                {/* 🔧 Fallback */}
-                <Route>
-                  <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-gray-50 to-gray-100">
-                    <div className="text-center">
-                      <h1 className="text-3xl font-bold text-gray-800 mb-4">
-                        Página não encontrada
-                      </h1>
-                      <p className="text-gray-600">A página que você procura não existe.</p>
-                      <div className="mt-4 text-sm text-gray-500">
-                        <p>🎨 Editores disponíveis:</p>
-                        <p>/editor - 🏆 Editor moderno (SchemaDrivenEditorResponsive)</p>
-                        <p>/editor-fixed - 🏆 Editor moderno (mesmo editor)</p>
-                        <p>/editor-improved - Editor melhorado</p>
+              {/* 🎯 EDITOR PRINCIPAL - EditorPro com fundo preto e 4 colunas */}
+              <Route path="/editor/:funnelId?" component={({ params }: { params: { funnelId?: string } }) => {
+                console.log('🔗 Rota /editor com EditorPro ativada:', params);
+                return (
+                  <div className="h-screen w-screen">
+                    <Suspense fallback={
+                      <div className="flex items-center justify-center min-h-screen bg-gray-900">
+                        <div className="text-center">
+                          <div className="w-16 h-16 mx-auto mb-4 border-4 border-white border-t-transparent rounded-full animate-spin"></div>
+                          <p className="text-white text-lg font-medium">Carregando Editor Profissional...</p>
+                        </div>
                       </div>
-                    </div>
+                    }>
+                      <EditorProvider funnelId={params.funnelId} enableSupabase={false}>
+                        <EditorPro />
+                      </EditorProvider>
+                    </Suspense>
                   </div>
-                </Route>
-              </Switch>
-            </Suspense>
-          </Router>
-        </ThemeProvider>
+                );
+              }} />
+
+              {/* 🎯 EDITOR ALTERNATIVO - MainEditor */}
+              <Route path="/editor-main" component={() =>
+                <Suspense fallback={<LoadingFallback />}>
+                  <MainEditor />
+                </Suspense>
+              } />
+
+              {/* Autenticação */}
+              <Route path="/auth" component={() =>
+                <Suspense fallback={<LoadingFallback />}>
+                  <AuthPage />
+                </Suspense>
+              } />
+
+              {/* 🎯 ÁREA ADMINISTRATIVA - ROTAS PROTEGIDAS */}
+              <ProtectedRoute path="/dashboard" component={DashboardPage} />
+
+              {/* Rota /admin que redireciona para o DashboardPage */}
+              <ProtectedRoute path="/admin" component={DashboardPage} />
+
+              {/* Subrotas admin que também carregam o DashboardPage */}
+              <ProtectedRoute path="/admin/*" component={DashboardPage} />
+
+              {/* 📊 Páginas de Analytics e Métricas */}
+              <ProtectedRoute path="/analytics" component={AnalyticsPage} />
+
+              <ProtectedRoute path="/metrics" component={MetricsPage} />
+
+              <ProtectedRoute path="/participants" component={ParticipantsPage} />
+
+              <ProtectedRoute path="/settings" component={SettingsPage} />
+
+              <ProtectedRoute path="/overview" component={OverviewPage} />
+
+              {/* 🎨 Páginas de Desenvolvimento e Testes */}
+              <Route path="/step/:stepId" component={() =>
+                <Suspense fallback={<LoadingFallback />}>
+                  <StepPage />
+                </Suspense>
+              } />
+              <Route path="/funnel-dashboard" component={() =>
+                <Suspense fallback={<LoadingFallback />}>
+                  <FunnelDashboardPage />
+                </Suspense>
+              } />
+              <Route path="/creatives" component={() =>
+                <Suspense fallback={<LoadingFallback />}>
+                  <CreativesPage />
+                </Suspense>
+              } />
+
+              {/* 🧪 Páginas de Teste e Desenvolvimento */}
+              <Route path="/test-agent-style" component={() =>
+                <Suspense fallback={<LoadingFallback />}>
+                  <AgentStyleFunnelTestPage />
+                </Suspense>
+              } />
+              <Route path="/test-participants" component={() =>
+                <Suspense fallback={<LoadingFallback />}>
+                  <TestParticipantsPage />
+                </Suspense>
+              } />
+              <Route path="/test-steps" component={() =>
+                <Suspense fallback={<LoadingFallback />}>
+                  <StepsShowcasePage />
+                </Suspense>
+              } />
+              <Route path="/test-schema" component={() =>
+                <Suspense fallback={<LoadingFallback />}>
+                  <SchemaEditorPage />
+                </Suspense>
+              } />
+              <Route path="/test-properties" component={() =>
+                <Suspense fallback={<LoadingFallback />}>
+                  <EnhancedPropertiesPanelDemo />
+                </Suspense>
+              } />
+              <Route path="/test-data" component={() =>
+                <Suspense fallback={<LoadingFallback />}>
+                  <TestDataPanel />
+                </Suspense>
+              } />
+              <Route path="/abtest" component={() =>
+                <Suspense fallback={<LoadingFallback />}>
+                  <ABTestPage />
+                </Suspense>
+              } />
+
+              {/* 🔧 Páginas Especiais */}
+              <Route path="/com-que-roupa-eu-vou" component={() =>
+                <Suspense fallback={<LoadingFallback />}>
+                  <ComQueRoupaEuVouPage />
+                </Suspense>
+              } />
+              <Route path="/editor-templates" component={() =>
+                <Suspense fallback={<LoadingFallback />}>
+                  <EditorTemplatesPage />
+                </Suspense>
+              } />
+              <Route path="/nocode" component={() =>
+                <Suspense fallback={<LoadingFallback />}>
+                  <NoCodeConfigPage />
+                </Suspense>
+              } />
+
+              {/* Teste do sistema de configuração */}
+              <Route path="/config-test" component={() =>
+                <Suspense fallback={<LoadingFallback />}>
+                  <ConfigurationTest />
+                </Suspense>
+              } />
+
+              <Route path="/test-editor-pro" component={() => {
+                const TestEditorPro = lazy(() => import('./components/debug/TestEditorPro'));
+                return (
+                  <Suspense fallback={<LoadingFallback />}>
+                    <TestEditorPro />
+                  </Suspense>
+                );
+              }} />
+
+              {/* 🔍 DEBUG: Página de debug do template */}
+              <Route path="/debug-template" component={() => {
+                const TemplateDebugPage = lazy(() => import('./components/debug/TemplateDebugPage'));
+                return (
+                  <Suspense fallback={<LoadingFallback />}>
+                    <TemplateDebugPage />
+                  </Suspense>
+                );
+              }} />
+
+              {/* 🔍 DEBUG: Teste isolado do StepSidebar */}
+              <Route path="/debug-stepsidebar" component={() => {
+                const StepSidebarTest = lazy(() => import('./components/debug/StepSidebarTest'));
+                return (
+                  <Suspense fallback={<LoadingFallback />}>
+                    <StepSidebarTest />
+                  </Suspense>
+                );
+              }} />
+
+              {/* 🎯 DEMO: Editor Pro Demo (legacy) */}
+              <Route path="/demo-editor-pro" component={() =>
+                <Suspense fallback={<LoadingFallback />}>
+                  <EditorProConsolidatedPage />
+                </Suspense>
+              } />
+
+              {/* Fallback para rotas não encontradas */}
+              <Route>
+                <div className="min-h-screen flex items-center justify-center">
+                  <div className="container mx-auto text-center">
+                    <h1 className="text-4xl font-bold mb-4">Página não encontrada</h1>
+                    <p className="text-lg text-gray-600 mb-8">A página que você está procurando não existe.</p>
+                    <a href="/" className="bg-primary text-white px-6 py-3 rounded-lg hover:bg-primary/90">
+                      Voltar ao Quiz
+                    </a>
+                  </div>
+                </div>
+              </Route>
+            </Switch>
+          </Suspense>
+        </Router>
         <Toaster />
-      </EditorProvider>
-    </AuthProvider>
+      </AuthProvider>
+    </ThemeProvider>
   );
-};
+}
 
 export default App;

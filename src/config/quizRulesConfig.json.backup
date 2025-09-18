@@ -1,0 +1,23 @@
+{
+    "meta": {
+        "name": "Quiz Rules Configuration",
+        "version": "2.0.0",
+        "description": "Configuração centralizada para regras do quiz"
+    },
+    "stepRules": {
+        "1": {
+            "type": "form",
+            "validation": {
+                "type": "input",
+                "required": [
+                    "userName"
+                ],
+                "message": "Digite seu nome para continuar"
+            }
+        }
+    },
+    "globalRules": {
+        "maxSteps": 21,
+        "enableScoring": true
+    }
+}

@@ -406,7 +406,7 @@ export class MigrationSystem {
     /**
      * Determina tipo do arquivo
      */
-    private determineFileType(filePath: string, _content: string): MigrationTarget['type'] {
+    private determineFileType(filePath: string, content: string): MigrationTarget['type'] {
         if (filePath.includes('services/')) return 'service';
         if (filePath.includes('hooks/')) return 'hook';
         if (filePath.includes('components/')) return 'component';

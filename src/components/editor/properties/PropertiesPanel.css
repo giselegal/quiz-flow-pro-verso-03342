@@ -1,0 +1,162 @@
+/* Barra de rolagem customizada para o painel de propriedades */
+.properties-panel .scroll-area {
+    /* Força rolagem apenas vertical */
+    overflow-y: auto;
+    max-width: 100%;
+    word-wrap: break-word;
+}
+
+/* Impede vazamento de conteúdo */
+.properties-panel {
+    max-width: 100%;
+}
+
+.properties-panel * {
+    max-width: 100% !important;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    box-sizing: border-box !important;
+}
+
+/* Impede cards e containers de vazarem */
+.properties-panel .card,
+.properties-panel [class*="max-w-"],
+.properties-panel [class*="w-["] {
+    max-width: 100% !important;
+    width: auto !important;
+}
+
+/* Força containers grandes a se ajustarem */
+.properties-panel .max-w-4xl,
+.properties-panel .max-w-2xl,
+.properties-panel .max-w-xl {
+    max-width: 100% !important;
+}
+
+/* Impede botões e inputs de vazarem */
+.properties-panel input,
+.properties-panel button,
+.properties-panel select,
+.properties-panel textarea {
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+}
+
+/* Container para elementos com risco de vazar */
+.properties-panel .property-container {
+    max-width: 100%;
+}
+
+/* Estilo personalizado da barra de rolagem */
+.properties-panel .scroll-area::-webkit-scrollbar {
+    width: 8px;
+}
+
+.properties-panel .scroll-area::-webkit-scrollbar-track {
+    background: rgba(55, 65, 81, 0.5);
+    border-radius: 4px;
+}
+
+.properties-panel .scroll-area::-webkit-scrollbar-thumb {
+    background: rgba(107, 114, 128, 0.8);
+    border-radius: 4px;
+    border: 1px solid rgba(75, 85, 99, 0.3);
+}
+
+.properties-panel .scroll-area::-webkit-scrollbar-thumb:hover {
+    background: rgba(156, 163, 175, 0.9);
+}
+
+/* Firefox */
+.properties-panel .scroll-area {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(107, 114, 128, 0.8) rgba(55, 65, 81, 0.5);
+}
+
+/* Contraste melhorado para textos em campos com fundos claros */
+.properties-panel label,
+.properties-panel .field-label {
+    color: #f9fafb !important;
+    /* Branco quase puro */
+    font-weight: 500 !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.properties-panel input[type="text"],
+.properties-panel input[type="number"],
+.properties-panel input[type="color"],
+.properties-panel textarea,
+.properties-panel select {
+    color: #1f2937 !important;
+    /* Texto escuro em campos claros */
+    background-color: #f9fafb !important;
+    border-color: #d1d5db !important;
+}
+
+.properties-panel input[type="text"]:focus,
+.properties-panel input[type="number"]:focus,
+.properties-panel input[type="color"]:focus,
+.properties-panel textarea:focus,
+.properties-panel select:focus {
+    border-color: #3b82f6 !important;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1) !important;
+}
+
+.properties-panel input::placeholder,
+.properties-panel textarea::placeholder {
+    color: #6b7280 !important;
+}
+
+/* Melhora o contraste das descrições */
+.properties-panel .property-description,
+.properties-panel .help-text {
+    color: #e5e7eb !important;
+    font-size: 0.875rem;
+}
+
+/* Contraste para badges e labels */
+.properties-panel .badge,
+.properties-panel .property-badge {
+    color: #111827 !important;
+    font-weight: 600 !important;
+}
+
+/* Botões com melhor contraste */
+.properties-panel button {
+    font-weight: 500 !important;
+}
+
+.properties-panel button:not(.btn-ghost) {
+    color: #ffffff !important;
+}
+
+/* Melhorias específicas para o tema escuro */
+.properties-panel.dark .category-header h3 {
+    color: #ffffff !important;
+    font-weight: 600 !important;
+}
+
+.properties-panel.dark .category-description {
+    color: #d1d5db !important;
+}
+
+/* Switch e checkbox com melhor visibilidade */
+.properties-panel .switch-label,
+.properties-panel .checkbox-label {
+    color: #f9fafb !important;
+    font-weight: 500 !important;
+}
+
+/* Melhorias nos sliders */
+.properties-panel .slider-label {
+    color: #f9fafb !important;
+    font-weight: 500 !important;
+}
+
+.properties-panel .slider-value {
+    color: #e5e7eb !important;
+    font-weight: 600 !important;
+    background-color: rgba(55, 65, 81, 0.8) !important;
+    padding: 2px 8px !important;
+    border-radius: 4px !important;
+}

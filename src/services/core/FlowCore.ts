@@ -1,19 +1,30 @@
-/**
- * 🌊 FLOW CORE - STUB IMPLEMENTATION
- * 
- * Core flow management
- */
+import { computeSelectionValidity, getEffectiveRequiredSelections, isScoringPhase, isStrategicPhase } from '@/lib/quiz/selectionRules';
 
-export class FlowCore {
-  initializeFlow(flowId: string): void {
-    console.log('Initializing flow:', flowId);
-  }
+export const FlowCore = {
+  // Mapeia etapa (2–11) → ids esperados pelo motor (q1..q10)
+  mapStepToQuestionId(stepNum: number): string | null {
+    if (stepNum >= 2 && stepNum <= 11) return `q${stepNum - 1}`;
+    return null;
+  },
 
-  processStep(stepId: string, data: any): any {
-    console.log('Processing step:', stepId, data);
-    return { success: true, nextStep: 'next' };
-  }
-}
+  // Centraliza decisão de auto-avançar considerando configs do bloco e da etapa
+  shouldAutoAdvance(
+    params: {
+      isValid: boolean;
+      stepConfig?: { autoAdvanceOnComplete?: boolean; autoAdvanceDelay?: number } | undefined;
+      blockConfig?: { autoAdvanceOnComplete?: boolean; autoAdvanceDelay?: number } | undefined;
+    }
+  ): { proceed: boolean; delay: number } {
+    const { isValid, stepConfig, blockConfig } = params;
+    const enabled = (blockConfig?.autoAdvanceOnComplete ?? stepConfig?.autoAdvanceOnComplete) ?? false;
+    const delay = (blockConfig?.autoAdvanceDelay ?? stepConfig?.autoAdvanceDelay) ?? 1500;
+    return { proceed: !!isValid && !!enabled, delay };
+  },
+};
 
-export const flowCore = new FlowCore();
-export default flowCore;
+export const SelectionRules = {
+  computeSelectionValidity,
+  getEffectiveRequiredSelections,
+  isScoringPhase,
+  isStrategicPhase,
+};

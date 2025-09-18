@@ -1,0 +1,284 @@
+{
+  "templateVersion": "2.0",
+  "metadata": {
+    "id": "quiz-step-08",
+    "name": "Q7 - QUAL VISUAL VOC MAIS",
+    "description": "Questão 7 de 13",
+    "category": "quiz-question",
+    "type": "question",
+    "tags": [
+      "quiz",
+      "style",
+      "quiz-question",
+      "gisele-galvao"
+    ],
+    "createdAt": "2025-08-10T03:45:03.513Z",
+    "updatedAt": "2025-08-10T03:45:03.513Z",
+    "author": "giselegal"
+  },
+  "design": {
+    "primaryColor": "#B89B7A",
+    "secondaryColor": "#432818",
+    "accentColor": "#aa6b5d",
+    "backgroundColor": "#FAF9F7",
+    "fontFamily": "'Playfair Display', 'Inter', serif",
+    "button": {
+      "background": "linear-gradient(90deg, #B89B7A, #aa6b5d)",
+      "textColor": "#fff",
+      "borderRadius": "10px",
+      "shadow": "0 4px 14px rgba(184, 155, 122, 0.15)"
+    },
+    "card": {
+      "background": "#fff",
+      "borderRadius": "16px",
+      "shadow": "0 4px 20px rgba(184, 155, 122, 0.10)"
+    },
+    "progressBar": {
+      "color": "#B89B7A",
+      "background": "#F3E8E6",
+      "height": "6px"
+    },
+    "animations": {
+      "questionTransition": "fade, scale",
+      "optionSelect": "glow, scale",
+      "button": "hover:scale-105, active:scale-95"
+    },
+    "imageOptionSize": {
+      "default": {
+        "width": 256,
+        "height": 256,
+        "aspect": "square"
+      },
+      "strategic": {
+        "width": 400,
+        "height": 256,
+        "aspect": "landscape"
+      }
+    }
+  },
+  "layout": {
+    "containerWidth": "full",
+    "spacing": "responsive",
+    "backgroundColor": "#FAF9F7",
+    "responsive": true,
+    "animations": {
+      "questionTransition": "fade, scale",
+      "optionSelect": "glow, scale",
+      "button": "hover:scale-105, active:scale-95"
+    }
+  },
+  "blocks": [
+    {
+      "id": "step08-header",
+      "type": "quiz-intro-header",
+      "properties": {
+        "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
+        "logoAlt": "Logo Gisele Galvão",
+        "logoWidth": 120,
+        "logoHeight": 50,
+        "showProgress": true,
+        "progressValue": 8,
+        "progressMax": 21,
+        "showBackButton": true,
+        "containerWidth": "full",
+        "spacing": "small",
+        "showLogo": true,
+        "progressBarColor": "#B89B7A",
+        "progressBarThickness": 6,
+        "backgroundColor": "#FFFFFF",
+        "textColor": "#432818",
+        "paddingTop": 16,
+        "paddingBottom": 16,
+        "paddingLeft": 24,
+        "paddingRight": 24,
+        "marginBottom": 24,
+        "progressTotal": 100,
+        "type": "quiz-intro-header"
+      }
+    },
+    {
+      "id": "step08-question-title",
+      "type": "text-inline",
+      "properties": {
+        "content": "QUAL SUA CALÇA FAVORITA?",
+        "fontSize": "text-2xl",
+        "fontWeight": "font-bold",
+        "textAlign": "text-center",
+        "color": "#432818",
+        "fontFamily": "'Playfair Display', serif",
+        "containerWidth": "full",
+        "spacing": "small"
+      }
+    },
+    {
+      "id": "step08-question-counter",
+      "type": "text-inline",
+      "properties": {
+        "content": "Questão 7 de 13",
+        "fontSize": "text-sm",
+        "textAlign": "text-center",
+        "color": "#6B7280",
+        "marginBottom": 24,
+        "containerWidth": "full",
+        "spacing": "small"
+      }
+    },
+    {
+      "id": "step08-options-grid",
+      "type": "options-grid",
+      "properties": {
+        "options": [
+          {
+            "id": "7a",
+            "text": "Calça fluida acetinada bege",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735419/38_iilv0l.webp",
+            "styleCategory": "Natural",
+            "points": 1
+          },
+          {
+            "id": "7b",
+            "text": "Calça de alfaiataria cinza",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735417/39_arsswu.webp",
+            "styleCategory": "Clássico",
+            "points": 1
+          },
+          {
+            "id": "7c",
+            "text": "Jeans reto e básico",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735419/40_beq52x.webp",
+            "styleCategory": "Contemporâneo",
+            "points": 1
+          },
+          {
+            "id": "7d",
+            "text": "Calça reta bege de tecido",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735419/41_hconq4.webp",
+            "styleCategory": "Elegante",
+            "points": 1
+          },
+          {
+            "id": "7e",
+            "text": "Calça ampla rosa alfaiatada",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735420/42_q8xws1.webp",
+            "styleCategory": "Romântico",
+            "points": 1
+          },
+          {
+            "id": "7f",
+            "text": "Legging preta de couro",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735424/43_ljy7sh.webp",
+            "styleCategory": "Sexy",
+            "points": 1
+          },
+          {
+            "id": "7g",
+            "text": "Calça reta preta de couro",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735424/44_nqgvoq.webp",
+            "styleCategory": "Dramático",
+            "points": 1
+          },
+          {
+            "id": "7h",
+            "text": "Calça estampada floral leve e ampla",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735425/45_lp64m8.webp",
+            "styleCategory": "Criativo",
+            "points": 1
+          }
+        ],
+        "columns": 2,
+        "imageSize": 256,
+        "showImages": true,
+        "multipleSelection": true,
+        "minSelections": 3,
+        "maxSelections": 3,
+        "borderColor": "#E5E7EB",
+        "selectedBorderColor": "#B89B7A",
+        "hoverColor": "#F3E8D3",
+        "containerWidth": "full",
+        "spacing": "small",
+        "marginBottom": 16,
+        "selectionStyle": "glow",
+        "animationType": "scale",
+        "validationMessage": "Selecione 3 opções para avançar.",
+        "scoring": {
+          "enabled": true,
+          "categories": [
+            "Natural",
+            "Clássico",
+            "Contemporâneo",
+            "Elegante",
+            "Romântico",
+            "Sexy",
+            "Dramático",
+            "Criativo"
+          ]
+        }
+      }
+    },
+    {
+      "id": "step08-continue-button",
+      "type": "button-inline",
+      "properties": {
+        "text": "Próxima Questão →",
+        "textWhenDisabled": "Selecione 3 opções para avançar",
+        "variant": "primary",
+        "size": "large",
+        "fullWidth": true,
+        "backgroundColor": "#B89B7A",
+        "backgroundGradient": "linear-gradient(90deg, #B89B7A, #aa6b5d)",
+        "textColor": "#ffffff",
+        "borderRadius": "10px",
+        "shadow": "0 4px 14px rgba(184, 155, 122, 0.15)",
+        "disabled": true,
+        "requiresValidInput": true,
+        "enableOnSelection": true,
+        "minSelections": 3,
+        "animation": "hover:scale-105, active:scale-95",
+        "containerWidth": "full",
+        "spacing": "small",
+        "marginTop": 24
+      }
+    }
+  ],
+  "validation": {
+    "required": true,
+    "minAnswers": 3,
+    "maxAnswers": 3,
+    "validationMessage": "Selecione 3 opções para avançar."
+  },
+  "analytics": {
+    "trackingId": "step-08-quiz-question",
+    "events": [
+      "page_view",
+      "interaction",
+      "validation_error",
+      "completion"
+    ],
+    "utmParams": true,
+    "customEvents": []
+  },
+  "logic": {
+    "navigation": {
+      "nextStep": "step-09",
+      "prevStep": "step-07",
+      "allowBack": true,
+      "autoAdvance": false
+    },
+    "scoring": {
+      "enabled": true,
+      "method": "category-points",
+      "categories": [
+        "Natural",
+        "Clássico",
+        "Contemporâneo",
+        "Elegante",
+        "Romântico",
+        "Sexy",
+        "Dramático",
+        "Criativo"
+      ]
+    },
+    "conditions": null
+  },
+  "updatedAt": "2025-08-17T19:06:10.216Z"
+}

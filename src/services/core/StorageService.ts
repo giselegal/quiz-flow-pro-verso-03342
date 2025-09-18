@@ -1,125 +1,130 @@
 /**
- * 🗄️ STORAGE SERVICE - STUB IMPLEMENTATION
- * 
- * Basic storage service to maintain compatibility
+ * StorageService – wrappers seguros para armazenamento no navegador
+ * - JSON seguro (parse/stringify)
+ * - Tratamento de quota excedida com fallback para sessionStorage
+ * - Silencioso em produção; logs apenas em DEV
  */
-
-export interface StorageServiceInterface {
-  setItem(key: string, value: any): void;
-  getItem<T>(key: string): T | null;
-  removeItem(key: string): void;
-  clear(): void;
-}
-
-export class StorageService implements StorageServiceInterface {
-  setItem(key: string, value: any): void {
+export const StorageService = {
+  // Fallback em memória para ambientes sem Storage (ex.: testes Node)
+  _mem: new Map<string, string>(),
+  _hasLocal(): boolean {
+    try { return typeof localStorage !== 'undefined'; } catch { return false; }
+  },
+  _hasSession(): boolean {
+    try { return typeof sessionStorage !== 'undefined'; } catch { return false; }
+  },
+  safeGetString(key: string): string | null {
     try {
-      localStorage.setItem(key, JSON.stringify(value));
-    } catch (error) {
-      console.warn('Failed to store item:', key, error);
+      if (this._hasLocal()) {
+        const v = localStorage.getItem(key);
+        if (v != null) return v;
+      }
+      if (this._hasSession()) {
+        const v = sessionStorage.getItem(key);
+        if (v != null) return v;
+      }
+      return this._mem.get(key) ?? null;
+    } catch (e) {
+      if ((import.meta as any)?.env?.DEV)
+        console.warn('[StorageService] getString falhou:', e);
+      return this._mem.get(key) ?? null;
     }
-  }
+  },
 
-  getItem<T>(key: string): T | null {
+  safeGetJSON<T = any>(key: string): T | null {
     try {
-      const item = localStorage.getItem(key);
-      return item ? JSON.parse(item) : null;
-    } catch (error) {
-      console.warn('Failed to retrieve item:', key, error);
-      return null;
+      const raw = (this._hasLocal() ? localStorage.getItem(key) : null)
+        ?? (this._hasSession() ? sessionStorage.getItem(key) : null)
+        ?? this._mem.get(key) ?? null;
+      if (!raw) return null;
+      return JSON.parse(raw) as T;
+    } catch (e) {
+      if ((import.meta as any)?.env?.DEV) console.warn('[StorageService] getJSON falhou:', e);
+      const raw = this._mem.get(key);
+      return raw ? (JSON.parse(raw) as T) : null;
     }
-  }
+  },
 
-  removeItem(key: string): void {
+  safeSetJSON(key: string, value: unknown): boolean {
     try {
-      localStorage.removeItem(key);
-    } catch (error) {
-      console.warn('Failed to remove item:', key, error);
+      const raw = JSON.stringify(value);
+      if (this._hasLocal()) {
+        localStorage.setItem(key, raw);
+        return true;
+      }
+      // Sem localStorage → salvar em memória e tentar sessionStorage em seguida
+      this._mem.set(key, raw);
+      if (this._hasSession()) {
+        sessionStorage.setItem(key, raw);
+      }
+      return true;
+    } catch (e: any) {
+      // Quota excedida ou storage indisponível → tentar sessionStorage
+      try {
+        const raw = JSON.stringify(value);
+        if (this._hasSession()) {
+          sessionStorage.setItem(key, raw);
+          return true;
+        }
+        this._mem.set(key, raw);
+        return true;
+      } catch (e2) {
+        if ((import.meta as any)?.env?.DEV)
+          console.warn('[StorageService] setJSON falhou (local e session):', e, e2);
+        this._mem.set(key, JSON.stringify(value));
+        return true;
+      }
     }
-  }
+  },
 
-  clear(): void {
+  safeSetString(key: string, value: string): boolean {
     try {
-      localStorage.clear();
-    } catch (error) {
-      console.warn('Failed to clear storage:', error);
+      if (this._hasLocal()) {
+        localStorage.setItem(key, value);
+        return true;
+      }
+      this._mem.set(key, value);
+      if (this._hasSession()) {
+        sessionStorage.setItem(key, value);
+      }
+      return true;
+    } catch (e) {
+      try {
+        if (this._hasSession()) {
+          sessionStorage.setItem(key, value);
+          return true;
+        }
+        this._mem.set(key, value);
+        return true;
+      } catch (e2) {
+        if ((import.meta as any)?.env?.DEV)
+          console.warn('[StorageService] setString falhou:', e, e2);
+        this._mem.set(key, value);
+        return true;
+      }
     }
-  }
+  },
 
-  // Static methods for compatibility
-  static safeGetString(key: string, defaultValue: string = ''): string {
+  safeRemove(key: string): boolean {
     try {
-      const item = localStorage.getItem(key);
-      return item || defaultValue;
-    } catch (error) {
-      console.warn('Failed to safely get string:', key, error);
-      return defaultValue;
+      if (this._hasLocal()) {
+        localStorage.removeItem(key);
+      }
+      this._mem.delete(key);
+      return true;
+    } catch (e) {
+      try {
+        if (this._hasSession()) {
+          sessionStorage.removeItem(key);
+        }
+        this._mem.delete(key);
+        return true;
+      } catch (e2) {
+        if ((import.meta as any)?.env?.DEV)
+          console.warn('[StorageService] remove falhou:', e, e2);
+        this._mem.delete(key);
+        return true;
+      }
     }
-  }
-
-  static safeGetJSON<T>(key: string, defaultValue?: T): T {
-    try {
-      const item = localStorage.getItem(key);
-      return item ? JSON.parse(item) : (defaultValue as T);
-    } catch (error) {
-      console.warn('Failed to safely get JSON:', key, error);
-      return defaultValue as T;
-    }
-  }
-
-  static safeSetString(key: string, value: string): void {
-    try {
-      localStorage.setItem(key, value);
-    } catch (error) {
-      console.warn('Failed to safely set string:', key, error);
-    }
-  }
-
-  static safeSetJSON(key: string, value: any): void {
-    try {
-      localStorage.setItem(key, JSON.stringify(value));
-    } catch (error) {
-      console.warn('Failed to safely set JSON:', key, error);
-    }
-  }
-
-  // Additional static methods for compatibility
-  static async getUserData(): Promise<any> {
-    try {
-      const data = localStorage.getItem('quiz_user_data');
-      return data ? JSON.parse(data) : {};
-    } catch (error) {
-      console.error('Error getting user data:', error);
-      return {};
-    }
-  }
-
-  static async getCalculatedStyles(): Promise<any[]> {
-    try {
-      const data = localStorage.getItem('quiz_calculated_styles');
-      return data ? JSON.parse(data) : [];
-    } catch (error) {
-      console.error('Error getting calculated styles:', error);
-      return [];
-    }
-  }
-
-  static async setUserData(userData: any): Promise<void> {
-    try {
-      localStorage.setItem('quiz_user_data', JSON.stringify(userData));
-    } catch (error) {
-      console.error('Error saving user data:', error);
-    }
-  }
-
-  static async setCalculatedStyles(styles: any[]): Promise<void> {
-    try {
-      localStorage.setItem('quiz_calculated_styles', JSON.stringify(styles));
-    } catch (error) {
-      console.error('Error saving calculated styles:', error);
-    }
-  }
-}
-
-export const storageService = new StorageService();
-export default StorageService;
+  },
+};

@@ -1,0 +1,276 @@
+{
+  "templateVersion": "2.0",
+  "metadata": {
+    "id": "quiz-step-10",
+    "name": "Q9 - QUAL VISUAL VOC MAIS",
+    "description": "Questão 9 de 13",
+    "category": "quiz-question",
+    "type": "question",
+    "tags": [
+      "quiz",
+      "style",
+      "quiz-question",
+      "gisele-galvao"
+    ],
+    "createdAt": "2025-08-10T03:45:03.515Z",
+    "updatedAt": "2025-08-10T03:45:03.515Z",
+    "author": "giselegal"
+  },
+  "design": {
+    "primaryColor": "#B89B7A",
+    "secondaryColor": "#432818",
+    "accentColor": "#aa6b5d",
+    "backgroundColor": "#FAF9F7",
+    "fontFamily": "'Playfair Display', 'Inter', serif",
+    "button": {
+      "background": "linear-gradient(90deg, #B89B7A, #aa6b5d)",
+      "textColor": "#fff",
+      "borderRadius": "10px",
+      "shadow": "0 4px 14px rgba(184, 155, 122, 0.15)"
+    },
+    "card": {
+      "background": "#fff",
+      "borderRadius": "16px",
+      "shadow": "0 4px 20px rgba(184, 155, 122, 0.10)"
+    },
+    "progressBar": {
+      "color": "#B89B7A",
+      "background": "#F3E8E6",
+      "height": "6px"
+    },
+    "animations": {
+      "questionTransition": "fade, scale",
+      "optionSelect": "glow, scale",
+      "button": "hover:scale-105, active:scale-95"
+    },
+    "imageOptionSize": {
+      "default": {
+        "width": 256,
+        "height": 256,
+        "aspect": "square"
+      },
+      "strategic": {
+        "width": 400,
+        "height": 256,
+        "aspect": "landscape"
+      }
+    }
+  },
+  "layout": {
+    "containerWidth": "full",
+    "spacing": "responsive",
+    "backgroundColor": "#FAF9F7",
+    "responsive": true,
+    "animations": {
+      "questionTransition": "fade, scale",
+      "optionSelect": "glow, scale",
+      "button": "hover:scale-105, active:scale-95"
+    }
+  },
+  "blocks": [
+    {
+      "id": "step10-header",
+      "type": "quiz-intro-header",
+      "properties": {
+        "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
+        "logoAlt": "Logo Gisele Galvão",
+        "logoWidth": 120,
+        "logoHeight": 50,
+        "showProgress": true,
+        "progressValue": 10,
+        "progressMax": 21,
+        "showBackButton": true,
+        "containerWidth": "full",
+        "spacing": "small",
+        "showLogo": true,
+        "progressBarColor": "#B89B7A",
+        "progressBarThickness": 6,
+        "backgroundColor": "#FFFFFF",
+        "textColor": "#432818",
+        "paddingTop": 16,
+        "paddingBottom": 16,
+        "paddingLeft": 24,
+        "paddingRight": 24,
+        "marginBottom": 24,
+        "progressTotal": 100,
+        "type": "quiz-intro-header"
+      }
+    },
+    {
+      "id": "step10-question-title",
+      "type": "text-inline",
+      "properties": {
+        "content": "QUE TIPO DE ACESSÓRIOS VOCÊ GOSTA?",
+        "fontSize": "text-2xl",
+        "fontWeight": "font-bold",
+        "textAlign": "text-center",
+        "color": "#432818",
+        "fontFamily": "'Playfair Display', serif",
+        "containerWidth": "full",
+        "spacing": "small"
+      }
+    },
+    {
+      "id": "step10-question-counter",
+      "type": "text-inline",
+      "properties": {
+        "content": "Questão 9 de 13",
+        "fontSize": "text-sm",
+        "textAlign": "text-center",
+        "color": "#6B7280",
+        "marginBottom": 24,
+        "containerWidth": "full",
+        "spacing": "small"
+      }
+    },
+    {
+      "id": "step10-options-grid",
+      "type": "options-grid",
+      "properties": {
+        "options": [
+          {
+            "id": "9a",
+            "text": "Pequenos e discretos, às vezes nem uso",
+            "styleCategory": "Natural",
+            "points": 1
+          },
+          {
+            "id": "9b",
+            "text": "Brincos pequenos e discretos. Corrente fininha",
+            "styleCategory": "Clássico",
+            "points": 1
+          },
+          {
+            "id": "9c",
+            "text": "Acessórios que elevem meu look com um toque moderno",
+            "styleCategory": "Contemporâneo",
+            "points": 1
+          },
+          {
+            "id": "9d",
+            "text": "Acessórios sofisticados, joias ou semijoias",
+            "styleCategory": "Elegante",
+            "points": 1
+          },
+          {
+            "id": "9e",
+            "text": "Peças delicadas e com um toque feminino",
+            "styleCategory": "Romântico",
+            "points": 1
+          },
+          {
+            "id": "9f",
+            "text": "Brincos longos, colares que valorizem minha beleza",
+            "styleCategory": "Sexy",
+            "points": 1
+          },
+          {
+            "id": "9g",
+            "text": "Acessórios pesados, que causem um impacto",
+            "styleCategory": "Dramático",
+            "points": 1
+          },
+          {
+            "id": "9h",
+            "text": "Acessórios diferentes, grandes e marcantes",
+            "styleCategory": "Criativo",
+            "points": 1
+          }
+        ],
+        "columns": 2,
+        "imageSize": 0,
+        "showImages": false,
+        "multipleSelection": true,
+        "minSelections": 3,
+        "maxSelections": 3,
+        "borderColor": "#E5E7EB",
+        "selectedBorderColor": "#B89B7A",
+        "hoverColor": "#F3E8D3",
+        "containerWidth": "full",
+        "spacing": "small",
+        "marginBottom": 16,
+        "selectionStyle": "glow",
+        "animationType": "scale",
+        "validationMessage": "Selecione 3 opções para avançar.",
+        "scoring": {
+          "enabled": true,
+          "categories": [
+            "Natural",
+            "Clássico",
+            "Contemporâneo",
+            "Elegante",
+            "Romântico",
+            "Sexy",
+            "Dramático",
+            "Criativo"
+          ]
+        }
+      }
+    },
+    {
+      "id": "step10-continue-button",
+      "type": "button-inline",
+      "properties": {
+        "text": "Próxima Questão →",
+        "textWhenDisabled": "Selecione 3 opções para avançar",
+        "variant": "primary",
+        "size": "large",
+        "fullWidth": true,
+        "backgroundColor": "#B89B7A",
+        "backgroundGradient": "linear-gradient(90deg, #B89B7A, #aa6b5d)",
+        "textColor": "#ffffff",
+        "borderRadius": "10px",
+        "shadow": "0 4px 14px rgba(184, 155, 122, 0.15)",
+        "disabled": true,
+        "requiresValidInput": true,
+        "enableOnSelection": true,
+        "minSelections": 3,
+        "animation": "hover:scale-105, active:scale-95",
+        "containerWidth": "full",
+        "spacing": "small",
+        "marginTop": 24
+      }
+    }
+  ],
+  "validation": {
+    "required": true,
+    "minAnswers": 3,
+    "maxAnswers": 3,
+    "validationMessage": "Selecione 3 opções para avançar."
+  },
+  "analytics": {
+    "trackingId": "step-10-quiz-question",
+    "events": [
+      "page_view",
+      "interaction",
+      "validation_error",
+      "completion"
+    ],
+    "utmParams": true,
+    "customEvents": []
+  },
+  "logic": {
+    "navigation": {
+      "nextStep": "step-11",
+      "prevStep": "step-09",
+      "allowBack": true,
+      "autoAdvance": false
+    },
+    "scoring": {
+      "enabled": true,
+      "method": "category-points",
+      "categories": [
+        "Natural",
+        "Clássico",
+        "Contemporâneo",
+        "Elegante",
+        "Romântico",
+        "Sexy",
+        "Dramático",
+        "Criativo"
+      ]
+    },
+    "conditions": null
+  },
+  "updatedAt": "2025-08-17T19:06:10.217Z"
+}

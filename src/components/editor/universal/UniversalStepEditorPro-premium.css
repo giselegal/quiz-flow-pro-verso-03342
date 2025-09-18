@@ -1,0 +1,431 @@
+/* ================================
+   UniversalStepEditorPro - Premium Styles
+   ================================ */
+
+/* ================================
+   UniversalStepEditorPro - Layout Fixes
+   ================================ */
+
+/* 4-Column Layout Container */
+.universal-step-editor-pro .desktop-layout-4cols {
+    display: flex;
+    height: calc(100vh - 80px);
+    width: 100%;
+}
+
+/* Sidebar styling improvements */
+.universal-step-editor-pro .sidebar-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.universal-step-editor-pro .sidebar-header {
+    padding: 1rem;
+    border-bottom: 1px solid rgba(107, 114, 128, 0.5);
+}
+
+.universal-step-editor-pro .sidebar-content {
+    flex: 1;
+    overflow-y: auto;
+}
+
+/* Canvas area improvements */
+.universal-step-editor-pro .canvas-container {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Mobile responsive fixes */
+@media (max-width: 1023px) {
+    .universal-step-editor-pro .desktop-layout-4cols {
+        display: none;
+    }
+}
+
+/* Variables for consistent theming */
+:root {
+    --pro-primary: #3b82f6;
+    --pro-primary-dark: #2563eb;
+    --pro-secondary: #8b5cf6;
+    --pro-accent: #06b6d4;
+    --pro-success: #10b981;
+    --pro-warning: #f59e0b;
+    --pro-error: #ef4444;
+    --pro-glass: rgba(255, 255, 255, 0.1);
+    --pro-glass-dark: rgba(0, 0, 0, 0.2);
+    --pro-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    --pro-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    --pro-border: rgba(255, 255, 255, 0.1);
+    --pro-border-dark: rgba(0, 0, 0, 0.1);
+}
+
+/* Container principal */
+.universal-editor-pro {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    min-height: 100vh;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Animações fluidas */
+.universal-editor-pro * {
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Header Premium com gradiente */
+.pro-header {
+    background: linear-gradient(135deg, #1f2937 0%, #374151 50%, #1f2937 100%);
+    border-bottom: 1px solid var(--pro-border);
+    box-shadow: var(--pro-shadow);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+/* Sidebar Glass Effect */
+.pro-sidebar {
+    background: rgba(15, 23, 42, 0.95);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.pro-sidebar-left {
+    border-right: 1px solid var(--pro-border);
+}
+
+.pro-sidebar-right {
+    border-left: 1px solid var(--pro-border);
+}
+
+/* Canvas Area com efeito fluido */
+.pro-canvas {
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 50%, #f8fafc 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+.pro-canvas::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at 50% 50%, rgba(59, 130, 246, 0.05) 0%, transparent 50%);
+    pointer-events: none;
+}
+
+/* Botões Premium */
+.pro-btn {
+    position: relative;
+    overflow: hidden;
+    transform: translateZ(0);
+}
+
+.pro-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s;
+}
+
+.pro-btn:hover::before {
+    left: 100%;
+}
+
+.pro-btn-primary {
+    background: linear-gradient(135deg, var(--pro-primary), var(--pro-secondary));
+    box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+}
+
+.pro-btn-primary:hover {
+    box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+    transform: translateY(-1px);
+}
+
+/* Mobile Actions com micro-interações */
+.mobile-action-btn {
+    position: relative;
+    overflow: hidden;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+.mobile-action-btn:active {
+    transform: scale(0.95);
+}
+
+.mobile-action-btn::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: width 0.3s, height 0.3s;
+}
+
+.mobile-action-btn:active::after {
+    width: 120px;
+    height: 120px;
+}
+
+/* Overlays Mobile Modernos */
+.mobile-overlay {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    z-index: 50;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+}
+
+/* Scrollbars personalizadas */
+.scrollbar-thin {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(156, 163, 175, 0.5) transparent;
+}
+
+.scrollbar-thin::-webkit-scrollbar {
+    width: 4px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb {
+    background: rgba(156, 163, 175, 0.3);
+    border-radius: 2px;
+    transition: background 0.2s ease;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb:hover {
+    background: rgba(156, 163, 175, 0.5);
+}
+
+/* Dark Mode Scrollbars */
+.dark .scrollbar-thin {
+    scrollbar-color: rgba(75, 85, 99, 0.5) transparent;
+}
+
+.dark .scrollbar-thin::-webkit-scrollbar-thumb {
+    background: rgba(75, 85, 99, 0.3);
+}
+
+.dark .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+    background: rgba(75, 85, 99, 0.5);
+}
+
+/* Formulários com estilo premium */
+.pro-form-control {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    transition: all 0.2s ease;
+}
+
+.pro-form-control:focus {
+    border-color: var(--pro-primary);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    background: rgba(255, 255, 255, 0.08);
+}
+
+/* Animações de entrada */
+@keyframes slideInUp {
+    from {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideInLeft {
+    from {
+        transform: translateX(-20px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideInRight {
+    from {
+        transform: translateX(20px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+.animate-slide-in-up {
+    animation: slideInUp 0.3s ease-out;
+}
+
+.animate-slide-in-left {
+    animation: slideInLeft 0.3s ease-out;
+}
+
+.animate-slide-in-right {
+    animation: slideInRight 0.3s ease-out;
+}
+
+/* Loading States */
+.loading-shimmer {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+}
+
+.dark .loading-shimmer {
+    background: linear-gradient(90deg, #374151 25%, #4b5563 50%, #374151 75%);
+    background-size: 200% 100%;
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: -200% 0;
+    }
+
+    100% {
+        background-position: 200% 0;
+    }
+}
+
+/* Hover Effects */
+.hover-lift {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.hover-lift:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.hover-glow {
+    position: relative;
+    overflow: hidden;
+}
+
+.hover-glow::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.hover-glow:hover::before {
+    opacity: 1;
+}
+
+/* Focus States */
+.focus-ring {
+    transition: box-shadow 0.15s ease-in-out;
+}
+
+.focus-ring:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+/* Status Indicators */
+.status-indicator {
+    position: relative;
+}
+
+.status-indicator::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    right: -2px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    border: 2px solid white;
+}
+
+.status-indicator.status-online::before {
+    background: var(--pro-success);
+    animation: pulse 2s infinite;
+}
+
+.status-indicator.status-busy::before {
+    background: var(--pro-warning);
+}
+
+.status-indicator.status-offline::before {
+    background: var(--pro-error);
+}
+
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+    }
+
+    70% {
+        box-shadow: 0 0 0 10px rgba(16, 185, 129, 0);
+    }
+
+    100% {
+        box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+    }
+}
+
+/* Responsive Utilities */
+@media (max-width: 1024px) {
+    .pro-sidebar {
+        width: 280px;
+    }
+}
+
+@media (max-width: 768px) {
+    .pro-header {
+        padding: 1rem;
+    }
+
+    .mobile-action-btn {
+        width: 56px;
+        height: 56px;
+    }
+}
+
+/* Performance Optimizations */
+.gpu-accelerated {
+    transform: translateZ(0);
+    will-change: transform;
+}
+
+.no-select {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}

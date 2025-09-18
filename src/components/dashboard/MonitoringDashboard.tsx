@@ -4,6 +4,7 @@
  * Interface visual para acompanhar métricas do sistema em tempo real
  */
 
+import { useValidationControl } from '@/middleware/ValidationMiddleware';
 import { useMonitoring } from '@/services/MonitoringService';
 import { useFeatureFlags } from '@/utils/FeatureFlagManager';
 import React, { useEffect, useState } from 'react';
@@ -19,6 +20,7 @@ interface DashboardProps {
 export const MonitoringDashboard: React.FC<DashboardProps> = ({ isVisible = false, onToggle }) => {
   const { metrics, trackEvent } = useMonitoring();
   const flags = useFeatureFlags();
+  const { runManualValidation, isEnabled } = useValidationControl();
 
   const [isExpanded, setIsExpanded] = useState(false);
   const [lastUpdate, setLastUpdate] = useState(new Date());
@@ -90,11 +92,8 @@ export const MonitoringDashboard: React.FC<DashboardProps> = ({ isVisible = fals
 
             {/* Controles */}
             <ControlsCard
-              onValidation={async () => {
-                console.log('Manual validation not available');
-                return Promise.resolve();
-              }}
-              isValidationEnabled={false}
+              onValidation={runManualValidation}
+              isValidationEnabled={isEnabled}
               onEvent={trackEvent}
             />
           </>

@@ -1,0 +1,447 @@
+// Hook de integração com Supabase para o Quiz - ATUALIZADO para Quiz21StepsProvider
+import { useToast } from '@/components/ui/use-toast';
+import { quizSupabaseService } from '@/services/quizSupabaseService';
+import { QuizAnswer, QuizQuestion, QuizResult } from '@/types/quiz';
+import { useCallback, useEffect, useState } from 'react';
+import { StorageService } from '@/services/core/StorageService';
+
+// Interface para a sessão integrada com Quiz21StepsProvider
+interface Quiz21SupabaseSession {
+  id: string | null;
+  userId: string | null;
+  funnelId: string;
+  status: 'idle' | 'started' | 'in_progress' | 'completed' | 'abandoned';
+  currentStep: number;
+  totalSteps: number;
+  score: number;
+  startedAt: Date | null;
+  lastActivity: Date | null;
+  responses: QuizAnswer[];
+  strategicResponses: any[];
+  result: QuizResult | null;
+  // Propriedades derivadas do status para compatibilidade
+  isStarted: boolean;
+  isCompleted: boolean;
+}
+
+// Interface para parâmetros UTM
+interface UtmParameters {
+  source?: string;
+  medium?: string;
+  campaign?: string;
+}
+
+// Função utilitária para obter parâmetros UTM da URL
+const getUtmParameters = (): UtmParameters => {
+  if (typeof window === 'undefined') return {};
+
+  const urlParams = new URLSearchParams(window.location.search);
+  return {
+    source: urlParams.get('utm_source') || undefined,
+    medium: urlParams.get('utm_medium') || undefined,
+    campaign: urlParams.get('utm_campaign') || undefined,
+  };
+};
+
+/**
+ * Hook personalizado para integrar o quiz com o Supabase
+ * Gerencia todo o ciclo de vida da sessão do quiz
+ */
+export const useSupabaseQuiz = (questions: QuizQuestion[] = []) => {
+  const { toast } = useToast();
+
+  // Estado da sessão do quiz
+  const [session, setSession] = useState<Quiz21SupabaseSession>({
+    id: null,
+    userId: null,
+    funnelId: 'default-funnel',
+    status: 'idle',
+    currentStep: 1,
+    totalSteps: 21,
+    score: 0,
+    startedAt: null,
+    lastActivity: null,
+    responses: [],
+    strategicResponses: [],
+    result: null,
+    isStarted: false,
+    isCompleted: false,
+  });
+
+  // Estado de carregamento
+  const [isLoading, setIsLoading] = useState(false);
+
+  // Estado de erro
+  const [error, setError] = useState<string | null>(null);
+
+  // Inicializar o quiz com dados do usuário
+  const startQuiz = useCallback(
+    async (userData: { name: string; email: string; quizId: string }) => {
+      setIsLoading(true);
+      setError(null);
+
+      try {
+        // Obter parâmetros UTM
+        const utmParams = getUtmParameters();
+
+        // Criar usuário no Supabase
+        const user = await quizSupabaseService.createQuizUser({
+          name: userData.name,
+          email: userData.email,
+          utmSource: utmParams.source,
+          utmMedium: utmParams.medium,
+          utmCampaign: utmParams.campaign,
+          userAgent: navigator.userAgent,
+        });
+
+        // Criar sessão do quiz
+        const quizSession = await quizSupabaseService.createQuizSession({
+          funnelId: userData.quizId,
+          quizUserId: user.id,
+          totalSteps: questions.length,
+          maxScore: 100,
+        });
+
+        // Atualizar estado local
+        setSession({
+          ...session,
+          id: quizSession.id,
+          userId: user.id,
+          status: 'started',
+          currentStep: 0,
+          responses: [],
+          isStarted: true,
+          isCompleted: false,
+        });
+
+        // Rastrear evento de início
+        await quizSupabaseService.trackEvent({
+          funnelId: userData.quizId,
+          eventType: 'quiz_started',
+          sessionId: quizSession.id,
+          userId: user.id,
+        });
+
+        return {
+          success: true,
+          sessionId: quizSession.id,
+          userId: user.id,
+        };
+      } catch (error) {
+        console.error('Erro ao iniciar o quiz:', error);
+        setError('Não foi possível iniciar o quiz. Tente novamente.');
+
+        toast({
+          title: 'Erro ao iniciar o quiz',
+          description: 'Por favor, tente novamente.',
+          variant: 'destructive',
+        });
+
+        return { success: false };
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [questions.length, session, toast]
+  );
+
+  // Salvar resposta - nova assinatura para suportar weights
+  const saveAnswer = useCallback(
+    async (answer: { questionId: string; optionId: string; weights?: Record<string, number> }) => {
+      if (!session.id) {
+        setError('Sessão do quiz não iniciada');
+        return false;
+      }
+
+      try {
+        // Encontrar a pergunta e opção
+        const question = questions.find(q => q.id === answer.questionId);
+        const option = question?.options.find(o => o.id === answer.optionId);
+
+        if (!question || !option) {
+          throw new Error('Pergunta ou opção não encontrada');
+        }
+
+        // Salvar resposta no Supabase (se sessionId existe)
+        if (session.id) {
+          await quizSupabaseService.saveQuizResponse({
+            sessionId: session.id,
+            stepNumber: session.currentStep + 1,
+            questionId: answer.questionId,
+            questionText: question.text || question.question,
+            answerValue: answer.optionId,
+            answerText: option.text,
+            scoreEarned: option.weight || 1,
+            responseTimeMs: 0,
+          });
+
+          // Atualizar sessão
+          await quizSupabaseService.updateQuizSession(session.id, {
+            currentStep: session.currentStep + 1,
+            status: 'in_progress',
+          });
+        }
+
+        // Atualizar estado local com weights se fornecidos
+        const newAnswer: QuizAnswer = {
+          questionId: answer.questionId,
+          optionId: answer.optionId,
+          weights: answer.weights,
+        };
+        const newResponses = [...session.responses, newAnswer];
+
+        setSession({
+          ...session,
+          currentStep: session.currentStep + 1,
+          status: 'in_progress',
+          responses: newResponses,
+        });
+
+        return true;
+      } catch (error) {
+        console.error('Erro ao salvar resposta:', error);
+        setError('Erro ao salvar resposta. Tente novamente.');
+
+        toast({
+          title: 'Erro ao salvar resposta',
+          description: 'Por favor, tente novamente.',
+          variant: 'destructive',
+        });
+
+        return false;
+      }
+    },
+    [session, questions, toast]
+  );
+
+  // Calcular e salvar resultado final
+  const completeQuiz = useCallback(async () => {
+    if (!session.responses.length) {
+      setError('Não há respostas para calcular o resultado');
+      return null;
+    }
+
+    setIsLoading(true);
+
+    try {
+      // Padronizado: usar quizResultsService para cálculo completo
+      const { quizResultsService } = await import('@/services/quizResultsService');
+
+      // Montar objeto de sessão compatível com o serviço
+      const sessionForCalculation = {
+        id: session.id || 'local-session',
+        session_id: session.id || 'local-session',
+        quiz_user_id: session.userId || undefined,
+        responses: session.responses || [],
+        current_step: session.currentStep,
+      } as any;
+
+      const fullResults = await quizResultsService.calculateResults(sessionForCalculation);
+
+      // Normalizar estrutura mínima esperada no estado local
+      const normalized = {
+        version: 'v1',
+        primaryStyle: {
+          style: fullResults.styleProfile.primaryStyle,
+          category: fullResults.styleProfile.primaryStyle,
+          percentage: Math.round((fullResults.metadata.answeredQuestions / 21) * 100),
+          score: fullResults.completionScore,
+        },
+        secondaryStyles: fullResults.styleProfile.secondaryStyle
+          ? [
+              {
+                style: fullResults.styleProfile.secondaryStyle,
+                category: fullResults.styleProfile.secondaryStyle,
+                percentage:
+                  Math.max(
+                    0,
+                    Math.min(100, Math.round(fullResults.styleProfile.confidence * 100))
+                  ) || 50,
+              },
+            ]
+          : [],
+        recommendations: fullResults.recommendations,
+        metadata: fullResults.metadata,
+      } as any;
+
+  if (session.id) {
+        await quizSupabaseService.updateQuizSession(session.id, {
+          status: 'completed',
+          score: fullResults.completionScore,
+          completedAt: new Date(),
+        });
+
+        const resultId = await quizSupabaseService.saveQuizResult({
+          sessionId: session.id,
+          resultType: normalized.primaryStyle.style,
+          resultTitle: normalized.primaryStyle.category,
+          resultDescription: `Seu estilo predominante é ${normalized.primaryStyle.category} (${normalized.primaryStyle.percentage}%).`,
+          resultData: {
+            ...normalized,
+            sessionId: session.id,
+            userId: session.userId,
+          },
+        });
+
+        // Atualizar estado local
+        setSession({
+          ...session,
+          status: 'completed',
+          result: normalized,
+          isCompleted: true,
+        });
+        // Persistir no localStorage para consumo imediato pelos componentes de resultado
+        try {
+          StorageService.safeSetJSON('quizResult', normalized);
+          if (typeof fullResults?.userName === 'string' && fullResults.userName.trim()) {
+            StorageService.safeSetString('userName', fullResults.userName.trim());
+          }
+        } catch {}
+
+        return { success: true, resultId, result: normalized };
+      } else {
+        setSession({
+          ...session,
+          status: 'completed',
+          result: normalized,
+          isCompleted: true,
+        });
+        try {
+          StorageService.safeSetJSON('quizResult', normalized);
+          if (typeof fullResults?.userName === 'string' && fullResults.userName.trim()) {
+            StorageService.safeSetString('userName', fullResults.userName.trim());
+          }
+        } catch {}
+        return { success: true, result: normalized };
+      }
+    } catch (error) {
+      console.error('Erro ao completar o quiz:', error);
+      setError('Erro ao calcular resultado. Tente novamente.');
+
+      toast({
+        title: 'Erro ao completar o quiz',
+        description: 'Por favor, tente novamente.',
+        variant: 'destructive',
+      });
+
+      return { success: false };
+    } finally {
+      setIsLoading(false);
+    }
+  }, [session, toast]);
+
+  // Registrar conversão (quando o usuário adquire um produto)
+  const recordConversion = useCallback(
+    async (conversionData: {
+      productId: string;
+      productName: string;
+      value: number;
+      currency?: string;
+    }) => {
+      if (!session.id) {
+        setError('Sessão do quiz não iniciada');
+        return false;
+      }
+
+      try {
+        await quizSupabaseService.recordConversion({
+          sessionId: session.id,
+          conversionType: 'purchase',
+          conversionValue: conversionData.value,
+          currency: conversionData.currency || 'BRL',
+          productId: conversionData.productId,
+          productName: conversionData.productName,
+        });
+
+        return true;
+      } catch (error) {
+        console.error('Erro ao registrar conversão:', error);
+        return false;
+      }
+    },
+    [session.id]
+  );
+
+  // Reiniciar o quiz
+  const resetQuiz = useCallback(() => {
+    setSession({
+      id: null,
+      userId: null,
+      funnelId: 'default-funnel',
+      status: 'idle',
+      currentStep: 0,
+      totalSteps: questions.length,
+      score: 0,
+      startedAt: null,
+      lastActivity: null,
+      responses: [],
+      strategicResponses: [],
+      result: null,
+      isStarted: false,
+      isCompleted: false,
+    });
+
+    setError(null);
+  }, [questions.length]);
+
+  // Voltar para a pergunta anterior
+  const goToPreviousQuestion = useCallback(() => {
+    if (session.currentStep > 0) {
+      setSession({
+        ...session,
+        currentStep: session.currentStep - 1,
+        responses: session.responses.slice(0, -1),
+      });
+    }
+  }, [session]);
+
+  // Carregar resultado salvo (se disponível)
+  useEffect(() => {
+    const loadSavedResult = () => {
+      try {
+  const parsedResult = StorageService.safeGetJSON<any>('quizResult');
+  if (parsedResult) {
+
+          // Verificar se o resultado tem o formato esperado
+          if (parsedResult.primaryStyle && parsedResult.secondaryStyles) {
+            setSession(prev => ({
+              ...prev,
+              status: 'completed',
+              result: parsedResult,
+              isCompleted: true,
+            }));
+          }
+  }
+      } catch (error) {
+        console.error('Erro ao carregar resultado salvo:', error);
+      }
+    };
+
+    // Carregar apenas se não houver sessão ativa
+    if (!session.isStarted && !session.result) {
+      loadSavedResult();
+    }
+  }, []);
+
+  return {
+    // Estado
+    session,
+    currentStep: session.currentStep,
+    responses: session.responses,
+    result: session.result,
+    isLoading,
+    error,
+    isStarted: session.isStarted,
+    isCompleted: session.isCompleted,
+
+    // Ações
+    startQuiz,
+    saveAnswer,
+    completeQuiz,
+    resetQuiz,
+    goToPreviousQuestion,
+    recordConversion,
+  };
+};
+
+export default useSupabaseQuiz;

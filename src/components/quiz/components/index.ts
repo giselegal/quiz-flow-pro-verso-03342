@@ -1,0 +1,20 @@
+// Component exports for quiz components
+export { default as QuizTitle } from './QuizTitle';
+export { default as QuizSubtitle } from './QuizSubtitle';
+export { default as QuizParagraph } from './QuizParagraph';
+export { default as QuizImage } from './QuizImage';
+export { default as QuizButton } from './QuizButton';
+export { default as QuizSpacer } from './QuizSpacer';
+export { default as QuizProgress } from './QuizProgress';
+export { default as QuizInput } from './QuizInput';
+export { default as QuizOptions } from './QuizOptions';
+export { default as QuizVideo } from './QuizVideo';
+export { default as QuizTestimonial } from './QuizTestimonial';
+export { default as QuizPrice } from './QuizPrice';
+export { default as QuizCountdown } from './QuizCountdown';
+export { default as QuizGuarantee } from './QuizGuarantee';
+export { default as QuizBonus } from './QuizBonus';
+export { default as QuizFAQ } from './QuizFAQ';
+export { default as QuizSocialProof } from './QuizSocialProof';
+export { default as QuizEmail } from './QuizEmail';
+export { default as QuizPhone } from './QuizPhone';

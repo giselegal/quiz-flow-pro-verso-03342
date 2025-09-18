@@ -120,19 +120,17 @@ export class FunnelError extends Error {
         // Obter definição do código
         const definition = getErrorDefinition(code);
 
-        // Inicializar propriedades primeiro
-        super(message || 'Unknown error');
-        this.name = 'FunnelError';
-        this.code = code;
-
         // Se não encontrar definição, usar valores padrão
         if (!definition) {
             console.warn(`FunnelError: Unknown error code ${code}, using defaults`);
+            super(message || 'Unknown error');
+            this.name = 'FunnelError';
+            this.code = code;
             this.definition = {
                 code,
                 userMessage: message || 'An unknown error occurred',
                 technicalMessage: message || 'Unknown error',
-                severity: ErrorSeverity.ERROR,
+                severity: ErrorSeverity.MEDIUM,
                 category: 'unknown',
                 retryable: false,
                 logLevel: 'error',
@@ -163,10 +161,9 @@ export class FunnelError extends Error {
                 logLevel: 'error',
                 category: 'unknown',
                 tags: [],
-                severity: ErrorSeverity.ERROR,
-                retryable: false,
+                severity: ErrorSeverity.MEDIUM,
                 reportable: true,
-                sensitive: false
+                component: 'unknown'
             };
             this.retryCount = 0;
             return;

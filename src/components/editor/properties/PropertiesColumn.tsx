@@ -1,67 +1,88 @@
-import React from 'react';
+import React, { Suspense } from 'react';
+import { Block } from '@/types/editor';
+import { cn } from '@/lib/utils';
+import { UltraUnifiedPropertiesPanel } from './UltraUnifiedPropertiesPanel';
 
-interface PropertiesColumnProps {
-  children?: React.ReactNode;
-  selectedBlock?: any;
-  onUpdate?: (updates: any) => void;
-  onClose?: () => void;
-  onDelete?: () => void;
+export interface PropertiesColumnProps {
+  selectedBlock: Block | undefined;
+  onUpdate: (updates: Record<string, any>) => void;
+  onClose: () => void;
+  onDelete: () => void;
+  onDuplicate?: () => void;
+  onReset?: () => void;
+  previewMode?: 'desktop' | 'tablet' | 'mobile';
+  onPreviewModeChange?: (mode: 'desktop' | 'tablet' | 'mobile') => void;
+  className?: string;
 }
 
-const PropertiesColumn: React.FC<PropertiesColumnProps> = ({ 
-  children, 
+export const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
   selectedBlock,
   onUpdate,
-  onClose,
-  onDelete 
+  onDelete,
+  onDuplicate,
+  onReset,
+  previewMode,
+  onPreviewModeChange,
+  className = '',
 }) => {
+  // Debug logs
+  React.useEffect(() => {
+    console.log('🏗️  PropertiesColumn renderizado:', {
+      hasSelectedBlock: !!selectedBlock,
+      selectedBlockType: selectedBlock?.type,
+      selectedBlockId: selectedBlock?.id
+    });
+  }, [selectedBlock]);
+
+  const handleUpdate = React.useCallback((updates: Record<string, any>) => {
+    console.log('🔄 PropertiesColumn -> UltraUnifiedPropertiesPanel update:', updates);
+    onUpdate(updates);
+  }, [onUpdate]);
+
+  const handleDelete = React.useCallback(() => {
+    console.log('🗑️  PropertiesColumn -> Delete selected block');
+    onDelete();
+  }, [onDelete]);
+
+  const handleDuplicate = React.useCallback(() => {
+    console.log('📋 PropertiesColumn -> Duplicate selected block');
+    onDuplicate?.();
+  }, [onDuplicate]);
+
+  const handleReset = React.useCallback(() => {
+    console.log('🔄 PropertiesColumn -> Reset selected block');
+    onReset?.();
+  }, [onReset]);
+
   return (
-    <div className="properties-column w-64 bg-white border-l border-gray-200 p-4">
-      <div className="flex items-center justify-between mb-4">
-        <h3 className="text-lg font-semibold">Properties</h3>
-        {onClose && (
-          <button onClick={onClose} className="text-gray-500 hover:text-gray-700">
-            ×
-          </button>
-        )}
-      </div>
-      <div className="properties-content">
-        {selectedBlock ? (
-          <div>
-            <div className="mb-4">
-              <label className="block text-sm font-medium mb-2">Block Type</label>
-              <div className="text-sm text-gray-600">{selectedBlock.type || 'Unknown'}</div>
-            </div>
-            {onUpdate && (
-              <div className="space-y-2">
-                <button 
-                  onClick={() => onUpdate({})} 
-                  className="w-full px-3 py-1 text-sm bg-blue-500 text-white rounded hover:bg-blue-600"
-                >
-                  Update Properties
-                </button>
-                {onDelete && (
-                  <button 
-                    onClick={onDelete} 
-                    className="w-full px-3 py-1 text-sm bg-red-500 text-white rounded hover:bg-red-600"
-                  >
-                    Delete Block
-                  </button>
-                )}
-              </div>
-            )}
-          </div>
-        ) : (
-          children || (
-            <div className="text-center text-gray-500 py-8">
-              <p>Select an element to edit properties</p>
-            </div>
-          )
-        )}
-      </div>
+    <div
+      className={cn(
+        'h-full bg-background border-l border-border flex flex-col',
+        'w-full',
+        className
+      )}
+    >
+      <Suspense fallback={
+        <div className="p-4 text-sm text-muted-foreground animate-pulse flex items-center gap-2">
+          <svg className="w-4 h-4 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+          </svg>
+          Carregando painel unificado...
+        </div>
+      }>
+        <UltraUnifiedPropertiesPanel
+          selectedBlock={selectedBlock}
+          onUpdate={handleUpdate}
+          onDelete={handleDelete}
+          onDuplicate={handleDuplicate}
+          onReset={handleReset}
+          previewMode={previewMode}
+          onPreviewModeChange={onPreviewModeChange}
+          className="flex-1"
+        />
+      </Suspense>
     </div>
   );
 };
 
-export { PropertiesColumn };
 export default PropertiesColumn;
