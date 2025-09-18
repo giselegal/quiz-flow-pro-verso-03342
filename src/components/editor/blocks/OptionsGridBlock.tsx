@@ -293,6 +293,20 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
     validationMessage: string;
   } | null>(null);
 
+  // 🔧 Debug logs para desenvolvimento
+  React.useEffect(() => {
+    if (import.meta?.env?.DEV) {
+      console.log('🔧 OptionsGridBlock: Debug info', {
+        isPreviewMode,
+        multipleSelection,
+        optionsCount: options?.length || 0,
+        selectedOptions: isPreviewMode ? previewSelections : selectedOptions,
+        blockId: block?.id,
+        currentStep: (window as any)?.__quizCurrentStep ?? currentStepFromEditor
+      });
+    }
+  }, [isPreviewMode, multipleSelection, previewSelections, selectedOptions, block?.id, currentStepFromEditor]);
+
   // 🎯 CONFIGURAÇÃO HÍBRIDA POR ETAPA (JSON + OVERRIDE + FALLBACK)
   const getStepBehavior = React.useCallback(async (stepNumber: number) => {
     try {
@@ -838,11 +852,53 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
                   event: e,
                   currentTarget: e.currentTarget,
                   isPreviewMode,
-                  multipleSelection
+                  multipleSelection,
+                  timestamp: Date.now()
                 });
+
+                // Forçar interrupção de qualquer evento concorrente
                 e.preventDefault();
                 e.stopPropagation();
-                handleOptionSelect(opt.id);
+                // stopImmediatePropagation não está disponível no tipo React MouseEvent
+                (e.nativeEvent as any).stopImmediatePropagation?.();
+
+                // Garantir que o elemento está visível e interativo
+                const element = e.currentTarget as HTMLElement;
+                console.log('🔍 Element state:', {
+                  pointerEvents: window.getComputedStyle(element).pointerEvents,
+                  cursor: window.getComputedStyle(element).cursor,
+                  zIndex: window.getComputedStyle(element).zIndex,
+                  position: window.getComputedStyle(element).position,
+                  display: window.getComputedStyle(element).display,
+                  visibility: window.getComputedStyle(element).visibility
+                });
+
+                // Adicionar marcação visual temporária para debug
+                element.style.backgroundColor = '#ffeb3b';
+                setTimeout(() => {
+                  element.style.backgroundColor = '';
+                }, 200);
+
+                // Executar seleção com diferentes estratégias
+                console.log('⚡ Executing handleOptionSelect for:', opt.id);
+
+                // Estratégia 1: Imediato
+                try {
+                  handleOptionSelect(opt.id);
+                  console.log('✅ Immediate execution successful');
+                } catch (error) {
+                  console.error('❌ Immediate execution failed:', error);
+
+                  // Estratégia 2: Com delay
+                  setTimeout(() => {
+                    try {
+                      handleOptionSelect(opt.id);
+                      console.log('✅ Delayed execution successful');
+                    } catch (delayedError) {
+                      console.error('❌ Delayed execution failed:', delayedError);
+                    }
+                  }, 10);
+                }
               }}
               onMouseEnter={e => {
                 (e.currentTarget.style as any).boxShadow = hoverStyles.boxShadow as string;
@@ -850,7 +906,12 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
               onMouseLeave={e => {
                 (e.currentTarget.style as any).boxShadow = selectedStyles.boxShadow as any || '';
               }}
-              style={{ ...selectedStyles }}
+              style={{
+                ...selectedStyles,
+                cursor: 'pointer !important',
+                pointerEvents: 'auto',
+                userSelect: 'none'
+              }}
             >
               {opt.imageUrl && showImageEffective && (
                 <img
