@@ -11,7 +11,6 @@ import { ResultEngine } from '@/services/core/ResultEngine';
 import ResultOrchestrator from '@/services/core/ResultOrchestrator';
 import { STYLE_KEYWORDS_MAPPING } from '@/utils/styleKeywordMap';
 import { SelectionRules, FlowCore } from '@/services/core/FlowCore';
-import OPTIMIZED_FUNNEL_CONFIG from '@/config/optimized21StepsFunnel';
 import useOptimizedScheduler from '@/hooks/useOptimizedScheduler';
 import { useStepNavigationStore } from '@/stores/useStepNavigationStore';
 
@@ -658,10 +657,9 @@ const QuizModularPage: React.FC<QuizModularPageProps> = ({ initialStep }) => {
       }
 
       // ✅ 3. EXECUTAR CÁLCULO ROBUSTO (via Orchestrator)
-      const weightQuestions = (OPTIMIZED_FUNNEL_CONFIG as any)?.calculations?.scoreWeights?.questions;
       const { payload } = await ResultOrchestrator.run({
         selectionsByQuestion: selectionsForScoring,
-        weightQuestions: typeof weightQuestions === 'number' ? weightQuestions : 1,
+        weightQuestions: 1,
         userName: userName || 'Usuário',
         persistToSupabase: false,
         sessionId: null,
