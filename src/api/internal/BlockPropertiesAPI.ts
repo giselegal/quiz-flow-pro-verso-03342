@@ -8,7 +8,7 @@
  * - Performance otimizada
  */
 
-import { blocksRegistry } from '@/core/blocks/registry';
+import { blocksRegistry, type PropSchema } from '@/core/blocks/registry';
 
 // ===== INTERFACES =====
 
@@ -45,6 +45,49 @@ class BlockPropertiesCache {
     private cache = new Map<string, BlockDefinition>();
     private observers = new Set<(event: PropertyChangeEvent) => void>();
 
+    // Convert registry PropSchema[] to our BlockPropertySchema format
+    private convertPropsSchemaToProperties(propsSchema: PropSchema[]): Record<string, BlockPropertySchema> {
+        const properties: Record<string, BlockPropertySchema> = {};
+
+        propsSchema.forEach(prop => {
+            const blockSchema: BlockPropertySchema = {
+                kind: this.mapPropKind(prop.kind),
+                label: prop.label,
+                defaultValue: prop.default,
+                options: prop.options?.map(opt => opt.value),
+                validation: undefined, // Can be enhanced later
+                transform: undefined   // Can be enhanced later
+            };
+
+            properties[prop.key] = blockSchema;
+        });
+
+        return properties;
+    }
+
+    // Map registry PropKind to our BlockPropertySchema kind
+    private mapPropKind(kind: string): BlockPropertySchema['kind'] {
+        switch (kind) {
+            case 'text':
+            case 'textarea':
+                return 'text';
+            case 'number':
+                return 'number';
+            case 'range':
+                return 'range';
+            case 'color':
+                return 'color';
+            case 'select':
+                return 'select';
+            case 'switch':
+                return 'boolean';
+            case 'url':
+                return 'text'; // URLs are treated as text with validation
+            default:
+                return 'text';
+        }
+    }
+
     get(blockType: string): BlockDefinition | null {
         if (this.cache.has(blockType)) {
             return this.cache.get(blockType)!;
@@ -55,10 +98,10 @@ class BlockPropertiesCache {
         if (registryDef) {
             const definition: BlockDefinition = {
                 type: blockType,
-                name: registryDef.name || blockType,
+                name: registryDef.title || blockType,
                 category: registryDef.category || 'Other',
-                properties: registryDef.properties || {},
-                defaultContent: registryDef.defaultContent || {},
+                properties: this.convertPropsSchemaToProperties(registryDef.propsSchema || []),
+                defaultContent: registryDef.defaultProps || {},
                 icon: registryDef.icon
             };
 

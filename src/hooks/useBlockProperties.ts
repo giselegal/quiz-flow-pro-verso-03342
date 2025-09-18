@@ -23,7 +23,7 @@ interface UseBlockPropertiesReturn {
     validateProperty: (key: string, value: any) => Promise<boolean>;
 }
 
-interface UseBlockPropertiesOptions {
+export interface UseBlockPropertiesOptions {
     blockId: string;
     blockType: string;
     initialProperties?: Record<string, any>;
