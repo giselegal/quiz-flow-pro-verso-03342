@@ -17,7 +17,7 @@ export default defineConfig({
     port: 8080,
     open: false,
     cors: true,
-    strictPort: false,
+    strictPort: true, // Força usar exatamente a porta 8080
     fs: {
       allow: ['..'],
     },
