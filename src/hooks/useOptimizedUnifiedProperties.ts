@@ -21,12 +21,51 @@ interface UseOptimizedUnifiedPropertiesOptions {
 // Cache de propriedades por tipo de bloco para evitar recálculos
 const propertiesCache = new Map<string, UnifiedProperty[]>();
 
-// Função para gerar propriedades baseadas no tipo de bloco (memoizada)
+// Função para carregar configurações NoCode do localStorage
+const loadNoCodeConfiguration = () => {
+    try {
+        // Configurações gerais NoCode
+        const noCodeConfig = localStorage.getItem('quiz-nocode-config');
+        const globalConfig = localStorage.getItem('quiz-global-config');
+
+        // Configurações específicas por tipo de bloco/resultado
+        const resultConfig = localStorage.getItem('quiz-result-config');
+        const step20Config = localStorage.getItem('step20-configuration');
+
+        // Configurações específicas por estilo (para blocos de resultado)
+        const styleConfigs: Record<string, any> = {};
+        ['Elegante', 'Moderno', 'Natural', 'Clássico', 'Boho', 'Minimalista'].forEach(style => {
+            const key = `result_config_${style}`;
+            const config = localStorage.getItem(key);
+            if (config) {
+                try {
+                    styleConfigs[style] = JSON.parse(config);
+                } catch { /* ignore */ }
+            }
+        });
+
+        return {
+            noCode: noCodeConfig ? JSON.parse(noCodeConfig) : null,
+            global: globalConfig ? JSON.parse(globalConfig) : null,
+            result: resultConfig ? JSON.parse(resultConfig) : null,
+            step20: step20Config ? JSON.parse(step20Config) : null,
+            styles: styleConfigs
+        };
+    } catch (error) {
+        console.warn('Erro ao carregar configurações NoCode:', error);
+        return { noCode: null, global: null, result: null, step20: null, styles: {} };
+    }
+};
+
+// Função para gerar propriedades baseadas no tipo de bloco (memoizada) + NoCode
 const generatePropertiesForBlockType = (blockType: string): UnifiedProperty[] => {
     // Verifica cache primeiro
     if (propertiesCache.has(blockType)) {
         return propertiesCache.get(blockType)!;
     }
+
+    // 🎯 CORREÇÃO CRÍTICA: Carregar configurações NoCode
+    const noCodeConfigs = loadNoCodeConfiguration();
 
     let properties: UnifiedProperty[] = [];
 
@@ -174,6 +213,57 @@ const generatePropertiesForBlockType = (blockType: string): UnifiedProperty[] =>
                     category: PropertyCategory.STYLE
                 }
             ];
+            break;
+
+        case 'result':
+        case 'quiz-result':
+        case 'step20-result':
+            // 🎯 CORREÇÃO CRÍTICA: Propriedades de resultado integradas com NoCode
+            properties = [
+                ...baseProperties,
+                {
+                    key: 'resultTitle',
+                    value: noCodeConfigs.result?.title || noCodeConfigs.step20?.title || 'Seu Resultado',
+                    type: PropertyType.TEXT,
+                    label: 'Título do Resultado',
+                    category: PropertyCategory.CONTENT
+                },
+                {
+                    key: 'resultDescription',
+                    value: noCodeConfigs.result?.description || noCodeConfigs.step20?.description || '',
+                    type: PropertyType.TEXTAREA,
+                    label: 'Descrição do Resultado',
+                    category: PropertyCategory.CONTENT
+                },
+                {
+                    key: 'resultStyle',
+                    value: 'Elegante',
+                    type: PropertyType.SELECT,
+                    label: 'Estilo do Resultado',
+                    category: PropertyCategory.STYLE,
+                    options: [
+                        { value: 'Elegante', label: 'Elegante' },
+                        { value: 'Moderno', label: 'Moderno' },
+                        { value: 'Natural', label: 'Natural' },
+                        { value: 'Clássico', label: 'Clássico' },
+                        { value: 'Boho', label: 'Boho' },
+                        { value: 'Minimalista', label: 'Minimalista' }
+                    ]
+                }
+            ];
+
+            // Adicionar configurações específicas por estilo se existirem
+            Object.entries(noCodeConfigs.styles).forEach(([style, config]: [string, any]) => {
+                if (config && typeof config === 'object') {
+                    properties.push({
+                        key: `style_${style.toLowerCase()}_config`,
+                        value: JSON.stringify(config, null, 2),
+                        type: PropertyType.TEXTAREA,
+                        label: `Config. ${style}`,
+                        category: PropertyCategory.ADVANCED
+                    });
+                }
+            });
             break;
 
         default:
