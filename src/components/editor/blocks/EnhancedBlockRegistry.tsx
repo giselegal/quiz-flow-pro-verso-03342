@@ -104,6 +104,10 @@ export const ENHANCED_BLOCK_REGISTRY: Record<string, ComponentType<any>> = {
         () => import('@/components/editor/blocks/MentorSectionInlineBlock')
     ),
 
+    // 🎯 NOVOS COMPONENTES DE DEPOIMENTOS COM DADOS REAIS
+    'testimonial-card-inline': lazy(() => import('@/components/editor/blocks/TestimonialCardInlineBlock')),
+    'testimonials-carousel-inline': lazy(() => import('@/components/editor/blocks/TestimonialsCarouselInlineBlock')),
+
     // ✅ ALIASES PARA COMPATIBILIDADE
     'personalized-hook-inline': lazy(
         () => import('@/components/editor/blocks/StyleCardInlineBlock')

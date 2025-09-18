@@ -8,6 +8,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 import { getEnhancedBlockComponent } from '@/components/editor/blocks/EnhancedBlockRegistry';
 import { cn } from '@/lib/utils';
 import {
+  Award,
   BarChart3,
   Clock,
   Grid3X3,
@@ -15,10 +16,12 @@ import {
   MousePointer,
   Palette,
   Plus,
+  Quote,
   Search,
   Settings,
   Star,
   Type,
+  Users,
   Zap,
 } from 'lucide-react';
 import React, { useMemo, useState } from 'react';
@@ -136,6 +139,38 @@ const COMPONENT_CATEGORIES = {
         icon: Image,
         featured: true,
         tags: ['imagem', 'mídia'],
+      },
+    ],
+  },
+  social: {
+    label: 'Social Proof',
+    icon: Users,
+    description: 'Depoimentos e credibilidade',
+    color: '#16A34A',
+    components: [
+      {
+        type: 'mentor-section-inline',
+        name: 'Seção da Mentora',
+        description: 'Apresentação da Gisele Galvão',
+        icon: Award,
+        featured: true,
+        tags: ['mentora', 'gisele', 'apresentação'],
+      },
+      {
+        type: 'testimonial-card-inline',
+        name: 'Depoimento Individual',
+        description: 'Card com depoimento de cliente',
+        icon: Quote,
+        featured: true,
+        tags: ['depoimento', 'cliente', 'prova social'],
+      },
+      {
+        type: 'testimonials-carousel-inline',
+        name: 'Carrossel de Depoimentos',
+        description: 'Múltiplos depoimentos em carrossel',
+        icon: Users,
+        featured: true,
+        tags: ['carrossel', 'múltiplos depoimentos', 'social proof'],
       },
     ],
   },
