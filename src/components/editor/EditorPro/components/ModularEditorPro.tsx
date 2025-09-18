@@ -10,7 +10,7 @@ import EditorToolbar from './EditorToolbar';
 import EditorCanvas from './EditorCanvas';
 import StepSidebar from '@/components/editor/sidebars/StepSidebar';
 import ComponentsSidebar from '@/components/editor/sidebars/ComponentsSidebar';
-import PropertiesColumn from '@/components/editor/properties/PropertiesColumn';
+import RegistryPropertiesPanel from '@/components/universal/RegistryPropertiesPanel';
 
 /**
  * Hook para controlar larguras redimensionáveis das colunas
@@ -533,11 +533,21 @@ const ModularEditorPro: React.FC = () => {
             className="border-l border-border bg-muted/30 flex-shrink-0"
             style={{ width: `${columnWidths.properties}px` }}
           >
-            <PropertiesColumn
-              selectedBlock={selectedBlock || undefined}
-              onUpdate={handleUpdateSelectedBlock}
+            <RegistryPropertiesPanel
+              selectedBlock={selectedBlock || null}
+              onUpdate={(blockId: string, updates: Record<string, any>) => {
+                console.log('🔄 RegistryPropertiesPanel update:', { blockId, updates });
+                if (selectedBlock && blockId === selectedBlock.id) {
+                  handleUpdateBlock(selectedBlock.id, updates);
+                }
+              }}
               onClose={() => actions.setSelectedBlockId(null)}
-              onDelete={handleDeleteSelectedBlock}
+              onDelete={(blockId: string) => {
+                console.log('🗑️ RegistryPropertiesPanel delete:', blockId);
+                if (selectedBlock && blockId === selectedBlock.id) {
+                  handleDeleteSelectedBlock();
+                }
+              }}
             />
           </div>
         </div>
