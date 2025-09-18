@@ -2,6 +2,7 @@ import React, { memo } from 'react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { Play, Eye, EyeOff, Undo, Redo, Save, Settings } from 'lucide-react';
+import EditorNoCodePanel from '@/components/editor/EditorNoCodePanel';
 
 /**
  * 🛠️ TOOLBAR DO EDITOR OTIMIZADA
@@ -98,6 +99,11 @@ const EditorToolbar: React.FC<EditorToolbarProps> = memo(({
           >
             <Redo className="h-4 w-4" />
           </Button>
+        </div>
+
+        {/* NoCode Configuration Panel */}
+        <div className="flex items-center border-r border-border pr-2 mr-2">
+          <EditorNoCodePanel className="px-3 py-1.5 text-sm rounded-md bg-[#B89B7A] hover:bg-[#A0895B] text-white transition-colors" />
         </div>
 
         {/* Preview Toggle */}
