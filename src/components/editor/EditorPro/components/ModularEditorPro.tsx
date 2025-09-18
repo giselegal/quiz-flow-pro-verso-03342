@@ -235,6 +235,7 @@ const ModularEditorPro: React.FC = () => {
     'Quiz': [
       { type: 'quiz-question', name: 'Pergunta', icon: 'help', category: 'Quiz', description: 'Pergunta do quiz' },
       { type: 'quiz-options', name: 'Opções', icon: 'list', category: 'Quiz', description: 'Opções de resposta' },
+      { type: 'options-grid', name: 'Grade de Opções', icon: 'flash', category: 'Quiz', description: 'Grade interativa de opções' },
     ],
     'Layout': [
       { type: 'container', name: 'Container', icon: 'square', category: 'Layout', description: 'Container flexível' },
@@ -342,6 +343,31 @@ const ModularEditorPro: React.FC = () => {
         return { maxWidth: 'md', rounded: 'rounded-lg' };
       case 'button':
         return { variant: 'primary', size: 'md' };
+      case 'options-grid':
+        return {
+          title: 'Escolha uma opção:',
+          description: '',
+          columns: 2,
+          gridGap: 16,
+          showImages: true,
+          multipleSelection: false,
+          options: [
+            {
+              id: 'option-1',
+              text: 'Opção A',
+              description: 'Descrição da opção A',
+              value: 'a',
+              category: 'Categoria A'
+            },
+            {
+              id: 'option-2',
+              text: 'Opção B',
+              description: 'Descrição da opção B',
+              value: 'b',
+              category: 'Categoria B'
+            }
+          ]
+        };
       case 'mentor-section-inline':
         return {
           backgroundColor: '#ffffff',

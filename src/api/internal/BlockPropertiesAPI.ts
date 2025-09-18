@@ -49,8 +49,6 @@ class BlockPropertiesCache {
     private convertPropsSchemaToProperties(propsSchema: PropSchema[]): Record<string, BlockPropertySchema> {
         const properties: Record<string, BlockPropertySchema> = {};
 
-        console.log('🔄 Converting PropSchema[], length:', propsSchema.length);
-
         propsSchema.forEach(prop => {
             const blockSchema: BlockPropertySchema = {
                 kind: this.mapPropKind(prop.kind),
@@ -62,10 +60,8 @@ class BlockPropertiesCache {
             };
 
             properties[prop.key] = blockSchema;
-            console.log(`📝 Converted property: ${prop.key} (${prop.kind} -> ${blockSchema.kind})`);
         });
 
-        console.log('✅ Conversion complete. Properties count:', Object.keys(properties).length);
         return properties;
     }
 
@@ -93,22 +89,13 @@ class BlockPropertiesCache {
     }
 
     get(blockType: string): BlockDefinition | null {
-        console.log(`🔍 BlockPropertiesCache.get(${blockType})`);
-
         if (this.cache.has(blockType)) {
-            console.log('✅ Cache HIT');
             return this.cache.get(blockType)!;
         }
 
-        console.log('❌ Cache MISS, loading from registry...');
-
         // Lazy load from registry
         const registryDef = blocksRegistry[blockType];
-        console.log('📋 Registry definition exists:', !!registryDef);
-
         if (registryDef) {
-            console.log('📊 Registry propsSchema length:', registryDef.propsSchema?.length || 0);
-
             const definition: BlockDefinition = {
                 type: blockType,
                 name: registryDef.title || blockType,
@@ -118,16 +105,12 @@ class BlockPropertiesCache {
                 icon: registryDef.icon
             };
 
-            console.log('💾 Caching definition with properties count:', Object.keys(definition.properties).length);
             this.cache.set(blockType, definition);
             return definition;
         }
 
-        console.log('❌ Block type not found in registry');
         return null;
-    }
-
-    invalidate(blockType?: string): void {
+    } invalidate(blockType?: string): void {
         if (blockType) {
             this.cache.delete(blockType);
         } else {
