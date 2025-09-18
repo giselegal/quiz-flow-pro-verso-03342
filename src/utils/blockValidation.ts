@@ -502,13 +502,13 @@ function cleanStringValues(props: Record<string, any>) {
     });
 }
 
-function getBaseDefaultProperties(blockType: BlockType): Record<string, any> {
+function getBaseDefaultProperties(_blockType: BlockType): Record<string, any> {
     // Esta função retornaria as propriedades padrão base
     // (implementação similar à que já existe nos testes)
     return {};
 }
 
-function applyContextualDefaults(baseDefaults: Record<string, any>, context: Record<string, any>) {
+function applyContextualDefaults(baseDefaults: Record<string, any>, _context: Record<string, any>) {
     // Aplicar contexto específico às propriedades padrão
     return { ...baseDefaults };
 }

@@ -30,273 +30,111 @@ export interface UniversalBlockRendererProps {
   style?: React.CSSProperties;
 }
 
-// 🎨 COMPONENTES DE BLOCOS BÁSICOS
-const TextBlock: React.FC<{ block: Block; isSelected?: boolean; onUpdate?: (updates: any) => void }> = memo(({
-  block,
-  isSelected,
-  onUpdate
-}) => {
-  const text = block.properties?.text || 'Digite seu texto aqui...';
-
-  const handleTextChange = useCallback((e: React.ChangeEvent<HTMLDivElement>) => {
-    onUpdate?.({ properties: { ...block.properties, text: e.currentTarget.textContent } });
-  }, [onUpdate, block.properties]);
-
-  return (
-    <div
-      contentEditable={!isSelected ? false : true}
-      onBlur={handleTextChange}
-      className={cn(
-        'min-h-[2rem] p-2 rounded border-2 transition-all',
-        isSelected
-          ? 'border-primary bg-primary/5'
-          : 'border-transparent hover:border-muted-foreground/20'
-      )}
-      suppressContentEditableWarning
-    >
-      {text}
+// 🎯 FALLBACK COMPONENT
+const FallbackBlock: React.FC<{ block: Block; isSelected?: boolean }> = memo(({ 
+  block, 
+  isSelected 
+}) => (
+  <div className={cn(
+    'p-4 border-2 border-dashed border-muted-foreground/20 rounded-lg bg-muted/10',
+    isSelected && 'border-primary bg-primary/5'
+  )}>
+    <div className="text-sm text-muted-foreground">
+      Tipo de bloco: <span className="font-mono">{block.type}</span>
     </div>
-  );
-});
-
-const ButtonBlock: React.FC<{ block: Block; isSelected?: boolean; onUpdate?: (updates: any) => void }> = memo(({
-  block,
-  isSelected
-}) => {
-  const text = block.properties?.text || 'Botão';
-  const url = block.properties?.url || '#';
-
-  return (
-    <div className={cn(
-      'inline-block p-2 rounded border-2 transition-all',
-      isSelected
-        ? 'border-primary bg-primary/5'
-        : 'border-transparent hover:border-muted-foreground/20'
-    )}>
-      <button
-        className="px-4 py-2 bg-primary text-primary-foreground rounded hover:bg-primary/90 transition-colors"
-        onClick={(e) => {
-          e.preventDefault();
-          if (url && url !== '#') {
-            window.open(url, '_blank');
-          }
-        }}
-      >
-        {text}
-      </button>
+    <div className="text-xs text-muted-foreground mt-1">
+      ID: {block.id}
     </div>
-  );
-});
+  </div>
+));
 
-const ImageBlock: React.FC<{ block: Block; isSelected?: boolean }> = memo(({
-  block,
-  isSelected
-}) => {
-  const src = block.properties?.src || 'https://via.placeholder.com/300x200';
-  const alt = block.properties?.alt || 'Imagem';
-
-  return (
-    <div className={cn(
-      'inline-block p-2 rounded border-2 transition-all',
-      isSelected
-        ? 'border-primary bg-primary/5'
-        : 'border-transparent hover:border-muted-foreground/20'
-    )}>
-      <img
-        src={src}
-        alt={alt}
-        className="max-w-full h-auto rounded"
-        style={{ maxHeight: '400px' }}
-      />
-    </div>
-  );
-});
-
-const FormBlock: React.FC<{ block: Block; isSelected?: boolean }> = memo(({
-  block,
-  isSelected
-}) => {
-  const title = block.properties?.title || 'Formulário';
-  const fields = block.properties?.fields || [
-    { type: 'text', label: 'Nome', placeholder: 'Digite seu nome' },
-    { type: 'email', label: 'Email', placeholder: 'seu@email.com' }
-  ];
-
-  return (
-    <div className={cn(
-      'p-4 rounded border-2 transition-all bg-background',
-      isSelected
-        ? 'border-primary bg-primary/5'
-        : 'border-muted hover:border-muted-foreground/20'
-    )}>
-      <h3 className="font-semibold mb-4">{title}</h3>
-      <div className="space-y-3">
-        {fields.map((field: any, index: number) => (
-          <div key={index}>
-            <label className="block text-sm font-medium mb-1">
-              {field.label}
-            </label>
-            <input
-              type={field.type}
-              placeholder={field.placeholder}
-              className="w-full px-3 py-2 border border-muted rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20"
-            />
-          </div>
-        ))}
-        <button className="w-full px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors">
-          Enviar
-        </button>
-      </div>
-    </div>
-  );
-});
-
-/**
- * 🎨 Universal Block Renderer v3.0
- * 
- * Features v3.0:
- * - Clean Architecture integration
- * - Performance otimizada com memo
- * - Suporte a edição inline
- * - Registry extensível de componentes
- * - Feedback visual aprimorado
- */
+// 📦 UNIVERSAL BLOCK RENDERER PRINCIPAL
 export const UniversalBlockRenderer: React.FC<UniversalBlockRendererProps> = memo(({
   block,
   isSelected = false,
   isPreviewing = false,
+  mode = 'editor',
   onSelect,
-  onClick, // Legacy compatibility
+  onClick,
   onUpdate,
   onDelete,
-  onPropertyChange, // Legacy compatibility
+  onPropertyChange,
   className,
   style
 }) => {
-  // 🚩 FEATURE FLAGS (mock por enquanto)
-  const featureFlags = { useCleanArchitecture: true };
-
-  // 🎯 COMPONENT RESOLUTION - Usando Enhanced Block Registry
-  const BlockComponent = useMemo(() => {
-    const component = getEnhancedBlockComponent(block.type);
-    console.log(`🔍 UniversalBlockRenderer resolving: "${block.type}" →`, {
-      found: !!component,
-      name: component?.name || component?.displayName || 'Unknown'
-    });
-    return component;
+  // 🎯 OBTER COMPONENTE DO REGISTRY
+  const Component = useMemo(() => {
+    try {
+      return getEnhancedBlockComponent(block.type);
+    } catch (error) {
+      console.warn(`Block type '${block.type}' not found in enhanced registry`, error);
+      return null;
+    }
   }, [block.type]);
 
-  // 🎯 HANDLERS COM COMPATIBILIDADE LEGACY
-  const handleClick = useCallback((e: React.MouseEvent) => {
-    if (!isPreviewing) {
-      e.stopPropagation();
-      // Usar onSelect se disponível, caso contrário onClick (legacy)
-      if (onSelect) {
-        onSelect(block.id);
-      } else if (onClick) {
-        onClick();
-      }
-    }
-  }, [isPreviewing, onSelect, onClick, block.id]);
+  // 🎯 HANDLERS OTIMIZADOS
+  const handleClick = useCallback(() => {
+    onSelect?.(block.id);
+    onClick?.();
+  }, [onSelect, onClick, block.id]);
 
   const handleUpdate = useCallback((updates: Partial<Block>) => {
-    if (onUpdate) {
-      onUpdate(block.id, updates);
-    } else if (onPropertyChange && updates.properties) {
-      // Legacy compatibility: chamar onPropertyChange para cada propriedade
-      Object.entries(updates.properties).forEach(([key, value]) => {
-        onPropertyChange(key, value);
-      });
-    }
-  }, [onUpdate, onPropertyChange, block.id]);
+    onUpdate?.(block.id, updates);
+  }, [onUpdate, block.id]);
 
-  const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
-    if (e.key === 'Delete' && isSelected && !isPreviewing) {
-      e.preventDefault();
-      onDelete?.(block.id);
-    }
-  }, [isSelected, isPreviewing, onDelete, block.id]);
+  const handlePropertyChange = useCallback((key: string, value: any) => {
+    onPropertyChange?.(key, value);
+    // Também atualiza via onUpdate para compatibilidade
+    onUpdate?.(block.id, {
+      properties: { ...block.properties, [key]: value }
+    });
+  }, [onPropertyChange, onUpdate, block.id, block.properties]);
 
-  // 🎨 FALLBACK PARA TIPOS DESCONHECIDOS
-  if (!BlockComponent) {
+  const handleDelete = useCallback(() => {
+    onDelete?.(block.id);
+  }, [onDelete, block.id]);
+
+  // 🎯 PROPRIEDADES UNIFICADAS
+  const blockProps = useMemo(() => ({
+    block,
+    isSelected,
+    isPreviewing,
+    mode,
+    onUpdate: handleUpdate,
+    onDelete: handleDelete,
+    onPropertyChange: handlePropertyChange,
+    onClick: handleClick,
+  }), [
+    block, 
+    isSelected, 
+    isPreviewing, 
+    mode, 
+    handleUpdate, 
+    handleDelete, 
+    handlePropertyChange, 
+    handleClick
+  ]);
+
+  // 🎯 RENDERIZAÇÃO CONDICIONAL
+  if (!Component) {
     return (
-      <div
-        className={cn(
-          'p-4 border-2 border-dashed border-muted-foreground/20 rounded-lg',
-          'bg-muted/10 text-center text-muted-foreground',
-          isSelected && 'border-destructive bg-destructive/5',
-          className
-        )}
+      <div 
+        className={cn('cursor-pointer', className)} 
         style={style}
         onClick={handleClick}
-        tabIndex={0}
-        onKeyDown={handleKeyDown}
       >
-        <div className="text-sm font-medium mb-1">
-          Tipo desconhecido: {block.type}
-        </div>
-        <div className="text-xs">
-          Componente não registrado no sistema
-        </div>
-        {featureFlags.useCleanArchitecture && (
-          <div className="text-xs mt-2 text-primary">
-            Clean Architecture v3.0
-          </div>
-        )}
+        <FallbackBlock block={block} isSelected={isSelected} />
       </div>
     );
   }
 
-  // 🎨 RENDER PRINCIPAL
   return (
-    <div
-      className={cn(
-        'relative group transition-all duration-200',
-        !isPreviewing && 'cursor-pointer',
-        className
-      )}
+    <div 
+      className={cn('cursor-pointer', className)} 
       style={style}
       onClick={handleClick}
-      tabIndex={0}
-      onKeyDown={handleKeyDown}
     >
-      {/* Indicador de seleção */}
-      {isSelected && !isPreviewing && (
-        <div className="absolute -inset-1 border-2 border-primary rounded-lg pointer-events-none">
-          <div className="absolute -top-6 left-0 px-2 py-1 bg-primary text-primary-foreground text-xs rounded">
-            {block.type}
-          </div>
-        </div>
-      )}
-
-      {/* Controles de hover */}
-      {!isPreviewing && (
-        <div className="absolute -top-8 right-0 opacity-0 group-hover:opacity-100 transition-opacity">
-          <div className="flex items-center gap-1">
-            {featureFlags.useCleanArchitecture && (
-              <span className="px-1 py-0.5 bg-blue-500 text-white text-xs rounded">
-                v3.0
-              </span>
-            )}
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                onDelete?.(block.id);
-              }}
-              className="w-6 h-6 bg-destructive text-destructive-foreground rounded text-xs hover:bg-destructive/90"
-            >
-              ×
-            </button>
-          </div>
-        </div>
-      )}
-
-      {/* Componente do bloco */}
-      <BlockComponent
-        block={block}
-        isSelected={isSelected}
-        onUpdate={handleUpdate}
-      />
+      <Component {...blockProps} />
     </div>
   );
 });

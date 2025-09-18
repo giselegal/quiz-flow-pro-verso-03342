@@ -72,14 +72,14 @@ export function sanitizeRichText(html: string): string {
 
     // Then allow only specific tags
     const tagRegex = /<\/?(\w+)([^>]*)>/g;
-    sanitized = sanitized.replace(tagRegex, (match, tagName, attributes) => {
+    sanitized = sanitized.replace(tagRegex, (_match, tagName, attributes) => {
         if (!allowedTags.includes(tagName.toLowerCase())) {
             return ''; // Remove disallowed tags
         }
 
         // For allowed tags, sanitize attributes
         if (attributes) {
-            const cleanAttributes = attributes.replace(/(\w+)=["']([^"']*)["']/g, (attrMatch: string, attrName: string, attrValue: string) => {
+            const cleanAttributes = attributes.replace(/(\w+)=["']([^"']*)["']/g, (_attrMatch: string, attrName: string, attrValue: string) => {
                 if (allowedAttributes.includes(attrName.toLowerCase())) {
                     // Additional validation for href
                     if (attrName.toLowerCase() === 'href') {
@@ -185,7 +185,7 @@ export function sanitizeText(text: string, options: {
     let sanitized = text
         // Normalize whitespace
         .replace(/[\r\n\t]/g, allowNewlines ? '\n' : ' ')
-        .replace(/\s+/g, allowNewlines ? (match) => match.includes('\n') ? '\n' : ' ' : ' ')
+        .replace(/\s+/g, allowNewlines ? ' ' : ' ')
         .trim();
 
     // Remove special characters if not allowed
