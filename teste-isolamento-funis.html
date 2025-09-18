@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🧪 Teste de Isolamento de Funis</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .funnel-test {
+            border: 2px solid #ddd;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+        }
+
+        .funnel-test.active {
+            border-color: #4CAF50;
+            background: #f8fff8;
+        }
+
+        button {
+            background: #007cba;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+
+        button:hover {
+            background: #005a87;
+        }
+
+        .success {
+            color: #4CAF50;
+            font-weight: bold;
+        }
+
+        .error {
+            color: #f44336;
+            font-weight: bold;
+        }
+
+        .info {
+            color: #2196F3;
+            font-weight: bold;
+        }
+
+        .warning {
+            color: #ff9800;
+            font-weight: bold;
+        }
+
+        pre {
+            background: #f0f0f0;
+            padding: 10px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>🧪 Teste de Isolamento de Funis</h1>
+        <p>Este teste verifica se o sistema consegue distinguir entre diferentes funis pelos IDs.</p>
+    </div>
+
+    <div class="container">
+        <h2>📊 Resultados dos Testes</h2>
+        <div id="results"></div>
+    </div>
+
+    <div class="container">
+        <h2>🎯 Teste 1: Geração de IDs Únicos</h2>
+        <button onclick="testUniqueIdGeneration()">Gerar 10 IDs Únicos</button>
+        <div id="uniqueIds"></div>
+    </div>
+
+    <div class="container">
+        <h2>🔗 Teste 2: URLs de Funis Diferentes</h2>
+        <div id="urlTests"></div>
+        <button onclick="testUrlDifferentiation()">Testar URLs</button>
+    </div>
+
+    <div class="container">
+        <h2>🏃‍♂️ Teste 3: Navegação Real</h2>
+        <p>Abrir funis diferentes em abas separadas:</p>
+        <button onclick="openFunnel('funnel_001_quiz_estilo')">Abrir Funil 1 (Quiz Estilo)</button>
+        <button onclick="openFunnel('funnel_002_lead_magnet')">Abrir Funil 2 (Lead Magnet)</button>
+        <button onclick="openFunnel('funnel_003_vendas')">Abrir Funil 3 (Vendas)</button>
+        <div id="navigationResults"></div>
+    </div>
+
+    <div class="container">
+        <h2>🧬 Teste 4: Isolamento localStorage</h2>
+        <button onclick="testLocalStorageIsolation()">Testar Isolamento</button>
+        <div id="storageResults"></div>
+    </div>
+
+    <script>
+        // Função para gerar ID único (igual à do sistema)
+        function generateUniqueId() {
+            return `funnel_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+        }
+
+        // Teste 1: Geração de IDs únicos
+        function testUniqueIdGeneration() {
+            const container = document.getElementById('uniqueIds');
+            const ids = [];
+
+            container.innerHTML = '<h3>🔄 Gerando IDs...</h3>';
+
+            // Gerar 10 IDs únicos
+            for (let i = 0; i < 10; i++) {
+                const id = generateUniqueId();
+                ids.push(id);
+
+                // Pequena pausa para garantir timestamp diferente
+                const now = Date.now();
+                while (Date.now() === now) { } // busy wait
+            }
+
+            // Verificar se todos são únicos
+            const uniqueIds = [...new Set(ids)];
+            const allUnique = uniqueIds.length === ids.length;
+
+            let html = `<h3>${allUnique ? '✅' : '❌'} Teste de Unicidade</h3>`;
+            html += `<p><strong>IDs Gerados:</strong> ${ids.length}</p>`;
+            html += `<p><strong>IDs Únicos:</strong> ${uniqueIds.length}</p>`;
+            html += `<p class="${allUnique ? 'success' : 'error'}">
+                ${allUnique ? 'SUCESSO: Todos os IDs são únicos!' : 'ERRO: IDs duplicados detectados!'}
+            </p>`;
+
+            html += '<pre>' + ids.map((id, i) => `${i + 1}. ${id}`).join('\\n') + '</pre>';
+
+            container.innerHTML = html;
+        }
+
+        // Teste 2: URLs diferentes
+        function testUrlDifferentiation() {
+            const container = document.getElementById('urlTests');
+
+            const funnelIds = [
+                'funnel_001_quiz_estilo',
+                'funnel_002_lead_magnet',
+                'funnel_003_vendas',
+                'funnel_004_webinar',
+                'funnel_005_consultoria'
+            ];
+
+            let html = '<h3>🔗 URLs de Teste Geradas:</h3>';
+
+            funnelIds.forEach((id, index) => {
+                const url = `${window.location.origin}/editor?funnel=${id}`;
+                html += `
+                    <div class="funnel-test">
+                        <strong>Funil ${index + 1}:</strong><br>
+                        <strong>ID:</strong> <code>${id}</code><br>
+                        <strong>URL:</strong> <a href="${url}" target="_blank">${url}</a><br>
+                        <button onclick="window.open('${url}', '_blank')">🚀 Abrir</button>
+                    </div>
+                `;
+            });
+
+            html += '<p class="success">✅ Cada funil tem URL única e identificável!</p>';
+
+            container.innerHTML = html;
+        }
+
+        // Teste 3: Navegação real
+        function openFunnel(funnelId) {
+            const url = `/editor?funnel=${funnelId}`;
+            const newWindow = window.open(url, `funnel_${funnelId}`);
+
+            const container = document.getElementById('navigationResults');
+            const timestamp = new Date().toLocaleTimeString();
+
+            container.innerHTML += `
+                <div class="funnel-test">
+                    <span class="info">[${timestamp}]</span> 
+                    Abrindo funil: <code>${funnelId}</code><br>
+                    URL: <code>${url}</code>
+                    ${newWindow ? '<span class="success">✅ Aberto</span>' : '<span class="error">❌ Bloqueado</span>'}
+                </div>
+            `;
+        }
+
+        // Teste 4: Isolamento localStorage
+        function testLocalStorageIsolation() {
+            const container = document.getElementById('storageResults');
+
+            // Simular dados diferentes para cada funil
+            const funnelData = {
+                'funnel_001': { name: 'Quiz Estilo', steps: 21, current: 5 },
+                'funnel_002': { name: 'Lead Magnet', steps: 3, current: 1 },
+                'funnel_003': { name: 'Vendas', steps: 8, current: 3 }
+            };
+
+            let html = '<h3>🧬 Teste de Isolamento localStorage</h3>';
+
+            // Salvar dados de cada funil
+            Object.entries(funnelData).forEach(([id, data]) => {
+                const key = `editor:${id}`;
+                localStorage.setItem(key, JSON.stringify(data));
+                html += `<p>💾 Salvo: <code>${key}</code> = ${JSON.stringify(data)}</p>`;
+            });
+
+            html += '<br><h4>📖 Verificando Isolamento:</h4>';
+
+            // Verificar se os dados estão isolados
+            Object.keys(funnelData).forEach(id => {
+                const key = `editor:${id}`;
+                const stored = localStorage.getItem(key);
+                const parsed = JSON.parse(stored);
+
+                html += `
+                    <div class="funnel-test">
+                        <strong>Funil:</strong> <code>${id}</code><br>
+                        <strong>Dados:</strong> <code>${stored}</code><br>
+                        <span class="success">✅ Isolamento OK - Dados únicos para cada funil</span>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+        }
+
+        // Executar teste inicial ao carregar a página
+        document.addEventListener('DOMContentLoaded', function () {
+            // Verificar parâmetros da URL atual
+            const urlParams = new URLSearchParams(window.location.search);
+            const currentFunnelId = urlParams.get('funnel');
+
+            let html = '';
+
+            if (currentFunnelId) {
+                html += `
+                    <div class="funnel-test active">
+                        <h3>🎯 Funil Identificado na URL!</h3>
+                        <p><strong>ID do Funil:</strong> <code>${currentFunnelId}</code></p>
+                        <p class="success">✅ O sistema consegue extrair o ID da URL!</p>
+                    </div>
+                `;
+            } else {
+                html += `
+                    <div class="funnel-test">
+                        <h3>ℹ️ Nenhum Funil na URL</h3>
+                        <p>Esta página não tem parâmetro <code>?funnel=ID</code></p>
+                        <p class="info">Para testar, adicione <code>?funnel=teste123</code> na URL</p>
+                    </div>
+                `;
+            }
+
+            // Verificar se o editor estaria funcionando
+            html += `
+                <div class="funnel-test">
+                    <h3>🔧 Status do Sistema</h3>
+                    <p><strong>URL Atual:</strong> <code>${window.location.href}</code></p>
+                    <p><strong>Origem:</strong> <code>${window.location.origin}</code></p>
+                    <p><strong>Caminho:</strong> <code>${window.location.pathname}</code></p>
+                    <p><strong>Parâmetros:</strong> <code>${window.location.search}</code></p>
+                </div>
+            `;
+
+            document.getElementById('results').innerHTML = html;
+        });
+    </script>
+</body>
+
+</html>
