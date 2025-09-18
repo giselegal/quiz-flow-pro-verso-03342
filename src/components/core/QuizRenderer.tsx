@@ -194,7 +194,7 @@ export const QuizRenderer: React.FC<QuizRendererProps> = React.memo(({
     const handleNavigationEvent = (ev: Event) => {
       const e = ev as CustomEvent<{ stepId?: number; from?: number; to?: number }>;
       const targetStep = e.detail?.stepId ?? e.detail?.to;
-      
+
       if (typeof targetStep === 'number' && targetStep >= 1 && targetStep <= 21) {
         console.log('🎯 QuizRenderer: Navegando para etapa', targetStep);
         try {
@@ -208,7 +208,7 @@ export const QuizRenderer: React.FC<QuizRendererProps> = React.memo(({
 
     window.addEventListener('navigate-to-step', handleNavigationEvent as EventListener);
     window.addEventListener('quiz-navigate-to-step', handleNavigationEvent as EventListener);
-    
+
     return () => {
       window.removeEventListener('navigate-to-step', handleNavigationEvent as EventListener);
       window.removeEventListener('quiz-navigate-to-step', handleNavigationEvent as EventListener);

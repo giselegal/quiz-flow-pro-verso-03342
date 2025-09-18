@@ -31,52 +31,53 @@ interface Props {
   marginBottom?: number;
   marginLeft?: number;
   marginRight?: number;
+  isPreviewing?: boolean;
 }
 
 export // Função para converter valores de margem em classes Tailwind (Sistema Universal)
-const getMarginClass = (value: number | string | undefined, type: string): string => {
-  const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
+  const getMarginClass = (value: number | string | undefined, type: string): string => {
+    const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
 
-  if (!numValue || isNaN(numValue) || numValue === 0) return '';
+    if (!numValue || isNaN(numValue) || numValue === 0) return '';
 
-  const prefix = type === 'top' ? 'mt' : type === 'bottom' ? 'mb' : type === 'left' ? 'ml' : 'mr';
+    const prefix = type === 'top' ? 'mt' : type === 'bottom' ? 'mb' : type === 'left' ? 'ml' : 'mr';
 
-  // Margens negativas
-  if (numValue < 0) {
-    const absValue = Math.abs(numValue);
-    if (absValue <= 4) return `-${prefix}-1`;
-    if (absValue <= 8) return `-${prefix}-2`;
-    if (absValue <= 12) return `-${prefix}-3`;
-    if (absValue <= 16) return `-${prefix}-4`;
-    if (absValue <= 20) return `-${prefix}-5`;
-    if (absValue <= 24) return `-${prefix}-6`;
-    if (absValue <= 28) return `-${prefix}-7`;
-    if (absValue <= 32) return `-${prefix}-8`;
-    if (absValue <= 36) return `-${prefix}-9`;
-    if (absValue <= 40) return `-${prefix}-10`;
-    return `-${prefix}-10`; // Máximo para negativas
-  }
+    // Margens negativas
+    if (numValue < 0) {
+      const absValue = Math.abs(numValue);
+      if (absValue <= 4) return `-${prefix}-1`;
+      if (absValue <= 8) return `-${prefix}-2`;
+      if (absValue <= 12) return `-${prefix}-3`;
+      if (absValue <= 16) return `-${prefix}-4`;
+      if (absValue <= 20) return `-${prefix}-5`;
+      if (absValue <= 24) return `-${prefix}-6`;
+      if (absValue <= 28) return `-${prefix}-7`;
+      if (absValue <= 32) return `-${prefix}-8`;
+      if (absValue <= 36) return `-${prefix}-9`;
+      if (absValue <= 40) return `-${prefix}-10`;
+      return `-${prefix}-10`; // Máximo para negativas
+    }
 
-  // Margens positivas (expandido para suportar até 100px)
-  if (numValue <= 4) return `${prefix}-1`;
-  if (numValue <= 8) return `${prefix}-2`;
-  if (numValue <= 12) return `${prefix}-3`;
-  if (numValue <= 16) return `${prefix}-4`;
-  if (numValue <= 20) return `${prefix}-5`;
-  if (numValue <= 24) return `${prefix}-6`;
-  if (numValue <= 28) return `${prefix}-7`;
-  if (numValue <= 32) return `${prefix}-8`;
-  if (numValue <= 36) return `${prefix}-9`;
-  if (numValue <= 40) return `${prefix}-10`;
-  if (numValue <= 44) return `${prefix}-11`;
-  if (numValue <= 48) return `${prefix}-12`;
-  if (numValue <= 56) return `${prefix}-14`;
-  if (numValue <= 64) return `${prefix}-16`;
-  if (numValue <= 80) return `${prefix}-20`;
-  if (numValue <= 96) return `${prefix}-24`;
-  if (numValue <= 112) return `${prefix}-28`;
-  return `${prefix}-32`; // Máximo suportado
-};
+    // Margens positivas (expandido para suportar até 100px)
+    if (numValue <= 4) return `${prefix}-1`;
+    if (numValue <= 8) return `${prefix}-2`;
+    if (numValue <= 12) return `${prefix}-3`;
+    if (numValue <= 16) return `${prefix}-4`;
+    if (numValue <= 20) return `${prefix}-5`;
+    if (numValue <= 24) return `${prefix}-6`;
+    if (numValue <= 28) return `${prefix}-7`;
+    if (numValue <= 32) return `${prefix}-8`;
+    if (numValue <= 36) return `${prefix}-9`;
+    if (numValue <= 40) return `${prefix}-10`;
+    if (numValue <= 44) return `${prefix}-11`;
+    if (numValue <= 48) return `${prefix}-12`;
+    if (numValue <= 56) return `${prefix}-14`;
+    if (numValue <= 64) return `${prefix}-16`;
+    if (numValue <= 80) return `${prefix}-20`;
+    if (numValue <= 96) return `${prefix}-24`;
+    if (numValue <= 112) return `${prefix}-28`;
+    return `${prefix}-32`; // Máximo suportado
+  };
 
 const PricingCardInlineBlock: React.FC<Props> = ({
   block,
@@ -88,6 +89,7 @@ const PricingCardInlineBlock: React.FC<Props> = ({
   marginBottom = 0,
   marginLeft = 0,
   marginRight = 0,
+  isPreviewing = false,
 }) => {
   const [isHovered, setIsHovered] = useState(false);
   const properties = safeGetBlockProperties(block);
@@ -241,12 +243,13 @@ const PricingCardInlineBlock: React.FC<Props> = ({
           {/* Título */}
           <h2
             className={cn(
-              'text-2xl font-bold cursor-text transition-all duration-300',
+              'text-2xl font-bold transition-all duration-300',
+              isPreviewing ? 'cursor-default' : 'cursor-text',
               variant === 'premium' ? 'text-white' : 'text-[#432818]',
               isHovered && 'scale-105'
             )}
             suppressContentEditableWarning
-            onBlur={e => onUpdate?.({ title: e.target.textContent })}
+            onBlur={e => !isPreviewing && onUpdate?.({ title: e.target.textContent })}
           >
             {title}
           </h2>
@@ -254,11 +257,12 @@ const PricingCardInlineBlock: React.FC<Props> = ({
           {/* Subtítulo */}
           <p
             className={cn(
-              'cursor-text font-medium',
+              'font-medium',
+              isPreviewing ? 'cursor-default' : 'cursor-text',
               variant === 'premium' ? 'text-[#432818]/90' : 'text-[#432818]'
             )}
             suppressContentEditableWarning
-            onBlur={e => onUpdate?.({ subtitle: e.target.textContent })}
+            onBlur={e => !isPreviewing && onUpdate?.({ subtitle: e.target.textContent })}
           >
             {subtitle}
           </p>
@@ -268,21 +272,26 @@ const PricingCardInlineBlock: React.FC<Props> = ({
             <div
               className={cn(
                 'text-lg line-through',
+                isPreviewing ? 'cursor-default' : 'cursor-text',
                 variant === 'premium' ? 'text-[#432818]/60' : 'text-gray-500'
               )}
             >
               <span
                 suppressContentEditableWarning
-                onBlur={e => onUpdate?.({ originalPrice: e.target.textContent })}
+                onBlur={e => !isPreviewing && onUpdate?.({ originalPrice: e.target.textContent })}
               >
                 {originalPrice}
               </span>
             </div>
 
-            <div className={cn('text-4xl font-bold', variantStyles.price)}>
+            <div className={cn(
+              'text-4xl font-bold',
+              isPreviewing ? 'cursor-default' : 'cursor-text',
+              variantStyles.price
+            )}>
               <span
                 suppressContentEditableWarning
-                onBlur={e => onUpdate?.({ currentPrice: e.target.textContent })}
+                onBlur={e => !isPreviewing && onUpdate?.({ currentPrice: e.target.textContent })}
               >
                 {currentPrice}
               </span>
@@ -333,8 +342,9 @@ const PricingCardInlineBlock: React.FC<Props> = ({
           >
             <span className="flex items-center justify-center gap-2 relative z-10">
               <span
+                className={isPreviewing ? 'cursor-default' : 'cursor-text'}
                 suppressContentEditableWarning
-                onBlur={e => onUpdate?.({ buttonText: e.target.textContent })}
+                onBlur={e => !isPreviewing && onUpdate?.({ buttonText: e.target.textContent })}
               >
                 {buttonText}
               </span>

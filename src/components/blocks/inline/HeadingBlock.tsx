@@ -19,6 +19,7 @@ const HeadingBlock: React.FC<BlockComponentProps> = ({
   isSelected,
   onClick,
   onPropertyChange,
+  isPreviewing = false,
 }) => {
   const {
     text = 'Título',
@@ -91,6 +92,7 @@ const HeadingBlock: React.FC<BlockComponentProps> = ({
     <HeadingTag
       className={cn(
         'heading-block w-full transition-all duration-200 outline-none',
+        isPreviewing ? 'cursor-default' : 'cursor-text',
         fontSize ? '' : getDefaultFontSize(),
         getWeightClass(),
         getAlignClass(),
@@ -102,9 +104,9 @@ const HeadingBlock: React.FC<BlockComponentProps> = ({
         color,
         fontSize: fontSize || undefined,
       }}
-      contentEditable={isSelected}
+      contentEditable={isPreviewing ? false : isSelected}
       suppressContentEditableWarning
-      onBlur={e => handlePropertyUpdate('text', e.target.textContent || '')}
+      onBlur={e => !isPreviewing && handlePropertyUpdate('text', e.target.textContent || '')}
       onClick={onClick}
     >
       {text}
