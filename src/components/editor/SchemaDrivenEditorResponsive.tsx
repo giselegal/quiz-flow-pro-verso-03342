@@ -14,6 +14,7 @@ import { calculateAndSaveQuizResult } from '@/utils/quizResultCalculator';
 
 import React, { useState } from 'react';
 import { createBlockFromComponent } from '@/utils/editorUtils';
+import EditorNoCodePanel from './EditorNoCodePanel';
 
 interface SchemaDrivenEditorResponsiveProps {
   funnelId?: string;
@@ -148,6 +149,9 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
 
         {/* Botão para Modo Interativo */}
         <div className="flex items-center gap-2">
+          {/* NoCode Configuration Button */}
+          <EditorNoCodePanel className="px-3 py-2 text-sm rounded-lg bg-[#B89B7A] hover:bg-[#A0895B] text-white transition-colors" />
+          
           <button
             onClick={handleModeToggle}
             className={`px-3 py-2 text-sm rounded-lg transition-colors ${isInteractiveMode

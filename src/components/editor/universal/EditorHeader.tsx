@@ -1,6 +1,7 @@
 import React, { useRef, useState } from 'react';
 import { cn } from '@/lib/utils';
 import { useTheme } from '@/components/theme-provider';
+import EditorNoCodePanel from '../EditorNoCodePanel';
 
 export interface EditorHeaderProps {
     mode: 'edit' | 'preview';
@@ -319,6 +320,9 @@ const EditorHeader: React.FC<EditorHeaderProps> = ({
                             </svg>
                             Save
                         </button>
+
+                        {/* Botão NoCode Configurações */}
+                        <EditorNoCodePanel className="flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-[#B89B7A] to-[#D4A574] text-white text-sm font-medium rounded-lg hover:opacity-90 shadow-lg backdrop-blur-sm transition-opacity" />
 
                         <button
                             className="px-4 py-2 bg-gray-800/80 border border-gray-700/50 text-gray-300 text-sm rounded-md hover:bg-gray-700/80 hover:text-white transition-colors backdrop-blur-sm"

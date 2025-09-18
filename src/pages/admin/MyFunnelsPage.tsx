@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { funnelLocalStore } from '@/services/funnelLocalStore';
-import { Edit, Eye, Globe2, Plus, Upload, Link as LinkIcon } from 'lucide-react';
+import { Edit, Eye, Globe2, Plus, Upload, Link as LinkIcon, Zap } from 'lucide-react';
 import React from 'react';
 import { Input } from '@/components/ui/input';
 import { useLocation } from 'wouter';
@@ -10,6 +10,7 @@ import { publishFunnel } from '@/services/funnelPublishing';
 import { AdminBreadcrumbs } from '@/components/admin/AdminBreadcrumbs';
 import { useMyFunnelsPersistence } from '@/hooks/editor/useContextualEditorPersistence';
 import { FunnelContext } from '@/core/contexts/FunnelContext';
+import EditorNoCodePanel from '@/components/editor/EditorNoCodePanel';
 // FunnelSettingsModal import removed - not used
 
 type Funnel = ReturnType<typeof funnelLocalStore.list>[number];
@@ -261,6 +262,9 @@ const MyFunnelsPage: React.FC = () => {
         </div>
 
         <div className="flex gap-2">
+          {/* Quick NoCode Access */}
+          <EditorNoCodePanel className="flex items-center gap-2 px-4 py-2 bg-[#B89B7A] hover:bg-[#A0895B] text-white rounded-md transition-colors border-0" />
+
           <Button onClick={() => goToEditor()} className="flex items-center gap-2">
             <Plus className="h-4 w-4" />
             Novo Funil

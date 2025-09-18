@@ -42,6 +42,7 @@ const coreBusinessItems = [
     description: 'SEO, Analytics, Domínios - Sem código',
     badge: 'NoCode',
     isAdvanced: false,
+    priority: true,
   },
   {
     title: 'Quiz Manager',
@@ -120,6 +121,7 @@ export function AdminSidebar() {
   const renderSidebarItem = (item: any, isAdvanced = false) => {
     const Icon = item.icon;
     const isActive = location === item.href;
+    const isPriority = item.priority;
 
     return (
       <Link
@@ -130,19 +132,29 @@ export function AdminSidebar() {
           isActive
             ? isAdvanced
               ? 'bg-gradient-to-r from-[#B89B7A] to-[#A08968] text-white shadow-md'
+              : isPriority
+              ? 'bg-gradient-to-r from-[#B89B7A] to-[#D4A574] text-white shadow-lg border-2 border-[#E8D5B7]'
               : 'bg-[#B89B7A] text-white'
+            : isPriority
+            ? 'text-[#432818] hover:bg-[#F5F2E9] bg-gradient-to-r from-[#FBF8F3] to-[#F8F5F0] border border-[#E8D5B7]'
             : 'text-[#432818] hover:bg-[#F5F2E9]'
         )}
       >
         <div className="flex items-center gap-3">
-          <Icon className="w-5 h-5" />
-          <span className="font-medium">{item.title}</span>
+          <Icon className={cn("w-5 h-5", isPriority && "text-[#B89B7A]")} />
+          <span className={cn("font-medium", isPriority && "font-semibold")}>{item.title}</span>
           {(item.badge || item.isAdvanced) && (
             <Badge
               variant={item.isAdvanced ? "default" : "secondary"}
               className={cn(
                 "text-xs px-2 py-0.5 ml-auto",
-                isActive ? "bg-white/20 text-white" : item.isAdvanced ? "bg-purple-100 text-purple-700" : "bg-green-100 text-green-700"
+                isActive 
+                  ? "bg-white/20 text-white" 
+                  : item.isAdvanced 
+                  ? "bg-purple-100 text-purple-700" 
+                  : isPriority 
+                  ? "bg-[#B89B7A] text-white font-medium"
+                  : "bg-green-100 text-green-700"
               )}
             >
               {item.badge || 'Pro'}
@@ -152,14 +164,14 @@ export function AdminSidebar() {
         {item.description && (
           <span className={cn(
             'text-xs ml-8',
-            isActive ? 'text-white/70' : 'text-[#8F7A6A]'
+            isActive ? 'text-white/70' : isPriority ? 'text-[#8F7A6A] font-medium' : 'text-[#8F7A6A]'
           )}>
             {item.description}
           </span>
         )}
-        {isAdvanced && (
+        {(isAdvanced || isPriority) && (
           <div className="absolute top-1 right-1">
-            <Zap className="w-3 h-3 text-yellow-400" />
+            <Zap className={cn("w-3 h-3", isAdvanced ? "text-yellow-400" : "text-[#B89B7A]")} />
           </div>
         )}
       </Link>
