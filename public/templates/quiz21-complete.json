@@ -1,0 +1,197 @@
+{
+    "templateVersion": "2.0",
+    "metadata": {
+        "id": "quiz21StepsComplete",
+        "name": "Quiz de Estilo Pessoal - 21 Etapas Completo",
+        "description": "Template completo para descoberta do estilo pessoal com 21 etapas, incluindo coleta de dados, quiz pontuado, questões estratégicas e ofertas.",
+        "version": "2.0.0",
+        "category": "quiz",
+        "templateType": "quiz-complete",
+        "createdAt": "2025-09-18T00:00:00.000Z",
+        "updatedAt": "2025-09-18T00:00:00.000Z",
+        "author": "Gisele Galvão"
+    },
+    "globalConfig": {
+        "branding": {
+            "primaryColor": "#B89B7A",
+            "secondaryColor": "#432818",
+            "backgroundColor": "#FAF9F7",
+            "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
+            "logoAlt": "Logo Gisele Galvão"
+        },
+        "navigation": {
+            "autoAdvanceSteps": [
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9,
+                10,
+                11
+            ],
+            "manualAdvanceSteps": [
+                1,
+                13,
+                14,
+                15,
+                16,
+                17,
+                18,
+                20,
+                21
+            ],
+            "transitionSteps": [
+                12,
+                19
+            ],
+            "autoAdvanceDelay": 1500
+        },
+        "validation": {
+            "rules": {
+                "step1": {
+                    "type": "input",
+                    "required": true,
+                    "minLength": 2,
+                    "message": "Digite seu nome para continuar"
+                },
+                "steps2to11": {
+                    "type": "selection",
+                    "required": true,
+                    "requiredSelections": 3,
+                    "maxSelections": 3,
+                    "message": "Selecione 3 opções para continuar"
+                },
+                "steps13to18": {
+                    "type": "selection",
+                    "required": true,
+                    "requiredSelections": 1,
+                    "maxSelections": 1,
+                    "message": "Selecione uma opção para continuar"
+                }
+            }
+        },
+        "scoring": {
+            "categories": [
+                "Natural",
+                "Clássico",
+                "Contemporâneo",
+                "Elegante",
+                "Romântico",
+                "Sexy",
+                "Dramático",
+                "Criativo"
+            ],
+            "algorithm": {
+                "type": "category-points",
+                "normalQuestionWeight": 1.0,
+                "strategicQuestionWeight": 0.0,
+                "minimumScoreDifference": 2,
+                "tieBreaker": "first-selected"
+            }
+        },
+        "analytics": {
+            "enabled": true,
+            "trackingId": "quiz-21-steps-complete",
+            "events": [
+                "page_view",
+                "step_completed",
+                "option_selected",
+                "quiz_completed"
+            ]
+        }
+    },
+    "steps": {
+        "step-1": {
+            "metadata": {
+                "name": "Coleta do Nome",
+                "description": "Página inicial para coleta do nome do usuário",
+                "type": "intro",
+                "category": "lead-capture"
+            },
+            "behavior": {
+                "autoAdvance": false,
+                "autoAdvanceDelay": 0,
+                "showProgress": false,
+                "allowBack": false
+            },
+            "validation": {
+                "type": "input",
+                "required": true,
+                "minLength": 2,
+                "message": "Digite seu nome para continuar"
+            },
+            "blocks": [
+                {
+                    "id": "step1-quiz-header",
+                    "type": "quiz-intro-header",
+                    "position": 0,
+                    "properties": {
+                        "backgroundColor": "#F8F9FA",
+                        "textAlign": "center",
+                        "showBackground": true,
+                        "padding": "24px",
+                        "borderRadius": "8px",
+                        "marginBottom": "16px",
+                        "boxShadow": "sm",
+                        "animation": "fadeIn",
+                        "animationDuration": "0.8s",
+                        "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
+                        "logoAlt": "Logo Gisele Galvão",
+                        "showLogo": true,
+                        "enableProgressBar": false,
+                        "progressValue": 0,
+                        "progressMax": 100,
+                        "showBackButton": false,
+                        "contentMaxWidth": 640,
+                        "progressHeight": 8
+                    }
+                },
+                {
+                    "id": "step1-title",
+                    "type": "text",
+                    "position": 1,
+                    "properties": {
+                        "text": "<span style=\"color: #B89B7A; font-weight: 700; font-family: 'Playfair Display', serif;\">Chega</span> <span style=\"font-family: 'Playfair Display', serif;\">de um guarda-roupa lotado e da sensação de que</span> <span style=\"color: #B89B7A; font-weight: 700; font-family: 'Playfair Display', serif;\">nada combina com você.</span>",
+                        "fontSize": "text-3xl md:text-4xl",
+                        "fontWeight": "font-bold",
+                        "textAlign": "center",
+                        "color": "#432818",
+                        "lineHeight": "leading-tight",
+                        "maxWidth": "640px",
+                        "marginTop": 12,
+                        "marginBottom": 10
+                    }
+                }
+            ]
+        },
+        "step-2": {
+            "metadata": {
+                "name": "Q1 - Estilo de Roupa",
+                "description": "Primeira questão sobre preferências de estilo",
+                "type": "question",
+                "category": "quiz-question"
+            },
+            "behavior": {
+                "autoAdvance": true,
+                "autoAdvanceDelay": 1500,
+                "showProgress": true,
+                "allowBack": true
+            },
+            "validation": {
+                "type": "selection",
+                "required": true,
+                "requiredSelections": 3,
+                "maxSelections": 3,
+                "message": "Selecione 3 opções para continuar"
+            },
+            "scoring": {
+                "enabled": true,
+                "method": "category-points",
+                "weight": 1.0
+            }
+        }
+    }
+}
