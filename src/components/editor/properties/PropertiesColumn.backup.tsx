@@ -1,7 +1,7 @@
 import React, { Suspense } from 'react';
 import { Block } from '@/types/editor';
 import { cn } from '@/lib/utils';
-import { SinglePropertiesPanel } from './SinglePropertiesPanel';
+import { UltraUnifiedPropertiesPanel } from './UltraUnifiedPropertiesPanel';
 
 export interface PropertiesColumnProps {
   selectedBlock: Block | undefined;
@@ -20,6 +20,9 @@ export const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
   onUpdate,
   onDelete,
   onDuplicate,
+  onReset,
+  previewMode,
+  onPreviewModeChange,
   className = '',
 }) => {
   // Debug logs
@@ -32,7 +35,7 @@ export const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
   }, [selectedBlock]);
 
   const handleUpdate = React.useCallback((updates: Record<string, any>) => {
-    console.log('🔄 PropertiesColumn -> SinglePropertiesPanel update:', updates);
+    console.log('🔄 PropertiesColumn -> UltraUnifiedPropertiesPanel update:', updates);
     onUpdate(updates);
   }, [onUpdate]);
 
@@ -45,6 +48,11 @@ export const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
     console.log('📋 PropertiesColumn -> Duplicate selected block');
     onDuplicate?.();
   }, [onDuplicate]);
+
+  const handleReset = React.useCallback(() => {
+    console.log('🔄 PropertiesColumn -> Reset selected block');
+    onReset?.();
+  }, [onReset]);
 
   return (
     <div
@@ -59,14 +67,18 @@ export const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
           <svg className="w-4 h-4 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
           </svg>
-          Carregando painel otimizado...
+          Carregando painel unificado...
         </div>
       }>
-        <SinglePropertiesPanel
-          selectedBlock={selectedBlock || null}
+        <UltraUnifiedPropertiesPanel
+          selectedBlock={selectedBlock}
           onUpdate={handleUpdate}
           onDelete={handleDelete}
           onDuplicate={handleDuplicate}
+          onReset={handleReset}
+          previewMode={previewMode}
+          onPreviewModeChange={onPreviewModeChange}
+          className="flex-1"
         />
       </Suspense>
     </div>
