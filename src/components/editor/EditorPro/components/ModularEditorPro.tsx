@@ -221,6 +221,11 @@ const ModularEditorPro: React.FC = () => {
       { type: 'text', name: 'Texto', icon: 'doc', category: 'Conteúdo', description: 'Parágrafo de texto' },
       { type: 'image', name: 'Imagem', icon: 'image', category: 'Conteúdo', description: 'Inserir imagem' },
     ],
+    'Social Proof': [
+      { type: 'mentor-section-inline', name: 'Seção da Mentora', icon: 'user', category: 'Social Proof', description: 'Seção com informações da Gisele Galvão' },
+      { type: 'testimonial-card-inline', name: 'Depoimento', icon: 'quote', category: 'Social Proof', description: 'Depoimento individual de cliente' },
+      { type: 'testimonials-carousel-inline', name: 'Carrossel de Depoimentos', icon: 'carousel', category: 'Social Proof', description: 'Carrossel com múltiplos depoimentos' },
+    ],
     'Formulários': [
       { type: 'form', name: 'Formulário', icon: 'button', category: 'Formulários', description: 'Formulário de contato' },
       { type: 'button', name: 'Botão', icon: 'button', category: 'Formulários', description: 'Botão de ação' },
@@ -297,6 +302,29 @@ const ModularEditorPro: React.FC = () => {
         return { backgroundColor: '#ffffff' };
       case 'spacer':
         return { height: '20px' };
+      case 'mentor-section-inline':
+        return {
+          title: 'Conheça sua Mentora',
+          subtitle: 'Especialista em Consultoria de Imagem'
+        };
+      case 'testimonial-card-inline':
+        return {
+          testimonialType: 'mariangela',
+          cardStyle: 'elegant',
+          showPhoto: true,
+          showRating: true,
+          showResult: true
+        };
+      case 'testimonials-carousel-inline':
+        return {
+          title: 'O que nossas clientes dizem',
+          subtitle: 'Transformações reais de mulheres como você',
+          itemsPerView: 1,
+          showNavigationArrows: true,
+          showDots: true,
+          autoPlay: false,
+          layout: 'cards'
+        };
       default:
         return {};
     }
@@ -312,6 +340,33 @@ const ModularEditorPro: React.FC = () => {
         return { maxWidth: 'md', rounded: 'rounded-lg' };
       case 'button':
         return { variant: 'primary', size: 'md' };
+      case 'mentor-section-inline':
+        return {
+          backgroundColor: '#ffffff',
+          accentColor: '#ec4899',
+          marginTop: 0,
+          marginBottom: 0,
+          marginLeft: 0,
+          marginRight: 0
+        };
+      case 'testimonial-card-inline':
+        return {
+          backgroundColor: '#ffffff',
+          accentColor: '#ec4899',
+          marginTop: 0,
+          marginBottom: 0,
+          marginLeft: 0,
+          marginRight: 0
+        };
+      case 'testimonials-carousel-inline':
+        return {
+          backgroundColor: '#ffffff',
+          accentColor: '#ec4899',
+          marginTop: 0,
+          marginBottom: 0,
+          marginLeft: 0,
+          marginRight: 0
+        };
       default:
         return {};
     }
