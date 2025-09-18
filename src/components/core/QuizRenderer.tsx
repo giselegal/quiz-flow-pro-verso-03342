@@ -189,6 +189,32 @@ export const QuizRenderer: React.FC<QuizRendererProps> = React.memo(({
     };
   }, [currentStep, setStepValid]); // Added setStepValid to dependencies
 
+  // 🚀 NAVEGAÇÃO AUTOMÁTICA - Escutar eventos de navegação
+  useEffect(() => {
+    const handleNavigationEvent = (ev: Event) => {
+      const e = ev as CustomEvent<{ stepId?: number; from?: number; to?: number }>;
+      const targetStep = e.detail?.stepId ?? e.detail?.to;
+      
+      if (typeof targetStep === 'number' && targetStep >= 1 && targetStep <= 21) {
+        console.log('🎯 QuizRenderer: Navegando para etapa', targetStep);
+        try {
+          if (goToStep) goToStep(targetStep);
+          else if (targetStep > currentStep && nextStep) nextStep();
+        } catch (error) {
+          console.error('❌ Erro na navegação:', error);
+        }
+      }
+    };
+
+    window.addEventListener('navigate-to-step', handleNavigationEvent as EventListener);
+    window.addEventListener('quiz-navigate-to-step', handleNavigationEvent as EventListener);
+    
+    return () => {
+      window.removeEventListener('navigate-to-step', handleNavigationEvent as EventListener);
+      window.removeEventListener('quiz-navigate-to-step', handleNavigationEvent as EventListener);
+    };
+  }, [currentStep, nextStep, goToStep]);
+
   // Memoize stepBlocks to prevent infinite re-renders
   const stableStepBlocks = useMemo(() => finalStepBlocks || [], [finalStepBlocks]);
   // Memoizar o wrapper de stepBlocks por chave de etapa para estabilidade de identidade
@@ -402,6 +428,7 @@ export const QuizRenderer: React.FC<QuizRendererProps> = React.memo(({
                   },
                 }}
                 isSelected={isSelected}
+                isPreviewing={mode === 'production' || mode === 'preview'}
                 mode={mode}
                 onClick={() => {
                   // Mantém seleção ao clicar no próprio componente

@@ -471,8 +471,8 @@ const FunnelPanelPage: React.FC = () => {
   };
 
   const finalTemplates: UnifiedTemplate[] = React.useMemo(() => {
-    // ✅ MODO PRODUÇÃO: Mostrando todos os templates únicos disponíveis
-    const developmentMode = false;
+    // ✅ MODO DESENVOLVIMENTO: Mostrando apenas o template de 21 etapas completo
+    const developmentMode = true;
 
     if (developmentMode) {
       // Filtra para mostrar APENAS o funil principal para edição

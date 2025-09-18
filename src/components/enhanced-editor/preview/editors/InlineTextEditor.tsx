@@ -7,6 +7,7 @@ interface InlineTextEditorProps {
   placeholder?: string;
   className?: string;
   multiline?: boolean;
+  isPreviewing?: boolean; // Desabilita edição no modo preview
 }
 
 const InlineTextEditor: React.FC<InlineTextEditorProps> = ({
@@ -15,6 +16,7 @@ const InlineTextEditor: React.FC<InlineTextEditorProps> = ({
   placeholder,
   className,
   multiline = false,
+  isPreviewing = false,
 }) => {
   const [text, setText] = useState(value || '');
   const [isEditing, setIsEditing] = useState(false);
@@ -46,7 +48,9 @@ const InlineTextEditor: React.FC<InlineTextEditorProps> = ({
   };
 
   const handleClick = () => {
-    setIsEditing(true);
+    if (!isPreviewing) {
+      setIsEditing(true);
+    }
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -75,7 +79,8 @@ const InlineTextEditor: React.FC<InlineTextEditorProps> = ({
           <div
             onClick={handleClick}
             className={cn(
-              'w-full cursor-text whitespace-pre-wrap',
+              'w-full whitespace-pre-wrap',
+              isPreviewing ? 'cursor-default' : 'cursor-text',
               !text && 'text-gray-400',
               className
             )}
@@ -103,7 +108,12 @@ const InlineTextEditor: React.FC<InlineTextEditorProps> = ({
       ) : (
         <div
           onClick={handleClick}
-          className={cn('w-full cursor-text', !text && 'text-gray-400', className)}
+          className={cn(
+            'w-full',
+            isPreviewing ? 'cursor-default' : 'cursor-text',
+            !text && 'text-gray-400',
+            className
+          )}
         >
           {text || placeholder}
         </div>

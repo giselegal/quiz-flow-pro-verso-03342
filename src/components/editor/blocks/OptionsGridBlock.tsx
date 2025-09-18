@@ -346,7 +346,7 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
       return {
         requiresValidInput: false,
         requiresValidSelection: true,
-        autoAdvance: false, // ✅ SEM AUTO-AVANÇO
+        autoAdvance: false, // ❌ AUTO-AVANÇO DESABILITADO - usuário deve clicar manualmente
         autoAdvanceDelay: 0,
         validationMessage: 'Selecione uma opção para continuar',
       };

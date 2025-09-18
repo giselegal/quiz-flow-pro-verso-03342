@@ -20,6 +20,7 @@ export interface InlineEditableTextProps {
   style?: React.CSSProperties;
   // Additional props for compatibility
   isEditing?: boolean;
+  isPreviewing?: boolean; // Desabilita edição no modo preview
   onEdit?: () => void;
   minHeight?: string;
   maxWidth?: string;
@@ -45,6 +46,7 @@ const InlineEditableText: React.FC<InlineEditableTextProps> = ({
   onBlur,
   style,
   isEditing: editingProp = false,
+  isPreviewing = false,
   onEdit,
   minHeight,
   maxWidth,
@@ -73,7 +75,7 @@ const InlineEditableText: React.FC<InlineEditableTextProps> = ({
   }, [isEditing, internalValue]);
 
   const handleClick = () => {
-    if (!disabled && !isEditing) {
+    if (!disabled && !isEditing && !isPreviewing) {
       setIsEditing(true);
       onEdit?.();
     }
@@ -133,8 +135,8 @@ const InlineEditableText: React.FC<InlineEditableTextProps> = ({
     fontSizeClasses[fontSize],
     fontWeightClasses[fontWeight],
     textAlignClasses[textAlign],
-    disabled ? 'cursor-not-allowed opacity-50' : 'cursor-pointer',
-    isEditing ? 'cursor-text' : '',
+    disabled ? 'cursor-not-allowed opacity-50' : isPreviewing ? 'cursor-default' : 'cursor-pointer',
+    isEditing && !isPreviewing ? 'cursor-text' : '',
     className
   );
 
