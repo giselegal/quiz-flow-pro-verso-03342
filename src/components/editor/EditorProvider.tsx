@@ -279,6 +279,223 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
     funnelsContext = null;
   }
 
+  // 🎯 NOVA FUNCIONALIDADE: Carregar dados reais do funil quando funnelId é fornecido
+  const loadRealFunnelData = useCallback(async () => {
+    if (!funnelId || funnelId === 'quiz-estilo-completo') {
+      console.log('📋 EditorProvider: Usando template padrão, não carregando dados de funil específico. FunnelId:', funnelId);
+      return;
+    }
+
+    try {
+      console.log('🔄 EditorProvider: Iniciando carregamento de dados reais do funil:', funnelId);
+      setState(prev => ({ ...prev, isLoading: true }));
+
+      // Para testes, vamos criar dados mock quando não há dados reais
+      if (funnelId === 'test-funnel-123') {
+        console.log('🧪 EditorProvider: Usando dados mock para teste');
+
+        const mockFunnelData = {
+          name: 'Funil de Teste Mock',
+          pages: [
+            {
+              title: 'Qual é o seu estilo preferido?',
+              blocks: [{
+                id: 'block-1',
+                type: 'quiz-question-inline',
+                properties: {
+                  question: 'Qual é o seu estilo preferido?',
+                  options: [
+                    { id: 'opt-1', text: 'Clássico', score: 10, image: null },
+                    { id: 'opt-2', text: 'Moderno', score: 15, image: null },
+                    { id: 'opt-3', text: 'Boho', score: 20, image: null }
+                  ],
+                  multipleSelection: false,
+                  required: true,
+                  showImages: true
+                },
+                content: {
+                  title: 'Pergunta sobre Estilo',
+                  description: 'Escolha a opção que melhor representa você'
+                }
+              }]
+            },
+            {
+              title: 'Qual é a sua cor favorita?',
+              blocks: [{
+                id: 'block-2',
+                type: 'quiz-question-inline',
+                properties: {
+                  question: 'Qual é a sua cor favorita?',
+                  options: [
+                    { id: 'opt-4', text: 'Azul', score: 10, image: null },
+                    { id: 'opt-5', text: 'Verde', score: 15, image: null },
+                    { id: 'opt-6', text: 'Vermelho', score: 20, image: null }
+                  ],
+                  multipleSelection: false,
+                  required: true,
+                  showImages: false
+                },
+                content: {
+                  title: 'Pergunta sobre Cor',
+                  description: 'Selecione sua cor preferida'
+                }
+              }]
+            }
+          ]
+        };
+
+        // Processar dados mock da mesma forma
+        const realStepBlocks: Record<string, Block[]> = {};
+
+        mockFunnelData.pages.forEach((page: any, index: number) => {
+          const stepKey = `step-${index + 1}`;
+
+          const blocks: Block[] = Array.isArray(page.blocks)
+            ? page.blocks.map((block: any) => ({
+              id: block.id || `${stepKey}-block-${Date.now()}-${Math.random()}`,
+              type: (block.type as BlockType) || 'quiz-question-inline',
+              order: block.order || 0,
+              properties: {
+                question: block.properties?.question || page.title || 'Pergunta não definida',
+                options: block.properties?.options || [],
+                multipleSelection: block.properties?.multipleSelection || false,
+                required: block.properties?.required !== false,
+                showImages: block.properties?.showImages !== false,
+                ...(block.properties || {})
+              },
+              content: {
+                title: block.content?.title || page.title || 'Título não definido',
+                description: block.content?.description || '',
+                ...(block.content || {})
+              }
+            }))
+            : [];
+
+          if (blocks.length > 0) {
+            realStepBlocks[stepKey] = blocks;
+            console.log(`📝 EditorProvider: Step ${stepKey} preparado com ${blocks.length} blocos (mock)`);
+          }
+        });
+
+        // Atualizar estado com dados mock
+        setState(prev => ({
+          ...prev,
+          stepBlocks: {
+            ...prev.stepBlocks,
+            ...realStepBlocks
+          },
+          isLoading: false
+        }));
+
+        console.log('✅ EditorProvider: Dados mock integrados ao editor:', {
+          stepKeys: Object.keys(realStepBlocks),
+          totalBlocks: Object.values(realStepBlocks).reduce((acc, blocks) => acc + blocks.length, 0),
+          funnelName: mockFunnelData.name
+        });
+
+        return;
+      }
+
+      // Para funis reais, usar serviço do Supabase
+      const { schemaDrivenFunnelService } = await import('@/services/schemaDrivenFunnelService');
+
+      console.log('📡 EditorProvider: Chamando schemaDrivenFunnelService.getFunnel...');
+      const funnelData = await schemaDrivenFunnelService.getFunnel(funnelId);
+
+      if (funnelData && funnelData.pages) {
+        console.log('✅ EditorProvider: Dados do funil carregados com sucesso:', {
+          name: funnelData.name,
+          pagesCount: funnelData.pages.length,
+          funnelId,
+          pages: funnelData.pages.map((p, i) => ({ index: i, title: p.title, blocksCount: Array.isArray(p.blocks) ? p.blocks.length : 0 }))
+        });
+
+        // Converter páginas do funil em stepBlocks
+        const realStepBlocks: Record<string, Block[]> = {};
+
+        funnelData.pages.forEach((page: any, index: number) => {
+          const stepKey = `step-${index + 1}`;
+
+          const blocks: Block[] = Array.isArray(page.blocks)
+            ? page.blocks.map((block: any) => ({
+              id: block.id || `${stepKey}-block-${Date.now()}-${Math.random()}`,
+              type: (block.type as BlockType) || 'quiz-question-inline',
+              order: block.order || 0,
+              properties: {
+                question: block.title || block.properties?.question || page.title || 'Pergunta não definida',
+                options: block.properties?.options || block.options || [],
+                multipleSelection: block.properties?.multipleSelection || false,
+                required: block.properties?.required !== false,
+                showImages: block.properties?.showImages !== false,
+                ...(block.properties || {})
+              },
+              content: {
+                title: block.title || block.content?.title || page.title || 'Título não definido',
+                description: block.description || block.content?.description || '',
+                ...(block.content || {})
+              }
+            }))
+            : [];
+
+          // Se não houver blocos, criar um bloco de questão padrão baseado na página
+          if (blocks.length === 0 && page.title) {
+            console.log(`🔧 EditorProvider: Criando bloco padrão para página ${index + 1} (${page.title})`);
+            blocks.push({
+              id: `${stepKey}-default-block`,
+              type: 'quiz-question-inline',
+              order: 0,
+              properties: {
+                question: page.title,
+                options: [],
+                multipleSelection: false,
+                required: true,
+                showImages: true
+              },
+              content: {
+                title: page.title,
+                description: ''
+              }
+            });
+          }
+
+          if (blocks.length > 0) {
+            realStepBlocks[stepKey] = blocks;
+            console.log(`📝 EditorProvider: Step ${stepKey} preparado com ${blocks.length} blocos`);
+          }
+        });
+
+        // Atualizar estado com dados reais
+        setState(prev => ({
+          ...prev,
+          stepBlocks: {
+            ...prev.stepBlocks,
+            ...realStepBlocks
+          },
+          isLoading: false
+        }));
+
+        console.log('✅ EditorProvider: Dados reais do funil integrados ao editor:', {
+          stepKeys: Object.keys(realStepBlocks),
+          totalBlocks: Object.values(realStepBlocks).reduce((acc, blocks) => acc + blocks.length, 0),
+          funnelName: funnelData.name
+        });
+
+      } else {
+        console.warn('⚠️ EditorProvider: Funil não encontrado ou sem páginas:', { funnelId, funnelData });
+        setState(prev => ({ ...prev, isLoading: false }));
+      }
+
+    } catch (error) {
+      console.error('❌ EditorProvider: Erro ao carregar dados reais do funil:', error);
+      setState(prev => ({ ...prev, isLoading: false }));
+    }
+  }, [funnelId, setState]);  // 🚀 Carregar dados reais do funil quando funnelId mudar
+  useEffect(() => {
+    if (funnelId && funnelId !== 'quiz-estilo-completo') {
+      loadRealFunnelData();
+    }
+  }, [funnelId, loadRealFunnelData]);
+
   // 🚀 DEBOUNCE PARA SALVAMENTO: Evitar sobrecarga do sistema
   const debouncedSave = React.useRef<NodeJS.Timeout | null>(null);
   const saveToFunnelsContext = useCallback((funnelData: any) => {
