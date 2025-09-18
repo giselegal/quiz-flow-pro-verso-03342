@@ -7,6 +7,7 @@ import { Switch } from '@/components/ui/switch';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import {
     Globe,
     Link,
@@ -16,7 +17,9 @@ import {
     Save,
     Check,
     Facebook,
-    Settings
+    Settings,
+    AlertTriangle,
+    ExternalLink
 } from 'lucide-react';
 
 interface SEOSettings {
@@ -169,10 +172,15 @@ export const FunnelSettingsModal: React.FC<FunnelSettingsModalProps> = ({
                 <div className="border-b border-gray-200 p-6 bg-gray-50">
                     <div className="flex items-center justify-between">
                         <div>
-                            <h2 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
-                                <Settings className="w-6 h-6 text-[#B89B7A]" />
-                                Configurações do Funil
-                            </h2>
+                            <div className="flex items-center gap-2 mb-1">
+                                <h2 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
+                                    <Settings className="w-6 h-6 text-[#B89B7A]" />
+                                    Configurações do Funil
+                                </h2>
+                                <Badge variant="secondary" className="bg-orange-100 text-orange-700">
+                                    Depreciado
+                                </Badge>
+                            </div>
                             <p className="text-gray-600 mt-1">
                                 Configure SEO, domínio, tracking e tema para: <Badge variant="outline">{funnelName}</Badge>
                             </p>
@@ -186,6 +194,33 @@ export const FunnelSettingsModal: React.FC<FunnelSettingsModalProps> = ({
                             <X className="w-4 h-4" />
                         </Button>
                     </div>
+
+                    {/* Aviso de Migração */}
+                    <Alert className="mt-4 border-orange-200 bg-orange-50">
+                        <AlertTriangle className="h-4 w-4 text-orange-600" />
+                        <AlertDescription className="text-orange-800">
+                            <div className="flex items-center justify-between">
+                                <div>
+                                    <strong>🚀 Nova Localização!</strong>
+                                    <p className="mt-1 text-sm">
+                                        Configurações técnicas agora estão centralizadas no <strong>Painel Administrativo</strong>.
+                                        Este modal será removido em breve.
+                                    </p>
+                                </div>
+                                <Button
+                                    variant="outline"
+                                    size="sm"
+                                    className="ml-4 border-orange-300 text-orange-700 hover:bg-orange-100"
+                                    onClick={() => {
+                                        window.open('/admin/funis', '_blank');
+                                    }}
+                                >
+                                    <ExternalLink className="w-4 h-4 mr-1" />
+                                    Abrir Painel Admin
+                                </Button>
+                            </div>
+                        </AlertDescription>
+                    </Alert>
                 </div>
 
                 {/* Content */}

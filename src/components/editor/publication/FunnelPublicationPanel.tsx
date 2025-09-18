@@ -14,6 +14,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { AlertTriangle, ExternalLink } from 'lucide-react';
 
 // ============================================================================
 // TYPES
@@ -132,7 +134,12 @@ export function FunnelPublicationPanel({
             {/* Header */}
             <div className="flex items-center justify-between">
                 <div>
-                    <h2 className="text-2xl font-bold">📡 Configurações de Publicação</h2>
+                    <div className="flex items-center gap-2 mb-2">
+                        <h2 className="text-2xl font-bold">📡 Configurações de Publicação</h2>
+                        <Badge variant="secondary" className="bg-orange-100 text-orange-700">
+                            Depreciado
+                        </Badge>
+                    </div>
                     <p className="text-muted-foreground">
                         Configure domínio, resultados, SEO e tracking para seu funil
                     </p>
@@ -151,6 +158,33 @@ export function FunnelPublicationPanel({
                     </Button>
                 </div>
             </div>
+
+            {/* Aviso de Migração */}
+            <Alert className="border-orange-200 bg-orange-50">
+                <AlertTriangle className="h-4 w-4 text-orange-600" />
+                <AlertDescription className="text-orange-800">
+                    <div className="flex items-center justify-between">
+                        <div>
+                            <strong>🚀 Funcionalidades Migradas!</strong>
+                            <p className="mt-1 text-sm">
+                                Todas as configurações de <strong>publicação, domínio, SEO e analytics</strong>
+                                foram centralizadas no <strong>Painel Administrativo</strong> para melhor organização.
+                            </p>
+                        </div>
+                        <Button
+                            variant="outline"
+                            size="sm"
+                            className="ml-4 border-orange-300 text-orange-700 hover:bg-orange-100"
+                            onClick={() => {
+                                window.open('/admin/funis', '_blank');
+                            }}
+                        >
+                            <ExternalLink className="w-4 h-4 mr-1" />
+                            Usar Painel Admin
+                        </Button>
+                    </div>
+                </AlertDescription>
+            </Alert>
 
             <Separator />
 

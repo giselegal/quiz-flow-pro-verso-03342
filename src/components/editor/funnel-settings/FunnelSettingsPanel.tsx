@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import { useToast } from '@/hooks/use-toast';
 import { useFunnelSettingsHistory } from '@/hooks/editor/useFunnelSettingsHistory';
 import { SEOSettings } from './sections/SEOSettings';
@@ -10,7 +12,7 @@ import { WebhookSettings } from './sections/WebhookSettings';
 import { DomainSettings } from './sections/DomainSettings';
 import { FunnelSettings, defaultFunnelSettings } from '@/types/funnelSettings';
 import { FunnelSettingsService } from '@/services/funnelSettingsService';
-import { Save, Undo, Redo, RotateCcw } from 'lucide-react';
+import { Save, Undo, Redo, RotateCcw, ExternalLink, AlertTriangle } from 'lucide-react';
 
 interface FunnelSettingsPanelProps {
   funnelId: string;
@@ -118,7 +120,12 @@ export const FunnelSettingsPanel: React.FC<FunnelSettingsPanelProps> = ({
       <DialogContent className="max-w-4xl max-h-[90vh] overflow-hidden">
         <DialogHeader>
           <DialogTitle className="flex items-center justify-between">
-            <span>Configurações do Funil</span>
+            <div className="flex items-center gap-2">
+              <span>Configurações do Funil</span>
+              <Badge variant="secondary" className="bg-orange-100 text-orange-700">
+                Depreciado
+              </Badge>
+            </div>
             <div className="flex gap-2">
               <Button variant="outline" size="sm" onClick={handleUndo} disabled={!canUndo}>
                 <Undo className="w-4 h-4" />
@@ -136,6 +143,33 @@ export const FunnelSettingsPanel: React.FC<FunnelSettingsPanelProps> = ({
             </div>
           </DialogTitle>
         </DialogHeader>
+
+        {/* Aviso de Migração */}
+        <Alert className="border-orange-200 bg-orange-50">
+          <AlertTriangle className="h-4 w-4 text-orange-600" />
+          <AlertDescription className="text-orange-800">
+            <div className="flex items-center justify-between">
+              <div>
+                <strong>🚀 Configurações Movidas!</strong>
+                <p className="mt-1 text-sm">
+                  As configurações técnicas agora estão centralizadas no <strong>Painel Administrativo</strong>
+                  para uma melhor separação entre GESTÃO e CRIAÇÃO.
+                </p>
+              </div>
+              <Button
+                variant="outline"
+                size="sm"
+                className="ml-4 border-orange-300 text-orange-700 hover:bg-orange-100"
+                onClick={() => {
+                  window.open('/admin/funis', '_blank');
+                }}
+              >
+                <ExternalLink className="w-4 h-4 mr-1" />
+                Ir para Painel Admin
+              </Button>
+            </div>
+          </AlertDescription>
+        </Alert>
 
         <div className="overflow-y-auto">
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
