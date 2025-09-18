@@ -1,0 +1,886 @@
+{
+    "meta": {
+        "name": "Quiz Rules Configuration",
+        "version": "2.0.0",
+        "description": "Configuração centralizada para regras, validação, pontuação e comportamento do quiz",
+        "lastUpdated": "2025-01-21"
+    },
+    "stepRules": {
+        "1": {
+            "type": "form",
+            "category": "intro",
+            "validation": {
+                "type": "input",
+                "required": [
+                    "userName"
+                ],
+                "message": "Digite seu nome para continuar",
+                "minLength": 2,
+                "maxLength": 50
+            },
+            "behavior": {
+                "autoAdvance": false,
+                "showProgress": true,
+                "allowBack": false
+            },
+            "button": {
+                "text": "Começar Quiz",
+                "activationRule": "requiresValidInput",
+                "style": "primary"
+            }
+        },
+        "2": {
+            "type": "quiz-question",
+            "category": "normal",
+            "validation": {
+                "type": "selection",
+                "required": true,
+                "minSelections": 3,
+                "maxSelections": 3,
+                "message": "Selecione 3 opções para avançar"
+            },
+            "behavior": {
+                "autoAdvance": true,
+                "autoAdvanceDelay": 1000,
+                "showProgress": true,
+                "allowBack": true
+            },
+            "scoring": {
+                "enabled": true,
+                "pointsPerOption": 1,
+                "categories": [
+                    "natural",
+                    "classico",
+                    "contemporaneo",
+                    "elegante",
+                    "romantico",
+                    "sexy",
+                    "dramatico",
+                    "criativo"
+                ],
+                "weight": 1.0
+            },
+            "button": {
+                "text": "Próxima",
+                "activationRule": "requiresValidSelection",
+                "style": "primary"
+            }
+        },
+        "3": {
+            "type": "quiz-question",
+            "category": "normal",
+            "validation": {
+                "type": "selection",
+                "required": true,
+                "minSelections": 3,
+                "maxSelections": 3,
+                "message": "Selecione 3 opções para avançar"
+            },
+            "behavior": {
+                "autoAdvance": true,
+                "autoAdvanceDelay": 1000,
+                "showProgress": true,
+                "allowBack": true
+            },
+            "scoring": {
+                "enabled": true,
+                "pointsPerOption": 1,
+                "categories": [
+                    "natural",
+                    "classico",
+                    "contemporaneo",
+                    "elegante",
+                    "romantico",
+                    "sexy",
+                    "dramatico",
+                    "criativo"
+                ],
+                "weight": 1.0
+            },
+            "button": {
+                "text": "Próxima",
+                "activationRule": "requiresValidSelection",
+                "style": "primary"
+            }
+        },
+        "4": {
+            "type": "quiz-question",
+            "category": "normal",
+            "validation": {
+                "type": "selection",
+                "required": true,
+                "minSelections": 3,
+                "maxSelections": 3,
+                "message": "Selecione 3 opções para avançar"
+            },
+            "behavior": {
+                "autoAdvance": true,
+                "autoAdvanceDelay": 1000,
+                "showProgress": true,
+                "allowBack": true
+            },
+            "scoring": {
+                "enabled": true,
+                "pointsPerOption": 1,
+                "categories": [
+                    "natural",
+                    "classico",
+                    "contemporaneo",
+                    "elegante",
+                    "romantico",
+                    "sexy",
+                    "dramatico",
+                    "criativo"
+                ],
+                "weight": 1.0
+            },
+            "button": {
+                "text": "Próxima",
+                "activationRule": "requiresValidSelection",
+                "style": "primary"
+            }
+        },
+        "5": {
+            "type": "quiz-question",
+            "category": "normal",
+            "validation": {
+                "type": "selection",
+                "required": true,
+                "minSelections": 3,
+                "maxSelections": 3,
+                "message": "Selecione 3 opções para avançar"
+            },
+            "behavior": {
+                "autoAdvance": true,
+                "autoAdvanceDelay": 1000,
+                "showProgress": true,
+                "allowBack": true
+            },
+            "scoring": {
+                "enabled": true,
+                "pointsPerOption": 1,
+                "categories": [
+                    "natural",
+                    "classico",
+                    "contemporaneo",
+                    "elegante",
+                    "romantico",
+                    "sexy",
+                    "dramatico",
+                    "criativo"
+                ],
+                "weight": 1.0
+            },
+            "button": {
+                "text": "Próxima",
+                "activationRule": "requiresValidSelection",
+                "style": "primary"
+            }
+        },
+        "6": {
+            "type": "quiz-question",
+            "category": "normal",
+            "validation": {
+                "type": "selection",
+                "required": true,
+                "minSelections": 3,
+                "maxSelections": 3,
+                "message": "Selecione 3 opções para avançar"
+            },
+            "behavior": {
+                "autoAdvance": true,
+                "autoAdvanceDelay": 1000,
+                "showProgress": true,
+                "allowBack": true
+            },
+            "scoring": {
+                "enabled": true,
+                "pointsPerOption": 1,
+                "categories": [
+                    "natural",
+                    "classico",
+                    "contemporaneo",
+                    "elegante",
+                    "romantico",
+                    "sexy",
+                    "dramatico",
+                    "criativo"
+                ],
+                "weight": 1.0
+            },
+            "button": {
+                "text": "Próxima",
+                "activationRule": "requiresValidSelection",
+                "style": "primary"
+            }
+        },
+        "7": {
+            "type": "quiz-question",
+            "category": "normal",
+            "validation": {
+                "type": "selection",
+                "required": true,
+                "minSelections": 3,
+                "maxSelections": 3,
+                "message": "Selecione 3 opções para avançar"
+            },
+            "behavior": {
+                "autoAdvance": true,
+                "autoAdvanceDelay": 1000,
+                "showProgress": true,
+                "allowBack": true
+            },
+            "scoring": {
+                "enabled": true,
+                "pointsPerOption": 1,
+                "categories": [
+                    "natural",
+                    "classico",
+                    "contemporaneo",
+                    "elegante",
+                    "romantico",
+                    "sexy",
+                    "dramatico",
+                    "criativo"
+                ],
+                "weight": 1.0
+            },
+            "button": {
+                "text": "Próxima",
+                "activationRule": "requiresValidSelection",
+                "style": "primary"
+            }
+        },
+        "8": {
+            "type": "quiz-question",
+            "category": "normal",
+            "validation": {
+                "type": "selection",
+                "required": true,
+                "minSelections": 3,
+                "maxSelections": 3,
+                "message": "Selecione 3 opções para avançar"
+            },
+            "behavior": {
+                "autoAdvance": true,
+                "autoAdvanceDelay": 1000,
+                "showProgress": true,
+                "allowBack": true
+            },
+            "scoring": {
+                "enabled": true,
+                "pointsPerOption": 1,
+                "categories": [
+                    "natural",
+                    "classico",
+                    "contemporaneo",
+                    "elegante",
+                    "romantico",
+                    "sexy",
+                    "dramatico",
+                    "criativo"
+                ],
+                "weight": 1.0
+            },
+            "button": {
+                "text": "Próxima",
+                "activationRule": "requiresValidSelection",
+                "style": "primary"
+            }
+        },
+        "9": {
+            "type": "quiz-question",
+            "category": "normal",
+            "validation": {
+                "type": "selection",
+                "required": true,
+                "minSelections": 3,
+                "maxSelections": 3,
+                "message": "Selecione 3 opções para avançar"
+            },
+            "behavior": {
+                "autoAdvance": true,
+                "autoAdvanceDelay": 1000,
+                "showProgress": true,
+                "allowBack": true
+            },
+            "scoring": {
+                "enabled": true,
+                "pointsPerOption": 1,
+                "categories": [
+                    "natural",
+                    "classico",
+                    "contemporaneo",
+                    "elegante",
+                    "romantico",
+                    "sexy",
+                    "dramatico",
+                    "criativo"
+                ],
+                "weight": 1.0
+            },
+            "button": {
+                "text": "Próxima",
+                "activationRule": "requiresValidSelection",
+                "style": "primary"
+            }
+        },
+        "10": {
+            "type": "quiz-question",
+            "category": "normal",
+            "validation": {
+                "type": "selection",
+                "required": true,
+                "minSelections": 3,
+                "maxSelections": 3,
+                "message": "Selecione 3 opções para avançar"
+            },
+            "behavior": {
+                "autoAdvance": true,
+                "autoAdvanceDelay": 1000,
+                "showProgress": true,
+                "allowBack": true
+            },
+            "scoring": {
+                "enabled": true,
+                "pointsPerOption": 1,
+                "categories": [
+                    "natural",
+                    "classico",
+                    "contemporaneo",
+                    "elegante",
+                    "romantico",
+                    "sexy",
+                    "dramatico",
+                    "criativo"
+                ],
+                "weight": 1.0
+            },
+            "button": {
+                "text": "Próxima",
+                "activationRule": "requiresValidSelection",
+                "style": "primary"
+            }
+        },
+        "11": {
+            "type": "quiz-question",
+            "category": "normal",
+            "validation": {
+                "type": "selection",
+                "required": true,
+                "minSelections": 3,
+                "maxSelections": 3,
+                "message": "Selecione 3 opções para avançar"
+            },
+            "behavior": {
+                "autoAdvance": true,
+                "autoAdvanceDelay": 1000,
+                "showProgress": true,
+                "allowBack": true
+            },
+            "scoring": {
+                "enabled": true,
+                "pointsPerOption": 1,
+                "categories": [
+                    "natural",
+                    "classico",
+                    "contemporaneo",
+                    "elegante",
+                    "romantico",
+                    "sexy",
+                    "dramatico",
+                    "criativo"
+                ],
+                "weight": 1.0
+            },
+            "button": {
+                "text": "Próxima",
+                "activationRule": "requiresValidSelection",
+                "style": "primary"
+            }
+        },
+        "12": {
+            "type": "transition",
+            "category": "intermediate",
+            "validation": {
+                "type": "none",
+                "required": false,
+                "message": ""
+            },
+            "behavior": {
+                "autoAdvance": false,
+                "showProgress": true,
+                "allowBack": true
+            },
+            "button": {
+                "text": "Continuar",
+                "activationRule": "always",
+                "style": "primary"
+            }
+        },
+        "13": {
+            "type": "strategic-question",
+            "category": "strategic",
+            "validation": {
+                "type": "selection",
+                "required": true,
+                "minSelections": 1,
+                "maxSelections": 1,
+                "message": "Selecione uma opção para continuar"
+            },
+            "behavior": {
+                "autoAdvance": false,
+                "showProgress": true,
+                "allowBack": true
+            },
+            "scoring": {
+                "enabled": true,
+                "pointsPerOption": 2,
+                "categories": [
+                    "natural",
+                    "classico",
+                    "contemporaneo",
+                    "elegante",
+                    "romantico",
+                    "sexy",
+                    "dramatico",
+                    "criativo"
+                ],
+                "weight": 1.5
+            },
+            "button": {
+                "text": "Próxima",
+                "activationRule": "requiresValidSelection",
+                "style": "primary"
+            }
+        },
+        "14": {
+            "type": "strategic-question",
+            "category": "strategic",
+            "validation": {
+                "type": "selection",
+                "required": true,
+                "minSelections": 1,
+                "maxSelections": 1,
+                "message": "Selecione uma opção para continuar"
+            },
+            "behavior": {
+                "autoAdvance": false,
+                "showProgress": true,
+                "allowBack": true
+            },
+            "scoring": {
+                "enabled": true,
+                "pointsPerOption": 2,
+                "categories": [
+                    "natural",
+                    "classico",
+                    "contemporaneo",
+                    "elegante",
+                    "romantico",
+                    "sexy",
+                    "dramatico",
+                    "criativo"
+                ],
+                "weight": 1.5
+            },
+            "button": {
+                "text": "Próxima",
+                "activationRule": "requiresValidSelection",
+                "style": "primary"
+            }
+        },
+        "15": {
+            "type": "strategic-question",
+            "category": "strategic",
+            "validation": {
+                "type": "selection",
+                "required": true,
+                "minSelections": 1,
+                "maxSelections": 1,
+                "message": "Selecione uma opção para continuar"
+            },
+            "behavior": {
+                "autoAdvance": false,
+                "showProgress": true,
+                "allowBack": true
+            },
+            "scoring": {
+                "enabled": true,
+                "pointsPerOption": 2,
+                "categories": [
+                    "natural",
+                    "classico",
+                    "contemporaneo",
+                    "elegante",
+                    "romantico",
+                    "sexy",
+                    "dramatico",
+                    "criativo"
+                ],
+                "weight": 1.5
+            },
+            "button": {
+                "text": "Próxima",
+                "activationRule": "requiresValidSelection",
+                "style": "primary"
+            }
+        },
+        "16": {
+            "type": "strategic-question",
+            "category": "strategic",
+            "validation": {
+                "type": "selection",
+                "required": true,
+                "minSelections": 1,
+                "maxSelections": 1,
+                "message": "Selecione uma opção para continuar"
+            },
+            "behavior": {
+                "autoAdvance": false,
+                "showProgress": true,
+                "allowBack": true
+            },
+            "scoring": {
+                "enabled": true,
+                "pointsPerOption": 2,
+                "categories": [
+                    "natural",
+                    "classico",
+                    "contemporaneo",
+                    "elegante",
+                    "romantico",
+                    "sexy",
+                    "dramatico",
+                    "criativo"
+                ],
+                "weight": 1.5
+            },
+            "button": {
+                "text": "Próxima",
+                "activationRule": "requiresValidSelection",
+                "style": "primary"
+            }
+        },
+        "17": {
+            "type": "strategic-question",
+            "category": "strategic",
+            "validation": {
+                "type": "selection",
+                "required": true,
+                "minSelections": 1,
+                "maxSelections": 1,
+                "message": "Selecione uma opção para continuar"
+            },
+            "behavior": {
+                "autoAdvance": false,
+                "showProgress": true,
+                "allowBack": true
+            },
+            "scoring": {
+                "enabled": true,
+                "pointsPerOption": 2,
+                "categories": [
+                    "natural",
+                    "classico",
+                    "contemporaneo",
+                    "elegante",
+                    "romantico",
+                    "sexy",
+                    "dramatico",
+                    "criativo"
+                ],
+                "weight": 1.5
+            },
+            "button": {
+                "text": "Próxima",
+                "activationRule": "requiresValidSelection",
+                "style": "primary"
+            }
+        },
+        "18": {
+            "type": "strategic-question",
+            "category": "strategic",
+            "validation": {
+                "type": "selection",
+                "required": true,
+                "minSelections": 1,
+                "maxSelections": 1,
+                "message": "Selecione uma opção para continuar"
+            },
+            "behavior": {
+                "autoAdvance": false,
+                "showProgress": true,
+                "allowBack": true
+            },
+            "scoring": {
+                "enabled": true,
+                "pointsPerOption": 2,
+                "categories": [
+                    "natural",
+                    "classico",
+                    "contemporaneo",
+                    "elegante",
+                    "romantico",
+                    "sexy",
+                    "dramatico",
+                    "criativo"
+                ],
+                "weight": 1.5
+            },
+            "button": {
+                "text": "Ver Resultado",
+                "activationRule": "requiresValidSelection",
+                "style": "primary"
+            }
+        },
+        "19": {
+            "type": "transition",
+            "category": "final",
+            "validation": {
+                "type": "none",
+                "required": false,
+                "message": ""
+            },
+            "behavior": {
+                "autoAdvance": false,
+                "showProgress": true,
+                "allowBack": false
+            },
+            "button": {
+                "text": "Ver Resultado",
+                "activationRule": "always",
+                "style": "primary"
+            }
+        },
+        "20": {
+            "type": "result",
+            "category": "result",
+            "validation": {
+                "type": "none",
+                "required": false,
+                "message": ""
+            },
+            "behavior": {
+                "autoAdvance": false,
+                "showProgress": false,
+                "allowBack": false
+            },
+            "button": {
+                "text": "Baixar Guia",
+                "activationRule": "always",
+                "style": "secondary"
+            }
+        },
+        "21": {
+            "type": "offer",
+            "category": "offer",
+            "validation": {
+                "type": "none",
+                "required": false,
+                "message": ""
+            },
+            "behavior": {
+                "autoAdvance": false,
+                "showProgress": false,
+                "allowBack": false
+            },
+            "button": {
+                "text": "Quero Saber Mais",
+                "activationRule": "always",
+                "style": "cta"
+            }
+        }
+    },
+    "globalScoringConfig": {
+        "categories": [
+            {
+                "id": "natural",
+                "name": "Natural",
+                "description": "Estilo que valoriza a simplicidade e conforto",
+                "color": "#8FBC8F",
+                "weight": 1.0
+            },
+            {
+                "id": "classico",
+                "name": "Clássico",
+                "description": "Estilo elegante e atemporal",
+                "color": "#4682B4",
+                "weight": 1.0
+            },
+            {
+                "id": "contemporaneo",
+                "name": "Contemporâneo",
+                "description": "Estilo moderno e atual",
+                "color": "#696969",
+                "weight": 1.0
+            },
+            {
+                "id": "elegante",
+                "name": "Elegante",
+                "description": "Estilo sofisticado e refinado",
+                "color": "#2F2F2F",
+                "weight": 1.0
+            },
+            {
+                "id": "romantico",
+                "name": "Romântico",
+                "description": "Estilo feminino e delicado",
+                "color": "#FFB6C1",
+                "weight": 1.0
+            },
+            {
+                "id": "sexy",
+                "name": "Sexy",
+                "description": "Estilo sensual e marcante",
+                "color": "#8B0000",
+                "weight": 1.0
+            },
+            {
+                "id": "dramatico",
+                "name": "Dramático",
+                "description": "Estilo ousado e impactante",
+                "color": "#000000",
+                "weight": 1.0
+            },
+            {
+                "id": "criativo",
+                "name": "Criativo",
+                "description": "Estilo único e inovador",
+                "color": "#9400D3",
+                "weight": 1.0
+            }
+        ],
+        "algorithm": {
+            "type": "weighted_sum",
+            "normalQuestionWeight": 0.7,
+            "strategicQuestionWeight": 0.3,
+            "minimumScoreDifference": 0.1,
+            "tieBreaker": "first_selection"
+        },
+        "resultCalculation": {
+            "primaryStyle": "highest_score",
+            "secondaryStyles": "top_3_excluding_primary",
+            "showPercentages": true,
+            "roundTo": 1
+        }
+    },
+    "validationMessages": {
+        "pt": {
+            "step1": {
+                "emptyName": "Digite seu nome para continuar",
+                "tooShort": "Nome deve ter pelo menos 2 caracteres",
+                "tooLong": "Nome deve ter no máximo 50 caracteres"
+            },
+            "quizQuestions": {
+                "noSelection": "Selecione 3 opções para avançar",
+                "insufficientSelection": "Selecione pelo menos 3 opções",
+                "tooManySelections": "Selecione no máximo 3 opções"
+            },
+            "strategicQuestions": {
+                "noSelection": "Selecione uma opção para continuar",
+                "tooManySelections": "Selecione apenas uma opção"
+            },
+            "general": {
+                "loading": "Carregando...",
+                "error": "Ocorreu um erro. Tente novamente.",
+                "success": "Sucesso!"
+            }
+        }
+    },
+    "behaviorPresets": {
+        "autoAdvanceSteps": [
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11
+        ],
+        "manualAdvanceSteps": [
+            1,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21
+        ],
+        "scoringSteps": [
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18
+        ],
+        "validationRequiredSteps": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18
+        ]
+    },
+    "uiConfig": {
+        "buttons": {
+            "primary": {
+                "background": "linear-gradient(90deg, #B89B7A, #aa6b5d)",
+                "color": "#fff",
+                "borderRadius": "10px",
+                "shadow": "0 4px 14px rgba(184, 155, 122, 0.15)",
+                "disabledOpacity": 0.6
+            },
+            "secondary": {
+                "background": "#fff",
+                "color": "#B89B7A",
+                "border": "2px solid #B89B7A",
+                "borderRadius": "10px",
+                "disabledOpacity": 0.4
+            },
+            "cta": {
+                "background": "linear-gradient(90deg, #aa6b5d, #B89B7A)",
+                "color": "#fff",
+                "borderRadius": "12px",
+                "shadow": "0 6px 20px rgba(170, 107, 93, 0.25)",
+                "scale": "1.05"
+            }
+        },
+        "animations": {
+            "autoAdvanceDelay": 1000,
+            "transitionDuration": 300,
+            "buttonHover": "scale(1.02)",
+            "optionSelect": "scale(0.98)"
+        }
+    }
+}

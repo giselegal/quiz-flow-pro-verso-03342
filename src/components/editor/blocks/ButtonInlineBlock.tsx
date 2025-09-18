@@ -8,11 +8,15 @@ import { trackQuizStart } from '../../../utils/analytics';
 import { useOptimizedScheduler } from '@/hooks/useOptimizedScheduler';
 import { StorageService } from '@/services/core/StorageService';
 import { useGlobalEventManager } from '@/hooks/useGlobalEventManager';
+import { useQuizRulesConfig } from '@/hooks/useQuizRulesConfig';
+import { useUnifiedQuizState } from '@/hooks/useUnifiedQuizState';
 
 /**
  * ButtonInlineBlock - Componente modular inline horizontal
  * Botão responsivo e configurável com múltiplas variantes
  * MODULAR | REUTILIZÁVEL | RESPONSIVO | INDEPENDENTE
+ * 
+ * ✅ CONFIGURAÇÃO CENTRALIZADA: Usa useQuizRulesConfig para regras automáticas
  */
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
@@ -127,6 +131,33 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
     loading = false,
   } = (block?.properties as any) || {};
 
+  // 🎯 APLICAR CONFIGURAÇÕES AUTOMÁTICAS POR ETAPA
+  const { getStepRules } = useQuizRulesConfig();
+  const { getCurrentStep } = useUnifiedQuizState();
+
+  // Obter etapa atual
+  const currentStep = getCurrentStep();
+  const stepRule = getStepRules(currentStep);
+
+  // Sobrepor configurações baseado na configuração JSON centralizada
+  const finalRequiresValidInput = stepRule?.validation.type === 'input' && stepRule.validation.required || requiresValidInput;
+  const finalRequiresValidSelection = stepRule?.validation.type === 'selection' && stepRule.validation.required || requiresValidSelection;
+  const finalAutoAdvanceOnComplete = stepRule?.behavior.autoAdvance || autoAdvanceOnComplete;
+  const finalAutoAdvanceDelay = stepRule?.behavior.autoAdvanceDelay || autoAdvanceDelay;
+
+  console.log('🎯 ButtonInlineBlock - Configurações aplicadas:', {
+    currentStep,
+    stepRule: stepRule ? {
+      type: stepRule.type,
+      validation: stepRule.validation,
+      behavior: stepRule.behavior
+    } : null,
+    finalRequiresValidInput,
+    finalRequiresValidSelection,
+    finalAutoAdvanceOnComplete,
+    finalAutoAdvanceDelay
+  });
+
   // Suporte a controle externo de estado (eventos globais)
   const buttonId =
     (block?.id as string) || (block?.properties as any)?.buttonId || 'cta-button-modular';
@@ -156,11 +187,11 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
   }, [buttonId, addEventListener]);
 
   const [isValidated, setIsValidated] = useState(false);
-  const [isSelectionValid, setIsSelectionValid] = useState(!requiresValidSelection);
+  const [isSelectionValid, setIsSelectionValid] = useState(!finalRequiresValidSelection);
 
   // Efeito para verificar validação de input quando necessário
   useEffect(() => {
-    if (requiresValidInput) {
+    if (finalRequiresValidInput) {
       // Verificar se há input válido (exemplo: nome preenchido)
       userResponseService
         .getResponse('intro-name-input')
@@ -173,18 +204,18 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
     } else {
       setIsValidated(true);
     }
-  }, [requiresValidInput]);
+  }, [finalRequiresValidInput]);
 
   // Efeito para ouvir mudanças de seleção do quiz (validação de seleção)
   useEffect(() => {
     const handleQuizSelectionChange = (event: Event) => {
       const e = event as CustomEvent<any>;
       const valid = typeof e.detail?.isValid === 'boolean' ? e.detail.isValid : !!e.detail?.valid;
-      if (requiresValidSelection) setIsSelectionValid(valid);
+      if (finalRequiresValidSelection) setIsSelectionValid(valid);
     };
 
     const handleQuizInputChange = (event: Event) => {
-      if (!requiresValidInput) return;
+      if (!finalRequiresValidInput) return;
       const e = event as CustomEvent<any>;
       const { value, valid } = e.detail || {};
       const ok = typeof value === 'string' ? value.trim().length > 0 : !!valid;
@@ -195,10 +226,10 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
     let cleanup1: (() => void) | null = null;
     let cleanup2: (() => void) | null = null;
 
-    if (requiresValidSelection) {
+    if (finalRequiresValidSelection) {
       cleanup1 = addEventListener('quiz-selection-change', handleQuizSelectionChange);
     }
-    if (requiresValidInput) {
+    if (finalRequiresValidInput) {
       cleanup2 = addEventListener('quiz-input-change', handleQuizInputChange);
     }
 
@@ -206,14 +237,14 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
       cleanup1?.();
       cleanup2?.();
     };
-  }, [requiresValidSelection, requiresValidInput, addEventListener]);
+  }, [finalRequiresValidSelection, finalRequiresValidInput, addEventListener]);
 
   // Determinar se o botão deve estar desabilitado
   const isButtonDisabled =
     externalDisabled ??
     (disabled ||
-      (requiresValidInput && !isValidated) ||
-      (requiresValidSelection && !isSelectionValid) ||
+      (finalRequiresValidInput && !isValidated) ||
+      (finalRequiresValidSelection && !isSelectionValid) ||
       loading);
   // 🚀 Função para inicializar quiz no Supabase
   const initializeQuizWithSupabase = async (userName: string) => {
@@ -450,7 +481,7 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
           e.stopPropagation();
           // Validação robusta: se exigir input válido, checar DOM e storage em tempo real
           let allowProceed = true;
-          if (requiresValidInput) {
+          if (finalRequiresValidInput) {
             // 1) Tentar pegar diretamente do DOM (campo de nome)
             const nameInputEl = document.querySelector(
               'input[name="userName"]'
@@ -474,7 +505,7 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
           if (!allowProceed) {
             return;
           }
-          if (requiresValidSelection && !isSelectionValid) {
+          if (finalRequiresValidSelection && !isSelectionValid) {
             return;
           }
 
@@ -542,12 +573,12 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
 
               // Navegação: se configurado para auto-advance, usa nextStepId do próprio botão
               const targetStep = nextStepId || 'step-2';
-              if (autoAdvanceOnComplete) {
+              if (finalAutoAdvanceOnComplete) {
                 const { schedule } = useOptimizedScheduler();
                 return schedule('button-auto-advance', () => {
                   const detail = { stepId: targetStep, source: 'step1-button' } as any;
                   import('@/utils/stepEvents').then(({ dispatchNavigate }) => dispatchNavigate(targetStep, detail));
-                }, Number(autoAdvanceDelay) || 0);
+                }, Number(finalAutoAdvanceDelay) || 0);
               }
             }
           }

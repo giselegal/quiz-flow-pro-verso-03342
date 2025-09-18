@@ -169,7 +169,7 @@ const SortableBlockWrapperBase: React.FC<SortableBlockWrapperProps> = ({
         </div>
 
         {/* 🎯 RENDERIZAÇÃO UNIFICADA: Usando UniversalBlockRenderer como na produção */}
-        <div className="pointer-events-none select-none" aria-disabled>
+        <div className="pointer-events-auto select-none" aria-disabled={false}>
           <React.Suspense
             fallback={
               <div className="animate-pulse bg-gray-200 h-16 rounded flex items-center justify-center">

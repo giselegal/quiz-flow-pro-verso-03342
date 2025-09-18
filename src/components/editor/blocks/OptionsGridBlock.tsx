@@ -7,6 +7,7 @@ import { unifiedQuizStorage } from '@/services/core/UnifiedQuizStorage';
 import { StorageService } from '@/services/core/StorageService';
 import { safePlaceholder } from '@/utils/placeholder';
 import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
+import { useQuizRulesConfig } from '@/hooks/useQuizRulesConfig';
 
 interface Option {
   id: string;
@@ -381,7 +382,49 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
     }
   })();
 
+  // 🎯 CONFIGURAÇÃO CENTRALIZADA POR ETAPA
+  const { getStepRules } = useQuizRulesConfig();
+
+  const getStepBehavior = (stepNumber: number) => {
+    const stepRule = getStepRules(stepNumber);
+
+    if (!stepRule) {
+      console.warn(`⚠️ OptionsGridBlock: Configuração não encontrada para step ${stepNumber}`);
+      return {
+        requiresValidInput: false,
+        requiresValidSelection: false,
+        autoAdvance: false,
+        autoAdvanceDelay: 1000,
+        validationMessage: 'Erro: configuração não encontrada'
+      };
+    }
+
+    console.log(`✅ OptionsGridBlock: Comportamento configurado para step ${stepNumber}:`, {
+      type: stepRule.type,
+      validation: stepRule.validation,
+      behavior: stepRule.behavior
+    });
+
+    return {
+      requiresValidInput: stepRule.validation.type === 'input' && stepRule.validation.required,
+      requiresValidSelection: stepRule.validation.type === 'selection' && stepRule.validation.required,
+      autoAdvance: stepRule.behavior.autoAdvance,
+      autoAdvanceDelay: stepRule.behavior.autoAdvanceDelay || 1000,
+      validationMessage: stepRule.validation.message
+    };
+  };
+
   const handleOptionSelect = (optionId: string) => {
+    console.log('🔍 OptionsGridBlock: handleOptionSelect called', {
+      optionId,
+      isPreviewMode,
+      multipleSelection,
+      currentPreviewSelections: previewSelections,
+      currentSelectedOptions: selectedOptions,
+      allowDeselection,
+      maxSelections
+    });
+
     if (isPreviewMode) {
       // Preview mode: Handle selection with real behavior
       let newSelections: string[];
@@ -411,6 +454,7 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
         }
       }
 
+      console.log('✅ Preview mode: new selections', newSelections);
       setPreviewSelections(newSelections);
 
       // Persistir seleções para validação centralizada e pontuação
@@ -528,9 +572,13 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
       }
     } else {
       // Editor mode: Update properties and emit validation event for editor UX
+      console.log('🎯 Editor mode: processing selection');
+
       let newSelections: string[];
       if (multipleSelection) {
         const currentSelections = selectedOptions || [];
+        console.log('📊 Current selections in editor:', currentSelections);
+
         if (currentSelections.includes(optionId)) {
           newSelections = allowDeselection
             ? currentSelections.filter((id: string) => id !== optionId)
@@ -543,9 +591,12 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
             newSelections = currentSelections;
           }
         }
+
+        console.log('✅ New selections (multiple):', newSelections);
         onPropertyChange?.('selectedOptions', newSelections);
       } else {
         newSelections = [optionId];
+        console.log('✅ New selection (single):', newSelections);
         onPropertyChange?.('selectedOption', optionId);
       }
 
@@ -583,46 +634,42 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
         })
       );
 
-      // Autoavanço somente nas etapas 2–11, ao atingir a última seleção obrigatória
-      if (isScoringPhase(step)) {
-        // Evitar múltiplos disparos se usuário clicar rapidamente
-        if (hasRequiredSelections && !autoAdvanceScheduledRef.current) {
-          autoAdvanceScheduledRef.current = true;
+      // 🎯 APLICAR COMPORTAMENTO ESPECÍFICO POR ETAPA
+      const currentStep = (window as any)?.__quizCurrentStep ?? step ?? 1;
+      const stepBehavior = getStepBehavior(currentStep);
 
-          // Ativa visualmente e funcionalmente o botão "Avançar" via evento acima,
-          // e após um pequeno delay, navega automaticamente.
-          const nextStep = Math.min(step + 1, 21);
-          const delayMs = Math.max(
-            200,
-            Math.min(1200, (block?.properties as any)?.autoAdvanceDelay ?? 600)
+      // Autoavanço baseado na configuração da etapa
+      if (stepBehavior.autoAdvance && hasRequiredSelections && !autoAdvanceScheduledRef.current) {
+        autoAdvanceScheduledRef.current = true;
+
+        // Ativa visualmente e funcionalmente o botão "Avançar" via evento acima,
+        // e após um pequeno delay, navega automaticamente.
+        const nextStep = Math.min(currentStep + 1, 21);
+        const delayMs = stepBehavior.autoAdvanceDelay ?? 1000;
+
+        console.log('🚀 Auto-avanço ativado para etapa', currentStep, '→', nextStep);
+
+        cancel('options-grid-editor-auto-advance');
+        schedule('options-grid-editor-auto-advance', () => {
+          // Dispara ambos eventos para máxima compatibilidade
+          window.dispatchEvent(
+            new CustomEvent('navigate-to-step', {
+              detail: { stepId: nextStep, source: 'options-grid-auto-advance' },
+            })
+          );
+          window.dispatchEvent(
+            new CustomEvent('quiz-navigate-to-step', {
+              detail: { stepId: nextStep, source: 'options-grid-auto-advance' },
+            })
           );
 
-          cancel('options-grid-editor-auto-advance');
-          schedule('options-grid-editor-auto-advance', () => {
-            // Dispara ambos eventos para máxima compatibilidade
-            window.dispatchEvent(
-              new CustomEvent('navigate-to-step', {
-                detail: { stepId: nextStep, source: 'options-grid-auto-advance' },
-              })
-            );
-            window.dispatchEvent(
-              new CustomEvent('quiz-navigate-to-step', {
-                detail: { stepId: nextStep, source: 'options-grid-auto-advance' },
-              })
-            );
-
-            // Libera para um próximo uso quando o usuário retornar/alterar
-            autoAdvanceScheduledRef.current = false;
-          }, delayMs, 'timeout');
-        }
-
-        // Se caiu abaixo do requisito, libera nova tentativa
-        if (!hasRequiredSelections) {
+          // Libera para um próximo uso quando o usuário retornar/alterar
           autoAdvanceScheduledRef.current = false;
-          cancel('options-grid-editor-auto-advance');
-        }
-      } else {
-        // Fases sem autoavanço (1 e 13–18): apenas ativação visual/funcional do botão "Avançar"
+        }, delayMs, 'timeout');
+      }
+
+      // Se não tem auto-avanço ativado ou não há seleções suficientes, limpar tentativas
+      if (!stepBehavior.autoAdvance || !hasRequiredSelections) {
         autoAdvanceScheduledRef.current = false;
         cancel('options-grid-editor-auto-advance');
       }
@@ -716,7 +763,18 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
               }}
               className={`rounded-lg border p-4 transition-all duration-200 cursor-pointer ${isSelectedOption ? '' : 'border-neutral-200 bg-white'
                 } ${cardLayoutClass}`}
-              onClick={() => handleOptionSelect(opt.id)}
+              onClick={(e) => {
+                console.log('🖱️ Option clicked!', {
+                  optionId: opt.id,
+                  event: e,
+                  currentTarget: e.currentTarget,
+                  isPreviewMode,
+                  multipleSelection
+                });
+                e.preventDefault();
+                e.stopPropagation();
+                handleOptionSelect(opt.id);
+              }}
               onMouseEnter={e => {
                 (e.currentTarget.style as any).boxShadow = hoverStyles.boxShadow as string;
               }}

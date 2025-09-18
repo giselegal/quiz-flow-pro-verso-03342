@@ -3,6 +3,7 @@ import { isScorableQuestion } from '@/core/constants/quiz';
 import { QuizAnswer, QuizQuestion, QuizResult, StyleResult } from '@/types/quiz';
 import { useCallback, useState } from 'react';
 import { StorageService } from '@/services/core/StorageService';
+import { useQuizRulesConfig } from './useQuizRulesConfig';
 
 // ✅ INTERFACE PARA QUESTÕES ESTRATÉGICAS
 interface StrategicAnswer {
@@ -21,7 +22,10 @@ export const useQuizLogic = () => {
   const [quizResult, setQuizResult] = useState<QuizResult | null>(null);
   const [totalQuestions, setTotalQuestions] = useState(0);
   // ✅ NOVO: Estado para capturar nome do usuário na Etapa 1
-  const [userName, setUserName] = useState<string>(StorageService.safeGetString('userName') || StorageService.safeGetString('quizUserName') || '');
+  const [userName, setUserName] = useState<string>('');
+
+  // ✅ INTEGRAÇÃO: Conectar com configuração centralizada
+  const { config } = useQuizRulesConfig();
 
   const initializeQuiz = (questions: QuizQuestion[]) => {
     setCurrentQuestionIndex(0);
@@ -136,43 +140,114 @@ export const useQuizLogic = () => {
 
   const calculateResults = useCallback(
     (answers: QuizAnswer[]): QuizResult => {
-      const styleScores = calculateStyleScores(answers);
+      // ✅ NOVO: Usar UnifiedCalculationEngine consolidado
+      console.log('🎯 useQuizLogic: Usando UnifiedCalculationEngine para cálculo');
 
-      const sortedStyles = Object.entries(styleScores).sort(
-        ([, scoreA], [, scoreB]) => scoreB - scoreA
-      );
-      const topStyle = sortedStyles[0]?.[0] || 'Natural';
-
-      // Total de pontos somando todos os estilos (considera multi-seleção por questão)
-      const totalPoints = Object.values(styleScores).reduce((acc, v) => acc + (v || 0), 0);
-
-      const primaryResult = createStyleResult(topStyle, styleScores[topStyle] || 0, totalPoints);
-
-      const secondaryResults = sortedStyles
-        .slice(1, 4)
-        .map(([category, score]) => createStyleResult(category, score, totalPoints));
-
-      // ✅ PERSONALIZAÇÃO: Incluir nome do usuário no resultado
       const currentUserName =
         userName ||
         StorageService.safeGetString('userName') ||
         StorageService.safeGetString('quizUserName') || '';
 
-      const result: QuizResult = {
-        primaryStyle: primaryResult,
-        secondaryStyles: secondaryResults,
-        totalQuestions: answers.length,
-        completedAt: new Date(),
-        scores: styleScores,
-        // ✅ NOVO: Dados personalizados
-        userData: {
-          name: currentUserName,
-          completionTime: new Date(),
-          strategicAnswersCount: strategicAnswers.length,
-        },
-      };
+      try {
+        // Importar dinamicamente para evitar dependências circulares
+        const { UnifiedCalculationEngine } = require('@/utils/UnifiedCalculationEngine');
 
-      return result;
+        // Criar engine com configuração centralizada
+        const engine = new UnifiedCalculationEngine(config || undefined);
+
+        const engineResult = engine.calculateResults(answers, {
+          includeUserData: true,
+          userName: currentUserName,
+          strategicAnswersCount: strategicAnswers.length,
+          tieBreakStrategy: config?.globalScoringConfig?.algorithm?.tieBreaker === 'first_selection'
+            ? 'first-answer'
+            : 'highest-score',
+          debug: process.env.NODE_ENV === 'development'
+        });
+
+        // Mapear resultado do engine para interface esperada pelo useQuizLogic
+        const primaryStyleData = engineResult.scores.find((s: any) => s.style === engineResult.primaryStyle);
+        const secondaryStylesData = engineResult.scores.filter((s: any) =>
+          engineResult.secondaryStyles.includes(s.style)
+        );
+
+        const mappedResult: QuizResult = {
+          primaryStyle: {
+            category: engineResult.primaryStyle,
+            score: primaryStyleData?.points || 0,
+            percentage: primaryStyleData?.percentage || 0,
+            style: engineResult.primaryStyle.toLowerCase(),
+            points: primaryStyleData?.points || 0,
+            rank: 1,
+          },
+          secondaryStyles: secondaryStylesData.map((styleData: any, index: number) => ({
+            category: styleData.style,
+            score: styleData.points,
+            percentage: styleData.percentage,
+            style: styleData.style.toLowerCase(),
+            points: styleData.points,
+            rank: index + 2,
+          })),
+          totalQuestions: engineResult.totalQuestions,
+          completedAt: engineResult.completedAt,
+          scores: Object.fromEntries(
+            engineResult.scores.map((s: any) => [s.style, s.points])
+          ),
+          // Dados de compatibilidade
+          predominantStyle: engineResult.primaryStyle,
+          complementaryStyles: engineResult.secondaryStyles,
+          styleScores: Object.fromEntries(
+            engineResult.scores.map((s: any) => [s.style, s.points])
+          ),
+          participantName: currentUserName,
+          userData: engineResult.userData
+        };
+
+        console.log('✅ useQuizLogic: Resultado calculado via UnifiedCalculationEngine:', {
+          primaryStyle: mappedResult.primaryStyle.category,
+          percentage: mappedResult.primaryStyle.percentage,
+          totalQuestions: mappedResult.totalQuestions,
+          usingCentralizedConfig: !!config
+        });
+
+        return mappedResult;
+      } catch (error) {
+        console.warn('⚠️ useQuizLogic: Erro no UnifiedCalculationEngine, usando fallback:', error);
+
+        // FALLBACK: Manter implementação original como backup
+        const styleScores = calculateStyleScores(answers);
+
+        const sortedStyles = Object.entries(styleScores).sort(
+          ([, scoreA], [, scoreB]) => scoreB - scoreA
+        );
+        const topStyle = sortedStyles[0]?.[0] || 'Natural';
+
+        // Total de pontos somando todos os estilos (considera multi-seleção por questão)
+        const totalPoints = Object.values(styleScores).reduce((acc, v) => acc + (v || 0), 0);
+
+        const primaryResult = createStyleResult(topStyle, styleScores[topStyle] || 0, totalPoints);
+
+        const secondaryResults = sortedStyles
+          .slice(1, 4)
+          .map(([category, score]) => createStyleResult(category, score, totalPoints));
+
+        const result: QuizResult = {
+          primaryStyle: primaryResult,
+          secondaryStyles: secondaryResults,
+          totalQuestions: answers.length,
+          completedAt: new Date(),
+          scores: styleScores,
+          // ✅ NOVO: Dados personalizados
+          userData: {
+            name: currentUserName,
+            completionTime: new Date(),
+            strategicAnswersCount: strategicAnswers.length,
+          },
+        };
+
+        console.log('✅ useQuizLogic: Usando algoritmo fallback');
+        return result;
+      }
     },
     [userName, strategicAnswers.length]
   );
