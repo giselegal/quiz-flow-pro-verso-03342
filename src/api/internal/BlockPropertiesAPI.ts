@@ -94,21 +94,21 @@ class BlockPropertiesCache {
 
     get(blockType: string): BlockDefinition | null {
         console.log(`🔍 BlockPropertiesCache.get(${blockType})`);
-        
+
         if (this.cache.has(blockType)) {
             console.log('✅ Cache HIT');
             return this.cache.get(blockType)!;
         }
 
         console.log('❌ Cache MISS, loading from registry...');
-        
+
         // Lazy load from registry
         const registryDef = blocksRegistry[blockType];
         console.log('📋 Registry definition exists:', !!registryDef);
-        
+
         if (registryDef) {
             console.log('📊 Registry propsSchema length:', registryDef.propsSchema?.length || 0);
-            
+
             const definition: BlockDefinition = {
                 type: blockType,
                 name: registryDef.title || blockType,
