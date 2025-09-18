@@ -65,13 +65,13 @@ const getDefaultStepConfig = (stepId: string): StepNavigationConfig => {
 
   // Configurações específicas por tipo de etapa
   if (stepNumber === 1) {
-    // Lead Collection - Nome obrigatório
+    // Lead Collection - Nome obrigatório, SEM auto-avanço
     return {
       requiredSelections: 1,
       maxSelections: 1,
       multipleSelection: false,
-      autoAdvanceOnComplete: true,
-      autoAdvanceDelay: 1000,
+      autoAdvanceOnComplete: false, // ✅ REMOVIDO auto-avanço
+      autoAdvanceDelay: 0,
       enableButtonOnlyWhenValid: true,
       showValidationFeedback: true,
       showSelectionCount: false,
@@ -82,9 +82,9 @@ const getDefaultStepConfig = (stepId: string): StepNavigationConfig => {
       selectionStyle: 'border',
       selectedColor: '#3B82F6',
       hoverColor: '#EBF5FF',
-  backgroundFrom: '#FAF9F7',
-  backgroundVia: '#F5F2E9',
-  backgroundTo: '#EEEBE1',
+      backgroundFrom: '#FAF9F7',
+      backgroundVia: '#F5F2E9',
+      backgroundTo: '#EEEBE1',
     };
   } else if (stepNumber >= 2 && stepNumber <= 11) {
     // Questões Pontuadas - 3 seleções obrigatórias
@@ -104,18 +104,18 @@ const getDefaultStepConfig = (stepId: string): StepNavigationConfig => {
       selectionStyle: 'border',
       selectedColor: '#3B82F6',
       hoverColor: '#EBF5FF',
-  backgroundFrom: '#FAF9F7',
-  backgroundVia: '#F5F2E9',
-  backgroundTo: '#EEEBE1',
+      backgroundFrom: '#FAF9F7',
+      backgroundVia: '#F5F2E9',
+      backgroundTo: '#EEEBE1',
     };
   } else if (stepNumber >= 13 && stepNumber <= 18) {
-    // Questões Estratégicas - 1 seleção obrigatória
+    // Questões Estratégicas - 1 seleção obrigatória, SEM auto-avanço
     return {
       requiredSelections: 1,
       maxSelections: 1,
       multipleSelection: false,
-      autoAdvanceOnComplete: true,
-      autoAdvanceDelay: 1200,
+      autoAdvanceOnComplete: false, // ✅ REMOVIDO auto-avanço
+      autoAdvanceDelay: 0,
       enableButtonOnlyWhenValid: true,
       showValidationFeedback: true,
       showSelectionCount: false,
@@ -126,9 +126,9 @@ const getDefaultStepConfig = (stepId: string): StepNavigationConfig => {
       selectionStyle: 'border',
       selectedColor: '#10B981',
       hoverColor: '#ECFDF5',
-  backgroundFrom: '#FAF9F7',
-  backgroundVia: '#F5F2E9',
-  backgroundTo: '#EEEBE1',
+      backgroundFrom: '#FAF9F7',
+      backgroundVia: '#F5F2E9',
+      backgroundTo: '#EEEBE1',
     };
   } else {
     // Outras etapas (transições, resultado, oferta)
@@ -148,9 +148,9 @@ const getDefaultStepConfig = (stepId: string): StepNavigationConfig => {
       selectionStyle: 'border',
       selectedColor: '#3B82F6',
       hoverColor: '#EBF5FF',
-  backgroundFrom: '#FAF9F7',
-  backgroundVia: '#F5F2E9',
-  backgroundTo: '#EEEBE1',
+      backgroundFrom: '#FAF9F7',
+      backgroundVia: '#F5F2E9',
+      backgroundTo: '#EEEBE1',
     };
   }
 };

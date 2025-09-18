@@ -7,7 +7,7 @@ import { unifiedQuizStorage } from '@/services/core/UnifiedQuizStorage';
 import { StorageService } from '@/services/core/StorageService';
 import { safePlaceholder } from '@/utils/placeholder';
 import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
-import { useQuizRulesConfig } from '@/hooks/useQuizRulesConfig';
+import HybridTemplateService from '@/services/HybridTemplateService'; // ✅ USAR SISTEMA HÍBRIDO
 
 interface Option {
   id: string;
@@ -284,6 +284,94 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
   const [previewSelections, setPreviewSelections] = React.useState<string[]>([]);
   const previewAutoAdvanceRef = React.useRef(false);
 
+  // 🎯 Estado para configuração da etapa atual
+  const [stepBehaviorConfig, setStepBehaviorConfig] = React.useState<{
+    requiresValidInput: boolean;
+    requiresValidSelection: boolean;
+    autoAdvance: boolean;
+    autoAdvanceDelay: number;
+    validationMessage: string;
+  } | null>(null);
+
+  // 🎯 CONFIGURAÇÃO HÍBRIDA POR ETAPA (JSON + OVERRIDE + FALLBACK)
+  const getStepBehavior = React.useCallback(async (stepNumber: number) => {
+    try {
+      const stepConfig = await HybridTemplateService.getStepConfig(stepNumber);
+
+      console.log(`✅ OptionsGridBlock: Configuração híbrida para step ${stepNumber}:`, {
+        source: 'HybridTemplateService',
+        autoAdvance: stepConfig.behavior.autoAdvance,
+        autoAdvanceDelay: stepConfig.behavior.autoAdvanceDelay,
+        requiredSelections: stepConfig.validation.requiredSelections,
+      });
+
+      return {
+        requiresValidInput: stepConfig.validation.type === 'input' && stepConfig.validation.required,
+        requiresValidSelection: stepConfig.validation.type === 'selection' && stepConfig.validation.required,
+        autoAdvance: stepConfig.behavior.autoAdvance,
+        autoAdvanceDelay: stepConfig.behavior.autoAdvanceDelay || 1000,
+        validationMessage: stepConfig.validation.message,
+      };
+    } catch (error) {
+      console.error(`❌ OptionsGridBlock: Erro ao carregar configuração para step ${stepNumber}:`, error);
+
+      // Fallback para regras hardcoded
+      return getHardcodedStepBehavior(stepNumber);
+    }
+  }, []);
+
+  // 🔄 Fallback com regras hardcoded para garantir funcionamento
+  const getHardcodedStepBehavior = (stepNumber: number) => {
+    if (stepNumber === 1) {
+      return {
+        requiresValidInput: true,
+        requiresValidSelection: false,
+        autoAdvance: false,
+        autoAdvanceDelay: 0,
+        validationMessage: 'Digite seu nome para continuar',
+      };
+    }
+
+    if (stepNumber >= 2 && stepNumber <= 11) {
+      return {
+        requiresValidInput: false,
+        requiresValidSelection: true,
+        autoAdvance: true, // ✅ AUTO-AVANÇO HABILITADO
+        autoAdvanceDelay: 1500,
+        validationMessage: 'Selecione 3 opções para continuar',
+      };
+    }
+
+    if (stepNumber >= 13 && stepNumber <= 18) {
+      return {
+        requiresValidInput: false,
+        requiresValidSelection: true,
+        autoAdvance: false, // ✅ SEM AUTO-AVANÇO
+        autoAdvanceDelay: 0,
+        validationMessage: 'Selecione uma opção para continuar',
+      };
+    }
+
+    return {
+      requiresValidInput: false,
+      requiresValidSelection: false,
+      autoAdvance: false,
+      autoAdvanceDelay: 0,
+      validationMessage: '',
+    };
+  };
+
+  // ⚡ Carregar configuração da etapa atual
+  React.useEffect(() => {
+    const currentStep = (window as any)?.__quizCurrentStep ?? currentStepFromEditor ?? 1;
+
+    if (typeof currentStep === 'number' && currentStep >= 1) {
+      getStepBehavior(currentStep).then(config => {
+        setStepBehaviorConfig(config);
+      });
+    }
+  }, [currentStepFromEditor, getStepBehavior]);
+
   // Persistência unificada das seleções (compatível com validação centralizada)
   const persistSelections = React.useCallback((selections: string[]) => {
     try {
@@ -382,37 +470,16 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
     }
   })();
 
-  // 🎯 CONFIGURAÇÃO CENTRALIZADA POR ETAPA
-  const { getStepRules } = useQuizRulesConfig();
+  // ⚡ Carregar configuração da etapa atual
+  React.useEffect(() => {
+    const currentStep = (window as any)?.__quizCurrentStep ?? currentStepFromEditor ?? 1;
 
-  const getStepBehavior = (stepNumber: number) => {
-    const stepRule = getStepRules(stepNumber);
-
-    if (!stepRule) {
-      console.warn(`⚠️ OptionsGridBlock: Configuração não encontrada para step ${stepNumber}`);
-      return {
-        requiresValidInput: false,
-        requiresValidSelection: false,
-        autoAdvance: false,
-        autoAdvanceDelay: 1000,
-        validationMessage: 'Erro: configuração não encontrada'
-      };
+    if (typeof currentStep === 'number' && currentStep >= 1) {
+      getStepBehavior(currentStep).then(config => {
+        setStepBehaviorConfig(config);
+      });
     }
-
-    console.log(`✅ OptionsGridBlock: Comportamento configurado para step ${stepNumber}:`, {
-      type: stepRule.type,
-      validation: stepRule.validation,
-      behavior: stepRule.behavior
-    });
-
-    return {
-      requiresValidInput: stepRule.validation.type === 'input' && stepRule.validation.required,
-      requiresValidSelection: stepRule.validation.type === 'selection' && stepRule.validation.required,
-      autoAdvance: stepRule.behavior.autoAdvance,
-      autoAdvanceDelay: stepRule.behavior.autoAdvanceDelay || 1000,
-      validationMessage: stepRule.validation.message
-    };
-  };
+  }, [currentStepFromEditor, getStepBehavior]);
 
   const handleOptionSelect = (optionId: string) => {
     console.log('🔍 OptionsGridBlock: handleOptionSelect called', {
@@ -636,7 +703,9 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
 
       // 🎯 APLICAR COMPORTAMENTO ESPECÍFICO POR ETAPA
       const currentStep = (window as any)?.__quizCurrentStep ?? step ?? 1;
-      const stepBehavior = getStepBehavior(currentStep);
+
+      // Usar configuração carregada do estado ou fallback
+      const stepBehavior = stepBehaviorConfig || getHardcodedStepBehavior(currentStep);
 
       // Autoavanço baseado na configuração da etapa
       if (stepBehavior.autoAdvance && hasRequiredSelections && !autoAdvanceScheduledRef.current) {

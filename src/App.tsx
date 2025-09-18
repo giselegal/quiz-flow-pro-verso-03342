@@ -16,8 +16,8 @@ const Home = lazy(() => import('./pages/Home'));
 const AuthPage = lazy(() => import('./pages/AuthPage'));
 // 🏗️ EDITOR PRINCIPAL - ModularEditorPro moderno com UniversalNoCodePanel
 const EditorPro = lazy(() => import('./components/editor/EditorPro/components/ModularEditorPro'));
-// 🏗️ EDITOR PRINCIPAL PROFISSIONAL ALTERNATIVO
-const MainEditor = lazy(() => import('./pages/MainEditor'));
+// 🏗️ EDITOR PRINCIPAL PROFISSIONAL ALTERNATIVO COM SUPORTE A PARÂMETROS URL
+const MainEditor = lazy(() => import('./pages/MainEditorUnified.new'));
 // 🚀 NOVO: Editor Visual Headless
 const HeadlessVisualEditor = lazy(() => import('./core/editor/HeadlessVisualEditor'));
 const DashboardPage = lazy(() => import('./pages/admin/DashboardPage'));
