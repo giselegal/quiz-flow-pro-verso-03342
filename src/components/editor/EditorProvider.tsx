@@ -926,6 +926,13 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
 
   const updateBlock = useCallback(
     async (stepKey: string, blockId: string, updates: Record<string, any>) => {
+      console.log('🔄 EditorProvider - updateBlock chamado:', {
+        stepKey,
+        blockId,
+        updates,
+        currentBlocks: (state.stepBlocks[stepKey] || []).length
+      });
+
       // Sempre mesclar alterações em properties por padrão.
       // Se o payload já vier com { properties }, respeitar e mesclar também.
       setState(prev => {
@@ -936,6 +943,14 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
             ...(b.properties || {}),
             ...(incomingProps || {}),
           };
+          
+          console.log('🔄 EditorProvider - atualizando bloco:', {
+            blockId: b.id,
+            beforeProperties: b.properties,
+            incomingProps,
+            mergedProps
+          });
+          
           return { ...b, properties: mergedProps };
         });
 

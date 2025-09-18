@@ -188,7 +188,21 @@ const ModularEditorPro: React.FC = () => {
   // Bloco selecionado
   const selectedBlock = useMemo(() => {
     if (!state.selectedBlockId) return null;
-    return currentStepBlocks.find(block => block.id === state.selectedBlockId) || null;
+    const block = currentStepBlocks.find(block => block.id === state.selectedBlockId) || null;
+    
+    // 🔍 DEBUG: Log do selectedBlock para investigar o problema  
+    console.log('🔍 ModularEditorPro - selectedBlock calculado:', {
+      selectedBlockId: state.selectedBlockId,
+      currentStepBlocks: currentStepBlocks.length,
+      foundBlock: !!block,
+      blockId: block?.id,
+      blockType: block?.type,
+      properties: block?.properties,
+      content: block?.content,
+      fullBlock: block
+    });
+    
+    return block;
   }, [currentStepBlocks, state.selectedBlockId]);
 
   // Dados para componentes da sidebar
@@ -232,6 +246,13 @@ const ModularEditorPro: React.FC = () => {
   }, [state.currentStep, actions]);
 
   const handleUpdateSelectedBlock = useCallback((updates: Record<string, any>) => {
+    console.log('🔄 ModularEditorPro - handleUpdateSelectedBlock chamado:', {
+      hasSelectedBlock: !!selectedBlock,
+      selectedBlockId: selectedBlock?.id,
+      updates,
+      updateType: typeof updates
+    });
+    
     if (selectedBlock) {
       handleUpdateBlock(selectedBlock.id, updates);
     }

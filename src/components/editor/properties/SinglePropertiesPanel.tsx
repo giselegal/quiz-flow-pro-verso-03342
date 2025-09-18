@@ -435,12 +435,23 @@ export const SinglePropertiesPanel: React.FC<SinglePropertiesPanelProps> = memo(
     // ID único para esta instância do painel
     const uniqueId = useId();
 
+    // 🔍 DEBUG: Log do selectedBlock para investigar o problema
+    console.log('🔍 SinglePropertiesPanel - selectedBlock recebido:', {
+        hasBlock: !!selectedBlock,
+        blockId: selectedBlock?.id,
+        blockType: selectedBlock?.type,
+        properties: selectedBlock?.properties,
+        content: selectedBlock?.content,
+        fullBlock: selectedBlock
+    });
+
     // Hook otimizado de propriedades com debouncing
     const { updateProperty, getPropertiesByCategory } = useOptimizedUnifiedProperties({
         blockType: selectedBlock?.type || '',
         blockId: selectedBlock?.id,
         currentBlock: selectedBlock,
         onUpdate: onUpdate ? (_blockId: string, updates: any) => {
+            console.log('🔄 SinglePropertiesPanel - enviando updates:', updates);
             // Adaptar para o formato esperado pelo editor atual
             onUpdate(updates.properties || updates);
         } : undefined
