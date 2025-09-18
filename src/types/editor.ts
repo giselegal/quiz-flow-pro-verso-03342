@@ -142,6 +142,7 @@ export type BlockType =
   | 'testimonials'
   | 'testimonial'
   | 'testimonial-card-inline'
+  | 'testimonials-carousel-inline'
   | 'testimonialsSection'
   | 'bonus'
   | 'secure-purchase'
@@ -456,7 +457,7 @@ export interface TextBlock extends BaseBlock {
 }
 
 export interface TestimonialBlock extends BaseBlock {
-  type: 'testimonial' | 'testimonials' | 'testimonial-card-inline' | 'testimonialsSection';
+  type: 'testimonial' | 'testimonials' | 'testimonial-card-inline' | 'testimonials-carousel-inline' | 'testimonialsSection';
   content: TestimonialContent;
 }
 
@@ -519,7 +520,7 @@ export const isTextBlock = (block: Block): block is TextBlock => {
 };
 
 export const isTestimonialBlock = (block: Block): block is TestimonialBlock => {
-  return ['testimonial', 'testimonials', 'testimonial-card-inline', 'testimonialsSection'].includes(
+  return ['testimonial', 'testimonials', 'testimonial-card-inline', 'testimonials-carousel-inline', 'testimonialsSection'].includes(
     block.type
   );
 };
@@ -553,7 +554,7 @@ export const getContentType = (blockType: BlockType): string => {
   if (blockType === 'headline') return 'HeadlineContent';
   if (blockType === 'text') return 'TextContent';
   if (
-    ['testimonial', 'testimonials', 'testimonial-card-inline', 'testimonialsSection'].includes(
+    ['testimonial', 'testimonials', 'testimonial-card-inline', 'testimonials-carousel-inline', 'testimonialsSection'].includes(
       blockType
     )
   )
@@ -612,12 +613,12 @@ export interface EditorConfig {
 
   // Block configuration
   blocks?:
-    | EditorBlock[]
-    | {
-        maxPerPage?: number;
-        defaultSpacing?: number;
-        gridColumns?: number;
-      };
+  | EditorBlock[]
+  | {
+    maxPerPage?: number;
+    defaultSpacing?: number;
+    gridColumns?: number;
+  };
 
   // Editor features
   features?: {
@@ -638,12 +639,12 @@ export interface EditorConfig {
 
   // Theme configuration
   theme?:
-    | {
-        colorScheme?: string;
-        radius?: string;
-        spacing?: string;
-      }
-    | string;
+  | {
+    colorScheme?: string;
+    radius?: string;
+    spacing?: string;
+  }
+  | string;
 
   // Performance settings
   performance?: {

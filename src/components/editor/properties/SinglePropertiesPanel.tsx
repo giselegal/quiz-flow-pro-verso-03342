@@ -40,6 +40,7 @@ const NavigationPropertyEditor = lazy(() => import('./editors/NavigationProperty
 const TestimonialPropertyEditor = lazy(() => import('./editors/TestimonialPropertyEditor').then(m => ({ default: m.TestimonialPropertyEditor })));
 const PricingPropertyEditor = lazy(() => import('./editors/PricingPropertyEditor').then(m => ({ default: m.PricingPropertyEditor })));
 const ResultCommonPropertyEditor = lazy(() => import('./editors/ResultCommonPropertyEditor').then(m => ({ default: m.ResultCommonPropertyEditor })));
+const MentorPropertyEditor = lazy(() => import('./editors/MentorPropertyEditor'));
 
 import { PropertyType, UnifiedBlock } from '@/hooks/useUnifiedProperties';
 import { useOptimizedUnifiedProperties } from '@/hooks/useOptimizedUnifiedProperties';
@@ -224,9 +225,21 @@ const SpecializedEditor: React.FC<{
         case 'testimonial':
         case 'testimonials':
         case 'testimonial-card-inline':
+        case 'testimonials-carousel-inline':
             return (
                 <Suspense fallback={<div className="p-4 text-center text-sm text-muted-foreground">Carregando editor de depoimento...</div>}>
                     <TestimonialPropertyEditor
+                        block={selectedBlock as any}
+                        onUpdate={handleUpdate as any}
+                        isPreviewMode={false}
+                    />
+                </Suspense>
+            );
+
+        case 'mentor-section-inline':
+            return (
+                <Suspense fallback={<div className="p-4 text-center text-sm text-muted-foreground">Carregando editor de mentora...</div>}>
+                    <MentorPropertyEditor
                         block={selectedBlock as any}
                         onUpdate={handleUpdate as any}
                         isPreviewMode={false}
