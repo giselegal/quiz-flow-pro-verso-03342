@@ -9,7 +9,7 @@ import { useMemo } from 'react';
 
 export interface StepValidation {
     type: 'input' | 'selection' | 'none';
-    required: boolean | string[];
+    required: boolean | string[] | number; // Aceita também number para seleções
     minSelections?: number;
     maxSelections?: number;
     minLength?: number;
@@ -88,7 +88,11 @@ export interface QuizRulesConfig {
         autoAdvanceSteps: number[];
         manualAdvanceSteps: number[];
         scoringSteps: number[];
-        validationRequiredSteps: number[];
+        strategicSteps: number[];
+        transitionSteps: number[];
+        inputValidationSteps: number[];
+        selectionValidationSteps: number[];
+        alwaysActiveSteps: number[];
     };
     uiConfig: {
         buttons: Record<string, Record<string, any>>;
@@ -239,6 +243,72 @@ export function useQuizRulesConfig() {
     }, [config]);
 
     // ============================================================================
+    // NOVAS FUNÇÕES PARA AS REGRAS ESPECÍFICAS
+    // ============================================================================
+
+    // Verificar se é etapa de transição (botão sempre ativo)
+    const isTransitionStep = useMemo(() => {
+        return (stepNumber: number): boolean => {
+            return config.behaviorPresets.transitionSteps.includes(stepNumber);
+        };
+    }, [config]);
+
+    // Verificar se é etapa estratégica (1 seleção)
+    const isStrategicStep = useMemo(() => {
+        return (stepNumber: number): boolean => {
+            return config.behaviorPresets.strategicSteps.includes(stepNumber);
+        };
+    }, [config]);
+
+    // Verificar se é etapa de pontuação (3 seleções)
+    const isScoringStep = useMemo(() => {
+        return (stepNumber: number): boolean => {
+            return config.behaviorPresets.scoringSteps.includes(stepNumber);
+        };
+    }, [config]);
+
+    // Obter número de seleções necessárias
+    const getRequiredSelections = useMemo(() => {
+        return (stepNumber: number): number => {
+            if (isScoringStep(stepNumber)) return 3;
+            if (isStrategicStep(stepNumber)) return 1;
+            return 0;
+        };
+    }, [isScoringStep, isStrategicStep]);
+
+    // Verificar se botão deve estar sempre ativo
+    const isAlwaysActiveStep = useMemo(() => {
+        return (stepNumber: number): boolean => {
+            return config.behaviorPresets.alwaysActiveSteps.includes(stepNumber);
+        };
+    }, [config]);
+
+    // Obter regra de ativação do botão
+    const getButtonActivationRule = useMemo(() => {
+        return (stepNumber: number): string => {
+            const stepRule = getStepRules(stepNumber);
+            if (!stepRule) return 'always';
+            
+            // Etapa 1: requer input válido
+            if (stepNumber === 1) return 'requiresValidInput';
+            
+            // Etapas 2-11: requer 3 seleções válidas
+            if (stepNumber >= 2 && stepNumber <= 11) return 'requiresValidSelection';
+            
+            // Etapa 12: sempre ativo (transição)
+            if (stepNumber === 12) return 'always';
+            
+            // Etapas 13-18: requer 1 seleção válida
+            if (stepNumber >= 13 && stepNumber <= 18) return 'requiresValidSelection';
+            
+            // Etapas 19-21: sempre ativo
+            if (stepNumber >= 19 && stepNumber <= 21) return 'always';
+            
+            return stepRule.button.activationRule;
+        };
+    }, [getStepRules]);
+
+    // ============================================================================
     // FUNÇÃO: Debug - Log completo da configuração
     // ============================================================================
     const logConfiguration = useMemo(() => {
@@ -283,13 +353,26 @@ export function useQuizRulesConfig() {
         getStyleCategories,
         getAlgorithmConfig,
 
+        // Novas funções para regras específicas
+        isTransitionStep,
+        isStrategicStep,
+        isScoringStep,
+        getRequiredSelections,
+        isAlwaysActiveStep,
+        getButtonActivationRule,
+
         // Debug
         logConfiguration,
 
         // Atalhos úteis
         autoAdvanceSteps: config.behaviorPresets.autoAdvanceSteps,
+        manualAdvanceSteps: config.behaviorPresets.manualAdvanceSteps,
         scoringSteps: config.behaviorPresets.scoringSteps,
-        validationRequiredSteps: config.behaviorPresets.validationRequiredSteps,
+        strategicSteps: config.behaviorPresets.strategicSteps,
+        transitionSteps: config.behaviorPresets.transitionSteps,
+        inputValidationSteps: config.behaviorPresets.inputValidationSteps,
+        selectionValidationSteps: config.behaviorPresets.selectionValidationSteps,
+        alwaysActiveSteps: config.behaviorPresets.alwaysActiveSteps,
         styleCategories: config.globalScoringConfig.categories,
 
         // Metadados

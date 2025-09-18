@@ -1,7 +1,7 @@
 import { cn } from '@/lib/utils';
 import type { BlockComponentProps } from '@/types/blocks';
 import { ArrowRight, Download, Edit3, MousePointer2, Play, Star } from 'lucide-react';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { sessionService } from '../../../services/sessionService';
 import { userResponseService } from '../../../services/userResponseService';
 import { trackQuizStart } from '../../../utils/analytics';
@@ -132,16 +132,34 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
   } = (block?.properties as any) || {};
 
   // 🎯 APLICAR CONFIGURAÇÕES AUTOMÁTICAS POR ETAPA
-  const { getStepRules } = useQuizRulesConfig();
+  const { 
+    getStepRules, 
+    isAlwaysActiveStep, 
+    getRequiredSelections, 
+    getButtonActivationRule 
+  } = useQuizRulesConfig();
   const { getCurrentStep } = useUnifiedQuizState();
 
   // Obter etapa atual
   const currentStep = getCurrentStep();
   const stepRule = getStepRules(currentStep);
+  const requiredSelections = getRequiredSelections(currentStep);
+  const buttonActivationRule = getButtonActivationRule(currentStep);
+  const isAlwaysActive = isAlwaysActiveStep(currentStep);
 
-  // Sobrepor configurações baseado na configuração JSON centralizada
-  const finalRequiresValidInput = stepRule?.validation.type === 'input' && stepRule.validation.required || requiresValidInput;
-  const finalRequiresValidSelection = stepRule?.validation.type === 'selection' && stepRule.validation.required || requiresValidSelection;
+  // Aplicar regras específicas baseadas na configuração centralizada
+  const finalRequiresValidInput = (
+    buttonActivationRule === 'requiresValidInput' || 
+    (stepRule?.validation.type === 'input' && stepRule.validation.required) || 
+    requiresValidInput
+  );
+  
+  const finalRequiresValidSelection = (
+    buttonActivationRule === 'requiresValidSelection' || 
+    (stepRule?.validation.type === 'selection' && stepRule.validation.required) || 
+    requiresValidSelection
+  );
+  
   const finalAutoAdvanceOnComplete = stepRule?.behavior.autoAdvance || autoAdvanceOnComplete;
   const finalAutoAdvanceDelay = stepRule?.behavior.autoAdvanceDelay || autoAdvanceDelay;
 
@@ -239,13 +257,59 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
     };
   }, [finalRequiresValidSelection, finalRequiresValidInput, addEventListener]);
 
-  // Determinar se o botão deve estar desabilitado
-  const isButtonDisabled =
-    externalDisabled ??
-    (disabled ||
-      (finalRequiresValidInput && !isValidated) ||
-      (finalRequiresValidSelection && !isSelectionValid) ||
-      loading);
+  // Determinar se o botão deve estar desabilitado baseado nas regras centralizadas
+  const isButtonDisabled = useMemo(() => {
+    // Se tem controle externo, usar ele
+    if (externalDisabled !== null) return externalDisabled;
+    
+    // Se está loading, desabilitar
+    if (loading) return true;
+    
+    // Se disabled manual, desabilitar  
+    if (disabled) return true;
+    
+    // Se é etapa sempre ativa (12, 19-21), nunca desabilitar
+    if (isAlwaysActive) return false;
+    
+    // Regras específicas por etapa
+    switch (currentStep) {
+      case 1:
+        // Etapa 1: requer nome válido
+        return !isValidated;
+        
+      case 2: case 3: case 4: case 5: case 6:
+      case 7: case 8: case 9: case 10: case 11:
+        // Etapas 2-11: requer 3 seleções válidas
+        return !isSelectionValid;
+        
+      case 12:
+        // Etapa 12: transição, sempre ativo
+        return false;
+        
+      case 13: case 14: case 15: case 16: case 17: case 18:
+        // Etapas 13-18: requer 1 seleção válida
+        return !isSelectionValid;
+        
+      case 19: case 20: case 21:
+        // Etapas 19-21: sempre ativo
+        return false;
+        
+      default:
+        // Fallback para lógica antiga
+        return (finalRequiresValidInput && !isValidated) || 
+               (finalRequiresValidSelection && !isSelectionValid);
+    }
+  }, [
+    externalDisabled, 
+    loading, 
+    disabled, 
+    isAlwaysActive, 
+    currentStep, 
+    isValidated, 
+    isSelectionValid, 
+    finalRequiresValidInput, 
+    finalRequiresValidSelection
+  ]);
   // 🚀 Função para inicializar quiz no Supabase
   const initializeQuizWithSupabase = async (userName: string) => {
     try {
