@@ -288,6 +288,8 @@ export const AVAILABLE_COMPONENTS = [
     { type: 'sales-hero', label: 'Sales Hero', category: 'result' },
     { type: 'bonus', label: 'Bônus (Seção)', category: 'result' },
     { type: 'testimonials', label: 'Depoimentos', category: 'result' },
+    { type: 'testimonial-card-inline', label: 'Depoimento Individual', category: 'result' },
+    { type: 'testimonials-carousel-inline', label: 'Carrossel de Depoimentos', category: 'result' },
     { type: 'value-anchoring', label: 'Ancoragem de Valor', category: 'result' },
     { type: 'secure-purchase', label: 'Compra Segura', category: 'result' },
     { type: 'mentor-section-inline', label: 'Seção da Mentora', category: 'result' },

@@ -1211,6 +1211,119 @@ export const blocksRegistry: Record<string, BlockDefinition> = process.env.NODE_
             prop({ key: 'showImages', kind: 'switch', label: 'Mostrar Imagens', category: 'content', default: false })
         ],
     },
+
+    // === COMPONENTES DA GISELE GALVÃO ===
+    'mentor-section-inline': {
+        type: 'mentor-section-inline',
+        title: 'Seção da Mentora',
+        category: 'Social Proof',
+        icon: 'user',
+        defaultProps: {
+            title: 'Conheça sua Mentora',
+            subtitle: 'Especialista em Consultoria de Imagem',
+            backgroundColor: '#ffffff',
+            accentColor: '#ec4899',
+            marginTop: 0,
+            marginBottom: 0,
+            marginLeft: 0,
+            marginRight: 0
+        },
+        propsSchema: [
+            prop({ key: 'title', kind: 'text', label: 'Título', category: 'content', default: 'Conheça sua Mentora' }),
+            prop({ key: 'subtitle', kind: 'text', label: 'Subtítulo', category: 'content', default: 'Especialista em Consultoria de Imagem' }),
+            prop({ key: 'backgroundColor', kind: 'color', label: 'Cor de Fundo', category: 'style', default: '#ffffff' }),
+            prop({ key: 'accentColor', kind: 'color', label: 'Cor de Destaque', category: 'style', default: '#ec4899' }),
+            prop({ key: 'marginTop', kind: 'number', label: 'Margem Superior', category: 'layout', min: 0, max: 200, step: 4, unit: 'px', default: 0 }),
+            prop({ key: 'marginBottom', kind: 'number', label: 'Margem Inferior', category: 'layout', min: 0, max: 200, step: 4, unit: 'px', default: 0 }),
+            prop({ key: 'marginLeft', kind: 'number', label: 'Margem Esquerda', category: 'layout', min: 0, max: 200, step: 4, unit: 'px', default: 0 }),
+            prop({ key: 'marginRight', kind: 'number', label: 'Margem Direita', category: 'layout', min: 0, max: 200, step: 4, unit: 'px', default: 0 })
+        ],
+    },
+
+    'testimonial-card-inline': {
+        type: 'testimonial-card-inline',
+        title: 'Depoimento Individual',
+        category: 'Social Proof',
+        icon: 'quote',
+        defaultProps: {
+            testimonialType: 'mariangela',
+            cardStyle: 'elegant',
+            showPhoto: true,
+            showRating: true,
+            showResult: true,
+            backgroundColor: '#ffffff',
+            accentColor: '#ec4899',
+            marginTop: 0,
+            marginBottom: 0,
+            marginLeft: 0,
+            marginRight: 0
+        },
+        propsSchema: [
+            select('testimonialType', 'Tipo de Depoimento', [
+                { value: 'mariangela', label: 'Mariangela Santos' },
+                { value: 'sonia', label: 'Sonia Spier' },
+                { value: 'ana', label: 'Ana Carolina' },
+                { value: 'patricia', label: 'Patricia Lima' },
+                { value: 'custom', label: 'Customizado' }
+            ], { category: 'content', default: 'mariangela' }),
+            select('cardStyle', 'Estilo do Card', [
+                { value: 'elegant', label: 'Elegante' },
+                { value: 'modern', label: 'Moderno' },
+                { value: 'minimal', label: 'Minimalista' },
+                { value: 'luxury', label: 'Luxuoso' }
+            ], { category: 'style', default: 'elegant' }),
+            prop({ key: 'showPhoto', kind: 'switch', label: 'Mostrar Foto', category: 'content', default: true }),
+            prop({ key: 'showRating', kind: 'switch', label: 'Mostrar Avaliação', category: 'content', default: true }),
+            prop({ key: 'showResult', kind: 'switch', label: 'Mostrar Resultado', category: 'content', default: true }),
+            prop({ key: 'backgroundColor', kind: 'color', label: 'Cor de Fundo', category: 'style', default: '#ffffff' }),
+            prop({ key: 'accentColor', kind: 'color', label: 'Cor de Destaque', category: 'style', default: '#ec4899' }),
+            prop({ key: 'marginTop', kind: 'number', label: 'Margem Superior', category: 'layout', min: 0, max: 200, step: 4, unit: 'px', default: 0 }),
+            prop({ key: 'marginBottom', kind: 'number', label: 'Margem Inferior', category: 'layout', min: 0, max: 200, step: 4, unit: 'px', default: 0 }),
+            prop({ key: 'marginLeft', kind: 'number', label: 'Margem Esquerda', category: 'layout', min: 0, max: 200, step: 4, unit: 'px', default: 0 }),
+            prop({ key: 'marginRight', kind: 'number', label: 'Margem Direita', category: 'layout', min: 0, max: 200, step: 4, unit: 'px', default: 0 })
+        ],
+    },
+
+    'testimonials-carousel-inline': {
+        type: 'testimonials-carousel-inline',
+        title: 'Carrossel de Depoimentos',
+        category: 'Social Proof',
+        icon: 'carousel',
+        defaultProps: {
+            title: 'O que nossas clientes dizem',
+            subtitle: 'Transformações reais de mulheres como você',
+            itemsPerView: 1,
+            showNavigationArrows: true,
+            showDots: true,
+            autoPlay: false,
+            layout: 'cards',
+            backgroundColor: '#ffffff',
+            accentColor: '#ec4899',
+            marginTop: 0,
+            marginBottom: 0,
+            marginLeft: 0,
+            marginRight: 0
+        },
+        propsSchema: [
+            prop({ key: 'title', kind: 'text', label: 'Título', category: 'content', default: 'O que nossas clientes dizem' }),
+            prop({ key: 'subtitle', kind: 'text', label: 'Subtítulo', category: 'content', default: 'Transformações reais de mulheres como você' }),
+            prop({ key: 'itemsPerView', kind: 'number', label: 'Itens por Visualização', category: 'behavior', min: 1, max: 3, step: 1, default: 1 }),
+            prop({ key: 'showNavigationArrows', kind: 'switch', label: 'Setas de Navegação', category: 'behavior', default: true }),
+            prop({ key: 'showDots', kind: 'switch', label: 'Pontos Indicadores', category: 'behavior', default: true }),
+            prop({ key: 'autoPlay', kind: 'switch', label: 'Auto-play', category: 'behavior', default: false }),
+            select('layout', 'Layout', [
+                { value: 'cards', label: 'Cards' },
+                { value: 'list', label: 'Lista' },
+                { value: 'grid', label: 'Grade' }
+            ], { category: 'layout', default: 'cards' }),
+            prop({ key: 'backgroundColor', kind: 'color', label: 'Cor de Fundo', category: 'style', default: '#ffffff' }),
+            prop({ key: 'accentColor', kind: 'color', label: 'Cor de Destaque', category: 'style', default: '#ec4899' }),
+            prop({ key: 'marginTop', kind: 'number', label: 'Margem Superior', category: 'layout', min: 0, max: 200, step: 4, unit: 'px', default: 0 }),
+            prop({ key: 'marginBottom', kind: 'number', label: 'Margem Inferior', category: 'layout', min: 0, max: 200, step: 4, unit: 'px', default: 0 }),
+            prop({ key: 'marginLeft', kind: 'number', label: 'Margem Esquerda', category: 'layout', min: 0, max: 200, step: 4, unit: 'px', default: 0 }),
+            prop({ key: 'marginRight', kind: 'number', label: 'Margem Direita', category: 'layout', min: 0, max: 200, step: 4, unit: 'px', default: 0 })
+        ],
+    },
 };
 
 export const getBlockDefinition = (type: string): BlockDefinition | undefined => blocksRegistry[type];

@@ -6,5 +6,10 @@ export { default as QuizResultCalculatedBlock } from './QuizResultCalculatedBloc
 export { default as UniversalBlockRenderer } from './UniversalBlockRenderer';
 export type { UniversalBlockRendererProps } from './UniversalBlockRenderer';
 
+// Novos componentes da Gisele Galvão
+export { default as MentorSectionInlineBlock } from './MentorSectionInlineBlock';
+export { default as TestimonialCardInlineBlock } from './TestimonialCardInlineBlock';
+export { default as TestimonialsCarouselInlineBlock } from './TestimonialsCarouselInlineBlock';
+
 // Export empty object to make this a valid module
-export {};
+export { };
