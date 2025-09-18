@@ -132,11 +132,11 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
   } = (block?.properties as any) || {};
 
   // 🎯 APLICAR CONFIGURAÇÕES AUTOMÁTICAS POR ETAPA
-  const { 
-    getStepRules, 
-    isAlwaysActiveStep, 
-    getRequiredSelections, 
-    getButtonActivationRule 
+  const {
+    getStepRules,
+    isAlwaysActiveStep,
+    getRequiredSelections,
+    getButtonActivationRule
   } = useQuizRulesConfig();
   const { getCurrentStep } = useUnifiedQuizState();
 
@@ -149,17 +149,17 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
 
   // Aplicar regras específicas baseadas na configuração centralizada
   const finalRequiresValidInput = (
-    buttonActivationRule === 'requiresValidInput' || 
-    (stepRule?.validation.type === 'input' && stepRule.validation.required) || 
+    buttonActivationRule === 'requiresValidInput' ||
+    (stepRule?.validation.type === 'input' && stepRule.validation.required) ||
     requiresValidInput
   );
-  
+
   const finalRequiresValidSelection = (
-    buttonActivationRule === 'requiresValidSelection' || 
-    (stepRule?.validation.type === 'selection' && stepRule.validation.required) || 
+    buttonActivationRule === 'requiresValidSelection' ||
+    (stepRule?.validation.type === 'selection' && stepRule.validation.required) ||
     requiresValidSelection
   );
-  
+
   const finalAutoAdvanceOnComplete = stepRule?.behavior.autoAdvance || autoAdvanceOnComplete;
   const finalAutoAdvanceDelay = stepRule?.behavior.autoAdvanceDelay || autoAdvanceDelay;
 
@@ -170,6 +170,9 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
       validation: stepRule.validation,
       behavior: stepRule.behavior
     } : null,
+    requiredSelections,
+    buttonActivationRule,
+    isAlwaysActive,
     finalRequiresValidInput,
     finalRequiresValidSelection,
     finalAutoAdvanceOnComplete,
@@ -228,8 +231,25 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
   useEffect(() => {
     const handleQuizSelectionChange = (event: Event) => {
       const e = event as CustomEvent<any>;
-      const valid = typeof e.detail?.isValid === 'boolean' ? e.detail.isValid : !!e.detail?.valid;
-      if (finalRequiresValidSelection) setIsSelectionValid(valid);
+
+      // Validação inteligente baseada no número de seleções necessárias
+      if (finalRequiresValidSelection && requiredSelections > 0) {
+        const selectedCount = e.detail?.selectedCount || e.detail?.count || 0;
+        const isValid = selectedCount >= requiredSelections;
+
+        console.log('🎯 ButtonInlineBlock - Validação de seleção:', {
+          currentStep,
+          requiredSelections,
+          selectedCount,
+          isValid
+        });
+
+        setIsSelectionValid(isValid);
+      } else {
+        // Fallback para validação genérica
+        const valid = typeof e.detail?.isValid === 'boolean' ? e.detail.isValid : !!e.detail?.valid;
+        if (finalRequiresValidSelection) setIsSelectionValid(valid);
+      }
     };
 
     const handleQuizInputChange = (event: Event) => {
@@ -255,59 +275,54 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
       cleanup1?.();
       cleanup2?.();
     };
-  }, [finalRequiresValidSelection, finalRequiresValidInput, addEventListener]);
+  }, [finalRequiresValidSelection, finalRequiresValidInput, requiredSelections, currentStep, addEventListener]);
 
   // Determinar se o botão deve estar desabilitado baseado nas regras centralizadas
   const isButtonDisabled = useMemo(() => {
     // Se tem controle externo, usar ele
     if (externalDisabled !== null) return externalDisabled;
-    
+
     // Se está loading, desabilitar
     if (loading) return true;
-    
+
     // Se disabled manual, desabilitar  
     if (disabled) return true;
-    
+
     // Se é etapa sempre ativa (12, 19-21), nunca desabilitar
     if (isAlwaysActive) return false;
-    
-    // Regras específicas por etapa
+
+    // Lógica inteligente baseada nas configurações centralizadas
+    if (buttonActivationRule === 'always') {
+      // Botão sempre ativo
+      return false;
+    } else if (buttonActivationRule === 'requiresValidInput') {
+      // Etapa 1: requer input válido (nome)
+      return !isValidated;
+    } else if (buttonActivationRule === 'requiresValidSelection') {
+      // Etapas que requerem seleção (2-11: 3 seleções, 13-18: 1 seleção)
+      return !isSelectionValid;
+    }
+
+    // Fallback para casos específicos (não deveria ser necessário)
     switch (currentStep) {
       case 1:
-        // Etapa 1: requer nome válido
         return !isValidated;
-        
-      case 2: case 3: case 4: case 5: case 6:
-      case 7: case 8: case 9: case 10: case 11:
-        // Etapas 2-11: requer 3 seleções válidas
-        return !isSelectionValid;
-        
-      case 12:
-        // Etapa 12: transição, sempre ativo
+      case 12: case 19: case 20: case 21:
         return false;
-        
-      case 13: case 14: case 15: case 16: case 17: case 18:
-        // Etapas 13-18: requer 1 seleção válida
-        return !isSelectionValid;
-        
-      case 19: case 20: case 21:
-        // Etapas 19-21: sempre ativo
-        return false;
-        
       default:
-        // Fallback para lógica antiga
-        return (finalRequiresValidInput && !isValidated) || 
-               (finalRequiresValidSelection && !isSelectionValid);
+        return (finalRequiresValidInput && !isValidated) ||
+          (finalRequiresValidSelection && !isSelectionValid);
     }
   }, [
-    externalDisabled, 
-    loading, 
-    disabled, 
-    isAlwaysActive, 
-    currentStep, 
-    isValidated, 
-    isSelectionValid, 
-    finalRequiresValidInput, 
+    externalDisabled,
+    loading,
+    disabled,
+    isAlwaysActive,
+    buttonActivationRule,
+    currentStep,
+    isValidated,
+    isSelectionValid,
+    finalRequiresValidInput,
     finalRequiresValidSelection
   ]);
   // 🚀 Função para inicializar quiz no Supabase

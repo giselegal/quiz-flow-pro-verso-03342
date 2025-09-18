@@ -288,22 +288,22 @@ export function useQuizRulesConfig() {
         return (stepNumber: number): string => {
             const stepRule = getStepRules(stepNumber);
             if (!stepRule) return 'always';
-            
+
             // Etapa 1: requer input válido
             if (stepNumber === 1) return 'requiresValidInput';
-            
+
             // Etapas 2-11: requer 3 seleções válidas
             if (stepNumber >= 2 && stepNumber <= 11) return 'requiresValidSelection';
-            
+
             // Etapa 12: sempre ativo (transição)
             if (stepNumber === 12) return 'always';
-            
+
             // Etapas 13-18: requer 1 seleção válida
             if (stepNumber >= 13 && stepNumber <= 18) return 'requiresValidSelection';
-            
+
             // Etapas 19-21: sempre ativo
             if (stepNumber >= 19 && stepNumber <= 21) return 'always';
-            
+
             return stepRule.button.activationRule;
         };
     }, [getStepRules]);
