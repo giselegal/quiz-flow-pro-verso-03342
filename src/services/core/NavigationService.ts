@@ -295,6 +295,7 @@ export class NavigationService {
                 const context: NavigationContext = {
                     from: transaction.from,
                     to: transaction.to,
+                    path: path,
                     params: transaction.params || {},
                     query: transaction.query || {},
                     metadata: transaction.metadata || {},
