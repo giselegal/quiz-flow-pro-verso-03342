@@ -14,6 +14,8 @@ import { useStep20NoCodeIntegration } from '@/hooks/useStep20Configuration';
 import { HeaderProperties, defaultHeaderProperties } from '@/config/headerPropertiesMapping';
 import Step20URLDocumentation from '@/components/admin/Step20URLDocumentation';
 import Step20IntegrationGuide from '@/components/admin/Step20IntegrationGuide';
+import StepConfigurationPanel from '@/components/admin/StepConfigurationPanel';
+import ResultConfigurationPanel from '@/components/admin/ResultConfigurationPanel';
 import {
   Globe,
   Zap,
@@ -47,6 +49,15 @@ interface PixelSettings {
   googleAnalyticsId: string;
   googleTagManagerId: string;
   enabled: boolean;
+}
+
+interface PublishingSettings {
+  templateStorage: 'local' | 'supabase' | 'vercel' | 'aws';
+  templatePath: string;
+  backupEnabled: boolean;
+  basePublishUrl: string;
+  previewUrl: string;
+  cdnUrl: string;
 }
 
 interface FunnelSettings {
@@ -102,6 +113,15 @@ export const NoCodeConfigPanel: React.FC = () => {
     googleAnalyticsId: '',
     googleTagManagerId: '',
     enabled: true
+  });
+
+  const [publishingSettings, setPublishingSettings] = useState<PublishingSettings>({
+    templateStorage: 'local',
+    templatePath: '/public/templates/',
+    backupEnabled: true,
+    basePublishUrl: 'https://quizquest.app',
+    previewUrl: 'https://preview.quizquest.app',
+    cdnUrl: 'https://cdn.quizquest.app'
   });
 
   const [funnelSettings, setFunnelSettings] = useState<FunnelSettings>({
@@ -203,32 +223,44 @@ export const NoCodeConfigPanel: React.FC = () => {
       </div>
 
       <Tabs defaultValue="status" className="space-y-6">
-        <TabsList className="grid grid-cols-7 w-full max-w-5xl">
-          <TabsTrigger value="status" className="flex items-center gap-2">
+        <TabsList className="grid grid-cols-10 w-full max-w-7xl">
+          <TabsTrigger value="status" className="flex items-center gap-2 text-xs">
             <Monitor className="w-4 h-4" />
             Status
           </TabsTrigger>
-          <TabsTrigger value="header" className="flex items-center gap-2">
+          <TabsTrigger value="steps" className="flex items-center gap-2 text-xs">
+            <Zap className="w-4 h-4" />
+            Etapas
+          </TabsTrigger>
+          <TabsTrigger value="results" className="flex items-center gap-2 text-xs">
+            <Trophy className="w-4 h-4" />
+            Resultados
+          </TabsTrigger>
+          <TabsTrigger value="header" className="flex items-center gap-2 text-xs">
             <Palette className="w-4 h-4" />
             Header
           </TabsTrigger>
-          <TabsTrigger value="seo" className="flex items-center gap-2">
+          <TabsTrigger value="seo" className="flex items-center gap-2 text-xs">
             <Globe className="w-4 h-4" />
             SEO
           </TabsTrigger>
-          <TabsTrigger value="domain" className="flex items-center gap-2">
+          <TabsTrigger value="domain" className="flex items-center gap-2 text-xs">
             <Link className="w-4 h-4" />
             Domínio
           </TabsTrigger>
-          <TabsTrigger value="tracking" className="flex items-center gap-2">
+          <TabsTrigger value="publishing" className="flex items-center gap-2 text-xs">
+            <Monitor className="w-4 h-4" />
+            Publicação
+          </TabsTrigger>
+          <TabsTrigger value="tracking" className="flex items-center gap-2 text-xs">
             <Eye className="w-4 h-4" />
             Tracking
           </TabsTrigger>
-          <TabsTrigger value="step20" className="flex items-center gap-2">
+          <TabsTrigger value="step20" className="flex items-center gap-2 text-xs">
             <Trophy className="w-4 h-4" />
             Etapa 20
           </TabsTrigger>
-          <TabsTrigger value="theme" className="flex items-center gap-2">
+          <TabsTrigger value="theme" className="flex items-center gap-2 text-xs">
             <Palette className="w-4 h-4" />
             Tema
           </TabsTrigger>
@@ -239,7 +271,17 @@ export const NoCodeConfigPanel: React.FC = () => {
           <ConfigurationStatusPanel />
         </TabsContent>
 
-        {/* 🎛️ Header Configuration */}
+        {/* 🚀 Step Behavior Configuration */}
+        <TabsContent value="steps">
+          <StepConfigurationPanel />
+        </TabsContent>
+
+        {/* � Result Variables Configuration */}
+        <TabsContent value="results">
+          <ResultConfigurationPanel />
+        </TabsContent>
+
+        {/* �🎛️ Header Configuration */}
         <TabsContent value="header">
           <HeaderConfigurationPanel
             headerConfig={headerSettings}
@@ -405,6 +447,148 @@ export const NoCodeConfigPanel: React.FC = () => {
                   style={{ borderColor: '#B89B7A', color: '#B89B7A' }}
                 >
                   Conectar com Vercel
+                </Button>
+              </CardContent>
+            </Card>
+          </div>
+        </TabsContent>
+
+        {/* Publishing Configuration */}
+        <TabsContent value="publishing">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <Card className="border-0" style={{ backgroundColor: '#FFFFFF', boxShadow: '0 4px 20px rgba(184, 155, 122, 0.1)' }}>
+              <CardHeader>
+                <CardTitle className="text-[#432818] flex items-center gap-2">
+                  <Monitor className="w-5 h-5" style={{ color: '#B89B7A' }} />
+                  Destino dos Templates
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div className="space-y-2">
+                  <Label htmlFor="template-storage">Local de Armazenamento</Label>
+                  <Select
+                    value={publishingSettings.templateStorage}
+                    onValueChange={(value) => setPublishingSettings({
+                      ...publishingSettings,
+                      templateStorage: value as PublishingSettings['templateStorage']
+                    })}
+                  >
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="local">🏠 LocalStorage (Desenvolvimento)</SelectItem>
+                      <SelectItem value="supabase">🗄️ Supabase Database</SelectItem>
+                      <SelectItem value="vercel">⚡ Vercel Blob Storage</SelectItem>
+                      <SelectItem value="aws">☁️ AWS S3</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="template-path">Pasta de Templates</Label>
+                  <Input
+                    id="template-path"
+                    value={publishingSettings.templatePath}
+                    onChange={(e) => setPublishingSettings({
+                      ...publishingSettings,
+                      templatePath: e.target.value
+                    })}
+                    placeholder="/public/templates/"
+                  />
+                  <p className="text-xs text-[#8F7A6A]">Pasta onde os templates JSON são salvos</p>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="backup-enabled">Backup Automático</Label>
+                  <div className="flex items-center space-x-2">
+                    <Switch
+                      checked={publishingSettings.backupEnabled}
+                      onCheckedChange={(checked) => setPublishingSettings({
+                        ...publishingSettings,
+                        backupEnabled: checked
+                      })}
+                    />
+                    <span className="text-sm">Criar backup a cada salvamento</span>
+                  </div>
+                </div>
+
+                <div className="p-4 rounded-lg" style={{ backgroundColor: '#F3E8E6' }}>
+                  <div className="flex items-center gap-2 mb-2">
+                    <Check className="w-4 h-4 text-green-600" />
+                    <span className="text-sm font-medium text-[#432818]">Status Atual</span>
+                  </div>
+                  <p className="text-xs text-[#6B4F43]">
+                    ✅ Templates sendo salvos em: <code>/public/templates/</code><br />
+                    ✅ Backup automático: Habilitado<br />
+                    ✅ Configurações por funil: LocalStorage
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="border-0" style={{ backgroundColor: '#FFFFFF', boxShadow: '0 4px 20px rgba(184, 155, 122, 0.1)' }}>
+              <CardHeader>
+                <CardTitle className="text-[#432818] flex items-center gap-2">
+                  <Link className="w-5 h-5" style={{ color: '#B89B7A' }} />
+                  URLs de Publicação Global
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="base-publish-url">URL Base de Publicação</Label>
+                  <Input
+                    id="base-publish-url"
+                    value={publishingSettings.basePublishUrl}
+                    onChange={(e) => setPublishingSettings({
+                      ...publishingSettings,
+                      basePublishUrl: e.target.value
+                    })}
+                    placeholder="https://quizquest.app"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="preview-url">URL Base de Preview</Label>
+                  <Input
+                    id="preview-url"
+                    value={publishingSettings.previewUrl}
+                    onChange={(e) => setPublishingSettings({
+                      ...publishingSettings,
+                      previewUrl: e.target.value
+                    })}
+                    placeholder="https://preview.quizquest.app"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="cdn-url">CDN Base URL</Label>
+                  <Input
+                    id="cdn-url"
+                    value={publishingSettings.cdnUrl}
+                    onChange={(e) => setPublishingSettings({
+                      ...publishingSettings,
+                      cdnUrl: e.target.value
+                    })}
+                    placeholder="https://cdn.quizquest.app"
+                  />
+                </div>
+
+                <div className="p-4 rounded-lg" style={{ backgroundColor: '#E8F5E8' }}>
+                  <h4 className="font-medium text-green-800 mb-2">🎯 URLs Finais</h4>
+                  <div className="text-xs space-y-1 text-green-700">
+                    <div>📡 <strong>Publicado:</strong> {publishingSettings.basePublishUrl}/[slug]</div>
+                    <div>👁️ <strong>Preview:</strong> {publishingSettings.previewUrl}/[funnelId]</div>
+                    <div>⚡ <strong>CDN:</strong> {publishingSettings.cdnUrl}/[assets]</div>
+                  </div>
+                </div>
+
+                <Button
+                  onClick={() => handleSave('Publicação')}
+                  disabled={saving}
+                  className="bg-[#B89B7A] hover:bg-[#A0895B] text-white w-full"
+                >
+                  Salvar Configurações de Publicação
                 </Button>
               </CardContent>
             </Card>

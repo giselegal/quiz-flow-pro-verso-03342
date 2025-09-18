@@ -13,7 +13,6 @@ import {
   Brain,
   LineChart,
   Database,
-  Link2,
 } from 'lucide-react';
 import { Link, useLocation } from 'wouter';
 import { Badge } from '../ui/badge';
@@ -35,6 +34,14 @@ const coreBusinessItems = [
     href: '/editor',
     icon: Code,
     description: 'Editor drag & drop principal',
+  },
+  {
+    title: 'Configurações NoCode',
+    href: '/admin/configuracao',
+    icon: Zap,
+    description: 'SEO, Analytics, Domínios - Sem código',
+    badge: 'NoCode',
+    isAdvanced: false,
   },
   {
     title: 'Quiz Manager',
@@ -97,12 +104,6 @@ const configItems = [
     href: '/admin/settings',
     icon: Settings,
     description: 'Configurações do sistema',
-  },
-  {
-    title: 'Integrações',
-    href: '/admin/configuracao',
-    icon: Link2,
-    description: 'SEO, Pixel, UTM, Webhooks',
   },
   {
     title: 'Templates',
