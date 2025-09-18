@@ -139,17 +139,86 @@ class HybridTemplateService {
                 return this.overrideCache.get(stepId);
             }
 
-            const response = await fetch(`/templates/${stepId}-template.json`);
+            // Normalizar stepId para formato correto (step-01, step-02, etc.)
+            const normalizedStepId = this.normalizeStepId(stepId);
+            const templatePath = `/templates/${normalizedStepId}-template.json`;
+
+            console.log(`🔍 HybridTemplateService: Tentando carregar template: ${templatePath}`);
+
+            const response = await fetch(templatePath);
             if (response.ok) {
                 const override = await response.json();
                 this.overrideCache.set(stepId, override);
                 console.log(`✅ Override carregado para ${stepId}`);
                 return override;
             }
+
+            // Se 404, usar template padrão ao invés de falhar
+            if (response.status === 404) {
+                console.log(`⚠️ Template ${templatePath} não encontrado (404), usando template padrão`);
+                const defaultTemplate = this.createDefaultTemplate(normalizedStepId);
+                this.overrideCache.set(stepId, defaultTemplate);
+                return defaultTemplate;
+            }
+
+            console.warn(`⚠️ Erro ${response.status} ao carregar template ${templatePath}`);
             return null;
-        } catch {
-            return null;
+        } catch (error) {
+            console.warn(`⚠️ Falha ao carregar override para ${stepId}:`, error);
+            // Em caso de erro de rede, usar template padrão
+            const normalizedStepId = this.normalizeStepId(stepId);
+            const defaultTemplate = this.createDefaultTemplate(normalizedStepId);
+            this.overrideCache.set(stepId, defaultTemplate);
+            return defaultTemplate;
         }
+    }
+
+    /**
+     * Normaliza stepId para formato consistente (step-01, step-02, etc.)
+     */
+    private static normalizeStepId(stepId: string): string {
+        // Se já está no formato step-XX, retornar como está
+        if (stepId.match(/^step-\d{2}$/)) {
+            return stepId;
+        }
+
+        // Se é apenas um número, converter para step-XX
+        const stepNumber = parseInt(stepId.replace(/\D/g, ''), 10);
+        if (!isNaN(stepNumber)) {
+            return `step-${stepNumber.toString().padStart(2, '0')}`;
+        }
+
+        // Fallback para casos não esperados
+        return stepId;
+    }
+
+    /**
+     * Cria um template padrão quando o arquivo não é encontrado
+     */
+    private static createDefaultTemplate(stepId: string): any {
+        return {
+            id: stepId,
+            name: `Template padrão - ${stepId}`,
+            description: `Template padrão gerado para ${stepId}`,
+            blocks: [],
+            settings: {
+                behavior: {
+                    autoAdvance: false,
+                    showProgress: true,
+                    allowBack: true
+                },
+                validation: {
+                    required: false,
+                    minSelections: 0,
+                    maxSelections: 1
+                }
+            },
+            meta: {
+                isDefaultTemplate: true,
+                generated: true,
+                timestamp: new Date().toISOString()
+            }
+        };
     }
 
     /**
