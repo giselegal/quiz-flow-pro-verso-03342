@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔍 Debug: Painel de Propriedades</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+
+        .debug-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .debug-section {
+            margin: 20px 0;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background: #f9f9f9;
+        }
+
+        .debug-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .debug-step {
+            margin: 10px 0;
+            padding: 10px;
+            background: white;
+            border-radius: 5px;
+            border-left: 4px solid #007acc;
+        }
+
+        .debug-code {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: 'Monaco', 'Consolas', monospace;
+            font-size: 12px;
+            overflow-x: auto;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: bold;
+            margin: 0 5px;
+        }
+
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status.warning {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .action-button {
+            display: inline-block;
+            padding: 10px 20px;
+            background: #007acc;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            margin: 5px;
+            transition: background 0.3s;
+        }
+
+        .action-button:hover {
+            background: #005a9e;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="debug-container">
+        <h1>🔍 Debug: Investigação do Painel de Propriedades</h1>
+
+        <div class="debug-section">
+            <div class="debug-title">📊 Status da Investigação</div>
+            <p><span class="status success">✅ Arquitetura validada</span> - ModularEditorPro usa o painel correto</p>
+            <p><span class="status warning">⚠️ Problema identificado</span> - Painel não carrega propriedades dos
+                componentes</p>
+            <p><span class="status error">🔍 Investigando</span> - Logs adicionados para encontrar desconexão</p>
+        </div>
+
+        <div class="debug-section">
+            <div class="debug-title">🔄 Fluxo de Dados Esperado</div>
+            <div class="debug-step">
+                <strong>1. Clique no Componente</strong><br>
+                ➜ ModularEditorPro.handleBlockSelect() ➜ setSelectedBlockId()
+            </div>
+            <div class="debug-step">
+                <strong>2. Estado Atualizado</strong><br>
+                ➜ selectedBlock = currentStepBlocks.find(id) ➜ useMemo recalcula
+            </div>
+            <div class="debug-step">
+                <strong>3. Props Passadas</strong><br>
+                ➜ PropertiesColumn recebe selectedBlock ➜ SinglePropertiesPanel
+            </div>
+            <div class="debug-step">
+                <strong>4. Renderização</strong><br>
+                ➜ useOptimizedUnifiedProperties ➜ getPropertiesByCategory ➜ PropertyField
+            </div>
+        </div>
+
+        <div class="debug-section">
+            <div class="debug-title">🔧 Logs Adicionados para Debug</div>
+            <div class="debug-code">
+                console.log('🔍 ModularEditorPro - selectedBlock calculado:', {
+                selectedBlockId: state.selectedBlockId,
+                currentStepBlocks: currentStepBlocks.length,
+                foundBlock: !!block,
+                blockId: block?.id,
+                blockType: block?.type,
+                properties: block?.properties,
+                content: block?.content
+                });
+
+                console.log('🔍 SinglePropertiesPanel - selectedBlock recebido:', {
+                hasBlock: !!selectedBlock,
+                blockId: selectedBlock?.id,
+                blockType: selectedBlock?.type,
+                properties: selectedBlock?.properties,
+                content: selectedBlock?.content
+                });
+
+                console.log('🔄 EditorProvider - updateBlock chamado:', {
+                stepKey, blockId, updates,
+                beforeProperties: b.properties,
+                mergedProps
+                });
+            </div>
+        </div>
+
+        <div class="debug-section">
+            <div class="debug-title">🎯 Próximos Passos de Debug</div>
+            <ol>
+                <li><strong>Abrir Console do Browser</strong> - F12 → Console</li>
+                <li><strong>Navegar para Editor</strong> - /editor/new ou /admin</li>
+                <li><strong>Clicar em Componente</strong> - Verificar logs no console</li>
+                <li><strong>Analisar Dados</strong> - Verificar se selectedBlock tem properties</li>
+                <li><strong>Testar Atualização</strong> - Mudar valor e ver logs de update</li>
+            </ol>
+        </div>
+
+        <div class="debug-section">
+            <div class="debug-title">🚀 Links para Teste</div>
+            <a href="/editor/new" class="action-button">🎨 Editor Novo</a>
+            <a href="/admin/funis" class="action-button">⚙️ Painel Admin</a>
+            <a href="/editor-pro/test" class="action-button">🧪 Editor Pro Teste</a>
+            <a href="javascript:window.open('/editor/new','_blank')" class="action-button">🔍 Debug Console</a>
+        </div>
+
+        <div class="debug-section">
+            <div class="debug-title">📝 Possíveis Causas</div>
+            <ul>
+                <li><strong>Estado não sincronizado:</strong> selectedBlockId não encontra bloco correto</li>
+                <li><strong>Propriedades vazias:</strong> Blocos sendo criados sem properties iniciais</li>
+                <li><strong>Hook com problema:</strong> useOptimizedUnifiedProperties não mapeando corretamente</li>
+                <li><strong>Memoização incorreta:</strong> useMemo não atualizando quando deveria</li>
+                <li><strong>Formato de dados:</strong> properties vs content confundindo o sistema</li>
+            </ul>
+        </div>
+
+        <div style="text-align: center; margin-top: 40px; padding: 20px; background: #e3f2fd; border-radius: 8px;">
+            <p><strong>🔍 Debug Mode Ativado!</strong></p>
+            <p>Logs detalhados foram adicionados ao código. Abra o console do browser e teste o editor para identificar
+                onde está a desconexão.</p>
+        </div>
+    </div>
+
+    <script>
+        // Auto-open console se estiver em desenvolvimento
+        if (window.location.hostname === 'localhost' || window.location.hostname.includes('codespaces')) {
+            console.log('🔍 Debug mode ativado! Verifique os logs quando usar o editor.');
+            console.log('📍 Navegue para /editor/new e clique em componentes para ver os logs.');
+        }
+    </script>
+</body>
+
+</html>

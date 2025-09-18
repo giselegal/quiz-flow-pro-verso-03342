@@ -435,7 +435,7 @@ export const SinglePropertiesPanel: React.FC<SinglePropertiesPanelProps> = memo(
     // ID único para esta instância do painel
     const uniqueId = useId();
 
-    // 🔍 DEBUG: Log do selectedBlock para investigar o problema
+    // 🔍 DEBUG DETALHADO: Investigar desconexão do painel
     console.log('🔍 SinglePropertiesPanel - selectedBlock recebido:', {
         hasBlock: !!selectedBlock,
         blockId: selectedBlock?.id,
@@ -443,6 +443,20 @@ export const SinglePropertiesPanel: React.FC<SinglePropertiesPanelProps> = memo(
         properties: selectedBlock?.properties,
         content: selectedBlock?.content,
         fullBlock: selectedBlock
+    });
+
+    console.log('🔍 DEBUG CRÍTICO - Análise detalhada do selectedBlock:', {
+        selectedBlockExists: selectedBlock !== null && selectedBlock !== undefined,
+        selectedBlockType: typeof selectedBlock,
+        selectedBlockKeys: selectedBlock ? Object.keys(selectedBlock) : 'N/A',
+        hasProperties: selectedBlock?.properties !== undefined,
+        propertiesType: typeof selectedBlock?.properties,
+        propertiesKeys: selectedBlock?.properties ? Object.keys(selectedBlock.properties) : 'N/A',
+        propertiesValues: selectedBlock?.properties || 'N/A',
+        hasContent: selectedBlock?.content !== undefined,
+        contentType: typeof selectedBlock?.content,
+        contentKeys: selectedBlock?.content ? Object.keys(selectedBlock.content) : 'N/A',
+        contentValues: selectedBlock?.content || 'N/A'
     });
 
     // Hook otimizado de propriedades com debouncing

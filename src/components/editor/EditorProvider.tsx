@@ -943,14 +943,14 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
             ...(b.properties || {}),
             ...(incomingProps || {}),
           };
-          
+
           console.log('🔄 EditorProvider - atualizando bloco:', {
             blockId: b.id,
             beforeProperties: b.properties,
             incomingProps,
             mergedProps
           });
-          
+
           return { ...b, properties: mergedProps };
         });
 

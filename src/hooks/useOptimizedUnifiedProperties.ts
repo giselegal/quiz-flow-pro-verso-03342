@@ -196,16 +196,32 @@ export const useOptimizedUnifiedProperties = ({
     const properties = useMemo(() => {
         const generated = generatePropertiesForBlockType(blockType);
 
+        // 🔍 DEBUG CRÍTICO - Hook processamento
+        console.log('🚀 useOptimizedUnifiedProperties - processando:', {
+            blockType,
+            currentBlockExists: !!currentBlock,
+            currentBlockId: currentBlock?.id,
+            hasProperties: !!currentBlock?.properties,
+            hasContent: !!currentBlock?.content,
+            propertiesData: currentBlock?.properties,
+            contentData: currentBlock?.content,
+            basePropsCount: generated.length
+        });
+
         // Aplica valores atuais do bloco se existir
         if (currentBlock?.properties || currentBlock?.content) {
-            return generated.map(prop => ({
+            const result = generated.map(prop => ({
                 ...prop,
                 value: currentBlock?.properties?.[prop.key] ??
                     currentBlock?.content?.[prop.key] ??
                     prop.value
             }));
+
+            console.log('✅ useOptimizedUnifiedProperties - propriedades hidratadas:', result);
+            return result;
         }
 
+        console.log('⚠️ useOptimizedUnifiedProperties - usando propriedades base (sem dados do currentBlock)');
         return generated;
     }, [blockType, currentBlock?.properties, currentBlock?.content]);
 

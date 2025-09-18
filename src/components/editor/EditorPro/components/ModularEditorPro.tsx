@@ -189,7 +189,7 @@ const ModularEditorPro: React.FC = () => {
   const selectedBlock = useMemo(() => {
     if (!state.selectedBlockId) return null;
     const block = currentStepBlocks.find(block => block.id === state.selectedBlockId) || null;
-    
+
     // 🔍 DEBUG: Log do selectedBlock para investigar o problema  
     console.log('🔍 ModularEditorPro - selectedBlock calculado:', {
       selectedBlockId: state.selectedBlockId,
@@ -201,7 +201,7 @@ const ModularEditorPro: React.FC = () => {
       content: block?.content,
       fullBlock: block
     });
-    
+
     return block;
   }, [currentStepBlocks, state.selectedBlockId]);
 
@@ -252,7 +252,7 @@ const ModularEditorPro: React.FC = () => {
       updates,
       updateType: typeof updates
     });
-    
+
     if (selectedBlock) {
       handleUpdateBlock(selectedBlock.id, updates);
     }
