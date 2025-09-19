@@ -120,8 +120,8 @@ export const useStepConfig = ({
         if (!config?.analytics.trackEvents) return;
 
         // Track page view
-        if (typeof gtag !== 'undefined') {
-            gtag('event', config.analytics.eventName || 'step_viewed', {
+        if (typeof window !== 'undefined' && 'gtag' in window) {
+            (window as any).gtag('event', config.analytics.eventName || 'step_viewed', {
                 funnel_id: funnelId,
                 step_number: stepNumber,
                 step_type: config.metadata.type,

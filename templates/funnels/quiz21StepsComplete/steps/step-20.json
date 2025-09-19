@@ -1,0 +1,71 @@
+{
+    "stepNumber": 20,
+    "override": true,
+    "reason": "Processing Step com Loading Otimizado",
+    "ui": {
+        "theme": "processing",
+        "showProgress": true,
+        "animationType": "fade",
+        "showProcessingSteps": true
+    },
+    "behavior": {
+        "autoAdvance": true,
+        "autoAdvanceDelay": 4000,
+        "showProgress": true,
+        "allowBack": false
+    },
+    "validation": {
+        "type": "none"
+    },
+    "analytics": {
+        "trackEvents": true,
+        "eventName": "result_processing",
+        "customProperties": {
+            "processing_time": 4000,
+            "step_type": "loading"
+        }
+    },
+    "content": {
+        "title": "🔮 Criando seu Resultado Personalizado",
+        "subtitle": "Analisando suas respostas...",
+        "processingSteps": [
+            {
+                "text": "Analisando seu perfil...",
+                "duration": 1000,
+                "icon": "👤"
+            },
+            {
+                "text": "Selecionando looks perfeitos...",
+                "duration": 1500,
+                "icon": "👗"
+            },
+            {
+                "text": "Personalizando recomendações...",
+                "duration": 1000,
+                "icon": "✨"
+            },
+            {
+                "text": "Quase pronto!",
+                "duration": 500,
+                "icon": "🎉"
+            }
+        ],
+        "animation": {
+            "type": "progress-dots",
+            "speed": "medium"
+        }
+    },
+    "integrations": {
+        "api": {
+            "endpoint": "/api/quiz/process",
+            "method": "POST",
+            "timeout": 5000
+        }
+    },
+    "metadata": {
+        "version": "1.5",
+        "processingOptimized": true,
+        "created": "2024-09-19T00:00:00Z",
+        "notes": "Step de processamento com animações e steps visuais"
+    }
+}

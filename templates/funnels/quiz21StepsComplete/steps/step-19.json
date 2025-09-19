@@ -1,0 +1,87 @@
+{
+    "stepNumber": 19,
+    "override": true,
+    "reason": "Lead Capture Otimizado - Conversão Premium",
+    "ui": {
+        "theme": "conversion",
+        "showProgress": true,
+        "highlightForm": true,
+        "showTrustSignals": true
+    },
+    "behavior": {
+        "autoAdvance": false,
+        "showProgress": false,
+        "allowBack": true,
+        "focusFirstInput": true
+    },
+    "validation": {
+        "type": "input",
+        "required": true,
+        "fields": {
+            "email": {
+                "pattern": "^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$",
+                "message": "Digite seu melhor email para receber o resultado"
+            },
+            "name": {
+                "minLength": 2,
+                "message": "Como podemos te chamar?"
+            }
+        }
+    },
+    "analytics": {
+        "trackEvents": true,
+        "eventName": "lead_capture_optimized",
+        "customProperties": {
+            "lead_magnet": "quiz_result",
+            "conversion_page": true,
+            "step_type": "lead_capture"
+        }
+    },
+    "content": {
+        "title": "🎯 Receba seu Resultado Personalizado",
+        "subtitle": "Digite seus dados para receber suas recomendações exclusivas",
+        "description": "Enviaremos um relatório completo com looks personalizados para o seu estilo!",
+        "form": {
+            "fields": [
+                {
+                    "name": "name",
+                    "type": "text",
+                    "placeholder": "Seu nome",
+                    "required": true
+                },
+                {
+                    "name": "email",
+                    "type": "email",
+                    "placeholder": "seu@email.com",
+                    "required": true
+                }
+            ],
+            "submitText": "Receber Resultado Gratuito",
+            "trustSignals": [
+                "✅ 100% gratuito",
+                "🔒 Seus dados estão seguros",
+                "📧 Sem spam, prometido"
+            ]
+        }
+    },
+    "integrations": {
+        "email": {
+            "provider": "mailchimp",
+            "listId": "quiz_results_premium",
+            "tags": [
+                "quiz_completed",
+                "lead_captured"
+            ]
+        },
+        "analytics": {
+            "conversionGoal": "lead_capture",
+            "value": 10.00
+        }
+    },
+    "metadata": {
+        "version": "2.1",
+        "conversionOptimized": true,
+        "created": "2024-09-19T00:00:00Z",
+        "notes": "Lead capture otimizado com trust signals e validação aprimorada"
+    }
+}

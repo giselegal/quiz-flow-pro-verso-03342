@@ -1,0 +1,125 @@
+{
+    "funnelId": "lead-magnet-fashion",
+    "name": "Lead Magnet Fashion",
+    "version": "1.0.0",
+    "totalSteps": 7,
+    "description": "Funil rápido para captura de leads com foco em moda",
+    "theme": "minimal",
+    "analytics": {
+        "trackingId": "lead_magnet_fashion",
+        "enableGoogleAnalytics": true,
+        "enableFacebookPixel": true,
+        "customEvents": [
+            "lead_start",
+            "lead_captured",
+            "download_started"
+        ]
+    },
+    "globalSettings": {
+        "allowBack": true,
+        "showProgress": true,
+        "autoSave": false,
+        "sessionTimeout": 900,
+        "maxRetries": 2
+    },
+    "ui": {
+        "primaryColor": "#FF6B9D",
+        "secondaryColor": "#C44569",
+        "fontFamily": "Poppins",
+        "borderRadius": "12px",
+        "maxWidth": "lg"
+    },
+    "steps": {
+        "1": {
+            "type": "intro",
+            "category": "welcome",
+            "autoAdvance": false,
+            "validation": "none"
+        },
+        "2": {
+            "type": "question",
+            "category": "profile",
+            "autoAdvance": false,
+            "validation": "required"
+        },
+        "3": {
+            "type": "question",
+            "category": "preferences",
+            "autoAdvance": false,
+            "validation": "required"
+        },
+        "4": {
+            "type": "question",
+            "category": "goals",
+            "autoAdvance": false,
+            "validation": "required"
+        },
+        "5": {
+            "type": "leadCapture",
+            "category": "contact",
+            "autoAdvance": false,
+            "validation": "email"
+        },
+        "6": {
+            "type": "processing",
+            "category": "system",
+            "autoAdvance": true,
+            "validation": "none",
+            "autoAdvanceDelay": 2000
+        },
+        "7": {
+            "type": "download",
+            "category": "final",
+            "autoAdvance": false,
+            "validation": "none"
+        }
+    },
+    "validation": {
+        "required": {
+            "type": "selection",
+            "minSelections": 1,
+            "message": "Selecione uma opção para continuar"
+        },
+        "email": {
+            "type": "input",
+            "pattern": "^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$",
+            "message": "Digite um email válido para receber o material"
+        },
+        "none": {
+            "type": "none",
+            "message": ""
+        }
+    },
+    "behavior": {
+        "autoAdvance": {
+            "enabled": true,
+            "defaultDelay": 2000,
+            "steps": [
+                6
+            ]
+        },
+        "analytics": {
+            "trackStepViews": true,
+            "trackSelections": true,
+            "trackCompletions": true
+        }
+    },
+    "integrations": {
+        "api": {
+            "endpoint": "/api/lead-magnet/submit",
+            "realTimeData": false,
+            "fallbackData": "LEAD_MAGNET_REGISTRY"
+        },
+        "email": {
+            "provider": "mailchimp",
+            "listId": "fashion_leads"
+        },
+        "download": {
+            "type": "pdf",
+            "url": "/downloads/fashion-guide.pdf",
+            "trackDownloads": true
+        }
+    },
+    "created": "2024-09-19T00:00:00Z",
+    "updated": "2024-09-19T00:00:00Z"
+}

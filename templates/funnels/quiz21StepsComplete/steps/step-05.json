@@ -1,0 +1,47 @@
+{
+    "stepNumber": 5,
+    "override": true,
+    "reason": "A/B Test - Versão com auto-avanço",
+    "ui": {
+        "theme": "premium",
+        "showTimer": true,
+        "highlightOptions": true
+    },
+    "behavior": {
+        "autoAdvance": true,
+        "autoAdvanceDelay": 5000,
+        "showProgress": true,
+        "allowBack": true
+    },
+    "validation": {
+        "type": "selection",
+        "required": true,
+        "minSelections": 1,
+        "maxSelections": 2,
+        "message": "Escolha 1 ou 2 opções que mais combinam com você"
+    },
+    "analytics": {
+        "trackEvents": true,
+        "eventName": "step_5_enhanced",
+        "customProperties": {
+            "ab_test": "auto_advance_v2",
+            "variant": "enhanced"
+        }
+    },
+    "content": {
+        "title": "🌟 Qual é o seu estilo preferido? (Versão Premium)",
+        "subtitle": "Selecione até 2 opções que mais representam você",
+        "description": "Esta pergunta nos ajuda a personalizar ainda mais suas recomendações.",
+        "timer": {
+            "show": true,
+            "duration": 5,
+            "message": "Avançando automaticamente em {seconds}s"
+        }
+    },
+    "metadata": {
+        "version": "2.0",
+        "abTest": "step5_enhanced",
+        "created": "2024-09-19T00:00:00Z",
+        "notes": "Override para teste A/B com auto-avanço e seleção múltipla"
+    }
+}
