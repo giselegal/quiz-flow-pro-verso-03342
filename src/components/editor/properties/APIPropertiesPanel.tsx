@@ -19,7 +19,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { AlertCircle, RefreshCw, Check, X } from 'lucide-react';
 
-import { useBlockProperties, type UseBlockPropertiesOptions } from '@/hooks/useBlockProperties';
+import { useBlockProperties } from '@/hooks/useBlockProperties';
 import { type BlockPropertySchema } from '@/api/internal/BlockPropertiesAPI';
 
 // ===== INTERFACES =====
@@ -176,8 +176,7 @@ export const APIPropertiesPanel: React.FC<APIPropertiesPanelProps> = memo(({
         isLoading,
         error,
         updateProperty,
-        resetToDefaults,
-        validateProperty
+        resetToDefaults
     } = useBlockProperties({
         blockId,
         blockType,

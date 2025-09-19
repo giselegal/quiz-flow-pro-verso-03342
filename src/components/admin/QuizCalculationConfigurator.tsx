@@ -17,16 +17,14 @@ import {
     Settings,
     Calculator,
     Target,
-    Shuffle,
     Eye,
     Download,
-    Upload,
     AlertTriangle,
     CheckCircle,
     Play
 } from 'lucide-react';
 import { useQuizRulesConfig, QuizRulesConfig } from '@/hooks/useQuizRulesConfig';
-import { UnifiedCalculationEngine, calculateQuizResults } from '@/utils/UnifiedCalculationEngine';
+import { UnifiedCalculationEngine } from '@/utils/UnifiedCalculationEngine';
 
 interface QuizCalculationConfiguratorProps {
     onConfigSave?: (config: QuizRulesConfig) => void;

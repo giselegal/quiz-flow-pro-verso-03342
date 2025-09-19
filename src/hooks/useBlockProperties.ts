@@ -8,7 +8,7 @@
  * - Observadores de mudanças
  */
 
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { blockPropertiesAPI, type BlockDefinition, type PropertyChangeEvent } from '@/api/internal/BlockPropertiesAPI';
 
 // ===== INTERFACES =====

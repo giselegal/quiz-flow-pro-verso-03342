@@ -117,20 +117,27 @@ export class FunnelError extends Error {
         context: Partial<FunnelErrorContext> = {},
         originalError?: Error
     ) {
-        // Obter definição do código
+        // Usar mensagem customizada ou padrão primeiro
         const definition = getErrorDefinition(code);
+        const finalMessage = message || (definition?.userMessage) || 'Unknown error';
+
+        // Chamar constructor do Error PRIMEIRO
+        super(finalMessage);
+
+        // Configurar propriedades básicas
+        this.name = 'FunnelError';
+        this.code = code;
+        this.occurredAt = new Date();
+        this.originalError = originalError;
 
         // Se não encontrar definição, usar valores padrão
         if (!definition) {
             console.warn(`FunnelError: Unknown error code ${code}, using defaults`);
-            super(message || 'Unknown error');
-            this.name = 'FunnelError';
-            this.code = code;
             this.definition = {
                 code,
-                userMessage: message || 'An unknown error occurred',
-                technicalMessage: message || 'Unknown error',
-                severity: ErrorSeverity.MEDIUM,
+                userMessage: finalMessage,
+                technicalMessage: finalMessage,
+                severity: ErrorSeverity.ERROR,
                 category: 'unknown',
                 retryable: false,
                 logLevel: 'error',
@@ -140,9 +147,7 @@ export class FunnelError extends Error {
                 userActions: [],
                 tags: []
             };
-            this.occurredAt = new Date();
             this.isRecoverable = false;
-            this.originalError = originalError;
             this.context = {
                 timestamp: this.occurredAt.toISOString(),
                 userAgent: typeof navigator !== 'undefined' ? navigator.userAgent : 'Unknown',
@@ -161,27 +166,18 @@ export class FunnelError extends Error {
                 logLevel: 'error',
                 category: 'unknown',
                 tags: [],
-                severity: ErrorSeverity.MEDIUM,
+                severity: ErrorSeverity.ERROR,
+                retryable: false,
                 reportable: true,
-                component: 'unknown'
+                sensitive: false
             };
             this.retryCount = 0;
             return;
         }
 
-        // Usar mensagem customizada ou padrão
-        const finalMessage = message || definition.userMessage;
-
-        // Chamar constructor do Error
-        super(finalMessage);
-
-        // Configurar propriedades básicas
-        this.name = 'FunnelError';
-        this.code = code;
+        // Usar definição encontrada
         this.definition = definition;
-        this.occurredAt = new Date();
         this.isRecoverable = definition.retryable;
-        this.originalError = originalError;
 
         // Configurar contexto
         this.context = {

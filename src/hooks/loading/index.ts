@@ -124,16 +124,16 @@ export function initializeLoadingServices(): void {
 /**
  * Get loading service health status
  */
-export function getGlobalLoadingState(): {
+export async function getGlobalLoadingState(): Promise<{
     isLoading: boolean;
     message?: string;
     progress?: number;
     errors: string[];
     warnings: string[];
-} {
+}> {
     try {
         // Use dynamic import instead of require
-        const masterLoadingService = await import('./MasterLoadingService').then(m => m.masterLoadingService);
+        const masterLoadingService = (await import('./MasterLoadingService')).masterLoadingService;
         const currentState = masterLoadingService.getCurrentState();
         const allStates = masterLoadingService.getAllComponentStates();
 
@@ -142,11 +142,11 @@ export function getGlobalLoadingState(): {
             .some(state => (state as any)?.isLoading);
 
         return {
-            isLoading: currentState.isGlobalLoading || hasActiveLoadings,
+            isLoading: currentState.isLoading || hasActiveLoadings,
             message: currentState.message,
             progress: currentState.progress,
-            errors: currentState.errors || [],
-            warnings: currentState.warnings || []
+            errors: currentState.error ? [currentState.error] : [],
+            warnings: []
         };
     } catch (error) {
         console.warn('Failed to get global loading state:', error);
