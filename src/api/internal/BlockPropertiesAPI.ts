@@ -6,9 +6,12 @@
  * - Validação de propriedades
  * - Observadores de mudanças
  * - Performance otimizada
+ * - ✅ CONECTADA AOS DADOS REAIS DO FUNIL
  */
 
 import { blocksRegistry, type PropSchema } from '@/core/blocks/registry';
+import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
+import { UNIFIED_TEMPLATE_REGISTRY } from '@/config/unifiedTemplatesRegistry';
 
 // ===== INTERFACES =====
 
@@ -271,8 +274,94 @@ export class BlockPropertiesAPI {
         return value;
     }
 
+    // 🎯 GET REAL TEMPLATE DATA - BUSCA DADOS REAIS DO QUIZ21STEPSCOMPLETE
+    async getRealTemplateData(templateId: string = 'quiz21StepsComplete'): Promise<Record<string, any[]>> {
+        console.log(`🔍 Buscando dados reais do template: ${templateId}`);
+
+        // Buscar metadados do registry
+        const templateMeta = UNIFIED_TEMPLATE_REGISTRY[templateId];
+        if (!templateMeta) {
+            console.warn(`⚠️ Template ${templateId} não encontrado no UNIFIED_TEMPLATE_REGISTRY`);
+            return {};
+        }
+
+        // Buscar dados REAIS do template (questões, opções, imagens)
+        if (templateId === 'quiz21StepsComplete') {
+            console.log('✅ Carregando dados COMPLETOS do QUIZ_STYLE_21_STEPS_TEMPLATE');
+            return QUIZ_STYLE_21_STEPS_TEMPLATE;
+        }
+
+        console.warn(`⚠️ Dados reais não implementados para template: ${templateId}`);
+        return {};
+    }
+
+    // 🔍 GET STEP DATA WITH REAL CONTENT
+    async getStepDataWithRealContent(stepNumber: number, templateId: string = 'quiz21StepsComplete'): Promise<any[]> {
+        const templateData = await this.getRealTemplateData(templateId);
+        const stepKey = `step-${stepNumber}`;
+        const stepData = templateData[stepKey] || [];
+
+        console.log(`🔍 Dados do step ${stepNumber}:`, {
+            stepKey,
+            blocksCount: stepData.length,
+            blockTypes: stepData.map(block => block.type),
+            hasRealContent: stepData.length > 0
+        });
+
+        return stepData;
+    }
+
+    // 📊 GET BLOCK WITH REAL CONTENT
+    async getBlockWithRealContent(blockId: string, stepNumber?: number): Promise<any | null> {
+        // Se o step for fornecido, buscar apenas nesse step
+        if (stepNumber) {
+            const stepData = await this.getStepDataWithRealContent(stepNumber);
+            return stepData.find(block => block.id === blockId) || null;
+        }
+
+        // Buscar em todos os steps
+        const templateData = await this.getRealTemplateData();
+        for (const stepKey of Object.keys(templateData)) {
+            const blocks = templateData[stepKey];
+            const block = blocks.find(b => b.id === blockId);
+            if (block) {
+                console.log(`✅ Bloco ${blockId} encontrado no ${stepKey} com conteúdo real:`, {
+                    type: block.type,
+                    hasContent: !!block.content,
+                    hasProperties: !!block.properties,
+                    contentKeys: Object.keys(block.content || {}),
+                    propertiesKeys: Object.keys(block.properties || {})
+                });
+                return block;
+            }
+        }
+
+        console.warn(`⚠️ Bloco ${blockId} não encontrado no template`);
+        return null;
+    }
+
     // 📊 GET DEFAULT PROPERTIES (with real funnel data integration) - GENÉRICO
     async getDefaultProperties(blockType: string, blockId?: string): Promise<Record<string, any>> {
+        // 🎯 PRIORIDADE 1: Se blockId fornecido, buscar dados REAIS do template
+        if (blockId) {
+            const realBlock = await this.getBlockWithRealContent(blockId);
+            if (realBlock) {
+                console.log(`✅ Usando dados REAIS para bloco ${blockId}:`, {
+                    type: realBlock.type,
+                    content: realBlock.content,
+                    properties: realBlock.properties
+                });
+                return {
+                    ...realBlock.properties || {},
+                    ...realBlock.content || {},
+                    _fromRealTemplate: true,
+                    _blockId: blockId,
+                    _blockType: realBlock.type
+                };
+            }
+        }
+
+        // 🎯 PRIORIDADE 2: Definição do registry
         const definition = await this.getBlockDefinition(blockType);
         if (!definition) {
             console.warn(`⚠️ Definição não encontrada para tipo '${blockType}' - usando propriedades genéricas`);
