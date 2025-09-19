@@ -387,8 +387,8 @@ const EditorInitializerUnified: React.FC<{
                 // Timeout para template loading
                 const templatePromise = new Promise(async (resolve, reject) => {
                     try {
-                        const templates = templateLibraryService.listBuiltins();
-                        const template = templates.find(t => t.id === validTemplateId);
+                        const templates = await templateLibraryService.listBuiltins();
+                        const template = templates.find((t: any) => t.id === validTemplateId);
 
                         if (template) {
                             console.log('✅ [TEMPLATE] Template encontrado:', template.name || validTemplateId);
@@ -457,7 +457,7 @@ const EditorInitializerUnified: React.FC<{
 
                         if (!cancelled && UniversalComp) {
                             clearTimeout(timeoutId);
-                            setUnifiedEditorComp(() => UniversalComp);
+                            setUnifiedEditorComp(() => () => React.createElement(UniversalComp as any));
                             console.log('✅ [EDITOR] UniversalStepEditor carregado DIRETAMENTE com sucesso!');
                             return;
                         }

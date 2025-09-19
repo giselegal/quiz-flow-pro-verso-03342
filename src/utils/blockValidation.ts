@@ -71,7 +71,7 @@ export function getDefaultPropertiesForBlock(
  * Sanitiza propriedades removendo conteúdo perigoso
  */
 export function sanitizeBlockProperties(
-    blockType: BlockType,
+    // validateBlockType: unused parameter
     properties: Record<string, any>
 ): Record<string, any> {
     const sanitized = { ...properties };
@@ -502,13 +502,13 @@ function cleanStringValues(props: Record<string, any>) {
     });
 }
 
-function getBaseDefaultProperties(blockType: BlockType): Record<string, any> {
+function getBaseDefaultProperties(/* blockType: BlockType */): Record<string, any> {
     // Esta função retornaria as propriedades padrão base
     // (implementação similar à que já existe nos testes)
     return {};
 }
 
-function applyContextualDefaults(baseDefaults: Record<string, any>, context: Record<string, any>) {
+function applyContextualDefaults(baseDefaults: Record<string, any>, /* context: Record<string, any> */) {
     // Aplicar contexto específico às propriedades padrão
     return { ...baseDefaults };
 }

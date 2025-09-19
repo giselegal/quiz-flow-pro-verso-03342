@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { funnelLocalStore } from '@/services/funnelLocalStore';
-import { Edit, Eye, Globe2, Plus, Upload, Link as LinkIcon, Zap } from 'lucide-react';
+import { Edit, Eye, Globe2, Plus, Upload, Link as LinkIcon } from 'lucide-react';
 import React from 'react';
 import { Input } from '@/components/ui/input';
 import { useLocation } from 'wouter';
