@@ -6,17 +6,19 @@
  */
 
 :root {
-    /* 🎨 PALETA DE CORES PRINCIPAL */
+    /* 🎨 PALETA DE CORES PRINCIPAL - Cores exatas do /home */
     --color-brand-primary: #00BFFF;
-    /* brightBlue */
+    /* brand-brightBlue */
     --color-brand-secondary: #FF00FF;
-    /* brightPink */
+    /* brand-brightPink */
     --color-brand-accent: #4A2E9F;
-    /* darkBlue */
+    /* brand-lightBlue */
+    --color-brand-dark: #1A0F3D;
+    /* brand-darkBlue */
+    --color-brand-medium: #2E1A6B;
+    /* brand-mediumBlue */
     --color-brand-light: #E6F3FF;
-    /* lightBlue */
-    --color-brand-medium: #6BB6FF;
-    /* mediumBlue */
+    /* light variant */
 
     /* 🎯 CORES FUNCIONAIS */
     --color-background-primary: #FEFEFE;

@@ -134,11 +134,11 @@ export function AdminSidebar() {
             ? isAdvanced
               ? 'bg-gradient-to-r from-brand-accent to-brand-secondary text-white shadow-md'
               : isPriority
-              ? 'bg-gradient-to-r from-brand-primary to-brand-accent text-white shadow-lg border-2 border-brand-primary/30'
-              : 'bg-brand-primary text-white'
+                ? 'bg-gradient-to-r from-brand-primary to-brand-accent text-white shadow-lg border-2 border-brand-primary/30'
+                : 'bg-brand-primary text-white'
             : isPriority
-            ? 'text-brand-text hover:bg-brand-light bg-gradient-to-r from-white to-brand-light/50 border border-brand-primary/20'
-            : 'text-brand-text hover:bg-brand-light/50'
+              ? 'text-brand-text hover:bg-brand-light bg-gradient-to-r from-white to-brand-light/50 border border-brand-primary/20'
+              : 'text-brand-text hover:bg-brand-light/50'
         )}
       >
         <div className="flex items-center gap-3">
@@ -149,13 +149,13 @@ export function AdminSidebar() {
               variant={item.isAdvanced ? "default" : "secondary"}
               className={cn(
                 "text-xs px-2 py-0.5 ml-auto",
-                isActive 
-                  ? "bg-white/20 text-white" 
-                  : item.isAdvanced 
-                  ? "bg-gradient-to-r from-brand-accent to-brand-secondary text-white" 
-                  : isPriority 
-                  ? "bg-brand-primary text-white font-medium"
-                  : "bg-green-100 text-green-700"
+                isActive
+                  ? "bg-white/20 text-white"
+                  : item.isAdvanced
+                    ? "bg-gradient-to-r from-brand-accent to-brand-secondary text-white"
+                    : isPriority
+                      ? "bg-brand-primary text-white font-medium"
+                      : "bg-green-100 text-green-700"
               )}
             >
               {item.badge || 'Pro'}
