@@ -136,14 +136,14 @@ const ResizeHandle: React.FC<{
 
   return (
     <div
-      className={`relative w-1 bg-border hover:bg-blue-500 cursor-col-resize transition-colors duration-200 group ${className} ${isDragging ? 'bg-blue-500' : ''}`}
+      className={`relative w-1 bg-border hover:bg-brand-brightBlue cursor-col-resize transition-colors duration-200 group ${className} ${isDragging ? 'bg-brand-brightBlue' : ''}`}
       onMouseDown={handleMouseDown}
       onMouseEnter={() => setShowTooltip(true)}
       onMouseLeave={() => !isDragging && setShowTooltip(false)}
       title={label ? `Redimensionar ${label}` : 'Redimensionar coluna'}
     >
       {/* Indicador visual quando hover */}
-      <div className="absolute inset-0 w-1 bg-blue-500 opacity-0 group-hover:opacity-50 transition-opacity duration-200" />
+      <div className="absolute inset-0 w-1 bg-brand-brightBlue opacity-0 group-hover:opacity-50 transition-opacity duration-200" />
 
       {/* Tooltip com largura atual (opcional) */}
       {showTooltip && isDragging && label && (
