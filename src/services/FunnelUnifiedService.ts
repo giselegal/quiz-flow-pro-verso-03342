@@ -12,7 +12,9 @@
 
 import { supabase } from '@/integrations/supabase/client';
 import { FunnelContext } from '@/core/contexts/FunnelContext';
-import { funnelValidationService } from '@/services/funnelValidationService';
+// MIGRATED: Using new validation service
+import { migratedFunnelValidationService } from '@/services/migratedFunnelValidationService';
+import { errorManager, createValidationError } from '@/utils/errorHandling';
 import { deepClone } from '@/utils/cloneFunnel';
 
 // ============================================================================
@@ -549,14 +551,24 @@ export class FunnelUnifiedService {
     // ========================================================================
 
     /**
-     * Valida dados do funil
+     * Valida dados do funil - MIGRATED VERSION
      */
     private async validateFunnelData(funnel: UnifiedFunnelData): Promise<void> {
-        // Usar serviço de validação existente
-        const validation = await funnelValidationService.validateFunnelAccess(funnel.id, funnel.userId);
+        // MIGRATED: Usar novo serviço de validação
+        const validation = await migratedFunnelValidationService.validateFunnelAccess(funnel.id, funnel.userId);
 
         if (!validation.isValid) {
-            throw new Error(`Funil inválido: ${validation.error || 'Erro desconhecido'}`);
+            const error = createValidationError(
+                'SCHEMA_VALIDATION_FAILED',
+                `Funil inválido: ${validation.error?.message || 'Erro desconhecido'}`,
+                {
+                    funnelId: funnel.id,
+                    userId: funnel.userId,
+                    additionalData: { validationDetails: validation.validationDetails }
+                }
+            );
+            errorManager.handleError(error);
+            throw error;
         }
     }
 

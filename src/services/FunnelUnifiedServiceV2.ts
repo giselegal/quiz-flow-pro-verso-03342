@@ -13,7 +13,11 @@
 
 import { supabase } from '@/integrations/supabase/client';
 import { FunnelContext } from '@/core/contexts/FunnelContext';
-import { funnelValidationService } from '@/services/funnelValidationService';
+// MIGRATED: Using new validation service
+import { migratedFunnelValidationService } from '@/services/migratedFunnelValidationService';
+import { errorManager, createStorageError, createValidationError } from '@/utils/errorHandling';
+import { validateFunnelId } from '@/utils/idValidation';
+import { validateFunnelSchema } from '@/utils/schemaValidation';
 // import { deepClone } from '@/utils/cloneFunnel'; // unused
 import { hybridStorage } from './storage/HybridStorageService';
 import type { FunnelDBData, DraftDBData } from './storage/IndexedDBService';
@@ -299,10 +303,19 @@ class FunnelUnifiedServiceV2 {
                 version: existingFunnel.version + 1
             };
 
-            // Validar dados atualizados
-            const validation = funnelValidationService.validateFunnel(updatedFunnel);
+            // MIGRATED: Validar dados atualizados usando nova arquitetura
+            const validation = validateFunnelSchema(updatedFunnel);
             if (!validation.isValid) {
-                throw new Error(`Dados inválidos: ${validation.errors.join(', ')}`);
+                const validationError = createValidationError(
+                    'SCHEMA_VALIDATION_FAILED',
+                    `Dados inválidos no funil ${updatedFunnel.id}: ${validation.errors?.join(', ')}`,
+                    {
+                        funnelId: updatedFunnel.id,
+                        additionalData: { validationErrors: validation.errors }
+                    }
+                );
+                errorManager.handleError(validationError);
+                throw validationError;
             }
 
             // Salvar usando HybridStorage

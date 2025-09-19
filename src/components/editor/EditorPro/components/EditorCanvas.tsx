@@ -1,6 +1,6 @@
 import React, { memo, useMemo } from 'react';
 import { Block } from '@/types/editor';
-import { QuizRenderer } from '@/components/core/QuizRenderer';
+import ScalableQuizRenderer from '@/components/core/ScalableQuizRenderer';
 import CanvasDropZone from '@/components/editor/canvas/CanvasDropZone.simple';
 import { SortableContext } from '@dnd-kit/sortable';
 import { useStepSelection } from '@/hooks/useStepSelection';
@@ -8,7 +8,7 @@ import { useStepSelection } from '@/hooks/useStepSelection';
 /**
  * 🎨 CANVAS DO EDITOR OTIMIZADO
  * 
- * Componente isolado com contexto DnD próprio por etapa
+ * Agora usa ScalableQuizRenderer para preview escalável!
  */
 
 interface EditorCanvasProps {
@@ -49,13 +49,15 @@ const EditorCanvas: React.FC<EditorCanvasProps> = ({
     return (
       <div className="flex-1 min-h-0 bg-gradient-to-br from-[#FAF9F7] via-[#F5F2E9] to-[#EEEBE1]">
         <div className="h-full w-full overflow-y-auto">
-          <QuizRenderer
+          <ScalableQuizRenderer
+            funnelId="quiz21StepsComplete"
             mode="preview"
-            currentStepOverride={currentStep}
-            blocksOverride={blocks}
-            previewEditable={false}
-            onStepChange={onStepChange}
+            debugMode={true}
             className="preview-mode-canvas"
+            onStepChange={(step, data) => {
+              if (onStepChange) onStepChange(step);
+              console.log('📍 Preview step change:', step, data);
+            }}
           />
         </div>
       </div>

@@ -1,15 +1,17 @@
 /**
- * 🔄 FUNNEL LOCAL STORE - UPDATED WITH ADVANCED STORAGE
+ * 🔄 FUNNEL LOCAL STORE - MIGRATED TO IMPROVED SYSTEM
  * 
- * IMPORTANTE: Este arquivo foi atualizado para usar o novo sistema de storage
- * baseado em IndexedDB, mantendo compatibilidade total com a API existente.
+ * IMPORTANTE: Este arquivo foi migrado para usar o novo improvedFunnelSystem
+ * com validação completa, gerenciamento de erros padronizado e performance otimizada.
  * 
- * ✅ Compatibilidade: Todos os métodos existentes continuam funcionando
- * ✅ Performance: Migração automática para IndexedDB
- * ✅ Segurança: Versionamento e backup automático
- * ✅ Escalabilidade: Suporte para milhares de funis
+ * ✅ Integração: Totalmente integrado com improvedFunnelSystem
+ * ✅ Validação: Validação rigorosa de todos os dados
+ * ✅ Erros: Gerenciamento padronizado de erros
+ * ✅ Performance: Cache avançado e operações otimizadas
+ * ✅ Compatibilidade: API existente mantida integralmente
+ * ✅ Escalabilidade: Suporte para milhares de funis com IndexedDB
  */
 
-// Re-export everything from the new storage adapter
-export * from './FunnelStorageAdapter';
-export { funnelLocalStore } from './FunnelStorageAdapter';
+// Re-export everything from the migrated storage service
+export * from './migratedFunnelLocalStore';
+export { migratedFunnelLocalStore as funnelLocalStore } from './migratedFunnelLocalStore';

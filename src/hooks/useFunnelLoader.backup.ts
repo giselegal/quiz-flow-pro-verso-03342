@@ -1,15 +1,18 @@
 /**
- * 🔄 HOOK DE CARREGAMENTO E VALIDAÇÃO DE FUNIL
+ * 🔄 HOOK DE CARREGAMENTO E VALIDAÇÃO DE FUNIL - MIGRATED
  * 
  * Hook responsável por:
  * - Gerenciar estado de carregamento do funil
- * - Validar existência e permissões
- * - Fornecer fallbacks e error handling
+ * - Validar existência e permissões com nova arquitetura
+ * - Fornecer fallbacks e error handling padronizado
  * - Centralizar estado do funil atual
  */
 
 import { useState, useEffect, useCallback } from 'react';
-import { funnelValidationService, type FunnelValidationResult } from '@/services/funnelValidationService';
+// MIGRATED: Using new validation service
+import { migratedFunnelValidationService, type MigratedFunnelValidationResult } from '@/services/migratedFunnelValidationService';
+import { errorManager, createValidationError } from '@/utils/errorHandling';
+import { validateFunnelId } from '@/utils/idValidation';
 
 export interface FunnelLoadingState {
     // Estados de carregamento
@@ -20,7 +23,7 @@ export interface FunnelLoadingState {
     // Dados do funil
     funnelId: string | null;
     funnel: any | null;
-    validationResult: FunnelValidationResult | null;
+    validationResult: MigratedFunnelValidationResult | null; // MIGRATED
 
     // Controle de erro
     error: string | null;
@@ -41,7 +44,7 @@ export function useFunnelLoader(initialFunnelId?: string, userId?: string): Funn
     const [isError, setIsError] = useState(false);
     const [funnelId, setFunnelId] = useState<string | null>(initialFunnelId || null);
     const [funnel, setFunnel] = useState<any | null>(null);
-    const [validationResult, setValidationResult] = useState<FunnelValidationResult | null>(null);
+    const [validationResult, setValidationResult] = useState<MigratedFunnelValidationResult | null>(null); // MIGRATED
     const [error, setError] = useState<string | null>(null);
     const [errorType, setErrorType] = useState<string | null>(null);
     const [suggestions, setSuggestions] = useState<string[]>([]);
@@ -60,25 +63,49 @@ export function useFunnelLoader(initialFunnelId?: string, userId?: string): Funn
         clearError();
 
         try {
-            console.log('🔍 Validando funil:', id);
+            console.log('🔍 Validando funil (MIGRATED):', id);
 
-            const result = await funnelValidationService.validateFunnelAccess(id, currentUserId || userId);
+            // MIGRATED: Using new validation service with enhanced error handling
+            const idValidation = validateFunnelId(id);
+            if (!idValidation.isValid) {
+                const validationError = createValidationError(
+                    'INVALID_FUNNEL_ID',
+                    `ID do funil inválido: ${idValidation.error}`,
+                    {
+                        funnelId: id,
+                        additionalData: { validationResult: idValidation }
+                    }
+                );
+                errorManager.handleError(validationError);
+
+                setIsError(true);
+                setError(validationError.message);
+                setErrorType('INVALID_FORMAT');
+                return;
+            }
+
+            const result = await migratedFunnelValidationService.validateFunnelAccess(id, currentUserId || userId);
             setValidationResult(result);
 
             if (result.isValid) {
                 setFunnelId(id);
                 setFunnel(result.funnel);
-                console.log('✅ Funil validado com sucesso:', result.funnel);
+                console.log('✅ Funil validado com sucesso (MIGRATED):', result.funnel);
             } else {
                 setIsError(true);
-                setError(result.error || 'Erro desconhecido');
-                setErrorType(result.errorType || 'UNKNOWN');
+                setError(result.error?.message || 'Erro desconhecido');
+                setErrorType(result.error?.code || 'UNKNOWN');
 
-                // Buscar sugestões de funis alternativos
-                const alternativeSuggestions = await funnelValidationService.suggestAlternativeFunnels(id);
+                // MIGRATED: Buscar sugestões de funis alternativos
+                const alternativeSuggestions = await migratedFunnelValidationService.suggestAlternativeFunnels(id, currentUserId || userId);
                 setSuggestions(alternativeSuggestions);
 
-                console.warn('❌ Falha na validação do funil:', result);
+                console.warn('❌ Falha na validação do funil (MIGRATED):', result);
+
+                // Log error using new system
+                if (result.error) {
+                    errorManager.handleError(result.error);
+                }
             }
         } catch (err) {
             console.error('🚨 Erro crítico na validação do funil:', err);

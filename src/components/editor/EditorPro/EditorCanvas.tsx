@@ -1,6 +1,6 @@
 import React, { memo, useCallback } from 'react';
 import { Block } from '@/types/editor';
-import { QuizRenderer } from '@/components/core/QuizRenderer';
+import ScalableQuizRenderer from '@/components/core/ScalableQuizRenderer';
 import CanvasDropZone from '@/components/editor/canvas/CanvasDropZone.simple';
 
 interface EditorCanvasProps {
@@ -34,11 +34,14 @@ const EditorCanvas: React.FC<EditorCanvasProps> = memo(({
   if (isPreviewMode) {
     return (
       <div className="flex-1 min-h-0 overflow-auto">
-        <QuizRenderer
+        <ScalableQuizRenderer
+          funnelId="quiz21StepsComplete"
           mode="preview"
-          currentStepOverride={currentStep}
-          blocksOverride={blocks}
-          previewEditable={false}
+          debugMode={true}
+          className="editor-preview-mode"
+          onStepChange={(step, data) => {
+            console.log('📍 Editor preview step change:', step, data);
+          }}
         />
       </div>
     );

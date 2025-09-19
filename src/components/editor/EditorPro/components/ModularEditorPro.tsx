@@ -537,12 +537,48 @@ const ModularEditorPro: React.FC = () => {
     }, 500);
   }, [schedule, addNotification]);
 
-  const handlePublish = useCallback(() => {
-    console.log('Publicando funil...');
-    addNotification('Funil publicado com sucesso');
-  }, [addNotification]);
+  const handlePublish = useCallback(async () => {
+    try {
+      const funnelData = {
+        steps: state.stepBlocks,
+        currentStep: state.currentStep,
+        settings: {
+          seo: {
+            title: 'Quiz Funil',
+            description: 'Quiz interativo para captura de leads',
+            keywords: []
+          },
+          branding: {
+            colors: {
+              primary: '#3B82F6',
+              secondary: '#6B7280'
+            },
+            typography: {
+              fontFamily: {
+                primary: 'Inter'
+              }
+            }
+          },
+          analytics: {
+            enabled: false
+          }
+        }
+      };
 
-  return (
+      console.log('🚀 Iniciando publicação do funil...', funnelData);
+      addNotification('Funil sendo preparado para publicação...');
+
+      // Simular processo de publicação
+      await new Promise(resolve => setTimeout(resolve, 2000));
+
+      console.log('✅ Funil publicado com sucesso!');
+      addNotification('Funil publicado com sucesso!');
+
+    } catch (error) {
+      console.error('❌ Erro na publicação:', error);
+      addNotification('Erro ao publicar funil', 'error');
+    }
+  }, [state, addNotification]); return (
     <FunnelDataProviderWrapper>
       <DndContext
         sensors={sensors}

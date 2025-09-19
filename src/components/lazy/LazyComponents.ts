@@ -14,27 +14,27 @@ import { Block } from '@/types/editor';
  */
 
 // 🎯 HEAVY COMPONENTS: Componentes que impactam performance
-const LazyQuizRenderer = lazy(() => 
-  import('@/components/core/QuizRenderer').then(module => ({ default: module.QuizRenderer }))
+const LazyScalableQuizRenderer = lazy(() =>
+  import('@/components/core/ScalableQuizRenderer').then(module => ({ default: module.default }))
 );
 
-const LazyStep20Result = lazy(() => 
+const LazyStep20Result = lazy(() =>
   import('@/components/steps/Step20Result').then(module => ({ default: module.default }))
 );
 
-const LazyResultHeaderInlineBlock = lazy(() => 
+const LazyResultHeaderInlineBlock = lazy(() =>
   import('@/components/editor/blocks/ResultHeaderInlineBlock').then(module => ({ default: module.default }))
 );
 
-const LazyEditorPro = lazy(() => 
+const LazyEditorPro = lazy(() =>
   import('@/components/editor/EditorPro').then(module => ({ default: module.default }))
 );
 
-const LazyPropertiesPanel = lazy(() => 
+const LazyPropertiesPanel = lazy(() =>
   import('@/components/editor/properties/EnhancedPropertiesPanel').then(module => ({ default: module.default }))
 );
 
-const LazyQuizFlowOrchestrator = lazy(() => 
+const LazyQuizFlowOrchestrator = lazy(() =>
   import('@/components/core/QuizFlowOrchestrator').then(module => ({ default: module.default }))
 );
 
@@ -69,12 +69,12 @@ const LazyOfferBlocks = {
 // 🎯 COMPONENT REGISTRY: Registry completo de componentes lazy
 export const LazyComponentRegistry = {
   // Core components
-  QuizRenderer: LazyQuizRenderer,
+  QuizRenderer: LazyScalableQuizRenderer,
   Step20Result: LazyStep20Result,
   EditorPro: LazyEditorPro,
   PropertiesPanel: LazyPropertiesPanel,
   QuizFlowOrchestrator: LazyQuizFlowOrchestrator,
-  
+
   // Block components by category
   ...LazyFormBlocks,
   ...LazyQuizBlocks,
@@ -85,7 +85,7 @@ export const LazyComponentRegistry = {
 // 🎯 FALLBACK COMPONENTS: Componentes de carregamento otimizados
 export const LazyFallbacks = {
   QuizRenderer: 'QuizRenderer',
-  Step20Result: 'Step20Result', 
+  Step20Result: 'Step20Result',
   EditorPro: 'EditorPro',
   PropertiesPanel: 'PropertiesPanel',
   Block: 'Block'
@@ -102,7 +102,7 @@ export const createFallback = (type: string) => {
         </div>
       </div>
     `,
-    
+
     Step20Result: `
       <div className="flex items-center justify-center min-h-[500px] bg-gradient-to-br from-stone-50 to-stone-100">
         <div className="text-center">
@@ -112,7 +112,7 @@ export const createFallback = (type: string) => {
         </div>
       </div>
     `,
-    
+
     EditorPro: `
       <div className="flex items-center justify-center h-[600px] bg-background border rounded-lg">
         <div className="text-center">
@@ -121,7 +121,7 @@ export const createFallback = (type: string) => {
         </div>
       </div>
     `,
-    
+
     PropertiesPanel: `
       <div className="w-80 bg-card border-l p-4">
         <div className="animate-pulse space-y-4">
@@ -133,7 +133,7 @@ export const createFallback = (type: string) => {
         </div>
       </div>
     `,
-    
+
     Block: `
       <div className="p-4 border border-dashed border-muted-foreground/30 rounded-lg">
         <div className="animate-pulse space-y-3">
@@ -143,7 +143,7 @@ export const createFallback = (type: string) => {
       </div>
     `
   };
-  
+
   return fallbackMap[type] || fallbackMap.Block;
 };
 
@@ -200,7 +200,7 @@ class LazyPreloader {
     const blocks = categoryMap[category];
     if (!blocks) return Promise.resolve();
 
-    const promises = Object.keys(blocks).map(blockType => 
+    const promises = Object.keys(blocks).map(blockType =>
       this.preloadComponent(blockType)
     );
 
@@ -222,12 +222,12 @@ class LazyPreloader {
 
     // Match route patterns
     const components = routePreloadMap[route] || [];
-    
+
     // Add step-specific components
     const stepMatch = route.match(/\/step\/(\d+)/);
     if (stepMatch) {
       const stepNumber = parseInt(stepMatch[1]);
-      
+
       if (stepNumber >= 2 && stepNumber <= 18) {
         components.push('quiz-question', 'options-grid');
       } else if (stepNumber === 20) {
@@ -238,7 +238,7 @@ class LazyPreloader {
     }
 
     const promises = components.map(comp => this.preloadComponent(comp));
-    
+
     return Promise.allSettled(promises).then(() => {
       console.log(`✅ [LazyPreloader] Route preloaded: ${route} (${components.length} components)`);
     });
@@ -257,7 +257,7 @@ class LazyPreloader {
     ];
 
     const promises = criticalComponents.map(comp => this.preloadComponent(comp));
-    
+
     return Promise.allSettled(promises).then(() => {
       console.log(`✅ [LazyPreloader] Critical components preloaded`);
     });
@@ -269,7 +269,7 @@ class LazyPreloader {
   preloadForBlocks(blocks: Block[]): Promise<void> {
     const blockTypes = [...new Set(blocks.map(block => block.type))];
     const promises = blockTypes.map(type => this.preloadComponent(type));
-    
+
     return Promise.allSettled(promises).then(() => {
       console.log(`✅ [LazyPreloader] Blocks preloaded: ${blockTypes.join(', ')}`);
     });

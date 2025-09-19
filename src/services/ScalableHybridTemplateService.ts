@@ -95,8 +95,6 @@ class ScalableHybridTemplateService {
         stepNumber: number
     ): Promise<ScalableStepConfig> {
         try {
-            const cacheKey = `${funnelId}-step-${stepNumber}`;
-
             // 1. Carregar configuração do funil se necessário
             await this.ensureFunnelLoaded(funnelId);
 

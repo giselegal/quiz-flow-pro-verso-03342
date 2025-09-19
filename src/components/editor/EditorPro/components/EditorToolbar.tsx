@@ -1,7 +1,7 @@
 import React, { memo } from 'react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-import { Play, Eye, EyeOff, Undo, Redo, Save, Settings } from 'lucide-react';
+import { Eye, EyeOff, Undo, Redo, Save, Settings } from 'lucide-react';
 import EditorNoCodePanel from '@/components/editor/EditorNoCodePanel';
 
 /**
@@ -141,7 +141,17 @@ const EditorToolbar: React.FC<EditorToolbarProps> = memo(({
           {isSaving ? 'Salvando...' : 'Salvar'}
         </Button>
 
-        {/* Settings */}
+        {/* Publication Controls */}
+        <div className="flex items-center gap-1 border-r border-border pr-2 mr-2">
+          <Button
+            onClick={onPublish}
+            size="sm"
+            className="gap-2 bg-primary text-primary-foreground hover:bg-primary/90"
+          >
+            <Settings className="h-4 w-4" />
+            Publicar
+          </Button>
+        </div>        {/* Settings */}
         <Button
           variant="ghost"
           size="sm"
@@ -149,16 +159,6 @@ const EditorToolbar: React.FC<EditorToolbarProps> = memo(({
           title="Configurações"
         >
           <Settings className="h-4 w-4" />
-        </Button>
-
-        {/* Publish */}
-        <Button
-          onClick={onPublish}
-          size="sm"
-          className="gap-2 bg-primary text-primary-foreground hover:bg-primary/90"
-        >
-          <Play className="h-4 w-4" />
-          Publicar
         </Button>
       </div>
     </div>

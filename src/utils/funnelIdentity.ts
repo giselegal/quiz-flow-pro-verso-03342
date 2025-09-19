@@ -12,9 +12,7 @@ import {
   validateFunnelId,
   parseStepNumber,
   normalizeStageId,
-  generateSecureId,
-  generateInstanceKey,
-  type IdValidationResult
+  generateInstanceKey
 } from './idValidation';
 
 /**
@@ -115,18 +113,6 @@ export const generateUniqueInstanceKey = (
 ): string => {
   return generateInstanceKey(componentType, stepNumber);
 };
-/**
- * Gera instanceKey único com validação - substituído por generateUniqueInstanceKey
- * @deprecated Use generateUniqueInstanceKey instead
- */
-const _generateInstanceKey = (componentType: string, stepNumber: number): string => {
-  const timestamp = Date.now();
-  const random = Math.floor(Math.random() * 1000);
-  const key = `${componentType}-${stepNumber}-${timestamp}-${random}`;
-
-  console.log(`🔑 InstanceKey gerada: ${key}`);
-  return key;
-};
 
 /**
  * Valida se um funnelId tem formato válido - substituído por validateFunnelId
@@ -158,19 +144,6 @@ export const isValidFunnelId = (funnelId: string | null | undefined): boolean =>
  */
 export const getAvailableStepNumbers = (maxSteps: number = 21): number[] => {
   return Array.from({ length: maxSteps }, (_, i) => i + 1);
-};
-
-/**
- * Gera um UUID v4 válido para novos funis - substituído por generateSecureId
- * @deprecated Use generateSecureId from idValidation.ts instead
- */
-const _generateFunnelId = (): string => {
-  // Gera UUID v4 válido
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-    const r = Math.random() * 16 | 0;
-    const v = c == 'x' ? r : (r & 0x3 | 0x8);
-    return v.toString(16);
-  });
 };
 
 /**

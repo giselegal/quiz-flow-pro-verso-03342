@@ -3,7 +3,10 @@ import { generateId } from '@/types/unified-schema';
 import { toast } from '@/hooks/use-toast';
 import { getFunnelIdFromEnvOrStorage, saveFunnelIdToStorage } from '@/utils/funnelIdentity';
 import { FunnelContext } from '@/core/contexts/FunnelContext';
-import { ContextualFunnelService } from '@/services/contextualFunnelService';
+// MIGRATED: Using new contextual service
+import {
+  createMigratedContextualFunnelService
+} from '@/services/migratedContextualFunnelService';
 
 interface FunnelManagerProps {
   currentFunnelId?: string;
@@ -22,13 +25,15 @@ interface FunnelInfo {
 }
 
 /**
- * 🎯 GERENCIADOR DE FUNIS
+ * 🎯 GERENCIADOR DE FUNIS - MIGRATED
  * 
  * Interface para:
  * - Visualizar funis existentes
  * - Criar novos funis
  * - Navegar entre funis
  * - Indicar qual funil está ativo
+ * 
+ * MIGRATED: Agora usa MigratedContextualFunnelService com validação completa
  */
 export const FunnelManager: React.FC<FunnelManagerProps> = ({
   currentFunnelId,
@@ -42,8 +47,8 @@ export const FunnelManager: React.FC<FunnelManagerProps> = ({
   const [newFunnelName, setNewFunnelName] = useState('');
   const [showCreateForm, setShowCreateForm] = useState(false);
 
-  // 🎯 Criar instância do serviço contextual
-  const contextualFunnelService = new ContextualFunnelService(context);
+  // MIGRATED: Criar instância do serviço contextual migrado
+  const contextualFunnelService = createMigratedContextualFunnelService(context);
 
   // 🔍 Determinar funil atual
   const activeFunnelId = currentFunnelId || getFunnelIdFromEnvOrStorage() || 'quiz-estilo-completo';

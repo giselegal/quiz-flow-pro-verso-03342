@@ -4,8 +4,8 @@ import CanvasDropZone from '@/components/editor/canvas/CanvasDropZone.simple';
 import type { Block } from '@/types/editor';
 import { useCanvasContainerStyles } from '@/hooks/useCanvasContainerStyles';
 
-const LazyQuizRenderer = React.lazy(() =>
-  import('@/components/core/QuizRenderer').then(mod => ({ default: mod.QuizRenderer }))
+const LazyScalableQuizRenderer = React.lazy(() =>
+  import('@/components/core/ScalableQuizRenderer').then(mod => ({ default: mod.default }))
 );
 
 export interface CanvasAreaProps {
@@ -56,15 +56,15 @@ const CanvasArea: React.FC<CanvasAreaProps> = ({
         previewDevice === 'xl' && 'max-w-6xl'
       )}>
         {mode === 'preview' ? (
-          <LazyQuizRenderer
+          <LazyScalableQuizRenderer
+            funnelId="quiz21StepsComplete"
             mode="preview"
-            blocksOverride={currentStepData as any}
-            currentStepOverride={safeCurrentStep}
-            previewEditable
-            selectedBlockId={selectedBlockId}
-            onBlockClick={(blockId: string) => actions.setSelectedBlockId(blockId)}
-            onStepChange={(step: number) => actions.setCurrentStep(step)}
-            className="w-full"
+            debugMode={true}
+            className="w-full canvas-area-preview"
+            onStepChange={(step, data) => {
+              actions.setCurrentStep(step);
+              console.log('📍 Canvas area step change:', step, data);
+            }}
           />
         ) : (
           <CanvasDropZone

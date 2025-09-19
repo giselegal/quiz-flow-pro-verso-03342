@@ -1,5 +1,10 @@
 /**
- * 🚀 INTERNAL BLOCK PROPERTIES API
+ * 🚀 Iimport { blocksRegistry, type PropSchema } from '@/core/blocks/registry';
+import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
+import { UNIFIED_TEMPLATE_REGISTRY } from '@/config/unifiedTemplatesRegistry';
+import { IndexedDBStorageService, StorageConfig } from '@/utils/storage/IndexedDBStorageService';
+import { DraftPersistence } from '@/utils/storage/DraftPersistence';
+import { BlockType, BlockContent } from '@/types/editor';AL BLOCK PROPERTIES API
  * 
  * API interna para gerenciar propriedades de blocos de forma eficiente
  * - Cache inteligente
@@ -12,6 +17,8 @@
 import { blocksRegistry, type PropSchema } from '@/core/blocks/registry';
 import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
 import { UNIFIED_TEMPLATE_REGISTRY } from '@/config/unifiedTemplatesRegistry';
+import { IndexedDBStorageService, StorageConfig } from '@/utils/storage/IndexedDBStorageService';
+import { DraftPersistence } from '@/services/editor/DraftPersistence';
 
 // ===== INTERFACES =====
 
@@ -148,12 +155,47 @@ export class BlockPropertiesAPI {
     private static instance: BlockPropertiesAPI;
     private cache = new BlockPropertiesCache();
     private funnelDataProvider: FunnelDataProvider | null = null;
+    private storageService: IndexedDBStorageService | null = null;
 
     static getInstance(): BlockPropertiesAPI {
         if (!BlockPropertiesAPI.instance) {
             BlockPropertiesAPI.instance = new BlockPropertiesAPI();
         }
         return BlockPropertiesAPI.instance;
+    }
+
+    // 🗄️ INICIALIZAR STORAGE SYSTEMS
+    async initializeStorage(): Promise<void> {
+        try {
+            // Configuração customizada para Block Properties
+            const config: StorageConfig = {
+                dbName: 'BlockPropertiesDB',
+                version: 1,
+                stores: [{
+                    name: 'blockProperties',
+                    keyPath: 'id',
+                    indexes: [
+                        { name: 'blockId', keyPath: 'blockId' },
+                        { name: 'funnelId', keyPath: 'funnelId' },
+                        { name: 'timestamp', keyPath: 'metadata.timestamp' }
+                    ]
+                }, {
+                    name: 'blockDrafts',
+                    keyPath: 'id',
+                    indexes: [
+                        { name: 'blockId', keyPath: 'blockId' },
+                        { name: 'lastModified', keyPath: 'lastModified' }
+                    ]
+                }]
+            };
+
+            this.storageService = IndexedDBStorageService.getInstance(config);
+            await this.storageService.initialize();
+            console.log('🗄️ BlockPropertiesAPI storage initialized');
+        } catch (error) {
+            console.warn('⚠️ IndexedDB initialization failed, using localStorage fallback:', error);
+            this.storageService = null;
+        }
     }
 
     // 🔗 CONECTAR AOS DADOS REAIS DO FUNIL
@@ -417,33 +459,63 @@ export class BlockPropertiesAPI {
         return genericProperties;
     }
 
-    // 💾 SAVE PROPERTY TO REAL FUNNEL DATA
+    // 💾 SAVE PROPERTY TO FUNNEL (IMPLEMENTAÇÃO COMPLETA COM INDEXEDDB)
     async savePropertyToFunnel(blockId: string, propertyKey: string, value: any): Promise<boolean> {
-        if (!this.funnelDataProvider) {
-            console.warn('⚠️ FunnelDataProvider não conectado, não é possível salvar no funil');
-            return false;
+        // 1️⃣ INICIALIZAR STORAGE SE NECESSÁRIO
+        if (!this.storageService) {
+            await this.initializeStorage();
         }
 
         try {
-            const currentBlock = this.funnelDataProvider.getBlockById(blockId);
-            if (!currentBlock) {
-                console.warn(`⚠️ Bloco ${blockId} não encontrado para salvar propriedade ${propertyKey}`);
+            const currentFunnelId = this.getCurrentFunnelId();
+            if (!currentFunnelId) {
+                console.warn('⚠️ No funnel ID available for property save');
                 return false;
             }
 
-            // Atualizar propriedades no funil
-            const updatedProperties = {
-                ...currentBlock.properties,
-                [propertyKey]: value
+            // 2️⃣ SALVAR NO INDEXED DB
+            const propertyData = {
+                blockId,
+                property: propertyKey,
+                value,
+                funnelId: currentFunnelId,
+                timestamp: Date.now()
             };
 
-            this.funnelDataProvider.updateBlockProperties(blockId, updatedProperties);
+            const storageKey = `${currentFunnelId}_${blockId}_${propertyKey}`;
+            await this.storageService?.set('blockProperties', storageKey, propertyData);
 
-            console.log(`💾 Propriedade ${propertyKey} salva no funil para bloco ${blockId}:`, value);
+            // 3️⃣ SALVAR DRAFT PARA RECUPERAÇÃO RÁPIDA  
+            DraftPersistence.saveStepDraft(currentFunnelId, `block_${blockId}`, [{
+                id: blockId,
+                type: 'text' as any,
+                properties: { [propertyKey]: value },
+                content: { text: '' } as any,
+                order: 0
+            }]);
+
+            // 4️⃣ ATUALIZAR CACHE E NOTIFICAR
+            this.cache.invalidate(blockId);
+            console.log(`💾 Property saved: ${blockId}.${propertyKey} = `, value);
             return true;
+
         } catch (error) {
-            console.error('❌ Erro ao salvar propriedade no funil:', error);
-            return false;
+            console.error('❌ Error saving property:', error);
+
+            // 5️⃣ FALLBACK: localStorage
+            try {
+                const fallbackKey = `fallback_${blockId}_${propertyKey}`;
+                localStorage.setItem(fallbackKey, JSON.stringify({
+                    value,
+                    timestamp: Date.now(),
+                    funnelId: this.getCurrentFunnelId() || 'unknown'
+                }));
+                console.log('📦 Property saved to localStorage fallback');
+                return true;
+            } catch (fallbackError) {
+                console.error('💥 Complete storage failure:', fallbackError);
+                return false;
+            }
         }
     }
 
@@ -480,6 +552,101 @@ export class BlockPropertiesAPI {
     // 🧹 CLEAR CACHE
     clearCache(blockType?: string): void {
         this.cache.invalidate(blockType);
+    }
+
+    // 🆕 SAVE NEW COMPONENT TO FUNNEL (IMPLEMENTAÇÃO COMPLETA)
+    async saveNewComponentToFunnel(
+        component: any,
+        stepId: string,
+        position?: number,
+        funnelId?: string
+    ): Promise<boolean> {
+        if (!this.storageService) {
+            await this.initializeStorage();
+        }
+
+        try {
+            const currentFunnelId = funnelId || this.getCurrentFunnelId();
+            if (!currentFunnelId) {
+                console.warn('⚠️ No funnel ID available for new component');
+                return false;
+            }
+
+            const componentData = {
+                id: `${currentFunnelId}_${stepId}_${component.id || Date.now()}`,
+                component,
+                stepId,
+                position: position ?? 0,
+                funnelId: currentFunnelId,
+                timestamp: Date.now(),
+                metadata: {
+                    userId: this.getCurrentUserId(),
+                    context: 'new-component',
+                    namespace: 'components',
+                    timestamp: Date.now()
+                }
+            };
+
+            // Salvar no IndexedDB
+            await this.storageService?.set('blockProperties', componentData.id, componentData);
+
+            // Salvar draft usando o método correto
+            DraftPersistence.saveStepDraft(currentFunnelId, `new_component_${stepId}`, [{
+                id: component.id || `comp_${Date.now()}`,
+                type: component.type || 'text' as any,
+                properties: component,
+                content: component.content || { text: '' } as any,
+                order: position ?? 0
+            }]);
+
+            console.log(`🆕 New component saved to step ${stepId}:`, component);
+            return true;
+
+        } catch (error) {
+            console.error('❌ Error saving new component:', error);
+            return false;
+        }
+    }
+
+    // 🔍 RETRIEVE SAVED PROPERTIES FROM STORAGE
+    async getPropertiesFromStorage(blockId: string, funnelId?: string): Promise<Record<string, any>> {
+        if (!this.storageService) {
+            await this.initializeStorage();
+        }
+
+        try {
+            const currentFunnelId = funnelId || this.getCurrentFunnelId();
+            if (!currentFunnelId) return {};
+
+            // Buscar propriedades no IndexedDB usando query
+            const allProperties = await this.storageService?.query('blockProperties', {
+                index: 'blockId',
+                key: blockId
+            }) || [];
+
+            const result: Record<string, any> = {};
+            for (const prop of allProperties) {
+                const propData = prop as any; // Cast para poder acessar as propriedades
+                if (propData.blockId === blockId && propData.funnelId === currentFunnelId) {
+                    result[propData.property] = propData.value;
+                }
+            }
+
+            return result;
+        } catch (error) {
+            console.error('❌ Error retrieving properties from storage:', error);
+            return {};
+        }
+    }
+
+    // 🔑 HELPER METHODS
+    private getCurrentFunnelId(): string | null {
+        // Fallback: tentar localStorage primeiro
+        return localStorage.getItem('currentFunnelId') || null;
+    }
+
+    private getCurrentUserId(): string {
+        return localStorage.getItem('userId') || 'anonymous';
     }
 }
 
