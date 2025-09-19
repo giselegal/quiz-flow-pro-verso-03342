@@ -17,8 +17,8 @@ interface FunnelDataProviderWrapperProps {
     children: React.ReactNode;
 }
 
-export const FunnelDataProviderWrapper: React.FC<FunnelDataProviderWrapperProps> = ({ 
-    children 
+export const FunnelDataProviderWrapper: React.FC<FunnelDataProviderWrapperProps> = ({
+    children
 }) => {
     const { state, actions } = useEditor();
     const funnelsContext = useFunnels();
@@ -36,8 +36,10 @@ export const FunnelDataProviderWrapper: React.FC<FunnelDataProviderWrapperProps>
             },
 
             getBlockById: (blockId: string) => {
-                // Procurar o bloco em todas as etapas
-                for (const stepKey of Object.keys(state.stepBlocks)) {
+                // 🌐 GENÉRICO: Procurar o bloco em TODAS as etapas disponíveis
+                const allStepKeys = Object.keys(state.stepBlocks);
+
+                for (const stepKey of allStepKeys) {
                     const stepBlocks = state.stepBlocks[stepKey];
                     const foundBlock = stepBlocks.find(block => block.id === blockId);
                     if (foundBlock) {
@@ -45,18 +47,20 @@ export const FunnelDataProviderWrapper: React.FC<FunnelDataProviderWrapperProps>
                         return foundBlock;
                     }
                 }
-                console.warn(`⚠️ Bloco ${blockId} não encontrado em nenhuma etapa`);
+                console.warn(`⚠️ Bloco ${blockId} não encontrado em nenhuma das ${allStepKeys.length} etapas disponíveis`);
                 return null;
             },
 
             updateBlockProperties: (blockId: string, properties: Record<string, any>) => {
                 console.log(`🔄 Atualizando propriedades do bloco ${blockId}:`, properties);
-                
-                // Encontrar a etapa que contém o bloco
-                for (const stepKey of Object.keys(state.stepBlocks)) {
+
+                // 🌐 GENÉRICO: Encontrar a etapa que contém o bloco (sem assumir estrutura)
+                const allStepKeys = Object.keys(state.stepBlocks);
+
+                for (const stepKey of allStepKeys) {
                     const stepBlocks = state.stepBlocks[stepKey];
                     const blockIndex = stepBlocks.findIndex(block => block.id === blockId);
-                    
+
                     if (blockIndex !== -1) {
                         // Usar a action apropriada para atualizar
                         actions.updateBlock(stepKey, blockId, {
@@ -65,16 +69,14 @@ export const FunnelDataProviderWrapper: React.FC<FunnelDataProviderWrapperProps>
                                 ...properties
                             }
                         });
-                        
+
                         console.log(`✅ Bloco ${blockId} atualizado em ${stepKey} via EditorProvider`);
                         return;
                     }
                 }
-                
-                console.error(`❌ Não foi possível atualizar bloco ${blockId} - não encontrado`);
-            },
 
-            getFunnelId: () => {
+                console.error(`❌ Não foi possível atualizar bloco ${blockId} - não encontrado em nenhuma das ${allStepKeys.length} etapas`);
+            }, getFunnelId: () => {
                 return funnelsContext?.currentFunnelId || 'local-funnel';
             },
 
@@ -98,9 +100,9 @@ export const FunnelDataProviderWrapper: React.FC<FunnelDataProviderWrapperProps>
             console.log('🔌 FunnelDataProvider desconectado');
         };
     }, [
-        state.currentStep, 
-        state.stepBlocks, 
-        state.isSupabaseEnabled, 
+        state.currentStep,
+        state.stepBlocks,
+        state.isSupabaseEnabled,
         funnelsContext?.currentFunnelId,
         actions
     ]);

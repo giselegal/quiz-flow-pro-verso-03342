@@ -60,16 +60,16 @@ const FunnelDataDisplay: React.FC<{
             const currentStepBlocks = state.stepBlocks[currentStepKey] || [];
             const currentBlock = currentStepBlocks.find(b => b.id === blockId);
 
-            // Buscar informações adicionais do template
+            // Buscar informações adicionais do template (genérico)
             const templateInfo = funnelsContext?.getTemplateBlocks?.(
-                funnelsContext.currentFunnelId || 'quiz-estilo-21-steps',
+                funnelsContext.currentFunnelId || 'default-template',
                 currentStepKey
             );
 
             return {
                 funnelId: funnelsContext?.currentFunnelId || 'local-funnel',
                 currentStep: state.currentStep,
-                totalSteps: 21, // Template padrão tem 21 etapas
+                totalSteps: Object.keys(state.stepBlocks).length || 21, // Dinâmico baseado nos dados reais
                 blockIndex: currentStepBlocks.findIndex(b => b.id === blockId) + 1,
                 totalBlocks: currentStepBlocks.length,
                 blockData: currentBlock,

@@ -157,6 +157,44 @@ export class BlockPropertiesAPI {
     connectToFunnelData(provider: FunnelDataProvider): void {
         this.funnelDataProvider = provider;
         console.log('🔗 BlockPropertiesAPI conectada aos dados reais do funil!');
+
+        // 🌐 Detectar automaticamente a estrutura do funil
+        this.analyzeFunnelStructure();
+    }
+
+    // 🌐 ANALISAR ESTRUTURA DO FUNIL AUTOMATICAMENTE
+    private analyzeFunnelStructure(): void {
+        if (!this.funnelDataProvider) return;
+
+        const funnelId = this.funnelDataProvider.getFunnelId();
+        let totalSteps = 1;
+        let totalBlocks = 0;
+        const blockTypes = new Set<string>();
+
+        // Detectar quantas etapas existem
+        let step = 1;
+        while (step <= 100) { // Limite de segurança
+            const blocks = this.funnelDataProvider.getStepBlocks(step);
+            if (blocks.length > 0) {
+                totalSteps = step;
+                totalBlocks += blocks.length;
+
+                // Coletar tipos de blocos únicos
+                blocks.forEach(block => {
+                    if (block.type) blockTypes.add(block.type);
+                });
+            }
+            step++;
+        }
+
+        console.log('🌐 Estrutura do funil detectada automaticamente:', {
+            funnelId,
+            totalSteps,
+            totalBlocks,
+            blockTypesFound: Array.from(blockTypes),
+            isGeneric: true,
+            supportsAnyStructure: true
+        });
     }
 
     // 📊 GET REAL BLOCK PROPERTIES (from funnel, not just registry)
@@ -233,10 +271,13 @@ export class BlockPropertiesAPI {
         return value;
     }
 
-    // 📊 GET DEFAULT PROPERTIES (with real funnel data integration)
+    // 📊 GET DEFAULT PROPERTIES (with real funnel data integration) - GENÉRICO
     async getDefaultProperties(blockType: string, blockId?: string): Promise<Record<string, any>> {
         const definition = await this.getBlockDefinition(blockType);
-        if (!definition) return {};
+        if (!definition) {
+            console.warn(`⚠️ Definição não encontrada para tipo '${blockType}' - usando propriedades genéricas`);
+            return this.getGenericBlockProperties(blockType);
+        }
 
         // Start with registry defaults
         const defaults: Record<string, any> = {};
@@ -255,7 +296,7 @@ export class BlockPropertiesAPI {
                     realProperties,
                     merged: { ...registryDefaults, ...realProperties }
                 });
-                
+
                 return { ...registryDefaults, ...realProperties };
             } catch (error) {
                 console.warn('⚠️ Erro ao buscar propriedades reais, usando defaults do registry:', error);
@@ -263,6 +304,28 @@ export class BlockPropertiesAPI {
         }
 
         return registryDefaults;
+    }
+
+    // 🌐 PROPRIEDADES GENÉRICAS para tipos de bloco desconhecidos
+    private getGenericBlockProperties(blockType: string): Record<string, any> {
+        // Propriedades básicas que funcionam com qualquer tipo de bloco
+        const genericProperties = {
+            text: '',
+            title: '',
+            content: '',
+            visible: true,
+            enabled: true,
+            className: '',
+            style: {},
+            id: `${blockType}-${Date.now()}`,
+            // Metadados genéricos
+            _blockType: blockType,
+            _isGeneric: true,
+            _createdAt: new Date().toISOString()
+        };
+
+        console.log(`🌐 Usando propriedades genéricas para tipo desconhecido '${blockType}':`, genericProperties);
+        return genericProperties;
     }
 
     // 💾 SAVE PROPERTY TO REAL FUNNEL DATA
@@ -286,7 +349,7 @@ export class BlockPropertiesAPI {
             };
 
             this.funnelDataProvider.updateBlockProperties(blockId, updatedProperties);
-            
+
             console.log(`💾 Propriedade ${propertyKey} salva no funil para bloco ${blockId}:`, value);
             return true;
         } catch (error) {

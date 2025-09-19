@@ -69,7 +69,7 @@ export const useBlockProperties = (options: UseBlockPropertiesOptions): UseBlock
                         // Pass blockId to get real funnel data
                         const defaults = await blockPropertiesAPI.getDefaultProperties(blockType, blockId);
                         setProperties(prev => ({ ...defaults, ...prev }));
-                        
+
                         console.log(`🔗 useBlockProperties carregou dados reais para ${blockType}:`, {
                             blockId,
                             defaults,
