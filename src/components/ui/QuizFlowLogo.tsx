@@ -34,13 +34,13 @@ const QuizFlowLogo: React.FC<QuizFlowLogoProps> = ({
             <stop offset="50%" stopColor="#4A2E9F" />
             <stop offset="100%" stopColor="#FF00FF" />
           </linearGradient>
-          
+
           <linearGradient id="arrowGradient" x1="0%" y1="0%" x2="100%" y2="0%">
             <stop offset="0%" stopColor="#00BFFF" />
             <stop offset="50%" stopColor="#00FF7F" />
             <stop offset="100%" stopColor="#FFD700" />
           </linearGradient>
-          
+
           <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
             <stop offset="0%" stopColor="#00BFFF" opacity="0.1" />
             <stop offset="100%" stopColor="#FF00FF" opacity="0.05" />
@@ -53,7 +53,7 @@ const QuizFlowLogo: React.FC<QuizFlowLogoProps> = ({
               <feMergeNode in="SourceGraphic" />
             </feMerge>
           </filter>
-          
+
           <filter id="dropShadow">
             <feDropShadow dx="0" dy="4" stdDeviation="6" floodColor="rgba(0,191,255,0.4)" />
           </filter>
@@ -66,7 +66,7 @@ const QuizFlowLogo: React.FC<QuizFlowLogoProps> = ({
           r="55"
           fill="url(#bgGradient)"
           className="animate-pulse"
-          style={{animationDuration: '3s'}}
+          style={{ animationDuration: '3s' }}
         />
 
         {/* Logo principal com filtros */}
@@ -81,31 +81,31 @@ const QuizFlowLogo: React.FC<QuizFlowLogoProps> = ({
             strokeWidth="6"
             filter="url(#glowEffect)"
             className="animate-pulse"
-            style={{animationDuration: '4s'}}
+            style={{ animationDuration: '4s' }}
           />
 
           {/* Seta de crescimento integrada - mais proeminente */}
           <g stroke="url(#arrowGradient)" strokeWidth="5" strokeLinecap="round" filter="url(#glowEffect)">
             {/* Linha principal da seta - diagonal ascendente */}
-            <line 
-              x1="73" 
-              y1="70" 
-              x2="95" 
-              y2="48" 
+            <line
+              x1="73"
+              y1="70"
+              x2="95"
+              y2="48"
               className="animate-pulse"
-              style={{animationDuration: '2s'}}
+              style={{ animationDuration: '2s' }}
             />
-            
+
             {/* Ponta da seta - mais definida */}
-            <polyline 
-              points="87,52 95,48 91,40" 
-              fill="none" 
+            <polyline
+              points="87,52 95,48 91,40"
+              fill="none"
               strokeLinejoin="round"
               strokeWidth="4"
               className="animate-pulse"
-              style={{animationDuration: '2s'}}
+              style={{ animationDuration: '2s' }}
             />
-            
+
             {/* Indicadores de progresso */}
             <circle cx="78" cy="65" r="2" fill="url(#arrowGradient)" opacity="0.8" />
             <circle cx="85" cy="58" r="2.5" fill="url(#arrowGradient)" opacity="0.9" />
@@ -116,11 +116,11 @@ const QuizFlowLogo: React.FC<QuizFlowLogoProps> = ({
           <g fill="#FFFFFF" opacity="1">
             {/* Ponto de interrogação estilizado */}
             <circle cx="60" cy="48" r="3" />
-            <path 
-              d="M60 55 Q57 60 60 65" 
-              stroke="#4A2E9F" 
-              strokeWidth="3" 
-              fill="none" 
+            <path
+              d="M60 55 Q57 60 60 65"
+              stroke="#4A2E9F"
+              strokeWidth="3"
+              fill="none"
               strokeLinecap="round"
             />
             <circle cx="60" cy="68" r="2" fill="#4A2E9F" />
@@ -129,8 +129,8 @@ const QuizFlowLogo: React.FC<QuizFlowLogoProps> = ({
 
         {/* Elementos de fluxo melhorados */}
         <g opacity="0.6" stroke="url(#mainGradient)" strokeWidth="2" fill="none" strokeLinecap="round">
-          <path d="M20 35 Q35 30 50 35 Q65 30 80 35" className="animate-pulse" style={{animationDuration: '5s'}} />
-          <path d="M40 85 Q55 90 70 85 Q85 90 100 85" className="animate-pulse" style={{animationDuration: '6s'}} />
+          <path d="M20 35 Q35 30 50 35 Q65 30 80 35" className="animate-pulse" style={{ animationDuration: '5s' }} />
+          <path d="M40 85 Q55 90 70 85 Q85 90 100 85" className="animate-pulse" style={{ animationDuration: '6s' }} />
         </g>
 
         {/* Pontos de destaque nos cantos */}
@@ -147,7 +147,7 @@ const QuizFlowLogo: React.FC<QuizFlowLogoProps> = ({
         </g>
       </svg>
     </div>
-  );  const LogoText = () => {
+  ); const LogoText = () => {
     const textColor = theme === 'dark' ? 'text-white' : 'text-brand-darkBlue';
 
     return (
