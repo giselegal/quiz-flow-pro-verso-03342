@@ -10,9 +10,8 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { ThumbnailImage } from '@/components/ui/EnhancedOptimizedImage';
-// OTIMIZAÇÕES: Usar serviços avançados ao invés dos antigos
-import { advancedFunnelStorage } from '@/services/AdvancedFunnelStorage';
-import { funnelUnifiedService } from '@/services/FunnelUnifiedService';
+// 🚀 ARQUITETURA HÍBRIDA UNIFICADA: Usar apenas o sistema integrado
+import { improvedFunnelSystem } from '@/services/improvedFunnelSystem';
 import { customTemplateService, CustomTemplate } from '@/services/customTemplateService';
 import { Edit, Eye, Play, Plus, Sparkles, Zap, Copy, Trash2, RefreshCw, AlertTriangle, CheckCircle } from 'lucide-react';
 import { useLocation } from 'wouter';
@@ -26,8 +25,8 @@ const FunnelPanelPage: React.FC = () => {
   const logger = getLogger();
   const [, setLocation] = useLocation();
 
-  // 🚀 INSTÂNCIA DO SERVIÇO AVANÇADO: usar instância exportada
-  const advancedStorage = advancedFunnelStorage;
+  // 🚀 SISTEMA HÍBRIDO UNIFICADO: usar instância integrada com validação completa
+  const hybridSystem = improvedFunnelSystem;
 
   // 🚀 TODO: Integrar hook refatorado quando necessário
   // const { isLoading, funnel, canEdit, createFunnel } = useFunnelLoaderRefactored(FunnelContext.MY_FUNNELS);
@@ -329,10 +328,10 @@ const FunnelPanelPage: React.FC = () => {
       });
 
       if (baseTemplate) {
-        // 🚀 CORREÇÃO: Usar FunnelUnifiedService para criação completa
+        // 🚀 SISTEMA HÍBRIDO: Usar improvedFunnelSystem para criação integrada com validação
         const userId = 'admin-user'; // TODO: Pegar do contexto de auth
 
-        const newFunnel = await funnelUnifiedService.createFunnel({
+        const newFunnel = await hybridSystem.createFunnel({
           name: `${baseTemplate.name} - Cópia`,
           description: baseTemplate.description || '',
           category: baseTemplate.category || 'general',
@@ -342,10 +341,10 @@ const FunnelPanelPage: React.FC = () => {
           autoPublish: false
         });
 
-        logger.info('funnel-creation', 'Funil criado com sucesso via FunnelUnifiedService', {
+        logger.info('funnel-creation', 'Funil criado com sucesso via Sistema Híbrido', {
           funnelId: newFunnel.id,
           templateId: templateId,
-          storageStatus: 'unified'
+          storageStatus: 'hybrid-validated'
         });
 
         // ✅ CORREÇÃO FINAL: Usar path parameter simples como no resto do sistema
@@ -411,11 +410,13 @@ const FunnelPanelPage: React.FC = () => {
         createdAt: now,
         url: `/editor/${encodeURIComponent(newId)}`
       };
-      await advancedStorage.upsertFunnel(newFunnelItem);
 
-      console.log('✅ [DIAGNÓSTICO] Funil criado (fallback):', newFunnel);
-      const updatedFunnels = await advancedStorage.listFunnels();
-      console.log('📊 [DIAGNÓSTICO] Lista atualizada:', updatedFunnels.length, 'funis');
+      // 🚀 SISTEMA HÍBRIDO: Usar validação integrada ao invés de storage direto
+      await hybridSystem.validateAndStore(newFunnelItem);
+
+      console.log('✅ [SISTEMA HÍBRIDO] Funil criado com validação:', newFunnel);
+      const updatedFunnels = await hybridSystem.listValidatedFunnels();
+      console.log('📊 [SISTEMA HÍBRIDO] Lista atualizada:', updatedFunnels.length, 'funis');
 
       // Navegar com ID específico do funil criado
       const fallbackUrl = `/editor/${encodeURIComponent(newId)}?template=${templateId}`;
@@ -515,20 +516,20 @@ const FunnelPanelPage: React.FC = () => {
     console.log('🎨 Criando funil personalizado...');
 
     try {
-      // ✅ CORREÇÃO: Usar FunnelUnifiedService
+      // 🚀 SISTEMA HÍBRIDO: Usar improvedFunnelSystem para criação integrada
       const userId = 'admin-user'; // TODO: Pegar do contexto de auth
       const name = `Funil Personalizado ${new Date().toLocaleTimeString()}`;
 
-      const newFunnel = await funnelUnifiedService.createFunnel({
-        name: name,
-        description: 'Funil personalizado criado do painel admin',
+      const newFunnel = await hybridSystem.createFunnel({
+        name,
+        description: 'Funil criado do zero para personalização completa',
         category: 'custom',
         context: FunnelContext.MY_FUNNELS,
         userId: userId,
         autoPublish: false
       });
 
-      console.log('✅ Funil personalizado criado via FunnelUnifiedService:', newFunnel.id);
+      console.log('✅ Funil personalizado criado via Sistema Híbrido:', newFunnel.id);
       setLocation(`/editor/${encodeURIComponent(newFunnel.id)}`);
 
     } catch (error) {
@@ -555,9 +556,11 @@ const FunnelPanelPage: React.FC = () => {
         createdAt: now,
         url: `/editor/${encodeURIComponent(newId)}`
       };
-      await advancedStorage.upsertFunnel(newFunnelItem);
 
-      console.log('✅ Funil personalizado criado (fallback):', newFunnel);
+      // 🚀 SISTEMA HÍBRIDO: Usar validação integrada
+      await hybridSystem.validateAndStore(newFunnelItem);
+
+      console.log('✅ Funil personalizado criado com validação híbrida:', newFunnel);
       setLocation(`/editor/${encodeURIComponent(newId)}`);
     }
   };
