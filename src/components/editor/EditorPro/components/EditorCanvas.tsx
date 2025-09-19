@@ -4,7 +4,6 @@ import { QuizRenderer } from '@/components/core/QuizRenderer';
 import CanvasDropZone from '@/components/editor/canvas/CanvasDropZone.simple';
 import { SortableContext } from '@dnd-kit/sortable';
 import { useStepSelection } from '@/hooks/useStepSelection';
-import { generateStableKey } from '@/utils/generateUniqueId';
 
 /**
  * 🎨 CANVAS DO EDITOR OTIMIZADO
@@ -23,7 +22,7 @@ interface EditorCanvasProps {
   onStepChange?: (step: number) => void;
 }
 
-const EditorCanvas: React.FC<EditorCanvasProps> = memo(({
+const EditorCanvas: React.FC<EditorCanvasProps> = ({
   blocks,
   selectedBlock,
   currentStep,
@@ -40,15 +39,11 @@ const EditorCanvas: React.FC<EditorCanvasProps> = memo(({
     debounceMs: 50
   });
 
-  // Key estável para forçar remount ao trocar etapa
-  const canvasKey = useMemo(() =>
-    generateStableKey({
-
-      stepNumber: currentStep,
-      type: 'block'
-    }),
-    [currentStep]
-  );
+  // Key estável que NÃO força remount desnecessário
+  const canvasKey = useMemo(() => {
+    // Usar uma chave estável baseada apenas no step, não regenerar constantemente
+    return `editor-canvas-step-${currentStep}`;
+  }, [currentStep]);
 
   if (isPreviewMode) {
     return (
@@ -87,8 +82,35 @@ const EditorCanvas: React.FC<EditorCanvasProps> = memo(({
       </div>
     </div>
   );
-});
+};
+
+// 🚀 OTIMIZAÇÃO: Comparação inteligente para evitar re-renders desnecessários
+const arePropsEqual = (prevProps: EditorCanvasProps, nextProps: EditorCanvasProps): boolean => {
+  // Se mudou o step ou mode, re-render
+  if (prevProps.currentStep !== nextProps.currentStep || prevProps.isPreviewMode !== nextProps.isPreviewMode) {
+    return false;
+  }
+
+  // Se mudou o selectedBlock ID, re-render
+  if (prevProps.selectedBlock?.id !== nextProps.selectedBlock?.id) {
+    return false;
+  }
+
+  // Se mudou o número ou ordem de blocos, re-render
+  if (prevProps.blocks.length !== nextProps.blocks.length) {
+    return false;
+  }
+
+  // Comparação rápida de IDs dos blocos (sem comparar todo o content)
+  for (let i = 0; i < prevProps.blocks.length; i++) {
+    if (prevProps.blocks[i].id !== nextProps.blocks[i].id) {
+      return false;
+    }
+  }
+
+  return true; // Props são equivalentes, não re-render
+};
 
 EditorCanvas.displayName = 'EditorCanvas';
 
-export default EditorCanvas;
+export default memo(EditorCanvas, arePropsEqual);

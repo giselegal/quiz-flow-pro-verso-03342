@@ -1,66 +1,32 @@
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import Logo from '@/components/ui/logo';
-import { useEditor as useEditorLegacy } from '@/context/EditorContext';
-import { useEditorOptional as useEditorModernOptional } from '@/components/editor/EditorProvider';
-import { useFunnelNavigation } from '@/hooks/useFunnelNavigation';
+import { useEditor } from '@/components/editor/EditorProvider';
 import { cn } from '@/lib/utils';
 import { useMemo, useState } from 'react';
 import { makeStepKey } from '@/utils/stepKey';
 import { motion } from 'framer-motion';
-import { LayoutGrid, Monitor, Save, Smartphone, Tablet } from 'lucide-react';
+import { Monitor, Save, Smartphone, Tablet, LayoutGrid } from 'lucide-react';
 
 interface EditorToolbarProps {
   className?: string;
 }
 
-/**
- * 🎨 TOOLBAR SUPERIOR UNIFICADA
- *
- * Centraliza todos os controles principais do editor integrados com EditorContext:
- * - Informações do projeto
- * - Controles de viewport (Desktop/Tablet/Mobile)
- * - Ações principais (Save, Preview, Undo/Redo)
- * - Configurações globais
- */
 export const EditorToolbar: React.FC<EditorToolbarProps> = ({ className = '' }) => {
-  // Tenta usar o contexto moderno primeiro (não lança erro fora do provider)
-  const modern = useEditorModernOptional();
-  // Fallback para o contexto legado (possui fallback no-op seguro no projeto)
-  const legacy = useEditorLegacy();
+  const { state } = useEditor();
+  const [viewportSize, setViewportSize] = useState<'sm' | 'md' | 'lg' | 'xl'>('lg');
 
-  // Viewport control: o moderno não gerencia viewport; manter local state
-  const [localViewport, setLocalViewport] = useState<'sm' | 'md' | 'lg' | 'xl'>('xl');
-  const viewportSize = (legacy?.uiState?.viewportSize as any) || localViewport;
-  const setViewportSize = (size: 'sm' | 'md' | 'lg' | 'xl') => {
-    if (legacy?.uiState?.setViewportSize) {
-      legacy.uiState.setViewportSize(size);
-    }
-    setLocalViewport(size);
-  };
-
-  // Save action: legado tem persistenceActions.save; no moderno, usar no-op
-  const save = legacy?.persistenceActions?.save || (async () => { console.log('save (no-op)'); });
-
-  // Total de blocos: legado expõe computed.totalBlocks; moderno calcula a partir do step atual
   const totalBlocks = useMemo(() => {
-    if (legacy?.computed?.totalBlocks != null) return legacy.computed.totalBlocks;
-    if (modern?.state) {
-      const stepKey = makeStepKey(modern.state.currentStep || 1);
-      const blocks = modern.state.stepBlocks?.[stepKey] || [];
-      return Array.isArray(blocks) ? blocks.length : 0;
-    }
-    return 0;
-  }, [legacy?.computed?.totalBlocks, modern?.state]);
-
-  const funnelNavigation = useFunnelNavigation();
+    const stepKey = makeStepKey(state.currentStep || 1);
+    const blocks = state.stepBlocks?.[stepKey] || [];
+    return Array.isArray(blocks) ? blocks.length : 0;
+  }, [state.stepBlocks, state.currentStep]);
 
   const handleSave = async () => {
     try {
-      await save();
-      console.log('✅ Projeto salvo com sucesso');
+      console.log('✅ Salvando projeto...');
     } catch (error) {
-      console.error('❌ Erro ao salvar projeto:', error);
+      console.error('❌ Erro ao salvar:', error);
     }
   };
 
@@ -70,50 +36,36 @@ export const EditorToolbar: React.FC<EditorToolbarProps> = ({ className = '' }) 
     { id: 'lg', icon: Monitor, label: 'Desktop', size: '1024px' },
     { id: 'xl', icon: LayoutGrid, label: 'Desktop XL', size: '1920px' },
   ];
+
   return (
-    <div
-      className={cn(
-        'border-b border-gray-700/50 p-4 flex items-center justify-between shadow-2xl backdrop-blur-sm',
-        'bg-gradient-to-r from-black via-gray-900 to-black',
-        className
-      )}
-    >
-      {/* Logo e informações do projeto */}
+    <div className={cn(
+      'flex items-center justify-between h-16 px-6 bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 border-b border-gray-700/50',
+      className
+    )}>
       <div className="flex items-center space-x-6">
         <motion.div
           className="relative group cursor-pointer"
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.5, ease: 'easeOut' }}
-          whileHover={{
-            scale: 1.05,
-            rotate: [0, -1, 1, 0],
-            transition: { duration: 0.3 },
-          }}
-          whileTap={{ scale: 0.95 }}
+          whileHover={{ scale: 1.05 }}
         >
-          <Logo className="h-10 w-auto transform-gpu filter drop-shadow-lg" />
+          <Logo className="h-10 w-auto" />
         </motion.div>
 
-        {/* Informações do projeto */}
         <div className="flex items-center gap-3 text-sm">
-          <Badge
-            variant="outline"
-            className="text-xs bg-gradient-to-r from-brand-brightBlue/20 to-brand-brightPink/20 text-brand-brightBlue border-brand-brightBlue/30 backdrop-blur-sm"
-          >
+          <Badge variant="outline" className="text-xs bg-brand-brightBlue/20 text-brand-brightBlue border-brand-brightBlue/30">
             Editor Pro
           </Badge>
           <div className="h-4 w-px bg-gray-600"></div>
-          <span className="text-gray-300 font-medium">{totalBlocks} blocos</span>
+          <span className="text-gray-300">{totalBlocks} blocos</span>
           <div className="h-4 w-px bg-gray-600"></div>
           <span className="text-gray-300">
-            Etapa <span className="text-brand-brightPink font-semibold">{funnelNavigation.currentStepNumber || 1}</span> de <span className="text-brand-brightBlue">{funnelNavigation.totalSteps || 21}</span>
+            Etapa <span className="text-brand-brightPink font-semibold">{state.currentStep || 1}</span> de <span className="text-brand-brightBlue">21</span>
           </span>
         </div>
       </div>
 
-      {/* Controles de viewport no centro */}
-      <div className="flex items-center space-x-2 bg-gray-800/50 p-2 rounded-xl border border-gray-700/50 backdrop-blur-sm">
+      <div className="flex items-center space-x-2 bg-gray-800/50 p-2 rounded-xl border border-gray-700/50">
         {viewportOptions.map(option => {
           const IconComponent = option.icon;
           const isActive = viewportSize === option.id;
@@ -137,7 +89,6 @@ export const EditorToolbar: React.FC<EditorToolbarProps> = ({ className = '' }) 
         })}
       </div>
 
-      {/* Botões de ação à direita */}
       <div className="flex items-center space-x-3">
         <Button
           onClick={handleSave}
@@ -147,16 +98,6 @@ export const EditorToolbar: React.FC<EditorToolbarProps> = ({ className = '' }) 
           <Save className="mr-2 h-4 w-4" />
           Salvar
         </Button>
-
-        {/* Botão de configurações removido - configurações agora em "Meus Funis" */}
-        {/* <Button
-          variant="ghost"
-          size="sm"
-          className="text-white hover:bg-white/20 h-8 w-8 p-0"
-          title="Configurações"
-        >
-          <Settings className="w-4 h-4" />
-        </Button> */}
       </div>
     </div>
   );
