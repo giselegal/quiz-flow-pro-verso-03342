@@ -11,7 +11,13 @@ import { AdminBreadcrumbs } from '@/components/admin/AdminBreadcrumbs';
 import { useMyFunnelsPersistence } from '@/hooks/editor/useContextualEditorPersistence';
 import { FunnelContext } from '@/core/contexts/FunnelContext';
 import EditorNoCodePanel from '@/components/editor/EditorNoCodePanel';
-// FunnelSettingsModal import removed - not used
+// ✅ Importar sistema aprimorado
+import {
+  sanitizeAndNormalizeFunnelData,
+  performSystemHealthCheck,
+  errorManager,
+  createFunnelError
+} from '@/utils/improvedFunnelSystem';
 
 type Funnel = ReturnType<typeof funnelLocalStore.list>[number];
 
@@ -29,9 +35,32 @@ const MyFunnelsPage: React.FC = () => {
 
     const loadContextualFunnels = async () => {
       try {
+        // ✅ Health check do sistema antes de carregar
+        const systemHealth = performSystemHealthCheck();
+        if (systemHealth.overall === 'critical') {
+          console.error('❌ Sistema com problemas críticos:', systemHealth.issues);
+          systemHealth.issues.forEach(issue => {
+            errorManager.handleError(new Error(`System Health: ${issue}`));
+          });
+        } else if (systemHealth.overall === 'warning') {
+          console.warn('⚠️ Sistema com warnings:', systemHealth.recommendations);
+        } else {
+          console.log('✅ Sistema saudável - carregando funis...');
+        }
+
         const contextualFunnels = await listFunnels();
         console.log('📋 Funis contextuais carregados:', contextualFunnels);
-        setFunnels(contextualFunnels);
+
+        // ✅ Validar e normalizar dados carregados
+        const normalizedFunnels = contextualFunnels.map(funnel => {
+          const sanitized = sanitizeAndNormalizeFunnelData(funnel);
+          if (!sanitized.isValid) {
+            console.warn(`⚠️ Funnel ${funnel.id} tem problemas:`, sanitized.errors);
+          }
+          return sanitized.data;
+        });
+
+        setFunnels(normalizedFunnels);
 
         // 🚀 CORREÇÃO: Se não há funis no contexto, criar alguns de exemplo
         if (contextualFunnels.length === 0) {
@@ -40,6 +69,12 @@ const MyFunnelsPage: React.FC = () => {
         }
       } catch (error) {
         console.error('❌ Erro ao carregar funis contextuais:', error);
+        const storageError = createFunnelError('STORAGE_NOT_AVAILABLE',
+          `Failed to load funnels: ${error instanceof Error ? error.message : 'Unknown error'}`, {
+          operation: 'loadContextualFunnels'
+        });
+        errorManager.handleError(storageError);
+
         // Fallback para o sistema antigo se houver erro
         const loadedFunnels = funnelLocalStore.list();
         console.log('📋 Fallback - Funis carregados do localStorage:', loadedFunnels);
@@ -74,17 +109,32 @@ const MyFunnelsPage: React.FC = () => {
     ];
 
     try {
+      // ✅ Validar e normalizar funis antes de salvar
+      const validatedFunnels = initialFunnels.map(funnel => {
+        const sanitized = sanitizeAndNormalizeFunnelData(funnel);
+        if (!sanitized.isValid) {
+          console.warn(`⚠️ Funnel inicial ${funnel.id} tem problemas:`, sanitized.errors);
+        }
+        return sanitized.data;
+      });
+
       // Salvar usando o hook contextual para isolamento
-      for (const funnel of initialFunnels) {
+      for (const funnel of validatedFunnels) {
         await saveFunnel(funnel);
       }
 
       // Recarregar a lista
       const updatedFunnels = await listFunnels();
       setFunnels(updatedFunnels);
-      console.log('✅ Funis iniciais criados no contexto MY_FUNNELS:', initialFunnels);
+      console.log('✅ Funis iniciais criados no contexto MY_FUNNELS:', validatedFunnels);
     } catch (error) {
       console.error('❌ Erro ao criar funis iniciais:', error);
+      const creationError = createFunnelError('FUNNEL_CREATION_FAILED',
+        `Failed to create initial funnels: ${error instanceof Error ? error.message : 'Unknown error'}`, {
+        operation: 'createInitialFunnels'
+      });
+      errorManager.handleError(creationError);
+
       // Fallback para o sistema antigo
       const legacyFunnels = initialFunnels.map(f => ({
         id: f.id,

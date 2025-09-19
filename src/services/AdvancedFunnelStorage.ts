@@ -1,27 +1,32 @@
 /**
- * 🎯 ADVANCED FUNNEL STORAGE SERVICE - INDEXEDDB IMPLEMENTATION
+ * 🎯 ADVANCED FUNNEL STORAGE SERVICE - MELHORADO
  * 
- * Sistema de armazenamento avançado para funis substituindo localStorage:
- * - IndexedDB para storage assíncrono e escalável
- * - Versionamento automático de dados
- * - Migração segura do localStorage
- * - Sync server-side opcional
- * - Backup e restore functionality
- * - Performance otimizada com cache
- * - Sistema de erros padronizado integrado
+ * Sistema de armazenamento avançado com melhorias:
+ * - Validação rigorosa de dados
+ * - Error handling padronizado  
+ * - Verificação de integridade automática
+ * - Recovery robusto de falhas
+ * - Nomenclatura consistente
  */
 
-import { FunnelError, FunnelErrorFactory } from '@/core/errors/FunnelError';
-import { FunnelErrorCode } from '@/core/errors/FunnelErrorCodes';
-import { handleFunnelError } from '@/core/errors/FunnelErrorHandler';
+import {
+    errorManager,
+    createStorageError
+} from '@/utils/errorHandling';
+import { validateFunnelSchema } from '@/utils/schemaValidation';
+import { validateFunnelId } from '@/utils/idValidation';
 
-// Simple console logger for storage operations
+// Enhanced logger with structured error handling
 const logger = {
     info: (message: string, data?: any, context?: string) => {
         console.log(`[${context || 'FunnelStorage'}] INFO: ${message}`, data || '');
     },
     error: (message: string, data?: any, context?: string) => {
-        console.error(`[${context || 'FunnelStorage'}] ERROR: ${message}`, data || '');
+        const error = createStorageError('STORAGE_NOT_AVAILABLE', message, {
+            operation: context,
+            additionalData: data
+        });
+        errorManager.handleError(error);
     },
     warn: (message: string, data?: any, context?: string) => {
         console.warn(`[${context || 'FunnelStorage'}] WARN: ${message}`, data || '');
@@ -279,8 +284,10 @@ class AdvancedFunnelStorageService {
 
             // Criar erro padronizado e tentar recovery
             const errorMessage = error instanceof Error ? error.message : String(error);
-            const funnelError = FunnelErrorFactory.storageError('listFunnels', errorMessage);
-            await handleFunnelError(funnelError, { operation: 'listFunnels' });
+            const storageError = createStorageError('STORAGE_NOT_AVAILABLE', errorMessage, {
+                operation: 'listFunnels'
+            });
+            errorManager.handleError(storageError);
 
             return this.fallbackToLocalStorage();
         }
@@ -305,9 +312,12 @@ class AdvancedFunnelStorageService {
             );
 
             if (!funnel) {
-                // Criar erro NOT_FOUND
-                const notFoundError = FunnelErrorFactory.notFound(id);
-                await handleFunnelError(notFoundError, { operation: 'getFunnel' });
+                // Criar erro NOT_FOUND usando novo sistema
+                const notFoundError = createStorageError('STORAGE_NOT_AVAILABLE', `Funnel not found: ${id}`, {
+                    operation: 'getFunnel',
+                    funnelId: id
+                });
+                errorManager.handleError(notFoundError);
                 return null;
             }
 
@@ -318,16 +328,30 @@ class AdvancedFunnelStorageService {
         } catch (error) {
             logger.error('Failed to get funnel', { id, error }, 'FunnelStorage');
 
-            // Criar erro padronizado
+            // Criar erro padronizado usando novo sistema
             const errorMessage = error instanceof Error ? error.message : String(error);
-            const funnelError = FunnelErrorFactory.storageError('getFunnel', errorMessage);
-            await handleFunnelError(funnelError, { operation: 'getFunnel', funnelId: id });
+            const storageError = createStorageError('STORAGE_NOT_AVAILABLE', `Failed to get funnel: ${errorMessage}`, {
+                operation: 'getFunnel',
+                funnelId: id
+            });
+            errorManager.handleError(storageError);
 
             return this.fallbackGetFunnel(id);
         }
     }
 
     async upsertFunnel(item: Partial<FunnelItem> & { id: string }): Promise<FunnelItem> {
+        // Validar ID do funnel
+        const idValidation = validateFunnelId(item.id);
+        if (!idValidation.isValid) {
+            const validationError = createStorageError('STORAGE_NOT_AVAILABLE', `Invalid funnel ID: ${idValidation.error}`, {
+                operation: 'upsertFunnel',
+                funnelId: item.id
+            });
+            errorManager.handleError(validationError);
+            throw new Error(`Invalid funnel ID: ${idValidation.error}`);
+        }
+
         const now = new Date().toISOString();
         const existingFunnel = await this.getFunnel(item.id);
 
@@ -341,6 +365,17 @@ class AdvancedFunnelStorageService {
             checksum: this.generateChecksum(item),
             ...item,
         };
+
+        // Validar dados do funnel
+        const schemaValidation = validateFunnelSchema(funnelItem);
+        if (!schemaValidation.isValid) {
+            const validationError = createStorageError('STORAGE_NOT_AVAILABLE', `Funnel schema validation failed: ${schemaValidation.errors.join(', ')}`, {
+                operation: 'upsertFunnel',
+                funnelId: item.id
+            });
+            errorManager.handleError(validationError);
+            throw new Error(`Funnel schema validation failed: ${schemaValidation.errors.join(', ')}`);
+        }
 
         try {
             await this.dbManager.transaction(
@@ -366,15 +401,18 @@ class AdvancedFunnelStorageService {
 
             // Verificar se é erro de quota/storage
             if (error instanceof Error && error.name === 'QuotaExceededError') {
-                const quotaError = new FunnelError(FunnelErrorCode.STORAGE_FULL, undefined, {
+                const quotaError = createStorageError('STORAGE_QUOTA_EXCEEDED', 'Storage quota exceeded during funnel save', {
                     operation: 'upsertFunnel',
                     funnelId: item.id
                 });
-                await handleFunnelError(quotaError);
+                errorManager.handleError(quotaError);
             } else {
                 const errorMessage = error instanceof Error ? error.message : String(error);
-                const funnelError = FunnelErrorFactory.storageError('upsertFunnel', errorMessage);
-                await handleFunnelError(funnelError, { operation: 'upsertFunnel', funnelId: item.id });
+                const storageError = createStorageError('STORAGE_NOT_AVAILABLE', `Failed to upsert funnel: ${errorMessage}`, {
+                    operation: 'upsertFunnel',
+                    funnelId: item.id
+                });
+                errorManager.handleError(storageError);
             }
 
             throw new Error(`Failed to save funnel: ${error}`);
