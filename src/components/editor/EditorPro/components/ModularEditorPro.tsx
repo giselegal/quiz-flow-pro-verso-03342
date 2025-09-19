@@ -181,10 +181,22 @@ const ModularEditorPro: React.FC = () => {
     })
   );
 
-  // Blocos da etapa atual com memoização
+  // Blocos da etapa atual com memoização e debug melhorado
   const currentStepBlocks = useMemo(() => {
     const stepKey = `step-${state.currentStep}`;
-    return state.stepBlocks[stepKey] || [];
+    const blocks = state.stepBlocks[stepKey] || [];
+    
+    // 🔍 DEBUG: Log detalhado do carregamento de blocos
+    console.log('🔍 ModularEditorPro - currentStepBlocks calculado:', {
+      currentStep: state.currentStep,
+      stepKey,
+      blocksFound: blocks.length,
+      blockTypes: blocks.map(b => b.type),
+      allStepKeys: Object.keys(state.stepBlocks),
+      totalBlocks: Object.values(state.stepBlocks).reduce((acc, arr) => acc + arr.length, 0)
+    });
+
+    return blocks;
   }, [state.stepBlocks, state.currentStep]);
 
   // Bloco selecionado
@@ -200,8 +212,7 @@ const ModularEditorPro: React.FC = () => {
       blockId: block?.id,
       blockType: block?.type,
       properties: block?.properties,
-      content: block?.content,
-      fullBlock: block
+      content: block?.content
     });
 
     return block;
@@ -245,26 +256,18 @@ const ModularEditorPro: React.FC = () => {
 
   // Handlers de bloco otimizados
   const handleSelectBlock = useCallback((blockId: string) => {
+    console.log('🔍 ModularEditorPro - handleSelectBlock chamado:', {
+      blockId,
+      currentStep: state.currentStep,
+      currentBlocks: currentStepBlocks.length
+    });
     actions.setSelectedBlockId(blockId);
-  }, [actions]);
+  }, [actions, state.currentStep, currentStepBlocks.length]);
 
   const handleUpdateBlock = useCallback((blockId: string, updates: Partial<Block>) => {
     const stepKey = `step-${state.currentStep}`;
     actions.updateBlock(stepKey, blockId, updates);
   }, [state.currentStep, actions]);
-
-  const handleUpdateSelectedBlock = useCallback((updates: Record<string, any>) => {
-    console.log('🔄 ModularEditorPro - handleUpdateSelectedBlock chamado:', {
-      hasSelectedBlock: !!selectedBlock,
-      selectedBlockId: selectedBlock?.id,
-      updates,
-      updateType: typeof updates
-    });
-
-    if (selectedBlock) {
-      handleUpdateBlock(selectedBlock.id, updates);
-    }
-  }, [selectedBlock, handleUpdateBlock]);
 
   const handleDeleteBlock = useCallback((blockId: string) => {
     const stepKey = `step-${state.currentStep}`;
@@ -502,7 +505,14 @@ const ModularEditorPro: React.FC = () => {
             <StepSidebar
               currentStep={state.currentStep}
               stepHasBlocks={stepHasBlocksRecord}
-              onSelectStep={actions.setCurrentStep}
+              onSelectStep={(step: number) => {
+                console.log('🔍 ModularEditorPro - StepSidebar onSelectStep chamado:', {
+                  fromStep: state.currentStep,
+                  toStep: step,
+                  stepHasBlocks: stepHasBlocksRecord[step]
+                });
+                actions.setCurrentStep(step);
+              }}
               getStepAnalysis={() => ({ icon: 'note', label: 'Etapa', desc: 'Configurar' })}
               renderIcon={(icon: string) => <div>{icon}</div>}
             />
@@ -537,6 +547,7 @@ const ModularEditorPro: React.FC = () => {
           <div className="flex-1 min-w-0 overflow-hidden">
             <div className="h-full overflow-y-auto">
               <EditorCanvas
+                key={`canvas-step-${state.currentStep}-${currentStepBlocks.length}`} // Force remount when step/blocks change
                 blocks={currentStepBlocks}
                 selectedBlock={selectedBlock}
                 currentStep={state.currentStep}
@@ -544,7 +555,13 @@ const ModularEditorPro: React.FC = () => {
                 onUpdateBlock={handleUpdateBlock}
                 onDeleteBlock={handleDeleteBlock}
                 isPreviewMode={isPreviewMode}
-                onStepChange={actions.setCurrentStep} // Para navegação no preview
+                onStepChange={(step: number) => {
+                  console.log('🔍 ModularEditorPro - EditorCanvas onStepChange chamado:', {
+                    fromStep: state.currentStep,
+                    toStep: step
+                  });
+                  actions.setCurrentStep(step);
+                }}
               />
             </div>
           </div>

@@ -777,6 +777,14 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
   useEffect(() => {
     const currentStep = rawState.currentStep;
     if (!currentStep) return;
+    
+    console.log('🔍 EditorProvider - currentStep changed:', {
+      currentStep,
+      hasBlocks: (rawState.stepBlocks[`step-${currentStep}`] || []).length > 0,
+      allSteps: Object.keys(rawState.stepBlocks),
+      isTestEnv: process.env.NODE_ENV === 'test'
+    });
+    
     // Em testes, evitamos carregamento automático para reduzir uso de memória
     if (process.env.NODE_ENV === 'test') return;
     // Only load step if needed, and avoid triggering infinite loops
@@ -818,16 +826,15 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
         step = correctedStep;
       }
 
-      if (process.env.NODE_ENV === 'development') {
-        console.log('🔍 setCurrentStep called:', {
-          requestedStep: step,
-          isValidStep,
-          currentStep: stateRef.current.currentStep,
-          stepType: typeof step,
-          isInteger: Number.isInteger(step),
-          timestamp: new Date().toISOString()
-        });
-      }
+      console.log('🔍 EditorProvider.setCurrentStep called:', {
+        requestedStep: step,
+        isValidStep,
+        currentStep: stateRef.current.currentStep,
+        stepType: typeof step,
+        isInteger: Number.isInteger(step),
+        hasBlocksForStep: (stateRef.current.stepBlocks[`step-${step}`] || []).length > 0,
+        timestamp: new Date().toISOString()
+      });
 
       if (!isValidStep) {
         console.error('❌ INVESTIGAÇÃO #2: currentStep fora do intervalo válido (1-21):', {
@@ -852,11 +859,22 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
         console.warn('🔧 Corrigindo para step válido:', step);
       }
 
-      setState(prev => ({
-        ...prev,
-        currentStep: step,
-        selectedBlockId: null,
-      }));
+      setState(prev => {
+        const newState = {
+          ...prev,
+          currentStep: step,
+          selectedBlockId: null,
+        };
+        
+        console.log('🔍 EditorProvider.setCurrentStep - setState aplicado:', {
+          oldStep: prev.currentStep,
+          newStep: step,
+          hasBlocksForNewStep: (prev.stepBlocks[`step-${step}`] || []).length > 0,
+          allStepsWithBlocks: Object.entries(prev.stepBlocks).filter(([_, blocks]) => blocks.length > 0).map(([key]) => key)
+        });
+        
+        return newState;
+      });
       // 🔗 Sincronizar etapa atual com o sistema unificado e expor para blocos/quiz
       try {
         if (typeof window !== 'undefined') {
