@@ -41,27 +41,27 @@ const MetricCard: React.FC<MetricCardProps> = ({
     color = 'blue'
 }) => {
     const colorClasses = {
-        green: 'border-green-200 bg-green-50 text-green-700',
-        blue: 'border-blue-200 bg-blue-50 text-blue-700',
-        purple: 'border-purple-200 bg-purple-50 text-purple-700',
-        orange: 'border-orange-200 bg-orange-50 text-orange-700'
+        green: 'border-green-200 bg-gradient-to-br from-green-50 to-green-100 text-green-700',
+        blue: 'border-brand-primary/30 bg-gradient-to-br from-brand-light to-white text-brand-text',
+        purple: 'border-brand-accent/30 bg-gradient-to-br from-brand-accent/10 to-brand-secondary/10 text-brand-accent',
+        orange: 'border-orange-200 bg-gradient-to-br from-orange-50 to-orange-100 text-orange-700'
     };
 
     const trendColors = {
         up: 'text-green-600',
         down: 'text-red-600',
-        neutral: 'text-gray-600'
+        neutral: 'text-brand-text-secondary'
     };
 
     return (
-        <Card className={`border-2 ${colorClasses[color]}`}>
+        <Card className={`border-2 ${colorClasses[color]} shadow-lg hover:shadow-xl transition-all duration-200`}>
             <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                     <div>
                         <p className="text-sm font-medium opacity-70">{title}</p>
                         <p className="text-3xl font-bold">{value}</p>
                         {change && (
-                            <p className={`text-sm ${trendColors[trend]}`}>
+                            <p className={`text-sm font-medium ${trendColors[trend]}`}>
                                 {trend === 'up' && '↗'} {trend === 'down' && '↘'} {change}
                             </p>
                         )}
@@ -89,25 +89,25 @@ const SimpleBarChart: React.FC<SimpleBarChartProps> = ({ data, title, height = 2
     const maxValue = Math.max(...data.map(d => d.value));
 
     return (
-        <Card>
+        <Card className="shadow-lg hover:shadow-xl transition-all duration-200">
             <CardHeader>
-                <CardTitle className="text-lg">{title}</CardTitle>
+                <CardTitle className="text-lg text-brand-text">{title}</CardTitle>
             </CardHeader>
             <CardContent>
                 <div className="space-y-3" style={{ height }}>
                     {data.map((item, index) => (
                         <div key={index} className="flex items-center space-x-3">
-                            <div className="w-24 text-sm font-medium truncate">{item.label}</div>
-                            <div className="flex-1 bg-gray-200 rounded-full h-3 relative">
+                            <div className="w-24 text-sm font-medium truncate text-brand-text">{item.label}</div>
+                            <div className="flex-1 bg-brand-light rounded-full h-3 relative">
                                 <div
-                                    className={`h-3 rounded-full ${item.color || 'bg-blue-500'} transition-all duration-500`}
+                                    className={`h-3 rounded-full bg-gradient-to-r from-brand-primary to-brand-accent transition-all duration-500`}
                                     style={{
                                         width: `${(item.value / maxValue) * 100}%`,
                                         minWidth: item.value > 0 ? '8px' : '0px'
                                     }}
                                 />
                             </div>
-                            <div className="w-12 text-right text-sm font-semibold">{item.value}</div>
+                            <div className="w-12 text-right text-sm font-semibold text-brand-text">{item.value}</div>
                         </div>
                     ))}
                 </div>

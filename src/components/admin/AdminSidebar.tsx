@@ -1,4 +1,5 @@
 import { cn } from '@/lib/utils';
+import QuizFlowLogo from '@/components/ui/QuizFlowLogo';
 import {
   Code,
   Eye,
@@ -128,20 +129,20 @@ export function AdminSidebar() {
         key={item.href}
         href={item.href}
         className={cn(
-          'flex flex-col gap-1 px-4 py-3 rounded-lg transition-colors relative',
+          'flex flex-col gap-1 px-4 py-3 rounded-lg transition-all duration-200 relative',
           isActive
             ? isAdvanced
-              ? 'bg-gradient-to-r from-[#B89B7A] to-[#A08968] text-white shadow-md'
+              ? 'bg-gradient-to-r from-brand-accent to-brand-secondary text-white shadow-md'
               : isPriority
-              ? 'bg-gradient-to-r from-[#B89B7A] to-[#D4A574] text-white shadow-lg border-2 border-[#E8D5B7]'
-              : 'bg-[#B89B7A] text-white'
+              ? 'bg-gradient-to-r from-brand-primary to-brand-accent text-white shadow-lg border-2 border-brand-primary/30'
+              : 'bg-brand-primary text-white'
             : isPriority
-            ? 'text-[#432818] hover:bg-[#F5F2E9] bg-gradient-to-r from-[#FBF8F3] to-[#F8F5F0] border border-[#E8D5B7]'
-            : 'text-[#432818] hover:bg-[#F5F2E9]'
+            ? 'text-brand-text hover:bg-brand-light bg-gradient-to-r from-white to-brand-light/50 border border-brand-primary/20'
+            : 'text-brand-text hover:bg-brand-light/50'
         )}
       >
         <div className="flex items-center gap-3">
-          <Icon className={cn("w-5 h-5", isPriority && "text-[#B89B7A]")} />
+          <Icon className={cn("w-5 h-5", isPriority && "text-brand-primary")} />
           <span className={cn("font-medium", isPriority && "font-semibold")}>{item.title}</span>
           {(item.badge || item.isAdvanced) && (
             <Badge
@@ -151,9 +152,9 @@ export function AdminSidebar() {
                 isActive 
                   ? "bg-white/20 text-white" 
                   : item.isAdvanced 
-                  ? "bg-purple-100 text-purple-700" 
+                  ? "bg-gradient-to-r from-brand-accent to-brand-secondary text-white" 
                   : isPriority 
-                  ? "bg-[#B89B7A] text-white font-medium"
+                  ? "bg-brand-primary text-white font-medium"
                   : "bg-green-100 text-green-700"
               )}
             >
@@ -164,14 +165,14 @@ export function AdminSidebar() {
         {item.description && (
           <span className={cn(
             'text-xs ml-8',
-            isActive ? 'text-white/70' : isPriority ? 'text-[#8F7A6A] font-medium' : 'text-[#8F7A6A]'
+            isActive ? 'text-white/70' : isPriority ? 'text-brand-text-secondary font-medium' : 'text-brand-text-secondary'
           )}>
             {item.description}
           </span>
         )}
         {(isAdvanced || isPriority) && (
           <div className="absolute top-1 right-1">
-            <Zap className={cn("w-3 h-3", isAdvanced ? "text-yellow-400" : "text-[#B89B7A]")} />
+            <Zap className={cn("w-3 h-3", isAdvanced ? "text-yellow-400" : "text-brand-primary")} />
           </div>
         )}
       </Link>
@@ -184,7 +185,7 @@ export function AdminSidebar() {
     return (
       <div className="space-y-2">
         <div className="px-4 py-2">
-          <div className="flex items-center gap-2 text-xs font-semibold text-[#B89B7A] uppercase tracking-wide">
+          <div className="flex items-center gap-2 text-xs font-semibold text-brand-primary uppercase tracking-wide">
             {SectionIcon && <SectionIcon className="w-4 h-4" />}
             {title}
           </div>
@@ -195,18 +196,20 @@ export function AdminSidebar() {
   };
 
   return (
-    <div className="w-64 bg-white border-r border-[#D4C4A0] h-screen overflow-y-auto">
-      <div className="p-6">
-        <h2 className="text-xl font-bold text-[#432818]">Quiz Quest</h2>
-        <div className="flex items-center gap-2 mt-2">
-          <Badge variant="default" className="bg-green-500 text-white text-xs">
+    <div className="w-64 bg-white/95 backdrop-blur-sm border-r border-gray-200 h-screen overflow-y-auto">
+      <div className="p-6 border-b border-gray-100">
+        <div className="flex items-center justify-center mb-2">
+          <QuizFlowLogo size="md" variant="full" theme="light" />
+        </div>
+        <div className="flex items-center justify-center gap-2 mt-3">
+          <Badge variant="default" className="bg-gradient-to-r from-brand-primary to-brand-accent text-white text-xs shadow-lg">
             <Zap className="w-3 h-3 mr-1" />
             Pro Active
           </Badge>
         </div>
       </div>
 
-      <nav className="px-4 space-y-6">
+      <nav className="px-4 space-y-6 py-4">
         {/* Dashboard Principal */}
         {renderSection('Dashboard', dashboardItems, false, Home)}
 
@@ -223,7 +226,7 @@ export function AdminSidebar() {
       <div className="absolute bottom-4 px-4 w-64">
         <Link
           href="/"
-          className="flex items-center gap-3 px-4 py-3 text-[#B89B7A] hover:bg-[#F5F2E9] rounded-lg transition-colors"
+          className="flex items-center gap-3 px-4 py-3 text-brand-primary hover:bg-brand-light/50 rounded-lg transition-all duration-200 border border-transparent hover:border-brand-primary/20"
         >
           <Eye className="w-5 h-5" />
           <span className="font-medium">Ver Site</span>

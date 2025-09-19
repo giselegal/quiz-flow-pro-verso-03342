@@ -2,6 +2,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
+import QuizFlowLogo from '@/components/ui/QuizFlowLogo';
 import { useAuth } from '@/context/AuthContext';
 import { AlertCircle, Chrome, Lock, Mail } from 'lucide-react';
 import React, { useState } from 'react';
@@ -72,42 +73,24 @@ const AuthPage: React.FC = () => {
   };
 
   return (
-    <div
-      className="min-h-screen flex items-center justify-center p-4"
-      style={{
-        backgroundColor: '#FEFEFE',
-        background: 'linear-gradient(135deg, #FEFEFE 0%, #FAF9F7 50%, #F3E8E6 100%)',
-      }}
-    >
-      <div
-        className="max-w-md w-full rounded-2xl shadow-2xl p-8 border-0 backdrop-blur-sm"
-        style={{
-          backgroundColor: 'rgba(254, 254, 254, 0.95)',
-          boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.15)',
-          border: '1px solid rgba(184, 155, 122, 0.2)',
-        }}
-      >
+    <div className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-brand-light via-brand-background to-brand-primary/10">
+      <div className="max-w-md w-full rounded-2xl shadow-lg p-8 backdrop-blur-lg border border-white/20 bg-white/95">
         {/* Logo */}
         <div className="text-center mb-8">
-          <div className="mx-auto w-20 h-20 mb-4">
-            <img
-              src="https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp"
-              alt="QuizFlow"
-              className="w-full h-full object-cover rounded-full border-3"
-              style={{ borderColor: '#B89B7A' }}
-            />
+          <div className="flex justify-center mb-4">
+            <QuizFlowLogo size="lg" variant="full" theme="light" />
           </div>
-          <h1 className="text-2xl font-bold" style={{ color: '#432818' }}>
+          <h1 className="text-2xl font-bold text-brand-text mb-2">
             {isLogin ? 'Bem-vindo de volta' : 'Criar conta'}
           </h1>
-          <p className="text-sm mt-2" style={{ color: '#6B4F43' }}>
-            Acesse sua plataforma QuizFlow
+          <p className="text-sm text-brand-text-secondary">
+            Acesse sua plataforma QuizFlow Pro
           </p>
         </div>
 
         {/* Error Alert */}
         {error && (
-          <Alert className="mb-6 border-red-500 bg-red-50">
+          <Alert className="mb-6 border-red-400 bg-red-50/80 backdrop-blur-sm">
             <AlertCircle className="h-4 w-4 text-red-500" />
             <AlertDescription className="text-red-700">{error}</AlertDescription>
           </Alert>
@@ -115,7 +98,7 @@ const AuthPage: React.FC = () => {
 
         {/* Reset Email Sent */}
         {resetEmailSent && (
-          <Alert className="mb-6 border-green-500 bg-green-50">
+          <Alert className="mb-6 border-green-400 bg-green-50/80 backdrop-blur-sm">
             <Mail className="h-4 w-4 text-green-500" />
             <AlertDescription className="text-green-700">
               Email de recuperação enviado! Verifique sua caixa de entrada.
@@ -127,34 +110,25 @@ const AuthPage: React.FC = () => {
         <Button
           type="button"
           variant="outline"
-          className="w-full mb-6 h-12"
+          className="w-full mb-6 h-12 border-gray-200 hover:bg-brand-light/50 transition-all duration-200"
           onClick={handleGoogleSignIn}
           disabled={false}
-          style={{
-            borderColor: '#E5DDD5',
-            backgroundColor: '#FEFEFE',
-          }}
         >
-          <Chrome className="w-5 h-5 mr-3" style={{ color: '#4285f4' }} />
-          Continuar com Google
+          <Chrome className="w-5 h-5 mr-3 text-brand-primary" />
+          <span className="text-brand-text">Continuar com Google</span>
         </Button>
 
         {/* Divider */}
         <div className="flex items-center justify-center mb-6">
-          <div className="h-px flex-1" style={{ backgroundColor: '#E5DDD5' }}></div>
-          <span className="px-4 text-sm" style={{ color: '#8B7355' }}>
-            ou
-          </span>
-          <div className="h-px flex-1" style={{ backgroundColor: '#E5DDD5' }}></div>
+          <div className="h-px flex-1 bg-gray-200"></div>
+          <span className="px-4 text-sm text-brand-text-secondary">ou</span>
+          <div className="h-px flex-1 bg-gray-200"></div>
         </div>
 
         {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="relative">
-            <Mail
-              className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5"
-              style={{ color: '#8B7355' }}
-            />
+            <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-brand-text-secondary" />
             <Input
               type="email"
               placeholder="seu@email.com"
@@ -165,19 +139,12 @@ const AuthPage: React.FC = () => {
               autoComplete="email"
               autoCapitalize="none"
               spellCheck={false}
-              className="pl-12 h-12"
-              style={{
-                borderColor: '#E5DDD5',
-                backgroundColor: '#FEFEFE',
-              }}
+              className="pl-12 h-12 border-gray-200 bg-white/80 backdrop-blur-sm focus:border-brand-primary focus:ring-brand-primary/20 transition-all duration-200"
             />
           </div>
 
           <div className="relative">
-            <Lock
-              className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5"
-              style={{ color: '#8B7355' }}
-            />
+            <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-brand-text-secondary" />
             <Input
               type="password"
               placeholder="Sua senha"
@@ -186,20 +153,13 @@ const AuthPage: React.FC = () => {
               required
               name="password"
               autoComplete={isLogin ? 'current-password' : 'new-password'}
-              className="pl-12 h-12"
-              style={{
-                borderColor: '#E5DDD5',
-                backgroundColor: '#FEFEFE',
-              }}
+              className="pl-12 h-12 border-gray-200 bg-white/80 backdrop-blur-sm focus:border-brand-primary focus:ring-brand-primary/20 transition-all duration-200"
             />
           </div>
 
           {!isLogin && (
             <div className="relative">
-              <Lock
-                className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5"
-                style={{ color: '#8B7355' }}
-              />
+              <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-brand-text-secondary" />
               <Input
                 type="password"
                 placeholder="Confirme sua senha"
@@ -208,22 +168,15 @@ const AuthPage: React.FC = () => {
                 required
                 name="confirm-password"
                 autoComplete="new-password"
-                className="pl-12 h-12"
-                style={{
-                  borderColor: '#E5DDD5',
-                  backgroundColor: '#FEFEFE',
-                }}
+                className="pl-12 h-12 border-gray-200 bg-white/80 backdrop-blur-sm focus:border-brand-primary focus:ring-brand-primary/20 transition-all duration-200"
               />
             </div>
           )}
 
           <Button
             type="submit"
-            className="w-full h-12 text-white font-semibold bg-brightPink hover:bg-brightBlue"
+            className="w-full h-12 text-white font-semibold bg-gradient-to-r from-brand-primary via-brand-accent to-brand-secondary hover:from-brand-primary/90 hover:to-brand-secondary/90 shadow-lg hover:shadow-xl transition-all duration-200"
             disabled={isLoading}
-            style={{
-              boxShadow: '0 4px 10px rgba(255, 105, 180, 0.3)',
-            }}
           >
             {isLoading ? (
               <div className="flex items-center justify-center gap-2">
@@ -241,7 +194,7 @@ const AuthPage: React.FC = () => {
           <button
             type="button"
             onClick={handlePasswordReset}
-            className="w-full text-sm mt-2 font-medium text-mediumBlue hover:text-brightPink"
+            className="w-full text-sm font-medium text-brand-accent hover:text-brand-primary transition-colors duration-200"
           >
             Esqueceu sua senha?
           </button>
@@ -249,13 +202,13 @@ const AuthPage: React.FC = () => {
           <button
             type="button"
             onClick={() => setIsLogin(!isLogin)}
-            className="w-full text-sm mt-4 font-medium text-mediumBlue hover:text-brightPink"
+            className="w-full text-sm font-medium text-brand-accent hover:text-brand-primary transition-colors duration-200"
           >
             {isLogin ? 'Não tem uma conta? Crie uma' : 'Já tem uma conta? Faça login'}
           </button>
 
-          <p className="text-xs pt-4" style={{ color: '#8B7355' }}>
-            © 2025 Gisele Galvão. Todos os direitos reservados.
+          <p className="text-xs pt-4 text-brand-text-secondary">
+            © 2025 QuizFlow Pro. Todos os direitos reservados.
           </p>
         </div>
       </div>
