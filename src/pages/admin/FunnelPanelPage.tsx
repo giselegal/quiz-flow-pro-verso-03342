@@ -478,9 +478,10 @@ const FunnelPanelPage: React.FC = () => {
       // Filtra para mostrar APENAS o funil principal para edição
       const unifiedTemplates = getUnifiedTemplates({ sortBy: sort === 'name' ? 'name' : 'usageCount' });
       const filteredTemplates = unifiedTemplates.filter(template =>
-        template.id === 'quiz-estilo-21-steps' ||
-        template.name === 'Quiz 21 Steps Complete' ||
-        template.name.includes('Quiz 21 Etapas')
+        template.id === 'quiz21StepsComplete' ||
+        template.id === 'comQueRoupaEuVou' ||
+        template.name.includes('Quiz de Estilo') ||
+        template.name.includes('Com que Roupa')
       );
 
       // Se não encontrar o template específico, usar o primeiro disponível
