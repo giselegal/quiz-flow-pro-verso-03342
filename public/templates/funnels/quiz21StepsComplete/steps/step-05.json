@@ -1,0 +1,91 @@
+{
+    "templateVersion": "2.0",
+    "funnelId": "quiz21StepsComplete",
+    "stepNumber": 5,
+    "timestamp": "2025-09-19T12:00:00.000Z",
+    "metadata": {
+        "name": "Questão sobre Ocasiões Especiais",
+        "description": "Entenda as preferências para eventos formais",
+        "type": "strategic-question"
+    },
+    "behavior": {
+        "autoAdvance": true,
+        "autoAdvanceDelay": 2000,
+        "showProgress": true,
+        "allowBack": true
+    },
+    "validation": {
+        "type": "selection",
+        "required": true,
+        "requiredSelections": 2,
+        "maxSelections": 3,
+        "message": "Selecione 2 ou 3 opções que mais te representam"
+    },
+    "ui": {
+        "layout": "grid",
+        "animation": "slide-up",
+        "customCSS": ".step-5 { background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); }"
+    },
+    "analytics": {
+        "trackEvents": true,
+        "eventName": "quiz_occasions_preferences",
+        "customProperties": {
+            "category": "style_preference",
+            "importance": "high"
+        }
+    },
+    "blocks": [
+        {
+            "id": "step5-title",
+            "type": "heading",
+            "content": {
+                "text": "Em quais <strong>ocasiões especiais</strong> você mais se preocupa com o look?",
+                "level": 2
+            }
+        },
+        {
+            "id": "step5-options",
+            "type": "option-grid",
+            "content": {
+                "options": [
+                    {
+                        "id": "work-events",
+                        "text": "Eventos de trabalho",
+                        "description": "Reuniões importantes, apresentações, networking",
+                        "image": "/images/occasions/work-events.jpg"
+                    },
+                    {
+                        "id": "social-events",
+                        "text": "Eventos sociais",
+                        "description": "Festas, jantares, encontros com amigos",
+                        "image": "/images/occasions/social-events.jpg"
+                    },
+                    {
+                        "id": "romantic-dates",
+                        "text": "Encontros românticos",
+                        "description": "Dates, comemorações a dois, aniversários",
+                        "image": "/images/occasions/romantic-dates.jpg"
+                    },
+                    {
+                        "id": "formal-events",
+                        "text": "Eventos formais",
+                        "description": "Casamentos, formaturas, cerimônias",
+                        "image": "/images/occasions/formal-events.jpg"
+                    },
+                    {
+                        "id": "casual-daily",
+                        "text": "Dia a dia casual",
+                        "description": "Trabalho, compras, atividades cotidianas",
+                        "image": "/images/occasions/casual-daily.jpg"
+                    },
+                    {
+                        "id": "travel-vacation",
+                        "text": "Viagens e férias",
+                        "description": "Looks para destinos, turismo, relaxamento",
+                        "image": "/images/occasions/travel-vacation.jpg"
+                    }
+                ]
+            }
+        }
+    ]
+}

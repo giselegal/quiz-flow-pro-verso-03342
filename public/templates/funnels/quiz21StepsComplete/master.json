@@ -1,0 +1,77 @@
+{
+    "templateVersion": "2.0",
+    "metadata": {
+        "id": "quiz21StepsComplete",
+        "name": "Quiz de Estilo Pessoal - 21 Etapas Completo",
+        "description": "Template principal completo para descoberta do estilo pessoal",
+        "stepCount": 21,
+        "category": "quiz-complete"
+    },
+    "globalConfig": {
+        "navigation": {
+            "autoAdvanceSteps": [
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9,
+                10,
+                11
+            ],
+            "manualAdvanceSteps": [
+                1,
+                12,
+                13,
+                14,
+                15,
+                16,
+                17,
+                18,
+                19,
+                20,
+                21
+            ],
+            "defaultAutoAdvanceDelay": 1500
+        },
+        "validation": {
+            "globalRules": {
+                "maxSelections": 3,
+                "minInputLength": 2
+            },
+            "strictMode": true
+        },
+        "ui": {
+            "theme": "fashion-premium",
+            "primaryColor": "#B89B7A",
+            "secondaryColor": "#432818"
+        },
+        "analytics": {
+            "enabled": true,
+            "provider": "gtag",
+            "trackingId": "GA_MEASUREMENT_ID"
+        }
+    },
+    "stepDefaults": {
+        "behavior": {
+            "autoAdvance": false,
+            "autoAdvanceDelay": 1500,
+            "showProgress": true,
+            "allowBack": true
+        },
+        "validation": {
+            "type": "selection",
+            "required": true,
+            "message": "Por favor, faça uma seleção para continuar"
+        },
+        "ui": {
+            "layout": "single",
+            "animation": "fade"
+        },
+        "analytics": {
+            "trackEvents": true
+        }
+    }
+}
