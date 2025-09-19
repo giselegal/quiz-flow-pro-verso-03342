@@ -3,10 +3,7 @@ import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Separator } from '@/components/ui/separator';
-import { Switch } from '@/components/ui/switch';
-import { Textarea } from '@/components/ui/textarea';
 import { Block } from '@/types/editor';
 import { User, Palette, Layout, Settings } from 'lucide-react';
 import { PropertyNumber } from '../components/PropertyNumber';
@@ -14,13 +11,11 @@ import { PropertyNumber } from '../components/PropertyNumber';
 interface MentorPropertyEditorProps {
     block: Block;
     onUpdate: (updates: Partial<Block>) => void;
-    isPreviewMode?: boolean;
 }
 
 export const MentorPropertyEditor: React.FC<MentorPropertyEditorProps> = ({
     block,
     onUpdate,
-    isPreviewMode = false,
 }) => {
     // Função helper para atualizar propriedades
     const updateProperty = (key: string, value: any) => {
@@ -141,7 +136,6 @@ export const MentorPropertyEditor: React.FC<MentorPropertyEditorProps> = ({
                             min={0}
                             max={200}
                             step={4}
-                            unit="px"
                         />
 
                         {/* Margem Inferior */}
@@ -152,7 +146,6 @@ export const MentorPropertyEditor: React.FC<MentorPropertyEditorProps> = ({
                             min={0}
                             max={200}
                             step={4}
-                            unit="px"
                         />
 
                         {/* Margem Esquerda */}
@@ -163,7 +156,6 @@ export const MentorPropertyEditor: React.FC<MentorPropertyEditorProps> = ({
                             min={0}
                             max={200}
                             step={4}
-                            unit="px"
                         />
 
                         {/* Margem Direita */}
@@ -174,7 +166,6 @@ export const MentorPropertyEditor: React.FC<MentorPropertyEditorProps> = ({
                             min={0}
                             max={200}
                             step={4}
-                            unit="px"
                         />
                     </CardContent>
                 </Card>

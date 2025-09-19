@@ -88,7 +88,6 @@ const TestimonialsCarouselInlineBlock: React.FC<BlockComponentProps> = ({
     isSelected = false,
     isPreviewing = false,
     onClick,
-    onPropertyChange,
     className = '',
 }) => {
     const {
@@ -192,7 +191,7 @@ const TestimonialsCarouselInlineBlock: React.FC<BlockComponentProps> = ({
         return activeTestimonials.slice(currentIndex, currentIndex + itemsPerView);
     }, [activeTestimonials, currentIndex, itemsPerView, showAllAtOnce]);
 
-    const renderTestimonial = (testimonial: typeof TESTIMONIALS_DATABASE[0], index: number) => (
+    const renderTestimonial = (testimonial: typeof TESTIMONIALS_DATABASE[0]) => (
         <div
             key={testimonial.id}
             className="p-6 rounded-xl shadow-sm border border-gray-100 transition-all duration-200 hover:shadow-md"
@@ -319,8 +318,8 @@ const TestimonialsCarouselInlineBlock: React.FC<BlockComponentProps> = ({
                     layoutClasses[layout as keyof typeof layoutClasses],
                     layout === 'grid' && `grid-cols-1 md:grid-cols-${Math.min(itemsPerView, 2)} lg:grid-cols-${itemsPerView}`
                 )}>
-                    {visibleTestimonials.map((testimonial, index) =>
-                        renderTestimonial(testimonial, index)
+                    {visibleTestimonials.map((testimonial) =>
+                        renderTestimonial(testimonial)
                     )}
                 </div>
 

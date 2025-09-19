@@ -242,7 +242,6 @@ const SpecializedEditor: React.FC<{
                     <MentorPropertyEditor
                         block={selectedBlock as any}
                         onUpdate={handleUpdate as any}
-                        isPreviewMode={false}
                     />
                 </Suspense>
             );

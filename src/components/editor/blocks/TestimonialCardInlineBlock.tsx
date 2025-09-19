@@ -1,7 +1,7 @@
 import { cn } from '@/lib/utils';
 import type { BlockComponentProps } from '@/types/blocks';
-import { Edit3, Star, Quote, User, CheckCircle } from 'lucide-react';
-import React, { useState, useCallback, useMemo } from 'react';
+import { Edit3, Star, Quote, CheckCircle } from 'lucide-react';
+import React, { useMemo } from 'react';
 
 /**
  * TestimonialCardInlineBlock - Card de depoimento de cliente
@@ -58,7 +58,6 @@ const TestimonialCardInlineBlock: React.FC<BlockComponentProps> = ({
     isSelected = false,
     isPreviewing = false,
     onClick,
-    onPropertyChange,
     className = '',
 }) => {
     const {

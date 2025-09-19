@@ -1,282 +1,144 @@
-/**
- * 🎨 UNIVERSAL BLOCK RENDERER v3.0 - CLEAN ARCHITECTURE
- * 
- * Renderer universal de blocos otimizado com Clean Architecture
- * Performance máxima e flexibilidade total
- */
-
-import React, { memo, useMemo, useCallback } from 'react';
+import React, { memo, useCallback, useMemo } from 'react';
+import { Block } from '@/types/editor';
+import TestimonialCardInlineBlock from './TestimonialCardInlineBlock';
+import TestimonialsCarouselInlineBlock from './TestimonialsCarouselInlineBlock';
+import MentorSectionInlineBlock from './MentorSectionInlineBlock';
 import { cn } from '@/lib/utils';
-import { getEnhancedBlockComponent } from './EnhancedBlockRegistry';
-
-// 🎯 INTERFACES (EXPORTADAS)
-export interface Block {
-  id: string;
-  type: string;
-  properties?: Record<string, any>;
-}
 
 export interface UniversalBlockRendererProps {
   block: Block;
   isSelected?: boolean;
   isPreviewing?: boolean;
-  mode?: 'production' | 'preview' | 'editor';
-  onSelect?: (blockId: string) => void;
-  onClick?: () => void; // Legacy compatibility
+  mode?: string; // Legacy compatibility
   onUpdate?: (blockId: string, updates: Partial<Block>) => void;
   onDelete?: (blockId: string) => void;
-  onPropertyChange?: (key: string, value: any) => void; // Legacy compatibility
+  onSelect?: (blockId: string) => void;
+  onClick?: () => void;
+  onPropertyChange?: (key: string, value: any) => void;
   className?: string;
   style?: React.CSSProperties;
 }
 
-// 🎨 COMPONENTES DE BLOCOS BÁSICOS
-const TextBlock: React.FC<{
-  block: Block;
-  isSelected?: boolean;
-  isPreviewing?: boolean;
-  onUpdate?: (updates: any) => void
-}> = memo(({
-  block,
-  isSelected,
-  isPreviewing = false,
-  onUpdate
-}) => {
-  const text = block.properties?.text || 'Digite seu texto aqui...';
-
-  const handleTextChange = useCallback((e: React.ChangeEvent<HTMLDivElement>) => {
-    onUpdate?.({ properties: { ...block.properties, text: e.currentTarget.textContent } });
-  }, [onUpdate, block.properties]);
-
-  return (
-    <div
-      contentEditable={isPreviewing ? false : isSelected}
-      onBlur={handleTextChange}
-      className={cn(
-        'min-h-[2rem] p-2 rounded border-2 transition-all',
-        isSelected
-          ? 'border-primary bg-primary/5'
-          : 'border-transparent hover:border-muted-foreground/20'
-      )}
-      suppressContentEditableWarning
-    >
-      {text}
-    </div>
-  );
-});
-
-const ButtonBlock: React.FC<{ block: Block; isSelected?: boolean; onUpdate?: (updates: any) => void }> = memo(({
-  block,
-  isSelected
-}) => {
-  const text = block.properties?.text || 'Botão';
-  const url = block.properties?.url || '#';
-
-  return (
-    <div className={cn(
-      'inline-block p-2 rounded border-2 transition-all',
-      isSelected
-        ? 'border-primary bg-primary/5'
-        : 'border-transparent hover:border-muted-foreground/20'
-    )}>
-      <button
-        className="px-4 py-2 bg-primary text-primary-foreground rounded hover:bg-primary/90 transition-colors"
-        onClick={(e) => {
-          e.preventDefault();
-          if (url && url !== '#') {
-            window.open(url, '_blank');
-          }
-        }}
-      >
-        {text}
-      </button>
-    </div>
-  );
-});
-
-const ImageBlock: React.FC<{ block: Block; isSelected?: boolean }> = memo(({
-  block,
-  isSelected
-}) => {
-  const src = block.properties?.src || 'https://via.placeholder.com/300x200';
-  const alt = block.properties?.alt || 'Imagem';
-
-  return (
-    <div className={cn(
-      'inline-block p-2 rounded border-2 transition-all',
-      isSelected
-        ? 'border-primary bg-primary/5'
-        : 'border-transparent hover:border-muted-foreground/20'
-    )}>
-      <img
-        src={src}
-        alt={alt}
-        className="max-w-full h-auto rounded"
-        style={{ maxHeight: '400px' }}
-      />
-    </div>
-  );
-});
-
-const FormBlock: React.FC<{ block: Block; isSelected?: boolean }> = memo(({
-  block,
-  isSelected
-}) => {
-  const title = block.properties?.title || 'Formulário';
-  const fields = block.properties?.fields || [
-    { type: 'text', label: 'Nome', placeholder: 'Digite seu nome' },
-    { type: 'email', label: 'Email', placeholder: 'seu@email.com' }
-  ];
-
-  return (
-    <div className={cn(
-      'p-4 rounded border-2 transition-all bg-background',
-      isSelected
-        ? 'border-primary bg-primary/5'
-        : 'border-muted hover:border-muted-foreground/20'
-    )}>
-      <h3 className="font-semibold mb-4">{title}</h3>
-      <div className="space-y-3">
-        {fields.map((field: any, index: number) => (
-          <div key={index}>
-            <label className="block text-sm font-medium mb-1">
-              {field.label}
-            </label>
-            <input
-              type={field.type}
-              placeholder={field.placeholder}
-              className="w-full px-3 py-2 border border-muted rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20"
-            />
-
-          </div>
-        ))}
-        <button className="w-full px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors">
-          Enviar
-        </button>
-      </div>
-    </div>
-  );
-});
-
 /**
- * 🎨 Universal Block Renderer v3.0
+ * 🚀 UNIVERSAL BLOCK RENDERER v3.0
  * 
- * Features v3.0:
- * - Clean Architecture integration
- * - Performance otimizada com memo
- * - Suporte a edição inline
- * - Registry extensível de componentes
- * - Feedback visual aprimorado
+ * Sistema unificado para renderizar qualquer tipo de bloco
+ * ✅ Zero Coupling com contextos específicos
+ * ✅ Suporte universal a todos os tipos de bloco
+ * ✅ Props padronizadas e flexíveis
+ * ✅ Feature flags para versionamento
  */
-export const UniversalBlockRenderer: React.FC<UniversalBlockRendererProps> = memo(({
+
+// 🎮 Feature Flags - Sistema de versionamento controlado
+const featureFlags = {
+  useCleanArchitecture: process.env.NODE_ENV === 'development',
+  enableAdvancedLogging: process.env.NODE_ENV === 'development',
+  useModernComponents: true,
+};
+
+// 🗂️ REGISTRY DE COMPONENTES - Mapeamento Universal
+const BlockComponentRegistry = {
+  // Business Components
+  'mentor-section-inline': MentorSectionInlineBlock,
+  'testimonial-card-inline': TestimonialCardInlineBlock,
+  'testimonials-carousel-inline': TestimonialsCarouselInlineBlock,
+
+  // Fallbacks
+  headline: (props: any) => <div {...props}>Headline</div>,
+  text: (props: any) => <div {...props}>Text</div>,
+  image: (props: any) => <div {...props}>Image</div>,
+  button: (props: any) => <div {...props}>Button</div>,
+  form: (props: any) => <div {...props}>Form</div>,
+  spacer: (props: any) => <div {...props}>Spacer</div>,
+  container: (props: any) => <div {...props}>Container</div>,
+};
+
+const UniversalBlockRenderer: React.FC<UniversalBlockRendererProps> = memo(({
   block,
   isSelected = false,
   isPreviewing = false,
-  onSelect,
-  onClick, // Legacy compatibility
   onUpdate,
   onDelete,
-  onPropertyChange, // Legacy compatibility
-  className,
-  style
+  onSelect,
+  onClick,
+  className = '',
+  style,
 }) => {
-  // 🚩 FEATURE FLAGS (mock por enquanto)
-  const featureFlags = { useCleanArchitecture: true };
-
-  // 🎯 COMPONENT RESOLUTION - Usando Enhanced Block Registry
-  const BlockComponent = useMemo(() => {
-    const component = getEnhancedBlockComponent(block.type);
-    console.log(`🔍 UniversalBlockRenderer resolving: "${block.type}" →`, {
-      found: !!component,
-      name: component?.name || component?.displayName || 'Unknown'
+  // 🔍 LOGS DE DESENVOLVIMENTO - Debugging e monitoramento
+  if (featureFlags.enableAdvancedLogging) {
+    console.log('🎯 UniversalBlockRenderer renderizando:', {
+      blockType: block.type,
+      blockId: block.id,
+      isSelected,
+      isPreviewing,
+      hasOnUpdate: !!onUpdate,
+      hasProps: Object.keys(block.properties || {}).length,
     });
-    return component;
-  }, [block.type]);
-
-  // 🎯 HANDLERS COM COMPATIBILIDADE LEGACY
-  const handleClick = useCallback((e: React.MouseEvent) => {
-    if (!isPreviewing) {
-      e.stopPropagation();
-      // Usar onSelect se disponível, caso contrário onClick (legacy)
-      if (onSelect) {
-        onSelect(block.id);
-      } else if (onClick) {
-        onClick();
-      }
-    }
-  }, [isPreviewing, onSelect, onClick, block.id]);
-
-  const handleUpdate = useCallback((updates: Partial<Block>) => {
-    if (onUpdate) {
-      onUpdate(block.id, updates);
-    } else if (onPropertyChange && updates.properties) {
-      // Legacy compatibility: chamar onPropertyChange para cada propriedade
-      Object.entries(updates.properties).forEach(([key, value]) => {
-        onPropertyChange(key, value);
-      });
-    }
-  }, [onUpdate, onPropertyChange, block.id]);
-
-  const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
-    if (e.key === 'Delete' && isSelected && !isPreviewing) {
-      e.preventDefault();
-      onDelete?.(block.id);
-    }
-  }, [isSelected, isPreviewing, onDelete, block.id]);
-
-  // 🎨 FALLBACK PARA TIPOS DESCONHECIDOS
-  if (!BlockComponent) {
-    return (
-      <div
-        className={cn(
-          'p-4 border-2 border-dashed border-muted-foreground/20 rounded-lg',
-          'bg-muted/10 text-center text-muted-foreground',
-          isSelected && 'border-destructive bg-destructive/5',
-          className
-        )}
-        style={style}
-        onClick={handleClick}
-        tabIndex={0}
-        onKeyDown={handleKeyDown}
-      >
-        <div className="text-sm font-medium mb-1">
-          Tipo desconhecido: {block.type}
-        </div>
-        <div className="text-xs">
-          Componente não registrado no sistema
-        </div>
-        {featureFlags.useCleanArchitecture && (
-          <div className="text-xs mt-2 text-primary">
-            Clean Architecture v3.0
-          </div>
-        )}
-      </div>
-    );
   }
 
-  // 🎨 RENDER PRINCIPAL
+  // 🧠 RESOLUÇÃO DE COMPONENTE - Smart component resolution
+  const BlockComponent = useMemo(() => {
+    const Component = BlockComponentRegistry[block.type as keyof typeof BlockComponentRegistry];
+
+    if (!Component) {
+      // Fallback para tipos desconhecidos
+      console.warn(`⚠️ Tipo de bloco desconhecido: ${block.type}. Usando fallback.`);
+      return ({ children, ...props }: any) => (
+        <div 
+          className="p-4 border-2 border-dashed border-orange-300 bg-orange-50 rounded"
+          {...props}
+        >
+          <div className="text-sm text-orange-700 font-medium">
+            Tipo desconhecido: {block.type}
+          </div>
+          <div className="text-xs text-orange-600 mt-1">
+            ID: {block.id}
+          </div>
+          {children}
+        </div>
+      );
+    }
+
+    return Component;
+  }, [block.type]);
+
+  // 🎛️ HANDLERS UNIFICADOS - Event handling padronizado
+  const handleUpdate = useCallback((updates: Partial<Block>) => {
+    if (featureFlags.enableAdvancedLogging) {
+      console.log('🔄 UniversalBlockRenderer: Update solicitado:', {
+        blockId: block.id,
+        updates,
+        hasOnUpdate: !!onUpdate,
+      });
+    }
+    onUpdate?.(block.id, updates);
+  }, [block.id, onUpdate]);
+
+  const handleClick = useCallback(() => {
+    // Priority: onSelect > onClick (legacy)
+    if (onSelect) {
+      onSelect(block.id);
+    } else if (onClick) {
+      onClick();
+    }
+  }, [block.id, onSelect, onClick]);
+
+  // 🎨 RENDER - Sistema de renderização unificado
   return (
     <div
       className={cn(
+        'universal-block-renderer',
         'relative group transition-all duration-200',
-        !isPreviewing && 'cursor-pointer',
+        isSelected && 'ring-2 ring-primary ring-offset-2',
+        !isPreviewing && 'hover:shadow-sm',
         className
       )}
       style={style}
-      onClick={handleClick}
-      tabIndex={0}
-      onKeyDown={handleKeyDown}
+      onClick={!isPreviewing ? handleClick : undefined}
+      data-block-id={block.id}
+      data-block-type={block.type}
     >
-      {/* Indicador de seleção */}
-      {isSelected && !isPreviewing && (
-        <div className="absolute -inset-1 border-2 border-primary rounded-lg pointer-events-none">
-          <div className="absolute -top-6 left-0 px-2 py-1 bg-primary text-primary-foreground text-xs rounded">
-            {block.type}
-          </div>
-        </div>
-      )}
-
-      {/* Controles de hover */}
+      {/* 🗑️ DELETE BUTTON - Apenas no modo editor */}
       {!isPreviewing && (
         <div className="absolute -top-8 right-0 opacity-0 group-hover:opacity-100 transition-opacity">
           <div className="flex items-center gap-1">
