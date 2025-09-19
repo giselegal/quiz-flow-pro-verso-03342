@@ -64,10 +64,17 @@ export const useBlockProperties = (options: UseBlockPropertiesOptions): UseBlock
                 if (!cancelled) {
                     setDefinition(def);
 
-                    // Merge with defaults if definition exists
+                    // 🔗 Merge with defaults AND real funnel data if available
                     if (def) {
-                        const defaults = await blockPropertiesAPI.getDefaultProperties(blockType);
+                        // Pass blockId to get real funnel data
+                        const defaults = await blockPropertiesAPI.getDefaultProperties(blockType, blockId);
                         setProperties(prev => ({ ...defaults, ...prev }));
+                        
+                        console.log(`🔗 useBlockProperties carregou dados reais para ${blockType}:`, {
+                            blockId,
+                            defaults,
+                            currentProperties: properties
+                        });
                     }
                 }
             } catch (err) {
@@ -125,6 +132,14 @@ export const useBlockProperties = (options: UseBlockPropertiesOptions): UseBlock
                 ...prev,
                 [key]: processedValue
             }));
+
+            // 💾 Save to real funnel data if valid
+            if (isValid) {
+                const saveSuccess = await blockPropertiesAPI.savePropertyToFunnel(blockId, key, processedValue);
+                if (saveSuccess) {
+                    console.log(`💾 Propriedade ${key} salva no funil com sucesso!`);
+                }
+            }
 
             // Notify API of change
             blockPropertiesAPI.notifyPropertyChange(blockId, blockType, key, oldValue, processedValue);

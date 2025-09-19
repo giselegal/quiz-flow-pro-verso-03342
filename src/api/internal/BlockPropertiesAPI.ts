@@ -39,6 +39,17 @@ export interface PropertyChangeEvent {
     timestamp: number;
 }
 
+// ===== REAL FUNNEL DATA INTEGRATION =====
+
+export interface FunnelDataProvider {
+    getCurrentStep: () => number;
+    getStepBlocks: (step: number) => any[];
+    getBlockById: (blockId: string) => any | null;
+    updateBlockProperties: (blockId: string, properties: Record<string, any>) => void;
+    getFunnelId: () => string;
+    isSupabaseEnabled: () => boolean;
+}
+
 // ===== CACHE SYSTEM =====
 
 class BlockPropertiesCache {
@@ -133,12 +144,43 @@ class BlockPropertiesCache {
 export class BlockPropertiesAPI {
     private static instance: BlockPropertiesAPI;
     private cache = new BlockPropertiesCache();
+    private funnelDataProvider: FunnelDataProvider | null = null;
 
     static getInstance(): BlockPropertiesAPI {
         if (!BlockPropertiesAPI.instance) {
             BlockPropertiesAPI.instance = new BlockPropertiesAPI();
         }
         return BlockPropertiesAPI.instance;
+    }
+
+    // 🔗 CONECTAR AOS DADOS REAIS DO FUNIL
+    connectToFunnelData(provider: FunnelDataProvider): void {
+        this.funnelDataProvider = provider;
+        console.log('🔗 BlockPropertiesAPI conectada aos dados reais do funil!');
+    }
+
+    // 📊 GET REAL BLOCK PROPERTIES (from funnel, not just registry)
+    async getRealBlockProperties(blockId: string): Promise<Record<string, any>> {
+        if (!this.funnelDataProvider) {
+            console.warn('⚠️ FunnelDataProvider não conectado, usando propriedades vazias');
+            return {};
+        }
+
+        const block = this.funnelDataProvider.getBlockById(blockId);
+        if (!block) {
+            console.warn(`⚠️ Bloco ${blockId} não encontrado no funil`);
+            return {};
+        }
+
+        // Buscar propriedades reais do bloco no funil
+        return {
+            ...block.properties,
+            ...block.content,
+            // Incluir metadados do funil
+            _funnelId: this.funnelDataProvider.getFunnelId(),
+            _currentStep: this.funnelDataProvider.getCurrentStep(),
+            _isSupabaseEnabled: this.funnelDataProvider.isSupabaseEnabled()
+        };
     }
 
     // 🔍 GET BLOCK DEFINITION
@@ -191,17 +233,66 @@ export class BlockPropertiesAPI {
         return value;
     }
 
-    // 📊 GET DEFAULT PROPERTIES
-    async getDefaultProperties(blockType: string): Promise<Record<string, any>> {
+    // 📊 GET DEFAULT PROPERTIES (with real funnel data integration)
+    async getDefaultProperties(blockType: string, blockId?: string): Promise<Record<string, any>> {
         const definition = await this.getBlockDefinition(blockType);
         if (!definition) return {};
 
+        // Start with registry defaults
         const defaults: Record<string, any> = {};
         Object.entries(definition.properties).forEach(([key, schema]) => {
             defaults[key] = schema.defaultValue;
         });
 
-        return { ...defaults, ...definition.defaultContent };
+        const registryDefaults = { ...defaults, ...definition.defaultContent };
+
+        // 🔗 If we have a blockId and funnel data provider, merge with real data
+        if (blockId && this.funnelDataProvider) {
+            try {
+                const realProperties = await this.getRealBlockProperties(blockId);
+                console.log(`🔗 Mesclando propriedades reais do funil para ${blockType}:`, {
+                    registryDefaults,
+                    realProperties,
+                    merged: { ...registryDefaults, ...realProperties }
+                });
+                
+                return { ...registryDefaults, ...realProperties };
+            } catch (error) {
+                console.warn('⚠️ Erro ao buscar propriedades reais, usando defaults do registry:', error);
+            }
+        }
+
+        return registryDefaults;
+    }
+
+    // 💾 SAVE PROPERTY TO REAL FUNNEL DATA
+    async savePropertyToFunnel(blockId: string, propertyKey: string, value: any): Promise<boolean> {
+        if (!this.funnelDataProvider) {
+            console.warn('⚠️ FunnelDataProvider não conectado, não é possível salvar no funil');
+            return false;
+        }
+
+        try {
+            const currentBlock = this.funnelDataProvider.getBlockById(blockId);
+            if (!currentBlock) {
+                console.warn(`⚠️ Bloco ${blockId} não encontrado para salvar propriedade ${propertyKey}`);
+                return false;
+            }
+
+            // Atualizar propriedades no funil
+            const updatedProperties = {
+                ...currentBlock.properties,
+                [propertyKey]: value
+            };
+
+            this.funnelDataProvider.updateBlockProperties(blockId, updatedProperties);
+            
+            console.log(`💾 Propriedade ${propertyKey} salva no funil para bloco ${blockId}:`, value);
+            return true;
+        } catch (error) {
+            console.error('❌ Erro ao salvar propriedade no funil:', error);
+            return false;
+        }
     }
 
     // 🔔 PROPERTY CHANGE NOTIFICATION

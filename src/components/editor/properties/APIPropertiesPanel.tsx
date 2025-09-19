@@ -1,10 +1,11 @@
 /**
  * 🚀 API-DRIVEN PROPERTIES PANEL
  * 
- * Painel de propriedades que usa a API interna para máxima performance
+ * Painel de propriedades que usa a API interna + dados reais do funil
  * - Comunicação via API interna
  * - Cache inteligente
  * - Validação em tempo real
+ * - Dados reais do funil integrados
  * - Re-renders otimizados
  */
 
@@ -17,9 +18,11 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Slider } from '@/components/ui/slider';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { AlertCircle, RefreshCw, Check, X } from 'lucide-react';
+import { AlertCircle, RefreshCw, Check, X, Database } from 'lucide-react';
 
 import { useBlockProperties } from '@/hooks/useBlockProperties';
+import { useEditor } from '@/components/editor/EditorProvider';
+import { useFunnels } from '@/context/FunnelsContext';
 import { type BlockPropertySchema } from '@/api/internal/BlockPropertiesAPI';
 
 // ===== INTERFACES =====
@@ -41,6 +44,109 @@ interface PropertyFieldProps {
     isValid: boolean;
     onChange: (value: any) => Promise<void>;
 }
+
+// ===== REAL FUNNEL DATA COMPONENT =====
+
+const FunnelDataDisplay: React.FC<{
+    blockId: string;
+    blockType: string;
+}> = memo(({ blockId, blockType }) => {
+    const { state } = useEditor();
+    const funnelsContext = useFunnels();
+
+    const funnelInfo = useMemo(() => {
+        try {
+            const currentStepKey = `step-${state.currentStep}`;
+            const currentStepBlocks = state.stepBlocks[currentStepKey] || [];
+            const currentBlock = currentStepBlocks.find(b => b.id === blockId);
+
+            // Buscar informações adicionais do template
+            const templateInfo = funnelsContext?.getTemplateBlocks?.(
+                funnelsContext.currentFunnelId || 'quiz-estilo-21-steps',
+                currentStepKey
+            );
+
+            return {
+                funnelId: funnelsContext?.currentFunnelId || 'local-funnel',
+                currentStep: state.currentStep,
+                totalSteps: 21, // Template padrão tem 21 etapas
+                blockIndex: currentStepBlocks.findIndex(b => b.id === blockId) + 1,
+                totalBlocks: currentStepBlocks.length,
+                blockData: currentBlock,
+                templateBlocksCount: templateInfo?.length || 0,
+                hasValidation: !!state.stepValidation[state.currentStep],
+                lastModified: new Date().toLocaleString('pt-BR'),
+                isSupabaseEnabled: state.isSupabaseEnabled,
+                databaseMode: state.databaseMode,
+                // Informações específicas do bloco
+                blockContent: currentBlock?.content,
+                blockProperties: currentBlock?.properties,
+                blockOrder: currentBlock ? currentStepBlocks.indexOf(currentBlock) : -1,
+                // Status de integração
+                isConnectedToFunnel: !!currentBlock && !!funnelsContext,
+                canSaveToDatabase: !!(state.isSupabaseEnabled && funnelsContext?.saveFunnelToDatabase)
+            };
+        } catch (error) {
+            console.error('Erro ao buscar dados do funil:', error);
+            return null;
+        }
+    }, [state, funnelsContext, blockId]);
+
+    if (!funnelInfo) {
+        return (
+            <div className="p-3 bg-red-50 border border-red-200 rounded-lg">
+                <p className="text-xs text-red-600">❌ Erro ao carregar dados do funil</p>
+            </div>
+        );
+    }
+
+    return (
+        <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg space-y-2">
+            <div className="flex items-center gap-2">
+                <Database className="w-4 h-4 text-blue-600" />
+                <span className="text-xs font-medium text-blue-700">Dados Reais do Funil</span>
+            </div>
+
+            <div className="grid grid-cols-2 gap-2 text-xs">
+                <div>
+                    <span className="text-gray-500">Funil:</span>
+                    <p className="font-mono text-blue-600">{funnelInfo.funnelId}</p>
+                </div>
+                <div>
+                    <span className="text-gray-500">Etapa:</span>
+                    <p className="font-semibold">{funnelInfo.currentStep}/{funnelInfo.totalSteps}</p>
+                </div>
+                <div>
+                    <span className="text-gray-500">Bloco:</span>
+                    <p className="font-semibold">{funnelInfo.blockIndex}/{funnelInfo.totalBlocks}</p>
+                </div>
+                <div>
+                    <span className="text-gray-500">Tipo:</span>
+                    <p className="font-mono text-purple-600">{blockType}</p>
+                </div>
+                <div>
+                    <span className="text-gray-500">Storage:</span>
+                    <p className="font-semibold">{funnelInfo.databaseMode}</p>
+                </div>
+                <div>
+                    <span className="text-gray-500">Status:</span>
+                    <Badge variant={funnelInfo.hasValidation ? "default" : "secondary"} className="text-xs">
+                        {funnelInfo.hasValidation ? "Válido" : "Pendente"}
+                    </Badge>
+                </div>
+            </div>
+
+            {funnelInfo.blockData && (
+                <div className="pt-2 border-t border-blue-200">
+                    <span className="text-xs text-gray-500">Propriedades atuais:</span>
+                    <pre className="text-xs bg-white p-2 rounded border overflow-x-auto">
+                        {JSON.stringify(funnelInfo.blockData.properties || {}, null, 2)}
+                    </pre>
+                </div>
+            )}
+        </div>
+    );
+});
 
 // ===== PROPERTY FIELD COMPONENTS =====
 
@@ -303,6 +409,12 @@ export const APIPropertiesPanel: React.FC<APIPropertiesPanelProps> = memo(({
             </CardHeader>
 
             <CardContent className="space-y-4">
+                {/* Dados Reais do Funil */}
+                <FunnelDataDisplay
+                    blockId={blockId}
+                    blockType={blockType}
+                />
+
                 {/* Property Fields */}
                 {propertyFields.length > 0 ? (
                     <div className="space-y-4">
