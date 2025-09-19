@@ -247,19 +247,29 @@ export const UnifiedContextProvider: React.FC<UnifiedContextProviderProps> = ({
             }
 
             if (debugMode) {
-                console.log('💾 UnifiedContext: Saving as template:', name);
+                console.log('💾 UnifiedContext: Saving as template:', name, description ? `with description: ${description}` : '');
             }
 
             // Implementação simples para criar template customizado
             const templateId = `custom-${Date.now()}`;
 
-            // Aqui seria implementada a criação real do template
-            console.log('Template customizado criado:', templateId);
+            // Criar estrutura completa do template incluindo a descrição
+            const templateData = {
+                id: templateId,
+                name,
+                description: description || `Template criado a partir do funil "${editor.funnel.name || 'Sem nome'}"`,
+                category: 'custom',
+                funnel: editor.funnel,
+                createdAt: new Date().toISOString()
+            };
+
+            // Aqui seria implementada a criação real do template com os dados completos
+            console.log('Template customizado criado:', templateData);
 
             if (templateId) {
                 toast({
                     title: 'Template salvo',
-                    description: `Template "${name}" criado com sucesso.`
+                    description: `Template "${name}" criado com sucesso.${description ? ` Descrição: ${description}` : ''}`
                 });
             }
 
