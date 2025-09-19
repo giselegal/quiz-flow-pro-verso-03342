@@ -33,8 +33,12 @@ const QuizFlowLogo: React.FC<QuizFlowLogoProps> = ({
             <stop offset="50%" stopColor="#4A2E9F" />
             <stop offset="100%" stopColor="#FF00FF" />
           </linearGradient>
-          <linearGradient id="accentGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+          <linearGradient id="growthGradient" x1="0%" y1="0%" x2="100%" y2="0%">
             <stop offset="0%" stopColor="#00BFFF" />
+            <stop offset="100%" stopColor="#00FF7F" />
+          </linearGradient>
+          <linearGradient id="flowGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stopColor="#4A2E9F" />
             <stop offset="100%" stopColor="#FF00FF" />
           </linearGradient>
           <filter id="glow">
@@ -49,81 +53,83 @@ const QuizFlowLogo: React.FC<QuizFlowLogoProps> = ({
           </filter>
         </defs>
 
-        {/* Background circle with subtle gradient */}
+        {/* Background circle with subtle gradient - represents learning space */}
         <circle
           cx="50"
           cy="50"
-          r="45"
+          r="46"
           fill="url(#primaryGradient)"
-          opacity="0.1"
-          className="animate-pulse"
+          opacity="0.08"
+          className="animate-pulse duration-3000"
         />
 
-        {/* Main Q shape - modern and professional */}
+        {/* Main design centered at 50,50 */}
         <g filter="url(#shadow)">
-          {/* Outer ring */}
+          {/* Q letter body - perfect circle representing completeness of knowledge */}
           <circle
             cx="50"
-            cy="50"
-            r="35"
+            cy="48"
+            r="22"
             fill="none"
             stroke="url(#primaryGradient)"
-            strokeWidth="3"
-            opacity="0.8"
-          />
-
-          {/* Q letter - clean circle */}
-          <circle
-            cx="50"
-            cy="45"
-            r="18"
-            fill="none"
-            stroke="url(#primaryGradient)"
-            strokeWidth="4"
+            strokeWidth="5"
             filter="url(#glow)"
+            className="animate-pulse duration-4000"
           />
 
-          {/* Q tail - diagonal line */}
-          <line
-            x1="60"
-            y1="55"
-            x2="68"
-            y2="63"
-            stroke="url(#primaryGradient)"
-            strokeWidth="4"
-            strokeLinecap="round"
-            filter="url(#glow)"
-          />
+          {/* Growth Arrow integrated into Q tail - starts from inside Q and grows upward/outward */}
+          <g stroke="url(#growthGradient)" strokeWidth="4" strokeLinecap="round" filter="url(#glow)">
+            {/* Arrow shaft - diagonal growth trajectory */}
+            <line x1="64" y1="62" x2="78" y2="48" className="animate-pulse duration-2000" />
 
-          {/* Inner accent - small quiz indicator */}
-          <circle cx="50" cy="45" r="6" fill="white" opacity="0.9" />
-          <circle cx="50" cy="42" r="1.5" fill="#4A2E9F" />
-          <circle cx="50" cy="48" r="1" fill="#4A2E9F" />
+            {/* Arrow head - pointing up and right (growth direction) */}
+            <polyline
+              points="72,52 78,48 74,42"
+              fill="none"
+              strokeLinejoin="round"
+              className="animate-pulse duration-2000"
+            />
+
+            {/* Small growth indicators - ascending dots */}
+            <circle cx="68" cy="57" r="1.5" fill="url(#growthGradient)" opacity="0.8" />
+            <circle cx="73" cy="52" r="1.2" fill="url(#growthGradient)" opacity="0.9" />
+            <circle cx="78" cy="47" r="1" fill="url(#growthGradient)" />
+          </g>
+
+          {/* Inner knowledge symbol - question mark essence */}
+          <g fill="#FFFFFF" opacity="0.95">
+            <circle cx="50" cy="42" r="2" />
+            <path
+              d="M50 48 Q48 52 50 56"
+              stroke="#4A2E9F"
+              strokeWidth="2"
+              fill="none"
+              strokeLinecap="round"
+            />
+            <circle cx="50" cy="58" r="1.5" fill="#4A2E9F" />
+          </g>
         </g>
 
-        {/* Flow indicators - elegant curved lines */}
-        <g opacity="0.6">
-          <path
-            d="M20 25 Q35 20 50 30 Q65 20 80 25"
-            stroke="url(#accentGradient)"
-            strokeWidth="1.5"
-            fill="none"
-            strokeLinecap="round"
-          />
-          <path
-            d="M20 75 Q35 80 50 70 Q65 80 80 75"
-            stroke="url(#accentGradient)"
-            strokeWidth="1.5"
-            fill="none"
-            strokeLinecap="round"
-          />
+        {/* Flow indicators - represents learning journey */}
+        <g opacity="0.5" stroke="url(#flowGradient)" strokeWidth="1.5" fill="none" strokeLinecap="round">
+          {/* Progressive flow lines - getting stronger as they move forward */}
+          <path d="M15 30 Q25 25 35 28 Q45 25 55 28" opacity="0.4" />
+          <path d="M45 72 Q55 75 65 72 Q75 75 85 72" opacity="0.6" />
+          <path d="M20 50 Q30 47 40 50" opacity="0.3" />
         </g>
 
-        {/* Corner accent dots */}
-        <circle cx="15" cy="15" r="1.5" fill="#00BFFF" opacity="0.7" />
-        <circle cx="85" cy="15" r="1.5" fill="#FF00FF" opacity="0.7" />
-        <circle cx="15" cy="85" r="1.5" fill="#FF00FF" opacity="0.7" />
-        <circle cx="85" cy="85" r="1.5" fill="#00BFFF" opacity="0.7" />
+        {/* Achievement indicators - corner elements suggesting progress */}
+        <g opacity="0.7">
+          <circle cx="20" cy="20" r="1.8" fill="#00BFFF">
+            <animate attributeName="opacity" values="0.3;0.8;0.3" dur="3s" repeatCount="indefinite" />
+          </circle>
+          <circle cx="80" cy="20" r="1.5" fill="#00FF7F">
+            <animate attributeName="opacity" values="0.4;0.9;0.4" dur="3.5s" repeatCount="indefinite" />
+          </circle>
+          <circle cx="20" cy="80" r="1.2" fill="#FF00FF">
+            <animate attributeName="opacity" values="0.5;1;0.5" dur="4s" repeatCount="indefinite" />
+          </circle>
+        </g>
       </svg>
     </div>
   );
