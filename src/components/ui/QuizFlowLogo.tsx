@@ -59,91 +59,96 @@ const QuizFlowLogo: React.FC<QuizFlowLogoProps> = ({
           </filter>
         </defs>
 
-        {/* Fundo circular moderno */}
+        {/* Fundo sutil e profissional */}
         <circle
           cx="60"
           cy="60"
-          r="55"
+          r="50"
           fill="url(#bgGradient)"
-          className="animate-pulse"
-          style={{ animationDuration: '3s' }}
+          opacity="0.6"
         />
 
         {/* Logo principal com filtros */}
         <g filter="url(#dropShadow)">
-          {/* Q moderno - círculo principal */}
-          <circle
-            cx="60"
-            cy="55"
-            r="25"
-            fill="none"
-            stroke="url(#mainGradient)"
-            strokeWidth="6"
-            filter="url(#glowEffect)"
-            className="animate-pulse"
-            style={{ animationDuration: '4s' }}
-          />
+          {/* Q profissional - forma geométrica perfeita */}
+          <g>
+            {/* Corpo principal do Q - círculo perfeito */}
+            <circle
+              cx="60"
+              cy="55"
+              r="22"
+              fill="none"
+              stroke="url(#mainGradient)"
+              strokeWidth="4.5"
+              filter="url(#glowEffect)"
+              opacity="0.95"
+            />
 
-          {/* Seta de crescimento integrada - mais proeminente */}
-          <g stroke="url(#arrowGradient)" strokeWidth="5" strokeLinecap="round" filter="url(#glowEffect)">
-            {/* Linha principal da seta - diagonal ascendente */}
+            {/* Cauda do Q - linha diagonal elegante integrada */}
             <line
-              x1="73"
+              x1="75"
               y1="70"
-              x2="95"
-              y2="48"
-              className="animate-pulse"
-              style={{ animationDuration: '2s' }}
-            />
-
-            {/* Ponta da seta - mais definida */}
-            <polyline
-              points="87,52 95,48 91,40"
-              fill="none"
-              strokeLinejoin="round"
-              strokeWidth="4"
-              className="animate-pulse"
-              style={{ animationDuration: '2s' }}
-            />
-
-            {/* Indicadores de progresso */}
-            <circle cx="78" cy="65" r="2" fill="url(#arrowGradient)" opacity="0.8" />
-            <circle cx="85" cy="58" r="2.5" fill="url(#arrowGradient)" opacity="0.9" />
-            <circle cx="92" cy="51" r="3" fill="url(#arrowGradient)" />
-          </g>
-
-          {/* Símbolo interno do Quiz - mais claro */}
-          <g fill="#FFFFFF" opacity="1">
-            {/* Ponto de interrogação estilizado */}
-            <circle cx="60" cy="48" r="3" />
-            <path
-              d="M60 55 Q57 60 60 65"
-              stroke="#4A2E9F"
-              strokeWidth="3"
-              fill="none"
+              x2="82"
+              y2="77"
+              stroke="url(#mainGradient)"
+              strokeWidth="4.5"
               strokeLinecap="round"
+              filter="url(#glowEffect)"
+              opacity="0.95"
             />
-            <circle cx="60" cy="68" r="2" fill="#4A2E9F" />
+          </g>
+
+          {/* Seta de crescimento moderna - separada e bem definida */}
+          <g stroke="url(#arrowGradient)" strokeLinecap="round" filter="url(#glowEffect)">
+            {/* Shaft principal da seta */}
+            <line
+              x1="85"
+              y1="72"
+              x2="98"
+              y2="45"
+              strokeWidth="3.5"
+              opacity="0.9"
+            />
+
+            {/* Ponta da seta - triangular profissional */}
+            <path
+              d="M94 49 L98 45 L94 41"
+              fill="none"
+              strokeWidth="3.5"
+              strokeLinejoin="round"
+              opacity="0.9"
+            />
+
+            {/* Indicadores de progresso sutis */}
+            <circle cx="88" cy="67" r="1.5" fill="url(#arrowGradient)" opacity="0.7" />
+            <circle cx="92" cy="59" r="2" fill="url(#arrowGradient)" opacity="0.8" />
+            <circle cx="96" cy="51" r="2.5" fill="url(#arrowGradient)" opacity="0.9" />
+          </g>
+
+          {/* Centro do Q - símbolo minimalista */}
+          <g opacity="0.8">
+            {/* Ponto central - representa o núcleo do conhecimento */}
+            <circle cx="60" cy="55" r="8" fill="url(#mainGradient)" opacity="0.15" />
+
+            {/* Símbolo interno - questionamento inteligente */}
+            <g fill="#FFFFFF" opacity="0.9">
+              <circle cx="60" cy="50" r="2" />
+              <circle cx="60" cy="60" r="1.5" />
+            </g>
           </g>
         </g>
 
-        {/* Elementos de fluxo melhorados */}
-        <g opacity="0.6" stroke="url(#mainGradient)" strokeWidth="2" fill="none" strokeLinecap="round">
-          <path d="M20 35 Q35 30 50 35 Q65 30 80 35" className="animate-pulse" style={{ animationDuration: '5s' }} />
-          <path d="M40 85 Q55 90 70 85 Q85 90 100 85" className="animate-pulse" style={{ animationDuration: '6s' }} />
+        {/* Elementos de fluxo profissionais - linhas sutis */}
+        <g opacity="0.4" stroke="url(#mainGradient)" strokeWidth="1.5" fill="none" strokeLinecap="round">
+          <path d="M25 40 Q40 35 55 40" />
+          <path d="M65 80 Q80 85 95 80" />
         </g>
 
-        {/* Pontos de destaque nos cantos */}
-        <g>
-          <circle cx="25" cy="25" r="3" fill="#00BFFF" opacity="0.8">
-            <animate attributeName="r" values="2;4;2" dur="3s" repeatCount="indefinite" />
-          </circle>
-          <circle cx="95" cy="25" r="2.5" fill="#00FF7F" opacity="0.8">
-            <animate attributeName="r" values="1.5;3.5;1.5" dur="3.5s" repeatCount="indefinite" />
-          </circle>
-          <circle cx="25" cy="95" r="2" fill="#FF00FF" opacity="0.8">
-            <animate attributeName="r" values="1;3;1" dur="4s" repeatCount="indefinite" />
-          </circle>
+        {/* Pontos de destaque minimalistas */}
+        <g opacity="0.5">
+          <circle cx="30" cy="30" r="2" fill="#00BFFF" />
+          <circle cx="90" cy="30" r="1.5" fill="#00FF7F" />
+          <circle cx="30" cy="90" r="1" fill="#FF00FF" />
         </g>
       </svg>
     </div>
