@@ -23,118 +23,131 @@ const QuizFlowLogo: React.FC<QuizFlowLogoProps> = ({
   const LogoIcon = () => (
     <div className={`${sizeClasses[size].icon} relative flex items-center justify-center`}>
       <svg
-        viewBox="0 0 100 100"
+        viewBox="0 0 120 120"
         className="w-full h-full"
         xmlns="http://www.w3.org/2000/svg"
       >
         <defs>
-          <linearGradient id="primaryGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+          {/* Gradientes mais vibrantes */}
+          <linearGradient id="mainGradient" x1="0%" y1="0%" x2="100%" y2="100%">
             <stop offset="0%" stopColor="#00BFFF" />
             <stop offset="50%" stopColor="#4A2E9F" />
             <stop offset="100%" stopColor="#FF00FF" />
           </linearGradient>
-          <linearGradient id="growthGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+          
+          <linearGradient id="arrowGradient" x1="0%" y1="0%" x2="100%" y2="0%">
             <stop offset="0%" stopColor="#00BFFF" />
-            <stop offset="100%" stopColor="#00FF7F" />
+            <stop offset="50%" stopColor="#00FF7F" />
+            <stop offset="100%" stopColor="#FFD700" />
           </linearGradient>
-          <linearGradient id="flowGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="#4A2E9F" />
-            <stop offset="100%" stopColor="#FF00FF" />
+          
+          <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#00BFFF" opacity="0.1" />
+            <stop offset="100%" stopColor="#FF00FF" opacity="0.05" />
           </linearGradient>
-          <filter id="glow">
-            <feGaussianBlur stdDeviation="2" result="coloredBlur" />
+
+          <filter id="glowEffect">
+            <feGaussianBlur stdDeviation="3" result="coloredBlur" />
             <feMerge>
               <feMergeNode in="coloredBlur" />
               <feMergeNode in="SourceGraphic" />
             </feMerge>
           </filter>
-          <filter id="shadow">
-            <feDropShadow dx="0" dy="2" stdDeviation="4" floodColor="rgba(0,191,255,0.3)" />
+          
+          <filter id="dropShadow">
+            <feDropShadow dx="0" dy="4" stdDeviation="6" floodColor="rgba(0,191,255,0.4)" />
           </filter>
         </defs>
 
-        {/* Background circle with subtle gradient - represents learning space */}
+        {/* Fundo circular moderno */}
         <circle
-          cx="50"
-          cy="50"
-          r="46"
-          fill="url(#primaryGradient)"
-          opacity="0.08"
-          className="animate-pulse duration-3000"
+          cx="60"
+          cy="60"
+          r="55"
+          fill="url(#bgGradient)"
+          className="animate-pulse"
+          style={{animationDuration: '3s'}}
         />
 
-        {/* Main design centered at 50,50 */}
-        <g filter="url(#shadow)">
-          {/* Q letter body - perfect circle representing completeness of knowledge */}
+        {/* Logo principal com filtros */}
+        <g filter="url(#dropShadow)">
+          {/* Q moderno - círculo principal */}
           <circle
-            cx="50"
-            cy="48"
-            r="22"
+            cx="60"
+            cy="55"
+            r="25"
             fill="none"
-            stroke="url(#primaryGradient)"
-            strokeWidth="5"
-            filter="url(#glow)"
-            className="animate-pulse duration-4000"
+            stroke="url(#mainGradient)"
+            strokeWidth="6"
+            filter="url(#glowEffect)"
+            className="animate-pulse"
+            style={{animationDuration: '4s'}}
           />
 
-          {/* Growth Arrow integrated into Q tail - starts from inside Q and grows upward/outward */}
-          <g stroke="url(#growthGradient)" strokeWidth="4" strokeLinecap="round" filter="url(#glow)">
-            {/* Arrow shaft - diagonal growth trajectory */}
-            <line x1="64" y1="62" x2="78" y2="48" className="animate-pulse duration-2000" />
-
-            {/* Arrow head - pointing up and right (growth direction) */}
-            <polyline
-              points="72,52 78,48 74,42"
-              fill="none"
-              strokeLinejoin="round"
-              className="animate-pulse duration-2000"
+          {/* Seta de crescimento integrada - mais proeminente */}
+          <g stroke="url(#arrowGradient)" strokeWidth="5" strokeLinecap="round" filter="url(#glowEffect)">
+            {/* Linha principal da seta - diagonal ascendente */}
+            <line 
+              x1="73" 
+              y1="70" 
+              x2="95" 
+              y2="48" 
+              className="animate-pulse"
+              style={{animationDuration: '2s'}}
             />
-
-            {/* Small growth indicators - ascending dots */}
-            <circle cx="68" cy="57" r="1.5" fill="url(#growthGradient)" opacity="0.8" />
-            <circle cx="73" cy="52" r="1.2" fill="url(#growthGradient)" opacity="0.9" />
-            <circle cx="78" cy="47" r="1" fill="url(#growthGradient)" />
+            
+            {/* Ponta da seta - mais definida */}
+            <polyline 
+              points="87,52 95,48 91,40" 
+              fill="none" 
+              strokeLinejoin="round"
+              strokeWidth="4"
+              className="animate-pulse"
+              style={{animationDuration: '2s'}}
+            />
+            
+            {/* Indicadores de progresso */}
+            <circle cx="78" cy="65" r="2" fill="url(#arrowGradient)" opacity="0.8" />
+            <circle cx="85" cy="58" r="2.5" fill="url(#arrowGradient)" opacity="0.9" />
+            <circle cx="92" cy="51" r="3" fill="url(#arrowGradient)" />
           </g>
 
-          {/* Inner knowledge symbol - question mark essence */}
-          <g fill="#FFFFFF" opacity="0.95">
-            <circle cx="50" cy="42" r="2" />
-            <path
-              d="M50 48 Q48 52 50 56"
-              stroke="#4A2E9F"
-              strokeWidth="2"
-              fill="none"
+          {/* Símbolo interno do Quiz - mais claro */}
+          <g fill="#FFFFFF" opacity="1">
+            {/* Ponto de interrogação estilizado */}
+            <circle cx="60" cy="48" r="3" />
+            <path 
+              d="M60 55 Q57 60 60 65" 
+              stroke="#4A2E9F" 
+              strokeWidth="3" 
+              fill="none" 
               strokeLinecap="round"
             />
-            <circle cx="50" cy="58" r="1.5" fill="#4A2E9F" />
+            <circle cx="60" cy="68" r="2" fill="#4A2E9F" />
           </g>
         </g>
 
-        {/* Flow indicators - represents learning journey */}
-        <g opacity="0.5" stroke="url(#flowGradient)" strokeWidth="1.5" fill="none" strokeLinecap="round">
-          {/* Progressive flow lines - getting stronger as they move forward */}
-          <path d="M15 30 Q25 25 35 28 Q45 25 55 28" opacity="0.4" />
-          <path d="M45 72 Q55 75 65 72 Q75 75 85 72" opacity="0.6" />
-          <path d="M20 50 Q30 47 40 50" opacity="0.3" />
+        {/* Elementos de fluxo melhorados */}
+        <g opacity="0.6" stroke="url(#mainGradient)" strokeWidth="2" fill="none" strokeLinecap="round">
+          <path d="M20 35 Q35 30 50 35 Q65 30 80 35" className="animate-pulse" style={{animationDuration: '5s'}} />
+          <path d="M40 85 Q55 90 70 85 Q85 90 100 85" className="animate-pulse" style={{animationDuration: '6s'}} />
         </g>
 
-        {/* Achievement indicators - corner elements suggesting progress */}
-        <g opacity="0.7">
-          <circle cx="20" cy="20" r="1.8" fill="#00BFFF">
-            <animate attributeName="opacity" values="0.3;0.8;0.3" dur="3s" repeatCount="indefinite" />
+        {/* Pontos de destaque nos cantos */}
+        <g>
+          <circle cx="25" cy="25" r="3" fill="#00BFFF" opacity="0.8">
+            <animate attributeName="r" values="2;4;2" dur="3s" repeatCount="indefinite" />
           </circle>
-          <circle cx="80" cy="20" r="1.5" fill="#00FF7F">
-            <animate attributeName="opacity" values="0.4;0.9;0.4" dur="3.5s" repeatCount="indefinite" />
+          <circle cx="95" cy="25" r="2.5" fill="#00FF7F" opacity="0.8">
+            <animate attributeName="r" values="1.5;3.5;1.5" dur="3.5s" repeatCount="indefinite" />
           </circle>
-          <circle cx="20" cy="80" r="1.2" fill="#FF00FF">
-            <animate attributeName="opacity" values="0.5;1;0.5" dur="4s" repeatCount="indefinite" />
+          <circle cx="25" cy="95" r="2" fill="#FF00FF" opacity="0.8">
+            <animate attributeName="r" values="1;3;1" dur="4s" repeatCount="indefinite" />
           </circle>
         </g>
       </svg>
     </div>
-  );
-
-  const LogoText = () => {
+  );  const LogoText = () => {
     const textColor = theme === 'dark' ? 'text-white' : 'text-brand-darkBlue';
 
     return (
