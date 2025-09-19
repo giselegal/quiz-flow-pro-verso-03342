@@ -17,7 +17,7 @@ import { customTemplateService, CustomTemplate } from '@/services/customTemplate
 import { Edit, Eye, Play, Plus, Sparkles, Zap, Copy, Trash2, RefreshCw, AlertTriangle, CheckCircle } from 'lucide-react';
 import { useLocation } from 'wouter';
 import { AdminBreadcrumbs } from '@/components/admin/AdminBreadcrumbs';
-import { useFunnelTemplates } from '@/core/funnel/hooks/useFunnelTemplates';
+import { useFunnelTemplates } from '@/core/funnel/hooks/useFunnelTemplatesRefactored';
 import { getUnifiedTemplates, TemplateRegistry, type UnifiedTemplate } from '@/config/unifiedTemplatesRegistry';
 import { FunnelContext } from '@/core/contexts/FunnelContext';
 import FunnelTechnicalConfigPanel from '@/components/admin/FunnelTechnicalConfigPanel';

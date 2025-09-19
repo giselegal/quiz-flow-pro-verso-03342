@@ -13,13 +13,15 @@
 
 import React, { createContext, useContext, useCallback, useEffect, useMemo, useState, ReactNode } from 'react';
 import { useUnifiedEditor, type UnifiedEditorReturn } from '../../hooks/core/useUnifiedEditor';
-import { unifiedTemplateManager, type UnifiedTemplateData } from '../templates/UnifiedTemplateManager';
+import { TemplateRegistry, type UnifiedTemplate } from '@/config/unifiedTemplatesRegistry';
 import { FunnelContext } from './FunnelContext';
 import { useToast } from '../../components/ui/use-toast';
 
 // ============================================================================
 // TYPES AND INTERFACES
 // ============================================================================
+
+export type UnifiedTemplateData = UnifiedTemplate;
 
 export interface UnifiedContextState {
     // Editor state (from useUnifiedEditor)
@@ -172,7 +174,7 @@ export const UnifiedContextProvider: React.FC<UnifiedContextProviderProps> = ({
                 console.log('🔄 UnifiedContext: Loading template:', templateId);
             }
 
-            const template = await unifiedTemplateManager.getTemplateById(templateId);
+            const template = TemplateRegistry.getById(templateId);
             if (!template) {
                 throw new Error(`Template não encontrado: ${templateId}`);
             }
