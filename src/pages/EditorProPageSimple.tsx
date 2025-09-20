@@ -1,94 +1,209 @@
-import React from 'react';
-import { useLocation } from 'wouter';
+import { useState } from 'react';
+import { Bot, Sparkles, Palette, BarChart3, TestTube, Calculator, Settings, ChevronLeft, Zap } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import ModularEditorPro from '@/components/editor/EditorPro/components/ModularEditorPro';
 import { SimpleBuilderProvider } from '@/components/editor/SimpleBuilderProviderFixed';
+import { TemplatesIASidebar } from '@/components/editor/sidebars/TemplatesIASidebar';
+import { BrandKitSidebar } from '@/components/editor/sidebars/BrandKitSidebar';
+import { AIStepGenerator } from '@/components/editor/AIStepGenerator';
+import { type FunnelTemplate } from '@/services/FunnelAIAgent';
+import { useLocation } from 'wouter';
 
-/**
- * 🚀 EDITOR IA PRO - Versão inicial simplificada
- * 
- * Esta é a versão 1.0 que estabelece a base para as funcionalidades avançadas.
- * Próximas versões incluirão: IA, Analytics, Brand Kit, A/B Testing
- */
+export function EditorProPageSimple() {
+  const [, setLocation] = useLocation();
+  const [activeModal, setActiveModal] = useState<string | null>(null);
 
-interface EditorProPageProps {
-    params?: {
-        funnelId?: string;
-    };
-}
+  // Handlers para funcionalidades IA
+  const handleSelectTemplate = (template: FunnelTemplate) => {
+    console.log('✨ Template IA aplicado:', template.meta.name);
 
-const EditorProPageSimple: React.FC<EditorProPageProps> = ({ params }) => {
-    const [, navigate] = useLocation();
-    const { funnelId } = params || {};
+    // Aplicar configuração de design
+    if (template.design) {
+      document.documentElement.style.setProperty('--primary-color', template.design.primaryColor);
+      document.documentElement.style.setProperty('--secondary-color', template.design.secondaryColor);
+    }
 
-    return (
-        <div className="h-screen w-screen bg-slate-900 relative">
-            {/* 🎯 HEADER - Badge Pro + Navigation */}
-            <div className="absolute top-0 left-0 right-0 z-50 bg-slate-800 border-b border-slate-700 h-12 flex items-center justify-between px-4">
-                <div className="flex items-center gap-4">
-                    <h1 className="text-white font-semibold flex items-center gap-2">
-                        🚀 Editor IA Pro
-                        <span className="text-xs bg-gradient-to-r from-purple-500 to-pink-500 text-white px-2 py-1 rounded-full">
-                            BETA v1.0
-                        </span>
-                    </h1>
-                </div>
+    // Fechar modal
+    setActiveModal(null);
 
-                {/* 🎛️ Controles Pro (placeholder) */}
-                <div className="flex items-center gap-2">
-                    <button
-                        className="px-3 py-1 bg-slate-700 text-gray-300 rounded text-sm hover:bg-slate-600"
-                        onClick={() => alert('🤖 Templates IA - Em desenvolvimento!')}
-                    >
-                        🤖 Templates IA
-                    </button>
+    // Tracking de uso
+    localStorage.setItem('selected-template', JSON.stringify({
+      name: template.meta.name,
+      timestamp: Date.now(),
+      steps: template.steps.length
+    }));
+  };
 
-                    <button
-                        className="px-3 py-1 bg-slate-700 text-gray-300 rounded text-sm hover:bg-slate-600"
-                        onClick={() => alert('🎨 Brand Kit - Em desenvolvimento!')}
-                    >
-                        🎨 Brand Kit
-                    </button>
+  const handleStepsGenerated = (steps: any[]) => {
+    console.log('🤖 Steps IA gerados:', steps);
 
-                    <button
-                        className="px-3 py-1 bg-slate-700 text-gray-300 rounded text-sm hover:bg-slate-600"
-                        onClick={() => alert('📊 Analytics - Em desenvolvimento!')}
-                    >
-                        📊 Analytics
-                    </button>
+    // Aplicar steps ao editor
+    localStorage.setItem('ai-generated-steps', JSON.stringify({
+      steps,
+      timestamp: Date.now(),
+      count: steps.length
+    }));
 
-                    <button
-                        onClick={() => navigate('/editor')}
-                        className="px-3 py-1 bg-slate-600 text-gray-300 rounded text-sm hover:bg-slate-500"
-                    >
-                        ← Editor Básico
-                    </button>
-                </div>
+    // Fechar modal
+    setActiveModal(null);
+
+    // Notification
+    alert(`✅ ${steps.length} steps foram gerados com IA e aplicados ao editor!`);
+  };
+
+  return (
+    <div className="flex flex-col h-screen bg-gray-50">
+      {/* Header Pro */}
+      <div className="bg-white border-b shadow-sm">
+        <div className="flex items-center justify-between px-6 py-3">
+          <div className="flex items-center gap-4">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setLocation('/editor')}
+              className="flex items-center gap-2"
+            >
+              <ChevronLeft className="w-4 h-4" />
+              Voltar ao Editor Básico
+            </Button>
+
+            <div className="h-6 border-l border-gray-300" />
+
+            <div className="flex items-center gap-2">
+              <Bot className="w-6 h-6 text-purple-600" />
+              <h1 className="text-lg font-semibold">Editor IA Pro</h1>
+              <Badge className="bg-gradient-to-r from-purple-600 to-pink-600 text-white">
+                <Sparkles className="w-3 h-3 mr-1" />
+                Premium
+              </Badge>
             </div>
+          </div>
 
-            {/* 🎯 MAIN EDITOR - Com SimpleBuilderProvider */}
-            <div className="pt-12 h-full">
-                <SimpleBuilderProvider funnelId={funnelId}>
-                    <ModularEditorPro
-                        showProFeatures={true}
-                    />
-                </SimpleBuilderProvider>
-            </div>
-
-            {/* 🎯 OVERLAY: Info sobre funcionalidades */}
-            <div className="fixed bottom-4 right-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white p-4 rounded-lg shadow-xl max-w-sm">
-                <div className="text-sm">
-                    <div className="font-semibold mb-1">🚀 Editor IA Pro v1.0</div>
-                    <div className="text-xs opacity-90">
-                        Base estabelecida com sucesso! Próximas funcionalidades:
-                        <br />• 🤖 Geração IA com Gemini
-                        <br />• 📊 Analytics em tempo real
-                        <br />• 🎨 Brand Kit automático
-                        <br />• 🧪 A/B Testing integrado
-                    </div>
-                </div>
-            </div>
+          <div className="flex items-center gap-2">
+            <Badge variant="outline" className="text-xs">
+              Gemini 2.0 Flash
+            </Badge>
+            <Button variant="outline" size="sm">
+              <Settings className="w-4 h-4 mr-2" />
+              Configurações
+            </Button>
+          </div>
         </div>
-    );
-};
+      </div>
 
-export default EditorProPageSimple;
+      {/* Toolbar Pro com Funcionalidades IA */}
+      <div className="bg-white border-b">
+        <div className="px-6 py-3">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              {/* Gerador IA */}
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setActiveModal('ai-generator')}
+                className="flex items-center gap-2 bg-gradient-to-r from-blue-50 to-purple-50 border-blue-200"
+              >
+                <Zap className="w-4 h-4 text-blue-600" />
+                Gerar Steps IA
+                <Badge className="bg-blue-600 text-white text-xs ml-1">New</Badge>
+              </Button>
+
+              {/* Templates IA */}
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setActiveModal('templates')}
+                className="flex items-center gap-2"
+              >
+                <Sparkles className="w-4 h-4" />
+                Templates IA
+              </Button>
+
+              {/* Brand Kit */}
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setActiveModal('brandkit')}
+                className="flex items-center gap-2"
+              >
+                <Palette className="w-4 h-4" />
+                Brand Kit
+              </Button>
+
+              {/* Analytics */}
+              <Button
+                variant="outline"
+                size="sm"
+                disabled
+                className="flex items-center gap-2 opacity-60"
+              >
+                <BarChart3 className="w-4 h-4" />
+                Analytics
+                <Badge variant="secondary" className="text-xs ml-1">Em breve</Badge>
+              </Button>
+
+              {/* A/B Testing */}
+              <Button
+                variant="outline"
+                size="sm"
+                disabled
+                className="flex items-center gap-2 opacity-60"
+              >
+                <TestTube className="w-4 h-4" />
+                A/B Testing
+                <Badge variant="secondary" className="text-xs ml-1">Em breve</Badge>
+              </Button>
+
+              {/* Calculation Engine */}
+              <Button
+                variant="outline"
+                size="sm"
+                disabled
+                className="flex items-center gap-2 opacity-60"
+              >
+                <Calculator className="w-4 h-4" />
+                Cálculos IA
+                <Badge variant="secondary" className="text-xs ml-1">Em breve</Badge>
+              </Button>
+            </div>
+
+            <div className="text-sm text-gray-500">
+              🚀 Sistema Pro ativo com IA integrada
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Editor Principal */}
+      <div className="flex-1 overflow-hidden">
+        <SimpleBuilderProvider>
+          <ModularEditorPro
+            showProFeatures={true}
+          />
+        </SimpleBuilderProvider>
+      </div>
+
+      {/* Modals dos Sidebars */}
+      {activeModal === 'ai-generator' && (
+        <AIStepGenerator
+          onStepsGenerated={handleStepsGenerated}
+          onClose={() => setActiveModal(null)}
+        />
+      )}
+
+      {activeModal === 'templates' && (
+        <TemplatesIASidebar
+          onSelectTemplate={handleSelectTemplate}
+          onClose={() => setActiveModal(null)}
+        />
+      )}
+
+      {activeModal === 'brandkit' && (
+        <BrandKitSidebar
+          onClose={() => setActiveModal(null)}
+        />
+      )}
+    </div>
+  );
+}
