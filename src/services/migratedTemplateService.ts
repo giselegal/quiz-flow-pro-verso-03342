@@ -344,6 +344,37 @@ class MigratedTemplateService {
     // STEP TEMPLATE METHODS - API COMPATÍVEL
     // ============================================================================
 
+    // Novo método compatível com EditorContext
+    async getTemplateByStep(step: number): Promise<TemplateData> {
+        return this.getStepTemplate(step);
+    }
+
+    // Novo método para conversão de blocos
+    convertToEditorBlocksWithStage(blocks: Block[], funnelId: string, stageId: string, step: number): Block[] {
+        return blocks.map((block, index) => ({
+            ...block,
+            id: block.id || `${stageId}-block-${index}-${Date.now()}`,
+            order: index,
+            properties: {
+                ...block.properties,
+                funnelId,
+                stageId,
+                step
+            }
+        }));
+    }
+
+    // Método para conversão de templates em blocos do editor
+    convertTemplateBlocksToEditorBlocks(blocks: any[]): Block[] {
+        return blocks.map((block, index) => ({
+            id: block.id || `block-${Date.now()}-${index}`,
+            type: block.type || 'text',
+            content: block.content || {},
+            properties: block.properties || {},
+            order: index
+        }));
+    }
+
     async getStepTemplate(step: number): Promise<TemplateData> {
         const startTime = Date.now();
 

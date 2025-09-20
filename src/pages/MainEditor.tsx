@@ -3,6 +3,7 @@ import { ErrorBoundary } from '@/components/editor/ErrorBoundary';
 import { EditorProvider } from '@/components/editor/EditorProvider';
 import { FunnelsProvider } from '@/context/FunnelsContext';
 import { EditorPro } from '@/legacy/editor/EditorPro';
+// import { SimplifiedOptimizedEditor } from '@/components/editor/EditorPro/components/SimplifiedOptimizedEditor';
 
 /**
  * 🎯 MAIN EDITOR - ESTRUTURA ROBUSTA E PROFISSIONAL
@@ -43,6 +44,9 @@ const MainEditor: React.FC = () => {
             }}
           >
             <EditorPro className="h-full w-full" />
+            {/* Para testar otimizações, descomente a linha abaixo e comente a de cima:
+            <SimplifiedOptimizedEditor />
+            */}
           </EditorProvider>
         </FunnelsProvider>
       </ErrorBoundary>

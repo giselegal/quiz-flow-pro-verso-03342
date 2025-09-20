@@ -30,9 +30,7 @@ export {
 } from './hooks/useFunnelState';
 
 export {
-    useFunnelTemplates,
-    useCreateFunnelFromTemplate,
-    useFunnelTemplatePreview
+    useFunnelTemplates
 } from './hooks/useFunnelTemplates';
 
 // Hook types
