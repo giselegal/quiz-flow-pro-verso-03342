@@ -270,7 +270,7 @@ const ModularEditorPro: React.FC = () => {
     };
 
     validateCurrentStep();
-  }, [state.currentStep, currentStepBlocks, actions]);
+  }, [state.currentStep, currentStepBlocks]); // ❌ Removido 'actions' para evitar loop infinito
 
   // Validação ao salvar draft
   useEffect(() => {
@@ -297,7 +297,7 @@ const ModularEditorPro: React.FC = () => {
     }, 2000); // Debounce de 2 segundos
 
     return () => clearTimeout(saveTimeout);
-  }, [currentStepBlocks, state.currentStep, actions]);
+  }, [currentStepBlocks, state.currentStep]); // ❌ Removido 'actions' para evitar loop infinito
 
   const groupedComponents = useMemo(() => ({
     'Conteúdo': [

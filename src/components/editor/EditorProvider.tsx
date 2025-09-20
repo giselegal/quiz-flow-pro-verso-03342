@@ -777,14 +777,14 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
   useEffect(() => {
     const currentStep = rawState.currentStep;
     if (!currentStep) return;
-    
+
     console.log('🔍 EditorProvider - currentStep changed:', {
       currentStep,
       hasBlocks: (rawState.stepBlocks[`step-${currentStep}`] || []).length > 0,
       allSteps: Object.keys(rawState.stepBlocks),
       isTestEnv: process.env.NODE_ENV === 'test'
     });
-    
+
     // Em testes, evitamos carregamento automático para reduzir uso de memória
     if (process.env.NODE_ENV === 'test') return;
     // Only load step if needed, and avoid triggering infinite loops
@@ -865,14 +865,14 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
           currentStep: step,
           selectedBlockId: null,
         };
-        
+
         console.log('🔍 EditorProvider.setCurrentStep - setState aplicado:', {
           oldStep: prev.currentStep,
           newStep: step,
           hasBlocksForNewStep: (prev.stepBlocks[`step-${step}`] || []).length > 0,
           allStepsWithBlocks: Object.entries(prev.stepBlocks).filter(([_, blocks]) => blocks.length > 0).map(([key]) => key)
         });
-        
+
         return newState;
       });
       // 🔗 Sincronizar etapa atual com o sistema unificado e expor para blocos/quiz
@@ -1414,15 +1414,17 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
     }, 100); // Debounce to prevent excessive updates
 
     return () => clearTimeout(timeoutId);
-  }, [state.currentStep, Object.keys(state.stepBlocks || {}).length]); // Only depend on key values that matter
+  }, [state.currentStep, state.isLoading]); // ❌ Dependências simplificadas para evitar loops
 
   // �🔍 DIAGNÓSTICO: Expor contexto globalmente para debugging
   useEffect(() => {
     const timeoutId = setTimeout(() => {
       if (typeof window !== 'undefined') {
+        // ❌ Simplificado para evitar loops - removido spread de actions
         (window as any).__EDITOR_CONTEXT__ = {
-          ...state,
-          actions,
+          stepBlocks: state.stepBlocks,
+          currentStep: state.currentStep,
+          timestamp: Date.now()
         };
 
         // Detectar erros de contexto
