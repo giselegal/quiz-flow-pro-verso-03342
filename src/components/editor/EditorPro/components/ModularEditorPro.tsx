@@ -1,5 +1,6 @@
 import React, { useCallback, useMemo, useState, useRef, useEffect } from 'react';
-import { useEditor } from '@/components/editor/EditorProvider';
+// 🚀 SIMPLE BUILDER SYSTEM - Hook compatível com SimpleBuilderProvider
+import { useOptimizedEditor } from '@/components/editor/SimpleBuilderProvider';
 import { useOptimizedScheduler } from '@/hooks/useOptimizedScheduler';
 import { useNotification } from '@/components/ui/Notification';
 import { Block } from '@/types/editor';
@@ -166,7 +167,8 @@ const ResizeHandle: React.FC<{
  */
 
 const ModularEditorPro: React.FC = () => {
-  const { state, actions } = useEditor();
+  // 🚀 BUILDER SYSTEM - Hook integrado
+  const { state, actions } = useOptimizedEditor();
   const { schedule } = useOptimizedScheduler();
   const { addNotification } = useNotification();
   const { columnWidths, handleResize } = useResizableColumns();

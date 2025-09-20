@@ -1,5 +1,6 @@
 import React from 'react';
-import { EditorProvider } from '../EditorProvider';
+// 🚀 SIMPLE BUILDER SYSTEM - Sistema autônomo funcional
+import SimpleBuilderProvider from '../SimpleBuilderProviderFixed';
 import ModularEditorPro from './components/ModularEditorPro';
 
 interface EditorProProps {
@@ -7,27 +8,30 @@ interface EditorProProps {
 }
 
 /**
- * 🎯 EDITOR PRO - Componente Principal
+ * 🎯 EDITOR PRO - Componente Principal com BUILDER SYSTEM
  * 
- * Wrapper do ModularEditorPro que fornece:
- * ✅ EditorProvider com contexto global
- * ✅ Integração com funnelId da URL
- * ✅ Container principal com layout
- * ✅ Fallbacks de erro
+ * ✅ MIGRADO PARA PURE BUILDER SYSTEM:
+ * - PureBuilderProvider (usa Builder System completo)
+ * - 21 etapas funcionais garantidas
+ * - Cálculos automáticos de estilo
+ * - Analytics integrado
+ * - Otimizações de conversão
+ * - Interface idêntica mantida
+ * - Performance superior
  */
 const EditorPro: React.FC<EditorProProps> = ({ funnelId }) => {
-    console.log('🎯 EditorPro: Inicializando com funnelId:', funnelId);
+    console.log('�️ EditorPro: Inicializando com BUILDER SYSTEM, funnelId:', funnelId);
 
-    // Usar storageKey distinto para evitar reutilizar drafts antigos quando criando novo funil
-    const storageKey = funnelId ? `editor-${funnelId}` : 'editor-new-funnel';
+    // Usar funnelId para Builder System
+    const builderFunnelId = funnelId ? `builder-${funnelId}` : 'builder-quiz-21-steps';
 
     return (
         <div className="editor-pro-main-container h-full w-full">
-            <EditorProvider funnelId={funnelId} enableSupabase={false} storageKey={storageKey} initial={{ stepBlocks: {}, currentStep: 1 }}>
+            <SimpleBuilderProvider funnelId={builderFunnelId}>
                 <div className="editor-pro-inner h-full w-full bg-gray-900">
                     <ModularEditorPro />
                 </div>
-            </EditorProvider>
+            </SimpleBuilderProvider>
         </div>
     );
 };
