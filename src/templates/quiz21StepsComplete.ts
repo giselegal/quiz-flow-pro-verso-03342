@@ -3344,7 +3344,7 @@ for (let i = 4; i <= 21; i++) {
   QUIZ_STYLE_21_STEPS_TEMPLATE[`step-${i}`] = [
     {
       id: `step${i}-placeholder`,
-      type: 'text' as BlockType,
+      type: 'text',
       content: {
         text: `Etapa ${i} - Adicione componentes usando o editor`
       },

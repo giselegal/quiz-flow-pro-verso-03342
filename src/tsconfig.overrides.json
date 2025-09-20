@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "skipLibCheck": true,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "exactOptionalPropertyTypes": false
+  },
+  "ts-node": {
+    "compilerOptions": {
+      "noUnusedLocals": false,
+      "noUnusedParameters": false
+    }
+  }
+}
