@@ -435,8 +435,8 @@ export function PerformanceMonitoring({ onClose }: PerformanceMonitoringProps) {
                                 key={key}
                                 onClick={() => setActiveTab(key as any)}
                                 className={`flex items-center gap-2 px-6 py-4 text-sm font-medium border-b-2 transition-colors ${activeTab === key
-                                        ? 'border-orange-500 text-orange-600 bg-orange-50'
-                                        : 'border-transparent text-gray-500 hover:text-gray-700 hover:bg-gray-50'
+                                    ? 'border-orange-500 text-orange-600 bg-orange-50'
+                                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:bg-gray-50'
                                     }`}
                             >
                                 <Icon className="w-4 h-4" />
@@ -478,8 +478,8 @@ export function PerformanceMonitoring({ onClose }: PerformanceMonitoringProps) {
                                             <div className="flex items-center gap-1">
                                                 {getTrendIcon(metric.trend, metric.change)}
                                                 <span className={`text-sm font-medium ${(metric.change > 0 && (metric.category === 'speed' || metric.category === 'efficiency')) ||
-                                                        (metric.change < 0 && (metric.category === 'reliability' || metric.category === 'user-experience'))
-                                                        ? 'text-red-600' : 'text-green-600'
+                                                    (metric.change < 0 && (metric.category === 'reliability' || metric.category === 'user-experience'))
+                                                    ? 'text-red-600' : 'text-green-600'
                                                     }`}>
                                                     {metric.change > 0 ? '+' : ''}{metric.change.toFixed(1)}%
                                                 </span>
@@ -496,8 +496,8 @@ export function PerformanceMonitoring({ onClose }: PerformanceMonitoringProps) {
                                             <div className="w-full bg-gray-200 rounded-full h-2">
                                                 <div
                                                     className={`h-2 rounded-full transition-all duration-500 ${metric.value / metric.threshold > 0.8 ? 'bg-red-500' :
-                                                            metric.value / metric.threshold > 0.6 ? 'bg-yellow-500' :
-                                                                'bg-green-500'
+                                                        metric.value / metric.threshold > 0.6 ? 'bg-yellow-500' :
+                                                            'bg-green-500'
                                                         }`}
                                                     style={{
                                                         width: `${Math.min((metric.value / metric.threshold) * 100, 100)}%`
@@ -610,14 +610,14 @@ export function PerformanceMonitoring({ onClose }: PerformanceMonitoringProps) {
                                                     <div className="flex items-center gap-3 mb-2">
                                                         <h4 className="font-semibold text-gray-900">{optimization.title}</h4>
                                                         <Badge className={`text-xs ${optimization.impact === 'high' ? 'bg-green-100 text-green-800' :
-                                                                optimization.impact === 'medium' ? 'bg-yellow-100 text-yellow-800' :
-                                                                    'bg-gray-100 text-gray-800'
+                                                            optimization.impact === 'medium' ? 'bg-yellow-100 text-yellow-800' :
+                                                                'bg-gray-100 text-gray-800'
                                                             }`}>
                                                             {optimization.impact} impacto
                                                         </Badge>
                                                         <Badge className={`text-xs ${optimization.effort === 'easy' ? 'bg-green-100 text-green-800' :
-                                                                optimization.effort === 'medium' ? 'bg-yellow-100 text-yellow-800' :
-                                                                    'bg-red-100 text-red-800'
+                                                            optimization.effort === 'medium' ? 'bg-yellow-100 text-yellow-800' :
+                                                                'bg-red-100 text-red-800'
                                                             }`}>
                                                             {optimization.effort}
                                                         </Badge>

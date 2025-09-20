@@ -396,8 +396,8 @@ export function AdvancedExportSystem({ onClose }: AdvancedExportSystemProps) {
                                 key={key}
                                 onClick={() => setActiveTab(key as any)}
                                 className={`flex items-center gap-2 px-6 py-4 text-sm font-medium border-b-2 transition-colors ${activeTab === key
-                                        ? 'border-blue-500 text-blue-600 bg-blue-50'
-                                        : 'border-transparent text-gray-500 hover:text-gray-700 hover:bg-gray-50'
+                                    ? 'border-blue-500 text-blue-600 bg-blue-50'
+                                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:bg-gray-50'
                                     }`}
                             >
                                 <Icon className="w-4 h-4" />
@@ -439,8 +439,8 @@ export function AdvancedExportSystem({ onClose }: AdvancedExportSystemProps) {
                                     <div
                                         key={format.id}
                                         className={`bg-white border rounded-xl p-6 shadow-sm cursor-pointer transition-all hover:shadow-md ${selectedFormats.includes(format.id)
-                                                ? 'border-blue-500 bg-blue-50'
-                                                : 'border-gray-200'
+                                            ? 'border-blue-500 bg-blue-50'
+                                            : 'border-gray-200'
                                             }`}
                                         onClick={() => toggleFormatSelection(format.id)}
                                     >
