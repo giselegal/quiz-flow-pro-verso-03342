@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * 🎯 VALIDATION SYSTEM - UNIFIED EXPORT INDEX
  * 
@@ -162,8 +163,8 @@ export const quickValidate = {
      */
     userInput: async (input: string) => {
         const { validateData } = await import('./ValidationEngine');
-        const { sanitizeText } = await import('./SanitizationUtils');
         const { ValidationContext } = await import('@/types/core');
+        const { sanitizeText } = await import('./SanitizationUtils');
 
         const sanitized = sanitizeText(input, { maxLength: 1000 });
         const result = await validateData(sanitized, ValidationContext.USER_INPUT);

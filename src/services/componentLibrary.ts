@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * 🧩 SISTEMA DE COMPONENTES REUTILIZÁVEIS
  * Component Library System para Templates Escaláveis

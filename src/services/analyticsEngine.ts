@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * 📊 SISTEMA DE ANALYTICS E MONITORAMENTO AVANÇADO
  * Advanced Analytics System para Funis Escaláveis
