@@ -605,8 +605,8 @@ const ModularEditorPro: React.FC<ModularEditorProProps> = () => {
       console.error('❌ Erro na publicação:', error);
       addNotification('Erro ao publicar funil', 'error');
     }
-  }, [state, addNotification]); 
-  
+  }, [state, addNotification]);
+
   return (
     <DndContext
       sensors={sensors}
@@ -614,228 +614,228 @@ const ModularEditorPro: React.FC<ModularEditorProProps> = () => {
       onDragStart={handleGlobalDragStart}
       onDragEnd={handleGlobalDragEnd}
     >
-        <div className="h-full w-full flex flex-col bg-background">
-          {/* 🔍 DEBUG: Loading State Check */}
-          {state.isLoading && (
-            <div className="absolute inset-0 bg-background/80 flex items-center justify-center z-50">
-              <div className="text-center">
-                <div className="w-8 h-8 mx-auto mb-4 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
-                <p className="text-muted-foreground">Carregando dados do editor...</p>
+      <div className="h-full w-full flex flex-col bg-background">
+        {/* 🔍 DEBUG: Loading State Check */}
+        {state.isLoading && (
+          <div className="absolute inset-0 bg-background/80 flex items-center justify-center z-50">
+            <div className="text-center">
+              <div className="w-8 h-8 mx-auto mb-4 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
+              <p className="text-muted-foreground">Carregando dados do editor...</p>
+            </div>
+          </div>
+        )}
+
+        {/* 🔍 DEBUG: Empty State Check */}
+        {!state.isLoading && Object.keys(state.stepBlocks).length === 0 && (
+          <div className="flex-1 flex items-center justify-center">
+            <div className="text-center max-w-md">
+              <div className="w-12 h-12 mx-auto mb-4 rounded-full bg-muted flex items-center justify-center">
+                <span className="text-2xl">📝</span>
+              </div>
+              <h3 className="text-lg font-semibold mb-2">Nenhum template carregado</h3>
+              <p className="text-muted-foreground mb-4">
+                O editor está aguardando o carregamento dos dados do template.
+                Verifique se o funnelId está correto na URL.
+              </p>
+              <div className="text-xs text-muted-foreground space-y-1">
+                <div>🔍 Debug Info:</div>
+                <div>Current Step: {state.currentStep}</div>
+                <div>Step Blocks: {Object.keys(state.stepBlocks).length} keys</div>
+                <div>Selected Block: {state.selectedBlockId || 'none'}</div>
               </div>
             </div>
-          )}
+          </div>
+        )}
 
-          {/* 🔍 DEBUG: Empty State Check */}
-          {!state.isLoading && Object.keys(state.stepBlocks).length === 0 && (
-            <div className="flex-1 flex items-center justify-center">
-              <div className="text-center max-w-md">
-                <div className="w-12 h-12 mx-auto mb-4 rounded-full bg-muted flex items-center justify-center">
-                  <span className="text-2xl">📝</span>
-                </div>
-                <h3 className="text-lg font-semibold mb-2">Nenhum template carregado</h3>
-                <p className="text-muted-foreground mb-4">
-                  O editor está aguardando o carregamento dos dados do template.
-                  Verifique se o funnelId está correto na URL.
-                </p>
-                <div className="text-xs text-muted-foreground space-y-1">
-                  <div>🔍 Debug Info:</div>
-                  <div>Current Step: {state.currentStep}</div>
-                  <div>Step Blocks: {Object.keys(state.stepBlocks).length} keys</div>
-                  <div>Selected Block: {state.selectedBlockId || 'none'}</div>
-                </div>
+        {/* 🔍 DEBUG: Step without blocks */}
+        {!state.isLoading && Object.keys(state.stepBlocks).length > 0 && currentStepBlocks.length === 0 && (
+          <div className="flex-1 flex items-center justify-center">
+            <div className="text-center max-w-md">
+              <div className="w-12 h-12 mx-auto mb-4 rounded-full bg-orange-100 flex items-center justify-center">
+                <span className="text-2xl">⚠️</span>
+              </div>
+              <h3 className="text-lg font-semibold mb-2">Etapa {state.currentStep} vazia</h3>
+              <p className="text-muted-foreground mb-4">
+                Esta etapa não possui componentes. Arraste componentes da sidebar para começar a construir.
+              </p>
+              <div className="text-xs text-muted-foreground space-y-1">
+                <div>🔍 Debug Info:</div>
+                <div>Available Steps: {Object.keys(state.stepBlocks).join(', ')}</div>
+                <div>Current Step Key: step-{state.currentStep}</div>
+                <div>Has Step Data: {`step-${state.currentStep}` in state.stepBlocks ? 'Yes' : 'No'}</div>
               </div>
             </div>
-          )}
+          </div>
+        )}
 
-          {/* 🔍 DEBUG: Step without blocks */}
-          {!state.isLoading && Object.keys(state.stepBlocks).length > 0 && currentStepBlocks.length === 0 && (
-            <div className="flex-1 flex items-center justify-center">
-              <div className="text-center max-w-md">
-                <div className="w-12 h-12 mx-auto mb-4 rounded-full bg-orange-100 flex items-center justify-center">
-                  <span className="text-2xl">⚠️</span>
-                </div>
-                <h3 className="text-lg font-semibold mb-2">Etapa {state.currentStep} vazia</h3>
-                <p className="text-muted-foreground mb-4">
-                  Esta etapa não possui componentes. Arraste componentes da sidebar para começar a construir.
-                </p>
-                <div className="text-xs text-muted-foreground space-y-1">
-                  <div>🔍 Debug Info:</div>
-                  <div>Available Steps: {Object.keys(state.stepBlocks).join(', ')}</div>
-                  <div>Current Step Key: step-{state.currentStep}</div>
-                  <div>Has Step Data: {`step-${state.currentStep}` in state.stepBlocks ? 'Yes' : 'No'}</div>
-                </div>
+        {/* Renderização normal apenas se há dados */}
+        {!state.isLoading && currentStepBlocks.length > 0 && (
+          <>
+            {/* Toolbar */}
+            <EditorToolbar
+              currentStep={state.currentStep}
+              totalSteps={Math.max(...Object.keys(stepHasBlocksRecord).map(Number), 21)}
+              isPreviewMode={isPreviewMode}
+              canUndo={actions.canUndo}
+              canRedo={actions.canRedo}
+              isSaving={state.isLoading}
+              onTogglePreview={handleTogglePreview}
+              onUndo={actions.undo}
+              onRedo={actions.redo}
+              onSave={handleSave}
+              onPublish={handlePublish}
+              onOpenSettings={() => console.log('Configurações')}
+            />
+
+            {/* Layout principal de 4 colunas com controles de largura */}
+            <div className="flex-1 flex overflow-hidden">
+              {/* Sidebar de etapas */}
+              <div
+                className="border-r border-border bg-muted/30 flex-shrink-0"
+                style={{ width: `${columnWidths.steps}px` }}
+              >
+                <StepSidebar
+                  currentStep={state.currentStep}
+                  stepHasBlocks={stepHasBlocksRecord}
+                  stepValidation={state.stepValidation}
+                  onSelectStep={(step: number) => {
+                    console.log('🔍 ModularEditorPro - StepSidebar onSelectStep chamado:', {
+                      fromStep: state.currentStep,
+                      toStep: step,
+                      stepHasBlocks: stepHasBlocksRecord[step],
+                      stepValidation: state.stepValidation[step]
+                    });
+                    actions.setCurrentStep(step);
+                  }}
+                  getStepAnalysis={() => ({ icon: 'note', label: 'Etapa', desc: 'Configurar' })}
+                  renderIcon={(icon: string) => <div>{icon}</div>}
+                />
               </div>
-            </div>
-          )}
 
-          {/* Renderização normal apenas se há dados */}
-          {!state.isLoading && currentStepBlocks.length > 0 && (
-            <>
-              {/* Toolbar */}
-              <EditorToolbar
-                currentStep={state.currentStep}
-                totalSteps={Math.max(...Object.keys(stepHasBlocksRecord).map(Number), 21)}
-                isPreviewMode={isPreviewMode}
-                canUndo={actions.canUndo}
-                canRedo={actions.canRedo}
-                isSaving={state.isLoading}
-                onTogglePreview={handleTogglePreview}
-                onUndo={actions.undo}
-                onRedo={actions.redo}
-                onSave={handleSave}
-                onPublish={handlePublish}
-                onOpenSettings={() => console.log('Configurações')}
+              {/* Divisor redimensionável - Steps */}
+              <ResizeHandle
+                onResize={(width) => handleResize('steps', width)}
+                className="hover:shadow-lg"
+                label="Etapas"
               />
 
-              {/* Layout principal de 4 colunas com controles de largura */}
-              <div className="flex-1 flex overflow-hidden">
-                {/* Sidebar de etapas */}
-                <div
-                  className="border-r border-border bg-muted/30 flex-shrink-0"
-                  style={{ width: `${columnWidths.steps}px` }}
-                >
-                  <StepSidebar
+              {/* Sidebar de componentes */}
+              <div
+                className="border-r border-border bg-background flex-shrink-0"
+                style={{ width: `${columnWidths.components}px` }}
+              >
+                <ComponentsSidebar
+                  groupedComponents={groupedComponents}
+                  renderIcon={(icon: string) => <div>{icon}</div>}
+                />
+              </div>
+
+              {/* Divisor redimensionável - Components */}
+              <ResizeHandle
+                onResize={(width) => handleResize('components', width)}
+                className="hover:shadow-lg"
+                label="Componentes"
+              />
+
+              {/* Canvas principal com scroll vertical */}
+              <div className="flex-1 min-w-0 overflow-hidden">
+                <div className="h-full overflow-y-auto">
+                  <EditorCanvas
+                    key={`editor-canvas-stable-${state.currentStep}`} // Chave estável - só muda no step
+                    blocks={currentStepBlocks}
+                    selectedBlock={selectedBlock}
                     currentStep={state.currentStep}
-                    stepHasBlocks={stepHasBlocksRecord}
-                    stepValidation={state.stepValidation}
-                    onSelectStep={(step: number) => {
-                      console.log('🔍 ModularEditorPro - StepSidebar onSelectStep chamado:', {
+                    onSelectBlock={handleSelectBlock}
+                    onUpdateBlock={handleUpdateBlock}
+                    onDeleteBlock={handleDeleteBlock}
+                    isPreviewMode={isPreviewMode}
+                    onStepChange={(step: number) => {
+                      console.log('🔍 ModularEditorPro - EditorCanvas onStepChange chamado:', {
                         fromStep: state.currentStep,
-                        toStep: step,
-                        stepHasBlocks: stepHasBlocksRecord[step],
-                        stepValidation: state.stepValidation[step]
+                        toStep: step
                       });
                       actions.setCurrentStep(step);
                     }}
-                    getStepAnalysis={() => ({ icon: 'note', label: 'Etapa', desc: 'Configurar' })}
-                    renderIcon={(icon: string) => <div>{icon}</div>}
                   />
-                </div>
-
-                {/* Divisor redimensionável - Steps */}
-                <ResizeHandle
-                  onResize={(width) => handleResize('steps', width)}
-                  className="hover:shadow-lg"
-                  label="Etapas"
-                />
-
-                {/* Sidebar de componentes */}
-                <div
-                  className="border-r border-border bg-background flex-shrink-0"
-                  style={{ width: `${columnWidths.components}px` }}
-                >
-                  <ComponentsSidebar
-                    groupedComponents={groupedComponents}
-                    renderIcon={(icon: string) => <div>{icon}</div>}
-                  />
-                </div>
-
-                {/* Divisor redimensionável - Components */}
-                <ResizeHandle
-                  onResize={(width) => handleResize('components', width)}
-                  className="hover:shadow-lg"
-                  label="Componentes"
-                />
-
-                {/* Canvas principal com scroll vertical */}
-                <div className="flex-1 min-w-0 overflow-hidden">
-                  <div className="h-full overflow-y-auto">
-                    <EditorCanvas
-                      key={`editor-canvas-stable-${state.currentStep}`} // Chave estável - só muda no step
-                      blocks={currentStepBlocks}
-                      selectedBlock={selectedBlock}
-                      currentStep={state.currentStep}
-                      onSelectBlock={handleSelectBlock}
-                      onUpdateBlock={handleUpdateBlock}
-                      onDeleteBlock={handleDeleteBlock}
-                      isPreviewMode={isPreviewMode}
-                      onStepChange={(step: number) => {
-                        console.log('🔍 ModularEditorPro - EditorCanvas onStepChange chamado:', {
-                          fromStep: state.currentStep,
-                          toStep: step
-                        });
-                        actions.setCurrentStep(step);
-                      }}
-                    />
-                  </div>
-                </div>
-
-                {/* Divisor redimensionável - Properties */}
-                <ResizeHandle
-                  onResize={(width) => handleResize('properties', width)}
-                  className="hover:shadow-lg"
-                  label="Propriedades"
-                />
-
-                {/* Propriedades com Toggle API/Registry */}
-                <div
-                  className="border-l border-border bg-muted/30 flex-shrink-0 flex flex-col"
-                  style={{ width: `${columnWidths.properties}px` }}
-                >
-                  {/* Header com Toggle */}
-                  <div className="p-2 border-b bg-background">
-                    <div className="flex items-center justify-between">
-                      <span className="text-xs font-medium">Propriedades</span>
-                      <button
-                        onClick={() => setUseAPIPanel(!useAPIPanel)}
-                        className="px-2 py-1 text-xs bg-primary/10 hover:bg-primary/20 rounded transition-colors"
-                        title={`Alternar para ${useAPIPanel ? 'Registry' : 'API'} Panel`}
-                      >
-                        {useAPIPanel ? '🚀 API' : '📋 Registry'}
-                      </button>
-                    </div>
-                  </div>
-
-                  {/* Panel Content */}
-                  <div className="flex-1 overflow-auto">
-                    {useAPIPanel && selectedBlock ? (
-                      <APIPropertiesPanel
-                        blockId={selectedBlock.id}
-                        blockType={selectedBlock.type}
-                        initialProperties={selectedBlock.properties || {}}
-                        onPropertyChange={(key: string, value: any, isValid: boolean) => {
-                          console.log('🚀 APIPropertiesPanel change:', { key, value, isValid });
-                          if (selectedBlock && isValid) {
-                            handleUpdateBlock(selectedBlock.id, {
-                              properties: {
-                                ...selectedBlock.properties,
-                                [key]: value
-                              }
-                            });
-                          }
-                        }}
-                        onClose={() => actions.setSelectedBlockId(null)}
-                        onDelete={() => {
-                          if (selectedBlock) {
-                            handleDeleteSelectedBlock();
-                          }
-                        }}
-                      />
-                    ) : (
-                      <RegistryPropertiesPanel
-                        selectedBlock={selectedBlock || null}
-                        onUpdate={(blockId: string, updates: Record<string, any>) => {
-                          console.log('� RegistryPropertiesPanel update:', { blockId, updates });
-                          if (selectedBlock && blockId === selectedBlock.id) {
-                            handleUpdateBlock(selectedBlock.id, updates);
-                          }
-                        }}
-                        onClose={() => actions.setSelectedBlockId(null)}
-                        onDelete={(blockId: string) => {
-                          console.log('🗑️ RegistryPropertiesPanel delete:', blockId);
-                          if (selectedBlock && blockId === selectedBlock.id) {
-                            handleDeleteSelectedBlock();
-                          }
-                        }}
-                      />
-                    )}
-                  </div>
                 </div>
               </div>
-            </>
-          )}
-        </div>
-      </DndContext>
+
+              {/* Divisor redimensionável - Properties */}
+              <ResizeHandle
+                onResize={(width) => handleResize('properties', width)}
+                className="hover:shadow-lg"
+                label="Propriedades"
+              />
+
+              {/* Propriedades com Toggle API/Registry */}
+              <div
+                className="border-l border-border bg-muted/30 flex-shrink-0 flex flex-col"
+                style={{ width: `${columnWidths.properties}px` }}
+              >
+                {/* Header com Toggle */}
+                <div className="p-2 border-b bg-background">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-medium">Propriedades</span>
+                    <button
+                      onClick={() => setUseAPIPanel(!useAPIPanel)}
+                      className="px-2 py-1 text-xs bg-primary/10 hover:bg-primary/20 rounded transition-colors"
+                      title={`Alternar para ${useAPIPanel ? 'Registry' : 'API'} Panel`}
+                    >
+                      {useAPIPanel ? '🚀 API' : '📋 Registry'}
+                    </button>
+                  </div>
+                </div>
+
+                {/* Panel Content */}
+                <div className="flex-1 overflow-auto">
+                  {useAPIPanel && selectedBlock ? (
+                    <APIPropertiesPanel
+                      blockId={selectedBlock.id}
+                      blockType={selectedBlock.type}
+                      initialProperties={selectedBlock.properties || {}}
+                      onPropertyChange={(key: string, value: any, isValid: boolean) => {
+                        console.log('🚀 APIPropertiesPanel change:', { key, value, isValid });
+                        if (selectedBlock && isValid) {
+                          handleUpdateBlock(selectedBlock.id, {
+                            properties: {
+                              ...selectedBlock.properties,
+                              [key]: value
+                            }
+                          });
+                        }
+                      }}
+                      onClose={() => actions.setSelectedBlockId(null)}
+                      onDelete={() => {
+                        if (selectedBlock) {
+                          handleDeleteSelectedBlock();
+                        }
+                      }}
+                    />
+                  ) : (
+                    <RegistryPropertiesPanel
+                      selectedBlock={selectedBlock || null}
+                      onUpdate={(blockId: string, updates: Record<string, any>) => {
+                        console.log('� RegistryPropertiesPanel update:', { blockId, updates });
+                        if (selectedBlock && blockId === selectedBlock.id) {
+                          handleUpdateBlock(selectedBlock.id, updates);
+                        }
+                      }}
+                      onClose={() => actions.setSelectedBlockId(null)}
+                      onDelete={(blockId: string) => {
+                        console.log('🗑️ RegistryPropertiesPanel delete:', blockId);
+                        if (selectedBlock && blockId === selectedBlock.id) {
+                          handleDeleteSelectedBlock();
+                        }
+                      }}
+                    />
+                  )}
+                </div>
+              </div>
+            </div>
+          </>
+        )}
+      </div>
+    </DndContext>
   );
 };
 

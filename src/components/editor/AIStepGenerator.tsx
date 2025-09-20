@@ -5,6 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { Textarea } from '@/components/ui/textarea';
 import { Bot, Sparkles, Wand2, Play, Zap, Check, AlertCircle } from 'lucide-react';
 import { Progress } from '@/components/ui/progress';
+import { useAI } from '@/hooks/useAI';
 
 interface AIStepGeneratorProps {
     onStepsGenerated: (steps: any[]) => void;
@@ -25,6 +26,9 @@ export function AIStepGenerator({ onStepsGenerated, onClose }: AIStepGeneratorPr
     const [generationSteps, setGenerationSteps] = useState<GenerationStep[]>([]);
     const [generatedSteps, setGeneratedSteps] = useState<any[]>([]);
 
+    // 🤖 Hook da IA integrada
+    const { generateFunnel, isLoading: isAILoading, error: aiError, isConfigured } = useAI();
+
     // Prompts sugeridos
     const suggestedPrompts = [
         'Crie um quiz de estilo pessoal com 5 perguntas sobre preferências de moda',
@@ -40,19 +44,90 @@ export function AIStepGenerator({ onStepsGenerated, onClose }: AIStepGeneratorPr
         setIsGenerating(true);
         setGeneratedSteps([]);
 
-        // Inicializar steps de geração
+        // Steps de progresso da geração
         const steps: GenerationStep[] = [
-            { id: 'analyze', name: 'Analisando Prompt', description: 'Processando sua solicitação...', status: 'pending', progress: 0 },
-            { id: 'structure', name: 'Estruturando Funil', description: 'Definindo arquitetura do quiz...', status: 'pending', progress: 0 },
-            { id: 'questions', name: 'Gerando Perguntas', description: 'Criando perguntas inteligentes...', status: 'pending', progress: 0 },
-            { id: 'logic', name: 'Configurando Lógica', description: 'Implementando sistema de cálculo...', status: 'pending', progress: 0 },
-            { id: 'design', name: 'Aplicando Design', description: 'Definindo aparência e UX...', status: 'pending', progress: 0 },
+            { id: 'analyze', name: 'Análise do Prompt', description: 'Analisando suas necessidades...', status: 'pending', progress: 0 },
+            { id: 'ai-generate', name: 'Geração IA', description: 'GitHub Models gerando conteúdo...', status: 'pending', progress: 0 },
+            { id: 'structure', name: 'Estruturação', description: 'Organizando steps e componentes...', status: 'pending', progress: 0 },
+            { id: 'optimize', name: 'Otimização', description: 'Aplicando melhores práticas...', status: 'pending', progress: 0 },
             { id: 'finalize', name: 'Finalizando', description: 'Preparando steps para o editor...', status: 'pending', progress: 0 }
         ];
 
         setGenerationSteps(steps);
 
         try {
+            // 🤖 USAR IA REAL em vez de simulação
+            if (isConfigured) {
+                // Marcar como processando
+                setGenerationSteps(prev => prev.map(step =>
+                    step.id === 'ai-generate' ? { ...step, status: 'processing', progress: 50 } : step
+                ));
+
+                // Gerar com IA real
+                const aiSteps = await generateFunnel(prompt);
+
+                if (aiSteps) {
+                    // Sucesso na geração IA
+                    setGenerationSteps(prev => prev.map(step =>
+                        step.id === 'ai-generate' ? { ...step, status: 'completed', progress: 100 } : step
+                    ));
+
+                    // Processar resultado
+                    setGenerationSteps(prev => prev.map(step =>
+                        step.id === 'structure' ? { ...step, status: 'processing', progress: 50 } : step
+                    ));
+
+                    // Simular processamento final
+                    await new Promise(resolve => setTimeout(resolve, 1000));
+
+                    setGenerationSteps(prev => prev.map(step =>
+                        step.status !== 'completed' ? { ...step, status: 'completed', progress: 100 } : step
+                    ));
+
+                    setGeneratedSteps(aiSteps);
+                } else {
+                    throw new Error('IA não retornou resultado válido');
+                }
+            } else {
+                // Fallback para simulação se IA não configurada
+                console.warn('⚠️ IA não configurada, usando simulação');
+
+                // Simular processamento
+                for (const step of steps) {
+                    setGenerationSteps(prev => prev.map(s =>
+                        s.id === step.id ? { ...s, status: 'processing' } : s
+                    ));
+
+                    await new Promise(resolve => setTimeout(resolve, 800));
+
+                    setGenerationSteps(prev => prev.map(s =>
+                        s.id === step.id ? { ...s, status: 'completed', progress: 100 } : s
+                    ));
+                }
+
+                // Gerar steps simulados
+                const simulatedSteps = [
+                    {
+                        id: 'step-1',
+                        title: 'Pergunta Inicial',
+                        type: 'question',
+                        components: [
+                            {
+                                type: 'text',
+                                content: `Baseado em: "${prompt}"`,
+                                properties: {}
+                            }
+                        ]
+                    }
+                ];
+
+                setGeneratedSteps(simulatedSteps);
+            }
+
+            // Processar e finalizar
+            setTimeout(() => {
+                onStepsGenerated(generatedSteps.length > 0 ? generatedSteps : []);
+            }, 1000);
             // Criar template baseado no prompt - simulação
             const dynamicTemplateConfig = {
                 meta: {
