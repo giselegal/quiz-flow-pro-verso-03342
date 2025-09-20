@@ -117,7 +117,7 @@ function App() {
                   console.log('🚀 Rota /editor-pro com EditorProPageSimple ativada:', params);
                   return (
                     <Suspense fallback={<LoadingFallback />}>
-                      <EditorProPageSimple params={params} />
+                      <EditorProPageSimple />
                     </Suspense>
                   );
                 }} />
