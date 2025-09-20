@@ -7,7 +7,7 @@
 
 import React, { useState } from 'react';
 import { UniversalStepEditor } from '@/components/editor/universal/UniversalStepEditor';
-import { useUniversalStepEditor } from '@/hooks/useUniversalStepEditor.simple';
+import { useUniversalStepEditorSimple } from '@/hooks/useUniversalStepEditor.simple';
 
 // ============================================================================
 // COMPONENTE DEMO PRINCIPAL

@@ -14,8 +14,8 @@ import ComponentsSidebar from '@/components/editor/sidebars/ComponentsSidebar';
 import RegistryPropertiesPanel from '@/components/universal/RegistryPropertiesPanel';
 import APIPropertiesPanel from '@/components/editor/properties/APIPropertiesPanel';
 
-// 🔗 Provider de dados reais do funil
-import FunnelDataProviderWrapper from '@/providers/FunnelDataProvider';
+// 🔗 Provider de dados reais do funil - REMOVIDO para compatibilidade com SimpleBuilderProvider
+// import FunnelDataProviderWrapper from '@/providers/FunnelDataProvider';
 
 /**
  * Hook para controlar larguras redimensionáveis das colunas
@@ -610,14 +610,15 @@ const ModularEditorPro: React.FC<ModularEditorProProps> = ({
       console.error('❌ Erro na publicação:', error);
       addNotification('Erro ao publicar funil', 'error');
     }
-  }, [state, addNotification]); return (
-    <FunnelDataProviderWrapper>
-      <DndContext
-        sensors={sensors}
-        collisionDetection={closestCenter}
-        onDragStart={handleGlobalDragStart}
-        onDragEnd={handleGlobalDragEnd}
-      >
+  }, [state, addNotification]); 
+  
+  return (
+    <DndContext
+      sensors={sensors}
+      collisionDetection={closestCenter}
+      onDragStart={handleGlobalDragStart}
+      onDragEnd={handleGlobalDragEnd}
+    >
         <div className="h-full w-full flex flex-col bg-background">
           {/* 🔍 DEBUG: Loading State Check */}
           {state.isLoading && (
@@ -840,7 +841,6 @@ const ModularEditorPro: React.FC<ModularEditorProProps> = ({
           )}
         </div>
       </DndContext>
-    </FunnelDataProviderWrapper>
   );
 };
 

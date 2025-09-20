@@ -88,6 +88,14 @@ export type BlockType =
   | 'urgency-timer-inline'
   | 'before-after-inline'
   | 'mentor-section-inline'
+
+  // Blocos de quiz e formulário - NOVOS TIPOS ADICIONADOS
+  | 'multiple-choice'
+  | 'single-choice' 
+  | 'text-input'
+  | 'info-card'
+  | 'result-card'
+  | 'offer-card'
   | 'spacer-inline'
   | 'heading-inline'
   | 'button-inline'
@@ -443,6 +451,22 @@ export interface BaseBlock {
 export interface Block extends BaseBlock {
   type: BlockType;
   content: BlockContent;
+  
+  // Extended properties for SimpleBuilderProvider compatibility
+  validation?: {
+    required?: boolean;
+    minLength?: number;
+    maxLength?: number;
+    pattern?: string;
+    custom?: (value: any) => boolean | string;
+    isValid?: boolean; // Add isValid property
+  };
+  position?: {
+    x?: number;
+    y?: number;
+    width?: number;
+    height?: number;
+  };
 }
 
 // Interfaces especializadas para tipos específicos
