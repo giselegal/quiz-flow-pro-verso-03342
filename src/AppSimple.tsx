@@ -11,7 +11,7 @@ const ConfigurationTest = lazy(() => import('./pages/ConfigurationTest'));
 
 // Admin pages - lazy loaded
 const DashboardPage = lazy(() => import('./pages/admin/DashboardPage'));
-const MainEditorUnified = lazy(() => import('./pages/MainEditorUnified'));
+const MainEditorOptimized = lazy(() => import('./pages/MainEditorOptimized'));
 
 // Loading component simples
 const PageLoading = () => (
@@ -49,12 +49,12 @@ function AppSimple() {
                             {/* Editor principal */}
                             <Route path="/editor" component={() =>
                                 <Suspense fallback={<PageLoading />}>
-                                    <MainEditorUnified />
+                                    <MainEditorOptimized />
                                 </Suspense>
                             } />
                             <Route path="/editor/:funnelId" component={() =>
                                 <Suspense fallback={<PageLoading />}>
-                                    <MainEditorUnified />
+                                    <MainEditorOptimized />
                                 </Suspense>
                             } />
 
