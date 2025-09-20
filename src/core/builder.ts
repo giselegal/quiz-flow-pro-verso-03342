@@ -26,6 +26,16 @@ export const createFunnelFromTemplate = (template: string) => {
               withContent: (content: any) => ({
                 withProperties: (props: any) => ({
                   withValidation: (validation: any) => ({
+                    withCalculationRules: (rules: any) => ({
+                      withMetadata: (metadata: any) => ({
+                        complete: () => console.log('Step completed:', name)
+                      })
+                    }),
+                    withMetadata: (metadata: any) => ({
+                      complete: () => console.log('Step completed:', name)
+                    })
+                  }),
+                  withCalculationRules: (rules: any) => ({
                     withMetadata: (metadata: any) => ({
                       complete: () => console.log('Step completed:', name)
                     })
@@ -35,6 +45,11 @@ export const createFunnelFromTemplate = (template: string) => {
                   })
                 }),
                 withValidation: (validation: any) => ({
+                  withCalculationRules: (rules: any) => ({
+                    withMetadata: (metadata: any) => ({
+                      complete: () => console.log('Step completed:', name)
+                    })
+                  }),
                   withMetadata: (metadata: any) => ({
                     complete: () => console.log('Step completed:', name)
                   })
@@ -45,6 +60,16 @@ export const createFunnelFromTemplate = (template: string) => {
               }),
               withProperties: (props: any) => ({
                 withValidation: (validation: any) => ({
+                  withCalculationRules: (rules: any) => ({
+                    withMetadata: (metadata: any) => ({
+                      complete: () => console.log('Step completed:', name)
+                    })
+                  }),
+                  withMetadata: (metadata: any) => ({
+                    complete: () => console.log('Step completed:', name)
+                  })
+                }),
+                withCalculationRules: (rules: any) => ({
                   withMetadata: (metadata: any) => ({
                     complete: () => console.log('Step completed:', name)
                   })
@@ -75,18 +100,27 @@ export const createFunnelFromTemplate = (template: string) => {
           }),
           autoConnect: () => ({
             optimize: () => ({
+              enableAnalytics: () => ({
               build: () => ({
-                steps: []
+                steps: [],
+                settings: { theme: 'default' }
+              })
+              }),
+              build: () => ({
+                steps: [],
+                settings: { theme: 'default' }
               })
             })
           }),
           enableAnalytics: () => ({
             build: () => ({
-              steps: []
+              steps: [],
+              settings: { theme: 'default' }
             })
           }),
           build: () => ({
-            steps: []
+            steps: [],
+            settings: { theme: 'default' }
           })
         })
       })
