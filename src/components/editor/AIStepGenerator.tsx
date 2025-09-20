@@ -53,8 +53,8 @@ export function AIStepGenerator({ onStepsGenerated, onClose }: AIStepGeneratorPr
         setGenerationSteps(steps);
 
         try {
-            // Criar template baseado no prompt
-            const dynamicTemplate: FunnelTemplate = {
+            // Criar template baseado no prompt - simulação
+            const dynamicTemplateConfig = {
                 meta: {
                     name: `Quiz Personalizado - ${new Date().toLocaleDateString()}`,
                     description: prompt,
@@ -121,39 +121,36 @@ export function AIStepGenerator({ onStepsGenerated, onClose }: AIStepGeneratorPr
                 }
             };
 
-            // Simular geração com AI Agent
-            const aiAgent = new FunnelAIAgent((stepId, status, progress) => {
+            // Usar o template config para log (opcional)
+            console.log('Gerando steps com configuração:', dynamicTemplateConfig.meta.name);
+
+            // Simular geração com AI - sem dependências externas
+            const simulateAIProgress = (stepId: string, status: 'pending' | 'processing' | 'completed' | 'error', progress: number) => {
                 setGenerationSteps(prev => prev.map(step =>
                     step.id === stepId ? { ...step, status, progress } : step
                 ));
-            });
+            };
 
             // Processar cada step
             for (let i = 0; i < steps.length; i++) {
                 const step = steps[i];
 
-                setGenerationSteps(prev => prev.map(s =>
-                    s.id === step.id ? { ...s, status: 'processing' } : s
-                ));
+                simulateAIProgress(step.id, 'processing', 0);
 
                 // Simular processamento IA
-                await new Promise(resolve => {
+                await new Promise<void>(resolve => {
                     const duration = Math.random() * 2000 + 1000; // 1-3 segundos
                     let progress = 0;
 
                     const interval = setInterval(() => {
                         progress += 10;
-                        setGenerationSteps(prev => prev.map(s =>
-                            s.id === step.id ? { ...s, progress: Math.min(progress, 90) } : s
-                        ));
+                        simulateAIProgress(step.id, 'processing', Math.min(progress, 90));
 
                         if (progress >= 90) {
                             clearInterval(interval);
                             setTimeout(() => {
-                                setGenerationSteps(prev => prev.map(s =>
-                                    s.id === step.id ? { ...s, status: 'completed', progress: 100 } : s
-                                ));
-                                resolve(true);
+                                simulateAIProgress(step.id, 'completed', 100);
+                                resolve();
                             }, 300);
                         }
                     }, duration / 10);

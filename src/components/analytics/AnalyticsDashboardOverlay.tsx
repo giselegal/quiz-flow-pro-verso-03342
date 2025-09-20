@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import {
     X,
     BarChart3,
@@ -16,8 +16,7 @@ import {
     CheckCircle,
     ArrowUp,
     ArrowDown,
-    Minimize2,
-    Maximize2
+    Minimize2
 } from 'lucide-react';
 import { Badge } from '../ui/badge';
 import { Button } from '../ui/button';
@@ -306,8 +305,8 @@ export function AnalyticsDashboardOverlay({ onClose }: AnalyticsDashboardOverlay
                                         <div className="flex items-center gap-2">
                                             <Badge
                                                 className={`${step.conversionRate > 20 ? 'bg-green-100 text-green-800' :
-                                                        step.conversionRate > 15 ? 'bg-yellow-100 text-yellow-800' :
-                                                            'bg-red-100 text-red-800'
+                                                    step.conversionRate > 15 ? 'bg-yellow-100 text-yellow-800' :
+                                                        'bg-red-100 text-red-800'
                                                     }`}
                                             >
                                                 {step.conversionRate.toFixed(1)}%

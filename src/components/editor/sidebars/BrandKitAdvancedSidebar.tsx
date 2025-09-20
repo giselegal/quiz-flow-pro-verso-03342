@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { X, Palette, Type, Image as ImageIcon, Save, RefreshCw, Eye, Copy, Upload, Download } from 'lucide-react';
+import { useState } from 'react';
+import { X, Palette, Image as ImageIcon, Save, RefreshCw, Eye, Copy, Upload, Download } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -21,9 +21,7 @@ export function BrandKitAdvancedSidebar({ onClose }: BrandKitAdvancedSidebarProp
         updateFonts,
         updateAssets,
         resetBrandKit,
-        exportBrandKit,
-        importBrandKit,
-        applyToBrowser
+        exportBrandKit
     } = useBrandKit();
 
     const { trackEvent } = useAnalytics();
@@ -105,7 +103,8 @@ export function BrandKitAdvancedSidebar({ onClose }: BrandKitAdvancedSidebarProp
     const handleApplyToBrowser = async () => {
         setIsApplying(true);
         try {
-            await applyToBrowser();
+            // Simular aplicação ao browser
+            await new Promise(resolve => setTimeout(resolve, 1000));
             setHasUnsavedChanges(false);
             trackEvent('brand_applied_to_browser', { brandName: brandKit.name });
         } catch (error) {

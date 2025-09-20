@@ -282,3 +282,5 @@ export function EditorProPageSimple() {
     </div>
   );
 }
+
+export default EditorProPageSimple;

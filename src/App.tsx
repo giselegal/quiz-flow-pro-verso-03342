@@ -50,9 +50,6 @@ const TestDataPanel = lazy(() => import('./components/TestDataPanel'));
 // 🎯 NOVO: Editor Pro Consolidado (substitui UniversalStepEditorProDemo)
 const EditorProConsolidatedPage = lazy(() => import('./pages/EditorProConsolidatedPage'));
 
-// 🚀 NOVO: Editor IA Pro - Sistema completo com funcionalidades avançadas
-const EditorProPage = lazy(() => import('./pages/EditorProPage'));
-
 // 🚀 NOVO: Editor IA Pro - Versão simplificada para testes  
 const EditorProPageSimple = lazy(() => import('./pages/EditorProPageSimple'));
 
