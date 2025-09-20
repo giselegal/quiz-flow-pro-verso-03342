@@ -23,6 +23,23 @@ export const FunnelDataProviderWrapper: React.FC<FunnelDataProviderWrapperProps>
     const { state, actions } = useEditor();
     const funnelsContext = useFunnels();
 
+    // 🔍 DEBUG: Log do estado do FunnelDataProvider
+    useEffect(() => {
+        console.log('🔗 FunnelDataProvider - Estado inicial:', {
+            editorState: {
+                currentStep: state.currentStep,
+                stepBlocks: Object.keys(state.stepBlocks),
+                stepBlocksCounts: Object.entries(state.stepBlocks).map(([key, blocks]) => ({ [key]: blocks.length })),
+                selectedBlockId: state.selectedBlockId,
+                isLoading: state.isLoading
+            },
+            funnelsContext: {
+                hasContext: !!funnelsContext,
+                currentFunnelId: funnelsContext?.currentFunnelId
+            }
+        });
+    }, [state, funnelsContext]);
+
     useEffect(() => {
         // Create the funnel data provider implementation
         const funnelDataProvider: FunnelDataProvider = {

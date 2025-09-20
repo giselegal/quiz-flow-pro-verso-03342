@@ -175,6 +175,16 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
   quizId,
   enableSupabase = false,
 }) => {
+  // 🔍 DEBUG: Log inicial dos parâmetros do EditorProvider
+  useEffect(() => {
+    console.log('🎯 EditorProvider - Inicialização com parâmetros:', {
+      funnelId,
+      quizId,
+      enableSupabase,
+      timestamp: new Date().toISOString()
+    });
+  }, [funnelId, quizId, enableSupabase]);
+
   // Diagnóstico: sinalizar montagem do provider moderno no escopo global (apenas browser)
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -1264,6 +1274,22 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
       console.error('❌ Failed to load default template:', err);
     }
   }, [setState]);
+
+  // 🚀 AUTO LOAD: Carregar template padrão se não há funnelId específico
+  useEffect(() => {
+    const shouldLoadDefault = !funnelId || funnelId === 'quiz-estilo-completo';
+
+    console.log('🔍 EditorProvider - Verificação de carregamento automático:', {
+      funnelId,
+      shouldLoadDefault,
+      currentStepBlocks: Object.keys(rawState.stepBlocks).length
+    });
+
+    if (shouldLoadDefault && Object.keys(rawState.stepBlocks).length === 0) {
+      console.log('🚀 EditorProvider - Carregando template padrão automaticamente...');
+      loadDefaultTemplate();
+    }
+  }, [funnelId, rawState.stepBlocks, loadDefaultTemplate]);
 
   const exportJSON = useCallback(() => {
     // Normalize step keys to canonical format step-<n>
