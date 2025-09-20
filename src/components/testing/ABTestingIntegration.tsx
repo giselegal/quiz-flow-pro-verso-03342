@@ -64,7 +64,7 @@ interface ABTest {
 export function ABTestingIntegration({ onClose }: ABTestingIntegrationProps) {
     const { trackEvent } = useAnalytics();
     const [activeTab, setActiveTab] = useState<'active' | 'create' | 'results'>('active');
-    const [selectedTest, setSelectedTest] = useState<string | null>(null);
+    const [selectedTest] = useState<string | null>(null);
 
     const [abTests, setAbTests] = useState<ABTest[]>([
         {

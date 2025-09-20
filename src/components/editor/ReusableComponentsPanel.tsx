@@ -26,7 +26,7 @@ export const ReusableComponentsPanel: React.FC<ReusableComponentsPanelProps> = (
     getAvailableCategories,
     addReusableComponentToEditor,
     applyComponentTemplate,
-  } = useEditorReusableComponents();
+  } = useEditorReusableComponentsSimple();
 
   const categories = getAvailableCategories();
 

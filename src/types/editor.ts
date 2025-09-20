@@ -434,7 +434,7 @@ export interface EditableContent {
 
   iconColor?: string;
 
-  options?: Array<{ id: string; text: string; imageUrl?: string }>;
+  options?: Array<{ id: string; text: string; imageUrl?: string; value?: string }>;
 
   [key: string]: any;
 }
@@ -459,7 +459,9 @@ export interface Block extends BaseBlock {
     maxLength?: number;
     pattern?: string;
     custom?: (value: any) => boolean | string;
-    isValid?: boolean; // Add isValid property
+    isValid?: boolean;
+    errors?: string[]; // Add errors property
+    warnings?: string[];
   };
   position?: {
     x?: number;
@@ -467,6 +469,9 @@ export interface Block extends BaseBlock {
     width?: number;
     height?: number;
   };
+  // Add missing properties
+  style?: Record<string, any>;
+  metadata?: Record<string, any>;
 }
 
 // Interfaces especializadas para tipos específicos

@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
-import { X, Palette, Type, Image as ImageIcon, Save, RefreshCw, Eye } from 'lucide-react';
+import { X, Palette, Eye, RefreshCw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
@@ -279,7 +278,6 @@ export const BrandKitSidebar: React.FC<BrandKitSidebarProps> = ({ onClose }) => 
                         onClick={handleExport}
                         className="flex-1"
                     >
-                        <Save className="w-3 h-3 mr-1" />
                         Exportar
                     </Button>
                 </div>

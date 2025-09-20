@@ -18,7 +18,7 @@ export interface ReusableComponent {
 
 export const useEditorReusableComponentsSimple = () => {
   const [components, setComponents] = useState<ReusableComponent[]>([]);
-  const [categories, setCategories] = useState<string[]>(['Básicos', 'Avançados', 'Formulários']);
+  const [categories] = useState<string[]>(['Básicos', 'Avançados', 'Formulários']);
   const [isLoading, setIsLoading] = useState(false);
 
   const loadComponents = useCallback(async () => {

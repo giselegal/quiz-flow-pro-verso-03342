@@ -19,7 +19,7 @@ export interface QuizValidationOptions {
 }
 
 export const useQuizValidation = (options: QuizValidationOptions = {}) => {
-  const validate = useCallback((data: any): QuizValidationResult => {
+  const validate = useCallback((_data: any): QuizValidationResult => {
     console.log('🔍 Quiz validation executed with options:', options);
     
     // Placeholder validation logic

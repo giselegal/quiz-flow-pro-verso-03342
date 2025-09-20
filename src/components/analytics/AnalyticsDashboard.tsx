@@ -22,8 +22,7 @@ interface AnalyticsDashboardProps {
 
 const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
   quizId = 'default',
-  className = '',
-  onClose
+  className = ''
 }) => {
   const [metrics, setMetrics] = useState<AnalyticsMetrics | null>(null);
   const [funnel, setFunnel] = useState<ConversionFunnel[]>([]);

@@ -191,11 +191,11 @@ const generateQuiz21StepsWithBuilder = (): Record<string, Block[]> => {
         // 🔄 CONVERTER para formato compatível com editor atual
         const stepBlocks: Record<string, Block[]> = {};
 
-        funnelResult.steps?.forEach((step, index) => {
+        funnelResult.steps?.forEach((step: any, index: number) => {
             const stepKey = `step-${index + 1}`;
 
             // Converter componentes Builder para formato Block
-            const blocks: Block[] = step.components?.map((component, blockIndex) => ({
+            const blocks: Block[] = step.components?.map((component: any, blockIndex: number) => ({
                 id: `${stepKey}-block-${blockIndex + 1}`,
                 type: component.type || 'quiz-question',
                 position: { x: 0, y: blockIndex * 100 },
@@ -237,6 +237,7 @@ const generateQuiz21StepsWithBuilder = (): Record<string, Block[]> => {
             fallbackBlocks[`step-${i}`] = [{
                 id: `step-${i}-block-1`,
                 type: i === 1 ? 'text-input' : i <= 11 ? 'multiple-choice' : 'info-card',
+                order: 1, // Add missing order property
                 position: { x: 0, y: 0 },
                 properties: {
                     stepNumber: i,

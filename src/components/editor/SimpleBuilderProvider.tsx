@@ -107,6 +107,7 @@ const generate21StepsInline = (): Record<string, Block[]> => {
         steps[`step-${i}`] = [{
             id: `step${i}-quiz-question`,
             type: 'multiple-choice',
+            order: 1, // Add missing order property
             position: { x: 0, y: 0 },
             properties: {
                 stepNumber: i,
@@ -154,6 +155,7 @@ const generate21StepsInline = (): Record<string, Block[]> => {
     steps['step-12'] = [{
         id: 'step12-transition',
         type: 'hero-section',
+        order: 1, // Add missing order property
         position: { x: 0, y: 0 },
         properties: {
             stepNumber: 12,
@@ -183,6 +185,7 @@ const generate21StepsInline = (): Record<string, Block[]> => {
         steps[`step-${i}`] = [{
             id: `step${i}-strategic-question`,
             type: 'single-choice',
+            order: 1, // Add missing order property
             position: { x: 0, y: 0 },
             properties: {
                 stepNumber: i,
@@ -223,6 +226,7 @@ const generate21StepsInline = (): Record<string, Block[]> => {
     steps['step-19'] = [{
         id: 'step19-transition-result',
         type: 'hero-section',
+        order: 1, // Add missing order property
         position: { x: 0, y: 0 },
         properties: {
             stepNumber: 19,
@@ -253,6 +257,7 @@ const generate21StepsInline = (): Record<string, Block[]> => {
     steps['step-20'] = [{
         id: 'step20-result',
         type: 'result-card',
+        order: 1, // Add missing order property
         position: { x: 0, y: 0 },
         properties: {
             stepNumber: 20,
@@ -295,6 +300,7 @@ const generate21StepsInline = (): Record<string, Block[]> => {
     steps['step-21'] = [{
         id: 'step21-offer',
         type: 'offer-card',
+        order: 1, // Add missing order property
         position: { x: 0, y: 0 },
         properties: {
             stepNumber: 21,
