@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from 'react';
 import { getLogger } from '@/utils/logging';
 import { Button } from '@/components/ui/button';

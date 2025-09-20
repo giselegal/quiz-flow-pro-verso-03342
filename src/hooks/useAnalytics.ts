@@ -6,8 +6,8 @@
  * e experimentos A/B nos componentes React.
  */
 
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import { analyticsEngine, FunnelMetrics, ComponentMetrics, ABTestExperiment, PerformanceMetricsDashboard, PerformanceMetric } from '@/services/analyticsEngine';
+import { useCallback, useEffect, useState } from 'react';
+import { analyticsEngine, FunnelMetrics, ComponentMetrics, PerformanceMetricsDashboard, PerformanceMetric } from '@/services/analyticsEngine';
 
 // ============================================================================
 // TIPOS E INTERFACES

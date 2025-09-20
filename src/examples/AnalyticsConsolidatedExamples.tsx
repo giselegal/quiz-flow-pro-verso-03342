@@ -212,7 +212,7 @@ export const AutoTrackingComponent: React.FC<{
 
 export const RealTimeMetricsExample: React.FC<{ funnelId: string }> = ({ funnelId }) => {
     const [metrics, setMetrics] = React.useState<any>(null);
-    const [alerts, setAlerts] = React.useState<any[]>([]);
+    const [alerts] = React.useState<any[]>([]);
 
     useEffect(() => {
         const fetchMetrics = async () => {

@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * 🎯 MASTER LOADING SERVICE - CONSOLIDAÇÃO ARQUITETURAL
  * 

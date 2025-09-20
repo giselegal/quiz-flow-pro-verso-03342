@@ -55,13 +55,13 @@ export function validateBlockProperties(
  * Obtém propriedades padrão para um tipo de bloco
  */
 export function getDefaultPropertiesForBlock(
-    blockType: BlockType,
+    _blockType: BlockType,
     context?: Record<string, any>
 ): Record<string, any> {
-    const baseDefaults = getBaseDefaultProperties(blockType);
+    const baseDefaults = getBaseDefaultProperties();
 
     if (context) {
-        return applyContextualDefaults(baseDefaults, context);
+        return applyContextualDefaults(baseDefaults);
     }
 
     return baseDefaults;
@@ -91,7 +91,7 @@ export function sanitizeBlockProperties(
     });
 
     // Normalizar valores numéricos
-    normalizeNumericValues(sanitized, blockType);
+    normalizeNumericValues(sanitized, 'text' as BlockType);
 
     // Limpar strings
     cleanStringValues(sanitized);

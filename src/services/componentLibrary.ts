@@ -9,7 +9,6 @@
  */
 
 import { getLogger } from '@/utils/logging';
-import { validateFunnelId } from '@/utils/idValidation';
 
 const logger = getLogger();
 
@@ -169,9 +168,9 @@ export type ComponentType =
 export class ComponentLibrary {
     private components = new Map<string, Component>();
     private categories = new Map<ComponentCategory, Component[]>();
-    private logger = getLogger();
-
     constructor() {
+        // Logger available if needed
+        console.log('ComponentLibrary initialized');
         this.initializeBuiltInComponents();
     }
 

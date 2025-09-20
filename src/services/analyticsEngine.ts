@@ -766,11 +766,11 @@ export class AnalyticsEngine {
         return events.filter(e => e.type === 'conversion_completed').length;
     }
 
-    private calculateAverageTimeToComplete(events: AnalyticsEvent[]): number {
+    private calculateAverageTimeToComplete(_events: AnalyticsEvent[]): number {
         return 300; // 5 minutos em segundos
     }
 
-    private calculateTopDropoffSteps(events: AnalyticsEvent[]): StepDropoffInfo[] {
+    private calculateTopDropoffSteps(_events: AnalyticsEvent[]): StepDropoffInfo[] {
         return [];
     }
 
@@ -783,11 +783,11 @@ export class AnalyticsEngine {
         return breakdown;
     }
 
-    private calculateTrafficSources(events: AnalyticsEvent[]): TrafficSourceBreakdown {
+    private calculateTrafficSources(_events: AnalyticsEvent[]): TrafficSourceBreakdown {
         return {};
     }
 
-    private calculateTimeRangeStats(events: AnalyticsEvent[], timeRange: string): TimeRangeStats {
+    private calculateTimeRangeStats(_events: AnalyticsEvent[], timeRange: string): TimeRangeStats {
         return {
             period: timeRange as any,
             data: []
@@ -814,7 +814,7 @@ export class AnalyticsEngine {
         return componentInteractions > 0 ? (conversions / componentInteractions) * 100 : 0;
     }
 
-    private getPopularVariants(events: AnalyticsEvent[]): string[] {
+    private getPopularVariants(_events: AnalyticsEvent[]): string[] {
         return ['default', 'variant-a', 'variant-b'];
     }
 
@@ -833,7 +833,7 @@ export class AnalyticsEngine {
         return [Math.max(0, rate - margin), Math.min(1, rate + margin)];
     }
 
-    private calculateSignificance(variant: any, allVariants: any[], events: AnalyticsEvent[]): number {
+    private calculateSignificance(_variant: any, _allVariants: any[], _events: AnalyticsEvent[]): number {
         return Math.random() * 100;
     }
 
@@ -843,7 +843,7 @@ export class AnalyticsEngine {
         );
     }
 
-    private generateRecommendation(results: VariantResults[], experiment: ABTestExperiment): string {
+    private generateRecommendation(results: VariantResults[], _experiment: ABTestExperiment): string {
         const winner = this.determineWinner(results);
         if (winner) {
             return `Recomendamos usar a variante ${winner.variantId} que teve ${winner.conversionRate.toFixed(1)}% de conversão`;
