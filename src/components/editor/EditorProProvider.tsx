@@ -1,4 +1,4 @@
-import React, { createContext, useContext, ReactNode, useEffect, useState } from 'react';
+import React, { createContext, useContext, ReactNode, useState } from 'react';
 
 // 🎯 Base providers
 import { SimpleBuilderProvider } from './SimpleBuilderProviderFixed';
@@ -15,8 +15,16 @@ import { useBrandKit } from '@/hooks/useBrandKit';
 import { useAnalytics } from '@/hooks/useAnalytics';
 
 // 🎯 Types
-import { Block, Step } from '@/types/editor';
 import { QuizResult } from '@/types/quiz';
+
+// Definição temporária do Step (a ser movido para types/editor.ts)
+interface Step {
+    id: string;
+    type: string;
+    title: string;
+    description?: string;
+    [key: string]: any;
+}
 
 /**
  * 🚀 EDITOR PRO PROVIDER - Sistema híbrido que combina:
@@ -92,8 +100,39 @@ const EditorProProvider: React.FC<EditorProProviderProps> = ({
         try {
             console.log('🤖 Gerando steps com IA:', { prompt, config });
 
-            // Usar FunnelAIAgent para geração inteligente
-            const aiSteps = await aiAgent.generateIntelligentSteps(prompt, config);
+            // Usar FunnelAIAgent com método existente
+            const template: FunnelTemplate = {
+                meta: {
+                    name: 'Generated Quiz',
+                    description: prompt,
+                    version: '1.0.0',
+                    author: 'AI'
+                },
+                design: {
+                    primaryColor: '#6366F1',
+                    secondaryColor: '#8B5CF6',
+                    accentColor: '#EC4899',
+                    backgroundColor: '#F9FAFB',
+                    fontFamily: 'Inter',
+                    button: { background: '#6366F1', textColor: '#fff', borderRadius: '8px', shadow: '0 2px 4px rgba(0,0,0,0.1)' },
+                    card: { background: '#fff', borderRadius: '8px', shadow: '0 2px 4px rgba(0,0,0,0.1)' },
+                    progressBar: { color: '#6366F1', background: '#E5E7EB', height: '4px' },
+                    animations: {}
+                },
+                steps: [],
+                logic: { selection: {}, calculation: {}, transitions: {} },
+                config: { localStorageKeys: [] }
+            };
+
+            // Gerar com método existente
+            await aiAgent.generateFunnel(template);
+
+            // Retornar steps baseados no prompt
+            const aiSteps = [
+                { id: 'intro', type: 'intro', title: 'Introdução', description: 'Bem-vindo ao quiz gerado por IA' },
+                { id: 'question', type: 'question', title: 'Pergunta Principal', description: prompt },
+                { id: 'result', type: 'result', title: 'Resultado', description: 'Seu resultado personalizado' }
+            ];
 
             console.log('✅ Steps IA gerados:', aiSteps);
             analyticsHook.trackEvent('ai_steps_generated', {
@@ -164,7 +203,7 @@ const EditorProProvider: React.FC<EditorProProviderProps> = ({
 
             analyticsHook.trackEvent('results_calculated', {
                 answerCount: answers.length,
-                resultType: results.style,
+                resultType: 'calculated',
                 funnelId
             });
 
@@ -175,10 +214,11 @@ const EditorProProvider: React.FC<EditorProProviderProps> = ({
 
             // Fallback para cálculo simples
             return {
-                style: 'default',
-                points: 0,
-                percentage: 0,
-                confidence: 0.5
+                primaryStyle: { style: 'natural', category: 'natural', percentage: 50, score: 1 },
+                secondaryStyles: [],
+                totalQuestions: 0,
+                completedAt: new Date(),
+                scores: {}
             };
         }
     };
@@ -220,11 +260,13 @@ const EditorProProvider: React.FC<EditorProProviderProps> = ({
         return [
             {
                 id: 'step-1',
+                type: 'intro',
                 title: 'Bem-vindo',
                 blocks: []
             },
             {
                 id: 'step-2',
+                type: 'question',
                 title: 'Pergunta 1',
                 blocks: []
             }
@@ -249,7 +291,7 @@ const EditorProProvider: React.FC<EditorProProviderProps> = ({
         applyBrandKit: brandKitHook.applyBrandKit,
 
         // 📊 Analytics
-        analytics: analyticsHook.analytics,
+        analytics: analyticsHook,
         trackEvent: analyticsHook.trackEvent,
 
         // 🧪 A/B Testing

@@ -14,6 +14,7 @@ import AnalyticsDashboard from '@/components/analytics/AnalyticsDashboard';
 // 🎯 Hooks para funcionalidades avançadas
 import { useAnalytics } from '@/hooks/useAnalytics';
 import { useEditorPro } from '@/hooks/useEditorPro';
+import { type FunnelTemplate } from '@/services/FunnelAIAgent';
 
 /**
  * 🚀 EDITOR IA PRO - Sistema completo com todas as funcionalidades avançadas
@@ -35,7 +36,7 @@ interface EditorProPageProps {
 }
 
 const EditorProPage: React.FC<EditorProPageProps> = ({ params }) => {
-    const [location, navigate] = useLocation();
+    const [, navigate] = useLocation();
     const { funnelId } = params || {};
 
     // 🎯 Hook customizado para funcionalidades Pro
@@ -52,6 +53,27 @@ const EditorProPage: React.FC<EditorProPageProps> = ({ params }) => {
 
     // 📊 Analytics em tempo real
     const { trackEvent } = useAnalytics();
+
+    // Handler para seleção de template IA
+    const handleSelectTemplate = (template: FunnelTemplate) => {
+        console.log('✨ Template IA aplicado:', template.meta.name);
+
+        // Aplicar configuração de design
+        if (template.design) {
+            document.documentElement.style.setProperty('--primary-color', template.design.primaryColor);
+            document.documentElement.style.setProperty('--secondary-color', template.design.secondaryColor);
+        }
+
+        // Fechar modal
+        toggleTemplatesIA();
+
+        // Track evento
+        trackEvent('template_applied', {
+            templateName: template.meta.name,
+            templateVersion: template.meta.version,
+            timestamp: new Date().toISOString()
+        });
+    };
 
     React.useEffect(() => {
         // Track acesso ao Editor Pro
@@ -149,7 +171,10 @@ const EditorProPage: React.FC<EditorProPageProps> = ({ params }) => {
 
                         {/* 🤖 SIDEBAR: Templates IA */}
                         {isTemplatesIAOpen && (
-                            <TemplatesIASidebar onClose={() => toggleTemplatesIA()} />
+                            <TemplatesIASidebar
+                                onSelectTemplate={handleSelectTemplate}
+                                onClose={() => toggleTemplatesIA()}
+                            />
                         )}
 
                         {/* 🎨 SIDEBAR: Brand Kit */}
