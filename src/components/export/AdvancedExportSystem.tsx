@@ -1,16 +1,12 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import {
     X,
     Download,
     FileText,
-    Image,
     Code,
     Globe,
     Smartphone,
-    Monitor,
     Settings,
-    CheckCircle,
-    AlertCircle,
     RefreshCw,
     Upload,
     Share2,
@@ -138,7 +134,7 @@ export function AdvancedExportSystem({ onClose }: AdvancedExportSystemProps) {
         }
     ]);
 
-    const [exportPresets, setExportPresets] = useState<ExportPreset[]>([
+    const [exportPresets] = useState<ExportPreset[]>([
         {
             id: 'full-stack',
             name: 'Full Stack Complete',
@@ -168,7 +164,7 @@ export function AdvancedExportSystem({ onClose }: AdvancedExportSystemProps) {
         }
     ]);
 
-    const [integrationPlatforms, setIntegrationPlatforms] = useState<IntegrationPlatform[]>([
+    const [integrationPlatforms] = useState<IntegrationPlatform[]>([
         {
             id: 'github',
             name: 'GitHub Pages',
