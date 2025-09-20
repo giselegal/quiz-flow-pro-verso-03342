@@ -26,10 +26,13 @@ const MainEditorUnified: React.FC = () => {
     const params = React.useMemo(() => new URLSearchParams(location.split('?')[1] || ''), [location]);
     const routeParams = useParams<{ funnelId?: string }>();
 
-    // Extrair parâmetros da URL
+    // 🔧 CORREÇÃO CRÍTICA: Priorizar funis reais sobre templates
+    const realFunnelId = routeParams.funnelId || params.get('funnel');
     const templateId = params.get('template');
-    const funnelId = routeParams.funnelId || params.get('funnel');
     const debugMode = params.get('debug') === 'true';
+    
+    // Lógica de prioridade: funil real > template > novo
+    const funnelId = realFunnelId || undefined; // Só usar funnelId se for real
 
     // Log inicial para debug
     console.log('🎯 [MAIN] MainEditorUnified iniciado:', {
@@ -64,10 +67,10 @@ const MainEditorUnified: React.FC = () => {
             <UnifiedFunnelProvider funnelId={sanitizedParams.funnelId} debugMode={debugMode}>
                 <FunnelsProvider debug={debugMode}>
                     <EditorProvider
-                        enableSupabase={false} // Desabilitar Supabase por enquanto para evitar problemas
-                        funnelId={sanitizedParams.funnelId}
-                        quizId={sanitizedParams.funnelId || 'local-funnel'}
-                        storageKey="main-editor-unified-state"
+                        enableSupabase={!!realFunnelId} // Ativar Supabase apenas para funis reais
+                        funnelId={funnelId}
+                        quizId={funnelId || templateId || 'local-funnel'}
+                        storageKey={`editor-unified-${funnelId || templateId || 'new'}`}
                     >
                         <LegacyCompatibilityWrapper
                             enableWarnings={debugMode}

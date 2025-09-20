@@ -28,16 +28,16 @@ const EditorFallback: React.FC<{
 
             // Lista de editores para tentar em ordem de prioridade
             const editorPaths = [
-                '../editor/UnifiedEditor',
-                '../editor/EditorPro',
-                '../editor/MainEditor'
+                '@/components/editor/EditorPro',
+                '@/legacy/editor/EditorPro',
+                '@/components/editor/SchemaDrivenEditorResponsive'
             ];
 
             for (const editorPath of editorPaths) {
                 try {
                     console.log(`🔄 [FALLBACK] Tentando carregar: ${editorPath}`);
                     const mod = await import(editorPath);
-                    const Component = mod.default || mod.UnifiedEditor || mod.EditorPro || mod.MainEditor;
+                    const Component = mod.default || mod.EditorPro || mod.SchemaDrivenEditorResponsive;
 
                     if (Component) {
                         console.log(`✅ [FALLBACK] Editor carregado: ${editorPath}`);

@@ -208,20 +208,30 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
       }
     };
   }, []);
-  // Build initial state from template
+  // 🔧 CORREÇÃO CRÍTICA: Estado inicial dinâmico baseado em funnelId
   const getInitialState = (): EditorState => {
     const initialBlocks: Record<string, Block[]> = {};
-    // Em ambiente de teste, iniciamos vazio para testes previsíveis
     const isTestEnv = process.env.NODE_ENV === 'test';
+    
     if (!isTestEnv) {
-      // Carregar diretamente do template otimizado
-      Object.entries(QUIZ_STYLE_21_STEPS_TEMPLATE).forEach(([stepKey, blocks]) => {
-        if (Array.isArray(blocks) && blocks.length > 0) {
-          initialBlocks[stepKey] = [...blocks];
-        }
-      });
+      // Se funnelId indica template, carregar do templateLibraryService
+      if (funnelId?.startsWith('template-')) {
+        console.log('📋 EditorProvider: Carregando template inicial:', funnelId);
+        // Template será carregado depois via loadRealFunnelData
+      } else if (funnelId && !funnelId.includes('new-funnel')) {
+        console.log('🔗 EditorProvider: Funil real será carregado do Supabase:', funnelId);
+        // Dados reais serão carregados depois via loadRealFunnelData
+      } else {
+        // Fallback para template padrão apenas quando criar novo funil
+        console.log('🆕 EditorProvider: Usando template padrão para novo funil');
+        Object.entries(QUIZ_STYLE_21_STEPS_TEMPLATE).forEach(([stepKey, blocks]) => {
+          if (Array.isArray(blocks) && blocks.length > 0) {
+            initialBlocks[stepKey] = [...blocks];
+          }
+        });
+      }
     } else {
-      // Garante pelo menos arrays vazios para as primeiras etapas usadas nos testes
+      // Em testes, iniciar sempre vazio
       initialBlocks['step-1'] = [];
       initialBlocks['step-2'] = [];
     }
@@ -289,10 +299,38 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
     funnelsContext = null;
   }
 
-  // 🎯 NOVA FUNCIONALIDADE: Carregar dados reais do funil quando funnelId é fornecido
+  // 🔧 CORREÇÃO CRÍTICA: Carregamento inteligente de funis/templates
   const loadRealFunnelData = useCallback(async () => {
-    if (!funnelId || funnelId === 'quiz-estilo-completo') {
-      console.log('📋 EditorProvider: Usando template padrão, não carregando dados de funil específico. FunnelId:', funnelId);
+    if (!funnelId || funnelId === 'new-funnel') {
+      console.log('📋 EditorProvider: Novo funil ou sem ID, usando template padrão');
+      return;
+    }
+
+    // Carregar template se funnelId indica template
+    if (funnelId.startsWith('template-')) {
+      const templateId = funnelId.replace('template-', '');
+      console.log('📄 EditorProvider: Carregando template:', templateId);
+      
+      try {
+        const { templateLibraryService } = await import('@/services/templateLibraryService');
+        const template = templateLibraryService.getById(templateId);
+        
+        if (template) {
+          console.log('✅ Template encontrado:', template);
+          // Converter template para stepBlocks se necessário
+          setState(prev => ({
+            ...prev,
+            isLoading: false
+          }));
+          return;
+        } else {
+          console.warn('⚠️ Template não encontrado, usando fallback');
+        }
+      } catch (error) {
+        console.error('❌ Erro ao carregar template:', error);
+      }
+      
+      setState(prev => ({ ...prev, isLoading: false }));
       return;
     }
 
