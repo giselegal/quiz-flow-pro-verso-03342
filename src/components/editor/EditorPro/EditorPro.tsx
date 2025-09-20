@@ -18,9 +18,12 @@ interface EditorProProps {
 const EditorPro: React.FC<EditorProProps> = ({ funnelId }) => {
     console.log('🎯 EditorPro: Inicializando com funnelId:', funnelId);
 
+    // Usar storageKey distinto para evitar reutilizar drafts antigos quando criando novo funil
+    const storageKey = funnelId ? `editor-${funnelId}` : 'editor-new-funnel';
+
     return (
         <div className="editor-pro-main-container h-full w-full">
-            <EditorProvider funnelId={funnelId} enableSupabase={false}>
+            <EditorProvider funnelId={funnelId} enableSupabase={false} storageKey={storageKey} initial={{ stepBlocks: {}, currentStep: 1 }}>
                 <div className="editor-pro-inner h-full w-full bg-gray-900">
                     <ModularEditorPro />
                 </div>

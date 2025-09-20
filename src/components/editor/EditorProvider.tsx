@@ -1317,9 +1317,11 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
     }
   }, [setState]);
 
-  // 🚀 AUTO LOAD: Carregar template padrão se não há funnelId específico
+  // 🚀 AUTO LOAD: Carregar template padrão apenas quando explicitamente indicado
   useEffect(() => {
-    const shouldLoadDefault = !funnelId || funnelId === 'quiz-estilo-completo';
+    // Antes: carregava o template quando !funnelId (isso preenchia o canvas ao criar novo funil)
+    // Agora: só carrega automaticamente se um template específico for solicitado
+    const shouldLoadDefault = funnelId === 'quiz-estilo-completo' || (typeof funnelId === 'string' && funnelId.startsWith('template-'));
 
     console.log('🔍 EditorProvider - Verificação de carregamento automático:', {
       funnelId,
