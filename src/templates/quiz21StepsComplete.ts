@@ -3338,4 +3338,28 @@ export const QUIZ_QUESTIONS_COMPLETE: Record<number, string> = {
   21: 'Página de oferta direta',
 };
 
+// @ts-nocheck
+// Criar etapas 4-21 com blocos básicos para o editor funcionar
+for (let i = 4; i <= 21; i++) {
+  QUIZ_STYLE_21_STEPS_TEMPLATE[`step-${i}`] = [
+    {
+      id: `step${i}-placeholder`,
+      type: 'text' as BlockType,
+      content: {
+        text: `Etapa ${i} - Adicione componentes usando o editor`
+      },
+      properties: {
+        text: `Etapa ${i} - Adicione componentes usando o editor`,
+        textAlign: 'center',
+        fontSize: 'text-lg',
+        color: '#432818',
+        backgroundColor: '#f9f9f9',
+        padding: '2rem',
+        borderRadius: '0.5rem'
+      },
+      order: 0,
+    }
+  ];
+}
+
 export default QUIZ_STYLE_21_STEPS_TEMPLATE;

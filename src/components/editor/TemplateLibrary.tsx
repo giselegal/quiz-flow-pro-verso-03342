@@ -3,7 +3,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { supabaseTemplateService, UITemplate } from '@/services/templateService';
+import templateService, { UITemplate } from '@/services/templateService';
 import { Crown, Download, Eye, Search, Sparkles, Star } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 
@@ -25,7 +25,7 @@ export const TemplateLibrary: React.FC = () => {
       setLoading(true);
       setError('');
       console.log('🔄 Carregando templates...');
-      const data = await supabaseTemplateService.getTemplates();
+      const data = await templateService.getTemplates();
 
       if (data.length === 0) {
         setShowInitializer(true);
@@ -84,7 +84,7 @@ export const TemplateLibrary: React.FC = () => {
   const handleUseTemplate = async (template: UITemplate) => {
     try {
       // Incrementar contador de uso
-      await supabaseTemplateService.incrementUsage(template.id);
+      await templateService.incrementUsage(template.id);
 
       // TODO: Implementar carregamento do template no editor
       console.log('🎯 Carregando template:', template.name);

@@ -90,6 +90,43 @@ class MigratedTemplateService {
     private readonly CACHE_TTL = 10 * 60 * 1000; // 10 minutos
     private readonly TEMPLATE_VERSION = '2.1.0';
 
+    // Métodos para compatibilidade com EditorContext
+    async getTemplateByStep(step: number): Promise<{ blocks: Block[] }> {
+        const template = await this.getStepTemplate(step);
+        return { blocks: template.blocks };
+    }
+
+    convertToEditorBlocksWithStage(
+        blocks: Block[],
+        funnelId: string,
+        stageId: string,
+        stepNumber: number
+    ): Block[] {
+        return blocks.map((block, index) => ({
+            ...block,
+            properties: {
+                ...block.properties,
+                funnelId,
+                stageId,
+                stepNumber
+            },
+            order: index
+        }));
+    }
+
+    convertTemplateBlocksToEditorBlocks(blocks: Block[]): Block[] {
+        return this.cloneBlocks(blocks);
+    }
+
+    async getTemplates(): Promise<UITemplate[]> {
+        return this.getUITemplates();
+    }
+
+    async incrementUsage(templateId: string): Promise<void> {
+        console.log(`📈 Incrementing usage for template: ${templateId}`);
+        // Implementação placeholder - em produção conectaria com banco de dados
+    }
+
     // ============================================================================
     // INITIALIZATION
     // ============================================================================
