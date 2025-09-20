@@ -21,8 +21,8 @@ const MainEditor: React.FC = () => {
   const urlFunnelId = urlParams.get('funnel');
   const urlTemplateId = urlParams.get('template');
   
-  // Lógica de prioridade: funnelId real > templateId > fallback
-  const funnelId = urlFunnelId || (urlTemplateId ? `template-${urlTemplateId}` : 'new-funnel');
+  // Lógica de prioridade: funnelId real > templateId > sem parâmetros = undefined (canvas vazio)
+  const funnelId = urlFunnelId || (urlTemplateId ? `template-${urlTemplateId}` : undefined);
   const quizId = urlFunnelId || urlTemplateId || 'professional-quiz-editor';
   
   console.log('🎯 MainEditor: Parâmetros dinâmicos:', {

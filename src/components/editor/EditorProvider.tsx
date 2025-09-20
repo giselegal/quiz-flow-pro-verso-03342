@@ -221,9 +221,13 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
       } else if (funnelId && !funnelId.includes('new-funnel')) {
         console.log('🔗 EditorProvider: Funil real será carregado do Supabase:', funnelId);
         // Dados reais serão carregados depois via loadRealFunnelData
+      } else if (!funnelId) {
+        // Sem funnelId = canvas em branco para criação
+        console.log('🆕 EditorProvider: Iniciando com canvas vazio (criação de novo funil)');
+        // initialBlocks permanece vazio para canvas em branco
       } else {
-        // Fallback para template padrão apenas quando criar novo funil
-        console.log('🆕 EditorProvider: Usando template padrão para novo funil');
+        // Fallback para template padrão apenas quando explicitamente solicitado
+        console.log('🆕 EditorProvider: Usando template padrão para funil existente');
         Object.entries(QUIZ_STYLE_21_STEPS_TEMPLATE).forEach(([stepKey, blocks]) => {
           if (Array.isArray(blocks) && blocks.length > 0) {
             initialBlocks[stepKey] = [...blocks];
@@ -301,8 +305,8 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
 
   // 🔧 CORREÇÃO CRÍTICA: Carregamento inteligente de funis/templates
   const loadRealFunnelData = useCallback(async () => {
-    if (!funnelId || funnelId === 'new-funnel') {
-      console.log('📋 EditorProvider: Novo funil ou sem ID, usando template padrão');
+    if (!funnelId) {
+      console.log('📋 EditorProvider: Sem funnelId, mantendo canvas vazio');
       return;
     }
 
