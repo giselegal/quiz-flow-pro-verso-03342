@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useCallback, useRef, useEffect } from 'react';
-import { FunnelBuilder, createFunnelFromTemplate } from '@/core/builder';
+import { createFunnelFromTemplate } from '@/core/builder';
 import type { Block } from '@/types/editor';
 
 /**

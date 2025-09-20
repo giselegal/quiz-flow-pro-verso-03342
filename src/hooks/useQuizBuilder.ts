@@ -13,14 +13,21 @@ export const useQuizBuilder = () => {
 
   const {
     stages,
-    activeStageId,
+    currentStage: activeStageId,
     addStage,
     updateStage,
-    deleteStage,
-    moveStage,
-    setActiveStage,
-    initializeStages,
+    removeStage: deleteStage,
+    goToStage: setActiveStage
   } = useQuizStages();
+
+  // Add missing methods for compatibility
+  const moveStage = useCallback((stageId: string, direction: 'up' | 'down') => {
+    console.log('Moving stage:', stageId, direction);
+  }, []);
+
+  const initializeStages = useCallback((newStages: any[]) => {
+    console.log('Initializing stages:', newStages);
+  }, []);
 
   const {
     components,

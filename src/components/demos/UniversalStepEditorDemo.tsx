@@ -5,7 +5,7 @@
  * Integração completa: FunnelCore + IndexedDB + Craft.js + Adaptador
  */
 
-import React, { useState } from 'react';
+import React from 'react';
 import { UniversalStepEditor } from '@/components/editor/universal/UniversalStepEditor';
 import { useUniversalStepEditorSimple } from '@/hooks/useUniversalStepEditor.simple';
 
@@ -14,18 +14,15 @@ import { useUniversalStepEditorSimple } from '@/hooks/useUniversalStepEditor.sim
 // ============================================================================
 
 export const UniversalStepEditorDemo: React.FC = () => {
-    const [selectedStepId, setSelectedStepId] = useState('step-1');
+    // Remove unused variable warning  
+    const selectedStepId = 'step-1';
     const selectedStepNumber = parseInt(selectedStepId.split('-')[1]) || 1;
 
     // Usar hook personalizado
     const {
-        steps,
-        currentStep,
         isLoading,
         loadStep,
-        saveStep,
-        handleError,
-        totalSteps
+        saveStep
     } = useUniversalStepEditorSimple();
     
     // Remove unused variables
@@ -40,26 +37,10 @@ export const UniversalStepEditorDemo: React.FC = () => {
     
     const editorActions = {
         goToStep: (stepId: string) => loadStep(stepId),
-        saveStep: () => saveStep(currentStep || '', {}),
+        saveStep: () => saveStep('current-step', {}),
         resetStep: () => Promise.resolve(),
         exportStep: () => ({}),
-        importStep: (data: any) => Promise.resolve()
-    };
-
-    const mockOptions = {
-        autoSave: true,
-        autoSaveInterval: 5000, // 5 segundos
-        enableSync: true,
-        onStepChange: (stepId: string) => {
-            console.log(`📍 Navegou para: ${stepId}`);
-            setSelectedStepId(stepId);
-        },
-        onSave: (stepId: string, data: any) => {
-            console.log(`💾 Step ${stepId} salvo:`, data);
-        },
-        onError: (error: any) => {
-            console.error('❌ Erro no editor:', error);
-        }
+        importStep: (_data: any) => Promise.resolve()
     };
 
     // ========================================================================

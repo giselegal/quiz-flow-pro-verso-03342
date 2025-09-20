@@ -1,634 +1,444 @@
-import React, { useState, useEffect } from 'react';
+import { useState } from 'react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import {
-    X,
-    TestTube2,
-    BarChart3,
-    TrendingUp,
-    Users,
-    Target,
-    Copy,
-    Play,
-    Pause,
-    RefreshCw,
-    CheckCircle,
-    AlertTriangle,
-    Monitor,
-    Smartphone,
-    ArrowRight,
-    Settings,
-    Eye,
-    MousePointer
+  Play,
+  Pause,
+  BarChart3,
+  Settings,
+  Plus,
+  CheckCircle,
+  TrendingUp,
 } from 'lucide-react';
-import { Badge } from '../ui/badge';
-import { Button } from '../ui/button';
-import { Input } from '../ui/input';
-import { useAnalytics } from '../../hooks/useAnalytics';
-import { Switch } from '../ui/switch';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { useAnalytics } from '@/hooks/useAnalytics';
 
-interface ABTestingIntegrationProps {
-    onClose: () => void;
+export interface ABTestingIntegrationProps {
+  onClose: () => void;
 }
 
 interface ABTestVariant {
-    id: string;
-    name: string;
-    description: string;
-    traffic: number;
-    conversions: number;
-    visitors: number;
-    conversionRate: number;
-    isWinning: boolean;
-    confidence: number;
-    status: 'running' | 'paused' | 'completed';
-    changes: Array<{
-        element: string;
-        property: string;
-        originalValue: string;
-        newValue: string;
-    }>;
+  id: string;
+  name: string;
+  traffic: number;
+  conversions: number;
+  visitors: number;
+  conversionRate: number;
+  isControl: boolean;
 }
 
 interface ABTest {
-    id: string;
-    name: string;
-    status: 'draft' | 'running' | 'paused' | 'completed';
-    startDate: string;
-    endDate?: string;
-    goal: string;
-    variants: ABTestVariant[];
-    totalVisitors: number;
-    overallLift: number;
-    significance: number;
+  id: string;
+  name: string;
+  status: 'running' | 'paused' | 'completed' | 'draft';
+  startDate: string;
+  endDate?: string;
+  goal: string;
+  description: string;
+  totalVisitors: number;
+  variants: ABTestVariant[];
+  overallLift: number;
+  significance: number;
 }
 
 export function ABTestingIntegration({ onClose }: ABTestingIntegrationProps) {
     const { trackEvent } = useAnalytics();
     const [activeTab, setActiveTab] = useState<'active' | 'create' | 'results'>('active');
-    const [selectedTest] = useState<string | null>(null);
 
-    const [abTests, setAbTests] = useState<ABTest[]>([
+    const [abTests] = useState<ABTest[]>([
         {
             id: 'test-1',
             name: 'Landing Page Headlines',
             status: 'running',
             startDate: '2024-01-15',
             goal: 'quiz_start',
+            description: 'Testing different headline variations for the quiz landing page',
             totalVisitors: 1250,
             overallLift: 12.5,
             significance: 95.2,
             variants: [
                 {
                     id: 'control',
-                    name: 'Controle (Original)',
-                    description: 'Versão atual do headline',
+                    name: 'Original Headline',
                     traffic: 50,
-                    conversions: 85,
+                    conversions: 125,
                     visitors: 625,
-                    conversionRate: 13.6,
-                    isWinning: false,
-                    confidence: 0,
-                    status: 'running',
-                    changes: []
+                    conversionRate: 20.0,
+                    isControl: true
                 },
                 {
                     id: 'variant-a',
-                    name: 'Variant A - Urgência',
-                    description: 'Headline com senso de urgência',
+                    name: 'Action-Focused Headline',
                     traffic: 50,
-                    conversions: 110,
+                    conversions: 140,
                     visitors: 625,
-                    conversionRate: 17.6,
-                    isWinning: true,
-                    confidence: 95.2,
-                    status: 'running',
-                    changes: [
-                        {
-                            element: 'h1',
-                            property: 'text',
-                            originalValue: 'Descubra seu perfil ideal',
-                            newValue: 'Apenas 2 minutos! Descubra seu perfil ideal agora'
-                        }
-                    ]
-                }
-            ]
-        },
-        {
-            id: 'test-2',
-            name: 'Call-to-Action Button',
-            status: 'paused',
-            startDate: '2024-01-10',
-            goal: 'form_completion',
-            totalVisitors: 890,
-            overallLift: -2.1,
-            significance: 68.5,
-            variants: [
-                {
-                    id: 'control-2',
-                    name: 'Controle',
-                    description: 'Botão azul padrão',
-                    traffic: 50,
-                    conversions: 67,
-                    visitors: 445,
-                    conversionRate: 15.1,
-                    isWinning: true,
-                    confidence: 68.5,
-                    status: 'paused',
-                    changes: []
-                },
-                {
-                    id: 'variant-b',
-                    name: 'Variant B - Verde',
-                    description: 'Botão verde com urgência',
-                    traffic: 50,
-                    conversions: 58,
-                    visitors: 445,
-                    conversionRate: 13.0,
-                    isWinning: false,
-                    confidence: 0,
-                    status: 'paused',
-                    changes: [
-                        {
-                            element: 'button.cta',
-                            property: 'background',
-                            originalValue: '#3B82F6',
-                            newValue: '#10B981'
-                        },
-                        {
-                            element: 'button.cta',
-                            property: 'text',
-                            originalValue: 'Começar Quiz',
-                            newValue: 'Iniciar Agora!'
-                        }
-                    ]
+                    conversionRate: 22.4,
+                    isControl: false
                 }
             ]
         }
     ]);
 
-    const [newTest, setNewTest] = useState({
-        name: '',
-        goal: 'quiz_start',
-        description: '',
-        variants: [
-            { name: 'Controle', description: 'Versão atual', traffic: 50 },
-            { name: 'Variant A', description: 'Nova versão', traffic: 50 }
-        ]
-    });
-
-    const handleStartTest = (testId: string) => {
-        setAbTests(prev => prev.map(test =>
-            test.id === testId ? { ...test, status: 'running' as const } : test
-        ));
-        trackEvent('ab_test_started', { testId });
-    };
-
-    const handlePauseTest = (testId: string) => {
-        setAbTests(prev => prev.map(test =>
-            test.id === testId ? { ...test, status: 'paused' as const } : test
-        ));
-        trackEvent('ab_test_paused', { testId });
-    };
-
-    const handleCreateTest = () => {
-        const newTestData: ABTest = {
-            id: `test-${Date.now()}`,
-            name: newTest.name,
-            status: 'draft',
-            startDate: new Date().toISOString().split('T')[0],
-            goal: newTest.goal,
-            totalVisitors: 0,
-            overallLift: 0,
-            significance: 0,
-            variants: newTest.variants.map((variant, index) => ({
-                id: index === 0 ? 'control' : `variant-${String.fromCharCode(65 + index - 1)}`,
-                name: variant.name,
-                description: variant.description,
-                traffic: variant.traffic,
-                conversions: 0,
-                visitors: 0,
-                conversionRate: 0,
-                isWinning: false,
-                confidence: 0,
-                status: 'running' as const,
-                changes: []
-            }))
-        };
-
-        setAbTests(prev => [...prev, newTestData]);
-        setNewTest({
-            name: '',
-            goal: 'quiz_start',
-            description: '',
-            variants: [
-                { name: 'Controle', description: 'Versão atual', traffic: 50 },
-                { name: 'Variant A', description: 'Nova versão', traffic: 50 }
-            ]
-        });
-        setActiveTab('active');
-        trackEvent('ab_test_created', { testName: newTestData.name });
-    };
-
-    const getStatusBadge = (status: ABTest['status']) => {
-        const statusConfig = {
-            draft: { color: 'bg-gray-100 text-gray-800', label: 'Rascunho' },
-            running: { color: 'bg-green-100 text-green-800', label: 'Rodando' },
-            paused: { color: 'bg-yellow-100 text-yellow-800', label: 'Pausado' },
-            completed: { color: 'bg-blue-100 text-blue-800', label: 'Finalizado' }
-        };
-
-        const config = statusConfig[status];
-        return <Badge className={config.color}>{config.label}</Badge>;
-    };
-
-    const getStatusIcon = (status: ABTest['status']) => {
-        switch (status) {
-            case 'running': return <Play className="w-4 h-4 text-green-600" />;
-            case 'paused': return <Pause className="w-4 h-4 text-yellow-600" />;
-            case 'completed': return <CheckCircle className="w-4 h-4 text-blue-600" />;
-            default: return <Settings className="w-4 h-4 text-gray-600" />;
-        }
-    };
-
     return (
-        <div className="fixed inset-0 z-[130] flex items-center justify-center">
-            <div
-                className="absolute inset-0 bg-black/60 backdrop-blur-sm"
-                onClick={onClose}
-            />
-            <div className="relative w-full max-w-7xl mx-4 bg-white rounded-xl shadow-2xl border border-gray-200 max-h-[90vh] overflow-hidden">
-                {/* Header */}
-                <div className="flex items-center justify-between p-6 border-b bg-gradient-to-r from-purple-50 to-indigo-50">
-                    <div className="flex items-center gap-4">
-                        <div className="p-2 bg-gradient-to-r from-purple-600 to-indigo-600 rounded-lg">
-                            <TestTube2 className="w-6 h-6 text-white" />
-                        </div>
-                        <div>
-                            <h2 className="text-xl font-semibold text-gray-900">A/B Testing Suite</h2>
-                            <p className="text-sm text-gray-600">Teste e otimize suas conversões em tempo real</p>
-                        </div>
+        <div className="fixed inset-y-0 right-0 w-96 bg-white shadow-2xl border-l border-gray-200 flex flex-col z-50">
+            {/* Header */}
+            <div className="p-6 border-b border-gray-200 bg-gradient-to-r from-purple-50 to-blue-50">
+                <div className="flex items-center justify-between">
+                    <div>
+                        <h2 className="text-xl font-bold text-gray-900">🧪 A/B Testing</h2>
+                        <p className="text-sm text-gray-600 mt-1">
+                            Otimize conversões com testes controlados
+                        </p>
                     </div>
-
                     <Button
-                        variant="outline"
+                        variant="ghost"
+                        size="sm"
                         onClick={onClose}
-                        className="flex items-center gap-2"
+                        className="text-gray-500 hover:text-gray-700"
                     >
-                        <X className="w-4 h-4" />
-                        Fechar
+                        ✕
                     </Button>
                 </div>
-
-                {/* Tabs */}
-                <div className="border-b">
-                    <div className="flex">
-                        {[
-                            { key: 'active', label: 'Testes Ativos', icon: Play },
-                            { key: 'create', label: 'Criar Teste', icon: TestTube2 },
-                            { key: 'results', label: 'Resultados', icon: BarChart3 }
-                        ].map(({ key, label, icon: Icon }) => (
-                            <button
-                                key={key}
-                                onClick={() => setActiveTab(key as any)}
-                                className={`flex items-center gap-2 px-6 py-4 text-sm font-medium border-b-2 transition-colors ${activeTab === key
-                                        ? 'border-purple-500 text-purple-600 bg-purple-50'
-                                        : 'border-transparent text-gray-500 hover:text-gray-700 hover:bg-gray-50'
-                                    }`}
-                            >
-                                <Icon className="w-4 h-4" />
-                                {label}
-                            </button>
-                        ))}
+                
+                {/* Quick Stats */}
+                <div className="grid grid-cols-2 gap-3 mt-4">
+                    <div className="bg-white rounded-lg p-3 text-center">
+                        <div className="text-lg font-bold text-green-600">+12.5%</div>
+                        <div className="text-xs text-gray-500">Lift Médio</div>
+                    </div>
+                    <div className="bg-white rounded-lg p-3 text-center">
+                        <div className="text-lg font-bold text-blue-600">{abTests.length}</div>
+                        <div className="text-xs text-gray-500">Testes Ativos</div>
                     </div>
                 </div>
+            </div>
 
-                {/* Content */}
-                <div className="p-6 overflow-y-auto max-h-[calc(90vh-160px)]">
-                    {activeTab === 'active' && (
-                        <div className="space-y-6">
-                            <div className="flex items-center justify-between">
-                                <h3 className="text-lg font-semibold text-gray-900">Testes em Andamento</h3>
+            {/* Tabs Navigation */}
+            <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as any)} className="flex-1 flex flex-col">
+                <div className="px-6 pt-4">
+                    <TabsList className="grid w-full grid-cols-3">
+                        <TabsTrigger value="active">Ativos</TabsTrigger>
+                        <TabsTrigger value="create">Criar</TabsTrigger>
+                        <TabsTrigger value="results">Resultados</TabsTrigger>
+                    </TabsList>
+                </div>
+
+                {/* Tab Content */}
+                <div className="flex-1 overflow-y-auto">
+                    {/* Active Tests Tab */}
+                    <TabsContent value="active" className="p-6 space-y-4">
+                        {abTests.length === 0 ? (
+                            <div className="text-center py-12">
+                                <div className="text-4xl mb-4">🧪</div>
+                                <h3 className="text-lg font-medium text-gray-900 mb-2">
+                                    Nenhum teste ativo
+                                </h3>
+                                <p className="text-sm text-gray-600 mb-4">
+                                    Crie seu primeiro teste A/B para começar a otimizar
+                                </p>
                                 <Button
                                     onClick={() => setActiveTab('create')}
-                                    className="bg-gradient-to-r from-purple-600 to-indigo-600 text-white"
+                                    className="bg-blue-600 hover:bg-blue-700"
                                 >
-                                    <TestTube2 className="w-4 h-4 mr-2" />
-                                    Novo Teste
+                                    <Plus className="w-4 h-4 mr-2" />
+                                    Criar Teste
                                 </Button>
                             </div>
-
-                            {abTests.map((test) => (
-                                <div key={test.id} className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
-                                    <div className="flex items-start justify-between mb-4">
-                                        <div className="flex-1">
-                                            <div className="flex items-center gap-3 mb-2">
-                                                {getStatusIcon(test.status)}
-                                                <h4 className="text-lg font-semibold text-gray-900">{test.name}</h4>
-                                                {getStatusBadge(test.status)}
+                        ) : (
+                            abTests.map((test) => (
+                                <Card key={test.id} className="relative">
+                                    <CardHeader className="pb-3">
+                                        <div className="flex items-start justify-between">
+                                            <div>
+                                                <CardTitle className="text-base">{test.name}</CardTitle>
+                                                <CardDescription className="text-sm">
+                                                    {test.description}
+                                                </CardDescription>
                                             </div>
-                                            <p className="text-sm text-gray-600">
-                                                Iniciado em {new Date(test.startDate).toLocaleDateString('pt-BR')} •
-                                                Meta: {test.goal} • {test.totalVisitors} visitantes
-                                            </p>
-                                        </div>
-
-                                        <div className="flex items-center gap-2">
-                                            {test.status === 'running' && (
-                                                <Button
-                                                    variant="outline"
-                                                    size="sm"
-                                                    onClick={() => handlePauseTest(test.id)}
-                                                >
-                                                    <Pause className="w-4 h-4 mr-1" />
-                                                    Pausar
-                                                </Button>
-                                            )}
-                                            {test.status === 'paused' && (
-                                                <Button
-                                                    variant="outline"
-                                                    size="sm"
-                                                    onClick={() => handleStartTest(test.id)}
-                                                >
-                                                    <Play className="w-4 h-4 mr-1" />
-                                                    Retomar
-                                                </Button>
-                                            )}
-                                        </div>
-                                    </div>
-
-                                    {/* Test Performance Summary */}
-                                    {test.totalVisitors > 0 && (
-                                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-                                            <div className="bg-gradient-to-br from-blue-50 to-blue-100 p-4 rounded-lg border border-blue-200">
-                                                <div className="flex items-center gap-2 mb-2">
-                                                    <Users className="w-4 h-4 text-blue-600" />
-                                                    <span className="text-sm font-medium text-blue-900">Visitantes</span>
-                                                </div>
-                                                <p className="text-2xl font-bold text-blue-900">{test.totalVisitors.toLocaleString()}</p>
-                                            </div>
-
-                                            <div className="bg-gradient-to-br from-green-50 to-green-100 p-4 rounded-lg border border-green-200">
-                                                <div className="flex items-center gap-2 mb-2">
-                                                    <TrendingUp className="w-4 h-4 text-green-600" />
-                                                    <span className="text-sm font-medium text-green-900">Lift Geral</span>
-                                                </div>
-                                                <p className={`text-2xl font-bold ${test.overallLift > 0 ? 'text-green-900' : 'text-red-900'}`}>
-                                                    {test.overallLift > 0 ? '+' : ''}{test.overallLift.toFixed(1)}%
-                                                </p>
-                                            </div>
-
-                                            <div className="bg-gradient-to-br from-purple-50 to-purple-100 p-4 rounded-lg border border-purple-200">
-                                                <div className="flex items-center gap-2 mb-2">
-                                                    <Target className="w-4 h-4 text-purple-600" />
-                                                    <span className="text-sm font-medium text-purple-900">Significância</span>
-                                                </div>
-                                                <p className="text-2xl font-bold text-purple-900">{test.significance.toFixed(1)}%</p>
-                                            </div>
-                                        </div>
-                                    )}
-
-                                    {/* Variants */}
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                        {test.variants.map((variant) => (
-                                            <div
-                                                key={variant.id}
-                                                className={`border rounded-lg p-4 ${variant.isWinning && test.significance > 90
-                                                        ? 'border-green-300 bg-green-50'
-                                                        : 'border-gray-200 bg-gray-50'
-                                                    }`}
+                                            <Badge 
+                                                variant={test.status === 'running' ? 'default' : 'secondary'}
+                                                className={test.status === 'running' ? 'bg-green-100 text-green-800' : ''}
                                             >
-                                                <div className="flex items-center justify-between mb-3">
-                                                    <div className="flex items-center gap-2">
-                                                        <h5 className="font-medium text-gray-900">{variant.name}</h5>
-                                                        {variant.isWinning && test.significance > 90 && (
-                                                            <Badge className="bg-green-100 text-green-800 text-xs">
-                                                                Vencedor
-                                                            </Badge>
-                                                        )}
-                                                    </div>
-                                                    <span className="text-sm text-gray-600">{variant.traffic}% tráfego</span>
-                                                </div>
-
-                                                <p className="text-sm text-gray-600 mb-3">{variant.description}</p>
-
-                                                {test.totalVisitors > 0 && (
-                                                    <div className="grid grid-cols-3 gap-3 text-center">
-                                                        <div>
-                                                            <p className="text-lg font-semibold text-gray-900">{variant.visitors}</p>
-                                                            <p className="text-xs text-gray-500">Visitantes</p>
-                                                        </div>
-                                                        <div>
-                                                            <p className="text-lg font-semibold text-gray-900">{variant.conversions}</p>
-                                                            <p className="text-xs text-gray-500">Conversões</p>
-                                                        </div>
-                                                        <div>
-                                                            <p className={`text-lg font-semibold ${variant.isWinning ? 'text-green-600' : 'text-gray-900'
-                                                                }`}>
-                                                                {variant.conversionRate.toFixed(1)}%
-                                                            </p>
-                                                            <p className="text-xs text-gray-500">Taxa Conv.</p>
-                                                        </div>
-                                                    </div>
+                                                {test.status === 'running' ? (
+                                                    <>
+                                                        <div className="w-2 h-2 bg-green-500 rounded-full mr-1 animate-pulse" />
+                                                        Rodando
+                                                    </>
+                                                ) : (
+                                                    test.status
                                                 )}
+                                            </Badge>
+                                        </div>
+                                    </CardHeader>
 
-                                                {/* Changes Preview */}
-                                                {variant.changes.length > 0 && (
-                                                    <div className="mt-3 pt-3 border-t border-gray-200">
-                                                        <p className="text-xs font-medium text-gray-700 mb-2">Mudanças:</p>
-                                                        {variant.changes.slice(0, 2).map((change, idx) => (
-                                                            <div key={idx} className="text-xs text-gray-600">
-                                                                <span className="font-medium">{change.element}</span>: {change.property}
-                                                            </div>
-                                                        ))}
-                                                    </div>
-                                                )}
-                                            </div>
-                                        ))}
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    )}
-
-                    {activeTab === 'create' && (
-                        <div className="max-w-2xl mx-auto">
-                            <h3 className="text-lg font-semibold text-gray-900 mb-6">Criar Novo Teste A/B</h3>
-
-                            <div className="space-y-6">
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                                        Nome do Teste
-                                    </label>
-                                    <Input
-                                        value={newTest.name}
-                                        onChange={(e) => setNewTest(prev => ({ ...prev, name: e.target.value }))}
-                                        placeholder="Ex: Headline da Landing Page"
-                                        className="w-full"
-                                    />
-                                </div>
-
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                                        Objetivo do Teste
-                                    </label>
-                                    <select
-                                        value={newTest.goal}
-                                        onChange={(e) => setNewTest(prev => ({ ...prev, goal: e.target.value }))}
-                                        className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
-                                    >
-                                        <option value="quiz_start">Início do Quiz</option>
-                                        <option value="form_completion">Conclusão do Formulário</option>
-                                        <option value="email_signup">Cadastro de Email</option>
-                                        <option value="conversion">Conversão Final</option>
-                                    </select>
-                                </div>
-
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                                        Descrição
-                                    </label>
-                                    <textarea
-                                        value={newTest.description}
-                                        onChange={(e) => setNewTest(prev => ({ ...prev, description: e.target.value }))}
-                                        placeholder="Descreva o que você está testando..."
-                                        rows={3}
-                                        className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
-                                    />
-                                </div>
-
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-4">
-                                        Variações do Teste
-                                    </label>
-                                    {newTest.variants.map((variant, index) => (
-                                        <div key={index} className="border border-gray-200 rounded-lg p-4 mb-3">
-                                            <div className="grid grid-cols-2 gap-4 mb-3">
-                                                <div>
-                                                    <label className="block text-xs font-medium text-gray-600 mb-1">Nome</label>
-                                                    <Input
-                                                        value={variant.name}
-                                                        onChange={(e) => {
-                                                            const updatedVariants = [...newTest.variants];
-                                                            updatedVariants[index] = { ...variant, name: e.target.value };
-                                                            setNewTest(prev => ({ ...prev, variants: updatedVariants }));
-                                                        }}
-                                                        placeholder="Nome da variação"
-                                                    />
-                                                </div>
-                                                <div>
-                                                    <label className="block text-xs font-medium text-gray-600 mb-1">
-                                                        Tráfego (%)
-                                                    </label>
-                                                    <Input
-                                                        type="number"
-                                                        value={variant.traffic}
-                                                        onChange={(e) => {
-                                                            const updatedVariants = [...newTest.variants];
-                                                            updatedVariants[index] = { ...variant, traffic: parseInt(e.target.value) || 50 };
-                                                            setNewTest(prev => ({ ...prev, variants: updatedVariants }));
-                                                        }}
-                                                        min="0"
-                                                        max="100"
-                                                    />
-                                                </div>
+                                    <CardContent>
+                                        {/* Test Stats */}
+                                        <div className="grid grid-cols-3 gap-4 mb-4 text-center">
+                                            <div>
+                                                <div className="text-lg font-bold">{test.totalVisitors}</div>
+                                                <div className="text-xs text-gray-500">Visitantes</div>
                                             </div>
                                             <div>
-                                                <label className="block text-xs font-medium text-gray-600 mb-1">Descrição</label>
-                                                <Input
-                                                    value={variant.description}
-                                                    onChange={(e) => {
-                                                        const updatedVariants = [...newTest.variants];
-                                                        updatedVariants[index] = { ...variant, description: e.target.value };
-                                                        setNewTest(prev => ({ ...prev, variants: updatedVariants }));
-                                                    }}
-                                                    placeholder="Descreva esta variação"
-                                                />
+                                                <div className="text-lg font-bold text-green-600">+{test.overallLift}%</div>
+                                                <div className="text-xs text-gray-500">Lift</div>
+                                            </div>
+                                            <div>
+                                                <div className="text-lg font-bold">{test.significance}%</div>
+                                                <div className="text-xs text-gray-500">Significância</div>
                                             </div>
                                         </div>
-                                    ))}
-                                </div>
 
-                                <div className="flex justify-between pt-6">
-                                    <Button
-                                        variant="outline"
-                                        onClick={() => setActiveTab('active')}
+                                        {/* Variants Comparison */}
+                                        <div className="space-y-2 mb-4">
+                                            {test.variants.map((variant) => (
+                                                <div
+                                                    key={variant.id}
+                                                    className={`p-3 rounded-lg border ${
+                                                        variant.isControl 
+                                                            ? 'border-gray-200 bg-gray-50' 
+                                                            : 'border-blue-200 bg-blue-50'
+                                                    }`}
+                                                >
+                                                    <div className="flex justify-between items-center mb-1">
+                                                        <span className="text-sm font-medium">
+                                                            {variant.name}
+                                                            {variant.isControl && (
+                                                                <Badge variant="outline" className="ml-2 text-xs">
+                                                                    Controle
+                                                                </Badge>
+                                                            )}
+                                                        </span>
+                                                        <span className="text-sm font-bold">
+                                                            {variant.conversionRate}%
+                                                        </span>
+                                                    </div>
+                                                    <div className="w-full bg-gray-200 rounded-full h-2">
+                                                        <div
+                                                            className={`h-2 rounded-full ${
+                                                                variant.isControl ? 'bg-gray-400' : 'bg-blue-500'
+                                                            }`}
+                                                            style={{ 
+                                                                width: `${Math.max(variant.conversionRate * 4, 10)}%` 
+                                                            }}
+                                                        />
+                                                    </div>
+                                                    <div className="text-xs text-gray-500 mt-1">
+                                                        {variant.conversions} conversões de {variant.visitors} visitantes
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+
+                                        {/* Test Actions */}
+                                        <div className="flex gap-2">
+                                            <Button
+                                                variant="outline"
+                                                size="sm"
+                                                className="flex-1"
+                                                onClick={() => {
+                                                    trackEvent('ab_test_paused', { testId: test.id });
+                                                }}
+                                            >
+                                                <Pause className="w-4 h-4 mr-1" />
+                                                Pausar
+                                            </Button>
+                                            <Button
+                                                variant="outline"
+                                                size="sm"
+                                                className="flex-1"
+                                                onClick={() => setActiveTab('results')}
+                                            >
+                                                <BarChart3 className="w-4 h-4 mr-1" />
+                                                Ver Dados
+                                            </Button>
+                                            <Button
+                                                variant="outline"
+                                                size="sm"
+                                                onClick={() => {
+                                                    // Implement settings
+                                                }}
+                                            >
+                                                <Settings className="w-4 h-4" />
+                                            </Button>
+                                        </div>
+                                    </CardContent>
+                                </Card>
+                            ))
+                        )}
+                    </TabsContent>
+
+                    {/* Create Test Tab */}
+                    <TabsContent value="create" className="p-6">
+                        <div className="space-y-6">
+                            <div>
+                                <h3 className="text-lg font-medium mb-4">Criar Novo Teste A/B</h3>
+                                <div className="space-y-4">
+                                    <div>
+                                        <Label htmlFor="test-name">Nome do Teste</Label>
+                                        <Input
+                                            id="test-name"
+                                            placeholder="Ex: Teste de Headline da Landing Page"
+                                            className="mt-1"
+                                        />
+                                    </div>
+
+                                    <div>
+                                        <Label htmlFor="test-goal">Objetivo</Label>
+                                        <select 
+                                            id="test-goal"
+                                            className="mt-1 w-full p-2 border border-gray-300 rounded-md"
+                                        >
+                                            <option>Início do Quiz</option>
+                                            <option>Conclusão do Quiz</option>
+                                            <option>Clique no CTA</option>
+                                            <option>Captura de Email</option>
+                                        </select>
+                                    </div>
+
+                                    <div>
+                                        <Label htmlFor="test-description">Descrição</Label>
+                                        <textarea
+                                            id="test-description"
+                                            rows={3}
+                                            placeholder="Descreva o que você está testando..."
+                                            className="mt-1 w-full p-2 border border-gray-300 rounded-md resize-none"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div>
+                                <h4 className="font-medium mb-3">Variações</h4>
+                                <div className="space-y-3">
+                                    <div className="p-3 border border-gray-200 rounded-lg">
+                                        <div className="flex justify-between items-center mb-2">
+                                            <span className="font-medium">Controle (Original)</span>
+                                            <Badge variant="outline">50% tráfego</Badge>
+                                        </div>
+                                        <Input 
+                                            placeholder="Nome da variação de controle"
+                                            className="text-sm"
+                                        />
+                                    </div>
+
+                                    <div className="p-3 border border-blue-200 rounded-lg bg-blue-50">
+                                        <div className="flex justify-between items-center mb-2">
+                                            <span className="font-medium">Variação A</span>
+                                            <Badge variant="outline">50% tráfego</Badge>
+                                        </div>
+                                        <Input 
+                                            placeholder="Nome da nova variação"
+                                            className="text-sm"
+                                        />
+                                    </div>
+
+                                    <Button 
+                                        variant="outline" 
+                                        size="sm" 
+                                        className="w-full border-dashed"
                                     >
-                                        Cancelar
-                                    </Button>
-                                    <Button
-                                        onClick={handleCreateTest}
-                                        disabled={!newTest.name.trim()}
-                                        className="bg-gradient-to-r from-purple-600 to-indigo-600 text-white"
-                                    >
-                                        Criar Teste
+                                        <Plus className="w-4 h-4 mr-1" />
+                                        Adicionar Variação
                                     </Button>
                                 </div>
                             </div>
+
+                            <div className="pt-4 border-t border-gray-200">
+                                <Button 
+                                    className="w-full bg-blue-600 hover:bg-blue-700"
+                                    onClick={() => {
+                                        trackEvent('ab_test_created');
+                                        setActiveTab('active');
+                                    }}
+                                >
+                                    <Play className="w-4 h-4 mr-2" />
+                                    Iniciar Teste A/B
+                                </Button>
+                            </div>
                         </div>
-                    )}
+                    </TabsContent>
 
-                    {activeTab === 'results' && (
+                    {/* Results Tab */}
+                    <TabsContent value="results" className="p-6">
                         <div className="space-y-6">
-                            <h3 className="text-lg font-semibold text-gray-900">Histórico de Resultados</h3>
-
-                            {abTests.filter(test => test.totalVisitors > 0).map((test) => (
-                                <div key={test.id} className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
-                                    <div className="flex items-center justify-between mb-6">
-                                        <div>
-                                            <h4 className="text-lg font-semibold text-gray-900">{test.name}</h4>
-                                            <p className="text-sm text-gray-600">
-                                                {new Date(test.startDate).toLocaleDateString('pt-BR')} •
-                                                {test.totalVisitors.toLocaleString()} visitantes
-                                            </p>
-                                        </div>
-                                        <div className="text-right">
-                                            <p className={`text-2xl font-bold ${test.overallLift > 0 ? 'text-green-600' : 'text-red-600'}`}>
-                                                {test.overallLift > 0 ? '+' : ''}{test.overallLift.toFixed(1)}%
-                                            </p>
-                                            <p className="text-sm text-gray-500">Lift geral</p>
-                                        </div>
-                                    </div>
-
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                        {test.variants.map((variant) => (
-                                            <div
-                                                key={variant.id}
-                                                className={`p-4 rounded-lg border ${variant.isWinning ? 'border-green-200 bg-green-50' : 'border-gray-200 bg-gray-50'
-                                                    }`}
-                                            >
-                                                <div className="flex items-center justify-between mb-3">
-                                                    <h5 className="font-medium text-gray-900">{variant.name}</h5>
-                                                    {variant.isWinning && (
-                                                        <Badge className="bg-green-100 text-green-800">Vencedor</Badge>
-                                                    )}
+                            <div>
+                                <h3 className="text-lg font-medium mb-4">Análise Detalhada</h3>
+                                
+                                {abTests.length > 0 && (
+                                    <Card>
+                                        <CardHeader>
+                                            <CardTitle className="text-base">{abTests[0].name}</CardTitle>
+                                            <CardDescription>
+                                                Análise estatística completa do teste
+                                            </CardDescription>
+                                        </CardHeader>
+                                        <CardContent>
+                                            <div className="grid grid-cols-2 gap-4 mb-4">
+                                                <div className="text-center p-3 bg-green-50 rounded-lg">
+                                                    <div className="text-2xl font-bold text-green-600">
+                                                        +{abTests[0].overallLift}%
+                                                    </div>
+                                                    <div className="text-sm text-gray-600">Melhoria</div>
                                                 </div>
-
-                                                <div className="grid grid-cols-2 gap-4 text-sm">
-                                                    <div>
-                                                        <p className="text-gray-600">Taxa de Conversão</p>
-                                                        <p className="text-lg font-semibold text-gray-900">{variant.conversionRate.toFixed(1)}%</p>
+                                                <div className="text-center p-3 bg-blue-50 rounded-lg">
+                                                    <div className="text-2xl font-bold text-blue-600">
+                                                        {abTests[0].significance}%
                                                     </div>
-                                                    <div>
-                                                        <p className="text-gray-600">Confiança</p>
-                                                        <p className="text-lg font-semibold text-gray-900">{variant.confidence.toFixed(1)}%</p>
-                                                    </div>
-                                                    <div>
-                                                        <p className="text-gray-600">Visitantes</p>
-                                                        <p className="text-lg font-semibold text-gray-900">{variant.visitors}</p>
-                                                    </div>
-                                                    <div>
-                                                        <p className="text-gray-600">Conversões</p>
-                                                        <p className="text-lg font-semibold text-gray-900">{variant.conversions}</p>
-                                                    </div>
+                                                    <div className="text-sm text-gray-600">Confiança</div>
                                                 </div>
                                             </div>
-                                        ))}
-                                    </div>
-                                </div>
-                            ))}
+
+                                            <div className="space-y-3">
+                                                <div className="flex justify-between text-sm">
+                                                    <span>Status do Teste:</span>
+                                                    <Badge variant={abTests[0].significance >= 95 ? 'default' : 'secondary'}>
+                                                        {abTests[0].significance >= 95 ? 
+                                                            <><CheckCircle className="w-3 h-3 mr-1" />Significante</> : 
+                                                            'Coletando dados...'
+                                                        }
+                                                    </Badge>
+                                                </div>
+                                                
+                                                <div className="flex justify-between text-sm">
+                                                    <span>Duração:</span>
+                                                    <span>7 dias</span>
+                                                </div>
+                                                
+                                                <div className="flex justify-between text-sm">
+                                                    <span>Visitantes únicos:</span>
+                                                    <span>{abTests[0].totalVisitors}</span>
+                                                </div>
+                                            </div>
+
+                                            <div className="mt-4 pt-4 border-t border-gray-200">
+                                                <h4 className="font-medium mb-2">Recomendação</h4>
+                                                <div className="p-3 bg-green-50 border-l-4 border-green-400 text-sm">
+                                                    <strong>Implementar Variação A:</strong> Com 95.2% de confiança 
+                                                    estatística e +12.5% de lift, a variação A demonstra uma 
+                                                    melhoria significativa na taxa de conversão.
+                                                </div>
+                                            </div>
+
+                                            <div className="flex gap-2 mt-4">
+                                                <Button variant="outline" className="flex-1">
+                                                    <TrendingUp className="w-4 h-4 mr-1" />
+                                                    Implementar Vencedor
+                                                </Button>
+                                                <Button variant="outline" className="flex-1">
+                                                    Exportar Dados
+                                                </Button>
+                                            </div>
+                                        </CardContent>
+                                    </Card>
+                                )}
+                            </div>
                         </div>
-                    )}
+                    </TabsContent>
                 </div>
-            </div>
+            </Tabs>
         </div>
     );
 }

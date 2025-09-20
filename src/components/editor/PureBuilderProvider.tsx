@@ -407,7 +407,7 @@ const generateWithPureBuilder = async (): Promise<{
         finalFunnel.steps?.forEach((step, index) => {
             const stepKey = `step-${index + 1}`;
 
-            const blocks: Block[] = step.components?.map((component, blockIndex) => ({
+            const blocks: Block[] = step.components?.map((component: any, blockIndex: number) => ({
                 id: `${stepKey}-block-${blockIndex + 1}`,
                 type: component.type || 'quiz-question',
                 position: { x: 0, y: blockIndex * 100 },
@@ -547,7 +547,7 @@ export const PureBuilderProvider: React.FC<{
                 }
             }, [state.loadedSteps]),
 
-            preloadAdjacentSteps: useCallback(async (currentStep: number) => {
+            preloadAdjacentSteps: useCallback(async (_currentStep: number) => {
                 console.log('📦 Builder System: All steps optimized and preloaded');
             }, []),
 

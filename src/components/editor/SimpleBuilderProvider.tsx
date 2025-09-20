@@ -418,7 +418,7 @@ export const SimpleBuilderProvider: React.FC<{
                 }
             }, [state.loadedSteps]),
 
-            preloadAdjacentSteps: useCallback(async (currentStep: number) => {
+            preloadAdjacentSteps: useCallback(async (_currentStep: number) => {
                 // Sistema inline já tem tudo carregado
                 console.log('📦 All steps preloaded with inline system');
             }, []),
