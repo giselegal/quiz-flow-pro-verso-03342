@@ -1,14 +1,26 @@
 /**
- * 🏗️ FUNNEL HOOKS INDEX
+ * 🪝 FUNNEL HOOKS INDEX
+ * 
+ * Exporta todos os hooks especializados para funis
  */
 
 // Main hooks
-export { useFunnel } from './useFunnel';
-export { useFunnelState } from './useFunnelState';
-export { 
-  useFunnelTemplates,
-  useCreateFunnelFromTemplate,
-  useFunnelTemplatePreview,
-  type UseFunnelTemplatesOptions,
-  type UseFunnelTemplatesReturn
+export * from './useFunnel';
+export * from './useFunnelState';
+export * from './useFunnelTemplates';
+
+// Re-export specific types for convenience
+export type {
+    UseFunnelOptions,
+    UseFunnelReturn
+} from './useFunnel';
+
+export type {
+    UseFunnelStateOptions,
+    UseFunnelStateReturn
+} from './useFunnelState';
+
+export type {
+    UseFunnelTemplatesOptions,
+    UseFunnelTemplatesReturn
 } from './useFunnelTemplates';

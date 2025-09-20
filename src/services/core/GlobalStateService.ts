@@ -189,26 +189,22 @@ export class GlobalStateService extends EventEmitter {
     private createDefaultState(): StateCache {
         return {
             config: {
-                theme: 'light' as const,
-                language: 'pt-BR',
-                debugMode: true,
-                performanceMode: 'normal' as const,
-                autoSave: true,
-                autoSaveInterval: 30000
+                version: '1.0.0',
+                environment: 'development',
+                features: {
+                    analytics: true,
+                    debugging: true,
+                    performance: true
+                }
             },
             ui: {
+                loading: false,
                 sidebarOpen: true,
-                propertiesPanelOpen: true,
-                previewMode: false,
-                viewMode: 'desktop' as const,
-                currentRoute: '/dashboard',
-                isFullscreen: false
+                currentView: 'dashboard'
             },
             funnel: {
-                activeFunnelId: null,
-                activeFunnel: null,
-                funnelHistory: [],
-                recentFunnels: []
+                currentFunnelId: null,
+                editMode: false
             },
             lastSync: Date.now(),
             isDirty: false

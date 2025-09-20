@@ -1,17 +1,6 @@
 import { cn } from '@/lib/utils';
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useOptimizedScheduler } from '@/hooks/useOptimizedScheduler';
-
-// Context for notifications
-interface NotificationContextType {
-  addNotification: (message: string, type?: 'success' | 'error' | 'warning' | 'info', duration?: number) => void;
-  success: (message: string, duration?: number) => void;
-  error: (message: string, duration?: number) => void;
-  warning: (message: string, duration?: number) => void;
-  info: (message: string, duration?: number) => void;
-}
-
-const NotificationContext = createContext<NotificationContextType | undefined>(undefined);
 
 interface NotificationProps {
   message: string;
@@ -82,8 +71,8 @@ export const Notification: React.FC<NotificationProps> = ({
   );
 };
 
-// NotificationProvider component
-export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+// Hook para gerenciar notificações
+export const useNotification = () => {
   const [notifications, setNotifications] = useState<
     Array<{
       id: string;
@@ -106,18 +95,8 @@ export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({ 
     setNotifications(prev => prev.filter(n => n.id !== id));
   };
 
-  const contextValue: NotificationContextType = {
-    addNotification,
-    success: (message: string, duration?: number) => addNotification(message, 'success', duration),
-    error: (message: string, duration?: number) => addNotification(message, 'error', duration),
-    warning: (message: string, duration?: number) => addNotification(message, 'warning', duration),
-    info: (message: string, duration?: number) => addNotification(message, 'info', duration),
-  };
-
-  return (
-    <NotificationContext.Provider value={contextValue}>
-      {children}
-      {/* Render notifications */}
+  const NotificationContainer = () => (
+    <>
       {notifications.map(notification => (
         <Notification
           key={notification.id}
@@ -127,15 +106,15 @@ export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({ 
           onClose={() => removeNotification(notification.id)}
         />
       ))}
-    </NotificationContext.Provider>
+    </>
   );
-};
 
-// Hook para usar notificações
-export const useNotification = (): NotificationContextType => {
-  const context = useContext(NotificationContext);
-  if (!context) {
-    throw new Error('useNotification must be used within a NotificationProvider');
-  }
-  return context;
+  return {
+    addNotification,
+    NotificationContainer,
+    success: (message: string, duration?: number) => addNotification(message, 'success', duration),
+    error: (message: string, duration?: number) => addNotification(message, 'error', duration),
+    warning: (message: string, duration?: number) => addNotification(message, 'warning', duration),
+    info: (message: string, duration?: number) => addNotification(message, 'info', duration),
+  };
 };

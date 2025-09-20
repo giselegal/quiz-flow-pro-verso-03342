@@ -46,7 +46,10 @@ export type {
     UseFunnelStateReturn
 } from './hooks/useFunnelState';
 
-export type { UseFunnelTemplatesOptions, UseFunnelTemplatesReturn } from './hooks/useFunnelTemplates';
+export type {
+    UseFunnelTemplatesOptions,
+    UseFunnelTemplatesReturn
+} from './hooks/useFunnelTemplates';
 
 // Re-export commonly used types
 export type {

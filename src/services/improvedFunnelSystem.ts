@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * 🚀 SISTEMA HÍBRIDO UNIFICADO - IMPROVED FUNNEL SYSTEM
  * 
