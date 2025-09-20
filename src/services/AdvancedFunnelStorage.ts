@@ -46,6 +46,20 @@ export interface FunnelItem {
     createdAt: string;
     version: number;
     checksum?: string; // Para verificação de integridade
+
+    // 🚀 MULTI-TENANCY: Campos adicionais para escalabilidade
+    userId?: string;
+    organizationId?: string;
+    workspaceId?: string;
+    visibility?: 'private' | 'workspace' | 'organization' | 'public';
+    category?: string;
+    permissions?: Array<{
+        action: 'view' | 'edit' | 'duplicate' | 'delete' | 'share';
+        resource: 'funnel' | 'template' | 'component';
+        scope: 'own' | 'workspace' | 'organization';
+    }>;
+    accessLevel?: 'read' | 'write' | 'admin';
+    sharedWith?: string[];
 }
 
 export interface FunnelSettings {

@@ -15,10 +15,24 @@ import { advancedFunnelStorage } from './AdvancedFunnelStorage';
 import { validateFunnelId } from '@/utils/idValidation';
 import { errorManager, createStorageError } from '@/utils/errorHandling';
 import { FunnelContext } from '@/core/contexts/FunnelContext';
+import { analyticsEngine } from './analyticsEngine';
 
 // ============================================================================
 // INTERFACES E TIPOS
 // ============================================================================
+
+export interface Permission {
+    action: 'view' | 'edit' | 'duplicate' | 'delete' | 'share';
+    resource: 'funnel' | 'template' | 'component';
+    scope: 'own' | 'workspace' | 'organization';
+}
+
+export interface MultiTenantContext {
+    organizationId: string;
+    workspaceId: string;
+    permissions: Permission[];
+    role: 'owner' | 'admin' | 'editor' | 'viewer';
+}
 
 export interface HybridFunnelData {
     id: string;
@@ -27,7 +41,15 @@ export interface HybridFunnelData {
     category?: string;
     templateId?: string;
     context: FunnelContext;
+    // 🚀 MULTI-TENANCY: Estrutura escalável
     userId: string;
+    organizationId: string;
+    workspaceId: string;
+    permissions: Permission[];
+    visibility: 'private' | 'workspace' | 'organization' | 'public';
+    // Metadados de acesso
+    accessLevel: 'read' | 'write' | 'admin';
+    sharedWith: string[]; // userIds com acesso específico
     autoPublish?: boolean;
     status?: 'draft' | 'published';
     url?: string;
@@ -62,6 +84,54 @@ class ImprovedFunnelSystem {
     private readonly logger = getLogger();
 
     // ============================================================================
+    // SISTEMA DE PERMISSÕES MULTI-TENANT
+    // ============================================================================
+
+    checkPermission(
+        userPermissions: Permission[],
+        requiredAction: Permission['action'],
+        resourceType: Permission['resource'],
+        scope: Permission['scope'] = 'own'
+    ): boolean {
+        return userPermissions.some(permission =>
+            permission.action === requiredAction &&
+            permission.resource === resourceType &&
+            (permission.scope === scope || permission.scope === 'organization') // Admin org pode tudo
+        );
+    }
+
+    canAccessFunnel(
+        funnelData: HybridFunnelData,
+        requestingUserId: string,
+        requestingUserOrg: string,
+        requestingUserWorkspace: string,
+        requiredAction: Permission['action'] = 'view'
+    ): boolean {
+        // 1. Proprietário sempre pode acessar
+        if (funnelData.userId === requestingUserId) {
+            return true;
+        }
+
+        // 2. Verificar visibilidade
+        switch (funnelData.visibility) {
+            case 'private':
+                return funnelData.sharedWith.includes(requestingUserId);
+
+            case 'workspace':
+                return funnelData.workspaceId === requestingUserWorkspace;
+
+            case 'organization':
+                return funnelData.organizationId === requestingUserOrg;
+
+            case 'public':
+                return true;
+
+            default:
+                return false;
+        }
+    }
+
+    // ============================================================================
     // VALIDAÇÃO INTEGRADA
     // ============================================================================
 
@@ -92,6 +162,27 @@ class ImprovedFunnelSystem {
             result.isValid = false;
         }
 
+        // 🚀 MULTI-TENANCY: Validações específicas
+        if (data.organizationId && !data.organizationId.trim()) {
+            result.errors.push('OrganizationID é obrigatório');
+            result.isValid = false;
+        }
+
+        if (data.workspaceId && !data.workspaceId.trim()) {
+            result.errors.push('WorkspaceID é obrigatório');
+            result.isValid = false;
+        }
+
+        if (data.visibility && !['private', 'workspace', 'organization', 'public'].includes(data.visibility)) {
+            result.errors.push('Visibility deve ser: private, workspace, organization ou public');
+            result.isValid = false;
+        }
+
+        if (data.accessLevel && !['read', 'write', 'admin'].includes(data.accessLevel)) {
+            result.errors.push('AccessLevel deve ser: read, write ou admin');
+            result.isValid = false;
+        }
+
         // Validações de negócio
         if (data.context && !Object.values(FunnelContext).includes(data.context)) {
             result.warnings.push('Contexto não reconhecido');
@@ -110,11 +201,15 @@ class ImprovedFunnelSystem {
     // CRIAÇÃO DE FUNIS HÍBRIDA
     // ============================================================================
 
-    async createFunnel(params: Omit<HybridFunnelData, 'id' | 'createdAt' | 'updatedAt'>): Promise<FunnelCreationResult> {
+    async createFunnel(params: Omit<HybridFunnelData, 'id' | 'createdAt' | 'updatedAt' | 'version' | 'url'> & {
+        multiTenantContext?: MultiTenantContext;
+    }): Promise<FunnelCreationResult> {
         this.logger.info('hybrid-creation', 'Iniciando criação de funil híbrida', {
             name: params.name,
             templateId: params.templateId,
-            context: params.context
+            context: params.context,
+            organizationId: params.organizationId,
+            workspaceId: params.workspaceId
         });
 
         try {
@@ -122,7 +217,14 @@ class ImprovedFunnelSystem {
             const funnelId = this.generateSecureId(params.name);
             const now = new Date().toISOString();
 
-            // 2. Criar dados completos do funil
+            // 2. Definir permissões padrão se não especificadas
+            const defaultPermissions: Permission[] = [
+                { action: 'view', resource: 'funnel', scope: 'own' },
+                { action: 'edit', resource: 'funnel', scope: 'own' },
+                { action: 'duplicate', resource: 'funnel', scope: 'own' }
+            ];
+
+            // 3. Criar dados completos do funil
             const funnelData: HybridFunnelData = {
                 id: funnelId,
                 name: params.name,
@@ -130,7 +232,14 @@ class ImprovedFunnelSystem {
                 category: params.category || 'general',
                 templateId: params.templateId,
                 context: params.context,
+                // 🚀 MULTI-TENANCY: Campos obrigatórios
                 userId: params.userId,
+                organizationId: params.organizationId || `org_${params.userId}`, // Default org
+                workspaceId: params.workspaceId || `ws_${params.userId}`, // Default workspace
+                permissions: params.permissions || defaultPermissions,
+                visibility: params.visibility || 'private',
+                accessLevel: params.accessLevel || 'admin',
+                sharedWith: params.sharedWith || [],
                 status: params.autoPublish ? 'published' : 'draft',
                 url: `/editor/${encodeURIComponent(funnelId)}`,
                 version: 1,
@@ -163,11 +272,29 @@ class ImprovedFunnelSystem {
             // 4. Armazenamento através do AdvancedFunnelStorage
             const storedFunnel = await advancedFunnelStorage.upsertFunnel(funnelData);
 
+            // 5. 📊 ANALYTICS TRACKING: Registrar criação de funil
+            analyticsEngine.trackEvent({
+                type: 'funnel_started',
+                funnelId: storedFunnel.id,
+                userId: params.userId,
+                sessionId: this.generateSessionId(),
+                properties: {
+                    funnelName: storedFunnel.name,
+                    templateId: params.templateId,
+                    organizationId: params.organizationId,
+                    workspaceId: params.workspaceId,
+                    visibility: params.visibility || 'private',
+                    autoPublish: params.autoPublish || false
+                },
+                metadata: this.getCurrentEventMetadata()
+            });
+
             this.logger.info('hybrid-creation', 'Funil criado com sucesso no sistema híbrido', {
                 funnelId: storedFunnel.id,
                 status: storedFunnel.status,
                 validationPassed: true,
-                storageMethod: 'advanced'
+                storageMethod: 'advanced',
+                analyticsTracked: true
             });
 
             return {
@@ -247,21 +374,64 @@ class ImprovedFunnelSystem {
     }
 
     // ============================================================================
-    // LISTAGEM VALIDADA
+    // LISTAGEM VALIDADA COM MULTI-TENANCY
     // ============================================================================
 
-    async listValidatedFunnels(): Promise<any[]> {
+    async listValidatedFunnels(
+        requestingUserId?: string,
+        requestingUserOrg?: string,
+        requestingUserWorkspace?: string,
+        filters?: {
+            organizationId?: string;
+            workspaceId?: string;
+            visibility?: HybridFunnelData['visibility'];
+            category?: string;
+        }
+    ): Promise<any[]> {
         try {
-            const funnels = await advancedFunnelStorage.listFunnels();
+            const allFunnels = await advancedFunnelStorage.listFunnels();
 
-            this.logger.debug('hybrid-list', 'Funis listados com validação', {
-                count: funnels.length
+            this.logger.debug('hybrid-list', 'Funis listados com validação multi-tenant', {
+                totalCount: allFunnels.length,
+                requestingUserId,
+                requestingUserOrg,
+                filters
             });
 
-            return funnels.filter(funnel => {
+            // Filtrar e validar funis
+            const validatedFunnels = allFunnels.filter(funnel => {
+                // 1. Validação básica de ID
                 const validation = validateFunnelId(funnel.id);
-                return validation.isValid;
+                if (!validation.isValid) return false;
+
+                // 2. 🚀 MULTI-TENANCY: Filtros de acesso
+                if (requestingUserId) {
+                    const hasAccess = this.canAccessFunnel(
+                        funnel as HybridFunnelData,
+                        requestingUserId,
+                        requestingUserOrg || '',
+                        requestingUserWorkspace || ''
+                    );
+                    if (!hasAccess) return false;
+                }
+
+                // 3. Aplicar filtros opcionais
+                if (filters) {
+                    if (filters.organizationId && funnel.organizationId !== filters.organizationId) return false;
+                    if (filters.workspaceId && funnel.workspaceId !== filters.workspaceId) return false;
+                    if (filters.visibility && funnel.visibility !== filters.visibility) return false;
+                    if (filters.category && funnel.category !== filters.category) return false;
+                }
+
+                return true;
             });
+
+            this.logger.debug('hybrid-list', 'Funis filtrados por multi-tenancy', {
+                filteredCount: validatedFunnels.length,
+                originalCount: allFunnels.length
+            });
+
+            return validatedFunnels;
 
         } catch (error) {
             this.logger.error('hybrid-list', 'Erro na listagem validada', {
@@ -319,6 +489,36 @@ class ImprovedFunnelSystem {
                 totalFunnels: 0
             };
         }
+    }
+
+    // ============================================================================
+    // MÉTODOS AUXILIARES PARA ANALYTICS
+    // ============================================================================
+
+    private generateSessionId(): string {
+        return `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    }
+
+    private getCurrentEventMetadata(): any {
+        // Em um ambiente real, isso coletaria dados do browser/request
+        return {
+            userAgent: typeof navigator !== 'undefined' ? navigator.userAgent : 'server',
+            device: {
+                type: 'desktop', // Simplificado para server-side
+                os: 'Unknown',
+                browser: 'Unknown',
+                screenResolution: '1920x1080',
+                viewportSize: '1920x1080'
+            },
+            location: {
+                country: 'BR',
+                region: 'SP',
+                city: 'São Paulo',
+                timezone: 'America/Sao_Paulo'
+            },
+            referrer: 'direct',
+            utm: {}
+        };
     }
 }
 
