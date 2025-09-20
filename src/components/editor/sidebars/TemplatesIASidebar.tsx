@@ -290,7 +290,7 @@ export function TemplatesIASidebar({ onSelectTemplate, onClose }: TemplatesIASid
                     </div>
 
                     <div className="text-xs text-gray-500">
-                      Recursos: {Object.entries(template.config.features)
+                      Recursos: {Object.entries(template.config?.features || {})
                         .filter(([, enabled]) => enabled)
                         .map(([feature]) => feature)
                         .join(', ')}

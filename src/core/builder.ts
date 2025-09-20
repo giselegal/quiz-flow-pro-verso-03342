@@ -23,6 +23,51 @@ export const createFunnelFromTemplate = (template: string) => {
         withAnalytics: (analytics: any) => ({
           addStep: (name: string) => ({
             addComponentFromTemplate: (type: string) => ({
+              withContent: (content: any) => ({
+                withProperties: (props: any) => ({
+                  withValidation: (validation: any) => ({
+                    withMetadata: (metadata: any) => ({
+                      complete: () => console.log('Step completed:', name)
+                    })
+                  }),
+                  withMetadata: (metadata: any) => ({
+                    complete: () => console.log('Step completed:', name)
+                  })
+                }),
+                withValidation: (validation: any) => ({
+                  withMetadata: (metadata: any) => ({
+                    complete: () => console.log('Step completed:', name)
+                  })
+                }),
+                withMetadata: (metadata: any) => ({
+                  complete: () => console.log('Step completed:', name)
+                })
+              }),
+              withProperties: (props: any) => ({
+                withValidation: (validation: any) => ({
+                  withMetadata: (metadata: any) => ({
+                    complete: () => console.log('Step completed:', name)
+                  })
+                }),
+                withMetadata: (metadata: any) => ({
+                  complete: () => console.log('Step completed:', name)
+                })
+              }),
+              withValidation: (validation: any) => ({
+                withCalculationRules: (rules: any) => ({
+                  withMetadata: (metadata: any) => ({
+                    complete: () => console.log('Step completed:', name)
+                  })
+                }),
+                withMetadata: (metadata: any) => ({
+                  complete: () => console.log('Step completed:', name)
+                })
+              }),
+              withCalculationRules: (rules: any) => ({
+                withMetadata: (metadata: any) => ({
+                  complete: () => console.log('Step completed:', name)
+                })
+              }),
               withMetadata: (metadata: any) => ({
                 complete: () => console.log('Step completed:', name)
               })
@@ -34,6 +79,14 @@ export const createFunnelFromTemplate = (template: string) => {
                 steps: []
               })
             })
+          }),
+          enableAnalytics: () => ({
+            build: () => ({
+              steps: []
+            })
+          }),
+          build: () => ({
+            steps: []
           })
         })
       })

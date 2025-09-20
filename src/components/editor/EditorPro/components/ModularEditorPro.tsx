@@ -177,12 +177,7 @@ interface ModularEditorProProps {
  * ✅ Timers migrados para useOptimizedScheduler
  */
 
-const ModularEditorPro: React.FC<ModularEditorProProps> = ({
-  showProFeatures = false,
-  templatesIAOpen = false,
-  brandKitOpen = false,
-  analyticsOpen = false
-}) => {
+const ModularEditorPro: React.FC<ModularEditorProProps> = () => {
   // 🚀 BUILDER SYSTEM - Hook integrado
   const { state, actions } = useOptimizedEditor();
   const { schedule } = useOptimizedScheduler();

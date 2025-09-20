@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useCallback, useRef, useEffect } from 'react';
 // 🚀 BUILDER SYSTEM - Imports corrigidos para compatibilidade
 import type { Block } from '@/types/editor';
+import { createFunnelFromTemplate } from '@/core/builder';
 
 /**
  * 🏗️ PURE BUILDER SYSTEM PROVIDER
@@ -404,7 +405,7 @@ const generateWithPureBuilder = async (): Promise<{
         // 🔄 CONVERTER PARA FORMATO COMPATÍVEL
         const stepBlocks: Record<string, Block[]> = {};
 
-        finalFunnel.steps?.forEach((step, index) => {
+        finalFunnel.steps?.forEach((step: any, index: number) => {
             const stepKey = `step-${index + 1}`;
 
             const blocks: Block[] = step.components?.map((component: any, blockIndex: number) => ({

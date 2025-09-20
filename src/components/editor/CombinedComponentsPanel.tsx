@@ -48,7 +48,7 @@ export const CombinedComponentsPanel: React.FC<CombinedComponentsPanelProps> = (
               <div className="p-2">
                 <ReusableComponentsPanel
                   currentStepNumber={currentStepNumber}
-                  onComponentAdd={type => {
+                  onComponentAdd={(type: string) => {
                     console.log(`✅ Componente reutilizável ${type} adicionado!`);
                   }}
                 />

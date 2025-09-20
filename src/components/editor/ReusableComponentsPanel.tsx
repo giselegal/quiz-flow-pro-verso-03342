@@ -8,7 +8,12 @@
 import React, { useState, useEffect } from 'react';
 import { useEditorReusableComponentsSimple } from '@/hooks/useEditorReusableComponents.simple';
 
-const ReusableComponentsPanel: React.FC = () => {
+interface ReusableComponentsPanelProps {
+  currentStepNumber?: number;
+  onComponentAdd?: (type: string) => void;
+}
+
+const ReusableComponentsPanel: React.FC<ReusableComponentsPanelProps> = () => {
   // Configuração para mobile-first
   const [isMobile, setIsMobile] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<string>('all');

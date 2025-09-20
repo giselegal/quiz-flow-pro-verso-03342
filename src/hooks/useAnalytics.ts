@@ -43,8 +43,12 @@ export const useAnalytics = () => {
     setTimeout(() => setIsLoadingPerformance(false), 1000);
   }, []);
 
-  const trackPerformanceMetric = useCallback((metric: string, _value?: number) => {
-    console.log('📈 Performance metric:', metric);
+  const trackPerformanceMetric = useCallback((metric: string | { metricName: string; value: number; unit?: string }) => {
+    if (typeof metric === 'string') {
+      console.log('📈 Performance metric:', metric);
+    } else {
+      console.log('📈 Performance metric:', metric.metricName, metric.value, metric.unit);
+    }
   }, []);
 
   return {
@@ -60,7 +64,7 @@ export const useAnalytics = () => {
   };
 };
 
-export const useFunnelAnalytics = () => {
+export const useFunnelAnalytics = (funnelId?: string, userId?: string) => {
   const analytics = useAnalytics();
   const [funnelMetrics] = useState({
     totalSteps: 21,
@@ -76,14 +80,14 @@ export const useFunnelAnalytics = () => {
   const [isLoadingMetrics, setIsLoadingMetrics] = useState(false);
   
   const trackFunnelStep = useCallback((stepName: string, properties?: Record<string, any>) => {
-    console.log('🔄 Funnel step:', stepName, properties);
-  }, []);
+    console.log('🔄 Funnel step:', stepName, properties, { funnelId, userId });
+  }, [funnelId, userId]);
 
   const refreshMetrics = useCallback(async () => {
     setIsLoadingMetrics(true);
-    console.log('🔄 Refreshing funnel metrics');
+    console.log('🔄 Refreshing funnel metrics for:', funnelId);
     setTimeout(() => setIsLoadingMetrics(false), 1000);
-  }, []);
+  }, [funnelId]);
 
   return {
     ...analytics,
@@ -94,18 +98,22 @@ export const useFunnelAnalytics = () => {
   };
 };
 
-export const useABTest = () => {
+export const useABTest = (testId?: string, userId?: string) => {
   const analytics = useAnalytics();
   const [activeTests] = useState([]);
   
-  const getVariant = useCallback((testId: string) => {
-    console.log('🧪 AB Test variant:', testId);
+  const getVariant = useCallback((variantTestId: string) => {
+    console.log('🧪 AB Test variant:', variantTestId, { testId, userId });
     return 'control';
-  }, []);
+  }, [testId, userId]);
 
-  const trackConversion = useCallback((testId: string, goal: string) => {
-    console.log('🎯 AB Test conversion:', testId, goal);
-  }, []);
+  const trackConversion = useCallback((goal: string, properties?: Record<string, any>) => {
+    console.log('🎯 AB Test conversion:', { testId, goal, properties, userId });
+  }, [testId, userId]);
+
+  const trackEvent = useCallback((eventName: string, properties?: Record<string, any>) => {
+    console.log('📊 AB Test event:', { testId, eventName, properties, userId });
+  }, [testId, userId]);
 
   const variant = 'control'; // Static variant
 
@@ -114,6 +122,7 @@ export const useABTest = () => {
     activeTests,
     getVariant,
     trackConversion,
+    trackEvent,
     variant
   };
 };

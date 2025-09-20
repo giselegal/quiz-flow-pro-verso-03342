@@ -74,7 +74,7 @@ export const HookAnalyticsExample: React.FC<{ funnelId: string; userId: string }
     };
 
     const handleQuizComplete = (result: any) => {
-        analytics.trackConversion({
+        analytics.trackConversion('quiz_completed', {
             result,
             completionTime: Date.now()
         });
@@ -132,7 +132,7 @@ export const ABTestExample: React.FC<{ userId: string }> = ({ userId }) => {
         });
 
         // Se foi uma conversão
-        abTest.trackConversion({
+        abTest.trackConversion('button_conversion', {
             variant: abTest.variant,
             conversionValue: 100
         });
@@ -163,16 +163,12 @@ export const AutoTrackingComponent: React.FC<{
     componentId: string;
     funnelId: string;
     userId: string
-}> = ({ componentId, funnelId, userId }) => {
-    const { trackInteraction, startTimer, endTimer } = useAnalytics({
-        componentId,
-        funnelId,
-        userId,
-        autoTrack: true // Auto-track mount/unmount
-    });
+}> = ({ componentId }) => {
+    const { trackInteraction, startTimer, endTimer } = useAnalytics();
 
     const handleInteraction = (action: string) => {
-        trackInteraction(componentId, action, {
+        trackInteraction(action, {
+            componentId,
             timestamp: new Date().toISOString(),
             userAgent: navigator.userAgent
         });
@@ -184,10 +180,7 @@ export const AutoTrackingComponent: React.FC<{
         // Simular tarefa longa
         await new Promise(resolve => setTimeout(resolve, 2000));
 
-        endTimer('long-task', {
-            taskType: 'simulation',
-            success: true
-        });
+        endTimer('long-task');
     };
 
     return (
@@ -306,7 +299,7 @@ export const MigratedCodeExample = () => {
     const funnelId = 'quiz-123';
 
     // Using hooks (recommended for React components)
-    const { trackEvent, trackConversion } = useAnalytics({ funnelId, userId });
+    const { trackEvent, trackConversion } = useAnalytics();
 
     const handleButtonClick = () => {
         // Internal tracking (more detailed)
@@ -329,7 +322,7 @@ export const MigratedCodeExample = () => {
         }, userId);
 
         // Also track as conversion
-        trackConversion({
+        trackConversion('quiz_completed', {
             score: 100,
             category: 'personality-test'
         });
