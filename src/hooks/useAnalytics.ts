@@ -33,6 +33,7 @@ export interface AnalyticsHookResult {
     componentMetrics: ComponentMetrics | null;
     isLoadingMetrics: boolean;
     refreshMetrics: () => void;
+    getRealtimeMetrics: () => Promise<any>;
 
     // A/B Testing
     experimentVariant: string | null;
@@ -260,6 +261,15 @@ export function useAnalytics(options: UseAnalyticsOptions = {}): AnalyticsHookRe
         componentMetrics,
         isLoadingMetrics,
         refreshMetrics,
+        getRealtimeMetrics: async () => {
+            // Mock realtime metrics para demonstração
+            return {
+                views: Math.floor(Math.random() * 1000) + 500,
+                completions: Math.floor(Math.random() * 100) + 50,
+                conversionRate: (Math.random() * 0.3 + 0.4).toFixed(3),
+                avgTime: `${Math.floor(Math.random() * 3) + 2}m ${Math.floor(Math.random() * 60)}s`
+            };
+        },
         experimentVariant,
         assignToExperiment,
         startTimer,

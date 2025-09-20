@@ -50,6 +50,12 @@ const TestDataPanel = lazy(() => import('./components/TestDataPanel'));
 // 🎯 NOVO: Editor Pro Consolidado (substitui UniversalStepEditorProDemo)
 const EditorProConsolidatedPage = lazy(() => import('./pages/EditorProConsolidatedPage'));
 
+// 🚀 NOVO: Editor IA Pro - Sistema completo com funcionalidades avançadas
+const EditorProPage = lazy(() => import('./pages/EditorProPage'));
+
+// 🚀 NOVO: Editor IA Pro - Versão simplificada para testes  
+const EditorProPageSimple = lazy(() => import('./pages/EditorProPageSimple'));
+
 // Teste simples do navegador
 const SimpleEditorTest = lazy(() => import('./components/test/SimpleEditorTest'));
 
@@ -109,8 +115,18 @@ function App() {
                   </Suspense>
                 } />
 
-                {/* 🎯 NOVO: Editor Pro Consolidado - Arquitetura Final */}
-                <Route path="/editor-pro" component={() =>
+                {/* 🚀 NOVO: Editor IA Pro - Sistema completo com funcionalidades avançadas */}
+                <Route path="/editor-pro/:funnelId?" component={({ params }: { params: { funnelId?: string } }) => {
+                  console.log('🚀 Rota /editor-pro com EditorProPageSimple ativada:', params);
+                  return (
+                    <Suspense fallback={<LoadingFallback />}>
+                      <EditorProPageSimple params={params} />
+                    </Suspense>
+                  );
+                }} />
+
+                {/* 🎯 LEGACY: Editor Pro Consolidado - Arquitetura Final */}
+                <Route path="/editor-pro-legacy" component={() =>
                   <Suspense fallback={<LoadingFallback />}>
                     <EditorProConsolidatedPage />
                   </Suspense>

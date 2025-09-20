@@ -162,11 +162,27 @@ const ResizeHandle: React.FC<{
  * Substitui o EditorPro.tsx monolítico (1312 linhas) por arquitetura modular
  * ✅ Componentes isolados e reutilizáveis
  * ✅ Estado centralizado via EditorProvider
+/**
+ * 🚀 MODULAR EDITOR PRO - Interface para props
+ */
+interface ModularEditorProProps {
+  showProFeatures?: boolean;
+  templatesIAOpen?: boolean;
+  brandKitOpen?: boolean;
+  analyticsOpen?: boolean;
+}
+
+/**
  * ✅ Performance otimizada com React.memo
  * ✅ Timers migrados para useOptimizedScheduler
  */
 
-const ModularEditorPro: React.FC = () => {
+const ModularEditorPro: React.FC<ModularEditorProProps> = ({
+  showProFeatures = false,
+  templatesIAOpen = false,
+  brandKitOpen = false,
+  analyticsOpen = false
+}) => {
   // 🚀 BUILDER SYSTEM - Hook integrado
   const { state, actions } = useOptimizedEditor();
   const { schedule } = useOptimizedScheduler();
