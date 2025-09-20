@@ -6,7 +6,6 @@ import { LoadingFallback } from './components/ui/loading-fallback';
 import { Toaster } from './components/ui/toaster';
 import { AuthProvider } from './context/AuthContext';
 import { FunnelsProvider } from './context/FunnelsContext';
-import { EditorProvider } from './components/editor/EditorProvider';
 import { performanceManager } from './utils/performanceManager';
 
 const EditorTemplatesPage = lazy(() => import('./pages/editor-templates'));
@@ -15,8 +14,8 @@ const ComQueRoupaEuVouPage = lazy(() => import('./pages/ComQueRoupaEuVouPage'));
 // 🎯 PÁGINAS ESSENCIAIS - SEM CONFLITOS
 const Home = lazy(() => import('./pages/Home'));
 const AuthPage = lazy(() => import('./pages/AuthPage'));
-// 🏗️ EDITOR PRINCIPAL - ModularEditorPro moderno com UniversalNoCodePanel
-const EditorPro = lazy(() => import('./components/editor/EditorPro/components/ModularEditorPro'));
+// 🏗️ EDITOR PRINCIPAL - EditorPro com ModularEditorPro e EditorProvider integrado
+const EditorPro = lazy(() => import('./components/editor/EditorPro/EditorPro'));
 // 🏗️ EDITOR PRINCIPAL PROFISSIONAL ALTERNATIVO COM SUPORTE A PARÂMETROS URL
 const MainEditor = lazy(() => import('./pages/MainEditorUnified.new'));
 // 🚀 NOVO: Editor Visual Headless
@@ -156,9 +155,7 @@ function App() {
                           </div>
                         </div>
                       }>
-                        <EditorProvider funnelId={params.funnelId} enableSupabase={false}>
-                          <EditorPro />
-                        </EditorProvider>
+                        <EditorPro funnelId={params.funnelId} />
                       </Suspense>
                     </div>
                   );
