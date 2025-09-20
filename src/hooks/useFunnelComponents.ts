@@ -6,7 +6,7 @@ import {
   AddComponentInput,
   UpdateComponentInput,
 } from '@/services/funnelComponentsService';
-import { generateInstanceKey } from '@/utils/funnelIdentity';
+import { generateUniqueInstanceKey } from '@/utils/funnelIdentity';
 
 interface UseFunnelComponentsProps {
   funnelId: string;
@@ -106,7 +106,7 @@ export const useFunnelComponents = ({
         // Fallback local sem persistência
         const newComponent: ComponentInstance = {
           id: `local-${Date.now()}`,
-          instance_key: generateInstanceKey(componentTypeKey, stepNumber),
+          instance_key: generateUniqueInstanceKey(componentTypeKey, stepNumber),
           component_type_key: componentTypeKey,
           funnel_id: funnelId,
           step_number: stepNumber,
@@ -130,7 +130,7 @@ export const useFunnelComponents = ({
         const input: AddComponentInput = {
           funnelId,
           stepNumber,
-          instanceKey: generateInstanceKey(componentTypeKey, stepNumber),
+          instanceKey: generateUniqueInstanceKey(componentTypeKey, stepNumber),
           componentTypeKey,
           orderIndex: position ?? components.length + 1,
           properties: {},

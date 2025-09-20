@@ -18,6 +18,13 @@ export * from './migratedTemplateService';
 // Re-export the default service with backward compatibility
 export { migratedTemplateService as default } from './migratedTemplateService';
 
+// Import to ensure migratedTemplateService is available
+import { migratedTemplateService } from './migratedTemplateService';
+
+// Export specific methods for compatibility
+export const supabaseTemplateService = migratedTemplateService;
+export const loadStepTemplate = (step: number) => migratedTemplateService.getStepTemplate(step);
+
 /**
  * 📖 CHANGELOG & MIGRATION NOTES
  * 

@@ -3,46 +3,55 @@ import { ErrorBoundary } from '@/components/editor/ErrorBoundary';
 import { EditorProvider } from '@/components/editor/EditorProvider';
 import { FunnelsProvider } from '@/context/FunnelsContext';
 import { EditorPro } from '@/legacy/editor/EditorPro';
+// import { SimplifiedOptimizedEditor } from '@/components/editor/EditorPro/components/SimplifiedOptimizedEditor';
 
 /**
- * 🎯 MAIN EDITOR - ESTRUTURA ROBUSTA E PROFISSIONAL
+ * 🎯 MAIN EDITOR - ESTRUTURA ROBUSTA COM LOADING DINÂMICO
  * 
- * Arquitetura limpa e direta:
- * ✅ FunnelsProvider - Context de funnels necessário
- * ✅ EditorProvider (1158 linhas) - Estado robusto com Supabase
- * ✅ EditorPro (989 linhas) - Editor 4 colunas completo
- * ✅ ErrorBoundary - Tratamento de erros
- * ✅ Zero abstrações desnecessárias
- * 
- * Funcionalidades garantidas:
- * - 4 colunas responsivas
- * - 21 etapas dinâmicas
- * - Drag & Drop robusto
- * - Persistência Supabase
- * - Validação centralizada
- * - Cálculo automático de resultados
+ * Correções implementadas:
+ * ✅ FunnelId dinâmico da URL (não hardcoded)
+ * ✅ Prioridade: funnelId real > templateId > novo funil
+ * ✅ EditorProvider com Supabase ativo
+ * ✅ Loading inteligente de funis/templates
+ * ✅ Fallback para template quando necessário
  */
 const MainEditor: React.FC = () => {
-  const funnelId = 'quiz-style-21-steps';
-  const quizId = 'professional-quiz-editor';
+  // 🔧 CORREÇÃO CRÍTICA: Capturar parâmetros dinâmicos da URL
+  const urlParams = new URLSearchParams(window.location.search);
+  const urlFunnelId = urlParams.get('funnel');
+  const urlTemplateId = urlParams.get('template');
+  
+  // Lógica de prioridade: funnelId real > templateId > sem parâmetros = undefined (canvas vazio)
+  const funnelId = urlFunnelId || (urlTemplateId ? `template-${urlTemplateId}` : undefined);
+  const quizId = urlFunnelId || urlTemplateId || 'professional-quiz-editor';
+  
+  console.log('🎯 MainEditor: Parâmetros dinâmicos:', {
+    urlFunnelId,
+    urlTemplateId,
+    resolvedFunnelId: funnelId,
+    resolvedQuizId: quizId
+  });
 
   return (
     <div className="h-screen w-full bg-background">
       <ErrorBoundary>
         <FunnelsProvider debug={true}>
           <EditorProvider
-            enableSupabase={true}
+            enableSupabase={!!urlFunnelId} // Ativar Supabase apenas para funis reais
             funnelId={funnelId}
             quizId={quizId}
-            storageKey="main-editor-professional"
+            storageKey={`editor-${funnelId}`}
             initial={{
               currentStep: 1,
               selectedBlockId: null,
-              isSupabaseEnabled: true,
-              databaseMode: 'supabase'
+              isSupabaseEnabled: !!urlFunnelId,
+              databaseMode: urlFunnelId ? 'supabase' : 'local'
             }}
           >
             <EditorPro className="h-full w-full" />
+            {/* Para testar otimizações, descomente a linha abaixo e comente a de cima:
+            <SimplifiedOptimizedEditor />
+            */}
           </EditorProvider>
         </FunnelsProvider>
       </ErrorBoundary>

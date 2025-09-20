@@ -185,7 +185,7 @@ export function sanitizeText(text: string, options: {
     let sanitized = text
         // Normalize whitespace
         .replace(/[\r\n\t]/g, allowNewlines ? '\n' : ' ')
-        .replace(/\s+/g, allowNewlines ? ((match: string) => match.includes('\n') ? '\n' : ' ') : ' ')
+        .replace(/\s+/g, allowNewlines ? ' ' : ' ')
         .trim();
 
     // Remove special characters if not allowed

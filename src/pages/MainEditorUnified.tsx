@@ -391,7 +391,7 @@ const EditorInitializerUnified: React.FC<{
                         const template = templates.find((t: any) => t.id === validTemplateId);
 
                         if (template) {
-                            console.log('✅ [TEMPLATE] Template encontrado:', template.name || validTemplateId);
+                            console.log('✅ [TEMPLATE] Template encontrado:', (template as any)?.name || validTemplateId);
                             resolve(template);
                         } else {
                             console.warn('⚠️ [TEMPLATE] Template não encontrado, usando padrão');

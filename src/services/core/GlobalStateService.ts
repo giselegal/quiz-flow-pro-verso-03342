@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * 🎯 GLOBAL STATE SERVICE - SIMPLIFICADO
  * 

@@ -30,17 +30,32 @@ export const templateLibraryService = {
     return [...this.listBuiltins(), ...loadCustomTemplates()];
   },
   getById(id: string): FunnelTemplate | null {
-    // Aliases para IDs vindos da UI/serviços
+    // 🔧 CORREÇÃO CRÍTICA: Aliases expandidos para compatibilidade total
     const aliases: Record<string, string> = {
+      // Aliases originais
       'default-quiz-funnel-21-steps': (funnel21 as any).id,
       'style-quiz-21-steps': (funnel21 as any).id,
       'funil-21-etapas': (funnel21 as any).id,
       'optimized-21-steps-funnel': (optimized21 as any).id,
       'optimized-21-steps': (optimized21 as any).id,
       'quiz-21-otimizado': (optimized21 as any).id,
+      
+      // 🎯 NOVOS ALIASES CRÍTICOS: Para resolver problemas de loading
+      'quiz21StepsComplete': (funnel21 as any).id,
+      'quiz-estilo-completo': (funnel21 as any).id,
+      'quiz-style-21-steps': (funnel21 as any).id,
+      'QUIZ_STYLE_21_STEPS_TEMPLATE': (funnel21 as any).id,
+      'template-quiz21StepsComplete': (funnel21 as any).id,
+      'template-optimized-21-steps-funnel': (optimized21 as any).id,
     };
     const resolvedId = aliases[id] || id;
-    return this.listAll().find(t => t.id === resolvedId) || null;
+    const found = this.listAll().find(t => t.id === resolvedId);
+    
+    if (!found) {
+      console.warn('⚠️ Template não encontrado:', { originalId: id, resolvedId, availableIds: this.listAll().map(t => t.id) });
+    }
+    
+    return found || null;
   },
   saveCustom(template: FunnelTemplate) {
     const list = loadCustomTemplates();
