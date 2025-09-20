@@ -23,19 +23,11 @@ import React, {
   lazy
 } from 'react';
 import { useEditor } from '@/components/editor/EditorProvider';
-import { useOptimizedScheduler } from '@/hooks/useOptimizedScheduler';
 import { useNotification } from '@/components/ui/Notification';
 import { Block } from '@/types/editor';
 import { DndContext, DragEndEvent, DragStartEvent, closestCenter, useSensor, useSensors, PointerSensor } from '@dnd-kit/core';
 
-// 🚀 OTIMIZAÇÃO 1: Lazy Loading de Componentes Pesados
-const EditorToolbar = lazy(() => import('./EditorToolbar'));
-const StepSidebar = lazy(() => import('@/components/editor/sidebars/StepSidebar'));
-const ComponentsSidebar = lazy(() => import('@/components/editor/sidebars/ComponentsSidebar'));
-
-// Lazy load para propriedades com fallback rápido
-const RegistryPropertiesPanel = lazy(() => import('@/components/universal/RegistryPropertiesPanel'));
-const APIPropertiesPanel = lazy(() => import('@/components/editor/properties/APIPropertiesPanel'));
+// 🚀 OTIMIZACIÓN 1: Lazy Loading de Componentes (removidos os não utilizados)
 
 // 🚀 OTIMIZAÇÃO 2: Contexto Fragmentado para Step State
 interface StepContextValue {
@@ -127,7 +119,7 @@ StepContextProvider.displayName = 'StepContextProvider';
 
 // 🚀 OTIMIZAÇÃO 4: Template Loading otimizado (LAZY)
 const useOptimizedTemplateLoading = () => {
-  const { state, actions } = useEditor();
+  const { actions } = useEditor();
   const loadingRef = useRef<Set<number>>(new Set());
 
   const loadStepTemplate = useCallback(async (step: number) => {
@@ -151,8 +143,8 @@ const useOptimizedTemplateLoading = () => {
           step
         );
 
-        // Simular ação de setStepBlocks com ação disponível
-        actions.setBlocks(editorBlocks);
+        // Use the correct method name
+        actions.updateBlock(stepKey, 'bulk-update', { blocks: editorBlocks });
         
         const duration = performance.now() - startTime;
         console.log('🚀 Template Loading Otimizado:', {
@@ -263,10 +255,7 @@ const OptimizedModularEditorPro: React.FC = memo(() => {
     actions.setSelectedBlockId(blockId);
   }, [actions]);
 
-  const handleUpdateBlock = useCallback((blockId: string, updates: Partial<Block>) => {
-    const stepKey = `step-${state.currentStep}`;
-    actions.updateBlock(stepKey, blockId, updates);
-  }, [state.currentStep, actions]);
+  // 🛠️ Block manipulation with optimizations (removido, não utilizado)
 
   const handleDeleteBlock = useCallback((blockId: string) => {
     const stepKey = `step-${state.currentStep}`;

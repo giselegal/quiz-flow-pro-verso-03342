@@ -5,7 +5,6 @@
  */
 
 import { useState, useEffect, useCallback, useMemo } from 'react';
-import { migratedTemplateService } from '@/services/migratedTemplateService';
 
 export interface FunnelTemplate {
   id: string;

@@ -7,9 +7,8 @@
  * ✅ 3. Template Loading Otimizado - carrega apenas etapa atual
  */
 
-import React, { memo, useMemo, useCallback, useEffect, useState, Suspense, lazy } from 'react';
+import React, { useCallback, Suspense, memo, lazy, useState, useEffect } from 'react';
 import { useEditor } from '@/components/editor/EditorProvider';
-import { Block } from '@/types/editor';
 
 // 🚀 OTIMIZAÇÃO 1: Lazy Loading de Componentes
 const ModularEditorPro = lazy(() => import('./ModularEditorPro'));
