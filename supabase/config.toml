@@ -1,1 +1,4 @@
 project_id = "pwtjuuhchtbzttrzoutw"
+
+[functions.github-models-ai]
+verify_jwt = false
