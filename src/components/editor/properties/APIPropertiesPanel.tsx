@@ -21,7 +21,7 @@ import { Badge } from '@/components/ui/badge';
 import { AlertCircle, RefreshCw, Check, X, Database } from 'lucide-react';
 
 import { useBlockProperties } from '@/hooks/useBlockProperties';
-import { useEditor } from '@/components/editor/EditorProvider';
+import { useSimpleBuilder } from '@/components/editor/SimpleBuilderProviderFixed';
 import { useFunnels } from '@/context/FunnelsContext';
 import { type BlockPropertySchema } from '@/api/internal/BlockPropertiesAPI';
 
@@ -51,14 +51,15 @@ const FunnelDataDisplay: React.FC<{
     blockId: string;
     blockType: string;
 }> = memo(({ blockId, blockType }) => {
-    const { state } = useEditor();
+    const builder = useSimpleBuilder();
     const funnelsContext = useFunnels();
 
     const funnelInfo = useMemo(() => {
         try {
-            const currentStepKey = `step-${state.currentStep}`;
-            const currentStepBlocks = state.stepBlocks[currentStepKey] || [];
-            const currentBlock = currentStepBlocks.find(b => b.id === blockId);
+            const stepState = builder?.state;
+            const currentStepKey = `step-${stepState.currentStep}`;
+            const currentStepBlocks = stepState.steps[currentStepKey] || [];
+            const currentBlock = currentStepBlocks.find((b: any) => b.id === blockId);
 
             // Buscar informações adicionais do template (genérico)
             const templateInfo = funnelsContext?.getTemplateBlocks?.(
@@ -68,29 +69,29 @@ const FunnelDataDisplay: React.FC<{
 
             return {
                 funnelId: funnelsContext?.currentFunnelId || 'local-funnel',
-                currentStep: state.currentStep,
-                totalSteps: Object.keys(state.stepBlocks).length || 21, // Dinâmico baseado nos dados reais
-                blockIndex: currentStepBlocks.findIndex(b => b.id === blockId) + 1,
+                currentStep: stepState.currentStep,
+                totalSteps: Object.keys(stepState.steps).length || 21, // Dinâmico baseado nos dados reais
+                blockIndex: currentStepBlocks.findIndex((b: any) => b.id === blockId) + 1,
                 totalBlocks: currentStepBlocks.length,
                 blockData: currentBlock,
                 templateBlocksCount: templateInfo?.length || 0,
-                hasValidation: !!state.stepValidation[state.currentStep],
+                hasValidation: !!stepState.stepValidation[stepState.currentStep],
                 lastModified: new Date().toLocaleString('pt-BR'),
-                isSupabaseEnabled: state.isSupabaseEnabled,
-                databaseMode: state.databaseMode,
+                isSupabaseEnabled: false,
+                databaseMode: 'local',
                 // Informações específicas do bloco
                 blockContent: currentBlock?.content,
                 blockProperties: currentBlock?.properties,
                 blockOrder: currentBlock ? currentStepBlocks.indexOf(currentBlock) : -1,
                 // Status de integração
                 isConnectedToFunnel: !!currentBlock && !!funnelsContext,
-                canSaveToDatabase: !!(state.isSupabaseEnabled && funnelsContext?.saveFunnelToDatabase)
+                canSaveToDatabase: false
             };
         } catch (error) {
             console.error('Erro ao buscar dados do funil:', error);
             return null;
         }
-    }, [state, funnelsContext, blockId]);
+    }, [builder, funnelsContext, blockId]);
 
     if (!funnelInfo) {
         return (
