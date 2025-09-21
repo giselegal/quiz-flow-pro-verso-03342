@@ -48,6 +48,9 @@ const FunnelDashboardPage = lazy(() => import('./pages/FunnelDashboardPage'));
 const TestParticipantsPage = lazy(() => import('./pages/TestParticipantsPage'));
 const TestDataPanel = lazy(() => import('./components/TestDataPanel'));
 
+// 🌟 UNIVERSAL FUNNEL EDITOR - NOVA FUNCIONALIDADE
+const UniversalFunnelDemo = lazy(() => import('./pages/UniversalFunnelDemo'));
+
 // 🚀 URGENTE: Quiz 21 Steps Complete
 const CreateQuiz21CompletePage = lazy(() => import('./pages/CreateQuiz21CompletePage'));
 
@@ -56,6 +59,9 @@ const FashionAITestPage = lazy(() => import('./pages/FashionAITestPage'));
 
 // Teste simples do navegador
 const SimpleEditorTest = lazy(() => import('./components/test/SimpleEditorTest'));
+
+// 🚀 NOVO: Core limpo para teste
+const TestNewQuizCore = lazy(() => import('./examples/Quiz21StepsSimple'));
 
 // Loading component
 const PageLoading = () => (
@@ -114,7 +120,7 @@ function App() {
                 } />
 
                 {/* 🚀 EDITOR UNIFICADO - TODAS AS ROTAS REDIRECIONAM PARA AQUI */}
-                
+
                 {/* Rota principal do editor */}
                 <Route path="/editor/:funnelId?" component={({ params }: { params: { funnelId?: string } }) => {
                   console.log('🎯 Rota /editor unificada ativada:', params);
@@ -179,6 +185,13 @@ function App() {
                 <Route path="/test-simple" component={() =>
                   <Suspense fallback={<LoadingFallback />}>
                     <SimpleEditorTest />
+                  </Suspense>
+                } />
+
+                {/* 🎯 NOVO: Teste do Core Simplificado */}
+                <Route path="/test-new-core" component={() =>
+                  <Suspense fallback={<LoadingFallback />}>
+                    <TestNewQuizCore />
                   </Suspense>
                 } />
 
@@ -278,6 +291,13 @@ function App() {
                 <Route path="/abtest" component={() =>
                   <Suspense fallback={<LoadingFallback />}>
                     <ABTestPage />
+                  </Suspense>
+                } />
+
+                {/* 🌟 UNIVERSAL FUNNEL EDITOR - DEMO */}
+                <Route path="/universal-editor" component={() =>
+                  <Suspense fallback={<LoadingFallback />}>
+                    <UniversalFunnelDemo />
                   </Suspense>
                 } />
 
