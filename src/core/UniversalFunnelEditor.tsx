@@ -10,16 +10,21 @@
  * ✅ Custom funnels (user-defined)
  */
 
-import React, { useState, useCallback, useMemo, useEffect } from 'react';
-import { ChevronLeft, ChevronRight, Plus, Settings, Eye, Save, Download } from 'lucide-react';
+import React, { useState, useCallback, useEffect } from 'react';
+import { ChevronLeft, ChevronRight, Plus, Eye, Save, Download } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 
+// 🚀 INTEGRAÇÕES COM SISTEMA EXISTENTE
+import { useAnalytics } from '@/hooks/useAnalytics';
+import { useAutosave } from '@/hooks/useAutosave';
+import { useHistory } from '@/hooks/useHistory';
+
 // ===============================
-// 🎯 TYPES UNIVERSAIS
+// 🎯 TYPES UNIVERSAIS - EXPORTADOS
 // ===============================
 
-interface UniversalBlock {
+export interface UniversalBlock {
     id: string;
     type: string;
     content: any;
@@ -31,7 +36,7 @@ interface UniversalBlock {
     };
 }
 
-interface UniversalStep {
+export interface UniversalStep {
     id: string | number;
     name: string;
     blocks: UniversalBlock[];
@@ -43,7 +48,7 @@ interface UniversalStep {
     };
 }
 
-interface UniversalFunnel {
+export interface UniversalFunnel {
     id: string;
     name: string;
     type: string; // 'quiz', 'lead-magnet', 'ecommerce', 'webinar', 'custom'
@@ -69,6 +74,11 @@ interface UniversalFunnelEditorProps {
     onPreview?: (funnel: UniversalFunnel) => void;
     onExport?: (funnel: UniversalFunnel) => void;
     readOnly?: boolean;
+    // 🚀 NOVAS INTEGRAÇÕES COM SISTEMA EXISTENTE
+    enableAnalytics?: boolean;
+    enableAutosave?: boolean;
+    enableHistory?: boolean;
+    showMetrics?: boolean;
 }
 
 // ===============================
@@ -294,13 +304,48 @@ export const UniversalFunnelEditor: React.FC<UniversalFunnelEditorProps> = ({
     onSave,
     onPreview,
     onExport,
-    readOnly = false
+    readOnly = false,
+    // 🚀 NOVAS INTEGRAÇÕES
+    enableAnalytics = true,
+    enableAutosave = true,
+    enableHistory = true,
+    showMetrics = false
 }) => {
     const [funnel, setFunnel] = useState<UniversalFunnel>(initialFunnel);
     const [currentStepIndex, setCurrentStepIndex] = useState(0);
     const [selectedBlockId, setSelectedBlockId] = useState<string | null>(null);
-    const [isEditMode, setIsEditMode] = useState(true);
+    const [isEditMode, setIsEditMode] = useState(!readOnly);
     const [isSaving, setIsSaving] = useState(false);
+
+    // 🚀 INTEGRAÇÃO COM HOOKS EXISTENTES DO SISTEMA
+    const analytics = enableAnalytics ? useAnalytics() : null;
+    const autosave = enableAutosave && onSave ? useAutosave({
+        data: funnel,
+        onSave: async (data: any) => {
+            if (onSave) {
+                await onSave(data);
+                return true;
+            }
+            return false;
+        },
+        interval: 2000,
+        enabled: !readOnly
+    }) : null;
+    const history = enableHistory ? useHistory({
+        maxHistorySize: 50,
+        initialState: funnel
+    }) : null;
+
+    // 🎯 TRACK ANALYTICS EVENTS
+    useEffect(() => {
+        if (analytics) {
+            analytics.trackEvent('universal-editor-open', {
+                page: `/universal-editor/${funnel.type}/${funnel.id}`,
+                funnelType: funnel.type,
+                funnelId: funnel.id
+            });
+        }
+    }, [analytics, funnel.id, funnel.type]);
 
     const currentStep = funnel.steps[currentStepIndex];
 

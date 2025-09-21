@@ -15,9 +15,7 @@
 
 import React from 'react';
 import { ErrorBoundary } from '@/components/editor/ErrorBoundary';
-import PureBuilderProvider from '@/components/editor/PureBuilderProvider';
-import { FunnelsProvider } from '@/context/FunnelsContext';
-import EditorProUnified from '@/components/editor/EditorProUnified';
+import ModernUnifiedEditor from './editor/ModernUnifiedEditor';
 
 interface EditorUnifiedPageProps {
   initialStep?: number;
@@ -32,10 +30,10 @@ const EditorUnifiedPage: React.FC<EditorUnifiedPageProps> = ({
   const urlParams = new URLSearchParams(window.location.search);
   const urlFunnelId = urlParams.get('funnel');
   const urlTemplateId = urlParams.get('template');
-  
+
   // Lógica de prioridade: props > URL funnel > URL template > fallback
   const resolvedFunnelId = propFunnelId || urlFunnelId || (urlTemplateId ? `template-${urlTemplateId}` : undefined);
-  
+
   console.log('🎯 EditorUnifiedPage: Parâmetros consolidados:', {
     propFunnelId,
     urlFunnelId,
@@ -47,14 +45,10 @@ const EditorUnifiedPage: React.FC<EditorUnifiedPageProps> = ({
   return (
     <div className="h-screen w-full bg-background">
       <ErrorBoundary>
-        <FunnelsProvider debug={false}>
-          <PureBuilderProvider funnelId={resolvedFunnelId}>
-            <EditorProUnified 
-              funnelId={resolvedFunnelId}
-              showProFeatures={true}
-            />
-          </PureBuilderProvider>
-        </FunnelsProvider>
+        <ModernUnifiedEditor
+          funnelId={resolvedFunnelId}
+          mode="visual"
+        />
       </ErrorBoundary>
     </div>
   );

@@ -15,11 +15,9 @@ const ComQueRoupaEuVouPage = lazy(() => import('./pages/ComQueRoupaEuVouPage'));
 const Home = lazy(() => import('./pages/Home'));
 const AuthPage = lazy(() => import('./pages/AuthPage'));
 
-// 🚀 EDITOR UNIFICADO - PONTO DE ENTRADA ÚNICO
-const EditorUnifiedPage = lazy(() => import('./pages/EditorUnifiedPage'));
+// 🚀 EDITOR MODERNO NEURAL - PONTO DE ENTRADA ÚNICO
+const ModernUnifiedEditor = lazy(() => import('./pages/editor/ModernUnifiedEditor'));
 
-// 🚀 EDITOR VISUAL HEADLESS (mantido para compatibilidade)
-const HeadlessVisualEditor = lazy(() => import('./core/editor/HeadlessVisualEditor'));
 // 🚀 DASHBOARD AVANÇADO (futuro)
 const DashboardPage = lazy(() => import('./pages/DashboardPage'));
 const StepPage = lazy(() => import('./pages/StepPage'));
@@ -47,9 +45,6 @@ const EnhancedPropertiesPanelDemo = lazy(() => import('./components/demo/Enhance
 const FunnelDashboardPage = lazy(() => import('./pages/FunnelDashboardPage'));
 const TestParticipantsPage = lazy(() => import('./pages/TestParticipantsPage'));
 const TestDataPanel = lazy(() => import('./components/TestDataPanel'));
-
-// 🌟 UNIVERSAL FUNNEL EDITOR - NOVA FUNCIONALIDADE
-const UniversalFunnelDemo = lazy(() => import('./pages/UniversalFunnelDemo'));
 
 // 🚀 URGENTE: Quiz 21 Steps Complete
 const CreateQuiz21CompletePage = lazy(() => import('./pages/CreateQuiz21CompletePage'));
@@ -134,7 +129,7 @@ function App() {
                           </div>
                         </div>
                       }>
-                        <EditorUnifiedPage funnelId={params.funnelId} />
+                        <ModernUnifiedEditor funnelId={params.funnelId} />
                       </Suspense>
                     </div>
                   );
@@ -148,7 +143,7 @@ function App() {
                   window.history.replaceState(null, '', newPath);
                   return (
                     <Suspense fallback={<LoadingFallback />}>
-                      <EditorUnifiedPage funnelId={params.funnelId} />
+                      <ModernUnifiedEditor funnelId={params.funnelId} />
                     </Suspense>
                   );
                 }} />
@@ -157,7 +152,7 @@ function App() {
                   window.history.replaceState(null, '', '/editor');
                   return (
                     <Suspense fallback={<LoadingFallback />}>
-                      <EditorUnifiedPage />
+                      <ModernUnifiedEditor />
                     </Suspense>
                   );
                 }} />
@@ -166,7 +161,7 @@ function App() {
                   window.history.replaceState(null, '', '/editor');
                   return (
                     <Suspense fallback={<LoadingFallback />}>
-                      <EditorUnifiedPage />
+                      <ModernUnifiedEditor />
                     </Suspense>
                   );
                 }} />
@@ -195,20 +190,28 @@ function App() {
                   </Suspense>
                 } />
 
-                {/* 🚀 NOVO: Editor Visual Headless com integração JSON ↔ Painel */}
+                {/* 🎯 CONSOLIDAÇÃO: Rotas de editores antigos redirecionadas */}
                 <Route path="/headless-editor/:funnelId?" component={(props: any) => {
                   const { params } = props;
-                  const search = window.location.search;
-                  console.log('🎯 Rota /headless-editor ativada com params:', params);
-                  const urlParams = new URLSearchParams(search);
-                  const templateId = urlParams.get('template');
-                  console.log('📋 Template ID extraído da URL:', templateId);
+                  // Redireciona para editor moderno mantendo parâmetros
+                  const newPath = `/editor${params.funnelId ? `/${params.funnelId}` : ''}${window.location.search}`;
+                  window.history.replaceState(null, '', newPath);
                   return (
                     <Suspense fallback={<LoadingFallback />}>
-                      <HeadlessVisualEditor
+                      <ModernUnifiedEditor
                         funnelId={params.funnelId}
-                        templateId={templateId || undefined}
+                        mode="headless"
                       />
+                    </Suspense>
+                  );
+                }} />
+
+                <Route path="/universal-editor" component={() => {
+                  // Redireciona para editor moderno  
+                  window.history.replaceState(null, '', '/editor');
+                  return (
+                    <Suspense fallback={<LoadingFallback />}>
+                      <ModernUnifiedEditor mode="funnel" />
                     </Suspense>
                   );
                 }} />
@@ -294,12 +297,15 @@ function App() {
                   </Suspense>
                 } />
 
-                {/* 🌟 UNIVERSAL FUNNEL EDITOR - DEMO */}
-                <Route path="/universal-editor" component={() =>
-                  <Suspense fallback={<LoadingFallback />}>
-                    <UniversalFunnelDemo />
-                  </Suspense>
-                } />
+                {/* 🌟 CONSOLIDAÇÃO: Universal Editor redirecionado */}
+                <Route path="/universal-editor" component={() => {
+                  window.history.replaceState(null, '', '/editor');
+                  return (
+                    <Suspense fallback={<LoadingFallback />}>
+                      <ModernUnifiedEditor mode="funnel" />
+                    </Suspense>
+                  );
+                }} />
 
                 {/* 🔧 Páginas Especiais */}
                 <Route path="/com-que-roupa-eu-vou" component={() =>
@@ -325,11 +331,13 @@ function App() {
                   </Suspense>
                 } />
 
+                {/* 🎯 CONSOLIDAÇÃO: Editor de teste redirecionado */}
                 <Route path="/test-editor-pro" component={() => {
-                  const TestEditorPro = lazy(() => import('./components/debug/TestEditorPro'));
+                  console.log('⚠️ Rota de teste redirecionada para editor principal');
+                  window.history.replaceState(null, '', '/editor');
                   return (
                     <Suspense fallback={<LoadingFallback />}>
-                      <TestEditorPro />
+                      <ModernUnifiedEditor mode="visual" />
                     </Suspense>
                   );
                 }} />
@@ -359,7 +367,7 @@ function App() {
                   window.history.replaceState(null, '', '/editor');
                   return (
                     <Suspense fallback={<LoadingFallback />}>
-                      <EditorUnifiedPage />
+                      <ModernUnifiedEditor />
                     </Suspense>
                   );
                 }} />

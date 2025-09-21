@@ -56,7 +56,7 @@ export class Quiz21StepsAdapter {
                     type: 'question',
                     content: {
                         question: step.pergunta,
-                        options: step.opcoes.map((opcao, index) => ({
+                        options: step.opcoes.map((opcao) => ({
                             text: opcao.texto,
                             value: opcao.valor,
                             nextStep: opcao.proximoStep
@@ -102,7 +102,7 @@ export class Quiz21StepsAdapter {
             const questionBlock = step.blocks.find(b => b.type === 'question');
 
             return {
-                id: parseInt(step.id) || 0,
+                id: parseInt(String(step.id)) || 0,
                 titulo: titleBlock?.content?.text || step.name,
                 pergunta: questionBlock?.content?.question || '',
                 opcoes: questionBlock?.content?.options || [],
