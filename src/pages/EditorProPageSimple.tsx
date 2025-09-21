@@ -3,7 +3,7 @@ import { Bot, Sparkles, Palette, BarChart3, TestTube2, Calculator, Settings, Che
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import ModularEditorPro from '@/components/editor/EditorPro/components/ModularEditorPro';
-import SimpleBuilderProvider from '@/components/editor/SimpleBuilderProvider';
+import SimpleBuilderProvider from '@/components/editor/SimpleBuilderProviderFixed';
 import { TemplatesIASidebar } from '@/components/editor/sidebars/TemplatesIASidebar';
 import { BrandKitSidebar } from '@/components/editor/sidebars/BrandKitSidebar';
 import { AnalyticsDashboardOverlay } from '../components/analytics/AnalyticsDashboardOverlay';

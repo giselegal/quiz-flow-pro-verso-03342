@@ -1,6 +1,6 @@
 import React, { useCallback, useMemo, useState, useRef, useEffect } from 'react';
 // 🚀 SIMPLE BUILDER SYSTEM - Hook compatível com SimpleBuilderProvider
-import { useOptimizedEditor } from '@/components/editor/SimpleBuilderProvider';
+import { useSimpleBuilder } from '@/components/editor/SimpleBuilderProviderFixed';
 import { useOptimizedScheduler } from '@/hooks/useOptimizedScheduler';
 import { useNotification } from '@/components/ui/Notification';
 import { Block } from '@/types/editor';
@@ -179,7 +179,7 @@ interface ModularEditorProProps {
 
 const ModularEditorPro: React.FC<ModularEditorProProps> = () => {
   // 🚀 BUILDER SYSTEM - Hook integrado
-  const { state, actions } = useOptimizedEditor();
+  const { state, actions } = useSimpleBuilder();
   const { schedule } = useOptimizedScheduler();
   const { addNotification } = useNotification();
   const { columnWidths, handleResize } = useResizableColumns();
@@ -214,7 +214,7 @@ const ModularEditorPro: React.FC<ModularEditorProProps> = () => {
   // Blocos da etapa atual com memoização e debug melhorado
   const currentStepBlocks = useMemo(() => {
     const stepKey = `step-${state.currentStep}`;
-    const blocks = state.stepBlocks[stepKey] || [];
+    const blocks = state.steps[stepKey] || [];
 
     // 🔍 DEBUG: Log detalhado do carregamento de blocos
     console.log('🔍 ModularEditorPro - currentStepBlocks calculado:', {
@@ -222,21 +222,22 @@ const ModularEditorPro: React.FC<ModularEditorProProps> = () => {
       stepKey,
       blocksFound: blocks.length,
       blockTypes: blocks.map(b => b.type),
-      allStepKeys: Object.keys(state.stepBlocks),
-      totalBlocks: Object.values(state.stepBlocks).reduce((acc, arr) => acc + arr.length, 0)
+      allStepKeys: Object.keys(state.steps),
+      totalBlocks: Object.values(state.steps).reduce((acc, arr) => acc + arr.length, 0)
     });
 
     return blocks;
-  }, [state.stepBlocks, state.currentStep]);
+  }, [state.steps, state.currentStep]);
 
-  // Bloco selecionado
+  // Bloco selecionado - usar um selectedBlockId simples local
+  const [selectedBlockId, setSelectedBlockId] = useState<string | null>(null);
   const selectedBlock = useMemo(() => {
-    if (!state.selectedBlockId) return null;
-    const block = currentStepBlocks.find(block => block.id === state.selectedBlockId) || null;
+    if (!selectedBlockId) return null;
+    const block = currentStepBlocks.find(block => block.id === selectedBlockId) || null;
 
     // 🔍 DEBUG: Log do selectedBlock para investigar o problema  
     console.log('🔍 ModularEditorPro - selectedBlock calculado:', {
-      selectedBlockId: state.selectedBlockId,
+      selectedBlockId,
       currentStepBlocks: currentStepBlocks.length,
       foundBlock: !!block,
       blockId: block?.id,
@@ -246,14 +247,14 @@ const ModularEditorPro: React.FC<ModularEditorProProps> = () => {
     });
 
     return block;
-  }, [currentStepBlocks, state.selectedBlockId]);
+  }, [currentStepBlocks, selectedBlockId]);
 
   // Dados para componentes da sidebar - GENÉRICO para qualquer funil
   const stepHasBlocksRecord = useMemo(() => {
     const record: Record<number, boolean> = {};
 
     // 🌐 GENÉRICO: Detecta automaticamente quantas etapas o funil tem
-    const stepKeys = Object.keys(state.stepBlocks);
+    const stepKeys = Object.keys(state.steps);
     const maxStep = stepKeys.reduce((max, key) => {
       const stepNumber = parseInt(key.replace('step-', ''));
       return Math.max(max, stepNumber);
@@ -261,7 +262,7 @@ const ModularEditorPro: React.FC<ModularEditorProProps> = () => {
 
     for (let i = 1; i <= maxStep; i++) {
       const stepKey = `step-${i}`;
-      record[i] = (state.stepBlocks[stepKey]?.length || 0) > 0;
+      record[i] = (state.steps[stepKey]?.length || 0) > 0;
     }
 
     // 🔍 DEBUG: Log do stepHasBlocksRecord para investigar problemas
@@ -269,16 +270,16 @@ const ModularEditorPro: React.FC<ModularEditorProProps> = () => {
       record,
       currentStep: state.currentStep,
       totalStepsWithBlocks: Object.values(record).filter(Boolean).length,
-      stepBlocksKeys: Object.keys(state.stepBlocks),
+      stepBlocksKeys: Object.keys(state.steps),
       sampleStepBlocks: {
-        'step-1': state.stepBlocks['step-1']?.length || 0,
-        'step-2': state.stepBlocks['step-2']?.length || 0,
-        'step-3': state.stepBlocks['step-3']?.length || 0
+        'step-1': state.steps['step-1']?.length || 0,
+        'step-2': state.steps['step-2']?.length || 0,
+        'step-3': state.steps['step-3']?.length || 0
       }
     });
 
     return record;
-  }, [state.stepBlocks, state.currentStep]);
+  }, [state.steps, state.currentStep]);
 
   // Sistema de validação automática de etapas
   useEffect(() => {
@@ -315,8 +316,10 @@ const ModularEditorPro: React.FC<ModularEditorProProps> = () => {
             blocksCount: currentStepBlocks.length
           });
 
-          // Marcar etapa como válida se tem blocos
-          actions.setStepValid(state.currentStep, true);
+      // Marcar etapa como válida se tem blocos
+      if (actions.setStepValid) {
+        actions.setStepValid(state.currentStep, true);
+      }
         } catch (error) {
           console.error('❌ Erro ao salvar draft:', error);
         }
@@ -359,8 +362,8 @@ const ModularEditorPro: React.FC<ModularEditorProProps> = () => {
       currentStep: state.currentStep,
       currentBlocks: currentStepBlocks.length
     });
-    actions.setSelectedBlockId(blockId);
-  }, [actions, state.currentStep, currentStepBlocks.length]);
+    setSelectedBlockId(blockId);
+  }, [state.currentStep, currentStepBlocks.length]);
 
   const handleUpdateBlock = useCallback((blockId: string, updates: Partial<Block>) => {
     const stepKey = `step-${state.currentStep}`;
@@ -372,12 +375,12 @@ const ModularEditorPro: React.FC<ModularEditorProProps> = () => {
     actions.removeBlock(stepKey, blockId);
 
     // Limpar seleção se deletar bloco selecionado
-    if (state.selectedBlockId === blockId) {
-      actions.setSelectedBlockId(null);
+    if (selectedBlockId === blockId) {
+      setSelectedBlockId(null);
     }
 
     addNotification('Componente foi removido da etapa');
-  }, [state.currentStep, state.selectedBlockId, actions, addNotification]);
+  }, [state.currentStep, selectedBlockId, actions, addNotification]);
 
   const handleDeleteSelectedBlock = useCallback(() => {
     if (selectedBlock) {
