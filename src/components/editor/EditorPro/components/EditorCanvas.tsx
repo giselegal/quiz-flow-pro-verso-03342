@@ -47,13 +47,13 @@ const EditorCanvas: React.FC<EditorCanvasProps> = ({
 
   if (isPreviewMode) {
     return (
-      <div className="flex-1 min-h-0 bg-gradient-to-br from-[#FAF9F7] via-[#F5F2E9] to-[#EEEBE1]">
-        <div className="h-full w-full overflow-y-auto">
+      <div className="flex-1 min-h-0 bg-gradient-to-br from-[#FAF9F7] via-[#F5F2E9] to-[#EEEBE1] isolate">
+        <div className="h-full w-full overflow-y-auto relative z-0">
           <ScalableQuizRenderer
             funnelId="quiz21StepsComplete"
             mode="preview"
             debugMode={true}
-            className="preview-mode-canvas"
+            className="preview-mode-canvas w-full h-full"
             onStepChange={(step, data) => {
               if (onStepChange) onStepChange(step);
               console.log('📍 Preview step change:', step, data);
@@ -67,20 +67,18 @@ const EditorCanvas: React.FC<EditorCanvasProps> = ({
   return (
     <div
       key={canvasKey}
-      className="flex-1 min-h-0 relative bg-gradient-to-br from-[#FAF9F7] via-[#F5F2E9] to-[#EEEBE1]"
+      className="flex-1 min-h-0 relative bg-gradient-to-br from-[#FAF9F7] via-[#F5F2E9] to-[#EEEBE1] isolate"
     >
       <div className="h-full w-full overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
-        {/* ✅ CORREÇÃO: Remover StepDndProvider aninhado - usar apenas SortableContext */}
-        <SortableContext items={blocks.map(block => `dnd-block-${currentStep}-${block.id}`)}>
-          <CanvasDropZone
-            blocks={blocks}
-            selectedBlockId={selectedBlock?.id || null}
-            onSelectBlock={handleBlockSelection}
-            onUpdateBlock={onUpdateBlock}
-            onDeleteBlock={onDeleteBlock}
-            scopeId={currentStep}
-          />
-        </SortableContext>
+        {/* ✅ CORREÇÃO: Usar CanvasDropZone sem SortableContext aninhado */}
+        <CanvasDropZone
+          blocks={blocks}
+          selectedBlockId={selectedBlock?.id || null}
+          onSelectBlock={handleBlockSelection}
+          onUpdateBlock={onUpdateBlock}
+          onDeleteBlock={onDeleteBlock}
+          scopeId={currentStep}
+        />
       </div>
     </div>
   );

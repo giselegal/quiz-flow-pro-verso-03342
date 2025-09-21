@@ -512,7 +512,7 @@ const CanvasDropZoneBase: React.FC<CanvasDropZoneProps> = ({
           ref={scrollRef}
           onScroll={onScroll}
           className="w-full"
-          style={{ maxWidth: 800, margin: '0 auto', maxHeight: '70vh' }}
+          style={{ maxWidth: 800, margin: '0 auto', height: 'auto' }}
         >
           {blocks.length > 0 ? (
             <div className="space-y-3">
