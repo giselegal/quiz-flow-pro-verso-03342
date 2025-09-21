@@ -47,6 +47,9 @@ const FunnelDashboardPage = lazy(() => import('./pages/FunnelDashboardPage'));
 const TestParticipantsPage = lazy(() => import('./pages/TestParticipantsPage'));
 const TestDataPanel = lazy(() => import('./components/TestDataPanel'));
 
+// 🚀 URGENTE: Quiz 21 Steps Complete
+const CreateQuiz21CompletePage = lazy(() => import('./pages/CreateQuiz21CompletePage'));
+
 // 🎯 NOVO: Editor Pro Consolidado (substitui UniversalStepEditorProDemo)
 const EditorProConsolidatedPage = lazy(() => import('./pages/EditorProConsolidatedPage'));
 
@@ -126,11 +129,15 @@ function App() {
                 }} />
 
                 {/* � NOVO: Teste de IA para Geração de Imagens de Moda */}
+                {/* Fashion AI Test Page */}
                 <Route path="/fashion-ai" component={() => (
                   <Suspense fallback={<LoadingFallback />}>
                     <FashionAITestPage />
                   </Suspense>
                 )} />
+
+                {/* 🚀 URGENTE: Criar Quiz 21 Steps Complete */}
+                <ProtectedRoute path="/create-quiz21-complete" component={CreateQuiz21CompletePage} />
 
                 {/* �🎯 LEGACY: Editor Pro Consolidado - Arquitetura Final */}
                 <Route path="/editor-pro-legacy" component={() =>
