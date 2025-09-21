@@ -134,6 +134,9 @@ export const ENHANCED_BLOCK_REGISTRY: Record<string, ComponentType<any>> = {
     // ✅ BLOCOS UNIVERSAIS
     heading: lazy(() => import('@/components/editor/blocks/HeadingInlineBlock')),
     'heading-inline': lazy(() => import('@/components/editor/blocks/HeadingInlineBlock')),
+    // Aliases para compatibilidade com templates antigos
+    headline: lazy(() => import('@/components/editor/blocks/HeadingInlineBlock')),
+    'headline-inline': lazy(() => import('@/components/editor/blocks/HeadingInlineBlock')),
     'image-display-inline': lazy(() => import('@/components/editor/blocks/ImageDisplayInline')),
     'lead-form': lazy(() => import('@/components/editor/blocks/LeadFormBlock')),
     'connected-lead-form': lazy(() => import('@/components/editor/blocks/ConnectedLeadFormBlock')),

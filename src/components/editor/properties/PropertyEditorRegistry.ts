@@ -142,6 +142,36 @@ export const PROPERTY_EDITOR_REGISTRY: PropertyEditorRegistry = {
     category: 'content',
   },
 
+  // Alias para títulos simples
+  headline: {
+    priority: 18,
+    properties: [
+      {
+        name: 'content',
+        type: 'text',
+        label: 'Título',
+        required: true,
+        placeholder: 'Digite o título...'
+      },
+      {
+        name: 'alignment',
+        type: 'select',
+        label: 'Alinhamento',
+        required: false,
+        options: ['left', 'center', 'right']
+      },
+      {
+        name: 'size',
+        type: 'select',
+        label: 'Tamanho',
+        required: false,
+        options: ['small', 'medium', 'large', 'xl']
+      }
+    ],
+    editorComponent: 'TextPropertyEditor',
+    category: 'content',
+  },
+
   button: {
     priority: 6,
     properties: [

@@ -414,6 +414,27 @@ export const blocksRegistry: Record<string, BlockDefinition> = process.env.NODE_
             prop({ key: 'textColor', kind: 'color', label: 'Cor do Texto', category: 'style', default: '#432818' }),
         ],
     },
+    'headline': {
+        type: 'headline',
+        title: 'Título',
+        category: 'Conteúdo',
+        icon: 'note',
+        defaultProps: { text: 'Título', level: 'h2', alignment: 'center', textColor: '#432818' },
+        propsSchema: [
+            prop({ key: 'text', kind: 'text', label: 'Texto', category: 'content', default: 'Título', required: true }),
+            select('level', 'Nível', [
+                { value: 'h1', label: 'H1' },
+                { value: 'h2', label: 'H2' },
+                { value: 'h3', label: 'H3' },
+            ], { category: 'style', default: 'h2' }),
+            select('alignment', 'Alinhamento', [
+                { value: 'left', label: 'Esquerda' },
+                { value: 'center', label: 'Centro' },
+                { value: 'right', label: 'Direita' },
+            ], { category: 'layout', default: 'center' }),
+            prop({ key: 'textColor', kind: 'color', label: 'Cor do Texto', category: 'style', default: '#432818' }),
+        ],
+    },
     'options-grid': {
         type: 'options-grid',
         title: 'Grade de Opções',
