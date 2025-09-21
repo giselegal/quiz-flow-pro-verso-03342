@@ -32,7 +32,7 @@ const QuizModularPage: React.FC<QuizModularPageProps> = () => {
       <div className="container mx-auto px-2 sm:px-4 md:px-6 py-4 md:py-8">
         <div className="max-w-4xl mx-auto">
           <ScalableQuizRenderer
-            funnelId="quiz21StepsComplete"
+            funnelId="quiz21StepsComplete-production"
             mode="production"
             className="production-quiz"
             onComplete={(results) => {
