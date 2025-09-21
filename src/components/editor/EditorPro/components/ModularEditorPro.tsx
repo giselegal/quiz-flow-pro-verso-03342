@@ -843,7 +843,3 @@ const ModularEditorPro: React.FC<ModularEditorProProps> = () => {
 };
 
 export default ModularEditorPro;
-
-// Export versões otimizadas para testes de performance
-export { default as OptimizedModularEditorPro } from './OptimizedModularEditorPro';
-export { default as SimplifiedOptimizedEditor } from './SimplifiedOptimizedEditor';
