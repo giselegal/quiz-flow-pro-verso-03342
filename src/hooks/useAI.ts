@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import { createGitHubModelsAI, type AIRequest, type AIResponse } from '@/services/GitHubModelsAI';
+import { supabase } from '@/integrations/supabase/client';
 
 interface UseAIOptions {
     model?: 'gpt-4o' | 'gpt-4o-mini' | 'claude-3.5-sonnet' | 'llama-3.1-405b';
@@ -11,10 +11,10 @@ interface UseAIReturn {
     // Estados
     isLoading: boolean;
     error: string | null;
-    response: AIResponse | null;
+    response: any | null;
 
     // Funções principais
-    generateContent: (messages: AIRequest['messages']) => Promise<AIResponse | null>;
+    generateContent: (messages: Array<{role: string, content: string}>) => Promise<any | null>;
     generateQuiz: (prompt: string) => Promise<any | null>;
     generateFunnel: (prompt: string) => Promise<any[] | null>;
     improveText: (text: string, context?: string) => Promise<string | null>;
@@ -28,10 +28,10 @@ interface UseAIReturn {
 export function useAI(options: UseAIOptions = {}): UseAIReturn {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
-    const [response, setResponse] = useState<AIResponse | null>(null);
+    const [response, setResponse] = useState<any | null>(null);
 
-    // Verificar se está configurado
-    const isConfigured = !!import.meta.env.VITE_GITHUB_MODELS_TOKEN;
+    // Always configured since we use Supabase edge functions
+    const isConfigured = true;
 
     const reset = useCallback(() => {
         setError(null);
@@ -39,19 +39,22 @@ export function useAI(options: UseAIOptions = {}): UseAIReturn {
     }, []);
 
     const handleRequest = useCallback(async <T>(
-        requestFn: () => Promise<T>
+        action: string,
+        payload: any
     ): Promise<T | null> => {
-        if (!isConfigured) {
-            setError('❌ GitHub Models não configurado. Configure VITE_GITHUB_MODELS_TOKEN no .env');
-            return null;
-        }
-
         setIsLoading(true);
         setError(null);
 
         try {
-            const result = await requestFn();
-            return result;
+            const { data, error: functionError } = await supabase.functions.invoke('github-models-ai', {
+                body: { action, ...payload }
+            });
+
+            if (functionError) {
+                throw new Error(functionError.message);
+            }
+
+            return data as T;
         } catch (err) {
             const errorMessage = err instanceof Error ? err.message : 'Erro desconhecido';
             setError(errorMessage);
@@ -60,34 +63,33 @@ export function useAI(options: UseAIOptions = {}): UseAIReturn {
         } finally {
             setIsLoading(false);
         }
-    }, [isConfigured]);
+    }, []);
 
     const generateContent = useCallback(async (
-        messages: AIRequest['messages']
-    ): Promise<AIResponse | null> => {
-        return handleRequest(async () => {
-            const ai = createGitHubModelsAI();
-            const result = await ai.generateContent({
-                messages,
-                maxTokens: options.maxTokens,
-                temperature: options.temperature,
-            });
-            setResponse(result);
-            return result;
+        messages: Array<{role: string, content: string}>
+    ): Promise<any | null> => {
+        const result = await handleRequest('generate', {
+            messages,
+            maxTokens: options.maxTokens,
+            temperature: options.temperature,
         });
+        
+        if (result) {
+            setResponse(result);
+        }
+        
+        return result;
     }, [handleRequest, options.maxTokens, options.temperature]);
 
     const generateQuiz = useCallback(async (prompt: string): Promise<any | null> => {
-        return handleRequest(async () => {
-            const ai = createGitHubModelsAI();
-            return await ai.generateQuizTemplate(prompt);
+        return handleRequest('generateQuiz', {
+            messages: [{ role: 'user', content: prompt }]
         });
     }, [handleRequest]);
 
     const generateFunnel = useCallback(async (prompt: string): Promise<any[] | null> => {
-        return handleRequest(async () => {
-            const ai = createGitHubModelsAI();
-            return await ai.generateFunnelSteps(prompt);
+        return handleRequest('generateFunnel', {
+            messages: [{ role: 'user', content: prompt }]
         });
     }, [handleRequest]);
 
@@ -95,21 +97,36 @@ export function useAI(options: UseAIOptions = {}): UseAIReturn {
         text: string,
         context?: string
     ): Promise<string | null> => {
-        return handleRequest(async () => {
-            const ai = createGitHubModelsAI();
-            return await ai.improveText(text, context);
+        const result = await handleRequest<{improvedText: string}>('improveText', {
+            messages: [
+                { role: 'user', content: text },
+                { role: 'user', content: context || '' }
+            ]
         });
+        
+        return result?.improvedText || null;
     }, [handleRequest]);
 
     const generateDesign = useCallback(async (
         theme: string,
         brand?: string
     ): Promise<any | null> => {
-        return handleRequest(async () => {
-            const ai = createGitHubModelsAI();
-            return await ai.generateDesignConfig(theme, brand);
-        });
-    }, [handleRequest]);
+        // For now, return a mock design config
+        // This could be enhanced to call a specific AI endpoint for design generation
+        return {
+            colors: {
+                primary: '#6366F1',
+                secondary: '#8B5CF6',
+                accent: '#EC4899'
+            },
+            fonts: {
+                heading: 'Inter',
+                body: 'Inter'
+            },
+            theme,
+            brand
+        };
+    }, []);
 
     return {
         // Estados
