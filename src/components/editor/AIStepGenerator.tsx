@@ -3,9 +3,10 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Textarea } from '@/components/ui/textarea';
-import { Bot, Sparkles, Wand2, Play, Zap, Check, AlertCircle } from 'lucide-react';
+import { Bot, Sparkles, Wand2, Play, Zap, Check, AlertCircle, Image as ImageIcon } from 'lucide-react';
 import { Progress } from '@/components/ui/progress';
 import { useAI } from '@/hooks/useAI';
+import { useFashionAI, FASHION_PROMPTS } from '@/hooks/useFashionAI';
 
 interface AIStepGeneratorProps {
     onStepsGenerated: (steps: any[]) => void;
@@ -27,15 +28,22 @@ export function AIStepGenerator({ onStepsGenerated, onClose }: AIStepGeneratorPr
     const [generatedSteps, setGeneratedSteps] = useState<any[]>([]);
 
     // 🤖 Hook da IA integrada
-    const { generateFunnel, isLoading: isAILoading, error: aiError, isConfigured } = useAI();
+    const { generateFunnel, isConfigured } = useAI();
 
-    // Prompts sugeridos
+    // 🎨 Hook da IA de imagens de moda (para funis de roupa)
+    const fashionAI = useFashionAI({
+        provider: 'dalle3',
+        apiKey: process.env.VITE_OPENAI_API_KEY || '',
+        style: 'realistic'
+    });
+
+    // Prompts sugeridos com foco em moda
     const suggestedPrompts = [
-        'Crie um quiz de estilo pessoal com 5 perguntas sobre preferências de moda',
-        'Gere um funil para consultoria nutricional com coleta de dados corporais',
-        'Faça um quiz de personalidade para empreendedores com resultados personalizados',
-        'Crie um formulário de avaliação fitness com recomendações de treino',
-        'Gere um quiz de autoconhecimento para coaching pessoal'
+        '🎨 Crie um funil "Que roupa eu vou?" com geração de imagens de looks personalizados',
+        'Gere um quiz de estilo pessoal com 5 perguntas sobre preferências de moda',
+        'Faça um consultoria de guarda-roupa com análise de cores e estilo pessoal',
+        'Crie um formulário de personal shopper com recomendações de compras',
+        'Gere um quiz de autoconhecimento para estilo e moda pessoal'
     ];
 
     const handleGenerate = async () => {
@@ -199,6 +207,16 @@ export function AIStepGenerator({ onStepsGenerated, onClose }: AIStepGeneratorPr
             // Usar o template config para log (opcional)
             console.log('Gerando steps com configuração:', dynamicTemplateConfig.meta.name);
 
+            // 🎨 Detectar se é funil de moda para gerar imagens
+            const isFashionFunnel = prompt.toLowerCase().includes('roupa') ||
+                prompt.toLowerCase().includes('moda') ||
+                prompt.toLowerCase().includes('estilo') ||
+                prompt.toLowerCase().includes('look');
+
+            if (isFashionFunnel) {
+                console.log('🎨 Funil de moda detectado! Integrando geração de imagens...');
+            }
+
             // Simular geração com AI - sem dependências externas
             const simulateAIProgress = (stepId: string, status: 'pending' | 'processing' | 'completed' | 'error', progress: number) => {
                 setGenerationSteps(prev => prev.map(step =>
@@ -211,6 +229,36 @@ export function AIStepGenerator({ onStepsGenerated, onClose }: AIStepGeneratorPr
                 const step = steps[i];
 
                 simulateAIProgress(step.id, 'processing', 0);
+
+                // 🎨 Se for funil de moda, gerar imagens durante o processo de finalização
+                if (isFashionFunnel && step.id === 'finalize' && fashionAI) {
+                    console.log('🎨 Gerando imagens de exemplo para o funil de moda...');
+
+                    try {
+                        // Gerar uma imagem de exemplo baseada no prompt
+                        const fashionRequest = {
+                            prompt: `Stylish outfit recommendation, ${prompt}`,
+                            gender: 'feminino' as const,
+                            occasion: 'casual' as const,
+                            style: 'moderno' as const,
+                            colors: ['black', 'white', 'navy'],
+                            season: 'verão' as const
+                        };
+
+                        const imageResult = await fashionAI.generateOutfit(fashionRequest);
+                        if (imageResult.success && imageResult.imageUrl) {
+                            console.log('✅ Imagem de moda gerada com sucesso!');
+                            // Salvar a imagem gerada para usar nos resultados
+                            localStorage.setItem('generated_fashion_image', JSON.stringify({
+                                url: imageResult.imageUrl,
+                                prompt: imageResult.prompt,
+                                timestamp: Date.now()
+                            }));
+                        }
+                    } catch (error) {
+                        console.log('⚠️ Erro ao gerar imagem de moda:', error);
+                    }
+                }
 
                 // Simular processamento IA
                 await new Promise<void>(resolve => {

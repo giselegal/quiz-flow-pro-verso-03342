@@ -53,6 +53,9 @@ const EditorProConsolidatedPage = lazy(() => import('./pages/EditorProConsolidat
 // 🚀 NOVO: Editor IA Pro - Versão simplificada para testes  
 const EditorProPageSimple = lazy(() => import('./pages/EditorProPageSimple'));
 
+// 🎨 NOVO: Teste de IA para Geração de Imagens de Moda
+const FashionAITestPage = lazy(() => import('./pages/FashionAITestPage'));
+
 // Teste simples do navegador
 const SimpleEditorTest = lazy(() => import('./components/test/SimpleEditorTest'));
 
@@ -122,7 +125,14 @@ function App() {
                   );
                 }} />
 
-                {/* 🎯 LEGACY: Editor Pro Consolidado - Arquitetura Final */}
+                {/* � NOVO: Teste de IA para Geração de Imagens de Moda */}
+                <Route path="/fashion-ai" component={() => (
+                  <Suspense fallback={<LoadingFallback />}>
+                    <FashionAITestPage />
+                  </Suspense>
+                )} />
+
+                {/* �🎯 LEGACY: Editor Pro Consolidado - Arquitetura Final */}
                 <Route path="/editor-pro-legacy" component={() =>
                   <Suspense fallback={<LoadingFallback />}>
                     <EditorProConsolidatedPage />
