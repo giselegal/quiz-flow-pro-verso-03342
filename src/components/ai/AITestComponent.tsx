@@ -3,7 +3,6 @@ import { Bot, Sparkles, Zap, AlertCircle, CheckCircle, Copy, Download } from 'lu
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
-import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { useAI } from '@/hooks/useAI';
 

@@ -3,10 +3,10 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Textarea } from '@/components/ui/textarea';
-import { Bot, Sparkles, Wand2, Play, Zap, Check, AlertCircle, Image as ImageIcon } from 'lucide-react';
+import { Bot, Sparkles, Wand2, Play, Zap, Check, AlertCircle } from 'lucide-react';
 import { Progress } from '@/components/ui/progress';
 import { useAI } from '@/hooks/useAI';
-import { useFashionAI, FASHION_PROMPTS } from '@/hooks/useFashionAI';
+import { useFashionAI } from '@/hooks/useFashionAI';
 
 interface AIStepGeneratorProps {
     onStepsGenerated: (steps: any[]) => void;

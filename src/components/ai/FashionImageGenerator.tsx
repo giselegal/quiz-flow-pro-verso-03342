@@ -6,7 +6,6 @@ import { Badge } from '../ui/badge';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
 import { Textarea } from '../ui/textarea';
-import { Switch } from '../ui/switch';
 import { Progress } from '../ui/progress';
 import { useFashionAI, FASHION_PROMPTS, FASHION_COLORS } from '../../hooks/useFashionAI';
 import { FashionImageRequest } from '../../services/FashionImageAI';

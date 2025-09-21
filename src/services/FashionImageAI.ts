@@ -82,7 +82,7 @@ export class FashionImageAI {
     /**
      * 🎯 DALL-E 3 - Melhor qualidade para moda
      */
-    private async generateWithDALLE3(prompt: string, request: FashionImageRequest): Promise<ImageGenerationResponse> {
+    private async generateWithDALLE3(prompt: string, _request: FashionImageRequest): Promise<ImageGenerationResponse> {
         const response = await fetch('https://api.openai.com/v1/images/generations', {
             method: 'POST',
             headers: {
@@ -121,7 +121,7 @@ export class FashionImageAI {
     /**
      * 🤖 Gemini Vision - Gratuito, multimodal
      */
-    private async generateWithGemini(prompt: string, request: FashionImageRequest): Promise<ImageGenerationResponse> {
+    private async generateWithGemini(prompt: string, _request: FashionImageRequest): Promise<ImageGenerationResponse> {
         // Nota: Gemini ainda não tem geração de imagem oficial
         // Simulando resposta ou usando Imagen via Google Cloud
         const response = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent', {
@@ -160,7 +160,7 @@ export class FashionImageAI {
     /**
      * 🎨 Stable Diffusion - Open source, customizável
      */
-    private async generateWithStableDiffusion(prompt: string, request: FashionImageRequest): Promise<ImageGenerationResponse> {
+    private async generateWithStableDiffusion(prompt: string, _request: FashionImageRequest): Promise<ImageGenerationResponse> {
         const response = await fetch('https://api-inference.huggingface.co/models/runwayml/stable-diffusion-v1-5', {
             method: 'POST',
             headers: {
@@ -203,7 +203,7 @@ export class FashionImageAI {
     /**
      * 🎭 Midjourney - Via Discord Bot (implementação futura)
      */
-    private async generateWithMidjourney(prompt: string, request: FashionImageRequest): Promise<ImageGenerationResponse> {
+    private async generateWithMidjourney(prompt: string, _request: FashionImageRequest): Promise<ImageGenerationResponse> {
         return {
             success: false,
             error: 'Midjourney integration ainda não implementado. Use DALL-E 3.',

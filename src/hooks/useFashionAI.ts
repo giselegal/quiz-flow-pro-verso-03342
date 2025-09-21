@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import { FashionImageAI, FashionImageRequest, ImageGenerationResponse, ImageGenerationConfig } from '../services/FashionImageAI';
+import { FashionImageAI, FashionImageRequest, ImageGenerationResponse } from '../services/FashionImageAI';
 
 interface UseFashionAIConfig {
     provider: 'dalle3' | 'gemini' | 'stable-diffusion' | 'midjourney';
