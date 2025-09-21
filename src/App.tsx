@@ -14,11 +14,11 @@ const ComQueRoupaEuVouPage = lazy(() => import('./pages/ComQueRoupaEuVouPage'));
 // 🎯 PÁGINAS ESSENCIAIS - SEM CONFLITOS
 const Home = lazy(() => import('./pages/Home'));
 const AuthPage = lazy(() => import('./pages/AuthPage'));
-// 🏗️ EDITOR PRINCIPAL - EditorPro com ModularEditorPro e EditorProvider integrado
-// const EditorPro = lazy(() => import('./components/editor/EditorPro/EditorPro')); // unused after routing /editor to EditorProPageSimple
-// 🏗️ EDITOR PRINCIPAL PROFISSIONAL ALTERNATIVO COM SUPORTE A PARÂMETROS URL
-const MainEditor = lazy(() => import('./pages/MainEditorUnified.new'));
-// 🚀 NOVO: Editor Visual Headless
+
+// 🚀 EDITOR UNIFICADO - PONTO DE ENTRADA ÚNICO
+const EditorUnifiedPage = lazy(() => import('./pages/EditorUnifiedPage'));
+
+// 🚀 EDITOR VISUAL HEADLESS (mantido para compatibilidade)
 const HeadlessVisualEditor = lazy(() => import('./core/editor/HeadlessVisualEditor'));
 const DashboardPage = lazy(() => import('./pages/admin/DashboardPage'));
 const StepPage = lazy(() => import('./pages/StepPage'));
@@ -49,12 +49,6 @@ const TestDataPanel = lazy(() => import('./components/TestDataPanel'));
 
 // 🚀 URGENTE: Quiz 21 Steps Complete
 const CreateQuiz21CompletePage = lazy(() => import('./pages/CreateQuiz21CompletePage'));
-
-// 🎯 NOVO: Editor Pro Consolidado (substitui UniversalStepEditorProDemo)
-const EditorProConsolidatedPage = lazy(() => import('./pages/EditorProConsolidatedPage'));
-
-// 🚀 NOVO: Editor IA Pro - Versão simplificada para testes  
-const EditorProPageSimple = lazy(() => import('./pages/EditorProPageSimple'));
 
 // 🎨 NOVO: Teste de IA para Geração de Imagens de Moda
 const FashionAITestPage = lazy(() => import('./pages/FashionAITestPage'));
@@ -118,18 +112,59 @@ function App() {
                   </Suspense>
                 } />
 
-                {/* 🚀 NOVO: Editor IA Pro - Sistema completo com funcionalidades avançadas */}
+                {/* 🚀 EDITOR UNIFICADO - TODAS AS ROTAS REDIRECIONAM PARA AQUI */}
+                
+                {/* Rota principal do editor */}
+                <Route path="/editor/:funnelId?" component={({ params }: { params: { funnelId?: string } }) => {
+                  console.log('🎯 Rota /editor unificada ativada:', params);
+                  return (
+                    <div className="h-screen w-screen">
+                      <Suspense fallback={
+                        <div className="flex items-center justify-center min-h-screen bg-background">
+                          <div className="text-center">
+                            <div className="w-16 h-16 mx-auto mb-4 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+                            <p className="text-foreground text-lg font-medium">Carregando Editor Unificado...</p>
+                          </div>
+                        </div>
+                      }>
+                        <EditorUnifiedPage funnelId={params.funnelId} />
+                      </Suspense>
+                    </div>
+                  );
+                }} />
+
+                {/* Redirecionamentos para o editor unificado */}
                 <Route path="/editor-pro/:funnelId?" component={({ params }: { params: { funnelId?: string } }) => {
-                  console.log('🚀 Rota /editor-pro com EditorProPageSimple ativada:', params);
+                  // Redireciona para o editor unificado mantendo parâmetros
+                  const search = window.location.search;
+                  const newPath = `/editor${params.funnelId ? `/${params.funnelId}` : ''}${search}`;
+                  window.history.replaceState(null, '', newPath);
                   return (
                     <Suspense fallback={<LoadingFallback />}>
-                      <EditorProPageSimple />
+                      <EditorUnifiedPage funnelId={params.funnelId} />
                     </Suspense>
                   );
                 }} />
 
-                {/* � NOVO: Teste de IA para Geração de Imagens de Moda */}
-                {/* Fashion AI Test Page */}
+                <Route path="/editor-pro-legacy" component={() => {
+                  window.history.replaceState(null, '', '/editor');
+                  return (
+                    <Suspense fallback={<LoadingFallback />}>
+                      <EditorUnifiedPage />
+                    </Suspense>
+                  );
+                }} />
+
+                <Route path="/editor-main" component={() => {
+                  window.history.replaceState(null, '', '/editor');
+                  return (
+                    <Suspense fallback={<LoadingFallback />}>
+                      <EditorUnifiedPage />
+                    </Suspense>
+                  );
+                }} />
+
+                {/* 🎯 NOVO: Teste de IA para Geração de Imagens de Moda */}
                 <Route path="/fashion-ai" component={() => (
                   <Suspense fallback={<LoadingFallback />}>
                     <FashionAITestPage />
@@ -139,13 +174,6 @@ function App() {
                 {/* 🚀 URGENTE: Criar Quiz 21 Steps Complete */}
                 <ProtectedRoute path="/create-quiz21-complete" component={CreateQuiz21CompletePage} />
 
-                {/* �🎯 LEGACY: Editor Pro Consolidado - Arquitetura Final */}
-                <Route path="/editor-pro-legacy" component={() =>
-                  <Suspense fallback={<LoadingFallback />}>
-                    <EditorProConsolidatedPage />
-                  </Suspense>
-                } />
-
                 {/* Teste simples do navegador */}
                 <Route path="/test-simple" component={() =>
                   <Suspense fallback={<LoadingFallback />}>
@@ -153,7 +181,6 @@ function App() {
                   </Suspense>
                 } />
 
-                {/* Editor - ordem importante: mais específico primeiro */}
                 {/* 🚀 NOVO: Editor Visual Headless com integração JSON ↔ Painel */}
                 <Route path="/headless-editor/:funnelId?" component={(props: any) => {
                   const { params } = props;
@@ -171,32 +198,6 @@ function App() {
                     </Suspense>
                   );
                 }} />
-
-                {/* 🎯 EDITOR PRINCIPAL - EditorPro com fundo preto e 4 colunas */}
-                <Route path="/editor/:funnelId?" component={({ params }: { params: { funnelId?: string } }) => {
-                  console.log('🔗 Rota /editor com EditorProPageSimple ativada:', params);
-                  return (
-                    <div className="h-screen w-screen">
-                      <Suspense fallback={
-                        <div className="flex items-center justify-center min-h-screen bg-gray-900">
-                          <div className="text-center">
-                            <div className="w-16 h-16 mx-auto mb-4 border-4 border-white border-t-transparent rounded-full animate-spin"></div>
-                            <p className="text-white text-lg font-medium">Carregando Editor IA Pro...</p>
-                          </div>
-                        </div>
-                      }>
-                        <EditorProPageSimple />
-                      </Suspense>
-                    </div>
-                  );
-                }} />
-
-                {/* 🎯 EDITOR ALTERNATIVO - MainEditor */}
-                <Route path="/editor-main" component={() =>
-                  <Suspense fallback={<LoadingFallback />}>
-                    <MainEditor />
-                  </Suspense>
-                } />
 
                 {/* Autenticação */}
                 <Route path="/auth" component={() =>
@@ -332,12 +333,15 @@ function App() {
                   );
                 }} />
 
-                {/* 🎯 DEMO: Editor Pro Demo (legacy) */}
-                <Route path="/demo-editor-pro" component={() =>
-                  <Suspense fallback={<LoadingFallback />}>
-                    <EditorProConsolidatedPage />
-                  </Suspense>
-                } />
+                {/* 🎯 DEMO: Editor Pro Demo (redirects to unified) */}
+                <Route path="/demo-editor-pro" component={() => {
+                  window.history.replaceState(null, '', '/editor');
+                  return (
+                    <Suspense fallback={<LoadingFallback />}>
+                      <EditorUnifiedPage />
+                    </Suspense>
+                  );
+                }} />
 
                 {/* Fallback para rotas não encontradas */}
                 <Route>
