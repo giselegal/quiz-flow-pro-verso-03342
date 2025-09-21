@@ -461,7 +461,7 @@ const FUNNEL_TEMPLATES: Record<
 };
 
 export const FunnelsProvider: React.FC<FunnelsProviderProps> = ({ children, debug = true }) => {
-  // ✅ CORRIGIDO: Obter funnelId dinamicamente da URL ou fallback
+  // ✅ CORRIGIDO: Obter funnelId dinamicamente da URL SEM fallback forçado
   const [currentFunnelId, setCurrentFunnelId] = useState<string>(() => {
     try {
       // Primeiro, tentar obter da URL
@@ -479,12 +479,12 @@ export const FunnelsProvider: React.FC<FunnelsProviderProps> = ({ children, debu
         return funnelFromStorage;
       }
 
-      // Fallback para o template padrão
-      console.log('🔍 FunnelsContext: usando fallback template-optimized-21-steps-funnel');
-      return 'template-optimized-21-steps-funnel';
+      // ❌ REMOVIDO: Fallback automático para template de 21 etapas
+      console.log('🔍 FunnelsContext: sem funnelId específico, deixar vazio para detecção dinâmica');
+      return ''; // Vazio para permitir detecção dinâmica
     } catch (error) {
       console.error('❌ Erro ao obter funnelId:', error);
-      return 'template-optimized-21-steps-funnel';
+      return ''; // Vazio ao invés de forçar template específico
     }
   });
 

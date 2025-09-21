@@ -26,6 +26,7 @@ export interface EditorRuntimeProvidersProps {
     children: React.ReactNode;
     funnelId?: string;
     initialStep?: number;
+    totalSteps?: number; // ✅ NOVO: Aceitar totalSteps dinâmico
     debugMode?: boolean;
     supabaseConfig?: {
         enabled: boolean;
@@ -39,6 +40,7 @@ export const EditorRuntimeProviders: React.FC<EditorRuntimeProvidersProps> = ({
     children,
     funnelId,
     initialStep,
+    totalSteps = 21, // ✅ NOVO: Default 21 para compatibilidade, mas aceita dinâmico
     debugMode = false,
     supabaseConfig = { enabled: false },
 }) => {
@@ -59,7 +61,7 @@ export const EditorRuntimeProviders: React.FC<EditorRuntimeProvidersProps> = ({
                         {/* Fase 1 mantém providers separadas - comentários indicam fusões futuras */}
                         <EditorQuizProvider>
                             <Quiz21StepsProvider debug={debugMode} initialStep={initialStep}>
-                                <QuizFlowProvider initialStep={initialStep} totalSteps={21}>
+                                <QuizFlowProvider initialStep={initialStep} totalSteps={totalSteps}>
                                     {children}
                                 </QuizFlowProvider>
                             </Quiz21StepsProvider>

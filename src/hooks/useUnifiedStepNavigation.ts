@@ -49,8 +49,8 @@ export const useUnifiedStepNavigation = (): UseUnifiedStepNavigationReturn => {
     const { currentStep, stepBlocks, stepValidation, isLoading } = state;
     const { setCurrentStep } = actions;
 
-    // Constantes
-    const TOTAL_STEPS = 21;
+    // 🔧 CORREÇÃO: Constantes dinâmicas baseadas nos dados reais
+    const TOTAL_STEPS = Object.keys(stepBlocks).length || 1; // Dinâmico baseado em stepBlocks
 
     // IDs formatados
     const currentStepId = useMemo(() => `step-${currentStep}`, [currentStep]);

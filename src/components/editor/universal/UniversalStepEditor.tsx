@@ -117,7 +117,9 @@ const UniversalStepEditor: React.FC<UniversalStepEditorProps> = ({
     }, [stepId, stepNumber]);
 
     const handleNext = () => {
-        if (stepNumber < 21) {
+        // ✅ CORRIGIDO: Obter totalSteps dinamicamente
+        const availableSteps = Object.keys(QUIZ_STYLE_21_STEPS_TEMPLATE).length || 21;
+        if (stepNumber < availableSteps) {
             const nextStepId = `step-${stepNumber + 1}`;
             onStepChange?.(nextStepId);
         }

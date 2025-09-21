@@ -208,7 +208,7 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
       }
     };
   }, []);
-  // 🔧 CORREÇÃO CRÍTICA: Estado inicial dinâmico baseado em funnelId
+  // 🔧 CORREÇÃO CRÍTICA: Estado inicial dinâmico SEM forçar 21 etapas
   const getInitialState = (): EditorState => {
     const initialBlocks: Record<string, Block[]> = {};
     const isTestEnv = process.env.NODE_ENV === 'test';
@@ -216,8 +216,8 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
     if (!isTestEnv) {
       // Se funnelId indica template, carregar do templateLibraryService
       if (funnelId?.startsWith('template-')) {
-        console.log('📋 EditorProvider: Carregando template inicial:', funnelId);
-        // Template será carregado depois via loadRealFunnelData
+        console.log('📋 EditorProvider: Template será carregado dinamicamente:', funnelId);
+        // Template será carregado depois via loadRealFunnelData - NÃO forçar 21 etapas
       } else if (funnelId && !funnelId.includes('new-funnel')) {
         console.log('🔗 EditorProvider: Funil real será carregado do Supabase:', funnelId);
         // Dados reais serão carregados depois via loadRealFunnelData
@@ -226,13 +226,10 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
         console.log('🆕 EditorProvider: Iniciando com canvas vazio (criação de novo funil)');
         // initialBlocks permanece vazio para canvas em branco
       } else {
-        // Fallback para template padrão apenas quando explicitamente solicitado
-        console.log('🆕 EditorProvider: Usando template padrão para funil existente');
-        Object.entries(QUIZ_STYLE_21_STEPS_TEMPLATE).forEach(([stepKey, blocks]) => {
-          if (Array.isArray(blocks) && blocks.length > 0) {
-            initialBlocks[stepKey] = [...blocks];
-          }
-        });
+        console.log('🆕 EditorProvider: Canvas vazio para funil novo');
+        // ❌ REMOVIDO: Não forçar template de 21 etapas por padrão
+        // Apenas inicializar com step-1 vazio
+        initialBlocks['step-1'] = [];
       }
     } else {
       // Em testes, iniciar sempre vazio

@@ -1,10 +1,9 @@
 /**
  * 🎪 QUIZ FLOW ORCHESTRATOR
- * Orquestrador principal do fluxo de 21 etapas
+ * Orquestrador principal do fluxo dinâmico de etapas
  * Conecta produção e editor com mesma fonte de dados
  */
 
-import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
 import { Block } from '@/types/editor';
 import React, { createContext, useCallback, useContext, useEffect, useReducer } from 'react';
 
@@ -130,9 +129,11 @@ const QuizFlowContext = createContext<{
 export const QuizFlowProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [state, dispatch] = useReducer(quizFlowReducer, initialState);
 
-  // 📊 CARREGAR DADOS DAS ETAPAS
+  // 📊 CARREGAR DADOS DAS ETAPAS (não forçar template específico)
   useEffect(() => {
-    dispatch({ type: 'LOAD_STEP_DATA', payload: QUIZ_STYLE_21_STEPS_TEMPLATE });
+    // ❌ REMOVIDO: Carregamento automático do template de 21 etapas
+    // dispatch({ type: 'LOAD_STEP_DATA', payload: QUIZ_STYLE_21_STEPS_TEMPLATE });
+    console.log('📊 QuizFlowProvider: Aguardando dados dinâmicos ao invés de forçar template');
   }, []);
 
   // 🎯 AÇÕES DO ORQUESTRADOR
@@ -166,10 +167,11 @@ export const QuizFlowProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     }, []),
 
     nextStep: useCallback(() => {
-      if (state.currentStep < 21) {
+      const maxSteps = Object.keys(state.stepData).length || 21; // Dinâmico baseado nos dados
+      if (state.currentStep < maxSteps) {
         dispatch({ type: 'SET_STEP', payload: state.currentStep + 1 });
       }
-    }, [state.currentStep]),
+    }, [state.currentStep, state.stepData]),
 
     prevStep: useCallback(() => {
       if (state.currentStep > 1) {
@@ -242,13 +244,15 @@ export const useQuizFlow = () => {
 // 📊 HOOK PARA DADOS DA ETAPA ATUAL
 export const useCurrentStepData = () => {
   const { state, actions } = useQuizFlow();
+  const totalSteps = Object.keys(state.stepData).length || 21; // Dinâmico
 
   return {
     stepNumber: state.currentStep,
     blocks: actions.getStepBlocks(state.currentStep),
-    progress: Math.round((state.currentStep / 21) * 100),
-    canGoNext: state.currentStep < 21,
+    progress: Math.round((state.currentStep / totalSteps) * 100),
+    canGoNext: state.currentStep < totalSteps,
     canGoPrev: state.currentStep > 1,
+    totalSteps, // ✅ NOVO: Expor totalSteps dinamicamente
   };
 };
 

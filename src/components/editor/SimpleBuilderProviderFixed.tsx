@@ -128,11 +128,11 @@ export const SimpleBuilderProvider: React.FC<{ children: React.ReactNode; funnel
 }) => {
     console.log('🚀 SimpleBuilderProvider initializing with funnelId:', funnelId);
 
-    // Estado inicial
+    // Estado inicial - NÃO forçar 21 etapas por padrão
     const [state, setState] = useState<SimpleBuilderState>(() => ({
-        steps: generate21StepsSimple(),
+        steps: {}, // ❌ REMOVIDO: generate21StepsSimple() - começar vazio
         currentStep: 1,
-        totalSteps: 21,
+        totalSteps: 0, // Será definido dinamicamente
         isLoading: false,
         score: 0,
         responses: {},
@@ -259,12 +259,14 @@ export const SimpleBuilderProvider: React.FC<{ children: React.ReactNode; funnel
             });
         },
         loadDefaultTemplate: () => {
+            // ✅ AGORA: Só gera template quando explicitamente solicitado
             const newSteps = generate21StepsSimple();
             setState(prev => ({
                 ...prev,
                 steps: newSteps,
                 totalSteps: Object.keys(newSteps).length
             }));
+            console.log('📋 SimpleBuilder: Template padrão de 21 etapas carregado explicitamente');
         },
         
 // AI Integration methods

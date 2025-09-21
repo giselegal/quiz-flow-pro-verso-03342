@@ -7,6 +7,7 @@ import type { ComponentsSidebarProps } from '@/components/editor/sidebars/Compon
 
 interface EditorLayoutProps {
   currentStep: number;
+  totalSteps?: number; // ✅ NOVO: Aceitar totalSteps dinâmico
   blocks: Block[];
   selectedBlock: Block | null;
   onStepChange: (step: number) => void;
@@ -24,6 +25,7 @@ interface EditorLayoutProps {
 
 const EditorLayout: React.FC<EditorLayoutProps> = memo(({
   currentStep,
+  totalSteps = 21, // ✅ NOVO: Aceitar totalSteps dinâmico com fallback
   blocks,
   selectedBlock,
   onStepChange,
@@ -36,12 +38,12 @@ const EditorLayout: React.FC<EditorLayoutProps> = memo(({
   getStepAnalysis: getStepAnalysisProp,
   stepValidation
 }) => {
-  // Derivados para Sidebars existentes
+  // Derivados para Sidebars existentes - usar totalSteps dinâmico
   const stepHasBlocks = useMemo(() => {
     const map: Record<number, boolean> = {};
-    for (let i = 1; i <= 21; i++) map[i] = (i === currentStep ? blocks.length > 0 : false);
+    for (let i = 1; i <= totalSteps; i++) map[i] = (i === currentStep ? blocks.length > 0 : false);
     return map;
-  }, [blocks.length, currentStep]);
+  }, [blocks.length, currentStep, totalSteps]);
 
   const getStepAnalysis = useMemo(() => (
     getStepAnalysisProp || ((step: number) => ({ icon: 'info', label: `Etapa ${step}`, desc: 'Configuração padrão' }))
@@ -61,6 +63,7 @@ const EditorLayout: React.FC<EditorLayoutProps> = memo(({
       <aside className="w-72 bg-card border-r border-border flex-shrink-0 overflow-hidden">
         <StepSidebar
           currentStep={currentStep}
+          totalSteps={totalSteps} // ✅ NOVO: Passar totalSteps dinâmico
           stepHasBlocks={stepHasBlocks}
           onSelectStep={onStepChange}
           getStepAnalysis={getStepAnalysis}

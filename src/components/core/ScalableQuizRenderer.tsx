@@ -36,7 +36,7 @@ export const ScalableQuizRenderer = memo<ScalableQuizRendererProps>(({
 }) => {
     // Estado do quiz flow
     const [currentStep, setCurrentStep] = useState(1);
-    const [totalSteps, setTotalSteps] = useState(21); // Default para quiz21StepsComplete
+    const [totalSteps, setTotalSteps] = useState(0); // ❌ REMOVIDO: Default 21 - será dinâmico
     const [userAnswers, setUserAnswers] = useState<Record<number, any>>({});
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -55,10 +55,26 @@ export const ScalableQuizRenderer = memo<ScalableQuizRendererProps>(({
                 const realData = await blockApi.getRealTemplateData(funnelId);
                 setRealQuizData(realData);
 
-                // 2. Para o quiz21StepsComplete, mantemos 21 steps
-                if (funnelId === 'quiz21StepsComplete') {
-                    setTotalSteps(21);
+                // 2. Detectar totalSteps dinamicamente baseado nos dados reais
+                let detectedSteps = 1; // Mínimo 1
+                
+                if (realData && typeof realData === 'object') {
+                    // Tentar diferentes estruturas de dados
+                    if (realData.steps && Array.isArray(realData.steps)) {
+                        detectedSteps = realData.steps.length;
+                    } else if (realData.totalSteps && typeof realData.totalSteps === 'number') {
+                        detectedSteps = realData.totalSteps;
+                    } else if (realData.stepBlocks && typeof realData.stepBlocks === 'object') {
+                        detectedSteps = Object.keys(realData.stepBlocks).length;
+                    }
                 }
+                
+                // Para o quiz21StepsComplete especificamente, usar 21 como padrão se não detectado
+                if (funnelId === 'quiz21StepsComplete' && detectedSteps <= 1) {
+                    detectedSteps = 21;
+                }
+                
+                setTotalSteps(Math.max(detectedSteps, 1)); // Garante pelo menos 1 step
 
                 console.log(`✅ ScalableQuizRenderer: Funil ${funnelId} inicializado`, {
                     totalSteps: totalSteps,
