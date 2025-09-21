@@ -8,9 +8,9 @@
  * ✅ Fallback automático para legacy
  */
 
-import React, { useMemo } from 'react';
-import HybridProviderStack from '@/providers/HybridProviderStack';
-import { MainEditorUnified } from './MainEditorUnified';
+import React from 'react';
+import SimpleBuilderProvider from './SimpleBuilderProviderFixed';
+import ModularEditorPro from './EditorPro/components/ModularEditorPro';
 import { PerformanceMonitorProvider, PerformanceDashboard } from '@/monitoring/PerformanceMonitor';
 import { cn } from '@/lib/utils';
 import { EditorLoadingWrapper } from './EditorLoadingWrapper';
@@ -40,32 +40,16 @@ export const EditorConsolidatedPro: React.FC<EditorConsolidatedProProps> = ({
   stepNumber = 1,
   funnelId = 'quiz-style-21-steps',
   debugMode = false,
-  enablePerformanceMonitoring = true,
-  onStepChange,
-  onSave
+  enablePerformanceMonitoring = true
 }) => {
-  console.log('🎯 EditorConsolidatedPro: Clean Architecture v2.0', { 
+  console.log('🎯 EditorConsolidatedPro: Unified Architecture', { 
     stepNumber, 
     funnelId, 
     enablePerformanceMonitoring 
   });
 
-  // Configuração Supabase otimizada
-  const supabaseConfig = useMemo(() => ({
-    enabled: true,
-    funnelId,
-    quizId: funnelId,
-    storageKey: `${funnelId}-editor-state`
-  }), [funnelId]);
-
   const editorContent = (
-    <HybridProviderStack
-      initialStep={stepNumber}
-      debugMode={debugMode}
-      useCleanArchitecture={true}
-      supabaseConfig={supabaseConfig}
-      funnelId={funnelId}
-    >
+    <SimpleBuilderProvider funnelId={funnelId}>
       <div className="h-full flex flex-col">
         {/* Performance Dashboard (só em debug mode) */}
         {debugMode && enablePerformanceMonitoring && (
@@ -76,14 +60,7 @@ export const EditorConsolidatedPro: React.FC<EditorConsolidatedProProps> = ({
 
         {/* Editor Principal */}
         <div className="flex-1">
-          <MainEditorUnified 
-            className="h-full"
-            stepNumber={stepNumber}
-            funnelId={funnelId}
-            onStepChange={onStepChange}
-            onSave={onSave}
-            debugMode={debugMode}
-          />
+          <ModularEditorPro />
         </div>
       </div>
 
@@ -97,7 +74,7 @@ export const EditorConsolidatedPro: React.FC<EditorConsolidatedProProps> = ({
         )}>
           <div className="flex items-center gap-2">
             <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
-            🎯 Clean Architecture v2.0
+            🎯 Unified Architecture
           </div>
         </div>
 
@@ -121,7 +98,7 @@ export const EditorConsolidatedPro: React.FC<EditorConsolidatedProProps> = ({
           </div>
         )}
       </div>
-    </HybridProviderStack>
+    </SimpleBuilderProvider>
   );
 
   return (

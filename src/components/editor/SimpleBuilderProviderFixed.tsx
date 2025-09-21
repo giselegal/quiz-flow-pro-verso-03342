@@ -267,15 +267,14 @@ export const SimpleBuilderProvider: React.FC<{ children: React.ReactNode; funnel
             }));
         },
         
-        // AI Integration methods
+// AI Integration methods
         loadTemplate: async (templateId: string) => {
             console.log(`📋 Loading template: ${templateId}`);
             
-            // Implementar carregamento de template real
             try {
                 setState(prev => ({ ...prev, isLoading: true }));
                 
-                // Templates disponíveis
+                // Simple template mapping for common templates
                 const templates: Record<string, any> = {
                     'fashion-quiz-01': {
                         steps: {
@@ -296,7 +295,7 @@ export const SimpleBuilderProvider: React.FC<{ children: React.ReactNode; funnel
                                 },
                                 {
                                     id: 'q1-options',
-                                    type: 'quiz-options',
+                                    type: 'options-grid',
                                     content: { 
                                         options: [
                                             { id: 'casual', text: 'Casual & Confortável', value: 'casual' },
@@ -323,7 +322,7 @@ export const SimpleBuilderProvider: React.FC<{ children: React.ReactNode; funnel
                 
                 const templateData = templates[templateId] || templates['default'];
                 
-                // Aplicar template
+                // Apply template
                 setState(prev => ({
                     ...prev,
                     steps: typeof templateData === 'object' && templateData.steps ? templateData.steps : templateData,
@@ -331,10 +330,10 @@ export const SimpleBuilderProvider: React.FC<{ children: React.ReactNode; funnel
                     currentStep: 1
                 }));
                 
-                console.log(`✅ Template ${templateId} carregado com sucesso`);
+                console.log(`✅ Template ${templateId} loaded successfully`);
             } catch (error) {
-                console.error(`❌ Erro ao carregar template ${templateId}:`, error);
-                // Fallback para template padrão
+                console.error(`❌ Error loading template ${templateId}:`, error);
+                // Fallback to default template
                 setState(prev => ({
                     ...prev,
                     steps: generate21StepsSimple(),

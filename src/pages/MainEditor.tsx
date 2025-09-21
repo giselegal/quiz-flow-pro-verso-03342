@@ -1,9 +1,8 @@
 import React from 'react';
 import { ErrorBoundary } from '@/components/editor/ErrorBoundary';
-import { EditorProvider } from '@/components/editor/EditorProvider';
+import SimpleBuilderProvider from '@/components/editor/SimpleBuilderProviderFixed';
 import { FunnelsProvider } from '@/context/FunnelsContext';
-import { EditorPro } from '@/legacy/editor/EditorPro';
-// import { SimplifiedOptimizedEditor } from '@/components/editor/EditorPro/components/SimplifiedOptimizedEditor';
+import ModularEditorPro from '@/components/editor/EditorPro/components/ModularEditorPro';
 
 /**
  * 🎯 MAIN EDITOR - ESTRUTURA ROBUSTA COM LOADING DINÂMICO
@@ -36,23 +35,9 @@ const MainEditor: React.FC = () => {
     <div className="h-screen w-full bg-background">
       <ErrorBoundary>
         <FunnelsProvider debug={true}>
-          <EditorProvider
-            enableSupabase={!!urlFunnelId} // Ativar Supabase apenas para funis reais
-            funnelId={funnelId}
-            quizId={quizId}
-            storageKey={`editor-${funnelId}`}
-            initial={{
-              currentStep: 1,
-              selectedBlockId: null,
-              isSupabaseEnabled: !!urlFunnelId,
-              databaseMode: urlFunnelId ? 'supabase' : 'local'
-            }}
-          >
-            <EditorPro className="h-full w-full" />
-            {/* Para testar otimizações, descomente a linha abaixo e comente a de cima:
-            <SimplifiedOptimizedEditor />
-            */}
-          </EditorProvider>
+          <SimpleBuilderProvider funnelId={funnelId}>
+            <ModularEditorPro />
+          </SimpleBuilderProvider>
         </FunnelsProvider>
       </ErrorBoundary>
     </div>
