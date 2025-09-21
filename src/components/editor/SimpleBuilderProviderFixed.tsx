@@ -142,16 +142,19 @@ export const SimpleBuilderProvider: React.FC<{ children: React.ReactNode; funnel
     // Ações do Builder
     const actions: SimpleBuilderActions = {
         goToStep: useCallback((step: number) => {
-            if (step >= 1 && step <= 21) {
-                setState(prev => ({ ...prev, currentStep: step }));
-                console.log(`📍 Navigated to step ${step}`);
-            }
+            setState(prev => {
+                const max = prev.totalSteps || Object.keys(prev.steps).length || 1;
+                const clamped = Math.max(1, Math.min(max, step));
+                console.log(`📍 Navigated to step ${clamped} (requested: ${step}, max: ${max})`);
+                return { ...prev, currentStep: clamped };
+            });
         }, []),
 
         goToNextStep: useCallback(() => {
             setState(prev => {
-                const nextStep = Math.min(prev.currentStep + 1, 21);
-                console.log(`➡️ Next step: ${nextStep}`);
+                const max = prev.totalSteps || Object.keys(prev.steps).length || 1;
+                const nextStep = Math.min(prev.currentStep + 1, max);
+                console.log(`➡️ Next step: ${nextStep} (max: ${max})`);
                 return { ...prev, currentStep: nextStep };
             });
         }, []),
@@ -256,9 +259,11 @@ export const SimpleBuilderProvider: React.FC<{ children: React.ReactNode; funnel
             });
         },
         loadDefaultTemplate: () => {
+            const newSteps = generate21StepsSimple();
             setState(prev => ({
                 ...prev,
-                steps: generate21StepsSimple()
+                steps: newSteps,
+                totalSteps: Object.keys(newSteps).length
             }));
         },
         

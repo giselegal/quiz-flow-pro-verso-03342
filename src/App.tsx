@@ -15,7 +15,7 @@ const ComQueRoupaEuVouPage = lazy(() => import('./pages/ComQueRoupaEuVouPage'));
 const Home = lazy(() => import('./pages/Home'));
 const AuthPage = lazy(() => import('./pages/AuthPage'));
 // 🏗️ EDITOR PRINCIPAL - EditorPro com ModularEditorPro e EditorProvider integrado
-const EditorPro = lazy(() => import('./components/editor/EditorPro/EditorPro'));
+// const EditorPro = lazy(() => import('./components/editor/EditorPro/EditorPro')); // unused after routing /editor to EditorProPageSimple
 // 🏗️ EDITOR PRINCIPAL PROFISSIONAL ALTERNATIVO COM SUPORTE A PARÂMETROS URL
 const MainEditor = lazy(() => import('./pages/MainEditorUnified.new'));
 // 🚀 NOVO: Editor Visual Headless
@@ -174,18 +174,18 @@ function App() {
 
                 {/* 🎯 EDITOR PRINCIPAL - EditorPro com fundo preto e 4 colunas */}
                 <Route path="/editor/:funnelId?" component={({ params }: { params: { funnelId?: string } }) => {
-                  console.log('🔗 Rota /editor com EditorPro ativada:', params);
+                  console.log('🔗 Rota /editor com EditorProPageSimple ativada:', params);
                   return (
                     <div className="h-screen w-screen">
                       <Suspense fallback={
                         <div className="flex items-center justify-center min-h-screen bg-gray-900">
                           <div className="text-center">
                             <div className="w-16 h-16 mx-auto mb-4 border-4 border-white border-t-transparent rounded-full animate-spin"></div>
-                            <p className="text-white text-lg font-medium">Carregando Editor Profissional...</p>
+                            <p className="text-white text-lg font-medium">Carregando Editor IA Pro...</p>
                           </div>
                         </div>
                       }>
-                        <EditorPro funnelId={params.funnelId} />
+                        <EditorProPageSimple />
                       </Suspense>
                     </div>
                   );
