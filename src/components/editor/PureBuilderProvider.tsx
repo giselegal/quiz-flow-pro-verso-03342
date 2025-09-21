@@ -2,6 +2,8 @@ import React, { createContext, useContext, useState, useCallback, useRef, useEff
 // 🚀 BUILDER SYSTEM - Imports corrigidos para compatibilidade
 import type { Block } from '@/types/editor';
 import { createFunnelFromTemplate } from '@/core/builder';
+// 🎯 IMPORT DO JSON ESPECÍFICO DO QUIZ21STEPS
+import { QUIZ_STYLE_21_STEPS_TEMPLATE, QUIZ_GLOBAL_CONFIG, FUNNEL_PERSISTENCE_SCHEMA } from '@/templates/quiz21StepsComplete';
 
 /**
  * 🏗️ PURE BUILDER SYSTEM PROVIDER
@@ -56,6 +58,10 @@ export interface PureBuilderActions {
     generateAnalytics: () => any;
     validateFunnel: () => Promise<any>;
 
+    // 🔄 Sistema de Duplicação e Templates
+    cloneFunnel: (newName?: string, newId?: string) => any;
+    createFromTemplate: (templateName: string, customName?: string) => Promise<any>;
+
     // Compatibility with EditorProvider
     canUndo: boolean;
     canRedo: boolean;
@@ -82,17 +88,25 @@ export const usePureBuilder = () => {
 };
 
 // 🎯 GERAÇÃO COM BUILDER SYSTEM COMPLETO
-const generateWithPureBuilder = async (): Promise<{
+const generateWithPureBuilder = async (templateName: string = 'product-quiz'): Promise<{
     stepBlocks: Record<string, Block[]>;
     builderInstance: any;
     funnelConfig: any;
 }> => {
-    console.log('🏗️ Generating funnel with Pure Builder System...');
+    console.log('🏗️ Generating funnel with Pure Builder System...', { templateName });
 
     try {
-        // 🚀 CRIAR FUNIL USANDO BUILDER SYSTEM
-        const funnelBuilder = createFunnelFromTemplate('product-quiz')
-            .withDescription('Quiz de Estilo Pessoal - 21 Etapas - Builder System')
+        // �️ VALIDAÇÃO DE TEMPLATE SEGURA
+        const validTemplates = ['product-quiz', 'lead-qualification', 'customer-satisfaction', 'quiz21StepsComplete'];
+        const safeTemplate = validTemplates.includes(templateName) ? templateName : 'product-quiz';
+
+        if (safeTemplate !== templateName) {
+            console.warn(`⚠️ Template '${templateName}' não encontrado. Usando fallback: '${safeTemplate}'`);
+        }
+
+        // �🚀 CRIAR FUNIL USANDO BUILDER SYSTEM
+        const funnelBuilder = createFunnelFromTemplate(safeTemplate)
+            .withDescription(`${safeTemplate === 'quiz21StepsComplete' ? 'Quiz de Estilo Pessoal - 21 Etapas Completo' : 'Quiz de Estilo Pessoal - 21 Etapas'} - Builder System`)
             .withSettings({
                 theme: 'modern-elegant',
                 allowBackward: true,
@@ -405,6 +419,54 @@ const generateWithPureBuilder = async (): Promise<{
         // 🔄 CONVERTER PARA FORMATO COMPATÍVEL
         const stepBlocks: Record<string, Block[]> = {};
 
+        // 🎯 LÓGICA ESPECIAL PARA QUIZ21STEPS - USAR JSON ESPECÍFICO
+        if (safeTemplate === 'quiz21StepsComplete') {
+            console.log('🎯 Usando JSON específico do quiz21StepsComplete...');
+
+            // 🔄 ADAPTADOR: Converter formato quiz21StepsComplete para formato Block
+            const adaptedStepBlocks: Record<string, Block[]> = {};
+
+            Object.entries(QUIZ_STYLE_21_STEPS_TEMPLATE).forEach(([stepKey, blocks]) => {
+                adaptedStepBlocks[stepKey] = blocks.map((block: any) => ({
+                    id: block.id,
+                    type: block.type,
+                    order: block.order || 0,
+                    content: block.content || {},
+                    properties: block.properties || {},
+                    // 🆕 ADICIONAR CAMPOS OBRIGATÓRIOS DO TIPO BLOCK
+                    position: { x: 0, y: (block.order || 0) * 100 },
+                    style: block.style || {},
+                    metadata: {
+                        ...block.metadata,
+                        fromQuiz21StepsTemplate: true,
+                        adaptedAt: new Date().toISOString()
+                    },
+                    validation: {
+                        isValid: true,
+                        errors: [],
+                        warnings: []
+                    }
+                } as Block));
+            });
+
+            Object.assign(stepBlocks, adaptedStepBlocks);
+
+            return {
+                stepBlocks,
+                builderInstance: funnelBuilder,
+                funnelConfig: {
+                    ...finalFunnel,
+                    ...QUIZ_GLOBAL_CONFIG,
+                    persistenceSchema: FUNNEL_PERSISTENCE_SCHEMA,
+                    hasSpecificJSON: true,
+                    jsonSource: 'quiz21StepsComplete.ts',
+                    totalSteps: Object.keys(adaptedStepBlocks).length,
+                    adapted: true
+                }
+            };
+        }
+
+        // 🔄 LÓGICA PADRÃO PARA OUTROS TEMPLATES
         finalFunnel.steps?.forEach((step: any, index: number) => {
             const stepKey = `step-${index + 1}`;
 
@@ -495,9 +557,15 @@ export const PureBuilderProvider: React.FC<{
             if (!isInitialized.current) {
                 console.log('🏗️ Initializing PureBuilderProvider with Builder System...');
 
+                // 🎯 CAPTURAR PARÂMETRO TEMPLATE DA URL
+                const urlParams = new URLSearchParams(window.location.search);
+                const templateParam = urlParams.get('template') || 'product-quiz';
+
+                console.log('📋 Template selecionado:', templateParam);
+
                 setState(prev => ({ ...prev, isLoading: true }));
 
-                generateWithPureBuilder()
+                generateWithPureBuilder(templateParam)
                     .then(({ stepBlocks, builderInstance, funnelConfig }) => {
                         setState(prev => ({
                             ...prev,
@@ -680,6 +748,80 @@ export const PureBuilderProvider: React.FC<{
                     }));
                 } catch (error) {
                     console.error('❌ Error importing JSON:', error);
+                }
+            }, []),
+
+            // 🔄 SISTEMA DE DUPLICAÇÃO E CLONAGEM
+            cloneFunnel: useCallback((newName?: string, newId?: string) => {
+                const cloneId = newId || `clone-${Date.now()}`;
+                const cloneName = newName || `Cópia de ${state.funnelConfig?.name || 'Funil'}`;
+
+                console.log('📋 Clonando funil:', { originalId: funnelId, cloneId, cloneName });
+
+                // Clonar stepBlocks com novos IDs únicos
+                const clonedStepBlocks: Record<string, Block[]> = {};
+                Object.entries(state.stepBlocks).forEach(([stepKey, blocks]) => {
+                    clonedStepBlocks[stepKey] = blocks.map(block => ({
+                        ...block,
+                        id: `${block.id}-clone-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`
+                    }));
+                });
+
+                // Clonar configuração do funil
+                const clonedConfig = {
+                    ...state.funnelConfig,
+                    id: cloneId,
+                    name: cloneName,
+                    createdAt: new Date().toISOString(),
+                    clonedFrom: funnelId
+                };
+
+                return {
+                    id: cloneId,
+                    name: cloneName,
+                    stepBlocks: clonedStepBlocks,
+                    funnelConfig: clonedConfig,
+                    metadata: {
+                        isClone: true,
+                        originalId: funnelId,
+                        clonedAt: new Date().toISOString()
+                    }
+                };
+            }, [state.stepBlocks, state.funnelConfig, funnelId]),
+
+            createFromTemplate: useCallback(async (templateName: string, customName?: string) => {
+                console.log('📋 Criando novo funil do template:', templateName);
+
+                const newId = `template-${templateName}-${Date.now()}`;
+                const newName = customName || `${templateName} - ${new Date().toLocaleDateString()}`;
+
+                try {
+                    const { stepBlocks, builderInstance, funnelConfig } = await generateWithPureBuilder(templateName);
+
+                    // Aplicar novo ID e nome
+                    const customConfig = {
+                        ...funnelConfig,
+                        id: newId,
+                        name: newName,
+                        createdAt: new Date().toISOString(),
+                        templateSource: templateName
+                    };
+
+                    return {
+                        id: newId,
+                        name: newName,
+                        stepBlocks,
+                        funnelConfig: customConfig,
+                        builderInstance,
+                        metadata: {
+                            isFromTemplate: true,
+                            templateName,
+                            createdAt: new Date().toISOString()
+                        }
+                    };
+                } catch (error) {
+                    console.error('❌ Erro ao criar funil do template:', error);
+                    throw error;
                 }
             }, []),
 
