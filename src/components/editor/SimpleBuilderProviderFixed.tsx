@@ -33,6 +33,10 @@ export interface SimpleBuilderActions {
     addBlockAtIndex: (stepKey: string, block: Block, index: number) => Promise<void>;
     reorderBlocks: (stepKey: string, oldIndex: number, newIndex: number) => Promise<void>;
     loadDefaultTemplate: () => void;
+    
+    // AI Integration
+    loadTemplate: (templateId: string) => Promise<void>;
+    applyAISteps: (steps: any[]) => void;
 }
 
 export interface SimpleBuilderContextValue {
@@ -256,6 +260,107 @@ export const SimpleBuilderProvider: React.FC<{ children: React.ReactNode; funnel
                 ...prev,
                 steps: generate21StepsSimple()
             }));
+        },
+        
+        // AI Integration methods
+        loadTemplate: async (templateId: string) => {
+            console.log('🤖 Loading AI template:', templateId);
+            try {
+                // Import template service
+                const { templateLibraryService } = await import('@/services/templateLibraryService');
+                const template = templateLibraryService.getById(templateId);
+                
+                if (template && template.steps) {
+                    const convertedSteps: Record<string, Block[]> = {};
+                    
+                    // Handle different template structures
+                    if (Array.isArray(template.steps)) {
+                        template.steps.forEach((step: any, index: number) => {
+                            const stepKey = `step-${index + 1}`;
+                            convertedSteps[stepKey] = step.blocks || [];
+                        });
+                    } else if (typeof template.steps === 'object') {
+                        // Handle object-based steps structure
+                        Object.entries(template.steps).forEach(([key, blocks]) => {
+                            convertedSteps[key] = Array.isArray(blocks) ? blocks : [];
+                        });
+                    }
+                    
+                    setState(prev => ({
+                        ...prev,
+                        steps: convertedSteps,
+                        totalSteps: Array.isArray(template.steps) ? template.steps.length : Object.keys(template.steps).length
+                    }));
+                    
+                    console.log('✅ Template loaded successfully:', templateId);
+                } else {
+                    console.warn('⚠️ Template not found:', templateId);
+                }
+            } catch (error) {
+                console.error('❌ Failed to load template:', error);
+            }
+        },
+        
+        applyAISteps: (steps: any[]) => {
+            console.log('🤖 Applying AI generated steps:', steps);
+            
+            const convertedSteps: Record<string, Block[]> = {};
+            
+            steps.forEach((step, index) => {
+                const stepKey = `step-${index + 1}`;
+                
+                // Convert AI step to blocks
+                const blocks: Block[] = [];
+                
+                if (step.title) {
+                    blocks.push({
+                        id: `${stepKey}-title`,
+                        type: 'headline' as BlockType,
+                        order: 1,
+                        properties: { stepNumber: index + 1 },
+                        content: { text: step.title, level: 2, align: 'center' }
+                    });
+                }
+                
+                if (step.content || step.description) {
+                    blocks.push({
+                        id: `${stepKey}-content`,
+                        type: 'text' as BlockType,
+                        order: 2,
+                        properties: { stepNumber: index + 1 },
+                        content: { text: step.content || step.description, textAlign: 'center' }
+                    });
+                }
+                
+                if (step.options && Array.isArray(step.options)) {
+                    blocks.push({
+                        id: `${stepKey}-options`,
+                        type: 'options-grid' as BlockType,
+                        order: 3,
+                        properties: { 
+                            stepNumber: index + 1,
+                            columns: 2,
+                            options: step.options.map((opt: any, optIndex: number) => ({
+                                id: `option-${optIndex + 1}`,
+                                text: typeof opt === 'string' ? opt : opt.text || opt.label,
+                                value: typeof opt === 'string' ? opt.toLowerCase() : opt.value,
+                                category: step.category || 'default'
+                            }))
+                        },
+                        content: { title: step.question || 'Escolha uma opção:' }
+                    });
+                }
+                
+                convertedSteps[stepKey] = blocks;
+            });
+            
+            setState(prev => ({
+                ...prev,
+                steps: convertedSteps,
+                totalSteps: steps.length
+            }));
+            
+            console.log('✅ AI steps applied successfully');
         }
     };
 

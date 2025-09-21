@@ -27,8 +27,8 @@ export function AIStepGenerator({ onStepsGenerated, onClose }: AIStepGeneratorPr
     const [generationSteps, setGenerationSteps] = useState<GenerationStep[]>([]);
     const [generatedSteps, setGeneratedSteps] = useState<any[]>([]);
 
-    // 🤖 Hook da IA integrada
-    const { generateFunnel, isConfigured } = useAI();
+    // 🤖 Hook da IA integrada - CORREÇÃO: usar generateFunnel corretamente
+    const { generateFunnel: generateFunnelMethod, isConfigured } = useAI();
 
     // 🎨 Hook da IA de imagens de moda (para funis de roupa)
     const fashionAI = useFashionAI({
@@ -72,7 +72,7 @@ export function AIStepGenerator({ onStepsGenerated, onClose }: AIStepGeneratorPr
                 ));
 
                 // Gerar com IA real
-                const aiSteps = await generateFunnel(prompt);
+                const aiSteps = await generateFunnelMethod(prompt);
 
                 if (aiSteps) {
                     // Sucesso na geração IA
