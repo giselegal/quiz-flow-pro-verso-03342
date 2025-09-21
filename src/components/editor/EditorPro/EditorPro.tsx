@@ -1,6 +1,6 @@
 import React from 'react';
-// 🚀 SIMPLE BUILDER SYSTEM - Sistema autônomo funcional
-import SimpleBuilderProvider from '../SimpleBuilderProviderFixed';
+// 🚀 PURE BUILDER SYSTEM - Sistema unificado otimizado
+import PureBuilderProvider from '../PureBuilderProvider';
 import ModularEditorPro from './components/ModularEditorPro';
 
 interface EditorProProps {
@@ -27,11 +27,11 @@ const EditorPro: React.FC<EditorProProps> = ({ funnelId }) => {
 
     return (
         <div className="editor-pro-main-container h-full w-full">
-            <SimpleBuilderProvider funnelId={builderFunnelId}>
+            <PureBuilderProvider funnelId={builderFunnelId}>
                 <div className="editor-pro-inner h-full w-full bg-gray-900">
                     <ModularEditorPro />
                 </div>
-            </SimpleBuilderProvider>
+            </PureBuilderProvider>
         </div>
     );
 };

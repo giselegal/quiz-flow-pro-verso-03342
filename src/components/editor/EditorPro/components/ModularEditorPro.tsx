@@ -1,10 +1,10 @@
 import React, { useCallback, useMemo, useState, useRef, useEffect } from 'react';
-// 🚀 SIMPLE BUILDER SYSTEM - Hook compatível com SimpleBuilderProvider
-import { useSimpleBuilder } from '@/components/editor/SimpleBuilderProviderFixed';
+// 🚀 PURE BUILDER SYSTEM - Hook unificado otimizado
+import { usePureBuilder } from '@/components/editor/PureBuilderProvider';
 import { useOptimizedScheduler } from '@/hooks/useOptimizedScheduler';
 import { useNotification } from '@/components/ui/Notification';
 import { Block } from '@/types/editor';
-import { DndContext, DragEndEvent, DragStartEvent, closestCenter, useSensor, useSensors, PointerSensor } from '@dnd-kit/core';
+import { DragEndEvent, DragStartEvent } from '@dnd-kit/core';
 
 // Componentes modulares
 import EditorToolbar from './EditorToolbar';
@@ -178,8 +178,8 @@ interface ModularEditorProProps {
  */
 
 const ModularEditorPro: React.FC<ModularEditorProProps> = () => {
-  // 🚀 BUILDER SYSTEM - Hook integrado
-  const { state, actions } = useSimpleBuilder();
+  // 🚀 PURE BUILDER SYSTEM - Hook unificado
+  const { state, actions } = usePureBuilder();
   const { schedule } = useOptimizedScheduler();
   const { addNotification } = useNotification();
   const { columnWidths, handleResize } = useResizableColumns();
@@ -187,11 +187,11 @@ const ModularEditorPro: React.FC<ModularEditorProProps> = () => {
   // 🔍 DEBUG: Log completo do estado inicial
   useEffect(() => {
     console.log('🚀 ModularEditorPro - Estado inicial completo:', {
-      steps: state.steps,
+      stepBlocks: state.stepBlocks,
       currentStep: state.currentStep,
-      stepKeys: Object.keys(state.steps),
-      totalSteps: Object.keys(state.steps).length,
-      stepCounts: Object.entries(state.steps).map(([key, blocks]) => ({ [key]: Array.isArray(blocks) ? blocks.length : 0 })),
+      stepKeys: Object.keys(state.stepBlocks),
+      totalSteps: Object.keys(state.stepBlocks).length,
+      stepCounts: Object.entries(state.stepBlocks).map(([key, blocks]) => ({ [key]: Array.isArray(blocks) ? blocks.length : 0 })),
       isLoading: state.isLoading,
       stepValidation: state.stepValidation
     });
@@ -203,19 +203,12 @@ const ModularEditorPro: React.FC<ModularEditorProProps> = () => {
   // Bloco selecionado - usar um selectedBlockId simples local
   const [selectedBlockId, setSelectedBlockId] = useState<string | null>(null);
 
-  // Sensores do DnD otimizados
-  const sensors = useSensors(
-    useSensor(PointerSensor, {
-      activationConstraint: {
-        distance: 8, // Evita ativação acidental
-      },
-    })
-  );
+  // DnD removido - usa contexto do PureBuilderProvider
 
-  // Blocos da etapa atual com memoização e debug melhorado
+  // Blocos da etapa atual com memoização otimizada  
   const currentStepBlocks = useMemo(() => {
     const stepKey = `step-${state.currentStep}`;
-    const blocks = state.steps[stepKey] || [];
+    const blocks = state.stepBlocks[stepKey] || [];
 
     // 🔍 DEBUG: Log detalhado do carregamento de blocos
     console.log('🔍 ModularEditorPro - currentStepBlocks calculado:', {
@@ -223,12 +216,12 @@ const ModularEditorPro: React.FC<ModularEditorProProps> = () => {
       stepKey,
       blocksFound: blocks.length,
       blockTypes: blocks.map(b => b.type),
-      allStepKeys: Object.keys(state.steps),
-      totalBlocks: Object.values(state.steps).reduce((acc, arr) => acc + arr.length, 0)
+      allStepKeys: Object.keys(state.stepBlocks),
+      totalBlocks: Object.values(state.stepBlocks).reduce((acc, arr) => acc + arr.length, 0)
     });
 
     return blocks;
-  }, [state.steps, state.currentStep]);
+  }, [state.stepBlocks, state.currentStep]);
 
   // Bloco selecionado com memoização e debug melhorado
   const selectedBlock = useMemo(() => {
@@ -254,15 +247,15 @@ const ModularEditorPro: React.FC<ModularEditorProProps> = () => {
     const record: Record<number, boolean> = {};
 
     // 🌐 DINÂMICO: Detecta automaticamente quantas etapas o funil tem
-    const stepKeys = Object.keys(state.steps);
+    const stepKeys = Object.keys(state.stepBlocks);
     const maxStep = stepKeys.reduce((max, key) => {
       const stepNumber = parseInt(key.replace('step-', ''));
       return Math.max(max, stepNumber);
-    }, state.totalSteps || Object.keys(state.steps).length || 1); // Usar totalSteps dinâmico
+    }, 21); // Pure Builder System sempre tem 21 etapas
 
     for (let i = 1; i <= maxStep; i++) {
       const stepKey = `step-${i}`;
-      record[i] = (state.steps[stepKey]?.length || 0) > 0;
+      record[i] = (state.stepBlocks[stepKey]?.length || 0) > 0;
     }
 
     // 🔍 DEBUG: Log do stepHasBlocksRecord para investigar problemas
@@ -270,16 +263,16 @@ const ModularEditorPro: React.FC<ModularEditorProProps> = () => {
       record,
       currentStep: state.currentStep,
       totalStepsWithBlocks: Object.values(record).filter(Boolean).length,
-      stepBlocksKeys: Object.keys(state.steps),
+      stepBlocksKeys: Object.keys(state.stepBlocks),
       sampleStepBlocks: {
-        'step-1': state.steps['step-1']?.length || 0,
-        'step-2': state.steps['step-2']?.length || 0,
-        'step-3': state.steps['step-3']?.length || 0
+        'step-1': state.stepBlocks['step-1']?.length || 0,
+        'step-2': state.stepBlocks['step-2']?.length || 0,
+        'step-3': state.stepBlocks['step-3']?.length || 0
       }
     });
 
     return record;
-  }, [state.steps, state.currentStep]);
+  }, [state.stepBlocks, state.currentStep]);
 
   // Sistema de validação automática de etapas
   useEffect(() => {
@@ -570,7 +563,7 @@ const ModularEditorPro: React.FC<ModularEditorProProps> = () => {
   const handlePublish = useCallback(async () => {
     try {
       const funnelData = {
-        steps: state.steps,
+        stepBlocks: state.stepBlocks,
         currentStep: state.currentStep,
         settings: {
           seo: {
@@ -611,47 +604,41 @@ const ModularEditorPro: React.FC<ModularEditorProProps> = () => {
   }, [state, addNotification]);
 
   return (
-    <DndContext
-      sensors={sensors}
-      collisionDetection={closestCenter}
-      onDragStart={handleGlobalDragStart}
-      onDragEnd={handleGlobalDragEnd}
-    >
-      <div className="h-full w-full flex flex-col bg-background">
-        {/* 🔍 DEBUG: Loading State Check */}
-        {state.isLoading && (
-          <div className="absolute inset-0 bg-background/80 flex items-center justify-center z-50">
-            <div className="text-center">
-              <div className="w-8 h-8 mx-auto mb-4 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
-              <p className="text-muted-foreground">Carregando dados do editor...</p>
-            </div>
+    <div className="h-full w-full flex flex-col bg-background">
+      {/* 🔍 DEBUG: Loading State Check */}
+      {state.isLoading && (
+        <div className="absolute inset-0 bg-background/80 flex items-center justify-center z-50">
+          <div className="text-center">
+            <div className="w-8 h-8 mx-auto mb-4 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
+            <p className="text-muted-foreground">Carregando dados do editor...</p>
           </div>
-        )}
+        </div>
+      )}
 
-        {/* 🔍 DEBUG: Empty State Check */}
-        {!state.isLoading && Object.keys(state.steps).length === 0 && (
-          <div className="flex-1 flex items-center justify-center">
-            <div className="text-center max-w-md">
-              <div className="w-12 h-12 mx-auto mb-4 rounded-full bg-muted flex items-center justify-center">
-                <span className="text-2xl">📝</span>
-              </div>
-              <h3 className="text-lg font-semibold mb-2">Nenhum template carregado</h3>
-              <p className="text-muted-foreground mb-4">
-                O editor está aguardando o carregamento dos dados do template.
-                Verifique se o funnelId está correto na URL.
-              </p>
-              <div className="text-xs text-muted-foreground space-y-1">
-                <div>🔍 Debug Info:</div>
-                <div>Current Step: {state.currentStep}</div>
-                <div>Step Blocks: {Object.keys(state.steps).length} keys</div>
-                <div>Selected Block: {selectedBlockId || 'none'}</div>
-              </div>
+      {/* 🔍 DEBUG: Empty State Check */}
+      {!state.isLoading && Object.keys(state.stepBlocks).length === 0 && (
+        <div className="flex-1 flex items-center justify-center">
+          <div className="text-center max-w-md">
+            <div className="w-12 h-12 mx-auto mb-4 rounded-full bg-muted flex items-center justify-center">
+              <span className="text-2xl">📝</span>
+            </div>
+            <h3 className="text-lg font-semibold mb-2">Nenhum template carregado</h3>
+            <p className="text-muted-foreground mb-4">
+              O editor está aguardando o carregamento dos dados do template.
+              Verifique se o funnelId está correto na URL.
+            </p>
+            <div className="text-xs text-muted-foreground space-y-1">
+              <div>🔍 Debug Info:</div>
+              <div>Current Step: {state.currentStep}</div>
+              <div>Step Blocks: {Object.keys(state.stepBlocks).length} keys</div>
+              <div>Selected Block: {selectedBlockId || 'none'}</div>
             </div>
           </div>
-        )}
+        </div>
+      )}
 
         {/* 🔍 DEBUG: Step without blocks */}
-        {!state.isLoading && Object.keys(state.steps).length > 0 && currentStepBlocks.length === 0 && (
+        {!state.isLoading && Object.keys(state.stepBlocks).length > 0 && currentStepBlocks.length === 0 && (
           <div className="flex-1 flex items-center justify-center">
             <div className="text-center max-w-md">
               <div className="w-12 h-12 mx-auto mb-4 rounded-full bg-orange-100 flex items-center justify-center">
@@ -663,9 +650,9 @@ const ModularEditorPro: React.FC<ModularEditorProProps> = () => {
               </p>
               <div className="text-xs text-muted-foreground space-y-1">
                 <div>🔍 Debug Info:</div>
-                <div>Available Steps: {Object.keys(state.steps).join(', ')}</div>
+                <div>Available Steps: {Object.keys(state.stepBlocks).join(', ')}</div>
                 <div>Current Step Key: step-{state.currentStep}</div>
-                <div>Has Step Data: {`step-${state.currentStep}` in state.steps ? 'Yes' : 'No'}</div>
+                <div>Has Step Data: {`step-${state.currentStep}` in state.stepBlocks ? 'Yes' : 'No'}</div>
               </div>
             </div>
           </div>
@@ -708,7 +695,7 @@ const ModularEditorPro: React.FC<ModularEditorProProps> = () => {
                       stepHasBlocks: stepHasBlocksRecord[step],
                       stepValidation: state.stepValidation[step]
                     });
-                    actions.goToStep(step);
+                    actions.setCurrentStep(step);
                   }}
                   getStepAnalysis={() => ({ icon: 'note', label: 'Etapa', desc: 'Configurar' })}
                   renderIcon={(icon: string) => <div>{icon}</div>}
@@ -757,7 +744,7 @@ const ModularEditorPro: React.FC<ModularEditorProProps> = () => {
                         fromStep: state.currentStep,
                         toStep: step
                       });
-                      actions.goToStep(step);
+                      actions.setCurrentStep(step);
                     }}
                   />
                 </div>
@@ -830,15 +817,14 @@ const ModularEditorPro: React.FC<ModularEditorProProps> = () => {
                           handleDeleteSelectedBlock();
                         }
                       }}
-                    />
-                  )}
-                </div>
-              </div>
+                />
+              )}
             </div>
-          </>
+          </div>
+        </div>
         )}
       </div>
-    </DndContext>
+    </div>
   );
 };
 

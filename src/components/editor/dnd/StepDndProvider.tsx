@@ -1,12 +1,11 @@
-import React, { useMemo } from 'react';
-import { DndContext, DragEndEvent, DragStartEvent, closestCenter, rectIntersection, useSensor, useSensors, PointerSensor, KeyboardSensor } from '@dnd-kit/core';
-import { sortableKeyboardCoordinates } from '@dnd-kit/sortable';
-import { generateUniqueId } from '@/utils/generateUniqueId';
+import React from 'react';
+import { DragEndEvent, DragStartEvent } from '@dnd-kit/core';
 
 /**
- * 🎯 CONTEXTO DND ISOLADO POR ETAPA
+ * 🎯 WRAPPER SIMPLES SEM DND CONTEXT
  * 
- * Resolve conflitos de seleção entre etapas 2-21 isolando cada contexto DnD
+ * Simplificado para usar apenas o DndContext do PureBuilderProvider
+ * Remove aninhamento e conflitos de contexto
  */
 
 interface StepDndProviderProps {
@@ -20,53 +19,19 @@ interface StepDndProviderProps {
 export const StepDndProvider: React.FC<StepDndProviderProps> = React.memo(({
   stepNumber,
   children,
-  onDragStart,
-  onDragEnd,
-  onDragCancel
+  onDragStart: _onDragStart,
+  onDragEnd: _onDragEnd,
+  onDragCancel: _onDragCancel
 }) => {
-  // Sensores otimizados para performance
-  const sensors = useSensors(
-    useSensor(PointerSensor, {
-      activationConstraint: {
-        distance: 8, // Evita ativação acidental
-      },
-    }),
-    useSensor(KeyboardSensor, {
-      coordinateGetter: sortableKeyboardCoordinates,
-    })
-  );
-
-  // Algoritmo de colisão híbrido otimizado
-  const collisionDetection = useMemo(() => {
-    return (args: any) => {
-      // Usar closestCenter para precisão em espaços pequenos
-      const closestCenterCollisions = closestCenter(args);
-      if (closestCenterCollisions.length > 0) {
-        return closestCenterCollisions;
-      }
-      
-      // Fallback para rectIntersection para áreas maiores
-      return rectIntersection(args);
-    };
-  }, []);
-
-  // Key única forçada para resetar contexto quando trocar de etapa
-  const contextKey = useMemo(() => 
-    generateUniqueId({ stepNumber, type: 'block' }), 
-    [stepNumber]
-  );
+  // 🎯 SIMPLIFICADO: Apenas wrapper sem DndContext duplicado
+  // O DndContext é fornecido pelo PureBuilderProvider
+  
+  console.log('🔄 StepDndProvider wrapper para step:', stepNumber);
 
   return (
-    <DndContext
-      key={contextKey} // 🔑 CRÍTICO: Force context reset
-      sensors={sensors}
-      collisionDetection={collisionDetection}
-      onDragStart={onDragStart}
-      onDragEnd={onDragEnd}
-      onDragCancel={onDragCancel}
-    >
+    <div data-step-wrapper={stepNumber} className="step-dnd-wrapper">
       {children}
-    </DndContext>
+    </div>
   );
 });
 
