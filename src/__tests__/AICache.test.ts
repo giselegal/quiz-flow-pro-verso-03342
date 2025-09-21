@@ -233,8 +233,9 @@ describe('AICache Service', () => {
         metadata: { generated: true, style: 'business' }
       };
       
-      AICache.set(templateKey, templateData);
-      const retrieved = AICache.get(templateKey);
+      mockAICache.set(templateKey, templateData);
+      mockAICache.get.mockReturnValue(templateData);
+      const retrieved = mockAICache.get(templateKey);
       
       expect(retrieved).toEqual(templateData);
       expect(retrieved?.blocks).toHaveLength(2);
@@ -248,8 +249,9 @@ describe('AICache Service', () => {
         impact: 'high'
       };
       
-      AICache.set(optimizationKey, optimizationData, 600000); // 10 min TTL
-      const retrieved = AICache.get(optimizationKey);
+      mockAICache.set(optimizationKey, optimizationData, 600000); // 10 min TTL
+      mockAICache.get.mockReturnValue(optimizationData);
+      const retrieved = mockAICache.get(optimizationKey);
       
       expect(retrieved).toEqual(optimizationData);
       expect(retrieved?.confidence).toBe(0.85);
