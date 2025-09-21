@@ -187,12 +187,11 @@ const ModularEditorPro: React.FC<ModularEditorProProps> = () => {
   // 🔍 DEBUG: Log completo do estado inicial
   useEffect(() => {
     console.log('🚀 ModularEditorPro - Estado inicial completo:', {
-      stepBlocks: state.stepBlocks,
+      steps: state.steps,
       currentStep: state.currentStep,
-      selectedBlockId: state.selectedBlockId,
-      stepBlocksKeys: Object.keys(state.stepBlocks),
-      totalSteps: Object.keys(state.stepBlocks).length,
-      stepBlocksCounts: Object.entries(state.stepBlocks).map(([key, blocks]) => ({ [key]: blocks.length })),
+      stepKeys: Object.keys(state.steps),
+      totalSteps: Object.keys(state.steps).length,
+      stepCounts: Object.entries(state.steps).map(([key, blocks]) => ({ [key]: Array.isArray(blocks) ? blocks.length : 0 })),
       isLoading: state.isLoading,
       stepValidation: state.stepValidation
     });
@@ -201,6 +200,8 @@ const ModularEditorPro: React.FC<ModularEditorProProps> = () => {
   // Estados locais para UI (removidos os não utilizados)
   const [isPreviewMode, setIsPreviewMode] = useState(false);
   const [useAPIPanel, setUseAPIPanel] = useState(false); // Toggle para testar API Panel
+  // Bloco selecionado - usar um selectedBlockId simples local
+  const [selectedBlockId, setSelectedBlockId] = useState<string | null>(null);
 
   // Sensores do DnD otimizados
   const sensors = useSensors(
@@ -229,8 +230,7 @@ const ModularEditorPro: React.FC<ModularEditorProProps> = () => {
     return blocks;
   }, [state.steps, state.currentStep]);
 
-  // Bloco selecionado - usar um selectedBlockId simples local
-  const [selectedBlockId, setSelectedBlockId] = useState<string | null>(null);
+  // Bloco selecionado com memoização e debug melhorado
   const selectedBlock = useMemo(() => {
     if (!selectedBlockId) return null;
     const block = currentStepBlocks.find(block => block.id === selectedBlockId) || null;
@@ -316,10 +316,10 @@ const ModularEditorPro: React.FC<ModularEditorProProps> = () => {
             blocksCount: currentStepBlocks.length
           });
 
-      // Marcar etapa como válida se tem blocos
-      if (actions.setStepValid) {
-        actions.setStepValid(state.currentStep, true);
-      }
+          // Marcar etapa como válida se tem blocos
+          if (actions.setStepValid) {
+            actions.setStepValid(state.currentStep, true);
+          }
         } catch (error) {
           console.error('❌ Erro ao salvar draft:', error);
         }
@@ -327,7 +327,7 @@ const ModularEditorPro: React.FC<ModularEditorProProps> = () => {
     }, 2000); // Debounce de 2 segundos
 
     return () => clearTimeout(saveTimeout);
-  }, [currentStepBlocks, state.currentStep]); // ❌ Removido 'actions' para evitar loop infinito
+  }, [currentStepBlocks, state.currentStep, actions]);
 
   const groupedComponents = useMemo(() => ({
     'Conteúdo': [
@@ -538,7 +538,7 @@ const ModularEditorPro: React.FC<ModularEditorProProps> = () => {
       actions.addBlock(stepKey, newBlock);
 
       // Selecionar o novo bloco
-      actions.setSelectedBlockId(newBlockId);
+      setSelectedBlockId(newBlockId);
 
       addNotification(`Componente ${active.data.current.title} adicionado`);
       return;
@@ -570,7 +570,7 @@ const ModularEditorPro: React.FC<ModularEditorProProps> = () => {
   const handlePublish = useCallback(async () => {
     try {
       const funnelData = {
-        steps: state.stepBlocks,
+        steps: state.steps,
         currentStep: state.currentStep,
         settings: {
           seo: {
@@ -629,7 +629,7 @@ const ModularEditorPro: React.FC<ModularEditorProProps> = () => {
         )}
 
         {/* 🔍 DEBUG: Empty State Check */}
-        {!state.isLoading && Object.keys(state.stepBlocks).length === 0 && (
+        {!state.isLoading && Object.keys(state.steps).length === 0 && (
           <div className="flex-1 flex items-center justify-center">
             <div className="text-center max-w-md">
               <div className="w-12 h-12 mx-auto mb-4 rounded-full bg-muted flex items-center justify-center">
@@ -643,15 +643,15 @@ const ModularEditorPro: React.FC<ModularEditorProProps> = () => {
               <div className="text-xs text-muted-foreground space-y-1">
                 <div>🔍 Debug Info:</div>
                 <div>Current Step: {state.currentStep}</div>
-                <div>Step Blocks: {Object.keys(state.stepBlocks).length} keys</div>
-                <div>Selected Block: {state.selectedBlockId || 'none'}</div>
+                <div>Step Blocks: {Object.keys(state.steps).length} keys</div>
+                <div>Selected Block: {selectedBlockId || 'none'}</div>
               </div>
             </div>
           </div>
         )}
 
         {/* 🔍 DEBUG: Step without blocks */}
-        {!state.isLoading && Object.keys(state.stepBlocks).length > 0 && currentStepBlocks.length === 0 && (
+        {!state.isLoading && Object.keys(state.steps).length > 0 && currentStepBlocks.length === 0 && (
           <div className="flex-1 flex items-center justify-center">
             <div className="text-center max-w-md">
               <div className="w-12 h-12 mx-auto mb-4 rounded-full bg-orange-100 flex items-center justify-center">
@@ -663,9 +663,9 @@ const ModularEditorPro: React.FC<ModularEditorProProps> = () => {
               </p>
               <div className="text-xs text-muted-foreground space-y-1">
                 <div>🔍 Debug Info:</div>
-                <div>Available Steps: {Object.keys(state.stepBlocks).join(', ')}</div>
+                <div>Available Steps: {Object.keys(state.steps).join(', ')}</div>
                 <div>Current Step Key: step-{state.currentStep}</div>
-                <div>Has Step Data: {`step-${state.currentStep}` in state.stepBlocks ? 'Yes' : 'No'}</div>
+                <div>Has Step Data: {`step-${state.currentStep}` in state.steps ? 'Yes' : 'No'}</div>
               </div>
             </div>
           </div>
@@ -708,7 +708,7 @@ const ModularEditorPro: React.FC<ModularEditorProProps> = () => {
                       stepHasBlocks: stepHasBlocksRecord[step],
                       stepValidation: state.stepValidation[step]
                     });
-                    actions.setCurrentStep(step);
+                    actions.goToStep(step);
                   }}
                   getStepAnalysis={() => ({ icon: 'note', label: 'Etapa', desc: 'Configurar' })}
                   renderIcon={(icon: string) => <div>{icon}</div>}
@@ -757,7 +757,7 @@ const ModularEditorPro: React.FC<ModularEditorProProps> = () => {
                         fromStep: state.currentStep,
                         toStep: step
                       });
-                      actions.setCurrentStep(step);
+                      actions.goToStep(step);
                     }}
                   />
                 </div>
@@ -807,7 +807,7 @@ const ModularEditorPro: React.FC<ModularEditorProProps> = () => {
                           });
                         }
                       }}
-                      onClose={() => actions.setSelectedBlockId(null)}
+                      onClose={() => setSelectedBlockId(null)}
                       onDelete={() => {
                         if (selectedBlock) {
                           handleDeleteSelectedBlock();
@@ -823,7 +823,7 @@ const ModularEditorPro: React.FC<ModularEditorProProps> = () => {
                           handleUpdateBlock(selectedBlock.id, updates);
                         }
                       }}
-                      onClose={() => actions.setSelectedBlockId(null)}
+                      onClose={() => setSelectedBlockId(null)}
                       onDelete={(blockId: string) => {
                         console.log('🗑️ RegistryPropertiesPanel delete:', blockId);
                         if (selectedBlock && blockId === selectedBlock.id) {
