@@ -20,7 +20,8 @@ const EditorUnifiedPage = lazy(() => import('./pages/EditorUnifiedPage'));
 
 // 🚀 EDITOR VISUAL HEADLESS (mantido para compatibilidade)
 const HeadlessVisualEditor = lazy(() => import('./core/editor/HeadlessVisualEditor'));
-const DashboardPage = lazy(() => import('./pages/admin/DashboardPage'));
+// 🚀 DASHBOARD AVANÇADO (futuro)
+const DashboardPage = lazy(() => import('./pages/DashboardPage'));
 const StepPage = lazy(() => import('./pages/StepPage'));
 // ✅ Página de produção modular limpa (cliente final)
 const QuizModularPage = lazy(() => import('./pages/QuizModularPage'));
