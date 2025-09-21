@@ -6,43 +6,23 @@ import { Input } from '@/components/ui/input';
 import { Bot, Sparkles, Search, Zap, Palette, ShoppingBag, Heart, Star, X } from 'lucide-react';
 import { useAI } from '@/hooks/useAI';
 
-// Interface para template de funil
-export interface FunnelTemplate {
-  id: string;
-  meta: {
-    name: string;
-    description: string;
-    version: string;
-    author: string;
-    category: string;
-    tags: string[];
-  };
-  design: {
-    primaryColor: string;
-    secondaryColor: string;
-    accentColor: string;
-    backgroundColor: string;
-    fontFamily: string;
-  };
-  steps: any[];
-  preview?: string;
-}
+// Tipagem afrouxada para compatibilidade entre páginas
 
 interface TemplatesIASidebarProps {
-  onSelectTemplate: (template: FunnelTemplate) => void;
+  onSelectTemplate: (template: AIFunnelTemplate) => void | Promise<void>;
   onClose: () => void;
 }
 
 export function TemplatesIASidebar({ onSelectTemplate, onClose }: TemplatesIASidebarProps) {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
-  const [templates, setTemplates] = useState<FunnelTemplate[]>([]);
+  const [templates, setTemplates] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   
   const { generateFunnel, isLoading: aiLoading } = useAI();
 
   // Templates pré-definidos para demonstração
-  const predefinedTemplates: FunnelTemplate[] = [
+  const predefinedTemplates: any[] = [
     {
       id: 'fashion-quiz-01',
       meta: {
@@ -145,7 +125,7 @@ export function TemplatesIASidebar({ onSelectTemplate, onClose }: TemplatesIASid
   const filteredTemplates = templates.filter(template => {
     const matchesSearch = template.meta.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          template.meta.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         template.meta.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()));
+                         template.meta.tags.some((tag: string) => tag.toLowerCase().includes(searchTerm.toLowerCase()));
     
     const matchesCategory = selectedCategory === 'all' || template.meta.category === selectedCategory;
     
@@ -159,7 +139,7 @@ export function TemplatesIASidebar({ onSelectTemplate, onClose }: TemplatesIASid
       const aiSteps = await generateFunnel(`Criar template: ${searchTerm}`);
       
       if (aiSteps) {
-        const customTemplate: FunnelTemplate = {
+        const customTemplate: any = {
           id: `ai-generated-${Date.now()}`,
           meta: {
             name: `Template IA: ${searchTerm}`,
@@ -281,7 +261,7 @@ export function TemplatesIASidebar({ onSelectTemplate, onClose }: TemplatesIASid
                   </CardHeader>
                   <CardContent>
                     <div className="flex flex-wrap gap-1 mb-3">
-                      {template.meta.tags.slice(0, 3).map((tag) => (
+                      {template.meta.tags.slice(0, 3).map((tag: string) => (
                         <Badge key={tag} variant="secondary" className="text-xs">
                           {tag}
                         </Badge>

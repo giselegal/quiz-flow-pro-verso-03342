@@ -273,7 +273,7 @@ export const SimpleBuilderProvider: React.FC<{ children: React.ReactNode; funnel
             
             // Implementar carregamento de template real
             try {
-                setIsLoading?.(true);
+                setState(prev => ({ ...prev, isLoading: true }));
                 
                 // Templates disponíveis
                 const templates: Record<string, any> = {
@@ -341,7 +341,7 @@ export const SimpleBuilderProvider: React.FC<{ children: React.ReactNode; funnel
                     totalSteps: 21
                 }));
             } finally {
-                setIsLoading?.(false);
+                setState(prev => ({ ...prev, isLoading: false }));
             }
         },
 
