@@ -516,28 +516,16 @@ const COMPONENT_CATEGORIES = COMPONENT_LIBRARY.reduce((acc, item) => {
 }, {} as Record<string, ComponentLibraryItem[]>);
 
 // ===============================
-// 🖼️ DRAGGABLE COMPONENT
+// 🖼️ DRAGGABLE COMPONENT (SIMPLIFIED)
 // ===============================
 
 const DraggableComponent: React.FC<{ item: ComponentLibraryItem }> = ({ item }) => {
-    const [{ isDragging }, drag] = useDrag(() => ({
-        type: 'component',
-        item: { type: item.id, defaultElement: item.defaultElement },
-        collect: (monitor) => ({
-            isDragging: monitor.isDragging(),
-        }),
-    }));
-
     const IconComponent = item.icon;
 
     return (
         <div
-            ref={drag}
-            className={`
-        p-3 rounded-lg border border-gray-200 bg-white hover:border-blue-300 hover:shadow-sm 
-        cursor-grab active:cursor-grabbing transition-all duration-200
-        ${isDragging ? 'opacity-50 scale-95' : ''}
-      `}
+            className="p-3 rounded-lg border border-gray-200 bg-white hover:border-blue-300 hover:shadow-sm 
+                cursor-pointer transition-all duration-200"
         >
             <div className="flex items-center gap-2 mb-2">
                 <IconComponent className="w-4 h-4 text-gray-600" />
