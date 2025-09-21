@@ -171,8 +171,6 @@ export class UnifiedAIOrchestrator {
     private providers: Map<string, AIProvider>;
     private funnelAIAgent: FunnelAIAgent;
     // private calculationEngine: UnifiedCalculationEngine;
-    private analytics: any;
-    private geminiAI: any;
 
     constructor() {
         this.providers = new Map();
@@ -219,7 +217,6 @@ export class UnifiedAIOrchestrator {
         try {
             // Determinar quais providers usar
             const selectedProviders = this.selectProviders(request);
-            const totalProviders = selectedProviders.length;
 
             // Executar providers
             if (request.options?.parallel) {
@@ -480,7 +477,7 @@ export class UnifiedAIOrchestrator {
         }
     }
 
-    private async executePerformanceAI(request: AIOrchestrationRequest): Promise<any> {
+    private async executePerformanceAI(_request: AIOrchestrationRequest): Promise<any> {
         await new Promise(resolve => setTimeout(resolve, 500));
 
         return {
@@ -498,7 +495,7 @@ export class UnifiedAIOrchestrator {
         };
     }
 
-    private async executeAnalyticsAI(request: AIOrchestrationRequest): Promise<any> {
+    private async executeAnalyticsAI(_request: AIOrchestrationRequest): Promise<any> {
         await new Promise(resolve => setTimeout(resolve, 800));
 
         return {

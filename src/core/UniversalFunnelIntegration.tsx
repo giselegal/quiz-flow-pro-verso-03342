@@ -36,7 +36,7 @@ export const UniversalFunnelIntegration: React.FC<UniversalFunnelIntegrationProp
     readOnly = false
 }) => {
     const [universalFunnel, setUniversalFunnel] = useState<UniversalFunnel | null>(null);
-    const [originalData, setOriginalData] = useState<any>(null);
+    const [_originalData, _setOriginalData] = useState<any>(null);
     const [detectedType, setDetectedType] = useState<string>('');
     const [loadingState, setLoadingState] = useState<LoadingState>({ isLoading: true });
 
@@ -63,7 +63,7 @@ export const UniversalFunnelIntegration: React.FC<UniversalFunnelIntegrationProp
             // 3. Converter para formato universal
             const universal = FunnelAdapterFactory.toUniversal(funnelData, type);
 
-            setOriginalData(funnelData);
+            _setOriginalData(funnelData);
             setUniversalFunnel(universal);
             setLoadingState({ isLoading: false, success: `Funil carregado (tipo: ${type})` });
 
@@ -90,7 +90,7 @@ export const UniversalFunnelIntegration: React.FC<UniversalFunnelIntegrationProp
             await onSave(originalFormat);
 
             // 3. Atualizar dados originais
-            setOriginalData(originalFormat);
+            _setOriginalData(originalFormat);
             setLoadingState({
                 isLoading: false,
                 success: 'Funil salvo com sucesso!'

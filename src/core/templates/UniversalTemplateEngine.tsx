@@ -20,9 +20,9 @@ import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
 import {
-    Search, Brain, Crown, Download, Eye, Copy, Star
+    Search, Brain, Crown, Download, Eye, Copy, Star,
+    Sparkles, FileText, Target, Layout, Layers, Palette, Zap
 } from 'lucide-react';
-import { useAnalytics } from '@/hooks/useAnalytics';
 
 // ===============================
 // 🎯 UNIVERSAL TEMPLATE TYPES
@@ -213,8 +213,6 @@ export class UniversalTemplateEngine {
     private templates: Map<string, UniversalTemplate>;
     private renderers: Map<TemplateType, TemplateRenderer>;
     private cache: Map<string, RenderedTemplate>;
-    private aiOrchestrator: any;
-    private analytics: any;
 
     constructor() {
         this.templates = new Map();
@@ -553,7 +551,7 @@ export class UniversalTemplateEngine {
     // 🛠️ HELPER METHODS
     // ===============================
 
-    private createDefaultStructure(type: TemplateType): TemplateStructure {
+    private createDefaultStructure(_type: TemplateType): TemplateStructure {
         // Implementation specific to each template type
         return {
             sections: [],
@@ -630,7 +628,7 @@ export class UniversalTemplateEngine {
         };
     }
 
-    private async optimizeContent(structure: TemplateStructure, data: any): Promise<TemplateStructure> {
+    private async optimizeContent(structure: TemplateStructure, _data: any): Promise<TemplateStructure> {
         // AI content optimization logic
         return structure;
     }
@@ -640,17 +638,17 @@ export class UniversalTemplateEngine {
         return styles;
     }
 
-    private async generateSmartSuggestions(templateData: TemplateData, userData: any): Promise<TemplateData> {
+    private async generateSmartSuggestions(templateData: TemplateData, _userData: any): Promise<TemplateData> {
         // Smart suggestions logic
         return templateData;
     }
 
-    private async postProcessTemplate(rendered: RenderedTemplate, options: RenderOptions): Promise<RenderedTemplate> {
+    private async postProcessTemplate(rendered: RenderedTemplate, _options: RenderOptions): Promise<RenderedTemplate> {
         // Post-processing logic (minification, optimization, etc.)
         return rendered;
     }
 
-    private async calculatePerformanceMetrics(template: UniversalTemplate): Promise<PerformanceMetrics> {
+    private async calculatePerformanceMetrics(_template: UniversalTemplate): Promise<PerformanceMetrics> {
         // Calculate real performance metrics
         return {
             loadTime: Math.random() * 2 + 0.5,
@@ -661,7 +659,7 @@ export class UniversalTemplateEngine {
         };
     }
 
-    private trackTemplateRender(templateId: string, data: any, options: any): void {
+    private trackTemplateRender(_templateId: string, _data: any, _options: any): void {
         // Analytics tracking
     }
 
@@ -684,11 +682,11 @@ export class UniversalTemplateEngine {
 // ===============================
 
 abstract class TemplateRenderer {
-    abstract render(template: UniversalTemplate, data: Record<string, any>, options: RenderOptions): Promise<RenderedTemplate>;
+    abstract render(_template: UniversalTemplate, _data: Record<string, any>, _options: RenderOptions): Promise<RenderedTemplate>;
 }
 
 class FunnelRenderer extends TemplateRenderer {
-    async render(template: UniversalTemplate, data: Record<string, any>, options: RenderOptions): Promise<RenderedTemplate> {
+    async render(_template: UniversalTemplate, _data: Record<string, any>, _options: RenderOptions): Promise<RenderedTemplate> {
         return {
             html: '<div class="funnel-template">Funnel Content</div>',
             css: '.funnel-template { /* styles */ }',
@@ -699,7 +697,7 @@ class FunnelRenderer extends TemplateRenderer {
 }
 
 class QuizRenderer extends TemplateRenderer {
-    async render(template: UniversalTemplate, data: Record<string, any>, options: RenderOptions): Promise<RenderedTemplate> {
+    async render(_template: UniversalTemplate, _data: Record<string, any>, _options: RenderOptions): Promise<RenderedTemplate> {
         return {
             html: '<div class="quiz-template">Quiz Content</div>',
             css: '.quiz-template { /* styles */ }',
@@ -710,7 +708,7 @@ class QuizRenderer extends TemplateRenderer {
 }
 
 class LandingPageRenderer extends TemplateRenderer {
-    async render(template: UniversalTemplate, data: Record<string, any>, options: RenderOptions): Promise<RenderedTemplate> {
+    async render(_template: UniversalTemplate, _data: Record<string, any>, _options: RenderOptions): Promise<RenderedTemplate> {
         return {
             html: '<div class="landing-template">Landing Page Content</div>',
             css: '.landing-template { /* styles */ }',
@@ -721,7 +719,7 @@ class LandingPageRenderer extends TemplateRenderer {
 }
 
 class FormRenderer extends TemplateRenderer {
-    async render(template: UniversalTemplate, data: Record<string, any>, options: RenderOptions): Promise<RenderedTemplate> {
+    async render(_template: UniversalTemplate, _data: Record<string, any>, _options: RenderOptions): Promise<RenderedTemplate> {
         return {
             html: '<div class="form-template">Form Content</div>',
             css: '.form-template { /* styles */ }',
@@ -732,7 +730,7 @@ class FormRenderer extends TemplateRenderer {
 }
 
 class ComponentRenderer extends TemplateRenderer {
-    async render(template: UniversalTemplate, data: Record<string, any>, options: RenderOptions): Promise<RenderedTemplate> {
+    async render(_template: UniversalTemplate, _data: Record<string, any>, _options: RenderOptions): Promise<RenderedTemplate> {
         return {
             html: '<div class="component-template">Component Content</div>',
             css: '.component-template { /* styles */ }',
@@ -743,7 +741,7 @@ class ComponentRenderer extends TemplateRenderer {
 }
 
 class LayoutRenderer extends TemplateRenderer {
-    async render(template: UniversalTemplate, data: Record<string, any>, options: RenderOptions): Promise<RenderedTemplate> {
+    async render(_template: UniversalTemplate, _data: Record<string, any>, _options: RenderOptions): Promise<RenderedTemplate> {
         return {
             html: '<div class="layout-template">Layout Content</div>',
             css: '.layout-template { /* styles */ }',
@@ -754,7 +752,7 @@ class LayoutRenderer extends TemplateRenderer {
 }
 
 class ThemeRenderer extends TemplateRenderer {
-    async render(template: UniversalTemplate, data: Record<string, any>, options: RenderOptions): Promise<RenderedTemplate> {
+    async render(_template: UniversalTemplate, _data: Record<string, any>, _options: RenderOptions): Promise<RenderedTemplate> {
         return {
             html: '<div class="theme-template">Theme Content</div>',
             css: '.theme-template { /* styles */ }',
@@ -765,7 +763,7 @@ class ThemeRenderer extends TemplateRenderer {
 }
 
 class HybridRenderer extends TemplateRenderer {
-    async render(template: UniversalTemplate, data: Record<string, any>, options: RenderOptions): Promise<RenderedTemplate> {
+    async render(_template: UniversalTemplate, _data: Record<string, any>, _options: RenderOptions): Promise<RenderedTemplate> {
         return {
             html: '<div class="hybrid-template">Hybrid Content</div>',
             css: '.hybrid-template { /* styles */ }',
@@ -862,10 +860,7 @@ export const UniversalTemplateBrowser: React.FC = () => {
     const [engine] = useState(() => new UniversalTemplateEngine());
     const [templates, setTemplates] = useState<UniversalTemplate[]>([]);
     const [filters, setFilters] = useState<TemplateFilters>({});
-    const [selectedTemplate, setSelectedTemplate] = useState<UniversalTemplate | null>(null);
     const [searchTerm, setSearchTerm] = useState('');
-    const { orchestrate } = useAIOrchestrator();
-    const analytics = useUnifiedAnalytics();
 
     useEffect(() => {
         loadTemplates();
@@ -888,7 +883,8 @@ export const UniversalTemplateBrowser: React.FC = () => {
     }, [filters]);
 
     const handleTemplateAction = useCallback(async (action: string, templateId: string) => {
-        analytics.trackEvent('template_action', { action, templateId });
+        // Track template action (analytics integration to be implemented)
+        console.log('Template action:', action, templateId);
 
         switch (action) {
             case 'preview':
@@ -903,7 +899,7 @@ export const UniversalTemplateBrowser: React.FC = () => {
                 // Handle download
                 break;
         }
-    }, [engine, analytics, loadTemplates]);
+    }, [engine, loadTemplates]);
 
     return (
         <div className="w-full space-y-6">

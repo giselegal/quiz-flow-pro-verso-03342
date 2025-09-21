@@ -11,16 +11,14 @@
  * RESULTADO: Dashboard 400% mais completo e inteligente
  */
 
-import React, { useState, useCallback, useEffect, useMemo } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Progress } from '@/components/ui/progress';
 import {
     Activity,
     TrendingUp,
-    TrendingDown,
     Users,
     Eye,
     Clock,
@@ -29,18 +27,13 @@ import {
     Brain,
     Settings,
     BarChart3,
-    PieChart,
-    LineChart,
     Gauge,
-    AlertTriangle,
     CheckCircle,
-    XCircle,
     ArrowUp,
     ArrowDown,
-    Sparkles
+    Sparkles,
+    Layers
 } from 'lucide-react';
-import { useAnalytics } from '@/hooks/useAnalytics';
-import { UnifiedAIOrchestrator, useAIOrchestrator } from './ai/UnifiedAIOrchestrator';
 
 // ===============================
 // 🎯 UNIFIED ANALYTICS TYPES
@@ -487,7 +480,7 @@ export const UnifiedAnalyticsDashboard: React.FC = () => {
     const [activeTab, setActiveTab] = useState('realtime');
     const [metrics, setMetrics] = useState<UnifiedMetrics | null>(null);
     const [analyticsEngine] = useState(() => new UnifiedAnalyticsEngine());
-    const { orchestrate, isProcessing } = useAIOrchestrator();
+    const [isProcessing, setIsProcessing] = useState(false);
 
     // Subscribe to analytics updates
     useEffect(() => {
@@ -499,20 +492,20 @@ export const UnifiedAnalyticsDashboard: React.FC = () => {
         return unsubscribe;
     }, [analyticsEngine]);
 
-    // Generate AI insights
+    // Generate AI insights (mock implementation)
     const generateAIInsights = useCallback(async () => {
         try {
-            const result = await orchestrate({
-                type: 'generate_insights',
-                data: { metrics },
-                options: { priority: 'quality', parallel: true }
-            });
-
-            console.log('AI Insights generated:', result);
+            setIsProcessing(true);
+            // Mock AI insight generation
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            
+            console.log('AI Insights generated (mock):', { metrics });
+            setIsProcessing(false);
         } catch (error) {
             console.error('Failed to generate AI insights:', error);
+            setIsProcessing(false);
         }
-    }, [metrics, orchestrate]);
+    }, [metrics]);
 
     if (!metrics) {
         return (

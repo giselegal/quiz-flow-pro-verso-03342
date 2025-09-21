@@ -37,7 +37,7 @@ export const SimpleQuizCore: React.FC<SimpleQuizCoreProps> = ({
     // ✅ Estado mínimo necessário
     const [currentStep, setCurrentStep] = useState(0);
     const [answers, setAnswers] = useState<Record<string, any>>({});
-    const [isLoading, setIsLoading] = useState(false);
+    const [isLoading, _setIsLoading] = useState(false);
 
     // ✅ Computed values com cache
     const currentStepData = useMemo(() => steps[currentStep], [steps, currentStep]);

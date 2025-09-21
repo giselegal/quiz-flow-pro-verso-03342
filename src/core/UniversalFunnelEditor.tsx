@@ -302,14 +302,14 @@ export const UniversalFunnelEditor: React.FC<UniversalFunnelEditorProps> = ({
     funnel: initialFunnel,
     onFunnelChange,
     onSave,
-    onPreview,
+    onPreview: _onPreview,
     onExport,
     readOnly = false,
     // 🚀 NOVAS INTEGRAÇÕES
     enableAnalytics = true,
     enableAutosave = true,
     enableHistory = true,
-    showMetrics = false
+    showMetrics: _showMetrics = false
 }) => {
     const [funnel, setFunnel] = useState<UniversalFunnel>(initialFunnel);
     const [currentStepIndex, setCurrentStepIndex] = useState(0);
@@ -319,22 +319,29 @@ export const UniversalFunnelEditor: React.FC<UniversalFunnelEditorProps> = ({
 
     // 🚀 INTEGRAÇÃO COM HOOKS EXISTENTES DO SISTEMA
     const analytics = enableAnalytics ? useAnalytics() : null;
-    const autosave = enableAutosave && onSave ? useAutosave({
-        data: funnel,
-        onSave: async (data: any) => {
-            if (onSave) {
-                await onSave(data);
-                return true;
-            }
-            return false;
-        },
-        interval: 2000,
-        enabled: !readOnly
-    }) : null;
-    const history = enableHistory ? useHistory({
-        maxHistorySize: 50,
-        initialState: funnel
-    }) : null;
+
+    // Inicialização de hooks para funcionalidades futuras
+    if (enableAutosave && onSave) {
+        useAutosave({
+            data: funnel,
+            onSave: async (data: any) => {
+                if (onSave) {
+                    await onSave(data);
+                    return true;
+                }
+                return false;
+            },
+            interval: 2000,
+            enabled: !readOnly
+        });
+    }
+
+    if (enableHistory) {
+        useHistory({
+            maxHistorySize: 50,
+            initialState: funnel
+        });
+    }
 
     // 🎯 TRACK ANALYTICS EVENTS
     useEffect(() => {

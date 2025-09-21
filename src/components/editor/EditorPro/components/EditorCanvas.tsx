@@ -2,7 +2,6 @@ import React, { memo, useMemo } from 'react';
 import { Block } from '@/types/editor';
 import ScalableQuizRenderer from '@/components/core/ScalableQuizRenderer';
 import CanvasDropZone from '@/components/editor/canvas/CanvasDropZone.simple';
-import { SortableContext } from '@dnd-kit/sortable';
 import { useStepSelection } from '@/hooks/useStepSelection';
 
 /**
