@@ -15,7 +15,7 @@
 
 import React from 'react';
 import { ErrorBoundary } from '@/components/editor/ErrorBoundary';
-import SimpleBuilderProvider from '@/components/editor/SimpleBuilderProviderFixed';
+import PureBuilderProvider from '@/components/editor/PureBuilderProvider';
 import { FunnelsProvider } from '@/context/FunnelsContext';
 import EditorProUnified from '@/components/editor/EditorProUnified';
 
@@ -48,12 +48,12 @@ const EditorUnifiedPage: React.FC<EditorUnifiedPageProps> = ({
     <div className="h-screen w-full bg-background">
       <ErrorBoundary>
         <FunnelsProvider debug={false}>
-          <SimpleBuilderProvider funnelId={resolvedFunnelId}>
+          <PureBuilderProvider funnelId={resolvedFunnelId}>
             <EditorProUnified 
               funnelId={resolvedFunnelId}
               showProFeatures={true}
             />
-          </SimpleBuilderProvider>
+          </PureBuilderProvider>
         </FunnelsProvider>
       </ErrorBoundary>
     </div>
