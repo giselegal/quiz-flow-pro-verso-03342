@@ -409,7 +409,7 @@ export async function createQuiz21CompleteViaService(): Promise<string | null> {
 
         // Importar serviço dinamicamente
         const { FunnelUnifiedService } = await import('@/services/FunnelUnifiedService');
-        const funnelService = new FunnelUnifiedService();
+        const funnelService = FunnelUnifiedService.getInstance();
 
         // Criar funil
         const unifiedFunnelData = {
@@ -432,26 +432,27 @@ export async function createQuiz21CompleteViaService(): Promise<string | null> {
                 currentStepId: QUIZ_21_COMPLETE_DATA.pages[0]?.id || 'step-1',
                 totalSteps: QUIZ_21_COMPLETE_DATA.pages.length,
                 completedSteps: 0,
-                userProgress: {}
-            },
+                userProgress: {},
+                createdAt: new Date().toISOString(),
+                updatedAt: new Date().toISOString()
+            } as any,
             createdAt: new Date(),
             updatedAt: new Date()
         };
 
         const createdFunnel = await funnelService.createFunnel(unifiedFunnelData);
 
-        // Salvar páginas
-        for (const page of QUIZ_21_COMPLETE_DATA.pages) {
-            await funnelService.savePage(createdFunnel.id, {
+        // Salvar páginas usando updateFunnel com páginas incluídas
+        await funnelService.updateFunnel(createdFunnel.id, {
+            pages: QUIZ_21_COMPLETE_DATA.pages.map(page => ({
                 id: page.id,
                 type: page.page_type,
                 order: page.page_order,
                 title: page.title,
                 blocks: page.blocks,
-                metadata: page.metadata,
-                settings: {}
-            });
-        }
+                metadata: page.metadata || {}
+            }))
+        }, user?.id || 'anonymous');
 
         console.log(`✅ Quiz 21 Complete criado: ${createdFunnel.id}`);
         return createdFunnel.id;

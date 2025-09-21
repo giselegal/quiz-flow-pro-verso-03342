@@ -124,7 +124,7 @@ const ModularEditorProSimple: React.FC<ModularEditorProSimpleProps> = ({ showPro
                               {block.content.description && (
                                 <p>{block.content.description}</p>
                               )}
-                              {block.content.options?.length > 0 && (
+                              {block.content.options && block.content.options.length > 0 && (
                                 <div className="mt-2">
                                   <p className="font-medium">Opções:</p>
                                   <ul className="list-disc list-inside text-gray-600">

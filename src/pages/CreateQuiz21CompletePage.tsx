@@ -127,11 +127,11 @@ const CreateQuiz21CompletePage: React.FC = () => {
                                 <div className="space-y-1 max-h-64 overflow-y-auto">
                                     {QUIZ_21_COMPLETE_DATA.pages.map((page) => (
                                         <div key={page.id} className="flex items-center gap-2 text-sm p-2 bg-gray-50 rounded">
-                                            <Badge size="sm" variant="outline">
+                                            <Badge variant="outline">
                                                 {page.page_order}
                                             </Badge>
                                             <span className="flex-1">{page.title}</span>
-                                            <Badge size="sm" variant="secondary">
+                                            <Badge variant="secondary">
                                                 {page.page_type}
                                             </Badge>
                                         </div>

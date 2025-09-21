@@ -176,7 +176,8 @@ export type BlockType =
   | 'step20-compatibility'
   | 'step20-secondary-styles'
   | 'step20-personalized-offer'
-  | 'step20-complete-template';
+  | 'step20-complete-template'
+  | 'price-display';
 
 export interface FAQItem {
   id: string;
