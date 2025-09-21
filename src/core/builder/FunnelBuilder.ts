@@ -167,6 +167,98 @@ export const FUNNEL_TEMPLATES = {
                 components: ['hero-section']
             }
         ]
+    },
+
+    // 🎯 QUIZ 21 ETAPAS COMPLETO - MODELO DISPONÍVEL, DUPLICÁVEL E PERSONALIZÁVEL
+    'quiz21StepsComplete': {
+        name: 'Quiz de Estilo Pessoal - 21 Etapas',
+        description: 'Template completo para descoberta do estilo pessoal com 21 etapas: coleta de nome, 10 questões pontuadas, questões estratégicas, resultado e oferta',
+        steps: [
+            {
+                name: 'Coleta do Nome',
+                components: ['quiz-intro-header', 'name-input-section']
+            },
+            {
+                name: 'Questão 1 - Ocasiões Sociais',
+                components: ['quiz-question-header', 'multiple-choice-quiz']
+            },
+            {
+                name: 'Questão 2 - Estilo Trabalho',
+                components: ['quiz-question-header', 'multiple-choice-quiz']
+            },
+            {
+                name: 'Questão 3 - Cores Favoritas',
+                components: ['quiz-question-header', 'multiple-choice-quiz']
+            },
+            {
+                name: 'Questão 4 - Peças Essenciais',
+                components: ['quiz-question-header', 'multiple-choice-quiz']
+            },
+            {
+                name: 'Questão 5 - Inspiração',
+                components: ['quiz-question-header', 'multiple-choice-quiz']
+            },
+            {
+                name: 'Questão 6 - Acessórios',
+                components: ['quiz-question-header', 'multiple-choice-quiz']
+            },
+            {
+                name: 'Questão 7 - Estação do Ano',
+                components: ['quiz-question-header', 'multiple-choice-quiz']
+            },
+            {
+                name: 'Questão 8 - Estilo Fim de Semana',
+                components: ['quiz-question-header', 'multiple-choice-quiz']
+            },
+            {
+                name: 'Questão 9 - Padrões e Texturas',
+                components: ['quiz-question-header', 'multiple-choice-quiz']
+            },
+            {
+                name: 'Questão 10 - Estilo de Vida',
+                components: ['quiz-question-header', 'multiple-choice-quiz']
+            },
+            {
+                name: 'Transição - Questões Estratégicas',
+                components: ['transition-section', 'progress-indicator']
+            },
+            {
+                name: 'Estratégica 1 - Investimento',
+                components: ['quiz-question-header', 'single-choice-strategic']
+            },
+            {
+                name: 'Estratégica 2 - Urgência',
+                components: ['quiz-question-header', 'single-choice-strategic']
+            },
+            {
+                name: 'Estratégica 3 - Desafios',
+                components: ['quiz-question-header', 'single-choice-strategic']
+            },
+            {
+                name: 'Estratégica 4 - Sonho',
+                components: ['quiz-question-header', 'single-choice-strategic']
+            },
+            {
+                name: 'Estratégica 5 - Prioridade',
+                components: ['quiz-question-header', 'single-choice-strategic']
+            },
+            {
+                name: 'Estratégica 6 - Confiança',
+                components: ['quiz-question-header', 'single-choice-strategic']
+            },
+            {
+                name: 'Transição - Preparando Resultado',
+                components: ['loading-section', 'result-preparation']
+            },
+            {
+                name: 'Página de Resultado',
+                components: ['result-header', 'style-analysis', 'recommendations', 'cta-section']
+            },
+            {
+                name: 'Página de Oferta',
+                components: ['offer-header', 'offer-benefits', 'pricing-section', 'testimonials', 'guarantee', 'checkout-form']
+            }
+        ]
     }
 } as const;
 
