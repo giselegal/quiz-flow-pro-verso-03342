@@ -5,11 +5,10 @@ import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Bot, Sparkles, Search, Zap, Palette, ShoppingBag, Heart, Star, X } from 'lucide-react';
 import { useAI } from '@/hooks/useAI';
-
-// Tipagem afrouxada para compatibilidade entre páginas
+import { type FunnelTemplate } from '@/services/FunnelAIAgent';
 
 interface TemplatesIASidebarProps {
-  onSelectTemplate: (template: AIFunnelTemplate) => void | Promise<void>;
+  onSelectTemplate: (template: FunnelTemplate) => void | Promise<void>;
   onClose: () => void;
 }
 
