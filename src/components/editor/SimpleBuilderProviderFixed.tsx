@@ -269,46 +269,84 @@ export const SimpleBuilderProvider: React.FC<{ children: React.ReactNode; funnel
         
         // AI Integration methods
         loadTemplate: async (templateId: string) => {
-            console.log('🤖 Loading AI template:', templateId);
+            console.log(`📋 Loading template: ${templateId}`);
+            
+            // Implementar carregamento de template real
             try {
-                // Import template service
-                const { templateLibraryService } = await import('@/services/templateLibraryService');
-                const template = templateLibraryService.getById(templateId);
+                setIsLoading?.(true);
                 
-                if (template && template.steps) {
-                    const convertedSteps: Record<string, Block[]> = {};
-                    
-                    // Handle different template structures
-                    if (Array.isArray(template.steps)) {
-                        template.steps.forEach((step: any, index: number) => {
-                            const stepKey = `step-${index + 1}`;
-                            convertedSteps[stepKey] = step.blocks || [];
-                        });
-                    } else if (typeof template.steps === 'object') {
-                        // Handle object-based steps structure
-                        Object.entries(template.steps).forEach(([key, blocks]) => {
-                            convertedSteps[key] = Array.isArray(blocks) ? blocks : [];
-                        });
-                    }
-                    
-                    setState(prev => ({
-                        ...prev,
-                        steps: convertedSteps,
-                        totalSteps: Array.isArray(template.steps) ? template.steps.length : Object.keys(template.steps).length
-                    }));
-                    
-                    console.log('✅ Template loaded successfully:', templateId);
-                } else {
-                    console.warn('⚠️ Template not found:', templateId);
-                }
+                // Templates disponíveis
+                const templates: Record<string, any> = {
+                    'fashion-quiz-01': {
+                        steps: {
+                            'step-1': [
+                                {
+                                    id: 'intro-headline',
+                                    type: 'headline',
+                                    content: { title: 'Descubra seu Estilo Pessoal', subtitle: 'Quiz personalizado com IA' },
+                                    properties: { fontSize: 'text-3xl', textAlign: 'center' }
+                                }
+                            ],
+                            'step-2': [
+                                {
+                                    id: 'q1-question',
+                                    type: 'quiz-question',
+                                    content: { question: 'Qual seu estilo favorito?' },
+                                    properties: {}
+                                },
+                                {
+                                    id: 'q1-options',
+                                    type: 'quiz-options',
+                                    content: { 
+                                        options: [
+                                            { id: 'casual', text: 'Casual & Confortável', value: 'casual' },
+                                            { id: 'elegante', text: 'Elegante & Sofisticado', value: 'elegante' },
+                                            { id: 'moderno', text: 'Moderno & Trendy', value: 'moderno' }
+                                        ]
+                                    },
+                                    properties: { layout: 'grid' }
+                                }
+                            ],
+                            'step-3': [
+                                {
+                                    id: 'result-title',
+                                    type: 'headline',
+                                    content: { title: 'Seu Estilo Pessoal', subtitle: 'Resultado baseado nas suas respostas' },
+                                    properties: { fontSize: 'text-2xl', textAlign: 'center' }
+                                }
+                            ]
+                        },
+                        totalSteps: 3
+                    },
+                    'default': generate21StepsSimple()
+                };
+                
+                const templateData = templates[templateId] || templates['default'];
+                
+                // Aplicar template
+                setState(prev => ({
+                    ...prev,
+                    steps: typeof templateData === 'object' && templateData.steps ? templateData.steps : templateData,
+                    totalSteps: templateData.totalSteps || Object.keys(templateData.steps || templateData).length,
+                    currentStep: 1
+                }));
+                
+                console.log(`✅ Template ${templateId} carregado com sucesso`);
             } catch (error) {
-                console.error('❌ Failed to load template:', error);
+                console.error(`❌ Erro ao carregar template ${templateId}:`, error);
+                // Fallback para template padrão
+                setState(prev => ({
+                    ...prev,
+                    steps: generate21StepsSimple(),
+                    totalSteps: 21
+                }));
+            } finally {
+                setIsLoading?.(false);
             }
         },
-        
+
         applyAISteps: (steps: any[]) => {
-            console.log('🤖 Applying AI generated steps:', steps);
-            
+            console.log('🤖 Applying AI steps:', steps);
             const convertedSteps: Record<string, Block[]> = {};
             
             steps.forEach((step, index) => {

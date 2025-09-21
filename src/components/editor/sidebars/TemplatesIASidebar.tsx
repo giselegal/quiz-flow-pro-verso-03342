@@ -1,325 +1,338 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Bot, Sparkles, Wand2, Check } from 'lucide-react';
-import { type FunnelTemplate } from '@/services/FunnelAIAgent';
+import { Badge } from '@/components/ui/badge';
+import { Input } from '@/components/ui/input';
+import { Bot, Sparkles, Search, Zap, Palette, ShoppingBag, Heart, Star, X } from 'lucide-react';
+import { useAI } from '@/hooks/useAI';
+
+// Interface para template de funil
+export interface FunnelTemplate {
+  id: string;
+  meta: {
+    name: string;
+    description: string;
+    version: string;
+    author: string;
+    category: string;
+    tags: string[];
+  };
+  design: {
+    primaryColor: string;
+    secondaryColor: string;
+    accentColor: string;
+    backgroundColor: string;
+    fontFamily: string;
+  };
+  steps: any[];
+  preview?: string;
+}
 
 interface TemplatesIASidebarProps {
   onSelectTemplate: (template: FunnelTemplate) => void;
   onClose: () => void;
 }
 
-// Template da Consultora de Estilo com IA
-const STYLE_CONSULTANT_TEMPLATE: FunnelTemplate = {
-  meta: {
-    name: 'Com que Roupa eu Vou? - Consultora de Estilo IA',
-    description: 'Funil completo para consultoria de estilo personalizada com inteligência artificial. Gera looks, imagens e ofertas diretas.',
-    version: '2.0.0',
-    author: 'giselegal',
-  },
-  design: {
-    primaryColor: '#9333EA',
-    secondaryColor: '#EC4899',
-    accentColor: '#A855F7',
-    backgroundColor: 'linear-gradient(to bottom right, #F3E8FF, #FCE7F3)',
-    fontFamily: "'Inter', 'Poppins', sans-serif",
-    button: {
-      background: 'linear-gradient(90deg, #9333EA, #EC4899)',
-      textColor: '#fff',
-      borderRadius: '12px',
-      shadow: '0 8px 20px rgba(147, 51, 234, 0.25)',
-    },
-    card: {
-      background: '#fff',
-      borderRadius: '16px',
-      shadow: '0 8px 32px rgba(147, 51, 234, 0.12)',
-    },
-    progressBar: {
-      color: '#9333EA',
-      background: '#F3E8FF',
-      height: '8px',
-    },
-    animations: {
-      formTransition: 'slide-up, fade',
-      buttonHover: 'scale-105, glow',
-      resultAppear: 'fade-in-up',
-    },
-  },
-  steps: [
-    {
-      type: 'intro',
-      title: 'Com que Roupa eu Vou?',
-      description: 'Sua consultora de estilo pessoal com IA! Descubra o look perfeito para qualquer ocasião.',
-      imageUrl: 'https://images.unsplash.com/photo-1445205170230-053b83016050?w=800&h=600&fit=crop',
-      cta: 'Começar Consulta de Estilo',
-    },
-    {
-      type: 'form',
-      title: 'Conte-me sobre seu compromisso',
-      fields: [
-        {
-          id: 'compromisso',
-          type: 'text',
-          label: 'Compromisso',
-          placeholder: 'Ex: Reunião de trabalho, Jantar com amigos, Festa de aniversário',
-          required: true,
-        },
-        {
-          id: 'horario',
-          type: 'select',
-          label: 'Horário',
-          options: [
-            { value: 'Manhã', label: 'Manhã (até 12h)' },
-            { value: 'Tarde', label: 'Tarde (12h às 18h)' },
-            { value: 'Noite', label: 'Noite (após 18h)' },
-          ],
-          required: true,
-        },
-        {
-          id: 'clima',
-          type: 'select',
-          label: 'Clima',
-          options: [
-            { value: 'Sol', label: 'Ensolarado' },
-            { value: 'Chuva', label: 'Chuvoso' },
-            { value: 'Frio', label: 'Frio' },
-            { value: 'Quente', label: 'Quente' },
-            { value: 'Nublado', label: 'Nublado' },
-          ],
-          required: true,
-        }
-      ],
-    }
-  ],
-  logic: {
-    selection: {
-      form: 'Todos os campos obrigatórios devem ser preenchidos',
-      processing: 'IA processa os dados do formulário',
-    },
-    calculation: {
-      method: 'Geração dinâmica com API de IA',
-      resultado: 'Look personalizado baseado nas preferências',
-    },
-    transitions: {
-      betweenSteps: 'Animações suaves slide-up e fade',
-    },
-  },
-  integrations: {
-    ai: {
-      textGeneration: {
-        provider: 'gemini',
-        model: 'gemini-2.0-flash',
-        prompt: "Sugira um look completo para {{compromisso}} na {{horario}} com clima {{clima}}",
-      },
-    },
-  },
-  config: {
-    localStorageKeys: ['style_consultation_data'],
-    features: {
-      aiGeneration: true,
-      imageProcessing: true,
-      emailCapture: true,
-      socialSharing: true,
-      responsive: true,
-    },
-  },
-};
-
-// Template de Quiz de Fitness
-const FITNESS_TEMPLATE: FunnelTemplate = {
-  meta: {
-    name: 'Personal Trainer IA - Quiz Fitness',
-    description: 'Quiz inteligente para planos de treino personalizados com IA',
-    version: '1.0.0',
-    author: 'giselegal',
-  },
-  design: {
-    primaryColor: '#059669',
-    secondaryColor: '#10B981',
-    accentColor: '#34D399',
-    backgroundColor: 'linear-gradient(to bottom right, #ECFDF5, #D1FAE5)',
-    fontFamily: "'Inter', sans-serif",
-    button: {
-      background: 'linear-gradient(90deg, #059669, #10B981)',
-      textColor: '#fff',
-      borderRadius: '8px',
-      shadow: '0 4px 12px rgba(5, 150, 105, 0.25)',
-    },
-    card: {
-      background: '#fff',
-      borderRadius: '12px',
-      shadow: '0 4px 16px rgba(5, 150, 105, 0.1)',
-    },
-    progressBar: {
-      color: '#059669',
-      background: '#D1FAE5',
-      height: '6px',
-    },
-    animations: {
-      formTransition: 'slide-up',
-      buttonHover: 'scale-105',
-      resultAppear: 'fade-in',
-    },
-  },
-  steps: [
-    {
-      type: 'intro',
-      title: 'Personal Trainer IA',
-      description: 'Descubra o plano de treino perfeito para seus objetivos!',
-      imageUrl: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=800&h=600&fit=crop',
-      cta: 'Começar Avaliação Fitness',
-    },
-    {
-      type: 'form',
-      title: 'Conte sobre seus objetivos',
-      fields: [
-        {
-          id: 'objetivo',
-          type: 'select',
-          label: 'Seu objetivo principal',
-          options: [
-            { value: 'Perder peso', label: 'Perder peso' },
-            { value: 'Ganhar massa', label: 'Ganhar massa muscular' },
-            { value: 'Definir', label: 'Definir músculos' },
-            { value: 'Condicionamento', label: 'Melhorar condicionamento' },
-          ],
-          required: true,
-        },
-      ],
-    }
-  ],
-  logic: { selection: {}, calculation: {}, transitions: {} },
-  integrations: {
-    ai: {
-      textGeneration: {
-        provider: 'gemini',
-        model: 'gemini-2.0-flash',
-        prompt: "Crie um plano de treino para objetivo: {{objetivo}}",
-      },
-    },
-  },
-  config: {
-    localStorageKeys: ['fitness_assessment'],
-    features: { aiGeneration: true, responsive: true },
-  },
-};
-
-const AVAILABLE_TEMPLATES = [STYLE_CONSULTANT_TEMPLATE, FITNESS_TEMPLATE];
-
 export function TemplatesIASidebar({ onSelectTemplate, onClose }: TemplatesIASidebarProps) {
-  const [selectedTemplate, setSelectedTemplate] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState<string>('all');
+  const [templates, setTemplates] = useState<FunnelTemplate[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  
+  const { generateFunnel, isLoading: aiLoading } = useAI();
 
-  const handleSelectTemplate = async (template: FunnelTemplate) => {
-    try {
-      setIsLoading(true);
-      setSelectedTemplate(template.meta.name);
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      onSelectTemplate(template);
-      console.log('Template selecionado:', template.meta.name);
-    } catch (error) {
-      console.error('Erro ao selecionar template:', error);
-    } finally {
-      setIsLoading(false);
+  // Templates pré-definidos para demonstração
+  const predefinedTemplates: FunnelTemplate[] = [
+    {
+      id: 'fashion-quiz-01',
+      meta: {
+        name: 'Quiz de Estilo Pessoal',
+        description: 'Descubra seu estilo único em 5 minutos',
+        version: '1.0.0',
+        author: 'Fashion AI',
+        category: 'fashion',
+        tags: ['estilo', 'moda', 'personalidade', 'quiz']
+      },
+      design: {
+        primaryColor: '#FF6B6B',
+        secondaryColor: '#4ECDC4',
+        accentColor: '#45B7D1',
+        backgroundColor: 'linear-gradient(135deg, #FF6B6B 0%, #4ECDC4 100%)',
+        fontFamily: 'Poppins'
+      },
+      steps: [
+        { id: 'intro', title: 'Bem-vindo ao Quiz de Estilo', type: 'intro' },
+        { id: 'q1', title: 'Qual seu estilo favorito?', type: 'question' },
+        { id: 'q2', title: 'Cores preferidas?', type: 'question' },
+        { id: 'result', title: 'Seu Estilo Pessoal', type: 'result' }
+      ],
+      preview: 'https://images.unsplash.com/photo-1445205170230-053b83016050?w=400&h=300&fit=crop'
+    },
+    {
+      id: 'wardrobe-consultant',
+      meta: {
+        name: 'Consultoria de Guarda-Roupa',
+        description: 'Análise completa do seu armário',
+        version: '1.0.0',
+        author: 'Style AI',
+        category: 'consulting',
+        tags: ['consultoria', 'armário', 'organização', 'styling']
+      },
+      design: {
+        primaryColor: '#6366F1',
+        secondaryColor: '#8B5CF6',
+        accentColor: '#EC4899',
+        backgroundColor: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+        fontFamily: 'Inter'
+      },
+      steps: [
+        { id: 'intro', title: 'Consultoria Personalizada', type: 'intro' },
+        { id: 'q1', title: 'Qual seu objetivo?', type: 'question' },
+        { id: 'q2', title: 'Orçamento disponível?', type: 'question' },
+        { id: 'analysis', title: 'Análise do Guarda-Roupa', type: 'analysis' },
+        { id: 'recommendations', title: 'Recomendações', type: 'result' }
+      ],
+      preview: 'https://images.unsplash.com/photo-1581338834647-b0fb40704e21?w=400&h=300&fit=crop'
+    },
+    {
+      id: 'personal-shopper',
+      meta: {
+        name: 'Personal Shopper IA',
+        description: 'Recomendações personalizadas de compras',
+        version: '1.0.0',
+        author: 'Shopping AI',
+        category: 'shopping',
+        tags: ['shopping', 'recomendações', 'compras', 'ia']
+      },
+      design: {
+        primaryColor: '#10B981',
+        secondaryColor: '#059669',
+        accentColor: '#F59E0B',
+        backgroundColor: 'linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)',
+        fontFamily: 'Roboto'
+      },
+      steps: [
+        { id: 'intro', title: 'Personal Shopper IA', type: 'intro' },
+        { id: 'profile', title: 'Seu Perfil', type: 'form' },
+        { id: 'preferences', title: 'Preferências de Estilo', type: 'question' },
+        { id: 'budget', title: 'Orçamento', type: 'question' },
+        { id: 'recommendations', title: 'Suas Recomendações', type: 'result' }
+      ],
+      preview: 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=400&h=300&fit=crop'
     }
-  };
+  ];
 
-  const getTemplateIcon = (templateName: string) => {
-    if (templateName.includes('Estilo') || templateName.includes('Roupa')) return Sparkles;
-    if (templateName.includes('Fitness') || templateName.includes('Trainer')) return Wand2;
-    return Bot;
+  const categories = [
+    { id: 'all', name: 'Todos', icon: Star },
+    { id: 'fashion', name: 'Moda', icon: Heart },
+    { id: 'consulting', name: 'Consultoria', icon: Zap },
+    { id: 'shopping', name: 'Shopping', icon: ShoppingBag }
+  ];
+
+  useEffect(() => {
+    // Simular carregamento de templates
+    const loadTemplates = async () => {
+      setIsLoading(true);
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      setTemplates(predefinedTemplates);
+      setIsLoading(false);
+    };
+
+    loadTemplates();
+  }, []);
+
+  // Filtrar templates
+  const filteredTemplates = templates.filter(template => {
+    const matchesSearch = template.meta.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         template.meta.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         template.meta.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()));
+    
+    const matchesCategory = selectedCategory === 'all' || template.meta.category === selectedCategory;
+    
+    return matchesSearch && matchesCategory;
+  });
+
+  const handleGenerateCustomTemplate = async () => {
+    if (!searchTerm.trim()) return;
+    
+    try {
+      const aiSteps = await generateFunnel(`Criar template: ${searchTerm}`);
+      
+      if (aiSteps) {
+        const customTemplate: FunnelTemplate = {
+          id: `ai-generated-${Date.now()}`,
+          meta: {
+            name: `Template IA: ${searchTerm}`,
+            description: `Template gerado automaticamente baseado em: ${searchTerm}`,
+            version: '1.0.0',
+            author: 'Gemini AI',
+            category: 'ai-generated',
+            tags: searchTerm.split(' ')
+          },
+          design: {
+            primaryColor: '#6366F1',
+            secondaryColor: '#8B5CF6', 
+            accentColor: '#EC4899',
+            backgroundColor: 'linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%)',
+            fontFamily: 'Inter'
+          },
+          steps: aiSteps
+        };
+        
+        onSelectTemplate(customTemplate);
+      }
+    } catch (error) {
+      console.error('Erro ao gerar template personalizado:', error);
+    }
   };
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg shadow-xl max-w-4xl w-full mx-4 max-h-[90vh] overflow-hidden">
-        <div className="p-6 border-b">
+      <div className="bg-white rounded-lg shadow-xl max-w-6xl w-full mx-4 max-h-[90vh] overflow-hidden">
+        {/* Header */}
+        <div className="p-6 border-b bg-gradient-to-r from-purple-50 to-pink-50">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Bot className="w-6 h-6 text-purple-600" />
-              <h2 className="text-xl font-semibold">Templates IA Avançados</h2>
-              <Badge variant="outline" className="bg-purple-50 text-purple-700">
-                <Sparkles className="w-3 h-3 mr-1" />
-                Powered by Gemini 2.0
-              </Badge>
+            <div className="flex items-center gap-3">
+              <div className="p-2 bg-gradient-to-r from-purple-600 to-pink-600 rounded-lg">
+                <Sparkles className="w-6 h-6 text-white" />
+              </div>
+              <div>
+                <h2 className="text-2xl font-bold text-gray-900">Templates IA</h2>
+                <p className="text-gray-600">Escolha um template ou crie um personalizado com IA</p>
+              </div>
             </div>
-            <Button variant="ghost" onClick={onClose}>✕</Button>
+            <Button variant="ghost" onClick={onClose}>
+              <X className="w-5 h-5" />
+            </Button>
           </div>
-          <p className="text-gray-600 mt-2">
-            Escolha um template inteligente com IA integrada para criar funis personalizados
-          </p>
+
+          {/* Search e Generate */}
+          <div className="mt-4 flex gap-3">
+            <div className="flex-1 relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+              <Input
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                placeholder="Buscar templates ou descrever seu funil personalizado..."
+                className="pl-10"
+              />
+            </div>
+            <Button
+              onClick={handleGenerateCustomTemplate}
+              disabled={!searchTerm.trim() || aiLoading}
+              className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
+            >
+              <Bot className="w-4 h-4 mr-2" />
+              {aiLoading ? 'Gerando...' : 'Gerar com IA'}
+            </Button>
+          </div>
         </div>
 
-        <div className="p-6 overflow-y-auto max-h-[70vh]">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {AVAILABLE_TEMPLATES.map((template) => {
-              const Icon = getTemplateIcon(template.meta.name);
-              const isSelected = selectedTemplate === template.meta.name;
-              
+        {/* Categories */}
+        <div className="p-4 border-b bg-gray-50">
+          <div className="flex gap-2 flex-wrap">
+            {categories.map((category) => {
+              const Icon = category.icon;
               return (
-                <Card
-                  key={template.meta.name}
-                  className={`cursor-pointer transition-all duration-200 hover:shadow-lg ${
-                    isSelected ? 'ring-2 ring-purple-500 bg-purple-50' : ''
-                  }`}
-                  onClick={() => handleSelectTemplate(template)}
+                <Button
+                  key={category.id}
+                  variant={selectedCategory === category.id ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setSelectedCategory(category.id)}
+                  className="flex items-center gap-2"
                 >
-                  <CardHeader className="pb-3">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <Icon className="w-5 h-5 text-purple-600" />
-                        <CardTitle className="text-sm">{template.meta.name}</CardTitle>
-                      </div>
-                      {isSelected && <Check className="w-5 h-5 text-green-600" />}
-                    </div>
-                  </CardHeader>
-                  <CardContent className="pt-0">
-                    <p className="text-sm text-gray-600 mb-3">{template.meta.description}</p>
-                    
-                    <div className="space-y-2 mb-3">
-                      <div className="flex items-center gap-2">
-                        <Badge variant="outline" className="text-xs">{template.steps.length} Steps</Badge>
-                        <Badge variant="outline" className="text-xs">v{template.meta.version}</Badge>
-                      </div>
-                      
-                      <div className="flex items-center gap-1">
-                        <Sparkles className="w-3 h-3 text-amber-500" />
-                        <span className="text-xs text-amber-700">IA Gemini 2.0 Flash</span>
-                      </div>
-                    </div>
-
-                    <div className="text-xs text-gray-500">
-                      Recursos: {Object.entries(template.config?.features || {})
-                        .filter(([, enabled]) => enabled)
-                        .map(([feature]) => feature)
-                        .join(', ')}
-                    </div>
-                  </CardContent>
-                </Card>
+                  <Icon className="w-4 h-4" />
+                  {category.name}
+                </Button>
               );
             })}
           </div>
         </div>
 
-        <div className="p-6 border-t bg-gray-50">
-          <div className="flex items-center justify-between">
-            <div className="text-sm text-gray-600">
-              <Wand2 className="w-4 h-4 inline mr-1" />
-              Templates com IA integrada para resultados personalizados
+        {/* Templates Grid */}
+        <div className="p-6 overflow-y-auto max-h-[60vh]">
+          {isLoading ? (
+            <div className="flex items-center justify-center py-12">
+              <div className="text-center">
+                <div className="w-8 h-8 border-4 border-purple-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+                <p className="text-gray-600">Carregando templates...</p>
+              </div>
             </div>
-            <div className="flex gap-2">
-              <Button variant="outline" onClick={onClose}>Cancelar</Button>
-              {isLoading && (
-                <Button disabled>
-                  <Bot className="w-4 h-4 mr-2 animate-spin" />
-                  Carregando...
-                </Button>
-              )}
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {filteredTemplates.map((template) => (
+                <Card 
+                  key={template.id} 
+                  className="cursor-pointer hover:shadow-lg transition-all duration-200 hover:scale-105"
+                  onClick={() => onSelectTemplate(template)}
+                >
+                  <CardHeader className="pb-3">
+                    {template.preview && (
+                      <div className="w-full h-32 bg-gray-100 rounded-lg mb-3 overflow-hidden">
+                        <img 
+                          src={template.preview} 
+                          alt={template.meta.name}
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                    )}
+                    <CardTitle className="text-lg">{template.meta.name}</CardTitle>
+                    <p className="text-sm text-gray-600">{template.meta.description}</p>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="flex flex-wrap gap-1 mb-3">
+                      {template.meta.tags.slice(0, 3).map((tag) => (
+                        <Badge key={tag} variant="secondary" className="text-xs">
+                          {tag}
+                        </Badge>
+                      ))}
+                    </div>
+                    <div className="flex items-center justify-between text-sm text-gray-500">
+                      <span>{template.steps.length} steps</span>
+                      <span>por {template.meta.author}</span>
+                    </div>
+                    <div className="mt-3 flex items-center gap-2">
+                      <div 
+                        className="w-4 h-4 rounded-full border-2 border-white shadow"
+                        style={{ backgroundColor: template.design.primaryColor }}
+                      />
+                      <div 
+                        className="w-4 h-4 rounded-full border-2 border-white shadow"
+                        style={{ backgroundColor: template.design.secondaryColor }}
+                      />
+                      <div 
+                        className="w-4 h-4 rounded-full border-2 border-white shadow"
+                        style={{ backgroundColor: template.design.accentColor }}
+                      />
+                      <span className="text-xs text-gray-500 ml-2">{template.design.fontFamily}</span>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
             </div>
-          </div>
+          )}
+
+          {!isLoading && filteredTemplates.length === 0 && (
+            <div className="text-center py-12">
+              <Palette className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+              <h3 className="text-lg font-medium text-gray-900 mb-2">Nenhum template encontrado</h3>
+              <p className="text-gray-600 mb-4">
+                Não encontramos templates que correspondam à sua busca.
+              </p>
+              <Button
+                onClick={handleGenerateCustomTemplate}
+                disabled={!searchTerm.trim() || aiLoading}
+                className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
+              >
+                <Bot className="w-4 h-4 mr-2" />
+                Criar Template Personalizado com IA
+              </Button>
+            </div>
+          )}
         </div>
       </div>
     </div>
   );
 }
+
+export default TemplatesIASidebar;

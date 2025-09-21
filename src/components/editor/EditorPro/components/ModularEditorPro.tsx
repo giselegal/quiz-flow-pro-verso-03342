@@ -253,12 +253,12 @@ const ModularEditorPro: React.FC<ModularEditorProProps> = () => {
   const stepHasBlocksRecord = useMemo(() => {
     const record: Record<number, boolean> = {};
 
-    // 🌐 GENÉRICO: Detecta automaticamente quantas etapas o funil tem
+    // 🌐 DINÂMICO: Detecta automaticamente quantas etapas o funil tem
     const stepKeys = Object.keys(state.steps);
     const maxStep = stepKeys.reduce((max, key) => {
       const stepNumber = parseInt(key.replace('step-', ''));
       return Math.max(max, stepNumber);
-    }, 21); // 21 como fallback para compatibilidade
+    }, state.totalSteps || Object.keys(state.steps).length || 1); // Usar totalSteps dinâmico
 
     for (let i = 1; i <= maxStep; i++) {
       const stepKey = `step-${i}`;
