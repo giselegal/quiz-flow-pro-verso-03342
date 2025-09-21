@@ -49,6 +49,9 @@ const select = (key: string, label: string, options: Array<{ value: any; label: 
 // Em testes, fornecemos um registro mínimo para reduzir uso de memória
 const minimalRegistry: Record<string, BlockDefinition> = {
     'text': { type: 'text', title: 'Texto', category: 'Conteúdo', defaultProps: { text: '' }, propsSchema: [] },
+    'headline': { type: 'headline', title: 'Título', category: 'Conteúdo', defaultProps: { text: 'Título', level: 'h2' }, propsSchema: [] },
+    'image': { type: 'image', title: 'Imagem', category: 'Conteúdo', defaultProps: { src: '', alt: 'Imagem' }, propsSchema: [] },
+    'button': { type: 'button', title: 'Botão', category: 'Ação', defaultProps: { text: 'Clique aqui' }, propsSchema: [] },
     'form-container': {
         type: 'form-container',
         title: 'Formulário',

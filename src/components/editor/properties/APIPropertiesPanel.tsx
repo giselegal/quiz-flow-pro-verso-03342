@@ -53,6 +53,19 @@ const FunnelDataDisplay: React.FC<{
 }> = memo(({ blockId, blockType }) => {
     const builder = useSimpleBuilder();
     const funnelsContext = useFunnels();
+    
+    // 🛡️ DEFENSIVE GUARD: Verificar se builder está disponível  
+    if (!builder?.state) {
+        return (
+            <div className="flex items-center justify-center p-8 text-gray-500">
+                <div className="text-center">
+                    <AlertCircle className="w-8 h-8 mx-auto mb-2" />
+                    <p>Builder context não disponível</p>
+                    <p className="text-xs">Verifique se o componente está dentro de SimpleBuilderProvider</p>
+                </div>
+            </div>
+        );
+    }
 
     const funnelInfo = useMemo(() => {
         try {
