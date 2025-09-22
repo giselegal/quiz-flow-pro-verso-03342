@@ -31,7 +31,7 @@ export class AICache {
     hitRate: 0
   };
 
-  constructor(private maxSize = 100) {}
+  constructor(private maxSize = 100) { }
 
   /**
    * Gera hash para chave de cache baseada em parâmetros
@@ -52,15 +52,34 @@ export class AICache {
    */
   get<T>(key: string, params?: any): T | null {
     this.stats.totalRequests++;
-    
+
     const hash = params ? this.generateHash(params) : '';
-    const fullKey = hash ? `${key}_${hash}` : key;
+    const fullKey = `ai_cache_${hash ? `${key}_${hash}` : key}`;
+
+    // Tenta carregar do localStorage se não estiver no cache em memória
+    if (!this.cache.has(fullKey)) {
+      const storedItem = localStorage.getItem(fullKey);
+      if (storedItem) {
+        try {
+          const entry = JSON.parse(storedItem);
+          if (!this.isExpired(entry)) {
+            this.cache.set(fullKey, entry);
+          } else {
+            localStorage.removeItem(fullKey);
+          }
+        } catch (e) {
+          localStorage.removeItem(fullKey);
+        }
+      }
+    }
+
     const entry = this.cache.get(fullKey);
 
     if (!entry || this.isExpired(entry)) {
       this.stats.misses++;
       if (entry) {
         this.cache.delete(fullKey);
+        localStorage.removeItem(fullKey);
       }
       this.updateHitRate();
       return null;
@@ -75,20 +94,32 @@ export class AICache {
    * Armazena dados no cache
    */
   set<T>(key: string, data: T, ttlMs = 5 * 60 * 1000, params?: any): void {
+    if (data === undefined || data === null) {
+      return;
+    }
+
     const hash = params ? this.generateHash(params) : '';
-    const fullKey = hash ? `${key}_${hash}` : key;
+    const fullKey = `ai_cache_${hash ? `${key}_${hash}` : key}`;
 
     // Limpar cache se atingiu tamanho máximo
     if (this.cache.size >= this.maxSize) {
       this.evictOldest();
     }
 
-    this.cache.set(fullKey, {
+    const entry = {
       data,
       timestamp: Date.now(),
       ttl: ttlMs,
       hash
-    });
+    };
+
+    this.cache.set(fullKey, entry);
+
+    try {
+      localStorage.setItem(fullKey, JSON.stringify(entry));
+    } catch (e) {
+      console.error("Falha ao persistir no localStorage:", e);
+    }
 
     console.log(`🧠 AICache: Cached '${key}' (TTL: ${ttlMs}ms)`);
   }
@@ -152,8 +183,8 @@ export class AICache {
    * Atualiza taxa de acerto
    */
   private updateHitRate(): void {
-    this.stats.hitRate = this.stats.totalRequests > 0 
-      ? (this.stats.hits / this.stats.totalRequests) * 100 
+    this.stats.hitRate = this.stats.totalRequests > 0
+      ? (this.stats.hits / this.stats.totalRequests) * 100
       : 0;
   }
 
@@ -169,7 +200,7 @@ export class AICache {
    */
   getInfo() {
     const entries: Array<{ key: string; size: number; age: number; ttl: number }> = [];
-    
+
     for (const [key, entry] of this.cache.entries()) {
       entries.push({
         key,
@@ -198,10 +229,10 @@ export function cached(
   key: string,
   ttlMs = 5 * 60 * 1000
 ) {
-  return function(_target: any, _propertyKey: string, descriptor: PropertyDescriptor) {
+  return function (_target: any, _propertyKey: string, descriptor: PropertyDescriptor) {
     const originalMethod = descriptor.value;
 
-    descriptor.value = async function(...args: any[]) {
+    descriptor.value = async function (...args: any[]) {
       const cached = aiCache.get(key, args);
       if (cached) {
         console.log(`🎯 Cache hit for ${key}`);

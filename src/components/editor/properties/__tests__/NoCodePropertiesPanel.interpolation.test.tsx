@@ -6,7 +6,7 @@
  */
 
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { renderHook, act } from '@testing-library/react';
+import { act } from '@testing-library/react';
 import { render, screen } from '@testing-library/react';
 import React from 'react';
 
@@ -241,21 +241,29 @@ describe('NoCodePropertiesPanel - Sistema de Interpolação', () => {
 
         it('deve lidar com o caso específico de progressMessage', () => {
             let interpolationSystem: any;
+            let testSystem: any;
+            let result: string = '';
 
             render(
                 <TestInterpolationWrapper>
                     {(system) => {
+                        testSystem = system;
                         interpolationSystem = system;
-                        // Simula seleção de 3 opções de 5 obrigatórias
-                        system.setSelectedCount(3);
-                        system.setRequiredCount(5);
                         return <div>Test</div>;
                     }}
                 </TestInterpolationWrapper>
             );
 
-            const progressMessage = 'Você selecionou {count} de {required} opções';
-            const result = interpolationSystem.interpolateText(progressMessage);
+            act(() => {
+                testSystem.setSelectedCount(3);
+                testSystem.setRequiredCount(5);
+            });
+
+            act(() => {
+                const progressMessage = 'Você selecionou {count} de {required} opções';
+                result = interpolationSystem.interpolateText(progressMessage);
+            });
+
 
             expect(result).toBe('Você selecionou 3 de 5 opções');
         });

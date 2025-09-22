@@ -1,113 +1,70 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 
-// Mock do AICache como classe para coincidir com implementação
-const mockAICache = {
-  get: vi.fn(),
-  set: vi.fn(),
-  clear: vi.fn(),
-  getStats: vi.fn(),
-};
-
-vi.mock('@/services/AICache', () => ({
-  AICache: mockAICache,
-}));
-
-// Mock do localStorage
-const mockLocalStorage = (() => {
-  let store: { [key: string]: string } = {};
-  
-  return {
-    getItem: vi.fn((key: string) => store[key] || null),
-    setItem: vi.fn((key: string, value: string) => {
-      store[key] = value;
-    }),
-    removeItem: vi.fn((key: string) => {
-      delete store[key];
-    }),
-    clear: vi.fn(() => {
-      store = {};
-    }),
-  };
-})();
-
-Object.defineProperty(window, 'localStorage', {
-  value: mockLocalStorage,
-});
+import { AICache } from '@/services/AICache';
 
 describe('AICache Service', () => {
+  let cache: AICache;
+
   beforeEach(() => {
-    mockLocalStorage.clear();
+    localStorage.clear();
     vi.clearAllMocks();
-    // Reset mocks
-    mockAICache.get.mockReturnValue(null);
-    mockAICache.getStats.mockReturnValue({ hits: 0, misses: 0, hitRate: 0 });
+    cache = new AICache();
   });
 
   describe('Operações básicas de cache', () => {
     it('deve armazenar e recuperar dados corretamente', () => {
       const key = 'test-key';
       const data = { message: 'Hello AI', timestamp: Date.now() };
-      
-      // Configura mock para retornar o dado
-      mockAICache.get.mockReturnValue(data);
-      
-      mockAICache.set(key, data);
-      const retrieved = mockAICache.get(key);
-      
+
+      cache.set(key, data);
+      const retrieved = cache.get(key);
+
       expect(retrieved).toEqual(data);
-      expect(mockAICache.set).toHaveBeenCalledWith(key, data);
     });
 
     it('deve retornar null para chaves inexistentes', () => {
-      mockAICache.get.mockReturnValue(null);
-      const result = mockAICache.get('non-existent-key');
+      const result = cache.get('non-existent-key');
       expect(result).toBeNull();
     });
 
     it('deve limpar cache corretamente', () => {
-      mockAICache.set('key1', { data: 'test1' });
-      mockAICache.set('key2', { data: 'test2' });
-      
-      // Simula dados existentes
-      mockAICache.get.mockReturnValue({ data: 'test' });
-      expect(mockAICache.get('key1')).toBeTruthy();
-      expect(mockAICache.get('key2')).toBeTruthy();
-      
-      mockAICache.clear();
-      mockAICache.get.mockReturnValue(null);
-      
-      expect(mockAICache.get('key1')).toBeNull();
-      expect(mockAICache.get('key2')).toBeNull();
-      expect(mockAICache.clear).toHaveBeenCalled();
+      cache.set('key1', { data: 'test1' });
+      cache.set('key2', { data: 'test2' });
+
+      expect(cache.get('key1')).toBeTruthy();
+      expect(cache.get('key2')).toBeTruthy();
+
+      cache.clear();
+
+      expect(cache.get('key1')).toBeNull();
+      expect(cache.get('key2')).toBeNull();
     });
   });
 
   describe('TTL (Time To Live)', () => {
-    it('deve respeitar TTL e expirar entradas antigas', () => {
+    it('deve respeitar TTL e expirar entradas antigas', async () => {
       const key = 'ttl-test';
       const data = { content: 'test data' };
       const shortTTL = 10; // 10ms
-      
-      // Simula comportamento com TTL
-      mockAICache.set(key, data, shortTTL);
-      
+
+      cache.set(key, data, shortTTL);
+
       // Imediatamente deve estar disponível
-      mockAICache.get.mockReturnValue(data);
-      expect(mockAICache.get(key)).toEqual(data);
-      
-      // Simula passagem do tempo e expiração
-      mockAICache.get.mockReturnValue(null);
-      expect(mockAICache.get(key)).toBeNull();
+      expect(cache.get(key)).toEqual(data);
+
+      // Simula passagem do tempo
+      await new Promise(r => setTimeout(r, shortTTL + 5));
+
+      expect(cache.get(key)).toBeNull();
     });
 
     it('deve usar TTL padrão quando não especificado', () => {
       const key = 'default-ttl';
       const data = { content: 'default test' };
-      
-      mockAICache.get.mockReturnValue(data);
-      mockAICache.set(key, data);
-      const retrieved = mockAICache.get(key);
-      
+
+      cache.set(key, data);
+      const retrieved = cache.get(key);
+
       expect(retrieved).toEqual(data);
     });
   });
@@ -116,21 +73,18 @@ describe('AICache Service', () => {
     it('deve rastrear hits e misses corretamente', () => {
       const key = 'stats-test';
       const data = { content: 'stats data' };
-      
+
       // Miss inicial
-      mockAICache.getStats.mockReturnValue({ misses: 1, hits: 0, hitRate: 0 });
-      mockAICache.get(key);
-      let stats = mockAICache.getStats();
+      cache.get(key);
+      let stats = cache.getStats();
       expect(stats.misses).toBe(1);
       expect(stats.hits).toBe(0);
-      
+
       // Set e hit
-      mockAICache.set(key, data);
-      mockAICache.get.mockReturnValue(data);
-      mockAICache.getStats.mockReturnValue({ misses: 1, hits: 1, hitRate: 50 });
-      mockAICache.get(key);
-      
-      stats = mockAICache.getStats();
+      cache.set(key, data);
+      cache.get(key);
+
+      stats = cache.getStats();
       expect(stats.hits).toBe(1);
       expect(stats.misses).toBe(1);
     });
@@ -138,29 +92,25 @@ describe('AICache Service', () => {
     it('deve calcular hit rate corretamente', () => {
       const key = 'hitrate-test';
       const data = { content: 'hit rate data' };
-      
-      mockAICache.set(key, data);
-      mockAICache.get.mockReturnValue(data);
-      
+
+      cache.set(key, data);
+
       // 3 hits
-      mockAICache.get(key);
-      mockAICache.get(key);
-      mockAICache.get(key);
-      
+      cache.get(key);
+      cache.get(key);
+      cache.get(key);
+
       // 1 miss  
-      mockAICache.get.mockReturnValue(null);
-      mockAICache.get('non-existent');
-      
-      mockAICache.getStats.mockReturnValue({ hits: 3, misses: 1, hitRate: 75 });
-      const stats = mockAICache.getStats();
+      cache.get('non-existent');
+
+      const stats = cache.getStats();
       expect(stats.hits).toBe(3);
       expect(stats.misses).toBe(1);
       expect(stats.hitRate).toBe(75); // 3/(3+1) * 100
     });
 
     it('deve lidar com hit rate quando não há acessos', () => {
-      mockAICache.getStats.mockReturnValue({ hits: 0, misses: 0, hitRate: 0 });
-      const stats = mockAICache.getStats();
+      const stats = cache.getStats();
       expect(stats.hitRate).toBe(0);
     });
   });
@@ -168,22 +118,20 @@ describe('AICache Service', () => {
   describe('Validação de entrada', () => {
     it('deve lidar com dados inválidos graciosamente', () => {
       const key = 'invalid-test';
-      
+
       // Não deve quebrar com dados undefined/null
-      mockAICache.set(key, undefined as any);
-      mockAICache.get.mockReturnValue(null);
-      expect(mockAICache.get(key)).toBeNull();
-      
-      mockAICache.set(key, null as any);
-      expect(mockAICache.get(key)).toBeNull();
+      cache.set(key, undefined as any);
+      expect(cache.get(key)).toBeNull();
+
+      cache.set(key, null as any);
+      expect(cache.get(key)).toBeNull();
     });
 
     it('deve lidar com chaves inválidas', () => {
-      expect(() => mockAICache.get('')).not.toThrow();
-      expect(() => mockAICache.set('', { data: 'test' })).not.toThrow();
-      
-      mockAICache.get.mockReturnValue(null);
-      expect(mockAICache.get('')).toBeNull();
+      expect(() => cache.get('')).not.toThrow();
+      expect(() => cache.set('', { data: 'test' })).not.toThrow();
+
+      expect(cache.get('')).toBeNull();
     });
   });
 
@@ -191,16 +139,15 @@ describe('AICache Service', () => {
     it('deve persistir dados no localStorage', () => {
       const key = 'persistence-test';
       const data = { persisted: true };
-      
-      mockAICache.set(key, data);
-      
-      expect(mockLocalStorage.setItem).toHaveBeenCalledWith(
-        expect.stringContaining('ai_cache_'),
+      const setItemSpy = vi.spyOn(localStorage, 'setItem');
+
+      cache.set(key, data);
+
+      expect(setItemSpy).toHaveBeenCalledWith(
+        `ai_cache_${key}`,
         expect.any(String)
       );
-    });
-
-    it('deve carregar dados do localStorage na inicialização', () => {
+    }); it('deve carregar dados do localStorage na inicialização', () => {
       const key = 'load-test';
       const data = { loaded: true };
       const cacheEntry = {
@@ -208,16 +155,16 @@ describe('AICache Service', () => {
         timestamp: Date.now(),
         ttl: 300000
       };
-      
+
       // Simula dados já existentes no localStorage
-      mockLocalStorage.setItem(
+      localStorage.setItem(
         `ai_cache_${key}`,
         JSON.stringify(cacheEntry)
       );
-      
-      // Deve carregar automaticamente
-      mockAICache.get.mockReturnValue(data);
-      const retrieved = mockAICache.get(key);
+
+      // Cria uma nova instância para simular a inicialização
+      const newCache = new AICache();
+      const retrieved = newCache.get(key);
       expect(retrieved).toEqual(data);
     });
   });
@@ -232,11 +179,10 @@ describe('AICache Service', () => {
         ],
         metadata: { generated: true, style: 'business' }
       };
-      
-      mockAICache.set(templateKey, templateData);
-      mockAICache.get.mockReturnValue(templateData);
-      const retrieved = mockAICache.get(templateKey);
-      
+
+      cache.set(templateKey, templateData);
+      const retrieved = cache.get(templateKey);
+
       expect(retrieved).toEqual(templateData);
       expect(retrieved?.blocks).toHaveLength(2);
     });
@@ -248,11 +194,10 @@ describe('AICache Service', () => {
         confidence: 0.85,
         impact: 'high'
       };
-      
-      mockAICache.set(optimizationKey, optimizationData, 600000); // 10 min TTL
-      mockAICache.get.mockReturnValue(optimizationData);
-      const retrieved = mockAICache.get(optimizationKey);
-      
+
+      cache.set(optimizationKey, optimizationData, 600000); // 10 min TTL
+      const retrieved = cache.get(optimizationKey);
+
       expect(retrieved).toEqual(optimizationData);
       expect(retrieved?.confidence).toBe(0.85);
     });
