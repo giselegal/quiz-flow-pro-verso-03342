@@ -503,8 +503,20 @@ const EditableBlock: React.FC<EditableBlockProps> = ({
                         <h2 className="text-xl font-bold text-center">
                             {block.content.question}
                         </h2>
-                        <div className={`grid gap-4 ${showImages ? 'grid-cols-1 md:grid-cols-2' : 'grid-cols-1'
-                            }`}>
+                        <div className={`grid gap-4 ${(() => {
+                            // 🎯 REGRA AUTOMATICA: 1 coluna para texto-only, 2 colunas para imagem+texto
+                            const hasImages = showImages && block.content.options?.some((opt: any) =>
+                                opt.imageUrl || opt.image
+                            );
+
+                            if (!hasImages) {
+                                console.log('🎯 ModularV1Editor: Detectado apenas texto → usando 1 coluna');
+                                return 'grid-cols-1';
+                            }
+
+                            console.log('🎯 ModularV1Editor: Detectado imagens → usando 2 colunas responsivas');
+                            return 'grid-cols-1 md:grid-cols-2';
+                        })()}`}>
                             {block.content.options?.map((option: any) => (
                                 <button
                                     key={option.id}
