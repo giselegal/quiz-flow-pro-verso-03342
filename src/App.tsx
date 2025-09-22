@@ -66,6 +66,9 @@ const SimpleEditorTest = lazy(() => import('./components/test/SimpleEditorTest')
 // 🚀 NOVO: Core limpo para teste
 const TestNewQuizCore = lazy(() => import('./examples/Quiz21StepsSimple'));
 
+// 🧪 TESTE DE COMPONENTES INDIVIDUAIS
+const ComponentTestPage = lazy(() => import('./pages/ComponentTestPage'));
+
 // Loading component
 const PageLoading = () => (
   <div className="min-h-screen flex items-center justify-center">
@@ -394,6 +397,13 @@ function App() {
                 <Route path="/config-test" component={() =>
                   <Suspense fallback={<LoadingFallback />}>
                     <ConfigurationTest />
+                  </Suspense>
+                } />
+
+                {/* 🧪 TESTE DE COMPONENTES INDIVIDUAIS */}
+                <Route path="/test-components" component={() =>
+                  <Suspense fallback={<LoadingFallback />}>
+                    <ComponentTestPage />
                   </Suspense>
                 } />
 
