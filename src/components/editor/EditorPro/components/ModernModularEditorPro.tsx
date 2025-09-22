@@ -85,12 +85,12 @@ const ModernModularEditorPro: React.FC<ModernModularEditorProProps> = ({
     const handleComponentDrag = useCallback(async (componentId: string) => {
         try {
             console.log('🔧 Adicionando componente:', componentId);
-            
+
             const stepKey = `step-${currentStep}`;
-            
+
             // Mapear componentId para BlockType válido
             const validComponentType = getValidBlockType(componentId);
-            
+
             // Criar novo bloco baseado no componente selecionado
             const newBlock: Block = {
                 id: `block_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
@@ -110,13 +110,13 @@ const ModernModularEditorPro: React.FC<ModernModularEditorProProps> = ({
                     warnings: []
                 }
             };
-            
+
             // Adicionar bloco ao step atual
             await addBlock(stepKey, newBlock);
-            
+
             // Selecionar o novo bloco
             setSelectedBlockId(newBlock.id);
-            
+
             console.log('✅ Componente adicionado com sucesso:', newBlock);
         } catch (error) {
             console.error('❌ Erro ao adicionar componente:', error);
@@ -127,7 +127,7 @@ const ModernModularEditorPro: React.FC<ModernModularEditorProProps> = ({
     const getValidBlockType = useCallback((componentId: string): BlockType => {
         const componentMap: Record<string, BlockType> = {
             'text': 'text',
-            'headline': 'headline', 
+            'headline': 'headline',
             'button': 'button',
             'image': 'image',
             'question': 'multiple-choice',
@@ -139,7 +139,7 @@ const ModernModularEditorPro: React.FC<ModernModularEditorProProps> = ({
             'offer-card': 'offer-card',
             'spacer': 'spacer'
         };
-        
+
         return componentMap[componentId] || 'text-inline'; // fallback seguro
     }, []);
 
@@ -190,7 +190,7 @@ const ModernModularEditorPro: React.FC<ModernModularEditorProProps> = ({
     const realSteps = Object.keys(stepBlocks).map((stepKey, index) => {
         const stepNumber = parseInt(stepKey.replace('step-', '').replace('step_', '')) || index + 1;
         const blocks = stepBlocks[stepKey] || [];
-        
+
         return {
             id: stepKey,
             name: `Etapa ${stepNumber}`,
@@ -204,7 +204,7 @@ const ModernModularEditorPro: React.FC<ModernModularEditorProProps> = ({
     // 🎯 Handler para obter bloco selecionado real dos dados
     const getSelectedBlock = useCallback(() => {
         if (!selectedBlockId) return null;
-        
+
         // Procurar o bloco em todos os steps
         for (const [stepKey, blocks] of Object.entries(stepBlocks)) {
             const block = blocks.find(b => b.id === selectedBlockId);
@@ -213,7 +213,7 @@ const ModernModularEditorPro: React.FC<ModernModularEditorProProps> = ({
                 return block;
             }
         }
-        
+
         return null;
     }, [selectedBlockId, stepBlocks]);
 
@@ -223,7 +223,7 @@ const ModernModularEditorPro: React.FC<ModernModularEditorProProps> = ({
     const handlePropertyUpdate = useCallback((blockId: string, updates: Record<string, any>) => {
         try {
             console.log('🔄 Atualizando propriedades:', { blockId, updates });
-            
+
             // Encontrar em qual step o bloco está
             let targetStepKey = '';
             for (const [stepKey, blocks] of Object.entries(stepBlocks)) {
@@ -232,7 +232,7 @@ const ModernModularEditorPro: React.FC<ModernModularEditorProProps> = ({
                     break;
                 }
             }
-            
+
             if (targetStepKey) {
                 updateBlock(targetStepKey, blockId, updates);
                 console.log('✅ Propriedades atualizadas com sucesso');
@@ -307,17 +307,16 @@ const ModernModularEditorPro: React.FC<ModernModularEditorProProps> = ({
                                 <h2 className="text-xl font-bold">
                                     Etapa {currentStep}
                                 </h2>
-                                
+
                                 {stepBlocks[`step-${currentStep}`]?.length > 0 ? (
                                     <div className="space-y-3">
                                         {stepBlocks[`step-${currentStep}`].map((block, index) => (
                                             <div
                                                 key={block.id}
-                                                className={`p-3 border rounded cursor-pointer transition-colors ${
-                                                    selectedBlockId === block.id 
-                                                        ? 'border-blue-500 bg-blue-50' 
+                                                className={`p-3 border rounded cursor-pointer transition-colors ${selectedBlockId === block.id
+                                                        ? 'border-blue-500 bg-blue-50'
                                                         : 'border-gray-200 hover:border-gray-300'
-                                                }`}
+                                                    }`}
                                                 onClick={() => handleBlockSelect(block.id)}
                                             >
                                                 <div className="flex justify-between items-center">
