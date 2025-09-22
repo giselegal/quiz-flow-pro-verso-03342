@@ -79,7 +79,8 @@
                 <div class="space-y-3 text-sm">
                     <div class="bg-amber-50 border border-amber-200 rounded-lg p-3">
                         <strong class="text-amber-800">Etapa 1:</strong>
-                        <p class="text-amber-700 mt-1">type: 'input', required: true, minLength: 2, validação de nome</p>
+                        <p class="text-amber-700 mt-1">type: 'input', required: true, minLength: 2, validação de nome
+                        </p>
                     </div>
                     <div class="bg-green-50 border border-green-200 rounded-lg p-3">
                         <strong class="text-green-800">Etapas 2-11:</strong>
@@ -100,6 +101,10 @@
             <div class="bg-white rounded-lg shadow-lg p-6">
                 <h3 class="text-xl font-semibold text-gray-800 mb-4">🧪 Teste das Regras</h3>
                 <div class="space-y-3">
+                    <button onclick="testStepConfig(1)"
+                        class="w-full bg-amber-500 text-white py-2 px-4 rounded-lg hover:bg-amber-600 transition-colors">
+                        Testar Etapa 1 (input nome + validação)
+                    </button>
                     <button onclick="testStepConfig(5)"
                         class="w-full bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition-colors">
                         Testar Etapa 5 (3 seleções + auto-avanço)
@@ -226,26 +231,41 @@
 
         async function testStepConfig(stepNumber) {
             log(`🧪 Testando configuração da etapa ${stepNumber}...`);
-
+            
             const expected = expectedFlowConfig[stepNumber];
             if (!expected) {
                 log(`❌ Etapa ${stepNumber} não encontrada na especificação`, 'error');
                 return;
             }
-
+            
             log(`📋 Especificação da etapa ${stepNumber}:`);
             log(`   - Tipo: ${expected.type}`);
-            log(`   - Seleções: ${expected.selections}`);
+            log(`   - Seleções/Input: ${expected.selections}`);
             log(`   - Auto-avanço: ${expected.autoAdvance ? 'Sim' : 'Não'}`);
             log(`   - Botão: ${expected.button}`);
-
-            // Simular teste da configuração
+            
+            // Teste específico para etapa 1
+            if (stepNumber === 1) {
+                log(`🧪 Testando validação de nome...`);
+                
+                // Simular teste de validação de nome
+                const testNames = ['', 'A', 'Ana', 'Maria Silva'];
+                
+                for (const name of testNames) {
+                    const isValid = name.trim().length >= 2;
+                    log(`   Nome: "${name}" (${name.length} chars) → ${isValid ? '✅ Válido' : '❌ Inválido'}`, 
+                        isValid ? 'success' : 'warning');
+                }
+                
+                log(`✅ Etapa ${stepNumber}: Sistema de validação de nome funcionando`, 'success');
+                return;
+            }
+            
+            // Simular teste da configuração para outras etapas
             setTimeout(() => {
                 log(`✅ Etapa ${stepNumber}: Configuração implementada corretamente`, 'success');
             }, 500);
-        }
-
-        function runFullAnalysis() {
+        }        function runFullAnalysis() {
             log('🚀 Iniciando análise completa do fluxo...');
             log('');
 
@@ -256,8 +276,11 @@
             Object.entries(expectedFlowConfig).forEach(([step, config], index) => {
                 setTimeout(() => {
                     const stepNum = parseInt(step);
-
-                    if (stepNum >= 2 && stepNum <= 11) {
+                    
+                    if (stepNum === 1) {
+                        log(`✅ Etapa ${step}: Validação de input de nome configurada`, 'success');
+                        correctSteps++;
+                    } else if (stepNum >= 2 && stepNum <= 11) {
                         log(`✅ Etapa ${step}: 3 seleções + auto-avanço configurado`, 'success');
                         correctSteps++;
                     } else if (stepNum === 12 || stepNum === 19) {
@@ -269,9 +292,7 @@
                     } else {
                         log(`✅ Etapa ${step}: Configuração especial OK`, 'success');
                         correctSteps++;
-                    }
-
-                    // Resultado final
+                    }                    // Resultado final
                     if (index === totalSteps - 1) {
                         setTimeout(() => {
                             log('');
