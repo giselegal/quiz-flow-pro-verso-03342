@@ -1,19 +1,25 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>🔧 CORREÇÃO: Etapas 1, 19 e 20 - Blocos Não Suportados</title>
     <style>
-        body { 
+        body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            margin: 0; 
+            margin: 0;
             padding: 20px;
             background: linear-gradient(135deg, #FAF9F7, #F5F2E9, #EEEBE1);
             color: #432818;
         }
-        .container { max-width: 900px; margin: 0 auto; }
-        .error-banner { 
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .error-banner {
             background: linear-gradient(135deg, #dc2626, #b91c1c);
             color: white;
             padding: 20px;
@@ -22,7 +28,8 @@
             margin-bottom: 30px;
             box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
         }
-        .solution-banner { 
+
+        .solution-banner {
             background: linear-gradient(135deg, #B89B7A, #8B7355);
             color: white;
             padding: 20px;
@@ -31,14 +38,16 @@
             margin-bottom: 30px;
             box-shadow: 0 4px 12px rgba(184, 155, 122, 0.3);
         }
-        .card { 
+
+        .card {
             background: white;
             border-radius: 12px;
             padding: 24px;
             margin-bottom: 20px;
             box-shadow: 0 2px 8px rgba(67, 40, 24, 0.1);
         }
-        .block-type { 
+
+        .block-type {
             background: #f1f5f9;
             border: 1px solid #cbd5e1;
             padding: 8px 12px;
@@ -49,6 +58,7 @@
             display: inline-block;
             margin: 4px 8px 4px 0;
         }
+
         .code-block {
             background: #1e293b;
             color: #e2e8f0;
@@ -59,16 +69,26 @@
             overflow-x: auto;
             margin: 16px 0;
         }
-        .status { 
-            padding: 6px 12px; 
-            border-radius: 4px; 
-            font-size: 12px; 
+
+        .status {
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 12px;
             font-weight: 600;
             display: inline-block;
             margin: 4px 8px 4px 0;
         }
-        .fixed { background: #dcfce7; color: #15803d; }
-        .created { background: #dbeafe; color: #1d4ed8; }
+
+        .fixed {
+            background: #dcfce7;
+            color: #15803d;
+        }
+
+        .created {
+            background: #dbeafe;
+            color: #1d4ed8;
+        }
+
         .test-link {
             display: inline-block;
             background: linear-gradient(135deg, #B89B7A, #8B7355);
@@ -80,12 +100,14 @@
             margin: 4px 8px 4px 0;
             transition: all 0.3s ease;
         }
+
         .test-link:hover {
             transform: translateY(-1px);
             box-shadow: 0 2px 8px rgba(184, 155, 122, 0.4);
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <!-- Problema Identificado -->
@@ -110,7 +132,7 @@
                 <span class="block-type">text-inline</span>
                 <span class="block-type">button</span>
             </div>
-            
+
             <p><strong>Blocos problemáticos</strong> encontrados nas etapas:</p>
             <div style="margin: 16px 0;">
                 <span class="block-type">text</span>
@@ -119,14 +141,14 @@
                 <span class="block-type">form-container</span>
                 <span class="block-type">legal-notice</span>
             </div>
-            
+
             <p>Estes tipos caíam no <code>default</code> case e mostravam apenas debug boxes cinzas.</p>
         </div>
 
         <!-- Componentes Criados -->
         <div class="card">
             <h2>🧩 Componentes Criados</h2>
-            
+
             <h3>Novos Blocos Implementados:</h3>
             <div style="margin-bottom: 20px;">
                 <div style="margin-bottom: 12px;">
@@ -156,37 +178,37 @@
         <div class="card">
             <h2>💻 Código da Solução</h2>
             <p>Modificação principal no <code>ModularV1Editor.tsx</code>:</p>
-            
-            <div class="code-block">
-// ANTES - Apenas 4 tipos suportados
-switch (block.type) {
-    case 'quiz-intro-header': // ...
-    case 'options-grid': // ...
-    case 'text-inline': // ...
-    case 'button': // ...
-    default: // ❌ DEBUG BOX CINZA
-}
 
-// DEPOIS - 9 tipos suportados
-switch (block.type) {
-    case 'quiz-intro-header': // ...
-    case 'options-grid': // ...
-    case 'text-inline': // ...
-    case 'button': // ...
-    case 'text': // ✅ NOVO
-    case 'image': // ✅ NOVO
-    case 'decorative-bar': // ✅ NOVO
-    case 'form-container': // ✅ NOVO
-    case 'legal-notice': // ✅ NOVO
-    default: // Só para tipos realmente desconhecidos
-}
+            <div class="code-block">
+                // ANTES - Apenas 4 tipos suportados
+                switch (block.type) {
+                case 'quiz-intro-header': // ...
+                case 'options-grid': // ...
+                case 'text-inline': // ...
+                case 'button': // ...
+                default: // ❌ DEBUG BOX CINZA
+                }
+
+                // DEPOIS - 9 tipos suportados
+                switch (block.type) {
+                case 'quiz-intro-header': // ...
+                case 'options-grid': // ...
+                case 'text-inline': // ...
+                case 'button': // ...
+                case 'text': // ✅ NOVO
+                case 'image': // ✅ NOVO
+                case 'decorative-bar': // ✅ NOVO
+                case 'form-container': // ✅ NOVO
+                case 'legal-notice': // ✅ NOVO
+                default: // Só para tipos realmente desconhecidos
+                }
             </div>
         </div>
 
         <!-- Arquivos Modificados -->
         <div class="card">
             <h2>📁 Arquivos Afetados</h2>
-            
+
             <h3>Arquivo Principal Modificado:</h3>
             <div style="margin-bottom: 20px;">
                 <div style="margin-bottom: 8px;">
@@ -194,8 +216,8 @@ switch (block.type) {
                     <code>src/components/editor/v1-modular/ModularV1Editor.tsx</code>
                 </div>
                 <small>- Adicionados imports dos novos blocos<br>
-                - Expandido switch statement com 5 novos casos<br>
-                - Integração completa com sistema existente</small>
+                    - Expandido switch statement com 5 novos casos<br>
+                    - Integração completa com sistema existente</small>
             </div>
 
             <h3>Novos Arquivos Criados:</h3>
@@ -226,7 +248,7 @@ switch (block.type) {
         <!-- Características dos Componentes -->
         <div class="card">
             <h2>⚙️ Características dos Novos Componentes</h2>
-            
+
             <h3>✅ Todos os Componentes São:</h3>
             <ul>
                 <li><strong>Modulares:</strong> Interface padrão <code>BlockComponentProps</code></li>
@@ -250,7 +272,7 @@ switch (block.type) {
         <!-- Resultado -->
         <div class="card">
             <h2>🎉 Resultado Final</h2>
-            
+
             <h3>✅ Problemas Resolvidos:</h3>
             <ul>
                 <li>Etapa 1 agora renderiza completamente (texto + form + legal)</li>
@@ -274,18 +296,19 @@ switch (block.type) {
         <div class="card">
             <h2>🧪 Testar a Correção</h2>
             <p>Acesse as etapas que estavam problemáticas:</p>
-            
+
             <a href="http://localhost:8080/quiz/1" class="test-link">📝 Etapa 1 - Introdução</a>
             <a href="http://localhost:8080/quiz/19" class="test-link">⏭️ Etapa 19 - Transição</a>
             <a href="http://localhost:8080/quiz/20" class="test-link">🏆 Etapa 20 - Resultado</a>
-            
-            <p><strong>Resultado esperado:</strong> Todas as etapas devem renderizar completamente sem debug boxes cinzas.</p>
+
+            <p><strong>Resultado esperado:</strong> Todas as etapas devem renderizar completamente sem debug boxes
+                cinzas.</p>
         </div>
 
         <!-- Próximos Passos -->
         <div class="card">
             <h2>🔄 Próximos Passos (Opcionais)</h2>
-            
+
             <h3>Melhorias Futuras:</h3>
             <ol>
                 <li><strong>Funcionalidade Completa:</strong> Tornar formulários funcionais em modo preview</li>
@@ -309,12 +332,12 @@ switch (block.type) {
 
     <script>
         // Animações simples
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             const cards = document.querySelectorAll('.card');
             cards.forEach((card, index) => {
                 card.style.opacity = '0';
                 card.style.transform = 'translateY(20px)';
-                
+
                 setTimeout(() => {
                     card.style.transition = 'all 0.4s ease';
                     card.style.opacity = '1';
@@ -324,4 +347,5 @@ switch (block.type) {
         });
     </script>
 </body>
+
 </html>
