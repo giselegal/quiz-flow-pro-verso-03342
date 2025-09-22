@@ -1,8 +1,11 @@
-import React from 'react';
+import React, { memo, useMemo } from 'react';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { ArrowLeft } from 'lucide-react';
 import { Block } from '@/types/editor';
+import ScalableQuizRenderer from '@/components/core/ScalableQuizRenderer';
+import CanvasDropZone from '@/components/editor/canvas/CanvasDropZone.simple';
+import { useStepSelection } from '@/hooks/useStepSelection';
 
 interface CaktoCanvasHeaderProps {
     currentStep: number;
@@ -35,6 +38,7 @@ interface CaktoCanvasProps {
     onUpdateBlock?: (blockId: string, updates: Partial<Block>) => void;
     onDeleteBlock?: (blockId: string) => void;
     onReturn?: () => void;
+    onStepChange?: (step: number) => void;
     children?: React.ReactNode;
 }
 
@@ -113,13 +117,20 @@ const CaktoCanvas: React.FC<CaktoCanvasProps> = ({
     onUpdateBlock,
     onDeleteBlock,
     onReturn,
+    onStepChange,
     children
 }) => {
-    const handleBlockClick = (block: Block) => {
-        if (!isPreviewMode && onSelectBlock) {
-            onSelectBlock(block.id);
-        }
-    };
+    // Sistema de seleção otimizado
+    const { handleBlockSelection } = useStepSelection({
+        stepNumber: currentStep,
+        onSelectBlock: onSelectBlock || (() => {}),
+        debounceMs: 50
+    });
+
+    // Key estável que NÃO força remount desnecessário
+    const canvasKey = useMemo(() => {
+        return `cakto-canvas-step-${currentStep}`;
+    }, [currentStep]);
 
     const handleBlockUpdate = (blockId: string, updates: Partial<Block>) => {
         if (onUpdateBlock) {
@@ -133,8 +144,47 @@ const CaktoCanvas: React.FC<CaktoCanvasProps> = ({
         }
     };
 
+    // Preview mode usa ScalableQuizRenderer otimizado
+    if (isPreviewMode) {
+        return (
+            <div className={`w-full h-full ${className}`}>
+                <div className="group relative main-content w-full min-h-full mx-auto bg-background">
+                    {showHeader && (
+                        <CaktoCanvasHeader
+                            currentStep={currentStep}
+                            totalSteps={totalSteps}
+                            showLogo={headerConfig.showLogo}
+                            showProgress={headerConfig.showProgress}
+                            allowReturn={headerConfig.allowReturn}
+                            logoUrl={headerConfig.logoUrl}
+                            logoAlt={headerConfig.logoAlt}
+                            onReturn={onReturn}
+                        />
+                    )}
+                    
+                    <div className="h-full w-full overflow-y-auto relative z-0">
+                        <ScalableQuizRenderer
+                            funnelId="quiz21StepsComplete"
+                            mode="preview"
+                            debugMode={true}
+                            className="preview-mode-canvas w-full h-full"
+                            onStepChange={(step, data) => {
+                                if (onStepChange) onStepChange(step);
+                                console.log('📍 Cakto Preview step change:', step, data);
+                            }}
+                        />
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+    // Modo de edição usa CanvasDropZone otimizado
     return (
-        <div className={`w-full h-full overflow-y-auto ${className}`}>
+        <div 
+            key={canvasKey}
+            className={`w-full h-full overflow-y-auto ${className}`}
+        >
             <div className="group relative main-content w-full min-h-full mx-auto bg-background">
                 {/* Canvas header */}
                 {showHeader && (
@@ -150,92 +200,20 @@ const CaktoCanvas: React.FC<CaktoCanvasProps> = ({
                     />
                 )}
 
-                {/* Main content area */}
+                {/* Main content area otimizada */}
                 <div className="flex flex-col gap-4 md:gap-6 h-full justify-between p-3 group-[.screen-mobile]:p-3 md:p-5 pb-10">
-                    {/* Blocks container */}
-                    <div className="grid gap-4 opacity-100">
-                        {/* Custom children or blocks */}
+                    <div className="h-full w-full overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
                         {children ? (
                             children
                         ) : (
-                            <div className="main-content w-full relative mx-auto max-w-4xl h-full">
-                                <div className="flex flex-row flex-wrap pb-10 gap-4">
-                                    {blocks.length === 0 ? (
-                                        // Empty state
-                                        <div className="w-full flex items-center justify-center py-20">
-                                            <div className="text-center max-w-md">
-                                                <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-muted flex items-center justify-center">
-                                                    <span className="text-3xl">📝</span>
-                                                </div>
-                                                <h3 className="text-lg font-semibold mb-2">
-                                                    {isPreviewMode ? 'Etapa em branco' : 'Etapa vazia'}
-                                                </h3>
-                                                <p className="text-muted-foreground">
-                                                    {isPreviewMode
-                                                        ? 'Esta etapa ainda não possui conteúdo.'
-                                                        : 'Arraste componentes da barra de ferramentas para começar a construir esta etapa.'
-                                                    }
-                                                </p>
-                                            </div>
-                                        </div>
-                                    ) : (
-                                        // Render blocks
-                                        blocks.map((block) => (
-                                            <div
-                                                key={block.id}
-                                                role="button"
-                                                tabIndex={0}
-                                                className={`
-                          group/canvas-item max-w-full canvas-item min-h-[1.25rem] relative self-auto mr-auto w-full
-                          ${!isPreviewMode ? 'cursor-pointer' : 'cursor-default'}
-                          ${selectedBlock?.id === block.id && !isPreviewMode ? 'ring-2 ring-blue-500 ring-offset-2' : ''}
-                        `}
-                                                onClick={() => handleBlockClick(block)}
-                                                onKeyDown={(e) => {
-                                                    if (e.key === 'Enter' || e.key === ' ') {
-                                                        handleBlockClick(block);
-                                                    }
-                                                }}
-                                            >
-                                                <div className={`
-                          min-h-[1.25rem] min-w-full relative self-auto box-border rounded-md p-4 bg-background border
-                          ${!isPreviewMode ? 'group-hover/canvas-item:border-blue-500 hover:border-blue-500 border-dashed' : 'border-transparent'}
-                          ${selectedBlock?.id === block.id && !isPreviewMode ? 'border-blue-500 border-solid' : ''}
-                        `}>
-                                                    {/* Block type indicator (only in edit mode) */}
-                                                    {!isPreviewMode && (
-                                                        <div className="absolute -top-2 left-2 px-2 py-1 text-xs bg-blue-500 text-white rounded opacity-0 group-hover/canvas-item:opacity-100 transition-opacity">
-                                                            {block.type}
-                                                        </div>
-                                                    )}
-
-                                                    {/* Block content placeholder */}
-                                                    <div className="min-h-[2rem] flex items-center justify-center text-muted-foreground">
-                                                        {block.content || `Componente ${block.type}`}
-                                                    </div>
-
-                                                    {/* Block actions (only in edit mode and when selected) */}
-                                                    {!isPreviewMode && selectedBlock?.id === block.id && (
-                                                        <div className="absolute -top-8 right-2 flex gap-1 opacity-0 group-hover/canvas-item:opacity-100 transition-opacity">
-                                                            <Button
-                                                                size="sm"
-                                                                variant="destructive"
-                                                                onClick={(e) => {
-                                                                    e.stopPropagation();
-                                                                    handleBlockDelete(block.id);
-                                                                }}
-                                                                className="h-6 px-2 text-xs"
-                                                            >
-                                                                Excluir
-                                                            </Button>
-                                                        </div>
-                                                    )}
-                                                </div>
-                                            </div>
-                                        ))
-                                    )}
-                                </div>
-                            </div>
+                            <CanvasDropZone
+                                blocks={blocks}
+                                selectedBlockId={selectedBlock?.id || null}
+                                onSelectBlock={handleBlockSelection}
+                                onUpdateBlock={handleBlockUpdate}
+                                onDeleteBlock={handleBlockDelete}
+                                scopeId={currentStep}
+                            />
                         )}
                     </div>
 
@@ -247,5 +225,34 @@ const CaktoCanvas: React.FC<CaktoCanvasProps> = ({
     );
 };
 
+// 🚀 OTIMIZAÇÃO: Comparação inteligente para evitar re-renders desnecessários
+const arePropsEqual = (prevProps: CaktoCanvasProps, nextProps: CaktoCanvasProps): boolean => {
+    // Se mudou o step ou mode, re-render
+    if (prevProps.currentStep !== nextProps.currentStep || prevProps.isPreviewMode !== nextProps.isPreviewMode) {
+        return false;
+    }
+
+    // Se mudou o selectedBlock ID, re-render
+    if (prevProps.selectedBlock?.id !== nextProps.selectedBlock?.id) {
+        return false;
+    }
+
+    // Se mudou o número ou ordem de blocos, re-render
+    if (prevProps.blocks.length !== nextProps.blocks.length) {
+        return false;
+    }
+
+    // Comparação rápida de IDs dos blocos (sem comparar todo o content)
+    for (let i = 0; i < prevProps.blocks.length; i++) {
+        if (prevProps.blocks[i].id !== nextProps.blocks[i].id) {
+            return false;
+        }
+    }
+
+    return true; // Props são equivalentes, não re-render
+};
+
+CaktoCanvas.displayName = 'CaktoCanvas';
+
 export { CaktoCanvasHeader };
-export default CaktoCanvas;
+export default memo(CaktoCanvas, arePropsEqual);
