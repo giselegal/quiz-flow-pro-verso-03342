@@ -69,6 +69,9 @@ const TestNewQuizCore = lazy(() => import('./examples/Quiz21StepsSimple'));
 // 🧪 TESTE DE COMPONENTES INDIVIDUAIS
 const ComponentTestPage = lazy(() => import('./pages/ComponentTestPage'));
 
+// 🎯 VERSÃO ESTÁVEL: ModularEditorPro com QuizRenderer
+const ModularEditorProStable = lazy(() => import('./components/editor/EditorPro/components/ModularEditorProStable'));
+
 // Loading component
 const PageLoading = () => (
   <div className="min-h-screen flex items-center justify-center">
@@ -404,6 +407,13 @@ function App() {
                 <Route path="/test-components" component={() =>
                   <Suspense fallback={<LoadingFallback />}>
                     <ComponentTestPage />
+                  </Suspense>
+                } />
+
+                {/* 🎯 VERSÃO ESTÁVEL: ModularEditorPro com QuizRenderer */}
+                <Route path="/editor-stable" component={() =>
+                  <Suspense fallback={<LoadingFallback />}>
+                    <ModularEditorProStable />
                   </Suspense>
                 } />
 
