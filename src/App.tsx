@@ -22,7 +22,7 @@ const ModernUnifiedEditor = lazy(() => import('./pages/editor/ModernUnifiedEdito
 // 🔧 EDITOR MODULAR PRO - ROTA ALTERNATIVA
 const ModularEditorPro = lazy(() => import('./components/editor/EditorPro/components/ModularEditorPro'));
 const ModernModularEditorPro = lazy(() => import('./components/editor/EditorPro/components/ModernModularEditorPro'));
-const PureBuilderProvider = lazy(() => import('./components/editor/PureBuilderProvider'));
+import { PureBuilderProvider } from './components/editor/PureBuilderProvider';
 
 // 🏆 PÁGINA DE COMPARAÇÃO DOS EDITORES
 const EditorComparativePage = lazy(() => import('./pages/EditorComparativePage'));
