@@ -503,7 +503,7 @@ const EditableBlock: React.FC<EditableBlockProps> = ({
                         <h2 className="text-xl font-bold text-center">
                             {block.content.question}
                         </h2>
-                        <div className={`grid gap-4 ${showImages ? 'grid-cols-2 lg:grid-cols-4' : 'grid-cols-1'
+                        <div className={`grid gap-4 ${showImages ? 'grid-cols-1 md:grid-cols-2' : 'grid-cols-1'
                             }`}>
                             {block.content.options?.map((option: any) => (
                                 <button

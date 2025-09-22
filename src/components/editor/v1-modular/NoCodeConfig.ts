@@ -137,7 +137,7 @@ export class NoCodeConfigExtractor {
             responsive: {
                 mobile: { columns: 1, fontSize: '14px', spacing: '12px' },
                 tablet: { columns: 2, fontSize: '16px', spacing: '16px' },
-                desktop: { columns: 2, fontSize: '18px', spacing: '20px' },
+                desktop: { columns: 2, fontSize: '18px', spacing: '20px' }, // Max 2 colunas
             },
             analytics: {
                 trackingEnabled: true,
@@ -370,7 +370,36 @@ export class NoCodeConfigExtractor {
     }
 
     /**
-     * 🚀 Obtém configuração global
+     * � Determina o número de colunas baseado no tipo de questão
+     */
+    getColumnsForQuestion(hasImages: boolean): number {
+        // REGRA: Opções com imagem = 2 colunas, só texto = 1 coluna
+        return hasImages ? 2 : 1;
+    }
+
+    /**
+     * 🎨 Gera classe CSS responsiva para colunas
+     */
+    getResponsiveColumnClass(hasImages: boolean): string {
+        if (hasImages) {
+            // Com imagens: 1 col mobile, 2 col desktop
+            return 'grid-cols-1 md:grid-cols-2';
+        } else {
+            // Só texto: sempre 1 coluna
+            return 'grid-cols-1';
+        }
+    }
+
+    /**
+     * 📱 Verifica se deve usar layout responsivo
+     */
+    shouldUseResponsiveColumns(hasImages: boolean): boolean {
+        // Só usa responsivo quando tem imagens
+        return hasImages;
+    }
+
+    /**
+     * �🚀 Obtém configuração global
      */
     getGlobalConfig(): NoCodeGlobalConfig {
         return this.globalConfig;
