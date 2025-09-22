@@ -116,36 +116,36 @@ const QuizNavigation: React.FC<QuizNavigationProps> = ({
   };
 
   const getCategoryColor = (step: number) => {
-    if (step === 1) return 'bg-[#B89B7A]'; // Introdução - cor principal da marca
-    if (step >= 2 && step <= 14) return 'bg-[#8B6F47]'; // Descoberta - tom médio da paleta
-    if (step === 15) return 'bg-[#A67C52]'; // Processamento - variação da marca
-    if (step >= 16 && step <= 19) return 'bg-[#7A5A3A]'; // Resultado - tom escuro da paleta
-    if (step === 20) return 'bg-[#432818]'; // Captura - cor secundária da marca
-    if (step === 21) return 'bg-[#D4C4A8]'; // Oferta - tom claro da paleta
-    return 'bg-[#B89B7A]'; // Padrão - cor principal da marca
+    if (step === 1) return 'bg-amber-500'; // Introdução - dourado padrão
+    if (step >= 2 && step <= 14) return 'bg-amber-600'; // Descoberta - dourado médio
+    if (step === 15) return 'bg-amber-400'; // Processamento - dourado claro
+    if (step >= 16 && step <= 19) return 'bg-amber-700'; // Resultado - dourado escuro
+    if (step === 20) return 'bg-amber-800'; // Captura - dourado muito escuro
+    if (step === 21) return 'bg-amber-300'; // Oferta - dourado bem claro
+    return 'bg-amber-500'; // Padrão - dourado padrão
   };
 
-  
+
 
   return (
     <>
       {/* 🚀 NAVEGAÇÃO PREMIUM - Header Superior */}
       <div className="sticky top-0 z-50 bg-background/95 backdrop-blur-lg border-b shadow-sm">
         {/* Header Principal */}
-        <div className="border-b bg-gradient-to-r from-[#FAF9F7] to-white">
+        <div className="border-b bg-gradient-to-r from-amber-50 to-white">
           <div className="max-w-7xl mx-auto px-4 py-3">
             <div className="flex items-center justify-between">
               {/* Logo e Info do Quiz */}
               <div className="flex items-center space-x-4">
                 <div className="flex items-center space-x-3">
-                  <div className="w-10 h-10 bg-[#B89B7A] rounded-lg flex items-center justify-center">
+                  <div className="w-10 h-10 bg-amber-500 rounded-lg flex items-center justify-center">
                     <Sparkles className="w-5 h-5 text-white" />
                   </div>
                   <div>
-                    <h1 className="text-lg font-bold text-[#432818]">
+                    <h1 className="text-lg font-bold text-amber-800">
                       Quiz de Descoberta de Estilo
                     </h1>
-                    <div className="flex items-center space-x-2 text-sm text-[#6B4F43]">
+                    <div className="flex items-center space-x-2 text-sm text-amber-700">
                       <span>Gisele Galvão</span>
                       <span>•</span>
                       <span>8 Estilos Únicos</span>
@@ -223,11 +223,10 @@ const QuizNavigation: React.FC<QuizNavigationProps> = ({
                     size="sm"
                     onClick={onNext}
                     disabled={!canProceed}
-                    className={`gap-2 transition-all duration-300 ${
-                      canProceed
-                        ? 'bg-[#B89B7A] hover:bg-[#A68A6E] text-white'
+                    className={`gap-2 transition-all duration-300 ${canProceed
+                        ? 'bg-amber-500 hover:bg-amber-600 text-white'
                         : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                    } ${showActivationEffect ? 'scale-105 shadow-lg' : ''}`}
+                      } ${showActivationEffect ? 'scale-105 shadow-lg' : ''}`}
                     aria-label={
                       currentStep === totalSteps ? 'Finalizar quiz' : 'Ir para a próxima etapa'
                     }
@@ -253,7 +252,7 @@ const QuizNavigation: React.FC<QuizNavigationProps> = ({
               <div className="w-full">
                 <div className="flex items-center justify-between mb-2">
                   <span className="text-sm text-gray-600">Progresso do Quiz</span>
-                  <span className="text-sm font-medium text-[#B89B7A]">
+                  <span className="text-sm font-medium text-amber-600">
                     {Math.round(progressPercentage)}%
                   </span>
                 </div>
@@ -263,7 +262,7 @@ const QuizNavigation: React.FC<QuizNavigationProps> = ({
               {/* Helper Text */}
               {!canProceed && (
                 <div className="mt-4 text-center">
-                  <p className="text-sm text-[#8F7A6A] flex items-center justify-center gap-2">
+                  <p className="text-sm text-amber-700 flex items-center justify-center gap-2">
                     <AlertTriangle className="h-4 w-4" />
                     {getHelperText()}
                   </p>

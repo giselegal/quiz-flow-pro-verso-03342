@@ -182,7 +182,7 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
     requiredSelections = 1,
     // 🎯 PROPRIEDADES DE ESTILO
     selectionStyle = 'border',
-    selectedColor = '#F59E0B',
+    // selectedColor = '#F59E0B', // Removido - não usado
     hoverColor = '#D4C2A8',
     // 🎯 PROPRIEDADES DE COMPORTAMENTO
     allowDeselection = true,

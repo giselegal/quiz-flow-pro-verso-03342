@@ -173,7 +173,7 @@ export class NoCodeConfigExtractor {
      * 🔍 Busca bloco por tipo
      */
     private findBlockByType(type: string): any {
-        for (const [stepId, blocks] of Object.entries(this.template)) {
+        for (const [, blocks] of Object.entries(this.template)) {
             const block = blocks.find(b => b.type === type);
             if (block) return block;
         }
