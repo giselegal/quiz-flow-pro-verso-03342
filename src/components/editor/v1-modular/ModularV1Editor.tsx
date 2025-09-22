@@ -231,8 +231,8 @@ export const ModularV1Editor: React.FC = () => {
                             key={step.id}
                             onClick={() => goToStep(index + 1)}
                             className={`w-full text-left p-3 mb-1 rounded-lg transition-colors ${currentStep === index + 1
-                                    ? 'bg-blue-100 text-blue-800 border border-blue-300'
-                                    : 'hover:bg-gray-100 text-gray-700'
+                                ? 'bg-blue-100 text-blue-800 border border-blue-300'
+                                : 'hover:bg-gray-100 text-gray-700'
                                 }`}
                         >
                             <div className="flex items-center justify-between">
@@ -511,8 +511,8 @@ const EditableBlock: React.FC<EditableBlockProps> = ({
                                     onClick={() => onOptionClick(option.id, isMultiple)}
                                     disabled={editMode}
                                     className={`p-4 border rounded-lg transition-all ${selectedOptions.includes(option.id)
-                                            ? 'border-blue-500 bg-blue-50'
-                                            : 'border-gray-300 hover:border-gray-400'
+                                        ? 'border-blue-500 bg-blue-50'
+                                        : 'border-gray-300 hover:border-gray-400'
                                         } ${editMode ? 'cursor-default' : 'cursor-pointer'}`}
                                 >
                                     {option.imageUrl && showImages && (
@@ -576,11 +576,11 @@ const EditableBlock: React.FC<EditableBlockProps> = ({
         <div
             onClick={onSelect}
             className={`relative transition-all ${editMode
-                    ? `cursor-pointer border-2 rounded-lg p-2 ${isSelected
-                        ? 'border-blue-500 bg-blue-50'
-                        : 'border-transparent hover:border-gray-300'
-                    }`
-                    : ''
+                ? `cursor-pointer border-2 rounded-lg p-2 ${isSelected
+                    ? 'border-blue-500 bg-blue-50'
+                    : 'border-transparent hover:border-gray-300'
+                }`
+                : ''
                 }`}
         >
             {renderBlockContent()}
