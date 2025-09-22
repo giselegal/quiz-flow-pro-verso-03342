@@ -510,9 +510,9 @@ const EditableBlock: React.FC<EditableBlockProps> = ({
                                     key={option.id}
                                     onClick={() => onOptionClick(option.id, isMultiple)}
                                     disabled={editMode}
-                                    className={`p-4 border rounded-lg transition-all ${selectedOptions.includes(option.id)
-                                        ? 'border-blue-500 bg-blue-50'
-                                        : 'border-gray-300 hover:border-gray-400'
+                                    className={`p-4 border rounded-lg transition-all duration-300 ${selectedOptions.includes(option.id)
+                                        ? 'border-amber-400 bg-gradient-to-b from-amber-50 to-amber-100 shadow-lg ring-1 ring-amber-300/50'
+                                        : 'border-gray-200 bg-white hover:border-amber-200 hover:shadow-md'
                                         } ${editMode ? 'cursor-default' : 'cursor-pointer'}`}
                                 >
                                     {option.imageUrl && showImages && (

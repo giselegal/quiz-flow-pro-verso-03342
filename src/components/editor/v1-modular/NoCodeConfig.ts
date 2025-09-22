@@ -115,8 +115,8 @@ export class NoCodeConfigExtractor {
             branding: {
                 logo: logoBlock?.properties?.logoUrl || 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
                 logoAlt: logoBlock?.properties?.logoAlt || 'Logo Gisele Galvão',
-                primaryColor: '#B89B7A',
-                secondaryColor: '#432818',
+                primaryColor: '#F59E0B', // Dourado amber-500
+                secondaryColor: '#92400E', // Dourado escuro amber-800
                 fontFamily: 'Playfair Display, serif',
             },
             quiz: {

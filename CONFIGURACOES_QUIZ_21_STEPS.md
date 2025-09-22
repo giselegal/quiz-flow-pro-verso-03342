@@ -148,16 +148,38 @@ autoAdvanceDelay: 600,         // 0.6 segundos (muito rápido)
 
 ## 🎨 **CONFIGURAÇÕES VISUAIS**
 
-### **Estilos de Seleção:**
+### **Estilos de Seleção - BORDA DOURADA FINA:**
 ```typescript
 // Questões do Quiz
-selectionStyle: 'border',       // Borda azul ao selecionar
-selectedColor: '#3B82F6',       // Azul padrão
-hoverColor: '#EBF5FF',         // Azul claro no hover
+selectionStyle: 'border',       // Borda fina com sombra
+selectedColor: '#F59E0B',       // Dourado amber-500
+backgroundColor: '#FFFBEB',     // Fundo dourado claro amber-50
+boxShadow: '0 0 0 1px rgba(245, 158, 11, 0.2), 0 2px 8px rgba(245, 158, 11, 0.15)',
 
 // Questões Estratégicas  
-selectionStyle: 'background',   // Fundo colorido ao selecionar
-selectionStyle: 'glow',        // Efeito glow especial
+selectionStyle: 'background',   // Fundo colorido sutil
+selectionStyle: 'glow',        // Efeito glow dourado especial
+```
+
+### **Cores do Sistema:**
+```typescript
+primary: '#F59E0B',            // Dourado amber-500 (borda selecionada)
+secondary: '#92400E',          // Dourado escuro amber-800 
+accent: '#FEF3C7',            // Dourado claro amber-100 (fundo)
+neutral: '#E5E7EB',           // Cinza claro (borda normal)
+```
+
+### **Efeitos Visuais:**
+```typescript
+// Seleção Padrão (border)
+borderWidth: '1px',            // Borda bem fina
+borderColor: '#F59E0B',        // Dourado
+boxShadow: 'sutil com dourado',// Sombra dourada sutil
+backgroundColor: '#FFFBEB',    // Fundo dourado claro
+
+// Hover (não selecionado)
+borderColor: '#F3F4F6',        // Cinza claro
+boxShadow: '0 2px 4px rgba(0,0,0,0.1)', // Sombra sutil
 ```
 
 ### **Espaçamentos:**
@@ -317,41 +339,53 @@ touch: {
 ### **Carregamento:**
 ```typescript
 performance: {
-  imagePreloading: true,      // Pré-carrega imagens
-  lazyLoading: true,         // Carregamento sob demanda
-  compression: 'webp',       // Formato WebP quando possível
-  fallback: 'jpg',          // Fallback para JPG
-  caching: '30d',           // Cache de 30 dias
-}
-```
-
-### **Analytics:**
-```typescript
-tracking: {
-  stepCompletionTime: true,   // Tempo por etapa
-  dropOffPoints: true,        // Pontos de abandono
-  userInteractions: true,     // Interações do usuário
-  heatmaps: true,            // Mapas de calor
-}
-```
-
----
-
-## 🎛️ **EXEMPLO PRÁTICO DE USO**
-
 ### **Configuração para Questão COM Imagens:**
 ```typescript
 {
   properties: {
-    showImages: true,        // Mostra imagens
-    columns: 2,             // 2 colunas no desktop
-    responsiveColumns: true, // Adapta para mobile
-    imageWidth: 300,        // Imagem quadrada
+    showImages: true,            // Mostra imagens
+    columns: 2,                 // 2 colunas no desktop
+    responsiveColumns: true,     // Adapta para mobile
+    imageWidth: 300,            // Imagem quadrada
     imageHeight: 300,
-    requiredSelections: 3,  // Quiz: 3 seleções
+    requiredSelections: 3,       // Quiz: 3 seleções
     multipleSelection: true,
     autoAdvanceOnComplete: true,
     autoAdvanceDelay: 1500,
+    
+    // 🎨 ESTILO VISUAL DOURADO
+    selectionStyle: 'border',    // Borda fina
+    selectedColor: '#F59E0B',    // Dourado amber-500
+    selectedBackground: '#FFFBEB', // Fundo dourado claro
+    borderWidth: '1px',          // Borda bem fina
+    boxShadow: 'sutil dourada',  // Sombra dourada
+  }
+}
+
+// CSS resultante: "border-amber-400 bg-amber-50 shadow-lg ring-amber-300"
+```
+
+### **Configuração para Questão SÓ Texto:**
+```typescript
+{
+  properties: {
+    showImages: false,           // Sem imagens
+    columns: 1,                 // Sempre 1 coluna
+    responsiveColumns: false,    // Não adapta
+    requiredSelections: 1,       // Estratégica: 1 seleção
+    multipleSelection: false,
+    autoAdvanceOnComplete: true,
+    autoAdvanceDelay: 1200,
+    
+    // 🎨 ESTILO VISUAL DOURADO
+    selectionStyle: 'background', // Fundo sutil
+    selectedColor: '#F59E0B',     // Dourado amber-500
+    selectedBackground: '#FEF3C7', // Fundo dourado mais claro
+  }
+}
+
+// CSS resultante: "grid-cols-1" com fundo dourado ao selecionar
+``` autoAdvanceDelay: 1500,
   }
 }
 

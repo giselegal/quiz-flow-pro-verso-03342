@@ -182,7 +182,7 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
     requiredSelections = 1,
     // 🎯 PROPRIEDADES DE ESTILO
     selectionStyle = 'border',
-    selectedColor = '#B89B7A',
+    selectedColor = '#F59E0B',
     hoverColor = '#D4C2A8',
     // 🎯 PROPRIEDADES DE COMPORTAMENTO
     allowDeselection = true,
@@ -811,20 +811,41 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
             switch (selectionStyle) {
               case 'background':
                 return isSelectedOption
-                  ? { backgroundColor: `${selectedColor}1A`, borderColor: selectedColor }
-                  : { backgroundColor: 'white' };
+                  ? {
+                    backgroundColor: '#FEF3C7', // amber-100
+                    borderColor: '#F59E0B', // amber-500
+                    borderWidth: '1px',
+                    boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)'
+                  }
+                  : { backgroundColor: 'white', borderColor: '#E5E7EB' };
               case 'shadow':
                 return isSelectedOption
                   ? {
-                    boxShadow: `0 0 0 2px ${selectedColor}55, 0 8px 20px ${selectedColor}33`,
-                    borderColor: selectedColor,
+                    boxShadow: `0 0 0 1px #F59E0B, 0 4px 12px rgba(245, 158, 11, 0.25)`,
+                    borderColor: '#F59E0B',
+                    borderWidth: '1px',
+                    backgroundColor: '#FFFBEB', // amber-50
                   }
-                  : {};
-              default:
-                // border
+                  : { borderColor: '#E5E7EB' };
+              case 'glow':
                 return isSelectedOption
-                  ? { borderColor: selectedColor, boxShadow: `${selectedColor}55 0px 0px 0px 2px inset` }
-                  : {};
+                  ? {
+                    borderColor: '#F59E0B',
+                    borderWidth: '1px',
+                    boxShadow: `0 0 0 1px rgba(245, 158, 11, 0.3), 0 0 20px rgba(245, 158, 11, 0.2), 0 4px 12px rgba(0, 0, 0, 0.1)`,
+                    backgroundColor: 'rgba(255, 251, 235, 0.8)', // amber-50 com transparência
+                  }
+                  : { borderColor: '#E5E7EB' };
+              default:
+                // border - estilo padrão com borda fina dourada
+                return isSelectedOption
+                  ? {
+                    borderColor: '#F59E0B',
+                    borderWidth: '1px',
+                    boxShadow: `0 0 0 1px rgba(245, 158, 11, 0.2), 0 2px 8px rgba(245, 158, 11, 0.15)`,
+                    backgroundColor: '#FFFBEB' // amber-50
+                  }
+                  : { borderColor: '#E5E7EB' };
             }
           })();
 
