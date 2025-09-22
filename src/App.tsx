@@ -22,6 +22,10 @@ const ModernUnifiedEditor = lazy(() => import('./pages/editor/ModernUnifiedEdito
 // 🔧 EDITOR MODULAR PRO - ROTA ALTERNATIVA
 const ModularEditorPro = lazy(() => import('./components/editor/EditorPro/components/ModularEditorPro'));
 const ModernModularEditorPro = lazy(() => import('./components/editor/EditorPro/components/ModernModularEditorPro'));
+
+// 🎯 EDITOR V1 MODULAR - BASEADO NA VERSÃO FUNCIONAL
+const ModularV1Editor = lazy(() => import('./components/editor/v1-modular/ModularV1Editor'));
+
 import { PureBuilderProvider } from './components/editor/PureBuilderProvider';
 
 // 🏆 PÁGINA DE COMPARAÇÃO DOS EDITORES
@@ -231,6 +235,27 @@ function App() {
                         <PureBuilderProvider>
                           <ModularEditorPro />
                         </PureBuilderProvider>
+                      </Suspense>
+                    </div>
+                  );
+                }} />
+
+                {/* 🎯 NOVO: EDITOR V1 MODULAR - Baseado na versão funcional */}
+                <Route path="/editor-v1" component={() => {
+                  console.log('🎯 Rota /editor-v1 ativada - Editor V1 Modular');
+
+                  return (
+                    <div className="h-screen w-screen bg-gray-50">
+                      <Suspense fallback={
+                        <div className="flex items-center justify-center min-h-screen bg-background">
+                          <div className="text-center">
+                            <div className="w-16 h-16 mx-auto mb-4 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+                            <p className="text-foreground text-lg font-medium">Carregando Editor V1 Modular...</p>
+                            <p className="text-sm text-gray-500 mt-2">21 Etapas Editáveis</p>
+                          </div>
+                        </div>
+                      }>
+                        <ModularV1Editor />
                       </Suspense>
                     </div>
                   );
