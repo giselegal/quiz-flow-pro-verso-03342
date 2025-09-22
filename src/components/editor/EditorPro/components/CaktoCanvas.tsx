@@ -123,7 +123,7 @@ const CaktoCanvas: React.FC<CaktoCanvasProps> = ({
     // Sistema de seleção otimizado
     const { handleBlockSelection } = useStepSelection({
         stepNumber: currentStep,
-        onSelectBlock: onSelectBlock || (() => {}),
+        onSelectBlock: onSelectBlock || (() => { }),
         debounceMs: 50
     });
 
@@ -161,7 +161,7 @@ const CaktoCanvas: React.FC<CaktoCanvasProps> = ({
                             onReturn={onReturn}
                         />
                     )}
-                    
+
                     <div className="h-full w-full overflow-y-auto relative z-0">
                         <ScalableQuizRenderer
                             funnelId="quiz21StepsComplete"
@@ -181,7 +181,7 @@ const CaktoCanvas: React.FC<CaktoCanvasProps> = ({
 
     // Modo de edição usa CanvasDropZone otimizado
     return (
-        <div 
+        <div
             key={canvasKey}
             className={`w-full h-full overflow-y-auto ${className}`}
         >
