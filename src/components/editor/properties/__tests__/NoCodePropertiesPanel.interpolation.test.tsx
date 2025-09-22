@@ -12,11 +12,11 @@ import React from 'react';
 
 // Mock dos hooks externos
 vi.mock('@/hooks/useUserName', () => ({
-  useUserName: vi.fn()
+    useUserName: vi.fn()
 }));
 
 vi.mock('@/hooks/useQuizResult', () => ({
-  useQuizResult: vi.fn()
+    useQuizResult: vi.fn()
 }));
 
 // Import dos hooks mockados
@@ -26,415 +26,415 @@ import { useQuizResult } from '@/hooks/useQuizResult';
 // Função para extrair o hook useInterpolationSystem do componente
 // Como não está exportado, vamos testá-lo indiretamente através do componente
 const TestInterpolationWrapper = ({ children }: { children: (interpolation: any) => React.ReactNode }) => {
-  // Duplicamos a lógica do useInterpolationSystem para teste
-  const userName = useUserName() as string;
-  const { primaryStyle } = useQuizResult() as any;
-  
-  const [currentStep, setCurrentStep] = React.useState(1);
-  const [offerPrice, setOfferPrice] = React.useState('R$ 297,00');
-  const [selectedCount, setSelectedCount] = React.useState(0);
-  const [requiredCount, setRequiredCount] = React.useState(1);
+    // Duplicamos a lógica do useInterpolationSystem para teste
+    const userName = useUserName() as string;
+    const { primaryStyle } = useQuizResult() as any;
 
-  const availableVariables = React.useMemo(() => [
-    {
-      key: 'userName',
-      label: 'Nome do Usuário',
-      description: 'Nome preenchido pelo usuário no quiz',
-      example: 'Ana',
-      value: userName || 'Usuário'
-    },
-    {
-      key: 'resultStyle',
-      label: 'Estilo Predominante',
-      description: 'Resultado calculado do quiz de estilo',
-      example: 'Clássico',
-      value: primaryStyle?.style || 'Seu Estilo'
-    },
-    {
-      key: 'quizStep',
-      label: 'Etapa Atual',
-      description: 'Número da etapa atual do quiz',
-      example: '5',
-      value: currentStep.toString()
-    },
-    {
-      key: 'offerPrice',
-      label: 'Preço da Oferta',
-      description: 'Preço especial da consultoria',
-      example: 'R$ 297,00',
-      value: offerPrice
-    },
-    {
-      key: 'resultPercentage',
-      label: 'Porcentagem do Resultado',
-      description: 'Porcentagem do estilo predominante',
-      example: '85%',
-      value: primaryStyle?.percentage ? `${Math.round(primaryStyle.percentage)}%` : '0%'
-    },
-    {
-      key: 'count',
-      label: 'Opções Selecionadas',
-      description: 'Número de opções selecionadas pelo usuário',
-      example: '3',
-      value: selectedCount.toString()
-    },
-    {
-      key: 'required',
-      label: 'Opções Obrigatórias',
-      description: 'Número mínimo/máximo de opções requeridas',
-      example: '5',
-      value: requiredCount.toString()
-    }
-  ], [userName, primaryStyle, currentStep, offerPrice, selectedCount, requiredCount]);
+    const [currentStep, setCurrentStep] = React.useState(1);
+    const [offerPrice, setOfferPrice] = React.useState('R$ 297,00');
+    const [selectedCount, setSelectedCount] = React.useState(0);
+    const [requiredCount, setRequiredCount] = React.useState(1);
 
-  const interpolateText = React.useCallback((text: string): string => {
-    if (!text || typeof text !== 'string') return text;
+    const availableVariables = React.useMemo(() => [
+        {
+            key: 'userName',
+            label: 'Nome do Usuário',
+            description: 'Nome preenchido pelo usuário no quiz',
+            example: 'Ana',
+            value: userName || 'Usuário'
+        },
+        {
+            key: 'resultStyle',
+            label: 'Estilo Predominante',
+            description: 'Resultado calculado do quiz de estilo',
+            example: 'Clássico',
+            value: primaryStyle?.style || 'Seu Estilo'
+        },
+        {
+            key: 'quizStep',
+            label: 'Etapa Atual',
+            description: 'Número da etapa atual do quiz',
+            example: '5',
+            value: currentStep.toString()
+        },
+        {
+            key: 'offerPrice',
+            label: 'Preço da Oferta',
+            description: 'Preço especial da consultoria',
+            example: 'R$ 297,00',
+            value: offerPrice
+        },
+        {
+            key: 'resultPercentage',
+            label: 'Porcentagem do Resultado',
+            description: 'Porcentagem do estilo predominante',
+            example: '85%',
+            value: primaryStyle?.percentage ? `${Math.round(primaryStyle.percentage)}%` : '0%'
+        },
+        {
+            key: 'count',
+            label: 'Opções Selecionadas',
+            description: 'Número de opções selecionadas pelo usuário',
+            example: '3',
+            value: selectedCount.toString()
+        },
+        {
+            key: 'required',
+            label: 'Opções Obrigatórias',
+            description: 'Número mínimo/máximo de opções requeridas',
+            example: '5',
+            value: requiredCount.toString()
+        }
+    ], [userName, primaryStyle, currentStep, offerPrice, selectedCount, requiredCount]);
 
-    let interpolated = text;
-    availableVariables.forEach(variable => {
-      const pattern = new RegExp(`\\{${variable.key}\\}`, 'g');
-      interpolated = interpolated.replace(pattern, variable.value);
-    });
+    const interpolateText = React.useCallback((text: string): string => {
+        if (!text || typeof text !== 'string') return text;
 
-    return interpolated;
-  }, [availableVariables]);
+        let interpolated = text;
+        availableVariables.forEach(variable => {
+            const pattern = new RegExp(`\\{${variable.key}\\}`, 'g');
+            interpolated = interpolated.replace(pattern, variable.value);
+        });
 
-  const validateInterpolation = React.useCallback((text: string): { isValid: boolean; errors: string[] } => {
-    if (!text || typeof text !== 'string') return { isValid: true, errors: [] };
+        return interpolated;
+    }, [availableVariables]);
 
-    const errors: string[] = [];
-    const variablePattern = /\{([^}]+)\}/g;
-    const matches = Array.from(text.matchAll(variablePattern));
+    const validateInterpolation = React.useCallback((text: string): { isValid: boolean; errors: string[] } => {
+        if (!text || typeof text !== 'string') return { isValid: true, errors: [] };
 
-    matches.forEach(match => {
-      const variableKey = match[1];
-      const isValidVariable = availableVariables.some(v => v.key === variableKey);
+        const errors: string[] = [];
+        const variablePattern = /\{([^}]+)\}/g;
+        const matches = Array.from(text.matchAll(variablePattern));
 
-      if (!isValidVariable) {
-        errors.push(`Variável desconhecida: {${variableKey}}`);
-      }
-    });
+        matches.forEach(match => {
+            const variableKey = match[1];
+            const isValidVariable = availableVariables.some(v => v.key === variableKey);
 
-    return {
-      isValid: errors.length === 0,
-      errors
-    };
-  }, [availableVariables]);
+            if (!isValidVariable) {
+                errors.push(`Variável desconhecida: {${variableKey}}`);
+            }
+        });
 
-  return (
-    <>
-      {children({
-        availableVariables,
-        interpolateText,
-        validateInterpolation,
-        setCurrentStep,
-        setOfferPrice,
-        setSelectedCount,
-        setRequiredCount
-      })}
-    </>
-  );
+        return {
+            isValid: errors.length === 0,
+            errors
+        };
+    }, [availableVariables]);
+
+    return (
+        <>
+            {children({
+                availableVariables,
+                interpolateText,
+                validateInterpolation,
+                setCurrentStep,
+                setOfferPrice,
+                setSelectedCount,
+                setRequiredCount
+            })}
+        </>
+    );
 };
 
 describe('NoCodePropertiesPanel - Sistema de Interpolação', () => {
-  beforeEach(() => {
-    // Reset dos mocks
-    vi.resetAllMocks();
-    
-    // Mock padrão para useUserName
-    (useUserName as any).mockReturnValue('Maria Silva');
-    
-    // Mock padrão para useQuizResult
-    (useQuizResult as any).mockReturnValue({
-      primaryStyle: {
-        style: 'Clássico',
-        percentage: 85.5
-      }
-    });
-  });
+    beforeEach(() => {
+        // Reset dos mocks
+        vi.resetAllMocks();
 
-  describe('Variáveis Disponíveis', () => {
-    it('deve incluir todas as variáveis esperadas', () => {
-      let interpolationSystem: any;
-      
-      render(
-        <TestInterpolationWrapper>
-          {(system) => {
-            interpolationSystem = system;
-            return <div>Test</div>;
-          }}
-        </TestInterpolationWrapper>
-      );
+        // Mock padrão para useUserName
+        (useUserName as any).mockReturnValue('Maria Silva');
 
-      const variableKeys = interpolationSystem.availableVariables.map((v: any) => v.key);
-      
-      expect(variableKeys).toContain('userName');
-      expect(variableKeys).toContain('resultStyle');
-      expect(variableKeys).toContain('quizStep');
-      expect(variableKeys).toContain('offerPrice');
-      expect(variableKeys).toContain('resultPercentage');
-      expect(variableKeys).toContain('count');
-      expect(variableKeys).toContain('required');
+        // Mock padrão para useQuizResult
+        (useQuizResult as any).mockReturnValue({
+            primaryStyle: {
+                style: 'Clássico',
+                percentage: 85.5
+            }
+        });
     });
 
-    it('deve ter valores corretos para cada variável', () => {
-      let interpolationSystem: any;
-      
-      render(
-        <TestInterpolationWrapper>
-          {(system) => {
-            interpolationSystem = system;
-            return <div>Test</div>;
-          }}
-        </TestInterpolationWrapper>
-      );
+    describe('Variáveis Disponíveis', () => {
+        it('deve incluir todas as variáveis esperadas', () => {
+            let interpolationSystem: any;
 
-      const variables = interpolationSystem.availableVariables;
-      const userNameVar = variables.find((v: any) => v.key === 'userName');
-      const resultStyleVar = variables.find((v: any) => v.key === 'resultStyle');
-      const resultPercentageVar = variables.find((v: any) => v.key === 'resultPercentage');
-      const countVar = variables.find((v: any) => v.key === 'count');
-      const requiredVar = variables.find((v: any) => v.key === 'required');
+            render(
+                <TestInterpolationWrapper>
+                    {(system) => {
+                        interpolationSystem = system;
+                        return <div>Test</div>;
+                    }}
+                </TestInterpolationWrapper>
+            );
 
-      expect(userNameVar.value).toBe('Maria Silva');
-      expect(resultStyleVar.value).toBe('Clássico');
-      expect(resultPercentageVar.value).toBe('86%'); // Math.round(85.5)
-      expect(countVar.value).toBe('0');
-      expect(requiredVar.value).toBe('1');
-    });
-  });
+            const variableKeys = interpolationSystem.availableVariables.map((v: any) => v.key);
 
-  describe('Interpolação de Texto', () => {
-    it('deve substituir variáveis simples corretamente', () => {
-      let interpolationSystem: any;
-      
-      render(
-        <TestInterpolationWrapper>
-          {(system) => {
-            interpolationSystem = system;
-            return <div>Test</div>;
-          }}
-        </TestInterpolationWrapper>
-      );
+            expect(variableKeys).toContain('userName');
+            expect(variableKeys).toContain('resultStyle');
+            expect(variableKeys).toContain('quizStep');
+            expect(variableKeys).toContain('offerPrice');
+            expect(variableKeys).toContain('resultPercentage');
+            expect(variableKeys).toContain('count');
+            expect(variableKeys).toContain('required');
+        });
 
-      const result = interpolationSystem.interpolateText('Olá {userName}!');
-      expect(result).toBe('Olá Maria Silva!');
-    });
+        it('deve ter valores corretos para cada variável', () => {
+            let interpolationSystem: any;
 
-    it('deve substituir múltiplas variáveis', () => {
-      let interpolationSystem: any;
-      
-      render(
-        <TestInterpolationWrapper>
-          {(system) => {
-            interpolationSystem = system;
-            return <div>Test</div>;
-          }}
-        </TestInterpolationWrapper>
-      );
+            render(
+                <TestInterpolationWrapper>
+                    {(system) => {
+                        interpolationSystem = system;
+                        return <div>Test</div>;
+                    }}
+                </TestInterpolationWrapper>
+            );
 
-      const text = 'Olá {userName}, seu estilo é {resultStyle} com {resultPercentage} de certeza!';
-      const result = interpolationSystem.interpolateText(text);
-      
-      expect(result).toBe('Olá Maria Silva, seu estilo é Clássico com 86% de certeza!');
+            const variables = interpolationSystem.availableVariables;
+            const userNameVar = variables.find((v: any) => v.key === 'userName');
+            const resultStyleVar = variables.find((v: any) => v.key === 'resultStyle');
+            const resultPercentageVar = variables.find((v: any) => v.key === 'resultPercentage');
+            const countVar = variables.find((v: any) => v.key === 'count');
+            const requiredVar = variables.find((v: any) => v.key === 'required');
+
+            expect(userNameVar.value).toBe('Maria Silva');
+            expect(resultStyleVar.value).toBe('Clássico');
+            expect(resultPercentageVar.value).toBe('86%'); // Math.round(85.5)
+            expect(countVar.value).toBe('0');
+            expect(requiredVar.value).toBe('1');
+        });
     });
 
-    it('deve lidar com o caso específico de progressMessage', () => {
-      let interpolationSystem: any;
-      
-      render(
-        <TestInterpolationWrapper>
-          {(system) => {
-            interpolationSystem = system;
-            // Simula seleção de 3 opções de 5 obrigatórias
-            system.setSelectedCount(3);
-            system.setRequiredCount(5);
-            return <div>Test</div>;
-          }}
-        </TestInterpolationWrapper>
-      );
+    describe('Interpolação de Texto', () => {
+        it('deve substituir variáveis simples corretamente', () => {
+            let interpolationSystem: any;
 
-      const progressMessage = 'Você selecionou {count} de {required} opções';
-      const result = interpolationSystem.interpolateText(progressMessage);
-      
-      expect(result).toBe('Você selecionou 3 de 5 opções');
+            render(
+                <TestInterpolationWrapper>
+                    {(system) => {
+                        interpolationSystem = system;
+                        return <div>Test</div>;
+                    }}
+                </TestInterpolationWrapper>
+            );
+
+            const result = interpolationSystem.interpolateText('Olá {userName}!');
+            expect(result).toBe('Olá Maria Silva!');
+        });
+
+        it('deve substituir múltiplas variáveis', () => {
+            let interpolationSystem: any;
+
+            render(
+                <TestInterpolationWrapper>
+                    {(system) => {
+                        interpolationSystem = system;
+                        return <div>Test</div>;
+                    }}
+                </TestInterpolationWrapper>
+            );
+
+            const text = 'Olá {userName}, seu estilo é {resultStyle} com {resultPercentage} de certeza!';
+            const result = interpolationSystem.interpolateText(text);
+
+            expect(result).toBe('Olá Maria Silva, seu estilo é Clássico com 86% de certeza!');
+        });
+
+        it('deve lidar com o caso específico de progressMessage', () => {
+            let interpolationSystem: any;
+
+            render(
+                <TestInterpolationWrapper>
+                    {(system) => {
+                        interpolationSystem = system;
+                        // Simula seleção de 3 opções de 5 obrigatórias
+                        system.setSelectedCount(3);
+                        system.setRequiredCount(5);
+                        return <div>Test</div>;
+                    }}
+                </TestInterpolationWrapper>
+            );
+
+            const progressMessage = 'Você selecionou {count} de {required} opções';
+            const result = interpolationSystem.interpolateText(progressMessage);
+
+            expect(result).toBe('Você selecionou 3 de 5 opções');
+        });
+
+        it('deve retornar texto inalterado quando não há variáveis', () => {
+            let interpolationSystem: any;
+
+            render(
+                <TestInterpolationWrapper>
+                    {(system) => {
+                        interpolationSystem = system;
+                        return <div>Test</div>;
+                    }}
+                </TestInterpolationWrapper>
+            );
+
+            const text = 'Texto sem variáveis';
+            const result = interpolationSystem.interpolateText(text);
+
+            expect(result).toBe('Texto sem variáveis');
+        });
+
+        it('deve manter variáveis inválidas inalteradas', () => {
+            let interpolationSystem: any;
+
+            render(
+                <TestInterpolationWrapper>
+                    {(system) => {
+                        interpolationSystem = system;
+                        return <div>Test</div>;
+                    }}
+                </TestInterpolationWrapper>
+            );
+
+            const text = 'Olá {invalidVariable}!';
+            const result = interpolationSystem.interpolateText(text);
+
+            expect(result).toBe('Olá {invalidVariable}!');
+        });
     });
 
-    it('deve retornar texto inalterado quando não há variáveis', () => {
-      let interpolationSystem: any;
-      
-      render(
-        <TestInterpolationWrapper>
-          {(system) => {
-            interpolationSystem = system;
-            return <div>Test</div>;
-          }}
-        </TestInterpolationWrapper>
-      );
+    describe('Validação de Interpolação', () => {
+        it('deve validar texto com variáveis válidas', () => {
+            let interpolationSystem: any;
 
-      const text = 'Texto sem variáveis';
-      const result = interpolationSystem.interpolateText(text);
-      
-      expect(result).toBe('Texto sem variáveis');
+            render(
+                <TestInterpolationWrapper>
+                    {(system) => {
+                        interpolationSystem = system;
+                        return <div>Test</div>;
+                    }}
+                </TestInterpolationWrapper>
+            );
+
+            const validation = interpolationSystem.validateInterpolation('Olá {userName}!');
+
+            expect(validation.isValid).toBe(true);
+            expect(validation.errors).toHaveLength(0);
+        });
+
+        it('deve detectar variáveis inválidas', () => {
+            let interpolationSystem: any;
+
+            render(
+                <TestInterpolationWrapper>
+                    {(system) => {
+                        interpolationSystem = system;
+                        return <div>Test</div>;
+                    }}
+                </TestInterpolationWrapper>
+            );
+
+            const validation = interpolationSystem.validateInterpolation('Olá {invalidVar}!');
+
+            expect(validation.isValid).toBe(false);
+            expect(validation.errors).toContain('Variável desconhecida: {invalidVar}');
+        });
+
+        it('deve validar múltiplas variáveis (válidas e inválidas)', () => {
+            let interpolationSystem: any;
+
+            render(
+                <TestInterpolationWrapper>
+                    {(system) => {
+                        interpolationSystem = system;
+                        return <div>Test</div>;
+                    }}
+                </TestInterpolationWrapper>
+            );
+
+            const text = 'Olá {userName}, {invalidVar} e {resultStyle}';
+            const validation = interpolationSystem.validateInterpolation(text);
+
+            expect(validation.isValid).toBe(false);
+            expect(validation.errors).toHaveLength(1);
+            expect(validation.errors).toContain('Variável desconhecida: {invalidVar}');
+        });
+
+        it('deve validar o caso específico do progressMessage que estava falhando', () => {
+            let interpolationSystem: any;
+
+            render(
+                <TestInterpolationWrapper>
+                    {(system) => {
+                        interpolationSystem = system;
+                        return <div>Test</div>;
+                    }}
+                </TestInterpolationWrapper>
+            );
+
+            const progressMessage = 'Você selecionou {count} de {required} opções';
+            const validation = interpolationSystem.validateInterpolation(progressMessage);
+
+            expect(validation.isValid).toBe(true);
+            expect(validation.errors).toHaveLength(0);
+        });
     });
 
-    it('deve manter variáveis inválidas inalteradas', () => {
-      let interpolationSystem: any;
-      
-      render(
-        <TestInterpolationWrapper>
-          {(system) => {
-            interpolationSystem = system;
-            return <div>Test</div>;
-          }}
-        </TestInterpolationWrapper>
-      );
+    describe('Hooks Integration', () => {
+        it('deve usar valores do useUserName quando disponível', () => {
+            (useUserName as any).mockReturnValue('João Santos');
 
-      const text = 'Olá {invalidVariable}!';
-      const result = interpolationSystem.interpolateText(text);
-      
-      expect(result).toBe('Olá {invalidVariable}!');
+            let interpolationSystem: any;
+
+            render(
+                <TestInterpolationWrapper>
+                    {(system) => {
+                        interpolationSystem = system;
+                        return <div>Test</div>;
+                    }}
+                </TestInterpolationWrapper>
+            );
+
+            const userNameVar = interpolationSystem.availableVariables.find((v: any) => v.key === 'userName');
+            expect(userNameVar.value).toBe('João Santos');
+        });
+
+        it('deve usar fallback quando useUserName retorna null', () => {
+            (useUserName as any).mockReturnValue(null);
+
+            let interpolationSystem: any;
+
+            render(
+                <TestInterpolationWrapper>
+                    {(system) => {
+                        interpolationSystem = system;
+                        return <div>Test</div>;
+                    }}
+                </TestInterpolationWrapper>
+            );
+
+            const userNameVar = interpolationSystem.availableVariables.find((v: any) => v.key === 'userName');
+            expect(userNameVar.value).toBe('Usuário');
+        });
+
+        it('deve usar dados do useQuizResult quando disponível', () => {
+            (useQuizResult as any).mockReturnValue({
+                primaryStyle: {
+                    style: 'Romântico',
+                    percentage: 92.3
+                }
+            });
+
+            let interpolationSystem: any;
+
+            render(
+                <TestInterpolationWrapper>
+                    {(system) => {
+                        interpolationSystem = system;
+                        return <div>Test</div>;
+                    }}
+                </TestInterpolationWrapper>
+            );
+
+            const resultStyleVar = interpolationSystem.availableVariables.find((v: any) => v.key === 'resultStyle');
+            const resultPercentageVar = interpolationSystem.availableVariables.find((v: any) => v.key === 'resultPercentage');
+
+            expect(resultStyleVar.value).toBe('Romântico');
+            expect(resultPercentageVar.value).toBe('92%');
+        });
     });
-  });
-
-  describe('Validação de Interpolação', () => {
-    it('deve validar texto com variáveis válidas', () => {
-      let interpolationSystem: any;
-      
-      render(
-        <TestInterpolationWrapper>
-          {(system) => {
-            interpolationSystem = system;
-            return <div>Test</div>;
-          }}
-        </TestInterpolationWrapper>
-      );
-
-      const validation = interpolationSystem.validateInterpolation('Olá {userName}!');
-      
-      expect(validation.isValid).toBe(true);
-      expect(validation.errors).toHaveLength(0);
-    });
-
-    it('deve detectar variáveis inválidas', () => {
-      let interpolationSystem: any;
-      
-      render(
-        <TestInterpolationWrapper>
-          {(system) => {
-            interpolationSystem = system;
-            return <div>Test</div>;
-          }}
-        </TestInterpolationWrapper>
-      );
-
-      const validation = interpolationSystem.validateInterpolation('Olá {invalidVar}!');
-      
-      expect(validation.isValid).toBe(false);
-      expect(validation.errors).toContain('Variável desconhecida: {invalidVar}');
-    });
-
-    it('deve validar múltiplas variáveis (válidas e inválidas)', () => {
-      let interpolationSystem: any;
-      
-      render(
-        <TestInterpolationWrapper>
-          {(system) => {
-            interpolationSystem = system;
-            return <div>Test</div>;
-          }}
-        </TestInterpolationWrapper>
-      );
-
-      const text = 'Olá {userName}, {invalidVar} e {resultStyle}';
-      const validation = interpolationSystem.validateInterpolation(text);
-      
-      expect(validation.isValid).toBe(false);
-      expect(validation.errors).toHaveLength(1);
-      expect(validation.errors).toContain('Variável desconhecida: {invalidVar}');
-    });
-
-    it('deve validar o caso específico do progressMessage que estava falhando', () => {
-      let interpolationSystem: any;
-      
-      render(
-        <TestInterpolationWrapper>
-          {(system) => {
-            interpolationSystem = system;
-            return <div>Test</div>;
-          }}
-        </TestInterpolationWrapper>
-      );
-
-      const progressMessage = 'Você selecionou {count} de {required} opções';
-      const validation = interpolationSystem.validateInterpolation(progressMessage);
-      
-      expect(validation.isValid).toBe(true);
-      expect(validation.errors).toHaveLength(0);
-    });
-  });
-
-  describe('Hooks Integration', () => {
-    it('deve usar valores do useUserName quando disponível', () => {
-      (useUserName as any).mockReturnValue('João Santos');
-      
-      let interpolationSystem: any;
-      
-      render(
-        <TestInterpolationWrapper>
-          {(system) => {
-            interpolationSystem = system;
-            return <div>Test</div>;
-          }}
-        </TestInterpolationWrapper>
-      );
-
-      const userNameVar = interpolationSystem.availableVariables.find((v: any) => v.key === 'userName');
-      expect(userNameVar.value).toBe('João Santos');
-    });
-
-    it('deve usar fallback quando useUserName retorna null', () => {
-      (useUserName as any).mockReturnValue(null);
-      
-      let interpolationSystem: any;
-      
-      render(
-        <TestInterpolationWrapper>
-          {(system) => {
-            interpolationSystem = system;
-            return <div>Test</div>;
-          }}
-        </TestInterpolationWrapper>
-      );
-
-      const userNameVar = interpolationSystem.availableVariables.find((v: any) => v.key === 'userName');
-      expect(userNameVar.value).toBe('Usuário');
-    });
-
-    it('deve usar dados do useQuizResult quando disponível', () => {
-      (useQuizResult as any).mockReturnValue({
-        primaryStyle: {
-          style: 'Romântico',
-          percentage: 92.3
-        }
-      });
-      
-      let interpolationSystem: any;
-      
-      render(
-        <TestInterpolationWrapper>
-          {(system) => {
-            interpolationSystem = system;
-            return <div>Test</div>;
-          }}
-        </TestInterpolationWrapper>
-      );
-
-      const resultStyleVar = interpolationSystem.availableVariables.find((v: any) => v.key === 'resultStyle');
-      const resultPercentageVar = interpolationSystem.availableVariables.find((v: any) => v.key === 'resultPercentage');
-      
-      expect(resultStyleVar.value).toBe('Romântico');
-      expect(resultPercentageVar.value).toBe('92%');
-    });
-  });
 });
