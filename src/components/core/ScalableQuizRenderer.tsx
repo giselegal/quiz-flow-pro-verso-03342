@@ -3,6 +3,8 @@ import { cn } from '@/lib/utils';
 import UniversalQuizStep from '@/components/universal/UniversalQuizStep';
 import { BlockPropertiesAPI } from '@/api/internal/BlockPropertiesAPI';
 import ScalableHybridTemplateService from '@/services/ScalableHybridTemplateService';
+import { QuizStepRouter } from '@/components/router/QuizStepRouter';
+import SpecializedStepRenderer from '@/components/specialized/SpecializedStepRenderer';
 
 interface ScalableQuizRendererProps {
     funnelId: string;
@@ -57,7 +59,7 @@ export const ScalableQuizRenderer = memo<ScalableQuizRendererProps>(({
 
                 // 2. Detectar totalSteps dinamicamente baseado nos dados reais
                 let detectedSteps = 1; // Mínimo 1
-                
+
                 if (realData && typeof realData === 'object') {
                     // Tentar diferentes estruturas de dados
                     if (realData.steps && Array.isArray(realData.steps)) {
@@ -68,12 +70,12 @@ export const ScalableQuizRenderer = memo<ScalableQuizRendererProps>(({
                         detectedSteps = Object.keys(realData.stepBlocks).length;
                     }
                 }
-                
+
                 // Para o quiz21StepsComplete especificamente, usar 21 como padrão se não detectado
                 if (funnelId === 'quiz21StepsComplete' && detectedSteps <= 1) {
                     detectedSteps = 21;
                 }
-                
+
                 setTotalSteps(Math.max(detectedSteps, 1)); // Garante pelo menos 1 step
 
                 console.log(`✅ ScalableQuizRenderer: Funil ${funnelId} inicializado`, {
@@ -305,22 +307,48 @@ export const ScalableQuizRenderer = memo<ScalableQuizRendererProps>(({
                 </div>
             </div>
 
-            {/* Universal Quiz Step Component */}
-            {stepData && (
-                <UniversalQuizStep
-                    funnelId={funnelId}
-                    stepNumber={currentStep}
-                    data={stepData}
-                    onNext={() => {
-                        // Salva resposta antes de avançar se houver dados do step
-                        if (stepData?.userAnswer) {
-                            handleStepAnswer(currentStep, stepData.userAnswer);
-                        }
-                        nextStep();
-                    }}
-                    onBack={prevStep}
-                />
-            )}            {/* Loading do step */}
+            {/* 🎯 HYBRID RENDERING - Specializada vs Universal */}
+            {stepData && (() => {
+                // Detectar se step é especializado usando QuizStepRouter
+                const stepType = QuizStepRouter.getStepType(currentStep);
+                const isSpecialized = stepType === 'specialized';
+
+                if (isSpecialized) {
+                    console.log(`🎯 ScalableQuizRenderer: Renderizando step ${currentStep} como ESPECIALIZADO`);
+                    return (
+                        <SpecializedStepRenderer
+                            stepNumber={currentStep}
+                            data={stepData}
+                            funnelId={funnelId}
+                            onNext={() => {
+                                // Salva resposta antes de avançar se houver dados do step
+                                if (stepData?.userAnswer) {
+                                    handleStepAnswer(currentStep, stepData.userAnswer);
+                                }
+                                nextStep();
+                            }}
+                            onBack={prevStep}
+                        />
+                    );
+                } else {
+                    console.log(`🎯 ScalableQuizRenderer: Renderizando step ${currentStep} como MODULAR`);
+                    return (
+                        <UniversalQuizStep
+                            funnelId={funnelId}
+                            stepNumber={currentStep}
+                            data={stepData}
+                            onNext={() => {
+                                // Salva resposta antes de avançar se houver dados do step
+                                if (stepData?.userAnswer) {
+                                    handleStepAnswer(currentStep, stepData.userAnswer);
+                                }
+                                nextStep();
+                            }}
+                            onBack={prevStep}
+                        />
+                    );
+                }
+            })()}            {/* Loading do step */}
             {!stepData && !isLoading && (
                 <div className="flex items-center justify-center min-h-[200px]">
                     <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-[#B89B7A]" />

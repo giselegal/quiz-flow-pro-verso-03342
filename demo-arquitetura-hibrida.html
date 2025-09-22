@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔀 Demonstração - Arquitetura Híbrida</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-50 min-h-screen py-8">
+    <div class="container mx-auto max-w-6xl px-4">
+        <!-- Cabeçalho -->
+        <div class="text-center mb-8">
+            <h1 class="text-4xl font-bold text-gray-800 mb-4">
+                🔀 Arquitetura Híbrida para Quiz
+            </h1>
+            <p class="text-lg text-gray-600">
+                Demonstração da melhor prática: Páginas Especializadas + Editor Modular
+            </p>
+        </div>
+
+        <!-- Problema Atual -->
+        <div class="bg-red-50 border border-red-200 rounded-lg p-6 mb-8">
+            <h2 class="text-2xl font-semibold text-red-800 mb-4">🚨 Problema Identificado</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <h3 class="font-semibold text-red-700 mb-2">❌ Etapas que não renderizam</h3>
+                    <ul class="text-sm text-red-600 space-y-1">
+                        <li>• <strong>Etapa 1:</strong> form-container, text, legal-notice</li>
+                        <li>• <strong>Etapa 20:</strong> result-header-inline, urgency-timer-inline</li>
+                        <li>• <strong>Etapa 21:</strong> offer-cta-inline, style-card-inline</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-semibold text-red-700 mb-2">✅ Tipos suportados no ModularV1Editor</h3>
+                    <ul class="text-sm text-red-600 space-y-1">
+                        <li>• quiz-intro-header (cabeçalho simples)</li>
+                        <li>• options-grid (questões múltipla escolha)</li>
+                        <li>• text-inline (textos básicos)</li>
+                        <li>• button (botões simples)</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Solução Proposta -->
+        <div class="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-8">
+            <h2 class="text-2xl font-semibold text-blue-800 mb-4">💡 Solução: Arquitetura Híbrida</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="bg-white rounded-lg p-4">
+                    <h3 class="font-semibold text-yellow-700 mb-2">🎭 Páginas Especializadas</h3>
+                    <p class="text-yellow-600 mb-2 text-sm">Para etapas com UX complexa</p>
+                    <ul class="text-sm text-yellow-600 space-y-1">
+                        <li>• Etapa 1: QuizIntroPage</li>
+                        <li>• Etapa 20: ResultPage</li>
+                        <li>• Etapa 21: OfferPage</li>
+                    </ul>
+                </div>
+                <div class="bg-white rounded-lg p-4">
+                    <h3 class="font-semibold text-green-700 mb-2">🧩 Editor Modular</h3>
+                    <p class="text-green-600 mb-2 text-sm">Para questões similares</p>
+                    <ul class="text-sm text-green-600 space-y-1">
+                        <li>• Etapas 2-11: Questões pontuadas</li>
+                        <li>• Etapas 12, 19: Transições</li>
+                        <li>• Etapas 13-18: Estratégicas</li>
+                    </ul>
+                </div>
+                <div class="bg-white rounded-lg p-4">
+                    <h3 class="font-semibold text-purple-700 mb-2">🔀 Roteador Inteligente</h3>
+                    <p class="text-purple-600 mb-2 text-sm">Escolhe automaticamente</p>
+                    <ul class="text-sm text-purple-600 space-y-1">
+                        <li>• Detecta tipo da etapa</li>
+                        <li>• Renderiza componente correto</li>
+                        <li>• Mantém navegação fluida</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Demonstração Interativa -->
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-8">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-6">🧪 Demonstração Interativa</h2>
+
+            <!-- Controles -->
+            <div class="mb-6">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-lg font-semibold">Navegação pelas Etapas</h3>
+                    <div class="text-sm text-gray-600">
+                        Etapa <span id="current-step">1</span> de 21
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-4 mb-4">
+                    <button id="prev-btn" onclick="changeStep(-1)"
+                        class="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed">
+                        ← Anterior
+                    </button>
+                    <input type="range" id="step-slider" min="1" max="21" value="1" class="flex-1"
+                        onchange="setStep(this.value)">
+                    <button id="next-btn" onclick="changeStep(1)"
+                        class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+                        Próxima →
+                    </button>
+                </div>
+
+                <!-- Botões de acesso rápido -->
+                <div class="flex flex-wrap gap-2">
+                    <button onclick="setStep(1)"
+                        class="px-3 py-1 text-sm bg-yellow-100 text-yellow-800 rounded hover:bg-yellow-200">
+                        Etapa 1 (Intro)
+                    </button>
+                    <button onclick="setStep(5)"
+                        class="px-3 py-1 text-sm bg-green-100 text-green-800 rounded hover:bg-green-200">
+                        Etapa 5 (Quiz)
+                    </button>
+                    <button onclick="setStep(12)"
+                        class="px-3 py-1 text-sm bg-blue-100 text-blue-800 rounded hover:bg-blue-200">
+                        Etapa 12 (Transição)
+                    </button>
+                    <button onclick="setStep(15)"
+                        class="px-3 py-1 text-sm bg-purple-100 text-purple-800 rounded hover:bg-purple-200">
+                        Etapa 15 (Estratégica)
+                    </button>
+                    <button onclick="setStep(20)"
+                        class="px-3 py-1 text-sm bg-red-100 text-red-800 rounded hover:bg-red-200">
+                        Etapa 20 (Resultado)
+                    </button>
+                    <button onclick="setStep(21)"
+                        class="px-3 py-1 text-sm bg-orange-100 text-orange-800 rounded hover:bg-orange-200">
+                        Etapa 21 (Oferta)
+                    </button>
+                </div>
+            </div>
+
+            <!-- Visualização da Etapa -->
+            <div id="step-visualization" class="border-2 border-gray-200 rounded-lg p-6 min-h-96">
+                <!-- Conteúdo será preenchido dinamicamente -->
+            </div>
+        </div>
+
+        <!-- Estatísticas da Arquitetura -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div class="bg-white rounded-lg shadow p-6 text-center">
+                <div class="text-3xl font-bold text-yellow-600 mb-2">14%</div>
+                <div class="text-sm text-gray-600">Páginas Especializadas</div>
+                <div class="text-xs text-gray-500 mt-1">3 de 21 etapas</div>
+            </div>
+            <div class="bg-white rounded-lg shadow p-6 text-center">
+                <div class="text-3xl font-bold text-green-600 mb-2">86%</div>
+                <div class="text-sm text-gray-600">Editor Modular</div>
+                <div class="text-xs text-gray-500 mt-1">18 de 21 etapas</div>
+            </div>
+            <div class="bg-white rounded-lg shadow p-6 text-center">
+                <div class="text-3xl font-bold text-blue-600 mb-2">100%</div>
+                <div class="text-sm text-gray-600">Cobertura Total</div>
+                <div class="text-xs text-gray-500 mt-1">Todas as etapas suportadas</div>
+            </div>
+        </div>
+
+        <!-- Roadmap de Implementação -->
+        <div class="bg-gray-50 rounded-lg p-6">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-4">🛣️ Roadmap de Implementação</h2>
+            <div class="space-y-4">
+                <div class="flex items-center gap-3">
+                    <div class="w-6 h-6 bg-green-500 text-white rounded-full flex items-center justify-center text-xs">✓
+                    </div>
+                    <span class="text-gray-700">Análise e identificação do problema</span>
+                </div>
+                <div class="flex items-center gap-3">
+                    <div class="w-6 h-6 bg-green-500 text-white rounded-full flex items-center justify-center text-xs">✓
+                    </div>
+                    <span class="text-gray-700">Criação do QuizStepRouter</span>
+                </div>
+                <div class="flex items-center gap-3">
+                    <div class="w-6 h-6 bg-yellow-500 text-white rounded-full flex items-center justify-center text-xs">
+                        ⚠</div>
+                    <span class="text-gray-700">Implementar QuizIntroPage (Etapa 1)</span>
+                </div>
+                <div class="flex items-center gap-3">
+                    <div class="w-6 h-6 bg-gray-400 text-white rounded-full flex items-center justify-center text-xs">○
+                    </div>
+                    <span class="text-gray-500">Implementar ResultPage (Etapa 20)</span>
+                </div>
+                <div class="flex items-center gap-3">
+                    <div class="w-6 h-6 bg-gray-400 text-white rounded-full flex items-center justify-center text-xs">○
+                    </div>
+                    <span class="text-gray-500">Implementar OfferPage (Etapa 21)</span>
+                </div>
+                <div class="flex items-center gap-3">
+                    <div class="w-6 h-6 bg-gray-400 text-white rounded-full flex items-center justify-center text-xs">○
+                    </div>
+                    <span class="text-gray-500">Integrar com ModularV1Editor</span>
+                </div>
+                <div class="flex items-center gap-3">
+                    <div class="w-6 h-6 bg-gray-400 text-white rounded-full flex items-center justify-center text-xs">○
+                    </div>
+                    <span class="text-gray-500">Testes e otimizações</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Estado atual
+        let currentStepNumber = 1;
+
+        // Configuração das etapas
+        const stepConfig = {
+            1: { type: 'specialized', category: 'intro', title: 'Coleta de Nome', component: 'QuizIntroPage' },
+            2: { type: 'modular', category: 'scored-question', title: 'Questão 1 de 10', component: 'ModularV1Editor' },
+            3: { type: 'modular', category: 'scored-question', title: 'Questão 2 de 10', component: 'ModularV1Editor' },
+            4: { type: 'modular', category: 'scored-question', title: 'Questão 3 de 10', component: 'ModularV1Editor' },
+            5: { type: 'modular', category: 'scored-question', title: 'Questão 4 de 10', component: 'ModularV1Editor' },
+            6: { type: 'modular', category: 'scored-question', title: 'Questão 5 de 10', component: 'ModularV1Editor' },
+            7: { type: 'modular', category: 'scored-question', title: 'Questão 6 de 10', component: 'ModularV1Editor' },
+            8: { type: 'modular', category: 'scored-question', title: 'Questão 7 de 10', component: 'ModularV1Editor' },
+            9: { type: 'modular', category: 'scored-question', title: 'Questão 8 de 10', component: 'ModularV1Editor' },
+            10: { type: 'modular', category: 'scored-question', title: 'Questão 9 de 10', component: 'ModularV1Editor' },
+            11: { type: 'modular', category: 'scored-question', title: 'Questão 10 de 10', component: 'ModularV1Editor' },
+            12: { type: 'modular', category: 'transition', title: 'Transição - Estratégicas', component: 'ModularV1Editor' },
+            13: { type: 'modular', category: 'strategic-question', title: 'Estratégica 1 de 6', component: 'ModularV1Editor' },
+            14: { type: 'modular', category: 'strategic-question', title: 'Estratégica 2 de 6', component: 'ModularV1Editor' },
+            15: { type: 'modular', category: 'strategic-question', title: 'Estratégica 3 de 6', component: 'ModularV1Editor' },
+            16: { type: 'modular', category: 'strategic-question', title: 'Estratégica 4 de 6', component: 'ModularV1Editor' },
+            17: { type: 'modular', category: 'strategic-question', title: 'Estratégica 5 de 6', component: 'ModularV1Editor' },
+            18: { type: 'modular', category: 'strategic-question', title: 'Estratégica 6 de 6', component: 'ModularV1Editor' },
+            19: { type: 'modular', category: 'transition', title: 'Transição - Resultado', component: 'ModularV1Editor' },
+            20: { type: 'specialized', category: 'result', title: 'Página de Resultado', component: 'ResultPage' },
+            21: { type: 'specialized', category: 'offer', title: 'Página de Oferta', component: 'OfferPage' },
+        };
+
+        // Função para renderizar etapa especializada
+        function renderSpecializedStep(stepNumber, config) {
+            const colors = {
+                intro: { bg: 'bg-yellow-50', border: 'border-yellow-200', text: 'text-yellow-800' },
+                result: { bg: 'bg-red-50', border: 'border-red-200', text: 'text-red-800' },
+                offer: { bg: 'bg-orange-50', border: 'border-orange-200', text: 'text-orange-800' }
+            };
+
+            const color = colors[config.category] || colors.intro;
+
+            return `
+                <div class="${color.bg} ${color.border} border-2 rounded-lg p-6">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-8 h-8 ${color.bg} ${color.border} border-2 rounded-full flex items-center justify-center">
+                            <span class="text-sm font-bold ${color.text}">🎭</span>
+                        </div>
+                        <h3 class="text-xl font-bold ${color.text}">Página Especializada</h3>
+                    </div>
+                    
+                    <div class="space-y-4">
+                        <div>
+                            <h4 class="font-semibold ${color.text} mb-2">${config.title}</h4>
+                            <p class="text-sm ${color.text.replace('800', '700')}">
+                                Esta etapa requer um componente especializado para UX complexa
+                            </p>
+                        </div>
+                        
+                        <div class="grid grid-cols-2 gap-4 text-sm">
+                            <div>
+                                <strong class="${color.text}">Componente:</strong>
+                                <div class="font-mono text-xs ${color.text.replace('800', '600')}">${config.component}</div>
+                            </div>
+                            <div>
+                                <strong class="${color.text}">Categoria:</strong>
+                                <div class="capitalize ${color.text.replace('800', '600')}">${config.category}</div>
+                            </div>
+                        </div>
+
+                        <div class="p-4 bg-white bg-opacity-60 rounded">
+                            <h5 class="font-semibold ${color.text} mb-2">Por que é especializada?</h5>
+                            <ul class="text-xs ${color.text.replace('800', '600')} space-y-1">
+                                ${stepNumber === 1 ? `
+                                    <li>• Campo de input com validação complexa</li>
+                                    <li>• Persistência de dados do usuário</li>
+                                    <li>• Lógica de ativação de botão específica</li>
+                                    <li>• Políticas de privacidade e termos</li>
+                                ` : stepNumber === 20 ? `
+                                    <li>• Cálculo e exibição de resultados</li>
+                                    <li>• Personalização baseada em respostas</li>
+                                    <li>• Componentes visuais ricos (gráficos, imagens)</li>
+                                    <li>• CTA para próxima etapa (oferta)</li>
+                                ` : `
+                                    <li>• Página de conversão/vendas</li>
+                                    <li>• Timer de urgência</li>
+                                    <li>• CTAs de alta conversão</li>
+                                    <li>• Integração com checkout</li>
+                                `}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Função para renderizar etapa modular
+        function renderModularStep(stepNumber, config) {
+            const colors = {
+                'scored-question': { bg: 'bg-green-50', border: 'border-green-200', text: 'text-green-800' },
+                'strategic-question': { bg: 'bg-purple-50', border: 'border-purple-200', text: 'text-purple-800' },
+                'transition': { bg: 'bg-blue-50', border: 'border-blue-200', text: 'text-blue-800' }
+            };
+
+            const color = colors[config.category] || colors['scored-question'];
+
+            return `
+                <div class="${color.bg} ${color.border} border-2 rounded-lg p-6">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-8 h-8 ${color.bg} ${color.border} border-2 rounded-full flex items-center justify-center">
+                            <span class="text-sm font-bold ${color.text}">🧩</span>
+                        </div>
+                        <h3 class="text-xl font-bold ${color.text}">Editor Modular</h3>
+                    </div>
+                    
+                    <div class="space-y-4">
+                        <div>
+                            <h4 class="font-semibold ${color.text} mb-2">${config.title}</h4>
+                            <p class="text-sm ${color.text.replace('800', '700')}">
+                                Esta etapa usa o editor modular universal com componentes reutilizáveis
+                            </p>
+                        </div>
+                        
+                        <div class="grid grid-cols-2 gap-4 text-sm">
+                            <div>
+                                <strong class="${color.text}">Componente:</strong>
+                                <div class="font-mono text-xs ${color.text.replace('800', '600')}">${config.component}</div>
+                            </div>
+                            <div>
+                                <strong class="${color.text}">Categoria:</strong>
+                                <div class="capitalize ${color.text.replace('800', '600')}">${config.category.replace('-', ' ')}</div>
+                            </div>
+                        </div>
+
+                        <div class="p-4 bg-white bg-opacity-60 rounded">
+                            <h5 class="font-semibold ${color.text} mb-2">Características:</h5>
+                            <ul class="text-xs ${color.text.replace('800', '600')} space-y-1">
+                                ${config.category === 'scored-question' ? `
+                                    <li>• Questão com múltiplas opções (imagem + texto)</li>
+                                    <li>• 3 seleções obrigatórias</li>
+                                    <li>• Auto-avanço após validação</li>
+                                    <li>• Pontuação para cálculo de resultado</li>
+                                ` : config.category === 'strategic-question' ? `
+                                    <li>• Questão estratégica com opção única</li>
+                                    <li>• 1 seleção obrigatória</li>
+                                    <li>• Avanço manual pelo usuário</li>
+                                    <li>• Influencia recomendações finais</li>
+                                ` : `
+                                    <li>• Página de transição entre seções</li>
+                                    <li>• Botão "Continuar" sempre ativo</li>
+                                    <li>• Avanço manual pelo usuário</li>
+                                    <li>• Contexto para próxima seção</li>
+                                `}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Função para atualizar a visualização
+        function updateVisualization() {
+            const config = stepConfig[currentStepNumber];
+            const container = document.getElementById('step-visualization');
+
+            if (config.type === 'specialized') {
+                container.innerHTML = renderSpecializedStep(currentStepNumber, config);
+            } else {
+                container.innerHTML = renderModularStep(currentStepNumber, config);
+            }
+
+            // Atualizar controles
+            document.getElementById('current-step').textContent = currentStepNumber;
+            document.getElementById('step-slider').value = currentStepNumber;
+
+            // Atualizar botões
+            const prevBtn = document.getElementById('prev-btn');
+            const nextBtn = document.getElementById('next-btn');
+
+            prevBtn.disabled = currentStepNumber <= 1;
+            nextBtn.disabled = currentStepNumber >= 21;
+        }
+
+        // Função para mudar etapa
+        function changeStep(delta) {
+            const newStep = currentStepNumber + delta;
+            if (newStep >= 1 && newStep <= 21) {
+                setStep(newStep);
+            }
+        }
+
+        // Função para definir etapa específica
+        function setStep(step) {
+            currentStepNumber = parseInt(step);
+            updateVisualization();
+        }
+
+        // Inicialização
+        document.addEventListener('DOMContentLoaded', function () {
+            updateVisualization();
+        });
+    </script>
+</body>
+
+</html>
