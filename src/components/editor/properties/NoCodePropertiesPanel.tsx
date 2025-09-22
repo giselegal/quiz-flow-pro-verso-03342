@@ -108,6 +108,8 @@ const useInterpolationSystem = () => {
 
   const [currentStep, setCurrentStep] = useState(1);
   const [offerPrice, setOfferPrice] = useState('R$ 297,00');
+  const [selectedCount, setSelectedCount] = useState(0);
+  const [requiredCount, setRequiredCount] = useState(1);
 
   // Variáveis disponíveis para interpolação
   const availableVariables: InterpolationVariable[] = useMemo(() => [
@@ -145,8 +147,22 @@ const useInterpolationSystem = () => {
       description: 'Porcentagem do estilo predominante',
       example: '85%',
       value: primaryStyle?.percentage ? `${Math.round(primaryStyle.percentage)}%` : '0%'
+    },
+    {
+      key: 'count',
+      label: 'Opções Selecionadas',
+      description: 'Número de opções selecionadas pelo usuário',
+      example: '3',
+      value: selectedCount.toString()
+    },
+    {
+      key: 'required',
+      label: 'Opções Obrigatórias',
+      description: 'Número mínimo/máximo de opções requeridas',
+      example: '5',
+      value: requiredCount.toString()
     }
-  ], [userName, primaryStyle, currentStep, offerPrice]);
+  ], [userName, primaryStyle, currentStep, offerPrice, selectedCount, requiredCount]);
 
   // Interpolação de texto
   const interpolateText = useCallback((text: string): string => {
@@ -189,7 +205,9 @@ const useInterpolationSystem = () => {
     interpolateText,
     validateInterpolation,
     setCurrentStep,
-    setOfferPrice
+    setOfferPrice,
+    setSelectedCount,
+    setRequiredCount
   };
 };
 
