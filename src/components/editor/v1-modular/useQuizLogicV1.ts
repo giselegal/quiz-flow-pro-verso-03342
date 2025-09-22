@@ -193,12 +193,12 @@ export const useQuizLogicV1 = () => {
     const handleNameInput = useCallback((name: string) => {
         // Salva no localStorage para persistência
         localStorage.setItem('userName', name);
-        
+
         // Dispara evento global para outros componentes
         window.dispatchEvent(new CustomEvent('quiz-name-change', {
             detail: { name, valid: name.trim().length >= 2 }
         }));
-        
+
         console.log(`👤 Nome do usuário atualizado: "${name}"`);
     }, []);
 
@@ -308,14 +308,14 @@ export const useQuizLogicV1 = () => {
         canProceed: (() => {
             // 🎯 VALIDAÇÃO ESPECÍFICA POR ETAPA
             const currentStep = (window as any)?.__quizCurrentStep ?? currentQuestionIndex + 1;
-            
+
             // Etapa 1: Validação de input de nome
             if (currentStep === 1) {
                 // Verifica se há um nome válido nos dados do usuário
                 const storedName = localStorage.getItem('userName') || '';
                 return storedName.trim().length >= 2;
             }
-            
+
             // Outras etapas: Validação de seleções (lógica original)
             return currentAnswers.length >= (currentQuestion?.required || 1);
         })(),

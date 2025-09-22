@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>🧪 Teste Validação Etapa 1 - Nome Obrigatório</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
+
 <body class="bg-gray-50 min-h-screen py-8">
     <div class="container mx-auto max-w-4xl px-4">
         <div class="text-center mb-8">
@@ -48,29 +50,22 @@
                 <h2 class="text-2xl font-bold text-center text-gray-800 mb-6">
                     Como posso te chamar?
                 </h2>
-                
+
                 <div class="space-y-4">
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">
                             Nome *
                         </label>
-                        <input
-                            type="text"
-                            id="name-input"
-                            placeholder="Digite seu primeiro nome aqui..."
+                        <input type="text" id="name-input" placeholder="Digite seu primeiro nome aqui..."
                             className="w-full px-4 py-3 border-2 border-amber-300 rounded-lg focus:border-amber-500 focus:outline-none text-lg"
-                            maxlength="50"
-                        />
+                            maxlength="50" />
                         <div class="text-xs text-gray-500 mt-1">
                             Mínimo 2 caracteres
                         </div>
                     </div>
 
-                    <button
-                        id="continue-btn"
-                        disabled
-                        className="w-full py-3 px-6 text-lg font-semibold rounded-lg transition-all duration-300 disabled:bg-gray-300 disabled:text-gray-500 disabled:cursor-not-allowed bg-amber-500 hover:bg-amber-600 text-white"
-                    >
+                    <button id="continue-btn" disabled
+                        className="w-full py-3 px-6 text-lg font-semibold rounded-lg transition-all duration-300 disabled:bg-gray-300 disabled:text-gray-500 disabled:cursor-not-allowed bg-amber-500 hover:bg-amber-600 text-white">
                         Quero Descobrir meu Estilo Agora!
                     </button>
                 </div>
@@ -103,7 +98,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <div class="bg-white rounded-lg shadow-lg p-6">
                 <h3 class="text-xl font-semibold text-gray-800 mb-4">🧪 Estado do Teste</h3>
                 <div id="test-status" class="space-y-3">
@@ -131,7 +126,8 @@
         <div class="bg-gray-900 text-green-400 rounded-lg p-6">
             <div class="flex items-center justify-between mb-4">
                 <h3 class="text-xl font-semibold">🖥️ Console de Eventos</h3>
-                <button onclick="clearConsole()" class="bg-red-500 text-white px-3 py-1 rounded text-sm hover:bg-red-600 transition-colors">
+                <button onclick="clearConsole()"
+                    class="bg-red-500 text-white px-3 py-1 rounded text-sm hover:bg-red-600 transition-colors">
                     Limpar
                 </button>
             </div>
@@ -170,11 +166,11 @@
                 warning: 'text-yellow-400',
                 error: 'text-red-400'
             };
-            
+
             const logEntry = document.createElement('div');
             logEntry.className = colors[type] || colors.info;
             logEntry.innerHTML = `<span class="opacity-70">[${timestamp}]</span> ${message}`;
-            
+
             eventConsole.appendChild(logEntry);
             eventConsole.scrollTop = eventConsole.scrollHeight;
         }
@@ -183,10 +179,10 @@
         function validateName(name) {
             const trimmed = name.trim();
             const isValid = trimmed.length >= 2;
-            
-            log(`📝 Validando nome: "${trimmed}" (${trimmed.length} chars) → ${isValid ? 'VÁLIDO' : 'INVÁLIDO'}`, 
+
+            log(`📝 Validando nome: "${trimmed}" (${trimmed.length} chars) → ${isValid ? 'VÁLIDO' : 'INVÁLIDO'}`,
                 isValid ? 'success' : 'warning');
-            
+
             return isValid;
         }
 
@@ -203,7 +199,7 @@
         // Atualizar estado do botão
         function updateButtonState(enabled) {
             continueBtn.disabled = !enabled;
-            
+
             if (enabled) {
                 continueBtn.className = 'w-full py-3 px-6 text-lg font-semibold rounded-lg transition-all duration-300 bg-amber-500 hover:bg-amber-600 text-white';
                 log('✅ Botão HABILITADO - usuário pode continuar', 'success');
@@ -211,15 +207,15 @@
                 continueBtn.className = 'w-full py-3 px-6 text-lg font-semibold rounded-lg transition-all duration-300 disabled:bg-gray-300 disabled:text-gray-500 disabled:cursor-not-allowed';
                 log('🔴 Botão DESABILITADO - validação necessária', 'warning');
             }
-            
+
             updateIndicator('indicator-button', enabled);
         }
 
         // Event listener para o input
-        nameInput.addEventListener('input', function(e) {
+        nameInput.addEventListener('input', function (e) {
             currentName = e.target.value;
             isNameValid = validateName(currentName);
-            
+
             // Simular salvamento no localStorage
             if (isNameValid) {
                 localStorage.setItem('userName', currentName.trim());
@@ -229,10 +225,10 @@
                 localStorage.removeItem('userName');
                 updateIndicator('indicator-storage', false);
             }
-            
+
             // Atualizar botão
             updateButtonState(isNameValid);
-            
+
             // Mensagem de validação
             if (currentName.trim().length > 0 && !isNameValid) {
                 validationMessage.className = 'mt-4 text-center text-sm text-red-600';
@@ -241,13 +237,13 @@
             } else {
                 validationMessage.classList.add('hidden');
             }
-            
+
             updateIndicator('indicator-input', true);
             updateIndicator('indicator-validation', true);
         });
 
         // Event listener para o botão
-        continueBtn.addEventListener('click', function() {
+        continueBtn.addEventListener('click', function () {
             if (isNameValid) {
                 log('🚀 SUCESSO: Usuário pode avançar para próxima etapa!', 'success');
                 updateFinalResult(true);
@@ -260,7 +256,7 @@
         // Atualizar resultado final
         function updateFinalResult(success) {
             const resultDiv = document.getElementById('final-test-result');
-            
+
             if (success) {
                 resultDiv.innerHTML = `
                     <div class="text-center">
@@ -293,11 +289,11 @@
         }
 
         // Inicialização
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             log('🚀 Sistema de validação iniciado');
             log('👆 Digite seu nome no campo acima para testar');
             updateButtonState(false);
-            
+
             // Verificar se já há nome salvo
             const savedName = localStorage.getItem('userName');
             if (savedName) {
@@ -310,4 +306,5 @@
         });
     </script>
 </body>
+
 </html>
