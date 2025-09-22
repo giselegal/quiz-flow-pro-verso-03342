@@ -14,7 +14,7 @@ import { NoCodeConfigExtractor } from './NoCodeConfig';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
-import { ChevronLeft, ChevronRight, Edit3, Eye, Play, Settings, BarChart3 } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Edit3, Eye, Settings, BarChart3 } from 'lucide-react';
 import NoCodePropertiesPanel from '@/components/editor/properties/NoCodePropertiesPanel';
 import type { Block } from '@/types/editor';
 
@@ -75,11 +75,8 @@ export const ModularV1Editor: React.FC = () => {
 
     // 📝 Dados extraídos do template
     const [steps, setSteps] = useState<ModularStep[]>([]);
-    const [questions, setQuestions] = useState<Record<string, any>>({});
-    const [imageOptions, setImageOptions] = useState<Record<string, any>>({});
 
     // 👤 Dados do usuário (como na V1)
-    const [userName, setUserName] = useState('');
     const [userAnswers, setUserAnswers] = useState<UserAnswer[]>([]);
 
     /**
@@ -108,8 +105,6 @@ export const ModularV1Editor: React.FC = () => {
         });
 
         setSteps(modularSteps);
-        setQuestions(noCodeConfig.extractQuestions());
-        setImageOptions(noCodeConfig.extractImageOptions());
     }, [noCodeConfig]);
 
     /**
@@ -372,7 +367,6 @@ export const ModularV1Editor: React.FC = () => {
                                 selectedBlock={selectedBlock}
                                 onBlockSelect={selectBlock}
                                 onQuizAnswer={handleQuizAnswer}
-                                globalConfig={globalConfig}
                             />
                         </CardContent>
                     </Card>
@@ -429,7 +423,6 @@ interface EditableCanvasProps {
     selectedBlock: string | null;
     onBlockSelect: (blockId: string) => void;
     onQuizAnswer: (stepId: string, optionIds: string[]) => void;
-    globalConfig: any;
 }
 
 const EditableCanvas: React.FC<EditableCanvasProps> = ({
@@ -439,7 +432,6 @@ const EditableCanvas: React.FC<EditableCanvasProps> = ({
     selectedBlock,
     onBlockSelect,
     onQuizAnswer,
-    globalConfig,
 }) => {
     const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
 

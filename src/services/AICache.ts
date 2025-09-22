@@ -94,7 +94,7 @@ export class AICache {
    * Armazena dados no cache
    */
   set<T>(key: string, data: T, ttlMs = 5 * 60 * 1000, params?: any): void {
-    if (data === undefined || data === null) {
+    if (data === undefined || data === null || key === '') {
       return;
     }
 
@@ -122,9 +122,7 @@ export class AICache {
     }
 
     console.log(`🧠 AICache: Cached '${key}' (TTL: ${ttlMs}ms)`);
-  }
-
-  /**
+  }  /**
    * Remove entrada mais antiga do cache
    */
   private evictOldest(): void {
@@ -170,6 +168,14 @@ export class AICache {
    */
   clear(): void {
     this.cache.clear();
+
+    // Limpa também o localStorage
+    Object.keys(localStorage).forEach(key => {
+      if (key.startsWith('ai_cache_')) {
+        localStorage.removeItem(key);
+      }
+    });
+
     this.stats = {
       hits: 0,
       misses: 0,

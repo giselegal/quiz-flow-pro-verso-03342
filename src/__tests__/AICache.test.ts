@@ -31,13 +31,92 @@ describe('AICache Service', () => {
       cache.set('key1', { data: 'test1' });
       cache.set('key2', { data: 'test2' });
 
-      expect(cache.get('key1')).toBeTruthy();
-      expect(cache.get('key2')).toBeTruthy();
+      expect(cache.get('key1')).toEqual({ data: 'test1' });
+      expect(cache.get('key2')).toEqual({ data: 'test2' });
 
       cache.clear();
 
       expect(cache.get('key1')).toBeNull();
       expect(cache.get('key2')).toBeNull();
+      expect(localStorage.getItem('ai_cache_key1')).toBeNull();
+      expect(localStorage.getItem('ai_cache_key2')).toBeNull();
+    });
+
+    it('deve lidar com chaves inválidas', () => {
+      expect(() => cache.get('')).not.toThrow();
+      expect(() => cache.set('', { data: 'test' })).not.toThrow();
+
+      // O get para uma chave vazia deve retornar nulo, pois não deve encontrar correspondência.
+      expect(cache.get('')).toBeNull();
+    });
+  });
+
+  describe('Persistência no localStorage', () => {
+    it('deve persistir dados no localStorage', () => {
+      const key = 'persistence-test';
+      const data = { persisted: true };
+      const setItemSpy = vi.spyOn(localStorage, 'setItem');
+
+      cache.set(key, data);
+
+      expect(setItemSpy).toHaveBeenCalledWith(
+        `ai_cache_${key}`,
+        expect.any(String)
+      );
+    });
+    it('deve carregar dados do localStorage na inicialização', () => {
+      const key = 'load-test';
+      const data = { loaded: true };
+      const cacheEntry = {
+        data,
+        timestamp: Date.now(),
+        ttl: 300000
+      };
+
+      // Simula dados já existentes no localStorage
+      localStorage.setItem(
+        `ai_cache_${key}`,
+        JSON.stringify(cacheEntry)
+      );
+
+      // Cria uma nova instância para simular a inicialização
+      const newCache = new AICache();
+      const retrieved = newCache.get(key);
+      expect(retrieved).toEqual(data);
+    });
+  });
+
+  describe('Cenários de uso real', () => {
+    it('deve funcionar com respostas de template IA', () => {
+      const templateKey = 'template_step_5_business';
+      const templateData = {
+        blocks: [
+          { id: 'header', type: 'text', content: 'Business Template' },
+          { id: 'form', type: 'form', content: 'Contact Form' }
+        ],
+        metadata: { generated: true, style: 'business' }
+      };
+
+      cache.set(templateKey, templateData);
+      const retrieved = cache.get<{ blocks: any[] }>(templateKey);
+
+      expect(retrieved).toEqual(templateData);
+      expect(retrieved?.blocks).toHaveLength(2);
+    });
+
+    it('deve funcionar com cache de otimizações IA', () => {
+      const optimizationKey = 'optimize_funnel_conversion';
+      const optimizationData = {
+        suggestions: ['Improve CTA', 'Reduce form fields'],
+        confidence: 0.85,
+        impact: 'high'
+      };
+
+      cache.set(optimizationKey, optimizationData, 600000); // 10 min TTL
+      const retrieved = cache.get<{ confidence: number }>(optimizationKey);
+
+      expect(retrieved).toEqual(optimizationData);
+      expect(retrieved?.confidence).toBe(0.85);
     });
   });
 
@@ -131,6 +210,7 @@ describe('AICache Service', () => {
       expect(() => cache.get('')).not.toThrow();
       expect(() => cache.set('', { data: 'test' })).not.toThrow();
 
+      // O get para uma chave vazia deve retornar nulo, pois não deve encontrar correspondência.
       expect(cache.get('')).toBeNull();
     });
   });
@@ -181,7 +261,7 @@ describe('AICache Service', () => {
       };
 
       cache.set(templateKey, templateData);
-      const retrieved = cache.get(templateKey);
+      const retrieved = cache.get<{ blocks: any[], metadata: any }>(templateKey);
 
       expect(retrieved).toEqual(templateData);
       expect(retrieved?.blocks).toHaveLength(2);
@@ -196,7 +276,7 @@ describe('AICache Service', () => {
       };
 
       cache.set(optimizationKey, optimizationData, 600000); // 10 min TTL
-      const retrieved = cache.get(optimizationKey);
+      const retrieved = cache.get<{ suggestions: string[], confidence: number, impact: string }>(optimizationKey);
 
       expect(retrieved).toEqual(optimizationData);
       expect(retrieved?.confidence).toBe(0.85);
