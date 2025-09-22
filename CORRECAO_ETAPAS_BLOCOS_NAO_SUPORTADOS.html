@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔧 CORREÇÃO: Etapas 1, 19 e 20 - Blocos Não Suportados</title>
+    <style>
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0; 
+            padding: 20px;
+            background: linear-gradient(135deg, #FAF9F7, #F5F2E9, #EEEBE1);
+            color: #432818;
+        }
+        .container { max-width: 900px; margin: 0 auto; }
+        .error-banner { 
+            background: linear-gradient(135deg, #dc2626, #b91c1c);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
+        }
+        .solution-banner { 
+            background: linear-gradient(135deg, #B89B7A, #8B7355);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 12px rgba(184, 155, 122, 0.3);
+        }
+        .card { 
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(67, 40, 24, 0.1);
+        }
+        .block-type { 
+            background: #f1f5f9;
+            border: 1px solid #cbd5e1;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            color: #1e293b;
+            display: inline-block;
+            margin: 4px 8px 4px 0;
+        }
+        .code-block {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 16px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            overflow-x: auto;
+            margin: 16px 0;
+        }
+        .status { 
+            padding: 6px 12px; 
+            border-radius: 4px; 
+            font-size: 12px; 
+            font-weight: 600;
+            display: inline-block;
+            margin: 4px 8px 4px 0;
+        }
+        .fixed { background: #dcfce7; color: #15803d; }
+        .created { background: #dbeafe; color: #1d4ed8; }
+        .test-link {
+            display: inline-block;
+            background: linear-gradient(135deg, #B89B7A, #8B7355);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+            margin: 4px 8px 4px 0;
+            transition: all 0.3s ease;
+        }
+        .test-link:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(184, 155, 122, 0.4);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Problema Identificado -->
+        <div class="error-banner">
+            <h1>🚨 PROBLEMA IDENTIFICADO</h1>
+            <p>Etapas 1, 19 e 20 não renderizam - Blocos não suportados pelo ModularV1Editor</p>
+        </div>
+
+        <!-- Solução Implementada -->
+        <div class="solution-banner">
+            <h1>✅ SOLUÇÃO IMPLEMENTADA</h1>
+            <p>Novos componentes de bloco criados e integrados ao ModularV1Editor</p>
+        </div>
+
+        <!-- Análise do Problema -->
+        <div class="card">
+            <h2>🔍 Análise do Problema</h2>
+            <p><strong>ModularV1Editor</strong> só suportava 4 tipos de blocos:</p>
+            <div style="margin: 16px 0;">
+                <span class="block-type">quiz-intro-header</span>
+                <span class="block-type">options-grid</span>
+                <span class="block-type">text-inline</span>
+                <span class="block-type">button</span>
+            </div>
+            
+            <p><strong>Blocos problemáticos</strong> encontrados nas etapas:</p>
+            <div style="margin: 16px 0;">
+                <span class="block-type">text</span>
+                <span class="block-type">image</span>
+                <span class="block-type">decorative-bar</span>
+                <span class="block-type">form-container</span>
+                <span class="block-type">legal-notice</span>
+            </div>
+            
+            <p>Estes tipos caíam no <code>default</code> case e mostravam apenas debug boxes cinzas.</p>
+        </div>
+
+        <!-- Componentes Criados -->
+        <div class="card">
+            <h2>🧩 Componentes Criados</h2>
+            
+            <h3>Novos Blocos Implementados:</h3>
+            <div style="margin-bottom: 20px;">
+                <div style="margin-bottom: 12px;">
+                    <span class="status created">CRIADO</span>
+                    <strong>SimpleTextBlock.tsx</strong> - Renderiza texto formatado com HTML
+                </div>
+                <div style="margin-bottom: 12px;">
+                    <span class="status created">CRIADO</span>
+                    <strong>SimpleImageBlock.tsx</strong> - Renderiza imagens com placeholder
+                </div>
+                <div style="margin-bottom: 12px;">
+                    <span class="status created">CRIADO</span>
+                    <strong>DecorativeBarBlock.tsx</strong> - Barra decorativa personalizável
+                </div>
+                <div style="margin-bottom: 12px;">
+                    <span class="status created">CRIADO</span>
+                    <strong>SimpleFormBlock.tsx</strong> - Formulário de coleta de nome
+                </div>
+                <div style="margin-bottom: 12px;">
+                    <span class="status created">CRIADO</span>
+                    <strong>LegalNoticeBlock.tsx</strong> - Aviso legal/copyright
+                </div>
+            </div>
+        </div>
+
+        <!-- Código Implementado -->
+        <div class="card">
+            <h2>💻 Código da Solução</h2>
+            <p>Modificação principal no <code>ModularV1Editor.tsx</code>:</p>
+            
+            <div class="code-block">
+// ANTES - Apenas 4 tipos suportados
+switch (block.type) {
+    case 'quiz-intro-header': // ...
+    case 'options-grid': // ...
+    case 'text-inline': // ...
+    case 'button': // ...
+    default: // ❌ DEBUG BOX CINZA
+}
+
+// DEPOIS - 9 tipos suportados
+switch (block.type) {
+    case 'quiz-intro-header': // ...
+    case 'options-grid': // ...
+    case 'text-inline': // ...
+    case 'button': // ...
+    case 'text': // ✅ NOVO
+    case 'image': // ✅ NOVO
+    case 'decorative-bar': // ✅ NOVO
+    case 'form-container': // ✅ NOVO
+    case 'legal-notice': // ✅ NOVO
+    default: // Só para tipos realmente desconhecidos
+}
+            </div>
+        </div>
+
+        <!-- Arquivos Modificados -->
+        <div class="card">
+            <h2>📁 Arquivos Afetados</h2>
+            
+            <h3>Arquivo Principal Modificado:</h3>
+            <div style="margin-bottom: 20px;">
+                <div style="margin-bottom: 8px;">
+                    <span class="status fixed">ATUALIZADO</span>
+                    <code>src/components/editor/v1-modular/ModularV1Editor.tsx</code>
+                </div>
+                <small>- Adicionados imports dos novos blocos<br>
+                - Expandido switch statement com 5 novos casos<br>
+                - Integração completa com sistema existente</small>
+            </div>
+
+            <h3>Novos Arquivos Criados:</h3>
+            <div style="margin-bottom: 20px;">
+                <div style="margin-bottom: 8px;">
+                    <span class="status created">NOVO</span>
+                    <code>src/components/editor/blocks/SimpleTextBlock.tsx</code>
+                </div>
+                <div style="margin-bottom: 8px;">
+                    <span class="status created">NOVO</span>
+                    <code>src/components/editor/blocks/SimpleImageBlock.tsx</code>
+                </div>
+                <div style="margin-bottom: 8px;">
+                    <span class="status created">NOVO</span>
+                    <code>src/components/editor/blocks/DecorativeBarBlock.tsx</code>
+                </div>
+                <div style="margin-bottom: 8px;">
+                    <span class="status created">NOVO</span>
+                    <code>src/components/editor/blocks/SimpleFormBlock.tsx</code>
+                </div>
+                <div style="margin-bottom: 8px;">
+                    <span class="status created">NOVO</span>
+                    <code>src/components/editor/blocks/LegalNoticeBlock.tsx</code>
+                </div>
+            </div>
+        </div>
+
+        <!-- Características dos Componentes -->
+        <div class="card">
+            <h2>⚙️ Características dos Novos Componentes</h2>
+            
+            <h3>✅ Todos os Componentes São:</h3>
+            <ul>
+                <li><strong>Modulares:</strong> Interface padrão <code>BlockComponentProps</code></li>
+                <li><strong>Independentes:</strong> Funcionam sem dependências externas</li>
+                <li><strong>Editáveis:</strong> Suportam seleção visual e cliques</li>
+                <li><strong>Responsivos:</strong> Layout adaptativo</li>
+                <li><strong>Estilizados:</strong> Design consistente com o sistema</li>
+                <li><strong>Performantes:</strong> Componentes simples e otimizados</li>
+            </ul>
+
+            <h3>🎯 Funcionalidades Implementadas:</h3>
+            <ul>
+                <li><strong>SimpleTextBlock:</strong> Renderiza HTML formatado, suporta estilos inline</li>
+                <li><strong>SimpleImageBlock:</strong> Exibe imagens com fallback para placeholder</li>
+                <li><strong>DecorativeBarBlock:</strong> Barras decorativas configuráveis</li>
+                <li><strong>SimpleFormBlock:</strong> Formulário de nome visual (disabled no editor)</li>
+                <li><strong>LegalNoticeBlock:</strong> Avisos legais com formatação</li>
+            </ul>
+        </div>
+
+        <!-- Resultado -->
+        <div class="card">
+            <h2>🎉 Resultado Final</h2>
+            
+            <h3>✅ Problemas Resolvidos:</h3>
+            <ul>
+                <li>Etapa 1 agora renderiza completamente (texto + form + legal)</li>
+                <li>Etapa 19 renderiza com todos os blocos de transição</li>
+                <li>Etapa 20 exibe resultados formatados corretamente</li>
+                <li>Debug boxes cinzas eliminadas</li>
+                <li>Experiência visual consistente</li>
+            </ul>
+
+            <h3>🚀 Melhorias Implementadas:</h3>
+            <ul>
+                <li>Cobertura completa de tipos de bloco</li>
+                <li>Componentes reutilizáveis e modulares</li>
+                <li>Código limpo e manutenível</li>
+                <li>Performance otimizada</li>
+                <li>Design system consistente</li>
+            </ul>
+        </div>
+
+        <!-- Testes -->
+        <div class="card">
+            <h2>🧪 Testar a Correção</h2>
+            <p>Acesse as etapas que estavam problemáticas:</p>
+            
+            <a href="http://localhost:8080/quiz/1" class="test-link">📝 Etapa 1 - Introdução</a>
+            <a href="http://localhost:8080/quiz/19" class="test-link">⏭️ Etapa 19 - Transição</a>
+            <a href="http://localhost:8080/quiz/20" class="test-link">🏆 Etapa 20 - Resultado</a>
+            
+            <p><strong>Resultado esperado:</strong> Todas as etapas devem renderizar completamente sem debug boxes cinzas.</p>
+        </div>
+
+        <!-- Próximos Passos -->
+        <div class="card">
+            <h2>🔄 Próximos Passos (Opcionais)</h2>
+            
+            <h3>Melhorias Futuras:</h3>
+            <ol>
+                <li><strong>Funcionalidade Completa:</strong> Tornar formulários funcionais em modo preview</li>
+                <li><strong>Propriedades Avançadas:</strong> Adicionar mais opções de configuração</li>
+                <li><strong>Testes Unitários:</strong> Criar testes para os novos componentes</li>
+                <li><strong>Documentação:</strong> Documentar props e uso dos novos blocos</li>
+                <li><strong>Integração Editor:</strong> Adicionar aos painéis de propriedades</li>
+            </ol>
+        </div>
+
+        <!-- Footer -->
+        <div class="card">
+            <h2>📋 Resumo da Correção</h2>
+            <p>✅ <strong>Problema:</strong> 5 tipos de bloco não suportados causando debug boxes</p>
+            <p>✅ <strong>Solução:</strong> 5 novos componentes modulares criados e integrados</p>
+            <p>✅ <strong>Resultado:</strong> Etapas 1, 19 e 20 renderizam completamente</p>
+            <p>✅ <strong>Arquitetura:</strong> Mantida modularidade e padrões existentes</p>
+            <p>✅ <strong>Performance:</strong> Componentes simples e otimizados</p>
+        </div>
+    </div>
+
+    <script>
+        // Animações simples
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.card');
+            cards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                
+                setTimeout(() => {
+                    card.style.transition = 'all 0.4s ease';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, 100 + (index * 50));
+            });
+        });
+    </script>
+</body>
+</html>

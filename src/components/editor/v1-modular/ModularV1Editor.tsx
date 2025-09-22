@@ -16,6 +16,13 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { ChevronLeft, ChevronRight, Edit3, Eye, Play, Settings, BarChart3 } from 'lucide-react';
 
+// 🎯 NOVOS BLOCOS PARA SUPORTAR TODAS AS ETAPAS
+import DecorativeBarBlock from '@/components/editor/blocks/DecorativeBarBlock';
+import LegalNoticeBlock from '@/components/editor/blocks/LegalNoticeBlock';
+import SimpleTextBlock from '@/components/editor/blocks/SimpleTextBlock';
+import SimpleImageBlock from '@/components/editor/blocks/SimpleImageBlock';
+import SimpleFormBlock from '@/components/editor/blocks/SimpleFormBlock';
+
 // 🏷️ TIPOS
 interface ModularStep {
     id: string;
@@ -569,6 +576,26 @@ const EditableBlock: React.FC<EditableBlockProps> = ({
                         </Button>
                     </div>
                 );
+
+            case 'text':
+                // Renderizar texto formatado usando componente simples
+                return <SimpleTextBlock block={block} isSelected={isSelected} onClick={onSelect} />;
+
+            case 'image':
+                // Renderizar imagem usando componente simples
+                return <SimpleImageBlock block={block} isSelected={isSelected} onClick={onSelect} />;
+
+            case 'decorative-bar':
+                // Renderizar barra decorativa
+                return <DecorativeBarBlock block={block} isSelected={isSelected} onClick={onSelect} />;
+
+            case 'form-container':
+                // Renderizar formulário usando componente simples
+                return <SimpleFormBlock block={block} isSelected={isSelected} onClick={onSelect} />;
+
+            case 'legal-notice':
+                // Renderizar aviso legal
+                return <LegalNoticeBlock block={block} isSelected={isSelected} onClick={onSelect} />;
 
             default:
                 return (
