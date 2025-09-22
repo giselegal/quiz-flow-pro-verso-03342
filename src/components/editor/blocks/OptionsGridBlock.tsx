@@ -463,8 +463,22 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
       : 'flex flex-col';
 
   const gridColsClass = (() => {
+    // 🎯 REGRA AUTOMATICA: 1 coluna para texto-only, 2 colunas para imagem+texto
+    const hasImages = showImages && options.some((opt: any) =>
+      opt.imageUrl || opt.image || opt.icon
+    );
+
+    if (!hasImages) {
+      // Apenas texto: sempre 1 coluna
+      console.log('🎯 OptionsGridBlock: Detectado apenas texto → usando 1 coluna');
+      return 'grid-cols-1';
+    }
+
+    // Com imagens: aplicar lógica original
+    console.log('🎯 OptionsGridBlock: Detectado imagens → usando 2 colunas responsivas');
     const raw = typeof columns === 'string' ? parseInt(columns, 10) : columns;
     const colNum = isNaN(Number(raw)) ? 2 : Math.max(1, Math.min(Number(raw), 2));
+
     if (colNum === 1) return 'grid-cols-1';
     // colNum === 2 (máximo)
     return responsiveColumns ? 'grid-cols-1 md:grid-cols-2' : 'grid-cols-2';
