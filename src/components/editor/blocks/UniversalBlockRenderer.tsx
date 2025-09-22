@@ -96,7 +96,7 @@ const UniversalBlockRenderer: React.FC<UniversalBlockRendererProps> = memo(({
       // Fallback para tipos desconhecidos
       console.warn(`⚠️ Tipo de bloco desconhecido: ${block.type}. Usando fallback.`);
       return ({ children, ...props }: any) => (
-        <div 
+        <div
           className="p-4 border-2 border-dashed border-orange-300 bg-orange-50 rounded"
           {...props}
         >

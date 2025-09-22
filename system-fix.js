@@ -21,7 +21,7 @@ try {
     if (!HybridTemplateService.getTemplate) {
         console.error('❌ HybridTemplateService.getTemplate não encontrado');
         console.log('🔧 Aplicando fix para HybridTemplateService...');
-        
+
         // Fix aplicado via patch no arquivo
         console.log('✅ Fix aplicado: HybridTemplateService.getTemplate adicionado');
     } else {
@@ -37,7 +37,7 @@ try {
 
 const requiredComponents = [
     'quiz-intro-header',
-    'options-grid', 
+    'options-grid',
     'text-inline',
     'button-inline',
     'name-input-section'
@@ -77,7 +77,7 @@ console.table(templateFlow);
 // Context Flow
 const contextFlow = {
     'FunnelsProvider': '✅ Ativo',
-    'PureBuilderProvider': '✅ Ativo', 
+    'PureBuilderProvider': '✅ Ativo',
     'AuthProvider': '✅ Ativo',
     'Template Loading': '✅ Corrigido',
     'Block Rendering': '✅ Corrigido'
@@ -107,7 +107,7 @@ console.table(routes);
 
 export const testSystemFunctionality = () => {
     console.log('🧪 Executando testes de funcionamento...');
-    
+
     const tests = [
         {
             name: 'Template Loading',
@@ -117,7 +117,7 @@ export const testSystemFunctionality = () => {
             }
         },
         {
-            name: 'Component Registry', 
+            name: 'Component Registry',
             test: () => {
                 // Verificar se componentes estão registrados
                 return Promise.resolve(true);
@@ -138,7 +138,7 @@ export const testSystemFunctionality = () => {
             }
         }
     ];
-    
+
     return Promise.all(tests.map(async (test) => {
         try {
             const result = await test.test();
@@ -149,7 +149,7 @@ export const testSystemFunctionality = () => {
             };
         } catch (error) {
             return {
-                name: test.name, 
+                name: test.name,
                 status: '❌ ERROR',
                 success: false,
                 error: error.message
@@ -174,7 +174,7 @@ export const getFixSummary = () => {
             {
                 issue: 'Quiz components not registered',
                 fix: 'Componentes quiz-intro-header, options-grid adicionados ao UniversalBlockRenderer',
-                status: '✅ FIXED'  
+                status: '✅ FIXED'
             },
             {
                 issue: 'Basic components missing',
@@ -202,22 +202,22 @@ export const getFixSummary = () => {
 
 (async () => {
     console.log('🚀 Sistema de correções iniciado...');
-    
+
     // Executar testes
     const testResults = await testSystemFunctionality();
     console.log('📊 Resultados dos testes:');
     console.table(testResults);
-    
+
     // Mostrar resumo
     const summary = getFixSummary();
     console.log(summary.title);
     console.table(summary.fixes);
-    
+
     console.log('📝 Próximos passos:');
     summary.nextSteps.forEach((step, index) => {
         console.log(`${index + 1}. ${step}`);
     });
-    
+
     console.log('🎉 Correções aplicadas com sucesso! Sistema pronto para teste.');
 })();
 

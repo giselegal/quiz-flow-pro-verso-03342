@@ -27,7 +27,7 @@ const ComponentTestPage: React.FC = () => {
             }
         },
         optionsGrid: {
-            id: 'test-options-1', 
+            id: 'test-options-1',
             type: 'options-grid',
             properties: {
                 question: 'Teste do Options Grid?',
@@ -64,7 +64,7 @@ const ComponentTestPage: React.FC = () => {
                 <section style={{ marginBottom: '40px', padding: '20px', background: 'rgba(255,255,255,0.1)', borderRadius: '10px' }}>
                     <h2>1. 🎯 QuizIntroHeaderBlock (Direto)</h2>
                     <div style={{ background: 'white', padding: '20px', borderRadius: '8px', color: 'black' }}>
-                        <QuizIntroHeaderBlock 
+                        <QuizIntroHeaderBlock
                             block={testBlocks.quizIntroHeader}
                             onClick={() => console.log('Header clicked')}
                         />
@@ -75,7 +75,7 @@ const ComponentTestPage: React.FC = () => {
                 <section style={{ marginBottom: '40px', padding: '20px', background: 'rgba(255,255,255,0.1)', borderRadius: '10px' }}>
                     <h2>2. 📊 OptionsGridBlock (Direto)</h2>
                     <div style={{ background: 'white', padding: '20px', borderRadius: '8px', color: 'black' }}>
-                        <OptionsGridBlock 
+                        <OptionsGridBlock
                             block={testBlocks.optionsGrid}
                             onClick={() => console.log('Options clicked')}
                         />
@@ -86,7 +86,7 @@ const ComponentTestPage: React.FC = () => {
                 <section style={{ marginBottom: '40px', padding: '20px', background: 'rgba(255,255,255,0.1)', borderRadius: '10px' }}>
                     <h2>3. 📝 TextInlineBlock (Direto)</h2>
                     <div style={{ background: 'white', padding: '20px', borderRadius: '8px', color: 'black' }}>
-                        <TextInlineBlock 
+                        <TextInlineBlock
                             block={testBlocks.textInline}
                             onClick={() => console.log('Text clicked')}
                         />
@@ -97,7 +97,7 @@ const ComponentTestPage: React.FC = () => {
                 <section style={{ marginBottom: '40px', padding: '20px', background: 'rgba(255,255,255,0.1)', borderRadius: '10px' }}>
                     <h2>4. 🔄 UniversalBlockRenderer (quiz-intro-header)</h2>
                     <div style={{ background: 'white', padding: '20px', borderRadius: '8px', color: 'black' }}>
-                        <UniversalBlockRenderer 
+                        <UniversalBlockRenderer
                             block={testBlocks.quizIntroHeader}
                             isSelected={false}
                             isPreviewing={true}
@@ -109,7 +109,7 @@ const ComponentTestPage: React.FC = () => {
                 <section style={{ marginBottom: '40px', padding: '20px', background: 'rgba(255,255,255,0.1)', borderRadius: '10px' }}>
                     <h2>5. 🔄 UniversalBlockRenderer (options-grid)</h2>
                     <div style={{ background: 'white', padding: '20px', borderRadius: '8px', color: 'black' }}>
-                        <UniversalBlockRenderer 
+                        <UniversalBlockRenderer
                             block={testBlocks.optionsGrid}
                             isSelected={false}
                             isPreviewing={true}
@@ -121,7 +121,7 @@ const ComponentTestPage: React.FC = () => {
                 <section style={{ marginBottom: '40px', padding: '20px', background: 'rgba(255,255,255,0.1)', borderRadius: '10px' }}>
                     <h2>6. ❓ Componente Desconhecido (Fallback)</h2>
                     <div style={{ background: 'white', padding: '20px', borderRadius: '8px', color: 'black' }}>
-                        <UniversalBlockRenderer 
+                        <UniversalBlockRenderer
                             block={{
                                 id: 'test-unknown',
                                 type: 'unknown-component-type',
