@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Debug Check</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        .success {
+            color: green;
+        }
+
+        .error {
+            color: red;
+        }
+
+        .info {
+            color: blue;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Debug Check - Sistema de Renderização</h1>
+
+    <h2>1. Teste Básico de JavaScript</h2>
+    <div id="js-test">❌ JavaScript não carregou</div>
+
+    <h2>2. Teste de Acesso à API Local</h2>
+    <div id="api-test">⏳ Testando...</div>
+
+    <h2>3. Teste de Elementos DOM</h2>
+    <div id="dom-test">⏳ Testando...</div>
+
+    <h2>4. Logs do Console</h2>
+    <div id="console-logs"></div>
+
+    <script>
+        // 1. Teste básico de JavaScript
+        document.getElementById('js-test').innerHTML = '<span class="success">✅ JavaScript funcionando</span>';
+
+        // 2. Teste de console capture
+        const consoleLogs = document.getElementById('console-logs');
+        const originalLog = console.log;
+        const originalError = console.error;
+        const originalWarn = console.warn;
+
+        function addLog(type, message) {
+            consoleLogs.innerHTML += `<div class="${type}">[${new Date().toLocaleTimeString()}] ${type.toUpperCase()}: ${message}</div>`;
+        }
+
+        console.log = function (...args) {
+            addLog('info', args.join(' '));
+            return originalLog.apply(console, arguments);
+        };
+
+        console.error = function (...args) {
+            addLog('error', args.join(' '));
+            return originalError.apply(console, arguments);
+        };
+
+        console.warn = function (...args) {
+            addLog('error', args.join(' '));
+            return originalWarn.apply(console, arguments);
+        };
+
+        // 3. Teste de acesso à API local
+        fetch('http://localhost:8080/')
+            .then(response => {
+                if (response.ok) {
+                    document.getElementById('api-test').innerHTML = '<span class="success">✅ API local respondendo</span>';
+                    return response.text();
+                } else {
+                    throw new Error(`Status: ${response.status}`);
+                }
+            })
+            .then(html => {
+                const hasReact = html.includes('react');
+                const hasDiv = html.includes('<div id="root">');
+                document.getElementById('dom-test').innerHTML = `
+                    <span class="${hasReact ? 'success' : 'error'}">${hasReact ? '✅' : '❌'} React detectado: ${hasReact}</span><br>
+                    <span class="${hasDiv ? 'success' : 'error'}">${hasDiv ? '✅' : '❌'} Div#root presente: ${hasDiv}</span>
+                `;
+            })
+            .catch(error => {
+                document.getElementById('api-test').innerHTML = `<span class="error">❌ Erro na API: ${error.message}</span>`;
+                document.getElementById('dom-test').innerHTML = '<span class="error">❌ Não foi possível testar DOM</span>';
+            });
+
+        // 4. Teste de carregamento de módulos
+        console.log('🔧 DEBUG: debug-check.html carregado');
+
+        // 5. Simular alguns dos logs que esperamos ver no main.tsx
+        console.log('🚀 Simulando inicialização de serviços...');
+        console.log('🔧 DEBUG: Testando carregamento...');
+        console.log('✅ DEBUG: Teste renderizado com sucesso');
+    </script>
+</body>
+
+</html>

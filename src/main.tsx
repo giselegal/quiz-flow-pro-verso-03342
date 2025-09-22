@@ -114,6 +114,21 @@ if ((import.meta.env.DEV || typeof window !== 'undefined') && typeof window !== 
 // �🚀 SUPABASE: Configuração inicial do serviço
 console.log('🚀 Inicializando serviços Supabase...');
 console.log('🔧 DEBUG: main.tsx carregado');
+
+// 🔧 DIAGNOSTIC: Testar template
+import runTemplateDiagnostic from './utils/templateDiagnostic';
+import { getTemplateStatus } from './utils/hybridIntegration';
+
+const diagnosticResult = runTemplateDiagnostic();
+console.log('🔬 [MAIN] Template diagnostic:', diagnosticResult);
+
+// Testar integração híbrida
+getTemplateStatus().then(status => {
+  console.log('🔬 [MAIN] Hybrid integration status:', status);
+}).catch(error => {
+  console.error('❌ [MAIN] Hybrid integration error:', error);
+});
+
 // O serviço é inicializado automaticamente na importação
 
 console.log('🔧 DEBUG: Criando root do React...');

@@ -13,10 +13,15 @@ const ComQueRoupaEuVouPage = lazy(() => import('./pages/ComQueRoupaEuVouPage'));
 
 // 🎯 PÁGINAS ESSENCIAIS - SEM CONFLITOS
 const Home = lazy(() => import('./pages/Home'));
+const SystemDiagnosticPage = lazy(() => import('./pages/SystemDiagnosticPage'));
 const AuthPage = lazy(() => import('./pages/AuthPage'));
 
 // 🚀 EDITOR MODERNO NEURAL - PONTO DE ENTRADA ÚNICO
 const ModernUnifiedEditor = lazy(() => import('./pages/editor/ModernUnifiedEditor'));
+
+// 🔧 EDITOR MODULAR PRO - ROTA ALTERNATIVA
+const ModularEditorPro = lazy(() => import('./components/editor/EditorPro/components/ModularEditorPro'));
+const PureBuilderProvider = lazy(() => import('./components/editor/PureBuilderProvider'));
 
 // 🚀 DASHBOARD AVANÇADO (futuro)
 const DashboardPage = lazy(() => import('./pages/DashboardPage'));
@@ -88,8 +93,15 @@ function App() {
           <Router>
             <Suspense fallback={<PageLoading />}>
               <Switch>
-                {/* Rota principal - Home */}
+                {/* Rota principal - System Diagnostic */}
                 <Route path="/" component={() =>
+                  <Suspense fallback={<LoadingFallback />}>
+                    <SystemDiagnosticPage />
+                  </Suspense>
+                } />
+
+                {/* Rota Home original */}
+                <Route path="/home" component={() =>
                   <Suspense fallback={<LoadingFallback />}>
                     <Home />
                   </Suspense>
@@ -145,6 +157,50 @@ function App() {
                     <Suspense fallback={<LoadingFallback />}>
                       <ModernUnifiedEditor funnelId={params.funnelId} />
                     </Suspense>
+                  );
+                }} />
+
+                {/* 🔧 ROTA ALTERNATIVA: ModularEditorPro */}
+                <Route path="/editor-modular/:funnelId?" component={({ params }: { params: { funnelId?: string } }) => {
+                  console.log('🔧 Rota /editor-modular ativada:', params);
+
+                  return (
+                    <div className="h-screen w-screen">
+                      <Suspense fallback={
+                        <div className="flex items-center justify-center min-h-screen bg-background">
+                          <div className="text-center">
+                            <div className="w-16 h-16 mx-auto mb-4 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+                            <p className="text-foreground text-lg font-medium">Carregando ModularEditorPro...</p>
+                          </div>
+                        </div>
+                      }>
+                        <PureBuilderProvider funnelId={params.funnelId}>
+                          <ModularEditorPro />
+                        </PureBuilderProvider>
+                      </Suspense>
+                    </div>
+                  );
+                }} />
+
+                {/* 🔧 ROTA SIMPLES: ModularEditorPro sem parâmetros */}
+                <Route path="/modular-editor" component={() => {
+                  console.log('🔧 Rota /modular-editor ativada');
+
+                  return (
+                    <div className="h-screen w-screen">
+                      <Suspense fallback={
+                        <div className="flex items-center justify-center min-h-screen bg-background">
+                          <div className="text-center">
+                            <div className="w-16 h-16 mx-auto mb-4 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+                            <p className="text-foreground text-lg font-medium">Carregando ModularEditorPro...</p>
+                          </div>
+                        </div>
+                      }>
+                        <PureBuilderProvider>
+                          <ModularEditorPro />
+                        </PureBuilderProvider>
+                      </Suspense>
+                    </div>
                   );
                 }} />
 

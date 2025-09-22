@@ -420,7 +420,7 @@ const generateWithPureBuilder = async (templateName: string = 'product-quiz'): P
         // 🎯 CONVERTER DADOS DO BUILDER SYSTEM PARA FORMATO BLOCKS
         finalFunnel.steps?.forEach((step: any, index: number) => {
             const stepKey = `step-${index + 1}`;
-            
+
             // Se o step tem componentes do quiz21StepsComplete, usar eles diretamente
             if (step.components && Array.isArray(step.components)) {
                 stepBlocks[stepKey] = step.components.map((component: any, blockIndex: number) => ({
