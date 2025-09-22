@@ -16,12 +16,12 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { ChevronLeft, ChevronRight, Edit3, Eye, Play, Settings, BarChart3 } from 'lucide-react';
 
-// 🎯 NOVOS BLOCOS PARA SUPORTAR TODAS AS ETAPAS
-import DecorativeBarBlock from '@/components/editor/blocks/DecorativeBarBlock';
-import LegalNoticeBlock from '@/components/editor/blocks/LegalNoticeBlock';
-import SimpleTextBlock from '@/components/editor/blocks/SimpleTextBlock';
-import SimpleImageBlock from '@/components/editor/blocks/SimpleImageBlock';
-import SimpleFormBlock from '@/components/editor/blocks/SimpleFormBlock';
+// 🎯 NOVOS BLOCOS SIMPLES PARA SUPORTAR TODAS AS ETAPAS
+import SimpleTextBlock from '@/components/blocks/simple/SimpleTextBlock';
+import SimpleImageBlock from '@/components/blocks/simple/SimpleImageBlock';
+import SimpleDecorativeBarBlock from '@/components/blocks/simple/SimpleDecorativeBarBlock';
+import SimpleFormContainerBlock from '@/components/blocks/simple/SimpleFormContainerBlock';
+import SimpleLegalNoticeBlock from '@/components/blocks/simple/SimpleLegalNoticeBlock';
 
 // 🏷️ TIPOS
 interface ModularStep {
@@ -579,23 +579,23 @@ const EditableBlock: React.FC<EditableBlockProps> = ({
 
             case 'text':
                 // Renderizar texto formatado usando componente simples
-                return <SimpleTextBlock block={block} isSelected={isSelected} onClick={onSelect} />;
+                return <SimpleTextBlock block={block} isSelected={isSelected} editMode={editMode} onSelect={onSelect} />;
 
             case 'image':
                 // Renderizar imagem usando componente simples
-                return <SimpleImageBlock block={block} isSelected={isSelected} onClick={onSelect} />;
+                return <SimpleImageBlock block={block} isSelected={isSelected} editMode={editMode} onSelect={onSelect} />;
 
             case 'decorative-bar':
                 // Renderizar barra decorativa
-                return <DecorativeBarBlock block={block} isSelected={isSelected} onClick={onSelect} />;
+                return <SimpleDecorativeBarBlock block={block} isSelected={isSelected} editMode={editMode} onSelect={onSelect} />;
 
             case 'form-container':
                 // Renderizar formulário usando componente simples
-                return <SimpleFormBlock block={block} isSelected={isSelected} onClick={onSelect} />;
+                return <SimpleFormContainerBlock block={block} isSelected={isSelected} editMode={editMode} previewMode={previewMode} onSelect={onSelect} />;
 
             case 'legal-notice':
                 // Renderizar aviso legal
-                return <LegalNoticeBlock block={block} isSelected={isSelected} onClick={onSelect} />;
+                return <SimpleLegalNoticeBlock block={block} isSelected={isSelected} editMode={editMode} onSelect={onSelect} />;
 
             default:
                 return (

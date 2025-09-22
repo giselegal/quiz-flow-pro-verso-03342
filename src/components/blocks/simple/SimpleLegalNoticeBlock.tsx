@@ -1,10 +1,12 @@
 import React from 'react';
 
-interface SimpleDecorativeBarBlockProps {
+interface SimpleLegalNoticeBlockProps {
     block: {
         id: string;
         type: string;
-        content?: Record<string, any>;
+        content?: {
+            text?: string;
+        };
         properties?: Record<string, any>;
     };
     isSelected?: boolean;
@@ -13,12 +15,14 @@ interface SimpleDecorativeBarBlockProps {
     onSelect?: () => void;
 }
 
-const SimpleDecorativeBarBlock: React.FC<SimpleDecorativeBarBlockProps> = ({
+const SimpleLegalNoticeBlock: React.FC<SimpleLegalNoticeBlockProps> = ({
     block,
     isSelected = false,
     editMode = false,
     onSelect,
 }) => {
+    const { text = '2025 - Todos os direitos reservados' } = block.content || {};
+
     return (
         <div
             onClick={onSelect}
@@ -27,14 +31,11 @@ const SimpleDecorativeBarBlock: React.FC<SimpleDecorativeBarBlockProps> = ({
                     : 'border border-transparent'
                 } cursor-pointer transition-all`}
         >
-            <div className="flex justify-center">
-                <div
-                    className="h-1 rounded-full bg-gradient-to-r from-transparent via-[#B89B7A] to-transparent"
-                    style={{ width: '120px' }}
-                />
+            <div className="text-center text-sm text-gray-500 opacity-75">
+                {text}
             </div>
         </div>
     );
 };
 
-export default SimpleDecorativeBarBlock;
+export default SimpleLegalNoticeBlock;
