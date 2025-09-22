@@ -1,0 +1,11 @@
+[33mcommit 7fa815aa62568ac2b4d49354c5b24f2dd86650b4[m
+Author: gpt-engineer-app[bot] <159125892+gpt-engineer-app[bot]@users.noreply.github.com>
+Date:   Wed Sep 17 00:49:27 2025 +0000
+
+    Fix: Implement quiz structure correction plan
+
+src/components/blocks/inline/LeadFormBlock.tsx
+src/components/editor/ComponentsSidebar.tsx
+src/components/editor/properties/editors/LeadFormPropertyEditor.tsx
+src/core/editor/DynamicPropertiesPanel.tsx
+tests/calcResults.test.ts
