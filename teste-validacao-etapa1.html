@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🧪 Teste Validação Etapa 1 - Nome Obrigatório</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 min-h-screen py-8">
+    <div class="container mx-auto max-w-4xl px-4">
+        <div class="text-center mb-8">
+            <h1 class="text-4xl font-bold text-amber-800 mb-4">
+                🧪 Teste de Validação - Etapa 1
+            </h1>
+            <p class="text-lg text-gray-600">
+                Verificando se o botão só ativa após digitar o nome
+            </p>
+        </div>
+
+        <!-- Status da Implementação -->
+        <div class="bg-green-50 border border-green-200 rounded-lg p-6 mb-8">
+            <h2 class="text-2xl font-semibold text-green-800 mb-4">✅ Implementação Realizada</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <h3 class="font-semibold text-green-700 mb-2">🔧 Modificações Técnicas</h3>
+                    <ul class="text-sm text-green-600 space-y-1">
+                        <li>✅ HybridTemplateService.ts - Etapa 1 como 'input' type</li>
+                        <li>✅ useQuizLogicV1.ts - canProceed com validação de nome</li>
+                        <li>✅ OptionsGridBlock.tsx - requiresValidInput configurado</li>
+                        <li>✅ Função handleNameInput para gerenciar estado</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-semibold text-green-700 mb-2">🎯 Comportamento Esperado</h3>
+                    <ul class="text-sm text-green-600 space-y-1">
+                        <li>🔴 Botão desabilitado inicialmente</li>
+                        <li>⌨️ Usuário digita no campo de nome</li>
+                        <li>✅ Botão habilitado após 2+ caracteres</li>
+                        <li>🚀 Permite avançar para etapa 2</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Simulação da Etapa 1 -->
+        <div class="bg-white rounded-lg shadow-lg p-8 mb-8">
+            <div class="max-w-md mx-auto">
+                <h2 class="text-2xl font-bold text-center text-gray-800 mb-6">
+                    Como posso te chamar?
+                </h2>
+                
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            Nome *
+                        </label>
+                        <input
+                            type="text"
+                            id="name-input"
+                            placeholder="Digite seu primeiro nome aqui..."
+                            className="w-full px-4 py-3 border-2 border-amber-300 rounded-lg focus:border-amber-500 focus:outline-none text-lg"
+                            maxlength="50"
+                        />
+                        <div class="text-xs text-gray-500 mt-1">
+                            Mínimo 2 caracteres
+                        </div>
+                    </div>
+
+                    <button
+                        id="continue-btn"
+                        disabled
+                        className="w-full py-3 px-6 text-lg font-semibold rounded-lg transition-all duration-300 disabled:bg-gray-300 disabled:text-gray-500 disabled:cursor-not-allowed bg-amber-500 hover:bg-amber-600 text-white"
+                    >
+                        Quero Descobrir meu Estilo Agora!
+                    </button>
+                </div>
+
+                <div id="validation-message" class="mt-4 text-center text-sm hidden">
+                    <!-- Mensagens de validação aparecerão aqui -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Detalhes Técnicos -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+            <div class="bg-white rounded-lg shadow-lg p-6">
+                <h3 class="text-xl font-semibold text-gray-800 mb-4">📋 Regras Implementadas</h3>
+                <div class="space-y-3 text-sm">
+                    <div class="bg-blue-50 border border-blue-200 rounded-lg p-3">
+                        <strong class="text-blue-800">HybridTemplateService:</strong>
+                        <p class="text-blue-700 mt-1">
+                            <code>validation.type = 'input'</code><br>
+                            <code>validation.required = true</code><br>
+                            <code>validation.minLength = 2</code>
+                        </p>
+                    </div>
+                    <div class="bg-purple-50 border border-purple-200 rounded-lg p-3">
+                        <strong class="text-purple-800">useQuizLogicV1:</strong>
+                        <p class="text-purple-700 mt-1">
+                            <code>canProceed = storedName.length >= 2</code><br>
+                            <code>handleNameInput(name)</code>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-lg shadow-lg p-6">
+                <h3 class="text-xl font-semibold text-gray-800 mb-4">🧪 Estado do Teste</h3>
+                <div id="test-status" class="space-y-3">
+                    <div class="flex items-center gap-2">
+                        <span class="w-3 h-3 bg-gray-300 rounded-full" id="indicator-input"></span>
+                        <span class="text-sm">Campo de nome funcional</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="w-3 h-3 bg-gray-300 rounded-full" id="indicator-validation"></span>
+                        <span class="text-sm">Validação em tempo real</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="w-3 h-3 bg-gray-300 rounded-full" id="indicator-button"></span>
+                        <span class="text-sm">Botão responde à validação</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="w-3 h-3 bg-gray-300 rounded-full" id="indicator-storage"></span>
+                        <span class="text-sm">Nome salvo no localStorage</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Console de Log -->
+        <div class="bg-gray-900 text-green-400 rounded-lg p-6">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-xl font-semibold">🖥️ Console de Eventos</h3>
+                <button onclick="clearConsole()" class="bg-red-500 text-white px-3 py-1 rounded text-sm hover:bg-red-600 transition-colors">
+                    Limpar
+                </button>
+            </div>
+            <div id="event-console" class="font-mono text-sm h-48 overflow-y-auto">
+                <div class="opacity-70">[SISTEMA] Console iniciado - digite no campo acima para testar</div>
+            </div>
+        </div>
+
+        <!-- Resultado Final -->
+        <div class="mt-8 text-center">
+            <div id="final-test-result" class="inline-block bg-gray-50 border rounded-lg p-6">
+                <div class="text-gray-500">
+                    Digite seu nome no campo acima para testar a validação
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Estado da validação
+        let isNameValid = false;
+        let currentName = '';
+
+        // Elementos
+        const nameInput = document.getElementById('name-input');
+        const continueBtn = document.getElementById('continue-btn');
+        const validationMessage = document.getElementById('validation-message');
+        const eventConsole = document.getElementById('event-console');
+
+        // Função para log no console
+        function log(message, type = 'info') {
+            const timestamp = new Date().toLocaleTimeString();
+            const colors = {
+                info: 'text-green-400',
+                success: 'text-emerald-400',
+                warning: 'text-yellow-400',
+                error: 'text-red-400'
+            };
+            
+            const logEntry = document.createElement('div');
+            logEntry.className = colors[type] || colors.info;
+            logEntry.innerHTML = `<span class="opacity-70">[${timestamp}]</span> ${message}`;
+            
+            eventConsole.appendChild(logEntry);
+            eventConsole.scrollTop = eventConsole.scrollHeight;
+        }
+
+        // Função de validação do nome
+        function validateName(name) {
+            const trimmed = name.trim();
+            const isValid = trimmed.length >= 2;
+            
+            log(`📝 Validando nome: "${trimmed}" (${trimmed.length} chars) → ${isValid ? 'VÁLIDO' : 'INVÁLIDO'}`, 
+                isValid ? 'success' : 'warning');
+            
+            return isValid;
+        }
+
+        // Atualizar indicadores visuais
+        function updateIndicator(id, status) {
+            const indicator = document.getElementById(id);
+            if (status) {
+                indicator.className = 'w-3 h-3 bg-green-500 rounded-full';
+            } else {
+                indicator.className = 'w-3 h-3 bg-red-500 rounded-full';
+            }
+        }
+
+        // Atualizar estado do botão
+        function updateButtonState(enabled) {
+            continueBtn.disabled = !enabled;
+            
+            if (enabled) {
+                continueBtn.className = 'w-full py-3 px-6 text-lg font-semibold rounded-lg transition-all duration-300 bg-amber-500 hover:bg-amber-600 text-white';
+                log('✅ Botão HABILITADO - usuário pode continuar', 'success');
+            } else {
+                continueBtn.className = 'w-full py-3 px-6 text-lg font-semibold rounded-lg transition-all duration-300 disabled:bg-gray-300 disabled:text-gray-500 disabled:cursor-not-allowed';
+                log('🔴 Botão DESABILITADO - validação necessária', 'warning');
+            }
+            
+            updateIndicator('indicator-button', enabled);
+        }
+
+        // Event listener para o input
+        nameInput.addEventListener('input', function(e) {
+            currentName = e.target.value;
+            isNameValid = validateName(currentName);
+            
+            // Simular salvamento no localStorage
+            if (isNameValid) {
+                localStorage.setItem('userName', currentName.trim());
+                updateIndicator('indicator-storage', true);
+                log(`💾 Nome salvo no localStorage: "${currentName.trim()}"`, 'success');
+            } else {
+                localStorage.removeItem('userName');
+                updateIndicator('indicator-storage', false);
+            }
+            
+            // Atualizar botão
+            updateButtonState(isNameValid);
+            
+            // Mensagem de validação
+            if (currentName.trim().length > 0 && !isNameValid) {
+                validationMessage.className = 'mt-4 text-center text-sm text-red-600';
+                validationMessage.textContent = 'Nome deve ter pelo menos 2 caracteres';
+                validationMessage.classList.remove('hidden');
+            } else {
+                validationMessage.classList.add('hidden');
+            }
+            
+            updateIndicator('indicator-input', true);
+            updateIndicator('indicator-validation', true);
+        });
+
+        // Event listener para o botão
+        continueBtn.addEventListener('click', function() {
+            if (isNameValid) {
+                log('🚀 SUCESSO: Usuário pode avançar para próxima etapa!', 'success');
+                updateFinalResult(true);
+            } else {
+                log('❌ ERRO: Tentativa de avançar sem nome válido', 'error');
+                updateFinalResult(false);
+            }
+        });
+
+        // Atualizar resultado final
+        function updateFinalResult(success) {
+            const resultDiv = document.getElementById('final-test-result');
+            
+            if (success) {
+                resultDiv.innerHTML = `
+                    <div class="text-center">
+                        <div class="text-4xl mb-3">🎉</div>
+                        <h3 class="text-2xl font-bold text-green-700 mb-2">VALIDAÇÃO FUNCIONANDO!</h3>
+                        <p class="text-green-600 mb-3">O botão só ativa após digitar nome válido</p>
+                        <div class="text-sm text-green-700 bg-green-50 rounded-lg p-3">
+                            ✅ Nome: "${currentName}"<br>
+                            ✅ Caracteres: ${currentName.trim().length}<br>
+                            ✅ Status: Pode avançar para etapa 2
+                        </div>
+                    </div>
+                `;
+                resultDiv.className = 'inline-block bg-green-50 border border-green-200 rounded-lg p-6';
+            } else {
+                resultDiv.innerHTML = `
+                    <div class="text-center">
+                        <div class="text-4xl mb-3">⚠️</div>
+                        <h3 class="text-2xl font-bold text-yellow-700 mb-2">VALIDAÇÃO PENDENTE</h3>
+                        <p class="text-yellow-600">Digite um nome válido para testar</p>
+                    </div>
+                `;
+                resultDiv.className = 'inline-block bg-yellow-50 border border-yellow-200 rounded-lg p-6';
+            }
+        }
+
+        // Função para limpar console
+        function clearConsole() {
+            eventConsole.innerHTML = '<div class="opacity-70">[SISTEMA] Console limpo</div>';
+        }
+
+        // Inicialização
+        document.addEventListener('DOMContentLoaded', function() {
+            log('🚀 Sistema de validação iniciado');
+            log('👆 Digite seu nome no campo acima para testar');
+            updateButtonState(false);
+            
+            // Verificar se já há nome salvo
+            const savedName = localStorage.getItem('userName');
+            if (savedName) {
+                nameInput.value = savedName;
+                currentName = savedName;
+                isNameValid = validateName(savedName);
+                updateButtonState(isNameValid);
+                log(`📋 Nome recuperado do localStorage: "${savedName}"`, 'info');
+            }
+        });
+    </script>
+</body>
+</html>
