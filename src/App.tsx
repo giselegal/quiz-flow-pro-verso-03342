@@ -21,6 +21,7 @@ const ModernUnifiedEditor = lazy(() => import('./pages/editor/ModernUnifiedEdito
 
 // 🔧 EDITOR MODULAR PRO - ROTA ALTERNATIVA
 const ModularEditorPro = lazy(() => import('./components/editor/EditorPro/components/ModularEditorPro'));
+const ModernModularEditorPro = lazy(() => import('./components/editor/EditorPro/components/ModernModularEditorPro'));
 const PureBuilderProvider = lazy(() => import('./components/editor/PureBuilderProvider'));
 
 // 🏆 PÁGINA DE COMPARAÇÃO DOS EDITORES
@@ -185,6 +186,28 @@ function App() {
                       }>
                         <PureBuilderProvider funnelId={params.funnelId}>
                           <ModularEditorPro />
+                        </PureBuilderProvider>
+                      </Suspense>
+                    </div>
+                  );
+                }} />
+
+                {/* 🚀 NOVA ROTA: Modern ModularEditorPro */}
+                <Route path="/editor-modern/:funnelId?" component={({ params }: { params: { funnelId?: string } }) => {
+                  console.log('🚀 Rota /editor-modern ativada:', params);
+
+                  return (
+                    <div className="h-screen w-screen">
+                      <Suspense fallback={
+                        <div className="flex items-center justify-center min-h-screen bg-background">
+                          <div className="text-center">
+                            <div className="w-16 h-16 mx-auto mb-4 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+                            <p className="text-foreground text-lg font-medium">Carregando Editor Modernizado...</p>
+                          </div>
+                        </div>
+                      }>
+                        <PureBuilderProvider funnelId={params.funnelId}>
+                          <ModernModularEditorPro />
                         </PureBuilderProvider>
                       </Suspense>
                     </div>
