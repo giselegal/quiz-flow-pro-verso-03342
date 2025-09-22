@@ -21,7 +21,7 @@ import { Badge } from '@/components/ui/badge';
 import { AlertCircle, RefreshCw, Check, X, Database } from 'lucide-react';
 
 import { useBlockProperties } from '@/hooks/useBlockProperties';
-import { useSimpleBuilder } from '@/components/editor/SimpleBuilderProviderFixed';
+import { usePureBuilder } from '@/components/editor/PureBuilderProvider';
 import { useFunnels } from '@/context/FunnelsContext';
 import { type BlockPropertySchema } from '@/api/internal/BlockPropertiesAPI';
 
@@ -51,7 +51,7 @@ const FunnelDataDisplay: React.FC<{
     blockId: string;
     blockType: string;
 }> = memo(({ blockId, blockType }) => {
-    const builder = useSimpleBuilder();
+    const builder = usePureBuilder();
     const funnelsContext = useFunnels();
     
     // 🛡️ DEFENSIVE GUARD: Verificar se builder está disponível  
@@ -61,7 +61,7 @@ const FunnelDataDisplay: React.FC<{
                 <div className="text-center">
                     <AlertCircle className="w-8 h-8 mx-auto mb-2" />
                     <p>Builder context não disponível</p>
-                    <p className="text-xs">Verifique se o componente está dentro de SimpleBuilderProvider</p>
+                    <p className="text-xs">Verifique se o componente está dentro de PureBuilderProvider</p>
                 </div>
             </div>
         );

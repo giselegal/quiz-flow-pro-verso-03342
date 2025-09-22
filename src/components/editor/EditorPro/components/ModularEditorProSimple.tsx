@@ -1,12 +1,12 @@
 import React from 'react';
-import { useSimpleBuilder } from '@/components/editor/SimpleBuilderProviderFixed';
+import { usePureBuilder } from '@/components/editor/PureBuilderProvider';
 
 interface ModularEditorProSimpleProps {
   showProFeatures?: boolean;
 }
 
 const ModularEditorProSimple: React.FC<ModularEditorProSimpleProps> = ({ showProFeatures = true }) => {
-  const { state, actions } = useSimpleBuilder();
+  const { state, actions } = usePureBuilder();
 
   return (
     <div className="flex-1 flex bg-gray-50">
@@ -14,7 +14,7 @@ const ModularEditorProSimple: React.FC<ModularEditorProSimpleProps> = ({ showPro
       <div className="w-64 bg-white border-r border-gray-200 overflow-y-auto">
         <div className="p-4 border-b border-gray-200">
           <h2 className="font-semibold text-gray-900">Etapas</h2>
-          <p className="text-sm text-gray-600">Total: {state.totalSteps}</p>
+          <p className="text-sm text-gray-600">Total: {Object.keys(state.stepBlocks).length}</p>
         </div>
 
         <div className="p-2">

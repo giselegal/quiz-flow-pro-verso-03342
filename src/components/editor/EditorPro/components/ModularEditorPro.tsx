@@ -14,7 +14,7 @@ import ComponentsSidebar from '@/components/editor/sidebars/ComponentsSidebar';
 import RegistryPropertiesPanel from '@/components/universal/RegistryPropertiesPanel';
 import APIPropertiesPanel from '@/components/editor/properties/APIPropertiesPanel';
 
-// 🔗 Provider de dados reais do funil - REMOVIDO para compatibilidade com SimpleBuilderProvider
+// 🔗 Provider de dados reais do funil - MIGRADO para PureBuilderProvider
 // import FunnelDataProviderWrapper from '@/providers/FunnelDataProvider';
 
 /**
@@ -805,7 +805,7 @@ const ModularEditorPro: React.FC<ModularEditorProProps> = () => {
                     <RegistryPropertiesPanel
                       selectedBlock={selectedBlock || null}
                       onUpdate={(blockId: string, updates: Record<string, any>) => {
-                        console.log('� RegistryPropertiesPanel update:', { blockId, updates });
+                        console.log('🔄 RegistryPropertiesPanel update:', { blockId, updates });
                         if (selectedBlock && blockId === selectedBlock.id) {
                           handleUpdateBlock(selectedBlock.id, updates);
                         }
@@ -817,15 +817,15 @@ const ModularEditorPro: React.FC<ModularEditorProProps> = () => {
                           handleDeleteSelectedBlock();
                         }
                       }}
-                />
-              )}
+                    />
+                  )}
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
+          </>
         )}
       </div>
-    </div>
-  );
+    );
 };
 
 export default ModularEditorPro;
