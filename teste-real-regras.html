@@ -1,16 +1,18 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>🧪 Teste Real - Editor V1 Regras</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
+
 <body class="bg-gray-100 p-6">
     <div class="max-w-4xl mx-auto">
         <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
             <h1 class="text-2xl font-bold text-amber-800 mb-4">🧪 Teste Real - Editor V1 Regras</h1>
-            
+
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                 <div class="space-y-4">
                     <h3 class="text-lg font-semibold text-gray-800">📋 Checklist de Verificação</h3>
@@ -37,41 +39,41 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="space-y-4">
                     <h3 class="text-lg font-semibold text-gray-800">🔗 Links de Teste</h3>
                     <div class="space-y-2">
-                        <a href="/editor-v1" 
-                           class="block bg-amber-50 border border-amber-200 rounded-lg p-3 text-amber-800 hover:bg-amber-100 transition-colors">
+                        <a href="/editor-v1"
+                            class="block bg-amber-50 border border-amber-200 rounded-lg p-3 text-amber-800 hover:bg-amber-100 transition-colors">
                             📝 Editor V1 Modular
                         </a>
-                        <a href="/" 
-                           class="block bg-blue-50 border border-blue-200 rounded-lg p-3 text-blue-800 hover:bg-blue-100 transition-colors">
+                        <a href="/"
+                            class="block bg-blue-50 border border-blue-200 rounded-lg p-3 text-blue-800 hover:bg-blue-100 transition-colors">
                             🎯 Quiz Principal
                         </a>
-                        <a href="/demo-selection-rules.html" 
-                           class="block bg-green-50 border border-green-200 rounded-lg p-3 text-green-800 hover:bg-green-100 transition-colors">
+                        <a href="/demo-selection-rules.html"
+                            class="block bg-green-50 border border-green-200 rounded-lg p-3 text-green-800 hover:bg-green-100 transition-colors">
                             🧪 Demo das Regras
                         </a>
                     </div>
                 </div>
             </div>
-            
+
             <div class="border-t pt-4">
                 <h3 class="text-lg font-semibold text-gray-800 mb-3">🔍 Resultado da Verificação</h3>
                 <div id="verification-result" class="p-4 rounded-lg bg-gray-50 border">
                     <div class="text-center text-gray-500">Clique no botão abaixo para verificar</div>
                 </div>
-                
+
                 <div class="flex justify-center mt-4">
-                    <button onclick="runFullVerification()" 
-                            class="bg-amber-500 text-white px-6 py-3 rounded-lg hover:bg-amber-600 transition-colors font-medium">
+                    <button onclick="runFullVerification()"
+                        class="bg-amber-500 text-white px-6 py-3 rounded-lg hover:bg-amber-600 transition-colors font-medium">
                         🚀 Executar Verificação Completa
                     </button>
                 </div>
             </div>
         </div>
-        
+
         <!-- Console de Debug -->
         <div class="bg-gray-900 text-green-400 rounded-lg p-4 font-mono text-sm">
             <div class="font-bold mb-2">🖥️ Console de Debug:</div>
@@ -83,7 +85,7 @@
 
     <script>
         let verificationResults = {};
-        
+
         function debugLog(message, type = 'info') {
             const console = document.getElementById('debug-console');
             const timestamp = new Date().toLocaleTimeString();
@@ -93,18 +95,18 @@
                 warning: 'text-yellow-400',
                 error: 'text-red-400'
             };
-            
+
             const logEntry = document.createElement('div');
             logEntry.className = colors[type] || colors.info;
             logEntry.innerHTML = `<span class="opacity-70">[${timestamp}]</span> ${message}`;
-            
+
             console.appendChild(logEntry);
             console.scrollTop = console.scrollHeight;
         }
-        
+
         async function checkHybridTemplateService() {
             debugLog('🔧 Verificando HybridTemplateService...');
-            
+
             try {
                 // Tentar acessar via window global
                 if (window.__HYBRID_TEMPLATE_SERVICE__) {
@@ -113,7 +115,7 @@
                     verificationResults.hybridService = status.serviceActive;
                     return true;
                 }
-                
+
                 // Tentar via fetch do editor
                 const response = await fetch('/editor-v1');
                 if (response.ok) {
@@ -121,19 +123,19 @@
                     verificationResults.hybridService = true;
                     return true;
                 }
-                
+
                 debugLog('⚠️ HybridTemplateService não verificável via browser', 'warning');
                 return false;
-                
+
             } catch (error) {
                 debugLog(`❌ Erro ao verificar HybridTemplateService: ${error.message}`, 'error');
                 return false;
             }
         }
-        
+
         function checkImplementedRules() {
             debugLog('📝 Verificando implementação das regras...');
-            
+
             // Simular verificação das regras implementadas
             const rules = {
                 columnDetection: true, // Implementado no OptionsGridBlock.tsx
@@ -141,7 +143,7 @@
                 textOnlyOneColumn: true, // grid-cols-1 quando sem imagens
                 imageTextTwoColumns: true, // grid-cols-1 md:grid-cols-2 com imagens
             };
-            
+
             Object.entries(rules).forEach(([rule, implemented]) => {
                 if (implemented) {
                     debugLog(`✅ ${rule}: Implementado`);
@@ -150,10 +152,10 @@
                 }
                 verificationResults[rule] = implemented;
             });
-            
+
             return rules;
         }
-        
+
         function updateCheckboxes() {
             document.getElementById('check1').checked = verificationResults.hybridService;
             document.getElementById('check2').checked = verificationResults.columnDetection;
@@ -161,12 +163,12 @@
             document.getElementById('check4').checked = verificationResults.textOnlyOneColumn;
             document.getElementById('check5').checked = verificationResults.imageTextTwoColumns;
         }
-        
+
         function updateVerificationResult() {
             const resultDiv = document.getElementById('verification-result');
             const total = Object.keys(verificationResults).length;
             const passed = Object.values(verificationResults).filter(Boolean).length;
-            
+
             if (passed === total) {
                 resultDiv.innerHTML = `
                     <div class="text-center">
@@ -196,35 +198,35 @@
                 resultDiv.className = 'p-4 rounded-lg bg-red-50 border border-red-200';
             }
         }
-        
+
         async function runFullVerification() {
             debugLog('🚀 Iniciando verificação completa...');
             verificationResults = {};
-            
+
             // Limpar resultado anterior
             document.getElementById('verification-result').innerHTML = '<div class="text-center text-gray-500">Verificando...</div>';
-            
+
             // Executar verificações
             await checkHybridTemplateService();
             checkImplementedRules();
-            
+
             // Atualizar UI
             updateCheckboxes();
             updateVerificationResult();
-            
+
             debugLog('✅ Verificação completa finalizada');
-            
+
             // Resumo final
             const total = Object.keys(verificationResults).length;
             const passed = Object.values(verificationResults).filter(Boolean).length;
-            
+
             if (passed === total) {
                 debugLog(`🎉 RESULTADO FINAL: TODAS AS REGRAS FUNCIONAM (${passed}/${total})`, 'success');
             } else {
                 debugLog(`⚠️ RESULTADO FINAL: ${passed}/${total} regras funcionando`, 'warning');
             }
         }
-        
+
         // Verificação automática ao carregar
         document.addEventListener('DOMContentLoaded', () => {
             debugLog('🔍 Página de verificação carregada');
@@ -232,4 +234,5 @@
         });
     </script>
 </body>
+
 </html>

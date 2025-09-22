@@ -15,7 +15,7 @@ export interface StepBehaviorConfig {
 }
 
 export interface StepValidationConfig {
-    type: 'input' | 'selection' | 'none';
+    type: 'input' | 'selection' | 'none' | 'transition';
     required: boolean;
     requiredSelections?: number;
     maxSelections?: number;
@@ -267,7 +267,8 @@ class HybridTemplateService {
      * Aplica regras globais baseadas no número da etapa
      */
     private static getGlobalRules(stepNumber: number): { behavior: StepBehaviorConfig; validation: StepValidationConfig } {
-        // Regras baseadas nas especificações do usuário
+        // 🎯 ESPECIFICAÇÃO ATUALIZADA DO FLUXO DE SELEÇÕES:
+        // Etapa 1: Input nome (manual)
         if (stepNumber === 1) {
             return {
                 behavior: {
@@ -285,6 +286,7 @@ class HybridTemplateService {
             };
         }
 
+        // Etapas 2-11: 3 seleções obrigatórias + auto-avanço após 3ª seleção
         if (stepNumber >= 2 && stepNumber <= 11) {
             return {
                 behavior: {
@@ -303,10 +305,28 @@ class HybridTemplateService {
             };
         }
 
+        // Etapas 12 e 19: Páginas de transição - botão "Continuar" ativo (manual)
+        if (stepNumber === 12 || stepNumber === 19) {
+            return {
+                behavior: {
+                    autoAdvance: false, // ✅ MANUAL - usuário clica "Continuar"
+                    autoAdvanceDelay: 0,
+                    showProgress: true,
+                    allowBack: true,
+                },
+                validation: {
+                    type: 'transition', // ✅ NOVO: tipo especial para transições
+                    required: false, // ✅ Não requer validação - botão sempre ativo
+                    message: 'Clique em "Continuar" para prosseguir',
+                },
+            };
+        }
+
+        // Etapas 13-18: 1 opção obrigatória + botão "Avançar" manual após seleção
         if (stepNumber >= 13 && stepNumber <= 18) {
             return {
                 behavior: {
-                    autoAdvance: false, // ✅ SEM AUTO-AVANÇO
+                    autoAdvance: false, // ✅ MANUAL - usuário clica "Avançar"
                     autoAdvanceDelay: 0,
                     showProgress: true,
                     allowBack: true,
@@ -321,7 +341,7 @@ class HybridTemplateService {
             };
         }
 
-        // Outras etapas (transições, resultado, oferta)
+        // Outras etapas (20, 21, etc.)
         return {
             behavior: {
                 autoAdvance: false,
