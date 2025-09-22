@@ -71,7 +71,7 @@ const FunnelDataDisplay: React.FC<{
         try {
             const stepState = builder?.state;
             const currentStepKey = `step-${stepState.currentStep}`;
-            const currentStepBlocks = stepState.steps[currentStepKey] || [];
+            const currentStepBlocks = stepState.stepBlocks[currentStepKey] || [];
             const currentBlock = currentStepBlocks.find((b: any) => b.id === blockId);
 
             // Buscar informações adicionais do template (genérico)
@@ -83,7 +83,7 @@ const FunnelDataDisplay: React.FC<{
             return {
                 funnelId: funnelsContext?.currentFunnelId || 'local-funnel',
                 currentStep: stepState.currentStep,
-                totalSteps: Object.keys(stepState.steps).length || 21, // Dinâmico baseado nos dados reais
+                totalSteps: Object.keys(stepState.stepBlocks).length || 21, // Dinâmico baseado nos dados reais
                 blockIndex: currentStepBlocks.findIndex((b: any) => b.id === blockId) + 1,
                 totalBlocks: currentStepBlocks.length,
                 blockData: currentBlock,

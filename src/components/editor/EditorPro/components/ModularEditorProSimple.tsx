@@ -1,5 +1,6 @@
 import React from 'react';
 import { usePureBuilder } from '@/components/editor/PureBuilderProvider';
+import { Block } from '@/types/editor';
 
 interface ModularEditorProSimpleProps {
   showProFeatures?: boolean;
@@ -8,31 +9,63 @@ interface ModularEditorProSimpleProps {
 const ModularEditorProSimple: React.FC<ModularEditorProSimpleProps> = ({ showProFeatures = true }) => {
   const { state, actions } = usePureBuilder();
 
+  // Calculate total steps from stepBlocks
+  const totalSteps = Object.keys(state.stepBlocks).length || 21;
+  
+  // Helper functions for navigation
+  const goToStep = (step: number) => {
+    if (step >= 1 && step <= totalSteps) {
+      actions.setCurrentStep(step);
+    }
+  };
+
+  const goToPreviousStep = () => {
+    if (state.currentStep > 1) {
+      actions.setCurrentStep(state.currentStep - 1);
+    }
+  };
+
+  const goToNextStep = () => {
+    if (state.currentStep < totalSteps) {
+      actions.setCurrentStep(state.currentStep + 1);
+    }
+  };
+
+  // Get current step blocks
+  const currentStepKey = `step-${state.currentStep}`;
+  const currentStepBlocks = state.stepBlocks[currentStepKey] || [];
+
   return (
     <div className="flex-1 flex bg-gray-50">
       {/* Left Sidebar - Steps */}
       <div className="w-64 bg-white border-r border-gray-200 overflow-y-auto">
         <div className="p-4 border-b border-gray-200">
           <h2 className="font-semibold text-gray-900">Etapas</h2>
-          <p className="text-sm text-gray-600">Total: {Object.keys(state.stepBlocks).length}</p>
+          <p className="text-sm text-gray-600">Total: {totalSteps}</p>
         </div>
 
         <div className="p-2">
-          {Array.from({ length: state.totalSteps }, (_, i) => i + 1).map((step) => (
-            <button
-              key={step}
-              onClick={() => actions.goToStep(step)}
-              className={`w-full text-left p-3 rounded-lg mb-1 transition-colors ${state.currentStep === step
-                  ? 'bg-blue-50 border-l-4 border-blue-500 text-blue-900'
-                  : 'hover:bg-gray-50 text-gray-700'
+          {Array.from({ length: totalSteps }, (_, i) => i + 1).map((step) => {
+            const stepKey = `step-${step}`;
+            const stepBlocks = state.stepBlocks[stepKey] || [];
+            
+            return (
+              <button
+                key={step}
+                onClick={() => goToStep(step)}
+                className={`w-full text-left p-3 rounded-lg mb-1 transition-colors ${
+                  state.currentStep === step
+                    ? 'bg-blue-50 border-l-4 border-blue-500 text-blue-900'
+                    : 'hover:bg-gray-50 text-gray-700'
                 }`}
-            >
-              <div className="font-medium">Etapa {step}</div>
-              <div className="text-xs text-gray-500">
-                {state.steps[`step-${step}`]?.length || 0} componentes
-              </div>
-            </button>
-          ))}
+              >
+                <div className="font-medium">Etapa {step}</div>
+                <div className="text-xs text-gray-500">
+                  {stepBlocks.length} componentes
+                </div>
+              </button>
+            );
+          })}
         </div>
       </div>
 
@@ -46,21 +79,21 @@ const ModularEditorProSimple: React.FC<ModularEditorProSimpleProps> = ({ showPro
                 Etapa {state.currentStep}
               </h1>
               <p className="text-sm text-gray-600">
-                {state.steps[`step-${state.currentStep}`]?.length || 0} componentes nesta etapa
+                {currentStepBlocks.length} componentes nesta etapa
               </p>
             </div>
 
             <div className="flex items-center gap-2">
               <button
-                onClick={() => actions.goToPreviousStep()}
+                onClick={goToPreviousStep}
                 disabled={state.currentStep === 1}
                 className="px-3 py-2 text-sm bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 ← Anterior
               </button>
               <button
-                onClick={() => actions.goToNextStep()}
-                disabled={state.currentStep === state.totalSteps}
+                onClick={goToNextStep}
+                disabled={state.currentStep === totalSteps}
                 className="px-3 py-2 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Próximo →
@@ -83,9 +116,9 @@ const ModularEditorProSimple: React.FC<ModularEditorProSimpleProps> = ({ showPro
                     Componentes da Etapa {state.currentStep}
                   </h2>
 
-                  {state.steps[`step-${state.currentStep}`]?.length > 0 ? (
+                  {currentStepBlocks.length > 0 ? (
                     <div className="space-y-4">
-                      {state.steps[`step-${state.currentStep}`].map((block, index) => (
+                      {currentStepBlocks.map((block: Block, index: number) => (
                         <div
                           key={block.id}
                           className="p-4 bg-gray-50 rounded-lg border border-gray-200"
@@ -111,7 +144,7 @@ const ModularEditorProSimple: React.FC<ModularEditorProSimpleProps> = ({ showPro
                                 {block.type}
                               </span>
                               <button
-                                onClick={() => actions.removeBlock(`step-${state.currentStep}`, block.id)}
+                                onClick={() => actions.removeBlock(currentStepKey, block.id)}
                                 className="text-red-600 hover:text-red-800 text-sm"
                               >
                                 Remover
@@ -181,7 +214,7 @@ const ModularEditorProSimple: React.FC<ModularEditorProSimpleProps> = ({ showPro
             <button
               key={component.type}
               onClick={() => {
-                const newBlock = {
+                const newBlock: Block = {
                   id: `block-${Date.now()}`,
                   type: component.type as any,
                   content: {
@@ -189,10 +222,10 @@ const ModularEditorProSimple: React.FC<ModularEditorProSimpleProps> = ({ showPro
                     description: `Novo ${component.title}`,
                   },
                   properties: {},
-                  order: state.steps[`step-${state.currentStep}`]?.length || 0
+                  order: currentStepBlocks.length
                 };
 
-                actions.addBlock(`step-${state.currentStep}`, newBlock);
+                actions.addBlock(currentStepKey, newBlock);
               }}
               className="w-full text-left p-3 rounded-lg mb-1 hover:bg-gray-50 text-gray-700 border border-gray-200"
             >

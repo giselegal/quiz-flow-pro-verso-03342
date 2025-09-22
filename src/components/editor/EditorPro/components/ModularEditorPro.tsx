@@ -4,7 +4,6 @@ import { usePureBuilder } from '@/components/editor/PureBuilderProvider';
 import { useOptimizedScheduler } from '@/hooks/useOptimizedScheduler';
 import { useNotification } from '@/components/ui/Notification';
 import { Block } from '@/types/editor';
-import { DragEndEvent, DragStartEvent } from '@dnd-kit/core';
 
 // Componentes modulares
 import EditorToolbar from './EditorToolbar';
@@ -381,56 +380,7 @@ const ModularEditorPro: React.FC<ModularEditorProProps> = () => {
     }
   }, [selectedBlock, handleDeleteBlock]);
 
-  // 🔧 FUNÇÕES AUXILIARES: Conteúdo padrão para novos componentes
-  const getDefaultContentForType = useCallback((type: string) => {
-    switch (type) {
-      case 'headline':
-        return { title: 'Novo Título', subtitle: 'Subtítulo opcional' };
-      case 'text':
-        return { text: 'Digite seu texto aqui...' };
-      case 'image':
-        return { src: 'https://via.placeholder.com/400x300', alt: 'Nova imagem' };
-      case 'form':
-        return { title: 'Formulário', fields: [] };
-      case 'button':
-        return { text: 'Clique aqui', action: 'next' };
-      case 'quiz-question':
-        return { question: 'Nova pergunta do quiz?' };
-      case 'quiz-options':
-        return { options: ['Opção 1', 'Opção 2', 'Opção 3'] };
-      case 'container':
-        return { backgroundColor: '#ffffff' };
-      case 'spacer':
-        return { height: '20px' };
-      case 'mentor-section-inline':
-        return {
-          title: 'Conheça sua Mentora',
-          subtitle: 'Especialista em Consultoria de Imagem'
-        };
-      case 'testimonial-card-inline':
-        return {
-          testimonialType: 'mariangela',
-          cardStyle: 'elegant',
-          showPhoto: true,
-          showRating: true,
-          showResult: true
-        };
-      case 'testimonials-carousel-inline':
-        return {
-          title: 'O que nossas clientes dizem',
-          subtitle: 'Transformações reais de mulheres como você',
-          itemsPerView: 1,
-          showNavigationArrows: true,
-          showDots: true,
-          autoPlay: false,
-          layout: 'cards'
-        };
-      default:
-        return {};
-    }
-  }, []);
-
-  const getDefaultPropertiesForType = useCallback((type: string) => {
+  // ✅ Funções auxiliares removidas - não utilizadas após migração para PureBuilderProvider
     switch (type) {
       case 'headline':
         return { fontSize: 'text-2xl', fontWeight: 'font-bold', textAlign: 'center' };
@@ -497,55 +447,7 @@ const ModularEditorPro: React.FC<ModularEditorProProps> = () => {
     }
   }, []);
 
-  // 🔧 NOVO: Handler global para drag-and-drop de componentes da sidebar
-  const handleGlobalDragStart = useCallback((event: DragStartEvent) => {
-    console.log('🎯 Global Drag Start:', event.active.data.current);
-  }, []);
-
-  const handleGlobalDragEnd = useCallback((event: DragEndEvent) => {
-    const { active, over } = event;
-
-    if (!over || !active.data.current) {
-      console.log('❌ Drag end sem target válido');
-      return;
-    }
-
-    // Verificar se é um componente da sidebar sendo solto no canvas
-    if (active.data.current.type === 'sidebar-component' && over.data.current?.type === 'dropzone') {
-      const componentType = active.data.current.blockType;
-      const stepKey = `step-${state.currentStep}`;
-
-      console.log('✅ Adicionando componente ao canvas:', componentType);
-
-      // Criar novo bloco
-      const newBlockId = `${componentType}-${Date.now()}`;
-      const newBlock: Block = {
-        id: newBlockId,
-        type: componentType,
-        order: currentStepBlocks.length,
-        content: getDefaultContentForType(componentType) as any,
-        properties: getDefaultPropertiesForType(componentType) as any,
-      };
-
-      // Adicionar bloco à etapa atual
-      actions.addBlock(stepKey, newBlock);
-
-      // Selecionar o novo bloco
-      setSelectedBlockId(newBlockId);
-
-      addNotification(`Componente ${active.data.current.title} adicionado`);
-      return;
-    }
-
-    // Verificar se é reordenação dentro do canvas (delegado para canvas interno)
-    if (active.data.current.type === 'canvas-block') {
-      console.log('🔄 Reordenação de bloco no canvas - delegado para EditorCanvas');
-      // Não interferir - deixar o EditorCanvas lidar com isso
-      return;
-    }
-
-    console.log('ℹ️ Drag end não tratado:', { active: active.data.current, over: over.data.current });
-  }, [state.currentStep, currentStepBlocks.length, actions, addNotification, getDefaultContentForType, getDefaultPropertiesForType]);
+  // ✅ Handlers DnD removidos - usando apenas DndContext do PureBuilderProvider
 
   // Handlers da toolbar
   const handleTogglePreview = useCallback(() => {
