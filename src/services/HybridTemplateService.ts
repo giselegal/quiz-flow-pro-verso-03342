@@ -56,7 +56,49 @@ class HybridTemplateService {
     private static overrideCache = new Map<string, any>();
 
     /**
-     * 🏆 MÉTODO PRINCIPAL - Obter configuração de uma etapa
+     * � MÉTODO PRINCIPAL: getTemplate
+     * Hierarquia de prioridade de templates
+     */
+    static async getTemplate(templateId: string): Promise<any | null> {
+        try {
+            // 1. Carregar master template se necessário
+            if (!this.masterTemplate) {
+                await this.loadMasterTemplate();
+            }
+
+            // 2. Verificar se é um template específico
+            if (templateId === 'quiz21StepsComplete') {
+                // Fallback para template TypeScript
+                try {
+                    const { QUIZ_STYLE_21_STEPS_TEMPLATE } = await import('@/templates/quiz21StepsComplete');
+                    return QUIZ_STYLE_21_STEPS_TEMPLATE;
+                } catch (error) {
+                    console.error('❌ Erro ao carregar quiz21StepsComplete:', error);
+                }
+            }
+
+            // 3. Tentar carregar do master template
+            if (this.masterTemplate && this.masterTemplate.steps && this.masterTemplate.steps[templateId]) {
+                return this.masterTemplate.steps[templateId];
+            }
+
+            // 4. Tentar carregar override específico
+            const override = await this.loadStepOverride(templateId);
+            if (override) {
+                return override;
+            }
+
+            console.warn(`⚠️ Template não encontrado: ${templateId}`);
+            return null;
+
+        } catch (error) {
+            console.error(`❌ Erro ao carregar template ${templateId}:`, error);
+            return null;
+        }
+    }
+
+    /**
+     * �🏆 MÉTODO PRINCIPAL - Obter configuração de uma etapa
      */
     static async getStepConfig(stepNumber: number): Promise<StepTemplate> {
         try {

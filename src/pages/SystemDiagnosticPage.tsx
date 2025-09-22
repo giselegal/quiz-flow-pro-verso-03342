@@ -119,7 +119,7 @@ const SystemDiagnosticPage: React.FC = () => {
                         borderRadius: '8px',
                         marginTop: '20px'
                     }}>
-                        <strong>Timestamp:</strong> {new Date(status.timestamp).toLocaleString()}
+                        <strong>Timestamp:</strong> {status?.timestamp ? new Date(status.timestamp).toLocaleString() : 'N/A'}
                     </div>
                 </header>
 

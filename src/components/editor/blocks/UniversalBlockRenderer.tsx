@@ -3,6 +3,10 @@ import { Block } from '@/types/editor';
 import TestimonialCardInlineBlock from './TestimonialCardInlineBlock';
 import TestimonialsCarouselInlineBlock from './TestimonialsCarouselInlineBlock';
 import MentorSectionInlineBlock from './MentorSectionInlineBlock';
+import QuizIntroHeaderBlock from './QuizIntroHeaderBlock';
+import OptionsGridBlock from './OptionsGridBlock';
+import TextInlineBlock from './TextInlineBlock';
+import ButtonInlineBlock from './ButtonInlineBlock';
 import { cn } from '@/lib/utils';
 
 export interface UniversalBlockRendererProps {
@@ -38,6 +42,14 @@ const featureFlags = {
 
 // 🗂️ REGISTRY DE COMPONENTES - Mapeamento Universal
 const BlockComponentRegistry = {
+  // Quiz Components
+  'quiz-intro-header': QuizIntroHeaderBlock,
+  'options-grid': OptionsGridBlock,
+
+  // Basic Components
+  'text-inline': TextInlineBlock,
+  'button-inline': ButtonInlineBlock,
+
   // Business Components
   'mentor-section-inline': MentorSectionInlineBlock,
   'testimonial-card-inline': TestimonialCardInlineBlock,
