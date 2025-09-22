@@ -15,6 +15,8 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { ChevronLeft, ChevronRight, Edit3, Eye, Play, Settings, BarChart3 } from 'lucide-react';
+import NoCodePropertiesPanel from '@/components/editor/properties/NoCodePropertiesPanel';
+import type { Block } from '@/types/editor';
 
 // 🎯 NOVOS BLOCOS SIMPLES PARA SUPORTAR TODAS AS ETAPAS
 import SimpleTextBlock from '@/components/blocks/simple/SimpleTextBlock';
@@ -42,7 +44,7 @@ import SimpleButtonInlineBlock from '@/components/blocks/simple/SimpleButtonInli
 interface ModularStep {
     id: string;
     title: string;
-    blocks: any[];
+    blocks: Block[];
     isQuizStep: boolean;
     isCompleted: boolean;
 }
@@ -377,15 +379,31 @@ export const ModularV1Editor: React.FC = () => {
                 </div>
             </div>
 
-            {/* 🔧 PAINEL DE PROPRIEDADES */}
+            {/* 🔧 PAINEL DE PROPRIEDADES VISUAL */}
             {editMode && selectedBlock && (
                 <div className="w-80 bg-white border-l border-gray-200">
-                    <PropertiesPanel
-                        blockId={selectedBlock}
-                        stepData={currentStepData}
-                        onBlockUpdate={(blockId, updates) => {
-                            console.log('Atualizar bloco:', blockId, updates);
+                    <NoCodePropertiesPanel
+                        selectedBlock={currentStepData.blocks.find(b => b.id === selectedBlock)}
+                        currentStep={currentStep}
+                        totalSteps={steps.length}
+                        onUpdate={(updates) => {
+                            console.log('Atualizar bloco visual:', selectedBlock, updates);
+                            // TODO: Implementar atualização real dos dados
                         }}
+                        onDelete={() => {
+                            console.log('Excluir bloco:', selectedBlock);
+                            // TODO: Implementar exclusão
+                        }}
+                        onDuplicate={() => {
+                            console.log('Duplicar bloco:', selectedBlock);
+                            // TODO: Implementar duplicação
+                        }}
+                        onReset={() => {
+                            console.log('Restaurar padrões do bloco:', selectedBlock);
+                            // TODO: Implementar reset
+                        }}
+                        previewMode={!editMode}
+                        onPreviewToggle={(enabled) => setEditMode(!enabled)}
                     />
                 </div>
             )}
@@ -691,102 +709,7 @@ const EditableBlock: React.FC<EditableBlockProps> = ({
 };
 
 /**
- * 🔧 PAINEL DE PROPRIEDADES
- */
-interface PropertiesPanelProps {
-    blockId: string;
-    stepData: ModularStep;
-    onBlockUpdate: (blockId: string, updates: any) => void;
-}
-
-const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
-    blockId,
-    stepData,
-    onBlockUpdate,
-}) => {
-    const block = stepData.blocks.find(b => b.id === blockId);
-
-    if (!block) {
-        return (
-            <div className="p-4">
-                <p className="text-gray-500">Bloco não encontrado</p>
-            </div>
-        );
-    }
-
-    return (
-        <div className="p-4">
-            <h3 className="font-bold text-lg mb-4">Propriedades</h3>
-
-            <div className="space-y-4">
-                <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Tipo de Bloco
-                    </label>
-                    <input
-                        type="text"
-                        value={block.type}
-                        disabled
-                        className="w-full px-3 py-2 border border-gray-300 rounded text-sm bg-gray-50"
-                    />
-                </div>
-
-                <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                        ID do Bloco
-                    </label>
-                    <input
-                        type="text"
-                        value={block.id}
-                        disabled
-                        className="w-full px-3 py-2 border border-gray-300 rounded text-sm bg-gray-50"
-                    />
-                </div>
-
-                <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Conteúdo (JSON)
-                    </label>
-                    <textarea
-                        value={JSON.stringify(block.content, null, 2)}
-                        onChange={(e) => {
-                            try {
-                                const newContent = JSON.parse(e.target.value);
-                                onBlockUpdate(blockId, { content: newContent });
-                            } catch (error) {
-                                // JSON inválido - não atualiza
-                            }
-                        }}
-                        className="w-full px-3 py-2 border border-gray-300 rounded text-sm font-mono"
-                        rows={8}
-                    />
-                </div>
-
-                <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Propriedades (JSON)
-                    </label>
-                    <textarea
-                        value={JSON.stringify(block.properties, null, 2)}
-                        onChange={(e) => {
-                            try {
-                                const newProperties = JSON.parse(e.target.value);
-                                onBlockUpdate(blockId, { properties: newProperties });
-                            } catch (error) {
-                                // JSON inválido - não atualiza
-                            }
-                        }}
-                        className="w-full px-3 py-2 border border-gray-300 rounded text-sm font-mono"
-                        rows={6}
-                    />
-                </div>
-            </div>
-        </div>
-    );
-};
-
-/**
- * 📊 MODAL DE RESULTADO
+ *  MODAL DE RESULTADO
  */
 interface ResultModalProps {
     result: QuizResult;
