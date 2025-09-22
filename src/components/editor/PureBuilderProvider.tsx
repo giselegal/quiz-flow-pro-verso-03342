@@ -2,8 +2,6 @@ import React, { createContext, useContext, useState, useCallback, useRef, useEff
 // 🚀 BUILDER SYSTEM - Imports corrigidos para compatibilidade
 import type { Block } from '@/types/editor';
 import { createFunnelFromTemplate } from '@/core/builder';
-// 🎯 IMPORT DO JSON ESPECÍFICO DO QUIZ21STEPS
-import { QUIZ_STYLE_21_STEPS_TEMPLATE, QUIZ_GLOBAL_CONFIG, FUNNEL_PERSISTENCE_SCHEMA } from '@/templates/quiz21StepsComplete';
 
 /**
  * 🏗️ PURE BUILDER SYSTEM PROVIDER
@@ -419,27 +417,26 @@ const generateWithPureBuilder = async (templateName: string = 'product-quiz'): P
         // 🔄 CONVERTER PARA FORMATO COMPATÍVEL
         const stepBlocks: Record<string, Block[]> = {};
 
-        // 🎯 LÓGICA ESPECIAL PARA QUIZ21STEPS - USAR JSON ESPECÍFICO
-        if (safeTemplate === 'quiz21StepsComplete') {
-            console.log('🎯 Usando JSON específico do quiz21StepsComplete...');
-
-            // 🔄 ADAPTADOR: Converter formato quiz21StepsComplete para formato Block
-            const adaptedStepBlocks: Record<string, Block[]> = {};
-
-            Object.entries(QUIZ_STYLE_21_STEPS_TEMPLATE).forEach(([stepKey, blocks]) => {
-                adaptedStepBlocks[stepKey] = blocks.map((block: any) => ({
-                    id: block.id,
-                    type: block.type,
-                    order: block.order || 0,
-                    content: block.content || {},
-                    properties: block.properties || {},
-                    // 🆕 ADICIONAR CAMPOS OBRIGATÓRIOS DO TIPO BLOCK
-                    position: { x: 0, y: (block.order || 0) * 100 },
-                    style: block.style || {},
+        // 🎯 CONVERTER DADOS DO BUILDER SYSTEM PARA FORMATO BLOCKS
+        finalFunnel.steps?.forEach((step: any, index: number) => {
+            const stepKey = `step-${index + 1}`;
+            
+            // Se o step tem componentes do quiz21StepsComplete, usar eles diretamente
+            if (step.components && Array.isArray(step.components)) {
+                stepBlocks[stepKey] = step.components.map((component: any, blockIndex: number) => ({
+                    id: component.id || `${stepKey}-block-${blockIndex + 1}`,
+                    type: component.type || 'quiz-question',
+                    order: blockIndex,
+                    position: { x: 0, y: blockIndex * 100 },
+                    content: component.content || {},
+                    properties: component.properties || {},
+                    style: component.style || {},
                     metadata: {
-                        ...block.metadata,
-                        fromQuiz21StepsTemplate: true,
-                        adaptedAt: new Date().toISOString()
+                        ...component.metadata,
+                        stepNumber: index + 1,
+                        blockIndex: blockIndex + 1,
+                        fromBuilderSystem: true,
+                        generatedAt: new Date().toISOString()
                     },
                     validation: {
                         isValid: true,
@@ -447,24 +444,42 @@ const generateWithPureBuilder = async (templateName: string = 'product-quiz'): P
                         warnings: []
                     }
                 } as Block));
-            });
+            } else {
+                // Fallback: criar bloco básico se não houver componentes
+                stepBlocks[stepKey] = [{
+                    id: `${stepKey}-block-1`,
+                    type: 'text-inline',
+                    order: 0,
+                    position: { x: 0, y: 0 },
+                    content: { title: step.name || `Etapa ${index + 1}` },
+                    properties: { stepNumber: index + 1 },
+                    style: {},
+                    metadata: {
+                        stepName: step.name,
+                        fallbackBlock: true,
+                        fromBuilderSystem: true
+                    },
+                    validation: {
+                        isValid: true,
+                        errors: [],
+                        warnings: []
+                    }
+                } as Block];
+            }
+        });
 
-            Object.assign(stepBlocks, adaptedStepBlocks);
+        console.log(`✅ Builder System processado: ${Object.keys(stepBlocks).length} etapas carregadas`);
 
-            return {
-                stepBlocks,
-                builderInstance: funnelBuilder,
-                funnelConfig: {
-                    ...finalFunnel,
-                    ...QUIZ_GLOBAL_CONFIG,
-                    persistenceSchema: FUNNEL_PERSISTENCE_SCHEMA,
-                    hasSpecificJSON: true,
-                    jsonSource: 'quiz21StepsComplete.ts',
-                    totalSteps: Object.keys(adaptedStepBlocks).length,
-                    adapted: true
-                }
-            };
-        }
+        return {
+            stepBlocks,
+            builderInstance: funnelBuilder,
+            funnelConfig: {
+                ...finalFunnel,
+                hasBuilderSystem: true,
+                totalSteps: Object.keys(stepBlocks).length,
+                source: 'core-builder-system'
+            }
+        };
 
         // 🔄 LÓGICA PADRÃO PARA OUTROS TEMPLATES
         finalFunnel.steps?.forEach((step: any, index: number) => {
