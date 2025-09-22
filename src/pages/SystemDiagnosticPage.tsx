@@ -202,6 +202,21 @@ const SystemDiagnosticPage: React.FC = () => {
                 <div style={{ textAlign: 'center', marginTop: '40px' }}>
                     <div style={{ display: 'flex', gap: '20px', justifyContent: 'center', flexWrap: 'wrap' }}>
                         <button
+                            onClick={() => window.location.href = '/comparativo'}
+                            style={{
+                                background: '#FFD700',
+                                color: 'black',
+                                border: 'none',
+                                padding: '12px 24px',
+                                borderRadius: '8px',
+                                cursor: 'pointer',
+                                fontSize: '16px',
+                                fontWeight: 'bold'
+                            }}
+                        >
+                            🏆 Comparar Editores
+                        </button>
+                        <button
                             onClick={() => window.location.href = '/editor'}
                             style={{
                                 background: '#4CAF50',

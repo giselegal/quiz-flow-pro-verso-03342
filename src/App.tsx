@@ -23,6 +23,9 @@ const ModernUnifiedEditor = lazy(() => import('./pages/editor/ModernUnifiedEdito
 const ModularEditorPro = lazy(() => import('./components/editor/EditorPro/components/ModularEditorPro'));
 const PureBuilderProvider = lazy(() => import('./components/editor/PureBuilderProvider'));
 
+// 🏆 PÁGINA DE COMPARAÇÃO DOS EDITORES
+const EditorComparativePage = lazy(() => import('./pages/EditorComparativePage'));
+
 // 🚀 DASHBOARD AVANÇADO (futuro)
 const DashboardPage = lazy(() => import('./pages/DashboardPage'));
 const StepPage = lazy(() => import('./pages/StepPage'));
@@ -271,6 +274,13 @@ function App() {
                     </Suspense>
                   );
                 }} />
+
+                {/* 🏆 Página de Comparação dos Editores */}
+                <Route path="/comparativo" component={() =>
+                  <Suspense fallback={<LoadingFallback />}>
+                    <EditorComparativePage />
+                  </Suspense>
+                } />
 
                 {/* Autenticação */}
                 <Route path="/auth" component={() =>
