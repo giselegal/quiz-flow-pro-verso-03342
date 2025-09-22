@@ -23,6 +23,21 @@ import SimpleDecorativeBarBlock from '@/components/blocks/simple/SimpleDecorativ
 import SimpleFormContainerBlock from '@/components/blocks/simple/SimpleFormContainerBlock';
 import SimpleLegalNoticeBlock from '@/components/blocks/simple/SimpleLegalNoticeBlock';
 
+// 🎯 NOVOS BLOCOS PARA ETAPAS 19 E 20
+import SimpleConnectedTemplateWrapperBlock from '@/components/blocks/simple/SimpleConnectedTemplateWrapperBlock';
+import SimpleResultHeaderInlineBlock from '@/components/blocks/simple/SimpleResultHeaderInlineBlock';
+import SimpleUrgencyTimerInlineBlock from '@/components/blocks/simple/SimpleUrgencyTimerInlineBlock';
+import SimpleStyleCardInlineBlock from '@/components/blocks/simple/SimpleStyleCardInlineBlock';
+import SimpleSecondaryStylesBlock from '@/components/blocks/simple/SimpleSecondaryStylesBlock';
+import SimpleBeforeAfterInlineBlock from '@/components/blocks/simple/SimpleBeforeAfterInlineBlock';
+import SimpleBonusBlock from '@/components/blocks/simple/SimpleBonusBlock';
+import SimpleTestimonialsBlock from '@/components/blocks/simple/SimpleTestimonialsBlock';
+import SimpleValueAnchoringBlock from '@/components/blocks/simple/SimpleValueAnchoringBlock';
+import SimpleSecurePurchaseBlock from '@/components/blocks/simple/SimpleSecurePurchaseBlock';
+import SimpleGuaranteeBlock from '@/components/blocks/simple/SimpleGuaranteeBlock';
+import SimpleMentorSectionInlineBlock from '@/components/blocks/simple/SimpleMentorSectionInlineBlock';
+import SimpleButtonInlineBlock from '@/components/blocks/simple/SimpleButtonInlineBlock';
+
 // 🏷️ TIPOS
 interface ModularStep {
     id: string;
@@ -596,6 +611,46 @@ const EditableBlock: React.FC<EditableBlockProps> = ({
             case 'legal-notice':
                 // Renderizar aviso legal
                 return <SimpleLegalNoticeBlock block={block} isSelected={isSelected} editMode={editMode} onSelect={onSelect} />;
+
+            // 🎯 NOVOS CASOS PARA ETAPAS 19 E 20
+            case 'connected-template-wrapper':
+                return <SimpleConnectedTemplateWrapperBlock block={block} isSelected={isSelected} editMode={editMode} onSelect={onSelect} />;
+
+            case 'result-header-inline':
+                return <SimpleResultHeaderInlineBlock block={block} isSelected={isSelected} editMode={editMode} onSelect={onSelect} />;
+
+            case 'urgency-timer-inline':
+                return <SimpleUrgencyTimerInlineBlock block={block} isSelected={isSelected} editMode={editMode} onSelect={onSelect} />;
+
+            case 'style-card-inline':
+                return <SimpleStyleCardInlineBlock block={block} isSelected={isSelected} editMode={editMode} onSelect={onSelect} />;
+
+            case 'secondary-styles':
+                return <SimpleSecondaryStylesBlock block={block} isSelected={isSelected} editMode={editMode} onSelect={onSelect} />;
+
+            case 'before-after-inline':
+                return <SimpleBeforeAfterInlineBlock block={block} isSelected={isSelected} editMode={editMode} onSelect={onSelect} />;
+
+            case 'bonus':
+                return <SimpleBonusBlock block={block} isSelected={isSelected} editMode={editMode} onSelect={onSelect} />;
+
+            case 'testimonials':
+                return <SimpleTestimonialsBlock block={block} isSelected={isSelected} editMode={editMode} onSelect={onSelect} />;
+
+            case 'value-anchoring':
+                return <SimpleValueAnchoringBlock block={block} isSelected={isSelected} editMode={editMode} onSelect={onSelect} />;
+
+            case 'secure-purchase':
+                return <SimpleSecurePurchaseBlock block={block} isSelected={isSelected} editMode={editMode} onSelect={onSelect} />;
+
+            case 'guarantee':
+                return <SimpleGuaranteeBlock block={block} isSelected={isSelected} editMode={editMode} onSelect={onSelect} />;
+
+            case 'mentor-section-inline':
+                return <SimpleMentorSectionInlineBlock block={block} isSelected={isSelected} editMode={editMode} onSelect={onSelect} />;
+
+            case 'button-inline':
+                return <SimpleButtonInlineBlock block={block} isSelected={isSelected} editMode={editMode} onSelect={onSelect} />;
 
             default:
                 return (
