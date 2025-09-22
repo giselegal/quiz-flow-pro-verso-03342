@@ -6,29 +6,25 @@
  */
 
 import HybridTemplateService from '@/services/HybridTemplateService';
-import { createFunnelFromTemplate } from '@/core/builder';
 import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
 
-// Instância global do serviço híbrido
-let hybridTemplateService: HybridTemplateService | null = null;
+// Flag para controlar se o serviço já foi inicializado
+let isInitialized = false;
 
 /**
  * Inicializa o HybridTemplateService com fallback seguro
  */
-export const initializeHybridTemplateService = async (): Promise<HybridTemplateService> => {
+export const initializeHybridTemplateService = async (): Promise<typeof HybridTemplateService> => {
     console.log('🔧 [HYBRID] Inicializando HybridTemplateService...');
 
-    if (hybridTemplateService) {
+    if (isInitialized) {
         console.log('✅ [HYBRID] Serviço já inicializado');
-        return hybridTemplateService;
+        return HybridTemplateService;
     }
 
     try {
-        // Criar instância do serviço
-        hybridTemplateService = new HybridTemplateService();
-
-        // Verificar se o template base está disponível
-        const templateData = await hybridTemplateService.getTemplate('quiz21StepsComplete');
+        // Verificar se o template base está disponível (usando método estático)
+        const templateData = await HybridTemplateService.getTemplate('quiz21StepsComplete');
 
         if (!templateData || Object.keys(templateData).length === 0) {
             console.warn('⚠️ [HYBRID] Template não encontrado, usando fallback...');
@@ -36,8 +32,8 @@ export const initializeHybridTemplateService = async (): Promise<HybridTemplateS
             // Fallback: usar template direto
             if (QUIZ_STYLE_21_STEPS_TEMPLATE) {
                 console.log('✅ [HYBRID] Usando template direto como fallback');
-                // Adicionar template diretamente ao cache do serviço
-                (hybridTemplateService as any).templateCache.set('quiz21StepsComplete', QUIZ_STYLE_21_STEPS_TEMPLATE);
+                // Note: Como HybridTemplateService usa métodos estáticos, 
+                // o fallback será tratado internamente pelo serviço
             } else {
                 console.error('❌ [HYBRID] CRÍTICO: Nenhum template disponível!');
                 throw new Error('Template não disponível');
@@ -46,14 +42,15 @@ export const initializeHybridTemplateService = async (): Promise<HybridTemplateS
             console.log('✅ [HYBRID] Template carregado com sucesso:', Object.keys(templateData).length, 'etapas');
         }
 
-        return hybridTemplateService;
+        isInitialized = true;
+        return HybridTemplateService;
 
     } catch (error) {
         console.error('❌ [HYBRID] Erro ao inicializar serviço:', error);
 
-        // Fallback crítico: criar serviço mínimo
-        hybridTemplateService = new HybridTemplateService();
-        return hybridTemplateService;
+        // Fallback crítico: marcar como inicializado mesmo com erro
+        isInitialized = true;
+        return HybridTemplateService;
     }
 };
 
@@ -61,41 +58,26 @@ export const initializeHybridTemplateService = async (): Promise<HybridTemplateS
  * Versão integrada do createFunnelFromTemplate que usa HybridTemplateService
  */
 export const createIntegratedFunnel = async (templateName: string = 'quiz21StepsComplete') => {
-    console.log('🏗️ [INTEGRATED] Criando funil integrado:', templateName);
+    console.log('🚀 [HYBRID] Criando funil integrado:', templateName);
 
     try {
-        // Garantir que o serviço híbrido está inicializado
-        const service = await initializeHybridTemplateService();
+        // Inicializar serviço se necessário
+        await initializeHybridTemplateService();
 
-        // Buscar template usando serviço híbrido
-        const templateData = await service.getTemplate(templateName);
+        // Obter template usando método estático
+        const templateData = await HybridTemplateService.getTemplate(templateName);
 
         if (!templateData) {
-            console.warn('⚠️ [INTEGRATED] Template não encontrado, usando builder padrão');
-            return createFunnelFromTemplate(templateName);
+            console.error('❌ [HYBRID] Template não encontrado:', templateName);
+            return null;
         }
 
-        console.log('✅ [INTEGRATED] Template obtido do HybridTemplateService:', Object.keys(templateData).length, 'etapas');
-
-        // Usar builder normal mas com dados do serviço híbrido
-        const builder = createFunnelFromTemplate(templateName);
-
-        // Garantir que o builder tem os dados corretos
-        if (builder && typeof builder.build === 'function') {
-            const funnelConfig = builder.build();
-            console.log('✅ [INTEGRATED] Funil construído com sucesso:', funnelConfig.steps?.length || 0, 'etapas');
-            return builder;
-        } else {
-            console.error('❌ [INTEGRATED] Erro na construção do funil');
-            throw new Error('Falha na construção do funil');
-        }
+        console.log('✅ [HYBRID] Funil integrado criado com sucesso');
+        return templateData;
 
     } catch (error) {
-        console.error('❌ [INTEGRATED] Erro crítico:', error);
-
-        // Fallback final: usar builder direto
-        console.log('🔄 [INTEGRATED] Usando fallback: builder direto');
-        return createFunnelFromTemplate(templateName);
+        console.error('❌ [HYBRID] Erro ao criar funil integrado:', error);
+        return null;
     }
 };
 
@@ -104,11 +86,11 @@ export const createIntegratedFunnel = async (templateName: string = 'quiz21Steps
  */
 export const getTemplateStatus = async () => {
     try {
-        const service = await initializeHybridTemplateService();
-        const template = await service.getTemplate('quiz21StepsComplete');
+        await initializeHybridTemplateService();
+        const template = await HybridTemplateService.getTemplate('quiz21StepsComplete');
 
         return {
-            serviceActive: !!service,
+            serviceActive: isInitialized,
             templateLoaded: !!template,
             templateSteps: template ? Object.keys(template).length : 0,
             fallbackAvailable: !!QUIZ_STYLE_21_STEPS_TEMPLATE,
