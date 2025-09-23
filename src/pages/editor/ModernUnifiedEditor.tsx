@@ -8,7 +8,7 @@
  * ✅ Elimina conflitos entre editores fragmentados
  */
 
-import React, { useState, useCallback, Suspense } from 'react';
+import React, { useState, useCallback, Suspense, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -27,6 +27,13 @@ const EditorProUnified = React.lazy(() =>
 import { FunnelsProvider } from '@/context/FunnelsContext';
 import PureBuilderProvider from '@/components/editor/PureBuilderProvider';
 import { useNotification } from '@/components/ui/Notification';
+import UnifiedCRUDProvider, { useUnifiedCRUD } from '@/context/UnifiedCRUDProvider';
+
+// 🎯 CRUD Services Integration
+import { useUnifiedEditor } from '@/hooks/core/useUnifiedEditor';
+
+// 🧪 Development Testing
+import testCRUDOperations from '@/utils/testCRUDOperations';
 
 // ===============================
 // 🎯 TYPES & INTERFACES
@@ -71,20 +78,83 @@ interface ModernToolbarProps {
     editorState: EditorState;
     onStateChange: (updates: Partial<EditorState>) => void;
     funnelId?: string;
+    onSave?: () => Promise<void>;
+    onCreateNew?: () => Promise<void>;
+    onDuplicate?: () => Promise<void>;
+    onTestCRUD?: () => Promise<void>;
 }
 
 const ModernToolbar: React.FC<ModernToolbarProps> = ({
     editorState,
     onStateChange,
-    funnelId
+    funnelId,
+    onSave,
+    onCreateNew,
+    onDuplicate,
+    onTestCRUD
 }) => {
     const { addNotification } = useNotification();
+    const [isOperating, setIsOperating] = useState(false);
 
-    const handleSave = useCallback(() => {
-        addNotification('💾 Projeto salvo com sucesso!', 'success');
-    }, [addNotification]);
+    const handleSave = useCallback(async () => {
+        if (isOperating || !onSave) return;
 
-    const handleAIToggle = useCallback(() => {
+        setIsOperating(true);
+        try {
+            await onSave();
+            addNotification('💾 Projeto salvo com sucesso!', 'success');
+        } catch (error) {
+            console.error('Erro ao salvar:', error);
+            addNotification('❌ Erro ao salvar projeto', 'error');
+        } finally {
+            setIsOperating(false);
+        }
+    }, [onSave, addNotification, isOperating]);
+
+    const handleCreateNew = useCallback(async () => {
+        if (isOperating || !onCreateNew) return;
+
+        setIsOperating(true);
+        try {
+            await onCreateNew();
+            addNotification('🎉 Novo projeto criado!', 'success');
+        } catch (error) {
+            console.error('Erro ao criar projeto:', error);
+            addNotification('❌ Erro ao criar projeto', 'error');
+        } finally {
+            setIsOperating(false);
+        }
+    }, [onCreateNew, addNotification, isOperating]);
+
+    const handleDuplicate = useCallback(async () => {
+        if (isOperating || !onDuplicate || !funnelId) return;
+
+        setIsOperating(true);
+        try {
+            await onDuplicate();
+            addNotification('📋 Projeto duplicado com sucesso!', 'success');
+        } catch (error) {
+            console.error('Erro ao duplicar projeto:', error);
+            addNotification('❌ Erro ao duplicar projeto', 'error');
+        } finally {
+            setIsOperating(false);
+        }
+    }, [onDuplicate, addNotification, isOperating, funnelId]);
+
+    const handleTestCRUD = useCallback(async () => {
+        if (isOperating || !onTestCRUD) return;
+
+        setIsOperating(true);
+        try {
+            await onTestCRUD();
+            addNotification('🧪 Testes CRUD executados - veja o console', 'info');
+        } catch (error) {
+            console.error('Erro ao executar testes:', error);
+            addNotification('❌ Erro nos testes CRUD', 'error');
+        } finally {
+            setIsOperating(false);
+        }
+    }, [onTestCRUD, addNotification, isOperating]); const handleAIToggle = useCallback(() => {
         const newState = !editorState.aiAssistantActive;
         onStateChange({ aiAssistantActive: newState });
         addNotification(
@@ -141,9 +211,47 @@ const ModernToolbar: React.FC<ModernToolbarProps> = ({
             {/* Actions */}
             <div className="flex items-center gap-2">
                 <Button
+                    variant="secondary"
+                    size="sm"
+                    onClick={handleCreateNew}
+                    disabled={isOperating}
+                >
+                    <Target className="w-4 h-4 mr-2" />
+                    Novo
+                </Button>
+
+                {funnelId && (
+                    <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={handleDuplicate}
+                        disabled={isOperating}
+                    >
+                        <Component className="w-4 h-4 mr-2" />
+                        Duplicar
+                    </Button>
+                )}
+
+                <Separator orientation="vertical" className="h-4" />
+
+                {/* 🧪 Test Button (DEV) */}
+                <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={handleTestCRUD}
+                    disabled={isOperating}
+                    title="Executar testes CRUD (Development)"
+                >
+                    🧪 Test
+                </Button>
+
+                <Separator orientation="vertical" className="h-4" />
+
+                <Button
                     variant={editorState.aiAssistantActive ? "default" : "outline"}
                     size="sm"
                     onClick={handleAIToggle}
+                    disabled={isOperating}
                 >
                     <Brain className="w-4 h-4 mr-2" />
                     IA
@@ -153,14 +261,20 @@ const ModernToolbar: React.FC<ModernToolbarProps> = ({
                     variant="outline"
                     size="sm"
                     onClick={() => onStateChange({ previewMode: !editorState.previewMode })}
+                    disabled={isOperating}
                 >
                     <Eye className="w-4 h-4 mr-2" />
                     Preview
                 </Button>
 
-                <Button variant="default" size="sm" onClick={handleSave}>
+                <Button
+                    variant="default"
+                    size="sm"
+                    onClick={handleSave}
+                    disabled={isOperating || !onSave}
+                >
                     <CheckCircle className="w-4 h-4 mr-2" />
-                    Salvar
+                    {isOperating ? 'Salvando...' : 'Salvar'}
                 </Button>
             </div>
         </div>
@@ -168,16 +282,22 @@ const ModernToolbar: React.FC<ModernToolbarProps> = ({
 };
 
 // ===============================
-// 🎯 MAIN EDITOR COMPONENT
+// 🎯 UNIFIED EDITOR WITH CRUD
 // ===============================
 
-const ModernUnifiedEditor: React.FC<ModernUnifiedEditorProps> = ({
+const UnifiedEditorCore: React.FC<ModernUnifiedEditorProps> = ({
     funnelId,
     templateId,
     mode = 'visual',
     className = ''
 }) => {
-    // Estado do editor
+    // 🎯 UNIFIED CRUD CONTEXT
+    const crudContext = useUnifiedCRUD();
+
+    // 🎯 UNIFIED EDITOR HOOK - CRUD INTEGRATION
+    const unifiedEditor = useUnifiedEditor();
+
+    // Estado do editor UI
     const [editorState, setEditorState] = useState<EditorState>({
         mode,
         aiAssistantActive: false,
@@ -189,29 +309,95 @@ const ModernUnifiedEditor: React.FC<ModernUnifiedEditorProps> = ({
         setEditorState(prev => ({ ...prev, ...updates }));
     }, []);
 
-    console.log('🎯 ModernUnifiedEditor iniciado:', {
+    // ========================================================================
+    // 🔥 CRUD OPERATIONS - UNIFIED IMPLEMENTATION
+    // ========================================================================
+
+    const handleSave = useCallback(async () => {
+        console.log('💾 Salvando via UnifiedCRUD...');
+        await crudContext.saveFunnel();
+        console.log('✅ Salvo com sucesso via UnifiedCRUD');
+    }, [crudContext]);
+
+    const handleCreateNew = useCallback(async () => {
+        console.log('🎯 Criando novo funil via UnifiedCRUD...');
+        await crudContext.createFunnel('Novo Funil', { templateId });
+        console.log('✅ Novo funil criado via UnifiedCRUD');
+    }, [crudContext, templateId]);
+
+    const handleDuplicate = useCallback(async () => {
+        if (!funnelId && !crudContext.currentFunnel?.id) {
+            throw new Error('ID do funil necessário para duplicar');
+        }
+
+        const targetId = funnelId || crudContext.currentFunnel!.id;
+        console.log('📋 Duplicando funil via UnifiedCRUD:', targetId);
+
+        await crudContext.duplicateFunnel(targetId, 'Cópia de Funil');
+        console.log('✅ Funil duplicado via UnifiedCRUD');
+    }, [funnelId, crudContext]);
+
+    // 🧪 DEV TESTING - Test CRUD operations
+    const handleTestCRUD = useCallback(async () => {
+        console.log('🧪 Executando testes CRUD...');
+        try {
+            const results = await testCRUDOperations();
+            if (results.success) {
+                console.log('🎉 Todos os testes CRUD passaram!', results.results);
+                alert('✅ Todos os testes CRUD passaram! Verifique o console para detalhes.');
+            } else {
+                console.error('❌ Falha nos testes CRUD:', results.error);
+                alert('❌ Falha nos testes CRUD. Verifique o console para detalhes.');
+            }
+        } catch (error) {
+            console.error('❌ Erro ao executar testes:', error);
+            alert('❌ Erro ao executar testes CRUD.');
+        }
+    }, []);
+
+    // ========================================================================
+    // 🚀 INITIALIZATION
+    // ========================================================================
+
+    // Sync between UnifiedCRUD and UnifiedEditor
+    useEffect(() => {
+        if (crudContext.currentFunnel && !unifiedEditor.funnel) {
+            console.log('� Sincronizando funnel do CRUD para Editor');
+            unifiedEditor.loadFunnel(crudContext.currentFunnel.id).catch(console.error);
+        }
+    }, [crudContext.currentFunnel, unifiedEditor]);
+
+    console.log('🎯 UnifiedEditorCore estado:', {
         mode: editorState.mode,
         funnelId,
         templateId,
+        crudFunnelId: crudContext.currentFunnel?.id,
+        editorFunnelId: unifiedEditor.funnel?.id,
+        isLoading: crudContext.isLoading || unifiedEditor.isLoading,
+        error: crudContext.error || unifiedEditor.error,
         aiActive: editorState.aiAssistantActive
     });
 
     return (
         <div className={`h-screen w-full bg-background flex flex-col ${className}`}>
-            {/* Toolbar Moderno */}
+            {/* Toolbar Moderno com CRUD Actions */}
             <ModernToolbar
                 editorState={editorState}
                 onStateChange={handleStateChange}
-                funnelId={funnelId}
+                funnelId={funnelId || crudContext.currentFunnel?.id}
+                onSave={handleSave}
+                onCreateNew={handleCreateNew}
+                onDuplicate={handleDuplicate}
+                onTestCRUD={handleTestCRUD}
             />
 
             {/* Main Editor Area - Usando EditorProUnified como base única */}
             <div className="flex-1 overflow-hidden">
                 <FunnelsProvider debug={false}>
-                    <PureBuilderProvider funnelId={funnelId}>
+                    <PureBuilderProvider funnelId={funnelId || unifiedEditor.funnel?.id}>
                         <Suspense fallback={<LoadingSpinner message="Carregando editor principal..." />}>
                             <EditorProUnified
-                                funnelId={funnelId}
+                                funnelId={funnelId || unifiedEditor.funnel?.id}
                                 showProFeatures={true}
                                 className="h-full"
                             />
@@ -220,11 +406,33 @@ const ModernUnifiedEditor: React.FC<ModernUnifiedEditorProps> = ({
                 </FunnelsProvider>
             </div>
 
-            {/* Status Bar */}
+            {/* Status Bar com informações CRUD */}
             <div className="h-8 bg-muted/30 border-t border-border flex items-center justify-between px-4">
                 <div className="flex items-center gap-2 text-xs text-muted-foreground">
                     <Activity className="w-3 h-3" />
                     <span>Editor ativo: {editorState.mode}</span>
+
+                    {unifiedEditor.isLoading && (
+                        <>
+                            <Separator orientation="vertical" className="h-3" />
+                            <span>⏳ Carregando...</span>
+                        </>
+                    )}
+
+                    {unifiedEditor.isDirty && (
+                        <>
+                            <Separator orientation="vertical" className="h-3" />
+                            <span>✏️ Modificado</span>
+                        </>
+                    )}
+
+                    {unifiedEditor.lastSaved && (
+                        <>
+                            <Separator orientation="vertical" className="h-3" />
+                            <span>💾 Salvo: {new Date(unifiedEditor.lastSaved).toLocaleTimeString()}</span>
+                        </>
+                    )}
+
                     {editorState.aiAssistantActive && (
                         <>
                             <Separator orientation="vertical" className="h-3" />
@@ -234,10 +442,26 @@ const ModernUnifiedEditor: React.FC<ModernUnifiedEditorProps> = ({
                     )}
                 </div>
                 <div className="text-xs text-muted-foreground">
-                    Neural Editor v2.0 - Consolidado
+                    Neural Editor v2.0 - CRUD Unificado ✅
                 </div>
             </div>
         </div>
+    );
+};
+
+// ===============================
+// 🎯 WRAPPER WITH PROVIDERS
+// ===============================
+
+const ModernUnifiedEditor: React.FC<ModernUnifiedEditorProps> = (props) => {
+    return (
+        <UnifiedCRUDProvider
+            funnelId={props.funnelId}
+            autoLoad={true}
+            debug={false}
+        >
+            <UnifiedEditorCore {...props} />
+        </UnifiedCRUDProvider>
     );
 };
 
