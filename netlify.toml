@@ -11,36 +11,74 @@
   to = "/.netlify/functions/:splat"
   status = 200
 
+# Rotas administrativas
 [[redirects]]
   from = "/admin/*"
   to = "/index.html"
   status = 200
 
 [[redirects]]
-  from = "/auth/*"
+  from = "/dashboard*"
   to = "/index.html"
   status = 200
 
+# Autenticação
+[[redirects]]
+  from = "/auth*"
+  to = "/index.html"
+  status = 200
+
+# Editor e suas sub-rotas
 [[redirects]]
   from = "/editor/*"
   to = "/index.html"
   status = 200
 
+# Redirects legacy para o editor unificado
 [[redirects]]
-  from = "/editor-fixed/*"
+  from = "/editor-pro*"
+  to = "/editor"
+  status = 301
+
+[[redirects]]
+  from = "/editor-modular*"
+  to = "/editor"
+  status = 301
+
+[[redirects]]
+  from = "/editor-v1*"
+  to = "/editor"
+  status = 301
+
+[[redirects]]
+  from = "/editor-fixed*"
+  to = "/editor"
+  status = 301
+
+# Templates
+[[redirects]]
+  from = "/templates*"
+  to = "/index.html"
+  status = 200
+
+# Quiz e Resultado
+[[redirects]]
+  from = "/quiz-estilo*"
   to = "/index.html"
   status = 200
 
 [[redirects]]
-  from = "/quiz/*"
+  from = "/resultado*"
   to = "/index.html"
   status = 200
 
+# Páginas de desenvolvimento
 [[redirects]]
-  from = "/resultado/*"
+  from = "/diagnostics*"
   to = "/index.html"
   status = 200
 
+# Fallback geral para SPA
 [[redirects]]
   from = "/*"
   to = "/index.html"
