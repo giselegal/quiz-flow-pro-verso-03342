@@ -35,13 +35,18 @@ export default {
         sm: 'calc(var(--radius) - 4px)',
       },
       colors: {
-        // ✅ CORES DA MARCA
+        // ✅ QUIZFLOW BRAND SYSTEM
         brand: {
-          darkBlue: '#1A0F3D',
-          mediumBlue: '#2E1A6B',
-          lightBlue: '#4A2E9F',
-          brightBlue: '#00BFFF',
-          brightPink: '#FF00FF',
+          darkBlue: 'hsl(var(--brand-dark-blue))',
+          mediumBlue: 'hsl(var(--brand-medium-blue))',
+          lightBlue: 'hsl(var(--brand-light-blue))',
+          brightBlue: 'hsl(var(--brand-bright-blue))',
+          brightPink: 'hsl(var(--brand-bright-pink))',
+          primary: 'hsl(var(--brand-primary))',
+          dark: 'hsl(var(--brand-dark))',
+          background: 'hsl(var(--brand-background))',
+          text: 'hsl(var(--brand-text))',
+          muted: 'hsl(var(--brand-muted))',
         },
 
         background: 'hsl(var(--background))',
@@ -120,6 +125,30 @@ export default {
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
+        'fade-in': 'fadeIn 0.3s ease-out',
+        'scale-in': 'scaleIn 0.2s ease-out',
+        'slide-up': 'slideUp 0.3s ease-out',
+        'glow': 'glow 2s ease-in-out infinite alternate',
+      },
+      keyframes: {
+        ...{
+          fadeIn: {
+            '0%': { opacity: '0', transform: 'translateY(10px)' },
+            '100%': { opacity: '1', transform: 'translateY(0)' },
+          },
+          scaleIn: {
+            '0%': { opacity: '0', transform: 'scale(0.95)' },
+            '100%': { opacity: '1', transform: 'scale(1)' },
+          },
+          slideUp: {
+            '0%': { opacity: '0', transform: 'translateY(20px)' },
+            '100%': { opacity: '1', transform: 'translateY(0)' },
+          },
+          glow: {
+            '0%': { boxShadow: '0 0 20px hsl(var(--brand-bright-blue) / 0.2)' },
+            '100%': { boxShadow: '0 0 40px hsl(var(--brand-bright-blue) / 0.4)' },
+          },
+        },
       },
     },
   },

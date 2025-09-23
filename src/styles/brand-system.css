@@ -1,0 +1,313 @@
+/* =====================================================================
+   QUIZFLOW BRAND SYSTEM - Componentes e Utilitários
+   ===================================================================== */
+
+/* 🎨 GRADIENTES DA MARCA */
+.gradient-primary {
+  background: var(--gradient-primary);
+}
+
+.gradient-tech {
+  background: var(--gradient-tech);
+}
+
+.gradient-hero {
+  background: var(--gradient-hero);
+}
+
+.gradient-subtle {
+  background: var(--gradient-subtle);
+}
+
+/* ✨ EFEITOS VISUAIS */
+.shadow-brand {
+  box-shadow: var(--shadow-brand);
+}
+
+.shadow-glow {
+  box-shadow: var(--shadow-glow);
+}
+
+.shadow-card {
+  box-shadow: var(--shadow-card);
+}
+
+/* 📱 GLASSMORPHISM */
+.glass {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+/* 🎯 BOTÕES DA MARCA */
+.btn-primary {
+  background: linear-gradient(135deg, hsl(var(--brand-bright-blue)), hsl(var(--brand-bright-pink)));
+  color: white;
+  font-weight: 600;
+  transform: scale(1);
+  transition: all 0.3s ease;
+  box-shadow: var(--shadow-brand);
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, hsl(var(--brand-bright-pink)), hsl(var(--brand-bright-blue)));
+  transform: scale(1.05);
+  box-shadow: var(--shadow-glow);
+}
+
+.btn-secondary {
+  background: linear-gradient(135deg, hsl(var(--brand-light-blue)), hsl(var(--brand-medium-blue)));
+  color: white;
+  font-weight: 500;
+  transform: scale(1);
+  transition: all 0.3s ease;
+  box-shadow: var(--shadow-card);
+}
+
+.btn-secondary:hover {
+  background: linear-gradient(135deg, hsl(var(--brand-medium-blue)), hsl(var(--brand-dark-blue)));
+  transform: scale(1.05);
+}
+
+.btn-outline {
+  border: 2px solid hsl(var(--brand-bright-blue));
+  color: hsl(var(--brand-bright-blue));
+  background: transparent;
+  transition: all 0.3s ease;
+}
+
+.btn-outline:hover {
+  background: hsl(var(--brand-bright-blue));
+  color: white;
+}
+
+/* 🏷️ BADGES */
+.badge-primary {
+  background: hsl(var(--brand-light-blue) / 0.2);
+  color: hsl(var(--brand-dark-blue));
+  border: 1px solid hsl(var(--brand-light-blue) / 0.3);
+  backdrop-filter: blur(4px);
+  border-radius: 9999px;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.badge-success {
+  background: rgb(220, 252, 231);
+  color: rgb(22, 101, 52);
+  border: 1px solid rgb(187, 247, 208);
+  border-radius: 9999px;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+/* 📊 MÉTRICAS E CARDS */
+.metric-card {
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  text-align: center;
+  transform: scale(1);
+  transition: all 0.3s ease;
+}
+
+.metric-card:hover {
+  transform: scale(1.05);
+  box-shadow: var(--shadow-card);
+}
+
+.metric-icon {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1rem auto;
+  background: linear-gradient(135deg, hsl(var(--brand-bright-blue)), hsl(var(--brand-light-blue)));
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  color: white;
+}
+
+.metric-value {
+  font-size: 1.875rem;
+  font-weight: 700;
+  color: hsl(var(--brand-dark-blue));
+  margin-bottom: 0.5rem;
+}
+
+.metric-label {
+  color: hsl(var(--brand-dark-blue) / 0.7);
+  font-weight: 500;
+}
+
+/* 🎪 FEATURE CARDS */
+.feature-card {
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 1rem;
+  padding: 2rem;
+  transition: all 0.3s ease;
+  transform: scale(1);
+}
+
+.feature-card:hover {
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+  transform: scale(1.05);
+}
+
+.feature-icon {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  color: white;
+}
+
+.feature-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: hsl(var(--brand-dark-blue));
+  margin-bottom: 0.75rem;
+}
+
+.feature-description {
+  color: hsl(var(--brand-dark-blue) / 0.8);
+  line-height: 1.625;
+}
+
+/* 🌊 HERO ELEMENTS */
+.hero-title {
+  font-size: clamp(2.25rem, 5vw, 3.75rem);
+  font-weight: 700;
+  color: white;
+  margin-bottom: 1.5rem;
+  line-height: 1.2;
+  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
+}
+
+.hero-subtitle {
+  font-size: 1.25rem;
+  color: white;
+  margin-bottom: 2rem;
+  max-width: 48rem;
+  margin-left: auto;
+  margin-right: auto;
+  line-height: 1.625;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+}
+
+.hero-gradient-text {
+  background: linear-gradient(135deg, hsl(var(--brand-bright-blue)), white, hsl(var(--brand-bright-pink)));
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  display: block;
+}
+
+/* 💫 SOCIAL PROOF */
+.social-proof-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(4px);
+  padding: 0.5rem 1rem;
+  border-radius: 9999px;
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* 🔥 HOVER EFFECTS */
+.hover-lift {
+  transform: scale(1);
+  transition: all 0.3s ease;
+}
+
+.hover-lift:hover {
+  transform: scale(1.05) translateY(-4px);
+}
+
+.hover-glow {
+  transition: all 0.3s ease;
+}
+
+.hover-glow:hover {
+  box-shadow: var(--shadow-glow);
+}
+
+.hover-scale {
+  transform: scale(1);
+  transition: transform 0.3s ease;
+}
+
+.hover-scale:hover {
+  transform: scale(1.05);
+}
+
+/* 📐 LAYOUT UTILITIES */
+.section-container {
+  max-width: 80rem;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+@media (min-width: 640px) {
+  .section-container {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .section-container {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+}
+
+.content-center {
+  max-width: 56rem;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+
+/* 🎨 PERFORMANCE OPTIMIZATIONS */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Optimize transforms */
+.transform-gpu {
+  transform: translateZ(0);
+  will-change: transform;
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}

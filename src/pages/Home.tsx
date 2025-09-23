@@ -229,29 +229,29 @@ const Home = () => {
         </TechBackground>
 
         {/* Métricas */}
-        <section className="py-16 bg-gradient-to-r from-white via-gray-50 to-white">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <section className="py-16 gradient-subtle">
+          <div className="section-container">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              <div className="text-center group hover:scale-105 transition-transform duration-300">
-                <div className="w-16 h-16 bg-gradient-to-r from-brand-brightBlue to-brand-lightBlue rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg group-hover:shadow-xl transition-shadow">
-                  <Target className="h-8 w-8 text-white" />
+              <div className="metric-card">
+                <div className="metric-icon">
+                  <Target className="h-8 w-8" />
                 </div>
-                <h3 className="text-3xl font-bold text-brand-darkBlue mb-2">85%</h3>
-                <p className="text-brand-darkBlue/70 font-medium">Taxa de Conversão Média</p>
+                <h3 className="metric-value">85%</h3>
+                <p className="metric-label">Taxa de Conversão Média</p>
               </div>
-              <div className="text-center group hover:scale-105 transition-transform duration-300">
-                <div className="w-16 h-16 bg-gradient-to-r from-brand-brightPink to-brand-lightBlue rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg group-hover:shadow-xl transition-shadow">
-                  <MousePointer className="h-8 w-8 text-white" />
+              <div className="metric-card">
+                <div className="metric-icon" style={{ background: 'linear-gradient(135deg, hsl(var(--brand-bright-pink)), hsl(var(--brand-light-blue)))' }}>
+                  <MousePointer className="h-8 w-8" />
                 </div>
-                <h3 className="text-3xl font-bold text-brand-darkBlue mb-2">12x</h3>
-                <p className="text-brand-darkBlue/70 font-medium">Mais Engajamento</p>
+                <h3 className="metric-value">12x</h3>
+                <p className="metric-label">Mais Engajamento</p>
               </div>
-              <div className="text-center group hover:scale-105 transition-transform duration-300">
-                <div className="w-16 h-16 bg-gradient-to-r from-brand-lightBlue to-brand-brightBlue rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg group-hover:shadow-xl transition-shadow">
-                  <Rocket className="h-8 w-8 text-white" />
+              <div className="metric-card">
+                <div className="metric-icon" style={{ background: 'linear-gradient(135deg, hsl(var(--brand-light-blue)), hsl(var(--brand-bright-blue)))' }}>
+                  <Rocket className="h-8 w-8" />
                 </div>
-                <h3 className="text-3xl font-bold text-brand-darkBlue mb-2">5min</h3>
-                <p className="text-brand-darkBlue/70 font-medium">Para Criar seu Primeiro Quiz</p>
+                <h3 className="metric-value">5min</h3>
+                <p className="metric-label">Para Criar seu Primeiro Quiz</p>
               </div>
             </div>
           </div>
@@ -259,16 +259,13 @@ const Home = () => {
 
         {/* Features */}
         <TechBackground variant="section" className="py-20 lg:py-32">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-16">
-              <h3 className="text-3xl lg:text-4xl font-bold text-white mb-4 drop-shadow-lg">
+          <div className="section-container">
+            <div className="content-center mb-16">
+              <h3 className="hero-title">
                 Tudo que você precisa para
-                <span className="bg-gradient-to-r from-brand-brightBlue via-white to-brand-brightPink bg-clip-text text-transparent">
-                  {' '}
-                  converter mais
-                </span>
+                <span className="hero-gradient-text"> converter mais</span>
               </h3>
-              <p className="text-xl text-white max-w-2xl mx-auto drop-shadow-md">
+              <p className="hero-subtitle">
                 Ferramentas poderosas e intuitivas para criar experiências que seus clientes vão
                 amar
               </p>
@@ -276,38 +273,36 @@ const Home = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {/* Feature 1 */}
-              <article className="bg-white/90 backdrop-blur-sm rounded-2xl p-8 shadow-lg border border-white/20 hover:shadow-xl transition-all duration-300 hover:scale-105">
-                <div className="w-12 h-12 bg-gradient-to-r from-brand-brightBlue to-brand-lightBlue rounded-xl flex items-center justify-center mb-6 shadow-md">
-                  <Zap className="h-6 w-6 text-white" />
+              <article className="feature-card">
+                <div className="feature-icon" style={{ background: 'linear-gradient(135deg, hsl(var(--brand-bright-blue)), hsl(var(--brand-light-blue)))' }}>
+                  <Zap className="h-6 w-6" />
                 </div>
-                <h4 className="text-xl font-semibold text-brand-darkBlue mb-3">Criação Rápida</h4>
-                <p className="text-brand-darkBlue/80 leading-relaxed">
+                <h4 className="feature-title">Criação Rápida</h4>
+                <p className="feature-description">
                   Crie quizzes profissionais em minutos com nossos templates inteligentes e editor
                   visual.
                 </p>
               </article>
 
               {/* Feature 2 */}
-              <article className="bg-white/90 backdrop-blur-sm rounded-2xl p-8 shadow-lg border border-white/20 hover:shadow-xl transition-all duration-300 hover:scale-105">
-                <div className="w-12 h-12 bg-gradient-to-r from-brand-brightPink to-brand-lightBlue rounded-xl flex items-center justify-center mb-6 shadow-md">
-                  <Target className="h-6 w-6 text-white" />
+              <article className="feature-card">
+                <div className="feature-icon" style={{ background: 'linear-gradient(135deg, hsl(var(--brand-bright-pink)), hsl(var(--brand-light-blue)))' }}>
+                  <Target className="h-6 w-6" />
                 </div>
-                <h4 className="text-xl font-semibold text-brand-darkBlue mb-3">
-                  Segmentação Inteligente
-                </h4>
-                <p className="text-brand-darkBlue/80 leading-relaxed">
+                <h4 className="feature-title">Segmentação Inteligente</h4>
+                <p className="feature-description">
                   Qualifique leads automaticamente e direcione ofertas personalizadas baseadas nas
                   respostas.
                 </p>
               </article>
 
               {/* Feature 3 */}
-              <article className="bg-white/90 backdrop-blur-sm rounded-2xl p-8 shadow-lg border border-white/20 hover:shadow-xl transition-all duration-300 hover:scale-105">
-                <div className="w-12 h-12 bg-gradient-to-r from-brand-lightBlue to-brand-brightBlue rounded-xl flex items-center justify-center mb-6 shadow-md">
-                  <TrendingUp className="h-6 w-6 text-white" />
+              <article className="feature-card">
+                <div className="feature-icon" style={{ background: 'linear-gradient(135deg, hsl(var(--brand-light-blue)), hsl(var(--brand-bright-blue)))' }}>
+                  <TrendingUp className="h-6 w-6" />
                 </div>
-                <h4 className="text-xl font-semibold text-brand-darkBlue mb-3">Analytics Avançado</h4>
-                <p className="text-brand-darkBlue/80 leading-relaxed">
+                <h4 className="feature-title">Analytics Avançado</h4>
+                <p className="feature-description">
                   Acompanhe métricas detalhadas e otimize suas campanhas com insights em tempo real.
                 </p>
               </article>
@@ -317,15 +312,13 @@ const Home = () => {
 
         {/* CTA Final */}
         <TechBackground variant="section" className="py-20 lg:py-32">
-          <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
-            <h3 className="text-3xl lg:text-4xl font-bold text-white mb-6 drop-shadow-lg">
+          <div className="content-center">
+            <h3 className="hero-title">
               Pronto para{' '}
-              <span className="bg-gradient-to-r from-brand-brightBlue via-white to-brand-brightPink bg-clip-text text-transparent">
-                revolucionar
-              </span>{' '}
+              <span className="hero-gradient-text">revolucionar</span>{' '}
               suas vendas?
             </h3>
-            <p className="text-xl text-white mb-8 max-w-2xl mx-auto drop-shadow-md">
+            <p className="hero-subtitle">
               Junte-se a milhares de empreendedores que já transformaram seus negócios com o
               QuizFlow Pro
             </p>

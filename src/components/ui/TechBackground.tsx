@@ -14,13 +14,13 @@ const TechBackground: React.FC<TechBackgroundProps> = ({
   const getBackgroundClasses = () => {
     switch (variant) {
       case 'hero':
-        return 'bg-gradient-to-br from-slate-900 via-brand-darkBlue to-brand-mediumBlue';
+        return 'gradient-tech';
       case 'section':
-        return 'bg-gradient-to-r from-brand-mediumBlue/95 via-brand-darkBlue/90 to-slate-900/95';
+        return 'bg-gradient-to-r from-brand-mediumBlue/95 via-brand-darkBlue/90 to-brand-darkBlue/85';
       case 'minimal':
-        return 'bg-gradient-to-br from-brand-lightBlue/10 via-background to-brand-brightBlue/5';
+        return 'gradient-subtle';
       default:
-        return 'bg-gradient-to-br from-slate-900 via-brand-darkBlue to-brand-mediumBlue';
+        return 'gradient-tech';
     }
   };
 
