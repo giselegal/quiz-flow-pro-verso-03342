@@ -245,7 +245,6 @@ export const SingleEditorEntry: React.FC<SingleEditorEntryProps> = (props) => {
                   isOptimizing: false,
                   currentTemplate: undefined
                 }}>
-                
                   {/* 🚀 BUILDER SYSTEM TOOLBAR - ENHANCED FASE 2 */}
                   <div className="builder-system-header">
                     <BuilderSystemToolbar 
