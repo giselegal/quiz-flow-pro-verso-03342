@@ -14,7 +14,6 @@ import { LoadingFallback } from './components/ui/loading-fallback';
 import { Toaster } from './components/ui/toaster';
 import { AuthProvider } from './context/AuthContext';
 import { FunnelsProvider } from './context/FunnelsContext';
-import { performanceManager } from './utils/performanceManager';
 import { RedirectRoute } from './components/RedirectRoute';
 import { QuizErrorBoundary } from './components/RouteErrorBoundary';
 
