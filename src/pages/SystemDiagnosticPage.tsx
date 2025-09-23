@@ -270,8 +270,85 @@ const SystemDiagnosticPage: React.FC = () => {
                                 fontSize: '16px'
                             }}
                         >
-                            🔄 Recarregar
-                        </button>
+                        🔄 Recarregar
+                    </button>
+                    
+                    {/* 🚀 NAVEGAÇÃO PARA EDITOR FUNCIONAL */}
+                    <div style={{
+                        marginTop: '2rem',
+                        padding: '2rem',
+                        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                        borderRadius: '12px',
+                        textAlign: 'center',
+                        color: 'white',
+                        boxShadow: '0 8px 32px rgba(102, 126, 234, 0.3)'
+                    }}>
+                        <h2 style={{ margin: '0 0 1rem 0', fontSize: '24px' }}>🎯 Editor Funcional Ativo!</h2>
+                        <p style={{ margin: '0 0 1.5rem 0', opacity: 0.9, fontSize: '16px' }}>
+                            Gargalos críticos resolvidos! Builder System com 21 etapas funcionais
+                        </p>
+                        
+                        <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
+                            <button
+                                onClick={() => window.location.href = '/editor'}
+                                style={{
+                                    padding: '14px 28px',
+                                    background: '#10B981',
+                                    color: 'white',
+                                    border: 'none',
+                                    borderRadius: '8px',
+                                    fontSize: '16px',
+                                    fontWeight: 'bold',
+                                    cursor: 'pointer',
+                                    boxShadow: '0 4px 16px rgba(16, 185, 129, 0.4)',
+                                    transition: 'all 0.3s ease'
+                                }}
+                            >
+                                🎯 Testar Editor Principal
+                            </button>
+                            
+                            <button
+                                onClick={() => window.location.href = '/editor-modular'}
+                                style={{
+                                    padding: '14px 28px',
+                                    background: '#8B5CF6',
+                                    color: 'white',
+                                    border: 'none',
+                                    borderRadius: '8px',
+                                    fontSize: '16px',
+                                    fontWeight: 'bold',
+                                    cursor: 'pointer',
+                                    boxShadow: '0 4px 16px rgba(139, 92, 246, 0.4)',
+                                    transition: 'all 0.3s ease'
+                                }}
+                            >
+                                🔧 Editor Modular Pro
+                            </button>
+                        </div>
+                        
+                        <div style={{ 
+                            marginTop: '1.5rem', 
+                            fontSize: '14px', 
+                            opacity: 0.9,
+                            display: 'flex',
+                            justifyContent: 'center',
+                            gap: '2rem',
+                            flexWrap: 'wrap'
+                        }}>
+                            <span style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                                ✅ 21 Etapas Funcionais
+                            </span>
+                            <span style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                                🤖 IA Templates Ativa
+                            </span>
+                            <span style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                                🔄 Drag & Drop
+                            </span>
+                            <span style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                                📊 Analytics Builder
+                            </span>
+                        </div>
+                    </div>
                     </div>
                 </div>
             </div>
