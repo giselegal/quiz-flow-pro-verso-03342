@@ -83,31 +83,70 @@ const EditorCanvas: React.FC<EditorCanvasProps> = ({
   );
 };
 
-// 🚀 OTIMIZAÇÃO: Comparação inteligente para evitar re-renders desnecessários
+// 🚀 OTIMIZAÇÃO AVANÇADA: Comparação profunda para eliminar re-renders desnecessários
 const arePropsEqual = (prevProps: EditorCanvasProps, nextProps: EditorCanvasProps): boolean => {
-  // Se mudou o step ou mode, re-render
-  if (prevProps.currentStep !== nextProps.currentStep || prevProps.isPreviewMode !== nextProps.isPreviewMode) {
+  // 1. Comparações rápidas primeiro (early returns)
+  if (prevProps.currentStep !== nextProps.currentStep ||
+    prevProps.isPreviewMode !== nextProps.isPreviewMode) {
     return false;
   }
 
-  // Se mudou o selectedBlock ID, re-render
+  // 2. Comparar selectedBlock
   if (prevProps.selectedBlock?.id !== nextProps.selectedBlock?.id) {
     return false;
   }
 
-  // Se mudou o número ou ordem de blocos, re-render
+  // 3. Comparar handlers (referência de função pode mudar)
+  if (prevProps.onSelectBlock !== nextProps.onSelectBlock ||
+    prevProps.onUpdateBlock !== nextProps.onUpdateBlock ||
+    prevProps.onDeleteBlock !== nextProps.onDeleteBlock ||
+    prevProps.onStepChange !== nextProps.onStepChange) {
+    return false;
+  }
+
+  // 4. Comparação inteligente de blocos
   if (prevProps.blocks.length !== nextProps.blocks.length) {
     return false;
   }
 
-  // Comparação rápida de IDs dos blocos (sem comparar todo o content)
+  // 5. ✅ NOVA OTIMIZAÇÃO: Comparação profunda de conteúdo dos blocos
   for (let i = 0; i < prevProps.blocks.length; i++) {
-    if (prevProps.blocks[i].id !== nextProps.blocks[i].id) {
+    const prevBlock: Block = prevProps.blocks[i];
+    const nextBlock: Block = nextProps.blocks[i];
+
+    // Comparar ID, type e propriedades essenciais
+    if (prevBlock.id !== nextBlock.id ||
+      prevBlock.type !== nextBlock.type ||
+      prevBlock.position !== nextBlock.position) {
+      return false;
+    }
+
+    // ✅ Comparação shallow de propriedades críticas (sem deep comparison custosa)
+    const prevBlockProps = prevBlock.properties || {};
+    const nextBlockProps = nextBlock.properties || {};
+
+    if (Object.keys(prevBlockProps).length !== Object.keys(nextBlockProps).length) {
+      return false;
+    }
+
+    // Comparar apenas propriedades visuais que afetam renderização
+    const visualProps = ['text', 'content', 'backgroundColor', 'textColor', 'fontSize', 'padding', 'margin', 'visible'];
+    for (const prop of visualProps) {
+      if (prevBlockProps[prop] !== nextBlockProps[prop]) {
+        return false;
+      }
+    }
+
+    // Comparação shallow de content
+    const prevContent = prevBlock.content || {};
+    const nextContent = nextBlock.content || {};
+
+    if (JSON.stringify(prevContent) !== JSON.stringify(nextContent)) {
       return false;
     }
   }
 
-  return true; // Props são equivalentes, não re-render
+  return true; // Props são realmente equivalentes, evitar re-render
 };
 
 EditorCanvas.displayName = 'EditorCanvas';

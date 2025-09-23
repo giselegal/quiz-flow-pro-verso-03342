@@ -16,32 +16,49 @@ interface UseStepSelectionProps {
 export const useStepSelection = ({
   stepNumber,
   onSelectBlock,
-  debounceMs = 25 // ✅ OTIMIZAÇÃO: Reduzido de 50ms para 25ms para melhor responsividade
+  debounceMs = 100 // ✅ OTIMIZAÇÃO: Aumentado para 100ms para melhor performance (menos calls)
 }: UseStepSelectionProps) => {
   const { debounce } = useOptimizedScheduler();
   const lastSelectedRef = useRef<string | null>(null);
-  const lastSelectionTimeRef = useRef<number>(0); // ✅ OTIMIZAÇÃO: Timestamp da última seleção
+  const lastSelectionTimeRef = useRef<number>(0);
 
-  // Handler otimizado com debounce e deduplicação aprimorada
+  // ✅ NOVA OTIMIZAÇÃO: Cache para evitar string concatenation repetida
+  const stepKeyRef = useRef<string>('');
+  if (stepKeyRef.current !== `step-${stepNumber}-selection`) {
+    stepKeyRef.current = `step-${stepNumber}-selection`;
+  }
+
+  // Handler super otimizado com múltiplas camadas de deduplicação
   const handleBlockSelection = useCallback((blockId: string) => {
-    const now = performance.now();
+    // ✅ OTIMIZAÇÃO 1: Early return sem performance.now() custoso
+    if (lastSelectedRef.current === blockId) {
+      return; // Mesma seleção, skip completamente
+    }
 
-    // ✅ OTIMIZAÇÃO: Early return mais eficiente
-    // Evita seleções redundantes e chamadas muito próximas (< 50ms)
-    if (lastSelectedRef.current === blockId &&
-      now - lastSelectionTimeRef.current < 50) {
-      return;
+    // ✅ OTIMIZAÇÃO 2: Usar Date.now() ao invés de performance.now() (mais rápido)
+    const now = Date.now();
+
+    // ✅ OTIMIZAÇÃO 3: Threshold aumentado para 150ms (mais eficiente)
+    if (now - lastSelectionTimeRef.current < 150) {
+      // Muito rápido, provavelmente click/drag múltiplo - debounce mais agressivo
+      lastSelectedRef.current = blockId;
+      lastSelectionTimeRef.current = now;
+
+      const cleanup = debounce(
+        stepKeyRef.current,
+        () => onSelectBlock(blockId),
+        debounceMs + 50 // Debounce extra para clicks rápidos
+      );
+      return cleanup;
     }
 
     lastSelectedRef.current = blockId;
     lastSelectionTimeRef.current = now;
 
-    // Debounce para evitar multiple calls durante drag/click rápido
+    // ✅ OTIMIZAÇÃO 4: Usar chave cached para evitar concatenation
     const cleanup = debounce(
-      `step-${stepNumber}-selection`,
-      () => {
-        onSelectBlock(blockId);
-      },
+      stepKeyRef.current,
+      () => onSelectBlock(blockId),
       debounceMs
     );
 

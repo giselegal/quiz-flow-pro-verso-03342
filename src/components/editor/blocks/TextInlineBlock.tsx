@@ -507,7 +507,7 @@ const TextInlineBlock: React.FC<BlockComponentProps> = ({
 };
 
 // ES7+ Export com default + named exports para flexibilidade
-export default TextInlineBlock;
+// Component ends here - export will be at the end with React.memo
 
 // ES7+ Type exports para reutilização
 export type { BlockComponentProps };
@@ -536,3 +536,25 @@ export const createTextBlock = (
     ...options,
   },
 });
+
+// ✅ OTIMIZAÇÃO: Adicionar memoização para melhor performance
+const areEqual = (prevProps: BlockComponentProps, nextProps: BlockComponentProps) => {
+  // Comparar ID do bloco
+  if (prevProps.block?.id !== nextProps.block?.id) return false;
+  if (prevProps.isSelected !== nextProps.isSelected) return false;
+
+  // Comparar propriedades que afetam renderização visual
+  const prevProps_ = prevProps.block?.properties || {};
+  const nextProps_ = nextProps.block?.properties || {};
+
+  const visualProps = ['content', 'fontSize', 'fontWeight', 'textAlign', 'color', 'backgroundColor',
+    'maxWidth', 'useUsername', 'marginTop', 'marginBottom', 'lineHeight'];
+
+  for (const prop of visualProps) {
+    if (prevProps_[prop] !== nextProps_[prop]) return false;
+  }
+
+  return true;
+};
+
+export default React.memo(TextInlineBlock, areEqual);

@@ -5,8 +5,7 @@ import UniversalBlockRenderer from '@/components/editor/blocks/UniversalBlockRen
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { GripVertical, Trash2 } from 'lucide-react';
-import React from 'react';
-import { generateUniqueId } from '@/utils/generateUniqueId';
+import React, { useMemo } from 'react';
 import { useStepSelection } from '@/hooks/useStepSelection';
 import { useCanvasContainerStyles } from '@/hooks/useCanvasContainerStyles';
 
@@ -31,7 +30,26 @@ const SortableBlockWrapperBase: React.FC<SortableBlockWrapperProps> = ({
   // Hook para aplicar estilos dinâmicos
   useCanvasContainerStyles();
 
-  // Make block draggable for reordering
+  // ✅ OTIMIZAÇÃO: Memoizar IDs estáveis para evitar recreação no useSortable
+  const stableSortableId = useMemo(() => {
+    return `sortable-${scopeId ?? 'default'}-${block.id}-block`;
+  }, [scopeId, block.id]);
+
+  // ✅ OTIMIZAÇÃO: Memoizar data structure para evitar recreação
+  const sortableData = useMemo(() => ({
+    type: 'canvas-block' as const,
+    blockId: String(block.id),
+    blockType: block.type, // Cached block type
+    scopeId: scopeId ?? 'default',
+    // ✅ Não passar objeto block inteiro - apenas propriedades essenciais
+    position: block.position,
+    properties: {
+      // Apenas propriedades essenciais para drag
+      visible: block.properties?.visible ?? true,
+    }
+  }), [block.id, block.type, block.position, block.properties?.visible, scopeId]);
+
+  // Make block draggable for reordering - agora com IDs estáveis
   const {
     attributes,
     listeners,
@@ -40,42 +58,39 @@ const SortableBlockWrapperBase: React.FC<SortableBlockWrapperProps> = ({
     transition,
     isDragging,
   } = useSortable({
-    id: generateUniqueId({
-      stepNumber: scopeId ?? 'default',
-      blockId: String(block.id),
-      type: 'block'
-    }),
-    data: {
-      type: 'canvas-block',
-      blockId: String(block.id), // Required by validateDrop
-      block: block,
-      scopeId: scopeId ?? 'default',
-    },
+    id: stableSortableId,
+    data: sortableData,
   });
 
-  // Combine refs (somente sortable; useSortable já registra droppable internamente na SortableContext)
-  const setNodeRef = (node: HTMLElement | null) => {
+  // ✅ OTIMIZAÇÃO: Memoizar setNodeRef para evitar recreação
+  const setNodeRef = useMemo(() => (node: HTMLElement | null) => {
     setSortableRef(node);
-  };
+  }, [setSortableRef]);
 
-  // Style configuration for draggable element
-  const style = {
+  // ✅ OTIMIZAÇÃO: Memoizar style object para evitar recreação desnecessária
+  const style = useMemo(() => ({
     transform: CSS.Transform.toString(transform),
     transition,
     opacity: isDragging ? 0.5 : 1,
-    zIndex: isDragging ? 50 : 'auto',
-  };
+    zIndex: isDragging ? 50 : ('auto' as const),
+  }), [transform, transition, isDragging]);
 
-  // Seleção centralizada com debounce por etapa
-  const numericStep = typeof scopeId === 'number' ? scopeId : Number(scopeId) || 0;
+  // ✅ OTIMIZAÇÃO: Memoizar cálculo de step numérico
+  const numericStep = useMemo(() =>
+    typeof scopeId === 'number' ? scopeId : Number(scopeId) || 0
+    , [scopeId]);
+
+  // ✅ OTIMIZAÇÃO: Memoizar onSelect callback para evitar recreação
+  const onSelectCallback = useMemo(() => () => onSelect(), [onSelect]);
+
   const { handleBlockSelection } = useStepSelection({
     stepNumber: numericStep,
-    onSelectBlock: () => onSelect(),
+    onSelectBlock: onSelectCallback,
     debounceMs: 50,
   });
 
-  // Um único handler no capture para garantir seleção estável
-  const handlePointerDownCapture = (e: React.PointerEvent) => {
+  // ✅ OTIMIZAÇÃO: Memoizar handler para evitar recreação constante
+  const handlePointerDownCapture = useMemo(() => (e: React.PointerEvent) => {
     // Só botão principal e sem modificadores
     if (e.button !== 0 || e.ctrlKey || e.metaKey || e.shiftKey || e.altKey) return;
     const target = e.target as HTMLElement | null;
@@ -102,7 +117,7 @@ const SortableBlockWrapperBase: React.FC<SortableBlockWrapperProps> = ({
     }
     // Selecionar sempre (inclusive quando clicar em áreas não interativas)
     handleBlockSelection(String(block.id));
-  };
+  }, [numericStep, block.id, scopeId, handleBlockSelection]);
 
   // Fallback adicional: garantir seleção também em onClick (debounce do hook evita duplicidade)
   const handleClick = (e: React.MouseEvent) => {

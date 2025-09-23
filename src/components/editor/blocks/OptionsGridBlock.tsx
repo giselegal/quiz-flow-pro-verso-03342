@@ -981,4 +981,30 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
   );
 };
 
-export default OptionsGridBlock;
+// ✅ OTIMIZAÇÃO: Adicionar memoização para evitar re-renders desnecessários
+const areEqual = (prevProps: OptionsGridBlockProps, nextProps: OptionsGridBlockProps) => {
+  // Comparar propriedades essenciais que afetam renderização
+  if (prevProps.block?.id !== nextProps.block?.id) return false;
+
+  // Comparar propriedades críticas
+  const prevProps_ = prevProps.properties || {};
+  const nextProps_ = nextProps.properties || {};
+
+  // Comparação type-safe das propriedades críticas
+  if (prevProps_.question !== nextProps_.question) return false;
+  if (prevProps_.questionId !== nextProps_.questionId) return false;
+  if (prevProps_.columns !== nextProps_.columns) return false;
+  if (prevProps_.selectedOption !== nextProps_.selectedOption) return false;
+  if (prevProps_.multipleSelection !== nextProps_.multipleSelection) return false;
+  if (prevProps_.maxSelections !== nextProps_.maxSelections) return false;
+  if (prevProps_.showImages !== nextProps_.showImages) return false;
+  if (prevProps_.imageSize !== nextProps_.imageSize) return false;
+
+  // Comparação de arrays (options, selectedOptions)
+  if (JSON.stringify(prevProps_.options) !== JSON.stringify(nextProps_.options)) return false;
+  if (JSON.stringify(prevProps_.selectedOptions) !== JSON.stringify(nextProps_.selectedOptions)) return false;
+
+  return true;
+};
+
+export default React.memo(OptionsGridBlock, areEqual);

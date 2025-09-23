@@ -1,4 +1,4 @@
-import React, { memo, useCallback } from 'react';
+import React, { memo, useMemo } from 'react';
 import { cn } from '@/lib/utils';
 import { Block } from '@/types/editor';
 import QuizIntroHeaderBlock from './QuizIntroHeaderBlock';
@@ -66,6 +66,11 @@ const BlockComponentRegistry: Record<string, React.FC<any>> = {
   'container': createFallbackComponent('container'),
 };
 
+// ✅ OTIMIZAÇÃO: Cachear registry lookup para evitar lookup a cada render
+const useBlockComponent = (blockType: string) => {
+  return useMemo(() => BlockComponentRegistry[blockType], [blockType]);
+};
+
 const UniversalBlockRenderer: React.FC<UniversalBlockRendererProps> = memo(({
   block,
   isSelected = false,
@@ -77,18 +82,21 @@ const UniversalBlockRenderer: React.FC<UniversalBlockRendererProps> = memo(({
   style,
   onClick,
 }) => {
-  const BlockComponent = BlockComponentRegistry[block.type];
+  // ✅ OTIMIZAÇÃO: Usar hook cacheado ao invés de lookup direto
+  const BlockComponent = useBlockComponent(block.type);
 
-  const handleUpdate = useCallback((updates: any) => {
-    onUpdate?.(block.id, updates);
-  }, [block.id, onUpdate]);
+  // ✅ OTIMIZAÇÃO: Memoizar handlers com dependências estáveis
+  const handleUpdate = useMemo(() =>
+    onUpdate ? (updates: any) => onUpdate(block.id, updates) : undefined
+    , [block.id, onUpdate]);
 
-  const handleClick = useCallback(() => {
+  const handleClick = useMemo(() => {
     if (onSelect) {
-      onSelect(block.id);
+      return () => onSelect(block.id);
     } else if (onClick) {
-      onClick();
+      return onClick;
     }
+    return undefined;
   }, [block.id, onSelect, onClick]);
 
   if (!BlockComponent) {
