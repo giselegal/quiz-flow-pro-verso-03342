@@ -1,0 +1,28 @@
+# Redirects para SPA - Netlify _redirects
+# API routes primeiro
+/api/*  /.netlify/functions/:splat  200
+
+# Admin routes
+/admin/*  /index.html  200
+/dashboard*  /index.html  200
+
+# Auth
+/auth*  /index.html  200
+
+# Editor routes
+/editor/*  /index.html  200
+
+# Legacy editor redirects
+/editor-pro*  /editor  301
+/editor-modular*  /editor  301
+/editor-v1*  /editor  301
+/editor-fixed*  /editor  301
+
+# Other routes
+/templates*  /index.html  200
+/quiz-estilo*  /index.html  200
+/resultado*  /index.html  200
+/diagnostics*  /index.html  200
+
+# Fallback - sempre por último
+/*  /index.html  200

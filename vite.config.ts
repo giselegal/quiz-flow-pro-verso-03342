@@ -27,6 +27,9 @@ export default defineConfig({
       'Access-Control-Allow-Headers': '*',
       'Permissions-Policy': 'camera=(), microphone=(), geolocation=()',
     },
+    // 🚀 Configuração para SPA - fallback para index.html
+    middlewareMode: false,
+    proxy: {},
   },
   preview: {
     host: '0.0.0.0',
@@ -36,6 +39,8 @@ export default defineConfig({
       'Access-Control-Allow-Origin': '*',
       'Permissions-Policy': 'camera=(), microphone=(), geolocation=()',
     },
+    // 🚀 Configuração para SPA no preview também
+    strictPort: true,
   },
   publicDir: 'public',
   assetsInclude: ['**/*.json'],
