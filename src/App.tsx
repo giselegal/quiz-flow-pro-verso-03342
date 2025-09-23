@@ -77,7 +77,7 @@ const ComponentTestPage = lazy(() => import('./pages/ComponentTestPage'));
 // 🎯 VERSÃO ESTÁVEL: ModularEditorPro com QuizRenderer
 const ModularEditorProStable = lazy(() => import('./components/editor/EditorPro/components/ModularEditorProStable'));
 
-// Loading component
+import { SingleEditorEntry } from '@/components/editor/SingleEditorEntry';
 const PageLoading = () => (
   <div className="min-h-screen flex items-center justify-center">
     <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary"></div>
@@ -142,24 +142,12 @@ function App() {
 
                 {/* 🚀 EDITOR UNIFICADO - TODAS AS ROTAS REDIRECIONAM PARA AQUI */}
 
-                {/* Rota principal do editor */}
-                <Route path="/editor/:funnelId?" component={({ params }: { params: { funnelId?: string } }) => {
-                  console.log('🎯 Rota /editor unificada ativada:', params);
-                  return (
-                    <div className="h-screen w-screen">
-                      <Suspense fallback={
-                        <div className="flex items-center justify-center min-h-screen bg-background">
-                          <div className="text-center">
-                            <div className="w-16 h-16 mx-auto mb-4 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
-                            <p className="text-foreground text-lg font-medium">Carregando Editor Unificado...</p>
-                          </div>
-                        </div>
-                      }>
-                        <ModernUnifiedEditor funnelId={params.funnelId} />
-                      </Suspense>
-                    </div>
-                  );
-                }} />
+// Update App.tsx routes to use SingleEditorEntry
+<Route path="/editor/:funnelId?" component={({ params }: { params: { funnelId?: string } }) => (
+  <Suspense fallback={<LoadingFallback />}>
+    <SingleEditorEntry funnelId={params.funnelId} />
+  </Suspense>
+)} />
 
                 {/* Redirecionamentos para o editor unificado */}
                 <Route path="/editor-pro/:funnelId?" component={({ params }: { params: { funnelId?: string } }) => {
