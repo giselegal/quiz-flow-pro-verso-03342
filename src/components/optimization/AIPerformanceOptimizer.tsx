@@ -15,15 +15,15 @@ import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Switch } from '@/components/ui/switch';
 import { 
+  TrendingUp, 
+  Activity, 
   Zap, 
   Brain, 
-  Target, 
-  Activity,
-  Settings,
-  CheckCircle,
   AlertTriangle,
-  TrendingUp,
-  Cpu,
+  CheckCircle,
+  Target,
+  Gauge,
+  Settings,
   MemoryStick
 } from 'lucide-react';
 import { usePerformanceMonitor } from '@/hooks/usePerformanceMonitor';

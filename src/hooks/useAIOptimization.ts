@@ -93,14 +93,9 @@ export const useAIOptimization = (options: UseAIOptimizationOptions = {}) => {
   const [behaviorPatterns, setBehaviorPatterns] = useState<UserBehaviorPattern[]>([]);
   
   const analysisTimeoutRef = useRef<NodeJS.Timeout>();
-  const behaviorCollectorRef = useRef<any[]>([]);
 
   // 📊 COLETAR MÉTRICAS CONSOLIDADAS
   const collectMetrics = useCallback((): PerformanceMetrics => {
-    // Combinar métricas do performance monitor com métricas calculadas
-    const currentTime = performance.now();
-    const memory = (performance as any).memory;
-    
     return {
       renderTime: perfMetrics.renderCount * 0.5 + Math.random() * 8,
       memoryUsage: perfMetrics.memoryUsage,

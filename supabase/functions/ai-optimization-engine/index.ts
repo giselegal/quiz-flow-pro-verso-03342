@@ -1,10 +1,3 @@
-/**
- * 🧠 AI OPTIMIZATION ENGINE - SUPABASE EDGE FUNCTION
- * 
- * Edge Function que utiliza GPT-5 para gerar otimizações inteligentes
- * baseadas em métricas de performance e padrões de uso do editor
- */
-
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 
@@ -195,7 +188,7 @@ Please provide 3-5 specific optimization recommendations in JSON format with the
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
 
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error in AI optimization engine:', error);
     
     // 🔄 FALLBACK COM RECOMENDAÇÕES BÁSICAS
