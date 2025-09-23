@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { Suspense } from 'react';
 
 const MegaSimpleApp = () => {

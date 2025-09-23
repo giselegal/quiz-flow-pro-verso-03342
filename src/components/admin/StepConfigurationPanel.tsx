@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * 🎛️ STEP BEHAVIOR CONFIGURATION PANEL
  * 

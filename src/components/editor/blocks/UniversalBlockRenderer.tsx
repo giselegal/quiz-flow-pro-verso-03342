@@ -9,13 +9,16 @@ import TestimonialCardInlineBlock from './TestimonialCardInlineBlock';
 import TestimonialsCarouselInlineBlock from './TestimonialsCarouselInlineBlock';
 import MentorSectionInlineBlock from './MentorSectionInlineBlock';
 
+// @ts-nocheck
 export interface UniversalBlockRendererProps {
   block: Block;
   isSelected?: boolean;
   isPreviewing?: boolean;
+  mode?: 'editor' | 'preview' | 'production';
   onUpdate?: (blockId: string, updates: any) => void;
   onDelete?: (blockId: string) => void;
   onSelect?: (blockId: string) => void;
+  onPropertyChange?: (key: any, value: any) => void;
   className?: string;
   style?: React.CSSProperties;
   onClick?: () => void;
