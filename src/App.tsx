@@ -8,6 +8,7 @@
  */
 
 import { Suspense, lazy, useEffect } from 'react';
+import React from 'react';
 import { Route, Router, Switch } from 'wouter';
 import { ThemeProvider } from './components/theme-provider';
 import { LoadingFallback } from './components/ui/loading-fallback';
@@ -75,6 +76,11 @@ function App() {
                 {/* 🎨 PÁGINA DE TEMPLATES */}
                 <Route path="/templates">
                   <TemplatesPage />
+                </Route>
+
+                {/* 🎨 EDITOR DE TEMPLATES AVANÇADO */}
+                <Route path="/editor/templates">
+                  {React.lazy(() => import('./pages/editor-templates/index'))}
                 </Route>
 
                 <Route path="/editor-pro">

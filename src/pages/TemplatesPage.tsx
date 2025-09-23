@@ -21,49 +21,43 @@ import {
     Palette,
     Settings
 } from 'lucide-react';
+import { getUnifiedTemplates } from '@/config/unifiedTemplatesRegistry';
 
-// Template registry
-const AVAILABLE_TEMPLATES = [
-    {
-        id: 'quiz-estilo-completo',
-        name: 'Quiz de Estilo Pessoal',
-        description: 'Quiz completo de 21 etapas para descobrir estilo pessoal',
-        category: 'Quiz',
-        steps: 21,
-        icon: Sparkles,
-        color: 'bg-purple-500',
-        popular: true
-    },
-    {
-        id: 'quiz-personalidade',
-        name: 'Quiz de Personalidade',
-        description: 'Descubra traços de personalidade únicos',
-        category: 'Quiz',
-        steps: 15,
-        icon: Users,
-        color: 'bg-blue-500'
-    },
-    {
-        id: 'funil-21-etapas',
-        name: 'Funil de Conversão',
-        description: 'Funil otimizado para alta conversão',
-        category: 'Funil',
-        steps: 21,
-        icon: TrendingUp,
-        color: 'bg-green-500'
-    },
-    {
-        id: 'template-blank',
-        name: 'Template Vazio',
-        description: 'Comece do zero com total liberdade',
-        category: 'Básico',
-        steps: 1,
-        icon: FileText,
-        color: 'bg-gray-500'
-    }
-];
+// Mapeamento de ícones para categorias
+const CATEGORY_ICONS: Record<string, any> = {
+    'quiz-complete': Sparkles,
+    'quiz-express': Users,
+    'quiz-style': Palette,
+    'personal-branding': Users,
+    'lead-magnet': TrendingUp,
+    'webinar': FileText,
+    'ecommerce': Settings,
+    'default': FileText
+};
 
-const CATEGORIES = ['Todos', 'Quiz', 'Funil', 'Básico'];
+const CATEGORY_COLORS: Record<string, string> = {
+    'quiz-complete': 'bg-purple-500',
+    'quiz-express': 'bg-blue-500',
+    'quiz-style': 'bg-pink-500',
+    'personal-branding': 'bg-orange-500',
+    'lead-magnet': 'bg-green-500',
+    'webinar': 'bg-yellow-500',
+    'ecommerce': 'bg-red-500',
+    'default': 'bg-gray-500'
+};
+
+// Template vazio especial
+const BLANK_TEMPLATE = {
+    id: 'template-blank',
+    name: 'Template Vazio',
+    description: 'Comece do zero com total liberdade',
+    category: 'Básico',
+    stepCount: 1,
+    icon: FileText,
+    color: 'bg-gray-500',
+    isOfficial: true,
+    popular: false
+};
 
 interface TemplatesPageProps {
     onTemplateSelect?: (templateId: string, funnelName?: string) => void;
@@ -75,7 +69,33 @@ const TemplatesPage: React.FC<TemplatesPageProps> = ({ onTemplateSelect }) => {
     const [newFunnelName, setNewFunnelName] = useState('');
     const [isDialogOpen, setIsDialogOpen] = useState(false);
 
-    const filteredTemplates = AVAILABLE_TEMPLATES.filter(template => 
+    // Carregar templates do registry unificado
+    const unifiedTemplates = getUnifiedTemplates();
+    
+    // Converter para formato compatível e adicionar template vazio
+    const availableTemplates = [
+        ...unifiedTemplates.map(template => ({
+            id: template.id,
+            name: template.name,
+            description: template.description,
+            category: template.category,
+            steps: template.stepCount, // Usar 'steps' como propriedade padrão
+            icon: CATEGORY_ICONS[template.category] || CATEGORY_ICONS.default,
+            color: CATEGORY_COLORS[template.category] || CATEGORY_COLORS.default,
+            popular: template.usageCount > 1000,
+            isOfficial: template.isOfficial
+        })),
+        {
+            ...BLANK_TEMPLATE,
+            steps: 1 // Garantir que usa a mesma propriedade
+        }
+    ];
+
+    // Extrair categorias dinâmicas dos templates
+    const dynamicCategories = Array.from(new Set(unifiedTemplates.map(t => t.category)));
+    const categories = ['Todos', ...dynamicCategories, 'Básico'];
+
+    const filteredTemplates = availableTemplates.filter(template => 
         selectedCategory === 'Todos' || template.category === selectedCategory
     );
 
@@ -118,7 +138,7 @@ const TemplatesPage: React.FC<TemplatesPageProps> = ({ onTemplateSelect }) => {
                 {/* Category Filter */}
                 <div className="flex justify-center mb-8">
                     <div className="flex gap-2 p-1 bg-background rounded-lg border">
-                        {CATEGORIES.map((category) => (
+                        {categories.map((category: string) => (
                             <Button
                                 key={category}
                                 variant={selectedCategory === category ? 'default' : 'ghost'}
@@ -153,9 +173,9 @@ const TemplatesPage: React.FC<TemplatesPageProps> = ({ onTemplateSelect }) => {
                                                     Popular
                                                 </Badge>
                                             )}
-                                            <Badge variant="outline">
+                                             <Badge variant="outline">
                                                 {template.steps} etapas
-                                            </Badge>
+                                             </Badge>
                                         </div>
                                     </div>
                                     <CardTitle className="group-hover:text-primary transition-colors">
@@ -189,6 +209,15 @@ const TemplatesPage: React.FC<TemplatesPageProps> = ({ onTemplateSelect }) => {
                     >
                         <Plus className="h-5 w-5" />
                         Criar Funil Vazio
+                    </Button>
+                    <Button 
+                        size="lg" 
+                        variant="outline"
+                        onClick={() => setLocation('/editor/templates')}
+                        className="flex items-center gap-2"
+                    >
+                        <Sparkles className="h-5 w-5" />
+                        Templates Avançados
                     </Button>
                     <Button 
                         size="lg" 
