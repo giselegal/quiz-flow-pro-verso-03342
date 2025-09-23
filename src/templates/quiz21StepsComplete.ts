@@ -2928,6 +2928,77 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = IS_TEST ? M
         iconColor: '#3B82F6',
       },
     },
+    // 🤖 BLOCO DE IA - GERAÇÃO DE LOOKS PERSONALIZADOS
+    {
+      id: 'step20-ai-fashion-generator',
+      type: 'fashion-ai-generator',
+      order: 5.5,
+      content: {
+        title: '✨ Seus looks personalizados com IA',
+        subtitle: 'Baseado no seu estilo {resultStyle}, nossa IA criou looks exclusivos para você',
+        description: 'Veja como aplicar seu estilo na prática com sugestões personalizadas',
+        loadingMessage: 'Gerando seus looks personalizados... 🎨',
+        errorMessage: 'Ops! Não conseguimos gerar as imagens agora. Tente novamente em alguns minutos.',
+      },
+      properties: {
+        // Configuração da IA
+        styleType: '{resultStyle}', // Interpola o resultado calculado
+        generateOnLoad: true,
+        autoGenerate: true,
+
+        // Provedores de IA (em ordem de prioridade)
+        providers: ['dalle3', 'gemini', 'stable-diffusion'],
+        fallbackProvider: 'gemini',
+
+        // Configurações visuais
+        backgroundColor: '#F8FAFC',
+        borderRadius: 16,
+        padding: 24,
+        marginBottom: 24,
+
+        // Configurações de geração
+        imageCount: 3,
+        imageSize: 'large', // 512x512
+        showColorPalette: true,
+        showStyleTips: true,
+
+        // Configurações de exibição
+        layout: 'grid', // grid | carousel
+        columns: 3,
+        spacing: 16,
+        showLoadingState: true,
+        showErrorState: true,
+
+        // Configurações avançadas
+        cacheResults: true,
+        retryAttempts: 2,
+        timeout: 30000, // 30 segundos
+
+        // Prompts personalizados por estilo
+        stylePrompts: {
+          natural: 'Casual comfortable outfit, earth tones, natural fabrics, relaxed fit, minimalist accessories',
+          classico: 'Classic elegant outfit, timeless pieces, neutral colors, structured blazer, quality materials',
+          contemporaneo: 'Modern contemporary outfit, current trends, practical pieces, clean lines, urban style',
+          elegante: 'Sophisticated elegant outfit, luxury materials, refined details, impeccable fit, premium quality',
+          romantico: 'Romantic feminine outfit, soft fabrics, delicate details, pastel colors, flowing silhouettes',
+          sexy: 'Sensual confident outfit, body-conscious fit, bold colors, strategic cutouts, elegant sensuality',
+          dramatico: 'Dramatic statement outfit, bold pieces, strong contrasts, geometric shapes, urban edge',
+          criativo: 'Creative unique outfit, bold patterns, vibrant colors, unconventional combinations, artistic flair'
+        },
+
+        // Configurações de cores por estilo
+        colorPalettes: {
+          natural: ['#8B7355', '#A0956B', '#E6D7C3', '#F5F0E8'],
+          classico: ['#2C3E50', '#34495E', '#BDC3C7', '#ECF0F1'],
+          contemporaneo: ['#ffffffff', '#2ECC71', '#95A5A6', '#F8F9FA'],
+          elegante: ['#1A1A1A', '#8B4513', '#D4AF37', '#FFFEF7'],
+          romantico: ['#FF69B4', '#FFB6C1', '#E6E6FA', '#FFF0F5'],
+          sexy: ['#DC143C', '#8B0000', '#000000', '#FFFFFF'],
+          dramatico: ['#000000', '#FF0000', '#FFFFFF', '#C0C0C0'],
+          criativo: ['#FF4500', '#32CD32', '#FF1493', '#FFD700']
+        }
+      },
+    },
     {
       id: 'step20-secondary-styles',
       type: 'secondary-styles',
