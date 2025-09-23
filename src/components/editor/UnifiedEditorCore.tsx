@@ -22,7 +22,7 @@ import { logger } from '@/utils/debugLogger';
 // 🎯 LAZY LOADED COMPONENTS (código splitting inteligente)
 const EditorToolbar = React.lazy(() => import('@/components/editor/toolbar/EditorToolbar').then(m => ({ default: m.EditorToolbar })));
 const StepSidebar = React.lazy(() => import('@/components/editor/sidebars/StepSidebar'));
-const ComponentsSidebar = React.lazy(() => import('@/components/editor/sidebars/ComponentsSidebar'));
+const UnifiedComponentsPanel = React.lazy(() => import('@/components/editor/panels/UnifiedComponentsPanel'));
 const CanvasDropZone = React.lazy(() => import('@/components/editor/canvas/CanvasDropZone.simple'));
 const UltraUnifiedPropertiesPanel = React.lazy(() => import('@/components/editor/properties/UltraUnifiedPropertiesPanel'));
 
@@ -113,9 +113,12 @@ const ModeRenderer: React.FC<{
               {/* Sidebar Esquerda - Componentes */}
               <div className="w-64 border-r border-border bg-card">
                 <Suspense fallback={<ComponentLoadingFallback name="Componentes" />}>
-                  <ComponentsSidebar 
-                    groupedComponents={{}}
-                    renderIcon={() => null}
+                  <UnifiedComponentsPanel 
+                    onAddComponent={(componentId, metadata) => {
+                      // Handle component addition
+                      console.log('Adding component:', componentId, metadata);
+                    }}
+                    compactMode={true}
                   />
                 </Suspense>
               </div>
