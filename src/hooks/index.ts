@@ -18,7 +18,7 @@
 // 🔥 NEW: Unified Core System (single source of truth)
 export {
   useUnifiedEditor,
-  useEditor, // Legacy compatibility
+  // Note: useEditor legacy export removed - use EditorProvider.useEditor instead
 } from './core/useUnifiedEditor';
 
 // 🔥 NEW: Optimized Data Management

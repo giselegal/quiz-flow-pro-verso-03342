@@ -210,7 +210,7 @@ export const useBundleOptimizer = (budget: Partial<PerformanceBudget> = {}) => {
 };
 
 // 🎯 SMART COMPONENT LOADER
-export const createSmartLoader = <T,>(
+export const createSmartLoader = (
   componentPath: string,
   fallbackPath?: string
 ) => {

@@ -11,7 +11,9 @@
 
 import { useState, useCallback, useMemo } from 'react';
 import { styleMapping, type StyleId } from '@/data/styles';
-import { QUIZ_STEPS, STEP_ORDER, STRATEGIC_ANSWER_TO_OFFER_KEY } from '@/data/quizSteps';
+import { QUIZ_STEPS, STEP_ORDER } from '@/data/quizSteps';
+// Note: STRATEGIC_ANSWER_TO_OFFER_KEY commented - not used
+// import { STRATEGIC_ANSWER_TO_OFFER_KEY } from '@/data/quizSteps';
 
 // Tipos do estado do quiz
 export interface QuizScores {

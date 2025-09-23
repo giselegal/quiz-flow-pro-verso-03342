@@ -28,7 +28,7 @@ export type {
 // Hooks
 export { useQuiz } from './hooks/useQuiz';
 export { useFunnel } from './hooks/useFunnel';
-export { useEditor } from './hooks/useEditor';
+// Note: useEditor now available from @/components/editor/EditorProvider
 
 export type {
   UseQuizState,
@@ -40,10 +40,7 @@ export type {
   UseFunnelActions
 } from './hooks/useFunnel';
 
-export type {
-  UseEditorState,
-  UseEditorActions
-} from './hooks/useEditor';
+// Note: UseEditor types removed - use EditorProvider types instead
 
 // Utility Functions
 export const createQuizFromTemplate = async (templateId: string, newName: string) => {

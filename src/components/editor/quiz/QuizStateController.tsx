@@ -84,7 +84,8 @@ export const QuizFlowController: React.FC<QuizFlowControllerProps> = ({
     }
   }, []);
 
-  const { updateState } = useQuizState();
+  const quizState = useQuizState();
+  // Note: updateState removed - use specific actions from quizState instead
   const {
     navigationState,
     goToStep,
@@ -106,12 +107,13 @@ export const QuizFlowController: React.FC<QuizFlowControllerProps> = ({
 
   // Sync with quiz state
   useEffect(() => {
-    updateState({
-      currentStep: currentStepNumber,
-    progress: (currentStepNumber / totalSteps) * 100,
-    isCompleted: currentStepNumber >= totalSteps,
-    });
-  }, [currentStepNumber, userAnswers, currentStep, totalSteps, updateState]);
+    // TODO: Replace updateState with specific actions from useQuizState
+    // updateState({
+    //   currentStep: currentStepNumber,
+    //   progress: (currentStepNumber / totalSteps) * 100,
+    //   isCompleted: currentStepNumber >= totalSteps,
+    // });
+  }, [currentStepNumber, userAnswers, currentStep, totalSteps]);
 
   const setAnswer = useCallback((stepId: string, optionIds: string[]) => {
     setUserAnswers(prev => ({

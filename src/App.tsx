@@ -8,7 +8,7 @@ import { AuthProvider } from './context/AuthContext';
 import { FunnelsProvider } from './context/FunnelsContext';
 import { performanceManager } from './utils/performanceManager';
 import { RedirectRoute } from './components/RedirectRoute';
-import { QuizErrorBoundary, EditorErrorBoundary } from './components/RouteErrorBoundary';
+import { QuizErrorBoundary } from './components/RouteErrorBoundary';
 
 const EditorTemplatesPage = lazy(() => import('./pages/editor-templates'));
 const ComQueRoupaEuVouPage = lazy(() => import('./pages/ComQueRoupaEuVouPage'));

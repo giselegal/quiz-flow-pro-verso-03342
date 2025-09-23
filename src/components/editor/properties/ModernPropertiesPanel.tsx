@@ -399,7 +399,7 @@ export const ModernPropertiesPanel: React.FC<ModernPropertiesPanelProps> = ({
   onDelete,
   onDuplicate
 }) => {
-  const { updateBlock, deleteBlock } = useEditor();
+  const { actions } = useEditor();
 
   // Descobrir propriedades usando sistema existente
   const discoveredProperties = React.useMemo(() => {
@@ -479,9 +479,11 @@ export const ModernPropertiesPanel: React.FC<ModernPropertiesPanelProps> = ({
     if (onUpdate) {
       onUpdate(finalUpdates);
     } else {
-      updateBlock(selectedBlock.id, finalUpdates);
+      // EditorProvider requires stepKey and blockId
+      const currentStepKey = `step-1`; // TODO: Get from state
+      actions.updateBlock(currentStepKey, selectedBlock.id, finalUpdates);
     }
-  }, [selectedBlock, updateBlock, onUpdate]);
+  }, [selectedBlock, actions, onUpdate]);
 
   // Atualização em lote (usado pelo Quick Panel)
   const handleBatchUpdate = React.useCallback((updates: Record<string, any>) => {
@@ -518,9 +520,11 @@ export const ModernPropertiesPanel: React.FC<ModernPropertiesPanelProps> = ({
     if (onUpdate) {
       onUpdate(finalUpdates);
     } else {
-      updateBlock(selectedBlock.id, finalUpdates);
+      // EditorProvider requires stepKey and blockId
+      const currentStepKey = `step-1`; // TODO: Get from state
+      actions.updateBlock(currentStepKey, selectedBlock.id, finalUpdates);
     }
-  }, [selectedBlock, onUpdate, updateBlock]);
+  }, [selectedBlock, onUpdate, actions]);
 
   if (!selectedBlock) {
     return (
@@ -659,7 +663,13 @@ export const ModernPropertiesPanel: React.FC<ModernPropertiesPanelProps> = ({
               className="w-full"
               onClick={() => {
                 if (selectedBlock) {
-                  onDelete?.() || deleteBlock(selectedBlock.id);
+                  if (onDelete) {
+                    onDelete();
+                  } else {
+                    // EditorProvider requires stepKey and blockId
+                    const currentStepKey = `step-1`; // TODO: Get from state
+                    actions.removeBlock(currentStepKey, selectedBlock.id);
+                  }
                 }
               }}
             >
