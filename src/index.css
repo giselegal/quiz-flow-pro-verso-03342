@@ -8,10 +8,10 @@
 @import "./styles/canvas-performance.css";
 @import "./styles/imageOptimization.css";
 @import './styles/mobile-responsive-fixes.css';
+@import './styles/brand-system.css';
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-@import './styles/brand-system.css';
 
 /* Utilitário de largura consistente para coluna/canvas/componentes */
 @layer utilities {

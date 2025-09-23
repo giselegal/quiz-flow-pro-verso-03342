@@ -5,4 +5,6 @@
  * de conteúdo personalizado baseado no resultado do quiz.
  */
 
-export type { default as FashionAIGeneratorBlock } from './FashionAIGeneratorBlock';
+import FashionAIGeneratorBlockComponent from './FashionAIGeneratorBlock';
+
+export const FashionAIGeneratorBlock = FashionAIGeneratorBlockComponent;
