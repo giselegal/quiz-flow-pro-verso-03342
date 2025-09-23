@@ -1,6 +1,6 @@
 import React from 'react';
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/components/ui/resizable';
-import { useEditor } from '@/hooks/useEditor';
+import { useEditor } from '@/components/editor/EditorProvider';
 import { StyleResult } from '@/types/quiz';
 import ComponentsSidebar from '../components/ComponentsSidebar';
 import { PreviewPanel } from './PreviewPanel';
@@ -11,8 +11,10 @@ interface ResultPageBuilderProps {
 }
 
 export const ResultPageBuilder: React.FC<ResultPageBuilderProps> = ({ primaryStyle }) => {
-  const { addBlock, updateBlock, deleteBlock } = useEditor();
+  const { actions, state } = useEditor();
   const [selectedComponent, setSelectedComponent] = React.useState<string | null>(null);
+
+  const currentStepKey = `step-${state.currentStep}`;
 
   return (
     <div className="h-screen flex flex-col overflow-hidden">
@@ -24,9 +26,16 @@ export const ResultPageBuilder: React.FC<ResultPageBuilderProps> = ({ primarySty
         {/* Left Sidebar - Components */}
         <ResizablePanel defaultSize={20} minSize={15} maxSize={25}>
           <ComponentsSidebar
-            onComponentSelect={(type: string) => {
-              const newId = addBlock(type);
-              setSelectedComponent(newId);
+            onComponentSelect={async (type: string) => {
+              const newBlock = {
+                id: `result-${Date.now()}`,
+                type: type as any,
+                content: {},
+                properties: {},
+                order: 0
+              };
+              await actions.addBlock(currentStepKey, newBlock);
+              setSelectedComponent(newBlock.id);
             }}
           />
         </ResizablePanel>
@@ -51,12 +60,12 @@ export const ResultPageBuilder: React.FC<ResultPageBuilderProps> = ({ primarySty
             onClose={() => setSelectedComponent(null)}
             onUpdate={content => {
               if (selectedComponent) {
-                updateBlock(selectedComponent, content);
+                actions.updateBlock(currentStepKey, selectedComponent, content);
               }
             }}
             onDelete={() => {
               if (selectedComponent) {
-                deleteBlock(selectedComponent);
+                actions.removeBlock(currentStepKey, selectedComponent);
                 setSelectedComponent(null);
               }
             }}

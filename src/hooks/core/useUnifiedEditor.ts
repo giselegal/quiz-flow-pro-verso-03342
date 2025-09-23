@@ -537,21 +537,21 @@ export const useUnifiedEditor = (): UnifiedEditorReturn => {
     deleteFunnel: async () => false, // TODO: Implement
 
     addStage,
-    updateStage: async () => {}, // TODO: Implement
-    deleteStage: async () => {}, // TODO: Implement
-    reorderStages: async () => {}, // TODO: Implement
+    updateStage: async () => { }, // TODO: Implement
+    deleteStage: async () => { }, // TODO: Implement
+    reorderStages: async () => { }, // TODO: Implement
     setActiveStage,
 
     addBlock,
     updateBlock,
-    deleteBlock: async () => {}, // TODO: Implement
+    deleteBlock: async () => { }, // TODO: Implement
     duplicateBlock: async () => '', // TODO: Implement
-    reorderBlocks: async () => {}, // TODO: Implement
+    reorderBlocks: async () => { }, // TODO: Implement
     setSelectedBlock,
 
-    updateBlockProperty: async () => {}, // TODO: Implement
-    updateBlockProperties: async () => {}, // TODO: Implement
-    resetBlockProperties: async () => {}, // TODO: Implement
+    updateBlockProperty: async () => { }, // TODO: Implement
+    updateBlockProperties: async () => { }, // TODO: Implement
+    resetBlockProperties: async () => { }, // TODO: Implement
 
     setIsPreviewing: (value: boolean) => setState(prev => ({ ...prev, isPreviewing: value })),
     setError: (error: string | null) => setState(prev => ({ ...prev, error })),
@@ -568,45 +568,9 @@ export const useUnifiedEditor = (): UnifiedEditorReturn => {
 };
 
 // =============================================================================
-// BACKWARD COMPATIBILITY EXPORTS
+// BACKWARD COMPATIBILITY EXPORTS - REMOVED FOR CONSOLIDATION
 // =============================================================================
-
-/**
- * Legacy useEditor hook for backward compatibility
- * @deprecated Use useUnifiedEditor instead
- */
-export const useEditor = (): any => {
-  const unified = useUnifiedEditor();
-
-  console.warn('useEditor is deprecated. Use useUnifiedEditor instead.');
-
-  return unified.legacy;
-};
-
-/**
- * Legacy useConsolidatedEditor hook for backward compatibility
- * @deprecated Use useUnifiedEditor instead
- */
-export const useConsolidatedEditor = (): any => {
-  const unified = useUnifiedEditor();
-
-  console.warn('useConsolidatedEditor is deprecated. Use useUnifiedEditor instead.');
-
-  return {
-    blocks: unified.activeBlocks,
-    addBlock: unified.legacy.addBlock,
-    updateBlock: unified.legacy.updateBlock,
-    deleteBlock: unified.legacy.deleteBlock,
-    stages: unified.funnel?.stages || [],
-    activeStageId: unified.activeStageId || '',
-    selectedBlockId: unified.selectedBlockId,
-    setActiveStage: unified.setActiveStage,
-    setSelectedBlock: unified.setSelectedBlock,
-    isSaving: unified.isSaving,
-    saveFunnel: unified.saveFunnel,
-    isPreviewing: unified.isPreviewing,
-    setIsPreviewing: unified.setIsPreviewing,
-  };
-};
+// Note: All legacy hooks now use EditorProvider.useEditor directly
+// Note: All legacy hooks now use EditorProvider.useEditor directly
 
 export default useUnifiedEditor;

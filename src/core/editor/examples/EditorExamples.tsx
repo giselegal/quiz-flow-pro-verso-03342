@@ -348,8 +348,10 @@ export class SupabaseFunnelDataProvider implements EditorDataProvider {
 // ============================================================================
 // HOOK PARA USAR O EDITOR
 // ============================================================================
+// NOTE: Example useEditor function renamed to avoid conflicts with EditorProvider.useEditor
+// ============================================================================
 
-export interface UseEditorOptions {
+export interface UseEditorExampleOptions {
     funnelId?: string;
     initialData?: EditorFunnelData;
     provider: 'mock' | 'supabase' | 'localStorage';
@@ -357,7 +359,7 @@ export interface UseEditorOptions {
     config?: Partial<EditorConfig>;
 }
 
-export function useEditor(options: UseEditorOptions) {
+export function useEditorExample(options: UseEditorExampleOptions) {
     const [isReady, setIsReady] = React.useState(false);
     const [dataProvider, setDataProvider] = React.useState<EditorDataProvider | null>(null);
     const [validator, setValidator] = React.useState<any>(null);

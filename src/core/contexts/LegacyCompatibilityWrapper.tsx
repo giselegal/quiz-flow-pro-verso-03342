@@ -89,76 +89,10 @@ const LegacyBridgeProvider: React.FC<{ children: ReactNode; enableWarnings: bool
 };
 
 // ====================
-// LEGACY HOOKS BRIDGE
+// LEGACY HOOKS BRIDGE - REMOVED FOR CONSOLIDATION  
 // ====================
-
-/**
- * Legacy useEditor hook - versão simplificada que funciona
- */
-export const useEditor = (): SimplifiedLegacyEditorContext => {
-    const { unifiedContext, enableWarnings } = useContext(LegacyBridgeContext);
-
-    if (enableWarnings) {
-        console.warn(
-            '⚠️ useEditor is deprecated. Please migrate to useUnifiedContext.\n' +
-            'Migration guide available in docs/MIGRATION_GUIDE.md'
-        );
-    }
-
-    if (!unifiedContext) {
-        console.error('useEditor called outside UnifiedContextProvider. Returning safe fallback.');
-        return createSafeFallback();
-    }
-
-    // Bridge simplificado que funciona com estrutura atual
-    return {
-        state: {
-            currentStep: 1, // Temporary fallback
-            stepBlocks: {}, // Temporary fallback
-            isDirty: unifiedContext.persistence.lastSaved === null,
-        },
-        blockActions: {
-            addBlock: async (type: string, _properties: any = {}) => {
-                // Use legacy compatibility from useUnifiedEditor
-                return unifiedContext.editor.legacy.addBlock(type);
-            },
-            updateBlock: unifiedContext.editor.legacy.updateBlock,
-            deleteBlock: unifiedContext.editor.legacy.deleteBlock,
-        },
-        persistenceActions: {
-            save: unifiedContext.save,
-        },
-        uiState: {
-            activePanel: unifiedContext.ui.activePanel,
-            sidebarOpen: unifiedContext.ui.sidebarOpen,
-        },
-    };
-};
-
-/**
- * Fallback seguro quando fora do contexto
- */
-function createSafeFallback(): SimplifiedLegacyEditorContext {
-    return {
-        state: {
-            currentStep: 1,
-            stepBlocks: {},
-            isDirty: false,
-        },
-        blockActions: {
-            addBlock: async () => 'fallback-block-id',
-            updateBlock: async () => { },
-            deleteBlock: async () => { },
-        },
-        persistenceActions: {
-            save: async () => ({ success: false, error: 'No context available' }),
-        },
-        uiState: {
-            activePanel: 'components',
-            sidebarOpen: false,
-        },
-    };
-}
+// Note: Legacy hooks now use EditorProvider.useEditor directly
+// Note: Legacy hooks now use EditorProvider.useEditor directly
 
 // ====================
 // MIGRATION UTILITIES

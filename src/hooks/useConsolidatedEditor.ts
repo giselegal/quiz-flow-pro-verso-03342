@@ -172,46 +172,6 @@ export const useUnifiedEditor = (): ConsolidatedEditorReturn => {
   };
 };
 
-/**
- * @deprecated Use useUnifiedEditor instead
- * This is kept for backward compatibility during migration
- */
-export const useEditor = (): Partial<ConsolidatedEditorReturn> => {
-  console.warn('useEditor is deprecated. Use useUnifiedEditor instead.');
-
-  try {
-    return useUnifiedEditor();
-  } catch (error) {
-    // Fallback to simple editor if EditorContext is not available
-    console.warn('EditorContext not available, using fallback editor');
-
-    // Simple fallback implementation
-    const blocks: Block[] = [];
-
-    return {
-      blocks,
-      config: { blocks, title: 'Editor', description: '' },
-      addBlock: async (_type: string) => {
-        console.warn('Fallback addBlock called');
-        return `block-${Date.now()}`;
-      },
-      updateBlock: async () => {
-        console.warn('Fallback updateBlock called');
-      },
-      deleteBlock: async () => {
-        console.warn('Fallback deleteBlock called');
-      },
-      reorderBlocks: async () => {
-        console.warn('Fallback reorderBlocks called');
-      },
-      setAllBlocks: () => {
-        console.warn('Fallback setAllBlocks called');
-      },
-      clearAllBlocks: () => {
-        console.warn('Fallback clearAllBlocks called');
-      },
-    };
-  }
-};
+// Note: Legacy useEditor export removed - use EditorProvider.useEditor instead
 
 export default useUnifiedEditor;
