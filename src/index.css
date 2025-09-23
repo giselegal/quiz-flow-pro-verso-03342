@@ -367,11 +367,11 @@ img:hover,
     --brand-bright-blue: 195 100% 50%;   /* #00BFFF */
     --brand-bright-pink: 300 100% 50%;   /* #FF00FF */
     
-    /* Clean White Support Colors */
-    --brand-primary: 0 0% 100%;          /* #FFFFFF */
-    --brand-dark: 0 0% 100%;            /* #FFFFFF */
-    --brand-background: 0 0% 100%;      /* #FFFFFF */
-    --brand-text: 0 0% 20%;             /* #333333 */
+    /* Earthy Support Colors */
+    --brand-primary: 33 42% 63%;         /* #b89b7a */
+    --brand-dark: 30 40% 18%;           /* #432818 */
+    --brand-background: 44 32% 97%;     /* #FAF9F7 */
+    --brand-text: 30 40% 18%;           /* #432818 */
     --brand-muted: 213 9% 62%;          /* #9CA3AF */
 
     /* Gradients */
