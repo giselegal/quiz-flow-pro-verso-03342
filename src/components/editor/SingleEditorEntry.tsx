@@ -18,7 +18,7 @@
 
 import React, { Suspense, useMemo } from 'react';
 import { useLocation } from 'wouter';
-import { ConsolidatedEditorProvider } from './ConsolidatedEditorProvider';
+import { StateConsolidationManager } from './StateConsolidationManager';
 import { UnifiedEditorCore } from './UnifiedEditorCore';
 import { ErrorBoundary } from './ErrorBoundary';
 import { PerformanceMonitorProvider } from './optimization/PerformanceMonitor';
@@ -27,6 +27,7 @@ import { BuilderSystemPanel } from './panels/BuilderSystemPanel';
 import { BuilderSystemToolbar } from './toolbar/BuilderSystemToolbar';
 import { UnifiedDndProvider } from './dnd/UnifiedDndProvider';
 import { TemplatesMarketplace } from './templates/TemplatesMarketplace';
+import { BuilderSystemProvider } from '@/hooks/useBuilderSystemProvider';
 import { logger } from '@/utils/debugLogger';
 
 export interface SingleEditorEntryProps {
@@ -213,51 +214,81 @@ export const SingleEditorEntry: React.FC<SingleEditorEntryProps> = (props) => {
             }}
           >
             <ErrorBoundary>
-              <ConsolidatedEditorProvider {...providerConfig}>
+              <StateConsolidationManager 
+                funnelId={providerConfig.funnelId}
+                preferConsolidated={true}
+                enableMigration={true}
+                debug={providerConfig.debug}
+              >
+                <BuilderSystemProvider value={{
+                  generateQuiz: async (prompt: string) => {
+                    console.log('🤖 Generate quiz:', prompt);
+                    return null;
+                  },
+                  optimizeFunnel: async () => {
+                    console.log('⚡ Optimize funnel');
+                  },
+                  improveWithAI: async () => {
+                    console.log('🚀 Improve with AI');
+                    return null;
+                  },
+                  applyTemplate: async (templateId: string) => {
+                    console.log('🎨 Apply template:', templateId);
+                  },
+                  saveAsTemplate: async (name: string) => {
+                    console.log('💾 Save as template:', name);
+                  },
+                  quickOptimize: () => handleBuilderSystemAction('optimize'),
+                  quickValidate: () => handleBuilderSystemAction('validate'),
+                  quickPreview: () => handleBuilderSystemAction('preview'),
+                  isGenerating: false,
+                  isOptimizing: false,
+                  currentTemplate: undefined
+                }}>
                 
-                {/* 🚀 BUILDER SYSTEM TOOLBAR - ENHANCED FASE 2 */}
-                <div className="builder-system-header">
-                  <BuilderSystemToolbar 
-                    onQuickAction={handleBuilderSystemAction}
-                    onModeChange={(mode) => logger.info('🔄 Mode changed:', mode)}
-                    className="border-b"
-                  />
-                </div>
-
-                {/* 🎯 MAIN EDITOR LAYOUT WITH UNIFIED DND */}
-                <div className="flex h-[calc(100vh-60px)]">
-                  
-                  {/* 🎨 ENHANCED BUILDER SYSTEM PANEL */}
-                  <div className="w-80 border-r bg-muted/5 overflow-y-auto">
-                    <BuilderSystemPanel 
-                      onQuizGenerated={(result) => {
-                        logger.info('🎯 Quiz gerado via Builder System (Fase 2):', result);
-                      }}
+                  {/* 🚀 BUILDER SYSTEM TOOLBAR - ENHANCED FASE 2 */}
+                  <div className="builder-system-header">
+                    <BuilderSystemToolbar 
+                      onQuickAction={handleBuilderSystemAction}
+                      onModeChange={(mode) => logger.info('🔄 Mode changed:', mode)}
+                      className="border-b"
                     />
                   </div>
 
-                  {/* 🎯 CORE EDITOR WITH UNIFIED DND */}
-                  <div className="flex-1 flex flex-col">
-                    <Suspense fallback={<LoadingFallback />}>
-                      <UnifiedEditorCore {...coreConfig} />
-                    </Suspense>
-                  </div>
-
-                  {/* 🎨 TEMPLATES MARKETPLACE SIDEBAR */}
-                  <div className="w-96 border-l bg-muted/5 overflow-y-auto">
-                    <div className="p-4">
-                      <h3 className="font-semibold mb-4">Templates Marketplace</h3>
-                      <TemplatesMarketplace 
-                        onApplyTemplate={(template) => {
-                          logger.info('🎨 Template aplicado do Marketplace:', template);
+                  {/* 🎯 MAIN EDITOR LAYOUT WITH UNIFIED DND */}
+                  <div className="flex h-[calc(100vh-60px)]">
+                    
+                    {/* 🎨 ENHANCED BUILDER SYSTEM PANEL */}
+                    <div className="w-80 border-r bg-muted/5 overflow-y-auto">
+                      <BuilderSystemPanel 
+                        onQuizGenerated={(result) => {
+                          logger.info('🎯 Quiz gerado via Builder System (Fase 2):', result);
                         }}
-                        className="scale-90 origin-top-left w-[111%]"
                       />
                     </div>
+
+                    {/* 🎯 CORE EDITOR WITH UNIFIED DND */}
+                    <div className="flex-1 flex flex-col">
+                      <Suspense fallback={<LoadingFallback />}>
+                        <UnifiedEditorCore {...coreConfig} />
+                      </Suspense>
+                    </div>
+
+                    {/* 🎨 TEMPLATES MARKETPLACE SIDEBAR */}
+                    <div className="w-96 border-l bg-muted/5 overflow-y-auto">
+                      <div className="p-4">
+                        <h3 className="font-semibold mb-4">Templates Marketplace</h3>
+                        <TemplatesMarketplace 
+                          onApplyTemplate={(template) => {
+                            logger.info('🎨 Template aplicado do Marketplace:', template);
+                          }}
+                          className="scale-90 origin-top-left w-[111%]"
+                        />
+                      </div>
+                    </div>
                   </div>
-                </div>
-                
-              </ConsolidatedEditorProvider>
+                </BuilderSystemProvider>
+              </StateConsolidationManager>
             </ErrorBoundary>
           </UnifiedDndProvider>
           

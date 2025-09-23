@@ -16,7 +16,7 @@
  */
 
 import React, { Suspense, useMemo, useCallback } from 'react';
-import { useConsolidatedEditor } from './ConsolidatedEditorProvider';
+import { useUnifiedEditor } from './StateConsolidationManager';
 import { logger } from '@/utils/debugLogger';
 
 // 🎯 LAZY LOADED COMPONENTS (código splitting inteligente)
@@ -75,7 +75,7 @@ const ModeRenderer: React.FC<{
   mode: 'visual' | 'headless' | 'production' | 'funnel';
   funnelId?: string;
 }> = ({ mode, funnelId }) => {
-  const { state, actions } = useConsolidatedEditor();
+  const { state, actions } = useUnifiedEditor();
 
   const renderModeContent = useCallback(() => {
     switch (mode) {
@@ -245,7 +245,7 @@ export const UnifiedEditorCore: React.FC<UnifiedEditorCoreProps> = ({
   initialStep = 1,
   className = 'h-full w-full'
 }) => {
-  const { state, actions } = useConsolidatedEditor();
+  const { state, actions } = useUnifiedEditor();
 
   // 🎯 INITIALIZE STEP ON MOUNT
   React.useEffect(() => {

@@ -253,7 +253,10 @@ export const ConsolidatedEditorProvider: React.FC<ConsolidatedEditorProviderProp
   const ensureStepLoaded = useCallback(async (step: number | string) => {
     const stepNum = typeof step === 'string' ? parseInt(step.replace('step-', '')) : step;
     
-    if (state.loadedSteps.has(stepNum)) {
+    // 🔧 CORREÇÃO CRÍTICA: Garantir que loadedSteps é sempre um Set
+    const loadedStepsSet = state.loadedSteps instanceof Set ? state.loadedSteps : new Set(Array.isArray(state.loadedSteps) ? state.loadedSteps : [1]);
+    
+    if (loadedStepsSet.has(stepNum)) {
       return; // Already loaded
     }
 
@@ -275,22 +278,32 @@ export const ConsolidatedEditorProvider: React.FC<ConsolidatedEditorProviderProp
             ? templateBlocks.filter((block): block is Block => block && typeof block === 'object')
             : [];
           
-          setState(prev => ({
-            ...prev,
-            stepBlocks: {
-              ...prev.stepBlocks,
-              [stepKey]: normalizedBlocks
-            },
-            loadedSteps: new Set([...prev.loadedSteps, stepNum]),
-            isLoading: false
-          }));
+          setState(prev => {
+            // 🔧 CORREÇÃO CRÍTICA: Garantir que prev.loadedSteps é sempre um Set
+            const currentLoadedSteps = prev.loadedSteps instanceof Set ? prev.loadedSteps : new Set(Array.isArray(prev.loadedSteps) ? prev.loadedSteps : [1]);
+            
+            return {
+              ...prev,
+              stepBlocks: {
+                ...prev.stepBlocks,
+                [stepKey]: normalizedBlocks
+              },
+              loadedSteps: new Set([...currentLoadedSteps, stepNum]),
+              isLoading: false
+            };
+          });
         }
       } else {
-        setState(prev => ({
-          ...prev,
-          loadedSteps: new Set([...prev.loadedSteps, stepNum]),
-          isLoading: false
-        }));
+        setState(prev => {
+          // 🔧 CORREÇÃO CRÍTICA: Garantir que prev.loadedSteps é sempre um Set
+          const currentLoadedSteps = prev.loadedSteps instanceof Set ? prev.loadedSteps : new Set(Array.isArray(prev.loadedSteps) ? prev.loadedSteps : [1]);
+          
+          return {
+            ...prev,
+            loadedSteps: new Set([...currentLoadedSteps, stepNum]),
+            isLoading: false
+          };
+        });
       }
     } catch (error) {
       logger.error('Erro ao carregar step:', error);
@@ -315,12 +328,16 @@ export const ConsolidatedEditorProvider: React.FC<ConsolidatedEditorProviderProp
       state.currentStep + 1
     ].filter(s => s >= 1 && s <= 21));
 
-    const stepsToRemove = [...state.loadedSteps].filter(step => !keepSteps.has(step));
+    // 🔧 CORREÇÃO CRÍTICA: Garantir que state.loadedSteps é sempre um Set
+    const loadedStepsSet = state.loadedSteps instanceof Set ? state.loadedSteps : new Set(Array.isArray(state.loadedSteps) ? state.loadedSteps : [1]);
+    const stepsToRemove = [...loadedStepsSet].filter(step => !keepSteps.has(step));
     
     if (stepsToRemove.length > 0) {
       setState(prev => {
         const newStepBlocks = { ...prev.stepBlocks };
-        const newLoadedSteps = new Set(prev.loadedSteps);
+        // 🔧 CORREÇÃO CRÍTICA: Garantir que prev.loadedSteps é sempre um Set
+        const currentLoadedSteps = prev.loadedSteps instanceof Set ? prev.loadedSteps : new Set(Array.isArray(prev.loadedSteps) ? prev.loadedSteps : [1]);
+        const newLoadedSteps = new Set(currentLoadedSteps);
         
         stepsToRemove.forEach(step => {
           delete newStepBlocks[`step-${step}`];
