@@ -12,32 +12,8 @@ import { UnifiedContextProvider, useUnifiedContext, UnifiedContextValue } from '
 // LEGACY CONTEXT BRIDGE
 // ====================
 
-interface SimplifiedLegacyEditorContext {
-    // Estado básico
-    state: {
-        currentStep: number;
-        stepBlocks: Record<string, any[]>;
-        isDirty: boolean;
-    };
-
-    // Ações do editor
-    blockActions: {
-        addBlock: (type: string, properties?: any) => Promise<string>;
-        updateBlock: (blockId: string, updates: any) => Promise<void>;
-        deleteBlock: (blockId: string) => Promise<void>;
-    };
-
-    // Ações de persistência
-    persistenceActions: {
-        save: () => Promise<{ success: boolean; error?: string }>;
-    };
-
-    // Estado da UI básico
-    uiState: {
-        activePanel: string;
-        sidebarOpen: boolean;
-    };
-}
+// Note: SimplifiedLegacyEditorContext removed - interface was unused
+// Legacy compatibility is handled directly through UnifiedContextValue
 
 // Context para bridge
 const LegacyBridgeContext = createContext<{

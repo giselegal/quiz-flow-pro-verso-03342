@@ -7,7 +7,8 @@
 
 import React, { Suspense, useState, useEffect } from 'react';
 import { CleanArchitectureProvider, useFeatureFlags } from '@/providers/CleanArchitectureProvider';
-import { useEditor, useQuiz, useFunnel } from '@/application';
+import { useQuiz, useFunnel } from '@/application';
+import { useEditor } from '@/components/editor/EditorProvider';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { cn } from '@/lib/utils';
 import { Block } from '@/core/domains';
