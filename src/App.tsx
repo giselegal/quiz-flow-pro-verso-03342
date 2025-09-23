@@ -57,11 +57,17 @@ function App() {
                   </div>
                 </Route>
 
-                 {/* 🎯 EDITOR - REDIRECIONA PARA TEMPLATES QUANDO VAZIO */}
+                {/* 🎯 EDITOR - REDIRECIONA PARA TEMPLATES QUANDO VAZIO */}
                 <Route path="/editor" nest>
                   <Route path="/">
                     <RedirectRoute to="/editor/templates" />
                   </Route>
+
+                  {/* 🤖 QUIZ COM IA - ROTA ESPECIAL */}
+                  <Route path="/quiz-ai-21-steps">
+                    {React.lazy(() => import('./pages/QuizAIPage'))}
+                  </Route>
+
                   <Route path="/:funnelId">
                     {(params) => (
                       <QuizErrorBoundary>
