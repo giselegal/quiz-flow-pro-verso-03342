@@ -79,7 +79,7 @@ const Home = () => {
                         {user.name?.charAt(0) || user.email.charAt(0)}
                       </span>
                     </div>
-                    <span className="text-sm font-medium text-brand-darkBlue">
+                    <span className="text-sm font-medium text-gray-700">
                       {user.name || user.email}
                     </span>
                   </div>
@@ -100,7 +100,7 @@ const Home = () => {
                   <Button
                     onClick={logout}
                     variant="outline"
-                    className="border-brand-lightBlue text-brand-darkBlue hover:bg-brand-lightBlue/10"
+                    className="border-brand-lightBlue text-gray-700 hover:bg-brand-lightBlue/10"
                   >
                     Sair
                   </Button>
@@ -110,7 +110,7 @@ const Home = () => {
                   <Button
                     onClick={() => navigate('/auth')}
                     variant="outline"
-                    className="border-brand-lightBlue text-brand-darkBlue hover:bg-brand-lightBlue/10"
+                    className="border-brand-lightBlue text-gray-700 hover:bg-brand-lightBlue/10"
                   >
                     Entrar
                   </Button>
@@ -136,7 +136,10 @@ const Home = () => {
                 <QuizFlowLogo size="xl" variant="full" className="mx-auto" />
               </div>
 
-              <Badge className="mb-6 bg-brand-lightBlue/40 text-brand-darkBlue border-0 px-4 py-2">
+              <Badge className="mb-6 text-gray-700 border-0 px-4 py-2" style={{ 
+                background: 'rgba(255, 255, 255, 0.9)', 
+                backdropFilter: 'blur(10px)' 
+              }}>
                 <Sparkles className="h-4 w-4 mr-2" />
                 Plataforma de Marketing Interativo
               </Badge>
@@ -191,7 +194,7 @@ const Home = () => {
                       onClick={() => navigate('/editor')}
                       size="lg"
                       variant="outline"
-                      className="border-brand-primary text-brand-primary hover:bg-brand-primary/10 px-8 py-4 text-lg font-semibold"
+                      className="border-brand-primary text-gray-700 hover:bg-brand-primary/10 px-8 py-4 text-lg font-semibold"
                     >
                       <Target className="h-5 w-5 mr-2" />
                       Editor Clássico
@@ -202,7 +205,7 @@ const Home = () => {
                 <Button
                   variant="outline"
                   size="lg"
-                  className="border-brand-light text-brand-text hover:bg-brand-light/10 px-8 py-4 text-lg"
+                  className="border-brand-light text-white hover:bg-brand-light/10 px-8 py-4 text-lg"
                 >
                   <Eye className="h-5 w-5 mr-2" />
                   Ver Demo
@@ -237,21 +240,21 @@ const Home = () => {
                   <Target className="h-8 w-8" />
                 </div>
                 <h3 className="metric-value">85%</h3>
-                <p className="metric-label">Taxa de Conversão Média</p>
+                <p className="metric-label text-gray-700">Taxa de Conversão Média</p>
               </div>
               <div className="metric-card">
                 <div className="metric-icon" style={{ background: 'linear-gradient(135deg, hsl(var(--brand-bright-pink)), hsl(var(--brand-light-blue)))' }}>
                   <MousePointer className="h-8 w-8" />
                 </div>
                 <h3 className="metric-value">12x</h3>
-                <p className="metric-label">Mais Engajamento</p>
+                <p className="metric-label text-gray-700">Mais Engajamento</p>
               </div>
               <div className="metric-card">
                 <div className="metric-icon" style={{ background: 'linear-gradient(135deg, hsl(var(--brand-light-blue)), hsl(var(--brand-bright-blue)))' }}>
                   <Rocket className="h-8 w-8" />
                 </div>
                 <h3 className="metric-value">5min</h3>
-                <p className="metric-label">Para Criar seu Primeiro Quiz</p>
+                <p className="metric-label text-gray-700">Para Criar seu Primeiro Quiz</p>
               </div>
             </div>
           </div>
@@ -326,7 +329,7 @@ const Home = () => {
               <Button
                 onClick={() => navigate(user ? '/admin' : '/auth')}
                 size="lg"
-                className="bg-white/95 backdrop-blur-sm text-brand-darkBlue hover:bg-white hover:text-brand-darkBlue border-0 shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105 font-semibold px-8 py-4 text-lg"
+                className="bg-white/95 backdrop-blur-sm text-gray-700 hover:bg-white hover:text-gray-700 border-0 shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105 font-semibold px-8 py-4 text-lg"
               >
                 <Rocket className="h-5 w-5 mr-2" />
                 {user ? 'Acessar Dashboard' : 'Começar Gratuitamente'}

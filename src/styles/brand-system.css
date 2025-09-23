@@ -90,7 +90,7 @@
 /* 🏷️ BADGES */
 .badge-primary {
   background: hsl(var(--brand-light-blue) / 0.2);
-  color: hsl(var(--brand-dark-blue));
+  color: #333333;
   border: 1px solid hsl(var(--brand-light-blue) / 0.3);
   backdrop-filter: blur(4px);
   border-radius: 9999px;
@@ -142,12 +142,12 @@
 .metric-value {
   font-size: 1.875rem;
   font-weight: 700;
-  color: hsl(var(--brand-dark-blue));
+  color: #333333;
   margin-bottom: 0.5rem;
 }
 
 .metric-label {
-  color: hsl(var(--brand-dark-blue) / 0.7);
+  color: #666666;
   font-weight: 500;
 }
 
@@ -182,12 +182,12 @@
 .feature-title {
   font-size: 1.25rem;
   font-weight: 600;
-  color: hsl(var(--brand-dark-blue));
+  color: #333333;
   margin-bottom: 0.75rem;
 }
 
 .feature-description {
-  color: hsl(var(--brand-dark-blue) / 0.8);
+  color: #666666;
   line-height: 1.625;
 }
 
