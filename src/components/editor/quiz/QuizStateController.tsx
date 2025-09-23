@@ -114,8 +114,7 @@ export const QuizFlowController: React.FC<QuizFlowControllerProps> = ({
     }
   }, []);
 
-  const quizState = useQuizState();
-  // Note: updateState removed - use specific actions from quizState instead
+  // Note: quizState removed as it was unused - using useQuizNavigation directly
   const {
     navigationState,
     goToStep,
