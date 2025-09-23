@@ -33,7 +33,8 @@ const AnalyticsPage = lazy(() => import('./pages/admin/AnalyticsPage'));
 const OverviewPage = lazy(() => import('./pages/admin/OverviewPage'));
 const SettingsPage = lazy(() => import('./pages/admin/SettingsPage'));
 
-// 🧩 PÁGINAS DE DESENVOLVIMENTO
+// 🎨 PÁGINA DE TEMPLATES
+const TemplatesPage = lazy(() => import('./pages/TemplatesPage'));
 const SystemDiagnosticPage = lazy(() => import('./pages/SystemDiagnosticPage'));
 
 function App() {
@@ -55,21 +56,25 @@ function App() {
                   </div>
                 </Route>
 
-                {/* 🎯 EDITOR ÚNICO - TODAS AS VARIAÇÕES */}
-                <Route path="/editor">
-                  <QuizErrorBoundary>
-                    <div data-testid="editor-unified-page">
-                      <ModernUnifiedEditor />
-                    </div>
-                  </QuizErrorBoundary>
+                 {/* 🎯 EDITOR - REDIRECIONA PARA TEMPLATES QUANDO VAZIO */}
+                <Route path="/editor" nest>
+                  <Route path="/">
+                    <RedirectRoute to="/templates" />
+                  </Route>
+                  <Route path="/:funnelId">
+                    {(params) => (
+                      <QuizErrorBoundary>
+                        <div data-testid="editor-unified-page">
+                          <ModernUnifiedEditor funnelId={params.funnelId} />
+                        </div>
+                      </QuizErrorBoundary>
+                    )}
+                  </Route>
                 </Route>
 
-                <Route path="/editor/:funnelId">
-                  {(params) => (
-                    <QuizErrorBoundary>
-                      <ModernUnifiedEditor funnelId={params.funnelId} />
-                    </QuizErrorBoundary>
-                  )}
+                {/* 🎨 PÁGINA DE TEMPLATES */}
+                <Route path="/templates">
+                  <TemplatesPage />
                 </Route>
 
                 <Route path="/editor-pro">
@@ -117,7 +122,9 @@ function App() {
 
                 <Route path="/admin/settings">
                   <SettingsPage />
-                </Route>                {/* 🔧 DESENVOLVIMENTO */}
+                </Route>
+
+                {/* 🔧 DESENVOLVIMENTO */}
                 <Route path="/diagnostics">
                   <SystemDiagnosticPage />
                 </Route>

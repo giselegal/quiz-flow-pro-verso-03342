@@ -90,12 +90,12 @@ const Home = () => {
                     Dashboard
                   </Button>
                   <Button
-                    onClick={() => navigate('/editor')}
+                    onClick={() => navigate('/templates')}
                     variant="outline"
                     className="border-brand-brightBlue text-brand-brightBlue hover:bg-brand-brightBlue/10"
                   >
                     <Target className="h-4 w-4 mr-2" />
-                    Quiz Editor
+                    Criar Funil
                   </Button>
                   <Button
                     onClick={logout}
@@ -167,12 +167,12 @@ const Home = () => {
                 {user && (
                   <>
                     <Button
-                      onClick={() => navigate('/editor')}
+                      onClick={() => navigate('/templates')}
                       size="lg"
                       className="bg-gradient-to-r from-brand-brightBlue to-brand-brightPink hover:from-brand-brightPink hover:to-brand-brightBlue text-white shadow-xl px-8 py-4 text-lg"
                     >
                       <Sparkles className="h-5 w-5 mr-2" />
-                      Editor Unificado
+                      Criar Funil
                       <Badge className="ml-2 bg-brand-lightBlue text-brand-darkBlue text-xs">NOVO</Badge>
                     </Button>
 
@@ -188,13 +188,13 @@ const Home = () => {
                     </Button>
 
                     <Button
-                      onClick={() => navigate('/editor')}
+                      onClick={() => navigate('/templates')}
                       size="lg"
                       variant="outline"
                       className="border-brand-primary text-brand-primary hover:bg-brand-primary/10 px-8 py-4 text-lg font-semibold"
                     >
                       <Target className="h-5 w-5 mr-2" />
-                      Editor Clássico
+                      Templates
                     </Button>
                   </>
                 )}
