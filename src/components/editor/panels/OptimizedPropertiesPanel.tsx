@@ -61,8 +61,8 @@ export const OptimizedPropertiesPanel: React.FC<OptimizedPropertiesPanelProps> =
 
   // 🎯 HANDLERS
   const handlePropertyChange = useCallback(async (
-    blockId: string, 
-    property: string, 
+    blockId: string,
+    property: string,
     value: any
   ) => {
     try {
@@ -87,7 +87,7 @@ export const OptimizedPropertiesPanel: React.FC<OptimizedPropertiesPanelProps> =
   // 🎨 RENDER EMPTY STATE
   if (selectedBlocksData.length === 0) {
     return (
-      <div 
+      <div
         className={cn(
           'border-l bg-muted/20 flex flex-col',
           position === 'left' && 'border-l-0 border-r',
@@ -103,7 +103,7 @@ export const OptimizedPropertiesPanel: React.FC<OptimizedPropertiesPanelProps> =
             </Badge>
           )}
         </div>
-        
+
         <div className="flex-1 flex items-center justify-center p-6">
           <div className="text-center text-muted-foreground">
             <div className="text-lg mb-2">🎨</div>
@@ -120,7 +120,7 @@ export const OptimizedPropertiesPanel: React.FC<OptimizedPropertiesPanelProps> =
   // 🎨 RENDER MULTI SELECTION
   if (isMultiSelection) {
     return (
-      <div 
+      <div
         className={cn(
           'border-l bg-muted/20 flex flex-col',
           position === 'left' && 'border-l-0 border-r',
@@ -134,30 +134,30 @@ export const OptimizedPropertiesPanel: React.FC<OptimizedPropertiesPanelProps> =
             {selectedBlocksData.length} blocos selecionados
           </Badge>
         </div>
-        
+
         <ScrollArea className="flex-1">
           <div className="p-4 space-y-4">
             {/* Ações em lote */}
             <div className="space-y-2">
               <Label className="text-xs text-muted-foreground">Ações em lote</Label>
-              <Button 
-                variant="destructive" 
-                size="sm" 
+              <Button
+                variant="destructive"
+                size="sm"
                 onClick={handleDeleteSelected}
                 className="w-full"
               >
                 Deletar selecionados ({selectedBlocksData.length})
               </Button>
             </div>
-            
+
             <Separator />
-            
+
             {/* Lista de blocos selecionados */}
             <div className="space-y-2">
               <Label className="text-xs text-muted-foreground">Blocos selecionados</Label>
               <div className="space-y-1">
                 {selectedBlocksData.map((block: any, index: number) => (
-                  <div 
+                  <div
                     key={block.id}
                     className="flex items-center justify-between p-2 border rounded-lg bg-background"
                   >
@@ -184,7 +184,7 @@ export const OptimizedPropertiesPanel: React.FC<OptimizedPropertiesPanelProps> =
 
   // 🎨 RENDER SINGLE SELECTION
   return (
-    <div 
+    <div
       className={cn(
         'border-l bg-muted/20 flex flex-col',
         position === 'left' && 'border-l-0 border-r',
@@ -205,50 +205,50 @@ export const OptimizedPropertiesPanel: React.FC<OptimizedPropertiesPanelProps> =
           )}
         </div>
       </div>
-      
+
       <ScrollArea className="flex-1">
         <div className="p-4 space-y-6">
           {/* Informações básicas */}
           <div className="space-y-3">
             <Label className="text-xs text-muted-foreground">Informações básicas</Label>
-            
+
             <div className="space-y-2">
               <div>
                 <Label className="text-xs">ID do bloco</Label>
-                <Input 
-                  value={singleBlock?.id || ''} 
-                  readOnly 
+                <Input
+                  value={singleBlock?.id || ''}
+                  readOnly
                   className="text-xs h-8"
                 />
               </div>
-              
+
               <div>
                 <Label className="text-xs">Tipo</Label>
-                <Input 
-                  value={singleBlock?.type || ''} 
-                  readOnly 
+                <Input
+                  value={singleBlock?.type || ''}
+                  readOnly
                   className="text-xs h-8"
                 />
               </div>
             </div>
           </div>
-          
+
           <Separator />
-          
+
           {/* Propriedades específicas do tipo */}
           <div className="space-y-3">
             <Label className="text-xs text-muted-foreground">Propriedades do {singleBlock?.type}</Label>
-            
+
             <div className="space-y-2">
               {/* Exemplo para tipo 'text' */}
               {singleBlock?.type === 'text' && (
                 <div>
                   <Label className="text-xs">Texto</Label>
-                  <Input 
-                    value={singleBlock.properties?.text || ''} 
+                  <Input
+                    value={singleBlock.properties?.text || ''}
                     onChange={(e) => handlePropertyChange(
-                      singleBlock.id, 
-                      'text', 
+                      singleBlock.id,
+                      'text',
                       e.target.value
                     )}
                     className="text-xs h-8"
@@ -256,31 +256,31 @@ export const OptimizedPropertiesPanel: React.FC<OptimizedPropertiesPanelProps> =
                   />
                 </div>
               )}
-              
+
               {/* Exemplo para tipo 'button' */}
               {singleBlock?.type === 'button' && (
                 <>
                   <div>
                     <Label className="text-xs">Texto do botão</Label>
-                    <Input 
-                      value={singleBlock.properties?.text || ''} 
+                    <Input
+                      value={singleBlock.properties?.text || ''}
                       onChange={(e) => handlePropertyChange(
-                        singleBlock.id, 
-                        'text', 
+                        singleBlock.id,
+                        'text',
                         e.target.value
                       )}
                       className="text-xs h-8"
                       placeholder="Clique aqui"
                     />
                   </div>
-                  
+
                   <div>
                     <Label className="text-xs">URL de destino</Label>
-                    <Input 
-                      value={(singleBlock.properties as any)?.url || ''} 
+                    <Input
+                      value={(singleBlock.properties as any)?.url || ''}
                       onChange={(e) => handlePropertyChange(
-                        singleBlock.id, 
-                        'url', 
+                        singleBlock.id,
+                        'url',
                         e.target.value
                       )}
                       className="text-xs h-8"
@@ -291,15 +291,15 @@ export const OptimizedPropertiesPanel: React.FC<OptimizedPropertiesPanelProps> =
               )}
             </div>
           </div>
-          
+
           <Separator />
-          
+
           {/* Ações */}
           <div className="space-y-2">
             <Label className="text-xs text-muted-foreground">Ações</Label>
-            <Button 
-              variant="destructive" 
-              size="sm" 
+            <Button
+              variant="destructive"
+              size="sm"
               onClick={() => deleteBlock(singleBlock?.id || '')}
               className="w-full"
             >

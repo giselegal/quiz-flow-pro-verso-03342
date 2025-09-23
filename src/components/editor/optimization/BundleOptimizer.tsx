@@ -61,7 +61,7 @@ class ImportCache {
 
     this.missCount++;
     const startTime = Date.now();
-    
+
     const promise = loader().then(result => {
       this.loadTimes.set(key, Date.now() - startTime);
       return result;
@@ -111,7 +111,7 @@ export const useBundleOptimizer = (budget: Partial<PerformanceBudget> = {}) => {
     if ('memory' in performance) {
       const memInfo = (performance as any).memory;
       const memoryUsage = memInfo.usedJSHeapSize;
-      
+
       setMetrics(prev => ({
         ...prev,
         memoryUsage
@@ -130,7 +130,7 @@ export const useBundleOptimizer = (budget: Partial<PerformanceBudget> = {}) => {
   // 🎯 BUNDLE SIZE MONITORING
   const updateBundleMetrics = useCallback(() => {
     const stats = importCache.getStats();
-    
+
     setMetrics(prev => ({
       ...prev,
       cacheHitRate: stats.hitRate,
@@ -139,7 +139,7 @@ export const useBundleOptimizer = (budget: Partial<PerformanceBudget> = {}) => {
 
     // Performance budget checks
     const warnings: string[] = [];
-    
+
     if (stats.avgLoadTime > finalBudget.maxLoadTime) {
       warnings.push(`Load time: ${stats.avgLoadTime}ms (budget: ${finalBudget.maxLoadTime}ms)`);
     }
@@ -165,7 +165,7 @@ export const useBundleOptimizer = (budget: Partial<PerformanceBudget> = {}) => {
     try {
       const startTime = Date.now();
       const result = await importCache.get(key, loader);
-      
+
       const loadTime = Date.now() - startTime;
       logger.debug(`Bundle: Loaded ${key} in ${loadTime}ms`);
 
@@ -190,12 +190,12 @@ export const useBundleOptimizer = (budget: Partial<PerformanceBudget> = {}) => {
   const cleanup = useCallback(() => {
     importCache.clear();
     setBudgetWarnings([]);
-    
+
     // Force garbage collection if available
     if ('gc' in window && typeof (window as any).gc === 'function') {
       (window as any).gc();
     }
-    
+
     logger.info('Bundle: Cleanup completed');
   }, []);
 
@@ -216,15 +216,15 @@ export const createSmartLoader = (
 ) => {
   return React.lazy(() => {
     const loader = () => import(componentPath);
-    
+
     return importCache.get(componentPath, loader).catch(async (error) => {
       logger.warn(`Smart Loader: Primary component failed (${componentPath}), trying fallback`);
-      
+
       if (fallbackPath) {
         const fallbackLoader = () => import(fallbackPath);
         return importCache.get(fallbackPath, fallbackLoader);
       }
-      
+
       throw error;
     });
   });
@@ -257,7 +257,7 @@ export const BundleOptimizerProvider: React.FC<BundleOptimizerProviderProps> = (
 
     const observer = new PerformanceObserver((list) => {
       const entries = list.getEntries();
-      
+
       entries.forEach(entry => {
         if (entry.name.includes('chunk') || entry.name.includes('.js')) {
           logger.debug('Bundle: Resource loaded:', {
@@ -284,7 +284,7 @@ export const BundleOptimizerProvider: React.FC<BundleOptimizerProviderProps> = (
   return (
     <div className="bundle-optimizer-provider">
       {children}
-      
+
       {/* Development-only performance overlay */}
       {process.env.NODE_ENV === 'development' && optimizer.budgetWarnings.length > 0 && (
         <div className="fixed bottom-4 right-4 bg-yellow-500 text-white p-3 rounded-lg shadow-lg max-w-sm z-50">

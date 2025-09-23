@@ -219,7 +219,7 @@ export const QuizFlowController: React.FC<QuizFlowControllerProps> = ({
   const value: QuizFlowContextType = {
     currentStep,
     currentStepNumber,
-  totalSteps,
+    totalSteps,
     goToStep,
     nextStep,
     previousStep,

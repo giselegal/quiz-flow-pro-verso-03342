@@ -10,7 +10,7 @@ export { QuizService } from './services/QuizService';
 export { FunnelService } from './services/FunnelService';
 export { EditorService } from './services/EditorService';
 
-export type { 
+export type {
   QuizAnalytics,
   QuizSession
 } from './services/QuizService';
@@ -90,7 +90,7 @@ export class ApplicationMonitor {
     operation: () => Promise<T>
   ): Promise<T> {
     const startTime = performance.now();
-    
+
     if (!this.metrics[operationName]) {
       this.metrics[operationName] = { calls: 0, totalTime: 0, errors: 0 };
     }
@@ -98,10 +98,10 @@ export class ApplicationMonitor {
     try {
       const result = await operation();
       const endTime = performance.now();
-      
+
       this.metrics[operationName].calls++;
       this.metrics[operationName].totalTime += endTime - startTime;
-      
+
       return result;
     } catch (error) {
       this.metrics[operationName].errors++;
@@ -109,15 +109,15 @@ export class ApplicationMonitor {
     }
   }
 
-  getMetrics(): Record<string, { 
-    calls: number; 
-    averageTime: number; 
-    totalTime: number; 
+  getMetrics(): Record<string, {
+    calls: number;
+    averageTime: number;
+    totalTime: number;
     errors: number;
     errorRate: number;
   }> {
     const result: any = {};
-    
+
     Object.entries(this.metrics).forEach(([operation, data]) => {
       result[operation] = {
         calls: data.calls,
@@ -127,7 +127,7 @@ export class ApplicationMonitor {
         errorRate: data.calls > 0 ? data.errors / data.calls : 0
       };
     });
-    
+
     return result;
   }
 
@@ -153,7 +153,7 @@ export const handleApplicationError = (error: any, context: string): Application
   if (error instanceof ApplicationError) {
     return error;
   }
-  
+
   return new ApplicationError(
     error.message || 'An unexpected error occurred',
     context.split('.')[0],
