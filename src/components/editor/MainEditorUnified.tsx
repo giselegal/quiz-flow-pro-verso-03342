@@ -1,8 +1,13 @@
 /**
  * 🎯 MAIN EDITOR UNIFIED - CLEAN ARCHITECTURE
  * 
- * Editor principal migrado para Clean Architecture
- * com fallback automático para legacy
+ * Editor principal migrado para Clean Architecture  const handleBlockSelect = (blockId: string) => {
+    // Note: selectBlock removed as EditorProvider doesn't expose this function
+    // TODO: Implement block selection when needed
+    if (debugMode) {
+      console.log('🎯 Bloco selecionado:', blockId);
+    }
+  };m fallback automático para legacy
  */
 
 import React, { Suspense, useState, useEffect } from 'react';
@@ -35,25 +40,19 @@ const MainEditorUnifiedInternal: React.FC<MainEditorUnifiedProps> = ({
 }) => {
   // 🚩 FEATURE FLAGS
   const featureFlags = useFeatureFlags();
-  
+
   // 🔧 HOOKS DA CLEAN ARCHITECTURE
-  const { 
-    selectedBlocks, 
-    addBlock, 
-    deleteBlock,
-    selectBlock,
-    isLoading: editorLoading,
-    error: editorError 
-  } = useEditor();
-  
-  const { 
-    isLoading: quizLoading 
+  const {
+    state: { isLoading: editorLoading },
+    actions: { addBlock }
+  } = useEditor(); const {
+    isLoading: quizLoading
   } = useQuiz();
-  
-  const { 
+
+  const {
     funnel,
     blocks,
-    isLoading: funnelLoading 
+    isLoading: funnelLoading
   } = useFunnel(funnelId);
 
   // 🎯 ESTADO LOCAL
@@ -66,10 +65,10 @@ const MainEditorUnifiedInternal: React.FC<MainEditorUnifiedProps> = ({
         if (debugMode) {
           console.log('🎯 MainEditorUnified: Inicializando com Clean Architecture');
         }
-        
+
         // Sincronizar step atual (implementação futura)
         // TODO: Implementar lógica de step quando necessário
-        
+
         setIsInitialized(true);
       } catch (error) {
         console.error('❌ Erro na inicialização:', error);
@@ -95,17 +94,8 @@ const MainEditorUnifiedInternal: React.FC<MainEditorUnifiedProps> = ({
     );
   }
 
-  // ❌ ERROR STATE
-  if (editorError) {
-    return (
-      <div className="flex items-center justify-center h-64 bg-red-50 border border-red-200 rounded-lg">
-        <div className="text-center">
-          <div className="text-red-600 font-medium mb-2">Erro no Editor</div>
-          <div className="text-red-500 text-sm">{editorError}</div>
-        </div>
-      </div>
-    );
-  }
+  // Note: Error state handling removed as EditorProvider doesn't expose error in interface
+  // TODO: Add error handling when needed
 
   // 🎯 HANDLERS
   const handleBlockAdd = async (blockType: string, content: any) => {
@@ -148,7 +138,7 @@ const MainEditorUnifiedInternal: React.FC<MainEditorUnifiedProps> = ({
             Clean Architecture
           </span>
         </div>
-        
+
         <div className="flex items-center gap-2 text-sm text-muted-foreground">
           <span>Step {stepNumber}/21</span>
           <span>•</span>
@@ -256,7 +246,7 @@ const MainEditorUnifiedInternal: React.FC<MainEditorUnifiedProps> = ({
           >
             ← Anterior
           </button>
-          
+
           <div className="flex items-center gap-2">
             {Array.from({ length: 21 }, (_, i) => i + 1).map((step) => (
               <button
@@ -273,7 +263,7 @@ const MainEditorUnifiedInternal: React.FC<MainEditorUnifiedProps> = ({
               </button>
             ))}
           </div>
-          
+
           <button
             onClick={() => handleStepChange(Math.min(21, stepNumber + 1))}
             disabled={stepNumber >= 21}
@@ -303,7 +293,7 @@ const MainEditorUnifiedInternal: React.FC<MainEditorUnifiedProps> = ({
  */
 export const MainEditorUnified: React.FC<MainEditorUnifiedProps> = (props) => {
   return (
-    <CleanArchitectureProvider 
+    <CleanArchitectureProvider
       enableCleanArchitecture={true}
       debugMode={props.debugMode}
       fallbackToLegacy={true}
