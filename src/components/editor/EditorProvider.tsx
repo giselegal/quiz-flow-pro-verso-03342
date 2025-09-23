@@ -7,7 +7,6 @@ import { Block, BlockType } from '@/types/editor';
 import { extractStepNumberFromKey } from '@/utils/supabaseMapper';
 import { arrayMove } from '@dnd-kit/sortable';
 import React, { createContext, ReactNode, useCallback, useContext, useEffect } from 'react';
-import { useConsolidatedEditor } from './ConsolidatedEditorProvider';
 import { unifiedQuizStorage } from '@/services/core/UnifiedQuizStorage';
 import { useFunnels } from '@/context/FunnelsContext';
 
@@ -70,19 +69,6 @@ export const useEditor = () => {
   const context = useContext(EditorContext);
   if (context) {
     return context;
-  }
-
-  // Fallback transparente: usar ConsolidatedEditorProvider se estiver presente
-  try {
-    const consolidated = useConsolidatedEditor();
-    if (consolidated) {
-      return {
-        state: consolidated.state,
-        actions: consolidated.actions
-      } as any;
-    }
-  } catch {
-    // Consolidated não disponível neste contexto
   }
 
   // Log detalhado e erro como último recurso
@@ -228,7 +214,7 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
   const getInitialState = (): EditorState => {
     const initialBlocks: Record<string, Block[]> = {};
     const isTestEnv = process.env.NODE_ENV === 'test';
-    
+
     if (!isTestEnv) {
       // Se funnelId indica template, carregar do templateLibraryService
       if (funnelId?.startsWith('template-')) {
@@ -327,11 +313,11 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
     if (funnelId.startsWith('template-')) {
       const templateId = funnelId.replace('template-', '');
       console.log('📄 EditorProvider: Carregando template:', templateId);
-      
+
       try {
         const { templateLibraryService } = await import('@/services/templateLibraryService');
         const template = templateLibraryService.getById(templateId);
-        
+
         if (template) {
           console.log('✅ Template encontrado:', template);
           // Converter template para stepBlocks se necessário
@@ -346,7 +332,7 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
       } catch (error) {
         console.error('❌ Erro ao carregar template:', error);
       }
-      
+
       setState(prev => ({ ...prev, isLoading: false }));
       return;
     }

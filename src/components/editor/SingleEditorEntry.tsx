@@ -18,7 +18,7 @@
 
 import React, { Suspense, useMemo } from 'react';
 import { useLocation } from 'wouter';
-import { StateConsolidationManager } from './StateConsolidationManager';
+import { EditorProvider } from './EditorProvider';
 import { UnifiedEditorCore } from './UnifiedEditorCore';
 import { ErrorBoundary } from './ErrorBoundary';
 import { PerformanceMonitorProvider } from './optimization/PerformanceMonitor';
@@ -62,21 +62,21 @@ const LoadingFallback = React.memo(() => (
  * - Props fornecidas
  */
 const detectEditorMode = (
-  location: string, 
+  location: string,
   propMode?: string
 ): 'visual' | 'headless' | 'production' | 'funnel' => {
   // Prioridade: props > URL query > path
   const urlParams = new URLSearchParams(location.split('?')[1] || '');
   const modeParam = urlParams.get('mode');
-  
+
   if (propMode) return propMode as any;
   if (modeParam) return modeParam as any;
-  
+
   // Detectar por path
   if (location.includes('/headless-editor')) return 'headless';
   if (location.includes('/universal-editor')) return 'funnel';
   if (location.includes('/quiz')) return 'production';
-  
+
   return 'visual'; // Default
 };
 
@@ -90,19 +90,19 @@ const detectEditorMode = (
  */
 const extractEditorParams = (location: string, props: SingleEditorEntryProps) => {
   const urlParams = new URLSearchParams(location.split('?')[1] || '');
-  
+
   // Extract funnelId from path or props
   const pathMatch = location.match(/\/editor[^\/]*\/([^?\/]+)/);
   const pathFunnelId = pathMatch?.[1];
-  
-  const funnelId = props.funnelId || 
-                   pathFunnelId || 
-                   urlParams.get('funnel') || 
-                   urlParams.get('funnelId') ||
-                   (urlParams.get('template') ? `template-${urlParams.get('template')}` : undefined);
 
-  const initialStep = props.initialStep || 
-                     parseInt(urlParams.get('step') || '1') || 1;
+  const funnelId = props.funnelId ||
+    pathFunnelId ||
+    urlParams.get('funnel') ||
+    urlParams.get('funnelId') ||
+    (urlParams.get('template') ? `template-${urlParams.get('template')}` : undefined);
+
+  const initialStep = props.initialStep ||
+    parseInt(urlParams.get('step') || '1') || 1;
 
   const mode = detectEditorMode(location, props.mode);
 
@@ -117,10 +117,10 @@ const extractEditorParams = (location: string, props: SingleEditorEntryProps) =>
 
 export const SingleEditorEntry: React.FC<SingleEditorEntryProps> = (props) => {
   const [location] = useLocation();
-  
+
   const editorConfig = useMemo(() => {
     const config = extractEditorParams(location, props);
-    
+
     logger.info('🚀 SingleEditorEntry: Fase 2 - DnD Unificado + Templates', {
       location,
       props,
@@ -146,7 +146,7 @@ export const SingleEditorEntry: React.FC<SingleEditorEntryProps> = (props) => {
       isSupabaseEnabled: editorConfig.enableSupabase
     },
     debug: editorConfig.debug,
-    
+
     // 🎯 BUILDER SYSTEM CONFIGURATION ENHANCED
     builderSystem: {
       aiEnabled: true,
@@ -154,7 +154,7 @@ export const SingleEditorEntry: React.FC<SingleEditorEntryProps> = (props) => {
       autoOptimization: true,
       cacheEnabled: true,
       performanceMonitoring: true,
-      
+
       // 🎯 FASE 2 FEATURES
       unifiedDnd: true,
       templatesMarketplace: true,
@@ -169,7 +169,7 @@ export const SingleEditorEntry: React.FC<SingleEditorEntryProps> = (props) => {
     funnelId: editorConfig.funnelId,
     initialStep: editorConfig.initialStep,
     className: props.className || 'h-screen w-full',
-    
+
     // 🚀 FASE 2 INTEGRATIONS
     enableBuilderSystem: true,
     enableAIFeatures: true,
@@ -181,7 +181,7 @@ export const SingleEditorEntry: React.FC<SingleEditorEntryProps> = (props) => {
   // 🎯 ENHANCED HANDLERS FASE 2
   const handleBuilderSystemAction = (action: string, data?: any) => {
     logger.info('🚀 Builder System Action (Fase 2):', { action, data });
-    
+
     switch (action) {
       case 'optimize':
         // Trigger automatic optimization with DnD analytics
@@ -204,7 +204,7 @@ export const SingleEditorEntry: React.FC<SingleEditorEntryProps> = (props) => {
     <div className="single-editor-entry h-screen w-full bg-background">
       <ProductionOptimizerProvider>
         <PerformanceMonitorProvider enableOverlay={process.env.NODE_ENV === 'development'}>
-          
+
           {/* 🎯 UNIFIED DND PROVIDER - FASE 2 */}
           <UnifiedDndProvider
             enableAnalytics={true}
@@ -214,11 +214,9 @@ export const SingleEditorEntry: React.FC<SingleEditorEntryProps> = (props) => {
             }}
           >
             <ErrorBoundary>
-              <StateConsolidationManager 
+              <EditorProvider
                 funnelId={providerConfig.funnelId}
-                preferConsolidated={true}
-                enableMigration={true}
-                debug={providerConfig.debug}
+                enableSupabase={true}
               >
                 <BuilderSystemProvider value={{
                   generateQuiz: async (prompt: string) => {
@@ -247,7 +245,7 @@ export const SingleEditorEntry: React.FC<SingleEditorEntryProps> = (props) => {
                 }}>
                   {/* 🚀 BUILDER SYSTEM TOOLBAR - ENHANCED FASE 2 */}
                   <div className="builder-system-header">
-                    <BuilderSystemToolbar 
+                    <BuilderSystemToolbar
                       onQuickAction={handleBuilderSystemAction}
                       onModeChange={(mode) => logger.info('🔄 Mode changed:', mode)}
                       className="border-b"
@@ -256,10 +254,10 @@ export const SingleEditorEntry: React.FC<SingleEditorEntryProps> = (props) => {
 
                   {/* 🎯 MAIN EDITOR LAYOUT WITH UNIFIED DND */}
                   <div className="flex h-[calc(100vh-60px)]">
-                    
+
                     {/* 🎨 ENHANCED BUILDER SYSTEM PANEL */}
                     <div className="w-80 border-r bg-muted/5 overflow-y-auto">
-                      <BuilderSystemPanel 
+                      <BuilderSystemPanel
                         onQuizGenerated={(result) => {
                           logger.info('🎯 Quiz gerado via Builder System (Fase 2):', result);
                         }}
@@ -277,7 +275,7 @@ export const SingleEditorEntry: React.FC<SingleEditorEntryProps> = (props) => {
                     <div className="w-96 border-l bg-muted/5 overflow-y-auto">
                       <div className="p-4">
                         <h3 className="font-semibold mb-4">Templates Marketplace</h3>
-                        <TemplatesMarketplace 
+                        <TemplatesMarketplace
                           onApplyTemplate={(template) => {
                             logger.info('🎨 Template aplicado do Marketplace:', template);
                           }}
@@ -287,10 +285,10 @@ export const SingleEditorEntry: React.FC<SingleEditorEntryProps> = (props) => {
                     </div>
                   </div>
                 </BuilderSystemProvider>
-              </StateConsolidationManager>
+              </EditorProvider>
             </ErrorBoundary>
           </UnifiedDndProvider>
-          
+
         </PerformanceMonitorProvider>
       </ProductionOptimizerProvider>
     </div>

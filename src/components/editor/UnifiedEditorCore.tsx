@@ -16,7 +16,7 @@
  */
 
 import React, { Suspense, useMemo, useCallback } from 'react';
-import { useUnifiedEditor } from './StateConsolidationManager';
+import { useEditor } from '@/components/editor/EditorProvider';
 import { logger } from '@/utils/debugLogger';
 
 // 🎯 LAZY LOADED COMPONENTS (código splitting inteligente)
@@ -27,7 +27,7 @@ const CanvasDropZone = React.lazy(() => import('@/components/editor/canvas/Canva
 const UltraUnifiedPropertiesPanel = React.lazy(() => import('@/components/editor/properties/UltraUnifiedPropertiesPanel'));
 
 // 🎯 FALLBACK COMPONENTS
-const ModularEditorProFallback = React.lazy(() => 
+const ModularEditorProFallback = React.lazy(() =>
   import('@/components/editor/EditorPro/components/ModularEditorPro')
 );
 
@@ -75,7 +75,7 @@ const ModeRenderer: React.FC<{
   mode: 'visual' | 'headless' | 'production' | 'funnel';
   funnelId?: string;
 }> = ({ mode, funnelId }) => {
-  const { state, actions } = useUnifiedEditor();
+  const { state, actions } = useEditor();
 
   const renderModeContent = useCallback(() => {
     switch (mode) {
@@ -86,17 +86,17 @@ const ModeRenderer: React.FC<{
             <Suspense fallback={<ComponentLoadingFallback name="Toolbar" />}>
               <EditorToolbar />
             </Suspense>
-            
+
             {/* Layout Principal 4 Colunas */}
             <div className="flex-1 overflow-hidden flex">
               {/* Sidebar Esquerda - Etapas */}
               <div className="w-64 border-r border-border bg-card">
                 <Suspense fallback={<ComponentLoadingFallback name="Etapas" />}>
-                  <StepSidebar 
+                  <StepSidebar
                     currentStep={state.currentStep}
                     totalSteps={21}
                     stepHasBlocks={Object.fromEntries(
-                      Array.from({length: 21}, (_, i) => [i + 1, (state.stepBlocks[`step-${i + 1}`]?.length || 0) > 0])
+                      Array.from({ length: 21 }, (_, i) => [i + 1, (state.stepBlocks[`step-${i + 1}`]?.length || 0) > 0])
                     )}
                     stepValidation={state.stepValidation}
                     onSelectStep={actions.setCurrentStep}
@@ -109,11 +109,11 @@ const ModeRenderer: React.FC<{
                   />
                 </Suspense>
               </div>
-              
+
               {/* Sidebar Esquerda - Componentes */}
               <div className="w-64 border-r border-border bg-card">
                 <Suspense fallback={<ComponentLoadingFallback name="Componentes" />}>
-                  <UnifiedComponentsPanel 
+                  <UnifiedComponentsPanel
                     onAddComponent={(componentId, metadata) => {
                       // Handle component addition
                       console.log('Adding component:', componentId, metadata);
@@ -122,11 +122,11 @@ const ModeRenderer: React.FC<{
                   />
                 </Suspense>
               </div>
-              
+
               {/* Canvas Principal */}
               <div className="flex-1 bg-background">
                 <Suspense fallback={<ComponentLoadingFallback name="Canvas" />}>
-                  <CanvasDropZone 
+                  <CanvasDropZone
                     blocks={state.stepBlocks[`step-${state.currentStep}`] || []}
                     selectedBlockId={state.selectedBlockId}
                     onSelectBlock={actions.setSelectedBlockId}
@@ -135,12 +135,12 @@ const ModeRenderer: React.FC<{
                   />
                 </Suspense>
               </div>
-              
+
               {/* Sidebar Direita - Propriedades */}
               <div className="w-80 border-l border-border bg-card">
                 <Suspense fallback={<ComponentLoadingFallback name="Propriedades" />}>
-                  <UltraUnifiedPropertiesPanel 
-                    onUpdate={() => {}}
+                  <UltraUnifiedPropertiesPanel
+                    onUpdate={() => { }}
                   />
                 </Suspense>
               </div>
@@ -152,7 +152,7 @@ const ModeRenderer: React.FC<{
         return (
           <div className="h-full w-full p-4">
             <Suspense fallback={<ComponentLoadingFallback name="Canvas Headless" />}>
-              <CanvasDropZone 
+              <CanvasDropZone
                 blocks={state.stepBlocks[`step-${state.currentStep}`] || []}
                 selectedBlockId={state.selectedBlockId}
                 onSelectBlock={actions.setSelectedBlockId}
@@ -166,13 +166,13 @@ const ModeRenderer: React.FC<{
 
       case 'production':
         // Para modo produção, usar ScalableQuizRenderer
-        const ScalableQuizRenderer = React.lazy(() => 
+        const ScalableQuizRenderer = React.lazy(() =>
           import('@/components/core/ScalableQuizRenderer')
         );
-        
+
         return (
           <Suspense fallback={<ComponentLoadingFallback name="Quiz Renderer" />}>
-            <ScalableQuizRenderer 
+            <ScalableQuizRenderer
               funnelId={funnelId || 'quiz21StepsComplete'}
               mode="production"
               className="h-full"
@@ -187,11 +187,11 @@ const ModeRenderer: React.FC<{
             <div className="flex h-full">
               <div className="w-64 border-r border-border">
                 <Suspense fallback={<ComponentLoadingFallback name="Etapas" />}>
-                  <StepSidebar 
+                  <StepSidebar
                     currentStep={state.currentStep}
                     totalSteps={21}
                     stepHasBlocks={Object.fromEntries(
-                      Array.from({length: 21}, (_, i) => [i + 1, (state.stepBlocks[`step-${i + 1}`]?.length || 0) > 0])
+                      Array.from({ length: 21 }, (_, i) => [i + 1, (state.stepBlocks[`step-${i + 1}`]?.length || 0) > 0])
                     )}
                     stepValidation={state.stepValidation}
                     onSelectStep={actions.setCurrentStep}
@@ -206,7 +206,7 @@ const ModeRenderer: React.FC<{
               </div>
               <div className="flex-1">
                 <Suspense fallback={<ComponentLoadingFallback name="Canvas" />}>
-                  <CanvasDropZone 
+                  <CanvasDropZone
                     blocks={state.stepBlocks[`step-${state.currentStep}`] || []}
                     selectedBlockId={state.selectedBlockId}
                     onSelectBlock={actions.setSelectedBlockId}
@@ -217,8 +217,8 @@ const ModeRenderer: React.FC<{
               </div>
               <div className="w-80 border-l border-border">
                 <Suspense fallback={<ComponentLoadingFallback name="Propriedades" />}>
-                  <UltraUnifiedPropertiesPanel 
-                    onUpdate={() => {}}
+                  <UltraUnifiedPropertiesPanel
+                    onUpdate={() => { }}
                   />
                 </Suspense>
               </div>
@@ -245,14 +245,14 @@ export const UnifiedEditorCore: React.FC<UnifiedEditorCoreProps> = ({
   initialStep = 1,
   className = 'h-full w-full'
 }) => {
-  const { state, actions } = useUnifiedEditor();
+  const { state, actions } = useEditor();
 
   // 🎯 INITIALIZE STEP ON MOUNT
   React.useEffect(() => {
     if (initialStep !== state.currentStep) {
       actions.setCurrentStep(initialStep);
     }
-    
+
     // Ensure current step is loaded
     actions.ensureStepLoaded(state.currentStep);
   }, [initialStep, state.currentStep, actions]);
@@ -261,15 +261,14 @@ export const UnifiedEditorCore: React.FC<UnifiedEditorCoreProps> = ({
   const performanceStats = useMemo(() => ({
     mode,
     currentStep: state.currentStep,
-    loadedSteps: state.loadedSteps?.size || 0,
-    totalBlocks: Object.values(state.stepBlocks || {}).reduce((acc, blocks) => acc + blocks.length, 0),
+    totalBlocks: Object.values(state.stepBlocks || {}).reduce((acc: number, blocks: any) => acc + (Array.isArray(blocks) ? blocks.length : 0), 0),
     selectedBlock: state.selectedBlockId,
     funnelId
   }), [mode, state, funnelId]);
 
   React.useEffect(() => {
     logger.info('UnifiedEditorCore: Performance stats', performanceStats);
-    
+
     // Set global debug info
     if (typeof window !== 'undefined') {
       (window as any).__UNIFIED_EDITOR_STATS__ = performanceStats;
