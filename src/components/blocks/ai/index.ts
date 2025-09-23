@@ -5,4 +5,4 @@
  * de conteúdo personalizado baseado no resultado do quiz.
  */
 
-export { default as FashionAIGeneratorBlock } from './FashionAIGeneratorBlock';
+export type { default as FashionAIGeneratorBlock } from './FashionAIGeneratorBlock';

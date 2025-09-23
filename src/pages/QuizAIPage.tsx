@@ -15,7 +15,7 @@ interface QuizAIPageProps {
     previewMode?: boolean;
 }
 
-export const QuizAIPage: React.FC<QuizAIPageProps> = ({ previewMode = false }) => {
+export const QuizAIPage: React.FC<QuizAIPageProps> = () => {
     return (
         <div className="min-h-screen bg-gradient-to-br from-purple-50 to-pink-50">
             {/* Header especial para Quiz com IA */}

@@ -13,7 +13,7 @@
  * ✅ Weak references para evitar memory leaks
  */
 
-import { debounce } from 'lodash-es';
+// Removed lodash-es dependency - using native debounce if needed
 
 type EventCallback = (data?: any) => void;
 type EventCleanup = () => void;

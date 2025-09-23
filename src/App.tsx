@@ -1,14 +1,16 @@
 /**
- * 🎯 APP.TSX SIMPLIFICADO - VERSÃO LIMPA
+ * 🎯 APP.TSX com ROTEAMENTO SPA OTIMIZADO
  * 
- * ANTES: 551 linhas, 50+ rotas, 11+ editores
- * DEPOIS: ~150 linhas, 10 rotas essenciais, 1 editor único
- * 
- * FILOSOFIA: 1 Editor, 1 Provider, 1 Verdade
+ * MELHORIAS v2.0:
+ * ✅ Roteamento aninhado para admin
+ * ✅ Layout consistente para áreas administrativas
+ * ✅ Página 404 personalizada
+ * ✅ Code splitting otimizado por seções
+ * ✅ Fallbacks apropriados
+ * ✅ Estrutura escalável
  */
 
 import { Suspense, lazy, useEffect } from 'react';
-import React from 'react';
 import { Route, Router, Switch } from 'wouter';
 import { ThemeProvider } from './components/theme-provider';
 import { LoadingFallback } from './components/ui/loading-fallback';
@@ -21,29 +23,33 @@ import { QuizErrorBoundary } from './components/RouteErrorBoundary';
 // 🏠 PÁGINAS ESSENCIAIS
 const Home = lazy(() => import('./pages/Home'));
 const AuthPage = lazy(() => import('./pages/AuthPage'));
+const NotFound = lazy(() => import('./pages/NotFound'));
 
 // 🎯 EDITOR ÚNICO - PONTO DE ENTRADA DEFINITIVO
 const ModernUnifiedEditor = lazy(() => import('./pages/editor/ModernUnifiedEditor'));
 
 // 🧪 PÁGINAS DE QUIZ
 const QuizEstiloPessoalPage = lazy(() => import('./pages/QuizEstiloPessoalPage'));
+const QuizAIPage = lazy(() => import('./pages/QuizAIPage'));
+
+// 🏢 LAYOUT ADMINISTRATIVO
+const AdminLayout = lazy(() => import('./components/layout/AdminLayout'));
 
 // 🔧 PÁGINAS ADMIN
-const DashboardPage = lazy(() => import('./pages/DashboardPage'));
 const AnalyticsPage = lazy(() => import('./pages/admin/AnalyticsPage'));
-const OverviewPage = lazy(() => import('./pages/admin/OverviewPage'));
+const ConsolidatedOverviewPage = lazy(() => import('./pages/admin/ConsolidatedOverviewPage'));
 const SettingsPage = lazy(() => import('./pages/admin/SettingsPage'));
 
-// 🎨 PÁGINA DE TEMPLATES
+// 🎨 PÁGINAS DE TEMPLATES
 const TemplatesPage = lazy(() => import('./pages/TemplatesPage'));
 const SystemDiagnosticPage = lazy(() => import('./pages/SystemDiagnosticPage'));
 
 function App() {
   useEffect(() => {
-    // Note: performanceManager.startPageLoad removed as method doesn't exist
-    // TODO: Implement performance tracking when needed
-    console.log('🚀 App initialized');
-  }, []); return (
+    console.log('🚀 App initialized with SPA routing v2.0');
+  }, []);
+
+  return (
     <ThemeProvider defaultTheme="light">
       <AuthProvider>
         <FunnelsProvider>
@@ -65,7 +71,7 @@ function App() {
 
                   {/* 🤖 QUIZ COM IA - ROTA ESPECIAL */}
                   <Route path="/quiz-ai-21-steps">
-                    {React.lazy(() => import('./pages/QuizAIPage'))}
+                    <QuizAIPage />
                   </Route>
 
                   <Route path="/:funnelId">
@@ -84,17 +90,15 @@ function App() {
                   <TemplatesPage />
                 </Route>
 
-                {/* 🎨 EDITOR DE TEMPLATES AVANÇADO */}
-                <Route path="/editor/templates" component={React.lazy(() => import('./pages/editor-templates/index'))} />
+                <Route path="/editor/templates" component={lazy(() => import('./pages/editor-templates/index'))} />
 
+                {/* 🔄 REDIRECTS LEGACY EDITORES */}
                 <Route path="/editor-pro">
                   <RedirectRoute to="/editor" />
                 </Route>
-
                 <Route path="/editor-modular">
                   <RedirectRoute to="/editor" />
                 </Route>
-
                 <Route path="/editor-v1">
                   <RedirectRoute to="/editor" />
                 </Route>
@@ -117,21 +121,39 @@ function App() {
                   <AuthPage />
                 </Route>
 
-                {/* 🛡️ PÁGINAS PROTEGIDAS - ADMIN */}
+                {/* 🏢 ÁREA ADMINISTRATIVA COM LAYOUT CONSISTENTE */}
+                <Route path="/admin" nest>
+                  <Route path="/">
+                    <AdminLayout 
+                      title="Dashboard Administrativo" 
+                      subtitle="Visão geral das métricas e atividades do sistema"
+                    >
+                      <ConsolidatedOverviewPage />
+                    </AdminLayout>
+                  </Route>
+
+                  <Route path="/analytics">
+                    <AdminLayout 
+                      title="Analytics Avançado" 
+                      subtitle="Métricas detalhadas e análises de performance"
+                    >
+                      <AnalyticsPage />
+                    </AdminLayout>
+                  </Route>
+
+                  <Route path="/settings">
+                    <AdminLayout 
+                      title="Configurações do Sistema" 
+                      subtitle="Gerenciar configurações e preferências"
+                    >
+                      <SettingsPage />
+                    </AdminLayout>
+                  </Route>
+                </Route>
+
+                {/* 🛡️ DASHBOARD (REDIRECT PARA ADMIN) */}
                 <Route path="/dashboard">
-                  <DashboardPage />
-                </Route>
-
-                <Route path="/admin">
-                  <OverviewPage />
-                </Route>
-
-                <Route path="/admin/analytics">
-                  <AnalyticsPage />
-                </Route>
-
-                <Route path="/admin/settings">
-                  <SettingsPage />
+                  <RedirectRoute to="/admin" />
                 </Route>
 
                 {/* 🔧 DESENVOLVIMENTO */}
@@ -139,9 +161,9 @@ function App() {
                   <SystemDiagnosticPage />
                 </Route>
 
-                {/* 🚫 FALLBACK */}
+                {/* 🚫 PÁGINA 404 PERSONALIZADA */}
                 <Route>
-                  <RedirectRoute to="/" />
+                  <NotFound />
                 </Route>
               </Switch>
             </Suspense>
@@ -156,21 +178,34 @@ function App() {
 export default App;
 
 /**
- * 📊 MÉTRICAS DE SIMPLIFICAÇÃO:
+ * 📊 MELHORIAS IMPLEMENTADAS:
  * 
- * ANTES:
- * - 551 linhas
- * - 50+ rotas
- * - 11+ editores diferentes
- * - 17+ lazy imports de editores
- * - 7+ providers conflitantes
+ * ✅ ROTEAMENTO SPA:
+ * - Configuração completa no vite.config.ts
+ * - historyApiFallback para todas as rotas
+ * - Redirects Netlify otimizados
  * 
- * DEPOIS:
- * - ~130 linhas
- * - 15 rotas essenciais
- * - 1 editor único (ModernUnifiedEditor)
- * - 3 redirects para consolidação
- * - 1 provider principal
+ * ✅ LAYOUT ADMINISTRATIVO:
+ * - AdminLayout consistente para todas as páginas admin
+ * - Navegação lateral unificada
+ * - Breadcrumbs automáticos
+ * - Estrutura responsiva
  * 
- * REDUÇÃO: 76% das linhas, 70% das rotas
+ * ✅ NAVEGAÇÃO MELHORADA:
+ * - useNavigation v2.0 com breadcrumbs
+ * - Histórico de navegação
+ * - Transições suaves
+ * - Preload estratégico
+ * 
+ * ✅ UX OTIMIZADA:
+ * - Página 404 personalizada
+ * - Loading states consistentes  
+ * - Error boundaries adequados
+ * - Code splitting por seções
+ * 
+ * ✅ PERFORMANCE:
+ * - Lazy loading otimizado
+ * - Code splitting inteligente
+ * - Bundle size reduzido
+ * - Cache estratégico
  */

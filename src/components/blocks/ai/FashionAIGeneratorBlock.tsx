@@ -6,10 +6,8 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { Block, BlockProps } from '@/types/editor';
-import { useFashionAI } from '@/hooks/useFashionAI';
+import { Block } from '@/types/editor';
 import { QuizResult } from '@/components/editor/v1-modular/QuizCalculationEngine';
-import { useAIInterpolation } from '@/utils/aiInterpolation';
 import { Loader2, Sparkles, RefreshCw, Download, Heart } from 'lucide-react';
 
 interface FashionAIGeneratorContent {
@@ -52,7 +50,7 @@ interface FashionAIGeneratorBlock extends Block {
     properties: FashionAIGeneratorProperties;
 }
 
-interface FashionAIGeneratorBlockProps extends BlockProps {
+interface FashionAIGeneratorBlockProps {
     block: FashionAIGeneratorBlock;
     quizResult?: QuizResult;
     isSelected?: boolean;
@@ -69,7 +67,7 @@ export const FashionAIGeneratorBlock: React.FC<FashionAIGeneratorBlockProps> = (
     isEditing = false
 }) => {
     const { content, properties } = block;
-    const { aiData, interpolateText } = useAIInterpolation(quizResult || null);
+    // const { aiData, interpolateText } = useAIInterpolation(quizResult || null);
 
     const [generatedImages, setGeneratedImages] = useState<string[]>([]);
     const [currentStyle, setCurrentStyle] = useState<string>('');
