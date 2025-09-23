@@ -10,7 +10,7 @@
  * ✅ Estrutura escalável
  */
 
-import { Suspense, lazy, useEffect } from 'react';
+import React, { Suspense, lazy, useEffect } from 'react';
 import { Route, Router, Switch } from 'wouter';
 import { ThemeProvider } from './components/theme-provider';
 import { LoadingFallback } from './components/ui/loading-fallback';
@@ -63,34 +63,42 @@ function App() {
                   </div>
                 </Route>
 
-                {/* 🎯 EDITOR - REDIRECIONA PARA TEMPLATES QUANDO VAZIO */}
-                <Route path="/editor" nest>
-                  <Route path="/">
-                    <RedirectRoute to="/editor/templates" />
-                  </Route>
-
-                  {/* 🤖 QUIZ COM IA - ROTA ESPECIAL */}
-                  <Route path="/quiz-ai-21-steps">
-                    <QuizAIPage />
-                  </Route>
-
-                  <Route path="/:funnelId">
-                    {(params) => (
-                      <QuizErrorBoundary>
-                        <div data-testid="editor-unified-page">
-                          <ModernUnifiedEditor funnelId={params.funnelId} />
-                        </div>
-                      </QuizErrorBoundary>
-                    )}
-                  </Route>
+                {/* 🎯 EDITOR - ROTAS DIRETAS SEM NESTED REDIRECTS */}
+                <Route path="/editor">
+                  <div data-testid="editor-templates-page">
+                    <Suspense fallback={<LoadingFallback />}>
+                      {React.createElement(lazy(() => import('./pages/editor-templates/index')))}
+                    </Suspense>
+                  </div>
                 </Route>
 
-                {/* 🎨 PÁGINA DE TEMPLATES */}
+                <Route path="/editor/templates">
+                  <div data-testid="editor-templates-page">
+                    <Suspense fallback={<LoadingFallback />}>
+                      {React.createElement(lazy(() => import('./pages/editor-templates/index')))}
+                    </Suspense>
+                  </div>
+                </Route>
+
+                <Route path="/editor/:funnelId">
+                  {(params) => (
+                    <QuizErrorBoundary>
+                      <div data-testid="editor-unified-page">
+                        <ModernUnifiedEditor funnelId={params.funnelId} />
+                      </div>
+                    </QuizErrorBoundary>
+                  )}
+                </Route>
+
+                {/* 🤖 QUIZ COM IA - ROTA ESPECIAL */}
+                <Route path="/quiz-ai-21-steps">
+                  <QuizAIPage />
+                </Route>
+
+                {/* 🎨 PÁGINA DE TEMPLATES GERAL */}
                 <Route path="/templates">
                   <TemplatesPage />
                 </Route>
-
-                <Route path="/editor/templates" component={lazy(() => import('./pages/editor-templates/index'))} />
 
                 {/* 🔄 REDIRECTS LEGACY EDITORES */}
                 <Route path="/editor-pro">

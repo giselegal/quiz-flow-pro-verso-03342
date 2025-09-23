@@ -7,6 +7,7 @@ import { useLocation } from 'wouter';
 import { getUnifiedTemplates } from '@/config/unifiedTemplatesRegistry';
 import { cloneFunnelTemplate } from '@/utils/cloneFunnel';
 import { funnelLocalStore } from '@/services/funnelLocalStore';
+import EditorLayout from '@/components/layout/EditorLayout';
 
 const EditorTemplatesPage: React.FC = () => {
   const [, setLocation] = useLocation();
@@ -94,16 +95,20 @@ const EditorTemplatesPage: React.FC = () => {
   };
 
   return (
-    <div className="container mx-auto p-6">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-[#432818] mb-2">
-          <Sparkles className="inline-block w-8 h-8 mr-2 text-[#B89B7A]" />
-          Modelos de Funil
-        </h1>
-        <p className="text-[#8F7A6A] text-lg">
-          Escolha um modelo otimizado para começar seu funil
-        </p>
-      </div>
+    <EditorLayout
+      title="Modelos de Funil"
+      subtitle="Escolha um template otimizado para começar"
+    >
+      <div className="container mx-auto p-6 h-full overflow-y-auto">
+        <div className="mb-8">
+          <div className="flex items-center gap-3 mb-4">
+            <Sparkles className="w-8 h-8 text-primary" />
+            <div>
+              <h1 className="text-3xl font-bold text-foreground">Templates Disponíveis</h1>
+              <p className="text-muted-foreground">Selecione um modelo e personalize conforme necessário</p>
+            </div>
+          </div>
+        </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {templates.map((template) => (
@@ -193,15 +198,19 @@ const EditorTemplatesPage: React.FC = () => {
           <p className="text-[#8F7A6A] mb-4">
             Não há templates disponíveis no momento.
           </p>
-          <Button
-            onClick={() => setLocation('/editor')}
-            className="bg-[#B89B7A] hover:bg-[#A08966] text-white"
-          >
-            Criar Funil do Zero
-          </Button>
+      <Button
+        onClick={() => {
+          const emptyFunnelId = `funnel-empty-${Date.now()}`;
+          setLocation(`/editor/${emptyFunnelId}`);
+        }}
+        className="bg-[#B89B7A] hover:bg-[#A08966] text-white"
+      >
+        Criar Funil do Zero
+      </Button>
         </div>
       )}
-    </div>
+      </div>
+    </EditorLayout>
   );
 };
 
