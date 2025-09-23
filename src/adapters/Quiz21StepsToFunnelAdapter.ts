@@ -21,6 +21,7 @@ import {
     StepSettings
 } from '@/core/funnel/types';
 import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
+import type { FunnelSettings } from '@/core/funnel/types';
 
 // ============================================================================
 // TIPOS DO ADAPTER
@@ -192,7 +193,7 @@ export class Quiz21StepsToFunnelAdapter {
         return BLOCK_TO_COMPONENT_TYPE_MAP[blockType] || blockType;
     }
 
-    private mapBlockContent(content: any): any {
+    private mapBlockContent(content: Record<string, any>): Record<string, any> {
         return {
             text: content.text || content.label || content.title || '',
             value: content.value || '',
@@ -201,7 +202,7 @@ export class Quiz21StepsToFunnelAdapter {
         };
     }
 
-    private mapBlockProperties(properties: any): any {
+    private mapBlockProperties(properties: Record<string, any>): Record<string, any> {
         return {
             required: properties.required === true,
             placeholder: properties.placeholder || '',
@@ -226,7 +227,7 @@ export class Quiz21StepsToFunnelAdapter {
         };
     }
 
-    private createFunnelSettings(): any {
+    private createFunnelSettings(): FunnelSettings {
         return {
             autoSave: true,
             autoAdvance: false,
@@ -240,18 +241,9 @@ export class Quiz21StepsToFunnelAdapter {
                 spacing: '16px',
                 layout: 'centered'
             },
-            navigation: {
-                showProgress: true,
-                showStepNumbers: true,
-                allowBackward: true,
-                showNavigationButtons: true,
-                autoAdvanceDelay: 0
-            },
-            validation: {
-                strictMode: false,
-                requiredFields: [],
-                customValidators: {}
-            }
+            autoSaveInterval: 30000,
+            maxHistorySize: 50,
+            validationRules: []
         };
     }
 

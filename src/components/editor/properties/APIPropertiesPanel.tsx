@@ -231,9 +231,9 @@ const PropertyField: React.FC<PropertyFieldProps> = memo(({
                         <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                        {schema.options.map((option) => (
-                            <SelectItem key={option} value={option}>
-                                {option}
+                        {schema.options.map((option, index) => (
+                            <SelectItem key={index} value={String(option)}>
+                                {String(option)}
                             </SelectItem>
                         ))}
                     </SelectContent>

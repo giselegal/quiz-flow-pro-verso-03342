@@ -20,10 +20,10 @@ import { DraftPersistence } from '@/services/editor/DraftPersistence';
 export interface BlockPropertySchema {
     kind: 'text' | 'number' | 'boolean' | 'select' | 'color' | 'image' | 'range';
     label: string;
-    defaultValue: any;
-    options?: any[];
-    validation?: (value: any) => boolean;
-    transform?: (value: any) => any;
+    defaultValue: string | number | boolean | any[] | Record<string, any>;
+    options?: Array<{label: string; value: string | number}>;
+    validation?: (value: string | number | boolean) => boolean;
+    transform?: (value: string | number | boolean) => string | number | boolean;
 }
 
 export interface BlockDefinition {
@@ -39,8 +39,8 @@ export interface PropertyChangeEvent {
     blockId: string;
     blockType: string;
     property: string;
-    oldValue: any;
-    newValue: any;
+    oldValue: string | number | boolean | any[] | Record<string, any>;
+    newValue: string | number | boolean | any[] | Record<string, any>;
     timestamp: number;
 }
 
