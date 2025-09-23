@@ -21,7 +21,7 @@ import { logger } from '@/utils/debugLogger';
 
 // 🎯 LAZY LOADED COMPONENTS (código splitting inteligente)
 const EditorToolbar = React.lazy(() => import('@/components/editor/toolbar/EditorToolbar').then(m => ({ default: m.EditorToolbar })));
-const FunnelStagesPanel = React.lazy(() => import('@/components/editor/sidebars/FunnelStagesSidebar').catch(() => import('@/components/editor/sidebars/ComponentsSidebar')));
+const StepSidebar = React.lazy(() => import('@/components/editor/sidebars/StepSidebar'));
 const ComponentsSidebar = React.lazy(() => import('@/components/editor/sidebars/ComponentsSidebar'));
 const CanvasDropZone = React.lazy(() => import('@/components/editor/canvas/CanvasDropZone.simple'));
 const UltraUnifiedPropertiesPanel = React.lazy(() => import('@/components/editor/properties/UltraUnifiedPropertiesPanel'));
@@ -92,7 +92,21 @@ const ModeRenderer: React.FC<{
               {/* Sidebar Esquerda - Etapas */}
               <div className="w-64 border-r border-border bg-card">
                 <Suspense fallback={<ComponentLoadingFallback name="Etapas" />}>
-                  <FunnelStagesPanel />
+                  <StepSidebar 
+                    currentStep={state.currentStep}
+                    totalSteps={21}
+                    stepHasBlocks={Object.fromEntries(
+                      Array.from({length: 21}, (_, i) => [i + 1, (state.stepBlocks[`step-${i + 1}`]?.length || 0) > 0])
+                    )}
+                    stepValidation={state.stepValidation}
+                    onSelectStep={actions.setCurrentStep}
+                    getStepAnalysis={(step) => ({
+                      icon: 'quiz',
+                      label: `Etapa ${step}`,
+                      desc: `Quiz step ${step}`
+                    })}
+                    renderIcon={(_name, className) => <span className={className}>🎯</span>}
+                  />
                 </Suspense>
               </div>
               
@@ -170,7 +184,21 @@ const ModeRenderer: React.FC<{
             <div className="flex h-full">
               <div className="w-64 border-r border-border">
                 <Suspense fallback={<ComponentLoadingFallback name="Etapas" />}>
-                  <FunnelStagesPanel />
+                  <StepSidebar 
+                    currentStep={state.currentStep}
+                    totalSteps={21}
+                    stepHasBlocks={Object.fromEntries(
+                      Array.from({length: 21}, (_, i) => [i + 1, (state.stepBlocks[`step-${i + 1}`]?.length || 0) > 0])
+                    )}
+                    stepValidation={state.stepValidation}
+                    onSelectStep={actions.setCurrentStep}
+                    getStepAnalysis={(step) => ({
+                      icon: 'quiz',
+                      label: `Etapa ${step}`,
+                      desc: `Quiz step ${step}`
+                    })}
+                    renderIcon={(_name, className) => <span className={className}>🎯</span>}
+                  />
                 </Suspense>
               </div>
               <div className="flex-1">
@@ -245,32 +273,6 @@ export const UnifiedEditorCore: React.FC<UnifiedEditorCoreProps> = ({
     }
   }, [performanceStats]);
 
-  // 🎯 ERROR BOUNDARY FALLBACK
-  const ErrorFallback = React.useMemo(() => 
-    React.memo(() => (
-      <div className="flex items-center justify-center h-full bg-background">
-        <div className="text-center max-w-md p-6">
-          <div className="w-16 h-16 mx-auto mb-4 text-destructive">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" className="w-full h-full">
-              <circle cx="12" cy="12" r="10"/>
-              <line x1="12" y1="8" x2="12" y2="12"/>
-              <line x1="12" y1="16" x2="12.01" y2="16"/>
-            </svg>
-          </div>
-          <h2 className="text-xl font-semibold text-foreground mb-2">Erro no Editor</h2>
-          <p className="text-muted-foreground mb-4">
-            Ocorreu um erro inesperado. Tentando recuperar...
-          </p>
-          <button 
-            onClick={() => window.location.reload()}
-            className="px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90"
-          >
-            Recarregar Editor
-          </button>
-        </div>
-      </div>
-    )), []
-  );
 
   return (
     <div className={`unified-editor-core ${className} bg-background`}>
