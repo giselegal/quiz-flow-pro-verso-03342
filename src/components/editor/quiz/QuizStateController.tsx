@@ -1,7 +1,22 @@
 /**
  * 🎯 CONTROLADOR CENTRAL DO FLUXO DO QUIZ
  *
- * Gerencia estado global da  const editorState = useMemo(() => {
+ * Gerencia estado global da  const editorS  const editorState = useMemo(() => {
+    try {
+      return useEditor();
+    } catch {
+      return null; // Editor não disponível
+    }
+  }, []);
+
+  // Note: quizState removed as it was unused - using useQuizNavigation directly
+  const {
+    navigationState,
+    goToStep,
+    nextStep: navNext,
+    previousStep: navPrev,
+  } = useQuizNavigation(currentStepNumber, totalSteps, (step: number) => {
+    setCurrentStepNumber(step); => {
     try {
       return useEditor();
     } catch {

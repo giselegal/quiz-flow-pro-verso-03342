@@ -223,53 +223,53 @@ const MainEditorUnifiedInternal: React.FC<MainEditorUnifiedProps> = ({
       {/* 🎯 FOOTER COM CONTROLES DE STEP */}
       <div className="p-4 border-t bg-background">
         <div className="flex items-center justify-between">
-      <button
-        onClick={() => handleStepChange(Math.max(1, stepNumber - 1))}
-        disabled={stepNumber <= 1}
-        className="px-4 py-2 bg-muted hover:bg-muted/80 disabled:opacity-50 rounded-lg"
-      >
-        ← Anterior
-      </button>
-
-      <div className="flex items-center gap-2">
-        {Array.from({ length: 21 }, (_, i) => i + 1).map((step) => (
           <button
-            key={step}
-            onClick={() => handleStepChange(step)}
-            className={cn(
-              'w-8 h-8 rounded-full text-sm',
-              step === stepNumber
-                ? 'bg-primary text-primary-foreground'
-                : 'bg-muted hover:bg-muted/80'
-            )}
+            onClick={() => handleStepChange(Math.max(1, stepNumber - 1))}
+            disabled={stepNumber <= 1}
+            className="px-4 py-2 bg-muted hover:bg-muted/80 disabled:opacity-50 rounded-lg"
           >
-            {step}
+            ← Anterior
           </button>
-        ))}
+
+          <div className="flex items-center gap-2">
+            {Array.from({ length: 21 }, (_, i) => i + 1).map((step) => (
+              <button
+                key={step}
+                onClick={() => handleStepChange(step)}
+                className={cn(
+                  'w-8 h-8 rounded-full text-sm',
+                  step === stepNumber
+                    ? 'bg-primary text-primary-foreground'
+                    : 'bg-muted hover:bg-muted/80'
+                )}
+              >
+                {step}
+              </button>
+            ))}
+          </div>
+
+          <button
+            onClick={() => handleStepChange(Math.min(21, stepNumber + 1))}
+            disabled={stepNumber >= 21}
+            className="px-4 py-2 bg-muted hover:bg-muted/80 disabled:opacity-50 rounded-lg"
+          >
+            Próximo →
+          </button>
+        </div>
       </div>
 
-      <button
-        onClick={() => handleStepChange(Math.min(21, stepNumber + 1))}
-        disabled={stepNumber >= 21}
-        className="px-4 py-2 bg-muted hover:bg-muted/80 disabled:opacity-50 rounded-lg"
-      >
-        Próximo →
-      </button>
-    </div>
-  </div>
-
-  {/* 🐛 DEBUG INFO */ }
-  {
-    debugMode && (
-      <div className="fixed bottom-4 right-4 p-3 bg-black/80 text-white text-xs rounded-lg max-w-sm">
-        <div>Clean Architecture: ✅</div>
-        <div>Step: {stepNumber}/21</div>
-        <div>Blocks: {blocks?.length || 0}</div>
-        <div>Funnel: {funnel?.id || 'N/A'}</div>
-        {featureFlags.useCleanArchitecture && <div>🚩 New Architecture</div>}
-      </div>
-    )
-  }
+      {/* 🐛 DEBUG INFO */}
+      {
+        debugMode && (
+          <div className="fixed bottom-4 right-4 p-3 bg-black/80 text-white text-xs rounded-lg max-w-sm">
+            <div>Clean Architecture: ✅</div>
+            <div>Step: {stepNumber}/21</div>
+            <div>Blocks: {blocks?.length || 0}</div>
+            <div>Funnel: {funnel?.id || 'N/A'}</div>
+            {featureFlags.useCleanArchitecture && <div>🚩 New Architecture</div>}
+          </div>
+        )
+      }
     </div >
   );
 };
