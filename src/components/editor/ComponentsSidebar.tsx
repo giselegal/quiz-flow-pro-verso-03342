@@ -25,6 +25,11 @@ import {
   Palette,
   Star,
   Heart,
+  PlayCircle,
+  ArrowRight,
+  CircleCheckBig,
+  ShoppingBag,
+  Sparkles,
 } from 'lucide-react';
 import React from 'react';
 
@@ -135,6 +140,76 @@ const blockCategories: BlockCategory[] = [
     ],
   },
   {
+    title: 'Quiz Components',
+    items: [
+      {
+        type: 'quiz-intro-step',
+        label: 'Intro Step',
+        icon: <Sparkles className="h-4 w-4" />,
+        description: 'Etapa de introdução do quiz',
+      },
+      {
+        type: 'quiz-question-step',
+        label: 'Question Step',
+        icon: <MessageSquare className="h-4 w-4" />,
+        description: 'Etapa de pergunta do quiz',
+      },
+      {
+        type: 'quiz-transition-step',
+        label: 'Transition Step',
+        icon: <ArrowRight className="h-4 w-4" />,
+        description: 'Etapa de transição entre seções',
+      },
+      {
+        type: 'quiz-result-step',
+        label: 'Result Step',
+        icon: <CircleCheckBig className="h-4 w-4" />,
+        description: 'Etapa de exibição do resultado',
+      },
+      {
+        type: 'quiz-offer-step',
+        label: 'Offer Step',
+        icon: <ShoppingBag className="h-4 w-4" />,
+        description: 'Etapa de apresentação da oferta',
+      },
+    ],
+  },
+  {
+    title: 'Funnel Blocks',
+    items: [
+      {
+        type: 'funnel-intro-step',
+        label: 'Funnel Intro',
+        icon: <PlayCircle className="h-4 w-4" />,
+        description: 'Introdução ao funil/quiz',
+      },
+      {
+        type: 'name-collect-step',
+        label: 'Name Collect',
+        icon: <User className="h-4 w-4" />,
+        description: 'Coleta de nome do usuário',
+      },
+      {
+        type: 'question-multiple-step',
+        label: 'Multiple Choice',
+        icon: <CheckSquare className="h-4 w-4" />,
+        description: 'Perguntas de múltipla escolha',
+      },
+      {
+        type: 'processing-step',
+        label: 'Processing',
+        icon: <Target className="h-4 w-4" />,
+        description: 'Processamento do resultado',
+      },
+      {
+        type: 'offer-page-step',
+        label: 'Offer Page',
+        icon: <Gift className="h-4 w-4" />,
+        description: 'Página de oferta final',
+      },
+    ],
+  },
+  {
     title: 'Resultado Step 20',
     items: [
       {
@@ -185,7 +260,7 @@ const blockCategories: BlockCategory[] = [
 
 export const ComponentsSidebar: React.FC = () => {
   const { actions, state } = useEditor();
-  
+
   const handleAddBlock = (type: BlockType) => {
     const stepKey = `step-${state.currentStep}`;
     const newBlock: Block = {

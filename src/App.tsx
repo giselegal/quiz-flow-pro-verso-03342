@@ -7,6 +7,8 @@ import { Toaster } from './components/ui/toaster';
 import { AuthProvider } from './context/AuthContext';
 import { FunnelsProvider } from './context/FunnelsContext';
 import { performanceManager } from './utils/performanceManager';
+import { RedirectRoute } from './components/RedirectRoute';
+import { QuizErrorBoundary, EditorErrorBoundary } from './components/RouteErrorBoundary';
 
 const EditorTemplatesPage = lazy(() => import('./pages/editor-templates'));
 const ComQueRoupaEuVouPage = lazy(() => import('./pages/ComQueRoupaEuVouPage'));
@@ -36,6 +38,9 @@ const DashboardPage = lazy(() => import('./pages/DashboardPage'));
 const StepPage = lazy(() => import('./pages/StepPage'));
 // ✅ Página de produção modular limpa (cliente final)
 const QuizModularPage = lazy(() => import('./pages/QuizModularPage'));
+
+// 🎯 NOVO: Quiz Estilo Pessoal - Gisele Galvão
+const QuizEstiloPessoalPage = lazy(() => import('./pages/QuizEstiloPessoalPage'));
 
 // Lazy loading para páginas admin
 const AnalyticsPage = lazy(() => import('./pages/admin/AnalyticsPage'));
@@ -130,6 +135,23 @@ function App() {
                     <QuizModularPage />
                   </Suspense>
                 } />
+
+                {/* 🎯 NOVO: Quiz Estilo Pessoal - Gisele Galvão */}
+                <Route path="/quiz-estilo" component={() =>
+                  <QuizErrorBoundary>
+                    <Suspense fallback={<LoadingFallback />}>
+                      <QuizEstiloPessoalPage />
+                    </Suspense>
+                  </QuizErrorBoundary>
+                } />
+                <Route path="/quiz-gisele" component={() =>
+                  <QuizErrorBoundary>
+                    <Suspense fallback={<LoadingFallback />}>
+                      <QuizEstiloPessoalPage />
+                    </Suspense>
+                  </QuizErrorBoundary>
+                } />
+
                 {/* Encaminha o parâmetro :step para QuizModularPage */}
                 <Route path="/quiz/:step" component={(params: any) =>
                   <Suspense fallback={<LoadingFallback />}>
@@ -145,23 +167,23 @@ function App() {
 
                 {/* 🚀 EDITOR UNIFICADO - TODAS AS ROTAS REDIRECIONAM PARA AQUI */}
 
-// Update App.tsx routes to use SingleEditorEntry
-<Route path="/editor/:funnelId?" component={({ params }: { params: { funnelId?: string } }) => (
-  <Suspense fallback={<LoadingFallback />}>
-    <SingleEditorEntry funnelId={params.funnelId} />
-  </Suspense>
-)} />
+                {/* Rota principal do editor */}
+                <Route path="/editor/:funnelId?" component={({ params }: { params: { funnelId?: string } }) => (
+                  <Suspense fallback={<LoadingFallback />}>
+                    <SingleEditorEntry funnelId={params.funnelId} />
+                  </Suspense>
+                )} />
 
                 {/* Redirecionamentos para o editor unificado */}
                 <Route path="/editor-pro/:funnelId?" component={({ params }: { params: { funnelId?: string } }) => {
                   // Redireciona para o editor unificado mantendo parâmetros
-                  const search = window.location.search;
-                  const newPath = `/editor${params.funnelId ? `/${params.funnelId}` : ''}${search}`;
-                  window.history.replaceState(null, '', newPath);
+                  const targetPath = `/editor${params.funnelId ? `/${params.funnelId}` : ''}`;
                   return (
-                    <Suspense fallback={<LoadingFallback />}>
-                      <ModernUnifiedEditor funnelId={params.funnelId} />
-                    </Suspense>
+                    <RedirectRoute to={targetPath} preserveQuery={true}>
+                      <Suspense fallback={<LoadingFallback />}>
+                        <ModernUnifiedEditor funnelId={params.funnelId} />
+                      </Suspense>
+                    </RedirectRoute>
                   );
                 }} />
 

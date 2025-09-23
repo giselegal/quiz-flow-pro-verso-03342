@@ -1,18 +1,24 @@
-// 🚫 ARQUIVO DESABILITADO - MIGRADO PARA Routing.test.wouter.tsx
-// 
-// Este arquivo usa MemoryRouter (React Router) que foi removido do projeto.
-// Os testes foram migrados para usar Wouter em Routing.test.wouter.tsx
-// 
-// MOTIVO: Sistema migrado de React Router DOM para Wouter
-// STATUS: Deprecated - Manter para referência histórica
+import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { render, screen } from '@testing-library/react';
+import { Router } from 'wouter';
+import App from '@/App';
 
-import { describe, it, expect } from 'vitest';
+// Mock dos componentes principais
+vi.mock('@/components/editor/EditorProUnified', () => ({
+  default: () => <div data-testid="editor-pro-unified">Editor Unificado</div>,
+}));
 
-describe('🚫 Testes Desabilitados - Migrados para Wouter', () => {
-  it.skip('deve migrar para Routing.test.wouter.tsx', () => {
-    expect(true).toBe(true);
-  });
-});
+vi.mock('@/pages/Index', () => ({
+  default: () => <div data-testid="index-page">Página Inicial</div>,
+}));
+
+vi.mock('@/pages/StepsShowcase', () => ({
+  default: () => <div data-testid="steps-showcase">Steps Showcase</div>,
+}));
+
+vi.mock('@/pages/EditorUnifiedPage', () => ({
+  default: () => <div data-testid="editor-unified-page">Editor Unified Page</div>,
+}));
 
 // Mock do sistema de navegação
 vi.mock('@/hooks/useUnifiedStepNavigation', () => ({
@@ -100,7 +106,7 @@ describe('Routing Tests - Consolidação', () => {
     it('deve redirecionar rotas antigas do editor', () => {
       const oldRoutes = [
         '/editor-consolidated',
-        '/editor-simple',
+        '/editor-simple', 
         '/editor-optimized',
         '/main-editor'
       ];
@@ -111,7 +117,7 @@ describe('Routing Tests - Consolidação', () => {
             <App />
           </MemoryRouter>
         );
-
+        
         // Rotas antigas não devem existir mais
         expect(screen.queryByTestId('old-editor')).not.toBeInTheDocument();
       });
@@ -254,13 +260,13 @@ describe('Routing Tests - Consolidação', () => {
   describe('Performance de Routing', () => {
     it('deve carregar rotas rapidamente', () => {
       const start = performance.now();
-
+      
       render(
         <MemoryRouter initialEntries={['/editor']}>
           <App />
         </MemoryRouter>
       );
-
+      
       const end = performance.now();
       const loadTime = end - start;
 

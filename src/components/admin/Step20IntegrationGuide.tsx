@@ -34,20 +34,22 @@ export const QuizResultPage = () => {
 };`,
 
         routerIntegration: `// Em App.tsx
-import { Routes, Route } from 'react-router-dom';
+import { Route, Router, Switch } from 'wouter';
 
 function App() {
   return (
-    <Routes>
-      {/* Etapas regulares */}
-      <Route path="/step/:step" element={<StepPage />} />
-      
-      {/* Página de resultado especializada */}
-      <Route path="/step20" element={<QuizResultPage />} />
-      
-      {/* Outras rotas */}
-      <Route path="/" element={<HomePage />} />
-    </Routes>
+    <Router>
+      <Switch>
+        {/* Etapas regulares */}
+        <Route path="/step/:step" component={StepPage} />
+        
+        {/* Página de resultado especializada */}
+        <Route path="/step20" component={QuizResultPage} />
+        
+        {/* Outras rotas */}
+        <Route path="/" component={HomePage} />
+      </Switch>
+    </Router>
   );
 }`,
 

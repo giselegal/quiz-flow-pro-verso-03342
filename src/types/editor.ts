@@ -91,7 +91,7 @@ export type BlockType =
 
   // Blocos de quiz e formulário - NOVOS TIPOS ADICIONADOS
   | 'multiple-choice'
-  | 'single-choice' 
+  | 'single-choice'
   | 'text-input'
   | 'info-card'
   | 'result-card'
@@ -177,7 +177,21 @@ export type BlockType =
   | 'step20-secondary-styles'
   | 'step20-personalized-offer'
   | 'step20-complete-template'
-  | 'price-display';
+  | 'price-display'
+
+  // Quiz App Components (NEW)
+  | 'quiz-intro-step'
+  | 'quiz-question-step'
+  | 'quiz-transition-step'
+  | 'quiz-result-step'
+  | 'quiz-offer-step'
+
+  // Funnel Block Components (NEW)
+  | 'funnel-intro-step'
+  | 'name-collect-step'
+  | 'question-multiple-step'
+  | 'processing-step'
+  | 'offer-page-step';
 
 export interface FAQItem {
   id: string;
@@ -452,7 +466,7 @@ export interface BaseBlock {
 export interface Block extends BaseBlock {
   type: BlockType;
   content: BlockContent;
-  
+
   // Extended properties for SimpleBuilderProvider compatibility
   validation?: {
     required?: boolean;

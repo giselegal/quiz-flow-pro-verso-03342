@@ -1,0 +1,59 @@
+import QuizApp from '@/components/quiz/QuizApp';
+import '@/styles/globals.css';
+
+/**
+ * 🎯 QUIZ ESTILO PESSOAL - GISELE GALVÃO
+ * 
+ * Página principal do quiz de descoberta de estilo pessoal.
+ * Usa os novos componentes modulares criados especificamente 
+ * para o sistema da Gisele Galvão.
+ * 
+ * Funcionalidades:
+ * - ✅ 21 etapas completas (intro + 10 perguntas + estratégicas + resultado + oferta)
+ * - ✅ Sistema de pontuação por estilo (8 estilos disponíveis)
+ * - ✅ Ofertas personalizadas baseadas nas respostas estratégicas
+ * - ✅ Design com paleta de cores personalizada
+ * - ✅ Responsive e otimizado
+ */
+export default function QuizEstiloPessoalPage() {
+    return (
+        <div className="quiz-estilo-page">
+            {/* Meta tags para SEO */}
+            <head>
+                <title>Descubra Seu Estilo Pessoal - Quiz Completo | Gisele Galvão</title>
+                <meta
+                    name="description"
+                    content="Descubra seu estilo pessoal único com nosso quiz completo. Natural, Clássico, Contemporâneo, Elegante, Romântico, Sexy, Dramático ou Criativo? Faça o teste agora!"
+                />
+                <meta name="keywords" content="estilo pessoal, moda, consultoria de imagem, Gisele Galvão, quiz de estilo" />
+                <meta property="og:title" content="Descubra Seu Estilo Pessoal - Quiz Completo" />
+                <meta property="og:description" content="Quiz completo para descobrir seu estilo pessoal único. Receba dicas personalizadas e ofertas exclusivas." />
+                <meta property="og:type" content="website" />
+                <meta name="viewport" content="width=device-width, initial-scale=1" />
+            </head>
+
+            {/* Componente principal do quiz */}
+            <main className="min-h-screen">
+                <QuizApp />
+            </main>
+
+            {/* Scripts de analytics (exemplo) */}
+            <script
+                dangerouslySetInnerHTML={{
+                    __html: `
+                        // Google Analytics ou outras ferramentas
+                        console.log('Quiz Gisele Galvão - Página carregada');
+                        
+                        // Tracking de início do quiz
+                        if (typeof gtag !== 'undefined') {
+                            gtag('event', 'quiz_started', {
+                                event_category: 'engagement',
+                                event_label: 'quiz_estilo_pessoal'
+                            });
+                        }
+                    `
+                }}
+            />
+        </div>
+    );
+}
