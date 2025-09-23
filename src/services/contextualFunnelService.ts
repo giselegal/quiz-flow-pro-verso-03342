@@ -83,8 +83,31 @@ export class ContextualFunnelService implements ContextualService {
                 },
             };
 
-            const { data, error } = await supabase.from('funnels').insert(funnelData).select().single();
-            if (error) throw error;
+            const { data, error } = await supabase.from('funnels').insert([funnelData]).select().single();
+            if (error) {
+                console.warn('⚠️ Supabase insert failed, using localStorage fallback:', error);
+                // Fallback para localStorage quando Supabase falha
+                const fallbackData = {
+                    ...funnelData,
+                    id: generateId(),
+                    created_at: new Date().toISOString(),
+                    updated_at: new Date().toISOString()
+                };
+                
+                // Salvar no localStorage como fallback
+                const contextualData: ContextualFunnelData = {
+                    id: fallbackData.id,
+                    name: fallbackData.name,
+                    description: fallbackData.description || null,
+                    pages: [],
+                    theme: (fallbackData.settings as any)?.theme || 'default',
+                    config: (fallbackData.settings as any)?.config || {},
+                    context: this.context
+                };
+
+                localStorage.setItem(`contextual_funnel_${this.context}_${fallbackData.id}`, JSON.stringify(contextualData));
+                return contextualData;
+            }
 
             // ✅ Salvar também no localStorage contextual
             const contextualData: ContextualFunnelData = {

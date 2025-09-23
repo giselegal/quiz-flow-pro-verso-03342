@@ -74,7 +74,29 @@ export const schemaDrivenFunnelService = {
 
       const { data, error } = await supabase.from('funnels').insert([funnelData]).select().single();
 
-      if (error) throw error;
+      if (error) {
+        console.warn('⚠️ Supabase insert failed, using localStorage fallback:', error);
+        // Fallback para localStorage quando Supabase falha  
+        const fallbackData = {
+          ...funnelData,
+          id: generateId(),
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString()
+        };
+
+        // Salvar no localStorage
+        const fallbackFunnel: SchemaDrivenFunnelData = {
+          ...funnel,
+          id: fallbackData.id,
+          name: funnel.name || 'Novo Funil',
+          description: funnel.description || '',
+          pages: funnel.pages || []
+        };
+        
+        localStorage.setItem(`schema_funnel_${fallbackData.id}`, JSON.stringify(fallbackFunnel));
+
+        return fallbackFunnel;
+      }
 
       // Criar páginas se existirem
       if (funnel.pages && funnel.pages.length > 0) {

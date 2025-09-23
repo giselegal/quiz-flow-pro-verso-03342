@@ -60,7 +60,7 @@ function App() {
                  {/* 🎯 EDITOR - REDIRECIONA PARA TEMPLATES QUANDO VAZIO */}
                 <Route path="/editor" nest>
                   <Route path="/">
-                    <RedirectRoute to="/templates" />
+                    <RedirectRoute to="/editor/templates" />
                   </Route>
                   <Route path="/:funnelId">
                     {(params) => (
@@ -79,9 +79,7 @@ function App() {
                 </Route>
 
                 {/* 🎨 EDITOR DE TEMPLATES AVANÇADO */}
-                <Route path="/editor/templates">
-                  {React.lazy(() => import('./pages/editor-templates/index'))}
-                </Route>
+                <Route path="/editor/templates" component={React.lazy(() => import('./pages/editor-templates/index'))} />
 
                 <Route path="/editor-pro">
                   <RedirectRoute to="/editor" />
