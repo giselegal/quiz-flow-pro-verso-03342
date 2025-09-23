@@ -62,6 +62,9 @@ const TestDataPanel = lazy(() => import('./components/TestDataPanel'));
 // 🚀 URGENTE: Quiz 21 Steps Complete
 const CreateQuiz21CompletePage = lazy(() => import('./pages/CreateQuiz21CompletePage'));
 
+// 🎯 NOVO: Builder System Demo
+const BuilderSystemDemo = lazy(() => import('./pages/BuilderSystemDemo'));
+
 // 🎨 NOVO: Teste de IA para Geração de Imagens de Moda
 const FashionAITestPage = lazy(() => import('./pages/FashionAITestPage'));
 
@@ -266,6 +269,13 @@ function App() {
                     </Suspense>
                   );
                 }} />
+
+                {/* 🎯 NOVO: Builder System Demo */}
+                <Route path="/builder-demo" component={() => (
+                  <Suspense fallback={<LoadingFallback />}>
+                    <BuilderSystemDemo />
+                  </Suspense>
+                )} />
 
                 {/* 🎯 NOVO: Teste de IA para Geração de Imagens de Moda */}
                 <Route path="/fashion-ai" component={() => (

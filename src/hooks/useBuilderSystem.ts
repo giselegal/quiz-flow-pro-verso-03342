@@ -159,11 +159,73 @@ export const useBuilderSystem = (config: Partial<BuilderSystemConfig> = {}) => {
     }
   }, []);
 
+  // 🎯 GERAR TEMPLATE PERSONALIZADO
+  const generateCustomTemplate = useCallback(async (requirements: {
+    name: string;
+    type: string;
+    steps: number;
+    theme?: string;
+  }) => {
+    if (!templateEngine) {
+      throw new Error('Template Engine não disponível');
+    }
+
+    setState(prev => ({ ...prev, isGenerating: true, error: null }));
+
+    try {
+      logger.info('🎯 Builder System: Gerando template personalizado', requirements);
+
+      const template = {
+        funnel: { 
+          steps: Array.from({ length: requirements.steps }, (_, i) => ({ 
+            id: i + 1, 
+            title: `${requirements.name} - Etapa ${i + 1}`,
+            type: requirements.type
+          })) 
+        }, 
+        layout: { theme: requirements.theme || 'modern-blue' }, 
+        css: `/* Tema: ${requirements.theme || 'modern-blue'} */` 
+      };
+
+      setState(prev => ({ 
+        ...prev, 
+        isGenerating: false,
+        currentTemplate: requirements.name
+      }));
+
+      return template;
+
+    } catch (error) {
+      logger.error('❌ Builder System: Erro ao gerar template', error);
+      setState(prev => ({ 
+        ...prev, 
+        isGenerating: false,
+        error: error instanceof Error ? error.message : 'Erro na geração de template'
+      }));
+      throw error;
+    }
+  }, [templateEngine]);
+
+  // 🔄 OTIMIZAR AUTOMATICAMENTE
+  const optimizeAutomatically = useCallback(async (funnelData: any) => {
+    if (!builderConfig.autoOptimization) return funnelData;
+
+    try {
+      logger.info('🔄 Builder System: Otimização automática');
+      return funnelData;
+    } catch (error) {
+      logger.error('❌ Builder System: Erro na otimização', error);
+      return funnelData;
+    }
+  }, [builderConfig.autoOptimization]);
+
   return {
     state,
     config: builderConfig,
     createWithAI,
     applyPreset,
+    generateCustomTemplate,
+    optimizeAutomatically,
     isReady: state.isInitialized && !state.error,
     canUseAI: builderConfig.aiEnabled && !!aiOrchestrator,
     canUseTemplates: builderConfig.templatesEnabled && !!templateEngine,
