@@ -10,7 +10,7 @@
  * ✅ Estrutura escalável
  */
 
-import React, { Suspense, lazy, useEffect } from 'react';
+import { Suspense, lazy, useEffect } from 'react';
 import { Route, Router, Switch } from 'wouter';
 import { ThemeProvider } from './components/theme-provider';
 import { LoadingFallback } from './components/ui/loading-fallback';
@@ -43,6 +43,7 @@ const SettingsPage = lazy(() => import('./pages/admin/SettingsPage'));
 // 🎨 PÁGINAS DE TEMPLATES
 const TemplatesPage = lazy(() => import('./pages/TemplatesPage'));
 const SystemDiagnosticPage = lazy(() => import('./pages/SystemDiagnosticPage'));
+const EditorTemplatesPage = lazy(() => import('./pages/editor-templates/index'));
 
 function App() {
   useEffect(() => {
@@ -66,17 +67,13 @@ function App() {
                 {/* 🎯 EDITOR - ROTAS DIRETAS SEM NESTED REDIRECTS */}
                 <Route path="/editor">
                   <div data-testid="editor-templates-page">
-                    <Suspense fallback={<LoadingFallback />}>
-                      {React.createElement(lazy(() => import('./pages/editor-templates/index')))}
-                    </Suspense>
+                    <EditorTemplatesPage />
                   </div>
                 </Route>
 
                 <Route path="/editor/templates">
                   <div data-testid="editor-templates-page">
-                    <Suspense fallback={<LoadingFallback />}>
-                      {React.createElement(lazy(() => import('./pages/editor-templates/index')))}
-                    </Suspense>
+                    <EditorTemplatesPage />
                   </div>
                 </Route>
 
