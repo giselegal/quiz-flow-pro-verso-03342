@@ -63,10 +63,10 @@ export const StepAnalyticsDashboard: React.FC<StepAnalyticsDashboardProps> = ({ 
               
               {metric.blockCount > 0 && (
                 <div className="mt-1 grid grid-cols-2 gap-x-1 gap-y-0.5">
-                  {Object.entries(metric.types).map(([type, count]) => (
+                  {Object.entries(metric.types as Record<string, number>).map(([type, count]) => (
                     <div key={`${metric.step}-${type}`} className="flex justify-between">
                       <span className="text-gray-500 dark:text-gray-400 truncate">{type}:</span>
-                      <span>{count}</span>
+                      <span>{count as React.ReactNode}</span>
                     </div>
                   ))}
                 </div>

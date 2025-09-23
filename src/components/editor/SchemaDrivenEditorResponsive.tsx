@@ -35,14 +35,14 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
   const currentStepKey = `step-${state.currentStep}`;
   const currentBlocks = state.stepBlocks[currentStepKey] || [];
   const selectedBlockId = state.selectedBlockId;
-  const selectedBlock = currentBlocks.find(b => b.id === selectedBlockId) || null;
+  const selectedBlock = currentBlocks.find((b: any) => b.id === selectedBlockId) || null;
   const setSelectedBlockId = actions.setSelectedBlockId;
 
   const [isInteractiveMode, setIsInteractiveMode] = useState(mode === 'interactive');
 
   // 🎯 FASE 2: Integrar fallback para etapa 20 com sistema modular
   const isStep20 = state.currentStep === 20;
-  const hasResultHeaderBlock = currentBlocks.some(block =>
+  const hasResultHeaderBlock = currentBlocks.some((block: any) =>
     block.type === 'result-header-inline'
   );
 

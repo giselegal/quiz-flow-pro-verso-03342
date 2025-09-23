@@ -29,7 +29,7 @@ export const FunnelDataProviderWrapper: React.FC<FunnelDataProviderWrapperProps>
             editorState: {
                 currentStep: state.currentStep,
                 stepBlocks: Object.keys(state.stepBlocks),
-                stepBlocksCounts: Object.entries(state.stepBlocks).map(([key, blocks]) => ({ [key]: blocks.length })),
+                stepBlocksCounts: Object.entries(state.stepBlocks).map(([key, blocks]) => ({ [key]: (blocks as any[]).length })),
                 selectedBlockId: state.selectedBlockId,
                 isLoading: state.isLoading
             },
@@ -58,7 +58,7 @@ export const FunnelDataProviderWrapper: React.FC<FunnelDataProviderWrapperProps>
 
                 for (const stepKey of allStepKeys) {
                     const stepBlocks = state.stepBlocks[stepKey];
-                    const foundBlock = stepBlocks.find(block => block.id === blockId);
+                    const foundBlock = stepBlocks.find((block: any) => block.id === blockId);
                     if (foundBlock) {
                         console.log(`🔍 Bloco ${blockId} encontrado em ${stepKey}:`, foundBlock);
                         return foundBlock;
@@ -76,7 +76,7 @@ export const FunnelDataProviderWrapper: React.FC<FunnelDataProviderWrapperProps>
 
                 for (const stepKey of allStepKeys) {
                     const stepBlocks = state.stepBlocks[stepKey];
-                    const blockIndex = stepBlocks.findIndex(block => block.id === blockId);
+                    const blockIndex = stepBlocks.findIndex((block: any) => block.id === blockId);
 
                     if (blockIndex !== -1) {
                         // Usar a action apropriada para atualizar

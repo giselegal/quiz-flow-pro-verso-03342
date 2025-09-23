@@ -38,7 +38,7 @@ const Harness: React.FC = () => {
         };
     }, [actions]);
 
-    const list = (state.stepBlocks['step-1'] || []).map(b => b.type).join(',');
+    const list = (state.stepBlocks['step-1'] || []).map((b: any) => b.type).join(',');
     return (
         <div>
             <div data-testid="phase">{phase}</div>
