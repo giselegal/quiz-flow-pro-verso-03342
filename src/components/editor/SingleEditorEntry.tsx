@@ -17,6 +17,8 @@ import { useLocation } from 'wouter';
 import { ConsolidatedEditorProvider } from './ConsolidatedEditorProvider';
 import { UnifiedEditorCore } from './UnifiedEditorCore';
 import { ErrorBoundary } from './ErrorBoundary';
+import { PerformanceMonitorProvider } from './optimization/PerformanceMonitor';
+import { ProductionOptimizerProvider } from './optimization/ProductionOptimizer';
 import { logger } from '@/utils/debugLogger';
 
 export interface SingleEditorEntryProps {
@@ -139,13 +141,17 @@ export const SingleEditorEntry: React.FC<SingleEditorEntryProps> = (props) => {
 
   return (
     <div className="single-editor-entry h-screen w-full bg-background">
-      <ErrorBoundary>
-        <ConsolidatedEditorProvider {...providerConfig}>
-          <Suspense fallback={<LoadingFallback />}>
-            <UnifiedEditorCore {...coreConfig} />
-          </Suspense>
-        </ConsolidatedEditorProvider>
-      </ErrorBoundary>
+      <ProductionOptimizerProvider>
+        <PerformanceMonitorProvider enableOverlay={process.env.NODE_ENV === 'development'}>
+          <ErrorBoundary>
+            <ConsolidatedEditorProvider {...providerConfig}>
+              <Suspense fallback={<LoadingFallback />}>
+                <UnifiedEditorCore {...coreConfig} />
+              </Suspense>
+            </ConsolidatedEditorProvider>
+          </ErrorBoundary>
+        </PerformanceMonitorProvider>
+      </ProductionOptimizerProvider>
     </div>
   );
 };
