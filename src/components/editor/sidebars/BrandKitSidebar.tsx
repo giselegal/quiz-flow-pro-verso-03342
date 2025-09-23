@@ -8,7 +8,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 // 🎨 Brand Kit hook
 import { useBrandKit } from '@/hooks/useBrandKit';
-import { usePureBuilder } from '@/components/editor/PureBuilderProvider';
 
 /**
  * 🎨 BRAND KIT SIDEBAR
@@ -32,7 +31,10 @@ export const BrandKitSidebar: React.FC<BrandKitSidebarProps> = ({ onClose }) => 
         importBrandKit
     } = useBrandKit();
 
-    const { trackEvent } = useEditorProContext();
+    // Analytics tracking fallback for compatibility
+    const trackEvent = (event: string, data?: any) => {
+        console.log('📊 Brand Kit Event:', event, data);
+    };
 
     const [activeTab, setActiveTab] = useState('colors');
     const [previewMode, setPreviewMode] = useState(false);

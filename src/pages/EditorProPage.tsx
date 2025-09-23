@@ -160,7 +160,7 @@ const EditorProPage: React.FC<EditorProPageProps> = ({ params }) => {
             {/* 🎯 MAIN EDITOR - Com provider híbrido */}
             <div className="pt-12 h-full">
                 <Suspense fallback={<LoadingFallback />}>
-                    <PureBuilderProvider funnelId={funnelId}> funnelId={funnelId}>
+                    <PureBuilderProvider funnelId={funnelId}>
                         {/* 🎯 Editor principal com funcionalidades básicas + IA */}
                         <ModularEditorPro
                             showProFeatures={true}
