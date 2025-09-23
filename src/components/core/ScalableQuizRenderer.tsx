@@ -52,27 +52,19 @@ export const ScalableQuizRenderer = memo<ScalableQuizRendererProps>(({
                 setIsLoading(true);
                 setError(null);
 
-                // 1. Carrega dados reais do quiz via BlockPropertiesAPI
+                // 1. Primeiro carregar configuração master do funil via ScalableHybridTemplateService
+                const funnelStats = await ScalableHybridTemplateService.getFunnelStats(funnelId);
+                let detectedSteps = funnelStats.stepCount || 21;
+                
+                console.log(`🔍 Configuração master carregada para ${funnelId}:`, funnelStats);
+
+                // 2. Carrega dados reais do quiz via BlockPropertiesAPI (opcional/complementar)
                 const blockApi = new BlockPropertiesAPI();
                 const realData = await blockApi.getRealTemplateData(funnelId);
                 setRealQuizData(realData);
 
-                // 2. Detectar totalSteps dinamicamente baseado nos dados reais
-                let detectedSteps = 1; // Mínimo 1
-
-                if (realData && typeof realData === 'object') {
-                    // Tentar diferentes estruturas de dados
-                    if (realData.steps && Array.isArray(realData.steps)) {
-                        detectedSteps = realData.steps.length;
-                    } else if (realData.totalSteps && typeof realData.totalSteps === 'number') {
-                        detectedSteps = realData.totalSteps;
-                    } else if (realData.stepBlocks && typeof realData.stepBlocks === 'object') {
-                        detectedSteps = Object.keys(realData.stepBlocks).length;
-                    }
-                }
-
-                // Para o quiz21StepsComplete especificamente, usar 21 como padrão se não detectado
-                if (funnelId === 'quiz21StepsComplete' && detectedSteps <= 1) {
+                // 3. Para o quiz21StepsComplete especificamente, garantir 21 steps
+                if (funnelId === 'quiz21StepsComplete') {
                     detectedSteps = 21;
                 }
 
