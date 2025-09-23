@@ -8,6 +8,7 @@ import ButtonInlineBlock from './ButtonInlineBlock';
 import TestimonialCardInlineBlock from './TestimonialCardInlineBlock';
 import TestimonialsCarouselInlineBlock from './TestimonialsCarouselInlineBlock';
 import MentorSectionInlineBlock from './MentorSectionInlineBlock';
+import { FashionAIGeneratorBlock } from '@/components/blocks/ai';
 
 // @ts-nocheck
 export interface UniversalBlockRendererProps {
@@ -27,9 +28,9 @@ export interface UniversalBlockRendererProps {
 const createFallbackComponent = (type: string) => {
   return (props: any) => {
     const { isSelected, isPreviewing, onUpdate, block, ...domProps } = props;
-    
+
     return (
-      <div 
+      <div
         {...domProps}
         className={cn("p-4 border border-gray-300 rounded", domProps.className)}
       >
@@ -55,6 +56,7 @@ const BlockComponentRegistry: Record<string, React.FC<any>> = {
   'mentor-section-inline': MentorSectionInlineBlock,
   'testimonial-card-inline': TestimonialCardInlineBlock,
   'testimonials-carousel-inline': TestimonialsCarouselInlineBlock,
+  'fashion-ai-generator': FashionAIGeneratorBlock,
   'text': createFallbackComponent('text'),
   'headline': createFallbackComponent('headline'),
   'image': createFallbackComponent('image'),
@@ -135,7 +137,7 @@ const UniversalBlockRenderer: React.FC<UniversalBlockRendererProps> = memo(({
           ×
         </button>
       )}
-      
+
       {!isPreviewing && isSelected && (
         <div className="absolute top-0 left-0 -mt-6 text-xs bg-blue-500 text-white px-2 py-1 rounded z-10">
           {block.type}

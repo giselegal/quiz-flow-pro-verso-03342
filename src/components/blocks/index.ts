@@ -13,3 +13,6 @@ export * from './result';
 
 // Blocos de Oferta (Etapa 21) - IMPLEMENTADOS ✅
 export * from './offer';
+
+// Blocos de IA - IMPLEMENTADOS ✅
+export * from './ai';

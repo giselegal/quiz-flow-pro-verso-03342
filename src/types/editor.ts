@@ -179,6 +179,9 @@ export type BlockType =
   | 'step20-complete-template'
   | 'price-display'
 
+  // AI Integration Components (NEW)
+  | 'fashion-ai-generator'
+
   // Quiz App Components (NEW)
   | 'quiz-intro-step'
   | 'quiz-question-step'
