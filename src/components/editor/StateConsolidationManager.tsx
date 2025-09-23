@@ -7,7 +7,7 @@
  * - Estado unificado com fallbacks robustos
  */
 
-import React, { createContext, useContext, useMemo, useEffect, useState } from 'react';
+import React, { createContext, useContext, useMemo, useEffect } from 'react';
 import { ConsolidatedEditorProvider, useConsolidatedEditor, ConsolidatedEditorState } from './ConsolidatedEditorProvider';
 import { EditorProvider, useEditor, EditorState } from './EditorProvider';
 import { logger } from '@/utils/debugLogger';
@@ -230,56 +230,24 @@ const createActionsAdapter = (
   };
 };
 
-// 🎯 DETECTOR DE PROVIDERS DISPONÍVEIS
-const useProviderDetection = () => {
-  const [availableProviders, setAvailableProviders] = useState<string[]>([]);
-  
-  useEffect(() => {
-    const providers: string[] = [];
-    
-    try {
-      // Tentar acessar consolidated
-      const consolidated = useConsolidatedEditor();
-      if (consolidated) providers.push('consolidated');
-    } catch {
-      // Consolidated não disponível
-    }
-    
-    try {
-      // Tentar acessar legacy
-      const legacy = useEditor();
-      if (legacy) providers.push('legacy');
-    } catch {
-      // Legacy não disponível
-    }
-    
-    setAvailableProviders(providers);
-    logger.info('StateConsolidationManager: Available providers detected', providers);
-  }, []);
-  
-  return availableProviders;
-};
+// 🎯 REMOVIDO: Detector baseado em hooks que violava regras de hooks
+// Substituído por detecção segura dentro do conteúdo usando hooks "safe"
+// (mantemos a numeração de linhas estável evitando grandes alterações)
+
 
 // 🎯 WRAPPER INTERNO PARA ACESSAR PROVIDERS
 const StateConsolidationContent: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const availableProviders = useProviderDetection();
-  
-  // Tentar acessar providers disponíveis
-  let consolidatedContext = null;
-  let legacyContext = null;
-  
-  try {
-    consolidatedContext = useConsolidatedEditor();
-  } catch {
-    // Consolidated não disponível
-  }
-  
-  try {
-    legacyContext = useEditor();
-  } catch {
-    // Legacy não disponível
-  }
-  
+  // Detecção segura dos providers disponíveis (sem violar Rules of Hooks)
+  const consolidatedContext = useConsolidatedEditorSafe();
+  const legacyContext = useEditorSafe();
+
+  const availableProviders = useMemo(() => {
+    const providers: string[] = [];
+    if (consolidatedContext) providers.push('consolidated');
+    if (legacyContext) providers.push('legacy');
+    return providers;
+  }, [consolidatedContext, legacyContext]);
+
   // Criar estado unificado
   const unifiedState = useMemo(() => 
     createStateAdapter(consolidatedContext?.state, legacyContext?.state),

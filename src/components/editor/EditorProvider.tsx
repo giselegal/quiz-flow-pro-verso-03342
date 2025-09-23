@@ -7,6 +7,7 @@ import { Block, BlockType } from '@/types/editor';
 import { extractStepNumberFromKey } from '@/utils/supabaseMapper';
 import { arrayMove } from '@dnd-kit/sortable';
 import React, { createContext, ReactNode, useCallback, useContext, useEffect } from 'react';
+import { useConsolidatedEditor } from './ConsolidatedEditorProvider';
 import { unifiedQuizStorage } from '@/services/core/UnifiedQuizStorage';
 import { useFunnels } from '@/context/FunnelsContext';
 
@@ -67,27 +68,42 @@ const EditorContext = createContext<EditorContextValue | undefined>(undefined);
 
 export const useEditor = () => {
   const context = useContext(EditorContext);
-  if (!context) {
-    // 🔍 INVESTIGAÇÃO #1: Enhanced error reporting for context issues
-    console.error('❌ ERRO DE CONTEXTO DO EDITOR:', {
-      location: window.location.href,
-      timestamp: new Date().toISOString(),
-      reactVersion: React.version,
-      contextValue: context,
-      editorElements: document.querySelectorAll('[class*="editor"], [class*="Editor"]').length,
-      providerElements: document.querySelectorAll('[class*="provider"], [class*="Provider"]').length
-    });
+  if (context) {
+    return context;
+  }
 
-    // Add diagnostic info to window for debugging
+  // Fallback transparente: usar ConsolidatedEditorProvider se estiver presente
+  try {
+    const consolidated = useConsolidatedEditor();
+    if (consolidated) {
+      return {
+        state: consolidated.state,
+        actions: consolidated.actions
+      } as any;
+    }
+  } catch {
+    // Consolidated não disponível neste contexto
+  }
+
+  // Log detalhado e erro como último recurso
+  console.error('❌ ERRO DE CONTEXTO DO EDITOR:', {
+    location: typeof window !== 'undefined' ? window.location.href : 'ssr',
+    timestamp: new Date().toISOString(),
+    reactVersion: (React as any).version,
+    contextValue: context,
+    editorElements: typeof document !== 'undefined' ? document.querySelectorAll('[class*="editor"], [class*="Editor"]').length : 0,
+    providerElements: typeof document !== 'undefined' ? document.querySelectorAll('[class*="provider"], [class*="Provider"]').length : 0
+  });
+
+  if (typeof window !== 'undefined') {
     (window as any).__EDITOR_CONTEXT_ERROR__ = {
       timestamp: new Date().toISOString(),
-      location: window.location.href,
+      location: window.location?.href,
       stackTrace: new Error().stack
     };
-
-    throw new Error('🚨 useEditor must be used within an EditorProvider - check that EditorPro is wrapped correctly');
   }
-  return context;
+
+  throw new Error('🚨 useEditor must be used within an EditorProvider - check that EditorPro is wrapped correctly');
 };
 
 // Versão opcional do hook que NÃO lança erro quando usado fora do Provider.
