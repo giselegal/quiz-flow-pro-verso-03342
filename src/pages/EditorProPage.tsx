@@ -3,7 +3,7 @@ import { LoadingFallback } from '@/components/ui/loading-fallback';
 import { useLocation } from 'wouter';
 
 // 🚀 EDITOR IA PRO - Importações dos sistemas avançados
-import EditorProProvider from '@/components/editor/EditorProProvider';
+import PureBuilderProvider from '@/components/editor/PureBuilderProvider';
 import ModularEditorPro from '@/components/editor/EditorPro/components/ModularEditorPro';
 
 // 🤖 Sistemas IA avançados
@@ -160,7 +160,7 @@ const EditorProPage: React.FC<EditorProPageProps> = ({ params }) => {
             {/* 🎯 MAIN EDITOR - Com provider híbrido */}
             <div className="pt-12 h-full">
                 <Suspense fallback={<LoadingFallback />}>
-                    <EditorProProvider funnelId={funnelId}>
+                    <PureBuilderProvider funnelId={funnelId}> funnelId={funnelId}>
                         {/* 🎯 Editor principal com funcionalidades básicas + IA */}
                         <ModularEditorPro
                             showProFeatures={true}
@@ -186,7 +186,7 @@ const EditorProPage: React.FC<EditorProPageProps> = ({ params }) => {
                         {isAnalyticsOpen && (
                             <AnalyticsDashboard onClose={() => toggleAnalytics()} />
                         )}
-                    </EditorProProvider>
+                    </PureBuilderProvider>
                 </Suspense>
             </div>
 

@@ -18,8 +18,8 @@ const LazyAreaChart = lazy(() =>
     }))
 );
 
-const LazySchemaDrivenEditor = lazy(() =>
-    import('@/components/editor/SchemaDrivenEditorResponsive').then(module => ({
+const LazyModernUnifiedEditor = lazy(() =>
+    import('@/pages/editor/ModernUnifiedEditor').then(module => ({
         default: module.default
     }))
 );
@@ -104,9 +104,9 @@ export const OptimizedAreaChart = (props: any) => (
     </Suspense>
 );
 
-export const OptimizedSchemaDrivenEditor = (props: any) => (
+export const OptimizedModernUnifiedEditor = (props: any) => (
     <Suspense fallback={<EditorSkeleton />}>
-        <LazySchemaDrivenEditor {...props} />
+        <LazyModernUnifiedEditor {...props} />
     </Suspense>
 );
 
@@ -146,7 +146,7 @@ export const OptimizedMetricsPage = (props: any) => (
 export const preloadCriticalComponents = () => {
     // Preload dos componentes mais usados após 2s de idle
     const preloadTimer = setTimeout(() => {
-        import('@/components/editor/SchemaDrivenEditorResponsive');
+        import('@/pages/editor/ModernUnifiedEditor');
         import('@/components/editor/EditorProvider');
     }, 2000);
 

@@ -8,7 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 // 🎨 Brand Kit hook
 import { useBrandKit } from '@/hooks/useBrandKit';
-import { useEditorProContext } from '@/components/editor/EditorProProvider';
+import { usePureBuilder } from '@/components/editor/PureBuilderProvider';
 
 /**
  * 🎨 BRAND KIT SIDEBAR

@@ -7,11 +7,12 @@
 // COMPONENTES ORIGINAIS
 // ============================================================================
 
-// Principais componentes do editor
+// Principais componentes do editor - APENAS OS ESSENCIAIS
 export { default as ComponentList } from './ComponentList';
-// PageEditorCanvas removido - era apenas um placeholder que retornava null
 export { default as QuizEditorSteps } from './QuizEditorSteps';
-export { default as SchemaDrivenEditorResponsive } from './SchemaDrivenEditorResponsive';
+// ✅ EDITORES PRINCIPAIS UNIFICADOS
+export { default as EditorProUnified } from './EditorProUnified';
+export { default as PureBuilderProvider } from './PureBuilderProvider';
 
 // Componentes com named exports
 export { AddBlockButton } from './AddBlockButton';
@@ -19,8 +20,7 @@ export { AddBlockButton } from './AddBlockButton';
 // export { DeleteBlockButton } from "./DeleteBlockButton";
 export { default as EditBlockContent } from './EditBlockContent';
 // export { EditorBlockItem } from "./EditorBlockItem";
-export { EmptyEditor } from './EmptyEditor';
-export { PageEditor } from './PageEditor';
+// ✅ EDITORES CONSOLIDADOS - apenas essenciais mantidos
 export { StepsPanel } from './StepsPanel';
 
 // 🎯 PAINEL DE PROPRIEDADES RECOMENDADO (use este!)
