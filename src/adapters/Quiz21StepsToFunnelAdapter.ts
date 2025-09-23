@@ -241,9 +241,18 @@ export class Quiz21StepsToFunnelAdapter {
                 spacing: '16px',
                 layout: 'centered'
             },
-            autoSaveInterval: 30000,
-            maxHistorySize: 50,
-            validationRules: []
+            navigation: {
+                showProgress: true,
+                showStepNumbers: true,
+                allowBackward: true,
+                showNavigationButtons: true,
+                autoAdvanceDelay: 0
+            },
+            validation: {
+                strictMode: false,
+                requiredFields: [],
+                customValidators: {}
+            }
         };
     }
 
