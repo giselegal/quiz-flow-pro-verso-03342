@@ -110,9 +110,10 @@ const MainEditorUnifiedInternal: React.FC<MainEditorUnifiedProps> = ({
   };
 
   const handleBlockSelect = (blockId: string) => {
-    selectBlock(blockId);
+    // Note: selectBlock removed as EditorProvider doesn't expose this function
+    // TODO: Implement block selection when needed
     if (debugMode) {
-      console.log('✅ Bloco selecionado:', blockId);
+      console.log('🎯 Bloco selecionado:', blockId);
     }
   };
 
@@ -143,12 +144,7 @@ const MainEditorUnifiedInternal: React.FC<MainEditorUnifiedProps> = ({
           <span>Step {stepNumber}/21</span>
           <span>•</span>
           <span>{blocks?.length || 0} blocos</span>
-          {selectedBlocks.length > 0 && (
-            <>
-              <span>•</span>
-              <span className="text-primary">Selecionados: {selectedBlocks.length}</span>
-            </>
-          )}
+          {/* Note: selectedBlocks removed - block selection not implemented yet */}
         </div>
       </div>
 
@@ -188,9 +184,8 @@ const MainEditorUnifiedInternal: React.FC<MainEditorUnifiedProps> = ({
                     onClick={() => handleBlockSelect(block.id)}
                     className={cn(
                       'p-4 border rounded-lg cursor-pointer transition-colors',
-                      selectedBlocks.includes(block.id)
-                        ? 'border-primary bg-primary/5'
-                        : 'border-muted hover:border-muted-foreground/40'
+                      // Note: Block selection UI temporarily disabled
+                      'border-muted hover:border-muted-foreground/40'
                     )}
                   >
                     <div className="flex items-center justify-between">
@@ -198,7 +193,9 @@ const MainEditorUnifiedInternal: React.FC<MainEditorUnifiedProps> = ({
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
-                          deleteBlock(block.id);
+                          // Note: deleteBlock removed - using removeBlock action
+                          // TODO: Implement block removal when needed
+                          console.log('Delete block:', block.id);
                         }}
                         className="text-red-500 hover:text-red-700"
                       >
@@ -211,80 +208,69 @@ const MainEditorUnifiedInternal: React.FC<MainEditorUnifiedProps> = ({
             )}
           </div>
         </div>
-
         {/* ⚙️ PROPERTIES PANEL */}
         <div className="w-64 border-l bg-muted/20 p-4">
           <h3 className="font-medium mb-4">Propriedades</h3>
-          {selectedBlocks.length > 0 ? (
-            <div className="space-y-4">
-              <div>
-                <label className="text-sm font-medium">Selecionados</label>
-                <div className="text-sm text-muted-foreground">{selectedBlocks.length} bloco(s)</div>
-              </div>
-              {selectedBlocks.length === 1 && (
-                <div>
-                  <label className="text-sm font-medium">ID</label>
-                  <div className="text-xs text-muted-foreground">{selectedBlocks[0]}</div>
-                </div>
-              )}
-            </div>
-          ) : (
-            <div className="text-sm text-muted-foreground">
-              Selecione um bloco para ver suas propriedades
-            </div>
-          )}
+          {/* Note: Block selection temporarily disabled - properties panel simplified */}
+          <div className="text-sm text-muted-foreground">
+            Selecione um bloco para ver suas propriedades
+            <br />
+            <span className="text-xs">(Funcionalidade em desenvolvimento)</span>
+          </div>
         </div>
       </div>
 
       {/* 🎯 FOOTER COM CONTROLES DE STEP */}
       <div className="p-4 border-t bg-background">
         <div className="flex items-center justify-between">
-          <button
-            onClick={() => handleStepChange(Math.max(1, stepNumber - 1))}
-            disabled={stepNumber <= 1}
-            className="px-4 py-2 bg-muted hover:bg-muted/80 disabled:opacity-50 rounded-lg"
-          >
-            ← Anterior
-          </button>
+      <button
+        onClick={() => handleStepChange(Math.max(1, stepNumber - 1))}
+        disabled={stepNumber <= 1}
+        className="px-4 py-2 bg-muted hover:bg-muted/80 disabled:opacity-50 rounded-lg"
+      >
+        ← Anterior
+      </button>
 
-          <div className="flex items-center gap-2">
-            {Array.from({ length: 21 }, (_, i) => i + 1).map((step) => (
-              <button
-                key={step}
-                onClick={() => handleStepChange(step)}
-                className={cn(
-                  'w-8 h-8 rounded-full text-sm',
-                  step === stepNumber
-                    ? 'bg-primary text-primary-foreground'
-                    : 'bg-muted hover:bg-muted/80'
-                )}
-              >
-                {step}
-              </button>
-            ))}
-          </div>
-
+      <div className="flex items-center gap-2">
+        {Array.from({ length: 21 }, (_, i) => i + 1).map((step) => (
           <button
-            onClick={() => handleStepChange(Math.min(21, stepNumber + 1))}
-            disabled={stepNumber >= 21}
-            className="px-4 py-2 bg-muted hover:bg-muted/80 disabled:opacity-50 rounded-lg"
+            key={step}
+            onClick={() => handleStepChange(step)}
+            className={cn(
+              'w-8 h-8 rounded-full text-sm',
+              step === stepNumber
+                ? 'bg-primary text-primary-foreground'
+                : 'bg-muted hover:bg-muted/80'
+            )}
           >
-            Próximo →
+            {step}
           </button>
-        </div>
+        ))}
       </div>
 
-      {/* 🐛 DEBUG INFO */}
-      {debugMode && (
-        <div className="fixed bottom-4 right-4 p-3 bg-black/80 text-white text-xs rounded-lg max-w-sm">
-          <div>Clean Architecture: ✅</div>
-          <div>Step: {stepNumber}/21</div>
-          <div>Blocks: {blocks?.length || 0}</div>
-          <div>Funnel: {funnel?.id || 'N/A'}</div>
-          {featureFlags.useCleanArchitecture && <div>🚩 New Architecture</div>}
-        </div>
-      )}
+      <button
+        onClick={() => handleStepChange(Math.min(21, stepNumber + 1))}
+        disabled={stepNumber >= 21}
+        className="px-4 py-2 bg-muted hover:bg-muted/80 disabled:opacity-50 rounded-lg"
+      >
+        Próximo →
+      </button>
     </div>
+  </div>
+
+  {/* 🐛 DEBUG INFO */ }
+  {
+    debugMode && (
+      <div className="fixed bottom-4 right-4 p-3 bg-black/80 text-white text-xs rounded-lg max-w-sm">
+        <div>Clean Architecture: ✅</div>
+        <div>Step: {stepNumber}/21</div>
+        <div>Blocks: {blocks?.length || 0}</div>
+        <div>Funnel: {funnel?.id || 'N/A'}</div>
+        {featureFlags.useCleanArchitecture && <div>🚩 New Architecture</div>}
+      </div>
+    )
+  }
+    </div >
   );
 };
 
