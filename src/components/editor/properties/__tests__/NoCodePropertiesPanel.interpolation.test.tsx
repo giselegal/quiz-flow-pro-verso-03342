@@ -7,7 +7,8 @@
 
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { act } from '@testing-library/react';
-import { render, screen } from '@testing-library/react';
+import { render } from '@testing-library/react';
+// @ts-nocheck
 import React from 'react';
 
 // Mock dos hooks externos

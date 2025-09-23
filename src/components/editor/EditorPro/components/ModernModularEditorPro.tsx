@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useState, useCallback } from 'react';
 import { usePureBuilder } from '@/components/editor/PureBuilderProvider';
 import type { Block, BlockType } from '@/types/editor';

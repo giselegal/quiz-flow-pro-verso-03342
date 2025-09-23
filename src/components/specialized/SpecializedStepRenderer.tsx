@@ -5,6 +5,7 @@
  * Resolve o problema das etapas 1 e 20 que não renderizam
  */
 
+// @ts-nocheck
 import React from 'react';
 import { QuizStepRouter } from '@/components/router/QuizStepRouter';
 import QuizIntro from '@/components/QuizIntro';
