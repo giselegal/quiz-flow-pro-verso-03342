@@ -1,124 +1,117 @@
 /**
- * 🎯 UNIFIED COMPONENTS PANEL - PAINEL UNIFICADO DE COMPONENTES
+ * 🎯 UNIFIED COMPONENTS PANEL - VERSÃO SIMPLIFICADA
  * 
- * Painel intercambiável que substitui múltiplos components sidebars:
- * - ComponentsSidebar
- * - EnhancedComponentsSidebar  
- * - ComponentsPanel
- * - CombinedComponentsPanel
- * 
- * FUNCIONALIDADES:
- * ✅ Component registry integration
- * ✅ Search e filtering
- * ✅ Categorização dinâmica
- * ✅ Drag & drop support
- * ✅ Lazy loading components
- * ✅ Responsive design
+ * Painel unificado simplificado que funciona com componentes existentes
+ * até que o ComponentRegistry seja totalmente implementado.
  */
 
-import React, { useState, useMemo, useCallback } from 'react';
+import React, { useState, useMemo } from 'react';
 import { cn } from '@/lib/utils';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { 
   Search, 
   Grid3X3, 
   List, 
   Star, 
-  Zap,
-  ChevronDown,
-  ChevronRight,
   Plus
 } from 'lucide-react';
 
 export interface UnifiedComponentsPanelProps {
   className?: string;
-  onAddComponent?: (componentId: string, metadata: ComponentMetadata) => void;
+  onAddComponent?: (componentId: string, metadata: any) => void;
   showSearch?: boolean;
   showCategories?: boolean;
-  showFilters?: boolean;
-  defaultView?: 'grid' | 'list';
   compactMode?: boolean;
 }
+
+// 🎯 SIMPLE COMPONENT DATA (fallback até ComponentRegistry estar pronto)
+const SIMPLE_COMPONENTS = [
+  {
+    id: 'quiz-question-inline',
+    name: 'Pergunta de Quiz',
+    description: 'Pergunta interativa com múltiplas opções',
+    category: 'quiz',
+    icon: '❓',
+    isNew: false
+  },
+  {
+    id: 'button',
+    name: 'Botão',
+    description: 'Botão interativo customizável',
+    category: 'interactive',
+    icon: '🔘',
+    isNew: false
+  },
+  {
+    id: 'text',
+    name: 'Texto',
+    description: 'Bloco de texto simples',
+    category: 'content',
+    icon: '📝',
+    isNew: false
+  },
+  {
+    id: 'image',
+    name: 'Imagem',
+    description: 'Imagem responsiva',
+    category: 'media',
+    icon: '🖼️',
+    isNew: false
+  },
+  {
+    id: 'testimonial',
+    name: 'Depoimento',
+    description: 'Card de depoimento',
+    category: 'social',
+    icon: '⭐',
+    isNew: true
+  }
+];
 
 export const UnifiedComponentsPanel: React.FC<UnifiedComponentsPanelProps> = ({
   className = '',
   onAddComponent,
   showSearch = true,
   showCategories = true,
-  showFilters = true,
-  defaultView = 'grid',
   compactMode = false
 }) => {
-  // 🎯 STATE MANAGEMENT
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedCategory] = useState<ComponentCategory | 'all'>('all');
-  const [viewMode, setViewMode] = useState<'grid' | 'list'>(defaultView);
-  const [showNewOnly, setShowNewOnly] = useState(false);
-  const [showProOnly, setShowProOnly] = useState(false);
-  const [expandedCategories, setExpandedCategories] = useState<Set<ComponentCategory>>(new Set(['quiz', 'content']));
+  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
 
-  // 🎯 DATA PROCESSING
-  const { filteredComponents, groupedComponents } = useMemo(() => {
-    let components = Object.values(COMPONENT_REGISTRY);
+  // 🎯 SIMPLE FILTERING
+  const filteredComponents = useMemo(() => {
+    let components = SIMPLE_COMPONENTS;
 
-    // Apply search filter
     if (searchQuery.trim()) {
-      components = searchComponents(searchQuery);
+      const searchTerm = searchQuery.toLowerCase();
+      components = components.filter(comp => 
+        comp.name.toLowerCase().includes(searchTerm) ||
+        comp.description.toLowerCase().includes(searchTerm) ||
+        comp.category.toLowerCase().includes(searchTerm)
+      );
     }
 
-    // Apply category filter
-    if (selectedCategory !== 'all') {
-      components = components.filter(comp => comp.category === selectedCategory);
-    }
+    return components;
+  }, [searchQuery]);
 
-    // Apply special filters
-    if (showNewOnly) {
-      components = components.filter(comp => comp.isNew);
-    }
-    if (showProOnly) {
-      components = components.filter(comp => comp.isPro);
-    }
-
-    // Group components
-    const grouped = components.reduce((acc, comp) => {
+  // 🎯 GROUP BY CATEGORY
+  const groupedComponents = useMemo(() => {
+    return filteredComponents.reduce((acc, comp) => {
       if (!acc[comp.category]) acc[comp.category] = [];
       acc[comp.category].push(comp);
       return acc;
-    }, {} as Record<ComponentCategory, ComponentMetadata[]>);
+    }, {} as Record<string, typeof SIMPLE_COMPONENTS>);
+  }, [filteredComponents]);
 
-    return {
-      filteredComponents: components,
-      groupedComponents: grouped
-    };
-  }, [searchQuery, selectedCategory, showNewOnly, showProOnly]);
-
-  // 🎯 EVENT HANDLERS
-  const handleAddComponent = useCallback((metadata: ComponentMetadata) => {
-    onAddComponent?.(metadata.id, metadata);
-  }, [onAddComponent]);
-
-  const handleCategoryToggle = useCallback((category: ComponentCategory) => {
-    setExpandedCategories(prev => {
-      const newSet = new Set(prev);
-      if (newSet.has(category)) {
-        newSet.delete(category);
-      } else {
-        newSet.add(category);
-      }
-      return newSet;
-    });
-  }, []);
-
-  // 🎯 COMPONENT ITEM RENDERER
-  const ComponentItem = React.memo<{ 
-    component: ComponentMetadata;
+  // 🎯 COMPONENT ITEM
+  const ComponentItem: React.FC<{ 
+    component: typeof SIMPLE_COMPONENTS[0];
     isCompact?: boolean;
     viewMode: 'grid' | 'list';
-  }>(({ component, isCompact = false, viewMode }) => {
+  }> = ({ component, isCompact = false, viewMode }) => {
     const isGridView = viewMode === 'grid';
     
     return (
@@ -128,7 +121,7 @@ export const UnifiedComponentsPanel: React.FC<UnifiedComponentsPanelProps> = ({
           isGridView ? 'p-3' : 'p-2 flex items-center gap-3',
           isCompact && 'p-2'
         )}
-        onClick={() => handleAddComponent(component)}
+        onClick={() => onAddComponent?.(component.id, component)}
         title={`Adicionar ${component.name}`}
       >
         {/* Icon */}
@@ -138,13 +131,13 @@ export const UnifiedComponentsPanel: React.FC<UnifiedComponentsPanelProps> = ({
           isCompact && 'w-5 h-5'
         )}>
           <span className={cn('text-sm', isCompact && 'text-xs')}>
-            {component.icon || '🔧'}
+            {component.icon}
           </span>
         </div>
 
         {/* Content */}
         <div className={cn('flex-1 min-w-0', isGridView && 'text-center')}>
-          <div className="flex items-center gap-2 mb-1">
+          <div className="flex items-center gap-2 mb-1 justify-center">
             <h4 className={cn(
               'font-medium text-foreground truncate',
               isGridView ? 'text-xs' : 'text-sm',
@@ -153,21 +146,12 @@ export const UnifiedComponentsPanel: React.FC<UnifiedComponentsPanelProps> = ({
               {component.name}
             </h4>
             
-            {/* Badges */}
-            <div className="flex gap-1">
-              {component.isNew && (
-                <Badge variant="secondary" className="text-xs px-1 py-0">
-                  <Star className="w-2.5 h-2.5 mr-1" />
-                  New
-                </Badge>
-              )}
-              {component.isPro && (
-                <Badge variant="outline" className="text-xs px-1 py-0">
-                  <Zap className="w-2.5 h-2.5 mr-1" />
-                  Pro
-                </Badge>
-              )}
-            </div>
+            {component.isNew && (
+              <Badge variant="secondary" className="text-xs px-1 py-0">
+                <Star className="w-2.5 h-2.5 mr-1" />
+                New
+              </Badge>
+            )}
           </div>
 
           {!isCompact && (
@@ -190,56 +174,7 @@ export const UnifiedComponentsPanel: React.FC<UnifiedComponentsPanelProps> = ({
         </div>
       </div>
     );
-  });
-
-  // 🎯 CATEGORY SECTION RENDERER
-  const CategorySection = React.memo<{
-    category: ComponentCategory;
-    components: ComponentMetadata[];
-  }>(({ category, components }) => {
-    const isExpanded = expandedCategories.has(category);
-    
-    if (components.length === 0) return null;
-
-    return (
-      <div className="mb-4">
-        <button
-          onClick={() => handleCategoryToggle(category)}
-          className="flex items-center gap-2 w-full text-left p-2 hover:bg-accent/50 rounded-md transition-colors"
-        >
-          {isExpanded ? (
-            <ChevronDown className="w-4 h-4 text-muted-foreground" />
-          ) : (
-            <ChevronRight className="w-4 h-4 text-muted-foreground" />
-          )}
-          <span className="font-medium text-sm capitalize">
-            {category}
-          </span>
-          <Badge variant="outline" className="ml-auto text-xs">
-            {components.length}
-          </Badge>
-        </button>
-
-        {isExpanded && (
-          <div className={cn(
-            'mt-2 gap-2',
-            viewMode === 'grid' 
-              ? 'grid grid-cols-2 gap-2' 
-              : 'space-y-1'
-          )}>
-            {components.map(component => (
-              <ComponentItem
-                key={component.id}
-                component={component}
-                isCompact={compactMode}
-                viewMode={viewMode}
-              />
-            ))}
-          </div>
-        )}
-      </div>
-    );
-  });
+  };
 
   return (
     <div className={cn('unified-components-panel h-full flex flex-col bg-card', className)}>
@@ -281,30 +216,6 @@ export const UnifiedComponentsPanel: React.FC<UnifiedComponentsPanelProps> = ({
             />
           </div>
         )}
-
-        {/* Filters */}
-        {showFilters && (
-          <div className="flex gap-2 flex-wrap">
-            <Button
-              variant={showNewOnly ? 'default' : 'outline'}
-              size="sm"
-              onClick={() => setShowNewOnly(!showNewOnly)}
-              className="h-6 px-2 text-xs"
-            >
-              <Star className="w-3 h-3 mr-1" />
-              Novos
-            </Button>
-            <Button
-              variant={showProOnly ? 'default' : 'outline'}
-              size="sm"
-              onClick={() => setShowProOnly(!showProOnly)}
-              className="h-6 px-2 text-xs"
-            >
-              <Zap className="w-3 h-3 mr-1" />
-              Pro
-            </Button>
-          </div>
-        )}
       </div>
 
       {/* Content */}
@@ -312,14 +223,33 @@ export const UnifiedComponentsPanel: React.FC<UnifiedComponentsPanelProps> = ({
         <div className="p-4">
           {showCategories ? (
             // Categorized View
-        Object.entries(groupedComponents)
-          .sort(([a], [b]) => a.localeCompare(b))
-          .map(([category, components]) => (
-                <CategorySection
-                  key={category}
-                  category={category as ComponentCategory}
-                  components={components}
-                />
+            Object.entries(groupedComponents)
+              .sort(([a], [b]) => a.localeCompare(b))
+              .map(([category, components]) => (
+                <div key={category} className="mb-4">
+                  <div className="flex items-center gap-2 mb-2">
+                    <span className="font-medium text-sm capitalize">{category}</span>
+                    <Badge variant="outline" className="text-xs">
+                      {components.length}
+                    </Badge>
+                  </div>
+                  
+                  <div className={cn(
+                    'gap-2',
+                    viewMode === 'grid' 
+                      ? 'grid grid-cols-2 gap-2' 
+                      : 'space-y-1'
+                  )}>
+                    {components.map(component => (
+                      <ComponentItem
+                        key={component.id}
+                        component={component}
+                        isCompact={compactMode}
+                        viewMode={viewMode}
+                      />
+                    ))}
+                  </div>
+                </div>
               ))
           ) : (
             // Flat View

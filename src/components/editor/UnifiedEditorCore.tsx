@@ -261,8 +261,8 @@ export const UnifiedEditorCore: React.FC<UnifiedEditorCoreProps> = ({
   const performanceStats = useMemo(() => ({
     mode,
     currentStep: state.currentStep,
-    loadedSteps: state.loadedSteps.size,
-    totalBlocks: Object.values(state.stepBlocks).reduce((acc, blocks) => acc + blocks.length, 0),
+    loadedSteps: state.loadedSteps?.size || 0,
+    totalBlocks: Object.values(state.stepBlocks || {}).reduce((acc, blocks) => acc + blocks.length, 0),
     selectedBlock: state.selectedBlockId,
     funnelId
   }), [mode, state, funnelId]);

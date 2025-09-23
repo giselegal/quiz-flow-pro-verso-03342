@@ -191,12 +191,26 @@ export const ConsolidatedEditorProvider: React.FC<ConsolidatedEditorProviderProp
       ...initial
     };
 
+    // 🎯 SAFETY CHECK: Ensure loadedSteps is always a Set
+    if (!(baseState.loadedSteps instanceof Set)) {
+      baseState.loadedSteps = new Set([1]);
+    }
+
     // Load from cache if available
     const cacheKey = `editor-state-${funnelId || 'default'}`;
     const cachedState = cacheManager.get(cacheKey);
     if (cachedState) {
       logger.info('ConsolidatedEditorProvider: Estado carregado do cache', cacheKey);
-      return { ...baseState, ...cachedState };
+      const mergedState = { ...baseState, ...cachedState };
+      
+      // 🎯 SAFETY CHECK: Ensure cached loadedSteps is a Set
+      if (Array.isArray(cachedState.loadedSteps)) {
+        mergedState.loadedSteps = new Set(cachedState.loadedSteps);
+      } else if (!(mergedState.loadedSteps instanceof Set)) {
+        mergedState.loadedSteps = new Set([mergedState.currentStep || 1]);
+      }
+      
+      return mergedState;
     }
 
     return baseState;
@@ -222,7 +236,8 @@ export const ConsolidatedEditorProvider: React.FC<ConsolidatedEditorProviderProp
       stepBlocks: state.stepBlocks,
       databaseMode: state.databaseMode,
       isSupabaseEnabled: state.isSupabaseEnabled,
-      mode: state.mode
+      mode: state.mode,
+      loadedSteps: Array.from(state.loadedSteps || [])
     })
   });
 
