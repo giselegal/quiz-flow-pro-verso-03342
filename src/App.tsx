@@ -13,7 +13,6 @@ const ComQueRoupaEuVouPage = lazy(() => import('./pages/ComQueRoupaEuVouPage'));
 
 // 🎯 PÁGINAS ESSENCIAIS - SEM CONFLITOS
 const Home = lazy(() => import('./pages/Home'));
-const SystemDiagnosticPage = lazy(() => import('./pages/SystemDiagnosticPage'));
 const AuthPage = lazy(() => import('./pages/AuthPage'));
 
 // 🚀 EDITOR MODERNO NEURAL - PONTO DE ENTRADA ÚNICO
@@ -110,14 +109,14 @@ function App() {
           <Router>
             <Suspense fallback={<PageLoading />}>
               <Switch>
-                {/* Rota principal - System Diagnostic */}
+                {/* Rota principal - Home */}
                 <Route path="/" component={() =>
                   <Suspense fallback={<LoadingFallback />}>
-                    <SystemDiagnosticPage />
+                    <Home />
                   </Suspense>
                 } />
 
-                {/* Rota Home original */}
+                {/* Rota Home alternativa */}
                 <Route path="/home" component={() =>
                   <Suspense fallback={<LoadingFallback />}>
                     <Home />
