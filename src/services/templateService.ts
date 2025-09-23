@@ -12,18 +12,18 @@
  * ✅ Versionamento: Sistema de migração e controle de versão
  */
 
-// Re-export everything from the migrated template service
-export * from './migratedTemplateService';
+// Re-export everything from the core template service  
+export * from '../core/funnel/services/TemplateService';
 
 // Re-export the default service with backward compatibility
-export { migratedTemplateService as default } from './migratedTemplateService';
+export { templateService as default } from '../core/funnel/services/TemplateService';
 
-// Import to ensure migratedTemplateService is available
-import { migratedTemplateService } from './migratedTemplateService';
+// Import to ensure templateService is available
+import { templateService } from '../core/funnel/services/TemplateService';
 
 // Export specific methods for compatibility
-export const supabaseTemplateService = migratedTemplateService;
-export const loadStepTemplate = (step: number) => migratedTemplateService.getStepTemplate(step);
+export const supabaseTemplateService = templateService;
+export const loadStepTemplate = (step: number) => templateService.getTemplate(`step-${step}`);
 
 /**
  * 📖 CHANGELOG & MIGRATION NOTES

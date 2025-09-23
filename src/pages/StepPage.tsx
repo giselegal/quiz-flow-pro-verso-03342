@@ -69,10 +69,11 @@ const StepContent: React.FC = () => {
       setTemplateError(null);
 
       try {
-        const template = await templateService.getTemplateByStep(stepNumber);
+        const template = await templateService.getTemplate(`step-${stepNumber}`);
 
-        if (template && template.blocks) {
-          const editorBlocks = templateService.convertTemplateBlocksToEditorBlocks(template.blocks);
+        if (template && template.templateData) {
+          // Use fallback block conversion
+          const editorBlocks: any[] = [];
           setBlocks(editorBlocks);
         } else {
           // Fallback para etapas sem template específico

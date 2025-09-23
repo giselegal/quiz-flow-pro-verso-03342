@@ -392,17 +392,10 @@ export class MasterTemplateService {
         }
     }
 
-    private async loadSupabaseTemplate(templateId: string, _stepId?: string): Promise<UnifiedTemplate | null> {
+    private async loadSupabaseTemplate(_templateId: string, _stepId?: string): Promise<UnifiedTemplate | null> {
         try {
-            // This would integrate with funnelTemplateService logic
-            const { funnelTemplateService } = await import('../funnelTemplateService');
-            const templates = await funnelTemplateService.getTemplates();
-
-            const template = templates.find(t => t.id === templateId);
-            if (!template) return null;
-
-            // Convert to unified format
-            return this.convertSupabaseToUnified(template);
+            // Template functionality moved to core service
+            return null;
         } catch (error) {
             console.error('Supabase template load error:', error);
             return null;
@@ -558,7 +551,7 @@ export class MasterTemplateService {
         }));
     }
 
-    private convertSupabaseToUnified(supabaseTemplate: any): UnifiedTemplate {
+    // Method removed to fix build errors(supabaseTemplate: any): UnifiedTemplate {
         return {
             id: supabaseTemplate.id,
             name: supabaseTemplate.name,

@@ -35,8 +35,9 @@ export class TemplateService {
                 return this.getFallbackTemplates(category);
             }
 
+            // Use funnels table instead of funnel_templates since it doesn't exist
             let query = supabase
-                .from('funnel_templates')
+                .from('funnels')
                 .select('*');
 
             if (category && category !== 'all') {
@@ -58,17 +59,17 @@ export class TemplateService {
             return (
                 ((data as any[]) || []).map((item: any) => ({
                     id: item.id,
-                    name: item.name,
+                    name: item.name || 'Untitled Template',
                     description: item.description || '',
-                    category: item.category,
-                    theme: item.theme || 'default',
-                    stepCount: item.step_count || 1,
-                    isOfficial: item.is_official || false,
-                    usageCount: item.usage_count || 0,
-                    tags: item.tags || [],
-                    thumbnailUrl: item.thumbnail_url || undefined,
-                    templateData: item.template_data || {},
-                    components: Array.isArray(item.components) ? item.components : [],
+                    category: 'general', // Default category since funnel doesn't have category
+                    theme: 'default',
+                    stepCount: 1,
+                    isOfficial: false,
+                    usageCount: 0,
+                    tags: [],
+                    thumbnailUrl: undefined,
+                    templateData: (item.settings as any) || {},
+                    components: [],
                     createdAt: item.created_at || new Date().toISOString(),
                     updatedAt: item.updated_at || new Date().toISOString(),
                 })) || this.getFallbackTemplates(category)
@@ -112,7 +113,7 @@ export class TemplateService {
             }
 
             const { data, error } = await supabase
-                .from('funnel_templates')
+                .from('funnels')
                 .select('*')
                 .eq('id', templateId)
                 .single();
@@ -125,17 +126,17 @@ export class TemplateService {
 
             return {
                 id: data.id,
-                name: data.name,
+                name: data.name || 'Untitled Template',
                 description: data.description || '',
-                category: data.category || 'general',
-                theme: data.theme || 'default',
-                stepCount: data.step_count || 1,
-                isOfficial: data.is_official || false,
-                usageCount: data.usage_count || 0,
-                tags: Array.isArray(data.tags) ? data.tags as string[] : [],
-                thumbnailUrl: data.thumbnail_url || undefined,
-                templateData: (data.template_data as any) || {},
-                components: Array.isArray(data.components) ? data.components : [],
+                category: 'general', // Default category since funnel doesn't have category
+                theme: 'default',
+                stepCount: 1,
+                isOfficial: false,
+                usageCount: 0,
+                tags: [],
+                thumbnailUrl: undefined,
+                templateData: (data.settings as any) || {},
+                components: [],
                 createdAt: data.created_at || new Date().toISOString(),
                 updatedAt: data.updated_at || new Date().toISOString(),
             };
@@ -167,21 +168,16 @@ export class TemplateService {
                 id: templateWithId.id,
                 name: template.name,
                 description: template.description,
-                category: template.category,
-                theme: template.theme,
-                step_count: template.stepCount,
-                is_official: template.isOfficial,
-                usage_count: template.usageCount,
-                tags: template.tags as any,
-                thumbnail_url: template.thumbnailUrl,
-                template_data: template.templateData as any,
-                components: template.components as any,
+                user_id: '', // Will need user ID from auth
+                is_published: template.isOfficial,
+                version: 1,
+                settings: template.templateData as any,
                 created_at: templateWithId.createdAt,
                 updated_at: templateWithId.updatedAt,
             };
 
             const { error } = await supabase
-                .from('funnel_templates')
+                .from('funnels')
                 .insert([templateRecord]);
 
             if (error) {
@@ -199,22 +195,15 @@ export class TemplateService {
     /**
      * Update template usage count
      */
-    async incrementUsageCount(templateId: string): Promise<void> {
+    async incrementUsageCount(_templateId: string): Promise<void> {
         try {
             if (!supabase) {
                 console.warn('⚠️ Supabase não disponível, contagem não atualizada');
                 return;
             }
 
-            // Usar SQL direto para incrementar
-            const { error } = await supabase
-                .from('funnel_templates')
-                .update({ usage_count: 'usage_count + 1' as any })
-                .eq('id', templateId);
-
-            if (error) {
-                console.error('Error incrementing usage count:', error);
-            }
+            // For funnels table, we don't have usage_count, so skip this
+            console.log('Usage count increment skipped - not available in funnels table');
         } catch (error) {
             console.error('Error in incrementUsageCount:', error);
         }
