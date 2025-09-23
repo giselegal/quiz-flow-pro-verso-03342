@@ -111,8 +111,10 @@ export const useStepNavigation = (initialStep: number = 1) => {
 
         // Verificar se é etapa de quiz (tem perguntas)
         const isQuizStep =
-          template.blocks?.some((block: any) =>
-            ['multiple-choice', 'single-choice', 'text-input', 'rating'].includes(block.type)
+          template.templateData?.steps?.some((step: any) =>
+            step.blocks?.some((block: any) =>
+              ['multiple-choice', 'single-choice', 'text-input', 'rating'].includes(block.type)
+            )
           ) || false;
 
         const data: StepData = {
@@ -127,7 +129,7 @@ export const useStepNavigation = (initialStep: number = 1) => {
 
         console.log(`✅ Dados da etapa ${stepNumber} carregados:`, {
           isQuizStep,
-          blocksCount: template.blocks?.length || 0,
+          stepsCount: template.templateData?.steps?.length || 0,
         });
 
         return data;
