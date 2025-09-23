@@ -1,10 +1,5 @@
 /**
- * 🚀 Iimport { blocksRegistry, type PropSchema } from '@/core/blocks/registry';
-import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
-import { UNIFIED_TEMPLATE_REGISTRY } from '@/config/unifiedTemplatesRegistry';
-import { IndexedDBStorageService, StorageConfig } from '@/utils/storage/IndexedDBStorageService';
-import { DraftPersistence } from '@/utils/storage/DraftPersistence';
-import { BlockType, BlockContent } from '@/types/editor';AL BLOCK PROPERTIES API
+ * 🚀 INTERNAL BLOCK PROPERTIES API
  * 
  * API interna para gerenciar propriedades de blocos de forma eficiente
  * - Cache inteligente
