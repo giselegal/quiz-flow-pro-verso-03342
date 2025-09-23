@@ -38,7 +38,6 @@
 import { useEditor } from '@/context/EditorContext';
 import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
 import { useQuizNavigation } from '@/hooks/useQuizNavigation';
-import { useQuizState } from '@/hooks/useQuizState';
 import { loadStepBlocks, getStepInfo } from '@/utils/quiz21StepsRenderer';
 import React, { createContext, useCallback, useContext, useEffect, useState } from 'react';
 
