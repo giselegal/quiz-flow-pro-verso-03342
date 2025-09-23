@@ -14,6 +14,78 @@ export type Database = {
   }
   public: {
     Tables: {
+      ai_optimization_recommendations: {
+        Row: {
+          actual_improvement: number | null
+          applied: boolean | null
+          applied_at: string | null
+          auto_applicable: boolean | null
+          behavior_patterns: Json | null
+          code_example: string | null
+          created_at: string | null
+          description: string
+          effort: string | null
+          expected_improvement: number | null
+          funnel_id: string | null
+          id: string
+          implementation: string | null
+          metrics: Json | null
+          priority: string
+          session_id: string | null
+          success: boolean | null
+          title: string
+          type: string
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          actual_improvement?: number | null
+          applied?: boolean | null
+          applied_at?: string | null
+          auto_applicable?: boolean | null
+          behavior_patterns?: Json | null
+          code_example?: string | null
+          created_at?: string | null
+          description: string
+          effort?: string | null
+          expected_improvement?: number | null
+          funnel_id?: string | null
+          id?: string
+          implementation?: string | null
+          metrics?: Json | null
+          priority: string
+          session_id?: string | null
+          success?: boolean | null
+          title: string
+          type: string
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          actual_improvement?: number | null
+          applied?: boolean | null
+          applied_at?: string | null
+          auto_applicable?: boolean | null
+          behavior_patterns?: Json | null
+          code_example?: string | null
+          created_at?: string | null
+          description?: string
+          effort?: string | null
+          expected_improvement?: number | null
+          funnel_id?: string | null
+          id?: string
+          implementation?: string | null
+          metrics?: Json | null
+          priority?: string
+          session_id?: string | null
+          success?: boolean | null
+          title?: string
+          type?: string
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       component_instances: {
         Row: {
           component_type_key: string
@@ -224,6 +296,65 @@ export type Database = {
           version?: number | null
         }
         Relationships: []
+      }
+      optimization_results: {
+        Row: {
+          after_metrics: Json | null
+          applied_at: string | null
+          applied_by: string | null
+          before_metrics: Json | null
+          created_at: string | null
+          error_message: string | null
+          funnel_id: string | null
+          id: string
+          improvement_percentage: number | null
+          recommendation_id: string | null
+          rollback_available: boolean | null
+          rolled_back: boolean | null
+          success: boolean | null
+          user_id: string | null
+        }
+        Insert: {
+          after_metrics?: Json | null
+          applied_at?: string | null
+          applied_by?: string | null
+          before_metrics?: Json | null
+          created_at?: string | null
+          error_message?: string | null
+          funnel_id?: string | null
+          id?: string
+          improvement_percentage?: number | null
+          recommendation_id?: string | null
+          rollback_available?: boolean | null
+          rolled_back?: boolean | null
+          success?: boolean | null
+          user_id?: string | null
+        }
+        Update: {
+          after_metrics?: Json | null
+          applied_at?: string | null
+          applied_by?: string | null
+          before_metrics?: Json | null
+          created_at?: string | null
+          error_message?: string | null
+          funnel_id?: string | null
+          id?: string
+          improvement_percentage?: number | null
+          recommendation_id?: string | null
+          rollback_available?: boolean | null
+          rolled_back?: boolean | null
+          success?: boolean | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "optimization_results_recommendation_id_fkey"
+            columns: ["recommendation_id"]
+            isOneToOne: false
+            referencedRelation: "ai_optimization_recommendations"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       profiles: {
         Row: {
@@ -544,12 +675,130 @@ export type Database = {
         }
         Relationships: []
       }
+      real_time_metrics: {
+        Row: {
+          bundle_size: number | null
+          cache_hit_rate: number | null
+          device_info: Json | null
+          editor_mode: string | null
+          error_rate: number | null
+          funnel_id: string | null
+          id: string
+          memory_usage: number | null
+          network_latency: number | null
+          performance_score: number | null
+          recorded_at: string | null
+          render_time: number | null
+          session_id: string
+          user_agent: string | null
+          user_engagement: number | null
+          user_id: string | null
+          user_interaction_latency: number | null
+        }
+        Insert: {
+          bundle_size?: number | null
+          cache_hit_rate?: number | null
+          device_info?: Json | null
+          editor_mode?: string | null
+          error_rate?: number | null
+          funnel_id?: string | null
+          id?: string
+          memory_usage?: number | null
+          network_latency?: number | null
+          performance_score?: number | null
+          recorded_at?: string | null
+          render_time?: number | null
+          session_id: string
+          user_agent?: string | null
+          user_engagement?: number | null
+          user_id?: string | null
+          user_interaction_latency?: number | null
+        }
+        Update: {
+          bundle_size?: number | null
+          cache_hit_rate?: number | null
+          device_info?: Json | null
+          editor_mode?: string | null
+          error_rate?: number | null
+          funnel_id?: string | null
+          id?: string
+          memory_usage?: number | null
+          network_latency?: number | null
+          performance_score?: number | null
+          recorded_at?: string | null
+          render_time?: number | null
+          session_id?: string
+          user_agent?: string | null
+          user_engagement?: number | null
+          user_id?: string | null
+          user_interaction_latency?: number | null
+        }
+        Relationships: []
+      }
+      user_behavior_patterns: {
+        Row: {
+          action: string
+          analyzed_period_end: string | null
+          analyzed_period_start: string | null
+          avg_duration: number | null
+          created_at: string | null
+          drop_off_points: Json | null
+          frequency: number | null
+          funnel_id: string | null
+          id: string
+          optimization_potential: number | null
+          session_id: string | null
+          success_rate: number | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          action: string
+          analyzed_period_end?: string | null
+          analyzed_period_start?: string | null
+          avg_duration?: number | null
+          created_at?: string | null
+          drop_off_points?: Json | null
+          frequency?: number | null
+          funnel_id?: string | null
+          id?: string
+          optimization_potential?: number | null
+          session_id?: string | null
+          success_rate?: number | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          action?: string
+          analyzed_period_end?: string | null
+          analyzed_period_start?: string | null
+          avg_duration?: number | null
+          created_at?: string | null
+          drop_off_points?: Json | null
+          frequency?: number | null
+          funnel_id?: string | null
+          id?: string
+          optimization_potential?: number | null
+          session_id?: string | null
+          success_rate?: number | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      cleanup_old_analytics_data: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
+      cleanup_old_metrics: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
     }
     Enums: {
       [_ in never]: never
