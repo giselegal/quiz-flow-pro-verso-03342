@@ -33,14 +33,14 @@ export function getStepTemplate(stepId: string): any {
   if (TEMPLATE_CACHE.has(stepId)) {
     return TEMPLATE_CACHE.get(stepId);
   }
-  
+
   // Get template from the complete template object
   const template = QUIZ_STYLE_21_STEPS_TEMPLATE[stepId];
   if (template) {
     TEMPLATE_CACHE.set(stepId, template);
     return template;
   }
-  
+
   console.warn(`⚠️ Template ${stepId} not found`);
   return null;
 }
@@ -53,7 +53,7 @@ export function getPersonalizedStepTemplate(stepId: string, funnelId?: string): 
   }
 
   const cacheKey = `${funnelId}:${stepId}`;
-  
+
   // Verificar cache de funil personalizado
   if (FUNNEL_TEMPLATE_CACHE.has(cacheKey)) {
     return FUNNEL_TEMPLATE_CACHE.get(cacheKey);
@@ -68,10 +68,10 @@ export function getPersonalizedStepTemplate(stepId: string, funnelId?: string): 
 
   // 🔄 PERSONALIZAR TEMPLATE baseado no funnelId
   const personalizedTemplate = personalizeTemplateForFunnel(baseTemplate, funnelId, stepId);
-  
+
   // Cache da versão personalizada
   FUNNEL_TEMPLATE_CACHE.set(cacheKey, personalizedTemplate);
-  
+
   console.log(`✅ Template personalizado criado: ${stepId} para funil ${funnelId}`);
   return personalizedTemplate;
 }
@@ -82,10 +82,10 @@ function personalizeTemplateForFunnel(template: any[], funnelId: string, _stepId
 
   // Gerar seed único baseado no funnelId para consistência
   const funnelSeed = generateSeedFromFunnelId(funnelId);
-  
+
   return template.map((block) => {
     const personalizedBlock = JSON.parse(JSON.stringify(block)); // Deep clone
-    
+
     // 🎯 PERSONALIZAÇÃO 1: IDs únicos por funil
     if (personalizedBlock.id) {
       personalizedBlock.id = `${personalizedBlock.id}-${funnelSeed}`;
@@ -145,7 +145,7 @@ function generateSeedFromFunnelId(funnelId: string): string {
 // 🎨 Obter nome da variante baseado no seed
 function getFunnelVariantName(seed: string): string {
   const variants = [
-    'Premium', 'Pro', 'Classic', 'Elite', 'Special', 
+    'Premium', 'Pro', 'Classic', 'Elite', 'Special',
     'Advanced', 'Custom', 'Exclusive', 'Deluxe', 'Ultimate'
   ];
   const index = seed.charCodeAt(0) % variants.length;

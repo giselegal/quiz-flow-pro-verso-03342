@@ -491,7 +491,7 @@ export const EditorProvider: React.FC<{
       try {
         const stagesFromTemplates: any[] = [];
         for (let stepNumber = 1; stepNumber <= 21; stepNumber++) {
-          const template = await getStepTemplate(stepNumber);
+          const template = await getStepTemplate(stepNumber, currentFunnelId);
           stagesFromTemplates.push({
             id: `step-${stepNumber}`,
             name: `Etapa ${stepNumber}`,
@@ -533,7 +533,7 @@ export const EditorProvider: React.FC<{
           const stepMatch = id.match(/step-(\d+)/);
           const stepNumber = stepMatch ? parseInt(stepMatch[1], 10) : NaN;
           if (!isNaN(stepNumber)) {
-            const template = await getStepTemplate(stepNumber);
+            const template = await getStepTemplate(stepNumber, currentFunnelId);
             const templateBlocks = template?.blocks || [];
             const editorBlocks = templateBlocks.map((block: any, index: number) => ({
               id: block.id || `block-${Date.now()}-${Math.random()}`,
@@ -661,7 +661,7 @@ export const EditorProvider: React.FC<{
           console.error(`❌ Erro ao carregar template para etapa ${step}:`, error);
           // fallback para getStepTemplate em caso de falha do serviço
           try {
-            await getStepTemplate(step);
+            await getStepTemplate(step, currentFunnelId);
             // Fallback block conversion since method doesn't exist
             const editorBlocks: any[] = [];
             dispatch({ type: 'SET_BLOCKS', payload: editorBlocks });

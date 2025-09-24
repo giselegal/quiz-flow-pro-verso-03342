@@ -76,7 +76,7 @@ class UnifiedTemplateService {
   async loadStepBlocks(stepId: string, funnelId?: string): Promise<Block[]> {
     // 🆔 CACHE KEY que inclui funnelId para personalização
     const cacheKey = funnelId ? `${stepId}:${funnelId}` : stepId;
-    
+
     // Evitar carregamento duplicado
     if (this.loading.has(cacheKey)) {
       console.log(`⏳ [UnifiedTemplate] ${cacheKey} já carregando, aguardando...`);
