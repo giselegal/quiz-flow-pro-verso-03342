@@ -133,26 +133,36 @@ export const UnifiedCRUDProvider: React.FC<UnifiedCRUDProviderProps> = ({
 
             if (!funnel) {
                 console.warn(`⚠️ Funil não encontrado com ID normalizado: ${searchId} (original: ${id})`);
-                // FASE 1: Fallback gracioso - criar funil vazio se necessário
-                const fallbackFunnel = await enhancedFunnelService.createFallbackFunnel(id);
+            const fallbackFunnel = await enhancedFunnelService.createFallbackFunnel(id);
             if (!fallbackFunnel) {
                 throw new Error(`Funil não encontrado: ${id}`);
             }
             setCurrentFunnel(fallbackFunnel);
-            }
-
-            setCurrentFunnel(funnel);
-
+            
             // Atualizar lista se não estiver presente
             setFunnels(prev => {
-                const exists = prev.find(f => f.id === funnel.id);
+                const exists = prev.find(f => f.id === fallbackFunnel.id);
                 if (!exists) {
-                    return [funnel, ...prev];
+                    return [fallbackFunnel, ...prev];
                 }
-                return prev.map(f => f.id === funnel.id ? funnel : f);
+                return prev;
             });
+            }
 
-            if (debug) console.log('✅ Funnel loaded:', funnel.id);
+            if (funnel) {
+                setCurrentFunnel(funnel);
+
+                // Atualizar lista se não estiver presente
+                setFunnels(prev => {
+                    const exists = prev.find(f => f.id === funnel.id);
+                    if (!exists) {
+                        return [funnel, ...prev];
+                    }
+                    return prev.map(f => f.id === funnel.id ? funnel : f);
+                });
+
+                if (debug) console.log('✅ Funnel loaded:', funnel.id);
+            }
 
         } catch (err) {
             const errorMessage = err instanceof Error ? err.message : 'Erro ao carregar funil';

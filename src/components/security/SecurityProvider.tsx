@@ -152,7 +152,7 @@ export const SecureForm: React.FC<{
   children: ReactNode;
   onSubmit: (data: any) => void;
 }> = ({ children, onSubmit }) => {
-  const { validateInput, sanitizeHtml, logSecurityEvent } = useSecurity();
+  const { sanitizeHtml, logSecurityEvent } = useSecurity();
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();

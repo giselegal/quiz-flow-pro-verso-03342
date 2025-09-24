@@ -94,6 +94,7 @@ export class EnhancedFunnelService {
         name: `Funil ${funnelId}`,
         description: 'Funil criado automaticamente',
         userId: 'anonymous',
+        context: {} as any,
         isPublished: false,
         version: 1,
         settings: {
@@ -113,8 +114,8 @@ export class EnhancedFunnelService {
           created_at: new Date().toISOString(),
           updated_at: new Date().toISOString()
         })),
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString()
+        createdAt: new Date(),
+        updatedAt: new Date()
       };
 
       // Save fallback to database

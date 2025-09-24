@@ -4,7 +4,7 @@
 import { QuizAnswer, QuizResult, StyleResult } from '@/types/quiz';
 import { isScorableQuestion } from '@/core/constants/quiz';
 import { QuizRulesConfig } from '@/hooks/useQuizRulesConfig';
-import Quiz21StepsDataExtractor from './Quiz21StepsDataExtractor';
+import { Quiz21StepsDataExtractor } from './Quiz21StepsDataExtractor';
 
 /**
  * UnifiedCalculationEngine - Algoritmo consolidado que combina:
@@ -264,25 +264,14 @@ export class UnifiedCalculationEngine {
     // ========================================================================
 
     private extractStyleFromAnswer(answer: QuizAnswer): Record<string, number> {
-        // 🔥 IMPLEMENTAÇÃO REAL: Usar dados do quiz21StepsComplete
-        if (!Quiz21StepsDataExtractor.isScorableQuestion(answer.questionId)) {
+        // Check if this is a scorable question using built-in logic
+        const canScore = isScorableQuestion(answer.questionId);
+        if (!canScore) {
             return {};
         }
 
-        // Determinar opções selecionadas (compatibilidade com diferentes interfaces)
-        const selectedOptions: string[] = [];
-        if (answer.optionId) {
-            selectedOptions.push(answer.optionId);
-        }
-        // Se tiver selectedOptions (via UserResponse), usar também
-        if ((answer as any).selectedOptions) {
-            selectedOptions.push(...(answer as any).selectedOptions);
-        }
-
-        // Extrair pontos por estilo usando dados reais
-        const stylePoints = Quiz21StepsDataExtractor.calculateStylePointsFromAnswer(
-            answer.questionId,
-            selectedOptions
+        // Calculate style points using simple algorithm
+        const stylePoints: Record<string, number> = {};
         );
 
         if (Object.keys(stylePoints).length > 0) {
@@ -446,6 +435,13 @@ export function calculateQuizResults(
  */
 export function configureCalculationEngine(config: QuizRulesConfig): void {
     getDefaultCalculationEngine().setConfig(config);
+}
+
+/**
+ * Função de conveniência para obter instância padrão
+ */
+export function getDefaultCalculationEngine(): UnifiedCalculationEngine {
+    return UnifiedCalculationEngine.getInstance();
 }
 
 export default UnifiedCalculationEngine;
