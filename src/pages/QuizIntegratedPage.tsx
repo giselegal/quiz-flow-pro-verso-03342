@@ -1,9 +1,7 @@
 import { CanvasDropZone } from '@/components/editor/canvas/CanvasDropZone.simple';
 import { Quiz21StepsNavigation } from '@/components/quiz/Quiz21StepsNavigation';
-import { Quiz21StepsProvider, useQuiz21Steps } from '@/components/quiz/Quiz21StepsProvider';
+import { FunnelMasterProvider, useQuiz21Steps } from '@/providers/FunnelMasterProvider';
 import { EditorProvider, useEditor } from '@/context/EditorContext';
-import { EditorQuizProvider } from '@/context/EditorQuizContext';
-import { FunnelsProvider } from '@/context/FunnelsContext';
 import React from 'react';
 
 /**
@@ -105,25 +103,22 @@ const QuizIntegratedRenderer: React.FC = () => {
 };
 
 /**
- * 🎯 PÁGINA PRINCIPAL DO QUIZ COM PROVIDERS
+ * 🎯 PÁGINA PRINCIPAL DO QUIZ COM PROVIDERS CONSOLIDADOS
  *
- * Estrutura de Providers:
- * 1. FunnelsProvider - Dados das 21 etapas
- * 2. EditorProvider - Sistema de blocos
- * 3. EditorQuizProvider - Lógica de quiz
- * 4. Quiz21StepsProvider - Navegação integrada
+ * Estrutura de Providers (SIMPLIFICADA):
+ * 1. FunnelMasterProvider - Consolida todas as funcionalidades (funis, quiz, steps)
+ * 2. EditorProvider - Sistema de blocos (mantido)
  */
 const QuizPage: React.FC = () => {
   return (
-    <FunnelsProvider debug={true}>
+    <FunnelMasterProvider
+      debugMode={true}
+      enableCache={true}
+    >
       <EditorProvider>
-        <EditorQuizProvider>
-          <Quiz21StepsProvider debug={true} initialStep={1}>
-            <QuizIntegratedRenderer />
-          </Quiz21StepsProvider>
-        </EditorQuizProvider>
+        <QuizIntegratedRenderer />
       </EditorProvider>
-    </FunnelsProvider>
+    </FunnelMasterProvider>
   );
 };
 

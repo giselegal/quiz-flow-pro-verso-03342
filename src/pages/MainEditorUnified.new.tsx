@@ -1,14 +1,13 @@
 import React from 'react';
 import { useLocation, useParams } from 'wouter';
 import { ErrorBoundary } from '../components/editor/ErrorBoundary';
-import { FunnelsProvider } from '@/context/FunnelsContext';
+import { FunnelMasterProvider } from '@/providers/FunnelMasterProvider';
 import { LegacyCompatibilityWrapper } from '@/core/contexts/LegacyCompatibilityWrapper';
 import { FunnelContext } from '@/core/contexts/FunnelContext';
 import { EditorProvider } from '../components/editor/EditorProvider';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { useFunnelContext } from '@/hooks/useFunnelLoader';
 import FunnelFallback from '@/components/editor/FunnelFallback';
-import { UnifiedFunnelProvider } from '@/context/UnifiedFunnelContext';
 import EditorFallback from '@/components/editor/EditorFallback';
 
 /**
@@ -30,7 +29,7 @@ const MainEditorUnified: React.FC = () => {
     const realFunnelId = routeParams.funnelId || params.get('funnel');
     const templateId = params.get('template');
     const debugMode = params.get('debug') === 'true';
-    
+
     // Lógica de prioridade: funil real > template > novo
     const funnelId = realFunnelId || undefined; // Só usar funnelId se for real
 
@@ -64,34 +63,36 @@ const MainEditorUnified: React.FC = () => {
 
     return (
         <ErrorBoundary>
-            <UnifiedFunnelProvider funnelId={sanitizedParams.funnelId} debugMode={debugMode}>
-                <FunnelsProvider debug={debugMode}>
-                    <EditorProvider
-                        enableSupabase={!!realFunnelId} // Ativar Supabase apenas para funis reais
-                        funnelId={funnelId}
-                        quizId={funnelId || templateId || 'local-funnel'}
-                        storageKey={`editor-unified-${funnelId || templateId || 'new'}`}
+            <FunnelMasterProvider
+                funnelId={sanitizedParams.funnelId}
+                debugMode={debugMode}
+                enableCache={true}
+            >
+                <EditorProvider
+                    enableSupabase={!!realFunnelId} // Ativar Supabase apenas para funis reais
+                    funnelId={funnelId}
+                    quizId={funnelId || templateId || 'local-funnel'}
+                    storageKey={`editor-unified-${funnelId || templateId || 'new'}`}
+                >
+                    <LegacyCompatibilityWrapper
+                        enableWarnings={debugMode}
+                        initialContext={FunnelContext.EDITOR}
                     >
-                        <LegacyCompatibilityWrapper
-                            enableWarnings={debugMode}
-                            initialContext={FunnelContext.EDITOR}
-                        >
-                            {sanitizedParams.funnelId ? (
-                                <FunnelValidatedEditor
-                                    templateId={sanitizedParams.templateId}
-                                    funnelId={sanitizedParams.funnelId}
-                                    debugMode={debugMode}
-                                />
-                            ) : (
-                                <EditorFallback
-                                    templateId={sanitizedParams.templateId}
-                                    funnelId={sanitizedParams.funnelId}
-                                />
-                            )}
-                        </LegacyCompatibilityWrapper>
-                    </EditorProvider>
-                </FunnelsProvider>
-            </UnifiedFunnelProvider>
+                        {sanitizedParams.funnelId ? (
+                            <FunnelValidatedEditor
+                                templateId={sanitizedParams.templateId}
+                                funnelId={sanitizedParams.funnelId}
+                                debugMode={debugMode}
+                            />
+                        ) : (
+                            <EditorFallback
+                                templateId={sanitizedParams.templateId}
+                                funnelId={sanitizedParams.funnelId}
+                            />
+                        )}
+                    </LegacyCompatibilityWrapper>
+                </EditorProvider>
+            </FunnelMasterProvider>
         </ErrorBoundary>
     );
 };

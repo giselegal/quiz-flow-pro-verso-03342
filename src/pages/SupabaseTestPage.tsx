@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { SupabaseTest } from '../components/test/SupabaseTest';
-import { FunnelsProvider } from '../context/FunnelsContext';
+import { FunnelMasterProvider } from '@/providers/FunnelMasterProvider';
 import { Toaster } from '../components/ui/toaster';
 
 /**
@@ -13,6 +12,18 @@ const DebugLogger: React.FC = () => {
   }, []);
 
   return null;
+};
+
+/**
+ * Componente de teste básico do Supabase
+ */
+const SupabaseTest: React.FC = () => {
+  return (
+    <div className="p-8">
+      <h1 className="text-2xl font-bold mb-4">Teste Supabase</h1>
+      <p>Teste básico da integração com Supabase usando FunnelMasterProvider.</p>
+    </div>
+  );
 };
 
 /**
@@ -36,11 +47,14 @@ const SupabaseTestPage: React.FC = () => {
         />
       </div>
 
-      <FunnelsProvider debug={debugMode}>
+      <FunnelMasterProvider 
+        debugMode={debugMode}
+        enableCache={true}
+      >
         {debugMode && <DebugLogger />}
         <SupabaseTest />
         <Toaster />
-      </FunnelsProvider>
+      </FunnelMasterProvider>
     </div>
   );
 };

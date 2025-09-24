@@ -32,7 +32,7 @@ const TemplateLoadingSkeleton = React.lazy(() =>
 );
 
 // Providers necessários
-import { FunnelsProvider } from '@/context/FunnelsContext';
+import { FunnelMasterProvider } from '@/providers/FunnelMasterProvider';
 import PureBuilderProvider from '@/components/editor/PureBuilderProvider';
 import { useNotification } from '@/components/ui/Notification';
 import UnifiedCRUDProvider, { useUnifiedCRUD } from '@/context/UnifiedCRUDProvider';
@@ -417,7 +417,11 @@ const UnifiedEditorCore: React.FC<ModernUnifiedEditorProps> = ({
 
             {/* Main Editor Area - Usando EditorProUnified como base única */}
             <div className="flex-1 overflow-hidden">
-                <FunnelsProvider debug={false}>
+                <FunnelMasterProvider 
+                    funnelId={extractedFunnelId}
+                    debugMode={false}
+                    enableCache={true}
+                >
                     <PureBuilderProvider funnelId={extractedFunnelId}>
                         <Suspense fallback={
                             <Suspense fallback={<LoadingSpinner message="Carregando componentes..." />}>
@@ -435,7 +439,7 @@ const UnifiedEditorCore: React.FC<ModernUnifiedEditorProps> = ({
                             </Suspense>
                         </Suspense>
                     </PureBuilderProvider>
-                </FunnelsProvider>
+                </FunnelMasterProvider>
             </div>
 
             {/* Status Bar com informações CRUD */}
