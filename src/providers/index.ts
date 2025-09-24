@@ -5,12 +5,21 @@
  */
 
 // Clean Architecture Provider
-export {
-  CleanArchitectureProvider,
-  useCleanArchitecture,
-  useFeatureFlags,
-  useServices
-} from './CleanArchitectureProvider';
+export { default as CleanArchitectureProvider } from './CleanArchitectureProvider';
+
+// Funnel Master Provider (consolidates 5+ providers)
+export { 
+  FunnelMasterProvider,
+  useFunnelMaster,
+  useFunnels,
+  useUnifiedFunnel,
+  useFunnelConfig,
+  useQuizFlow,
+  useQuiz21Steps
+} from './FunnelMasterProvider';
+
+// Optimized Provider Stack
+export { default as OptimizedProviderStack } from './OptimizedProviderStack';
 
 // Legacy Providers (mantidos para compatibilidade)
 export { EditorRuntimeProviders } from '@/context/EditorRuntimeProviders';
