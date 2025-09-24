@@ -16,7 +16,7 @@
 // Removido imports não utilizados - serão readicionados quando necessário
 
 // ✅ TIPOS DE RECURSOS GERENCIADOS
-export type CleanupResourceType = 
+export type CleanupResourceType =
   | 'event-listener'
   | 'timer'
   | 'interval'
@@ -85,7 +85,7 @@ export class AutoCleanupManager {
    */
   register(resource: Omit<CleanupResource, 'id' | 'createdAt'>): string {
     const id = `${resource.type}-${resource.name}-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-    
+
     const fullResource: CleanupResource = {
       ...resource,
       id,
@@ -111,7 +111,7 @@ export class AutoCleanupManager {
    */
   cleanup(resourceId: string): boolean {
     const resource = this.resources.get(resourceId);
-    
+
     if (!resource) {
       console.warn(`⚠️ Resource not found for cleanup: ${resourceId}`);
       return false;
@@ -119,7 +119,7 @@ export class AutoCleanupManager {
 
     try {
       resource.cleanup();
-      
+
       this.resources.delete(resourceId);
       this.cleanupHistory.push(resource);
       this.stats.totalCleaned++;
@@ -145,7 +145,7 @@ export class AutoCleanupManager {
    */
   cleanupComponent(componentId: string): number {
     let cleanedCount = 0;
-    
+
     const componentResources = Array.from(this.resources.values())
       .filter(resource => resource.componentId === componentId);
 
@@ -168,7 +168,7 @@ export class AutoCleanupManager {
    */
   cleanupByType(type: CleanupResourceType): number {
     let cleanedCount = 0;
-    
+
     const typeResources = Array.from(this.resources.values())
       .filter(resource => resource.type === type);
 
@@ -192,7 +192,7 @@ export class AutoCleanupManager {
   cleanupByAge(maxAgeMs: number = 5 * 60 * 1000): number { // 5 minutos default
     let cleanedCount = 0;
     const now = Date.now();
-    
+
     const oldResources = Array.from(this.resources.values())
       .filter(resource => (now - resource.createdAt) > maxAgeMs);
 
@@ -424,7 +424,7 @@ export const stopAutoCleanup = (): void => {
 // ✅ INICIAR AUTO-CLEANUP AUTOMATICAMENTE
 if (typeof window !== 'undefined') {
   startAutoCleanup();
-  
+
   // Cleanup ao sair da página
   window.addEventListener('beforeunload', () => {
     const cleaned = cleanupManager.cleanupAll();

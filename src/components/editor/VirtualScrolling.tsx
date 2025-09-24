@@ -80,19 +80,19 @@ export const VirtualScrolling = <T extends any>({
   // ✅ CALCULAR ALTURA DOS ITENS
   const getItemHeight = useCallback((item: T, index: number): number => {
     const itemId = getItemId(item, index);
-    
+
     // Cache primeiro
     const cached = heightsCache.get(itemId);
     if (cached) return cached;
 
     // Calcular altura
-    const height = typeof itemHeight === 'function' 
-      ? itemHeight(item, index) 
+    const height = typeof itemHeight === 'function'
+      ? itemHeight(item, index)
       : itemHeight;
-    
+
     // Cachear resultado
     heightsCache.set(itemId, height);
-    
+
     return height;
   }, [itemHeight, getItemId]);
 
@@ -100,11 +100,11 @@ export const VirtualScrolling = <T extends any>({
   const getItemPositions = useMemo(() => {
     let currentTop = 0;
     const positions = new Map<number, number>();
-    
+
     for (let i = 0; i < items.length; i++) {
       const cacheKey = `pos-${i}`;
       const cached = positionsCache.get(cacheKey);
-      
+
       if (cached !== null) {
         positions.set(i, cached);
         currentTop = cached + getItemHeight(items[i], i);
@@ -114,7 +114,7 @@ export const VirtualScrolling = <T extends any>({
         currentTop += getItemHeight(items[i], i);
       }
     }
-    
+
     return positions;
   }, [items, getItemHeight]);
 
@@ -130,7 +130,7 @@ export const VirtualScrolling = <T extends any>({
     while (low <= high) {
       const mid = Math.floor((low + high) / 2);
       const position = getItemPositions.get(mid) || 0;
-      
+
       if (position < scrollTop) {
         startIndex = mid;
         low = mid + 1;
@@ -186,9 +186,9 @@ export const VirtualScrolling = <T extends any>({
     if (!container) return;
 
     const cleanupScrollId = registerEventListener(
-      container, 
-      'scroll', 
-      handleScroll, 
+      container,
+      'scroll',
+      handleScroll,
       { passive: true },
       componentId
     );
@@ -212,7 +212,7 @@ export const VirtualScrolling = <T extends any>({
     setState(prev => ({
       ...prev,
       visibleRange: initialRange,
-      totalHeight: Array.from(getItemPositions.values()).reduce((max, pos, i) => 
+      totalHeight: Array.from(getItemPositions.values()).reduce((max, pos, i) =>
         Math.max(max, pos + getItemHeight(items[i] || {}, i)), 0
       )
     }));
@@ -233,23 +233,23 @@ export const VirtualScrolling = <T extends any>({
   // ✅ CALCULAR TOTAL HEIGHT
   const totalHeight = useMemo(() => {
     if (items.length === 0) return 0;
-    
+
     const lastPosition = getItemPositions.get(items.length - 1) || 0;
     const lastItemHeight = getItemHeight(items[items.length - 1], items.length - 1);
-    
+
     return lastPosition + lastItemHeight;
   }, [items, getItemPositions, getItemHeight]);
 
   // ✅ RENDERIZAR ITENS VISÍVEIS
   const visibleItems = useMemo(() => {
     const rendered = [];
-    
+
     for (let i = state.visibleRange.start; i <= state.visibleRange.end && i < items.length; i++) {
       const item = items[i];
       const itemId = getItemId(item, i);
       const top = getItemPositions.get(i) || 0;
       const height = getItemHeight(item, i);
-      
+
       const style: React.CSSProperties = {
         position: 'absolute',
         top,
@@ -265,7 +265,7 @@ export const VirtualScrolling = <T extends any>({
         </div>
       );
     }
-    
+
     return rendered;
   }, [state.visibleRange, items, getItemId, getItemPositions, getItemHeight, renderItem]);
 
@@ -326,13 +326,13 @@ export const VirtualBlockList: React.FC<{
   containerHeight: number;
   onBlockClick?: (block: any, index: number) => void;
 }> = ({ blocks, containerHeight, onBlockClick }) => {
-  const { VirtualScrollingComponent, renderBlock, handleScroll, itemHeight, bufferSize } = 
+  const { VirtualScrollingComponent, renderBlock, handleScroll, itemHeight, bufferSize } =
     useVirtualBlockList(blocks, containerHeight);
 
   const renderBlockWithClick = useCallback((block: any, index: number, style: React.CSSProperties) => {
     return (
-      <div 
-        style={style} 
+      <div
+        style={style}
         className="virtual-block-item cursor-pointer hover:bg-gray-50"
         onClick={() => onBlockClick?.(block, index)}
       >
