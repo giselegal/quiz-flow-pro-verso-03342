@@ -1,10 +1,11 @@
 /**
- * 🎯 ENHANCED FUNNEL SERVICE
+ * 🎯 ENHANCED FUNNEL SERVICE - FASE 1 & 7: FALLBACK INTELIGENTE
  * 
  * Wrapper que adiciona funcionalidades automáticas sobre o FunnelUnifiedService:
  * - Auto-criação de funis baseados em templates
  * - Fallback inteligente para IDs não encontrados
  * - Cache otimizado com invalidação automática
+ * - Sistema de templates robusto
  */
 
 import { FunnelUnifiedService, UnifiedFunnelData } from './FunnelUnifiedService';
@@ -14,6 +15,7 @@ export class EnhancedFunnelService {
   private static instance: EnhancedFunnelService;
   private funnelService = FunnelUnifiedService.getInstance();
   private templateService = TemplateFunnelService.getInstance();
+  private cache = new Map<string, UnifiedFunnelData>();
 
   private constructor() {}
 
@@ -30,12 +32,20 @@ export class EnhancedFunnelService {
   async getFunnelWithFallback(funnelId: string, userId?: string): Promise<UnifiedFunnelData | null> {
     console.log('🎯 EnhancedFunnelService: Getting funnel with fallback', funnelId);
 
+    // Check cache first
+    const cached = this.cache.get(funnelId);
+    if (cached) {
+      console.log('✅ Funnel found in cache:', funnelId);
+      return cached;
+    }
+
     try {
       // Tentar carregar funil existente
       let funnel = await this.funnelService.getFunnel(funnelId, userId);
       
       if (funnel) {
         console.log('✅ Funnel found in database:', funnelId);
+        this.cache.set(funnelId, funnel);
         return funnel;
       }
 
@@ -47,45 +57,89 @@ export class EnhancedFunnelService {
         
         if (funnel) {
           console.log('✅ Funnel created from template:', funnelId);
+          this.cache.set(funnelId, funnel);
           return funnel;
         }
       }
 
-      console.log('❌ Funnel not found and cannot be created:', funnelId);
-      return null;
+      // Fallback: criar funil básico se não existe
+      funnel = await this.createFallbackFunnel(funnelId);
+      if (funnel) {
+        this.cache.set(funnelId, funnel);
+      }
 
+      return funnel;
     } catch (error) {
       console.error('❌ Error in getFunnelWithFallback:', error);
+      
+      // Em caso de erro, tentar criar fallback
+      const fallback = await this.createFallbackFunnel(funnelId);
+      if (fallback) {
+        this.cache.set(funnelId, fallback);
+      }
+      
+      return fallback;
+    }
+  }
+
+  /**
+   * FASE 1: Criar funil fallback quando não existe
+   */
+  async createFallbackFunnel(funnelId: string): Promise<UnifiedFunnelData | null> {
+    try {
+      console.log('🔄 Creating fallback funnel:', funnelId);
+
+      const fallbackFunnel: UnifiedFunnelData = {
+        id: funnelId,
+        name: `Funil ${funnelId}`,
+        description: 'Funil criado automaticamente',
+        user_id: 'anonymous',
+        is_published: false,
+        version: 1,
+        settings: {
+          theme: 'modern-elegant',
+          totalSteps: 21,
+          allowBackward: true,
+          saveProgress: true
+        },
+        pages: Array.from({ length: 21 }, (_, index) => ({
+          id: `${funnelId}-step-${index + 1}`,
+          funnel_id: funnelId,
+          page_type: 'question',
+          page_order: index + 1,
+          title: `Etapa ${index + 1}`,
+          blocks: [],
+          metadata: {},
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString()
+        })),
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
+      };
+
+      // Save fallback to database
+      await this.funnelService.createFunnel(fallbackFunnel);
+      
+      console.log('✅ Fallback funnel created successfully:', funnelId);
+      return fallbackFunnel;
+    } catch (error) {
+      console.error('❌ Error creating fallback funnel:', error);
       return null;
     }
   }
 
   /**
-   * Proxy para outras operações do FunnelUnifiedService
+   * Clear cache
    */
-  async createFunnel(options: any): Promise<UnifiedFunnelData> {
-    return this.funnelService.createFunnel(options);
+  clearCache(): void {
+    this.cache.clear();
   }
 
-  async updateFunnel(id: string, updates: any, userId?: string): Promise<UnifiedFunnelData> {
-    return this.funnelService.updateFunnel(id, updates, userId);
-  }
-
-  async listFunnels(options: any = {}): Promise<UnifiedFunnelData[]> {
-    return this.funnelService.listFunnels(options);
-  }
-
-  async duplicateFunnel(id: string, newName?: string, userId?: string): Promise<UnifiedFunnelData> {
-    return this.funnelService.duplicateFunnel(id, newName, userId);
-  }
-
-  // Event system
-  on(event: any, listener: any): void {
-    return this.funnelService.on(event, listener);
-  }
-
-  off(event: any, listener: any): void {
-    return this.funnelService.off(event, listener);
+  /**
+   * Update cache entry
+   */
+  updateCache(funnelId: string, funnel: UnifiedFunnelData): void {
+    this.cache.set(funnelId, funnel);
   }
 }
 

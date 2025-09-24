@@ -237,37 +237,36 @@ const generateWithPureBuilder = async (funnelId: string, templateInfo: any): Pro
                             containerWidth: 'full',
                             spacing: 'small'
                         }
-                    }] as Block[];
+                     }] as Block[];
                 }
             }
         }
     }
-        }
 
-console.log(`✅ Templates JSON carregados: ${Object.keys(stepBlocks).length}/${totalSteps} etapas`);
+    console.log(`✅ Templates JSON carregados: ${Object.keys(stepBlocks).length}/${totalSteps} etapas`);
 
-// 🚀 CRIAR CONFIGURAÇÃO DINÂMICA
-const funnelConfig = {
-    templateId: safeTemplate,
-    totalSteps,
-    stepBlocks,
-    theme: templateInfo.theme || 'modern-elegant',
-    allowBackward: true,
-    saveProgress: true,
-    showProgress: true
-};
+    // 🚀 CRIAR CONFIGURAÇÃO DINÂMICA
+    const funnelConfig = {
+        templateId: safeTemplate,
+        totalSteps,
+        stepBlocks,
+        theme: templateInfo.theme || 'modern-elegant',
+        allowBackward: true,
+        saveProgress: true,
+        showProgress: true
+    };
 
-return {
-    stepBlocks,
-    builderInstance: null, // Não precisamos do builder quando carregamos JSON
-    funnelConfig,
-    totalSteps // ✅ USAR TOTAL STEPS DINÂMICO
-};
+    return {
+        stepBlocks,
+        builderInstance: null,
+        funnelConfig,
+        totalSteps
+    };
 
     } catch (error) {
-    console.error('❌ Error with Pure Builder System:', error);
-    throw error;
-}
+        console.error('❌ Error with Pure Builder System:', error);
+        throw error;
+    }
 };
 
 // 🎯 PROVIDER PRINCIPAL
