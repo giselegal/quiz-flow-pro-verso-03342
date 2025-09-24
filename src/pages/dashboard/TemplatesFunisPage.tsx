@@ -177,13 +177,13 @@ const TemplatesFunisPage: React.FC = () => {
     };
 
     return (
-        <div className="p-6 bg-slate-50 min-h-screen">
+        <div className="p-6 bg-white min-h-screen">
             {/* Header */}
             <div className="mb-8">
-                <h1 className="text-3xl font-bold text-slate-900 mb-2">
+                <h1 className="text-3xl font-bold text-[#1A0F3D] mb-2">
                     Modelos de Funis
                 </h1>
-                <p className="text-slate-600 mb-6">
+                <p className="text-[#2E1A6B] mb-6">
                     Templates profissionais e testados para diferentes objetivos de negócio
                 </p>
 
