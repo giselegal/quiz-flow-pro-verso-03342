@@ -1,132 +1,161 @@
-import React from 'react';
-import { Copy, Eye, Download, Star } from 'lucide-react';
+import React, { useState } from 'react';
+import { Copy, Eye, Download, Star, Search, Filter } from 'lucide-react';
 import { Button } from '../../components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../components/ui/card';
 import { Badge } from '../../components/ui/badge';
+import { Input } from '../../components/ui/input';
 
-// Templates de funis reais e práticos disponíveis
+// Templates organizados por segmento de mercado
 const templatesFunis = [
+    // === TEMPLATES B2B ===
     {
-        id: 'template-quiz-personalidade',
-        name: 'Quiz de Personalidade',
-        description: 'Descubra seu estilo pessoal em 5 perguntas simples. Perfeito para engajamento e geração de leads.',
-        category: 'Quiz',
-        difficulty: 'Fácil',
-        questions: 5,
-        avgTime: '3 min',
+        id: 'template-qualificacao-b2b',
+        name: 'Qualificação de Leads B2B',
+        description: 'Identifique e qualifique leads empresariais com perguntas estratégicas e scoring automático.',
+        category: 'B2B',
+        segment: 'B2B',
+        difficulty: 'Intermediário',
         rating: 4.8,
-        downloads: 3250,
-        tags: ['Personalidade', 'Engajamento', 'Lead Generation'],
-        preview: 'https://via.placeholder.com/300x200/3b82f6/ffffff?text=Quiz+Personalidade',
-        features: ['Resultados personalizados', 'Captura de email', 'Compartilhamento social']
-    },
-    {
-        id: 'template-lead-magnet',
-        name: 'Lead Magnet com E-book',
-        description: 'Capture leads qualificados oferecendo conteúdo de valor em troca do contato.',
-        category: 'Lead Generation',
-        difficulty: 'Fácil',
-        questions: 3,
-        avgTime: '2 min',
-        rating: 4.9,
-        downloads: 5890,
-        tags: ['Lead Magnet', 'E-book', 'Captura'],
-        preview: 'https://via.placeholder.com/300x200/10b981/ffffff?text=Lead+Magnet',
-        features: ['Formulário otimizado', 'Entrega automática', 'Integração email']
-    },
-    {
-        id: 'template-pesquisa-nps',
-        name: 'Pesquisa NPS',
-        description: 'Meça a satisfação dos clientes com Net Promoter Score de forma simples e eficaz.',
-        category: 'Pesquisa',
-        difficulty: 'Fácil',
-        questions: 4,
-        avgTime: '2 min',
-        rating: 4.7,
-        downloads: 2100,
-        tags: ['NPS', 'Satisfação', 'Feedback'],
-        preview: 'https://via.placeholder.com/300x200/f59e0b/ffffff?text=NPS+Survey',
-        features: ['Cálculo automático do NPS', 'Segmentação de respostas', 'Relatórios visuais']
+        downloads: 2456,
+        tags: ['B2B', 'Lead Scoring', 'Qualificação'],
+        preview: 'https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=400&h=240&fit=crop&crop=center&auto=format&q=60',
+        features: ['Lead scoring automático', 'Integração CRM', 'Relatórios avançados', 'Follow-up inteligente']
     },
     {
         id: 'template-calculadora-roi',
         name: 'Calculadora de ROI',
-        description: 'Ferramenta interativa para demonstrar o retorno do investimento em seus serviços.',
-        category: 'Calculadora',
-        difficulty: 'Intermediário',
-        questions: 6,
-        avgTime: '5 min',
-        rating: 4.6,
-        downloads: 1750,
-        tags: ['ROI', 'Vendas', 'Calculadora'],
-        preview: 'https://via.placeholder.com/300x200/ef4444/ffffff?text=ROI+Calculator',
-        features: ['Cálculos automáticos', 'Resultados visuais', 'PDF de proposta']
-    },
-    {
-        id: 'template-qualificacao-lead',
-        name: 'Qualificação de Leads B2B',
-        description: 'Identifique e qualifique leads empresariais com perguntas estratégicas.',
+        description: 'Demonstre o valor do seu produto/serviço com uma calculadora interativa de retorno sobre investimento.',
         category: 'B2B',
+        segment: 'B2B',
         difficulty: 'Avançado',
-        questions: 8,
-        avgTime: '7 min',
-        rating: 4.8,
-        downloads: 890,
-        tags: ['B2B', 'Qualificação', 'Vendas'],
-        preview: 'https://via.placeholder.com/300x200/8b5cf6/ffffff?text=B2B+Qualification',
-        features: ['Scoring automático', 'Segmentação avançada', 'Integração CRM']
+        rating: 4.9,
+        downloads: 1834,
+        tags: ['ROI', 'Calculadora', 'Vendas'],
+        preview: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=400&h=240&fit=crop&crop=center&auto=format&q=60',
+        features: ['Cálculos personalizados', 'Relatórios em PDF', 'Integração com pipelines', 'Análise comparativa']
     },
     {
-        id: 'template-onboarding',
-        name: 'Onboarding de Clientes',
-        description: 'Colete informações essenciais para personalizar a experiência do novo cliente.',
-        category: 'Onboarding',
+        id: 'template-auditoria-digital',
+        name: 'Auditoria Digital Gratuita',
+        description: 'Ofereça uma auditoria digital completa como isca digital para atrair empresas interessadas.',
+        category: 'B2B',
+        segment: 'B2B',
         difficulty: 'Intermediário',
-        questions: 6,
-        avgTime: '4 min',
-        rating: 4.5,
-        downloads: 950,
-        tags: ['Onboarding', 'Personalização', 'Experiência'],
-        preview: 'https://via.placeholder.com/300x200/06b6d4/ffffff?text=Onboarding',
-        features: ['Coleta de preferências', 'Setup personalizado', 'Jornada guiada']
+        rating: 4.7,
+        downloads: 3247,
+        tags: ['Auditoria', 'Digital', 'Lead Magnet'],
+        preview: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=400&h=240&fit=crop&crop=center&auto=format&q=60',
+        features: ['Análise automática', 'Relatório personalizado', 'Recomendações', 'Agendamento de reunião']
     },
+
+    // === TEMPLATES CLIENTE FINAL ===
     {
-        id: 'template-evento-inscricao',
-        name: 'Inscrição para Eventos',
-        description: 'Formulário completo para inscrições em webinars, workshops e eventos.',
-        category: 'Eventos',
+        id: 'template-lead-magnet',
+        name: 'Lead Magnet Premium',
+        description: 'Capture leads qualificados oferecendo conteúdo exclusivo e de alto valor para seu público.',
+        category: 'Lead Generation',
+        segment: 'Cliente Final',
         difficulty: 'Fácil',
-        questions: 5,
-        avgTime: '3 min',
-        rating: 4.4,
-        downloads: 1320,
-        tags: ['Eventos', 'Inscrição', 'Webinar'],
-        preview: 'https://via.placeholder.com/300x200/f97316/ffffff?text=Event+Registration',
-        features: ['Agenda automática', 'Lembretes por email', 'Link de acesso']
+        rating: 4.6,
+        downloads: 5672,
+        tags: ['Lead Magnet', 'Captura', 'Conteúdo'],
+        preview: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=400&h=240&fit=crop&crop=center&auto=format&q=60',
+        features: ['Formulários otimizados', 'Entrega automática', 'Segmentação de público', 'Analytics integrado']
     },
     {
-        id: 'template-pesquisa-mercado',
-        name: 'Pesquisa de Mercado',
-        description: 'Colete insights valiosos sobre seu público e validar ideias de produtos.',
+        id: 'template-pesquisa-nps',
+        name: 'Pesquisa de Satisfação NPS',
+        description: 'Meça a satisfação dos seus clientes e identifique oportunidades de melhoria com metodologia NPS.',
         category: 'Pesquisa',
+        segment: 'Cliente Final',
+        difficulty: 'Fácil',
+        rating: 4.5,
+        downloads: 4123,
+        tags: ['NPS', 'Satisfação', 'Pesquisa'],
+        preview: 'https://images.unsplash.com/photo-1553877522-43269d4ea984?w=400&h=240&fit=crop&crop=center&auto=format&q=60',
+        features: ['Cálculo automático NPS', 'Segmentação de respostas', 'Dashboards visuais', 'Alertas automáticos']
+    },
+    {
+        id: 'template-onboarding-clientes',
+        name: 'Onboarding de Clientes',
+        description: 'Guie novos clientes através do processo de integração com seu produto de forma interativa.',
+        category: 'Onboarding',
+        segment: 'Cliente Final',
         difficulty: 'Intermediário',
-        questions: 10,
-        avgTime: '6 min',
-        rating: 4.3,
-        downloads: 680,
-        tags: ['Pesquisa', 'Mercado', 'Insights'],
-        preview: 'https://via.placeholder.com/300x200/84cc16/ffffff?text=Market+Research',
-        features: ['Análise estatística', 'Gráficos automáticos', 'Exportação de dados']
+        rating: 4.8,
+        downloads: 2891,
+        tags: ['Onboarding', 'Cliente', 'Integração'],
+        preview: 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=400&h=240&fit=crop&crop=center&auto=format&q=60',
+        features: ['Progresso visual', 'Checkpoints interativos', 'Recursos contextuais', 'Suporte integrado']
+    },
+    {
+        id: 'template-inscricao-evento',
+        name: 'Inscrição para Eventos',
+        description: 'Simplifique o processo de inscrição em eventos com formulários inteligentes e confirmação automática.',
+        category: 'Eventos',
+        segment: 'Cliente Final',
+        difficulty: 'Fácil',
+        rating: 4.4,
+        downloads: 3456,
+        tags: ['Evento', 'Inscrição', 'Registro'],
+        preview: 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=400&h=240&fit=crop&crop=center&auto=format&q=60',
+        features: ['Agenda dinâmica', 'QR codes', 'Lembretes automáticos', 'Check-in digital']
+    },
+
+    // === TEMPLATES QUIZ ===
+    {
+        id: 'template-quiz-personalidade',
+        name: 'Quiz de Personalidade',
+        description: 'Engaje seu público com um quiz divertido que revela traços de personalidade e gera leads.',
+        category: 'Quiz',
+        segment: 'Quiz',
+        difficulty: 'Fácil',
+        rating: 4.7,
+        downloads: 8934,
+        tags: ['Quiz', 'Personalidade', 'Engajamento'],
+        preview: 'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=400&h=240&fit=crop&crop=center&auto=format&q=60',
+        features: ['Resultados personalizados', 'Compartilhamento social', 'Captura de leads', 'Analytics detalhado']
+    },
+    {
+        id: 'template-quiz-conhecimento',
+        name: 'Quiz de Conhecimento',
+        description: 'Teste o conhecimento dos participantes sobre seu nicho e eduque-os no processo.',
+        category: 'Quiz',
+        segment: 'Quiz',
+        difficulty: 'Intermediário',
+        rating: 4.6,
+        downloads: 5247,
+        tags: ['Quiz', 'Conhecimento', 'Educação'],
+        preview: 'https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?w=400&h=240&fit=crop&crop=center&auto=format&q=60',
+        features: ['Sistema de pontuação', 'Feedback imediato', 'Níveis de dificuldade', 'Certificados digitais']
+    },
+    {
+        id: 'template-quiz-produto',
+        name: 'Quiz Recomendação de Produto',
+        description: 'Ajude clientes a encontrar o produto perfeito através de perguntas direcionadas.',
+        category: 'Quiz',
+        segment: 'Quiz',
+        difficulty: 'Avançado',
+        rating: 4.9,
+        downloads: 3180,
+        tags: ['Produto', 'Recomendação', 'Vendas'],
+        preview: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=400&h=240&fit=crop&crop=center&auto=format&q=60',
+        features: ['Recomendações inteligentes', 'Integração com catálogo', 'Cross-sell automático', 'Cupons personalizados']
     }
-]; const categories = ['Todos', 'Quiz', 'Lead Generation', 'Pesquisa', 'Calculadora', 'B2B', 'Onboarding', 'Eventos'];
+];
+
+const segments = ['Todos', 'B2B', 'Cliente Final', 'Quiz'];
+const categories = ['Todos', 'B2B', 'Lead Generation', 'Pesquisa', 'Onboarding', 'Eventos', 'Quiz'];
 const difficulties = ['Todos', 'Fácil', 'Intermediário', 'Avançado'];
 
 const TemplatesFunisPage: React.FC = () => {
-    const [selectedCategory, setSelectedCategory] = React.useState('Todos');
-    const [selectedDifficulty, setSelectedDifficulty] = React.useState('Todos');
-    const [searchTerm, setSearchTerm] = React.useState('');
+    const [selectedSegment, setSelectedSegment] = useState('Todos');
+    const [selectedCategory, setSelectedCategory] = useState('Todos');
+    const [selectedDifficulty, setSelectedDifficulty] = useState('Todos');
+    const [searchTerm, setSearchTerm] = useState('');
 
     const filteredTemplates = templatesFunis.filter(template => {
+        const matchesSegment = selectedSegment === 'Todos' || template.segment === selectedSegment;
         const matchesCategory = selectedCategory === 'Todos' || template.category === selectedCategory;
         const matchesDifficulty = selectedDifficulty === 'Todos' || template.difficulty === selectedDifficulty;
         const matchesSearch = searchTerm === '' ||
@@ -134,7 +163,7 @@ const TemplatesFunisPage: React.FC = () => {
             template.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
             template.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()));
 
-        return matchesCategory && matchesDifficulty && matchesSearch;
+        return matchesSegment && matchesCategory && matchesDifficulty && matchesSearch;
     });
 
     const handleUseTemplate = (templateId: string) => {
@@ -154,152 +183,256 @@ const TemplatesFunisPage: React.FC = () => {
                 <h1 className="text-3xl font-bold text-gray-900 mb-2">
                     Modelos de Funis
                 </h1>
-                <p className="text-gray-600">
+                <p className="text-gray-600 mb-6">
                     Templates profissionais e testados para diferentes objetivos de negócio
                 </p>
-            </div>            {/* Filtros */}
-            <div className="mb-6 space-y-4">
-                {/* Search */}
-                <div className="flex-1">
-                    <input
-                        type="text"
-                        placeholder="Buscar templates..."
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                    />
+
+                {/* Resumo por segmento */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                    <Card className="p-4">
+                        <div className="flex items-center gap-3">
+                            <div className="p-2 bg-blue-50 rounded-lg">
+                                <div className="w-6 h-6 bg-blue-600 rounded"></div>
+                            </div>
+                            <div>
+                                <p className="text-sm text-gray-600">Templates B2B</p>
+                                <p className="text-xl font-bold">{templatesFunis.filter(t => t.segment === 'B2B').length}</p>
+                                <p className="text-xs text-gray-500">Empresarial</p>
+                            </div>
+                        </div>
+                    </Card>
+
+                    <Card className="p-4">
+                        <div className="flex items-center gap-3">
+                            <div className="p-2 bg-green-50 rounded-lg">
+                                <div className="w-6 h-6 bg-green-600 rounded"></div>
+                            </div>
+                            <div>
+                                <p className="text-sm text-gray-600">Cliente Final</p>
+                                <p className="text-xl font-bold">{templatesFunis.filter(t => t.segment === 'Cliente Final').length}</p>
+                                <p className="text-xs text-gray-500">Consumidor</p>
+                            </div>
+                        </div>
+                    </Card>
+
+                    <Card className="p-4">
+                        <div className="flex items-center gap-3">
+                            <div className="p-2 bg-purple-50 rounded-lg">
+                                <div className="w-6 h-6 bg-purple-600 rounded"></div>
+                            </div>
+                            <div>
+                                <p className="text-sm text-gray-600">Quiz Interativos</p>
+                                <p className="text-xl font-bold">{templatesFunis.filter(t => t.segment === 'Quiz').length}</p>
+                                <p className="text-xs text-gray-500">Engajamento</p>
+                            </div>
+                        </div>
+                    </Card>
                 </div>
 
-                {/* Filtros */}
-                <div className="flex flex-wrap gap-4">
-                    {/* Categories */}
-                    <div className="flex flex-wrap gap-2">
-                        <span className="text-sm font-medium text-gray-700 mr-2">Categoria:</span>
-                        {categories.map(category => (
-                            <Button
-                                key={category}
-                                variant={selectedCategory === category ? "default" : "outline"}
-                                size="sm"
-                                onClick={() => setSelectedCategory(category)}
-                                className="text-xs"
-                            >
-                                {category}
-                            </Button>
-                        ))}
-                    </div>
-
-                    {/* Difficulties */}
-                    <div className="flex flex-wrap gap-2">
-                        <span className="text-sm font-medium text-gray-700 mr-2">Dificuldade:</span>
-                        {difficulties.map(difficulty => (
-                            <Button
-                                key={difficulty}
-                                variant={selectedDifficulty === difficulty ? "default" : "outline"}
-                                size="sm"
-                                onClick={() => setSelectedDifficulty(difficulty)}
-                                className="text-xs"
-                            >
-                                {difficulty}
-                            </Button>
-                        ))}
-                    </div>
+                {/* Barra de Pesquisa */}
+                <div className="relative mb-6">
+                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                    <Input
+                        type="text"
+                        placeholder="Pesquisar templates por nome, descrição ou tags..."
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        className="pl-10 pr-4"
+                    />
+                    {searchTerm && (
+                        <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+                            <Badge variant="secondary" className="text-xs">
+                                {filteredTemplates.length} encontrados
+                            </Badge>
+                        </div>
+                    )}
                 </div>
             </div>
 
-            {/* Stats */}
-            <div className="mb-6">
-                <p className="text-sm text-gray-600">
-                    Mostrando {filteredTemplates.length} de {templatesFunis.length} templates
-                </p>
+            {/* Filtros */}
+            <div className="mb-8">
+                <div className="flex flex-wrap gap-4 mb-4">
+                    {/* Filtro por Segmento */}
+                    <div className="flex flex-wrap gap-2">
+                        <span className="text-sm font-medium text-gray-700 flex items-center gap-2 mr-2">
+                            <Filter className="w-4 h-4" />
+                            Segmento:
+                        </span>
+                        {segments.map((segment) => (
+                            <button
+                                key={segment}
+                                onClick={() => setSelectedSegment(segment)}
+                                className={`px-3 py-1 rounded-full text-sm transition-colors ${selectedSegment === segment
+                                        ? 'bg-blue-600 text-white'
+                                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                                    }`}
+                            >
+                                {segment}
+                            </button>
+                        ))}
+                    </div>
+                </div>
+
+                <div className="flex flex-wrap gap-4">
+                    {/* Filtro por Categoria */}
+                    <div className="flex flex-wrap gap-2">
+                        <span className="text-sm font-medium text-gray-700 mr-2">Categoria:</span>
+                        {categories.map((category) => (
+                            <button
+                                key={category}
+                                onClick={() => setSelectedCategory(category)}
+                                className={`px-3 py-1 rounded-full text-sm transition-colors ${selectedCategory === category
+                                        ? 'bg-green-600 text-white'
+                                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                                    }`}
+                            >
+                                {category}
+                            </button>
+                        ))}
+                    </div>
+
+                    {/* Filtro por Dificuldade */}
+                    <div className="flex flex-wrap gap-2">
+                        <span className="text-sm font-medium text-gray-700 mr-2">Dificuldade:</span>
+                        {difficulties.map((difficulty) => (
+                            <button
+                                key={difficulty}
+                                onClick={() => setSelectedDifficulty(difficulty)}
+                                className={`px-3 py-1 rounded-full text-sm transition-colors ${selectedDifficulty === difficulty
+                                        ? 'bg-purple-600 text-white'
+                                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                                    }`}
+                            >
+                                {difficulty}
+                            </button>
+                        ))}
+                    </div>
+                </div>
             </div>
 
             {/* Templates Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {filteredTemplates.map(template => (
-                    <Card key={template.id} className="hover:shadow-lg transition-shadow">
-                        <CardHeader className="pb-3">
-                            {/* Preview Image */}
-                            <div className="w-full h-32 bg-gray-100 rounded-lg mb-3 overflow-hidden">
-                                <img
-                                    src={template.preview}
-                                    alt={template.name}
-                                    className="w-full h-full object-cover"
-                                />
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                {filteredTemplates.map((template) => (
+                    <Card key={template.id} className="group hover:shadow-xl transition-all duration-300 overflow-hidden border-0 shadow-lg">
+                        {/* Preview Image */}
+                        <div className="relative h-48 overflow-hidden">
+                            <img
+                                src={template.preview}
+                                alt={template.name}
+                                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+
+                            {/* Overlay Actions */}
+                            <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                <div className="flex gap-2">
+                                    <Button
+                                        size="sm"
+                                        variant="secondary"
+                                        className="bg-white/90 hover:bg-white"
+                                        onClick={() => handlePreviewTemplate(template.id)}
+                                    >
+                                        <Eye className="w-4 h-4 mr-1" />
+                                        Preview
+                                    </Button>
+                                    <Button
+                                        size="sm"
+                                        className="bg-blue-600 hover:bg-blue-700"
+                                        onClick={() => handleUseTemplate(template.id)}
+                                    >
+                                        <Copy className="w-4 h-4 mr-1" />
+                                        Usar
+                                    </Button>
+                                </div>
                             </div>
 
-                            <CardTitle className="text-lg">{template.name}</CardTitle>
-                            <CardDescription className="text-sm line-clamp-2">
+                            {/* Segment Badge */}
+                            <div className="absolute top-3 left-3">
+                                <Badge
+                                    variant="secondary"
+                                    className={`
+                                        ${template.segment === 'B2B' ? 'bg-blue-100 text-blue-800' : ''}
+                                        ${template.segment === 'Cliente Final' ? 'bg-green-100 text-green-800' : ''}
+                                        ${template.segment === 'Quiz' ? 'bg-purple-100 text-purple-800' : ''}
+                                    `}
+                                >
+                                    {template.segment}
+                                </Badge>
+                            </div>
+
+                            {/* Difficulty Badge */}
+                            <div className="absolute top-3 right-3">
+                                <Badge variant="outline" className="bg-white/90">
+                                    {template.difficulty}
+                                </Badge>
+                            </div>
+                        </div>
+
+                        <CardHeader className="pb-3">
+                            <div className="flex items-start justify-between">
+                                <CardTitle className="text-lg font-bold text-gray-900 line-clamp-2">
+                                    {template.name}
+                                </CardTitle>
+                                <div className="flex items-center gap-1 text-yellow-500 shrink-0">
+                                    <Star className="w-4 h-4 fill-current" />
+                                    <span className="text-sm font-medium text-gray-700">{template.rating}</span>
+                                </div>
+                            </div>
+                            <CardDescription className="text-gray-600 line-clamp-3">
                                 {template.description}
                             </CardDescription>
                         </CardHeader>
 
-                        <CardContent>
-                            {/* Badges */}
-                            <div className="flex flex-wrap gap-1 mb-3">
-                                <Badge variant="secondary" className="text-xs">
-                                    {template.category}
-                                </Badge>
-                                <Badge variant="outline" className="text-xs">
-                                    {template.difficulty}
-                                </Badge>
-                                {template.tags.slice(0, 2).map(tag => (
-                                    <Badge key={tag} variant="outline" className="text-xs">
+                        <CardContent className="pt-0">
+                            {/* Tags */}
+                            <div className="flex flex-wrap gap-1 mb-4">
+                                {template.tags.map((tag, index) => (
+                                    <Badge key={index} variant="outline" className="text-xs">
                                         {tag}
                                     </Badge>
                                 ))}
                             </div>
 
-                            {/* Stats */}
-                            <div className="flex justify-between text-sm text-gray-600 mb-4">
-                                <div className="flex items-center gap-4">
-                                    <span>{template.questions} perguntas</span>
-                                    <span>{template.avgTime}</span>
-                                </div>
-                            </div>
-
-                            <div className="flex justify-between text-sm text-gray-600 mb-4">
-                                <div className="flex items-center gap-1">
-                                    <Star className="w-3 h-3 text-yellow-500" />
-                                    <span>{template.rating}</span>
-                                </div>
-                                <div className="flex items-center gap-1">
-                                    <Download className="w-3 h-3" />
-                                    <span>{template.downloads.toLocaleString()}</span>
-                                </div>
-                            </div>
-
                             {/* Features */}
-                            {template.features && (
-                                <div className="mb-4">
-                                    <p className="text-xs font-medium text-gray-700 mb-2">Recursos:</p>
-                                    <div className="space-y-1">
-                                        {template.features.slice(0, 3).map((feature, index) => (
-                                            <div key={index} className="flex items-center text-xs text-gray-600">
-                                                <div className="w-1.5 h-1.5 bg-green-500 rounded-full mr-2"></div>
-                                                {feature}
-                                            </div>
-                                        ))}
+                            <div className="mb-4">
+                                <h4 className="text-sm font-medium text-gray-900 mb-2">Principais recursos:</h4>
+                                <ul className="text-xs text-gray-600 space-y-1">
+                                    {template.features.slice(0, 3).map((feature, index) => (
+                                        <li key={index} className="flex items-center gap-2">
+                                            <div className="w-1 h-1 bg-blue-600 rounded-full"></div>
+                                            {feature}
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+
+                            {/* Stats & Actions */}
+                            <div className="flex items-center justify-between">
+                                <div className="flex items-center gap-4 text-xs text-gray-500">
+                                    <div className="flex items-center gap-1">
+                                        <Download className="w-3 h-3" />
+                                        {template.downloads.toLocaleString()}
                                     </div>
                                 </div>
-                            )}
 
-                            {/* Actions */}
-                            <div className="flex gap-2">
-                                <Button
-                                    size="sm"
-                                    onClick={() => handleUseTemplate(template.id)}
-                                    className="flex-1"
-                                >
-                                    <Copy className="w-4 h-4 mr-1" />
-                                    Usar Template
-                                </Button>
-                                <Button
-                                    variant="outline"
-                                    size="sm"
-                                    onClick={() => handlePreviewTemplate(template.id)}
-                                >
-                                    <Eye className="w-4 h-4" />
-                                </Button>
+                                <div className="flex items-center gap-1">
+                                    <Button
+                                        size="sm"
+                                        variant="outline"
+                                        className="h-8 px-3"
+                                        onClick={() => handlePreviewTemplate(template.id)}
+                                    >
+                                        <Eye className="w-3 h-3" />
+                                    </Button>
+                                    <Button
+                                        size="sm"
+                                        className="h-8 px-3 bg-blue-600 hover:bg-blue-700"
+                                        onClick={() => handleUseTemplate(template.id)}
+                                    >
+                                        <Copy className="w-3 h-3 mr-1" />
+                                        Usar
+                                    </Button>
+                                </div>
                             </div>
                         </CardContent>
                     </Card>
@@ -309,15 +442,27 @@ const TemplatesFunisPage: React.FC = () => {
             {/* Empty State */}
             {filteredTemplates.length === 0 && (
                 <div className="text-center py-12">
-                    <div className="text-gray-400 mb-4">
-                        <Copy className="w-16 h-16 mx-auto" />
+                    <div className="max-w-md mx-auto">
+                        <Search className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+                        <h3 className="text-lg font-medium text-gray-900 mb-2">
+                            Nenhum template encontrado
+                        </h3>
+                        <p className="text-gray-600 mb-4">
+                            Não conseguimos encontrar templates com os filtros selecionados.
+                            Tente ajustar os critérios de busca.
+                        </p>
+                        <Button
+                            variant="outline"
+                            onClick={() => {
+                                setSelectedSegment('Todos');
+                                setSelectedCategory('Todos');
+                                setSelectedDifficulty('Todos');
+                                setSearchTerm('');
+                            }}
+                        >
+                            Limpar Filtros
+                        </Button>
                     </div>
-                    <h3 className="text-lg font-medium text-gray-900 mb-2">
-                        Nenhum template encontrado
-                    </h3>
-                    <p className="text-gray-600">
-                        Tente ajustar os filtros ou termo de busca
-                    </p>
                 </div>
             )}
         </div>
