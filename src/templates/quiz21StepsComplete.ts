@@ -3664,9 +3664,7 @@ export const QUIZ_QUESTIONS_COMPLETE: Record<number, string> = {
   21: 'Página de oferta direta',
 };
 
-export default QUIZ_STYLE_21_STEPS_TEMPLATE;
-
-// 🎯 FORMATO PARA REGISTRY - ADAPTADOR
+// 🎯 FORMATO PARA REGISTRY - ADAPTADOR  
 export const quiz21StepsCompleteTemplate = {
   config: {
     globalConfig: {
@@ -3738,3 +3736,6 @@ export const quiz21StepsCompleteTemplate = {
     };
   })
 };
+
+// 🎯 DEFAULT EXPORT PARA REGISTRY COMPATIBILITY
+export default quiz21StepsCompleteTemplate;
