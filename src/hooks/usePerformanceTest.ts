@@ -164,11 +164,14 @@ export function usePerformanceTest(
             const memoryUsage = memoryInfo ?
                 (memoryInfo.usedJSHeapSize / memoryInfo.totalJSHeapSize) * 100 : 0;
 
-            // Detectar vazamentos de memória
-            if (memoryBaselineRef.current === 0) {
-                memoryBaselineRef.current = currentMemory;
+            // Detectar vazamentos de memória apenas se habilitado
+            let memoryLeaks = 0;
+            if (trackMemoryLeaks) {
+                if (memoryBaselineRef.current === 0) {
+                    memoryBaselineRef.current = currentMemory;
+                }
+                memoryLeaks = currentMemory > memoryBaselineRef.current * 1.5 ? 1 : 0;
             }
-            const memoryLeaks = currentMemory > memoryBaselineRef.current * 1.5 ? 1 : 0;
 
             // 🌐 Métricas de rede
             const networkCalls = networkCallsRef.current;
@@ -383,7 +386,7 @@ export function usePerformanceTest(
         const recommendations: string[] = [];
 
         // Adicionar recomendações baseadas em alertas críticos
-        if (alerts.some(alert => alert.severity === 'critical')) {
+        if (alerts.some(alert => alert.type === 'critical')) {
             recommendations.push('🚨 Problemas críticos de performance detectados - ação imediata necessária');
         }
 
