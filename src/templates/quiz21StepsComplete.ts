@@ -26,6 +26,7 @@ import { Block } from '../types/editor';
 
 // 🔧 PERFORMANCE E CACHE OTIMIZADO
 const TEMPLATE_CACHE = new Map<string, any>();
+const FUNNEL_TEMPLATE_CACHE = new Map<string, any>();
 
 // 🚀 FUNÇÃO DE CARREGAMENTO OTIMIZADO PARA PERFORMANCE
 export function getStepTemplate(stepId: string): any {
@@ -42,6 +43,129 @@ export function getStepTemplate(stepId: string): any {
   
   console.warn(`⚠️ Template ${stepId} not found`);
   return null;
+}
+
+// 🎯 NOVA FUNÇÃO: Template personalizado por funil
+export function getPersonalizedStepTemplate(stepId: string, funnelId?: string): any {
+  // Se não há funnelId, usar template padrão
+  if (!funnelId) {
+    return getStepTemplate(stepId);
+  }
+
+  const cacheKey = `${funnelId}:${stepId}`;
+  
+  // Verificar cache de funil personalizado
+  if (FUNNEL_TEMPLATE_CACHE.has(cacheKey)) {
+    return FUNNEL_TEMPLATE_CACHE.get(cacheKey);
+  }
+
+  // Obter template base
+  const baseTemplate = QUIZ_STYLE_21_STEPS_TEMPLATE[stepId];
+  if (!baseTemplate) {
+    console.warn(`⚠️ Template ${stepId} not found for funnel ${funnelId}`);
+    return null;
+  }
+
+  // 🔄 PERSONALIZAR TEMPLATE baseado no funnelId
+  const personalizedTemplate = personalizeTemplateForFunnel(baseTemplate, funnelId, stepId);
+  
+  // Cache da versão personalizada
+  FUNNEL_TEMPLATE_CACHE.set(cacheKey, personalizedTemplate);
+  
+  console.log(`✅ Template personalizado criado: ${stepId} para funil ${funnelId}`);
+  return personalizedTemplate;
+}
+
+// 🎨 FUNÇÃO DE PERSONALIZAÇÃO baseada no funnelId
+function personalizeTemplateForFunnel(template: any[], funnelId: string, _stepId: string): any[] {
+  if (!Array.isArray(template)) return template;
+
+  // Gerar seed único baseado no funnelId para consistência
+  const funnelSeed = generateSeedFromFunnelId(funnelId);
+  
+  return template.map((block) => {
+    const personalizedBlock = JSON.parse(JSON.stringify(block)); // Deep clone
+    
+    // 🎯 PERSONALIZAÇÃO 1: IDs únicos por funil
+    if (personalizedBlock.id) {
+      personalizedBlock.id = `${personalizedBlock.id}-${funnelSeed}`;
+    }
+
+    // 🎯 PERSONALIZAÇÃO 2: Conteúdo único baseado no tipo de bloco
+    if (personalizedBlock.type === 'quiz-intro-header' && personalizedBlock.content?.title) {
+      const variations = [
+        personalizedBlock.content.title, // Original
+        `${personalizedBlock.content.title} - Versão ${funnelSeed.slice(-3)}`,
+        `${personalizedBlock.content.title} (${getFunnelVariantName(funnelSeed)})`,
+        `${personalizedBlock.content.title} - Edição Personalizada`
+      ];
+      personalizedBlock.content.title = variations[funnelSeed.charCodeAt(0) % variations.length];
+    }
+
+    // 🎯 PERSONALIZAÇÃO 3: Questões com variações
+    if (personalizedBlock.type === 'quiz-question' && personalizedBlock.content?.question) {
+      const originalQuestion = personalizedBlock.content.question;
+      personalizedBlock.content.question = `${originalQuestion} [ID: ${funnelSeed.slice(-4)}]`;
+    }
+
+    // 🎯 PERSONALIZAÇÃO 4: Textos descritivos
+    if (personalizedBlock.content?.text && typeof personalizedBlock.content.text === 'string') {
+      const originalText = personalizedBlock.content.text;
+      if (!originalText.includes('[Funil:')) {
+        personalizedBlock.content.text = `${originalText} [Funil: ${funnelSeed.slice(-4)}]`;
+      }
+    }
+
+    // 🎯 PERSONALIZAÇÃO 5: Cores temáticas baseadas no funil
+    if (personalizedBlock.properties?.style) {
+      const themeColor = getFunnelThemeColor(funnelSeed);
+      if (personalizedBlock.properties.style.backgroundColor) {
+        personalizedBlock.properties.style.backgroundColor = themeColor.bg;
+      }
+      if (personalizedBlock.properties.style.color) {
+        personalizedBlock.properties.style.color = themeColor.text;
+      }
+    }
+
+    return personalizedBlock;
+  });
+}
+
+// 🎲 Gerar seed consistente a partir do funnelId
+function generateSeedFromFunnelId(funnelId: string): string {
+  let hash = 0;
+  for (let i = 0; i < funnelId.length; i++) {
+    const char = funnelId.charCodeAt(i);
+    hash = ((hash << 5) - hash) + char;
+    hash = hash & hash; // Convert to 32bit integer
+  }
+  return `fnl${Math.abs(hash).toString(16).slice(0, 8)}`;
+}
+
+// 🎨 Obter nome da variante baseado no seed
+function getFunnelVariantName(seed: string): string {
+  const variants = [
+    'Premium', 'Pro', 'Classic', 'Elite', 'Special', 
+    'Advanced', 'Custom', 'Exclusive', 'Deluxe', 'Ultimate'
+  ];
+  const index = seed.charCodeAt(0) % variants.length;
+  return variants[index];
+}
+
+// 🌈 Obter cores temáticas baseadas no funil
+function getFunnelThemeColor(seed: string): { bg: string, text: string } {
+  const themes = [
+    { bg: '#f3f4f6', text: '#374151' }, // Gray
+    { bg: '#fef3c7', text: '#92400e' }, // Yellow
+    { bg: '#dbeafe', text: '#1e40af' }, // Blue
+    { bg: '#d1fae5', text: '#065f46' }, // Green
+    { bg: '#fce7f3', text: '#be185d' }, // Pink
+    { bg: '#e0e7ff', text: '#3730a3' }, // Indigo
+    { bg: '#fed7d7', text: '#c53030' }, // Red
+    { bg: '#c6f6d5', text: '#2d3748' }, // Light Green
+  ];
+  const index = seed.charCodeAt(0) % themes.length;
+  return themes[index];
 }
 
 // 🔧 ESTRUTURA COMPLETA DE PERSISTÊNCIA JSON  

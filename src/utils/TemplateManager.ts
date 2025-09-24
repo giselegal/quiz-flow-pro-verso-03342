@@ -13,8 +13,8 @@ export class TemplateManager {
   private static cache = new Map<string, Block[]>();
   private static PUBLISH_PREFIX = 'quiz_published_blocks_';
 
-  static async loadStepBlocks(stepId: string): Promise<Block[]> {
-    return await unifiedTemplateService.loadStepBlocks(stepId);
+  static async loadStepBlocks(stepId: string, funnelId?: string): Promise<Block[]> {
+    return await unifiedTemplateService.loadStepBlocks(stepId, funnelId);
   }
 
   static publishStep(stepId: string, blocks: Block[]): void {
@@ -29,9 +29,10 @@ export class TemplateManager {
     return unifiedTemplateService.preloadCommonSteps();
   }
 
-  static async reloadTemplate(stepId: string): Promise<Block[]> {
-    unifiedTemplateService.invalidateCache(stepId);
-    return unifiedTemplateService.loadStepBlocks(stepId);
+  static async reloadTemplate(stepId: string, funnelId?: string): Promise<Block[]> {
+    const cacheKey = funnelId ? `${stepId}:${funnelId}` : stepId;
+    unifiedTemplateService.invalidateCache(cacheKey);
+    return unifiedTemplateService.loadStepBlocks(stepId, funnelId);
   }
 
   static getAvailableTemplates(maxSteps: number = 21): string[] {

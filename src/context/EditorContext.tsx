@@ -20,10 +20,10 @@ import React, {
 // import { useTemplateValidation } from '../hooks/useTemplateValidation';
 
 // Função wrapper para carregar templates usando TemplateManager
-const getStepTemplate = async (stepNumber: number) => {
+const getStepTemplate = async (stepNumber: number, funnelId?: string) => {
   try {
     const stepId = `step-${stepNumber}`;
-    const blocks = await TemplateManager.loadStepBlocks(stepId);
+    const blocks = await TemplateManager.loadStepBlocks(stepId, funnelId);
     return blocks && blocks.length > 0 ? { blocks } : null;
   } catch (error) {
     console.error(`Erro ao carregar template da etapa ${stepNumber}:`, error);
@@ -218,7 +218,7 @@ export const EditorProvider: React.FC<{
           }
         } catch (err) {
           // Fallback leve usando getStepTemplate se serviço falhar
-          const template = await getStepTemplate(1);
+          const template = await getStepTemplate(1, currentFunnelId);
           const templateBlocks = template?.blocks || [];
           if (templateBlocks.length > 0) {
             const editorBlocks = templateBlocks.map((block: any, index: number) => ({

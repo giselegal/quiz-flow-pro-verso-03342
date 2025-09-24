@@ -1,6 +1,6 @@
 // @ts-nocheck
 import { Block, BlockType } from '@/types/editor';
-import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
+import { QUIZ_STYLE_21_STEPS_TEMPLATE, getPersonalizedStepTemplate } from '@/templates/quiz21StepsComplete';
 import { stepTemplates, QuestionParams, StrategicParams } from '@/templates/stepTemplates';
 import { StorageService } from '@/services/core/StorageService';
 
@@ -73,31 +73,57 @@ class UnifiedTemplateService {
   /**
    * 🎯 MÉTODO PRINCIPAL - Carrega blocos com sistema unificado
    */
-  async loadStepBlocks(stepId: string): Promise<Block[]> {
+  async loadStepBlocks(stepId: string, funnelId?: string): Promise<Block[]> {
+    // 🆔 CACHE KEY que inclui funnelId para personalização
+    const cacheKey = funnelId ? `${stepId}:${funnelId}` : stepId;
+    
     // Evitar carregamento duplicado
-    if (this.loading.has(stepId)) {
-      console.log(`⏳ [UnifiedTemplate] ${stepId} já carregando, aguardando...`);
+    if (this.loading.has(cacheKey)) {
+      console.log(`⏳ [UnifiedTemplate] ${cacheKey} já carregando, aguardando...`);
 
       // Wait for loading to complete (max 5s)
       const startTime = Date.now();
-      while (this.loading.has(stepId) && (Date.now() - startTime < 5000)) {
+      while (this.loading.has(cacheKey) && (Date.now() - startTime < 5000)) {
         await new Promise(resolve => setTimeout(resolve, 100));
       }
     }
 
     // Verificar cache válido
-    if (this.config.enableCache && this.isCacheValid(stepId)) {
-      const cached = this.cache.get(stepId)!;
-      console.log(`📦 [UnifiedTemplate] ${stepId} cache hit (${cached.source}) - ${cached.blocks.length} blocos`);
+    if (this.config.enableCache && this.isCacheValid(cacheKey)) {
+      const cached = this.cache.get(cacheKey)!;
+      console.log(`📦 [UnifiedTemplate] ${cacheKey} cache hit (${cached.source}) - ${cached.blocks.length} blocos`);
       return cached.blocks;
     }
 
-    this.loading.add(stepId);
+    this.loading.add(cacheKey);
 
     try {
-      console.log(`🔄 [UnifiedTemplate] Carregando ${stepId}...`);
+      console.log(`🔄 [UnifiedTemplate] Carregando ${stepId}${funnelId ? ` para funil ${funnelId}` : ''}...`);
 
-      // Tentar cada fonte por prioridade
+      // 🎯 PRIORIDADE 1: Se há funnelId, tentar template personalizado primeiro
+      if (funnelId) {
+        try {
+          const personalizedBlocks = getPersonalizedStepTemplate(stepId, funnelId);
+          if (personalizedBlocks && personalizedBlocks.length > 0) {
+            console.log(`✅ [UnifiedTemplate] ${stepId} personalizado para funil ${funnelId} (${personalizedBlocks.length} blocos)`);
+
+            // Cache do resultado personalizado
+            if (this.config.enableCache) {
+              this.cache.set(cacheKey, {
+                blocks: personalizedBlocks,
+                timestamp: Date.now(),
+                source: 'personalized'
+              });
+            }
+
+            return personalizedBlocks;
+          }
+        } catch (error) {
+          console.warn(`⚠️ [UnifiedTemplate] Falha na personalização para ${stepId}, funil ${funnelId}:`, error);
+        }
+      }
+
+      // Tentar cada fonte por prioridade (fallback para templates padrão)
       for (const source of this.sources) {
         try {
           const blocks = await source.loader(stepId);
@@ -107,7 +133,7 @@ class UnifiedTemplateService {
 
             // Cache successful result
             if (this.config.enableCache) {
-              this.cache.set(stepId, {
+              this.cache.set(cacheKey, {
                 blocks,
                 timestamp: Date.now(),
                 source: source.name
@@ -127,26 +153,26 @@ class UnifiedTemplateService {
       return [];
 
     } finally {
-      this.loading.delete(stepId);
+      this.loading.delete(cacheKey);
     }
   }
 
   /**
    * 🔄 Cache Management
    */
-  private isCacheValid(stepId: string): boolean {
-    if (!this.cache.has(stepId)) return false;
+  private isCacheValid(cacheKey: string): boolean {
+    if (!this.cache.has(cacheKey)) return false;
 
-    const cached = this.cache.get(stepId)!;
+    const cached = this.cache.get(cacheKey)!;
     const age = Date.now() - cached.timestamp;
 
     return age < this.config.cacheTimeout;
   }
 
-  invalidateCache(stepId?: string): void {
-    if (stepId) {
-      this.cache.delete(stepId);
-      console.log(`🗑️ [UnifiedTemplate] Cache invalidado: ${stepId}`);
+  invalidateCache(cacheKey?: string): void {
+    if (cacheKey) {
+      this.cache.delete(cacheKey);
+      console.log(`🗑️ [UnifiedTemplate] Cache invalidado: ${cacheKey}`);
     } else {
       this.cache.clear();
       console.log(`🗑️ [UnifiedTemplate] Cache limpo completamente`);
