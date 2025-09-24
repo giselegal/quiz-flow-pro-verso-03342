@@ -14,6 +14,45 @@ export type Database = {
   }
   public: {
     Tables: {
+      admin_goals: {
+        Row: {
+          achieved: boolean | null
+          created_at: string
+          current_value: number | null
+          goal_type: string
+          id: string
+          period_end: string
+          period_start: string
+          target_value: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          achieved?: boolean | null
+          created_at?: string
+          current_value?: number | null
+          goal_type: string
+          id?: string
+          period_end?: string
+          period_start?: string
+          target_value: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          achieved?: boolean | null
+          created_at?: string
+          current_value?: number | null
+          goal_type?: string
+          id?: string
+          period_end?: string
+          period_start?: string
+          target_value?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       ai_optimization_recommendations: {
         Row: {
           actual_improvement: number | null
@@ -735,6 +774,72 @@ export type Database = {
         }
         Relationships: []
       }
+      security_audit_logs: {
+        Row: {
+          created_at: string | null
+          event_data: Json | null
+          event_type: string
+          id: string
+          ip_address: unknown | null
+          severity: string | null
+          user_agent: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          event_data?: Json | null
+          event_type: string
+          id?: string
+          ip_address?: unknown | null
+          severity?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          event_data?: Json | null
+          event_type?: string
+          id?: string
+          ip_address?: unknown | null
+          severity?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      system_health_metrics: {
+        Row: {
+          id: string
+          metadata: Json | null
+          metric_name: string
+          metric_unit: string | null
+          metric_value: number
+          recorded_at: string | null
+          service_name: string
+          status: string | null
+        }
+        Insert: {
+          id?: string
+          metadata?: Json | null
+          metric_name: string
+          metric_unit?: string | null
+          metric_value: number
+          recorded_at?: string | null
+          service_name: string
+          status?: string | null
+        }
+        Update: {
+          id?: string
+          metadata?: Json | null
+          metric_name?: string
+          metric_unit?: string | null
+          metric_value?: number
+          recorded_at?: string | null
+          service_name?: string
+          status?: string | null
+        }
+        Relationships: []
+      }
       user_behavior_patterns: {
         Row: {
           action: string
@@ -798,6 +903,21 @@ export type Database = {
       cleanup_old_metrics: {
         Args: Record<PropertyKey, never>
         Returns: undefined
+      }
+      log_security_event: {
+        Args: { p_event_data?: Json; p_event_type: string; p_severity?: string }
+        Returns: string
+      }
+      record_system_metric: {
+        Args: {
+          p_metadata?: Json
+          p_metric_name: string
+          p_metric_unit?: string
+          p_metric_value: number
+          p_service_name: string
+          p_status?: string
+        }
+        Returns: string
       }
     }
     Enums: {
