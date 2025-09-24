@@ -173,7 +173,7 @@ export const EditorProUnified: React.FC<EditorProUnifiedProps> = ({
     const maxStep = stepKeys.reduce((max, key) => {
       const stepNumber = parseInt(key.replace('step-', ''));
       return Math.max(max, stepNumber);
-    }, 21); // Builder System usa 21 steps
+    }, 0); // ✅ Começar com 0 - sem forçar 21 steps
 
     for (let i = 1; i <= maxStep; i++) {
       const stepKey = `step-${i}`;
@@ -181,6 +181,19 @@ export const EditorProUnified: React.FC<EditorProUnifiedProps> = ({
     }
 
     return record;
+  }, [state.stepBlocks]);
+
+  // ✅ Calcular totalSteps dinamicamente baseado nas stepBlocks disponíveis
+  const totalSteps = useMemo(() => {
+    const stepKeys = Object.keys(state.stepBlocks || {});
+    const stepNumbers = stepKeys
+      .map(key => {
+        const match = key.match(/step-(\d+)/);
+        return match ? parseInt(match[1]) : 0;
+      })
+      .filter(num => num > 0);
+    
+    return stepNumbers.length > 0 ? Math.max(...stepNumbers) : 0;
   }, [state.stepBlocks]);
 
   // Event Handlers
@@ -328,7 +341,7 @@ export const EditorProUnified: React.FC<EditorProUnifiedProps> = ({
             currentStep={state.currentStep}
             stepHasBlocks={stepHasBlocksRecord}
             onSelectStep={actions.setCurrentStep}
-            totalSteps={21}
+            totalSteps={totalSteps}
             getStepAnalysis={getStepAnalysis}
             renderIcon={renderIcon}
           />
@@ -359,7 +372,7 @@ export const EditorProUnified: React.FC<EditorProUnifiedProps> = ({
         <div className="flex-1 flex flex-col min-w-0">
           <EditorToolbar
             currentStep={state.currentStep}
-            totalSteps={21}
+            totalSteps={totalSteps}
             isPreviewMode={isPreviewMode}
             canUndo={actions.canUndo}
             canRedo={actions.canRedo}

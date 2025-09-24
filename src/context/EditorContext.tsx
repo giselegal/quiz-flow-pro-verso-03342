@@ -508,35 +508,17 @@ export const EditorProvider: React.FC<{
         setRealStages(stagesFromTemplates);
       } catch (error) {
         console.error('❌ Erro ao carregar etapas:', error);
-        const fallbackStages = Array.from({ length: 21 }, (_, i) => ({
-          id: `step-${i + 1}`,
-          name: `Etapa ${i + 1}`,
-          description: `Descrição da etapa ${i + 1}`,
-          order: i + 1,
-          blocksCount: 0,
-          metadata: { blocksCount: 0 },
-        }));
-        setRealStages(fallbackStages);
+        // ✅ CORREÇÃO: Não forçar 21 etapas por padrão - iniciar vazio
+        setRealStages([]);
       }
     };
     loadStages();
   }, []);
 
-  // Use real stages or fallback
+  // Use real stages or start empty
   const stages = useMemo(() => {
-    if (realStages.length > 0) {
-      return realStages;
-    }
-
-    // Fallback to basic 21 steps while loading
-    return Array.from({ length: 21 }, (_, i) => ({
-      id: `step-${i + 1}`,
-      name: `Etapa ${i + 1}`,
-      description: `Descrição da etapa ${i + 1}`,
-      order: i + 1,
-      blocksCount: 0,
-      metadata: { blocksCount: 0 },
-    }));
+    // ✅ CORREÇÃO: Usar apenas stages reais carregados, sem fallback de 21 etapas
+    return realStages;
   }, [realStages]);
 
   // ✅ MOVER PARA FORA DO useMemo - no nível do componente

@@ -77,6 +77,19 @@ const ModeRenderer: React.FC<{
 }> = ({ mode, funnelId }) => {
   const { state, actions } = useEditor();
 
+  // ✅ Calcular totalSteps dinamicamente baseado nas stepBlocks disponíveis
+  const totalSteps = useMemo(() => {
+    const stepKeys = Object.keys(state.stepBlocks || {});
+    const stepNumbers = stepKeys
+      .map(key => {
+        const match = key.match(/step-(\d+)/);
+        return match ? parseInt(match[1]) : 0;
+      })
+      .filter(num => num > 0);
+    
+    return stepNumbers.length > 0 ? Math.max(...stepNumbers) : 0;
+  }, [state.stepBlocks]);
+
   const renderModeContent = useCallback(() => {
     switch (mode) {
       case 'visual':
@@ -94,9 +107,9 @@ const ModeRenderer: React.FC<{
                 <Suspense fallback={<ComponentLoadingFallback name="Etapas" />}>
                   <StepSidebar
                     currentStep={state.currentStep}
-                    totalSteps={21}
+                    totalSteps={totalSteps}
                     stepHasBlocks={Object.fromEntries(
-                      Array.from({ length: 21 }, (_, i) => [i + 1, (state.stepBlocks[`step-${i + 1}`]?.length || 0) > 0])
+                      Array.from({ length: totalSteps }, (_, i) => [i + 1, (state.stepBlocks[`step-${i + 1}`]?.length || 0) > 0])
                     )}
                     stepValidation={state.stepValidation}
                     onSelectStep={actions.setCurrentStep}
@@ -189,9 +202,9 @@ const ModeRenderer: React.FC<{
                 <Suspense fallback={<ComponentLoadingFallback name="Etapas" />}>
                   <StepSidebar
                     currentStep={state.currentStep}
-                    totalSteps={21}
+                    totalSteps={totalSteps}
                     stepHasBlocks={Object.fromEntries(
-                      Array.from({ length: 21 }, (_, i) => [i + 1, (state.stepBlocks[`step-${i + 1}`]?.length || 0) > 0])
+                      Array.from({ length: totalSteps }, (_, i) => [i + 1, (state.stepBlocks[`step-${i + 1}`]?.length || 0) > 0])
                     )}
                     stepValidation={state.stepValidation}
                     onSelectStep={actions.setCurrentStep}
