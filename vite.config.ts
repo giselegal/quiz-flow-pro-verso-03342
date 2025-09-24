@@ -30,19 +30,8 @@ export default defineConfig({
     // 🚀 Configuração SPA completa para desenvolvimento
     middlewareMode: false,
     proxy: {},
-    historyApiFallback: {
-      // Direciona todas as rotas SPA para index.html
-      rewrites: [
-        { from: /^\/admin/, to: '/index.html' },
-        { from: /^\/editor/, to: '/index.html' },
-        { from: /^\/quiz/, to: '/index.html' },
-        { from: /^\/resultado/, to: '/index.html' },
-        { from: /^\/templates/, to: '/index.html' },
-        { from: /^\/auth/, to: '/index.html' },
-        { from: /^\/dashboard/, to: '/index.html' },
-        { from: /^\/$/, to: '/index.html' }
-      ]
-    },
+    // SPA routing será tratado pelo plugin vite
+    hmr: true,
   },
   preview: {
     host: '0.0.0.0',

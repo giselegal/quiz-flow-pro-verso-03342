@@ -47,7 +47,7 @@ test.describe('Security Flow Tests', () => {
 
         // Verificar que script não foi executado
         page.on('dialog', () => {
-            test.fail('XSS vulnerability detected - alert was triggered');
+            throw new Error('XSS vulnerability detected - alert was triggered');
         });
 
         // Verificar que conteúdo foi sanitizado
@@ -129,7 +129,7 @@ test.describe('Security Flow Tests', () => {
             if (body) {
                 sensitivePatterns.forEach(pattern => {
                     if (pattern.test(body)) {
-                        test.fail(`Sensitive data detected in request: ${body.substring(0, 100)}...`);
+                        throw new Error(`Sensitive data detected in request: ${body.substring(0, 100)}...`);
                     }
                 });
             }
@@ -175,14 +175,16 @@ test.describe('Security Flow Tests', () => {
         let blockedRequest = false;
 
         // Interceptar responses para detectar rate limiting
-        page.route('**/api/**', (route) => {
-            const response = route.fetch().then(res => {
-                if (res.status() === 429) {
+        page.route('**/api/**', async (route) => {
+            try {
+                const response = await route.fetch();
+                if (response.status() === 429) {
                     blockedRequest = true;
                 }
-                return res;
-            });
-            route.fulfill({ response });
+                route.fulfill({ response });
+            } catch (error) {
+                route.abort();
+            }
         });
 
         // Fazer múltiplas requests rapidamente

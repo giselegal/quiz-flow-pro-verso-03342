@@ -308,17 +308,32 @@ export const VirtualScrolling = <T extends any>({
 };
 
 // ✅ HOOK PARA USAR VIRTUAL SCROLLING COM BLOCKS
-export const useVirtualBlockList = (_blocks: any[], _containerHeight: number) => {
-  // Hook simplificado para uso com blocks - implementação futura
+export const useVirtualBlockList = (blocks: any[], containerHeight: number) => {
+  const defaultRenderBlock = useCallback((block: any, index: number, style: React.CSSProperties) => {
+    return (
+      <div style={style} className="virtual-block-item">
+        <div className="p-2 border-b">
+          <strong>Block {index}</strong>
+          <div>{block.title || block.name || 'Unnamed Block'}</div>
+          <div className="text-sm text-gray-600">{block.type || 'Unknown Type'}</div>
+        </div>
+      </div>
+    );
+  }, []);
+
+  const handleScroll = useCallback((scrollTop: number) => {
+    // Lógica de scroll para blocks
+    console.log('Block scroll:', scrollTop);
+  }, []);
+
   return {
-    visibleItems: [],
-    totalHeight: 0,
+    visibleItems: blocks,
+    totalHeight: Math.min(blocks.length * 50, containerHeight),
     containerProps: {},
     listProps: {},
-    // Propriedades adicionais para compatibilidade
-    VirtualScrollingComponent: null,
-    renderBlock: null,
-    handleScroll: null,
+    VirtualScrollingComponent: VirtualScrolling,
+    renderBlock: defaultRenderBlock,
+    handleScroll,
     itemHeight: 50,
     bufferSize: 5
   };
