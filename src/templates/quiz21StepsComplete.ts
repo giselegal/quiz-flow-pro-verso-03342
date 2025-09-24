@@ -107,16 +107,16 @@ function personalizeTemplateForFunnel(template: any[], funnelId: string, _stepId
     // 🎯 PERSONALIZAÇÃO 3: Blocos de texto - CONTEÚDO REALMENTE DIFERENTE
     if (personalizedBlock.type === 'text' && personalizedBlock.content?.text) {
       const originalText = personalizedBlock.content.text;
-      
+
       // Criar variações reais baseadas no tipo de funil
       const textVariations = getTextVariationsForFunnel(originalText, variantName, funnelSeed);
-      
+
       let hashNum = 0;
       for (let i = 0; i < funnelSeed.length; i++) {
         hashNum += funnelSeed.charCodeAt(i);
       }
       personalizedBlock.content.text = textVariations[hashNum % textVariations.length];
-      
+
       // Personalizar cores do texto
       if (personalizedBlock.properties) {
         personalizedBlock.properties.color = themeColors.text;
@@ -132,19 +132,19 @@ function personalizeTemplateForFunnel(template: any[], funnelId: string, _stepId
     // 🎯 PERSONALIZAÇÃO 5: Inputs do formulário
     if (personalizedBlock.type === 'form-input' && personalizedBlock.content?.placeholder) {
       personalizedBlock.content.placeholder = getPlaceholderVariationForFunnel(
-        personalizedBlock.content.placeholder, 
+        personalizedBlock.content.placeholder,
         variantName
       );
     }
 
     // 🎯 PERSONALIZAÇÃO 6: Botões e navegação
-    if ((personalizedBlock.type === 'button' || personalizedBlock.type === 'quiz-navigation') 
-        && personalizedBlock.content?.text) {
+    if ((personalizedBlock.type === 'button' || personalizedBlock.type === 'quiz-navigation')
+      && personalizedBlock.content?.text) {
       personalizedBlock.content.text = getButtonVariationForFunnel(
-        personalizedBlock.content.text, 
+        personalizedBlock.content.text,
         variantName
       );
-      
+
       if (personalizedBlock.properties?.style) {
         personalizedBlock.properties.style.backgroundColor = themeColors.text;
         personalizedBlock.properties.style.color = themeColors.bg;
@@ -171,7 +171,7 @@ function personalizeTemplateForFunnel(template: any[], funnelId: string, _stepId
 function getTextVariationsForFunnel(originalText: string, variantName: string, _funnelSeed: string): string[] {
   // Preservar HTML tags se existirem
   const hasHtml = originalText.includes('<');
-  
+
   if (hasHtml) {
     return [
       originalText, // Original
@@ -200,7 +200,7 @@ function getQuestionVariationForFunnel(originalQuestion: string, variantName: st
     originalQuestion.replace(/Qual/g, `${variantName} - Qual`),
     originalQuestion.replace(/Como/g, `${variantName} - Como`)
   ];
-  
+
   return variations[originalQuestion.length % variations.length];
 }
 
@@ -213,7 +213,7 @@ function getPlaceholderVariationForFunnel(originalPlaceholder: string, variantNa
     originalPlaceholder.replace(/seu/g, `seu ${variantName.toLowerCase()}`),
     `✨ ${originalPlaceholder}`
   ];
-  
+
   return variations[originalPlaceholder.length % variations.length];
 }
 
@@ -226,7 +226,7 @@ function getButtonVariationForFunnel(originalText: string, variantName: string):
     originalText.replace(/Próximo/g, `Seguir`),
     `🚀 ${originalText}`
   ];
-  
+
   return variations[originalText.length % variations.length];
 }
 
