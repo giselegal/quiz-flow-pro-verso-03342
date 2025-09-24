@@ -2,6 +2,7 @@ import React, { memo, useMemo } from 'react';
 import { cn } from '@/lib/utils';
 import { Block } from '@/types/editor';
 import { getEnhancedBlockComponent } from '@/components/editor/blocks/EnhancedBlockRegistry';
+import { blockRendererDebug } from '@/components/editor/debug/BlockRendererDebug';
 // Importações diretas para componentes críticos (performance)
 import QuizIntroHeaderBlock from './QuizIntroHeaderBlock';
 import OptionsGridBlock from './OptionsGridBlock';
@@ -70,24 +71,76 @@ const BlockComponentRegistry: Record<string, React.FC<any>> = {
 
 // ✅ SISTEMA HÍBRIDO: Cache crítico + EnhancedBlockRegistry completo
 const getBlockComponent = (blockType: string) => {
+  // Debug logging para troubleshooting
+  console.log(`🔍 UniversalBlockRenderer: Buscando componente para tipo "${blockType}"`);
+
   // 1. Cache de componentes críticos para performance máxima
   if (BlockComponentRegistry[blockType]) {
+    console.log(`✅ Componente encontrado no cache crítico: ${blockType}`);
     return BlockComponentRegistry[blockType];
   }
 
   // 2. Buscar no EnhancedBlockRegistry (150+ componentes)
-  const enhancedComponent = getEnhancedBlockComponent(blockType);
-  if (enhancedComponent) {
-    return enhancedComponent;
+  try {
+    const enhancedComponent = getEnhancedBlockComponent(blockType);
+    if (enhancedComponent) {
+      console.log(`✅ Componente encontrado no EnhancedBlockRegistry: ${blockType}`);
+      return enhancedComponent;
+    }
+  } catch (error) {
+    console.error(`❌ Erro ao buscar componente no EnhancedBlockRegistry: ${blockType}`, error);
   }
 
-  // 3. Fallback final
+  // 3. Log para componentes não encontrados
+  console.warn(`⚠️ Componente não encontrado em nenhum registry: ${blockType}`);
+  
+  // 4. Fallback final
   return null;
 };
 
-// ✅ OTIMIZAÇÃO: Hook memoizado com sistema híbrido
+// ✅ OTIMIZAÇÃO: Hook memoizado com sistema híbrido + cache inteligente + debug
+const componentCache = new Map<string, React.ComponentType<any> | null>();
+let cacheHits = 0;
+let cacheMisses = 0;
+
 const useBlockComponent = (blockType: string) => {
-  return useMemo(() => getBlockComponent(blockType), [blockType]);
+  return useMemo(() => {
+    const totalLookups = cacheHits + cacheMisses + 1;
+    
+    // Verificar cache primeiro
+    if (componentCache.has(blockType)) {
+      const cachedComponent = componentCache.get(blockType);
+      cacheHits++;
+      console.log(`🚀 Componente recuperado do cache: ${blockType}`);
+      
+      // Atualizar stats de debug
+      blockRendererDebug.updateCacheStats({
+        cacheSize: componentCache.size,
+        totalLookups,
+        cacheHits,
+        cacheMisses
+      });
+      
+      return cachedComponent;
+    }
+
+    // Cache miss - buscar componente
+    cacheMisses++;
+    const component = getBlockComponent(blockType);
+    
+    // Armazenar no cache
+    componentCache.set(blockType, component);
+    
+    // Atualizar stats de debug
+    blockRendererDebug.updateCacheStats({
+      cacheSize: componentCache.size,
+      totalLookups,
+      cacheHits,
+      cacheMisses
+    });
+    
+    return component;
+  }, [blockType]);
 };
 
 const UniversalBlockRenderer: React.FC<UniversalBlockRendererProps> = memo(({
@@ -101,8 +154,42 @@ const UniversalBlockRenderer: React.FC<UniversalBlockRendererProps> = memo(({
   style,
   onClick,
 }) => {
+  // ✅ MONITORAMENTO DE PERFORMANCE
+  const renderStartTime = React.useRef<number>();
+  
+  React.useEffect(() => {
+    renderStartTime.current = performance.now();
+  });
+
+  React.useEffect(() => {
+    if (renderStartTime.current) {
+      const renderTime = performance.now() - renderStartTime.current;
+      if (renderTime > 50) { // Log apenas renders lentos
+        console.warn(`⚠️ Render lento detectado`, {
+          blockType: block.type,
+          blockId: block.id,
+          renderTime: `${renderTime.toFixed(2)}ms`,
+          isSelected,
+          isPreviewing
+        });
+      }
+    }
+  });
+
   // ✅ OTIMIZAÇÃO: Usar hook cacheado ao invés de lookup direto
   const BlockComponent = useBlockComponent(block.type);
+
+  // ✅ LOG DE RENDERIZAÇÃO PARA DEBUG
+  React.useEffect(() => {
+    console.log(`🎨 Renderizando bloco:`, {
+      type: block.type,
+      id: block.id,
+      hasComponent: !!BlockComponent,
+      isSelected,
+      isPreviewing,
+      timestamp: new Date().toISOString()
+    });
+  }, [block.type, block.id, BlockComponent, isSelected, isPreviewing]);
 
   // ✅ OTIMIZAÇÃO: Memoizar handlers com dependências estáveis
   const handleUpdate = useMemo(() =>
@@ -119,10 +206,18 @@ const UniversalBlockRenderer: React.FC<UniversalBlockRendererProps> = memo(({
   }, [block.id, onSelect, onClick]);
 
   if (!BlockComponent) {
+    // Log detalhado para debug
+    console.error(`❌ UniversalBlockRenderer: Componente não encontrado`, {
+      blockType: block.type,
+      blockId: block.id,
+      availableInCache: Array.from(componentCache.keys()),
+      availableInRegistry: Object.keys(BlockComponentRegistry)
+    });
+
     return (
       <div
         className={cn(
-          "p-4 border-2 border-dashed border-orange-300 bg-orange-50 rounded",
+          "p-4 border-2 border-dashed border-red-300 bg-red-50 rounded",
           className
         )}
         style={style}
@@ -130,12 +225,32 @@ const UniversalBlockRenderer: React.FC<UniversalBlockRendererProps> = memo(({
         data-block-id={block.id}
         data-block-type={block.type}
       >
-        <div className="text-sm text-orange-700 font-medium mb-2">
-          Tipo desconhecido: {block.type}
+        <div className="text-sm text-red-700 font-medium mb-2">
+          ⚠️ Componente não encontrado: {block.type}
         </div>
-        <div className="text-xs text-orange-600">
+        <div className="text-xs text-red-600 mb-2">
           ID: {block.id}
         </div>
+        <div className="text-xs text-red-500">
+          Verifique se o componente está registrado no EnhancedBlockRegistry
+        </div>
+        {!isPreviewing && (
+          <button
+            onClick={() => {
+              console.log('🔍 Debug info:', {
+                blockType: block.type,
+                blockId: block.id,
+                blockContent: block.content,
+                blockProperties: block.properties,
+                availableComponents: Object.keys(BlockComponentRegistry),
+                cacheSize: componentCache.size
+              });
+            }}
+            className="mt-2 text-xs bg-red-100 text-red-700 px-2 py-1 rounded hover:bg-red-200"
+          >
+            Debug Info
+          </button>
+        )}
       </div>
     );
   }
@@ -167,19 +282,86 @@ const UniversalBlockRenderer: React.FC<UniversalBlockRendererProps> = memo(({
 
       {!isPreviewing && isSelected && (
         <div className="absolute top-0 left-0 -mt-6 text-xs bg-blue-500 text-white px-2 py-1 rounded z-10">
-          {block.type}
+          {block.type} #{block.id}
         </div>
       )}
 
-      <BlockComponent
-        block={block}
-        isSelected={isSelected}
-        isPreviewing={isPreviewing}
-        onUpdate={handleUpdate}
-      />
+      {/* ✅ RENDERIZAÇÃO COM ERROR BOUNDARY E LOGGING */}
+      <React.Suspense 
+        fallback={
+          <div className="p-4 bg-gray-100 rounded animate-pulse">
+            <div className="text-sm text-gray-600">
+              🔄 Carregando componente: {block.type}
+            </div>
+          </div>
+        }
+      >
+        <ErrorBoundary blockType={block.type} blockId={block.id}>
+          <BlockComponent
+            block={block}
+            isSelected={isSelected}
+            isPreviewing={isPreviewing}
+            onUpdate={handleUpdate}
+          />
+        </ErrorBoundary>
+      </React.Suspense>
     </div>
   );
 });
+
+// ✅ ERROR BOUNDARY PARA COMPONENTES
+class ErrorBoundary extends React.Component<
+  { children: React.ReactNode; blockType: string; blockId: string },
+  { hasError: boolean; error?: Error }
+> {
+  constructor(props: { children: React.ReactNode; blockType: string; blockId: string }) {
+    super(props);
+    this.state = { hasError: false };
+  }
+
+  static getDerivedStateFromError(error: Error) {
+    return { hasError: true, error };
+  }
+
+  componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
+    console.error(`🚨 Erro ao renderizar componente ${this.props.blockType}:`, {
+      blockType: this.props.blockType,
+      blockId: this.props.blockId,
+      error: error.message,
+      stack: error.stack,
+      errorInfo
+    });
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div className="p-4 border-2 border-dashed border-red-400 bg-red-50 rounded">
+          <div className="text-sm text-red-700 font-medium mb-2">
+            💥 Erro na renderização: {this.props.blockType}
+          </div>
+          <div className="text-xs text-red-600 mb-2">
+            ID: {this.props.blockId}
+          </div>
+          <div className="text-xs text-red-500">
+            {this.state.error?.message || 'Erro desconhecido'}
+          </div>
+          <button
+            onClick={() => {
+              this.setState({ hasError: false, error: undefined });
+              console.log('🔄 Tentando renderizar novamente:', this.props.blockType);
+            }}
+            className="mt-2 text-xs bg-red-100 text-red-700 px-2 py-1 rounded hover:bg-red-200"
+          >
+            🔄 Tentar Novamente
+          </button>
+        </div>
+      );
+    }
+
+    return this.props.children;
+  }
+}
 
 UniversalBlockRenderer.displayName = 'UniversalBlockRenderer';
 
