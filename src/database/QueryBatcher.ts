@@ -180,7 +180,8 @@ class QueryBatcher {
         
         // Cache successful SELECT results
         if (query.operation === 'select' && result && !result.error && this.config.enableCache) {
-          const cacheKey = this.generateCacheKey(query.table, query.operation, query.query, query.filters);
+          const filters = query.filters || {};
+          const cacheKey = this.generateCacheKey(query.table, query.operation, query.query, filters);
           queryCache.set(cacheKey, result, { priority: 'medium' });
         }
 
@@ -216,8 +217,9 @@ class QueryBatcher {
         // Type assertion for dynamic table names
         let supabaseQuery = (supabase as any).from(query.table).select(query.query);
         
-        // Apply filters
-        Object.entries(query.filters || {}).forEach(([key, value]) => {
+        // Apply filters safely
+        const filters = query.filters || {};
+        Object.entries(filters).forEach(([key, value]) => {
           supabaseQuery = supabaseQuery.eq(key, value);
         });
 
@@ -244,7 +246,8 @@ class QueryBatcher {
       for (const query of updateQueries) {
         let supabaseQuery = (supabase as any).from(query.table).update(query.query);
         
-        Object.entries(query.filters || {}).forEach(([key, value]) => {
+        const filters = query.filters || {};
+        Object.entries(filters).forEach(([key, value]) => {
           supabaseQuery = supabaseQuery.eq(key, value);
         });
 
@@ -258,7 +261,8 @@ class QueryBatcher {
       for (const query of deleteQueries) {
         let supabaseQuery = (supabase as any).from(query.table).delete();
         
-        Object.entries(query.filters || {}).forEach(([key, value]) => {
+        const filters = query.filters || {};
+        Object.entries(filters).forEach(([key, value]) => {
           supabaseQuery = supabaseQuery.eq(key, value);
         });
 

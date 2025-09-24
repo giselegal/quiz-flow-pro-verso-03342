@@ -94,7 +94,6 @@ const CHUNK_REGISTRY: Record<string, ChunkConfig> = {
 class BundleOptimizer {
   private loadedChunks = new Set<string>();
   private preloadingChunks = new Set<string>();
-  private loadPromises = new Map<string, Promise<any>>();
   private bundleStats = {
     totalSize: 0,
     loadedSize: 0,
@@ -213,6 +212,7 @@ class BundleOptimizer {
    * 📊 UPDATE BUNDLE STATS
    */
   private updateBundleStats(chunkName: string, config?: ChunkConfig): void {
+    console.log(`📊 Updating bundle stats for: ${chunkName}`);
     if (config?.estimatedSize) {
       const sizeKB = parseInt(config.estimatedSize.replace('KB', ''));
       this.bundleStats.loadedSize += sizeKB;
