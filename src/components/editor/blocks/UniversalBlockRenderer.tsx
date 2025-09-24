@@ -3,6 +3,7 @@ import { cn } from '@/lib/utils';
 import { Block } from '@/types/editor';
 import { getEnhancedBlockComponent } from '@/components/editor/blocks/EnhancedBlockRegistry';
 import { blockRendererDebug } from '@/components/editor/debug/BlockRendererDebug';
+import { cacheManager } from '@/utils/cache/LRUCache';
 // Importações diretas para componentes críticos (performance)
 import QuizIntroHeaderBlock from './QuizIntroHeaderBlock';
 import OptionsGridBlock from './OptionsGridBlock';
@@ -98,45 +99,49 @@ const getBlockComponent = (blockType: string) => {
   return null;
 };
 
-// ✅ OTIMIZAÇÃO: Hook memoizado com sistema híbrido + cache inteligente + debug
-const componentCache = new Map<string, React.ComponentType<any> | null>();
-let cacheHits = 0;
-let cacheMisses = 0;
+// ✅ OTIMIZAÇÃO: LRU Cache para eliminar memory leaks
+const componentCache = cacheManager.getCache<React.ComponentType<any> | null>('blockComponents', 50);
+const renderCache = cacheManager.getCache<BlockRenderData>('blockRenders', 100);
+
+interface BlockRenderData {
+  timestamp: number;
+  renderTime: number;
+  blockType: string;
+  isSelected: boolean;
+}
 
 const useBlockComponent = (blockType: string) => {
   return useMemo(() => {
-    const totalLookups = cacheHits + cacheMisses + 1;
+    // Verificar cache LRU primeiro
+    const cachedComponent = componentCache.get(blockType);
+    if (cachedComponent !== null) {
+      console.log(`🚀 Componente recuperado do LRU cache: ${blockType}`);
 
-    // Verificar cache primeiro
-    if (componentCache.has(blockType)) {
-      const cachedComponent = componentCache.get(blockType);
-      cacheHits++;
-      console.log(`🚀 Componente recuperado do cache: ${blockType}`);
-
-      // Atualizar stats de debug
+      // Atualizar stats de debug com LRU metrics
+      const cacheStats = componentCache.getStats();
       blockRendererDebug.updateCacheStats({
-        cacheSize: componentCache.size,
-        totalLookups,
-        cacheHits,
-        cacheMisses
+        cacheSize: cacheStats.size,
+        totalLookups: cacheStats.hits + cacheStats.misses,
+        cacheHits: cacheStats.hits,
+        cacheMisses: cacheStats.misses
       });
 
       return cachedComponent;
     }
 
     // Cache miss - buscar componente
-    cacheMisses++;
     const component = getBlockComponent(blockType);
 
-    // Armazenar no cache
+    // Armazenar no LRU cache
     componentCache.set(blockType, component);
 
     // Atualizar stats de debug
+    const cacheStats = componentCache.getStats();
     blockRendererDebug.updateCacheStats({
-      cacheSize: componentCache.size,
-      totalLookups,
-      cacheHits,
-      cacheMisses
+      cacheSize: cacheStats.size,
+      totalLookups: cacheStats.hits + cacheStats.misses,
+      cacheHits: cacheStats.hits,
+      cacheMisses: cacheStats.misses
     });
 
     return component;
@@ -164,6 +169,15 @@ const UniversalBlockRenderer: React.FC<UniversalBlockRendererProps> = memo(({
   React.useEffect(() => {
     if (renderStartTime.current) {
       const renderTime = performance.now() - renderStartTime.current;
+
+      // Armazenar render data no cache para análise
+      const renderData: BlockRenderData = {
+        timestamp: Date.now(),
+        renderTime,
+        blockType: block.type,
+        isSelected
+      };
+      renderCache.set(`${block.id}-${Date.now()}`, renderData);
 
       // Registrar estatísticas de render
       blockRendererDebug.logRender({
@@ -249,13 +263,14 @@ const UniversalBlockRenderer: React.FC<UniversalBlockRendererProps> = memo(({
         {!isPreviewing && (
           <button
             onClick={() => {
+              const cacheStats = componentCache.getStats();
               console.log('🔍 Debug info:', {
                 blockType: block.type,
                 blockId: block.id,
                 blockContent: block.content,
                 blockProperties: block.properties,
                 availableComponents: Object.keys(BlockComponentRegistry),
-                cacheSize: componentCache.size
+                cacheStats: cacheStats
               });
             }}
             className="mt-2 text-xs bg-red-100 text-red-700 px-2 py-1 rounded hover:bg-red-200"
