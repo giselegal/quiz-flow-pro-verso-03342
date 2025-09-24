@@ -10,6 +10,11 @@ interface EditorState {
   isPreviewMode: boolean;
   viewMode: 'desktop' | 'mobile';
   
+  // New properties for compatibility
+  currentFunnel: any | null;
+  stepBlocks: Record<string, Block[]>;
+  cache: Map<string, any>;
+  
   // Histórico (Undo/Redo)
   history: Block[][];
   historyIndex: number;
@@ -58,6 +63,11 @@ export const useUnifiedEditorState = create<EditorState>()(
       currentStep: 1,
       isPreviewMode: false,
       viewMode: 'desktop',
+      
+      // New properties
+      currentFunnel: null,
+      stepBlocks: {},
+      cache: new Map(),
       
       // Histórico
       history: [[]],
@@ -178,9 +188,15 @@ export const useUnifiedEditorState = create<EditorState>()(
 
 // Hook simplificado para performance monitoring
 export const useEditorPerformance = () => {
-  return {
-    logBlocksCount: (count: number) => {
-      console.log(`📊 Editor Performance: ${count} blocks in state`);
-    }
-  };
+    const isSaving = useUnifiedEditorState(state => state.isSaving);
+    
+    return {
+      logBlocksCount: (count: number) => {
+        console.log(`📊 Editor Performance: ${count} blocks in state`);
+      },
+      memoryUsage: (performance as any).memory ? Math.round((performance as any).memory.usedJSHeapSize / 1024 / 1024) : 0,
+      cacheSize: 0,
+      isDirty: false,
+      isSaving
+    };
 };

@@ -135,10 +135,10 @@ export const UnifiedCRUDProvider: React.FC<UnifiedCRUDProviderProps> = ({
                 console.warn(`⚠️ Funil não encontrado com ID normalizado: ${searchId} (original: ${id})`);
                 // FASE 1: Fallback gracioso - criar funil vazio se necessário
                 const fallbackFunnel = await enhancedFunnelService.createFallbackFunnel(id);
-                if (!fallbackFunnel) {
-                    throw new Error(`Funil não encontrado: ${id}`);
-                }
-                setCurrentFunnel(fallbackFunnel);
+            if (!fallbackFunnel) {
+                throw new Error(`Funil não encontrado: ${id}`);
+            }
+            setCurrentFunnel(fallbackFunnel);
             }
 
             setCurrentFunnel(funnel);

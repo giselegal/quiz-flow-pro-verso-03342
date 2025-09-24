@@ -122,7 +122,7 @@ const generateWithPureBuilder = async (funnelId: string, templateInfo: any): Pro
         const stepBlocks: Record<string, Block[]> = {};
 
         // ✅ CORREÇÃO: Usar template local para quiz21StepsComplete
-        if (targetFunnelId === 'quiz21StepsComplete') {
+        if (safeTemplate === 'quiz21StepsComplete') {
             console.log('🎯 Carregando template local quiz21StepsComplete...');
 
             try {
@@ -237,31 +237,30 @@ const generateWithPureBuilder = async (funnelId: string, templateInfo: any): Pro
                             containerWidth: 'full',
                             spacing: 'small'
                         }
-                     }] as Block[];
+                    }] as Block[];
                 }
             }
         }
-    }
 
-    console.log(`✅ Templates JSON carregados: ${Object.keys(stepBlocks).length}/${totalSteps} etapas`);
+        console.log(`✅ Templates JSON carregados: ${Object.keys(stepBlocks).length}/${totalSteps} etapas`);
 
-    // 🚀 CRIAR CONFIGURAÇÃO DINÂMICA
-    const funnelConfig = {
-        templateId: safeTemplate,
-        totalSteps,
-        stepBlocks,
-        theme: templateInfo.theme || 'modern-elegant',
-        allowBackward: true,
-        saveProgress: true,
-        showProgress: true
-    };
+        // 🚀 CRIAR CONFIGURAÇÃO DINÂMICA
+        const funnelConfig = {
+            templateId: safeTemplate,
+            totalSteps,
+            stepBlocks,
+            theme: templateInfo.theme || 'modern-elegant',
+            allowBackward: true,
+            saveProgress: true,
+            showProgress: true
+        };
 
-    return {
-        stepBlocks,
-        builderInstance: null,
-        funnelConfig,
-        totalSteps
-    };
+        return {
+            stepBlocks,
+            builderInstance: null,
+            funnelConfig,
+            totalSteps
+        };
 
     } catch (error) {
         console.error('❌ Error with Pure Builder System:', error);

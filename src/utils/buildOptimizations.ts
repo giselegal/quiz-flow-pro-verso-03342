@@ -80,11 +80,11 @@ export const createLazyComponent = (
 ) => {
   const LazyComponent = React.lazy(importFn);
   
-  return (props: any) => (
-    <React.Suspense fallback={fallback ? React.createElement(fallback) : null}>
-      <LazyComponent {...props} />
-    </React.Suspense>
-  );
+  return (props: any) => 
+    React.createElement(React.Suspense, 
+      { fallback: fallback ? React.createElement(fallback) : null },
+      React.createElement(LazyComponent, props)
+    );
 };
 
 // Build health check
