@@ -82,6 +82,8 @@ function personalizeTemplateForFunnel(template: any[], funnelId: string, _stepId
 
   // Gerar seed único baseado no funnelId para consistência
   const funnelSeed = generateSeedFromFunnelId(funnelId);
+  const variantName = getFunnelVariantName(funnelSeed);
+  const themeColors = getFunnelThemeColor(funnelSeed);
 
   return template.map((block) => {
     const personalizedBlock = JSON.parse(JSON.stringify(block)); // Deep clone
@@ -91,49 +93,141 @@ function personalizeTemplateForFunnel(template: any[], funnelId: string, _stepId
       personalizedBlock.id = `${personalizedBlock.id}-fnl${funnelSeed}`;
     }
 
-    // 🎯 PERSONALIZAÇÃO 2: Conteúdo único baseado no tipo de bloco
-    if (personalizedBlock.type === 'quiz-intro-header' && personalizedBlock.content?.title) {
-      const variations = [
-        personalizedBlock.content.title, // Original
-        `${personalizedBlock.content.title} - Versão ${funnelSeed.slice(-3)}`,
-        `${personalizedBlock.content.title} (${getFunnelVariantName(funnelSeed)})`,
-        `${personalizedBlock.content.title} - Edição Personalizada`
-      ];
-      // Usar hash do seed completo para selecionar variação
+    // 🎯 PERSONALIZAÇÃO 2: Headers do quiz
+    if (personalizedBlock.type === 'quiz-intro-header') {
+      if (personalizedBlock.content?.title) {
+        personalizedBlock.content.title = `${personalizedBlock.content.title} (${variantName})`;
+      }
+      if (personalizedBlock.properties) {
+        personalizedBlock.properties.backgroundColor = themeColors.bg;
+        personalizedBlock.properties.borderColor = themeColors.text;
+      }
+    }
+
+    // 🎯 PERSONALIZAÇÃO 3: Blocos de texto - CONTEÚDO REALMENTE DIFERENTE
+    if (personalizedBlock.type === 'text' && personalizedBlock.content?.text) {
+      const originalText = personalizedBlock.content.text;
+      
+      // Criar variações reais baseadas no tipo de funil
+      const textVariations = getTextVariationsForFunnel(originalText, variantName, funnelSeed);
+      
       let hashNum = 0;
       for (let i = 0; i < funnelSeed.length; i++) {
         hashNum += funnelSeed.charCodeAt(i);
       }
-      personalizedBlock.content.title = variations[hashNum % variations.length];
+      personalizedBlock.content.text = textVariations[hashNum % textVariations.length];
+      
+      // Personalizar cores do texto
+      if (personalizedBlock.properties) {
+        personalizedBlock.properties.color = themeColors.text;
+      }
     }
 
-    // 🎯 PERSONALIZAÇÃO 3: Questões com variações
+    // 🎯 PERSONALIZAÇÃO 4: Questões com variações
     if (personalizedBlock.type === 'quiz-question' && personalizedBlock.content?.question) {
       const originalQuestion = personalizedBlock.content.question;
-      personalizedBlock.content.question = `${originalQuestion} [ID: ${funnelSeed.slice(-4)}]`;
+      personalizedBlock.content.question = getQuestionVariationForFunnel(originalQuestion, variantName);
     }
 
-    // 🎯 PERSONALIZAÇÃO 4: Textos descritivos
-    if (personalizedBlock.content?.text && typeof personalizedBlock.content.text === 'string') {
-      const originalText = personalizedBlock.content.text;
-      if (!originalText.includes('[Funil:')) {
-        personalizedBlock.content.text = `${originalText} [Funil: ${funnelSeed.slice(-4)}]`;
+    // 🎯 PERSONALIZAÇÃO 5: Inputs do formulário
+    if (personalizedBlock.type === 'form-input' && personalizedBlock.content?.placeholder) {
+      personalizedBlock.content.placeholder = getPlaceholderVariationForFunnel(
+        personalizedBlock.content.placeholder, 
+        variantName
+      );
+    }
+
+    // 🎯 PERSONALIZAÇÃO 6: Botões e navegação
+    if ((personalizedBlock.type === 'button' || personalizedBlock.type === 'quiz-navigation') 
+        && personalizedBlock.content?.text) {
+      personalizedBlock.content.text = getButtonVariationForFunnel(
+        personalizedBlock.content.text, 
+        variantName
+      );
+      
+      if (personalizedBlock.properties?.style) {
+        personalizedBlock.properties.style.backgroundColor = themeColors.text;
+        personalizedBlock.properties.style.color = themeColors.bg;
       }
     }
 
-    // 🎯 PERSONALIZAÇÃO 5: Cores temáticas baseadas no funil
+    // 🎯 PERSONALIZAÇÃO 7: Cores globais nos estilos
     if (personalizedBlock.properties?.style) {
-      const themeColor = getFunnelThemeColor(funnelSeed);
-      if (personalizedBlock.properties.style.backgroundColor) {
-        personalizedBlock.properties.style.backgroundColor = themeColor.bg;
+      if (personalizedBlock.properties.style.backgroundColor?.includes('#F8F9FA')) {
+        personalizedBlock.properties.style.backgroundColor = themeColors.bg;
       }
-      if (personalizedBlock.properties.style.color) {
-        personalizedBlock.properties.style.color = themeColor.text;
+      if (personalizedBlock.properties.style.color?.includes('#432818')) {
+        personalizedBlock.properties.style.color = themeColors.text;
       }
     }
 
     return personalizedBlock;
   });
+}
+
+// � FUNÇÕES AUXILIARES PARA VARIAÇÕES DE CONTEÚDO
+
+// Criar variações reais de texto baseadas no tipo de funil
+function getTextVariationsForFunnel(originalText: string, variantName: string, _funnelSeed: string): string[] {
+  // Preservar HTML tags se existirem
+  const hasHtml = originalText.includes('<');
+  
+  if (hasHtml) {
+    return [
+      originalText, // Original
+      originalText.replace(/Chega/g, `Chegou a hora`),
+      originalText.replace(/guarda-roupa/g, `closet ${variantName.toLowerCase()}`),
+      originalText.replace(/nada combina/g, `nada mais combina`),
+      originalText.replace(/com você/g, `com seu estilo ${variantName}`)
+    ];
+  } else {
+    return [
+      originalText,
+      `${originalText} [Versão ${variantName}]`,
+      originalText.replace(/você/g, `você (${variantName})`),
+      `🎯 ${variantName}: ${originalText}`,
+      originalText.replace(/seu/g, `seu exclusivo`)
+    ];
+  }
+}
+
+// Variações para perguntas do quiz
+function getQuestionVariationForFunnel(originalQuestion: string, variantName: string): string {
+  const variations = [
+    originalQuestion,
+    `${originalQuestion} (Edição ${variantName})`,
+    `[${variantName}] ${originalQuestion}`,
+    originalQuestion.replace(/Qual/g, `${variantName} - Qual`),
+    originalQuestion.replace(/Como/g, `${variantName} - Como`)
+  ];
+  
+  return variations[originalQuestion.length % variations.length];
+}
+
+// Variações para placeholders
+function getPlaceholderVariationForFunnel(originalPlaceholder: string, variantName: string): string {
+  const variations = [
+    originalPlaceholder,
+    `${originalPlaceholder} (${variantName})`,
+    originalPlaceholder.replace(/Digite/g, `Digite aqui`),
+    originalPlaceholder.replace(/seu/g, `seu ${variantName.toLowerCase()}`),
+    `✨ ${originalPlaceholder}`
+  ];
+  
+  return variations[originalPlaceholder.length % variations.length];
+}
+
+// Variações para botões
+function getButtonVariationForFunnel(originalText: string, variantName: string): string {
+  const variations = [
+    originalText,
+    `${originalText} ${variantName}`,
+    originalText.replace(/Continuar/g, `Avançar`),
+    originalText.replace(/Próximo/g, `Seguir`),
+    `🚀 ${originalText}`
+  ];
+  
+  return variations[originalText.length % variations.length];
 }
 
 // 🎲 Gerar seed consistente a partir do funnelId
