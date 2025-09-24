@@ -4,89 +4,121 @@ import { Button } from '../../components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../components/ui/card';
 import { Badge } from '../../components/ui/badge';
 
-// Mock data para templates de funis
+// Templates de funis reais e práticos disponíveis
 const templatesFunis = [
     {
-        id: 'template-1',
+        id: 'template-quiz-personalidade',
         name: 'Quiz de Personalidade',
-        description: 'Template para quiz de personalidade com 5 perguntas e resultado personalizado',
-        category: 'Personalidade',
+        description: 'Descubra seu estilo pessoal em 5 perguntas simples. Perfeito para engajamento e geração de leads.',
+        category: 'Quiz',
         difficulty: 'Fácil',
         questions: 5,
         avgTime: '3 min',
         rating: 4.8,
-        downloads: 1250,
-        tags: ['Personalidade', 'Engajamento', 'Social'],
-        preview: 'https://via.placeholder.com/300x200/3b82f6/ffffff?text=Quiz+Personalidade'
+        downloads: 3250,
+        tags: ['Personalidade', 'Engajamento', 'Lead Generation'],
+        preview: 'https://via.placeholder.com/300x200/3b82f6/ffffff?text=Quiz+Personalidade',
+        features: ['Resultados personalizados', 'Captura de email', 'Compartilhamento social']
     },
     {
-        id: 'template-2',
-        name: 'Funil de Vendas B2B',
-        description: 'Template completo para qualificação de leads B2B com scoring automático',
-        category: 'Negócios',
+        id: 'template-lead-magnet',
+        name: 'Lead Magnet com E-book',
+        description: 'Capture leads qualificados oferecendo conteúdo de valor em troca do contato.',
+        category: 'Lead Generation',
+        difficulty: 'Fácil',
+        questions: 3,
+        avgTime: '2 min',
+        rating: 4.9,
+        downloads: 5890,
+        tags: ['Lead Magnet', 'E-book', 'Captura'],
+        preview: 'https://via.placeholder.com/300x200/10b981/ffffff?text=Lead+Magnet',
+        features: ['Formulário otimizado', 'Entrega automática', 'Integração email']
+    },
+    {
+        id: 'template-pesquisa-nps',
+        name: 'Pesquisa NPS',
+        description: 'Meça a satisfação dos clientes com Net Promoter Score de forma simples e eficaz.',
+        category: 'Pesquisa',
+        difficulty: 'Fácil',
+        questions: 4,
+        avgTime: '2 min',
+        rating: 4.7,
+        downloads: 2100,
+        tags: ['NPS', 'Satisfação', 'Feedback'],
+        preview: 'https://via.placeholder.com/300x200/f59e0b/ffffff?text=NPS+Survey',
+        features: ['Cálculo automático do NPS', 'Segmentação de respostas', 'Relatórios visuais']
+    },
+    {
+        id: 'template-calculadora-roi',
+        name: 'Calculadora de ROI',
+        description: 'Ferramenta interativa para demonstrar o retorno do investimento em seus serviços.',
+        category: 'Calculadora',
+        difficulty: 'Intermediário',
+        questions: 6,
+        avgTime: '5 min',
+        rating: 4.6,
+        downloads: 1750,
+        tags: ['ROI', 'Vendas', 'Calculadora'],
+        preview: 'https://via.placeholder.com/300x200/ef4444/ffffff?text=ROI+Calculator',
+        features: ['Cálculos automáticos', 'Resultados visuais', 'PDF de proposta']
+    },
+    {
+        id: 'template-qualificacao-lead',
+        name: 'Qualificação de Leads B2B',
+        description: 'Identifique e qualifique leads empresariais com perguntas estratégicas.',
+        category: 'B2B',
         difficulty: 'Avançado',
         questions: 8,
-        avgTime: '6 min',
-        rating: 4.9,
+        avgTime: '7 min',
+        rating: 4.8,
         downloads: 890,
-        tags: ['B2B', 'Vendas', 'Qualificação'],
-        preview: 'https://via.placeholder.com/300x200/10b981/ffffff?text=B2B+Funnel'
+        tags: ['B2B', 'Qualificação', 'Vendas'],
+        preview: 'https://via.placeholder.com/300x200/8b5cf6/ffffff?text=B2B+Qualification',
+        features: ['Scoring automático', 'Segmentação avançada', 'Integração CRM']
     },
     {
-        id: 'template-3',
-        name: 'Pesquisa de Satisfação',
-        description: 'Modelo para avaliar satisfação do cliente com NPS integrado',
-        category: 'Feedback',
+        id: 'template-onboarding',
+        name: 'Onboarding de Clientes',
+        description: 'Colete informações essenciais para personalizar a experiência do novo cliente.',
+        category: 'Onboarding',
         difficulty: 'Intermediário',
         questions: 6,
         avgTime: '4 min',
-        rating: 4.6,
-        downloads: 2100,
-        tags: ['NPS', 'Satisfação', 'Feedback'],
-        preview: 'https://via.placeholder.com/300x200/f59e0b/ffffff?text=NPS+Survey'
-    },
-    {
-        id: 'template-4',
-        name: 'Quiz Educacional',
-        description: 'Template para quiz educacional com explicações e pontuação',
-        category: 'Educação',
-        difficulty: 'Fácil',
-        questions: 10,
-        avgTime: '8 min',
-        rating: 4.7,
-        downloads: 1680,
-        tags: ['Educação', 'Aprendizado', 'Avaliação'],
-        preview: 'https://via.placeholder.com/300x200/8b5cf6/ffffff?text=Quiz+Educacional'
-    },
-    {
-        id: 'template-5',
-        name: 'Calculadora de ROI',
-        description: 'Funil interativo para calcular retorno sobre investimento',
-        category: 'Calculadora',
-        difficulty: 'Avançado',
-        questions: 7,
-        avgTime: '5 min',
         rating: 4.5,
-        downloads: 750,
-        tags: ['ROI', 'Calculadora', 'Financeiro'],
-        preview: 'https://via.placeholder.com/300x200/ef4444/ffffff?text=ROI+Calculator'
+        downloads: 950,
+        tags: ['Onboarding', 'Personalização', 'Experiência'],
+        preview: 'https://via.placeholder.com/300x200/06b6d4/ffffff?text=Onboarding',
+        features: ['Coleta de preferências', 'Setup personalizado', 'Jornada guiada']
     },
     {
-        id: 'template-6',
-        name: 'Onboarding Interativo',
-        description: 'Template para processo de onboarding de novos usuários',
-        category: 'Onboarding',
-        difficulty: 'Intermediário',
-        questions: 4,
+        id: 'template-evento-inscricao',
+        name: 'Inscrição para Eventos',
+        description: 'Formulário completo para inscrições em webinars, workshops e eventos.',
+        category: 'Eventos',
+        difficulty: 'Fácil',
+        questions: 5,
         avgTime: '3 min',
         rating: 4.4,
-        downloads: 950,
-        tags: ['Onboarding', 'UX', 'Engajamento'],
-        preview: 'https://via.placeholder.com/300x200/06b6d4/ffffff?text=Onboarding'
+        downloads: 1320,
+        tags: ['Eventos', 'Inscrição', 'Webinar'],
+        preview: 'https://via.placeholder.com/300x200/f97316/ffffff?text=Event+Registration',
+        features: ['Agenda automática', 'Lembretes por email', 'Link de acesso']
+    },
+    {
+        id: 'template-pesquisa-mercado',
+        name: 'Pesquisa de Mercado',
+        description: 'Colete insights valiosos sobre seu público e validar ideias de produtos.',
+        category: 'Pesquisa',
+        difficulty: 'Intermediário',
+        questions: 10,
+        avgTime: '6 min',
+        rating: 4.3,
+        downloads: 680,
+        tags: ['Pesquisa', 'Mercado', 'Insights'],
+        preview: 'https://via.placeholder.com/300x200/84cc16/ffffff?text=Market+Research',
+        features: ['Análise estatística', 'Gráficos automáticos', 'Exportação de dados']
     }
-];
-
-const categories = ['Todos', 'Personalidade', 'Negócios', 'Feedback', 'Educação', 'Calculadora', 'Onboarding'];
+]; const categories = ['Todos', 'Quiz', 'Lead Generation', 'Pesquisa', 'Calculadora', 'B2B', 'Onboarding', 'Eventos'];
 const difficulties = ['Todos', 'Fácil', 'Intermediário', 'Avançado'];
 
 const TemplatesFunisPage: React.FC = () => {
@@ -120,14 +152,12 @@ const TemplatesFunisPage: React.FC = () => {
             {/* Header */}
             <div className="mb-8">
                 <h1 className="text-3xl font-bold text-gray-900 mb-2">
-                    Templates de Funis
+                    Modelos de Funis
                 </h1>
                 <p className="text-gray-600">
-                    Escolha entre nossos modelos prontos para começar rapidamente
+                    Templates profissionais e testados para diferentes objetivos de negócio
                 </p>
-            </div>
-
-            {/* Filtros */}
+            </div>            {/* Filtros */}
             <div className="mb-6 space-y-4">
                 {/* Search */}
                 <div className="flex-1">
@@ -237,6 +267,21 @@ const TemplatesFunisPage: React.FC = () => {
                                     <span>{template.downloads.toLocaleString()}</span>
                                 </div>
                             </div>
+
+                            {/* Features */}
+                            {template.features && (
+                                <div className="mb-4">
+                                    <p className="text-xs font-medium text-gray-700 mb-2">Recursos:</p>
+                                    <div className="space-y-1">
+                                        {template.features.slice(0, 3).map((feature, index) => (
+                                            <div key={index} className="flex items-center text-xs text-gray-600">
+                                                <div className="w-1.5 h-1.5 bg-green-500 rounded-full mr-2"></div>
+                                                {feature}
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
 
                             {/* Actions */}
                             <div className="flex gap-2">

@@ -128,22 +128,22 @@ const pageConfig: Record<string, { title: string; subtitle: string; actions?: Re
         )
     },
     '/dashboard/templates-funis': {
-        title: 'Templates de Funis',
-        subtitle: 'Modelos prontos para começar rapidamente',
+        title: 'Modelos de Funis',
+        subtitle: 'Templates prontos e profissionais para começar rapidamente',
         actions: (
             <Button variant="outline" size="sm">
                 <RefreshCw className="w-4 h-4 mr-2" />
-                Atualizar
+                Atualizar Catálogo
             </Button>
         )
     },
     '/dashboard/meus-funis': {
-        title: 'Meus Funis',
-        subtitle: 'Gerencie seus funis personalizados',
+        title: 'Meus Funis Ativos',
+        subtitle: 'Funis em uso, editados e publicados com métricas reais',
         actions: (
             <Button size="sm">
                 <Plus className="w-4 h-4 mr-2" />
-                Criar Funil
+                Novo Funil
             </Button>
         )
     },

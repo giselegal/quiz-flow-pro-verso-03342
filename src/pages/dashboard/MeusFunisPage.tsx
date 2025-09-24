@@ -24,87 +24,167 @@ import {
     DropdownMenuTrigger,
 } from '../../components/ui/dropdown-menu';
 
-// Mock data para funis do usuário
+// Funis do usuário - em uso ativo, editados e publicados
 const meusFunis = [
     {
-        id: 'funil-1',
-        name: 'Quiz de Marketing Digital',
-        description: 'Quiz personalizado para captar leads interessados em marketing digital',
+        id: 'funil-marketing-digital-live',
+        name: 'Quiz: Qual Seu Nível em Marketing Digital?',
+        description: 'Funil ativo gerando leads qualificados para consultoria em marketing digital',
         status: 'active',
-        createdAt: '2024-01-15',
-        updatedAt: '2024-01-20',
+        createdAt: '2024-09-01',
+        updatedAt: '2024-09-20',
+        publishedAt: '2024-09-05',
         template: 'Quiz de Personalidade',
-        views: 1250,
-        completions: 890,
-        conversionRate: 71.2,
+        url: 'quiz-marketing-digital.com',
+        views: 4250,
+        completions: 2890,
+        conversionRate: 68.0,
         category: 'Marketing',
-        questions: 6,
+        questions: 7,
         avgTime: '4 min',
-        thumbnail: 'https://via.placeholder.com/200x120/3b82f6/ffffff?text=Marketing+Quiz'
+        thumbnail: 'https://via.placeholder.com/200x120/3b82f6/ffffff?text=Marketing+Quiz',
+        lastEdited: '2 dias atrás',
+        revenue: 'R$ 15.400'
     },
     {
-        id: 'funil-2',
-        name: 'Avaliação de Satisfação',
-        description: 'Pesquisa customizada para medir satisfação dos clientes',
+        id: 'funil-nps-clientes-ativo',
+        name: 'Pesquisa de Satisfação - Clientes Premium',
+        description: 'Coletando feedback contínuo dos clientes premium para melhorias no serviço',
         status: 'active',
-        createdAt: '2024-01-10',
-        updatedAt: '2024-01-22',
-        template: 'Pesquisa de Satisfação',
-        views: 2100,
-        completions: 1850,
-        conversionRate: 88.1,
+        createdAt: '2024-08-15',
+        updatedAt: '2024-09-22',
+        publishedAt: '2024-08-20',
+        template: 'Pesquisa NPS',
+        url: 'feedback-premium.com',
+        views: 890,
+        completions: 756,
+        conversionRate: 84.9,
         category: 'Feedback',
-        questions: 8,
-        avgTime: '5 min',
-        thumbnail: 'https://via.placeholder.com/200x120/10b981/ffffff?text=Satisfacao'
+        questions: 5,
+        avgTime: '3 min',
+        thumbnail: 'https://via.placeholder.com/200x120/10b981/ffffff?text=NPS+Survey',
+        lastEdited: '1 hora atrás',
+        revenue: 'N/A'
     },
     {
-        id: 'funil-3',
-        name: 'Calculadora ROI Personalizada',
-        description: 'Ferramenta personalizada para demonstrar ROI dos nossos serviços',
-        status: 'draft',
-        createdAt: '2024-01-18',
-        updatedAt: '2024-01-22',
+        id: 'funil-roi-consultoria',
+        name: 'Calculadora ROI - Consultoria Empresarial',
+        description: 'Demonstra valor da consultoria para prospects B2B - alta conversão',
+        status: 'active',
+        createdAt: '2024-09-10',
+        updatedAt: '2024-09-23',
+        publishedAt: '2024-09-15',
         template: 'Calculadora de ROI',
+        url: 'roi-consultoria.com',
+        views: 1680,
+        completions: 920,
+        conversionRate: 54.8,
+        category: 'B2B',
+        questions: 8,
+        avgTime: '7 min',
+        thumbnail: 'https://via.placeholder.com/200x120/ef4444/ffffff?text=ROI+Calc',
+        lastEdited: '3 horas atrás',
+        revenue: 'R$ 28.900'
+    },
+    {
+        id: 'funil-leads-webinar',
+        name: 'Inscrição Webinar: "IA no Marketing"',
+        description: 'Formulário de inscrição para webinar mensal - evento recorrente',
+        status: 'active',
+        createdAt: '2024-09-18',
+        updatedAt: '2024-09-24',
+        publishedAt: '2024-09-20',
+        template: 'Inscrição para Eventos',
+        url: 'webinar-ia-marketing.com',
+        views: 2340,
+        completions: 1560,
+        conversionRate: 66.7,
+        category: 'Eventos',
+        questions: 4,
+        avgTime: '2 min',
+        thumbnail: 'https://via.placeholder.com/200x120/8b5cf6/ffffff?text=Webinar+IA',
+        lastEdited: '30 min atrás',
+        revenue: 'R$ 8.200'
+    },
+    {
+        id: 'funil-onboarding-clientes',
+        name: 'Onboarding Novos Clientes',
+        description: 'Processo personalizado de integração - melhora retenção em 40%',
+        status: 'active',
+        createdAt: '2024-08-25',
+        updatedAt: '2024-09-21',
+        publishedAt: '2024-09-01',
+        template: 'Onboarding de Clientes',
+        url: 'onboarding-interno.com',
+        views: 156,
+        completions: 142,
+        conversionRate: 91.0,
+        category: 'Onboarding',
+        questions: 6,
+        avgTime: '5 min',
+        thumbnail: 'https://via.placeholder.com/200x120/06b6d4/ffffff?text=Onboarding',
+        lastEdited: '1 dia atrás',
+        revenue: 'N/A'
+    },
+    {
+        id: 'funil-teste-ab-landing',
+        name: 'Landing Page Curso Online - Versão A',
+        description: 'Teste A/B da landing principal do curso - versão otimizada',
+        status: 'active',
+        createdAt: '2024-09-05',
+        updatedAt: '2024-09-24',
+        publishedAt: '2024-09-10',
+        template: 'Lead Magnet com E-book',
+        url: 'curso-online-v2.com',
+        views: 5620,
+        completions: 3240,
+        conversionRate: 57.6,
+        category: 'Educação',
+        questions: 3,
+        avgTime: '2 min',
+        thumbnail: 'https://via.placeholder.com/200x120/f97316/ffffff?text=Curso+Online',
+        lastEdited: '15 min atrás',
+        revenue: 'R$ 42.300'
+    },
+    {
+        id: 'funil-qualificacao-b2b-draft',
+        name: 'Qualificação Leads B2B Enterprise',
+        description: 'Em desenvolvimento - para prospects de grande porte (rascunho)',
+        status: 'draft',
+        createdAt: '2024-09-20',
+        updatedAt: '2024-09-24',
+        publishedAt: null,
+        template: 'Qualificação de Leads B2B',
+        url: null,
         views: 0,
         completions: 0,
         conversionRate: 0,
-        category: 'Vendas',
-        questions: 7,
-        avgTime: '6 min',
-        thumbnail: 'https://via.placeholder.com/200x120/ef4444/ffffff?text=ROI+Calc'
+        category: 'B2B',
+        questions: 12,
+        avgTime: '10 min',
+        thumbnail: 'https://via.placeholder.com/200x120/gray/ffffff?text=Em+Desenvolvimento',
+        lastEdited: '2 horas atrás',
+        revenue: 'R$ 0'
     },
     {
-        id: 'funil-4',
-        name: 'Onboarding Tech Team',
-        description: 'Processo de integração para novos desenvolvedores',
+        id: 'funil-feedback-produto-pausado',
+        name: 'Feedback Novo Produto - SaaS',
+        description: 'Pausado temporariamente - aguardando nova versão do produto',
         status: 'paused',
-        createdAt: '2024-01-05',
-        updatedAt: '2024-01-15',
-        template: 'Onboarding Interativo',
-        views: 45,
-        completions: 32,
-        conversionRate: 71.1,
-        category: 'RH',
-        questions: 5,
-        avgTime: '8 min',
-        thumbnail: 'https://via.placeholder.com/200x120/8b5cf6/ffffff?text=Onboarding'
-    },
-    {
-        id: 'funil-5',
-        name: 'Lead Scoring B2B',
-        description: 'Funil avançado para qualificação automática de leads empresariais',
-        status: 'active',
-        createdAt: '2023-12-20',
-        updatedAt: '2024-01-21',
-        template: 'Funil de Vendas B2B',
-        views: 3200,
-        completions: 2100,
-        conversionRate: 65.6,
-        category: 'Vendas',
-        questions: 9,
-        avgTime: '7 min',
-        thumbnail: 'https://via.placeholder.com/200x120/f59e0b/ffffff?text=B2B+Scoring'
+        createdAt: '2024-08-30',
+        updatedAt: '2024-09-15',
+        publishedAt: '2024-09-05',
+        template: 'Pesquisa de Mercado',
+        url: 'feedback-saas-produto.com',
+        views: 340,
+        completions: 180,
+        conversionRate: 52.9,
+        category: 'Pesquisa',
+        questions: 8,
+        avgTime: '6 min',
+        thumbnail: 'https://via.placeholder.com/200x120/gray/ffffff?text=Pausado',
+        lastEdited: '1 semana atrás',
+        revenue: 'N/A'
     }
 ];
 
@@ -233,12 +313,12 @@ const MeusFunisPage: React.FC = () => {
                     <Card>
                         <CardContent className="p-4">
                             <div className="flex items-center gap-3">
-                                <div className="p-2 bg-orange-50 rounded-lg">
-                                    <BarChart3 className="w-5 h-5 text-orange-600" />
+                                <div className="p-2 bg-green-50 rounded-lg">
+                                    <BarChart3 className="w-5 h-5 text-green-600" />
                                 </div>
                                 <div>
-                                    <p className="text-sm text-gray-600">Funis Ativos</p>
-                                    <p className="text-xl font-bold">{meusFunis.filter(f => f.status === 'active').length}</p>
+                                    <p className="text-sm text-gray-600">Receita Total</p>
+                                    <p className="text-xl font-bold text-green-600">R$ 94.800</p>
                                 </div>
                             </div>
                         </CardContent>
@@ -398,9 +478,24 @@ const MeusFunisPage: React.FC = () => {
                                     <p className="font-semibold">{funil.conversionRate.toFixed(1)}%</p>
                                 </div>
                                 <div>
-                                    <p className="text-gray-500">Tempo Médio</p>
-                                    <p className="font-semibold">{funil.avgTime}</p>
+                                    <p className="text-gray-500">Receita</p>
+                                    <p className="font-semibold text-green-600">{funil.revenue}</p>
                                 </div>
+                            </div>
+
+                            {/* URL e Status de Publicação */}
+                            {funil.url && (
+                                <div className="mb-3">
+                                    <p className="text-xs text-gray-500">URL:</p>
+                                    <p className="text-xs text-blue-600 truncate">{funil.url}</p>
+                                </div>
+                            )}
+
+                            {/* Última Edição */}
+                            <div className="mb-3">
+                                <p className="text-xs text-gray-500">
+                                    Última edição: <span className="text-gray-700">{funil.lastEdited}</span>
+                                </p>
                             </div>
 
                             {/* Dates */}

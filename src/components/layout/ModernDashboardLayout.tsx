@@ -111,17 +111,17 @@ const ModernDashboardLayout: React.FC<ModernDashboardLayoutProps> = ({
                 },
                 {
                     href: '/dashboard/templates-funis',
-                    label: 'Templates de Funis',
+                    label: 'Modelos de Funis',
                     icon: Copy,
-                    badge: 'Modelos',
+                    badge: 'Templates',
                     badgeVariant: 'secondary'
                 },
                 {
                     href: '/dashboard/meus-funis',
-                    label: 'Meus Funis',
+                    label: 'Meus Funis Ativos',
                     icon: Edit,
-                    badge: 'Meus',
-                    badgeVariant: 'outline'
+                    badge: 'Live',
+                    badgeVariant: 'default'
                 },
                 {
                     href: '/dashboard/quizzes',
