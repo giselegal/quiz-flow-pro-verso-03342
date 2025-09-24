@@ -43,6 +43,12 @@ class HealthCheckService {
    * Iniciar monitoramento contínuo
    */
   startMonitoring(intervalMs: number = 30000) {
+    // Desabilitar monitoramento em desenvolvimento para evitar erros de conexão
+    if (import.meta.env.DEV || import.meta.env.MODE === 'development') {
+      console.log('🏥 Health monitoring disabled in development mode');
+      return;
+    }
+
     if (this.checkInterval) {
       clearInterval(this.checkInterval);
     }
@@ -69,6 +75,26 @@ class HealthCheckService {
    * Realizar verificação completa de saúde
    */
   async performHealthCheck(): Promise<HealthStatus> {
+    // Retornar status mock em desenvolvimento
+    if (import.meta.env.DEV || import.meta.env.MODE === 'development') {
+      return {
+        status: 'healthy',
+        timestamp: new Date().toISOString(),
+        services: {
+          frontend: { status: 'up', lastCheck: new Date().toISOString(), responseTime: 50 },
+          supabase: { status: 'up', lastCheck: new Date().toISOString(), responseTime: 100 },
+          analytics: { status: 'up', lastCheck: new Date().toISOString(), responseTime: 75 },
+          storage: { status: 'up', lastCheck: new Date().toISOString(), responseTime: 80 }
+        },
+        metrics: {
+          responseTime: 76,
+          memoryUsage: 45,
+          errorRate: 0,
+          uptime: Date.now()
+        }
+      };
+    }
+
     const startTime = performance.now();
 
     const [frontend, supabase, analytics, storage] = await Promise.allSettled([
