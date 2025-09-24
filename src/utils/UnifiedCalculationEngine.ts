@@ -4,7 +4,6 @@
 import { QuizAnswer, QuizResult, StyleResult } from '@/types/quiz';
 import { isScorableQuestion } from '@/core/constants/quiz';
 import { QuizRulesConfig } from '@/hooks/useQuizRulesConfig';
-import { Quiz21StepsDataExtractor } from './Quiz21StepsDataExtractor';
 
 /**
  * UnifiedCalculationEngine - Algoritmo consolidado que combina:
@@ -272,7 +271,9 @@ export class UnifiedCalculationEngine {
 
         // Calculate style points using simple algorithm
         const stylePoints: Record<string, number> = {};
-        );
+        
+        // Extract selected options from answer (use optionId for compatibility)
+        const selectedOptions = answer.optionId ? [answer.optionId] : [];
 
         if (Object.keys(stylePoints).length > 0) {
             return stylePoints;
@@ -308,8 +309,8 @@ export class UnifiedCalculationEngine {
             return this.config.globalScoringConfig.categories.map(cat => cat.name);
         }
 
-        // Fallback: usar categorias do Quiz21Steps
-        return Quiz21StepsDataExtractor.getAvailableStyles();
+        // Fallback: usar categorias predefinidas
+        return ['classico', 'romantico', 'dramatico', 'natural', 'criativo', 'elegante', 'sexy', 'contemporaneo'];
     }
 
     private applyTieBreaker(
@@ -435,13 +436,6 @@ export function calculateQuizResults(
  */
 export function configureCalculationEngine(config: QuizRulesConfig): void {
     getDefaultCalculationEngine().setConfig(config);
-}
-
-/**
- * Função de conveniência para obter instância padrão
- */
-export function getDefaultCalculationEngine(): UnifiedCalculationEngine {
-    return UnifiedCalculationEngine.getInstance();
 }
 
 export default UnifiedCalculationEngine;
