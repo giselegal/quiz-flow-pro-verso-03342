@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { usePerformanceTest } from '../hooks/usePerformanceTest';
+import React, { useState, useCallback, useRef, useEffect } from 'react';
+import { usePerformanceTest } from '../../hooks/usePerformanceTest';
 
 /**
  * 🐛 DEBUG PANEL - DEBUGGING AVANÇADO EM DESENVOLVIMENTO
@@ -56,10 +56,10 @@ const DebugPanel: React.FC<DebugPanelProps> = ({
     component = 'App',
     includePerformance = true,
     debugData = {},
-    onAction,
+    // onAction, // Parâmetro não utilizado no momento
     position = 'bottom-right',
     minimizable = true,
-    level = 'advanced'
+    // level = 'advanced' // Parâmetro não utilizado no momento
 }) => {
 
     // Estados

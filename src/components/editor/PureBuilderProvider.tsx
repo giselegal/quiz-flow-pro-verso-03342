@@ -272,18 +272,22 @@ export const PureBuilderProvider: React.FC<{
 
         // 🎯 INITIALIZATION - Agora dinâmico baseado no template
         useEffect(() => {
-            if (!isInitialized.current && funnelId) {
-                console.log('🏗️ Initializing PureBuilderProvider with Builder System...', { funnelId });
+            if (!isInitialized.current) {
+                const targetFunnelId = funnelId || 'quiz21StepsComplete'; // Template padrão
+                console.log('🏗️ Initializing PureBuilderProvider with Builder System...', {
+                    providedFunnelId: funnelId,
+                    targetFunnelId
+                });
                 isInitialized.current = true;
 
                 setState(prev => ({ ...prev, isLoading: true }));
 
                 // ✅ USAR getTemplateInfo para obter dados dinâmicos
-                getTemplateInfo(funnelId)
+                getTemplateInfo(targetFunnelId)
                     .then(templateInfo => {
                         console.log('📋 Template info carregado:', templateInfo);
 
-                        return generateWithPureBuilder(funnelId, templateInfo)
+                        return generateWithPureBuilder(targetFunnelId, templateInfo)
                             .then(result => ({ ...result, templateInfo })); // 🔧 CORREÇÃO: Passar templateInfo adiante
                     })
                     .then(({ stepBlocks, builderInstance, funnelConfig, totalSteps: templateTotalSteps, templateInfo }) => {

@@ -65,11 +65,13 @@ function App() {
                   </div>
                 </Route>
 
-                {/* 🎯 EDITOR - ROTAS DIRETAS SEM NESTED REDIRECTS */}
+                {/* 🎯 EDITOR - ROTA PRINCIPAL CORRIGIDA */}
                 <Route path="/editor">
-                  <div data-testid="editor-templates-page">
-                    <EditorTemplatesPage />
-                  </div>
+                  <EditorErrorBoundary>
+                    <div data-testid="editor-main-page">
+                      <ModernUnifiedEditor />
+                    </div>
+                  </EditorErrorBoundary>
                 </Route>
 
                 <Route path="/editor/templates">

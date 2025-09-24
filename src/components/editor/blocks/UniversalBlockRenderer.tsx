@@ -16,6 +16,12 @@ import MentorSectionInlineBlock from './MentorSectionInlineBlock';
 import TestimonialCardInlineBlock from './TestimonialCardInlineBlock';
 import TestimonialsCarouselInlineBlock from './TestimonialsCarouselInlineBlock';
 
+// Importações adicionais de quiz components
+import QuizQuestionBlock from './QuizQuestionBlock';
+import QuizOptionBlock from './QuizOptionBlock';
+import QuizHeaderBlock from './QuizHeaderBlock';
+import QuizTitleBlock from './QuizTitleBlock';
+
 export interface UniversalBlockRendererProps {
   block: Block;
   isSelected?: boolean;
@@ -68,6 +74,10 @@ const createFallbackComponent = (type: string) => {
 
 const BlockComponentRegistry: Record<string, React.FC<any>> = {
   'quiz-intro-header': QuizIntroHeaderBlock,
+  'quiz-question': QuizQuestionBlock,
+  'quiz-option': QuizOptionBlock,
+  'quiz-header': QuizHeaderBlock,
+  'quiz-title': QuizTitleBlock,
   'options-grid': OptionsGridBlock,
   'text-inline': TextInlineBlock,
   'button-inline': ButtonInlineBlock,
@@ -82,7 +92,10 @@ const BlockComponentRegistry: Record<string, React.FC<any>> = {
   'button': createFallbackComponent('button'),
   'form': createFallbackComponent('form'),
   'spacer': createFallbackComponent('spacer'),
-  'container': createFallbackComponent('container')
+  'container': createFallbackComponent('container'),
+  // Suporte a tipos genéricos de quiz e funnel
+  'quiz': createFallbackComponent('quiz'),
+  'funnel': createFallbackComponent('funnel')
 };
 
 // ✅ HOOK OTIMIZADO PARA RECUPERAÇÃO DE COMPONENTES
