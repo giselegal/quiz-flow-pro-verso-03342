@@ -9,7 +9,7 @@ import {
     MoreVertical,
     Eye,
     BarChart3,
-    Calendar,
+    
     Users,
     TrendingUp
 } from 'lucide-react';
@@ -201,7 +201,6 @@ const MeusFunisPage: React.FC = () => {
     const [funisData, setFunisData] = React.useState(meusFunis);
 
     const categories = ['todos', ...Array.from(new Set(funisData.map(funil => funil.category)))];
-    const statusOptions = ['todos', 'active', 'draft', 'paused'];
 
     const filteredFunis = funisData.filter(funil => {
         const matchesStatus = selectedStatus === 'todos' || funil.status === selectedStatus;

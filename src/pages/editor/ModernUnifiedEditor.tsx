@@ -40,6 +40,9 @@ import UnifiedCRUDProvider, { useUnifiedCRUD } from '@/context/UnifiedCRUDProvid
 // 🎯 CRUD Services Integration
 import { useUnifiedEditor } from '@/hooks/core/useUnifiedEditor';
 
+// 🎯 TEMPLATE REGISTRY INTEGRATION
+import { loadFullTemplate, convertTemplateToEditorFormat } from '@/templates/registry';
+
 // 🧪 Development Testing
 import testCRUDOperations from '@/utils/testCRUDOperations';
 
@@ -299,21 +302,42 @@ const UnifiedEditorCore: React.FC<ModernUnifiedEditorProps> = ({
     mode = 'visual',
     className = ''
 }) => {
-    // 🎯 EXTRAIR FUNNEL ID DA URL /editor/quiz-cores-perfeitas-1758512392351_o1cke0
-    const extractedFunnelId = React.useMemo(() => {
+    // 🎯 EXTRAIR FUNNEL ID OU TEMPLATE ID DA URL 
+    const extractedInfo = React.useMemo(() => {
         const path = window.location.pathname;
-        console.log('🔍 Extraindo funnelId da URL:', path);
+        console.log('🔍 Analisando URL:', path);
 
-        // Extrair ID do template da URL do editor
+        // Detectar se é template ou funil na URL
         if (path.startsWith('/editor/') && path.length > '/editor/'.length) {
-            const extractedId = path.replace('/editor/', '');
-            console.log('✅ FunnelId extraído da URL:', extractedId);
-            return extractedId;
+            const identifier = path.replace('/editor/', '');
+
+            // 🎯 VERIFICAR SE É UM TEMPLATE CONHECIDO
+            // Templates disponíveis: testTemplate, quiz21StepsComplete
+            const knownTemplates = [
+                'testTemplate',
+                'quiz21StepsComplete'
+            ]; const isTemplate = knownTemplates.includes(identifier);
+
+            if (isTemplate) {
+                console.log('✅ Template detectado na URL:', identifier);
+                return { templateId: identifier, funnelId: null, type: 'template' };
+            } else {
+                console.log('✅ FunnelId detectado na URL:', identifier);
+                return { templateId: null, funnelId: identifier, type: 'funnel' };
+            }
         }
 
-        console.log('⚠️ Nenhum funnelId encontrado na URL, usando prop:', funnelId);
-        return funnelId;
-    }, [funnelId]);
+        console.log('⚠️ Usando props: funnelId =', funnelId, 'templateId =', templateId);
+        return {
+            funnelId: funnelId || null,
+            templateId: templateId || null,
+            type: templateId ? 'template' : 'funnel'
+        };
+    }, [funnelId, templateId]);
+
+    // 🎯 TEMPLATE LOADING STATE
+    const [isLoadingTemplate, setIsLoadingTemplate] = useState(false);
+    const [templateError, setTemplateError] = useState<string | null>(null);
 
     // 🎯 UNIFIED CRUD CONTEXT
     const crudContext = useUnifiedCRUD();
@@ -327,6 +351,36 @@ const UnifiedEditorCore: React.FC<ModernUnifiedEditorProps> = ({
         aiAssistantActive: false,
         previewMode: false
     });
+
+    // 🎯 TEMPLATE LOADING EFFECT
+    useEffect(() => {
+        if (extractedInfo.type === 'template' && extractedInfo.templateId) {
+            console.log('🎯 Carregando template:', extractedInfo.templateId);
+            setIsLoadingTemplate(true);
+            setTemplateError(null);
+
+            loadFullTemplate(extractedInfo.templateId)
+                .then(template => {
+                    if (template) {
+                        console.log('✅ Template carregado:', template);
+                        const editorFormat = convertTemplateToEditorFormat(template);
+                        console.log('✅ Template convertido para formato do editor:', editorFormat);
+
+                        // Criar um novo funil baseado no template
+                        return crudContext.createFunnel(template.name, { templateId: template.id });
+                    } else {
+                        throw new Error(`Template ${extractedInfo.templateId} não encontrado`);
+                    }
+                })
+                .catch(error => {
+                    console.error('❌ Erro ao carregar template:', error);
+                    setTemplateError(error.message);
+                })
+                .finally(() => {
+                    setIsLoadingTemplate(false);
+                });
+        }
+    }, [extractedInfo.templateId, extractedInfo.type, crudContext]);
 
     // Handler para mudanças de estado
     const handleStateChange = useCallback((updates: Partial<EditorState>) => {
@@ -393,14 +447,46 @@ const UnifiedEditorCore: React.FC<ModernUnifiedEditorProps> = ({
 
     console.log('🎯 UnifiedEditorCore estado:', {
         mode: editorState.mode,
-        funnelId,
-        templateId,
+        type: extractedInfo.type,
+        funnelId: extractedInfo.funnelId,
+        templateId: extractedInfo.templateId,
         crudFunnelId: crudContext.currentFunnel?.id,
         editorFunnelId: unifiedEditor.funnel?.id,
         isLoading: crudContext.isLoading || unifiedEditor.isLoading,
+        isLoadingTemplate,
+        templateError,
         error: crudContext.error || unifiedEditor.error,
         aiActive: editorState.aiAssistantActive
     });
+
+    // Mostrar loading se template está carregando
+    if (isLoadingTemplate) {
+        return (
+            <div className={`h-screen w-full bg-background flex flex-col ${className}`}>
+                <LoadingSpinner message="Carregando template..." />
+            </div>
+        );
+    }
+
+    // Mostrar erro se template falhou ao carregar
+    if (templateError) {
+        return (
+            <div className={`h-screen w-full bg-background flex flex-col ${className}`}>
+                <div className="flex items-center justify-center h-full">
+                    <div className="text-center">
+                        <div className="text-red-500 text-lg mb-4">❌ Erro ao carregar template</div>
+                        <p className="text-muted-foreground">{templateError}</p>
+                        <Button
+                            onClick={() => window.location.reload()}
+                            className="mt-4"
+                        >
+                            Tentar novamente
+                        </Button>
+                    </div>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className={`h-screen w-full bg-background flex flex-col ${className}`}>
@@ -408,7 +494,7 @@ const UnifiedEditorCore: React.FC<ModernUnifiedEditorProps> = ({
             <ModernToolbar
                 editorState={editorState}
                 onStateChange={handleStateChange}
-                funnelId={extractedFunnelId || crudContext.currentFunnel?.id}
+                funnelId={extractedInfo.funnelId || crudContext.currentFunnel?.id}
                 onSave={handleSave}
                 onCreateNew={handleCreateNew}
                 onDuplicate={handleDuplicate}
@@ -418,11 +504,11 @@ const UnifiedEditorCore: React.FC<ModernUnifiedEditorProps> = ({
             {/* Main Editor Area - Usando EditorProUnified como base única */}
             <div className="flex-1 overflow-hidden">
                 <FunnelMasterProvider
-                    funnelId={extractedFunnelId}
+                    funnelId={extractedInfo.funnelId || undefined}
                     debugMode={false}
                     enableCache={true}
                 >
-                    <PureBuilderProvider funnelId={extractedFunnelId}>
+                    <PureBuilderProvider funnelId={extractedInfo.funnelId || undefined}>
                         <Suspense fallback={
                             <Suspense fallback={<LoadingSpinner message="Carregando componentes..." />}>
                                 <TemplateLoadingSkeleton />
@@ -431,7 +517,7 @@ const UnifiedEditorCore: React.FC<ModernUnifiedEditorProps> = ({
                             <Suspense fallback={<LoadingSpinner message="Carregando error boundary..." />}>
                                 <TemplateErrorBoundary>
                                     <EditorProUnified
-                                        funnelId={extractedFunnelId}
+                                        funnelId={extractedInfo.funnelId || undefined}
                                         showProFeatures={true}
                                         className="h-full"
                                     />
@@ -490,18 +576,38 @@ const UnifiedEditorCore: React.FC<ModernUnifiedEditorProps> = ({
 // ===============================
 
 const ModernUnifiedEditor: React.FC<ModernUnifiedEditorProps> = (props) => {
-    // Extrair funnelId da URL também no wrapper
-    const extractedFunnelId = React.useMemo(() => {
+    // Extrair info (funnelId ou templateId) da URL também no wrapper
+    const extractedInfo = React.useMemo(() => {
         const path = window.location.pathname;
         if (path.startsWith('/editor/') && path.length > '/editor/'.length) {
-            return path.replace('/editor/', '');
+            const identifier = path.replace('/editor/', '');
+
+            // Verificar se é um template conhecido
+            const knownTemplates = [
+                'testTemplate',
+                'quiz21StepsComplete',
+                'leadMagnetFashion',
+                'webinarSignup',
+                'npseSurvey',
+                'roiCalculator'
+            ]; const isTemplate = knownTemplates.includes(identifier);
+
+            if (isTemplate) {
+                return { templateId: identifier, funnelId: null };
+            } else {
+                return { templateId: null, funnelId: identifier };
+            }
         }
-        return props.funnelId;
-    }, [props.funnelId]);
+
+        return {
+            funnelId: props.funnelId || null,
+            templateId: props.templateId || null
+        };
+    }, [props.funnelId, props.templateId]);
 
     return (
         <UnifiedCRUDProvider
-            funnelId={extractedFunnelId}
+            funnelId={extractedInfo.funnelId || undefined}
             autoLoad={true}
             debug={false}
         >

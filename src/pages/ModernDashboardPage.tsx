@@ -57,7 +57,6 @@ const MeusFunisPage = lazy(() => import('./dashboard/MeusFunisPage'));
 const SettingsPage = lazy(() => import('./dashboard/SettingsPage'));
 
 // Wrapper para AdminDashboard
-const AdminDashboardWrapper: React.FC = () => <AdminDashboard />;
 
 // Componente de loading personalizado
 const DashboardLoadingFallback = () => (

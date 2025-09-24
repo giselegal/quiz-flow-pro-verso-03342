@@ -3,9 +3,8 @@
  */
 
 import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Plus, Zap } from 'lucide-react';
+import { Plus } from 'lucide-react';
 
 const IntegrationsPage: React.FC = () => (
     <div className="space-y-6">

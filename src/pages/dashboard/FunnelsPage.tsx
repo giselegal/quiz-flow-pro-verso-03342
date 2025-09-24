@@ -7,7 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Link } from 'wouter';
-import { Plus, Edit, Eye, MoreHorizontal, Target, Users, TrendingUp } from 'lucide-react';
+import { Plus, Edit, Eye, Target, Users, TrendingUp } from 'lucide-react';
 
 const FunnelsPage: React.FC = () => {
     const funnels = [

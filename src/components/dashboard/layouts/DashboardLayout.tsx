@@ -400,4 +400,3 @@ export const DashboardCard: React.FC<DashboardCardProps> = ({
 // ============================================================================
 
 export default DashboardLayout;
-export { DashboardPage, DashboardCard };

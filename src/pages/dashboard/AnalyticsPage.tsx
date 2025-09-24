@@ -5,7 +5,6 @@
  */
 
 import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import RealTimeDashboard from '@/components/dashboard/RealTimeDashboard';
 
 const AnalyticsPage: React.FC = () => {

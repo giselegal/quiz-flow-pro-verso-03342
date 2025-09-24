@@ -3665,3 +3665,76 @@ export const QUIZ_QUESTIONS_COMPLETE: Record<number, string> = {
 };
 
 export default QUIZ_STYLE_21_STEPS_TEMPLATE;
+
+// 🎯 FORMATO PARA REGISTRY - ADAPTADOR
+export const quiz21StepsCompleteTemplate = {
+  config: {
+    globalConfig: {
+      theme: {
+        primaryColor: "#0066CC",
+        secondaryColor: "#FF6B35",
+        accentColor: "#4ECDC4"
+      },
+      navigation: {
+        allowBack: true,
+        showProgress: true
+      },
+      analytics: {
+        enabled: true,
+        trackingId: "quiz21-analytics"
+      }
+    },
+    seo: {
+      title: "Descubra Seu Estilo Pessoal - Quiz Completo",
+      description: "Quiz completo para descobrir seu estilo pessoal único com 21 etapas otimizadas",
+      keywords: ["quiz", "estilo pessoal", "moda", "personalização"]
+    },
+    tracking: {
+      googleAnalytics: "GA_MEASUREMENT_ID",
+      facebookPixel: "FB_PIXEL_ID",
+      customEvents: {
+        "quiz_start": "Quiz iniciado",
+        "quiz_complete": "Quiz finalizado"
+      }
+    }
+  },
+  steps: Object.keys(QUIZ_STYLE_21_STEPS_TEMPLATE).map((stepKey, index) => {
+    const stepBlocks = QUIZ_STYLE_21_STEPS_TEMPLATE[stepKey];
+
+    // Determinar o tipo do step baseado no conteúdo
+    let stepType: 'intro' | 'question' | 'transition' | 'result' | 'offer' = 'question';
+    if (index === 0) stepType = 'intro';
+    else if (stepKey.includes('transition') || stepKey.includes('Transition')) stepType = 'transition';
+    else if (stepKey.includes('result') || stepKey.includes('Result')) stepType = 'result';
+    else if (stepKey.includes('offer') || stepKey.includes('Offer')) stepType = 'offer';
+
+    // Extrair título do primeiro bloco se disponível
+    let title = `Etapa ${index + 1}`;
+    if (stepBlocks && stepBlocks.length > 0) {
+      const firstBlock = stepBlocks[0];
+      if (firstBlock.content?.title) {
+        title = firstBlock.content.title;
+      } else if (firstBlock.content?.question) {
+        title = firstBlock.content.question;
+      }
+    }
+
+    return {
+      stepNumber: index + 1,
+      type: stepType,
+      title: title,
+      subtitle: stepType === 'question' ? 'Selecione suas preferências' : undefined,
+      blocks: stepBlocks || [],
+      validation: stepType === 'question' ? {
+        required: true,
+        minSelections: stepKey.includes('strategic') ? 1 : 3,
+        maxSelections: stepKey.includes('strategic') ? 1 : 3
+      } : undefined,
+      navigation: {
+        nextButton: stepType === 'offer' ? 'Finalizar' : 'Continuar',
+        autoAdvance: false,
+        autoAdvanceDelay: 0
+      }
+    };
+  })
+};

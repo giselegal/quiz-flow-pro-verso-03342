@@ -17,8 +17,8 @@ import {
     Users,
     TrendingUp,
     Target,
-    Activity,
-    Clock,
+    
+    
     CheckCircle,
     AlertCircle,
     ArrowUpRight,
