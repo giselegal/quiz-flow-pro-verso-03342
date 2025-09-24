@@ -1,4 +1,4 @@
-import { getEnhancedBlockComponent } from '@/components/editor/blocks/enhancedBlockRegistry';
+import { getEnhancedBlockComponent } from '@/components/editor/blocks/EnhancedBlockRegistry';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { usePreview } from '@/context/PreviewContext';
