@@ -1,7 +1,6 @@
 import React, { createContext, useContext, useState, useCallback, useRef, useEffect } from 'react';
 // 🚀 BUILDER SYSTEM - Imports corrigidos para compatibilidade
 import type { Block } from '@/types/editor';
-import { createFunnelFromTemplate } from '@/core/builder';
 import { getTemplateInfo } from '@/utils/funnelNormalizer';
 
 /**
@@ -86,7 +85,7 @@ export const usePureBuilder = () => {
     return context;
 };
 
-// 🎯 GERAÇÃO COM BUILDER SYSTEM DINÂMICO
+// 🎯 GERAÇÃO DINÂMICA COM TEMPLATES JSON
 const generateWithPureBuilder = async (funnelId: string, templateInfo: any): Promise<{
     stepBlocks: Record<string, Block[]>;
     builderInstance: any;
@@ -104,443 +103,84 @@ const generateWithPureBuilder = async (funnelId: string, templateInfo: any): Pro
         const templateName = templateInfo.baseId;
         const totalSteps = templateInfo.totalSteps;
         
-        // 🛡️ VALIDAÇÃO DE TEMPLATE SEGURA
-        const validTemplates = ['product-quiz', 'lead-qualification', 'customer-satisfaction', 'quiz21StepsComplete', 'com-que-roupa-eu-vou', 'quiz-cores-perfeitas'];
+        // 🛡️ VALIDAÇÃO DE TEMPLATE SEGURA - Incluindo quiz-style-express
+        const validTemplates = ['product-quiz', 'lead-qualification', 'customer-satisfaction', 'quiz21StepsComplete', 'com-que-roupa-eu-vou', 'quiz-cores-perfeitas', 'quiz-style-express'];
         const safeTemplate = validTemplates.includes(templateName) ? templateName : 'product-quiz';
 
         if (safeTemplate !== templateName) {
             console.warn(`⚠️ Template '${templateName}' não encontrado. Usando fallback: '${safeTemplate}'`);
         }
 
-        // �🚀 CRIAR FUNIL USANDO BUILDER SYSTEM
-        const funnelBuilder = createFunnelFromTemplate(safeTemplate)
-            .withDescription(`${safeTemplate === 'quiz21StepsComplete' ? 'Quiz de Estilo Pessoal - 21 Etapas Completo' : 'Quiz de Estilo Pessoal - 21 Etapas'} - Builder System`)
-            .withSettings({
-                theme: 'modern-elegant',
-                allowBackward: true,
-                saveProgress: true,
-                showProgress: true,
-                progressStyle: 'bar',
-                autoAdvance: false
-            })
-            .withAnalytics({
-                trackingEnabled: true,
-                events: [
-                    'funnel_started',
-                    'step_completed',
-                    'quiz_question_answered',
-                    'strategic_question_answered',
-                    'result_calculated',
-                    'offer_viewed',
-                    'conversion_completed'
-                ],
-                goals: [
-                    {
-                        id: 'quiz_completion',
-                        name: 'Quiz Completion Rate',
-                        type: 'completion',
-                        triggerCondition: { step: 21 }
-                    },
-                    {
-                        id: 'lead_capture',
-                        name: 'Lead Capture Rate',
-                        type: 'conversion',
-                        triggerCondition: { step: 1, hasUserName: true }
-                    },
-                    {
-                        id: 'consultation_conversion',
-                        name: 'Consultation Sale Conversion',
-                        type: 'conversion',
-                        triggerCondition: { step: 21, action: 'purchase' }
-                    }
-                ]
-            });
-
-        // 🎯 STEP 1: Captura de Nome (Builder Template)
-        funnelBuilder.addStep('Coleta de Nome')
-            .addComponentFromTemplate('text-input')
-            .withContent({
-                label: 'Como posso te chamar?',
-                placeholder: 'Digite seu primeiro nome...',
-                buttonText: 'Começar Quiz de Estilo!'
-            })
-            .withProperties({
-                required: true,
-                minLength: 2,
-                maxLength: 50,
-                dataKey: 'userName',
-                autoAdvance: true,
-                saveToDatabase: true
-            })
-            .withValidation({
-                rules: ['required', 'minLength:2'],
-                messages: {
-                    required: 'Por favor, digite seu nome',
-                    minLength: 'Nome deve ter pelo menos 2 caracteres'
-                }
-            })
-            .withMetadata({
-                stepType: 'data-collection',
-                isRequired: true,
-                contributes_to_personalization: true
-            })
-            .complete();
-
-        // 🎯 STEPS 2-11: Questões Pontuadas (Builder Template)
-        for (let i = 2; i <= 11; i++) {
-            const questionNum = i - 1;
-
-            funnelBuilder.addStep(`Questão ${questionNum}`)
-                .addComponentFromTemplate('multiple-choice')
-                .withContent({
-                    question: `Questão ${questionNum} de 10 - Qual seu estilo de roupa favorito?`,
-                    description: 'Selecione exatamente 3 opções que mais combinam com você',
-                    options: [
-                        {
-                            id: 'classic',
-                            text: 'Peças clássicas e atemporais',
-                            value: 'classic',
-                            scoreWeight: { classic: 3, modern: 1, romantic: 2, edgy: 0 }
-                        },
-                        {
-                            id: 'modern',
-                            text: 'Looks modernos e minimalistas',
-                            value: 'modern',
-                            scoreWeight: { classic: 0, modern: 3, romantic: 1, edgy: 2 }
-                        },
-                        {
-                            id: 'romantic',
-                            text: 'Roupas românticas e femininas',
-                            value: 'romantic',
-                            scoreWeight: { classic: 2, modern: 0, romantic: 3, edgy: 1 }
-                        },
-                        {
-                            id: 'edgy',
-                            text: 'Peças com atitude e personalidade',
-                            value: 'edgy',
-                            scoreWeight: { classic: 0, modern: 2, romantic: 1, edgy: 3 }
-                        }
-                    ]
-                })
-                .withProperties({
-                    questionType: 'multiple-choice',
-                    required: true,
-                    minSelections: 3,
-                    maxSelections: 3,
-                    scoring: true,
-                    scoringMethod: 'weighted'
-                })
-                .withValidation({
-                    rules: ['required', 'exactSelections:3'],
-                    messages: {
-                        required: 'Por favor, selecione 3 opções',
-                        exactSelections: 'Selecione exatamente 3 opções'
-                    }
-                })
-                .withMetadata({
-                    stepType: 'scored-question',
-                    questionNumber: questionNum,
-                    contributes_to_calculation: true,
-                    weight: 1.0
-                })
-                .complete();
-        }
-
-        // 🎯 STEP 12: Transição (Builder Template)
-        funnelBuilder.addStep('Transição Estratégica')
-            .addComponentFromTemplate('hero-section')
-            .withContent({
-                title: 'Perfeito! Agora vamos aprofundar...',
-                subtitle: 'As próximas perguntas vão nos ajudar a personalizar ainda mais seu resultado',
-                buttonText: 'Continuar Quiz',
-                backgroundImage: 'https://res.cloudinary.com/der8kogzu/image/upload/f_avif,q_85,w_800,c_limit/v1752443943/transition-bg.avif'
-            })
-            .withProperties({
-                showProgress: true,
-                progressValue: 50,
-                autoAdvance: false
-            })
-            .withMetadata({
-                stepType: 'transition',
-                milestone: 'halfway_point'
-            })
-            .complete();
-
-        // 🎯 STEPS 13-18: Questões Estratégicas (Builder Template)
-        const strategicQuestions = [
-            'O que melhor descreve seu lifestyle?',
-            'Qual sua prioridade ao se vestir?',
-            'Como você gosta de se sentir com suas roupas?',
-            'Qual sua relação com tendências de moda?',
-            'O que mais importa no seu guarda-roupa?',
-            'Como você quer que as pessoas te vejam?'
-        ];
-
-        for (let i = 13; i <= 18; i++) {
-            const questionNum = i - 12;
-            const question = strategicQuestions[questionNum - 1];
-
-            funnelBuilder.addStep(`Questão Estratégica ${questionNum}`)
-                .addComponentFromTemplate('single-choice')
-                .withContent({
-                    question: question,
-                    description: 'Escolha apenas 1 opção que melhor te representa',
-                    options: [
-                        { id: 'opt1', text: 'Praticidade e conforto em primeiro lugar', value: 'practical' },
-                        { id: 'opt2', text: 'Elegância e sofisticação sempre', value: 'elegant' },
-                        { id: 'opt3', text: 'Criatividade e expressão pessoal', value: 'creative' },
-                        { id: 'opt4', text: 'Segurança e confiança no visual', value: 'confident' }
-                    ]
-                })
-                .withProperties({
-                    questionType: 'single-choice',
-                    required: true,
-                    minSelections: 1,
-                    maxSelections: 1,
-                    scoring: false
-                })
-                .withValidation({
-                    rules: ['required', 'exactSelections:1'],
-                    messages: {
-                        required: 'Por favor, escolha uma opção',
-                        exactSelections: 'Escolha apenas 1 opção'
-                    }
-                })
-                .withMetadata({
-                    stepType: 'strategic-question',
-                    questionNumber: questionNum,
-                    influences_recommendations: true,
-                    category: 'personality-profiling'
-                })
-                .complete();
-        }
-
-        // 🎯 STEP 19: Transição para Resultado (Builder Template)
-        funnelBuilder.addStep('Calculando Resultado')
-            .addComponentFromTemplate('loading-screen')
-            .withContent({
-                title: 'Analisando suas respostas...',
-                subtitle: 'Estamos descobrindo seu estilo predominante!',
-                loadingMessages: [
-                    'Processando preferências de estilo...',
-                    'Calculando compatibilidades...',
-                    'Gerando recomendações personalizadas...',
-                    'Quase pronto!'
-                ]
-            })
-            .withProperties({
-                autoAdvance: true,
-                duration: 4000,
-                showProgress: true,
-                triggerCalculation: true
-            })
-            .withMetadata({
-                stepType: 'calculation-transition',
-                triggers_calculation: true
-            })
-            .complete();
-
-        // 🎯 STEP 20: Resultado Calculado (Builder Template)
-        funnelBuilder.addStep('Seu Resultado Personalizado')
-            .addComponentFromTemplate('result-display')
-            .withContent({
-                title: '🎉 Descobrimos seu estilo!',
-                resultTemplate: 'Seu estilo predominante é: {{primaryStyle}}',
-                descriptionTemplate: '{{styleDescription}}',
-                recommendationsTitle: 'Recomendações personalizadas para você:',
-                recommendationsTemplate: '{{personalizedRecommendations}}',
-                nextStepText: 'Quer transformar seu guarda-roupa baseado nesse resultado?'
-            })
-            .withProperties({
-                showCalculatedResult: true,
-                personalizationEnabled: true,
-                useUserName: true,
-                calculationAlgorithm: 'weighted-scoring'
-            })
-            .withCalculationRules({
-                primary_style: {
-                    method: 'highest_score',
-                    fallback: 'classic'
-                },
-                secondary_styles: {
-                    method: 'top_two_scores',
-                    minimum_threshold: 0.3
-                },
-                recommendations: {
-                    method: 'style_based_matching',
-                    personalization_factors: ['primary_style', 'strategic_answers', 'user_name']
-                }
-            })
-            .withMetadata({
-                stepType: 'result-page',
-                has_calculations: true,
-                personalized: true,
-                conversion_optimized: true
-            })
-            .complete();
-
-        // 🎯 STEP 21: Oferta Personalizada (Builder Template)
-        funnelBuilder.addStep('Oferta Especial')
-            .addComponentFromTemplate('personalized-offer')
-            .withContent({
-                titleTemplate: 'Oferta Especial para o Estilo {{primaryStyle}}!',
-                subtitleTemplate: 'Olá {{userName}}, transforme seu guarda-roupa agora!',
-                offerDescription: 'Consultoria de Imagem Personalizada baseada no seu resultado',
-                features: [
-                    'Análise completa do seu estilo pessoal',
-                    'Guia de cores personalizadas',
-                    'Dicas de combinações para seu tipo físico',
-                    'Planejamento de guarda-roupa inteligente',
-                    'Acompanhamento por 30 dias'
-                ],
-                price: 'R$ 297,00',
-                originalPrice: 'R$ 597,00',
-                discount: '50% OFF - Apenas para quem fez o quiz!',
-                ctaText: 'Quero Transformar Meu Estilo Agora!',
-                guarantee: '7 dias de garantia incondicional',
-                urgency: 'Oferta válida por apenas 24 horas!'
-            })
-            .withProperties({
-                personalizedOffer: true,
-                conversionOptimized: true,
-                urgencyTimer: 24 * 60 * 60 * 1000, // 24 horas
-                trackConversion: true
-            })
-            .withMetadata({
-                stepType: 'offer-page',
-                conversion_goal: 'consultation_sale',
-                personalized: true,
-                has_urgency: true,
-                price_value: 297.00
-            })
-            .complete();
-
-        // 🚀 CONSTRUIR E OTIMIZAR FUNIL
-        const finalFunnel = funnelBuilder
-            .autoConnect() // Conecta as etapas automaticamente
-            .optimize()    // Aplica otimizações de conversão
-            .enableAnalytics() // Ativa tracking completo
-            .build();
-
-        console.log('✅ Builder System generated optimized funnel:', finalFunnel);
-
-        // 🔄 CONVERTER PARA FORMATO COMPATÍVEL
+        // 🚀 CARREGAMENTO DINÂMICO DE TEMPLATES JSON
+        console.log(`🎯 Carregando ${totalSteps} templates JSON para ${safeTemplate}`);
+        
         const stepBlocks: Record<string, Block[]> = {};
-
-        // 🎯 CONVERTER DADOS DO BUILDER SYSTEM PARA FORMATO BLOCKS
-        finalFunnel.steps?.forEach((step: any, index: number) => {
-            const stepKey = `step-${index + 1}`;
-
-            // Se o step tem componentes do quiz21StepsComplete, usar eles diretamente
-            if (step.components && Array.isArray(step.components)) {
-                stepBlocks[stepKey] = step.components.map((component: any, blockIndex: number) => ({
-                    id: component.id || `${stepKey}-block-${blockIndex + 1}`,
-                    type: component.type || 'quiz-question',
-                    order: blockIndex,
-                    position: { x: 0, y: blockIndex * 100 },
-                    content: component.content || {},
-                    properties: component.properties || {},
-                    style: component.style || {},
-                    metadata: {
-                        ...component.metadata,
-                        stepNumber: index + 1,
-                        blockIndex: blockIndex + 1,
-                        fromBuilderSystem: true,
-                        generatedAt: new Date().toISOString()
-                    },
-                    validation: {
-                        isValid: true,
-                        errors: [],
-                        warnings: []
-                    }
-                } as Block));
-            } else {
-                // Fallback: criar bloco básico se não houver componentes
+        
+        // 📦 CARREGAR TEMPLATES JSON DINAMICAMENTE
+        for (let i = 1; i <= totalSteps; i++) {
+            const stepKey = `step-${i}`;
+            try {
+                // Carregar template JSON do diretório templates/
+                const templateResponse = await fetch(`/templates/step-${i.toString().padStart(2, '0')}-template.json`);
+                if (templateResponse.ok) {
+                    const templateData = await templateResponse.json();
+                    stepBlocks[stepKey] = templateData.blocks || [];
+                    console.log(`✅ Carregado ${stepKey}: ${stepBlocks[stepKey].length} blocos`);
+                } else {
+                    console.warn(`⚠️ Template não encontrado: step-${i.toString().padStart(2, '0')}-template.json`);
+                    // Fallback: criar bloco básico
+                    stepBlocks[stepKey] = [{
+                        id: `fallback-${stepKey}`,
+                        type: 'text-inline',
+                        position: { x: 0, y: 0 },
+                        order: 0,
+                        content: { text: `Etapa ${i} - Template em desenvolvimento` },
+                        properties: {
+                            fontSize: 'text-lg',
+                            textAlign: 'text-center',
+                            containerWidth: 'full',
+                            spacing: 'small'
+                        }
+                    }] as Block[];
+                }
+            } catch (error) {
+                console.error(`❌ Erro ao carregar template ${stepKey}:`, error);
+                // Fallback: criar bloco de erro
                 stepBlocks[stepKey] = [{
-                    id: `${stepKey}-block-1`,
+                    id: `error-${stepKey}`,
                     type: 'text-inline',
-                    order: 0,
                     position: { x: 0, y: 0 },
-                    content: { title: step.name || `Etapa ${index + 1}` },
-                    properties: { stepNumber: index + 1 },
-                    style: {},
-                    metadata: {
-                        stepName: step.name,
-                        fallbackBlock: true,
-                        fromBuilderSystem: true
-                    },
-                    validation: {
-                        isValid: true,
-                        errors: [],
-                        warnings: []
+                    order: 0,
+                    content: { text: `Etapa ${i} - Erro no carregamento` },
+                    properties: {
+                        fontSize: 'text-lg',
+                        textAlign: 'text-center',
+                        color: '#ef4444',
+                        containerWidth: 'full',
+                        spacing: 'small'
                     }
-                } as Block];
+                }] as Block[];
             }
-        });
+        }
 
-        console.log(`✅ Builder System processado: ${Object.keys(stepBlocks).length} etapas carregadas`);
+        console.log(`✅ Templates JSON carregados: ${Object.keys(stepBlocks).length}/${totalSteps} etapas`);
 
-        return {
+        // 🚀 CRIAR CONFIGURAÇÃO DINÂMICA
+        const funnelConfig = {
+            templateId: safeTemplate,
+            totalSteps,
             stepBlocks,
-            builderInstance: funnelBuilder,
-            funnelConfig: {
-                ...finalFunnel,
-                hasBuilderSystem: true,
-                totalSteps: totalSteps, // ✅ DINÂMICO
-                source: 'core-builder-system'
-            },
-            totalSteps // ✅ RETORNAR TOTAL STEPS
+            theme: templateInfo.theme || 'modern-elegant',
+            allowBackward: true,
+            saveProgress: true,
+            showProgress: true
         };
 
-        // 🔄 LÓGICA PADRÃO PARA OUTROS TEMPLATES
-        finalFunnel.steps?.forEach((step: any, index: number) => {
-            const stepKey = `step-${index + 1}`;
-
-            const blocks: Block[] = step.components?.map((component: any, blockIndex: number) => ({
-                id: `${stepKey}-block-${blockIndex + 1}`,
-                type: component.type || 'quiz-question',
-                position: { x: 0, y: blockIndex * 100 },
-                properties: {
-                    ...component.properties,
-                    stepNumber: index + 1,
-                    blockIndex: blockIndex + 1,
-                    builderSystemGenerated: true,
-                    builderVersion: '2.0'
-                },
-                content: {
-                    ...component.content,
-                    title: step.name,
-                    description: step.description || component.content?.description || ''
-                },
-                style: {
-                    ...component.style,
-                    theme: finalFunnel.settings?.theme || 'modern-elegant'
-                },
-                validation: {
-                    ...component.validation,
-                    isValid: true,
-                    errors: [],
-                    warnings: []
-                },
-                metadata: {
-                    ...component.metadata,
-                    ...step.metadata,
-                    createdByBuilderSystem: true,
-                    builderVersion: '2.0',
-                    optimized: true,
-                    hasAnalytics: true,
-                    generatedAt: new Date().toISOString()
-                }
-            })) || [];
-
-            stepBlocks[stepKey] = blocks;
-        });
-
         return {
             stepBlocks,
-            builderInstance: funnelBuilder,
-            funnelConfig: finalFunnel,
-            totalSteps // ✅ RETORNAR TOTAL STEPS
+            builderInstance: null, // Não precisamos do builder quando carregamos JSON
+            funnelConfig,
+            totalSteps // ✅ USAR TOTAL STEPS DINÂMICO
         };
 
     } catch (error) {
@@ -561,6 +201,7 @@ export const PureBuilderProvider: React.FC<{
     initial = {},
     children
 }) => {
+        // ⚡ STATE OTIMIZADO - Agora dinâmico baseado no template
         const [state, setState] = useState<PureBuilderState>({
             currentStep: 1,
             selectedBlockId: null,
@@ -576,10 +217,13 @@ export const PureBuilderProvider: React.FC<{
             analyticsData: {},
             ...initial
         });
+        
+        // 🎯 Controlar total de steps dinamicamente
+        const [totalSteps, setTotalSteps] = useState<number>(21); // Default fallback
 
         const isInitialized = useRef(false);
 
-        // 🚀 INICIALIZAÇÃO DINÂMICA COM FUNNELID
+        // 🎯 INITIALIZATION - Agora dinâmico baseado no template
         useEffect(() => {
             if (!isInitialized.current && funnelId) {
                 console.log('🏗️ Initializing PureBuilderProvider with Builder System...', { funnelId });
@@ -594,30 +238,27 @@ export const PureBuilderProvider: React.FC<{
                         
                         return generateWithPureBuilder(funnelId, templateInfo);
                     })
-                    .then(({ stepBlocks, builderInstance, funnelConfig, totalSteps }) => {
+                    .then(({ stepBlocks, builderInstance, funnelConfig, totalSteps: templateTotalSteps }) => {
+                        // ✅ ATUALIZAR TOTAL STEPS
+                        setTotalSteps(templateTotalSteps);
+
                         setState(prev => ({
                             ...prev,
                             stepBlocks,
                             builderInstance,
                             funnelConfig,
-                            loadedSteps: new Set(Array.from({ length: totalSteps }, (_, i) => i + 1)), // ✅ DINÂMICO
-                            stepValidation: Object.fromEntries(
-                                Array.from({ length: totalSteps }, (_, i) => [i + 1, true]) // ✅ DINÂMICO
-                            ),
-                            isLoading: false
+                            isLoading: false,
+                            loadedSteps: new Set(Array.from({ length: templateTotalSteps }, (_, i) => i + 1))
                         }));
 
-                        console.log('✅ PureBuilderProvider initialized with Builder System', {
-                            totalSteps,
-                            templateName: funnelConfig.name || 'Unknown'
-                        });
+                        console.log(`✅ Pure Builder initialized: ${templateTotalSteps} etapas carregadas`);
                     })
-                    .catch((error) => {
-                        console.error('❌ Failed to initialize Pure Builder:', error);
+                    .catch(error => {
+                        console.error('❌ Error initializing PureBuilderProvider:', error);
                         setState(prev => ({ ...prev, isLoading: false }));
                     });
             }
-        }, [funnelId]); // ✅ DEPENDÊNCIA DO FUNNELID
+        }, [funnelId]);
 
         // Actions with Builder System integration
         const actions: PureBuilderActions = {
@@ -906,6 +547,200 @@ export const PureBuilderProvider: React.FC<{
             }, [])
         };
 
+        // ⚡ FUNÇÕES DE CONTROLE
+        const ensureStepLoaded = useCallback(async (step: number) => {
+            const stepKey = `step-${step}`;
+            
+            if (state.stepBlocks[stepKey]) {
+                return;
+            }
+
+            // ✅ DINÂMICO: Verificar se está dentro do limite
+            if (step < 1 || step > totalSteps) {
+                console.warn(`⚠️ Step ${step} está fora do range válido (1-${totalSteps})`);
+                return;
+            }
+
+            setState(prev => ({
+                ...prev,
+                loadedSteps: new Set([...prev.loadedSteps, step])
+            }));
+        }, [state.stepBlocks, totalSteps]);
+
+        const preloadAdjacentSteps = useCallback(async (currentStep: number) => {
+            const steps = [];
+            
+            // ✅ DINÂMICO: Verificar limites baseado no totalSteps
+            if (currentStep > 1) steps.push(currentStep - 1);
+            if (currentStep < totalSteps) steps.push(currentStep + 1);
+
+            for (const step of steps) {
+                await ensureStepLoaded(step);
+            }
+        }, [ensureStepLoaded, totalSteps]);
+
+        const clearUnusedSteps = useCallback(() => {
+            const currentStep = state.currentStep;
+            const adjacentSteps = new Set([
+                Math.max(1, currentStep - 1),
+                currentStep,
+                Math.min(totalSteps, currentStep + 1)
+            ]);
+
+            setState(prev => ({
+                ...prev,
+                loadedSteps: new Set([...prev.loadedSteps].filter(step => adjacentSteps.has(step)))
+            }));
+        }, [state.currentStep, totalSteps]);
+
+        const setCurrentStep = useCallback((step: number) => {
+            // ✅ DINÂMICO: Validar range
+            if (step < 1 || step > totalSteps) {
+                console.warn(`⚠️ Tentativa de navegar para step inválido: ${step} (range válido: 1-${totalSteps})`);
+                return;
+            }
+
+            setState(prev => ({ ...prev, currentStep: step }));
+            ensureStepLoaded(step);
+            preloadAdjacentSteps(step);
+        }, [ensureStepLoaded, preloadAdjacentSteps, totalSteps]);
+
+        const setSelectedBlockId = useCallback((blockId: string | null) => {
+            setState(prev => ({ ...prev, selectedBlockId: blockId }));
+        }, []);
+
+        const addBlock = useCallback(async (stepKey: string, block: Block) => {
+            setState(prev => ({
+                ...prev,
+                stepBlocks: {
+                    ...prev.stepBlocks,
+                    [stepKey]: [...(prev.stepBlocks[stepKey] || []), block]
+                }
+            }));
+        }, []);
+
+        const updateBlock = useCallback(async (stepKey: string, blockId: string, updates: Record<string, any>) => {
+            setState(prev => ({
+                ...prev,
+                stepBlocks: {
+                    ...prev.stepBlocks,
+                    [stepKey]: (prev.stepBlocks[stepKey] || []).map(block =>
+                        block.id === blockId ? { ...block, ...updates } : block
+                    )
+                }
+            }));
+        }, []);
+
+        const removeBlock = useCallback(async (stepKey: string, blockId: string) => {
+            setState(prev => ({
+                ...prev,
+                stepBlocks: {
+                    ...prev.stepBlocks,
+                    [stepKey]: (prev.stepBlocks[stepKey] || []).filter(block => block.id !== blockId)
+                }
+            }));
+        }, []);
+
+        const setStepValid = useCallback((step: number, isValid: boolean) => {
+            setState(prev => ({
+                ...prev,
+                stepValidation: {
+                    ...prev.stepValidation,
+                    [step]: isValid
+                }
+            }));
+        }, []);
+
+        const exportJSON = useCallback(() => {
+            return JSON.stringify({
+                stepBlocks: state.stepBlocks,
+                funnelConfig: state.funnelConfig,
+                totalSteps
+            }, null, 2);
+        }, [state.stepBlocks, state.funnelConfig, totalSteps]);
+
+        const importJSON = useCallback((json: string) => {
+            try {
+                const data = JSON.parse(json);
+                setState(prev => ({
+                    ...prev,
+                    stepBlocks: data.stepBlocks || {},
+                    funnelConfig: data.funnelConfig || {}
+                }));
+                if (data.totalSteps) {
+                    setTotalSteps(data.totalSteps);
+                }
+            } catch (error) {
+                console.error('❌ Error importing JSON:', error);
+            }
+        }, []);
+
+        // Builder System functions
+        const calculateResults = useCallback(async () => {
+            return state.calculationEngine?.calculate() || {};
+        }, [state.calculationEngine]);
+
+        const optimizeFunnel = useCallback(async () => {
+            if (state.builderInstance?.optimize) {
+                await state.builderInstance.optimize();
+            }
+        }, [state.builderInstance]);
+
+        const generateAnalytics = useCallback(() => {
+            return state.analyticsData || {};
+        }, [state.analyticsData]);
+
+        const validateFunnel = useCallback(async () => {
+            return { isValid: true, errors: [], warnings: [] };
+        }, []);
+
+        const cloneFunnel = useCallback((newName?: string, newId?: string) => {
+            return {
+                ...state.funnelConfig,
+                id: newId || `clone-${Date.now()}`,
+                name: newName || `Clone ${state.funnelConfig?.name || 'Funnel'}`
+            };
+        }, [state.funnelConfig]);
+
+        const createFromTemplate = useCallback(async (templateName: string, _customName?: string) => {
+            const templateInfo = await getTemplateInfo(templateName);
+            return generateWithPureBuilder(templateName, templateInfo);
+        }, []);
+
+        // Compatibility functions
+        const addBlockAtIndex = useCallback(async (stepKey: string, block: Block, index: number) => {
+            setState(prev => {
+                const stepBlocks = [...(prev.stepBlocks[stepKey] || [])];
+                stepBlocks.splice(index, 0, block);
+                return {
+                    ...prev,
+                    stepBlocks: {
+                        ...prev.stepBlocks,
+                        [stepKey]: stepBlocks
+                    }
+                };
+            });
+        }, []);
+
+        const reorderBlocks = useCallback(async (stepKey: string, oldIndex: number, newIndex: number) => {
+            setState(prev => {
+                const stepBlocks = [...(prev.stepBlocks[stepKey] || [])];
+                const [movedBlock] = stepBlocks.splice(oldIndex, 1);
+                stepBlocks.splice(newIndex, 0, movedBlock);
+                return {
+                    ...prev,
+                    stepBlocks: {
+                        ...prev.stepBlocks,
+                        [stepKey]: stepBlocks
+                    }
+                };
+            });
+        }, []);
+
+        const loadDefaultTemplate = useCallback(() => {
+            // Implementar carregamento de template padrão se necessário
+        }, []);
+
         const contextValue: PureBuilderContextValue = {
             state,
             actions
@@ -931,7 +766,7 @@ export const PureBuilderProvider: React.FC<{
                 {children}
             </PureBuilderContext.Provider>
         );
-    };
+};
 
 // Export hook compatível
 export const useOptimizedEditor = usePureBuilder;

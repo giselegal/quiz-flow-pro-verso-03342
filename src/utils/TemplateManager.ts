@@ -34,13 +34,13 @@ export class TemplateManager {
     return unifiedTemplateService.loadStepBlocks(stepId);
   }
 
-  static getAvailableTemplates(): string[] {
-    return Array.from({ length: 21 }, (_, i) => `step-${i + 1}`);
+  static getAvailableTemplates(maxSteps: number = 21): string[] {
+    return Array.from({ length: maxSteps }, (_, i) => `step-${i + 1}`);
   }
 
-  static hasTemplate(stepId: string): boolean {
+  static hasTemplate(stepId: string, maxSteps: number = 21): boolean {
     const stepNumber = parseInt(stepId.replace('step-', ''));
-    return stepNumber >= 1 && stepNumber <= 21;
+    return stepNumber >= 1 && stepNumber <= maxSteps;
   }
 
   static clearCache(): void {
