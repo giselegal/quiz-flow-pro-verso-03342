@@ -1,6 +1,8 @@
 import React, { memo, useMemo } from 'react';
 import { cn } from '@/lib/utils';
 import { Block } from '@/types/editor';
+import { getEnhancedBlockComponent } from '@/components/editor/blocks/EnhancedBlockRegistry';
+// Importações diretas para componentes críticos (performance)
 import QuizIntroHeaderBlock from './QuizIntroHeaderBlock';
 import OptionsGridBlock from './OptionsGridBlock';
 import TextInlineBlock from './TextInlineBlock';
