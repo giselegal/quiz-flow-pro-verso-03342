@@ -11,7 +11,6 @@ import EditorCanvas from './EditorCanvas';
 import StepSidebar from '@/components/editor/sidebars/StepSidebar';
 import ComponentsSidebar from '@/components/editor/sidebars/ComponentsSidebar';
 import RegistryPropertiesPanel from '@/components/universal/RegistryPropertiesPanel';
-import APIPropertiesPanel from '@/components/editor/properties/APIPropertiesPanel';
 
 /**
  * Hook para controlar larguras redimensionáveis das colunas
@@ -291,12 +290,6 @@ const ModularEditorPro: React.FC<ModularEditorProProps> = () => {
     addNotification('Componente foi removido da etapa');
   }, [context, addNotification]);
 
-  const handleDeleteSelectedBlock = useCallback(() => {
-    if (selectedBlock) {
-      handleDeleteBlock(selectedBlock.id);
-    }
-  }, [selectedBlock, handleDeleteBlock]);
-
   // Handlers da toolbar
   const handleTogglePreview = useCallback(() => {
     setIsPreviewMode(prev => !prev);
@@ -342,18 +335,6 @@ const ModularEditorPro: React.FC<ModularEditorProProps> = () => {
       totalStages: context.stages.length
     });
   }, [context]);
-
-  // Função para adicionar componente
-  const handleComponentSelect = useCallback(async (componentType: string) => {
-    try {
-      const blockId = await context.addBlock(componentType as any);
-      context.setSelectedBlockId(blockId);
-      addNotification(`Componente ${componentType} adicionado`);
-    } catch (error) {
-      console.error('Erro ao adicionar componente:', error);
-      addNotification('Erro ao adicionar componente', 'error');
-    }
-  }, [context, addNotification]);
 
   return (
     <div className="h-full w-full flex flex-col bg-background">
@@ -476,9 +457,15 @@ const ModularEditorPro: React.FC<ModularEditorProProps> = () => {
           ) : (
             <RegistryPropertiesPanel
               selectedBlock={selectedBlock}
-              onUpdate={(updates: Partial<Block>) => selectedBlock && handleUpdateBlock(selectedBlock.id, updates)}
+              onUpdate={(blockId: string, updates: Record<string, any>) => {
+                console.log('🔧 RegistryPropertiesPanel onUpdate called:', { blockId, updates });
+                handleUpdateBlock(blockId, updates);
+              }}
               onClose={() => context.setSelectedBlockId(null)}
-              onDelete={handleDeleteSelectedBlock}
+              onDelete={(blockId: string) => {
+                console.log('🗑️ RegistryPropertiesPanel onDelete called:', { blockId });
+                handleDeleteBlock(blockId);
+              }}
             />
           )}
           
