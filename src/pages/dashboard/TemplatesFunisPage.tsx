@@ -441,17 +441,17 @@ const TemplatesFunisPage: React.FC = () => {
             {filteredTemplates.length === 0 && (
                 <div className="text-center py-12">
                     <div className="max-w-md mx-auto">
-                        <Search className="w-16 h-16 text-slate-400 mx-auto mb-4" />
-                        <h3 className="text-lg font-medium text-slate-900 mb-2">
+                        <Search className="w-16 h-16 text-[#2E1A6B] mx-auto mb-4" />
+                        <h3 className="text-lg font-medium text-[#1A0F3D] mb-2">
                             Nenhum template encontrado
                         </h3>
-                        <p className="text-slate-600 mb-4">
+                        <p className="text-[#2E1A6B] mb-4">
                             Não conseguimos encontrar templates com os filtros selecionados.
                             Tente ajustar os critérios de busca.
                         </p>
                         <Button
                             variant="outline"
-                            className="border-slate-300 text-slate-700 hover:bg-slate-50"
+                            className="border-[#4A2E9F] text-[#2E1A6B] hover:bg-[#4A2E9F]/10"
                             onClick={() => {
                                 setSelectedSegment('Todos');
                                 setSelectedCategory('Todos');
