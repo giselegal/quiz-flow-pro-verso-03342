@@ -553,12 +553,20 @@ const TemplatesIA: React.FC = () => {
   const handlePreview = () => {
     if (generatedFunnelId) {
       setLocation(`/quiz/${generatedFunnelId}`);
+    } else {
+      // Se não há funil gerado, usar template base
+      const templateName = selectedTemplate === 'STYLE_QUIZ' ? 'quiz21StepsComplete' : 'style-consultant';
+      setLocation(`/quiz?template=${templateName}`);
     }
   };
 
   const handleEditInEditor = () => {
     if (generatedFunnelId) {
       setLocation(`/editor?template=${generatedFunnelId}`);
+    } else {
+      // Se não há funil gerado, abrir editor com template base
+      const templateName = selectedTemplate === 'STYLE_QUIZ' ? 'quiz21StepsComplete' : 'style-consultant';
+      setLocation(`/editor?template=${templateName}`);
     }
   };
 
@@ -588,11 +596,10 @@ const TemplatesIA: React.FC = () => {
             {/* Seletor de Templates */}
             <div className="grid grid-cols-1 gap-4">
               <Card
-                className={`cursor-pointer border-2 transition-all ${
-                  selectedTemplate === 'STYLE_QUIZ'
+                className={`cursor-pointer border-2 transition-all ${selectedTemplate === 'STYLE_QUIZ'
                     ? 'border-purple-400 bg-gradient-to-br from-purple-50 to-blue-50'
                     : 'border-gray-200 bg-white hover:border-gray-300'
-                }`}
+                  }`}
                 onClick={() => setSelectedTemplate('STYLE_QUIZ')}
               >
                 <CardHeader className="pb-3">
@@ -608,11 +615,10 @@ const TemplatesIA: React.FC = () => {
               </Card>
 
               <Card
-                className={`cursor-pointer border-2 transition-all ${
-                  selectedTemplate === 'STYLE_CONSULTANT'
+                className={`cursor-pointer border-2 transition-all ${selectedTemplate === 'STYLE_CONSULTANT'
                     ? 'border-purple-400 bg-gradient-to-br from-purple-50 to-pink-50'
                     : 'border-gray-200 bg-white hover:border-gray-300'
-                }`}
+                  }`}
                 onClick={() => setSelectedTemplate('STYLE_CONSULTANT')}
               >
                 <CardHeader className="pb-3">
@@ -722,8 +728,9 @@ const TemplatesIA: React.FC = () => {
                   </Button>
                 )}
 
-                {generatedFunnelId && (
-                  <div className="space-y-3">
+                {/* Botões sempre disponíveis */}
+                <div className="space-y-3">
+                  {generatedFunnelId && (
                     <div className="bg-green-50 border border-green-200 rounded-lg p-4">
                       <div className="flex items-center gap-2 text-green-800 font-medium mb-2">
                         <Check className="w-4 h-4" />
@@ -733,26 +740,26 @@ const TemplatesIA: React.FC = () => {
                         ID: <code style={{ backgroundColor: '#E5DDD5' }}>{generatedFunnelId}</code>
                       </div>
                     </div>
+                  )}
 
-                    <div className="grid grid-cols-2 gap-3">
-                      <Button
-                        onClick={handlePreview}
-                        variant="outline"
-                        style={{ backgroundColor: '#FAF9F7' }}
-                      >
-                        <Eye className="w-4 h-4 mr-2" />
-                        Preview
-                      </Button>
-                      <Button
-                        onClick={handleEditInEditor}
-                        className="bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white"
-                      >
-                        <Play className="w-4 h-4 mr-2" />
-                        Editar
-                      </Button>
-                    </div>
+                  <div className="grid grid-cols-2 gap-3">
+                    <Button
+                      onClick={handlePreview}
+                      variant="outline"
+                      style={{ backgroundColor: '#FAF9F7' }}
+                    >
+                      <Eye className="w-4 h-4 mr-2" />
+                      {generatedFunnelId ? 'Preview' : 'Testar Template'}
+                    </Button>
+                    <Button
+                      onClick={handleEditInEditor}
+                      className="bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white"
+                    >
+                      <Play className="w-4 h-4 mr-2" />
+                      {generatedFunnelId ? 'Editar' : 'Usar Template'}
+                    </Button>
                   </div>
-                )}
+                </div>
               </CardContent>
             </Card>
           </div>
@@ -785,15 +792,14 @@ const TemplatesIA: React.FC = () => {
                           <div
                             className={`
                             w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium
-                            ${
-                              step.status === 'completed'
+                            ${step.status === 'completed'
                                 ? 'bg-green-100 text-green-700'
                                 : step.status === 'processing'
                                   ? 'bg-blue-100 text-blue-700 animate-pulse'
                                   : step.status === 'error'
                                     ? 'bg-red-100 text-red-700'
                                     : 'bg-gray-100 text-gray-500'
-                            }
+                              }
                           `}
                           >
                             {step.status === 'completed' ? (
@@ -870,47 +876,47 @@ const TemplatesIA: React.FC = () => {
                   <div className="flex flex-wrap gap-1">
                     {selectedTemplate === 'STYLE_QUIZ'
                       ? [
-                          'Multiselect',
-                          'Validação',
-                          'Animações',
-                          'Analytics',
-                          'Responsive',
-                          'Cálculo IA',
-                          'CTAs Dinâmicos',
-                          'Tracking UTM',
-                        ]
+                        'Multiselect',
+                        'Validação',
+                        'Animações',
+                        'Analytics',
+                        'Responsive',
+                        'Cálculo IA',
+                        'CTAs Dinâmicos',
+                        'Tracking UTM',
+                      ]
                       : [
-                          'Geração de IA',
-                          'Processamento de Imagem',
-                          'Captura de Email',
-                          'Compartilhamento Social',
-                          'Formulários Inteligentes',
-                          'CTA Personalizado',
-                          'Analytics Avançado',
-                          'API Integrations',
-                        ]}
+                        'Geração de IA',
+                        'Processamento de Imagem',
+                        'Captura de Email',
+                        'Compartilhamento Social',
+                        'Formulários Inteligentes',
+                        'CTA Personalizado',
+                        'Analytics Avançado',
+                        'API Integrations',
+                      ]}
 
                     {(selectedTemplate === 'STYLE_QUIZ'
                       ? [
-                          'Multiselect',
-                          'Validação',
-                          'Animações',
-                          'Analytics',
-                          'Responsive',
-                          'Cálculo IA',
-                          'CTAs Dinâmicos',
-                          'Tracking UTM',
-                        ]
+                        'Multiselect',
+                        'Validação',
+                        'Animações',
+                        'Analytics',
+                        'Responsive',
+                        'Cálculo IA',
+                        'CTAs Dinâmicos',
+                        'Tracking UTM',
+                      ]
                       : [
-                          'Geração de IA',
-                          'Processamento de Imagem',
-                          'Captura de Email',
-                          'Compartilhamento Social',
-                          'Formulários Inteligentes',
-                          'CTA Personalizado',
-                          'Analytics Avançado',
-                          'API Integrations',
-                        ]
+                        'Geração de IA',
+                        'Processamento de Imagem',
+                        'Captura de Email',
+                        'Compartilhamento Social',
+                        'Formulários Inteligentes',
+                        'CTA Personalizado',
+                        'Analytics Avançado',
+                        'API Integrations',
+                      ]
                     ).map(feature => (
                       <Badge key={feature} variant="outline" className="text-xs">
                         {feature}
