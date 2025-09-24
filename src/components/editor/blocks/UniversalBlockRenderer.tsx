@@ -93,7 +93,7 @@ const getBlockComponent = (blockType: string) => {
 
   // 3. Log para componentes não encontrados
   console.warn(`⚠️ Componente não encontrado em nenhum registry: ${blockType}`);
-  
+
   // 4. Fallback final
   return null;
 };
@@ -106,13 +106,13 @@ let cacheMisses = 0;
 const useBlockComponent = (blockType: string) => {
   return useMemo(() => {
     const totalLookups = cacheHits + cacheMisses + 1;
-    
+
     // Verificar cache primeiro
     if (componentCache.has(blockType)) {
       const cachedComponent = componentCache.get(blockType);
       cacheHits++;
       console.log(`🚀 Componente recuperado do cache: ${blockType}`);
-      
+
       // Atualizar stats de debug
       blockRendererDebug.updateCacheStats({
         cacheSize: componentCache.size,
@@ -120,17 +120,17 @@ const useBlockComponent = (blockType: string) => {
         cacheHits,
         cacheMisses
       });
-      
+
       return cachedComponent;
     }
 
     // Cache miss - buscar componente
     cacheMisses++;
     const component = getBlockComponent(blockType);
-    
+
     // Armazenar no cache
     componentCache.set(blockType, component);
-    
+
     // Atualizar stats de debug
     blockRendererDebug.updateCacheStats({
       cacheSize: componentCache.size,
@@ -138,7 +138,7 @@ const useBlockComponent = (blockType: string) => {
       cacheHits,
       cacheMisses
     });
-    
+
     return component;
   }, [blockType]);
 };
@@ -156,7 +156,7 @@ const UniversalBlockRenderer: React.FC<UniversalBlockRendererProps> = memo(({
 }) => {
   // ✅ MONITORAMENTO DE PERFORMANCE
   const renderStartTime = React.useRef<number>();
-  
+
   React.useEffect(() => {
     renderStartTime.current = performance.now();
   });
@@ -164,6 +164,18 @@ const UniversalBlockRenderer: React.FC<UniversalBlockRendererProps> = memo(({
   React.useEffect(() => {
     if (renderStartTime.current) {
       const renderTime = performance.now() - renderStartTime.current;
+      
+      // Registrar estatísticas de render
+      blockRendererDebug.logRender({
+        blockType: block.type,
+        blockId: block.id,
+        renderTime,
+        timestamp: Date.now(),
+        isSelected,
+        isPreviewing,
+        hasComponent: !!BlockComponent
+      });
+
       if (renderTime > 50) { // Log apenas renders lentos
         console.warn(`⚠️ Render lento detectado`, {
           blockType: block.type,
@@ -287,7 +299,7 @@ const UniversalBlockRenderer: React.FC<UniversalBlockRendererProps> = memo(({
       )}
 
       {/* ✅ RENDERIZAÇÃO COM ERROR BOUNDARY E LOGGING */}
-      <React.Suspense 
+      <React.Suspense
         fallback={
           <div className="p-4 bg-gray-100 rounded animate-pulse">
             <div className="text-sm text-gray-600">
