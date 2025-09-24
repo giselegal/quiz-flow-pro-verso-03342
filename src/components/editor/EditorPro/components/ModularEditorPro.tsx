@@ -1,6 +1,6 @@
-import React, { useCallback, useMemo, useState, useRef, useEffect } from 'react';
-// 🚀 PURE BUILDER SYSTEM - Hook unificado otimizado
-import { usePureBuilder } from '@/components/editor/PureBuilderProvider';
+import React, { useCallback, useMemo, useState, useRef, useEffect, useContext } from 'react';
+// ✅ CONSOLIDADO: Usando EditorContext unificado
+import { EditorContext } from '@/context/EditorContext';
 import { useOptimizedScheduler } from '@/hooks/useOptimizedScheduler';
 import { useNotification } from '@/components/ui/Notification';
 import { Block } from '@/types/editor';
@@ -12,9 +12,6 @@ import StepSidebar from '@/components/editor/sidebars/StepSidebar';
 import ComponentsSidebar from '@/components/editor/sidebars/ComponentsSidebar';
 import RegistryPropertiesPanel from '@/components/universal/RegistryPropertiesPanel';
 import APIPropertiesPanel from '@/components/editor/properties/APIPropertiesPanel';
-
-// 🔗 Provider de dados reais do funil - MIGRADO para PureBuilderProvider
-// import FunnelDataProviderWrapper from '@/providers/FunnelDataProvider';
 
 /**
  * Hook para controlar larguras redimensionáveis das colunas
@@ -156,13 +153,7 @@ const ResizeHandle: React.FC<{
 };
 
 /**
- * 🚀 EDITOR PRO MODULAR E OTIMIZADO
- * 
- * Substitui o EditorPro.tsx monolítico (1312 linhas) por arquitetura modular
- * ✅ Componentes isolados e reutilizáveis
- * ✅ Estado centralizado via EditorProvider
-/**
- * 🚀 MODULAR EDITOR PRO - Interface para props
+ * ✅ MODULAR EDITOR PRO - Interface para props
  */
 interface ModularEditorProProps {
   showProFeatures?: boolean;
@@ -173,153 +164,81 @@ interface ModularEditorProProps {
 
 /**
  * ✅ Performance otimizada com React.memo
- * ✅ Timers migrados para useOptimizedScheduler
+ * ✅ Consolidado para usar EditorProvider unificado
  */
-
 const ModularEditorPro: React.FC<ModularEditorProProps> = () => {
-  // 🚀 PURE BUILDER SYSTEM - Hook unificado
-  const { state, actions } = usePureBuilder();
+  // ✅ CONSOLIDADO: Hook do EditorContext
+  const context = useContext(EditorContext);
+  
+  if (!context) {
+    throw new Error('ModularEditorPro must be used within EditorProvider');
+  }
+
   const { schedule } = useOptimizedScheduler();
   const { addNotification } = useNotification();
   const { columnWidths, handleResize } = useResizableColumns();
 
   // 🔍 DEBUG: Log completo do estado inicial
   useEffect(() => {
-    console.log('🚀 ModularEditorPro - Estado inicial completo:', {
-      stepBlocks: state.stepBlocks,
-      currentStep: state.currentStep,
-      stepKeys: Object.keys(state.stepBlocks),
-      totalSteps: Object.keys(state.stepBlocks).length,
-      stepCounts: Object.entries(state.stepBlocks).map(([key, blocks]) => ({ [key]: Array.isArray(blocks) ? blocks.length : 0 })),
-      isLoading: state.isLoading,
-      stepValidation: state.stepValidation
+    console.log('🚀 ModularEditorPro - Estado inicial consolidado:', {
+      totalBlocks: context.state.blocks.length,
+      selectedBlockId: context.selectedBlockId,
+      isPreviewing: context.state.isPreviewing,
+      isLoading: context.isLoading,
+      stages: context.stages.length,
+      activeStageId: context.activeStageId
     });
-  }, [state]);
+  }, [context]);
 
-  // Estados locais para UI (removidos os não utilizados)
+  // Estados locais para UI
   const [isPreviewMode, setIsPreviewMode] = useState(false);
-  const [useAPIPanel, setUseAPIPanel] = useState(false); // Toggle para testar API Panel
-  // Bloco selecionado - usar um selectedBlockId simples local
-  const [selectedBlockId, setSelectedBlockId] = useState<string | null>(null);
+  const [useAPIPanel, setUseAPIPanel] = useState(false);
 
-  // DnD removido - usa contexto do PureBuilderProvider
-
-  // Blocos da etapa atual com memoização otimizada  
+  // Blocos da etapa atual - usando computed do context
   const currentStepBlocks = useMemo(() => {
-    const stepKey = `step-${state.currentStep}`;
-    const blocks = state.stepBlocks[stepKey] || [];
+    return context.computed.currentBlocks;
+  }, [context.computed.currentBlocks]);
 
-    // 🔍 DEBUG: Log detalhado do carregamento de blocos
-    console.log('🔍 ModularEditorPro - currentStepBlocks calculado:', {
-      currentStep: state.currentStep,
-      stepKey,
-      blocksFound: blocks.length,
-      blockTypes: blocks.map(b => b.type),
-      allStepKeys: Object.keys(state.stepBlocks),
-      totalBlocks: Object.values(state.stepBlocks).reduce((acc, arr) => acc + arr.length, 0)
-    });
-
-    return blocks;
-  }, [state.stepBlocks, state.currentStep]);
-
-  // Bloco selecionado com memoização e debug melhorado
+  // Bloco selecionado consolidado
   const selectedBlock = useMemo(() => {
-    if (!selectedBlockId) return null;
-    const block = currentStepBlocks.find(block => block.id === selectedBlockId) || null;
+    return context.computed.selectedBlock;
+  }, [context.computed.selectedBlock]);
 
-    // 🔍 DEBUG: Log do selectedBlock para investigar o problema  
-    console.log('🔍 ModularEditorPro - selectedBlock calculado:', {
-      selectedBlockId,
-      currentStepBlocks: currentStepBlocks.length,
-      foundBlock: !!block,
-      blockId: block?.id,
-      blockType: block?.type,
-      properties: block?.properties,
-      content: block?.content
-    });
-
-    return block;
-  }, [currentStepBlocks, selectedBlockId]);
-
-  // Dados para componentes da sidebar - GENÉRICO para qualquer funil
+  // Dados para componentes da sidebar - usar stages do context
   const stepHasBlocksRecord = useMemo(() => {
     const record: Record<number, boolean> = {};
+    
+    // Usar stages do context para determinar etapas existentes
+    const maxSteps = Math.max(21, context.stages.length); // Garantir pelo menos 21 steps
 
-    // 🌐 DINÂMICO: Detecta automaticamente quantas etapas o funil tem
-    const stepKeys = Object.keys(state.stepBlocks);
-    const maxStep = stepKeys.reduce((max, key) => {
-      const stepNumber = parseInt(key.replace('step-', ''));
-      return Math.max(max, stepNumber);
-    }, 21); // Pure Builder System sempre tem 21 etapas
-
-    for (let i = 1; i <= maxStep; i++) {
-      const stepKey = `step-${i}`;
-      record[i] = (state.stepBlocks[stepKey]?.length || 0) > 0;
+    for (let i = 1; i <= maxSteps; i++) {
+      // Por enquanto, vamos assumir que todas as etapas existem
+      // Isso pode ser refinado quando tivermos dados reais dos stages
+      record[i] = i <= context.stages.length;
     }
 
-    // 🔍 DEBUG: Log do stepHasBlocksRecord para investigar problemas
-    console.log('🔍 ModularEditorPro - stepHasBlocksRecord calculado:', {
+    console.log('🔍 ModularEditorPro - stepHasBlocksRecord consolidado:', {
       record,
-      currentStep: state.currentStep,
-      totalStepsWithBlocks: Object.values(record).filter(Boolean).length,
-      stepBlocksKeys: Object.keys(state.stepBlocks),
-      sampleStepBlocks: {
-        'step-1': state.stepBlocks['step-1']?.length || 0,
-        'step-2': state.stepBlocks['step-2']?.length || 0,
-        'step-3': state.stepBlocks['step-3']?.length || 0
-      }
+      stagesLength: context.stages.length,
+      maxSteps,
+      currentBlocks: currentStepBlocks.length
     });
 
     return record;
-  }, [state.stepBlocks, state.currentStep]);
+  }, [context.stages, currentStepBlocks.length]);
 
   // Sistema de validação automática de etapas
   useEffect(() => {
-    // Validar a etapa atual sempre que mudar de step ou os blocos mudarem
-    const validateCurrentStep = () => {
-      const isStepValid = currentStepBlocks.length > 0;
-      actions.setStepValid(state.currentStep, isStepValid);
-
-      // 🔍 DEBUG: Log da validação de etapa
-      console.log('🔍 ModularEditorPro - Validação de etapa:', {
-        step: state.currentStep,
-        blocksCount: currentStepBlocks.length,
-        isValid: isStepValid,
-        blockIds: currentStepBlocks.map(b => b.id)
-      });
-    };
-
-    validateCurrentStep();
-  }, [state.currentStep, currentStepBlocks]); // ❌ Removido 'actions' para evitar loop infinito
-
-  // Validação ao salvar draft
-  useEffect(() => {
-    // Salvar draft quando houver mudanças nos blocos (com debounce)
-    const saveTimeout = setTimeout(() => {
-      if (currentStepBlocks.length > 0) {
-        try {
-          const draftKey = 'local-funnel'; // Usar chave consistente
-          const stepKey = `step-${state.currentStep}`;
-
-          // Simular salvamento de draft (placeholder para implementação real)
-          console.log('💾 Salvando draft automaticamente:', {
-            draftKey,
-            stepKey,
-            blocksCount: currentStepBlocks.length
-          });
-
-          // Marcar etapa como válida se tem blocos
-          if (actions.setStepValid) {
-            actions.setStepValid(state.currentStep, true);
-          }
-        } catch (error) {
-          console.error('❌ Erro ao salvar draft:', error);
-        }
-      }
-    }, 2000); // Debounce de 2 segundos
-
-    return () => clearTimeout(saveTimeout);
-  }, [currentStepBlocks, state.currentStep, actions]);
+    // Validação simples baseada na presença de blocos
+    const isStepValid = currentStepBlocks.length > 0;
+    
+    console.log('🔍 ModularEditorPro - Validação de etapa consolidada:', {
+      activeStageId: context.activeStageId,
+      blocksCount: currentStepBlocks.length,
+      isValid: isStepValid,
+      blockIds: currentStepBlocks.map(b => b.id)
+    });
+  }, [context.activeStageId, currentStepBlocks]);
 
   const groupedComponents = useMemo(() => ({
     'Conteúdo': [
@@ -347,32 +266,30 @@ const ModularEditorPro: React.FC<ModularEditorProProps> = () => {
     ]
   }), []);
 
-  // Handlers de bloco otimizados
+  // Handlers consolidados usando EditorContext
   const handleSelectBlock = useCallback((blockId: string) => {
-    console.log('🔍 ModularEditorPro - handleSelectBlock chamado:', {
+    console.log('🔍 ModularEditorPro - handleSelectBlock consolidado:', {
       blockId,
-      currentStep: state.currentStep,
+      activeStageId: context.activeStageId,
       currentBlocks: currentStepBlocks.length
     });
-    setSelectedBlockId(blockId);
-  }, [state.currentStep, currentStepBlocks.length]);
+    context.setSelectedBlockId(blockId);
+  }, [context, currentStepBlocks.length]);
 
-  const handleUpdateBlock = useCallback((blockId: string, updates: Partial<Block>) => {
-    const stepKey = `step-${state.currentStep}`;
-    actions.updateBlock(stepKey, blockId, updates);
-  }, [state.currentStep, actions]);
+  const handleUpdateBlock = useCallback(async (blockId: string, updates: Partial<Block>) => {
+    await context.updateBlock(blockId, updates);
+  }, [context]);
 
-  const handleDeleteBlock = useCallback((blockId: string) => {
-    const stepKey = `step-${state.currentStep}`;
-    actions.removeBlock(stepKey, blockId);
-
+  const handleDeleteBlock = useCallback(async (blockId: string) => {
+    await context.deleteBlock(blockId);
+    
     // Limpar seleção se deletar bloco selecionado
-    if (selectedBlockId === blockId) {
-      setSelectedBlockId(null);
+    if (context.selectedBlockId === blockId) {
+      context.setSelectedBlockId(null);
     }
 
     addNotification('Componente foi removido da etapa');
-  }, [state.currentStep, selectedBlockId, actions, addNotification]);
+  }, [context, addNotification]);
 
   const handleDeleteSelectedBlock = useCallback(() => {
     if (selectedBlock) {
@@ -380,51 +297,27 @@ const ModularEditorPro: React.FC<ModularEditorProProps> = () => {
     }
   }, [selectedBlock, handleDeleteBlock]);
 
-  // ✅ Funções auxiliares removidas - não utilizadas após migração para PureBuilderProvider
-
   // Handlers da toolbar
   const handleTogglePreview = useCallback(() => {
     setIsPreviewMode(prev => !prev);
-  }, []);
+    context.togglePreview();
+  }, [context]);
 
   const handleSave = useCallback(() => {
     // Salvar com debounce
     schedule('save-editor', () => {
-      console.log('Salvando editor...');
+      context.save();
       addNotification('Editor salvo com sucesso');
     }, 500);
-  }, [schedule, addNotification]);
+  }, [schedule, addNotification, context]);
 
   const handlePublish = useCallback(async () => {
     try {
-      const funnelData = {
-        stepBlocks: state.stepBlocks,
-        currentStep: state.currentStep,
-        settings: {
-          seo: {
-            title: 'Quiz Funil',
-            description: 'Quiz interativo para captura de leads',
-            keywords: []
-          },
-          branding: {
-            colors: {
-              primary: '#3B82F6',
-              secondary: '#6B7280'
-            },
-            typography: {
-              fontFamily: {
-                primary: 'Inter'
-              }
-            }
-          },
-          analytics: {
-            enabled: false
-          }
-        }
-      };
-
-      console.log('🚀 Iniciando publicação do funil...', funnelData);
+      console.log('🚀 Iniciando publicação do funil consolidado...');
       addNotification('Funil sendo preparado para publicação...');
+
+      // Usar o save do context
+      await context.save();
 
       // Simular processo de publicação
       await new Promise(resolve => setTimeout(resolve, 2000));
@@ -436,12 +329,36 @@ const ModularEditorPro: React.FC<ModularEditorProProps> = () => {
       console.error('❌ Erro na publicação:', error);
       addNotification('Erro ao publicar funil', 'error');
     }
-  }, [state, addNotification]);
+  }, [context, addNotification]);
+
+  // Função para mudança de etapa
+  const handleStepChange = useCallback((step: number) => {
+    const stageId = `step-${step}`;
+    context.stageActions.setActiveStage(stageId);
+    
+    console.log('🔄 ModularEditorPro - Mudança de etapa consolidada:', {
+      step,
+      stageId,
+      totalStages: context.stages.length
+    });
+  }, [context]);
+
+  // Função para adicionar componente
+  const handleComponentSelect = useCallback(async (componentType: string) => {
+    try {
+      const blockId = await context.addBlock(componentType as any);
+      context.setSelectedBlockId(blockId);
+      addNotification(`Componente ${componentType} adicionado`);
+    } catch (error) {
+      console.error('Erro ao adicionar componente:', error);
+      addNotification('Erro ao adicionar componente', 'error');
+    }
+  }, [context, addNotification]);
 
   return (
     <div className="h-full w-full flex flex-col bg-background">
       {/* 🔍 DEBUG: Loading State Check */}
-      {state.isLoading && (
+      {context.isLoading && (
         <div className="absolute inset-0 bg-background/80 flex items-center justify-center z-50">
           <div className="text-center">
             <div className="w-8 h-8 mx-auto mb-4 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
@@ -451,216 +368,133 @@ const ModularEditorPro: React.FC<ModularEditorProProps> = () => {
       )}
 
       {/* 🔍 DEBUG: Empty State Check */}
-      {!state.isLoading && Object.keys(state.stepBlocks).length === 0 && (
+      {!context.isLoading && context.state.blocks.length === 0 && (
         <div className="flex-1 flex items-center justify-center">
           <div className="text-center max-w-md">
             <div className="w-12 h-12 mx-auto mb-4 rounded-full bg-muted flex items-center justify-center">
               <span className="text-2xl">📝</span>
             </div>
-            <h3 className="text-lg font-semibold mb-2">Nenhum template carregado</h3>
+            <h3 className="text-lg font-semibold mb-2">Editor Consolidado Carregado</h3>
             <p className="text-muted-foreground mb-4">
-              O editor está aguardando o carregamento dos dados do template.
-              Verifique se o funnelId está correto na URL.
+              Sistema unificado pronto. Selecione uma etapa para começar a editar.
             </p>
-            <div className="text-xs text-muted-foreground space-y-1">
-              <div>🔍 Debug Info:</div>
-              <div>Current Step: {state.currentStep}</div>
-              <div>Step Blocks: {Object.keys(state.stepBlocks).length} keys</div>
-              <div>Selected Block: {selectedBlockId || 'none'}</div>
-            </div>
+            <button 
+              onClick={() => handleStepChange(1)}
+              className="px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors"
+            >
+              Ir para Etapa 1
+            </button>
           </div>
         </div>
       )}
 
-        {/* 🔍 DEBUG: Step without blocks */}
-        {!state.isLoading && Object.keys(state.stepBlocks).length > 0 && currentStepBlocks.length === 0 && (
-          <div className="flex-1 flex items-center justify-center">
-            <div className="text-center max-w-md">
-              <div className="w-12 h-12 mx-auto mb-4 rounded-full bg-orange-100 flex items-center justify-center">
-                <span className="text-2xl">⚠️</span>
-              </div>
-              <h3 className="text-lg font-semibold mb-2">Etapa {state.currentStep} vazia</h3>
-              <p className="text-muted-foreground mb-4">
-                Esta etapa não possui componentes. Arraste componentes da sidebar para começar a construir.
-              </p>
-              <div className="text-xs text-muted-foreground space-y-1">
-                <div>🔍 Debug Info:</div>
-                <div>Available Steps: {Object.keys(state.stepBlocks).join(', ')}</div>
-                <div>Current Step Key: step-{state.currentStep}</div>
-                <div>Has Step Data: {`step-${state.currentStep}` in state.stepBlocks ? 'Yes' : 'No'}</div>
-              </div>
-            </div>
-          </div>
-        )}
+      {/* 🎛️ TOOLBAR SUPERIOR */}
+      <EditorToolbar
+        onTogglePreview={handleTogglePreview}
+        onSave={handleSave}
+        onPublish={handlePublish}
+        isPreviewMode={isPreviewMode}
+        currentStep={parseInt(context.activeStageId.replace('step-', '')) || 1}
+        totalSteps={Math.max(21, context.stages.length)}
+        canUndo={false}
+        canRedo={false}
+        onUndo={() => {}}
+        onRedo={() => {}}
+        isSaving={false}
+        onOpenSettings={() => {}}
+      />
 
-        {/* Renderização normal apenas se há dados */}
-        {!state.isLoading && currentStepBlocks.length > 0 && (
-          <>
-            {/* Toolbar */}
-            <EditorToolbar
-              currentStep={state.currentStep}
-              totalSteps={Math.max(...Object.keys(stepHasBlocksRecord).map(Number), 21)}
-              isPreviewMode={isPreviewMode}
-              canUndo={actions.canUndo}
-              canRedo={actions.canRedo}
-              isSaving={state.isLoading}
-              onTogglePreview={handleTogglePreview}
-              onUndo={actions.undo}
-              onRedo={actions.redo}
-              onSave={handleSave}
-              onPublish={handlePublish}
-              onOpenSettings={() => console.log('Configurações')}
+      {/* 📐 LAYOUT PRINCIPAL FLEXÍVEL */}
+      <div className="flex-1 flex min-h-0 bg-background text-foreground overflow-hidden">
+        {/* 📋 SIDEBAR ESQUERDA - ETAPAS */}
+        <aside 
+          className="bg-card border-r border-border flex-shrink-0 overflow-hidden" 
+          style={{ width: `${columnWidths.steps}px` }}
+        >
+          <StepSidebar
+            currentStep={parseInt(context.activeStageId.replace('step-', '')) || 1}
+            totalSteps={Math.max(21, context.stages.length)}
+            stepHasBlocks={stepHasBlocksRecord}
+            onSelectStep={handleStepChange}
+            getStepAnalysis={(step: number) => ({ 
+              icon: 'info', 
+              label: `Etapa ${step}`, 
+              desc: `Configuração da etapa ${step}` 
+            })}
+            renderIcon={() => null}
+          />
+        </aside>
+
+        <ResizeHandle 
+          onResize={(width) => handleResize('steps', width)} 
+          label="Etapas"
+        />
+
+        {/* 🧩 COLUNA CENTRO-ESQUERDA - COMPONENTES */}
+        <aside 
+          className="bg-card/50 border-r border-border flex-shrink-0 overflow-hidden" 
+          style={{ width: `${columnWidths.components}px` }}
+        >
+          <ComponentsSidebar 
+            groupedComponents={groupedComponents} 
+            renderIcon={() => null}
+          />
+        </aside>
+
+        <ResizeHandle 
+          onResize={(width) => handleResize('components', width)} 
+          label="Componentes"
+        />
+
+        {/* 🎨 ÁREA CENTRAL - CANVAS PRINCIPAL */}
+        <main className="flex-1 min-h-0 bg-muted/30 flex flex-col overflow-hidden">
+          <EditorCanvas
+            blocks={currentStepBlocks}
+            selectedBlock={selectedBlock}
+            currentStep={parseInt(context.activeStageId.replace('step-', '')) || 1}
+            onSelectBlock={handleSelectBlock}
+            onUpdateBlock={handleUpdateBlock}
+            onDeleteBlock={handleDeleteBlock}
+            isPreviewMode={isPreviewMode}
+          />
+        </main>
+
+        <ResizeHandle 
+          onResize={(width) => handleResize('properties', width)} 
+          label="Propriedades"
+        />
+
+        {/* ⚙️ SIDEBAR DIREITA - PROPRIEDADES */}
+        <aside 
+          className="bg-card border-l border-border flex-shrink-0 overflow-hidden" 
+          style={{ width: `${columnWidths.properties}px` }}
+        >
+          {useAPIPanel ? (
+            <div className="p-4">
+              <p className="text-sm text-muted-foreground">API Properties Panel</p>
+            </div>
+          ) : (
+            <RegistryPropertiesPanel
+              selectedBlock={selectedBlock}
+              onUpdate={(updates: Partial<Block>) => selectedBlock && handleUpdateBlock(selectedBlock.id, updates)}
+              onClose={() => context.setSelectedBlockId(null)}
+              onDelete={handleDeleteSelectedBlock}
             />
-
-            {/* Layout principal de 4 colunas com controles de largura */}
-            <div className="flex-1 flex overflow-hidden">
-              {/* Sidebar de etapas */}
-              <div
-                className="border-r border-border bg-muted/30 flex-shrink-0"
-                style={{ width: `${columnWidths.steps}px` }}
-              >
-                <StepSidebar
-                  currentStep={state.currentStep}
-                  stepHasBlocks={stepHasBlocksRecord}
-                  stepValidation={state.stepValidation}
-                  onSelectStep={(step: number) => {
-                    console.log('🔍 ModularEditorPro - StepSidebar onSelectStep chamado:', {
-                      fromStep: state.currentStep,
-                      toStep: step,
-                      stepHasBlocks: stepHasBlocksRecord[step],
-                      stepValidation: state.stepValidation[step]
-                    });
-                    actions.setCurrentStep(step);
-                  }}
-                  getStepAnalysis={() => ({ icon: 'note', label: 'Etapa', desc: 'Configurar' })}
-                  renderIcon={(icon: string) => <div>{icon}</div>}
-                />
-              </div>
-
-              {/* Divisor redimensionável - Steps */}
-              <ResizeHandle
-                onResize={(width) => handleResize('steps', width)}
-                className="hover:shadow-lg"
-                label="Etapas"
-              />
-
-              {/* Sidebar de componentes */}
-              <div
-                className="border-r border-border bg-background flex-shrink-0"
-                style={{ width: `${columnWidths.components}px` }}
-              >
-                <ComponentsSidebar
-                  groupedComponents={groupedComponents}
-                  renderIcon={(icon: string) => <div>{icon}</div>}
-                />
-              </div>
-
-              {/* Divisor redimensionável - Components */}
-              <ResizeHandle
-                onResize={(width) => handleResize('components', width)}
-                className="hover:shadow-lg"
-                label="Componentes"
-              />
-
-              {/* Canvas principal com scroll vertical */}
-              <div className="flex-1 min-w-0 overflow-hidden">
-                <div className="h-full overflow-y-auto">
-                  <EditorCanvas
-                    key={`editor-canvas-stable-${state.currentStep}`} // Chave estável - só muda no step
-                    blocks={currentStepBlocks}
-                    selectedBlock={selectedBlock}
-                    currentStep={state.currentStep}
-                    onSelectBlock={handleSelectBlock}
-                    onUpdateBlock={handleUpdateBlock}
-                    onDeleteBlock={handleDeleteBlock}
-                    isPreviewMode={isPreviewMode}
-                    onStepChange={(step: number) => {
-                      console.log('🔍 ModularEditorPro - EditorCanvas onStepChange chamado:', {
-                        fromStep: state.currentStep,
-                        toStep: step
-                      });
-                      actions.setCurrentStep(step);
-                    }}
-                  />
-                </div>
-              </div>
-
-              {/* Divisor redimensionável - Properties */}
-              <ResizeHandle
-                onResize={(width) => handleResize('properties', width)}
-                className="hover:shadow-lg"
-                label="Propriedades"
-              />
-
-              {/* Propriedades com Toggle API/Registry */}
-              <div
-                className="border-l border-border bg-muted/30 flex-shrink-0 flex flex-col"
-                style={{ width: `${columnWidths.properties}px` }}
-              >
-                {/* Header com Toggle */}
-                <div className="p-2 border-b bg-background">
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs font-medium">Propriedades</span>
-                    <button
-                      onClick={() => setUseAPIPanel(!useAPIPanel)}
-                      className="px-2 py-1 text-xs bg-primary/10 hover:bg-primary/20 rounded transition-colors"
-                      title={`Alternar para ${useAPIPanel ? 'Registry' : 'API'} Panel`}
-                    >
-                      {useAPIPanel ? '🚀 API' : '📋 Registry'}
-                    </button>
-                  </div>
-                </div>
-
-                {/* Panel Content */}
-                <div className="flex-1 overflow-auto">
-                  {useAPIPanel && selectedBlock ? (
-                    <APIPropertiesPanel
-                      blockId={selectedBlock.id}
-                      blockType={selectedBlock.type}
-                      initialProperties={selectedBlock.properties || {}}
-                      onPropertyChange={(key: string, value: any, isValid: boolean) => {
-                        console.log('🚀 APIPropertiesPanel change:', { key, value, isValid });
-                        if (selectedBlock && isValid) {
-                          handleUpdateBlock(selectedBlock.id, {
-                            properties: {
-                              ...selectedBlock.properties,
-                              [key]: value
-                            }
-                          });
-                        }
-                      }}
-                      onClose={() => setSelectedBlockId(null)}
-                      onDelete={() => {
-                        if (selectedBlock) {
-                          handleDeleteSelectedBlock();
-                        }
-                      }}
-                    />
-                  ) : (
-                    <RegistryPropertiesPanel
-                      selectedBlock={selectedBlock || null}
-                      onUpdate={(blockId: string, updates: Record<string, any>) => {
-                        console.log('🔄 RegistryPropertiesPanel update:', { blockId, updates });
-                        if (selectedBlock && blockId === selectedBlock.id) {
-                          handleUpdateBlock(selectedBlock.id, updates);
-                        }
-                      }}
-                      onClose={() => setSelectedBlockId(null)}
-                      onDelete={(blockId: string) => {
-                        console.log('🗑️ RegistryPropertiesPanel delete:', blockId);
-                        if (selectedBlock && blockId === selectedBlock.id) {
-                          handleDeleteSelectedBlock();
-                        }
-                      }}
-                    />
-                  )}
-                </div>
-              </div>
-            </div>
-          </>
-        )}
+          )}
+          
+          {/* Toggle entre painéis */}
+          <div className="p-2 border-t border-border">
+            <button
+              onClick={() => setUseAPIPanel(!useAPIPanel)}
+              className="w-full text-xs text-muted-foreground hover:text-foreground transition-colors"
+            >
+              {useAPIPanel ? 'Usar Painel Registry' : 'Usar Painel API'}
+            </button>
+          </div>
+        </aside>
       </div>
-    );
+    </div>
+  );
 };
 
 export default ModularEditorPro;

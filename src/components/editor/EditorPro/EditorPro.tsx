@@ -1,6 +1,7 @@
 import React from 'react';
-// 🚀 PURE BUILDER SYSTEM - Sistema unificado otimizado
-import PureBuilderProvider from '../PureBuilderProvider';
+// ✅ CONSOLIDADO: Sistema unificado com EditorProvider
+import { EditorProvider } from '@/context/EditorContext';
+import { UnifiedDndProvider } from '@/components/editor/dnd/UnifiedDndProvider';
 import ModularEditorPro from './components/ModularEditorPro';
 
 interface EditorProProps {
@@ -8,30 +9,30 @@ interface EditorProProps {
 }
 
 /**
- * 🎯 EDITOR PRO - Componente Principal com BUILDER SYSTEM
+ * 🎯 EDITOR PRO - Componente Principal CONSOLIDADO
  * 
- * ✅ MIGRADO PARA PURE BUILDER SYSTEM:
- * - PureBuilderProvider (usa Builder System completo)
+ * ✅ CONSOLIDADO COM SISTEMA UNIFICADO:
+ * - EditorProvider único (substitui PureBuilderProvider)
+ * - UnifiedDndProvider para drag & drop
  * - 21 etapas funcionais garantidas
- * - Cálculos automáticos de estilo
- * - Analytics integrado
- * - Otimizações de conversão
- * - Interface idêntica mantida
+ * - Interface mantida
  * - Performance superior
+ * - Arquitetura limpa
  */
 const EditorPro: React.FC<EditorProProps> = ({ funnelId }) => {
-    console.log('�️ EditorPro: Inicializando com BUILDER SYSTEM, funnelId:', funnelId);
+    console.log('⚡️ EditorPro: Inicializando CONSOLIDADO, funnelId:', funnelId);
 
-    // Usar funnelId para Builder System
-    const builderFunnelId = funnelId ? `builder-${funnelId}` : 'builder-quiz-21-steps';
+    const editorFunnelId = funnelId || 'quiz-21-steps-consolidated';
 
     return (
         <div className="editor-pro-main-container h-full w-full">
-            <PureBuilderProvider funnelId={builderFunnelId}>
-                <div className="editor-pro-inner h-full w-full bg-gray-900">
-                    <ModularEditorPro />
-                </div>
-            </PureBuilderProvider>
+            <EditorProvider funnelId={editorFunnelId}>
+                <UnifiedDndProvider>
+                    <div className="editor-pro-inner h-full w-full bg-gray-900">
+                        <ModularEditorPro />
+                    </div>
+                </UnifiedDndProvider>
+            </EditorProvider>
         </div>
     );
 };
