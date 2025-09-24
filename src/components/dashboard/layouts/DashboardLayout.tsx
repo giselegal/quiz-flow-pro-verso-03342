@@ -147,36 +147,36 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
                     {/* Navigation */}
                     <nav className="flex-1 p-4 space-y-2">
                         {navigationItems.map((item) => (
-                            <Link key={item.href} href={item.href}>
-                                <a
-                                    onClick={() => onClose()}
-                                    className={cn(
-                                        "flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors group",
-                                        isActive(item.href)
-                                            ? "bg-[#1A0F3D]/10 text-[#1A0F3D] border border-[#1A0F3D]/20"
-                                            : "text-gray-600 hover:bg-gray-50 hover:text-[#1A0F3D]"
-                                    )}
-                                >
-                                    <item.icon className={cn(
-                                        "w-5 h-5",
-                                        isActive(item.href) ? "text-[#2E1A6B]" : "text-gray-400 group-hover:text-[#2E1A6B]"
-                                    )} />
-                                    <div className="flex-1">
-                                        <div className="flex items-center justify-between">
-                                            <span>{item.label}</span>
-                                            {item.badge && (
-                                                <Badge variant="secondary" className="text-xs">
-                                                    {item.badge}
-                                                </Badge>
-                                            )}
-                                        </div>
-                                        {item.description && !isActive(item.href) && (
-                                            <p className="text-xs text-gray-500 mt-1 group-hover:text-gray-600">
-                                                {item.description}
-                                            </p>
+                            <Link
+                                key={item.href}
+                                href={item.href}
+                                onClick={() => onClose()}
+                                className={cn(
+                                    "flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors group",
+                                    isActive(item.href)
+                                        ? "bg-[#1A0F3D]/10 text-[#1A0F3D] border border-[#1A0F3D]/20"
+                                        : "text-gray-600 hover:bg-gray-50 hover:text-[#1A0F3D]"
+                                )}
+                            >
+                                <item.icon className={cn(
+                                    "w-5 h-5",
+                                    isActive(item.href) ? "text-[#2E1A6B]" : "text-gray-400 group-hover:text-[#2E1A6B]"
+                                )} />
+                                <div className="flex-1">
+                                    <div className="flex items-center justify-between">
+                                        <span>{item.label}</span>
+                                        {item.badge && (
+                                            <Badge variant="secondary" className="text-xs">
+                                                {item.badge}
+                                            </Badge>
                                         )}
                                     </div>
-                                </a>
+                                    {item.description && !isActive(item.href) && (
+                                        <p className="text-xs text-gray-500 mt-1 group-hover:text-gray-600">
+                                            {item.description}
+                                        </p>
+                                    )}
+                                </div>
                             </Link>
                         ))}
                     </nav>

@@ -280,19 +280,9 @@ const ModernDashboardLayout: React.FC<ModernDashboardLayoutProps> = ({
 
                                     return (
                                         <li key={item.href}>
-                                            {item.isExternal ? (
-                                                <Link href={item.href}>
-                                                    <a onClick={() => setSidebarOpen(false)}>
-                                                        {linkContent}
-                                                    </a>
-                                                </Link>
-                                            ) : (
-                                                <Link href={item.href}>
-                                                    <a onClick={() => setSidebarOpen(false)}>
-                                                        {linkContent}
-                                                    </a>
-                                                </Link>
-                                            )}
+                                            <Link href={item.href} onClick={() => setSidebarOpen(false)}>
+                                                {linkContent}
+                                            </Link>
                                         </li>
                                     );
                                 })}
@@ -361,21 +351,17 @@ const ModernDashboardLayout: React.FC<ModernDashboardLayoutProps> = ({
 
                             {/* Breadcrumbs */}
                             <nav className="flex items-center space-x-1 text-sm text-gray-500">
-                                <Link href="/">
-                                    <a className="hover:text-gray-700 transition-colors">
-                                        <Home className="w-4 h-4" />
-                                    </a>
+                                <Link href="/" className="hover:text-gray-700 transition-colors">
+                                    <Home className="w-4 h-4" />
                                 </Link>
-                                {breadcrumbs.map((crumb, index) => (
+                                {breadcrumbs.map((crumb) => (
                                     <React.Fragment key={crumb.path}>
                                         <ChevronRight className="w-4 h-4" />
                                         {crumb.isLast ? (
                                             <span className="font-medium text-gray-900">{crumb.label}</span>
                                         ) : (
-                                            <Link href={crumb.path}>
-                                                <a className="hover:text-gray-700 transition-colors">
-                                                    {crumb.label}
-                                                </a>
+                                            <Link href={crumb.path} className="hover:text-gray-700 transition-colors">
+                                                {crumb.label}
                                             </Link>
                                         )}
                                     </React.Fragment>

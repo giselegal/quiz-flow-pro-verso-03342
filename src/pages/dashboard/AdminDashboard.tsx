@@ -67,20 +67,18 @@ const QuickAction: React.FC<QuickActionProps> = ({ title, description, href, ico
     };
 
     return (
-        <Link href={href}>
-            <a>
-                <Card className={cn("transition-all hover:shadow-md cursor-pointer", colorClasses[color])}>
-                    <CardContent className="p-4">
-                        <div className="flex items-start space-x-3">
-                            <div className="text-gray-600">{icon}</div>
-                            <div className="flex-1">
-                                <h3 className="font-semibold text-gray-900 text-sm">{title}</h3>
-                                <p className="text-xs text-gray-600 mt-1">{description}</p>
-                            </div>
+        <Link href={href} className={cn("transition-all hover:shadow-md cursor-pointer", colorClasses[color])}>
+            <Card>
+                <CardContent className="p-4">
+                    <div className="flex items-start space-x-3">
+                        <div className="text-gray-600">{icon}</div>
+                        <div className="flex-1">
+                            <h3 className="font-semibold text-gray-900 text-sm">{title}</h3>
+                            <p className="text-xs text-gray-600 mt-1">{description}</p>
                         </div>
-                    </CardContent>
-                </Card>
-            </a>
+                    </div>
+                </CardContent>
+            </Card>
         </Link>
     );
 };

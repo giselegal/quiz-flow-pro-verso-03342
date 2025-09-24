@@ -42,7 +42,7 @@ const meusFunis = [
         category: 'Marketing',
         questions: 7,
         avgTime: '4 min',
-        thumbnail: 'https://via.placeholder.com/200x120/3b82f6/ffffff?text=Marketing+Quiz',
+        thumbnail: 'https://placehold.co/200x120/3b82f6/ffffff?text=Marketing+Quiz',
         lastEdited: '2 dias atrás',
         revenue: 'R$ 15.400'
     },
@@ -62,7 +62,7 @@ const meusFunis = [
         category: 'Feedback',
         questions: 5,
         avgTime: '3 min',
-        thumbnail: 'https://via.placeholder.com/200x120/10b981/ffffff?text=NPS+Survey',
+        thumbnail: 'https://placehold.co/200x120/10b981/ffffff?text=NPS+Survey',
         lastEdited: '1 hora atrás',
         revenue: 'N/A'
     },
@@ -82,7 +82,7 @@ const meusFunis = [
         category: 'B2B',
         questions: 8,
         avgTime: '7 min',
-        thumbnail: 'https://via.placeholder.com/200x120/ef4444/ffffff?text=ROI+Calc',
+        thumbnail: 'https://placehold.co/200x120/ef4444/ffffff?text=ROI+Calc',
         lastEdited: '3 horas atrás',
         revenue: 'R$ 28.900'
     },
@@ -102,7 +102,7 @@ const meusFunis = [
         category: 'Eventos',
         questions: 4,
         avgTime: '2 min',
-        thumbnail: 'https://via.placeholder.com/200x120/8b5cf6/ffffff?text=Webinar+IA',
+        thumbnail: 'https://placehold.co/200x120/8b5cf6/ffffff?text=Webinar+IA',
         lastEdited: '30 min atrás',
         revenue: 'R$ 8.200'
     },
@@ -122,7 +122,7 @@ const meusFunis = [
         category: 'Onboarding',
         questions: 6,
         avgTime: '5 min',
-        thumbnail: 'https://via.placeholder.com/200x120/06b6d4/ffffff?text=Onboarding',
+        thumbnail: 'https://placehold.co/200x120/06b6d4/ffffff?text=Onboarding',
         lastEdited: '1 dia atrás',
         revenue: 'N/A'
     },
@@ -142,7 +142,7 @@ const meusFunis = [
         category: 'Educação',
         questions: 3,
         avgTime: '2 min',
-        thumbnail: 'https://via.placeholder.com/200x120/f97316/ffffff?text=Curso+Online',
+        thumbnail: 'https://placehold.co/200x120/f97316/ffffff?text=Curso+Online',
         lastEdited: '15 min atrás',
         revenue: 'R$ 42.300'
     },
@@ -162,7 +162,7 @@ const meusFunis = [
         category: 'B2B',
         questions: 12,
         avgTime: '10 min',
-        thumbnail: 'https://via.placeholder.com/200x120/gray/ffffff?text=Em+Desenvolvimento',
+        thumbnail: 'https://placehold.co/200x120/cccccc/ffffff?text=Em+Desenvolvimento',
         lastEdited: '2 horas atrás',
         revenue: 'R$ 0'
     },
@@ -182,7 +182,7 @@ const meusFunis = [
         category: 'Pesquisa',
         questions: 8,
         avgTime: '6 min',
-        thumbnail: 'https://via.placeholder.com/200x120/gray/ffffff?text=Pausado',
+        thumbnail: 'https://placehold.co/200x120/cccccc/ffffff?text=Pausado',
         lastEdited: '1 semana atrás',
         revenue: 'N/A'
     }
