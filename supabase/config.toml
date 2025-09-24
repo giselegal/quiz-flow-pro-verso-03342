@@ -8,3 +8,9 @@ verify_jwt = false
 
 [functions.csp-headers]
 verify_jwt = false
+
+[functions.rate-limiter]
+verify_jwt = false
+
+[functions.backup-system]
+verify_jwt = false

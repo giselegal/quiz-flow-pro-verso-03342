@@ -14,6 +14,45 @@ export type Database = {
   }
   public: {
     Tables: {
+      active_sessions: {
+        Row: {
+          created_at: string | null
+          expires_at: string
+          id: string
+          ip_address: unknown | null
+          is_active: boolean | null
+          last_activity: string | null
+          location_data: Json | null
+          session_token: string
+          user_agent: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          expires_at: string
+          id?: string
+          ip_address?: unknown | null
+          is_active?: boolean | null
+          last_activity?: string | null
+          location_data?: Json | null
+          session_token: string
+          user_agent?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          expires_at?: string
+          id?: string
+          ip_address?: unknown | null
+          is_active?: boolean | null
+          last_activity?: string | null
+          location_data?: Json | null
+          session_token?: string
+          user_agent?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       admin_goals: {
         Row: {
           achieved: boolean | null
@@ -121,6 +160,51 @@ export type Database = {
           title?: string
           type?: string
           updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      backup_jobs: {
+        Row: {
+          backup_data: Json | null
+          completed_at: string | null
+          created_at: string | null
+          description: string | null
+          error_message: string | null
+          id: string
+          size_bytes: number | null
+          started_at: string | null
+          status: string | null
+          tables: string[]
+          type: string
+          user_id: string | null
+        }
+        Insert: {
+          backup_data?: Json | null
+          completed_at?: string | null
+          created_at?: string | null
+          description?: string | null
+          error_message?: string | null
+          id?: string
+          size_bytes?: number | null
+          started_at?: string | null
+          status?: string | null
+          tables?: string[]
+          type: string
+          user_id?: string | null
+        }
+        Update: {
+          backup_data?: Json | null
+          completed_at?: string | null
+          created_at?: string | null
+          description?: string | null
+          error_message?: string | null
+          id?: string
+          size_bytes?: number | null
+          started_at?: string | null
+          status?: string | null
+          tables?: string[]
+          type?: string
           user_id?: string | null
         }
         Relationships: []
@@ -714,6 +798,48 @@ export type Database = {
         }
         Relationships: []
       }
+      rate_limits: {
+        Row: {
+          created_at: string | null
+          current: number
+          endpoint: string
+          id: string
+          identifier: string
+          last_request: number
+          limit_value: number
+          reset_time: number
+          updated_at: string | null
+          user_id: string | null
+          window_seconds: number
+        }
+        Insert: {
+          created_at?: string | null
+          current?: number
+          endpoint: string
+          id?: string
+          identifier: string
+          last_request: number
+          limit_value: number
+          reset_time: number
+          updated_at?: string | null
+          user_id?: string | null
+          window_seconds: number
+        }
+        Update: {
+          created_at?: string | null
+          current?: number
+          endpoint?: string
+          id?: string
+          identifier?: string
+          last_request?: number
+          limit_value?: number
+          reset_time?: number
+          updated_at?: string | null
+          user_id?: string | null
+          window_seconds?: number
+        }
+        Relationships: []
+      }
       real_time_metrics: {
         Row: {
           bundle_size: number | null
@@ -891,17 +1017,80 @@ export type Database = {
         }
         Relationships: []
       }
+      user_security_settings: {
+        Row: {
+          allowed_ips: unknown[] | null
+          backup_notifications: boolean | null
+          created_at: string | null
+          id: string
+          last_password_change: string | null
+          locked_until: string | null
+          login_attempts: number | null
+          security_alerts: boolean | null
+          security_questions: Json | null
+          session_timeout: number | null
+          two_factor_enabled: boolean | null
+          two_factor_secret: string | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          allowed_ips?: unknown[] | null
+          backup_notifications?: boolean | null
+          created_at?: string | null
+          id?: string
+          last_password_change?: string | null
+          locked_until?: string | null
+          login_attempts?: number | null
+          security_alerts?: boolean | null
+          security_questions?: Json | null
+          session_timeout?: number | null
+          two_factor_enabled?: boolean | null
+          two_factor_secret?: string | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          allowed_ips?: unknown[] | null
+          backup_notifications?: boolean | null
+          created_at?: string | null
+          id?: string
+          last_password_change?: string | null
+          locked_until?: string | null
+          login_attempts?: number | null
+          security_alerts?: boolean | null
+          security_questions?: Json | null
+          session_timeout?: number | null
+          two_factor_enabled?: boolean | null
+          two_factor_secret?: string | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
+      cleanup_expired_rate_limits: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
+      cleanup_expired_sessions: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
       cleanup_old_analytics_data: {
         Args: Record<PropertyKey, never>
         Returns: undefined
       }
       cleanup_old_metrics: {
         Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
+      handle_failed_login_attempt: {
+        Args: { p_user_id: string }
         Returns: undefined
       }
       log_security_event: {
@@ -918,6 +1107,10 @@ export type Database = {
           p_status?: string
         }
         Returns: string
+      }
+      reset_login_attempts: {
+        Args: { p_user_id: string }
+        Returns: undefined
       }
     }
     Enums: {
