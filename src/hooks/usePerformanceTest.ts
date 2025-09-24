@@ -193,7 +193,8 @@ export function usePerformanceTest(
                 .filter(entry => entry.name.includes('.js') || entry.name.includes('.css'));
 
             const bundleSize = bundleEntries.reduce((total, entry) => {
-                return total + (entry.transferSize || 0);
+                const resourceEntry = entry as PerformanceResourceTiming;
+                return total + (resourceEntry.transferSize || 0);
             }, 0) / 1024; // KB
 
             const chunkLoadTime = bundleEntries.length > 0
@@ -380,6 +381,11 @@ export function usePerformanceTest(
         alerts: PerformanceAlert[]
     ): string[] => {
         const recommendations: string[] = [];
+
+        // Adicionar recomendações baseadas em alertas críticos
+        if (alerts.some(alert => alert.severity === 'critical')) {
+            recommendations.push('🚨 Problemas críticos de performance detectados - ação imediata necessária');
+        }
 
         if (metrics.renderTime > finalThresholds.renderTime) {
             recommendations.push('Consider implementing React.memo() for expensive components');
