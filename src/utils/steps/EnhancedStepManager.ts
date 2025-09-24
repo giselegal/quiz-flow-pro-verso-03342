@@ -57,7 +57,7 @@ const mockLogger: Logger = {
 const mockCacheManager = {
     getCache: <T>(_name: string, _size: number): CacheManager<T> => ({
         get: (_key: string) => null,
-        set: (_key: string, _value: T) => {},
+        set: (_key: string, _value: T) => { },
         has: (_key: string) => false,
         delete: (_key: string) => false
     })
@@ -944,7 +944,7 @@ export class EnhancedStepManager {
         });
     }
 
-    private async generateStepRecommendations(step: EnhancedStepMetadata, userContext: UserPersonalizationContext): Promise<StepRecommendation[]> {
+    private async generateStepRecommendations(_step: EnhancedStepMetadata, _userContext: UserPersonalizationContext): Promise<StepRecommendation[]> {
         return [
             {
                 type: 'optimization',
@@ -963,7 +963,7 @@ export class EnhancedStepManager {
     }
 
     private canAccessStep(step: EnhancedStepMetadata, userContext: UserPersonalizationContext): boolean {
-        return step.prerequisites.every(prereqId => 
+        return step.prerequisites.every(prereqId =>
             userContext.session.answers[prereqId] !== undefined
         );
     }
@@ -1033,7 +1033,7 @@ export class EnhancedStepManager {
 
     private calculateEstimatedImprovements(optimizations: OptimizationAction[]): Record<string, number> {
         const improvements: Record<string, number> = {};
-        
+
         optimizations.forEach(opt => {
             switch (opt.type) {
                 case 'performance':
@@ -1063,7 +1063,7 @@ export class EnhancedStepManager {
         return step ? step.componentIds.map(id => ({ id, type: 'component' })) : [];
     }
 
-    private getAppliedOptimizations(stepId: string): any[] {
+    private getAppliedOptimizations(_stepId: string): any[] {
         // Return list of optimizations applied to this step
         return [];
     }

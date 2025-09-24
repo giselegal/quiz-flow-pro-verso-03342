@@ -5,9 +5,47 @@
  * de métricas, comportamento e performance
  */
 
-import { unifiedIDGenerator } from '../ids/UnifiedIDGenerator';
-import { useLogger } from '../logger/SmartLogger';
-import { cacheManager } from '../cache/LRUCache';
+// Mock imports para compatibilidade
+interface Logger {
+    debug: (message: string, data?: any) => void;
+    info: (message: string, data?: any) => void;
+    warn: (message: string, data?: any) => void;
+    error: (message: string, data?: any) => void;
+    performance: (name: string, duration: number) => void;
+}
+
+interface UnifiedIDGenerator {
+    generateID: (type: string, context?: any) => string;
+}
+
+interface CacheManager<T> {
+    get: (key: string) => T | null;
+    set: (key: string, value: T) => void;
+    has: (key: string) => boolean;
+    delete: (key: string) => boolean;
+}
+
+// Mock implementations
+const mockLogger: Logger = {
+    debug: (message: string, data?: any) => console.log(`[DEBUG] ${message}`, data),
+    info: (message: string, data?: any) => console.log(`[INFO] ${message}`, data),
+    warn: (message: string, data?: any) => console.warn(`[WARN] ${message}`, data),
+    error: (message: string, data?: any) => console.error(`[ERROR] ${message}`, data),
+    performance: (name: string, duration: number) => console.log(`[PERF] ${name}: ${duration}ms`)
+};
+
+const unifiedIDGenerator: UnifiedIDGenerator = {
+    generateID: (type: string, _context?: any) => `${type}_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
+};
+
+const mockCacheManager = {
+    getCache: <T>(_name: string, _size: number): CacheManager<T> => ({
+        get: (_key: string) => null,
+        set: (_key: string, _value: T) => {},
+        has: (_key: string) => false,
+        delete: (_key: string) => false
+    })
+};
 
 // ✅ INTERFACES DE ANALYTICS
 export interface RealAnalyticsEvent {
