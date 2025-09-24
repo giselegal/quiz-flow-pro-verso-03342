@@ -8,9 +8,6 @@ import QuizIntroHeaderBlock from './QuizIntroHeaderBlock';
 import OptionsGridBlock from './OptionsGridBlock';
 import TextInlineBlock from './TextInlineBlock';
 import ButtonInlineBlock from './ButtonInlineBlock';
-import TestimonialCardInlineBlock from './TestimonialCardInlineBlock';
-import TestimonialsCarouselInlineBlock from './TestimonialsCarouselInlineBlock';
-import MentorSectionInlineBlock from './MentorSectionInlineBlock';
 import { FashionAIGeneratorBlock } from '@/components/blocks/ai';
 
 // @ts-nocheck
@@ -56,9 +53,6 @@ const BlockComponentRegistry: Record<string, React.FC<any>> = {
   'options-grid': OptionsGridBlock,
   'text-inline': TextInlineBlock,
   'button-inline': ButtonInlineBlock,
-  'mentor-section-inline': MentorSectionInlineBlock,
-  'testimonial-card-inline': TestimonialCardInlineBlock,
-  'testimonials-carousel-inline': TestimonialsCarouselInlineBlock,
   'fashion-ai-generator': FashionAIGeneratorBlock,
   'text': createFallbackComponent('text'),
   'headline': createFallbackComponent('headline'),
