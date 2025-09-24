@@ -86,8 +86,10 @@ export class LRUCache<T> {
         // Se atingiu a capacidade, remover o menos recente
         if (this.cache.size >= this.capacity) {
             const oldestKey = this.cache.keys().next().value;
-            this.cache.delete(oldestKey);
-            this.stats.evictions++;
+            if (oldestKey !== undefined) {
+                this.cache.delete(oldestKey);
+                this.stats.evictions++;
+            }
         }
 
         // Adicionar nova entrada
@@ -181,8 +183,10 @@ export class LRUCache<T> {
             // Reduzir cache removendo entradas mais antigas
             while (this.cache.size > newCapacity) {
                 const oldestKey = this.cache.keys().next().value;
-                this.cache.delete(oldestKey);
-                this.stats.evictions++;
+                if (oldestKey !== undefined) {
+                    this.cache.delete(oldestKey);
+                    this.stats.evictions++;
+                }
             }
         }
 

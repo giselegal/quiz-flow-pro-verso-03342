@@ -4,6 +4,8 @@ import { Block } from '@/types/editor';
 import { getEnhancedBlockComponent } from '@/components/editor/blocks/EnhancedBlockRegistry';
 import { blockRendererDebug } from '@/components/editor/debug/BlockRendererDebug';
 import { cacheManager } from '@/utils/cache/LRUCache';
+import { useLogger } from '@/utils/logger/SmartLogger';
+
 // Importações diretas para componentes críticos (performance)
 import QuizIntroHeaderBlock from './QuizIntroHeaderBlock';
 import OptionsGridBlock from './OptionsGridBlock';
@@ -14,7 +16,6 @@ import MentorSectionInlineBlock from './MentorSectionInlineBlock';
 import TestimonialCardInlineBlock from './TestimonialCardInlineBlock';
 import TestimonialsCarouselInlineBlock from './TestimonialsCarouselInlineBlock';
 
-// @ts-nocheck
 export interface UniversalBlockRendererProps {
   block: Block;
   isSelected?: boolean;
@@ -27,6 +28,19 @@ export interface UniversalBlockRendererProps {
   className?: string;
   style?: React.CSSProperties;
   onClick?: () => void;
+}
+
+// ✅ CACHE PARA DADOS DE RENDERIZAÇÃO
+const renderCache = cacheManager.getCache('render');
+
+// ✅ CACHE PARA COMPONENTES RESOLVIDOS
+const componentCache = cacheManager.getCache('components');
+
+interface BlockRenderData {
+  timestamp: number;
+  renderTime: number;
+  blockType: string;
+  isSelected: boolean;
 }
 
 const createFallbackComponent = (type: string) => {
@@ -61,91 +75,55 @@ const BlockComponentRegistry: Record<string, React.FC<any>> = {
   'mentor-section-inline': MentorSectionInlineBlock,
   'testimonial-card-inline': TestimonialCardInlineBlock,
   'testimonials-carousel-inline': TestimonialsCarouselInlineBlock,
+  // Fallbacks para tipos básicos
   'text': createFallbackComponent('text'),
   'headline': createFallbackComponent('headline'),
   'image': createFallbackComponent('image'),
   'button': createFallbackComponent('button'),
   'form': createFallbackComponent('form'),
   'spacer': createFallbackComponent('spacer'),
-  'container': createFallbackComponent('container'),
+  'container': createFallbackComponent('container')
 };
 
-// ✅ SISTEMA HÍBRIDO: Cache crítico + EnhancedBlockRegistry completo
-const getBlockComponent = (blockType: string) => {
-  // Debug logging para troubleshooting
-  console.log(`🔍 UniversalBlockRenderer: Buscando componente para tipo "${blockType}"`);
+// ✅ HOOK OTIMIZADO PARA RECUPERAÇÃO DE COMPONENTES
+const useBlockComponent = (blockType: string): React.ComponentType<any> | null => {
+  const logger = useLogger('BlockComponent');
 
-  // 1. Cache de componentes críticos para performance máxima
-  if (BlockComponentRegistry[blockType]) {
-    console.log(`✅ Componente encontrado no cache crítico: ${blockType}`);
-    return BlockComponentRegistry[blockType];
-  }
-
-  // 2. Buscar no EnhancedBlockRegistry (150+ componentes)
-  try {
-    const enhancedComponent = getEnhancedBlockComponent(blockType);
-    if (enhancedComponent) {
-      console.log(`✅ Componente encontrado no EnhancedBlockRegistry: ${blockType}`);
-      return enhancedComponent;
-    }
-  } catch (error) {
-    console.error(`❌ Erro ao buscar componente no EnhancedBlockRegistry: ${blockType}`, error);
-  }
-
-  // 3. Log para componentes não encontrados
-  console.warn(`⚠️ Componente não encontrado em nenhum registry: ${blockType}`);
-
-  // 4. Fallback final
-  return null;
-};
-
-// ✅ OTIMIZAÇÃO: LRU Cache para eliminar memory leaks
-const componentCache = cacheManager.getCache<React.ComponentType<any> | null>('blockComponents', 50);
-const renderCache = cacheManager.getCache<BlockRenderData>('blockRenders', 100);
-
-interface BlockRenderData {
-  timestamp: number;
-  renderTime: number;
-  blockType: string;
-  isSelected: boolean;
-}
-
-const useBlockComponent = (blockType: string) => {
   return useMemo(() => {
-    // Verificar cache LRU primeiro
-    const cachedComponent = componentCache.get(blockType);
-    if (cachedComponent !== null) {
-      console.log(`🚀 Componente recuperado do LRU cache: ${blockType}`);
-
-      // Atualizar stats de debug com LRU metrics
-      const cacheStats = componentCache.getStats();
-      blockRendererDebug.updateCacheStats({
-        cacheSize: cacheStats.size,
-        totalLookups: cacheStats.hits + cacheStats.misses,
-        cacheHits: cacheStats.hits,
-        cacheMisses: cacheStats.misses
-      });
-
-      return cachedComponent;
+    // Verificar cache primeiro
+    const cached = componentCache.get(blockType);
+    if (cached) {
+      logger.debug(`Cache hit para componente: ${blockType}`);
+      return cached as React.ComponentType<any>;
     }
 
-    // Cache miss - buscar componente
-    const component = getBlockComponent(blockType);
+    logger.debug(`Resolvendo componente: ${blockType}`);
 
-    // Armazenar no LRU cache
-    componentCache.set(blockType, component);
+    // Tentar registry direto primeiro (performance crítica)
+    let component = BlockComponentRegistry[blockType];
 
-    // Atualizar stats de debug
-    const cacheStats = componentCache.getStats();
-    blockRendererDebug.updateCacheStats({
-      cacheSize: cacheStats.size,
-      totalLookups: cacheStats.hits + cacheStats.misses,
-      cacheHits: cacheStats.hits,
-      cacheMisses: cacheStats.misses
-    });
+    if (!component) {
+      // Fallback para enhanced registry - converter para React.FC
+      const enhancedComponent = getEnhancedBlockComponent(blockType);
+      if (enhancedComponent) {
+        component = enhancedComponent as React.FC<any>;
+      }
+    }
 
-    return component;
-  }, [blockType]);
+    if (component) {
+      // Cachear componente resolvido
+      componentCache.set(blockType, component);
+      logger.debug(`Componente ${blockType} cacheado com sucesso`);
+      return component as React.ComponentType<any>;
+    } else {
+      logger.warn(`Componente não encontrado: ${blockType}`, {
+        availableInRegistry: Object.keys(BlockComponentRegistry),
+        availableInEnhanced: 'check EnhancedBlockRegistry'
+      });
+    }
+
+    return null;
+  }, [blockType, logger]);
 };
 
 const UniversalBlockRenderer: React.FC<UniversalBlockRendererProps> = memo(({
@@ -159,12 +137,17 @@ const UniversalBlockRenderer: React.FC<UniversalBlockRendererProps> = memo(({
   style,
   onClick,
 }) => {
+  const logger = useLogger('BlockRenderer');
+
   // ✅ MONITORAMENTO DE PERFORMANCE
   const renderStartTime = React.useRef<number>();
 
   React.useEffect(() => {
     renderStartTime.current = performance.now();
   });
+
+  // ✅ OTIMIZAÇÃO: Usar hook cacheado ao invés de lookup direto
+  const BlockComponent = useBlockComponent(block.type);
 
   React.useEffect(() => {
     if (renderStartTime.current) {
@@ -190,39 +173,36 @@ const UniversalBlockRenderer: React.FC<UniversalBlockRendererProps> = memo(({
         hasComponent: !!BlockComponent
       });
 
-      if (renderTime > 50) { // Log apenas renders lentos
-        console.warn(`⚠️ Render lento detectado`, {
-          blockType: block.type,
+      // Log apenas renders lentos (production-safe)
+      if (renderTime > 50) {
+        logger.warn(`Slow render: ${block.type}`, {
           blockId: block.id,
           renderTime: `${renderTime.toFixed(2)}ms`,
           isSelected,
           isPreviewing
         });
+      } else {
+        logger.performance(`render-${block.type}`, renderTime);
       }
     }
   });
 
-  // ✅ OTIMIZAÇÃO: Usar hook cacheado ao invés de lookup direto
-  const BlockComponent = useBlockComponent(block.type);
-
-  // ✅ LOG DE RENDERIZAÇÃO PARA DEBUG
+  // ✅ LOG DE RENDERIZAÇÃO (apenas em desenvolvimento)
   React.useEffect(() => {
-    console.log(`🎨 Renderizando bloco:`, {
-      type: block.type,
-      id: block.id,
-      hasComponent: !!BlockComponent,
+    logger.render(`UniversalBlockRenderer[${block.type}]`, {
+      blockId: block.id,
       isSelected,
       isPreviewing,
-      timestamp: new Date().toISOString()
+      hasComponent: !!BlockComponent
     });
-  }, [block.type, block.id, BlockComponent, isSelected, isPreviewing]);
+  }, [block.type, block.id, BlockComponent, isSelected, isPreviewing, logger]);
 
   // ✅ OTIMIZAÇÃO: Memoizar handlers com dependências estáveis
-  const handleUpdate = useMemo(() =>
+  const handleUpdate = React.useMemo(() =>
     onUpdate ? (updates: any) => onUpdate(block.id, updates) : undefined
     , [block.id, onUpdate]);
 
-  const handleClick = useMemo(() => {
+  const handleClick = React.useMemo(() => {
     if (onSelect) {
       return () => onSelect(block.id);
     } else if (onClick) {
@@ -233,7 +213,7 @@ const UniversalBlockRenderer: React.FC<UniversalBlockRendererProps> = memo(({
 
   if (!BlockComponent) {
     // Log detalhado para debug
-    console.error(`❌ UniversalBlockRenderer: Componente não encontrado`, {
+    logger.error(`Componente não encontrado`, {
       blockType: block.type,
       blockId: block.id,
       availableInCache: Array.from(componentCache.keys()),
@@ -264,7 +244,7 @@ const UniversalBlockRenderer: React.FC<UniversalBlockRendererProps> = memo(({
           <button
             onClick={() => {
               const cacheStats = componentCache.getStats();
-              console.log('🔍 Debug info:', {
+              logger.info('Debug info:', {
                 blockType: block.type,
                 blockId: block.id,
                 blockContent: block.content,
@@ -324,12 +304,14 @@ const UniversalBlockRenderer: React.FC<UniversalBlockRendererProps> = memo(({
         }
       >
         <ErrorBoundary blockType={block.type} blockId={block.id}>
-          <BlockComponent
-            block={block}
-            isSelected={isSelected}
-            isPreviewing={isPreviewing}
-            onUpdate={handleUpdate}
-          />
+          {BlockComponent && (
+            <BlockComponent
+              block={block}
+              isSelected={isSelected}
+              isPreviewing={isPreviewing}
+              onUpdate={handleUpdate}
+            />
+          )}
         </ErrorBoundary>
       </React.Suspense>
     </div>
