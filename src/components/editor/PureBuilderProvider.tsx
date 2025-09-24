@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState, useCallback, useRef, useEff
 // 🚀 BUILDER SYSTEM - Imports corrigidos para compatibilidade
 import type { Block } from '@/types/editor';
 import { getTemplateInfo } from '@/utils/funnelNormalizer';
+import { unifiedTemplateService } from '@/services/UnifiedTemplateService';
 
 /**
  * 🏗️ PURE BUILDER SYSTEM PROVIDER
@@ -115,51 +116,88 @@ const generateWithPureBuilder = async (funnelId: string, templateInfo: any): Pro
             console.warn(`⚠️ Template '${templateName}' não encontrado. Usando fallback: '${safeTemplate}'`);
         }
 
-        // 🚀 CARREGAMENTO DINÂMICO DE TEMPLATES JSON
-        console.log(`🎯 Carregando ${totalSteps} templates JSON para ${safeTemplate}`);
+        // 🚀 CARREGAMENTO OTIMIZADO COM UNIFIED TEMPLATE SERVICE
+        console.log(`🎯 Carregando ${totalSteps} templates usando UnifiedTemplateService...`);
         
         const stepBlocks: Record<string, Block[]> = {};
         
-        // 📦 CARREGAR TEMPLATES JSON DINAMICAMENTE
-        for (let i = 1; i <= totalSteps; i++) {
-            const stepKey = `step-${i}`;
-            try {
-                // Carregar template JSON do diretório templates/
-                const templateResponse = await fetch(`/templates/step-${i.toString().padStart(2, '0')}-template.json`);
-                if (templateResponse.ok) {
-                    const templateData = await templateResponse.json();
-                    stepBlocks[stepKey] = templateData.blocks || [];
-                    console.log(`✅ Carregado ${stepKey}: ${stepBlocks[stepKey].length} blocos`);
+        // ✅ TEMPLATE LOADING PARALELO - Substituindo loop sequencial
+        try {
+            await unifiedTemplateService.preloadCriticalTemplates();
+            
+            // Carregar todos os templates em paralelo
+            const templatePromises = Array.from({ length: totalSteps }, (_, i) => {
+                const stepKey = `step-${i + 1}`;
+                const templateId = `step-${(i + 1).toString().padStart(2, '0')}`;
+                
+                return unifiedTemplateService.getTemplate(templateId)
+                    .then(template => ({ stepKey, template }))
+                    .catch(error => {
+                        console.warn(`⚠️ Fallback para ${stepKey}:`, error);
+                        return {
+                            stepKey,
+                            template: {
+                                blocks: [{
+                                    id: `fallback-${stepKey}`,
+                                    type: 'text-inline',
+                                    position: { x: 0, y: 0 },
+                                    order: 0,
+                                    content: { text: `Etapa ${i + 1} - Template em desenvolvimento` },
+                                    properties: {
+                                        fontSize: 'text-lg',
+                                        textAlign: 'text-center',
+                                        containerWidth: 'full',
+                                        spacing: 'small'
+                                    }
+                                }] as Block[]
+                            }
+                        };
+                    });
+            });
+
+            const results = await Promise.allSettled(templatePromises);
+            
+            results.forEach((result, index) => {
+                if (result.status === 'fulfilled') {
+                    const { stepKey, template } = result.value;
+                    stepBlocks[stepKey] = template.blocks || [];
+                    console.log(`✅ Loaded parallel ${stepKey}: ${stepBlocks[stepKey].length} blocos`);
                 } else {
-                    console.warn(`⚠️ Template não encontrado: step-${i.toString().padStart(2, '0')}-template.json`);
-                    // Fallback: criar bloco básico
+                    const stepKey = `step-${index + 1}`;
+                    console.error(`❌ Failed to load ${stepKey}:`, result.reason);
                     stepBlocks[stepKey] = [{
-                        id: `fallback-${stepKey}`,
+                        id: `error-${stepKey}`,
                         type: 'text-inline',
                         position: { x: 0, y: 0 },
                         order: 0,
-                        content: { text: `Etapa ${i} - Template em desenvolvimento` },
+                        content: { text: `Etapa ${index + 1} - Erro no carregamento` },
                         properties: {
                             fontSize: 'text-lg',
                             textAlign: 'text-center',
+                            color: '#ef4444',
                             containerWidth: 'full',
                             spacing: 'small'
                         }
                     }] as Block[];
                 }
-            } catch (error) {
-                console.error(`❌ Erro ao carregar template ${stepKey}:`, error);
-                // Fallback: criar bloco de erro
+            });
+            
+        } catch (error) {
+            console.error('❌ Error in parallel template loading:', error);
+            
+            // Fallback para sistema antigo apenas em caso de falha crítica
+            for (let i = 1; i <= totalSteps; i++) {
+                const stepKey = `step-${i}`;
                 stepBlocks[stepKey] = [{
-                    id: `error-${stepKey}`,
+                    id: `emergency-fallback-${stepKey}`,
                     type: 'text-inline',
                     position: { x: 0, y: 0 },
                     order: 0,
-                    content: { text: `Etapa ${i} - Erro no carregamento` },
+                    content: { text: `Etapa ${i} - Sistema de emergência` },
                     properties: {
                         fontSize: 'text-lg',
                         textAlign: 'text-center',
-                        color: '#ef4444',
+                        color: '#f59e0b',
                         containerWidth: 'full',
                         spacing: 'small'
                     }

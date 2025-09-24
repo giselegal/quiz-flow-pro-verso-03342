@@ -16,7 +16,7 @@ import { ThemeProvider } from './components/theme-provider';
 import { LoadingFallback } from './components/ui/loading-fallback';
 import { Toaster } from './components/ui/toaster';
 import { AuthProvider } from './context/AuthContext';
-import { FunnelsProvider } from './context/FunnelsContext';
+import { FunnelMasterProvider } from './providers/FunnelMasterProvider';
 import { RedirectRoute } from './components/RedirectRoute';
 import { QuizErrorBoundary } from './components/RouteErrorBoundary';
 import { EditorErrorBoundary } from './components/error/EditorErrorBoundary';
@@ -54,7 +54,7 @@ function App() {
   return (
     <ThemeProvider defaultTheme="light">
       <AuthProvider>
-        <FunnelsProvider>
+        <FunnelMasterProvider>
           <Router>
             <Suspense fallback={<LoadingFallback />}>
               <Switch>
@@ -184,7 +184,7 @@ function App() {
             </Suspense>
           </Router>
           <Toaster />
-        </FunnelsProvider>
+        </FunnelMasterProvider>
       </AuthProvider>
     </ThemeProvider>
   );
