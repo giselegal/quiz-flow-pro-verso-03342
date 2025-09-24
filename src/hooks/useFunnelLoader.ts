@@ -13,6 +13,7 @@
 
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { funnelUnifiedService, type UnifiedFunnelData } from '@/services/FunnelUnifiedService';
+import { enhancedFunnelService } from '@/services/EnhancedFunnelService';
 import { FunnelContext } from '@/core/contexts/FunnelContext';
 
 export interface FunnelLoadingState {
