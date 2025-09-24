@@ -11,6 +11,7 @@
 
 import React, { createContext, useContext, useCallback, useEffect, useState } from 'react';
 import { funnelUnifiedService, UnifiedFunnelData } from '@/services/FunnelUnifiedService';
+import { enhancedFunnelService } from '@/services/EnhancedFunnelService';
 import { normalizeFunnelId } from '@/utils/funnelNormalizer';
 
 // ============================================================================
@@ -128,7 +129,7 @@ export const UnifiedCRUDProvider: React.FC<UnifiedCRUDProviderProps> = ({
             
             console.log('🔍 Normalizando funnelId:', { original: id, normalized: searchId });
 
-            const funnel = await funnelUnifiedService.getFunnel(searchId);
+            const funnel = await enhancedFunnelService.getFunnelWithFallback(searchId);
 
             if (!funnel) {
                 console.warn(`⚠️ Funil não encontrado com ID normalizado: ${searchId} (original: ${id})`);

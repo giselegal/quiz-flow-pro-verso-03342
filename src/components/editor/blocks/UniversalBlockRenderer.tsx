@@ -9,6 +9,9 @@ import OptionsGridBlock from './OptionsGridBlock';
 import TextInlineBlock from './TextInlineBlock';
 import ButtonInlineBlock from './ButtonInlineBlock';
 import { FashionAIGeneratorBlock } from '@/components/blocks/ai';
+import MentorSectionInlineBlock from './MentorSectionInlineBlock';
+import TestimonialCardInlineBlock from './TestimonialCardInlineBlock';
+import TestimonialsCarouselInlineBlock from './TestimonialsCarouselInlineBlock';
 
 // @ts-nocheck
 export interface UniversalBlockRendererProps {
@@ -54,6 +57,9 @@ const BlockComponentRegistry: Record<string, React.FC<any>> = {
   'text-inline': TextInlineBlock,
   'button-inline': ButtonInlineBlock,
   'fashion-ai-generator': FashionAIGeneratorBlock,
+  'mentor-section-inline': MentorSectionInlineBlock,
+  'testimonial-card-inline': TestimonialCardInlineBlock,
+  'testimonials-carousel-inline': TestimonialsCarouselInlineBlock,
   'text': createFallbackComponent('text'),
   'headline': createFallbackComponent('headline'),
   'image': createFallbackComponent('image'),

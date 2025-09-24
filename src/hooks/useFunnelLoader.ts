@@ -126,7 +126,7 @@ export function useFunnelLoader(
             console.log('📖 useFunnelLoader: Carregando funil', id);
 
             // Usar serviço unificado (com cache automático)
-            const loadedFunnel = await funnelUnifiedService.getFunnel(id, userId);
+            const loadedFunnel = await enhancedFunnelService.getFunnelWithFallback(id, userId);
             
             if (loadedFunnel) {
                 setFunnel(loadedFunnel);

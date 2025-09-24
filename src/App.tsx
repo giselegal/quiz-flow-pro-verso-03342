@@ -19,6 +19,7 @@ import { AuthProvider } from './context/AuthContext';
 import { FunnelsProvider } from './context/FunnelsContext';
 import { RedirectRoute } from './components/RedirectRoute';
 import { QuizErrorBoundary } from './components/RouteErrorBoundary';
+import { EditorErrorBoundary } from './components/error/EditorErrorBoundary';
 
 // 🏠 PÁGINAS ESSENCIAIS
 const Home = lazy(() => import('./pages/Home'));
@@ -79,11 +80,11 @@ function App() {
 
                 <Route path="/editor/:funnelId">
                   {(params) => (
-                    <QuizErrorBoundary>
+                    <EditorErrorBoundary>
                       <div data-testid="editor-unified-page">
                         <ModernUnifiedEditor funnelId={params.funnelId} />
                       </div>
-                    </QuizErrorBoundary>
+                    </EditorErrorBoundary>
                   )}
                 </Route>
 

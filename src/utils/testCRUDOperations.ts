@@ -6,6 +6,7 @@
  */
 
 import { funnelUnifiedService } from '../services/FunnelUnifiedService';
+import { enhancedFunnelService } from '../services/EnhancedFunnelService';
 
 export async function testCRUDOperations() {
     console.log('🧪 Iniciando teste das operações CRUD...');
@@ -16,7 +17,7 @@ export async function testCRUDOperations() {
         // ========================================================================
         console.log('\n1. 🎯 Testando CREATE...');
 
-        const newFunnel = await funnelUnifiedService.createFunnel({
+        const newFunnel = await enhancedFunnelService.createFunnel({
             name: 'Teste CRUD - Funil de Teste',
             description: 'Funil criado para testar operações CRUD',
             category: 'teste',
@@ -31,7 +32,7 @@ export async function testCRUDOperations() {
         // ========================================================================
         console.log('\n2. 📖 Testando READ...');
 
-        const loadedFunnel = await funnelUnifiedService.getFunnel(testFunnelId);
+        const loadedFunnel = await enhancedFunnelService.getFunnelWithFallback(testFunnelId);
 
         if (loadedFunnel && loadedFunnel.id === testFunnelId) {
             console.log('✅ READ funcionou:', loadedFunnel.name);
@@ -44,7 +45,7 @@ export async function testCRUDOperations() {
         // ========================================================================
         console.log('\n3. ✏️ Testando UPDATE...');
 
-        const updatedFunnel = await funnelUnifiedService.updateFunnel(testFunnelId, {
+        const updatedFunnel = await enhancedFunnelService.updateFunnel(testFunnelId, {
             name: 'Teste CRUD - Funil ATUALIZADO',
             description: 'Descrição atualizada via teste CRUD',
         });
@@ -56,7 +57,7 @@ export async function testCRUDOperations() {
         // ========================================================================
         console.log('\n4. 📋 Testando DUPLICATE...');
 
-        const duplicatedFunnel = await funnelUnifiedService.duplicateFunnel(
+        const duplicatedFunnel = await enhancedFunnelService.duplicateFunnel(
             testFunnelId,
             'Cópia do Teste CRUD'
         );
@@ -68,7 +69,7 @@ export async function testCRUDOperations() {
         // ========================================================================
         console.log('\n5. 📋 Testando LIST...');
 
-        const funnels = await funnelUnifiedService.listFunnels({
+        const funnels = await enhancedFunnelService.listFunnels({
             category: 'teste',
             limit: 10
         });
