@@ -47,7 +47,8 @@ class UnifiedTemplateService {
         await Promise.allSettled(preloadPromises);
         
         const duration = performance.now() - startTime;
-        console.log(`🎯 Preload concluído em ${duration.toFixed(2)}ms`);
+        const successful = this.CRITICAL_TEMPLATES.length - preloadPromises.length;
+        console.log(`🎯 Preload concluído: ${successful}/${this.CRITICAL_TEMPLATES.length} templates em ${duration.toFixed(2)}ms`);
     }
 
     /**
@@ -212,11 +213,16 @@ class UnifiedTemplateService {
     }
 
     getCacheStats() {
+        const hitRate = this.cache.size > 0 ? 
+            ((this.cache.size / (this.cache.size + this.preloadingPromises.size)) * 100).toFixed(1) : '0';
+        
         return {
             cached: this.cache.size,
             preloading: this.preloadingPromises.size,
             criticalTemplates: this.CRITICAL_TEMPLATES.length,
-            memoryUsage: this.estimateMemoryUsage()
+            memoryUsage: this.estimateMemoryUsage(),
+            hitRate: `${hitRate}%`,
+            efficiency: this.cache.size >= this.CRITICAL_TEMPLATES.length ? 'High' : 'Medium'
         };
     }
 

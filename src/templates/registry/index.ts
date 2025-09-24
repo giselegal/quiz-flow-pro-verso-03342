@@ -276,10 +276,10 @@ export async function loadFullTemplate(templateId: string): Promise<FullTemplate
             return cachedTemplate;
         }
 
-        // Obter metadados enhanced
-        const enhancedMetadata = AVAILABLE_TEMPLATES[templateId] as EnhancedTemplateMetadata;
-        if (!enhancedMetadata) {
-            console.error(`Template ${templateId} não encontrado no registry enhanced`);
+        // Obter metadados básicos
+        const metadata = AVAILABLE_TEMPLATES[templateId];
+        if (!metadata) {
+            console.error(`Template ${templateId} não encontrado no registry`);
             return null;
         }
 
@@ -297,7 +297,7 @@ export async function loadFullTemplate(templateId: string): Promise<FullTemplate
         let templateModule;
 
         try {
-            const moduleResult = await enhancedMetadata.loader();
+            const moduleResult = await metadata.loader();
 
             // Lidar com diferentes formatos de export
             if (moduleResult.default) {
@@ -325,13 +325,13 @@ export async function loadFullTemplate(templateId: string): Promise<FullTemplate
 
         // Combinar metadados com conteúdo do template
         const fullTemplate: FullTemplate = {
-            ...enhancedMetadata,
+            ...metadata,
             config: templateModule.config || {},
             steps: templateModule.steps || []
         };
 
         // Cache inteligente baseado na estratégia
-        const cacheStrategy = enhancedMetadata.settings?.cacheStrategy || 'normal';
+        const cacheStrategy = metadata.settings?.cacheStrategy || 'normal';
 
         switch (cacheStrategy) {
             case 'aggressive':
@@ -348,7 +348,7 @@ export async function loadFullTemplate(templateId: string): Promise<FullTemplate
         }
 
         // Incrementar uso
-        enhancedMetadata.usageCount++;
+        metadata.usageCount++;
 
         // Registrar tempo de carregamento
         const loadTime = performance.now() - loadStartTime;
@@ -360,9 +360,9 @@ export async function loadFullTemplate(templateId: string): Promise<FullTemplate
                 source: 'dynamic-import',
                 loadTime,
                 cacheStrategy,
-                hasPlugins: !!(enhancedMetadata.requiredPlugins?.length || enhancedMetadata.optionalPlugins?.length),
-                hasValidation: !!(enhancedMetadata.validationRules?.length),
-                hasEventHandlers: !!(enhancedMetadata.eventHandlers?.length)
+                hasPlugins: !!(metadata.requiredPlugins?.length || metadata.optionalPlugins?.length),
+                hasValidation: !!(metadata.validationRules?.length),
+                hasEventHandlers: !!(metadata.eventHandlers?.length)
             }, templateId);
         }
 
@@ -444,18 +444,13 @@ export function convertTemplateToEditorFormat(template: FullTemplate): any {
 }
 
 /**
- * Incrementar contador de uso do template com analytics enhanced
+ * Incrementar contador de uso do template
  */
 export function incrementTemplateUsage(templateId: string): void {
-    const template = AVAILABLE_TEMPLATES[templateId] as EnhancedTemplateMetadata;
+    const template = AVAILABLE_TEMPLATES[templateId];
     if (template) {
         template.usageCount++;
-
-        // Atualizar analytics enhanced
-        if (template.analytics) {
-            template.analytics.usage = (template.analytics.usage || 0) + 1;
-        }
-
+        
         // Limpar cache para forçar recarregamento
         metadataCache.delete(templateId);
         templateCache.delete(templateId);
@@ -488,18 +483,15 @@ export function clearTemplateCache(): void {
 }
 
 /**
- * 🎯 ENHANCED ANALYTICS
+ * 📊 ANALYTICS BÁSICO
  * Obter estatísticas dos templates
  */
 export function getTemplateAnalytics(): any {
-    const templates = Object.values(AVAILABLE_TEMPLATES) as EnhancedTemplateMetadata[];
+    const templates = Object.values(AVAILABLE_TEMPLATES);
 
     return {
         totalTemplates: templates.length,
         totalUsage: templates.reduce((sum, t) => sum + t.usageCount, 0),
-        averageRating: templates
-            .filter(t => t.analytics?.userRating)
-            .reduce((sum, t, _, arr) => sum + ((t.analytics?.userRating || 0) / arr.length), 0),
         categoriesStats: templates.reduce((stats, template) => {
             stats[template.category] = (stats[template.category] || 0) + 1;
             return stats;
