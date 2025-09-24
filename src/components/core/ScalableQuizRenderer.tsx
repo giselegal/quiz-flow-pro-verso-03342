@@ -5,6 +5,7 @@ import { BlockPropertiesAPI } from '@/api/internal/BlockPropertiesAPI';
 import ScalableHybridTemplateService from '@/services/ScalableHybridTemplateService';
 import { QuizStepRouter } from '@/components/router/QuizStepRouter';
 import SpecializedStepRenderer from '@/components/specialized/SpecializedStepRenderer';
+import { getTemplateInfo } from '@/utils/funnelNormalizer';
 
 interface ScalableQuizRendererProps {
     funnelId: string;
@@ -38,12 +39,13 @@ export const ScalableQuizRenderer = memo<ScalableQuizRendererProps>(({
 }) => {
     // Estado do quiz flow
     const [currentStep, setCurrentStep] = useState(1);
-    const [totalSteps, setTotalSteps] = useState(0); // ❌ REMOVIDO: Default 21 - será dinâmico
+    const [totalSteps, setTotalSteps] = useState(1); // ✅ DINÂMICO - mínimo 1 step
     const [userAnswers, setUserAnswers] = useState<Record<number, any>>({});
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [realQuizData, setRealQuizData] = useState<any>(null);
     const [stepData, setStepData] = useState<any>(null);
+    const [templateInfo, setTemplateInfo] = useState<any>(null);
 
     // Configuração inicial do funil
     useEffect(() => {
@@ -52,27 +54,44 @@ export const ScalableQuizRenderer = memo<ScalableQuizRendererProps>(({
                 setIsLoading(true);
                 setError(null);
 
-                // 1. Primeiro carregar configuração master do funil via ScalableHybridTemplateService
-                const funnelStats = await ScalableHybridTemplateService.getFunnelStats(funnelId);
-                let detectedSteps = funnelStats.stepCount || 21;
+                // 1. ✅ NOVO: Normalizar funnelId e obter info do template
+                const templateInfo = await getTemplateInfo(funnelId);
+                setTemplateInfo(templateInfo);
                 
-                console.log(`🔍 Configuração master carregada para ${funnelId}:`, funnelStats);
+                console.log(`🔍 Template info carregado para ${funnelId}:`, templateInfo);
 
-                // 2. Carrega dados reais do quiz via BlockPropertiesAPI (opcional/complementar)
-                const blockApi = new BlockPropertiesAPI();
-                const realData = await blockApi.getRealTemplateData(funnelId);
-                setRealQuizData(realData);
+                // 2. Usar totalSteps do template (dinâmico)
+                let detectedSteps = templateInfo.totalSteps || 1;
 
-                // 3. Para o quiz21StepsComplete especificamente, garantir 21 steps
-                if (funnelId === 'quiz21StepsComplete') {
-                    detectedSteps = 21;
+                // 3. Fallback: tentar ScalableHybridTemplateService
+                try {
+                    const funnelStats = await ScalableHybridTemplateService.getFunnelStats(funnelId);
+                    if (funnelStats.stepCount && funnelStats.stepCount > 0) {
+                        detectedSteps = Math.max(detectedSteps, funnelStats.stepCount);
+                    }
+                } catch (hybridError) {
+                    console.warn('⚠️ ScalableHybridTemplateService não disponível:', hybridError);
                 }
 
+                // 4. Carrega dados reais do quiz via BlockPropertiesAPI (opcional)
+                try {
+                    const blockApi = new BlockPropertiesAPI();
+                    const realData = await blockApi.getRealTemplateData(templateInfo.baseId);
+                    setRealQuizData(realData);
+                } catch (apiError) {
+                    console.warn('⚠️ BlockPropertiesAPI não disponível:', apiError);
+                }
+
+                // ❌ REMOVIDO: Lógica hardcoded do quiz21StepsComplete
+                
                 setTotalSteps(Math.max(detectedSteps, 1)); // Garante pelo menos 1 step
 
-                console.log(`✅ ScalableQuizRenderer: Funil ${funnelId} inicializado`, {
-                    totalSteps: totalSteps,
-                    hasRealData: !!realData
+                console.log(`✅ ScalableQuizRenderer: Funil ${funnelId} inicializado dinamicamente`, {
+                    baseId: templateInfo.baseId,
+                    templateName: templateInfo.templateName,
+                    totalSteps: detectedSteps,
+                    hasTemplate: !!templateInfo.template,
+                    hasRealData: !!realQuizData
                 });
 
             } catch (error) {
@@ -84,7 +103,7 @@ export const ScalableQuizRenderer = memo<ScalableQuizRendererProps>(({
         };
 
         initializeFunnel();
-    }, [funnelId, totalSteps]);
+    }, [funnelId]);
 
     // Carrega dados do step atual
     useEffect(() => {
@@ -257,22 +276,24 @@ export const ScalableQuizRenderer = memo<ScalableQuizRendererProps>(({
     // Main Quiz Interface
     return (
         <div className={cn('w-full max-w-2xl mx-auto', className)}>
-            {/* Debug Panel (apenas em modo debug) */}
-            {debugMode && (
+            {/* Debug Panel (sempre visível em preview ou debug) */}
+            {(debugMode || mode === 'preview') && (
                 <div className="mb-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg text-xs">
                     <div className="font-semibold text-yellow-800 mb-2">
-                        🔧 Debug Mode - Sistema Escalável Ativo
+                        🔧 Debug - Sistema Dinâmico {debugMode ? 'ON' : '(Preview)'}
                     </div>
                     <div className="grid grid-cols-2 gap-2 text-yellow-700">
-                        <div>Funil: {funnelId}</div>
-                        <div>Step: {currentStep}/{totalSteps}</div>
-                        <div>Progresso: {progress}%</div>
-                        <div>Dados Reais: {realQuizData ? '✅' : '❌'}</div>
-                        <div>Step Data: {stepData ? '✅' : '❌'}</div>
-                        <div>Sistema: HybridTemplateService</div>
+                        <div><strong>Funil Original:</strong> {funnelId}</div>
+                        <div><strong>Template Base:</strong> {templateInfo?.baseId || 'N/A'}</div>
+                        <div><strong>Nome Template:</strong> {templateInfo?.templateName || 'N/A'}</div>
+                        <div><strong>Step:</strong> {currentStep}/{totalSteps}</div>
+                        <div><strong>Progresso:</strong> {progress}%</div>
+                        <div><strong>Template Carregado:</strong> {templateInfo?.template ? '✅' : '❌'}</div>
+                        <div><strong>Dados Reais:</strong> {realQuizData ? '✅' : '❌'}</div>
+                        <div><strong>Step Data:</strong> {stepData ? '✅' : '❌'}</div>
                     </div>
 
-                    {stepData && (
+                    {stepData && debugMode && (
                         <details className="mt-2">
                             <summary className="cursor-pointer text-yellow-800 font-medium">
                                 Config Atual (JSON)

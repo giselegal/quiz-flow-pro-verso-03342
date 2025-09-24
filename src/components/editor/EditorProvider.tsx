@@ -211,47 +211,36 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
     };
   }, []);
   // 🔧 CORREÇÃO CRÍTICA: Estado inicial dinâmico SEM forçar 21 etapas
-  const getInitialState = (): EditorState => {
-    const initialBlocks: Record<string, Block[]> = {};
-    const isTestEnv = process.env.NODE_ENV === 'test';
+    const getInitialState = (): EditorState => {
+        const initialBlocks: Record<string, Block[]> = {};
+        const isTestEnv = process.env.NODE_ENV === 'test';
 
-    if (!isTestEnv) {
-      // Se funnelId indica template, carregar do templateLibraryService
-      if (funnelId?.startsWith('template-')) {
-        console.log('📋 EditorProvider: Template será carregado dinamicamente:', funnelId);
-        // Template será carregado depois via loadRealFunnelData - NÃO forçar 21 etapas
-      } else if (funnelId && !funnelId.includes('new-funnel')) {
-        console.log('🔗 EditorProvider: Funil real será carregado do Supabase:', funnelId);
-        // Dados reais serão carregados depois via loadRealFunnelData
-      } else if (!funnelId) {
-        // Sem funnelId = canvas em branco para criação
-        console.log('🆕 EditorProvider: Iniciando com canvas vazio (criação de novo funil)');
-        // initialBlocks permanece vazio para canvas em branco
-      } else {
-        console.log('🆕 EditorProvider: Canvas vazio para funil novo');
-        // ❌ REMOVIDO: Não forçar template de 21 etapas por padrão
-        // Apenas inicializar com step-1 vazio
-        initialBlocks['step-1'] = [];
-      }
-    } else {
-      // Em testes, iniciar sempre vazio
-      initialBlocks['step-1'] = [];
-      initialBlocks['step-2'] = [];
-    }
+        if (!isTestEnv) {
+            // ✅ NOVO: Sistema totalmente dinâmico sem templates fixos
+            console.log('🆕 EditorProvider: Iniciando com canvas dinâmico para funnelId:', funnelId);
+            
+            // Canvas sempre inicia vazio - template será carregado depois via loadRealFunnelData
+            // ❌ REMOVIDO: Não forçar nenhum template por padrão
+            initialBlocks['step-1'] = []; // Apenas step inicial vazio
+        } else {
+            // Em testes, iniciar sempre vazio
+            initialBlocks['step-1'] = [];
+            initialBlocks['step-2'] = [];
+        }
 
-    const state: EditorState = {
-      stepBlocks: initialBlocks,
-      currentStep: 1,
-      selectedBlockId: null,
-      stepValidation: {},
-      isSupabaseEnabled: enableSupabase,
-      databaseMode: enableSupabase ? 'supabase' : 'local',
-      isLoading: false,
-      ...initial,
+        const state: EditorState = {
+            stepBlocks: initialBlocks,
+            currentStep: 1,
+            selectedBlockId: null,
+            stepValidation: {},
+            isSupabaseEnabled: enableSupabase,
+            databaseMode: enableSupabase ? 'supabase' : 'local',
+            isLoading: false,
+            ...initial,
+        };
+
+        return state;
     };
-
-    return state;
-  };
 
   const {
     present: rawState,

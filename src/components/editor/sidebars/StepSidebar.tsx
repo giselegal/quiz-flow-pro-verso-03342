@@ -3,24 +3,26 @@ import { cn } from '@/lib/utils';
 
 export interface StepSidebarProps {
   currentStep: number;
-  totalSteps?: number;
+  totalSteps: number; // ✅ OBRIGATÓRIO - calculado dinamicamente
   stepHasBlocks: Record<number, boolean>;
   stepValidation?: Record<number, boolean>;
   onSelectStep: (step: number) => void;
   getStepAnalysis: (step: number) => { icon: string; label: string; desc: string };
   renderIcon: (name: string, className?: string) => React.ReactNode;
   className?: string;
+  funnelId?: string; // Para debug
 }
 
 const StepSidebarComponent: React.FC<StepSidebarProps> = ({
   currentStep,
-  totalSteps = 21,
+  totalSteps, // ❌ REMOVIDO: Default 21 - agora obrigatório e dinâmico
   stepHasBlocks,
   stepValidation,
   onSelectStep,
   getStepAnalysis,
   renderIcon,
   className = '',
+  funnelId,
 }) => {
   return (
     <div
@@ -33,7 +35,9 @@ const StepSidebarComponent: React.FC<StepSidebarProps> = ({
     >
       <div className="p-4 border-b border-gray-800/50 flex-shrink-0">
         <h3 className="font-medium text-sm text-gray-200" id="steps-heading">Etapas do Quiz</h3>
-        <p className="text-xs text-gray-500 mt-1" aria-live="polite">{totalSteps} steps configured</p>
+        <p className="text-xs text-gray-500 mt-1" aria-live="polite">
+          {totalSteps} steps {funnelId && <span>({funnelId})</span>}
+        </p>
       </div>
 
       <div className="flex-1 overflow-y-auto" role="list" aria-labelledby="steps-heading">

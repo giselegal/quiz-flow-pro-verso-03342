@@ -24,7 +24,7 @@ interface Step {
 }
 
 interface ModernStepSidebarProps {
-    steps?: Step[];
+    totalSteps?: number; // ✅ DINÂMICO - calculado pelos componentes pai
     activeStepId?: string;
     onStepClick?: (stepId: string) => void;
     onStepAdd?: () => void;
@@ -32,10 +32,11 @@ interface ModernStepSidebarProps {
     onStepRename?: (stepId: string, newName: string) => void;
     onStepDuplicate?: (stepId: string) => void;
     className?: string;
+    funnelId?: string; // Para debug
 }
 
 export const ModernStepSidebar: React.FC<ModernStepSidebarProps> = ({
-    steps = defaultSteps,
+    totalSteps = 1, // ✅ DINÂMICO - mínimo 1 step
     activeStepId,
     onStepClick,
     onStepAdd,
@@ -43,9 +44,18 @@ export const ModernStepSidebar: React.FC<ModernStepSidebarProps> = ({
     onStepRename,
     onStepDuplicate,
     className = '',
+    funnelId,
 }) => {
     const [editingStepId, setEditingStepId] = useState<string | null>(null);
     const [editingName, setEditingName] = useState('');
+
+    // ✅ DINÂMICO: Gerar steps baseado no totalSteps
+    const steps: Step[] = Array.from({ length: totalSteps }, (_, i) => ({
+        id: `${i + 1}`,
+        name: `Etapa ${i + 1}`,
+        isActive: activeStepId === `${i + 1}`,
+        order: i + 1
+    }));
 
     const handleStepClick = (step: Step) => {
         if (editingStepId === step.id) return;
@@ -160,7 +170,6 @@ export const ModernStepSidebar: React.FC<ModernStepSidebarProps> = ({
                             </div>
                         ))}
 
-                        {/* Add Step Button */}
                         <div className="grid md:p-1 relative">
                             <Button
                                 variant="ghost"
@@ -170,6 +179,11 @@ export const ModernStepSidebar: React.FC<ModernStepSidebarProps> = ({
                                 <Plus className="mr-2 h-4 w-4" />
                                 Adicionar Etapa
                             </Button>
+                            {funnelId && (
+                                <div className="text-xs text-zinc-500 mt-1 px-4">
+                                    {totalSteps} steps ({funnelId})
+                                </div>
+                            )}
                         </div>
 
                         <div className="py-10"></div>
@@ -180,22 +194,7 @@ export const ModernStepSidebar: React.FC<ModernStepSidebarProps> = ({
     );
 };
 
-// Default steps for demonstration
-const defaultSteps: Step[] = [
-    { id: '1', name: 'Etapa 1', isActive: true, order: 1 },
-    { id: '2', name: 'Etapa 2', order: 2 },
-    { id: '3', name: 'Etapa 3', order: 3 },
-    { id: '4', name: 'Etapa 4', order: 4 },
-    { id: '5', name: 'Etapa 5', order: 5 },
-    { id: '6', name: 'Etapa 6', order: 6 },
-    { id: '7', name: 'Etapa 7', order: 7 },
-    { id: '8', name: 'Etapa 8', order: 8 },
-    { id: '9', name: 'Etapa 9', order: 9 },
-    { id: '10', name: 'Etapa 10', order: 10 },
-    { id: '11', name: 'Etapa 11', order: 11 },
-    { id: '12', name: 'Etapa 12', order: 12 },
-    { id: '13', name: 'Etapa 13', order: 13 },
-    { id: '14', name: 'Etapa 14', order: 14 },
-];
+// ❌ REMOVIDO: Steps hardcoded - agora são gerados dinamicamente
+// Default steps removidos - ModernStepSidebar agora usa totalSteps para gerar steps dinamicamente
 
 export default ModernStepSidebar;

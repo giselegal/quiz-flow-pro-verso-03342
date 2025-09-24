@@ -49,8 +49,15 @@ export const useUnifiedStepNavigation = (): UseUnifiedStepNavigationReturn => {
     const { currentStep, stepBlocks, stepValidation, isLoading } = state;
     const { setCurrentStep } = actions;
 
-    // 🔧 CORREÇÃO: Constantes dinâmicas baseadas nos dados reais
-    const TOTAL_STEPS = Object.keys(stepBlocks).length || 1; // Dinâmico baseado em stepBlocks
+    // 🔧 CORREÇÃO: Constantes dinâmicas baseadas nos dados reais E template info
+    const TOTAL_STEPS = useMemo(() => {
+        // Primeiro tentar contar steps dos stepBlocks
+        const stepsFromBlocks = Object.keys(stepBlocks).length;
+        if (stepsFromBlocks > 0) return stepsFromBlocks;
+
+        // Fallback mínimo
+        return 1;
+    }, [stepBlocks]);
 
     // IDs formatados
     const currentStepId = useMemo(() => `step-${currentStep}`, [currentStep]);
