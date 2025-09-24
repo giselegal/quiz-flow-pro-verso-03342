@@ -177,71 +177,69 @@ const TemplatesFunisPage: React.FC = () => {
     };
 
     return (
-        <div className="p-6">
+        <div className="p-6 bg-slate-50 min-h-screen">
             {/* Header */}
             <div className="mb-8">
-                <h1 className="text-3xl font-bold text-gray-900 mb-2">
+                <h1 className="text-3xl font-bold text-slate-900 mb-2">
                     Modelos de Funis
                 </h1>
-                <p className="text-gray-600 mb-6">
+                <p className="text-slate-600 mb-6">
                     Templates profissionais e testados para diferentes objetivos de negócio
                 </p>
 
                 {/* Resumo por segmento */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-                    <Card className="p-4">
+                    <Card className="p-4 border border-slate-200 bg-white shadow-sm hover:shadow-lg transition-all duration-300">
                         <div className="flex items-center gap-3">
-                            <div className="p-2 bg-blue-50 rounded-lg">
-                                <div className="w-6 h-6 bg-blue-600 rounded"></div>
+                            <div className="p-2 bg-slate-100 rounded-lg">
+                                <div className="w-6 h-6 bg-slate-700 rounded"></div>
                             </div>
                             <div>
-                                <p className="text-sm text-gray-600">Templates B2B</p>
-                                <p className="text-xl font-bold">{templatesFunis.filter(t => t.segment === 'B2B').length}</p>
-                                <p className="text-xs text-gray-500">Empresarial</p>
+                                <p className="text-sm text-slate-600">Templates B2B</p>
+                                <p className="text-xl font-bold text-slate-900">{templatesFunis.filter(t => t.segment === 'B2B').length}</p>
+                                <p className="text-xs text-slate-500">Empresarial</p>
                             </div>
                         </div>
                     </Card>
 
-                    <Card className="p-4">
+                    <Card className="p-4 border border-pink-200 bg-pink-50 shadow-sm hover:shadow-lg transition-all duration-300">
                         <div className="flex items-center gap-3">
-                            <div className="p-2 bg-green-50 rounded-lg">
-                                <div className="w-6 h-6 bg-green-600 rounded"></div>
+                            <div className="p-2 bg-pink-100 rounded-lg">
+                                <div className="w-6 h-6 bg-pink-600 rounded"></div>
                             </div>
                             <div>
-                                <p className="text-sm text-gray-600">Cliente Final</p>
-                                <p className="text-xl font-bold">{templatesFunis.filter(t => t.segment === 'Cliente Final').length}</p>
-                                <p className="text-xs text-gray-500">Consumidor</p>
+                                <p className="text-sm text-pink-700">Cliente Final</p>
+                                <p className="text-xl font-bold text-pink-900">{templatesFunis.filter(t => t.segment === 'Cliente Final').length}</p>
+                                <p className="text-xs text-pink-600">Consumidor</p>
                             </div>
                         </div>
                     </Card>
 
-                    <Card className="p-4">
+                    <Card className="p-4 border border-purple-200 bg-purple-50 shadow-sm hover:shadow-lg transition-all duration-300">
                         <div className="flex items-center gap-3">
-                            <div className="p-2 bg-purple-50 rounded-lg">
+                            <div className="p-2 bg-purple-100 rounded-lg">
                                 <div className="w-6 h-6 bg-purple-600 rounded"></div>
                             </div>
                             <div>
-                                <p className="text-sm text-gray-600">Quiz Interativos</p>
-                                <p className="text-xl font-bold">{templatesFunis.filter(t => t.segment === 'Quiz').length}</p>
-                                <p className="text-xs text-gray-500">Engajamento</p>
+                                <p className="text-sm text-purple-700">Quiz Interativos</p>
+                                <p className="text-xl font-bold text-purple-900">{templatesFunis.filter(t => t.segment === 'Quiz').length}</p>
+                                <p className="text-xs text-purple-600">Engajamento</p>
                             </div>
                         </div>
                     </Card>
-                </div>
-
-                {/* Barra de Pesquisa */}
+                </div>                {/* Barra de Pesquisa */}
                 <div className="relative mb-6">
-                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-4 h-4" />
                     <Input
                         type="text"
                         placeholder="Pesquisar templates por nome, descrição ou tags..."
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
-                        className="pl-10 pr-4"
+                        className="pl-10 pr-4 border-slate-300 focus:border-slate-500 focus:ring-slate-500"
                     />
                     {searchTerm && (
                         <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
-                            <Badge variant="secondary" className="text-xs">
+                            <Badge variant="secondary" className="text-xs bg-slate-100 text-slate-700">
                                 {filteredTemplates.length} encontrados
                             </Badge>
                         </div>
@@ -254,7 +252,7 @@ const TemplatesFunisPage: React.FC = () => {
                 <div className="flex flex-wrap gap-4 mb-4">
                     {/* Filtro por Segmento */}
                     <div className="flex flex-wrap gap-2">
-                        <span className="text-sm font-medium text-gray-700 flex items-center gap-2 mr-2">
+                        <span className="text-sm font-medium text-slate-700 flex items-center gap-2 mr-2">
                             <Filter className="w-4 h-4" />
                             Segmento:
                         </span>
@@ -263,8 +261,8 @@ const TemplatesFunisPage: React.FC = () => {
                                 key={segment}
                                 onClick={() => setSelectedSegment(segment)}
                                 className={`px-3 py-1 rounded-full text-sm transition-colors ${selectedSegment === segment
-                                        ? 'bg-blue-600 text-white'
-                                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                                    ? 'bg-slate-700 text-white shadow-lg'
+                                    : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
                                     }`}
                             >
                                 {segment}
@@ -276,14 +274,14 @@ const TemplatesFunisPage: React.FC = () => {
                 <div className="flex flex-wrap gap-4">
                     {/* Filtro por Categoria */}
                     <div className="flex flex-wrap gap-2">
-                        <span className="text-sm font-medium text-gray-700 mr-2">Categoria:</span>
+                        <span className="text-sm font-medium text-slate-700 mr-2">Categoria:</span>
                         {categories.map((category) => (
                             <button
                                 key={category}
                                 onClick={() => setSelectedCategory(category)}
                                 className={`px-3 py-1 rounded-full text-sm transition-colors ${selectedCategory === category
-                                        ? 'bg-green-600 text-white'
-                                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                                    ? 'bg-pink-600 text-white shadow-lg'
+                                    : 'bg-pink-100 text-pink-700 hover:bg-pink-200'
                                     }`}
                             >
                                 {category}
@@ -293,14 +291,14 @@ const TemplatesFunisPage: React.FC = () => {
 
                     {/* Filtro por Dificuldade */}
                     <div className="flex flex-wrap gap-2">
-                        <span className="text-sm font-medium text-gray-700 mr-2">Dificuldade:</span>
+                        <span className="text-sm font-medium text-slate-700 mr-2">Dificuldade:</span>
                         {difficulties.map((difficulty) => (
                             <button
                                 key={difficulty}
                                 onClick={() => setSelectedDifficulty(difficulty)}
                                 className={`px-3 py-1 rounded-full text-sm transition-colors ${selectedDifficulty === difficulty
-                                        ? 'bg-purple-600 text-white'
-                                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                                    ? 'bg-purple-600 text-white shadow-lg'
+                                    : 'bg-purple-100 text-purple-700 hover:bg-purple-200'
                                     }`}
                             >
                                 {difficulty}
@@ -337,7 +335,7 @@ const TemplatesFunisPage: React.FC = () => {
                                     </Button>
                                     <Button
                                         size="sm"
-                                        className="bg-blue-600 hover:bg-blue-700"
+                                        className="bg-slate-700 hover:bg-slate-800 text-white"
                                         onClick={() => handleUseTemplate(template.id)}
                                     >
                                         <Copy className="w-4 h-4 mr-1" />
@@ -351,8 +349,8 @@ const TemplatesFunisPage: React.FC = () => {
                                 <Badge
                                     variant="secondary"
                                     className={`
-                                        ${template.segment === 'B2B' ? 'bg-blue-100 text-blue-800' : ''}
-                                        ${template.segment === 'Cliente Final' ? 'bg-green-100 text-green-800' : ''}
+                                        ${template.segment === 'B2B' ? 'bg-slate-100 text-slate-800' : ''}
+                                        ${template.segment === 'Cliente Final' ? 'bg-pink-100 text-pink-800' : ''}
                                         ${template.segment === 'Quiz' ? 'bg-purple-100 text-purple-800' : ''}
                                     `}
                                 >
@@ -362,7 +360,7 @@ const TemplatesFunisPage: React.FC = () => {
 
                             {/* Difficulty Badge */}
                             <div className="absolute top-3 right-3">
-                                <Badge variant="outline" className="bg-white/90">
+                                <Badge variant="outline" className="bg-white/90 border-slate-300">
                                     {template.difficulty}
                                 </Badge>
                             </div>
@@ -370,15 +368,15 @@ const TemplatesFunisPage: React.FC = () => {
 
                         <CardHeader className="pb-3">
                             <div className="flex items-start justify-between">
-                                <CardTitle className="text-lg font-bold text-gray-900 line-clamp-2">
+                                <CardTitle className="text-lg font-bold text-slate-900 line-clamp-2">
                                     {template.name}
                                 </CardTitle>
-                                <div className="flex items-center gap-1 text-yellow-500 shrink-0">
+                                <div className="flex items-center gap-1 text-pink-500 shrink-0">
                                     <Star className="w-4 h-4 fill-current" />
-                                    <span className="text-sm font-medium text-gray-700">{template.rating}</span>
+                                    <span className="text-sm font-medium text-slate-700">{template.rating}</span>
                                 </div>
                             </div>
-                            <CardDescription className="text-gray-600 line-clamp-3">
+                            <CardDescription className="text-slate-600 line-clamp-3">
                                 {template.description}
                             </CardDescription>
                         </CardHeader>
@@ -387,7 +385,7 @@ const TemplatesFunisPage: React.FC = () => {
                             {/* Tags */}
                             <div className="flex flex-wrap gap-1 mb-4">
                                 {template.tags.map((tag, index) => (
-                                    <Badge key={index} variant="outline" className="text-xs">
+                                    <Badge key={index} variant="outline" className="text-xs border-slate-300 text-slate-700">
                                         {tag}
                                     </Badge>
                                 ))}
@@ -395,11 +393,11 @@ const TemplatesFunisPage: React.FC = () => {
 
                             {/* Features */}
                             <div className="mb-4">
-                                <h4 className="text-sm font-medium text-gray-900 mb-2">Principais recursos:</h4>
-                                <ul className="text-xs text-gray-600 space-y-1">
+                                <h4 className="text-sm font-medium text-slate-900 mb-2">Principais recursos:</h4>
+                                <ul className="text-xs text-slate-600 space-y-1">
                                     {template.features.slice(0, 3).map((feature, index) => (
                                         <li key={index} className="flex items-center gap-2">
-                                            <div className="w-1 h-1 bg-blue-600 rounded-full"></div>
+                                            <div className="w-1 h-1 bg-purple-600 rounded-full"></div>
                                             {feature}
                                         </li>
                                     ))}
@@ -408,7 +406,7 @@ const TemplatesFunisPage: React.FC = () => {
 
                             {/* Stats & Actions */}
                             <div className="flex items-center justify-between">
-                                <div className="flex items-center gap-4 text-xs text-gray-500">
+                                <div className="flex items-center gap-4 text-xs text-slate-500">
                                     <div className="flex items-center gap-1">
                                         <Download className="w-3 h-3" />
                                         {template.downloads.toLocaleString()}
@@ -419,14 +417,14 @@ const TemplatesFunisPage: React.FC = () => {
                                     <Button
                                         size="sm"
                                         variant="outline"
-                                        className="h-8 px-3"
+                                        className="h-8 px-3 border-slate-300 text-slate-700 hover:bg-slate-50"
                                         onClick={() => handlePreviewTemplate(template.id)}
                                     >
                                         <Eye className="w-3 h-3" />
                                     </Button>
                                     <Button
                                         size="sm"
-                                        className="h-8 px-3 bg-blue-600 hover:bg-blue-700"
+                                        className="h-8 px-3 bg-slate-700 hover:bg-slate-800 text-white"
                                         onClick={() => handleUseTemplate(template.id)}
                                     >
                                         <Copy className="w-3 h-3 mr-1" />
@@ -443,16 +441,17 @@ const TemplatesFunisPage: React.FC = () => {
             {filteredTemplates.length === 0 && (
                 <div className="text-center py-12">
                     <div className="max-w-md mx-auto">
-                        <Search className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-                        <h3 className="text-lg font-medium text-gray-900 mb-2">
+                        <Search className="w-16 h-16 text-slate-400 mx-auto mb-4" />
+                        <h3 className="text-lg font-medium text-slate-900 mb-2">
                             Nenhum template encontrado
                         </h3>
-                        <p className="text-gray-600 mb-4">
+                        <p className="text-slate-600 mb-4">
                             Não conseguimos encontrar templates com os filtros selecionados.
                             Tente ajustar os critérios de busca.
                         </p>
                         <Button
                             variant="outline"
+                            className="border-slate-300 text-slate-700 hover:bg-slate-50"
                             onClick={() => {
                                 setSelectedSegment('Todos');
                                 setSelectedCategory('Todos');
