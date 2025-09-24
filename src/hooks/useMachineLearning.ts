@@ -511,7 +511,7 @@ class MachineLearningEngine {
         };
     }
 
-    async discoverPatterns(data: any[], types: MLPattern['type'][]): Promise<MLPattern[]> {
+    async discoverPatterns(_data: any[], _types: MLPattern['type'][]): Promise<MLPattern[]> {
         // Simular descoberta de padrões
         await new Promise(resolve => setTimeout(resolve, 500));
 

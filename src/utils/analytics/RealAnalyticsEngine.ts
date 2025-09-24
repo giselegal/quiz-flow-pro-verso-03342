@@ -182,7 +182,7 @@ export class RealAnalyticsEngine {
 
     // Storage interno
     private events: RealAnalyticsEvent[] = [];
-    private userBehaviors: Map<string, UserBehaviorPattern> = new Map();
+    private _userBehaviors: Map<string, UserBehaviorPattern> = new Map(); // Prefixo _ para indicar uso futuro
     private performanceData: PerformanceMetrics[] = [];
     private abTests: Map<string, ABTestExperiment> = new Map();
     private funnels: Map<string, ConversionFunnel> = new Map();
@@ -199,7 +199,7 @@ export class RealAnalyticsEngine {
     };
 
     // Timers e workers
-    private flushTimer?: NodeJS.Timeout;
+    private _flushTimer?: NodeJS.Timeout; // Prefixo _ para indicar uso futuro
     private performanceObserver?: PerformanceObserver;
 
     static getInstance(): RealAnalyticsEngine {
@@ -420,7 +420,7 @@ export class RealAnalyticsEngine {
     createConversionFunnel(
         name: string,
         steps: string[],
-        config?: {
+        _config?: {
             trackingConfig?: Record<string, any>;
             goals?: Record<string, number>;
         }
@@ -595,7 +595,7 @@ export class RealAnalyticsEngine {
     // ===== MÉTODOS PRIVADOS =====
 
     private setupAutoFlush(): void {
-        this.flushTimer = setInterval(() => {
+        this._flushTimer = setInterval(() => {
             if (this.events.length > 0) {
                 this.flushEvents();
             }
@@ -829,33 +829,33 @@ export class RealAnalyticsEngine {
     private filterEventsByTimeRange(events: RealAnalyticsEvent[], timeRange: { start: Date; end: Date }): RealAnalyticsEvent[] {
         return events.filter(e => e.timestamp >= timeRange.start && e.timestamp <= timeRange.end);
     }
-    private generateOverviewReport(events: RealAnalyticsEvent[], timeRange: any, filters?: any): AnalyticsReport {
+    private generateOverviewReport(_events: RealAnalyticsEvent[], _timeRange: any, _filters?: any): AnalyticsReport {
         return {} as AnalyticsReport;
     }
-    private generateFunnelReport(events: RealAnalyticsEvent[], timeRange: any, filters?: any): AnalyticsReport {
+    private generateFunnelReport(_events: RealAnalyticsEvent[], _timeRange: any, _filters?: any): AnalyticsReport {
         return {} as AnalyticsReport;
     }
-    private generateABTestReport(events: RealAnalyticsEvent[], timeRange: any, filters?: any): AnalyticsReport {
+    private generateABTestReport(_events: RealAnalyticsEvent[], _timeRange: any, _filters?: any): AnalyticsReport {
         return {} as AnalyticsReport;
     }
-    private generatePerformanceReport(events: RealAnalyticsEvent[], timeRange: any, filters?: any): AnalyticsReport {
+    private generatePerformanceReport(_events: RealAnalyticsEvent[], _timeRange: any, _filters?: any): AnalyticsReport {
         return {} as AnalyticsReport;
     }
-    private generateBehaviorReport(events: RealAnalyticsEvent[], timeRange: any, filters?: any): AnalyticsReport {
+    private generateBehaviorReport(_events: RealAnalyticsEvent[], _timeRange: any, _filters?: any): AnalyticsReport {
         return {} as AnalyticsReport;
     }
-    private calculateTopPages(events: RealAnalyticsEvent[]): any[] { return []; }
-    private calculateErrorRate(events: RealAnalyticsEvent[]): number { return 0; }
-    private calculateAverageLoadTime(events: RealAnalyticsEvent[]): number { return 0; }
-    private calculateConversionRate(events: RealAnalyticsEvent[]): number { return 0; }
-    private trackClickBehavior(e: MouseEvent): void { }
+    private calculateTopPages(_events: RealAnalyticsEvent[]): any[] { return []; }
+    private calculateErrorRate(_events: RealAnalyticsEvent[]): number { return 0; }
+    private calculateAverageLoadTime(_events: RealAnalyticsEvent[]): number { return 0; }
+    private calculateConversionRate(_events: RealAnalyticsEvent[]): number { return 0; }
+    private trackClickBehavior(_e: MouseEvent): void { }
     private trackScrollBehavior(): void { }
     private trackVisibilityChange(): void { }
-    private processPerformanceEntry(entry: PerformanceEntry): void { }
-    private updateConversionMetrics(event: RealAnalyticsEvent): void { }
-    private updateStepMetrics(event: RealAnalyticsEvent): void { }
-    private updateBehaviorMetrics(event: RealAnalyticsEvent): void { }
-    private updateABTestMetrics(event: RealAnalyticsEvent): void { }
+    private processPerformanceEntry(_entry: PerformanceEntry): void { }
+    private updateConversionMetrics(_event: RealAnalyticsEvent): void { }
+    private updateStepMetrics(_event: RealAnalyticsEvent): void { }
+    private updateBehaviorMetrics(_event: RealAnalyticsEvent): void { }
+    private updateABTestMetrics(_event: RealAnalyticsEvent): void { }
 }
 
 // ===== INTERFACES AUXILIARES =====

@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { usePerformanceTest } from '../../hooks/usePerformanceTest';
 
 /**
@@ -148,7 +148,8 @@ const DebugPanel: React.FC<DebugPanelProps> = ({
                     )
                 );
 
-                addLog('error', `Network Error: ${method} ${url}`, { url, method, error: error.message });
+                const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+                addLog('error', `Network Error: ${method} ${url}`, { url, method, error: errorMessage });
                 throw error;
             }
         };
