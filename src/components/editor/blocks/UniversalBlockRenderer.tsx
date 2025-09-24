@@ -164,7 +164,7 @@ const UniversalBlockRenderer: React.FC<UniversalBlockRendererProps> = memo(({
   React.useEffect(() => {
     if (renderStartTime.current) {
       const renderTime = performance.now() - renderStartTime.current;
-      
+
       // Registrar estatísticas de render
       blockRendererDebug.logRender({
         blockType: block.type,
