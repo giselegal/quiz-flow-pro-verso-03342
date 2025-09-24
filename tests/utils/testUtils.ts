@@ -163,9 +163,10 @@ export class PageUtils {
             await page.waitForTimeout(500); // Aguarda adaptação
 
             const isVisible = await page.locator(breakpoint.testSelector).isVisible();
-            const hasExpectedClass = breakpoint.expectedClass
-                ? await page.locator(breakpoint.testSelector).getAttribute('class')?.includes(breakpoint.expectedClass)
-                : true;
+            const classAttribute = breakpoint.expectedClass 
+                ? await page.locator(breakpoint.testSelector).getAttribute('class')
+                : null;
+            const hasExpectedClass = classAttribute?.includes(breakpoint.expectedClass || '') ?? true;
 
             results.push({
                 name: breakpoint.name,
