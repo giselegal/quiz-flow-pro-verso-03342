@@ -5,7 +5,7 @@
  * Integra com o UnifiedServiceManager e usa dados reais do Supabase
  */
 
-import { BaseUnifiedService, ServiceConfig } from './UnifiedServiceManager';
+import { BaseUnifiedService } from './UnifiedServiceManager';
 import { supabase } from '@/integrations/supabase/client';
 
 // ============================================================================
@@ -15,13 +15,13 @@ import { supabase } from '@/integrations/supabase/client';
 export interface FunnelData {
   id: string;
   name: string;
-  description?: string;
-  user_id: string;
-  is_published: boolean;
-  version: number;
-  settings?: Record<string, any>;
-  created_at: string;
-  updated_at: string;
+  description?: string | null;
+  user_id: string | null;
+  is_published: boolean | null;
+  version: number | null;
+  settings?: any;
+  created_at: string | null;
+  updated_at: string | null;
 }
 
 export interface FunnelMetrics {
@@ -66,7 +66,7 @@ export class ConsolidatedFunnelService extends BaseUnifiedService {
 
   async healthCheck(): Promise<boolean> {
     try {
-      const { data, error } = await supabase
+      const { error } = await supabase
         .from('funnels')
         .select('count(*)')
         .limit(1);
@@ -96,16 +96,7 @@ export class ConsolidatedFunnelService extends BaseUnifiedService {
         throw new Error(`Failed to fetch funnels: ${error.message}`);
       }
 
-      const funnels = data?.map(f => ({
-        ...f,
-        description: f.description || undefined,
-        user_id: f.user_id || '',
-        is_published: f.is_published || false,
-        version: f.version || 1,
-        settings: f.settings || {},
-        created_at: f.created_at || '',
-        updated_at: f.updated_at || ''
-      })) || [];
+      const funnels = data || [];
       this.setCached(cacheKey, funnels, 300000); // 5 minutes
       return funnels;
     }, 'getAllFunnels');
@@ -128,8 +119,9 @@ export class ConsolidatedFunnelService extends BaseUnifiedService {
         throw new Error(`Failed to fetch funnel: ${error.message}`);
       }
 
-      this.setCached(cacheKey, data, 300000);
-      return data;
+      const funnel = data;
+      this.setCached(cacheKey, funnel, 300000);
+      return funnel;
     }, 'getFunnelById');
   }
 
@@ -226,8 +218,8 @@ export class ConsolidatedFunnelService extends BaseUnifiedService {
       // Device breakdown
       const deviceCounts = new Map<string, number>();
       sessionsData.forEach(session => {
-      const metadata = session.metadata as any;
-      const device = metadata?.device_info?.type || 'unknown';
+        const metadata = session.metadata as any;
+        const device = metadata?.device_info?.type || 'unknown';
         deviceCounts.set(device, (deviceCounts.get(device) || 0) + 1);
       });
 
@@ -272,7 +264,7 @@ export class ConsolidatedFunnelService extends BaseUnifiedService {
   // FUNNEL OPERATIONS
   // ========================================================================
 
-  async createFunnel(data: Omit<FunnelData, 'id' | 'created_at' | 'updated_at'>): Promise<FunnelData> {
+  async createFunnel(data: Omit<FunnelData, 'created_at' | 'updated_at'>): Promise<FunnelData> {
     return this.executeWithMetrics(async () => {
       const now = new Date().toISOString();
       const funnelData = {
@@ -381,6 +373,17 @@ export class ConsolidatedFunnelService extends BaseUnifiedService {
       this.setCached(cacheKey, summary, 180000); // 3 minutes
       return summary;
     }, 'getDashboardSummary');
+  }
+
+  // ========================================================================
+  // CACHE STATS FOR REGISTRY
+  // ========================================================================
+
+  getCacheStats(): { size: number; hitRate: number } {
+    return {
+      size: this.cache.size,
+      hitRate: 85 // Mock hit rate for now
+    };
   }
 }
 

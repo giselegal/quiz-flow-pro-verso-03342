@@ -11,9 +11,8 @@ import React, { useState, useEffect } from 'react';
 import AdvancedAnalytics from '@/components/dashboard/AdvancedAnalytics';
 import { AnalyticsDashboard } from '@/components/admin/analytics/AdvancedAnalytics';
 import ABTestComparison from '@/components/analytics/ABTestComparison';
-// OTIMIZAÇÕES: Usar serviços avançados de analytics
-import { QuizAnalyticsService } from '@/services/core/QuizAnalyticsService';
-import * as realTimeAnalytics from '@/services/realTimeAnalytics';
+import { realDataAnalyticsService } from '@/services/core/RealDataAnalyticsService';
+import { consolidatedFunnelService } from '@/services/core/ConsolidatedFunnelService';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import {
@@ -31,12 +30,39 @@ const AnalyticsPage: React.FC = () => {
   const [selectedQuizId, setSelectedQuizId] = useState('quiz-default');
   const [isAdvancedMode, setIsAdvancedMode] = useState(false);
 
-  // Mock data de quizzes para demonstração
-  const availableQuizzes = [
-    { id: 'quiz-default', name: 'Quiz Principal', status: 'active' },
-    { id: 'quiz-roupa', name: 'Com que roupa eu vou?', status: 'active' },
-    { id: 'quiz-teste', name: 'Quiz de Teste', status: 'draft' },
-  ];
+  const [realMetrics, setRealMetrics] = useState<any>(null);
+  const [funnelMetrics, setFunnelMetrics] = useState<any[]>([]);
+
+  // Load real data from consolidated services
+  useEffect(() => {
+    const loadRealData = async () => {
+      try {
+        const [metrics, funnels] = await Promise.all([
+          realDataAnalyticsService.getRealMetrics(),
+          consolidatedFunnelService.getFunnelMetrics()
+        ]);
+        
+        setRealMetrics(metrics);
+        setFunnelMetrics(funnels);
+        
+        console.log('✅ Analytics carregado com dados reais:', { 
+          totalSessions: metrics.totalSessions,
+          totalFunnels: funnels.length 
+        });
+      } catch (error) {
+        console.error('❌ Erro ao carregar analytics:', error);
+      }
+    };
+
+    loadRealData();
+  }, []);
+
+  // Mock data de quizzes para demonstração - substituído por dados reais
+  const availableQuizzes = funnelMetrics.map(funnel => ({
+    id: funnel.id,
+    name: funnel.name,
+    status: funnel.status
+  }));
 
   const tabs = [
     {
@@ -78,11 +104,11 @@ const AnalyticsPage: React.FC = () => {
             </h1>
             <Badge variant="default" className="bg-green-500 hover:bg-green-600">
               <Zap className="w-3 h-3 mr-1" />
-              Funcionalidades Avançadas Ativas
+              Dados Reais Carregados ({realMetrics?.totalSessions || 0} sessões)
             </Badge>
           </div>
           <p className="text-[#8F7A6A]">
-            Dashboard empresarial com analytics em tempo real, testes A/B e análise de conversão
+            Dashboard com dados reais do Supabase - {funnelMetrics.length} funnels ativos
           </p>
         </div>
 

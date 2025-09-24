@@ -6,6 +6,7 @@
 
 import React, { useState, useCallback } from 'react';
 import ParticipantsTable from '@/components/dashboard/ParticipantsTable';
+import { realDataAnalyticsService } from '@/services/core/RealDataAnalyticsService';
 import AnalyticsDashboard from '@/components/dashboard/AnalyticsDashboard';
 import AdvancedAnalytics from '@/components/dashboard/AdvancedAnalytics';
 import ReportGenerator from '@/components/dashboard/ReportGenerator';
@@ -18,6 +19,22 @@ const ParticipantsPage: React.FC = () => {
         deviceType: 'all',
         status: 'all'
     });
+    const [realMetrics, setRealMetrics] = useState<any>(null);
+
+    // Load real data from consolidated services
+    React.useEffect(() => {
+        const loadRealData = async () => {
+            try {
+                const metrics = await realDataAnalyticsService.getRealMetrics();
+                setRealMetrics(metrics);
+                console.log('✅ Participants page carregado com dados reais:', metrics);
+            } catch (error) {
+                console.error('❌ Erro ao carregar dados dos participantes:', error);
+            }
+        };
+
+        loadRealData();
+    }, []);
 
     const handleRefresh = useCallback(() => {
         // Função para forçar refresh dos componentes
@@ -39,7 +56,7 @@ const ParticipantsPage: React.FC = () => {
                     Dashboard de Participantes
                 </h1>
                 <p className="text-[#8F7A6A] mt-2">
-                    Análise completa do desempenho do quiz e comportamento dos usuários
+                    Análise completa com dados reais - {realMetrics?.totalSessions || 0} sessões
                 </p>
             </div>
 
