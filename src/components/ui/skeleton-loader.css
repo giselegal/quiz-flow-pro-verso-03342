@@ -1,0 +1,363 @@
+/* 💀 SKELETON LOADER STYLES */
+
+.skeleton-loader {
+    position: relative;
+    overflow: hidden;
+    border-radius: 4px;
+    background: linear-gradient(90deg,
+            var(--skeleton-bg, #e2e8f0) 25%,
+            var(--skeleton-highlight, #f1f5f9) 50%,
+            var(--skeleton-bg, #e2e8f0) 75%);
+    background-size: 200% 100%;
+}
+
+/* 🌊 Animações */
+.skeleton-shimmer {
+    animation: shimmer 1.5s infinite linear;
+}
+
+.skeleton-pulse {
+    animation: pulse 1.5s infinite ease-in-out;
+}
+
+.skeleton-wave {
+    animation: wave 1.8s infinite ease-in-out;
+}
+
+.skeleton-rounded {
+    border-radius: 50% !important;
+}
+
+/* 📝 Text Skeleton */
+.skeleton-text-container {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.skeleton-text-line {
+    height: 1em;
+    border-radius: 4px;
+}
+
+.skeleton-text-line:last-child {
+    width: 60% !important;
+}
+
+/* 🃏 Card Skeleton */
+.skeleton-card {
+    padding: 16px;
+    border-radius: 8px;
+    border: 1px solid #e5e7eb;
+}
+
+.skeleton-card-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.skeleton-card-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    flex: 1;
+}
+
+.skeleton-card-body {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+/* 👤 Avatar Skeleton */
+.skeleton-avatar {
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+/* 📐 Rectangle Skeleton */
+.skeleton-rectangle {
+    border-radius: 8px;
+}
+
+/* 🎯 Funnel Skeleton */
+.skeleton-funnel-container {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.skeleton-funnel-header {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: center;
+    text-align: center;
+}
+
+.skeleton-funnel-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.skeleton-funnel-step {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+}
+
+.skeleton-step-number {
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.skeleton-step-content {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex: 1;
+}
+
+/* ✏️ Editor Skeleton */
+.skeleton-editor-container {
+    display: grid;
+    grid-template-columns: 1fr 300px;
+    grid-template-rows: auto 1fr;
+    gap: 16px;
+    height: 100vh;
+}
+
+.skeleton-editor-toolbar {
+    grid-column: 1 / -1;
+    display: flex;
+    gap: 8px;
+    padding: 12px;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.skeleton-tool-button {
+    border-radius: 6px;
+    flex-shrink: 0;
+}
+
+.skeleton-editor-canvas {
+    padding: 16px;
+    background: #f9fafb;
+    border-radius: 8px;
+}
+
+.skeleton-canvas {
+    border-radius: 8px;
+    background: white;
+    border: 2px dashed #d1d5db;
+}
+
+.skeleton-editor-properties {
+    padding: 16px;
+    background: #f9fafb;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.skeleton-property-row {
+    display: flex;
+    justify-content: between;
+    align-items: center;
+    gap: 12px;
+}
+
+.skeleton-input {
+    border-radius: 6px;
+    flex: 1;
+}
+
+/* 📋 List Skeleton */
+.skeleton-list-container {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.skeleton-list-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+}
+
+.skeleton-list-content {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    flex: 1;
+}
+
+.skeleton-action {
+    border-radius: 4px;
+    flex-shrink: 0;
+}
+
+/* 📊 Dashboard Skeleton */
+.skeleton-dashboard-container {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.skeleton-dashboard-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+}
+
+.skeleton-stat-card {
+    padding: 20px;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.skeleton-dashboard-charts {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 16px;
+}
+
+.skeleton-chart {
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+}
+
+/* 🎨 Keyframe Animations */
+@keyframes shimmer {
+    0% {
+        background-position: -200% 0;
+    }
+
+    100% {
+        background-position: 200% 0;
+    }
+}
+
+@keyframes pulse {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.5;
+    }
+}
+
+@keyframes wave {
+
+    0%,
+    100% {
+        transform: translateX(0);
+    }
+
+    50% {
+        transform: translateX(4px);
+    }
+}
+
+/* 📱 Responsive Design */
+@media (max-width: 768px) {
+    .skeleton-editor-container {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto 1fr;
+    }
+
+    .skeleton-editor-properties {
+        order: -1;
+        max-height: 200px;
+        overflow-y: auto;
+    }
+
+    .skeleton-dashboard-stats {
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    }
+
+    .skeleton-dashboard-charts {
+        grid-template-columns: 1fr;
+    }
+
+    .skeleton-funnel-step {
+        flex-direction: column;
+        align-items: flex-start;
+        text-align: left;
+    }
+}
+
+/* 🎨 Dark Theme Support */
+@media (prefers-color-scheme: dark) {
+    .skeleton-loader {
+        --skeleton-bg: #374151;
+        --skeleton-highlight: #4b5563;
+    }
+
+    .skeleton-card,
+    .skeleton-funnel-step,
+    .skeleton-list-item,
+    .skeleton-stat-card,
+    .skeleton-chart {
+        border-color: #4b5563;
+    }
+
+    .skeleton-editor-toolbar {
+        border-bottom-color: #4b5563;
+    }
+
+    .skeleton-editor-canvas,
+    .skeleton-editor-properties {
+        background: #1f2937;
+    }
+
+    .skeleton-canvas {
+        background: #111827;
+        border-color: #4b5563;
+    }
+}
+
+/* 🚀 Performance Optimizations */
+.skeleton-loader {
+    will-change: background-position;
+    backface-visibility: hidden;
+    transform: translateZ(0);
+}
+
+/* Reduce animations on low-end devices */
+@media (prefers-reduced-motion: reduce) {
+
+    .skeleton-shimmer,
+    .skeleton-pulse,
+    .skeleton-wave {
+        animation: none;
+    }
+
+    .skeleton-loader {
+        opacity: 0.6;
+    }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    .skeleton-loader {
+        --skeleton-bg: #000000;
+        --skeleton-highlight: #ffffff;
+    }
+}
