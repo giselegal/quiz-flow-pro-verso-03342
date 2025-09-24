@@ -203,7 +203,7 @@ export class UnifiedIDGenerator {
         const stats = {
             totalGenerated: this.cache.size,
             byType: {} as Record<IDType, number>,
-            recentIds: []
+            recentIds: [] as Array<{ id: string; type: IDType; createdAt: Date }>
         };
 
         // Contar por tipo

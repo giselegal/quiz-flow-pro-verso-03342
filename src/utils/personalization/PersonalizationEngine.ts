@@ -5,8 +5,53 @@
  * para criar experiências altamente personalizadas
  */
 
+import React from 'react';
 import { cacheManager } from '../cache/LRUCache';
 import { useLogger } from '../logger/SmartLogger';
+
+// ✅ INTERFACES AUXILIARES
+export interface AbandonedStep {
+    stepId: string;
+    funnelId: string;
+    abandonedAt: Date;
+    timeSpent: number;
+    reason?: 'timeout' | 'navigation' | 'error' | 'manual';
+}
+
+export interface ClickPattern {
+    element: string;
+    count: number;
+    avgTimeToClick: number;
+    lastClicked: Date;
+}
+
+export interface DevicePattern {
+    type: 'mobile' | 'tablet' | 'desktop';
+    os: string;
+    browser: string;
+    usage: number; // percentage
+}
+
+export interface SessionTime {
+    date: Date;
+    duration: number; // in minutes
+    funnelId: string;
+    completed: boolean;
+}
+
+export interface CompletedFunnel {
+    id: string;
+    completedAt: Date;
+    timeSpent: number;
+    score?: number;
+}
+
+export interface UserSegment {
+    id: string;
+    name: string;
+    criteria: Record<string, any>;
+    priority: number;
+}
 
 // ✅ TIPOS DE PERSONALIZAÇÃO
 export interface UserPersonalizationContext {
@@ -92,7 +137,7 @@ export interface PersonalizationTrigger {
 }
 
 export interface PersonalizationAction {
-    type: 'content' | 'styling' | 'navigation' | 'calculation' | 'recommendation';
+    type: 'content' | 'styling' | 'navigation' | 'calculation' | 'recommendation' | 'template';
     modifications: Record<string, any>;
     template?: string;
 }
@@ -238,7 +283,10 @@ export class PersonalizationEngine {
                 calc.lastCalculated = new Date();
 
             } catch (error) {
-                this.logger.warn('Calculation failed', { calcId: calc.id, error: error.message });
+                this.logger.warn('Calculation failed', { 
+                    calcId: calc.id, 
+                    error: error instanceof Error ? error.message : String(error) 
+                });
             }
         }
 
@@ -322,7 +370,10 @@ export class PersonalizationEngine {
             // Avaliar condição de forma segura
             return this.safeEval(trigger.condition, evalContext);
         } catch (error) {
-            this.logger.warn('Trigger evaluation failed', { trigger: trigger.type, error: error.message });
+            this.logger.warn('Trigger evaluation failed', { 
+                trigger: trigger.type, 
+                error: error instanceof Error ? error.message : String(error)
+            });
             return false;
         }
     }
@@ -339,7 +390,21 @@ export class PersonalizationEngine {
                 return this.applyStyleModifications(content, action.modifications);
 
             case 'template':
-                return action.template || content;
+                return action.template?.replace(/{{(\w+)}}/g, (_, key) => {
+                    return context.user[key as keyof typeof context.user]?.toString() || `{{${key}}}`;
+                }) || content;
+
+            case 'navigation':
+                // Personalizar navegação baseada no contexto
+                return content;
+
+            case 'calculation':
+                // Aplicar cálculos personalizados
+                return content;
+
+            case 'recommendation':
+                // Adicionar recomendações baseadas no contexto
+                return content + `\n<!-- Recomendação: ${this.recommendNextStep(context)} -->`;
 
             default:
                 return content;
@@ -358,8 +423,16 @@ export class PersonalizationEngine {
     }
 
     private applyStyleModifications(content: string, modifications: Record<string, any>): string {
-        // Implementar modificações de estilo
-        return content;
+        // Implementar modificações de estilo baseadas nas modifications
+        let result = content;
+        
+        for (const [key, value] of Object.entries(modifications)) {
+            // Aplicar modificações de estilo CSS
+            const stylePattern = new RegExp(`(${key}:\\s*)[^;]+`, 'g');
+            result = result.replace(stylePattern, `$1${value}`);
+        }
+        
+        return result;
     }
 
     private prepareCalculationContext(context: UserPersonalizationContext, inputs: string[]): any {
@@ -384,7 +457,7 @@ export class PersonalizationEngine {
             const func = new Function(...Object.keys(context), `return ${formula}`);
             return func(...Object.values(context));
         } catch (error) {
-            throw new Error(`Formula execution failed: ${error.message}`);
+            throw new Error(`Formula execution failed: ${error instanceof Error ? error.message : String(error)}`);
         }
     }
 
@@ -426,7 +499,7 @@ export class PersonalizationEngine {
         }, {} as Record<string, number>);
 
         const mostCommon = Object.entries(styleCounts)
-            .sort(([, a], [, b]) => b - a)[0];
+            .sort(([, a], [, b]) => (b as number) - (a as number))[0];
 
         return mostCommon ? mostCommon[0] : 'casual';
     }

@@ -58,7 +58,7 @@ export const VirtualScrolling = <T extends any>({
   itemHeight,
   renderItem,
   containerHeight,
-  containerWidth: number = 800, // Mudança de string para number
+  containerWidth = 800,
   bufferSize = 5,
   className = '',
   getItemId = (_item: T, index: number) => `item-${index}`, // Usar underscore para parâmetros não utilizados
@@ -195,7 +195,7 @@ export const VirtualScrolling = <T extends any>({
 
     const { cleanupId: resizeCleanupId } = registerResizeObserver(
       (entries) => {
-        for (const entry of entries) {
+        for (const _entry of entries) {
           // Re-calcular range quando container redimensiona
           const newVisibleRange = getVisibleRange(state.scrollTop);
           setState(prev => ({
