@@ -2,7 +2,36 @@
  * 📊 PÁGINA PRINCIPAL DO DASHBOARD MODERNIZADA
  * 
  * Dashboard central com:
- * - Overview das métricas principais
+ * - Ove    '/dashboard/funnels': {
+        title: 'Funis',
+        subtitle: 'Gestão completa dos seus funis de conversão',
+        actions: (
+            <Button size="sm">
+                <Plus className="w-4 h-4 mr-2" />
+                Novo Funil
+            </Button>
+        )
+    },
+    '/dashboard/templates-funis': {
+        title: 'Templates de Funis',
+        subtitle: 'Modelos prontos para começar rapidamente',
+        actions: (
+            <Button size="sm">
+                <RefreshCw className="w-4 h-4 mr-2" />
+                Atualizar
+            </Button>
+        )
+    },
+    '/dashboard/meus-funis': {
+        title: 'Meus Funis',
+        subtitle: 'Gerencie seus funis personalizados',
+        actions: (
+            <Button size="sm">
+                <Plus className="w-4 h-4 mr-2" />
+                Criar Funil
+            </Button>
+        )
+    },métricas principais
  * - Cards de resumo interativos
  * - Gráficos em tempo real
  * - Atalhos para funcionalidades principais
@@ -24,6 +53,8 @@ const DashboardOverview = lazy(() => import('./dashboard/OverviewPage'));
 const AnalyticsPage = lazy(() => import('./dashboard/AnalyticsPage'));
 const RealTimePage = lazy(() => import('./dashboard/RealTimePage'));
 const FunnelsPage = lazy(() => import('./dashboard/FunnelsPage'));
+const TemplatesFunisPage = lazy(() => import('./dashboard/TemplatesFunisPage'));
+const MeusFunisPage = lazy(() => import('./dashboard/MeusFunisPage'));
 const QuizzesPage = lazy(() => import('./dashboard/QuizzesPage'));
 const ParticipantsPage = lazy(() => import('./dashboard/ParticipantsPage'));
 const TemplatesPage = lazy(() => import('./dashboard/TemplatesPage'));
@@ -181,6 +212,8 @@ const ModernDashboardPage: React.FC = () => {
 
                     {/* Gestão de Conteúdo */}
                     <Route path="/dashboard/funnels" component={FunnelsPage} />
+                    <Route path="/dashboard/templates-funis" component={TemplatesFunisPage} />
+                    <Route path="/dashboard/meus-funis" component={MeusFunisPage} />
                     <Route path="/dashboard/quizzes" component={QuizzesPage} />
                     <Route path="/dashboard/templates" component={TemplatesPage} />
                     <Route path="/dashboard/participants" component={ParticipantsPage} />

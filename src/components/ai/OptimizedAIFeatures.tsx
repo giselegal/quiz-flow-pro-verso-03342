@@ -6,7 +6,7 @@
  */
 
 import React, { lazy, Suspense, useState, useCallback } from 'react';
-import { Bot, Sparkles, Palette, BarChart3, TestTube2, Calculator, Download, Activity } from 'lucide-react';
+import { Bot, Download, Activity } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { aiCache } from '@/services/AICache';
@@ -77,80 +77,7 @@ export const OptimizedAIFeatures: React.FC<OptimizedAIFeaturesProps> = ({
         <div className="px-6 py-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2 flex-wrap">
-              {/* AI Generator */}
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => openFeature('ai-generator')}
-                className="flex items-center gap-2 bg-gradient-to-r from-blue-50 to-purple-50 border-blue-200"
-              >
-                <Bot className="w-4 h-4 text-blue-600" />
-                Gerar Steps IA
-                <Badge className="bg-blue-600 text-white text-xs ml-1">Smart</Badge>
-              </Button>
-
-              {/* Templates IA */}
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => openFeature('templates')}
-              >
-                <Sparkles className="w-4 h-4" />
-                Templates IA
-                {cacheStats.totalRequests > 0 && (
-                  <Badge variant="secondary" className="text-xs ml-1">
-                    {Math.round(cacheStats.hitRate)}% cache
-                  </Badge>
-                )}
-              </Button>
-
-              {/* Brand Kit Pro */}
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => openFeature('brandkit-advanced')}
-                className="bg-gradient-to-r from-pink-50 to-purple-50 border-pink-200"
-              >
-                <Palette className="w-4 h-4 text-pink-600" />
-                Brand Kit Pro
-                <Badge className="bg-pink-600 text-white text-xs ml-1">Pro</Badge>
-              </Button>
-
-              {/* Analytics Live */}
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => openFeature('analytics')}
-                className="bg-gradient-to-r from-purple-50 to-indigo-50 border-purple-200"
-              >
-                <BarChart3 className="w-4 h-4 text-purple-600" />
-                Analytics Live
-                <Badge className="bg-purple-600 text-white text-xs ml-1">Real-time</Badge>
-              </Button>
-
-              {/* A/B Testing */}
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => openFeature('ab-testing')}
-                className="bg-gradient-to-r from-indigo-50 to-blue-50 border-indigo-200"
-              >
-                <TestTube2 className="w-4 h-4 text-indigo-600" />
-                A/B Testing
-                <Badge className="bg-indigo-600 text-white text-xs ml-1">Neural</Badge>
-              </Button>
-
-              {/* ML Predictions */}
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => openFeature('ml-predictions')}
-                className="bg-gradient-to-r from-blue-50 to-cyan-50 border-blue-200"
-              >
-                <Calculator className="w-4 h-4 text-blue-600" />
-                Cálculos ML
-                <Badge className="bg-blue-600 text-white text-xs ml-1">AI</Badge>
-              </Button>
+              {/* Recursos não funcionais removidos: Gerar Steps IA, Smart Templates IA, Brand Kit Pro, Analytics Live Real-time, A/B Testing Neural, Cálculos ML AI */}
 
               {/* Performance Monitor */}
               <Button

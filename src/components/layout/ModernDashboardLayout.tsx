@@ -31,7 +31,9 @@ import {
     User,
     LogOut,
     ChevronDown,
-    Activity
+    Activity,
+    Copy,
+    Edit
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -106,6 +108,20 @@ const ModernDashboardLayout: React.FC<ModernDashboardLayoutProps> = ({
                     href: '/dashboard/funnels',
                     label: 'Funis',
                     icon: Target
+                },
+                {
+                    href: '/dashboard/templates-funis',
+                    label: 'Templates de Funis',
+                    icon: Copy,
+                    badge: 'Modelos',
+                    badgeVariant: 'secondary'
+                },
+                {
+                    href: '/dashboard/meus-funis',
+                    label: 'Meus Funis',
+                    icon: Edit,
+                    badge: 'Meus',
+                    badgeVariant: 'outline'
                 },
                 {
                     href: '/dashboard/quizzes',
