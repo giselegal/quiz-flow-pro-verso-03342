@@ -163,7 +163,7 @@ export class PageUtils {
             await page.waitForTimeout(500); // Aguarda adaptação
 
             const isVisible = await page.locator(breakpoint.testSelector).isVisible();
-            const classAttribute = breakpoint.expectedClass 
+            const classAttribute = breakpoint.expectedClass
                 ? await page.locator(breakpoint.testSelector).getAttribute('class')
                 : null;
             const hasExpectedClass = classAttribute?.includes(breakpoint.expectedClass || '') ?? true;
@@ -382,7 +382,8 @@ export class DeviceUtils {
             try {
                 await testFn({ name, viewport });
             } catch (error) {
-                throw new Error(`Test failed on ${name}: ${error.message}`);
+                const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+                throw new Error(`Test failed on ${name}: ${errorMessage}`);
             }
         }
     }
