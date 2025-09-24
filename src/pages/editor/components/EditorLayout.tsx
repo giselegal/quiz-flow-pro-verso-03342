@@ -11,10 +11,10 @@ import { Badge } from '@/components/ui/badge';
 import {
     Layout,
     Layers,
-    BarChart3,
     Sparkles,
     Crown,
-    FileText
+    Edit3,
+    Eye
 } from 'lucide-react';
 
 // ===============================
@@ -22,38 +22,21 @@ import {
 // ===============================
 
 const EditorNavigation: React.FC = () => {
-    const navigationItems = [
+    const tabs = [
         {
-            id: 'editor',
-            name: 'Editor Visual',
-            icon: Layout,
+            id: 'canvas',
+            name: 'Canvas',
+            icon: Edit3,
             path: '/editor',
-            description: 'Editor visual com drag & drop',
-            badge: 'Principal'
+            description: 'Editor visual'
         },
         {
-            id: 'builder',
-            name: 'Builder System',
-            icon: Layers,
-            path: '/editor/builder',
-            description: 'Sistema de construção avançado',
-            badge: 'Premium'
-        },
-        {
-            id: 'templates',
-            name: 'Templates',
-            icon: FileText,
-            path: '/editor/templates',
-            description: 'Biblioteca de templates',
-            badge: 'IA'
-        },
-        {
-            id: 'analytics',
-            name: 'Analytics',
-            icon: BarChart3,
-            path: '/editor/analytics',
-            description: 'Dashboard de métricas',
-            badge: 'Insights'
+            id: 'preview',
+            name: 'Preview',
+            icon: Eye,
+            path: '/editor/preview',
+            description: 'Visualização em tempo real',
+            badge: 'Live'
         }
     ];
 
@@ -72,7 +55,7 @@ const EditorNavigation: React.FC = () => {
                 </div>
 
                 <div className="flex items-center gap-2">
-                    {navigationItems.map((item) => {
+                    {tabs.map((item) => {
                         const IconComponent = item.icon;
                         return (
                             <Button

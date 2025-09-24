@@ -126,14 +126,14 @@ export const OptimizedAIFeatures: React.FC<OptimizedAIFeaturesProps> = ({
         <Suspense fallback={<AIFeatureLoader feature="Componente IA" />}>
           {activeModal === 'ai-generator' && (
             <AIStepGenerator
-              onStepsGenerated={onStepsGenerated || (() => {})}
+              onStepsGenerated={onStepsGenerated || (() => { })}
               onClose={closeFeature}
             />
           )}
 
           {activeModal === 'templates' && (
             <TemplatesIASidebar
-              onSelectTemplate={onSelectTemplate || (() => {})}
+              onSelectTemplate={onSelectTemplate || (() => { })}
               onClose={closeFeature}
             />
           )}
