@@ -11,6 +11,7 @@ interface EditorCanvasProps {
   onUpdateBlock: (blockId: string, updates: Partial<Block>) => void;
   onDeleteBlock: (blockId: string) => void;
   isPreviewMode: boolean;
+  funnelId?: string; // Tornar dinâmico
 }
 
 const EditorCanvas: React.FC<EditorCanvasProps> = memo(({
@@ -20,7 +21,8 @@ const EditorCanvas: React.FC<EditorCanvasProps> = memo(({
   onSelectBlock,
   onUpdateBlock,
   onDeleteBlock,
-  isPreviewMode
+  isPreviewMode,
+  funnelId = 'quiz21StepsComplete' // Fallback temporário até sistema ser totalmente dinâmico
 }) => {
   // Otimizar seleção de blocos
   const handleBlockSelect = useCallback((id: string) => {
@@ -35,7 +37,7 @@ const EditorCanvas: React.FC<EditorCanvasProps> = memo(({
     return (
       <div className="flex-1 min-h-0 overflow-auto">
         <ScalableQuizRenderer
-          funnelId="quiz21StepsComplete"
+          funnelId={funnelId}
           mode="preview"
           debugMode={true}
           className="editor-preview-mode"

@@ -437,6 +437,7 @@ const ModularEditorPro: React.FC<ModularEditorProProps> = () => {
             onUpdateBlock={handleUpdateBlock}
             onDeleteBlock={handleDeleteBlock}
             isPreviewMode={isPreviewMode}
+            // funnelId will be handled internally by EditorCanvas
           />
         </main>
 

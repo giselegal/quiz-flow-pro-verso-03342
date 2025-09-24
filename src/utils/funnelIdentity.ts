@@ -59,13 +59,12 @@ export const getFunnelIdFromEnvOrStorage = (): string | null => {
       }
     }
 
-    // Fallback: gerar novo ID válido
-    const fallbackId = 'quiz21StepsComplete';
-    console.log('🎯 Usando funnel ID padrão:', fallbackId);
-    return fallbackId;
+    // Nenhum fallback fixo - deixar que o sistema decida baseado na escolha do usuário
+    console.log('⚠️ Nenhum FunnelId encontrado - retornando null para permitir seleção de template');
+    return null;
   } catch (error) {
     console.error('❌ Erro ao obter FunnelId:', error);
-    return 'quiz21StepsComplete';
+    return null;
   }
 };
 

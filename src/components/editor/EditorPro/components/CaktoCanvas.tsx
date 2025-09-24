@@ -40,6 +40,7 @@ interface CaktoCanvasProps {
     onReturn?: () => void;
     onStepChange?: (step: number) => void;
     children?: React.ReactNode;
+    funnelId?: string; // Adicionar funnelId dinâmico
 }
 
 const CaktoCanvasHeader: React.FC<CaktoCanvasHeaderProps> = ({
@@ -118,7 +119,8 @@ const CaktoCanvas: React.FC<CaktoCanvasProps> = ({
     onDeleteBlock,
     onReturn,
     onStepChange,
-    children
+    children,
+    funnelId = 'quiz21StepsComplete' // Fallback temporário até sistema ser totalmente dinâmico
 }) => {
     // Sistema de seleção otimizado
     const { handleBlockSelection } = useStepSelection({
@@ -164,7 +166,7 @@ const CaktoCanvas: React.FC<CaktoCanvasProps> = ({
 
                     <div className="h-full w-full overflow-y-auto relative z-0">
                         <ScalableQuizRenderer
-                            funnelId="quiz21StepsComplete"
+                            funnelId={funnelId}
                             mode="preview"
                             debugMode={true}
                             className="preview-mode-canvas w-full h-full"

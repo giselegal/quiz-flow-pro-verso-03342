@@ -18,6 +18,7 @@ export interface CanvasAreaProps {
   selectedBlockId: string | null;
   actions: any;
   isDragging: boolean;
+  funnelId?: string; // Adicionar funnelId dinâmico
 }
 
 const CanvasArea: React.FC<CanvasAreaProps> = ({
@@ -30,6 +31,7 @@ const CanvasArea: React.FC<CanvasAreaProps> = ({
   selectedBlockId,
   actions,
   isDragging,
+  funnelId = 'quiz21StepsComplete' // Fallback temporário até sistema ser totalmente dinâmico
 }) => {
   // Hook para aplicar estilos dinâmicos
   useCanvasContainerStyles();
@@ -57,7 +59,7 @@ const CanvasArea: React.FC<CanvasAreaProps> = ({
       )}>
         {mode === 'preview' ? (
           <LazyScalableQuizRenderer
-            funnelId="quiz21StepsComplete"
+            funnelId={funnelId}
             mode="preview"
             debugMode={true}
             className="w-full canvas-area-preview"

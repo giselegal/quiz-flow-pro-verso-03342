@@ -291,6 +291,22 @@ const UnifiedEditorCore: React.FC<ModernUnifiedEditorProps> = ({
     mode = 'visual',
     className = ''
 }) => {
+    // 🎯 EXTRAIR FUNNEL ID DA URL /editor/quiz-cores-perfeitas-1758512392351_o1cke0
+    const extractedFunnelId = React.useMemo(() => {
+        const path = window.location.pathname;
+        console.log('🔍 Extraindo funnelId da URL:', path);
+        
+        // Extrair ID do template da URL do editor
+        if (path.startsWith('/editor/') && path.length > '/editor/'.length) {
+            const extractedId = path.replace('/editor/', '');
+            console.log('✅ FunnelId extraído da URL:', extractedId);
+            return extractedId;
+        }
+        
+        console.log('⚠️ Nenhum funnelId encontrado na URL, usando prop:', funnelId);
+        return funnelId;
+    }, [funnelId]);
+
     // 🎯 UNIFIED CRUD CONTEXT
     const crudContext = useUnifiedCRUD();
 
@@ -384,7 +400,7 @@ const UnifiedEditorCore: React.FC<ModernUnifiedEditorProps> = ({
             <ModernToolbar
                 editorState={editorState}
                 onStateChange={handleStateChange}
-                funnelId={funnelId || crudContext.currentFunnel?.id}
+                funnelId={extractedFunnelId || crudContext.currentFunnel?.id}
                 onSave={handleSave}
                 onCreateNew={handleCreateNew}
                 onDuplicate={handleDuplicate}
@@ -393,11 +409,11 @@ const UnifiedEditorCore: React.FC<ModernUnifiedEditorProps> = ({
 
             {/* Main Editor Area - Usando EditorProUnified como base única */}
             <div className="flex-1 overflow-hidden">
-                <FunnelsProvider debug={false}>
-                    <PureBuilderProvider funnelId={funnelId || unifiedEditor.funnel?.id}>
+        <FunnelsProvider debug={false}>
+                    <PureBuilderProvider funnelId={extractedFunnelId}>
                         <Suspense fallback={<LoadingSpinner message="Carregando editor principal..." />}>
                             <EditorProUnified
-                                funnelId={funnelId || unifiedEditor.funnel?.id}
+                                funnelId={extractedFunnelId}
                                 showProFeatures={true}
                                 className="h-full"
                             />
@@ -454,9 +470,18 @@ const UnifiedEditorCore: React.FC<ModernUnifiedEditorProps> = ({
 // ===============================
 
 const ModernUnifiedEditor: React.FC<ModernUnifiedEditorProps> = (props) => {
+    // Extrair funnelId da URL também no wrapper
+    const extractedFunnelId = React.useMemo(() => {
+        const path = window.location.pathname;
+        if (path.startsWith('/editor/') && path.length > '/editor/'.length) {
+            return path.replace('/editor/', '');
+        }
+        return props.funnelId;
+    }, [props.funnelId]);
+
     return (
         <UnifiedCRUDProvider
-            funnelId={props.funnelId}
+            funnelId={extractedFunnelId}
             autoLoad={true}
             debug={false}
         >
