@@ -41,7 +41,7 @@ const unifiedIDGenerator: UnifiedIDGenerator = {
 const mockCacheManager = {
     getCache: <T>(_name: string, _size: number): CacheManager<T> => ({
         get: (_key: string) => null,
-        set: (_key: string, _value: T) => {},
+        set: (_key: string, _value: T) => { },
         has: (_key: string) => false,
         delete: (_key: string) => false
     })
@@ -177,8 +177,8 @@ export type AnalyticsEventType =
  */
 export class RealAnalyticsEngine {
     private static instance: RealAnalyticsEngine;
-    private logger = useLogger('RealAnalyticsEngine');
-    private cache = cacheManager.getCache<any>('analytics', 1000);
+    private logger = mockLogger;
+    private cache = mockCacheManager.getCache<any>('analytics', 1000);
 
     // Storage interno
     private events: RealAnalyticsEvent[] = [];
@@ -749,7 +749,7 @@ export class RealAnalyticsEngine {
                 sessionId = unifiedIDGenerator.generateID('session');
                 sessionStorage.setItem('analytics_session_id', sessionId);
             }
-            return sessionId;
+            return sessionId || unifiedIDGenerator.generateID('session');
         }
 
         return unifiedIDGenerator.generateID('session');
