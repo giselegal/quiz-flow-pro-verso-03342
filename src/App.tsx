@@ -138,19 +138,12 @@ function App() {
                   <ModernDashboardPage />
                 </Route>
 
-                {/* 🏢 ÁREA ADMINISTRATIVA LEGADO - REDIRECIONAMENTO */}
-                <Route path="/admin" nest>
-                  <Route path="/">
-                    <RedirectRoute to="/dashboard" />
-                  </Route>
-
-                  <Route path="/analytics">
-                    <RedirectRoute to="/dashboard/analytics" />
-                  </Route>
-
-                  <Route path="/settings">
-                    <RedirectRoute to="/dashboard/settings" />
-                  </Route>
+                {/* 🔄 REDIRECTS ADMIN LEGACY */}
+                <Route path="/admin">
+                  <RedirectRoute to="/dashboard" />
+                </Route>
+                <Route path="/admin/:page">
+                  {(params) => <RedirectRoute to={`/dashboard/${params.page}`} />}
                 </Route>
 
                 {/* 🔧 DESENVOLVIMENTO */}

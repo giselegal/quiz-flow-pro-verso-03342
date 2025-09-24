@@ -2,36 +2,7 @@
  * 📊 PÁGINA PRINCIPAL DO DASHBOARD MODERNIZADA
  * 
  * Dashboard central com:
- * - Ove    '/dashboard/funnels': {
-        title: 'Funis',
-        subtitle: 'Gestão completa dos seus funis de conversão',
-        actions: (
-            <Button size="sm">
-                <Plus className="w-4 h-4 mr-2" />
-                Novo Funil
-            </Button>
-        )
-    },
-    '/dashboard/templates-funis': {
-        title: 'Templates de Funis',
-        subtitle: 'Modelos prontos para começar rapidamente',
-        actions: (
-            <Button size="sm">
-                <RefreshCw className="w-4 h-4 mr-2" />
-                Atualizar
-            </Button>
-        )
-    },
-    '/dashboard/meus-funis': {
-        title: 'Meus Funis',
-        subtitle: 'Gerencie seus funis personalizados',
-        actions: (
-            <Button size="sm">
-                <Plus className="w-4 h-4 mr-2" />
-                Criar Funil
-            </Button>
-        )
-    },métricas principais
+ * - Métricas principais
  * - Cards de resumo interativos
  * - Gráficos em tempo real
  * - Atalhos para funcionalidades principais
@@ -52,6 +23,9 @@ import { LoadingSpinner } from '@/components/ui/loading-spinner';
 const AdminDashboard = lazy(() => import('./dashboard/AdminDashboard'));
 const TemplatesFunisPage = lazy(() => import('./dashboard/TemplatesFunisPage'));
 const MeusFunisPage = lazy(() => import('./dashboard/MeusFunisPage'));
+
+// Editor integrado ao dashboard
+const ModernUnifiedEditor = lazy(() => import('./editor/ModernUnifiedEditor'));
 
 // Legacy pages (mantidas para compatibilidade temporária)
 const SettingsPage = lazy(() => import('./dashboard/SettingsPage'));
@@ -199,6 +173,22 @@ const pageConfig: Record<string, { title: string; subtitle: string; actions?: Re
     '/dashboard/integrations': {
         title: 'Integrações',
         subtitle: 'Conecte com ferramentas externas'
+    },
+    '/dashboard/editor': {
+        title: 'Editor',
+        subtitle: 'Construa e edite seus funis visualmente',
+        actions: (
+            <div className="flex items-center space-x-2">
+                <Button variant="outline" size="sm">
+                    <RefreshCw className="w-4 h-4 mr-2" />
+                    Atualizar
+                </Button>
+                <Button size="sm">
+                    <Download className="w-4 h-4 mr-2" />
+                    Salvar
+                </Button>
+            </div>
+        )
     }
 };
 
@@ -217,7 +207,7 @@ const ModernDashboardPage: React.FC = () => {
         >
             <Suspense fallback={<DashboardLoadingFallback />}>
                 <Switch>
-                    {/* DASHBOARD CONSOLIDADO - Substitui múltiplas páginas */}
+                    {/* DASHBOARD CONSOLIDADO - Página principal */}
                     <Route path="/dashboard">
                         {() => <AdminDashboard />}
                     </Route>
@@ -225,11 +215,26 @@ const ModernDashboardPage: React.FC = () => {
                         {() => <AdminDashboard />}
                     </Route>
 
-                    {/* Páginas específicas mantidas */}
+                    {/* EDITOR INTEGRADO */}
+                    <Route path="/dashboard/editor">
+                        {() => <ModernUnifiedEditor />}
+                    </Route>
+                    <Route path="/dashboard/editor/:funnelId">
+                        {(params) => <ModernUnifiedEditor funnelId={params.funnelId} />}
+                    </Route>
+
+                    {/* Páginas específicas */}
                     <Route path="/dashboard/templates-funis" component={TemplatesFunisPage} />
                     <Route path="/dashboard/meus-funis" component={MeusFunisPage} />
+                    <Route path="/dashboard/analytics" component={AdminDashboard} />
+                    <Route path="/dashboard/participants" component={AdminDashboard} />
+                    <Route path="/dashboard/quizzes" component={AdminDashboard} />
+                    <Route path="/dashboard/ab-tests" component={AdminDashboard} />
+                    <Route path="/dashboard/creatives" component={AdminDashboard} />
+                    <Route path="/dashboard/templates" component={AdminDashboard} />
+                    <Route path="/dashboard/integrations" component={AdminDashboard} />
 
-                    {/* Configurações (temporário) */}
+                    {/* Configurações */}
                     <Route path="/dashboard/settings" component={SettingsPage} />
 
                     {/* Fallback para rotas não encontradas dentro do dashboard */}
