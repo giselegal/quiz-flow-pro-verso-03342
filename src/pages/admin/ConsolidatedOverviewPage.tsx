@@ -3,8 +3,9 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { useNavigationSafe } from '@/hooks/useNavigationSafe';
-import { getDashboardMetrics } from '@/services/realTimeAnalytics';
-import { getCachedMetrics } from '@/utils/analyticsHelpers';
+import { serviceManager } from '@/services/core/UnifiedServiceManager';
+import { consolidatedFunnelService } from '@/services/core/ConsolidatedFunnelService';
+import { realDataAnalyticsService } from '@/services/core/RealDataAnalyticsService';
 import {
     Activity,
     ArrowUpRight,
@@ -26,44 +27,44 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'wouter';
 
 interface DashboardData {
-    metrics: {
-        totalVisitors: number;
-        totalStarts: number;
-        totalCompletes: number;
-        completionRate: number;
-        conversionRate: number;
-        averageTimeSpent: number;
-        totalLeads: number;
-        totalSales: number;
+    funnelSummary: {
+        totalFunnels: number;
+        activeFunnels: number;
+        draftFunnels: number;
+        totalSessions: number;
+        totalCompletions: number;
+        averageConversionRate: number;
     };
-    realtimeMetrics: {
-        total_sessions: number;
-        completed_sessions: number;
-        conversion_rate: number;
-        average_completion_time: number;
-        real_time_active_users: number;
+    realMetrics: {
+        totalSessions: number;
+        completedSessions: number;
+        conversionRate: number;
+        averageCompletionTime: number;
+        activeUsersNow: number;
+        leadGeneration: number;
+        topPerformingFunnels: Array<{ id: string; name: string; sessions: number; rate: number }>;
     };
 }
 
 const ConsolidatedOverviewPage: React.FC = () => {
     const { navigateToEditor } = useNavigationSafe();
     const [dashboardData, setDashboardData] = useState<DashboardData>({
-        metrics: {
-            totalVisitors: 0,
-            totalStarts: 0,
-            totalCompletes: 0,
-            completionRate: 0,
-            conversionRate: 0,
-            averageTimeSpent: 0,
-            totalLeads: 0,
-            totalSales: 0,
+        funnelSummary: {
+            totalFunnels: 0,
+            activeFunnels: 0,
+            draftFunnels: 0,
+            totalSessions: 0,
+            totalCompletions: 0,
+            averageConversionRate: 0,
         },
-        realtimeMetrics: {
-            total_sessions: 0,
-            completed_sessions: 0,
-            conversion_rate: 0,
-            average_completion_time: 0,
-            real_time_active_users: 0,
+        realMetrics: {
+            totalSessions: 0,
+            completedSessions: 0,
+            conversionRate: 0,
+            averageCompletionTime: 0,
+            activeUsersNow: 0,
+            leadGeneration: 0,
+            topPerformingFunnels: [],
         },
     });
     const [loading, setLoading] = useState(true);
@@ -71,14 +72,30 @@ const ConsolidatedOverviewPage: React.FC = () => {
     useEffect(() => {
         const loadDashboardData = async () => {
             try {
-                // Carregar métricas em cache dos últimos 30 dias
-                const cachedMetrics = getCachedMetrics('30d');
+                // Registrar services no UnifiedServiceManager
+                serviceManager.registerService(consolidatedFunnelService);
+                serviceManager.registerService(realDataAnalyticsService);
 
-                // Carregar métricas em tempo real
-                const realtimeMetrics = await getDashboardMetrics(); setDashboardData({
-                    metrics: cachedMetrics,
-                    realtimeMetrics,
+                // Carregar dados reais do Supabase
+                const [funnelSummary, realMetrics] = await Promise.all([
+                    consolidatedFunnelService.getDashboardSummary(),
+                    realDataAnalyticsService.getRealMetrics()
+                ]);
+
+                setDashboardData({
+                    funnelSummary,
+                    realMetrics: {
+                        totalSessions: realMetrics.totalSessions,
+                        completedSessions: realMetrics.completedSessions,
+                        conversionRate: realMetrics.conversionRate,
+                        averageCompletionTime: realMetrics.averageCompletionTime,
+                        activeUsersNow: realMetrics.activeUsersNow,
+                        leadGeneration: realMetrics.leadGeneration,
+                        topPerformingFunnels: realMetrics.topPerformingFunnels,
+                    },
                 });
+
+                console.log('✅ Dashboard carregado com dados reais do Supabase');
             } catch (error) {
                 console.error('❌ Erro ao carregar dados do dashboard:', error);
             } finally {
@@ -100,7 +117,7 @@ const ConsolidatedOverviewPage: React.FC = () => {
         );
     }
 
-    const { metrics, realtimeMetrics } = dashboardData;
+    const { funnelSummary, realMetrics } = dashboardData;
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-[#FAF9F7] via-[#FEFEFE] to-[#F5F2E9] p-6 space-y-8">
@@ -125,7 +142,7 @@ const ConsolidatedOverviewPage: React.FC = () => {
                                     className="border-[#B89B7A]/40 text-[#B89B7A] bg-[#B89B7A]/10"
                                 >
                                     <Activity className="h-3 w-3 mr-1" />
-                                    {realtimeMetrics.real_time_active_users} usuários online
+                                    {realMetrics.activeUsersNow} usuários online
                                 </Badge>
                             </div>
                         </div>
@@ -246,18 +263,18 @@ const ConsolidatedOverviewPage: React.FC = () => {
                     </CardHeader>
                     <CardContent>
                         <div className="text-3xl font-bold text-[#432818] mb-1">
-                            {realtimeMetrics.total_sessions || metrics.totalStarts}
+                            {realMetrics.totalSessions}
                         </div>
                         <div className="flex items-center text-sm mb-3">
                             <ArrowUpRight className="h-4 w-4 text-[#B89B7A] mr-1" />
                             <span className="text-[#B89B7A] font-semibold">
-                                {metrics.totalStarts > 0 ? '+' + Math.round((realtimeMetrics.total_sessions / metrics.totalStarts - 1) * 100) : 0}%
+                                +{Math.round((realMetrics.totalSessions / Math.max(funnelSummary.totalFunnels, 1)) * 10)}%
                             </span>
-                            <span className="ml-1 text-[#6B4F43]">vs período anterior</span>
+                            <span className="ml-1 text-[#6B4F43]">sessões por funnel</span>
                         </div>
                         <div className="space-y-2">
-                            <Progress value={75} className="h-2 bg-[#FAF9F7]" />
-                            <p className="text-xs text-[#6B4F43]">75% da meta mensal</p>
+                            <Progress value={Math.min((realMetrics.totalSessions / 1000) * 100, 100)} className="h-2 bg-[#FAF9F7]" />
+                            <p className="text-xs text-[#6B4F43]">{funnelSummary.totalFunnels} funnels criados</p>
                         </div>
                     </CardContent>
                 </Card>
@@ -274,17 +291,19 @@ const ConsolidatedOverviewPage: React.FC = () => {
                     </CardHeader>
                     <CardContent>
                         <div className="text-3xl font-bold text-[#432818] mb-1">
-                            {realtimeMetrics.conversion_rate || metrics.conversionRate}%
+                            {realMetrics.conversionRate}%
                         </div>
                         <div className="flex items-center text-sm mb-3">
                             <ArrowUpRight className="h-4 w-4 text-[#B89B7A] mr-1" />
-                            <span className="text-[#B89B7A] font-semibold">+5.2%</span>
-                            <span className="ml-1 text-[#6B4F43]">vs período anterior</span>
+                            <span className="text-[#B89B7A] font-semibold">
+                                {funnelSummary.averageConversionRate > realMetrics.conversionRate ? 'Abaixo' : 'Acima'} da média
+                            </span>
+                            <span className="ml-1 text-[#6B4F43]">({funnelSummary.averageConversionRate}%)</span>
                         </div>
                         <div className="space-y-2">
-                            <Progress value={Math.min(metrics.conversionRate * 2, 100)} className="h-2 bg-[#FAF9F7]" />
+                            <Progress value={Math.min(realMetrics.conversionRate * 2, 100)} className="h-2 bg-[#FAF9F7]" />
                             <p className="text-xs text-[#6B4F43]">
-                                {metrics.conversionRate > 50 ? 'Excelente' : metrics.conversionRate > 25 ? 'Boa' : 'Pode melhorar'} performance
+                                {realMetrics.conversionRate > 50 ? 'Excelente' : realMetrics.conversionRate > 25 ? 'Boa' : 'Pode melhorar'} performance
                             </p>
                         </div>
                     </CardContent>
@@ -302,16 +321,18 @@ const ConsolidatedOverviewPage: React.FC = () => {
                     </CardHeader>
                     <CardContent>
                         <div className="text-3xl font-bold text-[#432818] mb-1">
-                            {metrics.totalLeads}
+                            {realMetrics.leadGeneration}
                         </div>
                         <div className="flex items-center text-sm mb-3">
                             <ArrowUpRight className="h-4 w-4 text-[#B89B7A] mr-1" />
-                            <span className="text-[#B89B7A] font-semibold">+12.8%</span>
-                            <span className="ml-1 text-[#6B4F43]">vs período anterior</span>
+                            <span className="text-[#B89B7A] font-semibold">
+                                {realMetrics.completedSessions > 0 ? '+' + Math.round((realMetrics.leadGeneration / realMetrics.completedSessions) * 100) : 0}%
+                            </span>
+                            <span className="ml-1 text-[#6B4F43]">dos completados</span>
                         </div>
                         <div className="space-y-2">
-                            <Progress value={85} className="h-2 bg-[#FAF9F7]" />
-                            <p className="text-xs text-[#6B4F43]">85% da meta mensal</p>
+                            <Progress value={Math.min((realMetrics.leadGeneration / Math.max(realMetrics.completedSessions, 1)) * 100, 100)} className="h-2 bg-[#FAF9F7]" />
+                            <p className="text-xs text-[#6B4F43]">Leads dos quizzes finalizados</p>
                         </div>
                     </CardContent>
                 </Card>
@@ -328,16 +349,18 @@ const ConsolidatedOverviewPage: React.FC = () => {
                     </CardHeader>
                     <CardContent>
                         <div className="text-3xl font-bold text-[#432818] mb-1">
-                            {Math.round((realtimeMetrics.average_completion_time || metrics.averageTimeSpent) / 60)}min
+                            {Math.round(realMetrics.averageCompletionTime / 60)}min
                         </div>
                         <div className="flex items-center text-sm mb-3">
                             <ArrowUpRight className="h-4 w-4 text-[#B89B7A] mr-1" />
-                            <span className="text-[#B89B7A] font-semibold">Estável</span>
-                            <span className="ml-1 text-[#6B4F43]">engajamento alto</span>
+                            <span className="text-[#B89B7A] font-semibold">
+                                {realMetrics.averageCompletionTime > 300 ? 'Alto' : realMetrics.averageCompletionTime > 180 ? 'Médio' : 'Rápido'}
+                            </span>
+                            <span className="ml-1 text-[#6B4F43]">engajamento</span>
                         </div>
                         <div className="space-y-2">
-                            <Progress value={70} className="h-2 bg-[#FAF9F7]" />
-                            <p className="text-xs text-[#6B4F43]">Tempo ideal de engajamento</p>
+                            <Progress value={Math.min((realMetrics.averageCompletionTime / 600) * 100, 100)} className="h-2 bg-[#FAF9F7]" />
+                            <p className="text-xs text-[#6B4F43]">Tempo médio real de conclusão</p>
                         </div>
                     </CardContent>
                 </Card>
@@ -448,14 +471,14 @@ const ConsolidatedOverviewPage: React.FC = () => {
                             <div className="space-y-3">
                                 <div className="flex items-center justify-between">
                                     <span className="text-sm text-[#6B4F43]">Taxa de Conclusão:</span>
-                                    <span className="font-semibold text-[#432818]">{metrics.completionRate}%</span>
+                                    <span className="font-semibold text-[#432818]">{realMetrics.conversionRate}%</span>
                                 </div>
-                                <Progress value={metrics.completionRate} className="h-2" />
+                                <Progress value={realMetrics.conversionRate} className="h-2" />
 
                                 <div className="flex items-center justify-between">
                                     <span className="text-sm text-[#6B4F43]">Engajamento:</span>
-                                    <Badge variant={metrics.averageTimeSpent > 300 ? 'default' : 'secondary'}>
-                                        {metrics.averageTimeSpent > 300 ? 'Alto' : 'Médio'}
+                                    <Badge variant={realMetrics.averageCompletionTime > 300 ? 'default' : 'secondary'}>
+                                        {realMetrics.averageCompletionTime > 300 ? 'Alto' : 'Médio'}
                                     </Badge>
                                 </div>
                             </div>

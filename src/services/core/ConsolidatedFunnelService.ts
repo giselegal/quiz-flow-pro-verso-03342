@@ -1,72 +1,48 @@
 /**
- * 🎯 CONSOLIDATED FUNNEL SERVICE - UNIFICAÇÃO COMPLETA
+ * 🎯 CONSOLIDATED FUNNEL SERVICE
  * 
- * Substitui e unifica:
- * - FunnelUnifiedService
- * - FunnelUnifiedServiceV2 
- * - EnhancedFunnelService
- * - TemplateFunnelService
- * - contextualFunnelService
+ * Serviço unificado para gerenciar todos os aspectos dos funnels
+ * Integra com o UnifiedServiceManager e usa dados reais do Supabase
  */
 
 import { BaseUnifiedService, ServiceConfig } from './UnifiedServiceManager';
 import { supabase } from '@/integrations/supabase/client';
-import { FunnelContext } from '@/core/contexts/FunnelContext';
-import { deepClone } from '@/utils/cloneFunnel';
 
 // ============================================================================
-// INTERFACES
+// TYPES
 // ============================================================================
 
-export interface ConsolidatedFunnelData {
+export interface FunnelData {
   id: string;
   name: string;
   description?: string;
-  category: string;
-  context: FunnelContext;
-  userId: string;
-  
-  // Core data
-  settings: any;
-  pages: any[];
-  
-  // Metadata
-  isPublished: boolean;
+  user_id: string;
+  is_published: boolean;
   version: number;
-  createdAt: Date;
-  updatedAt: Date;
-  
-  // Template integration
-  templateId?: string;
-  isFromTemplate?: boolean;
+  settings?: Record<string, any>;
+  created_at: string;
+  updated_at: string;
 }
 
-export interface CreateFunnelParams {
+export interface FunnelMetrics {
+  id: string;
   name: string;
-  description?: string;
-  category?: string;
-  context: FunnelContext;
-  templateId?: string;
-  userId?: string;
-  autoPublish?: boolean;
+  totalSessions: number;
+  completedSessions: number;
+  conversionRate: number;
+  averageTime: number;
+  lastActivity?: string;
+  status: 'active' | 'inactive' | 'draft';
 }
 
-export interface UpdateFunnelParams {
-  name?: string;
-  description?: string;
-  category?: string;
-  settings?: any;
-  pages?: any[];
-  isPublished?: boolean;
-}
-
-export interface QueryFunnelParams {
-  context?: FunnelContext;
-  userId?: string;
-  includeUnpublished?: boolean;
-  category?: string;
-  limit?: number;
-  offset?: number;
+export interface FunnelAnalytics {
+  funnelId: string;
+  sessions: number;
+  completions: number;
+  abandonment: number;
+  averageSteps: number;
+  deviceBreakdown: Array<{ device: string; count: number }>;
+  dailyActivity: Array<{ date: string; sessions: number }>;
 }
 
 // ============================================================================
@@ -74,20 +50,14 @@ export interface QueryFunnelParams {
 // ============================================================================
 
 export class ConsolidatedFunnelService extends BaseUnifiedService {
-  private static readonly CONFIG: ServiceConfig = {
-    name: 'ConsolidatedFunnelService',
-    priority: 1,
-    cacheTTL: 5 * 60 * 1000, // 5 minutos
-    retryAttempts: 3,
-    timeout: 10000
-  };
-
-  private loadedFunnels = new Map<string, ConsolidatedFunnelData>();
-  private currentUserId: string | null = null;
-
   constructor() {
-    super(ConsolidatedFunnelService.CONFIG);
-    this.initializeAuth();
+    super({
+      name: 'ConsolidatedFunnelService',
+      priority: 1,
+      cacheTTL: 300000, // 5 minutes
+      retryAttempts: 3,
+      timeout: 10000
+    });
   }
 
   getName(): string {
@@ -96,462 +66,321 @@ export class ConsolidatedFunnelService extends BaseUnifiedService {
 
   async healthCheck(): Promise<boolean> {
     try {
-      // Test basic Supabase connection
-      const { error } = await supabase.from('funnels').select('count').limit(1);
+      const { data, error } = await supabase
+        .from('funnels')
+        .select('count(*)')
+        .limit(1);
+      
       return !error;
-    } catch {
+    } catch (error) {
       return false;
     }
   }
 
-  /**
-   * 🔐 INITIALIZE AUTH
-   */
-  private async initializeAuth(): Promise<void> {
-    try {
-      const { data: { user } } = await supabase.auth.getUser();
-      this.currentUserId = user?.id || null;
-      console.log('🔐 ConsolidatedFunnelService auth initialized:', !!this.currentUserId);
-    } catch (error) {
-      console.warn('⚠️ Auth initialization failed:', error);
-    }
-  }
+  // ========================================================================
+  // FUNNEL MANAGEMENT
+  // ========================================================================
 
-  /**
-   * 🎯 CREATE FUNNEL - Criação unificada
-   */
-  async createFunnel(params: CreateFunnelParams): Promise<ConsolidatedFunnelData> {
+  async getAllFunnels(): Promise<FunnelData[]> {
     return this.executeWithMetrics(async () => {
-      console.log('🎯 Creating funnel:', params);
+      const cacheKey = 'all-funnels';
+      const cached = this.getCached<FunnelData[]>(cacheKey);
+      if (cached) return cached;
 
-      // Ensure user ID
-      const userId = params.userId || this.currentUserId;
-      if (!userId) {
-        throw new Error('User ID required for funnel creation');
+      const { data, error } = await supabase
+        .from('funnels')
+        .select('*')
+        .order('updated_at', { ascending: false });
+
+      if (error) {
+        throw new Error(`Failed to fetch funnels: ${error.message}`);
       }
 
-      // Generate ID
-      const funnelId = this.generateFunnelId(params.name);
+      const funnels = data?.map(f => ({
+        ...f,
+        description: f.description || undefined,
+        user_id: f.user_id || '',
+        is_published: f.is_published || false,
+        version: f.version || 1,
+        settings: f.settings || {},
+        created_at: f.created_at || '',
+        updated_at: f.updated_at || ''
+      })) || [];
+      this.setCached(cacheKey, funnels, 300000); // 5 minutes
+      return funnels;
+    }, 'getAllFunnels');
+  }
+
+  async getFunnelById(id: string): Promise<FunnelData | null> {
+    return this.executeWithMetrics(async () => {
+      const cacheKey = `funnel-${id}`;
+      const cached = this.getCached<FunnelData>(cacheKey);
+      if (cached) return cached;
+
+      const { data, error } = await supabase
+        .from('funnels')
+        .select('*')
+        .eq('id', id)
+        .single();
+
+      if (error) {
+        if (error.code === 'PGRST116') return null; // Not found
+        throw new Error(`Failed to fetch funnel: ${error.message}`);
+      }
+
+      this.setCached(cacheKey, data, 300000);
+      return data;
+    }, 'getFunnelById');
+  }
+
+  // ========================================================================
+  // FUNNEL METRICS
+  // ========================================================================
+
+  async getFunnelMetrics(): Promise<FunnelMetrics[]> {
+    return this.executeWithMetrics(async () => {
+      const cacheKey = 'funnel-metrics';
+      const cached = this.getCached<FunnelMetrics[]>(cacheKey);
+      if (cached) return cached;
+
+      // Get all funnels
+      const funnels = await this.getAllFunnels();
       
-      // Build funnel data
-      const funnelData: ConsolidatedFunnelData = {
-        id: funnelId,
-        name: params.name,
-        description: params.description || '',
-        category: params.category || 'outros',
-        context: params.context,
-        userId,
-        settings: this.getDefaultSettings(),
-        pages: await this.generateDefaultPages(params.templateId),
-        isPublished: params.autoPublish || false,
-        version: 1,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        templateId: params.templateId,
-        isFromTemplate: !!params.templateId
+      // Get sessions for each funnel
+      const { data: sessions } = await supabase
+        .from('quiz_sessions')
+        .select('funnel_id, status, started_at, completed_at');
+
+      const sessionsMap = new Map<string, any[]>();
+      (sessions || []).forEach(session => {
+        const funnelSessions = sessionsMap.get(session.funnel_id) || [];
+        funnelSessions.push(session);
+        sessionsMap.set(session.funnel_id, funnelSessions);
+      });
+
+      const metrics: FunnelMetrics[] = funnels.map(funnel => {
+        const funnelSessions = sessionsMap.get(funnel.id) || [];
+        const completedSessions = funnelSessions.filter(s => s.status === 'completed');
+        
+        let averageTime = 0;
+        if (completedSessions.length > 0) {
+          const totalTime = completedSessions.reduce((sum, session) => {
+            if (session.completed_at && session.started_at) {
+              const start = new Date(session.started_at).getTime();
+              const end = new Date(session.completed_at).getTime();
+              return sum + (end - start);
+            }
+            return sum;
+          }, 0);
+          averageTime = Math.round(totalTime / completedSessions.length / 1000); // seconds
+        }
+
+        const lastSession = funnelSessions.sort((a, b) => 
+          new Date(b.started_at).getTime() - new Date(a.started_at).getTime()
+        )[0];
+
+        return {
+          id: funnel.id,
+          name: funnel.name,
+          totalSessions: funnelSessions.length,
+          completedSessions: completedSessions.length,
+          conversionRate: funnelSessions.length > 0 ? 
+            Math.round((completedSessions.length / funnelSessions.length) * 100) : 0,
+          averageTime,
+          lastActivity: lastSession?.started_at,
+          status: funnel.is_published ? 
+            (funnelSessions.length > 0 ? 'active' : 'inactive') : 'draft'
+        };
+      });
+
+      this.setCached(cacheKey, metrics, 180000); // 3 minutes
+      return metrics;
+    }, 'getFunnelMetrics');
+  }
+
+  async getFunnelAnalytics(funnelId: string): Promise<FunnelAnalytics> {
+    return this.executeWithMetrics(async () => {
+      const cacheKey = `funnel-analytics-${funnelId}`;
+      const cached = this.getCached<FunnelAnalytics>(cacheKey);
+      if (cached) return cached;
+
+      const { data: sessions } = await supabase
+        .from('quiz_sessions')
+        .select('*')
+        .eq('funnel_id', funnelId);
+
+      const { data: responses } = await supabase
+        .from('quiz_step_responses')
+        .select('session_id, step_number')
+        .in('session_id', (sessions || []).map(s => s.id));
+
+      const sessionsData = sessions || [];
+      const completedSessions = sessionsData.filter(s => s.status === 'completed');
+      const abandonedSessions = sessionsData.filter(s => s.status === 'abandoned');
+
+      // Calculate average steps
+      const totalSteps = (responses || []).length;
+      const averageSteps = sessionsData.length > 0 ? 
+        Math.round(totalSteps / sessionsData.length) : 0;
+
+      // Device breakdown
+      const deviceCounts = new Map<string, number>();
+      sessionsData.forEach(session => {
+      const metadata = session.metadata as any;
+      const device = metadata?.device_info?.type || 'unknown';
+        deviceCounts.set(device, (deviceCounts.get(device) || 0) + 1);
+      });
+
+      const deviceBreakdown = Array.from(deviceCounts.entries()).map(([device, count]) => ({
+        device,
+        count
+      }));
+
+      // Daily activity (last 7 days)
+      const last7Days = Array.from({ length: 7 }, (_, i) => {
+        const date = new Date();
+        date.setDate(date.getDate() - i);
+        return date.toISOString().split('T')[0];
+      }).reverse();
+
+      const dailyActivity = last7Days.map(date => {
+        const daySessions = sessionsData.filter(s => 
+          s.started_at.startsWith(date)
+        );
+        return {
+          date: date.split('-').slice(1).reverse().join('/'), // MM/DD format
+          sessions: daySessions.length
+        };
+      });
+
+      const analytics: FunnelAnalytics = {
+        funnelId,
+        sessions: sessionsData.length,
+        completions: completedSessions.length,
+        abandonment: abandonedSessions.length,
+        averageSteps,
+        deviceBreakdown,
+        dailyActivity
       };
 
-      // Save to Supabase
-      const { error } = await supabase
+      this.setCached(cacheKey, analytics, 300000);
+      return analytics;
+    }, 'getFunnelAnalytics');
+  }
+
+  // ========================================================================
+  // FUNNEL OPERATIONS
+  // ========================================================================
+
+  async createFunnel(data: Omit<FunnelData, 'id' | 'created_at' | 'updated_at'>): Promise<FunnelData> {
+    return this.executeWithMetrics(async () => {
+      const now = new Date().toISOString();
+      const funnelData = {
+        ...data,
+        created_at: now,
+        updated_at: now
+      };
+
+      const { data: result, error } = await supabase
         .from('funnels')
-        .insert({
-          id: funnelData.id,
-          name: funnelData.name,
-          description: funnelData.description,
-          user_id: funnelData.userId,
-          settings: funnelData.settings,
-          is_published: funnelData.isPublished,
-          version: funnelData.version
-        });
+        .insert([funnelData])
+        .select()
+        .single();
 
       if (error) {
         throw new Error(`Failed to create funnel: ${error.message}`);
       }
 
-      // Save pages
-      if (funnelData.pages.length > 0) {
-        const pagesData = funnelData.pages.map((page, index) => ({
-          funnel_id: funnelData.id,
-          id: page.id || `page-${index + 1}`,
-          page_order: page.page_order || index + 1,
-          page_type: page.page_type || 'step',
-          title: page.title || `Step ${index + 1}`,
-          blocks: page.blocks || [],
-          metadata: page.metadata || {}
-        }));
-
-        const { error: pagesError } = await supabase
-          .from('funnel_pages')
-          .insert(pagesData);
-
-        if (pagesError) {
-          console.warn('⚠️ Failed to save pages:', pagesError);
-        }
-      }
-
-      // Cache the funnel
-      this.setCached(funnelId, funnelData);
-      this.loadedFunnels.set(funnelId, funnelData);
-
-      console.log('✅ Funnel created successfully:', funnelId);
-      return funnelData;
+      // Clear cache
+      this.clearCache();
+      
+      return result;
     }, 'createFunnel');
   }
 
-  /**
-   * 📖 GET FUNNEL - Busca unificada
-   */
-  async getFunnel(funnelId: string): Promise<ConsolidatedFunnelData | null> {
+  async updateFunnel(id: string, updates: Partial<FunnelData>): Promise<FunnelData> {
     return this.executeWithMetrics(async () => {
-      // Check cache first
-      const cached = this.getCached<ConsolidatedFunnelData>(funnelId);
-      if (cached) {
-        console.log(`⚡ Funnel cache hit: ${funnelId}`);
-        return cached;
-      }
-
-      // Load from Supabase
-      const { data: funnelData, error: funnelError } = await supabase
+      const { data, error } = await supabase
         .from('funnels')
-        .select('*')
-        .eq('id', funnelId)
+        .update({
+          ...updates,
+          updated_at: new Date().toISOString()
+        })
+        .eq('id', id)
+        .select()
         .single();
-
-      if (funnelError || !funnelData) {
-        console.log(`❌ Funnel not found: ${funnelId}`);
-        return null;
-      }
-
-      // Load pages
-      const { data: pagesData } = await supabase
-        .from('funnel_pages')
-        .select('*')
-        .eq('funnel_id', funnelId)
-        .order('page_order');
-
-      // Transform to our format
-      const funnel: ConsolidatedFunnelData = {
-        id: funnelData.id,
-        name: funnelData.name,
-        description: funnelData.description || '',
-        category: 'quiz',
-        context: FunnelContext.EDITOR,
-        userId: funnelData.user_id || '',
-        settings: (funnelData.settings as any) || {},
-        pages: pagesData || [],
-        isPublished: funnelData.is_published || false,
-        version: funnelData.version || 1,
-        createdAt: new Date(funnelData.created_at || new Date()),
-        updatedAt: new Date(funnelData.updated_at || new Date()),
-        templateId: (funnelData.settings as any)?.templateId,
-        isFromTemplate: !!((funnelData.settings as any)?.templateId)
-      };
-
-      // Cache and return
-      this.setCached(funnelId, funnel);
-      this.loadedFunnels.set(funnelId, funnel);
-
-      console.log('✅ Funnel loaded from database:', funnelId);
-      return funnel;
-    }, 'getFunnel');
-  }
-
-  /**
-   * 💾 UPDATE FUNNEL - Atualização unificada
-   */
-  async updateFunnel(funnelId: string, params: UpdateFunnelParams): Promise<ConsolidatedFunnelData> {
-    return this.executeWithMetrics(async () => {
-      // Get existing funnel
-      const existingFunnel = await this.getFunnel(funnelId);
-      if (!existingFunnel) {
-        throw new Error(`Funnel not found: ${funnelId}`);
-      }
-
-      // Prepare updates
-      const updates: any = {
-        updated_at: new Date().toISOString()
-      };
-
-      if (params.name) updates.name = params.name;
-      if (params.description !== undefined) updates.description = params.description;
-      if (params.isPublished !== undefined) updates.is_published = params.isPublished;
-      if (params.settings) updates.settings = { ...existingFunnel.settings, ...params.settings };
-
-      // Update in Supabase
-      const { error } = await supabase
-        .from('funnels')
-        .update(updates)
-        .eq('id', funnelId);
 
       if (error) {
         throw new Error(`Failed to update funnel: ${error.message}`);
       }
 
-      // Update pages if provided
-      if (params.pages) {
-        // Delete existing pages
-        await supabase
-          .from('funnel_pages')
-          .delete()
-          .eq('funnel_id', funnelId);
-
-        // Insert new pages
-        if (params.pages.length > 0) {
-          const pagesData = params.pages.map((page, index) => ({
-            funnel_id: funnelId,
-            id: page.id || `page-${index + 1}`,
-            page_order: page.page_order || index + 1,
-            page_type: page.page_type || 'step',
-            title: page.title || `Step ${index + 1}`,
-            blocks: page.blocks || [],
-            metadata: page.metadata || {}
-          }));
-
-          await supabase
-            .from('funnel_pages')
-            .insert(pagesData);
-        }
-      }
-
-      // Build updated funnel
-      const updatedFunnel: ConsolidatedFunnelData = {
-        ...existingFunnel,
-        name: updates.name || existingFunnel.name,
-        description: updates.description || existingFunnel.description,
-        settings: updates.settings || existingFunnel.settings,
-        pages: params.pages || existingFunnel.pages,
-        isPublished: updates.is_published ?? existingFunnel.isPublished,
-        updatedAt: new Date()
-      };
-
-      // Update cache
-      this.setCached(funnelId, updatedFunnel);
-      this.loadedFunnels.set(funnelId, updatedFunnel);
-
-      console.log('✅ Funnel updated successfully:', funnelId);
-      return updatedFunnel;
+      // Clear cache
+      this.clearCache();
+      
+      return data;
     }, 'updateFunnel');
   }
 
-  /**
-   * 📋 LIST FUNNELS - Listagem unificada
-   */
-  async listFunnels(params: QueryFunnelParams = {}): Promise<ConsolidatedFunnelData[]> {
+  async deleteFunnel(id: string): Promise<void> {
     return this.executeWithMetrics(async () => {
-      const userId = params.userId || this.currentUserId;
-      if (!userId) {
-        console.warn('⚠️ No user ID for listing funnels');
-        return [];
-      }
-
-      let query = supabase
-        .from('funnels')
-        .select(`
-          *,
-          funnel_pages (*)
-        `)
-        .eq('user_id', userId);
-
-      if (!params.includeUnpublished) {
-        query = query.eq('is_published', true);
-      }
-
-      if (params.limit) {
-        query = query.limit(params.limit);
-      }
-
-      if (params.offset) {
-        query = query.range(params.offset, params.offset + (params.limit || 10) - 1);
-      }
-
-      const { data, error } = await query;
-
-      if (error) {
-        throw new Error(`Failed to list funnels: ${error.message}`);
-      }
-
-      // Transform to our format
-      const funnels = (data || []).map((item: any): ConsolidatedFunnelData => ({
-        id: item.id,
-        name: item.name,
-        description: item.description || '',
-        category: 'quiz',
-        context: FunnelContext.EDITOR,
-        userId: item.user_id,
-        settings: item.settings || {},
-        pages: item.funnel_pages || [],
-        isPublished: item.is_published || false,
-        version: item.version || 1,
-        createdAt: new Date(item.created_at),
-        updatedAt: new Date(item.updated_at),
-        templateId: item.settings?.templateId,
-        isFromTemplate: !!item.settings?.templateId
-      }));
-
-      console.log(`✅ Listed ${funnels.length} funnels for user ${userId}`);
-      return funnels;
-    }, 'listFunnels');
-  }
-
-  /**
-   * 📋 DUPLICATE FUNNEL - Duplicação unificada
-   */
-  async duplicateFunnel(funnelId: string, newName?: string): Promise<ConsolidatedFunnelData> {
-    return this.executeWithMetrics(async () => {
-      const originalFunnel = await this.getFunnel(funnelId);
-      if (!originalFunnel) {
-        throw new Error(`Funnel not found for duplication: ${funnelId}`);
-      }
-
-      // Create duplicate
-      const duplicateParams: CreateFunnelParams = {
-        name: newName || `${originalFunnel.name} (Cópia)`,
-        description: originalFunnel.description,
-        category: originalFunnel.category,
-        context: originalFunnel.context,
-        templateId: originalFunnel.templateId,
-        userId: originalFunnel.userId,
-        autoPublish: false
-      };
-
-      const duplicate = await this.createFunnel(duplicateParams);
-
-      // Copy pages with deep clone
-      const clonedPages = deepClone(originalFunnel.pages);
-      await this.updateFunnel(duplicate.id, { pages: clonedPages });
-
-      console.log('✅ Funnel duplicated successfully:', duplicate.id);
-      return duplicate;
-    }, 'duplicateFunnel');
-  }
-
-  /**
-   * 🗑️ DELETE FUNNEL - Exclusão unificada
-   */
-  async deleteFunnel(funnelId: string): Promise<boolean> {
-    return this.executeWithMetrics(async () => {
-      // Delete pages first (foreign key constraint)
-      await supabase
-        .from('funnel_pages')
-        .delete()
-        .eq('funnel_id', funnelId);
-
-      // Delete funnel
       const { error } = await supabase
         .from('funnels')
         .delete()
-        .eq('id', funnelId);
+        .eq('id', id);
 
       if (error) {
         throw new Error(`Failed to delete funnel: ${error.message}`);
       }
 
-      // Clear from cache
-      this.cache.delete(funnelId);
-      this.loadedFunnels.delete(funnelId);
-
-      console.log('✅ Funnel deleted successfully:', funnelId);
-      return true;
+      // Clear cache
+      this.clearCache();
     }, 'deleteFunnel');
   }
 
-  /**
-   * 🛠️ UTILITY METHODS
-   */
-  private generateFunnelId(name: string): string {
-    const sanitized = name.toLowerCase()
-      .replace(/[^a-z0-9]/g, '-')
-      .replace(/-+/g, '-')
-      .replace(/^-|-$/g, '');
-    
-    const timestamp = Date.now();
-    const random = Math.random().toString(36).substring(7);
-    
-    return `${sanitized}-${timestamp}-${random}`;
-  }
+  // ========================================================================
+  // DASHBOARD SUMMARY
+  // ========================================================================
 
-  private getDefaultSettings(): any {
-    return {
-      theme: {
-        primaryColor: '#007bff',
-        secondaryColor: '#6c757d',
-        accentColor: '#28a745'
-      },
-      navigation: {
-        allowBack: true,
-        showProgress: true,
-        autoAdvance: false
-      },
-      analytics: {
-        enabled: true,
-        trackingId: null
-      },
-      seo: {
-        title: '',
-        description: '',
-        keywords: []
-      }
-    };
-  }
+  async getDashboardSummary(): Promise<{
+    totalFunnels: number;
+    activeFunnels: number;
+    draftFunnels: number;
+    totalSessions: number;
+    totalCompletions: number;
+    averageConversionRate: number;
+  }> {
+    return this.executeWithMetrics(async () => {
+      const cacheKey = 'dashboard-summary';
+      const cached = this.getCached<any>(cacheKey);
+      if (cached) return cached;
 
-  private async generateDefaultPages(templateId?: string): Promise<any[]> {
-    if (!templateId) {
-      return [{
-        id: 'page-1',
-        page_order: 1,
-        page_type: 'step',
-        title: 'Step 1',
-        blocks: [],
-        metadata: {}
-      }];
-    }
+      const [funnels, { data: sessions }] = await Promise.all([
+        this.getAllFunnels(),
+        supabase.from('quiz_sessions').select('status, funnel_id')
+      ]);
 
-    // Load template pages using ConsolidatedTemplateService
-    try {
-      const { consolidatedTemplateService } = await import('./ConsolidatedTemplateService');
-      const template = await consolidatedTemplateService.getTemplate(templateId);
+      const activeFunnels = funnels.filter(f => f.is_published).length;
+      const draftFunnels = funnels.filter(f => !f.is_published).length;
+      const totalSessions = sessions?.length || 0;
+      const totalCompletions = sessions?.filter(s => s.status === 'completed').length || 0;
       
-      if (template && template.steps) {
-        return template.steps.map((step) => ({
-          id: `step-${step.stepNumber}`,
-          page_order: step.stepNumber,
-          page_type: 'step',
-          title: `Step ${step.stepNumber}`,
-          blocks: step.blocks || [],
-          metadata: step.metadata || {}
-        }));
-      }
-    } catch (error) {
-      console.warn('⚠️ Failed to load template pages:', error);
-    }
+      // Calculate average conversion rate across all funnels
+      const metrics = await this.getFunnelMetrics();
+      const averageConversionRate = metrics.length > 0 ? 
+        Math.round(metrics.reduce((sum, m) => sum + m.conversionRate, 0) / metrics.length) : 0;
 
-    return [{
-      id: 'page-1',
-      page_order: 1,
-      page_type: 'step',
-      title: 'Step 1',
-      blocks: [],
-      metadata: {}
-    }];
-  }
+      const summary = {
+        totalFunnels: funnels.length,
+        activeFunnels,
+        draftFunnels,
+        totalSessions,
+        totalCompletions,
+        averageConversionRate
+      };
 
-  /**
-   * 📊 GET CACHE STATS
-   */
-  getCacheStats() {
-    return {
-      loaded: this.loadedFunnels.size,
-      cached: this.cache.size,
-      memoryUsage: this.estimateMemoryUsage()
-    };
-  }
-
-  private estimateMemoryUsage(): string {
-    const funnels = Array.from(this.loadedFunnels.values());
-    const totalSize = funnels.reduce((acc, funnel) => {
-      return acc + JSON.stringify(funnel).length;
-    }, 0);
-    return `${(totalSize / 1024).toFixed(2)} KB`;
+      this.setCached(cacheKey, summary, 180000); // 3 minutes
+      return summary;
+    }, 'getDashboardSummary');
   }
 }
 
@@ -560,5 +389,4 @@ export class ConsolidatedFunnelService extends BaseUnifiedService {
 // ============================================================================
 
 export const consolidatedFunnelService = new ConsolidatedFunnelService();
-
 export default consolidatedFunnelService;
