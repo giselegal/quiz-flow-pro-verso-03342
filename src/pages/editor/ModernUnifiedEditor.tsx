@@ -303,14 +303,14 @@ const UnifiedEditorCore: React.FC<ModernUnifiedEditorProps> = ({
     const extractedFunnelId = React.useMemo(() => {
         const path = window.location.pathname;
         console.log('🔍 Extraindo funnelId da URL:', path);
-        
+
         // Extrair ID do template da URL do editor
         if (path.startsWith('/editor/') && path.length > '/editor/'.length) {
             const extractedId = path.replace('/editor/', '');
             console.log('✅ FunnelId extraído da URL:', extractedId);
             return extractedId;
         }
-        
+
         console.log('⚠️ Nenhum funnelId encontrado na URL, usando prop:', funnelId);
         return funnelId;
     }, [funnelId]);
@@ -417,7 +417,7 @@ const UnifiedEditorCore: React.FC<ModernUnifiedEditorProps> = ({
 
             {/* Main Editor Area - Usando EditorProUnified como base única */}
             <div className="flex-1 overflow-hidden">
-                <FunnelMasterProvider 
+                <FunnelMasterProvider
                     funnelId={extractedFunnelId}
                     debugMode={false}
                     enableCache={true}

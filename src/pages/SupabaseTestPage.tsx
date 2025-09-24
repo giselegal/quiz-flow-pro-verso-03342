@@ -47,7 +47,7 @@ const SupabaseTestPage: React.FC = () => {
         />
       </div>
 
-      <FunnelMasterProvider 
+      <FunnelMasterProvider
         debugMode={debugMode}
         enableCache={true}
       >
