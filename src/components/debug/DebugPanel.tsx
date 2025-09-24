@@ -360,8 +360,8 @@ const DebugPanel: React.FC<DebugPanelProps> = ({
                                             padding: '4px 8px',
                                             marginBottom: '2px',
                                             borderLeft: `3px solid ${log.level === 'error' ? '#ef4444' :
-                                                    log.level === 'warn' ? '#f59e0b' :
-                                                        log.level === 'debug' ? '#8b5cf6' : '#10b981'
+                                                log.level === 'warn' ? '#f59e0b' :
+                                                    log.level === 'debug' ? '#8b5cf6' : '#10b981'
                                                 }`,
                                             background: '#374151',
                                             borderRadius: '0 4px 4px 0',

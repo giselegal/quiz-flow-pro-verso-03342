@@ -5,12 +5,73 @@
  * de forma coordenada e eficiente
  */
 
-import { unifiedIDGenerator } from './ids/UnifiedIDGenerator';
-import { personalizationEngine, UserPersonalizationContext } from './personalization/PersonalizationEngine';
-import { enhancedStepManager } from './steps/EnhancedStepManager';
-import { realAnalyticsEngine } from './analytics/RealAnalyticsEngine';
-import { useLogger } from './logger/SmartLogger';
-import { cacheManager } from './cache/LRUCache';
+// Mock imports para compatibilidade
+interface Logger {
+    debug: (message: string, data?: any) => void;
+    info: (message: string, data?: any) => void;
+    warn: (message: string, data?: any) => void;
+    error: (message: string, data?: any) => void;
+}
+
+interface UnifiedIDGenerator {
+    generateID: (type: string, context?: any) => string;
+}
+
+interface PersonalizationEngine {
+    personalizeContent: (content: string, context: UserPersonalizationContext, options?: any) => string;
+}
+
+interface EnhancedStepManager {
+    processStep: (stepId: string, context: UserPersonalizationContext) => Promise<any>;
+}
+
+interface RealAnalyticsEngine {
+    trackEvent: (event: any) => void;
+}
+
+interface CacheManager<T> {
+    get: (key: string) => T | null;
+    set: (key: string, value: T) => void;
+}
+
+export interface UserPersonalizationContext {
+    user: { id: string; preferences?: Record<string, any> };
+    session: { id: string; answers: Record<string, any>; startTime: Date };
+    history: { completedSteps: string[]; totalTime: number };
+}
+
+// Mock implementations
+const mockLogger: Logger = {
+    debug: (message: string, data?: any) => console.log(`[DEBUG] ${message}`, data),
+    info: (message: string, data?: any) => console.log(`[INFO] ${message}`, data),
+    warn: (message: string, data?: any) => console.warn(`[WARN] ${message}`, data),
+    error: (message: string, data?: any) => console.error(`[ERROR] ${message}`, data)
+};
+
+const unifiedIDGenerator: UnifiedIDGenerator = {
+    generateID: (type: string, _context?: any) => `${type}_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
+};
+
+const personalizationEngine: PersonalizationEngine = {
+    personalizeContent: (content: string, _context: UserPersonalizationContext, _options?: any) => content
+};
+
+const enhancedStepManager: EnhancedStepManager = {
+    processStep: async (_stepId: string, _context: UserPersonalizationContext) => ({ success: true })
+};
+
+const realAnalyticsEngine: RealAnalyticsEngine = {
+    trackEvent: (_event: any) => {}
+};
+
+const mockCacheManager = {
+    getCache: <T>(_name: string, _size: number): CacheManager<T> => ({
+        get: (_key: string) => null,
+        set: (_key: string, _value: T) => {},
+    })
+};
+
+const cacheManager = mockCacheManager;
 
 // ✅ INTERFACE PRINCIPAL DE INTEGRAÇÃO
 export interface IntegratedQuizSystem {

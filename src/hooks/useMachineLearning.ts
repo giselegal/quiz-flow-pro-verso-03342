@@ -511,7 +511,7 @@ class MachineLearningEngine {
         };
     }
 
-    async discoverPatterns(_data: any[], _types: MLPattern['type'][]): Promise<MLPattern[]> {
+    async discoverPatterns(_data: any[], types: MLPattern['type'][]): Promise<MLPattern[]> {
         // Simular descoberta de padrões
         await new Promise(resolve => setTimeout(resolve, 500));
 
@@ -569,7 +569,7 @@ class MachineLearningEngine {
         return anomalies;
     }
 
-    async segmentUsers(userData: any[]): Promise<UserSegment[]> {
+    async segmentUsers(_userData: any[]): Promise<UserSegment[]> {
         // Simular segmentação de usuários
         return [
             {
@@ -609,7 +609,7 @@ class MachineLearningEngine {
         ];
     }
 
-    async generateInsights(data: any[], patterns: MLPattern[], models: PredictionModel[]): Promise<MLInsights> {
+    async generateInsights(_data: any[], _patterns: MLPattern[], _models: PredictionModel[]): Promise<MLInsights> {
         // Simular geração de insights
         return {
             trends: [
@@ -651,7 +651,7 @@ class MachineLearningEngine {
         };
     }
 
-    async predict(modelId: string, features: Record<string, any>): Promise<any> {
+    async predict(modelId: string, _features: Record<string, any>): Promise<any> {
         const model = this.models.get(modelId);
         if (!model) return null;
 
@@ -672,7 +672,7 @@ class MachineLearningEngine {
         return { prediction: Math.random(), confidence: 0.8 };
     }
 
-    async getPersonalizedRecommendations(userId: string | undefined, data: any[], segments: UserSegment[]): Promise<any[]> {
+    async getPersonalizedRecommendations(_userId: string | undefined, _data: any[], _segments: UserSegment[]): Promise<any[]> {
         // Simular recomendações personalizadas
         return [
             {
