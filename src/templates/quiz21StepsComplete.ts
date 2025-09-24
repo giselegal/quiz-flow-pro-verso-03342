@@ -88,7 +88,7 @@ function personalizeTemplateForFunnel(template: any[], funnelId: string, _stepId
 
     // 🎯 PERSONALIZAÇÃO 1: IDs únicos por funil
     if (personalizedBlock.id) {
-      personalizedBlock.id = `${personalizedBlock.id}-${funnelSeed}`;
+      personalizedBlock.id = `${personalizedBlock.id}-fnl${funnelSeed}`;
     }
 
     // 🎯 PERSONALIZAÇÃO 2: Conteúdo único baseado no tipo de bloco
@@ -99,7 +99,12 @@ function personalizeTemplateForFunnel(template: any[], funnelId: string, _stepId
         `${personalizedBlock.content.title} (${getFunnelVariantName(funnelSeed)})`,
         `${personalizedBlock.content.title} - Edição Personalizada`
       ];
-      personalizedBlock.content.title = variations[funnelSeed.charCodeAt(0) % variations.length];
+      // Usar hash do seed completo para selecionar variação
+      let hashNum = 0;
+      for (let i = 0; i < funnelSeed.length; i++) {
+        hashNum += funnelSeed.charCodeAt(i);
+      }
+      personalizedBlock.content.title = variations[hashNum % variations.length];
     }
 
     // 🎯 PERSONALIZAÇÃO 3: Questões com variações
@@ -139,7 +144,7 @@ function generateSeedFromFunnelId(funnelId: string): string {
     hash = ((hash << 5) - hash) + char;
     hash = hash & hash; // Convert to 32bit integer
   }
-  return `fnl${Math.abs(hash).toString(16).slice(0, 8)}`;
+  return Math.abs(hash).toString(16).slice(0, 8); // Remover prefixo "fnl"
 }
 
 // 🎨 Obter nome da variante baseado no seed
@@ -148,7 +153,12 @@ function getFunnelVariantName(seed: string): string {
     'Premium', 'Pro', 'Classic', 'Elite', 'Special',
     'Advanced', 'Custom', 'Exclusive', 'Deluxe', 'Ultimate'
   ];
-  const index = seed.charCodeAt(0) % variants.length;
+  // Usar hash numérico do seed completo ao invés do primeiro char
+  let hashNum = 0;
+  for (let i = 0; i < seed.length; i++) {
+    hashNum += seed.charCodeAt(i);
+  }
+  const index = hashNum % variants.length;
   return variants[index];
 }
 
@@ -164,7 +174,12 @@ function getFunnelThemeColor(seed: string): { bg: string, text: string } {
     { bg: '#fed7d7', text: '#c53030' }, // Red
     { bg: '#c6f6d5', text: '#2d3748' }, // Light Green
   ];
-  const index = seed.charCodeAt(0) % themes.length;
+  // Usar hash diferente para cores (soma dos char codes * posição)
+  let colorHash = 0;
+  for (let i = 0; i < seed.length; i++) {
+    colorHash += seed.charCodeAt(i) * (i + 1);
+  }
+  const index = colorHash % themes.length;
   return themes[index];
 }
 
