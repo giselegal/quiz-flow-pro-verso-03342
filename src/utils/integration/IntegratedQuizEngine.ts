@@ -60,25 +60,25 @@ interface CacheManager<T> {
 }
 
 export interface UserPersonalizationContext {
-    user: { 
-        id: string; 
-        preferences?: Record<string, any>; 
+    user: {
+        id: string;
+        preferences?: Record<string, any>;
         joinedAt?: Date;
         lastActiveAt?: Date;
     };
-    session: { 
-        id: string; 
-        answers: Record<string, any>; 
-        startTime: Date; 
+    session: {
+        id: string;
+        answers: Record<string, any>;
+        startTime: Date;
         startedAt?: Date;
         currentFunnel?: string;
         currentStep?: number;
         progress?: number;
         metadata?: Record<string, any>;
     };
-    history: { 
-        completedSteps: string[]; 
-        totalTime: number; 
+    history: {
+        completedSteps: string[];
+        totalTime: number;
         completedFunnels?: any[];
         abandonedSteps?: string[];
         timeSpentByStep?: Record<string, number>;
@@ -111,12 +111,12 @@ const enhancedStepManager: EnhancedStepManager = {
 };
 
 const realAnalyticsEngine: RealAnalyticsEngine = {
-    trackEvent: (_event: any) => {},
-    initialize: (_config: any) => {},
-    trackUserSession: (_userId: string, _data: any) => {},
+    trackEvent: (_event: any) => { },
+    initialize: (_config: any) => { },
+    trackUserSession: (_userId: string, _data: any) => { },
     trackStepInteraction: (_stepId: string, _action: string, _data?: any) => `event_${Date.now()}`,
-    trackError: (_error: Error, _context?: any) => {},
-    track: (_category: string, _action: string, _label: string, _data?: any) => {},
+    trackError: (_error: Error, _context?: any) => { },
+    track: (_category: string, _action: string, _label: string, _data?: any) => { },
     generateReport: (_type: string, _timeRange: any, _options?: any) => ({ report: 'mock' }),
     getRealTimeMetrics: () => ({ metrics: 'mock' })
 };

@@ -183,6 +183,9 @@ export class RealAnalyticsEngine {
     // Storage interno
     private events: RealAnalyticsEvent[] = [];
     private _userBehaviors: Map<string, UserBehaviorPattern> = new Map(); // Prefixo _ para indicar uso futuro
+
+    // Getter para acesso aos padrões de comportamento se necessário
+    get userBehaviors() { return this._userBehaviors; }
     private performanceData: PerformanceMetrics[] = [];
     private abTests: Map<string, ABTestExperiment> = new Map();
     private funnels: Map<string, ConversionFunnel> = new Map();
@@ -200,6 +203,9 @@ export class RealAnalyticsEngine {
 
     // Timers e workers
     private _flushTimer?: NodeJS.Timeout; // Prefixo _ para indicar uso futuro
+
+    // Getter para acesso ao timer se necessário
+    get flushTimer() { return this._flushTimer; }
     private performanceObserver?: PerformanceObserver;
 
     static getInstance(): RealAnalyticsEngine {
