@@ -283,9 +283,9 @@ export class PersonalizationEngine {
                 calc.lastCalculated = new Date();
 
             } catch (error) {
-                this.logger.warn('Calculation failed', { 
-                    calcId: calc.id, 
-                    error: error instanceof Error ? error.message : String(error) 
+                this.logger.warn('Calculation failed', {
+                    calcId: calc.id,
+                    error: error instanceof Error ? error.message : String(error)
                 });
             }
         }
@@ -370,8 +370,8 @@ export class PersonalizationEngine {
             // Avaliar condição de forma segura
             return this.safeEval(trigger.condition, evalContext);
         } catch (error) {
-            this.logger.warn('Trigger evaluation failed', { 
-                trigger: trigger.type, 
+            this.logger.warn('Trigger evaluation failed', {
+                trigger: trigger.type,
                 error: error instanceof Error ? error.message : String(error)
             });
             return false;
@@ -425,13 +425,13 @@ export class PersonalizationEngine {
     private applyStyleModifications(content: string, modifications: Record<string, any>): string {
         // Implementar modificações de estilo baseadas nas modifications
         let result = content;
-        
+
         for (const [key, value] of Object.entries(modifications)) {
             // Aplicar modificações de estilo CSS
             const stylePattern = new RegExp(`(${key}:\\s*)[^;]+`, 'g');
             result = result.replace(stylePattern, `$1${value}`);
         }
-        
+
         return result;
     }
 

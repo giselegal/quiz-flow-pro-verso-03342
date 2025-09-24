@@ -212,9 +212,10 @@ export const VirtualScrolling = <T extends any>({
     setState(prev => ({
       ...prev,
       visibleRange: initialRange,
-      totalHeight: Array.from(getItemPositions.values()).reduce((max, pos, i) =>
-        Math.max(max, pos + getItemHeight(items[i] || {}, i)), 0
-      )
+      totalHeight: Array.from(getItemPositions.values()).reduce((max, pos, i) => {
+        const item = items[i];
+        return item ? Math.max(max, pos + getItemHeight(item, i)) : max;
+      }, 0)
     }));
 
     return () => {
@@ -271,7 +272,10 @@ export const VirtualScrolling = <T extends any>({
 
   // ✅ LOG DE PERFORMANCE
   useEffect(() => {
-    logger.performance('virtual-scroll-render', {
+    const renderDuration = performance.now();
+    logger.performance('virtual-scroll-render', renderDuration);
+    
+    logger.debug('Virtual scroll stats', {
       totalItems: items.length,
       visibleItems: state.visibleRange.end - state.visibleRange.start + 1,
       totalHeight,
