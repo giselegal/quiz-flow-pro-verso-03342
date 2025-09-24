@@ -361,18 +361,28 @@ img:hover,
     --radius: 0.5rem;
 
     /* QuizFlow Brand System */
-    --brand-dark-blue: 256 66% 15%;      /* #1A0F3D */
-    --brand-medium-blue: 255 54% 25%;    /* #2E1A6B */
-    --brand-light-blue: 257 55% 40%;     /* #4A2E9F */
-    --brand-bright-blue: 195 100% 50%;   /* #00BFFF */
-    --brand-bright-pink: 300 100% 50%;   /* #FF00FF */
-    
+    --brand-dark-blue: 256 66% 15%;
+    /* #1A0F3D */
+    --brand-medium-blue: 255 54% 25%;
+    /* #2E1A6B */
+    --brand-light-blue: 257 55% 40%;
+    /* #4A2E9F */
+    --brand-bright-blue: 195 100% 50%;
+    /* #00BFFF */
+    --brand-bright-pink: 300 100% 50%;
+    /* #FF00FF */
+
     /* Clean Support Colors */
-    --brand-primary: 256 66% 15%;        /* #1A0F3D - usando dark blue */
-    --brand-dark: 256 66% 15%;          /* #1A0F3D - usando dark blue */
-    --brand-background: 0 0% 100%;      /* #FFFFFF - branco puro */
-    --brand-text: 256 66% 15%;          /* #1A0F3D - usando dark blue */
-    --brand-muted: 255 54% 25%;         /* #2E1A6B - usando medium blue */
+    --brand-primary: 256 66% 15%;
+    /* #1A0F3D - usando dark blue */
+    --brand-dark: 256 66% 15%;
+    /* #1A0F3D - usando dark blue */
+    --brand-background: 0 0% 100%;
+    /* #FFFFFF - branco puro */
+    --brand-text: 256 66% 15%;
+    /* #1A0F3D - usando dark blue */
+    --brand-muted: 255 54% 25%;
+    /* #2E1A6B - usando medium blue */
 
     /* Gradients */
     --gradient-primary: linear-gradient(135deg, hsl(var(--brand-bright-blue)), hsl(var(--brand-bright-pink)));
