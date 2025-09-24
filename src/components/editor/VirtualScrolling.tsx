@@ -274,7 +274,7 @@ export const VirtualScrolling = <T extends any>({
   useEffect(() => {
     const renderDuration = performance.now();
     logger.performance('virtual-scroll-render', renderDuration);
-    
+
     logger.debug('Virtual scroll stats', {
       totalItems: items.length,
       visibleItems: state.visibleRange.end - state.visibleRange.start + 1,
