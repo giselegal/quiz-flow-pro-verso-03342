@@ -7,14 +7,14 @@
 /* Variáveis CSS idênticas ao quiz real */
 :root {
   /* Cores primárias */
-  --quiz-primary: #b89b7a;
-  --quiz-secondary: #432818;
-  --quiz-accent: #d4c4a0;
+  --quiz-primary: #1A0F3D;
+  --quiz-secondary: #2E1A6B;
+  --quiz-accent: #4A2E9F;
   --quiz-bg: #fefefe;
-  --quiz-text: #432818;
-  --quiz-text-secondary: #6b4f43;
+  --quiz-text: #1A0F3D;
+  --quiz-text-secondary: #2E1A6B;
   --quiz-border: #e5e7eb;
-  --quiz-border-hover: #d4c4b0;
+  --quiz-border-hover: #4A2E9F;
   --quiz-success: #059669;
   --quiz-warning: #dc2626;
   --quiz-neutral: #6b7280;

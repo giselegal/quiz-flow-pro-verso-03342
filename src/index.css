@@ -103,7 +103,7 @@
   /* 14px */
   font-weight: 600;
   border-radius: var(--global-radius);
-  background: #b89b7a;
+  background: #1A0F3D;
   color: white;
   transition: all 0.2s ease;
 }
@@ -669,11 +669,11 @@ img:hover,
 
 /* Gradientes dinâmicos */
 .bg-gradient-brand {
-  background: linear-gradient(135deg, #b89b7a, #8b7355);
+  background: linear-gradient(135deg, #00BFFF, #FF00FF);
 }
 
 .bg-gradient-brand:hover {
-  background: linear-gradient(135deg, #c4a785, #9a7e5f);
+  background: linear-gradient(135deg, #1AC8FF, #FF33FF);
 }
 
 /* Estilos para o componente de upload de imagem */

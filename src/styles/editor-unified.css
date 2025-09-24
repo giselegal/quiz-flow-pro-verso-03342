@@ -7,15 +7,15 @@
 /* ===== VARIÁVEIS CSS CUSTOMIZADAS ===== */
 :root {
   /* Cores da marca */
-  --brand-primary: #b89b7a;
-  --brand-light: #d4c2a8;
-  --brand-dark: #a38a69;
-  --brand-text: #432818;
+  --brand-primary: #1A0F3D;
+  --brand-light: #4A2E9F;
+  --brand-dark: #1A0F3D;
+  --brand-text: #1A0F3D;
 
   /* Sombras profissionais */
-  --shadow-soft: 0 2px 8px -2px rgba(184, 155, 122, 0.1);
-  --shadow-medium: 0 4px 16px -4px rgba(184, 155, 122, 0.15);
-  --shadow-large: 0 8px 32px -8px rgba(184, 155, 122, 0.2);
+  --shadow-soft: 0 2px 8px -2px rgba(26, 15, 61, 0.1);
+  --shadow-medium: 0 4px 16px -4px rgba(26, 15, 61, 0.15);
+  --shadow-large: 0 8px 32px -8px rgba(26, 15, 61, 0.2);
 
   /* Gradientes suaves */
   --gradient-brand: linear-gradient(135deg, var(--brand-primary), var(--brand-dark));
