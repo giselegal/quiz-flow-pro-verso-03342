@@ -33,13 +33,8 @@ const ModernUnifiedEditor = lazy(() => import('./pages/editor/ModernUnifiedEdito
 const QuizEstiloPessoalPage = lazy(() => import('./pages/QuizEstiloPessoalPage'));
 const QuizAIPage = lazy(() => import('./pages/QuizAIPage'));
 
-// 🏢 LAYOUT ADMINISTRATIVO
-const AdminLayout = lazy(() => import('./components/layout/AdminLayout'));
-
-// 🔧 PÁGINAS ADMIN
-const AnalyticsPage = lazy(() => import('./pages/admin/AnalyticsPage'));
-const ConsolidatedOverviewPage = lazy(() => import('./pages/admin/ConsolidatedOverviewPage'));
-const SettingsPage = lazy(() => import('./pages/admin/SettingsPage'));
+// 🏢 LAYOUT ADMINISTRATIVO E DASHBOARD MODERNO
+const ModernDashboardPage = lazy(() => import('./pages/ModernDashboardPage'));
 
 // 🎨 PÁGINAS DE TEMPLATES
 const TemplatesPage = lazy(() => import('./pages/TemplatesPage'));
@@ -138,39 +133,24 @@ function App() {
                   <AuthPage />
                 </Route>
 
-                {/* 🏢 ÁREA ADMINISTRATIVA COM LAYOUT CONSISTENTE */}
+                {/* 🏢 DASHBOARD MODERNO - ROTA PRINCIPAL */}
+                <Route path="/dashboard" nest>
+                  <ModernDashboardPage />
+                </Route>
+
+                {/* 🏢 ÁREA ADMINISTRATIVA LEGADO - REDIRECIONAMENTO */}
                 <Route path="/admin" nest>
                   <Route path="/">
-                    <AdminLayout
-                      title="Dashboard Administrativo"
-                      subtitle="Visão geral das métricas e atividades do sistema"
-                    >
-                      <ConsolidatedOverviewPage />
-                    </AdminLayout>
+                    <RedirectRoute to="/dashboard" />
                   </Route>
 
                   <Route path="/analytics">
-                    <AdminLayout
-                      title="Analytics Avançado"
-                      subtitle="Métricas detalhadas e análises de performance"
-                    >
-                      <AnalyticsPage />
-                    </AdminLayout>
+                    <RedirectRoute to="/dashboard/analytics" />
                   </Route>
 
                   <Route path="/settings">
-                    <AdminLayout
-                      title="Configurações do Sistema"
-                      subtitle="Gerenciar configurações e preferências"
-                    >
-                      <SettingsPage />
-                    </AdminLayout>
+                    <RedirectRoute to="/dashboard/settings" />
                   </Route>
-                </Route>
-
-                {/* 🛡️ DASHBOARD (REDIRECT PARA ADMIN) */}
-                <Route path="/dashboard">
-                  <RedirectRoute to="/admin" />
                 </Route>
 
                 {/* 🔧 DESENVOLVIMENTO */}
