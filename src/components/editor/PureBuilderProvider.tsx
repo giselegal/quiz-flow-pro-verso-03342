@@ -30,7 +30,7 @@ export interface PureBuilderState {
     databaseMode: 'local' | 'supabase';
     isLoading: boolean;
     loadedSteps: Set<number>;
-    
+
     // 🔧 CORREÇÃO: Estados de template
     templateInfo: any | null;
     templateLoading: boolean;
@@ -97,17 +97,17 @@ const generateWithPureBuilder = async (funnelId: string, templateInfo: any): Pro
     funnelConfig: any;
     totalSteps: number;
 }> => {
-    console.log('🏗️ Generating funnel with Pure Builder System...', { 
-        funnelId, 
+    console.log('🏗️ Generating funnel with Pure Builder System...', {
+        funnelId,
         templateName: templateInfo.templateName,
-        totalSteps: templateInfo.totalSteps 
+        totalSteps: templateInfo.totalSteps
     });
 
     try {
         // ✅ USAR TEMPLATE INFO NORMALIZADO
         const templateName = templateInfo.baseId;
         const totalSteps = templateInfo.totalSteps;
-        
+
         // 🛡️ VALIDAÇÃO DE TEMPLATE SEGURA - Incluindo quiz-style-express
         const validTemplates = ['product-quiz', 'lead-qualification', 'customer-satisfaction', 'quiz21StepsComplete', 'com-que-roupa-eu-vou', 'quiz-cores-perfeitas', 'quiz-style-express'];
         const safeTemplate = validTemplates.includes(templateName) ? templateName : 'product-quiz';
@@ -118,18 +118,18 @@ const generateWithPureBuilder = async (funnelId: string, templateInfo: any): Pro
 
         // 🚀 CARREGAMENTO OTIMIZADO COM UNIFIED TEMPLATE SERVICE
         console.log(`🎯 Carregando ${totalSteps} templates usando UnifiedTemplateService...`);
-        
+
         const stepBlocks: Record<string, Block[]> = {};
-        
+
         // ✅ TEMPLATE LOADING PARALELO - Substituindo loop sequencial
         try {
             await unifiedTemplateService.preloadCriticalTemplates();
-            
+
             // Carregar todos os templates em paralelo
             const templatePromises = Array.from({ length: totalSteps }, (_, i) => {
                 const stepKey = `step-${i + 1}`;
                 const templateId = `step-${(i + 1).toString().padStart(2, '0')}`;
-                
+
                 return unifiedTemplateService.getTemplate(templateId)
                     .then(template => ({ stepKey, template }))
                     .catch(error => {
@@ -156,7 +156,7 @@ const generateWithPureBuilder = async (funnelId: string, templateInfo: any): Pro
             });
 
             const results = await Promise.allSettled(templatePromises);
-            
+
             results.forEach((result, index) => {
                 if (result.status === 'fulfilled') {
                     const { stepKey, template } = result.value;
@@ -181,10 +181,10 @@ const generateWithPureBuilder = async (funnelId: string, templateInfo: any): Pro
                     }] as Block[];
                 }
             });
-            
+
         } catch (error) {
             console.error('❌ Error in parallel template loading:', error);
-            
+
             // Fallback para sistema antigo apenas em caso de falha crítica
             for (let i = 1; i <= totalSteps; i++) {
                 const stepKey = `step-${i}`;
@@ -253,18 +253,18 @@ export const PureBuilderProvider: React.FC<{
             databaseMode: enableSupabase ? 'supabase' : 'local',
             isLoading: true, // 🔧 CORREÇÃO: Iniciar com loading true
             loadedSteps: new Set(),
-            
+
             // 🔧 CORREÇÃO: Estados de template
             templateInfo: null,
             templateLoading: true,
-            
+
             builderInstance: null,
             funnelConfig: null,
             calculationEngine: null,
             analyticsData: {},
             ...initial
         });
-        
+
         // 🎯 Controlar total de steps dinamicamente
         const [totalSteps, setTotalSteps] = useState<number>(21); // Default fallback
 
@@ -282,7 +282,7 @@ export const PureBuilderProvider: React.FC<{
                 getTemplateInfo(funnelId)
                     .then(templateInfo => {
                         console.log('📋 Template info carregado:', templateInfo);
-                        
+
                         return generateWithPureBuilder(funnelId, templateInfo)
                             .then(result => ({ ...result, templateInfo })); // 🔧 CORREÇÃO: Passar templateInfo adiante
                     })
@@ -305,10 +305,10 @@ export const PureBuilderProvider: React.FC<{
                     })
                     .catch(error => {
                         console.error('❌ Error initializing PureBuilderProvider:', error);
-                        
+
                         // 🔧 CORREÇÃO: Fallback com estrutura mínima válida
-                        setState(prev => ({ 
-                            ...prev, 
+                        setState(prev => ({
+                            ...prev,
                             isLoading: false,
                             templateLoading: false,
                             stepBlocks: { 'step-1': [] }, // Garantir ao menos step-1
@@ -330,11 +330,11 @@ export const PureBuilderProvider: React.FC<{
                 }
                 setState(prev => ({ ...prev, currentStep: step }));
             }, [totalSteps]),
-            
+
             setSelectedBlockId: useCallback((blockId: string | null) => {
                 setState(prev => ({ ...prev, selectedBlockId: blockId }));
             }, []),
-            
+
             ensureStepLoaded: useCallback(async (step: number) => {
                 const stepKey = `step-${step}`;
                 if (state.stepBlocks[stepKey] || step < 1 || step > totalSteps) return;
@@ -343,14 +343,14 @@ export const PureBuilderProvider: React.FC<{
                     loadedSteps: new Set([...prev.loadedSteps, step])
                 }));
             }, [state.stepBlocks, totalSteps]),
-            
+
             preloadAdjacentSteps: useCallback(async (currentStep: number) => {
                 const steps = [];
                 if (currentStep > 1) steps.push(currentStep - 1);
                 if (currentStep < totalSteps) steps.push(currentStep + 1);
                 // Preload logic would go here
             }, [totalSteps]),
-            
+
             clearUnusedSteps: useCallback(() => {
                 const currentStep = state.currentStep;
                 const adjacentSteps = new Set([
@@ -363,7 +363,7 @@ export const PureBuilderProvider: React.FC<{
                     loadedSteps: new Set([...prev.loadedSteps].filter(step => adjacentSteps.has(step)))
                 }));
             }, [state.currentStep, totalSteps]),
-            
+
             addBlock: useCallback(async (stepKey: string, block: Block) => {
                 setState(prev => ({
                     ...prev,
@@ -373,7 +373,7 @@ export const PureBuilderProvider: React.FC<{
                     }
                 }));
             }, []),
-            
+
             updateBlock: useCallback(async (stepKey: string, blockId: string, updates: Record<string, any>) => {
                 setState(prev => ({
                     ...prev,
@@ -385,7 +385,7 @@ export const PureBuilderProvider: React.FC<{
                     }
                 }));
             }, []),
-            
+
             removeBlock: useCallback(async (stepKey: string, blockId: string) => {
                 setState(prev => ({
                     ...prev,
@@ -395,14 +395,14 @@ export const PureBuilderProvider: React.FC<{
                     }
                 }));
             }, []),
-            
+
             setStepValid: useCallback((step: number, isValid: boolean) => {
                 setState(prev => ({
                     ...prev,
                     stepValidation: { ...prev.stepValidation, [step]: isValid }
                 }));
             }, []),
-            
+
             exportJSON: useCallback(() => {
                 return JSON.stringify({
                     stepBlocks: state.stepBlocks,
@@ -410,7 +410,7 @@ export const PureBuilderProvider: React.FC<{
                     totalSteps
                 }, null, 2);
             }, [state.stepBlocks, state.funnelConfig, totalSteps]),
-            
+
             importJSON: useCallback((json: string) => {
                 try {
                     const data = JSON.parse(json);
@@ -424,25 +424,25 @@ export const PureBuilderProvider: React.FC<{
                     console.error('❌ Error importing JSON:', error);
                 }
             }, []),
-            
+
             calculateResults: useCallback(async () => {
                 return state.calculationEngine?.calculate() || {};
             }, [state.calculationEngine]),
-            
+
             optimizeFunnel: useCallback(async () => {
                 if (state.builderInstance?.optimize) {
                     await state.builderInstance.optimize();
                 }
             }, [state.builderInstance]),
-            
+
             generateAnalytics: useCallback(() => {
                 return state.analyticsData || {};
             }, [state.analyticsData]),
-            
+
             validateFunnel: useCallback(async () => {
                 return { isValid: true, errors: [], warnings: [] };
             }, []),
-            
+
             cloneFunnel: useCallback((newName?: string, newId?: string) => {
                 return {
                     ...state.funnelConfig,
@@ -450,12 +450,12 @@ export const PureBuilderProvider: React.FC<{
                     name: newName || `Clone ${state.funnelConfig?.name || 'Funnel'}`
                 };
             }, [state.funnelConfig]),
-            
+
             createFromTemplate: useCallback(async (templateName: string, _customName?: string) => {
                 const templateInfo = await getTemplateInfo(templateName);
                 return generateWithPureBuilder(templateName, templateInfo);
             }, []),
-            
+
             addBlockAtIndex: useCallback(async (stepKey: string, block: Block, index: number) => {
                 setState(prev => {
                     const stepBlocks = [...(prev.stepBlocks[stepKey] || [])];
@@ -466,7 +466,7 @@ export const PureBuilderProvider: React.FC<{
                     };
                 });
             }, []),
-            
+
             reorderBlocks: useCallback(async (stepKey: string, oldIndex: number, newIndex: number) => {
                 setState(prev => {
                     const stepBlocks = [...(prev.stepBlocks[stepKey] || [])];
@@ -478,15 +478,15 @@ export const PureBuilderProvider: React.FC<{
                     };
                 });
             }, []),
-            
+
             loadDefaultTemplate: useCallback(() => {
                 // Default template loading logic
             }, []),
-            
+
             canUndo: false,
             canRedo: false,
-            undo: () => {},
-            redo: () => {}
+            undo: () => { },
+            redo: () => { }
         };
 
         // 🔧 CORREÇÃO: Memoizar state para evitar re-renders desnecessários
@@ -500,7 +500,7 @@ export const PureBuilderProvider: React.FC<{
                 {children}
             </PureBuilderContext.Provider>
         );
-};
+    };
 
 // Export hook compatível
 export const useOptimizedEditor = usePureBuilder;
