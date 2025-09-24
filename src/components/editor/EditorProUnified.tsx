@@ -65,7 +65,7 @@ const useResizableColumns = () => {
     const minWidths = { steps: 200, components: 280, properties: 280 };
     const maxWidths = { steps: 400, components: 500, properties: 500 };
     const clampedWidth = Math.max(minWidths[column], Math.min(maxWidths[column], width));
-    
+
     setColumnWidths(prev => {
       const newWidths = { ...prev, [column]: clampedWidth };
       localStorage.setItem('editor-column-widths', JSON.stringify(newWidths));
@@ -192,7 +192,7 @@ export const EditorProUnified: React.FC<EditorProUnifiedProps> = ({
         return match ? parseInt(match[1]) : 0;
       })
       .filter(num => num > 0);
-    
+
     return stepNumbers.length > 0 ? Math.max(...stepNumbers) : 0;
   }, [state.stepBlocks]);
 
@@ -209,18 +209,18 @@ export const EditorProUnified: React.FC<EditorProUnifiedProps> = ({
   const handleDeleteBlock = useCallback(async (blockId: string) => {
     const stepKey = `step-${state.currentStep}`;
     await actions.removeBlock(stepKey, blockId);
-    
+
     if (selectedBlockId === blockId) {
       setSelectedBlockId(null);
     }
-    
+
     addNotification('Componente removido');
   }, [state.currentStep, selectedBlockId, actions, addNotification]);
 
   // AI Feature Handlers (compatibilidade com Builder System)
   const handleSelectTemplate = useCallback(async (template: FunnelTemplate) => {
     console.log('✨ Template Builder System:', template.meta.name);
-    
+
     // Aplicar design usando Builder System
     if (template.design) {
       const designConfig = {
@@ -228,20 +228,20 @@ export const EditorProUnified: React.FC<EditorProUnifiedProps> = ({
         secondary: template.design.secondaryColor,
         timestamp: Date.now()
       };
-      
+
       document.documentElement.style.setProperty('--primary-color', designConfig.primary);
       document.documentElement.style.setProperty('--secondary-color', designConfig.secondary);
-      
+
       localStorage.setItem('builder-design-config', JSON.stringify(designConfig));
     }
-    
+
     // Builder System já tem templates pré-carregados
     addNotification(`Template "${template.meta.name}" ativo via Builder System!`);
   }, [addNotification]);
 
   const handleStepsGenerated = useCallback((steps: any[]) => {
     console.log('🏗️ Steps Builder System:', steps);
-    
+
     // Builder System já tem steps otimizados
     const stepsConfig = {
       steps,
@@ -249,9 +249,9 @@ export const EditorProUnified: React.FC<EditorProUnifiedProps> = ({
       count: steps.length,
       builderSystem: true
     };
-    
+
     localStorage.setItem('builder-generated-steps', JSON.stringify(stepsConfig));
-    
+
     addNotification(`Builder System: ${steps.length} steps otimizados!`);
   }, [addNotification]);
 
@@ -333,7 +333,7 @@ export const EditorProUnified: React.FC<EditorProUnifiedProps> = ({
       {/* Main Editor Layout - Builder System gerencia DND */}
       <div className="flex flex-1 overflow-hidden">
         {/* Steps Sidebar */}
-        <div 
+        <div
           className="bg-muted/50 border-r flex-shrink-0"
           style={{ width: `${columnWidths.steps}px` }}
         >
@@ -346,14 +346,14 @@ export const EditorProUnified: React.FC<EditorProUnifiedProps> = ({
             renderIcon={renderIcon}
           />
         </div>
-        
-        <ResizeHandle 
+
+        <ResizeHandle
           onResize={(width) => handleResize('steps', width)}
           label="Steps"
         />
 
         {/* Components Sidebar */}
-        <div 
+        <div
           className="bg-background border-r flex-shrink-0"
           style={{ width: `${columnWidths.components}px` }}
         >
@@ -362,8 +362,8 @@ export const EditorProUnified: React.FC<EditorProUnifiedProps> = ({
             renderIcon={renderIcon}
           />
         </div>
-        
-        <ResizeHandle 
+
+        <ResizeHandle
           onResize={(width) => handleResize('components', width)}
           label="Components"
         />
@@ -386,7 +386,7 @@ export const EditorProUnified: React.FC<EditorProUnifiedProps> = ({
             onPublish={() => addNotification('Publicado com Builder System')}
             onOpenSettings={() => console.log('Configurações Builder System')}
           />
-          
+
           <div className="flex-1 overflow-auto">
             <EditorCanvas
               blocks={currentStepBlocks}
@@ -401,13 +401,13 @@ export const EditorProUnified: React.FC<EditorProUnifiedProps> = ({
           </div>
         </div>
 
-        <ResizeHandle 
+        <ResizeHandle
           onResize={(width) => handleResize('properties', width)}
           label="Properties"
         />
 
         {/* Properties Panel */}
-        <div 
+        <div
           className="bg-background border-l flex-shrink-0"
           style={{ width: `${columnWidths.properties}px` }}
         >

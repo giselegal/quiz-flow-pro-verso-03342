@@ -86,7 +86,7 @@ const ModeRenderer: React.FC<{
         return match ? parseInt(match[1]) : 0;
       })
       .filter(num => num > 0);
-    
+
     return stepNumbers.length > 0 ? Math.max(...stepNumbers) : 0;
   }, [state.stepBlocks]);
 
