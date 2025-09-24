@@ -11,6 +11,7 @@ import { SortableBlockWrapper } from './SortableBlockWrapper.simple';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { useCanvasContainerStyles } from '@/hooks/useCanvasContainerStyles';
 import { useGlobalEventManager } from '@/utils/OptimizedGlobalEventManager';
+import { HookOrderDebugger } from '@/components/debug/HookOrderDebugger';
 
 // Componente de controles de navegação para aparecer no final dos blocos do editor
 const EditorNavigationControls: React.FC<{
@@ -236,20 +237,26 @@ const CanvasDropZoneBase: React.FC<CanvasDropZoneProps> = ({
 }) => {
   useRenderCount('CanvasDropZone');
 
+  // 🔧 CORREÇÃO: Mover useMemo para fora da renderização condicional
+  // Sempre calcular items do SortableContext para manter hook order consistente
+  const sortableItems = React.useMemo(() => {
+    return blocks.map(block => generateUniqueId({
+      stepNumber: scopeId ?? 'default',
+      blockId: String(block.id),
+      type: 'block'
+    }));
+  }, [blocks, scopeId]);
+
   // Hook para aplicar estilos dinâmicos
   useCanvasContainerStyles();
 
-  // 🔍 DEBUG: Log blocks data
-  React.useEffect(() => {
-    if (process.env.NODE_ENV === 'development') {
-      console.log('🎯 CanvasDropZone received blocks:', {
-        blocksCount: blocks?.length || 0,
-        blocks: blocks?.slice(0, 3), // Log first 3 blocks
-        scopeId,
-        selectedBlockId
-      });
-    }
-  }, [blocks, scopeId, selectedBlockId]);
+  // 🔍 DEBUG: Hook order debugger
+  const hookCalls = React.useMemo(() => [
+    'useRenderCount',
+    'sortableItems-useMemo',
+    'useCanvasContainerStyles',
+    'hookCalls-useMemo'
+  ], []);
 
   React.useEffect(() => {
     mark('CanvasDropZone:mounted');
@@ -395,6 +402,7 @@ const CanvasDropZoneBase: React.FC<CanvasDropZoneProps> = ({
     !isDraggingAnyValidComponent &&
     !virtDisabledDynamic &&
     blocks.length > EDIT_PROGRESSIVE_THRESHOLD;
+
   const [editRenderCount, setEditRenderCount] = React.useState<number>(
     enableProgressiveEdit ? Math.min(EDIT_BATCH_SIZE, blocks.length) : blocks.length
   );
@@ -483,6 +491,12 @@ const CanvasDropZoneBase: React.FC<CanvasDropZoneProps> = ({
       data-canvas-optimized="true"
       data-dnd-dropzone-type="raiz-da-tela"
     >
+      {/* 🔍 Hook Order Debugger */}
+      <HookOrderDebugger 
+        componentName="CanvasDropZone"
+        hookCalls={hookCalls}
+      />
+      
       {blocks.length === 0 ? (
         <div className="text-center py-12">
           {enableProgressiveEdit && editRenderCount < blocks.length ? (
@@ -549,14 +563,7 @@ const CanvasDropZoneBase: React.FC<CanvasDropZoneProps> = ({
         </div>
       ) : (
         <SortableContext
-          items={React.useMemo(
-            () => blocks.map(block => generateUniqueId({
-              stepNumber: scopeId ?? 'default',
-              blockId: String(block.id),
-              type: 'block'
-            })),
-            [blocks, scopeId]
-          )}
+          items={sortableItems}
           strategy={verticalListSortingStrategy}
         >
           <div className="w-full" style={{ maxWidth: 800, margin: '0 auto' }}>

@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useCallback, useRef, useEffect } from 'react';
+import React, { createContext, useContext, useState, useCallback, useRef, useEffect, useMemo } from 'react';
 // 🚀 BUILDER SYSTEM - Imports corrigidos para compatibilidade
 import type { Block } from '@/types/editor';
 import { getTemplateInfo } from '@/utils/funnelNormalizer';
@@ -29,6 +29,10 @@ export interface PureBuilderState {
     databaseMode: 'local' | 'supabase';
     isLoading: boolean;
     loadedSteps: Set<number>;
+    
+    // 🔧 CORREÇÃO: Estados de template
+    templateInfo: any | null;
+    templateLoading: boolean;
 
     // Builder System specific
     builderInstance: any;
@@ -205,12 +209,17 @@ export const PureBuilderProvider: React.FC<{
         const [state, setState] = useState<PureBuilderState>({
             currentStep: 1,
             selectedBlockId: null,
-            stepBlocks: {},
+            stepBlocks: {}, // 🔧 CORREÇÃO: Sempre inicializar como objeto vazio
             stepValidation: {},
             isSupabaseEnabled: enableSupabase,
             databaseMode: enableSupabase ? 'supabase' : 'local',
-            isLoading: false,
+            isLoading: true, // 🔧 CORREÇÃO: Iniciar com loading true
             loadedSteps: new Set(),
+            
+            // 🔧 CORREÇÃO: Estados de template
+            templateInfo: null,
+            templateLoading: true,
+            
             builderInstance: null,
             funnelConfig: null,
             calculationEngine: null,
@@ -236,9 +245,10 @@ export const PureBuilderProvider: React.FC<{
                     .then(templateInfo => {
                         console.log('📋 Template info carregado:', templateInfo);
                         
-                        return generateWithPureBuilder(funnelId, templateInfo);
+                        return generateWithPureBuilder(funnelId, templateInfo)
+                            .then(result => ({ ...result, templateInfo })); // 🔧 CORREÇÃO: Passar templateInfo adiante
                     })
-                    .then(({ stepBlocks, builderInstance, funnelConfig, totalSteps: templateTotalSteps }) => {
+                    .then(({ stepBlocks, builderInstance, funnelConfig, totalSteps: templateTotalSteps, templateInfo }) => {
                         // ✅ ATUALIZAR TOTAL STEPS
                         setTotalSteps(templateTotalSteps);
 
@@ -247,7 +257,9 @@ export const PureBuilderProvider: React.FC<{
                             stepBlocks,
                             builderInstance,
                             funnelConfig,
+                            templateInfo: templateInfo, // 🔧 CORREÇÃO: Agora templateInfo está disponível
                             isLoading: false,
+                            templateLoading: false,
                             loadedSteps: new Set(Array.from({ length: templateTotalSteps }, (_, i) => i + 1))
                         }));
 
@@ -255,12 +267,23 @@ export const PureBuilderProvider: React.FC<{
                     })
                     .catch(error => {
                         console.error('❌ Error initializing PureBuilderProvider:', error);
-                        setState(prev => ({ ...prev, isLoading: false }));
+                        
+                        // 🔧 CORREÇÃO: Fallback com estrutura mínima válida
+                        setState(prev => ({ 
+                            ...prev, 
+                            isLoading: false,
+                            templateLoading: false,
+                            stepBlocks: { 'step-1': [] }, // Garantir ao menos step-1
+                            funnelConfig: {
+                                templateId: 'fallback',
+                                totalSteps: 1,
+                                theme: 'modern-elegant'
+                            }
+                        }));
                     });
             }
         }, [funnelId]);
 
-        // ⚡ ACTIONS OBJECT - Todas as funções definidas inline
         const actions: PureBuilderActions = {
             setCurrentStep: useCallback((step: number) => {
                 if (step < 1 || step > totalSteps) {
@@ -428,8 +451,14 @@ export const PureBuilderProvider: React.FC<{
             redo: () => {}
         };
 
+        // 🔧 CORREÇÃO: Memoizar state para evitar re-renders desnecessários
+        const memoizedState = useMemo(() => ({
+            ...state,
+            totalSteps,
+        }), [state, totalSteps]);
+
         return (
-            <PureBuilderContext.Provider value={{ state, actions }}>
+            <PureBuilderContext.Provider value={{ state: memoizedState, actions }}>
                 {children}
             </PureBuilderContext.Provider>
         );

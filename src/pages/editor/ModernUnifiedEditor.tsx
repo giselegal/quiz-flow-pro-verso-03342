@@ -23,6 +23,14 @@ const EditorProUnified = React.lazy(() =>
     import('../../components/editor/EditorProUnified')
 );
 
+// 🔧 CORREÇÃO: Lazy loading dos componentes de error e loading
+const TemplateErrorBoundary = React.lazy(() =>
+    import('../../components/error/TemplateErrorBoundary')
+);
+const TemplateLoadingSkeleton = React.lazy(() =>
+    import('../../components/ui/template-loading-skeleton')
+);
+
 // Providers necessários
 import { FunnelsProvider } from '@/context/FunnelsContext';
 import PureBuilderProvider from '@/components/editor/PureBuilderProvider';
@@ -409,14 +417,22 @@ const UnifiedEditorCore: React.FC<ModernUnifiedEditorProps> = ({
 
             {/* Main Editor Area - Usando EditorProUnified como base única */}
             <div className="flex-1 overflow-hidden">
-        <FunnelsProvider debug={false}>
+                <FunnelsProvider debug={false}>
                     <PureBuilderProvider funnelId={extractedFunnelId}>
-                        <Suspense fallback={<LoadingSpinner message="Carregando editor principal..." />}>
-                            <EditorProUnified
-                                funnelId={extractedFunnelId}
-                                showProFeatures={true}
-                                className="h-full"
-                            />
+                        <Suspense fallback={
+                            <Suspense fallback={<LoadingSpinner message="Carregando componentes..." />}>
+                                <TemplateLoadingSkeleton />
+                            </Suspense>
+                        }>
+                            <Suspense fallback={<LoadingSpinner message="Carregando error boundary..." />}>
+                                <TemplateErrorBoundary>
+                                    <EditorProUnified
+                                        funnelId={extractedFunnelId}
+                                        showProFeatures={true}
+                                        className="h-full"
+                                    />
+                                </TemplateErrorBoundary>
+                            </Suspense>
                         </Suspense>
                     </PureBuilderProvider>
                 </FunnelsProvider>
