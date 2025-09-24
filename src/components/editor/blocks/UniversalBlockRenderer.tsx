@@ -21,6 +21,7 @@ import QuizQuestionBlock from './QuizQuestionBlock';
 import QuizOptionBlock from './QuizOptionBlock';
 import QuizHeaderBlock from './QuizHeaderBlock';
 import QuizTitleBlock from './QuizTitleBlock';
+import FormInputBlock from './FormInputBlock';
 
 export interface UniversalBlockRendererProps {
   block: Block;
@@ -81,6 +82,7 @@ const BlockComponentRegistry: Record<string, React.FC<any>> = {
   'options-grid': OptionsGridBlock,
   'text-inline': TextInlineBlock,
   'button-inline': ButtonInlineBlock,
+  'form-input': FormInputBlock,
   'fashion-ai-generator': FashionAIGeneratorBlock,
   'mentor-section-inline': MentorSectionInlineBlock,
   'testimonial-card-inline': TestimonialCardInlineBlock,
