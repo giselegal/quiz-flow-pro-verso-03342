@@ -13,8 +13,7 @@
  * ✅ Performance monitoring
  */
 
-import { useLogger } from '@/utils/logger/SmartLogger';
-import { cacheManager } from '@/utils/cache/LRUCache';
+// Removido imports não utilizados - serão readicionados quando necessário
 
 // ✅ TIPOS DE RECURSOS GERENCIADOS
 export type CleanupResourceType = 
