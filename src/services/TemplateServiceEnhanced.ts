@@ -46,7 +46,8 @@ class TemplateServiceEnhanced {
         }
 
         // Usar o serviço base via composição
-        const blocks = await this.baseService.loadStepBlocks(stepId, funnelId);
+        const template = await this.baseService.getTemplate(stepId);
+        const blocks = template?.blocks || [];
 
         // Log melhorado
         console.log(`📊 [Enhanced] ${stepId}${funnelId ? ` (${funnelId})` : ''}: ${blocks.length} blocos carregados`);
@@ -93,14 +94,7 @@ class TemplateServiceEnhanced {
      */
     clearFunnelCache(funnelId: string): void {
         // Usar método do baseService
-        if (typeof this.baseService.invalidateCache === 'function') {
-            // Limpar todas as chaves que começam com stepId:funnelId
-            for (let i = 1; i <= 21; i++) {
-                const cacheKey = `step-${i}:${funnelId}`;
-                this.baseService.invalidateCache(cacheKey);
-            }
-        }
-
+        this.baseService.clearCache();
         console.log(`🗑️ Cache limpo para funil: ${funnelId}`);
     }
 }
