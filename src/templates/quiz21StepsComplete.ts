@@ -24,7 +24,26 @@
 
 import { Block } from '../types/editor';
 
-// 🔧 ESTRUTURA COMPLETA DE PERSISTÊNCIA JSON
+// 🔧 PERFORMANCE E CACHE OTIMIZADO
+const TEMPLATE_CACHE = new Map<string, any>();
+
+// 🚀 FUNÇÃO DE CARREGAMENTO LAZY PARA PERFORMANCE
+export async function loadStepTemplate(stepId: string): Promise<any> {
+  if (TEMPLATE_CACHE.has(stepId)) {
+    return TEMPLATE_CACHE.get(stepId);
+  }
+  
+  try {
+    const template = await import(`../../templates/${stepId}-template.json`);
+    TEMPLATE_CACHE.set(stepId, template.default);
+    return template.default;
+  } catch (error) {
+    console.warn(`⚠️ Failed to load ${stepId}, using fallback`);
+    return null;
+  }
+}
+
+// 🔧 ESTRUTURA COMPLETA DE PERSISTÊNCIA JSON  
 export const FUNNEL_PERSISTENCE_SCHEMA = {
   // Metadados básicos
   id: 'quiz21StepsComplete',
@@ -34,7 +53,7 @@ export const FUNNEL_PERSISTENCE_SCHEMA = {
   category: 'quiz',
   templateType: 'quiz-complete',
 
-  // Configurações de persistência
+  // Configurações de persistência  
   persistence: {
     enabled: true,
     storage: ['localStorage', 'supabase', 'session'] as const,
@@ -43,6 +62,8 @@ export const FUNNEL_PERSISTENCE_SCHEMA = {
     compression: true,
     encryption: false,
     backupEnabled: true,
+    lazyLoading: true, // ✨ NOVO: Carregamento sob demanda
+    cacheEnabled: true, // ✨ NOVO: Cache inteligente
 
     // Estrutura de dados para armazenamento
     dataStructure: {
