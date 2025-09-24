@@ -7,11 +7,13 @@
  * - Cálculo de pontuações por estilo
  * - Perfil do usuário e resultado final
  * - Lógica de ofertas personalizadas
+ * - Suporte a templates personalizados via funnelId
  */
 
 import { useState, useCallback, useMemo } from 'react';
 import { styleMapping, type StyleId } from '@/data/styles';
 import { QUIZ_STEPS, STEP_ORDER } from '@/data/quizSteps';
+import { getPersonalizedStepTemplate } from '@/templates/quiz21StepsComplete';
 // Note: STRATEGIC_ANSWER_TO_OFFER_KEY commented - not used
 // import { STRATEGIC_ANSWER_TO_OFFER_KEY } from '@/data/quizSteps';
 
@@ -66,7 +68,7 @@ const initialState: QuizState = {
   userProfile: { ...initialUserProfile },
 };
 
-export function useQuizState() {
+export function useQuizState(funnelId?: string) {
   const [state, setState] = useState<QuizState>(initialState);
 
   // Navegar para próxima etapa
@@ -217,10 +219,18 @@ export function useQuizState() {
     return Math.min(100, Math.round((currentIndex / (totalSteps - 1)) * 100));
   }, [state.currentStep]);
 
-  // Obter dados da etapa atual
+  // Obter dados da etapa atual (com suporte a personalização via funnelId)
   const currentStepData = useMemo(() => {
+    if (funnelId) {
+      // Usar template personalizado se funnelId foi fornecido
+      const personalizedTemplate = getPersonalizedStepTemplate(state.currentStep, funnelId);
+      if (personalizedTemplate) {
+        return personalizedTemplate;
+      }
+    }
+    // Fallback para o template padrão
     return QUIZ_STEPS[state.currentStep];
-  }, [state.currentStep]);
+  }, [state.currentStep, funnelId]);
 
   // Verificar se pode voltar
   const canGoBack = useMemo(() => {

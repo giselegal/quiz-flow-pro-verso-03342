@@ -554,19 +554,17 @@ const TemplatesIA: React.FC = () => {
     if (generatedFunnelId) {
       setLocation(`/quiz/${generatedFunnelId}`);
     } else {
-      // Se não há funil gerado, usar template base
-      const templateName = selectedTemplate === 'STYLE_QUIZ' ? 'quiz21StepsComplete' : 'style-consultant';
-      setLocation(`/quiz?template=${templateName}`);
+      // Usar rota existente para teste do template
+      setLocation(`/quiz-estilo`);
     }
   };
 
   const handleEditInEditor = () => {
     if (generatedFunnelId) {
-      setLocation(`/editor?template=${generatedFunnelId}`);
+      setLocation(`/editor/${generatedFunnelId}`);
     } else {
-      // Se não há funil gerado, abrir editor com template base
-      const templateName = selectedTemplate === 'STYLE_QUIZ' ? 'quiz21StepsComplete' : 'style-consultant';
-      setLocation(`/editor?template=${templateName}`);
+      // Abrir editor para criar novo funil
+      setLocation(`/editor`);
     }
   };
 
@@ -597,8 +595,8 @@ const TemplatesIA: React.FC = () => {
             <div className="grid grid-cols-1 gap-4">
               <Card
                 className={`cursor-pointer border-2 transition-all ${selectedTemplate === 'STYLE_QUIZ'
-                    ? 'border-purple-400 bg-gradient-to-br from-purple-50 to-blue-50'
-                    : 'border-gray-200 bg-white hover:border-gray-300'
+                  ? 'border-purple-400 bg-gradient-to-br from-purple-50 to-blue-50'
+                  : 'border-gray-200 bg-white hover:border-gray-300'
                   }`}
                 onClick={() => setSelectedTemplate('STYLE_QUIZ')}
               >
@@ -616,8 +614,8 @@ const TemplatesIA: React.FC = () => {
 
               <Card
                 className={`cursor-pointer border-2 transition-all ${selectedTemplate === 'STYLE_CONSULTANT'
-                    ? 'border-purple-400 bg-gradient-to-br from-purple-50 to-pink-50'
-                    : 'border-gray-200 bg-white hover:border-gray-300'
+                  ? 'border-purple-400 bg-gradient-to-br from-purple-50 to-pink-50'
+                  : 'border-gray-200 bg-white hover:border-gray-300'
                   }`}
                 onClick={() => setSelectedTemplate('STYLE_CONSULTANT')}
               >

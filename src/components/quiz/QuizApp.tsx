@@ -16,8 +16,14 @@ import OfferStep from './OfferStep';
  * - Renderiza a etapa atual baseada no estado
  * - Coordena a navegação entre as 21 etapas
  * - Aplica o design e funcionalidades do HTML original
+ * - Suporte a templates personalizados via funnelId
  */
-export default function QuizApp() {
+
+interface QuizAppProps {
+    funnelId?: string;
+}
+
+export default function QuizApp({ funnelId }: QuizAppProps) {
     const {
         state,
         currentStepData,
@@ -28,7 +34,7 @@ export default function QuizApp() {
         addStrategicAnswer,
         calculateResult,
         getOfferKey,
-    } = useQuizState();
+    } = useQuizState(funnelId);
 
     // Calcular resultado automaticamente ao chegar na etapa 20
     useEffect(() => {

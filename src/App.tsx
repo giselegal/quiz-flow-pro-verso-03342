@@ -115,6 +115,15 @@ function App() {
                   </QuizErrorBoundary>
                 </Route>
 
+                {/* 🧪 QUIZ DINÂMICO COM SUPORTE A DIFERENTES TEMPLATES */}
+                <Route path="/quiz/:funnelId">
+                  {(params) => (
+                    <QuizErrorBoundary>
+                      <QuizEstiloPessoalPage funnelId={params.funnelId} />
+                    </QuizErrorBoundary>
+                  )}
+                </Route>
+
                 <Route path="/resultado">
                   <QuizErrorBoundary>
                     <QuizEstiloPessoalPage />
@@ -129,8 +138,8 @@ function App() {
                 {/* 🏢 ÁREA ADMINISTRATIVA COM LAYOUT CONSISTENTE */}
                 <Route path="/admin" nest>
                   <Route path="/">
-                    <AdminLayout 
-                      title="Dashboard Administrativo" 
+                    <AdminLayout
+                      title="Dashboard Administrativo"
                       subtitle="Visão geral das métricas e atividades do sistema"
                     >
                       <ConsolidatedOverviewPage />
@@ -138,8 +147,8 @@ function App() {
                   </Route>
 
                   <Route path="/analytics">
-                    <AdminLayout 
-                      title="Analytics Avançado" 
+                    <AdminLayout
+                      title="Analytics Avançado"
                       subtitle="Métricas detalhadas e análises de performance"
                     >
                       <AnalyticsPage />
@@ -147,8 +156,8 @@ function App() {
                   </Route>
 
                   <Route path="/settings">
-                    <AdminLayout 
-                      title="Configurações do Sistema" 
+                    <AdminLayout
+                      title="Configurações do Sistema"
                       subtitle="Gerenciar configurações e preferências"
                     >
                       <SettingsPage />

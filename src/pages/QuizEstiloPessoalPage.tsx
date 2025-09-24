@@ -14,8 +14,14 @@ import '@/styles/globals.css';
  * - ✅ Ofertas personalizadas baseadas nas respostas estratégicas
  * - ✅ Design com paleta de cores personalizada
  * - ✅ Responsive e otimizado
+ * - ✅ Suporte a templates personalizados via funnelId
  */
-export default function QuizEstiloPessoalPage() {
+
+interface QuizEstiloPessoalPageProps {
+    funnelId?: string;
+}
+
+export default function QuizEstiloPessoalPage({ funnelId }: QuizEstiloPessoalPageProps) {
     return (
         <div className="quiz-estilo-page">
             {/* Meta tags para SEO */}
@@ -34,7 +40,7 @@ export default function QuizEstiloPessoalPage() {
 
             {/* Componente principal do quiz */}
             <main className="min-h-screen">
-                <QuizApp />
+                <QuizApp funnelId={funnelId} />
             </main>
 
             {/* Scripts de analytics (exemplo) */}
