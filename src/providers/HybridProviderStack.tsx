@@ -6,7 +6,7 @@
  */
 
 import React, { ReactNode } from 'react';
-import { CleanArchitectureProvider } from './CleanArchitectureProvider';
+import CleanArchitectureProvider from './CleanArchitectureProvider';
 import { EditorRuntimeProviders } from '@/context/EditorRuntimeProviders';
 
 interface HybridProviderStackProps {
@@ -51,9 +51,8 @@ const HybridProviderStack: React.FC<HybridProviderStackProps> = ({
   if (useCleanArchitecture) {
     return (
       <CleanArchitectureProvider
-        enableCleanArchitecture={true}
+        funnelId={funnelId}
         debugMode={debugMode}
-        fallbackToLegacy={true}
       >
         <EditorRuntimeProviders
           funnelId={funnelId}
