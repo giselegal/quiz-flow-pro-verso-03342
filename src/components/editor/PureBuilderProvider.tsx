@@ -260,40 +260,49 @@ export const PureBuilderProvider: React.FC<{
             }
         }, [funnelId]);
 
-        // Actions with Builder System integration
+        // ⚡ ACTIONS OBJECT - Todas as funções definidas inline
         const actions: PureBuilderActions = {
             setCurrentStep: useCallback((step: number) => {
-                setState(prev => ({ ...prev, currentStep: step }));
-
-                // Track step change with Builder System analytics
-                if (state.funnelConfig?.analytics?.trackingEnabled) {
-                    console.log('📊 Tracking step change:', step);
-                    // Here you would integrate with your analytics
+                if (step < 1 || step > totalSteps) {
+                    console.warn(`⚠️ Tentativa de navegar para step inválido: ${step} (range válido: 1-${totalSteps})`);
+                    return;
                 }
-            }, [state.funnelConfig]),
-
+                setState(prev => ({ ...prev, currentStep: step }));
+            }, [totalSteps]),
+            
             setSelectedBlockId: useCallback((blockId: string | null) => {
                 setState(prev => ({ ...prev, selectedBlockId: blockId }));
             }, []),
-
+            
             ensureStepLoaded: useCallback(async (step: number) => {
-                // Builder System has everything loaded
-                if (!state.loadedSteps.has(step)) {
-                    setState(prev => ({
-                        ...prev,
-                        loadedSteps: new Set([...prev.loadedSteps, step])
-                    }));
-                }
-            }, [state.loadedSteps]),
-
-            preloadAdjacentSteps: useCallback(async (_currentStep: number) => {
-                console.log('📦 Builder System: All steps optimized and preloaded');
-            }, []),
-
+                const stepKey = `step-${step}`;
+                if (state.stepBlocks[stepKey] || step < 1 || step > totalSteps) return;
+                setState(prev => ({
+                    ...prev,
+                    loadedSteps: new Set([...prev.loadedSteps, step])
+                }));
+            }, [state.stepBlocks, totalSteps]),
+            
+            preloadAdjacentSteps: useCallback(async (currentStep: number) => {
+                const steps = [];
+                if (currentStep > 1) steps.push(currentStep - 1);
+                if (currentStep < totalSteps) steps.push(currentStep + 1);
+                // Preload logic would go here
+            }, [totalSteps]),
+            
             clearUnusedSteps: useCallback(() => {
-                console.log('🧠 Builder System: Optimal memory management active');
-            }, []),
-
+                const currentStep = state.currentStep;
+                const adjacentSteps = new Set([
+                    Math.max(1, currentStep - 1),
+                    currentStep,
+                    Math.min(totalSteps, currentStep + 1)
+                ]);
+                setState(prev => ({
+                    ...prev,
+                    loadedSteps: new Set([...prev.loadedSteps].filter(step => adjacentSteps.has(step)))
+                }));
+            }, [state.currentStep, totalSteps]),
+            
             addBlock: useCallback(async (stepKey: string, block: Block) => {
                 setState(prev => ({
                     ...prev,
@@ -303,466 +312,124 @@ export const PureBuilderProvider: React.FC<{
                     }
                 }));
             }, []),
-
+            
             updateBlock: useCallback(async (stepKey: string, blockId: string, updates: Record<string, any>) => {
                 setState(prev => ({
                     ...prev,
                     stepBlocks: {
                         ...prev.stepBlocks,
-                        [stepKey]: prev.stepBlocks[stepKey]?.map(block =>
+                        [stepKey]: (prev.stepBlocks[stepKey] || []).map(block =>
                             block.id === blockId ? { ...block, ...updates } : block
-                        ) || []
+                        )
                     }
                 }));
             }, []),
-
+            
             removeBlock: useCallback(async (stepKey: string, blockId: string) => {
                 setState(prev => ({
                     ...prev,
                     stepBlocks: {
                         ...prev.stepBlocks,
-                        [stepKey]: prev.stepBlocks[stepKey]?.filter(block => block.id !== blockId) || []
+                        [stepKey]: (prev.stepBlocks[stepKey] || []).filter(block => block.id !== blockId)
                     }
                 }));
             }, []),
-
+            
             setStepValid: useCallback((step: number, isValid: boolean) => {
                 setState(prev => ({
                     ...prev,
-                    stepValidation: {
-                        ...prev.stepValidation,
-                        [step]: isValid
-                    }
+                    stepValidation: { ...prev.stepValidation, [step]: isValid }
                 }));
             }, []),
-
-            // 🎯 BUILDER SYSTEM SPECIFIC ACTIONS
-            calculateResults: useCallback(async () => {
-                if (state.builderInstance && state.funnelConfig) {
-                    try {
-                        console.log('🧮 Calculating results with Builder System...');
-
-                        // Use Builder System calculation engine
-                        const results = await state.builderInstance.calculateResults({
-                            responses: state.stepBlocks,
-                            algorithm: 'weighted-scoring'
-                        });
-
-                        console.log('✅ Results calculated:', results);
-                        return results;
-                    } catch (error) {
-                        console.error('❌ Error calculating results:', error);
-                        return null;
-                    }
-                }
-                return null;
-            }, [state.builderInstance, state.funnelConfig, state.stepBlocks]),
-
-            optimizeFunnel: useCallback(async () => {
-                if (state.builderInstance) {
-                    console.log('⚡ Optimizing funnel with Builder System...');
-                    await state.builderInstance.optimize();
-                }
-            }, [state.builderInstance]),
-
-            generateAnalytics: useCallback(() => {
-                if (state.funnelConfig?.analytics) {
-                    return {
-                        trackingEnabled: state.funnelConfig.analytics.trackingEnabled,
-                        events: state.funnelConfig.analytics.events,
-                        goals: state.funnelConfig.analytics.goals,
-                        currentStep: state.currentStep,
-                        completionRate: state.funnelConfig?.totalSteps ? 
-                            (state.currentStep / state.funnelConfig.totalSteps) * 100 : 0, // ✅ DINÂMICO
-                        timestamp: new Date().toISOString()
-                    };
-                }
-                return {};
-            }, [state.funnelConfig, state.currentStep]),
-
-            validateFunnel: useCallback(async () => {
-                if (state.builderInstance) {
-                    console.log('✅ Validating funnel with Builder System...');
-                    return await state.builderInstance.validate();
-                }
-                return { isValid: true, errors: [], warnings: [] };
-            }, [state.builderInstance]),
-
+            
             exportJSON: useCallback(() => {
                 return JSON.stringify({
-                    funnelId,
-                    builderSystemPure: true,
-                    builderVersion: '2.0',
                     stepBlocks: state.stepBlocks,
                     funnelConfig: state.funnelConfig,
-                    analytics: state.analyticsData,
-                    metadata: {
-                        generatedAt: new Date().toISOString(),
-                        totalSteps: state.funnelConfig?.totalSteps || 1, // ✅ DINÂMICO
-                        hasCalculations: true,
-                        hasOptimizations: true,
-                        hasAnalytics: true,
-                        builderSystemPowered: true
-                    }
+                    totalSteps
                 }, null, 2);
-            }, [state.stepBlocks, state.funnelConfig, state.analyticsData, funnelId]),
-
+            }, [state.stepBlocks, state.funnelConfig, totalSteps]),
+            
             importJSON: useCallback((json: string) => {
                 try {
                     const data = JSON.parse(json);
                     setState(prev => ({
                         ...prev,
                         stepBlocks: data.stepBlocks || {},
-                        stepValidation: data.stepValidation || {},
-                        funnelConfig: data.funnelConfig || null,
-                        analyticsData: data.analytics || {}
+                        funnelConfig: data.funnelConfig || {}
                     }));
+                    if (data.totalSteps) setTotalSteps(data.totalSteps);
                 } catch (error) {
                     console.error('❌ Error importing JSON:', error);
                 }
             }, []),
-
-            // 🔄 SISTEMA DE DUPLICAÇÃO E CLONAGEM
-            cloneFunnel: useCallback((newName?: string, newId?: string) => {
-                const cloneId = newId || `clone-${Date.now()}`;
-                const cloneName = newName || `Cópia de ${state.funnelConfig?.name || 'Funil'}`;
-
-                console.log('📋 Clonando funil:', { originalId: funnelId, cloneId, cloneName });
-
-                // Clonar stepBlocks com novos IDs únicos
-                const clonedStepBlocks: Record<string, Block[]> = {};
-                Object.entries(state.stepBlocks).forEach(([stepKey, blocks]) => {
-                    clonedStepBlocks[stepKey] = blocks.map(block => ({
-                        ...block,
-                        id: `${block.id}-clone-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`
-                    }));
-                });
-
-                // Clonar configuração do funil
-                const clonedConfig = {
-                    ...state.funnelConfig,
-                    id: cloneId,
-                    name: cloneName,
-                    createdAt: new Date().toISOString(),
-                    clonedFrom: funnelId
-                };
-
-                return {
-                    id: cloneId,
-                    name: cloneName,
-                    stepBlocks: clonedStepBlocks,
-                    funnelConfig: clonedConfig,
-                    metadata: {
-                        isClone: true,
-                        originalId: funnelId,
-                        clonedAt: new Date().toISOString()
-                    }
-                };
-            }, [state.stepBlocks, state.funnelConfig, funnelId]),
-
-            createFromTemplate: useCallback(async (templateName: string, customName?: string) => {
-                console.log('📋 Criando novo funil do template:', templateName);
-
-                const newId = `template-${templateName}-${Date.now()}`;
-                const newName = customName || `${templateName} - ${new Date().toLocaleDateString()}`;
-
-                try {
-                    // ✅ USAR getTemplateInfo primeiro
-                    const templateInfo = await getTemplateInfo(templateName);
-                    const { stepBlocks, builderInstance, funnelConfig } = await generateWithPureBuilder(newId, templateInfo);
-
-                    // Aplicar novo ID e nome
-                    const customConfig = {
-                        ...funnelConfig,
-                        id: newId,
-                        name: newName,
-                        createdAt: new Date().toISOString(),
-                        templateSource: templateName
-                    };
-
-                    return {
-                        id: newId,
-                        name: newName,
-                        stepBlocks,
-                        funnelConfig: customConfig,
-                        builderInstance,
-                        metadata: {
-                            isFromTemplate: true,
-                            templateName,
-                            createdAt: new Date().toISOString()
-                        }
-                    };
-                } catch (error) {
-                    console.error('❌ Erro ao criar funil do template:', error);
-                    throw error;
+            
+            calculateResults: useCallback(async () => {
+                return state.calculationEngine?.calculate() || {};
+            }, [state.calculationEngine]),
+            
+            optimizeFunnel: useCallback(async () => {
+                if (state.builderInstance?.optimize) {
+                    await state.builderInstance.optimize();
                 }
+            }, [state.builderInstance]),
+            
+            generateAnalytics: useCallback(() => {
+                return state.analyticsData || {};
+            }, [state.analyticsData]),
+            
+            validateFunnel: useCallback(async () => {
+                return { isValid: true, errors: [], warnings: [] };
             }, []),
-
-            // 🔄 COMPATIBILITY METHODS (EditorProvider compatibility)
-            canUndo: false, // Builder System manages this internally
-            canRedo: false, // Builder System manages this internally
-
-            undo: useCallback(() => {
-                console.log('🔄 Undo operation - Builder System manages history internally');
+            
+            cloneFunnel: useCallback((newName?: string, newId?: string) => {
+                return {
+                    ...state.funnelConfig,
+                    id: newId || `clone-${Date.now()}`,
+                    name: newName || `Clone ${state.funnelConfig?.name || 'Funnel'}`
+                };
+            }, [state.funnelConfig]),
+            
+            createFromTemplate: useCallback(async (templateName: string, _customName?: string) => {
+                const templateInfo = await getTemplateInfo(templateName);
+                return generateWithPureBuilder(templateName, templateInfo);
             }, []),
-
-            redo: useCallback(() => {
-                console.log('🔄 Redo operation - Builder System manages history internally');
-            }, []),
-
+            
             addBlockAtIndex: useCallback(async (stepKey: string, block: Block, index: number) => {
                 setState(prev => {
-                    const currentBlocks = prev.stepBlocks[stepKey] || [];
-                    const newBlocks = [...currentBlocks];
-                    newBlocks.splice(index, 0, block);
+                    const stepBlocks = [...(prev.stepBlocks[stepKey] || [])];
+                    stepBlocks.splice(index, 0, block);
                     return {
                         ...prev,
-                        stepBlocks: {
-                            ...prev.stepBlocks,
-                            [stepKey]: newBlocks
-                        }
+                        stepBlocks: { ...prev.stepBlocks, [stepKey]: stepBlocks }
                     };
                 });
             }, []),
-
+            
             reorderBlocks: useCallback(async (stepKey: string, oldIndex: number, newIndex: number) => {
                 setState(prev => {
-                    const currentBlocks = prev.stepBlocks[stepKey] || [];
-                    const newBlocks = [...currentBlocks];
-                    const [removed] = newBlocks.splice(oldIndex, 1);
-                    newBlocks.splice(newIndex, 0, removed);
+                    const stepBlocks = [...(prev.stepBlocks[stepKey] || [])];
+                    const [movedBlock] = stepBlocks.splice(oldIndex, 1);
+                    stepBlocks.splice(newIndex, 0, movedBlock);
                     return {
                         ...prev,
-                        stepBlocks: {
-                            ...prev.stepBlocks,
-                            [stepKey]: newBlocks
-                        }
+                        stepBlocks: { ...prev.stepBlocks, [stepKey]: stepBlocks }
                     };
                 });
             }, []),
-
+            
             loadDefaultTemplate: useCallback(() => {
-                console.log('🏗️ Loading default template with Builder System...');
-                // Builder System já carrega template automaticamente na inicialização
-            }, [])
-        };
-
-        // ⚡ FUNÇÕES DE CONTROLE
-        const ensureStepLoaded = useCallback(async (step: number) => {
-            const stepKey = `step-${step}`;
+                // Default template loading logic
+            }, []),
             
-            if (state.stepBlocks[stepKey]) {
-                return;
-            }
-
-            // ✅ DINÂMICO: Verificar se está dentro do limite
-            if (step < 1 || step > totalSteps) {
-                console.warn(`⚠️ Step ${step} está fora do range válido (1-${totalSteps})`);
-                return;
-            }
-
-            setState(prev => ({
-                ...prev,
-                loadedSteps: new Set([...prev.loadedSteps, step])
-            }));
-        }, [state.stepBlocks, totalSteps]);
-
-        const preloadAdjacentSteps = useCallback(async (currentStep: number) => {
-            const steps = [];
-            
-            // ✅ DINÂMICO: Verificar limites baseado no totalSteps
-            if (currentStep > 1) steps.push(currentStep - 1);
-            if (currentStep < totalSteps) steps.push(currentStep + 1);
-
-            for (const step of steps) {
-                await ensureStepLoaded(step);
-            }
-        }, [ensureStepLoaded, totalSteps]);
-
-        const clearUnusedSteps = useCallback(() => {
-            const currentStep = state.currentStep;
-            const adjacentSteps = new Set([
-                Math.max(1, currentStep - 1),
-                currentStep,
-                Math.min(totalSteps, currentStep + 1)
-            ]);
-
-            setState(prev => ({
-                ...prev,
-                loadedSteps: new Set([...prev.loadedSteps].filter(step => adjacentSteps.has(step)))
-            }));
-        }, [state.currentStep, totalSteps]);
-
-        const setCurrentStep = useCallback((step: number) => {
-            // ✅ DINÂMICO: Validar range
-            if (step < 1 || step > totalSteps) {
-                console.warn(`⚠️ Tentativa de navegar para step inválido: ${step} (range válido: 1-${totalSteps})`);
-                return;
-            }
-
-            setState(prev => ({ ...prev, currentStep: step }));
-            ensureStepLoaded(step);
-            preloadAdjacentSteps(step);
-        }, [ensureStepLoaded, preloadAdjacentSteps, totalSteps]);
-
-        const setSelectedBlockId = useCallback((blockId: string | null) => {
-            setState(prev => ({ ...prev, selectedBlockId: blockId }));
-        }, []);
-
-        const addBlock = useCallback(async (stepKey: string, block: Block) => {
-            setState(prev => ({
-                ...prev,
-                stepBlocks: {
-                    ...prev.stepBlocks,
-                    [stepKey]: [...(prev.stepBlocks[stepKey] || []), block]
-                }
-            }));
-        }, []);
-
-        const updateBlock = useCallback(async (stepKey: string, blockId: string, updates: Record<string, any>) => {
-            setState(prev => ({
-                ...prev,
-                stepBlocks: {
-                    ...prev.stepBlocks,
-                    [stepKey]: (prev.stepBlocks[stepKey] || []).map(block =>
-                        block.id === blockId ? { ...block, ...updates } : block
-                    )
-                }
-            }));
-        }, []);
-
-        const removeBlock = useCallback(async (stepKey: string, blockId: string) => {
-            setState(prev => ({
-                ...prev,
-                stepBlocks: {
-                    ...prev.stepBlocks,
-                    [stepKey]: (prev.stepBlocks[stepKey] || []).filter(block => block.id !== blockId)
-                }
-            }));
-        }, []);
-
-        const setStepValid = useCallback((step: number, isValid: boolean) => {
-            setState(prev => ({
-                ...prev,
-                stepValidation: {
-                    ...prev.stepValidation,
-                    [step]: isValid
-                }
-            }));
-        }, []);
-
-        const exportJSON = useCallback(() => {
-            return JSON.stringify({
-                stepBlocks: state.stepBlocks,
-                funnelConfig: state.funnelConfig,
-                totalSteps
-            }, null, 2);
-        }, [state.stepBlocks, state.funnelConfig, totalSteps]);
-
-        const importJSON = useCallback((json: string) => {
-            try {
-                const data = JSON.parse(json);
-                setState(prev => ({
-                    ...prev,
-                    stepBlocks: data.stepBlocks || {},
-                    funnelConfig: data.funnelConfig || {}
-                }));
-                if (data.totalSteps) {
-                    setTotalSteps(data.totalSteps);
-                }
-            } catch (error) {
-                console.error('❌ Error importing JSON:', error);
-            }
-        }, []);
-
-        // Builder System functions
-        const calculateResults = useCallback(async () => {
-            return state.calculationEngine?.calculate() || {};
-        }, [state.calculationEngine]);
-
-        const optimizeFunnel = useCallback(async () => {
-            if (state.builderInstance?.optimize) {
-                await state.builderInstance.optimize();
-            }
-        }, [state.builderInstance]);
-
-        const generateAnalytics = useCallback(() => {
-            return state.analyticsData || {};
-        }, [state.analyticsData]);
-
-        const validateFunnel = useCallback(async () => {
-            return { isValid: true, errors: [], warnings: [] };
-        }, []);
-
-        const cloneFunnel = useCallback((newName?: string, newId?: string) => {
-            return {
-                ...state.funnelConfig,
-                id: newId || `clone-${Date.now()}`,
-                name: newName || `Clone ${state.funnelConfig?.name || 'Funnel'}`
-            };
-        }, [state.funnelConfig]);
-
-        const createFromTemplate = useCallback(async (templateName: string, _customName?: string) => {
-            const templateInfo = await getTemplateInfo(templateName);
-            return generateWithPureBuilder(templateName, templateInfo);
-        }, []);
-
-        // Compatibility functions
-        const addBlockAtIndex = useCallback(async (stepKey: string, block: Block, index: number) => {
-            setState(prev => {
-                const stepBlocks = [...(prev.stepBlocks[stepKey] || [])];
-                stepBlocks.splice(index, 0, block);
-                return {
-                    ...prev,
-                    stepBlocks: {
-                        ...prev.stepBlocks,
-                        [stepKey]: stepBlocks
-                    }
-                };
-            });
-        }, []);
-
-        const reorderBlocks = useCallback(async (stepKey: string, oldIndex: number, newIndex: number) => {
-            setState(prev => {
-                const stepBlocks = [...(prev.stepBlocks[stepKey] || [])];
-                const [movedBlock] = stepBlocks.splice(oldIndex, 1);
-                stepBlocks.splice(newIndex, 0, movedBlock);
-                return {
-                    ...prev,
-                    stepBlocks: {
-                        ...prev.stepBlocks,
-                        [stepKey]: stepBlocks
-                    }
-                };
-            });
-        }, []);
-
-        const loadDefaultTemplate = useCallback(() => {
-            // Implementar carregamento de template padrão se necessário
-        }, []);
-
-        const contextValue: PureBuilderContextValue = {
-            state,
-            actions
+            canUndo: false,
+            canRedo: false,
+            undo: () => {},
+            redo: () => {}
         };
-
-        // Debug info
-        useEffect(() => {
-            if (process.env.NODE_ENV === 'development') {
-                console.log('🏗️ PureBuilderProvider state:', {
-                    currentStep: state.currentStep,
-                    loadedSteps: Array.from(state.loadedSteps),
-                    totalStepBlocks: Object.keys(state.stepBlocks).length,
-                    isLoading: state.isLoading,
-                    hasBuilderInstance: !!state.builderInstance,
-                    hasFunnelConfig: !!state.funnelConfig,
-                    builderSystemActive: true
-                });
-            }
-        }, [state.currentStep, state.loadedSteps.size, state.isLoading, state.builderInstance]);
 
         return (
-            <PureBuilderContext.Provider value={contextValue}>
+            <PureBuilderContext.Provider value={{ state, actions }}>
                 {children}
             </PureBuilderContext.Provider>
         );
