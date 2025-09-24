@@ -27,20 +27,21 @@ import { Block } from '../types/editor';
 // 🔧 PERFORMANCE E CACHE OTIMIZADO
 const TEMPLATE_CACHE = new Map<string, any>();
 
-// 🚀 FUNÇÃO DE CARREGAMENTO LAZY PARA PERFORMANCE
-export async function loadStepTemplate(stepId: string): Promise<any> {
+// 🚀 FUNÇÃO DE CARREGAMENTO OTIMIZADO PARA PERFORMANCE
+export function getStepTemplate(stepId: string): any {
   if (TEMPLATE_CACHE.has(stepId)) {
     return TEMPLATE_CACHE.get(stepId);
   }
   
-  try {
-    const template = await import(`../../templates/${stepId}-template.json`);
-    TEMPLATE_CACHE.set(stepId, template.default);
-    return template.default;
-  } catch (error) {
-    console.warn(`⚠️ Failed to load ${stepId}, using fallback`);
-    return null;
+  // Get template from the complete template object
+  const template = QUIZ_STYLE_21_STEPS_TEMPLATE[stepId];
+  if (template) {
+    TEMPLATE_CACHE.set(stepId, template);
+    return template;
   }
+  
+  console.warn(`⚠️ Template ${stepId} not found`);
+  return null;
 }
 
 // 🔧 ESTRUTURA COMPLETA DE PERSISTÊNCIA JSON  

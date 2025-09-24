@@ -40,7 +40,7 @@ export function useTemplatePerformance(options: UseTemplatePerformanceOptions = 
   const cacheRef = useRef(new Map<string, any>());
   const loadStartRef = useRef<number>(0);
 
-  // 🎯 CARREGAMENTO LAZY DE TEMPLATE
+  // 🎯 CARREGAMENTO LAZY DE TEMPLATE (Using centralized template)
   const loadTemplate = useCallback(async (stepId: string) => {
     setIsLoading(true);
     loadStartRef.current = performance.now();
@@ -57,11 +57,12 @@ export function useTemplatePerformance(options: UseTemplatePerformanceOptions = 
     }
 
     try {
-      // Simulate dynamic import for template loading
-      const template = await import(`../templates/${stepId}-template.json`);
+      // Import the centralized template system
+      const { getStepTemplate } = await import('@/templates/quiz21StepsComplete');
+      const template = getStepTemplate(stepId);
       
-      if (enableCache) {
-        cacheRef.current.set(stepId, template.default);
+      if (enableCache && template) {
+        cacheRef.current.set(stepId, template);
       }
 
       setMetrics(prev => ({
@@ -72,10 +73,10 @@ export function useTemplatePerformance(options: UseTemplatePerformanceOptions = 
       }));
 
       setIsLoading(false);
-      return template.default;
+      return template;
 
     } catch (error) {
-      console.warn(`⚠️ Failed to load template: ${stepId}`);
+      console.warn(`⚠️ Failed to load template: ${stepId}`, error);
       setIsLoading(false);
       return null;
     }
@@ -88,7 +89,7 @@ export function useTemplatePerformance(options: UseTemplatePerformanceOptions = 
     for (let i = 1; i <= preloadNext; i++) {
       const nextStep = currentStep + i;
       if (nextStep <= 21) {
-        stepIds.push(`step-${nextStep.toString().padStart(2, '0')}`);
+        stepIds.push(`step-${nextStep}`); // Fixed: Remove padStart since template uses step-1, step-2, etc.
       }
     }
 
@@ -99,6 +100,19 @@ export function useTemplatePerformance(options: UseTemplatePerformanceOptions = 
       }
     });
   }, [loadTemplate, preloadNext]);
+
+  // 🚀 NAVEGAÇÃO OTIMIZADA COM PRELOAD (Simple version)
+  const navigateToStep = useCallback(async (stepNumber: number) => {
+    const stepId = `step-${stepNumber}`; // Fixed: Remove padStart since template uses step-1, step-2, etc.
+    
+    // Load current step
+    const template = await loadTemplate(stepId);
+    
+    // Preload next steps in background
+    preloadTemplates(stepNumber);
+    
+    return template;
+  }, [loadTemplate, preloadTemplates]);
 
   // 🧹 LIMPEZA DE CACHE
   const clearCache = useCallback(() => {
@@ -143,6 +157,7 @@ export function useTemplatePerformance(options: UseTemplatePerformanceOptions = 
     preloadTemplates,
     clearCache,
     getPerformanceReport,
+    navigateToStep,
     metrics,
     isLoading,
     cacheSize: cacheRef.current.size
@@ -161,7 +176,7 @@ export function useQuiz21Performance() {
 
   // 🚀 NAVEGAÇÃO OTIMIZADA COM PRELOAD
   const navigateToStep = useCallback(async (stepNumber: number) => {
-    const stepId = `step-${stepNumber.toString().padStart(2, '0')}`;
+    const stepId = `step-${stepNumber}`; // Fixed: Remove padStart since template uses step-1, step-2, etc.
     
     // Load current step
     const template = await performance.loadTemplate(stepId);
