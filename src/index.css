@@ -367,17 +367,17 @@ img:hover,
     --brand-bright-blue: 195 100% 50%;   /* #00BFFF */
     --brand-bright-pink: 300 100% 50%;   /* #FF00FF */
     
-    /* Earthy Support Colors */
-    --brand-primary: 33 42% 63%;         /* #b89b7a */
-    --brand-dark: 30 40% 18%;           /* #432818 */
-    --brand-background: 44 32% 97%;     /* #FAF9F7 */
-    --brand-text: 30 40% 18%;           /* #432818 */
-    --brand-muted: 213 9% 62%;          /* #9CA3AF */
+    /* Clean Support Colors */
+    --brand-primary: 256 66% 15%;        /* #1A0F3D - usando dark blue */
+    --brand-dark: 256 66% 15%;          /* #1A0F3D - usando dark blue */
+    --brand-background: 0 0% 100%;      /* #FFFFFF - branco puro */
+    --brand-text: 256 66% 15%;          /* #1A0F3D - usando dark blue */
+    --brand-muted: 255 54% 25%;         /* #2E1A6B - usando medium blue */
 
     /* Gradients */
     --gradient-primary: linear-gradient(135deg, hsl(var(--brand-bright-blue)), hsl(var(--brand-bright-pink)));
     --gradient-tech: linear-gradient(135deg, hsl(var(--brand-dark-blue)), hsl(var(--brand-medium-blue)), hsl(var(--brand-light-blue)));
-    --gradient-subtle: linear-gradient(135deg, hsl(var(--brand-background)), hsl(var(--brand-muted) / 0.1));
+    --gradient-subtle: linear-gradient(135deg, hsl(var(--brand-background)), hsl(var(--brand-medium-blue) / 0.1));
     --gradient-hero: linear-gradient(135deg, hsl(var(--brand-bright-blue)), hsl(var(--brand-light-blue)), hsl(var(--brand-bright-pink)));
 
     /* Shadows */
@@ -544,28 +544,28 @@ img:hover,
 
 /* Cores da marca para destaque */
 .text-brand {
-  color: #b89b7a;
+  color: #1A0F3D;
 }
 
 .text-brand-dark {
-  color: #432818;
+  color: #1A0F3D;
 }
 
 .bg-brand {
-  background-color: #b89b7a;
+  background-color: #1A0F3D;
 }
 
 .bg-brand-dark {
-  background-color: #432818;
+  background-color: #1A0F3D;
 }
 
 /* Gradientes elegantes */
 .bg-brand-gradient {
-  background: linear-gradient(135deg, #b89b7a 0%, #8b7355 100%);
+  background: linear-gradient(135deg, #00BFFF 0%, #FF00FF 100%);
 }
 
 .text-brand-gradient {
-  background: linear-gradient(135deg, #b89b7a 0%, #8b7355 100%);
+  background: linear-gradient(135deg, #00BFFF 0%, #FF00FF 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
