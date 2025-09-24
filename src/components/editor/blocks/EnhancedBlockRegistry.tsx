@@ -25,6 +25,7 @@ import {
     Step20PersonalizedOfferBlock,
     Step20CompleteTemplateBlock
 } from '@/components/editor/blocks/Step20ModularBlocks';
+import { FashionAIGeneratorBlock } from '@/components/blocks/ai';
 
 // 🎯 REGISTRY COMPLETO - 150+ COMPONENTES MAPEADOS
 export const ENHANCED_BLOCK_REGISTRY: Record<string, ComponentType<any>> = {
@@ -83,6 +84,9 @@ export const ENHANCED_BLOCK_REGISTRY: Record<string, ComponentType<any>> = {
     'secondary-styles': lazy(() => import('@/components/editor/blocks/SecondaryStylesInlineBlock')),
     'quiz-result-secondary': lazy(() => import('@/components/editor/blocks/StyleCardsGridBlock')),
     'result-card': lazy(() => import('@/components/editor/blocks/StyleCardInlineBlock')),
+
+    // 🤖 IA - FASHION AI GENERATOR
+    'fashion-ai-generator': FashionAIGeneratorBlock,
 
     // 🆕 STEP 20 - Módulos Modulares
     'step20-result-header': Step20ResultHeaderBlock,
@@ -275,6 +279,8 @@ export const AVAILABLE_COMPONENTS = [
     { type: 'result-card', label: 'Card de Resultado', category: 'quiz' },
     { type: 'loading-animation', label: 'Animação de Loading', category: 'ui' },
     { type: 'progress-bar', label: 'Barra de Progresso', category: 'ui' },
+    { type: 'heading', label: 'Título', category: 'content' },
+    { type: 'container', label: 'Container', category: 'layout' },
 
     // ✅ COMPONENTES AVANÇADOS
     { type: 'connected-template-wrapper', label: 'Template Wrapper Conectado', category: 'advanced' },
@@ -287,6 +293,7 @@ export const AVAILABLE_COMPONENTS = [
     // ✅ COMPONENTES DE RESULTADO
     { type: 'urgency-timer-inline', label: 'Timer de Urgência', category: 'result' },
     { type: 'before-after-inline', label: 'Antes e Depois', category: 'result' },
+    { type: 'result-header-inline', label: 'Cabeçalho de Resultado', category: 'result' },
     // Novo: bloco de vendas
     { type: 'sales-hero', label: 'Sales Hero', category: 'result' },
     { type: 'bonus', label: 'Bônus (Seção)', category: 'result' },
@@ -296,6 +303,11 @@ export const AVAILABLE_COMPONENTS = [
     { type: 'value-anchoring', label: 'Ancoragem de Valor', category: 'result' },
     { type: 'secure-purchase', label: 'Compra Segura', category: 'result' },
     { type: 'mentor-section-inline', label: 'Seção da Mentora', category: 'result' },
+    { type: 'guarantee', label: 'Garantia', category: 'result' },
+    { type: 'benefits', label: 'Lista de Benefícios', category: 'result' },
+
+    // 🤖 COMPONENTES DE IA
+    { type: 'fashion-ai-generator', label: 'Gerador de IA Fashion', category: 'ai' },
 ];
 
 /**
