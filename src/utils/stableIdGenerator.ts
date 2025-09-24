@@ -15,15 +15,15 @@ let idCounter = 0;
  */
 export function generateStableId(key: string, prefix: string = 'id'): string {
     const cacheKey = `${prefix}_${key}`;
-    
+
     if (ID_CACHE.has(cacheKey)) {
         return ID_CACHE.get(cacheKey)!;
     }
-    
+
     // Gerar ID baseado no hash do key + contador
     const hash = hashString(key);
     const id = `${prefix}-${hash}-${++idCounter}`;
-    
+
     ID_CACHE.set(cacheKey, id);
     return id;
 }
@@ -58,13 +58,13 @@ export function generateStepId(stepNumber: number | string): string {
 function hashString(str: string): string {
     let hash = 0;
     if (str.length === 0) return hash.toString();
-    
+
     for (let i = 0; i < str.length; i++) {
         const char = str.charCodeAt(i);
         hash = ((hash << 5) - hash) + char;
         hash = hash & hash; // Convert to 32-bit integer
     }
-    
+
     return Math.abs(hash).toString(36);
 }
 

@@ -2,6 +2,8 @@ import { useAutoSaveWithDebounce } from '@/hooks/editor/useAutoSaveWithDebounce'
 import { toast } from '@/hooks/use-toast';
 // Importação direta do TemplateManager para evitar problemas de dependência circular
 import { TemplateManager } from '@/utils/TemplateManager';
+// 🔧 CORREÇÃO: Import do gerador de IDs estável para resolver loop infinito
+import { generateBlockId, generateStableId } from '@/utils/stableIdGenerator';
 // Padronização: preferir templateService para carregar e converter blocos
 // Import dinâmico mantido onde necessário para evitar carga desnecessária do módulo em rotas que não usam
 // import { funnelPersistenceService } from '@/services/funnelPersistence';
@@ -222,7 +224,7 @@ export const EditorProvider: React.FC<{
           const templateBlocks = template?.blocks || [];
           if (templateBlocks.length > 0) {
             const editorBlocks = templateBlocks.map((block: any, index: number) => ({
-              id: block.id || `block-${Date.now()}-${Math.random()}`,
+              id: block.id || generateBlockId(block.type || 'text', index, 'step-1'),
               type: block.type || 'text',
               content: block.content || {},
               styles: block.styles || {},
@@ -303,7 +305,7 @@ export const EditorProvider: React.FC<{
   const addBlock = useCallback(
     async (type: BlockType): Promise<string> => {
       const newBlock: Block = {
-        id: `block-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+        id: generateBlockId(type, Date.now(), activeStageId),
         type,
         content: {},
         properties: {
@@ -536,7 +538,7 @@ export const EditorProvider: React.FC<{
             const template = await getStepTemplate(stepNumber, currentFunnelId);
             const templateBlocks = template?.blocks || [];
             const editorBlocks = templateBlocks.map((block: any, index: number) => ({
-              id: block.id || `block-${Date.now()}-${Math.random()}`,
+              id: block.id || generateBlockId(block.type || 'text', index, `step-${stepNumber}`),
               type: block.type || 'text',
               content: block.content || {},
               styles: block.styles || {},
@@ -806,7 +808,7 @@ export const useEditor = (): EditorContextType => {
       setFunnelId: noop,
 
       // Block actions
-      addBlock: async () => `fallback-block-${Date.now()}`,
+      addBlock: async () => generateStableId('fallback-block', 'fallback-block'),
       updateBlock: noopAsync,
       deleteBlock: noopAsync,
       reorderBlocks: noop,
@@ -850,10 +852,10 @@ export const useEditor = (): EditorContextType => {
       // Block actions object
       blockActions: {
         setSelectedBlockId: noop,
-        addBlock: async () => `fallback-block-${Date.now()}`,
+        addBlock: async () => generateStableId('fallback-block', 'fallback-block'),
         updateBlock: noopAsync,
         deleteBlock: noopAsync,
-        addBlockAtPosition: async () => `fallback-block-${Date.now()}`,
+        addBlockAtPosition: async () => generateStableId('fallback-block-position', 'fallback-block'),
         replaceBlocks: noop,
         reorderBlocks: noop,
       },

@@ -67,7 +67,8 @@ export const VirtualScrolling = <T extends any>({
 }: VirtualScrollingProps<T>) => {
   const logger = useLogger('VirtualScrolling');
   const containerRef = useRef<HTMLDivElement>(null);
-  const componentId = useMemo(() => `virtual-scroll-${Math.random().toString(36).substr(2, 9)}`, []);
+  // 🔧 CORREÇÃO: Gerar ID estável que não muda a cada render
+  const componentId = useRef(`virtual-scroll-${Date.now()}`).current;
 
   // ✅ STATE DO VIRTUAL SCROLLING
   const [state, setState] = useState<VirtualScrollingState>({

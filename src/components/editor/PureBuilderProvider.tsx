@@ -448,9 +448,11 @@ export const PureBuilderProvider: React.FC<{
             }, []),
 
             cloneFunnel: useCallback((newName?: string, newId?: string) => {
+                const baseId = newId || state.funnelConfig?.id || 'funnel';
+                const cloneId = newId || `clone-${baseId}`;
                 return {
                     ...state.funnelConfig,
-                    id: newId || `clone-${Date.now()}`,
+                    id: cloneId,
                     name: newName || `Clone ${state.funnelConfig?.name || 'Funnel'}`
                 };
             }, [state.funnelConfig]),

@@ -22,6 +22,8 @@ import { useHistoryState } from '@/hooks/useHistoryState';
 import { DraftPersistence } from '@/services/editor/DraftPersistence';
 import { editorDataService } from '@/core/editor/services/EditorDataService';
 import { cacheManager } from '@/utils/cache/LRUCache';
+// 🔧 CORREÇÃO: Import do gerador de IDs estável
+import { generateBlockId } from '@/utils/stableIdGenerator';
 
 // ===== UNIFIED STATE INTERFACE =====
 
@@ -346,7 +348,7 @@ export const UnifiedEditorProvider: React.FC<UnifiedEditorProviderProps> = ({
         // Legacy API compatibility
         addBlockLegacy: useCallback(async (type: BlockType): Promise<string> => {
             const stepKey = `step-${state.currentStep}`;
-            const blockId = `${type}-${Date.now()}`;
+            const blockId = generateBlockId(type, state.currentStep, stepKey);
             const block: Block = {
                 id: blockId,
                 type,
