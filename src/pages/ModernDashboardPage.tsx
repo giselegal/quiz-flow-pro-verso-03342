@@ -48,20 +48,16 @@ import { Plus, RefreshCw, Download, Filter } from 'lucide-react';
 import { Suspense, lazy } from 'react';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 
-// Páginas do Dashboard
-const DashboardOverview = lazy(() => import('./dashboard/OverviewPage'));
-const AnalyticsPage = lazy(() => import('./dashboard/AnalyticsPage'));
-const RealTimePage = lazy(() => import('./dashboard/RealTimePage'));
-const FunnelsPage = lazy(() => import('./dashboard/FunnelsPage'));
+// Páginas do Dashboard - CONSOLIDADO
+const AdminDashboard = lazy(() => import('./dashboard/AdminDashboard'));
 const TemplatesFunisPage = lazy(() => import('./dashboard/TemplatesFunisPage'));
 const MeusFunisPage = lazy(() => import('./dashboard/MeusFunisPage'));
-const QuizzesPage = lazy(() => import('./dashboard/QuizzesPage'));
-const ParticipantsPage = lazy(() => import('./dashboard/ParticipantsPage'));
-const TemplatesPage = lazy(() => import('./dashboard/TemplatesPage'));
-const ABTestsPage = lazy(() => import('./dashboard/ABTestsPage'));
-const CreativesPage = lazy(() => import('./dashboard/CreativesPage'));
+
+// Legacy pages (mantidas para compatibilidade temporária)
 const SettingsPage = lazy(() => import('./dashboard/SettingsPage'));
-const IntegrationsPage = lazy(() => import('./dashboard/IntegrationsPage'));
+
+// Wrapper para AdminDashboard
+const AdminDashboardWrapper: React.FC = () => <AdminDashboard />;
 
 // Componente de loading personalizado
 const DashboardLoadingFallback = () => (
@@ -76,8 +72,8 @@ const DashboardLoadingFallback = () => (
 // Mapeamento de títulos e subtítulos das páginas
 const pageConfig: Record<string, { title: string; subtitle: string; actions?: React.ReactNode }> = {
     '/dashboard': {
-        title: 'Dashboard',
-        subtitle: 'Visão geral das suas métricas e atividades',
+        title: 'Admin Dashboard',
+        subtitle: 'Dashboard consolidado com visão geral, participantes e analytics unificados',
         actions: (
             <div className="flex items-center space-x-2">
                 <Button variant="outline" size="sm">
@@ -222,29 +218,20 @@ const ModernDashboardPage: React.FC = () => {
         >
             <Suspense fallback={<DashboardLoadingFallback />}>
                 <Switch>
-                    {/* Página principal - Overview */}
-                    <Route path="/dashboard" component={DashboardOverview} />
-                    <Route path="/dashboard/" component={DashboardOverview} />
+                    {/* DASHBOARD CONSOLIDADO - Substitui múltiplas páginas */}
+                    <Route path="/dashboard">
+                        {() => <AdminDashboard />}
+                    </Route>
+                    <Route path="/dashboard/">
+                        {() => <AdminDashboard />}
+                    </Route>
 
-                    {/* Analytics e Métricas */}
-                    <Route path="/dashboard/analytics" component={AnalyticsPage} />
-                    <Route path="/dashboard/real-time" component={RealTimePage} />
-
-                    {/* Gestão de Conteúdo */}
-                    <Route path="/dashboard/funnels" component={FunnelsPage} />
+                    {/* Páginas específicas mantidas */}
                     <Route path="/dashboard/templates-funis" component={TemplatesFunisPage} />
                     <Route path="/dashboard/meus-funis" component={MeusFunisPage} />
-                    <Route path="/dashboard/quizzes" component={QuizzesPage} />
-                    <Route path="/dashboard/templates" component={TemplatesPage} />
-                    <Route path="/dashboard/participants" component={ParticipantsPage} />
 
-                    {/* Ferramentas */}
-                    <Route path="/dashboard/ab-tests" component={ABTestsPage} />
-                    <Route path="/dashboard/creatives" component={CreativesPage} />
-
-                    {/* Configurações */}
+                    {/* Configurações (temporário) */}
                     <Route path="/dashboard/settings" component={SettingsPage} />
-                    <Route path="/dashboard/integrations" component={IntegrationsPage} />
 
                     {/* Fallback para rotas não encontradas dentro do dashboard */}
                     <Route>

@@ -168,12 +168,14 @@ const TemplatesFunisPage: React.FC = () => {
 
     const handleUseTemplate = (templateId: string) => {
         console.log(`Usando template: ${templateId}`);
-        // Aqui integraria com a lógica do editor para carregar o template
+        // Redirecionar para o editor com o template selecionado
+        window.location.href = `/editor?template=${templateId}`;
     };
 
     const handlePreviewTemplate = (templateId: string) => {
         console.log(`Visualizando template: ${templateId}`);
-        // Aqui abriria um modal ou nova página com preview
+        // Abrir preview em nova aba
+        window.open(`/templates/preview/${templateId}`, '_blank');
     };
 
     return (

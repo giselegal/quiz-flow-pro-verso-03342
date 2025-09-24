@@ -70,14 +70,14 @@ interface QuickActionProps {
     description: string;
     href: string;
     icon: React.ReactNode;
-    color: 'blue' | 'green' | 'purple' | 'orange';
+    color: 'blue' | 'green' | 'brand' | 'orange';
 }
 
 const QuickAction: React.FC<QuickActionProps> = ({ title, description, href, icon, color }) => {
     const colorClasses = {
         blue: "bg-blue-50 border-blue-200 hover:bg-blue-100",
         green: "bg-green-50 border-green-200 hover:bg-green-100",
-        purple: "bg-purple-50 border-purple-200 hover:bg-purple-100",
+        brand: "bg-slate-50 border-slate-200 hover:bg-slate-100",
         orange: "bg-orange-50 border-orange-200 hover:bg-orange-100"
     };
 
@@ -217,7 +217,7 @@ const OverviewPage: React.FC = () => {
                                 description="Editar e otimizar funis existentes"
                                 href="/dashboard/funnels"
                                 icon={<Edit className="w-5 h-5" />}
-                                color="purple"
+                                color="brand"
                             />
                             <QuickAction
                                 title="Ver Participantes"

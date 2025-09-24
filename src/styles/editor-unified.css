@@ -20,11 +20,9 @@
   /* Gradientes suaves */
   --gradient-brand: linear-gradient(135deg, var(--brand-primary), var(--brand-dark));
   --gradient-light: linear-gradient(135deg, var(--brand-light), var(--brand-primary));
-  --gradient-background: linear-gradient(
-    135deg,
-    rgba(212, 194, 168, 0.05),
-    rgba(255, 255, 255, 0.8)
-  );
+  --gradient-background: linear-gradient(135deg,
+      rgba(212, 194, 168, 0.05),
+      rgba(255, 255, 255, 0.8));
 }
 
 /* ===== LAYOUT GERAL DO EDITOR UNIFICADO ===== */
@@ -96,7 +94,8 @@
 .unified-editor-canvas {
   background: linear-gradient(135deg, rgba(248, 250, 252, 0.5), rgba(255, 255, 255, 0.8));
   position: relative;
-  overflow: visible; /* ✅ CORRIGIDO: Permite drag-and-drop */
+  overflow: visible;
+  /* ✅ CORRIGIDO: Permite drag-and-drop */
 }
 
 .unified-editor-canvas::before {
@@ -122,7 +121,8 @@
   border-radius: 16px;
   box-shadow: var(--shadow-large);
   border: 1px solid rgba(212, 194, 168, 0.15);
-  overflow: visible; /* ✅ CORRIGIDO: Permite eventos de drag */
+  overflow: visible;
+  /* ✅ CORRIGIDO: Permite eventos de drag */
   transition: all 0.3s ease;
   transform: translateY(0);
 }
@@ -138,6 +138,7 @@
     opacity: 0;
     transform: translateX(-20px);
   }
+
   to {
     opacity: 1;
     transform: translateX(0);
@@ -149,6 +150,7 @@
     opacity: 0;
     transform: translateX(20px);
   }
+
   to {
     opacity: 1;
     transform: translateX(0);
@@ -160,6 +162,7 @@
     opacity: 0;
     transform: translateY(20px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -210,10 +213,12 @@
 }
 
 @keyframes pulse {
+
   0%,
   100% {
     opacity: 1;
   }
+
   50% {
     opacity: 0.5;
   }

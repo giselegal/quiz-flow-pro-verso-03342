@@ -198,11 +198,12 @@ const MeusFunisPage: React.FC = () => {
     const [selectedStatus, setSelectedStatus] = React.useState('todos');
     const [selectedCategory, setSelectedCategory] = React.useState('todos');
     const [sortBy, setSortBy] = React.useState('updated');
+    const [funisData, setFunisData] = React.useState(meusFunis);
 
-    const categories = ['todos', ...Array.from(new Set(meusFunis.map(funil => funil.category)))];
+    const categories = ['todos', ...Array.from(new Set(funisData.map(funil => funil.category)))];
     const statusOptions = ['todos', 'active', 'draft', 'paused'];
 
-    const filteredFunis = meusFunis.filter(funil => {
+    const filteredFunis = funisData.filter(funil => {
         const matchesStatus = selectedStatus === 'todos' || funil.status === selectedStatus;
         const matchesCategory = selectedCategory === 'todos' || funil.category === selectedCategory;
         return matchesStatus && matchesCategory;
@@ -225,19 +226,45 @@ const MeusFunisPage: React.FC = () => {
 
     const handleEditFunil = (funilId: string) => {
         console.log(`Editando funil: ${funilId}`);
-        // Aqui redirecionaria para o editor com o funil carregado
+        // Redirecionar para o editor com o funil carregado
+        window.location.href = `/editor/${funilId}`;
     };
 
     const handleDuplicateFunil = (funilId: string) => {
         console.log(`Duplicando funil: ${funilId}`);
+        // Criar uma cópia do funil
+        const funilOriginal = funisData.find(f => f.id === funilId);
+        if (funilOriginal) {
+            const novoFunil = {
+                ...funilOriginal,
+                id: `${funilId}-copy-${Date.now()}`,
+                name: `${funilOriginal.name} - Cópia`,
+                status: 'draft'
+            };
+            setFunisData(prev => [novoFunil, ...prev]);
+            alert('Funil duplicado com sucesso!');
+        }
     };
 
     const handleDeleteFunil = (funilId: string) => {
         console.log(`Excluindo funil: ${funilId}`);
+        if (confirm('Tem certeza que deseja excluir este funil?')) {
+            setFunisData(prev => prev.filter(f => f.id !== funilId));
+            alert('Funil excluído com sucesso!');
+        }
     };
 
     const handleToggleStatus = (funilId: string, currentStatus: string) => {
         console.log(`Alterando status do funil ${funilId} de ${currentStatus}`);
+        const newStatus = currentStatus === 'active' ? 'paused' : 'active';
+        setFunisData(prev =>
+            prev.map(f =>
+                f.id === funilId
+                    ? { ...f, status: newStatus }
+                    : f
+            )
+        );
+        alert(`Status alterado para ${newStatus === 'active' ? 'Ativo' : 'Pausado'}`);
     };
 
     const formatDate = (dateString: string) => {
@@ -296,8 +323,8 @@ const MeusFunisPage: React.FC = () => {
                     <Card>
                         <CardContent className="p-4">
                             <div className="flex items-center gap-3">
-                                <div className="p-2 bg-purple-50 rounded-lg">
-                                    <TrendingUp className="w-5 h-5 text-purple-600" />
+                                <div className="p-2 bg-slate-50 rounded-lg">
+                                    <TrendingUp className="w-5 h-5 text-slate-600" />
                                 </div>
                                 <div>
                                     <p className="text-sm text-gray-600">Taxa Média de Conversão</p>

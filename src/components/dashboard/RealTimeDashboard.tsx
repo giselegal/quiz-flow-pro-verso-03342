@@ -26,11 +26,11 @@ import {
 
 interface MetricCardProps {
     title: string;
-    value: string | number;
-    change?: string;
+    value: string;
     icon: React.ReactNode;
     trend?: 'up' | 'down' | 'neutral';
-    color?: 'green' | 'blue' | 'purple' | 'orange';
+    change?: string;
+    color?: 'green' | 'blue' | 'brand' | 'orange';
 }
 
 const MetricCard: React.FC<MetricCardProps> = ({
@@ -44,7 +44,7 @@ const MetricCard: React.FC<MetricCardProps> = ({
     const colorClasses = {
         green: 'border-green-200 bg-gradient-to-br from-green-50 to-green-100 text-green-700',
         blue: 'border-brand-primary/30 bg-gradient-to-br from-brand-light to-white text-brand-text',
-        purple: 'border-brand-accent/30 bg-gradient-to-br from-brand-accent/10 to-brand-secondary/10 text-brand-accent',
+        brand: 'border-slate-200 bg-gradient-to-br from-slate-50 to-slate-100 text-slate-700',
         orange: 'border-orange-200 bg-gradient-to-br from-orange-50 to-orange-100 text-orange-700'
     };
 
@@ -275,13 +275,13 @@ export const RealTimeDashboard: React.FC = () => {
         label: device.type,
         value: device.count,
         color: device.type === 'Desktop' ? 'bg-blue-500' :
-            device.type === 'Mobile' ? 'bg-green-500' : 'bg-purple-500'
+            device.type === 'Mobile' ? 'bg-green-500' : 'bg-slate-500'
     }));
 
     const styleData = dashboardData.popularStyles.slice(0, 5).map(style => ({
         label: style.style,
         value: style.count,
-        color: 'bg-gradient-to-r from-pink-500 to-purple-500'
+        color: 'bg-gradient-to-r from-blue-500 to-slate-500'
     }));
 
     const activityData = dashboardData.recentActivity.map(activity => ({
@@ -354,16 +354,16 @@ export const RealTimeDashboard: React.FC = () => {
 
                 <MetricCard
                     title="Etapas Médias"
-                    value={dashboardData.averageSteps}
+                    value={dashboardData.averageSteps.toString()}
                     change="86% completam"
                     icon={<Activity />}
                     trend="neutral"
-                    color="purple"
+                    color="brand"
                 />
 
                 <MetricCard
                     title="Usuários Ativos Agora"
-                    value={dashboardData.currentActiveUsers}
+                    value={dashboardData.currentActiveUsers.toString()}
                     change="Em tempo real"
                     icon={<Award />}
                     trend="neutral"

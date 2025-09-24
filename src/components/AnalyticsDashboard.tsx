@@ -450,7 +450,7 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
                     </div>
 
                     {funnelSettings.settings.experiments.enabled && (
-                        <div className="grid grid-cols-2 gap-4 pl-4 border-l-2 border-purple-200">
+                        <div className="grid grid-cols-2 gap-4 pl-4 border-l-2 border-slate-200">
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-1">
                                     Experimentos Simultâneos
