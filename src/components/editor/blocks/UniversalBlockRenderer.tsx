@@ -68,9 +68,26 @@ const BlockComponentRegistry: Record<string, React.FC<any>> = {
   'container': createFallbackComponent('container'),
 };
 
-// ✅ OTIMIZAÇÃO: Cachear registry lookup para evitar lookup a cada render
+// ✅ SISTEMA HÍBRIDO: Cache crítico + EnhancedBlockRegistry completo
+const getBlockComponent = (blockType: string) => {
+  // 1. Cache de componentes críticos para performance máxima
+  if (BlockComponentRegistry[blockType]) {
+    return BlockComponentRegistry[blockType];
+  }
+
+  // 2. Buscar no EnhancedBlockRegistry (150+ componentes)
+  const enhancedComponent = getEnhancedBlockComponent(blockType);
+  if (enhancedComponent) {
+    return enhancedComponent;
+  }
+
+  // 3. Fallback final
+  return null;
+};
+
+// ✅ OTIMIZAÇÃO: Hook memoizado com sistema híbrido
 const useBlockComponent = (blockType: string) => {
-  return useMemo(() => BlockComponentRegistry[blockType], [blockType]);
+  return useMemo(() => getBlockComponent(blockType), [blockType]);
 };
 
 const UniversalBlockRenderer: React.FC<UniversalBlockRendererProps> = memo(({
