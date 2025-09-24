@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState, useCallback, useRef, useEff
 // 🚀 BUILDER SYSTEM - Imports corrigidos para compatibilidade
 import type { Block } from '@/types/editor';
 import { createFunnelFromTemplate } from '@/core/builder';
+import { getTemplateInfo } from '@/utils/funnelNormalizer';
 
 /**
  * 🏗️ PURE BUILDER SYSTEM PROVIDER
@@ -85,17 +86,26 @@ export const usePureBuilder = () => {
     return context;
 };
 
-// 🎯 GERAÇÃO COM BUILDER SYSTEM COMPLETO
-const generateWithPureBuilder = async (templateName: string = 'product-quiz'): Promise<{
+// 🎯 GERAÇÃO COM BUILDER SYSTEM DINÂMICO
+const generateWithPureBuilder = async (funnelId: string, templateInfo: any): Promise<{
     stepBlocks: Record<string, Block[]>;
     builderInstance: any;
     funnelConfig: any;
+    totalSteps: number;
 }> => {
-    console.log('🏗️ Generating funnel with Pure Builder System...', { templateName });
+    console.log('🏗️ Generating funnel with Pure Builder System...', { 
+        funnelId, 
+        templateName: templateInfo.templateName,
+        totalSteps: templateInfo.totalSteps 
+    });
 
     try {
-        // �️ VALIDAÇÃO DE TEMPLATE SEGURA
-        const validTemplates = ['product-quiz', 'lead-qualification', 'customer-satisfaction', 'quiz21StepsComplete'];
+        // ✅ USAR TEMPLATE INFO NORMALIZADO
+        const templateName = templateInfo.baseId;
+        const totalSteps = templateInfo.totalSteps;
+        
+        // 🛡️ VALIDAÇÃO DE TEMPLATE SEGURA
+        const validTemplates = ['product-quiz', 'lead-qualification', 'customer-satisfaction', 'quiz21StepsComplete', 'com-que-roupa-eu-vou', 'quiz-cores-perfeitas'];
         const safeTemplate = validTemplates.includes(templateName) ? templateName : 'product-quiz';
 
         if (safeTemplate !== templateName) {
@@ -476,9 +486,10 @@ const generateWithPureBuilder = async (templateName: string = 'product-quiz'): P
             funnelConfig: {
                 ...finalFunnel,
                 hasBuilderSystem: true,
-                totalSteps: Object.keys(stepBlocks).length,
+                totalSteps: totalSteps, // ✅ DINÂMICO
                 source: 'core-builder-system'
-            }
+            },
+            totalSteps // ✅ RETORNAR TOTAL STEPS
         };
 
         // 🔄 LÓGICA PADRÃO PARA OUTROS TEMPLATES
@@ -528,7 +539,8 @@ const generateWithPureBuilder = async (templateName: string = 'product-quiz'): P
         return {
             stepBlocks,
             builderInstance: funnelBuilder,
-            funnelConfig: finalFunnel
+            funnelConfig: finalFunnel,
+            totalSteps // ✅ RETORNAR TOTAL STEPS
         };
 
     } catch (error) {
@@ -567,43 +579,45 @@ export const PureBuilderProvider: React.FC<{
 
         const isInitialized = useRef(false);
 
-        // 🚀 INICIALIZAÇÃO COM BUILDER SYSTEM
+        // 🚀 INICIALIZAÇÃO DINÂMICA COM FUNNELID
         useEffect(() => {
-            if (!isInitialized.current) {
-                console.log('🏗️ Initializing PureBuilderProvider with Builder System...');
-
-                // 🎯 CAPTURAR PARÂMETRO TEMPLATE DA URL
-                const urlParams = new URLSearchParams(window.location.search);
-                const templateParam = urlParams.get('template') || 'product-quiz';
-
-                console.log('📋 Template selecionado:', templateParam);
+            if (!isInitialized.current && funnelId) {
+                console.log('🏗️ Initializing PureBuilderProvider with Builder System...', { funnelId });
+                isInitialized.current = true;
 
                 setState(prev => ({ ...prev, isLoading: true }));
 
-                generateWithPureBuilder(templateParam)
-                    .then(({ stepBlocks, builderInstance, funnelConfig }) => {
+                // ✅ USAR getTemplateInfo para obter dados dinâmicos
+                getTemplateInfo(funnelId)
+                    .then(templateInfo => {
+                        console.log('📋 Template info carregado:', templateInfo);
+                        
+                        return generateWithPureBuilder(funnelId, templateInfo);
+                    })
+                    .then(({ stepBlocks, builderInstance, funnelConfig, totalSteps }) => {
                         setState(prev => ({
                             ...prev,
                             stepBlocks,
                             builderInstance,
                             funnelConfig,
-                            loadedSteps: new Set(Array.from({ length: 21 }, (_, i) => i + 1)),
+                            loadedSteps: new Set(Array.from({ length: totalSteps }, (_, i) => i + 1)), // ✅ DINÂMICO
                             stepValidation: Object.fromEntries(
-                                Array.from({ length: 21 }, (_, i) => [i + 1, true])
+                                Array.from({ length: totalSteps }, (_, i) => [i + 1, true]) // ✅ DINÂMICO
                             ),
                             isLoading: false
                         }));
 
-                        console.log('✅ PureBuilderProvider initialized with Builder System');
+                        console.log('✅ PureBuilderProvider initialized with Builder System', {
+                            totalSteps,
+                            templateName: funnelConfig.name || 'Unknown'
+                        });
                     })
                     .catch((error) => {
                         console.error('❌ Failed to initialize Pure Builder:', error);
                         setState(prev => ({ ...prev, isLoading: false }));
                     });
-
-                isInitialized.current = true;
             }
-        }, []);
+        }, [funnelId]); // ✅ DEPENDÊNCIA DO FUNNELID
 
         // Actions with Builder System integration
         const actions: PureBuilderActions = {
@@ -717,7 +731,8 @@ export const PureBuilderProvider: React.FC<{
                         events: state.funnelConfig.analytics.events,
                         goals: state.funnelConfig.analytics.goals,
                         currentStep: state.currentStep,
-                        completionRate: (state.currentStep / 21) * 100,
+                        completionRate: state.funnelConfig?.totalSteps ? 
+                            (state.currentStep / state.funnelConfig.totalSteps) * 100 : 0, // ✅ DINÂMICO
                         timestamp: new Date().toISOString()
                     };
                 }
@@ -742,7 +757,7 @@ export const PureBuilderProvider: React.FC<{
                     analytics: state.analyticsData,
                     metadata: {
                         generatedAt: new Date().toISOString(),
-                        totalSteps: 21,
+                        totalSteps: state.funnelConfig?.totalSteps || 1, // ✅ DINÂMICO
                         hasCalculations: true,
                         hasOptimizations: true,
                         hasAnalytics: true,
@@ -811,7 +826,9 @@ export const PureBuilderProvider: React.FC<{
                 const newName = customName || `${templateName} - ${new Date().toLocaleDateString()}`;
 
                 try {
-                    const { stepBlocks, builderInstance, funnelConfig } = await generateWithPureBuilder(templateName);
+                    // ✅ USAR getTemplateInfo primeiro
+                    const templateInfo = await getTemplateInfo(templateName);
+                    const { stepBlocks, builderInstance, funnelConfig } = await generateWithPureBuilder(newId, templateInfo);
 
                     // Aplicar novo ID e nome
                     const customConfig = {
