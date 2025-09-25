@@ -26,8 +26,11 @@ const Home = lazy(() => import('./pages/Home'));
 const AuthPage = lazy(() => import('./pages/AuthPage'));
 const NotFound = lazy(() => import('./pages/NotFound'));
 
-// 🎯 EDITOR ÚNICO - PONTO DE ENTRADA DEFINITIVO
-const ModernUnifiedEditor = lazy(() => import('./pages/editor/ModernUnifiedEditor'));
+// 🚀 HYBRID EDITOR PRO - O MELHOR DOS DOIS MUNDOS
+const HybridEditorPro = lazy(() => import('./components/editor/EditorPro/components/HybridEditorPro'));
+
+// 🎯 EDITOR LEGADO (fallback) - Comentado por enquanto
+// const ModernUnifiedEditor = lazy(() => import('./pages/editor/ModernUnifiedEditor'));
 
 // 🧪 PÁGINAS DE QUIZ
 const QuizEstiloPessoalPage = lazy(() => import('./pages/QuizEstiloPessoalPage'));
@@ -60,11 +63,11 @@ function App() {
                   </div>
                 </Route>
 
-                {/* 🎯 EDITOR - ROTA PRINCIPAL CORRIGIDA */}
+                {/* 🚀 HYBRID EDITOR PRO - ROTA PRINCIPAL CORRIGIDA */}
                 <Route path="/editor">
                   <EditorErrorBoundary>
-                    <div data-testid="editor-main-page">
-                      <ModernUnifiedEditor />
+                    <div data-testid="hybrid-editor-main-page">
+                      <HybridEditorPro />
                     </div>
                   </EditorErrorBoundary>
                 </Route>
@@ -78,8 +81,8 @@ function App() {
                 <Route path="/editor/:funnelId">
                   {(params) => (
                     <EditorErrorBoundary>
-                      <div data-testid="editor-unified-page">
-                        <ModernUnifiedEditor funnelId={params.funnelId} />
+                      <div data-testid="hybrid-editor-unified-page">
+                        <HybridEditorPro funnelId={params.funnelId} />
                       </div>
                     </EditorErrorBoundary>
                   )}
