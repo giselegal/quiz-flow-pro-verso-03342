@@ -84,34 +84,100 @@ class UnifiedTemplateService {
     }
 
     /**
-     * 🔄 LOAD WITH FALLBACK - Carregamento com fallbacks inteligentes
-     * ⚡ INDEPENDENTE: Não depende mais do TemplateService antigo
+     * 🔄 LOAD WITH FALLBACK - Carregamento dinâmico de qualquer template/funil
+     * ⚡ DINÂMICO: Funciona com qualquer funil, não hardcodado
      */
     private async loadTemplateWithFallback(templateId: string): Promise<any> {
         try {
-            // 1. Tentar carregar via templates estáticos integrados
+            // 1. Tentar carregar do banco de dados (Supabase)
+            const databaseTemplate = await this.loadFromDatabase(templateId);
+            if (databaseTemplate && Object.keys(databaseTemplate).length > 0) {
+                console.log(`✅ Template carregado do banco: ${templateId}`);
+                return databaseTemplate;
+            }
+        } catch (dbError) {
+            console.warn(`⚠️ Template não encontrado no banco para ${templateId}:`, dbError);
+        }
+
+        try {
+            // 2. Tentar carregar via templates críticos (apenas para casos específicos)
             const staticTemplate = this.getStaticTemplate(templateId);
             if (staticTemplate && Object.keys(staticTemplate).length > 0) {
-                console.log(`✅ Template estático carregado: ${templateId}`);
+                console.log(`✅ Template crítico carregado: ${templateId}`);
                 return staticTemplate;
             }
         } catch (staticError) {
-            console.warn(`⚠️ Template estático não encontrado para ${templateId}:`, staticError);
+            console.warn(`⚠️ Template crítico não encontrado para ${templateId}:`, staticError);
         }
 
-        // 2. Fallback: template dinâmico baseado no padrão
+        // 3. Fallback: template genérico baseado no padrão
         const fallbackTemplate = this.generateFallbackTemplate(templateId);
-        console.log(`🎨 Usando fallback dinâmico para: ${templateId}`);
+        console.log(`🎨 Usando fallback genérico para: ${templateId}`);
         return fallbackTemplate;
     }
 
     /**
-     * 🎯 GET STATIC TEMPLATE - Busca templates estáticos integrados
-     * ⚡ NOVO: Método independente para templates críticos
+     * 🗄️ LOAD FROM DATABASE - Busca templates dinamicamente do Supabase
+     * ⚡ NOVO: Método para buscar qualquer funil/template do banco
+     */
+    private async loadFromDatabase(templateId: string): Promise<any | null> {
+        try {
+            // Importar Supabase dinamicamente para evitar erros de inicialização
+            const { supabase } = await import('@/integrations/supabase/client');
+            
+            if (!supabase) {
+                console.warn('Supabase não disponível, pulando busca no banco');
+                return null;
+            }
+
+            // Buscar na tabela funnels
+            const { data, error } = await supabase
+                .from('funnels')
+                .select('*')
+                .eq('id', templateId)
+                .single();
+
+            if (error) {
+                console.warn(`Erro ao buscar template ${templateId}:`, error);
+                return null;
+            }
+
+            if (data) {
+                // Converter dados do banco para formato do template
+                // Usar settings para extrair steps e blocks se estiverem no JSON
+                const settings = data.settings as any || {};
+                
+                return {
+                    id: data.id,
+                    name: data.name || 'Template Dinâmico',
+                    description: data.description || '',
+                    steps: settings.steps || [],
+                    blocks: settings.blocks || [],
+                    isPublished: data.is_published || false,
+                    metadata: {
+                        fromDatabase: true,
+                        version: data.version || 1,
+                        userId: data.user_id,
+                        createdAt: data.created_at,
+                        updatedAt: data.updated_at
+                    }
+                };
+            }
+
+            return null;
+        } catch (error) {
+            console.warn(`Erro na busca do banco para ${templateId}:`, error);
+            return null;
+        }
+    }
+
+    /**
+     * 🎯 GET STATIC TEMPLATE - Apenas para templates críticos específicos
+     * ⚡ LIMITADO: Só para casos específicos, não para uso geral
      */
     private getStaticTemplate(templateId: string): any | null {
-        // Templates críticos integrados estaticamente
-        const staticTemplates: Record<string, any> = {
+        // Apenas templates críticos específicos (não para uso geral)
+        const criticalTemplates: Record<string, any> = {
             'step-1': {
                 id: 'step-1',
                 name: 'Quiz Step 1',
@@ -142,7 +208,7 @@ class UnifiedTemplateService {
             }
         };
 
-        return staticTemplates[templateId] || null;
+        return criticalTemplates[templateId] || null;
     }
 
     /**

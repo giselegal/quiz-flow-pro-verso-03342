@@ -108,9 +108,19 @@ const generateWithPureBuilder = async (funnelId: string, templateInfo: any): Pro
         const templateName = templateInfo.baseId;
         const totalSteps = templateInfo.totalSteps;
 
-        // 🛡️ VALIDAÇÃO DE TEMPLATE SEGURA - Incluindo quiz-style-express
-        const validTemplates = ['product-quiz', 'lead-qualification', 'customer-satisfaction', 'quiz21StepsComplete', 'com-que-roupa-eu-vou', 'quiz-cores-perfeitas', 'quiz-style-express'];
-        const safeTemplate = validTemplates.includes(templateName) ? templateName : 'product-quiz';
+        // 🛡️ VALIDAÇÃO DE TEMPLATE SEGURA - Templates disponíveis no UnifiedTemplateService
+        const validTemplates = [
+            'product-quiz', 
+            'lead-qualification', 
+            'customer-satisfaction', 
+            'quiz21StepsComplete', // ⚡ Template principal com 21 etapas
+            'com-que-roupa-eu-vou', 
+            'quiz-cores-perfeitas', 
+            'quiz-style-express',
+            'step-1', 
+            'step-2'
+        ];
+        const safeTemplate = validTemplates.includes(templateName) ? templateName : 'quiz21StepsComplete'; // ⚡ Fallback para template completo
 
         if (safeTemplate !== templateName) {
             console.warn(`⚠️ Template '${templateName}' não encontrado. Usando fallback: '${safeTemplate}'`);
@@ -238,7 +248,7 @@ export const PureBuilderProvider: React.FC<{
     initial?: Partial<PureBuilderState>;
     children: React.ReactNode;
 }> = ({
-    funnelId = 'pure-builder-quiz',
+    funnelId = 'quiz21StepsComplete', // ⚡ CORREÇÃO: Usar template disponível
     enableSupabase = true,
     initial = {},
     children
@@ -270,17 +280,20 @@ export const PureBuilderProvider: React.FC<{
 
         const isInitialized = useRef(false);
 
-        // 🎯 INITIALIZATION - Agora dinâmico baseado no template
+        // 🎯 INITIALIZATION - Dinâmico baseado em parâmetros 
         useEffect(() => {
             if (!isInitialized.current) {
-                const targetFunnelId = funnelId || 'quiz21StepsComplete'; // Template padrão
-                console.log('🏗️ Initializing PureBuilderProvider with Builder System...', {
-                    providedFunnelId: funnelId,
-                    targetFunnelId
-                });
                 isInitialized.current = true;
+                
+                console.log('🏗️ Initializing PureBuilderProvider with Builder System...', {
+                    providedFunnelId: funnelId
+                });
 
                 setState(prev => ({ ...prev, isLoading: true }));
+
+                // ⚡ DINÂMICO: Se não há funnelId, criar um genérico
+                const targetFunnelId = funnelId || `dynamic-funnel-${Date.now()}`;
+                console.log('🎯 Usando targetFunnelId:', targetFunnelId);
 
                 // ✅ USAR getTemplateInfo para obter dados dinâmicos
                 getTemplateInfo(targetFunnelId)

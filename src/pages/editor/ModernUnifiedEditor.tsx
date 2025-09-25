@@ -311,27 +311,29 @@ const UnifiedEditorCore: React.FC<ModernUnifiedEditorProps> = ({
         if (path.startsWith('/editor/') && path.length > '/editor/'.length) {
             const identifier = path.replace('/editor/', '');
 
-            // 🎯 VERIFICAR SE É UM TEMPLATE CONHECIDO
-            // Templates disponíveis: testTemplate, quiz21StepsComplete
-            const knownTemplates = [
-                'testTemplate',
-                'quiz21StepsComplete'
-            ]; const isTemplate = knownTemplates.includes(identifier);
-
-            if (isTemplate) {
-                console.log('✅ Template detectado na URL:', identifier);
+            // 🎯 DETECÇÃO DINÂMICA: Verificar se existe como template ou tratar como funnel
+            // Primeiro assumir que pode ser qualquer coisa
+            console.log('✅ Identificador encontrado na URL:', identifier);
+            
+            // Se contém 'step-' ou 'template' ou 'quiz', provavelmente é template
+            const looksLikeTemplate = /^(step-|template|quiz|test)/i.test(identifier);
+            
+            if (looksLikeTemplate) {
+                console.log('✅ Identificador parece ser template:', identifier);
                 return { templateId: identifier, funnelId: null, type: 'template' };
             } else {
-                console.log('✅ FunnelId detectado na URL:', identifier);
+                console.log('✅ Identificador tratado como funnelId:', identifier);
                 return { templateId: null, funnelId: identifier, type: 'funnel' };
             }
         }
 
         console.log('⚠️ Usando props: funnelId =', funnelId, 'templateId =', templateId);
+        
+        // ⚡ DINÂMICO: Não forçar template específico, deixar o sistema detectar automaticamente
         return {
             funnelId: funnelId || null,
-            templateId: templateId || null,
-            type: templateId ? 'template' : 'funnel'
+            templateId: templateId || null, // ⚡ Não forçar template específico
+            type: templateId ? 'template' : (funnelId ? 'funnel' : 'auto') // ⚡ Modo automático
         };
     }, [funnelId, templateId]);
 
