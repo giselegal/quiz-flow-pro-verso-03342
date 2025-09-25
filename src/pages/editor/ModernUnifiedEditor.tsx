@@ -63,6 +63,7 @@ interface EditorState {
     mode: EditorMode;
     aiAssistantActive: boolean;
     previewMode: boolean;
+    realExperienceMode: boolean; // Novo: modo de experiência real
 }
 
 // ===============================
@@ -278,15 +279,26 @@ const ModernToolbar: React.FC<ModernToolbarProps> = ({
                     Preview
                 </Button>
 
-                <Button
-                    variant="default"
-                    size="sm"
-                    onClick={handleSave}
-                    disabled={isOperating || !onSave}
-                >
-                    <CheckCircle className="w-4 h-4 mr-2" />
-                    {isOperating ? 'Salvando...' : 'Salvar'}
-                </Button>
+                    <Button
+                        variant={editorState.realExperienceMode ? "default" : "outline"}
+                        size="sm"
+                        onClick={() => onStateChange({ realExperienceMode: !editorState.realExperienceMode })}
+                        disabled={isOperating}
+                        title="Ativar experiência real com QuizOrchestrator"
+                    >
+                        <Target className="w-4 h-4 mr-2" />
+                        Real
+                    </Button>
+
+                    <Button
+                        variant="default"
+                        size="sm"
+                        onClick={handleSave}
+                        disabled={isOperating || !onSave}
+                    >
+                        <CheckCircle className="w-4 h-4 mr-2" />
+                        {isOperating ? 'Salvando...' : 'Salvar'}
+                    </Button>
             </div>
         </div>
     );
@@ -351,7 +363,8 @@ const UnifiedEditorCore: React.FC<ModernUnifiedEditorProps> = ({
     const [editorState, setEditorState] = useState<EditorState>({
         mode,
         aiAssistantActive: false,
-        previewMode: false
+        previewMode: false,
+        realExperienceMode: false // Inicialmente desabilitado
     });
 
     // 🎯 TEMPLATE LOADING EFFECT

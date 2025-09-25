@@ -27,8 +27,8 @@ interface UnifiedPreviewEngineProps {
 export type { UnifiedPreviewEngineProps };
 
 /**
- * Unified Preview Engine - Agora usa ProductionPreviewEngine
- * Mantém compatibilidade com a interface existente
+ * Unified Preview Engine - Agora usa InteractivePreviewEngine com QuizOrchestrator
+ * Experiência real do usuário final no canvas do editor
  */
 export const UnifiedPreviewEngine: React.FC<UnifiedPreviewEngineProps> = ({
   blocks = [],
@@ -45,23 +45,26 @@ export const UnifiedPreviewEngine: React.FC<UnifiedPreviewEngineProps> = ({
   mode = 'preview',
   enableProductionMode = false,
 }) => {
-  // Import dinâmico do ProductionPreviewEngine
-  const ProductionPreviewEngine = React.lazy(() => 
-    import('./ProductionPreviewEngine').then(mod => ({ default: mod.ProductionPreviewEngine }))
+  // Import dinâmico do InteractivePreviewEngine
+  const InteractivePreviewEngine = React.lazy(() => 
+    import('./InteractivePreviewEngine').then(mod => ({ default: mod.InteractivePreviewEngine }))
   );
 
   // Determinar o modo final (usando a variável mode)
   const finalMode = enableProductionMode ? 'production' : (mode === 'production' ? 'production' : (isPreviewing ? 'preview' : 'editor'));
+
+  // Habilitar experiência real quando em modo preview ou production
+  const enableRealExperience = finalMode === 'preview' || finalMode === 'production';
 
   return (
     <div className="unified-preview-engine">
       <React.Suspense fallback={
         <div className="flex items-center justify-center min-h-[400px]">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
-          <span className="ml-3 text-stone-600">Carregando preview engine...</span>
+          <span className="ml-3 text-stone-600">Carregando preview engine com QuizOrchestrator...</span>
         </div>
       }>
-        <ProductionPreviewEngine
+        <InteractivePreviewEngine
           blocks={blocks}
           selectedBlockId={selectedBlockId || undefined}
           isPreviewing={isPreviewing}
@@ -74,6 +77,7 @@ export const UnifiedPreviewEngine: React.FC<UnifiedPreviewEngineProps> = ({
           currentStep={currentStep}
           enableInteractions={enableInteractions}
           mode={finalMode}
+          enableRealExperience={enableRealExperience}
           className="w-full"
         />
       </React.Suspense>

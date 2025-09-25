@@ -26,6 +26,15 @@ export interface EnhancedBlockRendererProps {
   className?: string;
   enableValidation?: boolean;
   enableAutoAdvance?: boolean;
+  // Novo: Props para experiência real
+  realExperienceProps?: {
+    quizState: any;
+    selections: Record<string, string[]>;
+    userName: string;
+    isValidated: boolean;
+    canAutoAdvance: boolean;
+    onSelectionChange: (selections: string[]) => void;
+  };
 }
 
 /**
@@ -153,6 +162,7 @@ export const EnhancedBlockRenderer: React.FC<EnhancedBlockRendererProps> = ({
   className = '',
   enableValidation = true,
   enableAutoAdvance = true,
+  realExperienceProps,
 }) => {
   const Component = getEnhancedBlockComponent(block.type);
   const { simulateValidation } = useMockData();
@@ -238,19 +248,26 @@ export const EnhancedBlockRenderer: React.FC<EnhancedBlockRendererProps> = ({
     isPreviewing: isPreview,
     isEditor: !isPreview,
     
-    // Dados mockados
-    mockData: stepData,
+    // Dados mockados (fallback quando não há experiência real)
+    mockData: realExperienceProps ? null : stepData,
     funnelId,
     currentStep,
     
     // Validação
     validationState,
     validationMessage,
-    isValid: validation.validationResult.isValid,
+    isValid: realExperienceProps ? realExperienceProps.isValidated : validation.validationResult.isValid,
     
     // Auto-advance
-    canAutoAdvance: validation.canAutoAdvance,
+    canAutoAdvance: realExperienceProps ? realExperienceProps.canAutoAdvance : validation.canAutoAdvance,
     timeToAutoAdvance: validation.timeToAutoAdvance,
+    
+    // Experiência real
+    realData: realExperienceProps ? {
+      selections: realExperienceProps.selections,
+      userName: realExperienceProps.userName,
+      quizState: realExperienceProps.quizState,
+    } : null,
     
     // Callbacks
     onSave: (updates: any) => {
@@ -262,8 +279,15 @@ export const EnhancedBlockRenderer: React.FC<EnhancedBlockRendererProps> = ({
       }
     },
     onValidationChange: (isValid: boolean) => {
-      simulateValidation(block.id, isValid);
+      if (realExperienceProps) {
+        // Usar callback da experiência real
+        realExperienceProps.onSelectionChange([]);
+      } else {
+        // Fallback para mock
+        simulateValidation(block.id, isValid);
+      }
     },
+    onSelectionChange: realExperienceProps?.onSelectionChange,
     
     // Props do bloco
     ...block.properties,
