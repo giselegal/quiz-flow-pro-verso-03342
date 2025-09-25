@@ -10,26 +10,34 @@ export { EditorPropertiesPanel } from './EditorPropertiesPanel';
 export { EditorStageManager } from './EditorStageManager';
 export { SortablePreviewBlockWrapper } from './SortablePreviewBlockWrapper';
 export { UnifiedPreviewEngine } from './UnifiedPreviewEngine';
-export { UnifiedQuizStepLoader } from './UnifiedQuizStepLoader';
+export { ProductionPreviewEngine } from './ProductionPreviewEngine';
+export { EditorBlockRenderer } from './EditorBlockRenderer';
+export { MockDataProvider, useMockData, useMockStepData } from './MockDataProvider';
+export { ValidationIndicator, ValidationBadge, useValidation } from './ValidationIndicator';
 
 // Types
 export type { EditorControlsManagerProps } from './EditorControlsManager';
 export type { EditorPropertiesPanelProps, PropertyConfig } from './EditorPropertiesPanel';
 export type { EditorStageManagerProps } from './EditorStageManager';
 export type { UnifiedPreviewEngineProps } from './UnifiedPreviewEngine';
+export type { ProductionPreviewEngineProps } from './ProductionPreviewEngine';
+export type { EditorBlockRendererProps } from './EditorBlockRenderer';
+export type { ValidationIndicatorProps, ValidationState } from './ValidationIndicator';
 
 /**
  * 🎯 EDITOR UNIFICADO COMPLETO
  *
  * Todos os 6 componentes necessários para o sistema unificado:
  *
- * 1. ✅ UnifiedPreviewEngine - Engine de preview com fidelidade 100%
- * 2. ✅ EditorControlsManager - Sistema de controles unificado
- * 3. ✅ EditorStageManager - Gerenciador de etapas do quiz
- * 4. ✅ EditorPropertiesPanel - Painel de propriedades unificado
- * 5. ✅ UnifiedQuizStepLoader - Carregador otimizado de etapas do quiz
- * 6. ✅ Integração completa - Todos os componentes funcionando juntos
- * 7. ✅ SortablePreviewBlockWrapper - Componente para arrastar e soltar
+ * 1. ✅ UnifiedPreviewEngine - Engine de preview com fidelidade 100% (usa ProductionPreviewEngine)
+ * 2. ✅ ProductionPreviewEngine - Engine de renderização real dos componentes
+ * 3. ✅ EditorBlockRenderer - Renderizador específico para blocos do editor
+ * 4. ✅ ValidationIndicator - Sistema de validação visual
+ * 5. ✅ MockDataProvider - Dados mockados para preview realístico
+ * 6. ✅ EditorControlsManager - Sistema de controles unificado
+ * 7. ✅ EditorStageManager - Gerenciador de etapas do quiz
+ * 8. ✅ EditorPropertiesPanel - Painel de propriedades unificado
+ * 9. ✅ SortablePreviewBlockWrapper - Componente para arrastar e soltar
  *
- * Status: 🎉 IMPLEMENTAÇÃO COMPLETA
+ * Status: 🎉 FASE 1 IMPLEMENTADA - Preview Engine Completo
  */
