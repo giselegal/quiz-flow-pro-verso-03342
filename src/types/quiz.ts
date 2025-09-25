@@ -48,7 +48,7 @@ export interface QuizStage {
 
 export interface QuizQuestion {
   id: string;
-  type: 'multiple-choice' | 'single-choice' | 'text' | 'rating' | 'normal' | 'name-input';
+  type: 'multiple-choice' | 'single-choice' | 'text' | 'rating' | 'normal' | 'name-input' | 'both' | 'image';
   title: string;
   text?: string; // Legacy compatibility
   question?: string; // Legacy compatibility
@@ -81,6 +81,10 @@ export interface StyleResult {
   points?: number;
   rank?: number;
 }
+
+// Legacy compatibility export
+export interface Style extends StyleResult {}
+export type StyleTypeCompat = string;
 
 export interface StyleType {
   id: string;

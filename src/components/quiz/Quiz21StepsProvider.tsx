@@ -269,12 +269,12 @@ export const Quiz21StepsProvider: React.FC<Quiz21StepsProviderProps> = ({
         const userAnswers = answers.map(a => ({
           stepId: `step-${currentStep}`,
           questionId: a.questionId,
-          selectedOptions: [a.optionId],
+          selectedOptions: a.optionId ? [a.optionId] : [],
           selectedOptionDetails: [
             {
-              id: a.optionId,
-              text: a.optionId,
-              category: a.optionId,
+              id: a.optionId || '',
+              text: a.optionId || '',
+              category: a.optionId || '',
             },
           ],
           answeredAt: new Date(),
