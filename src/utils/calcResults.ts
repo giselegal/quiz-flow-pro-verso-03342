@@ -167,9 +167,8 @@ export class CalculationEngine {
         // Base result properties
         primaryStyle: styleResults[0],
         secondaryStyles: styleResults.slice(1),
-        scores,
+        score: Object.values(scores).reduce((sum, score) => sum + score, 0),
         totalQuestions: userResponses.responses.length,
-        version: this.version,
 
         // Enhanced metadata
         engineVersion: this.version,
@@ -314,9 +313,9 @@ export class CalculationEngine {
       if (this.isValidResponse(response)) {
         validResponses++;
         
-        if (response.weights) {
-          Object.entries(response.weights).forEach(([style, weight]) => {
-            if (scores.hasOwnProperty(style)) {
+        if (response.weight && typeof response.weight === 'object') {
+          Object.entries(response.weight).forEach(([style, weight]) => {
+            if (scores.hasOwnProperty(style) && typeof weight === 'number') {
               scores[style] += weight;
               styleDistribution[style].score += weight;
               styleDistribution[style].responseCount++;
@@ -496,9 +495,9 @@ export class CalculationEngine {
 
     // Simple scoring without external dependencies
     responses.forEach(response => {
-      if (response.weights) {
-        Object.entries(response.weights).forEach(([style, weight]) => {
-          if (scores.hasOwnProperty(style)) {
+      if (response.weight && typeof response.weight === 'object') {
+        Object.entries(response.weight).forEach(([style, weight]) => {
+          if (scores.hasOwnProperty(style) && typeof weight === 'number') {
             scores[style] += weight;
           }
         });
@@ -510,21 +509,21 @@ export class CalculationEngine {
     });
 
     const totalScore = Object.values(scores).reduce((sum, score) => sum + score, 0);
-    const styleResults = Object.entries(scores)
-      .map(([style, score]) => ({
-        style,
-        category: style,
-        score,
-        percentage: totalScore > 0 ? Math.round((score / totalScore) * 100) : 0,
-        points: score,
-        rank: 0
-      }))
-      .sort((a, b) => b.score - a.score)
-      .map((result, index) => ({ ...result, rank: index + 1 }));
+      const styleResults = Object.entries(scores)
+        .map(([style, score]) => mapToStyleResult({
+          style,
+          category: style,
+          score,
+          percentage: totalScore > 0 ? Math.round((score / totalScore) * 100) : 0,
+          points: score,
+          rank: 0
+        }))
+        .sort((a, b) => (b.score || 0) - (a.score || 0))
+        .map((result, index) => ({ ...result, rank: index + 1 }));
 
     return {
-      primaryStyle: styleResults[0],
-      secondaryStyles: styleResults.slice(1),
+      primaryStyle: mapToStyleResult(styleResults[0]),
+      secondaryStyles: styleResults.slice(1).map(mapToStyleResult),
       scores,
       totalQuestions: responses.length,
       version: this.version,

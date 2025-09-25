@@ -238,7 +238,7 @@ export const useQuizLogic = () => {
           primaryStyle: primaryResult,
           secondaryStyles: secondaryResults,
           totalQuestions: answers.length,
-          completedAt: new Date(),
+            completedAt: new Date().toISOString(),
           scores: styleScores,
           // ✅ NOVO: Dados personalizados
           userData: {

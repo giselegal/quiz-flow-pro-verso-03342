@@ -203,8 +203,17 @@ export class UnifiedCalculationEngine {
         const secondaryStylesData = sortedStyles.slice(1, 4);
 
         const primaryStyle: StyleResult = {
-            category: primaryStyleData.style,
+            id: primaryStyleData.style,
+            name: primaryStyleData.style.charAt(0).toUpperCase() + primaryStyleData.style.slice(1),
+            description: `Estilo ${primaryStyleData.style}`,
+            type: primaryStyleData.style as StyleType,
             score: primaryStyleData.points,
+            characteristics: [],
+            recommendations: [],
+            colors: [],
+            images: [],
+            // Legacy compatibility
+            category: primaryStyleData.style,
             percentage: primaryStyleData.percentage,
             style: primaryStyleData.style.toLowerCase(),
             points: primaryStyleData.points,
@@ -212,8 +221,17 @@ export class UnifiedCalculationEngine {
         };
 
         const secondaryStyles: StyleResult[] = secondaryStylesData.map((styleData, index) => ({
-            category: styleData.style,
+            id: styleData.style,
+            name: styleData.style.charAt(0).toUpperCase() + styleData.style.slice(1),
+            description: `Estilo ${styleData.style}`,
+            type: styleData.style as StyleType,
             score: styleData.points,
+            characteristics: [],
+            recommendations: [],
+            colors: [],
+            images: [],
+            // Legacy compatibility
+            category: styleData.style,
             percentage: styleData.percentage,
             style: styleData.style.toLowerCase(),
             points: styleData.points,
@@ -227,11 +245,15 @@ export class UnifiedCalculationEngine {
         });
 
         const result: QuizResult = {
+            id: `result-${Date.now()}`,
+            responses: {},
+            score: primaryStyle.score,
+            maxScore: 100,
+            completedAt: new Date().toISOString(),
             primaryStyle,
             secondaryStyles,
             totalQuestions: scorableAnswers.length,
-            completedAt: new Date(),
-            scores
+            styleResult: primaryStyle
         };
 
         // ========================================================================
@@ -246,10 +268,10 @@ export class UnifiedCalculationEngine {
             };
         }
 
-        if (this.debugMode) {
+            if (this.debugMode) {
             console.log('🎯 Resultado final:', {
-                primaryStyle: result.primaryStyle.category,
-                percentage: result.primaryStyle.percentage,
+                primaryStyle: result.primaryStyle?.category,
+                percentage: result.primaryStyle?.percentage,
                 totalQuestions: result.totalQuestions,
                 hasUserData: !!result.userData
             });

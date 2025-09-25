@@ -28,25 +28,27 @@ export const useStyleCalculations = (primaryStyle: StyleResult, secondaryStyles:
 
     // Cálculo de compatibilidade entre estilos
     const calculateCompatibility = () => {
-      const primaryConfig = styleConfig[primaryStyle.category];
+      const primaryConfig = styleConfig[primaryStyle.category || primaryStyle.name];
+      if (!primaryConfig) return 0;
+      
       let compatibilityScore = 0;
 
       secondaryStyles.forEach(style => {
-        styleConfig[style.category]; // Reference to avoid unused variable warning
-        if (primaryConfig.compatibleWith?.includes(style.category)) {
-          compatibilityScore += (style.percentage / 100) * 0.5;
+        const styleCategory = style.category || style.name;
+        if (primaryConfig.compatibleWith?.includes(styleCategory)) {
+          compatibilityScore += ((style.percentage || 0) / 100) * 0.5;
         }
       });
 
-      compatibilityScore += primaryStyle.percentage / 100;
+      compatibilityScore += (primaryStyle.percentage || 0) / 100;
       return Math.min(compatibilityScore * 100, 100);
     };
 
     // Cálculo de prioridade de recomendações
     const calculatePriority = () => {
-      const baseScore = primaryStyle.percentage;
+      const baseScore = primaryStyle.percentage || 0;
       const secondaryInfluence = secondaryStyles.reduce(
-        (acc, style) => acc + style.percentage * 0.3,
+        (acc, style) => acc + (style.percentage || 0) * 0.3,
         0
       );
       return Math.min((baseScore + secondaryInfluence) / 100, 10);
@@ -54,18 +56,20 @@ export const useStyleCalculations = (primaryStyle: StyleResult, secondaryStyles:
 
     // Cálculo de pontuação por categoria
     const calculateCategoryScore = () => {
-      const categoryConfig = styleConfig[primaryStyle.category];
-      const baseScore = primaryStyle.percentage;
+      const categoryConfig = styleConfig[primaryStyle.category || primaryStyle.name];
+      if (!categoryConfig) return primaryStyle.percentage || 0;
+      
+      const baseScore = primaryStyle.percentage || 0;
       const categoryMultiplier = categoryConfig.scoreMultiplier || 1;
       return Math.min(baseScore * categoryMultiplier, 100);
     };
 
     // Análise de compatibilidade de personalidade
     const analyzePersonality = () => {
-      const categoryConfig = styleConfig[primaryStyle.category];
-      const traits = categoryConfig.personalityTraits || [];
+      const categoryConfig = styleConfig[primaryStyle.category || primaryStyle.name];
+      const traits = categoryConfig?.personalityTraits || [];
       const confidenceScore =
-        ((primaryStyle.percentage / 100) * (secondaryStyles[0]?.percentage || 0)) / 100;
+        (((primaryStyle.percentage || 0) / 100) * (secondaryStyles[0]?.percentage || 0)) / 100;
 
       return {
         confidence: Math.min(confidenceScore * 100, 100),
