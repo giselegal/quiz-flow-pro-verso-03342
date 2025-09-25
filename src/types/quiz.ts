@@ -64,6 +64,17 @@ export interface QuizQuestion {
   };
 }
 
+// Define StyleType as union of style string literals
+export type StyleType = 
+  | 'natural' 
+  | 'classico' 
+  | 'contemporâneo' 
+  | 'elegante' 
+  | 'romântico' 
+  | 'sexy' 
+  | 'dramático' 
+  | 'criativo';
+
 export interface StyleResult {
   id: string;
   name: string;
@@ -74,6 +85,9 @@ export interface StyleResult {
   recommendations: string[];
   colors: string[];
   images: string[];
+  imageUrl?: string; // Legacy compatibility
+  guideImageUrl?: string; // Legacy compatibility
+  keywords?: string[]; // Legacy compatibility
   // Legacy compatibility
   category?: string;
   percentage?: number;
@@ -85,13 +99,7 @@ export interface StyleResult {
 // Legacy compatibility export
 export interface Style extends StyleResult {}
 export type StyleTypeCompat = string;
-
-export interface StyleType {
-  id: string;
-  name: string;
-  category: string;
-  description: string;
-}
+export type QuizComponentStyle = string;
 
 export interface QuizResult {
   id: string;
@@ -127,3 +135,6 @@ export type BlockType = string | {
   component: string;
   props?: Record<string, any>;
 };
+
+// Export ComputedResult for backward compatibility
+export interface ComputedResult extends QuizResult {}

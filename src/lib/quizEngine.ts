@@ -1,4 +1,4 @@
-import { QuizAnswer, QuizQuestion, QuizResult } from '@/types/quiz';
+import { QuizAnswer, QuizQuestion, QuizResult, StyleType } from '@/types/quiz';
 
 export function calculateQuizResult(answers: QuizAnswer[], questions: QuizQuestion[]): QuizResult {
   // Simple scoring algorithm
@@ -7,7 +7,7 @@ export function calculateQuizResult(answers: QuizAnswer[], questions: QuizQuesti
   // Calculate scores based on answers
   answers.forEach(answer => {
     const question = questions.find(q => q.id === answer.questionId);
-    if (question) {
+    if (question && question.options) {
       const option = question.options.find(o => o.id === answer.optionId);
       if (option?.style) {
         styleScores[option.style] = (styleScores[option.style] || 0) + (option.weight || 1);
@@ -21,9 +21,43 @@ export function calculateQuizResult(answers: QuizAnswer[], questions: QuizQuesti
   const complementaryStyles = sortedStyles.slice(1, 4).map(([style]) => style);
 
   return {
-    primaryStyle: {
-      category: predominantStyle,
+    id: 'quiz-result',
+    userId: undefined,
+    responses: {},
+    score: styleScores[predominantStyle] || 0,
+    maxScore: Object.values(styleScores).reduce((a, b) => a + b, 0),
+    completedAt: new Date().toISOString(),
+    styleResult: {
+      id: predominantStyle,
+      name: predominantStyle,
+      description: `Seu estilo predominante é ${predominantStyle}`,
+      type: predominantStyle as StyleType,
       score: styleScores[predominantStyle] || 0,
+      characteristics: [],
+      recommendations: [],
+      colors: [],
+      images: [],
+      category: predominantStyle,
+      percentage: Math.round(
+        ((styleScores[predominantStyle] || 0) /
+          Object.values(styleScores).reduce((a, b) => a + b, 1)) *
+          100
+      ),
+      style: predominantStyle,
+      points: styleScores[predominantStyle] || 0,
+      rank: 1,
+    },
+    primaryStyle: {
+      id: predominantStyle,
+      name: predominantStyle,
+      description: `Seu estilo predominante é ${predominantStyle}`,
+      type: predominantStyle as StyleType,
+      score: styleScores[predominantStyle] || 0,
+      characteristics: [],
+      recommendations: [],
+      colors: [],
+      images: [],
+      category: predominantStyle,
       percentage: Math.round(
         ((styleScores[predominantStyle] || 0) /
           Object.values(styleScores).reduce((a, b) => a + b, 1)) *
@@ -34,8 +68,16 @@ export function calculateQuizResult(answers: QuizAnswer[], questions: QuizQuesti
       rank: 1,
     },
     secondaryStyles: complementaryStyles.map((style, index) => ({
-      category: style,
+      id: style,
+      name: style,
+      description: `Estilo complementar: ${style}`,
+      type: style as StyleType,
       score: styleScores[style] || 0,
+      characteristics: [],
+      recommendations: [],
+      colors: [],
+      images: [],
+      category: style,
       percentage: Math.round(
         ((styleScores[style] || 0) / Object.values(styleScores).reduce((a, b) => a + b, 1)) * 100
       ),
@@ -44,10 +86,29 @@ export function calculateQuizResult(answers: QuizAnswer[], questions: QuizQuesti
       rank: index + 2,
     })),
     totalQuestions: questions.length,
-    completedAt: new Date(),
-    scores: styleScores,
-    predominantStyle,
-    complementaryStyles,
+    userData: {},
+    predominantStyle: {
+      id: predominantStyle,
+      name: predominantStyle,
+      description: `Seu estilo predominante é ${predominantStyle}`,
+      type: predominantStyle as StyleType,
+      score: styleScores[predominantStyle] || 0,
+      characteristics: [],
+      recommendations: [],
+      colors: [],
+      images: [],
+    },
+    complementaryStyles: complementaryStyles.map(style => ({
+      id: style,
+      name: style,
+      description: `Estilo complementar: ${style}`,
+      type: style as StyleType,
+      score: styleScores[style] || 0,
+      characteristics: [],
+      recommendations: [],
+      colors: [],
+      images: [],
+    })),
     styleScores,
   };
 }

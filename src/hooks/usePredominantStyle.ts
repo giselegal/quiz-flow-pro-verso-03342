@@ -33,7 +33,7 @@ export const usePredominantStyle = (primaryStyle: StyleResult | null) => {
     }
 
     try {
-      const styleData = styleConfig[primaryStyle.category];
+      const styleData = styleConfig[primaryStyle.category || ''];
 
       if (!styleData) {
         setError('Configuração de estilo não encontrada');
@@ -50,16 +50,16 @@ export const usePredominantStyle = (primaryStyle: StyleResult | null) => {
 
       // Análise detalhada do estilo
       const styleAnalysis: StyleAnalysis = {
-        name: primaryStyle.category,
+        name: primaryStyle.category || 'Desconhecido',
         description: styleData.description,
         imageUrl: styleData.image,
         guideUrl: styleData.guideImage,
         details: {
-          strengthLevel: getStrengthLevel(primaryStyle.percentage),
-          expressionLevel: primaryStyle.percentage,
-          personalityMatch: generatePersonalityMatch(primaryStyle.category),
+          strengthLevel: getStrengthLevel(primaryStyle.percentage || 0),
+          expressionLevel: primaryStyle.percentage || 0,
+          personalityMatch: generatePersonalityMatch(primaryStyle.category || ''),
         },
-        visualElements: getVisualElements(primaryStyle.category),
+        visualElements: getVisualElements(primaryStyle.category || ''),
       };
 
       setAnalysis(styleAnalysis);

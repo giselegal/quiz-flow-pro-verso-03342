@@ -50,7 +50,7 @@ export const LIVE_QUIZ_QUESTIONS = caktoquizQuestions.map(
       title: question.text || question.question || 'Question',
       type: 'both', // simplified
       multiSelect: 1,
-      options: question.options.map((opt: any) => ({
+      options: question.options?.map((opt: any) => ({
         id: opt.id,
         text: opt.text,
         imageUrl: opt.imageUrl,

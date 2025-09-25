@@ -93,6 +93,7 @@ export const useQuizCRUD = () => {
                   question: block.properties?.question || page.title || '',
                   text: block.properties?.question || page.title || '',
                   type: block.properties?.questionType || 'normal',
+                  required: true,
                   options: block.properties?.options || [],
                   multiSelect: block.properties?.multiSelect || 1,
                   order: page.page_order || 0,

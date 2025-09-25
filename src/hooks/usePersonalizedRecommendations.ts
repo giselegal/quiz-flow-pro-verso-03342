@@ -20,10 +20,12 @@ export const usePersonalizedRecommendations = (
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    if (!primaryStyle) return;
+    if (!primaryStyle || !primaryStyle.category) return;
 
     const generateRecommendations = () => {
-      const primaryConfig = styleConfig[primaryStyle.category];
+      const primaryConfig = styleConfig[primaryStyle.category || ''];
+      if (!primaryConfig) return [];
+      
       const recommendations: Recommendation[] = [];
 
       // Gerar recomendações de cores
@@ -36,8 +38,8 @@ export const usePersonalizedRecommendations = (
             description:
               color.description ||
               `${color.name} é uma cor que harmoniza perfeitamente com seu estilo ${primaryStyle.category}${userName ? `, ${userName}` : ''}.`,
-            priority: (primaryStyle.percentage / 100) * (color.priority || 1),
-            confidence: Math.min(primaryStyle.percentage, 100),
+            priority: ((primaryStyle.percentage || 0) / 100) * (color.priority || 1),
+            confidence: Math.min(primaryStyle.percentage || 0, 100),
           });
         });
       }
@@ -52,8 +54,8 @@ export const usePersonalizedRecommendations = (
             description:
               pattern.description ||
               `Padrões ${pattern.name.toLowerCase()} são ideais para expressar sua personalidade ${primaryStyle.category}.`,
-            priority: (primaryStyle.percentage / 100) * (pattern.priority || 1),
-            confidence: Math.min(primaryStyle.percentage * 0.9, 100),
+            priority: ((primaryStyle.percentage || 0) / 100) * (pattern.priority || 1),
+            confidence: Math.min((primaryStyle.percentage || 0) * 0.9, 100),
           });
         });
       }
@@ -68,15 +70,18 @@ export const usePersonalizedRecommendations = (
             description:
               fabric.description ||
               `${fabric.name} é um tecido que combina com seu estilo ${primaryStyle.category}.`,
-            priority: (primaryStyle.percentage / 100) * (fabric.priority || 1),
-            confidence: Math.min(primaryStyle.percentage * 0.85, 100),
+            priority: ((primaryStyle.percentage || 0) / 100) * (fabric.priority || 1),
+            confidence: Math.min((primaryStyle.percentage || 0) * 0.85, 100),
           });
         });
       }
 
       // Adicionar influência dos estilos secundários
-      secondaryStyles.forEach(style => {
+      secondaryStyles?.forEach(style => {
+        if (!style.category) return;
+        
         const secondaryConfig = styleConfig[style.category];
+        if (!secondaryConfig) return;
 
         // Adicionar recomendações complementares dos estilos secundários
         if (secondaryConfig.colors) {
@@ -88,8 +93,8 @@ export const usePersonalizedRecommendations = (
                 type: 'color',
                 title: `${color.name} (Complementar)`,
                 description: `${color.name} pode ser usado como cor de apoio, refletindo a influência do seu estilo secundário ${style.category}.`,
-                priority: (style.percentage / 100) * (color.priority || 1) * 0.7,
-                confidence: Math.min(style.percentage * 0.8, 100),
+                priority: ((style.percentage || 0) / 100) * (color.priority || 1) * 0.7,
+                confidence: Math.min((style.percentage || 0) * 0.8, 100),
               });
             });
         }

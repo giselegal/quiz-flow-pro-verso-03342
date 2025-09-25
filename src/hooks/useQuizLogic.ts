@@ -59,6 +59,9 @@ export const useQuizLogic = () => {
     setAnswers(prevAnswers => {
       const newAnswer: QuizAnswer = {
         questionId,
+        selectedOptions: [optionId],
+        value: [optionId],
+        timestamp: new Date().toISOString(),
         optionId,
       };
       return [...prevAnswers, newAnswer];

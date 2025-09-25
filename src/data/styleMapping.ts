@@ -36,6 +36,8 @@ export const createQuizOption = (
 
   return {
     id: `option_${optionLetter.toLowerCase()}`,
+    label: text,
+    value: optionLetter.toLowerCase(),
     text,
     style,
     imageUrl,
