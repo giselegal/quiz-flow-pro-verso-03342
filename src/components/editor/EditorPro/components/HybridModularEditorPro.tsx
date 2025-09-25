@@ -10,7 +10,7 @@
 
 import React, { useCallback, useMemo, useState, useRef, useContext } from 'react';
 import { EditorContext } from '@/context/EditorContext';
-import { useOptimizedScheduler } from '@/hooks/useOptimizedScheduler';
+// import { useOptimizedScheduler } from '@/hooks/useOptimizedScheduler'; // TODO: Implementar scheduler
 import { useNotification } from '@/components/ui/Notification';
 import { Block } from '@/types/editor';
 
@@ -33,7 +33,7 @@ import {
 } from 'lucide-react';
 
 // 🧠 IA e CRUD Integration
-import { useUnifiedCRUD } from '@/context/UnifiedCRUDProvider';
+// import { useUnifiedCRUD } from '@/context/UnifiedCRUDProvider'; // TODO: Implementar CRUD
 
 // ===== INTERFACES =====
 
@@ -96,11 +96,14 @@ const HybridToolbar: React.FC<HybridToolbarProps> = ({
     }, [onSave]);
 
     const handleCreateNew = useCallback(async () => {
-        console.log('🆕 Criar novo funil');
-        // if (crudContext?.createNew) {
-        //   await crudContext.createNew();
-        // }
-    }, []);
+        if (!onCreateNew) return;
+        setIsOperating(true);
+        try {
+            await onCreateNew();
+        } finally {
+            setIsOperating(false);
+        }
+    }, [onCreateNew]);
 
     const handleDuplicate = useCallback(async () => {
         if (!onDuplicate) return;
@@ -388,8 +391,8 @@ const ResizeHandle: React.FC<{
 
 const HybridModularEditorPro: React.FC<HybridModularEditorProProps> = ({
     funnelId,
-    showProFeatures = true,
-    enableAI = true,
+    // showProFeatures = true, // TODO: Implementar features pro
+    // enableAI = true, // TODO: Implementar controle de IA
     enableCRUD = true,
     className = ''
 }) => {
@@ -400,9 +403,9 @@ const HybridModularEditorPro: React.FC<HybridModularEditorProProps> = ({
     }
 
     // 🚀 CRUD Context do ModernUnifiedEditor (opcional)
-    const crudContext = enableCRUD ? useUnifiedCRUD() : null;
+    // const crudContext = enableCRUD ? useUnifiedCRUD() : null; // TODO: Implementar CRUD
 
-    const { schedule } = useOptimizedScheduler();
+    // const { schedule } = useOptimizedScheduler(); // TODO: Usar scheduler
     const { addNotification } = useNotification();
     const { columnWidths, handleResize } = useResizableColumns();
 
