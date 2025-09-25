@@ -95,7 +95,7 @@ export const MasterEditorWorkspace: React.FC<MasterEditorWorkspaceProps> = ({
           {integrationState.isInteractiveMode ? 'Modo Interativo' : 'Modo Visualização'}
         </Badge>
 
-        {stepValidation.hasErrors === false && (
+        {stepValidation.validationResult.isValid && (
           <Badge variant="default" className="bg-green-100 text-green-800">
             <CheckCircle className="w-3 h-3 mr-1" />
             Válido

@@ -59,7 +59,9 @@ export const useEditorIntegration = (): UseEditorIntegrationReturn => {
     setIntegrationState(prev => ({ ...prev, hasUnsavedChanges: true }));
   });
 
-  const stepValidation = useStepValidation(currentStepBlocks);
+  const stepValidation = useStepValidation({
+    stepNumber: currentStep,
+  });
 
   // Actions
   const toggleInteractiveMode = useCallback(() => {
