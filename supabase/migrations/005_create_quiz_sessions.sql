@@ -16,11 +16,13 @@ CREATE TABLE IF NOT EXISTS public.quiz_users (
   PRIMARY KEY (id)
 );
 
--- Tabela para sessões de quiz
+-- Tabela for sessões de quiz
 CREATE TABLE IF NOT EXISTS public.quiz_sessions (
   id UUID NOT NULL DEFAULT gen_random_uuid(),
   funnel_id TEXT,
+  user_id UUID REFERENCES public.quiz_users(id) ON DELETE CASCADE,
   quiz_user_id UUID REFERENCES public.quiz_users(id) ON DELETE CASCADE,
+  session_token TEXT,
   status TEXT NOT NULL DEFAULT 'started' CHECK (status IN ('started', 'in_progress', 'completed', 'abandoned')),
   current_step INTEGER DEFAULT 0,
   total_steps INTEGER DEFAULT 0,
