@@ -330,7 +330,7 @@ img:hover,
 @layer base {
   :root {
     /* Semantic Design System Colors */
-    --background: 0 0% 99.6%;
+    --background: 0 0% 99.6%;      /* #FEFEFE - Off-white */
     --foreground: 222.2 84% 4.9%;
 
     --card: 0 0% 100%;
@@ -339,17 +339,14 @@ img:hover,
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
 
-    --primary: 33 42% 63%;
-    --primary-foreground: 210 40% 98%;
+    --primary: 318 100% 55%;        /* #FF1CC0 - Neon Pink */
+    --primary-foreground: 0 0% 99.6%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 272 83% 58%;       /* #B131FA - Medium Purple */
+    --secondary-foreground: 0 0% 99.6%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --accent: 226 100% 56%;         /* #1C3AFF - Neon Blue */
+    --accent-foreground: 0 0% 99.6%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
@@ -360,40 +357,34 @@ img:hover,
 
     --radius: 0.5rem;
 
-    /* QuizFlow Brand System */
-    --brand-dark-blue: 256 66% 15%;
-    /* #1A0F3D */
-    --brand-medium-blue: 255 54% 25%;
-    /* #2E1A6B */
-    --brand-light-blue: 257 55% 40%;
-    /* #4A2E9F */
-    --brand-bright-blue: 195 100% 50%;
-    /* #00BFFF */
-    --brand-bright-pink: 300 100% 50%;
-    /* #FF00FF */
+    /* QuizFlow Brand System - CYBERPUNK NEON PALETTE */
+    --brand-dark-blue: 256 100% 23%;    /* #4A0074 - Dark Purple */
+    --brand-medium-blue: 272 83% 58%;   /* #B131FA - Medium Purple */
+    --brand-light-blue: 226 100% 56%;   /* #1C3AFF - Neon Blue */
+    --brand-bright-blue: 226 100% 56%;  /* #1C3AFF - Neon Blue */
+    --brand-bright-pink: 318 100% 55%;  /* #FF1CC0 - Neon Pink */
 
     /* Clean Support Colors */
-    --brand-primary: 256 66% 15%;
-    /* #1A0F3D - usando dark blue */
-    --brand-dark: 256 66% 15%;
-    /* #1A0F3D - usando dark blue */
-    --brand-background: 0 0% 100%;
-    /* #FFFFFF - branco puro */
-    --brand-text: 256 66% 15%;
-    /* #1A0F3D - usando dark blue */
-    --brand-muted: 255 54% 25%;
-    /* #2E1A6B - usando medium blue */
+    --brand-primary: 318 100% 55%;      /* #FF1CC0 - Neon Pink */
+    --brand-dark: 256 100% 23%;         /* #4A0074 - Dark Purple */
+    --brand-background: 0 0% 99.6%;     /* #FEFEFE - Off-white */
+    --brand-text: 256 100% 23%;         /* #4A0074 - Dark Purple */
+    --brand-muted: 272 83% 58%;         /* #B131FA - Medium Purple */
 
-    /* Gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(var(--brand-bright-blue)), hsl(var(--brand-bright-pink)));
-    --gradient-tech: linear-gradient(135deg, hsl(var(--brand-dark-blue)), hsl(var(--brand-medium-blue)), hsl(var(--brand-light-blue)));
-    --gradient-subtle: linear-gradient(135deg, hsl(var(--brand-background)), hsl(var(--brand-medium-blue) / 0.1));
-    --gradient-hero: linear-gradient(135deg, hsl(var(--brand-bright-blue)), hsl(var(--brand-light-blue)), hsl(var(--brand-bright-pink)));
+    /* Cyberpunk Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(318 100% 55%), hsl(226 100% 56%)); /* Pink to Blue */
+    --gradient-tech: linear-gradient(135deg, hsl(256 100% 23%), hsl(272 83% 58%), hsl(226 100% 56%)); /* Dark to Blue */
+    --gradient-subtle: linear-gradient(135deg, hsl(0 0% 99.6%), hsl(318 100% 55% / 0.1));
+    --gradient-hero: linear-gradient(135deg, hsl(318 100% 55%), hsl(272 83% 58%), hsl(226 100% 56%));
+    --gradient-neon: linear-gradient(45deg, hsl(318 100% 55%), hsl(272 83% 58%), hsl(226 100% 56%));
 
-    /* Shadows */
-    --shadow-brand: 0 10px 30px -10px hsl(var(--brand-bright-blue) / 0.3);
-    --shadow-glow: 0 0 40px hsl(var(--brand-bright-blue) / 0.4);
-    --shadow-card: 0 4px 20px hsl(var(--brand-dark-blue) / 0.1);
+    /* Cyberpunk Shadows with Glow */
+    --shadow-brand: 0 10px 30px -10px hsl(318 100% 55% / 0.3);
+    --shadow-glow: 0 0 40px hsl(318 100% 55% / 0.4);
+    --shadow-card: 0 4px 20px hsl(256 100% 23% / 0.1);
+    --shadow-neon: 0 0 20px hsl(318 100% 55% / 0.5);
+    --shadow-cyberpunk: 0 0 30px hsl(318 100% 55%), 0 0 60px hsl(226 100% 56%);
+    --shadow-intense: 0 0 40px hsl(318 100% 55% / 0.8);
 
     /* Sidebar */
     --sidebar-background: 0 0% 98%;
