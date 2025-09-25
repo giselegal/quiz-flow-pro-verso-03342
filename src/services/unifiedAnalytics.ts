@@ -12,7 +12,7 @@
  * ✅ Performance otimizada
  */
 
-import { supabase } from '@/lib/supabase';
+import { supabaseApiClient } from './core/SupabaseApiClient';
 import { Database } from '@/lib/supabase';
 import { getPhase5Data } from './phase5DataSimulator';
 
@@ -235,52 +235,38 @@ export class UnifiedAnalyticsService {
         }
 
         try {
-            let query = supabase
-                .from('quiz_sessions')
-                .select('*')
-                .order('started_at', { ascending: false });
+            // Use SupabaseApiClient for session data
+            const sessionsResponse = await supabaseApiClient.getQuizSessions({
+                dateRange: filters?.dateRange,
+                status: filters?.status
+            });
 
-            // Apply filters
-            if (filters?.dateRange) {
-                query = query
-                    .gte('started_at', filters.dateRange.from.toISOString())
-                    .lte('started_at', filters.dateRange.to.toISOString());
+            if (sessionsResponse.status !== 'success' || !sessionsResponse.data) {
+                throw new Error('Failed to fetch sessions');
             }
 
-            if (filters?.status) {
-                query = query.eq('status', filters.status);
-            }
-
-            const { data: sessions, error: sessionsError, count } = await query
-                .range((page - 1) * limit, page * limit - 1);
-
-            if (sessionsError) {
-                throw sessionsError;
-            }
+            const sessions = sessionsResponse.data.slice((page - 1) * limit, page * limit);
 
             // Get results and responses for each session
             const participantsDetails = await Promise.all(
-                sessions?.map(async (session) => {
-                    const [results, responses] = await Promise.all([
-                        supabase
-                            .from('quiz_results')
-                            .select('*')
-                            .eq('session_id', session.id),
-                        supabase
-                            .from('quiz_step_responses')
-                            .select('*')
-                            .eq('session_id', session.id)
-                            .order('step_number', { ascending: true })
+                sessions.map(async (session: any) => {
+                    const [resultsResponse, responsesResponse] = await Promise.all([
+                        supabaseApiClient.getQuizResults({ sessionId: session.id }),
+                        supabaseApiClient.getQuizStepResponses(session.id)
                     ]);
 
-                    return this.mapSessionToParticipantDetails(session, results.data, responses.data);
-                }) || []
+                    return this.mapSessionToParticipantDetails(
+                        session,
+                        resultsResponse.data || [],
+                        responsesResponse.data || []
+                    );
+                })
             );
 
             const result = {
                 participants: participantsDetails,
-                total: count || 0,
-                totalPages: Math.ceil((count || 0) / limit),
+                total: sessionsResponse.count || 0,
+                totalPages: Math.ceil((sessionsResponse.count || 0) / limit),
                 currentPage: page
             };
 
@@ -309,23 +295,20 @@ export class UnifiedAnalyticsService {
             const fiveMinutesAgo = new Date(now.getTime() - 5 * 60 * 1000);
             const oneHourAgo = new Date(now.getTime() - 60 * 60 * 1000);
 
-            const [activeSessions, recentCompletions] = await Promise.all([
-                supabase
-                    .from('quiz_sessions')
-                    .select('*')
-                    .eq('status', 'active')
-                    .gte('last_activity', fiveMinutesAgo.toISOString()),
-                supabase
-                    .from('quiz_sessions')
-                    .select('*')
-                    .eq('status', 'completed')
-                    .gte('completed_at', oneHourAgo.toISOString())
+            const [activeSessionsResponse, recentCompletionsResponse] = await Promise.all([
+                supabaseApiClient.getQuizSessions({
+                    dateRange: { from: fiveMinutesAgo, to: now }
+                }),
+                supabaseApiClient.getQuizSessions({
+                    status: 'completed',
+                    dateRange: { from: oneHourAgo, to: now }
+                })
             ]);
 
             return {
-                activeUsers: activeSessions.data?.length || 0,
-                activeSessions: activeSessions.data?.length || 0,
-                recentCompletions: recentCompletions.data?.length || 0,
+                activeUsers: activeSessionsResponse.data?.length || 0,
+                activeSessions: activeSessionsResponse.data?.length || 0,
+                recentCompletions: recentCompletionsResponse.data?.length || 0,
                 currentConversionRate: await this.getCurrentConversionRate(),
                 lastUpdated: now
             };
@@ -348,75 +331,67 @@ export class UnifiedAnalyticsService {
 
     private async getQuizSessions(filters?: AnalyticsFilters): Promise<QuizSession[]> {
         try {
-            let query = supabase.from('quiz_sessions').select('*');
+            // Try getting real data from Supabase via API client
+            const response = await supabaseApiClient.getQuizSessions({
+                dateRange: filters?.dateRange,
+                status: filters?.status
+            });
 
-            if (filters?.dateRange) {
-                query = query
-                    .gte('started_at', filters.dateRange.from.toISOString())
-                    .lte('started_at', filters.dateRange.to.toISOString());
+            if (response.status === 'success' && response.data && response.data.length > 0) {
+                console.log('📊 Dados reais do Supabase carregados para sessions');
+                return response.data;
             }
 
-            const { data, error } = await query;
-
-            if (error) {
-                throw error;
-            }
-
-            // Se há dados reais, use-os
-            if (data && data.length > 0) {
-                return data;
-            }
-
-            // Fallback para dados simulados da Fase 5
+            // Fallback to Phase 5 simulated data
             console.log('📊 Usando dados simulados da Fase 5 para sessions...');
             const phase5Data = getPhase5Data();
-            let sessions = phase5Data.sessions || [];
 
-            // Aplicar filtros se necessário
-            if (filters?.dateRange) {
-                sessions = sessions.filter((session: any) => {
-                    const startedAt = new Date(session.started_at);
-                    return startedAt >= filters.dateRange!.from && startedAt <= filters.dateRange!.to;
-                });
-            }
-
-            return sessions;
+            // Convert phase5Data to QuizSession format
+            return phase5Data.sessions.map((session: any) => ({
+                id: session.id,
+                user_id: session.user_id,
+                status: session.status as 'active' | 'completed' | 'abandoned',
+                created_at: session.created_at,
+                updated_at: session.updated_at,
+                metadata: session.metadata,
+                current_step: session.current_step || 1,
+                completion_rate: session.completion_rate || 0
+            }));
 
         } catch (error) {
-            // Em caso de erro (ex: Supabase indisponível), usar dados simulados
             console.log('⚠️ Erro no Supabase, usando dados simulados da Fase 5:', error);
             const phase5Data = getPhase5Data();
-            return phase5Data.sessions || [];
+            return phase5Data.sessions.map((session: any) => ({
+                id: session.id,
+                user_id: session.user_id,
+                status: session.status as 'active' | 'completed' | 'abandoned',
+                created_at: session.created_at,
+                updated_at: session.updated_at,
+                metadata: session.metadata,
+                current_step: session.current_step || 1,
+                completion_rate: session.completion_rate || 0
+            }));
         }
     }
 
     private async getQuizResults(filters?: AnalyticsFilters): Promise<QuizResult[]> {
         try {
-            let query = supabase.from('quiz_results').select('*');
+            // Try getting real data from Supabase via API client
+            const response = await supabaseApiClient.getQuizResults({
+                dateRange: filters?.dateRange
+            });
 
-            if (filters?.dateRange) {
-                query = query
-                    .gte('created_at', filters.dateRange.from.toISOString())
-                    .lte('created_at', filters.dateRange.to.toISOString());
+            if (response.status === 'success' && response.data && response.data.length > 0) {
+                console.log('📊 Dados reais do Supabase carregados para results');
+                return response.data;
             }
 
-            const { data, error } = await query;
-
-            if (error) {
-                throw error;
-            }
-
-            // Se há dados reais, use-os
-            if (data && data.length > 0) {
-                return data;
-            }
-
-            // Fallback para dados simulados da Fase 5
+            // Fallback to Phase 5 simulated data
             console.log('📊 Usando dados simulados da Fase 5 para results...');
             const phase5Data = getPhase5Data();
             let results = phase5Data.results || [];
 
-            // Aplicar filtros se necessário
+            // Apply filters if necessary
             if (filters?.dateRange) {
                 results = results.filter((result: any) => {
                     const createdAt = new Date(result.created_at);
@@ -427,7 +402,7 @@ export class UnifiedAnalyticsService {
             return results;
 
         } catch (error) {
-            // Em caso de erro, usar dados simulados
+            // In case of error, use simulated data
             console.log('⚠️ Erro no Supabase, usando dados simulados da Fase 5:', error);
             const phase5Data = getPhase5Data();
             return phase5Data.results || [];
@@ -577,15 +552,15 @@ export class UnifiedAnalyticsService {
     private async getCurrentConversionRate(): Promise<number> {
         const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000);
 
-        const { data: recentSessions } = await supabase
-            .from('quiz_sessions')
-            .select('*')
-            .gte('started_at', oneHourAgo.toISOString());
+        // Use SupabaseApiClient instead of direct supabase
+        const response = await supabaseApiClient.getQuizSessions({
+            dateRange: { from: oneHourAgo, to: new Date() }
+        });
 
-        if (!recentSessions || recentSessions.length === 0) return 0;
+        if (!response.data || response.data.length === 0) return 0;
 
-        const completed = recentSessions.filter(s => s.status === 'completed').length;
-        return Math.round((completed / recentSessions.length) * 100 * 10) / 10;
+        const completed = response.data.filter((s: any) => s.status === 'completed').length;
+        return Math.round((completed / response.data.length) * 100 * 10) / 10;
     }
 
     private getDateRange(filters?: AnalyticsFilters): { from: Date; to: Date } {

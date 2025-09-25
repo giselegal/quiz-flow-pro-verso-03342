@@ -23,7 +23,7 @@ export const simulatedData = {
             settings: { theme: 'modern', collectEmail: true }
         },
         {
-            id: 'funnel-carreira-ideal-2', 
+            id: 'funnel-carreira-ideal-2',
             name: 'Quiz: Sua Carreira Ideal',
             description: 'Descubra qual carreira combina melhor com seu perfil',
             is_published: true,
@@ -77,19 +77,19 @@ export const simulatedData = {
 export function generateSessions() {
     const statuses = ['completed', 'active', 'abandoned', 'completed', 'completed']; // More completed
     const sessions = [];
-    
+
     simulatedData.users.forEach((user, userIndex) => {
         const sessionCount = Math.random() > 0.7 ? (Math.random() > 0.5 ? 3 : 2) : 1;
-        
+
         for (let i = 0; i < sessionCount; i++) {
             const funnel = simulatedData.funnels[Math.floor(Math.random() * simulatedData.funnels.length)];
             const status = statuses[Math.floor(Math.random() * statuses.length)];
             const totalSteps = Math.floor(Math.random() * 8) + 5;
             const currentStep = status === 'completed' ? totalSteps : Math.floor(Math.random() * totalSteps) + 1;
-            
+
             const startTime = new Date(user.created_at);
             const sessionDuration = Math.floor(Math.random() * 1800) + 300; // 5-35 minutes
-            const completedAt = status === 'completed' ? 
+            const completedAt = status === 'completed' ?
                 new Date(startTime.getTime() + sessionDuration * 1000) : null;
 
             sessions.push({
@@ -112,7 +112,7 @@ export function generateSessions() {
             });
         }
     });
-    
+
     simulatedData.sessions = sessions;
     return sessions;
 }
@@ -120,10 +120,10 @@ export function generateSessions() {
 // Generate responses for sessions
 export function generateResponses() {
     if (!simulatedData.sessions) generateSessions();
-    
+
     const questions = [
         'Qual é seu estilo preferido?',
-        'Como você se veste para trabalhar?', 
+        'Como você se veste para trabalhar?',
         'Qual cor mais combina com você?',
         'Que tipo de evento você prefere?',
         'Como é seu estilo de vida?',
@@ -133,23 +133,23 @@ export function generateResponses() {
         'Qual seu hobby favorito?',
         'Que tipo de viagem prefere?'
     ];
-    
+
     const answers = {
         'Qual é seu estilo preferido?': ['Clássico', 'Moderno', 'Boho', 'Minimalista'],
         'Como você se veste para trabalhar?': ['Formal', 'Casual', 'Smart Casual', 'Criativo'],
         'Qual cor mais combina com você?': ['Azul', 'Preto', 'Branco', 'Vermelho', 'Verde']
     };
-    
+
     const responses = [];
-    
+
     simulatedData.sessions.forEach(session => {
         if (session.status === 'abandoned' && session.current_step <= 2) return;
-        
+
         for (let i = 0; i < session.current_step; i++) {
             const questionText = questions[i % questions.length];
             const possibleAnswers = answers[questionText] || ['Sim', 'Não', 'Talvez', 'Não sei'];
             const answer = possibleAnswers[Math.floor(Math.random() * possibleAnswers.length)];
-            
+
             responses.push({
                 id: `response-${session.id}-${i + 1}`,
                 session_id: session.id,
@@ -166,7 +166,7 @@ export function generateResponses() {
             });
         }
     });
-    
+
     simulatedData.responses = responses;
     return responses;
 }
@@ -174,15 +174,15 @@ export function generateResponses() {
 // Generate results for completed sessions
 export function generateResults() {
     if (!simulatedData.sessions) generateSessions();
-    
+
     const resultTypes = [
         'Estilo Clássico',
         'Estilo Moderno',
-        'Estilo Boho', 
+        'Estilo Boho',
         'Estilo Minimalista',
         'Estilo Criativo'
     ];
-    
+
     const descriptions = {
         'Estilo Clássico': 'Você tem um gosto refinado e atemporal. Prefere peças que nunca saem de moda.',
         'Estilo Moderno': 'Você está sempre em sintonia com as últimas tendências e gosta de inovar.',
@@ -190,12 +190,12 @@ export function generateResults() {
         'Estilo Minimalista': 'Você acredita que menos é mais. Prefere simplicidade e funcionalidade.',
         'Estilo Criativo': 'Você não tem medo de ousar e experimentar. Seu estilo é único e autêntico.'
     };
-    
+
     const results = simulatedData.sessions
         .filter(session => session.status === 'completed')
         .map(session => {
             const resultType = resultTypes[Math.floor(Math.random() * resultTypes.length)];
-            
+
             return {
                 id: `result-${session.id}`,
                 session_id: session.id,
@@ -212,14 +212,14 @@ export function generateResults() {
                 next_steps: {
                     actions: [
                         'Explore nosso catálogo de produtos',
-                        'Faça uma consultoria personalizada', 
+                        'Faça uma consultoria personalizada',
                         'Siga nossas dicas no Instagram'
                     ]
                 },
                 created_at: session.completed_at
             };
         });
-    
+
     simulatedData.results = results;
     return results;
 }
@@ -227,14 +227,14 @@ export function generateResults() {
 // Initialize all data
 export function initializePhase5Data() {
     console.log('🚀 Inicializando dados da Fase 5...');
-    
+
     generateSessions();
     generateResponses();
     generateResults();
-    
+
     // Store in localStorage for persistence
     localStorage.setItem('phase5_simulated_data', JSON.stringify(simulatedData));
-    
+
     console.log('✅ Dados da Fase 5 inicializados:', {
         funnels: simulatedData.funnels.length,
         users: simulatedData.users.length,
@@ -242,7 +242,7 @@ export function initializePhase5Data() {
         responses: simulatedData.responses.length,
         results: simulatedData.results.length
     });
-    
+
     return simulatedData;
 }
 
@@ -259,6 +259,6 @@ export function getPhase5Data() {
             console.warn('Failed to parse stored data, reinitializing...');
         }
     }
-    
+
     return initializePhase5Data();
 }
