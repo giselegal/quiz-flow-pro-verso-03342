@@ -13,13 +13,16 @@ export interface Template {
   id: string;
   name: string;
   description: string;
-  category: string;
-  tags: string[];
+  category?: string;
+  tags?: string[];
   thumbnail?: string;
   isAIGenerated?: boolean;
   createdAt: string;
   updatedAt?: string;
   blocks: TemplateBlock[];
+  // Legacy compatibility
+  version?: string;
+  author?: string;
 }
 
 export interface TemplateBlock {

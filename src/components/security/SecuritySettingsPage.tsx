@@ -62,7 +62,7 @@ export const SecuritySettingsPage: React.FC = () => {
     isLoading: backupLoading
   } = useBackupSystem();
 
-  const [recentBackups, setRecentBackups] = useState<BackupRecord[]>([]);
+  const [recentBackups, setRecentBackups] = useState<(BackupRecord | any)[]>([]);
 
   useEffect(() => {
     loadSecuritySettings();

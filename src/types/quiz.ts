@@ -7,6 +7,8 @@ export interface QuizOption {
   label: string;
   value: string;
   text?: string; // Legacy compatibility
+  styleCategory?: string; // Legacy compatibility
+  imageUrl?: string; // Legacy compatibility
   isCorrect?: boolean;
   weight?: number;
 }
@@ -22,6 +24,16 @@ export interface UserResponse {
   questionId: string;
   answer: string | string[];
   timestamp: string;
+}
+
+// Legacy compatibility
+export interface QuizAnswer {
+  questionId: string;
+  selectedOptions: string[];
+  value: string | string[];
+  timestamp: string;
+  optionId?: string; // Legacy compatibility
+  weight?: number; // Legacy compatibility
 }
 
 export interface QuizStage {
@@ -65,6 +77,8 @@ export interface StyleResult {
   category?: string;
   percentage?: number;
   style?: string;
+  points?: number;
+  rank?: number;
 }
 
 export interface StyleType {
@@ -86,6 +100,10 @@ export interface QuizResult {
   primaryStyle?: StyleResult;
   secondaryStyles?: StyleResult[];
   totalQuestions?: number;
+  userData?: any;
+  predominantStyle?: StyleResult;
+  complementaryStyles?: StyleResult[];
+  styleScores?: Record<string, number>;
 }
 
 export interface QuizFunnel {
@@ -96,10 +114,11 @@ export interface QuizFunnel {
   results: StyleResult[];
 }
 
-export interface BlockType {
+// Block type can be either string or object
+export type BlockType = string | {
   id: string;
   name: string;
   category: string;
   component: string;
   props?: Record<string, any>;
-}
+};

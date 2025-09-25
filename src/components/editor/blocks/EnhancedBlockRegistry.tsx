@@ -7,7 +7,6 @@
 import { lazy, type ComponentType } from 'react';
 // Importações estáticas essenciais para renderização imediata dos blocos principais
 import ButtonInlineBlock from '@/components/editor/blocks/ButtonInlineBlock';
-import BasicContainerBlock from '@/components/editor/blocks/BasicContainerBlock';
 import FormInputBlock from '@/components/editor/blocks/FormInputBlock';
 import ImageInlineBlock from '@/components/editor/blocks/ImageInlineBlock';
 import LegalNoticeInlineBlock from '@/components/editor/blocks/LegalNoticeInlineBlock';
@@ -50,11 +49,11 @@ export const ENHANCED_BLOCK_REGISTRY: Record<string, ComponentType<any>> = {
     'quiz-question-inline': TextInlineBlock,
     'quiz-options-inline': OptionsGridBlock,
     'options-grid': OptionsGridBlock,
-    'form-container': BasicContainerBlock,
+    'form-container': lazy(() => import('@/components/editor/blocks/BasicContainerBlock')),
     // Aliases de container estável
-    'container': BasicContainerBlock,
-    'section': BasicContainerBlock,
-    'box': BasicContainerBlock,
+    'container': lazy(() => import('@/components/editor/blocks/BasicContainerBlock')),
+    'section': lazy(() => import('@/components/editor/blocks/BasicContainerBlock')),
+    'box': lazy(() => import('@/components/editor/blocks/BasicContainerBlock')),
 
     // ✅ SALES PAGES - HERO
     'sales-hero': SalesHeroBlock,
