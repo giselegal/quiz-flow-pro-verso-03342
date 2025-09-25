@@ -1,105 +1,121 @@
-import React from 'react';
-import { useSortable } from '@dnd-kit/sortable';
-import { CSS } from '@dnd-kit/utilities';
-import { cn } from '@/lib/utils';
 import { Block } from '@/types/editor';
 import { StyleResult } from '@/types/quiz';
+import { useSortable } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
+import React, { useState } from 'react';
+import UniversalBlockRenderer from '../blocks/UniversalBlockRenderer';
 
 interface SortablePreviewBlockWrapperProps {
-  id?: string;
-  block?: Block;
-  isSelected?: boolean;
-  isPreviewing?: boolean;
+  block: Block;
+  isSelected: boolean;
+  isPreviewing: boolean;
+  renderConfig?: {
+    showBorders: boolean;
+    showLabels: boolean;
+    enableHover: boolean;
+    enableSelection: boolean;
+  };
   primaryStyle?: StyleResult;
-  onClick?: () => void;
-  onUpdate?: (updates: any) => void;
+  onClick: () => void;
+  onUpdate: (updates: Partial<Block>) => void;
   onSelect?: (blockId: string) => void;
-  children?: React.ReactNode;
-  disabled?: boolean;
-  className?: string;
+  // debug removido - não utilizado
 }
 
+/**
+ * 🎯 Wrapper para cada bloco no preview com funcionalidade de arrastar e soltar
+ */
 export const SortablePreviewBlockWrapper: React.FC<SortablePreviewBlockWrapperProps> = ({
-  id,
   block,
   isSelected,
-  isPreviewing: _isPreviewing,
-  primaryStyle: _primaryStyle,
+  isPreviewing,
+  // renderConfig, // removido - não usado mais
+  // primaryStyle, // unused
   onClick,
-  onUpdate: _onUpdate,
-  onSelect: _onSelect,
-  children,
-  disabled = false,
-  className,
+  // onUpdate, // unused
+  onSelect,
+  // debug removido - não utilizado
 }) => {
-  const blockId = id || block?.id || 'unknown';
-  
-  const {
-    attributes,
-    listeners,
-    setNodeRef,
-    transform,
-    transition,
-    isDragging,
-  } = useSortable({ 
-    id: blockId,
-    disabled 
+  console.log(`🔄 SortablePreviewBlockWrapper renderizado: ${block.id} (${block.type})`);
+
+  const [isHovered, setIsHovered] = useState(false);
+
+  // Configuração do useSortable do dnd-kit
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
+    id: block.id,
+    disabled: isPreviewing,
+    data: {
+      type: 'block',
+      block,
+    },
   });
 
-  const style = {
+  console.log(`🔧 useSortable config para ${block.id}:`, {
+    id: block.id,
+    disabled: isPreviewing,
+    hasListeners: !!listeners,
+    hasAttributes: !!attributes,
+    hasSetNodeRef: !!setNodeRef,
+  });
+
+  // Estilo do wrapper com transformação de arrastar e soltar
+  const wrapperStyle = {
+    outline: isSelected ? '2px solid rgba(59, 130, 246, 0.5)' : 'none', // Cor azul semi-transparente apenas quando selecionado
+    position: 'relative' as const,
     transform: CSS.Transform.toString(transform),
     transition,
+    opacity: isDragging ? 0.5 : 1,
+    zIndex: isDragging ? 999 : 'auto',
   };
 
-  // If block is provided, render the block content
-  if (block) {
-    return (
-      <div
-        ref={setNodeRef}
-        style={style}
-        className={cn(
-          'relative block-preview-wrapper',
-          isSelected && 'selected',
-          isDragging && 'z-50 opacity-50',
-          className
-        )}
-        onClick={onClick}
-        {...attributes}
-        {...listeners}
-      >
-        {/* Basic block content renderer - this should be enhanced based on block type */}
-        <div className="preview-block-content">
-          <div className="block-type-indicator text-xs text-gray-500 mb-1">
-            {block.type || 'Unknown Block'}
-          </div>
-          <div className="block-content">
-            {block.content?.text && (
-              <div className="text-content">{block.content.text}</div>
-            )}
-            {block.content?.title && (
-              <h3 className="block-title">{block.content.title}</h3>
-            )}
-            {/* Add more content renderers as needed */}
-          </div>
-        </div>
-      </div>
-    );
-  }
+  // Classes do wrapper
+  const wrapperClasses = [
+    'preview-block-wrapper',
+    `block-${block.type}`,
+    isSelected ? 'is-selected' : '',
+    isHovered ? 'is-hovered' : '',
+    isPreviewing ? 'in-preview-mode' : '',
+    isDragging ? 'is-dragging' : '',
+  ]
+    .filter(Boolean)
+    .join(' ');
 
-  // Otherwise render children with sortable wrapper
   return (
     <div
       ref={setNodeRef}
-      style={style}
-      className={cn(
-        'relative',
-        isDragging && 'z-50 opacity-50',
-        className
-      )}
+      className={wrapperClasses}
+      style={wrapperStyle}
+      onClick={onClick}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
       {...attributes}
-      {...listeners}
+      {...listeners} // ✅ CRUCIAL: Listeners para drag funcionarem
     >
-      {children}
+      {/* IDs removidos para visual limpo */}
+
+      {/* Renderização do bloco usando UniversalBlockRenderer */}
+      <div className="block-content relative">
+        {/* Visual totalmente limpo para produção */}
+
+        {/* Renderizar componente real usando UniversalBlockRenderer */}
+        <UniversalBlockRenderer
+          block={block}
+          isSelected={isSelected}
+          onClick={() => {
+            onClick();
+            onSelect?.(block.id);
+          }}
+        />
+      </div>
+
+      {/* Indicadores visuais removidos para visual limpo */}
+      {!isPreviewing && (
+        <div className="absolute inset-0 pointer-events-none">
+          {isHovered && !isSelected && !isDragging && (
+            <div className="absolute inset-0 border border-gray-200 rounded"></div>
+          )}
+        </div>
+      )}
     </div>
   );
 };

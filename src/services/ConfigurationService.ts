@@ -7,8 +7,10 @@
  * - Sistema de herança e sobrescrita
  */
 
-import { APP_CONFIG, type AppConfig } from '@/config/AppConfig';
+import { APP_CONFIG } from '@/config/AppConfig';
 import { QUIZ21_STEPS_CONFIG, type FunnelConfig, mergeFunnelWithAppConfig } from '@/templates/funnel-configs/quiz21StepsComplete.config';
+import type { AppConfig } from '@/config/AppConfig';
+import { FunnelConfigGenerator, COMMON_FUNNELS_CONFIGS } from '@/services/FunnelConfigGenerator';
 
 // ============================================================================
 // TIPOS E INTERFACES
@@ -35,9 +37,14 @@ export interface ConfigurationContext {
 const FUNNEL_CONFIGS_REGISTRY: Record<string, FunnelConfig> = {
     'quiz21StepsComplete': QUIZ21_STEPS_CONFIG,
     'quiz-estilo-21-steps': QUIZ21_STEPS_CONFIG, // Alias
-    // Futuros funis serão adicionados aqui
-    // 'personalityQuiz': PERSONALITY_QUIZ_CONFIG,
-    // 'businessQuiz': BUSINESS_QUIZ_CONFIG,
+
+    // ✨ NOVOS FUNIS USANDO GERADOR AUTOMÁTICO
+    'personality-quiz': COMMON_FUNNELS_CONFIGS['personality-quiz'],
+    'lead-magnet-ebook': COMMON_FUNNELS_CONFIGS['lead-magnet-ebook'],
+    'sales-basic': COMMON_FUNNELS_CONFIGS['sales-basic'],
+
+    // 🎯 FUNÇÃO DINÂMICA: Se não encontrar, gerar automaticamente
+    // Isso permitirá que qualquer funnelId funcione automaticamente
 };
 
 // ============================================================================
@@ -105,9 +112,43 @@ export class ConfigurationService {
 
     /**
      * Obtém configuração específica do funil
+     * ✨ NOVO: Suporte automático para funis não registrados
      */
     private getFunnelConfig(funnelId: string): FunnelConfig | null {
-        return FUNNEL_CONFIGS_REGISTRY[funnelId] || null;
+        // Tentar buscar no registry primeiro
+        let config = FUNNEL_CONFIGS_REGISTRY[funnelId];
+
+        if (!config) {
+            // 🚀 GERAÇÃO AUTOMÁTICA: Se não existe, criar baseado no ID
+            console.log(`⚡ Gerando configuração automática para funil: ${funnelId}`);
+
+            // Detectar categoria baseada no ID
+            let category: 'quiz' | 'sales' | 'lead-magnet' | 'assessment' | 'survey' | 'other' = 'other';
+            if (funnelId.includes('quiz')) category = 'quiz';
+            else if (funnelId.includes('sales') || funnelId.includes('venda')) category = 'sales';
+            else if (funnelId.includes('lead') || funnelId.includes('magnet')) category = 'lead-magnet';
+            else if (funnelId.includes('assessment') || funnelId.includes('avaliacao')) category = 'assessment';
+            else if (funnelId.includes('survey') || funnelId.includes('pesquisa')) category = 'survey';
+
+            // Gerar nome friendy baseado no ID
+            const friendlyName = funnelId
+                .replace(/[-_]/g, ' ')
+                .replace(/\b\w/g, l => l.toUpperCase());
+
+            // Gerar configuração automática
+            config = FunnelConfigGenerator.generateQuickConfig(
+                funnelId,
+                friendlyName,
+                category
+            );
+
+            // Armazenar no registry para próximas consultas
+            FUNNEL_CONFIGS_REGISTRY[funnelId] = config;
+
+            console.log(`✅ Configuração gerada e armazenada para: ${funnelId}`);
+        }
+
+        return config;
     }
 
     /**
