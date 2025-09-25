@@ -314,10 +314,10 @@ const UnifiedEditorCore: React.FC<ModernUnifiedEditorProps> = ({
             // 🎯 DETECÇÃO DINÂMICA: Verificar se existe como template ou tratar como funnel
             // Primeiro assumir que pode ser qualquer coisa
             console.log('✅ Identificador encontrado na URL:', identifier);
-            
+
             // Se contém 'step-' ou 'template' ou 'quiz', provavelmente é template
             const looksLikeTemplate = /^(step-|template|quiz|test)/i.test(identifier);
-            
+
             if (looksLikeTemplate) {
                 console.log('✅ Identificador parece ser template:', identifier);
                 return { templateId: identifier, funnelId: null, type: 'template' };
@@ -328,7 +328,7 @@ const UnifiedEditorCore: React.FC<ModernUnifiedEditorProps> = ({
         }
 
         console.log('⚠️ Usando props: funnelId =', funnelId, 'templateId =', templateId);
-        
+
         // ⚡ DINÂMICO: Não forçar template específico, deixar o sistema detectar automaticamente
         return {
             funnelId: funnelId || null,

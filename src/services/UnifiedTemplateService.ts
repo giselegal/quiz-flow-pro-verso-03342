@@ -124,7 +124,7 @@ class UnifiedTemplateService {
         try {
             // Importar Supabase dinamicamente para evitar erros de inicialização
             const { supabase } = await import('@/integrations/supabase/client');
-            
+
             if (!supabase) {
                 console.warn('Supabase não disponível, pulando busca no banco');
                 return null;
@@ -146,7 +146,7 @@ class UnifiedTemplateService {
                 // Converter dados do banco para formato do template
                 // Usar settings para extrair steps e blocks se estiverem no JSON
                 const settings = data.settings as any || {};
-                
+
                 return {
                     id: data.id,
                     name: data.name || 'Template Dinâmico',

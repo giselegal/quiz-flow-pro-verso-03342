@@ -110,14 +110,14 @@ const generateWithPureBuilder = async (funnelId: string, templateInfo: any): Pro
 
         // 🛡️ VALIDAÇÃO DE TEMPLATE SEGURA - Templates disponíveis no UnifiedTemplateService
         const validTemplates = [
-            'product-quiz', 
-            'lead-qualification', 
-            'customer-satisfaction', 
+            'product-quiz',
+            'lead-qualification',
+            'customer-satisfaction',
             'quiz21StepsComplete', // ⚡ Template principal com 21 etapas
-            'com-que-roupa-eu-vou', 
-            'quiz-cores-perfeitas', 
+            'com-que-roupa-eu-vou',
+            'quiz-cores-perfeitas',
             'quiz-style-express',
-            'step-1', 
+            'step-1',
             'step-2'
         ];
         const safeTemplate = validTemplates.includes(templateName) ? templateName : 'quiz21StepsComplete'; // ⚡ Fallback para template completo
@@ -284,7 +284,7 @@ export const PureBuilderProvider: React.FC<{
         useEffect(() => {
             if (!isInitialized.current) {
                 isInitialized.current = true;
-                
+
                 console.log('🏗️ Initializing PureBuilderProvider with Builder System...', {
                     providedFunnelId: funnelId
                 });
