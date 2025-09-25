@@ -18,7 +18,7 @@ import { Block } from '@/types/editor';
 import EditorCanvas from './EditorCanvas';
 import StepSidebar from '@/components/editor/sidebars/StepSidebar';
 import ComponentsSidebar from '@/components/editor/sidebars/ComponentsSidebar';
-import RegistryPropertiesPanel from '@/components/universal/RegistryPropertiesPanel';
+// import RegistryPropertiesPanel from '@/components/universal/RegistryPropertiesPanel'; // ❌ Removido - API Panel fixo
 import APIPropertiesPanel from '@/components/editor/properties/APIPropertiesPanel';
 
 // 🚀 PREMIUM: Funcionalidades do ModernUnifiedEditor
@@ -417,7 +417,7 @@ const HybridModularEditorPro: React.FC<HybridModularEditorProProps> = ({
         showStatusBar: true
     });
 
-    const [useAPIPanel, setUseAPIPanel] = useState(true); // ✅ API Panel por padrão
+    const [useAPIPanel] = useState(true); // 🔥 API Panel FIXO - Sempre ativo
     const [isBlankCanvas, setIsBlankCanvas] = useState(false); // 🎨 Canvas em branco
 
     // 📊 Estados computados do ModularEditorPro
@@ -647,12 +647,12 @@ const HybridModularEditorPro: React.FC<HybridModularEditorProProps> = ({
                     label="Propriedades"
                 />
 
-                {/* ⚙️ COLUNA 4: PROPRIEDADES - APIPropertiesPanel garantido */}
+                {/* ⚙️ COLUNA 4: PROPRIEDADES - APIPropertiesPanel SEMPRE ATIVO */}
                 <aside
                     className="bg-card border-l border-border flex-shrink-0 overflow-hidden"
                     style={{ width: `${columnWidths.properties}px` }}
                 >
-                    {useAPIPanel && selectedBlock ? (
+                    {selectedBlock ? (
                         <APIPropertiesPanel
                             blockId={selectedBlock.id}
                             blockType={selectedBlock.type}
@@ -667,34 +667,22 @@ const HybridModularEditorPro: React.FC<HybridModularEditorProProps> = ({
                             onClose={() => context.setSelectedBlockId(null)}
                             onDelete={() => handleDeleteBlock(selectedBlock.id)}
                         />
-                    ) : useAPIPanel && !selectedBlock ? (
+                    ) : (
                         <div className="p-4 text-center text-muted-foreground">
                             <div className="space-y-3">
                                 <Brain className="w-8 h-8 mx-auto text-primary" />
                                 <p>Selecione um componente</p>
-                                <p className="text-xs">API Panel com dados reais ativo</p>
+                                <p className="text-xs">🚀 API Panel ATIVO - Dados Reais</p>
+                                <p className="text-xs text-green-600 font-mono">useAPIPanel = true (fixo)</p>
                             </div>
                         </div>
-                    ) : (
-                        <RegistryPropertiesPanel
-                            selectedBlock={selectedBlock}
-                            onUpdate={(blockId: string, updates: Record<string, any>) => {
-                                handleUpdateBlock(blockId, updates);
-                            }}
-                            onClose={() => context.setSelectedBlockId(null)}
-                            onDelete={(blockId: string) => handleDeleteBlock(blockId)}
-                        />
                     )}
 
-                    {/* Toggle API/Registry - Preservado do ModularEditorPro */}
-                    <div className="p-2 border-t border-border">
-                        <button
-                            onClick={() => setUseAPIPanel(!useAPIPanel)}
-                            className="w-full text-xs text-muted-foreground hover:text-foreground transition-colors flex items-center justify-center gap-1"
-                        >
-                            <Brain className="w-3 h-3" />
-                            {useAPIPanel ? 'Usar Registry Panel' : 'Usar API Panel'}
-                        </button>
+                    {/* INFO: API Panel sempre ativo */}
+                    <div className="p-2 border-t border-border bg-green-50">
+                        <div className="text-xs text-green-700 text-center font-medium">
+                            🔥 API Panel FIXO ATIVO - Sem Registry
+                        </div>
                     </div>
                 </aside>
             </div>
