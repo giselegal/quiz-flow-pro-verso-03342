@@ -26,11 +26,11 @@ const Home = lazy(() => import('./pages/Home'));
 const AuthPage = lazy(() => import('./pages/AuthPage'));
 const NotFound = lazy(() => import('./pages/NotFound'));
 
-// 🚀 HYBRID EDITOR PRO - O MELHOR DOS DOIS MUNDOS
-const HybridEditorPro = lazy(() => import('./components/editor/EditorPro/components/HybridEditorPro'));
+// 🚀 MODERN UNIFIED EDITOR - EDITOR OFICIAL (MAIS COMPLETO)
+const ModernUnifiedEditor = lazy(() => import('./pages/editor/ModernUnifiedEditor'));
 
-// 🎯 EDITOR LEGADO (fallback) - Comentado por enquanto
-// const ModernUnifiedEditor = lazy(() => import('./pages/editor/ModernUnifiedEditor'));
+// ❌ HYBRID EDITOR PRO - DESATIVADO (substituído pelo ModernUnifiedEditor)
+// const HybridEditorPro = lazy(() => import('./components/editor/EditorPro/components/HybridEditorPro'));
 
 // 🧪 PÁGINAS DE QUIZ
 const QuizEstiloPessoalPage = lazy(() => import('./pages/QuizEstiloPessoalPage'));
@@ -63,11 +63,12 @@ function App() {
                   </div>
                 </Route>
 
-                {/* 🚀 HYBRID EDITOR PRO - ROTA PRINCIPAL CORRIGIDA */}
+                {/* 🚀 MODERN UNIFIED EDITOR - EDITOR OFICIAL ATIVO */}
                 <Route path="/editor">
                   <EditorErrorBoundary>
-                    <div data-testid="hybrid-editor-main-page">
-                      <HybridEditorPro />
+                    <div data-testid="modern-unified-editor-page">
+                      {/* ✅ ATIVADO: Editor mais completo com IA + CRUD + Templates */}
+                      <ModernUnifiedEditor />
                     </div>
                   </EditorErrorBoundary>
                 </Route>
@@ -81,8 +82,9 @@ function App() {
                 <Route path="/editor/:funnelId">
                   {(params) => (
                     <EditorErrorBoundary>
-                      <div data-testid="hybrid-editor-unified-page">
-                        <HybridEditorPro funnelId={params.funnelId} />
+                      <div data-testid="modern-unified-editor-funnel-page">
+                        {/* ✅ ATIVADO: Editor com suporte a funnelId dinâmico */}
+                        <ModernUnifiedEditor funnelId={params.funnelId} />
                       </div>
                     </EditorErrorBoundary>
                   )}
