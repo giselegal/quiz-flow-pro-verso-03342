@@ -15,7 +15,7 @@ interface TemplatesIASidebarProps {
 export function TemplatesIASidebar({ onSelectTemplate, onClose }: TemplatesIASidebarProps) {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
-  const [templates, setTemplates] = useState<any[]>([]);
+  const [templates, setTemplates] = useState<FunnelTemplate[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   
   const { generateFunnel, isLoading: aiLoading } = useAI();

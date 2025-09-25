@@ -82,7 +82,7 @@ const QuizMultipleChoiceBlock: React.FC<QuizMultipleChoiceBlockProps> = ({
   onPropertyChange,
   ...props
 }) => {
-  const [selectedOptions, setSelectedOptions] = useState<any[]>([]);
+  const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
 
   // Extrair as opções do formato texto para array de objetos
   const parseOptions = (optionsText: string) => {

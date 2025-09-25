@@ -128,7 +128,7 @@ const QuizOptionsGridBlock: React.FC<QuizOptionsGridBlockProps> = ({
   onPropertyChange,
   ...props
 }) => {
-  const [selectedOptions, setSelectedOptions] = useState<any[]>([]);
+  const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
 
   // 🔍 DEBUG DETALHADO - LOG DE TODAS AS PROPRIEDADES
   console.log('🔍 QuizOptionsGridBlock DEBUG COMPLETO:', {

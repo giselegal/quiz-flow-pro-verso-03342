@@ -13,10 +13,12 @@
 import { Suspense, lazy, useEffect } from 'react';
 import { Route, Router, Switch } from 'wouter';
 import { ThemeProvider } from './components/theme-provider';
-import { LoadingFallback } from './components/ui/loading-fallback';
+import { EnhancedLoadingFallback } from './components/ui/enhanced-loading-fallback';
+import { GlobalErrorBoundary } from './components/error/GlobalErrorBoundary';
 import { Toaster } from './components/ui/toaster';
 import { AuthProvider } from './context/AuthContext';
-import { FunnelMasterProvider } from './providers/FunnelMasterProvider';
+import OptimizedProviderStack from './providers/OptimizedProviderStack';
+import { serviceManager } from './services/core/UnifiedServiceManager';
 import { RedirectRoute } from './components/RedirectRoute';
 import { QuizErrorBoundary } from './components/RouteErrorBoundary';
 import { EditorErrorBoundary } from './components/error/EditorErrorBoundary';
@@ -46,15 +48,21 @@ const EditorTemplatesPage = lazy(() => import('./pages/editor-templates/index'))
 
 function App() {
   useEffect(() => {
-    console.log('🚀 App initialized with SPA routing v2.0');
+    console.log('🚀 App initialized with SPA routing v2.0 + OptimizedProviders');
+    
+    // Initialize UnifiedServiceManager
+    serviceManager.healthCheckAll().then(results => {
+      console.log('🔧 Service Health Check:', results);
+    });
   }, []);
 
   return (
-    <ThemeProvider defaultTheme="light">
-      <AuthProvider>
-        <FunnelMasterProvider>
-          <Router>
-            <Suspense fallback={<LoadingFallback />}>
+    <GlobalErrorBoundary showResetButton={true}>
+      <ThemeProvider defaultTheme="light">
+        <AuthProvider>
+          <OptimizedProviderStack enableLazyLoading={true} enableComponentCaching={true} debugMode={false}>
+            <Router>
+              <Suspense fallback={<EnhancedLoadingFallback message="Carregando aplicação..." variant="detailed" />}>
               <Switch>
                 {/* 🏠 PÁGINA INICIAL */}
                 <Route path="/">
@@ -164,9 +172,10 @@ function App() {
             </Suspense>
           </Router>
           <Toaster />
-        </FunnelMasterProvider>
+        </OptimizedProviderStack>
       </AuthProvider>
     </ThemeProvider>
+    </GlobalErrorBoundary>
   );
 }
 

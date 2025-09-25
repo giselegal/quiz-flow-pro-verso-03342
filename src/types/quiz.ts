@@ -1,149 +1,105 @@
-export type StyleType =
-  | 'natural'
-  | 'classico'
-  | 'contemporâneo'
-  | 'elegante'
-  | 'romântico'
-  | 'sexy'
-  | 'dramático'
-  | 'criativo';
-
-export interface Style {
-  id: StyleType;
-  name: string;
-  description: string;
-  imageUrl: string;
-  guideImageUrl: string;
-  colors: {
-    primary: string;
-    secondary: string;
-    accent: string;
-  };
-  keywords: string[];
-}
+/**
+ * 🎯 QUIZ TYPES - Type Safety para Quiz Components
+ */
 
 export interface QuizOption {
   id: string;
-  text: string;
-  style?: StyleType;
-  imageUrl?: string;
+  label: string;
+  value: string;
+  text?: string; // Legacy compatibility
+  isCorrect?: boolean;
   weight?: number;
-  styleCategory?: string;
-  points?: Record<string, number>;
 }
 
-export interface QuizQuestion {
-  id: string;
-  text: string;
-  question?: string; // Make optional for backward compatibility
-  options: QuizOption[];
-  style?: QuizComponentStyle;
-  // Additional properties for editor compatibility
-  title?: string;
-  order?: number;
-  type?: string;
-  multiSelect?: number;
-}
-
-export interface QuizComponentStyle {
-  backgroundColor?: string;
-  textColor?: string;
-  paddingY?: string;
-  paddingX?: string;
-  borderRadius?: string;
-}
-
-export interface QuizAnswer {
+export interface QuizResponse {
   questionId: string;
-  optionId: string;
-  weights?: Record<string, number>;
+  selectedOptions: string[];
+  textResponse?: string;
+  timestamp: string;
 }
 
 export interface UserResponse {
   questionId: string;
-  optionId?: string;
-  selectedOptions?: string[];
-  timestamp?: Date;
+  answer: string | string[];
+  timestamp: string;
 }
 
-// QuizResponse interface for compatibility
-export interface QuizResponse {
-  questionId: string;
-  selectedOptions: string[];
-  timestamp: Date;
+export interface QuizStage {
+  id: string;
+  title: string;
+  description?: string;
+  order: number;
+  isCompleted: boolean;
+  questions: QuizQuestion[];
 }
 
-export interface StyleScore {
-  style: StyleType;
-  points: number;
-  percentage: number;
-  rank: number;
+export interface QuizQuestion {
+  id: string;
+  type: 'multiple-choice' | 'single-choice' | 'text' | 'rating' | 'normal';
+  title: string;
+  text?: string; // Legacy compatibility
+  question?: string; // Legacy compatibility
+  description?: string;
+  required: boolean;
+  options?: QuizOption[];
+  multiSelect?: number;
+  order?: number;
+  validation?: {
+    minLength?: number;
+    maxLength?: number;
+    pattern?: string;
+  };
 }
 
 export interface StyleResult {
-  category: string;
+  id: string;
+  name: string;
+  description: string;
+  type: StyleType;
   score: number;
-  percentage: number;
-  style: string;
-  points?: number;
-  rank?: number;
+  characteristics: string[];
+  recommendations: string[];
+  colors: string[];
+  images: string[];
+  // Legacy compatibility
+  category?: string;
+  percentage?: number;
+  style?: string;
 }
 
-export interface ComputedResult {
-  primaryStyle: StyleResult;
-  secondaryStyles: StyleResult[];
-  scores: Record<string, number>;
-  totalQuestions: number;
-  version: string;
+export interface StyleType {
+  id: string;
+  name: string;
+  category: string;
+  description: string;
 }
 
 export interface QuizResult {
-  primaryStyle: StyleResult;
-  secondaryStyles: StyleResult[];
-  totalQuestions: number;
-  completedAt: Date;
-  scores: Record<string, number>;
-  // Additional properties for compatibility
-  predominantStyle?: string;
-  complementaryStyles?: string[];
-  styleScores?: Record<string, number>;
-  participantName?: string;
-  // ✅ NOVO: Dados personalizados do usuário
-  userData?: {
-    name?: string;
-    completionTime?: Date;
-    strategicAnswersCount?: number;
-  };
+  id: string;
+  userId?: string;
+  responses: Record<string, any>;
+  score: number;
+  maxScore: number;
+  completedAt: string;
+  styleResult?: StyleResult;
+  // Legacy compatibility
+  primaryStyle?: StyleResult;
+  secondaryStyles?: StyleResult[];
+  totalQuestions?: number;
 }
 
 export interface QuizFunnel {
   id: string;
   name: string;
-  description: string;
+  description?: string;
   questions: QuizQuestion[];
-  style?: QuizComponentStyle;
-  settings?: {
-    showProgressBar?: boolean;
-    autoAdvance?: boolean;
-  };
+  results: StyleResult[];
 }
 
-export interface User {
+export interface BlockType {
   id: string;
-  email: string;
-  userName?: string;
-  displayName?: string;
-  avatar?: string;
-  createdAt: Date;
-  updatedAt: Date;
+  name: string;
+  category: string;
+  component: string;
+  props?: Record<string, any>;
 }
-
-// Add BlockType export
-export type BlockType =
-  | 'headline'
-  | 'text'
-  | 'image'
-  | 'button'
-  | 'heading'
-  | 'paragraph'
-  | 'spacer';

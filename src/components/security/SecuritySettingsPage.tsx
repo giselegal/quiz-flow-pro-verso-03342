@@ -4,6 +4,7 @@
  */
 
 import React, { useState, useEffect } from 'react';
+import { BackupRecord } from '@/types/analytics';
 import { Card, CardHeader, CardContent, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
@@ -61,7 +62,7 @@ export const SecuritySettingsPage: React.FC = () => {
     isLoading: backupLoading
   } = useBackupSystem();
 
-  const [recentBackups, setRecentBackups] = useState<any[]>([]);
+  const [recentBackups, setRecentBackups] = useState<BackupRecord[]>([]);
 
   useEffect(() => {
     loadSecuritySettings();

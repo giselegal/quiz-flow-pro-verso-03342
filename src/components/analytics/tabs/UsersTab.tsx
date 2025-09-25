@@ -43,7 +43,7 @@ export const UsersTab: React.FC<UsersTabProps> = ({ analyticsData, loading }) =>
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedUser, setSelectedUser] = useState<string | null>(null);
   const [selectedUserData, setSelectedUserData] = useState<any>(null);
-  const [userEvents, setUserEvents] = useState<any[]>([]);
+  const [userEvents, setUserEvents] = useState<UserEvent[]>([]);
 
   // Prepare users list from analytics data
   const prepareUsersList = useMemo(() => {

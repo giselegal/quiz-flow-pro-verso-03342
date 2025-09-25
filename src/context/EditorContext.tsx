@@ -487,7 +487,7 @@ export const EditorProvider: React.FC<{
   });
 
   // Construir metadados das 21 etapas
-  const [realStages, setRealStages] = useState<any[]>([]);
+  const [realStages, setRealStages] = useState<QuizStage[]>([]);
   useEffect(() => {
     const loadStages = async () => {
       try {
