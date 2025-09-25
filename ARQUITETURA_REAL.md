@@ -1,58 +1,71 @@
-# 🏗️ ARQUITETURA REAL DO SISTEMA (2025)
+# 🏗️ ARQUITETURA OFICIAL DO SISTEMA (2025) - ATUALIZADA
 
-## ✅ ESTRUTURA EM PRODUÇÃO (ÚNICA VERDADE)
+## ✅ ESTRUTURA EM PRODUÇÃO (ATIVA)
 
 ```
 App.tsx (/editor route)
 ├── EditorErrorBoundary
-├── HybridEditorPro (wrapper - 89 linhas)
-    ├── EditorProvider (EditorContext.tsx - 923 linhas) ✅ ATIVO
-    ├── UnifiedDndProvider ✅ ATIVO
-    └── HybridModularEditorPro (700 linhas) ✅ EDITOR PRINCIPAL
-        ├── APIPropertiesPanel ✅ PAINEL ATIVO
-        ├── StepSidebar ✅ SIDEBAR
-        ├── ComponentsSidebar ✅ COMPONENTES
-        └── EditorCanvas ✅ CANVAS
+└── ModernUnifiedEditor (620 linhas) ✅ EDITOR OFICIAL
+    ├── UnifiedCRUDProvider ✅ CRUD COMPLETO
+    ├── FunnelMasterProvider (705 linhas) ✅ PROVIDER PRINCIPAL  
+    ├── PureBuilderProvider (527 linhas) ✅ BUILDER
+    └── EditorProUnified ✅ INTERFACE VISUAL
+        ├── IA Assistant ✅ INTELIGÊNCIA ARTIFICIAL
+        ├── 4 Modos (Visual, Builder, Funnel, Headless) ✅
+        ├── CRUD Operations (Create, Read, Update, Delete) ✅
+        ├── Template Registry ✅ SISTEMA AVANÇADO
+        ├── Testing Integration ✅ TESTES
+        └── Error Boundaries ✅ TRATAMENTO ROBUSTO
 ```
 
-## ❌ CÓDIGO MORTO (PARA REMOÇÃO)
+## ❌ CÓDIGO REMOVIDO (DESABILITADO)
 
-### Providers Obsoletos:
-- ❌ `UnifiedEditorProvider.tsx` (509 linhas) - NUNCA USADO
-- ❌ `EditorProvider.tsx` (1508 linhas) - NÃO USADO (confunde com EditorContext)
-- ❌ `HeadlessEditorProvider.tsx` - SÓ EM TESTES
-- ❌ `PureBuilderProvider.tsx` - NÃO USADO NO EDITOR PRINCIPAL
+### Editores Obsoletos (SUBSTITUÍDOS):
+- ❌ `HybridEditorPro.tsx.disabled` - BÁSICO DEMAIS
+- ❌ `HybridModularEditorPro.tsx.disabled` - INCOMPLETO  
+- ❌ `UnifiedEditorProvider.tsx.disabled` - CÓDIGO MORTO
+- ❌ `EditorProvider.tsx.disabled` - PESADO E REDUNDANTE
 
-### Editores Obsoletos:
-- ❌ `ModernUnifiedEditor.tsx` - COMENTADO NO APP.TSX
-- ❌ `UnifiedEditor.tsx` - NUNCA USADO
-- ❌ `ModularEditorPro.tsx` - SUBSTITUÍDO POR HybridModularEditorPro
+### Stack Atual vs Anterior:
+- ✅ **NOVO**: ModernUnifiedEditor (IA + CRUD + Templates + 4 Modos)
+- ❌ **ANTIGO**: HybridEditorPro (apenas layout visual básico)
 
-### Hooks Conflitantes:
-- ❌ `useUnifiedEditor` (múltiplas versões)
-- ❌ `useHeadlessEditor` - NÃO USADO
-- ❌ `useEditor` legacy - SUBSTITUÍDO
+## 🎯 FUNCIONALIDADES ATIVAS
 
-## 🎯 REGRA DE OURO
+### 🧠 IA Integration:
+- Assistente IA integrado
+- Suporte a múltiplos modos
+- Análise inteligente de templates
 
-**SE VOCÊ QUER EDITAR ALGO NO EDITOR:**
-1. Vá para `HybridModularEditorPro.tsx` (700 linhas)
-2. Este é o ÚNICO editor em produção
-3. Ele usa `EditorContext.tsx` como provider
-4. API Panel já está ATIVO e funcionando
+### 🔧 CRUD Completo:
+- Create: Novos funis
+- Read: Carregamento automático  
+- Update: Edição em tempo real
+- Delete: Remoção segura
 
-**NÃO TOQUE EM NADA COM "Unified" NO NOME** - São códigos mortos!
+### 📋 Template System:
+- Registry avançado
+- Conversão automática
+- Templates pré-definidos
 
-## 🧹 LIMPEZA NECESSÁRIA
+### 🎨 Interface:
+- 4 Modos: Visual, Builder, Funnel, Headless
+- Toolbar moderna
+- Status bar informativo
+- Error boundaries
 
-1. Remover UnifiedEditorProvider.tsx
-2. Remover EditorProvider.tsx (o pesado)
-3. Remover ModernUnifiedEditor.tsx
-4. Documentar apenas HybridModularEditorPro como editor oficial
+## 🧹 LIMPEZA REALIZADA
 
-## 📊 MÉTRICAS
+- ✅ ModernUnifiedEditor ATIVADO
+- ❌ HybridEditorPro REMOVIDO
+- ❌ HybridModularEditorPro REMOVIDO  
+- ❌ UnifiedEditorProvider REMOVIDO
+- ❌ EditorProvider pesado REMOVIDO
 
-- ✅ **1 Editor Real**: HybridModularEditorPro (700 linhas)
-- ✅ **1 Provider Real**: EditorProvider do EditorContext (923 linhas)
-- ❌ **20+ Arquivos Mortos**: Para remover
-- ✅ **API Panel**: Funcionando e ativo
+## 📊 MÉTRICAS FINAIS
+
+- ✅ **1 Editor Oficial**: ModernUnifiedEditor (620 linhas + stack)
+- ✅ **Providers Ativos**: UnifiedCRUD + FunnelMaster + PureBuilder
+- ❌ **Arquivos Removidos**: 5 componentes obsoletos
+- ✅ **Funcionalidades**: IA + CRUD + Templates + 4 Modos
+- ✅ **Performance**: Stack otimizado e unificado
