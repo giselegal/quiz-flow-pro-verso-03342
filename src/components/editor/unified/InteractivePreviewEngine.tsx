@@ -175,7 +175,7 @@ export const InteractivePreviewEngine: React.FC<InteractivePreviewEngineProps> =
     
     return {
       ...styleCalculationEngine,
-      calculateFinalResult: async (selections: Record<string, string[]>, userName: string) => {
+      calculateFinalResult: async (_selections: Record<string, string[]>, userName: string) => {
         // Mock result para preview
         return {
           primaryStyle: {
@@ -274,7 +274,7 @@ export const InteractivePreviewEngine: React.FC<InteractivePreviewEngineProps> =
       ...prev,
       selections: {
         ...prev.selections,
-        [`step-${step}`]: mockOptions.slice(0, Math.floor(Math.random() * 3) + 1)
+        [`step-${step}`]: ['option1', 'option2'].slice(0, Math.floor(Math.random() * 2) + 1)
       },
       validationStates: {
         ...prev.validationStates,
