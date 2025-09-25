@@ -5,10 +5,10 @@
  */
 
 import React from 'react';
-import UniversalVisualEditor from './UniversalVisualEditor';
+import ModernUnifiedEditor from './ModernUnifiedEditor';
 
 export const EditorRoutes: React.FC = () => {
-    return <UniversalVisualEditor />;
+    return <ModernUnifiedEditor />;
 };
 
 export default EditorRoutes;

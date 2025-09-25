@@ -1,3 +1,4 @@
+
 /**
  * 🎯 MODERN UNIFIED EDITOR - EDITOR DEFINITIVO
  * 
@@ -45,6 +46,10 @@ import { loadFullTemplate, convertTemplateToEditorFormat } from '@/templates/reg
 
 // 🧪 Development Testing
 import testCRUDOperations from '@/utils/testCRUDOperations';
+
+// 🔍 FUNNEL TYPE DETECTION
+import FunnelTypeDetector from '@/components/editor/FunnelTypeDetector';
+import type { FunnelType } from '@/services/FunnelTypesRegistry';
 
 // ===============================
 // 🎯 TYPES & INTERFACES
@@ -279,32 +284,32 @@ const ModernToolbar: React.FC<ModernToolbarProps> = ({
                     Preview
                 </Button>
 
-                    <Button
-                        variant={editorState.realExperienceMode ? "default" : "outline"}
-                        size="sm"
-                        onClick={() => {
-                            console.log('🎯 [DEBUG] Clicou no botão Real. Estado atual:', editorState.realExperienceMode);
-                            const newState = !editorState.realExperienceMode;
-                            console.log('🎯 [DEBUG] Novo estado:', newState);
-                            onStateChange({ realExperienceMode: newState });
-                        }}
-                        disabled={isOperating}
-                        title="Ativar experiência real com QuizOrchestrator"
-                        className={editorState.realExperienceMode ? "bg-green-600 hover:bg-green-700" : ""}
-                    >
-                        <Target className="w-4 h-4 mr-2" />
-                        {editorState.realExperienceMode ? "Real ✓" : "Real"}
-                    </Button>
+                <Button
+                    variant={editorState.realExperienceMode ? "default" : "outline"}
+                    size="sm"
+                    onClick={() => {
+                        console.log('🎯 [DEBUG] Clicou no botão Real. Estado atual:', editorState.realExperienceMode);
+                        const newState = !editorState.realExperienceMode;
+                        console.log('🎯 [DEBUG] Novo estado:', newState);
+                        onStateChange({ realExperienceMode: newState });
+                    }}
+                    disabled={isOperating}
+                    title="Ativar experiência real com QuizOrchestrator"
+                    className={editorState.realExperienceMode ? "bg-green-600 hover:bg-green-700" : ""}
+                >
+                    <Target className="w-4 h-4 mr-2" />
+                    {editorState.realExperienceMode ? "Real ✓" : "Real"}
+                </Button>
 
-                    <Button
-                        variant="default"
-                        size="sm"
-                        onClick={handleSave}
-                        disabled={isOperating || !onSave}
-                    >
-                        <CheckCircle className="w-4 h-4 mr-2" />
-                        {isOperating ? 'Salvando...' : 'Salvar'}
-                    </Button>
+                <Button
+                    variant="default"
+                    size="sm"
+                    onClick={handleSave}
+                    disabled={isOperating || !onSave}
+                >
+                    <CheckCircle className="w-4 h-4 mr-2" />
+                    {isOperating ? 'Salvando...' : 'Salvar'}
+                </Button>
             </div>
         </div>
     );
@@ -372,6 +377,19 @@ const UnifiedEditorCore: React.FC<ModernUnifiedEditorProps> = ({
         previewMode: false,
         realExperienceMode: false // Inicialmente desabilitado
     });
+
+    // 🎯 FUNNEL TYPE DETECTION STATE
+    const [detectedFunnelType, setDetectedFunnelType] = useState<FunnelType | null>(null);
+    const [funnelData, setFunnelData] = useState<any>(null);
+    const [isDetectingType, setIsDetectingType] = useState(false);
+
+    // 🎯 EFFECT: Iniciar detecção quando funnel for carregado
+    useEffect(() => {
+        if (extractedInfo.funnelId && !detectedFunnelType) {
+            console.log('🔍 Iniciando detecção de tipo para funnel:', extractedInfo.funnelId);
+            setIsDetectingType(true);
+        }
+    }, [extractedInfo.funnelId, detectedFunnelType]);
 
     // 🎯 TEMPLATE LOADING EFFECT
     useEffect(() => {
@@ -536,6 +554,57 @@ const UnifiedEditorCore: React.FC<ModernUnifiedEditorProps> = ({
                     enableCache={true}
                 >
                     <PureBuilderProvider funnelId={extractedInfo.funnelId || undefined}>
+                        {/* 🔍 FUNNEL TYPE DETECTION - apenas para funnels específicos */}
+                        {extractedInfo.funnelId && (
+                            <div className="p-4 border-b bg-background">
+                                <FunnelTypeDetector
+                                    funnelId={extractedInfo.funnelId}
+                                    onFunnelLoaded={(data) => {
+                                        console.log('✅ Funnel data loaded:', data);
+                                        setFunnelData(data);
+                                        setIsDetectingType(false);
+                                    }}
+                                    onTypeDetected={(type) => {
+                                        console.log('✅ Funnel type detected:', type);
+                                        setDetectedFunnelType(type);
+
+                                        // Ajustar configurações do editor baseado no tipo
+                                        if (type.editorConfig.showProgressBar) {
+                                            console.log('🔧 Habilitando barra de progresso');
+                                        }
+                                        if (type.supportsAI) {
+                                            console.log('🤖 Suporte a IA detectado');
+                                        }
+                                    }}
+                                />
+                                {/* Exibir informações do funnel detectado */}
+                                {detectedFunnelType && (
+                                    <div className="mt-2 p-2 bg-primary/5 rounded-md">
+                                        <div className="flex items-center gap-2">
+                                            <Badge variant="outline">{detectedFunnelType.category}</Badge>
+                                            <span className="text-sm font-medium">{detectedFunnelType.name}</span>
+                                            {detectedFunnelType.supportsAI && (
+                                                <Brain className="w-4 h-4 text-primary" />
+                                            )}
+                                        </div>
+                                        {detectedFunnelType.description && (
+                                            <p className="text-xs text-muted-foreground mt-1">
+                                                {detectedFunnelType.description}
+                                            </p>
+                                        )}
+                                    </div>
+                                )}
+                                {isDetectingType && (
+                                    <div className="mt-2 p-2 bg-muted/20 rounded-md">
+                                        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                                            <div className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
+                                            <span>Detectando tipo de funil...</span>
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+                        )}
+
                         <Suspense fallback={
                             <Suspense fallback={<LoadingSpinner message="Carregando componentes..." />}>
                                 <TemplateLoadingSkeleton />
@@ -588,6 +657,22 @@ const UnifiedEditorCore: React.FC<ModernUnifiedEditorProps> = ({
                             <Separator orientation="vertical" className="h-3" />
                             <Brain className="w-3 h-3" />
                             <span>IA Assistente ativo</span>
+                        </>
+                    )}
+
+                    {detectedFunnelType && (
+                        <>
+                            <Separator orientation="vertical" className="h-3" />
+                            <Target className="w-3 h-3" />
+                            <span>Tipo: {detectedFunnelType.name}</span>
+                        </>
+                    )}
+
+                    {funnelData && (
+                        <>
+                            <Separator orientation="vertical" className="h-3" />
+                            <CheckCircle className="w-3 h-3" />
+                            <span>Dados carregados</span>
                         </>
                     )}
                 </div>

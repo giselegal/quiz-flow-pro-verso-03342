@@ -62,6 +62,12 @@
   to = "/index.html"
   status = 200
 
+# Funnel Types Navigator
+[[redirects]]
+  from = "/funnel-types*"
+  to = "/index.html"
+  status = 200
+
 # Quiz e Resultado
 [[redirects]]
   from = "/quiz-estilo*"
