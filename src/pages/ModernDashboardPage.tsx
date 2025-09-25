@@ -21,7 +21,7 @@ import { LoadingSpinner } from '@/components/ui/loading-spinner';
 
 // Páginas do Dashboard - ESPECÍFICAS
 const AdminDashboard = lazy(() => import('./dashboard/AdminDashboard'));
-const OverviewPage = lazy(() => import('./dashboard/OverviewPage'));
+// const OverviewPage = lazy(() => import('./dashboard/OverviewPage'));
 const AnalyticsPage = lazy(() => import('./dashboard/AnalyticsPage'));
 const RealTimePage = lazy(() => import('./dashboard/RealTimePage'));
 const ParticipantsPage = lazy(() => import('./dashboard/ParticipantsPage'));

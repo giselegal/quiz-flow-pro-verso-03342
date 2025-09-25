@@ -74,20 +74,16 @@ const FunnelDataDisplay: React.FC<{
             const currentStepBlocks = stepState.stepBlocks[currentStepKey] || [];
             const currentBlock = currentStepBlocks.find((b: any) => b.id === blockId);
 
-            // Buscar informações adicionais do template (genérico)
-            const templateInfo = funnelsContext?.getTemplateBlocks?.(
-                funnelsContext.currentFunnelId || 'default-template',
-                currentStepKey
-            );
+            // TODO: Implement template blocks loading
 
             return {
-                funnelId: funnelsContext?.currentFunnelId || 'local-funnel',
+                funnelId: funnelsContext?.currentFunnel?.id || 'local-funnel',
                 currentStep: stepState.currentStep,
                 totalSteps: Object.keys(stepState.stepBlocks).length || 21, // Dinâmico baseado nos dados reais
                 blockIndex: currentStepBlocks.findIndex((b: any) => b.id === blockId) + 1,
                 totalBlocks: currentStepBlocks.length,
                 blockData: currentBlock,
-                templateBlocksCount: templateInfo?.length || 0,
+                templateBlocksCount: 0,
                 hasValidation: !!stepState.stepValidation[stepState.currentStep],
                 lastModified: new Date().toLocaleString('pt-BR'),
                 isSupabaseEnabled: false,
