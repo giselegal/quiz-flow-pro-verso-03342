@@ -7,8 +7,8 @@
 import { cn } from '@/lib/utils';
 import { Block } from '@/types/editor';
 import { StyleResult } from '@/types/quiz';
-import React, { useMemo } from 'react';
-import { SortablePreviewBlockWrapper } from './SortablePreviewBlockWrapper';
+import { useMemo } from 'react';
+import SortablePreviewBlockWrapper from './SortablePreviewBlockWrapper';
 import { ProductionPreviewEngine, type ProductionPreviewEngineProps } from './ProductionPreviewEngine';
 
 // 🏗️ TIPOS

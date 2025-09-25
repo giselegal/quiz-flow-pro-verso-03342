@@ -25,12 +25,12 @@ import { Loader2, Save, Check, AlertTriangle, Settings, Eye, Copy } from 'lucide
 
 import { FunnelConfigGenerator } from '@/services/FunnelConfigGenerator';
 import { FunnelConfigPersistenceService } from '@/services/FunnelConfigPersistenceService';
-import type { 
-    FunnelConfig, 
-    FunnelSEOOverrides, 
-    FunnelTrackingConfig, 
-    FunnelUTMConfig, 
-    FunnelWebhooksConfig 
+import type {
+    FunnelConfig,
+    FunnelSEOOverrides,
+    FunnelTrackingConfig,
+    FunnelUTMConfig,
+    FunnelWebhooksConfig
 } from '@/templates/funnel-configs/quiz21StepsComplete.config';
 
 // ============================================================================
@@ -41,12 +41,6 @@ interface FunnelTechnicalConfigPanelProps {
     funnelId: string;
     onConfigChange?: (config: FunnelConfig) => void;
     className?: string;
-}
-
-interface ConfigValidation {
-    isValid: boolean;
-    errors: string[];
-    warnings: string[];
 }
 
 // ============================================================================
@@ -61,7 +55,7 @@ export const FunnelTechnicalConfigPanel: React.FC<FunnelTechnicalConfigPanelProp
     // ============================================================================
     // ESTADOS
     // ============================================================================
-    
+
     const [config, setConfig] = useState<FunnelConfig | null>(null);
     const [originalConfig, setOriginalConfig] = useState<FunnelConfig | null>(null);
     const [loading, setLoading] = useState(true);
@@ -69,7 +63,7 @@ export const FunnelTechnicalConfigPanel: React.FC<FunnelTechnicalConfigPanelProp
     const [hasChanges, setHasChanges] = useState(false);
     const [previewMode, setPreviewMode] = useState(false);
     const [activeTab, setActiveTab] = useState('seo');
-    
+
     const persistenceService = FunnelConfigPersistenceService.getInstance();
 
     // ============================================================================
@@ -80,31 +74,31 @@ export const FunnelTechnicalConfigPanel: React.FC<FunnelTechnicalConfigPanelProp
         setLoading(true);
         try {
             console.log(`📂 Carregando configuração para funil: ${funnelId}`);
-            
+
             // Tentar carregar configuração existente
             let loadedConfig = await persistenceService.loadConfig(funnelId);
-            
+
             if (!loadedConfig) {
                 // Se não existe, gerar uma nova usando o template
                 console.log(`🏭 Gerando nova configuração para funil: ${funnelId}`);
-                const generatedConfig = FunnelConfigGenerator.generateConfig(funnelId);
-                
+                const generatedConfig = FunnelConfigGenerator.generateQuickConfig(funnelId, `Funil ${funnelId}`, 'quiz');
+
                 // Salvar a configuração gerada
                 loadedConfig = await persistenceService.saveConfig(funnelId, generatedConfig, {
                     source: 'generated',
                     validate: false // Não validar config gerada automaticamente
                 });
             }
-            
+
             setConfig(loadedConfig.config);
             setOriginalConfig(loadedConfig.config);
             console.log('✅ Configuração carregada com sucesso');
-            
+
         } catch (error) {
             console.error('❌ Erro ao carregar configuração:', error);
-            
+
             // Fallback: gerar configuração básica
-            const fallbackConfig = FunnelConfigGenerator.generateConfig(funnelId);
+            const fallbackConfig = FunnelConfigGenerator.generateQuickConfig(funnelId, `Funil ${funnelId}`, 'quiz');
             setConfig(fallbackConfig);
             setOriginalConfig(fallbackConfig);
         } finally {
@@ -134,7 +128,7 @@ export const FunnelTechnicalConfigPanel: React.FC<FunnelTechnicalConfigPanelProp
 
     const updateSEO = useCallback((seoUpdates: Partial<FunnelSEOOverrides>) => {
         if (!config) return;
-        
+
         setConfig(prev => ({
             ...prev!,
             seo: {
@@ -146,7 +140,7 @@ export const FunnelTechnicalConfigPanel: React.FC<FunnelTechnicalConfigPanelProp
 
     const updateTracking = useCallback((trackingUpdates: Partial<FunnelTrackingConfig>) => {
         if (!config) return;
-        
+
         setConfig(prev => ({
             ...prev!,
             tracking: {
@@ -158,7 +152,7 @@ export const FunnelTechnicalConfigPanel: React.FC<FunnelTechnicalConfigPanelProp
 
     const updateUTM = useCallback((utmUpdates: Partial<FunnelUTMConfig>) => {
         if (!config) return;
-        
+
         setConfig(prev => ({
             ...prev!,
             utm: {
@@ -170,14 +164,15 @@ export const FunnelTechnicalConfigPanel: React.FC<FunnelTechnicalConfigPanelProp
 
     const updateWebhooks = useCallback((webhooksUpdates: Partial<FunnelWebhooksConfig>) => {
         if (!config) return;
-        
-        setConfig(prev => ({
-            ...prev!,
+
+        setConfig(prev => prev ? ({
+            ...prev,
             webhooks: {
-                ...prev!.webhooks,
-                ...webhooksUpdates
+                ...prev.webhooks,
+                ...webhooksUpdates,
+                enabled: webhooksUpdates.enabled ?? prev.webhooks?.enabled ?? false
             }
-        }));
+        }) : prev);
     }, [config]);
 
     // ============================================================================
@@ -207,7 +202,7 @@ export const FunnelTechnicalConfigPanel: React.FC<FunnelTechnicalConfigPanelProp
             // Atualizar estado local
             setOriginalConfig(config);
             setHasChanges(false);
-            
+
             // Disparar callback para componente pai
             onConfigChange?.(config);
 
@@ -268,14 +263,14 @@ export const FunnelTechnicalConfigPanel: React.FC<FunnelTechnicalConfigPanelProp
                             Configure SEO, tracking, UTM, webhooks e outras opções técnicas do funil
                         </CardDescription>
                     </div>
-                    
+
                     <div className="flex items-center gap-2">
                         {hasChanges && (
                             <Badge variant="secondary">
                                 Alterações pendentes
                             </Badge>
                         )}
-                        
+
                         <Button
                             variant="outline"
                             size="sm"
@@ -284,7 +279,7 @@ export const FunnelTechnicalConfigPanel: React.FC<FunnelTechnicalConfigPanelProp
                             <Eye className="h-4 w-4 mr-1" />
                             {previewMode ? 'Editar' : 'Preview'}
                         </Button>
-                        
+
                         <Button
                             onClick={saveConfiguration}
                             disabled={saving || !hasChanges}
@@ -357,7 +352,7 @@ export const FunnelTechnicalConfigPanel: React.FC<FunnelTechnicalConfigPanelProp
                                 <Input
                                     id="seo-keywords"
                                     value={config.seo?.keywords?.join(', ') || ''}
-                                    onChange={(e) => updateSEO({ 
+                                    onChange={(e) => updateSEO({
                                         keywords: e.target.value.split(',').map(k => k.trim()).filter(Boolean)
                                     })}
                                     placeholder="palavra1, palavra2, palavra3"

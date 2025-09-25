@@ -7,7 +7,7 @@
  * Execute este script no console do navegador ou importe onde necessário.
  */
 
-import { initializePhase5Data, getPhase5Data } from './phase5DataSimulator';
+import { initializePhase5Data, getPhase5Data } from '../services/phase5DataSimulator';
 
 export function initPhase5() {
     try {
@@ -34,10 +34,10 @@ export function initPhase5() {
 
         console.log('🎉 Fase 5 inicializada com sucesso!');
         console.log('📈 Métricas disponíveis:');
-        console.log(`   • ${data.sessions?.filter(s => s.status === 'completed').length || 0} sessões completas`);
-        console.log(`   • ${data.sessions?.filter(s => s.status === 'active').length || 0} sessões ativas`);
-        console.log(`   • ${Math.round(((data.sessions?.filter(s => s.status === 'completed').length || 0) / (data.sessions?.length || 1)) * 100)}% taxa de conclusão`);
-        console.log(`   • ${data.results?.length || 0} resultados de quiz`);
+        console.log(`   • ${(data as any).sessions?.filter((s: any) => s.status === 'completed').length || 0} sessões completas`);
+        console.log(`   • ${(data as any).sessions?.filter((s: any) => s.status === 'active').length || 0} sessões ativas`);
+        console.log(`   • ${Math.round((((data as any).sessions?.filter((s: any) => s.status === 'completed').length || 0) / ((data as any).sessions?.length || 1)) * 100)}% taxa de conclusão`);
+        console.log(`   • ${(data as any).results?.length || 0} resultados de quiz`);
 
         console.log('✨ Dashboard agora tem dados reais para exibir!');
         return data;

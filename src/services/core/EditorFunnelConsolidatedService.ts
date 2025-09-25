@@ -12,7 +12,7 @@
  * ✅ Integração com SupabaseApiClient
  */
 
-import { supabaseApiClient } from './core/SupabaseApiClient';
+import { supabaseApiClient } from './SupabaseApiClient';
 import { unifiedTemplateService } from '@/services/UnifiedTemplateService';
 
 // ============================================================================
@@ -148,29 +148,9 @@ class EditorFunnelConsolidatedService {
                 return consolidatedTemplate;
             }
 
-            // Fallback to Supabase
-            const response = await supabaseApiClient.getTemplates({ limit: 1 });
-            if (response.status === 'success' && response.data && response.data.length > 0) {
-                const supabaseTemplate = response.data.find((t: any) => t.id === templateId);
-                if (supabaseTemplate) {
-                    const consolidatedTemplate: ConsolidatedTemplate = {
-                        id: supabaseTemplate.id,
-                        name: supabaseTemplate.name || templateId,
-                        description: supabaseTemplate.description || '',
-                        blocks: this.convertToConsolidatedBlocks(supabaseTemplate.blocks || []),
-                        metadata: supabaseTemplate.metadata || {},
-                        category: supabaseTemplate.category || 'default',
-                        created_at: supabaseTemplate.created_at,
-                        updated_at: supabaseTemplate.updated_at
-                    };
-
-                    // Cache result
-                    this.setCache(cacheKey, consolidatedTemplate);
-                    return consolidatedTemplate;
-                }
-            }
-
-            console.warn(`❌ Template ${templateId} not found in any source`);
+            // Fallback to Supabase - note: getTemplates method doesn't exist in current SupabaseApiClient
+            // For now, we'll skip this fallback to avoid errors
+            console.warn(`❌ Template ${templateId} not found in UnifiedTemplateService`);
             return null;
 
         } catch (error) {
@@ -221,32 +201,8 @@ class EditorFunnelConsolidatedService {
             }
 
             // Get additional templates from Supabase if needed
-            if (!options?.limit || templates.length < options.limit) {
-                const remainingLimit = options?.limit ? options.limit - templates.length : undefined;
-                const response = await supabaseApiClient.getTemplates({
-                    category: options?.category,
-                    limit: remainingLimit
-                });
-
-                if (response.status === 'success' && response.data) {
-                    for (const supabaseTemplate of response.data) {
-                        // Avoid duplicates
-                        if (!templates.find(t => t.id === supabaseTemplate.id)) {
-                            const consolidatedTemplate: ConsolidatedTemplate = {
-                                id: supabaseTemplate.id,
-                                name: supabaseTemplate.name || supabaseTemplate.id,
-                                description: supabaseTemplate.description || '',
-                                blocks: this.convertToConsolidatedBlocks(supabaseTemplate.blocks || []),
-                                metadata: supabaseTemplate.metadata || {},
-                                category: supabaseTemplate.category || 'default',
-                                created_at: supabaseTemplate.created_at,
-                                updated_at: supabaseTemplate.updated_at
-                            };
-                            templates.push(consolidatedTemplate);
-                        }
-                    }
-                }
-            }
+            // Note: SupabaseApiClient doesn't have getTemplates method currently
+            // Skipping Supabase fallback to avoid errors
 
             // Cache results
             this.setCache(cacheKey, templates);
@@ -285,12 +241,12 @@ class EditorFunnelConsolidatedService {
                 id: supabaseFunnel.id,
                 name: supabaseFunnel.name || funnelId,
                 description: supabaseFunnel.description || '',
-                status: (supabaseFunnel.status as any) || 'draft',
-                template_id: supabaseFunnel.template_id,
-                configuration: supabaseFunnel.configuration || {},
+                status: supabaseFunnel.is_published ? 'active' : 'draft',
+                template_id: undefined, // No template_id field in current schema
+                configuration: supabaseFunnel.settings as any || {},
                 steps: await this.loadFunnelSteps(funnelId),
-                created_at: supabaseFunnel.created_at,
-                updated_at: supabaseFunnel.updated_at
+                created_at: supabaseFunnel.created_at || new Date().toISOString(),
+                updated_at: supabaseFunnel.updated_at || new Date().toISOString()
             };
 
             // Cache result
@@ -333,12 +289,12 @@ class EditorFunnelConsolidatedService {
                     id: supabaseFunnel.id,
                     name: supabaseFunnel.name || supabaseFunnel.id,
                     description: supabaseFunnel.description || '',
-                    status: (supabaseFunnel.status as any) || 'draft',
-                    template_id: supabaseFunnel.template_id,
-                    configuration: supabaseFunnel.configuration || {},
+                    status: supabaseFunnel.is_published ? 'active' : 'draft',
+                    template_id: undefined, // No template_id field in current schema
+                    configuration: supabaseFunnel.settings as any || {},
                     steps: [], // Load on demand
-                    created_at: supabaseFunnel.created_at,
-                    updated_at: supabaseFunnel.updated_at
+                    created_at: supabaseFunnel.created_at || new Date().toISOString(),
+                    updated_at: supabaseFunnel.updated_at || new Date().toISOString()
                 };
                 funnels.push(consolidatedFunnel);
             }
@@ -367,11 +323,11 @@ class EditorFunnelConsolidatedService {
             const { data, error } = await supabaseClient
                 .from('funnels')
                 .insert({
+                    id: `funnel_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
                     name: funnelData.name,
                     description: funnelData.description || '',
-                    template_id: funnelData.template_id,
-                    configuration: funnelData.configuration || {},
-                    status: 'draft'
+                    settings: funnelData.configuration || {},
+                    is_published: false
                 })
                 .select()
                 .single();
@@ -387,13 +343,13 @@ class EditorFunnelConsolidatedService {
             const consolidatedFunnel: ConsolidatedFunnel = {
                 id: data.id,
                 name: data.name,
-                description: data.description,
-                status: data.status as any,
-                template_id: data.template_id,
-                configuration: data.configuration,
+                description: data.description || '',
+                status: data.is_published ? 'active' : 'draft',
+                template_id: undefined, // No template_id field in current schema
+                configuration: data.settings as any || {},
                 steps: [],
-                created_at: data.created_at,
-                updated_at: data.updated_at
+                created_at: data.created_at || new Date().toISOString(),
+                updated_at: data.updated_at || new Date().toISOString()
             };
 
             console.log(`✅ Created funnel: ${data.id}`);
@@ -464,7 +420,7 @@ class EditorFunnelConsolidatedService {
         }));
     }
 
-    private async loadFunnelSteps(funnelId: string): Promise<ConsolidatedFunnelStep[]> {
+    private async loadFunnelSteps(_funnelId: string): Promise<ConsolidatedFunnelStep[]> {
         try {
             // This is a placeholder - in a real implementation,
             // you would load steps from database or other sources

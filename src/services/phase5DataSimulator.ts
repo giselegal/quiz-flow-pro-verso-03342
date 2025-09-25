@@ -11,8 +11,95 @@
  * 3. Garante que o dashboard funcione completamente
  */
 
+// Definindo interfaces para TypeScript strict mode
+interface FunnelSettings {
+    theme: string;
+    collectEmail: boolean;
+}
+
+interface SimulatedFunnel {
+    id: string;
+    name: string;
+    description: string;
+    is_published: boolean;
+    created_at: string;
+    settings: FunnelSettings;
+}
+
+interface SimulatedUser {
+    id: string;
+    name: string;
+    email: string | null;
+    created_at: string;
+}
+
+interface SessionMetadata {
+    device: string;
+    browser: string;
+    referrer: string;
+}
+
+interface SimulatedSession {
+    id: string;
+    funnel_id: string;
+    quiz_user_id: string;
+    status: string;
+    started_at: string;
+    completed_at: string | null;
+    last_activity: string;
+    current_step: number;
+    total_steps: number;
+    score: number | null;
+    max_score: number;
+    metadata: SessionMetadata;
+}
+
+interface SimulatedResponse {
+    id: string;
+    session_id: string;
+    step_number: number;
+    question_id: string;
+    question_text: string;
+    answer_text: string;
+    answer_value: string;
+    score_earned: number;
+    response_time_ms: number;
+    responded_at: string;
+}
+
+interface ResultData {
+    primary_style: string;
+    secondary_styles: string[];
+    confidence_score: number;
+    characteristics: string[];
+}
+
+interface NextSteps {
+    actions: string[];
+}
+
+interface SimulatedResult {
+    id: string;
+    session_id: string;
+    result_type: string;
+    result_title: string;
+    result_description: string;
+    recommendation: string;
+    result_data: ResultData;
+    next_steps: NextSteps;
+    created_at: string | null;
+}
+
+interface SimulatedDataStructure {
+    funnels: SimulatedFunnel[];
+    users: SimulatedUser[];
+    sessions: SimulatedSession[] | null;
+    responses: SimulatedResponse[] | null;
+    results: SimulatedResult[] | null;
+}
+
 // Dados simulados mais realistas
-export const simulatedData = {
+export const simulatedData: SimulatedDataStructure = {
     funnels: [
         {
             id: 'funnel-estilo-pessoal-1',
@@ -74,11 +161,11 @@ export const simulatedData = {
 };
 
 // Generate dynamic sessions based on users and funnels
-export function generateSessions() {
+export function generateSessions(): SimulatedSession[] {
     const statuses = ['completed', 'active', 'abandoned', 'completed', 'completed']; // More completed
-    const sessions = [];
+    const sessions: SimulatedSession[] = [];
 
-    simulatedData.users.forEach((user, userIndex) => {
+    simulatedData.users.forEach((user) => {
         const sessionCount = Math.random() > 0.7 ? (Math.random() > 0.5 ? 3 : 2) : 1;
 
         for (let i = 0; i < sessionCount; i++) {
@@ -118,7 +205,7 @@ export function generateSessions() {
 }
 
 // Generate responses for sessions
-export function generateResponses() {
+export function generateResponses(): SimulatedResponse[] {
     if (!simulatedData.sessions) generateSessions();
 
     const questions = [
@@ -134,45 +221,47 @@ export function generateResponses() {
         'Que tipo de viagem prefere?'
     ];
 
-    const answers = {
+    const answers: { [key: string]: string[] } = {
         'Qual é seu estilo preferido?': ['Clássico', 'Moderno', 'Boho', 'Minimalista'],
         'Como você se veste para trabalhar?': ['Formal', 'Casual', 'Smart Casual', 'Criativo'],
         'Qual cor mais combina com você?': ['Azul', 'Preto', 'Branco', 'Vermelho', 'Verde']
     };
 
-    const responses = [];
+    const responses: SimulatedResponse[] = [];
 
-    simulatedData.sessions.forEach(session => {
-        if (session.status === 'abandoned' && session.current_step <= 2) return;
+    if (simulatedData.sessions) {
+        simulatedData.sessions.forEach((session: SimulatedSession) => {
+            if (session.status === 'abandoned' && session.current_step <= 2) return;
 
-        for (let i = 0; i < session.current_step; i++) {
-            const questionText = questions[i % questions.length];
-            const possibleAnswers = answers[questionText] || ['Sim', 'Não', 'Talvez', 'Não sei'];
-            const answer = possibleAnswers[Math.floor(Math.random() * possibleAnswers.length)];
+            for (let i = 0; i < session.current_step; i++) {
+                const questionText = questions[i % questions.length];
+                const possibleAnswers = answers[questionText] || ['Sim', 'Não', 'Talvez', 'Não sei'];
+                const answer = possibleAnswers[Math.floor(Math.random() * possibleAnswers.length)];
 
-            responses.push({
-                id: `response-${session.id}-${i + 1}`,
-                session_id: session.id,
-                step_number: i + 1,
-                question_id: `question-${i + 1}`,
-                question_text: questionText,
-                answer_text: answer,
-                answer_value: answer.toLowerCase().replace(/\s+/g, '_'),
-                score_earned: Math.floor(Math.random() * 10) + 1,
-                response_time_ms: Math.floor(Math.random() * 15000) + 2000,
-                responded_at: new Date(
-                    new Date(session.started_at).getTime() + i * (Math.random() * 60000 + 30000)
-                ).toISOString()
-            });
-        }
-    });
+                responses.push({
+                    id: `response-${session.id}-${i + 1}`,
+                    session_id: session.id,
+                    step_number: i + 1,
+                    question_id: `question-${i + 1}`,
+                    question_text: questionText,
+                    answer_text: answer,
+                    answer_value: answer.toLowerCase().replace(/\s+/g, '_'),
+                    score_earned: Math.floor(Math.random() * 10) + 1,
+                    response_time_ms: Math.floor(Math.random() * 15000) + 2000,
+                    responded_at: new Date(
+                        new Date(session.started_at).getTime() + i * (Math.random() * 60000 + 30000)
+                    ).toISOString()
+                });
+            }
+        });
+    }
 
     simulatedData.responses = responses;
     return responses;
 }
 
 // Generate results for completed sessions
-export function generateResults() {
+export function generateResults(): SimulatedResult[] {
     if (!simulatedData.sessions) generateSessions();
 
     const resultTypes = [
@@ -183,7 +272,7 @@ export function generateResults() {
         'Estilo Criativo'
     ];
 
-    const descriptions = {
+    const descriptions: { [key: string]: string } = {
         'Estilo Clássico': 'Você tem um gosto refinado e atemporal. Prefere peças que nunca saem de moda.',
         'Estilo Moderno': 'Você está sempre em sintonia com as últimas tendências e gosta de inovar.',
         'Estilo Boho': 'Seu estilo é livre e artístico. Você valoriza a individualidade e expressão pessoal.',
@@ -192,8 +281,8 @@ export function generateResults() {
     };
 
     const results = simulatedData.sessions
-        .filter(session => session.status === 'completed')
-        .map(session => {
+        ?.filter((session: SimulatedSession) => session.status === 'completed')
+        .map((session: SimulatedSession) => {
             const resultType = resultTypes[Math.floor(Math.random() * resultTypes.length)];
 
             return {
@@ -220,12 +309,13 @@ export function generateResults() {
             };
         });
 
-    simulatedData.results = results;
-    return results;
+    const finalResults = results || [];
+    simulatedData.results = finalResults;
+    return finalResults;
 }
 
 // Initialize all data
-export function initializePhase5Data() {
+export function initializePhase5Data(): SimulatedDataStructure {
     console.log('🚀 Inicializando dados da Fase 5...');
 
     generateSessions();
@@ -238,20 +328,20 @@ export function initializePhase5Data() {
     console.log('✅ Dados da Fase 5 inicializados:', {
         funnels: simulatedData.funnels.length,
         users: simulatedData.users.length,
-        sessions: simulatedData.sessions.length,
-        responses: simulatedData.responses.length,
-        results: simulatedData.results.length
+        sessions: simulatedData.sessions?.length ?? 0,
+        responses: simulatedData.responses?.length ?? 0,
+        results: simulatedData.results?.length ?? 0
     });
 
     return simulatedData;
 }
 
 // Get stored data or initialize if not present
-export function getPhase5Data() {
+export function getPhase5Data(): SimulatedDataStructure {
     const stored = localStorage.getItem('phase5_simulated_data');
     if (stored) {
         try {
-            const data = JSON.parse(stored);
+            const data = JSON.parse(stored) as SimulatedDataStructure;
             // Assign to simulatedData object
             Object.assign(simulatedData, data);
             return data;

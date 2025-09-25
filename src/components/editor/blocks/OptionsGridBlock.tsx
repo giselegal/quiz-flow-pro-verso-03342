@@ -2,7 +2,7 @@ import type { BlockComponentProps } from '@/types/blocks';
 import React from 'react';
 import useOptimizedScheduler from '@/hooks/useOptimizedScheduler';
 import { computeSelectionValidity, getEffectiveRequiredSelections, isScoringPhase } from '@/lib/quiz/selectionRules';
-import { useEditorOptional } from '../EditorProvider';
+import { usePureBuilder } from '../PureBuilderProvider';
 import { unifiedQuizStorage } from '@/services/core/UnifiedQuizStorage';
 import { StorageService } from '@/services/core/StorageService';
 import { safePlaceholder } from '@/utils/placeholder';
@@ -147,8 +147,8 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
   // Acessa etapa atual no modo editor
   let currentStepFromEditor: number | null = null;
   try {
-    const editor = useEditorOptional();
-    currentStepFromEditor = editor?.state?.currentStep ?? null;
+    const { state, actions } = usePureBuilder();
+    currentStepFromEditor = state?.currentStep ?? null;
   } catch (e) {
     currentStepFromEditor = null;
   }

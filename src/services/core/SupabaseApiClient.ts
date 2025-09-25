@@ -23,7 +23,6 @@ type QuizSession = Database['public']['Tables']['quiz_sessions']['Row'];
 type QuizResult = Database['public']['Tables']['quiz_results']['Row'];
 type QuizStepResponse = Database['public']['Tables']['quiz_step_responses']['Row'];
 type Funnel = Database['public']['Tables']['funnels']['Row'];
-type Template = Database['public']['Tables']['templates']['Row'];
 
 export interface SupabaseQueryOptions {
     cache?: boolean;
@@ -160,7 +159,7 @@ class SupabaseApiClient {
             }
 
             console.log(`✅ Quiz sessions retrieved: ${data?.length || 0} records`);
-            return { data, error: null, count, status: 'success' };
+            return { data, error: null, count: count || undefined, status: 'success' };
 
         } catch (error) {
             console.error('❌ Unexpected error getting quiz sessions:', error);
@@ -217,7 +216,7 @@ class SupabaseApiClient {
             }
 
             console.log(`✅ Quiz results retrieved: ${data?.length || 0} records`);
-            return { data, error: null, count, status: 'success' };
+            return { data, error: null, count: count || undefined, status: 'success' };
 
         } catch (error) {
             console.error('❌ Unexpected error getting quiz results:', error);
@@ -309,7 +308,7 @@ class SupabaseApiClient {
             }
 
             console.log(`✅ Funnels retrieved: ${data?.length || 0} records`);
-            return { data, error: null, count, status: 'success' };
+            return { data, error: null, count: count || undefined, status: 'success' };
 
         } catch (error) {
             console.error('❌ Unexpected error getting funnels:', error);
@@ -356,64 +355,14 @@ class SupabaseApiClient {
     }
 
     // ============================================================================
-    // TEMPLATE OPERATIONS
-    // ============================================================================
-
-    async getTemplates(options?: SupabaseQueryOptions & {
-        category?: string;
-        limit?: number;
-    }): Promise<SupabaseApiResponse<Template[]>> {
-        const cacheKey = this.getCacheKey('templates', options);
-
-        if (options?.cache !== false) {
-            const cached = this.getFromCache<Template[]>(cacheKey);
-            if (cached) {
-                return { data: cached, error: null, status: 'success' };
-            }
-        }
-
-        await this.rateLimit();
-
-        try {
-            let query = supabase
-                .from('templates')
-                .select('*')
-                .order('created_at', { ascending: false });
-
-            if (options?.category) {
-                query = query.eq('category', options.category);
-            }
-
-            if (options?.limit) {
-                query = query.limit(options.limit);
-            }
-
-            const { data, error, count } = await query;
-
-            if (error) {
-                console.error('❌ Supabase Query Error (templates):', error);
-                return { data: null, error, status: 'error' };
-            }
-
-            // Cache successful results
-            if (options?.cache !== false) {
-                this.setCache(cacheKey, data, 1800000); // 30 minutes (stable data)
-            }
-
-            console.log(`✅ Templates retrieved: ${data?.length || 0} records`);
-            return { data, error: null, count, status: 'success' };
-
-        } catch (error) {
-            console.error('❌ Unexpected error getting templates:', error);
-            return { data: null, error, status: 'error' };
-        }
-    }
-
-    // ============================================================================
     // WRITE OPERATIONS
     // ============================================================================
 
-    async createQuizSession(sessionData: Partial<QuizSession>): Promise<SupabaseApiResponse<QuizSession>> {
+    async createQuizSession(sessionData: Omit<QuizSession, 'id' | 'started_at'> & {
+        funnel_id: string;
+        quiz_user_id: string;
+        status: string;
+    }): Promise<SupabaseApiResponse<QuizSession>> {
         await this.rateLimit();
 
         try {

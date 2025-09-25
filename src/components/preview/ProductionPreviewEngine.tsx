@@ -14,7 +14,7 @@ import React, { useMemo, useState, useCallback, useEffect, useRef } from 'react'
 import { cn } from '@/lib/utils';
 import { Block } from '@/types/editor';
 import { StyleResult } from '@/types/quiz';
-import { SortablePreviewBlockWrapper } from './SortablePreviewBlockWrapper';
+import { UniversalBlockRenderer } from '@/components/editor/blocks/UniversalBlockRenderer';
 import { configurationService } from '@/services/ConfigurationService';
 import type { FunnelConfig } from '@/templates/funnel-configs/quiz21StepsComplete.config';
 
@@ -87,11 +87,12 @@ const calculateQuizResults = (answers: Record<string, any>): StyleResult | null 
     const predominant = Object.entries(scores).reduce((a, b) => scores[a[0]] > scores[b[0]] ? a : b)[0];
 
     return {
-        primary: predominant as any,
-        secondary: categories.filter(cat => cat !== predominant && scores[cat] > 0),
-        scores,
+        category: predominant,
+        score: scores[predominant],
         percentage: Math.round((scores[predominant] / answerValues.length) * 100),
-        description: `Seu estilo predominante é ${predominant}`
+        style: predominant,
+        points: scores[predominant],
+        rank: 1
     };
 };
 
@@ -165,9 +166,8 @@ export const ProductionPreviewEngine: React.FC<ProductionPreviewEngineProps> = (
                     environment: 'preview'
                 });
 
-                // Extrair configuração do funil
-                const funnelSpecificConfig = configurationService.getFunnelConfiguration(funnelId);
-                setFunnelConfig(funnelSpecificConfig);
+                // Usar a configuração mesclada
+                setFunnelConfig(mergedConfig as any);
 
                 console.log(`✅ Configuração carregada para preview do funil: ${funnelId}`);
             } catch (error) {
@@ -265,22 +265,6 @@ export const ProductionPreviewEngine: React.FC<ProductionPreviewEngineProps> = (
         trackInteraction('form_submit', { blockId, formData });
     }, [enableInteractions, onStateChange, trackInteraction]);
 
-    const handleStepChange = useCallback((newStep: number) => {
-        if (!enableInteractions) return;
-
-        setPreviewState(prev => {
-            const newState = {
-                ...prev,
-                currentStep: Math.max(0, Math.min(newStep, blocks.length - 1))
-            };
-
-            onStateChange?.(newState);
-            return newState;
-        });
-
-        trackInteraction('step_change', { fromStep: previewState.currentStep, toStep: newStep });
-    }, [blocks.length, enableInteractions, onStateChange, previewState.currentStep, trackInteraction]);
-
     // ============================================================================
     // ENHANCED BLOCK WRAPPER
     // ============================================================================
@@ -290,7 +274,7 @@ export const ProductionPreviewEngine: React.FC<ProductionPreviewEngineProps> = (
         isSelected: boolean;
         isPreviewing: boolean;
         primaryStyle?: StyleResult;
-    }> = ({ block, isSelected, isPreviewing, primaryStyle }) => {
+    }> = ({ block, isSelected, isPreviewing }) => {
         const handleBlockInteraction = useCallback((interactionType: string, data?: any) => {
             switch (interactionType) {
                 case 'answer_submit':
@@ -308,27 +292,21 @@ export const ProductionPreviewEngine: React.FC<ProductionPreviewEngineProps> = (
         }, [block.id, block.type]);
 
         return (
-            <SortablePreviewBlockWrapper
+            <UniversalBlockRenderer
                 key={block.id}
                 block={block}
                 isSelected={isSelected}
                 isPreviewing={isPreviewing || enableProductionMode}
-                primaryStyle={primaryStyle || previewState.calculatedResults}
+                mode={enableProductionMode ? 'production' : 'preview'}
                 onClick={() => {
                     onBlockSelect?.(block.id);
                     handleBlockInteraction('click');
                 }}
-                onUpdate={onBlockUpdate ? (updates: any) => {
-                    onBlockUpdate(block.id, updates);
-                    trackInteraction('block_update', { blockId: block.id, updates });
-                } : () => { }}
+                onUpdate={onBlockUpdate ? (blockId: string, updates: any) => {
+                    onBlockUpdate(blockId, updates);
+                    trackInteraction('block_update', { blockId, updates });
+                } : undefined}
                 onSelect={onBlockSelect}
-                // Props extras para modo produção
-                onAnswerSubmit={enableInteractions ? (answer: any) => handleAnswerSubmit(block.id, answer) : undefined}
-                onFormSubmit={enableInteractions ? (formData: any) => handleFormSubmit(block.id, formData) : undefined}
-                previewState={previewState}
-                funnelConfig={funnelConfig}
-                enableProductionMode={enableProductionMode}
             />
         );
     };
@@ -340,20 +318,20 @@ export const ProductionPreviewEngine: React.FC<ProductionPreviewEngineProps> = (
     if (isLoadingConfig) {
         return (
             <div className={cn('flex items-center justify-center h-64', className)}>
-                <div className=\"text-center\">
-                    <div className=\"animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-2\"></div>
-                    <div className=\"text-sm text-gray-500\">Carregando configurações...</div>
-                </div >
-            </div >
+                <div className="text-center">
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-2"></div>
+                    <div className="text-sm text-gray-500">Carregando configurações...</div>
+                </div>
+            </div>
         );
     }
 
-// ============================================================================
-// RENDER CONTEÚDO VAZIO
-// ============================================================================
+    // ============================================================================
+    // RENDER CONTEÚDO VAZIO
+    // ============================================================================
 
-if (!blocks || blocks.length === 0) {
-    return (
+    if (!blocks || blocks.length === 0) {
+        return (
             <div
                 className={cn(
                     'flex items-center justify-center h-64 border-2 border-dashed border-gray-300 rounded-lg',
@@ -364,104 +342,105 @@ if (!blocks || blocks.length === 0) {
                 style={{ maxWidth: viewportConfig.maxWidth }}
                 ref={previewContainerRef}
             >
-                <div className=\"text-center\">
-                    <div className=\"text-lg font-medium mb-2\">Canvas vazio</div>
-                    <div className=\"text-sm\">
-    {
-        enableProductionMode
-            ? 'Nenhum conteúdo disponível para preview'
-            : 'Arraste componentes da sidebar para começar'
-    }
-                    </div >
-                </div >
-            </div >
+                <div className="text-center">
+                    <div className="text-lg font-medium mb-2">Canvas vazio</div>
+                    <div className="text-sm">
+                        {
+                            enableProductionMode
+                                ? 'Nenhum conteúdo disponível para preview'
+                                : 'Arraste componentes da sidebar para começar'
+                        }
+                    </div>
+                </div>
+            </div>
         );
-}
+    }
 
-// ============================================================================
-// RENDER PRINCIPAL
-// ============================================================================
+    // ============================================================================
+    // RENDER PRINCIPAL
+    // ============================================================================
 
-return (
-    <div className={cn('preview-engine-container', 'relative', className)}>
-        {/* Header de Debug (apenas em modo editor) */}
-        {mode === 'editor' && !isPreviewing && (
-            <div className=\"mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg text-sm\">
-        <div className=\"flex items-center justify-between\">
-        <div>
-            <strong>Preview Engine:</strong> {enableProductionMode ? 'Modo Produção' : 'Modo Editor'}
-        </div>
-        <div className=\"flex items-center gap-4\">
-        <span>Progresso: {Math.round(previewState.quizProgress)}%</span>
-        <span>Respostas: {Object.keys(previewState.userAnswers).length}</span>
-    </div>
-                    </div >
-    {
-        previewState.calculatedResults && (
-            <div className=\"mt-2 text-xs text-blue-700\">
-                            Resultado calculado: <strong>{previewState.calculatedResults.primary}</strong> 
-                            ({ previewState.calculatedResults.percentage } %)
-                        </div >
-                    )}
-                </div >
+    return (
+        <div className={cn('preview-engine-container', 'relative', className)}>
+            {/* Header de Debug (apenas em modo editor) */}
+            {mode === 'editor' && !isPreviewing && (
+                <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg text-sm">
+                    <div className="flex items-center justify-between">
+                        <div>
+                            <strong>Preview Engine:</strong> {enableProductionMode ? 'Modo Produção' : 'Modo Editor'}
+                        </div>
+                        <div className="flex items-center gap-4">
+                            <span>Progresso: {Math.round(previewState.quizProgress)}%</span>
+                            <span>Respostas: {Object.keys(previewState.userAnswers).length}</span>
+                        </div>
+                    </div>
+                    {
+                        previewState.calculatedResults && (
+                            <div className="mt-2 text-xs text-blue-700">
+                                Resultado calculado: <strong>{previewState.calculatedResults.category}</strong>
+                                ({previewState.calculatedResults.percentage}%)
+                            </div>
+                        )
+                    }
+                </div>
             )}
 
-{/* Container principal com viewport */ }
-<div
-    className={cn(
-        'preview-container',
-        'transition-all duration-200',
-        viewportConfig.className,
-        {
-            'production-mode': enableProductionMode,
-            'interactive-mode': enableInteractions,
-            'preview-mode': isPreviewing
-        }
-    )}
-    style={{
-        maxWidth: viewportConfig.maxWidth,
-        ...(funnelConfig?.theme && {
-            '--primary-color': funnelConfig.theme.primaryColor,
-            '--secondary-color': funnelConfig.theme.secondaryColor,
-            '--accent-color': funnelConfig.theme.accentColor
-        } as React.CSSProperties)
-    }}
-    ref={previewContainerRef}
->
-    {blocks.map((block, index) => (
-        <EnhancedBlockWrapper
-            key={block.id}
-            block={block}
-            isSelected={selectedBlockId === block.id}
-            isPreviewing={isPreviewing}
-            primaryStyle={primaryStyle}
-        />
-    ))}
-</div>
+            {/* Container principal com viewport */}
+            <div
+                className={cn(
+                    'preview-container',
+                    'transition-all duration-200',
+                    viewportConfig.className,
+                    {
+                        'production-mode': enableProductionMode,
+                        'interactive-mode': enableInteractions,
+                        'preview-mode': isPreviewing
+                    }
+                )}
+                style={{
+                    maxWidth: viewportConfig.maxWidth,
+                    ...(funnelConfig?.theme && {
+                        '--primary-color': funnelConfig.theme.primaryColor,
+                        '--secondary-color': funnelConfig.theme.secondaryColor,
+                        '--accent-color': funnelConfig.theme.accentColor
+                    } as React.CSSProperties)
+                }}
+                ref={previewContainerRef}
+            >
+                {blocks.map((block) => (
+                    <EnhancedBlockWrapper
+                        key={block.id}
+                        block={block}
+                        isSelected={selectedBlockId === block.id}
+                        isPreviewing={isPreviewing}
+                        primaryStyle={primaryStyle}
+                    />
+                ))}
+            </div>
 
-{/* Footer de Analytics (apenas em modo produção) */ }
-{
-    enableProductionMode && enableAnalytics && funnelConfig?.tracking && (
-        <div className=\"mt-4 p-2 bg-gray-50 border rounded text-xs text-gray-600\">
-            < div className =\"flex items-center justify-between\">
-                <span>📊 Analytics ativo: </span >
-                    <div className=\"flex gap-2\">
-    {
-        funnelConfig.tracking.facebookPixel && (
-            <span className=\"px-2 py-1 bg-blue-100 rounded\">FB: {funnelConfig.tracking.facebookPixel.slice(-4)}</span>
-                            )
-    }
-    {
-        funnelConfig.tracking.googleAnalytics && (
-            <span className=\"px-2 py-1 bg-orange-100 rounded\">GA: {funnelConfig.tracking.googleAnalytics.slice(-6)}</span>
-                            )
-    }
-                        </div >
-                    </div >
-                </div >
-            )
-}
-        </div >
+            {/* Footer de Analytics (apenas em modo produção) */}
+            {
+                enableProductionMode && enableAnalytics && funnelConfig?.tracking && (
+                    <div className="mt-4 p-2 bg-gray-50 border rounded text-xs text-gray-600">
+                        <div className="flex items-center justify-between">
+                            <span>📊 Analytics ativo: </span>
+                            <div className="flex gap-2">
+                                {
+                                    funnelConfig.tracking.facebookPixel && (
+                                        <span className="px-2 py-1 bg-blue-100 rounded">FB: {funnelConfig.tracking.facebookPixel.slice(-4)}</span>
+                                    )
+                                }
+                                {
+                                    funnelConfig.tracking.googleAnalytics && (
+                                        <span className="px-2 py-1 bg-orange-100 rounded">GA: {funnelConfig.tracking.googleAnalytics.slice(-6)}</span>
+                                    )
+                                }
+                            </div>
+                        </div>
+                    </div>
+                )
+            }
+        </div>
     );
 };
 

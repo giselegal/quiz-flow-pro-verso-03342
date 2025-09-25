@@ -199,7 +199,8 @@ export class FunnelConfigGenerator {
         if (mergedCustomizations.webhooks) {
             baseConfig.webhooks = {
                 ...baseConfig.webhooks,
-                ...mergedCustomizations.webhooks
+                ...mergedCustomizations.webhooks,
+                enabled: mergedCustomizations.webhooks.enabled ?? baseConfig.webhooks?.enabled ?? true
             };
         }
 

@@ -12,7 +12,6 @@
  * ✅ Backup e restore automático
  */
 
-import { supabase } from '@/integrations/supabase/client';
 import { configurationService } from './ConfigurationService';
 import type { FunnelConfig } from '@/templates/funnel-configs/quiz21StepsComplete.config';
 
@@ -132,10 +131,7 @@ export class FunnelConfigPersistenceService {
     ): Promise<ConfigPersistenceData> {
         const {
             validate = true,
-            backup = true,
-            updateCache = true,
-            userId,
-            source = 'manual'
+            updateCache = true
         } = options;
 
         console.log(`💾 Salvando configuração para funil: ${funnelId}`);
@@ -150,35 +146,11 @@ export class FunnelConfigPersistenceService {
         }
 
         try {
-            // Backup da configuração atual se solicitado
-            if (backup) {
-                await this.backupCurrentConfig(funnelId);
-            }
+            // Como não temos uma tabela específica de configurações no Supabase,
+            // usar diretamente o localStorage com fallback
 
-            // Criar dados para persistência
-            const persistenceData: ConfigPersistenceData = {
-                id: `${funnelId}-${Date.now()}`,
-                funnelId,
-                config,
-                version: await this.getNextVersion(funnelId),
-                isActive: true,
-                validationStatus: validationResult ?
-                    (validationResult.isValid ? 'valid' : 'warning') : 'valid',
-                validationErrors: validationResult?.errors || [],
-                validationWarnings: validationResult?.warnings || [],
-                createdAt: new Date(),
-                updatedAt: new Date(),
-                createdBy: userId,
-                metadata: {
-                    source,
-                    category: config.funnel.category || 'other',
-                    templateId: config.funnel.templateId,
-                    lastValidatedAt: new Date()
-                }
-            };
-
-            // Salvar no Supabase
-            const savedData = await this.saveToSupabase(persistenceData);
+            // Salvar em localStorage como método principal
+            const savedData = await this.saveToLocalStorage(funnelId, config, options);
 
             // Atualizar cache do ConfigurationService se solicitado
             if (updateCache) {
@@ -209,11 +181,7 @@ export class FunnelConfigPersistenceService {
         funnelId: string,
         options: LoadConfigOptions = {}
     ): Promise<ConfigPersistenceData | null> {
-        const {
-            version,
-            includeInactive = false,
-            fromCache = true
-        } = options;
+        const { fromCache = true } = options;
 
         console.log(`📂 Carregando configuração para funil: ${funnelId}`);
 
@@ -225,21 +193,12 @@ export class FunnelConfigPersistenceService {
         }
 
         try {
-            // Tentar carregar do Supabase
-            const supabaseData = await this.loadFromSupabase(funnelId, options);
-
-            if (supabaseData) {
-                // Atualizar cache local
-                this.cache.set(funnelId, supabaseData);
-                return supabaseData;
-            }
-
-            // Fallback: tentar localStorage
+            // Como não temos tabela específica, usar fallback direto
             return await this.loadFromLocalStorage(funnelId);
 
         } catch (error) {
             console.error(`❌ Erro ao carregar configuração ${funnelId}:`, error);
-            return await this.loadFromLocalStorage(funnelId);
+            return null;
         }
     }
 
@@ -314,7 +273,7 @@ export class FunnelConfigPersistenceService {
     }
 
     // ========================================================================
-    // PRIVATE HELPER METHODS
+    // PRIVATE HELPER METHODS - LOCAL STORAGE ONLY
     // ========================================================================
 
     private validateSEO(seo: any) {
@@ -408,96 +367,6 @@ export class FunnelConfigPersistenceService {
         }
 
         return { errors, warnings, recommendations, penalty };
-    }
-
-    private async getNextVersion(funnelId: string): Promise<number> {
-        try {
-            const { data, error } = await supabase
-                .from('funnel_configs')
-                .select('version')
-                .eq('funnelId', funnelId)
-                .order('version', { ascending: false })
-                .limit(1)
-                .single();
-
-            if (error || !data) return 1;
-            return (data.version || 0) + 1;
-
-        } catch (error) {
-            return 1;
-        }
-    }
-
-    private async backupCurrentConfig(funnelId: string): Promise<void> {
-        const current = await this.loadConfig(funnelId, { fromCache: false });
-        if (current) {
-            current.isActive = false;
-            await this.saveToSupabase(current);
-        }
-    }
-
-    private async saveToSupabase(data: ConfigPersistenceData): Promise<ConfigPersistenceData> {
-        const { error } = await supabase
-            .from('funnel_configs')
-            .upsert({
-                id: data.id,
-                funnel_id: data.funnelId,
-                config_data: data.config,
-                version: data.version,
-                is_active: data.isActive,
-                validation_status: data.validationStatus,
-                validation_errors: data.validationErrors,
-                validation_warnings: data.validationWarnings,
-                created_by: data.createdBy,
-                metadata: data.metadata,
-                created_at: data.createdAt.toISOString(),
-                updated_at: data.updatedAt.toISOString()
-            });
-
-        if (error) {
-            throw new Error(`Erro ao salvar no Supabase: ${error.message}`);
-        }
-
-        return data;
-    }
-
-    private async loadFromSupabase(
-        funnelId: string,
-        options: LoadConfigOptions
-    ): Promise<ConfigPersistenceData | null> {
-        let query = supabase
-            .from('funnel_configs')
-            .select('*')
-            .eq('funnel_id', funnelId);
-
-        if (!options.includeInactive) {
-            query = query.eq('is_active', true);
-        }
-
-        if (options.version) {
-            query = query.eq('version', options.version);
-        }
-
-        query = query.order('created_at', { ascending: false }).limit(1);
-
-        const { data, error } = await query.single();
-
-        if (error || !data) return null;
-
-        return {
-            id: data.id,
-            funnelId: data.funnel_id,
-            config: data.config_data,
-            version: data.version,
-            isActive: data.is_active,
-            validationStatus: data.validation_status,
-            validationErrors: data.validation_errors || [],
-            validationWarnings: data.validation_warnings || [],
-            createdAt: new Date(data.created_at),
-            updatedAt: new Date(data.updated_at),
-            createdBy: data.created_by,
-            metadata: data.metadata || { source: 'manual', category: 'other', lastValidatedAt: new Date() }
-        };
     }
 
     private async saveToLocalStorage(
