@@ -89,7 +89,7 @@ export function ColorPicker({
         onClick={() => handleColorSelect(colorOption.value)}
         className={cn(
           'group relative flex flex-col items-center gap-1 p-2 rounded-lg hover:bg-gray-50 transition-all',
-          isSelected && 'bg-[#B89B7A]/10 ring-2 ring-[#B89B7A]'
+          isSelected && 'bg-brand-brightPink/10 ring-2 ring-brand-brightPink'
         )}
         title={colorOption.label}
       >
@@ -101,7 +101,7 @@ export function ColorPicker({
             </div>
           )}
         </div>
-        <span style={{ color: '#6B4F43' }}>{colorOption.label}</span>
+        <span className="text-brand-darkBlue text-xs">{colorOption.label}</span>
       </button>
     );
   };
@@ -118,7 +118,7 @@ export function ColorPicker({
         <Input
           value={inputValue}
           onChange={e => handleInputChange(e.target.value)}
-          placeholder="#B89B7A ou transparent"
+          placeholder="#FF1CC0 ou transparent"
           className="font-mono text-sm flex-1"
           disabled={disabled}
         />
@@ -133,25 +133,25 @@ export function ColorPicker({
           <PopoverContent className="w-80 p-4 max-h-96 overflow-y-auto">
             <div className="space-y-4">
               {/* Informações da cor atual */}
-              <div style={{ backgroundColor: '#FAF9F7' }}>
+              <div className="flex items-center gap-3 p-3 bg-brand-background rounded-lg border border-brand-brightPink/20">
                 <ColorPreview color={value} size="w-8 h-8" />
                 <div className="flex-1">
-                  <div style={{ color: '#432818' }}>{ColorUtils.getColorLabel(value)}</div>
-                  <div style={{ color: '#8B7355' }}>
+                  <div className="text-brand-darkBlue font-medium">{ColorUtils.getColorLabel(value)}</div>
+                  <div className="text-brand-darkBlue/60 text-sm font-mono">
                     {value === 'transparent' ? 'Transparente' : value}
                   </div>
                 </div>
               </div>
 
               {/* Tabs */}
-              <div style={{ backgroundColor: '#E5DDD5' }}>
+              <div className="flex gap-1 p-1 bg-brand-darkBlue/5 rounded-lg">
                 <button
                   onClick={() => setActiveTab('popular')}
                   className={cn(
                     'flex-1 px-3 py-2 text-sm font-medium rounded-md transition-colors',
                     activeTab === 'popular'
-                      ? 'bg-white text-[#B89B7A] shadow-sm'
-                      : 'text-gray-600 hover:text-gray-900'
+                      ? 'bg-gradient-to-r from-brand-brightPink to-brand-brightBlue text-white shadow-sm'
+                      : 'text-brand-darkBlue hover:text-brand-brightPink'
                   )}
                 >
                   Populares
@@ -161,8 +161,8 @@ export function ColorPicker({
                   className={cn(
                     'flex-1 px-3 py-2 text-sm font-medium rounded-md transition-colors',
                     activeTab === 'all'
-                      ? 'bg-white text-[#B89B7A] shadow-sm'
-                      : 'text-gray-600 hover:text-gray-900'
+                      ? 'bg-gradient-to-r from-brand-brightPink to-brand-brightBlue text-white shadow-sm'
+                      : 'text-brand-darkBlue hover:text-brand-brightPink'
                   )}
                 >
                   Paleta
@@ -173,8 +173,8 @@ export function ColorPicker({
                     className={cn(
                       'flex-1 px-3 py-2 text-sm font-medium rounded-md transition-colors',
                       activeTab === 'custom'
-                        ? 'bg-white text-[#B89B7A] shadow-sm'
-                        : 'text-gray-600 hover:text-gray-900'
+                        ? 'bg-gradient-to-r from-brand-brightPink to-brand-brightBlue text-white shadow-sm'
+                        : 'text-brand-darkBlue hover:text-brand-brightPink'
                     )}
                   >
                     Custom
@@ -215,9 +215,9 @@ export function ColorPicker({
                     <Label className="text-sm font-medium mb-2 block">Seletor Nativo</Label>
                     <input
                       type="color"
-                      value={isValidColor && value !== 'transparent' ? value : '#B89B7A'}
+                      value={isValidColor && value !== 'transparent' ? value : '#FF1CC0'}
                       onChange={e => handleColorSelect(e.target.value)}
-                      style={{ borderColor: '#E5DDD5' }}
+                      className="w-full h-10 rounded-md border border-brand-brightPink/30 cursor-pointer"
                     />
                   </div>
 
@@ -226,17 +226,17 @@ export function ColorPicker({
                     <Input
                       value={inputValue}
                       onChange={e => handleInputChange(e.target.value)}
-                      placeholder="#B89B7A, transparent, etc."
+                      placeholder="#FF1CC0, transparent, etc."
                       className="font-mono text-sm"
                     />
                     {!isValidColor && inputValue && (
-                      <p style={{ color: '#432818' }}>Use formato #RRGGBB ou "transparent"</p>
+                      <p className="text-brand-darkBlue/70 text-xs mt-1">Use formato #RRGGBB ou "transparent"</p>
                     )}
                   </div>
 
                   <button
                     onClick={() => handleColorSelect('transparent')}
-                    style={{ borderColor: '#E5DDD5' }}
+                    className="w-full px-3 py-2 text-sm font-medium border border-brand-brightPink/30 rounded-md hover:bg-brand-brightPink/10 text-brand-darkBlue transition-colors"
                   >
                     Usar Transparente
                   </button>
@@ -249,14 +249,14 @@ export function ColorPicker({
 
       {/* Preview Area */}
       {showPreview && isValidColor && (
-        <div style={{ backgroundColor: '#FAF9F7' }}>
-          <div style={{ color: '#6B4F43' }}>
+        <div className="flex items-center justify-between p-3 bg-brand-background rounded-lg border border-brand-brightPink/20">
+          <div className="text-brand-darkBlue/70 text-sm">
             <span>Preview:</span>
             <div
-              className="px-3 py-1 rounded-md font-medium transition-colors"
+              className="px-3 py-1 rounded-md font-medium transition-colors mt-1"
               style={{
-                backgroundColor: value === 'transparent' ? '#B89B7A' : value,
-                color: ColorUtils.getContrastColor(value === 'transparent' ? '#B89B7A' : value),
+                backgroundColor: value === 'transparent' ? '#FF1CC0' : value,
+                color: ColorUtils.getContrastColor(value === 'transparent' ? '#FF1CC0' : value),
               }}
             >
               Texto de Exemplo

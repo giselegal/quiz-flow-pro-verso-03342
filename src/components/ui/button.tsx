@@ -15,12 +15,20 @@ const buttonVariants = cva(
         secondary: 'bg-secondary text-secondary-foreground hover:bg-secondary/80',
         ghost: 'hover:bg-accent hover:text-accent-foreground',
         link: 'underline-offset-4 hover:underline text-primary',
+        // ✨ CYBERPUNK VARIANTS
+        cyberpunk: 'bg-gradient-to-r from-brand-brightPink to-brand-brightBlue text-white hover:shadow-lg hover:shadow-brand-brightPink/25 transform-gpu transition-all',
+        neon: 'bg-gradient-to-r from-brand-mediumBlue to-brand-brightBlue text-white hover:shadow-lg hover:shadow-brand-mediumBlue/25 transform-gpu transition-all',
+        darkPunk: 'bg-brand-darkBlue text-white hover:bg-brand-mediumBlue hover:shadow-md transition-all',
+        outlineNeon: 'border-2 border-brand-brightPink text-brand-brightPink hover:bg-brand-brightPink/10 hover:shadow-md hover:shadow-brand-brightPink/20 transition-all',
+        outlineBlue: 'border-2 border-brand-brightBlue text-brand-brightBlue hover:bg-brand-brightBlue/10 hover:shadow-md hover:shadow-brand-brightBlue/20 transition-all',
+        glassNeon: 'bg-white/10 backdrop-blur-sm border border-brand-brightPink/30 text-brand-brightPink hover:bg-brand-brightPink/20 hover:border-brand-brightPink/50 transition-all',
       },
       size: {
         default: 'h-10 py-2 px-4',
         sm: 'h-9 px-3 rounded-md',
         lg: 'h-11 px-8 rounded-md',
         icon: 'h-10 w-10',
+        xl: 'h-14 px-10 rounded-lg text-lg',
       },
     },
     defaultVariants: {
