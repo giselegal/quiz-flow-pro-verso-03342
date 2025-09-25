@@ -4,12 +4,15 @@ import { ChevronLeft, ChevronRight, Home, RotateCcw } from 'lucide-react';
 import React from 'react';
 import { useLocation } from 'wouter';
 import { useQuiz21Steps } from './Quiz21StepsProvider';
+import { QuizBackendStatus } from './QuizBackendStatus';
 
 interface Quiz21StepsNavigationProps {
   position?: 'floating' | 'sticky' | 'static';
   variant?: 'compact' | 'full';
   showProgress?: boolean;
   showControls?: boolean;
+  showBackendStatus?: boolean;
+  funnelId?: string;
   className?: string;
 }
 
@@ -28,6 +31,8 @@ export const Quiz21StepsNavigation: React.FC<Quiz21StepsNavigationProps> = ({
   variant = 'full',
   showProgress = true,
   showControls = true,
+  showBackendStatus = true,
+  funnelId,
   className = '',
 }) => {
   const [, setLocation] = useLocation();
@@ -263,6 +268,17 @@ export const Quiz21StepsNavigation: React.FC<Quiz21StepsNavigationProps> = ({
               </div>
             )}
           </div>
+
+          {/* 🔍 BACKEND STATUS */}
+          {showBackendStatus && funnelId && (
+            <div className="mt-3 pt-3 border-t border-stone-200">
+              <QuizBackendStatus 
+                funnelId={funnelId} 
+                variant="compact" 
+                showDetails={variant === 'full'} 
+              />
+            </div>
+          )}
 
           {/* 🔍 INFORMAÇÕES DE DEBUG (COMPACT) */}
           {variant === 'compact' && (userName || answers.length > 0) && (
