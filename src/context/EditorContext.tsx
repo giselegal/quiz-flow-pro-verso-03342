@@ -3,6 +3,7 @@ import { toast } from '@/hooks/use-toast';
 // Importação direta do TemplateManager para evitar problemas de dependência circular
 import { TemplateManager } from '@/utils/TemplateManager';
 // 🔧 CORREÇÃO: Import do gerador de IDs estável para resolver loop infinito
+import { QuizStage } from '@/types/quiz';
 import { generateBlockId, generateStableId } from '@/utils/stableIdGenerator';
 // Padronização: preferir templateService para carregar e converter blocos
 // Import dinâmico mantido onde necessário para evitar carga desnecessária do módulo em rotas que não usam

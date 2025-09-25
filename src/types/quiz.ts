@@ -9,6 +9,7 @@ export interface QuizOption {
   text?: string; // Legacy compatibility
   styleCategory?: string; // Legacy compatibility
   imageUrl?: string; // Legacy compatibility
+  style?: string; // Legacy compatibility - for quiz data
   isCorrect?: boolean;
   weight?: number;
 }
@@ -47,7 +48,7 @@ export interface QuizStage {
 
 export interface QuizQuestion {
   id: string;
-  type: 'multiple-choice' | 'single-choice' | 'text' | 'rating' | 'normal';
+  type: 'multiple-choice' | 'single-choice' | 'text' | 'rating' | 'normal' | 'name-input';
   title: string;
   text?: string; // Legacy compatibility
   question?: string; // Legacy compatibility
