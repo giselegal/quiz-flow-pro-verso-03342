@@ -8,7 +8,7 @@
  * Resultado: Editor definitivo com todas as funcionalidades premium
  */
 
-import React, { useCallback, useMemo, useState, useRef, useContext } from 'react';
+import React, { useCallback, useMemo, useState, useRef, useContext, useEffect } from 'react';
 import { EditorContext } from '@/context/EditorContext';
 // import { useOptimizedScheduler } from '@/hooks/useOptimizedScheduler'; // TODO: Implementar scheduler
 import { useNotification } from '@/components/ui/Notification';
@@ -418,10 +418,36 @@ const HybridModularEditorPro: React.FC<HybridModularEditorProProps> = ({
     });
 
     const [useAPIPanel, setUseAPIPanel] = useState(true); // ✅ API Panel por padrão
+    const [isBlankCanvas, setIsBlankCanvas] = useState(false); // 🎨 Canvas em branco
 
     // 📊 Estados computados do ModularEditorPro
     const currentStepBlocks = useMemo(() => context.computed.currentBlocks, [context.computed.currentBlocks]);
     const selectedBlock = useMemo(() => context.computed.selectedBlock, [context.computed.selectedBlock]);
+
+    // 🎨 INICIALIZAÇÃO: Canvas em branco quando não há funil
+    useEffect(() => {
+        // Se não há funnelId e não há blocks carregados, inicializa canvas em branco
+        const hasNoFunnel = !funnelId || funnelId === 'hybrid-editor-default';
+        const hasNoCurrentStepBlocks = !currentStepBlocks || currentStepBlocks.length === 0;
+        
+        if (hasNoFunnel && hasNoCurrentStepBlocks) {
+            console.log('🎨 Inicializando editor com canvas em branco para criação do zero');
+            setIsBlankCanvas(true);
+            
+            // Configura estado inicial para novo funil
+            setEditorState(prev => ({
+                ...prev,
+                mode: 'builder', // Modo builder para facilitar criação
+            }));
+
+            // Notifica usuário apenas uma vez
+            if (!isBlankCanvas) {
+                addNotification('Editor iniciado - Pronto para criar funil do zero!', 'info');
+            }
+        } else if (funnelId && funnelId !== 'hybrid-editor-default') {
+            setIsBlankCanvas(false);
+        }
+    }, [funnelId, currentStepBlocks, addNotification, isBlankCanvas]);
 
     // 🔄 Handlers do ModularEditorPro
     const handleSelectBlock = useCallback((blockId: string) => {
@@ -453,11 +479,35 @@ const HybridModularEditorPro: React.FC<HybridModularEditorProProps> = ({
 
     const handleCreateNew = useCallback(async () => {
         console.log('🆕 Criar novo funil');
+        
+        // Se estamos em canvas em branco, inicializa estrutura básica
+        if (isBlankCanvas) {
+            console.log('🎨 Inicializando estrutura básica para funil novo');
+            
+            // Configura primeira etapa
+            const initialStageId = 'step-1';
+            context.stageActions.setActiveStage(initialStageId);
+            
+            // Limpa seleção
+            context.setSelectedBlockId(null);
+            
+            // Atualiza estado do editor
+            setEditorState(prev => ({
+                ...prev,
+                mode: 'builder'
+            }));
+            
+            setIsBlankCanvas(false);
+            addNotification('Canvas pronto! Arraste componentes para começar.', 'success');
+            return;
+        }
+        
+        // Lógica para criar novo funil quando já existe um
         // if (crudContext?.createNew) {
         //   await crudContext.createNew();
         //   addNotification('Novo funil criado');
         // }
-    }, [addNotification]);
+    }, [isBlankCanvas, context, addNotification]);
 
     const handleDuplicate = useCallback(async () => {
         console.log('📋 Duplicar funil');
@@ -556,7 +606,31 @@ const HybridModularEditorPro: React.FC<HybridModularEditorProProps> = ({
                 />
 
                 {/* 🎨 COLUNA 3: CANVAS */}
-                <main className="flex-1 min-h-0 bg-muted/30 flex flex-col overflow-hidden">
+                <main className="flex-1 min-h-0 bg-muted/30 flex flex-col overflow-hidden relative">
+                    {/* 🎨 CANVAS EM BRANCO - Welcome Overlay */}
+                    {isBlankCanvas && (
+                        <div className="absolute inset-0 bg-background/95 flex items-center justify-center z-10">
+                            <div className="text-center max-w-md p-8 border border-border rounded-lg bg-card shadow-sm">
+                                <div className="mb-4">
+                                    <Target className="w-16 h-16 mx-auto text-primary mb-4" />
+                                    <h2 className="text-xl font-semibold mb-2">Canvas em Branco</h2>
+                                    <p className="text-muted-foreground mb-6">
+                                        Comece criando seu funil do zero! 
+                                        Arraste componentes da barra lateral ou clique no botão abaixo.
+                                    </p>
+                                </div>
+                                <Button
+                                    onClick={handleCreateNew}
+                                    className="w-full"
+                                    size="lg"
+                                >
+                                    <Plus className="w-4 h-4 mr-2" />
+                                    Inicializar Funil
+                                </Button>
+                            </div>
+                        </div>
+                    )}
+                    
                     <EditorCanvas
                         blocks={currentStepBlocks}
                         selectedBlock={selectedBlock}
