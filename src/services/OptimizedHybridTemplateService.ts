@@ -195,7 +195,7 @@ class OptimizedHybridTemplateService {
                 }
 
                 this.masterTemplate = data;
-                console.log(`✅ Master template carregado: ${this.masterTemplate.metadata.id} (v${this.masterTemplate.templateVersion})`);
+                console.log(`✅ Master template carregado: ${this.masterTemplate?.metadata?.id} (v${this.masterTemplate?.templateVersion})`);
             } else {
                 console.warn(`⚠️ Master template não encontrado (${response.status})`);
             }
