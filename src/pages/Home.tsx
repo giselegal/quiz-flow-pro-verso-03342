@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation } from 'wouter';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -8,8 +8,13 @@ import { useAuth } from '@/context/AuthContext';
 
 export const Home: React.FC = () => {
   const { user, logout } = useAuth();
-  const navigate = useNavigate();
+  const [, setLocation] = useLocation();
   const [isLoading, setIsLoading] = useState(true);
+
+  // Navigation helper function
+  const navigate = (path: string) => {
+    setLocation(path);
+  };
 
   // Simulate loading for smooth animations
   useEffect(() => {
