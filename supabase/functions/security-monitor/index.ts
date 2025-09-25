@@ -26,6 +26,16 @@ interface SecurityEvent {
   severity?: 'low' | 'medium' | 'high' | 'critical';
 }
 
+interface MetricRecord {
+  status: string;
+  [key: string]: any;
+}
+
+interface EventRecord {
+  severity: string;
+  [key: string]: any;
+}
+
 serve(async (req) => {
   // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
@@ -72,7 +82,7 @@ serve(async (req) => {
     return new Response(
       JSON.stringify({ 
         error: 'Internal server error',
-        message: error.message 
+        message: error instanceof Error ? error.message : String(error)
       }),
       { 
         status: 500, 
@@ -137,7 +147,7 @@ async function handleHealthCheck(supabase: any) {
     return new Response(
       JSON.stringify({ 
         status: 'critical',
-        error: error.message,
+        error: error instanceof Error ? error.message : String(error),
         timestamp: new Date().toISOString()
       }),
       { 
@@ -171,7 +181,7 @@ async function handleRecordMetric(req: Request, supabase: any) {
   } catch (error) {
     console.error('Failed to record metric:', error);
     return new Response(
-      JSON.stringify({ error: error.message }),
+      JSON.stringify({ error: error instanceof Error ? error.message : String(error) }),
       { 
         status: 500,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
@@ -200,7 +210,7 @@ async function handleLogSecurityEvent(req: Request, supabase: any) {
   } catch (error) {
     console.error('Failed to log security event:', error);
     return new Response(
-      JSON.stringify({ error: error.message }),
+      JSON.stringify({ error: error instanceof Error ? error.message : String(error) }),
       { 
         status: 500,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
@@ -237,7 +247,7 @@ async function handleGetMetrics(req: Request, supabase: any) {
   } catch (error) {
     console.error('Failed to get metrics:', error);
     return new Response(
-      JSON.stringify({ error: error.message }),
+      JSON.stringify({ error: error instanceof Error ? error.message : String(error) }),
       { 
         status: 500,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
@@ -268,10 +278,10 @@ async function handleSystemStatus(supabase: any) {
     if (eventsError) throw eventsError;
 
     // Analyze system status
-    const criticalMetrics = metrics?.filter(m => m.status === 'critical') || [];
-    const warningMetrics = metrics?.filter(m => m.status === 'warning') || [];
-    const criticalEvents = events?.filter(e => e.severity === 'critical') || [];
-    const highEvents = events?.filter(e => e.severity === 'high') || [];
+    const criticalMetrics = (metrics as MetricRecord[])?.filter((m: MetricRecord) => m.status === 'critical') || [];
+    const warningMetrics = (metrics as MetricRecord[])?.filter((m: MetricRecord) => m.status === 'warning') || [];
+    const criticalEvents = (events as EventRecord[])?.filter((e: EventRecord) => e.severity === 'critical') || [];
+    const highEvents = (events as EventRecord[])?.filter((e: EventRecord) => e.severity === 'high') || [];
 
     const overallStatus = criticalMetrics.length > 0 || criticalEvents.length > 0 
       ? 'critical'
@@ -302,7 +312,7 @@ async function handleSystemStatus(supabase: any) {
   } catch (error) {
     console.error('Failed to get system status:', error);
     return new Response(
-      JSON.stringify({ error: error.message }),
+      JSON.stringify({ error: error instanceof Error ? error.message : String(error) }),
       { 
         status: 500,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' } 

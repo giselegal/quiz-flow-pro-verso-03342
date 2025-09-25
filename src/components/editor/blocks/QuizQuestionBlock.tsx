@@ -82,6 +82,12 @@ const QuizQuestionBlock: React.FC<QuizQuestionBlockProps> = ({
     border: isSelected ? '2px solid #3b82f6' : '1px solid #e5e7eb',
   };
 
+  // Margin controls
+  const marginTop = 0;
+  const marginBottom = 0;  
+  const marginLeft = 0;
+  const marginRight = 0;
+
   const options = content.options || [
     { id: '1', text: 'Opção 1' },
     { id: '2', text: 'Opção 2' },

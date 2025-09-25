@@ -80,7 +80,7 @@ serve(async (req) => {
     return new Response(
       JSON.stringify({ 
         error: 'Internal server error',
-        message: error.message 
+        message: error instanceof Error ? error.message : String(error)
       }),
       { 
         status: 500, 
@@ -217,7 +217,7 @@ async function handleRateLimitCheck(req: Request, supabase: any) {
       JSON.stringify({ 
         allowed: true, // Fail open para não quebrar funcionalidade
         error: 'Rate limit check failed',
-        message: error.message 
+        message: error instanceof Error ? error.message : String(error)
       }),
       { 
         status: 500,
@@ -254,7 +254,7 @@ async function handleRateLimitReset(req: Request, supabase: any) {
   } catch (error) {
     console.error('Rate limit reset failed:', error);
     return new Response(
-      JSON.stringify({ error: error.message }),
+      JSON.stringify({ error: error instanceof Error ? error.message : String(error) }),
       { 
         status: 500,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
@@ -290,7 +290,7 @@ async function handleRateLimitStatus(req: Request, supabase: any) {
   } catch (error) {
     console.error('Failed to get rate limit status:', error);
     return new Response(
-      JSON.stringify({ error: error.message }),
+      JSON.stringify({ error: error instanceof Error ? error.message : String(error) }),
       { 
         status: 500,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' } 

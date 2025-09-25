@@ -91,7 +91,7 @@ serve(async (req) => {
     return new Response(
       JSON.stringify({ 
         error: 'Internal server error',
-        message: error.message 
+        message: error instanceof Error ? error.message : String(error)
       }),
       { 
         status: 500, 
@@ -109,8 +109,10 @@ async function handleCreateBackup(req: Request, supabase: any) {
     description 
   } = await req.json();
 
+  let backupId: string;
+
   try {
-    const backupId = crypto.randomUUID();
+    backupId = crypto.randomUUID();
     const tablesToBackup = type === 'full' 
       ? [...criticalTables, ...optionalTables]
       : tables.length > 0 
@@ -133,7 +135,7 @@ async function handleCreateBackup(req: Request, supabase: any) {
     if (insertError) throw insertError;
 
     // Iniciar processo de backup
-    const backupData = {};
+    const backupData: Record<string, any> = {};
     let totalSize = 0;
 
     // Atualizar status para 'running'
@@ -175,7 +177,7 @@ async function handleCreateBackup(req: Request, supabase: any) {
         }
 
         backupData[table] = data;
-        totalSize += JSON.stringify(data).length;
+        totalSize += JSON.stringify(data || []).length;
 
       } catch (tableError) {
         console.warn(`Error backing up table ${table}:`, tableError);
@@ -229,23 +231,25 @@ async function handleCreateBackup(req: Request, supabase: any) {
     console.error('Backup creation failed:', error);
     
     // Atualizar status para falha se o ID foi criado
-    try {
-      await supabase
-        .from('backup_jobs')
-        .update({
-          status: 'failed',
-          completed_at: new Date().toISOString(),
-          error_message: error.message
-        })
-        .eq('id', backupId);
-    } catch (updateError) {
-      console.error('Failed to update backup job status:', updateError);
+    if (backupId!) {
+      try {
+        await supabase
+          .from('backup_jobs')
+          .update({
+            status: 'failed',
+            completed_at: new Date().toISOString(),
+            error_message: error instanceof Error ? error.message : String(error)
+          })
+          .eq('id', backupId);
+      } catch (updateError) {
+        console.error('Failed to update backup job status:', updateError);
+      }
     }
 
     return new Response(
       JSON.stringify({ 
         error: 'Backup creation failed',
-        message: error.message 
+        message: error instanceof Error ? error.message : String(error)
       }),
       { 
         status: 500,
@@ -345,7 +349,7 @@ async function handleRestoreBackup(req: Request, supabase: any) {
     return new Response(
       JSON.stringify({ 
         error: 'Backup restore failed',
-        message: error.message 
+        message: error instanceof Error ? error.message : String(error)
       }),
       { 
         status: 500,
@@ -383,7 +387,7 @@ async function handleListBackups(req: Request, supabase: any) {
   } catch (error) {
     console.error('Failed to list backups:', error);
     return new Response(
-      JSON.stringify({ error: error.message }),
+      JSON.stringify({ error: error instanceof Error ? error.message : String(error) }),
       { 
         status: 500,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
@@ -413,7 +417,7 @@ async function handleBackupStatus(req: Request, supabase: any) {
   } catch (error) {
     console.error('Failed to get backup status:', error);
     return new Response(
-      JSON.stringify({ error: error.message }),
+      JSON.stringify({ error: error instanceof Error ? error.message : String(error) }),
       { 
         status: 500,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
@@ -460,7 +464,7 @@ async function handleCleanupOldBackups(supabase: any) {
   } catch (error) {
     console.error('Backup cleanup failed:', error);
     return new Response(
-      JSON.stringify({ error: error.message }),
+      JSON.stringify({ error: error instanceof Error ? error.message : String(error) }),
       { 
         status: 500,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
