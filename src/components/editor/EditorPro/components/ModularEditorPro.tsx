@@ -11,6 +11,7 @@ import EditorCanvas from './EditorCanvas';
 import StepSidebar from '@/components/editor/sidebars/StepSidebar';
 import ComponentsSidebar from '@/components/editor/sidebars/ComponentsSidebar';
 import RegistryPropertiesPanel from '@/components/universal/RegistryPropertiesPanel';
+import APIPropertiesPanel from '@/components/editor/properties/APIPropertiesPanel';
 
 /**
  * Hook para controlar larguras redimensionáveis das colunas
@@ -168,7 +169,7 @@ interface ModularEditorProProps {
 const ModularEditorPro: React.FC<ModularEditorProProps> = () => {
   // ✅ CONSOLIDADO: Hook do EditorContext
   const context = useContext(EditorContext);
-  
+
   if (!context) {
     throw new Error('ModularEditorPro must be used within EditorProvider');
   }
@@ -191,7 +192,7 @@ const ModularEditorPro: React.FC<ModularEditorProProps> = () => {
 
   // Estados locais para UI
   const [isPreviewMode, setIsPreviewMode] = useState(false);
-  const [useAPIPanel, setUseAPIPanel] = useState(false);
+  const [useAPIPanel, setUseAPIPanel] = useState(true); // ✅ ATIVANDO API PANEL POR PADRÃO
 
   // Blocos da etapa atual - usando computed do context
   const currentStepBlocks = useMemo(() => {
@@ -206,7 +207,7 @@ const ModularEditorPro: React.FC<ModularEditorProProps> = () => {
   // Dados para componentes da sidebar - usar stages do context
   const stepHasBlocksRecord = useMemo(() => {
     const record: Record<number, boolean> = {};
-    
+
     // Usar stages do context para determinar etapas existentes
     const maxSteps = Math.max(21, context.stages.length); // Garantir pelo menos 21 steps
 
@@ -230,7 +231,7 @@ const ModularEditorPro: React.FC<ModularEditorProProps> = () => {
   useEffect(() => {
     // Validação simples baseada na presença de blocos
     const isStepValid = currentStepBlocks.length > 0;
-    
+
     console.log('🔍 ModularEditorPro - Validação de etapa consolidada:', {
       activeStageId: context.activeStageId,
       blocksCount: currentStepBlocks.length,
@@ -281,7 +282,7 @@ const ModularEditorPro: React.FC<ModularEditorProProps> = () => {
 
   const handleDeleteBlock = useCallback(async (blockId: string) => {
     await context.deleteBlock(blockId);
-    
+
     // Limpar seleção se deletar bloco selecionado
     if (context.selectedBlockId === blockId) {
       context.setSelectedBlockId(null);
@@ -328,7 +329,7 @@ const ModularEditorPro: React.FC<ModularEditorProProps> = () => {
   const handleStepChange = useCallback((step: number) => {
     const stageId = `step-${step}`;
     context.stageActions.setActiveStage(stageId);
-    
+
     console.log('🔄 ModularEditorPro - Mudança de etapa consolidada:', {
       step,
       stageId,
@@ -359,7 +360,7 @@ const ModularEditorPro: React.FC<ModularEditorProProps> = () => {
             <p className="text-muted-foreground mb-4">
               Sistema unificado pronto. Selecione uma etapa para começar a editar.
             </p>
-            <button 
+            <button
               onClick={() => handleStepChange(1)}
               className="px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors"
             >
@@ -379,17 +380,17 @@ const ModularEditorPro: React.FC<ModularEditorProProps> = () => {
         totalSteps={Math.max(21, context.stages.length)}
         canUndo={false}
         canRedo={false}
-        onUndo={() => {}}
-        onRedo={() => {}}
+        onUndo={() => { }}
+        onRedo={() => { }}
         isSaving={false}
-        onOpenSettings={() => {}}
+        onOpenSettings={() => { }}
       />
 
       {/* 📐 LAYOUT PRINCIPAL FLEXÍVEL */}
       <div className="flex-1 flex min-h-0 bg-background text-foreground overflow-hidden">
         {/* 📋 SIDEBAR ESQUERDA - ETAPAS */}
-        <aside 
-          className="bg-card border-r border-border flex-shrink-0 overflow-hidden" 
+        <aside
+          className="bg-card border-r border-border flex-shrink-0 overflow-hidden"
           style={{ width: `${columnWidths.steps}px` }}
         >
           <StepSidebar
@@ -397,33 +398,33 @@ const ModularEditorPro: React.FC<ModularEditorProProps> = () => {
             totalSteps={Math.max(21, context.stages.length)}
             stepHasBlocks={stepHasBlocksRecord}
             onSelectStep={handleStepChange}
-            getStepAnalysis={(step: number) => ({ 
-              icon: 'info', 
-              label: `Etapa ${step}`, 
-              desc: `Configuração da etapa ${step}` 
+            getStepAnalysis={(step: number) => ({
+              icon: 'info',
+              label: `Etapa ${step}`,
+              desc: `Configuração da etapa ${step}`
             })}
             renderIcon={() => null}
           />
         </aside>
 
-        <ResizeHandle 
-          onResize={(width) => handleResize('steps', width)} 
+        <ResizeHandle
+          onResize={(width) => handleResize('steps', width)}
           label="Etapas"
         />
 
         {/* 🧩 COLUNA CENTRO-ESQUERDA - COMPONENTES */}
-        <aside 
-          className="bg-card/50 border-r border-border flex-shrink-0 overflow-hidden" 
+        <aside
+          className="bg-card/50 border-r border-border flex-shrink-0 overflow-hidden"
           style={{ width: `${columnWidths.components}px` }}
         >
-          <ComponentsSidebar 
-            groupedComponents={groupedComponents} 
+          <ComponentsSidebar
+            groupedComponents={groupedComponents}
             renderIcon={() => null}
           />
         </aside>
 
-        <ResizeHandle 
-          onResize={(width) => handleResize('components', width)} 
+        <ResizeHandle
+          onResize={(width) => handleResize('components', width)}
           label="Componentes"
         />
 
@@ -437,23 +438,42 @@ const ModularEditorPro: React.FC<ModularEditorProProps> = () => {
             onUpdateBlock={handleUpdateBlock}
             onDeleteBlock={handleDeleteBlock}
             isPreviewMode={isPreviewMode}
-            // funnelId will be handled internally by EditorCanvas
+          // funnelId will be handled internally by EditorCanvas
           />
         </main>
 
-        <ResizeHandle 
-          onResize={(width) => handleResize('properties', width)} 
+        <ResizeHandle
+          onResize={(width) => handleResize('properties', width)}
           label="Propriedades"
         />
 
         {/* ⚙️ SIDEBAR DIREITA - PROPRIEDADES */}
-        <aside 
-          className="bg-card border-l border-border flex-shrink-0 overflow-hidden" 
+        <aside
+          className="bg-card border-l border-border flex-shrink-0 overflow-hidden"
           style={{ width: `${columnWidths.properties}px` }}
         >
-          {useAPIPanel ? (
-            <div className="p-4">
-              <p className="text-sm text-muted-foreground">API Properties Panel</p>
+          {useAPIPanel && selectedBlock ? (
+            <APIPropertiesPanel
+              blockId={selectedBlock.id}
+              blockType={selectedBlock.type}
+              initialProperties={selectedBlock.content || {}}
+              onPropertyChange={(key: string, value: any, isValid: boolean) => {
+                console.log('🔧 APIPropertiesPanel onPropertyChange:', { key, value, isValid });
+                if (isValid) {
+                  handleUpdateBlock(selectedBlock.id, {
+                    content: { ...selectedBlock.content, [key]: value }
+                  });
+                }
+              }}
+              onClose={() => context.setSelectedBlockId(null)}
+              onDelete={() => {
+                console.log('🗑️ APIPropertiesPanel onDelete called');
+                handleDeleteBlock(selectedBlock.id);
+              }}
+            />
+          ) : useAPIPanel && !selectedBlock ? (
+            <div className="p-4 text-center text-muted-foreground">
+              <p>Selecione um componente para ver as propriedades via API</p>
             </div>
           ) : (
             <RegistryPropertiesPanel
@@ -469,7 +489,7 @@ const ModularEditorPro: React.FC<ModularEditorProProps> = () => {
               }}
             />
           )}
-          
+
           {/* Toggle entre painéis */}
           <div className="p-2 border-t border-border">
             <button

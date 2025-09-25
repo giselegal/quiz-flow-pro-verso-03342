@@ -5,7 +5,7 @@
  * por 12 services essenciais com responsabilidades bem definidas
  */
 
-import { EventEmitter } from 'events';
+import { EventEmitter } from '@/utils/EventEmitter';
 
 // ============================================================================
 // CORE SERVICE INTERFACES
@@ -52,21 +52,21 @@ export abstract class BaseUnifiedService extends EventEmitter {
   ): Promise<T> {
     const startTime = performance.now();
     this.metrics.callCount++;
-    
+
     try {
       const result = await operation();
       const duration = performance.now() - startTime;
-      
-      this.metrics.avgResponseTime = 
+
+      this.metrics.avgResponseTime =
         (this.metrics.avgResponseTime + duration) / 2;
       this.metrics.lastUsed = new Date();
-      
+
       this.emit('operation:success', { operationName, duration });
       return result;
     } catch (error) {
-      this.metrics.errorRate = 
+      this.metrics.errorRate =
         (this.metrics.errorRate + 1) / this.metrics.callCount;
-      
+
       this.emit('operation:error', { operationName, error });
       throw error;
     }
@@ -123,18 +123,18 @@ export class UnifiedServiceManager extends EventEmitter {
    */
   registerService(service: BaseUnifiedService): void {
     const name = service.getName();
-    
+
     if (this.services.has(name)) {
       console.warn(`⚠️ Service ${name} já registrado - substituindo...`);
     }
 
     this.services.set(name, service);
-    
+
     // Bind service events
     service.on('operation:success', (data) => {
       this.emit('service:operation:success', { service: name, ...data });
     });
-    
+
     service.on('operation:error', (data) => {
       this.emit('service:operation:error', { service: name, ...data });
     });
@@ -154,11 +154,11 @@ export class UnifiedServiceManager extends EventEmitter {
    */
   getAllMetrics(): Record<string, ServiceMetrics> {
     const metrics: Record<string, ServiceMetrics> = {};
-    
+
     for (const [name, service] of this.services) {
       metrics[name] = service.getMetrics();
     }
-    
+
     return metrics;
   }
 
@@ -167,7 +167,7 @@ export class UnifiedServiceManager extends EventEmitter {
    */
   async healthCheckAll(): Promise<Record<string, boolean>> {
     const results: Record<string, boolean> = {};
-    
+
     const checks = Array.from(this.services.entries()).map(async ([name, service]) => {
       try {
         results[name] = await service.healthCheck();
@@ -193,7 +193,7 @@ export class UnifiedServiceManager extends EventEmitter {
         console.error(`❌ Erro ao limpar service ${name}:`, error);
       }
     }
-    
+
     this.services.clear();
     this.removeAllListeners();
     console.log('🧹 UnifiedServiceManager limpo');
@@ -210,7 +210,7 @@ export class UnifiedServiceManager extends EventEmitter {
   } {
     const metrics = this.getAllMetrics();
     const values = Object.values(metrics);
-    
+
     return {
       totalServices: values.length,
       avgResponseTime: values.reduce((sum, m) => sum + m.avgResponseTime, 0) / values.length,

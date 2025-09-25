@@ -13,7 +13,7 @@ import {
     GlobalUIState,
     GlobalFunnelState
 } from '@/hooks/core/useGlobalState';
-import { EventEmitter } from 'events';
+import { EventEmitter } from '@/utils/EventEmitter';
 
 // Interfaces simplificadas
 export interface StateSnapshot {

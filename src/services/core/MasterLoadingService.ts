@@ -10,7 +10,7 @@
  * ✅ Suporte completo para operações paralelas e sequenciais
  */
 
-import { EventEmitter } from 'events';
+import { EventEmitter } from '@/utils/EventEmitter';
 
 // Tipos para o serviço de loading
 export interface LoadingContext {
