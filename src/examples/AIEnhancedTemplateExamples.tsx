@@ -4,7 +4,12 @@
  * Este exemplo mostra todas as funcionalidades de IA integradas
  */
 
-import AIEnhancedHybridTemplateService from './AIEnhancedHybridTemplateService';
+import { useState, useEffect } from 'react';
+import AIEnhancedHybridTemplateService from '../services/AIEnhancedHybridTemplateService';
+
+declare global {
+  function gtag(command: string, ...args: any[]): void;
+}
 
 // 🏁 EXEMPLO 1: INICIALIZAÇÃO COM IA
 async function exemploInicializacao() {
@@ -107,8 +112,8 @@ async function exemploAnalisePrediciva() {
 
 // 💡 EXEMPLO 5: USO EM COMPONENTE REACT
 function ExemploComponenteReact() {
-    const [stepConfig, setStepConfig] = useState(null);
-    const [aiStatus, setAiStatus] = useState(null);
+    const [stepConfig, setStepConfig] = useState<any>(null);
+    const [aiStatus, setAiStatus] = useState<any>(null);
 
     useEffect(() => {
         async function loadStep() {
@@ -120,7 +125,7 @@ function ExemploComponenteReact() {
 
             // Carregar step com contexto
             const config = await AIEnhancedHybridTemplateService.getStepConfig(3, {
-                userName: localStorage.getItem('userName'),
+                userName: localStorage.getItem('userName') || 'Usuário',
                 previousAnswers: JSON.parse(localStorage.getItem('quizAnswers') || '{}')
             });
 
@@ -140,7 +145,7 @@ function ExemploComponenteReact() {
             {/* Mostrar se foi gerado por IA */}
             {stepConfig.metadata.aiGenerated && (
                 <div className="ai-badge">
-                    🤖 Otimizado por IA (Confiança: {stepConfig.metadata.aiConfidence * 100}%)
+                    🤖 Otimizado por IA (Confiança: {(stepConfig.metadata.aiConfidence || 0) * 100}%)
                 </div>
             )}
 
@@ -156,7 +161,7 @@ function ExemploComponenteReact() {
                 <div className="ai-suggestions">
                     <h4>💡 Dicas inteligentes:</h4>
                     <ul>
-                        {stepConfig.validation.aiSuggestions.map((suggestion, index) => (
+                        {stepConfig.validation.aiSuggestions.map((suggestion: string, index: number) => (
                             <li key={index}>{suggestion}</li>
                         ))}
                     </ul>
@@ -167,93 +172,11 @@ function ExemploComponenteReact() {
             <div className="ai-status">
                 <small>
                     IA: {aiStatus?.enabled ? '🟢 Ativa' : '🔴 Desabilitada'} |
-                    Recursos: {aiStatus?.features.join(', ')}
+                    Recursos: {aiStatus?.features?.join(', ') || 'Nenhum'}
                 </small>
             </div>
         </div>
     );
-}
-
-// 🔧 EXEMPLO 6: CONFIGURAÇÃO AVANÇADA
-async function exemploConfiguracaoAvancada() {
-    console.log('🔧 EXEMPLO 6: Configuração avançada da IA');
-
-    // Configuração customizada por tipo de usuário
-    const isNewUser = !localStorage.getItem('hasCompletedQuiz');
-    const deviceType = /Mobile/.test(navigator.userAgent) ? 'mobile' : 'desktop';
-
-    AIEnhancedHybridTemplateService.initializeAI({
-        enabled: true,
-        provider: 'github-models',
-        model: 'gpt-4o-mini',
-
-        // Mais personalização para usuários novos
-        personalizationEnabled: isNewUser,
-
-        // Mais otimização para mobile
-        optimizationEnabled: deviceType === 'mobile',
-
-        // Conteúdo gerado por IA apenas para steps críticos
-        contentGenerationEnabled: true,
-
-        // Fallback IA para todos os casos
-        fallbackEnabled: true
-    });
-
-    // Contexto rico baseado no ambiente
-    AIEnhancedHybridTemplateService.setAIContext({
-        deviceType,
-        isNewUser,
-        browserLanguage: navigator.language,
-        timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-        screenSize: `${window.innerWidth}x${window.innerHeight}`,
-        connectionSpeed: (navigator as any).connection?.effectiveType || 'unknown'
-    });
-
-    console.log('✅ Configuração avançada aplicada');
-}
-
-// 🎯 EXEMPLO 7: A/B TESTING COM IA
-async function exemploABTestingComIA() {
-    console.log('🎯 EXEMPLO 7: A/B Testing otimizado com IA');
-
-    const variant = Math.random() < 0.5 ? 'A' : 'B';
-
-    // Configuração diferente para cada variante
-    AIEnhancedHybridTemplateService.setAIContext({
-        abTestVariant: variant,
-        testId: 'quiz-flow-optimization-2025',
-        cohort: variant === 'A' ? 'control' : 'ai-optimized'
-    });
-
-    if (variant === 'B') {
-        // Variante B usa IA completa
-        AIEnhancedHybridTemplateService.initializeAI({
-            enabled: true,
-            personalizationEnabled: true,
-            optimizationEnabled: true,
-            contentGenerationEnabled: true
-        });
-    } else {
-        // Variante A usa configuração padrão
-        AIEnhancedHybridTemplateService.initializeAI({
-            enabled: false
-        });
-    }
-
-    const stepConfig = await AIEnhancedHybridTemplateService.getStepConfig(5);
-
-    console.log(`Variante ${variant}:`, {
-        aiEnhanced: stepConfig.metadata.aiGenerated,
-        optimizations: stepConfig.behavior.aiOptimized ? 'Aplicadas' : 'Padrão'
-    });
-
-    // Tracking para análise
-    gtag('event', 'ab_test_step_load', {
-        variant,
-        step: 5,
-        ai_enhanced: stepConfig.metadata.aiGenerated
-    });
 }
 
 // 🚀 EXECUTAR TODOS OS EXEMPLOS
@@ -264,16 +187,10 @@ export async function demonstrarAIEnhancedService() {
     await exemploCarregamentoComIA();
     await exemploPersonalizacao();
     await exemploAnalisePrediciva();
-    await exemploConfiguracaoAvancada();
-    await exemploABTestingComIA();
 
     console.log('✅ Demonstração concluída! IA totalmente integrada ao sistema de templates.');
     console.log('🤖 Status final:', AIEnhancedHybridTemplateService.getAIStatus());
 }
-
-// Para usar no console do browser:
-// import { demonstrarAIEnhancedService } from './path/to/this/file';
-// demonstrarAIEnhancedService();
 
 export default {
     exemploInicializacao,
@@ -281,7 +198,5 @@ export default {
     exemploPersonalizacao,
     exemploAnalisePrediciva,
     ExemploComponenteReact,
-    exemploConfiguracaoAvancada,
-    exemploABTestingComIA,
     demonstrarAIEnhancedService
 };

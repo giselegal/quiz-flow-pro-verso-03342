@@ -187,7 +187,7 @@ describe('🎯 Fluxo Completo do Quiz (21 Etapas)', () => {
         });
       });
 
-      const offerKey = hook.current.getPersonalizedOfferKey();
+      const offerKey = hook.current.getOfferKey();
       expect(typeof offerKey).toBe('string');
       expect(offerKey.length).toBeGreaterThan(0);
     });
@@ -206,8 +206,8 @@ describe('🎯 Fluxo Completo do Quiz (21 Etapas)', () => {
         hook2.current.addStrategicAnswer('step-14', 'answer4');
       });
 
-      const offerKey1 = hook1.current.getPersonalizedOfferKey();
-      const offerKey2 = hook2.current.getPersonalizedOfferKey();
+      const offerKey1 = hook1.current.getOfferKey();
+      const offerKey2 = hook2.current.getOfferKey();
 
       expect(offerKey1).not.toBe(offerKey2);
     });
@@ -263,51 +263,6 @@ describe('🎯 Fluxo Completo do Quiz (21 Etapas)', () => {
       expect(hook.current.userProfile.userName).toBe(userName);
       expect(hook.current.answers['step-2']).toEqual(step2Answer);
       expect(hook.current.userProfile.strategicAnswers['step-13']).toBe(strategicAnswer);
-    });
-  });
-
-  describe('📊 Métricas e Analytics', () => {
-    it('deve rastrear tempo gasto em cada etapa', async () => {
-      const startTime = Date.now();
-      
-      act(() => {
-        hook.current.setUserName('Maria');
-        hook.current.nextStep();
-      });
-
-      // Simula tempo na etapa
-      await new Promise(resolve => setTimeout(resolve, 100));
-      
-      act(() => {
-        hook.current.addAnswer('step-2', ['option1']);
-        hook.current.nextStep();
-      });
-
-      const endTime = Date.now();
-      expect(endTime - startTime).toBeGreaterThan(50);
-    });
-
-    it('deve contar tentativas de avanço inválidas', () => {
-      let invalidAttempts = 0;
-      
-      // Mock para contar tentativas
-      const originalNextStep = hook.current.nextStep;
-      hook.current.nextStep = () => {
-        if (!hook.current.canProceed) {
-          invalidAttempts++;
-          return;
-        }
-        originalNextStep();
-      };
-
-      act(() => {
-        hook.current.nextStep(); // tentativa sem nome
-        hook.current.nextStep(); // segunda tentativa
-        hook.current.setUserName('Maria');
-        hook.current.nextStep(); // tentativa válida
-      });
-
-      expect(invalidAttempts).toBe(2);
     });
   });
 

@@ -10,7 +10,6 @@
  */
 
 import { GitHubModelsAI } from './GitHubModelsAI';
-import { useAI } from '@/hooks/useAI';
 
 // 🎯 INTERFACES EXPANDIDAS COM IA
 export interface AIConfig {
