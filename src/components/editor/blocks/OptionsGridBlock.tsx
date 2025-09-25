@@ -147,7 +147,7 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
   // Acessa etapa atual no modo editor
   let currentStepFromEditor: number | null = null;
   try {
-    const { state, actions } = usePureBuilder();
+    const { state } = usePureBuilder();
     currentStepFromEditor = state?.currentStep ?? null;
   } catch (e) {
     currentStepFromEditor = null;

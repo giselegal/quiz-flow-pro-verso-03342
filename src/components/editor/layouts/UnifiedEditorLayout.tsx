@@ -89,11 +89,11 @@ export const UnifiedEditorLayout: React.FC<UnifiedEditorLayoutProps> = ({ classN
           onValueChange={value => setActiveTab(value as any)}
           className="flex-1"
         >
-          <div className="border-b">
-            <TabsList className="grid w-full grid-cols-3">
-              <TabsTrigger value="quiz">Quiz Editor</TabsTrigger>
-              <TabsTrigger value="result">Result Page</TabsTrigger>
-              <TabsTrigger value="sales">Sales Page</TabsTrigger>
+          <div className="border-b border-brand-brightPink/20 bg-brand-background">
+            <TabsList className="grid w-full grid-cols-3 bg-brand-darkBlue/5">
+              <TabsTrigger value="quiz" className="text-brand-darkBlue data-[state=active]:bg-gradient-to-r data-[state=active]:from-brand-brightPink data-[state=active]:to-brand-brightBlue data-[state=active]:text-white">Quiz Editor</TabsTrigger>
+              <TabsTrigger value="result" className="text-brand-darkBlue data-[state=active]:bg-gradient-to-r data-[state=active]:from-brand-brightPink data-[state=active]:to-brand-brightBlue data-[state=active]:text-white">Result Page</TabsTrigger>
+              <TabsTrigger value="sales" className="text-brand-darkBlue data-[state=active]:bg-gradient-to-r data-[state=active]:from-brand-brightPink data-[state=active]:to-brand-brightBlue data-[state=active]:text-white">Sales Page</TabsTrigger>
             </TabsList>
           </div>
 
@@ -130,14 +130,14 @@ export const UnifiedEditorLayout: React.FC<UnifiedEditorLayoutProps> = ({ classN
           </TabsContent>
 
           <TabsContent value="quiz" className="flex-1 mt-0">
-            <div className="h-full flex items-center justify-center">
-              <p style={{ color: '#8B7355' }}>Quiz Editor - Em desenvolvimento</p>
+            <div className="h-full flex items-center justify-center bg-brand-background">
+              <p className="text-brand-darkBlue/70">Quiz Editor - Em desenvolvimento</p>
             </div>
           </TabsContent>
 
           <TabsContent value="sales" className="flex-1 mt-0">
-            <div className="h-full flex items-center justify-center">
-              <p style={{ color: '#8B7355' }}>Sales Page Editor - Em desenvolvimento</p>
+            <div className="h-full flex items-center justify-center bg-brand-background">
+              <p className="text-brand-darkBlue/70">Sales Page Editor - Em desenvolvimento</p>
             </div>
           </TabsContent>
         </Tabs>

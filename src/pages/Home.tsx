@@ -65,7 +65,7 @@ const Home = () => {
   return (
     <div className="min-h-screen animate-fade-in">
       {/* Header */}
-      <header className="sticky top-0 z-50 glass backdrop-blur-xl border-b border-brand-lightBlue/20 animate-slide-in-down">
+      <header className="sticky top-0 z-50 glass backdrop-blur-xl border-b border-brand-brightPink/20 animate-slide-in-down">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             {/* Logo com animação */}
@@ -78,7 +78,7 @@ const Home = () => {
               {user ? (
                 <div className="flex items-center space-x-3">
                   <div className="flex items-center space-x-2 px-3 py-2 glass rounded-lg hover-lift">
-                    <div className="w-6 h-6 gradient-primary rounded-full flex items-center justify-center transform-gpu hover-scale">
+                    <div className="w-6 h-6 bg-gradient-to-r from-brand-brightPink to-brand-brightBlue rounded-full flex items-center justify-center transform-gpu hover-scale">
                       <span className="text-xs font-semibold text-white">
                         {user.name?.charAt(0) || user.email.charAt(0)}
                       </span>
@@ -89,14 +89,14 @@ const Home = () => {
                   </div>
                   <Button
                     onClick={() => navigate('/admin')}
-                    className="btn-primary transform-gpu"
+                    className="bg-gradient-to-r from-brand-brightPink to-brand-brightBlue text-white hover:shadow-lg hover:shadow-brand-brightPink/25 transform-gpu"
                   >
                     Dashboard
                   </Button>
                   <Button
                     onClick={() => navigate('/templates')}
                     variant="outline"
-                    className="btn-outline hover-lift"
+                    className="border-brand-brightBlue text-brand-brightBlue hover:bg-brand-brightBlue/10 hover-lift"
                   >
                     <Target className="h-4 w-4 mr-2" />
                     Criar Funil
@@ -104,7 +104,7 @@ const Home = () => {
                   <Button
                     onClick={logout}
                     variant="outline"
-                    className="border-brand-lightBlue text-brand-darkBlue hover:bg-brand-lightBlue/10 hover-lift"
+                    className="border-brand-mediumBlue text-brand-mediumBlue hover:bg-brand-mediumBlue/10 hover-lift"
                   >
                     Sair
                   </Button>
@@ -114,13 +114,13 @@ const Home = () => {
                   <Button
                     onClick={() => navigate('/auth')}
                     variant="outline"
-                    className="btn-outline hover-lift"
+                    className="border-brand-brightBlue text-brand-brightBlue hover:bg-brand-brightBlue/10 hover-lift"
                   >
                     Entrar
                   </Button>
                   <Button
                     onClick={() => navigate('/auth')}
-                    className="btn-primary transform-gpu shadow-glow"
+                    className="bg-gradient-to-r from-brand-brightPink to-brand-brightBlue text-white hover:shadow-lg hover:shadow-brand-brightPink/25 transform-gpu"
                   >
                     Começar Grátis
                   </Button>
@@ -147,14 +147,14 @@ const Home = () => {
                 <QuizFlowLogo size="xl" variant="full" className="mx-auto hover-scale transform-gpu" />
               </div>
 
-              <Badge className="mb-6 badge-primary animate-slide-in-up hover-lift">
+              <Badge className="mb-6 bg-gradient-to-r from-brand-brightPink to-brand-brightBlue text-white animate-slide-in-up hover-lift shadow-lg shadow-brand-brightPink/25">
                 <Sparkles className="h-4 w-4 mr-2 animate-pulse" />
                 Plataforma de Marketing Interativo
               </Badge>
 
               <h1 className="hero-title animate-slide-in-up">
                 Transforme Visitantes em
-                <span className="hero-gradient-text animate-pulse">
+                <span className="bg-gradient-to-r from-brand-brightPink via-brand-mediumBlue to-brand-brightBlue bg-clip-text text-transparent animate-pulse">
                   Clientes Engajados
                 </span>
               </h1>
@@ -168,7 +168,7 @@ const Home = () => {
                 <Button
                   onClick={() => navigate(user ? '/admin' : '/auth')}
                   size="lg"
-                  className="btn-primary transform-gpu shadow-glow animate-enhanced-pulse px-8 py-6 text-lg font-bold"
+                  className="bg-gradient-to-r from-brand-brightPink to-brand-brightBlue text-white hover:shadow-lg hover:shadow-brand-brightPink/25 transform-gpu animate-enhanced-pulse px-8 py-6 text-lg font-bold"
                 >
                   <Play className="h-6 w-6 mr-3" />
                   {user ? 'Ir para Dashboard' : 'Começar Agora'}
@@ -180,18 +180,18 @@ const Home = () => {
                     <Button
                       onClick={() => navigate('/templates')}
                       size="lg"
-                      className="btn-primary transform-gpu shadow-brand px-8 py-6 text-lg"
+                      className="bg-gradient-to-r from-brand-mediumBlue to-brand-brightBlue text-white hover:shadow-lg hover:shadow-brand-mediumBlue/25 transform-gpu px-8 py-6 text-lg"
                     >
                       <Sparkles className="h-5 w-5 mr-3" />
                       Criar Funil
-                      <Badge className="ml-3 badge-success text-xs">NOVO</Badge>
+                      <Badge className="ml-3 bg-brand-brightPink text-white text-xs">NOVO</Badge>
                     </Button>
 
                     <Button
                       onClick={() => navigate('/templates')}
                       size="lg"
                       variant="outline"
-                      className="btn-outline hover-lift px-8 py-6 text-lg font-semibold glass"
+                      className="border-brand-brightBlue text-brand-brightBlue hover:bg-brand-brightBlue/10 hover-lift px-8 py-6 text-lg font-semibold glass"
                     >
                       <Target className="h-5 w-5 mr-3" />
                       Templates
@@ -220,7 +220,7 @@ const Home = () => {
                   <span className="font-semibold">+300% aumento em conversões</span>
                 </div>
                 <div className="social-proof-badge hover-lift">
-                  <Shield className="h-5 w-5 text-brand-lightBlue" />
+                  <Shield className="h-5 w-5 text-brand-mediumBlue" />
                   <span className="font-semibold">LGPD Compliant</span>
                 </div>
               </div>
@@ -233,7 +233,7 @@ const Home = () => {
           <div className="section-container">
             <div className="content-center mb-16">
               <h2 className="hero-title text-brand-darkBlue">
-                Resultados que <span className="hero-gradient-text">impressionam</span>
+                Resultados que <span className="bg-gradient-to-r from-brand-brightPink to-brand-brightBlue bg-clip-text text-transparent">impressionam</span>
               </h2>
               <p className="hero-subtitle text-brand-darkBlue/80">
                 Veja o impacto real que nossa plataforma gera para nossos clientes
@@ -242,21 +242,21 @@ const Home = () => {
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               <div className="metric-card hover-lift animate-slide-in-up">
-                <div className="metric-icon">
+                <div className="metric-icon bg-gradient-to-r from-brand-brightPink to-brand-brightBlue">
                   <Target className="h-8 w-8" />
                 </div>
                 <h3 className="metric-value">85%</h3>
                 <p className="metric-label">Taxa de Conversão Média</p>
               </div>
               <div className="metric-card hover-lift animate-slide-in-up" style={{ animationDelay: '0.1s' }}>
-                <div className="metric-icon gradient-primary">
+                <div className="metric-icon bg-gradient-to-r from-brand-mediumBlue to-brand-brightBlue">
                   <MousePointer className="h-8 w-8" />
                 </div>
                 <h3 className="metric-value">12x</h3>
                 <p className="metric-label">Mais Engajamento</p>
               </div>
               <div className="metric-card hover-lift animate-slide-in-up" style={{ animationDelay: '0.2s' }}>
-                <div className="metric-icon gradient-tech">
+                <div className="metric-icon bg-gradient-to-r from-brand-darkBlue to-brand-mediumBlue">
                   <Rocket className="h-8 w-8" />
                 </div>
                 <h3 className="metric-value">5min</h3>
@@ -272,7 +272,7 @@ const Home = () => {
             <div className="content-center mb-16">
               <h3 className="hero-title">
                 Tudo que você precisa para
-                <span className="hero-gradient-text"> converter mais</span>
+                <span className="bg-gradient-to-r from-brand-brightPink via-brand-mediumBlue to-brand-brightBlue bg-clip-text text-transparent"> converter mais</span>
               </h3>
               <p className="hero-subtitle">
                 Ferramentas poderosas e intuitivas para criar experiências que seus clientes vão
@@ -283,7 +283,7 @@ const Home = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {/* Feature 1 */}
               <article className="feature-card hover-lift animate-slide-in-up">
-                <div className="feature-icon gradient-primary">
+                <div className="feature-icon bg-gradient-to-r from-brand-brightPink to-brand-brightBlue">
                   <Zap className="h-6 w-6" />
                 </div>
                 <h4 className="feature-title">Criação Rápida</h4>
@@ -295,7 +295,7 @@ const Home = () => {
 
               {/* Feature 2 */}
               <article className="feature-card hover-lift animate-slide-in-up" style={{ animationDelay: '0.1s' }}>
-                <div className="feature-icon gradient-tech">
+                <div className="feature-icon bg-gradient-to-r from-brand-mediumBlue to-brand-brightBlue">
                   <Target className="h-6 w-6" />
                 </div>
                 <h4 className="feature-title">Segmentação Inteligente</h4>
@@ -307,7 +307,7 @@ const Home = () => {
 
               {/* Feature 3 */}
               <article className="feature-card hover-lift animate-slide-in-up" style={{ animationDelay: '0.2s' }}>
-                <div className="feature-icon gradient-hero">
+                <div className="feature-icon bg-gradient-to-r from-brand-darkBlue via-brand-mediumBlue to-brand-brightPink">
                   <TrendingUp className="h-6 w-6" />
                 </div>
                 <h4 className="feature-title">Analytics Avançado</h4>
@@ -329,7 +329,7 @@ const Home = () => {
           <div className="section-container">
             <div className="content-center mb-16">
               <h3 className="hero-title text-brand-darkBlue">
-                O que nossos <span className="hero-gradient-text">clientes dizem</span>
+                O que nossos <span className="bg-gradient-to-r from-brand-brightPink to-brand-brightBlue bg-clip-text text-transparent">clientes dizem</span>
               </h3>
               <p className="hero-subtitle text-brand-darkBlue/80">
                 Transformações reais de negócios que usam nossa plataforma
@@ -340,7 +340,7 @@ const Home = () => {
               {/* Depoimento 1 */}
               <div className="glass-card p-8 rounded-2xl hover-lift animate-slide-in-up transform-gpu">
                 <div className="flex items-center mb-6">
-                  <div className="w-12 h-12 gradient-primary rounded-full flex items-center justify-center mr-4">
+                  <div className="w-12 h-12 bg-gradient-to-r from-brand-brightPink to-brand-brightBlue rounded-full flex items-center justify-center mr-4">
                     <span className="text-white font-bold text-lg">M</span>
                   </div>
                   <div>
@@ -360,7 +360,7 @@ const Home = () => {
               {/* Depoimento 2 */}
               <div className="glass-card p-8 rounded-2xl hover-lift animate-slide-in-up transform-gpu" style={{ animationDelay: '0.1s' }}>
                 <div className="flex items-center mb-6">
-                  <div className="w-12 h-12 gradient-tech rounded-full flex items-center justify-center mr-4">
+                  <div className="w-12 h-12 bg-gradient-to-r from-brand-mediumBlue to-brand-brightBlue rounded-full flex items-center justify-center mr-4">
                     <span className="text-white font-bold text-lg">J</span>
                   </div>
                   <div>
@@ -380,7 +380,7 @@ const Home = () => {
               {/* Depoimento 3 */}
               <div className="glass-card p-8 rounded-2xl hover-lift animate-slide-in-up transform-gpu" style={{ animationDelay: '0.2s' }}>
                 <div className="flex items-center mb-6">
-                  <div className="w-12 h-12 gradient-hero rounded-full flex items-center justify-center mr-4">
+                  <div className="w-12 h-12 bg-gradient-to-r from-brand-darkBlue via-brand-mediumBlue to-brand-brightPink rounded-full flex items-center justify-center mr-4">
                     <span className="text-white font-bold text-lg">A</span>
                   </div>
                   <div>
