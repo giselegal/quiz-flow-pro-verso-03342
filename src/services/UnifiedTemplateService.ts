@@ -8,10 +8,9 @@
  * ✅ Cache inteligente com TTL
  * ✅ Fallbacks robustos
  * ✅ API unificada consolidando fragmentação
+ * 
+ * ⚡ INDEPENDENTE: Não depende mais de serviços legados
  */
-
-// ❌ REMOVIDO: import { templateService } from '../core/funnel/services/TemplateService';
-// ⚡ CORREÇÃO: UnifiedTemplateService agora é completamente independente
 
 // 🎯 CACHE AVANÇADO COM TTL
 interface CachedTemplate {
