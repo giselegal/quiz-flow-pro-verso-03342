@@ -17,6 +17,14 @@ export { MockDataProvider, useMockData, useMockStepData } from './MockDataProvid
 export { ValidationIndicator, ValidationBadge, useValidation } from './ValidationIndicator';
 export { UnifiedQuizStepLoader } from './UnifiedQuizStepLoader';
 
+// Componentes de resultado (Fase 3)
+export { EditableStep20Result } from '../result/EditableStep20Result';
+export { EditableText } from '../result/EditableText';
+export { EditableColor } from '../result/EditableColor';
+export { StyleSelector } from '../result/StyleSelector';
+export { ResultPreviewSwitcher } from '../result/ResultPreviewSwitcher';
+export { MockResultGenerator } from '../result/MockResultGenerator';
+
 // Types
 export type { EditorControlsManagerProps } from './EditorControlsManager';
 export type { EditorPropertiesPanelProps, PropertyConfig } from './EditorPropertiesPanel';
@@ -25,6 +33,9 @@ export type { UnifiedPreviewEngineProps } from './UnifiedPreviewEngine';
 export type { ProductionPreviewEngineProps } from './ProductionPreviewEngine';
 export type { EditorBlockRendererProps } from './EditorBlockRenderer';
 export type { ValidationIndicatorProps, ValidationState } from './ValidationIndicator';
+
+// Hooks (Fase 3)
+export { useQuizResultEditor } from '@/hooks/useQuizResultEditor';
 
 /**
  * 🎯 EDITOR UNIFICADO COMPLETO
@@ -36,10 +47,14 @@ export type { ValidationIndicatorProps, ValidationState } from './ValidationIndi
  * 3. ✅ EditorBlockRenderer - Renderizador específico para blocos do editor
  * 4. ✅ ValidationIndicator - Sistema de validação visual
  * 5. ✅ MockDataProvider - Dados mockados para preview realístico
- * 6. ✅ EditorControlsManager - Sistema de controles unificado
- * 7. ✅ EditorStageManager - Gerenciador de etapas do quiz
- * 8. ✅ EditorPropertiesPanel - Painel de propriedades unificado
- * 9. ✅ SortablePreviewBlockWrapper - Componente para arrastar e soltar
+ * 6. ✅ EditableStep20Result - Editor completo do Step 20 com customização
+ * 7. ✅ StyleSelector - Seletor de estilos para preview de diferentes resultados
+ * 8. ✅ ResultPreviewSwitcher - Alternador entre modos de preview (único/múltiplos/comparação)
+ * 9. ✅ useQuizResultEditor - Hook completo para edição de resultados
+ * 10. ✅ EditorControlsManager - Sistema de controles unificado
+ * 11. ✅ EditorStageManager - Gerenciador de etapas do quiz
+ * 12. ✅ EditorPropertiesPanel - Painel de propriedades unificado
+ * 13. ✅ SortablePreviewBlockWrapper - Componente para arrastar e soltar
  *
- * Status: 🎉 FASE 2 IMPLEMENTADA - Sistema de Validação Visual Completo
+ * Status: 🎉 FASE 3 IMPLEMENTADA - Integração Step 20 Completa
  */

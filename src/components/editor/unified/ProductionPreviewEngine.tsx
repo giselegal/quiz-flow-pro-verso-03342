@@ -11,6 +11,7 @@ import { Block } from '@/types/editor';
 import { cn } from '@/lib/utils';
 import Step20Result from '@/components/steps/Step20Result';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
+import { EditableStep20Result } from '../result/EditableStep20Result';
 import { EnhancedBlockRenderer } from './EnhancedBlockRenderer';
 
 export interface ProductionPreviewEngineProps {
@@ -48,15 +49,23 @@ export const ProductionPreviewEngine: React.FC<ProductionPreviewEngineProps> = (
   const isProductionMode = mode === 'production';
   const isEditorMode = mode === 'editor';
 
-  // Renderizar Step 20 como caso especial
+  // Renderizar Step 20 como caso especial com editor
   if (currentStep === 20) {
     return (
       <div className={cn('production-preview-step20', className)}>
         <Suspense fallback={<LoadingSpinner />}>
-          <Step20Result 
-            className="w-full" 
-            isPreview={!isProductionMode}
-          />
+          {isEditorMode ? (
+            <EditableStep20Result 
+              className="w-full" 
+              isPreview={isPreviewing}
+              enableEditing={true}
+            />
+          ) : (
+            <Step20Result 
+              className="w-full" 
+              isPreview={!isProductionMode}
+            />
+          )}
         </Suspense>
       </div>
     );
