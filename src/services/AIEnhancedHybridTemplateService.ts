@@ -105,9 +105,17 @@ export interface AIContext {
     };
 }
 
+interface StepOverrideData {
+    templateVersion: string;
+    stepId: string;
+    timestamp: string;
+    aiEnhanced: boolean;
+    overrides: Partial<StepTemplate>;
+}
+
 class AIEnhancedHybridTemplateService {
     private static masterTemplate: MasterTemplate | null = null;
-    private static overrideCache = new Map<string, StepTemplate>();
+    private static overrideCache = new Map<string, StepTemplate | StepOverrideData>();
     private static aiService: GitHubModelsAI | null = null;
     private static aiContext: AIContext = {};
     private static aiConfig: AIConfig = {
@@ -413,7 +421,7 @@ Responda com JSON contendo:
 
             // 🎨 BLOCOS OTIMIZADOS PELA IA (se disponível)
             if (aiGenerated.blocks && aiGenerated.blocks.length > 0) {
-                finalConfig.blocks = this.mergeBlocks(finalConfig.blocks, aiGenerated.blocks);
+                finalConfig.blocks = this.mergeBlocks(finalConfig.blocks || [], aiGenerated.blocks);
             }
         }
 
@@ -567,11 +575,11 @@ Forneça previsões e recomendações em JSON:
                 this.masterTemplate = await response.json();
 
                 // 🤖 CONFIGURAR IA SE DEFINIDA NO MASTER
-                if (this.masterTemplate.globalConfig.ai) {
+                if (this.masterTemplate?.globalConfig?.ai) {
                     this.initializeAI(this.masterTemplate.globalConfig.ai);
                 }
 
-                console.log('✅ Master template carregado:', this.masterTemplate?.metadata.id);
+                console.log('✅ Master template carregado:', this.masterTemplate?.metadata?.id);
             }
         } catch (error) {
             console.warn('⚠️ Falha ao carregar master template:', error);
