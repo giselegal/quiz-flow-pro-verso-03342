@@ -478,7 +478,7 @@ class QuizOrchestrator {
     
     // Implementar lógica de scoring baseada nas seleções
     // Esta é uma implementação simplificada
-    Object.entries(selections).forEach(([questionId, options]) => {
+    Object.entries(selections).forEach(([, options]) => {
       options.forEach(option => {
         // Extrair categoria do option (assumindo formato "categoria_opcao")
         const [category] = option.split('_');

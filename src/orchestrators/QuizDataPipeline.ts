@@ -6,9 +6,8 @@
  */
 
 import { Block } from '@/types/editor';
-import { unifiedQuizStorage, UnifiedQuizData } from '@/services/core/UnifiedQuizStorage';
+import { unifiedQuizStorage } from '@/services/core/UnifiedQuizStorage';
 import HybridTemplateService from '@/services/HybridTemplateService';
-import { supabase } from '@/integrations/supabase/client';
 
 export interface DataPipelineStage {
   name: string;
@@ -295,8 +294,7 @@ class QuizDataPipeline {
       // Gerar insights personalizados
       const personalizedInsights = this.generatePersonalizedInsights(
         dominantStyle, 
-        categoryScores, 
-        quizData
+        categoryScores
       );
 
       const result = {
@@ -516,7 +514,7 @@ class QuizDataPipeline {
   private calculateCategoryScores(selections: Record<string, string[]>): Record<string, number> {
     const scores: Record<string, number> = {};
     
-    Object.entries(selections).forEach(([questionId, options]) => {
+    Object.entries(selections).forEach(([, options]) => {
       options.forEach(option => {
         // Assumindo formato "categoria_opcao" ou similar
         const [category] = option.split('_');
@@ -545,8 +543,7 @@ class QuizDataPipeline {
 
   private generatePersonalizedInsights(
     dominantStyle: string, 
-    scores: Record<string, number>, 
-    quizData: UnifiedQuizData
+    scores: Record<string, number>
   ): any {
     return {
       primaryStyle: dominantStyle,
