@@ -1,3 +1,12 @@
+/**
+ * ⚠️  DEPRECATED - ARQUIVO LEGACY 
+ * 
+ * Este arquivo foi substituído por ModernDashboardPage.tsx
+ * As rotas /admin/* são redirecionadas para /dashboard/* no App.tsx
+ * 
+ * TODO: Remover este arquivo após validação completa da migração
+ */
+
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import React, { Suspense, lazy } from 'react';
 import { Route, Switch } from 'wouter';
