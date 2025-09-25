@@ -841,7 +841,7 @@ const RegistryPropertiesPanel: React.FC<RegistryPropertiesPanelProps> = ({
               </div>
               <div>
                 <h2 className="text-xl font-bold text-white">
-                  🔥 TESTE HOT RELOAD - {blockDef.title}
+                  ⚡️ API PANEL ATIVO - {blockDef.title}
                 </h2>
                 <p className="text-sm text-gray-200 font-mono">
                   {selectedBlock.id}
