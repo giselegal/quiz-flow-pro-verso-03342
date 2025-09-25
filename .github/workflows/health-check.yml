@@ -1,0 +1,356 @@
+name: 🏥 Health Check & Monitoring
+
+on:
+  schedule:
+    # Run every 15 minutes
+    - cron: '*/15 * * * *'
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to check'
+        required: true
+        default: 'production'
+        type: choice
+        options:
+          - staging
+          - production
+      alert_on_failure:
+        description: 'Send alerts on failure'
+        required: false
+        default: true
+        type: boolean
+
+concurrency:
+  group: health-check-${{ github.event.inputs.environment || 'production' }}
+  cancel-in-progress: true
+
+env:
+  NODE_VERSION: '18'
+  HEALTH_TIMEOUT: '30'
+
+jobs:
+  # ===== BASIC HEALTH CHECKS =====
+  basic-health:
+    name: 🔍 Basic Health Check
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      environment: ${{ steps.setup.outputs.environment }}
+      base-url: ${{ steps.setup.outputs.base-url }}
+      is-healthy: ${{ steps.health.outputs.is-healthy }}
+    steps:
+      - name: 🎯 Setup Environment
+        id: setup
+        run: |
+          ENV="${{ github.event.inputs.environment || 'production' }}"
+          echo "environment=$ENV" >> $GITHUB_OUTPUT
+          
+          if [[ "$ENV" == "production" ]]; then
+            echo "base-url=https://your-app.netlify.app" >> $GITHUB_OUTPUT
+          else
+            echo "base-url=https://staging--your-app.netlify.app" >> $GITHUB_OUTPUT
+          fi
+
+      - name: 🏥 Health Check
+        id: health
+        run: |
+          BASE_URL="${{ steps.setup.outputs.base-url }}"
+          echo "Checking health of: $BASE_URL"
+          
+          # Basic HTTP check
+          HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" --max-time ${{ env.HEALTH_TIMEOUT }} "$BASE_URL" || echo "000")
+          
+          if [[ "$HTTP_STATUS" == "200" ]]; then
+            echo "✅ HTTP Status: $HTTP_STATUS"
+            echo "is-healthy=true" >> $GITHUB_OUTPUT
+          else
+            echo "❌ HTTP Status: $HTTP_STATUS"
+            echo "is-healthy=false" >> $GITHUB_OUTPUT
+            exit 1
+          fi
+
+      - name: 🔍 Response Time Check
+        run: |
+          BASE_URL="${{ steps.setup.outputs.base-url }}"
+          
+          RESPONSE_TIME=$(curl -s -o /dev/null -w "%{time_total}" --max-time ${{ env.HEALTH_TIMEOUT }} "$BASE_URL" || echo "999")
+          RESPONSE_MS=$(echo "$RESPONSE_TIME * 1000" | bc -l | cut -d. -f1)
+          
+          echo "Response time: ${RESPONSE_MS}ms"
+          
+          if [[ $RESPONSE_MS -lt 3000 ]]; then
+            echo "✅ Response time acceptable"
+          elif [[ $RESPONSE_MS -lt 5000 ]]; then
+            echo "⚠️ Response time slow but acceptable"
+          else
+            echo "❌ Response time too slow: ${RESPONSE_MS}ms"
+            exit 1
+          fi
+
+      - name: 🌐 DNS Resolution Check
+        run: |
+          BASE_URL="${{ steps.setup.outputs.base-url }}"
+          DOMAIN=$(echo "$BASE_URL" | sed 's|https\?://||' | cut -d/ -f1)
+          
+          if nslookup "$DOMAIN" > /dev/null 2>&1; then
+            echo "✅ DNS resolution successful"
+          else
+            echo "❌ DNS resolution failed"
+            exit 1
+          fi
+
+  # ===== FUNCTIONAL HEALTH CHECKS =====
+  functional-health:
+    name: 🧪 Functional Health Check
+    runs-on: ubuntu-latest
+    needs: basic-health
+    timeout-minutes: 10
+    if: needs.basic-health.outputs.is-healthy == 'true'
+    steps:
+      - name: 📥 Checkout Code
+        uses: actions/checkout@v4
+
+      - name: ⚡ Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: 📦 Install Dependencies
+        run: npm ci --prefer-offline --no-audit
+
+      - name: 🎭 Install Playwright
+        run: npx playwright install chromium --with-deps
+
+      - name: 🧪 Run Health Check Tests
+        run: |
+          # Create a simple health check test
+          cat > health-check.spec.ts << 'EOF'
+          import { test, expect } from '@playwright/test';
+          
+          const BASE_URL = process.env.BASE_URL || '${{ needs.basic-health.outputs.base-url }}';
+          
+          test.describe('Health Check', () => {
+            test('Homepage loads correctly', async ({ page }) => {
+              await page.goto(BASE_URL);
+              await expect(page).toHaveTitle(/.+/);
+              await expect(page.locator('body')).toBeVisible();
+            });
+            
+            test('No critical JavaScript errors', async ({ page }) => {
+              const errors: string[] = [];
+              page.on('pageerror', error => {
+                if (error.message.includes('ReferenceError') || 
+                    error.message.includes('TypeError')) {
+                  errors.push(error.message);
+                }
+              });
+              
+              await page.goto(BASE_URL);
+              await page.waitForTimeout(3000);
+              
+              expect(errors.length).toBe(0);
+            });
+            
+            test('Main navigation works', async ({ page }) => {
+              await page.goto(BASE_URL);
+              
+              // Look for navigation elements
+              const navElements = page.locator('nav, [role="navigation"], a[href], button');
+              const count = await navElements.count();
+              
+              expect(count).toBeGreaterThan(0);
+            });
+          });
+          EOF
+          
+          npx playwright test health-check.spec.ts --project=chromium
+        env:
+          BASE_URL: ${{ needs.basic-health.outputs.base-url }}
+
+  # ===== PERFORMANCE MONITORING =====
+  performance-monitor:
+    name: ⚡ Performance Monitoring
+    runs-on: ubuntu-latest
+    needs: basic-health
+    timeout-minutes: 8
+    if: needs.basic-health.outputs.is-healthy == 'true'
+    steps:
+      - name: 🔍 Lighthouse Audit
+        run: |
+          BASE_URL="${{ needs.basic-health.outputs.base-url }}"
+          
+          npx lighthouse "$BASE_URL" \
+            --chrome-flags="--headless --no-sandbox --disable-dev-shm-usage" \
+            --output json \
+            --output-path lighthouse-report.json \
+            --preset desktop \
+            --quiet
+
+      - name: 📊 Performance Analysis
+        run: |
+          PERFORMANCE=$(node -e "
+            try {
+              const report = require('./lighthouse-report.json');
+              const scores = report.lhr.categories;
+              
+              const perf = Math.round(scores.performance.score * 100);
+              const accessibility = Math.round(scores.accessibility.score * 100);
+              const bestPractices = Math.round(scores['best-practices'].score * 100);
+              const seo = Math.round(scores.seo.score * 100);
+              
+              console.log('=== PERFORMANCE REPORT ===');
+              console.log('Performance:', perf + '%');
+              console.log('Accessibility:', accessibility + '%');
+              console.log('Best Practices:', bestPractices + '%');
+              console.log('SEO:', seo + '%');
+              
+              // Define thresholds
+              const thresholds = {
+                performance: 80,
+                accessibility: 85,
+                bestPractices: 80,
+                seo: 85
+              };
+              
+              let failed = false;
+              
+              if (perf < thresholds.performance) {
+                console.error('❌ Performance below threshold:', perf, '<', thresholds.performance);
+                failed = true;
+              }
+              if (accessibility < thresholds.accessibility) {
+                console.error('❌ Accessibility below threshold:', accessibility, '<', thresholds.accessibility);
+                failed = true;
+              }
+              
+              if (failed) {
+                console.error('❌ Performance monitoring failed');
+                process.exit(1);
+              } else {
+                console.log('✅ All performance metrics within acceptable range');
+              }
+            } catch (error) {
+              console.error('Error reading lighthouse report:', error.message);
+              process.exit(1);
+            }
+          ")
+
+  # ===== SECURITY MONITORING =====
+  security-monitor:
+    name: 🔒 Security Monitoring
+    runs-on: ubuntu-latest
+    needs: basic-health
+    timeout-minutes: 5
+    if: needs.basic-health.outputs.is-healthy == 'true'
+    steps:
+      - name: 🔒 Security Headers Check
+        run: |
+          BASE_URL="${{ needs.basic-health.outputs.base-url }}"
+          
+          echo "Checking security headers for: $BASE_URL"
+          
+          HEADERS=$(curl -s -I --max-time 30 "$BASE_URL")
+          
+          # Check for important security headers
+          if echo "$HEADERS" | grep -i "x-content-type-options" > /dev/null; then
+            echo "✅ X-Content-Type-Options header present"
+          else
+            echo "⚠️ X-Content-Type-Options header missing"
+          fi
+          
+          if echo "$HEADERS" | grep -i "x-frame-options\|content-security-policy" > /dev/null; then
+            echo "✅ Clickjacking protection present"
+          else
+            echo "⚠️ Clickjacking protection missing"
+          fi
+          
+          if echo "$HEADERS" | grep -i "strict-transport-security" > /dev/null; then
+            echo "✅ HSTS header present"
+          else
+            echo "⚠️ HSTS header missing"
+          fi
+
+      - name: 🌐 SSL Certificate Check
+        run: |
+          BASE_URL="${{ needs.basic-health.outputs.base-url }}"
+          DOMAIN=$(echo "$BASE_URL" | sed 's|https\?://||' | cut -d/ -f1)
+          
+          if [[ "$BASE_URL" == https* ]]; then
+            EXPIRY=$(echo | openssl s_client -servername "$DOMAIN" -connect "$DOMAIN:443" 2>/dev/null | openssl x509 -noout -enddate | cut -d= -f2)
+            EXPIRY_EPOCH=$(date -d "$EXPIRY" +%s)
+            CURRENT_EPOCH=$(date +%s)
+            DAYS_UNTIL_EXPIRY=$(( (EXPIRY_EPOCH - CURRENT_EPOCH) / 86400 ))
+            
+            echo "SSL certificate expires in $DAYS_UNTIL_EXPIRY days"
+            
+            if [[ $DAYS_UNTIL_EXPIRY -gt 30 ]]; then
+              echo "✅ SSL certificate valid"
+            elif [[ $DAYS_UNTIL_EXPIRY -gt 7 ]]; then
+              echo "⚠️ SSL certificate expires soon"
+            else
+              echo "❌ SSL certificate expires very soon!"
+              exit 1
+            fi
+          else
+            echo "⚠️ Site not using HTTPS"
+          fi
+
+  # ===== ALERT ON FAILURE =====
+  alert-on-failure:
+    name: 🚨 Alert on Failure
+    runs-on: ubuntu-latest
+    needs: [basic-health, functional-health, performance-monitor, security-monitor]
+    if: failure() && (github.event.inputs.alert_on_failure != 'false')
+    steps:
+      - name: 🚨 Generate Alert
+        run: |
+          echo "🚨 HEALTH CHECK FAILED!"
+          echo "Environment: ${{ needs.basic-health.outputs.environment }}"
+          echo "URL: ${{ needs.basic-health.outputs.base-url }}"
+          echo "Time: $(date -u '+%Y-%m-%d %H:%M:%S UTC')"
+          echo ""
+          echo "Failed checks:"
+          echo "- Basic Health: ${{ needs.basic-health.result }}"
+          echo "- Functional Health: ${{ needs.functional-health.result }}"
+          echo "- Performance: ${{ needs.performance-monitor.result }}"
+          echo "- Security: ${{ needs.security-monitor.result }}"
+
+      - name: 📢 Send Notification
+        run: |
+          echo "📢 Notification would be sent here"
+          # In real implementation:
+          # - Send Slack/Discord notification
+          # - Send email alert
+          # - Create PagerDuty incident
+          # - Update status page
+
+  # ===== HEALTH STATUS SUMMARY =====
+  health-summary:
+    name: 📊 Health Status Summary
+    runs-on: ubuntu-latest
+    needs: [basic-health, functional-health, performance-monitor, security-monitor]
+    if: always()
+    steps:
+      - name: 📊 Generate Summary
+        run: |
+          echo "=== HEALTH CHECK SUMMARY ==="
+          echo "Environment: ${{ needs.basic-health.outputs.environment }}"
+          echo "URL: ${{ needs.basic-health.outputs.base-url }}"
+          echo "Timestamp: $(date -u '+%Y-%m-%d %H:%M:%S UTC')"
+          echo ""
+          echo "Results:"
+          echo "🔍 Basic Health: ${{ needs.basic-health.result }}"
+          echo "🧪 Functional Health: ${{ needs.functional-health.result }}"
+          echo "⚡ Performance: ${{ needs.performance-monitor.result }}"
+          echo "🔒 Security: ${{ needs.security-monitor.result }}"
+          echo ""
+          
+          if [[ "${{ needs.basic-health.result }}" == "success" ]] && 
+             [[ "${{ needs.functional-health.result }}" == "success" ]] && 
+             [[ "${{ needs.performance-monitor.result }}" == "success" ]] && 
+             [[ "${{ needs.security-monitor.result }}" == "success" ]]; then
+            echo "✅ OVERALL STATUS: HEALTHY"
+          else
+            echo "❌ OVERALL STATUS: UNHEALTHY"
+          fi
