@@ -1,85 +1,56 @@
 /**
- * 🎯 TEMPLATES DAS 21 ETAPAS - CARREGAMENTO DINÂMICO
+ * 🎯 TEMPLATES DAS 21 ETAPAS - CARREGAMENTO PRIORITÁRIO DE DADOS REAIS
  *
- * Solução para evitar problemas de build com imports diretos de JSON
+ * CORREÇÃO CRÍTICA: Prioriza templates JSON reais sobre fallbacks genéricos
  */
 
-// Função para carregar template dinamicamente
-async function loadTemplate(stepNumber: number): Promise<any> {
+// Cache para templates carregados
+const templateCache = new Map<number, any>();
+
+// 🎯 FUNÇÃO PRINCIPAL: Carregar template real PRIMEIRO
+async function loadRealTemplate(stepNumber: number): Promise<any> {
   const stepId = stepNumber.toString().padStart(2, '0');
-  // Detecta ambiente de teste (Vitest/JSDOM) para evitar fetch HTTP
-  const isTestMode = (() => {
-    try {
-      const env = (import.meta as any)?.env ?? {};
-      const byMode = env?.MODE === 'test' || !!env?.TEST;
-      const byProc = typeof process !== 'undefined' && !!(process as any)?.env?.VITEST;
-      return Boolean(byMode || byProc);
-    } catch {
-      return false;
-    }
-  })();
-  // Evita tentar fetch repetidamente por etapa (dedup de warnings)
-  // (escopo de módulo)
-  const __TEMPLATE_FETCH_TRIED: Set<number> =
-    (globalThis as any).__TEMPLATE_FETCH_TRIED || new Set<number>();
-  (globalThis as any).__TEMPLATE_FETCH_TRIED = __TEMPLATE_FETCH_TRIED;
-
+  
   try {
-    // ✅ STRATEGY: Usar fetch HTTP apenas no browser (evita erros no Node/Vitest)
-    const templatePath = `/src/config/templates/step-${stepId}.json`;
-
-    // Durante desenvolvimento, usar fetch somente quando for browser real (não test) e sem SSR
-    if (
-      import.meta.env.DEV &&
-      typeof window !== 'undefined' &&
-      // Evita JSDOM/Vitest
-      !isTestMode &&
-      // Evita repetir fetch para a mesma etapa (ruído)
-      !__TEMPLATE_FETCH_TRIED.has(stepNumber)
-    ) {
-      try {
-        const response = await fetch(templatePath);
-        if (response.ok) {
-          const template = await response.json();
-          if (template && template.blocks) {
-            console.log(`✅ Template ${stepNumber} carregado via fetch`);
-            return template;
-          }
-        }
-      } catch (fetchError) {
-        // Garante aviso único por etapa
-        if (!__TEMPLATE_FETCH_TRIED.has(stepNumber)) {
-          console.warn(`⚠️ Fetch falhou para template ${stepNumber}:`, fetchError);
-        }
-      } finally {
-        __TEMPLATE_FETCH_TRIED.add(stepNumber);
-      }
-    }
-
-    // ✅ FALLBACK: Import dinâmico apenas quando necessário
+    // 🏆 PRIORIDADE 1: Templates JSON reais
     try {
       const localPath = `./step-${stepId}.json`;
       const moduleImport = await import(localPath);
       const template = moduleImport.default || moduleImport;
 
-      if (template && template.blocks) {
-        console.log(`✅ Template ${stepNumber} carregado via import`);
+      if (template && template.blocks && Array.isArray(template.blocks)) {
+        console.log(`🏆 Template REAL JSON carregado: ${stepNumber} com ${template.blocks.length} blocos`);
         return template;
       }
     } catch (importError) {
-      console.warn(`⚠️ Import falhou para template ${stepNumber}:`, importError);
+      console.warn(`⚠️ Template JSON não encontrado para step ${stepNumber}:`, importError);
     }
 
-    console.warn(`⚠️ Template ${stepNumber} não encontrado`);
+    // 🔄 PRIORIDADE 2: Fetch HTTP (desenvolvimento)
+    if (import.meta.env.DEV && typeof window !== 'undefined') {
+      const templatePath = `/src/config/templates/step-${stepId}.json`;
+      
+      try {
+        const response = await fetch(templatePath);
+        if (response.ok) {
+          const template = await response.json();
+          if (template && template.blocks) {
+            console.log(`✅ Template carregado via fetch: ${stepNumber}`);
+            return template;
+          }
+        }
+      } catch (fetchError) {
+        console.warn(`⚠️ Fetch falhou para template ${stepNumber}:`, fetchError);
+      }
+    }
+
+    console.warn(`⚠️ NENHUM TEMPLATE REAL encontrado para step ${stepNumber}`);
     return null;
   } catch (error) {
-    console.warn(`⚠️ Erro geral ao carregar template ${stepNumber}:`, error);
+    console.error(`❌ Erro ao carregar template real ${stepNumber}:`, error);
     return null;
   }
 }
-
-// Cache para templates carregados
-const templateCache = new Map<number, any>();
 
 // Exportação principal - compatível com código existente
 export const STEP_TEMPLATES = new Proxy({} as Record<number, any>, {
@@ -96,13 +67,13 @@ export const STEP_TEMPLATES = new Proxy({} as Record<number, any>, {
     }
 
     // Carregar dinamicamente e cachear
-    loadTemplate(stepNumber).then(template => {
+    loadRealTemplate(stepNumber).then(template => {
       if (template) {
         templateCache.set(stepNumber, template);
       }
     });
 
-    // Retorno temporário enquanto carrega
+    // Retorno temporário enquanto carrega (MARCA COMO LOADING)
     return {
       metadata: {
         id: `quiz-step-${stepNumber.toString().padStart(2, '0')}`,
@@ -116,44 +87,42 @@ export const STEP_TEMPLATES = new Proxy({} as Record<number, any>, {
 });
 
 /**
- * 🔧 FUNÇÃO HELPER: Carregar template específico
+ * 🔧 FUNÇÃO HELPER: Carregar template específico (PRIORIZA DADOS REAIS)
  */
 export async function getStepTemplate(stepNumber: number): Promise<any> {
   if (templateCache.has(stepNumber)) {
-    return templateCache.get(stepNumber);
+    const cached = templateCache.get(stepNumber);
+    // Se não está marcado como loading, retornar
+    if (!cached.__loading) {
+      return cached;
+    }
   }
 
-  const template = await loadTemplate(stepNumber);
+  // Forçar carregamento de template real
+  const template = await loadRealTemplate(stepNumber);
   if (template) {
     templateCache.set(stepNumber, template);
+    console.log(`🏆 Template REAL cacheado: ${stepNumber}`);
+    return template;
   }
 
-  return template;
+  // Se não encontrou template real, retornar null ao invés de fallback
+  console.warn(`❌ NENHUM TEMPLATE REAL disponível para step ${stepNumber}`);
+  return null;
 }
 
 /**
- * 🔧 FUNÇÃO HELPER: Pre-carregar todos os templates
- */
-export async function preloadAllTemplates(): Promise<void> {
-  const promises = [];
-  for (let i = 1; i <= 21; i++) {
-    promises.push(getStepTemplate(i));
-  }
-
-  await Promise.all(promises);
-  console.log('✅ Todos os templates foram pré-carregados');
-}
-
-/**
- * 🔧 FUNÇÃO HELPER: Verificar se template está carregado
- */
-export function isTemplateLoaded(stepNumber: number): boolean {
-  return templateCache.has(stepNumber);
-}
-
-/**
- * 🔧 FUNÇÃO HELPER: Limpar cache (para desenvolvimento)
+ * 🔧 FUNÇÃO HELPER: Limpar cache (CORREÇÃO CRÍTICA)
  */
 export function clearTemplateCache(): void {
   templateCache.clear();
+  console.log('🗑️ Template cache limpo - templates reais serão recarregados');
+}
+
+/**
+ * 🔧 FUNÇÃO HELPER: Forçar reload de template específico
+ */
+export async function reloadTemplate(stepNumber: number): Promise<any> {
+  templateCache.delete(stepNumber);
+  return await getStepTemplate(stepNumber);
 }
