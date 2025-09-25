@@ -131,15 +131,15 @@ export const useQuizLogic = () => {
   };
 
   // Calcula o resultado por estilo usando a proporção de pontos daquele estilo
-  const createStyleResult = (category: string, score: number, totalPoints: number): StyleResult => ({
-    category,
-    score,
-    // Usa proporção em relação ao total de pontos para evitar depender de totalQuestions
-    percentage: totalPoints > 0 ? Math.round((score / totalPoints) * 100) : 0,
-    style: category.toLowerCase(),
-    points: score,
-    rank: 1,
-  });
+  const createStyleResult = (category: string, score: number, totalPoints: number): StyleResult => 
+    mapToStyleResult({
+      category,
+      score,
+      percentage: totalPoints > 0 ? Math.round((score / totalPoints) * 100) : 0,
+      style: category.toLowerCase(),
+      points: score,
+      rank: 1
+    });
 
   const calculateResults = useCallback(
     (answers: QuizAnswer[]): QuizResult => {
@@ -175,14 +175,14 @@ export const useQuizLogic = () => {
         );
 
         const mappedResult: QuizResult = {
-          primaryStyle: {
-            category: engineResult.primaryStyle,
+          primaryStyle: mapToStyleResult({
+            category: engineResult.primaryStyle || 'natural',
             score: primaryStyleData?.points || 0,
             percentage: primaryStyleData?.percentage || 0,
-            style: engineResult.primaryStyle.toLowerCase(),
+            style: (engineResult.primaryStyle || 'natural').toLowerCase(),
             points: primaryStyleData?.points || 0,
-            rank: 1,
-          },
+            rank: 1
+          }),
           secondaryStyles: secondaryStylesData.map((styleData: any, index: number) => ({
             category: styleData.style,
             score: styleData.points,
@@ -207,8 +207,8 @@ export const useQuizLogic = () => {
         };
 
         console.log('✅ useQuizLogic: Resultado calculado via UnifiedCalculationEngine:', {
-          primaryStyle: mappedResult.primaryStyle.category,
-          percentage: mappedResult.primaryStyle.percentage,
+          primaryStyle: mappedResult.primaryStyle?.category || mappedResult.primaryStyle?.name,
+          percentage: mappedResult.primaryStyle?.percentage,
           totalQuestions: mappedResult.totalQuestions,
           usingCentralizedConfig: !!config
         });
@@ -238,8 +238,7 @@ export const useQuizLogic = () => {
           primaryStyle: primaryResult,
           secondaryStyles: secondaryResults,
           totalQuestions: answers.length,
-            completedAt: new Date().toISOString(),
-          scores: styleScores,
+          completedAt: new Date().toISOString(),
           // ✅ NOVO: Dados personalizados
           userData: {
             name: currentUserName,

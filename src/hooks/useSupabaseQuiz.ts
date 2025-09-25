@@ -185,8 +185,10 @@ export const useSupabaseQuiz = (questions: QuizQuestion[] = []) => {
         // Atualizar estado local com weights se fornecidos
         const newAnswer: QuizAnswer = {
           questionId: answer.questionId,
-          optionId: answer.optionId,
-          weights: answer.weights,
+          selectedOptions: [answer.optionId],
+          value: answer.optionId,
+          timestamp: new Date().toISOString(),
+          weight: answer.weights || {}
         };
         const newResponses = [...session.responses, newAnswer];
 

@@ -272,7 +272,8 @@ export const useQuizCRUD = () => {
                 type: block.properties?.questionType || 'normal',
                 options: block.properties?.options || [],
                 multiSelect: block.properties?.multiSelect || 1,
-                order: page.page_order || 0,
+                required: block.properties?.required || false,
+                order: questions.length
               });
             }
           });

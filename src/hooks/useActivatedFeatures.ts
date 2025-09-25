@@ -19,7 +19,7 @@ export const useActivatedFeatures = () => {
     automatedOptimization: false
   });
 
-  const [insights, setInsights] = useState(null);
+  const [insights, setInsights] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
