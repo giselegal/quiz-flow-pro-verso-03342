@@ -1,15 +1,13 @@
 /**
- * 🚀 UNIFIED TEMPLATE SERVICE - FASE 1: TEMPLATE PRELOADING
+ * 🚀 UNIFIED TEMPLATE SERVICE - CORREÇÃO CRÍTICA
  * 
- * Sistema unificado de templates com carregamento paralelo otimizado
- * para eliminar gargalo de 21 requests sequenciais.
+ * PRIORIZA DADOS REAIS do QUIZ_STYLE_21_STEPS_TEMPLATE sobre fallbacks genéricos
+ * Resolve problema de funil carregando dados "fixos" ao invés de dados reais
  * 
- * ✅ Preloading paralelo de templates críticos
- * ✅ Cache inteligente com TTL
- * ✅ Fallbacks robustos
- * ✅ API unificada consolidando fragmentação
- * 
- * ⚡ INDEPENDENTE: Não depende mais de serviços legados
+ * ✅ Template real PRIMEIRO
+ * ✅ Cache inteligente 
+ * ✅ Fallbacks apenas quando necessário
+ * ✅ API unificada
  */
 
 // 🎯 CACHE AVANÇADO COM TTL
@@ -84,12 +82,23 @@ class UnifiedTemplateService {
     }
 
     /**
-     * 🔄 LOAD WITH FALLBACK - Carregamento dinâmico de qualquer template/funil
-     * ⚡ DINÂMICO: Funciona com qualquer funil, não hardcodado
+     * 🔄 LOAD WITH FALLBACK - PRIORIZA TEMPLATES REAIS
+     * ⚡ CORREÇÃO CRÍTICA: Template real PRIMEIRO, banco depois, fallback por último
      */
     private async loadTemplateWithFallback(templateId: string): Promise<any> {
         try {
-            // 1. Tentar carregar do banco de dados (Supabase)
+            // 🎯 PRIORIDADE 1: Template real PRIMEIRO (CORREÇÃO CRÍTICA)
+            const staticTemplate = await this.getStaticTemplate(templateId);
+            if (staticTemplate && Object.keys(staticTemplate).length > 0) {
+                console.log(`🏆 Template REAL carregado com PRIORIDADE: ${templateId}`);
+                return staticTemplate;
+            }
+        } catch (staticError) {
+            console.warn(`⚠️ Template real não encontrado para ${templateId}:`, staticError);
+        }
+
+        try {
+            // 🎯 PRIORIDADE 2: Banco de dados (apenas se template real não existir)
             const databaseTemplate = await this.loadFromDatabase(templateId);
             if (databaseTemplate && Object.keys(databaseTemplate).length > 0) {
                 console.log(`✅ Template carregado do banco: ${templateId}`);
@@ -99,30 +108,17 @@ class UnifiedTemplateService {
             console.warn(`⚠️ Template não encontrado no banco para ${templateId}:`, dbError);
         }
 
-        try {
-            // 2. Tentar carregar via templates críticos (apenas para casos específicos)
-            const staticTemplate = this.getStaticTemplate(templateId);
-            if (staticTemplate && Object.keys(staticTemplate).length > 0) {
-                console.log(`✅ Template crítico carregado: ${templateId}`);
-                return staticTemplate;
-            }
-        } catch (staticError) {
-            console.warn(`⚠️ Template crítico não encontrado para ${templateId}:`, staticError);
-        }
-
-        // 3. Fallback: template genérico baseado no padrão
+        // 🎯 PRIORIDADE 3: Fallback genérico (APENAS se nada mais funcionar)
+        console.warn(`⚠️ USANDO FALLBACK para ${templateId} - dados podem estar incorretos!`);
         const fallbackTemplate = this.generateFallbackTemplate(templateId);
-        console.log(`🎨 Usando fallback genérico para: ${templateId}`);
         return fallbackTemplate;
     }
 
     /**
      * 🗄️ LOAD FROM DATABASE - Busca templates dinamicamente do Supabase
-     * ⚡ NOVO: Método para buscar qualquer funil/template do banco
      */
     private async loadFromDatabase(templateId: string): Promise<any | null> {
         try {
-            // Importar Supabase dinamicamente para evitar erros de inicialização
             const { supabase } = await import('@/integrations/supabase/client');
 
             if (!supabase) {
@@ -130,7 +126,6 @@ class UnifiedTemplateService {
                 return null;
             }
 
-            // Buscar na tabela funnels
             const { data, error } = await supabase
                 .from('funnels')
                 .select('*')
@@ -143,8 +138,6 @@ class UnifiedTemplateService {
             }
 
             if (data) {
-                // Converter dados do banco para formato do template
-                // Usar settings para extrair steps e blocks se estiverem no JSON
                 const settings = data.settings as any || {};
 
                 return {
@@ -172,47 +165,91 @@ class UnifiedTemplateService {
     }
 
     /**
-     * 🎯 GET STATIC TEMPLATE - Apenas para templates críticos específicos
-     * ⚡ LIMITADO: Só para casos específicos, não para uso geral
+     * 🎯 GET STATIC TEMPLATE - PRIORIZA TEMPLATE REAL COMPLETO
+     * ⚡ CORREÇÃO CRÍTICA: Usa dados REAIS do QUIZ_STYLE_21_STEPS_TEMPLATE
      */
-    private getStaticTemplate(templateId: string): any | null {
-        // Apenas templates críticos específicos (não para uso geral)
-        const criticalTemplates: Record<string, any> = {
-            'step-1': {
-                id: 'step-1',
-                name: 'Quiz Step 1',
-                blocks: [
-                    { type: 'headline', id: 'headline-1', properties: { text: 'Descubra seu estilo' } },
-                    { type: 'quiz-question', id: 'question-1', properties: { text: 'Qual seu objetivo principal?' } },
-                    { type: 'quiz-options', id: 'options-1', properties: {} },
-                    { type: 'button', id: 'btn-1', properties: { text: 'Continuar' } }
-                ]
-            },
-            'step-2': {
-                id: 'step-2',
-                name: 'Quiz Step 2',
-                blocks: [
-                    { type: 'quiz-question', id: 'question-2', properties: { text: 'Como você se veste normalmente?' } },
-                    { type: 'options-grid', id: 'options-2', properties: {} },
-                    { type: 'button', id: 'btn-2', properties: { text: 'Próxima' } }
-                ]
-            },
-            'quiz21StepsComplete': {
-                id: 'quiz21StepsComplete',
-                name: 'Quiz 21 Steps Complete',
-                totalSteps: 21,
-                steps: Array.from({ length: 21 }, (_, i) => ({
-                    step: i + 1,
-                    blocks: this.generateStepBlocks(i + 1)
-                }))
+    private async getStaticTemplate(templateId: string): Promise<any | null> {
+        try {
+            // 🎯 PRIORIDADE 1: Template completo real (quiz21StepsComplete)
+            if (templateId === 'quiz21StepsComplete' || templateId.startsWith('step-')) {
+                console.log(`🎯 Carregando template REAL: ${templateId}`);
+                
+                // Importar template real completo
+                const { QUIZ_STYLE_21_STEPS_TEMPLATE } = await import('@/templates/quiz21StepsComplete');
+                
+                if (templateId === 'quiz21StepsComplete') {
+                    // Retornar estrutura completa do template real
+                    return {
+                        id: 'quiz21StepsComplete',
+                        name: 'Quiz 21 Steps Complete (REAL)',
+                        totalSteps: 21,
+                        steps: QUIZ_STYLE_21_STEPS_TEMPLATE,
+                        metadata: {
+                            source: 'QUIZ_STYLE_21_STEPS_TEMPLATE',
+                            isReal: true,
+                            loadedAt: new Date().toISOString()
+                        }
+                    };
+                }
+                
+                // Para steps individuais, extrair do template real
+                const stepBlocks = QUIZ_STYLE_21_STEPS_TEMPLATE[templateId];
+                if (stepBlocks && Array.isArray(stepBlocks)) {
+                    console.log(`✅ Template REAL carregado: ${templateId} com ${stepBlocks.length} blocos`);
+                    return {
+                        id: templateId,
+                        name: `Step ${templateId} (REAL)`,
+                        blocks: stepBlocks,
+                        metadata: {
+                            source: 'QUIZ_STYLE_21_STEPS_TEMPLATE',
+                            isReal: true,
+                            loadedAt: new Date().toISOString()
+                        }
+                    };
+                } else {
+                    // Se não há template real, usar blocos gerados dinamicamente
+                    const generatedBlocks = this.generateStepBlocks(parseInt(templateId.replace('step-', '')));
+                    return {
+                        id: templateId,
+                        name: `Template ${templateId} (Generated)`,
+                        blocks: generatedBlocks,
+                        metadata: {
+                            source: 'generateStepBlocks',
+                            isGenerated: true,
+                            loadedAt: new Date().toISOString()
+                        }
+                    };
+                }
             }
-        };
 
-        return criticalTemplates[templateId] || null;
+            // 🎯 PRIORIDADE 2: Templates da biblioteca
+            const { templateLibraryService } = await import('@/services/templateLibraryService');
+            const libraryTemplate = templateLibraryService.getById(templateId);
+            
+            if (libraryTemplate) {
+                console.log(`✅ Template da biblioteca carregado: ${templateId}`);
+                return {
+                    ...libraryTemplate,
+                    metadata: {
+                        ...libraryTemplate.metadata,
+                        source: 'templateLibraryService',
+                        isReal: true,
+                        loadedAt: new Date().toISOString()
+                    }
+                };
+            }
+
+            console.warn(`⚠️ Template real não encontrado: ${templateId}`);
+            return null;
+
+        } catch (error) {
+            console.error(`❌ Erro ao carregar template real ${templateId}:`, error);
+            return null;
+        }
     }
 
     /**
-     * 🔧 GENERATE STEP BLOCKS - Helper para gerar blocos por step
+     * 🔧 GENERATE STEP BLOCKS - Helper para gerar blocos por step (usado em fallbacks)
      */
     private generateStepBlocks(stepNumber: number): any[] {
         if (stepNumber <= 19) {
@@ -386,29 +423,55 @@ class UnifiedTemplateService {
     }
 
     /**
-     * 🔧 LOAD STEP BLOCKS - Método específico para carregar blocks de etapas
+     * 🔧 LOAD STEP BLOCKS - CORREÇÃO CRÍTICA: Usa template real PRIMEIRO
      * Compatibilidade com TemplateManager
      */
     async loadStepBlocks(stepId: string, funnelId?: string): Promise<any[]> {
         try {
+            // 🎯 CORREÇÃO CRÍTICA: Forçar uso do template real para steps
+            if (stepId.startsWith('step-') || funnelId === 'quiz21StepsComplete') {
+                console.log(`🎯 Forçando carregamento de template REAL para: ${stepId}`);
+                
+                try {
+                    const { QUIZ_STYLE_21_STEPS_TEMPLATE } = await import('@/templates/quiz21StepsComplete');
+                    const realBlocks = QUIZ_STYLE_21_STEPS_TEMPLATE[stepId];
+                    
+                    if (realBlocks && Array.isArray(realBlocks)) {
+                        console.log(`🏆 TEMPLATE REAL carregado: ${stepId} com ${realBlocks.length} blocos`);
+                        return realBlocks;
+                    }
+                } catch (importError) {
+                    console.error(`❌ Erro ao importar template real: ${stepId}`, importError);
+                }
+            }
+
+            // Fallback para o sistema antigo apenas se template real falhar
             const templateId = funnelId ? `${stepId}:${funnelId}` : stepId;
             const template = await this.getTemplate(templateId);
 
             // Se o template tem blocks, retorna eles
             if (template?.blocks && Array.isArray(template.blocks)) {
+                console.log(`✅ Template blocks carregados: ${templateId} com ${template.blocks.length} blocos`);
                 return template.blocks;
             }
 
             // Se o template é um array direto de blocks
             if (Array.isArray(template)) {
+                console.log(`✅ Template array carregado: ${templateId} com ${template.length} blocos`);
                 return template;
             }
 
-            // Fallback: template vazio
-            console.log(`⚠️ Template ${templateId} não tem blocks válidos, retornando array vazio`);
+            // Se template tem steps.stepId (estrutura de funil completo)
+            if (template?.steps && template.steps[stepId]) {
+                console.log(`✅ Template de funil carregado: ${stepId}`);
+                return template.steps[stepId];
+            }
+
+            // Fallback: array vazio
+            console.warn(`⚠️ NENHUM BLOCO encontrado para ${stepId}, retornando array vazio`);
             return [];
         } catch (error) {
-            console.error(`❌ Erro ao carregar blocks para ${stepId}:`, error);
+            console.error(`❌ Erro CRÍTICO ao carregar blocks para ${stepId}:`, error);
             return [];
         }
     }
@@ -450,7 +513,6 @@ class UnifiedTemplateService {
 }
 
 // 🎯 SINGLETON INSTANCE
-
 export const unifiedTemplateService = new UnifiedTemplateService();
 
 // 🚀 Auto-preload na inicialização (após 200ms para não bloquear)
