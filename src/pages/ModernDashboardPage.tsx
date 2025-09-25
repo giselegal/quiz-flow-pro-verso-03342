@@ -22,7 +22,7 @@ import { LoadingSpinner } from '@/components/ui/loading-spinner';
 // Páginas do Dashboard - CONSOLIDADO
 const AdminDashboard = lazy(() => import('./dashboard/AdminDashboard'));
 const TemplatesFunisPage = lazy(() => import('./dashboard/TemplatesFunisPage'));
-const MeusFunisPage = lazy(() => import('./dashboard/MeusFunisPage'));
+const MeusFunisPageReal = lazy(() => import('./dashboard/MeusFunisPageReal'));
 
 // Editor integrado ao dashboard
 const ModernUnifiedEditor = lazy(() => import('./editor/ModernUnifiedEditor'));
@@ -225,7 +225,7 @@ const ModernDashboardPage: React.FC = () => {
 
                     {/* Páginas específicas */}
                     <Route path="/dashboard/templates-funis" component={TemplatesFunisPage} />
-                    <Route path="/dashboard/meus-funis" component={MeusFunisPage} />
+                    <Route path="/dashboard/meus-funis" component={MeusFunisPageReal} />
                     <Route path="/dashboard/analytics" component={AdminDashboard} />
                     <Route path="/dashboard/participants" component={AdminDashboard} />
                     <Route path="/dashboard/quizzes" component={AdminDashboard} />
@@ -233,6 +233,14 @@ const ModernDashboardPage: React.FC = () => {
                     <Route path="/dashboard/creatives" component={AdminDashboard} />
                     <Route path="/dashboard/templates" component={AdminDashboard} />
                     <Route path="/dashboard/integrations" component={AdminDashboard} />
+
+                    {/* Fix para rota duplicada */}
+                    <Route path="/dashboard/dashboard/:subRoute">
+                        {(params) => {
+                            window.history.replaceState(null, '', `/dashboard/${params.subRoute}`);
+                            return null;
+                        }}
+                    </Route>
 
                     {/* Configurações */}
                     <Route path="/dashboard/settings" component={SettingsPage} />

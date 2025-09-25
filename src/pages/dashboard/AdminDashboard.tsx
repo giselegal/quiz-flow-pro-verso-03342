@@ -28,7 +28,8 @@ import {
     AlertCircle
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/integrations/supabase/client';
+import { realDataAnalyticsService } from '@/services/core/RealDataAnalyticsService';
 
 // ============================================================================
 // TYPES
@@ -131,36 +132,39 @@ const AdminDashboard: React.FC = () => {
         try {
             setIsLoading(true);
 
-            // Carregar sessões do Supabase
-            const { data: sessions, error: sessionsError } = await supabase
-                .from('quiz_sessions')
-                .select('*')
-                .order('started_at', { ascending: false });
+            // Usar RealDataAnalyticsService para dados reais
+            const realMetrics = await realDataAnalyticsService.getRealMetrics();
 
-            if (sessionsError) {
-                console.error('Erro ao carregar sessões:', sessionsError);
-                return;
-            }
-
-            // Carregar resultados
-            const { data: results } = await supabase
-                .from('quiz_results')
-                .select('*');
-
-            // Calcular métricas
-            const totalParticipants = sessions?.length || 0;
-            const completedSessions = results?.length || 0;
-            const conversionRate = totalParticipants > 0 ? (completedSessions / totalParticipants) * 100 : 0;
+            // Calcular receita baseada em conversões
+            const estimatedRevenue = realMetrics.completedSessions * 45; // R$ 45 por lead convertido
 
             setMetrics({
-                totalParticipants,
-                activeFunnels: 8, // Dados simulados por enquanto
-                conversionRate: parseFloat(conversionRate.toFixed(1)),
-                totalRevenue: 15420 // Dados simulados por enquanto
+                totalParticipants: realMetrics.totalSessions,
+                activeFunnels: realMetrics.topPerformingFunnels.length,
+                conversionRate: realMetrics.conversionRate,
+                totalRevenue: estimatedRevenue
+            });
+
+            console.log('✅ Dashboard carregado com dados reais:', {
+                participants: realMetrics.totalSessions,
+                funnels: realMetrics.topPerformingFunnels.length,
+                conversion: realMetrics.conversionRate,
+                revenue: estimatedRevenue
             });
 
         } catch (error) {
-            console.error('Erro ao carregar dados do dashboard:', error);
+            console.error('❌ Erro ao carregar dados do dashboard:', error);
+            
+            // Fallback com dados do Supabase diretamente
+            const { data: funnels } = await supabase.from('funnels').select('*');
+            const { data: sessions } = await supabase.from('quiz_sessions').select('*');
+            
+            setMetrics({
+                totalParticipants: sessions?.length || 0,
+                activeFunnels: funnels?.filter(f => f.is_published).length || 0,
+                conversionRate: 0,
+                totalRevenue: 0
+            });
         } finally {
             setIsLoading(false);
         }
