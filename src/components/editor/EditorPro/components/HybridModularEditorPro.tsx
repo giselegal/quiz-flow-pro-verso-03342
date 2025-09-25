@@ -429,11 +429,11 @@ const HybridModularEditorPro: React.FC<HybridModularEditorProProps> = ({
         // Se não há funnelId e não há blocks carregados, inicializa canvas em branco
         const hasNoFunnel = !funnelId || funnelId === 'hybrid-editor-default';
         const hasNoCurrentStepBlocks = !currentStepBlocks || currentStepBlocks.length === 0;
-        
+
         if (hasNoFunnel && hasNoCurrentStepBlocks) {
             console.log('🎨 Inicializando editor com canvas em branco para criação do zero');
             setIsBlankCanvas(true);
-            
+
             // Configura estado inicial para novo funil
             setEditorState(prev => ({
                 ...prev,
@@ -479,29 +479,29 @@ const HybridModularEditorPro: React.FC<HybridModularEditorProProps> = ({
 
     const handleCreateNew = useCallback(async () => {
         console.log('🆕 Criar novo funil');
-        
+
         // Se estamos em canvas em branco, inicializa estrutura básica
         if (isBlankCanvas) {
             console.log('🎨 Inicializando estrutura básica para funil novo');
-            
+
             // Configura primeira etapa
             const initialStageId = 'step-1';
             context.stageActions.setActiveStage(initialStageId);
-            
+
             // Limpa seleção
             context.setSelectedBlockId(null);
-            
+
             // Atualiza estado do editor
             setEditorState(prev => ({
                 ...prev,
                 mode: 'builder'
             }));
-            
+
             setIsBlankCanvas(false);
             addNotification('Canvas pronto! Arraste componentes para começar.', 'success');
             return;
         }
-        
+
         // Lógica para criar novo funil quando já existe um
         // if (crudContext?.createNew) {
         //   await crudContext.createNew();
@@ -615,7 +615,7 @@ const HybridModularEditorPro: React.FC<HybridModularEditorProProps> = ({
                                     <Target className="w-16 h-16 mx-auto text-primary mb-4" />
                                     <h2 className="text-xl font-semibold mb-2">Canvas em Branco</h2>
                                     <p className="text-muted-foreground mb-6">
-                                        Comece criando seu funil do zero! 
+                                        Comece criando seu funil do zero!
                                         Arraste componentes da barra lateral ou clique no botão abaixo.
                                     </p>
                                 </div>
@@ -630,7 +630,7 @@ const HybridModularEditorPro: React.FC<HybridModularEditorProProps> = ({
                             </div>
                         </div>
                     )}
-                    
+
                     <EditorCanvas
                         blocks={currentStepBlocks}
                         selectedBlock={selectedBlock}
