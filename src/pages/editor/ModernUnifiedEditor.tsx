@@ -533,6 +533,7 @@ const UnifiedEditorCore: React.FC<ModernUnifiedEditorProps> = ({
                                 <TemplateErrorBoundary>
                                     <EditorProUnified
                                         funnelId={extractedInfo.funnelId || undefined}
+                                        realExperienceMode={editorState.realExperienceMode}
                                         showProFeatures={true}
                                         className="h-full"
                                     />

@@ -3,6 +3,7 @@ import { Block } from '@/types/editor';
 import ScalableQuizRenderer from '@/components/core/ScalableQuizRenderer';
 import CanvasDropZone from '@/components/editor/canvas/CanvasDropZone.simple';
 import { useStepSelection } from '@/hooks/useStepSelection';
+import { UnifiedPreviewEngine } from '@/components/editor/unified/UnifiedPreviewEngine'; // Import para experiência real
 
 /**
  * 🎨 CANVAS DO EDITOR OTIMIZADO
@@ -19,6 +20,7 @@ interface EditorCanvasProps {
   onDeleteBlock: (blockId: string) => void;
   isPreviewMode: boolean;
   onStepChange?: (step: number) => void;
+  realExperienceMode?: boolean; // Nova prop para ativar QuizOrchestrator
 }
 
 const EditorCanvas: React.FC<EditorCanvasProps> = ({
@@ -29,7 +31,8 @@ const EditorCanvas: React.FC<EditorCanvasProps> = ({
   onUpdateBlock,
   onDeleteBlock,
   isPreviewMode,
-  onStepChange
+  onStepChange,
+  realExperienceMode = false // Nova prop para ativar QuizOrchestrator
 }) => {
   // Sistema de seleção otimizado
   const { handleBlockSelection } = useStepSelection({
@@ -63,6 +66,35 @@ const EditorCanvas: React.FC<EditorCanvasProps> = ({
     );
   }
 
+  // 🎯 NOVA FUNCIONALIDADE: Experiência Real com QuizOrchestrator
+  if (realExperienceMode) {
+    return (
+      <div className="flex-1 min-h-0 bg-gradient-to-br from-[#FAF9F7] via-[#F5F2E9] to-[#EEEBE1] isolate">
+        <div className="h-full w-full overflow-y-auto relative z-0">
+          {/* Indicador visual de modo real ativo */}
+          <div className="absolute top-4 right-4 z-10 bg-primary text-primary-foreground px-3 py-1 rounded-full text-sm font-medium shadow-lg">
+            ✨ Experiência Real Ativa
+          </div>
+          
+          <UnifiedPreviewEngine
+            blocks={blocks}
+            selectedBlockId={selectedBlock?.id}
+            isPreviewing={false}
+            viewportSize="desktop"
+            onBlockSelect={onSelectBlock}
+            onBlockUpdate={onUpdateBlock}
+            onBlocksReordered={() => {}}
+            funnelId="quiz21StepsComplete"
+            currentStep={currentStep}
+            enableInteractions={true}
+            mode="editor"
+            enableProductionMode={true}
+          />
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div
       key={canvasKey}
@@ -87,7 +119,8 @@ const EditorCanvas: React.FC<EditorCanvasProps> = ({
 const arePropsEqual = (prevProps: EditorCanvasProps, nextProps: EditorCanvasProps): boolean => {
   // 1. Comparações rápidas primeiro (early returns)
   if (prevProps.currentStep !== nextProps.currentStep ||
-    prevProps.isPreviewMode !== nextProps.isPreviewMode) {
+    prevProps.isPreviewMode !== nextProps.isPreviewMode ||
+    prevProps.realExperienceMode !== nextProps.realExperienceMode) {
     return false;
   }
 

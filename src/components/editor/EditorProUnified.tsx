@@ -39,6 +39,7 @@ interface EditorProUnifiedProps {
   funnelId?: string;
   showProFeatures?: boolean;
   className?: string;
+  realExperienceMode?: boolean; // Nova prop para ativar QuizOrchestrator
 }
 
 /**
@@ -137,7 +138,8 @@ const ResizeHandle: React.FC<{
 
 export const EditorProUnified: React.FC<EditorProUnifiedProps> = ({
   showProFeatures = true,
-  className = ""
+  className = "",
+  realExperienceMode = false // Nova prop para ativar QuizOrchestrator
 }) => {
   // Pure Builder System State
   const { state, actions } = usePureBuilder();
@@ -398,6 +400,7 @@ export const EditorProUnified: React.FC<EditorProUnifiedProps> = ({
               onDeleteBlock={handleDeleteBlock}
               isPreviewMode={isPreviewMode}
               onStepChange={actions.setCurrentStep}
+              realExperienceMode={realExperienceMode} // Passar prop para EditorCanvas
             />
           </div>
         </div>
