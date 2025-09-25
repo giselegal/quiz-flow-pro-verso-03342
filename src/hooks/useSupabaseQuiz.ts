@@ -187,8 +187,7 @@ export const useSupabaseQuiz = (questions: QuizQuestion[] = []) => {
           questionId: answer.questionId,
           selectedOptions: [answer.optionId],
           value: answer.optionId,
-          timestamp: new Date().toISOString(),
-          weight: answer.weights || {}
+          timestamp: new Date().toISOString()
         };
         const newResponses = [...session.responses, newAnswer];
 

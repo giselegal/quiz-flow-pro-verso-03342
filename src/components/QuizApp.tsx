@@ -409,7 +409,7 @@ function ResultStep({ stepData, userName, resultStyle, onNext, onCalculate }: Re
                     Dicas Especiais para o seu estilo:
                 </h3>
                 <ul>
-                    {styleConfig.specialTips.map((tip, index) => (
+                    {(styleConfig.specialTips || []).map((tip: string, index: number) => (
                         <li key={index}>{tip}</li>
                     ))}
                 </ul>

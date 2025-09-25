@@ -99,7 +99,7 @@ export default function ResultStep({
                     <div className="mb-6">
                         <h4 className="font-semibold text-[#5b4135] mb-3">Palavras que te definem:</h4>
                         <div className="flex flex-wrap gap-2">
-                            {styleConfig.keywords.map((keyword, index) => (
+                            {(styleConfig.keywords || []).map((keyword: string, index: number) => (
                                 <span
                                     key={index}
                                     className="px-3 py-1 bg-[#deac6d] text-white text-sm rounded-full font-medium"
@@ -122,7 +122,7 @@ export default function ResultStep({
                 </div>
 
                 <div className="grid md:grid-cols-2 gap-4">
-                    {styleConfig.specialTips.map((tip, index) => (
+                    {(styleConfig.specialTips || []).map((tip: string, index: number) => (
                         <div key={index} className="flex items-start">
                             <div className="w-6 h-6 bg-[#deac6d]/20 rounded-full flex items-center justify-center mr-3 mt-0.5 flex-shrink-0">
                                 <span className="text-[#deac6d] text-xs font-bold">{index + 1}</span>

@@ -1,6 +1,7 @@
 import caktoquizQuestions from '@/data/caktoquizQuestions';
 import { isScorableQuestion } from '@/core/constants/quiz';
-import { QuizAnswer, QuizQuestion, QuizResult, StyleResult } from '@/types/quiz';
+import { StyleResult, QuizQuestion, QuizResult, QuizAnswer } from '@/types/quiz';
+import { mapToStyleResult } from '@/utils/styleResultMapper';
 import { useCallback, useState } from 'react';
 import { StorageService } from '@/services/core/StorageService';
 import { useQuizRulesConfig } from './useQuizRulesConfig';
@@ -193,16 +194,12 @@ export const useQuizLogic = () => {
           })),
           totalQuestions: engineResult.totalQuestions,
           completedAt: engineResult.completedAt,
-          scores: Object.fromEntries(
+          styleScores: Object.fromEntries(
             engineResult.scores.map((s: any) => [s.style, s.points])
           ),
           // Dados de compatibilidade
           predominantStyle: engineResult.primaryStyle,
           complementaryStyles: engineResult.secondaryStyles,
-          styleScores: Object.fromEntries(
-            engineResult.scores.map((s: any) => [s.style, s.points])
-          ),
-          participantName: currentUserName,
           userData: engineResult.userData
         };
 
@@ -235,10 +232,15 @@ export const useQuizLogic = () => {
           .map(([category, score]) => createStyleResult(category, score, totalPoints));
 
         const result: QuizResult = {
+          id: `result-${Date.now()}`,
+          responses: {},
+          score: Object.values(styleScores).reduce((sum, score) => sum + score, 0),
+          maxScore: 100,
+          completedAt: new Date().toISOString(),
           primaryStyle: primaryResult,
           secondaryStyles: secondaryResults,
           totalQuestions: answers.length,
-          completedAt: new Date().toISOString(),
+          styleResult: primaryResult,
           // ✅ NOVO: Dados personalizados
           userData: {
             name: currentUserName,

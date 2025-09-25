@@ -35,6 +35,7 @@ export interface QuizAnswer {
   timestamp: string;
   optionId?: string; // Legacy compatibility
   weight?: number; // Legacy compatibility
+  weights?: Record<string, number>; // Legacy compatibility
 }
 
 export interface QuizStage {
