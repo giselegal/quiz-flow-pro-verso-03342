@@ -529,10 +529,14 @@ export class CalculationEngine {
         .map((result, index) => ({ ...result, rank: index + 1 }));
 
     return {
+      id: `fallback-${Date.now()}`,
+      responses: {},
+      score: totalScore,
+      maxScore: 100,
+      completedAt: new Date().toISOString(),
       primaryStyle: mapToStyleResult(styleResults[0]),
       secondaryStyles: styleResults.slice(1).map(mapToStyleResult),
       totalQuestions: responses.length,
-      version: this.version,
       engineVersion: this.version,
       schemaHash: 'fallback',
       calculatedAt: new Date(),
