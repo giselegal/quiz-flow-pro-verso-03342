@@ -24,9 +24,6 @@ const AdminDashboard = lazy(() => import('./dashboard/AdminDashboard'));
 const TemplatesFunisPage = lazy(() => import('./dashboard/TemplatesFunisPage'));
 const MeusFunisPageReal = lazy(() => import('./dashboard/MeusFunisPageReal'));
 
-// Editor integrado ao dashboard
-const ModernUnifiedEditor = lazy(() => import('./editor/ModernUnifiedEditor'));
-
 // Legacy pages (mantidas para compatibilidade temporária)
 const SettingsPage = lazy(() => import('./dashboard/SettingsPage'));
 
@@ -87,8 +84,8 @@ const pageConfig: Record<string, { title: string; subtitle: string; actions?: Re
         )
     },
     '/dashboard/funnels': {
-        title: 'Funis',
-        subtitle: 'Gerencie seus funis de conversão',
+        title: 'Meus Funis',
+        subtitle: 'Gerencie seus funis de conversão e campanhas',
         actions: (
             <Button size="sm">
                 <Plus className="w-4 h-4 mr-2" />
@@ -96,59 +93,35 @@ const pageConfig: Record<string, { title: string; subtitle: string; actions?: Re
             </Button>
         )
     },
-    '/dashboard/templates-funis': {
-        title: 'Modelos de Funis',
-        subtitle: 'Templates prontos e profissionais para começar rapidamente',
+    '/dashboard/funnel-templates': {
+        title: 'Templates de Funis',
+        subtitle: 'Modelos profissionais prontos para uso',
         actions: (
             <Button variant="outline" size="sm">
-                <RefreshCw className="w-4 h-4 mr-2" />
-                Atualizar Catálogo
-            </Button>
-        )
-    },
-    '/dashboard/meus-funis': {
-        title: 'Meus Funis Ativos',
-        subtitle: 'Funis em uso, editados e publicados com métricas reais',
-        actions: (
-            <Button size="sm">
                 <Plus className="w-4 h-4 mr-2" />
-                Novo Funil
-            </Button>
-        )
-    },
-    '/dashboard/quizzes': {
-        title: 'Quizzes',
-        subtitle: 'Seus quizzes e formulários interativos',
-        actions: (
-            <Button size="sm">
-                <Plus className="w-4 h-4 mr-2" />
-                Novo Quiz
+                Criar Template
             </Button>
         )
     },
     '/dashboard/participants': {
         title: 'Participantes',
-        subtitle: 'Leads e participantes dos seus funis',
+        subtitle: 'Acompanhe leads e conversões',
         actions: (
-            <Button variant="outline" size="sm">
-                <Download className="w-4 h-4 mr-2" />
-                Exportar Lista
-            </Button>
-        )
-    },
-    '/dashboard/templates': {
-        title: 'Templates',
-        subtitle: 'Biblioteca de templates e componentes',
-        actions: (
-            <Button size="sm">
-                <Plus className="w-4 h-4 mr-2" />
-                Novo Template
-            </Button>
+            <div className="flex items-center space-x-2">
+                <Button variant="outline" size="sm">
+                    <Filter className="w-4 h-4 mr-2" />
+                    Filtros
+                </Button>
+                <Button variant="outline" size="sm">
+                    <Download className="w-4 h-4 mr-2" />
+                    Exportar
+                </Button>
+            </div>
         )
     },
     '/dashboard/ab-tests': {
         title: 'Testes A/B',
-        subtitle: 'Experimentos e otimizações',
+        subtitle: 'Configure e monitore experimentos',
         actions: (
             <Button size="sm">
                 <Plus className="w-4 h-4 mr-2" />
@@ -158,37 +131,25 @@ const pageConfig: Record<string, { title: string; subtitle: string; actions?: Re
     },
     '/dashboard/creatives': {
         title: 'Criativos',
-        subtitle: 'Imagens, vídeos e recursos visuais',
+        subtitle: 'Gerencie assets visuais e copy',
         actions: (
             <Button size="sm">
                 <Plus className="w-4 h-4 mr-2" />
-                Upload
+                Novo Criativo
             </Button>
         )
     },
-    '/dashboard/settings': {
-        title: 'Configurações',
-        subtitle: 'Configurações da conta e preferências'
+    '/dashboard/templates': {
+        title: 'Templates',
+        subtitle: 'Biblioteca de templates do sistema',
     },
     '/dashboard/integrations': {
         title: 'Integrações',
-        subtitle: 'Conecte com ferramentas externas'
+        subtitle: 'Conecte ferramentas externas',
     },
-    '/dashboard/editor': {
-        title: 'Editor',
-        subtitle: 'Construa e edite seus funis visualmente',
-        actions: (
-            <div className="flex items-center space-x-2">
-                <Button variant="outline" size="sm">
-                    <RefreshCw className="w-4 h-4 mr-2" />
-                    Atualizar
-                </Button>
-                <Button size="sm">
-                    <Download className="w-4 h-4 mr-2" />
-                    Salvar
-                </Button>
-            </div>
-        )
+    '/dashboard/settings': {
+        title: 'Configurações',
+        subtitle: 'Personalize e configure o sistema',
     }
 };
 
@@ -215,29 +176,39 @@ const ModernDashboardPage: React.FC = () => {
                         {() => <AdminDashboard />}
                     </Route>
 
-                    {/* EDITOR INTEGRADO */}
-                    <Route path="/dashboard/editor">
-                        {() => <ModernUnifiedEditor />}
-                    </Route>
-                    <Route path="/dashboard/editor/:funnelId">
-                        {(params) => <ModernUnifiedEditor funnelId={params.funnelId} />}
-                    </Route>
-
-                    {/* Páginas específicas */}
-                    <Route path="/dashboard/templates-funis" component={TemplatesFunisPage} />
-                    <Route path="/dashboard/meus-funis" component={MeusFunisPageReal} />
+                    {/* CONTENT MANAGEMENT - Páginas de conteúdo */}
+                    <Route path="/dashboard/funnel-templates" component={TemplatesFunisPage} />
+                    <Route path="/dashboard/funnels" component={MeusFunisPageReal} />
+                    
+                    {/* ANALYTICS - Páginas de análise */}
                     <Route path="/dashboard/analytics" component={AdminDashboard} />
                     <Route path="/dashboard/participants" component={AdminDashboard} />
-                    <Route path="/dashboard/quizzes" component={AdminDashboard} />
+                    
+                    {/* TOOLS - Ferramentas e funcionalidades */}
                     <Route path="/dashboard/ab-tests" component={AdminDashboard} />
                     <Route path="/dashboard/creatives" component={AdminDashboard} />
                     <Route path="/dashboard/templates" component={AdminDashboard} />
+                    
+                    {/* SYSTEM - Configurações do sistema */}
                     <Route path="/dashboard/integrations" component={AdminDashboard} />
+                    <Route path="/dashboard/settings" component={SettingsPage} />
 
-                    {/* Fix para rota duplicada */}
-                    <Route path="/dashboard/dashboard/:subRoute">
-                        {(params) => {
-                            window.history.replaceState(null, '', `/dashboard/${params.subRoute}`);
+                    {/* LEGACY REDIRECTS - Compatibilidade com rotas antigas */}
+                    <Route path="/dashboard/templates-funis">
+                        {() => {
+                            window.history.replaceState(null, '', '/dashboard/funnel-templates');
+                            return null;
+                        }}
+                    </Route>
+                    <Route path="/dashboard/meus-funis">
+                        {() => {
+                            window.history.replaceState(null, '', '/dashboard/funnels');
+                            return null;
+                        }}
+                    </Route>
+                    <Route path="/dashboard/quizzes">
+                        {() => {
+                            window.history.replaceState(null, '', '/dashboard/funnels');
                             return null;
                         }}
                     </Route>

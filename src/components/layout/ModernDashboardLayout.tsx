@@ -14,7 +14,6 @@ import {
     LayoutDashboard,
     BarChart3,
     Settings,
-    Users,
     Target,
     Edit3,
     ChevronRight,
@@ -23,7 +22,6 @@ import {
     Home,
     Zap,
     Database,
-    FileText,
     TestTube,
     Palette,
     Bell,
@@ -32,8 +30,7 @@ import {
     LogOut,
     ChevronDown,
     Activity,
-    Copy,
-    Edit
+    Copy
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -102,40 +99,25 @@ const ModernDashboardLayout: React.FC<ModernDashboardLayoutProps> = ({
             ]
         },
         {
-            label: 'Gestão',
+            label: 'Conteúdo',
             items: [
                 {
                     href: '/dashboard/funnels',
-                    label: 'Funis',
-                    icon: Target
+                    label: 'Meus Funis',
+                    icon: Target,
+                    badge: 'Live',
+                    badgeVariant: 'default'
                 },
                 {
-                    href: '/dashboard/templates-funis',
-                    label: 'Modelos de Funis',
+                    href: '/dashboard/funnel-templates',
+                    label: 'Templates de Funis',
                     icon: Copy,
                     badge: 'Templates',
                     badgeVariant: 'secondary'
                 },
                 {
-                    href: '/dashboard/meus-funis',
-                    label: 'Meus Funis Ativos',
-                    icon: Edit,
-                    badge: 'Live',
-                    badgeVariant: 'default'
-                },
-                {
-                    href: '/dashboard/quizzes',
-                    label: 'Quizzes',
-                    icon: FileText
-                },
-                {
-                    href: '/dashboard/participants',
-                    label: 'Participantes',
-                    icon: Users
-                },
-                {
                     href: '/dashboard/templates',
-                    label: 'Templates',
+                    label: 'Biblioteca de Templates',
                     icon: Database
                 }
             ]
