@@ -49,6 +49,7 @@ const getMarginClass = (value: string | number, type: string): string => {
 const RichTextBlock: React.FC<BlockComponentProps> = ({ block, className = '' }) => {
   return (
     <div
+      data-testid="block-text"
       className={`rich-text-block ${className}`}
       dangerouslySetInnerHTML={{
         __html: block.properties?.html || '<p>Rich text content</p>',

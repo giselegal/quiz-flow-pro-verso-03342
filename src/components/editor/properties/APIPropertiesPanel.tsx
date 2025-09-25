@@ -393,7 +393,7 @@ export const APIPropertiesPanel: React.FC<APIPropertiesPanelProps> = memo(({
     }
 
     return (
-        <Card className={className}>
+        <Card data-testid="properties-panel" className={className}>
             <CardHeader className="pb-3">
                 <div className="flex items-center justify-between">
                     <CardTitle className="flex items-center gap-2">

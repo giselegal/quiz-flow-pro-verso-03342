@@ -49,8 +49,8 @@ const getMarginClass = (value: string | number, type: string): string => {
 
 const ButtonBlock: React.FC<BlockComponentProps> = ({ block, className = '' }) => {
   return (
-    <div className={`button-block ${className}`}>
-      <Button onClick={() => console.log('Button clicked')}>
+    <div data-testid="block-button" className={`button-block ${className}`}>
+      <Button data-testid="block-header" onClick={() => console.log('Button clicked')}>
         {block.properties?.text || 'Click Me'}
       </Button>
     </div>

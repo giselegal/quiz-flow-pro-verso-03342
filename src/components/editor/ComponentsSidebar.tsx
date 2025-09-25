@@ -289,7 +289,7 @@ export const ComponentsSidebar: React.FC = () => {
   };
 
   return (
-    <Card className="h-full border-r rounded-none">
+    <Card data-testid="components-sidebar" className="h-full border-r rounded-none">
       <CardHeader className="px-4 py-3">
         <CardTitle className="text-sm font-medium">Componentes</CardTitle>
       </CardHeader>
