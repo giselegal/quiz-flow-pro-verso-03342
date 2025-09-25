@@ -179,16 +179,16 @@ const ModernDashboardPage: React.FC = () => {
                     {/* CONTENT MANAGEMENT - Páginas de conteúdo */}
                     <Route path="/dashboard/funnel-templates" component={TemplatesFunisPage} />
                     <Route path="/dashboard/funnels" component={MeusFunisPageReal} />
-                    
+
                     {/* ANALYTICS - Páginas de análise */}
                     <Route path="/dashboard/analytics" component={AdminDashboard} />
                     <Route path="/dashboard/participants" component={AdminDashboard} />
-                    
+
                     {/* TOOLS - Ferramentas e funcionalidades */}
                     <Route path="/dashboard/ab-tests" component={AdminDashboard} />
                     <Route path="/dashboard/creatives" component={AdminDashboard} />
                     <Route path="/dashboard/templates" component={AdminDashboard} />
-                    
+
                     {/* SYSTEM - Configurações do sistema */}
                     <Route path="/dashboard/integrations" component={AdminDashboard} />
                     <Route path="/dashboard/settings" component={SettingsPage} />
