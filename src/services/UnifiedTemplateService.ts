@@ -384,9 +384,73 @@ class UnifiedTemplateService {
         await Promise.allSettled(loadPromises);
         return results;
     }
+
+    /**
+     * 🔧 LOAD STEP BLOCKS - Método específico para carregar blocks de etapas
+     * Compatibilidade com TemplateManager
+     */
+    async loadStepBlocks(stepId: string, funnelId?: string): Promise<any[]> {
+        try {
+            const templateId = funnelId ? `${stepId}:${funnelId}` : stepId;
+            const template = await this.getTemplate(templateId);
+
+            // Se o template tem blocks, retorna eles
+            if (template?.blocks && Array.isArray(template.blocks)) {
+                return template.blocks;
+            }
+
+            // Se o template é um array direto de blocks
+            if (Array.isArray(template)) {
+                return template;
+            }
+
+            // Fallback: template vazio
+            console.log(`⚠️ Template ${templateId} não tem blocks válidos, retornando array vazio`);
+            return [];
+        } catch (error) {
+            console.error(`❌ Erro ao carregar blocks para ${stepId}:`, error);
+            return [];
+        }
+    }
+
+    /**
+     * 📤 PUBLISH STEP - Salva blocks de uma etapa
+     */
+    publishStep(stepId: string, blocks: any[]): void {
+        const templateData = { blocks };
+        this.cacheTemplate(stepId, templateData);
+        console.log(`📤 Step ${stepId} published com ${blocks.length} blocks`);
+    }
+
+    /**
+     * 🗑️ UNPUBLISH STEP - Remove template de uma etapa
+     */
+    unpublishStep(stepId: string): void {
+        this.cache.delete(stepId);
+        console.log(`🗑️ Step ${stepId} unpublished`);
+    }
+
+    /**
+     * 🚀 PRELOAD COMMON STEPS - Carrega etapas comuns
+     */
+    async preloadCommonSteps(): Promise<void> {
+        return this.preloadCriticalTemplates();
+    }
+
+    /**
+     * 🔄 INVALIDATE CACHE - Limpa cache
+     */
+    invalidateCache(key?: string): void {
+        if (key) {
+            this.cache.delete(key);
+        } else {
+            this.cache.clear();
+        }
+    }
 }
 
 // 🎯 SINGLETON INSTANCE
+
 export const unifiedTemplateService = new UnifiedTemplateService();
 
 // 🚀 Auto-preload na inicialização (após 200ms para não bloquear)

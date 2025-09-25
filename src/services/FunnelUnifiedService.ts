@@ -669,6 +669,13 @@ export class FunnelUnifiedService {
 
     private async saveToSupabase(funnel: UnifiedFunnelData, isUpdate = false): Promise<UnifiedFunnelData> {
         try {
+            // ⚡ VERIFICAÇÃO DEFENSIVA: Verificar se supabase está disponível
+            if (!supabase || !supabase.from) {
+                console.warn('⚠️ Supabase não disponível, salvando no localStorage');
+                this.saveToLocalStorage(funnel);
+                return funnel;
+            }
+
             const funnelRecord = {
                 id: funnel.id,
                 name: funnel.name,
@@ -689,18 +696,28 @@ export class FunnelUnifiedService {
 
             let result;
             if (isUpdate) {
-                result = await supabase
+                const query = supabase
                     .from('funnels')
                     .update(funnelRecord)
-                    .eq('id', funnel.id)
-                    .select()
-                    .single();
+                    .eq('id', funnel.id);
+
+                // ⚡ VERIFICAÇÃO DEFENSIVA: Verificar se select existe
+                if (typeof query.select === 'function') {
+                    result = await query.select().single();
+                } else {
+                    result = await query;
+                }
             } else {
-                result = await supabase
+                const query = supabase
                     .from('funnels')
-                    .insert([funnelRecord])
-                    .select()
-                    .single();
+                    .insert([funnelRecord]);
+
+                // ⚡ VERIFICAÇÃO DEFENSIVA: Verificar se select existe
+                if (typeof query.select === 'function') {
+                    result = await query.select().single();
+                } else {
+                    result = await query;
+                }
             }
 
             if (result.error) {
