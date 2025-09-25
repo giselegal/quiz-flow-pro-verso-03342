@@ -22,7 +22,7 @@ import { AlertCircle, RefreshCw, Check, X, Database } from 'lucide-react';
 
 import { useBlockProperties } from '@/hooks/useBlockProperties';
 import { usePureBuilder } from '@/components/editor/PureBuilderProvider';
-import { useFunnels } from '@/context/FunnelsContext';
+import { useFunnels } from '@/providers/FunnelMasterProvider';
 import { type BlockPropertySchema } from '@/api/internal/BlockPropertiesAPI';
 
 // ===== INTERFACES =====
@@ -53,7 +53,7 @@ const FunnelDataDisplay: React.FC<{
 }> = memo(({ blockId, blockType }) => {
     const builder = usePureBuilder();
     const funnelsContext = useFunnels();
-    
+
     // 🛡️ DEFENSIVE GUARD: Verificar se builder está disponível  
     if (!builder?.state) {
         return (

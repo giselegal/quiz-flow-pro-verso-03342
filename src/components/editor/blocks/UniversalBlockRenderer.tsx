@@ -23,6 +23,13 @@ import QuizHeaderBlock from './QuizHeaderBlock';
 import QuizTitleBlock from './QuizTitleBlock';
 import FormInputBlock from './FormInputBlock';
 
+// Importações dos componentes Step20
+import {
+  Step20ResultHeaderBlock,
+  Step20StyleRevealBlock,
+  Step20PersonalizedOfferBlock
+} from './Step20ModularBlocks';
+
 export interface UniversalBlockRendererProps {
   block: Block;
   isSelected?: boolean;
@@ -87,6 +94,10 @@ const BlockComponentRegistry: Record<string, React.FC<any>> = {
   'mentor-section-inline': MentorSectionInlineBlock,
   'testimonial-card-inline': TestimonialCardInlineBlock,
   'testimonials-carousel-inline': TestimonialsCarouselInlineBlock,
+  // Step20 Components
+  'step20-result-header': Step20ResultHeaderBlock,
+  'step20-style-reveal': Step20StyleRevealBlock,
+  'step20-personalized-offer': Step20PersonalizedOfferBlock,
   // Fallbacks para tipos básicos
   'text': createFallbackComponent('text'),
   'headline': createFallbackComponent('headline'),
