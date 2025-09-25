@@ -64,17 +64,30 @@ class SmartLogger {
             typeof window !== 'undefined' && window.location.hostname === 'localhost';
 
         const isProduction = process.env.NODE_ENV === 'production';
+        
+        // Check for debug mode via URL parameter
+        const hasDebugParam = typeof window !== 'undefined' && 
+            window.location.search.includes('debug=true');
+
+        // Smart log level configuration
+        let minLevel = LogLevel.WARN; // Default: only warnings and errors
+        if (isDevelopment && hasDebugParam) {
+            minLevel = LogLevel.DEBUG; // Full debug only when explicitly enabled
+        } else if (isDevelopment) {
+            minLevel = LogLevel.INFO; // Info level in dev without debug param
+        }
 
         this.config = {
             isDevelopment,
             isProduction,
-            minLevel: isProduction ? LogLevel.WARN : LogLevel.DEBUG,
-            maxBufferSize: 100,
-            flushInterval: 5000, // 5 seconds
-            enableConsole: !isProduction || false, // Disable console in production by default
+            minLevel,
+            maxBufferSize: 50, // Reduced buffer size
+            flushInterval: 10000, // 10 seconds
+            enableConsole: !isProduction,
             enableRemote: isProduction,
             enabledContexts: [],
-            disabledContexts: [],
+            // Disable noisy contexts by default
+            disabledContexts: isDevelopment && !hasDebugParam ? ['cache', 'render'] : [],
             ...config
         };
 
@@ -137,26 +150,43 @@ class SmartLogger {
     private outputToConsole(entry: LogEntry): void {
         const { level, message, context, data } = entry;
         const contextStr = context ? `[${context}]` : '';
-        const timestamp = new Date(entry.timestamp).toISOString();
+        const timestamp = new Date(entry.timestamp).toISOString().split('T')[1].replace('Z', '');
+
+        // Clean data formatting - remove object prototypes
+        const cleanData = data ? this.cleanObjectForLogging(data) : undefined;
 
         switch (level) {
             case LogLevel.DEBUG:
-                console.debug(`🐛 ${timestamp} ${contextStr}`, message, data || '');
+                console.debug(`🐛 ${timestamp} ${contextStr}`, message, cleanData);
                 break;
             case LogLevel.INFO:
-                console.info(`ℹ️ ${timestamp} ${contextStr}`, message, data || '');
+                console.info(`ℹ️ ${timestamp} ${contextStr}`, message, cleanData);
                 break;
             case LogLevel.WARN:
-                console.warn(`⚠️ ${timestamp} ${contextStr}`, message, data || '');
+                console.warn(`⚠️ ${timestamp} ${contextStr}`, message, cleanData);
                 break;
             case LogLevel.ERROR:
-                console.error(`❌ ${timestamp} ${contextStr}`, message, data || '');
+                console.error(`❌ ${timestamp} ${contextStr}`, message, cleanData);
                 if (entry.stack) console.error(entry.stack);
                 break;
             case LogLevel.CRITICAL:
-                console.error(`🚨 CRITICAL ${timestamp} ${contextStr}`, message, data || '');
+                console.error(`🚨 CRITICAL ${timestamp} ${contextStr}`, message, cleanData);
                 if (entry.stack) console.error(entry.stack);
                 break;
+        }
+    }
+
+    /**
+     * Clean objects for better logging readability
+     */
+    private cleanObjectForLogging(obj: any): any {
+        if (!obj || typeof obj !== 'object') return obj;
+        
+        try {
+            // Convert to JSON and back to remove prototypes and functions
+            return JSON.parse(JSON.stringify(obj));
+        } catch {
+            return String(obj);
         }
     }
 
@@ -220,14 +250,15 @@ class SmartLogger {
     // ===== PERFORMANCE LOGGING =====
 
     /**
-     * Log performance metrics
+     * Log performance metrics (optimized for 60fps - 16ms threshold)
      */
     performance(name: string, duration: number, context?: string): void {
-        if (duration > 100) { // Only log slow operations
-            this.warn(`Slow operation: ${name}`, { duration: `${duration.toFixed(2)}ms` }, context);
-        } else {
-            this.debug(`Performance: ${name}`, { duration: `${duration.toFixed(2)}ms` }, context);
+        // Only log slow operations (> 16ms = dropping below 60fps)
+        if (duration > 16) {
+            const level = duration > 100 ? 'warn' : 'info';
+            this[level](`Performance: ${name}`, { duration: `${duration.toFixed(2)}ms` }, context);
         }
+        // Skip logging fast operations to reduce noise
     }
 
     /**
@@ -254,11 +285,20 @@ class SmartLogger {
     // ===== RENDER LOGGING =====
 
     /**
-     * Log component renders (only in development)
+     * Log component renders (only when debug enabled)
      */
     render(componentName: string, props?: any, context?: string): void {
         if (!this.config.isDevelopment) return;
-        this.debug(`🎨 Render: ${componentName}`, props, context || 'render');
+        
+        // Only log renders when debug is explicitly enabled
+        const hasDebugParam = typeof window !== 'undefined' && 
+            window.location.search.includes('debug=true');
+            
+        if (!hasDebugParam) return;
+        
+        // Clean props for better readability
+        const cleanProps = props ? this.cleanObjectForLogging(props) : undefined;
+        this.debug(`🎨 Render: ${componentName}`, cleanProps, context || 'render');
     }
 
     /**
@@ -274,11 +314,17 @@ class SmartLogger {
     // ===== CACHE LOGGING =====
 
     cacheHit(key: string, context?: string): void {
-        this.debug(`🚀 Cache hit: ${key}`, undefined, context || 'cache');
+        // Only log cache hits when debug is explicitly enabled
+        const hasDebugParam = typeof window !== 'undefined' && 
+            window.location.search.includes('debug=true');
+        if (hasDebugParam) {
+            this.debug(`Cache hit para componente: ${key}`, undefined, context || 'BlockComponent');
+        }
     }
 
     cacheMiss(key: string, context?: string): void {
-        this.debug(`💨 Cache miss: ${key}`, undefined, context || 'cache');
+        // Always log cache misses as they might indicate performance issues
+        this.debug(`Cache miss para componente: ${key}`, undefined, context || 'BlockComponent');
     }
 
     cacheStats(stats: any, context?: string): void {
@@ -336,11 +382,24 @@ export const logger = new SmartLogger();
 if (typeof window !== 'undefined' && process.env.NODE_ENV === 'development') {
     (window as any).__LOGGER__ = logger;
     (window as any).__ENABLE_DEBUG_LOGS__ = () => {
-        logger.updateConfig({ minLevel: LogLevel.DEBUG, enableConsole: true });
+        logger.updateConfig({ 
+            minLevel: LogLevel.DEBUG, 
+            enableConsole: true,
+            disabledContexts: [] // Enable all contexts
+        });
+        console.info('🐛 Debug logs enabled! Add ?debug=true to URL for full verbosity');
     };
     (window as any).__DISABLE_DEBUG_LOGS__ = () => {
-        logger.updateConfig({ minLevel: LogLevel.WARN, enableConsole: false });
+        logger.updateConfig({ 
+            minLevel: LogLevel.WARN, 
+            enableConsole: false,
+            disabledContexts: ['cache', 'render']
+        });
+        console.info('🔇 Debug logs disabled');
     };
+    
+    // Helper message for developers
+    console.info('💡 SmartLogger optimized! Use ?debug=true in URL for full logs or call __ENABLE_DEBUG_LOGS__()');
 }
 
 // ===== REACT INTEGRATION =====
