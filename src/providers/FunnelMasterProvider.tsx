@@ -75,6 +75,10 @@ interface QuizState {
   maxScore: number;
   progress: number;
   isComplete: boolean;
+  userName: string;
+  answers: any[];
+  currentStepSelections: Record<string, string[]>;
+  autoAdvanceEnabled: boolean;
 }
 
 interface PerformanceMetrics {
@@ -140,7 +144,10 @@ type FunnelAction =
   | { type: 'RESET_CONFIG' }
   | { type: 'UPDATE_QUIZ_STATE'; payload: Partial<QuizState> }
   | { type: 'RESET_QUIZ' }
-  | { type: 'UPDATE_METRICS'; payload: Partial<PerformanceMetrics> };
+  | { type: 'UPDATE_METRICS'; payload: Partial<PerformanceMetrics> }
+  | { type: 'SET_USER_NAME'; payload: string }
+  | { type: 'ADD_ANSWER'; payload: any }
+  | { type: 'UPDATE_SELECTIONS'; payload: { step: string; selections: string[] } };
 
 // 🎯 INITIAL STATES
 const initialConfig: FunnelConfig = {
@@ -174,7 +181,11 @@ const initialQuizState: QuizState = {
   score: 0,
   maxScore: 0,
   progress: 0,
-  isComplete: false
+  isComplete: false,
+  userName: '',
+  answers: [],
+  currentStepSelections: {},
+  autoAdvanceEnabled: true,
 };
 
 const initialMetrics: PerformanceMetrics = {
@@ -228,6 +239,33 @@ function funnelMasterReducer(state: any, action: FunnelAction): any {
       return { 
         ...state, 
         quiz: { ...state.quiz, ...action.payload }
+      };
+    
+    case 'SET_USER_NAME':
+      return {
+        ...state,
+        quiz: { ...state.quiz, userName: action.payload }
+      };
+    
+    case 'ADD_ANSWER':
+      return {
+        ...state,
+        quiz: { 
+          ...state.quiz, 
+          answers: [...state.quiz.answers, action.payload] 
+        }
+      };
+    
+    case 'UPDATE_SELECTIONS':
+      return {
+        ...state,
+        quiz: {
+          ...state.quiz,
+          currentStepSelections: {
+            ...state.quiz.currentStepSelections,
+            [action.payload.step]: action.payload.selections
+          }
+        }
       };
     
     case 'RESET_QUIZ':
@@ -466,6 +504,19 @@ export const FunnelMasterProvider: React.FC<FunnelMasterProviderProps> = ({
       });
     },
 
+    // New methods for Quiz21Steps compatibility
+    setUserName: (name: string) => {
+      dispatch({ type: 'SET_USER_NAME', payload: name });
+    },
+
+    addAnswer: (answer: any) => {
+      dispatch({ type: 'ADD_ANSWER', payload: answer });
+    },
+
+    updateSelections: (step: string, selections: string[]) => {
+      dispatch({ type: 'UPDATE_SELECTIONS', payload: { step, selections } });
+    },
+
     submitQuiz: async (): Promise<void> => {
       dispatch({ 
         type: 'UPDATE_QUIZ_STATE', 
@@ -687,6 +738,11 @@ export const useQuizFlow = () => {
 // Legacy compatibility for useQuiz21Steps
 export const useQuiz21Steps = () => {
   const master = useFunnelMaster();
+  
+  const canGoNext = master.quiz.currentStep < master.quiz.totalSteps;
+  const canGoPrevious = master.quiz.currentStep > 1;
+  const isCurrentStepComplete = master.quiz.currentStepSelections[master.quiz.currentStep.toString()]?.length > 0 || master.quiz.userName.length > 0;
+  
   return {
     currentStep: master.quiz.currentStep,
     totalSteps: 21, // Fixed for 21-step quiz
@@ -694,12 +750,32 @@ export const useQuiz21Steps = () => {
     responses: master.quiz.responses,
     score: master.quiz.score,
     maxScore: master.quiz.maxScore,
+    canGoNext,
+    canGoPrevious,
+    isCurrentStepComplete,
+    autoAdvanceEnabled: master.quiz.autoAdvanceEnabled,
+    userName: master.quiz.userName,
+    answers: master.quiz.answers,
+    currentStepSelections: master.quiz.currentStepSelections,
+    
+    // Functions with expected names
     next: master.nextStep,
     previous: master.previousStep,
     goTo: master.goToStep,
+    goToNextStep: master.nextStep,
+    goToPreviousStep: master.previousStep,
     setResponse: master.updateResponse,
     submit: master.submitQuiz,
-    reset: master.resetQuiz
+    reset: master.resetQuiz,
+    resetQuiz: master.resetQuiz,
+    
+    // Helper functions
+    getProgress: () => master.quiz.progress,
+    getStepRequirements: () => ({
+      requiredSelections: master.quiz.currentStep === 1 ? 0 : 3, // Customize per step
+      allowMultiple: true,
+      validationRule: 'requiresValidSelection'
+    })
   };
 };
 

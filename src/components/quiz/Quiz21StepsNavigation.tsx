@@ -3,7 +3,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { ChevronLeft, ChevronRight, Home, RotateCcw } from 'lucide-react';
 import React from 'react';
 import { useLocation } from 'wouter';
-import { useQuiz21Steps } from './Quiz21StepsProvider';
+import { useQuiz21Steps } from '@/providers/FunnelMasterProvider';
 import { QuizBackendStatus } from './QuizBackendStatus';
 
 interface Quiz21StepsNavigationProps {
