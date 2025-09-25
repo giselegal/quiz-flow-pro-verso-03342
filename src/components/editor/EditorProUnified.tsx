@@ -25,7 +25,8 @@ import EditorToolbar from './EditorPro/components/EditorToolbar';
 import EditorCanvas from './EditorPro/components/EditorCanvas';
 import StepSidebar from './sidebars/StepSidebar';
 import ComponentsSidebar from './sidebars/ComponentsSidebar';
-import RegistryPropertiesPanel from '@/components/universal/RegistryPropertiesPanel';
+// import RegistryPropertiesPanel from '@/components/universal/RegistryPropertiesPanel'; // ❌ DESABILITADO - API Panel fixo
+import APIPropertiesPanel from './properties/APIPropertiesPanel'; // ✅ ADICIONADO
 
 // AI Features (lazy loaded)
 import OptimizedAIFeatures from '@/components/ai/OptimizedAIFeatures';
@@ -412,16 +413,22 @@ export const EditorProUnified: React.FC<EditorProUnifiedProps> = ({
           style={{ width: `${columnWidths.properties}px` }}
         >
           {selectedBlock ? (
-            <RegistryPropertiesPanel
-              selectedBlock={selectedBlock}
-              onUpdate={handleUpdateBlock}
+            <APIPropertiesPanel
+              blockId={selectedBlock.id}
+              blockType={selectedBlock.type}
+              initialProperties={selectedBlock.properties}
+              onPropertyChange={(key, value) => {
+                handleUpdateBlock(selectedBlock.id, {
+                  properties: { ...selectedBlock.properties, [key]: value }
+                });
+              }}
               onClose={() => setSelectedBlockId(null)}
-              onDelete={(blockId) => handleDeleteBlock(blockId)}
+              onDelete={() => handleDeleteBlock(selectedBlock.id)}
             />
           ) : (
             <div className="p-4 text-center text-muted-foreground">
-              <p className="text-sm">Selecione um componente para editar suas propriedades</p>
-              <p className="text-xs mt-2 text-primary">Builder System Ativo 🚀</p>
+              <p className="text-sm">Selecione um componente para ver as propriedades via API</p>
+              <p className="text-xs mt-2 text-primary">🔥 API Panel Mode Ativo 🚀</p>
             </div>
           )}
         </div>

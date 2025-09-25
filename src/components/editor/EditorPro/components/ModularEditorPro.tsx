@@ -10,7 +10,7 @@ import EditorToolbar from './EditorToolbar';
 import EditorCanvas from './EditorCanvas';
 import StepSidebar from '@/components/editor/sidebars/StepSidebar';
 import ComponentsSidebar from '@/components/editor/sidebars/ComponentsSidebar';
-import RegistryPropertiesPanel from '@/components/universal/RegistryPropertiesPanel';
+// import RegistryPropertiesPanel from '@/components/universal/RegistryPropertiesPanel'; // ❌ TEMPORARIAMENTE DESABILITADO
 import APIPropertiesPanel from '@/components/editor/properties/APIPropertiesPanel';
 
 /**
@@ -192,7 +192,7 @@ const ModularEditorPro: React.FC<ModularEditorProProps> = () => {
 
   // Estados locais para UI
   const [isPreviewMode, setIsPreviewMode] = useState(false);
-  const [useAPIPanel, setUseAPIPanel] = useState(true); // ✅ ATIVANDO API PANEL POR PADRÃO
+  const useAPIPanel = true; // ✅ API PANEL FIXO ATIVADO
 
   // Blocos da etapa atual - usando computed do context
   const currentStepBlocks = useMemo(() => {
@@ -471,33 +471,19 @@ const ModularEditorPro: React.FC<ModularEditorProProps> = () => {
                 handleDeleteBlock(selectedBlock.id);
               }}
             />
-          ) : useAPIPanel && !selectedBlock ? (
+          ) : (
+            // ❌ TEMPORARIAMENTE FORÇANDO APENAS API PANEL
             <div className="p-4 text-center text-muted-foreground">
+              <p>⚡️ API Panel Mode Always Active</p>
               <p>Selecione um componente para ver as propriedades via API</p>
             </div>
-          ) : (
-            <RegistryPropertiesPanel
-              selectedBlock={selectedBlock}
-              onUpdate={(blockId: string, updates: Record<string, any>) => {
-                console.log('🔧 RegistryPropertiesPanel onUpdate called:', { blockId, updates });
-                handleUpdateBlock(blockId, updates);
-              }}
-              onClose={() => context.setSelectedBlockId(null)}
-              onDelete={(blockId: string) => {
-                console.log('🗑️ RegistryPropertiesPanel onDelete called:', { blockId });
-                handleDeleteBlock(blockId);
-              }}
-            />
           )}
 
-          {/* Toggle entre painéis */}
+          {/* Toggle entre painéis - DESABILITADO */}
           <div className="p-2 border-t border-border">
-            <button
-              onClick={() => setUseAPIPanel(!useAPIPanel)}
-              className="w-full text-xs text-muted-foreground hover:text-foreground transition-colors"
-            >
-              {useAPIPanel ? 'Usar Painel Registry' : 'Usar Painel API'}
-            </button>
+            <div className="w-full text-xs text-muted-foreground text-center">
+              🔥 API Panel Mode (Registry Disabled)
+            </div>
           </div>
         </aside>
       </div>
