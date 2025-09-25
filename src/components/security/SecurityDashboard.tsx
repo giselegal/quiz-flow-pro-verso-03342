@@ -142,7 +142,7 @@ export const SecurityDashboard: React.FC = () => {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {systemStatus?.summary.critical_events || 0}
+              {systemStatus?.summary?.critical_events || 0}
             </div>
             <p className="text-xs text-muted-foreground">
               Últimas 24 horas
@@ -157,7 +157,9 @@ export const SecurityDashboard: React.FC = () => {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {performanceMetrics.pageLoadTime ? `${Math.round(performanceMetrics.pageLoadTime)}ms` : '-'}
+              {performanceMetrics && performanceMetrics.length > 0 
+                ? `${Math.round(performanceMetrics[0]?.metric_value || 0)}ms` 
+                : '-'}
             </div>
             <p className="text-xs text-muted-foreground">
               Tempo de carregamento
@@ -219,27 +221,27 @@ export const SecurityDashboard: React.FC = () => {
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm">
                   <div>
                     <span className="font-medium">Total de Métricas:</span>
-                    <span className="ml-2">{systemStatus.summary.metrics_count}</span>
+                    <span className="ml-2">{systemStatus.summary?.metrics_count || 0}</span>
                   </div>
                   <div>
                     <span className="font-medium">Métricas Críticas:</span>
-                    <span className="ml-2 text-destructive">{systemStatus.summary.critical_metrics}</span>
+                    <span className="ml-2 text-destructive">{systemStatus.summary?.critical_metrics || 0}</span>
                   </div>
                   <div>
                     <span className="font-medium">Avisos:</span>
-                    <span className="ml-2 text-warning">{systemStatus.summary.warning_metrics}</span>
+                    <span className="ml-2 text-warning">{systemStatus.summary?.warning_metrics || 0}</span>
                   </div>
                   <div>
                     <span className="font-medium">Eventos de Segurança:</span>
-                    <span className="ml-2">{systemStatus.summary.security_events}</span>
+                    <span className="ml-2">{systemStatus.summary?.security_events || 0}</span>
                   </div>
                   <div>
                     <span className="font-medium">Eventos Críticos:</span>
-                    <span className="ml-2 text-destructive">{systemStatus.summary.critical_events}</span>
+                    <span className="ml-2 text-destructive">{systemStatus.summary?.critical_events || 0}</span>
                   </div>
                   <div>
                     <span className="font-medium">Alta Severidade:</span>
-                    <span className="ml-2 text-warning">{systemStatus.summary.high_severity_events}</span>
+                    <span className="ml-2 text-warning">{systemStatus.summary?.high_severity_events || 0}</span>
                   </div>
                 </div>
               </CardContent>
@@ -342,26 +344,15 @@ export const SecurityDashboard: React.FC = () => {
         </TabsContent>
 
         <TabsContent value="events" className="space-y-4">
-          {systemStatus?.recent_critical_events?.length ? (
+          {systemStatus?.summary && systemStatus.summary.critical_events > 0 ? (
             <Card>
               <CardHeader>
                 <CardTitle className="text-destructive">Eventos Críticos Recentes</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="space-y-2">
-                  {systemStatus.recent_critical_events.map((event: any, index: number) => (
-                    <div key={index} className="flex items-center justify-between p-2 border rounded">
-                      <div>
-                        <span className="font-medium">{event.event_type}</span>
-                        <div className="text-sm text-muted-foreground flex items-center gap-2">
-                          <Clock className="w-3 h-3" />
-                          {new Date(event.created_at).toLocaleString()}
-                        </div>
-                      </div>
-                      <Badge variant="destructive">{event.severity}</Badge>
-                    </div>
-                  ))}
-                </div>
+                <p className="text-sm text-muted-foreground">
+                  {systemStatus.summary.critical_events} eventos críticos detectados nas últimas 24 horas.
+                </p>
               </CardContent>
             </Card>
           ) : (
@@ -370,6 +361,14 @@ export const SecurityDashboard: React.FC = () => {
                 <CheckCircle className="w-12 h-12 text-success mx-auto mb-4" />
                 <h3 className="text-lg font-medium">Nenhum evento crítico</h3>
                 <p className="text-muted-foreground">O sistema está operando sem eventos críticos recentes.</p>
+              </CardContent>
+            </Card>
+          )}
+        </TabsContent>
+      </Tabs>
+    </div>
+  );
+};
               </CardContent>
             </Card>
           )}

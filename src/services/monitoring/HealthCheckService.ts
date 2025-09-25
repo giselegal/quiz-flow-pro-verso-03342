@@ -127,24 +127,35 @@ class HealthCheckService {
   }
 
   /**
-   * Verificar conectividade com Supabase
+   * Verificar conectividade com Supabase usando edge function
    */
   private async checkSupabase(): Promise<ServiceHealth> {
     const startTime = performance.now();
     
     try {
-      // Ping simples ao Supabase
-      const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/rest/v1/`, {
-        method: 'HEAD',
-        headers: {
-          'apikey': import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY
+      // Usar edge function para health check real
+      const response = await fetch(
+        `https://pwtjuuhchtbzttrzoutw.supabase.co/functions/v1/security-monitor/health-check`,
+        {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+            'Content-Type': 'application/json'
+          }
         }
-      });
+      );
 
       const responseTime = performance.now() - startTime;
+      
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}`);
+      }
 
+      const healthData = await response.json();
+      
       return {
-        status: response.ok ? 'up' : 'down',
+        status: healthData.overall_status === 'healthy' ? 'up' : 
+                healthData.overall_status === 'degraded' ? 'degraded' : 'down',
         responseTime: Math.round(responseTime),
         lastCheck: new Date().toISOString()
       };
