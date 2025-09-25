@@ -17,8 +17,7 @@ import {
   CheckCircle, 
   XCircle, 
   RefreshCw,
-  TrendingUp,
-  Clock
+  TrendingUp
 } from 'lucide-react';
 
 export const SecurityDashboard: React.FC = () => {
@@ -361,14 +360,6 @@ export const SecurityDashboard: React.FC = () => {
                 <CheckCircle className="w-12 h-12 text-success mx-auto mb-4" />
                 <h3 className="text-lg font-medium">Nenhum evento crítico</h3>
                 <p className="text-muted-foreground">O sistema está operando sem eventos críticos recentes.</p>
-              </CardContent>
-            </Card>
-          )}
-        </TabsContent>
-      </Tabs>
-    </div>
-  );
-};
               </CardContent>
             </Card>
           )}
