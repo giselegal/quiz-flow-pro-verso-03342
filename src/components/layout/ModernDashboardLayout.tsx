@@ -30,7 +30,10 @@ import {
     LogOut,
     ChevronDown,
     Activity,
-    Copy
+    Copy,
+    Shield,
+    Brain,
+    HardDrive
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -95,6 +98,13 @@ const ModernDashboardLayout: React.FC<ModernDashboardLayoutProps> = ({
                     href: '/dashboard/real-time',
                     label: 'Tempo Real',
                     icon: Activity
+                },
+                {
+                    href: '/dashboard/monitoring',
+                    label: 'Monitoramento',
+                    icon: Shield,
+                    badge: 'Live',
+                    badgeVariant: 'default'
                 }
             ]
         },
@@ -119,6 +129,25 @@ const ModernDashboardLayout: React.FC<ModernDashboardLayoutProps> = ({
                     href: '/dashboard/templates',
                     label: 'Biblioteca de Templates',
                     icon: Database
+                }
+            ]
+        },
+        {
+            label: 'IA & Otimização',
+            items: [
+                {
+                    href: '/dashboard/ai-optimization',
+                    label: 'IA & Otimização',
+                    icon: Brain,
+                    badge: 'AI',
+                    badgeVariant: 'default'
+                },
+                {
+                    href: '/dashboard/backup',
+                    label: 'Backup & Recovery',
+                    icon: HardDrive,
+                    badge: 'Pro',
+                    badgeVariant: 'secondary'
                 }
             ]
         },
@@ -176,6 +205,9 @@ const ModernDashboardLayout: React.FC<ModernDashboardLayoutProps> = ({
             'dashboard': 'Dashboard',
             'analytics': 'Analytics',
             'real-time': 'Tempo Real',
+            'monitoring': 'Monitoramento',
+            'ai-optimization': 'IA & Otimização',
+            'backup': 'Backup & Recovery',
             'funnels': 'Funis',
             'quizzes': 'Quizzes',
             'participants': 'Participantes',

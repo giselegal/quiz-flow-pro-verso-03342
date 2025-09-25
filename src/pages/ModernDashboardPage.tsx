@@ -24,6 +24,9 @@ const AdminDashboard = lazy(() => import('./dashboard/AdminDashboard'));
 // const OverviewPage = lazy(() => import('./dashboard/OverviewPage'));
 const AnalyticsPage = lazy(() => import('./dashboard/AnalyticsPage'));
 const RealTimePage = lazy(() => import('./dashboard/RealTimePage'));
+const MonitoringPage = lazy(() => import('./dashboard/MonitoringPage'));
+const AIOptimizationPage = lazy(() => import('./dashboard/AIOptimizationPage'));
+const BackupPage = lazy(() => import('./dashboard/BackupPage'));
 const ParticipantsPage = lazy(() => import('./dashboard/ParticipantsPage'));
 const TemplatesFunisPage = lazy(() => import('./dashboard/TemplatesFunisPage'));
 const MeusFunisPageReal = lazy(() => import('./dashboard/MeusFunisPageReal'));
@@ -86,6 +89,36 @@ const pageConfig: Record<string, { title: string; subtitle: string; actions?: Re
             <Button variant="outline" size="sm">
                 <RefreshCw className="w-4 h-4 mr-2" />
                 Auto-refresh
+            </Button>
+        )
+    },
+    '/dashboard/monitoring': {
+        title: 'Monitoramento Avançado',
+        subtitle: 'Sistema de monitoramento em tempo real e alertas de segurança',
+        actions: (
+            <Button variant="outline" size="sm">
+                <RefreshCw className="w-4 h-4 mr-2" />
+                Atualizar Status
+            </Button>
+        )
+    },
+    '/dashboard/ai-optimization': {
+        title: 'IA & Otimização',
+        subtitle: 'Recomendações automáticas de otimização powered by AI',
+        actions: (
+            <Button size="sm">
+                <Plus className="w-4 h-4 mr-2" />
+                Executar Análise
+            </Button>
+        )
+    },
+    '/dashboard/backup': {
+        title: 'Backup & Recovery',
+        subtitle: 'Sistema de backup automático e disaster recovery',
+        actions: (
+            <Button size="sm">
+                <Plus className="w-4 h-4 mr-2" />
+                Criar Backup
             </Button>
         )
     },
@@ -185,7 +218,12 @@ const ModernDashboardPage: React.FC = () => {
                     {/* ANALYTICS - Páginas de análise específicas */}
                     <Route path="/dashboard/analytics" component={AnalyticsPage} />
                     <Route path="/dashboard/real-time" component={RealTimePage} />
+                    <Route path="/dashboard/monitoring" component={MonitoringPage} />
                     <Route path="/dashboard/participants" component={ParticipantsPage} />
+
+                    {/* AI & OPTIMIZATION - Páginas de IA e otimização */}
+                    <Route path="/dashboard/ai-optimization" component={AIOptimizationPage} />
+                    <Route path="/dashboard/backup" component={BackupPage} />
 
                     {/* CONTENT MANAGEMENT - Páginas de conteúdo */}
                     <Route path="/dashboard/funnel-templates" component={TemplatesFunisPage} />

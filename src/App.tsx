@@ -18,6 +18,8 @@ import { GlobalErrorBoundary } from './components/error/GlobalErrorBoundary';
 import { Toaster } from './components/ui/toaster';
 import { AuthProvider } from './context/AuthContext';
 import OptimizedProviderStack from './providers/OptimizedProviderStack';
+import { SecurityProvider } from './providers/SecurityProvider';
+import { MonitoringProvider } from './components/monitoring/MonitoringProvider';
 import { serviceManager } from './services/core/UnifiedServiceManager';
 import { RedirectRoute } from './components/RedirectRoute';
 import { QuizErrorBoundary } from './components/RouteErrorBoundary';
@@ -63,7 +65,9 @@ function App() {
     <GlobalErrorBoundary showResetButton={true}>
       <ThemeProvider defaultTheme="light">
         <AuthProvider>
-          <OptimizedProviderStack enableLazyLoading={true} enableComponentCaching={true} debugMode={false}>
+          <SecurityProvider>
+            <MonitoringProvider enableAlerts={true} enableAnalytics={true}>
+              <OptimizedProviderStack enableLazyLoading={true} enableComponentCaching={true} debugMode={false}>
             <Router>
               <Suspense fallback={<EnhancedLoadingFallback message="Carregando aplicação..." variant="detailed" />}>
               <Switch>
@@ -182,9 +186,11 @@ function App() {
             </Suspense>
           </Router>
           <Toaster />
-        </OptimizedProviderStack>
-      </AuthProvider>
-    </ThemeProvider>
+              </OptimizedProviderStack>
+            </MonitoringProvider>
+          </SecurityProvider>
+        </AuthProvider>
+      </ThemeProvider>
     </GlobalErrorBoundary>
   );
 }
