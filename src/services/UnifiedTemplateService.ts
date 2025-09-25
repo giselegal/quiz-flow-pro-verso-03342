@@ -10,7 +10,8 @@
  * ✅ API unificada consolidando fragmentação
  */
 
-import { templateService } from '../core/funnel/services/TemplateService';
+// ❌ REMOVIDO: import { templateService } from '../core/funnel/services/TemplateService';
+// ⚡ CORREÇÃO: UnifiedTemplateService agora é completamente independente
 
 // 🎯 CACHE AVANÇADO COM TTL
 interface CachedTemplate {
@@ -45,7 +46,7 @@ class UnifiedTemplateService {
         });
 
         await Promise.allSettled(preloadPromises);
-        
+
         const duration = performance.now() - startTime;
         const successful = this.CRITICAL_TEMPLATES.length - preloadPromises.length;
         console.log(`🎯 Preload concluído: ${successful}/${this.CRITICAL_TEMPLATES.length} templates em ${duration.toFixed(2)}ms`);
@@ -85,23 +86,88 @@ class UnifiedTemplateService {
 
     /**
      * 🔄 LOAD WITH FALLBACK - Carregamento com fallbacks inteligentes
+     * ⚡ INDEPENDENTE: Não depende mais do TemplateService antigo
      */
     private async loadTemplateWithFallback(templateId: string): Promise<any> {
         try {
-            // 1. Tentar carregar via core service
-            const template = await templateService.getTemplate(templateId);
-            if (template && Object.keys(template).length > 0) {
-                console.log(`✅ Template carregado: ${templateId}`);
-                return template;
+            // 1. Tentar carregar via templates estáticos integrados
+            const staticTemplate = this.getStaticTemplate(templateId);
+            if (staticTemplate && Object.keys(staticTemplate).length > 0) {
+                console.log(`✅ Template estático carregado: ${templateId}`);
+                return staticTemplate;
             }
-        } catch (coreError) {
-            console.warn(`⚠️ Core service falhou para ${templateId}:`, coreError);
+        } catch (staticError) {
+            console.warn(`⚠️ Template estático não encontrado para ${templateId}:`, staticError);
         }
 
-        // 2. Fallback: template estático baseado no padrão
+        // 2. Fallback: template dinâmico baseado no padrão
         const fallbackTemplate = this.generateFallbackTemplate(templateId);
-        console.log(`🎨 Usando fallback para: ${templateId}`);
+        console.log(`🎨 Usando fallback dinâmico para: ${templateId}`);
         return fallbackTemplate;
+    }
+
+    /**
+     * 🎯 GET STATIC TEMPLATE - Busca templates estáticos integrados
+     * ⚡ NOVO: Método independente para templates críticos
+     */
+    private getStaticTemplate(templateId: string): any | null {
+        // Templates críticos integrados estaticamente
+        const staticTemplates: Record<string, any> = {
+            'step-1': {
+                id: 'step-1',
+                name: 'Quiz Step 1',
+                blocks: [
+                    { type: 'headline', id: 'headline-1', properties: { text: 'Descubra seu estilo' } },
+                    { type: 'quiz-question', id: 'question-1', properties: { text: 'Qual seu objetivo principal?' } },
+                    { type: 'quiz-options', id: 'options-1', properties: {} },
+                    { type: 'button', id: 'btn-1', properties: { text: 'Continuar' } }
+                ]
+            },
+            'step-2': {
+                id: 'step-2',
+                name: 'Quiz Step 2',
+                blocks: [
+                    { type: 'quiz-question', id: 'question-2', properties: { text: 'Como você se veste normalmente?' } },
+                    { type: 'options-grid', id: 'options-2', properties: {} },
+                    { type: 'button', id: 'btn-2', properties: { text: 'Próxima' } }
+                ]
+            },
+            'quiz21StepsComplete': {
+                id: 'quiz21StepsComplete',
+                name: 'Quiz 21 Steps Complete',
+                totalSteps: 21,
+                steps: Array.from({ length: 21 }, (_, i) => ({
+                    step: i + 1,
+                    blocks: this.generateStepBlocks(i + 1)
+                }))
+            }
+        };
+
+        return staticTemplates[templateId] || null;
+    }
+
+    /**
+     * 🔧 GENERATE STEP BLOCKS - Helper para gerar blocos por step
+     */
+    private generateStepBlocks(stepNumber: number): any[] {
+        if (stepNumber <= 19) {
+            return [
+                { type: 'quiz-question', id: `question-${stepNumber}`, properties: { text: `Pergunta ${stepNumber}` } },
+                { type: 'quiz-options', id: `options-${stepNumber}`, properties: {} },
+                { type: 'button', id: `btn-${stepNumber}`, properties: { text: 'Continuar' } }
+            ];
+        } else if (stepNumber === 20) {
+            return [
+                { type: 'quiz-transition', id: 'transition-1', properties: { text: 'Analisando suas respostas...' } },
+                { type: 'loading-animation', id: 'loader-1', properties: {} }
+            ];
+        } else {
+            return [
+                { type: 'sales-hero', id: 'hero-1', properties: { text: 'Oferta Especial' } },
+                { type: 'urgency-timer-inline', id: 'timer-1', properties: {} },
+                { type: 'button', id: 'cta-1', properties: { text: 'Garantir Agora' } }
+            ];
+        }
     }
 
     /**
@@ -109,7 +175,7 @@ class UnifiedTemplateService {
      */
     private generateFallbackTemplate(templateId: string): any {
         const stepNumber = this.extractStepNumber(templateId);
-        
+
         const baseTemplate = {
             id: templateId,
             name: `Template ${templateId}`,
@@ -213,9 +279,9 @@ class UnifiedTemplateService {
     }
 
     getCacheStats() {
-        const hitRate = this.cache.size > 0 ? 
+        const hitRate = this.cache.size > 0 ?
             ((this.cache.size / (this.cache.size + this.preloadingPromises.size)) * 100).toFixed(1) : '0';
-        
+
         return {
             cached: this.cache.size,
             preloading: this.preloadingPromises.size,
@@ -239,7 +305,7 @@ class UnifiedTemplateService {
      */
     async getMultipleTemplates(templateIds: string[]): Promise<Record<string, any>> {
         const results: Record<string, any> = {};
-        
+
         const loadPromises = templateIds.map(async (templateId) => {
             try {
                 const template = await this.getTemplate(templateId);
