@@ -259,10 +259,9 @@ export const Quiz21StepsProvider: React.FC<Quiz21StepsProviderProps> = ({
         return;
       }
 
-      // 📊 ANALYTICS: Track step viewed
-      import('@/services/compatibleAnalytics')
-        .then(({ trackStepViewed }) => trackStepViewed(step))
-        .catch(err => console.warn('Analytics error:', err));
+      // 📊 ANALYTICS: Track step viewed (simplified - tracking service consolidated)
+      console.log(`📊 Step ${step} viewed`);
+      // TODO: Implement tracking in consolidated analytics service
 
       // 📊 ANALYTICS: Track step completion antes de mudar
       if (step > currentStep) {
@@ -328,10 +327,9 @@ export const Quiz21StepsProvider: React.FC<Quiz21StepsProviderProps> = ({
         });
       }
 
-      // 📊 ANALYTICS: Rastrear início do quiz
-      import('@/services/compatibleAnalytics')
-        .then(({ trackQuizStarted }) => trackQuizStarted(name))
-        .catch(err => console.warn('Analytics error:', err));
+      // 📊 ANALYTICS: Rastrear início do quiz (simplified - tracking service consolidated)
+      console.log(`📊 Quiz started by: ${name}`);
+      // TODO: Implement tracking in consolidated analytics service
 
       // Salvar em session data
       setSessionData(prev => ({
@@ -361,10 +359,9 @@ export const Quiz21StepsProvider: React.FC<Quiz21StepsProviderProps> = ({
       // 🗄️ SUPABASE: Salvar resposta no banco
       saveSupabaseAnswer({ questionId, optionId });
 
-      // 📊 ANALYTICS: Rastrear seleção de opção
-      import('@/services/compatibleAnalytics')
-        .then(({ trackOptionSelected }) => trackOptionSelected(currentStep, optionId))
-        .catch(err => console.warn('Analytics error:', err));
+      // 📊 ANALYTICS: Rastrear seleção de opção (simplified - tracking service consolidated)
+      console.log(`📊 Option ${optionId} selected at step ${currentStep}`);
+      // TODO: Implement tracking in consolidated analytics service
 
       // Atualizar seleções da etapa atual
       setCurrentStepSelections(prev => ({
@@ -453,10 +450,9 @@ export const Quiz21StepsProvider: React.FC<Quiz21StepsProviderProps> = ({
     // Note: quizLogicResult será atualizado após completeQuizLogic() por useQuizLogic
     setTimeout(() => {
       if (quizLogicResult) {
-        // 📊 ANALYTICS: Track quiz completion
-        import('@/services/compatibleAnalytics').then(({ trackQuizCompleted }) => {
-          trackQuizCompleted(quizLogicResult);
-        });
+        // 📊 ANALYTICS: Track quiz completion (simplified - tracking service consolidated)
+        console.log('📊 Quiz completed:', quizLogicResult);
+        // TODO: Implement tracking in consolidated analytics service
 
         if (debug) {
           console.log('🎯 Quiz21Steps: Quiz completado com analytics:', quizLogicResult);

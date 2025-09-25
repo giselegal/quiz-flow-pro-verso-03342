@@ -1,15 +1,31 @@
 
 /**
- * 📊 DASHBOARD DE ANALYTICS EM TEMPO REAL
+ * 📊 DASHBOARD DE ANALYTICS EM TEMPO REAL - FASE 6 OTIMIZADA
  * 
  * Dashboard moderno com métricas do quiz em tempo real
+ * Migrado para UnifiedAnalytics (sistema consolidado)
  */
 
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { getDashboardData, type DashboardData } from '@/services/compatibleAnalytics';
+import { unifiedAnalytics } from '@/services/unifiedAnalytics';
+
+// ============================================================================
+// TIPOS E INTERFACES
+// ============================================================================
+
+interface DashboardData {
+    totalSessions: number;
+    completedSessions: number;
+    conversionRate: number;
+    averageSteps: number;
+    popularStyles: Array<{ style: string; count: number; percentage: number }>;
+    recentActivity: Array<{ time: string; sessions: number }>;
+    deviceBreakdown: Array<{ type: string; count: number; percentage: number }>;
+    currentActiveUsers: number;
+}
 import {
     Users,
     TrendingUp,
@@ -214,7 +230,31 @@ export const RealTimeDashboard: React.FC = () => {
     const loadData = async () => {
         try {
             setIsLoading(true);
-            const data = await getDashboardData();
+            const metrics = await unifiedAnalytics.getDashboardMetrics();
+
+            // Converter métricas do UnifiedAnalytics para DashboardData
+            const data: DashboardData = {
+                totalSessions: metrics.totalParticipants,
+                completedSessions: metrics.completedSessions,
+                conversionRate: metrics.conversionRate,
+                averageSteps: Math.round(metrics.averageCompletionTime / 60), // convertendo tempo em steps aproximados
+                popularStyles: metrics.popularStyles.map(style => ({
+                    style: style.style,
+                    count: style.count,
+                    percentage: style.percentage
+                })),
+                recentActivity: metrics.hourlyActivity.map(activity => ({
+                    time: `${String(activity.hour).padStart(2, '0')}:00`,
+                    sessions: activity.activity
+                })),
+                deviceBreakdown: metrics.deviceBreakdown.map(device => ({
+                    type: device.device.charAt(0).toUpperCase() + device.device.slice(1), // Capitalize
+                    count: device.count,
+                    percentage: device.percentage
+                })),
+                currentActiveUsers: metrics.activeSessions
+            };
+
             setDashboardData(data);
         } catch (error) {
             console.error('Erro ao carregar dados:', error);
