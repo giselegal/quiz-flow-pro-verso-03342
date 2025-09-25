@@ -26,15 +26,15 @@ describe('⚡ Performance e Tempo de Carregamento', () => {
   describe('🚀 Carregamento Inicial', () => {
     it('deve carregar componentes principais rapidamente', async () => {
       const startTime = performance.now();
-      
+
       // Simula carregamento dos componentes principais
       const { useQuizState } = await import('@/hooks/useQuizState');
       const QuestionStep = await import('@/components/quiz/QuestionStep');
       const IntroStep = await import('@/components/quiz/IntroStep');
-      
+
       const endTime = performance.now();
       const loadTime = endTime - startTime;
-      
+
       expect(loadTime).toBeLessThan(500); // Menos de 500ms
       expect(useQuizState).toBeDefined();
       expect(QuestionStep).toBeDefined();
@@ -43,13 +43,13 @@ describe('⚡ Performance e Tempo de Carregamento', () => {
 
     it('deve carregar dados do quiz rapidamente', async () => {
       const startTime = performance.now();
-      
+
       const { QUIZ_STEPS } = await import('@/data/quizSteps');
       const { styleMapping } = await import('@/data/styles');
-      
+
       const endTime = performance.now();
       const loadTime = endTime - startTime;
-      
+
       expect(loadTime).toBeLessThan(100); // Menos de 100ms
       expect(Object.keys(QUIZ_STEPS)).toHaveLength(21);
       expect(Object.keys(styleMapping)).toBeGreaterThan(0);
@@ -60,15 +60,15 @@ describe('⚡ Performance e Tempo de Carregamento', () => {
     it('deve transicionar entre etapas rapidamente', async () => {
       const { renderHook, act } = await import('@testing-library/react');
       const { useQuizState } = await import('@/hooks/useQuizState');
-      
+
       const { result } = renderHook(() => useQuizState());
-      
+
       const transitions = [];
-      
+
       // Mede tempo de múltiplas transições
       for (let i = 0; i < 5; i++) {
         const startTime = performance.now();
-        
+
         act(() => {
           if (i === 0) {
             result.current.setUserName('Performance Test');
@@ -77,16 +77,16 @@ describe('⚡ Performance e Tempo de Carregamento', () => {
           }
           result.current.nextStep();
         });
-        
+
         const endTime = performance.now();
         transitions.push(endTime - startTime);
       }
-      
+
       // Todas as transições devem ser rápidas
       transitions.forEach(time => {
         expect(time).toBeLessThan(50); // Menos de 50ms cada
       });
-      
+
       // Tempo médio deve ser muito baixo
       const avgTime = transitions.reduce((a, b) => a + b) / transitions.length;
       expect(avgTime).toBeLessThan(25);
@@ -95,9 +95,9 @@ describe('⚡ Performance e Tempo de Carregamento', () => {
     it('deve calcular resultado rapidamente', async () => {
       const { renderHook, act } = await import('@testing-library/react');
       const { useQuizState } = await import('@/hooks/useQuizState');
-      
+
       const { result } = renderHook(() => useQuizState());
-      
+
       // Prepara estado com respostas
       act(() => {
         result.current.setUserName('Calculation Test');
@@ -105,16 +105,16 @@ describe('⚡ Performance e Tempo de Carregamento', () => {
           result.current.addAnswer(`step-${i}`, ['option1']);
         }
       });
-      
+
       const startTime = performance.now();
-      
+
       act(() => {
         result.current.calculateResult();
       });
-      
+
       const endTime = performance.now();
       const calculationTime = endTime - startTime;
-      
+
       expect(calculationTime).toBeLessThan(100); // Menos de 100ms
       expect(result.current.progress).toBeGreaterThan(0);
     });
@@ -123,7 +123,7 @@ describe('⚡ Performance e Tempo de Carregamento', () => {
   describe('📊 Performance de Cálculos', () => {
     it('deve processar pontuações rapidamente', async () => {
       const { styleMapping } = await import('@/data/styles');
-      
+
       const mockAnswers = {
         'step-2': ['option1'],
         'step-3': ['option2'],
@@ -131,9 +131,9 @@ describe('⚡ Performance e Tempo de Carregamento', () => {
         'step-5': ['option3'],
         'step-6': ['option2']
       };
-      
+
       const startTime = performance.now();
-      
+
       // Simula cálculo de pontuações
       const scores = {
         natural: 0,
@@ -145,8 +145,8 @@ describe('⚡ Performance e Tempo de Carregamento', () => {
         dramatico: 0,
         criativo: 0
       };
-      
-      Object.entries(mockAnswers).forEach(([step, answers]) => {
+
+      Object.entries(mockAnswers).forEach(([_, answers]) => {
         answers.forEach(answer => {
           if (styleMapping[answer]) {
             Object.entries(styleMapping[answer]).forEach(([style, points]) => {
@@ -155,10 +155,10 @@ describe('⚡ Performance e Tempo de Carregamento', () => {
           }
         });
       });
-      
+
       const endTime = performance.now();
       const calculationTime = endTime - startTime;
-      
+
       expect(calculationTime).toBeLessThan(20); // Menos de 20ms
       expect(Object.values(scores).some(score => score > 0)).toBe(true);
     });
@@ -173,11 +173,11 @@ describe('⚡ Performance e Tempo de Carregamento', () => {
         dataStorage: 10,       // Salvamento local
         imageLoad: 200         // Carregamento de imagens
       };
-      
+
       // Todos os tempos devem estar dentro dos limites aceitáveis para UX
       Object.entries(uxMetrics).forEach(([metric, maxTime]) => {
         expect(maxTime).toBeLessThan(1000); // Nenhuma operação > 1s
-        
+
         if (metric === 'stepTransition' || metric === 'dataStorage') {
           expect(maxTime).toBeLessThan(100); // Operações críticas < 100ms
         }
