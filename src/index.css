@@ -339,10 +339,10 @@ img:hover,
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
 
-    --primary: 318 100% 55%;        /* #FF1CC0 - Neon Pink */
+    --primary: 272 83% 58%;         /* #B131FA - Medium Purple */
     --primary-foreground: 0 0% 99.6%;
 
-    --secondary: 272 83% 58%;       /* #B131FA - Medium Purple */
+    --secondary: 256 100% 23%;      /* #4A0074 - Dark Purple */
     --secondary-foreground: 0 0% 99.6%;
 
     --accent: 226 100% 56%;         /* #1C3AFF - Neon Blue */
@@ -357,19 +357,19 @@ img:hover,
 
     --radius: 0.5rem;
 
-    /* QuizFlow Brand System - CYBERPUNK NEON PALETTE */
-    --brand-dark-blue: 256 100% 23%;    /* #4A0074 - Dark Purple */
-    --brand-medium-blue: 272 83% 58%;   /* #B131FA - Medium Purple */
-    --brand-light-blue: 226 100% 56%;   /* #1C3AFF - Neon Blue */
+    /* QuizFlow Brand System - CYBERPUNK EQUILIBRADO */
+    --brand-dark-blue: 256 100% 23%;    /* #4A0074 - Dark Purple (PRINCIPAL) */
+    --brand-medium-blue: 272 83% 58%;   /* #B131FA - Medium Purple (SECUNDÁRIO) */
+    --brand-light-blue: 226 100% 56%;   /* #1C3AFF - Neon Blue (ACCENT) */
     --brand-bright-blue: 226 100% 56%;  /* #1C3AFF - Neon Blue */
-    --brand-bright-pink: 318 100% 55%;  /* #FF1CC0 - Neon Pink */
+    --brand-bright-pink: 318 100% 55%;  /* #FF1CC0 - Neon Pink (APENAS GRADIENTES) */
 
-    /* Clean Support Colors */
-    --brand-primary: 318 100% 55%;      /* #FF1CC0 - Neon Pink */
+    /* Cores Principais - Roxos e Azuis */
+    --brand-primary: 272 83% 58%;       /* #B131FA - Medium Purple como principal */
     --brand-dark: 256 100% 23%;         /* #4A0074 - Dark Purple */
     --brand-background: 0 0% 99.6%;     /* #FEFEFE - Off-white */
     --brand-text: 256 100% 23%;         /* #4A0074 - Dark Purple */
-    --brand-muted: 272 83% 58%;         /* #B131FA - Medium Purple */
+    --brand-muted: 226 100% 56%;        /* #1C3AFF - Neon Blue */
 
     /* Cyberpunk Gradients */
     --gradient-primary: linear-gradient(135deg, hsl(318 100% 55%), hsl(226 100% 56%)); /* Pink to Blue */

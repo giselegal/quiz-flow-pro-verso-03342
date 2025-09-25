@@ -7,6 +7,13 @@ export interface DashboardMetrics {
   completionRate: number;
   averageScore: number;
   conversionRate: number;
+  // Add missing properties
+  completedSessions: number;
+  averageCompletionTime: number;
+  popularStyles: any[];
+  hourlyActivity: any[];
+  deviceBreakdown: any[];
+  activeSessions: number;
 }
 
 export interface ParticipantDetails {
@@ -29,12 +36,23 @@ export class UnifiedAnalyticsService {
       totalParticipants: 150,
       completionRate: 75,
       averageScore: 85,
-      conversionRate: 12.5
+      conversionRate: 12.5,
+      completedSessions: 113,
+      averageCompletionTime: 320,
+      popularStyles: [{ name: 'Modern', count: 45 }],
+      hourlyActivity: [{ hour: 14, count: 25 }],
+      deviceBreakdown: [{ device: 'Desktop', count: 80 }],
+      activeSessions: 25
     };
   }
 
-  static async getParticipantsDetails(): Promise<ParticipantDetails[]> {
-    return [];
+  static async getParticipantsDetails(): Promise<{ participants: ParticipantDetails[]; total: number; totalPages: number; currentPage: number }> {
+    return {
+      participants: [],
+      total: 0,
+      totalPages: 1,
+      currentPage: 1
+    };
   }
 
   static async getRealTimeMetrics() {
@@ -62,5 +80,8 @@ export class UnifiedAnalyticsService {
 }
 
 export const unifiedAnalytics = {
-  getRealTimeData: UnifiedAnalyticsService.getRealTimeData
+  getRealTimeData: UnifiedAnalyticsService.getRealTimeData,
+  getDashboardMetrics: UnifiedAnalyticsService.getDashboardMetrics,
+  getParticipantsDetails: UnifiedAnalyticsService.getParticipantsDetails,
+  getRealTimeMetrics: UnifiedAnalyticsService.getRealTimeMetrics
 };

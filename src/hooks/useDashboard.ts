@@ -197,7 +197,7 @@ export const useDashboard = (options: DashboardHookOptions = {}): DashboardHookR
         }));
 
         try {
-            const metrics = await unifiedAnalytics.getDashboardMetrics(filters);
+            const metrics = await unifiedAnalytics.getDashboardMetrics();
             performanceTracker.current.recordCacheHit(); // Service handles caching
 
             setState(prev => ({
@@ -241,7 +241,7 @@ export const useDashboard = (options: DashboardHookOptions = {}): DashboardHookR
         }));
 
         try {
-            const result = await unifiedAnalytics.getParticipantsDetails(filters, page, 10);
+            const result = await unifiedAnalytics.getParticipantsDetails();
             performanceTracker.current.recordCacheHit();
 
             setState(prev => ({

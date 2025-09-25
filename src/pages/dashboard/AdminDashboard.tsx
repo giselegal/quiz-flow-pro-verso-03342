@@ -65,9 +65,8 @@ interface QuickActionProps {
 }
 
 // ============================================================================
-// UNIFIED ANALYTICS INSTANCE
+// UNIFIED ANALYTICS INSTANCE  
 // ============================================================================
-const unifiedAnalytics = new UnifiedAnalyticsService();
 
 const QuickAction: React.FC<QuickActionProps> = ({ title, description, href, icon, color }) => {
     const colorClasses = {
@@ -153,7 +152,7 @@ const AdminDashboard: React.FC = () => {
             }
 
             // Usar UnifiedAnalytics (sistema consolidado com fallback automático)
-            const dashboardMetrics = await unifiedAnalytics.getDashboardMetrics();
+            const dashboardMetrics = await UnifiedAnalyticsService.getDashboardMetrics();
 
             // Calcular receita baseada em conversões
             const estimatedRevenue = dashboardMetrics.completedSessions * 45; // R$ 45 por lead convertido
@@ -177,7 +176,7 @@ const AdminDashboard: React.FC = () => {
                 active: dashboardMetrics.activeSessions,
                 conversion: dashboardMetrics.conversionRate,
                 revenue: estimatedRevenue,
-                source: dashboardMetrics.dataRange ? 'Supabase + Fase5' : 'Fase5 fallback'
+                source: 'Dados simulados'
             });
 
         } catch (error) {
