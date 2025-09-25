@@ -428,24 +428,44 @@ class UnifiedTemplateService {
      */
     async loadStepBlocks(stepId: string, funnelId?: string): Promise<any[]> {
         try {
-            // 🎯 CORREÇÃO CRÍTICA: Forçar uso do template real para steps
+            console.log(`🔍 Carregando blocos para: ${stepId} (funnelId: ${funnelId})`);
+            
+            // 🎯 PRIORIDADE 1: Template real completo (QUIZ_STYLE_21_STEPS_TEMPLATE)
             if (stepId.startsWith('step-') || funnelId === 'quiz21StepsComplete') {
-                console.log(`🎯 Forçando carregamento de template REAL para: ${stepId}`);
+                console.log(`🎯 Tentando carregar template REAL: ${stepId}`);
                 
                 try {
                     const { QUIZ_STYLE_21_STEPS_TEMPLATE } = await import('@/templates/quiz21StepsComplete');
-                    const realBlocks = QUIZ_STYLE_21_STEPS_TEMPLATE[stepId];
+                    const realBlocks = (QUIZ_STYLE_21_STEPS_TEMPLATE as any)[stepId];
                     
-                    if (realBlocks && Array.isArray(realBlocks)) {
-                        console.log(`🏆 TEMPLATE REAL carregado: ${stepId} com ${realBlocks.length} blocos`);
+                    if (realBlocks && Array.isArray(realBlocks) && realBlocks.length > 0) {
+                        console.log(`🏆 TEMPLATE REAL carregado: ${stepId} com ${realBlocks.length} blocos REAIS`);
                         return realBlocks;
+                    } else {
+                        console.log(`⚠️ Template real existe mas está vazio para: ${stepId}`);
                     }
                 } catch (importError) {
                     console.error(`❌ Erro ao importar template real: ${stepId}`, importError);
                 }
             }
 
-            // Fallback para o sistema antigo apenas se template real falhar
+            // 🎯 PRIORIDADE 2: Templates da biblioteca com conteúdo
+            try {
+                const { templateLibraryService } = await import('@/services/templateLibraryService');
+                const libraryTemplate = templateLibraryService.getById(stepId);
+                
+                if (libraryTemplate?.steps && (libraryTemplate.steps as any)[stepId]) {
+                    const libraryBlocks = (libraryTemplate.steps as any)[stepId];
+                    if (Array.isArray(libraryBlocks) && libraryBlocks.length > 0) {
+                        console.log(`📚 Template da biblioteca carregado: ${stepId} com ${libraryBlocks.length} blocos`);
+                        return libraryBlocks;
+                    }
+                }
+            } catch (libraryError) {
+                console.warn(`⚠️ Erro ao carregar da biblioteca: ${stepId}`, libraryError);
+            }
+
+            // 🎯 PRIORIDADE 3: Fallback inteligente para garantir que sempre há conteúdo
             const templateId = funnelId ? `${stepId}:${funnelId}` : stepId;
             const template = await this.getTemplate(templateId);
 

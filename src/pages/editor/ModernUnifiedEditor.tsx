@@ -333,8 +333,8 @@ const UnifiedEditorCore: React.FC<ModernUnifiedEditorProps> = ({
             // Primeiro assumir que pode ser qualquer coisa
             console.log('✅ Identificador encontrado na URL:', identifier);
 
-            // Se contém 'step-' ou 'template' ou 'quiz', provavelmente é template
-            const looksLikeTemplate = /^(step-|template|quiz|test)/i.test(identifier);
+            // 🎯 DETECÇÃO MELHORADA: Incluir mais padrões de template
+            const looksLikeTemplate = /^(step-|template|quiz|test|funnel|default-|optimized-|style-)/i.test(identifier);
 
             if (looksLikeTemplate) {
                 console.log('✅ Identificador parece ser template:', identifier);
