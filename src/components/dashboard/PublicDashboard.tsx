@@ -10,10 +10,10 @@ import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Progress } from '@/components/ui/progress';
 import { Button } from '@/components/ui/button';
-import { 
-  BarChart3, 
-  TrendingUp, 
-  Clock, 
+import {
+  BarChart3,
+  TrendingUp,
+  Clock,
   Zap,
   Brain,
   Target,
@@ -73,7 +73,7 @@ const PublicDashboard: React.FC = () => {
     const hours = Math.floor(seconds / 3600);
     const mins = Math.floor((seconds % 3600) / 60);
     const secs = seconds % 60;
-    
+
     if (hours > 0) {
       return `${hours}h ${mins}m`;
     }
@@ -115,12 +115,12 @@ const PublicDashboard: React.FC = () => {
               Acompanhe o progresso do seu projeto em tempo real
             </p>
           </div>
-          
+
           <div className="flex items-center gap-3">
             <Badge variant={isLive ? "default" : "secondary"}>
               {isLive ? "🟢 Live" : "⏸️ Pausado"}
             </Badge>
-            <Button 
+            <Button
               onClick={() => setIsLive(!isLive)}
               variant="outline"
               size="sm"
@@ -301,8 +301,8 @@ const PublicDashboard: React.FC = () => {
                       <div key={i} className="flex items-center justify-between">
                         <span className="text-sm">Etapa {i + 1}</span>
                         <div className="flex items-center gap-2">
-                          <Progress 
-                            value={Math.random() * 100} 
+                          <Progress
+                            value={Math.random() * 100}
                             className="w-20"
                           />
                           <span className="text-xs text-muted-foreground w-8">
@@ -360,7 +360,7 @@ const PublicDashboard: React.FC = () => {
                       Seu projeto está 44% mais rápido que a média. Continue assim!
                     </p>
                   </div>
-                  
+
                   <div className="p-4 bg-green-50 rounded-lg border-l-4 border-green-500">
                     <h4 className="font-semibold text-green-900">
                       🧠 IA Otimizada
@@ -369,7 +369,7 @@ const PublicDashboard: React.FC = () => {
                       Cache hit rate de {metrics.performance.cacheHitRate.toFixed(1)}% - excelente eficiência!
                     </p>
                   </div>
-                  
+
                   <div className="p-4 bg-purple-50 rounded-lg border-l-4 border-purple-500">
                     <h4 className="font-semibold text-purple-900">
                       📊 Próxima Milestone
