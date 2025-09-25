@@ -10,6 +10,7 @@
  */
 
 import { QuizAnswer, StyleResult, ComputedResult } from '@/types/quiz';
+import { mapToStyleResult } from '@/utils/styleResultMapper';
 
 // ===== ENGINE CONFIGURATION =====
 export const ENGINE_VERSION = '2.0.0';
@@ -165,9 +166,13 @@ export class CalculationEngine {
       // Step 7: Build final result
       const result: AggregateResult = {
         // Base result properties
+        id: `result-${Date.now()}`,
+        responses: {},
         primaryStyle: styleResults[0],
         secondaryStyles: styleResults.slice(1),
         score: Object.values(scores).reduce((sum, score) => sum + score, 0),
+        maxScore: 100,
+        completedAt: new Date().toISOString(),
         totalQuestions: userResponses.responses.length,
 
         // Enhanced metadata
@@ -355,17 +360,19 @@ export class CalculationEngine {
   private rankStyles(scores: Record<string, number>): StyleResult[] {
     const totalScore = Object.values(scores).reduce((sum, score) => sum + score, 0);
     
-    return Object.entries(scores)
+    const ranked = Object.entries(scores)
       .map(([style, score]) => ({
         style,
         category: style,
         score,
         percentage: totalScore > 0 ? Math.round((score / totalScore) * 100) : 0,
-        points: score, // alias for backward compatibility
-        rank: 0 // will be set when sorted
+        points: score,
+        rank: 0
       }))
       .sort((a, b) => b.score - a.score)
       .map((result, index) => ({ ...result, rank: index + 1 }));
+
+    return ranked.map(mapToStyleResult);
   }
 
   private matchOutcome(
@@ -524,7 +531,6 @@ export class CalculationEngine {
     return {
       primaryStyle: mapToStyleResult(styleResults[0]),
       secondaryStyles: styleResults.slice(1).map(mapToStyleResult),
-      scores,
       totalQuestions: responses.length,
       version: this.version,
       engineVersion: this.version,

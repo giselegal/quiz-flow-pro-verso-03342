@@ -174,8 +174,14 @@ export const useQuizLogic = () => {
         const secondaryStylesData = engineResult.scores.filter((s: any) =>
           engineResult.secondaryStyles.includes(s.style)
         );
+        const totalScore = engineResult.scores.reduce((sum: number, s: any) => sum + (s.points || 0), 0);
 
         const mappedResult: QuizResult = {
+          id: `result-${Date.now()}`,
+          responses: {},
+          score: totalScore,
+          maxScore: 100,
+          completedAt: new Date().toISOString(),
           primaryStyle: mapToStyleResult({
             category: engineResult.primaryStyle || 'natural',
             score: primaryStyleData?.points || 0,
@@ -184,16 +190,17 @@ export const useQuizLogic = () => {
             points: primaryStyleData?.points || 0,
             rank: 1
           }),
-          secondaryStyles: secondaryStylesData.map((styleData: any, index: number) => ({
-            category: styleData.style,
-            score: styleData.points,
-            percentage: styleData.percentage,
-            style: styleData.style.toLowerCase(),
-            points: styleData.points,
-            rank: index + 2,
-          })),
+          secondaryStyles: secondaryStylesData.map((styleData: any, index: number) =>
+            mapToStyleResult({
+              category: styleData.style,
+              score: styleData.points,
+              percentage: styleData.percentage,
+              style: styleData.style.toLowerCase(),
+              points: styleData.points,
+              rank: index + 2,
+            })
+          ),
           totalQuestions: engineResult.totalQuestions,
-          completedAt: engineResult.completedAt,
           styleScores: Object.fromEntries(
             engineResult.scores.map((s: any) => [s.style, s.points])
           ),

@@ -1,5 +1,5 @@
 import { UnifiedVisualEditor, EditorTab } from '@/components/unified-editor/UnifiedVisualEditor';
-import { StyleResult } from '@/types/quiz';
+import { mapToStyleResult } from '@/utils/styleResultMapper';
 
 export default {
   name: 'unified-editor',
@@ -36,14 +36,14 @@ export default {
     },
   },
   render: (props: any) => {
-    const primaryStyle: StyleResult = {
+    const primaryStyle = mapToStyleResult({
       category: props.styleCategory,
       score: props.styleScore,
       percentage: props.stylePercentage,
       style: props.styleCategory.toLowerCase(),
       points: props.styleScore,
       rank: 1,
-    };
+    });
 
     return (
       <div className="h-screen w-full">

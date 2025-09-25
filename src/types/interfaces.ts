@@ -2,7 +2,7 @@
  * 🎯 INTERFACES - Additional type definitions for missing interfaces
  */
 
-import { StyleResult, QuizResult } from './quiz';
+import type { StyleResult } from './quiz';
 
 export interface AggregateResult {
   id: string;

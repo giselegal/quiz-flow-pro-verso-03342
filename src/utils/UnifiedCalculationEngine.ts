@@ -1,7 +1,7 @@
 // src/utils/UnifiedCalculationEngine.ts
 // 🎯 CONSOLIDAÇÃO: Melhor algoritmo de cálculo aproveitando todas implementações existentes
 
-import { QuizAnswer, QuizResult, StyleResult } from '@/types/quiz';
+import { QuizAnswer, QuizResult, StyleResult, StyleType } from '@/types/quiz';
 import { isScorableQuestion } from '@/core/constants/quiz';
 import { QuizRulesConfig } from '@/hooks/useQuizRulesConfig';
 

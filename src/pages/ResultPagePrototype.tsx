@@ -1,4 +1,5 @@
 import { StyleResult } from '@/types/quiz';
+import { mapToStyleResult } from '@/utils/styleResultMapper';
 import { useEffect } from 'react';
 
 export default function ResultPagePrototype() {
@@ -11,32 +12,25 @@ export default function ResultPagePrototype() {
   const mockSecondaryStyles = ['Clássico', 'Contemporâneo', 'Natural'];
 
   // Mock data for prototype - variables intentionally unused for now
-  const _primaryStyle: StyleResult = mockPrimaryStyle
-    ? {
-        category: mockPrimaryStyle,
-        score: 100,
-        percentage: 85,
-        style: mockPrimaryStyle.toLowerCase(),
-        points: 100,
-        rank: 1,
-      }
-    : {
-        category: 'Natural',
-        score: 100,
-        percentage: 85,
-        style: 'natural',
-        points: 100,
-        rank: 1,
-      };
+  const _primaryStyle = mapToStyleResult({
+    category: mockPrimaryStyle || 'Natural',
+    score: 100,
+    percentage: 85,
+    style: (mockPrimaryStyle || 'Natural').toLowerCase(),
+    points: 100,
+    rank: 1,
+  });
 
-  const _secondaryStyles: StyleResult[] = mockSecondaryStyles.map((style, index) => ({
-    category: style,
-    score: 80 - index * 10,
-    percentage: 75 - index * 10,
-    style: style.toLowerCase(),
-    points: 80 - index * 10,
-    rank: index + 2,
-  }));
+  const _secondaryStyles: StyleResult[] = mockSecondaryStyles.map((style, index) =>
+    mapToStyleResult({
+      category: style,
+      score: 80 - index * 10,
+      percentage: 75 - index * 10,
+      style: style.toLowerCase(),
+      points: 80 - index * 10,
+      rank: index + 2,
+    })
+  );
 
   void _primaryStyle;
   void _secondaryStyles;

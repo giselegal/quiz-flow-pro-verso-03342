@@ -156,7 +156,7 @@ export const useSupabaseQuiz = (questions: QuizQuestion[] = []) => {
       try {
         // Encontrar a pergunta e opção
         const question = questions.find(q => q.id === answer.questionId);
-        const option = question?.options.find(o => o.id === answer.optionId);
+        const option = question?.options?.find(o => o.id === answer.optionId);
 
         if (!question || !option) {
           throw new Error('Pergunta ou opção não encontrada');

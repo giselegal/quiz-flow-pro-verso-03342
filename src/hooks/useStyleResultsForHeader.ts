@@ -56,9 +56,9 @@ export const useStyleResultsForHeader = (): StyleResultsForHeader => {
     // Se temos dados reais do quiz, usar eles
     if (primaryStyle && secondaryStyles && secondaryStyles.length >= 2) {
       const realStyles = [
-        { name: primaryStyle.style, percentage: Math.round(primaryStyle.percentage) },
-        { name: secondaryStyles[0].style, percentage: Math.round(secondaryStyles[0].percentage) },
-        { name: secondaryStyles[1].style, percentage: Math.round(secondaryStyles[1].percentage) },
+        { name: (primaryStyle.style || 'Natural'), percentage: Math.round((primaryStyle.percentage ?? 0)) },
+        { name: (secondaryStyles[0].style || 'Natural'), percentage: Math.round((secondaryStyles[0].percentage ?? 0)) },
+        { name: (secondaryStyles[1].style || 'Natural'), percentage: Math.round((secondaryStyles[1].percentage ?? 0)) },
       ];
 
       console.log('✅ Usando dados REAIS do quiz:', realStyles);

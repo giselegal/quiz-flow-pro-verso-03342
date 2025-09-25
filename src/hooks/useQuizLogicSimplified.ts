@@ -2,7 +2,7 @@
  * 🎯 QUIZ LOGIC SIMPLIFIED - Quick fix version
  */
 import { useState, useCallback } from 'react';
-import { QuizQuestion, QuizAnswer, StyleResult, QuizResult } from '@/types/quiz';
+import { QuizQuestion, QuizAnswer, QuizResult } from '@/types/quiz';
 import { mapToStyleResult } from '@/utils/styleResultMapper';
 
 export const useQuizLogicSimplified = (questions: QuizQuestion[]) => {

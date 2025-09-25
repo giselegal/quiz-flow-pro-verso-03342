@@ -157,8 +157,8 @@ export function useQuizState(funnelId?: string) {
       scores: newScores,
       userProfile: {
         ...prev.userProfile,
-        resultStyle: sortedStyles[0],
-        secondaryStyles: sortedStyles.slice(1, 3)
+        resultStyle: sortedStyles[0]?.name || '',
+        secondaryStyles: sortedStyles.slice(1, 3).map(s => s.name)
       }
     }));
 
