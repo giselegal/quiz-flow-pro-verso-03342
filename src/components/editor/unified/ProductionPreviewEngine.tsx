@@ -7,11 +7,11 @@
  */
 
 import React, { Suspense } from 'react';
-import { getEnhancedBlockComponent } from '@/components/editor/blocks/EnhancedBlockRegistry';
 import { Block } from '@/types/editor';
 import { cn } from '@/lib/utils';
 import Step20Result from '@/components/steps/Step20Result';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
+import { EnhancedBlockRenderer } from './EnhancedBlockRenderer';
 
 export interface ProductionPreviewEngineProps {
   blocks: Block[];
@@ -30,106 +30,6 @@ export interface ProductionPreviewEngineProps {
 }
 
 /**
- * Componente de erro para blocos que falharam na renderização
- */
-const BlockErrorBoundary: React.FC<{
-  blockId: string;
-  blockType: string;
-  children: React.ReactNode;
-}> = ({ blockId, blockType, children }) => {
-  return (
-    <div className="min-h-[60px] border border-red-200 bg-red-50 rounded-lg p-4 text-center">
-      <div className="text-red-600 text-sm">
-        ⚠️ Erro ao renderizar bloco
-      </div>
-      <div className="text-red-500 text-xs mt-1">
-        ID: {blockId} | Tipo: {blockType}
-      </div>
-      <div className="mt-2">
-        {children}
-      </div>
-    </div>
-  );
-};
-
-/**
- * Wrapper para blocos selecionáveis no editor
- */
-const SelectableBlockWrapper: React.FC<{
-  block: Block;
-  isSelected: boolean;
-  isPreview: boolean;
-  onSelect?: () => void;
-  children: React.ReactNode;
-}> = ({ block, isSelected, isPreview, onSelect, children }) => {
-  if (isPreview) {
-    return <>{children}</>;
-  }
-
-  return (
-    <div
-      className={cn(
-        'relative transition-all duration-200 cursor-pointer',
-        'hover:ring-2 hover:ring-primary/30 hover:ring-offset-2 rounded-lg',
-        isSelected && 'ring-2 ring-primary ring-offset-2',
-        'group'
-      )}
-      onClick={(e) => {
-        e.stopPropagation();
-        onSelect?.();
-      }}
-      data-block-id={block.id}
-      data-block-type={block.type}
-    >
-      {/* Indicador de seleção */}
-      {isSelected && (
-        <div className="absolute -top-6 left-0 z-10 bg-primary text-primary-foreground text-xs px-2 py-1 rounded-t-md">
-          {block.type} • {block.id}
-        </div>
-      )}
-      
-      {/* Indicador de hover no modo editor */}
-      <div className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg pointer-events-none" />
-      
-      {children}
-    </div>
-  );
-};
-
-/**
- * Carregador de mock data para preview
- */
-const useMockQuizData = (funnelId?: string, currentStep?: number) => {
-  return React.useMemo(() => {
-    if (currentStep === 20) {
-      // Mock data para Step 20 (resultado)
-      return {
-        primaryStyle: {
-          style: 'Clássico',
-          category: 'Clássico',
-          percentage: 85,
-          description: 'Seu estilo clássico reflete elegância e sofisticação. Você aprecia peças atemporais e bem estruturadas.',
-          score: 85
-        },
-        secondaryStyles: [
-          { style: 'Romântico', category: 'Romântico', percentage: 65, score: 65 },
-          { style: 'Natural', category: 'Natural', percentage: 45, score: 45 }
-        ],
-        userName: 'Maria Silva'
-      };
-    }
-
-    // Mock data para outras etapas
-    return {
-      currentStep: currentStep || 1,
-      totalSteps: 21,
-      userName: 'Maria Silva',
-      progress: ((currentStep || 1) / 21) * 100
-    };
-  }, [funnelId, currentStep]);
-};
-
-/**
  * Production Preview Engine - Renderiza componentes reais
  */
 export const ProductionPreviewEngine: React.FC<ProductionPreviewEngineProps> = ({
@@ -145,7 +45,6 @@ export const ProductionPreviewEngine: React.FC<ProductionPreviewEngineProps> = (
   className = '',
   enableInteractions = true,
 }) => {
-  const mockData = useMockQuizData(funnelId, currentStep);
   const isProductionMode = mode === 'production';
   const isEditorMode = mode === 'editor';
 
@@ -213,74 +112,33 @@ export const ProductionPreviewEngine: React.FC<ProductionPreviewEngineProps> = (
 
       {/* Renderizar blocos */}
       {blocks.map((block, index) => {
-        const Component = getEnhancedBlockComponent(block.type);
         const isSelected = selectedBlockId === block.id;
 
-        if (!Component) {
-          return (
-            <BlockErrorBoundary
-              key={block.id || `block-${index}`}
-              blockId={block.id || `block-${index}`}
-              blockType={block.type || 'unknown'}
-            >
-              <div className="text-stone-600">
-                Componente não encontrado: <code>{block.type}</code>
-              </div>
-            </BlockErrorBoundary>
-          );
-        }
-
-        // Preparar props do bloco
-        const blockProps = {
-          key: block.id || `block-${index}`,
-          block,
-          properties: block.properties || {},
-          content: block.content || {},
-          isSelected: isSelected && !isPreviewing,
-          isPreviewing: isPreviewing || isProductionMode,
-          isEditor: isEditorMode,
-          mockData,
-          funnelId,
-          currentStep,
-          onSave: (updates: any) => {
-            if (onBlockUpdate && enableInteractions) {
-              onBlockUpdate(block.id, updates);
-            }
-          },
-          onClick: () => {
-            if (onBlockSelect && !isPreviewing && enableInteractions) {
-              onBlockSelect(block.id);
-            }
-          },
-          // Passar todas as propriedades do bloco como props também
-          ...block.properties,
-        };
-
         return (
-          <SelectableBlockWrapper
-            key={block.id || `wrapper-${index}`}
+          <EnhancedBlockRenderer
+            key={block.id || `block-${index}`}
             block={block}
             isSelected={isSelected}
             isPreview={isPreviewing || isProductionMode}
+            currentStep={currentStep}
+            funnelId={funnelId}
             onSelect={() => {
               if (onBlockSelect && !isPreviewing && enableInteractions) {
                 onBlockSelect(block.id);
               }
             }}
-          >
-            <Suspense
-              fallback={
-                <div className="min-h-[80px] bg-stone-50 border border-stone-200 rounded-lg animate-pulse flex items-center justify-center">
-                  <LoadingSpinner size="sm" />
-                  <span className="ml-2 text-sm text-stone-500">
-                    Carregando {block.type}...
-                  </span>
-                </div>
+            onUpdate={(updates: any) => {
+              if (onBlockUpdate && enableInteractions) {
+                onBlockUpdate(block.id, updates);
               }
-            >
-              <Component {...blockProps} />
-            </Suspense>
-          </SelectableBlockWrapper>
+            }}
+            onValidationChange={(blockId: string, isValid: boolean) => {
+              console.log(`🎯 Block ${blockId} validation: ${isValid}`);
+            }}
+            enableValidation={true}
+            enableAutoAdvance={isPreviewing || isProductionMode}
+            className="mb-4"
+          />
         );
       })}
 

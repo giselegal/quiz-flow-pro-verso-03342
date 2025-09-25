@@ -12,8 +12,10 @@ export { SortablePreviewBlockWrapper } from './SortablePreviewBlockWrapper';
 export { UnifiedPreviewEngine } from './UnifiedPreviewEngine';
 export { ProductionPreviewEngine } from './ProductionPreviewEngine';
 export { EditorBlockRenderer } from './EditorBlockRenderer';
+export { EnhancedBlockRenderer } from './EnhancedBlockRenderer';
 export { MockDataProvider, useMockData, useMockStepData } from './MockDataProvider';
 export { ValidationIndicator, ValidationBadge, useValidation } from './ValidationIndicator';
+export { UnifiedQuizStepLoader } from './UnifiedQuizStepLoader';
 
 // Types
 export type { EditorControlsManagerProps } from './EditorControlsManager';
@@ -39,5 +41,5 @@ export type { ValidationIndicatorProps, ValidationState } from './ValidationIndi
  * 8. ✅ EditorPropertiesPanel - Painel de propriedades unificado
  * 9. ✅ SortablePreviewBlockWrapper - Componente para arrastar e soltar
  *
- * Status: 🎉 FASE 1 IMPLEMENTADA - Preview Engine Completo
+ * Status: 🎉 FASE 2 IMPLEMENTADA - Sistema de Validação Visual Completo
  */
