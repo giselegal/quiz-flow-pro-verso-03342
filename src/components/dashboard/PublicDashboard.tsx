@@ -89,7 +89,7 @@ const PublicDashboard: React.FC = () => {
       timestamp: new Date().toISOString(),
       project: 'Quiz Editor Pro',
       metrics,
-      generatedAt: 'Editor Consolidado v3.0'
+      generatedAt: 'Sistema v1.0'
     };
 
     const blob = new Blob([JSON.stringify(exportData, null, 2)], {
@@ -249,19 +249,19 @@ const PublicDashboard: React.FC = () => {
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <Brain className="w-5 h-5" />
-                    Cache IA
+                    Sistema
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="text-2xl font-bold text-blue-600">
-                    {metrics.performance.cacheHitRate.toFixed(1)}%
+                    Ativo
                   </div>
                   <p className="text-sm text-muted-foreground">
-                    Taxa de acerto
+                    Status operacional
                   </p>
-                  <Progress value={metrics.performance.cacheHitRate} className="mt-2" />
+                  <Progress value={100} className="mt-2" />
                   <p className="text-xs text-blue-600 mt-1">
-                    Excelente eficiência
+                    Sistema funcionando
                   </p>
                 </CardContent>
               </Card>
@@ -389,7 +389,7 @@ const PublicDashboard: React.FC = () => {
           <CardContent className="p-4">
             <div className="flex items-center justify-between text-sm text-muted-foreground">
               <div>
-                Powered by Editor Consolidado v3.0 • Última atualização: {new Date().toLocaleTimeString()}
+                Sistema ativo • Última atualização: {new Date().toLocaleTimeString()}
               </div>
               <div className="flex items-center gap-2">
                 <div className="w-2 h-2 rounded-full bg-green-500"></div>
