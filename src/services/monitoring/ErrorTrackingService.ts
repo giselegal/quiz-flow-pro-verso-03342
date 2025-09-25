@@ -29,6 +29,14 @@ export interface ErrorStats {
   topErrors: Array<{ fingerprint: string; count: number; message: string }>;
 }
 
+export interface ErrorContext {
+  component?: string;
+  action?: string;
+  level?: 'error' | 'warning' | 'info';
+  userId?: string;
+  metadata?: Record<string, any>;
+}
+
 class ErrorTrackingService {
   private static instance: ErrorTrackingService;
   private errors: ErrorReport[] = [];
@@ -52,14 +60,18 @@ class ErrorTrackingService {
    * Inicializar handlers globais de erro
    */
   private initializeGlobalHandlers() {
+    if (typeof window === 'undefined') return;
+
     // Erros JavaScript
     window.addEventListener('error', (event) => {
       this.captureError(event.error || new Error(event.message), {
         component: 'global',
         action: 'javascript_error',
-        filename: event.filename,
-        lineno: event.lineno,
-        colno: event.colno
+        metadata: {
+          filename: event.filename,
+          lineno: event.lineno,
+          colno: event.colno
+        }
       });
     });
 
@@ -94,13 +106,7 @@ class ErrorTrackingService {
   /**
    * Capturar erro manualmente
    */
-  captureError(error: Error | string, context?: {
-    component?: string;
-    action?: string;
-    level?: 'error' | 'warning' | 'info';
-    userId?: string;
-    metadata?: Record<string, any>;
-  }) {
+  captureError(error: Error | string, context?: ErrorContext) {
     const errorObj = typeof error === 'string' ? new Error(error) : error;
     const level = context?.level || 'error';
 
@@ -111,8 +117,8 @@ class ErrorTrackingService {
       message: errorObj.message,
       stack: errorObj.stack,
       context: {
-        url: window.location.href,
-        userAgent: navigator.userAgent,
+        url: typeof window !== 'undefined' ? window.location.href : '',
+        userAgent: typeof navigator !== 'undefined' ? navigator.userAgent : '',
         sessionId: this.sessionId,
         component: context?.component,
         action: context?.action,
@@ -140,22 +146,14 @@ class ErrorTrackingService {
   /**
    * Capturar warning
    */
-  captureWarning(message: string, context?: {
-    component?: string;
-    action?: string;
-    metadata?: Record<string, any>;
-  }) {
+  captureWarning(message: string, context?: Omit<ErrorContext, 'level'>) {
     return this.captureError(message, { ...context, level: 'warning' });
   }
 
   /**
    * Capturar info
    */
-  captureInfo(message: string, context?: {
-    component?: string;
-    action?: string;
-    metadata?: Record<string, any>;
-  }) {
+  captureInfo(message: string, context?: Omit<ErrorContext, 'level'>) {
     return this.captureError(message, { ...context, level: 'info' });
   }
 
@@ -171,10 +169,12 @@ class ErrorTrackingService {
     }
 
     // Salvar no localStorage para persistência
-    try {
-      localStorage.setItem('error_tracking', JSON.stringify(this.errors.slice(0, 100)));
-    } catch (e) {
-      // Ignorar se localStorage estiver cheio
+    if (typeof window !== 'undefined') {
+      try {
+        localStorage.setItem('error_tracking', JSON.stringify(this.errors.slice(0, 100)));
+      } catch (e) {
+        // Ignorar se localStorage estiver cheio
+      }
     }
   }
 
@@ -260,10 +260,12 @@ class ErrorTrackingService {
       });
     }
 
-    try {
-      localStorage.setItem('error_tracking', JSON.stringify(this.errors.slice(0, 100)));
-    } catch (e) {
-      // Ignorar
+    if (typeof window !== 'undefined') {
+      try {
+        localStorage.setItem('error_tracking', JSON.stringify(this.errors.slice(0, 100)));
+      } catch (e) {
+        // Ignorar
+      }
     }
   }
 

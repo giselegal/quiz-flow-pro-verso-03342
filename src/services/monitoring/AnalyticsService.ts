@@ -3,13 +3,6 @@
  * Google Analytics 4 + Custom Editor Metrics
  */
 
-declare global {
-  interface Window {
-    gtag?: (...args: any[]) => void;
-    dataLayer?: any[];
-  }
-}
-
 export interface CustomEvent {
   event_name: string;
   event_category: string;
@@ -61,7 +54,7 @@ class AnalyticsService {
    * Inicializar Google Analytics 4
    */
   initialize(measurementId: string = 'G-XXXXXXXXXX') {
-    if (this.isInitialized) return;
+    if (this.isInitialized || typeof window === 'undefined') return;
 
     // Carregar Google Analytics
     const script = document.createElement('script');
@@ -71,19 +64,23 @@ class AnalyticsService {
 
     // Configurar gtag
     window.dataLayer = window.dataLayer || [];
-    window.gtag = function() {
-      window.dataLayer.push(arguments);
+    window.gtag = window.gtag || function() {
+      if (window.dataLayer) {
+        window.dataLayer.push(arguments);
+      }
     };
 
-    window.gtag!('js', new Date());
-    window.gtag('config', measurementId, {
-      page_title: 'Quiz Editor Pro',
-      page_location: window.location.href,
-      custom_map: {
-        custom_parameter_1: 'session_id',
-        custom_parameter_2: 'editor_mode'
-      }
-    });
+    if (window.gtag) {
+      window.gtag('js', new Date().toISOString());
+      window.gtag('config', measurementId, {
+        page_title: 'Quiz Editor Pro',
+        page_location: window.location.href,
+        custom_map: {
+          custom_parameter_1: 'session_id',
+          custom_parameter_2: 'editor_mode'
+        }
+      });
+    }
 
     this.isInitialized = true;
     console.log('📊 Analytics initialized');
@@ -96,19 +93,21 @@ class AnalyticsService {
    * Rastrear evento personalizado
    */
   trackEvent(event: CustomEvent) {
-    if (!this.isInitialized) {
+    if (!this.isInitialized || typeof window === 'undefined') {
       console.warn('Analytics not initialized');
       return;
     }
 
-    window.gtag!('event', event.event_name, {
-      event_category: event.event_category,
-      event_label: event.event_label,
-      value: event.value,
-      session_id: this.sessionId,
-      timestamp: new Date().toISOString(),
-      ...event.custom_parameters
-    });
+    if (window.gtag) {
+      window.gtag('event', event.event_name, {
+        event_category: event.event_category,
+        event_label: event.event_label,
+        value: event.value,
+        session_id: this.sessionId,
+        timestamp: new Date().toISOString(),
+        ...event.custom_parameters
+      });
+    }
 
     console.log('📊 Event tracked:', event);
   }
@@ -185,30 +184,36 @@ class AnalyticsService {
    * Rastrear Core Web Vitals
    */
   trackWebVitals() {
-    // LCP (Largest Contentful Paint)
-    new PerformanceObserver((list) => {
-      for (const entry of list.getEntries()) {
-        this.trackPerformance('LCP', entry.startTime);
-      }
-    }).observe({ type: 'largest-contentful-paint', buffered: true });
+    if (typeof window === 'undefined' || !('PerformanceObserver' in window)) return;
 
-    // FID (First Input Delay) - usar polyfill se necessário
-    new PerformanceObserver((list) => {
-      for (const entry of list.getEntries()) {
-        this.trackPerformance('FID', (entry as any).processingStart - entry.startTime);
-      }
-    }).observe({ type: 'first-input', buffered: true });
-
-    // CLS (Cumulative Layout Shift)
-    let clsValue = 0;
-    new PerformanceObserver((list) => {
-      for (const entry of list.getEntries()) {
-        if (!(entry as any).hadRecentInput) {
-          clsValue += (entry as any).value;
+    try {
+      // LCP (Largest Contentful Paint)
+      new PerformanceObserver((list) => {
+        for (const entry of list.getEntries()) {
+          this.trackPerformance('LCP', entry.startTime);
         }
-      }
-      this.trackPerformance('CLS', clsValue * 1000, 'score');
-    }).observe({ type: 'layout-shift', buffered: true });
+      }).observe({ type: 'largest-contentful-paint', buffered: true });
+
+      // FID (First Input Delay)
+      new PerformanceObserver((list) => {
+        for (const entry of list.getEntries()) {
+          this.trackPerformance('FID', (entry as any).processingStart - entry.startTime);
+        }
+      }).observe({ type: 'first-input', buffered: true });
+
+      // CLS (Cumulative Layout Shift)
+      let clsValue = 0;
+      new PerformanceObserver((list) => {
+        for (const entry of list.getEntries()) {
+          if (!(entry as any).hadRecentInput) {
+            clsValue += (entry as any).value;
+          }
+        }
+        this.trackPerformance('CLS', clsValue * 1000, 'score');
+      }).observe({ type: 'layout-shift', buffered: true });
+    } catch (error) {
+      console.warn('Web Vitals tracking failed:', error);
+    }
   }
 
   /**
@@ -306,7 +311,6 @@ class AnalyticsService {
     const totalActions = this.editorMetrics.blocksAdded + this.editorMetrics.templatesUsed.length;
     if (totalActions === 0) return 0;
     
-    // Simplificado - pode ser mais complexo baseado em metas específicas
     return Math.min(100, (totalActions / 10) * 100);
   }
 }
@@ -328,11 +332,11 @@ if (typeof window !== 'undefined') {
 
   // Rastrear erros globais
   window.addEventListener('error', (event) => {
-    analyticsService.trackError(event.error, 'global_error');
+    analyticsService.trackError(event.error || new Error(event.message), 'global_error');
   });
 
   window.addEventListener('unhandledrejection', (event) => {
-    analyticsService.trackError(new Error(event.reason), 'unhandled_promise');
+    analyticsService.trackError(new Error(String(event.reason)), 'unhandled_promise');
   });
 
   // Rastrear fim da sessão

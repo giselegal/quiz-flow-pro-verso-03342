@@ -19,6 +19,7 @@ declare global {
     gtag?: (...args: any[]) => void;
     fbq?: (...args: any[]) => void;
     _fbq?: any;
+    dataLayer?: any[];
   }
 }
 
