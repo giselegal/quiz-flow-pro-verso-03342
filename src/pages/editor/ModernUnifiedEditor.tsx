@@ -282,12 +282,18 @@ const ModernToolbar: React.FC<ModernToolbarProps> = ({
                     <Button
                         variant={editorState.realExperienceMode ? "default" : "outline"}
                         size="sm"
-                        onClick={() => onStateChange({ realExperienceMode: !editorState.realExperienceMode })}
+                        onClick={() => {
+                            console.log('🎯 [DEBUG] Clicou no botão Real. Estado atual:', editorState.realExperienceMode);
+                            const newState = !editorState.realExperienceMode;
+                            console.log('🎯 [DEBUG] Novo estado:', newState);
+                            onStateChange({ realExperienceMode: newState });
+                        }}
                         disabled={isOperating}
                         title="Ativar experiência real com QuizOrchestrator"
+                        className={editorState.realExperienceMode ? "bg-green-600 hover:bg-green-700" : ""}
                     >
                         <Target className="w-4 h-4 mr-2" />
-                        Real
+                        {editorState.realExperienceMode ? "Real ✓" : "Real"}
                     </Button>
 
                     <Button
@@ -399,8 +405,14 @@ const UnifiedEditorCore: React.FC<ModernUnifiedEditorProps> = ({
 
     // Handler para mudanças de estado
     const handleStateChange = useCallback((updates: Partial<EditorState>) => {
-        setEditorState(prev => ({ ...prev, ...updates }));
-    }, []);
+        console.log('🎯 [DEBUG] handleStateChange chamado:', updates);
+        console.log('🎯 [DEBUG] Estado anterior:', editorState);
+        setEditorState(prev => {
+            const newState = { ...prev, ...updates };
+            console.log('🎯 [DEBUG] Novo estado:', newState);
+            return newState;
+        });
+    }, [editorState]);
 
     // ========================================================================
     // 🔥 CRUD OPERATIONS - UNIFIED IMPLEMENTATION

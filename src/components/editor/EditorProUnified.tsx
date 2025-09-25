@@ -141,6 +141,8 @@ export const EditorProUnified: React.FC<EditorProUnifiedProps> = ({
   className = "",
   realExperienceMode = false // Nova prop para ativar QuizOrchestrator
 }) => {
+  console.log('🎯 [DEBUG] EditorProUnified recebeu realExperienceMode:', realExperienceMode);
+  
   // Pure Builder System State
   const { state, actions } = usePureBuilder();
   const { addNotification } = useNotification();

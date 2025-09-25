@@ -68,12 +68,13 @@ const EditorCanvas: React.FC<EditorCanvasProps> = ({
 
   // 🎯 NOVA FUNCIONALIDADE: Experiência Real com QuizOrchestrator
   if (realExperienceMode) {
+    console.log('🎯 [DEBUG] EditorCanvas renderizando em modo Real Experience');
     return (
       <div className="flex-1 min-h-0 bg-gradient-to-br from-[#FAF9F7] via-[#F5F2E9] to-[#EEEBE1] isolate">
         <div className="h-full w-full overflow-y-auto relative z-0">
           {/* Indicador visual de modo real ativo */}
-          <div className="absolute top-4 right-4 z-10 bg-primary text-primary-foreground px-3 py-1 rounded-full text-sm font-medium shadow-lg">
-            ✨ Experiência Real Ativa
+          <div className="absolute top-4 right-4 z-10 bg-green-600 text-white px-4 py-2 rounded-full text-sm font-bold shadow-lg animate-pulse">
+            🎯 MODO REAL ATIVO
           </div>
           
           <UnifiedPreviewEngine
