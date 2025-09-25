@@ -441,13 +441,11 @@ const HybridModularEditorPro: React.FC<HybridModularEditorProProps> = ({
             }));
 
             // Notifica usuário apenas uma vez
-            if (!isBlankCanvas) {
-                addNotification('Editor iniciado - Pronto para criar funil do zero!', 'info');
-            }
+            addNotification('Editor iniciado - Pronto para criar funil do zero!', 'info');
         } else if (funnelId && funnelId !== 'hybrid-editor-default') {
             setIsBlankCanvas(false);
         }
-    }, [funnelId, currentStepBlocks, addNotification, isBlankCanvas]);
+    }, [funnelId, currentStepBlocks, addNotification]); // ❌ REMOVIDO isBlankCanvas para evitar loop
 
     // 🔄 Handlers do ModularEditorPro
     const handleSelectBlock = useCallback((blockId: string) => {
