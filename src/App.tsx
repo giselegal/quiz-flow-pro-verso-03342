@@ -41,6 +41,9 @@ const QuizAIPage = lazy(() => import('./pages/QuizAIPage'));
 // 🏢 LAYOUT ADMINISTRATIVO E DASHBOARD MODERNO
 const ModernDashboardPage = lazy(() => import('./pages/ModernDashboardPage'));
 
+// 🚀 PHASE 2 ENTERPRISE DASHBOARD
+const Phase2Dashboard = lazy(() => import('./pages/Phase2Dashboard'));
+
 // 🎨 PÁGINAS DE TEMPLATES
 const TemplatesPage = lazy(() => import('./pages/TemplatesPage'));
 const SystemDiagnosticPage = lazy(() => import('./pages/SystemDiagnosticPage'));
@@ -149,6 +152,13 @@ function App() {
                 {/* 🏢 DASHBOARD MODERNO - ROTA PRINCIPAL */}
                 <Route path="/dashboard" nest>
                   <ModernDashboardPage />
+                </Route>
+
+                {/* 🚀 PHASE 2 ENTERPRISE DASHBOARD */}
+                <Route path="/phase2">
+                  <div data-testid="phase2-dashboard-page">
+                    <Phase2Dashboard />
+                  </div>
                 </Route>
 
                 {/* 🔄 REDIRECTS ADMIN LEGACY */}

@@ -265,9 +265,7 @@ export class AdvancedPersonalizationEngine {
     ];
 
     // Initialize with mock data
-    defaultPersonas.forEach(persona => {
-      // Mock implementation
-    });
+    console.log('🎨 Initialized personas:', defaultPersonas.length);
   }
 
   private analyzePersonality(behaviors: any): string[] {
@@ -279,7 +277,7 @@ export class AdvancedPersonalizationEngine {
     return traits;
   }
 
-  private estimateDemographics(engagement: any): any {
+  private estimateDemographics(_engagement: any): any {
     return {
       ageRange: '25-35', // Based on engagement patterns
       location: 'Urban',  // Device/connection analysis
@@ -287,29 +285,29 @@ export class AdvancedPersonalizationEngine {
     };
   }
 
-  private inferValues(behaviors: any): string[] {
+  private inferValues(_behaviors: any): string[] {
     return ['sustainability', 'quality', 'authenticity'];
   }
 
-  private inferLifestyle(behaviors: any): string[] {
+  private inferLifestyle(_behaviors: any): string[] {
     return ['active', 'social', 'professional'];
   }
 
-  private analyzePurchaseBehavior(userData: any): string {
+  private analyzePurchaseBehavior(_userData: any): string {
     // Mock analysis
     return Math.random() > 0.5 ? 'frequent' : 'occasional';
   }
 
-  private analyzePriceSensitivity(behaviors: any): string {
+  private analyzePriceSensitivity(_behaviors: any): string {
     return Math.random() > 0.6 ? 'low' : 'medium';
   }
 
-  private inferVisualPreferences(behaviors: any): string {
+  private inferVisualPreferences(_behaviors: any): string {
     const styles = ['minimal', 'bold', 'elegant', 'trendy'];
     return styles[Math.floor(Math.random() * styles.length)];
   }
 
-  private getDefaultContent(contentType: string): any {
+  private getDefaultContent(_contentType: string): any {
     return {
       headline: 'Descubra Seu Estilo Único',
       description: 'Quiz personalizado para encontrar seu estilo perfeito',
@@ -323,13 +321,13 @@ export class AdvancedPersonalizationEngine {
     );
   }
 
-  private personalizeHeadline(persona: UserPersona, contentType: string): string {
+  private personalizeHeadline(persona: UserPersona, _contentType: string): string {
     const style = persona.preferences.communicationStyle;
     if (style === 'direct') return 'Transforme Seu Estilo Agora';
     return 'Descubra Suavemente Seu Estilo Único';
   }
 
-  private personalizeDescription(persona: UserPersona, contentType: string): string {
+  private personalizeDescription(_persona: UserPersona, _contentType: string): string {
     return 'Descrição personalizada baseada no perfil detectado';
   }
 
@@ -370,11 +368,11 @@ export class AdvancedPersonalizationEngine {
     console.log('📊 Tracking personalization performance:', { personaId, rulesApplied: rules.length });
   }
 
-  private calculateUrgencyLevel(behavior: any): number {
+  private calculateUrgencyLevel(_behavior: any): number {
     return Math.random() * 10; // 0-10 scale
   }
 
-  private suggestPricing(behavior: any): any {
+  private suggestPricing(_behavior: any): any {
     return {
       strategy: 'value-based',
       discount: Math.floor(Math.random() * 20),
@@ -382,14 +380,14 @@ export class AdvancedPersonalizationEngine {
     };
   }
 
-  private selectBestOffers(behavior: any): any[] {
+  private selectBestOffers(_behavior: any): any[] {
     return [
       { type: 'early-bird', discount: 15 },
       { type: 'bundle', savings: 25 }
     ];
   }
 
-  private predictNextAction(behavior: any): string {
+  private predictNextAction(_behavior: any): string {
     const actions = ['continue-quiz', 'view-results', 'explore-products', 'contact-expert'];
     return actions[Math.floor(Math.random() * actions.length)];
   }
@@ -400,7 +398,7 @@ export class AdvancedPersonalizationEngine {
       .slice(0, 5);
   }
 
-  private generateOptimizations(segment: any): any[] {
+  private generateOptimizations(_segment: any): any[] {
     return [
       {
         type: 'content',

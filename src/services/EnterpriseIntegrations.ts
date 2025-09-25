@@ -340,37 +340,37 @@ export class EnterpriseIntegrations {
   }
 
   // 🔧 HELPER METHODS
-  private async testConnection(integration: IntegrationConfig): Promise<boolean> {
+  private async testConnection(_integration: IntegrationConfig): Promise<boolean> {
     // Simulate API test
     await new Promise(resolve => setTimeout(resolve, 1000));
     return Math.random() > 0.1; // 90% success rate
   }
 
-  private async syncToCRM(integration: IntegrationConfig, data: any[]): Promise<number> {
+  private async syncToCRM(_integration: IntegrationConfig, data: any[]): Promise<number> {
     // CRM-specific sync logic
-    console.log(`📞 Syncing ${data.length} records to ${integration.name}`);
+    console.log(`📞 Syncing ${data.length} records to CRM`);
     return Math.floor(data.length * 0.95); // 95% success rate
   }
 
-  private async syncToEmail(integration: IntegrationConfig, data: any[]): Promise<number> {
+  private async syncToEmail(_integration: IntegrationConfig, data: any[]): Promise<number> {
     // Email platform sync logic
-    console.log(`📧 Syncing ${data.length} contacts to ${integration.name}`);
+    console.log(`📧 Syncing ${data.length} contacts to Email Platform`);
     return Math.floor(data.length * 0.98); // 98% success rate
   }
 
-  private async syncToEcommerce(integration: IntegrationConfig, data: any[]): Promise<number> {
+  private async syncToEcommerce(_integration: IntegrationConfig, data: any[]): Promise<number> {
     // Ecommerce platform sync logic
-    console.log(`🛒 Syncing ${data.length} records to ${integration.name}`);
+    console.log(`🛒 Syncing ${data.length} records to Ecommerce Platform`);
     return Math.floor(data.length * 0.92); // 92% success rate
   }
 
-  private async syncToAnalytics(integration: IntegrationConfig, data: any[]): Promise<number> {
+  private async syncToAnalytics(_integration: IntegrationConfig, data: any[]): Promise<number> {
     // Analytics platform sync logic
-    console.log(`📊 Syncing ${data.length} events to ${integration.name}`);
+    console.log(`📊 Syncing ${data.length} events to Analytics Platform`);
     return Math.floor(data.length * 0.97); // 97% success rate
   }
 
-  private async syncGeneric(integration: IntegrationConfig, data: any[]): Promise<number> {
+  private async syncGeneric(_integration: IntegrationConfig, data: any[]): Promise<number> {
     // Generic sync logic
     return Math.floor(data.length * 0.90); // 90% success rate
   }

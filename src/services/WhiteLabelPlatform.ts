@@ -225,7 +225,7 @@ export class WhiteLabelPlatform {
     const client = this.clients.get(clientId);
     if (!client) return null;
 
-    return {
+    const analytics = {
       client: {
         name: client.name,
         plan: client.plan,
@@ -255,6 +255,8 @@ export class WhiteLabelPlatform {
         responseTime: Math.floor(Math.random() * 4) + 1  // 1-5 hours
       }
     };
+
+    return analytics;
   }
 
   // 💰 REVENUE MANAGEMENT
@@ -367,6 +369,7 @@ export class WhiteLabelPlatform {
     if (!client) return null;
 
     const analytics = this.getClientAnalytics(clientId);
+    if (!analytics) return null;
     
     return {
       client: client.name,
