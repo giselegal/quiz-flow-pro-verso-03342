@@ -39,6 +39,7 @@ const ModernUnifiedEditor = lazy(() => import('./pages/editor/ModernUnifiedEdito
 // 🧪 PÁGINAS DE QUIZ
 const QuizEstiloPessoalPage = lazy(() => import('./pages/QuizEstiloPessoalPage'));
 const QuizAIPage = lazy(() => import('./pages/QuizAIPage'));
+const QuizIntegratedPage = lazy(() => import('./pages/QuizIntegratedPage'));
 
 // 🏢 LAYOUT ADMINISTRATIVO E DASHBOARD MODERNO
 const ModernDashboardPage = lazy(() => import('./pages/ModernDashboardPage'));
@@ -103,6 +104,13 @@ function App() {
                       </div>
                     </EditorErrorBoundary>
                   )}
+                </Route>
+
+                {/* 🎯 QUIZ INTEGRADO COM BACKEND COMPLETO */}
+                <Route path="/quiz">
+                  <QuizErrorBoundary>
+                    <QuizIntegratedPage />
+                  </QuizErrorBoundary>
                 </Route>
 
                 {/* 🤖 QUIZ COM IA - ROTA ESPECIAL */}

@@ -20,6 +20,7 @@
 
 # Other routes
 /templates*  /index.html  200
+/quiz*  /index.html  200
 /quiz-estilo*  /index.html  200
 /resultado*  /index.html  200
 /diagnostics*  /index.html  200
