@@ -25,6 +25,12 @@ export { StyleSelector } from '../result/StyleSelector';
 export { ResultPreviewSwitcher } from '../result/ResultPreviewSwitcher';
 export { MockResultGenerator } from '../result/MockResultGenerator';
 
+// Componentes interativos (Fase 4)
+export { InlineEditableBlock } from '../interactive/InlineEditableBlock';
+export { BlockPropertyPanel } from '../interactive/BlockPropertyPanel';
+export { DragDropBlockManager } from '../interactive/DragDropBlockManager';
+export { InteractivePreviewEngine } from '../interactive/InteractivePreviewEngine';
+
 // Types
 export type { EditorControlsManagerProps } from './EditorControlsManager';
 export type { EditorPropertiesPanelProps, PropertyConfig } from './EditorPropertiesPanel';
@@ -34,8 +40,9 @@ export type { ProductionPreviewEngineProps } from './ProductionPreviewEngine';
 export type { EditorBlockRendererProps } from './EditorBlockRenderer';
 export type { ValidationIndicatorProps, ValidationState } from './ValidationIndicator';
 
-// Hooks (Fase 3)
+// Hooks (Fase 3 & 4)
 export { useQuizResultEditor } from '@/hooks/useQuizResultEditor';
+export { useInlineEditor } from '@/hooks/useInlineEditor';
 
 /**
  * 🎯 EDITOR UNIFICADO COMPLETO
@@ -56,5 +63,12 @@ export { useQuizResultEditor } from '@/hooks/useQuizResultEditor';
  * 12. ✅ EditorPropertiesPanel - Painel de propriedades unificado
  * 13. ✅ SortablePreviewBlockWrapper - Componente para arrastar e soltar
  *
- * Status: 🎉 FASE 3 IMPLEMENTADA - Integração Step 20 Completa
+ * Status: 🎉 FASE 4 IMPLEMENTADA - Sistema de Edição Interativa Completo
+ * 
+ * Novas funcionalidades Phase 4:
+ * 14. ✅ useInlineEditor - Hook para gerenciar edição inline
+ * 15. ✅ InlineEditableBlock - Wrapper para edição inline de blocos
+ * 16. ✅ BlockPropertyPanel - Painel de propriedades em tempo real
+ * 17. ✅ DragDropBlockManager - Sistema de arrastar e soltar
+ * 18. ✅ InteractivePreviewEngine - Engine principal de edição interativa
  */
