@@ -89,7 +89,7 @@ const EditorCanvas: React.FC<EditorCanvasProps> = ({
             currentStep={currentStep}
             enableInteractions={true}
             mode="editor"
-            enableProductionMode={true}
+            enableProductionMode={realExperienceMode} // 🎯 CORREÇÃO: Usar realExperienceMode diretamente
           />
         </div>
       </div>

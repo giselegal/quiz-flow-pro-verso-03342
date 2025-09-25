@@ -27,8 +27,12 @@ interface UnifiedPreviewEngineProps {
 export type { UnifiedPreviewEngineProps };
 
 /**
- * Unified Preview Engine - Agora usa InteractivePreviewEngine com QuizOrchestrator
- * Experiência real do usuário final no canvas do editor
+ * 🎯 UNIFIED PREVIEW ENGINE - CORREÇÃO CRÍTICA DOS PONTOS CEGOS
+ * 
+ * ✅ CORRIGIDO: Agora respeita enableRealExperience independente do modo
+ * ✅ CORRIGIDO: Permite experiência real no modo 'editor' quando solicitado  
+ * ✅ CORRIGIDO: Prop chain correta até InteractivePreviewEngine
+ * ✅ CORRIGIDO: Lazy loading removido para melhor UX
  */
 export const UnifiedPreviewEngine: React.FC<UnifiedPreviewEngineProps> = ({
   blocks = [],
@@ -45,42 +49,41 @@ export const UnifiedPreviewEngine: React.FC<UnifiedPreviewEngineProps> = ({
   mode = 'preview',
   enableProductionMode = false,
 }) => {
-  // Import dinâmico do InteractivePreviewEngine
-  const InteractivePreviewEngine = React.lazy(() => 
-    import('./InteractivePreviewEngine').then(mod => ({ default: mod.InteractivePreviewEngine }))
-  );
+  console.log('🎯 [DEBUG] UnifiedPreviewEngine recebeu props:', {
+    mode,
+    enableProductionMode,
+    funnelId,
+    currentStep,
+    blocksCount: blocks.length
+  });
 
-  // Determinar o modo final (usando a variável mode)
-  const finalMode = enableProductionMode ? 'production' : (mode === 'production' ? 'production' : (isPreviewing ? 'preview' : 'editor'));
+  // Import direto (lazy loading removido para melhor UX)
+  const { InteractivePreviewEngine } = require('./InteractivePreviewEngine');
 
-  // Habilitar experiência real quando em modo preview ou production
-  const enableRealExperience = finalMode === 'preview' || finalMode === 'production';
+  // 🎯 CORREÇÃO CRÍTICA: Calcular enableRealExperience baseado na prop enableProductionMode
+  const enableRealExperience = enableProductionMode;
+  
+  console.log('🎯 [DEBUG] UnifiedPreviewEngine calculou enableRealExperience:', enableRealExperience);
 
   return (
     <div className="unified-preview-engine">
-      <React.Suspense fallback={
-        <div className="flex items-center justify-center min-h-[400px]">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
-          <span className="ml-3 text-stone-600">Carregando preview engine com QuizOrchestrator...</span>
-        </div>
-      }>
-        <InteractivePreviewEngine
-          blocks={blocks}
-          selectedBlockId={selectedBlockId || undefined}
-          isPreviewing={isPreviewing}
-          viewportSize={viewportSize}
-          primaryStyle={primaryStyle}
-          onBlockSelect={onBlockSelect}
-          onBlockUpdate={onBlockUpdate}
-          onBlocksReordered={onBlocksReordered}
-          funnelId={funnelId}
-          currentStep={currentStep}
-          enableInteractions={enableInteractions}
-          mode={finalMode}
-          enableRealExperience={enableRealExperience}
-          className="w-full"
-        />
-      </React.Suspense>
+      {/* 🎯 CORREÇÃO: Lazy loading removido - carregamento imediato */}
+      <InteractivePreviewEngine
+        blocks={blocks}
+        selectedBlockId={selectedBlockId || undefined}
+        isPreviewing={isPreviewing}
+        viewportSize={viewportSize}
+        primaryStyle={primaryStyle}
+        onBlockSelect={onBlockSelect}
+        onBlockUpdate={onBlockUpdate}
+        onBlocksReordered={onBlocksReordered}
+        funnelId={funnelId}
+        currentStep={currentStep}
+        enableInteractions={enableInteractions}
+        mode={mode}
+        enableRealExperience={enableRealExperience}
+        className="w-full"
+      />
     </div>
   );
 };

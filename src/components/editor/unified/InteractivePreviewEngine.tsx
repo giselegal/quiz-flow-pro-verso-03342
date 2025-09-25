@@ -71,6 +71,13 @@ export const InteractivePreviewEngine: React.FC<InteractivePreviewEngineProps> =
   enableInteractions = true,
   enableRealExperience = false
 }) => {
+  console.log('🎯 [DEBUG] InteractivePreviewEngine inicializado:', {
+    mode,
+    enableRealExperience,
+    funnelId,
+    currentStep: initialStep,
+    blocksCount: blocks.length
+  });
   const isProductionMode = mode === 'production';
   const isEditorMode = mode === 'editor';
   const isPreviewMode = mode === 'preview';
@@ -90,7 +97,18 @@ export const InteractivePreviewEngine: React.FC<InteractivePreviewEngineProps> =
 
   // 🎯 INICIALIZAR ORCHESTRATOR
   const orchestrator = useMemo(() => {
-    if (!enableRealExperience) return null;
+    console.log('🎯 [DEBUG] InteractivePreviewEngine - Inicializando orchestrator:', {
+      enableRealExperience,
+      funnelId,
+      autoAdvanceEnabled: quizState.autoAdvanceEnabled
+    });
+    
+    if (!enableRealExperience) {
+      console.log('🎯 [DEBUG] Orchestrator DESABILITADO - enableRealExperience = false');
+      return null;
+    }
+    
+    console.log('🎯 [DEBUG] Orchestrator HABILITADO - Criando instância singleton');
     
     // Usar instância singleton com configuração para preview
     const instance = {
@@ -103,42 +121,50 @@ export const InteractivePreviewEngine: React.FC<InteractivePreviewEngineProps> =
 
       // Setup callbacks mockados para preview
       onStepChange: (step: number) => {
+        console.log('🎯 [DEBUG] Orchestrator.onStepChange:', step);
         setQuizState(prev => ({ ...prev, currentStep: step }));
       },
       onValidationChange: (blockId: string, isValid: boolean) => {
+        console.log('🎯 [DEBUG] Orchestrator.onValidationChange:', { blockId, isValid });
         setQuizState(prev => ({
           ...prev,
           validationStates: { ...prev.validationStates, [blockId]: isValid }
         }));
       },
       onSelectionChange: (stepId: string, selections: string[]) => {
+        console.log('🎯 [DEBUG] Orchestrator.onSelectionChange:', { stepId, selections });
         setQuizState(prev => ({
           ...prev,
           selections: { ...prev.selections, [stepId]: selections }
         }));
       },
       goToStep: (step: number) => {
+        console.log('🎯 [DEBUG] Orchestrator.goToStep:', step);
         setQuizState(prev => ({ ...prev, currentStep: step }));
       },
       updateValidation: (blockId: string, isValid: boolean) => {
+        console.log('🎯 [DEBUG] Orchestrator.updateValidation:', { blockId, isValid });
         setQuizState(prev => ({
           ...prev,
           validationStates: { ...prev.validationStates, [blockId]: isValid }
         }));
       },
       updateSelections: (stepId: string, selections: string[]) => {
+        console.log('🎯 [DEBUG] Orchestrator.updateSelections:', { stepId, selections });
         setQuizState(prev => ({
           ...prev,
           selections: { ...prev.selections, [stepId]: selections }
         }));
       },
       updateUserData: (data: any) => {
+        console.log('🎯 [DEBUG] Orchestrator.updateUserData:', data);
         if (data.name) {
           setQuizState(prev => ({ ...prev, userName: data.name }));
         }
       }
     };
 
+    console.log('🎯 [DEBUG] Orchestrator instance criada com sucesso');
     return instance;
   }, [funnelId, enableRealExperience, quizState.autoAdvanceEnabled]);
 
