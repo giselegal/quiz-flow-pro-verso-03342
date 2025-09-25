@@ -622,11 +622,11 @@ COMMENT ON COLUMN outcomes.conditions IS 'JSON array of conditions for outcome m
 DO $$
 DECLARE
     missing_tables TEXT[];
-    table_name TEXT;
+    tbl_name TEXT;
 BEGIN
-    FOR table_name IN VALUES ('quiz_definitions'), ('user_results'), ('outcomes'), ('component_instances'), ('component_types'), ('calculation_audit') LOOP
-        IF NOT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_name = table_name AND table_schema = 'public') THEN
-            missing_tables := array_append(missing_tables, table_name);
+    FOR tbl_name IN VALUES ('quiz_definitions'), ('user_results'), ('outcomes'), ('component_instances'), ('component_types'), ('calculation_audit') LOOP
+        IF NOT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_name = tbl_name AND table_schema = 'public') THEN
+            missing_tables := array_append(missing_tables, tbl_name);
         END IF;
     END LOOP;
     
