@@ -9,9 +9,9 @@ import * as fs from 'fs';
 import * as path from 'path';
 
 // Importar dados do TypeScript
-import { 
-    QUIZ_STYLE_21_STEPS_TEMPLATE, 
-    QUIZ_GLOBAL_CONFIG 
+import {
+    QUIZ_STYLE_21_STEPS_TEMPLATE,
+    QUIZ_GLOBAL_CONFIG
 } from '../src/templates/quiz21StepsComplete';
 
 // Definir interfaces compatíveis
@@ -181,7 +181,7 @@ function inferStepType(stepNumber: number): string {
 // 📝 OBTER NOME E DESCRIÇÃO DA ETAPA
 function getStepMetadata(stepNumber: number) {
     const stepType = inferStepType(stepNumber);
-    
+
     const stepNames: Record<number, string> = {
         1: 'Coleta do Nome',
         2: 'Q1 - Estilo de Roupa',
@@ -234,25 +234,25 @@ function getStepMetadata(stepNumber: number) {
         name: stepNames[stepNumber] || `Step ${stepNumber}`,
         description: stepDescriptions[stepNumber] || `Etapa ${stepNumber} do quiz`,
         type: stepType,
-        category: stepNumber <= 11 ? 'quiz-question' : 
-                  stepNumber <= 18 ? 'strategic-question' :
-                  stepNumber === 12 || stepNumber === 19 ? 'transition' :
-                  stepNumber === 20 ? 'result' :
-                  stepNumber === 21 ? 'offer' : 'other'
+        category: stepNumber <= 11 ? 'quiz-question' :
+            stepNumber <= 18 ? 'strategic-question' :
+                stepNumber === 12 || stepNumber === 19 ? 'transition' :
+                    stepNumber === 20 ? 'result' :
+                        stepNumber === 21 ? 'offer' : 'other'
     };
 }
 
 // 🚀 GERADOR PRINCIPAL
 export function generateMasterJSON(): MasterTemplate {
     console.log('🚀 Gerando JSON Master correto...');
-    
+
     // Validar se temos o template TypeScript
     if (!QUIZ_STYLE_21_STEPS_TEMPLATE) {
         throw new Error('❌ QUIZ_STYLE_21_STEPS_TEMPLATE não encontrado!');
     }
 
     const steps: Record<string, StepTemplate> = {};
-    
+
     // Gerar todos os 21 steps
     Object.keys(QUIZ_STYLE_21_STEPS_TEMPLATE).forEach(stepKey => {
         const stepNumber = parseInt(stepKey.replace('step-', ''));
@@ -365,28 +365,28 @@ export function saveMasterJSON(): void {
     try {
         const masterTemplate = generateMasterJSON();
         const jsonContent = JSON.stringify(masterTemplate, null, 2);
-        
+
         // Caminho para salvar
         const outputPath = path.join(process.cwd(), 'public/templates/quiz21-complete.json');
         const backupPath = path.join(process.cwd(), 'public/templates/quiz21-complete-backup.json');
-        
+
         // Fazer backup do arquivo anterior se existir
         if (fs.existsSync(outputPath)) {
             fs.copyFileSync(outputPath, backupPath);
             console.log('📦 Backup criado:', backupPath);
         }
-        
+
         // Salvar novo JSON
         fs.writeFileSync(outputPath, jsonContent, 'utf8');
-        
+
         console.log('🎉 JSON Master salvo com sucesso!');
         console.log('📁 Local:', outputPath);
         console.log('📊 Tamanho:', (jsonContent.length / 1024).toFixed(2), 'KB');
         console.log('🔢 Steps incluídos:', Object.keys(masterTemplate.steps).length);
-        
+
         // Validar JSON gerado
         validateGeneratedJSON(masterTemplate);
-        
+
     } catch (error) {
         console.error('❌ Erro ao salvar JSON Master:', error);
         throw error;
@@ -396,21 +396,21 @@ export function saveMasterJSON(): void {
 // ✅ VALIDAR JSON GERADO
 function validateGeneratedJSON(masterTemplate: MasterTemplate): void {
     console.log('🔍 Validando JSON gerado...');
-    
+
     const issues: string[] = [];
-    
+
     // Validar estrutura básica
     if (!masterTemplate.templateVersion) issues.push('templateVersion ausente');
     if (!masterTemplate.metadata?.id) issues.push('metadata.id ausente');
     if (!masterTemplate.globalConfig) issues.push('globalConfig ausente');
     if (!masterTemplate.steps) issues.push('steps ausente');
-    
+
     // Validar steps
     const stepKeys = Object.keys(masterTemplate.steps);
     if (stepKeys.length !== 21) {
         issues.push(`Esperado 21 steps, encontrados ${stepKeys.length}`);
     }
-    
+
     // Validar estrutura de cada step
     stepKeys.forEach(stepKey => {
         const step = masterTemplate.steps[stepKey];
@@ -419,12 +419,12 @@ function validateGeneratedJSON(masterTemplate: MasterTemplate): void {
         if (!step.validation) issues.push(`${stepKey}: validation ausente`);
         if (!step.blocks) issues.push(`${stepKey}: blocks ausente`);
     });
-    
+
     // Validar configurações globais
     if (!masterTemplate.globalConfig.navigation?.autoAdvanceSteps) {
         issues.push('globalConfig.navigation.autoAdvanceSteps ausente');
     }
-    
+
     if (issues.length > 0) {
         console.warn('⚠️ Issues encontrados:');
         issues.forEach(issue => console.warn(`  - ${issue}`));
@@ -433,12 +433,10 @@ function validateGeneratedJSON(masterTemplate: MasterTemplate): void {
     }
 }
 
-// 🚀 EXECUTAR SE CHAMADO DIRETAMENTE
-if (require.main === module) {
-    console.log('🎯 === GERADOR DE JSON MASTER CORRETO ===');
-    saveMasterJSON();
-    console.log('✅ Processo concluído!');
-}
+// 🚀 EXECUTAR AUTOMATICAMENTE
+console.log('🎯 === GERADOR DE JSON MASTER CORRETO ===');
+saveMasterJSON();
+console.log('✅ Processo concluído!');
 
 export default {
     generateMasterJSON,
