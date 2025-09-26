@@ -93,8 +93,8 @@ export const useImageWithFallback = (
         setIsError(false);
 
         try {
-            // Verificar se já temos no cache
-            if (enableCache) {
+            // Verificar se já temos no cache (apenas para URLs externas)
+            if (enableCache && !imageUrl.startsWith('/') && !imageUrl.includes('localhost')) {
                 const cachedSrc = await imageCache.getImage(imageUrl, width, height);
                 if (cachedSrc) {
                     setSrc(cachedSrc);
@@ -107,7 +107,8 @@ export const useImageWithFallback = (
 
             // Tentar carregar a imagem original
             const img = new Image();
-            img.crossOrigin = 'anonymous';
+            // Remover crossOrigin para evitar problemas CORS com imagens locais
+            // img.crossOrigin = 'anonymous';
 
             const loadPromise = new Promise<void>((resolve, reject) => {
                 img.onload = () => resolve();
@@ -117,14 +118,15 @@ export const useImageWithFallback = (
 
             await loadPromise;
 
+
             // Se chegou até aqui, a imagem carregou com sucesso
             setSrc(imageUrl);
             setIsFallback(false);
             setIsError(false);
             setIsLoading(false);
 
-            // Opcionalmente, armazenar no cache
-            if (enableCache) {
+            // Opcionalmente, armazenar no cache (apenas para URLs externas)
+            if (enableCache && !imageUrl.startsWith('/') && !imageUrl.includes('localhost')) {
                 try {
                     // Converter imagem para blob para armazenamento
                     const canvas = document.createElement('canvas');

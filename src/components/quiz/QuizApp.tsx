@@ -1,7 +1,7 @@
 'use client';
 
 import { useQuizState } from '../../hooks/useQuizState';
-import IntroStep from './IntroStep';
+import IntroStepFixed from './IntroStepFixed';
 import QuestionStep from './QuestionStep';
 import StrategicQuestionStep from './StrategicQuestionStep';
 import TransitionStep from './TransitionStep';
@@ -51,12 +51,12 @@ export default function QuizApp({ funnelId }: QuizAppProps) {
     const showProgress = !['intro', 'transition', 'transition-result'].includes(currentStepData.type);
 
     return (
-        <div className="bg-[#fefefe] text-[#5b4135] min-h-screen">
-            <div className="quiz-container max-w-6xl mx-auto px-4 py-8">
+        <div className="min-h-screen">
+            <div className="quiz-container mx-auto">
 
                 {/* Barra de Progresso */}
                 {showProgress && (
-                    <div className="mb-6">
+                    <div className="mb-6 max-w-6xl mx-auto px-4 py-8">
                         <div className="w-full bg-gray-200 rounded-full h-2.5 mb-4">
                             <div
                                 className="bg-[#deac6d] h-2.5 rounded-full transition-all duration-500"
@@ -69,7 +69,7 @@ export default function QuizApp({ funnelId }: QuizAppProps) {
 
                 {/* Renderização da Etapa Atual */}
                 {currentStepData.type === 'intro' && (
-                    <IntroStep
+                    <IntroStepFixed
                         data={currentStepData}
                         onNameSubmit={(name: string) => {
                             setUserName(name);
@@ -79,52 +79,72 @@ export default function QuizApp({ funnelId }: QuizAppProps) {
                 )}
 
                 {currentStepData.type === 'question' && (
-                    <QuestionStep
-                        data={currentStepData}
-                        currentAnswers={state.answers[state.currentStep] || []}
-                        onAnswersChange={(answers: string[]) => {
-                            addAnswer(state.currentStep, answers);
-                            // Avanço automático após 1 segundo quando completo
-                            if (answers.length === currentStepData.requiredSelections) {
-                                setTimeout(() => nextStep(), 1000);
-                            }
-                        }}
-                    />
+                    <div className="bg-[#fefefe] text-[#5b4135] min-h-screen">
+                        <div className="max-w-6xl mx-auto px-4 py-8">
+                            <QuestionStep
+                                data={currentStepData}
+                                currentAnswers={state.answers[state.currentStep] || []}
+                                onAnswersChange={(answers: string[]) => {
+                                    addAnswer(state.currentStep, answers);
+                                    // Avanço automático após 1 segundo quando completo
+                                    if (answers.length === currentStepData.requiredSelections) {
+                                        setTimeout(() => nextStep(), 1000);
+                                    }
+                                }}
+                            />
+                        </div>
+                    </div>
                 )}
 
                 {currentStepData.type === 'strategic-question' && (
-                    <StrategicQuestionStep
-                        data={currentStepData}
-                        currentAnswer={state.answers[state.currentStep]?.[0] || ''}
-                        onAnswerChange={(answer: string) => {
-                            addAnswer(state.currentStep, [answer]);
-                            addStrategicAnswer(currentStepData.questionText!, answer);
-                            setTimeout(() => nextStep(), 500);
-                        }}
-                    />
+                    <div className="bg-[#fefefe] text-[#5b4135] min-h-screen">
+                        <div className="max-w-6xl mx-auto px-4 py-8">
+                            <StrategicQuestionStep
+                                data={currentStepData}
+                                currentAnswer={state.answers[state.currentStep]?.[0] || ''}
+                                onAnswerChange={(answer: string) => {
+                                    addAnswer(state.currentStep, [answer]);
+                                    addStrategicAnswer(currentStepData.questionText!, answer);
+                                    setTimeout(() => nextStep(), 500);
+                                }}
+                            />
+                        </div>
+                    </div>
                 )}
 
                 {(currentStepData.type === 'transition' || currentStepData.type === 'transition-result') && (
-                    <TransitionStep
-                        data={currentStepData}
-                        onComplete={() => nextStep()}
-                    />
+                    <div className="bg-[#fefefe] text-[#5b4135] min-h-screen">
+                        <div className="max-w-6xl mx-auto px-4 py-8">
+                            <TransitionStep
+                                data={currentStepData}
+                                onComplete={() => nextStep()}
+                            />
+                        </div>
+                    </div>
                 )}
 
                 {currentStepData.type === 'result' && (
-                    <ResultStep
-                        data={currentStepData}
-                        userProfile={state.userProfile}
-                        scores={state.scores}
-                    />
+                    <div className="bg-[#fefefe] text-[#5b4135] min-h-screen">
+                        <div className="max-w-6xl mx-auto px-4 py-8">
+                            <ResultStep
+                                data={currentStepData}
+                                userProfile={state.userProfile}
+                                scores={state.scores}
+                            />
+                        </div>
+                    </div>
                 )}
 
                 {currentStepData.type === 'offer' && (
-                    <OfferStep
-                        data={currentStepData}
-                        userProfile={state.userProfile}
-                        offerKey={getOfferKey()}
-                    />
+                    <div className="bg-[#fefefe] text-[#5b4135] min-h-screen">
+                        <div className="max-w-6xl mx-auto px-4 py-8">
+                            <OfferStep
+                                data={currentStepData}
+                                userProfile={state.userProfile}
+                                offerKey={getOfferKey()}
+                            />
+                        </div>
+                    </div>
                 )}
             </div>
         </div>

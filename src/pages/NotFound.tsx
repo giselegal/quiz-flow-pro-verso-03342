@@ -1,20 +1,21 @@
 /**
- * 🚫 PÁGINA 404 - NOT FOUND
+ * 🚫 PÁGINA 404 - NOT FOUND - VERSÃO CORRIGIDA
  * 
  * Página personalizada para rotas não encontradas com:
  * - Design consistente com o tema
  * - Links úteis para navegação
  * - Informações de debug em desenvolvimento
+ * - Corrigido para resolver problemas de importação
  */
 
 import React from 'react';
 import { Link } from 'wouter';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { 
-  Home, 
-  ArrowLeft, 
-  Search,
+import {
+  Home,
+  ArrowLeft,
+  Settings,
   AlertTriangle,
   ExternalLink
 } from 'lucide-react';
@@ -24,20 +25,18 @@ interface NotFoundProps {
   showDebugInfo?: boolean;
 }
 
-const NotFound: React.FC<NotFoundProps> = ({ 
+const NotFound: React.FC<NotFoundProps> = ({
   message = "Página não encontrada",
   showDebugInfo = process.env.NODE_ENV === 'development'
 }) => {
   const currentPath = typeof window !== 'undefined' ? window.location.pathname : '';
-  
+
   const suggestedRoutes = [
     { path: '/', label: 'Página Inicial', icon: Home },
-    { path: '/admin', label: 'Dashboard Admin', icon: Search },
+    { path: '/admin', label: 'Dashboard Admin', icon: Settings },
     { path: '/editor', label: 'Editor de Funis', icon: ExternalLink },
     { path: '/templates', label: 'Templates', icon: ExternalLink }
-  ];
-
-  return (
+  ]; return (
     <div className="min-h-screen bg-background flex items-center justify-center p-4">
       <div className="max-w-2xl w-full space-y-8">
         {/* Error Icon */}
@@ -87,15 +86,15 @@ const NotFound: React.FC<NotFoundProps> = ({
 
         {/* Action Buttons */}
         <div className="flex items-center justify-center space-x-4">
-          <Button 
-            variant="outline" 
+          <Button
+            variant="outline"
             onClick={() => window.history.back()}
             className="flex items-center space-x-2"
           >
             <ArrowLeft className="w-4 h-4" />
             <span>Voltar</span>
           </Button>
-          
+
           <Link href="/">
             <Button className="flex items-center space-x-2">
               <Home className="w-4 h-4" />

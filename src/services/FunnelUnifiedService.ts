@@ -11,6 +11,7 @@
  */
 
 import { supabase } from '@/integrations/supabase/client';
+import { indexedDBService } from './storage/IndexedDBService';
 import { FunnelContext } from '@/core/contexts/FunnelContext';
 // MIGRATED: Using new validation service
 import { migratedFunnelValidationService } from '@/services/migratedFunnelValidationService';
@@ -210,6 +211,70 @@ export class FunnelUnifiedService {
     private constructor() {
         // Setup cache invalidation listeners
         this.setupEventListeners();
+
+        // Inicializar IndexedDB
+        this.initializeIndexedDB();
+    }
+
+    private async initializeIndexedDB(): Promise<void> {
+        try {
+            await indexedDBService.init();
+            console.log('✅ FunnelUnifiedService: IndexedDB inicializado com sucesso');
+
+            // Verificar se é a primeira vez e migrar dados do localStorage
+            await this.migrateFromLocalStorage();
+        } catch (error) {
+            console.error('❌ FunnelUnifiedService: Erro ao inicializar IndexedDB:', error);
+            console.log('⚠️ Usando localStorage como fallback');
+        }
+    }
+
+    private async migrateFromLocalStorage(): Promise<void> {
+        const migrationKey = 'funnel_unified_migration_completed';
+
+        // Verificar se já foi migrado
+        if (localStorage.getItem(migrationKey)) {
+            console.log('✅ Migração do localStorage já foi concluída');
+            return;
+        }
+
+        try {
+            console.log('🔄 Iniciando migração do localStorage para IndexedDB...');
+            let migratedCount = 0;
+
+            // Migrar todos os funis do localStorage
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                if (key?.startsWith('unified_funnel:')) {
+                    const data = localStorage.getItem(key);
+                    if (data) {
+                        try {
+                            const funnel = JSON.parse(data);
+                            await indexedDBService.save('funnels', funnel.id, funnel, {
+                                userId: funnel.userId,
+                                context: funnel.context,
+                                tags: [funnel.category]
+                            });
+                            migratedCount++;
+                        } catch (parseError) {
+                            console.warn('⚠️ Erro ao migrar funil:', key, parseError);
+                        }
+                    }
+                }
+            }
+
+            // Marcar migração como concluída
+            localStorage.setItem(migrationKey, new Date().toISOString());
+
+            if (migratedCount > 0) {
+                console.log(`✅ Migração concluída: ${migratedCount} funis migrados para IndexedDB`);
+            } else {
+                console.log('ℹ️ Nenhum funil encontrado para migrar');
+            }
+
+        } catch (error) {
+            console.error('❌ Erro durante migração:', error);
+        }
     }
 
     static getInstance(): FunnelUnifiedService {
@@ -289,7 +354,7 @@ export class FunnelUnifiedService {
                 id: data.id,
                 name: data.name || 'Funil sem nome',
                 description: data.description || '',
-                category: data.category || 'outros',
+                category: data.settings?.category || 'outros', // Extrair categoria de settings
                 context: data.settings?.context || FunnelContext.EDITOR,
                 userId: data.user_id || 'anonymous',
                 settings: data.settings || {},
@@ -415,8 +480,8 @@ export class FunnelUnifiedService {
         } catch (error) {
             console.error('❌ Erro ao carregar funil:', error);
 
-            // Tentar fallback localStorage
-            return this.loadFromLocalStorage(id);
+            // Tentar fallback IndexedDB
+            return await this.loadFromIndexedDB(id);
         }
     }
 
@@ -507,8 +572,8 @@ export class FunnelUnifiedService {
         } catch (error) {
             console.error('❌ Erro ao listar funis:', error);
 
-            // Fallback para localStorage
-            return this.listFromLocalStorage(options);
+            // Fallback para IndexedDB
+            return await this.listFromIndexedDB(options);
         }
     }
 
@@ -721,8 +786,23 @@ export class FunnelUnifiedService {
         try {
             // ⚡ VERIFICAÇÃO DEFENSIVA: Verificar se supabase está disponível
             if (!supabase || !supabase.from) {
-                console.warn('⚠️ Supabase não disponível, salvando no localStorage');
-                this.saveToLocalStorage(funnel);
+                console.warn('⚠️ Supabase não disponível, salvando no IndexedDB');
+                await this.saveToIndexedDB(funnel);
+                return funnel;
+            }
+
+            // ⚡ VERIFICAÇÃO: Se userId é anonymous ou vazio, usar IndexedDB
+            if (!funnel.userId || funnel.userId === 'anonymous' || funnel.userId.startsWith('temp-')) {
+                console.warn('⚠️ Usuário não autenticado, salvando no IndexedDB');
+                await this.saveToIndexedDB(funnel);
+                return funnel;
+            }
+
+            // ⚡ VERIFICAÇÃO: Verificar se usuário está autenticado no Supabase
+            const { data: { session } } = await supabase.auth.getSession();
+            if (!session?.user) {
+                console.warn('⚠️ Sem sessão ativa no Supabase, salvando no IndexedDB');
+                await this.saveToIndexedDB(funnel);
                 return funnel;
             }
 
@@ -730,15 +810,15 @@ export class FunnelUnifiedService {
                 id: funnel.id,
                 name: funnel.name,
                 description: funnel.description,
-                category: funnel.category,
-                user_id: funnel.userId,
+                user_id: session.user.id, // Usar ID do usuário da sessão ativa
                 is_published: funnel.isPublished,
                 version: funnel.version,
                 settings: {
                     ...funnel.settings,
                     context: funnel.context,
                     templateId: funnel.templateId,
-                    isFromTemplate: funnel.isFromTemplate
+                    isFromTemplate: funnel.isFromTemplate,
+                    category: funnel.category // Mantém categoria dentro de settings
                 },
                 created_at: funnel.createdAt.toISOString(),
                 updated_at: funnel.updatedAt.toISOString()
@@ -746,36 +826,30 @@ export class FunnelUnifiedService {
 
             let result;
             if (isUpdate) {
-                const query = supabase
+                // Para update, sempre usar select para retornar os dados
+                result = await supabase
                     .from('funnels')
                     .update(funnelRecord)
-                    .eq('id', funnel.id);
-
-                // ⚡ VERIFICAÇÃO DEFENSIVA: Verificar se select existe
-                if (typeof query.select === 'function') {
-                    result = await query.select().single();
-                } else {
-                    result = await query;
-                }
+                    .eq('id', funnel.id)
+                    .select()
+                    .single();
             } else {
-                const query = supabase
+                // Para insert, sempre usar select para retornar os dados
+                result = await supabase
                     .from('funnels')
-                    .insert([funnelRecord]);
-
-                // ⚡ VERIFICAÇÃO DEFENSIVA: Verificar se select existe
-                if (typeof query.select === 'function') {
-                    result = await query.select().single();
-                } else {
-                    result = await query;
-                }
+                    .insert([funnelRecord])
+                    .select()
+                    .single();
             }
 
             if (result.error) {
+                console.error('❌ Erro na operação do Supabase:', result.error);
                 throw result.error;
             }
 
             // 🛡️ VERIFICAÇÃO DEFENSIVA: Garantir que result.data existe
             if (!result.data) {
+                console.error('❌ Resultado do Supabase sem dados:', { result, funnel: funnel.name });
                 throw new Error('Dados do funnel não foram retornados pelo Supabase');
             }
 
@@ -787,8 +861,8 @@ export class FunnelUnifiedService {
             return this.convertFromSupabaseFormat(result.data);
 
         } catch (error) {
-            console.error('❌ Erro no Supabase, salvando no localStorage:', error);
-            this.saveToLocalStorage(funnel);
+            console.error('❌ Erro no Supabase, salvando no IndexedDB:', error);
+            await this.saveToIndexedDB(funnel);
             return funnel;
         }
     }
@@ -938,10 +1012,29 @@ export class FunnelUnifiedService {
     }
 
     // ========================================================================
-    // LOCALSTORAGE FALLBACK
+    // INDEXEDDB FALLBACK (SUBSTITUI LOCALSTORAGE)
     // ========================================================================
 
-    private saveToLocalStorage(funnel: UnifiedFunnelData): void {
+    private async saveToIndexedDB(funnel: UnifiedFunnelData): Promise<void> {
+        try {
+            console.log('💾 Salvando no IndexedDB:', funnel.name);
+
+            // Salvar o funil completo
+            await indexedDBService.save('funnels', funnel.id, funnel, {
+                userId: funnel.userId,
+                context: funnel.context,
+                tags: [funnel.category]
+            });
+
+            console.log('✅ Funil salvo no IndexedDB com sucesso');
+        } catch (error) {
+            console.error('❌ Erro ao salvar no IndexedDB, fallback para localStorage:', error);
+            this.saveToLocalStorageBackup(funnel);
+        }
+    }
+
+    // Backup para localStorage se IndexedDB falhar
+    private saveToLocalStorageBackup(funnel: UnifiedFunnelData): void {
         try {
             const key = `unified_funnel:${funnel.id}`;
             localStorage.setItem(key, JSON.stringify(funnel));
@@ -970,11 +1063,38 @@ export class FunnelUnifiedService {
             localStorage.setItem(listKey, JSON.stringify(list));
 
         } catch (error) {
-            console.error('❌ Erro ao salvar no localStorage:', error);
+            console.error('❌ Erro ao salvar no localStorage backup:', error);
         }
     }
 
-    private loadFromLocalStorage(id: string): UnifiedFunnelData | null {
+    private async loadFromIndexedDB(id: string): Promise<UnifiedFunnelData | null> {
+        try {
+            const funnel = await indexedDBService.load('funnels', id);
+
+            if (!funnel) {
+                console.log('🔍 Funil não encontrado no IndexedDB, tentando localStorage backup');
+                return this.loadFromLocalStorageBackup(id);
+            }
+
+            // Converter dates de string para Date objects
+            if (funnel.createdAt && typeof funnel.createdAt === 'string') {
+                funnel.createdAt = new Date(funnel.createdAt);
+            }
+            if (funnel.updatedAt && typeof funnel.updatedAt === 'string') {
+                funnel.updatedAt = new Date(funnel.updatedAt);
+            }
+
+            console.log('✅ Funil carregado do IndexedDB:', funnel.name);
+            return funnel;
+
+        } catch (error) {
+            console.error('❌ Erro ao carregar do IndexedDB, tentando localStorage backup:', error);
+            return this.loadFromLocalStorageBackup(id);
+        }
+    }
+
+    // Backup para localStorage
+    private loadFromLocalStorageBackup(id: string): UnifiedFunnelData | null {
         try {
             const key = `unified_funnel:${id}`;
             const data = localStorage.getItem(key);
@@ -988,12 +1108,41 @@ export class FunnelUnifiedService {
             return funnel;
 
         } catch (error) {
-            console.error('❌ Erro ao carregar do localStorage:', error);
+            console.error('❌ Erro ao carregar do localStorage backup:', error);
             return null;
         }
     }
 
-    private listFromLocalStorage(options: ListFunnelOptions): UnifiedFunnelData[] {
+    private async listFromIndexedDB(options: ListFunnelOptions): Promise<UnifiedFunnelData[]> {
+        try {
+            const userId = options.userId || 'unknown';
+            const context = options.context || FunnelContext.EDITOR;
+
+            console.log('🔍 Listando funis do IndexedDB para:', { userId, context });
+
+            const funnels = await indexedDBService.list('funnels', { userId, context });
+
+            if (!funnels || funnels.length === 0) {
+                console.log('📭 Nenhum funil encontrado no IndexedDB, tentando localStorage backup');
+                return this.listFromLocalStorageBackup(options);
+            }
+
+            console.log(`✅ ${funnels.length} funis encontrados no IndexedDB`);
+
+            return funnels.map((funnel: any) => ({
+                ...funnel,
+                createdAt: new Date(funnel.createdAt || Date.now()),
+                updatedAt: new Date(funnel.updatedAt || Date.now())
+            }));
+
+        } catch (error) {
+            console.error('❌ Erro ao listar do IndexedDB, tentando localStorage backup:', error);
+            return this.listFromLocalStorageBackup(options);
+        }
+    }
+
+    // Backup para localStorage
+    private listFromLocalStorageBackup(options: ListFunnelOptions): UnifiedFunnelData[] {
         try {
             const userId = options.userId || 'unknown';
             const context = options.context || FunnelContext.EDITOR;
@@ -1021,7 +1170,7 @@ export class FunnelUnifiedService {
             }));
 
         } catch (error) {
-            console.error('❌ Erro ao listar do localStorage:', error);
+            console.error('❌ Erro ao listar do localStorage backup:', error);
             return [];
         }
     }

@@ -53,6 +53,8 @@ const TemplatesPage = lazy(() => import('./pages/TemplatesPage'));
 const SystemDiagnosticPage = lazy(() => import('./pages/SystemDiagnosticPage'));
 const EditorTemplatesPage = lazy(() => import('./pages/editor-templates/index'));
 const FunnelTypesPage = lazy(() => import('./pages/SimpleFunnelTypesPage'));
+const SupabaseFixTestPage = lazy(() => import('./pages/SupabaseFixTestPage'));
+const IndexedDBMigrationTestPage = lazy(() => import('./pages/IndexedDBMigrationTestPage'));
 
 function App() {
   useEffect(() => {
@@ -192,6 +194,16 @@ function App() {
                         {/* 🔧 DESENVOLVIMENTO */}
                         <Route path="/diagnostics">
                           <SystemDiagnosticPage />
+                        </Route>
+
+                        {/* 🧪 TESTE CORREÇÃO SUPABASE */}
+                        <Route path="/test-supabase-fix">
+                          <SupabaseFixTestPage />
+                        </Route>
+
+                        {/* 🗃️ TESTE MIGRAÇÃO INDEXEDDB */}
+                        <Route path="/test-indexeddb-migration">
+                          <IndexedDBMigrationTestPage />
                         </Route>
 
                         {/* 🚫 PÁGINA 404 PERSONALIZADA */}
