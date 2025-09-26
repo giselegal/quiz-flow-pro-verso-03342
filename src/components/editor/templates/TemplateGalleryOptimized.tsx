@@ -1,5 +1,4 @@
 // 📋 Template Gallery - Sistema de Gerenciamento de Templates (Versão Otimizada)
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
     Dialog,
@@ -8,7 +7,6 @@ import {
     DialogFooter,
     DialogHeader,
     DialogTitle,
-    DialogTrigger,
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -23,10 +21,6 @@ import { Textarea } from '@/components/ui/textarea';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { BlockData } from '@/types/blocks';
 import {
-    Clock,
-    Copy,
-    Download,
-    Eye,
     Grid,
     Heart,
     LayoutTemplate,
@@ -35,8 +29,6 @@ import {
     Search,
     SortAsc,
     SortDesc,
-    Star,
-    Trash2,
 } from 'lucide-react';
 import React, { useState } from 'react';
 import OptimizedTemplateCard from './OptimizedTemplateCard';
@@ -253,25 +245,6 @@ const TemplateGallery: React.FC<TemplateGalleryProps> = ({ onApplyTemplate, curr
         );
     };
 
-    const duplicateTemplate = (template: Template) => {
-        const newTemplate: Template = {
-            ...template,
-            id: `${template.id}-copy-${Date.now()}`,
-            name: `${template.name} (Cópia)`,
-            isPublic: false,
-            isFavorite: false,
-            createdAt: new Date(),
-            updatedAt: new Date(),
-            author: 'Você',
-            downloads: 0,
-        };
-
-        setTemplates(prev => [...prev, newTemplate]);
-    };
-
-    const handleDeleteTemplate = (templateId: string) => {
-        setTemplates(prev => prev.filter(template => template.id !== templateId));
-    };
 
     const handleCreateTemplate = () => {
         if (!newTemplate.name.trim() || !newTemplate.description.trim()) return;

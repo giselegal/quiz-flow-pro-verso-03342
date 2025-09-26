@@ -92,40 +92,33 @@ const FunnelTypeDetector: React.FC<FunnelDetectorProps> = ({
             console.log('🔍 Detectando tipo de funil para ID:', funnelId);
 
             let typeId: string;
-            let name: string;
 
             // 1. Verificar se é funil predefinido
             if (isPredefinedFunnel(funnelId)) {
                 const predefined = getPredefinedFunnelConfig(funnelId);
                 typeId = predefined!.typeId;
-                name = predefined!.name;
                 console.log('✅ Funil predefinido detectado:', typeId);
             }
             // 2. Detectar por padrões no ID
             else if (funnelId.includes('quiz') || funnelId.includes('estilo')) {
                 typeId = 'quiz-estilo-21-steps';
-                name = 'Quiz de Estilo Pessoal';
                 console.log('✅ Quiz detectado por padrão no ID');
             }
             else if (funnelId.includes('landing')) {
                 typeId = 'landing-page';
-                name = 'Landing Page';
                 console.log('✅ Landing page detectada por padrão no ID');
             }
             else if (funnelId.includes('sales') || funnelId.includes('vendas')) {
                 typeId = 'sales-funnel';
-                name = 'Funil de Vendas';
                 console.log('✅ Funil de vendas detectado por padrão no ID');
             }
             else if (funnelId.includes('lead')) {
                 typeId = 'lead-magnet';
-                name = 'Lead Magnet';
                 console.log('✅ Lead magnet detectado por padrão no ID');
             }
             // 3. Default para quiz se não conseguir detectar
             else {
                 typeId = 'quiz-estilo-21-steps';
-                name = 'Quiz de Estilo Pessoal (Default)';
                 console.log('⚠️ Tipo não detectado, usando quiz como padrão');
             }
 

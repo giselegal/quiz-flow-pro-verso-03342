@@ -35,8 +35,7 @@ export const useOptimizedImage = (
         quality = 0.8,
         format = 'webp',
         maxWidth,
-        maxHeight,
-        enableCache = true
+        maxHeight
     } = options;
 
     const [optimizedSrc, setOptimizedSrc] = useState<string | null>(null);

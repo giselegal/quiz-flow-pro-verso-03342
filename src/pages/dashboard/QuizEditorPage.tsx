@@ -14,27 +14,19 @@ import { Textarea } from '@/components/ui/textarea';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { Switch } from '@/components/ui/switch';
-import { Separator } from '@/components/ui/separator';
 import {
     Save,
     RefreshCw,
     Eye,
-    Settings,
-    Palette,
     ArrowRight,
     ArrowLeft,
-    Plus,
-    Trash2,
-    Edit3,
-    Check,
-    X,
     FileText,
     Zap,
     Target
 } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 import HybridTemplateService from '@/services/HybridTemplateService';
-import type { StepTemplate, MasterTemplate } from '@/services/HybridTemplateService';
+import type { StepTemplate } from '@/services/HybridTemplateService';
 
 // ============================================================================
 // INTERFACES
@@ -94,7 +86,6 @@ const QuizEditorDashboard: React.FC = () => {
     const [globalConfig, setGlobalConfig] = useState<GlobalConfig | null>(null);
     const [selectedStep, setSelectedStep] = useState<number>(1);
     const [stepConfig, setStepConfig] = useState<StepTemplate | null>(null);
-    const [masterTemplate, setMasterTemplate] = useState<MasterTemplate | null>(null);
 
     // ========================================================================
     // CARREGAR DADOS INICIAIS
@@ -108,12 +99,32 @@ const QuizEditorDashboard: React.FC = () => {
         try {
             setLoading(true);
 
-            // Carregar estatísticas do template master
-            const stats = HybridTemplateService.getMasterTemplateStats();
-
-            // Carregar configurações globais
-            const global = HybridTemplateService.getGlobalConfig();
-            setGlobalConfig(global);
+            // Simplified config loading without non-existent methods
+            setGlobalConfig({
+                branding: {
+                    primaryColor: '#e91e63',
+                    secondaryColor: '#f8bbd9', 
+                    backgroundColor: '#ffffff',
+                    logoUrl: '',
+                    logoAlt: 'Logo'
+                },
+                navigation: { 
+                    autoAdvanceSteps: [], 
+                    manualAdvanceSteps: [], 
+                    transitionSteps: [12, 19],
+                    autoAdvanceDelay: 3000 
+                },
+                scoring: {
+                    categories: ['classic', 'creative', 'elegant'],
+                    algorithm: {
+                        type: 'weighted',
+                        normalQuestionWeight: 1.0,
+                        strategicQuestionWeight: 2.0,
+                        minimumScoreDifference: 0.05,
+                        tieBreaker: 'strategic'
+                    }
+                }
+            });
 
             // Carregar todos os steps
             const steps: QuizStep[] = [];
@@ -237,27 +248,41 @@ const QuizEditorDashboard: React.FC = () => {
     };
 
     const updateMetadata = (field: string, value: string) => {
+        if (!stepConfig?.metadata) return;
+        
         updateStepConfig({
             metadata: {
-                ...stepConfig?.metadata,
+                name: stepConfig.metadata.name,
+                description: stepConfig.metadata.description,
+                type: stepConfig.metadata.type,
+                category: stepConfig.metadata.category,
                 [field]: value
             }
         });
     };
 
     const updateBehavior = (field: string, value: any) => {
+        if (!stepConfig?.behavior) return;
+        
         updateStepConfig({
             behavior: {
-                ...stepConfig?.behavior,
+                autoAdvance: stepConfig.behavior.autoAdvance,
+                autoAdvanceDelay: stepConfig.behavior.autoAdvanceDelay,
+                showProgress: stepConfig.behavior.showProgress,
+                allowBack: stepConfig.behavior.allowBack,
                 [field]: value
             }
         });
     };
 
     const updateValidation = (field: string, value: any) => {
+        if (!stepConfig?.validation) return;
+        
         updateStepConfig({
             validation: {
-                ...stepConfig?.validation,
+                type: stepConfig.validation.type,
+                required: stepConfig.validation.required,
+                message: stepConfig.validation.message,
                 [field]: value
             }
         });
