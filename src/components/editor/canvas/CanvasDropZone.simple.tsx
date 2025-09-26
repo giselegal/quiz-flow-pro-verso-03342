@@ -208,7 +208,16 @@ const InterBlockDropZoneBase: React.FC<{
   );
 };
 
-const InterBlockDropZone = React.memo(InterBlockDropZoneBase);
+// 🚀 OTIMIZAÇÃO: Componente memoizado para drop zone entre blocos
+const InterBlockDropZone = React.memo(InterBlockDropZoneBase, (prevProps, nextProps) => {
+  return (
+    prevProps.position === nextProps.position &&
+    prevProps.isActive === nextProps.isActive &&
+    prevProps.scopeId === nextProps.scopeId
+  );
+});
+
+InterBlockDropZone.displayName = 'InterBlockDropZone';
 
 interface CanvasDropZoneProps {
   blocks: Block[];
@@ -235,7 +244,10 @@ const CanvasDropZoneBase: React.FC<CanvasDropZoneProps> = ({
   scopeId,
   onDeselectBlocks,
 }) => {
-  useRenderCount('CanvasDropZone');
+  // 🚀 OTIMIZAÇÃO: Condicionar useRenderCount apenas no desenvolvimento e quando debug estiver ativo
+  if (process.env.NODE_ENV === 'development' && (window as any).__DND_DEBUG === true) {
+    useRenderCount('CanvasDropZone');
+  }
 
   // 🔧 CORREÇÃO: Mover useMemo para fora da renderização condicional
   // Sempre calcular items do SortableContext para manter hook order consistente
@@ -247,8 +259,15 @@ const CanvasDropZoneBase: React.FC<CanvasDropZoneProps> = ({
     }));
   }, [blocks, scopeId]);
 
-  // Hook para aplicar estilos dinâmicos
-  useCanvasContainerStyles();
+  // 🚀 OTIMIZAÇÃO: Hook para aplicar estilos dinâmicos - condicionar para evitar re-render
+  const canvasStylesEnabled = React.useMemo(() =>
+    process.env.NODE_ENV === 'development' && (window as any).__CANVAS_STYLES_DEBUG === true,
+    []
+  );
+
+  if (canvasStylesEnabled) {
+    useCanvasContainerStyles();
+  }
 
   // 🔍 DEBUG: Hook order debugger
   const hookCalls = React.useMemo(() => [
@@ -261,25 +280,31 @@ const CanvasDropZoneBase: React.FC<CanvasDropZoneProps> = ({
   React.useEffect(() => {
     mark('CanvasDropZone:mounted');
   }, []);
-  // Evitar recriar arrays/objetos a cada render (impede re-registro contínuo no dnd-kit)
-  const rootAccepts = React.useMemo(() => ['sidebar-component', 'canvas-block'], []);
-  const rootData = React.useMemo(
-    () => ({
-      type: 'dropzone',
-      accepts: rootAccepts,
-      position: blocks.length, // Posição no final
-      debug: 'main-canvas-zone', // Para debug
-    }),
-    [rootAccepts, blocks.length]
-  );
 
-  const { setNodeRef, isOver } = useDroppable({
-    // Escopar o id do droppable raiz por etapa para evitar colisões entre etapas 2–21
-    id: generateUniqueId({
+  // 🚀 OTIMIZAÇÃO: Evitar recriar arrays/objetos a cada render (impede re-registro contínuo no dnd-kit)
+  const rootAccepts = React.useMemo(() => ['sidebar-component', 'canvas-block'], []);
+
+  // 🚀 OTIMIZAÇÃO: Memoizar o ID do droppable para evitar recriação
+  const droppableId = React.useMemo(() =>
+    generateUniqueId({
       stepNumber: scopeId ?? 'default',
       type: 'dropzone'
     }),
-    data: { ...rootData, scopeId: scopeId ?? 'default' },
+    [scopeId]
+  );
+
+  // 🚀 OTIMIZAÇÃO: Memoizar dados do droppable
+  const droppableData = React.useMemo(() => ({
+    type: 'dropzone',
+    accepts: rootAccepts,
+    position: blocks.length,
+    debug: 'main-canvas-zone',
+    scopeId: scopeId ?? 'default'
+  }), [rootAccepts, blocks.length, scopeId]);
+
+  const { setNodeRef, isOver } = useDroppable({
+    id: droppableId,
+    data: droppableData,
   });
 
   // Usa useDndContext para obter active do contexto DnD
@@ -293,43 +318,51 @@ const CanvasDropZoneBase: React.FC<CanvasDropZoneProps> = ({
     return t === 'sidebar-component' || t === 'canvas-block' || overId.startsWith('sidebar-item-');
   }, [active]);
 
-  // Debug do drop zone - somente quando explicitamente habilitado
-  const isDebug = React.useCallback(() => {
+  // 🚀 OTIMIZAÇÃO: Debug do drop zone - memoizar callback e somente quando explicitamente habilitado
+  const isDebugEnabled = React.useMemo(() => {
     try {
       return (
         ((import.meta as any)?.env?.DEV ?? false) ||
-        (typeof process !== 'undefined' && (process as any)?.env?.NODE_ENV === 'development') ||
-        (typeof window !== 'undefined' && (window as any).__DND_DEBUG === true)
+        (process.env.NODE_ENV === 'development') ||
+        ((window as any)?.__DND_DEBUG === true)
       );
     } catch {
       return false;
     }
   }, []);
 
+  const debugLog = React.useCallback((message: string, data?: any) => {
+    if (isDebugEnabled) {
+      console.log(`🎯 ${message}`, data);
+    }
+  }, [isDebugEnabled]);
+
   const activeId = active?.id;
   const activeType = active?.data.current?.type;
   const activeBlockType = active?.data.current?.blockType;
+
+  // 🚀 OTIMIZAÇÃO: Debug effect condicional e memoizado
   React.useEffect(() => {
-    if (!isDebug()) return;
-    // eslint-disable-next-line no-console
-    console.log('🎯 CanvasDropZone: isOver =', isOver, 'active =', activeId);
+    if (!isDebugEnabled) return;
+
+    debugLog('CanvasDropZone: isOver =', { isOver, activeId });
+
     if (activeType === 'sidebar-component') {
-      // eslint-disable-next-line no-console
-      console.log('📦 Arrastando componente da sidebar:', activeBlockType);
+      debugLog('📦 Arrastando componente da sidebar:', activeBlockType);
     } else if (activeType === 'canvas-block') {
-      // eslint-disable-next-line no-console
-      console.log('🔄 Reordenando bloco do canvas:', activeId);
+      debugLog('🔄 Reordenando bloco do canvas:', activeId);
     }
-  }, [isOver, activeId, activeType, activeBlockType, isDebug]);
+  }, [isOver, activeId, activeType, activeBlockType, isDebugEnabled, debugLog]);
 
   // Modo preview controlado por prop (default: false)
   const isPreviewing = !!isPreviewingProp;
 
-  // Virtualização condicional (somente preview e listas muito grandes; nunca durante drag)
-  const VIRTUALIZE_THRESHOLD = 120;
-  const AVG_ITEM_HEIGHT = 120; // px (estimativa)
-  const OVERSCAN = 8; // itens
-  // Flag dinâmica para permitir alternância em tempo real (via header)
+  // 🚀 OTIMIZAÇÃO: Constantes de virtualização
+  const VIRTUALIZE_THRESHOLD = React.useMemo(() => 120, []);
+  const AVG_ITEM_HEIGHT = React.useMemo(() => 120, []); // px (estimativa)
+  const OVERSCAN = React.useMemo(() => 8, []); // itens
+
+  // 🚀 OTIMIZAÇÃO: Flag dinâmica para permitir alternância em tempo real (memoizada)
   const [virtDisabledDynamic, setVirtDisabledDynamic] = React.useState<boolean>(() => {
     try {
       const g: any = typeof globalThis !== 'undefined' ? (globalThis as any) : undefined;
@@ -338,48 +371,80 @@ const CanvasDropZoneBase: React.FC<CanvasDropZoneProps> = ({
       return false;
     }
   });
+
+  // 🚀 OTIMIZAÇÃO: UseEffect para events otimizado com debounce
   React.useEffect(() => {
+    let timeoutId: NodeJS.Timeout | null = null;
+
     const handler = (e: Event) => {
-      try {
-        const g: any = typeof globalThis !== 'undefined' ? (globalThis as any) : undefined;
-        const detail: any = (e as any)?.detail;
-        const next = typeof detail?.disabled === 'boolean' ? detail.disabled : g?.__NO_CANVAS_VIRT__ === true;
-        setVirtDisabledDynamic(Boolean(next));
-      } catch {
-        // noop
-      }
+      if (timeoutId) clearTimeout(timeoutId);
+
+      timeoutId = setTimeout(() => {
+        try {
+          const g: any = typeof globalThis !== 'undefined' ? (globalThis as any) : undefined;
+          const detail: any = (e as any)?.detail;
+          const next = typeof detail?.disabled === 'boolean' ? detail.disabled : g?.__NO_CANVAS_VIRT__ === true;
+          setVirtDisabledDynamic(Boolean(next));
+        } catch {
+          // noop
+        }
+      }, 50); // Debounce de 50ms
     };
+
     if (typeof window !== 'undefined') {
       window.addEventListener('canvas-virt-flag-changed', handler as EventListener);
-      return () => window.removeEventListener('canvas-virt-flag-changed', handler as EventListener);
+      return () => {
+        if (timeoutId) clearTimeout(timeoutId);
+        window.removeEventListener('canvas-virt-flag-changed', handler as EventListener);
+      };
     }
     return;
   }, []);
-  const enableVirtualization =
+  // 🚀 OTIMIZAÇÃO: Memoizar enableVirtualization para evitar recálculos
+  const enableVirtualization = React.useMemo(() =>
     isPreviewing &&
     !isDraggingAnyValidComponent &&
     !virtDisabledDynamic &&
-    blocks.length > VIRTUALIZE_THRESHOLD;
+    blocks.length > VIRTUALIZE_THRESHOLD,
+    [isPreviewing, isDraggingAnyValidComponent, virtDisabledDynamic, blocks.length, VIRTUALIZE_THRESHOLD]
+  );
 
   const scrollRef = React.useRef<HTMLDivElement | null>(null);
   const [scrollTop, setScrollTop] = React.useState(0);
   const [containerHeight, setContainerHeight] = React.useState<number>(600);
 
-  // Observa altura do container
+  // 🚀 OTIMIZAÇÃO: Observa altura do container com debounce
   React.useEffect(() => {
     const el = scrollRef.current;
     if (!el) return;
-    const ro = new ResizeObserver(() => setContainerHeight(el.clientHeight || 600));
+
+    let timeoutId: NodeJS.Timeout | null = null;
+
+    const ro = new ResizeObserver(() => {
+      if (timeoutId) clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => {
+        setContainerHeight(el.clientHeight || 600);
+      }, 100); // Debounce de 100ms
+    });
+
     ro.observe(el);
     setContainerHeight(el.clientHeight || 600);
-    return () => ro.disconnect();
+
+    return () => {
+      if (timeoutId) clearTimeout(timeoutId);
+      ro.disconnect();
+    };
   }, []); // Empty dependency array - only runs once on mount
 
+  // 🚀 OTIMIZAÇÃO: Scroll handler com debounce para evitar re-renders excessivos
   const onScroll = React.useCallback(() => {
     const el = scrollRef.current;
-    if (!el) return;
-    setScrollTop(el.scrollTop || 0);
-  }, []);
+    if (!el || !enableVirtualization) return;
+
+    requestAnimationFrame(() => {
+      setScrollTop(el.scrollTop || 0);
+    });
+  }, [enableVirtualization]);
 
   const visibleMeta = React.useMemo(() => {
     const visibleCount = Math.max(1, Math.ceil(containerHeight / AVG_ITEM_HEIGHT));
@@ -492,11 +557,11 @@ const CanvasDropZoneBase: React.FC<CanvasDropZoneProps> = ({
       data-dnd-dropzone-type="raiz-da-tela"
     >
       {/* 🔍 Hook Order Debugger */}
-      <HookOrderDebugger 
+      <HookOrderDebugger
         componentName="CanvasDropZone"
         hookCalls={hookCalls}
       />
-      
+
       {blocks.length === 0 ? (
         <div className="text-center py-12">
           {enableProgressiveEdit && editRenderCount < blocks.length ? (
@@ -604,6 +669,25 @@ const CanvasDropZoneBase: React.FC<CanvasDropZoneProps> = ({
   );
 };
 
-export const CanvasDropZone = React.memo(CanvasDropZoneBase);
+// 🚀 OTIMIZAÇÃO: React.memo com comparação customizada para evitar re-renders desnecessários
+const CanvasDropZoneMemoized = React.memo(CanvasDropZoneBase, (prevProps, nextProps) => {
+  // Comparação otimizada para evitar re-renders desnecessários
+  return (
+    prevProps.blocks.length === nextProps.blocks.length &&
+    prevProps.selectedBlockId === nextProps.selectedBlockId &&
+    prevProps.isPreviewing === nextProps.isPreviewing &&
+    prevProps.scopeId === nextProps.scopeId &&
+    prevProps.className === nextProps.className &&
+    // Comparação profunda apenas se necessário - verificar se blocks mudaram realmente
+    prevProps.blocks.every((block, index) => {
+      const nextBlock = nextProps.blocks[index];
+      return nextBlock && block.id === nextBlock.id && block.type === nextBlock.type;
+    })
+  );
+});
+
+CanvasDropZoneMemoized.displayName = 'CanvasDropZone';
+
+export const CanvasDropZone = CanvasDropZoneMemoized;
 
 export default CanvasDropZone;

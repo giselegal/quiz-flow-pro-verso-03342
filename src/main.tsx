@@ -9,6 +9,8 @@ import { initBrowserCleanup } from './utils/browserCleanup';
 import { cleanupConsoleWarnings } from './utils/development';
 // 🛡️ DEVELOPMENT: Bloquear conexões Lovable em desenvolvimento
 import './utils/blockLovableInDev';
+// 🎯 PERFORMANCE: Controle de debug do canvas para melhor performance
+import './utils/canvasPerformanceControl';
 // import "./utils/hotmartWebhookSimulator"; // Carregar simulador de webhook - temporariamente desabilitado
 
 // 🧹 DEVELOPMENT: Ativa limpeza de avisos apenas em desenvolvimento
