@@ -2,7 +2,7 @@
  * 🎨 STYLES DATABASE - Complete Style Definitions
  */
 
-import { StyleType } from '@/types/quiz';
+import { StyleType } from '../types/quiz';
 
 export interface Style {
   id: string;

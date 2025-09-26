@@ -11,9 +11,9 @@
  */
 
 import { useState, useCallback, useMemo } from 'react';
-import { styleMapping, type StyleId } from '@/data/styles';
-import { QUIZ_STEPS, STEP_ORDER } from '@/data/quizSteps';
-import { getPersonalizedStepTemplate } from '@/templates/quiz21StepsComplete';
+import { styleMapping, type StyleId } from '../data/styles';
+import { QUIZ_STEPS, STEP_ORDER } from '../data/quizSteps';
+import { getPersonalizedStepTemplate } from '../templates/quiz21StepsSimplified';
 // Note: STRATEGIC_ANSWER_TO_OFFER_KEY commented - not used
 // import { STRATEGIC_ANSWER_TO_OFFER_KEY } from '@/data/quizSteps';
 
