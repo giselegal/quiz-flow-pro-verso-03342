@@ -724,6 +724,11 @@ export class FunnelUnifiedService {
                 throw result.error;
             }
 
+            // 🛡️ VERIFICAÇÃO DEFENSIVA: Garantir que result.data existe
+            if (!result.data) {
+                throw new Error('Dados do funnel não foram retornados pelo Supabase');
+            }
+
             // Salvar páginas se existirem
             if (funnel.pages && funnel.pages.length > 0) {
                 await this.savePagesToSupabase(funnel.id, funnel.pages);
@@ -808,7 +813,9 @@ export class FunnelUnifiedService {
                 throw error;
             }
 
-            return (data || []).map(item => this.convertFromSupabaseFormat(item));
+            return (data || [])
+                .filter(item => item && typeof item === 'object') // 🛡️ Filtrar itens inválidos
+                .map(item => this.convertFromSupabaseFormat(item));
 
         } catch (error) {
             console.error('❌ Erro ao listar do Supabase:', error);
@@ -963,24 +970,65 @@ export class FunnelUnifiedService {
     // ========================================================================
 
     private convertFromSupabaseFormat(data: any): UnifiedFunnelData {
-        const settings = data.settings || {};
+        try {
+            // 🛡️ VERIFICAÇÃO DEFENSIVA: Garantir que data existe e é um objeto
+            if (!data || typeof data !== 'object') {
+                console.error('🚨 Dados inválidos no convertFromSupabaseFormat:', data);
+                throw new Error('Dados inválidos recebidos do Supabase: ' + JSON.stringify(data));
+            }
+
+            // 🛡️ VERIFICAÇÃO: Garantir que campos obrigatórios existem
+            if (!data.id) {
+                console.error('🚨 ID faltando nos dados do Supabase:', data);
+                throw new Error('ID do funnel é obrigatório');
+            }
+
+            console.debug('🔍 Convertendo dados do Supabase:', { id: data.id, hasSettings: !!data.settings });
+
+            const settings = data.settings || {};
+
+            // 🛡️ VERIFICAÇÃO ADICIONAL: Garantir que settings é um objeto válido
+            const safeSettings = (settings && typeof settings === 'object') ? settings : {};
 
         return {
             id: data.id,
-            name: data.name,
+            name: data.name || 'Funnel Sem Nome',
             description: data.description || '',
             category: data.category || 'outros',
-            context: settings.context || FunnelContext.EDITOR,
+            context: safeSettings.context || FunnelContext.EDITOR,
             userId: data.user_id,
-            settings: settings,
+            settings: safeSettings,
             pages: [],
             isPublished: data.is_published || false,
             version: data.version || 1,
-            createdAt: new Date(data.created_at),
-            updatedAt: new Date(data.updated_at),
-            templateId: settings.templateId,
-            isFromTemplate: settings.isFromTemplate || false
+            createdAt: new Date(data.created_at || new Date()),
+            updatedAt: new Date(data.updated_at || new Date()),
+            templateId: safeSettings.templateId,
+            isFromTemplate: safeSettings.isFromTemplate || false
         };
+        
+        } catch (error) {
+            console.error('🚨 Erro no convertFromSupabaseFormat:', error);
+            console.error('🚨 Dados que causaram o erro:', data);
+            
+            // Retornar um funnel básico válido em caso de erro
+            return {
+                id: data?.id || 'fallback_' + Date.now(),
+                name: data?.name || 'Funnel com Erro',
+                description: data?.description || 'Funnel recuperado com erro',
+                category: 'outros',
+                context: FunnelContext.EDITOR,
+                userId: data?.user_id || 'anonymous',
+                settings: {},
+                pages: [],
+                isPublished: false,
+                version: 1,
+                createdAt: new Date(),
+                updatedAt: new Date(),
+                templateId: undefined,
+                isFromTemplate: false
+            };
+        }
     }
 
     private generateUniqueId(): string {

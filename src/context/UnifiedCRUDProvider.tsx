@@ -108,9 +108,20 @@ export const UnifiedCRUDProvider: React.FC<UnifiedCRUDProviderProps> = ({
 
         } catch (err) {
             const errorMessage = err instanceof Error ? err.message : 'Erro ao criar funil';
-            setError(errorMessage);
+            
+            console.error('🚨 UnifiedCRUDProvider: Erro detalhado ao criar funnel:', {
+                error: err,
+                stack: err instanceof Error ? err.stack : 'N/A',
+                funcName: 'createFunnel',
+                params: { name, options }
+            });
+            
+            setError(`Erro ao criar funil: ${errorMessage}`);
+            
             if (debug) console.error('❌ Error creating funnel:', err);
-            throw err;
+            
+            // Re-throw com mais contexto
+            throw new Error(`Falha na criação do funil "${name}": ${errorMessage}`);
         } finally {
             setIsLoading(false);
         }
