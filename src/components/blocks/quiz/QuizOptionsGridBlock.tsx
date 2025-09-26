@@ -335,11 +335,6 @@ const QuizOptionsGridBlock: React.FC<QuizOptionsGridBlockProps> = ({
     responsiveColumns = true,
   } = properties || {};
 
-  // Seleção: estilo e cores (paridade com novos renderizadores)
-  const selectionStyle = properties?.selectionStyle || 'border';
-  const selectedColor = properties?.selectedColor || '#B89B7A';
-  const hoverColor = properties?.hoverColor || '#D4C2A8';
-
   // Calcular tamanho da imagem
   const finalImageWidth = imageWidth || imageSize;
   const finalImageHeight = imageHeight || imageSize;
