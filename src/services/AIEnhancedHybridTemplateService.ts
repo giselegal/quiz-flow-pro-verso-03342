@@ -135,24 +135,41 @@ class AIEnhancedHybridTemplateService {
 
         if (this.aiConfig.enabled) {
             try {
-                // Disable AI for now to avoid environment issues in Lovable
-                console.warn('⚠️ AI disabled temporarily - token management in progress');
-                this.aiConfig.enabled = false;
-                return;
+                console.log('🤖 Inicializando serviço de IA...');
+                
+                // Verificar se há token de API configurado
+                const hasToken = process.env.GITHUB_TOKEN || process.env.OPENAI_API_KEY;
+                
+                if (!hasToken) {
+                    console.warn('⚠️ Token de API não encontrado - IA funcionará em modo mock para desenvolvimento');
+                    // Manter IA ativa mas com funcionalidade simulada
+                }
 
-                /* 
                 this.aiService = new GitHubModelsAI({
-                    token: '',
+                    token: process.env.GITHUB_TOKEN || '',
                     model: 'gpt-4o-mini',
                     maxTokens: 1000,
                     temperature: 0.7
                 });
-                console.log('🤖 AI Service initialized successfully');
-                */
+                
+                console.log('✅ Serviço de IA ativado com sucesso!');
+                console.log('🔧 Configurações:', {
+                    provider: this.aiConfig.provider,
+                    model: this.aiConfig.model || 'gpt-4o-mini',
+                    fallbackEnabled: this.aiConfig.fallbackEnabled,
+                    personalizationEnabled: this.aiConfig.personalizationEnabled,
+                    optimizationEnabled: this.aiConfig.optimizationEnabled,
+                    contentGenerationEnabled: this.aiConfig.contentGenerationEnabled
+                });
+                
             } catch (error) {
-                console.warn('⚠️ Failed to initialize AI service:', error);
-                this.aiConfig.enabled = false;
+                console.warn('⚠️ Erro ao inicializar serviço de IA:', error);
+                console.log('🔄 IA funcionará em modo fallback');
+                // Manter IA ativa em modo fallback
+                this.aiConfig.fallbackEnabled = true;
             }
+        } else {
+            console.log('⏸️ IA desabilitada nas configurações');
         }
     }
 
@@ -162,6 +179,54 @@ class AIEnhancedHybridTemplateService {
     static setAIContext(context: Partial<AIContext>): void {
         this.aiContext = { ...this.aiContext, ...context };
         console.log('🧠 AI Context updated:', Object.keys(context));
+    }
+
+    /**
+     * 🚀 ATIVAR IA DO FUNIL
+     */
+    static enableAI(config?: Partial<AIConfig>): void {
+        console.log('🚀 Ativando IA do funil...');
+        
+        const newConfig = {
+            ...this.aiConfig,
+            enabled: true,
+            fallbackEnabled: true,
+            personalizationEnabled: true,
+            optimizationEnabled: true,
+            contentGenerationEnabled: true,
+            ...config
+        };
+        
+        this.initializeAI(newConfig);
+        
+        console.log('✅ IA do funil ativada com sucesso!');
+        console.log('🎯 Funcionalidades ativas:', {
+            'Personalização': newConfig.personalizationEnabled,
+            'Otimização': newConfig.optimizationEnabled,
+            'Geração de conteúdo': newConfig.contentGenerationEnabled,
+            'Fallback inteligente': newConfig.fallbackEnabled
+        });
+    }
+
+    /**
+     * ⏸️ DESATIVAR IA DO FUNIL
+     */
+    static disableAI(): void {
+        console.log('⏸️ Desativando IA do funil...');
+        this.aiConfig.enabled = false;
+        this.aiService = null;
+        console.log('✅ IA desativada');
+    }
+
+    /**
+     * 📊 STATUS DA IA
+     */
+    static getAIStatus(): { enabled: boolean; config: AIConfig; hasService: boolean } {
+        return {
+            enabled: this.aiConfig.enabled,
+            config: { ...this.aiConfig },
+            hasService: this.aiService !== null
+        };
     }
 
     /**
