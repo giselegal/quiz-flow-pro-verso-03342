@@ -231,13 +231,16 @@ export class FunnelUnifiedService {
         this.eventEmitter.off(event, listener);
     }
 
-    private emit(type: FunnelEventType, funnelId: string, data?: any, context?: FunnelContext, userId?: string): void {
+    private async emit(type: FunnelEventType, funnelId: string, data?: any, context?: FunnelContext, userId?: string): Promise<void> {
+        // 🔐 Se userId não fornecido, buscar o atual para consistência
+        const finalUserId = userId || await this.getCurrentUserId();
+
         this.eventEmitter.emit({
             type,
             funnelId,
             data,
             context: context || FunnelContext.EDITOR,
-            userId: userId || 'unknown',
+            userId: finalUserId,
             timestamp: Date.now()
         });
     }
@@ -251,10 +254,57 @@ export class FunnelUnifiedService {
         this.on('deleted', (event) => {
             this.cache.invalidate(event.funnelId);
         });
+    }
 
-        this.on('published', (event) => {
-            this.cache.invalidate(event.funnelId);
-        });
+    // ========================================================================
+    // PRIVATE UTILITY METHODS
+    // ========================================================================
+
+    /**
+     * 🔐 Obter ID do usuário atual
+     */
+    private async getCurrentUserId(): Promise<string> {
+        try {
+            const { data, error } = await supabase.auth.getUser();
+            if (error || !data?.user?.id) {
+                return 'anonymous';
+            }
+            return data.user.id;
+        } catch (error) {
+            console.warn('⚠️ Erro ao obter usuário atual:', error);
+            return 'anonymous';
+        }
+    }
+
+    /**
+     * 🔄 Converter dados do formato Supabase para UnifiedFunnelData
+     */
+    private convertFromSupabaseFormat(data: any): UnifiedFunnelData {
+        if (!data) {
+            throw new Error('❌ Dados do Supabase são null ou undefined');
+        }
+
+        try {
+            return {
+                id: data.id,
+                name: data.name || 'Funil sem nome',
+                description: data.description || '',
+                category: data.category || 'outros',
+                context: data.settings?.context || FunnelContext.EDITOR,
+                userId: data.user_id || 'anonymous',
+                settings: data.settings || {},
+                pages: data.pages || [],
+                isPublished: data.is_published || false,
+                version: data.version || 1,
+                createdAt: new Date(data.created_at || Date.now()),
+                updatedAt: new Date(data.updated_at || Date.now()),
+                templateId: data.settings?.templateId,
+                isFromTemplate: data.settings?.isFromTemplate || false
+            };
+        } catch (error) {
+            console.error('❌ Erro ao converter dados do Supabase:', error);
+            throw new Error(`Falha na conversão dos dados: ${error instanceof Error ? error.message : 'Erro desconhecido'}`);
+        }
     }
 
     // ========================================================================
@@ -317,7 +367,7 @@ export class FunnelUnifiedService {
             this.cache.invalidateByUser(userId);
 
             // Emitir evento
-            this.emit('created', id, savedFunnel, options.context, userId);
+            await this.emit('created', id, savedFunnel, options.context, userId);
 
             console.log('✅ Funil criado com sucesso:', savedFunnel);
             return savedFunnel;
@@ -411,7 +461,7 @@ export class FunnelUnifiedService {
             this.cache.invalidateByContext(savedFunnel.context);
 
             // Emitir evento
-            this.emit('updated', id, savedFunnel, savedFunnel.context, savedFunnel.userId);
+            await this.emit('updated', id, savedFunnel, savedFunnel.context, savedFunnel.userId);
 
             console.log('✅ Funil atualizado com sucesso:', savedFunnel);
             return savedFunnel;
@@ -535,7 +585,7 @@ export class FunnelUnifiedService {
             }
 
             // Emitir evento
-            this.emit('deleted', id, null, funnel?.context, funnel?.userId);
+            await this.emit('deleted', id, null, funnel?.context, funnel?.userId);
 
             console.log('✅ Funil deletado com sucesso:', id);
             return true;
@@ -954,9 +1004,20 @@ export class FunnelUnifiedService {
 
             const list = JSON.parse(data);
             return list.map((item: any) => ({
-                ...item,
-                createdAt: new Date(item.createdAt),
-                updatedAt: new Date(item.updatedAt)
+                id: item.id,
+                name: item.name || 'Funil sem nome',
+                description: item.description || '',
+                category: item.category || 'outros',
+                context,
+                userId,
+                settings: item.settings || {},
+                pages: item.pages || [],
+                isPublished: item.isPublished || false,
+                version: item.version || 1,
+                createdAt: new Date(item.createdAt || Date.now()),
+                updatedAt: new Date(item.updatedAt || Date.now()),
+                templateId: item.templateId,
+                isFromTemplate: item.isFromTemplate || false
             }));
 
         } catch (error) {
@@ -966,82 +1027,11 @@ export class FunnelUnifiedService {
     }
 
     // ========================================================================
-    // UTILITIES
+    // ADDITIONAL UTILITIES
     // ========================================================================
-
-    private convertFromSupabaseFormat(data: any): UnifiedFunnelData {
-        try {
-            // 🛡️ VERIFICAÇÃO DEFENSIVA: Garantir que data existe e é um objeto
-            if (!data || typeof data !== 'object') {
-                console.error('🚨 Dados inválidos no convertFromSupabaseFormat:', data);
-                throw new Error('Dados inválidos recebidos do Supabase: ' + JSON.stringify(data));
-            }
-
-            // 🛡️ VERIFICAÇÃO: Garantir que campos obrigatórios existem
-            if (!data.id) {
-                console.error('🚨 ID faltando nos dados do Supabase:', data);
-                throw new Error('ID do funnel é obrigatório');
-            }
-
-            console.debug('🔍 Convertendo dados do Supabase:', { id: data.id, hasSettings: !!data.settings });
-
-            const settings = data.settings || {};
-
-            // 🛡️ VERIFICAÇÃO ADICIONAL: Garantir que settings é um objeto válido
-            const safeSettings = (settings && typeof settings === 'object') ? settings : {};
-
-        return {
-            id: data.id,
-            name: data.name || 'Funnel Sem Nome',
-            description: data.description || '',
-            category: data.category || 'outros',
-            context: safeSettings.context || FunnelContext.EDITOR,
-            userId: data.user_id,
-            settings: safeSettings,
-            pages: [],
-            isPublished: data.is_published || false,
-            version: data.version || 1,
-            createdAt: new Date(data.created_at || new Date()),
-            updatedAt: new Date(data.updated_at || new Date()),
-            templateId: safeSettings.templateId,
-            isFromTemplate: safeSettings.isFromTemplate || false
-        };
-        
-        } catch (error) {
-            console.error('🚨 Erro no convertFromSupabaseFormat:', error);
-            console.error('🚨 Dados que causaram o erro:', data);
-            
-            // Retornar um funnel básico válido em caso de erro
-            return {
-                id: data?.id || 'fallback_' + Date.now(),
-                name: data?.name || 'Funnel com Erro',
-                description: data?.description || 'Funnel recuperado com erro',
-                category: 'outros',
-                context: FunnelContext.EDITOR,
-                userId: data?.user_id || 'anonymous',
-                settings: {},
-                pages: [],
-                isPublished: false,
-                version: 1,
-                createdAt: new Date(),
-                updatedAt: new Date(),
-                templateId: undefined,
-                isFromTemplate: false
-            };
-        }
-    }
 
     private generateUniqueId(): string {
         return `funnel_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-    }
-
-    private async getCurrentUserId(): Promise<string> {
-        try {
-            const { data: { user } } = await supabase.auth.getUser();
-            return user?.id || 'anonymous';
-        } catch {
-            return 'anonymous';
-        }
     }
 
     // ========================================================================
