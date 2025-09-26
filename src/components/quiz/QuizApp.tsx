@@ -115,6 +115,7 @@ export default function QuizApp({ funnelId }: QuizAppProps) {
                     <ResultStep
                         data={currentStepData}
                         userProfile={state.userProfile}
+                        scores={state.scores}
                         onContinue={() => nextStep()}
                     />
                 )}

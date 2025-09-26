@@ -1,6 +1,8 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { styleConfigGisele } from '../../data/styles';
 import type { QuizStep } from '../../data/quizSteps';
+import type { QuizScores } from '../../hooks/useQuizState';
+import { CheckCircle, ShoppingCart, ArrowDown, Lock, Star, Shield, Clock } from 'lucide-react';
 
 interface ResultStepProps {
     data: QuizStep;
@@ -9,20 +11,22 @@ interface ResultStepProps {
         resultStyle: string;
         secondaryStyles: string[];
     };
-    onContinue: () => void;
+    scores?: QuizScores;
 }
 
 /**
- * 🏆 COMPONENTE DE RESULTADO DO QUIZ
+ * 🏆 PÁGINA UNIFICADA DE RESULTADO + OFERTA
  * 
- * Exibe o resultado personalizado do quiz de estilo pessoal (etapa 20)
- * com descrição do estilo, imagem e dicas especializadas.
+ * Combina o resultado do quiz com a página de vendas numa experiência única
  */
 export default function ResultStep({
     data,
     userProfile,
-    onContinue
+    scores
 }: ResultStepProps) {
+    // Estados para interatividade
+    const [isButtonHovered, setIsButtonHovered] = useState(false);
+    
     // Verificação de segurança para o estilo
     let styleConfig = styleConfigGisele[userProfile.resultStyle];
 
@@ -33,12 +37,10 @@ export default function ResultStep({
         styleConfig = styleConfigGisele[firstStyle];
     }
 
+    // Scroll para o topo quando carregar
     useEffect(() => {
-        const timer = setTimeout(() => {
-            onContinue();
-        }, 8000); // Mais tempo para ler o resultado
-        return () => clearTimeout(timer);
-    }, [onContinue]);
+        window.scrollTo(0, 0);
+    }, []);
 
     if (!styleConfig) {
         return (
@@ -49,11 +51,62 @@ export default function ResultStep({
             </div>
         );
     }
+                </div>
+            </div>
+        );
+    }
 
     const secondaryStyleNames = userProfile.secondaryStyles
         .map(styleId => styleConfigGisele[styleId]?.name)
         .filter(Boolean)
         .join(' e ');
+
+    // Processar estilos com porcentagens para as barras de progresso
+    const processStylesWithPercentages = () => {
+        if (!scores) return [];
+
+        // Converter QuizScores para array de entradas (usando chaves sem acento do QuizScores)
+        const scoresEntries = [
+            ['natural', scores.natural],
+            ['classico', scores.classico], // sem acento no QuizScores
+            ['contemporaneo', scores.contemporaneo], // sem acento no QuizScores  
+            ['elegante', scores.elegante],
+            ['romantico', scores.romantico], // sem acento no QuizScores
+            ['sexy', scores.sexy],
+            ['dramatico', scores.dramatico], // sem acento no QuizScores
+            ['criativo', scores.criativo]
+        ] as [string, number][];
+
+        // Calcular total de pontos
+        const totalPoints = scoresEntries.reduce((sum, [, score]) => sum + score, 0);
+        if (totalPoints === 0) return [];
+
+        // Mapeamento de chave sem acento para com acento (para acessar styleConfigGisele)
+        const keyMapping: Record<string, string> = {
+            'classico': 'clássico',
+            'contemporaneo': 'contemporâneo',
+            'romantico': 'romântico',
+            'dramatico': 'dramático'
+        };
+
+        // Ordenar estilos por pontuação e calcular porcentagens
+        return scoresEntries
+            .map(([styleKey, score]) => {
+                const displayKey = keyMapping[styleKey] || styleKey; // usar chave com acento para display
+                return {
+                    key: styleKey,
+                    displayKey: displayKey,
+                    name: styleConfigGisele[displayKey]?.name || displayKey,
+                    score,
+                    percentage: ((score / totalPoints) * 100)
+                };
+            })
+            .filter(style => style.score > 0)
+            .sort((a, b) => b.score - a.score)
+            .slice(0, 5); // Mostrar apenas os top 5
+    };
+
+    const stylesWithPercentages = processStylesWithPercentages();
 
     return (
         <div className="bg-white p-6 md:p-12 rounded-lg shadow-lg text-center max-w-5xl mx-auto">
@@ -93,8 +146,48 @@ export default function ResultStep({
                         {styleConfig.description}
                     </p>
 
-                    {/* Estilos Secundários */}
-                    {secondaryStyleNames && (
+                    {/* Estilos com Barras de Progresso */}
+                    {stylesWithPercentages.length > 0 && (
+                        <div className="mb-6 p-4 bg-[#deac6d]/10 rounded-lg border border-[#deac6d]/20">
+                            <h4 className="font-semibold text-[#5b4135] mb-4">Seu Perfil de Estilos:</h4>
+                            <div className="space-y-3">
+                                {stylesWithPercentages.map((style, index) => (
+                                    <div key={style.key} className="relative">
+                                        <div className="flex justify-between items-center mb-1">
+                                            <span
+                                                className={`text-sm font-medium ${index === 0
+                                                        ? 'text-[#5b4135]'
+                                                        : 'text-gray-600'
+                                                    }`}
+                                            >
+                                                {index === 0 && '👑 '}{style.name}
+                                            </span>
+                                            <span className="text-sm text-[#deac6d] font-medium">
+                                                {style.percentage.toFixed(1)}%
+                                            </span>
+                                        </div>
+                                        <div className="w-full bg-gray-200 rounded-full h-2 overflow-hidden">
+                                            <div
+                                                className={`h-full rounded-full transition-all duration-1000 ease-out ${index === 0
+                                                        ? 'bg-gradient-to-r from-[#deac6d] to-[#c19952]'
+                                                        : index === 1
+                                                            ? 'bg-gradient-to-r from-[#deac6d]/80 to-[#c19952]/80'
+                                                            : 'bg-gradient-to-r from-[#deac6d]/60 to-[#c19952]/60'
+                                                    }`}
+                                                style={{
+                                                    width: `${style.percentage}%`,
+                                                    animationDelay: `${index * 0.2}s`
+                                                }}
+                                            />
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Fallback para estilos secundários caso não haja scores */}
+                    {stylesWithPercentages.length === 0 && secondaryStyleNames && (
                         <div className="mb-6 p-4 bg-[#deac6d]/10 rounded-lg border border-[#deac6d]/20">
                             <h4 className="font-semibold text-[#5b4135] mb-2">Estilos Complementares:</h4>
                             <p className="text-sm text-gray-700">
