@@ -37,14 +37,14 @@ export function FunnelAIControlPanel({ className = '', compact = false }: Funnel
     if (compact) {
         return (
             <div className={`flex items-center gap-2 ${className}`}>
-                <Badge 
+                <Badge
                     variant={isAIEnabled ? "default" : "secondary"}
                     className="flex items-center gap-1"
                 >
                     <Brain className="w-3 h-3" />
                     IA {isAIEnabled ? 'Ativa' : 'Inativa'}
                 </Badge>
-                
+
                 <Button
                     size="sm"
                     variant={isAIEnabled ? "secondary" : "default"}
@@ -76,14 +76,13 @@ export function FunnelAIControlPanel({ className = '', compact = false }: Funnel
                         <Brain className="w-5 h-5 text-blue-600" />
                         <h3 className="font-semibold text-lg">IA do Funil</h3>
                     </div>
-                    
-                    <Badge 
+
+                    <Badge
                         variant={isAIEnabled ? "default" : "secondary"}
                         className="flex items-center gap-1"
                     >
-                        <div className={`w-2 h-2 rounded-full ${
-                            isAIEnabled ? 'bg-green-500' : 'bg-gray-400'
-                        }`} />
+                        <div className={`w-2 h-2 rounded-full ${isAIEnabled ? 'bg-green-500' : 'bg-gray-400'
+                            }`} />
                         {isAIEnabled ? 'Ativa' : 'Inativa'}
                     </Badge>
                 </div>
@@ -96,7 +95,7 @@ export function FunnelAIControlPanel({ className = '', compact = false }: Funnel
                             {aiStatus.hasService ? '✅ Ativo' : '❌ Inativo'}
                         </span>
                     </div>
-                    
+
                     <div className="flex items-center justify-between">
                         <span className="text-gray-600">Provider:</span>
                         <span className="text-gray-800">
@@ -110,30 +109,26 @@ export function FunnelAIControlPanel({ className = '', compact = false }: Funnel
                     <h4 className="font-medium text-sm text-gray-700">Recursos Ativos:</h4>
                     <div className="grid grid-cols-2 gap-2 text-xs">
                         <div className="flex items-center gap-1">
-                            <div className={`w-2 h-2 rounded-full ${
-                                aiStatus.config.personalizationEnabled ? 'bg-green-500' : 'bg-gray-300'
-                            }`} />
+                            <div className={`w-2 h-2 rounded-full ${aiStatus.config.personalizationEnabled ? 'bg-green-500' : 'bg-gray-300'
+                                }`} />
                             <span>Personalização</span>
                         </div>
-                        
+
                         <div className="flex items-center gap-1">
-                            <div className={`w-2 h-2 rounded-full ${
-                                aiStatus.config.optimizationEnabled ? 'bg-green-500' : 'bg-gray-300'
-                            }`} />
+                            <div className={`w-2 h-2 rounded-full ${aiStatus.config.optimizationEnabled ? 'bg-green-500' : 'bg-gray-300'
+                                }`} />
                             <span>Otimização</span>
                         </div>
-                        
+
                         <div className="flex items-center gap-1">
-                            <div className={`w-2 h-2 rounded-full ${
-                                aiStatus.config.contentGenerationEnabled ? 'bg-green-500' : 'bg-gray-300'
-                            }`} />
+                            <div className={`w-2 h-2 rounded-full ${aiStatus.config.contentGenerationEnabled ? 'bg-green-500' : 'bg-gray-300'
+                                }`} />
                             <span>Geração de Conteúdo</span>
                         </div>
-                        
+
                         <div className="flex items-center gap-1">
-                            <div className={`w-2 h-2 rounded-full ${
-                                aiStatus.config.fallbackEnabled ? 'bg-green-500' : 'bg-gray-300'
-                            }`} />
+                            <div className={`w-2 h-2 rounded-full ${aiStatus.config.fallbackEnabled ? 'bg-green-500' : 'bg-gray-300'
+                                }`} />
                             <span>Fallback</span>
                         </div>
                     </div>
@@ -168,7 +163,7 @@ export function FunnelAIControlPanel({ className = '', compact = false }: Funnel
                             </>
                         )}
                     </Button>
-                    
+
                     <Button
                         variant="outline"
                         size="sm"

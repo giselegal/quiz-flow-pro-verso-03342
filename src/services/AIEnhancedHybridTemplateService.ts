@@ -915,19 +915,7 @@ Retorne apenas as otimizações sugeridas em JSON.`;
         this.aiContext = {};
         console.log('🔄 Cache limpo (incluindo contexto IA)');
     }
-
-    // 🤖 MÉTODO PARA OBTER STATUS DA IA
-    static getAIStatus(): {
-        enabled: boolean;
-        provider: string;
-        features: string[];
-        contextualized: boolean;
-        cacheSize: number;
-    } {
-        return {
-            enabled: this.aiConfig.enabled,
-            provider: this.aiConfig.provider,
-            features: [
+}
                 this.aiConfig.contentGenerationEnabled ? 'content-generation' : '',
                 this.aiConfig.personalizationEnabled ? 'personalization' : '',
                 this.aiConfig.optimizationEnabled ? 'optimization' : '',

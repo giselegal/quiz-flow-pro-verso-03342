@@ -19,18 +19,18 @@ interface AIStatus {
 interface UseFunnelAIReturn {
     // Estado
     aiStatus: AIStatus;
-    
+
     // Controles
     enableAI: () => Promise<void>;
     disableAI: () => void;
     refreshStatus: () => void;
-    
+
     // Contexto
     setAIContext: (context: any) => void;
-    
+
     // Templates
     getAIOptimizedStep: (stepNumber: number, context?: any) => Promise<any>;
-    
+
     // Utilidades
     isAIEnabled: boolean;
     canUseAI: boolean;
@@ -71,7 +71,7 @@ export function useFunnelAI(): UseFunnelAIReturn {
     // 🚀 Habilitar IA
     const enableAI = useCallback(async () => {
         setAIStatus(prev => ({ ...prev, loading: true, error: null }));
-        
+
         try {
             await activateFunnelAI();
             refreshStatus();
@@ -112,7 +112,7 @@ export function useFunnelAI(): UseFunnelAIReturn {
             if (context) {
                 setAIContext(context);
             }
-            
+
             return await AIEnhancedHybridTemplateService.getStepConfig(stepNumber, context);
         } catch (error) {
             console.error('❌ Erro ao obter step otimizado:', error);
