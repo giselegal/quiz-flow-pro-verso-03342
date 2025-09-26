@@ -1,4 +1,4 @@
-import type { QuizStep } from '@/data/quizSteps';
+import type { QuizStep } from '../../data/quizSteps';
 
 interface StrategicQuestionStepProps {
     data: QuizStep;

@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
-import { styleConfigGisele } from '@/data/styles';
-import type { QuizStep } from '@/data/quizSteps';
+import { styleConfigGisele } from '../../data/styles';
+import type { QuizStep } from '../../data/quizSteps';
 
 interface ResultStepProps {
     data: QuizStep;
@@ -23,7 +23,15 @@ export default function ResultStep({
     userProfile,
     onContinue
 }: ResultStepProps) {
-    const styleConfig = styleConfigGisele[userProfile.resultStyle];
+    // Verificação de segurança para o estilo
+    let styleConfig = styleConfigGisele[userProfile.resultStyle];
+
+    // Se não encontrar o estilo, usar o primeiro disponível como fallback
+    if (!styleConfig) {
+        console.warn(`⚠️ Estilo "${userProfile.resultStyle}" não encontrado, usando fallback`);
+        const firstStyle = Object.keys(styleConfigGisele)[0];
+        styleConfig = styleConfigGisele[firstStyle];
+    }
 
     useEffect(() => {
         const timer = setTimeout(() => {
@@ -36,7 +44,7 @@ export default function ResultStep({
         return (
             <div className="bg-white p-6 md:p-12 rounded-lg shadow-lg text-center max-w-4xl mx-auto">
                 <div className="text-red-500 text-xl">
-                    ❌ Erro: Estilo "{userProfile.resultStyle}" não encontrado.
+                    ❌ Erro: Nenhum estilo disponível. Reinicie o quiz.
                 </div>
             </div>
         );

@@ -102,33 +102,9 @@ export function useQuizState(funnelId?: string) {
     }));
   }, []);
 
-  // Adicionar resposta para etapa
-  const addAnswer = useCallback((stepId: string, selections: string[]) => {
-    setState(prev => ({
-      ...prev,
-      answers: {
-        ...prev.answers,
-        [stepId]: selections
-      }
-    }));
-  }, []);
-
-  // Adicionar resposta estratégica
-  const addStrategicAnswer = useCallback((question: string, answer: string) => {
-    setState(prev => ({
-      ...prev,
-      userProfile: {
-        ...prev.userProfile,
-        strategicAnswers: {
-          ...prev.userProfile.strategicAnswers,
-          [question]: answer
-        }
-      }
-    }));
-  }, []);
-
   // Calcular resultado do quiz
   const calculateResult = useCallback(() => {
+    console.log('🔄 Calculando resultado do quiz...');
     // Reinicia as pontuações
     const newScores = { ...initialScores };
 
@@ -146,10 +122,32 @@ export function useQuizState(funnelId?: string) {
       }
     });
 
+    console.log('📊 Pontuações calculadas:', newScores);
+
     // Ordena estilos por pontuação
     const sortedStyles = Object.entries(newScores)
       .sort(([, a], [, b]) => b - a)
-      .map(([styleId]) => styleMapping[styleId as StyleId]);
+      .map(([styleId]) => {
+        const style = styleMapping[styleId as StyleId];
+        console.log(`🎨 Mapeando estilo: ${styleId} ->`, style);
+        return style;
+      })
+      .filter(style => style !== undefined); // Remove estilos não encontrados
+
+    console.log('🏆 Estilos ordenados:', sortedStyles);
+
+    // Verifica se há estilos válidos
+    if (sortedStyles.length === 0) {
+      console.warn('⚠️ Nenhum estilo válido encontrado, usando estilo padrão');
+      // Usar primeiro estilo disponível como fallback
+      const fallbackStyle = Object.values(styleMapping)[0];
+      if (fallbackStyle) {
+        sortedStyles.push(fallbackStyle);
+      }
+    }
+
+    const resultStyleId = sortedStyles[0]?.id || 'clássico';
+    console.log('🎯 Estilo resultado:', resultStyleId);
 
     // Atualiza estado com resultado
     setState(prev => ({
@@ -157,8 +155,8 @@ export function useQuizState(funnelId?: string) {
       scores: newScores,
       userProfile: {
         ...prev.userProfile,
-        resultStyle: sortedStyles[0]?.name || '',
-        secondaryStyles: sortedStyles.slice(1, 3).map(s => s.name)
+        resultStyle: resultStyleId,
+        secondaryStyles: sortedStyles.slice(1, 3).map(s => s?.id).filter(Boolean)
       }
     }));
 
@@ -168,6 +166,39 @@ export function useQuizState(funnelId?: string) {
       scores: newScores
     };
   }, [state.answers]);
+
+  // Adicionar resposta para etapa
+  const addAnswer = useCallback((stepId: string, selections: string[]) => {
+    setState(prev => ({
+      ...prev,
+      answers: {
+        ...prev.answers,
+        [stepId]: selections
+      }
+    }));
+
+    // Auto-calcular resultado durante as questões estratégicas
+    const step = QUIZ_STEPS[stepId];
+    if (step?.type === 'strategic-question') {
+      setTimeout(() => {
+        calculateResult();
+      }, 100);
+    }
+  }, [calculateResult]);
+
+  // Adicionar resposta estratégica
+  const addStrategicAnswer = useCallback((question: string, answer: string) => {
+    setState(prev => ({
+      ...prev,
+      userProfile: {
+        ...prev.userProfile,
+        strategicAnswers: {
+          ...prev.userProfile.strategicAnswers,
+          [question]: answer
+        }
+      }
+    }));
+  }, []);
 
   // Obter chave da oferta baseada na resposta estratégica
   const getOfferKey = useCallback(() => {

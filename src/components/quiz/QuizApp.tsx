@@ -1,7 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
-import { useQuizState } from '@/hooks/useQuizState';
+import { useQuizState } from '../../hooks/useQuizState';
 import IntroStep from './IntroStep';
 import QuestionStep from './QuestionStep';
 import StrategicQuestionStep from './StrategicQuestionStep';
@@ -32,16 +31,11 @@ export default function QuizApp({ funnelId }: QuizAppProps) {
         setUserName,
         addAnswer,
         addStrategicAnswer,
-        calculateResult,
         getOfferKey,
     } = useQuizState(funnelId);
 
-    // Calcular resultado automaticamente ao chegar na etapa 20
-    useEffect(() => {
-        if (state.currentStep === 'step-20') {
-            calculateResult();
-        }
-    }, [state.currentStep, calculateResult]);
+    // Resultado já é calculado automaticamente durante as questões estratégicas
+    // O cálculo ocorre em tempo real conforme o usuário responde
 
     if (!currentStepData) {
         return (

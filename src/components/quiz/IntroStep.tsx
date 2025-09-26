@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import type { QuizStep } from '@/data/quizSteps';
+import type { QuizStep } from '../../data/quizSteps';
 
 interface IntroStepProps {
     data: QuizStep;
@@ -58,8 +58,8 @@ export default function IntroStep({ data, onNameSubmit }: IntroStepProps) {
                     onClick={handleSubmit}
                     disabled={!name.trim()}
                     className={`font-bold py-3 px-6 rounded-full shadow-md transition-transform transform hover:scale-105 ${name.trim()
-                            ? 'bg-[#deac6d] text-white hover:bg-[#c49548]'
-                            : 'bg-[#e6ddd4] text-[#8a7663] opacity-50 cursor-not-allowed'
+                        ? 'bg-[#deac6d] text-white hover:bg-[#c49548]'
+                        : 'bg-[#e6ddd4] text-[#8a7663] opacity-50 cursor-not-allowed'
                         }`}
                 >
                     {data.buttonText}
