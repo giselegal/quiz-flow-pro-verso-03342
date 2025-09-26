@@ -136,10 +136,10 @@ class AIEnhancedHybridTemplateService {
         if (this.aiConfig.enabled) {
             try {
                 console.log('🤖 Inicializando serviço de IA...');
-                
+
                 // Verificar se há token de API configurado
                 const hasToken = process.env.GITHUB_TOKEN || process.env.OPENAI_API_KEY;
-                
+
                 if (!hasToken) {
                     console.warn('⚠️ Token de API não encontrado - IA funcionará em modo mock para desenvolvimento');
                     // Manter IA ativa mas com funcionalidade simulada
@@ -151,7 +151,7 @@ class AIEnhancedHybridTemplateService {
                     maxTokens: 1000,
                     temperature: 0.7
                 });
-                
+
                 console.log('✅ Serviço de IA ativado com sucesso!');
                 console.log('🔧 Configurações:', {
                     provider: this.aiConfig.provider,
@@ -161,7 +161,7 @@ class AIEnhancedHybridTemplateService {
                     optimizationEnabled: this.aiConfig.optimizationEnabled,
                     contentGenerationEnabled: this.aiConfig.contentGenerationEnabled
                 });
-                
+
             } catch (error) {
                 console.warn('⚠️ Erro ao inicializar serviço de IA:', error);
                 console.log('🔄 IA funcionará em modo fallback');
@@ -186,7 +186,7 @@ class AIEnhancedHybridTemplateService {
      */
     static enableAI(config?: Partial<AIConfig>): void {
         console.log('🚀 Ativando IA do funil...');
-        
+
         const newConfig = {
             ...this.aiConfig,
             enabled: true,
@@ -196,9 +196,9 @@ class AIEnhancedHybridTemplateService {
             contentGenerationEnabled: true,
             ...config
         };
-        
+
         this.initializeAI(newConfig);
-        
+
         console.log('✅ IA do funil ativada com sucesso!');
         console.log('🎯 Funcionalidades ativas:', {
             'Personalização': newConfig.personalizationEnabled,
@@ -299,7 +299,7 @@ class AIEnhancedHybridTemplateService {
 
         try {
             const prompt = this.buildAIPrompt(stepNumber);
-            
+
             if (!this.aiService.generateContent) {
                 console.warn('⚠️ AI service generateContent method not available');
                 return null;

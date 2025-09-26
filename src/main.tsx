@@ -133,16 +133,6 @@ getTemplateStatus().then(status => {
   console.error('❌ [MAIN] Hybrid integration error:', error);
 });
 
-// 🤖 ATIVAÇÃO DA IA DO FUNIL
-console.log('🤖 Inicializando IA do funil...');
-setTimeout(() => {
-  try {
-    activateFunnelAI();
-  } catch (error) {
-    console.warn('⚠️ Erro ao ativar IA do funil:', error);
-  }
-}, 500); // Delay para garantir que os serviços estejam inicializados
-
 // O serviço é inicializado automaticamente na importação
 
 console.log('🔧 DEBUG: Criando root do React...');
