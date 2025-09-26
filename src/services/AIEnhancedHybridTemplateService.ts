@@ -916,15 +916,6 @@ Retorne apenas as otimizações sugeridas em JSON.`;
         console.log('🔄 Cache limpo (incluindo contexto IA)');
     }
 }
-                this.aiConfig.contentGenerationEnabled ? 'content-generation' : '',
-                this.aiConfig.personalizationEnabled ? 'personalization' : '',
-                this.aiConfig.optimizationEnabled ? 'optimization' : '',
-                this.aiConfig.fallbackEnabled ? 'ai-fallback' : ''
-            ].filter(Boolean),
-            contextualized: Object.keys(this.aiContext).length > 0,
-            cacheSize: this.overrideCache.size
-        };
-    }
-}
 
+export { AIEnhancedHybridTemplateService };
 export default AIEnhancedHybridTemplateService;
