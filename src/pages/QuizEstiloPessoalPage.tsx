@@ -1,5 +1,7 @@
 import QuizApp from '@/components/quiz/QuizApp';
+import { Helmet } from 'react-helmet-async';
 import '@/styles/globals.css';
+import { Helmet } from 'react-helmet';
 
 /**
  * 🎯 QUIZ ESTILO PESSOAL - GISELE GALVÃO
@@ -25,7 +27,7 @@ export default function QuizEstiloPessoalPage({ funnelId }: QuizEstiloPessoalPag
     return (
         <div className="quiz-estilo-page">
             {/* Meta tags para SEO */}
-            <head>
+            <Helmet>
                 <title>Descubra Seu Estilo Pessoal - Quiz Completo | Gisele Galvão</title>
                 <meta
                     name="description"
@@ -36,7 +38,7 @@ export default function QuizEstiloPessoalPage({ funnelId }: QuizEstiloPessoalPag
                 <meta property="og:description" content="Quiz completo para descobrir seu estilo pessoal único. Receba dicas personalizadas e ofertas exclusivas." />
                 <meta property="og:type" content="website" />
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
-            </head>
+            </Helmet>
 
             {/* Componente principal do quiz */}
             <main className="min-h-screen">
