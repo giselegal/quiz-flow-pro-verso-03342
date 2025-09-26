@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { styleConfigGisele } from '../../data/styles';
 import type { QuizStep } from '../../data/quizSteps';
 import type { QuizScores } from '../../hooks/useQuizState';
+import { useImageWithFallback } from '../../hooks/useImageWithFallback';
 import { ShoppingCart, Lock, Star, Shield, Clock } from 'lucide-react';
 
 interface ResultStepProps {
@@ -26,7 +27,7 @@ export default function ResultStep({
 }: ResultStepProps) {
     // Estados para interatividade
     const [isButtonHovered, setIsButtonHovered] = useState(false);
-    
+
     // Verificação de segurança para o estilo
     let styleConfig = styleConfigGisele[userProfile.resultStyle];
 
@@ -37,7 +38,22 @@ export default function ResultStep({
         styleConfig = styleConfigGisele[firstStyle];
     }
 
-    // Scroll para o topo quando carregar
+    // Hooks para imagens com fallback
+    const styleImage = useImageWithFallback(styleConfig?.imageUrl, {
+        width: 400,
+        height: 300,
+        fallbackText: styleConfig?.name || 'Estilo',
+        fallbackBgColor: '#f8f9fa',
+        fallbackTextColor: '#6b7280'
+    });
+
+    const guideImage = useImageWithFallback(styleConfig?.guideImageUrl, {
+        width: 600,
+        height: 400,
+        fallbackText: `Guia ${styleConfig?.name || 'Estilo'}`,
+        fallbackBgColor: '#f1f5f9',
+        fallbackTextColor: '#64748b'
+    });    // Scroll para o topo quando carregar
     useEffect(() => {
         window.scrollTo(0, 0);
     }, []);
@@ -55,7 +71,7 @@ export default function ResultStep({
     // Processar estilos com porcentagens para as barras de progresso
     const processStylesWithPercentages = () => {
         if (!scores) return [];
-        
+
         // Converter QuizScores para array de entradas (usando chaves sem acento do QuizScores)
         const scoresEntries = [
             ['natural', scores.natural],
@@ -67,19 +83,19 @@ export default function ResultStep({
             ['dramatico', scores.dramatico], // sem acento no QuizScores
             ['criativo', scores.criativo]
         ] as [string, number][];
-        
+
         // Calcular total de pontos
         const totalPoints = scoresEntries.reduce((sum, [, score]) => sum + score, 0);
         if (totalPoints === 0) return [];
-        
+
         // Mapeamento de chave sem acento para com acento (para acessar styleConfigGisele)
         const keyMapping: Record<string, string> = {
             'classico': 'clássico',
             'contemporaneo': 'contemporâneo',
-            'romantico': 'romântico', 
+            'romantico': 'romântico',
             'dramatico': 'dramático'
         };
-        
+
         // Ordenar estilos por pontuação e calcular porcentagens
         return scoresEntries
             .map(([styleKey, score]) => {
@@ -98,7 +114,7 @@ export default function ResultStep({
     };
 
     const stylesWithPercentages = processStylesWithPercentages();
-    
+
     // Estilos secundários para fallback
     const secondaryStyleNames = userProfile.secondaryStyles
         .map(styleId => styleConfigGisele[styleId]?.name)
@@ -114,7 +130,7 @@ export default function ResultStep({
                 'event_label': `CTA_Click_${userProfile.resultStyle}`
             });
         }
-        
+
         // Aqui você pode adicionar o link real de checkout
         window.open('https://pay.hotmart.com/seu-link-aqui', '_blank');
     };
@@ -124,9 +140,9 @@ export default function ResultStep({
             {/* Elementos decorativos de fundo */}
             <div className="absolute top-0 right-0 w-1/3 h-1/3 bg-[#deac6d]/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
             <div className="absolute bottom-0 left-0 w-1/4 h-1/4 bg-[#c19952]/5 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2"></div>
-            
+
             <div className="container mx-auto px-4 py-8 max-w-5xl relative z-10">
-                
+
                 {/* ====================== SEÇÃO 1: RESULTADO DO QUIZ ====================== */}
                 <div className="bg-white p-6 md:p-12 rounded-lg shadow-lg text-center mb-12">
                     {/* Celebração */}
@@ -146,12 +162,19 @@ export default function ResultStep({
                         {/* Coluna da Imagem */}
                         <div className="order-2 md:order-1">
                             <div className="max-w-sm mx-auto relative">
-                                <img 
-                                    src={styleConfig.imageUrl} 
-                                    alt={`Estilo ${styleConfig.name}`}
-                                    className="w-full h-auto rounded-lg shadow-md hover:scale-105 transition-transform duration-300"
-                                    loading="eager"
-                                />
+                                {styleImage.isLoading ? (
+                                    <div className="w-full h-auto rounded-lg shadow-md bg-gray-100 animate-pulse flex items-center justify-center min-h-[300px]">
+                                        <span className="text-gray-500">Carregando...</span>
+                                    </div>
+                                ) : (
+                                    <img
+                                        src={styleImage.src}
+                                        alt={`Estilo ${styleConfig.name}`}
+                                        className={`w-full h-auto rounded-lg shadow-md hover:scale-105 transition-transform duration-300 ${styleImage.isFallback ? 'border-2 border-dashed border-gray-300' : ''
+                                            }`}
+                                        loading="eager"
+                                    />
+                                )}
                                 {/* Cantos decorativos */}
                                 <div className="absolute -top-2 -right-2 w-8 h-8 border-t-2 border-r-2 border-[#deac6d]"></div>
                                 <div className="absolute -bottom-2 -left-2 w-8 h-8 border-b-2 border-l-2 border-[#deac6d]"></div>
@@ -173,12 +196,11 @@ export default function ResultStep({
                                         {stylesWithPercentages.map((style, index) => (
                                             <div key={style.key} className="relative">
                                                 <div className="flex justify-between items-center mb-1">
-                                                    <span 
-                                                        className={`text-sm font-medium ${
-                                                            index === 0 
-                                                                ? 'text-[#5b4135]' 
-                                                                : 'text-gray-600'
-                                                        }`}
+                                                    <span
+                                                        className={`text-sm font-medium ${index === 0
+                                                            ? 'text-[#5b4135]'
+                                                            : 'text-gray-600'
+                                                            }`}
                                                     >
                                                         {index === 0 && '👑 '}{style.name}
                                                     </span>
@@ -187,14 +209,13 @@ export default function ResultStep({
                                                     </span>
                                                 </div>
                                                 <div className="w-full bg-gray-200 rounded-full h-2 overflow-hidden">
-                                                    <div 
-                                                        className={`h-full rounded-full transition-all duration-1000 ease-out ${
-                                                            index === 0 
-                                                                ? 'bg-gradient-to-r from-[#deac6d] to-[#c19952]' 
-                                                                : index === 1
+                                                    <div
+                                                        className={`h-full rounded-full transition-all duration-1000 ease-out ${index === 0
+                                                            ? 'bg-gradient-to-r from-[#deac6d] to-[#c19952]'
+                                                            : index === 1
                                                                 ? 'bg-gradient-to-r from-[#deac6d]/80 to-[#c19952]/80'
                                                                 : 'bg-gradient-to-r from-[#deac6d]/60 to-[#c19952]/60'
-                                                        }`}
+                                                            }`}
                                                         style={{
                                                             width: `${style.percentage}%`,
                                                             animationDelay: `${index * 0.2}s`
@@ -236,12 +257,34 @@ export default function ResultStep({
 
                     {/* Imagem do Guia */}
                     <div className="mt-8 text-center">
-                        <img 
-                            src={styleConfig.guideImageUrl} 
-                            alt={`Guia de Estilo ${styleConfig.name}`}
-                            className="mx-auto max-w-md w-full h-auto rounded-lg shadow-md hover:scale-105 transition-transform duration-300"
-                            loading="lazy"
-                        />
+                        {guideImage.isLoading ? (
+                            <div className="mx-auto max-w-md w-full rounded-lg shadow-md bg-gray-100 animate-pulse flex items-center justify-center min-h-[400px]">
+                                <span className="text-gray-500">Carregando guia...</span>
+                            </div>
+                        ) : (
+                            <div className="relative mx-auto max-w-md">
+                                <img
+                                    src={guideImage.src}
+                                    alt={`Guia de Estilo ${styleConfig.name}`}
+                                    className={`mx-auto max-w-md w-full h-auto rounded-lg shadow-md hover:scale-105 transition-transform duration-300 ${guideImage.isFallback ? 'border-2 border-dashed border-gray-300' : ''
+                                        }`}
+                                    loading="lazy"
+                                />
+                                {guideImage.isFallback && (
+                                    <div className="absolute inset-0 bg-black bg-opacity-50 rounded-lg flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300">
+                                        <div className="text-white text-center p-4">
+                                            <p className="text-sm">📷 Imagem do guia será carregada em breve</p>
+                                            <button
+                                                onClick={guideImage.retry}
+                                                className="mt-2 px-3 py-1 bg-white bg-opacity-20 rounded text-xs hover:bg-opacity-30 transition-colors"
+                                            >
+                                                Tentar novamente
+                                            </button>
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+                        )}
                     </div>
                 </div>
 
@@ -256,7 +299,7 @@ export default function ResultStep({
                             roupas, mas de comunicar quem você é e aspira ser. Com a
                             orientação certa, você pode:
                         </p>
-                        
+
                         <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto mb-8">
                             {[
                                 { text: "Construir looks com intenção e identidade visual", icon: "🎯" },
@@ -291,7 +334,7 @@ export default function ResultStep({
                     <h3 className="text-2xl font-bold text-center text-[#5b4135] mb-8">
                         Veja os Resultados de Quem Já Transformou Sua Imagem
                     </h3>
-                    
+
                     <div className="grid md:grid-cols-3 gap-6">
                         {[
                             {
@@ -348,7 +391,7 @@ export default function ResultStep({
                         {/* Componentes de valor */}
                         <div className="bg-white p-6 rounded-lg shadow-md border border-[#deac6d]/20 max-w-lg mx-auto mb-8">
                             <h4 className="text-xl font-semibold text-[#5b4135] mb-4">O Que Você Recebe Hoje</h4>
-                            
+
                             <div className="space-y-3 mb-6 text-left">
                                 <div className="flex justify-between items-center p-3 border-b border-gray-100">
                                     <span>✅ Guia Principal de Estilo {styleConfig.name}</span>
@@ -369,7 +412,7 @@ export default function ResultStep({
                                     </div>
                                 </div>
                             </div>
-                            
+
                             <div className="text-center p-4 bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg border border-green-200">
                                 <p className="text-green-700 uppercase font-bold text-sm mb-2">OFERTA ESPECIAL {styleConfig.name.toUpperCase()}</p>
                                 <p className="text-4xl font-bold text-green-600 mb-1">R$ 39,00</p>
@@ -422,7 +465,7 @@ export default function ResultStep({
                                 devolvemos seu investimento sem perguntas.
                             </p>
                         </div>
-                        
+
                         <p className="text-[#deac6d] font-semibold">
                             ⚡ Esta é uma oferta exclusiva para o seu estilo {styleConfig.name}
                         </p>

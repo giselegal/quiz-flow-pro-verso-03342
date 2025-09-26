@@ -6,7 +6,12 @@
     "description": "Componente de introdução ultra-otimizado baseado no QuizIntro real",
     "category": "intro",
     "type": "intro",
-    "tags": ["quiz", "intro", "optimized", "lcp"],
+    "tags": [
+      "quiz",
+      "intro",
+      "optimized",
+      "lcp"
+    ],
     "performance": {
       "criticalPath": true,
       "lcpOptimized": true,
@@ -52,8 +57,8 @@
       "priority": "high"
     },
     "heroImage": {
-      "baseUrl": "https://res.cloudinary.com/der8kogzu/image/upload/",
-      "imageId": "v1752443943/Gemini_Generated_Image_i5cst6i5cst6i5cs_fpoukb",
+      "baseUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/",
+      "imageId": "v1746838118/20250509_2137_Desordem_e_Reflex%C3%A3o_simple_compose_01jtvszf8sfaytz493z9f16rf2_z1c2up",
       "optimized": {
         "avif": "f_avif,q_85,w_300,c_limit",
         "webp": "f_webp,q_85,w_300,c_limit",
@@ -320,8 +325,13 @@
       "allowBack": false
     },
     "stateManagement": {
-      "localState": ["nome", "error"],
-      "globalState": ["userName"]
+      "localState": [
+        "nome",
+        "error"
+      ],
+      "globalState": [
+        "userName"
+      ]
     }
   }
 }

@@ -48,10 +48,10 @@ export const QUIZ_STEPS: Record<string, QuizStep> = {
     formQuestion: 'Como posso te chamar?',
     placeholder: 'Digite seu primeiro nome aqui...',
     buttonText: 'Quero Descobrir meu Estilo Agora!',
-    image: 'https://res.cloudinary.com/der8kogzu/image/upload/f_avif,q_85,w_300,c_limit/v1752443943/Gemini_Generated_Image_i5cst6i5cst6i5cs_fpoukb.avif',
+    image: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1746838118/20250509_2137_Desordem_e_Reflex%C3%A3o_simple_compose_01jtvszf8sfaytz493z9f16rf2_z1c2up.png',
     nextStep: 'step-2',
   },
-  
+
   'step-2': {
     type: 'question',
     questionNumber: '1 de 10',
@@ -88,9 +88,9 @@ export const QUIZ_STEPS: Record<string, QuizStep> = {
     nextStep: 'step-4',
   },
 
-  'step-4': { 
-    type: 'question', 
-    questionNumber: '3 de 10', 
+  'step-4': {
+    type: 'question',
+    questionNumber: '3 de 10',
     questionText: 'QUAL VISUAL VOCÊ MAIS SE IDENTIFICA?',
     requiredSelections: 3,
     options: [
@@ -106,9 +106,9 @@ export const QUIZ_STEPS: Record<string, QuizStep> = {
     nextStep: 'step-5',
   },
 
-  'step-5': { 
-    type: 'question', 
-    questionNumber: '4 de 10', 
+  'step-5': {
+    type: 'question',
+    questionNumber: '4 de 10',
     questionText: 'QUAIS DETALHES VOCÊ GOSTA?',
     requiredSelections: 3,
     options: [
@@ -124,9 +124,9 @@ export const QUIZ_STEPS: Record<string, QuizStep> = {
     nextStep: 'step-6',
   },
 
-  'step-6': { 
-    type: 'question', 
-    questionNumber: '5 de 10', 
+  'step-6': {
+    type: 'question',
+    questionNumber: '5 de 10',
     questionText: 'QUAIS ESTAMPAS VOCÊ MAIS SE IDENTIFICA?',
     requiredSelections: 3,
     options: [
@@ -142,9 +142,9 @@ export const QUIZ_STEPS: Record<string, QuizStep> = {
     nextStep: 'step-7',
   },
 
-  'step-7': { 
-    type: 'question', 
-    questionNumber: '6 de 10', 
+  'step-7': {
+    type: 'question',
+    questionNumber: '6 de 10',
     questionText: 'QUAL CASACO É SEU FAVORITO?',
     requiredSelections: 3,
     options: [
@@ -160,9 +160,9 @@ export const QUIZ_STEPS: Record<string, QuizStep> = {
     nextStep: 'step-8',
   },
 
-  'step-8': { 
-    type: 'question', 
-    questionNumber: '7 de 10', 
+  'step-8': {
+    type: 'question',
+    questionNumber: '7 de 10',
     questionText: 'QUAL SUA CALÇA FAVORITA?',
     requiredSelections: 3,
     options: [
@@ -202,14 +202,14 @@ export const QUIZ_STEPS: Record<string, QuizStep> = {
     questionText: 'QUE TIPO DE ACESSÓRIOS VOCÊ GOSTA?',
     requiredSelections: 3,
     options: [
-      { id: 'natural', text: 'Pequenos e discretos, às vezes nem uso', image: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735431/56_acessorios_natural_zghkwe.webp' },
-      { id: 'classico', text: 'Brincos pequenos e discretos. Corrente fininha', image: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735431/57_acessorios_classico_kfhmwp.webp' },
-      { id: 'contemporaneo', text: 'Acessórios que elevem meu look com um toque moderno', image: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735431/58_acessorios_contemporaneo_lmsnqw.webp' },
-      { id: 'elegante', text: 'Acessórios sofisticados, joias ou semijoias', image: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735432/59_acessorios_elegante_hxkmpq.webp' },
-      { id: 'romantico', text: 'Peças delicadas e com um toque feminino', image: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735432/60_acessorios_romantico_ytrpnm.webp' },
-      { id: 'sexy', text: 'Brincos longos, colares que valorizem minha beleza', image: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735432/61_acessorios_sexy_qplmkn.webp' },
-      { id: 'dramatico', text: 'Acessórios pesados, que causem um impacto', image: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735433/62_acessorios_dramatico_mnbvcx.webp' },
-      { id: 'criativo', text: 'Acessórios diferentes, grandes e marcantes', image: 'https://res.com/dqljyf76t/image/upload/v1744735433/63_acessorios_criativo_poiuyt.webp' },
+      { id: 'natural', text: 'Pequenos e discretos, às vezes nem uso', image: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735479/56_htzoxy.png' },
+      { id: 'classico', text: 'Brincos pequenos e discretos. Corrente fininha', image: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735479/57_whzmff.png' },
+      { id: 'contemporaneo', text: 'Acessórios que elevem meu look com um toque moderno', image: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735482/61_joafud.png' },
+      { id: 'elegante', text: 'Acessórios sofisticados, joias ou semijoias', image: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735482/60_vzsnps.png' },
+      { id: 'romantico', text: 'Peças delicadas e com um toque feminino', image: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735482/59_dwaqrx.png' },
+      { id: 'sexy', text: 'Brincos longos, colares que valorizem minha beleza', image: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735487/63_lwgokn.png' },
+      { id: 'dramatico', text: 'Acessórios pesados, que causem um impacto', image: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735485/62_mno8wg.png' },
+      { id: 'criativo', text: 'Acessórios diferentes, grandes e marcantes', image: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735480/58_njdjoh.png' },
     ],
     nextStep: 'step-11',
   },
@@ -231,14 +231,14 @@ export const QUIZ_STEPS: Record<string, QuizStep> = {
     ],
     nextStep: 'step-12',
   },
-  
+
   'step-12': {
     type: 'transition',
     title: '🕐 Enquanto calculamos o seu resultado...',
     text: 'Queremos te fazer algumas perguntas que vão tornar sua experiência ainda mais completa. Responda com sinceridade. Isso é só entre você e a sua nova versão.',
     nextStep: 'step-13',
   },
-  
+
   'step-13': {
     type: 'strategic-question',
     questionText: 'Quando você se olha no espelho, como se sente com sua imagem pessoal atualmente?',
@@ -310,7 +310,7 @@ export const QUIZ_STEPS: Record<string, QuizStep> = {
     ],
     nextStep: 'step-19',
   },
-  
+
   'step-19': {
     type: 'transition-result',
     title: 'Obrigada por compartilhar.',

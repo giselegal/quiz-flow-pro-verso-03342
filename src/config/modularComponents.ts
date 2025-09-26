@@ -271,7 +271,7 @@ export const MODULAR_COMPONENTS: ModularComponent[] = [
       imageId: {
         type: 'string',
         editable: true,
-        default: 'v1752443943/Gemini_Generated_Image_i5cst6i5cst6i5cs_fpoukb',
+        default: 'v1746838118/20250509_2137_Desordem_e_Reflex%C3%A3o_simple_compose_01jtvszf8sfaytz493z9f16rf2_z1c2up',
       },
       formats: {
         type: 'object',
