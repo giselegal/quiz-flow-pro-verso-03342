@@ -135,13 +135,20 @@ class AIEnhancedHybridTemplateService {
 
         if (this.aiConfig.enabled) {
             try {
+                // Disable AI for now to avoid environment issues in Lovable
+                console.warn('⚠️ AI disabled temporarily - token management in progress');
+                this.aiConfig.enabled = false;
+                return;
+
+                /* 
                 this.aiService = new GitHubModelsAI({
-                    token: process.env.VITE_GITHUB_MODELS_TOKEN || '',
+                    token: '',
                     model: 'gpt-4o-mini',
                     maxTokens: 1000,
                     temperature: 0.7
                 });
                 console.log('🤖 AI Service initialized successfully');
+                */
             } catch (error) {
                 console.warn('⚠️ Failed to initialize AI service:', error);
                 this.aiConfig.enabled = false;
@@ -221,11 +228,18 @@ class AIEnhancedHybridTemplateService {
      */
     private static async generateStepWithAI(stepNumber: number): Promise<StepTemplate | null> {
         if (!this.aiService || !this.aiConfig.contentGenerationEnabled) {
+            console.warn('⚠️ AI service not available or content generation disabled');
             return null;
         }
 
         try {
             const prompt = this.buildAIPrompt(stepNumber);
+            
+            if (!this.aiService.generateContent) {
+                console.warn('⚠️ AI service generateContent method not available');
+                return null;
+            }
+
             const aiResponse = await this.aiService.generateContent({
                 messages: [
                     {
@@ -242,6 +256,11 @@ class AIEnhancedHybridTemplateService {
                 maxTokens: 800,
                 temperature: 0.7
             });
+
+            if (!aiResponse?.content) {
+                console.warn('⚠️ AI service returned empty response');
+                return null;
+            }
 
             const aiConfig = JSON.parse(aiResponse.content);
 

@@ -107,28 +107,31 @@ export class TemplateService {
      */
     async getTemplate(templateId: string): Promise<FunnelTemplate | null> {
         try {
+            // Sempre retornar fallback templates para evitar null
+            const fallbackTemplates = this.getFallbackTemplates();
+            const fallbackTemplate = fallbackTemplates.find(t => t.id === templateId);
+            
             if (!supabase) {
-                const fallbackTemplates = this.getFallbackTemplates();
-                return fallbackTemplates.find(t => t.id === templateId) || null;
+                console.warn('⚠️ Supabase não disponível, usando fallback');
+                return fallbackTemplate || this.createDefaultFallbackTemplate(templateId);
             }
 
             const { data, error } = await supabase
                 .from('funnels')
                 .select('*')
                 .eq('id', templateId)
-                .single();
+                .maybeSingle();
 
             if (error || !data) {
-                console.error('Error fetching template:', error);
-                const fallbackTemplates = this.getFallbackTemplates();
-                return fallbackTemplates.find(t => t.id === templateId) || null;
+                console.warn('⚠️ Template não encontrado no Supabase:', error);
+                return fallbackTemplate || this.createDefaultFallbackTemplate(templateId);
             }
 
             return {
                 id: data.id,
                 name: data.name || 'Untitled Template',
                 description: data.description || '',
-                category: 'general', // Default category since funnel doesn't have category
+                category: 'general',
                 theme: 'default',
                 stepCount: 1,
                 isOfficial: false,
@@ -141,9 +144,9 @@ export class TemplateService {
                 updatedAt: data.updated_at || new Date().toISOString(),
             };
         } catch (error) {
-            console.error('Error in getTemplate:', error);
+            console.error('❌ Error in getTemplate:', error);
             const fallbackTemplates = this.getFallbackTemplates();
-            return fallbackTemplates.find(t => t.id === templateId) || null;
+            return fallbackTemplates.find(t => t.id === templateId) || this.createDefaultFallbackTemplate(templateId);
         }
     }
 
@@ -340,6 +343,65 @@ export class TemplateService {
         ];
 
         return category ? templates.filter(t => t.category === category) : templates;
+    }
+
+    /**
+     * Cria template fallback padrão para IDs não encontrados
+     */
+    private createDefaultFallbackTemplate(templateId: string): FunnelTemplate {
+        return {
+            id: templateId,
+            name: `Template ${templateId}`,
+            description: `Template fallback para ${templateId}`,
+            category: 'general',
+            theme: 'default',
+            stepCount: 21,
+            isOfficial: false,
+            usageCount: 0,
+            tags: ['fallback'],
+            thumbnailUrl: undefined,
+            templateData: {
+                metadata: {
+                    name: `Template ${templateId}`,
+                    description: `Template fallback para ${templateId}`,
+                    category: 'general',
+                    theme: 'default',
+                    version: '1.0.0',
+                    isPublished: true,
+                    isOfficial: false
+                },
+                settings: {
+                    autoSave: true,
+                    autoAdvance: false,
+                    progressTracking: true,
+                    analytics: false,
+                    theme: {
+                        primaryColor: '#e91e63',
+                        secondaryColor: '#f8bbd9',
+                        fontFamily: 'Inter',
+                        borderRadius: '8px',
+                        spacing: '16px',
+                        layout: 'centered'
+                    },
+                    navigation: {
+                        showProgress: true,
+                        allowBackward: true,
+                        showStepNumbers: false,
+                        showNavigationButtons: true,
+                        autoAdvanceDelay: 3000
+                    },
+                    validation: {
+                        strictMode: false,
+                        requiredFields: [],
+                        customValidators: {}
+                    }
+                },
+                steps: []
+            },
+            components: [],
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString()
+        };
     }
 
     /**

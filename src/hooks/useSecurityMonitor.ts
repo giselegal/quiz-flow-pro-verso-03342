@@ -55,6 +55,11 @@ export const useSecurityMonitor = () => {
 
   const recordMetric = useCallback(async (metric: SecurityMetric) => {
     try {
+      if (!supabase?.functions?.invoke) {
+        console.warn('⚠️ Supabase functions not available');
+        return null;
+      }
+
       const { data, error } = await supabase.functions.invoke('security-monitor/record-metric', {
         body: metric
       });
@@ -69,6 +74,11 @@ export const useSecurityMonitor = () => {
 
   const logSecurityEvent = useCallback(async (event: SecurityEvent) => {
     try {
+      if (!supabase?.functions?.invoke) {
+        console.warn('⚠️ Supabase functions not available');
+        return null;
+      }
+
       const { data, error } = await supabase.functions.invoke('security-monitor/log-security-event', {
         body: event
       });
@@ -85,6 +95,11 @@ export const useSecurityMonitor = () => {
     try {
       setIsLoading(true);
       setError(null);
+
+      if (!supabase?.functions?.invoke) {
+        setError('Supabase functions not available');
+        return null;
+      }
 
       const { data, error } = await supabase.functions.invoke('security-monitor/health-check');
 
@@ -106,6 +121,11 @@ export const useSecurityMonitor = () => {
       setIsLoading(true);
       setError(null);
 
+      if (!supabase?.functions?.invoke) {
+        setError('Supabase functions not available');
+        return null;
+      }
+
       const { data, error } = await supabase.functions.invoke('security-monitor/system-status');
 
       if (error) throw error;
@@ -126,6 +146,11 @@ export const useSecurityMonitor = () => {
       setIsLoading(true);
       setError(null);
 
+      if (!supabase?.functions?.invoke) {
+        setError('Supabase functions not available');
+        return [];
+      }
+
       const params = new URLSearchParams();
       if (serviceName) params.append('service', serviceName);
       params.append('hours', hours.toString());
@@ -136,8 +161,8 @@ export const useSecurityMonitor = () => {
 
       if (error) throw error;
       
-      setPerformanceMetrics(data.metrics || []);
-      return data.metrics;
+      setPerformanceMetrics(data?.metrics || []);
+      return data?.metrics || [];
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to get metrics';
       setError(errorMessage);
