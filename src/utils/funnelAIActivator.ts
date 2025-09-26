@@ -32,17 +32,20 @@ export function activateFunnelAI() {
 
         // Definir contexto inicial inteligente
         AIEnhancedHybridTemplateService.setAIContext({
-            userProfile: {
-                interests: ['estilo', 'moda', 'beleza'],
-                previousResponses: {},
-                demographics: {
-                    language: 'pt-BR',
-                    region: 'Brasil'
-                }
-            },
+            userId: 'user_' + Date.now(),
+            userName: 'Usuário',
+            previousAnswers: {},
+            userSegment: 'quiz_estilo_pessoal',
             sessionData: {
-                startTime: new Date(),
-                source: 'web'
+                startTime: new Date().toISOString(),
+                source: 'web',
+                language: 'pt-BR',
+                region: 'Brasil'
+            },
+            performanceData: {
+                stepCompletionTimes: [],
+                dropOffPoints: [],
+                conversionRate: 0
             }
         });
 
