@@ -1,0 +1,192 @@
+{
+  "version": "1.0.0",
+  "lastUpdated": "2025-09-26T02:12:52.846Z",
+  "totalImages": 9,
+  "categories": [
+    "guias",
+    "mockups"
+  ],
+  "images": [
+    {
+      "id": "img_1758852772844_fcmi",
+      "name": "Mockup_de_todos_os_produtos_-_Imagem_da_video_aula_tjtyrz",
+      "url": "https://res.cloudinary.com/dqljyf76t/image/upload/v1758849960/Mockup_de_todos_os_produtos_-_Imagem_da_video_aula_tjtyrz.jpg",
+      "optimizedUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/f_auto,q_auto:good,w_1200,h_960,c_limit/v1758849960/Mockup_de_todos_os_produtos_-_Imagem_da_video_aula_tjtyrz.jpg",
+      "category": "mockups",
+      "tags": [
+        "mockups",
+        "mockup",
+        "produto",
+        "produtos",
+        "vendas"
+      ],
+      "dimensions": {
+        "width": 2500,
+        "height": 2000
+      },
+      "size": 1936384,
+      "uploadDate": "2025-09-26",
+      "description": "Mockup de todos os produtos - Imagem da vídeo aula"
+    },
+    {
+      "id": "img_1758852772845_urmz",
+      "name": "Mockup_todos_produtos_2_u8kpdi",
+      "url": "https://res.cloudinary.com/dqljyf76t/image/upload/v1758849960/Mockup_todos_produtos_2_u8kpdi.jpg",
+      "optimizedUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/f_auto,q_auto:good,w_1200,h_960,c_limit/v1758849960/Mockup_todos_produtos_2_u8kpdi.jpg",
+      "category": "mockups",
+      "tags": [
+        "mockups",
+        "mockup",
+        "produto",
+        "produtos",
+        "vendas"
+      ],
+      "dimensions": {
+        "width": 2500,
+        "height": 2000
+      },
+      "size": 1864704,
+      "uploadDate": "2025-09-26",
+      "description": "Mockup todos produtos versão 2"
+    },
+    {
+      "id": "img_1758852772845_t7sf",
+      "name": "O_Poder_das_cores_na_Imagem_c1f0od",
+      "url": "https://res.cloudinary.com/dqljyf76t/image/upload/v1758849943/O_Poder_das_cores_na_Imagem_c1f0od.jpg",
+      "optimizedUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/f_auto,q_auto:good,w_1414,h_2000,c_limit/v1758849943/O_Poder_das_cores_na_Imagem_c1f0od.jpg",
+      "category": "guias",
+      "tags": [
+        "guias",
+        "cores",
+        "estilo"
+      ],
+      "dimensions": {
+        "width": 1414,
+        "height": 2000
+      },
+      "size": 2045952,
+      "uploadDate": "2025-09-26",
+      "description": "O Poder das cores na Imagem"
+    },
+    {
+      "id": "img_1758852772845_u6dm",
+      "name": "Inventário_do_Guada-Roupa_m92ilf",
+      "url": "https://res.cloudinary.com/dqljyf76t/image/upload/v1758849943/Inventário_do_Guada-Roupa_m92ilf.jpg",
+      "optimizedUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/f_auto,q_auto:good,w_707,h_1000,c_limit/v1758849943/Inventário_do_Guada-Roupa_m92ilf.jpg",
+      "category": "guias",
+      "tags": [
+        "guias"
+      ],
+      "dimensions": {
+        "width": 707,
+        "height": 1000
+      },
+      "size": 231424,
+      "uploadDate": "2025-09-26",
+      "description": "Inventário do Guarda-Roupa"
+    },
+    {
+      "id": "img_1758852772845_qxvv",
+      "name": "Detox_Guarda-roupa_fnjehu",
+      "url": "https://res.cloudinary.com/dqljyf76t/image/upload/v1758849943/Detox_Guarda-roupa_fnjehu.jpg",
+      "optimizedUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/f_auto,q_auto:good,w_1414,h_2000,c_limit/v1758849943/Detox_Guarda-roupa_fnjehu.jpg",
+      "category": "guias",
+      "tags": [
+        "guias",
+        "limpeza",
+        "organização"
+      ],
+      "dimensions": {
+        "width": 1414,
+        "height": 2000
+      },
+      "size": 634880,
+      "uploadDate": "2025-09-26",
+      "description": "Detox Guarda-roupa"
+    },
+    {
+      "id": "img_1758852772846_647g",
+      "name": "Visagismo_Facial_-_Análise_Facial_e_Dicas_de_Acessórios_ihhqry",
+      "url": "https://res.cloudinary.com/dqljyf76t/image/upload/v1758849943/Visagismo_Facial_-_Análise_Facial_e_Dicas_de_Acessórios_ihhqry.jpg",
+      "optimizedUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/f_auto,q_auto:good,w_1414,h_2000,c_limit/v1758849943/Visagismo_Facial_-_Análise_Facial_e_Dicas_de_Acessórios_ihhqry.jpg",
+      "category": "guias",
+      "tags": [
+        "guias",
+        "rosto",
+        "acessórios"
+      ],
+      "dimensions": {
+        "width": 1414,
+        "height": 2000
+      },
+      "size": 1070080,
+      "uploadDate": "2025-09-26",
+      "description": "Visagismo Facial - Análise Facial e Dicas de Acessórios"
+    },
+    {
+      "id": "img_1758852772846_bm63",
+      "name": "Mockup_de_todos_os_produtos_qcmc8w",
+      "url": "https://res.cloudinary.com/dqljyf76t/image/upload/v1758849943/Mockup_de_todos_os_produtos_qcmc8w.jpg",
+      "optimizedUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/f_auto,q_auto:good,w_1200,h_960,c_limit/v1758849943/Mockup_de_todos_os_produtos_qcmc8w.jpg",
+      "category": "mockups",
+      "tags": [
+        "mockups",
+        "mockup",
+        "produto",
+        "produtos",
+        "vendas"
+      ],
+      "dimensions": {
+        "width": 2500,
+        "height": 2000
+      },
+      "size": 1255424,
+      "uploadDate": "2025-09-26",
+      "description": "Mockup de todos os produtos"
+    },
+    {
+      "id": "img_1758852772846_0zbz",
+      "name": "Mockup_de_todos_os_produtos_-_fundo_claro_ei4isu",
+      "url": "https://res.cloudinary.com/dqljyf76t/image/upload/v1758849942/Mockup_de_todos_os_produtos_-_fundo_claro_ei4isu.jpg",
+      "optimizedUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/f_auto,q_auto:good,w_1200,h_960,c_limit/v1758849942/Mockup_de_todos_os_produtos_-_fundo_claro_ei4isu.jpg",
+      "category": "mockups",
+      "tags": [
+        "mockups",
+        "mockup",
+        "produto",
+        "produtos",
+        "vendas"
+      ],
+      "dimensions": {
+        "width": 2500,
+        "height": 2000
+      },
+      "size": 1247232,
+      "uploadDate": "2025-09-26",
+      "description": "Mockup de todos os produtos - fundo claro"
+    },
+    {
+      "id": "img_1758852772846_c2no",
+      "name": "Mockup_de_todos_os_produtos_-_imagem_Gisele_Central_qxf32s",
+      "url": "https://res.cloudinary.com/dqljyf76t/image/upload/v1758849942/Mockup_de_todos_os_produtos_-_imagem_Gisele_Central_qxf32s.jpg",
+      "optimizedUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/f_auto,q_auto:good,w_1200,h_960,c_limit/v1758849942/Mockup_de_todos_os_produtos_-_imagem_Gisele_Central_qxf32s.jpg",
+      "category": "mockups",
+      "tags": [
+        "mockups",
+        "mockup",
+        "produto",
+        "produtos",
+        "vendas",
+        "marca",
+        "personal"
+      ],
+      "dimensions": {
+        "width": 2500,
+        "height": 2000
+      },
+      "size": 1323008,
+      "uploadDate": "2025-09-26",
+      "description": "Mockup de todos os produtos - imagem Gisele Central"
+    }
+  ]
+}

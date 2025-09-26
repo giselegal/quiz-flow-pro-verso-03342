@@ -1,5 +1,4 @@
-// 📋 Template Gallery - Sistema de Gerenciamento de Templates
-import { Badge } from '@/components/ui/badge';
+// 📋 Template Gallery - Sistema de Gerenciamento de Templates (Otimizado)
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -23,10 +22,6 @@ import { Textarea } from '@/components/ui/textarea';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { BlockData } from '@/types/blocks';
 import {
-  Clock,
-  Copy,
-  Download,
-  Eye,
   Grid,
   Heart,
   LayoutTemplate,
@@ -35,10 +30,9 @@ import {
   Search,
   SortAsc,
   SortDesc,
-  Star,
-  Trash2,
 } from 'lucide-react';
 import React, { useState } from 'react';
+import OptimizedTemplateCard from './OptimizedTemplateCard';
 
 // Tipos do Template
 interface Template {
@@ -614,27 +608,6 @@ export const TemplateGallery: React.FC<TemplateGalleryProps> = ({
     );
   };
 
-  // Duplicar template
-  const duplicateTemplate = (template: Template) => {
-    const duplicated: Template = {
-      ...template,
-      id: `${template.id}-copy-${Date.now()}`,
-      name: `${template.name} (Cópia)`,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-      isPublic: false,
-      isFavorite: false,
-      downloads: 0,
-    };
-
-    setTemplates(prev => [...prev, duplicated]);
-  };
-
-  // Deletar template
-  const deleteTemplate = (templateId: string) => {
-    setTemplates(prev => prev.filter(t => t.id !== templateId));
-  };
-
   return (
     <div className="w-full max-w-6xl mx-auto p-6">
       {/* Header */}
@@ -816,131 +789,17 @@ export const TemplateGallery: React.FC<TemplateGalleryProps> = ({
         }
       >
         {sortedTemplates.map(template => (
-          <div
+          <OptimizedTemplateCard
             key={template.id}
-            className={`bg-white border rounded-lg overflow-hidden hover:shadow-lg transition-shadow ${
-              viewMode === 'list' ? 'flex' : ''
-            }`}
-          >
-            {/* Thumbnail/Preview */}
-            <div
-              className={`bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center ${
-                viewMode === 'grid' ? 'h-32' : 'w-24 h-24 flex-shrink-0'
-              }`}
-            >
-              <span className="text-3xl">{template.thumbnail || '📄'}</span>
-            </div>
-
-            {/* Conteúdo */}
-            <div className="p-4 flex-1">
-              <div className="flex items-start justify-between mb-2">
-                <h3 style={{ color: '#432818' }}>{template.name}</h3>
-                <div className="flex items-center gap-1 ml-2">
-                  <TooltipProvider>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => toggleFavorite(template.id)}
-                          className="p-1 h-auto"
-                        >
-                          <Heart
-                            className={`w-3 h-3 ${
-                              template.isFavorite ? 'fill-current text-red-500' : 'text-gray-400'
-                            }`}
-                          />
-                        </Button>
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        {template.isFavorite ? 'Remover dos Favoritos' : 'Adicionar aos Favoritos'}
-                      </TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
-                </div>
-              </div>
-
-              <p style={{ color: '#6B4F43' }}>{template.description}</p>
-
-              <div className="flex flex-wrap gap-1 mb-3">
-                <Badge variant="secondary" className="text-xs">
-                  {template.category}
-                </Badge>
-                {template.tags.slice(0, 2).map(tag => (
-                  <Badge key={tag} variant="outline" className="text-xs">
-                    {tag}
-                  </Badge>
-                ))}
-                {template.tags.length > 2 && (
-                  <Badge variant="outline" className="text-xs">
-                    +{template.tags.length - 2}
-                  </Badge>
-                )}
-              </div>
-
-              {/* Metadados */}
-              <div style={{ color: '#8B7355' }}>
-                <div className="flex items-center gap-2">
-                  {template.rating && (
-                    <div className="flex items-center gap-1">
-                      <Star className="w-3 h-3 fill-current text-yellow-400" />
-                      <span>{template.rating}</span>
-                    </div>
-                  )}
-                  {template.downloads !== undefined && (
-                    <div className="flex items-center gap-1">
-                      <Download className="w-3 h-3" />
-                      <span>{template.downloads}</span>
-                    </div>
-                  )}
-                </div>
-                <div className="flex items-center gap-1">
-                  <Clock className="w-3 h-3" />
-                  <span>{template.createdAt.toLocaleDateString('pt-BR')}</span>
-                </div>
-              </div>
-
-              {/* Ações */}
-              <div className="flex items-center gap-2">
-                <Button size="sm" onClick={() => handleApplyTemplate(template)} className="flex-1">
-                  <Eye className="w-3 h-3 mr-1" />
-                  Aplicar
-                </Button>
-
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => duplicateTemplate(template)}
-                      >
-                        <Copy className="w-3 h-3" />
-                      </Button>
-                    </TooltipTrigger>
-                    <TooltipContent>Duplicar Template</TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-
-                {(!template.isPublic || template.author === 'Você') && (
-                  <TooltipProvider>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => deleteTemplate(template.id)}
-                        >
-                          <Trash2 className="w-3 h-3" />
-                        </Button>
-                      </TooltipTrigger>
-                      <TooltipContent>Excluir Template</TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
-                )}
-              </div>
-            </div>
-          </div>
+            template={template}
+            viewMode={viewMode}
+            onApply={handleApplyTemplate}
+            onToggleFavorite={toggleFavorite}
+            onPreview={(template) => {
+              // Implementar modal de preview se necessário
+              console.log('Preview template:', template.id);
+            }}
+          />
         ))}
       </div>
 
@@ -962,7 +821,7 @@ export const TemplateGallery: React.FC<TemplateGalleryProps> = ({
           )}
         </div>
       )}
-    </div>
+    </div >
   );
 };
 

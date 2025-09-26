@@ -2441,49 +2441,49 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = IS_TEST ? M
             id: 'natural_q9',
             text: 'Pequenos e discretos, às vezes nem uso',
             imageUrl:
-              'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735431/56_acessorios_natural_zghkwe.webp',
+              'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=300&h=300&fit=crop&crop=center&fm=jpg&q=85',
           },
           {
             id: 'classico_q9',
             text: 'Brincos pequenos e discretos. Corrente fininha',
             imageUrl:
-              'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735431/57_acessorios_classico_kfhmwp.webp',
+              'https://images.unsplash.com/photo-1506630448388-4e683c67ddb0?w=300&h=300&fit=crop&crop=center&fm=jpg&q=85',
           },
           {
             id: 'contemporaneo_q9',
             text: 'Acessórios que elevem meu look com um toque moderno',
             imageUrl:
-              'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735431/58_acessorios_contemporaneo_lmsnqw.webp',
+              'https://images.unsplash.com/photo-1571295051928-5feaf8bde4aa?w=300&h=300&fit=crop&crop=center&fm=jpg&q=85',
           },
           {
             id: 'elegante_q9',
             text: 'Acessórios sofisticados, joias ou semijoias',
             imageUrl:
-              'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735432/59_acessorios_elegante_hxkmpq.webp',
+              'https://images.unsplash.com/photo-1606760227091-3dd870d97f1d?w=300&h=300&fit=crop&crop=center&fm=jpg&q=85',
           },
           {
             id: 'romantico_q9',
             text: 'Peças delicadas e com um toque feminino',
             imageUrl:
-              'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735432/60_acessorios_romantico_ytrpnm.webp',
+              'https://images.unsplash.com/photo-1590736969955-71cc94901144?w=300&h=300&fit=crop&crop=center&fm=jpg&q=85',
           },
           {
             id: 'sexy_q9',
             text: 'Brincos longos, colares que valorizem minha beleza',
             imageUrl:
-              'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735432/61_acessorios_sexy_qplmkn.webp',
+              'https://images.unsplash.com/photo-1618164435735-413d3b066c1a?w=300&h=300&fit=crop&crop=center&fm=jpg&q=85',
           },
           {
             id: 'dramatico_q9',
             text: 'Acessórios pesados, que causem um impacto',
             imageUrl:
-              'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735433/62_acessorios_dramatico_mnbvcx.webp',
+              'https://images.unsplash.com/photo-1617038260897-41a1f14a8ca0?w=300&h=300&fit=crop&crop=center&fm=jpg&q=85',
           },
           {
             id: 'criativo_q9',
             text: 'Acessórios diferentes, grandes e marcantes',
             imageUrl:
-              'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735433/63_acessorios_criativo_poiuyt.webp',
+              'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=300&h=300&fit=crop&crop=center&fm=jpg&q=85',
           },
         ],
       },
