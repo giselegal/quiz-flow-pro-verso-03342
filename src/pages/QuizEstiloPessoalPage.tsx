@@ -1,7 +1,6 @@
 import QuizApp from '@/components/quiz/QuizApp';
 import { Helmet } from 'react-helmet-async';
 import '@/styles/globals.css';
-import { Helmet } from 'react-helmet';
 
 /**
  * 🎯 QUIZ ESTILO PESSOAL - GISELE GALVÃO
