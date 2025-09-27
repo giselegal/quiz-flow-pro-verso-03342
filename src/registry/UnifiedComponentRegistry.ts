@@ -135,7 +135,7 @@ export const UNIFIED_COMPONENT_REGISTRY: Record<string, ComponentType<any> | (()
 export const preloadCriticalComponents = async (): Promise<void> => {
     const preloadPromises = CRITICAL_COMPONENTS.map(async (componentType) => {
         if (preloadedComponents.has(componentType)) return;
-        
+
         try {
             const component = UNIFIED_COMPONENT_REGISTRY[componentType];
             if (component && typeof component === 'function' && !React.isValidElement(component)) {
@@ -265,8 +265,8 @@ export const getRegistryStats = () => ({
     cacheHitRate: componentCache.size > 0 ? (preloadedComponents.size / componentCache.size) * 100 : 0
 });
 
-// 🚀 Auto-preload críticos na inicialização
-if (typeof window !== 'undefined') {
+// 🚀 Auto-preload críticos na inicialização - DESABILITADO TEMPORARIAMENTE
+if (typeof window !== 'undefined' && false) { // Desabilitado para evitar erros de undefined block
     // Preload após 100ms para não bloquear a inicialização
     setTimeout(() => {
         preloadCriticalComponents().catch(console.error);

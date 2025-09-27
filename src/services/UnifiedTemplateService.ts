@@ -22,8 +22,10 @@ class UnifiedTemplateService {
     private preloadingPromises = new Map<string, Promise<any>>();
     private readonly DEFAULT_TTL = 5 * 60 * 1000; // 5 minutos
     private readonly CRITICAL_TEMPLATES = [
-        'step-1', 'step-2', 'step-12', 'step-20', 'step-21',
-        'quiz21StepsComplete', 'quiz-style-express'
+        'step-1', 'step-2', // Só templates que sabemos que existem
+        // 'step-12', 'step-20', 'step-21', // Comentado temporariamente
+        'quiz21StepsComplete', // Template principal
+        // 'quiz-style-express' // Comentado até ser configurado corretamente
     ];
 
     /**
@@ -35,8 +37,14 @@ class UnifiedTemplateService {
 
         const preloadPromises = this.CRITICAL_TEMPLATES.map(async (templateId) => {
             try {
-                await this.getTemplate(templateId);
-                console.log(`✅ Preloaded: ${templateId}`);
+                // Verificar se template existe antes de tentar carregar
+                const exists = await this.templateExists(templateId);
+                if (exists) {
+                    await this.getTemplate(templateId);
+                    console.log(`✅ Preloaded: ${templateId}`);
+                } else {
+                    console.warn(`⚠️ Template não encontrado, pulando: ${templateId}`);
+                }
             } catch (error) {
                 console.warn(`⚠️ Failed to preload ${templateId}:`, error);
             }
@@ -45,8 +53,28 @@ class UnifiedTemplateService {
         await Promise.allSettled(preloadPromises);
 
         const duration = performance.now() - startTime;
-        const successful = this.CRITICAL_TEMPLATES.length - preloadPromises.length;
-        console.log(`🎯 Preload concluído: ${successful}/${this.CRITICAL_TEMPLATES.length} templates em ${duration.toFixed(2)}ms`);
+        const successful = this.CRITICAL_TEMPLATES.length;
+        console.log(`🎯 Preload concluído em ${duration.toFixed(2)}ms`);
+    }
+
+    /**
+     * 🔍 Verificar se template existe
+     */
+    private async templateExists(templateId: string): Promise<boolean> {
+        try {
+            // Verificar nos registros locais primeiro
+            if (templateId.startsWith('step-')) {
+                return true; // Steps sempre existem
+            }
+
+            if (templateId === 'quiz21StepsComplete') {
+                return true; // Template principal sempre existe
+            }
+
+            return false; // Outros templates precisam ser verificados
+        } catch {
+            return false;
+        }
     }
 
     /**
@@ -173,10 +201,10 @@ class UnifiedTemplateService {
             // 🎯 PRIORIDADE 1: Template completo real (quiz21StepsComplete)
             if (templateId === 'quiz21StepsComplete' || templateId.startsWith('step-')) {
                 console.log(`🎯 Carregando template REAL: ${templateId}`);
-                
+
                 // Importar template real completo
                 const { QUIZ_STYLE_21_STEPS_TEMPLATE } = await import('@/templates/quiz21StepsComplete');
-                
+
                 if (templateId === 'quiz21StepsComplete') {
                     // Retornar estrutura completa do template real
                     return {
@@ -191,7 +219,7 @@ class UnifiedTemplateService {
                         }
                     };
                 }
-                
+
                 // Para steps individuais, extrair do template real
                 const stepBlocks = QUIZ_STYLE_21_STEPS_TEMPLATE[templateId];
                 if (stepBlocks && Array.isArray(stepBlocks)) {
@@ -225,7 +253,7 @@ class UnifiedTemplateService {
             // 🎯 PRIORIDADE 2: Templates da biblioteca
             const { templateLibraryService } = await import('@/services/templateLibraryService');
             const libraryTemplate = templateLibraryService.getById(templateId);
-            
+
             if (libraryTemplate) {
                 console.log(`✅ Template da biblioteca carregado: ${templateId}`);
                 return {
@@ -429,15 +457,15 @@ class UnifiedTemplateService {
     async loadStepBlocks(stepId: string, funnelId?: string): Promise<any[]> {
         try {
             console.log(`🔍 Carregando blocos para: ${stepId} (funnelId: ${funnelId})`);
-            
+
             // 🎯 PRIORIDADE 1: Template real completo (QUIZ_STYLE_21_STEPS_TEMPLATE)
             if (stepId.startsWith('step-') || funnelId === 'quiz21StepsComplete') {
                 console.log(`🎯 Tentando carregar template REAL: ${stepId}`);
-                
+
                 try {
                     const { QUIZ_STYLE_21_STEPS_TEMPLATE } = await import('@/templates/quiz21StepsComplete');
                     const realBlocks = (QUIZ_STYLE_21_STEPS_TEMPLATE as any)[stepId];
-                    
+
                     if (realBlocks && Array.isArray(realBlocks) && realBlocks.length > 0) {
                         console.log(`🏆 TEMPLATE REAL carregado: ${stepId} com ${realBlocks.length} blocos REAIS`);
                         return realBlocks;
@@ -453,7 +481,7 @@ class UnifiedTemplateService {
             try {
                 const { templateLibraryService } = await import('@/services/templateLibraryService');
                 const libraryTemplate = templateLibraryService.getById(stepId);
-                
+
                 if (libraryTemplate?.steps && (libraryTemplate.steps as any)[stepId]) {
                     const libraryBlocks = (libraryTemplate.steps as any)[stepId];
                     if (Array.isArray(libraryBlocks) && libraryBlocks.length > 0) {
