@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import IntroStepDirect from './IntroStepDirect';
+import Step2Direct from './Step2Direct';
 
 /**
  * 🎯 QUIZ APP DIRETO - SEM CAMADAS DESNECESSÁRIAS
@@ -12,6 +13,7 @@ import IntroStepDirect from './IntroStepDirect';
  * - ❌ Não usa quiz21StepsSimplified
  * - ❌ Não usa quiz21StepsComplete
  * - ✅ Renderiza diretamente a Etapa 1 conforme modelo
+ * - ✅ Navega para step-2 corretamente
  */
 
 interface QuizAppDirectProps {
@@ -22,6 +24,7 @@ export default function QuizAppDirect({ funnelId }: QuizAppDirectProps) {
     const [currentStep, setCurrentStep] = useState<string>('step-1');
     const [userName, setUserName] = useState<string>('');
     const [showSuccess, setShowSuccess] = useState<boolean>(false);
+    const [answers, setAnswers] = useState<Record<string, string>>({});
 
     const handleNameSubmit = (name: string) => {
         setUserName(name);
@@ -31,12 +34,21 @@ export default function QuizAppDirect({ funnelId }: QuizAppDirectProps) {
         // Mostrar feedback de sucesso
         setShowSuccess(true);
 
-        // Simular transição para próxima etapa após delay
+        // Transição para próxima etapa após delay
         setTimeout(() => {
             console.log('➡️ TESTE FLUXO: Avançando para step-2');
-            // setCurrentStep('step-2'); // Descomentado quando step-2 estiver pronto
-            alert(`🎉 FLUXO TESTADO COM SUCESSO!\n\nNome: ${name}\nPróximo: Etapa 2 (Quiz de Perguntas)\n\nTodos os sistemas funcionando! 🚀`);
+            setCurrentStep('step-2');
+            setShowSuccess(false);
         }, 1000);
+    };
+
+    const handleStep2Answer = (answer: string) => {
+        console.log('✅ TESTE FLUXO: Resposta da etapa 2:', answer);
+        setAnswers(prev => ({ ...prev, 'step-2': answer }));
+
+        // Por enquanto, mostrar sucesso da etapa 2
+        alert(`🎉 ETAPA 2 COMPLETADA!\n\nResposta: ${answer}\n\nPróximo: Implementar etapa 3...`);
+        // Aqui você pode implementar setCurrentStep('step-3') quando necessário
     };
 
     // Para step-1, renderizar IntroStepDirect
