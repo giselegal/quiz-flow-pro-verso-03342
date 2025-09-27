@@ -15,6 +15,7 @@ interface EditorCanvasProps {
   blocks: Block[];
   selectedBlock: Block | null;
   currentStep: number;
+  funnelId?: string; // ID do funil sendo editado
   onSelectBlock: (id: string) => void;
   onUpdateBlock: (blockId: string, updates: Partial<Block>) => void;
   onDeleteBlock: (blockId: string) => void;
@@ -27,6 +28,7 @@ const EditorCanvas: React.FC<EditorCanvasProps> = ({
   blocks,
   selectedBlock,
   currentStep,
+  funnelId,
   onSelectBlock,
   onUpdateBlock,
   onDeleteBlock,
@@ -48,17 +50,26 @@ const EditorCanvas: React.FC<EditorCanvasProps> = ({
   }, [currentStep]);
 
   if (isPreviewMode) {
+    // Usar funnelId dinâmico ou fallback para o template padrão
+    const previewFunnelId = funnelId || 'quiz21StepsComplete';
+    
     return (
       <div data-testid="preview-container" className="flex-1 min-h-0 bg-gradient-to-br from-[#FAF9F7] via-[#F5F2E9] to-[#EEEBE1] isolate">
         <div className="h-full w-full overflow-y-auto relative z-0">
+          {/* Indicador do funil sendo visualizado */}
+          {funnelId && (
+            <div className="absolute top-4 left-4 z-10 bg-blue-600 text-white px-4 py-2 rounded-full text-sm font-bold shadow-lg">
+              📋 Preview: {funnelId}
+            </div>
+          )}
           <ScalableQuizRenderer
-            funnelId="quiz21StepsComplete"
+            funnelId={previewFunnelId}
             mode="preview"
             debugMode={true}
             className="preview-mode-canvas w-full h-full"
             onStepChange={(step, data) => {
               if (onStepChange) onStepChange(step);
-              console.log('📍 Preview step change:', step, data);
+              console.log(`📍 Preview step change [${previewFunnelId}]:`, step, data);
             }}
           />
         </div>
@@ -68,13 +79,15 @@ const EditorCanvas: React.FC<EditorCanvasProps> = ({
 
   // 🎯 NOVA FUNCIONALIDADE: Experiência Real com QuizOrchestrator
   if (realExperienceMode) {
-    console.log('🎯 [DEBUG] EditorCanvas renderizando em modo Real Experience');
+    const realFunnelId = funnelId || 'quiz21StepsComplete';
+    console.log(`🎯 [DEBUG] EditorCanvas renderizando em modo Real Experience [${realFunnelId}]`);
+    
     return (
       <div className="flex-1 min-h-0 bg-gradient-to-br from-[#FAF9F7] via-[#F5F2E9] to-[#EEEBE1] isolate">
         <div className="h-full w-full overflow-y-auto relative z-0">
-          {/* Indicador visual de modo real ativo */}
+          {/* Indicador visual de modo real ativo com funil */}
           <div className="absolute top-4 right-4 z-10 bg-green-600 text-white px-4 py-2 rounded-full text-sm font-bold shadow-lg animate-pulse">
-            🎯 MODO REAL ATIVO
+            🎯 REAL: {realFunnelId}
           </div>
           
           <UnifiedPreviewEngine
@@ -85,7 +98,7 @@ const EditorCanvas: React.FC<EditorCanvasProps> = ({
             onBlockSelect={onSelectBlock}
             onBlockUpdate={onUpdateBlock}
             onBlocksReordered={() => {}}
-            funnelId="quiz21StepsComplete"
+            funnelId={realFunnelId}
             currentStep={currentStep}
             enableInteractions={true}
             mode="editor"
@@ -122,7 +135,8 @@ const arePropsEqual = (prevProps: EditorCanvasProps, nextProps: EditorCanvasProp
   // 1. Comparações rápidas primeiro (early returns)
   if (prevProps.currentStep !== nextProps.currentStep ||
     prevProps.isPreviewMode !== nextProps.isPreviewMode ||
-    prevProps.realExperienceMode !== nextProps.realExperienceMode) {
+    prevProps.realExperienceMode !== nextProps.realExperienceMode ||
+    prevProps.funnelId !== nextProps.funnelId) { // Incluir funnelId na comparação
     return false;
   }
 

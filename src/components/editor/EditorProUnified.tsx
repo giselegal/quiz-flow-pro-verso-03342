@@ -398,6 +398,7 @@ export const EditorProUnified: React.FC<EditorProUnifiedProps> = ({
               blocks={currentStepBlocks}
               selectedBlock={selectedBlock}
               currentStep={state.currentStep}
+              funnelId={funnelId} // Passar funnelId dinâmico para o canvas
               onSelectBlock={handleSelectBlock}
               onUpdateBlock={handleUpdateBlock}
               onDeleteBlock={handleDeleteBlock}
