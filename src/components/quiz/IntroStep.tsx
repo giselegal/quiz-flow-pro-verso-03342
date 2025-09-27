@@ -1,41 +1,6 @@
 'use client';
 
-import R    const handleSubmit = async (e?: React.FormEvent) => {
-        e?.preventDefault();
-        console.log('🎯 DEBUG: handleSubmit CHAMADO - início da função', { 
-            nome: nome.trim(), 
-            nomeLength: nome.length,
-            temNome: !!nome.trim(),
-            isSubmitting
-        });
-
-        if (nome.trim()) {
-            setIsSubmitting(true);
-            console.log('✅ DEBUG: Nome válido - setIsSubmitting(true)', nome.trim());
-
-            // Simular pequeno delay para mostrar o feedback
-            setTimeout(() => {
-                console.log('⏰ DEBUG: Dentro do setTimeout - prestes a chamar onNameSubmit');
-                console.log('🔍 DEBUG: onNameSubmit função:', typeof onNameSubmit);
-                
-                try {
-                    onNameSubmit(nome.trim());
-                    console.log('✅ DEBUG: onNameSubmit EXECUTADO COM SUCESSO!', nome.trim());
-                } catch (error) {
-                    console.error('❌ DEBUG: Erro ao chamar onNameSubmit:', error);
-                }
-                
-                setIsSubmitting(false);
-                console.log('🔄 DEBUG: setIsSubmitting(false) - finalizando');
-            }, 500);
-        } else {
-            console.log('❌ DEBUG: Nome inválido ou vazio - não executando onNameSubmit', {
-                nome,
-                nomeTrim: nome.trim(),
-                length: nome.length
-            });
-        }
-    }; from 'react';
+import React, { useState } from 'react';
 import type { QuizStep } from '../../data/quizSteps';
 
 interface IntroStepProps {
@@ -43,41 +8,33 @@ interface IntroStepProps {
     onNameSubmit: (name: string) => void;
 }
 
-/**
- * 🎯 COMPONENTE DIRETO - ETAPA 1 ADAPTADO
- * 
- * Implementação direta sem camadas desnecessárias
- * Layout exato conforme modelo solicitado
- * Adaptado do IntroStepDirect para usar props data
- */
 export default function IntroStep({ data, onNameSubmit }: IntroStepProps) {
-    console.log('🚀 IntroStep renderizando:', data);
-
     const [nome, setNome] = useState('');
-    const [isSubmitting, setIsSubmitting] = useState(false);
 
-    const handleSubmit = async (e?: React.FormEvent) => {
+    // 🔍 DEBUG: Vamos ver exatamente o que está chegando
+    console.log('🔍 IntroStepSimple - data recebido:', JSON.stringify(data, null, 2));
+    console.log('🔍 IntroStepSimple - data existe?', !!data);
+    console.log('🔍 IntroStepSimple - data.title:', data?.title);
+
+    // 🚨 FALLBACK TOTAL se data não existir
+    const safeData = data || {
+        type: 'intro',
+        title: '<span style="color: #B89B7A; font-weight: 700;">Chega</span> de um guarda-roupa lotado e da sensação de que <span style="color: #B89B7A; font-weight: 700;">nada combina com você</span>.',
+        formQuestion: 'Como posso te chamar?',
+        placeholder: 'Digite seu primeiro nome aqui...',
+        buttonText: 'Quero Descobrir meu Estilo Agora!',
+        image: 'https://res.cloudinary.com/der8kogzu/image/upload/f_png,q_85,w_300,c_limit/v1752443943/Gemini_Generated_Image_i5cst6i5cst6i5cs_fpoukb.png',
+    };
+
+    const handleSubmit = (e?: React.FormEvent) => {
         e?.preventDefault();
-        console.log('� TESTE: handleSubmit chamado', { nome: nome.trim() });
-
         if (nome.trim()) {
-            setIsSubmitting(true);
-            console.log('✅ TESTE: Nome válido, enviando...', nome.trim());
-
-            // Simular pequeno delay para mostrar o feedback
-            setTimeout(() => {
-                onNameSubmit(nome.trim());
-                setIsSubmitting(false);
-                console.log('✅ TESTE: onNameSubmit executado com sucesso');
-            }, 500);
-        } else {
-            console.log('❌ TESTE: Nome inválido ou vazio');
+            onNameSubmit(nome.trim());
         }
     };
 
     const handleKeyPress = (e: React.KeyboardEvent) => {
         if (e.key === 'Enter') {
-            console.log('⌨️ TESTE: Enter pressionado');
             handleSubmit();
         }
     };
@@ -114,7 +71,7 @@ export default function IntroStep({ data, onNameSubmit }: IntroStepProps) {
                     </div>
                 </div>
 
-                {/* Título principal - EXATAMENTE COMO PEDIDO */}
+                {/* Título principal - SEMPRE RENDERIZAR */}
                 <h1
                     className="text-2xl font-bold text-center leading-tight px-2 sm:text-3xl md:text-4xl text-[#432818]"
                     style={{
@@ -122,8 +79,14 @@ export default function IntroStep({ data, onNameSubmit }: IntroStepProps) {
                         fontWeight: 400,
                     }}
                 >
-                    <span style={{ color: '#B89B7A', fontWeight: 700 }}>Chega</span> de um guarda-roupa lotado e da sensação de que{' '}
-                    <span style={{ color: '#B89B7A', fontWeight: 700 }}>nada combina com você</span>.
+                    {safeData.title ? (
+                        <span dangerouslySetInnerHTML={{ __html: safeData.title }} />
+                    ) : (
+                        <>
+                            <span style={{ color: '#B89B7A', fontWeight: 700 }}>Chega</span> de um guarda-roupa lotado e da sensação de que{' '}
+                            <span style={{ color: '#B89B7A', fontWeight: 700 }}>nada combina com você</span>.
+                        </>
+                    )}
                 </h1>
             </header>
 
@@ -140,7 +103,7 @@ export default function IntroStep({ data, onNameSubmit }: IntroStepProps) {
                         }}
                     >
                         <img
-                            src={data?.image || "https://res.cloudinary.com/der8kogzu/image/upload/f_png,q_85,w_300,c_limit/v1752443943/Gemini_Generated_Image_i5cst6i5cst6i5cs_fpoukb.png"}
+                            src={safeData.image || 'https://res.cloudinary.com/der8kogzu/image/upload/f_png,q_85,w_300,c_limit/v1752443943/Gemini_Generated_Image_i5cst6i5cst6i5cs_fpoukb.png'}
                             alt="Descubra seu estilo predominante"
                             className="w-full h-full object-contain"
                             width={300}
@@ -184,12 +147,12 @@ export default function IntroStep({ data, onNameSubmit }: IntroStepProps) {
                                 htmlFor="name"
                                 className="block text-xs font-semibold text-[#432818] mb-1.5"
                             >
-                                Como posso te chamar? <span className="text-red-500">*</span>
+                                {safeData.formQuestion || 'NOME'} <span className="text-red-500">*</span>
                             </label>
                             <input
                                 id="name"
                                 type="text"
-                                placeholder={data?.placeholder || "Digite seu primeiro nome aqui..."}
+                                placeholder={safeData.placeholder || "Digite seu nome"}
                                 value={nome}
                                 onChange={(e) => setNome(e.target.value)}
                                 onKeyPress={handleKeyPress}
@@ -201,31 +164,14 @@ export default function IntroStep({ data, onNameSubmit }: IntroStepProps) {
 
                         <button
                             type="submit"
-                            onClick={(e) => {
-                                console.log('🖱️ DEBUG: Botão CLICADO!', { 
-                                    nome: nome.trim(),
-                                    disabled: !nome.trim() || isSubmitting,
-                                    isSubmitting
-                                });
-                                handleSubmit(e);
-                            }}
-                            className={`w-full py-3 px-4 text-base font-semibold rounded-md shadow-md transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[#B89B7A] focus:ring-offset-2 ${nome.trim() && !isSubmitting
+                            onClick={handleSubmit}
+                            className={`w-full py-3 px-4 text-base font-semibold rounded-md shadow-md transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[#B89B7A] focus:ring-offset-2 ${nome.trim()
                                 ? 'bg-[#B89B7A] text-white hover:bg-[#A1835D] hover:shadow-lg'
                                 : 'bg-[#B89B7A]/50 text-white/90 cursor-not-allowed'
                                 }`}
-                            disabled={!nome.trim() || isSubmitting}
+                            disabled={!nome.trim()}
                         >
-                            {isSubmitting ? (
-                                <span className="flex items-center justify-center">
-                                    <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                                    </svg>
-                                    Processando...
-                                </span>
-                            ) : (
-                                data?.buttonText || 'Quero Descobrir meu Estilo Agora!'
-                            )}
+                            {safeData.buttonText || 'Quero Descobrir meu Estilo Agora!'}
                         </button>
 
                         <p className="text-xs text-center text-gray-500 pt-1">
@@ -241,6 +187,14 @@ export default function IntroStep({ data, onNameSubmit }: IntroStepProps) {
                     © {new Date().getFullYear()} Gisele Galvão - Todos os direitos reservados
                 </p>
             </footer>
+
+            {/* DEBUG INFO - REMOVER EM PRODUÇÃO */}
+            <div className="fixed bottom-0 left-0 bg-black text-white p-2 text-xs max-w-sm overflow-auto max-h-32">
+                <strong>🔍 DEBUG:</strong><br />
+                Data exists: {data ? '✅' : '❌'}<br />
+                Title: {safeData.title ? '✅' : '❌'}<br />
+                ButtonText: {safeData.buttonText ? '✅' : '❌'}
+            </div>
         </main>
     );
 }
