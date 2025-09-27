@@ -1,6 +1,41 @@
 'use client';
 
-import React, { useState } from 'react';
+import R    const handleSubmit = async (e?: React.FormEvent) => {
+        e?.preventDefault();
+        console.log('🎯 DEBUG: handleSubmit CHAMADO - início da função', { 
+            nome: nome.trim(), 
+            nomeLength: nome.length,
+            temNome: !!nome.trim(),
+            isSubmitting
+        });
+
+        if (nome.trim()) {
+            setIsSubmitting(true);
+            console.log('✅ DEBUG: Nome válido - setIsSubmitting(true)', nome.trim());
+
+            // Simular pequeno delay para mostrar o feedback
+            setTimeout(() => {
+                console.log('⏰ DEBUG: Dentro do setTimeout - prestes a chamar onNameSubmit');
+                console.log('🔍 DEBUG: onNameSubmit função:', typeof onNameSubmit);
+                
+                try {
+                    onNameSubmit(nome.trim());
+                    console.log('✅ DEBUG: onNameSubmit EXECUTADO COM SUCESSO!', nome.trim());
+                } catch (error) {
+                    console.error('❌ DEBUG: Erro ao chamar onNameSubmit:', error);
+                }
+                
+                setIsSubmitting(false);
+                console.log('🔄 DEBUG: setIsSubmitting(false) - finalizando');
+            }, 500);
+        } else {
+            console.log('❌ DEBUG: Nome inválido ou vazio - não executando onNameSubmit', {
+                nome,
+                nomeTrim: nome.trim(),
+                length: nome.length
+            });
+        }
+    }; from 'react';
 import type { QuizStep } from '../../data/quizSteps';
 
 interface IntroStepProps {
@@ -166,7 +201,14 @@ export default function IntroStep({ data, onNameSubmit }: IntroStepProps) {
 
                         <button
                             type="submit"
-                            onClick={handleSubmit}
+                            onClick={(e) => {
+                                console.log('🖱️ DEBUG: Botão CLICADO!', { 
+                                    nome: nome.trim(),
+                                    disabled: !nome.trim() || isSubmitting,
+                                    isSubmitting
+                                });
+                                handleSubmit(e);
+                            }}
                             className={`w-full py-3 px-4 text-base font-semibold rounded-md shadow-md transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[#B89B7A] focus:ring-offset-2 ${nome.trim() && !isSubmitting
                                 ? 'bg-[#B89B7A] text-white hover:bg-[#A1835D] hover:shadow-lg'
                                 : 'bg-[#B89B7A]/50 text-white/90 cursor-not-allowed'

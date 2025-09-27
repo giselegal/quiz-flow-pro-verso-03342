@@ -27,6 +27,7 @@ export default function QuizAppDirect({ funnelId }: QuizAppDirectProps) {
     const [answers, setAnswers] = useState<Record<string, string>>({});
 
     const handleNameSubmit = (name: string) => {
+
         setUserName(name);
         console.log('✅ TESTE FLUXO: Nome coletado com sucesso:', name);
         console.log('🔄 TESTE FLUXO: Preparando para avançar para step-2...');
@@ -51,11 +52,25 @@ export default function QuizAppDirect({ funnelId }: QuizAppDirectProps) {
         // Aqui você pode implementar setCurrentStep('step-3') quando necessário
     };
 
-    // Para step-1, renderizar IntroStepDirect
+    // Para step-1, renderizar IntroStep adaptado
     if (currentStep === 'step-1') {
+        // Criar dados mock para compatibilidade com props data
+        const mockData = {
+            id: 'intro',
+            type: 'intro' as const,
+            title: 'Descobra seu Estilo Pessoal',
+            description: 'Quiz completo para descobrir seu estilo único',
+            image: 'https://res.cloudinary.com/der8kogzu/image/upload/f_png,q_85,w_300,c_limit/v1752443943/Gemini_Generated_Image_i5cst6i5cst6i5cs_fpoukb.png',
+            buttonText: 'Quero Descobrir meu Estilo Agora!',
+            placeholder: 'Digite seu primeiro nome aqui...'
+        };
+
         return (
             <div>
-                <IntroStepDirect onNameSubmit={handleNameSubmit} />
+                <IntroStep
+                    data={mockData}
+                    onNameSubmit={handleNameSubmit}
+                />
                 {showSuccess && (
                     <div className="fixed top-4 right-4 bg-green-500 text-white p-4 rounded-lg shadow-lg z-50 animate-pulse">
                         <p className="font-semibold">✅ Nome coletado!</p>
@@ -63,6 +78,16 @@ export default function QuizAppDirect({ funnelId }: QuizAppDirectProps) {
                     </div>
                 )}
             </div>
+        );
+    }
+
+    // Para step-2, renderizar Step2Direct
+    if (currentStep === 'step-2') {
+        return (
+            <Step2Direct
+                userName={userName}
+                onAnswer={handleStep2Answer}
+            />
         );
     }
 

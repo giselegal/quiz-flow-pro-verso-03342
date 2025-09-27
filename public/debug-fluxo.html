@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔍 Debug - Fluxo não avança</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .debug-panel {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border: 2px solid #dc3545;
+        }
+        .issue {
+            background: #f8d7da;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+            border-left: 4px solid #dc3545;
+        }
+        .solution {
+            background: #d4edda;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+            border-left: 4px solid #28a745;
+        }
+        .test-btn {
+            padding: 10px 20px;
+            background: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        .test-btn:hover {
+            background: #c82333;
+        }
+        .console-output {
+            background: #1e1e1e;
+            color: #00ff00;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: monospace;
+            margin: 10px 0;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔍 Debug: Fluxo não avança para próxima etapa</h1>
+
+    <div class="debug-panel">
+        <h2>❌ PROBLEMA IDENTIFICADO</h2>
+        <div class="issue">
+            <strong>Sintoma:</strong> O usuário reporta que o fluxo não avança para a próxima etapa após inserir o nome e clicar no botão.
+        </div>
+
+        <h3>🔍 Possíveis Causas:</h3>
+        <ul>
+            <li>onNameSubmit não está sendo chamado</li>
+            <li>handleSubmit não está executando</li>
+            <li>Botão não está respondendo ao click</li>
+            <li>JavaScript com erro no console</li>
+            <li>Estado isSubmitting travado</li>
+            <li>setTimeout não está funcionando</li>
+        </ul>
+    </div>
+
+    <div class="debug-panel">
+        <h2>🧪 TESTES DE DIAGNÓSTICO</h2>
+        
+        <button class="test-btn" onclick="testQuizFlow()">
+            🚀 Testar Fluxo Principal
+        </button>
+        
+        <button class="test-btn" onclick="openConsole()">
+            📋 Abrir Console de Debug
+        </button>
+        
+        <button class="test-btn" onclick="checkJSErrors()">
+            ⚠️ Verificar Erros JS
+        </button>
+
+        <div id="console-output" class="console-output" style="display: none;">
+            <div id="log-content">Aguardando logs...</div>
+        </div>
+    </div>
+
+    <div class="debug-panel">
+        <h2>🔧 SOLUÇÕES PROPOSTAS</h2>
+        
+        <div class="solution">
+            <strong>1. Verificar Console do Navegador</strong><br>
+            Abra F12 → Console e veja se há erros quando clica no botão
+        </div>
+        
+        <div class="solution">
+            <strong>2. Testar com Logs Extras</strong><br>
+            Adicionar mais console.log para identificar onde para
+        </div>
+        
+        <div class="solution">
+            <strong>3. Verificar handleSubmit</strong><br>
+            Pode haver problema na lógica de validação do nome
+        </div>
+        
+        <div class="solution">
+            <strong>4. Testar onClick vs onSubmit</strong><br>
+            Problema pode estar na duplicação de eventos
+        </div>
+    </div>
+
+    <div class="debug-panel" style="border-color: #28a745;">
+        <h2>🛠️ CORREÇÃO IMEDIATA</h2>
+        <p>Vou adicionar logs extras no IntroStep.tsx para identificar exatamente onde o fluxo está parando:</p>
+        
+        <div class="console-output">
+console.log('🎯 TESTE: handleSubmit chamado', { nome: nome.trim() });<br>
+console.log('✅ TESTE: Nome válido, enviando...', nome.trim());<br>
+console.log('✅ TESTE: onNameSubmit executado com sucesso');<br>
+console.log('✅ TESTE FLUXO: Nome coletado com sucesso:', name);<br>
+console.log('➡️ TESTE FLUXO: Avançando para step-2');
+        </div>
+        
+        <p>Se você não vir esses logs no console, identificaremos onde está o problema.</p>
+    </div>
+
+    <script>
+        let logContainer = document.getElementById('log-content');
+        let originalConsoleLog = console.log;
+        
+        // Interceptar console.log para mostrar na página
+        console.log = function(...args) {
+            originalConsoleLog.apply(console, args);
+            
+            const message = args.join(' ');
+            if (message.includes('TESTE')) {
+                const logDiv = document.createElement('div');
+                logDiv.innerHTML = `[${new Date().toLocaleTimeString()}] ${message}`;
+                logContainer.appendChild(logDiv);
+                document.getElementById('console-output').style.display = 'block';
+                logContainer.scrollTop = logContainer.scrollHeight;
+            }
+        };
+
+        function testQuizFlow() {
+            console.log('🧪 INICIANDO TESTE DE FLUXO...');
+            window.open('http://localhost:8080/quiz-estilo', '_blank');
+            
+            setTimeout(() => {
+                alert('🔍 INSTRUÇÕES DO TESTE:\\n\\n1. Digite um nome no campo\\n2. Clique no botão\\n3. Observe o console desta página\\n4. Verifique se avança para step-2\\n\\nSe não funcionar, volte aqui e veja os logs.');
+            }, 1000);
+        }
+
+        function openConsole() {
+            alert('📋 COMO ABRIR O CONSOLE:\\n\\n1. Pressione F12\\n2. Vá na aba Console\\n3. Teste o quiz\\n4. Procure por logs com "TESTE"\\n\\nSe não houver logs, o handleSubmit não está executando.');
+        }
+
+        function checkJSErrors() {
+            fetch('http://localhost:8080/quiz-estilo')
+                .then(() => {
+                    alert('✅ SERVIDOR OK\\n\\nPróximos passos:\\n1. Abra o quiz\\n2. Abra F12 → Console\\n3. Digite nome e clique\\n4. Veja se há erros vermelhos');
+                })
+                .catch(() => {
+                    alert('❌ SERVIDOR COM PROBLEMA\\n\\nServidor não está respondendo. Verifique se está rodando na porta 8080.');
+                });
+        }
+
+        // Mostrar status do servidor
+        fetch('http://localhost:8080/')
+            .then(response => {
+                if (response.ok) {
+                    document.title = '✅ ' + document.title;
+                    console.log('✅ DEBUG: Servidor ativo - pronto para debug');
+                }
+            })
+            .catch(() => {
+                document.title = '❌ ' + document.title;
+                console.log('❌ DEBUG: Servidor não responde');
+            });
+    </script>
+</body>
+</html>

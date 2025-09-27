@@ -1,4 +1,4 @@
-import QuizAppDirect from '@/components/quiz/QuizAppDirect';
+import QuizApp from '@/components/quiz/QuizApp';
 import { Helmet } from 'react-helmet-async';
 import '@/styles/globals.css';
 
@@ -41,7 +41,7 @@ export default function QuizEstiloPessoalPage({ funnelId }: QuizEstiloPessoalPag
 
             {/* Componente principal do quiz */}
             <main className="min-h-screen">
-                <QuizAppDirect funnelId={funnelId} />
+                <QuizApp funnelId={funnelId} />
             </main>
 
             {/* Scripts de analytics (exemplo) */}
