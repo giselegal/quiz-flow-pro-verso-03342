@@ -308,11 +308,9 @@
 
 /* Botões - IDÊNTICOS ao quiz real */
 .quizBtnPrimary {
-  background: linear-gradient(
-    135deg,
-    var(--quiz-primary-color) 0%,
-    var(--quiz-secondary-color) 100%
-  );
+  background: linear-gradient(135deg,
+      var(--quiz-primary-color) 0%,
+      var(--quiz-secondary-color) 100%);
   color: white;
   border: none;
   border-radius: 12px;
@@ -336,6 +334,7 @@
     opacity: 0;
     transform: translateY(20px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -347,6 +346,7 @@
     transform: scale(0.95);
     opacity: 0.8;
   }
+
   to {
     transform: scale(1);
     opacity: 1;
@@ -358,6 +358,7 @@
     opacity: 0;
     transform: translateX(-30px);
   }
+
   to {
     opacity: 1;
     transform: translateX(0);
@@ -383,9 +384,11 @@
   0% {
     transform: scale(1);
   }
+
   50% {
     transform: scale(1.02);
   }
+
   100% {
     transform: scale(1);
   }
@@ -409,6 +412,7 @@
     transform: scale(0);
     opacity: 1;
   }
+
   100% {
     transform: scale(4);
     opacity: 0;
@@ -445,6 +449,7 @@
   .quizGridImagesLarge {
     grid-template-columns: repeat(2, 1fr);
     gap: 0.5rem;
+    /* gap-2 como no exemplo */
   }
 
   .quizCheckNormal {
@@ -470,11 +475,13 @@
 
 /* Desktop Large - IDÊNTICO ao exemplo */
 @media (min-width: 1024px) {
+
   .quizGridImages,
   .quizGridImagesDesktop,
   .quizGridImagesLarge {
     grid-template-columns: repeat(2, 1fr);
     gap: 0.5rem;
+    /* gap-2 como no exemplo */
     max-width: 768px;
   }
 
@@ -520,6 +527,7 @@
   0% {
     transform: translate(-50%, -50%) rotate(0deg);
   }
+
   100% {
     transform: translate(-50%, -50%) rotate(360deg);
   }
@@ -533,10 +541,12 @@
 }
 
 @keyframes warningPulse {
+
   0%,
   100% {
     opacity: 1;
   }
+
   50% {
     opacity: 0.8;
   }
@@ -553,9 +563,11 @@
   0% {
     transform: scale(1);
   }
+
   50% {
     transform: scale(1.02);
   }
+
   100% {
     transform: scale(1);
   }

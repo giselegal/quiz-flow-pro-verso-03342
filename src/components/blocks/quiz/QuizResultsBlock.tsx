@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { Button } from '@/components/ui/button';
 import { QuizResult } from '@/hooks/useQuizResults';
 import { Block } from '@/types/editor';
