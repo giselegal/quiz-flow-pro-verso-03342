@@ -1,7 +1,7 @@
+'use client';
+
 import React, { useState } from 'react';
 import type { QuizStep } from '../../data/quizSteps';
-import { STATIC_LOGO_IMAGE_URLS, STATIC_INTRO_IMAGE_URLS } from '@/config/cloudinaryImages';
-import { cn } from '@/lib/utils';
 
 interface IntroStepProps {
     data: QuizStep;
@@ -9,73 +9,65 @@ interface IntroStepProps {
 }
 
 /**
- * 🚀 COMPONENTE DE INTRODUÇÃO DO QUIZ - EXATAMENTE COMO O MODELO
+ * 🎯 COMPONENTE DIRETO - ETAPA 1 ADAPTADO
+ * 
+ * Implementação direta sem camadas desnecessárias
+ * Layout exato conforme modelo solicitado
+ * Adaptado do IntroStepDirect para usar props data
  */
 export default function IntroStep({ data, onNameSubmit }: IntroStepProps) {
     console.log('🚀 IntroStep renderizando:', data);
 
     const [nome, setNome] = useState('');
-    const [error, setError] = useState('');
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
-    const handleSubmit = (e?: React.FormEvent) => {
+    const handleSubmit = async (e?: React.FormEvent) => {
         e?.preventDefault();
-        console.log('📝 Tentando submeter:', nome);
+        console.log('� TESTE: handleSubmit chamado', { nome: nome.trim() });
 
-        if (!nome.trim()) {
-            setError('Por favor, digite seu nome para continuar');
-            return;
+        if (nome.trim()) {
+            setIsSubmitting(true);
+            console.log('✅ TESTE: Nome válido, enviando...', nome.trim());
+
+            // Simular pequeno delay para mostrar o feedback
+            setTimeout(() => {
+                onNameSubmit(nome.trim());
+                setIsSubmitting(false);
+                console.log('✅ TESTE: onNameSubmit executado com sucesso');
+            }, 500);
+        } else {
+            console.log('❌ TESTE: Nome inválido ou vazio');
         }
-
-        setError('');
-        console.log('✅ Submetendo nome:', nome);
-        onNameSubmit(nome.trim());
     };
 
     const handleKeyPress = (e: React.KeyboardEvent) => {
         if (e.key === 'Enter') {
+            console.log('⌨️ TESTE: Enter pressionado');
             handleSubmit();
         }
     };
 
-    // Renderizar diretamente o conteúdo principal sem estados de carregamento
     return (
         <main
-            className="flex flex-col items-center justify-start min-h-screen py-8"
+            className="flex flex-col items-center justify-start min-h-screen bg-gradient-to-b from-white to-gray-50 py-8"
             data-section="intro"
-            style={{
-                background: 'linear-gradient(to bottom, #ffffff 0%, #f9fafb 100%)'
-            }}
         >
-            {/* Skip link para acessibilidade */}
-            <a
-                href="#quiz-form"
-                className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 z-50 bg-white text-[#432818] px-4 py-2 rounded-md shadow-md"
-            >
-                Pular para o formulário
-            </a>
-
             <header className="w-full max-w-xs sm:max-w-md md:max-w-lg px-4 space-y-8 mx-auto">
-                {/* Logo centralizado - renderização imediata */}
+                {/* Logo */}
                 <div className="flex flex-col items-center space-y-2">
                     <div className="relative">
-                        <picture>
-                            <source srcSet={STATIC_LOGO_IMAGE_URLS.webp} type="image/webp" />
-                            <img
-                                src={STATIC_LOGO_IMAGE_URLS.png}
-                                alt="Logo Gisele Galvão"
-                                className="h-auto mx-auto"
-                                width={120}
-                                height={50}
-                                loading="eager"
-                                fetchPriority="high"
-                                decoding="async"
-                                style={{
-                                    objectFit: 'contain',
-                                    maxWidth: '120px',
-                                    aspectRatio: '120 / 50',
-                                }}
-                            />
-                        </picture>
+                        <img
+                            src="https://res.cloudinary.com/der8kogzu/image/upload/f_png,q_70,w_120,h_50,c_fit/v1752430327/LOGO_DA_MARCA_GISELE_l78gin.png"
+                            alt="Logo Gisele Galvão"
+                            className="h-auto mx-auto"
+                            width={120}
+                            height={50}
+                            style={{
+                                objectFit: 'contain',
+                                maxWidth: '120px',
+                                aspectRatio: '120 / 50',
+                            }}
+                        />
                         {/* Barra dourada */}
                         <div
                             className="h-[3px] bg-[#B89B7A] rounded-full mt-1.5 mx-auto"
@@ -87,21 +79,21 @@ export default function IntroStep({ data, onNameSubmit }: IntroStepProps) {
                     </div>
                 </div>
 
-                {/* Título principal com a fonte Playfair Display */}
+                {/* Título principal - EXATAMENTE COMO PEDIDO */}
                 <h1
-                    className="text-2xl font-bold text-center leading-tight px-2 sm:text-3xl md:text-4xl playfair-display text-[#432818]"
+                    className="text-2xl font-bold text-center leading-tight px-2 sm:text-3xl md:text-4xl text-[#432818]"
                     style={{
                         fontFamily: '"Playfair Display", serif',
                         fontWeight: 400,
                     }}
                 >
                     <span style={{ color: '#B89B7A', fontWeight: 700 }}>Chega</span> de um guarda-roupa lotado e da sensação de que{' '}
-                    <span style={{ color: '#B89B7A', fontWeight: 700 }}>nada combina com você.</span>
+                    <span style={{ color: '#B89B7A', fontWeight: 700 }}>nada combina com você</span>.
                 </h1>
             </header>
 
             <section className="w-full max-w-xs sm:max-w-md md:max-w-lg px-4 space-y-6 md:space-y-8 mx-auto">
-                {/* Imagem principal - renderização imediata e LCP */}
+                {/* Imagem principal */}
                 <div className="mt-2 w-full mx-auto flex justify-center">
                     <div
                         className="overflow-hidden rounded-lg shadow-sm"
@@ -112,36 +104,20 @@ export default function IntroStep({ data, onNameSubmit }: IntroStepProps) {
                             maxWidth: '300px'
                         }}
                     >
-                        <div className="relative w-full h-full bg-[#F8F5F0]">
-                            <picture>
-                                <source
-                                    srcSet={STATIC_INTRO_IMAGE_URLS.avif}
-                                    type="image/avif"
-                                />
-                                <source
-                                    srcSet={STATIC_INTRO_IMAGE_URLS.webp}
-                                    type="image/webp"
-                                />
-                                <img
-                                    src={data.image || STATIC_INTRO_IMAGE_URLS.png}
-                                    alt="Descubra seu estilo predominante e transforme seu guarda-roupa"
-                                    className="w-full h-full object-contain"
-                                    width={300}
-                                    height={204}
-                                    loading="eager"
-                                    fetchPriority="high"
-                                    decoding="async"
-                                    id="lcp-image"
-                                    style={{
-                                        maxWidth: '300px',
-                                        maxHeight: '204px',
-                                        width: '100%',
-                                        height: 'auto',
-                                        objectFit: 'contain'
-                                    }}
-                                />
-                            </picture>
-                        </div>
+                        <img
+                            src={data?.image || "https://res.cloudinary.com/der8kogzu/image/upload/f_png,q_85,w_300,c_limit/v1752443943/Gemini_Generated_Image_i5cst6i5cst6i5cs_fpoukb.png"}
+                            alt="Descubra seu estilo predominante"
+                            className="w-full h-full object-contain"
+                            width={300}
+                            height={204}
+                            style={{
+                                maxWidth: '300px',
+                                maxHeight: '204px',
+                                width: '100%',
+                                height: 'auto',
+                                objectFit: 'contain'
+                            }}
+                        />
                     </div>
                 </div>
 
@@ -161,8 +137,8 @@ export default function IntroStep({ data, onNameSubmit }: IntroStepProps) {
                     </span>.
                 </p>
 
-                {/* Formulário - renderização imediata */}
-                <div id="quiz-form" className="mt-8">
+                {/* Formulário */}
+                <div className="mt-8">
                     <form
                         onSubmit={handleSubmit}
                         className="w-full space-y-6"
@@ -173,65 +149,45 @@ export default function IntroStep({ data, onNameSubmit }: IntroStepProps) {
                                 htmlFor="name"
                                 className="block text-xs font-semibold text-[#432818] mb-1.5"
                             >
-                                NOME <span className="text-red-500">*</span>
+                                Como posso te chamar? <span className="text-red-500">*</span>
                             </label>
                             <input
                                 id="name"
                                 type="text"
-                                placeholder={data.placeholder || "Digite seu nome"}
+                                placeholder={data?.placeholder || "Digite seu primeiro nome aqui..."}
                                 value={nome}
-                                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                                    setNome(e.target.value);
-                                    if (error) setError('');
-                                }}
+                                onChange={(e) => setNome(e.target.value)}
                                 onKeyPress={handleKeyPress}
-                                className={cn(
-                                    "w-full p-2.5 bg-[#FEFEFE] rounded-md border-2 focus:outline-none focus-visible:outline-none focus:ring-2 focus:ring-offset-2 focus-visible:ring-offset-2 focus:ring-offset-[#FEFEFE] focus-visible:ring-offset-[#FEFEFE]",
-                                    error
-                                        ? "border-red-500 focus:ring-red-500 focus-visible:ring-red-500"
-                                        : "border-[#B89B7A] focus:ring-[#A1835D] focus-visible:ring-[#A1835D]"
-                                )}
+                                className="w-full p-2.5 bg-[#FEFEFE] rounded-md border-2 border-[#B89B7A] focus:outline-none focus:ring-2 focus:ring-[#A1835D]"
                                 autoFocus
-                                aria-required="true"
-                                autoComplete="off"
-                                inputMode="text"
-                                maxLength={32}
-                                aria-invalid={!!error}
-                                aria-describedby={error ? "name-error" : undefined}
                                 required
                             />
-                            {error && (
-                                <p id="name-error" className="mt-1.5 text-sm text-red-500 font-medium">{error}</p>
-                            )}
                         </div>
 
                         <button
                             type="submit"
                             onClick={handleSubmit}
-                            className={cn(
-                                'w-full py-2 px-3 text-sm font-semibold rounded-md shadow-md transition-all duration-300',
-                                'focus:outline-none focus:ring-2 focus:ring-[#B89B7A] focus:ring-offset-2',
-                                'sm:py-3 sm:px-4 sm:text-base',
-                                'md:py-3.5 md:text-lg',
-                                nome.trim()
-                                    ? 'bg-[#B89B7A] text-white hover:bg-[#A1835D] active:bg-[#947645] hover:shadow-lg transform hover:scale-[1.01]'
-                                    : 'bg-[#B89B7A]/50 text-white/90 cursor-not-allowed'
-                            )}
-                            aria-disabled={!nome.trim()}
+                            className={`w-full py-3 px-4 text-base font-semibold rounded-md shadow-md transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[#B89B7A] focus:ring-offset-2 ${nome.trim() && !isSubmitting
+                                ? 'bg-[#B89B7A] text-white hover:bg-[#A1835D] hover:shadow-lg'
+                                : 'bg-[#B89B7A]/50 text-white/90 cursor-not-allowed'
+                                }`}
+                            disabled={!nome.trim() || isSubmitting}
                         >
-                            <span className="flex items-center justify-center gap-2">
-                                {nome.trim() ? (data.buttonText || 'Quero Descobrir meu Estilo Agora!') : 'Digite seu nome para continuar'}
-                            </span>
+                            {isSubmitting ? (
+                                <span className="flex items-center justify-center">
+                                    <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                    </svg>
+                                    Processando...
+                                </span>
+                            ) : (
+                                data?.buttonText || 'Quero Descobrir meu Estilo Agora!'
+                            )}
                         </button>
 
                         <p className="text-xs text-center text-gray-500 pt-1">
-                            Seu nome é necessário para personalizar sua experiência. Ao clicar, você concorda com nossa{' '}
-                            <a
-                                href="#"
-                                className="text-[#B89B7A] hover:text-[#A1835D] underline focus:outline-none focus:ring-1 focus:ring-[#B89B7A] rounded"
-                            >
-                                política de privacidade
-                            </a>
+                            Seu nome é necessário para personalizar sua experiência.
                         </p>
                     </form>
                 </div>
