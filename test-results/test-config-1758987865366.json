@@ -1,0 +1,20 @@
+{
+  "componentId": "quiz-app-connected",
+  "funnelId": "test_funnel_1758987865365",
+  "properties": {
+    "title": "Quiz de Estilo Pessoal - TESTE",
+    "subtitle": "Descubra seu estilo único",
+    "primaryColor": "#FF6B6B",
+    "secondaryColor": "#4ECDC4",
+    "showProgressBar": true,
+    "allowRetake": false,
+    "timeLimit": 600,
+    "difficulty": "medium",
+    "category": "fashion"
+  },
+  "metadata": {
+    "lastModified": "2025-09-27T15:44:25.365Z",
+    "version": 1,
+    "createdBy": "test-script"
+  }
+}
