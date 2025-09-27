@@ -1,5 +1,11 @@
 /**
- * 🎯 APP.TSX com ROTEAMENTO SPA OTIMIZADO
+ * 🎯 APP.TSX com ROTEAMENTO S////// 🔍 PÁGINAS DE DIAGNÓSTICO - TEMPORÁRIAS
+const TemplateDiagnosticPage = lazy(() => import('./pages/TemplateDiagnosticPage'));
+const DataTestPage = lazy(() => import('./pages/DataTestPage')); PÁGINAS DE DIAGNÓSTICO - TEMPORÁRIAS
+const TemplateDiagnosticPage = lazy(() => import('./pages/TemplateDiagnosticPage'));
+const DataTestPage = lazy(() => import('./pages/DataTestPage'));🔍 PÁGINAS DE DIAGNÓSTICO - TEMPORÁRIAS
+const TemplateDiagnosticPage = lazy(() => import('./pages/TemplateDiagnosticPage'));
+const DataTestPage = lazy(() => import('./pages/DataTestPage')); OTIMIZADO
  * 
  * MELHORIAS v2.0:
  * ✅ Roteamento aninhado para admin
@@ -112,6 +118,13 @@ function App() {
                           <Route path="/debug/templates">
                             <div data-testid="template-diagnostic-page">
                               <TemplateDiagnosticPage />
+                            </div>
+                          </Route>
+
+                          {/* 📊 PÁGINA DE TESTE DE DADOS - TEMPORÁRIA */}
+                          <Route path="/debug/data">
+                            <div data-testid="data-test-page">
+                              <DataTestPage />
                             </div>
                           </Route>
 
