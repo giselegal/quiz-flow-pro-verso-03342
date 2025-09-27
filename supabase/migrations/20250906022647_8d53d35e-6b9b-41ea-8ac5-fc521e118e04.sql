@@ -3,17 +3,17 @@
 DROP POLICY IF EXISTS "Users can view own quiz sessions" ON public.quiz_sessions;
 CREATE POLICY "Users can view own quiz sessions" 
 ON public.quiz_sessions FOR SELECT 
-USING (auth.uid() = user_id OR (user_id IS NULL AND session_token IS NOT NULL));
+USING (auth.uid() = quiz_user_id OR (quiz_user_id IS NULL AND session_token IS NOT NULL));
 
--- 2. Corrigir política da tabela quiz_session_steps
-DROP POLICY IF EXISTS "Users can view their own quiz session steps" ON public.quiz_session_steps;
-CREATE POLICY "Users can view their own quiz session steps" 
-ON public.quiz_session_steps FOR SELECT 
-USING (EXISTS (
-    SELECT 1 FROM public.quiz_sessions 
-    WHERE quiz_sessions.id = quiz_session_steps.session_id 
-    AND (quiz_sessions.user_id = auth.uid() OR quiz_sessions.user_id IS NULL)
-));
+-- 2. Corrigir política da tabela quiz_session_steps (comentado pois tabela não existe)
+-- DROP POLICY IF EXISTS "Users can view their own quiz session steps" ON public.quiz_session_steps;
+-- CREATE POLICY "Users can view their own quiz session steps" 
+-- ON public.quiz_session_steps FOR SELECT 
+-- USING (EXISTS (
+--     SELECT 1 FROM public.quiz_sessions 
+--     WHERE quiz_sessions.id = quiz_session_steps.session_id 
+--     AND (quiz_sessions.quiz_user_id = auth.uid() OR quiz_sessions.quiz_user_id IS NULL)
+-- ));
 
 -- 3. Corrigir política de componentes do funil
 DROP POLICY IF EXISTS "Users can view their own funnel components" ON public.funnel_components;
@@ -42,7 +42,7 @@ ON public.profiles FOR SELECT
 USING (auth.uid() = id);
 
 -- 6. Adicionar índices para melhorar performance das novas políticas
-CREATE INDEX IF NOT EXISTS idx_quiz_sessions_user_id ON public.quiz_sessions(user_id);
+CREATE INDEX IF NOT EXISTS idx_quiz_sessions_quiz_user_id ON public.quiz_sessions(quiz_user_id);
 CREATE INDEX IF NOT EXISTS idx_funnel_components_funnel_id ON public.funnel_components(funnel_id);
 CREATE INDEX IF NOT EXISTS idx_funnel_settings_funnel_id ON public.funnel_settings(funnel_id);
 CREATE INDEX IF NOT EXISTS idx_funnels_user_id ON public.funnels(user_id);
