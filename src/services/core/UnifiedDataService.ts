@@ -11,7 +11,16 @@
  */
 
 import { supabase } from '@/integrations/supabase/client';
-import { toast } from '@/hooks/use-toast';
+import type { Database } from '@/integrations/supabase/types';
+
+// ============================================================================
+// TYPES
+// ============================================================================
+
+type SupabaseFunnel = Database['public']['Tables']['funnels']['Row'];
+type SupabaseFunnelPage = Database['public']['Tables']['funnel_pages']['Row'];
+type SupabaseQuizSession = Database['public']['Tables']['quiz_sessions']['Row'];
+type SupabaseProfile = Database['public']['Tables']['profiles']['Row'];
 
 // ============================================================================
 // INTERFACES UNIFICADAS
@@ -210,21 +219,21 @@ class UnifiedDataServiceImpl {
                 return this.getFallbackFunnels();
             }
 
-            const funnels = await Promise.all((data || []).map(async (funnel: any) => {
+            const funnels = await Promise.all((data || []).map(async (funnel: SupabaseFunnel & { funnel_pages?: SupabaseFunnelPage[] }) => {
                 // Buscar métricas de analytics para cada funil
                 const metrics = await this.getFunnelMetrics(funnel.id);
 
                 return {
                     id: funnel.id,
                     name: funnel.name,
-                    description: funnel.description,
-                    user_id: funnel.user_id,
-                    is_published: funnel.is_published,
-                    version: funnel.version,
-                    settings: funnel.settings || { theme: 'default', category: 'general', autoSave: true },
-                    pages: funnel.funnel_pages || [],
-                    created_at: funnel.created_at,
-                    updated_at: funnel.updated_at,
+                    description: funnel.description || undefined,
+                    user_id: funnel.user_id || 'anonymous',
+                    is_published: funnel.is_published || false,
+                    version: funnel.version || 1,
+                    settings: this.parseSettings(funnel.settings),
+                    pages: this.transformFunnelPages(funnel.funnel_pages || []),
+                    created_at: funnel.created_at || new Date().toISOString(),
+                    updated_at: funnel.updated_at || new Date().toISOString(),
                     views: metrics.views,
                     conversions: metrics.conversions,
                     conversion_rate: metrics.conversion_rate
@@ -281,17 +290,19 @@ class UnifiedDataServiceImpl {
 
             const metrics = await this.getFunnelMetrics(id);
 
+            const typedData = data as SupabaseFunnel & { funnel_pages?: SupabaseFunnelPage[] };
+
             const funnel: UnifiedFunnel = {
-                id: data.id,
-                name: data.name,
-                description: data.description,
-                user_id: data.user_id,
-                is_published: data.is_published,
-                version: data.version,
-                settings: data.settings || { theme: 'default', category: 'general', autoSave: true },
-                pages: data.funnel_pages || [],
-                created_at: data.created_at,
-                updated_at: data.updated_at,
+                id: typedData.id,
+                name: typedData.name,
+                description: typedData.description || undefined,
+                user_id: typedData.user_id || 'anonymous',
+                is_published: typedData.is_published || false,
+                version: typedData.version || 1,
+                settings: this.parseSettings(typedData.settings),
+                pages: this.transformFunnelPages(typedData.funnel_pages || []),
+                created_at: typedData.created_at || new Date().toISOString(),
+                updated_at: typedData.updated_at || new Date().toISOString(),
                 views: metrics.views,
                 conversions: metrics.conversions,
                 conversion_rate: metrics.conversion_rate
@@ -390,8 +401,8 @@ class UnifiedDataServiceImpl {
             // Buscar dados de sessões
             const { data: sessions, error: sessionsError } = await supabase
                 .from('quiz_sessions')
-                .select('id, funnel_id, completed_at, created_at')
-                .order('created_at', { ascending: false });
+                .select('id, funnel_id, completed_at, started_at')
+                .order('started_at', { ascending: false });
 
             if (sessionsError) {
                 console.warn('⚠️ Erro ao carregar sessões:', sessionsError);
@@ -409,7 +420,7 @@ class UnifiedDataServiceImpl {
             });
 
             const topPerformingFunnels = Array.from(funnelMetrics.entries())
-                .map(([funnelId, sessions]) => {
+                .map(([funnelId]) => {
                     const funnel = funnels.find(f => f.id === funnelId);
                     return funnel ? {
                         id: funnel.id,
@@ -453,7 +464,7 @@ class UnifiedDataServiceImpl {
             // Buscar sessões do funil
             const { data: sessions, error } = await supabase
                 .from('quiz_sessions')
-                .select('id, completed_at, created_at')
+                .select('id, completed_at, started_at')
                 .eq('funnel_id', funnelId);
 
             if (error) {
@@ -524,8 +535,8 @@ class UnifiedDataServiceImpl {
             return {
                 id: user.id,
                 email: user.email,
-                full_name: profile?.full_name || user.user_metadata?.full_name,
-                avatar_url: profile?.avatar_url || user.user_metadata?.avatar_url,
+                full_name: profile?.name || user.user_metadata?.full_name,
+                avatar_url: user.user_metadata?.avatar_url,
                 created_at: user.created_at
             };
 
@@ -538,6 +549,39 @@ class UnifiedDataServiceImpl {
     // ========================================================================
     // PRIVATE HELPERS
     // ========================================================================
+
+    /**
+     * Converte settings do Supabase para formato unificado
+     */
+    private parseSettings(settings: any): { theme: string; category: string; autoSave: boolean;[key: string]: any } {
+        if (!settings || typeof settings !== 'object') {
+            return { theme: 'default', category: 'general', autoSave: true };
+        }
+
+        return {
+            theme: settings.theme || 'default',
+            category: settings.category || 'general',
+            autoSave: settings.autoSave !== false,
+            ...settings
+        };
+    }
+
+    /**
+     * Transforma pages do Supabase para formato unificado
+     */
+    private transformFunnelPages(pages: SupabaseFunnelPage[]): UnifiedFunnelPage[] {
+        return pages.map(page => ({
+            id: page.id,
+            funnel_id: page.funnel_id,
+            page_type: page.page_type,
+            title: page.title || undefined,
+            page_order: page.page_order,
+            blocks: Array.isArray(page.blocks) ? page.blocks : [],
+            metadata: page.metadata || undefined,
+            created_at: page.created_at || new Date().toISOString(),
+            updated_at: page.updated_at || new Date().toISOString()
+        }));
+    }
 
     private async getFunnelMetrics(funnelId: string): Promise<{
         views: number;
