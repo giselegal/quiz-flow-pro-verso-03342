@@ -1,7 +1,7 @@
 'use client';
 
 import { useQuizState } from '../../hooks/useQuizState';
-import IntroStepFixed from './IntroStepFixed';
+import IntroStep from './IntroStep';
 import QuestionStep from './QuestionStep';
 import StrategicQuestionStep from './StrategicQuestionStep';
 import TransitionStep from './TransitionStep';
@@ -69,7 +69,7 @@ export default function QuizApp({ funnelId }: QuizAppProps) {
 
                 {/* Renderização da Etapa Atual */}
                 {currentStepData.type === 'intro' && (
-                    <IntroStepFixed
+                    <IntroStep
                         data={currentStepData}
                         onNameSubmit={(name: string) => {
                             setUserName(name);
