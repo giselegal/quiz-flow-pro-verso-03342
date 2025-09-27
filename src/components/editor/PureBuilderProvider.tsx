@@ -291,9 +291,41 @@ export const PureBuilderProvider: React.FC<{
 
                 setState(prev => ({ ...prev, isLoading: true }));
 
-                // ⚡ DINÂMICO: Se não há funnelId, criar um genérico
-                const targetFunnelId = funnelId || `dynamic-funnel-${Date.now()}`;
-                console.log('🎯 Usando targetFunnelId:', targetFunnelId);
+                // 🆕 MODO CANVAS VAZIO - Para criação de funis do zero
+                if (!funnelId) {
+                    console.log('🆕 Inicializando canvas vazio para criação de funis do zero');
+                    setTotalSteps(1); // Começar com 1 step
+
+                    setState(prev => ({
+                        ...prev,
+                        stepBlocks: { 'step-1': [] }, // Step vazio para começar
+                        builderInstance: null,
+                        funnelConfig: {
+                            templateId: 'empty-canvas',
+                            totalSteps: 1,
+                            theme: 'modern-elegant',
+                            title: 'Novo Funil',
+                            description: 'Funil criado do zero'
+                        },
+                        templateInfo: {
+                            templateId: 'empty-canvas',
+                            totalSteps: 1,
+                            theme: 'modern-elegant',
+                            title: 'Novo Funil',
+                            description: 'Funil criado do zero'
+                        },
+                        isLoading: false,
+                        templateLoading: false,
+                        loadedSteps: new Set([1])
+                    }));
+
+                    console.log('✅ Canvas vazio inicializado para criação de funil');
+                    return;
+                }
+
+                // ⚡ MODO TEMPLATE - Carregar template existente
+                const targetFunnelId = funnelId;
+                console.log('🎯 Carregando template:', targetFunnelId);
 
                 // ✅ USAR getTemplateInfo para obter dados dinâmicos
                 getTemplateInfo(targetFunnelId)
