@@ -7,7 +7,7 @@ import { UnifiedPreviewEngine } from '@/components/editor/unified/UnifiedPreview
 /**
  * 🎨 CANVAS DO EDITOR OTIMIZADO
  * 
- * Agora usa ScalableQuizRenderer para preview escalável!
+ * Agora usa UnifiedPreviewEngine para preview em tempo real!
  */
 
 interface EditorCanvasProps {
