@@ -1,4 +1,4 @@
-import React from 'react';
+import { useState } from 'react';
 
 export default function IntroStepDebug({ data, onNameSubmit }: any) {
     console.log('🔍 DEBUG IntroStep - dados recebidos:', data);

@@ -2,7 +2,7 @@
  * QUIZ 21 STEPS SIMPLIFIED TEMPLATE INTEGRATION
  */
 
-import { getStepTemplate, QUIZ_STYLE_21_STEPS_TEMPLATE } from './quiz21StepsComplete';
+import { getStepTemplate } from './quiz21StepsComplete';
 import type { Block } from '../types/editor';
 
 // Função para converter Block[] para QuizStep
@@ -12,7 +12,7 @@ function convertBlocksToQuizStep(blocks: Block[]): any {
     // Encontrar blocos principais
     const titleBlock = blocks.find(block => block.id?.includes('title') || block.type === 'text');
     const imageBlock = blocks.find(block => block.type === 'image');
-    const formBlock = blocks.find(block => block.type === 'form-container');
+    // const formBlock = blocks.find(block => block.type === 'form-container'); // Não utilizado
 
     // Construir objeto QuizStep compatível
     const quizStep: any = {
