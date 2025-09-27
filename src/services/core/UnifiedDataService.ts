@@ -19,8 +19,6 @@ import type { Database } from '@/integrations/supabase/types';
 
 type SupabaseFunnel = Database['public']['Tables']['funnels']['Row'];
 type SupabaseFunnelPage = Database['public']['Tables']['funnel_pages']['Row'];
-type SupabaseQuizSession = Database['public']['Tables']['quiz_sessions']['Row'];
-type SupabaseProfile = Database['public']['Tables']['profiles']['Row'];
 
 // ============================================================================
 // INTERFACES UNIFICADAS
