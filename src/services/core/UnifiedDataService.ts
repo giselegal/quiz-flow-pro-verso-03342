@@ -402,7 +402,7 @@ class UnifiedDataServiceImpl {
             if (dataCheck.needsSampleData) {
                 console.log('🌱 Nenhum dado encontrado, populando dados de exemplo...');
                 await SampleDataService.populateSampleData();
-                
+
                 // Retornar métricas de exemplo
                 const sampleMetrics = SampleDataService.getSampleMetrics();
                 this.setCache(cacheKey, sampleMetrics);
