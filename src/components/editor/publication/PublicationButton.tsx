@@ -12,6 +12,8 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Settings } from 'lucide-react';
 import { FunnelPublicationPanel } from '@/components/editor/publication/FunnelPublicationPanel';
 import { useFunnelPublication } from '@/hooks/useFunnelPublication';
+import { EditorDashboardSyncService } from '@/services/core/EditorDashboardSyncService';
+import { UnifiedDataService } from '@/services/core/UnifiedDataService';
 
 interface PublicationSettingsButtonProps {
     funnelId: string;
@@ -41,13 +43,36 @@ export function PublicationSettingsButton({
 
     const handlePublish = async () => {
         try {
+            console.log('🚀 PublicationButton: Iniciando publicação com sincronização...');
+
+            // 1. Buscar dados atuais do funil
+            const currentFunnel = await UnifiedDataService.getFunnel(funnelId);
+            if (!currentFunnel) {
+                throw new Error('Funil não encontrado');
+            }
+
+            // 2. Publicar usando o serviço original
             await publishFunnel();
-            setShowDialog(false);
-            // Aqui você pode adicionar uma notificação de sucesso
-            console.log('✅ Funil publicado com sucesso!', generatePreviewUrl());
+
+            // 3. Sincronizar com dashboard usando EditorDashboardSyncService
+            const syncSuccess = await EditorDashboardSyncService.syncFunnelPublish(funnelId, {
+                ...currentFunnel,
+                is_published: true,
+                settings: {
+                    ...currentFunnel.settings,
+                    ...settings // Aplicar configurações de publicação
+                }
+            });
+
+            if (syncSuccess) {
+                setShowDialog(false);
+                console.log('✅ Funil publicado e sincronizado com dashboard!', generatePreviewUrl());
+            } else {
+                throw new Error('Falha na sincronização com dashboard');
+            }
         } catch (error) {
             console.error('❌ Erro ao publicar funil:', error);
-            // Aqui você pode adicionar uma notificação de erro
+            // EditorDashboardSyncService já mostra notificações de erro
         }
     };
 

@@ -23,6 +23,7 @@ import { SecurityProvider } from './providers/SecurityProvider';
 import { MonitoringProvider } from './components/monitoring/MonitoringProvider';
 import { serviceManager } from './services/core/UnifiedServiceManager';
 import { RedirectRoute } from './components/RedirectRoute';
+import { UnifiedRoutingService } from './services/core/UnifiedRoutingService';
 import { QuizErrorBoundary } from './components/RouteErrorBoundary';
 import { EditorErrorBoundary } from './components/error/EditorErrorBoundary';
 
@@ -171,9 +172,47 @@ function App() {
                           <AuthPage />
                         </Route>
 
-                        {/* 🏢 DASHBOARD MODERNO - ROTA PRINCIPAL */}
-                        <Route path="/dashboard" nest>
-                          <ModernDashboardPage />
+                        {/* 🏢 ADMIN DASHBOARD - ROTAS UNIFICADAS */}
+                        <Route path="/admin/dashboard">
+                          <div data-testid="admin-dashboard-page">
+                            <ModernDashboardPage />
+                          </div>
+                        </Route>
+
+                        <Route path="/admin/funnels">
+                          <div data-testid="admin-funnels-page">
+                            <ModernDashboardPage />
+                          </div>
+                        </Route>
+
+                        <Route path="/admin/funnels/:id/edit">
+                          {(params) => (
+                            <EditorErrorBoundary>
+                              <div data-testid="admin-integrated-editor-page">
+                                <ModernUnifiedEditor
+                                  funnelId={params.id}
+                                  mode="admin-integrated"
+                                />
+                              </div>
+                            </EditorErrorBoundary>
+                          )}
+                        </Route>
+
+                        <Route path="/admin/analytics">
+                          <div data-testid="admin-analytics-page">
+                            <ModernDashboardPage />
+                          </div>
+                        </Route>
+
+                        {/* 🔄 LEGACY REDIRECTS */}
+                        <Route path="/admin">
+                          <RedirectRoute to="/admin/dashboard" />
+                        </Route>
+                        <Route path="/dashboard">
+                          <RedirectRoute to="/admin/dashboard" />
+                        </Route>
+                        <Route path="/dashboard/:page">
+                          {(params) => <RedirectRoute to={`/admin/${params.page}`} />}
                         </Route>
 
                         {/* 🚀 PHASE 2 ENTERPRISE DASHBOARD */}
@@ -181,14 +220,6 @@ function App() {
                           <div data-testid="phase2-dashboard-page">
                             <Phase2Dashboard />
                           </div>
-                        </Route>
-
-                        {/* 🔄 REDIRECTS ADMIN LEGACY */}
-                        <Route path="/admin">
-                          <RedirectRoute to="/dashboard" />
-                        </Route>
-                        <Route path="/admin/:page">
-                          {(params) => <RedirectRoute to={`/dashboard/${params.page}`} />}
                         </Route>
 
                         {/* 🔧 DESENVOLVIMENTO */}

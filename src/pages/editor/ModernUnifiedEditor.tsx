@@ -47,6 +47,10 @@ import UnifiedCRUDProvider, { useUnifiedCRUD } from '@/context/UnifiedCRUDProvid
 // 🎯 CRUD Services Integration
 import { useUnifiedEditor } from '@/hooks/core/useUnifiedEditor';
 
+// 🔄 Editor-Dashboard Sync Integration
+import { EditorDashboardSyncService } from '@/services/core/EditorDashboardSyncService';
+import { UnifiedRoutingService } from '@/services/core/UnifiedRoutingService';
+
 // 🎯 TEMPLATE REGISTRY INTEGRATION
 import { loadFullTemplate, convertTemplateToEditorFormat } from '@/templates/registry';
 
@@ -61,7 +65,7 @@ import type { FunnelType } from '@/services/FunnelTypesRegistry';
 // 🎯 TYPES & INTERFACES
 // ===============================
 
-type EditorMode = 'visual' | 'builder' | 'funnel' | 'headless';
+type EditorMode = 'visual' | 'builder' | 'funnel' | 'headless' | 'admin-integrated';
 
 interface ModernUnifiedEditorProps {
     funnelId?: string;
@@ -101,6 +105,8 @@ interface ModernToolbarProps {
     editorState: EditorState;
     onStateChange: (updates: Partial<EditorState>) => void;
     funnelId?: string;
+    mode?: EditorMode;
+    adminReturnUrl?: string;
     onSave?: () => Promise<void>;
     onCreateNew?: () => Promise<void>;
     onDuplicate?: () => Promise<void>;
@@ -111,6 +117,8 @@ const ModernToolbar: React.FC<ModernToolbarProps> = ({
     editorState,
     onStateChange,
     funnelId,
+    mode,
+    adminReturnUrl,
     onSave,
     onCreateNew,
     onDuplicate,
@@ -177,7 +185,16 @@ const ModernToolbar: React.FC<ModernToolbarProps> = ({
         } finally {
             setIsOperating(false);
         }
-    }, [onTestCRUD, addNotification, isOperating]); const handleAIToggle = useCallback(() => {
+    }, [onTestCRUD, addNotification, isOperating]);
+
+    const handleBackToAdmin = useCallback(() => {
+        if (mode === 'admin-integrated' && funnelId) {
+            UnifiedRoutingService.navigateEditorToAdmin(funnelId);
+            addNotification('🔙 Retornando ao dashboard admin', 'info');
+        }
+    }, [mode, funnelId, addNotification]);
+
+    const handleAIToggle = useCallback(() => {
         const newState = !editorState.aiAssistantActive;
         onStateChange({ aiAssistantActive: newState });
         addNotification(
@@ -233,6 +250,22 @@ const ModernToolbar: React.FC<ModernToolbarProps> = ({
 
             {/* Actions */}
             <div className="flex items-center gap-2">
+                {/* Botão Voltar ao Admin (apenas em modo admin-integrated) */}
+                {mode === 'admin-integrated' && (
+                    <>
+                        <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={handleBackToAdmin}
+                            disabled={isOperating}
+                            className="border-blue-200 text-blue-700 hover:bg-blue-50"
+                        >
+                            🔙 Voltar ao Admin
+                        </Button>
+                        <Separator orientation="vertical" className="h-4" />
+                    </>
+                )}
+
                 <Button
                     variant="secondary"
                     size="sm"
@@ -411,6 +444,24 @@ const UnifiedEditorCore: React.FC<ModernUnifiedEditorProps> = ({
         }
     }, [extractedInfo.funnelId, detectedFunnelType]);
 
+    // 🔄 EFFECT: Conectar editor ao sistema de sincronização
+    useEffect(() => {
+        console.log('🔗 ModernUnifiedEditor: Conectando ao EditorDashboardSyncService...');
+
+        // Conectar editor ao serviço de sincronização
+        const disconnect = EditorDashboardSyncService.connectEditor({
+            funnelId: extractedInfo.funnelId,
+            refresh: () => {
+                // Função para atualizar o editor quando houver mudanças
+                console.log('🔄 Editor: Recebida solicitação de atualização do dashboard');
+                // Aqui você pode adicionar lógica para recarregar dados se necessário
+            }
+        });
+
+        // Cleanup na desmontagem
+        return disconnect;
+    }, [extractedInfo.funnelId]);
+
     // 🎯 TEMPLATE LOADING EFFECT - FIXED: Removed crudContext from dependencies to prevent infinite loop
     useEffect(() => {
         if (extractedInfo.type === 'template' && extractedInfo.templateId) {
@@ -560,6 +611,7 @@ const UnifiedEditorCore: React.FC<ModernUnifiedEditorProps> = ({
                 editorState={editorState}
                 onStateChange={handleStateChange}
                 funnelId={extractedInfo.funnelId || crudContext.currentFunnel?.id}
+                mode={mode || editorState.mode}
                 onSave={handleSave}
                 onCreateNew={handleCreateNew}
                 onDuplicate={handleDuplicate}

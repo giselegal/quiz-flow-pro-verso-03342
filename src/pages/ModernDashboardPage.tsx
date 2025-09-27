@@ -11,7 +11,7 @@
 
 import React from 'react';
 import { Route, Switch, useLocation } from 'wouter';
-import ModernDashboardLayout from '@/components/layout/ModernDashboardLayout';
+import { UnifiedAdminLayout } from '@/components/admin/UnifiedAdminLayout';
 import { Button } from '@/components/ui/button';
 import { Plus, RefreshCw, Download, Filter } from 'lucide-react';
 
@@ -195,15 +195,23 @@ const pageConfig: Record<string, { title: string; subtitle: string; actions?: Re
 const ModernDashboardPage: React.FC = () => {
     const [location] = useLocation();
 
-    // Normalizar a localização para encontrar a configuração correta
-    const normalizedLocation = location === '/dashboard/' ? '/dashboard' : location;
-    const config = pageConfig[normalizedLocation] || pageConfig['/dashboard'];
+
+
+    // Determinar view atual baseado na localização
+    const getCurrentView = () => {
+        if (location.includes('/funnels')) return 'funnels';
+        if (location.includes('/analytics')) return 'analytics';
+        if (location.includes('/edit')) return 'editor';
+        return 'dashboard';
+    };
+
+    // Extrair funnelId se estiver na rota de edição
+    const funnelId = location.match(/\/funnels\/([^\/]+)\/edit/)?.[1];
 
     return (
-        <ModernDashboardLayout
-            title={config.title}
-            subtitle={config.subtitle}
-            actions={config.actions}
+        <UnifiedAdminLayout
+            currentView={getCurrentView()}
+            funnelId={funnelId}
         >
             <Suspense fallback={<DashboardLoadingFallback />}>
                 <Switch>
@@ -273,7 +281,7 @@ const ModernDashboardPage: React.FC = () => {
                     </Route>
                 </Switch>
             </Suspense>
-        </ModernDashboardLayout>
+        </UnifiedAdminLayout>
     );
 };
 
