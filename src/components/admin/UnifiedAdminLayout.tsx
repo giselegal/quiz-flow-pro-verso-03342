@@ -151,8 +151,8 @@ export const UnifiedAdminLayout: React.FC<UnifiedAdminLayoutProps> = ({
                 ) : (
                     <div className="flex items-center justify-center h-full">
                         <div className="text-center">
-                            <Edit className="w-12 h-12 mx-auto text-gray-400 mb-4" />
-                            <p className="text-gray-600">Selecione um funil para editar</p>
+                            <Edit className="w-12 h-12 mx-auto mb-4" style={{ color: `${theme.colors.detailsMinor}60` }} />
+                            <p style={{ color: `${theme.colors.text}70` }}>Selecione um funil para editar</p>
                             <Button
                                 onClick={() => handleNavigateToView('funnels')}
                                 className="mt-4"
@@ -267,15 +267,15 @@ export const UnifiedAdminLayout: React.FC<UnifiedAdminLayoutProps> = ({
                             }}
                         >
                             <Tabs value={activeView} onValueChange={(value) => handleNavigateToView(value as any)} className="w-full">
-                                <TabsList className="grid w-full grid-cols-3 bg-transparent p-0 h-auto gap-1">
+                                <TabsList className="grid w-full grid-cols-3 p-0 h-auto gap-1" style={{ backgroundColor: 'transparent' }}>
                                     <TabsTrigger
                                         value="dashboard"
-                                        className="flex items-center gap-2 px-6 py-3 rounded-xl transition-all duration-200 glow-button"
+                                        className="flex items-center gap-2 px-6 py-3 rounded-xl transition-all duration-200 glow-button [&[data-state=active]]:bg-transparent [&[data-state=active]]:text-current"
                                         style={{
                                             background: activeView === 'dashboard'
-                                                ? `linear-gradient(135deg, ${theme.colors.buttons} 0%, ${theme.colors.detailsMinor} 100%)`
-                                                : 'transparent',
-                                            color: activeView === 'dashboard' ? '#ffffff' : theme.colors.text,
+                                                ? `linear-gradient(135deg, ${theme.colors.buttons} 0%, ${theme.colors.detailsMinor} 100%) !important`
+                                                : 'transparent !important',
+                                            color: activeView === 'dashboard' ? '#ffffff !important' : `${theme.colors.text} !important`,
                                             boxShadow: activeView === 'dashboard'
                                                 ? `0 0 15px ${theme.colors.buttons}40`
                                                 : 'none'
@@ -286,12 +286,12 @@ export const UnifiedAdminLayout: React.FC<UnifiedAdminLayoutProps> = ({
                                     </TabsTrigger>
                                     <TabsTrigger
                                         value="funnels"
-                                        className="flex items-center gap-2 px-6 py-3 rounded-xl transition-all duration-200 glow-button"
+                                        className="flex items-center gap-2 px-6 py-3 rounded-xl transition-all duration-200 glow-button [&[data-state=active]]:bg-transparent [&[data-state=active]]:text-current"
                                         style={{
                                             background: activeView === 'funnels'
-                                                ? `linear-gradient(135deg, ${theme.colors.buttons} 0%, ${theme.colors.detailsMinor} 100%)`
-                                                : 'transparent',
-                                            color: activeView === 'funnels' ? '#ffffff' : theme.colors.text,
+                                                ? `linear-gradient(135deg, ${theme.colors.buttons} 0%, ${theme.colors.detailsMinor} 100%) !important`
+                                                : 'transparent !important',
+                                            color: activeView === 'funnels' ? '#ffffff !important' : `${theme.colors.text} !important`,
                                             boxShadow: activeView === 'funnels'
                                                 ? `0 0 15px ${theme.colors.buttons}40`
                                                 : 'none'
@@ -302,12 +302,12 @@ export const UnifiedAdminLayout: React.FC<UnifiedAdminLayoutProps> = ({
                                     </TabsTrigger>
                                     <TabsTrigger
                                         value="analytics"
-                                        className="flex items-center gap-2 px-6 py-3 rounded-xl transition-all duration-200 glow-button"
+                                        className="flex items-center gap-2 px-6 py-3 rounded-xl transition-all duration-200 glow-button [&[data-state=active]]:bg-transparent [&[data-state=active]]:text-current"
                                         style={{
                                             background: activeView === 'analytics'
-                                                ? `linear-gradient(135deg, ${theme.colors.buttons} 0%, ${theme.colors.detailsMinor} 100%)`
-                                                : 'transparent',
-                                            color: activeView === 'analytics' ? '#ffffff' : theme.colors.text,
+                                                ? `linear-gradient(135deg, ${theme.colors.buttons} 0%, ${theme.colors.detailsMinor} 100%) !important`
+                                                : 'transparent !important',
+                                            color: activeView === 'analytics' ? '#ffffff !important' : `${theme.colors.text} !important`,
                                             boxShadow: activeView === 'analytics'
                                                 ? `0 0 15px ${theme.colors.buttons}40`
                                                 : 'none'

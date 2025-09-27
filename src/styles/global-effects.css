@@ -4,6 +4,27 @@
  * Efeitos de glow, gradientes e animações
  */
 
+/* ===== CORREÇÃO PARA TABS - IDENTIDADE VISUAL ===== */
+/* Sobrescreve cores padrão do shadcn/ui para manter identidade visual */
+[data-radix-collection-item][role="tab"] {
+    background: transparent !important;
+}
+
+[data-radix-collection-item][role="tab"][data-state="active"] {
+    background: transparent !important;
+    color: inherit !important;
+    box-shadow: none !important;
+}
+
+/* Remove muted colors do shadcn */
+.bg-muted {
+    background: transparent !important;
+}
+
+.text-muted-foreground {
+    color: inherit !important;
+}
+
 /* Botão com efeito glow */
 .glow-button {
     position: relative;
