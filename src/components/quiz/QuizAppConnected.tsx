@@ -23,11 +23,11 @@ interface QuizAppConnectedProps {
 }
 
 export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', editorMode = false }: QuizAppConnectedProps) {
-    
+
     // ============================================================================
     // CONFIGURATION HOOKS - Conecta com API
     // ============================================================================
-    
+
     // Configuração global do quiz
     const {
         properties: globalConfig,
@@ -40,7 +40,7 @@ export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', ed
         realTimeSync: true,
         autoSave: editorMode
     });
-    
+
     // Configurações de tema e visual
     const {
         properties: themeConfig,
@@ -50,11 +50,11 @@ export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', ed
         funnelId,
         realTimeSync: true
     });
-    
+
     // ============================================================================
     // QUIZ STATE - Lógica original mantida
     // ============================================================================
-    
+
     const {
         state,
         currentStepData,
@@ -65,13 +65,13 @@ export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', ed
         addStrategicAnswer,
         getOfferKey,
     } = useQuizState(funnelId);
-    
+
     // ============================================================================
     // DYNAMIC STEP CONFIGURATION
     // ============================================================================
-    
+
     const [stepConfigurations, setStepConfigurations] = useState<Record<string, any>>({});
-    
+
     // Carregar configurações específicas da etapa atual
     const currentStepNumber = parseInt(state.currentStep.replace('step-', ''), 10) || 1;
     const {
@@ -84,14 +84,14 @@ export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', ed
         realTimeSync: true,
         autoSave: editorMode
     });
-    
+
     // ============================================================================
     // LOADING AND ERROR STATES
     // ============================================================================
-    
+
     const isLoading = globalLoading || themeLoading || stepLoading;
     const hasError = globalError;
-    
+
     if (isLoading) {
         return (
             <div className="min-h-screen bg-[#fefefe] flex items-center justify-center">
@@ -103,7 +103,7 @@ export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', ed
             </div>
         );
     }
-    
+
     if (hasError) {
         return (
             <div className="min-h-screen bg-[#fefefe] flex items-center justify-center">
@@ -119,11 +119,11 @@ export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', ed
             </div>
         );
     }
-    
+
     // ============================================================================
     // CONFIGURATION MERGER - Combina todas as configurações
     // ============================================================================
-    
+
     const mergedConfig = {
         // Configurações globais
         ...globalConfig,
@@ -137,11 +137,11 @@ export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', ed
             allowRealTimeEditing: true
         })
     };
-    
+
     // ============================================================================
     // CURRENT STEP DATA WITH API CONFIG
     // ============================================================================
-    
+
     if (!currentStepData) {
         return (
             <div className="min-h-screen bg-[#fefefe] flex items-center justify-center">
@@ -156,11 +156,11 @@ export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', ed
             </div>
         );
     }
-    
+
     // ============================================================================
     // DYNAMIC STYLING - Baseado na configuração da API
     // ============================================================================
-    
+
     const dynamicStyles = {
         '--primary-color': mergedConfig.primaryColor || '#B89B7A',
         '--secondary-color': mergedConfig.secondaryColor || '#432818',
@@ -171,14 +171,14 @@ export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', ed
         '--spacing-unit': `${mergedConfig.spacingUnit || 8}px`,
         '--font-family': mergedConfig.fontFamily || 'Inter, sans-serif',
     } as React.CSSProperties;
-    
+
     // ============================================================================
     // PROGRESS BAR CONFIGURATION
     // ============================================================================
-    
-    const showProgress = mergedConfig.showProgress !== false && 
-                        !['intro', 'transition', 'transition-result'].includes(currentStepData.type);
-    
+
+    const showProgress = mergedConfig.showProgress !== false &&
+        !['intro', 'transition', 'transition-result'].includes(currentStepData.type);
+
     const progressConfig = {
         showPercentage: mergedConfig.showProgressPercentage !== false,
         showStepInfo: mergedConfig.showProgressStepInfo === true,
@@ -186,66 +186,66 @@ export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', ed
         height: mergedConfig.progressBarHeight || '2.5',
         backgroundColor: mergedConfig.progressBackgroundColor || 'gray-200',
     };
-    
+
     // ============================================================================
     // EDITOR OVERLAY (apenas no modo editor)
     // ============================================================================
-    
+
     const EditorOverlay = editorMode ? () => (
         <div className="fixed top-4 left-4 z-50 bg-white/90 backdrop-blur-sm border border-gray-200 rounded-lg p-3 shadow-lg max-w-xs">
             <div className="text-xs font-mono space-y-1">
                 <div><strong>Etapa:</strong> {currentStepNumber}/21</div>
                 <div><strong>Componente:</strong> {currentStepData.type}</div>
-                <div><strong>API Status:</strong> 
+                <div><strong>API Status:</strong>
                     <span className={`ml-1 ${connectionStatus === 'connected' ? 'text-green-600' : 'text-red-600'}`}>
                         {connectionStatus}
                     </span>
                 </div>
                 <div><strong>Configurações:</strong> {Object.keys(mergedConfig).length}</div>
                 <div className="pt-2 border-t border-gray-200">
-                    <div className="text-blue-600 cursor-pointer hover:underline" 
-                         onClick={() => console.log('Config:', mergedConfig)}>
+                    <div className="text-blue-600 cursor-pointer hover:underline"
+                        onClick={() => console.log('Config:', mergedConfig)}>
                         Ver Configuração →
                     </div>
                 </div>
             </div>
         </div>
     ) : null;
-    
+
     // ============================================================================
     // RENDER WITH API-DRIVEN CONFIGURATION
     // ============================================================================
-    
+
     return (
         <div className="min-h-screen" style={dynamicStyles}>
             <div className="quiz-container mx-auto">
-                
+
                 {/* Editor Overlay */}
                 {EditorOverlay && <EditorOverlay />}
 
                 {/* Progress Bar Configurável */}
                 {showProgress && (
                     <div className="mb-6 max-w-6xl mx-auto px-4 py-8">
-                        <div 
+                        <div
                             className={`w-full bg-${progressConfig.backgroundColor} rounded-full mb-4`}
                             style={{ height: `${progressConfig.height}px` }}
                         >
                             <div
                                 className="h-full rounded-full transition-all"
-                                style={{ 
+                                style={{
                                     width: `${progress}%`,
                                     backgroundColor: 'var(--progress-color)',
                                     transitionDuration: `${progressConfig.animationDuration}ms`
                                 }}
                             ></div>
                         </div>
-                        
+
                         {progressConfig.showPercentage && (
                             <p className="text-sm text-center mb-4">
                                 Progresso: {progress}%
                             </p>
                         )}
-                        
+
                         {progressConfig.showStepInfo && (
                             <p className="text-xs text-center text-gray-500">
                                 Etapa {currentStepNumber} de 21 • {currentStepData.type}
@@ -257,7 +257,7 @@ export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', ed
                 {/* Renderização da Etapa Atual com Configurações API */}
                 {currentStepData.type === 'intro' && (
                     <IntroStep
-                        data={{...currentStepData, ...currentStepConfig}}
+                        data={{ ...currentStepData, ...currentStepConfig }}
                         config={mergedConfig}
                         onNameSubmit={(name: string) => {
                             setUserName(name);
@@ -268,23 +268,23 @@ export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', ed
                 )}
 
                 {currentStepData.type === 'question' && (
-                    <div 
+                    <div
                         className="min-h-screen"
                         style={{ backgroundColor: 'var(--background-color)', color: 'var(--text-color)' }}
                     >
                         <div className="max-w-6xl mx-auto px-4 py-8">
                             <QuestionStep
-                                data={{...currentStepData, ...currentStepConfig}}
+                                data={{ ...currentStepData, ...currentStepConfig }}
                                 config={mergedConfig}
                                 currentAnswers={state.answers[state.currentStep] || []}
                                 onAnswersChange={(answers: string[]) => {
                                     addAnswer(state.currentStep, answers);
-                                    
+
                                     // Configuração dinâmica de auto-advance
                                     const autoAdvanceEnabled = mergedConfig.autoAdvance !== false;
                                     const autoAdvanceDelay = mergedConfig.autoAdvanceDelay || 1000;
                                     const requiredSelections = mergedConfig.requiredSelections || currentStepData.requiredSelections || 3;
-                                    
+
                                     if (autoAdvanceEnabled && answers.length === requiredSelections) {
                                         setTimeout(() => nextStep(), autoAdvanceDelay);
                                     }
@@ -297,18 +297,18 @@ export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', ed
                 )}
 
                 {currentStepData.type === 'strategic-question' && (
-                    <div 
+                    <div
                         className="min-h-screen"
                         style={{ backgroundColor: 'var(--background-color)', color: 'var(--text-color)' }}
                     >
                         <div className="max-w-6xl mx-auto px-4 py-8">
                             <StrategicQuestionStep
-                                data={{...currentStepData, ...currentStepConfig}}
+                                data={{ ...currentStepData, ...currentStepConfig }}
                                 config={mergedConfig}
                                 currentAnswer={state.answers[state.currentStep]?.[0] || ''}
                                 onAnswerChange={(answer: string) => {
                                     addStrategicAnswer(state.currentStep, answer);
-                                    
+
                                     // Strategic questions não têm auto-advance por padrão
                                     const strategicAutoAdvance = mergedConfig.strategicAutoAdvance === true;
                                     if (strategicAutoAdvance) {
@@ -324,7 +324,7 @@ export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', ed
 
                 {currentStepData.type === 'transition' && (
                     <TransitionStep
-                        data={{...currentStepData, ...currentStepConfig}}
+                        data={{ ...currentStepData, ...currentStepConfig }}
                         config={mergedConfig}
                         onContinue={() => nextStep()}
                         editorMode={editorMode}
@@ -333,7 +333,7 @@ export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', ed
 
                 {currentStepData.type === 'transition-result' && (
                     <TransitionStep
-                        data={{...currentStepData, ...currentStepConfig}}
+                        data={{ ...currentStepData, ...currentStepConfig }}
                         config={mergedConfig}
                         onContinue={() => nextStep()}
                         editorMode={editorMode}
@@ -342,7 +342,7 @@ export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', ed
 
                 {currentStepData.type === 'result' && (
                     <ResultStep
-                        data={{...currentStepData, ...currentStepConfig}}
+                        data={{ ...currentStepData, ...currentStepConfig }}
                         config={mergedConfig}
                         userProfile={state.userProfile}
                         onContinue={() => nextStep()}
@@ -353,7 +353,7 @@ export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', ed
 
                 {currentStepData.type === 'offer' && (
                     <OfferStep
-                        data={{...currentStepData, ...currentStepConfig}}
+                        data={{ ...currentStepData, ...currentStepConfig }}
                         config={mergedConfig}
                         userProfile={state.userProfile}
                         offerKey={getOfferKey()}
