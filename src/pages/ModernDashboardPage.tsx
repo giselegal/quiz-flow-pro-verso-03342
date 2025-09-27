@@ -37,6 +37,10 @@ const CreativesPage = lazy(() => import('./dashboard/CreativesPage'));
 const IntegrationsPage = lazy(() => import('./dashboard/IntegrationsPage'));
 const SettingsPage = lazy(() => import('./dashboard/SettingsPage'));
 
+// Página de teste para templates
+const TemplateTestPage = lazy(() => import('./TemplateTestPage'));
+const TemplateDebugPage = lazy(() => import('./dashboard/TemplateDebugPage'));
+
 // Wrapper para AdminDashboard
 
 // Componente de loading personalizado
@@ -264,6 +268,10 @@ const ModernDashboardPage: React.FC = () => {
                     {/* SYSTEM - Configurações do sistema */}
                     <Route path="/dashboard/integrations" component={IntegrationsPage} />
                     <Route path="/dashboard/settings" component={SettingsPage} />
+
+                    {/* TESTE - Página de teste para templates */}
+                    <Route path="/dashboard/template-test" component={TemplateTestPage} />
+                    <Route path="/dashboard/template-debug" component={TemplateDebugPage} />
 
                     {/* LEGACY REDIRECTS - Compatibilidade com rotas antigas */}
                     <Route path="/dashboard/templates-funis">
