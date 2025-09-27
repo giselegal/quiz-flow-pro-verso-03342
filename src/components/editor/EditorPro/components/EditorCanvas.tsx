@@ -53,13 +53,6 @@ const EditorCanvas: React.FC<EditorCanvasProps> = ({
     return (
       <div data-testid="preview-container" className="flex-1 min-h-0 bg-gradient-to-br from-[#FAF9F7] via-[#F5F2E9] to-[#EEEBE1] isolate">
         <div className="h-full w-full overflow-y-auto relative z-0">
-          {/* Indicador do funil sendo visualizado */}
-          {funnelId && (
-            <div className="absolute top-4 left-4 z-10 bg-blue-600 text-white px-4 py-2 rounded-full text-sm font-bold shadow-lg">
-              📋 Preview Real: {funnelId} | Step {currentStep}
-            </div>
-          )}
-
           {/* 🚀 PREVIEW EM TEMPO REAL - Reflete mudanças instantaneamente */}
           <UnifiedPreviewEngine
             blocks={blocks}
@@ -76,10 +69,10 @@ const EditorCanvas: React.FC<EditorCanvasProps> = ({
             enableProductionMode={false}
             realTimeUpdate={true} // 🎯 NOVA PROP: Habilita atualização em tempo real
             debugInfo={{
-              showDebugPanel: true,
-              stepData: true,
-              blockInfo: true,
-              templateInfo: true
+              showDebugPanel: false, // 🎯 DEBUG DESABILITADO
+              stepData: false,
+              blockInfo: false,
+              templateInfo: false
             }}
           />
         </div>

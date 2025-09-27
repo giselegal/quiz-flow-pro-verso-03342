@@ -474,25 +474,7 @@ export const InteractivePreviewEngine: React.FC<InteractivePreviewEngineProps> =
         </div>
       )}
 
-      {/* 🚀 DEBUG PANEL - PREVIEW EM TEMPO REAL */}
-      {(realTimeUpdate || mode === 'preview') && (
-        <div className="bg-blue-50 border border-blue-200 p-3 mb-4 rounded-lg text-xs">
-          <div className="font-semibold text-blue-800 mb-2">
-            ⚡ Preview Editor Real-Time - Sistema Ativo
-          </div>
-          <div className="grid grid-cols-2 gap-2 text-blue-700">
-            <div><strong>Funil:</strong> {funnelId}</div>
-            <div><strong>Step:</strong> {quizState.currentStep}</div>
-            <div><strong>Blocos do Editor:</strong> {blocks.length > 0 ? `${blocks.length} ✅` : '0 (Vazio)'}</div>
-            <div><strong>Modo:</strong> {mode}</div>
-            <div><strong>Tempo Real:</strong> {realTimeUpdate ? 'ON ⚡' : 'OFF'}</div>
-            <div><strong>Selecionado:</strong> {selectedBlockId ? '✅' : 'Nenhum'}</div>
-          </div>
-          <div className="mt-2 p-2 bg-blue-100 rounded text-blue-900 text-xs">
-            <strong>Status:</strong> Renderizando blocos do editor (não template fixo)
-          </div>
-        </div>
-      )}
+      {/* DEBUG PANEL REMOVIDO - Preview limpo sem informações de debug */}
 
       {/* Canvas vazio */}
       {blocks.length === 0 && (

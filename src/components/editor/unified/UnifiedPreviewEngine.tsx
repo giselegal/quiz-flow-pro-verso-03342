@@ -84,40 +84,9 @@ export const UnifiedPreviewEngine: React.FC<UnifiedPreviewEngineProps> = ({
   // 🎯 CORREÇÃO CRÍTICA: Calcular enableRealExperience baseado na prop enableProductionMode
   const enableRealExperience = enableProductionMode;
 
-  console.log('🎯 [DEBUG] UnifiedPreviewEngine calculou enableRealExperience:', enableRealExperience);
-
   return (
     <div className="unified-preview-engine">
-      {/* 🎯 DEBUG PANEL - Apenas em modo preview com realTimeUpdate */}
-      {mode === 'preview' && realTimeUpdate && debugInfo.showDebugPanel && (
-        <div className="bg-yellow-50 border border-yellow-200 p-3 mb-4 rounded-lg text-xs">
-          <div className="font-semibold text-yellow-800 mb-2">
-            🔧 Preview Real-Time - Sistema Dinâmico ON
-          </div>
-          <div className="grid grid-cols-2 gap-2 text-yellow-700">
-            <div><strong>Funil Original:</strong> {funnelId}</div>
-            <div><strong>Step:</strong> {currentStep}</div>
-            <div><strong>Blocos Carregados:</strong> {blocks.length > 0 ? '✅' : '❌'}</div>
-            <div><strong>Seleção Ativa:</strong> {selectedBlockId ? '✅' : '❌'}</div>
-            <div><strong>Update em Tempo Real:</strong> {realTimeUpdate ? '✅' : '❌'}</div>
-            <div><strong>Modo:</strong> {mode}</div>
-          </div>
-          {debugInfo.blockInfo && blocks.length > 0 && (
-            <details className="mt-2">
-              <summary className="cursor-pointer text-yellow-800 font-medium">
-                Blocos Atuais ({blocks.length})
-              </summary>
-              <div className="mt-1 p-2 bg-yellow-100 rounded text-yellow-900 max-h-32 overflow-auto">
-                {blocks.map((block, index) => (
-                  <div key={block.id} className="text-xs">
-                    {index + 1}. {block.type} - {block.id} {selectedBlockId === block.id ? '🎯' : ''}
-                  </div>
-                ))}
-              </div>
-            </details>
-          )}
-        </div>
-      )}
+      {/* DEBUG PANEL REMOVIDO - Preview limpo sem informações de debug */}
 
       {/* 🎯 CORREÇÃO: Lazy loading removido - carregamento imediato */}
       <InteractivePreviewEngine
