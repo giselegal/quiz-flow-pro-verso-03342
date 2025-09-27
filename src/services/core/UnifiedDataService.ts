@@ -12,7 +12,6 @@
 
 import { supabase } from '@/integrations/supabase/client';
 import type { Database } from '@/integrations/supabase/types';
-import { SampleDataService } from '@/services/SampleDataService';
 
 // ============================================================================
 // TYPES
@@ -393,22 +392,6 @@ class UnifiedDataServiceImpl {
 
         try {
             console.log('📊 UnifiedDataService: Carregando métricas do dashboard...');
-
-            // Verificar se há dados disponíveis
-            const dataCheck = await SampleDataService.checkDataAvailability();
-            console.log('🔍 Status dos dados:', dataCheck);
-
-            // Se não há dados reais, popular com dados de exemplo
-            if (dataCheck.needsSampleData) {
-                console.log('🌱 Nenhum dado encontrado, populando dados de exemplo...');
-                await SampleDataService.populateSampleData();
-
-                // Retornar métricas de exemplo
-                const sampleMetrics = SampleDataService.getSampleMetrics();
-                this.setCache(cacheKey, sampleMetrics);
-                console.log('✅ Métricas de exemplo carregadas:', sampleMetrics);
-                return sampleMetrics;
-            }
 
             // Buscar dados de funis
             const funnels = await this.getFunnels({ userId });

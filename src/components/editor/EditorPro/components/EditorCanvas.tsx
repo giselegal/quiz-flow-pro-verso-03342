@@ -3,72 +3,7 @@ import { Block } from '@/types/editor';
 import ScalableQuizRenderer from '@/components/core/ScalableQuizRenderer';
 import CanvasDropZone from '@/components/editor/canvas/CanvasDropZone.simple';
 import { useStepSelection } from '@/hooks/useStepSelection';
-import { UnifiedPreviewEngine } from '@/components/editor/unified/UnifiedPreviewEngine';
-import { Plus, MousePointer2, Sparkles } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-
-/**
- * Componente que renderiza o canvas vazio quando não há funnelId
- */
-const EmptyCanvas: React.FC<{
-  onAddFirstBlock?: () => void;
-}> = ({ onAddFirstBlock }) => {
-  return (
-    <div className="flex-1 min-h-0 relative bg-gradient-to-br from-[#FAF9F7] via-[#F5F2E9] to-[#EEEBE1] isolate flex items-center justify-center">
-      <div className="text-center p-8 max-w-lg">
-        {/* Ícone principal */}
-        <div className="mb-6 relative">
-          <div className="w-24 h-24 mx-auto bg-white/50 rounded-2xl flex items-center justify-center shadow-lg backdrop-blur-sm border border-gray-200/20">
-            <Plus className="w-12 h-12 text-[#687ef7]" />
-          </div>
-          <div className="absolute -bottom-2 -right-2 w-8 h-8 bg-[#d85dfb] rounded-full flex items-center justify-center shadow-lg">
-            <Sparkles className="w-4 h-4 text-white" />
-          </div>
-        </div>
-
-        {/* Título e descrição */}
-        <h2 className="text-2xl font-bold text-gray-900 mb-4">
-          Crie seu Funil do Zero
-        </h2>
-        <p className="text-gray-600 mb-8 leading-relaxed">
-          Comece criando um novo funil arrastando componentes da sidebar para o canvas.
-          Cada passo que você criar será automaticamente organizado e salvo.
-        </p>
-
-        {/* Dicas de uso */}
-        <div className="space-y-4 mb-8">
-          <div className="flex items-center text-sm text-gray-700 bg-white/30 rounded-lg p-3 backdrop-blur-sm">
-            <MousePointer2 className="w-4 h-4 mr-3 text-[#687ef7]" />
-            <span>Arraste componentes da <strong>sidebar esquerda</strong> para o canvas</span>
-          </div>
-          <div className="flex items-center text-sm text-gray-700 bg-white/30 rounded-lg p-3 backdrop-blur-sm">
-            <Plus className="w-4 h-4 mr-3 text-[#d85dfb]" />
-            <span>Use o botão <strong>+ Adicionar Componente</strong> para começar</span>
-          </div>
-        </div>
-
-        {/* Botão de ação */}
-        {onAddFirstBlock && (
-          <Button
-            onClick={onAddFirstBlock}
-            className="bg-[#687ef7] hover:bg-[#5a6fd8] text-white px-8 py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105"
-          >
-            <Plus className="w-5 h-5 mr-2" />
-            Adicionar Primeiro Componente
-          </Button>
-        )}
-      </div>
-
-      {/* Padrão de fundo sutil */}
-      <div className="absolute inset-0 opacity-5 pointer-events-none">
-        <div className="absolute top-1/4 left-1/4 w-2 h-2 bg-[#687ef7] rounded-full" />
-        <div className="absolute top-1/3 right-1/3 w-1 h-1 bg-[#d85dfb] rounded-full" />
-        <div className="absolute bottom-1/4 left-1/2 w-3 h-3 bg-[#dee5ff] rounded-full" />
-        <div className="absolute bottom-1/3 right-1/4 w-1.5 h-1.5 bg-[#687ef7] rounded-full" />
-      </div>
-    </div>
-  );
-};
+import { UnifiedPreviewEngine } from '@/components/editor/unified/UnifiedPreviewEngine'; // Import para experiência real
 
 /**
  * 🎨 CANVAS DO EDITOR OTIMIZADO
@@ -84,7 +19,6 @@ interface EditorCanvasProps {
   onSelectBlock: (id: string) => void;
   onUpdateBlock: (blockId: string, updates: Partial<Block>) => void;
   onDeleteBlock: (blockId: string) => void;
-  onAddFirstBlock?: () => void; // Função para adicionar primeiro componente
   isPreviewMode: boolean;
   onStepChange?: (step: number) => void;
   realExperienceMode?: boolean; // Nova prop para ativar QuizOrchestrator
@@ -98,7 +32,6 @@ const EditorCanvas: React.FC<EditorCanvasProps> = ({
   onSelectBlock,
   onUpdateBlock,
   onDeleteBlock,
-  onAddFirstBlock,
   isPreviewMode,
   onStepChange,
   realExperienceMode = false // Nova prop para ativar QuizOrchestrator
@@ -115,21 +48,6 @@ const EditorCanvas: React.FC<EditorCanvasProps> = ({
     // Usar uma chave estável baseada apenas no step, não regenerar constantemente
     return `editor-canvas-step-${currentStep}`;
   }, [currentStep]);
-
-  // 🆕 DETECTAR CANVAS VAZIO - Quando não há funnelId e não há blocos
-  const isEmptyCanvas = useMemo(() => {
-    return !funnelId && (!blocks || blocks.length === 0) && !isPreviewMode && !realExperienceMode;
-  }, [funnelId, blocks, isPreviewMode, realExperienceMode]);
-
-  // 🎯 MODO CANVAS VAZIO - Para criação de funis do zero
-  if (isEmptyCanvas) {
-    console.log('🆕 [DEBUG] Renderizando canvas vazio para criação de funil');
-    return (
-      <EmptyCanvas
-        onAddFirstBlock={onAddFirstBlock}
-      />
-    );
-  }
 
   if (isPreviewMode) {
     // Usar funnelId dinâmico ou fallback para o template padrão
@@ -222,33 +140,25 @@ const arePropsEqual = (prevProps: EditorCanvasProps, nextProps: EditorCanvasProp
     return false;
   }
 
-  // 🆕 2. Comparar estado de canvas vazio
-  const prevIsEmpty = !prevProps.funnelId && (!prevProps.blocks || prevProps.blocks.length === 0);
-  const nextIsEmpty = !nextProps.funnelId && (!nextProps.blocks || nextProps.blocks.length === 0);
-  if (prevIsEmpty !== nextIsEmpty) {
-    return false;
-  }
-
-  // 3. Comparar selectedBlock
+  // 2. Comparar selectedBlock
   if (prevProps.selectedBlock?.id !== nextProps.selectedBlock?.id) {
     return false;
   }
 
-  // 4. Comparar handlers (referência de função pode mudar)
+  // 3. Comparar handlers (referência de função pode mudar)
   if (prevProps.onSelectBlock !== nextProps.onSelectBlock ||
     prevProps.onUpdateBlock !== nextProps.onUpdateBlock ||
     prevProps.onDeleteBlock !== nextProps.onDeleteBlock ||
-    prevProps.onAddFirstBlock !== nextProps.onAddFirstBlock ||
     prevProps.onStepChange !== nextProps.onStepChange) {
     return false;
   }
 
-  // 5. Comparação inteligente de blocos
+  // 4. Comparação inteligente de blocos
   if (prevProps.blocks.length !== nextProps.blocks.length) {
     return false;
   }
 
-  // 6. ✅ NOVA OTIMIZAÇÃO: Comparação profunda de conteúdo dos blocos
+  // 5. ✅ NOVA OTIMIZAÇÃO: Comparação profunda de conteúdo dos blocos
   for (let i = 0; i < prevProps.blocks.length; i++) {
     const prevBlock: Block = prevProps.blocks[i];
     const nextBlock: Block = nextProps.blocks[i];

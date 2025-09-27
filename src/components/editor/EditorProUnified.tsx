@@ -223,42 +223,6 @@ export const EditorProUnified: React.FC<EditorProUnifiedProps> = ({
     addNotification('Componente removido');
   }, [state.currentStep, selectedBlockId, actions, addNotification]);
 
-  // 🆕 Handler para adicionar primeiro componente ao canvas vazio
-  const handleAddFirstBlock = useCallback(async () => {
-    const stepKey = `step-${state.currentStep}`;
-
-    // Criar um bloco básico de texto para começar
-    const firstBlock: Block = {
-      id: `block-${Date.now()}`,
-      type: 'text',
-      order: 1,
-      position: {
-        x: 0,
-        y: 0,
-        width: 100,
-        height: 60
-      },
-      properties: {
-        text: 'Bem-vindo ao seu novo funil!',
-        fontSize: '24px',
-        fontWeight: 'bold',
-        textAlign: 'center',
-        padding: '20px',
-        backgroundColor: 'transparent',
-        textColor: '#333333'
-      },
-      content: {
-        text: 'Bem-vindo ao seu novo funil!'
-      }
-    };
-
-    await actions.addBlock(stepKey, firstBlock);
-    setSelectedBlockId(firstBlock.id);
-    addNotification('Primeiro componente adicionado! 🎉');
-
-    console.log('🎯 Primeiro componente adicionado ao step:', stepKey);
-  }, [state.currentStep, actions, addNotification]);
-
   // AI Feature Handlers (compatibilidade com Builder System)
   const handleSelectTemplate = useCallback(async (template: FunnelTemplate) => {
     console.log('✨ Template Builder System:', template.meta.name);
@@ -438,7 +402,6 @@ export const EditorProUnified: React.FC<EditorProUnifiedProps> = ({
               onSelectBlock={handleSelectBlock}
               onUpdateBlock={handleUpdateBlock}
               onDeleteBlock={handleDeleteBlock}
-              onAddFirstBlock={handleAddFirstBlock} // 🆕 Função para adicionar primeiro componente
               isPreviewMode={isPreviewMode}
               onStepChange={actions.setCurrentStep}
               realExperienceMode={realExperienceMode} // Passar prop para EditorCanvas
