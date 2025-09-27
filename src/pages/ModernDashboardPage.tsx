@@ -28,6 +28,7 @@ const MonitoringPage = lazy(() => import('./dashboard/MonitoringPage'));
 const AIOptimizationPage = lazy(() => import('./dashboard/AIOptimizationPage'));
 const BackupPage = lazy(() => import('./dashboard/BackupPage'));
 const ParticipantsPage = lazy(() => import('./dashboard/ParticipantsPage'));
+const FacebookMetricsPage = lazy(() => import('./dashboard/FacebookMetricsPage'));
 const TemplatesFunisPage = lazy(() => import('./dashboard/TemplatesFunisPage'));
 const MeusFunisPageReal = lazy(() => import('./dashboard/MeusFunisPageReal'));
 const TemplatesPage = lazy(() => import('./dashboard/TemplatesPage'));
@@ -158,6 +159,22 @@ const pageConfig: Record<string, { title: string; subtitle: string; actions?: Re
             </div>
         )
     },
+    '/dashboard/facebook-metrics': {
+        title: 'Facebook Ads',
+        subtitle: 'Métricas detalhadas das campanhas Facebook',
+        actions: (
+            <div className="flex items-center space-x-2">
+                <Button variant="outline" size="sm">
+                    <RefreshCw className="w-4 h-4 mr-2" />
+                    Sincronizar
+                </Button>
+                <Button variant="outline" size="sm">
+                    <Download className="w-4 h-4 mr-2" />
+                    Exportar
+                </Button>
+            </div>
+        )
+    },
     '/dashboard/ab-tests': {
         title: 'Testes A/B',
         subtitle: 'Configure e monitore experimentos',
@@ -228,6 +245,7 @@ const ModernDashboardPage: React.FC = () => {
                     <Route path="/dashboard/real-time" component={RealTimePage} />
                     <Route path="/dashboard/monitoring" component={MonitoringPage} />
                     <Route path="/dashboard/participants" component={ParticipantsPage} />
+                    <Route path="/dashboard/facebook-metrics" component={FacebookMetricsPage} />
 
                     {/* AI & OPTIMIZATION - Páginas de IA e otimização */}
                     <Route path="/dashboard/ai-optimization" component={AIOptimizationPage} />

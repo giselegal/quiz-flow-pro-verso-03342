@@ -9,7 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/integrations/supabase/client';
 import {
     Table,
     TableBody,
@@ -89,29 +89,48 @@ const ParticipantsTable: React.FC = () => {
         try {
             setIsLoading(true);
 
-            // Buscar sessões do quiz
+            // 🔥 CORREÇÃO: Buscar sessões com dados dos usuários usando JOIN
             const { data: sessions, error: sessionsError } = await supabase
                 .from('quiz_sessions')
-                .select('*')
+                .select(`
+                    *,
+                    quiz_users!inner(
+                        id,
+                        name,
+                        email,
+                        created_at,
+                        utm_source,
+                        utm_medium,
+                        utm_campaign
+                    ),
+                    quiz_results(
+                        result_type,
+                        result_title,
+                        result_description,
+                        recommendation,
+                        result_data,
+                        created_at
+                    )
+                `)
                 .order('started_at', { ascending: false });
 
             if (sessionsError) {
                 console.error('Erro ao carregar sessões:', sessionsError);
+                console.error('Detalhes do erro:', sessionsError.message);
                 return;
             }
 
-            // Buscar resultados para cada sessão
-            const { data: results } = await supabase
-                .from('quiz_results')
-                .select('*');
+            console.log('✅ Sessions carregadas:', sessions?.length || 0);
+            console.log('📊 Primeira sessão de exemplo:', sessions?.[0]);
 
             // Combinar dados
             const participantsData: ParticipantResponse[] = (sessions || []).map(session => {
-                const result = results?.find(r => r.session_id === session.id);
+                const user = session.quiz_users;
+                const result = session.quiz_results?.[0]; // Pega o primeiro resultado
 
                 return {
                     id: session.id,
-                    user_name: session.quiz_user_id || 'Anônimo',
+                    user_name: user?.name || user?.email || 'Anônimo',
                     session_id: session.id,
                     started_at: session.started_at,
                     completed_at: session.completed_at,
