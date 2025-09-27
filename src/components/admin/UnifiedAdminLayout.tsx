@@ -331,6 +331,8 @@ export const UnifiedAdminLayout: React.FC<UnifiedAdminLayoutProps> = ({
 
                     {/* Actions - Design Premium com Nova Identidade */}
                     <div className="flex items-center gap-3">
+                        <ThemeToggle size="sm" />
+                        
                         {activeView === 'editor' && (
                             <Button
                                 variant="outline"
