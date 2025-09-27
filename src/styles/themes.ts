@@ -145,7 +145,7 @@ export const themeStyles = {
             left: 100%;
         }
     `,
-    
+
     glowCard: `
         .glow-card {
             border-radius: 16px;
@@ -174,7 +174,7 @@ export const themeStyles = {
             filter: blur(15px);
         }
     `,
-    
+
     glowText: `
         .glow-text {
             background: linear-gradient(135deg, #d85dfb 0%, #687ef7 100%);
@@ -184,7 +184,7 @@ export const themeStyles = {
             filter: drop-shadow(0 0 10px rgba(216, 93, 251, 0.5));
         }
     `,
-    
+
     neonBorder: `
         .neon-border {
             border: 2px solid transparent;

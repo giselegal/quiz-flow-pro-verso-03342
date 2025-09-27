@@ -14,7 +14,7 @@ interface ThemeToggleProps {
     size?: 'sm' | 'md' | 'lg';
 }
 
-export const ThemeToggle: React.FC<ThemeToggleProps> = ({ 
+export const ThemeToggle: React.FC<ThemeToggleProps> = ({
     className = '',
     size = 'md'
 }) => {

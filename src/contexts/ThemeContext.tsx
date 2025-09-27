@@ -28,9 +28,9 @@ interface ThemeProviderProps {
     defaultTheme?: 'dark' | 'light';
 }
 
-export const ThemeProvider: React.FC<ThemeProviderProps> = ({ 
-    children, 
-    defaultTheme = 'dark' 
+export const ThemeProvider: React.FC<ThemeProviderProps> = ({
+    children,
+    defaultTheme = 'dark'
 }) => {
     const [currentTheme, setCurrentTheme] = useState<'dark' | 'light'>(defaultTheme);
 
@@ -43,7 +43,7 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
     // Aplicar classes CSS globais baseadas no tema
     useEffect(() => {
         const root = document.documentElement;
-        
+
         // Aplicar variáveis CSS customizadas
         root.style.setProperty('--theme-background', theme.colors.background);
         root.style.setProperty('--theme-text', theme.colors.text);
@@ -58,14 +58,14 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
         // Aplicar estilos de fundo no body
         document.body.style.backgroundColor = theme.colors.background;
         document.body.style.color = theme.colors.text;
-        
+
     }, [currentTheme, theme]);
 
     return (
-        <ThemeContext.Provider value={{ 
-            theme, 
-            toggleTheme, 
-            isLight: currentTheme === 'light' 
+        <ThemeContext.Provider value={{
+            theme,
+            toggleTheme,
+            isLight: currentTheme === 'light'
         }}>
             <div className={`theme-${currentTheme} min-h-screen`}>
                 {children}

@@ -65,7 +65,7 @@
 }
 
 .glow-text:hover {
-    text-shadow: 
+    text-shadow:
         0 0 5px currentColor,
         0 0 10px currentColor,
         0 0 15px currentColor;
@@ -84,9 +84,10 @@
     from {
         box-shadow: 0 0 5px rgba(216, 93, 251, 0.5);
     }
+
     to {
-        box-shadow: 
-            0 0 20px rgba(216, 93, 251, 0.8), 
+        box-shadow:
+            0 0 20px rgba(216, 93, 251, 0.8),
             0 0 30px rgba(222, 229, 255, 0.5);
     }
 }
@@ -99,7 +100,7 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background-image: 
+    background-image:
         radial-gradient(2px 2px at 20px 30px, rgba(216, 93, 251, 0.3), transparent),
         radial-gradient(2px 2px at 40px 70px, rgba(222, 229, 255, 0.4), transparent),
         radial-gradient(1px 1px at 90px 40px, rgba(104, 126, 247, 0.3), transparent),
@@ -112,8 +113,13 @@
 }
 
 @keyframes particlesFloat {
-    0% { transform: translateY(0px); }
-    100% { transform: translateY(-100px); }
+    0% {
+        transform: translateY(0px);
+    }
+
+    100% {
+        transform: translateY(-100px);
+    }
 }
 
 /* Hover effects para cards */
@@ -124,7 +130,7 @@
 
 .interactive-card:hover {
     transform: translateY(-4px);
-    box-shadow: 
+    box-shadow:
         0 10px 40px rgba(216, 93, 251, 0.3),
         0 20px 60px rgba(222, 229, 255, 0.2);
 }
@@ -138,40 +144,49 @@
 }
 
 @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
 }
 
 /* Gradiente de fundo animado */
 .animated-bg {
-    background: linear-gradient(
-        45deg, 
-        #000000 0%, 
-        rgba(216, 93, 251, 0.1) 25%, 
-        rgba(222, 229, 255, 0.1) 50%, 
-        rgba(104, 126, 247, 0.1) 75%, 
-        #000000 100%
-    );
+    background: linear-gradient(45deg,
+            #000000 0%,
+            rgba(216, 93, 251, 0.1) 25%,
+            rgba(222, 229, 255, 0.1) 50%,
+            rgba(104, 126, 247, 0.1) 75%,
+            #000000 100%);
     background-size: 400% 400%;
     animation: gradientShift 8s ease infinite;
 }
 
 @keyframes gradientShift {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
 }
 
 /* Versão clara do tema */
 .theme-light .animated-bg {
-    background: linear-gradient(
-        45deg, 
-        #ffffff 0%, 
-        rgba(216, 93, 251, 0.1) 25%, 
-        rgba(222, 229, 255, 0.1) 50%, 
-        rgba(104, 126, 247, 0.1) 75%, 
-        #ffffff 100%
-    );
+    background: linear-gradient(45deg,
+            #ffffff 0%,
+            rgba(216, 93, 251, 0.1) 25%,
+            rgba(222, 229, 255, 0.1) 50%,
+            rgba(104, 126, 247, 0.1) 75%,
+            #ffffff 100%);
 }
 
 /* Efeito de glass morphism */
@@ -179,7 +194,7 @@
     background: rgba(255, 255, 255, 0.05);
     backdrop-filter: blur(20px);
     border: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 
+    box-shadow:
         0 8px 32px rgba(0, 0, 0, 0.1),
         inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
@@ -187,7 +202,7 @@
 .theme-light .glass-effect {
     background: rgba(0, 0, 0, 0.05);
     border: 1px solid rgba(0, 0, 0, 0.1);
-    box-shadow: 
+    box-shadow:
         0 8px 32px rgba(255, 255, 255, 0.1),
         inset 0 1px 0 rgba(0, 0, 0, 0.1);
 }
@@ -198,6 +213,7 @@
         opacity: 0;
         transform: translateY(30px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
@@ -213,6 +229,7 @@
         opacity: 0;
         transform: scale(0.9);
     }
+
     to {
         opacity: 1;
         transform: scale(1);

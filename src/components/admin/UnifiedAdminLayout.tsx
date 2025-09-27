@@ -180,17 +180,17 @@ export const UnifiedAdminLayout: React.FC<UnifiedAdminLayoutProps> = ({
     // ========================================================================
 
     return (
-        <div 
+        <div
             className={`min-h-screen ${className}`}
-            style={{ 
+            style={{
                 background: theme.colors.background,
-                color: theme.colors.text 
+                color: theme.colors.text
             }}
         >
             {/* Header Unificado - Design com Nova Identidade Visual */}
-            <header 
+            <header
                 className="sticky top-0 z-50 border-b shadow-sm"
-                style={{ 
+                style={{
                     borderColor: `${theme.colors.detailsMinor}30`,
                     backgroundColor: `${theme.colors.background}95`,
                     backdropFilter: 'blur(20px)',
@@ -201,7 +201,7 @@ export const UnifiedAdminLayout: React.FC<UnifiedAdminLayoutProps> = ({
                     {/* Logo e Titulo - Design Premium com Nova Identidade */}
                     <div className="flex items-center gap-6">
                         <div className="flex items-center gap-3">
-                            <div 
+                            <div
                                 className="flex items-center justify-center w-10 h-10 rounded-xl shadow-lg glow-button"
                                 style={{
                                     background: `linear-gradient(135deg, ${theme.colors.buttons} 0%, ${theme.colors.detailsMinor} 100%)`,
@@ -211,7 +211,7 @@ export const UnifiedAdminLayout: React.FC<UnifiedAdminLayoutProps> = ({
                                 <BarChart3 className="w-5 h-5 text-white" />
                             </div>
                             <div className="flex flex-col">
-                                <span 
+                                <span
                                     className="font-bold text-xl glow-text"
                                     style={{
                                         background: `linear-gradient(135deg, ${theme.colors.detailsMinor} 0%, ${theme.colors.buttons} 100%)`,
@@ -223,7 +223,7 @@ export const UnifiedAdminLayout: React.FC<UnifiedAdminLayoutProps> = ({
                                 >
                                     Admin Dashboard
                                 </span>
-                                <span 
+                                <span
                                     className="text-xs font-medium"
                                     style={{ color: `${theme.colors.text}70` }}
                                 >
@@ -235,13 +235,13 @@ export const UnifiedAdminLayout: React.FC<UnifiedAdminLayoutProps> = ({
                         {/* Sync Status - Design Moderno com Nova Identidade */}
                         {syncStats.total > 0 && (
                             <div className="flex items-center gap-3">
-                                <div 
+                                <div
                                     className="w-px h-6"
                                     style={{
                                         background: `linear-gradient(to bottom, transparent, ${theme.colors.detailsMinor}50, transparent)`
                                     }}
                                 />
-                                <div 
+                                <div
                                     className="flex items-center gap-2 px-3 py-1.5 rounded-full border glow-card"
                                     style={{
                                         backgroundColor: `${theme.colors.glowEffect}20`,
@@ -249,11 +249,11 @@ export const UnifiedAdminLayout: React.FC<UnifiedAdminLayoutProps> = ({
                                         boxShadow: `0 0 10px ${theme.colors.glowEffect}30`
                                     }}
                                 >
-                                    <div 
+                                    <div
                                         className="w-2 h-2 rounded-full animate-pulse"
                                         style={{ backgroundColor: theme.colors.detailsMinor }}
                                     />
-                                    <span 
+                                    <span
                                         className="text-xs font-medium"
                                         style={{ color: theme.colors.text }}
                                     >
@@ -266,7 +266,7 @@ export const UnifiedAdminLayout: React.FC<UnifiedAdminLayoutProps> = ({
 
                     {/* Navigation Tabs - Design Premium com Nova Identidade */}
                     <div className="flex-1 flex justify-center">
-                        <div 
+                        <div
                             className="flex items-center backdrop-blur-sm rounded-2xl p-1 shadow-sm border glow-card"
                             style={{
                                 backgroundColor: `${theme.colors.background}60`,
@@ -280,11 +280,11 @@ export const UnifiedAdminLayout: React.FC<UnifiedAdminLayoutProps> = ({
                                         value="dashboard"
                                         className="flex items-center gap-2 px-6 py-3 rounded-xl transition-all duration-200 glow-button"
                                         style={{
-                                            background: activeView === 'dashboard' 
+                                            background: activeView === 'dashboard'
                                                 ? `linear-gradient(135deg, ${theme.colors.buttons} 0%, ${theme.colors.detailsMinor} 100%)`
                                                 : 'transparent',
                                             color: activeView === 'dashboard' ? '#ffffff' : theme.colors.text,
-                                            boxShadow: activeView === 'dashboard' 
+                                            boxShadow: activeView === 'dashboard'
                                                 ? `0 0 15px ${theme.colors.buttons}40`
                                                 : 'none'
                                         }}
@@ -296,11 +296,11 @@ export const UnifiedAdminLayout: React.FC<UnifiedAdminLayoutProps> = ({
                                         value="funnels"
                                         className="flex items-center gap-2 px-6 py-3 rounded-xl transition-all duration-200 glow-button"
                                         style={{
-                                            background: activeView === 'funnels' 
+                                            background: activeView === 'funnels'
                                                 ? `linear-gradient(135deg, ${theme.colors.buttons} 0%, ${theme.colors.detailsMinor} 100%)`
                                                 : 'transparent',
                                             color: activeView === 'funnels' ? '#ffffff' : theme.colors.text,
-                                            boxShadow: activeView === 'funnels' 
+                                            boxShadow: activeView === 'funnels'
                                                 ? `0 0 15px ${theme.colors.buttons}40`
                                                 : 'none'
                                         }}
@@ -312,11 +312,11 @@ export const UnifiedAdminLayout: React.FC<UnifiedAdminLayoutProps> = ({
                                         value="analytics"
                                         className="flex items-center gap-2 px-6 py-3 rounded-xl transition-all duration-200 glow-button"
                                         style={{
-                                            background: activeView === 'analytics' 
+                                            background: activeView === 'analytics'
                                                 ? `linear-gradient(135deg, ${theme.colors.buttons} 0%, ${theme.colors.detailsMinor} 100%)`
                                                 : 'transparent',
                                             color: activeView === 'analytics' ? '#ffffff' : theme.colors.text,
-                                            boxShadow: activeView === 'analytics' 
+                                            boxShadow: activeView === 'analytics'
                                                 ? `0 0 15px ${theme.colors.buttons}40`
                                                 : 'none'
                                         }}
@@ -365,7 +365,7 @@ export const UnifiedAdminLayout: React.FC<UnifiedAdminLayoutProps> = ({
                 </div>
 
                 {/* Breadcrumbs - Design Moderno com Nova Identidade */}
-                <div 
+                <div
                     className="px-8 py-3 backdrop-blur-sm border-t"
                     style={{
                         background: `linear-gradient(90deg, ${theme.colors.glowEffect}20, ${theme.colors.detailsMinor}10)`,
@@ -398,7 +398,7 @@ export const UnifiedAdminLayout: React.FC<UnifiedAdminLayoutProps> = ({
 
             {/* Main Content - Design Premium com Nova Identidade */}
             <main className="flex-1 min-h-0">
-                <div 
+                <div
                     className="h-full backdrop-blur-sm"
                     style={{
                         background: `linear-gradient(135deg, ${theme.colors.background}60, ${theme.colors.glowEffect}10)`
@@ -408,7 +408,7 @@ export const UnifiedAdminLayout: React.FC<UnifiedAdminLayoutProps> = ({
                         fallback={
                             <div className="flex items-center justify-center h-64">
                                 <div className="text-center">
-                                    <div 
+                                    <div
                                         className="w-8 h-8 mx-auto mb-4 border-2 border-t-transparent rounded-full animate-spin"
                                         style={{
                                             borderColor: `${theme.colors.detailsMinor}30`,

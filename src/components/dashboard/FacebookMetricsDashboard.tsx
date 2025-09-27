@@ -225,7 +225,7 @@ const FacebookMetricsDashboard: React.FC<FacebookMetricsDashboardProps> = ({
     }
 
     return (
-        <div 
+        <div
             className="space-y-6 p-6 rounded-lg"
             style={{
                 background: theme.colors.background,
@@ -234,7 +234,7 @@ const FacebookMetricsDashboard: React.FC<FacebookMetricsDashboardProps> = ({
         >
             {/* Header com Nova Identidade Visual */}
             <div className="flex items-center justify-between">
-                <h2 
+                <h2
                     className="text-2xl font-bold flex items-center gap-2 glow-text"
                     style={{
                         background: `linear-gradient(135deg, ${theme.colors.detailsMinor} 0%, ${theme.colors.buttons} 100%)`,
@@ -247,8 +247,8 @@ const FacebookMetricsDashboard: React.FC<FacebookMetricsDashboardProps> = ({
                     <Facebook className="w-6 h-6" style={{ color: theme.colors.buttons }} />
                     Facebook Ads Metrics
                     {selectedFunnel !== 'all' && (
-                        <Badge 
-                            variant="outline" 
+                        <Badge
+                            variant="outline"
                             className="ml-2 glow-card"
                             style={{
                                 borderColor: theme.colors.detailsMinor,

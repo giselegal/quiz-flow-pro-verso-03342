@@ -9,7 +9,8 @@
 @import "./styles/imageOptimization.css";
 @import './styles/mobile-responsive-fixes.css';
 @import './styles/brand-system.css';
-@import './styles/global-effects.css'; /* Nova identidade visual */
+@import './styles/global-effects.css';
+/* Nova identidade visual */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -19,29 +20,68 @@
   .customizable-width {
     @apply w-full max-w-3xl min-w-full mx-auto;
   }
-  
+
   .bg-dot-pattern {
     background-image: radial-gradient(circle, #e2e8f0 1px, transparent 1px);
     background-size: 20px 20px;
   }
-  
+
   /* Classes da Nova Paleta Global Tech */
-  .bg-primary-blue { background-color: var(--primary-blue); }
-  .bg-secondary-purple { background-color: var(--secondary-purple); }
-  .bg-accent-cyan { background-color: var(--accent-cyan); }
-  .bg-pure-white { background-color: var(--pure-white); }
-  .bg-dark-navy { background-color: var(--dark-navy); }
-  .bg-light-gray { background-color: var(--light-gray); }
-  
-  .text-primary-blue { color: var(--primary-blue); }
-  .text-secondary-purple { color: var(--secondary-purple); }
-  .text-accent-cyan { color: var(--accent-cyan); }
-  .text-pure-white { color: var(--pure-white); }
-  .text-dark-navy { color: var(--dark-navy); }
-  
-  .bg-gradient-primary { background: var(--gradient-primary); }
-  .bg-gradient-accent { background: var(--gradient-accent); }
-  .bg-gradient-hero { background: var(--gradient-hero); }
+  .bg-primary-blue {
+    background-color: var(--primary-blue);
+  }
+
+  .bg-secondary-purple {
+    background-color: var(--secondary-purple);
+  }
+
+  .bg-accent-cyan {
+    background-color: var(--accent-cyan);
+  }
+
+  .bg-pure-white {
+    background-color: var(--pure-white);
+  }
+
+  .bg-dark-navy {
+    background-color: var(--dark-navy);
+  }
+
+  .bg-light-gray {
+    background-color: var(--light-gray);
+  }
+
+  .text-primary-blue {
+    color: var(--primary-blue);
+  }
+
+  .text-secondary-purple {
+    color: var(--secondary-purple);
+  }
+
+  .text-accent-cyan {
+    color: var(--accent-cyan);
+  }
+
+  .text-pure-white {
+    color: var(--pure-white);
+  }
+
+  .text-dark-navy {
+    color: var(--dark-navy);
+  }
+
+  .bg-gradient-primary {
+    background: var(--gradient-primary);
+  }
+
+  .bg-gradient-accent {
+    background: var(--gradient-accent);
+  }
+
+  .bg-gradient-hero {
+    background: var(--gradient-hero);
+  }
 }
 
 /* Variáveis Globais de Estilo para o Canvas */
@@ -52,7 +92,7 @@
   /* 608px */
   --global-radius: 0.5rem;
   /* 8px */
-  
+
   /* Nova Paleta de Cores - Global Tech */
   --primary-blue: #3B82F6;
   --secondary-purple: #8B5CF6;
@@ -60,7 +100,7 @@
   --pure-white: #FFFFFF;
   --dark-navy: #0F172A;
   --light-gray: #F8FAFC;
-  
+
   /* Gradientes */
   --gradient-primary: linear-gradient(135deg, var(--primary-blue), var(--secondary-purple));
   --gradient-accent: linear-gradient(135deg, var(--accent-cyan), var(--primary-blue));
@@ -367,7 +407,8 @@ img:hover,
 @layer base {
   :root {
     /* Semantic Design System Colors */
-    --background: 0 0% 99.6%;      /* #FEFEFE - Off-white */
+    --background: 0 0% 99.6%;
+    /* #FEFEFE - Off-white */
     --foreground: 222.2 84% 4.9%;
 
     --card: 0 0% 100%;
@@ -376,13 +417,16 @@ img:hover,
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
 
-    --primary: 272 83% 58%;         /* #B131FA - Medium Purple */
+    --primary: 272 83% 58%;
+    /* #B131FA - Medium Purple */
     --primary-foreground: 0 0% 99.6%;
 
-    --secondary: 256 100% 23%;      /* #4A0074 - Dark Purple */
+    --secondary: 256 100% 23%;
+    /* #4A0074 - Dark Purple */
     --secondary-foreground: 0 0% 99.6%;
 
-    --accent: 226 100% 56%;         /* #1C3AFF - Neon Blue */
+    --accent: 226 100% 56%;
+    /* #1C3AFF - Neon Blue */
     --accent-foreground: 0 0% 99.6%;
 
     --destructive: 0 84.2% 60.2%;
@@ -395,22 +439,34 @@ img:hover,
     --radius: 0.5rem;
 
     /* QuizFlow Brand System - CYBERPUNK EQUILIBRADO */
-    --brand-dark-blue: 256 100% 23%;    /* #4A0074 - Dark Purple (PRINCIPAL) */
-    --brand-medium-blue: 272 83% 58%;   /* #B131FA - Medium Purple (SECUNDÁRIO) */
-    --brand-light-blue: 226 100% 56%;   /* #1C3AFF - Neon Blue (ACCENT) */
-    --brand-bright-blue: 226 100% 56%;  /* #1C3AFF - Neon Blue */
-    --brand-bright-pink: 318 100% 55%;  /* #FF1CC0 - Neon Pink (APENAS GRADIENTES) */
+    --brand-dark-blue: 256 100% 23%;
+    /* #4A0074 - Dark Purple (PRINCIPAL) */
+    --brand-medium-blue: 272 83% 58%;
+    /* #B131FA - Medium Purple (SECUNDÁRIO) */
+    --brand-light-blue: 226 100% 56%;
+    /* #1C3AFF - Neon Blue (ACCENT) */
+    --brand-bright-blue: 226 100% 56%;
+    /* #1C3AFF - Neon Blue */
+    --brand-bright-pink: 318 100% 55%;
+    /* #FF1CC0 - Neon Pink (APENAS GRADIENTES) */
 
     /* Cores Principais - Roxos e Azuis */
-    --brand-primary: 272 83% 58%;       /* #B131FA - Medium Purple como principal */
-    --brand-dark: 256 100% 23%;         /* #4A0074 - Dark Purple */
-    --brand-background: 0 0% 99.6%;     /* #FEFEFE - Off-white */
-    --brand-text: 256 100% 23%;         /* #4A0074 - Dark Purple */
-    --brand-muted: 226 100% 56%;        /* #1C3AFF - Neon Blue */
+    --brand-primary: 272 83% 58%;
+    /* #B131FA - Medium Purple como principal */
+    --brand-dark: 256 100% 23%;
+    /* #4A0074 - Dark Purple */
+    --brand-background: 0 0% 99.6%;
+    /* #FEFEFE - Off-white */
+    --brand-text: 256 100% 23%;
+    /* #4A0074 - Dark Purple */
+    --brand-muted: 226 100% 56%;
+    /* #1C3AFF - Neon Blue */
 
     /* Cyberpunk Gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(318 100% 55%), hsl(226 100% 56%)); /* Pink to Blue */
-    --gradient-tech: linear-gradient(135deg, hsl(256 100% 23%), hsl(272 83% 58%), hsl(226 100% 56%)); /* Dark to Blue */
+    --gradient-primary: linear-gradient(135deg, hsl(318 100% 55%), hsl(226 100% 56%));
+    /* Pink to Blue */
+    --gradient-tech: linear-gradient(135deg, hsl(256 100% 23%), hsl(272 83% 58%), hsl(226 100% 56%));
+    /* Dark to Blue */
     --gradient-subtle: linear-gradient(135deg, hsl(0 0% 99.6%), hsl(318 100% 55% / 0.1));
     --gradient-hero: linear-gradient(135deg, hsl(318 100% 55%), hsl(272 83% 58%), hsl(226 100% 56%));
     --gradient-neon: linear-gradient(45deg, hsl(318 100% 55%), hsl(272 83% 58%), hsl(226 100% 56%));

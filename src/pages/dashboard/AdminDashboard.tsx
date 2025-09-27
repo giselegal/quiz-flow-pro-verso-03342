@@ -274,7 +274,7 @@ const AdminDashboard: React.FC = () => {
     // ============================================================================
 
     return (
-        <div 
+        <div
             className="p-8 space-y-8 min-h-screen animated-bg particles-bg"
             style={{
                 background: theme.colors.background,
@@ -284,7 +284,7 @@ const AdminDashboard: React.FC = () => {
             {/* Header Modernizado com Nova Identidade Visual */}
             <div className="flex justify-between items-start fade-in-up">
                 <div className="space-y-1">
-                    <h1 
+                    <h1
                         className="text-3xl font-bold glow-text"
                         style={{
                             background: `linear-gradient(135deg, ${theme.colors.detailsMinor} 0%, ${theme.colors.buttons} 100%)`,
@@ -296,7 +296,7 @@ const AdminDashboard: React.FC = () => {
                     >
                         Dashboard Executivo
                     </h1>
-                    <p 
+                    <p
                         className="text-lg font-medium"
                         style={{ color: `${theme.colors.text}80` }}
                     >
@@ -304,7 +304,7 @@ const AdminDashboard: React.FC = () => {
                     </p>
                 </div>
                 <div className="flex items-center gap-3">
-                    <div 
+                    <div
                         className="flex items-center gap-2 px-4 py-2 backdrop-blur-sm rounded-xl border shadow-sm glow-card"
                         style={{
                             backgroundColor: `${theme.colors.background}60`,
@@ -312,11 +312,11 @@ const AdminDashboard: React.FC = () => {
                             boxShadow: `0 0 20px ${theme.colors.glowEffect}20`
                         }}
                     >
-                        <div 
+                        <div
                             className="w-2 h-2 rounded-full animate-pulse"
                             style={{ backgroundColor: theme.colors.detailsMinor }}
                         />
-                        <span 
+                        <span
                             className="text-sm font-medium"
                             style={{ color: theme.colors.text }}
                         >
@@ -342,7 +342,7 @@ const AdminDashboard: React.FC = () => {
             </div>
 
             <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as typeof activeTab)} className="w-full">
-                <TabsList 
+                <TabsList
                     className="grid w-full grid-cols-3 backdrop-blur-sm border shadow-sm p-1 rounded-2xl max-w-md glass-effect glow-card"
                     style={{
                         backgroundColor: `${theme.colors.background}60`,
