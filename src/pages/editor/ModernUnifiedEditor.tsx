@@ -19,6 +19,12 @@ import {
     Component, Crown, Eye, CheckCircle, Activity
 } from 'lucide-react';
 
+// 📡 Publication Settings Integration
+import { PublicationSettingsButton } from '@/components/editor/publication/PublicationButton';
+
+// 🎛️ NoCode Configuration Panel
+import EditorNoCodePanel from '@/components/editor/EditorNoCodePanel';
+
 // Lazy loading do editor principal
 const EditorProUnified = React.lazy(() =>
     import('../../components/editor/EditorProUnified')
@@ -300,6 +306,20 @@ const ModernToolbar: React.FC<ModernToolbarProps> = ({
                     <Target className="w-4 h-4 mr-2" />
                     {editorState.realExperienceMode ? "Real ✓" : "Real"}
                 </Button>
+
+                <Separator orientation="vertical" className="h-4" />
+
+                {/* 🎛️ Configurações NoCode */}
+                <EditorNoCodePanel className="gap-2" />
+
+                {/* 📡 Configurações de Publicação */}
+                {funnelId && (
+                    <PublicationSettingsButton
+                        funnelId={funnelId}
+                        funnelTitle={`Funil ${funnelId}`}
+                        className="gap-2"
+                    />
+                )}
 
                 <Button
                     variant="default"
