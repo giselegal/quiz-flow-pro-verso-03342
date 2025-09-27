@@ -49,7 +49,8 @@ const DashboardLoadingFallback = () => (
     </div>
 );
 
-// Mapeamento de títulos e subtítulos das páginas
+// Mapeamento de títulos e subtítulos das páginas (não utilizado atualmente)
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const pageConfig: Record<string, { title: string; subtitle: string; actions?: React.ReactNode }> = {
     '/dashboard': {
         title: 'Admin Dashboard',

@@ -18,7 +18,6 @@ import {
     TableRow,
 } from '@/components/ui/table';
 import {
-    BarChart3,
     TrendingUp,
     TrendingDown,
     Eye,
@@ -28,9 +27,7 @@ import {
     Target,
     RefreshCw,
     Facebook,
-    Calendar,
     Activity,
-    Filter,
     Download
 } from 'lucide-react';
 import { useTheme } from '@/styles/themes';
