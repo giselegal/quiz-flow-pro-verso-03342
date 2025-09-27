@@ -313,28 +313,16 @@ export const QuizQuestion: React.FC<QuizQuestionProps> = ({
     const isSelected = selectedOptionIds.includes(option.id);
     const letter = String.fromCharCode(65 + index); // A, B, C, D...
 
-    const baseClasses = 'transition-all duration-200 cursor-pointer';
+    // Classes exatas do exemplo fornecido pelo usuário
+    const optionClasses = `whitespace-nowrap rounded-md text-sm font-medium ring-offset-background 
+      transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring 
+      focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 option 
+      border-zinc-200 bg-background hover:bg-primary hover:text-foreground px-4 
+      hover:shadow-2xl overflow-hidden min-w-full gap-2 flex h-auto py-2 flex-col 
+      items-center justify-start border drop-shadow-none option-button cursor-pointer`;
 
-  let optionClasses = baseClasses;
-    let contentClasses = '';
-
-    switch (optionStyle) {
-      case 'card':
-        optionClasses += ` p-4 border-2 rounded-lg ${
-          isSelected ? '' : 'border-gray-200'
-        }`;
-        contentClasses = 'flex items-center space-x-3';
-        break;
-      case 'button':
-        optionClasses += ` px-6 py-3 rounded-lg ${isSelected ? '' : 'bg-gray-100 text-gray-800'}`;
-        contentClasses = 'text-center';
-        break;
-      case 'radio':
-      case 'checkbox':
-        optionClasses += ' p-3 hover:bg-gray-50 rounded';
-        contentClasses = 'flex items-center space-x-3';
-        break;
-    }
+    // Classes para o conteúdo - com imagem usa layout em coluna
+    const contentClasses = option.imageUrl ? 'w-full' : 'flex items-center space-x-3';
 
     // Overrides dinâmicos conforme seleção e estilo desejado
     const selectedColor = customStyles?.selectedColor || '#B89B7A';
@@ -368,73 +356,44 @@ export const QuizQuestion: React.FC<QuizQuestionProps> = ({
     }
 
     return (
-      <div
+      <button
         key={option.id}
         className={optionClasses}
         style={{ ...itemStyles, ...(customStyles?.optionStyles || {}), ...overrides }}
         onClick={() => handleOptionSelect(option.id)}
         data-testid={`option-${option.id}`}
       >
-        <div className={option.imageUrl ? 'space-y-3' : contentClasses}>
-          {/* Indicador de seleção */}
-          {optionStyle === 'radio' && (
-            <div
-              className={`w-4 h-4 rounded-full border-2 ${
-                isSelected ? 'border-[#B89B7A] bg-[#B89B7A]' : 'border-gray-300'
-              }`}
-            >
-              {isSelected && <div className="w-2 h-2 bg-white rounded-full mx-auto mt-0.5"></div>}
-            </div>
-          )}
+        <div className={contentClasses}>
 
-          {optionStyle === 'checkbox' && (
-            <div
-              className={`w-4 h-4 border-2 rounded ${
-                isSelected ? 'border-[#B89B7A] bg-[#B89B7A]' : 'border-gray-300'
-              }`}
-            >
-              {isSelected && (
-                <svg
-                  className="w-3 h-3 text-white mt-0.5 ml-0.5"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-              )}
-            </div>
-          )}
-
-          {/* Imagem da opção (se houver) */}
+          {/* Imagem da opção (se houver) - Classes exatas do exemplo */}
           {option.imageUrl && customStyles?.contentType !== 'text-only' && (
-            <div className="w-full mb-3">
-              <img
-                src={option.imageUrl}
-                alt={option.text}
-                className={`w-full object-cover rounded-lg`}
-                style={{
-                  width: customStyles?.imageSize ? `${customStyles.imageSize}px` : undefined,
-                  height: customStyles?.imageSize ? `${customStyles.imageSize}px` : undefined,
-                  maxWidth: '100%',
-                }}
-                loading="lazy"
-              />
+            <img
+              src={option.imageUrl}
+              alt={option.text}
+              width="256"
+              height="256"
+              className="w-full rounded-t-md bg-white h-full"
+              loading="lazy"
+            />
+          )}
+
+          {/* Texto da opção - Layout exato do exemplo */}
+          {customStyles?.contentType !== 'image-only' && option.imageUrl && (
+            <div className="py-2 px-4 w-full flex flex-row text-base items-center text-full-primary justify-between">
+              <div className="break-words w-full custom-quill quill ql-editor quill-option text-centered mt-2">
+                {option.text && <p dangerouslySetInnerHTML={{ __html: option.text }} />}
+              </div>
             </div>
           )}
 
-          {/* Texto e letra em uma linha quando há imagem */}
-          {customStyles?.contentType !== 'image-only' && (
+          {/* Texto da opção para layout sem imagem */}
+          {customStyles?.contentType !== 'image-only' && !option.imageUrl && (
             <div className={option.imageUrl ? 'flex items-center space-x-3' : 'contents'}>
               {/* Letra da opção */}
               {showLetters && optionStyle === 'card' && (
                 <div
-                  className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold ${
-                    isSelected ? 'text-white' : 'bg-gray-200 text-gray-600'
-                  }`}
+                  className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold ${isSelected ? 'text-white' : 'bg-gray-200 text-gray-600'
+                    }`}
                   style={isSelected ? { backgroundColor: selectedColor } : undefined}
                 >
                   {letter}
@@ -449,7 +408,7 @@ export const QuizQuestion: React.FC<QuizQuestionProps> = ({
             </div>
           )}
         </div>
-      </div>
+      </button>
     );
   };
 
@@ -485,13 +444,12 @@ export const QuizQuestion: React.FC<QuizQuestionProps> = ({
         {question && question.trim() && (
           <div className="mb-8">
             <h2
-              className={`text-2xl md:text-3xl font-bold text-[#432818] mb-4 ${
-                alignment === 'center'
+              className={`text-2xl md:text-3xl font-bold text-[#432818] mb-4 ${alignment === 'center'
                   ? 'text-center'
                   : alignment === 'right'
                     ? 'text-right'
                     : 'text-left'
-              }`}
+                }`}
             >
               {question}
             </h2>
