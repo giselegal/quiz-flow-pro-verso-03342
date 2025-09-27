@@ -84,6 +84,7 @@ interface EditorCanvasProps {
   onSelectBlock: (id: string) => void;
   onUpdateBlock: (blockId: string, updates: Partial<Block>) => void;
   onDeleteBlock: (blockId: string) => void;
+  onAddFirstBlock?: () => void; // Função para adicionar primeiro componente
   isPreviewMode: boolean;
   onStepChange?: (step: number) => void;
   realExperienceMode?: boolean; // Nova prop para ativar QuizOrchestrator
@@ -97,6 +98,7 @@ const EditorCanvas: React.FC<EditorCanvasProps> = ({
   onSelectBlock,
   onUpdateBlock,
   onDeleteBlock,
+  onAddFirstBlock,
   isPreviewMode,
   onStepChange,
   realExperienceMode = false // Nova prop para ativar QuizOrchestrator
@@ -124,10 +126,7 @@ const EditorCanvas: React.FC<EditorCanvasProps> = ({
     console.log('🆕 [DEBUG] Renderizando canvas vazio para criação de funil');
     return (
       <EmptyCanvas
-        onAddFirstBlock={() => {
-          console.log('🎯 Usuário clicou para adicionar primeiro componente');
-          // Trigger para abrir sidebar de componentes ou adicionar bloco padrão
-        }}
+        onAddFirstBlock={onAddFirstBlock}
       />
     );
   }
@@ -239,6 +238,7 @@ const arePropsEqual = (prevProps: EditorCanvasProps, nextProps: EditorCanvasProp
   if (prevProps.onSelectBlock !== nextProps.onSelectBlock ||
     prevProps.onUpdateBlock !== nextProps.onUpdateBlock ||
     prevProps.onDeleteBlock !== nextProps.onDeleteBlock ||
+    prevProps.onAddFirstBlock !== nextProps.onAddFirstBlock ||
     prevProps.onStepChange !== nextProps.onStepChange) {
     return false;
   }
