@@ -32,7 +32,10 @@ const Home = lazy(() => import('./pages/Home'));
 const AuthPage = lazy(() => import('./pages/AuthPage'));
 const NotFound = lazy(() => import('./pages/NotFound'));
 
-// 🚀 MODERN UNIFIED EDITOR - EDITOR OFICIAL (MAIS COMPLETO)
+// � PÁGINAS DE DIAGNÓSTICO - TEMPORÁRIAS
+const TemplateDiagnosticPage = lazy(() => import('./pages/TemplateDiagnosticPage'));
+
+// �🚀 MODERN UNIFIED EDITOR - EDITOR OFICIAL (MAIS COMPLETO)
 const ModernUnifiedEditor = lazy(() => import('./pages/editor/ModernUnifiedEditor'));
 
 // ❌ HYBRID EDITOR PRO - DESATIVADO (substituído pelo ModernUnifiedEditor)
@@ -98,6 +101,13 @@ function App() {
                         <Route path="/editor/templates">
                           <div data-testid="editor-templates-page">
                             <EditorTemplatesPage />
+                          </div>
+                        </Route>
+
+                        {/* 🔍 PÁGINA DE DIAGNÓSTICO DE TEMPLATES - TEMPORÁRIA */}
+                        <Route path="/debug/templates">
+                          <div data-testid="template-diagnostic-page">
+                            <TemplateDiagnosticPage />
                           </div>
                         </Route>
 
