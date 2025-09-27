@@ -66,6 +66,10 @@ export const UNIFIED_COMPONENT_REGISTRY: Record<string, ComponentType<any> | (()
     'box': BasicContainerBlock,
     'sales-hero': SalesHeroBlock,
 
+    // 🔌 COMPONENTES CONECTADOS À API - Controlados pelo /editor
+    'quiz-options-grid-connected': lazy(() => import('@/components/blocks/quiz/QuizOptionsGridBlockConnected')),
+    'quiz-app-connected': lazy(() => import('@/components/quiz/QuizAppConnected')),
+
     // ✅ STEP 20 - Módulos críticos (estáticos)
     'step20-result-header': Step20ResultHeaderBlock,
     'step20-style-reveal': Step20StyleRevealBlock,
