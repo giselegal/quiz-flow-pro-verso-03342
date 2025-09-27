@@ -12,7 +12,7 @@ export interface Style {
   score: number;
   characteristics: string[];
   recommendations: string[];
-  colors: string[];
+  colors?: string[];
   images: string[];
   imageUrl?: string;
   guideImageUrl?: string;
@@ -37,14 +37,13 @@ export const STYLE_DEFINITIONS: Record<string, Style> = {
     score: 0,
     characteristics: ['atemporal', 'elegante', 'sofisticado', 'equilibrado', 'refinado'],
     recommendations: ['blazer', 'camisa branca', 'saia lápis', 'sapato oxford'],
-    colors: ['#2C3E50', '#34495E', '#ECF0F1'],
     images: ['/estilos/classico-1.jpg', '/estilos/classico-2.jpg'],
     description: 'Descubra quais peças atemporais fazem parte do seu DNA estilístico, as cores que mais valorizam você e os segredos para criar looks impecáveis que nunca saem de moda.',
-    imageUrl: '/estilos/classico-personal.svg',
-    guideImageUrl: '/estilos/classico-guide.svg',
+    imageUrl: '/estilos/classico-personal.webp',
+    guideImageUrl: '/estilos/classico-guide.webp',
     keywords: ['atemporal', 'elegante', 'sofisticado', 'equilibrado', 'refinado'],
-    image: '/estilos/classico-personal.jpg',
-    guideImage: '/estilos/classico-guide.jpg',
+    image: '/estilos/classico-personal.webp',
+    guideImage: '/estilos/classico-guide.webp',
     specialTips: ['Invista em peças de qualidade', 'Mantenha um guarda-roupa atemporal']
   },
 
@@ -55,14 +54,13 @@ export const STYLE_DEFINITIONS: Record<string, Style> = {
     score: 0,
     characteristics: ['descomplicado', 'confortável', 'natural', 'terroso', 'autêntico'],
     recommendations: ['jeans', 'camiseta básica', 'tênis', 'cardigan'],
-    colors: ['#8D6E63', '#D7CCC8', '#4CAF50'],
     images: ['/estilos/natural-1.jpg', '/estilos/natural-2.jpg'],
     description: 'Descubra as texturas e tons que conectam você com sua essência mais autêntica, além dos truques para criar looks descomplicados que irradiam naturalidade e charme.',
-    imageUrl: '/estilos/natural-personal.svg',
-    guideImageUrl: '/estilos/natural-guide.svg',
+    imageUrl: '/estilos/natural-personal.webp',
+    guideImageUrl: '/estilos/natural-guide.webp',
     keywords: ['descomplicado', 'confortável', 'natural', 'terroso', 'autêntico'],
-    image: '/estilos/natural-personal.jpg',
-    guideImage: '/estilos/natural-guide.jpg',
+    image: '/estilos/natural-personal.webp',
+    guideImage: '/estilos/natural-guide.webp',
     specialTips: ['Priorize o conforto', 'Use tecidos naturais']
   },
 
@@ -73,14 +71,13 @@ export const STYLE_DEFINITIONS: Record<string, Style> = {
     score: 0,
     characteristics: ['moderno', 'atual', 'tendência', 'inovador', 'experimental'],
     recommendations: ['peças de design', 'estampas geométricas', 'cortes assimétricos'],
-    colors: ['#607D8B', '#ECEFF1', '#FF5722'],
     images: ['/estilos/contemporaneo-1.jpg', '/estilos/contemporaneo-2.jpg'],
     description: 'Descubra quais tendências combinam perfeitamente com você, as estampas que destacam sua personalidade moderna e os segredos para estar sempre um passo à frente no mundo da moda.',
-    imageUrl: '/estilos/contemporaneo-personal.svg',
-    guideImageUrl: '/estilos/contemporaneo-guide.svg',
+    imageUrl: '/estilos/contemporaneo-personal.webp',
+    guideImageUrl: '/estilos/contemporaneo-guide.webp',
     keywords: ['moderno', 'atual', 'tendência', 'inovador', 'experimental'],
-    image: '/estilos/contemporaneo-personal.jpg',
-    guideImage: '/estilos/contemporaneo-guide.jpg',
+    image: '/estilos/contemporaneo-personal.webp',
+    guideImage: '/estilos/contemporaneo-guide.webp',
     specialTips: ['Experimente tendências novas', 'Misture peças modernas com clássicas']
   },
 
@@ -91,14 +88,13 @@ export const STYLE_DEFINITIONS: Record<string, Style> = {
     score: 0,
     characteristics: ['refinado', 'polido', 'qualidade', 'sofisticação', 'bom gosto'],
     recommendations: ['vestidos midi', 'salto alto', 'bolsa estruturada', 'joias delicadas'],
-    colors: ['#1A237E', '#C5CAE9', '#3F51B5'],
     images: ['/estilos/elegante-1.jpg', '/estilos/elegante-2.jpg'],
     description: 'Descubra as cores e texturas que exalam sofisticação no seu estilo, quais peças estratégicas elevam qualquer look e os detalhes que fazem toda a diferença na sua elegância.',
-    imageUrl: '/estilos/elegante-personal.svg',
-    guideImageUrl: '/estilos/elegante-guide.svg',
+    imageUrl: '/estilos/elegante-personal.webp',
+    guideImageUrl: '/estilos/elegante-guide.webp',
     keywords: ['refinado', 'polido', 'qualidade', 'sofisticação', 'bom gosto'],
-    image: '/estilos/elegante-personal.jpg',
-    guideImage: '/estilos/elegante-guide.jpg',
+    image: '/estilos/elegante-personal.webp',
+    guideImage: '/estilos/elegante-guide.webp',
     specialTips: ['Foque na qualidade dos tecidos', 'Atenção aos detalhes']
   },
 
@@ -109,14 +105,13 @@ export const STYLE_DEFINITIONS: Record<string, Style> = {
     score: 0,
     characteristics: ['delicado', 'feminino', 'floral', 'suave', 'doce'],
     recommendations: ['vestidos florais', 'rendas', 'babados', 'cores pastéis'],
-    colors: ['#F8BBD9', '#FCE4EC', '#E91E63'],
     images: ['/estilos/romantico-1.jpg', '/estilos/romantico-2.jpg'],
     description: 'Descubra quais estampas florais e tons suaves realçam sua feminilidade natural, os tecidos que abraçam sua delicadeza e os segredos para criar looks encantadores que expressam sua essência romântica.',
-    imageUrl: '/estilos/romantico-personal.svg',
-    guideImageUrl: '/estilos/romantico-guide.svg',
+    imageUrl: '/estilos/romantico-personal.webp',
+    guideImageUrl: '/estilos/romantico-guide.webp',
     keywords: ['delicado', 'feminino', 'floral', 'suave', 'doce'],
-    image: '/estilos/romantico-personal.jpg',
-    guideImage: '/estilos/romantico-guide.jpg',
+    image: '/estilos/romantico-personal.webp',
+    guideImage: '/estilos/romantico-guide.webp',
     specialTips: ['Use estampas florais', 'Aposte em cores suaves']
   },
 
@@ -127,14 +122,13 @@ export const STYLE_DEFINITIONS: Record<string, Style> = {
     score: 0,
     characteristics: ['sedutor', 'confiante', 'feminino', 'marcante', 'poderosa'],
     recommendations: ['decotes', 'vestidos justos', 'salto alto', 'cores vibrantes'],
-    colors: ['#B71C1C', '#FFCDD2', '#000000'],
     images: ['/estilos/sexy-1.jpg', '/estilos/sexy-2.jpg'],
     description: 'Descubra as cores vibrantes que potencializam sua sensualidade, os cortes estratégicos que valorizam sua silhueta e os segredos para expressar sua feminilidade com confiança e elegância.',
-    imageUrl: '/estilos/sexy-personal.svg',
-    guideImageUrl: '/estilos/sexy-guide.svg',
+    imageUrl: '/estilos/sexy-personal.webp',
+    guideImageUrl: '/estilos/sexy-guide.webp',
     keywords: ['sedutor', 'confiante', 'feminino', 'marcante', 'poderosa'],
-    image: '/estilos/sexy-personal.jpg',
-    guideImage: '/estilos/sexy-guide.jpg',
+    image: '/estilos/sexy-personal.webp',
+    guideImage: '/estilos/sexy-guide.webp',
     specialTips: ['Realce suas curvas', 'Confie na sua feminilidade']
   },
 
@@ -145,14 +139,13 @@ export const STYLE_DEFINITIONS: Record<string, Style> = {
     score: 0,
     characteristics: ['marcante', 'impactante', 'contraste', 'geométrico', 'confiante'],
     recommendations: ['ombros marcados', 'preto e branco', 'acessórios statement'],
-    colors: ['#000000', '#FFFFFF', '#E74C3C'],
     images: ['/estilos/dramatico-1.jpg', '/estilos/dramatico-2.jpg'],
     description: 'Descubra os contrastes ousados que fazem sua personalidade brilhar, as estampas geométricas que combinam com sua energia marcante e os acessórios que transformam qualquer look em statement.',
-    imageUrl: '/estilos/dramatico-personal.svg',
-    guideImageUrl: '/estilos/dramatico-guide.svg',
+    imageUrl: '/estilos/dramatico-personal.webp',
+    guideImageUrl: '/estilos/dramatico-guide.webp',
     keywords: ['marcante', 'impactante', 'contraste', 'geométrico', 'confiante'],
-    image: '/estilos/dramatico-personal.jpg',
-    guideImage: '/estilos/dramatico-guide.jpg',
+    image: '/estilos/dramatico-personal.webp',
+    guideImage: '/estilos/dramatico-guide.webp',
     specialTips: ['Use contrastes marcantes', 'Invista em acessórios statement']
   },
 
@@ -163,14 +156,13 @@ export const STYLE_DEFINITIONS: Record<string, Style> = {
     score: 0,
     characteristics: ['único', 'expressivo', 'experimental', 'colorido', 'criativo'],
     recommendations: ['estampas mixadas', 'cores vibrantes', 'acessórios únicos'],
-    colors: ['#9C27B0', '#FF9800', '#2196F3'],
     images: ['/estilos/criativo-1.jpg', '/estilos/criativo-2.jpg'],
     description: 'Descubra quais combinações de estampas expressam sua criatividade única, as cores vibrantes que conectam com sua energia artística e os truques para mixar peças de forma harmoniosa e autêntica.',
-    imageUrl: '/estilos/criativo-personal.svg',
-    guideImageUrl: '/estilos/criativo-guide.svg',
+    imageUrl: '/estilos/criativo-personal.webp',
+    guideImageUrl: '/estilos/criativo-guide.webp',
     keywords: ['único', 'expressivo', 'experimental', 'colorido', 'criativo'],
-    image: '/estilos/criativo-personal.jpg',
-    guideImage: '/estilos/criativo-guide.jpg',
+    image: '/estilos/criativo-personal.webp',
+    guideImage: '/estilos/criativo-guide.webp',
     specialTips: ['Misture estampas', 'Seja ousada com as cores']
   }
 };
