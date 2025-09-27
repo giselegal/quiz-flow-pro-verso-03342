@@ -226,11 +226,12 @@ export const EditorProUnified: React.FC<EditorProUnifiedProps> = ({
   // 🆕 Handler para adicionar primeiro componente ao canvas vazio
   const handleAddFirstBlock = useCallback(async () => {
     const stepKey = `step-${state.currentStep}`;
-    
+
     // Criar um bloco básico de texto para começar
     const firstBlock: Block = {
       id: `block-${Date.now()}`,
       type: 'text',
+      order: 1,
       position: {
         x: 0,
         y: 0,
@@ -254,7 +255,7 @@ export const EditorProUnified: React.FC<EditorProUnifiedProps> = ({
     await actions.addBlock(stepKey, firstBlock);
     setSelectedBlockId(firstBlock.id);
     addNotification('Primeiro componente adicionado! 🎉');
-    
+
     console.log('🎯 Primeiro componente adicionado ao step:', stepKey);
   }, [state.currentStep, actions, addNotification]);
 
