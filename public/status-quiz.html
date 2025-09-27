@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>STATUS: React + Etapa 1</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .status-ok {
+            color: #10b981;
+        }
+
+        .status-error {
+            color: #ef4444;
+        }
+
+        .status-check {
+            font-family: monospace;
+            font-size: 14px;
+        }
+
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap');
+    </style>
+</head>
+
+<body class="bg-gray-50 p-8">
+    <div class="max-w-4xl mx-auto">
+        <h1 class="text-3xl font-bold mb-6 text-gray-800">🔍 STATUS DO SISTEMA QUIZ</h1>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- STATUS GERAL -->
+            <div class="bg-white p-6 rounded-lg shadow">
+                <h2 class="text-xl font-semibold mb-4 text-gray-700">📊 Status Geral</h2>
+                <div class="space-y-2 status-check">
+                    <div class="status-ok">✅ Servidor Vite funcionando</div>
+                    <div class="status-ok">✅ Navegador aberto em /quiz-estilo</div>
+                    <div class="status-ok">✅ QuizAppDirect criado</div>
+                    <div class="status-ok">✅ IntroStepDirect criado</div>
+                    <div class="status-ok">✅ Camadas desnecessárias removidas</div>
+                </div>
+            </div>
+
+            <!-- LAYOUT ETAPA 1 -->
+            <div class="bg-white p-6 rounded-lg shadow">
+                <h2 class="text-xl font-semibold mb-4 text-gray-700">🎨 Layout Etapa 1</h2>
+                <div class="space-y-2 status-check">
+                    <div class="status-ok">✅ Logo: 120x50px com barra dourada</div>
+                    <div class="status-ok">✅ Título: "Chega de um guarda-roupa..."</div>
+                    <div class="status-ok">✅ Imagem: 300px máximo, aspect 1.47</div>
+                    <div class="status-ok">✅ Formulário: Input nome + botão</div>
+                    <div class="status-ok">✅ Cores: #B89B7A (dourado), #432818 (marrom)</div>
+                </div>
+            </div>
+
+            <!-- CAMADAS REMOVIDAS -->
+            <div class="bg-white p-6 rounded-lg shadow">
+                <h2 class="text-xl font-semibold mb-4 text-gray-700">🗑️ Camadas Removidas</h2>
+                <div class="space-y-2 status-check">
+                    <div class="status-error">❌ useQuizState</div>
+                    <div class="status-error">❌ getPersonalizedStepTemplate</div>
+                    <div class="status-error">❌ quiz21StepsSimplified</div>
+                    <div class="status-error">❌ quiz21StepsComplete</div>
+                    <div class="status-error">❌ Complexidade desnecessária</div>
+                </div>
+            </div>
+
+            <!-- TESTE MANUAL -->
+            <div class="bg-white p-6 rounded-lg shadow">
+                <h2 class="text-xl font-semibold mb-4 text-gray-700">🧪 Teste Manual</h2>
+                <p class="mb-4 text-gray-600">Para testar o layout da Etapa 1:</p>
+                <ol class="list-decimal list-inside space-y-2 text-sm">
+                    <li>Navegue para <strong>/quiz-estilo</strong></li>
+                    <li>Verifique se o título está correto</li>
+                    <li>Digite um nome no formulário</li>
+                    <li>Clique no botão para testar</li>
+                </ol>
+
+                <div class="mt-4 p-4 bg-green-50 rounded">
+                    <p class="text-green-800 font-semibold">
+                        🎯 Implementação Direta Concluída!
+                    </p>
+                    <p class="text-green-700 text-sm">
+                        Layout da Etapa 1 criado sem camadas desnecessárias
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- PREVIEW TÍTULO -->
+        <div class="mt-8 bg-white p-6 rounded-lg shadow">
+            <h2 class="text-xl font-semibold mb-4 text-gray-700">👀 Preview do Título</h2>
+            <div class="border-2 border-[#B89B7A] rounded-lg p-6 bg-gradient-to-b from-white to-gray-50">
+                <h1 class="text-2xl font-bold text-center leading-tight px-2 sm:text-3xl md:text-4xl text-[#432818]"
+                    style="font-family: 'Playfair Display', serif; font-weight: 400;">
+                    <span style="color: #B89B7A; font-weight: 700;">Chega</span> de um guarda-roupa lotado e da sensação
+                    de que <span style="color: #B89B7A; font-weight: 700;">nada combina com você</span>.
+                </h1>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
