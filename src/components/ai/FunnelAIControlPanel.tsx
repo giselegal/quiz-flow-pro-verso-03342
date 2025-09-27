@@ -4,7 +4,6 @@
  * Componente para gerenciar e monitorar a IA do funil
  */
 
-import React from 'react';
 import { useFunnelAI } from '../../hooks/useFunnelAI';
 import { Button } from '../ui/button';
 import { Card } from '../ui/card';

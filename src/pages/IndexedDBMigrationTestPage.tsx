@@ -1,5 +1,6 @@
 // Teste da migração do FunnelUnifiedService para IndexedDB
 import React from 'react';
+import { FunnelContext } from '@/core/contexts/FunnelContext';
 
 const IndexedDBMigrationTestPage: React.FC = () => {
     const [testResults, setTestResults] = React.useState<string[]>([]);
@@ -50,7 +51,7 @@ const IndexedDBMigrationTestPage: React.FC = () => {
                 name: 'Funil Novo IndexedDB',
                 description: 'Este funil deve ir direto para IndexedDB',
                 category: 'quiz',
-                context: 'editor',
+                context: FunnelContext.EDITOR,
                 userId: 'anonymous'
             });
 
@@ -63,7 +64,7 @@ const IndexedDBMigrationTestPage: React.FC = () => {
             // 3. Testar listagem (deve incluir dados migrados)
             addLog('📋 Testando listagem de funis...');
             const funnels = await service.listFunnels({
-                context: 'editor',
+                context: FunnelContext.EDITOR,
                 userId: 'anonymous'
             });
 

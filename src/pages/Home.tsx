@@ -20,7 +20,6 @@ export const Home: React.FC = () => {
   const { user, logout } = useAuth();
   const [, setLocation] = useLocation();
   const [isLoading, setIsLoading] = useState(true);
-  const [activeTestimonial, setActiveTestimonial] = useState(0);
 
   // Navigation helper function
   const navigate = (path: string) => {
@@ -35,12 +34,9 @@ export const Home: React.FC = () => {
     return () => clearTimeout(timer);
   }, []);
 
-  // Auto-rotate testimonials
+  // Auto-rotate testimonials (not needed for now)
   useEffect(() => {
-    const interval = setInterval(() => {
-      setActiveTestimonial((prev) => (prev + 1) % testimonials.length);
-    }, 5000);
-    return () => clearInterval(interval);
+    // Auto-rotate could be implemented here if needed
   }, []);
 
   // SEO otimizado
@@ -53,31 +49,6 @@ export const Home: React.FC = () => {
       document.head.appendChild(metaDesc);
     }
   }, []);
-
-  // Testimonials data
-  const testimonials = [
-    {
-      name: "Sarah Chen",
-      role: "Marketing Director, TechCorp",
-      country: "🇺🇸 USA",
-      content: "QuizFlow increased our lead generation by 340% in just 3 months. The international support is outstanding!",
-      rating: 5
-    },
-    {
-      name: "Marco Silva",
-      role: "CEO, Digital Solutions",
-      country: "🇧🇷 Brazil", 
-      content: "A ferramenta mais intuitiva que já usei. Nossos quizzes agora convertem 5x mais!",
-      rating: 5
-    },
-    {
-      name: "Yuki Tanaka",
-      role: "Growth Manager, StartupX",
-      country: "🇯🇵 Japan",
-      content: "クイズフローのおかげで、コンバージョン率が大幅に向上しました。素晴らしいツールです！",
-      rating: 5
-    }
-  ];
 
   // Stats data
   const stats = [

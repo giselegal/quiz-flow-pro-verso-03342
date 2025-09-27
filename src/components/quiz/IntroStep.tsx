@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import type { QuizStep } from '../../data/quizSteps';
+import { STATIC_LOGO_IMAGE_URLS, STATIC_INTRO_IMAGE_URLS } from '@/config/cloudinaryImages';
+import { cn } from '@/lib/utils';
 
 interface IntroStepProps {
     data: QuizStep;
