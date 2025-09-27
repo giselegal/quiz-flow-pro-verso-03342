@@ -391,7 +391,7 @@ const UnifiedEditorCore: React.FC<ModernUnifiedEditorProps> = ({
         }
     }, [extractedInfo.funnelId, detectedFunnelType]);
 
-    // 🎯 TEMPLATE LOADING EFFECT
+    // 🎯 TEMPLATE LOADING EFFECT - FIXED: Removed crudContext from dependencies to prevent infinite loop
     useEffect(() => {
         if (extractedInfo.type === 'template' && extractedInfo.templateId) {
             console.log('🎯 Carregando template:', extractedInfo.templateId);
@@ -419,7 +419,7 @@ const UnifiedEditorCore: React.FC<ModernUnifiedEditorProps> = ({
                     setIsLoadingTemplate(false);
                 });
         }
-    }, [extractedInfo.templateId, extractedInfo.type, crudContext]);
+    }, [extractedInfo.templateId, extractedInfo.type]); // 🔧 FIXED: Removido crudContext das dependências
 
     // Handler para mudanças de estado
     const handleStateChange = useCallback((updates: Partial<EditorState>) => {
