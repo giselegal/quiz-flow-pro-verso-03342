@@ -118,7 +118,6 @@ const ModernToolbar: React.FC<ModernToolbarProps> = ({
     onStateChange,
     funnelId,
     mode,
-    adminReturnUrl,
     onSave,
     onCreateNew,
     onDuplicate,

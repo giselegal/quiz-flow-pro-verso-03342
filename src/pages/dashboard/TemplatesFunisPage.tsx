@@ -16,11 +16,22 @@ const TemplatesFunisPage: React.FC = () => {
     const [selectedDifficulty, setSelectedDifficulty] = useState('Todos');
     const [searchTerm, setSearchTerm] = useState('');
 
+    // DEBUG: Log dos templates para diagnóstico
+    console.log('🔍 DEBUG TEMPLATES:', {
+        AVAILABLE_TEMPLATES,
+        totalTemplates: AVAILABLE_TEMPLATES.length,
+        activeTemplates: TemplateService.getActiveTemplates(),
+        quiz21Template: TemplateService.getTemplate('quiz21StepsComplete')
+    });
+
     const filteredTemplates = React.useMemo(() => {
-        let result = templatesFunis;
+        // Começar sempre com apenas templates ativos
+        let result = TemplateService.getActiveTemplates();
 
         if (selectedSegment !== 'Todos') {
             result = TemplateService.getTemplatesBySegment(selectedSegment);
+            // Garantir que apenas templates ativos sejam mostrados
+            result = result.filter(t => t.isActive);
         }
 
         if (selectedCategory !== 'Todos') {
@@ -42,6 +53,16 @@ const TemplatesFunisPage: React.FC = () => {
         return result;
     }, [selectedSegment, selectedCategory, selectedDifficulty, searchTerm]);
 
+    // DEBUG: Log dos templates filtrados
+    console.log('🔍 DEBUG FILTERED:', {
+        selectedSegment,
+        selectedCategory,
+        selectedDifficulty,
+        searchTerm,
+        filteredCount: filteredTemplates.length,
+        filteredTemplates: filteredTemplates.map(t => ({ id: t.id, name: t.name, isActive: t.isActive }))
+    });
+
     const handleUseTemplate = (templateId: string) => {
         console.log('Usando template:', templateId);
         window.open(`/editor?template=${templateId}`, '_blank');
@@ -54,6 +75,30 @@ const TemplatesFunisPage: React.FC = () => {
 
     return (
         <div className="p-6 bg-white min-h-screen">
+            {/* DEBUG INFO - Remover em produção */}
+            <div className="mb-6 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+                <h3 className="font-semibold text-yellow-800 mb-2">🔍 Informações de Debug</h3>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+                    <div>
+                        <strong>Total Templates:</strong> {templatesFunis.length}
+                    </div>
+                    <div>
+                        <strong>Templates Filtrados:</strong> {filteredTemplates.length}
+                    </div>
+                    <div>
+                        <strong>Quiz21 Encontrado:</strong> {
+                            TemplateService.getTemplate('quiz21StepsComplete') ? '✅' : '❌'
+                        }
+                    </div>
+                    <div>
+                        <strong>Templates Ativos:</strong> {TemplateService.getActiveTemplates().length}
+                    </div>
+                </div>
+                <div className="mt-2 text-xs text-gray-600">
+                    Filtros: Segmento={selectedSegment}, Categoria={selectedCategory}, Dificuldade={selectedDifficulty}, Busca="{searchTerm}"
+                </div>
+            </div>
+
             <div className="mb-8">
                 <h1 className="text-3xl font-bold text-[#1A0F3D] mb-2">
                     Templates de Funis
@@ -97,6 +142,7 @@ const TemplatesFunisPage: React.FC = () => {
                         className="px-3 py-2 border rounded-lg bg-white"
                     >
                         <option value="Todos">Todas as Categorias</option>
+                        <option value="Quiz">Quiz</option>
                         <option value="lead-generation">Geração de Leads</option>
                         <option value="product-quiz">Quiz de Produto</option>
                         <option value="survey">Pesquisa</option>
@@ -135,12 +181,12 @@ const TemplatesFunisPage: React.FC = () => {
                                         <Badge variant="outline" className="text-xs">
                                             {template.category}
                                         </Badge>
-                                        <Badge 
-                                            variant="secondary" 
+                                        <Badge
+                                            variant="secondary"
                                             className="text-xs"
                                             style={{
-                                                backgroundColor: template.difficulty === 'Fácil' ? '#10B981' : 
-                                                                 template.difficulty === 'Intermediário' ? '#F59E0B' : '#EF4444',
+                                                backgroundColor: template.difficulty === 'Fácil' ? '#10B981' :
+                                                    template.difficulty === 'Intermediário' ? '#F59E0B' : '#EF4444',
                                                 color: 'white'
                                             }}
                                         >
@@ -167,9 +213,9 @@ const TemplatesFunisPage: React.FC = () => {
 
                             <div className="flex flex-wrap gap-1 mb-4">
                                 {template.tags.slice(0, 3).map((tag) => (
-                                    <Badge 
-                                        key={tag} 
-                                        variant="outline" 
+                                    <Badge
+                                        key={tag}
+                                        variant="outline"
                                         className="text-xs px-2 py-0.5 bg-[#7C3AED]/10 text-[#7C3AED] border-[#7C3AED]/20"
                                     >
                                         {tag}
@@ -191,7 +237,7 @@ const TemplatesFunisPage: React.FC = () => {
                                     <Copy className="h-4 w-4 mr-1" />
                                     Usar Template
                                 </Button>
-                                
+
                                 <Button
                                     onClick={() => handlePreviewTemplate(template.id)}
                                     variant="outline"

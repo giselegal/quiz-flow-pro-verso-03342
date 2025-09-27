@@ -40,6 +40,7 @@ const SettingsPage = lazy(() => import('./dashboard/SettingsPage'));
 // Página de teste para templates
 const TemplateTestPage = lazy(() => import('./TemplateTestPage'));
 const TemplateDebugPage = lazy(() => import('./dashboard/TemplateDebugPage'));
+const TemplateInvestigationPage = lazy(() => import('./dashboard/TemplateInvestigationPage'));
 
 // Wrapper para AdminDashboard
 
@@ -272,6 +273,7 @@ const ModernDashboardPage: React.FC = () => {
                     {/* TESTE - Página de teste para templates */}
                     <Route path="/dashboard/template-test" component={TemplateTestPage} />
                     <Route path="/dashboard/template-debug" component={TemplateDebugPage} />
+                    <Route path="/dashboard/template-investigation" component={TemplateInvestigationPage} />
 
                     {/* LEGACY REDIRECTS - Compatibilidade com rotas antigas */}
                     <Route path="/dashboard/templates-funis">

@@ -422,7 +422,6 @@ export const EditorProUnified: React.FC<EditorProUnifiedProps> = ({
             <DynamicPropertiesPanel
               componentId={selectedBlock.type}
               funnelId={funnelId}
-              selectedComponent={selectedBlock}
               onPropertyChange={(key, value) => {
                 handleUpdateBlock(selectedBlock.id, {
                   properties: { ...selectedBlock.properties, [key]: value }
