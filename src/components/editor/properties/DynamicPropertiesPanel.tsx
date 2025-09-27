@@ -5,14 +5,12 @@
  * de qualquer componente baseado na API
  */
 
-import React, { useState, useEffect, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import { useComponentConfiguration } from '@/hooks/useComponentConfiguration';
-import { ComponentDefinition, PropertyCategory } from '@/types/componentConfiguration';
+import { PropertyCategory } from '@/hooks/useUnifiedProperties';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Separator } from '@/components/ui/separator';
 import { AlertTriangle, Save, RotateCcw, Eye, EyeOff, Zap, Clock } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 
@@ -22,7 +20,6 @@ import { propertyEditors } from '@/components/editor/properties/core/propertyEdi
 interface DynamicPropertiesPanelProps {
     componentId: string;
     funnelId?: string;
-    selectedComponent?: any;
     onPropertyChange?: (key: string, value: any) => void;
     onPreviewToggle?: (enabled: boolean) => void;
     onSave?: () => void;
@@ -32,7 +29,6 @@ interface DynamicPropertiesPanelProps {
 export default function DynamicPropertiesPanel({
     componentId,
     funnelId,
-    selectedComponent,
     onPropertyChange,
     onPreviewToggle,
     onSave,
@@ -113,13 +109,34 @@ export default function DynamicPropertiesPanel({
         const categories: Record<PropertyCategory, typeof componentDefinition.properties> = {
             [PropertyCategory.CONTENT]: [],
             [PropertyCategory.LAYOUT]: [],
-            [PropertyCategory.VISUAL]: [],
+            [PropertyCategory.STYLE]: [],
             [PropertyCategory.BEHAVIOR]: [],
             [PropertyCategory.ADVANCED]: [],
+            [PropertyCategory.ANIMATION]: [],
+            [PropertyCategory.ACCESSIBILITY]: [],
+            [PropertyCategory.SEO]: [],
         };
 
         componentDefinition.properties.forEach(prop => {
-            const category = prop.category as PropertyCategory || PropertyCategory.ADVANCED;
+            // Mapear categoria do componentConfiguration para useUnifiedProperties
+            let category: PropertyCategory;
+            switch (prop.category) {
+                case 'visual':
+                    category = PropertyCategory.STYLE;
+                    break;
+                case 'content':
+                    category = PropertyCategory.CONTENT;
+                    break;
+                case 'layout':
+                    category = PropertyCategory.LAYOUT;
+                    break;
+                case 'behavior':
+                    category = PropertyCategory.BEHAVIOR;
+                    break;
+                default:
+                    category = PropertyCategory.ADVANCED;
+            }
+
             if (categories[category]) {
                 categories[category].push(prop);
             }
@@ -202,7 +219,8 @@ export default function DynamicPropertiesPanel({
                     property={{
                         key: propDef.key,
                         label: propDef.label,
-                        type: propDef.type,
+                        type: propDef.type as any, // Usar any para compatibilidade entre enums
+                        category: PropertyCategory.ADVANCED, // Categoria padrão
                         value: currentValue,
                         ...propDef.editor.props
                     }}
@@ -223,17 +241,23 @@ export default function DynamicPropertiesPanel({
     const categoryLabels = {
         [PropertyCategory.CONTENT]: 'Conteúdo',
         [PropertyCategory.LAYOUT]: 'Layout',
-        [PropertyCategory.VISUAL]: 'Visual',
+        [PropertyCategory.STYLE]: 'Visual',
         [PropertyCategory.BEHAVIOR]: 'Comportamento',
         [PropertyCategory.ADVANCED]: 'Avançado',
+        [PropertyCategory.ANIMATION]: 'Animação',
+        [PropertyCategory.ACCESSIBILITY]: 'Acessibilidade',
+        [PropertyCategory.SEO]: 'SEO',
     };
 
     const categoryIcons = {
         [PropertyCategory.CONTENT]: '📝',
         [PropertyCategory.LAYOUT]: '📐',
-        [PropertyCategory.VISUAL]: '🎨',
+        [PropertyCategory.STYLE]: '🎨',
         [PropertyCategory.BEHAVIOR]: '⚡',
         [PropertyCategory.ADVANCED]: '🔧',
+        [PropertyCategory.ANIMATION]: '🎬',
+        [PropertyCategory.ACCESSIBILITY]: '♿',
+        [PropertyCategory.SEO]: '🔍',
     };
 
     // ============================================================================
