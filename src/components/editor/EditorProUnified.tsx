@@ -26,7 +26,7 @@ import EditorCanvas from './EditorPro/components/EditorCanvas';
 import StepSidebar from './sidebars/StepSidebar';
 import ComponentsSidebar from './sidebars/ComponentsSidebar';
 // import RegistryPropertiesPanel from '@/components/universal/RegistryPropertiesPanel'; // ❌ DESABILITADO - API Panel fixo
-import APIPropertiesPanel from './properties/APIPropertiesPanel'; // ✅ ADICIONADO
+import DynamicPropertiesPanel from './properties/DynamicPropertiesPanel'; // ✅ NOVO - Dynamic API Panel
 
 // AI Features (lazy loaded)
 import OptimizedAIFeatures from '@/components/ai/OptimizedAIFeatures';
@@ -137,12 +137,13 @@ const ResizeHandle: React.FC<{
 };
 
 export const EditorProUnified: React.FC<EditorProUnifiedProps> = ({
+  funnelId,
   showProFeatures = true,
   className = "",
   realExperienceMode = false // Nova prop para ativar QuizOrchestrator
 }) => {
   console.log('🎯 [DEBUG] EditorProUnified recebeu realExperienceMode:', realExperienceMode);
-  
+
   // Pure Builder System State
   const { state, actions } = usePureBuilder();
   const { addNotification } = useNotification();
@@ -418,22 +419,28 @@ export const EditorProUnified: React.FC<EditorProUnifiedProps> = ({
           style={{ width: `${columnWidths.properties}px` }}
         >
           {selectedBlock ? (
-            <APIPropertiesPanel
-              blockId={selectedBlock.id}
-              blockType={selectedBlock.type}
-              initialProperties={selectedBlock.properties}
+            <DynamicPropertiesPanel
+              componentId={selectedBlock.type}
+              funnelId={funnelId}
+              selectedComponent={selectedBlock}
               onPropertyChange={(key, value) => {
                 handleUpdateBlock(selectedBlock.id, {
                   properties: { ...selectedBlock.properties, [key]: value }
                 });
               }}
-              onClose={() => setSelectedBlockId(null)}
-              onDelete={() => handleDeleteBlock(selectedBlock.id)}
+              onSave={() => {
+                // Auto-save is handled by the DynamicPropertiesPanel
+                addNotification('Propriedades salvas com sucesso!', 'success');
+              }}
+              onReset={() => {
+                // Reset handled by DynamicPropertiesPanel
+                addNotification('Propriedades resetadas para padrão', 'info');
+              }}
             />
           ) : (
             <div className="p-4 text-center text-muted-foreground">
               <p className="text-sm">Selecione um componente para ver as propriedades via API</p>
-              <p className="text-xs mt-2 text-primary">🔥 API Panel Mode Ativo 🚀</p>
+              <p className="text-xs mt-2 text-primary">� Dynamic API Panel Mode Ativo �</p>
             </div>
           )}
         </div>
