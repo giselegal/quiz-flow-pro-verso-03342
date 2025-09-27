@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import IntroStepDirect from './IntroStepDirect';
+import IntroStep from './IntroStep';
 import Step2Direct from './Step2Direct';
 
 /**

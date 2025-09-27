@@ -31,8 +31,8 @@ export const useImageWithFallback = (
         width = 300,
         height = 200,
         fallbackText = 'Imagem',
-        fallbackBgColor = '#f1f5f9',
-        fallbackTextColor = '#64748b',
+        fallbackBgColor = 'transparent',
+        fallbackTextColor = 'transparent',
         enableCache = true,
         retryCount = 2,
         retryDelay = 1000,
@@ -59,23 +59,8 @@ export const useImageWithFallback = (
             setIsLoading(false);
         } catch (error) {
             console.warn('Erro ao criar placeholder:', error);
-            // Fallback extremo: SVG data URL inline
-            const svgContent = `
-        <svg width="${width}" height="${height}" xmlns="http://www.w3.org/2000/svg">
-          <rect width="100%" height="100%" fill="${fallbackBgColor}"/>
-          <text 
-            x="50%" 
-            y="50%" 
-            font-family="system-ui, -apple-system, sans-serif" 
-            font-size="${Math.min(width, height) / 10}"
-            fill="${fallbackTextColor}" 
-            text-anchor="middle" 
-            dominant-baseline="middle"
-          >${fallbackText}</text>
-        </svg>
-      `;
-            const fallbackDataUrl = `data:image/svg+xml;base64,${btoa(svgContent)}`;
-            setSrc(fallbackDataUrl);
+            // Fallback extremo: retornar string vazia ao invés de SVG
+            setSrc('');
             setIsFallback(true);
             setIsError(false);
             setIsLoading(false);
@@ -95,14 +80,18 @@ export const useImageWithFallback = (
         try {
             // Verificar se já temos no cache (apenas para URLs externas)
             if (enableCache && !imageUrl.startsWith('/') && !imageUrl.includes('localhost')) {
+                console.log('📦 Verificando cache para:', imageUrl);
                 const cachedSrc = await imageCache.getImage(imageUrl, width, height);
                 if (cachedSrc) {
+                    console.log('✅ Imagem encontrada no cache');
                     setSrc(cachedSrc);
                     setIsFallback(false);
                     setIsError(false);
                     setIsLoading(false);
                     return;
                 }
+            } else {
+                console.log('🔄 Pulando cache para URL local:', imageUrl);
             }
 
             // Tentar carregar a imagem original
@@ -111,8 +100,14 @@ export const useImageWithFallback = (
             // img.crossOrigin = 'anonymous';
 
             const loadPromise = new Promise<void>((resolve, reject) => {
-                img.onload = () => resolve();
-                img.onerror = () => reject(new Error('Falha ao carregar imagem'));
+                img.onload = () => {
+                    console.log('✅ Imagem carregada com sucesso:', imageUrl);
+                    resolve();
+                };
+                img.onerror = () => {
+                    console.error('❌ Erro ao carregar imagem:', imageUrl);
+                    reject(new Error('Falha ao carregar imagem'));
+                };
                 img.src = imageUrl;
             });
 
@@ -233,32 +228,32 @@ export const usePlaceholder = (
                 switch (type) {
                     case 'logo':
                         placeholderSrc = await imageCache.getOrCreatePlaceholder(
-                            96, 96, 'Logo', '#e2e8f0', '#64748b'
+                            96, 96, '', 'transparent', 'transparent'
                         );
                         break;
                     case 'image':
                         placeholderSrc = await imageCache.getOrCreatePlaceholder(
-                            300, 200, 'Imagem', '#f1f5f9', '#64748b'
+                            300, 200, '', 'transparent', 'transparent'
                         );
                         break;
                     case 'quiz-elegant':
                         placeholderSrc = await imageCache.getOrCreatePlaceholder(
-                            300, 200, 'Elegante', '#b89b7a', '#ffffff'
+                            300, 200, '', 'transparent', 'transparent'
                         );
                         break;
                     case 'quiz-casual':
                         placeholderSrc = await imageCache.getOrCreatePlaceholder(
-                            300, 200, 'Casual', '#432818', '#ffffff'
+                            300, 200, '', 'transparent', 'transparent'
                         );
                         break;
                     case 'loading':
                         placeholderSrc = await imageCache.getOrCreatePlaceholder(
-                            400, 300, 'Carregando...', '#B89B7A', '#FFFFFF'
+                            400, 300, '', 'transparent', 'transparent'
                         );
                         break;
                     case 'error':
                         placeholderSrc = await imageCache.getOrCreatePlaceholder(
-                            400, 300, 'Erro ao carregar', '#EF4444', '#FFFFFF'
+                            400, 300, '', 'transparent', 'transparent'
                         );
                         break;
                     case 'custom':
@@ -266,9 +261,9 @@ export const usePlaceholder = (
                         placeholderSrc = await imageCache.getOrCreatePlaceholder(
                             customOptions?.width || 300,
                             customOptions?.height || 200,
-                            customOptions?.text || 'Imagem',
-                            customOptions?.backgroundColor || '#f1f5f9',
-                            customOptions?.textColor || '#64748b'
+                            '',
+                            'transparent',
+                            'transparent'
                         );
                         break;
                 }
@@ -305,8 +300,8 @@ export const SmartImage: React.FC<SmartImageProps> = ({
     width = 300,
     height = 200,
     fallbackText = 'Imagem',
-    fallbackBgColor = '#f1f5f9',
-    fallbackTextColor = '#64748b',
+    fallbackBgColor = 'transparent',
+    fallbackTextColor = 'transparent',
     enableCache = true,
     retryCount = 2,
     showRetryButton = false,
