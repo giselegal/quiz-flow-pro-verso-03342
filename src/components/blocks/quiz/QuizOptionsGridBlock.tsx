@@ -302,7 +302,7 @@ const QuizOptionsGridBlock: React.FC<QuizOptionsGridBlockProps> = ({
   // Mapear propriedades do editor para o componente QuizQuestion
   const {
     // Layout e Orientação
-    columns = 2,
+    columns = 'auto', // 'auto' detecta automaticamente: 2 com imagens, 1 só texto
     layoutOrientation = 'vertical',
     contentType = 'text-and-image',
     // Imagens
@@ -335,14 +335,37 @@ const QuizOptionsGridBlock: React.FC<QuizOptionsGridBlockProps> = ({
     responsiveColumns = true,
   } = properties || {};
 
+  // Detectar automaticamente se há imagens nas opções
+  const hasImages = options.some(option => option.imageUrl && option.imageUrl.trim() !== '');
+
+  // Auto-configurar número de colunas baseado na presença de imagens
+  const autoColumns = hasImages ? 2 : 1; // 2 colunas com imagens, 1 coluna só texto
+  const finalColumns = columns === 'auto' ? autoColumns : (columns || autoColumns);
+
+  // Log para debug da detecção automática
+  console.log('🔍 Auto-detecção de colunas:', {
+    hasImages,
+    autoColumns,
+    finalColumns,
+    columnsConfig: columns,
+    gridColumnsClass,
+    optionsWithImages: options.filter(opt => opt.imageUrl).length,
+    totalOptions: options.length,
+    layout: hasImages ? '2 colunas (mobile + desktop)' : '1 coluna (todos dispositivos)'
+  });
+
   // Calcular tamanho da imagem
   const finalImageWidth = imageWidth || imageSize;
   const finalImageHeight = imageHeight || imageSize;
 
-  // Classes de layout baseadas na orientação
+  // Classes de layout baseadas na orientação e detecção automática
   const layoutClass = layoutOrientation === 'horizontal' ? 'grid' : 'flex flex-col';
-  const gridColumnsClass =
-    typeof columns === 'string' ? `grid-cols-${columns}` : `grid-cols-${columns}`;
+  const gridColumnsClass = responsiveColumns
+    ? (hasImages
+      ? 'grid-cols-2'                 // Com imagens: 2 colunas em todos os dispositivos
+      : 'grid-cols-1'                 // Só texto: sempre 1 coluna
+    )
+    : `grid-cols-${finalColumns}`;
 
   // Estilos dinâmicos para bordas e sombras
   const optionStyles = {

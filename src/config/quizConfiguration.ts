@@ -146,7 +146,7 @@ export const QUIZ_CONFIGURATION = {
         },
         rules: {
           multiSelect: { type: 'number', editable: true, default: 3 },
-          colunas: { type: 'number', editable: true, default: 2 },
+          colunas: { type: 'string', editable: true, default: 'auto' }, // 'auto' = 2 com imagens, 1 só texto
           buttonActivation: {
             type: 'string',
             editable: false,

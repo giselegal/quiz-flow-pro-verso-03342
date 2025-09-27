@@ -14,7 +14,7 @@ export interface OptionItem {
 export interface OptionsGridConfig {
   title: string;
   options: OptionItem[];
-  columns: 1 | 2 | 3 | 4;
+  columns: 1 | 2 | 3 | 4 | 'auto'; // 'auto' detecta automaticamente baseado nas imagens
   showImages: boolean;
   imageSize: 'small' | 'medium' | 'large';
   multipleSelection: boolean;
@@ -228,7 +228,7 @@ export const PRESET_CONFIGS = {
    */
   styleQuizWithImages: {
     title: 'Qual estilo combina mais com você?',
-    columns: 2,
+    columns: 'auto', // Auto-detecta: 2 com imagens, 1 só texto
     showImages: true,
     imageSize: 'large',
     multipleSelection: false,
@@ -353,8 +353,8 @@ export class OptionsGridUtils {
       errors.push('maxSelections deve ser maior ou igual a minSelections');
     }
 
-    if (config.columns && (config.columns < 1 || config.columns > 4)) {
-      errors.push('columns deve estar entre 1 e 4');
+    if (config.columns && config.columns !== 'auto' && (typeof config.columns === 'number' && (config.columns < 1 || config.columns > 4))) {
+      errors.push('columns deve estar entre 1 e 4, ou usar "auto"');
     }
 
     return {
@@ -387,12 +387,12 @@ export class OptionsGridUtils {
   ): Partial<OptionsGridConfig> {
     const optimizations = {
       mobile: {
-        columns: Math.min(baseConfig.columns, 2) as 1 | 2 | 3 | 4,
+        columns: baseConfig.columns === 'auto' ? ('auto' as const) : Math.min(baseConfig.columns as number, 2) as 1 | 2 | 3 | 4,
         imageSize: baseConfig.imageSize === 'large' ? ('medium' as const) : baseConfig.imageSize,
         gridGap: Math.max(8, baseConfig.gridGap - 4),
       },
       tablet: {
-        columns: Math.min(baseConfig.columns, 3) as 1 | 2 | 3 | 4,
+        columns: baseConfig.columns === 'auto' ? ('auto' as const) : Math.min(baseConfig.columns as number, 3) as 1 | 2 | 3 | 4,
         imageSize: baseConfig.imageSize,
         gridGap: baseConfig.gridGap,
       },
