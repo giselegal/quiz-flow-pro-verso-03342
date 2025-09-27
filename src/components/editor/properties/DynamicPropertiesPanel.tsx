@@ -17,7 +17,7 @@ import { AlertTriangle, Save, RotateCcw, Eye, EyeOff, Zap, Clock } from 'lucide-
 import { Alert, AlertDescription } from '@/components/ui/alert';
 
 // Importar editores de propriedades
-import { PROPERTY_EDITOR_REGISTRY } from '@/components/editor/properties/core/propertyEditors';
+import { propertyEditors } from '@/components/editor/properties/core/propertyEditors';
 
 interface DynamicPropertiesPanelProps {
     componentId: string;
@@ -177,7 +177,7 @@ export default function DynamicPropertiesPanel({
     // ============================================================================
 
     const renderPropertyEditor = (propDef: typeof componentDefinition.properties[0]) => {
-        const EditorComponent = PROPERTY_EDITOR_REGISTRY[propDef.type] || PROPERTY_EDITOR_REGISTRY['text'];
+        const EditorComponent = propertyEditors[propDef.type] || propertyEditors['text'];
         const currentValue = properties[propDef.key] ?? propDef.defaultValue;
 
         return (
