@@ -52,6 +52,9 @@ const ModernDashboardPage = lazy(() => import('./pages/ModernDashboardPage'));
 // 🚀 PHASE 2 ENTERPRISE DASHBOARD
 const Phase2Dashboard = lazy(() => import('./pages/Phase2Dashboard'));
 
+// 🔍 DIAGNÓSTICO ADMIN/DASHBOARD
+const AdminDashboardDiagnosticPage = lazy(() => import('./pages/AdminDashboardDiagnosticPage'));
+
 // 🎨 PÁGINAS DE TEMPLATES
 const TemplatesPage = lazy(() => import('./pages/TemplatesPage'));
 const SystemDiagnosticPage = lazy(() => import('./pages/SystemDiagnosticPage'));
@@ -236,6 +239,13 @@ function App() {
                           {/* 🔧 DESENVOLVIMENTO */}
                           <Route path="/diagnostics">
                             <SystemDiagnosticPage />
+                          </Route>
+
+                          {/* 🔍 DIAGNÓSTICO ADMIN/DASHBOARD */}
+                          <Route path="/admin-diagnostic">
+                            <div data-testid="admin-diagnostic-page">
+                              <AdminDashboardDiagnosticPage />
+                            </div>
                           </Route>
 
                           {/* 🧪 TESTE CORREÇÃO SUPABASE */}
