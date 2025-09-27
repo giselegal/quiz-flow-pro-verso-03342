@@ -37,6 +37,7 @@ export interface InteractivePreviewEngineProps {
   mode?: 'editor' | 'preview' | 'production';
   className?: string;
   enableRealExperience?: boolean; // Novo: habilitar experiência real
+  realTimeUpdate?: boolean; // 🎯 NOVO: Habilitar atualização em tempo real
 }
 
 /**
@@ -69,11 +70,13 @@ export const InteractivePreviewEngine: React.FC<InteractivePreviewEngineProps> =
   mode = 'preview',
   className = '',
   enableInteractions = true,
-  enableRealExperience = false
+  enableRealExperience = false,
+  realTimeUpdate = false // 🎯 NOVO: Sistema de atualização em tempo real
 }) => {
   console.log('🎯 [DEBUG] InteractivePreviewEngine inicializado:', {
     mode,
     enableRealExperience,
+    realTimeUpdate,
     funnelId,
     currentStep: initialStep,
     blocksCount: blocks.length
@@ -102,14 +105,14 @@ export const InteractivePreviewEngine: React.FC<InteractivePreviewEngineProps> =
       funnelId,
       autoAdvanceEnabled: quizState.autoAdvanceEnabled
     });
-    
+
     if (!enableRealExperience) {
       console.log('🎯 [DEBUG] Orchestrator DESABILITADO - enableRealExperience = false');
       return null;
     }
-    
+
     console.log('🎯 [DEBUG] Orchestrator HABILITADO - Criando instância singleton');
-    
+
     // Usar instância singleton com configuração para preview
     const instance = {
       ...quizOrchestrator,
@@ -171,7 +174,7 @@ export const InteractivePreviewEngine: React.FC<InteractivePreviewEngineProps> =
   // 🎯 NAVIGATION ENGINE
   const navigation = useMemo(() => {
     if (!enableRealExperience) return null;
-    
+
     return {
       canAdvanceToNext: (currentStep: number, validationStates: Record<string, boolean>) => {
         const stepKey = `step-${currentStep}`;
@@ -186,7 +189,7 @@ export const InteractivePreviewEngine: React.FC<InteractivePreviewEngineProps> =
   // 🎯 DATA PIPELINE  
   const dataPipeline = useMemo(() => {
     if (!enableRealExperience) return null;
-    
+
     return {
       ...quizDataPipeline,
       enableRealTimeProcessing: true,
@@ -198,7 +201,7 @@ export const InteractivePreviewEngine: React.FC<InteractivePreviewEngineProps> =
   // 🎯 STYLE CALCULATION ENGINE
   const styleEngine = useMemo(() => {
     if (!enableRealExperience) return null;
-    
+
     return {
       ...styleCalculationEngine,
       calculateFinalResult: async (_selections: Record<string, string[]>, userName: string) => {
@@ -206,7 +209,7 @@ export const InteractivePreviewEngine: React.FC<InteractivePreviewEngineProps> =
         return {
           primaryStyle: {
             style: 'Clássico',
-            category: 'Clássico', 
+            category: 'Clássico',
             percentage: 85,
             description: `${userName}, seu estilo clássico reflete elegância e sofisticação.`,
             score: 85
@@ -223,6 +226,45 @@ export const InteractivePreviewEngine: React.FC<InteractivePreviewEngineProps> =
     };
   }, [enableRealExperience]);
 
+  // 🎯 SISTEMA DE ATUALIZAÇÃO EM TEMPO REAL
+  useEffect(() => {
+    if (realTimeUpdate && blocks.length > 0) {
+      console.log('⚡ Preview atualizado em tempo real:', {
+        step: quizState.currentStep,
+        blocksCount: blocks.length,
+        selectedBlock: selectedBlockId,
+        funnelId,
+        timestamp: new Date().toISOString()
+      });
+
+      // Atualizar estado se necessário
+      if (selectedBlockId) {
+        console.log('🎯 Bloco selecionado mudou para:', selectedBlockId);
+      }
+
+      // Notificar sobre mudanças se callback disponível
+      if (onBlockUpdate && selectedBlockId) {
+        const updatedBlock = blocks.find(b => b.id === selectedBlockId);
+        if (updatedBlock) {
+          console.log('📝 Notificando mudança do bloco:', updatedBlock.id);
+          // Trigger uma pequena atualização para forçar re-render
+          onBlockUpdate(updatedBlock.id, { _lastUpdated: Date.now() });
+        }
+      }
+    }
+  }, [blocks, selectedBlockId, quizState.currentStep, realTimeUpdate, onBlockUpdate, funnelId]);
+
+  // 🎯 SINCRONIZAÇÃO COM STEP EXTERNO
+  useEffect(() => {
+    if (initialStep !== quizState.currentStep) {
+      console.log('🔄 Sincronizando step externo:', {
+        from: quizState.currentStep,
+        to: initialStep
+      });
+      setQuizState(prev => ({ ...prev, currentStep: initialStep }));
+    }
+  }, [initialStep, quizState.currentStep]);
+
   // 🎯 SIMULAR ENTRADA DE NOME
   useEffect(() => {
     if (enableRealExperience && !quizState.userName && quizState.currentStep === 1) {
@@ -230,7 +272,7 @@ export const InteractivePreviewEngine: React.FC<InteractivePreviewEngineProps> =
       setTimeout(() => {
         const mockName = 'Maria Silva'; // Nome mockado para preview
         setQuizState(prev => ({ ...prev, userName: mockName }));
-        
+
         if (orchestrator) {
           orchestrator.updateUserData({ name: mockName });
         }
@@ -318,7 +360,7 @@ export const InteractivePreviewEngine: React.FC<InteractivePreviewEngineProps> =
   useEffect(() => {
     if (enableRealExperience && quizState.currentStep >= 2 && quizState.currentStep <= 18) {
       const stepKey = `step-${quizState.currentStep}`;
-      
+
       if (!quizState.selections[stepKey]) {
         // Simular seleção após um delay
         const delay = Math.random() * 2000 + 1000; // 1-3 segundos
@@ -357,8 +399,8 @@ export const InteractivePreviewEngine: React.FC<InteractivePreviewEngineProps> =
             </div>
           </div>
         ) : (
-          <Step20Result 
-            className="w-full" 
+          <Step20Result
+            className="w-full"
             isPreview={!isProductionMode}
           />
         )}
@@ -391,7 +433,7 @@ export const InteractivePreviewEngine: React.FC<InteractivePreviewEngineProps> =
                 </p>
               </div>
             </div>
-            
+
             <div className="flex items-center gap-3">
               {quizState.userName && (
                 <Badge variant="outline" className="text-blue-700 border-blue-300">
@@ -399,11 +441,11 @@ export const InteractivePreviewEngine: React.FC<InteractivePreviewEngineProps> =
                   {quizState.userName}
                 </Badge>
               )}
-              
+
               <Badge variant="outline" className="text-blue-700 border-blue-300">
                 Step {quizState.currentStep}/{quizState.totalSteps}
               </Badge>
-              
+
               {quizState.autoAdvanceEnabled && quizState.timeToAutoAdvance > 0 && (
                 <Badge variant="default" className="bg-green-600">
                   <CheckCircle className="w-3 h-3 mr-1" />
@@ -439,7 +481,7 @@ export const InteractivePreviewEngine: React.FC<InteractivePreviewEngineProps> =
             <div className="text-6xl text-stone-300">📝</div>
             <h3 className="text-xl font-semibold text-stone-600">Canvas Vazio</h3>
             <p className="text-stone-500 max-w-sm">
-              {isEditorMode 
+              {isEditorMode
                 ? 'Adicione componentes da sidebar para começar a construir esta etapa'
                 : 'Nenhum componente configurado para esta etapa'
               }
@@ -480,7 +522,7 @@ export const InteractivePreviewEngine: React.FC<InteractivePreviewEngineProps> =
               if (enableRealExperience && orchestrator) {
                 orchestrator.updateValidation(blockId, isValid);
               }
-              
+
               setQuizState(prev => ({
                 ...prev,
                 validationStates: { ...prev.validationStates, [blockId]: isValid }

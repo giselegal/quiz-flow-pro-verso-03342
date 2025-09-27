@@ -209,7 +209,24 @@ export const EditorProUnified: React.FC<EditorProUnifiedProps> = ({
 
   const handleUpdateBlock = useCallback(async (blockId: string, updates: Partial<Block>) => {
     const stepKey = `step-${state.currentStep}`;
-    await actions.updateBlock(stepKey, blockId, updates);
+
+    // 🎯 SISTEMA DE ATUALIZAÇÃO EM TEMPO REAL
+    const enhancedUpdates = {
+      ...updates,
+      _lastUpdated: Date.now(), // Timestamp para tracking de mudanças
+      _updatedInPreview: true   // Flag para indicar que foi atualizado no preview
+    };
+
+    await actions.updateBlock(stepKey, blockId, enhancedUpdates);
+
+    // 🔄 Log para tracking de mudanças em tempo real
+    console.log('⚡ Bloco atualizado em tempo real:', {
+      blockId,
+      step: state.currentStep,
+      updatesCount: Object.keys(updates).length,
+      timestamp: new Date().toISOString()
+    });
+
   }, [state.currentStep, actions]);
 
   const handleDeleteBlock = useCallback(async (blockId: string) => {

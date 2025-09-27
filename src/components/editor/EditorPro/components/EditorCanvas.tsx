@@ -1,6 +1,5 @@
 import React, { memo, useMemo } from 'react';
 import { Block } from '@/types/editor';
-import ScalableQuizRenderer from '@/components/core/ScalableQuizRenderer';
 import CanvasDropZone from '@/components/editor/canvas/CanvasDropZone.simple';
 import { useStepSelection } from '@/hooks/useStepSelection';
 import { UnifiedPreviewEngine } from '@/components/editor/unified/UnifiedPreviewEngine'; // Import para experiência real
@@ -50,26 +49,37 @@ const EditorCanvas: React.FC<EditorCanvasProps> = ({
   }, [currentStep]);
 
   if (isPreviewMode) {
-    // Usar funnelId dinâmico ou fallback para o template padrão
-    const previewFunnelId = funnelId || 'quiz21StepsComplete';
-
+    // 🎯 PREVIEW EM TEMPO REAL - Usar UnifiedPreviewEngine com dados dinâmicos
     return (
       <div data-testid="preview-container" className="flex-1 min-h-0 bg-gradient-to-br from-[#FAF9F7] via-[#F5F2E9] to-[#EEEBE1] isolate">
         <div className="h-full w-full overflow-y-auto relative z-0">
           {/* Indicador do funil sendo visualizado */}
           {funnelId && (
             <div className="absolute top-4 left-4 z-10 bg-blue-600 text-white px-4 py-2 rounded-full text-sm font-bold shadow-lg">
-              📋 Preview: {funnelId}
+              📋 Preview Real: {funnelId} | Step {currentStep}
             </div>
           )}
-          <ScalableQuizRenderer
-            funnelId={previewFunnelId}
+
+          {/* 🚀 PREVIEW EM TEMPO REAL - Reflete mudanças instantaneamente */}
+          <UnifiedPreviewEngine
+            blocks={blocks}
+            selectedBlockId={selectedBlock?.id}
+            isPreviewing={true}
+            viewportSize="desktop"
+            onBlockSelect={onSelectBlock}
+            onBlockUpdate={onUpdateBlock}
+            onBlocksReordered={() => { }}
+            funnelId={funnelId || 'quiz21StepsComplete'}
+            currentStep={currentStep}
+            enableInteractions={false} // Preview mode - sem interações
             mode="preview"
-            debugMode={true}
-            className="preview-mode-canvas w-full h-full"
-            onStepChange={(step, data) => {
-              if (onStepChange) onStepChange(step);
-              console.log(`📍 Preview step change [${previewFunnelId}]:`, step, data);
+            enableProductionMode={false}
+            realTimeUpdate={true} // 🎯 NOVA PROP: Habilita atualização em tempo real
+            debugInfo={{
+              showDebugPanel: true,
+              stepData: true,
+              blockInfo: true,
+              templateInfo: true
             }}
           />
         </div>
