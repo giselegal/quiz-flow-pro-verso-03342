@@ -22,6 +22,8 @@ import {
 } from 'lucide-react';
 import { UnifiedRoutingService } from '@/services/core/UnifiedRoutingService';
 import { EditorDashboardSyncService } from '@/services/core/EditorDashboardSyncService';
+import { useTheme } from '@/styles/themes';
+import { ThemeToggle } from '@/components/ui/ThemeToggle';
 
 // Componentes lazy-loaded
 const AdminDashboard = React.lazy(() => import('@/pages/dashboard/AdminDashboard'));
@@ -58,6 +60,7 @@ export const UnifiedAdminLayout: React.FC<UnifiedAdminLayoutProps> = ({
 }) => {
     const [activeView, setActiveView] = useState(currentView);
     const [syncStats, setSyncStats] = useState(EditorDashboardSyncService.getSyncStats());
+    const theme = useTheme();
 
     // ========================================================================
     // NAVIGATION HANDLERS
@@ -177,33 +180,83 @@ export const UnifiedAdminLayout: React.FC<UnifiedAdminLayoutProps> = ({
     // ========================================================================
 
     return (
-        <div className={`min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-50/40 ${className}`}>
-            {/* Header Unificado - Design Profissional */}
-            <header className="sticky top-0 z-50 border-b border-white/20 bg-white/80 backdrop-blur-xl supports-[backdrop-filter]:bg-white/60 shadow-sm">
+        <div 
+            className={`min-h-screen ${className}`}
+            style={{ 
+                background: theme.colors.background,
+                color: theme.colors.text 
+            }}
+        >
+            {/* Header Unificado - Design com Nova Identidade Visual */}
+            <header 
+                className="sticky top-0 z-50 border-b shadow-sm"
+                style={{ 
+                    borderColor: `${theme.colors.detailsMinor}30`,
+                    backgroundColor: `${theme.colors.background}95`,
+                    backdropFilter: 'blur(20px)',
+                    boxShadow: `0 0 30px ${theme.colors.glowEffect}20`
+                }}
+            >
                 <div className="flex h-18 items-center px-8">
-                    {/* Logo e Titulo - Design Premium */}
+                    {/* Logo e Titulo - Design Premium com Nova Identidade */}
                     <div className="flex items-center gap-6">
                         <div className="flex items-center gap-3">
-                            <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-600 shadow-lg">
+                            <div 
+                                className="flex items-center justify-center w-10 h-10 rounded-xl shadow-lg glow-button"
+                                style={{
+                                    background: `linear-gradient(135deg, ${theme.colors.buttons} 0%, ${theme.colors.detailsMinor} 100%)`,
+                                    boxShadow: `0 0 20px ${theme.colors.buttons}50`
+                                }}
+                            >
                                 <BarChart3 className="w-5 h-5 text-white" />
                             </div>
                             <div className="flex flex-col">
-                                <span className="font-bold text-xl bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">
+                                <span 
+                                    className="font-bold text-xl glow-text"
+                                    style={{
+                                        background: `linear-gradient(135deg, ${theme.colors.detailsMinor} 0%, ${theme.colors.buttons} 100%)`,
+                                        WebkitBackgroundClip: 'text',
+                                        WebkitTextFillColor: 'transparent',
+                                        backgroundClip: 'text',
+                                        filter: `drop-shadow(0 0 10px ${theme.colors.detailsMinor}50)`
+                                    }}
+                                >
                                     Admin Dashboard
                                 </span>
-                                <span className="text-xs text-gray-500 font-medium">
+                                <span 
+                                    className="text-xs font-medium"
+                                    style={{ color: `${theme.colors.text}70` }}
+                                >
                                     Sistema Unificado v2.0
                                 </span>
                             </div>
                         </div>
 
-                        {/* Sync Status - Design Moderno */}
+                        {/* Sync Status - Design Moderno com Nova Identidade */}
                         {syncStats.total > 0 && (
                             <div className="flex items-center gap-3">
-                                <div className="w-px h-6 bg-gradient-to-b from-transparent via-gray-300 to-transparent" />
-                                <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-green-50 border border-green-200/60">
-                                    <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-                                    <span className="text-xs font-medium text-green-700">
+                                <div 
+                                    className="w-px h-6"
+                                    style={{
+                                        background: `linear-gradient(to bottom, transparent, ${theme.colors.detailsMinor}50, transparent)`
+                                    }}
+                                />
+                                <div 
+                                    className="flex items-center gap-2 px-3 py-1.5 rounded-full border glow-card"
+                                    style={{
+                                        backgroundColor: `${theme.colors.glowEffect}20`,
+                                        borderColor: `${theme.colors.detailsMinor}40`,
+                                        boxShadow: `0 0 10px ${theme.colors.glowEffect}30`
+                                    }}
+                                >
+                                    <div 
+                                        className="w-2 h-2 rounded-full animate-pulse"
+                                        style={{ backgroundColor: theme.colors.detailsMinor }}
+                                    />
+                                    <span 
+                                        className="text-xs font-medium"
+                                        style={{ color: theme.colors.text }}
+                                    >
                                         {syncStats.last24h} sync hoje
                                     </span>
                                 </div>
@@ -211,28 +264,62 @@ export const UnifiedAdminLayout: React.FC<UnifiedAdminLayoutProps> = ({
                         )}
                     </div>
 
-                    {/* Navigation Tabs - Design Premium */}
+                    {/* Navigation Tabs - Design Premium com Nova Identidade */}
                     <div className="flex-1 flex justify-center">
-                        <div className="flex items-center bg-white/60 backdrop-blur-sm rounded-2xl p-1 shadow-sm border border-white/40">
+                        <div 
+                            className="flex items-center backdrop-blur-sm rounded-2xl p-1 shadow-sm border glow-card"
+                            style={{
+                                backgroundColor: `${theme.colors.background}60`,
+                                borderColor: `${theme.colors.detailsMinor}30`,
+                                boxShadow: `0 0 20px ${theme.colors.glowEffect}20`
+                            }}
+                        >
                             <Tabs value={activeView} onValueChange={(value) => handleNavigateToView(value as any)} className="w-full">
                                 <TabsList className="grid w-full grid-cols-3 bg-transparent p-0 h-auto gap-1">
                                     <TabsTrigger
                                         value="dashboard"
-                                        className="flex items-center gap-2 px-6 py-3 rounded-xl data-[state=active]:bg-white data-[state=active]:shadow-md data-[state=active]:text-blue-600 transition-all duration-200"
+                                        className="flex items-center gap-2 px-6 py-3 rounded-xl transition-all duration-200 glow-button"
+                                        style={{
+                                            background: activeView === 'dashboard' 
+                                                ? `linear-gradient(135deg, ${theme.colors.buttons} 0%, ${theme.colors.detailsMinor} 100%)`
+                                                : 'transparent',
+                                            color: activeView === 'dashboard' ? '#ffffff' : theme.colors.text,
+                                            boxShadow: activeView === 'dashboard' 
+                                                ? `0 0 15px ${theme.colors.buttons}40`
+                                                : 'none'
+                                        }}
                                     >
                                         <Home className="w-4 h-4" />
                                         <span className="font-medium">Dashboard</span>
                                     </TabsTrigger>
                                     <TabsTrigger
                                         value="funnels"
-                                        className="flex items-center gap-2 px-6 py-3 rounded-xl data-[state=active]:bg-white data-[state=active]:shadow-md data-[state=active]:text-blue-600 transition-all duration-200"
+                                        className="flex items-center gap-2 px-6 py-3 rounded-xl transition-all duration-200 glow-button"
+                                        style={{
+                                            background: activeView === 'funnels' 
+                                                ? `linear-gradient(135deg, ${theme.colors.buttons} 0%, ${theme.colors.detailsMinor} 100%)`
+                                                : 'transparent',
+                                            color: activeView === 'funnels' ? '#ffffff' : theme.colors.text,
+                                            boxShadow: activeView === 'funnels' 
+                                                ? `0 0 15px ${theme.colors.buttons}40`
+                                                : 'none'
+                                        }}
                                     >
                                         <Target className="w-4 h-4" />
                                         <span className="font-medium">Funis</span>
                                     </TabsTrigger>
                                     <TabsTrigger
                                         value="analytics"
-                                        className="flex items-center gap-2 px-6 py-3 rounded-xl data-[state=active]:bg-white data-[state=active]:shadow-md data-[state=active]:text-blue-600 transition-all duration-200"
+                                        className="flex items-center gap-2 px-6 py-3 rounded-xl transition-all duration-200 glow-button"
+                                        style={{
+                                            background: activeView === 'analytics' 
+                                                ? `linear-gradient(135deg, ${theme.colors.buttons} 0%, ${theme.colors.detailsMinor} 100%)`
+                                                : 'transparent',
+                                            color: activeView === 'analytics' ? '#ffffff' : theme.colors.text,
+                                            boxShadow: activeView === 'analytics' 
+                                                ? `0 0 15px ${theme.colors.buttons}40`
+                                                : 'none'
+                                        }}
                                     >
                                         <Activity className="w-4 h-4" />
                                         <span className="font-medium">Analytics</span>
@@ -242,14 +329,20 @@ export const UnifiedAdminLayout: React.FC<UnifiedAdminLayoutProps> = ({
                         </div>
                     </div>
 
-                    {/* Actions - Design Premium */}
+                    {/* Actions - Design Premium com Nova Identidade */}
                     <div className="flex items-center gap-3">
                         {activeView === 'editor' && (
                             <Button
                                 variant="outline"
                                 size="sm"
                                 onClick={handleBackToDashboard}
-                                className="border-blue-200/60 text-blue-700 hover:bg-blue-50 hover:border-blue-300 transition-colors backdrop-blur-sm bg-white/50 shadow-sm"
+                                className="transition-colors backdrop-blur-sm shadow-sm border glow-button"
+                                style={{
+                                    borderColor: `${theme.colors.detailsMinor}60`,
+                                    color: theme.colors.text,
+                                    backgroundColor: `${theme.colors.background}50`,
+                                    boxShadow: `0 0 10px ${theme.colors.glowEffect}20`
+                                }}
                             >
                                 <ArrowLeft className="w-4 h-4 mr-2" />
                                 Voltar
@@ -259,7 +352,11 @@ export const UnifiedAdminLayout: React.FC<UnifiedAdminLayoutProps> = ({
                         <Button
                             size="sm"
                             onClick={() => handleNavigateToView('funnels')}
-                            className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white shadow-lg hover:shadow-xl transition-all duration-200 px-6 py-2.5 rounded-xl font-medium"
+                            className="shadow-lg hover:shadow-xl transition-all duration-200 px-6 py-2.5 rounded-xl font-medium text-white glow-button"
+                            style={{
+                                background: `linear-gradient(135deg, ${theme.colors.buttons} 0%, ${theme.colors.detailsMinor} 100%)`,
+                                boxShadow: `0 0 20px ${theme.colors.buttons}40, 0 4px 20px rgba(0, 0, 0, 0.2)`
+                            }}
                         >
                             <Plus className="w-4 h-4 mr-2" />
                             Novo Funil
@@ -267,16 +364,28 @@ export const UnifiedAdminLayout: React.FC<UnifiedAdminLayoutProps> = ({
                     </div>
                 </div>
 
-                {/* Breadcrumbs - Design Moderno */}
-                <div className="px-8 py-3 bg-gradient-to-r from-white/40 to-blue-50/40 backdrop-blur-sm border-t border-white/30">
-                    <nav className="flex items-center space-x-2 text-sm text-gray-600">
+                {/* Breadcrumbs - Design Moderno com Nova Identidade */}
+                <div 
+                    className="px-8 py-3 backdrop-blur-sm border-t"
+                    style={{
+                        background: `linear-gradient(90deg, ${theme.colors.glowEffect}20, ${theme.colors.detailsMinor}10)`,
+                        borderColor: `${theme.colors.detailsMinor}30`
+                    }}
+                >
+                    <nav className="flex items-center space-x-2 text-sm">
                         {getBreadcrumbs().map((crumb, index) => (
                             <React.Fragment key={crumb.path}>
-                                {index > 0 && <span>/</span>}
+                                {index > 0 && (
+                                    <span style={{ color: `${theme.colors.text}50` }}>/</span>
+                                )}
                                 <button
                                     onClick={() => crumb.path !== '#' && UnifiedRoutingService.navigate(crumb.path)}
-                                    className={`hover:text-foreground transition-colors ${crumb.active ? 'text-foreground font-medium' : ''
-                                        } ${crumb.path === '#' ? 'cursor-default' : 'cursor-pointer'}`}
+                                    className="transition-colors cursor-pointer hover:glow-text"
+                                    style={{
+                                        color: crumb.active ? theme.colors.detailsMinor : `${theme.colors.text}70`,
+                                        fontWeight: crumb.active ? '600' : '400',
+                                        cursor: crumb.path === '#' ? 'default' : 'pointer'
+                                    }}
                                     disabled={crumb.path === '#'}
                                 >
                                     {crumb.label}
@@ -287,15 +396,26 @@ export const UnifiedAdminLayout: React.FC<UnifiedAdminLayoutProps> = ({
                 </div>
             </header>
 
-            {/* Main Content - Design Premium */}
+            {/* Main Content - Design Premium com Nova Identidade */}
             <main className="flex-1 min-h-0">
-                <div className="h-full bg-gradient-to-br from-white/60 to-slate-50/60 backdrop-blur-sm">
+                <div 
+                    className="h-full backdrop-blur-sm"
+                    style={{
+                        background: `linear-gradient(135deg, ${theme.colors.background}60, ${theme.colors.glowEffect}10)`
+                    }}
+                >
                     <React.Suspense
                         fallback={
                             <div className="flex items-center justify-center h-64">
                                 <div className="text-center">
-                                    <div className="w-8 h-8 mx-auto mb-4 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
-                                    <p className="text-muted-foreground">Carregando...</p>
+                                    <div 
+                                        className="w-8 h-8 mx-auto mb-4 border-2 border-t-transparent rounded-full animate-spin"
+                                        style={{
+                                            borderColor: `${theme.colors.detailsMinor}30`,
+                                            borderTopColor: 'transparent'
+                                        }}
+                                    ></div>
+                                    <p style={{ color: `${theme.colors.text}70` }}>Carregando...</p>
                                 </div>
                             </div>
                         }

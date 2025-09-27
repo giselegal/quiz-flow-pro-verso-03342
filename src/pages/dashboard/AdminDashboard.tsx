@@ -2,11 +2,13 @@
  * 🏆 ADMIN DASHBOARD CONSOLIDADO - FASE 6 OTIMIZADA
  * 
  * Dashboard principal otimizado usando sistema consolidado de APIs
+ * Nova Identidade Visual Implementada
  * 
  * ✅ UnifiedAnalytics (sistema consolidado)
  * ✅ Dados reais do Supabase quando disponíveis
  * ✅ Dados simulados da Fase 5 como fallback inteligente
  * ✅ Performance otimizada com menos redundâncias
+ * ✅ Nova identidade visual com efeitos glow
  */
 
 import React, { useState, useEffect } from 'react';
@@ -35,6 +37,8 @@ import {
 import { cn } from '@/lib/utils';
 import { UnifiedDataService } from '@/services/core/UnifiedDataService';
 import { EditorDashboardSyncService } from '@/services/core/EditorDashboardSyncService';
+import { useTheme } from '@/styles/themes';
+import '@/styles/global-effects.css';
 
 // ============================================================================
 // TYPES
@@ -114,6 +118,7 @@ const AdminDashboard: React.FC = () => {
         activeUsersNow: 0
     });
     const [isLoading, setIsLoading] = useState(true);
+    const theme = useTheme();
     const [recentActivity] = useState<RecentActivity[]>([
         {
             id: 1,
@@ -269,26 +274,66 @@ const AdminDashboard: React.FC = () => {
     // ============================================================================
 
     return (
-        <div className="p-8 space-y-8 bg-gradient-to-br from-slate-50/50 to-blue-50/30 min-h-screen">
-            {/* Header Modernizado */}
-            <div className="flex justify-between items-start">
+        <div 
+            className="p-8 space-y-8 min-h-screen animated-bg particles-bg"
+            style={{
+                background: theme.colors.background,
+                color: theme.colors.text
+            }}
+        >
+            {/* Header Modernizado com Nova Identidade Visual */}
+            <div className="flex justify-between items-start fade-in-up">
                 <div className="space-y-1">
-                    <h1 className="text-3xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">
+                    <h1 
+                        className="text-3xl font-bold glow-text"
+                        style={{
+                            background: `linear-gradient(135deg, ${theme.colors.detailsMinor} 0%, ${theme.colors.buttons} 100%)`,
+                            WebkitBackgroundClip: 'text',
+                            WebkitTextFillColor: 'transparent',
+                            backgroundClip: 'text',
+                            filter: `drop-shadow(0 0 15px ${theme.colors.detailsMinor}50)`
+                        }}
+                    >
                         Dashboard Executivo
                     </h1>
-                    <p className="text-gray-500 text-lg font-medium">
+                    <p 
+                        className="text-lg font-medium"
+                        style={{ color: `${theme.colors.text}80` }}
+                    >
                         Visão estratégica dos seus resultados
                     </p>
                 </div>
                 <div className="flex items-center gap-3">
-                    <div className="flex items-center gap-2 px-4 py-2 bg-white/60 backdrop-blur-sm rounded-xl border border-white/40 shadow-sm">
-                        <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-                        <span className="text-sm font-medium text-gray-700">Dados em tempo real</span>
+                    <div 
+                        className="flex items-center gap-2 px-4 py-2 backdrop-blur-sm rounded-xl border shadow-sm glow-card"
+                        style={{
+                            backgroundColor: `${theme.colors.background}60`,
+                            borderColor: `${theme.colors.detailsMinor}40`,
+                            boxShadow: `0 0 20px ${theme.colors.glowEffect}20`
+                        }}
+                    >
+                        <div 
+                            className="w-2 h-2 rounded-full animate-pulse"
+                            style={{ backgroundColor: theme.colors.detailsMinor }}
+                        />
+                        <span 
+                            className="text-sm font-medium"
+                            style={{ color: theme.colors.text }}
+                        >
+                            Dados em tempo real
+                        </span>
                     </div>
                     <Button
                         onClick={loadDashboardData}
                         variant="outline"
-                        className="bg-white/60 backdrop-blur-sm border-white/40 hover:bg-white/80 shadow-sm"
+                        className="backdrop-blur-sm shadow-sm glow-button"
+                        style={{
+                            backgroundColor: `${theme.colors.background}60`,
+                            borderColor: `${theme.colors.detailsMinor}40`,
+                            color: theme.colors.text,
+                            background: `linear-gradient(135deg, ${theme.colors.buttons}20, ${theme.colors.detailsMinor}20)`,
+                            boxShadow: `0 0 15px ${theme.colors.glowEffect}30`
+                        }}
                     >
                         <RefreshCw className="w-4 h-4 mr-2" />
                         Atualizar
@@ -297,22 +342,55 @@ const AdminDashboard: React.FC = () => {
             </div>
 
             <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as typeof activeTab)} className="w-full">
-                <TabsList className="grid w-full grid-cols-3 bg-white/60 backdrop-blur-sm border border-white/40 shadow-sm p-1 rounded-2xl max-w-md">
+                <TabsList 
+                    className="grid w-full grid-cols-3 backdrop-blur-sm border shadow-sm p-1 rounded-2xl max-w-md glass-effect glow-card"
+                    style={{
+                        backgroundColor: `${theme.colors.background}60`,
+                        borderColor: `${theme.colors.detailsMinor}40`
+                    }}
+                >
                     <TabsTrigger
                         value="overview"
-                        className="rounded-xl data-[state=active]:bg-white data-[state=active]:shadow-md data-[state=active]:text-blue-600 transition-all duration-200 font-medium"
+                        className="rounded-xl transition-all duration-200 font-medium glow-button"
+                        style={{
+                            background: activeTab === 'overview'
+                                ? `linear-gradient(135deg, ${theme.colors.buttons} 0%, ${theme.colors.detailsMinor} 100%)`
+                                : 'transparent',
+                            color: activeTab === 'overview' ? '#ffffff' : theme.colors.text,
+                            boxShadow: activeTab === 'overview'
+                                ? `0 0 15px ${theme.colors.buttons}40`
+                                : 'none'
+                        }}
                     >
                         Visão Geral
                     </TabsTrigger>
                     <TabsTrigger
                         value="participants"
-                        className="rounded-xl data-[state=active]:bg-white data-[state=active]:shadow-md data-[state=active]:text-blue-600 transition-all duration-200 font-medium"
+                        className="rounded-xl transition-all duration-200 font-medium glow-button"
+                        style={{
+                            background: activeTab === 'participants'
+                                ? `linear-gradient(135deg, ${theme.colors.buttons} 0%, ${theme.colors.detailsMinor} 100%)`
+                                : 'transparent',
+                            color: activeTab === 'participants' ? '#ffffff' : theme.colors.text,
+                            boxShadow: activeTab === 'participants'
+                                ? `0 0 15px ${theme.colors.buttons}40`
+                                : 'none'
+                        }}
                     >
                         Participantes
                     </TabsTrigger>
                     <TabsTrigger
                         value="analytics"
-                        className="rounded-xl data-[state=active]:bg-white data-[state=active]:shadow-md data-[state=active]:text-blue-600 transition-all duration-200 font-medium"
+                        className="rounded-xl transition-all duration-200 font-medium glow-button"
+                        style={{
+                            background: activeTab === 'analytics'
+                                ? `linear-gradient(135deg, ${theme.colors.buttons} 0%, ${theme.colors.detailsMinor} 100%)`
+                                : 'transparent',
+                            color: activeTab === 'analytics' ? '#ffffff' : theme.colors.text,
+                            boxShadow: activeTab === 'analytics'
+                                ? `0 0 15px ${theme.colors.buttons}40`
+                                : 'none'
+                        }}
                     >
                         Analytics
                     </TabsTrigger>

@@ -9,6 +9,7 @@
 @import "./styles/imageOptimization.css";
 @import './styles/mobile-responsive-fixes.css';
 @import './styles/brand-system.css';
+@import './styles/global-effects.css'; /* Nova identidade visual */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
