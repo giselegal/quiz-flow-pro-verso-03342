@@ -28,7 +28,7 @@ import { ThemeToggle } from '@/components/ui/ThemeToggle';
 // Componentes lazy-loaded
 const AdminDashboard = React.lazy(() => import('@/pages/dashboard/AdminDashboard'));
 const MeusFunisPageReal = React.lazy(() => import('@/pages/dashboard/MeusFunisPageReal'));
-const AnalyticsPage = React.lazy(() => import('@/pages/admin/AnalyticsPage'));
+const AnalyticsPage = React.lazy(() => import('@/pages/dashboard/AnalyticsPage'));
 const ModernUnifiedEditor = React.lazy(() => import('@/pages/editor/ModernUnifiedEditor'));
 
 // ============================================================================
@@ -332,7 +332,7 @@ export const UnifiedAdminLayout: React.FC<UnifiedAdminLayoutProps> = ({
                     {/* Actions - Design Premium com Nova Identidade */}
                     <div className="flex items-center gap-3">
                         <ThemeToggle size="sm" />
-                        
+
                         {activeView === 'editor' && (
                             <Button
                                 variant="outline"
