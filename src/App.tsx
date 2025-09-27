@@ -13,6 +13,7 @@
 import { Suspense, lazy, useEffect } from 'react';
 import { Route, Router, Switch } from 'wouter';
 import { ThemeProvider } from './components/theme-provider';
+import { ThemeProvider as CustomThemeProvider } from './contexts/ThemeContext';
 import { HelmetProvider } from 'react-helmet-async';
 import { EnhancedLoadingFallback } from './components/ui/enhanced-loading-fallback';
 import { GlobalErrorBoundary } from './components/error/GlobalErrorBoundary';
@@ -74,9 +75,10 @@ function App() {
     <HelmetProvider>
       <GlobalErrorBoundary showResetButton={true}>
         <ThemeProvider defaultTheme="light">
-          <AuthProvider>
-            <SecurityProvider>
-              <MonitoringProvider enableAlerts={true} enableAnalytics={true}>
+          <CustomThemeProvider defaultTheme="dark">
+            <AuthProvider>
+              <SecurityProvider>
+                <MonitoringProvider enableAlerts={true} enableAnalytics={true}>
                 <OptimizedProviderStack enableLazyLoading={true} enableComponentCaching={true} debugMode={false}>
                   <Router>
                     <Suspense fallback={<EnhancedLoadingFallback message="Carregando aplicação..." variant="detailed" />}>
@@ -259,6 +261,7 @@ function App() {
               </MonitoringProvider>
             </SecurityProvider>
           </AuthProvider>
+          </CustomThemeProvider>
         </ThemeProvider>
       </GlobalErrorBoundary>
     </HelmetProvider>

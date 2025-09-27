@@ -7,14 +7,11 @@
 
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Separator } from '@/components/ui/separator';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
     BarChart3,
     Target,
     Activity,
-    Settings,
     Edit,
     ArrowLeft,
     Home,
@@ -75,11 +72,6 @@ export const UnifiedAdminLayout: React.FC<UnifiedAdminLayoutProps> = ({
 
         UnifiedRoutingService.navigate(paths[view]);
         setActiveView(view);
-    };
-
-    const handleEditFunnel = (funnelId: string) => {
-        UnifiedRoutingService.navigateAdminToEditor(funnelId, true);
-        setActiveView('editor');
     };
 
     const handleBackToDashboard = () => {

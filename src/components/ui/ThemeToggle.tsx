@@ -2,13 +2,13 @@
  * 🎨 THEME TOGGLE COMPONENT
  * 
  * Botão para alternar entre tema escuro e claro
- * Atualizado para usar o ThemeProvider do shadcn/ui
+ * Usa o sistema custom de temas para consistência visual
  */
 
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Moon, Sun } from 'lucide-react';
-import { useTheme } from '@/components/theme-provider';
+import { useThemeContext } from '@/contexts/ThemeContext';
 
 interface ThemeToggleProps {
     className?: string;
@@ -19,14 +19,7 @@ export const ThemeToggle: React.FC<ThemeToggleProps> = ({
     className = '',
     size = 'md'
 }) => {
-    const { theme, setTheme } = useTheme();
-
-    // Determinar se está no modo claro
-    const isLight = theme === 'light' || (theme === 'system' && window.matchMedia('(prefers-color-scheme: light)').matches);
-
-    const toggleTheme = () => {
-        setTheme(isLight ? 'dark' : 'light');
-    };
+    const { theme, toggleTheme, isLight } = useThemeContext();
 
     const sizeClasses = {
         sm: 'w-8 h-8 p-1',
@@ -48,12 +41,13 @@ export const ThemeToggle: React.FC<ThemeToggleProps> = ({
                 ${sizeClasses[size]} 
                 rounded-xl transition-all duration-300 
                 ${className}
-                bg-gradient-to-br from-purple-50 to-blue-50 dark:from-purple-900/20 dark:to-blue-900/20
-                border-purple-200 dark:border-purple-700
-                hover:from-purple-100 hover:to-blue-100 dark:hover:from-purple-800/30 dark:hover:to-blue-800/30
-                hover:shadow-lg hover:shadow-purple-200/50 dark:hover:shadow-purple-500/20
-                text-purple-700 dark:text-purple-300
             `}
+            style={{
+                background: `linear-gradient(135deg, ${theme.colors.buttons}20, ${theme.colors.detailsMinor}20)`,
+                borderColor: `${theme.colors.detailsMinor}50`,
+                color: theme.colors.text,
+                boxShadow: `0 0 15px ${theme.colors.glowEffect}30`
+            }}
             title={isLight ? 'Alternar para tema escuro' : 'Alternar para tema claro'}
         >
             {isLight ? (
