@@ -68,6 +68,15 @@ const FormInputBlock: React.FC<FormInputBlockProps> = ({
   funnelId: _funnelId,
   onValueChange,
 }) => {
+  // Verificação de segurança para evitar erro de undefined
+  if (!block) {
+    return (
+      <div className="p-4 border-2 border-dashed border-red-300 rounded">
+        <p className="text-red-600">Erro: Bloco FormInput não encontrado</p>
+      </div>
+    );
+  }
+
   // Determinar funnelId a partir do contexto/URL com fallback
   const effectiveFunnelId = React.useMemo(() => {
     try {
