@@ -8,9 +8,9 @@ import './styles/design-system.css';
 import { initBrowserCleanup } from './utils/browserCleanup';
 import { cleanupConsoleWarnings } from './utils/development';
 // 🔧 WEBSOCKET: Otimizador para resolver problemas de reconexão
-import './utils/websocket-optimizer';
+import { initializeWebSocketOptimization } from './utils/websocket-optimizer';
 // 📊 RUDDERSTACK: Otimizador para resolver problemas de analytics
-import './utils/rudderstack-optimizer';
+import { initializeRudderStackOptimization } from './utils/rudderstack-optimizer';
 // 🛡️ DEVELOPMENT: Bloquear conexões Lovable em desenvolvimento
 import './utils/blockLovableInDev';
 // 🎯 PERFORMANCE: Controle de debug do canvas para melhor performance
@@ -26,6 +26,9 @@ if (import.meta.env.DEV) {
   if (typeof window !== 'undefined') {
     initBrowserCleanup();
   }
+  // Inicializar otimizadores para desenvolvimento
+  initializeWebSocketOptimization();
+  initializeRudderStackOptimization();
 }
 
 // � Interceptor simples para bloquear logs externos em dev (Grafana/gpt-engineer)
