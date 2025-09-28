@@ -164,7 +164,7 @@ const EditorProPage: React.FC<EditorProPageProps> = ({ params }) => {
                         {/* 🎯 Editor principal com funcionalidades básicas + IA */}
                         <EditorProUnified
                             showProFeatures={true}
-                            funnelId={extractedFunnelId}
+                            funnelId={funnelId}
                             className="h-full w-full"
                         />
 

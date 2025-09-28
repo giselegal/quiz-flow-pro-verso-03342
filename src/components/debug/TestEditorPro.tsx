@@ -11,7 +11,7 @@ const TestEditorPro: React.FC = () => {
         const testEditorImport = async () => {
             try {
                 console.log('🧪 Testando import do EditorPro...');
-                const editorModule = await import('@/legacy/editor/EditorPro');
+                const editorModule = await import('@/components/editor/EditorProUnified');
                 console.log('✅ EditorPro importado com sucesso:', editorModule);
                 setSuccess(true);
             } catch (err) {
