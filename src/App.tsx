@@ -48,6 +48,7 @@ const QuizIntegratedPage = lazy(() => import('./pages/QuizIntegratedPage'));
 
 // 🏢 LAYOUT ADMINISTRATIVO E DASHBOARD MODERNO
 const ModernDashboardPage = lazy(() => import('./pages/ModernDashboardPage'));
+const ModernAdminDashboard = lazy(() => import('./pages/ModernAdminDashboard'));
 
 // 🚀 PHASE 2 ENTERPRISE DASHBOARD
 const Phase2Dashboard = lazy(() => import('./pages/Phase2Dashboard'));
@@ -217,9 +218,16 @@ function App() {
                             </div>
                           </Route>
 
-                          {/* 🔄 LEGACY REDIRECTS */}
+                          {/* 🎯 ADMIN DASHBOARD CONSOLIDADO */}
                           <Route path="/admin">
-                            <RedirectRoute to="/admin/dashboard" />
+                            <div data-testid="modern-admin-dashboard">
+                              <ModernAdminDashboard />
+                            </div>
+                          </Route>
+                          <Route path="/admin/*">
+                            <div data-testid="modern-admin-dashboard-subroutes">
+                              <ModernAdminDashboard />
+                            </div>
                           </Route>
                           <Route path="/dashboard">
                             <RedirectRoute to="/admin/dashboard" />
