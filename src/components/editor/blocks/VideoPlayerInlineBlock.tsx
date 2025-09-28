@@ -1,5 +1,6 @@
 // @ts-nocheck
 import React, { useState, useEffect, useRef } from 'react';
+import { SafeIframe } from '@/components/security/SafeIframe';
 import { cn } from '@/lib/utils';
 import InlineBaseWrapper from './base/InlineBaseWrapper';
 import InlineEditableText from './base/InlineEditableText';
@@ -340,11 +341,13 @@ const VideoPlayerInlineBlock: React.FC<BlockComponentProps> = ({
             // Embedded Video
             <div className="w-full h-full">
               {videoType === 'youtube' || videoType === 'vimeo' ? (
-                <iframe
+                <SafeIframe
                   src={getVideoEmbedUrl()}
                   className="w-full h-full"
-                  frameBorder="0"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowScripts={false}
+                  allowSameOrigin={true}
+                  trustLevel="untrusted"
+                  title={title || 'Vídeo'}
                   allowFullScreen
                 />
               ) : (

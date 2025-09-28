@@ -1,4 +1,5 @@
 import { Input } from '@/components/ui/input';
+import { SafeIframe } from '@/components/security/SafeIframe';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Switch } from '@/components/ui/switch';
@@ -107,11 +108,13 @@ const VideoBlockEditor: React.FC<VideoBlockEditorProps> = ({ block, onUpdate }) 
       {content.videoUrl && (
         <div className="mt-4 border p-2 rounded">
           <div className="aspect-video w-full">
-            <iframe
+            <SafeIframe
               src={getEmbedUrl(content.videoUrl)}
               className="w-full h-full"
               title={content.videoTitle || 'Video'}
-              frameBorder="0"
+              allowScripts={false}
+              allowSameOrigin={true}
+              trustLevel="untrusted"
               allowFullScreen
             />
           </div>

@@ -1,4 +1,5 @@
 import React from 'react';
+import { SafeIframe } from '@/components/security/SafeIframe';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Star, Play, Pause, Volume2, VolumeX } from 'lucide-react';
@@ -128,11 +129,13 @@ export const VideoSection: React.FC<VideoSectionProps> = ({
     if (videoType === 'youtube' || videoType === 'vimeo' || videoType === 'embedded') {
       return (
         <div className="relative aspect-video bg-black rounded-lg overflow-hidden">
-          <iframe
+          <SafeIframe
             src={getEmbedUrl()}
             className="w-full h-full"
-            frameBorder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowScripts={false}
+            allowSameOrigin={true}
+            trustLevel="untrusted"
+            title={title || 'Vídeo'}
             allowFullScreen
           />
         </div>

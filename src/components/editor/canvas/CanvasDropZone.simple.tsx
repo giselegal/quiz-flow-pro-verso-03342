@@ -12,6 +12,8 @@ import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { useCanvasContainerStyles } from '@/hooks/useCanvasContainerStyles';
 import { useGlobalEventManager } from '@/utils/OptimizedGlobalEventManager';
 import { HookOrderDebugger } from '@/components/debug/HookOrderDebugger';
+import { usePureBuilder } from '@/components/editor/PureBuilderProvider';
+import EmptyCanvasInterface from '@/components/editor/EmptyCanvasInterface';
 
 // Componente de controles de navegação para aparecer no final dos blocos do editor
 const EditorNavigationControls: React.FC<{
@@ -244,6 +246,22 @@ const CanvasDropZoneBase: React.FC<CanvasDropZoneProps> = ({
   scopeId,
   onDeselectBlocks,
 }) => {
+  // 🆕 CANVAS VAZIO: Acesso ao estado do PureBuilder para verificar totalSteps
+  const { state } = usePureBuilder();
+
+  // Calcular totalSteps com base nas stepBlocks disponíveis
+  const totalSteps = React.useMemo(() => {
+    const stepKeys = Object.keys(state?.stepBlocks || {});
+    const stepNumbers = stepKeys
+      .map(key => {
+        const match = key.match(/step-(\d+)/);
+        return match ? parseInt(match[1]) : 0;
+      })
+      .filter(num => num > 0);
+
+    return stepNumbers.length > 0 ? Math.max(...stepNumbers) : 0;
+  }, [state?.stepBlocks]);
+
   // 🚀 OTIMIZAÇÃO: Condicionar useRenderCount apenas no desenvolvimento e quando debug estiver ativo
   if (process.env.NODE_ENV === 'development' && (window as any).__DND_DEBUG === true) {
     useRenderCount('CanvasDropZone');
@@ -571,7 +589,16 @@ const CanvasDropZoneBase: React.FC<CanvasDropZoneProps> = ({
                 Carregando componentes ({editRenderCount} de {blocks.length})...
               </p>
             </div>
+          ) : totalSteps === 0 ? (
+            // 🆕 CANVAS COMPLETAMENTE VAZIO: Mostrar interface especial para criar primeira etapa
+            <EmptyCanvasInterface
+              onCreateFirstStep={() => {
+                // Callback para após criar primeira etapa
+                console.log('✅ Primeira etapa criada via EmptyCanvasInterface');
+              }}
+            />
           ) : (
+            // Canvas vazio para uma etapa específica (etapas existem, mas esta está vazia)
             <>
               <p className="text-stone-500 text-lg mb-2">
                 {isPreviewing

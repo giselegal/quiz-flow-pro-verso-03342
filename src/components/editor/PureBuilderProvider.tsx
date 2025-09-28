@@ -3,6 +3,7 @@ import React, { createContext, useContext, useState, useCallback, useRef, useEff
 import type { Block } from '@/types/editor';
 import { getTemplateInfo } from '@/utils/funnelNormalizer';
 import { unifiedTemplateService } from '@/services/UnifiedTemplateService';
+import { funnelApiClient, NormalizedFunnel } from '@/services/funnelApiClient';
 
 /**
  * 🏗️ PURE BUILDER SYSTEM PROVIDER
@@ -40,6 +41,11 @@ export interface PureBuilderState {
     funnelConfig: any;
     calculationEngine: any;
     analyticsData: any;
+
+    // 🆕 Estado da API de funil remoto
+    apiStatus?: 'idle' | 'loading' | 'ready' | 'empty' | 'error';
+    apiError?: string | null;
+    apiFunnelId?: string | null;
 }
 
 export interface PureBuilderActions {
@@ -54,6 +60,9 @@ export interface PureBuilderActions {
     setStepValid: (step: number, isValid: boolean) => void;
     exportJSON: () => string;
     importJSON: (json: string) => void;
+
+    // 🆕 CANVAS VAZIO - Ação para criar primeira etapa
+    createFirstStep: () => Promise<void>;
 
     // Builder System specific
     calculateResults: () => Promise<any>;
@@ -97,6 +106,28 @@ const generateWithPureBuilder = async (funnelId: string, templateInfo: any): Pro
     funnelConfig: any;
     totalSteps: number;
 }> => {
+    if (!templateInfo) {
+        console.warn('⚠️ generateWithPureBuilder chamado sem templateInfo - retornando estrutura vazia');
+        return { stepBlocks: {}, builderInstance: null, funnelConfig: { templateId: 'unknown', totalSteps: 0 }, totalSteps: 0 } as any;
+    }
+
+    if (!templateInfo.totalSteps || templateInfo.totalSteps <= 0) {
+        console.log('ℹ️ generateWithPureBuilder: totalSteps <= 0 (canvas vazio). Retornando estrutura vazia.');
+        return {
+            stepBlocks: {},
+            builderInstance: null,
+            funnelConfig: {
+                templateId: templateInfo.baseId || 'empty-canvas',
+                totalSteps: 0,
+                theme: templateInfo.theme || 'modern-elegant',
+                allowBackward: true,
+                saveProgress: true,
+                showProgress: false
+            },
+            totalSteps: 0
+        };
+    }
+
     console.log('🏗️ Generating funnel with Pure Builder System...', {
         funnelId,
         templateName: templateInfo.templateName,
@@ -272,6 +303,9 @@ export const PureBuilderProvider: React.FC<{
             funnelConfig: null,
             calculationEngine: null,
             analyticsData: {},
+            apiStatus: 'idle',
+            apiError: null,
+            apiFunnelId: funnelId || null,
             ...initial
         });
 
@@ -291,51 +325,149 @@ export const PureBuilderProvider: React.FC<{
 
                 setState(prev => ({ ...prev, isLoading: true }));
 
-                // ⚡ DINÂMICO: Se não há funnelId, criar um genérico
-                const targetFunnelId = funnelId || `dynamic-funnel-${Date.now()}`;
-                console.log('🎯 Usando targetFunnelId:', targetFunnelId);
+                // 🆕 CANVAS VAZIO: Se não há funnelId válido, inicializar canvas vazio
+                if (!funnelId || funnelId.trim() === '' || funnelId === 'undefined' || funnelId === 'null') {
+                    console.log('🆕 Canvas vazio: Iniciando editor sem template para criação do zero');
 
-                // ✅ USAR getTemplateInfo para obter dados dinâmicos
-                getTemplateInfo(targetFunnelId)
-                    .then(templateInfo => {
-                        console.log('📋 Template info carregado:', templateInfo);
+                    // ✅ Configurar estado inicial vazio
+                    setState(prev => ({
+                        ...prev,
+                        stepBlocks: {}, // Canvas completamente vazio
+                        builderInstance: null,
+                        funnelConfig: {
+                            templateId: 'empty-canvas',
+                            totalSteps: 0,
+                            theme: 'modern-elegant',
+                            allowBackward: true,
+                            saveProgress: true,
+                            showProgress: false // Sem progresso para canvas vazio
+                        },
+                        templateInfo: {
+                            templateName: 'Canvas Vazio',
+                            baseId: 'empty-canvas',
+                            totalSteps: 0,
+                            theme: 'modern-elegant'
+                        },
+                        isLoading: false,
+                        templateLoading: false,
+                        loadedSteps: new Set()
+                    }));
 
-                        return generateWithPureBuilder(targetFunnelId, templateInfo)
-                            .then(result => ({ ...result, templateInfo })); // 🔧 CORREÇÃO: Passar templateInfo adiante
-                    })
-                    .then(({ stepBlocks, builderInstance, funnelConfig, totalSteps: templateTotalSteps, templateInfo }) => {
-                        // ✅ ATUALIZAR TOTAL STEPS
+                    setTotalSteps(0);
+                    console.log('✅ Canvas vazio inicializado - usuário pode criar funil do zero');
+                    return;
+                }
+
+                // ⚡ DINÂMICO: Se há funnelId válido, tentar primeiro API remota
+                const targetFunnelId = funnelId;
+                console.log('🎯 Usando targetFunnelId (API primeiro):', targetFunnelId);
+
+                const abortController = new AbortController();
+                (window as any).__PURE_BUILDER_ABORT__ = abortController;
+
+                const loadFromApi = async (): Promise<{
+                    normalized?: NormalizedFunnel;
+                    templateInfo?: any;
+                    stepBlocks?: Record<string, Block[]>;
+                    builderInstance?: any;
+                    funnelConfig?: any;
+                    totalSteps?: number;
+                }> => {
+                    try {
+                        setState(prev => ({ ...prev, apiStatus: 'loading', apiError: null }));
+                        const normalized = await funnelApiClient.getFunnel(targetFunnelId, { signal: abortController.signal });
+                        if (normalized.isEmpty) {
+                            console.log('ℹ️ API retornou funil vazio ou inexistente - tratar como canvas vazio');
+                            setState(prev => ({ ...prev, apiStatus: 'empty' }));
+                            return { normalized, templateInfo: { baseId: 'empty-canvas', totalSteps: 0, templateName: 'Canvas Vazio (API)' }, totalSteps: 0, stepBlocks: {}, funnelConfig: normalized.funnelConfig };
+                        }
+                        setState(prev => ({ ...prev, apiStatus: 'ready' }));
+                        return {
+                            normalized,
+                            stepBlocks: normalized.stepBlocks as any,
+                            funnelConfig: normalized.funnelConfig,
+                            templateInfo: { baseId: normalized.funnelConfig.templateId, totalSteps: normalized.totalSteps, templateName: 'API-Funnel' },
+                            totalSteps: normalized.totalSteps
+                        };
+                    } catch (error: any) {
+                        console.warn('⚠️ Falha ao carregar via API, caindo para templates locais:', error);
+                        setState(prev => ({ ...prev, apiStatus: 'error', apiError: error?.message || 'API error' }));
+                        return {};
+                    }
+                };
+
+                const loadFromLocalTemplates = async () => {
+                    return getTemplateInfo(targetFunnelId)
+                        .then(templateInfo => {
+                            console.log('📋 Template info carregado (local fallback):', templateInfo);
+                            if (!templateInfo || !templateInfo.totalSteps || templateInfo.totalSteps === 0) {
+                                console.log('🛡️ Template com zero steps - inicializando canvas vazio sem gerar (fallback local)');
+                                return { stepBlocks: {}, builderInstance: null, funnelConfig: { templateId: templateInfo?.baseId || 'empty-canvas', totalSteps: 0, theme: 'modern-elegant', allowBackward: true, saveProgress: true, showProgress: false }, totalSteps: 0, templateInfo };
+                            }
+                            return generateWithPureBuilder(targetFunnelId, templateInfo).then(result => ({ ...result, templateInfo }));
+                        });
+                };
+
+                (async () => {
+                    const apiResult = await loadFromApi();
+                    if (apiResult.normalized) {
+                        const templateTotalSteps = apiResult.totalSteps || 0;
                         setTotalSteps(templateTotalSteps);
-
                         setState(prev => ({
                             ...prev,
-                            stepBlocks,
-                            builderInstance,
-                            funnelConfig,
-                            templateInfo: templateInfo, // 🔧 CORREÇÃO: Agora templateInfo está disponível
+                            stepBlocks: apiResult.stepBlocks || {},
+                            builderInstance: null,
+                            funnelConfig: apiResult.funnelConfig,
+                            templateInfo: apiResult.templateInfo,
                             isLoading: false,
                             templateLoading: false,
                             loadedSteps: new Set(Array.from({ length: templateTotalSteps }, (_, i) => i + 1))
                         }));
+                        console.log(`✅ Pure Builder (API) initialized: ${templateTotalSteps} etapas`);
+                        return;
+                    }
 
-                        console.log(`✅ Pure Builder initialized: ${templateTotalSteps} etapas carregadas`);
-                    })
-                    .catch(error => {
-                        console.error('❌ Error initializing PureBuilderProvider:', error);
-
-                        // 🔧 CORREÇÃO: Fallback com estrutura mínima válida
-                        setState(prev => ({
-                            ...prev,
-                            isLoading: false,
-                            templateLoading: false,
-                            stepBlocks: { 'step-1': [] }, // Garantir ao menos step-1
-                            funnelConfig: {
-                                templateId: 'fallback',
-                                totalSteps: 1,
-                                theme: 'modern-elegant'
-                            }
-                        }));
-                    });
+                    // Fallback local
+                    loadFromLocalTemplates()
+                        .then(({ stepBlocks, builderInstance, funnelConfig, totalSteps: templateTotalSteps, templateInfo }) => {
+                            setTotalSteps(templateTotalSteps);
+                            setState(prev => ({
+                                ...prev,
+                                stepBlocks: stepBlocks || {},
+                                builderInstance,
+                                funnelConfig,
+                                templateInfo,
+                                isLoading: false,
+                                templateLoading: false,
+                                loadedSteps: new Set(Array.from({ length: templateTotalSteps }, (_, i) => i + 1))
+                            }));
+                            console.log(`✅ Pure Builder (fallback local) initialized: ${templateTotalSteps} etapas`);
+                        })
+                        .catch(error => {
+                            console.error('❌ Error in local template fallback:', error);
+                            setState(prev => ({
+                                ...prev,
+                                isLoading: false,
+                                templateLoading: false,
+                                stepBlocks: {},
+                                funnelConfig: {
+                                    templateId: 'empty-fallback',
+                                    totalSteps: 0,
+                                    theme: 'modern-elegant',
+                                    allowBackward: true,
+                                    saveProgress: true,
+                                    showProgress: false
+                                },
+                                templateInfo: {
+                                    templateName: 'Canvas Vazio (Erro Geral)',
+                                    baseId: 'empty-fallback',
+                                    totalSteps: 0,
+                                    theme: 'modern-elegant'
+                                }
+                            }));
+                            setTotalSteps(0);
+                        });
+                })();
             }
         }, [funnelId]);
 
@@ -390,6 +522,47 @@ export const PureBuilderProvider: React.FC<{
                     }
                 }));
             }, []),
+
+            // 🆕 AÇÃO PARA CRIAR PRIMEIRA ETAPA EM CANVAS VAZIO
+            createFirstStep: useCallback(async () => {
+                if (totalSteps > 0) {
+                    console.warn('Canvas já possui etapas - use addStep para adicionar mais');
+                    return;
+                }
+
+                const firstStepKey = 'step-1';
+                const welcomeBlock: Block = {
+                    id: 'welcome-block',
+                    type: 'text-inline',
+                    content: {
+                        text: 'Bem-vindo! Esta é sua primeira etapa.'
+                    },
+                    order: 0,
+                    style: {},
+                    properties: {
+                        text: 'Bem-vindo! Esta é sua primeira etapa.',
+                        fontSize: '18px',
+                        textAlign: 'center'
+                    }
+                };
+
+                setState(prev => ({
+                    ...prev,
+                    stepBlocks: {
+                        [firstStepKey]: [welcomeBlock]
+                    },
+                    currentStep: 1,
+                    loadedSteps: new Set([1]),
+                    funnelConfig: {
+                        ...prev.funnelConfig,
+                        totalSteps: 1,
+                        showProgress: true
+                    }
+                }));
+
+                setTotalSteps(1);
+                console.log('✅ Primeira etapa criada no canvas vazio');
+            }, [totalSteps]),
 
             updateBlock: useCallback(async (stepKey: string, blockId: string, updates: Record<string, any>) => {
                 setState(prev => ({
@@ -509,10 +682,70 @@ export const PureBuilderProvider: React.FC<{
         };
 
         // 🔧 CORREÇÃO: Memoizar state para evitar re-renders desnecessários
-        const memoizedState = useMemo(() => ({
-            ...state,
-            totalSteps,
-        }), [state, totalSteps]);
+        const memoizedState = useMemo(() => {
+            let derivedStatus: 'loading' | 'ready' | 'empty' | 'error';
+            if (state.isLoading || state.templateLoading || state.apiStatus === 'loading') derivedStatus = 'loading';
+            else if (state.apiStatus === 'error') derivedStatus = 'error';
+            else if (totalSteps === 0) derivedStatus = 'empty';
+            else derivedStatus = 'ready';
+            return {
+                ...state,
+                totalSteps,
+                machineStatus: derivedStatus
+            };
+        }, [state, totalSteps]);
+
+        // 🛠️ INSTRUMENTAÇÃO: Expor snapshot em window para diagnóstico (somente em desenvolvimento)
+        useEffect(() => {
+            if (typeof window !== 'undefined' && import.meta.env.DEV) {
+                (window as any).__PURE_BUILDER_DEBUG__ = {
+                    updatedAt: new Date().toISOString(),
+                    currentStep: state.currentStep,
+                    totalSteps,
+                    stepKeys: Object.keys(state.stepBlocks || {}),
+                    templateInfo: state.templateInfo ? {
+                        baseId: state.templateInfo.baseId,
+                        templateName: state.templateInfo.templateName,
+                        totalSteps: state.templateInfo.totalSteps
+                    } : null,
+                    funnelConfig: state.funnelConfig ? {
+                        templateId: state.funnelConfig.templateId,
+                        totalSteps: state.funnelConfig.totalSteps,
+                        showProgress: state.funnelConfig.showProgress
+                    } : null,
+                    isLoading: state.isLoading,
+                    templateLoading: state.templateLoading,
+                    apiStatus: state.apiStatus,
+                    apiError: state.apiError
+                };
+                (window as any).__PURE_BUILDER_API__ = {
+                    status: state.apiStatus,
+                    error: state.apiError,
+                    funnelId: state.apiFunnelId,
+                    lastUpdate: Date.now()
+                };
+            }
+        }, [state, totalSteps]);
+
+        // 🛡️ LISTENER GLOBAL: Capturar primeiro erro antes do ErrorBoundary engolir contexto
+        useEffect(() => {
+            if (typeof window === 'undefined' || !(import.meta as any).env.DEV) return;
+            const handler = (ev: ErrorEvent) => {
+                if (!(window as any).__FIRST_GLOBAL_ERROR__) {
+                    (window as any).__FIRST_GLOBAL_ERROR__ = {
+                        message: ev.message,
+                        filename: ev.filename,
+                        lineno: ev.lineno,
+                        colno: ev.colno,
+                        stack: ev.error?.stack,
+                        capturedAt: Date.now()
+                    };
+                    console.error('🛑 [GLOBAL_ERROR_CAPTURE] Primeiro erro global registrado:', (window as any).__FIRST_GLOBAL_ERROR__);
+                }
+            };
+            window.addEventListener('error', handler);
+            return () => window.removeEventListener('error', handler);
+        }, []);
 
         return (
             <PureBuilderContext.Provider value={{ state: memoizedState, actions }}>
@@ -529,8 +762,8 @@ export const useBuilderEditor = usePureBuilder;
 
 // 🎯 ADAPTADOR MODERNO: Nova interface unificada
 export const useLegacyBuilderEditor = () => {
-  console.warn('⚠️ useLegacyBuilderEditor is deprecated. Use useEditor from EditorProviderMigrationAdapter instead.');
-  return usePureBuilder();
+    console.warn('⚠️ useLegacyBuilderEditor is deprecated. Use useEditor from EditorProviderMigrationAdapter instead.');
+    return usePureBuilder();
 };
 
 export default PureBuilderProvider;
