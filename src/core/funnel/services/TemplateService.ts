@@ -57,7 +57,9 @@ export class TemplateService {
             }
 
             return (
-                ((data as any[]) || []).map((item: any) => ({
+                ((data as unknown[]) || []).map((itemRaw) => {
+                    const item = itemRaw as { id: string; name?: string; description?: string; settings?: unknown; created_at?: string; updated_at?: string };
+                    return ({
                     id: item.id,
                     name: item.name || 'Untitled Template',
                     description: item.description || '',
@@ -68,11 +70,11 @@ export class TemplateService {
                     usageCount: 0,
                     tags: [],
                     thumbnailUrl: undefined,
-                    templateData: (item.settings as any) || {},
+                        templateData: (item.settings as unknown) as any || {},
                     components: [],
                     createdAt: item.created_at || new Date().toISOString(),
                     updatedAt: item.updated_at || new Date().toISOString(),
-                })) || this.getFallbackTemplates(category)
+                }) ) || this.getFallbackTemplates(category)
             );
         } catch (error) {
             console.error('Error in getTemplates:', error);
@@ -138,7 +140,7 @@ export class TemplateService {
                 usageCount: 0,
                 tags: [],
                 thumbnailUrl: undefined,
-                templateData: (data.settings as any) || {},
+                templateData: (data.settings as unknown) as any || {},
                 components: [],
                 createdAt: data.created_at || new Date().toISOString(),
                 updatedAt: data.updated_at || new Date().toISOString(),

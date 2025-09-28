@@ -32,6 +32,8 @@
   "exclude": [
     "src/pages/examples/**",
     "examples/**",
+    "backend-example/**",
+    "docs/**",
     "src/utils/EditorDiagnostics.ts",
     "src/utils/editorDiagnosticsShim.ts"
   ]
