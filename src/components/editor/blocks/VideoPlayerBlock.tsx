@@ -1,5 +1,6 @@
 // @ts-nocheck
 import { BlockComponentProps } from '@/types/blocks';
+import { SafeIframe } from '@/components/security/SafeIframe';
 
 interface VideoPlayerBlockProps extends BlockComponentProps {
   videoUrl?: string;
@@ -72,11 +73,15 @@ const VideoPlayerBlock: React.FC<VideoPlayerBlockProps> = ({
     >
       {videoUrl ? (
         <div className="aspect-video bg-black rounded-lg flex items-center justify-center">
-          <iframe
+          <SafeIframe
             src={videoUrl}
             title={title}
             className="w-full h-full rounded-lg"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowScripts={false}
+            allowSameOrigin={true}
+            allowPopups={false}
+            trustLevel="untrusted"
+            // Players de vídeo precisam de encrypted-media / picture-in-picture; já incluso no wrapper
             allowFullScreen
           />
         </div>
