@@ -465,13 +465,25 @@ export const EditorProvider: React.FC<{
           const stepNumber = stepMatch ? parseInt(stepMatch[1], 10) : NaN;
           if (!isNaN(stepNumber)) {
             const cacheKey = `${currentFunnelId}|${stepNumber}`;
-            let templateBlocks = stepTemplateCacheRef.current.get(cacheKey);
+            let templateBlocks: Array<{
+              id?: string;
+              type?: string;
+              content?: any;
+              styles?: Record<string, any>;
+              metadata?: Record<string, any>;
+            }> | undefined = stepTemplateCacheRef.current.get(cacheKey);
             if (!templateBlocks) {
               const template = await getStepTemplate(stepNumber, currentFunnelId);
-              templateBlocks = template?.blocks || [];
+              templateBlocks = (template?.blocks || []) as Array<{
+                id?: string;
+                type?: string;
+                content?: any;
+                styles?: Record<string, any>;
+                metadata?: Record<string, any>;
+              }>;
               stepTemplateCacheRef.current.set(cacheKey, templateBlocks);
             }
-            const editorBlocks = templateBlocks.map((block: any, index: number) => ({
+            const editorBlocks = (templateBlocks || []).map((block, index: number) => ({
               id: block.id || generateBlockId(block.type || 'text', index, `step-${stepNumber}`),
               type: block.type || 'text',
               content: block.content || {},
