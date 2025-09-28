@@ -140,7 +140,7 @@ export const AVAILABLE_TEMPLATES: Record<string, EnhancedTemplateMetadata> = {
         difficulty: 'básico',
         estimatedTime: 5,
         features: ['validação dinâmica', 'sistema de eventos', 'plugins básicos'],
-        loader: () => import('../testTemplate'),
+        loader: () => import('../testTemplate.ts'),
         eventHandlers: ['template:basic'],
         validationRules: ['basic-validation'],
         settings: {
@@ -185,7 +185,7 @@ export const AVAILABLE_TEMPLATES: Record<string, EnhancedTemplateMetadata> = {
             'plugins extensíveis',
             'drag & drop'
         ],
-        loader: () => import('../quiz21StepsComplete'),
+        loader: () => import('../quiz21StepsComplete.ts'),
         eventHandlers: ['quiz:advanced', 'progress:tracking', 'analytics:collection'],
         validationRules: ['quiz-validation', 'step-validation', 'conditional-validation'],
         requiredPlugins: ['quiz-core', 'progress-tracker'],
