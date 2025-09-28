@@ -33,7 +33,9 @@ import {
     BarChart3,
     CheckCircle,
     AlertCircle,
-    // Database
+    Brain,
+    Zap,
+    Shield
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { UnifiedDataService } from '@/services/core/UnifiedDataService';
@@ -475,9 +477,9 @@ const AdminDashboard: React.FC = () => {
                                         color="brand"
                                     />
                                     <QuickAction
-                                        title="Analytics"
-                                        description="Análises detalhadas de performance"
-                                        href="/admin/analytics"
+                                        title="🤖 AI Insights"
+                                        description="Recomendações IA e otimizações automáticas"
+                                        href="/admin/ai-insights"
                                         icon={<BarChart3 className="w-5 h-5" />}
                                         color="orange"
                                     />
@@ -485,14 +487,108 @@ const AdminDashboard: React.FC = () => {
                             </Card>
                         </div>
 
-                        {/* Atividade Recente - Design Premium */}
+                        {/* Recursos Avançados Descobertos */}
                         <div className="lg:col-span-2">
-                            <Card className="bg-white/60 backdrop-blur-sm border-white/40 shadow-lg hover:shadow-xl transition-all duration-300">
+                            <Card className="bg-gradient-to-r from-purple-50 to-blue-50 border-purple-200 shadow-lg hover:shadow-xl transition-all duration-300">
                                 <CardHeader className="flex flex-row items-center justify-between pb-4">
-                                    <CardTitle className="text-lg font-semibold text-gray-800 flex items-center gap-2">
-                                        <Activity className="w-5 h-5 text-green-600" />
-                                        Atividades Recentes
+                                    <CardTitle className="text-lg font-semibold text-purple-900 flex items-center gap-2">
+                                        <Zap className="w-5 h-5 text-purple-600" />
+                                        Recursos Avançados Disponíveis
                                     </CardTitle>
+                                    <Badge className="bg-purple-100 text-purple-700">Novos!</Badge>
+                                </CardHeader>
+                                <CardContent className="space-y-4">
+                                    <QuickAction
+                                        title="🤖 AI Insights & Optimization"
+                                        description="Sistema IA com recomendações automáticas (antes oculto)"
+                                        href="/admin/ai-insights"
+                                        icon={<Brain className="w-5 h-5" />}
+                                        color="blue"
+                                    />
+                                    <QuickAction
+                                        title="📊 Analytics Avançadas"
+                                        description="Dados comportamentais e insights profundos"
+                                        href="/admin/analytics-advanced"
+                                        icon={<BarChart3 className="w-5 h-5" />}
+                                        color="green"
+                                    />
+                                    <QuickAction
+                                        title="⚡ Performance Monitor"
+                                        description="Monitoramento sistema em tempo real"
+                                        href="/admin/performance-monitor"
+                                        icon={<Activity className="w-5 h-5" />}
+                                        color="brand"
+                                    />
+                                    <QuickAction
+                                        title="🛡️ Security Dashboard"
+                                        description="Logs de auditoria e monitoramento segurança"
+                                        href="/admin/security"
+                                        icon={<Shield className="w-5 h-5" />}
+                                        color="orange"
+                                    />
+                                </CardContent>
+                            </Card>
+                        </div>
+                    </div>
+                </TabsContent>
+
+                <TabsContent value="participants" className="space-y-8 mt-8">
+                    <UnifiedMetricsGrid 
+                        funnelId={selectedFunnel} 
+                        isLoading={isLoading}
+                        onFunnelSelect={setSelectedFunnel}
+                    />
+                </TabsContent>
+
+                <TabsContent value="analytics" className="space-y-8 mt-8">
+                    {/* Link para Analytics Avançadas */}
+                    <div className="mb-6">
+                        <Card className="bg-blue-50 border-blue-200">
+                            <CardContent className="p-4">
+                                <div className="flex items-center justify-between">
+                                    <div>
+                                        <h3 className="font-semibold text-blue-900">📊 Analytics Avançadas Disponíveis</h3>
+                                        <p className="text-blue-800 text-sm">Dados comportamentais detalhados, análise por etapa e insights profundos</p>
+                                    </div>
+                                    <Button
+                                        onClick={() => window.open('/admin/analytics-advanced', '_blank')}
+                                        className="bg-blue-600 hover:bg-blue-700"
+                                    >
+                                        Ver Analytics Completas
+                                    </Button>
+                                </div>
+                            </CardContent>
+                        </Card>
+                    </div>
+                    
+                    {/* Analytics Premium - Design Modernizado */}
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                        {/* Chart de Conversões */}
+                        <Card className="bg-white/60 backdrop-blur-sm border-white/40 shadow-lg hover:shadow-xl transition-all duration-300">
+                            <CardHeader>
+                                <CardTitle className="text-lg font-semibold text-gray-800 flex items-center gap-2">
+                                    <TrendingUp className="w-5 h-5 text-green-600" />
+                                    Conversões por Período
+                                </CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                                <div className="h-48 flex items-center justify-center border-2 border-dashed border-gray-200 rounded-lg">
+                                    <div className="text-center">
+                                        <BarChart3 className="w-12 h-12 text-gray-400 mx-auto mb-2" />
+                                        <p className="text-gray-500 text-sm">Gráfico de conversões</p>
+                                        <p className="text-xs text-gray-400">Ver analytics avançadas para mais detalhes</p>
+                                    </div>
+                                </div>
+                            </CardContent>
+                        </Card>
+
+                        {/* Atividade Recente */}
+                        <Card className="bg-white/60 backdrop-blur-sm border-white/40 shadow-lg hover:shadow-xl transition-all duration-300">
+                            <CardHeader className="flex flex-row items-center justify-between pb-4">
+                                <CardTitle className="text-lg font-semibold text-gray-800 flex items-center gap-2">
+                                    <Activity className="w-5 h-5 text-green-600" />
+                                    Atividades Recentes
+                                </CardTitle>
                                     <Button
                                         variant="outline"
                                         size="sm"

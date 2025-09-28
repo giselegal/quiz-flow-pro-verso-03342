@@ -19,6 +19,8 @@ const MeusFunisReal = React.lazy(() => import('./dashboard/MeusFunisPageReal'));
 const TemplatesReal = React.lazy(() => import('./dashboard/TemplatesPage'));
 const TemplatesFunisPage = React.lazy(() => import('./dashboard/TemplatesFunisPage'));
 const ModelosFunisPage = React.lazy(() => import('./dashboard/ModelosFunisPage'));
+const AIInsightsPage = React.lazy(() => import('./dashboard/AIInsightsPage'));
+const AdvancedAnalyticsPage = React.lazy(() => import('./dashboard/AdvancedAnalyticsPage'));
 const ABTestsPage = React.lazy(() => import('./dashboard/ABTestsPage'));
 const CreativesPage = React.lazy(() => import('./dashboard/CreativesPage'));
 const SettingsPage = React.lazy(() => import('./dashboard/SettingsPage'));
@@ -139,6 +141,12 @@ const ModernAdminDashboard: React.FC = () => {
             {/* Analytics - Páginas de análise com dados reais */}
             <Route path="/admin/analytics">
               <EnhancedAnalytics />
+            </Route>
+            <Route path="/admin/analytics-advanced">
+              <AdvancedAnalyticsPage />
+            </Route>
+            <Route path="/admin/ai-insights">
+              <AIInsightsPage />
             </Route>
             <Route path="/admin/participants">
               <ParticipantsPage />
