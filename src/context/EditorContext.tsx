@@ -414,10 +414,34 @@ export const EditorProvider: React.FC<{
 
   // Construir metadados das 21 etapas
   const [realStages, setRealStages] = useState<QuizStage[]>([]);
+
+  const resolveStageCount = useCallback(() => {
+    const configAny = config as (EditorConfig & { quizSettings?: { totalSteps?: number } }) | undefined;
+    return (
+      configAny?.quizSettings?.totalSteps ??
+      (configAny as any)?.maxStages ??
+      21
+    );
+  }, [config]);
+
   useEffect(() => {
-    // Deixar etapas vazias inicialmente; serão populadas conforme o usuário navega
-    setRealStages([]);
-  }, []);
+    const totalStages = resolveStageCount();
+    const nextStages: QuizStage[] = Array.from({ length: totalStages }, (_, index) => {
+      const order = index + 1;
+      return {
+        id: `step-${order}`,
+        title: `Etapa ${order}`,
+        description: '',
+        order,
+        isCompleted: false,
+        questions: [],
+      };
+    });
+
+    stepTemplateCacheRef.current.clear?.();
+    setRealStages(nextStages);
+    setActiveStageId('step-1');
+  }, [currentFunnelId, resolveStageCount]);
 
   // Use real stages or start empty
   const stages = useMemo(() => {
