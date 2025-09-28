@@ -11,10 +11,10 @@ export const DynamicPropertiesPanel: React.FC = () => {
     schema,
     isLoading: schemaLoading
   } = useHeadlessEditor();
-  
-  const { 
-    state: builderState, 
-    actions: builderActions 
+
+  const {
+    state: builderState,
+    actions: builderActions
   } = usePureBuilder();
 
   const [activeTab, setActiveTab] = useState<PanelTab>('step');
@@ -113,16 +113,16 @@ export const DynamicPropertiesPanel: React.FC = () => {
       {/* Conteúdo do Tab */}
       <div className="flex-1 overflow-y-auto">
         {renderTabContent(
-          activeTab, 
-          schema, 
-          builderState, 
-          currentStepBlocks, 
+          activeTab,
+          schema,
+          builderState,
+          currentStepBlocks,
           selectedBlock,
-          updateStep, 
-          updateGlobalSettings, 
-          selectStep, 
-          goToStep, 
-          selectedBlockId, 
+          updateStep,
+          updateGlobalSettings,
+          selectStep,
+          goToStep,
+          selectedBlockId,
           setSelectedBlockId,
           builderActions
         )}
@@ -214,7 +214,7 @@ const StepPropertiesPanel: React.FC<StepPropertiesPanelProps> = ({
   // 🎯 NOVA LÓGICA: Usar dados reais do builder
   const totalSteps = Object.keys(builderState.stepBlocks || {}).length;
   const currentStepNumber = builderState.currentStep;
-  
+
   // 🔧 Se não há bloco selecionado, mostrar overview da etapa atual
   if (!selectedBlock) {
     return (
@@ -232,7 +232,7 @@ const StepPropertiesPanel: React.FC<StepPropertiesPanelProps> = ({
             const stepNumber = parseInt(stepKey.replace('step-', ''));
             const blocks = builderState.stepBlocks[stepKey] || [];
             const isCurrentStep = stepNumber === currentStepNumber;
-            
+
             return (
               <button
                 key={stepKey}
@@ -240,18 +240,17 @@ const StepPropertiesPanel: React.FC<StepPropertiesPanelProps> = ({
                   selectStep(stepKey);
                   goToStep(stepNumber - 1);
                 }}
-                className={`w-full p-3 text-left border rounded-lg transition-colors ${
-                  isCurrentStep 
-                    ? 'border-blue-500 bg-blue-50' 
+                className={`w-full p-3 text-left border rounded-lg transition-colors ${isCurrentStep
+                    ? 'border-blue-500 bg-blue-50'
                     : 'border-gray-200 hover:border-blue-300 hover:bg-blue-50'
-                }`}
+                  }`}
               >
                 <div className="flex items-center justify-between">
                   <span className="font-medium text-sm">Etapa {stepNumber}</span>
                   <span className="text-xs text-gray-500">{blocks.length} blocos</span>
                 </div>
                 <div className="text-xs text-gray-600 mt-1">
-                  {blocks.length > 0 ? `${blocks[0].type}${blocks.length > 1 ? ` +${blocks.length-1}` : ''}` : 'Vazia'}
+                  {blocks.length > 0 ? `${blocks[0].type}${blocks.length > 1 ? ` +${blocks.length - 1}` : ''}` : 'Vazia'}
                 </div>
               </button>
             );
@@ -269,11 +268,10 @@ const StepPropertiesPanel: React.FC<StepPropertiesPanelProps> = ({
                   setSelectedBlockId(block.id);
                   builderActions.setSelectedBlockId(block.id);
                 }}
-                className={`w-full p-3 text-left border rounded-lg transition-colors ${
-                  selectedBlockId === block.id 
-                    ? 'border-blue-500 bg-blue-50' 
+                className={`w-full p-3 text-left border rounded-lg transition-colors ${selectedBlockId === block.id
+                    ? 'border-blue-500 bg-blue-50'
                     : 'border-gray-200 hover:border-blue-300 hover:bg-blue-50'
-                }`}
+                  }`}
               >
                 <div className="flex items-center justify-between">
                   <span className="font-medium text-sm capitalize">{block.type.replace('-', ' ')}</span>
@@ -303,8 +301,8 @@ const StepPropertiesPanel: React.FC<StepPropertiesPanelProps> = ({
   const handlePropertyUpdate = (field: string, value: any) => {
     if (selectedBlock) {
       const stepKey = `step-${currentStepNumber}`;
-      builderActions.updateBlock(stepKey, selectedBlock.id, { 
-        properties: { ...selectedBlock.properties, [field]: value } 
+      builderActions.updateBlock(stepKey, selectedBlock.id, {
+        properties: { ...selectedBlock.properties, [field]: value }
       });
     }
   };
@@ -1028,8 +1026,8 @@ const PublishPropertiesPanel: React.FC<PublishPropertiesPanelProps> = ({ schema,
           <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
             <div className="flex items-center">
               <div className={`w-3 h-3 rounded-full mr-3 ${schema.publication?.status === 'published' ? 'bg-green-500' :
-                  schema.publication?.status === 'review' ? 'bg-yellow-500' :
-                    'bg-gray-400'
+                schema.publication?.status === 'review' ? 'bg-yellow-500' :
+                  'bg-gray-400'
                 }`}></div>
               <div>
                 <div className="font-medium text-sm">
