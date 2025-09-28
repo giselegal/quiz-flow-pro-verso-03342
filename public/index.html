@@ -4,11 +4,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>🚀 CACHE BUST - Descubra Seu Estilo com Gisele Galvão | Vista-se de Você!</title>
-  <!-- FORCE CACHE INVALIDATION: 2025-09-09-v2 -->
+  <title>Descubra Seu Estilo com Gisele Galvão | Vista-se de Você!</title>
   <!-- CACHE BUSTING: Force reload with unique content -->
-  <meta name="cache-bust" content="2025-09-09-v2-force-reload" />
-  <meta name="build-version" content="inline-bundle-fix" />
+  <meta name="cache-bust" content="2025-01-01-v3-force-reload" />
+  <meta name="build-version" content="template-fix-v3" />
+  
+  <!-- Fix for deprecated APIs -->
+  <meta name="theme-color" content="#0066CC" />
+  <meta name="color-scheme" content="light" />
 
   <meta property="og:title" content="🚀 CACHE BUST - Descubra Seu Estilo com Gisele Galvão | Vista-se de Você!" />
   <meta property="og:description"
@@ -27,6 +30,10 @@
 
   <!-- Essential shim -->
   <script src="/require-shim.js"></script>
+  
+  <!-- Fix for deprecated APIs and iframe issues -->
+  <meta http-equiv="Permissions-Policy" content="camera=(), microphone=(), geolocation=(), vr=(), ambient-light-sensor=(), battery=()" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https:; frame-src 'none';" />
 
   <!-- Vite irá injetar os assets corretos no build -->
   <script type="module" src="/src/main.tsx"></script>
