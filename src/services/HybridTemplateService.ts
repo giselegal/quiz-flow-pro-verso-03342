@@ -70,7 +70,9 @@ class HybridTemplateService {
             if (templateId === 'quiz21StepsComplete') {
                 // Fallback para template TypeScript
                 try {
-                    const { QUIZ_STYLE_21_STEPS_TEMPLATE } = await import('@/templates/quiz21StepsComplete');
+                    // Usar import centralizado para evitar warning do Vite
+                    const { getQuiz21StepsTemplate } = await import('@/templates/imports');
+                    const QUIZ_STYLE_21_STEPS_TEMPLATE = getQuiz21StepsTemplate();
                     return QUIZ_STYLE_21_STEPS_TEMPLATE;
                 } catch (error) {
                     console.error('❌ Erro ao carregar quiz21StepsComplete:', error);
