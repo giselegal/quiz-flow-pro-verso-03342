@@ -177,7 +177,7 @@ export const QuizFlowController: React.FC<QuizFlowControllerProps> = ({
   const getOptionsForStep = (stepNumber: number): TemplateOption[] => {
     const blocks = QUIZ_STYLE_21_STEPS_TEMPLATE[`step-${stepNumber}`] || [];
     const optionsGrid = blocks.find(b => b.type === 'options-grid');
-    // @ts-ignore - content shape varies por bloco
+    // content shape varies by block type, using type assertion for options
     return (optionsGrid?.content?.options as TemplateOption[]) || [];
   };
 

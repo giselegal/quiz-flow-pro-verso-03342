@@ -1,4 +1,3 @@
-// @ts-nocheck
 import QuizQuestion from '@/components/funnel-blocks/QuizQuestion';
 import React, { useState } from 'react';
 import { QuizBlockProps } from './types';
@@ -73,12 +72,15 @@ export interface QuizOptionsGridBlockProps extends QuizBlockProps {
     selectionStyle?: 'border' | 'background' | 'shadow' | 'scale';
     gridGap?: number;
     responsiveColumns?: boolean;
+    // IDs e metadados
+    questionId?: string;
+    requiredSelections?: number;
   };
   deviceView?: 'mobile' | 'tablet' | 'desktop';
 }
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
-const getMarginClass = (value, type) => {
+const getMarginClass = (value: string | number, type: string): string => {
   const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
 
   if (isNaN(numValue) || numValue === 0) return '';
@@ -206,13 +208,13 @@ const QuizOptionsGridBlock: React.FC<QuizOptionsGridBlockProps> = ({
     const step = (window as any)?.__quizCurrentStep ?? null;
     const { isValid } = computeSelectionValidity(step, opts.length, {
       minSelections: properties?.minSelections,
-      requiredSelections: properties?.requiredSelections,
+      requiredSelections: properties?.requiredSelections || properties?.minSelections,
     });
     const currentCount = opts.length;
 
     // Evento padrão unificado
     try {
-      const questionId = properties?.questionId || id;
+      const questionId = properties?.questionId || properties?.question || id;
       const selectedIds = opts.map(opt => opt.id);
 
       // 🔗 Persistência unificada (produção/runtime)
@@ -271,7 +273,7 @@ const QuizOptionsGridBlock: React.FC<QuizOptionsGridBlockProps> = ({
       if (step) {
         const key = 'quizResponses';
         const prev = (StorageService.safeGetJSON(key) as any) || {};
-        const questionId = properties?.questionId || id;
+        const questionId = properties?.questionId || properties?.question || id;
         const entry = {
           ids: opts.map(o => o.id),
           texts: opts.map(o => o.text || ''),
@@ -294,7 +296,7 @@ const QuizOptionsGridBlock: React.FC<QuizOptionsGridBlockProps> = ({
       onPropertyChange('complete', true);
       onPropertyChange(
         'selectedOptions',
-        selectedOptions.map(opt => opt.id)
+        selectedOptions
       );
     }
   };
@@ -342,6 +344,15 @@ const QuizOptionsGridBlock: React.FC<QuizOptionsGridBlockProps> = ({
   const autoColumns = hasImages ? 2 : 1; // 2 colunas com imagens, 1 coluna só texto
   const finalColumns = columns === 'auto' ? autoColumns : (columns || autoColumns);
 
+  // Classes de layout baseadas na orientação e detecção automática
+  const layoutClass = layoutOrientation === 'horizontal' ? 'grid' : 'flex flex-col';
+  const gridColumnsClass = responsiveColumns
+    ? (hasImages
+      ? 'grid-cols-2'                 // Com imagens: 2 colunas em todos os dispositivos
+      : 'grid-cols-1'                 // Só texto: sempre 1 coluna
+    )
+    : `grid-cols-${finalColumns}`;
+
   // Log para debug da detecção automática
   console.log('🔍 Auto-detecção de colunas:', {
     hasImages,
@@ -357,15 +368,6 @@ const QuizOptionsGridBlock: React.FC<QuizOptionsGridBlockProps> = ({
   // Calcular tamanho da imagem
   const finalImageWidth = imageWidth || imageSize;
   const finalImageHeight = imageHeight || imageSize;
-
-  // Classes de layout baseadas na orientação e detecção automática
-  const layoutClass = layoutOrientation === 'horizontal' ? 'grid' : 'flex flex-col';
-  const gridColumnsClass = responsiveColumns
-    ? (hasImages
-      ? 'grid-cols-2'                 // Com imagens: 2 colunas em todos os dispositivos
-      : 'grid-cols-1'                 // Só texto: sempre 1 coluna
-    )
-    : `grid-cols-${finalColumns}`;
 
   // Estilos dinâmicos para bordas e sombras
   const optionStyles = {

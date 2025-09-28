@@ -1,4 +1,3 @@
-// @ts-nocheck
 import QuizQuestion from '@/components/funnel-blocks/QuizQuestion';
 import React, { useState } from 'react';
 import { QuizBlockProps } from './types';
@@ -32,7 +31,7 @@ export interface QuizMultipleChoiceBlockProps extends QuizBlockProps {
 }
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
-const getMarginClass = (value, type) => {
+const getMarginClass = (value: string | number, type: string): string => {
   const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
 
   if (isNaN(numValue) || numValue === 0) return '';
@@ -144,7 +143,7 @@ const QuizMultipleChoiceBlock: React.FC<QuizMultipleChoiceBlockProps> = ({
       onPropertyChange('complete', true);
       onPropertyChange(
         'selectedOptions',
-        selectedOptions.map(opt => opt.id)
+        selectedOptions
       );
     }
   };

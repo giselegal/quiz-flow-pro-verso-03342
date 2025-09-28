@@ -98,7 +98,7 @@ if (typeof window !== 'undefined') {
       const isPreviewHost = typeof location !== 'undefined' && /lovable\.app|stackblitz\.io|codesandbox\.io/.test(location.hostname);
       if ((import.meta.env.DEV || isPreviewHost) && typeof XMLHttpRequest !== 'undefined') {
         const OriginalXHR = XMLHttpRequest;
-        // @ts-ignore - extend constructor
+        // Properly typed XHR constructor patch
         function PatchedXHR(this: XMLHttpRequest) {
           const xhr = new OriginalXHR();
           const originalOpen = xhr.open;
@@ -115,7 +115,7 @@ if (typeof window !== 'undefined') {
           } as any;
           return xhr as any;
         }
-        // @ts-ignore
+        // Replace global XMLHttpRequest with patched version
         (window as any).XMLHttpRequest = PatchedXHR as any;
       }
     } catch { }

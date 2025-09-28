@@ -74,7 +74,7 @@ function App() {
     };
 
     if ('requestIdleCallback' in window) {
-      // @ts-ignore
+      // Use proper typing for requestIdleCallback
       (window as any).requestIdleCallback(run, { timeout: 3000 });
     } else {
       setTimeout(run, 1500);

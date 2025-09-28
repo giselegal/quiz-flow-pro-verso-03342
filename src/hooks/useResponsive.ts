@@ -178,8 +178,8 @@ export function useResponsive(options: UseResponsiveOptions = {}): ResponsiveSta
         const isOnline = navigator.onLine;
         let connectionType: string | undefined;
 
-        // @ts-ignore - Experimental API
-        const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+        // Network Information API - experimental but supported in modern browsers
+        const connection = (navigator as any).connection || (navigator as any).mozConnection || (navigator as any).webkitConnection;
         if (connection) {
             connectionType = connection.effectiveType || connection.type;
         }
@@ -321,8 +321,8 @@ export function useResponsive(options: UseResponsiveOptions = {}): ResponsiveSta
         lightModeQuery.addListener(handleMediaQueryChange);
 
         // Connection change listener (experimental)
-        // @ts-ignore
-        const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+        // Network Information API - experimental but supported in modern browsers
+        const connection = (navigator as any).connection || (navigator as any).mozConnection || (navigator as any).webkitConnection;
         if (connection && includeConnection) {
             connection.addEventListener('change', updateState);
         }
