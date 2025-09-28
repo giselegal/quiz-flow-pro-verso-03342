@@ -493,11 +493,15 @@ const UnifiedEditorCore: React.FC<ModernUnifiedEditorProps> = ({
 
     // Handler para mudanças de estado
     const handleStateChange = useCallback((updates: Partial<EditorState>) => {
-        console.log('🎯 [DEBUG] handleStateChange chamado:', updates);
-        console.log('🎯 [DEBUG] Estado anterior:', editorState);
+        // Gate de logs para evitar ruído em produção
+        const DEBUG = (import.meta as any)?.env?.VITE_EDITOR_DEBUG === 'true';
+        if (DEBUG) {
+            console.log('🎯 [DEBUG] handleStateChange chamado:', updates);
+            console.log('🎯 [DEBUG] Estado anterior:', editorState);
+        }
         setEditorState(prev => {
             const newState = { ...prev, ...updates };
-            console.log('🎯 [DEBUG] Novo estado:', newState);
+            if (DEBUG) console.log('🎯 [DEBUG] Novo estado:', newState);
             return newState;
         });
     }, [editorState]);
@@ -507,15 +511,17 @@ const UnifiedEditorCore: React.FC<ModernUnifiedEditorProps> = ({
     // ========================================================================
 
     const handleSave = useCallback(async () => {
-        console.log('💾 Salvando via UnifiedCRUD...');
+        const DEBUG = (import.meta as any)?.env?.VITE_EDITOR_DEBUG === 'true';
+        if (DEBUG) console.log('💾 Salvando via UnifiedCRUD...');
         await crudContext.saveFunnel();
-        console.log('✅ Salvo com sucesso via UnifiedCRUD');
+        if (DEBUG) console.log('✅ Salvo com sucesso via UnifiedCRUD');
     }, [crudContext]);
 
     const handleCreateNew = useCallback(async () => {
-        console.log('🎯 Criando novo funil via UnifiedCRUD...');
+        const DEBUG = (import.meta as any)?.env?.VITE_EDITOR_DEBUG === 'true';
+        if (DEBUG) console.log('🎯 Criando novo funil via UnifiedCRUD...');
         await crudContext.createFunnel('Novo Funil', { templateId });
-        console.log('✅ Novo funil criado via UnifiedCRUD');
+        if (DEBUG) console.log('✅ Novo funil criado via UnifiedCRUD');
     }, [crudContext, templateId]);
 
     const handleDuplicate = useCallback(async () => {
@@ -524,27 +530,26 @@ const UnifiedEditorCore: React.FC<ModernUnifiedEditorProps> = ({
         }
 
         const targetId = funnelId || crudContext.currentFunnel!.id;
-        console.log('📋 Duplicando funil via UnifiedCRUD:', targetId);
+        const DEBUG = (import.meta as any)?.env?.VITE_EDITOR_DEBUG === 'true';
+        if (DEBUG) console.log('📋 Duplicando funil via UnifiedCRUD:', targetId);
 
         await crudContext.duplicateFunnel(targetId, 'Cópia de Funil');
-        console.log('✅ Funil duplicado via UnifiedCRUD');
+        if (DEBUG) console.log('✅ Funil duplicado via UnifiedCRUD');
     }, [funnelId, crudContext]);
 
     // 🧪 DEV TESTING - Test CRUD operations
     const handleTestCRUD = useCallback(async () => {
-        console.log('🧪 Executando testes CRUD...');
+        const DEBUG = (import.meta as any)?.env?.VITE_EDITOR_DEBUG === 'true';
+        if (DEBUG) console.log('🧪 Executando testes CRUD...');
         try {
             const results = await testCRUDOperations();
             if (results.success) {
-                console.log('🎉 Todos os testes CRUD passaram!', results.results);
-                alert('✅ Todos os testes CRUD passaram! Verifique o console para detalhes.');
+                if (DEBUG) console.log('🎉 Todos os testes CRUD passaram!', results.results);
             } else {
-                console.error('❌ Falha nos testes CRUD:', results.error);
-                alert('❌ Falha nos testes CRUD. Verifique o console para detalhes.');
+                if (DEBUG) console.error('❌ Falha nos testes CRUD:', results.error);
             }
         } catch (error) {
-            console.error('❌ Erro ao executar testes:', error);
-            alert('❌ Erro ao executar testes CRUD.');
+            if (DEBUG) console.error('❌ Erro ao executar testes:', error);
         }
     }, []);
 

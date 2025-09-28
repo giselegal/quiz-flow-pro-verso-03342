@@ -156,16 +156,7 @@ function App() {
                             <FunnelTypesPage />
                           </Route>
 
-                          {/* 🔄 REDIRECTS LEGACY EDITORES */}
-                          <Route path="/editor-pro">
-                            <RedirectRoute to="/editor" />
-                          </Route>
-                          <Route path="/editor-modular">
-                            <RedirectRoute to="/editor" />
-                          </Route>
-                          <Route path="/editor-v1">
-                            <RedirectRoute to="/editor" />
-                          </Route>
+                          {/* 🔄 LEGACY EDITORS: removidos → manter apenas ModernUnifiedEditor */}
 
                           {/* 🧪 QUIZ DE ESTILO PESSOAL */}
                           <Route path="/quiz-estilo">
