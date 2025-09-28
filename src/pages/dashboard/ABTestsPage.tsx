@@ -2,7 +2,8 @@
  * 🧪 PÁGINA DE TESTES A/B
  */
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { EnhancedUnifiedDataService } from '@/services/core/EnhancedUnifiedDataService';
 import { Button } from '@/components/ui/button';
 import { Plus } from 'lucide-react';
 

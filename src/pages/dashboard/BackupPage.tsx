@@ -35,6 +35,25 @@ interface BackupJob {
 }
 
 export const BackupPage: React.FC = () => {
+  // Real data integration
+  const [isLoading, setIsLoading] = useState(true);
+  const [realTimeMetrics, setRealTimeMetrics] = useState(null);
+  
+  useEffect(() => {
+    const loadRealData = async () => {
+      try {
+        const metrics = await EnhancedUnifiedDataService.getRealTimeMetrics();
+        setRealTimeMetrics(metrics);
+        console.log('✅ ' + 'BackupPage.tsx' + ' carregado com dados reais:', metrics);
+      } catch (error) {
+        console.error('❌ Erro ao carregar dados reais:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    
+    loadRealData();
+  }, []);
   const { 
     isLoading, 
     error, 

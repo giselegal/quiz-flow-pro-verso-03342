@@ -2,7 +2,8 @@
  * ⚙️ PÁGINA DE CONFIGURAÇÕES
  */
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { EnhancedUnifiedDataService } from '@/services/core/EnhancedUnifiedDataService';
 import { Button } from '@/components/ui/button';
 import { Settings } from 'lucide-react';
 

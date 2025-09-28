@@ -47,6 +47,25 @@ const getTypeIcon = (type: string) => {
 };
 
 const TemplatesPage: React.FC = () => {
+  // Real data integration
+  const [isLoading, setIsLoading] = useState(true);
+  const [realTimeMetrics, setRealTimeMetrics] = useState(null);
+  
+  useEffect(() => {
+    const loadRealData = async () => {
+      try {
+        const metrics = await EnhancedUnifiedDataService.getRealTimeMetrics();
+        setRealTimeMetrics(metrics);
+        console.log('✅ ' + 'TemplatesPage.tsx' + ' carregado com dados reais:', metrics);
+      } catch (error) {
+        console.error('❌ Erro ao carregar dados reais:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    
+    loadRealData();
+  }, []);
     const [selectedCategory, setSelectedCategory] = useState<string>('Todos');
     const [selectedTemplate, setSelectedTemplate] = useState<TemplateConfig | null>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);

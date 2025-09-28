@@ -2,11 +2,31 @@
  * ⚡ PÁGINA DE MÉTRICAS EM TEMPO REAL
  */
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { EnhancedUnifiedDataService } from '@/services/core/EnhancedUnifiedDataService';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Activity, Users, Target, TrendingUp } from 'lucide-react';
 
 const RealTimePage: React.FC = () => {
+  // Real data integration
+  const [isLoading, setIsLoading] = useState(true);
+  const [realTimeMetrics, setRealTimeMetrics] = useState(null);
+  
+  useEffect(() => {
+    const loadRealData = async () => {
+      try {
+        const metrics = await EnhancedUnifiedDataService.getRealTimeMetrics();
+        setRealTimeMetrics(metrics);
+        console.log('✅ ' + 'RealTimePage.tsx' + ' carregado com dados reais:', metrics);
+      } catch (error) {
+        console.error('❌ Erro ao carregar dados reais:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    
+    loadRealData();
+  }, []);
     return (
         <div className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">

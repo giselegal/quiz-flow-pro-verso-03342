@@ -5,6 +5,7 @@
  */
 
 import React from 'react';
+import { EnhancedUnifiedDataService } from '@/services/core/EnhancedUnifiedDataService'; from 'react';
 import FacebookMetricsDashboard from '@/components/dashboard/FacebookMetricsDashboard';
 
 const FacebookMetricsPage: React.FC = () => {

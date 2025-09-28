@@ -3,7 +3,8 @@
  * Página principal de monitoramento do sistema em tempo real
  */
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { EnhancedUnifiedDataService } from '@/services/core/EnhancedUnifiedDataService';
 import { RealTimeMonitoringDashboard } from '@/components/monitoring/RealTimeMonitoringDashboard';
 import { SecurityAlert } from '@/components/security/SecurityAlert';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -22,6 +23,25 @@ import {
 } from 'lucide-react';
 
 export const MonitoringPage: React.FC = () => {
+  // Real data integration
+  const [isLoading, setIsLoading] = useState(true);
+  const [realTimeMetrics, setRealTimeMetrics] = useState(null);
+  
+  useEffect(() => {
+    const loadRealData = async () => {
+      try {
+        const metrics = await EnhancedUnifiedDataService.getRealTimeMetrics();
+        setRealTimeMetrics(metrics);
+        console.log('✅ ' + 'MonitoringPage.tsx' + ' carregado com dados reais:', metrics);
+      } catch (error) {
+        console.error('❌ Erro ao carregar dados reais:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    
+    loadRealData();
+  }, []);
   const { systemStatus, isSystemHealthy, hasCriticalIssues, hasWarnings } = useSecurity();
   const { isHealthy, errorCount, isMonitoring } = useMonitoringContext();
 

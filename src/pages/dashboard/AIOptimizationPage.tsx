@@ -3,7 +3,8 @@
  * Dashboard de otimização automática powered by AI
  */
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { EnhancedUnifiedDataService } from '@/services/core/EnhancedUnifiedDataService';
 import { AIOptimizationPanel } from '@/components/ai/AIOptimizationPanel';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -20,6 +21,25 @@ import {
 } from 'lucide-react';
 
 export const AIOptimizationPage: React.FC = () => {
+  // Real data integration
+  const [isLoading, setIsLoading] = useState(true);
+  const [realTimeMetrics, setRealTimeMetrics] = useState(null);
+  
+  useEffect(() => {
+    const loadRealData = async () => {
+      try {
+        const metrics = await EnhancedUnifiedDataService.getRealTimeMetrics();
+        setRealTimeMetrics(metrics);
+        console.log('✅ ' + 'AIOptimizationPage.tsx' + ' carregado com dados reais:', metrics);
+      } catch (error) {
+        console.error('❌ Erro ao carregar dados reais:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    
+    loadRealData();
+  }, []);
   return (
     <div className="space-y-6">
       {/* Métricas de Performance */}
