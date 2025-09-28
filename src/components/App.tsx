@@ -4,7 +4,7 @@
  */
 
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { Route, Router, Switch } from 'wouter';
 import { Toaster } from '@/components/ui/toaster';
 import { ThemeProvider } from '@/components/theme-provider';
 
@@ -34,18 +34,28 @@ const App: React.FC = () => {
               
               {/* Providers principais */}
               <FunnelMasterProvider>
-                <Routes>
+                <Switch>
                   {/* Rotas principais */}
-                  <Route path="/" element={<HomePage />} />
-                  <Route path="/editor/*" element={<EditorPage />} />
-                  
+                  <Route path="/">
+                    <HomePage />
+                  </Route>
+                  <Route path="/editor">
+                    <EditorPage />
+                  </Route>
+
                   {/* Rotas de segurança */}
-                  <Route path="/security" element={<SecurityDashboard />} />
-                  <Route path="/security/settings" element={<SecuritySettingsPage />} />
-                  
+                  <Route path="/security">
+                    <SecurityDashboard />
+                  </Route>
+                  <Route path="/security/settings">
+                    <SecuritySettingsPage />
+                  </Route>
+
                   {/* Fallback */}
-                  <Route path="*" element={<div>Página não encontrada</div>} />
-                </Routes>
+                  <Route>
+                    <div>Página não encontrada</div>
+                  </Route>
+                </Switch>
               </FunnelMasterProvider>
               
               {/* Toast notifications */}
