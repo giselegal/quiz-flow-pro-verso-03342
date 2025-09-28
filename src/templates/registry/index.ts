@@ -158,6 +158,44 @@ export const AVAILABLE_TEMPLATES: Record<string, EnhancedTemplateMetadata> = {
         }
     },
 
+    simpleTestTemplate: {
+        id: 'simpleTestTemplate',
+        name: 'Template de Teste Simples',
+        description: 'Template básico para debug',
+        category: 'test',
+        stepCount: 2,
+        thumbnail: '/images/templates/simple-test.jpg',
+        isOfficial: false,
+        usageCount: 0,
+        tags: ['teste', 'debug', 'simples'],
+        createdAt: '2024-12-30',
+        updatedAt: '2024-12-30',
+
+        version: '1.0.0',
+        author: 'Debug System',
+        difficulty: 'básico',
+        estimatedTime: 1,
+        features: ['teste básico'],
+        loader: () => import('../simpleTestTemplate.ts'),
+        eventHandlers: [],
+        validationRules: [],
+        requiredPlugins: [],
+        optionalPlugins: [],
+        settings: {
+            allowCustomization: true,
+            supportsDragDrop: false,
+            supportsRealTimeValidation: false,
+            supportsPlugins: false,
+            cacheStrategy: 'minimal'
+        },
+        analytics: {
+            usage: 0,
+            completionRate: 0,
+            averageTime: 0,
+            userRating: 0
+        }
+    },
+
     quiz21StepsComplete: {
         id: 'quiz21StepsComplete',
         name: 'Quiz 21 Etapas Pro',
