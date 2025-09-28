@@ -64,10 +64,21 @@ function App() {
   useEffect(() => {
     console.log('🚀 App initialized with SPA routing v2.0 + OptimizedProviders');
 
-    // Initialize UnifiedServiceManager
-    serviceManager.healthCheckAll().then(results => {
-      console.log('🔧 Service Health Check:', results);
-    });
+    // Initialize UnifiedServiceManager de forma adiada para não bloquear o first paint
+    const run = () => {
+      try {
+        serviceManager.healthCheckAll().then(results => {
+          console.log('🔧 Service Health Check:', results);
+        });
+      } catch {}
+    };
+
+    if ('requestIdleCallback' in window) {
+      // @ts-ignore
+      (window as any).requestIdleCallback(run, { timeout: 3000 });
+    } else {
+      setTimeout(run, 1500);
+    }
   }, []);
 
   return (

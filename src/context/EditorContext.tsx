@@ -19,6 +19,7 @@ import React, {
   useMemo,
   useReducer,
   useState,
+  useRef,
 } from 'react';
 // import { useTemplateValidation } from '../hooks/useTemplateValidation';
 
@@ -200,6 +201,8 @@ export const EditorProvider: React.FC<{
   const [currentFunnelId, setCurrentFunnelId] = useState<string>(initialFunnelId);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [activeStageId, setActiveStageId] = useState<string>('step-1');
+  // Cache leve de templates por funil/etapa para evitar re-fetchs
+  const stepTemplateCacheRef = useRef<Map<string, any[]>>(new Map());
 
   // Integração com sistema de templates via função utilitária
 
@@ -248,59 +251,8 @@ export const EditorProvider: React.FC<{
     };
   }, [currentFunnelId]);
 
-  // ✅ NOVO: Carregar templates automaticamente quando muda de etapa
-  useEffect(() => {
-    let isCancelled = false;
-    if (!activeStageId) return;
-
-    const loadStepTemplate = async () => {
-      try {
-        console.log(`🔄 AUTO-LOAD: Iniciando carregamento para etapa: ${activeStageId}`);
-        // Em ambiente de teste (node), ainda tentamos carregar via getStepTemplate
-        // acima. Se falhar, cairemos no catch e manteremos vazio.
-
-        // Carregar via templateService diretamente (preferencial)
-        try {
-          const templateService = (await import('../services/templateService')).default;
-          const stepNumber = parseInt(activeStageId.replace('step-', ''));
-
-          console.log(`🔍 AUTO-LOAD: Processando etapa número: ${stepNumber}`);
-
-          const template = await templateService.getTemplate(`step-${stepNumber}`);
-
-          if (template && template.templateData) {
-            console.log(`✅ AUTO-LOAD: Template da etapa ${stepNumber} carregado com sucesso!`);
-            console.log(`📊 AUTO-LOAD: Template data encontrado`);
-
-            // Log dos dados de template para debug
-            console.log(`🧩 AUTO-LOAD: Dados de template carregados`);
-
-            // Fallback block conversion since method doesn't exist
-            const editorBlocks: any[] = [];
-
-            console.log(`🔄 AUTO-LOAD: Convertidos ${editorBlocks.length} blocos para o editor`);
-            if (!isCancelled) dispatch({ type: 'SET_BLOCKS', payload: editorBlocks });
-
-            console.log(`✅ AUTO-LOAD: Blocos carregados no estado do editor!`);
-          } else {
-            console.warn(`⚠️ AUTO-LOAD: Template vazio para etapa ${stepNumber}`);
-            console.warn(`🔍 AUTO-LOAD: Template response:`, template);
-            dispatch({ type: 'SET_BLOCKS', payload: [] });
-          }
-        } catch (error) {
-          console.error('❌ AUTO-LOAD: Erro ao carregar template via service:', error);
-          if (!isCancelled) dispatch({ type: 'SET_BLOCKS', payload: [] });
-        }
-      } catch (error) {
-        console.error('❌ AUTO-LOAD: Erro geral ao carregar template da etapa:', error);
-      }
-    };
-
-    loadStepTemplate();
-    return () => {
-      isCancelled = true;
-    };
-  }, [activeStageId]);
+  // ✅ NOVO: Lazy-load por etapa (sem carregar todas as 21 no mount)
+  // O carregamento é feito sob demanda em stageActions.setActiveStage com cache local
 
   // Block management functions
   const addBlock = useCallback(
@@ -490,32 +442,8 @@ export const EditorProvider: React.FC<{
   // Construir metadados das 21 etapas
   const [realStages, setRealStages] = useState<QuizStage[]>([]);
   useEffect(() => {
-    const loadStages = async () => {
-      try {
-        const stagesFromTemplates: any[] = [];
-        for (let stepNumber = 1; stepNumber <= 21; stepNumber++) {
-          const template = await getStepTemplate(stepNumber, currentFunnelId);
-          stagesFromTemplates.push({
-            id: `step-${stepNumber}`,
-            name: `Etapa ${stepNumber}`,
-            description: `Descrição da etapa ${stepNumber}`,
-            order: stepNumber,
-            blocksCount: (template?.blocks || []).length,
-            metadata: {
-              blocksCount: (template?.blocks || []).length,
-              templateId: `step-${stepNumber}`,
-              version: '1.0.0',
-            },
-          });
-        }
-        setRealStages(stagesFromTemplates);
-      } catch (error) {
-        console.error('❌ Erro ao carregar etapas:', error);
-        // ✅ CORREÇÃO: Não forçar 21 etapas por padrão - iniciar vazio
-        setRealStages([]);
-      }
-    };
-    loadStages();
+    // Deixar etapas vazias inicialmente; serão populadas conforme o usuário navega
+    setRealStages([]);
   }, []);
 
   // Use real stages or start empty
@@ -536,8 +464,13 @@ export const EditorProvider: React.FC<{
           const stepMatch = id.match(/step-(\d+)/);
           const stepNumber = stepMatch ? parseInt(stepMatch[1], 10) : NaN;
           if (!isNaN(stepNumber)) {
-            const template = await getStepTemplate(stepNumber, currentFunnelId);
-            const templateBlocks = template?.blocks || [];
+            const cacheKey = `${currentFunnelId}|${stepNumber}`;
+            let templateBlocks = stepTemplateCacheRef.current.get(cacheKey);
+            if (!templateBlocks) {
+              const template = await getStepTemplate(stepNumber, currentFunnelId);
+              templateBlocks = template?.blocks || [];
+              stepTemplateCacheRef.current.set(cacheKey, templateBlocks);
+            }
             const editorBlocks = templateBlocks.map((block: any, index: number) => ({
               id: block.id || generateBlockId(block.type || 'text', index, `step-${stepNumber}`),
               type: block.type || 'text',
@@ -548,6 +481,20 @@ export const EditorProvider: React.FC<{
               order: index,
             }));
             dispatch({ type: 'SET_BLOCKS', payload: editorBlocks });
+
+            // Prefetch leve da próxima etapa para navegação suave
+            const nextStep = stepNumber + 1;
+            if (nextStep <= 21) {
+              const nextKey = `${currentFunnelId}|${nextStep}`;
+              if (!stepTemplateCacheRef.current.has(nextKey)) {
+                getStepTemplate(nextStep, currentFunnelId)
+                  .then(t => {
+                    const blocks = t?.blocks || [];
+                    stepTemplateCacheRef.current.set(nextKey, blocks);
+                  })
+                  .catch(() => { /* silencioso */ });
+              }
+            }
           }
         } catch (error) {
           console.error('❌ Erro ao carregar blocos da etapa:', error);

@@ -25,15 +25,21 @@ if (import.meta.env.DEV) {
 }
 
 // � Interceptor simples para bloquear logs externos em dev (Grafana/gpt-engineer)
-if ((import.meta.env.DEV || typeof window !== 'undefined') && typeof window !== 'undefined') {
-  const originalFetch = window.fetch.bind(window);
-  window.fetch = (input: RequestInfo | URL, init?: RequestInit) => {
+// Ativado somente com flag explícita para evitar efeitos colaterais em preview/prod
+if (typeof window !== 'undefined') {
+  const ENABLE_NETWORK_INTERCEPTORS = (import.meta as any)?.env?.VITE_ENABLE_NETWORK_INTERCEPTORS === 'true';
+  const isDevOrPreview = import.meta.env.DEV || (typeof location !== 'undefined' && /lovable\.app|stackblitz\.io|codesandbox\.io/.test(location.hostname));
+
+  // Guard: só ativa interceptores quando flag estiver ligada
+  if (ENABLE_NETWORK_INTERCEPTORS && isDevOrPreview) {
+    const originalFetch = window.fetch.bind(window);
+    window.fetch = (input: RequestInfo | URL, init?: RequestInit) => {
     const url = typeof input === 'string' ? input : input.toString();
     const DISABLE_SUPABASE = (import.meta as any)?.env?.VITE_DISABLE_SUPABASE === 'true';
     try {
       (window as any).__USE_CLOUDINARY__ = ((import.meta as any)?.env?.VITE_ENABLE_CLOUDINARY === 'true');
     } catch { }
-    const isPreviewHost = typeof location !== 'undefined' && /lovable\.app|stackblitz\.io|codesandbox\.io/.test(location.hostname);
+      const isPreviewHost = typeof location !== 'undefined' && /lovable\.app|stackblitz\.io|codesandbox\.io/.test(location.hostname);
     // Bloqueia logs externos em dev
     if (url.includes('cloudfunctions.net/pushLogsToGrafana')) {
       // Simula sucesso e evita 500 no console
@@ -67,52 +73,58 @@ if ((import.meta.env.DEV || typeof window !== 'undefined') && typeof window !== 
       );
     }
     return originalFetch(input as any, init);
-  };
+    };
 
-  // Também intercepta sendBeacon (Sentry usa esse transporte em prod)
-  try {
-    const isPreviewHost = typeof location !== 'undefined' && /lovable\.app|stackblitz\.io|codesandbox\.io/.test(location.hostname);
-    if (navigator?.sendBeacon && (import.meta.env.DEV || isPreviewHost)) {
-      const originalBeacon = navigator.sendBeacon.bind(navigator);
-      (navigator as any).sendBeacon = (url: any, data?: any) => {
-        try {
-          const str = typeof url === 'string' ? url : String(url);
-          if (/sentry\.io|ingest\.sentry\.io/.test(str)) {
-            console.warn('🛑 Interceptado (sendBeacon -> Sentry bloqueado):', str);
-            return true; // finge sucesso
-          }
-        } catch { }
-        return originalBeacon(url, data);
-      };
-    }
-  } catch { }
-
-  // Intercepta XHR para evitar ruído em libs que não usam fetch
-  try {
-    const isPreviewHost = typeof location !== 'undefined' && /lovable\.app|stackblitz\.io|codesandbox\.io/.test(location.hostname);
-    if ((import.meta.env.DEV || isPreviewHost) && typeof XMLHttpRequest !== 'undefined') {
-      const OriginalXHR = XMLHttpRequest;
-      // @ts-ignore - extend constructor
-      function PatchedXHR(this: XMLHttpRequest) {
-        const xhr = new OriginalXHR();
-        const originalOpen = xhr.open;
-        (xhr as any).open = function patchedOpen(method: string, url: string | URL) {
+    // Também intercepta sendBeacon (Sentry usa esse transporte em prod)
+    try {
+      const isPreviewHost = typeof location !== 'undefined' && /lovable\.app|stackblitz\.io|codesandbox\.io/.test(location.hostname);
+      if (navigator?.sendBeacon && (import.meta.env.DEV || isPreviewHost)) {
+        const originalBeacon = navigator.sendBeacon.bind(navigator);
+        (navigator as any).sendBeacon = (url: any, data?: any) => {
           try {
-            const u = typeof url === 'string' ? url : url.toString();
-            if (/sentry\.io|ingest\.sentry\.io/.test(u)) {
-              // Reescreve para um data: vazio e ignora
-              console.warn('🛑 Interceptado (XHR -> Sentry bloqueado):', u);
-              return originalOpen.apply(xhr, ['GET', 'data:ignored', true]);
+            const str = typeof url === 'string' ? url : String(url);
+            if (/sentry\.io|ingest\.sentry\.io/.test(str)) {
+              console.warn('🛑 Interceptado (sendBeacon -> Sentry bloqueado):', str);
+              return true; // finge sucesso
             }
           } catch { }
-          return originalOpen.apply(xhr, [method, url as any, true]);
-        } as any;
-        return xhr as any;
+          return originalBeacon(url, data);
+        };
       }
-      // @ts-ignore
-      (window as any).XMLHttpRequest = PatchedXHR as any;
-    }
-  } catch { }
+    } catch { }
+
+    // Intercepta XHR para evitar ruído em libs que não usam fetch
+    try {
+      const isPreviewHost = typeof location !== 'undefined' && /lovable\.app|stackblitz\.io|codesandbox\.io/.test(location.hostname);
+      if ((import.meta.env.DEV || isPreviewHost) && typeof XMLHttpRequest !== 'undefined') {
+        const OriginalXHR = XMLHttpRequest;
+        // @ts-ignore - extend constructor
+        function PatchedXHR(this: XMLHttpRequest) {
+          const xhr = new OriginalXHR();
+          const originalOpen = xhr.open;
+          (xhr as any).open = function patchedOpen(method: string, url: string | URL) {
+            try {
+              const u = typeof url === 'string' ? url : url.toString();
+              if (/sentry\.io|ingest\.sentry\.io/.test(u)) {
+                // Reescreve para um data: vazio e ignora
+                console.warn('🛑 Interceptado (XHR -> Sentry bloqueado):', u);
+                return originalOpen.apply(xhr, ['GET', 'data:ignored', true]);
+              }
+            } catch { }
+            return originalOpen.apply(xhr, [method, url as any, true]);
+          } as any;
+          return xhr as any;
+        }
+        // @ts-ignore
+        (window as any).XMLHttpRequest = PatchedXHR as any;
+      }
+    } catch { }
+
+    // Cleanup: restaurar interceptores no unload para evitar vazamento entre HMR/navegações
+    window.addEventListener('beforeunload', () => {
+      try { (window as any).fetch = originalFetch; } catch {}
+    });
+  }
 }
 
 // �🚀 SUPABASE: Configuração inicial do serviço

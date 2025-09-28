@@ -178,42 +178,54 @@ const UniversalBlockRenderer: React.FC<UniversalBlockRendererProps> = memo(({
   const BlockComponent = useBlockComponent(block.type);
 
   React.useEffect(() => {
-    if (renderStartTime.current) {
-      const renderTime = performance.now() - renderStartTime.current;
+    if (!renderStartTime.current) return;
+    const renderTime = performance.now() - renderStartTime.current;
 
-      // Armazenar render data no cache para análise
+    // Sample rate: só registra 1 a cada N renders por bloco para reduzir ruído
+    const SAMPLE_RATE = 10; // 10%
+    const shouldSample = (Math.abs(hashCode(block.id)) % 100) < SAMPLE_RATE;
+
+    if (shouldSample) {
+      const now = Date.now();
       const renderData: BlockRenderData = {
-        timestamp: Date.now(),
+        timestamp: now,
         renderTime,
         blockType: block.type,
         isSelected
       };
-      renderCache.set(`${block.id}-${Date.now()}`, renderData);
+      // LRU já limita tamanho, mas ainda assim evitar explosão de chaves
+      renderCache.set(`${block.id}-${now % 10_000}`, renderData);
 
-      // Registrar estatísticas de render
       blockRendererDebug.logRender({
         blockType: block.type,
         blockId: block.id,
         renderTime,
-        timestamp: Date.now(),
+        timestamp: now,
         isSelected,
         isPreviewing,
         hasComponent: !!BlockComponent
       });
+    }
 
-      // Log apenas renders lentos (production-safe)
-      if (renderTime > 50) {
-        logger.warn(`Slow render: ${block.type}`, {
-          blockId: block.id,
-          renderTime: `${renderTime.toFixed(2)}ms`,
-          isSelected,
-          isPreviewing
-        });
-      } else {
-        logger.performance(`render-${block.type}`, renderTime);
-      }
+    if (renderTime > 50) {
+      logger.warn(`Slow render: ${block.type}`, {
+        blockId: block.id,
+        renderTime: `${renderTime.toFixed(2)}ms`,
+        isSelected,
+        isPreviewing
+      });
     }
   });
+
+  function hashCode(str: string): number {
+    let hash = 0;
+    for (let i = 0; i < str.length; i++) {
+      const chr = str.charCodeAt(i);
+      hash = ((hash << 5) - hash) + chr;
+      hash |= 0;
+    }
+    return hash;
+  }
 
   // ✅ LOG DE RENDERIZAÇÃO (apenas em desenvolvimento)
   React.useEffect(() => {
