@@ -515,21 +515,29 @@ const BlockEditor: React.FC<BlockEditorProps> = ({
 
                 {block.type === 'button' && (
                     <>
-                        <div>
-                            <label className="block text-sm font-semibold text-gray-700 mb-2 flex items-center">
-                                <span className="mr-2">🔘</span>
-                                Texto do Botão
-                            </label>
-                            <input
-                                type="text"
-                                value={block.content?.text || ''}
-                                onChange={(e) => handleBlockUpdate('content', { ...block.content, text: e.target.value })}
-                                className="w-full px-3 py-2 border-2 border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
-                                placeholder="Texto do botão"
-                            />
-                        </div>
-
-                        <div>
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-2 flex items-center">
+                <span className="mr-2">🔘</span>
+                Texto do Botão
+              </label>
+              <input
+                type="text"
+                value={block.content?.text || ''}
+                onChange={(e) => handleBlockUpdate('content', { ...block.content, text: e.target.value })}
+                className={`w-full px-3 py-2 border-2 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 transition-all ${
+                  errors.content 
+                    ? 'border-red-300 focus:border-red-500 bg-red-50' 
+                    : 'border-gray-200 focus:border-blue-500'
+                }`}
+                placeholder="Texto do botão"
+              />
+              {errors.content && (
+                <p className="text-xs text-red-600 mt-1 flex items-center">
+                  <span className="mr-1">⚠️</span>
+                  {errors.content}
+                </p>
+              )}
+            </div>                        <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1">
                                 Ação do Botão
                             </label>
@@ -555,28 +563,36 @@ const BlockEditor: React.FC<BlockEditorProps> = ({
                     </h4>
 
                     <div className="space-y-3">
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
-                                Cor do Texto
-                            </label>
-                            <div className="flex items-center space-x-2">
-                                <input
-                                    type="color"
-                                    value={block.properties?.color || '#000000'}
-                                    onChange={(e) => handlePropertyUpdate('color', e.target.value)}
-                                    className="h-8 w-16 border border-gray-300 rounded"
-                                />
-                                <input
-                                    type="text"
-                                    value={block.properties?.color || '#000000'}
-                                    onChange={(e) => handlePropertyUpdate('color', e.target.value)}
-                                    className="flex-1 px-2 py-1 border border-gray-300 rounded text-xs"
-                                    placeholder="#000000"
-                                />
-                            </div>
-                        </div>
-
-                        <div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Cor do Texto
+              </label>
+              <div className="flex items-center space-x-2">
+                <input
+                  type="color"
+                  value={block.properties?.color || '#000000'}
+                  onChange={(e) => handlePropertyUpdate('color', e.target.value)}
+                  className="h-8 w-16 border border-gray-300 rounded"
+                />
+                <input
+                  type="text"
+                  value={block.properties?.color || '#000000'}
+                  onChange={(e) => handlePropertyUpdate('color', e.target.value)}
+                  className={`flex-1 px-2 py-1 border rounded text-xs ${
+                    errors.color 
+                      ? 'border-red-300 focus:border-red-500 bg-red-50' 
+                      : 'border-gray-300 focus:border-blue-500'
+                  }`}
+                  placeholder="#000000"
+                />
+              </div>
+              {errors.color && (
+                <p className="text-xs text-red-600 mt-1 flex items-center">
+                  <span className="mr-1">⚠️</span>
+                  {errors.color}
+                </p>
+              )}
+            </div>                        <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1">
                                 Classes CSS
                             </label>
