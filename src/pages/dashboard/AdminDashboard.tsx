@@ -20,6 +20,7 @@ import {
     UnifiedMetricsGrid
 } from '@/components/dashboard/core/UnifiedMetricCard';
 import { ModernMetricCard } from '@/components/admin/ModernMetricCard';
+import FunnelModelsCard from '@/components/admin/FunnelModelsCard';
 import {
     Users,
     TrendingUp,
@@ -437,6 +438,11 @@ const AdminDashboard: React.FC = () => {
                     </div>
 
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                        {/* Modelos de Funis - Card Dedicado */}
+                        <div className="lg:col-span-1">
+                            <FunnelModelsCard />
+                        </div>
+                        
                         {/* Ações Rápidas - Design Modernizado */}
                         <div className="lg:col-span-1">
                             <Card className="bg-white/60 backdrop-blur-sm border-white/40 shadow-lg hover:shadow-xl transition-all duration-300">
@@ -448,31 +454,31 @@ const AdminDashboard: React.FC = () => {
                                 </CardHeader>
                                 <CardContent className="space-y-4">
                                     <QuickAction
-                                        title="Criar Novo Funil"
-                                        description="Comece um novo funil de conversão"
-                                        href="/editor"
+                                        title="📋 Modelos de Funis"
+                                        description="Templates prontos: Quiz 21 Etapas, Lead Magnets e mais"
+                                        href="/admin/modelos"
                                         icon={<Plus className="w-5 h-5" />}
                                         color="blue"
                                     />
                                     <QuickAction
-                                        title="Ver Analytics"
-                                        description="Análises detalhadas de performance"
-                                        href="/dashboard/analytics"
-                                        icon={<BarChart3 className="w-5 h-5" />}
+                                        title="Criar Novo Funil"
+                                        description="Comece um novo funil de conversão"
+                                        href="/editor"
+                                        icon={<Edit className="w-5 h-5" />}
                                         color="green"
                                     />
                                     <QuickAction
-                                        title="Gerenciar Funis"
-                                        description="Editar e otimizar funis existentes"
-                                        href="/dashboard/funnels"
-                                        icon={<Edit className="w-5 h-5" />}
+                                        title="Meus Funis"
+                                        description="Gerencie seus funis existentes"
+                                        href="/admin/funnels"
+                                        icon={<Eye className="w-5 h-5" />}
                                         color="brand"
                                     />
                                     <QuickAction
-                                        title="Ver Participantes"
-                                        description="Lista de leads e engajamento"
-                                        href="/dashboard/participants"
-                                        icon={<Users className="w-5 h-5" />}
+                                        title="Analytics"
+                                        description="Análises detalhadas de performance"
+                                        href="/admin/analytics"
+                                        icon={<BarChart3 className="w-5 h-5" />}
                                         color="orange"
                                     />
                                 </CardContent>

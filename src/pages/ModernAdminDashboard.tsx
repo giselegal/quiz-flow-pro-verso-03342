@@ -17,6 +17,8 @@ const ParticipantsPage = React.lazy(() => import('./dashboard/ParticipantsPage')
 const FacebookMetrics = React.lazy(() => import('./dashboard/FacebookMetricsPage'));
 const MeusFunisReal = React.lazy(() => import('./dashboard/MeusFunisPageReal'));
 const TemplatesReal = React.lazy(() => import('./dashboard/TemplatesPage'));
+const TemplatesFunisPage = React.lazy(() => import('./dashboard/TemplatesFunisPage'));
+const ModelosFunisPage = React.lazy(() => import('./dashboard/ModelosFunisPage'));
 const ABTestsPage = React.lazy(() => import('./dashboard/ABTestsPage'));
 const CreativesPage = React.lazy(() => import('./dashboard/CreativesPage'));
 const SettingsPage = React.lazy(() => import('./dashboard/SettingsPage'));
@@ -151,6 +153,17 @@ const ModernAdminDashboard: React.FC = () => {
             </Route>
             <Route path="/admin/templates">
               <TemplatesReal />
+            </Route>
+            
+            {/* Modelos de Funis - Nova rota dedicada */}
+            <Route path="/admin/modelos">
+              <ModelosFunisPage />
+            </Route>
+            <Route path="/admin/modelos-funis">
+              <ModelosFunisPage />
+            </Route>
+            <Route path="/admin/templates-funis">
+              <TemplatesFunisPage />
             </Route>
 
             {/* Ferramentas - A/B Tests e Criativos */}
