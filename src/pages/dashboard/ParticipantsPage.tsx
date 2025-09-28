@@ -3,7 +3,7 @@
  */
 
 import React from 'react';
-import { EnhancedUnifiedDataService } from '@/services/core/EnhancedUnifiedDataService'; from 'react';
+import { EnhancedUnifiedDataService } from '@/services/core/EnhancedUnifiedDataService';
 import ParticipantsTable from '@/components/dashboard/ParticipantsTable';
 
 const ParticipantsPage: React.FC = () => (
