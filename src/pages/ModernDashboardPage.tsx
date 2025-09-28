@@ -32,6 +32,7 @@ const FacebookMetricsPage = lazy(() => import('./dashboard/FacebookMetricsPage')
 const TemplatesFunisPage = lazy(() => import('./dashboard/TemplatesFunisPage'));
 const MeusFunisPageReal = lazy(() => import('./dashboard/MeusFunisPageReal'));
 const TemplatesPage = lazy(() => import('./dashboard/TemplatesPage'));
+const QuizFunnelsPage = lazy(() => import('./dashboard/QuizFunnelsPage'));
 const ABTestsPage = lazy(() => import('./dashboard/ABTestsPage'));
 const CreativesPage = lazy(() => import('./dashboard/CreativesPage'));
 const IntegrationsPage = lazy(() => import('./dashboard/IntegrationsPage'));
@@ -261,6 +262,7 @@ const ModernDashboardPage: React.FC = () => {
                     <Route path="/dashboard/funnel-templates" component={TemplatesFunisPage} />
                     <Route path="/dashboard/funnels" component={MeusFunisPageReal} />
                     <Route path="/dashboard/templates" component={TemplatesPage} />
+                    <Route path="/dashboard/quiz-funnels" component={QuizFunnelsPage} />
 
                     {/* TOOLS - Ferramentas e funcionalidades */}
                     <Route path="/dashboard/ab-tests" component={ABTestsPage} />

@@ -523,6 +523,13 @@ const AdminDashboard: React.FC = () => {
                                         icon={<Shield className="w-5 h-5" />}
                                         color="orange"
                                     />
+                                    <QuickAction
+                                        title="🎯 Funis Quiz"
+                                        description="Gerenciar e editar funis de quiz de estilo"
+                                        href="/dashboard/quiz-funnels"
+                                        icon={<Target className="w-5 h-5" />}
+                                        color="purple"
+                                    />
                                 </CardContent>
                             </Card>
                         </div>

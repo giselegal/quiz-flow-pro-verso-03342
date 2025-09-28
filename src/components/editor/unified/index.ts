@@ -16,6 +16,14 @@
 export { RealStagesProvider, useRealStages } from './RealStagesProvider';
 export type { QuizStage, StageActions, RealStagesContextType } from './RealStagesProvider';
 
+// 🔗 INTEGRAÇÃO CRUD
+export { CRUDIntegrationProvider, useCRUDIntegration } from './UnifiedCRUDIntegration';
+export type {
+  CRUDIntegrationState,
+  CRUDIntegrationActions,
+  CRUDIntegrationContextType
+} from './UnifiedCRUDIntegration';
+
 // 🎨 PREVIEW ENGINES
 export { UnifiedPreviewEngine } from './UnifiedPreviewEngine';
 export type { UnifiedPreviewEngineProps } from './UnifiedPreviewEngine';
@@ -29,6 +37,40 @@ export type { InteractivePreviewEngineProps } from './InteractivePreviewEngine';
 export { templatesCacheService } from '@/services/TemplatesCacheService';
 export type { CacheConfig, CacheStats } from '@/services/TemplatesCacheService';
 
+// 🎯 SERVIÇOS CRUD
+export { unifiedCRUDService } from '@/services/UnifiedCRUDService';
+export type { 
+  UnifiedFunnel, 
+  UnifiedStage, 
+  FunnelSettings, 
+  StageSettings, 
+  CRUDOperation, 
+  CRUDResult 
+} from '@/services/UnifiedCRUDService';
+
+// 🔄 SISTEMA DE VERSIONAMENTO
+export { VersioningPanel } from './VersioningPanel';
+export { useUnifiedVersioning } from '../../hooks/core/useUnifiedVersioning';
+export { versioningService } from '../../services/VersioningService';
+export { historyManager } from '../../services/HistoryManager';
+
+// 👥 SISTEMA DE COLABORAÇÃO
+export { CollaborationPanel } from './CollaborationPanel';
+export { useUnifiedCollaboration } from '../../hooks/core/useUnifiedCollaboration';
+export { collaborationService } from '../../services/CollaborationService';
+export { permissionService } from '../../services/PermissionService';
+export { notificationService } from '../../services/NotificationService';
+
+// 📊 SISTEMA DE ANALYTICS
+export { AnalyticsDashboard } from './AnalyticsDashboard';
+export { useUnifiedAnalytics } from '../../hooks/core/useUnifiedAnalytics';
+export { analyticsService } from '../../services/AnalyticsService';
+
+// 🎯 INTEGRAÇÃO QUIZPAGE
+export { QuizPageEditor } from '../quiz/QuizPageEditor';
+export { useQuizPageEditor } from '../../hooks/core/useQuizPageEditor';
+export { quizPageIntegrationService } from '../../services/QuizPageIntegrationService';
+
 // 🔧 OUTROS COMPONENTES UNIFICADOS
 export { EnhancedBlockRenderer } from './EnhancedBlockRenderer';
 export { ProductionPreviewEngine } from './ProductionPreviewEngine';
@@ -38,9 +80,31 @@ export type { ProductionPreviewEngineProps } from './ProductionPreviewEngine';
 export const UnifiedEditorSystem = {
   RealStagesProvider,
   UnifiedPreviewWithFallbacks,
+  CRUDIntegrationProvider,
   templatesCacheService,
+  unifiedCRUDService,
   useRealStages,
   usePreviewWithFallbacks,
+  useCRUDIntegration,
+  // Versionamento
+  VersioningPanel,
+  useUnifiedVersioning,
+  versioningService,
+  historyManager,
+  // Colaboração
+  CollaborationPanel,
+  useUnifiedCollaboration,
+  collaborationService,
+  permissionService,
+  notificationService,
+  // Analytics
+  AnalyticsDashboard,
+  useUnifiedAnalytics,
+  analyticsService,
+  // QuizPage Integration
+  QuizPageEditor,
+  useQuizPageEditor,
+  quizPageIntegrationService,
 } as const;
 
 /**
