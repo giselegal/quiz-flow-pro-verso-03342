@@ -1,81 +1,124 @@
 /**
- * 🎨 EDITOR UNIFICADO - EXPORTS
- *
- * Exporta todos os componentes do sistema Editor Unificado
+ * 🎯 UNIFIED EDITOR COMPONENTS - EXPORTS CONSOLIDADOS
+ * 
+ * Ponto único de exportação para todos os componentes unificados do editor,
+ * incluindo as correções do Ticket #2: Pipeline de Etapas e Preview em Tempo Real.
+ * 
+ * COMPONENTES INCLUÍDOS:
+ * ✅ RealStagesProvider - Pipeline robusto de etapas
+ * ✅ TemplatesCacheService - Cache inteligente de templates
+ * ✅ UnifiedPreviewEngine - Preview com imports ESM
+ * ✅ UnifiedPreviewWithFallbacks - Preview com fallbacks robustos
+ * ✅ InteractivePreviewEngine - Preview interativo
  */
 
-// Componentes principais
-export { EditorControlsManager } from './EditorControlsManager';
-export { EditorPropertiesPanel } from './EditorPropertiesPanel';
-export { EditorStageManager } from './EditorStageManager';
-export { SortablePreviewBlockWrapper } from './SortablePreviewBlockWrapper';
+// 🏗️ PROVIDERS E CONTEXTOS
+export { RealStagesProvider, useRealStages } from './RealStagesProvider';
+export type { QuizStage, StageActions, RealStagesContextType } from './RealStagesProvider';
+
+// 🎨 PREVIEW ENGINES
 export { UnifiedPreviewEngine } from './UnifiedPreviewEngine';
-export { ProductionPreviewEngine } from './ProductionPreviewEngine';
-export { EditorBlockRenderer } from './EditorBlockRenderer';
-export { EnhancedBlockRenderer } from './EnhancedBlockRenderer';
-export { MockDataProvider, useMockData, useMockStepData } from './MockDataProvider';
-export { ValidationIndicator, ValidationBadge, useValidation } from './ValidationIndicator';
-export { UnifiedQuizStepLoader } from './UnifiedQuizStepLoader';
-
-// Componentes de resultado (Fase 3)
-export { EditableStep20Result } from '../result/EditableStep20Result';
-export { EditableText } from '../result/EditableText';
-export { EditableColor } from '../result/EditableColor';
-export { StyleSelector } from '../result/StyleSelector';
-export { ResultPreviewSwitcher } from '../result/ResultPreviewSwitcher';
-export { MockResultGenerator } from '../result/MockResultGenerator';
-
-// Componentes interativos (Fase 4)
-export { InlineEditableBlock } from '../interactive/InlineEditableBlock';
-export { BlockPropertyPanel } from '../interactive/BlockPropertyPanel';
-export { DragDropBlockManager } from '../interactive/DragDropBlockManager';
-export { InteractivePreviewEngine } from '../interactive/InteractivePreviewEngine';
-
-// Componentes avançados (Fase 5)
-export { CollaborationProvider, CollaborationStatus, useCollaboration } from '../advanced/CollaborationProvider';
-export { AdvancedStylingPanel } from '../advanced/AdvancedStylingPanel';
-export { PublishingEngine } from '../advanced/PublishingEngine';
-export { MasterEditorWorkspace } from '../advanced/MasterEditorWorkspace';
-
-// Types
-export type { EditorControlsManagerProps } from './EditorControlsManager';
-export type { EditorPropertiesPanelProps, PropertyConfig } from './EditorPropertiesPanel';
-export type { EditorStageManagerProps } from './EditorStageManager';
 export type { UnifiedPreviewEngineProps } from './UnifiedPreviewEngine';
-export type { ProductionPreviewEngineProps } from './ProductionPreviewEngine';
-export type { EditorBlockRendererProps } from './EditorBlockRenderer';
-export type { ValidationIndicatorProps, ValidationState } from './ValidationIndicator';
 
-// Hooks (Fase 3, 4 & 5)
-export { useQuizResultEditor } from '@/hooks/useQuizResultEditor';
-export { useInlineEditor } from '@/hooks/useInlineEditor';
-export { useEditorIntegration } from '@/hooks/useEditorIntegration';
+export { default as UnifiedPreviewWithFallbacks, usePreviewWithFallbacks } from './UnifiedPreviewWithFallbacks';
+
+export { InteractivePreviewEngine } from './InteractivePreviewEngine';
+export type { InteractivePreviewEngineProps } from './InteractivePreviewEngine';
+
+// 🗄️ SERVIÇOS DE CACHE
+export { templatesCacheService } from '@/services/TemplatesCacheService';
+export type { CacheConfig, CacheStats } from '@/services/TemplatesCacheService';
+
+// 🔧 OUTROS COMPONENTES UNIFICADOS
+export { EnhancedBlockRenderer } from './EnhancedBlockRenderer';
+export { ProductionPreviewEngine } from './ProductionPreviewEngine';
+export type { ProductionPreviewEngineProps } from './ProductionPreviewEngine';
+
+// 🎯 WRAPPER INTEGRADO COMPLETO
+export const UnifiedEditorSystem = {
+  RealStagesProvider,
+  UnifiedPreviewWithFallbacks,
+  templatesCacheService,
+  useRealStages,
+  usePreviewWithFallbacks,
+} as const;
 
 /**
- * 🎯 EDITOR UNIFICADO COMPLETO
- *
- * Todos os 6 componentes necessários para o sistema unificado:
- *
- * 1. ✅ UnifiedPreviewEngine - Engine de preview com fidelidade 100% (usa ProductionPreviewEngine)
- * 2. ✅ ProductionPreviewEngine - Engine de renderização real dos componentes
- * 3. ✅ EditorBlockRenderer - Renderizador específico para blocos do editor
- * 4. ✅ ValidationIndicator - Sistema de validação visual
- * 5. ✅ MockDataProvider - Dados mockados para preview realístico
- * 6. ✅ EditableStep20Result - Editor completo do Step 20 com customização
- * 7. ✅ StyleSelector - Seletor de estilos para preview de diferentes resultados
- * 8. ✅ ResultPreviewSwitcher - Alternador entre modos de preview (único/múltiplos/comparação)
- * 9. ✅ useQuizResultEditor - Hook completo para edição de resultados
- * 10. ✅ EditorControlsManager - Sistema de controles unificado
- * 11. ✅ EditorStageManager - Gerenciador de etapas do quiz
- * 12. ✅ EditorPropertiesPanel - Painel de propriedades unificado
- * 13. ✅ SortablePreviewBlockWrapper - Componente para arrastar e soltar
- *
- * Status: 🎉 FASE 5 IMPLEMENTADA - Workspace Avançado Completo
+ * 🚀 CONFIGURAÇÃO PADRÃO RECOMENDADA
  * 
- * Novas funcionalidades Phase 5:
- * 19. ✅ useEditorIntegration - Hook de integração completa com EditorProvider
- * 20. ✅ CollaborationProvider - Sistema de colaboração em tempo real
- * 21. ✅ AdvancedStylingPanel - Editor de estilos avançado com presets
- * 22. ✅ PublishingEngine - Engine completa de publicação
- * 23. ✅ MasterEditorWorkspace - Workspace unificado final
+ * Use esta configuração como base para integrar o sistema unificado
  */
+export const defaultUnifiedConfig = {
+  stages: {
+    maxStages: 21,
+    enablePreload: true,
+    enableCache: true,
+    funnelId: 'quiz21StepsComplete',
+  },
+  preview: {
+    fallbackMode: 'skeleton' as const,
+    enableErrorRecovery: true,
+    showDebugInfo: false,
+    retryCount: 3,
+  },
+  cache: {
+    maxEntries: 50,
+    ttlMs: 10 * 60 * 1000, // 10 minutos
+    preloadAdjacent: true,
+    enableMetrics: true,
+    maxMemoryMb: 25,
+  },
+} as const;
+
+/**
+ * 🎯 FUNÇÃO HELPER PARA SETUP RÁPIDO
+ * 
+ * Configura o sistema unificado com as melhores práticas
+ */
+export const setupUnifiedEditor = (customConfig?: {
+  stages?: Partial<typeof defaultUnifiedConfig.stages>;
+  preview?: Partial<typeof defaultUnifiedConfig.preview>;
+  cache?: Partial<typeof defaultUnifiedConfig.cache>;
+}) => {
+  const config = {
+    stages: { ...defaultUnifiedConfig.stages, ...customConfig?.stages },
+    preview: { ...defaultUnifiedConfig.preview, ...customConfig?.preview },
+    cache: { ...defaultUnifiedConfig.cache, ...customConfig?.cache },
+  };
+
+  // Configurar cache service
+  templatesCacheService.updateConfig(config.cache);
+
+  return {
+    config,
+    components: UnifiedEditorSystem,
+  };
+};
+
+/**
+ * 📊 DIAGNÓSTICOS DO SISTEMA UNIFICADO
+ */
+export const getUnifiedSystemDiagnostics = () => {
+  const cacheStats = templatesCacheService.getStats();
+  
+  return {
+    timestamp: new Date().toISOString(),
+    cache: {
+      stats: cacheStats,
+      hitRate: templatesCacheService.getHitRate(),
+      isHealthy: cacheStats.totalEntries > 0,
+    },
+    system: {
+      componentsLoaded: {
+        RealStagesProvider: !!RealStagesProvider,
+        UnifiedPreviewWithFallbacks: !!UnifiedPreviewWithFallbacks,
+        templatesCacheService: !!templatesCacheService,
+      },
+      version: '2.0.0-unified',
+      ticketImplemented: 'Ticket #2 - Pipeline de Etapas e Preview em Tempo Real',
+    },
+  };
+};
+
+// 🎯 EXPORT DEFAULT PARA INTEGRAÇÃO RÁPIDA
+export default UnifiedEditorSystem;

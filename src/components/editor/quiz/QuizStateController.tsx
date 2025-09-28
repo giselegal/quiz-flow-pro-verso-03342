@@ -35,7 +35,7 @@
  * e sincroniza com providers existentes.
  */
 
-import { useEditor } from '@/context/EditorContext';
+import { useEditor } from '@/components/editor/EditorProviderMigrationAdapter';
 import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
 import { useQuizNavigation } from '@/hooks/useQuizNavigation';
 import { loadStepBlocks, getStepInfo } from '@/utils/quiz21StepsRenderer';

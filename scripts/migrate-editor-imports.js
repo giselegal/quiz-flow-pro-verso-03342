@@ -11,9 +11,9 @@
  * - node scripts/migrate-editor-imports.js --apply (aplicar mudanças)
  */
 
-const fs = require('fs');
-const path = require('path');
-const glob = require('glob');
+import fs from 'fs';
+import path from 'path';
+import { glob } from 'glob';
 
 // Configurações
 const CONFIG = {
@@ -186,28 +186,16 @@ class EditorImportMigrator {
   }
 }
 
-// Adicionar verificação de dependências
-function checkDependencies() {
-  try {
-    require('glob');
-  } catch (error) {
-    console.error('❌ Dependência "glob" não encontrada. Instale com: npm install glob');
-    process.exit(1);
-  }
-}
-
 // Executar migração
 async function main() {
-  checkDependencies();
   const migrator = new EditorImportMigrator();
   await migrator.migrate();
 }
 
-if (require.main === module) {
-  main().catch(error => {
-    console.error('❌ Erro fatal:', error);
-    process.exit(1);
-  });
-}
+// Executar sempre (para simplificar em ES modules)
+main().catch(error => {
+  console.error('❌ Erro fatal:', error);
+  process.exit(1);
+});
 
-module.exports = { EditorImportMigrator };
+export { EditorImportMigrator };

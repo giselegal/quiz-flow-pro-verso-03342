@@ -78,8 +78,29 @@ export const UnifiedPreviewEngine: React.FC<UnifiedPreviewEngineProps> = ({
     }
   }, [blocks, selectedBlockId, currentStep, realTimeUpdate]);
 
-  // Import direto (lazy loading removido para melhor UX)
-  const { InteractivePreviewEngine } = require('./InteractivePreviewEngine');
+  // ✅ CORREÇÃO: Import estático compatível com Vite/ESM
+  const [InteractivePreviewEngine, setInteractivePreviewEngine] = React.useState<any>(null);
+  
+  React.useEffect(() => {
+    // Carregamento dinâmico do componente
+    import('./InteractivePreviewEngine').then(module => {
+      setInteractivePreviewEngine(() => module.InteractivePreviewEngine);
+    }).catch(error => {
+      console.error('❌ Erro ao carregar InteractivePreviewEngine:', error);
+    });
+  }, []);
+
+  // Fallback enquanto carrega
+  if (!InteractivePreviewEngine) {
+    return (
+      <div className="unified-preview-engine loading">
+        <div className="flex items-center justify-center p-8">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+          <span className="ml-2">Carregando preview...</span>
+        </div>
+      </div>
+    );
+  }
 
   // 🎯 CORREÇÃO CRÍTICA: Calcular enableRealExperience baseado na prop enableProductionMode
   const enableRealExperience = enableProductionMode;

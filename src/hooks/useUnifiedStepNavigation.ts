@@ -1,5 +1,5 @@
 import { useCallback, useMemo } from 'react';
-import { useEditor } from '@/components/editor/EditorProvider';
+import { useEditor } from '@/components/editor/EditorProviderMigrationAdapter';
 
 /**
  * 🎯 HOOK UNIFICADO DE NAVEGAÇÃO - SINGLE SOURCE OF TRUTH

@@ -1,5 +1,5 @@
 import React from 'react';
-import { useEditor } from '@/context/EditorContext';
+import { useEditor } from '@/components/editor/EditorProviderMigrationAdapter';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 

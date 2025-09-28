@@ -1,4 +1,4 @@
-import { useEditor } from '@/context/EditorContext';
+import { useEditor } from '@/components/editor/EditorProviderMigrationAdapter';
 import { useFunnels } from '@/context/FunnelsContext';
 import { useEffect } from 'react';
 

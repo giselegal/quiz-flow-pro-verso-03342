@@ -471,10 +471,10 @@ export const InteractivePreviewEngine: React.FC<InteractivePreviewEngineProps> =
             <div>Real: {enableRealExperience ? 'ON' : 'OFF'}</div>
             <div>Validações: {Object.keys(quizState.validationStates).length}</div>
           </div>
-        </div>
-lise do estado atual do projeto - não use       )}
-
-      {/* DEBUG PANEL REMOVIDO - Preview limpo sem informações de debug */}
+          </div>
+        )}
+  
+        {/* DEBUG PANEL REMOVIDO - Preview limpo sem informações de debug */}
 
       {/* Canvas vazio */}
       {blocks.length === 0 && (

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
-import { useEditor } from '@/context/EditorContext';
+import { useEditor } from '@/components/editor/EditorProviderMigrationAdapter';
 
 const FunnelStagesPanel: React.FC = () => {
   const { stages, activeStageId, stageActions } = useEditor();

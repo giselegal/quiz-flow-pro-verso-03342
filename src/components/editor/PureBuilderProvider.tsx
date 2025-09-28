@@ -523,6 +523,14 @@ export const PureBuilderProvider: React.FC<{
 
 // Export hook compatível
 export const useOptimizedEditor = usePureBuilder;
+// 🔄 MIGRAÇÃO: Hook legado mantido para compatibilidade
+// DEPRECATED: Use useEditor from EditorProviderMigrationAdapter
 export const useBuilderEditor = usePureBuilder;
+
+// 🎯 ADAPTADOR MODERNO: Nova interface unificada
+export const useLegacyBuilderEditor = () => {
+  console.warn('⚠️ useLegacyBuilderEditor is deprecated. Use useEditor from EditorProviderMigrationAdapter instead.');
+  return usePureBuilder();
+};
 
 export default PureBuilderProvider;

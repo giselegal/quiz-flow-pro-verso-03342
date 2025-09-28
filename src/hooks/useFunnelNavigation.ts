@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 // Preferir o contexto moderno do EditorProvider; manter fallback para legacy se necessário
-import { useEditor as useEditorModern } from '@/components/editor/EditorProvider';
+import { useEditor } from '@/components/editor/EditorProviderMigrationAdapter';
 import { useQuizFlow } from '@/context/QuizFlowProvider';
 import {
   calculateProgress,

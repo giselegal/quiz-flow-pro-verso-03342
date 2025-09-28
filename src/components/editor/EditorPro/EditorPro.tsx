@@ -1,6 +1,6 @@
 import React from 'react';
 // ✅ CONSOLIDADO: Sistema unificado com EditorProvider
-import { EditorProvider } from '@/context/EditorContext';
+import { EditorProvider } from '@/components/editor/EditorProviderMigrationAdapter';
 import { UnifiedDndProvider } from '@/components/editor/dnd/UnifiedDndProvider';
 import ModularEditorPro from './components/ModularEditorPro';
 

@@ -5,7 +5,7 @@
  * e os dados de etapas do quiz21StepsComplete
  */
 
-import { useEditor } from '@/context/EditorContext';
+import { useEditor } from '@/components/editor/EditorProviderMigrationAdapter';
 import { loadStepBlocks } from '@/utils/quiz21StepsRenderer';
 import { useEffect, useState } from 'react';
 

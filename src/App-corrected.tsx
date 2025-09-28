@@ -3,7 +3,7 @@ import { ThemeProvider } from '@/components/theme-provider';
 import { LoadingFallback } from '@/components/ui/loading-fallback';
 import { Toaster } from '@/components/ui/toaster';
 import { AuthProvider } from '@/context/AuthContext';
-import { EditorProvider } from '@/context/EditorContext';
+import { EditorProvider } from '@/components/editor/EditorProviderMigrationAdapter';
 import { Suspense, lazy } from 'react';
 import { Route, Router, Switch } from 'wouter';
 
