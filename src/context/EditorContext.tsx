@@ -417,11 +417,10 @@ export const EditorProvider: React.FC<{
 
   const resolveStageCount = useCallback(() => {
     const configAny = config as (EditorConfig & { quizSettings?: { totalSteps?: number } }) | undefined;
-    return (
-      configAny?.quizSettings?.totalSteps ??
-      (configAny as any)?.maxStages ??
-      21
-    );
+    const fromQuizSettings = configAny?.quizSettings?.totalSteps;
+    const fromConfig = (configAny as Record<string, any> | undefined)?.maxStages;
+    const total = typeof fromQuizSettings === 'number' ? fromQuizSettings : typeof fromConfig === 'number' ? fromConfig : 21;
+    return Math.max(1, Math.min(60, total));
   }, [config]);
 
   useEffect(() => {
@@ -438,7 +437,7 @@ export const EditorProvider: React.FC<{
       };
     });
 
-    stepTemplateCacheRef.current.clear?.();
+    stepTemplateCacheRef.current = new Map();
     setRealStages(nextStages);
     setActiveStageId('step-1');
   }, [currentFunnelId, resolveStageCount]);
@@ -490,6 +489,18 @@ export const EditorProvider: React.FC<{
               order: index,
             }));
             dispatch({ type: 'SET_BLOCKS', payload: editorBlocks });
+
+            setRealStages(prev =>
+              prev.map(stage =>
+                stage.id === id
+                  ? {
+                    ...stage,
+                    isCompleted: editorBlocks.length > 0,
+                    questions: stage.questions ?? [],
+                  }
+                  : stage
+              )
+            );
 
             // Prefetch leve da próxima etapa para navegação suave
             const nextStep = stepNumber + 1;
