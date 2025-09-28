@@ -58,24 +58,32 @@ export class TemplateService {
 
             return (
                 ((data as unknown[]) || []).map((itemRaw) => {
-                    const item = itemRaw as { id: string; name?: string; description?: string; settings?: unknown; created_at?: string; updated_at?: string };
-                    return ({
-                    id: item.id,
-                    name: item.name || 'Untitled Template',
-                    description: item.description || '',
-                    category: 'general', // Default category since funnel doesn't have category
-                    theme: 'default',
-                    stepCount: 1,
-                    isOfficial: false,
-                    usageCount: 0,
-                    tags: [],
-                    thumbnailUrl: undefined,
-                        templateData: (item.settings as unknown) as any || {},
-                    components: [],
-                    createdAt: item.created_at || new Date().toISOString(),
-                    updatedAt: item.updated_at || new Date().toISOString(),
-                }) ) || this.getFallbackTemplates(category)
-            );
+                    const item = itemRaw as {
+                        id: string;
+                        name?: string;
+                        description?: string;
+                        settings?: unknown;
+                        created_at?: string;
+                        updated_at?: string;
+                    };
+                    return {
+                        id: item.id,
+                        name: item.name || 'Untitled Template',
+                        description: item.description || '',
+                        category: 'general', // Default category since funnel doesn't have category
+                        theme: 'default',
+                        stepCount: 1,
+                        isOfficial: false,
+                        usageCount: 0,
+                        tags: [],
+                        thumbnailUrl: undefined,
+                        templateData: (item.settings as unknown as any) || {},
+                        components: [],
+                        createdAt: item.created_at || new Date().toISOString(),
+                        updatedAt: item.updated_at || new Date().toISOString(),
+                    };
+                })
+            ) || this.getFallbackTemplates(category);
         } catch (error) {
             console.error('Error in getTemplates:', error);
             return this.getFallbackTemplates(category);

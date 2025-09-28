@@ -1,1 +1,2 @@
-../../unified/SortablePreviewBlockWrapper.tsx
+export { default } from '../../unified/SortablePreviewBlockWrapper';
+export * from '../../unified/SortablePreviewBlockWrapper';

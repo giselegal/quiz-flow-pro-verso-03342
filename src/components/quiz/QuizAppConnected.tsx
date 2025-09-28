@@ -16,6 +16,7 @@ import TransitionStep from './TransitionStep';
 import ResultStep from './ResultStep';
 import OfferStep from './OfferStep';
 import { useEffect, useState } from 'react';
+import type { QuizConfig } from '@/types/quiz-config';
 
 interface QuizAppConnectedProps {
     funnelId?: string;
@@ -124,7 +125,7 @@ export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', ed
     // CONFIGURATION MERGER - Combina todas as configurações
     // ============================================================================
 
-    const mergedConfig = {
+    const mergedConfig: QuizConfig = {
         // Configurações globais
         ...globalConfig,
         // Configurações de tema
@@ -258,12 +259,10 @@ export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', ed
                 {currentStepData.type === 'intro' && (
                     <IntroStep
                         data={{ ...currentStepData, ...currentStepConfig }}
-                        config={mergedConfig}
                         onNameSubmit={(name: string) => {
                             setUserName(name);
                             nextStep();
                         }}
-                        editorMode={editorMode}
                     />
                 )}
 
@@ -275,22 +274,19 @@ export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', ed
                         <div className="max-w-6xl mx-auto px-4 py-8">
                             <QuestionStep
                                 data={{ ...currentStepData, ...currentStepConfig }}
-                                config={mergedConfig}
                                 currentAnswers={state.answers[state.currentStep] || []}
                                 onAnswersChange={(answers: string[]) => {
                                     addAnswer(state.currentStep, answers);
 
                                     // Configuração dinâmica de auto-advance
-                                    const autoAdvanceEnabled = mergedConfig.autoAdvance !== false;
-                                    const autoAdvanceDelay = mergedConfig.autoAdvanceDelay || 1000;
-                                    const requiredSelections = mergedConfig.requiredSelections || currentStepData.requiredSelections || 3;
+                                    const autoAdvanceEnabled = (mergedConfig.autoAdvance as any)?.enabled ?? mergedConfig.autoAdvance !== false;
+                                    const autoAdvanceDelay = (mergedConfig.autoAdvance as any)?.delay ?? (mergedConfig as any).autoAdvanceDelay ?? 1000;
+                                    const requiredSelections = (mergedConfig as any).requiredSelections || currentStepData.requiredSelections || 3;
 
                                     if (autoAdvanceEnabled && answers.length === requiredSelections) {
-                                        setTimeout(() => nextStep(), autoAdvanceDelay);
+                                        setTimeout(() => nextStep(), Number(autoAdvanceDelay) || 1000);
                                     }
                                 }}
-                                editorMode={editorMode}
-                                onConfigUpdate={editorMode ? updateStepProperty : undefined}
                             />
                         </div>
                     </div>
@@ -304,19 +300,16 @@ export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', ed
                         <div className="max-w-6xl mx-auto px-4 py-8">
                             <StrategicQuestionStep
                                 data={{ ...currentStepData, ...currentStepConfig }}
-                                config={mergedConfig}
                                 currentAnswer={state.answers[state.currentStep]?.[0] || ''}
                                 onAnswerChange={(answer: string) => {
                                     addStrategicAnswer(state.currentStep, answer);
 
                                     // Strategic questions não têm auto-advance por padrão
-                                    const strategicAutoAdvance = mergedConfig.strategicAutoAdvance === true;
+                                    const strategicAutoAdvance = (mergedConfig as any).strategicAutoAdvance === true;
                                     if (strategicAutoAdvance) {
-                                        setTimeout(() => nextStep(), mergedConfig.strategicAutoAdvanceDelay || 2000);
+                                        setTimeout(() => nextStep(), Number((mergedConfig as any).strategicAutoAdvanceDelay) || 2000);
                                     }
                                 }}
-                                editorMode={editorMode}
-                                onConfigUpdate={editorMode ? updateStepProperty : undefined}
                             />
                         </div>
                     </div>
@@ -325,40 +318,29 @@ export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', ed
                 {currentStepData.type === 'transition' && (
                     <TransitionStep
                         data={{ ...currentStepData, ...currentStepConfig }}
-                        config={mergedConfig}
-                        onContinue={() => nextStep()}
-                        editorMode={editorMode}
+                        onComplete={() => nextStep()}
                     />
                 )}
 
                 {currentStepData.type === 'transition-result' && (
                     <TransitionStep
                         data={{ ...currentStepData, ...currentStepConfig }}
-                        config={mergedConfig}
-                        onContinue={() => nextStep()}
-                        editorMode={editorMode}
+                        onComplete={() => nextStep()}
                     />
                 )}
 
                 {currentStepData.type === 'result' && (
                     <ResultStep
                         data={{ ...currentStepData, ...currentStepConfig }}
-                        config={mergedConfig}
                         userProfile={state.userProfile}
-                        onContinue={() => nextStep()}
-                        editorMode={editorMode}
-                        onConfigUpdate={editorMode ? updateStepProperty : undefined}
                     />
                 )}
 
                 {currentStepData.type === 'offer' && (
                     <OfferStep
                         data={{ ...currentStepData, ...currentStepConfig }}
-                        config={mergedConfig}
                         userProfile={state.userProfile}
                         offerKey={getOfferKey()}
-                        editorMode={editorMode}
-                        onConfigUpdate={editorMode ? updateStepProperty : undefined}
                     />
                 )}
 

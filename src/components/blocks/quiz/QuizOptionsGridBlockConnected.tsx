@@ -6,6 +6,7 @@
  */
 
 import React, { useMemo, useEffect } from 'react';
+import type { QuizConfig, ProcessedOptionsConfig } from '@/types/quiz-config';
 import { useComponentConfiguration } from '@/hooks/useComponentConfiguration';
 import QuizQuestion from '@/components/funnel-blocks/QuizQuestion';
 import { QuizBlockProps } from './types';
@@ -93,9 +94,9 @@ export default function QuizOptionsGridBlockConnected({
     // CONFIGURATION PROCESSING - Processa configurações da API
     // ============================================================================
 
-    const processedProperties = useMemo(() => {
+    const processedProperties: ProcessedOptionsConfig = useMemo(() => {
         // Valores padrão como fallback
-        const defaults = {
+        const defaults: ProcessedOptionsConfig = {
             columns: 'auto',
             imageSize: 256,
             gridGap: 8,
@@ -112,21 +113,21 @@ export default function QuizOptionsGridBlockConnected({
         };
 
         // Mesclar com configurações da API
-        const merged = { ...defaults, ...properties };
+        const merged: ProcessedOptionsConfig = { ...(defaults as any), ...(properties as any) };
 
         // Processar opções se elas vierem como string (JSON)
-        if (typeof merged.options === 'string') {
+        if (typeof (merged as any).options === 'string') {
             try {
-                merged.options = JSON.parse(merged.options);
+                (merged as any).options = JSON.parse((merged as any).options);
             } catch (e) {
                 console.warn('Invalid options JSON:', merged.options);
-                merged.options = [];
+                (merged as any).options = [];
             }
         }
 
         // Garantir que options seja um array
-        if (!Array.isArray(merged.options)) {
-            merged.options = [];
+        if (!Array.isArray(merged.options as any)) {
+            (merged as any).options = [];
         }
 
         return merged;
@@ -137,7 +138,7 @@ export default function QuizOptionsGridBlockConnected({
     // ============================================================================
 
     const layoutConfig = useMemo(() => {
-        const { columns, imageSize, gridGap, options } = processedProperties;
+        const { columns, imageSize, gridGap, options } = processedProperties as any;
 
         // Detectar se há imagens nas opções
         const hasImages = options.some((option: any) => option.imageUrl);
