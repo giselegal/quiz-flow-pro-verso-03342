@@ -20,7 +20,7 @@ import { SecuritySettingsPage } from '@/components/security/SecuritySettingsPage
 
 // Páginas existentes (exemplos)
 import { HomePage } from '@/pages/HomePage';
-import { EditorPage } from '@/pages/EditorPage';
+import EditorPage from '@/pages/EditorPage';
 
 const App: React.FC = () => {
   return (
