@@ -55,13 +55,17 @@ export const ScalableQuizRenderer = memo<ScalableQuizRendererProps>(({
                 setError(null);
 
                 // 1. ✅ NOVO: Normalizar funnelId e obter info do template
-                const templateInfo = await getTemplateInfo(funnelId);
-                setTemplateInfo(templateInfo);
-                
-                console.log(`🔍 Template info carregado para ${funnelId}:`, templateInfo);
+                const tpl = await getTemplateInfo(funnelId);
+                setTemplateInfo(tpl);
+
+                if (!tpl || typeof tpl !== 'object') {
+                    console.warn('⚠️ Template info retornou estrutura inesperada, usando fallback mínimo');
+                }
+
+                console.log(`🔍 Template info carregado para ${funnelId}:`, tpl);
 
                 // 2. Usar totalSteps do template (dinâmico)
-                let detectedSteps = templateInfo.totalSteps || 1;
+                let detectedSteps = (tpl && tpl.totalSteps) ? tpl.totalSteps : 1;
 
                 // 3. Fallback: tentar ScalableHybridTemplateService
                 try {
@@ -76,21 +80,23 @@ export const ScalableQuizRenderer = memo<ScalableQuizRendererProps>(({
                 // 4. Carrega dados reais do quiz via BlockPropertiesAPI (opcional)
                 try {
                     const blockApi = new BlockPropertiesAPI();
-                    const realData = await blockApi.getRealTemplateData(templateInfo.baseId);
-                    setRealQuizData(realData);
+                    if (tpl?.baseId) {
+                        const realData = await blockApi.getRealTemplateData(tpl.baseId);
+                        setRealQuizData(realData);
+                    }
                 } catch (apiError) {
                     console.warn('⚠️ BlockPropertiesAPI não disponível:', apiError);
                 }
 
                 // ❌ REMOVIDO: Lógica hardcoded do quiz21StepsComplete
-                
+
                 setTotalSteps(Math.max(detectedSteps, 1)); // Garante pelo menos 1 step
 
                 console.log(`✅ ScalableQuizRenderer: Funil ${funnelId} inicializado dinamicamente`, {
-                    baseId: templateInfo.baseId,
-                    templateName: templateInfo.templateName,
+                    baseId: tpl?.baseId,
+                    templateName: tpl?.templateName,
                     totalSteps: detectedSteps,
-                    hasTemplate: !!templateInfo.template,
+                    hasTemplate: !!tpl?.template,
                     hasRealData: !!realQuizData
                 });
 

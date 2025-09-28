@@ -650,6 +650,50 @@ export const PureBuilderProvider: React.FC<{
             totalSteps,
         }), [state, totalSteps]);
 
+        // 🛠️ INSTRUMENTAÇÃO: Expor snapshot em window para diagnóstico (somente em desenvolvimento)
+        useEffect(() => {
+            if (typeof window !== 'undefined' && import.meta.env.DEV) {
+                (window as any).__PURE_BUILDER_DEBUG__ = {
+                    updatedAt: new Date().toISOString(),
+                    currentStep: state.currentStep,
+                    totalSteps,
+                    stepKeys: Object.keys(state.stepBlocks || {}),
+                    templateInfo: state.templateInfo ? {
+                        baseId: state.templateInfo.baseId,
+                        templateName: state.templateInfo.templateName,
+                        totalSteps: state.templateInfo.totalSteps
+                    } : null,
+                    funnelConfig: state.funnelConfig ? {
+                        templateId: state.funnelConfig.templateId,
+                        totalSteps: state.funnelConfig.totalSteps,
+                        showProgress: state.funnelConfig.showProgress
+                    } : null,
+                    isLoading: state.isLoading,
+                    templateLoading: state.templateLoading
+                };
+            }
+        }, [state, totalSteps]);
+
+        // 🛡️ LISTENER GLOBAL: Capturar primeiro erro antes do ErrorBoundary engolir contexto
+        useEffect(() => {
+            if (typeof window === 'undefined' || !(import.meta as any).env.DEV) return;
+            const handler = (ev: ErrorEvent) => {
+                if (!(window as any).__FIRST_GLOBAL_ERROR__) {
+                    (window as any).__FIRST_GLOBAL_ERROR__ = {
+                        message: ev.message,
+                        filename: ev.filename,
+                        lineno: ev.lineno,
+                        colno: ev.colno,
+                        stack: ev.error?.stack,
+                        capturedAt: Date.now()
+                    };
+                    console.error('🛑 [GLOBAL_ERROR_CAPTURE] Primeiro erro global registrado:', (window as any).__FIRST_GLOBAL_ERROR__);
+                }
+            };
+            window.addEventListener('error', handler);
+            return () => window.removeEventListener('error', handler);
+        }, []);
+
         return (
             <PureBuilderContext.Provider value={{ state: memoizedState, actions }}>
                 {children}
