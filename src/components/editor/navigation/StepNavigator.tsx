@@ -13,11 +13,11 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
-import { 
-  ChevronLeft, 
-  ChevronRight, 
-  Play, 
-  CheckCircle, 
+import {
+  ChevronLeft,
+  ChevronRight,
+  Play,
+  CheckCircle,
   AlertCircle,
   Hash,
   Target,
@@ -194,16 +194,18 @@ const StepNavigator: React.FC<StepNavigatorProps> = ({
             const typeConfig = STEP_TYPE_CONFIG[step.type];
             const isCurrent = step.order === currentStep;
             const IconComponent = typeConfig.icon;
-            
+
             return (
               <button
                 key={step.id}
+                data-testid="step-navigator-item"
+                data-step-order={step.order}
+                data-step-id={step.id}
                 onClick={() => handleStepClick(step.order)}
-                className={`w-full p-3 mb-2 rounded-lg border transition-all duration-200 text-left ${
-                  isCurrent
+                className={`w-full p-3 mb-2 rounded-lg border transition-all duration-200 text-left ${isCurrent
                     ? 'border-primary bg-primary/10 shadow-sm'
                     : 'border-border hover:border-primary/50 hover:bg-muted/50'
-                }`}
+                  }`}
               >
                 <div className="flex items-center gap-3">
                   {/* Ícone do Tipo */}
@@ -221,20 +223,20 @@ const StepNavigator: React.FC<StepNavigatorProps> = ({
                         {typeConfig.label}
                       </Badge>
                     </div>
-                    
+
                     <div className="text-xs text-muted-foreground truncate">
                       {step.name}
                     </div>
-                    
+
                     <div className="flex items-center gap-2 mt-1">
                       <span className="text-xs text-muted-foreground">
                         {step.blocksCount} blocos
                       </span>
-                      
+
                       {step.isComplete && (
                         <CheckCircle className="w-3 h-3 text-green-600" />
                       )}
-                      
+
                       {step.hasError && (
                         <AlertCircle className="w-3 h-3 text-red-600" />
                       )}

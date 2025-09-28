@@ -18,6 +18,13 @@ export class TemplateErrorBoundary extends React.Component<TemplateErrorBoundary
 
   static getDerivedStateFromError(error: Error): TemplateErrorBoundaryState {
     console.error('🚨 TemplateErrorBoundary capturou erro:', error);
+    if (typeof window !== 'undefined') {
+      (window as any).__LAST_TEMPLATE_ERROR__ = {
+        message: error.message,
+        stack: error.stack,
+        timestamp: Date.now(),
+      };
+    }
     return { hasError: true, error };
   }
 

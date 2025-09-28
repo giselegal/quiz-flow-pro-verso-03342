@@ -30,6 +30,8 @@ const EditorProUnified = React.lazy(() =>
     import('../../components/editor/EditorProUnified')
 );
 
+import PureBuilderProvider from '@/components/editor/PureBuilderProvider';
+
 // 🔧 CORREÇÃO: Lazy loading dos componentes de error e loading
 const TemplateErrorBoundary = React.lazy(() =>
     import('../../components/error/TemplateErrorBoundary')
@@ -411,6 +413,10 @@ const UnifiedEditorCore: React.FC<ModernUnifiedEditorProps> = ({
         };
     }, [funnelId, templateId]);
 
+    const pureBuilderTargetId = React.useMemo(() => {
+        return extractedInfo.funnelId || extractedInfo.templateId || funnelId || templateId || 'quiz21StepsComplete';
+    }, [extractedInfo.funnelId, extractedInfo.templateId, funnelId, templateId]);
+
     // 🎯 TEMPLATE LOADING STATE
     const [isLoadingTemplate, setIsLoadingTemplate] = useState(false);
     const [templateError, setTemplateError] = useState<string | null>(null);
@@ -628,63 +634,68 @@ const UnifiedEditorCore: React.FC<ModernUnifiedEditorProps> = ({
                     debugMode={false}
                     enableCache={true}
                 >
-                        {/* 🔍 FUNNEL TYPE DETECTION - apenas para funnels específicos */}
-                        {extractedInfo.funnelId && (
-                            <div className="p-4 border-b bg-background">
-                                <FunnelTypeDetector
-                                    funnelId={extractedInfo.funnelId}
-                                    onFunnelLoaded={(data) => {
-                                        console.log('✅ Funnel data loaded:', data);
-                                        setFunnelData(data);
-                                        setIsDetectingType(false);
-                                    }}
-                                    onTypeDetected={(type) => {
-                                        console.log('✅ Funnel type detected:', type);
-                                        setDetectedFunnelType(type);
+                    {/* 🔍 FUNNEL TYPE DETECTION - apenas para funnels específicos */}
+                    {extractedInfo.funnelId && (
+                        <div className="p-4 border-b bg-background">
+                            <FunnelTypeDetector
+                                funnelId={extractedInfo.funnelId}
+                                onFunnelLoaded={(data) => {
+                                    console.log('✅ Funnel data loaded:', data);
+                                    setFunnelData(data);
+                                    setIsDetectingType(false);
+                                }}
+                                onTypeDetected={(type) => {
+                                    console.log('✅ Funnel type detected:', type);
+                                    setDetectedFunnelType(type);
 
-                                        // Ajustar configurações do editor baseado no tipo
-                                        if (type.editorConfig.showProgressBar) {
-                                            console.log('🔧 Habilitando barra de progresso');
-                                        }
-                                        if (type.supportsAI) {
-                                            console.log('🤖 Suporte a IA detectado');
-                                        }
-                                    }}
-                                />
-                                {/* Exibir informações do funnel detectado */}
-                                {detectedFunnelType && (
-                                    <div className="mt-2 p-2 bg-primary/5 rounded-md">
-                                        <div className="flex items-center gap-2">
-                                            <Badge variant="outline">{detectedFunnelType.category}</Badge>
-                                            <span className="text-sm font-medium">{detectedFunnelType.name}</span>
-                                            {detectedFunnelType.supportsAI && (
-                                                <Brain className="w-4 h-4 text-primary" />
-                                            )}
-                                        </div>
-                                        {detectedFunnelType.description && (
-                                            <p className="text-xs text-muted-foreground mt-1">
-                                                {detectedFunnelType.description}
-                                            </p>
+                                    // Ajustar configurações do editor baseado no tipo
+                                    if (type.editorConfig.showProgressBar) {
+                                        console.log('🔧 Habilitando barra de progresso');
+                                    }
+                                    if (type.supportsAI) {
+                                        console.log('🤖 Suporte a IA detectado');
+                                    }
+                                }}
+                            />
+                            {/* Exibir informações do funnel detectado */}
+                            {detectedFunnelType && (
+                                <div className="mt-2 p-2 bg-primary/5 rounded-md">
+                                    <div className="flex items-center gap-2">
+                                        <Badge variant="outline">{detectedFunnelType.category}</Badge>
+                                        <span className="text-sm font-medium">{detectedFunnelType.name}</span>
+                                        {detectedFunnelType.supportsAI && (
+                                            <Brain className="w-4 h-4 text-primary" />
                                         )}
                                     </div>
-                                )}
-                                {isDetectingType && (
-                                    <div className="mt-2 p-2 bg-muted/20 rounded-md">
-                                        <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                                            <div className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
-                                            <span>Detectando tipo de funil...</span>
-                                        </div>
+                                    {detectedFunnelType.description && (
+                                        <p className="text-xs text-muted-foreground mt-1">
+                                            {detectedFunnelType.description}
+                                        </p>
+                                    )}
+                                </div>
+                            )}
+                            {isDetectingType && (
+                                <div className="mt-2 p-2 bg-muted/20 rounded-md">
+                                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                                        <div className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
+                                        <span>Detectando tipo de funil...</span>
                                     </div>
-                                )}
-                            </div>
-                        )}
+                                </div>
+                            )}
+                        </div>
+                    )}
 
-                        <Suspense fallback={
-                            <Suspense fallback={<LoadingSpinner message="Carregando componentes..." />}>
-                                <TemplateLoadingSkeleton />
-                            </Suspense>
-                        }>
-                            <Suspense fallback={<LoadingSpinner message="Carregando error boundary..." />}>
+                    <Suspense fallback={
+                        <Suspense fallback={<LoadingSpinner message="Carregando componentes..." />}>
+                            <TemplateLoadingSkeleton />
+                        </Suspense>
+                    }>
+                        <Suspense fallback={<LoadingSpinner message="Carregando error boundary..." />}>
+                            <PureBuilderProvider
+                                key={`pure-builder-${pureBuilderTargetId}`}
+                                funnelId={pureBuilderTargetId}
+                                enableSupabase={false}
+                            >
                                 <TemplateErrorBoundary>
                                     <EditorProUnified
                                         funnelId={extractedInfo.funnelId || undefined}
@@ -693,8 +704,9 @@ const UnifiedEditorCore: React.FC<ModernUnifiedEditorProps> = ({
                                         className="h-full"
                                     />
                                 </TemplateErrorBoundary>
-                            </Suspense>
+                            </PureBuilderProvider>
                         </Suspense>
+                    </Suspense>
                 </FunnelMasterProvider>
             </div>
 

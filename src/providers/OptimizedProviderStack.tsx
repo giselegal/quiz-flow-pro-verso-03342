@@ -18,6 +18,7 @@ import { EditorProvider } from '@/components/editor/EditorProviderMigrationAdapt
 import { UnifiedDndProvider } from '@/components/editor/dnd/UnifiedDndProvider';
 import { unifiedTemplateService } from '@/services/UnifiedTemplateService';
 import { getUnifiedComponent } from '@/registry/UnifiedComponentRegistry';
+import { FunnelsProvider } from '@/context/FunnelsContext';
 
 // 🎯 CONSOLIDATED CONTEXT - Unifica múltiplos contextos
 interface OptimizedContextValue {
@@ -25,14 +26,14 @@ interface OptimizedContextValue {
   editorReady: boolean;
   templateService: typeof unifiedTemplateService;
   componentRegistry: typeof getUnifiedComponent;
-  
+
   // Performance metrics
   performanceMetrics: {
     providersLoaded: number;
     contextSwitches: number;
     lastOptimization: number;
   };
-  
+
   // Feature flags
   features: {
     lazyLoading: boolean;
@@ -107,13 +108,15 @@ const OptimizedProviderStack: React.FC<OptimizedProviderStackProps> = memo(({
 
   return (
     <OptimizedContext.Provider value={contextValue}>
-      <EditorProvider funnelId={funnelId}>
-        <UnifiedDndProvider>
-          <div className="optimized-provider-stack h-full w-full">
-            {children}
-          </div>
-        </UnifiedDndProvider>
-      </EditorProvider>
+      <FunnelsProvider debug={false}>
+        <EditorProvider funnelId={funnelId}>
+          <UnifiedDndProvider>
+            <div className="optimized-provider-stack h-full w-full">
+              {children}
+            </div>
+          </UnifiedDndProvider>
+        </EditorProvider>
+      </FunnelsProvider>
     </OptimizedContext.Provider>
   );
 });
@@ -156,11 +159,11 @@ export const withProviderPerformanceMonitoring = <P extends object>(
 ) => {
   const WrappedComponent = memo((props: P) => {
     const startTime = useMemo(() => performance.now(), []);
-    
+
     React.useEffect(() => {
       const endTime = performance.now();
       const renderTime = endTime - startTime;
-      
+
       if (renderTime > 16) { // More than 1 frame (16ms)
         console.warn(`⚠️ Provider ${providerName} render took ${renderTime.toFixed(2)}ms`);
       } else {
@@ -195,9 +198,9 @@ export const EditorActionsContext = createContext<{
   setSelectedBlock: (id: string | null) => void;
   togglePreviewMode: () => void;
 }>({
-  setCurrentStep: () => {},
-  setSelectedBlock: () => {},
-  togglePreviewMode: () => {}
+  setCurrentStep: () => { },
+  setSelectedBlock: () => { },
+  togglePreviewMode: () => { }
 });
 
 /**
