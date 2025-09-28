@@ -55,6 +55,9 @@ export interface PureBuilderActions {
     exportJSON: () => string;
     importJSON: (json: string) => void;
 
+    // 🆕 CANVAS VAZIO - Ação para criar primeira etapa
+    createFirstStep: () => Promise<void>;
+
     // Builder System specific
     calculateResults: () => Promise<any>;
     optimizeFunnel: () => Promise<void>;
@@ -291,8 +294,41 @@ export const PureBuilderProvider: React.FC<{
 
                 setState(prev => ({ ...prev, isLoading: true }));
 
-                // ⚡ DINÂMICO: Se não há funnelId, criar um genérico
-                const targetFunnelId = funnelId || `dynamic-funnel-${Date.now()}`;
+                // 🆕 CANVAS VAZIO: Se não há funnelId válido, inicializar canvas vazio
+                if (!funnelId || funnelId.trim() === '' || funnelId === 'undefined' || funnelId === 'null') {
+                    console.log('🆕 Canvas vazio: Iniciando editor sem template para criação do zero');
+
+                    // ✅ Configurar estado inicial vazio
+                    setState(prev => ({
+                        ...prev,
+                        stepBlocks: {}, // Canvas completamente vazio
+                        builderInstance: null,
+                        funnelConfig: {
+                            templateId: 'empty-canvas',
+                            totalSteps: 0,
+                            theme: 'modern-elegant',
+                            allowBackward: true,
+                            saveProgress: true,
+                            showProgress: false // Sem progresso para canvas vazio
+                        },
+                        templateInfo: {
+                            templateName: 'Canvas Vazio',
+                            baseId: 'empty-canvas',
+                            totalSteps: 0,
+                            theme: 'modern-elegant'
+                        },
+                        isLoading: false,
+                        templateLoading: false,
+                        loadedSteps: new Set()
+                    }));
+
+                    setTotalSteps(0);
+                    console.log('✅ Canvas vazio inicializado - usuário pode criar funil do zero');
+                    return;
+                }
+
+                // ⚡ DINÂMICO: Se há funnelId válido, carregar template
+                const targetFunnelId = funnelId;
                 console.log('🎯 Usando targetFunnelId:', targetFunnelId);
 
                 // ✅ USAR getTemplateInfo para obter dados dinâmicos
@@ -324,17 +360,30 @@ export const PureBuilderProvider: React.FC<{
                         console.error('❌ Error initializing PureBuilderProvider:', error);
 
                         // 🔧 CORREÇÃO: Fallback com estrutura mínima válida
+                        console.warn('⚠️ Error loading template, using empty canvas fallback');
+
                         setState(prev => ({
                             ...prev,
                             isLoading: false,
                             templateLoading: false,
-                            stepBlocks: { 'step-1': [] }, // Garantir ao menos step-1
+                            stepBlocks: {}, // Canvas vazio como fallback
                             funnelConfig: {
-                                templateId: 'fallback',
-                                totalSteps: 1,
+                                templateId: 'empty-fallback',
+                                totalSteps: 0,
+                                theme: 'modern-elegant',
+                                allowBackward: true,
+                                saveProgress: true,
+                                showProgress: false
+                            },
+                            templateInfo: {
+                                templateName: 'Canvas Vazio (Fallback)',
+                                baseId: 'empty-fallback',
+                                totalSteps: 0,
                                 theme: 'modern-elegant'
                             }
                         }));
+
+                        setTotalSteps(0);
                     });
             }
         }, [funnelId]);
@@ -390,6 +439,47 @@ export const PureBuilderProvider: React.FC<{
                     }
                 }));
             }, []),
+
+            // 🆕 AÇÃO PARA CRIAR PRIMEIRA ETAPA EM CANVAS VAZIO
+            createFirstStep: useCallback(async () => {
+                if (totalSteps > 0) {
+                    console.warn('Canvas já possui etapas - use addStep para adicionar mais');
+                    return;
+                }
+
+                const firstStepKey = 'step-1';
+                const welcomeBlock: Block = {
+                    id: 'welcome-block',
+                    type: 'text-inline',
+                    content: {
+                        text: 'Bem-vindo! Esta é sua primeira etapa.'
+                    },
+                    order: 0,
+                    style: {},
+                    properties: {
+                        text: 'Bem-vindo! Esta é sua primeira etapa.',
+                        fontSize: '18px',
+                        textAlign: 'center'
+                    }
+                };
+
+                setState(prev => ({
+                    ...prev,
+                    stepBlocks: {
+                        [firstStepKey]: [welcomeBlock]
+                    },
+                    currentStep: 1,
+                    loadedSteps: new Set([1]),
+                    funnelConfig: {
+                        ...prev.funnelConfig,
+                        totalSteps: 1,
+                        showProgress: true
+                    }
+                }));
+
+                setTotalSteps(1);
+                console.log('✅ Primeira etapa criada no canvas vazio');
+            }, [totalSteps]),
 
             updateBlock: useCallback(async (stepKey: string, blockId: string, updates: Record<string, any>) => {
                 setState(prev => ({
@@ -529,8 +619,8 @@ export const useBuilderEditor = usePureBuilder;
 
 // 🎯 ADAPTADOR MODERNO: Nova interface unificada
 export const useLegacyBuilderEditor = () => {
-  console.warn('⚠️ useLegacyBuilderEditor is deprecated. Use useEditor from EditorProviderMigrationAdapter instead.');
-  return usePureBuilder();
+    console.warn('⚠️ useLegacyBuilderEditor is deprecated. Use useEditor from EditorProviderMigrationAdapter instead.');
+    return usePureBuilder();
 };
 
 export default PureBuilderProvider;
