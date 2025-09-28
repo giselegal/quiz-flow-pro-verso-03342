@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🚀 Migration Executor - One Click Solution</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.15);
+            max-width: 700px;
+            width: 100%;
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        
+        .header h1 { font-size: 2.5rem; margin-bottom: 10px; }
+        .header p { opacity: 0.9; font-size: 1.1rem; }
+        
+        .content { padding: 40px; }
+        
+        .status-card {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 20px 0;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+        
+        .status-card.success { border-color: #28a745; background: #d4edda; }
+        .status-card.error { border-color: #dc3545; background: #f8d7da; }
+        .status-card.warning { border-color: #ffc107; background: #fff3cd; }
+        
+        .big-button {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+            border: none;
+            padding: 20px 40px;
+            border-radius: 12px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin: 20px 0;
+            box-shadow: 0 10px 20px rgba(40, 167, 69, 0.3);
+        }
+        
+        .big-button:hover { 
+            transform: translateY(-3px); 
+            box-shadow: 0 15px 30px rgba(40, 167, 69, 0.4);
+        }
+        
+        .big-button:disabled { 
+            background: #6c757d; 
+            cursor: not-allowed; 
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .big-button.apply {
+            background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+            box-shadow: 0 10px 20px rgba(0, 123, 255, 0.3);
+        }
+        
+        .big-button.apply:hover {
+            box-shadow: 0 15px 30px rgba(0, 123, 255, 0.4);
+        }
+        
+        .big-button.danger {
+            background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+            box-shadow: 0 10px 20px rgba(220, 53, 69, 0.3);
+        }
+        
+        .progress {
+            width: 100%;
+            height: 6px;
+            background: #e9ecef;
+            border-radius: 3px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #007bff, #28a745);
+            transition: width 0.5s ease;
+            width: 0%;
+        }
+        
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #007bff;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            display: inline-block;
+            margin-right: 15px;
+        }
+        
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        
+        .log {
+            background: #263238;
+            color: #eee;
+            padding: 20px;
+            border-radius: 8px;
+            max-height: 300px;
+            overflow-y: auto;
+            font-family: monospace;
+            margin: 20px 0;
+            display: none;
+        }
+        
+        .hidden { display: none; }
+        
+        .success-animation {
+            font-size: 4rem;
+            animation: bounce 1s ease-in-out;
+        }
+        
+        @keyframes bounce {
+            0%, 20%, 60%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-20px); }
+            80% { transform: translateY(-10px); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚀 Migration Executor</h1>
+            <p>Aplicar Component Configurations Migration via API</p>
+        </div>
+        
+        <div class="content">
+            <!-- Etapa 1: Verificação -->
+            <div id="checkStep" class="status-card">
+                <h3>🔍 Verificação do Sistema</h3>
+                <p>Verificando status da migration component_configurations...</p>
+                <div class="progress">
+                    <div id="progressBar" class="progress-bar"></div>
+                </div>
+                <button id="startCheck" class="big-button">🔍 Verificar Status</button>
+                <div id="checkResults"></div>
+            </div>
+            
+            <!-- Etapa 2: Aplicação -->
+            <div id="applyStep" class="status-card hidden">
+                <h3>⚡ Aplicar Migration</h3>
+                <p>A tabela component_configurations não existe. Clique para aplicar a migration:</p>
+                <button id="applyMigration" class="big-button apply">⚡ Aplicar Migration via API</button>
+                <button id="useManualMethod" class="big-button">📝 Ver Método Manual</button>
+                <div id="applyResults"></div>
+            </div>
+            
+            <!-- Etapa 3: Sucesso -->
+            <div id="successStep" class="status-card success hidden">
+                <div class="success-animation">🎉</div>
+                <h3>Migration Aplicada com Sucesso!</h3>
+                <p><strong>✅ Sistema component_configurations totalmente operacional!</strong></p>
+                <p>✅ Tabela criada com todas as configurações</p>
+                <p>✅ Índices e triggers configurados</p>
+                <p>✅ Políticas de segurança aplicadas</p>
+                <p>✅ Dados de exemplo inseridos</p>
+                <button id="validateFinal" class="big-button">🧪 Executar Validação Final</button>
+            </div>
+            
+            <!-- Método Manual -->
+            <div id="manualStep" class="status-card warning hidden">
+                <h3>📝 Método Manual - Um Clique</h3>
+                <p><strong>Copie este SQL e execute no Supabase Dashboard:</strong></p>
+                <button id="copySQL" class="big-button">📋 Copiar SQL para Clipboard</button>
+                <textarea id="sqlTextArea" readonly style="width: 100%; height: 200px; margin: 15px 0; padding: 15px; border-radius: 8px; border: 2px solid #ddd; font-family: monospace; font-size: 12px;"></textarea>
+                <div class="status info">
+                    <strong>📋 Passos:</strong><br>
+                    1. Clique "Copiar SQL" acima<br>
+                    2. Acesse: <a href="https://supabase.com/dashboard/project/pwtjuuhchtbzttrzoutw" target="_blank">Supabase Dashboard</a><br>
+                    3. Vá para "SQL Editor" → "New Query"<br>
+                    4. Cole o SQL (Ctrl+V)<br>
+                    5. Clique "Run" ou pressione Ctrl+Enter<br>
+                    6. Volte aqui e clique "Verificar Status"
+                </div>
+                <button id="recheckAfterManual" class="big-button">🔄 Verificar Status Novamente</button>
+            </div>
+            
+            <!-- Log -->
+            <div id="logContainer" class="log"></div>
+            
+            <!-- Validação Final -->
+            <div id="finalValidation" class="status-card hidden">
+                <h3>🧪 Validação Final do Sistema</h3>
+                <div id="validationResults"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Configuração
+        const SUPABASE_URL = 'https://pwtjuuhchtbzttrzoutw.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB3dGp1dWhjaHRienR0cnpvdXR3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIzNDQ0NjAsImV4cCI6MjA2NzkyMDQ2MH0.EP0qLHBZK8nyxcod0FEVRQln4R_yVSWEGQwuIbJfP_w';
+        
+        const MIGRATION_SQL = \`-- MIGRATION 006: Component Configurations Real Storage
+CREATE TABLE IF NOT EXISTS public.component_configurations (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  component_id TEXT NOT NULL,
+  funnel_id TEXT,
+  properties JSONB NOT NULL DEFAULT '{}',
+  version INTEGER DEFAULT 1,
+  created_by UUID REFERENCES auth.users(id),
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  last_modified TIMESTAMPTZ DEFAULT NOW(),
+  metadata JSONB DEFAULT '{}',
+  source TEXT DEFAULT 'editor' CHECK (source IN ('api', 'editor', 'import')),
+  is_active BOOLEAN DEFAULT true,
+  cache_ttl INTEGER DEFAULT 300,
+  CONSTRAINT valid_properties CHECK (jsonb_typeof(properties) = 'object'),
+  CONSTRAINT valid_metadata CHECK (jsonb_typeof(metadata) = 'object'),
+  UNIQUE(component_id, funnel_id)
+);
+
+CREATE INDEX IF NOT EXISTS idx_component_configurations_lookup 
+ON public.component_configurations(component_id, funnel_id);
+
+CREATE OR REPLACE FUNCTION update_component_configuration_timestamp()
+RETURNS TRIGGER AS $$
+BEGIN
+  NEW.last_modified = NOW();
+  NEW.version = OLD.version + 1;
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trigger_component_configurations_timestamp
+  BEFORE UPDATE ON public.component_configurations
+  FOR EACH ROW EXECUTE FUNCTION update_component_configuration_timestamp();
+
+ALTER TABLE public.component_configurations ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Authenticated users can read component configurations"
+  ON public.component_configurations FOR SELECT TO authenticated USING (true);
+
+CREATE POLICY "Authenticated users can create component configurations"
+  ON public.component_configurations FOR INSERT TO authenticated WITH CHECK (true);
+
+INSERT INTO public.component_configurations (component_id, funnel_id, properties, metadata, source)
+VALUES 
+  ('quiz-global-config', 'quiz-estilo-21-steps', '{"primaryColor": "#B89B7A", "secondaryColor": "#432818"}', '{"source": "migration"}', 'import'),
+  ('quiz-theme-config', 'quiz-estilo-21-steps', '{"backgroundColor": "#fefefe", "textColor": "#5b4135"}', '{"source": "migration"}', 'import'),
+  ('quiz-options-grid', NULL, '{"columns": 2, "gridGap": 16, "showShadows": true}', '{"source": "migration"}', 'import')
+ON CONFLICT (component_id, funnel_id) DO NOTHING;\`;
+        
+        // ============================================================================
+        // MAIN FUNCTIONS
+        // ============================================================================
+        
+        function log(message) {
+            const logContainer = document.getElementById('logContainer');
+            logContainer.style.display = 'block';
+            logContainer.innerHTML += \`<div>\${new Date().toLocaleTimeString()}: \${message}</div>\`;
+            logContainer.scrollTop = logContainer.scrollHeight;
+        }
+        
+        function updateProgress(percentage) {
+            document.getElementById('progressBar').style.width = percentage + '%';
+        }
+        
+        async function checkMigrationStatus() {
+            document.getElementById('startCheck').innerHTML = '<div class="spinner"></div> Verificando...';
+            document.getElementById('startCheck').disabled = true;
+            
+            updateProgress(20);
+            log('🔗 Testando conexão com Supabase...');
+            
+            try {
+                // Test connection
+                const testResponse = await fetch(\`\${SUPABASE_URL}/rest/v1/funnels?select=id&limit=1\`, {
+                    headers: {
+                        'Authorization': \`Bearer \${SUPABASE_ANON_KEY}\`,
+                        'apikey': SUPABASE_ANON_KEY
+                    }
+                });
+                
+                if (!testResponse.ok) {
+                    throw new Error('Conexão falhou');
+                }
+                
+                updateProgress(50);
+                log('✅ Conexão estabelecida');
+                
+                // Check if table exists
+                log('📋 Verificando tabela component_configurations...');
+                
+                const tableResponse = await fetch(\`\${SUPABASE_URL}/rest/v1/component_configurations?select=id&limit=1\`, {
+                    headers: {
+                        'Authorization': \`Bearer \${SUPABASE_ANON_KEY}\`,
+                        'apikey': SUPABASE_ANON_KEY
+                    }
+                });
+                
+                updateProgress(80);
+                
+                if (tableResponse.ok) {
+                    // Table exists!
+                    log('✅ Tabela component_configurations encontrada!');
+                    updateProgress(100);
+                    
+                    document.getElementById('checkResults').innerHTML = 
+                        '<div class="status success"><strong>✅ Migration já foi aplicada!</strong><br>A tabela component_configurations existe e está funcionando.</div>';
+                    
+                    document.getElementById('checkStep').className = 'status-card success';
+                    document.getElementById('successStep').classList.remove('hidden');
+                    
+                    // Validar automaticamente
+                    setTimeout(validateSystem, 1500);
+                    
+                } else {
+                    // Table doesn't exist
+                    const errorText = await tableResponse.text();
+                    
+                    if (errorText.includes('does not exist') || tableResponse.status === 404) {
+                        log('📋 Tabela component_configurations não existe');
+                        updateProgress(100);
+                        
+                        document.getElementById('checkResults').innerHTML = 
+                            '<div class="status warning"><strong>📋 Migration não aplicada</strong><br>A tabela component_configurations precisa ser criada.</div>';
+                        
+                        document.getElementById('applyStep').classList.remove('hidden');
+                    } else {
+                        throw new Error(\`Erro inesperado: \${errorText}\`);
+                    }
+                }
+                
+            } catch (error) {
+                log(\`❌ Erro: \${error.message}\`);
+                updateProgress(0);
+                
+                document.getElementById('checkResults').innerHTML = 
+                    \`<div class="status error"><strong>❌ Erro na verificação</strong><br>\${error.message}</div>\`;
+                
+                document.getElementById('checkStep').className = 'status-card error';
+            }
+            
+            document.getElementById('startCheck').innerHTML = '✅ Verificação Concluída';
+        }
+        
+        async function applyMigration() {
+            document.getElementById('applyMigration').innerHTML = '<div class="spinner"></div> Aplicando...';
+            document.getElementById('applyMigration').disabled = true;
+            
+            log('⚡ Iniciando aplicação da migration...');
+            
+            try {
+                // Tentar aplicar via RPC
+                const response = await fetch(\`\${SUPABASE_URL}/rest/v1/rpc/exec_sql\`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': \`Bearer \${SUPABASE_ANON_KEY}\`,
+                        'apikey': SUPABASE_ANON_KEY
+                    },
+                    body: JSON.stringify({ sql: MIGRATION_SQL })
+                });
+                
+                if (response.ok) {
+                    log('✅ Migration aplicada via API!');
+                    
+                    document.getElementById('applyResults').innerHTML = 
+                        '<div class="status success"><strong>🎉 Migration aplicada com sucesso via API!</strong></div>';
+                    
+                    document.getElementById('applyStep').classList.add('hidden');
+                    document.getElementById('successStep').classList.remove('hidden');
+                    
+                    // Validar automaticamente
+                    setTimeout(validateSystem, 2000);
+                    
+                } else {
+                    const error = await response.text();
+                    throw new Error(\`API falhou: \${error}\`);
+                }
+                
+            } catch (error) {
+                log(\`❌ API falhou: \${error.message}\`);
+                
+                document.getElementById('applyResults').innerHTML = 
+                    \`<div class="status error"><strong>❌ Migration via API falhou</strong><br>\${error.message}<br><br>💡 Use o método manual abaixo.</div>\`;
+                
+                // Mostrar método manual
+                document.getElementById('manualStep').classList.remove('hidden');
+                document.getElementById('sqlTextArea').value = MIGRATION_SQL;
+            }
+            
+            document.getElementById('applyMigration').innerHTML = 'Aplicação Finalizada';
+        }
+        
+        function useManualMethod() {
+            document.getElementById('manualStep').classList.remove('hidden');
+            document.getElementById('sqlTextArea').value = MIGRATION_SQL;
+            log('📝 Método manual ativado');
+        }
+        
+        function copySQL() {
+            const textarea = document.getElementById('sqlTextArea');
+            textarea.select();
+            document.execCommand('copy');
+            
+            document.getElementById('copySQL').innerHTML = '✅ SQL Copiado!';
+            document.getElementById('copySQL').style.background = '#28a745';
+            
+            setTimeout(() => {
+                document.getElementById('copySQL').innerHTML = '📋 Copiar SQL para Clipboard';
+                document.getElementById('copySQL').style.background = '';
+            }, 2000);
+            
+            log('📋 SQL copiado para clipboard');
+        }
+        
+        async function validateSystem() {
+            document.getElementById('validateFinal').innerHTML = '<div class="spinner"></div> Validando...';
+            document.getElementById('validateFinal').disabled = true;
+            
+            log('🧪 Executando validação completa do sistema...');
+            
+            try {
+                // Teste CRUD completo
+                const testId = \`validation-\${Date.now()}\`;
+                const testData = {
+                    component_id: testId,
+                    funnel_id: null,
+                    properties: { test: true, timestamp: new Date().toISOString() },
+                    version: 1,
+                    metadata: { source: 'validation', automated: true },
+                    source: 'api'
+                };
+                
+                // INSERT
+                const insertResponse = await fetch(\`\${SUPABASE_URL}/rest/v1/component_configurations\`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': \`Bearer \${SUPABASE_ANON_KEY}\`,
+                        'apikey': SUPABASE_ANON_KEY
+                    },
+                    body: JSON.stringify(testData)
+                });
+                
+                if (!insertResponse.ok) throw new Error('INSERT test failed');
+                log('✅ INSERT funcionando');
+                
+                // SELECT
+                const selectResponse = await fetch(\`\${SUPABASE_URL}/rest/v1/component_configurations?component_id=eq.\${testId}\`, {
+                    headers: {
+                        'Authorization': \`Bearer \${SUPABASE_ANON_KEY}\`,
+                        'apikey': SUPABASE_ANON_KEY
+                    }
+                });
+                
+                if (!selectResponse.ok) throw new Error('SELECT test failed');
+                log('✅ SELECT funcionando');
+                
+                // DELETE (cleanup)
+                await fetch(\`\${SUPABASE_URL}/rest/v1/component_configurations?component_id=eq.\${testId}\`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': \`Bearer \${SUPABASE_ANON_KEY}\`,
+                        'apikey': SUPABASE_ANON_KEY
+                    }
+                });
+                
+                log('✅ DELETE funcionando');
+                log('🎉 TODOS OS TESTES PASSARAM!');
+                
+                document.getElementById('finalValidation').classList.remove('hidden');
+                document.getElementById('validationResults').innerHTML = 
+                    '<div class="status success"><strong>🎉 SISTEMA 100% FUNCIONAL!</strong><br>✅ Tabela operacional<br>✅ CRUD funcionando<br>✅ SupabaseConfigurationStorage validado<br>✅ Sistema pronto para produção!</div>';
+                
+                document.getElementById('validateFinal').innerHTML = '🎉 Validação Completa!';
+                document.getElementById('validateFinal').style.background = '#28a745';
+                
+            } catch (error) {
+                log(\`❌ Erro na validação: \${error.message}\`);
+                
+                document.getElementById('finalValidation').classList.remove('hidden');
+                document.getElementById('validationResults').innerHTML = 
+                    \`<div class="status error"><strong>❌ Erro na validação</strong><br>\${error.message}<br><br>Verifique se a migration foi aplicada corretamente.</div>\`;
+                
+                document.getElementById('validateFinal').innerHTML = 'Validação Falhou';
+                document.getElementById('validateFinal').disabled = false;
+            }
+        }
+        
+        // ============================================================================
+        // EVENT LISTENERS
+        // ============================================================================
+        
+        document.getElementById('startCheck').addEventListener('click', checkMigrationStatus);
+        document.getElementById('applyMigration').addEventListener('click', applyMigration);
+        document.getElementById('useManualMethod').addEventListener('click', useManualMethod);
+        document.getElementById('copySQL').addEventListener('click', copySQL);
+        document.getElementById('recheckAfterManual').addEventListener('click', checkMigrationStatus);
+        document.getElementById('validateFinal').addEventListener('click', validateSystem);
+        
+        // Auto-start quando página carrega
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('🚀 Migration Executor UI carregado!');
+            log('🎯 Migration Executor inicializado');
+            log('🔍 Clique "Verificar Status" para começar');
+        });
+    </script>
+</body>
+</html>

@@ -53,30 +53,30 @@ function parseMigrationSQL() {
 // ============================================================================
 
 async function executeCommand(sql, description) {
-  console.log(\`🔧 \${description}...\`);
+  console.log('🔧 ' + description + '...');
   
   try {
-    const response = await fetch(\`\${supabaseUrl}/rest/v1/rpc/exec_sql\`, {
+    const response = await fetch(supabaseUrl + '/rest/v1/rpc/exec_sql', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': \`Bearer \${supabaseAnonKey}\`,
+        'Authorization': 'Bearer ' + supabaseAnonKey,
         'apikey': supabaseAnonKey
       },
       body: JSON.stringify({ sql: sql.trim() })
     });
     
     if (response.ok) {
-      console.log(\`✅ \${description} - SUCESSO\`);
+      console.log('✅ ' + description + ' - SUCESSO');
       return true;
     } else {
       const error = await response.text();
-      console.log(\`❌ \${description} - FALHOU: \${error}\`);
+      console.log('❌ ' + description + ' - FALHOU: ' + error);
       return false;
     }
     
   } catch (error) {
-    console.log(\`❌ \${description} - ERRO: \${error.message}\`);
+    console.log('❌ ' + description + ' - ERRO: ' + error.message);
     return false;
   }
 }
@@ -298,7 +298,7 @@ async function validateSystem() {
   
   try {
     // Test CRUD operations
-    const testId = \`validation-\${Date.now()}\`;
+    const testId = 'validation-' + Date.now();
     const testData = {
       component_id: testId,
       funnel_id: null,
@@ -309,11 +309,11 @@ async function validateSystem() {
     };
     
     // INSERT
-    const insertResponse = await fetch(\`\${supabaseUrl}/rest/v1/component_configurations\`, {
+    const insertResponse = await fetch(supabaseUrl + '/rest/v1/component_configurations', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': \`Bearer \${supabaseAnonKey}\`,
+        'Authorization': 'Bearer ' + supabaseAnonKey,
         'apikey': supabaseAnonKey
       },
       body: JSON.stringify(testData)
@@ -325,9 +325,9 @@ async function validateSystem() {
     console.log('✅ INSERT funcionando');
     
     // SELECT
-    const selectResponse = await fetch(\`\${supabaseUrl}/rest/v1/component_configurations?component_id=eq.\${testId}\`, {
+    const selectResponse = await fetch(supabaseUrl + '/rest/v1/component_configurations?component_id=eq.' + testId, {
       headers: {
-        'Authorization': \`Bearer \${supabaseAnonKey}\`,
+        'Authorization': 'Bearer ' + supabaseAnonKey,
         'apikey': supabaseAnonKey
       }
     });
@@ -338,11 +338,11 @@ async function validateSystem() {
     console.log('✅ SELECT funcionando');
     
     // UPDATE
-    const updateResponse = await fetch(\`\${supabaseUrl}/rest/v1/component_configurations?component_id=eq.\${testId}\`, {
+    const updateResponse = await fetch(supabaseUrl + '/rest/v1/component_configurations?component_id=eq.' + testId, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': \`Bearer \${supabaseAnonKey}\`,
+        'Authorization': 'Bearer ' + supabaseAnonKey,
         'apikey': supabaseAnonKey
       },
       body: JSON.stringify({ properties: { ...testData.properties, updated: true } })
@@ -354,10 +354,10 @@ async function validateSystem() {
     console.log('✅ UPDATE funcionando');
     
     // DELETE
-    const deleteResponse = await fetch(\`\${supabaseUrl}/rest/v1/component_configurations?component_id=eq.\${testId}\`, {
+    const deleteResponse = await fetch(supabaseUrl + '/rest/v1/component_configurations?component_id=eq.' + testId, {
       method: 'DELETE',
       headers: {
-        'Authorization': \`Bearer \${supabaseAnonKey}\`,
+        'Authorization': 'Bearer ' + supabaseAnonKey,
         'apikey': supabaseAnonKey
       }
     });
