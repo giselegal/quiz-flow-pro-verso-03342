@@ -208,47 +208,20 @@ export const EditorProvider: React.FC<{
 
   // Efeito para carregar o template inicial automaticamente
   useEffect(() => {
-    let isCancelled = false;
-    const loadInitialTemplate = async () => {
+    let cancelled = false;
+    const run = async () => {
+      setIsLoading(true);
       try {
-        if (isCancelled) return;
-        setIsLoading(true);
-        try {
-          const { default: templateService } = await import('../services/templateService');
-          await templateService.getTemplate('step-1');
-          const templateBlocks: any[] = [];
-          if (templateBlocks.length > 0) {
-            // Fallback block conversion since method doesn't exist
-            const editorBlocks: any[] = [];
-            if (!isCancelled) dispatch({ type: 'SET_BLOCKS', payload: editorBlocks });
-          }
-        } catch (err) {
-          // Fallback leve usando getStepTemplate se serviço falhar
-          const template = await getStepTemplate(1, currentFunnelId);
-          const templateBlocks = template?.blocks || [];
-          if (templateBlocks.length > 0) {
-            const editorBlocks = templateBlocks.map((block: any, index: number) => ({
-              id: block.id || generateBlockId(block.type || 'text', index, 'step-1'),
-              type: block.type || 'text',
-              content: block.content || {},
-              styles: block.styles || {},
-              metadata: block.metadata || {},
-              properties: { funnelId: currentFunnelId, stageId: 'step-1' },
-              order: index,
-            }));
-            if (!isCancelled) dispatch({ type: 'SET_BLOCKS', payload: editorBlocks });
-          }
-        }
-      } catch (error) {
-        console.error('❌ Erro ao carregar template inicial:', error);
+        // Carrega a etapa inicial via stageActions, que já usa cache e mapeamento tipado
+        await stageActions.setActiveStage('step-1');
+      } catch (e) {
+        console.error('❌ Erro ao carregar etapa inicial:', e);
       } finally {
-        if (!isCancelled) setIsLoading(false);
+        if (!cancelled) setIsLoading(false);
       }
     };
-    loadInitialTemplate();
-    return () => {
-      isCancelled = true;
-    };
+    run();
+    return () => { cancelled = true; };
   }, [currentFunnelId]);
 
   // ✅ NOVO: Lazy-load por etapa (sem carregar todas as 21 no mount)
