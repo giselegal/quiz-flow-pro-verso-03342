@@ -66,9 +66,8 @@ const VideoPlayerBlock: React.FC<VideoPlayerBlockProps> = ({
 
   return (
     <div
-      className={`p-4 border-2 border-dashed border-gray-300 rounded-lg ${
-        isSelected ? 'border-[#B89B7A] bg-[#B89B7A]/10' : 'hover:border-gray-400'
-      } ${className}`}
+      className={`p-4 border-2 border-dashed border-gray-300 rounded-lg ${isSelected ? 'border-[#B89B7A] bg-[#B89B7A]/10' : 'hover:border-gray-400'
+        } ${className}`}
       onClick={onClick}
     >
       {videoUrl ? (
