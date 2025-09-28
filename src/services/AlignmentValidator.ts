@@ -4,6 +4,8 @@
  * Serviço para monitorar alinhamento em tempo real
  */
 
+import { supabase } from '@/integrations/supabase/client';
+
 export class AlignmentValidator {
   static async validateAlignment(): Promise<{
     score: number;
@@ -36,7 +38,7 @@ export class AlignmentValidator {
       
       return { score, status, issues };
       
-    } catch (error) {
+    } catch (error: any) {
       return { 
         score: 0, 
         status: 'needs_improvement', 
