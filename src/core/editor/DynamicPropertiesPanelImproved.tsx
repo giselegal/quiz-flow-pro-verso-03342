@@ -339,56 +339,115 @@ const ImprovedStepPanel: React.FC<ImprovedStepPanelProps> = ({
 
 // 🎨 EDITOR DE BLOCO INDIVIDUAL
 interface BlockEditorProps {
-    block: Block;
-    builderState: any;
-    builderActions: any;
-    onClose: () => void;
+  block: Block;
+  builderState: any;
+  builderActions: any;
+  onClose: () => void;
 }
 
-const BlockEditor: React.FC<BlockEditorProps> = ({
-    block,
-    builderState,
-    builderActions,
-    onClose
+const BlockEditor: React.FC<BlockEditorProps> = ({ 
+  block, 
+  builderState, 
+  builderActions, 
+  onClose 
 }) => {
-    const currentStepNumber = builderState.currentStep;
+  const currentStepNumber = builderState.currentStep;
+  const [hasChanges, setHasChanges] = useState(false);
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  
+  // 🔄 VALIDAÇÃO EM TEMPO REAL
+  const validateField = (field: string, value: any): string | null => {
+    switch (field) {
+      case 'text':
+        if (!value || value.trim().length === 0) {
+          return 'O texto não pode estar vazio';
+        }
+        if (value.length > 500) {
+          return 'O texto não pode ter mais de 500 caracteres';
+        }
+        break;
+      case 'color':
+        if (!value.match(/^#[0-9A-Fa-f]{6}$/)) {
+          return 'Cor deve estar no formato #RRGGBB';
+        }
+        break;
+      default:
+        return null;
+    }
+    return null;
+  };  const handleBlockUpdate = (field: string, value: any) => {
+    const stepKey = `step-${currentStepNumber}`;
+    
+    // � VALIDAÇÃO
+    const error = validateField(field === 'content' ? 'text' : field, 
+                                field === 'content' ? value.text : value);
+    
+    if (error) {
+      setErrors(prev => ({ ...prev, [field]: error }));
+      return;
+    } else {
+      setErrors(prev => ({ ...prev, [field]: '' }));
+    }
+    
+    // �🔄 PREVIEW EM TEMPO REAL: Atualiza imediatamente
+    builderActions.updateBlock(stepKey, block.id, { [field]: value });
+    setHasChanges(true);
+    
+    // 🎯 FEEDBACK VISUAL: Mostrar confirmação
+    console.log(`🔄 Atualizando ${field}:`, value);
+  };
 
-    const handleBlockUpdate = (field: string, value: any) => {
-        const stepKey = `step-${currentStepNumber}`;
-        builderActions.updateBlock(stepKey, block.id, { [field]: value });
-    };
-
-    const handlePropertyUpdate = (field: string, value: any) => {
-        const stepKey = `step-${currentStepNumber}`;
-        builderActions.updateBlock(stepKey, block.id, {
-            properties: { ...block.properties, [field]: value }
-        });
-    };
-
-    return (
+  const handlePropertyUpdate = (field: string, value: any) => {
+    const stepKey = `step-${currentStepNumber}`;
+    
+    // � VALIDAÇÃO
+    const error = validateField(field, value);
+    
+    if (error) {
+      setErrors(prev => ({ ...prev, [field]: error }));
+      return;
+    } else {
+      setErrors(prev => ({ ...prev, [field]: '' }));
+    }
+    
+    // �🔄 PREVIEW EM TEMPO REAL: Atualiza propriedades imediatamente  
+    builderActions.updateBlock(stepKey, block.id, { 
+      properties: { ...block.properties, [field]: value } 
+    });
+    setHasChanges(true);
+    
+    // 🎯 FEEDBACK VISUAL: Mostrar confirmação
+    console.log(`🎨 Atualizando propriedade ${field}:`, value);
+  };    return (
         <div className="p-4 space-y-4">
-            {/* 🎯 HEADER DO EDITOR */}
-            <div className="bg-gradient-to-r from-purple-50 to-pink-50 rounded-lg p-4">
-                <div className="flex items-center justify-between mb-2">
-                    <div className="flex items-center">
-                        <span className="text-lg mr-2">{getBlockIcon(block.type)}</span>
-                        <h3 className="font-bold text-purple-900 capitalize">
-                            {block.type.replace('-', ' ')}
-                        </h3>
-                    </div>
-                    <button
-                        onClick={onClose}
-                        className="text-xs text-purple-600 hover:text-purple-800 px-2 py-1 rounded hover:bg-purple-200 transition-all"
-                    >
-                        ✕ Fechar
-                    </button>
-                </div>
-                <p className="text-xs text-purple-700">
-                    Editando bloco da Etapa {currentStepNumber}
-                </p>
-            </div>
-
-            {/* 📝 PROPRIEDADES ESPECÍFICAS */}
+      {/* 🎯 HEADER DO EDITOR */}
+      <div className="bg-gradient-to-r from-purple-50 to-pink-50 rounded-lg p-4">
+        <div className="flex items-center justify-between mb-2">
+          <div className="flex items-center">
+            <span className="text-lg mr-2">{getBlockIcon(block.type)}</span>
+            <h3 className="font-bold text-purple-900 capitalize">
+              {block.type.replace('-', ' ')}
+            </h3>
+            {hasChanges && (
+              <span className="ml-2 text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full animate-pulse">
+                ✨ Alterado
+              </span>
+            )}
+          </div>
+          <button
+            onClick={onClose}
+            className="text-xs text-purple-600 hover:text-purple-800 px-2 py-1 rounded hover:bg-purple-200 transition-all"
+          >
+            ✕ Fechar
+          </button>
+        </div>
+        <p className="text-xs text-purple-700">
+          Editando bloco da Etapa {currentStepNumber}
+          {Object.keys(errors).some(key => errors[key]) && (
+            <span className="ml-2 text-red-600">⚠️ Há erros nos campos</span>
+          )}
+        </p>
+      </div>            {/* 📝 PROPRIEDADES ESPECÍFICAS */}
             <div className="space-y-4">
                 {block.type === 'text-inline' && (
                     <>
