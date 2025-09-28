@@ -5,7 +5,7 @@
  * para gerar conteúdo personalizado baseado no estilo calculado.
  */
 
-import { QuizResult } from '@/components/editor/v1-modular/QuizCalculationEngine';
+import type { QuizResult } from '@/types/ai-quiz-result';
 
 // Mapeamento de estilos para prompts de IA otimizados
 export const AI_STYLE_PROMPTS: Record<string, string> = {
@@ -154,10 +154,10 @@ export function interpolateQuizVariables(
         resultStyle: quizResult.primaryStyle.name,
         resultPercentage: quizResult.primaryStyle.percentage.toString(),
         resultDescription: quizResult.primaryStyle.description,
-        secondaryStyle1: quizResult.secondaryStyles[0]?.name || '',
-        secondaryPercentage1: quizResult.secondaryStyles[0]?.percentage.toString() || '0',
-        secondaryStyle2: quizResult.secondaryStyles[1]?.name || '',
-        secondaryPercentage2: quizResult.secondaryStyles[1]?.percentage.toString() || '0',
+        secondaryStyle1: quizResult.secondaryStyles?.[0]?.name || '',
+        secondaryPercentage1: quizResult.secondaryStyles?.[0]?.percentage?.toString() || '0',
+        secondaryStyle2: quizResult.secondaryStyles?.[1]?.name || '',
+        secondaryPercentage2: quizResult.secondaryStyles?.[1]?.percentage?.toString() || '0',
         totalScore: quizResult.totalScore.toString(),
         ...additionalVars
     };

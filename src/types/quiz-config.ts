@@ -48,6 +48,13 @@ export interface QuizConfig extends ThemeConfig, ProgressConfig, QuestionConfig 
 
 export interface ProcessedOptionsConfig extends LayoutConfig, ThemeConfig {
   options?: Array<{ id?: string; text?: string; imageUrl?: string; value?: string }>;
+  // Extras usados pelos blocks conectados
+  multipleSelection?: boolean;
+  autoAdvance?: AutoAdvanceConfig | boolean;
+  primaryColor?: string;
+  selectedColor?: string;
+  borderRadius?: number;
+  showShadows?: boolean;
 }
 
 

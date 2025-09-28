@@ -7,7 +7,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Block } from '@/types/editor';
-import { QuizResult } from '@/components/editor/v1-modular/QuizCalculationEngine';
+import type { QuizResult } from '@/types/ai-quiz-result';
 import { Loader2, Sparkles, RefreshCw, Download, Heart } from 'lucide-react';
 
 interface FashionAIGeneratorContent {

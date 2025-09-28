@@ -91,7 +91,7 @@ const TemplateInvestigationPage: React.FC = () => {
             const { supabase } = await import('../../integrations/supabase/client');
 
             // Tentar buscar templates
-            const { data, error } = await supabase.from('templates').select('*');
+            const { data, error } = await (supabase as any).from('templates').select('*');
 
             if (error) {
                 console.log('❌ Erro Supabase:', error);
@@ -100,9 +100,9 @@ const TemplateInvestigationPage: React.FC = () => {
                 console.log('✅ Dados Supabase encontrados:', data);
                 setSupabaseData(data);
             }
-        } catch (e) {
+        } catch (e: any) {
             console.log('❌ Erro ao acessar Supabase:', e);
-            setSupabaseData({ error: e.toString() });
+            setSupabaseData({ error: (e?.message || String(e)) });
         }
     };
 
@@ -130,8 +130,8 @@ const TemplateInvestigationPage: React.FC = () => {
                     results[endpoint] = { error: `Status ${response.status}` };
                     console.log(`❌ ${endpoint} erro: ${response.status}`);
                 }
-            } catch (e) {
-                results[endpoint] = { error: e.toString() };
+            } catch (e: any) {
+                results[endpoint] = { error: (e?.message || String(e)) };
                 console.log(`❌ ${endpoint} erro:`, e);
             }
         }
@@ -160,8 +160,8 @@ const TemplateInvestigationPage: React.FC = () => {
                 } else {
                     results[file] = { error: `Status ${response.status}` };
                 }
-            } catch (e) {
-                results[file] = { error: e.toString() };
+            } catch (e: any) {
+                results[file] = { error: (e?.message || String(e)) };
             }
         }
 

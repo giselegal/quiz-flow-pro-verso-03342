@@ -48,10 +48,10 @@ const TemplateDiagnosticPage: React.FC = () => {
                     templates: allTemplates.map(t => ({ id: t.id, name: t.name })),
                     error: null
                 };
-            } catch (error) {
+            } catch (error: any) {
                 results.libraryService = {
                     status: 'error',
-                    error: error.message,
+                    error: error?.message || String(error),
                     builtinCount: 0,
                     totalCount: 0,
                     templates: []
@@ -67,10 +67,10 @@ const TemplateDiagnosticPage: React.FC = () => {
                     templates: unifiedTemplates.map(t => ({ id: t.id, name: t.name })),
                     error: null
                 };
-            } catch (error) {
+            } catch (error: any) {
                 results.unifiedRegistry = {
                     status: 'error',
-                    error: error.message,
+                    error: error?.message || String(error),
                     count: 0,
                     templates: []
                 };
@@ -85,10 +85,10 @@ const TemplateDiagnosticPage: React.FC = () => {
                     templates: myTemplates.map(t => ({ id: t.id, name: t.name })),
                     error: null
                 };
-            } catch (error) {
+            } catch (error: any) {
                 results.userTemplates = {
                     status: 'error',
-                    error: error.message,
+                    error: error?.message || String(error),
                     count: 0,
                     templates: []
                 };
@@ -108,11 +108,11 @@ const TemplateDiagnosticPage: React.FC = () => {
                 } else {
                     throw new Error(`HTTP ${response.status}`);
                 }
-            } catch (error) {
+            } catch (error: any) {
                 results.physicalFiles = {
                     status: 'error',
                     accessible: false,
-                    error: error.message,
+                    error: error?.message || String(error),
                     sampleTemplate: null
                 };
             }
@@ -120,11 +120,11 @@ const TemplateDiagnosticPage: React.FC = () => {
             console.log('🔍 Diagnóstico completo:', results);
             setDiagnostics(results);
 
-        } catch (error) {
+        } catch (error: any) {
             console.error('❌ Erro no diagnóstico:', error);
             results.general = {
                 status: 'error',
-                error: error.message
+                error: error?.message || String(error)
             };
             setDiagnostics(results);
         } finally {

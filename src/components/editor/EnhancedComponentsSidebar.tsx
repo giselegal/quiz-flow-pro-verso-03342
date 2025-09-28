@@ -1,4 +1,4 @@
-import { AVAILABLE_COMPONENTS } from '@/components/editor/blocks/EnhancedBlockRegistry';
+import { AVAILABLE_COMPONENTS } from '@/components/editor/blocks/enhancedBlockRegistry';
 import { DraggableComponentItem } from '@/components/editor/dnd/DraggableComponentItem';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -66,20 +66,18 @@ export const EnhancedComponentsSidebar: React.FC<EnhancedComponentsSidebarProps>
 
   // Memoização da filtragem de componentes para evitar re-computações custosas
   const filteredComponents = useMemo(() => {
-    return AVAILABLE_COMPONENTS.reduce(
-      (acc, component) => {
-        const matches = component.label.toLowerCase().includes(searchTerm.toLowerCase());
-        if (matches) {
-          const category = getCategoryDisplayName(component.category);
-          if (!acc[category]) {
-            acc[category] = [];
-          }
-          acc[category].push(component);
-        }
-        return acc;
-      },
-      {} as Record<string, typeof AVAILABLE_COMPONENTS>
-    );
+    type Comp = (typeof AVAILABLE_COMPONENTS)[number];
+    const bucket: Record<string, Comp[]> = {};
+    AVAILABLE_COMPONENTS.forEach((component) => {
+      const label = (component as any).label as string;
+      const cat = (component as any).category as string;
+      if (label?.toLowerCase().includes(searchTerm.toLowerCase())) {
+        const category = getCategoryDisplayName(cat);
+        if (!bucket[category]) bucket[category] = [];
+        bucket[category].push(component as Comp);
+      }
+    });
+    return bucket;
   }, [searchTerm, getCategoryDisplayName]);
 
   return (

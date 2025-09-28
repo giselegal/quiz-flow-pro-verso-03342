@@ -22,7 +22,7 @@ interface UniversalQuizResultsBlockProps {
 // Componente wrapper para UniversalBlockRenderer
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
-const getMarginClass = (value, type) => {
+const getMarginClass = (value: number | string, type: 'top' | 'bottom' | 'left' | 'right') => {
   const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
 
   if (isNaN(numValue) || numValue === 0) return '';

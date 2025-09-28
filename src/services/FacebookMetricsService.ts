@@ -106,7 +106,7 @@ export class FacebookMetricsService {
             const endDate = dateEnd || new Date().toISOString().split('T')[0];
 
             // Usar função do Supabase para buscar métricas do funil
-            const { data, error } = await supabase.rpc('get_funnel_facebook_summary', {
+            const { data, error } = await (supabase as any).rpc('get_funnel_facebook_summary', {
                 funnel_id_param: funnelId,
                 date_start_param: startDate,
                 date_end_param: endDate
@@ -117,7 +117,7 @@ export class FacebookMetricsService {
                 return null;
             }
 
-            return data?.[0] || null;
+            return (data as any)?.[0] || null;
 
         } catch (error) {
             console.error('❌ Erro no serviço de métricas:', error);
@@ -137,7 +137,7 @@ export class FacebookMetricsService {
             const startDate = dateStart || new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
             const endDate = dateEnd || new Date().toISOString().split('T')[0];
 
-            const { data, error } = await supabase
+            const { data, error } = await (supabase as any)
                 .from('facebook_metrics')
                 .select('*')
                 .eq('funnel_id', funnelId)
@@ -163,7 +163,7 @@ export class FacebookMetricsService {
      */
     static async getFunnelTrackingConfig(funnelId: string): Promise<FunnelTrackingConfig | null> {
         try {
-            const { data, error } = await supabase
+            const { data, error } = await (supabase as any)
                 .from('funnel_tracking_config')
                 .select('*')
                 .eq('funnel_id', funnelId)
@@ -187,7 +187,7 @@ export class FacebookMetricsService {
      */
     static async saveFunnelTrackingConfig(config: Partial<FunnelTrackingConfig>): Promise<boolean> {
         try {
-            const { data, error } = await supabase
+            const { data, error } = await (supabase as any)
                 .from('funnel_tracking_config')
                 .upsert(config, {
                     onConflict: 'funnel_id',
@@ -213,7 +213,7 @@ export class FacebookMetricsService {
      */
     static async getFunnelCampaigns(funnelId: string): Promise<CampaignMapping[]> {
         try {
-            const { data, error } = await supabase
+            const { data, error } = await (supabase as any)
                 .from('facebook_campaign_funnel_mapping')
                 .select('*')
                 .eq('funnel_id', funnelId)

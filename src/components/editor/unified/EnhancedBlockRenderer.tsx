@@ -6,7 +6,7 @@
  */
 
 import React, { Suspense } from 'react';
-import { getEnhancedBlockComponent } from '@/components/editor/blocks/EnhancedBlockRegistry';
+import { getEnhancedBlockComponent } from '@/components/editor/blocks/enhancedBlockRegistry';
 import { Block } from '@/types/editor';
 import { cn } from '@/lib/utils';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';

@@ -100,10 +100,9 @@ export default function QuizOptionsGridBlockConnected({
             columns: 'auto',
             imageSize: 256,
             gridGap: 8,
-            question: 'Qual opção você prefere?',
             options: [],
-            primaryColor: '#B89B7A',
-            selectedColor: '#432818',
+            primaryColor: '#B89B7A' as any,
+            selectedColor: '#432818' as any,
             multipleSelection: false,
             autoAdvance: { enabled: true, delay: 1500 },
             showImages: true,
@@ -113,7 +112,7 @@ export default function QuizOptionsGridBlockConnected({
         };
 
         // Mesclar com configurações da API
-        const merged: ProcessedOptionsConfig = { ...(defaults as any), ...(properties as any) };
+        const merged: ProcessedOptionsConfig = { ...(defaults as any), ...(properties as any) } as ProcessedOptionsConfig;
 
         // Processar opções se elas vierem como string (JSON)
         if (typeof (merged as any).options === 'string') {
@@ -183,14 +182,14 @@ export default function QuizOptionsGridBlockConnected({
     // DYNAMIC STYLES - Baseado na configuração da API
     // ============================================================================
 
-    const dynamicStyles = useMemo(() => ({
-        '--grid-columns': layoutConfig.columns,
-        '--grid-gap': `${layoutConfig.gridGap}px`,
-        '--image-size': `${layoutConfig.imageSize}px`,
-        '--primary-color': processedProperties.primaryColor,
-        '--selected-color': processedProperties.selectedColor,
-        '--border-radius': `${processedProperties.borderRadius}px`,
-        '--hover-shadow': processedProperties.showShadows ? '0 4px 12px rgba(0,0,0,0.1)' : 'none'
+    const dynamicStyles = useMemo<React.CSSProperties>(() => ({
+        ['--grid-columns' as any]: layoutConfig.columns as any,
+        ['--grid-gap' as any]: `${layoutConfig.gridGap}px`,
+        ['--image-size' as any]: `${layoutConfig.imageSize}px`,
+        ['--primary-color' as any]: (processedProperties as any).primaryColor,
+        ['--selected-color' as any]: (processedProperties as any).selectedColor,
+        ['--border-radius' as any]: `${(processedProperties as any).borderRadius}px`,
+        ['--hover-shadow' as any]: (processedProperties as any).showShadows ? '0 4px 12px rgba(0,0,0,0.1)' : 'none'
     }), [layoutConfig, processedProperties]);
 
     // ============================================================================
@@ -241,7 +240,7 @@ export default function QuizOptionsGridBlockConnected({
             {EditorOverlay && <EditorOverlay />}
 
             {/* Grid CSS customizado baseado na API */}
-            <style jsx>{`
+            <style>{`
         .quiz-grid {
           display: grid;
           grid-template-columns: repeat(var(--grid-columns), 1fr);
@@ -286,26 +285,22 @@ export default function QuizOptionsGridBlockConnected({
             {/* Componente principal renderizado com configurações API */}
             <QuizQuestion
                 // Passar todas as configurações vindas da API
-                {...processedProperties}
+                {...{...processedProperties, autoAdvance: typeof (processedProperties as any).autoAdvance === 'object' ? !!(processedProperties as any).autoAdvance?.enabled : (processedProperties as any).autoAdvance}}
+                question={(properties as any)?.question || 'Qual opção você prefere?'}
+                options={(processedProperties.options as any) || []}
 
                 // Props de integração
-                currentAnswers={currentAnswers}
-                onAnswersChange={onAnswersChange}
+                initialSelections={currentAnswers}
+                onSelectionChange={(opts) => onAnswersChange?.(opts.map(o => o.id).filter(Boolean) as string[])}
 
                 // Configurações de layout processadas
-                layoutConfig={layoutConfig}
+                // layoutConfig não é suportado pelo QuizQuestion; já usamos dynamicStyles
 
                 // Handlers para edição (apenas no modo editor)
-                onPropertyUpdate={editorMode ? handlePropertyUpdate : undefined}
+                // onPropertyUpdate não existe em QuizQuestion; manipulação via editor overlay
 
                 // Metadata para debug
-                debug={editorMode ? {
-                    componentId,
-                    funnelId,
-                    connectionStatus,
-                    hasUnsavedChanges,
-                    propertiesCount: Object.keys(properties).length
-                } : undefined}
+                // debug props removidas para compatibilidade de tipos
 
                 // Resto das props
                 {...props}
