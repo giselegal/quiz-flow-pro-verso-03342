@@ -15,8 +15,6 @@ import QuizIntroHeaderBlock from '@/components/editor/blocks/QuizIntroHeaderBloc
 import TextInlineBlock from '@/components/editor/blocks/TextInlineBlock';
 import SalesHeroBlock from '@/components/editor/blocks/SalesHeroBlock';
 import DecorativeBarInlineBlock from '@/components/editor/blocks/DecorativeBarInlineBlock';
-// Import estático para evitar warning do Vite
-import BasicContainerBlock from '@/components/editor/blocks/BasicContainerBlock';
 import {
     Step20ResultHeaderBlock,
     Step20StyleRevealBlock,
@@ -51,11 +49,11 @@ export const ENHANCED_BLOCK_REGISTRY: Record<string, ComponentType<any>> = {
     'quiz-question-inline': TextInlineBlock,
     'quiz-options-inline': OptionsGridBlock,
     'options-grid': OptionsGridBlock,
-    'form-container': BasicContainerBlock,
+    'form-container': lazy(() => import('@/components/editor/blocks/BasicContainerBlock')),
     // Aliases de container estável
-    'container': BasicContainerBlock,
-    'section': BasicContainerBlock,
-    'box': BasicContainerBlock,
+    'container': lazy(() => import('@/components/editor/blocks/BasicContainerBlock')),
+    'section': lazy(() => import('@/components/editor/blocks/BasicContainerBlock')),
+    'box': lazy(() => import('@/components/editor/blocks/BasicContainerBlock')),
 
     // ✅ SALES PAGES - HERO
     'sales-hero': SalesHeroBlock,
