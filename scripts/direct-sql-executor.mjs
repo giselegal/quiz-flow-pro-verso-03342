@@ -268,11 +268,11 @@ async function insertExampleData() {
   let inserted = 0;
   for (const config of exampleConfigs) {
     try {
-      const response = await fetch(\`\${supabaseUrl}/rest/v1/component_configurations\`, {
+      const response = await fetch(supabaseUrl + '/rest/v1/component_configurations', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': \`Bearer \${supabaseAnonKey}\`,
+          'Authorization': 'Bearer ' + supabaseAnonKey,
           'apikey': supabaseAnonKey,
           'Prefer': 'resolution=merge-duplicates'
         },
@@ -281,16 +281,16 @@ async function insertExampleData() {
       
       if (response.ok) {
         inserted++;
-        console.log(\`✅ \${config.component_id}\`);
+        console.log('✅ ' + config.component_id);
       } else {
-        console.log(\`⚠️ \${config.component_id} - já existe ou erro\`);
+        console.log('⚠️ ' + config.component_id + ' - já existe ou erro');
       }
     } catch (error) {
-      console.log(\`❌ \${config.component_id}: \${error.message}\`);
+      console.log('❌ ' + config.component_id + ': ' + error.message);
     }
   }
   
-  console.log(\`✅ \${inserted}/\${exampleConfigs.length} configurações inseridas\`);
+  console.log('✅ ' + inserted + '/' + exampleConfigs.length + ' configurações inseridas');
 }
 
 async function validateSystem() {
