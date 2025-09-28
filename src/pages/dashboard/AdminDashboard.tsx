@@ -14,11 +14,9 @@
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Link } from 'wouter';
-import {
-    UnifiedMetricsGrid
-} from '@/components/dashboard/core/UnifiedMetricCard';
 import { ModernMetricCard } from '@/components/admin/ModernMetricCard';
 import FunnelModelsCard from '@/components/admin/FunnelModelsCard';
 import {
@@ -76,7 +74,7 @@ interface QuickActionProps {
 }
 
 // ============================================================================
-// UNIFIED ANALYTICS INSTANCE  
+// QUICK ACTION COMPONENT  
 // ============================================================================
 
 const QuickAction: React.FC<QuickActionProps> = ({ title, description, href, icon, color }) => {
@@ -253,7 +251,7 @@ const AdminDashboard: React.FC = () => {
                         <RefreshCw className="w-6 h-6" />
                     </div>
                 </div>
-                <UnifiedMetricsGrid>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                     {[1, 2, 3, 4].map(i => (
                         <div key={i} className="animate-pulse">
                             <Card>
@@ -267,7 +265,7 @@ const AdminDashboard: React.FC = () => {
                             </Card>
                         </div>
                     ))}
-                </UnifiedMetricsGrid>
+                </div>
             </div>
         );
     }
@@ -436,7 +434,6 @@ const AdminDashboard: React.FC = () => {
                                 color="orange"
                             />
                         </div>
-
                     </div>
 
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -488,7 +485,7 @@ const AdminDashboard: React.FC = () => {
                         </div>
 
                         {/* Recursos Avançados Descobertos */}
-                        <div className="lg:col-span-2">
+                        <div className="lg:col-span-1">
                             <Card className="bg-gradient-to-r from-purple-50 to-blue-50 border-purple-200 shadow-lg hover:shadow-xl transition-all duration-300">
                                 <CardHeader className="flex flex-row items-center justify-between pb-4">
                                     <CardTitle className="text-lg font-semibold text-purple-900 flex items-center gap-2">
@@ -526,116 +523,6 @@ const AdminDashboard: React.FC = () => {
                                         icon={<Shield className="w-5 h-5" />}
                                         color="orange"
                                     />
-                                </CardContent>
-                            </Card>
-                        </div>
-                    </div>
-                </TabsContent>
-
-                <TabsContent value="participants" className="space-y-8 mt-8">
-                    <UnifiedMetricsGrid 
-                        funnelId={selectedFunnel} 
-                        isLoading={isLoading}
-                        onFunnelSelect={setSelectedFunnel}
-                    />
-                </TabsContent>
-
-                <TabsContent value="analytics" className="space-y-8 mt-8">
-                    {/* Link para Analytics Avançadas */}
-                    <div className="mb-6">
-                        <Card className="bg-blue-50 border-blue-200">
-                            <CardContent className="p-4">
-                                <div className="flex items-center justify-between">
-                                    <div>
-                                        <h3 className="font-semibold text-blue-900">📊 Analytics Avançadas Disponíveis</h3>
-                                        <p className="text-blue-800 text-sm">Dados comportamentais detalhados, análise por etapa e insights profundos</p>
-                                    </div>
-                                    <Button
-                                        onClick={() => window.open('/admin/analytics-advanced', '_blank')}
-                                        className="bg-blue-600 hover:bg-blue-700"
-                                    >
-                                        Ver Analytics Completas
-                                    </Button>
-                                </div>
-                            </CardContent>
-                        </Card>
-                    </div>
-                    
-                    {/* Analytics Premium - Design Modernizado */}
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                        {/* Chart de Conversões */}
-                        <Card className="bg-white/60 backdrop-blur-sm border-white/40 shadow-lg hover:shadow-xl transition-all duration-300">
-                            <CardHeader>
-                                <CardTitle className="text-lg font-semibold text-gray-800 flex items-center gap-2">
-                                    <TrendingUp className="w-5 h-5 text-green-600" />
-                                    Conversões por Período
-                                </CardTitle>
-                            </CardHeader>
-                            <CardContent>
-                                <div className="h-48 flex items-center justify-center border-2 border-dashed border-gray-200 rounded-lg">
-                                    <div className="text-center">
-                                        <BarChart3 className="w-12 h-12 text-gray-400 mx-auto mb-2" />
-                                        <p className="text-gray-500 text-sm">Gráfico de conversões</p>
-                                        <p className="text-xs text-gray-400">Ver analytics avançadas para mais detalhes</p>
-                                    </div>
-                                </div>
-                            </CardContent>
-                        </Card>
-
-                        {/* Atividade Recente */}
-                        <Card className="bg-white/60 backdrop-blur-sm border-white/40 shadow-lg hover:shadow-xl transition-all duration-300">
-                            <CardHeader className="flex flex-row items-center justify-between pb-4">
-                                <CardTitle className="text-lg font-semibold text-gray-800 flex items-center gap-2">
-                                    <Activity className="w-5 h-5 text-green-600" />
-                                    Atividades Recentes
-                                </CardTitle>
-                                    <Button
-                                        variant="outline"
-                                        size="sm"
-                                        className="bg-white/60 backdrop-blur-sm border-white/40 hover:bg-white/80 shadow-sm"
-                                    >
-                                        <Eye className="w-4 h-4 mr-2" />
-                                        Ver Todas
-                                    </Button>
-                                </CardHeader>
-                                <CardContent>
-                                    <div className="space-y-4">
-                                        {recentActivity.map((activity) => (
-                                            <div key={activity.id} className="flex items-start space-x-4 p-4 rounded-2xl bg-gradient-to-r from-white/40 to-gray-50/40 hover:from-white/60 hover:to-gray-50/60 transition-all duration-200 border border-white/30">
-                                                <div className={cn(
-                                                    "w-3 h-3 rounded-full mt-1.5 flex-shrink-0 shadow-sm",
-                                                    activity.status === 'success' && "bg-green-500 shadow-green-200",
-                                                    activity.status === 'info' && "bg-blue-500 shadow-blue-200",
-                                                    activity.status === 'warning' && "bg-orange-500 shadow-orange-200"
-                                                )} />
-                                                <div className="flex-1 min-w-0">
-                                                    <p className="font-semibold text-gray-900 text-sm">{activity.title}</p>
-                                                    <p className="text-gray-600 text-sm mt-1">{activity.description}</p>
-                                                    <p className="text-gray-400 text-xs mt-2 flex items-center gap-1">
-                                                        <div className="w-1 h-1 rounded-full bg-gray-400" />
-                                                        {activity.time}
-                                                    </p>
-                                                </div>
-                                                <div className="flex-shrink-0">
-                                                    {activity.status === 'success' && (
-                                                        <div className="flex items-center justify-center w-8 h-8 rounded-full bg-green-100">
-                                                            <CheckCircle className="w-4 h-4 text-green-600" />
-                                                        </div>
-                                                    )}
-                                                    {activity.status === 'warning' && (
-                                                        <div className="flex items-center justify-center w-8 h-8 rounded-full bg-orange-100">
-                                                            <AlertCircle className="w-4 h-4 text-orange-600" />
-                                                        </div>
-                                                    )}
-                                                    {activity.status === 'info' && (
-                                                        <div className="flex items-center justify-center w-8 h-8 rounded-full bg-blue-100">
-                                                            <Activity className="w-4 h-4 text-blue-600" />
-                                                        </div>
-                                                    )}
-                                                </div>
-                                            </div>
-                                        ))}
-                                    </div>
                                 </CardContent>
                             </Card>
                         </div>
@@ -701,37 +588,104 @@ const AdminDashboard: React.FC = () => {
                 </TabsContent>
 
                 <TabsContent value="analytics" className="space-y-8 mt-8">
-                    <Card className="bg-white/60 backdrop-blur-sm border-white/40 shadow-lg">
+                    {/* Link para Analytics Avançadas */}
+                    <div className="mb-6">
+                        <Card className="bg-blue-50 border-blue-200">
+                            <CardContent className="p-4">
+                                <div className="flex items-center justify-between">
+                                    <div>
+                                        <h3 className="font-semibold text-blue-900">📊 Analytics Avançadas Disponíveis</h3>
+                                        <p className="text-blue-800 text-sm">Dados comportamentais detalhados, análise por etapa e insights profundos</p>
+                                    </div>
+                                    <Button
+                                        onClick={() => window.open('/admin/analytics-advanced', '_blank')}
+                                        className="bg-blue-600 hover:bg-blue-700"
+                                    >
+                                        Ver Analytics Completas
+                                    </Button>
+                                </div>
+                            </CardContent>
+                        </Card>
+                    </div>
+                    
+                    {/* Analytics Premium - Design Modernizado */}
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                        {/* Chart de Conversões */}
+                        <Card className="bg-white/60 backdrop-blur-sm border-white/40 shadow-lg hover:shadow-xl transition-all duration-300">
                         <CardHeader>
-                            <CardTitle className="text-xl font-semibold text-gray-800 flex items-center gap-2">
-                                <BarChart3 className="w-6 h-6 text-purple-600" />
-                                Analytics Avançados
+                                <CardTitle className="text-lg font-semibold text-gray-800 flex items-center gap-2">
+                                    <TrendingUp className="w-5 h-5 text-green-600" />
+                                    Conversões por Período
                             </CardTitle>
                         </CardHeader>
                         <CardContent>
-                            <div className="text-center py-12">
-                                <div className="w-20 h-20 mx-auto mb-6 bg-gradient-to-br from-purple-100 to-purple-200 rounded-full flex items-center justify-center">
-                                    <BarChart3 className="w-10 h-10 text-purple-600" />
+                                <div className="h-48 flex items-center justify-center border-2 border-dashed border-gray-200 rounded-lg">
+                                    <div className="text-center">
+                                        <BarChart3 className="w-12 h-12 text-gray-400 mx-auto mb-2" />
+                                        <p className="text-gray-500 text-sm">Gráfico de conversões</p>
+                                        <p className="text-xs text-gray-400">Ver analytics avançadas para mais detalhes</p>
+                                    </div>
                                 </div>
-                                <h3 className="text-xl font-semibold text-gray-800 mb-2">
-                                    Analytics Detalhados em Desenvolvimento
-                                </h3>
-                                <p className="text-gray-600 mb-6 max-w-md mx-auto">
-                                    Em breve você terá acesso a gráficos detalhados, funis de conversão e insights avançados sobre o desempenho dos seus funis.
-                                </p>
-                                <div className="flex flex-col sm:flex-row gap-3 justify-center">
-                                    <Button className="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white shadow-lg">
-                                        <Activity className="w-4 h-4 mr-2" />
-                                        Solicitar Preview
-                                    </Button>
-                                    <Button variant="outline" className="bg-white/60 backdrop-blur-sm border-white/40 hover:bg-white/80">
+                            </CardContent>
+                        </Card>
+
+                        {/* Atividade Recente */}
+                        <Card className="bg-white/60 backdrop-blur-sm border-white/40 shadow-lg hover:shadow-xl transition-all duration-300">
+                            <CardHeader className="flex flex-row items-center justify-between pb-4">
+                                <CardTitle className="text-lg font-semibold text-gray-800 flex items-center gap-2">
+                                    <Activity className="w-5 h-5 text-green-600" />
+                                    Atividades Recentes
+                                </CardTitle>
+                                <Button
+                                    variant="outline"
+                                    size="sm"
+                                    className="bg-white/60 backdrop-blur-sm border-white/40 hover:bg-white/80 shadow-sm"
+                                >
                                         <Eye className="w-4 h-4 mr-2" />
-                                        Ver Roadmap
+                                    Ver Todas
                                     </Button>
-                                </div>
+                            </CardHeader>
+                            <CardContent>
+                                <div className="space-y-4">
+                                    {recentActivity.map((activity) => (
+                                        <div key={activity.id} className="flex items-start space-x-4 p-4 rounded-2xl bg-gradient-to-r from-white/40 to-gray-50/40 hover:from-white/60 hover:to-gray-50/60 transition-all duration-200 border border-white/30">
+                                            <div className={cn(
+                                                "w-3 h-3 rounded-full mt-1.5 flex-shrink-0 shadow-sm",
+                                                activity.status === 'success' && "bg-green-500 shadow-green-200",
+                                                activity.status === 'info' && "bg-blue-500 shadow-blue-200",
+                                                activity.status === 'warning' && "bg-orange-500 shadow-orange-200"
+                                            )} />
+                                            <div className="flex-1 min-w-0">
+                                                <p className="font-semibold text-gray-900 text-sm">{activity.title}</p>
+                                                <p className="text-gray-600 text-sm mt-1">{activity.description}</p>
+                                                <p className="text-gray-400 text-xs mt-2 flex items-center gap-1">
+                                                    <div className="w-1 h-1 rounded-full bg-gray-400" />
+                                                    {activity.time}
+                                                </p>
+                                            </div>
+                                            <div className="flex-shrink-0">
+                                                {activity.status === 'success' && (
+                                                    <div className="flex items-center justify-center w-8 h-8 rounded-full bg-green-100">
+                                                        <CheckCircle className="w-4 h-4 text-green-600" />
+                                                    </div>
+                                                )}
+                                                {activity.status === 'warning' && (
+                                                    <div className="flex items-center justify-center w-8 h-8 rounded-full bg-orange-100">
+                                                        <AlertCircle className="w-4 h-4 text-orange-600" />
+                                                    </div>
+                                                )}
+                                                {activity.status === 'info' && (
+                                                    <div className="flex items-center justify-center w-8 h-8 rounded-full bg-blue-100">
+                                                        <Activity className="w-4 h-4 text-blue-600" />
+                                                    </div>
+                                                )}
+                                            </div>
+                                        </div>
+                                    ))}
                             </div>
                         </CardContent>
                     </Card>
+                    </div>
                 </TabsContent>
             </Tabs>
         </div>

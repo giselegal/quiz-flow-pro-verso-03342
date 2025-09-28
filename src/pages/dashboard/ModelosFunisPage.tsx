@@ -22,7 +22,8 @@ import {
   TrendingUp,
   Zap,
   Award,
-  Palette
+  Palette,
+  Plus
 } from 'lucide-react';
 
 // Templates reais disponíveis
