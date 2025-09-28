@@ -26,7 +26,7 @@ import EditorCanvas from './EditorPro/components/EditorCanvas';
 import StepSidebar from './sidebars/StepSidebar';
 import ComponentsSidebar from './sidebars/ComponentsSidebar';
 // import RegistryPropertiesPanel from '@/components/universal/RegistryPropertiesPanel'; // ❌ DESABILITADO - API Panel fixo
-import DynamicPropertiesPanel from './properties/DynamicPropertiesPanel'; // ✅ NOVO - Dynamic API Panel
+import DynamicPropertiesPanelImproved from '../../core/editor/DynamicPropertiesPanelImproved'; // ✅ NOVO - Improved Properties Panel
 
 // AI Features (lazy loaded)
 import OptimizedAIFeatures from '@/components/ai/OptimizedAIFeatures';
@@ -437,28 +437,9 @@ export const EditorProUnified: React.FC<EditorProUnifiedProps> = ({
           style={{ width: `${columnWidths.properties}px` }}
         >
           {selectedBlock ? (
-            <DynamicPropertiesPanel
-              componentId={selectedBlock.type}
-              funnelId={funnelId}
-              onPropertyChange={(key, value) => {
-                handleUpdateBlock(selectedBlock.id, {
-                  properties: { ...selectedBlock.properties, [key]: value }
-                });
-              }}
-              onSave={() => {
-                // Auto-save is handled by the DynamicPropertiesPanel
-                addNotification('Propriedades salvas com sucesso!', 'success');
-              }}
-              onReset={() => {
-                // Reset handled by DynamicPropertiesPanel
-                addNotification('Propriedades resetadas para padrão', 'info');
-              }}
-            />
+            <DynamicPropertiesPanelImproved />
           ) : (
-            <div className="p-4 text-center text-muted-foreground">
-              <p className="text-sm">Selecione um componente para ver as propriedades via API</p>
-              <p className="text-xs mt-2 text-primary">� Dynamic API Panel Mode Ativo �</p>
-            </div>
+            <DynamicPropertiesPanelImproved />
           )}
         </div>
       </div>

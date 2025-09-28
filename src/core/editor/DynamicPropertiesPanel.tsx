@@ -1,43 +1,78 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useHeadlessEditor } from './HeadlessEditorProvider';
+import { usePureBuilder } from '../../components/editor/PureBuilderProvider';
 import { FunnelStep } from '../../types/quiz-schema';
+import type { Block } from '@/types/editor';
 
 type PanelTab = 'step' | 'global' | 'style' | 'publish';
 
 export const DynamicPropertiesPanel: React.FC = () => {
   const {
     schema,
-    isLoading
+    isLoading: schemaLoading
   } = useHeadlessEditor();
   
-  // Mock functions for missing properties (remove unused parameters warnings)
-  const currentStep = null;
-  const updateStep = (_stepId: string, _updates: any) => {};
-  const updateGlobalSettings = (_updates: any) => {};
-  const selectStep = (_stepId: string) => {};
-  const goToStep = (_index: number) => {};
+  const { 
+    state: builderState, 
+    actions: builderActions 
+  } = usePureBuilder();
 
   const [activeTab, setActiveTab] = useState<PanelTab>('step');
   const [selectedBlockId, setSelectedBlockId] = useState<string | null>(null);
+
+  // 🔧 INTEGRAÇÃO: Usar dados reais do PureBuilder
+  const currentStepKey = `step-${builderState.currentStep}`;
+  const currentStepBlocks = builderState.stepBlocks[currentStepKey] || [];
+  const selectedBlock = selectedBlockId ? currentStepBlocks.find(block => block.id === selectedBlockId) : null;
+
+  // 🔄 SINCRONIZAÇÃO: Atualizar seleção baseada no estado do builder
+  useEffect(() => {
+    if (builderState.selectedBlockId && builderState.selectedBlockId !== selectedBlockId) {
+      setSelectedBlockId(builderState.selectedBlockId);
+    }
+  }, [builderState.selectedBlockId, selectedBlockId]);
+
+  // 🎯 FUNÇÕES REAIS DE ATUALIZAÇÃO
+  const updateStep = (stepId: string, updates: any) => {
+    console.log('🔄 Atualizando step:', stepId, updates);
+    // Implementar lógica de atualização de step via builder actions
+  };
+
+  const updateGlobalSettings = (updates: any) => {
+    console.log('🌍 Atualizando configurações globais:', updates);
+    // Implementar lógica de atualização global
+  };
+
+  const selectStep = (stepId: string) => {
+    // Converter stepId para número se necessário
+    const stepNumber = parseInt(stepId.replace('step-', '')) || builderState.currentStep;
+    builderActions.setCurrentStep(stepNumber);
+  };
+
+  const goToStep = (index: number) => {
+    builderActions.setCurrentStep(index + 1);
+  };
+
+  const isLoading = schemaLoading || builderState.isLoading;
 
   if (isLoading) {
     return (
       <div className="w-80 border-l border-gray-200 bg-white flex items-center justify-center h-full">
         <div className="text-center">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-2"></div>
-          <p className="text-sm text-gray-500">Carregando...</p>
+          <p className="text-sm text-gray-500">Carregando painel...</p>
         </div>
       </div>
     );
   }
 
-  if (!schema) {
+  if (!schema && !builderState.stepBlocks) {
     return (
       <div className="w-80 border-l border-gray-200 bg-white flex items-center justify-center h-full">
         <div className="text-center p-6">
           <div className="text-4xl mb-3">📋</div>
-          <h3 className="text-lg font-semibold text-gray-900 mb-2">Nenhum Schema</h3>
-          <p className="text-sm text-gray-500">Carregue um schema para começar a editar</p>
+          <h3 className="text-lg font-semibold text-gray-900 mb-2">Painel de Propriedades</h3>
+          <p className="text-sm text-gray-500">Carregue um template para começar a editar</p>
         </div>
       </div>
     );
@@ -77,7 +112,20 @@ export const DynamicPropertiesPanel: React.FC = () => {
 
       {/* Conteúdo do Tab */}
       <div className="flex-1 overflow-y-auto">
-        {renderTabContent(activeTab, schema, currentStep, updateStep, updateGlobalSettings, selectStep, goToStep, selectedBlockId, setSelectedBlockId)}
+        {renderTabContent(
+          activeTab, 
+          schema, 
+          builderState, 
+          currentStepBlocks, 
+          selectedBlock,
+          updateStep, 
+          updateGlobalSettings, 
+          selectStep, 
+          goToStep, 
+          selectedBlockId, 
+          setSelectedBlockId,
+          builderActions
+        )}
       </div>
     </div>
   );
@@ -86,41 +134,50 @@ export const DynamicPropertiesPanel: React.FC = () => {
 function renderTabContent(
   tab: PanelTab,
   schema: any,
-  currentStep: FunnelStep | null,
+  builderState: any,
+  currentStepBlocks: Block[],
+  selectedBlock: Block | null,
   updateStep: (stepId: string, updates: Partial<FunnelStep>) => void,
   updateGlobalSettings: (updates: any) => void,
   selectStep: (stepId: string) => void,
   goToStep: (index: number) => void,
   selectedBlockId: string | null,
-  setSelectedBlockId: (id: string | null) => void
+  setSelectedBlockId: (id: string | null) => void,
+  builderActions: any
 ) {
   switch (tab) {
     case 'step':
       return <StepPropertiesPanel
         schema={schema}
-        currentStep={currentStep}
+        builderState={builderState}
+        currentStepBlocks={currentStepBlocks}
+        selectedBlock={selectedBlock}
         updateStep={updateStep}
         selectStep={selectStep}
         goToStep={goToStep}
         selectedBlockId={selectedBlockId}
         setSelectedBlockId={setSelectedBlockId}
+        builderActions={builderActions}
       />;
 
     case 'global':
       return <GlobalPropertiesPanel
         schema={schema}
+        builderState={builderState}
         updateGlobalSettings={updateGlobalSettings}
       />;
 
     case 'style':
       return <StylePropertiesPanel
         schema={schema}
+        builderState={builderState}
         updateGlobalSettings={updateGlobalSettings}
       />;
 
     case 'publish':
       return <PublishPropertiesPanel
         schema={schema}
+        builderState={builderState}
         updateGlobalSettings={updateGlobalSettings}
       />;
 
@@ -131,58 +188,125 @@ function renderTabContent(
 
 interface StepPropertiesPanelProps {
   schema: any;
-  currentStep: FunnelStep | null;
+  builderState: any;
+  currentStepBlocks: Block[];
+  selectedBlock: Block | null;
   updateStep: (stepId: string, updates: Partial<FunnelStep>) => void;
   selectStep: (stepId: string) => void;
   goToStep: (index: number) => void;
   selectedBlockId: string | null;
   setSelectedBlockId: (id: string | null) => void;
+  builderActions: any;
 }
 
 const StepPropertiesPanel: React.FC<StepPropertiesPanelProps> = ({
   schema,
-  currentStep,
+  builderState,
+  currentStepBlocks,
+  selectedBlock,
   updateStep,
   selectStep,
   goToStep,
   selectedBlockId,
-  setSelectedBlockId
+  setSelectedBlockId,
+  builderActions
 }) => {
-  if (!currentStep) {
+  // 🎯 NOVA LÓGICA: Usar dados reais do builder
+  const totalSteps = Object.keys(builderState.stepBlocks || {}).length;
+  const currentStepNumber = builderState.currentStep;
+  
+  // 🔧 Se não há bloco selecionado, mostrar overview da etapa atual
+  if (!selectedBlock) {
     return (
       <div className="p-4">
         <div className="text-center py-8 text-gray-500">
-          <div className="text-4xl mb-4">📝</div>
-          <h3 className="font-semibold text-gray-900 mb-2">Nenhuma etapa selecionada</h3>
-          <p className="text-sm mb-4">Selecione uma etapa para editar suas propriedades</p>
+          <div className="text-4xl mb-4">🎯</div>
+          <h3 className="font-semibold text-gray-900 mb-2">Etapa {currentStepNumber}</h3>
+          <p className="text-sm mb-4">Selecione um bloco para editar suas propriedades ou navegue entre etapas</p>
         </div>
 
         {/* Lista de Etapas */}
         <div className="space-y-2">
-          <h4 className="font-medium text-gray-900 mb-3">Etapas Disponíveis ({schema?.steps?.length || 0})</h4>
-          {schema?.steps?.map((step: any, index: number) => (
-            <button
-              key={step.id}
-              onClick={() => {
-                selectStep(step.id);
-                goToStep(index);
-              }}
-              className="w-full p-3 text-left border border-gray-200 rounded-lg hover:border-blue-300 hover:bg-blue-50 transition-colors"
-            >
-              <div className="flex items-center justify-between">
-                <span className="font-medium text-sm">{step.name}</span>
-                <span className="text-xs text-gray-500">#{index + 1}</span>
-              </div>
-              <div className="text-xs text-gray-600 mt-1">{step.type}</div>
-            </button>
-          ))}
+          <h4 className="font-medium text-gray-900 mb-3">Etapas Disponíveis ({totalSteps})</h4>
+          {Object.keys(builderState.stepBlocks || {}).map((stepKey, index) => {
+            const stepNumber = parseInt(stepKey.replace('step-', ''));
+            const blocks = builderState.stepBlocks[stepKey] || [];
+            const isCurrentStep = stepNumber === currentStepNumber;
+            
+            return (
+              <button
+                key={stepKey}
+                onClick={() => {
+                  selectStep(stepKey);
+                  goToStep(stepNumber - 1);
+                }}
+                className={`w-full p-3 text-left border rounded-lg transition-colors ${
+                  isCurrentStep 
+                    ? 'border-blue-500 bg-blue-50' 
+                    : 'border-gray-200 hover:border-blue-300 hover:bg-blue-50'
+                }`}
+              >
+                <div className="flex items-center justify-between">
+                  <span className="font-medium text-sm">Etapa {stepNumber}</span>
+                  <span className="text-xs text-gray-500">{blocks.length} blocos</span>
+                </div>
+                <div className="text-xs text-gray-600 mt-1">
+                  {blocks.length > 0 ? `${blocks[0].type}${blocks.length > 1 ? ` +${blocks.length-1}` : ''}` : 'Vazia'}
+                </div>
+              </button>
+            );
+          })}
         </div>
+
+        {/* Blocos da Etapa Atual */}
+        {currentStepBlocks.length > 0 && (
+          <div className="mt-6 space-y-2">
+            <h4 className="font-medium text-gray-900 mb-3">Blocos da Etapa {currentStepNumber}</h4>
+            {currentStepBlocks.map((block, index) => (
+              <button
+                key={block.id}
+                onClick={() => {
+                  setSelectedBlockId(block.id);
+                  builderActions.setSelectedBlockId(block.id);
+                }}
+                className={`w-full p-3 text-left border rounded-lg transition-colors ${
+                  selectedBlockId === block.id 
+                    ? 'border-blue-500 bg-blue-50' 
+                    : 'border-gray-200 hover:border-blue-300 hover:bg-blue-50'
+                }`}
+              >
+                <div className="flex items-center justify-between">
+                  <span className="font-medium text-sm capitalize">{block.type.replace('-', ' ')}</span>
+                  <span className="text-xs text-gray-500">#{index + 1}</span>
+                </div>
+                {block.content?.text && (
+                  <div className="text-xs text-gray-600 mt-1 truncate">
+                    {block.content.text.substring(0, 40)}...
+                  </div>
+                )}
+              </button>
+            ))}
+          </div>
+        )}
       </div>
     );
   }
 
-  const handleStepUpdate = (field: string, value: any) => {
-    updateStep(currentStep.id, { [field]: value });
+  // 🎯 EDIÇÃO DE BLOCO SELECIONADO
+  const handleBlockUpdate = (field: string, value: any) => {
+    if (selectedBlock) {
+      const stepKey = `step-${currentStepNumber}`;
+      builderActions.updateBlock(stepKey, selectedBlock.id, { [field]: value });
+    }
+  };
+
+  const handlePropertyUpdate = (field: string, value: any) => {
+    if (selectedBlock) {
+      const stepKey = `step-${currentStepNumber}`;
+      builderActions.updateBlock(stepKey, selectedBlock.id, { 
+        properties: { ...selectedBlock.properties, [field]: value } 
+      });
+    }
   };
 
   return (
