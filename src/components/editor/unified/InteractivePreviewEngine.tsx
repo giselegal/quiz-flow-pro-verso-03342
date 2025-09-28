@@ -472,7 +472,7 @@ export const InteractivePreviewEngine: React.FC<InteractivePreviewEngineProps> =
             <div>Validações: {Object.keys(quizState.validationStates).length}</div>
           </div>
         </div>
-      )}
+lise do estado atual do projeto - não use       )}
 
       {/* DEBUG PANEL REMOVIDO - Preview limpo sem informações de debug */}
 
