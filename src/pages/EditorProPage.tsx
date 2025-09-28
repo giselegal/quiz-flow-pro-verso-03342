@@ -4,7 +4,7 @@ import { useLocation } from 'wouter';
 
 // 🚀 EDITOR IA PRO - Importações dos sistemas avançados
 import PureBuilderProvider from '@/components/editor/PureBuilderProvider';
-import ModularEditorPro from '@/components/editor/EditorPro/components/ModularEditorPro';
+import { EditorProUnified } from '@/components/editor/EditorProUnified';
 
 // 🤖 Sistemas IA avançados
 import { TemplatesIASidebar } from '@/components/editor/sidebars/TemplatesIASidebar';
@@ -162,11 +162,10 @@ const EditorProPage: React.FC<EditorProPageProps> = ({ params }) => {
                 <Suspense fallback={<LoadingFallback />}>
                     <PureBuilderProvider funnelId={funnelId}>
                         {/* 🎯 Editor principal com funcionalidades básicas + IA */}
-                        <ModularEditorPro
+                        <EditorProUnified
                             showProFeatures={true}
-                            templatesIAOpen={isTemplatesIAOpen}
-                            brandKitOpen={isBrandKitOpen}
-                            analyticsOpen={isAnalyticsOpen}
+                            funnelId={extractedFunnelId}
+                            className="h-full w-full"
                         />
 
                         {/* 🤖 SIDEBAR: Templates IA */}
