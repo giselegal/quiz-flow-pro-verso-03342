@@ -16,7 +16,7 @@
 
 import { Block, BlockType } from '@/types/editor';
 import { toast } from '@/hooks/use-toast';
-import { versioningService } from './VersioningService';
+import { versioningService } from './versioningService';
 import { historyManager } from './HistoryManager';
 
 // Tipos principais
@@ -416,7 +416,7 @@ export class UnifiedCRUDService {
       order: typeof data.order === 'number' ? data.order : index,
       content: data.content || {},
       properties: data.properties || {},
-      styles: data.styles || {},
+      style: data.style || {},
       metadata: data.metadata || {},
     };
   };
@@ -851,6 +851,9 @@ export class UnifiedCRUDService {
         metadata: {
           ...funnel.stages[stageIndex].metadata,
           ...updates.metadata,
+          blocksCount: funnel.stages[stageIndex].blocks.length,
+          isValid: updates.metadata?.isValid ?? funnel.stages[stageIndex].metadata?.isValid ?? false,
+          completionRate: updates.metadata?.completionRate ?? funnel.stages[stageIndex].metadata?.completionRate ?? 0,
         },
       };
 
@@ -1058,13 +1061,15 @@ export class UnifiedCRUDService {
         order: block.order ?? stage.data.blocks.length,
         content: block.content || {},
         properties: block.properties || {},
-        styles: block.styles || {},
+        style: block.style || {},
         metadata: block.metadata || {},
       };
 
       // Adicionar block ao stage
       stage.data.blocks.push(newBlock);
-      stage.data.metadata.blocksCount = stage.data.blocks.length;
+      if (stage.data.metadata) {
+        stage.data.metadata.blocksCount = stage.data.blocks.length;
+      }
 
       // Atualizar funnel
       const funnel = this.funnels.get(funnelId)!;
@@ -1197,7 +1202,9 @@ export class UnifiedCRUDService {
 
       // Remover block
       const removedBlock = stage.data.blocks.splice(blockIndex, 1)[0];
-      stage.data.metadata.blocksCount = stage.data.blocks.length;
+      if (stage.data.metadata) {
+        stage.data.metadata.blocksCount = stage.data.blocks.length;
+      }
 
       // Reordenar blocks restantes
       stage.data.blocks.forEach((block, index) => {
@@ -1406,8 +1413,8 @@ export class UnifiedCRUDService {
   private validateFunnel(funnel: UnifiedFunnel): boolean {
     try {
       return (
-        funnel.id && 
-        funnel.name && 
+        Boolean(funnel.id) && 
+        Boolean(funnel.name) && 
         Array.isArray(funnel.stages) &&
         funnel.stages.length > 0 &&
         funnel.stages.every(stage => this.validateStage(stage))
@@ -1423,8 +1430,8 @@ export class UnifiedCRUDService {
   private validateStage(stage: UnifiedStage): boolean {
     try {
       return (
-        stage.id && 
-        stage.name && 
+        Boolean(stage.id) && 
+        Boolean(stage.name) && 
         Array.isArray(stage.blocks) &&
         typeof stage.order === 'number'
       );
@@ -1521,12 +1528,4 @@ export class UnifiedCRUDService {
 // Instância singleton
 export const unifiedCRUDService = new UnifiedCRUDService();
 
-// Export tipos
-export type { 
-  UnifiedFunnel, 
-  UnifiedStage, 
-  FunnelSettings, 
-  StageSettings, 
-  CRUDOperation, 
-  CRUDResult 
-};
+// Tipos já exportados acima

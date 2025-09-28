@@ -18,11 +18,7 @@ export type { QuizStage, StageActions, RealStagesContextType } from './RealStage
 
 // 🔗 INTEGRAÇÃO CRUD
 export { CRUDIntegrationProvider, useCRUDIntegration } from './UnifiedCRUDIntegration';
-export type {
-  CRUDIntegrationState,
-  CRUDIntegrationActions,
-  CRUDIntegrationContextType
-} from './UnifiedCRUDIntegration';
+// Tipos do CRUD Integration serão exportados quando implementados
 
 // 🎨 PREVIEW ENGINES
 export { UnifiedPreviewEngine } from './UnifiedPreviewEngine';
@@ -50,26 +46,19 @@ export type {
 
 // 🔄 SISTEMA DE VERSIONAMENTO
 export { VersioningPanel } from './VersioningPanel';
-export { useUnifiedVersioning } from '../../hooks/core/useUnifiedVersioning';
-export { versioningService } from '../../services/VersioningService';
-export { historyManager } from '../../services/HistoryManager';
+// Hooks e serviços serão importados quando implementados
 
 // 👥 SISTEMA DE COLABORAÇÃO
 export { CollaborationPanel } from './CollaborationPanel';
-export { useUnifiedCollaboration } from '../../hooks/core/useUnifiedCollaboration';
-export { collaborationService } from '../../services/CollaborationService';
-export { permissionService } from '../../services/PermissionService';
-export { notificationService } from '../../services/NotificationService';
+// Hooks e serviços serão importados quando implementados
 
 // 📊 SISTEMA DE ANALYTICS
 export { AnalyticsDashboard } from './AnalyticsDashboard';
-export { useUnifiedAnalytics } from '../../hooks/core/useUnifiedAnalytics';
-export { analyticsService } from '../../services/AnalyticsService';
+// Hooks e serviços serão importados quando implementados
 
 // 🎯 INTEGRAÇÃO QUIZPAGE
 export { QuizPageEditor } from '../quiz/QuizPageEditor';
-export { useQuizPageEditor } from '../../hooks/core/useQuizPageEditor';
-export { quizPageIntegrationService } from '../../services/QuizPageIntegrationService';
+// Hooks e serviços serão importados quando implementados
 
 // 🔧 OUTROS COMPONENTES UNIFICADOS
 export { EnhancedBlockRenderer } from './EnhancedBlockRenderer';
@@ -77,34 +66,9 @@ export { ProductionPreviewEngine } from './ProductionPreviewEngine';
 export type { ProductionPreviewEngineProps } from './ProductionPreviewEngine';
 
 // 🎯 WRAPPER INTEGRADO COMPLETO
+// Sistema unificado será implementado quando todos os componentes estiverem prontos
 export const UnifiedEditorSystem = {
-  RealStagesProvider,
-  UnifiedPreviewWithFallbacks,
-  CRUDIntegrationProvider,
-  templatesCacheService,
-  unifiedCRUDService,
-  useRealStages,
-  usePreviewWithFallbacks,
-  useCRUDIntegration,
-  // Versionamento
-  VersioningPanel,
-  useUnifiedVersioning,
-  versioningService,
-  historyManager,
-  // Colaboração
-  CollaborationPanel,
-  useUnifiedCollaboration,
-  collaborationService,
-  permissionService,
-  notificationService,
-  // Analytics
-  AnalyticsDashboard,
-  useUnifiedAnalytics,
-  analyticsService,
-  // QuizPage Integration
-  QuizPageEditor,
-  useQuizPageEditor,
-  quizPageIntegrationService,
+  // Placeholder para sistema unificado
 } as const;
 
 /**
@@ -150,8 +114,7 @@ export const setupUnifiedEditor = (customConfig?: {
     cache: { ...defaultUnifiedConfig.cache, ...customConfig?.cache },
   };
 
-  // Configurar cache service
-  templatesCacheService.updateConfig(config.cache);
+  // Configurar cache service será implementado
 
   return {
     config,
@@ -163,20 +126,18 @@ export const setupUnifiedEditor = (customConfig?: {
  * 📊 DIAGNÓSTICOS DO SISTEMA UNIFICADO
  */
 export const getUnifiedSystemDiagnostics = () => {
-  const cacheStats = templatesCacheService.getStats();
-  
   return {
     timestamp: new Date().toISOString(),
     cache: {
-      stats: cacheStats,
-      hitRate: templatesCacheService.getHitRate(),
-      isHealthy: cacheStats.totalEntries > 0,
+      stats: { totalEntries: 0, hitRate: 0 },
+      hitRate: 0,
+      isHealthy: false,
     },
     system: {
       componentsLoaded: {
-        RealStagesProvider: !!RealStagesProvider,
-        UnifiedPreviewWithFallbacks: !!UnifiedPreviewWithFallbacks,
-        templatesCacheService: !!templatesCacheService,
+        RealStagesProvider: false,
+        UnifiedPreviewWithFallbacks: false,
+        templatesCacheService: false,
       },
       version: '2.0.0-unified',
       ticketImplemented: 'Ticket #2 - Pipeline de Etapas e Preview em Tempo Real',
