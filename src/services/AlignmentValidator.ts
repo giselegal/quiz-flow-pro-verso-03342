@@ -24,7 +24,7 @@ export class AlignmentValidator {
       }
       
       // Check component_configurations
-      const { error: configError } = await supabase.from('component_configurations').select('id').limit(1);
+      const { error: configError } = await (supabase as any).from('component_configurations').select('id').limit(1);
       if (configError) {
         issues.push('component_configurations table missing');
         score -= 15;
