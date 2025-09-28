@@ -222,6 +222,39 @@ const FUNNEL_TEMPLATES: Record<
       },
     ],
   },
+  'quiz21StepsComplete': {
+    name: 'Quiz de Estilo Pessoal (21 Etapas)',
+    description: 'Template completo do quiz de estilo pessoal com 21 etapas, sistema de pontuação e resultados personalizados',
+    defaultSteps: Object.keys(QUIZ_QUESTIONS_COMPLETE).map(stepNum => {
+      const stepNumber = parseInt(stepNum);
+      const stepId = `step-${stepNumber}`;
+      const questionText =
+        QUIZ_QUESTIONS_COMPLETE[stepNumber as keyof typeof QUIZ_QUESTIONS_COMPLETE];
+
+      return {
+        id: stepId,
+        name: `Etapa ${stepNumber}`,
+        order: stepNumber,
+        blocksCount: QUIZ_STYLE_21_STEPS_TEMPLATE[stepId]?.length || 1,
+        isActive: true,
+        type:
+          stepNumber === 1
+            ? 'lead-collection'
+            : stepNumber >= 2 && stepNumber <= 11
+              ? 'scored-question'
+              : stepNumber === 12
+                ? 'transition'
+                : stepNumber >= 13 && stepNumber <= 18
+                  ? 'strategic-question'
+                  : stepNumber === 19
+                    ? 'transition'
+                    : stepNumber === 20
+                      ? 'result'
+                      : 'offer',
+        description: questionText,
+      };
+    }),
+  },
   'funil-21-etapas': {
     name: 'Quiz de Estilo Pessoal - 21 Etapas',
     description: 'Quiz completo para descobrir o estilo pessoal',
