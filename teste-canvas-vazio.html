@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste Canvas Vazio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100 p-8">
+    <div class="max-w-4xl mx-auto">
+        <h1 class="text-3xl font-bold mb-8 text-center">🧪 Teste: Canvas Vazio</h1>
+
+        <!-- Status da implementação -->
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-8">
+            <h2 class="text-xl font-semibold mb-4 text-green-600">✅ Implementação Concluída</h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <h3 class="text-lg font-semibold text-gray-800 mb-3">🎯 Funcionalidades Implementadas</h3>
+                    <ul class="space-y-2 text-sm">
+                        <li class="flex items-center gap-2">
+                            <span class="text-green-500">✅</span>
+                            <span>PureBuilderProvider detecta funnelId inválido</span>
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <span class="text-green-500">✅</span>
+                            <span>Canvas vazio inicializa com totalSteps = 0</span>
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <span class="text-green-500">✅</span>
+                            <span>EmptyCanvasInterface criada com botão "Criar Primeira Etapa"</span>
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <span class="text-green-500">✅</span>
+                            <span>CanvasDropZone integrado com a interface</span>
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <span class="text-green-500">✅</span>
+                            <span>Ação createFirstStep implementada</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h3 class="text-lg font-semibold text-gray-800 mb-3">🔧 Como Testar</h3>
+                    <ol class="space-y-2 text-sm">
+                        <li><span class="font-semibold">1.</span> Acesse: <code
+                                class="bg-gray-100 px-2 py-1 rounded">/editor</code> (sem ID)</li>
+                        <li><span class="font-semibold">2.</span> Ou: <code
+                                class="bg-gray-100 px-2 py-1 rounded">/editor?id=</code> (ID vazio)</li>
+                        <li><span class="font-semibold">3.</span> Ou: <code
+                                class="bg-gray-100 px-2 py-1 rounded">/editor?id=invalidId</code></li>
+                        <li><span class="font-semibold">4.</span> Deve mostrar interface "Canvas Vazio"</li>
+                        <li><span class="font-semibold">5.</span> Clicar "Criar Primeira Etapa"</li>
+                        <li><span class="font-semibold">6.</span> Deve criar step-1 com bloco de boas-vindas</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+
+        <!-- Simulação da Interface -->
+        <div class="bg-white rounded-lg shadow-lg p-8">
+            <h2 class="text-xl font-semibold mb-6 text-center">🎨 Preview da Interface</h2>
+
+            <!-- Simulação da EmptyCanvasInterface -->
+            <div
+                class="flex flex-col items-center justify-center min-h-[400px] p-8 bg-gradient-to-br from-white/80 to-stone-50/80 rounded-xl border-2 border-dashed border-stone-200">
+                <!-- Ícone principal -->
+                <div class="mb-6 p-4 bg-gradient-to-br from-amber-500 to-amber-600 rounded-full text-white">
+                    <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 4l-3 2 3 2 3-2-3-2zm0 0v16m-3-2l3-2 3 2-3 2z" />
+                    </svg>
+                </div>
+
+                <!-- Título e descrição -->
+                <h2 class="text-2xl font-bold text-stone-800 mb-3 text-center">
+                    Canvas Vazio - Comece do Zero
+                </h2>
+                <p class="text-stone-600 text-center mb-8 max-w-md leading-relaxed">
+                    Crie seu funil personalizado do zero! Comece adicionando sua primeira etapa
+                    e construa uma experiência única para seus usuários.
+                </p>
+
+                <!-- Botões de ação -->
+                <div class="flex flex-col sm:flex-row gap-4 mb-8">
+                    <!-- Botão principal: Criar primeira etapa -->
+                    <button
+                        class="bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 to-amber-700 text-white font-semibold px-8 py-3 rounded-lg shadow-lg hover:shadow-xl transition-all duration-200"
+                        onclick="alert('🎉 Funcionalidade: createFirstStep() seria executada!')">
+                        <span class="mr-2">+</span>
+                        Criar Primeira Etapa
+                    </button>
+
+                    <!-- Botão secundário: Usar template (futuro) -->
+                    <button
+                        class="border border-stone-300 text-stone-700 hover:bg-stone-50 px-8 py-3 rounded-lg transition-all duration-200">
+                        <span class="mr-2">⚡</span>
+                        Usar Template
+                    </button>
+                </div>
+
+                <!-- Dicas úteis -->
+                <div class="p-6 bg-blue-50/80 rounded-lg border border-blue-100 max-w-md">
+                    <h3 class="text-sm font-semibold text-blue-800 mb-2">💡 Dicas para começar:</h3>
+                    <ul class="text-sm text-blue-700 space-y-1">
+                        <li>• Comece com uma etapa de introdução</li>
+                        <li>• Use a sidebar para adicionar componentes</li>
+                        <li>• Configure as propriedades no painel direito</li>
+                        <li>• Teste no modo preview (ícone olho)</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Log de implementação -->
+        <div class="bg-gray-800 text-green-400 rounded-lg p-6 mt-8 font-mono text-sm">
+            <div class="text-green-300 font-semibold mb-4">📋 Log de Implementação:</div>
+            <div class="space-y-1">
+                <div>✅ PureBuilderProvider.tsx - Detecção de canvas vazio (linhas 297-326)</div>
+                <div>✅ EmptyCanvasInterface.tsx - Interface criada com botões e dicas</div>
+                <div>✅ CanvasDropZone.simple.tsx - Integração com totalSteps = 0</div>
+                <div>✅ createFirstStep() - Ação para criar primeira etapa implementada</div>
+                <div>🎯 Estado: <span class="text-yellow-300">Pronto para teste em /editor</span></div>
+            </div>
+        </div>
+
+        <!-- Links de teste -->
+        <div class="bg-blue-50 rounded-lg p-6 mt-6">
+            <h3 class="text-lg font-semibold text-blue-800 mb-4">🔗 Links de Teste</h3>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <a href="http://localhost:5555/editor"
+                    class="block p-4 bg-white rounded border hover:shadow-md transition-shadow">
+                    <div class="font-semibold text-blue-600">/editor</div>
+                    <div class="text-sm text-gray-600">Editor sem ID</div>
+                </a>
+                <a href="http://localhost:5555/editor?id="
+                    class="block p-4 bg-white rounded border hover:shadow-md transition-shadow">
+                    <div class="font-semibold text-blue-600">/editor?id=</div>
+                    <div class="text-sm text-gray-600">ID vazio</div>
+                </a>
+                <a href="http://localhost:5555/editor?id=invalid"
+                    class="block p-4 bg-white rounded border hover:shadow-md transition-shadow">
+                    <div class="font-semibold text-blue-600">/editor?id=invalid</div>
+                    <div class="text-sm text-gray-600">ID inválido</div>
+                </a>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
