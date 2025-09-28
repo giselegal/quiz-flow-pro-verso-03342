@@ -33,6 +33,8 @@
     "src/pages/examples/**",
     "examples/**",
     "backend-example/**",
+    "archived-legacy-editors/**",
+    "archived-examples/**",
     "docs/**",
     "src/utils/EditorDiagnostics.ts",
     "src/utils/editorDiagnosticsShim.ts"
