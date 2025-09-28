@@ -61,24 +61,40 @@ export const SafeIframe: React.FC<SafeIframeProps> = ({
 
     const sandboxTokens = new Set<string>();
 
-    if (allowSameOrigin) sandboxTokens.add('allow-same-origin');
+    // Detecta players que normalmente necessitam de scripts para funcionar
+    const requiresPlayerScripts = (() => {
+        if (!src) return false;
+        try {
+            const host = new URL(src).hostname;
+            return /youtube\.com$/.test(host) || /youtu\.be$/.test(host) || /player\.vimeo\.com$/.test(host) || /vimeo\.com$/.test(host);
+        } catch { return false; }
+    })();
+
+    let effectiveAllowScripts = allowScripts;
+    // Auto-enable para players confiáveis se o dev não desabilitou explicitamente
+    if (!allowScripts && requiresPlayerScripts && isTrusted) {
+        effectiveAllowScripts = true;
+        if (debug) console.log('[SafeIframe] Auto habilitando allow-scripts para player confiável:', src);
+    }
+
     if (allowForms) sandboxTokens.add('allow-forms');
     if (allowPopups) sandboxTokens.add('allow-popups');
     if (allowModals) sandboxTokens.add('allow-modals');
     if (allowDownloads) sandboxTokens.add('allow-downloads');
 
-    // Apenas adiciona scripts se explicitamente pedido e origem for whitelisted ou trustLevel = trusted
-    if (allowScripts && (isTrusted || trustLevel === 'trusted')) {
+    if (effectiveAllowScripts && (isTrusted || trustLevel === 'trusted')) {
         sandboxTokens.add('allow-scripts');
+        // Segurança: só adicionamos same-origin se explicitamente pedido e for truly trusted
+        if (allowSameOrigin && trustLevel === 'trusted') {
+            sandboxTokens.add('allow-same-origin');
+        }
+    } else {
+        if (allowSameOrigin) sandboxTokens.add('allow-same-origin');
     }
 
-    // Previne combinação perigosa se não for realmente confiável
-    if (sandboxTokens.has('allow-scripts') && sandboxTokens.has('allow-same-origin') && !(isTrusted || trustLevel === 'trusted')) {
-        // Remove allow-same-origin para mitigar escape
+    if (sandboxTokens.has('allow-scripts') && sandboxTokens.has('allow-same-origin') && trustLevel !== 'trusted') {
         sandboxTokens.delete('allow-same-origin');
-        if (debug) {
-            console.warn('[SafeIframe] Removido allow-same-origin para evitar escape (src=', src, ')');
-        }
+        if (debug) console.warn('[SafeIframe] Removido allow-same-origin (combinação com scripts) para evitar escape:', src);
     }
 
     const sandboxFinal = Array.from(sandboxTokens).join(' ');

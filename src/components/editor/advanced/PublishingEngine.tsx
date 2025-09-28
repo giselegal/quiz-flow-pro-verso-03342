@@ -1,4 +1,5 @@
 import React, { useState, useCallback } from 'react';
+import { SafeIframe } from '@/components/security/SafeIframe';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -8,12 +9,12 @@ import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { 
-  Rocket, 
-  Globe, 
-  Settings, 
-  Eye, 
-  CheckCircle, 
+import {
+  Rocket,
+  Globe,
+  Settings,
+  Eye,
+  CheckCircle,
   AlertCircle,
   Clock,
   BarChart3,
@@ -81,7 +82,7 @@ export const PublishingEngine: React.FC<PublishingEngineProps> = ({
       }
 
       const result = await PublishService.publishFunnel(publishOptions);
-      
+
       setPublishingState(prev => ({
         ...prev,
         isPublishing: false,
@@ -93,7 +94,7 @@ export const PublishingEngine: React.FC<PublishingEngineProps> = ({
       if (onPublishComplete) {
         onPublishComplete(result);
       }
-      
+
     } catch (error) {
       console.error('❌ Erro durante a publicação:', error);
       setPublishingState(prev => ({
@@ -235,13 +236,13 @@ export const PublishingEngine: React.FC<PublishingEngineProps> = ({
                 <Rocket className="w-4 h-4 mr-2" />
                 {publishingState.isPublishing ? 'Publicando...' : 'Publicar Funil'}
               </Button>
-              
+
               <Button
                 variant="outline"
                 size="lg"
-                onClick={() => setPublishOptions(prev => ({ 
-                  ...prev, 
-                  environment: prev.environment === 'staging' ? 'production' : 'staging' 
+                onClick={() => setPublishOptions(prev => ({
+                  ...prev,
+                  environment: prev.environment === 'staging' ? 'production' : 'staging'
                 }))}
               >
                 <Globe className="w-4 h-4 mr-2" />
@@ -254,7 +255,7 @@ export const PublishingEngine: React.FC<PublishingEngineProps> = ({
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-4">
                 <h3 className="text-lg font-semibold">Configurações de Deploy</h3>
-                
+
                 <div className="space-y-2">
                   <Label>Domínio Personalizado</Label>
                   <Input
@@ -281,7 +282,7 @@ export const PublishingEngine: React.FC<PublishingEngineProps> = ({
 
               <div className="space-y-4">
                 <h3 className="text-lg font-semibold">Otimizações</h3>
-                
+
                 <div className="flex items-center justify-between">
                   <Label>Comprimir Imagens</Label>
                   <Switch defaultChecked />
@@ -324,12 +325,15 @@ export const PublishingEngine: React.FC<PublishingEngineProps> = ({
                     </Button>
                   </div>
                 </div>
-                
+
                 <div className="border rounded-lg overflow-hidden">
-                  <iframe
+                  <SafeIframe
                     src={publishingState.previewUrl}
                     className="w-full h-96"
                     title="Preview do Funil"
+                    allowScripts={false}
+                    allowSameOrigin={true}
+                    trustLevel="untrusted"
                   />
                 </div>
               </div>

@@ -1,3 +1,5 @@
+import { SafeIframe } from '@/components/security/SafeIframe';
+
 interface VideoBlockPreviewProps {
   content: {
     videoUrl?: string;
@@ -46,11 +48,13 @@ const VideoBlockPreview: React.FC<VideoBlockPreviewProps> = ({ content }) => {
     <div style={content.style} className="space-y-4">
       {content.videoUrl ? (
         <div className="aspect-video w-full">
-          <iframe
+          <SafeIframe
             src={getEmbedUrl(content.videoUrl)}
             className="w-full h-full rounded-lg"
             title={content.videoTitle || 'Video'}
-            frameBorder="0"
+            allowScripts={false}
+            allowSameOrigin={true}
+            trustLevel="untrusted"
             allowFullScreen
           />
         </div>

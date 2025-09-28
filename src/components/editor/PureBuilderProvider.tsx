@@ -100,6 +100,28 @@ const generateWithPureBuilder = async (funnelId: string, templateInfo: any): Pro
     funnelConfig: any;
     totalSteps: number;
 }> => {
+    if (!templateInfo) {
+        console.warn('⚠️ generateWithPureBuilder chamado sem templateInfo - retornando estrutura vazia');
+        return { stepBlocks: {}, builderInstance: null, funnelConfig: { templateId: 'unknown', totalSteps: 0 }, totalSteps: 0 } as any;
+    }
+
+    if (!templateInfo.totalSteps || templateInfo.totalSteps <= 0) {
+        console.log('ℹ️ generateWithPureBuilder: totalSteps <= 0 (canvas vazio). Retornando estrutura vazia.');
+        return {
+            stepBlocks: {},
+            builderInstance: null,
+            funnelConfig: {
+                templateId: templateInfo.baseId || 'empty-canvas',
+                totalSteps: 0,
+                theme: templateInfo.theme || 'modern-elegant',
+                allowBackward: true,
+                saveProgress: true,
+                showProgress: false
+            },
+            totalSteps: 0
+        };
+    }
+
     console.log('🏗️ Generating funnel with Pure Builder System...', {
         funnelId,
         templateName: templateInfo.templateName,
@@ -336,8 +358,32 @@ export const PureBuilderProvider: React.FC<{
                     .then(templateInfo => {
                         console.log('📋 Template info carregado:', templateInfo);
 
+                        // 🛡️ Guard: Se canvas vazio, não chamar generateWithPureBuilder (evita erro de template)
+                        if (!templateInfo || !templateInfo.totalSteps || templateInfo.totalSteps === 0) {
+                            console.log('🛡️ Template com zero steps - inicializando canvas vazio sem gerar');
+                            setTotalSteps(0);
+                            setState(prev => ({
+                                ...prev,
+                                stepBlocks: {},
+                                builderInstance: null,
+                                funnelConfig: {
+                                    templateId: templateInfo?.baseId || 'empty-canvas',
+                                    totalSteps: 0,
+                                    theme: templateInfo?.theme || 'modern-elegant',
+                                    allowBackward: true,
+                                    saveProgress: true,
+                                    showProgress: false
+                                },
+                                templateInfo,
+                                isLoading: false,
+                                templateLoading: false,
+                                loadedSteps: new Set()
+                            }));
+                            return { stepBlocks: {}, builderInstance: null, funnelConfig: { totalSteps: 0 }, totalSteps: 0, templateInfo };
+                        }
+
                         return generateWithPureBuilder(targetFunnelId, templateInfo)
-                            .then(result => ({ ...result, templateInfo })); // 🔧 CORREÇÃO: Passar templateInfo adiante
+                            .then(result => ({ ...result, templateInfo }));
                     })
                     .then(({ stepBlocks, builderInstance, funnelConfig, totalSteps: templateTotalSteps, templateInfo }) => {
                         // ✅ ATUALIZAR TOTAL STEPS
