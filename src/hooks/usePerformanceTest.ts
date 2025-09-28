@@ -282,11 +282,17 @@ export function usePerformanceTest(
         intervalRef.current = setInterval(collectMetrics, interval);
 
         // Interceptar network calls se habilitado
+        let cleanup: (() => void) | undefined;
         if (trackNetworkCalls) {
-            setupNetworkTracking();
+            cleanup = setupNetworkTracking() as unknown as (() => void);
         }
 
         console.log(`[PerformanceTest:${componentName}] Test started`);
+
+        // Garantir cleanup se apropriado
+        if (cleanup) {
+            return () => cleanup && cleanup();
+        }
     }, [enabled, componentName, interval, collectMetrics, trackNetworkCalls]);
 
     // ⏹️ Parar teste
@@ -354,7 +360,9 @@ export function usePerformanceTest(
 
     // 🎯 Setup de tracking de rede
     const setupNetworkTracking = useCallback(() => {
-        // Interceptar fetch calls
+        const ENABLE = (import.meta as any)?.env?.VITE_ENABLE_PERF_NET_TRACKING === 'true';
+        if (!ENABLE) return () => {};
+
         const originalFetch = window.fetch;
         window.fetch = async (...args) => {
             const start = performance.now();
@@ -375,6 +383,10 @@ export function usePerformanceTest(
                 if (lastCall) lastCall.end = end;
                 throw error;
             }
+        };
+
+        return () => {
+            try { (window as any).fetch = originalFetch; } catch {}
         };
     }, []);
 

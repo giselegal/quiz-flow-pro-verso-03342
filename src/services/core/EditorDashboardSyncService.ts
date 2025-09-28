@@ -442,12 +442,30 @@ class EditorDashboardSyncServiceImpl {
 
         // Configurar auto-sync a cada 30 segundos
         const autoSyncInterval = setInterval(() => {
+            // Pausar quando aba estiver oculta para economizar CPU/Rede
+            if (typeof document !== 'undefined' && document.hidden) return;
             this.autoSync();
         }, 30000);
+
+        // Pausar/resumir imediatamente com Page Visibility
+        const visibilityHandler = () => {
+            if (document.hidden) {
+                // noop: ciclo já checa hidden
+            } else {
+                // Ao voltar, dispara um sync rápido
+                this.autoSync();
+            }
+        };
+        if (typeof document !== 'undefined' && typeof document.addEventListener === 'function') {
+            document.addEventListener('visibilitychange', visibilityHandler);
+        }
 
         // Retornar função de cleanup
         return () => {
             clearInterval(autoSyncInterval);
+            if (typeof document !== 'undefined' && typeof document.removeEventListener === 'function') {
+                document.removeEventListener('visibilitychange', visibilityHandler);
+            }
             console.log('🔌 EditorDashboardSync: Editor desconectado');
         };
     }
