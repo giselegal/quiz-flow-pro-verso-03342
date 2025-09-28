@@ -38,7 +38,9 @@ export const useQuizResult = () => {
       // 🎯 FASE 1: Verificar cache primeiro para evitar recálculos desnecessários
       let unifiedData = null;
       try {
-        const { unifiedQuizStorage } = await import('@/services/core/UnifiedQuizStorage');
+        // Usar import centralizado para evitar warning do Vite
+        const { getUnifiedQuizStorage } = await import('@/services/core/imports');
+        const unifiedQuizStorage = getUnifiedQuizStorage();
         unifiedData = unifiedQuizStorage.loadData();
         
         // Verificar cache de resultados se houver dados
@@ -77,7 +79,9 @@ export const useQuizResult = () => {
       let isResultStep = false;
 
       try {
-        const { unifiedQuizStorage } = await import('@/services/core/UnifiedQuizStorage');
+        // Usar import centralizado para evitar warning do Vite
+        const { getUnifiedQuizStorage } = await import('@/services/core/imports');
+        const unifiedQuizStorage = getUnifiedQuizStorage();
         const data = unifiedQuizStorage.loadData();
         isResultStep = data.metadata?.currentStep === 20;
         hasEnoughData = unifiedQuizStorage.hasEnoughDataForResult();

@@ -88,7 +88,8 @@ const TemplateInvestigationPage: React.FC = () => {
         console.log('☁️ Verificando Supabase...');
         try {
             // Tentar importar e usar o cliente Supabase
-            const { supabase } = await import('../../integrations/supabase/client');
+            // Usar import estático para evitar warning do Vite
+            const { supabase } = await import('@/integrations/supabase/client');
 
             // Tentar buscar templates
             const { data, error } = await (supabase as any).from('templates').select('*');

@@ -147,6 +147,7 @@ class UnifiedTemplateService {
      */
     private async loadFromDatabase(templateId: string): Promise<any | null> {
         try {
+            // Usar import estático para evitar warning do Vite
             const { supabase } = await import('@/integrations/supabase/client');
 
             if (!supabase) {
@@ -202,8 +203,9 @@ class UnifiedTemplateService {
             if (templateId === 'quiz21StepsComplete' || templateId.startsWith('step-')) {
                 console.log(`🎯 Carregando template REAL: ${templateId}`);
 
-                // Importar template real completo
-                const { QUIZ_STYLE_21_STEPS_TEMPLATE } = await import('@/templates/quiz21StepsComplete');
+                // Importar template real completo via barrel
+                const { getQuiz21StepsTemplate } = await import('@/templates/imports');
+                const QUIZ_STYLE_21_STEPS_TEMPLATE = getQuiz21StepsTemplate();
 
                 if (templateId === 'quiz21StepsComplete') {
                     // Retornar estrutura completa do template real
@@ -463,7 +465,9 @@ class UnifiedTemplateService {
                 console.log(`🎯 Tentando carregar template REAL: ${stepId}`);
 
                 try {
-                    const { QUIZ_STYLE_21_STEPS_TEMPLATE } = await import('@/templates/quiz21StepsComplete');
+                    // Usar import centralizado para evitar warning do Vite
+                    const { getQuiz21StepsTemplate } = await import('@/templates/imports');
+                    const QUIZ_STYLE_21_STEPS_TEMPLATE = getQuiz21StepsTemplate();
                     const realBlocks = (QUIZ_STYLE_21_STEPS_TEMPLATE as any)[stepId];
 
                     if (realBlocks && Array.isArray(realBlocks) && realBlocks.length > 0) {
