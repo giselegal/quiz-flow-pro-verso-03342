@@ -31,7 +31,11 @@ export default defineConfig({
     middlewareMode: false,
     proxy: {},
     // SPA routing será tratado pelo plugin vite
-    hmr: true,
+    hmr: {
+      overlay: false, // Desabilitar overlay de erro para reduzir spam
+      clientPort: 8080, // Usar porta específica
+      port: 8080, // Porta do HMR
+    },
   },
   preview: {
     host: '0.0.0.0',

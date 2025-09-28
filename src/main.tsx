@@ -7,6 +7,10 @@ import './styles/design-system.css';
 // 🧹 DEVELOPMENT: Sistema de limpeza de avisos do console
 import { initBrowserCleanup } from './utils/browserCleanup';
 import { cleanupConsoleWarnings } from './utils/development';
+// 🔧 WEBSOCKET: Otimizador para resolver problemas de reconexão
+import './utils/websocket-optimizer';
+// 📊 RUDDERSTACK: Otimizador para resolver problemas de analytics
+import './utils/rudderstack-optimizer';
 // 🛡️ DEVELOPMENT: Bloquear conexões Lovable em desenvolvimento
 import './utils/blockLovableInDev';
 // 🎯 PERFORMANCE: Controle de debug do canvas para melhor performance
