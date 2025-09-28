@@ -640,11 +640,4 @@ export class VersioningService {
 // Instância singleton
 export const versioningService = new VersioningService();
 
-// Export tipos
-export type { 
-  VersionSnapshot, 
-  VersionChange, 
-  VersionComparison, 
-  VersioningConfig, 
-  VersioningStats 
-};
+// Tipos já exportados acima

@@ -19,7 +19,7 @@ import {
   VersionSnapshot, 
   VersionComparison,
   VersioningStats 
-} from '@/services/VersioningService';
+} from '@/services/versioningService';
 import { 
   historyManager, 
   HistoryEntry, 
@@ -189,7 +189,7 @@ export const useUnifiedVersioning = (
       // Rastrear no histórico
       if (enableHistoryTracking) {
         await historyManager.trackCRUDChange(
-          'snapshot',
+          'create',
           'funnel',
           funnel.id,
           [],
@@ -234,7 +234,7 @@ export const useUnifiedVersioning = (
         if (enableHistoryTracking) {
           await historyManager.trackCRUDChange(
             'delete',
-            'system',
+            'funnel',
             id,
             [],
             `Snapshot ${id} excluído`

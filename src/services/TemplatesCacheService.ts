@@ -405,11 +405,13 @@ export class TemplatesCacheService {
 
   public preloadSteps(steps: number[], funnelId: string = 'default'): Promise<void[]> {
     return Promise.all(
-      steps.map(step => 
-        this.getStepTemplate(step, funnelId).catch(error => {
+      steps.map(async step => {
+        try {
+          await this.getStepTemplate(step, funnelId);
+        } catch (error) {
           console.warn(`⚠️ Preload falhou para step ${step}:`, error);
-        })
-      )
+        }
+      })
     );
   }
 
@@ -419,6 +421,34 @@ export class TemplatesCacheService {
   public updateConfig(newConfig: Partial<CacheConfig>): void {
     this.config = { ...this.config, ...newConfig };
     console.log('⚙️ Cache config atualizada:', this.config);
+  }
+
+  /**
+   * 🚀 MÉTODOS ADICIONAIS PARA INTEGRAÇÃO
+   */
+  public preloadFunnel(funnelId: string): Promise<void> {
+    return this.preloadSteps([1, 2, 3, 4, 5], funnelId).then(() => {});
+  }
+
+  public invalidateFunnel(funnelId: string): void {
+    const keysToDelete = Array.from(this.cache.keys()).filter(key => 
+      key.includes(funnelId)
+    );
+    keysToDelete.forEach(key => this.cache.delete(key));
+    console.log(`🗑️ Cache invalidado para funil ${funnelId}`);
+  }
+
+  public clearFunnel(funnelId: string): void {
+    this.invalidateFunnel(funnelId);
+  }
+
+  public refreshCache(): void {
+    this.invalidateAll();
+    console.log('🔄 Cache refreshado');
+  }
+
+  public clearCache(): void {
+    this.invalidateAll();
   }
 }
 

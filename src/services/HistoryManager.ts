@@ -13,7 +13,7 @@
  * ✅ Integração com undo/redo
  */
 
-import { VersionChange, VersionSnapshot } from './VersioningService';
+import { VersionChange, VersionSnapshot } from './versioningService';
 import { UnifiedFunnel, UnifiedStage } from './UnifiedCRUDService';
 import { Block } from '@/types/editor';
 
@@ -386,7 +386,12 @@ export class HistoryManager {
 
     const topChangedEntities = Array.from(entityChangeCounts.values())
       .sort((a, b) => b.count - a.count)
-      .slice(0, 10);
+      .slice(0, 10)
+      .map(item => ({
+        entityId: item.entityId,
+        entityType: item.entityType,
+        changeCount: item.count
+      }));
 
     return {
       totalEntries: entries.length,
@@ -547,10 +552,4 @@ export class HistoryManager {
 // Instância singleton
 export const historyManager = new HistoryManager();
 
-// Export tipos
-export type { 
-  HistoryEntry, 
-  HistoryFilter, 
-  HistoryStats, 
-  HistoryExport 
-};
+// Tipos já exportados acima
