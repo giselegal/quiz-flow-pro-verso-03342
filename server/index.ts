@@ -14,6 +14,21 @@ const server = createServer(app);
 app.use(cors());
 app.use(express.json());
 
+// ==================================================================================
+// In-memory Configuration Storage (server-side) - dev/default backend
+// ==================================================================================
+type StoredConfiguration = {
+  componentId: string;
+  funnelId?: string;
+  properties: Record<string, any>;
+  version: number;
+  lastModified: string;
+  metadata?: Record<string, any>;
+};
+
+const configStore = new Map<string, StoredConfiguration>();
+const configKey = (componentId: string, funnelId?: string) => (funnelId ? `${componentId}:${funnelId}` : componentId);
+
 // Servir arquivos estáticos do build com tipos MIME corretos
 app.use(express.static(path.join(__dirname, '../dist'), {
   setHeaders: (res, filePath) => {
@@ -32,6 +47,99 @@ app.use(express.static(path.join(__dirname, '../dist'), {
 // Health check endpoint
 app.get('/health', (req, res) => {
   res.json({ status: 'OK', timestamp: new Date().toISOString() });
+});
+
+// ==================================================================================
+// Configuration API endpoints
+// ==================================================================================
+
+// GET current configuration
+app.get('/api/components/:componentId/configuration', (req, res) => {
+  const { componentId } = req.params as { componentId: string };
+  const funnelId = (req.query?.funnelId as string | undefined) || undefined;
+  const key = configKey(componentId, funnelId);
+  const stored = configStore.get(key);
+  res.json(stored?.properties ?? {});
+});
+
+// PUT update configuration (replace/merge properties)
+app.put('/api/components/:componentId/configuration', (req, res) => {
+  const { componentId } = req.params as { componentId: string };
+  const { properties = {}, funnelId } = req.body || {};
+  const key = configKey(componentId, funnelId);
+  const existing = configStore.get(key);
+  const next: StoredConfiguration = {
+    componentId,
+    funnelId,
+    properties: { ...(existing?.properties || {}), ...(properties || {}) },
+    version: (existing?.version || 0) + 1,
+    lastModified: new Date().toISOString(),
+    metadata: { ...(existing?.metadata || {}), source: 'api' }
+  };
+  configStore.set(key, next);
+  res.json({ ok: true });
+});
+
+// POST update single property
+app.post('/api/components/:componentId/properties/:propertyKey', (req, res) => {
+  const { componentId, propertyKey } = req.params as { componentId: string; propertyKey: string };
+  const { value, funnelId } = req.body || {};
+  const key = configKey(componentId, funnelId);
+  const existing = configStore.get(key);
+  const nextProps = { ...(existing?.properties || {}), [propertyKey]: value };
+  const next: StoredConfiguration = {
+    componentId,
+    funnelId,
+    properties: nextProps,
+    version: (existing?.version || 0) + 1,
+    lastModified: new Date().toISOString(),
+    metadata: { ...(existing?.metadata || {}), source: 'api' }
+  };
+  configStore.set(key, next);
+  res.json({ ok: true });
+});
+
+// GET stats
+app.get('/api/configurations/stats', (_req, res) => {
+  const componentBreakdown: Record<string, number> = {};
+  let lastModified: string | null = null;
+  for (const entry of configStore.values()) {
+    componentBreakdown[entry.componentId] = (componentBreakdown[entry.componentId] || 0) + 1;
+    if (!lastModified || entry.lastModified > lastModified) lastModified = entry.lastModified;
+  }
+  res.json({ totalConfigurations: configStore.size, componentBreakdown, lastModified });
+});
+
+// GET export
+app.get('/api/configurations/export', (_req, res) => {
+  const payload = Array.from(configStore.entries()).map(([key, cfg]) => ({ key, ...cfg }));
+  res.json(payload);
+});
+
+// POST import
+app.post('/api/configurations/import', (req, res) => {
+  const items = Array.isArray(req.body) ? req.body : [];
+  for (const item of items) {
+    const key = item?.key || configKey(item?.componentId, item?.funnelId);
+    if (key) configStore.set(key, {
+      componentId: item.componentId,
+      funnelId: item.funnelId,
+      properties: item.properties || {},
+      version: Number(item.version || 1),
+      lastModified: item.lastModified || new Date().toISOString(),
+      metadata: item.metadata || {}
+    });
+  }
+  res.json({ imported: items.length });
+});
+
+// POST reset to defaults (server just deletes; client falls back to defaults)
+app.post('/api/components/:componentId/reset', (req, res) => {
+  const { componentId } = req.params as { componentId: string };
+  const { funnelId } = req.body || {};
+  const key = configKey(componentId, funnelId);
+  configStore.delete(key);
+  res.json({ ok: true });
 });
 
 // Quiz endpoints

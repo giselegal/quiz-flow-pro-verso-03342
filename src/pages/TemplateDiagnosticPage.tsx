@@ -120,6 +120,7 @@ const TemplateDiagnosticPage: React.FC = () => {
             console.log('🔍 Diagnóstico completo:', results);
             setDiagnostics(results);
 
+
         } catch (error: any) {
             console.error('❌ Erro no diagnóstico:', error);
             results.general = {

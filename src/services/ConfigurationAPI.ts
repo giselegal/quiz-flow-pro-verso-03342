@@ -86,6 +86,8 @@ export class ConfigurationAPI implements ComponentConfigurationAPI {
     private static instance: ConfigurationAPI;
     private cache = new Map<string, any>();
     private cacheTimeout = 5 * 60 * 1000; // 5 minutos
+    private useHttp = typeof window !== 'undefined' && (import.meta as any)?.env?.VITE_CONFIG_API_HTTP === 'true';
+    private baseUrl = typeof window !== 'undefined' ? '' : '';
 
     static getInstance(): ConfigurationAPI {
         if (!ConfigurationAPI.instance) {
@@ -108,7 +110,20 @@ export class ConfigurationAPI implements ComponentConfigurationAPI {
                 return this.cache.get(cacheKey);
             }
 
-            // Carregar do storage
+            if (this.useHttp) {
+                const params = new URLSearchParams();
+                if (funnelId) params.set('funnelId', funnelId);
+                const res = await fetch(`${this.baseUrl}/api/components/${encodeURIComponent(componentId)}/configuration?${params.toString()}`, {
+                    method: 'GET'
+                });
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                const json = await res.json();
+                this.cache.set(cacheKey, json);
+                setTimeout(() => this.cache.delete(cacheKey), this.cacheTimeout);
+                return json;
+            }
+
+            // Carregar do storage (fallback local em dev)
             const stored = await ConfigurationStorage.load(componentId, funnelId);
 
             if (stored) {
@@ -148,18 +163,27 @@ export class ConfigurationAPI implements ComponentConfigurationAPI {
                 throw new Error(`Validation failed: ${validation.errors.map(e => e.message).join(', ')}`);
             }
 
-            // Salvar no storage
-            await ConfigurationStorage.save({
-                componentId,
-                funnelId,
-                properties,
-                version: 1,
-                lastModified: new Date(),
-                metadata: {
-                    environment: 'development',
-                    source: 'api'
-                }
-            });
+            if (this.useHttp) {
+                const res = await fetch(`${this.baseUrl}/api/components/${encodeURIComponent(componentId)}/configuration`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ properties, funnelId })
+                });
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+            } else {
+                // Salvar no storage
+                await ConfigurationStorage.save({
+                    componentId,
+                    funnelId,
+                    properties,
+                    version: 1,
+                    lastModified: new Date(),
+                    metadata: {
+                        environment: 'development',
+                        source: 'api'
+                    }
+                });
+            }
 
             // Invalidar cache
             const cacheKey = `${componentId}:${funnelId || 'default'}`;
@@ -188,17 +212,26 @@ export class ConfigurationAPI implements ComponentConfigurationAPI {
         try {
             console.log(`🔧 UPDATE Property: ${componentId}.${propertyKey} = ${value}`);
 
-            // Carregar configuração atual
-            const currentConfig = await this.getConfiguration(componentId, funnelId);
+            if (this.useHttp) {
+                const res = await fetch(`${this.baseUrl}/api/components/${encodeURIComponent(componentId)}/properties/${encodeURIComponent(propertyKey)}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ value, funnelId })
+                });
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+            } else {
+                // Carregar configuração atual
+                const currentConfig = await this.getConfiguration(componentId, funnelId);
 
-            // Atualizar propriedade específica
-            const updatedConfig = {
-                ...currentConfig,
-                [propertyKey]: value
-            };
+                // Atualizar propriedade específica
+                const updatedConfig = {
+                    ...currentConfig,
+                    [propertyKey]: value
+                };
 
-            // Salvar configuração completa
-            await this.updateConfiguration(componentId, updatedConfig, funnelId);
+                // Salvar configuração completa
+                await this.updateConfiguration(componentId, updatedConfig, funnelId);
+            }
 
             console.log(`✅ Property updated: ${componentId}.${propertyKey}`);
 

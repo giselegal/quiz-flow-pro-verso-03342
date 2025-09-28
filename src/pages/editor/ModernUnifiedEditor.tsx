@@ -40,7 +40,6 @@ const TemplateLoadingSkeleton = React.lazy(() =>
 
 // Providers necessários
 import { FunnelMasterProvider } from '@/providers/FunnelMasterProvider';
-import PureBuilderProvider from '@/components/editor/PureBuilderProvider';
 import { useNotification } from '@/components/ui/Notification';
 import UnifiedCRUDProvider, { useUnifiedCRUD } from '@/context/UnifiedCRUDProvider';
 
@@ -629,7 +628,6 @@ const UnifiedEditorCore: React.FC<ModernUnifiedEditorProps> = ({
                     debugMode={false}
                     enableCache={true}
                 >
-                    <PureBuilderProvider funnelId={extractedInfo.funnelId || undefined}>
                         {/* 🔍 FUNNEL TYPE DETECTION - apenas para funnels específicos */}
                         {extractedInfo.funnelId && (
                             <div className="p-4 border-b bg-background">
@@ -697,7 +695,6 @@ const UnifiedEditorCore: React.FC<ModernUnifiedEditorProps> = ({
                                 </TemplateErrorBoundary>
                             </Suspense>
                         </Suspense>
-                    </PureBuilderProvider>
                 </FunnelMasterProvider>
             </div>
 
