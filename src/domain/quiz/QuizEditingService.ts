@@ -14,6 +14,7 @@ import { eventBus } from '@/core/events/eventBus';
 import { logger } from '@/core/logging/StructuredLogger';
 import canonicalDefinition from './quiz-definition';
 import { buildCanonicalBlocksTemplate, buildBlocksForDefinition } from './blockTemplateGenerator';
+import { invalidateQuizTemplate } from '@/templates/quiz21StepsAdapter';
 import { QuizDefinition } from './types';
 import { quizOverridesStorage } from './storage/QuizOverridesStorage';
 
@@ -95,6 +96,7 @@ export class QuizEditingService {
         if (!original) throw new Error(`Step ${stepId} não encontrado`);
         this.overrides.steps[stepId] = { ...(this.overrides.steps[stepId] || {}), ...patch };
         this.markDirty();
+        invalidateQuizTemplate('updateStep');
         this.recompute([stepId]);
         logger.info('Step atualizado', { stepId, fields: Object.keys(patch) }, 'QuizEditingService');
         eventBus.publish({ type: 'editor.step.modified', stepId, field: Object.keys(patch).join(','), ts: Date.now() });
@@ -104,6 +106,7 @@ export class QuizEditingService {
         if (this.overrides.steps[stepId]) {
             delete this.overrides.steps[stepId];
             this.markDirty();
+            invalidateQuizTemplate('resetStep');
             this.recompute();
             eventBus.publish({ type: 'quiz.definition.reload', hash: this.state?.hash || '', ts: Date.now() });
         }
@@ -121,6 +124,7 @@ export class QuizEditingService {
         (stepOverride as any).blocks = blocksOverride;
         this.overrides.steps[stepId] = stepOverride;
         this.markDirty();
+        invalidateQuizTemplate('updateBlock');
         this.recompute([stepId]);
         logger.debug('Block atualizado', { stepId, blockIndex, patchKeys: Object.keys(patch) }, 'QuizEditingService');
         eventBus.publish({ type: 'editor.step.modified', stepId, field: `block:${blockIndex}`, ts: Date.now() });
@@ -172,6 +176,7 @@ export class QuizEditingService {
     resetAll() {
         this.overrides = { version: 1, updatedAt: null, steps: {}, blocks: {} };
         this.markDirty();
+        invalidateQuizTemplate('resetAll');
         this.recompute();
         eventBus.publish({ type: 'quiz.definition.reload', hash: this.state?.hash || '', ts: Date.now() });
     }

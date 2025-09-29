@@ -8,17 +8,42 @@ import { getQuizDefinition } from '@/domain/quiz/runtime';
 export type Block = any;
 
 let _cache: Record<string, Block[]> | null = null;
+let _lastHash: string | null = null;
+
+function computeDefinitionHash(def: any): string {
+    try {
+        const json = JSON.stringify(def.steps.map((s: any) => ({ id: s.id, t: s.type, q: s.questionText, n: s.next }))); // reduzir
+        let h = 0; for (let i = 0; i < json.length; i++) { h = (h << 5) - h + json.charCodeAt(i); h |= 0; }
+        return ('00000000' + (h >>> 0).toString(16)).slice(-8);
+    } catch { return '00000000'; }
+}
+
+export function invalidateQuizTemplate(reason?: string) {
+    // eslint-disable-next-line no-console
+    console.info('[quiz21StepsAdapter] invalidando cache', reason || 'sem motivo');
+    _cache = null;
+    _lastHash = null;
+}
+
 function load(): Record<string, Block[]> {
-    if (_cache) return _cache;
     try {
         const def = getQuizDefinition();
-        _cache = def ? buildCanonicalBlocksTemplate() : {};
+        if (!def) {
+            if (!_cache) _cache = {};
+            return _cache;
+        }
+        const currentHash = computeDefinitionHash(def);
+        if (_cache && _lastHash === currentHash) {
+            return _cache;
+        }
+        _cache = buildCanonicalBlocksTemplate();
+        _lastHash = currentHash;
+        return _cache;
     } catch (e) {
-        // eslint-disable-next-line no-console
-        console.warn('[quiz21StepsAdapter] fallback vazio', e);
-        _cache = {};
+        console.warn('[quiz21StepsAdapter] erro ao carregar, usando cache ou vazio', e);
+        if (!_cache) _cache = {};
+        return _cache;
     }
-    return _cache;
 }
 
 export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = load();

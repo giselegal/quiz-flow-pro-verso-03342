@@ -1,5 +1,16 @@
 import { getQuizDefinition } from './runtime';
 
+// Deriva ordinal de pergunta baseado em progress.countedStepIds e id do step
+function computeQuestionOrdinal(definition: any, stepId: string): { ordinal: number | null; total: number | null; label: string | null } {
+    const counted: string[] | undefined = definition?.progress?.countedStepIds;
+    if (!Array.isArray(counted) || counted.length === 0) return { ordinal: null, total: null, label: null };
+    const idx = counted.indexOf(stepId);
+    if (idx === -1) return { ordinal: null, total: counted.length, label: null };
+    const ordinal = idx + 1;
+    const total = counted.length;
+    return { ordinal, total, label: `${ordinal} de ${total}` };
+}
+
 // Tipos genéricos de Block (mantemos 'any' onde o tipo exato ainda não está centralizado)
 export interface Block {
     id: string;
@@ -203,6 +214,10 @@ function buildIntro(ctx: BuildContext): Block[] {
 
 function buildQuestion(ctx: BuildContext): Block[] {
     const s = ctx.canonicalStep;
+    // Se questionNumber ausente ou inconsistente, recalcular dinâmico
+    const def = getQuizDefinition();
+    const dyn = computeQuestionOrdinal(def, s.id);
+    const effectiveQuestionNumber = dyn.label || s.questionNumber;
     const pres = deriveQuestionPresentation(s);
     const ov = questionOverrides[s.id];
     const finalLayout = ov?.layout || pres.layout;
@@ -245,7 +260,7 @@ function buildQuestion(ctx: BuildContext): Block[] {
         content: {
             question: s.questionText,
             options: s.options,
-            questionNumber: s.questionNumber,
+            questionNumber: effectiveQuestionNumber,
             requiredSelections: pres.requiredSelections,
             minSelections: pres.minSelections,
             maxSelections: pres.maxSelections,
