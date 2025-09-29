@@ -274,7 +274,12 @@ export class QuizEditingService {
         overrideBlocks.forEach((patch: any, idx: number) => {
             if (!patch) return;
             if (!stepBlocks[idx]) return;
-            stepBlocks[idx] = { ...stepBlocks[idx], properties: { ...stepBlocks[idx].properties, ...patch } };
+            const { content: patchContent, ...rest } = patch;
+            stepBlocks[idx] = {
+                ...stepBlocks[idx],
+                properties: { ...stepBlocks[idx].properties, ...rest },
+                content: patchContent ? { ...stepBlocks[idx].content, ...patchContent } : stepBlocks[idx].content
+            };
         });
     }
 

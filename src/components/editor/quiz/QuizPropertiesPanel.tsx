@@ -109,6 +109,55 @@ export const QuizPropertiesPanel: React.FC = () => {
                     <Textarea defaultValue={(step as any).questionText} onChange={e => handleChange('questionText', e.target.value)} rows={3} />
                 </div>
             )}
+            {(isQuestion || isStrategic) && (
+                <div className="space-y-2 border rounded p-2 bg-muted/20">
+                    <div className="flex items-center justify-between">
+                        <span className="text-[11px] font-semibold text-muted-foreground">Overrides de Layout</span>
+                        <Button size="sm" variant="ghost" className="text-[10px]" onClick={() => {
+                            // reset: remover campos de override definindo undefined
+                            quiz.updateStep({ layout: undefined as any, columns: undefined as any, optionStyle: undefined as any });
+                        }}>Reset</Button>
+                    </div>
+                    <div className="grid grid-cols-3 gap-2">
+                        <div className="space-y-1">
+                            <label className="text-[10px] font-medium">Layout</label>
+                            <select
+                                className="h-7 text-xs w-full border rounded px-1 bg-background"
+                                defaultValue={(step as any).layout || ''}
+                                onChange={e => handleChange('layout', e.target.value || undefined)}
+                            >
+                                <option value="">auto</option>
+                                <option value="grid">grid</option>
+                                <option value="list">list</option>
+                            </select>
+                        </div>
+                        <div className="space-y-1">
+                            <label className="text-[10px] font-medium">Columns</label>
+                            <input
+                                type="number"
+                                min={1}
+                                max={6}
+                                className="h-7 text-xs w-full border rounded px-1 bg-background"
+                                defaultValue={(step as any).columns || ''}
+                                onChange={e => handleChange('columns', e.target.value ? parseInt(e.target.value, 10) : undefined)}
+                            />
+                        </div>
+                        <div className="space-y-1">
+                            <label className="text-[10px] font-medium">Option Style</label>
+                            <select
+                                className="h-7 text-xs w-full border rounded px-1 bg-background"
+                                defaultValue={(step as any).optionStyle || ''}
+                                onChange={e => handleChange('optionStyle', e.target.value || undefined)}
+                            >
+                                <option value="">auto</option>
+                                <option value="image-card">image-card</option>
+                                <option value="text-card">text-card</option>
+                            </select>
+                        </div>
+                    </div>
+                    <p className="text-[10px] text-muted-foreground">Se vazio = heurística automática (derivada de imagens e quantidade de opções).</p>
+                </div>
+            )}
             {(isQuestion || isStrategic) && Array.isArray((step as any).options) && (
                 <div className="space-y-2">
                     <div className="flex items-center justify-between">
@@ -142,7 +191,21 @@ export const QuizPropertiesPanel: React.FC = () => {
                                     <span>{v.matchValue || '(sem match)'}</span>
                                     <Button size="sm" variant="ghost" onClick={() => handleRemoveVariant(idx)}>Remover</Button>
                                 </div>
-                                <Input placeholder="matchValue" defaultValue={v.matchValue} onChange={e => handleVariantChange(idx, 'matchValue', e.target.value)} className="h-7 text-xs" />
+                                <div className="grid grid-cols-2 gap-2">
+                                    <div className="space-y-1">
+                                        <label className="text-[10px] font-medium">matchValue</label>
+                                        <Input placeholder="matchValue" defaultValue={v.matchValue} onChange={e => handleVariantChange(idx, 'matchValue', e.target.value)} className="h-7 text-xs" />
+                                    </div>
+                                    <div className="space-y-1">
+                                        <label className="text-[10px] font-medium">matchOptionId</label>
+                                        <Input
+                                            placeholder="ex: opt-abc123"
+                                            defaultValue={v.matchOptionId}
+                                            onChange={e => handleVariantChange(idx, 'matchOptionId', e.target.value)}
+                                            className="h-7 text-xs"
+                                        />
+                                    </div>
+                                </div>
                                 <Input placeholder="Título" defaultValue={v.title} onChange={e => handleVariantChange(idx, 'title', e.target.value)} className="h-7 text-xs" />
                                 <Textarea placeholder="Descrição" defaultValue={v.description} onChange={e => handleVariantChange(idx, 'description', e.target.value)} rows={2} className="text-xs" />
                                 <Input placeholder="Botão" defaultValue={v.buttonText} onChange={e => handleVariantChange(idx, 'buttonText', e.target.value)} className="h-7 text-xs" />

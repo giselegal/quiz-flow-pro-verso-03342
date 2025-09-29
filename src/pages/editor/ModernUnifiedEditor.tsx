@@ -55,6 +55,7 @@ import { UnifiedRoutingService } from '@/services/core/UnifiedRoutingService';
 // 🎯 TEMPLATE REGISTRY INTEGRATION
 import { loadFullTemplate, convertTemplateToEditorFormat } from '@/templates/registry';
 import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
+import { getQuizDynamicMode } from '@/templates/quiz21StepsAdapter';
 
 // 🧪 Development Testing
 import testCRUDOperations from '@/utils/testCRUDOperations';
@@ -461,13 +462,13 @@ const UnifiedEditorCore: React.FC<ModernUnifiedEditorProps> = ({
         // 🚨 CORREÇÃO CRÍTICA: Processar query parameter template segundo
         if (templateParam) {
             console.log('✅ Template encontrado via query param:', templateParam);
-            
+
             // 🎯 QUIZ-ESTILO: Detectar template do quiz
             if (templateParam === 'quiz-estilo-21-steps') {
                 console.log('🎯 Detectado template quiz-estilo-21-steps');
                 return { templateId: templateParam, funnelId: null, type: 'quiz-template' };
             }
-            
+
             return { templateId: templateParam, funnelId: null, type: 'template' };
         }
 
@@ -504,17 +505,17 @@ const UnifiedEditorCore: React.FC<ModernUnifiedEditorProps> = ({
     // 🎯 QUIZ-ESTILO: Detectar e redirecionar para página especializada
     if (extractedInfo.type === 'quiz-template' && extractedInfo.templateId === 'quiz-estilo-21-steps') {
         console.log('🚀 Redirecionando para QuizEditorIntegratedPage...');
-        
+
         // Importar dinamicamente a página especializada
-        const QuizEditorIntegratedPage = React.lazy(() => 
+        const QuizEditorIntegratedPage = React.lazy(() =>
             import('./QuizEditorIntegratedPage')
         );
-        
+
         return (
             <div className={`modern-unified-editor ${className}`}>
                 <Suspense fallback={<LoadingSpinner message="Carregando Quiz Editor..." />}>
-                    <QuizEditorIntegratedPage 
-                        funnelId={extractedInfo.funnelId || undefined} 
+                    <QuizEditorIntegratedPage
+                        funnelId={extractedInfo.funnelId || undefined}
                     />
                 </Suspense>
             </div>
@@ -874,6 +875,7 @@ const UnifiedEditorCore: React.FC<ModernUnifiedEditorProps> = ({
                 <div className="flex items-center gap-2 text-xs text-muted-foreground">
                     <Activity className="w-3 h-3" />
                     <span>Editor ativo: {editorState.mode}</span>
+                    <span className="ml-2 px-2 py-0.5 rounded bg-muted/60">Dynamic Mode: {getQuizDynamicMode()}</span>
 
                     {unifiedEditor.isLoading && (
                         <>
