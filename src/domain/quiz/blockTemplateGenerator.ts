@@ -460,3 +460,29 @@ export function buildSubsetFrom(stepIdStart: string): Record<string, Block[]> {
     }
     return subset;
 }
+
+// Novo helper para construir blocks a partir de uma definição já mesclada (permite subset)
+export function buildBlocksForDefinition(definition: any, stepIds?: string[]): Record<string, Block[]> {
+    if (!definition) return {};
+    const steps: any[] = definition.steps || [];
+    const total = steps.length;
+    const wanted = stepIds && stepIds.length > 0 ? steps.filter(s => stepIds.includes(s.id)) : steps;
+    const result: Record<string, Block[]> = {};
+    wanted.forEach((step: any, index: number) => {
+        const globalIndex = steps.findIndex(s => s.id === step.id);
+        const builder = typeBuilders[step.type];
+        if (!builder) {
+            result[step.id] = [{ id: `${step.id}-raw`, type: 'raw-json-debug', order: 0, content: { step } }];
+            return;
+        }
+        result[step.id] = builder({
+            stepId: step.id,
+            index: globalIndex,
+            total,
+            canonicalStep: step,
+            previousStepId: globalIndex > 0 ? steps[globalIndex - 1].id : undefined,
+            nextStepId: globalIndex < total - 1 ? steps[globalIndex + 1].id : undefined
+        });
+    });
+    return result;
+}

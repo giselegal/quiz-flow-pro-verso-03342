@@ -1,3 +1,4 @@
+
 /**
  * QuizEditingService
  * --------------------------------------------------------------
@@ -11,7 +12,7 @@
 
 import { eventBus } from '@/core/events/eventBus';
 import canonicalDefinition from './quiz-definition.json';
-import { buildCanonicalBlocksTemplate } from './blockTemplateGenerator';
+import { buildCanonicalBlocksTemplate, buildBlocksForDefinition } from './blockTemplateGenerator';
 import { QuizDefinition } from './types';
 import { quizOverridesStorage } from './storage/QuizOverridesStorage';
 
@@ -93,7 +94,7 @@ export class QuizEditingService {
         if (!original) throw new Error(`Step ${stepId} não encontrado`);
         this.overrides.steps[stepId] = { ...(this.overrides.steps[stepId] || {}), ...patch };
         this.markDirty();
-        this.recompute();
+        this.recompute([stepId]);
         eventBus.publish({ type: 'editor.step.modified', stepId, field: Object.keys(patch).join(','), ts: Date.now() });
     }
 
@@ -118,7 +119,7 @@ export class QuizEditingService {
         (stepOverride as any).blocks = blocksOverride;
         this.overrides.steps[stepId] = stepOverride;
         this.markDirty();
-        this.recompute();
+        this.recompute([stepId]);
         eventBus.publish({ type: 'editor.step.modified', stepId, field: `block:${blockIndex}`, ts: Date.now() });
     }
 
@@ -126,6 +127,7 @@ export class QuizEditingService {
     private updateRoot(patch: Partial<Pick<QuizDefinition, 'scoring' | 'progress' | 'offerMapping'>>) {
         this.overrides.root = { ...(this.overrides.root || {}), ...patch };
         this.markDirty();
+        // Root-level impacta potencialmente todos os steps (ex: progress). Regerar integral.
         this.recompute();
         // evento simplificado usando existente
         eventBus.publish({ type: 'quiz.definition.reload', hash: this.state?.hash || '', ts: Date.now() });
@@ -224,27 +226,43 @@ export class QuizEditingService {
         return clone;
     }
 
-    private recompute() {
+    private recompute(changedStepIds?: string[]) {
         const merged = this.applyOverrides();
-        // buildCanonicalBlocksTemplate usa a definição canônica global;
-        // se aceitarmos no futuro múltiplas definições, refatorar para aceitar param.
-        const blocks = buildCanonicalBlocksTemplate();
-        // aplicar overrides de blocks específicos (índice)
-        for (const step of merged.steps) {
-            const overrideBlocks = (step as any).__blocksOverride;
-            if (overrideBlocks && Array.isArray(overrideBlocks)) {
-                const stepBlocks = blocks[step.id] || [];
-                overrideBlocks.forEach((patch: any, idx: number) => {
-                    if (!patch) return;
-                    if (!stepBlocks[idx]) return; // ignorar se não existe mais
-                    stepBlocks[idx] = { ...stepBlocks[idx], properties: { ...stepBlocks[idx].properties, ...patch } };
-                });
-            }
+        // Se ainda não temos estado ou não foram passados steps específicos, reconstruir tudo
+        if (!this.state || !changedStepIds || changedStepIds.length === 0) {
+            const fullBlocks = buildCanonicalBlocksTemplate();
+            // aplicar overrides de propriedades em blocks
+            for (const step of merged.steps) this.applyBlockOverrides(step, fullBlocks);
+            const hash = computeSimpleHash({ merged, overrides: this.overrides });
+            this.state = { definition: merged, steps: merged.steps, blocks: fullBlocks, hash, overrides: this.overrides };
+            this.notify();
+            eventBus.publish({ type: 'quiz.definition.reload', hash, ts: Date.now() });
+            return;
         }
+        // Hot reload seletivo: reconstruir apenas steps alterados
+        const partial = buildBlocksForDefinition(merged, changedStepIds);
+        // Aplicar overrides de blocks a cada step afetado
+        for (const step of merged.steps) {
+            if (changedStepIds.includes(step.id)) this.applyBlockOverrides(step, partial);
+        }
+        // Mesclar no estado existente
+        const nextBlocks = { ...(this.state.blocks || {}) };
+        Object.assign(nextBlocks, partial);
         const hash = computeSimpleHash({ merged, overrides: this.overrides });
-        this.state = { definition: merged, steps: merged.steps, blocks, hash, overrides: this.overrides };
+        this.state = { definition: merged, steps: merged.steps, blocks: nextBlocks, hash, overrides: this.overrides };
         this.notify();
-        eventBus.publish({ type: 'quiz.definition.reload', hash, ts: Date.now() });
+        eventBus.publish({ type: 'quiz.definition.reload', hash, ts: Date.now(), changedSteps: changedStepIds });
+    }
+
+    private applyBlockOverrides(step: any, blocksRecord: Record<string, any[]>) {
+        const overrideBlocks = (step as any).__blocksOverride;
+        if (!overrideBlocks || !Array.isArray(overrideBlocks)) return;
+        const stepBlocks = blocksRecord[step.id] || [];
+        overrideBlocks.forEach((patch: any, idx: number) => {
+            if (!patch) return;
+            if (!stepBlocks[idx]) return;
+            stepBlocks[idx] = { ...stepBlocks[idx], properties: { ...stepBlocks[idx].properties, ...patch } };
+        });
     }
 
     private notify() {

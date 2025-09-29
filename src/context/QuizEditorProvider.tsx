@@ -88,7 +88,39 @@ export const QuizEditorProvider: React.FC<{ children: ReactNode }> = ({ children
 
     return (
         <QuizEditorContext.Provider value={value}>
-            {children}
+            {!state && (
+                <div className="flex flex-col h-full animate-pulse text-xs">
+                    <div className="h-10 border-b bg-muted/40 flex items-center px-4 gap-3">
+                        <div className="h-4 w-32 bg-muted rounded" />
+                        <div className="h-4 w-16 bg-muted rounded" />
+                        <div className="h-4 w-20 bg-muted rounded" />
+                    </div>
+                    <div className="flex flex-1 overflow-hidden">
+                        <div className="border-r h-full bg-muted/20" style={{ width: 240 }}>
+                            <div className="p-3 space-y-2">
+                                {Array.from({ length: 6 }).map((_, i) => (
+                                    <div key={i} className="h-6 rounded bg-muted" />
+                                ))}
+                            </div>
+                        </div>
+                        <div className="flex-1 flex flex-col">
+                            <div className="flex-1 flex items-center justify-center text-muted-foreground">
+                                Carregando quiz & overrides...
+                            </div>
+                        </div>
+                        <div className="border-l h-full bg-muted/20" style={{ width: 320 }}>
+                            <div className="p-4 space-y-3">
+                                <div className="h-5 w-40 bg-muted rounded" />
+                                <div className="h-4 w-56 bg-muted rounded" />
+                                <div className="h-4 w-48 bg-muted rounded" />
+                                <div className="h-4 w-32 bg-muted rounded" />
+                            </div>
+                        </div>
+                    </div>
+                    <div className="h-6 border-t bg-muted/40" />
+                </div>
+            )}
+            {state && children}
         </QuizEditorContext.Provider>
     );
 };

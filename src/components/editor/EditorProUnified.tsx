@@ -30,6 +30,7 @@ import ComponentsSidebar from './sidebars/ComponentsSidebar';
 import DynamicPropertiesPanelImproved from '../../core/editor/DynamicPropertiesPanelImproved'; // ✅ NOVO - Improved Properties Panel
 import QuizPropertiesPanel from '@/components/editor/quiz/QuizPropertiesPanel';
 import GlobalQuizConfigPanel from '@/components/editor/quiz/GlobalQuizConfigPanel';
+import MasterJSONPreviewPanel from '@/components/editor/quiz/MasterJSONPreviewPanel';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 
 // AI Features (lazy loaded)
@@ -493,9 +494,10 @@ export const EditorProUnified: React.FC<EditorProUnifiedProps> = ({
           <div className="flex-1 overflow-auto">
             <Tabs defaultValue="step" className="w-full">
               <div className="px-3 pt-2">
-                <TabsList className="grid grid-cols-2 h-8 text-xs">
+                <TabsList className="grid grid-cols-3 h-8 text-xs">
                   <TabsTrigger value="step">Step</TabsTrigger>
                   <TabsTrigger value="global">Global</TabsTrigger>
+                  <TabsTrigger value="preview">Preview</TabsTrigger>
                 </TabsList>
               </div>
               <TabsContent value="step" className="mt-0 focus:outline-none">
@@ -506,6 +508,9 @@ export const EditorProUnified: React.FC<EditorProUnifiedProps> = ({
               </TabsContent>
               <TabsContent value="global" className="mt-0 focus:outline-none">
                 <GlobalQuizConfigPanel />
+              </TabsContent>
+              <TabsContent value="preview" className="mt-0 focus:outline-none">
+                <MasterJSONPreviewPanel />
               </TabsContent>
             </Tabs>
           </div>
