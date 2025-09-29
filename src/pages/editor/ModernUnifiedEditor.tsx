@@ -12,7 +12,7 @@
 import React, { useState, useCallback, Suspense, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Separator } from '@/components/ui/separator';
 import {
     Layout, Brain, Settings, Target,
@@ -30,7 +30,7 @@ const EditorProUnified = React.lazy(() =>
     import('../../components/editor/EditorProUnified')
 );
 
-import { PureBuilderProvider } from '@/components/editor/PureBuilderProvider';
+import PureBuilderProvider from '@/components/editor/PureBuilderProvider';
 
 // 🔧 CORREÇÃO: Lazy loading dos componentes de error e loading
 const TemplateErrorBoundary = React.lazy(() =>
@@ -44,8 +44,6 @@ const TemplateLoadingSkeleton = React.lazy(() =>
 import { FunnelMasterProvider } from '@/providers/FunnelMasterProvider';
 import { useNotification } from '@/components/ui/Notification';
 import UnifiedCRUDProvider, { useUnifiedCRUD } from '@/context/UnifiedCRUDProvider';
-import SafeEditorWrapper from '@/components/editor/SafeEditorWrapper';
-import SafeUnifiedEditorCore from '@/components/editor/SafeUnifiedEditorCore';
 
 // 🎯 CRUD Services Integration
 import { useUnifiedEditor } from '@/hooks/core/useUnifiedEditor';
@@ -463,13 +461,13 @@ const UnifiedEditorCore: React.FC<ModernUnifiedEditorProps> = ({
         // 🚨 CORREÇÃO CRÍTICA: Processar query parameter template segundo
         if (templateParam) {
             console.log('✅ Template encontrado via query param:', templateParam);
-
+            
             // 🎯 QUIZ-ESTILO: Detectar template do quiz
             if (templateParam === 'quiz-estilo-21-steps') {
                 console.log('🎯 Detectado template quiz-estilo-21-steps');
                 return { templateId: templateParam, funnelId: null, type: 'quiz-template' };
             }
-
+            
             return { templateId: templateParam, funnelId: null, type: 'template' };
         }
 
@@ -503,171 +501,20 @@ const UnifiedEditorCore: React.FC<ModernUnifiedEditorProps> = ({
         };
     }, [funnelId, templateId]);
 
-    // 🎯 DETECÇÃO AUTOMÁTICA DE TIPO DE FUNIL
-    const [funnelType, setFunnelType] = useState<any>(null);
-    const [showTypeDetector, setShowTypeDetector] = useState(false);
-
-    // Detectar tipo de funil automaticamente
-    useEffect(() => {
-        if (extractedInfo.templateId === 'quiz-estilo-21-steps' || 
-            extractedInfo.funnelId?.includes('quiz-estilo')) {
-            setFunnelType({
-                id: 'quiz-estilo',
-                name: 'Quiz de Estilo Pessoal',
-                editorComponent: 'QuizFunnelEditor'
-            });
-        } else if (extractedInfo.templateId || extractedInfo.funnelId) {
-            setShowTypeDetector(true);
-        }
-    }, [extractedInfo]);
-
-    // 🎯 QUIZ-ESTILO: Carregar editor especializado
-    if (funnelType?.id === 'quiz-estilo') {
-        console.log('🎯 Carregando editor especializado do quiz-estilo...');
-
-        // Importar dinamicamente os componentes do quiz-estilo
-        const QuizFunnelEditor = React.lazy(() =>
-            import('../../components/editor/QuizFunnelEditor')
+    // 🎯 QUIZ-ESTILO: Detectar e redirecionar para página especializada
+    if (extractedInfo.type === 'quiz-template' && extractedInfo.templateId === 'quiz-estilo-21-steps') {
+        console.log('🚀 Redirecionando para QuizEditorIntegratedPage...');
+        
+        // Importar dinamicamente a página especializada
+        const QuizEditorIntegratedPage = React.lazy(() => 
+            import('./QuizEditorIntegratedPage')
         );
-        const QuizStepEditor = React.lazy(() =>
-            import('../../components/editor/QuizStepEditor')
-        );
-        const QuizTemplateManager = React.lazy(() =>
-            import('../../components/editor/QuizTemplateManager')
-        );
-        const QuizPreviewPanel = React.lazy(() =>
-            import('../../components/editor/QuizPreviewPanel')
-        );
-
-        return (
-            <div className={`modern-unified-editor quiz-estilo-editor ${className}`}>
-                <div className="h-screen flex flex-col">
-                    {/* Header do Editor Quiz-Estilo */}
-                    <div className="bg-white border-b border-gray-200 px-4 py-3">
-                        <div className="flex items-center justify-between">
-                            <div className="flex items-center space-x-4">
-                                <h1 className="text-lg font-semibold text-gray-900">
-                                    Editor Quiz de Estilo Pessoal
-                                </h1>
-                                <Badge variant="outline" className="flex items-center gap-1">
-                                    <Target className="w-3 h-3" />
-                                    Quiz-Estilo
-                                </Badge>
-                            </div>
-                            
-                            <div className="flex items-center space-x-2">
-                                <Button variant="outline" size="sm">
-                                    <Eye className="w-4 h-4 mr-2" />
-                                    Preview
-                                </Button>
-                                <Button size="sm">
-                                    <CheckCircle className="w-4 h-4 mr-2" />
-                                    Salvar
-                                </Button>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Conteúdo Principal */}
-                    <div className="flex-1 flex overflow-hidden">
-                        {/* Sidebar com navegação */}
-                        <div className="w-80 border-r border-gray-200 bg-gray-50">
-                            <Tabs defaultValue="funnel" className="h-full">
-                                <TabsList className="grid w-full grid-cols-4 m-2">
-                                    <TabsTrigger value="funnel" className="text-xs">Funil</TabsTrigger>
-                                    <TabsTrigger value="steps" className="text-xs">Etapas</TabsTrigger>
-                                    <TabsTrigger value="templates" className="text-xs">Templates</TabsTrigger>
-                                    <TabsTrigger value="preview" className="text-xs">Preview</TabsTrigger>
-                                </TabsList>
-
-                                <div className="flex-1 p-4">
-                                    <TabsContent value="funnel" className="h-full">
-                                        <Suspense fallback={<div className="p-4">Carregando editor de funil...</div>}>
-                                            <QuizFunnelEditor
-                                                funnelId={extractedInfo.funnelId || 'quiz-estilo-21-steps'}
-                                            />
-                                        </Suspense>
-                                    </TabsContent>
-
-                                    <TabsContent value="steps" className="h-full">
-                                        <Suspense fallback={<div className="p-4">Carregando editor de etapas...</div>}>
-                                            <QuizStepEditor
-                                                stepId="step-1"
-                                            />
-                                        </Suspense>
-                                    </TabsContent>
-
-                                    <TabsContent value="templates" className="h-full">
-                                        <Suspense fallback={<div className="p-4">Carregando gerenciador de templates...</div>}>
-                                            <QuizTemplateManager />
-                                        </Suspense>
-                                    </TabsContent>
-
-                                    <TabsContent value="preview" className="h-full">
-                                        <Suspense fallback={<div className="p-4">Carregando preview...</div>}>
-                                            <QuizPreviewPanel
-                                                steps={[]}
-                                            />
-                                        </Suspense>
-                                    </TabsContent>
-                                </div>
-                            </Tabs>
-                        </div>
-
-                        {/* Área principal de edição */}
-                        <div className="flex-1 bg-white">
-                            <div className="h-full p-6">
-                                <div className="bg-gray-50 rounded-lg p-8 text-center">
-                                    <Layout className="w-12 h-12 mx-auto mb-4 text-gray-400" />
-                                    <h3 className="text-lg font-medium text-gray-900 mb-2">
-                                        Editor Visual do Quiz-Estilo
-                                    </h3>
-                                    <p className="text-gray-600 mb-4">
-                                        Use a sidebar para navegar entre as diferentes seções do editor
-                                    </p>
-                                    <div className="grid grid-cols-2 gap-4 max-w-md mx-auto">
-                                        <div className="bg-white p-4 rounded-lg border">
-                                            <Component className="w-6 h-6 mx-auto mb-2 text-blue-500" />
-                                            <p className="text-sm font-medium">Editar Funil</p>
-                                        </div>
-                                        <div className="bg-white p-4 rounded-lg border">
-                                            <Settings className="w-6 h-6 mx-auto mb-2 text-green-500" />
-                                            <p className="text-sm font-medium">Configurar Etapas</p>
-                                        </div>
-                                        <div className="bg-white p-4 rounded-lg border">
-                                            <Crown className="w-6 h-6 mx-auto mb-2 text-purple-500" />
-                                            <p className="text-sm font-medium">Gerenciar Templates</p>
-                                        </div>
-                                        <div className="bg-white p-4 rounded-lg border">
-                                            <Eye className="w-6 h-6 mx-auto mb-2 text-orange-500" />
-                                            <p className="text-sm font-medium">Preview</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        );
-    }
-
-    // 🎯 DETECTOR DE TIPO DE FUNIL
-    if (showTypeDetector) {
-        const FunnelTypeDetector = React.lazy(() =>
-            import('../../components/editor/FunnelTypeDetector')
-        );
-
+        
         return (
             <div className={`modern-unified-editor ${className}`}>
-                <Suspense fallback={<div className="p-8">Detectando tipo de funil...</div>}>
-                    <FunnelTypeDetector
-                        funnelId={extractedInfo.funnelId || undefined}
-                        templateId={extractedInfo.templateId || undefined}
-                        onTypeDetected={(type) => {
-                            setFunnelType(type);
-                            setShowTypeDetector(false);
-                        }}
+                <Suspense fallback={<LoadingSpinner message="Carregando Quiz Editor..." />}>
+                    <QuizEditorIntegratedPage 
+                        funnelId={extractedInfo.funnelId || undefined} 
                     />
                 </Suspense>
             </div>
@@ -950,11 +797,23 @@ const UnifiedEditorCore: React.FC<ModernUnifiedEditorProps> = ({
                     {extractedInfo.funnelId && (
                         <div className="p-4 border-b bg-background">
                             <FunnelTypeDetector
-                                funnelId={extractedInfo.funnelId || undefined}
-                                templateId={extractedInfo.templateId || undefined}
+                                funnelId={extractedInfo.funnelId}
+                                onFunnelLoaded={(data) => {
+                                    console.log('✅ Funnel data loaded:', data);
+                                    setFunnelData(data);
+                                    setIsDetectingType(false);
+                                }}
                                 onTypeDetected={(type) => {
                                     console.log('✅ Funnel type detected:', type);
-                                    setDetectedFunnelType(type as any);
+                                    setDetectedFunnelType(type);
+
+                                    // Ajustar configurações do editor baseado no tipo
+                                    if (type.editorConfig.showProgressBar) {
+                                        console.log('🔧 Habilitando barra de progresso');
+                                    }
+                                    if (type.supportsAI) {
+                                        console.log('🤖 Suporte a IA detectado');
+                                    }
                                 }}
                             />
                             {/* Exibir informações do funnel detectado */}
@@ -1104,18 +963,13 @@ const ModernUnifiedEditor: React.FC<ModernUnifiedEditorProps> = (props) => {
     }, [props.funnelId, props.templateId]);
 
     return (
-        <SafeEditorWrapper
+        <UnifiedCRUDProvider
             funnelId={extractedInfo.funnelId || undefined}
-            templateId={extractedInfo.templateId || undefined}
-            enableDebug={false}
+            autoLoad={true}
+            debug={false}
         >
-            <SafeUnifiedEditorCore 
-                funnelId={extractedInfo.funnelId}
-                templateId={extractedInfo.templateId}
-                mode={props.mode}
-                className={props.className}
-            />
-        </SafeEditorWrapper>
+            <UnifiedEditorCore {...props} />
+        </UnifiedCRUDProvider>
     );
 };
 

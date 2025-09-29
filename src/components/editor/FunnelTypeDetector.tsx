@@ -1,235 +1,317 @@
 /**
- * 🎯 FUNNEL TYPE DETECTOR - Detector de Tipos de Funil
+ * 🔍 DETECTOR DE TIPO DE FUNIL
  * 
- * Componente para detectar automaticamente o tipo de funil e carregar
- * o editor apropriado no ModernUnifiedEditor.
+ * Componente que detecta automaticamente o tipo de funil baseado no ID
+ * e carrega a configuração apropriada para o editor
  */
 
-'use client';
-
 import React, { useState, useEffect } from 'react';
-import { Badge } from '@/components/ui/badge';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { 
-  Target, 
-  Brain, 
-  Layout, 
-  Settings, 
-  Eye,
-  CheckCircle,
-  AlertCircle,
-  Loader2
+import { Badge } from '@/components/ui/badge';
+import { Separator } from '@/components/ui/separator';
+import {
+    RefreshCw,
+    Target,
+    FileText,
+    ShoppingCart,
+    Users,
+    HelpCircle,
+    AlertCircle,
+    CheckCircle,
+    Settings
 } from 'lucide-react';
+import { toast } from '@/hooks/use-toast';
 
-interface FunnelType {
-  id: string;
-  name: string;
-  description: string;
-  icon: React.ComponentType<any>;
-  color: string;
-  editorComponent: string;
-  features: string[];
+import {
+    getFunnelType,
+    loadFunnelConfig,
+    isPredefinedFunnel,
+    getPredefinedFunnelConfig,
+    type FunnelType
+} from '@/services/FunnelTypesRegistry';
+
+// ============================================================================
+// INTERFACES
+// ============================================================================
+
+interface FunnelDetectorProps {
+    funnelId: string;
+    onFunnelLoaded: (funnelData: any) => void;
+    onTypeDetected: (funnelType: FunnelType) => void;
 }
 
-interface FunnelTypeDetectorProps {
-  funnelId?: string;
-  templateId?: string;
-  onTypeDetected?: (type: FunnelType) => void;
-  onLoadEditor?: (type: FunnelType) => void;
+interface DetectedFunnel {
+    id: string;
+    type: FunnelType;
+    config: any;
+    isPredefined: boolean;
 }
 
-const FUNNEL_TYPES: FunnelType[] = [
-  {
-    id: 'quiz-estilo',
-    name: 'Quiz de Estilo Pessoal',
-    description: 'Quiz completo de 21 etapas para descobrir o estilo pessoal',
-    icon: Target,
-    color: 'blue',
-    editorComponent: 'QuizFunnelEditor',
-    features: ['21 etapas', 'Sistema de pontuação', 'Ofertas personalizadas', 'Preview em tempo real']
-  },
-  {
-    id: 'quiz-generic',
-    name: 'Quiz Genérico',
-    description: 'Quiz personalizável com etapas configuráveis',
-    icon: Brain,
-    color: 'green',
-    editorComponent: 'GenericQuizEditor',
-    features: ['Etapas personalizáveis', 'Múltiplas opções', 'Resultados dinâmicos']
-  },
-  {
-    id: 'lead-magnet',
-    name: 'Lead Magnet',
-    description: 'Página de captura de leads com formulário',
-    icon: Layout,
-    color: 'purple',
-    editorComponent: 'LeadMagnetEditor',
-    features: ['Formulário de captura', 'Landing page', 'Integração com CRM']
-  },
-  {
-    id: 'webinar',
-    name: 'Webinar',
-    description: 'Página de inscrição para webinar',
-    icon: Settings,
-    color: 'orange',
-    editorComponent: 'WebinarEditor',
-    features: ['Inscrição', 'Calendário', 'Lembretes automáticos']
-  }
-];
+// ============================================================================
+// ÍCONES POR CATEGORIA
+// ============================================================================
 
-export default function FunnelTypeDetector({
-  funnelId,
-  templateId,
-  onTypeDetected,
-  onLoadEditor
-}: FunnelTypeDetectorProps) {
-  const [detectedType, setDetectedType] = useState<FunnelType | null>(null);
-  const [isDetecting, setIsDetecting] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+const CATEGORY_ICONS = {
+    'quiz': Target,
+    'landing': FileText,
+    'ecommerce': ShoppingCart,
+    'lead-gen': Users,
+    'survey': HelpCircle,
+    'other': Settings
+};
 
-  useEffect(() => {
-    detectFunnelType();
-  }, [funnelId, templateId]);
+// ============================================================================
+// COMPONENTE PRINCIPAL
+// ============================================================================
 
-  const detectFunnelType = async () => {
-    setIsDetecting(true);
-    setError(null);
+const FunnelTypeDetector: React.FC<FunnelDetectorProps> = ({
+    funnelId,
+    onFunnelLoaded,
+    onTypeDetected
+}) => {
+    const [loading, setLoading] = useState(true);
+    const [detectedFunnel, setDetectedFunnel] = useState<DetectedFunnel | null>(null);
+    const [error, setError] = useState<string | null>(null);
 
-    try {
-      // Simular detecção baseada em ID ou template
-      await new Promise(resolve => setTimeout(resolve, 1000));
+    // ========================================================================
+    // DETECTAR TIPO DE FUNIL
+    // ========================================================================
 
-      let detected: FunnelType | null = null;
+    useEffect(() => {
+        detectFunnelType();
+    }, [funnelId]);
 
-      // Detectar por template ID
-      if (templateId) {
-        if (templateId.includes('quiz-estilo') || templateId.includes('quiz-21-steps')) {
-          detected = FUNNEL_TYPES.find(t => t.id === 'quiz-estilo') || null;
-        } else if (templateId.includes('quiz')) {
-          detected = FUNNEL_TYPES.find(t => t.id === 'quiz-generic') || null;
-        } else if (templateId.includes('lead')) {
-          detected = FUNNEL_TYPES.find(t => t.id === 'lead-magnet') || null;
-        } else if (templateId.includes('webinar')) {
-          detected = FUNNEL_TYPES.find(t => t.id === 'webinar') || null;
+    const detectFunnelType = async () => {
+        if (!funnelId) return;
+
+        try {
+            setLoading(true);
+            setError(null);
+
+            console.log('🔍 Detectando tipo de funil para ID:', funnelId);
+
+            let typeId: string;
+
+            // 1. Verificar se é funil predefinido
+            if (isPredefinedFunnel(funnelId)) {
+                const predefined = getPredefinedFunnelConfig(funnelId);
+                typeId = predefined!.typeId;
+                console.log('✅ Funil predefinido detectado:', typeId);
+            }
+            // 2. Detectar por padrões no ID
+            else if (funnelId.includes('quiz') || funnelId.includes('estilo')) {
+                typeId = 'quiz-estilo-21-steps';
+                console.log('✅ Quiz detectado por padrão no ID');
+            }
+            else if (funnelId.includes('landing')) {
+                typeId = 'landing-page';
+                console.log('✅ Landing page detectada por padrão no ID');
+            }
+            else if (funnelId.includes('sales') || funnelId.includes('vendas')) {
+                typeId = 'sales-funnel';
+                console.log('✅ Funil de vendas detectado por padrão no ID');
+            }
+            else if (funnelId.includes('lead')) {
+                typeId = 'lead-magnet';
+                console.log('✅ Lead magnet detectado por padrão no ID');
+            }
+            // 3. Default para quiz se não conseguir detectar
+            else {
+                typeId = 'quiz-estilo-21-steps';
+                console.log('⚠️ Tipo não detectado, usando quiz como padrão');
+            }
+
+            // Obter configuração do tipo
+            const funnelType = getFunnelType(typeId);
+            if (!funnelType) {
+                throw new Error(`Tipo de funil não encontrado: ${typeId}`);
+            }
+
+            // Carregar configuração do funil
+            console.log('📖 Carregando configuração do funil...');
+            const funnelConfig = await loadFunnelConfig(funnelId, typeId);
+
+            const detected: DetectedFunnel = {
+                id: funnelId,
+                type: funnelType,
+                config: funnelConfig,
+                isPredefined: isPredefinedFunnel(funnelId)
+            };
+
+            setDetectedFunnel(detected);
+
+            // Notificar componentes pai
+            onTypeDetected(funnelType);
+            onFunnelLoaded(funnelConfig);
+
+            toast({
+                title: "✅ Funil detectado com sucesso",
+                description: `${funnelType.name} carregado`,
+            });
+
+        } catch (error) {
+            console.error('❌ Erro na detecção do funil:', error);
+            setError(error instanceof Error ? error.message : 'Erro desconhecido');
+
+            toast({
+                title: "❌ Erro na detecção",
+                description: "Não foi possível detectar o tipo do funil",
+                variant: "destructive"
+            });
+        } finally {
+            setLoading(false);
         }
-      }
+    };
 
-      // Detectar por funnel ID
-      if (funnelId && !detected) {
-        if (funnelId.includes('quiz-estilo')) {
-          detected = FUNNEL_TYPES.find(t => t.id === 'quiz-estilo') || null;
-        } else if (funnelId.includes('quiz')) {
-          detected = FUNNEL_TYPES.find(t => t.id === 'quiz-generic') || null;
-        }
-      }
+    // ========================================================================
+    // RENDER - LOADING
+    // ========================================================================
 
-      // Fallback para quiz genérico
-      if (!detected) {
-        detected = FUNNEL_TYPES.find(t => t.id === 'quiz-generic') || null;
-      }
-
-      setDetectedType(detected);
-      onTypeDetected?.(detected!);
-    } catch (err) {
-      setError('Erro ao detectar tipo de funil');
-      console.error('Erro na detecção:', err);
-    } finally {
-      setIsDetecting(false);
+    if (loading) {
+        return (
+            <Card>
+                <CardContent className="p-6">
+                    <div className="flex items-center justify-center">
+                        <div className="text-center">
+                            <RefreshCw className="w-8 h-8 mx-auto mb-3 animate-spin text-blue-600" />
+                            <p className="text-gray-600">Detectando tipo de funil...</p>
+                            <p className="text-sm text-gray-500 mt-1">ID: {funnelId}</p>
+                        </div>
+                    </div>
+                </CardContent>
+            </Card>
+        );
     }
-  };
 
-  const handleLoadEditor = () => {
-    if (detectedType) {
-      onLoadEditor?.(detectedType);
+    // ========================================================================
+    // RENDER - ERROR
+    // ========================================================================
+
+    if (error) {
+        return (
+            <Card className="border-red-200">
+                <CardContent className="p-6">
+                    <div className="flex items-center justify-center">
+                        <div className="text-center">
+                            <AlertCircle className="w-8 h-8 mx-auto mb-3 text-red-600" />
+                            <p className="text-red-800 font-medium">Erro na Detecção</p>
+                            <p className="text-red-600 text-sm mt-1">{error}</p>
+                            <Button
+                                variant="outline"
+                                size="sm"
+                                className="mt-3"
+                                onClick={detectFunnelType}
+                            >
+                                <RefreshCw className="w-4 h-4 mr-2" />
+                                Tentar Novamente
+                            </Button>
+                        </div>
+                    </div>
+                </CardContent>
+            </Card>
+        );
     }
-  };
 
-  if (isDetecting) {
+    // ========================================================================
+    // RENDER - SUCCESS
+    // ========================================================================
+
+    if (!detectedFunnel) return null;
+
+    const { type, config, isPredefined } = detectedFunnel;
+    const IconComponent = CATEGORY_ICONS[type.category];
+
     return (
-      <div className="flex items-center justify-center h-64">
-        <div className="text-center">
-          <Loader2 className="w-8 h-8 animate-spin mx-auto mb-4 text-blue-500" />
-          <p className="text-gray-600">Detectando tipo de funil...</p>
-        </div>
-      </div>
+        <Card className="border-green-200 bg-green-50/50">
+            <CardHeader className="pb-3">
+                <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-3">
+                        <div className="flex items-center justify-center w-10 h-10 bg-green-100 rounded-lg">
+                            <IconComponent className="w-5 h-5 text-green-600" />
+                        </div>
+                        <div>
+                            <CardTitle className="text-green-900">{type.name}</CardTitle>
+                            <p className="text-sm text-green-700">{type.description}</p>
+                        </div>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                        {isPredefined && (
+                            <Badge variant="secondary" className="bg-blue-100 text-blue-800">
+                                Predefinido
+                            </Badge>
+                        )}
+                        <Badge variant="default" className="bg-green-100 text-green-800">
+                            {type.category.charAt(0).toUpperCase() + type.category.slice(1)}
+                        </Badge>
+                    </div>
+                </div>
+            </CardHeader>
+            <CardContent className="pt-0">
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+                    <div>
+                        <p className="text-gray-500">ID do Funil</p>
+                        <p className="font-medium text-gray-900 truncate">{detectedFunnel.id}</p>
+                    </div>
+                    <div>
+                        <p className="text-gray-500">Etapas</p>
+                        <p className="font-medium text-gray-900">
+                            {config.totalSteps || type.defaultSteps}
+                        </p>
+                    </div>
+                    <div>
+                        <p className="text-gray-500">Suporte IA</p>
+                        <div className="flex items-center space-x-1">
+                            {type.supportsAI ? (
+                                <CheckCircle className="w-4 h-4 text-green-600" />
+                            ) : (
+                                <AlertCircle className="w-4 h-4 text-gray-400" />
+                            )}
+                            <p className="font-medium text-gray-900">
+                                {type.supportsAI ? 'Sim' : 'Não'}
+                            </p>
+                        </div>
+                    </div>
+                    <div>
+                        <p className="text-gray-500">Lógica Customizada</p>
+                        <div className="flex items-center space-x-1">
+                            {type.hasCustomLogic ? (
+                                <CheckCircle className="w-4 h-4 text-green-600" />
+                            ) : (
+                                <AlertCircle className="w-4 h-4 text-gray-400" />
+                            )}
+                            <p className="font-medium text-gray-900">
+                                {type.hasCustomLogic ? 'Sim' : 'Não'}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <Separator className="my-4" />
+
+                <div className="text-xs text-gray-600">
+                    <p><strong>Configurações do Editor:</strong></p>
+                    <ul className="mt-1 space-y-1">
+                        {type.editorConfig.showStepNavigation && (
+                            <li>• Navegação entre etapas habilitada</li>
+                        )}
+                        {type.editorConfig.showProgressBar && (
+                            <li>• Barra de progresso habilitada</li>
+                        )}
+                        {type.editorConfig.allowReordering && (
+                            <li>• Reordenação de etapas permitida</li>
+                        )}
+                        {type.editorConfig.supportsDragDrop && (
+                            <li>• Drag & Drop habilitado</li>
+                        )}
+                        {type.editorConfig.customComponents && (
+                            <li>• Componentes customizados: {type.editorConfig.customComponents.join(', ')}</li>
+                        )}
+                    </ul>
+                </div>
+            </CardContent>
+        </Card>
     );
-  }
+};
 
-  if (error) {
-    return (
-      <div className="flex items-center justify-center h-64">
-        <div className="text-center">
-          <AlertCircle className="w-8 h-8 mx-auto mb-4 text-red-500" />
-          <p className="text-red-600 mb-4">{error}</p>
-          <Button onClick={detectFunnelType} variant="outline">
-            Tentar Novamente
-          </Button>
-        </div>
-      </div>
-    );
-  }
-
-  if (!detectedType) {
-    return (
-      <div className="flex items-center justify-center h-64">
-        <div className="text-center">
-          <AlertCircle className="w-8 h-8 mx-auto mb-4 text-yellow-500" />
-          <p className="text-gray-600">Tipo de funil não identificado</p>
-        </div>
-      </div>
-    );
-  }
-
-  const IconComponent = detectedType.icon;
-
-  return (
-    <div className="max-w-2xl mx-auto p-6">
-      <Card>
-        <CardHeader>
-          <div className="flex items-center space-x-3">
-            <div className={`p-2 rounded-lg bg-${detectedType.color}-100`}>
-              <IconComponent className={`w-6 h-6 text-${detectedType.color}-600`} />
-            </div>
-            <div>
-              <CardTitle className="flex items-center gap-2">
-                {detectedType.name}
-                <Badge variant="outline" className="text-xs">
-                  <CheckCircle className="w-3 h-3 mr-1" />
-                  Detectado
-                </Badge>
-              </CardTitle>
-              <CardDescription>{detectedType.description}</CardDescription>
-            </div>
-          </div>
-        </CardHeader>
-
-        <CardContent>
-          <div className="space-y-4">
-            <div>
-              <h4 className="font-medium mb-2">Funcionalidades Disponíveis:</h4>
-              <div className="flex flex-wrap gap-2">
-                {detectedType.features.map((feature, index) => (
-                  <Badge key={index} variant="secondary" className="text-xs">
-                    {feature}
-                  </Badge>
-                ))}
-              </div>
-            </div>
-
-            <div className="flex items-center justify-between pt-4 border-t">
-              <div className="text-sm text-gray-600">
-                Editor: <span className="font-medium">{detectedType.editorComponent}</span>
-              </div>
-              
-              <Button onClick={handleLoadEditor} className="flex items-center gap-2">
-                <Eye className="w-4 h-4" />
-                Carregar Editor
-              </Button>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-    </div>
-  );
-}
+export default FunnelTypeDetector;

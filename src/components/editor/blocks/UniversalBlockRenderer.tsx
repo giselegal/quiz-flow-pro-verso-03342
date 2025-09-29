@@ -1,7 +1,7 @@
 import React, { memo, useMemo } from 'react';
 import { cn } from '@/lib/utils';
 import { Block } from '@/types/editor';
-import { getEnhancedBlockComponent } from '@/components/editor/blocks/EnhancedBlockRegistry';
+import { getEnhancedBlockComponent } from '@/components/editor/blocks/enhancedBlockRegistry';
 import { blockRendererDebug } from '@/components/editor/debug/BlockRendererDebug';
 import { cacheManager } from '@/utils/cache/LRUCache';
 import { useLogger } from '@/utils/logger/SmartLogger';

@@ -1,3 +1,5 @@
+'use client';
+
 /**
  * 🎯 QUIZ PROPERTIES PANEL - Painel Especializado
  * 
@@ -16,7 +18,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Separator } from '@/components/ui/separator';
 import { Switch } from '@/components/ui/switch';
 import {
-  Settings, Target, Palette, BarChart3, 
+  Settings, Target, Palette, BarChart3,
   Plus, Trash2, Edit3, Save
 } from 'lucide-react';
 
@@ -292,7 +294,7 @@ const QuizPropertiesPanel: React.FC<QuizPropertiesPanelProps> = ({
                           <h4 className="font-medium mb-3">
                             Opção {optionIndex + 1}: {option.text}
                           </h4>
-                          
+
                           <div className="grid grid-cols-2 gap-3">
                             {QUIZ_STYLES.map(style => (
                               <div key={style} className="flex items-center justify-between">
