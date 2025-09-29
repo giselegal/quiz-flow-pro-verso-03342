@@ -83,8 +83,8 @@ export class QuizEditingService {
 
     subscribe(listener: Listener): () => void {
         this.listeners.add(listener);
-        // emitir snapshot inicial
-        listener(this.state!);
+        // emitir snapshot inicial somente se já houver estado computado
+        if (this.state) listener(this.state);
         return () => this.listeners.delete(listener);
     }
 
@@ -160,6 +160,7 @@ export class QuizEditingService {
     }
 
     isDirty() { return this.dirty; }
+    isInitialized() { return !!this.state; }
 
     resetAll() {
         this.overrides = { version: 1, updatedAt: null, steps: {}, blocks: {} };

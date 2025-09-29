@@ -23,11 +23,14 @@ import { Block } from '@/types/editor';
 // Core Editor Components (sempre carregados)
 import EditorToolbar from './EditorPro/components/EditorToolbar';
 import EditorCanvas from './EditorPro/components/EditorCanvas';
+import QuizCanvasErrorBoundary from '@/components/editor/errors/QuizCanvasErrorBoundary';
 import StepSidebar from './sidebars/StepSidebar';
 import ComponentsSidebar from './sidebars/ComponentsSidebar';
 // import RegistryPropertiesPanel from '@/components/universal/RegistryPropertiesPanel'; // ❌ DESABILITADO - API Panel fixo
 import DynamicPropertiesPanelImproved from '../../core/editor/DynamicPropertiesPanelImproved'; // ✅ NOVO - Improved Properties Panel
 import QuizPropertiesPanel from '@/components/editor/quiz/QuizPropertiesPanel';
+import GlobalQuizConfigPanel from '@/components/editor/quiz/GlobalQuizConfigPanel';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 
 // AI Features (lazy loaded)
 import OptimizedAIFeatures from '@/components/ai/OptimizedAIFeatures';
@@ -36,6 +39,8 @@ import OptimizedAIFeatures from '@/components/ai/OptimizedAIFeatures';
 import SystemStatus from '@/components/system/SystemStatus';
 import { type FunnelTemplate } from '@/services/FunnelAIAgent';
 import { useQuizEditor } from '@/domain/quiz/useQuizEditor';
+import { QuizEditorProvider } from '@/context/QuizEditorProvider';
+import QuizStatusBar from '@/components/editor/status/QuizStatusBar';
 
 interface EditorProUnifiedProps {
   funnelId?: string;
@@ -348,7 +353,7 @@ export const EditorProUnified: React.FC<EditorProUnifiedProps> = ({
     ]
   }), []);
 
-  return (
+  const content = (
     <div className={`flex flex-col h-screen bg-background ${className}`}>
       {/* Header Pro otimizado */}
       {showProFeatures && (
@@ -449,18 +454,20 @@ export const EditorProUnified: React.FC<EditorProUnifiedProps> = ({
           />
 
           <div className="flex-1 overflow-auto">
-            <EditorCanvas
-              blocks={currentStepBlocks}
-              selectedBlock={selectedBlock}
-              currentStep={state.currentStep}
-              funnelId={funnelId} // Passar funnelId dinâmico para o canvas
-              onSelectBlock={handleSelectBlock}
-              onUpdateBlock={handleUpdateBlock}
-              onDeleteBlock={handleDeleteBlock}
-              isPreviewMode={isPreviewMode}
-              onStepChange={actions.setCurrentStep}
-              realExperienceMode={realExperienceMode} // Passar prop para EditorCanvas
-            />
+            <QuizCanvasErrorBoundary currentStep={state.currentStep}>
+              <EditorCanvas
+                blocks={currentStepBlocks}
+                selectedBlock={selectedBlock}
+                currentStep={state.currentStep}
+                funnelId={funnelId} // Passar funnelId dinâmico para o canvas
+                onSelectBlock={handleSelectBlock}
+                onUpdateBlock={handleUpdateBlock}
+                onDeleteBlock={handleDeleteBlock}
+                isPreviewMode={isPreviewMode}
+                onStepChange={actions.setCurrentStep}
+                realExperienceMode={realExperienceMode} // Passar prop para EditorCanvas
+              />
+            </QuizCanvasErrorBoundary>
           </div>
         </div>
 
@@ -484,15 +491,23 @@ export const EditorProUnified: React.FC<EditorProUnifiedProps> = ({
           </div>
           {/* Placeholder painel dinâmica Fase A futura: por enquanto mantemos o panel existente */}
           <div className="flex-1 overflow-auto">
-            <QuizPropertiesPanel />
-            {/* Mantém painel de propriedades existente abaixo temporariamente */}
-            <div className="border-t">
-              {selectedBlock ? (
-                <DynamicPropertiesPanelImproved />
-              ) : (
-                <DynamicPropertiesPanelImproved />
-              )}
-            </div>
+            <Tabs defaultValue="step" className="w-full">
+              <div className="px-3 pt-2">
+                <TabsList className="grid grid-cols-2 h-8 text-xs">
+                  <TabsTrigger value="step">Step</TabsTrigger>
+                  <TabsTrigger value="global">Global</TabsTrigger>
+                </TabsList>
+              </div>
+              <TabsContent value="step" className="mt-0 focus:outline-none">
+                <QuizPropertiesPanel />
+                <div className="border-t">
+                  <DynamicPropertiesPanelImproved />
+                </div>
+              </TabsContent>
+              <TabsContent value="global" className="mt-0 focus:outline-none">
+                <GlobalQuizConfigPanel />
+              </TabsContent>
+            </Tabs>
           </div>
         </div>
       </div>
@@ -501,8 +516,10 @@ export const EditorProUnified: React.FC<EditorProUnifiedProps> = ({
 
       {/* System Status - Production Ready */}
       <SystemStatus />
+      <QuizStatusBar />
     </div>
   );
+  return <QuizEditorProvider>{content}</QuizEditorProvider>;
 };
 
 export default EditorProUnified;

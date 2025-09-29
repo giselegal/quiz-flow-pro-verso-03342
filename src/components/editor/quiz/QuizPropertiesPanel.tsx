@@ -86,26 +86,6 @@ export const QuizPropertiesPanel: React.FC = () => {
         quiz.updateStep({ variants });
     };
 
-    // Global editing helpers
-    const root = quiz.rootOverrides;
-    const def = quiz.state.definition;
-    const currentScoring = root.scoring || def.scoring;
-    const currentProgress = root.progress || def.progress;
-    const currentOfferMapping = root.offerMapping || def.offerMapping;
-
-    const updateDefaultWeight = (value: string) => {
-        const num = parseInt(value, 10);
-        if (!isNaN(num)) quiz.updateScoring({ defaultWeight: num });
-    };
-
-    const updateCountedSteps = (value: string) => {
-        const ids = value.split(',').map(v => v.trim()).filter(Boolean);
-        quiz.updateProgress({ countedStepIds: ids });
-    };
-
-    const updateStrategicFinal = (value: string) => {
-        quiz.updateOfferMapping({ strategicFinalStepId: value });
-    };
 
     return (
         <div className="p-3 space-y-4">
@@ -176,22 +156,6 @@ export const QuizPropertiesPanel: React.FC = () => {
                     </div>
                 </div>
             )}
-            {/* Global config (scoring / progress / offerMapping) */}
-            <div className="space-y-3 border-t pt-3">
-                <h4 className="text-xs font-semibold text-muted-foreground">Config Global</h4>
-                <div className="space-y-1">
-                    <label className="text-[10px] font-medium">Scoring Default Weight</label>
-                    <Input className="h-7 text-xs" defaultValue={String(currentScoring.defaultWeight)} onChange={e => updateDefaultWeight(e.target.value)} />
-                </div>
-                <div className="space-y-1">
-                    <label className="text-[10px] font-medium">Progress countedStepIds (comma)</label>
-                    <Textarea rows={2} className="text-[10px]" defaultValue={currentProgress.countedStepIds.join(',')} onChange={e => updateCountedSteps(e.target.value)} />
-                </div>
-                <div className="space-y-1">
-                    <label className="text-[10px] font-medium">strategicFinalStepId</label>
-                    <Input className="h-7 text-xs" defaultValue={currentOfferMapping.strategicFinalStepId} onChange={e => updateStrategicFinal(e.target.value)} />
-                </div>
-            </div>
             <div className="pt-2 border-t text-[10px] text-muted-foreground flex items-center justify-between">
                 <span>Hash: {quiz.state.hash}</span>
                 <div className="flex gap-1">
