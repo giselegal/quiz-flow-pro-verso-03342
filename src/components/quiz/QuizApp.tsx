@@ -1,12 +1,18 @@
 'use client';
 
 import { useQuizState } from '../../hooks/useQuizState';
+import { useQuizEditing } from '../../hooks/useQuizEditing';
+import { useQuizPreview } from '../../hooks/useQuizPreview';
 import IntroStep from './IntroStep';
 import QuestionStep from './QuestionStep';
 import StrategicQuestionStep from './StrategicQuestionStep';
 import TransitionStep from './TransitionStep';
 import ResultStep from './ResultStep';
 import OfferStep from './OfferStep';
+import { useState, useEffect } from 'react';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Edit, Eye, Save, Settings } from 'lucide-react';
 
 /**
  * 🎯 COMPONENTE PRINCIPAL DO QUIZ - GISELE GALVÃO
@@ -16,13 +22,26 @@ import OfferStep from './OfferStep';
  * - Coordena a navegação entre as 21 etapas
  * - Aplica o design e funcionalidades do HTML original
  * - Suporte a templates personalizados via funnelId
+ * - 🆕 Modo de edição integrado
+ * - 🆕 Preview em tempo real
+ * - 🆕 Sistema de versionamento
  */
 
 interface QuizAppProps {
     funnelId?: string;
+    editMode?: boolean;
+    onEditModeChange?: (editMode: boolean) => void;
+    onSave?: (steps: any[]) => void;
+    onLoad?: () => Promise<any[]>;
 }
 
-export default function QuizApp({ funnelId }: QuizAppProps) {
+export default function QuizApp({ 
+    funnelId, 
+    editMode = false, 
+    onEditModeChange,
+    onSave,
+    onLoad 
+}: QuizAppProps) {
     const {
         state,
         currentStepData,
@@ -33,6 +52,29 @@ export default function QuizApp({ funnelId }: QuizAppProps) {
         addStrategicAnswer,
         getOfferKey,
     } = useQuizState(funnelId);
+
+    // Hooks de edição
+    const editingState = useQuizEditing({
+        autoSave: true,
+        onSave: onSave ? async (steps) => onSave(steps) : undefined,
+        onLoad: onLoad,
+        initialSteps: []
+    });
+
+    const previewState = useQuizPreview({
+        steps: editingState.steps,
+        onStepChange: (stepId) => editingState.selectStep(stepId),
+        onComplete: () => console.log('Preview completo')
+    });
+
+    const [showEditControls, setShowEditControls] = useState(false);
+
+    // Detectar modo de edição
+    useEffect(() => {
+        const isEditMode = window.location.pathname.includes('/editor/') || editMode;
+        setShowEditControls(isEditMode);
+        onEditModeChange?.(isEditMode);
+    }, [editMode, onEditModeChange]);
 
     // Resultado já é calculado automaticamente durante as questões estratégicas
     // O cálculo ocorre em tempo real conforme o usuário responde
@@ -52,6 +94,37 @@ export default function QuizApp({ funnelId }: QuizAppProps) {
 
     return (
         <div className="min-h-screen">
+            {/* Controles de edição */}
+            {showEditControls && (
+                <div className="fixed top-4 right-4 z-50 flex items-center space-x-2">
+                    {editingState.hasUnsavedChanges && (
+                        <Badge variant="destructive" className="flex items-center gap-1">
+                            <span className="w-2 h-2 bg-red-500 rounded-full"></span>
+                            Alterações não salvas
+                        </Badge>
+                    )}
+                    
+                    <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => editingState.save()}
+                        disabled={!editingState.hasUnsavedChanges}
+                    >
+                        <Save className="w-4 h-4 mr-2" />
+                        Salvar
+                    </Button>
+                    
+                    <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => setShowEditControls(false)}
+                    >
+                        <Eye className="w-4 h-4 mr-2" />
+                        Sair do Editor
+                    </Button>
+                </div>
+            )}
+
             <div className="quiz-container mx-auto">
 
                 {/* Barra de Progresso */}

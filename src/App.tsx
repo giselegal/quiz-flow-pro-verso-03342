@@ -166,6 +166,18 @@ function App() {
                             </QuizErrorBoundary>
                           </Route>
 
+                          {/* 🎯 EDITOR DO QUIZ ESTILO - ROTA ESPECÍFICA */}
+                          <Route path="/editor/quiz-estilo">
+                            <EditorErrorBoundary>
+                              <div data-testid="quiz-estilo-editor-page">
+                                <QuizEstiloPessoalPage 
+                                  funnelId="quiz-estilo-21-steps" 
+                                  editMode={true}
+                                />
+                              </div>
+                            </EditorErrorBoundary>
+                          </Route>
+
                           {/* 🧪 QUIZ DINÂMICO COM SUPORTE A DIFERENTES TEMPLATES */}
                           <Route path="/quiz/:funnelId">
                             {(params) => (

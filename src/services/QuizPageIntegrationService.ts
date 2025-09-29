@@ -8,6 +8,10 @@
  * - Integrar com UnifiedCRUDService
  * - Gerenciar versões e histórico
  * - Sincronizar com dashboard
+ * - 🆕 Sistema de edição em tempo real
+ * - 🆕 Validação automática
+ * - 🆕 Backup automático
+ * - 🆕 Métricas de performance
  */
 
 import { unifiedCRUDService } from './UnifiedCRUDService';
@@ -56,12 +60,166 @@ export interface QuizPageFunnel {
 export class QuizPageIntegrationService {
   private static instance: QuizPageIntegrationService;
   private quizFunnels: Map<string, QuizPageFunnel> = new Map();
+  private autoSaveInterval: NodeJS.Timeout | null = null;
+  private validationCache: Map<string, { isValid: boolean; errors: string[]; timestamp: number }> = new Map();
+  private performanceMetrics: Map<string, { loadTime: number; saveTime: number; validationTime: number }> = new Map();
 
   static getInstance(): QuizPageIntegrationService {
     if (!QuizPageIntegrationService.instance) {
       QuizPageIntegrationService.instance = new QuizPageIntegrationService();
     }
     return QuizPageIntegrationService.instance;
+  }
+
+  /**
+   * Iniciar auto-save para um funil
+   */
+  startAutoSave(funnelId: string, intervalMs: number = 30000): void {
+    this.stopAutoSave(funnelId);
+    
+    this.autoSaveInterval = setInterval(async () => {
+      const funnel = this.quizFunnels.get(funnelId);
+      if (funnel) {
+        try {
+          await this.saveQuizFunnel(funnel);
+          console.log(`Auto-save realizado para funil ${funnelId}`);
+        } catch (error) {
+          console.error(`Erro no auto-save para funil ${funnelId}:`, error);
+        }
+      }
+    }, intervalMs);
+  }
+
+  /**
+   * Parar auto-save
+   */
+  stopAutoSave(funnelId: string): void {
+    if (this.autoSaveInterval) {
+      clearInterval(this.autoSaveInterval);
+      this.autoSaveInterval = null;
+    }
+  }
+
+  /**
+   * Validar funil com cache
+   */
+  async validateQuizFunnel(funnelId: string): Promise<{ isValid: boolean; errors: string[] }> {
+    const cacheKey = funnelId;
+    const cached = this.validationCache.get(cacheKey);
+    
+    // Verificar se o cache ainda é válido (5 minutos)
+    if (cached && Date.now() - cached.timestamp < 300000) {
+      return { isValid: cached.isValid, errors: cached.errors };
+    }
+
+    const startTime = Date.now();
+    const funnel = this.quizFunnels.get(funnelId);
+    
+    if (!funnel) {
+      return { isValid: false, errors: ['Funil não encontrado'] };
+    }
+
+    const errors: string[] = [];
+
+    // Validar componentes
+    if (funnel.components.length === 0) {
+      errors.push('O funil deve ter pelo menos um componente');
+    }
+
+    funnel.components.forEach((component, index) => {
+      if (!component.name.trim()) {
+        errors.push(`Componente ${index + 1}: Nome é obrigatório`);
+      }
+
+      if (!component.content.title?.trim()) {
+        errors.push(`Componente ${index + 1}: Título é obrigatório`);
+      }
+
+      if (component.type === 'question' && (!component.content.options || component.content.options.length < 2)) {
+        errors.push(`Componente ${index + 1}: Deve ter pelo menos 2 opções`);
+      }
+    });
+
+    const validationTime = Date.now() - startTime;
+    const isValid = errors.length === 0;
+
+    // Atualizar cache
+    this.validationCache.set(cacheKey, {
+      isValid,
+      errors,
+      timestamp: Date.now()
+    });
+
+    // Atualizar métricas
+    const metrics = this.performanceMetrics.get(funnelId) || { loadTime: 0, saveTime: 0, validationTime: 0 };
+    this.performanceMetrics.set(funnelId, { ...metrics, validationTime });
+
+    return { isValid, errors };
+  }
+
+  /**
+   * Obter métricas de performance
+   */
+  getPerformanceMetrics(funnelId: string): { loadTime: number; saveTime: number; validationTime: number } {
+    return this.performanceMetrics.get(funnelId) || { loadTime: 0, saveTime: 0, validationTime: 0 };
+  }
+
+  /**
+   * Criar backup automático
+   */
+  async createBackup(funnelId: string): Promise<string> {
+    const funnel = this.quizFunnels.get(funnelId);
+    if (!funnel) {
+      throw new Error('Funil não encontrado');
+    }
+
+    const backupId = `backup-${funnelId}-${Date.now()}`;
+    const backup = {
+      id: backupId,
+      funnelId,
+      data: JSON.parse(JSON.stringify(funnel)),
+      createdAt: new Date().toISOString(),
+      version: funnel.version
+    };
+
+    // Salvar backup no localStorage (em produção, usar banco de dados)
+    const backups = JSON.parse(localStorage.getItem('quiz-backups') || '[]');
+    backups.push(backup);
+    localStorage.setItem('quiz-backups', JSON.stringify(backups));
+
+    return backupId;
+  }
+
+  /**
+   * Restaurar backup
+   */
+  async restoreBackup(backupId: string): Promise<QuizPageFunnel> {
+    const backups = JSON.parse(localStorage.getItem('quiz-backups') || '[]');
+    const backup = backups.find((b: any) => b.id === backupId);
+    
+    if (!backup) {
+      throw new Error('Backup não encontrado');
+    }
+
+    const funnel = backup.data;
+    this.quizFunnels.set(funnel.id, funnel);
+    
+    return funnel;
+  }
+
+  /**
+   * Listar backups disponíveis
+   */
+  getBackups(funnelId: string): Array<{ id: string; createdAt: string; version: string }> {
+    const backups = JSON.parse(localStorage.getItem('quiz-backups') || '[]');
+    return backups
+      .filter((b: any) => b.funnelId === funnelId)
+      .map((b: any) => ({
+        id: b.id,
+        createdAt: b.createdAt,
+        version: b.version
+      }))
+      .sort((a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
   }
 
   /**
