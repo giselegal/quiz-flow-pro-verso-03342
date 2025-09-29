@@ -6,9 +6,9 @@
  */
 
 import { describe, test, expect, beforeEach, jest } from '@jest/globals';
-import QuizToEditorAdapter from '../src/adapters/QuizToEditorAdapter';
-import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '../src/templates/quiz21StepsComplete';
-import { Block, BlockType } from '../src/types/editor';
+import QuizToEditorAdapter from '@/adapters/QuizToEditorAdapter';
+import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
+import { Block, BlockType } from '@/types/editor';
 
 describe('🎯 QuizToEditorAdapter - Testes Unitários', () => {
 
