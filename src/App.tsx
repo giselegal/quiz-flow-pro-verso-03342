@@ -43,6 +43,7 @@ const ModernUnifiedEditor = lazy(() => import('./pages/editor/ModernUnifiedEdito
 
 // 🧪 PÁGINAS DE QUIZ
 const QuizEstiloPessoalPage = lazy(() => import('./pages/QuizEstiloPessoalPage'));
+const EditorValidationPage = lazy(() => import('./pages/test/EditorValidationPage'));
 const QuizAIPage = lazy(() => import('./pages/QuizAIPage'));
 const QuizIntegratedPage = lazy(() => import('./pages/QuizIntegratedPage'));
 
@@ -184,6 +185,13 @@ function App() {
                                 <QuizEstiloPessoalPage funnelId={params.funnelId} />
                               </QuizErrorBoundary>
                             )}
+                          </Route>
+
+                          {/* 🧪 PÁGINA DE TESTE DE VALIDAÇÃO */}
+                          <Route path="/test/editor-validation">
+                            <div data-testid="editor-validation-test-page">
+                              <EditorValidationPage />
+                            </div>
                           </Route>
 
                           <Route path="/resultado">
