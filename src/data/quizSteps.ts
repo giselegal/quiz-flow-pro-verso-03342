@@ -33,99 +33,95 @@ export interface QuizStep {
     offerMap?: Record<string, OfferContent>;
 }
 
-export interface OfferContent {
-    title: string;
-    description: string;
-    buttonText: string;
-    testimonial: {
-        quote: string;
-        author: string;
-    };
+/**
+ * Adaptador legacy -> canonical
+ * Este arquivo preserva a API usada amplamente no código existente (QUIZ_STEPS, STEP_ORDER, getStepById, etc.)
+ * porém sem duplicar a definição das 21 etapas. Tudo é derivado de `quiz-definition.json`.
+ */
+import canonicalDef from '../domain/quiz/quiz-definition.json';
+
+export interface QuizOption { id: string; text: string; image?: string; }
+export interface OfferContent { title: string; description: string; buttonText: string; testimonial: { quote: string; author: string }; }
+export interface QuizStep {
+    type: 'intro' | 'question' | 'strategic-question' | 'transition' | 'transition-result' | 'result' | 'offer';
+    title?: string;
+    questionNumber?: string;
+    questionText?: string;
+    formQuestion?: string;
+    placeholder?: string;
+    buttonText?: string;
+    text?: string;
+    image?: string;
+    requiredSelections?: number;
+    options?: QuizOption[];
+    nextStep?: string; // legacy compatibility (derivado de 'next')
+    offerMap?: Record<string, OfferContent>; // apenas em offer
 }
 
-// Estrutura completa das 21 etapas baseada no HTML fornecido
-export const QUIZ_STEPS: Record<string, QuizStep> = {
-    'step-1': {
-        type: 'intro',
-        title: '<span style="color: #B89B7A; font-weight: 700;" class="playfair-display">Chega</span> <span class="playfair-display">de um guarda-roupa lotado e da sensação de que</span> <span style="color: #B89B7A; font-weight: 700;" class="playfair-display">nada combina com você.</span>',
-        formQuestion: 'Como posso te chamar?',
-        placeholder: 'Digite seu primeiro nome aqui...',
-        buttonText: 'Quero Descobrir meu Estilo Agora!',
-        image: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1746838118/20250509_2137_Desordem_e_Reflex%C3%A3o_simple_compose_01jtvszf8sfaytz493z9f16rf2_z1c2up.png',
-        nextStep: 'step-2',
-    },
+// Constrói mapping de estilos de pergunta (1..10) para questionNumber
+const QUESTION_NUMBER_INDEX: Record<string, number> = {};
+let questionCounter = 0;
 
-    'step-2': {
-        type: 'question',
-        questionNumber: '1 de 10',
-        questionText: 'QUAL O SEU TIPO DE ROUPA FAVORITA?',
-        requiredSelections: 3,
-        options: [
-            { id: 'natural', text: 'Conforto, leveza e praticidade no vestir', image: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/11_hqmr8l.webp' },
-            { id: 'classico', text: 'Discrição, caimento clássico e sobriedade', image: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp' },
-            { id: 'contemporaneo', text: 'Praticidade com um toque de estilo atual', image: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_snhaym.webp' },
-            { id: 'elegante', text: 'Elegância refinada, moderna e sem exageros', image: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp' },
-            { id: 'romantico', text: 'Delicadeza em tecidos suaves e fluidos', image: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/15_xezvcy.webp' },
-            { id: 'sexy', text: 'Sensualidade com destaque para o corpo', image: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735316/16_mpqpew.webp' },
-            { id: 'dramatico', text: 'Impacto visual com peças estruturadas e assimétricas', image: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735319/17_m5ogub.webp' },
-            { id: 'criativo', text: 'Mix criativo com formas ousadas e originais', image: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/18_j8ipfb.webp' },
-        ],
-        nextStep: 'step-3',
-    },
+// Primeiro passe para numerar apenas steps type=question
+canonicalDef.steps.forEach(s => { if (s.type === 'question') { questionCounter++; QUESTION_NUMBER_INDEX[s.id] = questionCounter; } });
 
-    'step-3': {
-        type: 'question',
-        questionNumber: '2 de 10',
-        questionText: 'RESUMA A SUA PERSONALIDADE:',
-        requiredSelections: 3,
-        options: [
-            { id: 'natural', text: 'Informal, espontânea, alegre, essencialista' },
-            { id: 'classico', text: 'Conservadora, séria, organizada' },
-            { id: 'contemporaneo', text: 'Informada, ativa, prática' },
-            { id: 'elegante', text: 'Exigente, sofisticada, seletiva' },
-            { id: 'romantico', text: 'Feminina, meiga, delicada, sensível' },
-            { id: 'sexy', text: 'Glamorosa, vaidosa, sensual' },
-            { id: 'dramatico', text: 'Cosmopolita, moderna e audaciosa' },
-            { id: 'criativo', text: 'Exótica, aventureira, livre' },
-        ],
-        nextStep: 'step-4',
-    },
+const QUIZ_STEPS: Record<string, QuizStep> = {};
 
-    'step-4': {
-        type: 'question',
-        questionNumber: '3 de 10',
-        questionText: 'QUAL VISUAL VOCÊ MAIS SE IDENTIFICA?',
-        requiredSelections: 3,
-        options: [
-            { id: 'natural', text: 'Visual leve, despojado e natural', image: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/2_ziffwx.webp' },
-            { id: 'classico', text: 'Visual clássico e tradicional', image: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/3_asaunw.webp' },
-            { id: 'contemporaneo', text: 'Visual casual com toque atual', image: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/13_uvbciq.webp' },
-            { id: 'elegante', text: 'Visual refinado e imponente', image: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/5_dhrgpf.webp' },
-            { id: 'romantico', text: 'Visual romântico, feminino e delicado', image: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/6_gnoxfg.webp' },
-            { id: 'sexy', text: 'Visual sensual, com saia justa e decote', image: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735327/7_ynez1z.webp' },
-            { id: 'dramatico', text: 'Visual marcante e urbano (jeans + jaqueta)', image: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/8_yqu3hw.webp' },
-            { id: 'criativo', text: 'Visual criativo, colorido e ousado', image: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/9_x6so6a.webp' },
-        ],
-        nextStep: 'step-5',
-    },
+for (const step of canonicalDef.steps) {
+    const base: QuizStep = {
+        type: step.type as QuizStep['type'],
+        title: (step as any).title,
+        questionText: (step as any).questionText,
+        questionNumber: step.type === 'question' ? `${QUESTION_NUMBER_INDEX[step.id]} de ${questionCounter}` : undefined,
+        formQuestion: (step as any).formQuestion,
+        placeholder: (step as any).placeholder,
+        buttonText: (step as any).buttonText,
+        text: (step as any).text,
+        image: (step as any).image,
+        requiredSelections: (step as any).requiredSelections,
+        options: (step as any).options,
+        nextStep: (step as any).next // compat
+    };
 
-    'step-5': {
-        type: 'question',
-        questionNumber: '4 de 10',
-        questionText: 'QUAIS DETALHES VOCÊ GOSTA?',
-        requiredSelections: 3,
-        options: [
-            { id: 'natural', text: 'Poucos detalhes, básico e prático' },
-            { id: 'classico', text: 'Bem discretos e sutis, clean e clássico' },
-            { id: 'contemporaneo', text: 'Básico, mas com um toque de estilo' },
-            { id: 'elegante', text: 'Detalhes refinados, chic e que deem status' },
-            { id: 'romantico', text: 'Detalhes delicados, laços, babados' },
-            { id: 'sexy', text: 'Roupas que valorizem meu corpo: couro, zíper, fendas' },
-            { id: 'dramatico', text: 'Detalhes marcantes, firmeza e peso' },
-            { id: 'criativo', text: 'Detalhes diferentes do convencional, produções ousadas' },
-        ],
-        nextStep: 'step-6',
-    },
+    if (step.type === 'offer') {
+        const variants = (step as any).variants || [];
+        base.offerMap = variants.reduce((acc: Record<string, OfferContent>, v: any) => {
+            acc[v.matchValue] = {
+                title: v.title,
+                description: v.description,
+                buttonText: v.buttonText,
+                testimonial: v.testimonial
+            };
+            return acc;
+        }, {});
+    }
+
+    QUIZ_STEPS[step.id] = base;
+}
+
+// STEP_ORDER direto da fonte canonical
+export const STEP_ORDER = canonicalDef.steps.map(s => s.id);
+
+// STRATEGIC_ANSWER_TO_OFFER_KEY derivado do step estratégico final
+const finalStrategicId = canonicalDef.offerMapping.strategicFinalStepId;
+const finalStrategic = canonicalDef.steps.find(s => s.id === finalStrategicId);
+export const STRATEGIC_ANSWER_TO_OFFER_KEY = (() => {
+    if (finalStrategic && (finalStrategic as any).options) {
+        return (finalStrategic as any).options.reduce((acc: Record<string,string>, opt: any) => {
+            acc[opt.id] = opt.text; // id -> texto (matchValue)
+            return acc;
+        }, {});
+    }
+    return {} as const;
+})();
+
+export { QUIZ_STEPS };
+
+export const getStepById = (stepId: string): QuizStep | undefined => QUIZ_STEPS[stepId];
+export const getAllSteps = (): { id: string; step: QuizStep }[] => Object.entries(QUIZ_STEPS).map(([id, step]) => ({ id, step }));
+export const getNextStep = (currentStepId: string): string | undefined => QUIZ_STEPS[currentStepId]?.nextStep;
+
+// Nota: após remoção total das dependências legacy, este arquivo poderá ser simplificado ou removido.
 
     'step-6': {
         type: 'question',

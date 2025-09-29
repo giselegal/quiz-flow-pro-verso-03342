@@ -15,6 +15,8 @@ import { styleMapping, type StyleId } from '../data/styles';
 import { QUIZ_STEPS, STEP_ORDER } from '../data/quizSteps';
 // Runtime canonical opcional (fase de migração)
 import { getQuizDefinition } from '../domain/quiz/runtime';
+import { computeScores, emptyScores } from '../domain/quiz/scoringEngine';
+import { getOfferKey as canonicalOfferKey } from '../domain/quiz/offerEngine';
 import { getPersonalizedStepTemplate } from '../templates/quiz21StepsSimplified';
 // Note: STRATEGIC_ANSWER_TO_OFFER_KEY commented - not used
 // import { STRATEGIC_ANSWER_TO_OFFER_KEY } from '@/data/quizSteps';
@@ -121,51 +123,38 @@ export function useQuizState(funnelId?: string) {
   // Calcular resultado do quiz
   const calculateResult = useCallback(() => {
     console.log('🔄 Calculando resultado do quiz...');
-    // Reinicia as pontuações
-    const newScores = { ...initialScores };
-
-    // Conta pontos baseado nas respostas das etapas de perguntas (steps 2-11)
-    Object.entries(state.answers).forEach(([stepId, selections]) => {
-      const step = QUIZ_STEPS[stepId];
-
-      // Só conta pontos para etapas do tipo 'question' (não strategic-question)
-      if (step?.type === 'question' && selections) {
-        selections.forEach(selectionId => {
-          if (selectionId in newScores) {
-            (newScores as any)[selectionId] += 1;
-          }
-        });
-      }
-    });
-
-    console.log('📊 Pontuações calculadas:', newScores);
-
-    // Ordena estilos por pontuação
-    const sortedStyles = Object.entries(newScores)
-      .sort(([, a], [, b]) => b - a)
-      .map(([styleId]) => {
-        const style = styleMapping[styleId as StyleId];
-        console.log(`🎨 Mapeando estilo: ${styleId} ->`, style);
-        return style;
-      })
-      .filter(style => style !== undefined); // Remove estilos não encontrados
-
-    console.log('🏆 Estilos ordenados:', sortedStyles);
-
-    // Verifica se há estilos válidos
-    if (sortedStyles.length === 0) {
-      console.warn('⚠️ Nenhum estilo válido encontrado, usando estilo padrão');
-      // Usar primeiro estilo disponível como fallback
-      const fallbackStyle = Object.values(styleMapping)[0];
-      if (fallbackStyle) {
-        sortedStyles.push(fallbackStyle);
-      }
+    let newScores = { ...initialScores };
+    if (canonicalDef) {
+      // Usa engine canonical
+      const computed = computeScores({ def: canonicalDef, answers: state.answers });
+      newScores = { ...computed } as any;
+    } else {
+      // Fallback legacy
+      Object.entries(state.answers).forEach(([stepId, selections]) => {
+        const step = QUIZ_STEPS[stepId];
+        if (step?.type === 'question' && selections) {
+          selections.forEach(selectionId => {
+            if (selectionId in newScores) {
+              (newScores as any)[selectionId] += 1;
+            }
+          });
+        }
+      });
     }
 
-    const resultStyleId = sortedStyles[0]?.id || 'clássico';
-    console.log('🎯 Estilo resultado:', resultStyleId);
+    // Ordenação e derivação de estilos
+    const sortedStyles = Object.entries(newScores)
+      .sort(([, a], [, b]) => b - a)
+      .map(([styleId]) => styleMapping[styleId as StyleId])
+      .filter(Boolean);
 
-    // Atualiza estado com resultado
+    if (sortedStyles.length === 0) {
+      const fallbackStyle = Object.values(styleMapping)[0];
+      if (fallbackStyle) sortedStyles.push(fallbackStyle);
+    }
+
+    const resultStyleId = sortedStyles[0]?.id || 'classico';
+
     setState(prev => ({
       ...prev,
       scores: newScores,
@@ -181,7 +170,7 @@ export function useQuizState(funnelId?: string) {
       secondaryStyles: sortedStyles.slice(1, 3),
       scores: newScores
     };
-  }, [state.answers]);
+  }, [state.answers, canonicalDef]);
 
   // Adicionar resposta para etapa
   const addAnswer = useCallback((stepId: string, selections: string[]) => {
@@ -218,18 +207,19 @@ export function useQuizState(funnelId?: string) {
 
   // Obter chave da oferta baseada na resposta estratégica
   const getOfferKey = useCallback(() => {
+    if (canonicalDef) {
+      const key = canonicalOfferKey(canonicalDef, state.answers);
+      if (key) return key;
+    }
     const strategicAnswer = state.userProfile.strategicAnswers['Qual desses resultados você mais gostaria de alcançar?'];
-
-    // Mapear resposta para chave de oferta
     const answerToKey: Record<string, string> = {
       'montar-looks-facilidade': 'Montar looks com mais facilidade e confiança',
       'usar-que-tenho': 'Usar o que já tenho e me sentir estilosa',
       'comprar-consciencia': 'Comprar com mais consciência e sem culpa',
       'ser-admirada': 'Ser admirada pela imagem que transmito'
     };
-
     return answerToKey[strategicAnswer] || 'Montar looks com mais facilidade e confiança';
-  }, [state.userProfile.strategicAnswers]);
+  }, [state.userProfile.strategicAnswers, canonicalDef, state.answers]);
 
   // Resetar quiz
   const resetQuiz = useCallback(() => {
