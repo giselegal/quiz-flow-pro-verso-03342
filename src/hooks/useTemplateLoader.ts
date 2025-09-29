@@ -20,6 +20,7 @@ interface UseTemplateLoaderResult {
   loadTemplate: (stageId: string) => Promise<StageTemplate | null>;
   loadTemplateBlocks: (stageId: string) => Promise<Block[]>;
   getTemplateMetadata: (stageId: string) => TemplateMetadata | null;
+  loadQuizEstiloTemplate: (stepNumber: number) => Promise<{ blocks: Block[] }>; // 🎯 NOVO
 
   // Estado
   isLoading: boolean;
@@ -37,6 +38,41 @@ export function useTemplateLoader(): UseTemplateLoaderResult {
   const [error, setError] = useState<Error | null>(null);
   const [templatesMetadata, setTemplatesMetadata] = useState<Record<string, TemplateMetadata>>({});
   const [cachedTemplates, setCachedTemplates] = useState<Record<string, StageTemplate>>({});
+
+  // 🎯 NOVO: Carregar template quiz-estilo-21-steps
+  const loadQuizEstiloTemplate = useCallback(
+    async (stepNumber: number): Promise<{ blocks: Block[] }> => {
+      try {
+        setIsLoading(true);
+        setError(null);
+
+        // Importar adapter dinâmico
+        const { QuizToEditorAdapter } = await import('@/adapters/QuizToEditorAdapter');
+        
+        // Obter configuração da etapa específica
+        const stepConfig = await QuizToEditorAdapter.getStepConfiguration(stepNumber);
+        if (!stepConfig) {
+          throw new Error(`Quiz step ${stepNumber} not found`);
+        }
+
+        // Converter para formato de blocos do editor
+        const stepId = `step-${stepNumber}`;
+        const editorData = await QuizToEditorAdapter.convertQuizToEditor();
+        const blocks = editorData.stepBlocks[stepId] || [];
+
+        console.log(`✅ Quiz template loaded for step ${stepNumber}: ${blocks.length} blocks`);
+        
+        return { blocks };
+      } catch (err) {
+        console.error('❌ Error loading quiz template:', err);
+        setError(err as Error);
+        throw err;
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    []
+  );
 
   // Carregar metadata de todos os templates
   useEffect(() => {
@@ -128,6 +164,7 @@ export function useTemplateLoader(): UseTemplateLoaderResult {
     loadTemplate,
     loadTemplateBlocks,
     getTemplateMetadata,
+    loadQuizEstiloTemplate, // 🎯 NOVO: Método específico do quiz
     isLoading,
     error,
     templatesMetadata,
