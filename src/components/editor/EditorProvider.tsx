@@ -844,8 +844,8 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
 
     console.log('🔍 EditorProvider - currentStep changed:', {
       currentStep,
-      hasBlocks: ((rawState.stepBlocks || {})[`step-${currentStep}`] || []).length > 0,
-      allSteps: Object.keys(rawState.stepBlocks || {}),
+      hasBlocks: (rawState.stepBlocks[`step-${currentStep}`] || []).length > 0,
+      allSteps: Object.keys(rawState.stepBlocks),
       isTestEnv: process.env.NODE_ENV === 'test'
     });
 
@@ -1338,10 +1338,10 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
     console.log('🔍 EditorProvider - Verificação de carregamento automático:', {
       funnelId,
       shouldLoadDefault,
-      currentStepBlocks: Object.keys(rawState.stepBlocks || {}).length
+      currentStepBlocks: Object.keys(rawState.stepBlocks).length
     });
 
-    if (shouldLoadDefault && Object.keys(rawState.stepBlocks || {}).length === 0) {
+    if (shouldLoadDefault && Object.keys(rawState.stepBlocks).length === 0) {
       console.log('🚀 EditorProvider - Carregando template padrão automaticamente...');
       loadDefaultTemplate();
     }

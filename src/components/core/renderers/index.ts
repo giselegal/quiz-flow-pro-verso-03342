@@ -27,4 +27,4 @@ export {
   getEnhancedBlockComponent,
   ENHANCED_BLOCK_REGISTRY,
   AVAILABLE_COMPONENTS
-} from '@/components/editor/blocks/EnhancedBlockRegistry';
+} from '@/components/editor/blocks/enhancedBlockRegistry';
