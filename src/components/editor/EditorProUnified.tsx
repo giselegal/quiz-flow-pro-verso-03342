@@ -230,8 +230,9 @@ export const EditorProUnified: React.FC<EditorProUnifiedProps> = ({
         return match ? parseInt(match[1]) : 0;
       })
       .filter(num => num > 0);
-
-    return stepNumbers.length > 0 ? Math.max(...stepNumbers) : 0;
+    const max = stepNumbers.length > 0 ? Math.max(...stepNumbers) : 0;
+    // Ignorar step 21 temporariamente
+    return Math.min(max, 20);
   }, [state.stepBlocks]);
 
   // Event Handlers
