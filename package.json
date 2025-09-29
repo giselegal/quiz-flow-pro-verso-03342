@@ -78,7 +78,11 @@
     "smoke:step1": "node scripts/smoke-step1.mjs",
     "smoke:step1:persist": "node scripts/smoke-step1-persist.mjs",
     "smoke:e2e:3x": "node scripts/smoke-e2e-3x.mjs",
-    "simulate:dcc": "node scripts/simulate-dcc.mjs"
+    "simulate:dcc": "node scripts/simulate-dcc.mjs",
+    "quiz:compare": "tsx scripts/compare-quiz-canonical.ts",
+    "quiz:diff-blocks": "tsx scripts/diff-legacy-vs-dynamic-blocks.ts",
+    "quiz:verify-blocks": "tsx scripts/verify-blocks-parity.ts",
+    "quiz:edit:smoke": "tsx --tsconfig tsconfig.smoke.json scripts/quiz-edit-smoke.ts"
   },
   "smoke": {
     "step20": "node scripts/smoke-step20.mjs"
@@ -232,6 +236,7 @@
     "tailwindcss": "^3.4.17",
     "ts-jest": "^29.4.4",
     "ts-node": "^10.9.2",
+    "tsconfig-paths": "^4.2.0",
     "tsx": "^4.20.3",
     "typescript": "^5.6.3",
     "vite": "^5.4.14",

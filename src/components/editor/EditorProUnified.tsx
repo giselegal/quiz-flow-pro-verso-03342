@@ -23,10 +23,14 @@ import { Block } from '@/types/editor';
 // Core Editor Components (sempre carregados)
 import EditorToolbar from './EditorPro/components/EditorToolbar';
 import EditorCanvas from './EditorPro/components/EditorCanvas';
+import QuizCanvasErrorBoundary from '@/components/editor/errors/QuizCanvasErrorBoundary';
 import StepSidebar from './sidebars/StepSidebar';
 import ComponentsSidebar from './sidebars/ComponentsSidebar';
 // import RegistryPropertiesPanel from '@/components/universal/RegistryPropertiesPanel'; // ❌ DESABILITADO - API Panel fixo
 import DynamicPropertiesPanelImproved from '../../core/editor/DynamicPropertiesPanelImproved'; // ✅ NOVO - Improved Properties Panel
+import QuizPropertiesPanel from '@/components/editor/quiz/QuizPropertiesPanel';
+import GlobalQuizConfigPanel from '@/components/editor/quiz/GlobalQuizConfigPanel';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 
 // AI Features (lazy loaded)
 import OptimizedAIFeatures from '@/components/ai/OptimizedAIFeatures';
@@ -34,6 +38,9 @@ import OptimizedAIFeatures from '@/components/ai/OptimizedAIFeatures';
 // System Status (production ready)
 import SystemStatus from '@/components/system/SystemStatus';
 import { type FunnelTemplate } from '@/services/FunnelAIAgent';
+import { useQuizEditor } from '@/domain/quiz/useQuizEditor';
+import { QuizEditorProvider } from '@/context/QuizEditorProvider';
+import QuizStatusBar from '@/components/editor/status/QuizStatusBar';
 
 interface EditorProUnifiedProps {
   funnelId?: string;
@@ -149,9 +156,31 @@ export const EditorProUnified: React.FC<EditorProUnifiedProps> = ({
   const { addNotification } = useNotification();
   const { columnWidths, handleResize } = useResizableColumns();
 
+  // 🚀 Quiz Editing (Fase A integração inicial)
+  const quiz = useQuizEditor();
+  const quizSteps = quiz.state.steps; // array canônico com overrides aplicados
+
   // UI State (simplificado)
   const [isPreviewMode, setIsPreviewMode] = useState(false);
   const [selectedBlockId, setSelectedBlockId] = useState<string | null>(null);
+
+  // Sincronizar step selecionado do builder com quiz editor (one-way por enquanto)
+  useEffect(() => {
+    if (!quiz.selectedStepId && quizSteps.length > 0) {
+      quiz.selectStep(quizSteps[0].id);
+    }
+  }, [quiz.selectedStepId, quizSteps]);
+
+  // Quando usuário muda step no builder, se existir step equivalente no quiz, sincronizar
+  useEffect(() => {
+    const stepIdx = state.currentStep - 1;
+    if (quizSteps[stepIdx] && quiz.selectedStepId !== quizSteps[stepIdx].id) {
+      quiz.selectStep(quizSteps[stepIdx].id);
+    }
+  }, [state.currentStep, quizSteps, quiz.selectedStepId, quiz]);
+
+  // Memo de step atual do quiz
+  const currentQuizStep = useMemo(() => quizSteps.find(s => s.id === quiz.selectedStepId) || null, [quizSteps, quiz.selectedStepId]);
 
   // Inicialização Builder System
   useEffect(() => {
@@ -164,9 +193,17 @@ export const EditorProUnified: React.FC<EditorProUnifiedProps> = ({
 
   // Computed State
   const currentStepBlocks = useMemo(() => {
+    // Builder blocks originais
     const stepKey = `step-${state.currentStep}`;
-    return state.stepBlocks[stepKey] || [];
-  }, [state.stepBlocks, state.currentStep]);
+    const builderBlocks = state.stepBlocks[stepKey] || [];
+    // Tentar mapear para step do quiz (index = currentStep-1)
+    const quizIndex = state.currentStep - 1;
+    const quizStep = quiz.state.steps[quizIndex];
+    if (quizStep && quiz.state.blocks[quizStep.id]) {
+      return quiz.state.blocks[quizStep.id] as any[]; // usar blocks gerados dinâmicos do quiz
+    }
+    return builderBlocks;
+  }, [state.stepBlocks, state.currentStep, quiz.state.blocks, quiz.state.steps]);
 
   const selectedBlock = useMemo(() => {
     if (!selectedBlockId) return null;
@@ -198,8 +235,9 @@ export const EditorProUnified: React.FC<EditorProUnifiedProps> = ({
         return match ? parseInt(match[1]) : 0;
       })
       .filter(num => num > 0);
-
-    return stepNumbers.length > 0 ? Math.max(...stepNumbers) : 0;
+    const max = stepNumbers.length > 0 ? Math.max(...stepNumbers) : 0;
+    // Ignorar step 21 temporariamente
+    return Math.min(max, 20);
   }, [state.stepBlocks]);
 
   // Event Handlers
@@ -315,7 +353,7 @@ export const EditorProUnified: React.FC<EditorProUnifiedProps> = ({
     ]
   }), []);
 
-  return (
+  const content = (
     <div className={`flex flex-col h-screen bg-background ${className}`}>
       {/* Header Pro otimizado */}
       {showProFeatures && (
@@ -404,25 +442,32 @@ export const EditorProUnified: React.FC<EditorProUnifiedProps> = ({
             onUndo={actions.undo}
             onRedo={actions.redo}
             onSave={async () => {
-              addNotification('Funil salvo com sucesso - Builder System');
+              // Salvar funil + overrides do quiz
+              quiz.save();
+              addNotification('Salvo (Funnel + Quiz overrides)');
             }}
-            onPublish={() => addNotification('Publicado com Builder System')}
+            onPublish={() => {
+              quiz.publish();
+              addNotification('Publicado (Quiz overrides)');
+            }}
             onOpenSettings={() => console.log('Configurações Builder System')}
           />
 
           <div className="flex-1 overflow-auto">
-            <EditorCanvas
-              blocks={currentStepBlocks}
-              selectedBlock={selectedBlock}
-              currentStep={state.currentStep}
-              funnelId={funnelId} // Passar funnelId dinâmico para o canvas
-              onSelectBlock={handleSelectBlock}
-              onUpdateBlock={handleUpdateBlock}
-              onDeleteBlock={handleDeleteBlock}
-              isPreviewMode={isPreviewMode}
-              onStepChange={actions.setCurrentStep}
-              realExperienceMode={realExperienceMode} // Passar prop para EditorCanvas
-            />
+            <QuizCanvasErrorBoundary currentStep={state.currentStep}>
+              <EditorCanvas
+                blocks={currentStepBlocks}
+                selectedBlock={selectedBlock}
+                currentStep={state.currentStep}
+                funnelId={funnelId} // Passar funnelId dinâmico para o canvas
+                onSelectBlock={handleSelectBlock}
+                onUpdateBlock={handleUpdateBlock}
+                onDeleteBlock={handleDeleteBlock}
+                isPreviewMode={isPreviewMode}
+                onStepChange={actions.setCurrentStep}
+                realExperienceMode={realExperienceMode} // Passar prop para EditorCanvas
+              />
+            </QuizCanvasErrorBoundary>
           </div>
         </div>
 
@@ -433,14 +478,37 @@ export const EditorProUnified: React.FC<EditorProUnifiedProps> = ({
 
         {/* Properties Panel */}
         <div
-          className="bg-background border-l flex-shrink-0"
+          className="bg-background border-l flex-shrink-0 flex flex-col"
           style={{ width: `${columnWidths.properties}px` }}
         >
-          {selectedBlock ? (
-            <DynamicPropertiesPanelImproved />
-          ) : (
-            <DynamicPropertiesPanelImproved />
-          )}
+          {/* Header indicativo de estado Quiz */}
+          <div className="px-3 py-2 border-b text-xs flex items-center justify-between gap-2 bg-muted/30">
+            <span className="font-medium">Quiz Step</span>
+            <div className="flex items-center gap-2">
+              {quiz.dirty && <span className="text-amber-600">*dirty</span>}
+              <span className="text-muted-foreground">{quiz.state.hash}</span>
+            </div>
+          </div>
+          {/* Placeholder painel dinâmica Fase A futura: por enquanto mantemos o panel existente */}
+          <div className="flex-1 overflow-auto">
+            <Tabs defaultValue="step" className="w-full">
+              <div className="px-3 pt-2">
+                <TabsList className="grid grid-cols-2 h-8 text-xs">
+                  <TabsTrigger value="step">Step</TabsTrigger>
+                  <TabsTrigger value="global">Global</TabsTrigger>
+                </TabsList>
+              </div>
+              <TabsContent value="step" className="mt-0 focus:outline-none">
+                <QuizPropertiesPanel />
+                <div className="border-t">
+                  <DynamicPropertiesPanelImproved />
+                </div>
+              </TabsContent>
+              <TabsContent value="global" className="mt-0 focus:outline-none">
+                <GlobalQuizConfigPanel />
+              </TabsContent>
+            </Tabs>
+          </div>
         </div>
       </div>
 
@@ -448,8 +516,10 @@ export const EditorProUnified: React.FC<EditorProUnifiedProps> = ({
 
       {/* System Status - Production Ready */}
       <SystemStatus />
+      <QuizStatusBar />
     </div>
   );
+  return <QuizEditorProvider>{content}</QuizEditorProvider>;
 };
 
 export default EditorProUnified;

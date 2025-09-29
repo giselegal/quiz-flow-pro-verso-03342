@@ -65,11 +65,15 @@ export class SupabaseConfigurationStorage {
     private cache = new Map<string, { data: StoredConfiguration; timestamp: number }>();
     private cacheTtl = 5 * 60 * 1000; // 5 minutos
     private indexedDBService: IndexedDBStorageService;
-    private isOnline = navigator.onLine;
+    // Evitar ReferenceError em ambiente Node (smoke test headless)
+    private isOnline = typeof navigator !== 'undefined' ? navigator.onLine : true;
 
     constructor() {
         this.indexedDBService = IndexedDBStorageService.getInstance();
-        this.setupOfflineHandling();
+        // Só registrar listeners se estivermos em ambiente browser
+        if (typeof window !== 'undefined' && typeof window.addEventListener === 'function') {
+            this.setupOfflineHandling();
+        }
     }
 
     static getInstance(): SupabaseConfigurationStorage {
@@ -84,11 +88,11 @@ export class SupabaseConfigurationStorage {
     // =========================================================================
 
     private setupOfflineHandling(): void {
+        if (typeof window === 'undefined') return; // no-op em Node
         window.addEventListener('online', () => {
             this.isOnline = true;
             this.syncPendingChanges();
         });
-
         window.addEventListener('offline', () => {
             this.isOnline = false;
         });
@@ -266,7 +270,7 @@ export class SupabaseConfigurationStorage {
                 try {
                     // Use type assertion since table doesn't exist in types yet
                     let query = (supabase as any).from('component_configurations').select('*');
-                    
+
                     if (funnelId) {
                         query = query.eq('funnel_id', funnelId);
                     }
@@ -394,7 +398,7 @@ export class SupabaseConfigurationStorage {
 
     async getStats(funnelId?: string): Promise<ConfigurationStats> {
         const configurations = await this.list(funnelId);
-        
+
         const stats: ConfigurationStats = {
             totalConfigurations: configurations.length,
             byFunnel: {},

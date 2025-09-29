@@ -59,205 +59,67 @@ export function getPersonalizedStepTemplate(stepId: string, funnelId?: string): 
     return FUNNEL_TEMPLATE_CACHE.get(cacheKey);
   }
 
-  // Obter template base
-  const baseTemplate = QUIZ_STYLE_21_STEPS_TEMPLATE[stepId];
-  if (!baseTemplate) {
-    console.warn(`⚠️ Template ${stepId} not found for funnel ${funnelId}`);
-    return null;
+  /**
+   * Adapter leve para compatibilidade histórica.
+   * Agora todo o conteúdo de blocks é gerado dinamicamente a partir
+   * do quiz-definition canônico via blockTemplateGenerator.
+   * Este arquivo mantém apenas o feature flag e exposição do objeto.
+   */
+  import { buildCanonicalBlocksTemplate } from '../domain/quiz/blockTemplateGenerator';
+  import { getQuizDefinition } from '../domain/quiz/runtime';
+  export type Block = any;
+
+  const definition = getQuizDefinition();
+  const DYNAMIC = definition ? buildCanonicalBlocksTemplate() : {};
+  export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = DYNAMIC;
+
+  // Funções shim mantidas para evitar quebrar imports existentes.
+  export function getStepTemplate(stepId: string): any {
+    return QUIZ_STYLE_21_STEPS_TEMPLATE[stepId] || null;
+  }
+  export function getPersonalizedStepTemplate(stepId: string): any {
+    // Personalização anterior removida: responsabilidade futura de camada de apresentação.
+    return getStepTemplate(stepId);
   }
 
-  // 🔄 PERSONALIZAR TEMPLATE baseado no funnelId
-  const personalizedTemplate = personalizeTemplateForFunnel(baseTemplate, funnelId, stepId);
+  export default {
+    steps: Object.keys(QUIZ_STYLE_21_STEPS_TEMPLATE).map((id, idx) => ({
+      stepNumber: idx + 1,
+      blocks: QUIZ_STYLE_21_STEPS_TEMPLATE[id]
+    }))
+  };
 
-  // Cache da versão personalizada
-  FUNNEL_TEMPLATE_CACHE.set(cacheKey, personalizedTemplate);
+  /**
+   * Adapter leve (LEGACY REMOVED)
+   * Gera blocks dinamicamente via canonical quiz-definition.
+   */
+  import { buildCanonicalBlocksTemplate } from '../domain/quiz/blockTemplateGenerator';
+  import { getQuizDefinition } from '../domain/quiz/runtime';
 
-  console.log(`✅ Template personalizado criado: ${stepId} para funil ${funnelId}`);
-  return personalizedTemplate;
-}
+  export type Block = any;
 
-// 🎨 FUNÇÃO DE PERSONALIZAÇÃO baseada no funnelId
-function personalizeTemplateForFunnel(template: any[], funnelId: string, _stepId: string): any[] {
-  if (!Array.isArray(template)) return template;
+  const definition = getQuizDefinition();
+  const QUIZ_BLOCKS = definition ? buildCanonicalBlocksTemplate() : {};
 
-  // Gerar seed único baseado no funnelId para consistência
-  const funnelSeed = generateSeedFromFunnelId(funnelId);
-  const variantName = getFunnelVariantName(funnelSeed);
-  const themeColors = getFunnelThemeColor(funnelSeed);
+  export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = QUIZ_BLOCKS;
 
-  return template.map((block) => {
-    const personalizedBlock = JSON.parse(JSON.stringify(block)); // Deep clone
-
-    // 🎯 PERSONALIZAÇÃO 1: IDs únicos por funil
-    if (personalizedBlock.id) {
-      personalizedBlock.id = `${personalizedBlock.id}-fnl${funnelSeed}`;
-    }
-
-    // 🎯 PERSONALIZAÇÃO 2: Headers do quiz
-    if (personalizedBlock.type === 'quiz-intro-header') {
-      if (personalizedBlock.content?.title) {
-        personalizedBlock.content.title = `${personalizedBlock.content.title} (${variantName})`;
-      }
-      if (personalizedBlock.properties) {
-        personalizedBlock.properties.backgroundColor = themeColors.bg;
-        personalizedBlock.properties.borderColor = themeColors.text;
-      }
-    }
-
-    // 🎯 PERSONALIZAÇÃO 3: Blocos de texto - CONTEÚDO REALMENTE DIFERENTE
-    if (personalizedBlock.type === 'text' && personalizedBlock.content?.text) {
-      const originalText = personalizedBlock.content.text;
-
-      // Criar variações reais baseadas no tipo de funil
-      const textVariations = getTextVariationsForFunnel(originalText, variantName, funnelSeed);
-
-      let hashNum = 0;
-      for (let i = 0; i < funnelSeed.length; i++) {
-        hashNum += funnelSeed.charCodeAt(i);
-      }
-      personalizedBlock.content.text = textVariations[hashNum % textVariations.length];
-
-      // Personalizar cores do texto
-      if (personalizedBlock.properties) {
-        personalizedBlock.properties.color = themeColors.text;
-      }
-    }
-
-    // 🎯 PERSONALIZAÇÃO 4: Questões com variações
-    if (personalizedBlock.type === 'quiz-question' && personalizedBlock.content?.question) {
-      const originalQuestion = personalizedBlock.content.question;
-      personalizedBlock.content.question = getQuestionVariationForFunnel(originalQuestion, variantName);
-    }
-
-    // 🎯 PERSONALIZAÇÃO 5: Inputs do formulário
-    if (personalizedBlock.type === 'form-input' && personalizedBlock.content?.placeholder) {
-      personalizedBlock.content.placeholder = getPlaceholderVariationForFunnel(
-        personalizedBlock.content.placeholder,
-        variantName
-      );
-    }
-
-    // 🎯 PERSONALIZAÇÃO 6: Botões e navegação
-    if ((personalizedBlock.type === 'button' || personalizedBlock.type === 'quiz-navigation')
-      && personalizedBlock.content?.text) {
-      personalizedBlock.content.text = getButtonVariationForFunnel(
-        personalizedBlock.content.text,
-        variantName
-      );
-
-      if (personalizedBlock.properties?.style) {
-        personalizedBlock.properties.style.backgroundColor = themeColors.text;
-        personalizedBlock.properties.style.color = themeColors.bg;
-      }
-    }
-
-    // 🎯 PERSONALIZAÇÃO 7: Cores globais nos estilos
-    if (personalizedBlock.properties?.style) {
-      if (personalizedBlock.properties.style.backgroundColor?.includes('#F8F9FA')) {
-        personalizedBlock.properties.style.backgroundColor = themeColors.bg;
-      }
-      if (personalizedBlock.properties.style.color?.includes('#432818')) {
-        personalizedBlock.properties.style.color = themeColors.text;
-      }
-    }
-
-    return personalizedBlock;
-  });
-}
-
-// � FUNÇÕES AUXILIARES PARA VARIAÇÕES DE CONTEÚDO
-
-// Criar variações reais de texto baseadas no tipo de funil
-function getTextVariationsForFunnel(originalText: string, variantName: string, _funnelSeed: string): string[] {
-  // Preservar HTML tags se existirem
-  const hasHtml = originalText.includes('<');
-
-  if (hasHtml) {
-    return [
-      originalText, // Original
-      originalText.replace(/Chega/g, `Chegou a hora`),
-      originalText.replace(/guarda-roupa/g, `closet ${variantName.toLowerCase()}`),
-      originalText.replace(/nada combina/g, `nada mais combina`),
-      originalText.replace(/com você/g, `com seu estilo ${variantName}`)
-    ];
-  } else {
-    return [
-      originalText,
-      `${originalText} [Versão ${variantName}]`,
-      originalText.replace(/você/g, `você (${variantName})`),
-      `🎯 ${variantName}: ${originalText}`,
-      originalText.replace(/seu/g, `seu exclusivo`)
-    ];
+  export function getStepTemplate(stepId: string) {
+    return QUIZ_STYLE_21_STEPS_TEMPLATE[stepId] || null;
   }
-}
 
-// Variações para perguntas do quiz
-function getQuestionVariationForFunnel(originalQuestion: string, variantName: string): string {
-  const variations = [
-    originalQuestion,
-    `${originalQuestion} (Edição ${variantName})`,
-    `[${variantName}] ${originalQuestion}`,
-    originalQuestion.replace(/Qual/g, `${variantName} - Qual`),
-    originalQuestion.replace(/Como/g, `${variantName} - Como`)
-  ];
-
-  return variations[originalQuestion.length % variations.length];
-}
-
-// Variações para placeholders
-function getPlaceholderVariationForFunnel(originalPlaceholder: string, variantName: string): string {
-  const variations = [
-    originalPlaceholder,
-    `${originalPlaceholder} (${variantName})`,
-    originalPlaceholder.replace(/Digite/g, `Digite aqui`),
-    originalPlaceholder.replace(/seu/g, `seu ${variantName.toLowerCase()}`),
-    `✨ ${originalPlaceholder}`
-  ];
-
-  return variations[originalPlaceholder.length % variations.length];
-}
-
-// Variações para botões
-function getButtonVariationForFunnel(originalText: string, variantName: string): string {
-  const variations = [
-    originalText,
-    `${originalText} ${variantName}`,
-    originalText.replace(/Continuar/g, `Avançar`),
-    originalText.replace(/Próximo/g, `Seguir`),
-    `🚀 ${originalText}`
-  ];
-
-  return variations[originalText.length % variations.length];
-}
-
-// 🎲 Gerar seed consistente a partir do funnelId
-function generateSeedFromFunnelId(funnelId: string): string {
-  let hash = 0;
-  for (let i = 0; i < funnelId.length; i++) {
-    const char = funnelId.charCodeAt(i);
-    hash = ((hash << 5) - hash) + char;
-    hash = hash & hash; // Convert to 32bit integer
+  export function getPersonalizedStepTemplate(stepId: string) {
+    // Personalização anterior removida; retorna step base.
+    return getStepTemplate(stepId);
   }
-  return Math.abs(hash).toString(16).slice(0, 8); // Remover prefixo "fnl"
-}
 
-// 🎨 Obter nome da variante baseado no seed
-function getFunnelVariantName(seed: string): string {
-  const variants = [
-    'Premium', 'Pro', 'Classic', 'Elite', 'Special',
-    'Advanced', 'Custom', 'Exclusive', 'Deluxe', 'Ultimate'
-  ];
-  // Usar hash numérico do seed completo ao invés do primeiro char
-  let hashNum = 0;
-  for (let i = 0; i < seed.length; i++) {
-    hashNum += seed.charCodeAt(i);
-  }
-  const index = hashNum % variants.length;
-  return variants[index];
-}
+  const registryExport = {
+    steps: Object.keys(QUIZ_STYLE_21_STEPS_TEMPLATE).map((id, idx) => ({
+      stepNumber: idx + 1,
+      blocks: QUIZ_STYLE_21_STEPS_TEMPLATE[id]
+    }))
+  };
 
-// 🌈 Obter cores temáticas baseadas no funil
-function getFunnelThemeColor(seed: string): { bg: string, text: string } {
+  export default registryExport;
   const themes = [
     { bg: '#f3f4f6', text: '#374151' }, // Gray
     { bg: '#fef3c7', text: '#92400e' }, // Yellow
@@ -1109,6 +971,43 @@ export const QUIZ_GLOBAL_CONFIG = {
 // Verificar se estamos em ambiente de desenvolvimento real do Vite
 const IS_TEST = false; // Forçar template completo para debugging
 
+// Feature flag para template dinâmico (deduplicação progressiva)
+const USE_DYNAMIC_BLOCKS = (import.meta as any)?.env?.VITE_QUIZ_DYNAMIC_BLOCKS === '1';
+const USE_DYNAMIC_QUESTIONS = (import.meta as any)?.env?.VITE_QUIZ_DYNAMIC_QUESTIONS === '1';
+const USE_DYNAMIC_ALL = (import.meta as any)?.env?.VITE_QUIZ_DYNAMIC_ALL === '1';
+
+// Import lazy para evitar ciclos (carregador usa runtime que pode depender de configs)
+let DYNAMIC_SUBSET: Record<string, any> | null = null;
+if (USE_DYNAMIC_BLOCKS || USE_DYNAMIC_QUESTIONS || USE_DYNAMIC_ALL) {
+  try {
+    const mod = await import('../domain/quiz/blockTemplateGenerator');
+    if (USE_DYNAMIC_BLOCKS) {
+      DYNAMIC_SUBSET = mod.buildSubsetFrom('step-12');
+      console.log('[quiz-template] Dynamic subset (>= step-12) ativo', Object.keys(DYNAMIC_SUBSET));
+    }
+    if (USE_DYNAMIC_QUESTIONS) {
+      const definition = (await import('../domain/quiz/runtime')).getQuizDefinition();
+      if (definition) {
+        const questionIds = definition.steps.filter(s => s.type === 'question').map(s => s.id);
+        const full = mod.buildCanonicalBlocksTemplate();
+        DYNAMIC_SUBSET = {
+          ...(DYNAMIC_SUBSET || {}),
+          ...Object.fromEntries(questionIds.map(id => [id, full[id]]))
+        };
+        console.log('[quiz-template] Dynamic questions subset ativo', questionIds);
+      }
+    }
+    if (USE_DYNAMIC_ALL) {
+      const full = mod.buildCanonicalBlocksTemplate();
+      DYNAMIC_SUBSET = full; // sobrepõe tudo
+      console.log('[quiz-template] Modo FULL dynamic ativo (todos os steps)');
+    }
+  } catch (e) {
+    console.warn('[quiz-template] Falha ao carregar gerador dinâmico, revertendo para legado', e);
+    DYNAMIC_SUBSET = null;
+  }
+}
+
 console.log('🔍 Template loading:', {
   NODE_ENV: import.meta.env?.MODE || 'unknown',
   DEV: import.meta.env?.DEV || false,
@@ -1125,7 +1024,7 @@ const MINIMAL_TEST_TEMPLATE: Record<string, Block[]> = (() => {
   return t;
 })();
 
-export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = IS_TEST ? MINIMAL_TEST_TEMPLATE : {
+const LEGACY_TEMPLATE: Record<string, Block[]> = IS_TEST ? MINIMAL_TEST_TEMPLATE : {
   // 🎯 ETAPA 1: COLETA DO NOME
   'step-1': [
     {
@@ -3637,6 +3536,15 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = IS_TEST ? M
     },
   ],
 };
+
+// Mesclar subset dinâmico (se habilitado) sobre o legado para migração incremental segura
+export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = (() => {
+  if (!DYNAMIC_SUBSET) return LEGACY_TEMPLATE;
+  return {
+    ...LEGACY_TEMPLATE,
+    ...DYNAMIC_SUBSET
+  };
+})();
 
 // Lista completa das questões do quiz
 

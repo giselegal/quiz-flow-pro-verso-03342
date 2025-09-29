@@ -13,6 +13,10 @@
 import { useState, useCallback, useMemo } from 'react';
 import { styleMapping, type StyleId } from '../data/styles';
 import { QUIZ_STEPS, STEP_ORDER } from '../data/quizSteps';
+// Runtime canonical opcional (fase de migração)
+import { getQuizDefinition } from '../domain/quiz/runtime';
+import { computeScores, emptyScores } from '../domain/quiz/scoringEngine';
+import { getOfferKey as canonicalOfferKey } from '../domain/quiz/offerEngine';
 import { getPersonalizedStepTemplate } from '../templates/quiz21StepsSimplified';
 // Note: STRATEGIC_ANSWER_TO_OFFER_KEY commented - not used
 // import { STRATEGIC_ANSWER_TO_OFFER_KEY } from '@/data/quizSteps';
@@ -70,26 +74,40 @@ const initialState: QuizState = {
 
 export function useQuizState(funnelId?: string) {
   const [state, setState] = useState<QuizState>(initialState);
+  const canonicalEnabled = typeof window !== 'undefined' && (window as any).CANONICAL_QUIZ_RUNTIME === true;
+  const canonicalDef = canonicalEnabled ? getQuizDefinition() : null;
 
   // Navegar para próxima etapa
   const nextStep = useCallback((stepId?: string) => {
-    setState(prev => ({
-      ...prev,
-      currentStep: stepId || QUIZ_STEPS[prev.currentStep]?.nextStep || prev.currentStep
-    }));
-  }, []);
+    setState(prev => {
+      if (stepId) return { ...prev, currentStep: stepId };
+      if (canonicalDef) {
+        const currentIndex = canonicalDef.steps.findIndex(s => s.id === prev.currentStep);
+        const nextId = canonicalDef.steps[currentIndex + 1]?.id || prev.currentStep;
+        return { ...prev, currentStep: nextId };
+      }
+      return {
+        ...prev,
+        currentStep: QUIZ_STEPS[prev.currentStep]?.nextStep || prev.currentStep
+      };
+    });
+  }, [canonicalDef]);
 
   // Navegar para etapa anterior
   const previousStep = useCallback(() => {
+    if (canonicalDef) {
+      const idx = canonicalDef.steps.findIndex(s => s.id === state.currentStep);
+      if (idx > 0) {
+        setState(prev => ({ ...prev, currentStep: canonicalDef.steps[idx - 1].id }));
+      }
+      return;
+    }
     const currentIndex = STEP_ORDER.indexOf(state.currentStep);
     if (currentIndex > 0) {
       const prevStepId = STEP_ORDER[currentIndex - 1];
-      setState(prev => ({
-        ...prev,
-        currentStep: prevStepId
-      }));
+      setState(prev => ({ ...prev, currentStep: prevStepId }));
     }
-  }, [state.currentStep]);
+  }, [state.currentStep, canonicalDef]);
 
   // Definir nome do usuário
   const setUserName = useCallback((userName: string) => {
@@ -105,51 +123,38 @@ export function useQuizState(funnelId?: string) {
   // Calcular resultado do quiz
   const calculateResult = useCallback(() => {
     console.log('🔄 Calculando resultado do quiz...');
-    // Reinicia as pontuações
-    const newScores = { ...initialScores };
-
-    // Conta pontos baseado nas respostas das etapas de perguntas (steps 2-11)
-    Object.entries(state.answers).forEach(([stepId, selections]) => {
-      const step = QUIZ_STEPS[stepId];
-
-      // Só conta pontos para etapas do tipo 'question' (não strategic-question)
-      if (step?.type === 'question' && selections) {
-        selections.forEach(selectionId => {
-          if (selectionId in newScores) {
-            (newScores as any)[selectionId] += 1;
-          }
-        });
-      }
-    });
-
-    console.log('📊 Pontuações calculadas:', newScores);
-
-    // Ordena estilos por pontuação
-    const sortedStyles = Object.entries(newScores)
-      .sort(([, a], [, b]) => b - a)
-      .map(([styleId]) => {
-        const style = styleMapping[styleId as StyleId];
-        console.log(`🎨 Mapeando estilo: ${styleId} ->`, style);
-        return style;
-      })
-      .filter(style => style !== undefined); // Remove estilos não encontrados
-
-    console.log('🏆 Estilos ordenados:', sortedStyles);
-
-    // Verifica se há estilos válidos
-    if (sortedStyles.length === 0) {
-      console.warn('⚠️ Nenhum estilo válido encontrado, usando estilo padrão');
-      // Usar primeiro estilo disponível como fallback
-      const fallbackStyle = Object.values(styleMapping)[0];
-      if (fallbackStyle) {
-        sortedStyles.push(fallbackStyle);
-      }
+    let newScores = { ...initialScores };
+    if (canonicalDef) {
+      // Usa engine canonical
+      const computed = computeScores({ def: canonicalDef, answers: state.answers });
+      newScores = { ...computed } as any;
+    } else {
+      // Fallback legacy
+      Object.entries(state.answers).forEach(([stepId, selections]) => {
+        const step = QUIZ_STEPS[stepId];
+        if (step?.type === 'question' && selections) {
+          selections.forEach(selectionId => {
+            if (selectionId in newScores) {
+              (newScores as any)[selectionId] += 1;
+            }
+          });
+        }
+      });
     }
 
-    const resultStyleId = sortedStyles[0]?.id || 'clássico';
-    console.log('🎯 Estilo resultado:', resultStyleId);
+    // Ordenação e derivação de estilos
+    const sortedStyles = Object.entries(newScores)
+      .sort(([, a], [, b]) => b - a)
+      .map(([styleId]) => styleMapping[styleId as StyleId])
+      .filter(Boolean);
 
-    // Atualiza estado com resultado
+    if (sortedStyles.length === 0) {
+      const fallbackStyle = Object.values(styleMapping)[0];
+      if (fallbackStyle) sortedStyles.push(fallbackStyle);
+    }
+
+    const resultStyleId = sortedStyles[0]?.id || 'classico';
+
     setState(prev => ({
       ...prev,
       scores: newScores,
@@ -165,7 +170,7 @@ export function useQuizState(funnelId?: string) {
       secondaryStyles: sortedStyles.slice(1, 3),
       scores: newScores
     };
-  }, [state.answers]);
+  }, [state.answers, canonicalDef]);
 
   // Adicionar resposta para etapa
   const addAnswer = useCallback((stepId: string, selections: string[]) => {
@@ -202,18 +207,19 @@ export function useQuizState(funnelId?: string) {
 
   // Obter chave da oferta baseada na resposta estratégica
   const getOfferKey = useCallback(() => {
+    if (canonicalDef) {
+      const key = canonicalOfferKey(canonicalDef, state.answers);
+      if (key) return key;
+    }
     const strategicAnswer = state.userProfile.strategicAnswers['Qual desses resultados você mais gostaria de alcançar?'];
-
-    // Mapear resposta para chave de oferta
     const answerToKey: Record<string, string> = {
       'montar-looks-facilidade': 'Montar looks com mais facilidade e confiança',
       'usar-que-tenho': 'Usar o que já tenho e me sentir estilosa',
       'comprar-consciencia': 'Comprar com mais consciência e sem culpa',
       'ser-admirada': 'Ser admirada pela imagem que transmito'
     };
-
     return answerToKey[strategicAnswer] || 'Montar looks com mais facilidade e confiança';
-  }, [state.userProfile.strategicAnswers]);
+  }, [state.userProfile.strategicAnswers, canonicalDef, state.answers]);
 
   // Resetar quiz
   const resetQuiz = useCallback(() => {
@@ -222,7 +228,7 @@ export function useQuizState(funnelId?: string) {
 
   // Verificar se etapa atual tem respostas suficientes
   const isCurrentStepComplete = useMemo(() => {
-    const currentStepData = QUIZ_STEPS[state.currentStep];
+    const currentStepData = canonicalDef ? canonicalDef.steps.find(s => s.id === state.currentStep) as any : QUIZ_STEPS[state.currentStep];
 
     if (!currentStepData) return false;
 
@@ -245,23 +251,33 @@ export function useQuizState(funnelId?: string) {
 
   // Obter progresso do quiz
   const progress = useMemo(() => {
+    if (canonicalDef) {
+      const counted = new Set(canonicalDef.progress.countedStepIds);
+      const stepsBeforeOrEqual = canonicalDef.steps.filter(s => counted.has(s.id));
+      const indexCounted = stepsBeforeOrEqual.findIndex(s => s.id === state.currentStep);
+      const total = counted.size || 1;
+      const progress = indexCounted === -1 ? 0 : ((indexCounted + 1) / total) * 100;
+      return Math.min(100, Math.round(progress));
+    }
     const currentIndex = STEP_ORDER.indexOf(state.currentStep);
     const totalSteps = STEP_ORDER.length;
     return Math.min(100, Math.round((currentIndex / (totalSteps - 1)) * 100));
-  }, [state.currentStep]);
+  }, [state.currentStep, canonicalDef]);
 
   // Obter dados da etapa atual (com suporte a personalização via funnelId)
   const currentStepData = useMemo(() => {
-    if (funnelId) {
+    if (!canonicalDef && funnelId) {
       // Usar template personalizado se funnelId foi fornecido
       const personalizedTemplate = getPersonalizedStepTemplate(state.currentStep, funnelId);
       if (personalizedTemplate) {
         return personalizedTemplate;
       }
     }
-    // Fallback para o template padrão
+    if (canonicalDef) {
+      return canonicalDef.steps.find(s => s.id === state.currentStep);
+    }
     return QUIZ_STEPS[state.currentStep];
-  }, [state.currentStep, funnelId]);
+  }, [state.currentStep, funnelId, canonicalDef]);
 
   // Verificar se pode voltar
   const canGoBack = useMemo(() => {
