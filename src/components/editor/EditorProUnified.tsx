@@ -42,6 +42,7 @@ import { type FunnelTemplate } from '@/services/FunnelAIAgent';
 import { useQuizEditor } from '@/domain/quiz/useQuizEditor';
 import { QuizEditorProvider } from '@/context/QuizEditorProvider';
 import QuizStatusBar from '@/components/editor/status/QuizStatusBar';
+import LogConsoleOverlay from '@/components/system/LogConsoleOverlay';
 
 interface EditorProUnifiedProps {
   funnelId?: string;
@@ -522,6 +523,7 @@ export const EditorProUnified: React.FC<EditorProUnifiedProps> = ({
       {/* System Status - Production Ready */}
       <SystemStatus />
       <QuizStatusBar />
+      <LogConsoleOverlay />
     </div>
   );
   return <QuizEditorProvider>{content}</QuizEditorProvider>;
