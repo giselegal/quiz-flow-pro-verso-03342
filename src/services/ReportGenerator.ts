@@ -119,25 +119,25 @@ export class ReportGenerator {
         console.log(`📊 Gerando relatório: ${config.name}`);
 
         const startTime = performance.now();
-        
+
         try {
             // Coletar dados base
             const events = analyticsService.getEventsInTimeRange(
                 config.timeRange.start,
                 config.timeRange.end
             );
-            
+
             const metrics = analyticsService.getRealTimeMetrics();
-            
+
             // Aplicar filtros
             const filteredEvents = this.applyFilters(events, config.filters);
-            
+
             // Gerar seções do relatório
             const sections = await this.generateReportSections(config.type, filteredEvents, metrics);
-            
+
             // Gerar resumo e insights
             const summary = this.generateSummary(filteredEvents, metrics);
-            
+
             const report: ReportData = {
                 id: this.generateReportId(),
                 title: config.name,
@@ -155,12 +155,12 @@ export class ReportGenerator {
 
             // Salvar no histórico
             this.reportHistory.push(report);
-            
+
             const endTime = performance.now();
             console.log(`✅ Relatório gerado em ${Math.round(endTime - startTime)}ms`);
-            
+
             return report;
-            
+
         } catch (error) {
             console.error('❌ Erro ao gerar relatório:', error);
             throw new Error(`Failed to generate report: ${error}`);
@@ -309,7 +309,7 @@ export class ReportGenerator {
 
     private async generatePerformanceSections(events: UserEvent[], metrics: QuizMetrics): Promise<ReportSection[]> {
         const performanceEvents = events.filter(e => e.type === 'performance' || e.data.loadTime);
-        
+
         return [
             {
                 id: 'performance-overview',
@@ -336,7 +336,7 @@ export class ReportGenerator {
 
     private async generateUserJourneySections(events: UserEvent[]): Promise<ReportSection[]> {
         const journeyData = this.buildUserJourneys(events);
-        
+
         return [
             {
                 id: 'common-paths',
@@ -393,10 +393,10 @@ export class ReportGenerator {
     private generateSummary(events: UserEvent[], metrics: QuizMetrics): ReportSummary {
         const completions = events.filter(e => e.type === 'completion');
         const uniqueSessions = this.getUniqueSessions(events);
-        
+
         // Encontrar estilo mais popular
         const topStyle = Object.entries(metrics.styleDistribution)
-            .sort(([,a], [,b]) => b - a)[0]?.[0] || 'N/A';
+            .sort(([, a], [, b]) => b - a)[0]?.[0] || 'N/A';
 
         // Gerar insights automáticos
         const insights = this.generateAutomaticInsights(events, metrics);
@@ -419,7 +419,7 @@ export class ReportGenerator {
 
     private generateAutomaticInsights(events: UserEvent[], metrics: QuizMetrics): string[] {
         const insights: string[] = [];
-        
+
         // Insight sobre taxa de conclusão
         if (metrics.completionRate > 0.8) {
             insights.push('📈 Excelente taxa de conclusão - usuários estão altamente engajados');
@@ -438,9 +438,9 @@ export class ReportGenerator {
         // Insight sobre distribuição de estilos
         const styleEntries = Object.entries(metrics.styleDistribution);
         if (styleEntries.length > 0) {
-            const topStyle = styleEntries.sort(([,a], [,b]) => b - a)[0];
-            const dominancePercentage = (topStyle[1] / styleEntries.reduce((sum, [,count]) => sum + count, 0)) * 100;
-            
+            const topStyle = styleEntries.sort(([, a], [, b]) => b - a)[0];
+            const dominancePercentage = (topStyle[1] / styleEntries.reduce((sum, [, count]) => sum + count, 0)) * 100;
+
             if (dominancePercentage > 50) {
                 insights.push(`🎯 Estilo "${topStyle[0]}" domina com ${dominancePercentage.toFixed(1)}% dos resultados`);
             }
@@ -451,7 +451,7 @@ export class ReportGenerator {
 
     private generateRecommendations(events: UserEvent[], metrics: QuizMetrics): string[] {
         const recommendations: string[] = [];
-        
+
         // Recomendações baseadas em drop-off
         const dropAnalysis = analyticsService.getDropOffAnalysis();
         const highDropSteps = Object.entries(dropAnalysis)
@@ -478,7 +478,7 @@ export class ReportGenerator {
 
     private generateAlerts(events: UserEvent[], metrics: QuizMetrics): ReportSummary['alerts'] {
         const alerts: ReportSummary['alerts'] = [];
-        
+
         // Alert para taxa de erro alta
         if (metrics.performanceMetrics.errorRate > 5) {
             alerts.push({
@@ -524,11 +524,11 @@ export class ReportGenerator {
 
             // Filtro por tipo de dispositivo
             if (filters.deviceType && filters.deviceType !== 'all') {
-                const deviceType = event.metadata?.viewport?.width 
-                    ? (event.metadata.viewport.width < 768 ? 'mobile' : 
-                       event.metadata.viewport.width < 1024 ? 'tablet' : 'desktop')
+                const deviceType = event.metadata?.viewport?.width
+                    ? (event.metadata.viewport.width < 768 ? 'mobile' :
+                        event.metadata.viewport.width < 1024 ? 'tablet' : 'desktop')
                     : 'desktop';
-                
+
                 if (deviceType !== filters.deviceType) return false;
             }
 
@@ -588,9 +588,9 @@ export class ReportGenerator {
             if (!analysis[questionId]) {
                 analysis[questionId] = { responses: {}, total: 0 };
             }
-            
+
             const answerKey = JSON.stringify(answer);
-            analysis[questionId].responses[answerKey] = 
+            analysis[questionId].responses[answerKey] =
                 (analysis[questionId].responses[answerKey] || 0) + 1;
             analysis[questionId].total++;
         });
@@ -605,7 +605,7 @@ export class ReportGenerator {
 
     private generateDropOffInsights(analysis: Record<string, any>): string[] {
         const insights: string[] = [];
-        
+
         Object.entries(analysis).forEach(([stepId, data]) => {
             if (data.dropRate > 0.4) {
                 insights.push(`Etapa ${stepId} tem alta taxa de abandono (${(data.dropRate * 100).toFixed(1)}%)`);
@@ -632,15 +632,15 @@ export class ReportGenerator {
 
     private generatePerformanceInsights(metrics: QuizMetrics['performanceMetrics']): string[] {
         const insights: string[] = [];
-        
+
         if (metrics.averageLoadTime > 3000) {
             insights.push('Tempo de carregamento está acima do ideal (>3s)');
         }
-        
+
         if (metrics.errorRate > 1) {
             insights.push('Taxa de erro elevada necessita investigação');
         }
-        
+
         return insights;
     }
 
@@ -764,7 +764,7 @@ export class ReportGenerator {
             </body>
             </html>
         `;
-        
+
         return new Blob([html], { type: 'text/html' });
     }
 
@@ -788,7 +788,7 @@ export class ReportGenerator {
 
         this.scheduledReports.set(scheduledReport.id, scheduledReport);
         console.log(`📅 Relatório agendado: ${config.name}`);
-        
+
         return scheduledReport.id;
     }
 

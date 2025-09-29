@@ -79,7 +79,7 @@ export class PerformanceOptimizer {
         this.cacheConfig = this.getDefaultCacheConfig();
         this.lazyLoadConfig = this.getDefaultLazyLoadConfig();
         this.metrics = this.initializeMetrics();
-        
+
         this.initializeOptimizationRules();
         this.initializePerformanceMonitoring();
         this.initializeLazyLoading();
@@ -146,7 +146,7 @@ export class PerformanceOptimizer {
      */
     public get<T>(key: string): T | null {
         const entry = this.cache.get(key);
-        
+
         if (!entry) {
             this.metrics.cacheHitRate = this.calculateHitRate(false);
             return null;
@@ -161,11 +161,11 @@ export class PerformanceOptimizer {
         // Atualizar estatísticas de acesso
         entry.accessCount++;
         entry.lastAccessed = Date.now();
-        
+
         this.metrics.cacheHitRate = this.calculateHitRate(true);
 
         // Decomprimir se necessário
-        const data = this.cacheConfig.compression && this.isCompressed(entry.data) 
+        const data = this.cacheConfig.compression && this.isCompressed(entry.data)
             ? this.decompressData(entry.data)
             : entry.data;
 
@@ -183,12 +183,12 @@ export class PerformanceOptimizer {
      * Cache com fallback - se não existir, executa função e armazena resultado
      */
     public async getOrSet<T>(
-        key: string, 
+        key: string,
         fetcher: () => Promise<T> | T,
         options?: Parameters<typeof this.set>[2]
     ): Promise<T> {
         const cached = this.get<T>(key);
-        
+
         if (cached !== null) {
             return cached;
         }
@@ -205,7 +205,7 @@ export class PerformanceOptimizer {
         try {
             // Analisar padrões de navegação
             const navigationPatterns = this.analyzeNavigationPatterns();
-            
+
             // Pré-carregar próximos steps prováveis
             for (const pattern of navigationPatterns.slice(0, 3)) {
                 const stepData = getStepById(pattern.nextStep);
@@ -267,7 +267,7 @@ export class PerformanceOptimizer {
      */
     private async loadLazyElement(element: HTMLElement): Promise<void> {
         const type = element.getAttribute('data-lazy-type') as 'image' | 'component' | 'data';
-        
+
         try {
             switch (type) {
                 case 'image':
@@ -339,14 +339,14 @@ export class PerformanceOptimizer {
                 }
             });
 
-            this.performanceObserver.observe({ 
-                entryTypes: ['navigation', 'resource', 'paint', 'layout-shift'] 
+            this.performanceObserver.observe({
+                entryTypes: ['navigation', 'resource', 'paint', 'layout-shift']
             });
         }
 
         // Métricas de Web Vitals
         this.measureWebVitals();
-        
+
         // Monitoramento contínuo
         setInterval(() => {
             this.updatePerformanceMetrics();
@@ -360,17 +360,17 @@ export class PerformanceOptimizer {
                 const navEntry = entry as PerformanceNavigationTiming;
                 this.metrics.loadTimes.navigation = navEntry.loadEventEnd - navEntry.fetchStart;
                 break;
-                
+
             case 'paint':
                 if (entry.name === 'first-contentful-paint') {
                     this.metrics.fcp = entry.startTime;
                 }
                 break;
-                
+
             case 'largest-contentful-paint':
                 this.metrics.lcp = entry.startTime;
                 break;
-                
+
             case 'layout-shift':
                 const layoutEntry = entry as any;
                 this.metrics.cls += layoutEntry.value;
@@ -393,7 +393,7 @@ export class PerformanceOptimizer {
         this.metrics.memoryUsage = this.getCurrentMemoryUsage();
         this.metrics.bundleSize = this.estimateBundleSize();
         this.metrics.renderTime = this.measureRenderTime();
-        
+
         // Track para analytics
         analyticsService.trackEvent('performance', {
             action: 'metrics_update',
@@ -459,7 +459,7 @@ export class PerformanceOptimizer {
                     try {
                         await rule.action(this);
                         console.log(`✅ Executed optimization: ${rule.name}`);
-                        
+
                         analyticsService.trackEvent('performance', {
                             action: 'optimization_applied',
                             rule: rule.id
@@ -512,10 +512,10 @@ export class PerformanceOptimizer {
         let removedSize = 0;
         for (const entry of entries) {
             if (removedSize >= targetSize) break;
-            
+
             this.cache.delete(entry.key);
             removedSize += entry.size;
-            
+
             console.log(`🗑️ Evicted cache entry: ${entry.key} (${entry.size} bytes)`);
         }
     }
@@ -523,9 +523,9 @@ export class PerformanceOptimizer {
     private calculateEvictionScore(entry: CacheEntry): number {
         const age = Date.now() - entry.timestamp;
         const timeSinceAccess = Date.now() - entry.lastAccessed;
-        const priorityWeight = entry.priority === 'high' ? 0.1 : 
-                             entry.priority === 'medium' ? 0.5 : 1.0;
-        
+        const priorityWeight = entry.priority === 'high' ? 0.1 :
+            entry.priority === 'medium' ? 0.5 : 1.0;
+
         // Score mais baixo = maior chance de ser removido
         return (age + timeSinceAccess) * priorityWeight / (entry.accessCount + 1);
     }
@@ -541,7 +541,7 @@ export class PerformanceOptimizer {
             { nextStep: 'step-3', probability: 0.8 },
             { nextStep: 'step-result', probability: 0.3 }
         ];
-        
+
         return patterns.sort((a, b) => b.probability - a.probability);
     }
 
@@ -552,7 +552,7 @@ export class PerformanceOptimizer {
 
     private async preloadStepData(stepId: string): Promise<void> {
         const cacheKey = `step-data-${stepId}`;
-        
+
         if (!this.get(cacheKey)) {
             const stepData = getStepById(stepId);
             if (stepData) {
@@ -563,7 +563,7 @@ export class PerformanceOptimizer {
 
     private async preloadStyleData(styleId: string): Promise<void> {
         const cacheKey = `style-data-${styleId}`;
-        
+
         if (!this.get(cacheKey)) {
             const styleData = styleConfigGisele[styleId];
             if (styleData) {
@@ -626,8 +626,8 @@ export class PerformanceOptimizer {
 
     private calculateHitRate(isHit: boolean): number {
         // Implementar cálculo de hit rate
-        return isHit ? Math.min(this.metrics.cacheHitRate + 0.01, 1) : 
-                      Math.max(this.metrics.cacheHitRate - 0.01, 0);
+        return isHit ? Math.min(this.metrics.cacheHitRate + 0.01, 1) :
+            Math.max(this.metrics.cacheHitRate - 0.01, 0);
     }
 
     private updateCacheMetrics(): void {

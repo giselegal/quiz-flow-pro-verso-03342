@@ -346,10 +346,10 @@ const QuizEditorMode: React.FC<QuizEditorModeProps> = ({
   // FASE 4 - Inicializar Analytics
   useEffect(() => {
     initializeAnalytics();
-    
+
     // Atualizar métricas periodicamente
     const metricsInterval = setInterval(updatePerformanceMetrics, 30000);
-    
+
     return () => {
       clearInterval(metricsInterval);
     };
@@ -679,7 +679,7 @@ const QuizEditorMode: React.FC<QuizEditorModeProps> = ({
             <TabsContent value="analytics" className="h-full m-0">
               <div className="h-full">
                 {state.analyticsEnabled ? (
-                  <QuizAnalyticsDashboard 
+                  <QuizAnalyticsDashboard
                     className="h-full"
                     autoRefresh={state.realtimeUpdates}
                     refreshInterval={30000}
@@ -814,16 +814,16 @@ const QuizEditorMode: React.FC<QuizEditorModeProps> = ({
                       </div>
 
                       <div className="flex gap-2 pt-4">
-                        <Button 
-                          size="sm" 
+                        <Button
+                          size="sm"
                           variant="outline"
                           onClick={() => generateQuickReport('performance')}
                         >
                           <Download className="w-4 h-4 mr-2" />
                           Relatório Performance
                         </Button>
-                        <Button 
-                          size="sm" 
+                        <Button
+                          size="sm"
                           variant="outline"
                           onClick={() => updatePerformanceMetrics()}
                         >
