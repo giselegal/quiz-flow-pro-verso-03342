@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * 🚀 SISTEMA DE OTIMIZAÇÃO DE PERFORMANCE
  * Performance Optimizer para Sistema de Funis Escalável

@@ -199,14 +199,14 @@ export class AnalyticsService {
         this.events.forEach(event => {
             if (event.type === 'step_navigation') {
                 const { fromStep, toStep, timeSpent } = event.data;
-                
+
                 if (!stepStats[fromStep]) {
                     stepStats[fromStep] = { entries: 0, exits: 0, totalTime: 0 };
                 }
-                
+
                 stepStats[fromStep].exits++;
                 stepStats[fromStep].totalTime += timeSpent || 0;
-                
+
                 if (!stepStats[toStep]) {
                     stepStats[toStep] = { entries: 0, exits: 0, totalTime: 0 };
                 }
@@ -215,7 +215,7 @@ export class AnalyticsService {
         });
 
         const analysis: Record<string, { dropRate: number; avgTimeSpent: number }> = {};
-        
+
         Object.entries(stepStats).forEach(([stepId, stats]) => {
             analysis[stepId] = {
                 dropRate: stats.entries > 0 ? (stats.entries - stats.exits) / stats.entries : 0,
@@ -243,7 +243,7 @@ export class AnalyticsService {
         });
 
         const analysis: Record<string, { frequency: number; avgCompletionTime: number }> = {};
-        
+
         Object.entries(styleStats).forEach(([style, stats]) => {
             analysis[style] = {
                 frequency: stats.count,
@@ -266,7 +266,7 @@ export class AnalyticsService {
             if (!heatmap[questionId]) {
                 heatmap[questionId] = {};
             }
-            
+
             const answerKey = JSON.stringify(answer);
             heatmap[questionId][answerKey] = (heatmap[questionId][answerKey] || 0) + 1;
         });
@@ -304,7 +304,7 @@ export class AnalyticsService {
                     this.trackPerformanceMetric(entry);
                 });
             });
-            
+
             this.performanceObserver.observe({ entryTypes: ['navigation', 'resource', 'measure'] });
         }
 
@@ -370,17 +370,17 @@ export class AnalyticsService {
 
     private updateCompletionMetrics(event: UserEvent): void {
         const { finalStyle, completionTime } = event.data;
-        
+
         // Atualizar distribuição de estilos
-        this.metrics.styleDistribution[finalStyle] = 
+        this.metrics.styleDistribution[finalStyle] =
             (this.metrics.styleDistribution[finalStyle] || 0) + 1;
-        
+
         // Atualizar tempo médio
         const completions = this.events.filter(e => e.type === 'completion').length;
         const currentAvg = this.metrics.averageTimeToComplete;
-        this.metrics.averageTimeToComplete = 
+        this.metrics.averageTimeToComplete =
             (currentAvg * (completions - 1) + completionTime) / completions;
-        
+
         // Atualizar taxa de conclusão
         this.metrics.completionRate = completions / this.metrics.totalSessions;
     }
@@ -388,14 +388,14 @@ export class AnalyticsService {
     private updateAnswerMetrics(event: UserEvent): void {
         const { questionId, answer } = event.data;
         const answerKey = `${questionId}:${JSON.stringify(answer)}`;
-        this.metrics.popularAnswers[answerKey] = 
+        this.metrics.popularAnswers[answerKey] =
             (this.metrics.popularAnswers[answerKey] || 0) + 1;
     }
 
     private updateSessionStepTime(stepId: string, timeSpent: number): void {
         const sessionId = this.getCurrentSessionId();
         const session = this.sessions.get(sessionId);
-        
+
         if (session) {
             session.timePerStep[stepId] = timeSpent;
             session.currentStep = stepId;
@@ -406,7 +406,7 @@ export class AnalyticsService {
     private completeCurrentSession(): void {
         const sessionId = this.getCurrentSessionId();
         const session = this.sessions.get(sessionId);
-        
+
         if (session) {
             session.endTime = new Date().toISOString();
             session.completionStatus = 'completed';
@@ -421,14 +421,14 @@ export class AnalyticsService {
 
     private updatePerformanceMetrics(metric: PerformanceMetric): void {
         const { performanceMetrics } = this.metrics;
-        
+
         switch (metric.type) {
             case 'load_time':
-                performanceMetrics.averageLoadTime = 
+                performanceMetrics.averageLoadTime =
                     (performanceMetrics.averageLoadTime + metric.value) / 2;
                 break;
             case 'response_time':
-                performanceMetrics.averageResponseTime = 
+                performanceMetrics.averageResponseTime =
                     (performanceMetrics.averageResponseTime + metric.value) / 2;
                 break;
         }
@@ -438,7 +438,7 @@ export class AnalyticsService {
         // Recalcula métricas em tempo real
         const totalEvents = this.events.length;
         const completions = this.events.filter(e => e.type === 'completion').length;
-        
+
         if (this.metrics.totalSessions > 0) {
             this.metrics.completionRate = completions / this.metrics.totalSessions;
         }
@@ -446,7 +446,7 @@ export class AnalyticsService {
 
     private collectMetadata() {
         if (typeof window === 'undefined') return {};
-        
+
         return {
             userAgent: navigator.userAgent,
             viewport: {
@@ -466,7 +466,7 @@ export class AnalyticsService {
 
     private getCurrentSessionId(): string {
         if (typeof window === 'undefined') return 'server-session';
-        
+
         let sessionId = sessionStorage.getItem('quiz-session-id');
         if (!sessionId) {
             sessionId = `session-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
@@ -491,7 +491,7 @@ export class AnalyticsService {
 
     private getDeviceType(): 'desktop' | 'tablet' | 'mobile' {
         if (typeof window === 'undefined') return 'desktop';
-        
+
         const width = window.innerWidth;
         if (width < 768) return 'mobile';
         if (width < 1024) return 'tablet';
@@ -543,7 +543,7 @@ export class AnalyticsService {
     }
 
     public getEventsInTimeRange(startTime: string, endTime: string): UserEvent[] {
-        return this.events.filter(event => 
+        return this.events.filter(event =>
             event.timestamp >= startTime && event.timestamp <= endTime
         );
     }

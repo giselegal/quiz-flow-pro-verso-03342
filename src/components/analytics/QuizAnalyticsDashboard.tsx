@@ -60,10 +60,10 @@ interface ChartData {
 // 📊 COMPONENTE PRINCIPAL
 // ===============================
 
-export default function QuizAnalyticsDashboard({ 
-    className = '', 
-    autoRefresh = true, 
-    refreshInterval = 30000 
+export default function QuizAnalyticsDashboard({
+    className = '',
+    autoRefresh = true,
+    refreshInterval = 30000
 }: DashboardProps) {
     const [metrics, setMetrics] = useState<QuizMetrics | null>(null);
     const [events, setEvents] = useState<UserEvent[]>([]);
@@ -78,7 +78,7 @@ export default function QuizAnalyticsDashboard({
 
     useEffect(() => {
         loadAnalyticsData();
-        
+
         if (realTimeUpdates) {
             const interval = setInterval(loadAnalyticsData, refreshInterval);
             return () => clearInterval(interval);
@@ -105,7 +105,7 @@ export default function QuizAnalyticsDashboard({
             // Carregar eventos no período selecionado
             const timeRange = getTimeRangeForPeriod(activeTimeRange);
             const periodEvents = analyticsService.getEventsInTimeRange(
-                timeRange.start, 
+                timeRange.start,
                 timeRange.end
             );
             setEvents(periodEvents);
@@ -127,7 +127,7 @@ export default function QuizAnalyticsDashboard({
     const getTimeRangeForPeriod = (period: string) => {
         const end = new Date().toISOString();
         const start = new Date();
-        
+
         switch (period) {
             case '1h':
                 start.setHours(start.getHours() - 1);
@@ -142,7 +142,7 @@ export default function QuizAnalyticsDashboard({
                 start.setDate(start.getDate() - 30);
                 break;
         }
-        
+
         return { start: start.toISOString(), end };
     };
 
@@ -206,13 +206,13 @@ export default function QuizAnalyticsDashboard({
     // 🎨 COMPONENTES UI
     // ===============================
 
-    const KPICard: React.FC<KPICardProps> = ({ 
-        title, 
-        value, 
-        change, 
-        icon: Icon, 
-        trend = 'stable', 
-        color = 'blue' 
+    const KPICard: React.FC<KPICardProps> = ({
+        title,
+        value,
+        change,
+        icon: Icon,
+        trend = 'stable',
+        color = 'blue'
     }) => {
         const colorClasses = {
             blue: 'text-blue-600 bg-blue-50',
@@ -256,9 +256,9 @@ export default function QuizAnalyticsDashboard({
         );
     };
 
-    const SimpleChart: React.FC<{ data: ChartData; type: 'bar' | 'line' | 'pie' }> = ({ 
-        data, 
-        type 
+    const SimpleChart: React.FC<{ data: ChartData; type: 'bar' | 'line' | 'pie' }> = ({
+        data,
+        type
     }) => {
         if (!data.datasets[0]?.data.length) {
             return (
@@ -312,7 +312,7 @@ export default function QuizAnalyticsDashboard({
                     <h2 className="text-3xl font-bold">Analytics Dashboard</h2>
                     <p className="text-gray-600">Métricas em tempo real do quiz-editor</p>
                 </div>
-                
+
                 <div className="flex items-center space-x-4">
                     {/* Time Range Selector */}
                     <div className="flex space-x-1 bg-gray-100 rounded-lg p-1">
@@ -340,8 +340,8 @@ export default function QuizAnalyticsDashboard({
                     </Button>
 
                     {/* Export Button */}
-                    <Button 
-                        variant="outline" 
+                    <Button
+                        variant="outline"
                         size="sm"
                         onClick={() => {
                             const data = analyticsService.exportMetricsAsJSON();
@@ -442,7 +442,7 @@ export default function QuizAnalyticsDashboard({
                                                     {event.type}
                                                 </Badge>
                                                 <span className="text-sm">
-                                                    {event.type === 'step_navigation' 
+                                                    {event.type === 'step_navigation'
                                                         ? `${event.data.fromStep} → ${event.data.toStep}`
                                                         : event.data.questionId || 'Ação'
                                                     }
@@ -530,7 +530,7 @@ export default function QuizAnalyticsDashboard({
                                             {Object.entries(answers).slice(0, 3).map(([answer, count]) => {
                                                 const total = Object.values(answers).reduce((a: number, b: number) => a + b, 0);
                                                 const percentage = (count / total) * 100;
-                                                
+
                                                 return (
                                                     <div key={answer} className="flex items-center justify-between">
                                                         <span className="text-sm truncate max-w-xs">
@@ -538,8 +538,8 @@ export default function QuizAnalyticsDashboard({
                                                         </span>
                                                         <div className="flex items-center space-x-2">
                                                             <div className="w-16 bg-gray-200 rounded-full h-2">
-                                                                <div 
-                                                                    className="bg-blue-600 h-2 rounded-full" 
+                                                                <div
+                                                                    className="bg-blue-600 h-2 rounded-full"
                                                                     style={{ width: `${percentage}%` }}
                                                                 />
                                                             </div>
@@ -624,7 +624,7 @@ export default function QuizAnalyticsDashboard({
             <Alert>
                 <CheckCircle className="h-4 w-4" />
                 <AlertDescription>
-                    Dashboard atualizado em tempo real. 
+                    Dashboard atualizado em tempo real.
                     Última atualização: {new Date().toLocaleTimeString()}
                 </AlertDescription>
             </Alert>
