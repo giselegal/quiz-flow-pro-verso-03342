@@ -52,8 +52,8 @@ const QuizIntegratedRenderer: React.FC = () => {
     }
   }, []);
 
-  const computed = editorContext?.computed || { currentBlocks: [] };
-  const blockActions = editorContext?.blockActions || { 
+  const computed = (editorContext as any)?.computed || { currentBlocks: [] };
+  const blockActions = (editorContext as any)?.blockActions || { 
     setSelectedBlockId: () => {}, 
     updateBlock: () => Promise.resolve(), 
     deleteBlock: () => {} 

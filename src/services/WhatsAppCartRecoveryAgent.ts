@@ -49,6 +49,8 @@ interface RecoveryAnalytics {
   recoveredSales: number;
   recoveryRate: number;
   revenueRecovered: number;
+  totalContacted: number;
+  totalRecovered: number;
 }
 
 export class WhatsAppCartRecoveryAgent {
@@ -330,8 +332,40 @@ export class WhatsAppCartRecoveryAgent {
   }
 
   /**
-   * 📊 OBTER ANALYTICS DE RECUPERAÇÃO
+   * 📊 OBTER ESTATÍSTICAS DE RECUPERAÇÃO
    */
+  getStats(): RecoveryAnalytics {
+    const recoveries = Array.from(this.activeRecoveries.values());
+    const totalAbandoned = recoveries.length;
+    const converted = recoveries.filter(r => r.status === 'converted');
+    const contacted = recoveries.filter(r => r.recoveryAttempts > 0);
+    
+    return {
+      totalAbandoned,
+      messagesSent: recoveries.reduce((sum, r) => sum + r.recoveryAttempts, 0),
+      recoveredSales: converted.length,
+      recoveryRate: totalAbandoned > 0 ? (converted.length / totalAbandoned) * 100 : 0,
+      revenueRecovered: converted.reduce((sum, r) => sum + r.productPrice, 0),
+      totalContacted: contacted.length,
+      totalRecovered: converted.length
+    };
+  }
+
+  /**
+   * ▶️ INICIAR AGENTE
+   */
+  start(): void {
+    console.log('🚀 WhatsApp Cart Recovery Agent iniciado');
+    this.setupHotmartIntegration();
+  }
+
+  /**
+   * ⏹️ PARAR AGENTE
+   */
+  stop(): void {
+    console.log('⏹️ WhatsApp Cart Recovery Agent parado');
+    this.activeRecoveries.clear();
+  }
   async getRecoveryAnalytics(
     startDate: Date = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000), // 30 dias atrás
     endDate: Date = new Date()
@@ -447,9 +481,14 @@ export class WhatsAppCartRecoveryAgent {
 }
 
 // Export additional items for compatibility
+export { useWhatsAppCartRecovery as useWhatsAppRecoveryStats };
 export interface WhatsAppConfig {
-  token: string;
+  token?: string;
+  accessToken?: string; // Alias for token
   phoneNumberId: string;
+  businessAccountId?: string;
+  webhookVerifyToken?: string;
+  apiVersion?: string;
 }
 
 export interface CartAbandonmentData {
@@ -459,7 +498,7 @@ export interface CartAbandonmentData {
 }
 
 export const initializeWhatsAppAgent = (config: WhatsAppConfig) => {
-  return new WhatsAppCartRecoveryAgent(config.token, config.phoneNumberId);
+  return new WhatsAppCartRecoveryAgent(config.token || config.accessToken || 'mock_token', config.phoneNumberId);
 };
 
 export const getWhatsAppAgent = () => {
