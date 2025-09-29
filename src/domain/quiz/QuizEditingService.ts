@@ -193,13 +193,12 @@ export class QuizEditingService {
     private persistOverrides() {
         this.overrides.updatedAt = new Date().toISOString();
         if (!this.persistenceEnabled) return;
-        quizOverridesStorage.save(this.overrides).then((meta) => {
+        quizOverridesStorage.save(this.overrides).then(() => {
             // Evento granular de persistência
             eventBus.publish({
                 type: 'quiz.overrides.persisted',
                 hash: this.state?.hash || '',
-                ts: Date.now(),
-                storage: meta?.layer || 'unknown'
+                ts: Date.now()
             } as any);
             eventBus.publish({ type: 'quiz.definition.reload', hash: this.state?.hash || '', ts: Date.now() });
         });

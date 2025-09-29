@@ -319,8 +319,8 @@ export class DynamicMasterJSONGenerator {
         const stepsConfig: Record<string, DynamicStepTemplate> = {};
 
         // Gerar configurações para todas as 21 etapas
-    const maxSteps = HEADLESS ? 20 : 21; // respeitar limite atual UI em headless
-    for (let stepNumber = 1; stepNumber <= maxSteps; stepNumber++) {
+        const maxSteps = HEADLESS ? 20 : 21; // respeitar limite atual UI em headless
+        for (let stepNumber = 1; stepNumber <= maxSteps; stepNumber++) {
             try {
                 const stepId = `step-${stepNumber}`;
                 const stepConfig = await this.configAPI.getConfiguration(`quiz-step-${stepNumber}`, funnelId);

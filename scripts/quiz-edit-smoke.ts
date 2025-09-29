@@ -46,21 +46,24 @@ async function run() {
         process.exit(1);
     }
 
-    // Tentar gerar master JSON dinamicamente (ignorando falha se depender de browser)
+    // Gerar master JSON em modo headless para validar refletir override
     try {
+        process.env.QUIZ_HEADLESS = '1';
         const mod = await import('../src/services/DynamicMasterJSONGenerator');
-        const generator = (mod as any).default?.getInstance ? (mod as any).default.getInstance() : (mod as any).DynamicMasterJSONGenerator?.getInstance?.();
-        const inst = (mod as any).DynamicMasterJSONGenerator?.getInstance?.() || (mod as any).dynamicMasterJSON || generator;
-        if (inst && inst.generateMasterJSON) {
+        const inst = (mod as any).dynamicMasterJSON || (mod as any).DynamicMasterJSONGenerator?.getInstance?.();
+        if (inst?.generateMasterJSON) {
             const master = await inst.generateMasterJSON();
             const name = master.steps['step-2']?.metadata?.name;
-            console.log('Master JSON step-2 name:', name);
+            console.log('Master JSON (headless) step-2 name:', name);
             if (!name || !name.includes('Nova Pergunta')) {
-                console.warn('⚠️ Master JSON não refletiu override (pode ser cache ou dependências externas)');
+                console.error('❌ Headless master JSON não refletiu override');
+                process.exit(1);
+            } else {
+                console.log('✅ Headless master JSON refletiu override');
             }
         }
     } catch (err) {
-        console.warn('⚠️ Pulo geração master JSON (ambiente sem browser):', (err as any)?.message);
+        console.warn('⚠️ Falha headless master JSON:', (err as any)?.message);
     }
 
     console.log('✅ Smoke test básico OK');
