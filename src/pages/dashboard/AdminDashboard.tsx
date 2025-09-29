@@ -528,7 +528,7 @@ const AdminDashboard: React.FC = () => {
                                         description="Gerenciar e editar funis de quiz de estilo"
                                         href="/dashboard/quiz-funnels"
                                         icon={<Target className="w-5 h-5" />}
-                                        color="purple"
+                                        color="brand"
                                     />
                                 </CardContent>
                             </Card>

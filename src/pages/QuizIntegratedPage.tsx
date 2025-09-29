@@ -3,6 +3,7 @@ import { Quiz21StepsNavigation } from '@/components/quiz/Quiz21StepsNavigation';
 import { QuizOptimizedRenderer } from '@/components/quiz/QuizOptimizedRenderer';
 import { FunnelMasterProvider, useQuiz21Steps } from '@/providers/FunnelMasterProvider';
 import { useEditor } from '@/components/editor/EditorProviderMigrationAdapter';
+import { EditorProvider } from '@/components/editor/EditorProvider';
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent } from '@/components/ui/tabs';
@@ -26,6 +27,12 @@ const QuizIntegratedRenderer: React.FC = () => {
     } catch (error) {
       console.warn('EditorContext não disponível:', error);
       return {
+        state: { stepBlocks: { 'step-1': [] } },
+        actions: {
+          setSelectedBlockId: () => { },
+          updateBlock: () => Promise.resolve(),
+          deleteBlock: () => { },
+        },
         computed: { currentBlocks: [] },
         blockActions: {
           setSelectedBlockId: () => { },
@@ -45,17 +52,19 @@ const QuizIntegratedRenderer: React.FC = () => {
     }
   }, []);
 
-  const {
-    computed: { currentBlocks },
-    blockActions: { setSelectedBlockId, updateBlock, deleteBlock },
-  } = editorContext;
+  const computed = editorContext?.computed || { currentBlocks: [] };
+  const blockActions = editorContext?.blockActions || { 
+    setSelectedBlockId: () => {}, 
+    updateBlock: () => Promise.resolve(), 
+    deleteBlock: () => {} 
+  };
 
   const { currentStep } = quizContext;
 
   const handleDeleteBlock = (blockId: string) => {
     if (window.confirm('Tem certeza que deseja deletar este bloco?')) {
-      deleteBlock(blockId);
-      setSelectedBlockId(null);
+      if (blockActions?.deleteBlock) blockActions.deleteBlock(blockId);
+      if (blockActions?.setSelectedBlockId) blockActions.setSelectedBlockId(null);
     }
   };
 
@@ -109,10 +118,10 @@ const QuizIntegratedRenderer: React.FC = () => {
               {/* MODO PADRÃO - Canvas Simples */}
               <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl shadow-stone-200/40 border border-stone-200/30 ring-1 ring-stone-100/20 min-h-[600px] p-8">
                 <CanvasDropZone
-                  blocks={currentBlocks}
-                  onSelectBlock={(id: string) => setSelectedBlockId(id)}
+                  blocks={computed?.currentBlocks || []}
+                  onSelectBlock={(id: string) => blockActions?.setSelectedBlockId && blockActions.setSelectedBlockId(id)}
                   selectedBlockId={null}
-                  onUpdateBlock={updateBlock}
+                  onUpdateBlock={blockActions?.updateBlock || (() => Promise.resolve())}
                   onDeleteBlock={handleDeleteBlock}
                   scopeId={currentStep}
                 />
@@ -123,7 +132,7 @@ const QuizIntegratedRenderer: React.FC = () => {
                 <div className="flex justify-center items-center space-x-6">
                   <div>🎯 Etapa: {currentStep}/21</div>
                   <div>📊 Progresso: {Math.round((currentStep / 21) * 100)}%</div>
-                  <div>🎨 Blocos: {currentBlocks.length}</div>
+                  <div>🎨 Blocos: {computed?.currentBlocks?.length || 0}</div>
                 </div>
               </div>
             </TabsContent>

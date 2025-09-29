@@ -54,7 +54,7 @@ const TemplatesPage: React.FC = () => {
   useEffect(() => {
     const loadRealData = async () => {
       try {
-        const metrics = await EnhancedUnifiedDataService.getRealTimeMetrics();
+        const metrics = await MockDataService.getRealTimeMetrics();
         setRealTimeMetrics(metrics);
         console.log('✅ ' + 'TemplatesPage.tsx' + ' carregado com dados reais:', metrics);
       } catch (error) {

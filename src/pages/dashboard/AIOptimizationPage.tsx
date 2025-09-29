@@ -23,7 +23,7 @@ import {
 export const AIOptimizationPage: React.FC = () => {
   // Real data integration
   const [isLoading, setIsLoading] = useState(true);
-  const [realTimeMetrics, setRealTimeMetrics] = useState(null);
+  const [realTimeMetrics, setRealTimeMetrics] = useState<any>(null);
   
   useEffect(() => {
     const loadRealData = async () => {

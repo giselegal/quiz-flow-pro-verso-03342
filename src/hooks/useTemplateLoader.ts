@@ -31,7 +31,8 @@ interface UseTemplateLoaderResult {
 }
 
 export function useTemplateLoader(): UseTemplateLoaderResult {
-  const { stages } = useEditor();
+  const { state } = useEditor();
+  const stages = state.stepBlocks ? Object.keys(state.stepBlocks).map((id, index) => ({ id, order: index + 1 })) : [];
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
   const [templatesMetadata, setTemplatesMetadata] = useState<Record<string, TemplateMetadata>>({});
@@ -75,7 +76,7 @@ export function useTemplateLoader(): UseTemplateLoaderResult {
         }
 
         // Carregar do sistema de templates
-        const stage = stages.find(s => s.id === stageId);
+        const stage = stages.find((s: any) => s.id === stageId);
         if (!stage) throw new Error(`Stage ${stageId} not found`);
 
         const template = await getStepTemplate(stage.order);

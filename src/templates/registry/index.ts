@@ -162,7 +162,7 @@ export const AVAILABLE_TEMPLATES: Record<string, EnhancedTemplateMetadata> = {
         id: 'simpleTestTemplate',
         name: 'Template de Teste Simples',
         description: 'Template básico para debug',
-        category: 'test',
+        category: 'quiz-complete',
         stepCount: 2,
         thumbnail: '/images/templates/simple-test.jpg',
         isOfficial: false,
