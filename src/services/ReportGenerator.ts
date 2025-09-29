@@ -308,8 +308,8 @@ export class ReportGenerator {
     }
 
     private async generatePerformanceSections(events: UserEvent[], metrics: QuizMetrics): Promise<ReportSection[]> {
-    // Eventos de performance podem estar marcados com type 'performance' (se disponível) ou conter dados de loadTime
-    const performanceEvents = events.filter(e => (e as any).type === 'performance' || e.data?.loadTime);
+        // Eventos de performance podem estar marcados com type 'performance' (se disponível) ou conter dados de loadTime
+        const performanceEvents = events.filter(e => (e as any).type === 'performance' || e.data?.loadTime);
 
         return [
             {
