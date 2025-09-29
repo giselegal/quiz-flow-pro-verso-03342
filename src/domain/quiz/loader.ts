@@ -1,5 +1,5 @@
 import { quizDefinitionSchema, QuizDefinition } from './types';
-import rawDefinition from './quiz-definition.json';
+import rawDefinition from './quiz-definition';
 
 // Simple hash placeholder (real implementation could use crypto.subtle)
 function simpleHash(obj: any): string {

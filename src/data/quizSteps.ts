@@ -3,7 +3,7 @@
  * Mantém a API histórica (QUIZ_STEPS, STEP_ORDER, getStepById, etc.) sem duplicar conteúdo.
  * Todos os dados agora são derivados de `quiz-definition.json` (fonte única de verdade).
  */
-import canonicalDef from '../domain/quiz/quiz-definition.json';
+import canonicalDef from '../domain/quiz/quiz-definition';
 
 export interface QuizOption { id: string; text: string; image?: string; }
 export interface OfferContent { title: string; description: string; buttonText: string; testimonial: { quote: string; author: string }; }

@@ -11,7 +11,8 @@
  */
 
 import { eventBus } from '@/core/events/eventBus';
-import canonicalDefinition from './quiz-definition.json';
+import { logger } from '@/core/logging/StructuredLogger';
+import canonicalDefinition from './quiz-definition';
 import { buildCanonicalBlocksTemplate, buildBlocksForDefinition } from './blockTemplateGenerator';
 import { QuizDefinition } from './types';
 import { quizOverridesStorage } from './storage/QuizOverridesStorage';
@@ -95,6 +96,7 @@ export class QuizEditingService {
         this.overrides.steps[stepId] = { ...(this.overrides.steps[stepId] || {}), ...patch };
         this.markDirty();
         this.recompute([stepId]);
+        logger.info('Step atualizado', { stepId, fields: Object.keys(patch) }, 'QuizEditingService');
         eventBus.publish({ type: 'editor.step.modified', stepId, field: Object.keys(patch).join(','), ts: Date.now() });
     }
 
@@ -120,6 +122,7 @@ export class QuizEditingService {
         this.overrides.steps[stepId] = stepOverride;
         this.markDirty();
         this.recompute([stepId]);
+        logger.debug('Block atualizado', { stepId, blockIndex, patchKeys: Object.keys(patch) }, 'QuizEditingService');
         eventBus.publish({ type: 'editor.step.modified', stepId, field: `block:${blockIndex}`, ts: Date.now() });
     }
 
@@ -152,12 +155,14 @@ export class QuizEditingService {
         if (!this.dirty) return;
         this.persistOverrides();
         this.dirty = false;
+        logger.success('Overrides salvos', { updatedAt: this.overrides.updatedAt }, 'QuizEditingService');
         eventBus.publish({ type: 'quiz.definition.reload', hash: this.state?.hash || '', ts: Date.now() });
     }
 
     publish() {
         // Futuro: pipeline de versioning/snapshot; por ora só delega para save
         this.save();
+        logger.success('Versão publicada', { hash: this.state?.hash }, 'QuizEditingService');
         eventBus.publish({ type: 'version.published', version: this.state?.hash || 'draft', ts: Date.now() });
     }
 
@@ -203,6 +208,7 @@ export class QuizEditingService {
                 hash: this.state?.hash || '',
                 ts: Date.now()
             } as any);
+            logger.info('Persistência concluída', { medium: 'auto' }, 'QuizEditingService');
             eventBus.publish({ type: 'quiz.definition.reload', hash: this.state?.hash || '', ts: Date.now() });
         });
     }
@@ -237,6 +243,7 @@ export class QuizEditingService {
             this.state = { definition: merged, steps: merged.steps, blocks: fullBlocks, hash, overrides: this.overrides };
             this.notify();
             eventBus.publish({ type: 'quiz.definition.reload', hash, ts: Date.now() });
+            logger.debug('Rebuild completo', { steps: merged.steps.length }, 'QuizEditingService');
             return;
         }
         // Hot reload seletivo: reconstruir apenas steps alterados
@@ -252,6 +259,7 @@ export class QuizEditingService {
         this.state = { definition: merged, steps: merged.steps, blocks: nextBlocks, hash, overrides: this.overrides };
         this.notify();
         eventBus.publish({ type: 'quiz.definition.reload', hash, ts: Date.now(), changedSteps: changedStepIds });
+        logger.debug('Rebuild seletivo', { changedSteps: changedStepIds }, 'QuizEditingService');
     }
 
     private applyBlockOverrides(step: any, blocksRecord: Record<string, any[]>) {

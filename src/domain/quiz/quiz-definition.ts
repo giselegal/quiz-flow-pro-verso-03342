@@ -1,4 +1,6 @@
-{
+// Autogerado a partir de quiz-definition.json para contornar plugin JSON e permitir tipos.
+import { QuizDefinition } from "./types";
+const definition: QuizDefinition = {
     "id": "quiz-estilo-pessoal",
     "version": "2.0.0-draft.0",
     "status": "draft",
@@ -756,4 +758,5 @@
     "integrity": {
         "hash": "__PENDING__"
     }
-}
+} as unknown as QuizDefinition;
+export default definition;
