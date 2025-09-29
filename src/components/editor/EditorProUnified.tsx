@@ -188,9 +188,17 @@ export const EditorProUnified: React.FC<EditorProUnifiedProps> = ({
 
   // Computed State
   const currentStepBlocks = useMemo(() => {
+    // Builder blocks originais
     const stepKey = `step-${state.currentStep}`;
-    return state.stepBlocks[stepKey] || [];
-  }, [state.stepBlocks, state.currentStep]);
+    const builderBlocks = state.stepBlocks[stepKey] || [];
+    // Tentar mapear para step do quiz (index = currentStep-1)
+    const quizIndex = state.currentStep - 1;
+    const quizStep = quiz.state.steps[quizIndex];
+    if (quizStep && quiz.state.blocks[quizStep.id]) {
+      return quiz.state.blocks[quizStep.id] as any[]; // usar blocks gerados dinâmicos do quiz
+    }
+    return builderBlocks;
+  }, [state.stepBlocks, state.currentStep, quiz.state.blocks, quiz.state.steps]);
 
   const selectedBlock = useMemo(() => {
     if (!selectedBlockId) return null;

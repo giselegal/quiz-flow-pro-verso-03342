@@ -23,6 +23,7 @@ interface QuizOverridesFile {
     updatedAt: string | null;
     steps: Record<string, Partial<QuizStepLike>>;
     blocks: Record<string, any>;
+    root?: Partial<Pick<QuizDefinition, 'scoring' | 'progress' | 'offerMapping'>>; // novos overrides de nível raiz
 }
 
 export interface AppliedQuizState {
@@ -121,6 +122,30 @@ export class QuizEditingService {
         eventBus.publish({ type: 'editor.step.modified', stepId, field: `block:${blockIndex}`, ts: Date.now() });
     }
 
+    // ---- Root-level updates (scoring, progress, offerMapping) ----
+    private updateRoot(patch: Partial<Pick<QuizDefinition, 'scoring' | 'progress' | 'offerMapping'>>) {
+        this.overrides.root = { ...(this.overrides.root || {}), ...patch };
+        this.markDirty();
+        this.recompute();
+        // evento simplificado usando existente
+        eventBus.publish({ type: 'quiz.definition.reload', hash: this.state?.hash || '', ts: Date.now() });
+    }
+
+    updateScoring(patch: Partial<QuizDefinition['scoring']>) {
+        const current = this.overrides.root?.scoring || this.baseDefinition.scoring;
+        this.updateRoot({ scoring: { ...current, ...patch } });
+    }
+
+    updateProgress(patch: Partial<QuizDefinition['progress']>) {
+        const current = this.overrides.root?.progress || this.baseDefinition.progress;
+        this.updateRoot({ progress: { ...current, ...patch } });
+    }
+
+    updateOfferMapping(patch: Partial<QuizDefinition['offerMapping']>) {
+        const current = this.overrides.root?.offerMapping || this.baseDefinition.offerMapping;
+        this.updateRoot({ offerMapping: { ...current, ...patch } });
+    }
+
     save() {
         if (!this.dirty) return;
         this.persistOverrides();
@@ -133,6 +158,8 @@ export class QuizEditingService {
         this.save();
         eventBus.publish({ type: 'version.published', version: this.state?.hash || 'draft', ts: Date.now() });
     }
+
+    isDirty() { return this.dirty; }
 
     resetAll() {
         this.overrides = { version: 1, updatedAt: null, steps: {}, blocks: {} };
@@ -173,12 +200,17 @@ export class QuizEditingService {
 
     private applyOverrides(): QuizDefinition {
         const clone: QuizDefinition = JSON.parse(JSON.stringify(this.baseDefinition));
+        // aplicar root overrides
+        if (this.overrides.root) {
+            if (this.overrides.root.scoring) clone.scoring = { ...clone.scoring, ...this.overrides.root.scoring };
+            if (this.overrides.root.progress) clone.progress = { ...clone.progress, ...this.overrides.root.progress };
+            if (this.overrides.root.offerMapping) clone.offerMapping = { ...clone.offerMapping, ...this.overrides.root.offerMapping };
+        }
         for (const step of clone.steps) {
             const ov = this.overrides.steps[step.id];
             if (!ov) continue;
             Object.assign(step, ov, { id: step.id }); // manter id
             if ((ov as any).blocks) {
-                // blocks overrides aplicados após geração (apenas sinalizamos aqui)
                 (step as any).__blocksOverride = (ov as any).blocks;
             }
         }

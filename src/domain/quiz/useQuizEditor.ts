@@ -42,6 +42,10 @@ export function useQuizEditor(opts: UseQuizEditorOptions = {}) {
         resetStep,
         save: () => quizEditingService.save(),
         publish: () => quizEditingService.publish(),
-        dirty: quizEditingService.isDirty()
+        dirty: quizEditingService.isDirty(),
+        updateScoring: (patch: any) => (quizEditingService as any).updateScoring(patch),
+        updateProgress: (patch: any) => (quizEditingService as any).updateProgress(patch),
+        updateOfferMapping: (patch: any) => (quizEditingService as any).updateOfferMapping(patch),
+        rootOverrides: state.overrides.root || {}
     };
 }

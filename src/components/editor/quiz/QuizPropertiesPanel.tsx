@@ -23,6 +23,7 @@ export const QuizPropertiesPanel: React.FC = () => {
 
     const isQuestion = step.type === 'question';
     const isStrategic = step.type === 'strategic-question';
+    const isOffer = step.type === 'offer';
 
     const handleChange = (field: string, value: any) => {
         quiz.updateStep({ [field]: value });
@@ -48,6 +49,62 @@ export const QuizPropertiesPanel: React.FC = () => {
         const options = [...(step as any).options];
         options.splice(idx, 1);
         quiz.updateStep({ options });
+    };
+
+    const handleVariantChange = (idx: number, field: string, value: string) => {
+        if (!isOffer) return;
+        const variants = [...(step as any).variants];
+        variants[idx] = { ...variants[idx], [field]: value };
+        quiz.updateStep({ variants });
+    };
+
+    const handleVariantTestimonialChange = (idx: number, field: string, value: string) => {
+        if (!isOffer) return;
+        const variants = [...(step as any).variants];
+        const testimonial = { ...(variants[idx].testimonial || { quote: '', author: '' }), [field]: value };
+        variants[idx] = { ...variants[idx], testimonial };
+        quiz.updateStep({ variants });
+    };
+
+    const handleAddVariant = () => {
+        if (!isOffer) return;
+        const variants = [...(step as any).variants];
+        variants.push({
+            matchValue: 'novo',
+            title: 'Nova Variante',
+            description: 'Descrição',
+            buttonText: 'Chamar Ação',
+            testimonial: { quote: 'Depoimento', author: 'Autor' }
+        });
+        quiz.updateStep({ variants });
+    };
+
+    const handleRemoveVariant = (idx: number) => {
+        if (!isOffer) return;
+        const variants = [...(step as any).variants];
+        variants.splice(idx, 1);
+        quiz.updateStep({ variants });
+    };
+
+    // Global editing helpers
+    const root = quiz.rootOverrides;
+    const def = quiz.state.definition;
+    const currentScoring = root.scoring || def.scoring;
+    const currentProgress = root.progress || def.progress;
+    const currentOfferMapping = root.offerMapping || def.offerMapping;
+
+    const updateDefaultWeight = (value: string) => {
+        const num = parseInt(value, 10);
+        if (!isNaN(num)) quiz.updateScoring({ defaultWeight: num });
+    };
+
+    const updateCountedSteps = (value: string) => {
+        const ids = value.split(',').map(v => v.trim()).filter(Boolean);
+        quiz.updateProgress({ countedStepIds: ids });
+    };
+
+    const updateStrategicFinal = (value: string) => {
+        quiz.updateOfferMapping({ strategicFinalStepId: value });
     };
 
     return (
@@ -92,6 +149,49 @@ export const QuizPropertiesPanel: React.FC = () => {
                     </div>
                 </div>
             )}
+            {(isOffer) && (
+                <div className="space-y-2">
+                    <div className="flex items-center justify-between">
+                        <label className="text-xs font-medium">Variantes</label>
+                        <Button size="sm" variant="outline" onClick={handleAddVariant}>Adicionar</Button>
+                    </div>
+                    <div className="space-y-3">
+                        {(step as any).variants.map((v: any, idx: number) => (
+                            <div key={idx} className="border rounded p-2 space-y-2 bg-muted/30">
+                                <div className="flex items-center justify-between text-[11px] font-medium">
+                                    <span>{v.matchValue || '(sem match)'}</span>
+                                    <Button size="sm" variant="ghost" onClick={() => handleRemoveVariant(idx)}>Remover</Button>
+                                </div>
+                                <Input placeholder="matchValue" defaultValue={v.matchValue} onChange={e => handleVariantChange(idx, 'matchValue', e.target.value)} className="h-7 text-xs" />
+                                <Input placeholder="Título" defaultValue={v.title} onChange={e => handleVariantChange(idx, 'title', e.target.value)} className="h-7 text-xs" />
+                                <Textarea placeholder="Descrição" defaultValue={v.description} onChange={e => handleVariantChange(idx, 'description', e.target.value)} rows={2} className="text-xs" />
+                                <Input placeholder="Botão" defaultValue={v.buttonText} onChange={e => handleVariantChange(idx, 'buttonText', e.target.value)} className="h-7 text-xs" />
+                                <div className="space-y-1">
+                                    <label className="text-[10px] font-medium">Testimonial</label>
+                                    <Input placeholder="Quote" defaultValue={v.testimonial?.quote} onChange={e => handleVariantTestimonialChange(idx, 'quote', e.target.value)} className="h-7 text-xs" />
+                                    <Input placeholder="Author" defaultValue={v.testimonial?.author} onChange={e => handleVariantTestimonialChange(idx, 'author', e.target.value)} className="h-7 text-xs" />
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            )}
+            {/* Global config (scoring / progress / offerMapping) */}
+            <div className="space-y-3 border-t pt-3">
+                <h4 className="text-xs font-semibold text-muted-foreground">Config Global</h4>
+                <div className="space-y-1">
+                    <label className="text-[10px] font-medium">Scoring Default Weight</label>
+                    <Input className="h-7 text-xs" defaultValue={String(currentScoring.defaultWeight)} onChange={e => updateDefaultWeight(e.target.value)} />
+                </div>
+                <div className="space-y-1">
+                    <label className="text-[10px] font-medium">Progress countedStepIds (comma)</label>
+                    <Textarea rows={2} className="text-[10px]" defaultValue={currentProgress.countedStepIds.join(',')} onChange={e => updateCountedSteps(e.target.value)} />
+                </div>
+                <div className="space-y-1">
+                    <label className="text-[10px] font-medium">strategicFinalStepId</label>
+                    <Input className="h-7 text-xs" defaultValue={currentOfferMapping.strategicFinalStepId} onChange={e => updateStrategicFinal(e.target.value)} />
+                </div>
+            </div>
             <div className="pt-2 border-t text-[10px] text-muted-foreground flex items-center justify-between">
                 <span>Hash: {quiz.state.hash}</span>
                 <div className="flex gap-1">
