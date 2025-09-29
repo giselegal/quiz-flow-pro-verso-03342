@@ -664,6 +664,7 @@ const definition: QuizDefinition = {
             "variants": [
                 {
                     "matchValue": "Montar looks com mais facilidade e confiança",
+                    "matchOptionId": "montar-looks-facilidade",
                     "title": "{userName}, encontramos a solução para **combinar as suas peças com confiança!**",
                     "description": "Chega de incertezas. Liberamos uma oferta especial que vai te guiar passo a passo para criar looks harmoniosos e incríveis, usando o que você já tem.",
                     "buttonText": "Quero aprender a combinar as minhas peças agora!",
@@ -674,6 +675,7 @@ const definition: QuizDefinition = {
                 },
                 {
                     "matchValue": "Usar o que já tenho e me sentir estilosa",
+                    "matchOptionId": "usar-que-tenho",
                     "title": "{userName}, encontramos a solução para **se sentir estilosa com o que já tem!**",
                     "description": "Descubra o potencial escondido no seu próprio guarda-roupa. Esta oferta vai te ensinar a resgatar e transformar as peças esquecidas em looks incríveis, cheios de estilo e personalidade.",
                     "buttonText": "Quero me sentir mais estilosa com o que já tenho!",
@@ -684,6 +686,7 @@ const definition: QuizDefinition = {
                 },
                 {
                     "matchValue": "Comprar com mais consciência e sem culpa",
+                    "matchOptionId": "comprar-consciencia",
                     "title": "{userName}, a solução para você **comprar com consciência e sem culpa!**",
                     "description": "Pare de desperdiçar dinheiro com peças que não usa. A nossa oferta vai te ensinar a identificar exatamente o que te valoriza, transformando a sua forma de comprar para sempre.",
                     "buttonText": "Quero fazer compras inteligentes!",
@@ -694,6 +697,7 @@ const definition: QuizDefinition = {
                 },
                 {
                     "matchValue": "Ser admirada pela imagem que transmito",
+                    "matchOptionId": "ser-admirada",
                     "title": "{userName}, a chave para você **alinhar a sua imagem à sua essência!**",
                     "description": "A sua imagem é a sua maior ferramenta de comunicação. Esta oferta vai te ajudar a construir um estilo que não apenas te veste, mas que te representa, com autenticidade e propósito.",
                     "buttonText": "Quero que a minha imagem me represente!",
