@@ -766,4 +766,6 @@ export const useLegacyBuilderEditor = () => {
     return usePureBuilder();
 };
 
-export default PureBuilderProvider;
+// 🔧 CORREÇÃO: Export default compatível
+const PureBuilderProviderDefault = PureBuilderProvider;
+export default PureBuilderProviderDefault;

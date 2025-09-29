@@ -30,7 +30,7 @@ const EditorProUnified = React.lazy(() =>
     import('../../components/editor/EditorProUnified')
 );
 
-import PureBuilderProvider from '@/components/editor/PureBuilderProvider';
+import { PureBuilderProvider } from '@/components/editor/PureBuilderProvider';
 
 // 🔧 CORREÇÃO: Lazy loading dos componentes de error e loading
 const TemplateErrorBoundary = React.lazy(() =>
@@ -461,13 +461,13 @@ const UnifiedEditorCore: React.FC<ModernUnifiedEditorProps> = ({
         // 🚨 CORREÇÃO CRÍTICA: Processar query parameter template segundo
         if (templateParam) {
             console.log('✅ Template encontrado via query param:', templateParam);
-            
+
             // 🎯 QUIZ-ESTILO: Detectar template do quiz
             if (templateParam === 'quiz-estilo-21-steps') {
                 console.log('🎯 Detectado template quiz-estilo-21-steps');
                 return { templateId: templateParam, funnelId: null, type: 'quiz-template' };
             }
-            
+
             return { templateId: templateParam, funnelId: null, type: 'template' };
         }
 
@@ -504,17 +504,17 @@ const UnifiedEditorCore: React.FC<ModernUnifiedEditorProps> = ({
     // 🎯 QUIZ-ESTILO: Detectar e redirecionar para página especializada
     if (extractedInfo.type === 'quiz-template' && extractedInfo.templateId === 'quiz-estilo-21-steps') {
         console.log('🚀 Redirecionando para QuizEditorIntegratedPage...');
-        
+
         // Importar dinamicamente a página especializada
-        const QuizEditorIntegratedPage = React.lazy(() => 
+        const QuizEditorIntegratedPage = React.lazy(() =>
             import('./QuizEditorIntegratedPage')
         );
-        
+
         return (
             <div className={`modern-unified-editor ${className}`}>
                 <Suspense fallback={<LoadingSpinner message="Carregando Quiz Editor..." />}>
-                    <QuizEditorIntegratedPage 
-                        funnelId={extractedInfo.funnelId || undefined} 
+                    <QuizEditorIntegratedPage
+                        funnelId={extractedInfo.funnelId || undefined}
                     />
                 </Suspense>
             </div>
