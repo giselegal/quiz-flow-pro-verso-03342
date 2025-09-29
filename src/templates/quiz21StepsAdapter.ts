@@ -2,13 +2,28 @@
  * quiz21StepsAdapter.ts
  * Implementação mínima isolada para evitar reinserção de conteúdo legado.
  */
-import { buildCanonicalBlocksTemplate } from '@/domain/quiz/blockTemplateGenerator';
+import { buildCanonicalBlocksTemplate, buildBlocksForDefinition } from '@/domain/quiz/blockTemplateGenerator';
 import { getQuizDefinition } from '@/domain/quiz/runtime';
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type Block = any;
 
 let _cache: Record<string, Block[]> | null = null;
 let _lastHash: string | null = null;
+let _lastMode: QuizDynamicMode | null = null;
+
+// ------------------------------------------------------------
+// Feature Flags de Migração
+// ------------------------------------------------------------
+// Prioridade: ALL > BLOCKS > QUESTIONS
+export type QuizDynamicMode = 'all' | 'blocks' | 'questions' | 'legacy';
+
+export function getQuizDynamicMode(): QuizDynamicMode {
+    const env = (import.meta as any).env || (globalThis as any).process?.env || {};
+    if (env.VITE_QUIZ_DYNAMIC_ALL === '1') return 'all';
+    if (env.VITE_QUIZ_DYNAMIC_BLOCKS === '1') return 'blocks';
+    if (env.VITE_QUIZ_DYNAMIC_QUESTIONS === '1') return 'questions';
+    return 'legacy';
+}
 
 function computeDefinitionHash(def: any): string {
     try {
@@ -23,6 +38,7 @@ export function invalidateQuizTemplate(reason?: string) {
     console.info('[quiz21StepsAdapter] invalidando cache', reason || 'sem motivo');
     _cache = null;
     _lastHash = null;
+    _lastMode = null;
 }
 
 function load(): Record<string, Block[]> {
@@ -32,12 +48,37 @@ function load(): Record<string, Block[]> {
             if (!_cache) _cache = {};
             return _cache;
         }
-        const currentHash = computeDefinitionHash(def);
-        if (_cache && _lastHash === currentHash) {
+        const mode = getQuizDynamicMode();
+        const currentHash = computeDefinitionHash(def) + ':' + mode;
+        if (_cache && _lastHash === currentHash && _lastMode === mode) {
             return _cache;
         }
-        _cache = buildCanonicalBlocksTemplate();
+
+        let built: Record<string, Block[]> = {};
+
+        if (mode === 'all') {
+            built = buildCanonicalBlocksTemplate();
+        } else if (mode === 'blocks') {
+            // subset a partir do step 12 (id previsto: step-12)
+            const startId = def.steps[11]?.id; // index 11 = 12º step
+            const subsetIds = def.steps.slice(11).map((s: any) => s.id);
+            built = buildBlocksForDefinition(def, subsetIds);
+        } else if (mode === 'questions') {
+            // apenas steps tipo question (2–11). Consideramos indexes 1..10
+            const qIds = def.steps.filter((s: any) => s.type === 'question').map((s: any) => s.id);
+            built = buildBlocksForDefinition(def, qIds);
+        } else {
+            // legacy mode: construir tudo (para manter compat) – inicialmente mesmo que 'all'
+            built = buildCanonicalBlocksTemplate();
+        }
+
+        // Log simples (não usar logger central aqui para evitar dependências cíclicas)
+        // eslint-disable-next-line no-console
+        console.info('[quiz21StepsAdapter] modo', mode, 'stepsConstruidos=', Object.keys(built).length);
+
+        _cache = built;
         _lastHash = currentHash;
+        _lastMode = mode;
         return _cache;
     } catch (e) {
         console.warn('[quiz21StepsAdapter] erro ao carregar, usando cache ou vazio', e);

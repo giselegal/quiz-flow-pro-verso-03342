@@ -4,17 +4,19 @@
 Eliminar a duplicação massiva de definição de blocks no arquivo legado `quiz21StepsComplete.ts`, adotando geração dinâmica 100% baseada no `quiz-definition.json` + heurísticas e overrides opcionais.
 
 ## Estado Atual
-- Fonte de verdade semântica: `src/domain/quiz/quiz-definition.json` (21 steps, offers, scoring, progress).
-- Gerador dinâmico: `src/domain/quiz/blockTemplateGenerator.ts` (builders para: intro, question, strategic-question, transition, transition-result, result, offer).
-- Heurísticas aplicadas a perguntas: layout grid/list, colunas, optionStyle, selectionMode, required/min/max.
-- Feature flags:
-  - `VITE_QUIZ_DYNAMIC_BLOCKS`: ativa subset a partir da etapa 12.
-  - `VITE_QUIZ_DYNAMIC_QUESTIONS`: sobrepõe steps tipo `question` (2–11).
-  - `VITE_QUIZ_DYNAMIC_ALL`: substitui todos os steps (modo canônico completo).
-- Script de verificação: `npm run quiz:verify-blocks` garante presença e consistência básica.
+- Fonte de verdade semântica: `src/domain/quiz/quiz-definition.ts` (migração de JSON → TS para evitar parsing issues) com 21 steps, offers, scoring, progress.
+- Gerador dinâmico: `src/domain/quiz/blockTemplateGenerator.ts` (builders: intro, question, strategic-question, transition, transition-result, result, offer + seções modulares de result/offer).
+- Heurísticas aplicadas a perguntas: layout grid/list, colunas, optionStyle, selectionMode, required/min/max + ordinal dinâmico derivado de `progress.countedStepIds`.
+- Feature flags (implementadas em `src/templates/quiz21StepsAdapter.ts`):
+  - `VITE_QUIZ_DYNAMIC_BLOCKS=1`: gera somente subset a partir da etapa 12 (migração incremental).
+  - `VITE_QUIZ_DYNAMIC_QUESTIONS=1`: gera apenas steps de perguntas (2–11) para validar heurísticas isoladamente.
+  - `VITE_QUIZ_DYNAMIC_ALL=1`: gera todos os steps (modo canônico completo) — PRIORIDADE sobre as demais.
+  - Ausência de flags: modo `legacy` (atualmente equivalente a `all`, servindo apenas como fallback / rollback rápido).
+- Script de verificação: `npm run quiz:verify-blocks` garante presença e consistência básica (question/result/offer). 
+- Script diff legado vs dinâmico: `npm run quiz:diff-blocks` com tolerâncias definidas (delta ≤ 2 e ignoráveis decorativos).
 
 ## Critérios para Remover Legado
-1. `VITE_QUIZ_DYNAMIC_ALL=1` executa app sem erros de runtime (navegação 1→21).
+1. `VITE_QUIZ_DYNAMIC_ALL=1` executa app sem erros de runtime (navegação 1→21) – VALIDAR.
 2. `npm run quiz:verify-blocks` passa sem issues.
 3. Smoke tests relevantes (mínimo): `npm run smoke:step1`, `npm run smoke:step20` passam com flag full.
 4. Nenhum import externo crítico depende de IDs de blocos específicos do legado (ex.: `step1-title`). Se houver, mapear via override ou converter para seleção por `stepId` + tipo de bloco.
@@ -38,11 +40,11 @@ Eliminar a duplicação massiva de definição de blocks no arquivo legado `quiz
 | Diferença contagem blocks | Script diff falha | Voltar sem flags | Ajustar builder ou remover block fantasma legado |
 | Evento tracking ausente | Falta `offer_viewed` | Reativar legado parcial | Instrumentar evento no bloco dinâmico |
 
-## Script Diff Planejado
-Comparar para cada step:
-- countLegacy vs countDynamic
-- tipos setLegacy vs setDynamic
-Relatório em tabela + exit code != 0 se divergência > tolerância (tolerância inicial: apenas diferenças em tipos não-interativos auxiliares).
+## Script Diff (Implementado)
+Executa comparação para cada step:
+- countLegacy vs countDynamic (tolera delta absoluto ≤ 2)
+- tipos setLegacy vs setDynamic (ignora decorativos / lista IGNORABLE)
+Diferenças relevantes produzem exit code != 0.
 
 ## Overrides (Exemplo de Uso Futuro)
 ```ts
