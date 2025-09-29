@@ -168,9 +168,12 @@ async function processMessageChange(value: WhatsAppWebhookEntry['changes'][0]['v
 /**
  * 👤 PROCESSAR MENSAGEM DO USUÁRIO
  */
+type WhatsAppMessage = NonNullable<WhatsAppWebhookEntry['changes'][0]['value']['messages']>[0];
+type WhatsAppContact = NonNullable<WhatsAppWebhookEntry['changes'][0]['value']['contacts']>[0];
+
 async function handleUserMessage(
-  message: WhatsAppWebhookEntry['changes'][0]['value']['messages'][0],
-  contact?: WhatsAppWebhookEntry['changes'][0]['value']['contacts'][0]
+  message: WhatsAppMessage,
+  contact?: WhatsAppContact
 ): Promise<void> {
   const userPhone = message.from;
   const userName = contact?.profile?.name || 'Usuário';
@@ -274,7 +277,9 @@ async function handleInteractiveResponse(
 /**
  * 📈 PROCESSAR STATUS DE MENSAGEM
  */
-async function handleMessageStatus(status: WhatsAppWebhookEntry['changes'][0]['value']['statuses'][0]): Promise<void> {
+type WhatsAppStatus = NonNullable<WhatsAppWebhookEntry['changes'][0]['value']['statuses']>[0];
+
+async function handleMessageStatus(status: WhatsAppStatus): Promise<void> {
   console.log('📈 Status da mensagem:', {
     messageId: status.id,
     status: status.status,

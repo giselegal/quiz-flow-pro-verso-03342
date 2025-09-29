@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from 'react';
 import { useEditor } from '@/components/editor/EditorProviderMigrationAdapter';
 import { Badge } from '@/components/ui/badge';

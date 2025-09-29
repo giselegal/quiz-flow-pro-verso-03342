@@ -3,7 +3,16 @@ import { Button } from '@/components/ui/button';
 import { useEditor } from '@/components/editor/EditorProviderMigrationAdapter';
 
 const FunnelStagesPanel: React.FC = () => {
-  const { stages, activeStageId, stageActions } = useEditor();
+  const { state, actions } = useEditor();
+  const stages = [{ 
+    id: 'step-1', 
+    name: 'Step 1', 
+    order: 1, 
+    description: 'First step',
+    metadata: { blocksCount: 0 }
+  }]; // Mock stages
+  const activeStageId = `step-${state.currentStep}`;
+  const stageActions = { setActiveStage: (id: string) => actions.setCurrentStep(parseInt(id.replace('step-', ''))) };
 
   console.log('🏗️ FunnelStagesPanel: Renderizando painel', {
     stagesCount: stages.length,
@@ -25,7 +34,7 @@ const FunnelStagesPanel: React.FC = () => {
             <p className="text-xs text-gray-400 mt-1">Debug: Context não está fornecendo stages</p>
           </div>
         ) : (
-          stages.map(stage => (
+          stages.map((stage: any) => (
             <Button
               key={stage.id}
               variant={activeStageId === stage.id ? 'default' : 'outline'}

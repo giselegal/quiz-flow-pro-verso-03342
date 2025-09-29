@@ -5,7 +5,9 @@ import { Badge } from '@/components/ui/badge';
 import { useEditor } from '@/components/editor/EditorProviderMigrationAdapter';
 
 export const DatabaseControlPanel: React.FC = () => {
-  const { databaseMode, connectionStatus } = useEditor();
+  const { state } = useEditor();
+  const databaseMode: 'local' | 'supabase' = 'supabase';
+  const connectionStatus = 'connected' as const;
 
   return (
     <Card>

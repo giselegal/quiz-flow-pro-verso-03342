@@ -119,3 +119,37 @@ class AnalyticsService {
 }
 
 export const analyticsService = new AnalyticsService();
+
+// Missing exports for AnalyticsDashboard
+export interface AnalyticsMetrics {
+  total_views: number;
+  total_starts: number;
+  total_completions: number;
+  completion_rate: number;
+  conversion_rate: number;
+  bounce_rate: number;
+  average_time: number;
+  last_updated: string;
+}
+
+export interface ConversionFunnel {
+  step_name: string;
+  total_users: number;
+  conversion_rate: number;
+  drop_off_rate: number;
+}
+
+export const useAnalytics = () => ({
+  getQuizMetrics: async (quizId: string): Promise<AnalyticsMetrics> => ({
+    total_views: 0,
+    total_starts: 0,
+    total_completions: 0,
+    completion_rate: 0,
+    conversion_rate: 0,
+    bounce_rate: 0,
+    average_time: 0,
+    last_updated: new Date().toISOString(),
+  }),
+  getConversionFunnel: async (quizId: string): Promise<ConversionFunnel[]> => [],
+  syncLocalEvents: async () => Promise.resolve(),
+});

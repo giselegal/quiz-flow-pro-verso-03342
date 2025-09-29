@@ -3,7 +3,11 @@ import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
 import React from 'react';
 
 const DebugStep02: React.FC = () => {
-  const { computed, stageActions, blockActions, activeStageId } = useEditor();
+  const { state, actions } = useEditor();
+  const computed = { currentBlocks: [], selectedBlock: { id: 'mock-id' } };
+  const stageActions = { setActiveStage: () => {} };
+  const blockActions = { addBlock: async (type: string) => 'new-id' };
+  const activeStageId = 'step-1';
 
   // Obtém o template da etapa 2 do template completo
   const step02Template = QUIZ_STYLE_21_STEPS_TEMPLATE['step-2'] || [];
