@@ -1,7 +1,7 @@
 import { getBlocksForStep, mergeStepBlocks, normalizeStepBlocks } from '@/config/quizStepsComplete';
 import { DraftPersistence } from '@/services/editor/DraftPersistence';
 import { useEditorSupabaseIntegration } from '@/hooks/useEditorSupabaseIntegration';
-import { useHistoryState } from '@/hooks/useHistoryState';
+import { useHistoryStateIndexedDB } from '@/hooks/useHistoryStateIndexedDB';
 import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
 import { Block, BlockType } from '@/types/editor';
 import { extractStepNumberFromKey } from '@/utils/supabaseMapper';
@@ -211,50 +211,54 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
     };
   }, []);
   // 🔧 CORREÇÃO CRÍTICA: Estado inicial dinâmico SEM forçar 21 etapas
-    const getInitialState = (): EditorState => {
-        const initialBlocks: Record<string, Block[]> = {};
-        const isTestEnv = process.env.NODE_ENV === 'test';
+  const getInitialState = (): EditorState => {
+    const initialBlocks: Record<string, Block[]> = {};
+    const isTestEnv = process.env.NODE_ENV === 'test';
 
-        if (!isTestEnv) {
-            // ✅ NOVO: Sistema totalmente dinâmico sem templates fixos
-            console.log('🆕 EditorProvider: Iniciando com canvas dinâmico para funnelId:', funnelId);
-            
-            // Canvas sempre inicia vazio - template será carregado depois via loadRealFunnelData
-            // ❌ REMOVIDO: Não forçar nenhum template por padrão
-            initialBlocks['step-1'] = []; // Apenas step inicial vazio
-        } else {
-            // Em testes, iniciar sempre vazio
-            initialBlocks['step-1'] = [];
-            initialBlocks['step-2'] = [];
-        }
+    if (!isTestEnv) {
+      // ✅ NOVO: Sistema totalmente dinâmico sem templates fixos
+      console.log('🆕 EditorProvider: Iniciando com canvas dinâmico para funnelId:', funnelId);
 
-        const state: EditorState = {
-            stepBlocks: initialBlocks,
-            currentStep: 1,
-            selectedBlockId: null,
-            stepValidation: {},
-            isSupabaseEnabled: enableSupabase,
-            databaseMode: enableSupabase ? 'supabase' : 'local',
-            isLoading: false,
-            ...initial,
-        };
+      // Canvas sempre inicia vazio - template será carregado depois via loadRealFunnelData
+      // ❌ REMOVIDO: Não forçar nenhum template por padrão
+      initialBlocks['step-1'] = []; // Apenas step inicial vazio
+    } else {
+      // Em testes, iniciar sempre vazio
+      initialBlocks['step-1'] = [];
+      initialBlocks['step-2'] = [];
+    }
 
-        return state;
+    const state: EditorState = {
+      stepBlocks: initialBlocks,
+      currentStep: 1,
+      selectedBlockId: null,
+      stepValidation: {},
+      isSupabaseEnabled: enableSupabase,
+      databaseMode: enableSupabase ? 'supabase' : 'local',
+      isLoading: false,
+      ...initial,
     };
 
+    return state;
+  };
+
   const {
-    present: rawState,
-    setPresent: setState,
+    state: rawState,
+    setState,
     undo,
     redo,
     canUndo,
     canRedo,
-  } = useHistoryState<EditorState>(getInitialState(), {
+    storageReady,
+    clearHistory,
+  } = useHistoryStateIndexedDB<EditorState>(getInitialState(), {
     historyLimit: process.env.NODE_ENV === 'test' ? 5 : 30,
     storageKey,
     enablePersistence: process.env.NODE_ENV !== 'test',
     persistPresentOnly: true,
-    persistDebounceMs: process.env.NODE_ENV === 'test' ? 0 : 250,
+    persistDebounceMs: process.env.NODE_ENV === 'test' ? 0 : 500, // Increased for IndexedDB
+    namespace: 'quizEditor',
+    compression: true,
     serialize: (present: EditorState) => {
       // Persist only minimal fields to avoid quota issues
       const minimal: any = {

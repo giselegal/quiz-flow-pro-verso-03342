@@ -1,17 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import { useHeadlessEditor } from './HeadlessEditorProvider';
+import { Trash2, Plus, Settings, FileText, Palette, Globe, Rocket, AlertCircle, CheckCircle2 } from 'lucide-react';
+// Removendo dependência problemática do useHeadlessEditor
+// import { useHeadlessEditor } from './HeadlessEditorProvider';
 import { usePureBuilder } from '../../components/editor/PureBuilderProvider';
-import { FunnelStep } from '../../types/quiz-schema';
 import type { Block } from '@/types/editor';
 
 type PanelTab = 'step' | 'global' | 'style' | 'publish';
 
 export const DynamicPropertiesPanelImproved: React.FC = () => {
-    const {
-        schema,
-        isLoading: schemaLoading
-    } = useHeadlessEditor();
+    // 🚨 CORREÇÃO: Removendo useHeadlessEditor que estava causando erro
+    // const {
+    //     schema,
+    //     isLoading: schemaLoading
+    // } = useHeadlessEditor();
 
+    // ✅ USANDO APENAS PureBuilder que funciona
     const {
         state: builderState,
         actions: builderActions
@@ -53,7 +56,8 @@ export const DynamicPropertiesPanelImproved: React.FC = () => {
         builderActions.setCurrentStep(index + 1);
     };
 
-    const isLoading = schemaLoading || builderState.isLoading;
+    // ✅ USANDO APENAS PureBuilder que funciona
+    const isLoading = builderState.isLoading;
 
     if (isLoading) {
         return (
@@ -66,7 +70,7 @@ export const DynamicPropertiesPanelImproved: React.FC = () => {
         );
     }
 
-    if (!schema && !builderState.stepBlocks) {
+    if (!builderState.stepBlocks) {
         return (
             <div className="w-80 border-l border-gray-200 bg-white flex items-center justify-center h-full">
                 <div className="text-center p-6">
@@ -124,7 +128,7 @@ export const DynamicPropertiesPanelImproved: React.FC = () => {
             <div className="flex-1 overflow-y-auto">
                 {renderTabContent(
                     activeTab,
-                    schema,
+                    // schema removido - usando apenas builderState
                     builderState,
                     currentStepBlocks,
                     selectedBlock,
@@ -141,10 +145,10 @@ export const DynamicPropertiesPanelImproved: React.FC = () => {
     );
 };
 
-// 🎯 FUNÇÃO DE RENDERIZAÇÃO MELHORADA
+// 🎯 FUNÇÃO DE RENDERIZAÇÃO MELHORADA - SEM DEPENDÊNCIA DE SCHEMA
 function renderTabContent(
     tab: PanelTab,
-    schema: any,
+    // schema: any, // removido
     builderState: any,
     currentStepBlocks: Block[],
     selectedBlock: Block | null,
@@ -171,21 +175,21 @@ function renderTabContent(
 
         case 'global':
             return <ImprovedGlobalPanel
-                schema={schema}
+                // schema={schema} // removido
                 builderState={builderState}
                 updateGlobalSettings={updateGlobalSettings}
             />;
 
         case 'style':
             return <ImprovedStylePanel
-                schema={schema}
+                // schema={schema} // removido
                 builderState={builderState}
                 updateGlobalSettings={updateGlobalSettings}
             />;
 
         case 'publish':
             return <ImprovedPublishPanel
-                schema={schema}
+                // schema={schema} // removido
                 builderState={builderState}
                 updateGlobalSettings={updateGlobalSettings}
             />;
@@ -461,8 +465,8 @@ const BlockEditor: React.FC<BlockEditorProps> = ({
                                 onChange={(e) => handleBlockUpdate('content', { ...block.content, text: e.target.value })}
                                 rows={4}
                                 className={`w-full px-3 py-2 border-2 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 transition-all ${errors.content
-                                        ? 'border-red-300 focus:border-red-500 bg-red-50'
-                                        : 'border-gray-200 focus:border-blue-500'
+                                    ? 'border-red-300 focus:border-red-500 bg-red-50'
+                                    : 'border-gray-200 focus:border-blue-500'
                                     }`}
                                 placeholder="Digite o texto aqui..."
                             />
@@ -524,8 +528,8 @@ const BlockEditor: React.FC<BlockEditorProps> = ({
                                 value={block.content?.text || ''}
                                 onChange={(e) => handleBlockUpdate('content', { ...block.content, text: e.target.value })}
                                 className={`w-full px-3 py-2 border-2 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 transition-all ${errors.content
-                                        ? 'border-red-300 focus:border-red-500 bg-red-50'
-                                        : 'border-gray-200 focus:border-blue-500'
+                                    ? 'border-red-300 focus:border-red-500 bg-red-50'
+                                    : 'border-gray-200 focus:border-blue-500'
                                     }`}
                                 placeholder="Texto do botão"
                             />
@@ -577,8 +581,8 @@ const BlockEditor: React.FC<BlockEditorProps> = ({
                                     value={block.properties?.color || '#000000'}
                                     onChange={(e) => handlePropertyUpdate('color', e.target.value)}
                                     className={`flex-1 px-2 py-1 border rounded text-xs ${errors.color
-                                            ? 'border-red-300 focus:border-red-500 bg-red-50'
-                                            : 'border-gray-300 focus:border-blue-500'
+                                        ? 'border-red-300 focus:border-red-500 bg-red-50'
+                                        : 'border-gray-300 focus:border-blue-500'
                                         }`}
                                     placeholder="#000000"
                                 />
@@ -623,13 +627,11 @@ const BlockEditor: React.FC<BlockEditorProps> = ({
 
 // 🌍 PAINEL GLOBAL MELHORADO
 interface ImprovedGlobalPanelProps {
-    schema: any;
     builderState: any;
     updateGlobalSettings: (updates: any) => void;
 }
 
 const ImprovedGlobalPanel: React.FC<ImprovedGlobalPanelProps> = ({
-    schema,
     builderState,
     updateGlobalSettings
 }) => {
@@ -656,13 +658,11 @@ const ImprovedGlobalPanel: React.FC<ImprovedGlobalPanelProps> = ({
 
 // 🎨 PAINEL DE ESTILO MELHORADO
 interface ImprovedStylePanelProps {
-    schema: any;
     builderState: any;
     updateGlobalSettings: (updates: any) => void;
 }
 
 const ImprovedStylePanel: React.FC<ImprovedStylePanelProps> = ({
-    schema,
     builderState,
     updateGlobalSettings
 }) => {
@@ -689,13 +689,11 @@ const ImprovedStylePanel: React.FC<ImprovedStylePanelProps> = ({
 
 // 🚀 PAINEL DE PUBLICAÇÃO MELHORADO
 interface ImprovedPublishPanelProps {
-    schema: any;
     builderState: any;
     updateGlobalSettings: (updates: any) => void;
 }
 
 const ImprovedPublishPanel: React.FC<ImprovedPublishPanelProps> = ({
-    schema,
     builderState,
     updateGlobalSettings
 }) => {

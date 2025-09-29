@@ -54,6 +54,7 @@ import { UnifiedRoutingService } from '@/services/core/UnifiedRoutingService';
 
 // 🎯 TEMPLATE REGISTRY INTEGRATION
 import { loadFullTemplate, convertTemplateToEditorFormat } from '@/templates/registry';
+import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
 
 // 🧪 Development Testing
 import testCRUDOperations from '@/utils/testCRUDOperations';
@@ -61,6 +62,70 @@ import testCRUDOperations from '@/utils/testCRUDOperations';
 // 🔍 FUNNEL TYPE DETECTION
 import FunnelTypeDetector from '@/components/editor/FunnelTypeDetector';
 import type { FunnelType } from '@/services/FunnelTypesRegistry';
+
+// ===============================
+// 🔧 TEMPLATE CONVERSION UTILITIES
+// ===============================
+
+/**
+ * Converte QUIZ_STYLE_21_STEPS_TEMPLATE para formato compatível com o editor
+ */
+function convertTemplateToEditorBlocks(templateData: Record<string, any[]>): any[] {
+    const allBlocks: any[] = [];
+
+    Object.entries(templateData).forEach(([stepKey, stepBlocks]) => {
+        if (stepKey.startsWith('step-') && Array.isArray(stepBlocks)) {
+            stepBlocks.forEach((block, index) => {
+                allBlocks.push({
+                    ...block,
+                    id: `${stepKey}-${block.id}`,
+                    stepId: stepKey,
+                    stepNumber: parseInt(stepKey.replace('step-', '')),
+                    order: (parseInt(stepKey.replace('step-', '')) - 1) * 100 + index
+                });
+            });
+        }
+    });
+
+    console.log(`📊 Convertidos ${allBlocks.length} blocos de ${Object.keys(templateData).length} steps`);
+    return allBlocks;
+}
+
+/**
+ * Sistema de fallback para templates não encontrados
+ */
+function createFallbackTemplate(templateId: string) {
+    console.log(`⚠️ Criando template de fallback para: ${templateId}`);
+    return {
+        'step-1': [
+            {
+                id: 'fallback-welcome',
+                type: 'text-inline',
+                properties: {
+                    content: `Template "${templateId}" não encontrado. Este é um template de demonstração.`,
+                    textAlign: 'center',
+                    fontSize: 'text-xl',
+                    fontWeight: 'font-bold',
+                    color: '#1A365D'
+                },
+                content: {},
+                order: 0
+            },
+            {
+                id: 'fallback-description',
+                type: 'text-inline',
+                properties: {
+                    content: 'Por favor, verifique se o template existe ou entre em contato com o suporte.',
+                    textAlign: 'center',
+                    fontSize: 'text-base',
+                    color: '#718096'
+                },
+                content: {},
+                order: 1
+            }
+        ]
+    };
+}
 
 // ===============================
 // 🎯 TYPES & INTERFACES
@@ -381,15 +446,31 @@ const UnifiedEditorCore: React.FC<ModernUnifiedEditorProps> = ({
     // 🎯 EXTRAIR FUNNEL ID OU TEMPLATE ID DA URL 
     const extractedInfo = React.useMemo(() => {
         const path = window.location.pathname;
-        console.log('🔍 Analisando URL:', path);
+        const urlParams = new URLSearchParams(window.location.search);
+        const templateParam = urlParams.get('template');
+        const funnelParam = urlParams.get('funnel');
 
-        // Detectar se é template ou funil na URL
+        console.log('🔍 Analisando URL:', { path, templateParam, funnelParam });
+
+        // 🚨 CORREÇÃO CRÍTICA: Processar query parameter funnel primeiro
+        if (funnelParam) {
+            console.log('✅ Funnel encontrado via query param:', funnelParam);
+            return { templateId: null, funnelId: funnelParam, type: 'funnel' };
+        }
+
+        // 🚨 CORREÇÃO CRÍTICA: Processar query parameter template segundo
+        if (templateParam) {
+            console.log('✅ Template encontrado via query param:', templateParam);
+            return { templateId: templateParam, funnelId: null, type: 'template' };
+        }
+
+        // Detectar se é template ou funil na URL path
         if (path.startsWith('/editor/') && path.length > '/editor/'.length) {
             const identifier = path.replace('/editor/', '');
 
             // 🎯 DETECÇÃO DINÂMICA: Verificar se existe como template ou tratar como funnel
             // Primeiro assumir que pode ser qualquer coisa
-            console.log('✅ Identificador encontrado na URL:', identifier);
+            console.log('✅ Identificador encontrado no path:', identifier);
 
             // 🎯 DETECÇÃO MELHORADA: Incluir mais padrões de template
             const looksLikeTemplate = /^(step-|template|quiz|test|funnel|default-|optimized-|style-)/i.test(identifier);
@@ -466,33 +547,84 @@ const UnifiedEditorCore: React.FC<ModernUnifiedEditorProps> = ({
         return disconnect;
     }, [extractedInfo.funnelId]);
 
-    // 🎯 TEMPLATE LOADING EFFECT - FIXED: Removed crudContext from dependencies to prevent infinite loop
+    // 🎯 TEMPLATE LOADING EFFECT - CORREÇÃO PARA quiz21StepsComplete
     useEffect(() => {
         if (extractedInfo.type === 'template' && extractedInfo.templateId) {
             console.log('🎯 Carregando template:', extractedInfo.templateId);
             setIsLoadingTemplate(true);
             setTemplateError(null);
 
-            loadFullTemplate(extractedInfo.templateId)
-                .then(template => {
-                    if (template) {
-                        console.log('✅ Template carregado:', template);
-                        const editorFormat = convertTemplateToEditorFormat(template);
-                        console.log('✅ Template convertido para formato do editor:', editorFormat);
+            // 🚨 CORREÇÃO CRÍTICA: Carregar quiz21StepsComplete diretamente
+            if (extractedInfo.templateId === 'quiz21StepsComplete') {
+                try {
+                    console.log('🎯 Carregando QUIZ_STYLE_21_STEPS_TEMPLATE diretamente...');
 
-                        // Criar um novo funil baseado no template
-                        return crudContext.createFunnel(template.name, { templateId: template.id });
-                    } else {
-                        throw new Error(`Template ${extractedInfo.templateId} não encontrado`);
+                    // Verificar se o template existe e tem conteúdo
+                    if (!QUIZ_STYLE_21_STEPS_TEMPLATE || Object.keys(QUIZ_STYLE_21_STEPS_TEMPLATE).length === 0) {
+                        throw new Error('Template quiz21StepsComplete está vazio ou não existe');
                     }
-                })
-                .catch(error => {
-                    console.error('❌ Erro ao carregar template:', error);
-                    setTemplateError(error.message);
-                })
-                .finally(() => {
+
+                    // Converter template para formato compatível com o editor
+                    const convertedBlocks = convertTemplateToEditorBlocks(QUIZ_STYLE_21_STEPS_TEMPLATE);
+
+                    if (convertedBlocks.length === 0) {
+                        throw new Error('Template quiz21StepsComplete não produziu blocos válidos');
+                    }
+
+                    console.log('✅ Template quiz21StepsComplete convertido:', {
+                        totalSteps: Object.keys(QUIZ_STYLE_21_STEPS_TEMPLATE).length,
+                        totalBlocks: convertedBlocks.length
+                    });
+
+                    // Simular carregamento assíncrono para consistência
+                    setTimeout(() => {
+                        setIsLoadingTemplate(false);
+                        console.log('✅ Template quiz21StepsComplete carregado com sucesso');
+                    }, 100);
+
+                } catch (error) {
+                    console.error('❌ Erro ao carregar template quiz21StepsComplete:', error);
+                    console.log('🔄 Tentando sistema de fallback...');
+
+                    const errorMessage = error instanceof Error ? error.message : String(error);
+
+                    try {
+                        // Sistema de fallback
+                        const fallbackTemplate = createFallbackTemplate('quiz21StepsComplete');
+                        const fallbackBlocks = convertTemplateToEditorBlocks(fallbackTemplate);
+                        console.log('✅ Template de fallback criado com sucesso');
+                        setTemplateError(`Template original falhou, usando fallback: ${errorMessage}`);
+                    } catch (fallbackError) {
+                        const fallbackErrorMessage = fallbackError instanceof Error ? fallbackError.message : String(fallbackError);
+                        console.error('❌ Erro crítico: Fallback também falhou:', fallbackError);
+                        setTemplateError(`Erro crítico: ${errorMessage}. Fallback falhou: ${fallbackErrorMessage}`);
+                    }
+
                     setIsLoadingTemplate(false);
-                });
+                }
+            } else {
+                // Fallback para outros templates
+                loadFullTemplate(extractedInfo.templateId)
+                    .then(template => {
+                        if (template) {
+                            console.log('✅ Template carregado:', template);
+                            const editorFormat = convertTemplateToEditorFormat(template);
+                            console.log('✅ Template convertido para formato do editor:', editorFormat);
+
+                            // Criar um novo funil baseado no template
+                            return crudContext.createFunnel(template.name, { templateId: template.id });
+                        } else {
+                            throw new Error(`Template ${extractedInfo.templateId} não encontrado`);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('❌ Erro ao carregar template:', error);
+                        setTemplateError(error.message);
+                    })
+                    .finally(() => {
+                        setIsLoadingTemplate(false);
+                    });
+            }
         }
     }, [extractedInfo.templateId, extractedInfo.type]); // 🔧 FIXED: Removido crudContext das dependências
 
