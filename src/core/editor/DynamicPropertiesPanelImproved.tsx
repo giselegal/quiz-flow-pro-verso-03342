@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useState, useEffect } from 'react';
 import { Trash2, Plus, Settings, FileText, Palette, Globe, Rocket, AlertCircle, CheckCircle2 } from 'lucide-react';
 // Removendo dependência problemática do useHeadlessEditor

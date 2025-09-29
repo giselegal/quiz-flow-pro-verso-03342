@@ -178,7 +178,10 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
   quizId,
   enableSupabase = false,
 }) => {
-  // 🔍 DEBUG: Log inicial dos parâmetros do EditorProvider
+  // �️ PROTEÇÃO INICIAL: Garantir que initial seja um objeto válido
+  const safeInitial = initial && typeof initial === 'object' ? initial : {};
+
+  // �🔍 DEBUG: Log inicial dos parâmetros do EditorProvider
   useEffect(() => {
     console.log('🎯 EditorProvider - Inicialização com parâmetros:', {
       funnelId,
@@ -237,7 +240,7 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
       isSupabaseEnabled: enableSupabase,
       databaseMode: enableSupabase ? 'supabase' : 'local',
       isLoading: false,
-      ...initial,
+      ...safeInitial, // 🛡️ USAR safeInitial ao invés de initial
     };
 
     return state;
@@ -261,19 +264,35 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
     namespace: 'quizEditor',
     compression: true,
     serialize: (present: EditorState) => {
+      // 🛡️ PROTEÇÃO: Verificar se present existe
+      if (!present || typeof present !== 'object') {
+        console.warn('⚠️ EditorProvider serialize: present is invalid:', present);
+        return {
+          currentStep: 1,
+          selectedBlockId: null,
+          stepBlocks: {},
+          databaseMode: 'local',
+          isSupabaseEnabled: false,
+        };
+      }
+
       // Persist only minimal fields to avoid quota issues
       const minimal: any = {
         currentStep: present.currentStep || 1,
         selectedBlockId: present.selectedBlockId || null,
         // Persist only ids/types to allow lightweight restore; full templates are reloaded on mount
-        stepBlocks: Object.fromEntries(
-          Object.entries(present.stepBlocks || {}).map(([k, arr]) => [
+        stepBlocks: present.stepBlocks ? Object.fromEntries(
+          Object.entries(present.stepBlocks).map(([k, arr]) => [
             k,
-            (arr || []).map(b => ({ id: b.id, type: b.type, order: b.order || 0 })),
+            (Array.isArray(arr) ? arr : []).map(b => ({
+              id: b?.id || 'unknown',
+              type: b?.type || 'text',
+              order: b?.order || 0
+            })),
           ])
-        ),
-        databaseMode: present.databaseMode,
-        isSupabaseEnabled: present.isSupabaseEnabled,
+        ) : {},
+        databaseMode: present.databaseMode || 'local',
+        isSupabaseEnabled: present.isSupabaseEnabled || false,
       };
       return minimal;
     },
@@ -282,7 +301,7 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
   // Wire supabase integration hook (it may return helpers and flags)
   const supabaseIntegration: any = useEditorSupabaseIntegration(
     setState,
-    rawState,
+    rawState || getInitialState(), // 🛡️ PROTEÇÃO: fallback se rawState for undefined
     enableSupabase ? funnelId : undefined,
     enableSupabase ? quizId : undefined
   );
