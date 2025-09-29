@@ -183,7 +183,7 @@ export class ReportGenerator {
     /**
      * Gera relatório de jornada do usuário
      */
-    public generateUserJourneyReport(sessionId?: string): ReportData {
+    public async generateUserJourneyReport(sessionId?: string): Promise<ReportData> {
         const config: ReportConfig = {
             id: 'user-journey',
             name: 'Análise de Jornada do Usuário',
@@ -202,7 +202,7 @@ export class ReportGenerator {
     /**
      * Gera relatório de performance
      */
-    public generatePerformanceReport(): ReportData {
+    public async generatePerformanceReport(): Promise<ReportData> {
         const config: ReportConfig = {
             id: 'performance',
             name: 'Relatório de Performance',
@@ -308,7 +308,8 @@ export class ReportGenerator {
     }
 
     private async generatePerformanceSections(events: UserEvent[], metrics: QuizMetrics): Promise<ReportSection[]> {
-        const performanceEvents = events.filter(e => e.type === 'performance' || e.data.loadTime);
+    // Eventos de performance podem estar marcados com type 'performance' (se disponível) ou conter dados de loadTime
+    const performanceEvents = events.filter(e => (e as any).type === 'performance' || e.data?.loadTime);
 
         return [
             {

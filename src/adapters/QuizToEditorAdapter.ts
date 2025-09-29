@@ -1,8 +1,5 @@
 /**
  * 🔄 QUIZ TO EDITOR ADAPTER - FASE 3 - SINCRONIZAÇÃO BIDIRECIONAL
- * 
- * Adaptador real que converte o sistema de quiz-estilo para formato 
- * compatível com o editor unificado, com sincronização bidirecional
  * e persistência de dados em tempo real.
  */
 
@@ -294,17 +291,54 @@ export class QuizToEditorAdapter {
       ...Array.from({ length: 6 }, (_, i) => i + 13)  // steps 13-18
     ];
 
-    for (const stepNum of questionSteps) {
-      const stepId = `step-${stepNum}`;
-      const stepTemplate = getStepTemplate(stepId);
+      for (const stepNum of questionSteps) {
+        const stepId = `step-${stepNum}`;
+        const stepTemplate = getStepTemplate(stepId);
 
-      if (stepTemplate) {
-        const question = this.extractQuestionFromStep(stepTemplate, stepNum);
-        if (question) {
-          questions.push(question);
+        if (stepTemplate) {
+          const question = this.extractQuestionFromStep(stepTemplate, stepNum);
+          if (question) {
+            questions.push(question);
+          }
         }
       }
-    } \n    \n    console.log(`✅ Extraídas ${questions.length} questões reais`); \n    return questions; \n
+
+      console.log(`✅ Extraídas ${questions.length} questões reais`);
+      return questions;
+    }
+
+    /**
+     * Extrai uma questão de um step específico
+     */
+    private extractQuestionFromStep(stepBlocks: any[], stepNum: number): QuizQuestion | null {
+      // Encontrar bloco de título
+      const titleBlock = stepBlocks.find(block =>
+        block.type === 'text-inline' &&
+        block.properties?.fontSize?.includes('xl')
+      );
+
+      // Encontrar bloco de questão
+      const questionBlock = stepBlocks.find(block =>
+        block.type?.includes('quiz') ||
+        block.type?.includes('options')
+      );
+
+      if (!titleBlock || !questionBlock) {
+        return null;
+      }
+
+      const question: QuizQuestion = {
+        id: `q${stepNum}`,
+        type: questionBlock.type?.includes('multiple') ? 'multiple-choice' : 'single-choice',
+        title: titleBlock.properties?.content || `Questão ${stepNum}`,
+        description: this.extractDescription(stepBlocks),
+        required: true,
+        answers: this.extractAnswers(questionBlock),
+        order: stepNum
+      };
+
+      return question;
+    }
   } \n  \n  /**\n   * Extrai uma questão de um step específico\n   */\n  private extractQuestionFromStep(stepBlocks: any[], stepNum: number): QuizQuestion | null {
   \n    // Encontrar bloco de título\n    const titleBlock = stepBlocks.find(block => \n      block.type === 'text-inline' && \n      block.properties?.fontSize?.includes('xl')\n    );\n    \n    // Encontrar bloco de questão\n    const questionBlock = stepBlocks.find(block => \n      block.type?.includes('quiz') || \n      block.type?.includes('options')\n    );\n    \n    if (!titleBlock || !questionBlock) {\n      return null;\n    }\n    \n    const question: QuizQuestion = {\n      id: `q${stepNum}`,\n      type: questionBlock.type?.includes('multiple') ? 'multiple-choice' : 'single-choice',\n      title: titleBlock.properties?.content || `Questão ${stepNum}`,\n      description: this.extractDescription(stepBlocks),\n      required: true,\n      answers: this.extractAnswers(questionBlock),\n      order: stepNum\n    };\n    \n    return question;\n  }\n  \n  /**\n   * Extrai respostas de um bloco de questão\n   */\n  private extractAnswers(questionBlock: any): QuizAnswer[] {\n    const options = questionBlock.properties?.options || \n                   questionBlock.content?.options || [];\n    \n    return options.map((option: any, index: number) => ({\n      id: `a${index + 1}`,\n      text: option.text || option.label,\n      description: option.description || '',\n      stylePoints: this.extractStylePoints(option)\n    }));\n  }\n  \n  /**\n   * Extrai pontuação de estilo de uma opção\n   */\n  private extractStylePoints(option: any): Record<string, number> {\n    if (option.stylePoints) return option.stylePoints;\n    if (option.weights) return option.weights;\n    if (option.styleCategory) {\n      return { [option.styleCategory]: option.weight || 1 };\n    }\n    \n    // Fallback baseado no texto\n    return { [this.guessStyleFromText(option.text)]: 1 };\n  }\n  \n  /**\n   * Adivinha estilo baseado no texto da opção\n   */\n  private guessStyleFromText(text: string): string {\n    const keywords = {\n      'natural': ['natural', 'autêntico', 'genuíno'],\n      'classico': ['clássico', 'elegante', 'tradicional'],\n      'contemporaneo': ['moderno', 'atual', 'tecnológico'],\n      'romantico': ['romântico', 'delicado', 'suave'],\n      'sexy': ['sexy', 'sensual', 'sedutor'],\n      'dramatico': ['dramático', 'intenso', 'marcante'],\n      'criativo': ['criativo', 'artístico', 'expressivo']\n    };\n    \n    const lowerText = text.toLowerCase();\n    \n    for (const [style, words] of Object.entries(keywords)) {\n      if (words.some(word => lowerText.includes(word))) {\n        return style;\n      }\n    }\n    \n    return 'natural';\n  }\n  \n  /**\n   * Extrai descrição dos blocos\n   */\n  private extractDescription(stepBlocks: any[]): string {\n    const descBlock = stepBlocks.find(block => \n      block.type === 'text-inline' && \n      !block.properties?.fontSize?.includes('xl') &&\n      block.properties?.content?.length > 20\n    );\n    \n    return descBlock?.properties?.content || '';\n  }\n  \n  /**\n   * Salva alterações no quiz de volta ao template\n   */\n  async saveChangesToQuiz(editorState: EditorQuizState): Promise<SyncResult> {\n    try {\n      console.log('💾 Salvando alterações do editor...');\n      \n      // Marcar como limpo\n      this.isDirty = false;\n      this.currentState = {\n        ...editorState,\n        isDirty: false,\n        lastSaved: new Date().toISOString()\n      };\n      \n      // Notificar listeners\n      this.notifyListeners({\n        type: 'data-saved',\n        payload: this.currentState,\n        timestamp: new Date().toISOString()\n      });\n      \n      return {\n        success: true,\n        data: this.currentState,\n        timestamp: new Date().toISOString()\n      };\n      \n    } catch (error) {\n      console.error('❌ Erro ao salvar:', error);\n      return {\n        success: false,\n        error: error instanceof Error ? error.message : 'Erro desconhecido',\n        timestamp: new Date().toISOString()\n      };\n    }\n  }\n  \n  /**\n   * Inicia auto-save\n   */\n  startAutoSave(intervalMs = 30000): void {\n    if (this.autoSaveInterval) {\n      clearInterval(this.autoSaveInterval);\n    }\n    \n    this.autoSaveInterval = setInterval(() => {\n      if (this.isDirty && this.currentState) {\n        console.log('⏰ Auto-save triggered');\n        this.saveChangesToQuiz(this.currentState);\n      }\n    }, intervalMs);\n    \n    console.log(`⏰ Auto-save iniciado (${intervalMs}ms)`);\n  }\n  \n  /**\n   * Para auto-save\n   */\n  stopAutoSave(): void {\n    if (this.autoSaveInterval) {\n      clearInterval(this.autoSaveInterval);\n      this.autoSaveInterval = undefined;\n      console.log('⏰ Auto-save parado');\n    }\n  }\n  \n  /**\n   * Adiciona listener para mudanças\n   */\n  addChangeListener(listener: (event: ChangeEvent) => void): void {\n    this.changeListeners.push(listener);\n  }\n  \n  /**\n   * Remove listener\n   */\n  removeChangeListener(listener: (event: ChangeEvent) => void): void {\n    this.changeListeners = this.changeListeners.filter(l => l !== listener);\n  }\n  \n  /**\n   * Notifica listeners sobre mudanças\n   */\n  private notifyListeners(event: ChangeEvent): void {\n    this.changeListeners.forEach(listener => {\n      try {\n        listener(event);\n      } catch (error) {\n        console.error('Erro ao notificar listener:', error);\n      }\n    });\n  }\n  \n  /**\n   * Marca estado como alterado\n   */\n  markDirty(state: EditorQuizState): void {\n    this.isDirty = true;\n    this.currentState = { ...state, isDirty: true };\n    \n    this.notifyListeners({\n      type: 'question-updated',\n      payload: state,\n      timestamp: new Date().toISOString()\n    });\n  }\n  \n  /**\n   * Valida dados do quiz\n   */\n  static validateQuizData(data: any): boolean {\n    if (!data || typeof data !== 'object') return false;\n    \n    const required = ['questions', 'styles'];\n    return required.every(key => key in data && Array.isArray(data[key]));\n  }\n\n  /**\n   * ⚙️ Converter propriedades do editor de volta para quiz\n   */\n  private static convertEditorPropertiesToQuiz(editorProperties: any): any {
     const { stepNumber, isQuizComponent, originalType, ...quizProperties } = editorProperties;

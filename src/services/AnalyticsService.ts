@@ -17,7 +17,8 @@ import type { QuizStep } from '@/data/quizSteps';
 
 export interface UserEvent {
     id: string;
-    type: 'page_view' | 'question_answer' | 'step_navigation' | 'editor_action' | 'completion' | 'error';
+    // Adicionado 'performance' porque o serviço em vários locais rastreia analyticsService.trackEvent('performance', ...)
+    type: 'page_view' | 'question_answer' | 'step_navigation' | 'editor_action' | 'completion' | 'error' | 'performance';
     timestamp: string;
     userId?: string;
     sessionId: string;
