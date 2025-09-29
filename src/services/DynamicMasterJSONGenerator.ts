@@ -9,6 +9,11 @@ import { ConfigurationAPI } from '@/services/ConfigurationAPI';
 import { QUIZ_COMPONENTS_DEFINITIONS } from '@/types/componentConfiguration';
 import { quizEditingService } from '@/domain/quiz/QuizEditingService';
 
+// HEADLESS FLAG -------------------------------------------------------------
+// Permite que scripts CLI (smoke test) gerem uma versão mínima sem depender
+// de APIs externas / Supabase. Usar `QUIZ_HEADLESS=1` no ambiente Node.
+const HEADLESS = (process.env.QUIZ_HEADLESS === '1');
+
 // ============================================================================
 // INTERFACES
 // ============================================================================
@@ -116,6 +121,49 @@ export class DynamicMasterJSONGenerator {
     async generateMasterJSON(funnelId?: string): Promise<DynamicMasterJSON> {
         try {
             console.log(`🏗️ Generating dynamic master JSON${funnelId ? ` for ${funnelId}` : ''}`);
+
+            if (HEADLESS) {
+                // Caminho simplificado: usa somente estado aplicado do quizEditingService
+                // e defaults locais, evitando chamadas ao ConfigurationAPI / storage.
+                console.log('🧪 HEADLESS mode ativo - gerando JSON mínimo');
+                const applied = quizEditingService.getState();
+                const minimal: DynamicMasterJSON = {
+                    templateVersion: '3.0.0-headless',
+                    metadata: {
+                        id: funnelId || 'headless-quiz',
+                        name: 'Quiz Dinâmico (Headless)',
+                        description: 'Versão minimal para testes CLI',
+                        version: '3.0.0',
+                        generatedAt: new Date().toISOString(),
+                        source: 'dynamic-api',
+                        funnelId
+                    },
+                    globalConfig: {
+                        theme: { colors: { primary: '#000' } },
+                        behavior: {},
+                        navigation: {},
+                        validation: {},
+                        api: { baseUrl: '/api', endpoints: {}, realTimeSync: false }
+                    },
+                    steps: applied.steps.reduce((acc, s, idx) => {
+                        acc[s.id] = {
+                            metadata: {
+                                name: s.title || `Step ${idx + 1}`,
+                                description: (s as any).questionText || '',
+                                type: 'quiz',
+                                category: 'quiz',
+                                stepNumber: idx + 1
+                            },
+                            behavior: { autoAdvance: false, autoAdvanceDelay: 0, showProgress: true, allowBack: true },
+                            validation: { type: 'none', required: false, message: '' },
+                            blocks: (applied.blocks[s.id] || []).map(b => ({ id: b.id, type: b.type, properties: b.properties || {}, apiEndpoint: '' })),
+                            apiConfig: { endpoint: '', syncRealTime: false, cacheEnabled: false }
+                        }; return acc;
+                    }, {} as Record<string, DynamicStepTemplate>),
+                    components: {}
+                };
+                return minimal;
+            }
 
             // Verificar cache
             const cacheKey = funnelId || 'default';
@@ -271,7 +319,8 @@ export class DynamicMasterJSONGenerator {
         const stepsConfig: Record<string, DynamicStepTemplate> = {};
 
         // Gerar configurações para todas as 21 etapas
-        for (let stepNumber = 1; stepNumber <= 21; stepNumber++) {
+    const maxSteps = HEADLESS ? 20 : 21; // respeitar limite atual UI em headless
+    for (let stepNumber = 1; stepNumber <= maxSteps; stepNumber++) {
             try {
                 const stepId = `step-${stepNumber}`;
                 const stepConfig = await this.configAPI.getConfiguration(`quiz-step-${stepNumber}`, funnelId);
