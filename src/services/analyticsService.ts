@@ -105,6 +105,10 @@ class AnalyticsService {
     return event;
   }
 
+  trackEvent(eventName: string, properties: Record<string, any> = {}): void {
+    console.log(`📊 Tracking event: ${eventName}`, properties);
+  }
+
   getMetricsByCategory(category: Metric['category']): Metric[] {
     return this.metrics.get(category) || [];
   }

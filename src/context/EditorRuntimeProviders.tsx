@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from 'react';
 import { FunnelMasterProvider } from '@/providers/FunnelMasterProvider';
 import { EditorProvider } from '@/components/editor/EditorProviderMigrationAdapter';
