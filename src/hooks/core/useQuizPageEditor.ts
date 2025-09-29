@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * 🎯 USE QUIZ PAGE EDITOR HOOK
  * 

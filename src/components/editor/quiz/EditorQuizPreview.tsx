@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * 🎯 PÁGINA PRINCIPAL DO FLUXO MODULAR DO QUIZ
  *

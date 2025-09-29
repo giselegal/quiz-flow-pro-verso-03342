@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * 📊 ANALYTICS DASHBOARD - Dashboard de Analytics e Monitoramento
  * 

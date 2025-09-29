@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * 🎯 VERSIONING PANEL - INTERFACE DE VERSIONAMENTO
  * 

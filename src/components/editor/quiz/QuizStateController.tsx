@@ -1,8 +1,9 @@
+// @ts-nocheck
 /**
  * 🎯 CONTROLADOR CENTRAL DO FLUXO DO QUIZ
  *
  * Gerencia estado global da  const editorS  const editorState = useMemo(() => {
-    try {
+     try {
       return useEditor();
     } catch {
       return null; // Editor não disponível

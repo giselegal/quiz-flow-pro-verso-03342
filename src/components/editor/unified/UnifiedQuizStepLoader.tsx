@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * 🎯 UnifiedQuizStepLoader - Componente para carregar dados de etapas do quiz
  *

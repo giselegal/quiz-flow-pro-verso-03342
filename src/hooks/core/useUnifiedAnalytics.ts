@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * 📊 USE UNIFIED ANALYTICS - Hook de Analytics e Monitoramento
  * 

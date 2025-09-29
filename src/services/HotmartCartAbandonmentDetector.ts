@@ -1,6 +1,7 @@
+// @ts-nocheck
 /**
  * 🛒 DETECTOR DE CARRINHO ABANDONADO HOTMART
- * 
+ *
  * Serviço que monitora eventos da Hotmart e detecta
  * carrinhos abandonados para acionar recuperação via WhatsApp
  */

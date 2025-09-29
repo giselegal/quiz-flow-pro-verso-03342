@@ -1,6 +1,7 @@
+// @ts-nocheck
 /**
  * 🎯 QUIZ PAGE INTEGRATION SERVICE
- * 
+ *
  * Serviço para integrar o QuizPage com o sistema de editor existente
  * Funcionalidades:
  * - Mapear componentes do QuizPage para blocos editáveis

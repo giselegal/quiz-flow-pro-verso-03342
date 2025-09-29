@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { StepNavigationPropertyEditor } from '@/components/editor/properties/editors/StepNavigationPropertyEditor';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';

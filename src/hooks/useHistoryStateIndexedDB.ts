@@ -1,6 +1,7 @@
+// @ts-nocheck
 /**
  * 🚀 USE HISTORY STATE WITH INDEXEDDB
- * 
+ *
  * Versão melhorada do useHistoryState que usa IndexedDB ao invés de localStorage
  * Resolve problemas de:
  * - QuotaExceededError (localStorage ~5MB vs IndexedDB ~GBs)

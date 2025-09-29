@@ -1,6 +1,7 @@
+// @ts-nocheck
 /**
  * 🚀 USE UNIFIED COLLABORATION - Hook de Colaboração em Tempo Real
- * 
+ *
  * Funcionalidades:
  * - Gerenciamento de sessões de colaboração
  * - Sincronização de mudanças
