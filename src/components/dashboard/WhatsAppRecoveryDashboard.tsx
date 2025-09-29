@@ -404,7 +404,7 @@ export function WhatsAppRecoveryDashboard() {
                     Enviado 30 minutos após abandono do carrinho
                   </p>
                   <div className="bg-green-50 p-3 rounded text-sm">
-                    "Olá {{'{'}nome{'}'}}! 👋 Notei que você estava interessado no {{'{'}produto{'}'}}.
+                    "Olá {"{nome}"}! 👋 Notei que você estava interessado no {"{produto}"}.
                     Que tal finalizar sua compra agora? 🎯"
                   </div>
                 </div>
@@ -415,7 +415,7 @@ export function WhatsAppRecoveryDashboard() {
                     Mensagem interativa com botões de ação
                   </p>
                   <div className="bg-blue-50 p-3 rounded text-sm">
-                    "Olá {{'{'}nome{'}'}}! Preparei uma oferta especial para você! 🎁
+                    "Olá {"{nome}"}! Preparei uma oferta especial para você! 🎁
                     [✅ Finalizar Compra] [🎁 Ver Desconto] [❌ Não Tenho Interesse]"
                   </div>
                 </div>
@@ -427,7 +427,7 @@ export function WhatsAppRecoveryDashboard() {
                   </p>
                   <div className="bg-orange-50 p-3 rounded text-sm">
                     "Última chance! 20% OFF com código VOLTA20 ⏰
-                    Válido apenas por 24h! {{'{'}link{'}'}}'"
+                    Válido apenas por 24h! {"{link}"}'"
                   </div>
                 </div>
               </div>

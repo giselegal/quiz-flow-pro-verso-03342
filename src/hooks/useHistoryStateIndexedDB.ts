@@ -49,12 +49,13 @@ export const useHistoryStateIndexedDB = <T>(initialState: T, options: UseHistory
 
     useEffect(() => {
         if (enablePersistence) {
-            AdvancedStorageManager.getInstance().then(manager => {
+            try {
+                const manager = AdvancedStorageManager.getInstance();
                 setStorageManager(manager);
-            }).catch(error => {
+            } catch (error) {
                 console.error('Failed to initialize IndexedDB storage:', error);
                 // Fallback to localStorage behavior
-            });
+            }
         }
     }, [enablePersistence]);
 
