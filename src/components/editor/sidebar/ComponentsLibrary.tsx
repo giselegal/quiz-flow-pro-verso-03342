@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import { getEnhancedBlockComponent } from '@/components/editor/blocks/enhancedBlockRegistry';
+import { getEnhancedBlockComponent } from '@/components/editor/blocks/EnhancedBlockRegistry';
 import { cn } from '@/lib/utils';
 import {
   Award,

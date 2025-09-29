@@ -6,7 +6,7 @@
  */
 
 import React, { Suspense } from 'react';
-import { getEnhancedBlockComponent } from '@/components/editor/blocks/enhancedBlockRegistry';
+import { getEnhancedBlockComponent } from '@/components/editor/blocks/EnhancedBlockRegistry';
 import { Block } from '@/types/editor';
 import { cn } from '@/lib/utils';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
@@ -50,102 +50,102 @@ const ValidationAwareBlockWrapper: React.FC<{
   timeToAutoAdvance: number;
   onSelect?: () => void;
   children: React.ReactNode;
-}> = ({ 
-  block, 
-  isSelected, 
-  isPreview, 
-  validationState, 
+}> = ({
+  block,
+  isSelected,
+  isPreview,
+  validationState,
   validationMessage,
   canAutoAdvance,
   timeToAutoAdvance,
-  onSelect, 
-  children 
+  onSelect,
+  children
 }) => {
-  const [isHovering, setIsHovering] = React.useState(false);
+    const [isHovering, setIsHovering] = React.useState(false);
 
-  if (isPreview) {
+    if (isPreview) {
+      return (
+        <div className="relative">
+          {canAutoAdvance && timeToAutoAdvance > 0 && (
+            <div className="absolute -bottom-12 left-1/2 transform -translate-x-1/2 z-20">
+              <div className="bg-green-500 text-white px-3 py-2 rounded-lg shadow-lg text-sm flex items-center gap-2">
+                <div className="w-2 h-2 bg-white rounded-full animate-pulse" />
+                Avançando em {Math.ceil(timeToAutoAdvance / 1000)}s...
+              </div>
+            </div>
+          )}
+          {children}
+        </div>
+      );
+    }
+
     return (
-      <div className="relative">
+      <div
+        className={cn(
+          'relative transition-all duration-200 cursor-pointer group',
+          'hover:ring-2 hover:ring-primary/30 hover:ring-offset-2 rounded-lg',
+          isSelected && 'ring-2 ring-primary ring-offset-2',
+          isHovering && !isSelected && 'ring-1 ring-primary/20',
+          validationState === 'invalid' && 'ring-2 ring-red-500/50',
+          validationState === 'valid' && 'ring-2 ring-green-500/30'
+        )}
+        onClick={(e) => {
+          e.stopPropagation();
+          onSelect?.();
+        }}
+        onMouseEnter={() => setIsHovering(true)}
+        onMouseLeave={() => setIsHovering(false)}
+        data-block-id={block.id}
+        data-block-type={block.type}
+        data-validation-state={validationState}
+      >
+        {/* Toolbar do bloco */}
+        {(isSelected || isHovering) && (
+          <div className="absolute -top-8 left-0 z-10 flex items-center gap-2">
+            <div className="bg-primary text-primary-foreground text-xs px-2 py-1 rounded-md shadow-lg">
+              {block.type}
+            </div>
+            <div className="bg-stone-800 text-white text-xs px-2 py-1 rounded-md shadow-lg">
+              {block.id}
+            </div>
+            {validationState !== 'none' && (
+              <ValidationIndicator
+                state={validationState}
+                message={validationMessage}
+                size="sm"
+              />
+            )}
+          </div>
+        )}
+
+        {/* Badge de validação no canto */}
+        <ValidationBadge state={validationState} />
+
+        {/* Overlay de hover com cor baseada na validação */}
+        <div className={cn(
+          'absolute inset-0 rounded-lg pointer-events-none transition-opacity',
+          (isHovering || isSelected) ? 'opacity-100' : 'opacity-0',
+          validationState === 'valid' && 'bg-green-500/5',
+          validationState === 'invalid' && 'bg-red-500/5',
+          validationState === 'warning' && 'bg-yellow-500/5',
+          validationState === 'pending' && 'bg-blue-500/5',
+          validationState === 'none' && 'bg-primary/5'
+        )} />
+
+        {/* Indicador de auto-advance */}
         {canAutoAdvance && timeToAutoAdvance > 0 && (
-          <div className="absolute -bottom-12 left-1/2 transform -translate-x-1/2 z-20">
-            <div className="bg-green-500 text-white px-3 py-2 rounded-lg shadow-lg text-sm flex items-center gap-2">
-              <div className="w-2 h-2 bg-white rounded-full animate-pulse" />
-              Avançando em {Math.ceil(timeToAutoAdvance / 1000)}s...
+          <div className="absolute -bottom-8 right-0 z-10">
+            <div className="bg-green-500 text-white px-2 py-1 rounded text-xs flex items-center gap-1">
+              <div className="w-1.5 h-1.5 bg-white rounded-full animate-pulse" />
+              Auto {Math.ceil(timeToAutoAdvance / 1000)}s
             </div>
           </div>
         )}
+
         {children}
       </div>
     );
-  }
-
-  return (
-    <div
-      className={cn(
-        'relative transition-all duration-200 cursor-pointer group',
-        'hover:ring-2 hover:ring-primary/30 hover:ring-offset-2 rounded-lg',
-        isSelected && 'ring-2 ring-primary ring-offset-2',
-        isHovering && !isSelected && 'ring-1 ring-primary/20',
-        validationState === 'invalid' && 'ring-2 ring-red-500/50',
-        validationState === 'valid' && 'ring-2 ring-green-500/30'
-      )}
-      onClick={(e) => {
-        e.stopPropagation();
-        onSelect?.();
-      }}
-      onMouseEnter={() => setIsHovering(true)}
-      onMouseLeave={() => setIsHovering(false)}
-      data-block-id={block.id}
-      data-block-type={block.type}
-      data-validation-state={validationState}
-    >
-      {/* Toolbar do bloco */}
-      {(isSelected || isHovering) && (
-        <div className="absolute -top-8 left-0 z-10 flex items-center gap-2">
-          <div className="bg-primary text-primary-foreground text-xs px-2 py-1 rounded-md shadow-lg">
-            {block.type}
-          </div>
-          <div className="bg-stone-800 text-white text-xs px-2 py-1 rounded-md shadow-lg">
-            {block.id}
-          </div>
-          {validationState !== 'none' && (
-            <ValidationIndicator 
-              state={validationState} 
-              message={validationMessage}
-              size="sm"
-            />
-          )}
-        </div>
-      )}
-      
-      {/* Badge de validação no canto */}
-      <ValidationBadge state={validationState} />
-      
-      {/* Overlay de hover com cor baseada na validação */}
-      <div className={cn(
-        'absolute inset-0 rounded-lg pointer-events-none transition-opacity',
-        (isHovering || isSelected) ? 'opacity-100' : 'opacity-0',
-        validationState === 'valid' && 'bg-green-500/5',
-        validationState === 'invalid' && 'bg-red-500/5',
-        validationState === 'warning' && 'bg-yellow-500/5',
-        validationState === 'pending' && 'bg-blue-500/5',
-        validationState === 'none' && 'bg-primary/5'
-      )} />
-      
-      {/* Indicador de auto-advance */}
-      {canAutoAdvance && timeToAutoAdvance > 0 && (
-        <div className="absolute -bottom-8 right-0 z-10">
-          <div className="bg-green-500 text-white px-2 py-1 rounded text-xs flex items-center gap-1">
-            <div className="w-1.5 h-1.5 bg-white rounded-full animate-pulse" />
-            Auto {Math.ceil(timeToAutoAdvance / 1000)}s
-          </div>
-        </div>
-      )}
-      
-      {children}
-    </div>
-  );
-};
+  };
 
 /**
  * Enhanced Block Renderer com validação
@@ -167,7 +167,7 @@ export const EnhancedBlockRenderer: React.FC<EnhancedBlockRendererProps> = ({
   const Component = getEnhancedBlockComponent(block.type);
   const { simulateValidation } = useMockData();
   const stepData = useMockStepData(currentStep, funnelId);
-  
+
   // Sistema de validação integrado
   const validation = useStepValidation({
     stepNumber: currentStep,
@@ -179,23 +179,23 @@ export const EnhancedBlockRenderer: React.FC<EnhancedBlockRendererProps> = ({
   // Determinar estado de validação baseado no tipo de bloco
   const getValidationState = (): ValidationState => {
     if (!enableValidation) return 'none';
-    
+
     if (validation.isValidating) return 'pending';
-    
+
     // Regras específicas por tipo de bloco
     switch (block.type) {
       case 'form-input':
       case 'quiz-intro-header':
         return validation.isFieldValid('name') ? 'valid' : 'invalid';
-        
+
       case 'options-grid':
       case 'quiz-question-inline':
         return validation.isFieldValid('selectedOptions') ? 'valid' : 'invalid';
-        
+
       case 'button-inline':
         // Botões são válidos quando as condições do step são atendidas
         return validation.validationResult.isValid ? 'valid' : 'warning';
-        
+
       default:
         return validation.validationResult.state;
     }
@@ -247,28 +247,28 @@ export const EnhancedBlockRenderer: React.FC<EnhancedBlockRendererProps> = ({
     isSelected: isSelected && !isPreview,
     isPreviewing: isPreview,
     isEditor: !isPreview,
-    
+
     // Dados mockados (fallback quando não há experiência real)
     mockData: realExperienceProps ? null : stepData,
     funnelId,
     currentStep,
-    
+
     // Validação
     validationState,
     validationMessage,
     isValid: realExperienceProps ? realExperienceProps.isValidated : validation.validationResult.isValid,
-    
+
     // Auto-advance
     canAutoAdvance: realExperienceProps ? realExperienceProps.canAutoAdvance : validation.canAutoAdvance,
     timeToAutoAdvance: validation.timeToAutoAdvance,
-    
+
     // Experiência real
     realData: realExperienceProps ? {
       selections: realExperienceProps.selections,
       userName: realExperienceProps.userName,
       quizState: realExperienceProps.quizState,
     } : null,
-    
+
     // Callbacks
     onSave: (updates: any) => {
       onUpdate?.(updates);
@@ -288,7 +288,7 @@ export const EnhancedBlockRenderer: React.FC<EnhancedBlockRendererProps> = ({
       }
     },
     onSelectionChange: realExperienceProps?.onSelectionChange,
-    
+
     // Props do bloco
     ...block.properties,
   };
@@ -332,12 +332,12 @@ function getAutoAdvanceDelay(_blockType: string, currentStep: number): number {
   if (currentStep >= 2 && currentStep <= 11) {
     return 1500; // 1.5s
   }
-  
+
   // Steps 13-18: Questões estratégicas sem auto-advance
   if (currentStep >= 13 && currentStep <= 18) {
     return 0; // Sem auto-advance
   }
-  
+
   // Outros steps: delay padrão
   return 2000; // 2s
 }

@@ -1,5 +1,5 @@
 import React from 'react';
-import ENHANCED_BLOCK_REGISTRY, { getEnhancedBlockComponent, normalizeBlockProperties, getRegistryStats } from '@/components/editor/blocks/enhancedBlockRegistry';
+import ENHANCED_BLOCK_REGISTRY, { getEnhancedBlockComponent, normalizeBlockProperties, getRegistryStats } from '@/components/editor/blocks/EnhancedBlockRegistry';
 import VisualBlockFallback from '@/components/core/renderers/VisualBlockFallback';
 
 // Importações diretas para fallbacks críticos
