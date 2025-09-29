@@ -43,7 +43,7 @@ import type { QuizStep } from '@/data/quizSteps';
 // FASE 4 - Analytics e Performance
 import { analyticsService } from '@/services/AnalyticsService';
 import { reportGenerator } from '@/services/ReportGenerator';
-import { performanceOptimizer } from '@/services/performanceOptimizer';
+import { performanceOptimizer } from '@/services/PerformanceOptimizer';
 import QuizAnalyticsDashboard from '@/components/analytics/QuizAnalyticsDashboard';
 
 // ===============================
@@ -817,7 +817,7 @@ const QuizEditorMode: React.FC<QuizEditorModeProps> = ({
                         <Button
                           size="sm"
                           variant="outline"
-                          onClick={() => generateQuickReport('performance')}
+                          onClick={() => generateQuickReport()}
                         >
                           <Download className="w-4 h-4 mr-2" />
                           Relatório Performance
