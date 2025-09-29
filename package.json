@@ -79,7 +79,9 @@
     "smoke:step1:persist": "node scripts/smoke-step1-persist.mjs",
     "smoke:e2e:3x": "node scripts/smoke-e2e-3x.mjs",
     "simulate:dcc": "node scripts/simulate-dcc.mjs",
-    "quiz:compare": "tsx scripts/compare-quiz-canonical.ts"
+    "quiz:compare": "tsx scripts/compare-quiz-canonical.ts",
+    "quiz:diff-blocks": "tsx scripts/diff-legacy-vs-dynamic-blocks.ts",
+    "quiz:verify-blocks": "tsx scripts/verify-blocks-parity.ts"
   },
   "smoke": {
     "step20": "node scripts/smoke-step20.mjs"
