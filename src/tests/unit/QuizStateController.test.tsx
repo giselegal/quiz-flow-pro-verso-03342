@@ -19,749 +19,749 @@ jest.mock('../src/templates/quiz21StepsComplete');
 const mockUseEditor = useEditor as jest.MockedFunction<typeof useEditor>;
 
 describe('🎯 QuizStateController - Testes Unitários', () => {
-  
-  const defaultProps = {
-    mode: 'quiz' as const,
-    initialStep: 1,
-    onStepChange: jest.fn()
-  };
 
-  const mockEditorContext = {
-    selectedBlock: null,
-    setSelectedBlock: jest.fn(),
-    updateBlock: jest.fn(),
-    addBlock: jest.fn(),
-    deleteBlock: jest.fn()
-  };
-
-  beforeEach(() => {
-    jest.clearAllMocks();
-    
-    // Mock template
-    (QUIZ_STYLE_21_STEPS_TEMPLATE as any) = {
-      'step-1': [{ type: 'intro', content: {} }],
-      'step-2': [{ 
-        type: 'options-grid', 
-        content: { 
-          options: [
-            { id: '1', text: 'Opção 1', points: { classico: 10 } },
-            { id: '2', text: 'Opção 2', points: { romantico: 8 } }
-          ] 
-        } 
-      }]
+    const defaultProps = {
+        mode: 'quiz' as const,
+        initialStep: 1,
+        onStepChange: jest.fn()
     };
 
-    // Setup mock editor
-    mockUseEditor.mockReturnValue(mockEditorContext);
-  });
+    const mockEditorContext = {
+        selectedBlock: null,
+        setSelectedBlock: jest.fn(),
+        updateBlock: jest.fn(),
+        addBlock: jest.fn(),
+        deleteBlock: jest.fn()
+    };
 
-  describe('📊 Estado Inicial', () => {
-    
-    test('deve inicializar com estado correto', () => {
-      // ARRANGE & ACT
-      const TestComponent = () => {
-        const quizFlow = useQuizFlow();
-        return <div data-testid="current-step">{quizFlow.currentStepNumber}</div>;
-      };
+    beforeEach(() => {
+        jest.clearAllMocks();
 
-      const { getByTestId } = render(
-        <QuizFlowController {...defaultProps}>
-          <TestComponent />
-        </QuizFlowController>
-      );
+        // Mock template
+        (QUIZ_STYLE_21_STEPS_TEMPLATE as any) = {
+            'step-1': [{ type: 'intro', content: {} }],
+            'step-2': [{
+                type: 'options-grid',
+                content: {
+                    options: [
+                        { id: '1', text: 'Opção 1', points: { classico: 10 } },
+                        { id: '2', text: 'Opção 2', points: { romantico: 8 } }
+                    ]
+                }
+            }]
+        };
 
-      // ASSERT
-      expect(getByTestId('current-step')).toHaveTextContent('1');
+        // Setup mock editor
+        mockUseEditor.mockReturnValue(mockEditorContext);
     });
 
-    test('deve usar step inicial fornecido', () => {
-      // ARRANGE
-      const TestComponent = () => {
-        const quizFlow = useQuizFlow();
-        return <div data-testid="current-step">{quizFlow.currentStepNumber}</div>;
-      };
+    describe('📊 Estado Inicial', () => {
 
-      // ACT
-      const { getByTestId } = render(
-        <QuizFlowController {...defaultProps} initialStep={5}>
-          <TestComponent />
-        </QuizFlowController>
-      );
+        test('deve inicializar com estado correto', () => {
+            // ARRANGE & ACT
+            const TestComponent = () => {
+                const quizFlow = useQuizFlow();
+                return <div data-testid="current-step">{quizFlow.currentStepNumber}</div>;
+            };
 
-      // ASSERT
-      expect(getByTestId('current-step')).toHaveTextContent('5');
+            const { getByTestId } = render(
+                <QuizFlowController {...defaultProps}>
+                    <TestComponent />
+                </QuizFlowController>
+            );
+
+            // ASSERT
+            expect(getByTestId('current-step')).toHaveTextContent('1');
+        });
+
+        test('deve usar step inicial fornecido', () => {
+            // ARRANGE
+            const TestComponent = () => {
+                const quizFlow = useQuizFlow();
+                return <div data-testid="current-step">{quizFlow.currentStepNumber}</div>;
+            };
+
+            // ACT
+            const { getByTestId } = render(
+                <QuizFlowController {...defaultProps} initialStep={5}>
+                    <TestComponent />
+                </QuizFlowController>
+            );
+
+            // ASSERT
+            expect(getByTestId('current-step')).toHaveTextContent('5');
+        });
+
+        test('deve calcular totalSteps corretamente', () => {
+            // ARRANGE
+            const TestComponent = () => {
+                const quizFlow = useQuizFlow();
+                return <div data-testid="total-steps">{quizFlow.totalSteps}</div>;
+            };
+
+            // ACT
+            const { getByTestId } = render(
+                <QuizFlowController {...defaultProps}>
+                    <TestComponent />
+                </QuizFlowController>
+            );
+
+            // ASSERT
+            expect(getByTestId('total-steps')).toHaveTextContent('21');
+        });
     });
 
-    test('deve calcular totalSteps corretamente', () => {
-      // ARRANGE
-      const TestComponent = () => {
-        const quizFlow = useQuizFlow();
-        return <div data-testid="total-steps">{quizFlow.totalSteps}</div>;
-      };
+    describe('🔄 Navegação de Etapas', () => {
 
-      // ACT
-      const { getByTestId } = render(
-        <QuizFlowController {...defaultProps}>
-          <TestComponent />
-        </QuizFlowController>
-      );
+        test('deve navegar para próxima etapa', () => {
+            // ARRANGE
+            let quizFlowRef: any = null;
 
-      // ASSERT
-      expect(getByTestId('total-steps')).toHaveTextContent('21');
-    });
-  });
+            const TestComponent = () => {
+                const quizFlow = useQuizFlow();
+                quizFlowRef = quizFlow;
+                return <div data-testid="current-step">{quizFlow.currentStepNumber}</div>;
+            };
 
-  describe('🔄 Navegação de Etapas', () => {
-    
-    test('deve navegar para próxima etapa', () => {
-      // ARRANGE
-      let quizFlowRef: any = null;
-      
-      const TestComponent = () => {
-        const quizFlow = useQuizFlow();
-        quizFlowRef = quizFlow;
-        return <div data-testid="current-step">{quizFlow.currentStepNumber}</div>;
-      };
+            const { getByTestId } = render(
+                <QuizFlowController {...defaultProps}>
+                    <TestComponent />
+                </QuizFlowController>
+            );
 
-      const { getByTestId } = render(
-        <QuizFlowController {...defaultProps}>
-          <TestComponent />
-        </QuizFlowController>
-      );
+            // ACT
+            act(() => {
+                quizFlowRef.nextStep();
+            });
 
-      // ACT
-      act(() => {
-        quizFlowRef.nextStep();
-      });
+            // ASSERT
+            expect(getByTestId('current-step')).toHaveTextContent('2');
+            expect(defaultProps.onStepChange).toHaveBeenCalledWith(2);
+        });
 
-      // ASSERT
-      expect(getByTestId('current-step')).toHaveTextContent('2');
-      expect(defaultProps.onStepChange).toHaveBeenCalledWith(2);
-    });
+        test('deve navegar para etapa anterior', () => {
+            // ARRANGE
+            let quizFlowRef: any = null;
 
-    test('deve navegar para etapa anterior', () => {
-      // ARRANGE
-      let quizFlowRef: any = null;
-      
-      const TestComponent = () => {
-        const quizFlow = useQuizFlow();
-        quizFlowRef = quizFlow;
-        return <div data-testid="current-step">{quizFlow.currentStepNumber}</div>;
-      };
+            const TestComponent = () => {
+                const quizFlow = useQuizFlow();
+                quizFlowRef = quizFlow;
+                return <div data-testid="current-step">{quizFlow.currentStepNumber}</div>;
+            };
 
-      const { getByTestId } = render(
-        <QuizFlowController {...defaultProps} initialStep={3}>
-          <TestComponent />
-        </QuizFlowController>
-      );
+            const { getByTestId } = render(
+                <QuizFlowController {...defaultProps} initialStep={3}>
+                    <TestComponent />
+                </QuizFlowController>
+            );
 
-      // ACT
-      act(() => {
-        quizFlowRef.previousStep();
-      });
+            // ACT
+            act(() => {
+                quizFlowRef.previousStep();
+            });
 
-      // ASSERT
-      expect(getByTestId('current-step')).toHaveTextContent('2');
-    });
+            // ASSERT
+            expect(getByTestId('current-step')).toHaveTextContent('2');
+        });
 
-    test('deve ir para etapa específica', () => {
-      // ARRANGE
-      let quizFlowRef: any = null;
-      
-      const TestComponent = () => {
-        const quizFlow = useQuizFlow();
-        quizFlowRef = quizFlow;
-        return <div data-testid="current-step">{quizFlow.currentStepNumber}</div>;
-      };
+        test('deve ir para etapa específica', () => {
+            // ARRANGE
+            let quizFlowRef: any = null;
 
-      const { getByTestId } = render(
-        <QuizFlowController {...defaultProps}>
-          <TestComponent />
-        </QuizFlowController>
-      );
+            const TestComponent = () => {
+                const quizFlow = useQuizFlow();
+                quizFlowRef = quizFlow;
+                return <div data-testid="current-step">{quizFlow.currentStepNumber}</div>;
+            };
 
-      // ACT
-      act(() => {
-        quizFlowRef.goToStep(10);
-      });
+            const { getByTestId } = render(
+                <QuizFlowController {...defaultProps}>
+                    <TestComponent />
+                </QuizFlowController>
+            );
 
-      // ASSERT
-      expect(getByTestId('current-step')).toHaveTextContent('10');
-      expect(defaultProps.onStepChange).toHaveBeenCalledWith(10);
-    });
-  });
+            // ACT
+            act(() => {
+                quizFlowRef.goToStep(10);
+            });
 
-  describe('📝 Gerenciamento de Respostas', () => {
-    
-    test('deve definir resposta para etapa', () => {
-      // ARRANGE
-      let quizFlowRef: any = null;
-      
-      const TestComponent = () => {
-        const quizFlow = useQuizFlow();
-        quizFlowRef = quizFlow;
-        return null;
-      };
-
-      render(
-        <QuizFlowController {...defaultProps}>
-          <TestComponent />
-        </QuizFlowController>
-      );
-
-      // ACT
-      act(() => {
-        quizFlowRef.setAnswer('step-2', ['option-1', 'option-2']);
-      });
-
-      // ASSERT
-      expect(quizFlowRef.getAnswer('step-2')).toEqual(['option-1', 'option-2']);
+            // ASSERT
+            expect(getByTestId('current-step')).toHaveTextContent('10');
+            expect(defaultProps.onStepChange).toHaveBeenCalledWith(10);
+        });
     });
 
-    test('deve obter resposta vazia para etapa sem resposta', () => {
-      // ARRANGE
-      let quizFlowRef: any = null;
-      
-      const TestComponent = () => {
-        const quizFlow = useQuizFlow();
-        quizFlowRef = quizFlow;
-        return null;
-      };
+    describe('📝 Gerenciamento de Respostas', () => {
 
-      render(
-        <QuizFlowController {...defaultProps}>
-          <TestComponent />
-        </QuizFlowController>
-      );
+        test('deve definir resposta para etapa', () => {
+            // ARRANGE
+            let quizFlowRef: any = null;
 
-      // ACT & ASSERT
-      expect(quizFlowRef.getAnswer('step-99')).toEqual([]);
+            const TestComponent = () => {
+                const quizFlow = useQuizFlow();
+                quizFlowRef = quizFlow;
+                return null;
+            };
+
+            render(
+                <QuizFlowController {...defaultProps}>
+                    <TestComponent />
+                </QuizFlowController>
+            );
+
+            // ACT
+            act(() => {
+                quizFlowRef.setAnswer('step-2', ['option-1', 'option-2']);
+            });
+
+            // ASSERT
+            expect(quizFlowRef.getAnswer('step-2')).toEqual(['option-1', 'option-2']);
+        });
+
+        test('deve obter resposta vazia para etapa sem resposta', () => {
+            // ARRANGE
+            let quizFlowRef: any = null;
+
+            const TestComponent = () => {
+                const quizFlow = useQuizFlow();
+                quizFlowRef = quizFlow;
+                return null;
+            };
+
+            render(
+                <QuizFlowController {...defaultProps}>
+                    <TestComponent />
+                </QuizFlowController>
+            );
+
+            // ACT & ASSERT
+            expect(quizFlowRef.getAnswer('step-99')).toEqual([]);
+        });
+
+        test('deve calcular pontuações baseadas nas respostas', () => {
+            // ARRANGE
+            let quizFlowRef: any = null;
+
+            const TestComponent = () => {
+                const quizFlow = useQuizFlow();
+                quizFlowRef = quizFlow;
+                return null;
+            };
+
+            render(
+                <QuizFlowController {...defaultProps}>
+                    <TestComponent />
+                </QuizFlowController>
+            );
+
+            // ACT
+            act(() => {
+                quizFlowRef.setAnswer('step-2', ['1']); // Opção com 10 pontos clássico
+            });
+
+            const scores = quizFlowRef.calculateScores();
+
+            // ASSERT
+            expect(scores).toEqual(expect.objectContaining({
+                classico: 10
+            }));
+        });
     });
 
-    test('deve calcular pontuações baseadas nas respostas', () => {
-      // ARRANGE
-      let quizFlowRef: any = null;
-      
-      const TestComponent = () => {
-        const quizFlow = useQuizFlow();
-        quizFlowRef = quizFlow;
-        return null;
-      };
+    describe('✅ Validação de Etapas', () => {
 
-      render(
-        <QuizFlowController {...defaultProps}>
-          <TestComponent />
-        </QuizFlowController>
-      );
+        test('deve validar etapa com resposta obrigatória', () => {
+            // ARRANGE
+            let quizFlowRef: any = null;
 
-      // ACT
-      act(() => {
-        quizFlowRef.setAnswer('step-2', ['1']); // Opção com 10 pontos clássico
-      });
+            const TestComponent = () => {
+                const quizFlow = useQuizFlow();
+                quizFlowRef = quizFlow;
+                return null;
+            };
 
-      const scores = quizFlowRef.calculateScores();
+            render(
+                <QuizFlowController {...defaultProps}>
+                    <TestComponent />
+                </QuizFlowController>
+            );
 
-      // ASSERT
-      expect(scores).toEqual(expect.objectContaining({
-        classico: 10
-      }));
-    });
-  });
+            // ACT - Sem resposta
+            let isValid = quizFlowRef.isStepValid('step-2');
+            expect(isValid).toBe(false);
 
-  describe('✅ Validação de Etapas', () => {
-    
-    test('deve validar etapa com resposta obrigatória', () => {
-      // ARRANGE
-      let quizFlowRef: any = null;
-      
-      const TestComponent = () => {
-        const quizFlow = useQuizFlow();
-        quizFlowRef = quizFlow;
-        return null;
-      };
+            // ACT - Com resposta
+            act(() => {
+                quizFlowRef.setAnswer('step-2', ['1']);
+            });
 
-      render(
-        <QuizFlowController {...defaultProps}>
-          <TestComponent />
-        </QuizFlowController>
-      );
+            isValid = quizFlowRef.isStepValid('step-2');
+            expect(isValid).toBe(true);
+        });
 
-      // ACT - Sem resposta
-      let isValid = quizFlowRef.isStepValid('step-2');
-      expect(isValid).toBe(false);
+        test('deve permitir navegação apenas se etapa válida', () => {
+            // ARRANGE
+            let quizFlowRef: any = null;
 
-      // ACT - Com resposta
-      act(() => {
-        quizFlowRef.setAnswer('step-2', ['1']);
-      });
+            const TestComponent = () => {
+                const quizFlow = useQuizFlow();
+                quizFlowRef = quizFlow;
+                return <div data-testid="can-next">{quizFlow.canGoNext.toString()}</div>;
+            };
 
-      isValid = quizFlowRef.isStepValid('step-2');
-      expect(isValid).toBe(true);
+            const { getByTestId } = render(
+                <QuizFlowController {...defaultProps} initialStep={2}>
+                    <TestComponent />
+                </QuizFlowController>
+            );
+
+            // ACT & ASSERT - Sem resposta
+            expect(getByTestId('can-next')).toHaveTextContent('false');
+
+            // ACT - Com resposta
+            act(() => {
+                quizFlowRef.setAnswer('step-2', ['1']);
+            });
+
+            expect(getByTestId('can-next')).toHaveTextContent('true');
+        });
     });
 
-    test('deve permitir navegação apenas se etapa válida', () => {
-      // ARRANGE
-      let quizFlowRef: any = null;
-      
-      const TestComponent = () => {
-        const quizFlow = useQuizFlow();
-        quizFlowRef = quizFlow;
-        return <div data-testid="can-next">{quizFlow.canGoNext.toString()}</div>;
-      };
+    describe('🔗 Integração com Editor', () => {
 
-      const { getByTestId } = render(
-        <QuizFlowController {...defaultProps} initialStep={2}>
-          <TestComponent />
-        </QuizFlowController>
-      );
+        test('deve habilitar sincronização no modo editor', () => {
+            // ARRANGE
+            let quizFlowRef: any = null;
 
-      // ACT & ASSERT - Sem resposta
-      expect(getByTestId('can-next')).toHaveTextContent('false');
+            const TestComponent = () => {
+                const quizFlow = useQuizFlow();
+                quizFlowRef = quizFlow;
+                return <div data-testid="sync">{quizFlow.syncWithEditor.toString()}</div>;
+            };
 
-      // ACT - Com resposta
-      act(() => {
-        quizFlowRef.setAnswer('step-2', ['1']);
-      });
+            // ACT
+            const { getByTestId } = render(
+                <QuizFlowController {...defaultProps} mode="editor">
+                    <TestComponent />
+                </QuizFlowController>
+            );
 
-      expect(getByTestId('can-next')).toHaveTextContent('true');
-    });
-  });
+            // ASSERT
+            expect(getByTestId('sync')).toHaveTextContent('true');
+        });
 
-  describe('🔗 Integração com Editor', () => {
-    
-    test('deve habilitar sincronização no modo editor', () => {
-      // ARRANGE
-      let quizFlowRef: any = null;
-      
-      const TestComponent = () => {
-        const quizFlow = useQuizFlow();
-        quizFlowRef = quizFlow;
-        return <div data-testid="sync">{quizFlow.syncWithEditor.toString()}</div>;
-      };
+        test('deve desabilitar sincronização no modo quiz', () => {
+            // ARRANGE
+            let quizFlowRef: any = null;
 
-      // ACT
-      const { getByTestId } = render(
-        <QuizFlowController {...defaultProps} mode="editor">
-          <TestComponent />
-        </QuizFlowController>
-      );
+            const TestComponent = () => {
+                const quizFlow = useQuizFlow();
+                quizFlowRef = quizFlow;
+                return <div data-testid="sync">{quizFlow.syncWithEditor.toString()}</div>;
+            };
 
-      // ASSERT
-      expect(getByTestId('sync')).toHaveTextContent('true');
-    });
+            // ACT
+            const { getByTestId } = render(
+                <QuizFlowController {...defaultProps} mode="quiz">
+                    <TestComponent />
+                </QuizFlowController>
+            );
 
-    test('deve desabilitar sincronização no modo quiz', () => {
-      // ARRANGE
-      let quizFlowRef: any = null;
-      
-      const TestComponent = () => {
-        const quizFlow = useQuizFlow();
-        quizFlowRef = quizFlow;
-        return <div data-testid="sync">{quizFlow.syncWithEditor.toString()}</div>;
-      };
+            // ASSERT
+            expect(getByTestId('sync')).toHaveTextContent('false');
+        });
 
-      // ACT
-      const { getByTestId } = render(
-        <QuizFlowController {...defaultProps} mode="quiz">
-          <TestComponent />
-        </QuizFlowController>
-      );
+        test('deve carregar etapa no editor quando sincronizado', async () => {
+            // ARRANGE
+            const mockLoadStepIntoEditor = jest.fn();
 
-      // ASSERT
-      expect(getByTestId('sync')).toHaveTextContent('false');
-    });
+            let quizFlowRef: any = null;
 
-    test('deve carregar etapa no editor quando sincronizado', async () => {
-      // ARRANGE
-      const mockLoadStepIntoEditor = jest.fn();
-      
-      let quizFlowRef: any = null;
-      
-      const TestComponent = () => {
-        const quizFlow = useQuizFlow();
-        quizFlowRef = quizFlow;
-        // Simular função loadStepIntoEditor
-        quizFlowRef.loadStepIntoEditor = mockLoadStepIntoEditor;
-        return null;
-      };
+            const TestComponent = () => {
+                const quizFlow = useQuizFlow();
+                quizFlowRef = quizFlow;
+                // Simular função loadStepIntoEditor
+                quizFlowRef.loadStepIntoEditor = mockLoadStepIntoEditor;
+                return null;
+            };
 
-      render(
-        <QuizFlowController {...defaultProps} mode="editor">
-          <TestComponent />
-        </QuizFlowController>
-      );
+            render(
+                <QuizFlowController {...defaultProps} mode="editor">
+                    <TestComponent />
+                </QuizFlowController>
+            );
 
-      // ACT
-      act(() => {
-        quizFlowRef.setSyncWithEditor(true);
-        quizFlowRef.goToStep(3);
-      });
+            // ACT
+            act(() => {
+                quizFlowRef.setSyncWithEditor(true);
+                quizFlowRef.goToStep(3);
+            });
 
-      // ASSERT
-      await waitFor(() => {
-        expect(mockLoadStepIntoEditor).toHaveBeenCalledWith(3);
-      });
+            // ASSERT
+            await waitFor(() => {
+                expect(mockLoadStepIntoEditor).toHaveBeenCalledWith(3);
+            });
+        });
+
+        test('deve lidar com editor indisponível', () => {
+            // ARRANGE
+            mockUseEditor.mockImplementation(() => {
+                throw new Error('Editor não disponível');
+            });
+
+            // ACT & ASSERT
+            expect(() => {
+                render(
+                    <QuizFlowController {...defaultProps} mode="editor">
+                        <div>Test</div>
+                    </QuizFlowController>
+                );
+            }).not.toThrow();
+        });
     });
 
-    test('deve lidar com editor indisponível', () => {
-      // ARRANGE
-      mockUseEditor.mockImplementation(() => {
-        throw new Error('Editor não disponível');
-      });
+    describe('🎮 Controle de Modo', () => {
 
-      // ACT & ASSERT
-      expect(() => {
-        render(
-          <QuizFlowController {...defaultProps} mode="editor">
-            <div>Test</div>
-          </QuizFlowController>
-        );
-      }).not.toThrow();
+        test('deve alternar entre modos', () => {
+            // ARRANGE
+            let quizFlowRef: any = null;
+
+            const TestComponent = () => {
+                const quizFlow = useQuizFlow();
+                quizFlowRef = quizFlow;
+                return <div data-testid="mode">{quizFlow.mode}</div>;
+            };
+
+            const { getByTestId } = render(
+                <QuizFlowController {...defaultProps} mode="quiz">
+                    <TestComponent />
+                </QuizFlowController>
+            );
+
+            // ACT
+            act(() => {
+                quizFlowRef.setMode('editor');
+            });
+
+            // ASSERT
+            expect(getByTestId('mode')).toHaveTextContent('editor');
+        });
     });
-  });
-
-  describe('🎮 Controle de Modo', () => {
-    
-    test('deve alternar entre modos', () => {
-      // ARRANGE
-      let quizFlowRef: any = null;
-      
-      const TestComponent = () => {
-        const quizFlow = useQuizFlow();
-        quizFlowRef = quizFlow;
-        return <div data-testid="mode">{quizFlow.mode}</div>;
-      };
-
-      const { getByTestId } = render(
-        <QuizFlowController {...defaultProps} mode="quiz">
-          <TestComponent />
-        </QuizFlowController>
-      );
-
-      // ACT
-      act(() => {
-        quizFlowRef.setMode('editor');
-      });
-
-      // ASSERT
-      expect(getByTestId('mode')).toHaveTextContent('editor');
-    });
-  });
 });
 
 describe('🔄 QuizStateController - Testes de Integração', () => {
-  
-  beforeEach(() => {
-    jest.clearAllMocks();
-    mockUseEditor.mockReturnValue({
-      selectedBlock: null,
-      setSelectedBlock: jest.fn(),
-      updateBlock: jest.fn(),
-      addBlock: jest.fn(),
-      deleteBlock: jest.fn()
-    });
-  });
 
-  test('deve manter estado consistente durante navegação completa', () => {
-    // ARRANGE
-    let quizFlowRef: any = null;
-    const stepChanges: number[] = [];
-    
-    const TestComponent = () => {
-      const quizFlow = useQuizFlow();
-      quizFlowRef = quizFlow;
-      return null;
-    };
-
-    render(
-      <QuizFlowController 
-        mode="quiz" 
-        initialStep={1} 
-        onStepChange={(step) => stepChanges.push(step)}
-      >
-        <TestComponent />
-      </QuizFlowController>
-    );
-
-    // ACT - Navegação sequencial
-    const steps = [2, 3, 4, 5];
-    steps.forEach(step => {
-      act(() => {
-        quizFlowRef.setAnswer(`step-${step}`, [`option-${step}`]);
-        quizFlowRef.goToStep(step);
-      });
+    beforeEach(() => {
+        jest.clearAllMocks();
+        mockUseEditor.mockReturnValue({
+            selectedBlock: null,
+            setSelectedBlock: jest.fn(),
+            updateBlock: jest.fn(),
+            addBlock: jest.fn(),
+            deleteBlock: jest.fn()
+        });
     });
 
-    // ASSERT
-    expect(stepChanges).toEqual([2, 3, 4, 5]);
-    expect(quizFlowRef.currentStepNumber).toBe(5);
-    
-    // Verificar que respostas foram mantidas
-    steps.forEach(step => {
-      expect(quizFlowRef.getAnswer(`step-${step}`)).toEqual([`option-${step}`]);
-    });
-  });
+    test('deve manter estado consistente durante navegação completa', () => {
+        // ARRANGE
+        let quizFlowRef: any = null;
+        const stepChanges: number[] = [];
 
-  test('deve sincronizar corretamente entre quiz e editor', async () => {
-    // ARRANGE
-    const mockLoadStepIntoEditor = jest.fn();
-    let quizFlowRef: any = null;
-    
-    const TestComponent = () => {
-      const quizFlow = useQuizFlow();
-      quizFlowRef = quizFlow;
-      quizFlowRef.loadStepIntoEditor = mockLoadStepIntoEditor;
-      return null;
-    };
+        const TestComponent = () => {
+            const quizFlow = useQuizFlow();
+            quizFlowRef = quizFlow;
+            return null;
+        };
 
-    render(
-      <QuizFlowController mode="editor" initialStep={1}>
-        <TestComponent />
-      </QuizFlowController>
-    );
+        render(
+            <QuizFlowController
+                mode="quiz"
+                initialStep={1}
+                onStepChange={(step) => stepChanges.push(step)}
+            >
+                <TestComponent />
+            </QuizFlowController>
+        );
 
-    // ACT - Alternar sincronização e navegar
-    act(() => {
-      quizFlowRef.setSyncWithEditor(true);
-    });
+        // ACT - Navegação sequencial
+        const steps = [2, 3, 4, 5];
+        steps.forEach(step => {
+            act(() => {
+                quizFlowRef.setAnswer(`step-${step}`, [`option-${step}`]);
+                quizFlowRef.goToStep(step);
+            });
+        });
 
-    await act(async () => {
-      quizFlowRef.goToStep(5);
-      quizFlowRef.goToStep(10);
-      quizFlowRef.goToStep(15);
-    });
+        // ASSERT
+        expect(stepChanges).toEqual([2, 3, 4, 5]);
+        expect(quizFlowRef.currentStepNumber).toBe(5);
 
-    // ASSERT
-    await waitFor(() => {
-      expect(mockLoadStepIntoEditor).toHaveBeenCalledTimes(3);
-      expect(mockLoadStepIntoEditor).toHaveBeenCalledWith(5);
-      expect(mockLoadStepIntoEditor).toHaveBeenCalledWith(10);
-      expect(mockLoadStepIntoEditor).toHaveBeenCalledWith(15);
-    });
-  });
-
-  test('deve calcular pontuações corretas com múltiplas respostas', () => {
-    // ARRANGE
-    const mockTemplate = {
-      'step-2': [{ 
-        type: 'options-grid', 
-        content: { 
-          options: [
-            { id: 'a', text: 'A', points: { classico: 10, romantico: 5 } },
-            { id: 'b', text: 'B', points: { classico: 5, romantico: 10 } }
-          ] 
-        } 
-      }],
-      'step-3': [{ 
-        type: 'options-grid', 
-        content: { 
-          options: [
-            { id: 'c', text: 'C', points: { classico: 8, criativo: 12 } },
-            { id: 'd', text: 'D', points: { romantico: 7, criativo: 3 } }
-          ] 
-        } 
-      }]
-    };
-    
-    (QUIZ_STYLE_21_STEPS_TEMPLATE as any) = mockTemplate;
-
-    let quizFlowRef: any = null;
-    
-    const TestComponent = () => {
-      const quizFlow = useQuizFlow();
-      quizFlowRef = quizFlow;
-      return null;
-    };
-
-    render(
-      <QuizFlowController mode="quiz" initialStep={1}>
-        <TestComponent />
-      </QuizFlowController>
-    );
-
-    // ACT
-    act(() => {
-      quizFlowRef.setAnswer('step-2', ['a']); // classico: 10, romantico: 5
-      quizFlowRef.setAnswer('step-3', ['c']); // classico: 8, criativo: 12
+        // Verificar que respostas foram mantidas
+        steps.forEach(step => {
+            expect(quizFlowRef.getAnswer(`step-${step}`)).toEqual([`option-${step}`]);
+        });
     });
 
-    const scores = quizFlowRef.calculateScores();
+    test('deve sincronizar corretamente entre quiz e editor', async () => {
+        // ARRANGE
+        const mockLoadStepIntoEditor = jest.fn();
+        let quizFlowRef: any = null;
 
-    // ASSERT
-    expect(scores).toEqual({
-      classico: 18,  // 10 + 8
-      romantico: 5,  // 5 + 0
-      criativo: 12   // 0 + 12
+        const TestComponent = () => {
+            const quizFlow = useQuizFlow();
+            quizFlowRef = quizFlow;
+            quizFlowRef.loadStepIntoEditor = mockLoadStepIntoEditor;
+            return null;
+        };
+
+        render(
+            <QuizFlowController mode="editor" initialStep={1}>
+                <TestComponent />
+            </QuizFlowController>
+        );
+
+        // ACT - Alternar sincronização e navegar
+        act(() => {
+            quizFlowRef.setSyncWithEditor(true);
+        });
+
+        await act(async () => {
+            quizFlowRef.goToStep(5);
+            quizFlowRef.goToStep(10);
+            quizFlowRef.goToStep(15);
+        });
+
+        // ASSERT
+        await waitFor(() => {
+            expect(mockLoadStepIntoEditor).toHaveBeenCalledTimes(3);
+            expect(mockLoadStepIntoEditor).toHaveBeenCalledWith(5);
+            expect(mockLoadStepIntoEditor).toHaveBeenCalledWith(10);
+            expect(mockLoadStepIntoEditor).toHaveBeenCalledWith(15);
+        });
     });
-  });
+
+    test('deve calcular pontuações corretas com múltiplas respostas', () => {
+        // ARRANGE
+        const mockTemplate = {
+            'step-2': [{
+                type: 'options-grid',
+                content: {
+                    options: [
+                        { id: 'a', text: 'A', points: { classico: 10, romantico: 5 } },
+                        { id: 'b', text: 'B', points: { classico: 5, romantico: 10 } }
+                    ]
+                }
+            }],
+            'step-3': [{
+                type: 'options-grid',
+                content: {
+                    options: [
+                        { id: 'c', text: 'C', points: { classico: 8, criativo: 12 } },
+                        { id: 'd', text: 'D', points: { romantico: 7, criativo: 3 } }
+                    ]
+                }
+            }]
+        };
+
+        (QUIZ_STYLE_21_STEPS_TEMPLATE as any) = mockTemplate;
+
+        let quizFlowRef: any = null;
+
+        const TestComponent = () => {
+            const quizFlow = useQuizFlow();
+            quizFlowRef = quizFlow;
+            return null;
+        };
+
+        render(
+            <QuizFlowController mode="quiz" initialStep={1}>
+                <TestComponent />
+            </QuizFlowController>
+        );
+
+        // ACT
+        act(() => {
+            quizFlowRef.setAnswer('step-2', ['a']); // classico: 10, romantico: 5
+            quizFlowRef.setAnswer('step-3', ['c']); // classico: 8, criativo: 12
+        });
+
+        const scores = quizFlowRef.calculateScores();
+
+        // ASSERT
+        expect(scores).toEqual({
+            classico: 18,  // 10 + 8
+            romantico: 5,  // 5 + 0
+            criativo: 12   // 0 + 12
+        });
+    });
 });
 
 describe('⚡ QuizStateController - Testes de Performance', () => {
-  
-  beforeEach(() => {
-    mockUseEditor.mockReturnValue({
-      selectedBlock: null,
-      setSelectedBlock: jest.fn(),
-      updateBlock: jest.fn(),
-      addBlock: jest.fn(),
-      deleteBlock: jest.fn()
-    });
-  });
 
-  test('deve lidar com navegação rápida entre etapas', () => {
-    // ARRANGE
-    let quizFlowRef: any = null;
-    const startTime = Date.now();
-    
-    const TestComponent = () => {
-      const quizFlow = useQuizFlow();
-      quizFlowRef = quizFlow;
-      return null;
-    };
-
-    render(
-      <QuizFlowController mode="quiz" initialStep={1}>
-        <TestComponent />
-      </QuizFlowController>
-    );
-
-    // ACT - Navegação rápida
-    act(() => {
-      for (let i = 1; i <= 21; i++) {
-        quizFlowRef.goToStep(i);
-        quizFlowRef.setAnswer(`step-${i}`, [`option-${i}`]);
-      }
+    beforeEach(() => {
+        mockUseEditor.mockReturnValue({
+            selectedBlock: null,
+            setSelectedBlock: jest.fn(),
+            updateBlock: jest.fn(),
+            addBlock: jest.fn(),
+            deleteBlock: jest.fn()
+        });
     });
 
-    const endTime = Date.now();
+    test('deve lidar com navegação rápida entre etapas', () => {
+        // ARRANGE
+        let quizFlowRef: any = null;
+        const startTime = Date.now();
 
-    // ASSERT
-    expect(endTime - startTime).toBeLessThan(100); // < 100ms
-    expect(quizFlowRef.currentStepNumber).toBe(21);
-  });
+        const TestComponent = () => {
+            const quizFlow = useQuizFlow();
+            quizFlowRef = quizFlow;
+            return null;
+        };
 
-  test('deve calcular pontuações rapidamente com muitas respostas', () => {
-    // ARRANGE
-    let quizFlowRef: any = null;
-    
-    const TestComponent = () => {
-      const quizFlow = useQuizFlow();
-      quizFlowRef = quizFlow;
-      return null;
-    };
+        render(
+            <QuizFlowController mode="quiz" initialStep={1}>
+                <TestComponent />
+            </QuizFlowController>
+        );
 
-    render(
-      <QuizFlowController mode="quiz" initialStep={1}>
-        <TestComponent />
-      </QuizFlowController>
-    );
+        // ACT - Navegação rápida
+        act(() => {
+            for (let i = 1; i <= 21; i++) {
+                quizFlowRef.goToStep(i);
+                quizFlowRef.setAnswer(`step-${i}`, [`option-${i}`]);
+            }
+        });
 
-    // ACT - Adicionar muitas respostas
-    act(() => {
-      for (let i = 2; i <= 21; i++) {
-        quizFlowRef.setAnswer(`step-${i}`, [`option-${i}-1`, `option-${i}-2`]);
-      }
+        const endTime = Date.now();
+
+        // ASSERT
+        expect(endTime - startTime).toBeLessThan(100); // < 100ms
+        expect(quizFlowRef.currentStepNumber).toBe(21);
     });
 
-    const startTime = Date.now();
-    const scores = quizFlowRef.calculateScores();
-    const endTime = Date.now();
+    test('deve calcular pontuações rapidamente com muitas respostas', () => {
+        // ARRANGE
+        let quizFlowRef: any = null;
 
-    // ASSERT
-    expect(endTime - startTime).toBeLessThan(50); // < 50ms
-    expect(scores).toBeDefined();
-  });
+        const TestComponent = () => {
+            const quizFlow = useQuizFlow();
+            quizFlowRef = quizFlow;
+            return null;
+        };
+
+        render(
+            <QuizFlowController mode="quiz" initialStep={1}>
+                <TestComponent />
+            </QuizFlowController>
+        );
+
+        // ACT - Adicionar muitas respostas
+        act(() => {
+            for (let i = 2; i <= 21; i++) {
+                quizFlowRef.setAnswer(`step-${i}`, [`option-${i}-1`, `option-${i}-2`]);
+            }
+        });
+
+        const startTime = Date.now();
+        const scores = quizFlowRef.calculateScores();
+        const endTime = Date.now();
+
+        // ASSERT
+        expect(endTime - startTime).toBeLessThan(50); // < 50ms
+        expect(scores).toBeDefined();
+    });
 });
 
 describe('🛠️ QuizStateController - Casos Edge', () => {
-  
-  beforeEach(() => {
-    mockUseEditor.mockReturnValue({
-      selectedBlock: null,
-      setSelectedBlock: jest.fn(),
-      updateBlock: jest.fn(),
-      addBlock: jest.fn(),
-      deleteBlock: jest.fn()
-    });
-  });
 
-  test('deve lidar com template vazio', () => {
-    // ARRANGE
-    (QUIZ_STYLE_21_STEPS_TEMPLATE as any) = {};
-
-    // ACT & ASSERT
-    expect(() => {
-      render(
-        <QuizFlowController mode="quiz" initialStep={1}>
-          <div>Test</div>
-        </QuizFlowController>
-      );
-    }).not.toThrow();
-  });
-
-  test('deve lidar com etapa sem opções', () => {
-    // ARRANGE
-    (QUIZ_STYLE_21_STEPS_TEMPLATE as any) = {
-      'step-2': [{ type: 'options-grid', content: {} }]
-    };
-
-    let quizFlowRef: any = null;
-    
-    const TestComponent = () => {
-      const quizFlow = useQuizFlow();
-      quizFlowRef = quizFlow;
-      return null;
-    };
-
-    render(
-      <QuizFlowController mode="quiz" initialStep={1}>
-        <TestComponent />
-      </QuizFlowController>
-    );
-
-    // ACT & ASSERT
-    expect(() => {
-      act(() => {
-        quizFlowRef.setAnswer('step-2', ['option-1']);
-      });
-    }).not.toThrow();
-
-    const scores = quizFlowRef.calculateScores();
-    expect(scores).toEqual({});
-  });
-
-  test('deve lidar com hook useQuizFlow fora do provider', () => {
-    // ARRANGE & ACT & ASSERT
-    expect(() => {
-      renderHook(() => useQuizFlow());
-    }).toThrow('useQuizFlow must be used within QuizFlowController');
-  });
-
-  test('deve lidar com mudanças rápidas de modo', () => {
-    // ARRANGE
-    let quizFlowRef: any = null;
-    
-    const TestComponent = () => {
-      const quizFlow = useQuizFlow();
-      quizFlowRef = quizFlow;
-      return <div data-testid="mode">{quizFlow.mode}</div>;
-    };
-
-    const { getByTestId } = render(
-      <QuizFlowController mode="quiz" initialStep={1}>
-        <TestComponent />
-      </QuizFlowController>
-    );
-
-    // ACT - Mudanças rápidas de modo
-    act(() => {
-      quizFlowRef.setMode('editor');
-      quizFlowRef.setMode('quiz');
-      quizFlowRef.setMode('editor');
-      quizFlowRef.setMode('quiz');
+    beforeEach(() => {
+        mockUseEditor.mockReturnValue({
+            selectedBlock: null,
+            setSelectedBlock: jest.fn(),
+            updateBlock: jest.fn(),
+            addBlock: jest.fn(),
+            deleteBlock: jest.fn()
+        });
     });
 
-    // ASSERT
-    expect(getByTestId('mode')).toHaveTextContent('quiz');
-  });
+    test('deve lidar com template vazio', () => {
+        // ARRANGE
+        (QUIZ_STYLE_21_STEPS_TEMPLATE as any) = {};
+
+        // ACT & ASSERT
+        expect(() => {
+            render(
+                <QuizFlowController mode="quiz" initialStep={1}>
+                    <div>Test</div>
+                </QuizFlowController>
+            );
+        }).not.toThrow();
+    });
+
+    test('deve lidar com etapa sem opções', () => {
+        // ARRANGE
+        (QUIZ_STYLE_21_STEPS_TEMPLATE as any) = {
+            'step-2': [{ type: 'options-grid', content: {} }]
+        };
+
+        let quizFlowRef: any = null;
+
+        const TestComponent = () => {
+            const quizFlow = useQuizFlow();
+            quizFlowRef = quizFlow;
+            return null;
+        };
+
+        render(
+            <QuizFlowController mode="quiz" initialStep={1}>
+                <TestComponent />
+            </QuizFlowController>
+        );
+
+        // ACT & ASSERT
+        expect(() => {
+            act(() => {
+                quizFlowRef.setAnswer('step-2', ['option-1']);
+            });
+        }).not.toThrow();
+
+        const scores = quizFlowRef.calculateScores();
+        expect(scores).toEqual({});
+    });
+
+    test('deve lidar com hook useQuizFlow fora do provider', () => {
+        // ARRANGE & ACT & ASSERT
+        expect(() => {
+            renderHook(() => useQuizFlow());
+        }).toThrow('useQuizFlow must be used within QuizFlowController');
+    });
+
+    test('deve lidar com mudanças rápidas de modo', () => {
+        // ARRANGE
+        let quizFlowRef: any = null;
+
+        const TestComponent = () => {
+            const quizFlow = useQuizFlow();
+            quizFlowRef = quizFlow;
+            return <div data-testid="mode">{quizFlow.mode}</div>;
+        };
+
+        const { getByTestId } = render(
+            <QuizFlowController mode="quiz" initialStep={1}>
+                <TestComponent />
+            </QuizFlowController>
+        );
+
+        // ACT - Mudanças rápidas de modo
+        act(() => {
+            quizFlowRef.setMode('editor');
+            quizFlowRef.setMode('quiz');
+            quizFlowRef.setMode('editor');
+            quizFlowRef.setMode('quiz');
+        });
+
+        // ASSERT
+        expect(getByTestId('mode')).toHaveTextContent('quiz');
+    });
 });
