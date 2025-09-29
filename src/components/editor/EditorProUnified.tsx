@@ -27,6 +27,7 @@ import StepSidebar from './sidebars/StepSidebar';
 import ComponentsSidebar from './sidebars/ComponentsSidebar';
 // import RegistryPropertiesPanel from '@/components/universal/RegistryPropertiesPanel'; // ❌ DESABILITADO - API Panel fixo
 import DynamicPropertiesPanelImproved from '../../core/editor/DynamicPropertiesPanelImproved'; // ✅ NOVO - Improved Properties Panel
+import QuizPropertiesPanel from '@/components/editor/quiz/QuizPropertiesPanel';
 
 // AI Features (lazy loaded)
 import OptimizedAIFeatures from '@/components/ai/OptimizedAIFeatures';
@@ -34,6 +35,7 @@ import OptimizedAIFeatures from '@/components/ai/OptimizedAIFeatures';
 // System Status (production ready)
 import SystemStatus from '@/components/system/SystemStatus';
 import { type FunnelTemplate } from '@/services/FunnelAIAgent';
+import { useQuizEditor } from '@/domain/quiz/useQuizEditor';
 
 interface EditorProUnifiedProps {
   funnelId?: string;
@@ -149,9 +151,31 @@ export const EditorProUnified: React.FC<EditorProUnifiedProps> = ({
   const { addNotification } = useNotification();
   const { columnWidths, handleResize } = useResizableColumns();
 
+  // 🚀 Quiz Editing (Fase A integração inicial)
+  const quiz = useQuizEditor();
+  const quizSteps = quiz.state.steps; // array canônico com overrides aplicados
+
   // UI State (simplificado)
   const [isPreviewMode, setIsPreviewMode] = useState(false);
   const [selectedBlockId, setSelectedBlockId] = useState<string | null>(null);
+
+  // Sincronizar step selecionado do builder com quiz editor (one-way por enquanto)
+  useEffect(() => {
+    if (!quiz.selectedStepId && quizSteps.length > 0) {
+      quiz.selectStep(quizSteps[0].id);
+    }
+  }, [quiz.selectedStepId, quizSteps]);
+
+  // Quando usuário muda step no builder, se existir step equivalente no quiz, sincronizar
+  useEffect(() => {
+    const stepIdx = state.currentStep - 1;
+    if (quizSteps[stepIdx] && quiz.selectedStepId !== quizSteps[stepIdx].id) {
+      quiz.selectStep(quizSteps[stepIdx].id);
+    }
+  }, [state.currentStep, quizSteps, quiz.selectedStepId, quiz]);
+
+  // Memo de step atual do quiz
+  const currentQuizStep = useMemo(() => quizSteps.find(s => s.id === quiz.selectedStepId) || null, [quizSteps, quiz.selectedStepId]);
 
   // Inicialização Builder System
   useEffect(() => {
@@ -404,9 +428,14 @@ export const EditorProUnified: React.FC<EditorProUnifiedProps> = ({
             onUndo={actions.undo}
             onRedo={actions.redo}
             onSave={async () => {
-              addNotification('Funil salvo com sucesso - Builder System');
+              // Salvar funil + overrides do quiz
+              quiz.save();
+              addNotification('Salvo (Funnel + Quiz overrides)');
             }}
-            onPublish={() => addNotification('Publicado com Builder System')}
+            onPublish={() => {
+              quiz.publish();
+              addNotification('Publicado (Quiz overrides)');
+            }}
             onOpenSettings={() => console.log('Configurações Builder System')}
           />
 
@@ -433,14 +462,29 @@ export const EditorProUnified: React.FC<EditorProUnifiedProps> = ({
 
         {/* Properties Panel */}
         <div
-          className="bg-background border-l flex-shrink-0"
+          className="bg-background border-l flex-shrink-0 flex flex-col"
           style={{ width: `${columnWidths.properties}px` }}
         >
-          {selectedBlock ? (
-            <DynamicPropertiesPanelImproved />
-          ) : (
-            <DynamicPropertiesPanelImproved />
-          )}
+          {/* Header indicativo de estado Quiz */}
+          <div className="px-3 py-2 border-b text-xs flex items-center justify-between gap-2 bg-muted/30">
+            <span className="font-medium">Quiz Step</span>
+            <div className="flex items-center gap-2">
+              {quiz.dirty && <span className="text-amber-600">*dirty</span>}
+              <span className="text-muted-foreground">{quiz.state.hash}</span>
+            </div>
+          </div>
+          {/* Placeholder painel dinâmica Fase A futura: por enquanto mantemos o panel existente */}
+          <div className="flex-1 overflow-auto">
+            <QuizPropertiesPanel />
+            {/* Mantém painel de propriedades existente abaixo temporariamente */}
+            <div className="border-t">
+              {selectedBlock ? (
+                <DynamicPropertiesPanelImproved />
+              ) : (
+                <DynamicPropertiesPanelImproved />
+              )}
+            </div>
+          </div>
         </div>
       </div>
 
