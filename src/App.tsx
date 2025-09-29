@@ -166,13 +166,12 @@ function App() {
                             </QuizErrorBoundary>
                           </Route>
 
-                          {/* 🎯 EDITOR DO QUIZ ESTILO - ROTA ESPECÍFICA */}
+                          {/* 🎯 EDITOR DO QUIZ ESTILO - INTEGRADO NO EDITOR UNIFICADO */}
                           <Route path="/editor/quiz-estilo">
                             <EditorErrorBoundary>
                               <div data-testid="quiz-estilo-editor-page">
-                                <QuizEstiloPessoalPage 
-                                  funnelId="quiz-estilo-21-steps" 
-                                  editMode={true}
+                                <ModernUnifiedEditor 
+                                  templateId="quiz-estilo-21-steps"
                                 />
                               </div>
                             </EditorErrorBoundary>
