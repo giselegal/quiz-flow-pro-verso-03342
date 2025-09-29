@@ -152,7 +152,7 @@ function renderTabContent(
     builderState: any,
     currentStepBlocks: Block[],
     selectedBlock: Block | null,
-    updateStep: (stepId: string, updates: Partial<FunnelStep>) => void,
+    updateStep: (stepId: string, updates: any) => void,
     updateGlobalSettings: (updates: any) => void,
     selectStep: (stepId: string) => void,
     goToStep: (index: number) => void,
