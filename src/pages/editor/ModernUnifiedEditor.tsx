@@ -44,7 +44,8 @@ const TemplateLoadingSkeleton = React.lazy(() =>
 import { FunnelMasterProvider } from '@/providers/FunnelMasterProvider';
 import { useNotification } from '@/components/ui/Notification';
 import UnifiedCRUDProvider, { useUnifiedCRUD } from '@/context/UnifiedCRUDProvider';
-import EditorContextWrapper from '@/components/editor/EditorContextWrapper';
+import SafeEditorWrapper from '@/components/editor/SafeEditorWrapper';
+import SafeUnifiedEditorCore from '@/components/editor/SafeUnifiedEditorCore';
 
 // 🎯 CRUD Services Integration
 import { useUnifiedEditor } from '@/hooks/core/useUnifiedEditor';
@@ -1103,13 +1104,18 @@ const ModernUnifiedEditor: React.FC<ModernUnifiedEditorProps> = (props) => {
     }, [props.funnelId, props.templateId]);
 
     return (
-        <EditorContextWrapper
+        <SafeEditorWrapper
             funnelId={extractedInfo.funnelId || undefined}
             templateId={extractedInfo.templateId || undefined}
             enableDebug={false}
         >
-            <UnifiedEditorCore {...props} />
-        </EditorContextWrapper>
+            <SafeUnifiedEditorCore 
+                funnelId={extractedInfo.funnelId}
+                templateId={extractedInfo.templateId}
+                mode={props.mode}
+                className={props.className}
+            />
+        </SafeEditorWrapper>
     );
 };
 
