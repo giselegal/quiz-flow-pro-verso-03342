@@ -47,7 +47,6 @@ import type { QuizStep } from '@/data/quizSteps';
 // FASE 4 - Analytics e Performance
 // Migrado para tracker unificado
 import { unifiedEventTracker } from '@/analytics/UnifiedEventTracker';
-import { reportGenerator } from '@/services/ReportGenerator';
 import { performanceOptimizer } from '@/services/PerformanceOptimizer';
 import QuizAnalyticsDashboard from '@/components/analytics/QuizAnalyticsDashboard';
 
@@ -190,11 +189,29 @@ const QuizEditorMode: React.FC<QuizEditorModeProps> = ({
   // 💾 Auto-save Unificado (Substitui scheduleAutoSave anterior)
   // ===============================
   const persistTemplate = useCallback(async () => {
+    // Construir scoringMatrix a partir das questões (se houver stylePoints)
+    const scoringMatrix: Record<string, Record<string, Record<string, number>>> = {};
+    state.questions.forEach(q => {
+      if (!q.answers) return;
+      q.answers.forEach((ans: any) => {
+        const stylePoints = ans.stylePoints || {};
+        if (Object.keys(stylePoints).length === 0) return;
+        scoringMatrix[q.id] = scoringMatrix[q.id] || {};
+        scoringMatrix[q.id][ans.id] = {};
+        for (const styleId of Object.keys(stylePoints)) {
+          const val = stylePoints[styleId];
+          if (typeof val === 'number' && !isNaN(val)) {
+            scoringMatrix[q.id][ans.id][styleId] = val;
+          }
+        }
+      });
+    });
     const payload: QuizTemplateData = {
       templateId: funnelId || 'quiz-estilo',
       version: QUIZ_EDITOR_VERSION,
       questions: state.questions,
       styles: state.styles,
+      scoringMatrix: Object.keys(scoringMatrix).length ? scoringMatrix : undefined,
       updatedAt: new Date().toISOString()
     };
     const result = await QuizEditorPersistenceService.save(payload);
@@ -263,7 +280,7 @@ const QuizEditorMode: React.FC<QuizEditorModeProps> = ({
       }
 
       // 2) (Opcional) gerar relatório – mantido para futuras métricas; ignoramos retorno agora
-      try { await reportGenerator.generateReport({}); } catch { /* noop */ }
+      // (Relatórios desativados temporariamente nesta fase)
 
       // 3) Fallback: construir do modelo legacy -> normalizado
       const { questions, styles } = buildQuizEditableModel();
@@ -271,21 +288,36 @@ const QuizEditorMode: React.FC<QuizEditorModeProps> = ({
       setState(prev => ({ ...prev, questions, styles, syncStatus: 'synced' }));
       // Converter passos do quiz em questões editáveis
       const realQuestions = Object.entries(QUIZ_STEPS)
-        .filter(([key, step]) => step.type === 'question')
-        .map(([key, step], index) => ({
-          id: key,
-          title: step.questionText || `Questão ${index + 1}`,
-          subtitle: step.title || '',
-          type: 'multiple-choice',
-          stepNumber: parseInt(key.replace('step-', '')),
-          requiredSelections: (step as any).requiredSelections || null,
-          answers: step.options?.map((option, optIndex) => ({
-            id: `${key}-${option.id}`,
-            text: option.text,
-            description: '',
-            stylePoints: {} // Será preenchido com lógica real
-          })) || []
-        }));
+        .filter(([key, step]) => ['question', 'strategic-question', 'offer', 'result', 'transition', 'transition-result', 'intro'].includes(step.type))
+        .map(([key, step], index) => {
+          const base: any = {
+            id: key,
+            title: (step as any).questionText || (step as any).title || `Step ${index + 1}`,
+            subtitle: (step as any).title && (step as any).questionText ? (step as any).title : '',
+            rawType: step.type,
+            type: step.type === 'question' ? 'multiple-choice' : step.type,
+            stepNumber: parseInt(key.replace('step-', '')) || index + 1,
+            requiredSelections: (step as any).requiredSelections || null,
+            answers: (step as any).options?.map((option: any) => ({
+              id: `${key}-${option.id}`,
+              text: option.text,
+              image: option.image,
+              description: '',
+              stylePoints: {}
+            })) || []
+          };
+          if (step.type === 'offer' && (step as any).offerMap) {
+            base.variants = Object.entries((step as any).offerMap).map(([matchValue, v]: any) => ({
+              id: matchValue,
+              matchValue,
+              title: v.title,
+              description: v.description,
+              buttonText: v.buttonText,
+              testimonial: v.testimonial
+            }));
+          }
+          return base;
+        });
 
       // Converter estilos reais
       const realStyles = Object.values(styleConfigGisele).map(style => ({
@@ -333,14 +365,7 @@ const QuizEditorMode: React.FC<QuizEditorModeProps> = ({
   // FASE 4 - Inicializar Analytics
   useEffect(() => {
     initializeAnalytics();
-
-    // Atualizar métricas periodicamente
-    const metricsInterval = setInterval(updatePerformanceMetrics, 30000);
-
-    return () => {
-      clearInterval(metricsInterval);
-    };
-  }, [initializeAnalytics, updatePerformanceMetrics]);
+  }, [initializeAnalytics]);
 
   // ===============================
   // 🎮 HANDLERS DE INTERAÇÃO
@@ -381,6 +406,7 @@ const QuizEditorMode: React.FC<QuizEditorModeProps> = ({
       id: `q${state.questions.length + 1}`,
       title: `Nova questão ${state.questions.length + 1}`,
       subtitle: '',
+      rawType: 'question',
       type: 'multiple-choice',
       answers: []
     };
@@ -764,21 +790,73 @@ const QuizEditorMode: React.FC<QuizEditorModeProps> = ({
                         <Button
                           size="sm"
                           variant="outline"
-                          onClick={() => generateQuickReport()}
+                          disabled
                         >
                           <Download className="w-4 h-4 mr-2" />
-                          Relatório Performance
+                          Relatório (desativado)
                         </Button>
                         <Button
                           size="sm"
                           variant="outline"
-                          onClick={() => updatePerformanceMetrics()}
+                          disabled
                         >
                           <Activity className="w-4 h-4 mr-2" />
                           Atualizar Métricas
                         </Button>
                       </div>
                     </div>
+                  </CardContent>
+                </Card>
+                {/* Resumo Global de Pontuação */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-sm flex items-center gap-2">
+                      <Target className="w-4 h-4" /> Resumo de Pontuação (Sessão Atual)
+                    </CardTitle>
+                    <CardDescription>Pontuação agregada por estilo e por questão (não persistida até salvar).</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    {state.questions.length === 0 ? (
+                      <p className="text-sm text-muted-foreground">Nenhuma questão carregada.</p>
+                    ) : (
+                      <div className="space-y-4">
+                        <div className="overflow-auto">
+                          <table className="w-full text-xs border">
+                            <thead>
+                              <tr className="bg-muted/30">
+                                <th className="text-left p-2">Questão</th>
+                                {state.styles.map(s => (
+                                  <th key={s.id} className="text-left p-2">{s.name}</th>
+                                ))}
+                                <th className="text-left p-2">Total</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {state.questions.map(q => {
+                                const styleTotals: Record<string, number> = {};
+                                (q.answers || []).forEach((a: any) => {
+                                  Object.entries(a.stylePoints || {}).forEach(([sid, val]) => {
+                                    if (typeof val === 'number') {
+                                      styleTotals[sid] = (styleTotals[sid] || 0) + val;
+                                    }
+                                  });
+                                });
+                                const grand = Object.values(styleTotals).reduce((acc, v) => acc + v, 0);
+                                return (
+                                  <tr key={q.id} className="border-t">
+                                    <td className="p-2 font-medium whitespace-nowrap">{q.title?.slice(0, 40) || q.id}</td>
+                                    {state.styles.map(s => (
+                                      <td key={s.id} className="p-2">{styleTotals[s.id] || 0}</td>
+                                    ))}
+                                    <td className="p-2 font-semibold">{grand}</td>
+                                  </tr>
+                                );
+                              })}
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    )}
                   </CardContent>
                 </Card>
               </div>

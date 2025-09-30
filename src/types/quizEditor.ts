@@ -55,6 +55,8 @@ export interface QuizTemplateData {
   version: string;
   questions: QuizQuestionEditable[];
   styles: QuizStyleEditable[];
+  // Matriz de pontuação agregada: questionId -> answerId -> styleId -> weight
+  scoringMatrix?: Record<string, Record<string, Record<string, number>>>;
   updatedAt: string;
 }
 

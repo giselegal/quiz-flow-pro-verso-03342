@@ -13,8 +13,7 @@ import { Separator } from '@/components/ui/separator';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import {
     ChevronLeft, ChevronRight, Plus, Edit3, Check, AlertCircle,
-    Target, Brain, Heart, Crown, Palette, Users, Zap, Star,
-    Settings, Play, Eye
+    Target, Brain, Crown, Star, Play, Shuffle
 } from 'lucide-react';
 
 import { QuizQuestion } from '@/types/quiz';
@@ -30,10 +29,11 @@ interface QuizStepNavigationProps {
 
 interface StepInfo {
     index: number;
-    question: QuizQuestion;
+    question: QuizQuestion & { rawType?: string };
     isComplete: boolean;
     hasAnswers: boolean;
     hasScoring: boolean;
+    rawType: string;
 }
 
 const QuizStepNavigation: React.FC<QuizStepNavigationProps> = ({
@@ -45,22 +45,30 @@ const QuizStepNavigation: React.FC<QuizStepNavigationProps> = ({
     className = ''
 }) => {
     // Processar informações dos passos
-    const stepInfos: StepInfo[] = questions.map((question, index) => ({
+    const stepInfos: StepInfo[] = questions.map((question: any, index) => ({
         index,
         question,
         isComplete: Boolean(
             question.title?.trim() &&
             question.answers?.length >= 2 &&
-            question.answers.every(answer => answer.text?.trim() && answer.stylePoints)
+            question.answers.every((answer: any) => answer.text?.trim() && answer.stylePoints)
         ),
         hasAnswers: question.answers?.length >= 2,
-        hasScoring: question.answers?.every(answer => answer.stylePoints) || false
+        hasScoring: question.answers?.every((answer: any) => answer.stylePoints) || false,
+        rawType: question.rawType || question.type || 'question'
     }));
 
     const completedSteps = stepInfos.filter(step => step.isComplete).length;
     const progress = questions.length > 0 ? (completedSteps / questions.length) * 100 : 0;
 
     const getStepIcon = useCallback((step: StepInfo) => {
+        // Ícones diferenciados por tipo/base
+        const t = step.rawType;
+        if (t === 'strategic-question') return Brain;
+        if (t === 'offer') return Crown;
+        if (t === 'result' || t === 'transition-result') return Star;
+        if (t === 'intro') return Play;
+        if (t === 'transition') return Shuffle;
         if (step.isComplete) return Check;
         if (step.hasAnswers && !step.hasScoring) return AlertCircle;
         return Edit3;
@@ -143,10 +151,13 @@ const QuizStepNavigation: React.FC<QuizStepNavigationProps> = ({
 
                                             {/* Conteúdo da questão */}
                                             <div className="flex-1 text-left">
-                                                <div className="flex items-center gap-2">
+                                                <div className="flex items-center gap-2 flex-wrap">
                                                     <span className="font-medium">
                                                         Questão {index + 1}
                                                     </span>
+                                                    <Badge variant="outline" className="text-xs capitalize">
+                                                        {stepInfo.rawType.replace('-', ' ')}
+                                                    </Badge>
                                                     {stepInfo.isComplete && (
                                                         <Badge variant="secondary" className="text-xs">
                                                             Completa
@@ -170,7 +181,7 @@ const QuizStepNavigation: React.FC<QuizStepNavigationProps> = ({
                                                         variant={stepInfo.hasAnswers ? "default" : "outline"}
                                                         className="text-xs"
                                                     >
-                                                        {stepInfo.question.answers?.length || 0} respostas
+                                                        {(stepInfo.question as any).answers?.length || 0} respostas
                                                     </Badge>
 
                                                     <Badge

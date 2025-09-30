@@ -28,7 +28,6 @@ import StepSidebar from './sidebars/StepSidebar';
 import ComponentsSidebar from './sidebars/ComponentsSidebar';
 // import RegistryPropertiesPanel from '@/components/universal/RegistryPropertiesPanel'; // ❌ DESABILITADO - API Panel fixo
 import DynamicPropertiesPanelImproved from '../../core/editor/DynamicPropertiesPanelImproved'; // ✅ NOVO - Improved Properties Panel
-import QuizPropertiesPanel from '@/components/editor/quiz/QuizPropertiesPanel';
 import GlobalQuizConfigPanel from '@/components/editor/quiz/GlobalQuizConfigPanel';
 import MasterJSONPreviewPanel from '@/components/editor/quiz/MasterJSONPreviewPanel';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
@@ -502,7 +501,7 @@ export const EditorProUnified: React.FC<EditorProUnifiedProps> = ({
                 </TabsList>
               </div>
               <TabsContent value="step" className="mt-0 focus:outline-none">
-                <QuizPropertiesPanel />
+                {/* Painel de propriedades legado removido em favor do painel unificado Fase 3 */}
                 <div className="border-t">
                   <DynamicPropertiesPanelImproved />
                 </div>

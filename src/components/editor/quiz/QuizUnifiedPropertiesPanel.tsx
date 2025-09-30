@@ -5,7 +5,8 @@ import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
-import { Plus, Trash } from 'lucide-react';
+import { Plus, Trash, Edit3 } from 'lucide-react';
+import { STRATEGIC_ANSWER_TO_OFFER_KEY } from '@/data/quizSteps';
 
 interface QuizUnifiedPropertiesPanelProps {
     question: any;
@@ -60,6 +61,24 @@ const QuizUnifiedPropertiesPanel: React.FC<QuizUnifiedPropertiesPanelProps> = ({
         }
     };
 
+    // ------- Variants (oferta) CRUD -------
+    const ensureVariants = () => question.variants || [];
+    const addVariant = () => {
+        const variants = ensureVariants();
+        const nextId = `variant-${variants.length + 1}`;
+        const updated = [...variants, { id: nextId, matchValue: nextId, title: 'Nova Variante', description: '', buttonText: 'Comprar', testimonial: '' }];
+        onQuestionChange({ ...question, variants: updated });
+    };
+    const updateVariantField = (index: number, field: string, value: any) => {
+        const variants = ensureVariants().map((v: any, i: number) => i === index ? { ...v, [field]: value } : v);
+        onQuestionChange({ ...question, variants });
+    };
+    const removeVariant = (index: number) => {
+        const variants = ensureVariants();
+        variants.splice(index, 1);
+        onQuestionChange({ ...question, variants: [...variants] });
+    };
+
     return (
         <div className="space-y-6">
             <Card>
@@ -110,7 +129,14 @@ const QuizUnifiedPropertiesPanel: React.FC<QuizUnifiedPropertiesPanelProps> = ({
                                 </div>
                                 <div>
                                     <Label>Imagem (URL)</Label>
-                                    <Input value={opt.image || ''} onChange={e => updateOption(idx, 'image', e.target.value)} placeholder="https://..." />
+                                    <div className="flex items-start gap-2">
+                                        <Input className="flex-1" value={opt.image || ''} onChange={e => updateOption(idx, 'image', e.target.value)} placeholder="https://..." />
+                                        {opt.image && /^https?:\/\//.test(opt.image) && (
+                                            <div className="w-14 h-14 border rounded overflow-hidden flex items-center justify-center bg-muted">
+                                                <img src={opt.image} alt="preview" className="object-cover w-full h-full" onError={(ev) => { (ev.currentTarget as any).style.display = 'none'; }} />
+                                            </div>
+                                        )}
+                                    </div>
                                 </div>
                                 <div>
                                     <Label>Descrição</Label>
@@ -178,6 +204,94 @@ const QuizUnifiedPropertiesPanel: React.FC<QuizUnifiedPropertiesPanelProps> = ({
                     </div>
                 </CardContent>
             </Card>
+
+            {question.rawType === 'offer' && (
+                <Card>
+                    <CardHeader className="flex flex-row items-center justify-between">
+                        <CardTitle className="text-lg flex items-center gap-2">
+                            Variantes da Oferta
+                            <Badge variant="outline">{(question.variants?.length) || 0}</Badge>
+                        </CardTitle>
+                        <Button size="sm" variant="outline" onClick={addVariant}>
+                            <Plus className="w-4 h-4 mr-1" /> Nova Variante
+                        </Button>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                        {ensureVariants().length === 0 && (
+                            <p className="text-sm text-muted-foreground">Nenhuma variante definida. Use "Nova Variante" para criar.</p>
+                        )}
+                        {ensureVariants().map((v: any, idx: number) => (
+                            <div key={v.id || idx} className="border rounded-lg p-4 space-y-3">
+                                <div className="grid md:grid-cols-3 gap-4">
+                                    <div>
+                                        <Label>Match Value</Label>
+                                        <Input value={v.matchValue} onChange={e => updateVariantField(idx, 'matchValue', e.target.value)} placeholder="ex: ALTA_AUTONOMIA" />
+                                    </div>
+                                    <div>
+                                        <Label>Título</Label>
+                                        <Input value={v.title} onChange={e => updateVariantField(idx, 'title', e.target.value)} />
+                                    </div>
+                                    <div>
+                                        <Label>CTA (Button)</Label>
+                                        <Input value={v.buttonText} onChange={e => updateVariantField(idx, 'buttonText', e.target.value)} />
+                                    </div>
+                                </div>
+                                <div className="grid md:grid-cols-2 gap-4">
+                                    <div>
+                                        <Label>Descrição</Label>
+                                        <Input value={v.description} onChange={e => updateVariantField(idx, 'description', e.target.value)} placeholder="Resumo da oferta" />
+                                    </div>
+                                    <div>
+                                        <Label>Testimonial</Label>
+                                        <Input value={v.testimonial} onChange={e => updateVariantField(idx, 'testimonial', e.target.value)} placeholder="Depoimento curto" />
+                                    </div>
+                                </div>
+                                <div className="flex justify-end">
+                                    <Button size="sm" variant="ghost" onClick={() => removeVariant(idx)}>
+                                        <Trash className="w-4 h-4 mr-1" /> Remover
+                                    </Button>
+                                </div>
+                            </div>
+                        ))}
+                    </CardContent>
+                </Card>
+            )}
+
+            {question.rawType === 'strategic-question' && (
+                <Card>
+                    <CardHeader>
+                        <CardTitle className="text-lg">Mapeamento Estratégico → Variantes de Oferta</CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                        <p className="text-sm text-muted-foreground">
+                            Este painel mostra como cada resposta estratégica poderá direcionar para variantes de oferta (matchValue). Edição completa será implementada em fase posterior.
+                        </p>
+                        <div className="overflow-auto">
+                            <table className="w-full text-xs border">
+                                <thead>
+                                    <tr className="bg-muted/30">
+                                        <th className="text-left p-2">Resposta Estratégica</th>
+                                        <th className="text-left p-2">Match Value (Previsto)</th>
+                                        <th className="text-left p-2">Observação</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {(question.answers || []).map((a: any) => {
+                                        const mv = a[STRATEGIC_ANSWER_TO_OFFER_KEY] || a.matchValue || a.id;
+                                        return (
+                                            <tr key={a.id} className="border-t">
+                                                <td className="p-2 font-medium whitespace-nowrap">{a.text}</td>
+                                                <td className="p-2">{mv}</td>
+                                                <td className="p-2 text-muted-foreground">Ligação automática (read-only)</td>
+                                            </tr>
+                                        );
+                                    })}
+                                </tbody>
+                            </table>
+                        </div>
+                    </CardContent>
+                </Card>
+            )}
         </div>
     );
 };
