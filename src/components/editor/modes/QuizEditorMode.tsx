@@ -52,6 +52,7 @@ import { performanceOptimizer } from '@/services/PerformanceOptimizer';
 import QuizGlobalScoringEditor from '../quiz/QuizGlobalScoringEditor';
 import QuizAnalyticsDashboard from '@/components/analytics/QuizAnalyticsDashboard';
 import { templatePublishingService } from '@/services/TemplatePublishingService';
+import { canonicalizeQuizEstiloId } from '@/domain/quiz/quiz-estilo-ids';
 import { QuizToEditorAdapter } from '@/adapters/QuizToEditorAdapter';
 import { useNotification } from '@/components/ui/Notification';
 
@@ -214,8 +215,9 @@ const QuizEditorMode: React.FC<QuizEditorModeProps> = ({
         }
       });
     });
+    const canonicalTemplateId = canonicalizeQuizEstiloId(funnelId || 'quiz-estilo') || (funnelId || 'quiz-estilo');
     const payload: QuizTemplateData = {
-      templateId: funnelId || 'quiz-estilo',
+      templateId: canonicalTemplateId,
       version: QUIZ_EDITOR_VERSION,
       questions: state.questions,
       styles: state.styles,
@@ -600,8 +602,9 @@ const QuizEditorMode: React.FC<QuizEditorModeProps> = ({
                       };
                     });
 
+                    const publishId = canonicalizeQuizEstiloId(funnelId || 'quiz-estilo') || (funnelId || 'quiz-estilo');
                     const canonicalState: any = {
-                      id: funnelId || 'quiz-estilo',
+                      id: publishId,
                       name: 'Quiz Estilo Pessoal',
                       description: 'Template publicado via editor',
                       questions: state.questions,

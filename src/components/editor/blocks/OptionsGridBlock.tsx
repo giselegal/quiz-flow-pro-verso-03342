@@ -12,7 +12,6 @@ import { usePureBuilder } from '../PureBuilderProvider';
 import { unifiedQuizStorage } from '@/services/core/UnifiedQuizStorage';
 import { StorageService } from '@/services/core/StorageService';
 import { safePlaceholder } from '@/utils/placeholder';
-import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
 import HybridTemplateService from '@/services/HybridTemplateService'; // ✅ USAR SISTEMA HÍBRIDO
 
 interface Option {
@@ -36,45 +35,10 @@ interface OptionsGridBlockProps extends BlockComponentProps {
   sessionData?: Record<string, any>;
   onStepComplete?: (data: any) => void;
   autoAdvanceOnComplete?: boolean;
-
-  properties: {
-    question?: string;
-    questionId?: string;
-    options?: Option[];
-    columns?: number | string;
-    selectedOption?: string;
-    selectedOptions?: string[];
-    // 🎯 CONTROLES DE IMAGEM
-    showImages?: boolean;
-    imageSize?: 'small' | 'medium' | 'large' | 'custom' | string; // Permite strings também
-    imageWidth?: number;
-    imageHeight?: number;
-    imagePosition?: 'top' | 'left' | 'right' | 'bottom';
-    imageLayout?: 'vertical' | 'horizontal';
-    // 🎯 CONTROLES DE LAYOUT
-    multipleSelection?: boolean;
-    maxSelections?: number;
-    minSelections?: number;
-    requiredSelections?: number;
-    gridGap?: number;
-    responsiveColumns?: boolean;
-    // 🎯 CONTROLES DE SELEÇÃO
-    selectionStyle?: string;
-    selectedColor?: string;
-    hoverColor?: string;
-    allowDeselection?: boolean;
-    showSelectionCount?: boolean;
-    // 🎯 CONTROLES DE VALIDAÇÃO
-    validationMessage?: string;
-    progressMessage?: string;
-    enableButtonOnlyWhenValid?: boolean;
-    showValidationFeedback?: boolean;
-    // 🎯 CONTROLES DE COMPORTAMENTO
-    autoAdvanceOnComplete?: boolean;
-    autoAdvanceDelay?: number;
-    instantActivation?: boolean;
-    trackSelectionOrder?: boolean;
-  };
+  // 🎯 CONTROLES DE COMPORTAMENTO
+  autoAdvanceDelay?: number;
+  instantActivation?: boolean;
+  trackSelectionOrder?: boolean;
 }
 
 // NOTE: getMarginClass function available if needed for margin calculations
@@ -251,7 +215,8 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
       Number.isFinite(stepNum) && stepNum >= 1
     ) {
       const key = `step-${stepNum}`;
-      const canonicalStep = (QUIZ_STYLE_21_STEPS_TEMPLATE as any)[key] || [];
+      // LEGACY REMOVED: previously fetched from QUIZ_STYLE_21_STEPS_TEMPLATE. Using empty fallback.
+      const canonicalStep: any[] = [];
       const canonicalGrid = canonicalStep.find((b: any) => (b?.type || '').toLowerCase() === 'options-grid');
       const canonicalOptions = canonicalGrid?.content?.options;
       if (Array.isArray(canonicalOptions) && canonicalOptions.length > 0) {
@@ -276,7 +241,8 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
 
       if (runtimeStep != null && Number.isFinite(Number(runtimeStep)) && Number(runtimeStep) >= 1) {
         const key = `step-${runtimeStep}`;
-        const canonicalStep = (QUIZ_STYLE_21_STEPS_TEMPLATE as any)[key] || [];
+        // LEGACY REMOVED: previously fetched from QUIZ_STYLE_21_STEPS_TEMPLATE. Using empty fallback.
+        const canonicalStep: any[] = [];
         const canonicalGrid = canonicalStep.find((b: any) => (b?.type || '').toLowerCase() === 'options-grid');
         const canonicalOptions = canonicalGrid?.content?.options;
         if (Array.isArray(canonicalOptions) && canonicalOptions.length > 0) {

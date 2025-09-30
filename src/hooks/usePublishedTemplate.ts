@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { getPublishedTemplate, clearPublishedTemplateCache, PublishedTemplateData } from '@/services/PublishedTemplateRuntimeService';
+import { canonicalizeQuizEstiloId, isQuizEstiloId } from '@/domain/quiz/quiz-estilo-ids';
 
 interface UsePublishedTemplateOptions {
     templateId: string;
@@ -14,7 +15,9 @@ interface UsePublishedTemplateState {
 }
 
 export function usePublishedTemplate(options: UsePublishedTemplateOptions): UsePublishedTemplateState {
-    const { templateId, refreshFlag } = options;
+    const { templateId: rawTemplateId, refreshFlag } = options;
+    // Canonicaliza se for quiz-estilo
+    const templateId = isQuizEstiloId(rawTemplateId) ? (canonicalizeQuizEstiloId(rawTemplateId) || rawTemplateId) : rawTemplateId;
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | undefined>();
     const [data, setData] = useState<PublishedTemplateData | null>(null);
@@ -36,7 +39,7 @@ export function usePublishedTemplate(options: UsePublishedTemplateOptions): UseP
     useEffect(() => {
         load(Boolean(refreshFlag));
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [templateId, refreshFlag]);
+    }, [templateId, refreshFlag, rawTemplateId]);
 
     return {
         loading,

@@ -3,8 +3,10 @@ import { Helmet } from 'react-helmet-async';
 import '@/styles/globals.css';
 import { useSearchParams } from 'react-router-dom';
 import { usePublishedTemplate } from '@/hooks/usePublishedTemplate';
+import { loadQuizEstiloModel } from '@/domain/quiz/quizEstiloModelAdapter';
+import { QUIZ_ESTILO_TEMPLATE_ID, canonicalizeQuizEstiloId, isQuizEstiloId } from '@/domain/quiz/quiz-estilo-ids';
 import { QUIZ_STEPS } from '@/data/quizSteps';
-import { useMemo } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 
 /**
  * 🎯 QUIZ ESTILO PESSOAL - GISELE GALVÃO
@@ -29,9 +31,20 @@ interface QuizEstiloPessoalPageProps {
 export default function QuizEstiloPessoalPage({ funnelId }: QuizEstiloPessoalPageProps) {
     const [searchParams] = useSearchParams();
     const refresh = searchParams.get('refresh') === '1';
-    const templateId = 'quiz-estilo';
-    // Hook carrega template publicado; refresh=1 força recarga ignorando cache
+    // Aceitar aliases, mas sempre converter para ID canônico antes de buscar
+    const baseId = 'quiz-estilo';
+    const templateId = canonicalizeQuizEstiloId(baseId) || QUIZ_ESTILO_TEMPLATE_ID;
+    if (import.meta.env.DEV && baseId !== templateId) {
+        console.log('[quiz-estilo] Alias', baseId, '→ canônico', templateId);
+    }
     const { data, loading, error } = usePublishedTemplate({ templateId, refreshFlag: refresh });
+    // Carrega modelo unificado (published-first + fallback) paralelamente
+    const [model, setModel] = useState<any>(null);
+    useEffect(() => {
+        let cancelled = false;
+        loadQuizEstiloModel({ force: refresh }).then(m => { if (!cancelled) setModel(m); });
+        return () => { cancelled = true; };
+    }, [refresh]);
 
     const effectiveQuestions = useMemo(() => {
         if (data && data.questions?.length) return data.questions;
@@ -65,6 +78,13 @@ export default function QuizEstiloPessoalPage({ funnelId }: QuizEstiloPessoalPag
                 {error && (
                     <div className="p-6 text-center text-sm text-red-500">
                         Erro ao carregar versão publicada. Usando fallback local.
+                    </div>
+                )}
+                {model && (
+                    <div className="px-4 py-2 text-xs text-muted-foreground flex gap-4 justify-center">
+                        <span>Fonte: {model.source}</span>
+                        <span>Questões: {model.questions.length}</span>
+                        <span>StepBlocks: {Object.keys(model.stepBlocks || {}).length}</span>
                     </div>
                 )}
                 <QuizApp funnelId={funnelId} />
