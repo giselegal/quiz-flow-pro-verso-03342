@@ -24,8 +24,8 @@ class UnifiedTemplateService {
     private readonly CRITICAL_TEMPLATES = [
         'step-1', 'step-2', // Só templates que sabemos que existem
         // 'step-12', 'step-20', 'step-21', // Comentado temporariamente
-    'quiz21StepsComplete', // Template principal (legacy alias)
-    'quiz-estilo-21-steps', // Canônico
+        'quiz21StepsComplete', // Template principal (legacy alias)
+        'quiz-estilo-21-steps', // Canônico
         // 'quiz-style-express' // Comentado até ser configurado corretamente
     ];
 
