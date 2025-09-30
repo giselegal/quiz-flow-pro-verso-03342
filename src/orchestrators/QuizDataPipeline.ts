@@ -7,7 +7,9 @@
 
 import { Block } from '@/types/editor';
 import { unifiedQuizStorage } from '@/services/core/UnifiedQuizStorage';
-import HybridTemplateService from '@/services/HybridTemplateService';
+import HybridTemplateService from '@/services/HybridTemplateService'; // ainda usado para stepConfig
+import { quizEstiloLoaderGateway, mapStepsToStepBlocks } from '@/domain/quiz/gateway';
+import type { CanonicalStep } from '@/domain/quiz/gateway/QuizEstiloLoaderGateway';
 
 export interface DataPipelineStage {
   name: string;
@@ -45,7 +47,7 @@ class QuizDataPipeline {
    */
   async initialize(funnelId?: string, userId?: string): Promise<void> {
     const sessionId = this.generateSessionId();
-    
+
     this.context = {
       sessionId,
       funnelId,
@@ -70,22 +72,19 @@ class QuizDataPipeline {
    * 📄 STAGE 1: CARREGAR TEMPLATE
    * Templates → Configuração de etapas
    */
-  async loadTemplate(templateId: string = 'quiz21StepsComplete'): Promise<any> {
+  async loadTemplate(templateId: string = 'quiz-estilo-21-steps'): Promise<any> {
     await this.initializeStage('template-loading', 'processing');
 
     try {
-      const template = await HybridTemplateService.getTemplate(templateId);
-      
-      if (!template) {
-        throw new Error(`Template ${templateId} não encontrado`);
-      }
+      const canonical = await quizEstiloLoaderGateway.load();
+      const mapped = mapStepsToStepBlocks(canonical.steps as CanonicalStep[]);
 
       const transformation: DataTransformation = {
         input: { templateId },
-        output: { 
-          template, 
-          stepsCount: Object.keys(template).length,
-          hasBlocks: Object.values(template).some((step: any) => step?.length > 0),
+        output: {
+          template: mapped,
+          stepsCount: Object.keys(mapped).length,
+          hasBlocks: Object.values(mapped).some((step: any) => Array.isArray(step) && step.length > 0),
         },
         stage: 'template-loading',
         transformedAt: new Date().toISOString(),
@@ -99,7 +98,7 @@ class QuizDataPipeline {
         stepsCount: transformation.output.stepsCount,
       });
 
-      return template;
+      return mapped;
     } catch (error) {
       await this.errorStage('template-loading', error);
       throw error;
@@ -116,15 +115,15 @@ class QuizDataPipeline {
     try {
       const stepKey = `step-${step}`;
       const stepBlocks = template[stepKey] || [];
-      
+
       // Aplicar configurações dinâmicas baseadas na etapa
       const stepConfig = await HybridTemplateService.getStepConfig(step);
       const renderedBlocks = this.applyStepConfiguration(stepBlocks, stepConfig);
 
       const transformation: DataTransformation = {
         input: { step, templateStepBlocks: stepBlocks, stepConfig },
-        output: { 
-          renderedBlocks, 
+        output: {
+          renderedBlocks,
           blocksCount: renderedBlocks.length,
           hasValidation: stepConfig.validation.required,
           autoAdvance: stepConfig.behavior.autoAdvance,
@@ -159,13 +158,13 @@ class QuizDataPipeline {
     try {
       // Normalizar dados baseado no tipo de etapa
       const normalizedData = this.normalizeStepData(step, rawData);
-      
+
       // Validar estrutura dos dados
       this.validateDataStructure(step, normalizedData);
 
       const transformation: DataTransformation = {
         input: { step, rawData },
-        output: { 
+        output: {
           normalizedData,
           dataType: this.getStepDataType(step),
           isValid: true,
@@ -199,7 +198,7 @@ class QuizDataPipeline {
 
     try {
       const validation = this.performStepValidation(step, data);
-      
+
       const transformation: DataTransformation = {
         input: { step, data },
         output: validation,
@@ -233,7 +232,7 @@ class QuizDataPipeline {
     try {
       // 1. Salvar localmente
       const localSuccess = this.saveToLocalStorage(step, validatedData);
-      
+
       // 2. Tentar salvar remotamente
       let remoteSuccess = false;
       try {
@@ -279,7 +278,7 @@ class QuizDataPipeline {
 
     try {
       const quizData = unifiedQuizStorage.loadData();
-      
+
       // Verificar se há dados suficientes
       if (!unifiedQuizStorage.hasEnoughDataForResult()) {
         throw new Error('Dados insuficientes para calcular resultado');
@@ -287,13 +286,13 @@ class QuizDataPipeline {
 
       // Calcular pontuações por categoria
       const categoryScores = this.calculateCategoryScores(quizData.selections);
-      
+
       // Determinar estilo predominante
       const dominantStyle = this.getDominantStyle(categoryScores);
-      
+
       // Gerar insights personalizados
       const personalizedInsights = this.generatePersonalizedInsights(
-        dominantStyle, 
+        dominantStyle,
         categoryScores
       );
 
@@ -344,7 +343,7 @@ class QuizDataPipeline {
     hasErrors: boolean;
   } {
     const stages = Array.from(this.stages.values());
-    const isComplete = stages.every(stage => 
+    const isComplete = stages.every(stage =>
       stage.status === 'completed' || stage.status === 'error'
     );
     const hasErrors = stages.some(stage => stage.status === 'error');
@@ -367,7 +366,7 @@ class QuizDataPipeline {
       data,
       timestamp: new Date().toISOString(),
     };
-    
+
     this.stages.set(name, stage);
     this.updateContext();
   }
@@ -425,12 +424,12 @@ class QuizDataPipeline {
     } else if (step >= 2 && step <= 18) {
       // Etapas de seleção
       return {
-        selectedOptions: Array.isArray(rawData.selectedOptions) 
-          ? rawData.selectedOptions 
+        selectedOptions: Array.isArray(rawData.selectedOptions)
+          ? rawData.selectedOptions
           : rawData.selections || [],
       };
     }
-    
+
     return rawData;
   }
 
@@ -462,7 +461,7 @@ class QuizDataPipeline {
 
   private performStepValidation(step: number, data: any): { isValid: boolean; data: any; errors: string[] } {
     const errors: string[] = [];
-    
+
     try {
       this.validateDataStructure(step, data);
       return { isValid: true, data, errors: [] };
@@ -507,13 +506,13 @@ class QuizDataPipeline {
     // if (error) {
     //   throw new Error(`Erro do Supabase: ${error.message}`);
     // }
-    
+
     console.log('💾 Dados salvos (simulado):', payload);
   }
 
   private calculateCategoryScores(selections: Record<string, string[]>): Record<string, number> {
     const scores: Record<string, number> = {};
-    
+
     Object.entries(selections).forEach(([, options]) => {
       options.forEach(option => {
         // Assumindo formato "categoria_opcao" ou similar
@@ -542,13 +541,13 @@ class QuizDataPipeline {
   }
 
   private generatePersonalizedInsights(
-    dominantStyle: string, 
+    dominantStyle: string,
     scores: Record<string, number>
   ): any {
     return {
       primaryStyle: dominantStyle,
       secondaryStyles: Object.entries(scores)
-        .sort(([,a], [,b]) => b - a)
+        .sort(([, a], [, b]) => b - a)
         .slice(1, 3)
         .map(([style]) => style),
       personalityTraits: this.getPersonalityTraits(dominantStyle),
@@ -564,7 +563,7 @@ class QuizDataPipeline {
       dramatico: ['Ousada', 'Impactante', 'Confiante'],
       romantico: ['Feminina', 'Delicada', 'Sonhadora'],
     };
-    
+
     return traits[style] || ['Única', 'Especial', 'Autêntica'];
   }
 
@@ -575,14 +574,14 @@ class QuizDataPipeline {
       dramatico: ['Contrastes marcantes', 'Peças statement', 'Silhuetas geométricas'],
       romantico: ['Tecidos fluidos', 'Detalhes delicados', 'Cores suaves'],
     };
-    
+
     return recommendations[style] || ['Peças que refletem sua personalidade'];
   }
 
   private calculateConfidenceLevel(scores: Record<string, number>): number {
     const total = Object.values(scores).reduce((a, b) => a + b, 0);
     const maxScore = Math.max(...Object.values(scores));
-    
+
     return total > 0 ? Math.round((maxScore / total) * 100) : 0;
   }
 }

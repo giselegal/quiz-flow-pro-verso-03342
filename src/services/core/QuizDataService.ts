@@ -1,5 +1,19 @@
-// 📊 QUIZ DATA SERVICE
-import { quizLegacyTemplateAdapter } from '@/services/legacy/QuizLegacyTemplateAdapter';
+// 📊 QUIZ DATA SERVICE (refatorado para usar gateway canônico)
+import { quizEstiloLoaderGateway, mapStepsToStepBlocks } from '@/domain/quiz/gateway';
+import type { CanonicalStep } from '@/domain/quiz/gateway/QuizEstiloLoaderGateway';
+
+interface CachedData { stepBlocks: Record<string, any[]>; loadedAt: number }
+const CACHE_TTL = 60_000; // 1 min
+let _cache: CachedData | null = null;
+
+async function ensureCache() {
+  const now = Date.now();
+  if (_cache && (now - _cache.loadedAt) < CACHE_TTL) return _cache.stepBlocks;
+  const def = await quizEstiloLoaderGateway.load();
+  const mapped = mapStepsToStepBlocks(def.steps as CanonicalStep[]);
+  _cache = { stepBlocks: mapped, loadedAt: now };
+  return mapped;
+}
 
 export class QuizDataService {
   /**
@@ -7,14 +21,15 @@ export class QuizDataService {
    */
   static async getStepData(stepNumber: number) {
     const stepKey = `step-${stepNumber}`;
-    return quizLegacyTemplateAdapter.getStep(stepKey);
+    const blocks = await ensureCache();
+    return blocks[stepKey] || [];
   }
 
   /**
    * Buscar todas as etapas
    */
   static async getAllSteps() {
-    return quizLegacyTemplateAdapter.getAll();
+    return ensureCache();
   }
 
   /**

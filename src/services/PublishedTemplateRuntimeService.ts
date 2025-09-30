@@ -1,4 +1,5 @@
 import { supabase } from '@/integrations/supabase/client';
+import { validateCanonicalDefinition } from '@/domain/quiz/validation/schemas';
 
 export interface PublishedTemplateData {
     version: number;
@@ -15,18 +16,24 @@ const MAX_AGE_MS = 5 * 60 * 1000; // 5 minutos
 
 export async function fetchPublishedTemplate(templateId: string): Promise<PublishedTemplateData | null> {
     const { data, error } = await supabase
-        .from('templates')
-        .select('payload_json, scoring_matrix, variants_json, version')
+        .from('funnels')
+        .select('id, version, settings')
         .eq('id', templateId)
         .maybeSingle();
     if (error || !data) return null;
-    const payload = data.payload_json || {};
+    const settings: any = (data as any).settings || {};
+    const payload = settings.payload_json || {};
+    const validation = validateCanonicalDefinition(payload);
+    if (!validation.success) {
+        console.warn('[PublishedTemplateRuntimeService] payload inválido recebido; descartando', validation.error.flatten());
+        return null;
+    }
     return {
-        version: data.version || 1,
+        version: (data as any).version || 1,
         questions: payload.questions || [],
         styles: payload.styles || [],
-        scoringMatrix: data.scoring_matrix || payload.scoringMatrix,
-        variants: data.variants_json || []
+        scoringMatrix: settings.scoring_matrix || payload.scoringMatrix,
+        variants: settings.variants_json || []
     };
 }
 

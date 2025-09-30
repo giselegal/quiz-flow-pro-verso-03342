@@ -12,7 +12,8 @@
 import { quizOrchestrator } from './QuizOrchestrator';
 import { quizDataPipeline } from './QuizDataPipeline';
 import { unifiedQuizStorage } from '@/services/core/UnifiedQuizStorage';
-import HybridTemplateService from '@/services/HybridTemplateService';
+import HybridTemplateService from '@/services/HybridTemplateService'; // ainda usado para step configs
+import { quizEstiloLoaderGateway } from '@/domain/quiz/gateway';
 import { styleCalculationEngine } from '@/engines/StyleCalculationEngine';
 
 export interface BootstrapConfig {
@@ -59,12 +60,12 @@ class QuizAutoBootstrap {
    * 🚀 BOOTSTRAP PRINCIPAL
    */
   async bootstrap(config: BootstrapConfig = {}): Promise<boolean> {
-    this.config = { 
+    this.config = {
       autoStart: true,
       enableAnalytics: true,
       enableSupabase: false,
       debugMode: false,
-      ...config 
+      ...config
     };
 
     console.log('🚀 QuizAutoBootstrap: Iniciando bootstrap do sistema...', this.config);
@@ -80,25 +81,25 @@ class QuizAutoBootstrap {
 
       // FASE 1: Verificação de pré-requisitos
       await this.checkPrerequisites();
-      
+
       // FASE 2: Inicialização do storage
       await this.initializeStorage();
-      
+
       // FASE 3: Carregamento de templates
       await this.loadTemplates();
-      
+
       // FASE 4: Inicialização do pipeline de dados
       await this.initializePipeline();
-      
+
       // FASE 5: Inicialização do orchestrator
       await this.initializeOrchestrator();
-      
+
       // FASE 6: Configuração de sistemas auxiliares
       await this.initializeAuxiliarySystems();
-      
+
       // FASE 7: Verificação de saúde final
       await this.performHealthCheck();
-      
+
       // FASE 8: Auto-start se habilitado
       if (this.config.autoStart) {
         await this.autoStart();
@@ -120,7 +121,7 @@ class QuizAutoBootstrap {
 
     } catch (error) {
       console.error('❌ QuizAutoBootstrap: Erro no bootstrap:', error);
-      
+
       this.updateStatus({
         phase: 'error',
         progress: 0,
@@ -138,17 +139,17 @@ class QuizAutoBootstrap {
    */
   async restart(): Promise<boolean> {
     console.log('🔄 QuizAutoBootstrap: Reiniciando sistema...');
-    
+
     // Parar monitoramento
     this.stopHealthMonitoring();
-    
+
     // Limpar caches
     HybridTemplateService.clearCache();
     styleCalculationEngine.clearCache();
-    
+
     // Reinicializar
     this.status = this.getInitialStatus();
-    
+
     return await this.bootstrap(this.config);
   }
 
@@ -194,8 +195,8 @@ class QuizAutoBootstrap {
 
       // Verificar Templates
       try {
-        const template = await HybridTemplateService.getTemplate('quiz21StepsComplete');
-        if (!template) {
+        const canonical = await quizEstiloLoaderGateway.load();
+        if (!canonical || !canonical.steps || canonical.steps.length === 0) {
           health.templates = 'error';
         }
       } catch (error) {
@@ -312,7 +313,7 @@ class QuizAutoBootstrap {
     try {
       const templateId = this.config.templateId || 'quiz21StepsComplete';
       const template = await HybridTemplateService.getTemplate(templateId);
-      
+
       if (!template) {
         throw new Error(`Template ${templateId} não encontrado`);
       }
@@ -338,7 +339,7 @@ class QuizAutoBootstrap {
         this.config.funnelId,
         this.config.userId
       );
-      
+
       console.log('🔄 Pipeline inicializado');
     } catch (error) {
       throw new Error(`Falha na inicialização do pipeline: ${error}`);
@@ -354,12 +355,12 @@ class QuizAutoBootstrap {
 
     try {
       await quizOrchestrator.initialize(this.config.funnelId);
-      
+
       const state = quizOrchestrator.getState();
       if (!state.isInitialized) {
         throw new Error('Orchestrator não foi inicializado corretamente');
       }
-      
+
       console.log('🎯 Orchestrator inicializado:', {
         currentStep: state.currentStep,
         isValid: state.isStepValid,
@@ -403,7 +404,7 @@ class QuizAutoBootstrap {
     });
 
     const health = await this.checkSystemHealth();
-    
+
     if (health.overall === 'error') {
       throw new Error('Sistema apresenta erros críticos');
     }
@@ -417,10 +418,10 @@ class QuizAutoBootstrap {
 
   private async autoStart(): Promise<void> {
     console.log('🚀 Auto-start habilitado, iniciando quiz...');
-    
+
     // Aqui poderia disparar eventos para componentes React
     // ou configurar estado inicial específico
-    
+
     if (typeof window !== 'undefined') {
       window.dispatchEvent(new CustomEvent('quiz-auto-started', {
         detail: {
@@ -438,7 +439,7 @@ class QuizAutoBootstrap {
         if (this.config.debugMode) {
           console.log('📊 Analytics Event:', eventName, properties);
         }
-        
+
         // Aqui integraria com Google Analytics, Mixpanel, etc.
         window.dispatchEvent(new CustomEvent('quiz-analytics', {
           detail: { eventName, properties }
@@ -468,10 +469,10 @@ class QuizAutoBootstrap {
     this.healthCheckInterval = setInterval(async () => {
       try {
         const health = await this.checkSystemHealth();
-        
+
         if (health.overall === 'error') {
           console.error('🚨 Sistema apresenta erros críticos:', health);
-          
+
           // Tentar recuperação automática
           if (this.config.autoStart) {
             console.log('🔄 Tentando recuperação automática...');

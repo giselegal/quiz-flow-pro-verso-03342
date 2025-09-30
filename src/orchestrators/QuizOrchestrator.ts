@@ -11,7 +11,9 @@
  */
 
 import { unifiedQuizStorage, UnifiedQuizData } from '@/services/core/UnifiedQuizStorage';
-import HybridTemplateService, { StepTemplate } from '@/services/HybridTemplateService';
+import HybridTemplateService, { StepTemplate } from '@/services/HybridTemplateService'; // Mantido para StepConfig enquanto não migrado totalmente
+import { quizEstiloLoaderGateway, mapStepsToStepBlocks } from '@/domain/quiz/gateway';
+import type { CanonicalStep } from '@/domain/quiz/gateway/QuizEstiloLoaderGateway';
 import { ValidationResult } from '@/hooks/useStepValidation';
 import { isScoringPhase, isStrategicPhase } from '@/lib/quiz/selectionRules';
 import { Block } from '@/types/editor';
@@ -21,19 +23,19 @@ export interface QuizOrchestratorState {
   currentStep: number;
   currentStepConfig: StepTemplate | null;
   currentBlocks: Block[];
-  
+
   // Dados
   quizData: UnifiedQuizData;
-  
+
   // Validação
   isStepValid: boolean;
   validationResult: ValidationResult | null;
-  
+
   // Navegação
   canGoNext: boolean;
-  canGoPrevious: boolean; 
+  canGoPrevious: boolean;
   isAutoAdvancing: boolean;
-  
+
   // Estado global
   isInitialized: boolean;
   isLoading: boolean;
@@ -44,28 +46,28 @@ export interface QuizOrchestratorActions {
   // Inicialização
   initialize: (funnelId?: string) => Promise<void>;
   reset: () => void;
-  
+
   // Navegação
   goToStep: (step: number) => Promise<void>;
   goNext: () => Promise<void>;
   goPrevious: () => Promise<void>;
-  
+
   // Dados
   updateStepData: (data: any) => Promise<void>;
   updateSelections: (questionId: string, selections: string[]) => Promise<void>;
   updateFormData: (key: string, value: any) => Promise<void>;
-  
+
   // Validação
   validateCurrentStep: () => ValidationResult;
   triggerAutoAdvance: () => void;
-  
+
   // Resultado
   calculateResult: () => Promise<any>;
   saveResult: (result: any) => Promise<void>;
 }
 
 export interface QuizOrchestratorContext {
-  state: QuizOrchestratorState; 
+  state: QuizOrchestratorState;
   actions: QuizOrchestratorActions;
 }
 
@@ -123,10 +125,10 @@ class QuizOrchestrator {
 
       // 2. Carregar configuração da etapa atual
       const stepConfig = await HybridTemplateService.getStepConfig(currentStep);
-      
-      // 3. Carregar template/blocos da etapa
-      const template = await HybridTemplateService.getTemplate('quiz21StepsComplete');
-      const currentBlocks = this.getBlocksForStep(template, currentStep);
+      // 3. Carregar definição canônica published-first
+      const canonical = await quizEstiloLoaderGateway.load();
+      const mapped = mapStepsToStepBlocks(canonical.steps as CanonicalStep[]);
+      const currentBlocks = (mapped[`step-${currentStep}`] || []).map(b => ({ ...b }));
 
       // 4. Validar estado inicial
       const validationResult = this.validateStepData(currentStep, quizData);
@@ -176,9 +178,9 @@ class QuizOrchestrator {
     try {
       this.updateState({ isLoading: true });
 
-      console.log('🧭 QuizOrchestrator: Navegando para etapa', { 
-        from: this.state.currentStep, 
-        to: targetStep 
+      console.log('🧭 QuizOrchestrator: Navegando para etapa', {
+        from: this.state.currentStep,
+        to: targetStep
       });
 
       // 1. Validar se pode navegar
@@ -191,8 +193,9 @@ class QuizOrchestrator {
 
       // 3. Carregar configuração da nova etapa
       const stepConfig = await HybridTemplateService.getStepConfig(targetStep);
-      const template = await HybridTemplateService.getTemplate('quiz21StepsComplete');
-      const newBlocks = this.getBlocksForStep(template, targetStep);
+      const canonical = await quizEstiloLoaderGateway.load();
+      const mapped = mapStepsToStepBlocks(canonical.steps as CanonicalStep[]);
+      const newBlocks = (mapped[`step-${targetStep}`] || []).map(b => ({ ...b }));
 
       // 4. Atualizar progresso no storage
       unifiedQuizStorage.updateProgress(targetStep);
@@ -323,7 +326,7 @@ class QuizOrchestrator {
   async calculateResult(): Promise<any> {
     try {
       const { quizData } = this.state;
-      
+
       // Verificar se há dados suficientes
       if (!unifiedQuizStorage.hasEnoughDataForResult()) {
         throw new Error('Dados insuficientes para calcular resultado');
@@ -336,10 +339,10 @@ class QuizOrchestrator {
 
       // Calcular pontuações por categoria
       const scores = this.calculateCategoryScores(quizData.selections);
-      
+
       // Determinar estilo predominante
       const dominantStyle = this.getDominantStyle(scores);
-      
+
       // Gerar dados complementares
       const result = {
         dominantStyle,
@@ -431,7 +434,7 @@ class QuizOrchestrator {
   private canNavigateNext(step: number, validation: ValidationResult): boolean {
     // Etapas de transição (12, 19) sempre podem avançar
     if (step === 12 || step === 19) return true;
-    
+
     // Outras etapas precisam de validação
     return validation.isValid;
   }
@@ -468,14 +471,11 @@ class QuizOrchestrator {
     }
   }
 
-  private getBlocksForStep(template: any, step: number): Block[] {
-    const stepKey = `step-${step}`;
-    return template[stepKey] || [];
-  }
+  // getBlocksForStep removido (uso agora direto de mapped canonical)
 
   private calculateCategoryScores(selections: Record<string, string[]>): Record<string, number> {
     const scores: Record<string, number> = {};
-    
+
     // Implementar lógica de scoring baseada nas seleções
     // Esta é uma implementação simplificada
     Object.entries(selections).forEach(([, options]) => {

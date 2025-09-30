@@ -1,6 +1,7 @@
 import { supabase } from '@/integrations/supabase/client';
 import { QuizEditorPersistenceService } from '@/services/QuizEditorPersistenceService';
 import QuizToEditorAdapter, { EditorQuizState } from '@/adapters/QuizToEditorAdapter';
+import { validateCanonicalDefinition } from '@/domain/quiz/validation/schemas';
 
 /**
  * 🛰️ TemplatePublishingService
@@ -19,8 +20,9 @@ export interface PublishResult {
     diff?: any;
 }
 
+// Ajustado para alinhar com tabela existente (funnels) em vez de 'templates' tipada no supabase client.
 interface ExistingTemplateRow {
-    id: string; name?: string; description?: string; version?: number; payload_json?: any; scoring_matrix?: any; variants_json?: any;
+    id: string; name?: string; description?: string; version?: number; settings?: any; is_published?: boolean; updated_at?: string;
 }
 
 function computeDiff(prev: any, next: any) {
@@ -44,18 +46,22 @@ export class TemplatePublishingService {
         try {
             // 1. Converter para payload canônico usando adapter
             const canonical = await new QuizToEditorAdapter().convertEditorToQuiz(editorState);
+            const validation = validateCanonicalDefinition(canonical);
+            if (!validation.success) {
+                return { success: false, error: 'validation_failed', diff: validation.error.format() };
+            }
 
             const templateId = options?.templateId || editorState.id;
 
             // 2. Buscar template existente
             const { data: existing, error: fetchError } = await supabase
-                .from('templates')
+                .from('funnels')
                 .select('*')
                 .eq('id', templateId)
                 .maybeSingle<ExistingTemplateRow>();
             if (fetchError && fetchError.code !== 'PGRST116') throw fetchError;
 
-            const prevPayload = existing?.payload_json;
+            const prevPayload = existing?.settings?.payload_json;
 
             // 3. Calcular diff
             const diff = options?.skipDiff ? null : computeDiff(prevPayload, canonical);
@@ -67,34 +73,32 @@ export class TemplatePublishingService {
                 id: templateId,
                 name: editorState.name,
                 description: editorState.description,
-                payload_json: canonical,
-                scoring_matrix: editorState.scoringMatrix || null,
-                variants_json: this.extractVariants(editorState) || null,
-                version: nextVersion
+                version: nextVersion,
+                // Encapsula payload em settings para não conflitar com schema existente
+                settings: {
+                    payload_json: canonical,
+                    scoring_matrix: editorState.scoringMatrix || null,
+                    variants_json: this.extractVariants(editorState) || null
+                }
             };
 
             // 5. Upsert principal
             const { error: upsertError } = await supabase
-                .from('templates')
+                .from('funnels')
                 .upsert(upsertData, { onConflict: 'id' });
             if (upsertError) throw upsertError;
 
-            // 6. Registrar versão
-            const versionRow = {
-                template_id: templateId,
-                version: nextVersion,
-                snapshot_json: canonical,
-                diff_json: diff
-            };
-            const { error: versionError } = await supabase.from('template_versions').insert([versionRow]);
-            if (versionError) console.warn('⚠️ Falha ao registrar versão (continuando):', versionError.message);
+            // 6. (Opcional) Registrar diff em log futuro – omitido, tabela não confirmada
 
             // 7. Persistir metadados localmente
-            await QuizEditorPersistenceService.save(editorState.id, {
-                ...editorState,
-                lastSaved: new Date().toISOString(),
-                lastPublishedVersion: nextVersion,
-                lastPublishedAt: new Date().toISOString(),
+            await QuizEditorPersistenceService.save({
+                templateId: editorState.id,
+                name: editorState.name,
+                description: editorState.description,
+                version: nextVersion,
+                lastPublishedVersion: nextVersion as any,
+                lastPublishedAt: new Date().toISOString() as any,
+                // Campos mínimos para persistência local
             } as any);
 
             return { success: true, templateId, version: nextVersion, diff };
