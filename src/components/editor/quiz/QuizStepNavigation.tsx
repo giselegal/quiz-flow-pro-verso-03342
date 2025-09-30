@@ -115,25 +115,28 @@ const QuizStepNavigation: React.FC<QuizStepNavigationProps> = ({
 
             <CardContent className="pt-0">
                 {/* Lista de questões */}
-                <ScrollArea className="h-[400px]">
-                    <div className="space-y-2">
+                <ScrollArea className="h-[400px]" role="navigation" aria-label="Navegação de questões do quiz">
+                    <div className="space-y-2" role="list">
                         {stepInfos.map((stepInfo, index) => {
                             const Icon = getStepIcon(stepInfo);
                             const isCurrent = currentStep === index;
 
                             return (
-                                <div key={stepInfo.question.id || index}>
+                                <div key={stepInfo.question.id || index} role="listitem">
                                     <Button
                                         variant={getStepColor(stepInfo, isCurrent) as any}
                                         className={`w-full justify-start h-auto p-3 ${isCurrent ? 'ring-2 ring-primary ring-offset-2' : ''
                                             }`}
                                         onClick={() => onStepChange(index)}
+                                        aria-current={isCurrent ? 'true' : undefined}
+                                        aria-label={`Ir para questão ${index + 1}${stepInfo.isComplete ? ' completa' : ''}`}
+                                        tabIndex={0}
                                     >
                                         <div className="flex items-center gap-3 w-full">
                                             {/* Ícone do status */}
                                             <div className={`p-1 rounded-full ${stepInfo.isComplete ? 'bg-green-100 text-green-600' :
-                                                    stepInfo.hasAnswers ? 'bg-yellow-100 text-yellow-600' :
-                                                        'bg-gray-100 text-gray-600'
+                                                stepInfo.hasAnswers ? 'bg-yellow-100 text-yellow-600' :
+                                                    'bg-gray-100 text-gray-600'
                                                 }`}>
                                                 <Icon className="w-4 h-4" />
                                             </div>
