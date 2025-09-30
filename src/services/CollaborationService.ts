@@ -8,7 +8,7 @@
  * - Rastreamento de presença de usuários
  */
 
-import { createClient } from '@supabase/supabase-js';
+import { getSupabase } from '@/supabase/config';
 
 export interface CollaborationUser {
   id: string;
@@ -73,17 +73,15 @@ class CollaborationService {
 
   private async initializeSupabase() {
     try {
-      const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-      const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-      
-      if (supabaseUrl && supabaseKey) {
-        this.supabase = createClient(supabaseUrl, supabaseKey);
-        console.log('✅ CollaborationService: Supabase inicializado');
+      const client = getSupabase();
+      if (client) {
+        this.supabase = client;
+        console.log('✅ CollaborationService: Supabase inicializado (config central)');
       } else {
-        console.log('📝 CollaborationService: Modo offline - sem Supabase');
+        console.log('📝 CollaborationService: Modo offline - supabase/config retornou null');
       }
     } catch (error) {
-      console.warn('⚠️ CollaborationService: Erro ao inicializar Supabase:', error);
+      console.warn('⚠️ CollaborationService: Erro ao obter Supabase central:', error);
     }
   }
 
@@ -102,7 +100,7 @@ class CollaborationService {
     };
 
     this.sessions.set(session.id, session);
-    
+
     // Persistir no Supabase se disponível
     if (this.supabase) {
       try {
@@ -131,7 +129,7 @@ class CollaborationService {
    * 👥 Adicionar usuário à sessão
    */
   async addUserToSession(
-    sessionId: string, 
+    sessionId: string,
     user: Omit<CollaborationUser, 'isOnline' | 'lastSeen' | 'cursor'>,
     role: 'owner' | 'editor' | 'viewer' = 'editor'
   ): Promise<boolean> {
@@ -225,9 +223,9 @@ class CollaborationService {
    */
   private async detectConflicts(change: CollaborationChange): Promise<CollaborationConflict[]> {
     const conflicts: CollaborationConflict[] = [];
-    
+
     // Verificar mudanças recentes no mesmo entity
-    const recentChanges = this.changeQueue.filter(c => 
+    const recentChanges = this.changeQueue.filter(c =>
       c.entityType === change.entityType &&
       c.entityId === change.entityId &&
       c.id !== change.id &&
@@ -259,12 +257,12 @@ class CollaborationService {
     for (const conflict of conflicts) {
       try {
         const resolution = await this.conflictResolver.resolve(change, conflict);
-        
+
         if (resolution.resolved) {
           conflict.resolution = 'automatic';
           conflict.resolvedBy = 'system';
           conflict.resolvedAt = new Date();
-          
+
           console.log(`✅ Conflito resolvido automaticamente: ${conflict.id}`);
         } else {
           conflict.resolution = 'manual';
@@ -284,7 +282,7 @@ class CollaborationService {
     // Aqui seria a integração com o UnifiedCRUDService
     // Por enquanto, apenas marcar como resolvida
     change.resolved = true;
-    
+
     console.log(`✅ Mudança aplicada: ${change.id}`);
   }
 
@@ -317,15 +315,15 @@ class CollaborationService {
    * 🎯 Atualizar cursor do usuário
    */
   async updateUserCursor(
-    sessionId: string, 
-    userId: string, 
+    sessionId: string,
+    userId: string,
     cursor: CollaborationUser['cursor']
   ): Promise<void> {
     const user = this.activeUsers.get(userId);
     if (user) {
       user.cursor = cursor;
       user.lastSeen = new Date();
-      
+
       // Broadcast cursor update
       await this.broadcastCursorUpdate(sessionId, userId, cursor);
     }
@@ -335,8 +333,8 @@ class CollaborationService {
    * 📡 Broadcast de atualização de cursor
    */
   private async broadcastCursorUpdate(
-    sessionId: string, 
-    userId: string, 
+    sessionId: string,
+    userId: string,
     cursor: CollaborationUser['cursor']
   ): Promise<void> {
     console.log(`📡 Broadcasting cursor update for user ${userId}`);
@@ -353,7 +351,7 @@ class CollaborationService {
       totalUsers: session.users.length,
       onlineUsers: session.users.filter(u => u.isOnline).length,
       totalChanges: this.changeQueue.filter(c => c.sessionId === sessionId).length,
-      pendingConflicts: this.changeQueue.filter(c => 
+      pendingConflicts: this.changeQueue.filter(c =>
         c.sessionId === sessionId && !c.resolved
       ).length,
       lastActivity: session.lastActivity
@@ -385,10 +383,10 @@ class ConflictResolver {
    * Resolver conflito automaticamente
    */
   async resolve(
-    change: CollaborationChange, 
+    change: CollaborationChange,
     conflict: CollaborationConflict
   ): Promise<{ resolved: boolean; strategy?: string }> {
-    
+
     // Estratégias de resolução automática
     const strategies = [
       this.resolveByTimestamp,
@@ -415,7 +413,7 @@ class ConflictResolver {
    * Resolver por timestamp (mais recente vence)
    */
   private async resolveByTimestamp(
-    change: CollaborationChange, 
+    change: CollaborationChange,
     conflict: CollaborationConflict
   ): Promise<{ resolved: boolean; strategy?: string }> {
     // Implementação simplificada - em produção seria mais complexa
@@ -426,7 +424,7 @@ class ConflictResolver {
    * Resolver por role do usuário
    */
   private async resolveByUserRole(
-    change: CollaborationChange, 
+    change: CollaborationChange,
     conflict: CollaborationConflict
   ): Promise<{ resolved: boolean; strategy?: string }> {
     // Owner > Editor > Viewer
@@ -437,7 +435,7 @@ class ConflictResolver {
    * Resolver por tipo de mudança
    */
   private async resolveByChangeType(
-    change: CollaborationChange, 
+    change: CollaborationChange,
     conflict: CollaborationConflict
   ): Promise<{ resolved: boolean; strategy?: string }> {
     // Delete > Update > Create
@@ -448,7 +446,7 @@ class ConflictResolver {
    * Resolver por merge
    */
   private async resolveByMerge(
-    change: CollaborationChange, 
+    change: CollaborationChange,
     conflict: CollaborationConflict
   ): Promise<{ resolved: boolean; strategy?: string }> {
     // Tentar fazer merge das mudanças
