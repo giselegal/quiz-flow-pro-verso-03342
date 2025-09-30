@@ -101,8 +101,8 @@ export const Home: React.FC = () => {
       icon: Zap,
       title: 'Templates Prontos',
       description: 'Biblioteca de designs profissionais com templates específicos por setor',
-      color: 'text-orange-600',
-      bg: 'bg-orange-50'
+      color: 'text-fuchsia-600',
+      bg: 'bg-fuchsia-50'
     },
     {
       icon: TrendingUp,
@@ -149,9 +149,9 @@ export const Home: React.FC = () => {
             </div>
             
             <nav className="hidden md:flex items-center space-x-8">
-              <a href="#features" className="text-slate-600 hover:text-slate-900 font-medium transition-colors">Features</a>
-              <a href="#testimonials" className="text-slate-600 hover:text-slate-900 font-medium transition-colors">Reviews</a>
-              <a href="#pricing" className="text-slate-600 hover:text-slate-900 font-medium transition-colors">Pricing</a>
+              <a href="#features" className="text-slate-600 hover:text-slate-900 font-medium transition-colors">Recursos</a>
+              <a href="#testimonials" className="text-slate-600 hover:text-slate-900 font-medium transition-colors">Depoimentos</a>
+              <a href="#pricing" className="text-slate-600 hover:text-slate-900 font-medium transition-colors">Planos</a>
             </nav>
             
             <div className="flex items-center space-x-3">
@@ -162,19 +162,19 @@ export const Home: React.FC = () => {
                   </Button>
                   <Button onClick={() => navigate('/editor')} variant="outline">
                     <Target className="h-4 w-4 mr-2" />
-                    Create Quiz
+                    Criar Quiz
                   </Button>
                   <Button onClick={logout} variant="ghost" size="sm">
-                    Sign Out
+                    Sair
                   </Button>
                 </div>
               ) : (
                 <div className="flex items-center space-x-3">
                   <Button onClick={() => navigate('/auth')} variant="ghost">
-                    Sign In
+                    Entrar
                   </Button>
                   <Button onClick={() => navigate('/auth')} className="bg-gradient-to-r from-brand-brightBlue to-brand-lightBlue hover:from-brand-brightBlue/90 hover:to-brand-lightBlue/90">
-                    Start Free Trial
+                    Começar Grátis
                   </Button>
                 </div>
               )}
@@ -234,7 +234,7 @@ export const Home: React.FC = () => {
               {/* Social Proof */}
               <div className="flex flex-wrap items-center justify-center gap-8 text-sm text-slate-500">
                 <div className="flex items-center">
-                  <Star className="h-4 w-4 text-yellow-500 mr-1" />
+                  <Star className="h-4 w-4 text-fuchsia-500 mr-1" />
                   <span className="font-medium">4.9/5 avaliação</span>
                 </div>
                 <div className="flex items-center">
