@@ -5,7 +5,8 @@
 
 import { useEffect, useCallback, useState } from 'react';
 import { healthCheckService, type HealthStatus } from '@/services/monitoring/HealthCheckService';
-import { analyticsService } from '@/services/monitoring/AnalyticsService';
+// Migrado para adapter unificado (compat)
+import { analyticsServiceAdapter as analyticsService } from '@/analytics/compat/analyticsServiceAdapter';
 import { errorTrackingService, type ErrorReport } from '@/services/monitoring/ErrorTrackingService';
 
 export interface MonitoringState {
@@ -78,7 +79,7 @@ export const useMonitoring = (options?: {
   const startMonitoring = useCallback(async () => {
     try {
       healthCheckService.startMonitoring(healthCheckInterval);
-      
+
       // Verificação inicial
       const initialHealth = await healthCheckService.performHealthCheck();
       setState(prev => ({
@@ -130,9 +131,10 @@ export const useMonitoring = (options?: {
    */
   const trackEvent = useCallback((eventName: string, properties?: Record<string, any>) => {
     analyticsService.trackEvent({
-      event_name: eventName,
-      event_category: trackComponent || 'component',
-      custom_parameters: {
+      funnelId: properties?.funnelId || 'global',
+      type: eventName,
+      userId: properties?.userId,
+      payload: {
         component: trackComponent,
         ...properties
       }
@@ -149,10 +151,17 @@ export const useMonitoring = (options?: {
     });
 
     // Também rastrear no analytics
-    analyticsService.trackError(
-      typeof error === 'string' ? new Error(error) : error,
-      trackComponent
-    );
+    analyticsService.trackEvent({
+      funnelId: context?.funnelId || 'global',
+      type: 'error',
+      userId: context?.userId,
+      payload: {
+        error: typeof error === 'string' ? error : error.message,
+        stack: typeof error === 'string' ? undefined : error.stack,
+        component: trackComponent,
+        ...context
+      }
+    });
 
     return errorId;
   }, [trackComponent]);
@@ -161,16 +170,25 @@ export const useMonitoring = (options?: {
    * Rastrear performance
    */
   const trackPerformance = useCallback((metric: string, value: number, unit?: string) => {
-    analyticsService.trackPerformance(metric, value, unit);
+    analyticsService.trackEvent({
+      funnelId: 'global',
+      type: 'performance_metric',
+      payload: { metric, value, unit }
+    });
   }, []);
 
   /**
    * Rastrear ação do editor
    */
   const trackEditorAction = useCallback((action: string, details?: Record<string, any>) => {
-    analyticsService.trackEditorAction(action, {
-      component: trackComponent,
-      ...details
+    analyticsService.trackEvent({
+      funnelId: details?.funnelId || 'global',
+      type: 'editor_action',
+      payload: {
+        action,
+        component: trackComponent,
+        ...details
+      }
     });
   }, [trackComponent]);
 
@@ -185,7 +203,8 @@ export const useMonitoring = (options?: {
    * Obter métricas da sessão
    */
   const getSessionMetrics = useCallback(() => {
-    return analyticsService.getSessionMetrics();
+    // Adapter não mantém métricas de sessão detalhadas; retornar stub
+    return { sessionId: 'n/a', blocksAdded: 0, blocksRemoved: 0 } as any;
   }, []);
 
   /**
@@ -203,30 +222,30 @@ export const useMonitoring = (options?: {
   return {
     // Estado
     ...state,
-    
+
     // Ações
     startMonitoring,
     stopMonitoring,
     checkHealth,
-    
+
     // Tracking
     trackEvent,
     trackError,
     trackPerformance,
     trackEditorAction,
-    
+
     // Dados
     getErrorStats,
     getSessionMetrics,
     clearErrors,
-    
+
     // Utilitários
     isServiceHealthy: (serviceName: string) => {
       if (!state.healthStatus) return null;
       const service = state.healthStatus.services[serviceName as keyof typeof state.healthStatus.services];
       return service?.status === 'up';
     },
-    
+
     getServiceHealth: (serviceName: string) => {
       if (!state.healthStatus) return null;
       return state.healthStatus.services[serviceName as keyof typeof state.healthStatus.services];
@@ -238,15 +257,15 @@ export const useMonitoring = (options?: {
  * Hook específico para componentes do editor
  */
 export const useEditorMonitoring = (componentName: string) => {
-  const monitoring = useMonitoring({ 
+  const monitoring = useMonitoring({
     trackComponent: componentName,
-    autoStart: true 
+    autoStart: true
   });
 
   // Auto-track mount/unmount
   useEffect(() => {
     monitoring.trackEvent('component_mounted', { component: componentName });
-    
+
     return () => {
       monitoring.trackEvent('component_unmounted', { component: componentName });
     };

@@ -11,7 +11,9 @@
 import { getLogger } from '@/utils/logging';
 import { HybridFunnelData } from './improvedFunnelSystem';
 import { Component } from './componentLibrary';
-import { analyticsEngine } from './analyticsEngine';
+// Migrado para adapter unificado
+import { analyticsEngineAdapter as analyticsEngine } from '@/analytics/compat/analyticsEngineAdapter';
+import { unifiedEventTracker } from '@/analytics/UnifiedEventTracker';
 
 const logger = getLogger();
 
@@ -259,18 +261,19 @@ export class MarketplaceEngine {
         this.templates.set(templateId, fullTemplate);
 
         // Track submission analytics
-        analyticsEngine.trackEvent({
-            type: 'template_submitted',
+        unifiedEventTracker.track({
+            type: 'editor_action', // usando tipo existente até introduzir 'template_submitted'
             funnelId: template.template.id,
             userId: template.creatorId,
             sessionId: this.generateSessionId(),
-            properties: {
+            payload: {
+                event: 'template_submitted',
                 templateId,
                 category: template.category,
                 pricing: template.pricing,
                 organizationId: template.organizationId
             },
-            metadata: this.getCurrentEventMetadata()
+            context: { source: 'marketplace-engine' }
         });
 
         logger.info('marketplace', 'Template submitted for review', {
@@ -452,18 +455,19 @@ export class MarketplaceEngine {
         await this.recordRevenue(template.creatorId, template.pricing.amount, templateId);
 
         // Track purchase analytics
-        analyticsEngine.trackEvent({
-            type: 'template_purchased',
+        unifiedEventTracker.track({
+            type: 'conversion',
             funnelId: template.template.id,
             userId,
             sessionId: this.generateSessionId(),
-            properties: {
+            payload: {
+                event: 'template_purchased',
                 templateId,
                 amount: template.pricing.amount,
                 currency: template.pricing.currency,
                 creatorId: template.creatorId
             },
-            metadata: this.getCurrentEventMetadata()
+            context: { source: 'marketplace-engine' }
         });
 
         logger.info('marketplace', 'Template purchased', {
@@ -490,17 +494,18 @@ export class MarketplaceEngine {
         template.updatedAt = new Date();
 
         // Track download analytics
-        analyticsEngine.trackEvent({
-            type: 'template_downloaded',
+        unifiedEventTracker.track({
+            type: 'editor_action', // semantica temporária
             funnelId: template.template.id,
             userId,
             sessionId: this.generateSessionId(),
-            properties: {
+            payload: {
+                event: 'template_downloaded',
                 templateId,
                 free: true,
                 creatorId: template.creatorId
             },
-            metadata: this.getCurrentEventMetadata()
+            context: { source: 'marketplace-engine' }
         });
 
         return {

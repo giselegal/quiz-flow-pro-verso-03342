@@ -5,7 +5,7 @@
 
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { healthCheckService, type HealthStatus } from '@/services/monitoring/HealthCheckService';
-import { analyticsService } from '@/services/monitoring/AnalyticsService';
+import { analyticsServiceAdapter as analyticsService } from '@/analytics/compat/analyticsServiceAdapter';
 import { errorTrackingService, type ErrorReport } from '@/services/monitoring/ErrorTrackingService';
 import { useToast } from '@/hooks/use-toast';
 
@@ -46,14 +46,12 @@ export const MonitoringProvider: React.FC<MonitoringProviderProps> = ({
 
   useEffect(() => {
     // Inicializar serviços
-    if (enableAnalytics) {
-      analyticsService.initialize();
-    }
+    // Adapter não requer inicialização
 
     // Configurar listeners
     const handleHealthChange = (status: HealthStatus) => {
       setHealthStatus(status);
-      
+
       // Alertas críticos
       if (enableAlerts && status.status === 'unhealthy') {
         toast({
@@ -94,11 +92,12 @@ export const MonitoringProvider: React.FC<MonitoringProviderProps> = ({
     if (!isMonitoring) {
       healthCheckService.startMonitoring(healthCheckInterval);
       setIsMonitoring(true);
-      
+
       if (enableAnalytics) {
         analyticsService.trackEvent({
-          event_name: 'monitoring_started',
-          event_category: 'system'
+          funnelId: 'global',
+          type: 'monitoring_started',
+          payload: { category: 'system' }
         });
       }
     }
@@ -108,11 +107,12 @@ export const MonitoringProvider: React.FC<MonitoringProviderProps> = ({
     if (isMonitoring) {
       healthCheckService.stopMonitoring();
       setIsMonitoring(false);
-      
+
       if (enableAnalytics) {
         analyticsService.trackEvent({
-          event_name: 'monitoring_stopped',
-          event_category: 'system'
+          funnelId: 'global',
+          type: 'monitoring_stopped',
+          payload: { category: 'system' }
         });
       }
     }
@@ -121,9 +121,9 @@ export const MonitoringProvider: React.FC<MonitoringProviderProps> = ({
   const trackEvent = (name: string, properties?: Record<string, any>) => {
     if (enableAnalytics) {
       analyticsService.trackEvent({
-        event_name: name,
-        event_category: 'application',
-        custom_parameters: properties
+        funnelId: properties?.funnelId || 'global',
+        type: name,
+        payload: { category: 'application', ...properties }
       });
     }
   };
@@ -174,7 +174,7 @@ export const withMonitoring = <P extends object>(
 
     useEffect(() => {
       trackEvent('component_mounted', { component: componentName });
-      
+
       return () => {
         trackEvent('component_unmounted', { component: componentName });
       };
@@ -196,7 +196,7 @@ export const withMonitoring = <P extends object>(
   };
 
   WrappedComponent.displayName = `withMonitoring(${componentName || Component.displayName || Component.name})`;
-  
+
   return WrappedComponent;
 };
 

@@ -10,7 +10,7 @@ import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { AlertTriangle, CheckCircle, XCircle, Activity, TrendingUp, Clock, Users } from 'lucide-react';
 import { healthCheckService, type HealthStatus } from '@/services/monitoring/HealthCheckService';
-import { analyticsService } from '@/services/monitoring/AnalyticsService';
+import { analyticsServiceAdapter as analyticsService } from '@/analytics/compat/analyticsServiceAdapter';
 import { errorTrackingService, type ErrorStats } from '@/services/monitoring/ErrorTrackingService';
 
 interface MonitoringDashboardProps {
@@ -30,9 +30,9 @@ export const MonitoringDashboard: React.FC<MonitoringDashboardProps> = ({ classN
     // Configurar auto-refresh
     if (isAutoRefresh) {
       healthCheckService.startMonitoring(15000); // 15 segundos
-      
+
       const errorInterval = setInterval(loadErrorStats, 10000); // 10 segundos
-      
+
       return () => {
         healthCheckService.stopMonitoring();
         clearInterval(errorInterval);
@@ -110,7 +110,7 @@ export const MonitoringDashboard: React.FC<MonitoringDashboardProps> = ({ classN
             Status em tempo real da aplicação
           </p>
         </div>
-        
+
         <div className="flex items-center gap-2">
           <Button
             variant="outline"
@@ -119,7 +119,7 @@ export const MonitoringDashboard: React.FC<MonitoringDashboardProps> = ({ classN
           >
             {isAutoRefresh ? 'Pausar' : 'Iniciar'} Auto-Refresh
           </Button>
-          
+
           <Button
             variant="outline"
             size="sm"

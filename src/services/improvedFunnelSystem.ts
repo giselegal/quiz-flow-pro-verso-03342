@@ -16,7 +16,8 @@ import { advancedFunnelStorage } from './AdvancedFunnelStorage';
 import { validateFunnelId } from '@/utils/idValidation';
 import { errorManager, createStorageError } from '@/utils/errorHandling';
 import { FunnelContext } from '@/core/contexts/FunnelContext';
-import { analyticsEngine } from './analyticsEngine';
+// Migrado para adapter unificado
+import { analyticsEngineAdapter as analyticsEngine } from '@/analytics/compat/analyticsEngineAdapter';
 
 // ============================================================================
 // INTERFACES E TIPOS
