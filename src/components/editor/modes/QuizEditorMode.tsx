@@ -51,6 +51,9 @@ import { quizSupabaseService } from '@/services/quizSupabaseService';
 import { performanceOptimizer } from '@/services/PerformanceOptimizer';
 import QuizGlobalScoringEditor from '../quiz/QuizGlobalScoringEditor';
 import QuizAnalyticsDashboard from '@/components/analytics/QuizAnalyticsDashboard';
+import { templatePublishingService } from '@/services/TemplatePublishingService';
+import { QuizToEditorAdapter } from '@/adapters/QuizToEditorAdapter';
+import { useNotification } from '@/components/ui/Notification';
 
 // ===============================
 // 🎯 INTERFACES E TIPOS
@@ -131,6 +134,9 @@ const QuizEditorMode: React.FC<QuizEditorModeProps> = ({
   const navigation = useUnifiedStepNavigation();
   const quizConfig = useQuizConfig();
   const templateLoader = useTemplateLoader();
+  const { addNotification } = useNotification();
+  const adapterRef = useRef<QuizToEditorAdapter | null>(null);
+  if (!adapterRef.current) adapterRef.current = new QuizToEditorAdapter();
 
   // FASE 3 - Hook de estado do quiz seguindo padrão de referência
   const {
@@ -553,6 +559,40 @@ const QuizEditorMode: React.FC<QuizEditorModeProps> = ({
               >
                 <Save className="w-4 h-4 mr-2" />
                 {state.isSyncing ? 'Salvando...' : 'Salvar'}
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={async () => {
+                  try {
+                    addNotification('🚀 Publicando template...', 'info');
+                    unifiedEventTracker.track('editor_publish_attempt', { funnelId });
+                    const canonicalState: any = {
+                      id: funnelId || 'quiz-estilo',
+                      name: 'Quiz Estilo Pessoal',
+                      description: 'Template publicado via editor',
+                      questions: state.questions,
+                      styles: state.styles,
+                      scoringMatrix: (state as any).scoringMatrix,
+                      stepBlocks: {},
+                      isDirty: false,
+                      version: QUIZ_EDITOR_VERSION
+                    };
+                    const result = await templatePublishingService.publish(canonicalState);
+                    if (!result.success) {
+                      addNotification(`❌ Falha na publicação: ${result.error}`, 'error');
+                      unifiedEventTracker.track('editor_publish_failed', { error: result.error });
+                    } else {
+                      addNotification(`✅ Publicado versão ${result.version}`, 'success');
+                      unifiedEventTracker.track('editor_publish_success', { version: result.version });
+                    }
+                  } catch (err: any) {
+                    console.error('Erro ao publicar template', err);
+                    addNotification('❌ Erro inesperado na publicação', 'error');
+                  }
+                }}
+              >
+                <Cloud className="w-4 h-4 mr-2" /> Publicar
               </Button>
             </div>
           </div>

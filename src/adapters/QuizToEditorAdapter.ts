@@ -125,18 +125,7 @@ export class QuizToEditorAdapter {
     try {
       console.log('🔄 Convertendo editor para quiz...');
 
-      const quizData = {
-        id: editorState.id,
-        name: editorState.name,
-        description: editorState.description,
-        questions: editorState.questions,
-        styles: editorState.styles,
-        version: editorState.version,
-        metadata: {
-          lastModified: new Date().toISOString(),
-          source: 'editor'
-        }
-      };
+      const quizData = this.buildCanonicalPayload(editorState);
 
       console.log('✅ Conversão concluída:', quizData);
       return quizData;
@@ -144,6 +133,25 @@ export class QuizToEditorAdapter {
       console.error('❌ Erro na conversão:', error);
       throw error;
     }
+  }
+
+  /**
+   * 🧱 Monta payload canônico para publicação / persistência remota
+   */
+  buildCanonicalPayload(editorState: EditorQuizState) {
+    return {
+      id: editorState.id,
+      name: editorState.name,
+      description: editorState.description,
+      questions: editorState.questions,
+      styles: editorState.styles,
+      scoringMatrix: editorState.scoringMatrix,
+      version: editorState.version,
+      metadata: {
+        lastModified: new Date().toISOString(),
+        source: 'editor',
+      }
+    };
   }
 
   /**

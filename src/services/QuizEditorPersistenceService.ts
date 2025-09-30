@@ -36,7 +36,7 @@ export const QuizEditorPersistenceService: QuizEditorPersistence = {
     },
     async save(data: QuizTemplateData): Promise<QuizPersistenceResult> {
         try {
-            const enriched: QuizTemplateData = { ...data, version: QUIZ_EDITOR_VERSION, updatedAt: safeNowISO() };
+            const enriched: QuizTemplateData = { ...data, version: QUIZ_EDITOR_VERSION, updatedAt: safeNowISO() } as any;
             const key = buildKey(data.templateId);
             const storage = getStorage();
             if (storage) {
