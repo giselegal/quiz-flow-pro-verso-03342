@@ -5,7 +5,7 @@
  */
 
 import { Block } from '@/types/editor';
-import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
+import { quizLegacyTemplateAdapter } from '@/services/legacy/QuizLegacyTemplateAdapter';
 
 export interface TemplateThumbnail {
     id: string;
@@ -22,7 +22,15 @@ export const generateTemplateThumbnail = async (
     templateId: string,
     step1Blocks?: Block[]
 ): Promise<TemplateThumbnail> => {
-    const blocks = step1Blocks || QUIZ_STYLE_21_STEPS_TEMPLATE['step-1'] || [];
+    let blocks = step1Blocks;
+    if (!blocks) {
+        try {
+            const all = await quizLegacyTemplateAdapter.getAll();
+            blocks = all['step-1'] || [];
+        } catch {
+            blocks = [];
+        }
+    }
 
     // Criar canvas para renderizar o thumbnail
     const canvas = document.createElement('canvas');

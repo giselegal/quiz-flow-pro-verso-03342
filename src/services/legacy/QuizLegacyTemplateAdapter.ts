@@ -10,26 +10,26 @@ import type { Block } from '@/types/editor';
  * de quiz21StepsComplete sem quebrar componentes até refactor completo.
  */
 class QuizLegacyTemplateAdapter {
-  private cache: { steps: Record<string, Block[]>; loadedAt: number } | null = null;
-  private ttl = 60_000; // 1 minuto (curto para facilitar migração)
+    private cache: { steps: Record<string, Block[]>; loadedAt: number } | null = null;
+    private ttl = 60_000; // 1 minuto (curto para facilitar migração)
 
-  async ensureLoaded() {
-    const now = Date.now();
-    if (this.cache && (now - this.cache.loadedAt) < this.ttl) return this.cache.steps;
-    const def = await quizEstiloLoaderGateway.load();
-    const stepBlocks = mapStepsToStepBlocks(def.steps as CanonicalStep[]);
-    this.cache = { steps: stepBlocks, loadedAt: now };
-    return stepBlocks;
-  }
+    async ensureLoaded() {
+        const now = Date.now();
+        if (this.cache && (now - this.cache.loadedAt) < this.ttl) return this.cache.steps;
+        const def = await quizEstiloLoaderGateway.load();
+        const stepBlocks = mapStepsToStepBlocks(def.steps as CanonicalStep[]);
+        this.cache = { steps: stepBlocks, loadedAt: now };
+        return stepBlocks;
+    }
 
-  async getAll(): Promise<Record<string, Block[]>> {
-    return this.ensureLoaded();
-  }
+    async getAll(): Promise<Record<string, Block[]>> {
+        return this.ensureLoaded();
+    }
 
-  async getStep(stepKey: string): Promise<Block[]> {
-    const all = await this.ensureLoaded();
-    return all[stepKey] || [];
-  }
+    async getStep(stepKey: string): Promise<Block[]> {
+        const all = await this.ensureLoaded();
+        return all[stepKey] || [];
+    }
 }
 
 export const quizLegacyTemplateAdapter = new QuizLegacyTemplateAdapter();
