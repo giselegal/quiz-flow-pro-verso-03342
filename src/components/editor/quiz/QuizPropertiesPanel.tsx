@@ -15,16 +15,19 @@ import { Textarea } from '@/components/ui/textarea';
  */
 export const QuizPropertiesPanel: React.FC = () => {
     const quiz = useQuizEditor();
+    const step = quiz.selectedStep;
+
     /**
      * 🚨 DEPRECATED: QuizPropertiesPanel
      * Mantido apenas para referência histórica. Substituído por QuizUnifiedPropertiesPanel.
      */
-    return <div className="p-3 text-xs text-muted-foreground">Nenhum step selecionado</div>;
-}
+    if (!step) {
+        return <div className="p-3 text-xs text-muted-foreground">Nenhum step selecionado</div>;
+    }
 
-const isQuestion = step.type === 'question';
-const isStrategic = step.type === 'strategic-question';
-const isOffer = step.type === 'offer';
+    const isQuestion = step.type === 'question';
+    const isStrategic = step.type === 'strategic-question';
+    const isOffer = step.type === 'offer';
 
 const handleChange = (field: string, value: any) => {
     quiz.updateStep({ [field]: value });
