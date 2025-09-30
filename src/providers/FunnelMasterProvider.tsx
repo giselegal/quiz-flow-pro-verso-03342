@@ -16,7 +16,8 @@
  * - 70% menos debugging complexity
  */
 
-import React, { createContext, useContext, useReducer, useEffect, useMemo, ReactNode } from 'react';
+import React, { createContext, useContext, useReducer, useEffect, useMemo, ReactNode, useRef } from 'react';
+import { useEditorOptional } from '@/components/editor/provider-alias';
 import { supabase } from '@/integrations/supabase/client';
 
 // 🎯 UNIFIED TYPES
@@ -96,25 +97,25 @@ interface FunnelMasterContextType {
   isReady: boolean;
   isLoading: boolean;
   error: string | null;
-  
+
   // Configuração
   config: FunnelConfig;
-  
+
   // Quiz state
   quiz: QuizState;
-  
+
   // Performance metrics
   metrics: PerformanceMetrics;
-  
+
   // Ações consolidadas
   createFunnel: (name: string, description?: string) => Promise<UnifiedFunnelData>;
   updateFunnel: (updates: Partial<UnifiedFunnelData>) => Promise<void>;
   deleteFunnel: (id: string) => Promise<void>;
-  
+
   // Config actions
   updateConfig: (config: Partial<FunnelConfig>) => void;
   resetConfig: () => void;
-  
+
   // Quiz actions
   nextStep: () => void;
   previousStep: () => void;
@@ -122,20 +123,20 @@ interface FunnelMasterContextType {
   updateResponse: (questionId: string, response: any) => void;
   submitQuiz: () => Promise<void>;
   resetQuiz: () => void;
-  
+
   // Page management
   addPage: (page: Omit<FunnelPage, 'id'>) => Promise<void>;
   updatePage: (pageId: string, updates: Partial<FunnelPage>) => Promise<void>;
   deletePage: (pageId: string) => Promise<void>;
   reorderPages: (pageIds: string[]) => Promise<void>;
-  
+
   // Performance
   getMetrics: () => PerformanceMetrics;
   optimizePerformance: () => Promise<void>;
 }
 
 // 🎯 ACTION TYPES
-type FunnelAction = 
+type FunnelAction =
   | { type: 'SET_LOADING'; payload: boolean }
   | { type: 'SET_ERROR'; payload: string | null }
   | { type: 'SET_FUNNEL'; payload: UnifiedFunnelData | null }
@@ -210,52 +211,52 @@ function funnelMasterReducer(state: any, action: FunnelAction): any {
   switch (action.type) {
     case 'SET_LOADING':
       return { ...state, isLoading: action.payload };
-    
+
     case 'SET_ERROR':
       return { ...state, error: action.payload, isLoading: false };
-    
+
     case 'SET_FUNNEL':
-      return { 
-        ...state, 
+      return {
+        ...state,
         funnel: action.payload,
         isLoading: false,
         error: null,
         isReady: !!action.payload
       };
-    
+
     case 'SET_FUNNEL_ID':
       return { ...state, funnelId: action.payload };
-    
+
     case 'UPDATE_CONFIG':
-      return { 
-        ...state, 
+      return {
+        ...state,
         config: { ...state.config, ...action.payload }
       };
-    
+
     case 'RESET_CONFIG':
       return { ...state, config: initialConfig };
-    
+
     case 'UPDATE_QUIZ_STATE':
-      return { 
-        ...state, 
+      return {
+        ...state,
         quiz: { ...state.quiz, ...action.payload }
       };
-    
+
     case 'SET_USER_NAME':
       return {
         ...state,
         quiz: { ...state.quiz, userName: action.payload }
       };
-    
+
     case 'ADD_ANSWER':
       return {
         ...state,
-        quiz: { 
-          ...state.quiz, 
-          answers: [...state.quiz.answers, action.payload] 
+        quiz: {
+          ...state.quiz,
+          answers: [...state.quiz.answers, action.payload]
         }
       };
-    
+
     case 'UPDATE_SELECTIONS':
       return {
         ...state,
@@ -267,16 +268,16 @@ function funnelMasterReducer(state: any, action: FunnelAction): any {
           }
         }
       };
-    
+
     case 'RESET_QUIZ':
       return { ...state, quiz: initialQuizState };
-    
+
     case 'UPDATE_METRICS':
-      return { 
-        ...state, 
+      return {
+        ...state,
         metrics: { ...state.metrics, ...action.payload }
       };
-    
+
     default:
       return state;
   }
@@ -306,6 +307,8 @@ export const FunnelMasterProvider: React.FC<FunnelMasterProviderProps> = ({
     ...initialState,
     funnelId: funnelId || null
   });
+  const externalEditor = useEditorOptional();
+  const warnedRef = useRef(false);
 
   // Simple cache implementation
   const cache = useMemo(() => new Map<string, { data: any; timestamp: number }>(), []);
@@ -327,7 +330,7 @@ export const FunnelMasterProvider: React.FC<FunnelMasterProviderProps> = ({
   // 🎯 LOAD FUNNEL DATA
   const loadFunnel = async (id: string) => {
     dispatch({ type: 'SET_LOADING', payload: true });
-    
+
     try {
       // Try cache first
       const cacheKey = `funnel:${id}`;
@@ -337,6 +340,13 @@ export const FunnelMasterProvider: React.FC<FunnelMasterProviderProps> = ({
           dispatch({ type: 'SET_FUNNEL', payload: cached });
           if (debugMode) console.log('🎯 FunnelMaster: Loaded from cache', id);
           return;
+          // ⚠️ Aviso único quando em modo derivado pelo EditorProvider
+          useEffect(() => {
+            if (externalEditor && !warnedRef.current) {
+              console.warn('[FunnelMasterProvider] currentStep está sendo sincronizado via EditorProvider. Trate quiz.currentStep como espelho.');
+              warnedRef.current = true;
+            }
+          }, [externalEditor]);
         }
       }
 
@@ -370,7 +380,7 @@ export const FunnelMasterProvider: React.FC<FunnelMasterProviderProps> = ({
       setCache(cacheKey, unifiedFunnel);
 
       dispatch({ type: 'SET_FUNNEL', payload: unifiedFunnel });
-      
+
       if (debugMode) {
         console.log('🎯 FunnelMaster: Loaded funnel', { id, pages: unifiedFunnel.pages?.length });
       }
@@ -402,25 +412,25 @@ export const FunnelMasterProvider: React.FC<FunnelMasterProviderProps> = ({
     createFunnel: async (name: string, description?: string): Promise<UnifiedFunnelData> => {
       const user = await supabase.auth.getUser();
       const userId = user.data.user?.id;
-      
+
       if (!userId) throw new Error('User not authenticated');
 
       const { data, error } = await supabase
         .from('funnels')
-        .insert({ 
+        .insert({
           id: crypto.randomUUID(),
-          name, 
+          name,
           description: description || null,
-          user_id: userId 
+          user_id: userId
         })
         .select()
         .single();
 
       if (error) throw error;
-      
+
       const newFunnel: UnifiedFunnelData = { ...data, pages: [] };
       setCache(`funnel:${data.id}`, newFunnel);
-      
+
       return newFunnel;
     },
 
@@ -467,39 +477,32 @@ export const FunnelMasterProvider: React.FC<FunnelMasterProviderProps> = ({
 
     // Quiz actions
     nextStep: () => {
-      const nextStep = Math.min(state.quiz.currentStep + 1, state.quiz.totalSteps);
-      const progress = (nextStep / state.quiz.totalSteps) * 100;
-      
-      dispatch({ 
-        type: 'UPDATE_QUIZ_STATE', 
-        payload: { currentStep: nextStep, progress }
-      });
+      const base = externalEditor?.state?.currentStep ?? state.quiz.currentStep;
+      const next = Math.min(base + 1, state.quiz.totalSteps);
+      externalEditor?.actions?.setCurrentStep?.(next);
+      const progress = (next / state.quiz.totalSteps) * 100;
+      dispatch({ type: 'UPDATE_QUIZ_STATE', payload: { currentStep: next, progress } });
     },
 
     previousStep: () => {
-      const prevStep = Math.max(state.quiz.currentStep - 1, 1);
-      const progress = (prevStep / state.quiz.totalSteps) * 100;
-      
-      dispatch({ 
-        type: 'UPDATE_QUIZ_STATE', 
-        payload: { currentStep: prevStep, progress }
-      });
+      const base = externalEditor?.state?.currentStep ?? state.quiz.currentStep;
+      const prev = Math.max(base - 1, 1);
+      externalEditor?.actions?.setCurrentStep?.(prev);
+      const progress = (prev / state.quiz.totalSteps) * 100;
+      dispatch({ type: 'UPDATE_QUIZ_STATE', payload: { currentStep: prev, progress } });
     },
 
     goToStep: (step: number) => {
-      const validStep = Math.max(1, Math.min(step, state.quiz.totalSteps));
-      const progress = (validStep / state.quiz.totalSteps) * 100;
-      
-      dispatch({ 
-        type: 'UPDATE_QUIZ_STATE', 
-        payload: { currentStep: validStep, progress }
-      });
+      const target = Math.max(1, Math.min(step, state.quiz.totalSteps));
+      externalEditor?.actions?.setCurrentStep?.(target);
+      const progress = (target / state.quiz.totalSteps) * 100;
+      dispatch({ type: 'UPDATE_QUIZ_STATE', payload: { currentStep: target, progress } });
     },
 
     updateResponse: (questionId: string, response: any) => {
       const updatedResponses = { ...state.quiz.responses, [questionId]: response };
-      dispatch({ 
-        type: 'UPDATE_QUIZ_STATE', 
+      dispatch({
+        type: 'UPDATE_QUIZ_STATE',
         payload: { responses: updatedResponses }
       });
     },
@@ -518,11 +521,11 @@ export const FunnelMasterProvider: React.FC<FunnelMasterProviderProps> = ({
     },
 
     submitQuiz: async (): Promise<void> => {
-      dispatch({ 
-        type: 'UPDATE_QUIZ_STATE', 
+      dispatch({
+        type: 'UPDATE_QUIZ_STATE',
         payload: { isComplete: true, progress: 100 }
       });
-      
+
       // Here you would save the quiz results to the database
       if (debugMode) {
         console.log('🎯 FunnelMaster: Quiz submitted', state.quiz.responses);
@@ -550,7 +553,7 @@ export const FunnelMasterProvider: React.FC<FunnelMasterProviderProps> = ({
         ...state.funnel,
         pages: [...(state.funnel?.pages || []), data]
       };
-      
+
       dispatch({ type: 'SET_FUNNEL', payload: updatedFunnel });
     },
 
@@ -562,7 +565,7 @@ export const FunnelMasterProvider: React.FC<FunnelMasterProviderProps> = ({
 
       if (error) throw error;
 
-      const updatedPages = state.funnel?.pages?.map((page: FunnelPage) => 
+      const updatedPages = state.funnel?.pages?.map((page: FunnelPage) =>
         page.id === pageId ? { ...page, ...updates } : page
       ) || [];
 
@@ -608,7 +611,7 @@ export const FunnelMasterProvider: React.FC<FunnelMasterProviderProps> = ({
 
     optimizePerformance: async (): Promise<void> => {
       const startTime = performance.now();
-      
+
       // Clear old cache entries
       const now = Date.now();
       for (const [key, value] of cache.entries()) {
@@ -616,11 +619,11 @@ export const FunnelMasterProvider: React.FC<FunnelMasterProviderProps> = ({
           cache.delete(key);
         }
       }
-      
+
       // Update metrics
       const endTime = performance.now();
       const optimizationTime = endTime - startTime;
-      
+
       dispatch({
         type: 'UPDATE_METRICS',
         payload: {
@@ -738,11 +741,11 @@ export const useQuizFlow = () => {
 // Legacy compatibility for useQuiz21Steps
 export const useQuiz21Steps = () => {
   const master = useFunnelMaster();
-  
+
   const canGoNext = master.quiz.currentStep < master.quiz.totalSteps;
   const canGoPrevious = master.quiz.currentStep > 1;
   const isCurrentStepComplete = master.quiz.currentStepSelections[master.quiz.currentStep.toString()]?.length > 0 || master.quiz.userName.length > 0;
-  
+
   return {
     currentStep: master.quiz.currentStep,
     totalSteps: 21, // Fixed for 21-step quiz
@@ -757,7 +760,7 @@ export const useQuiz21Steps = () => {
     userName: master.quiz.userName,
     answers: master.quiz.answers,
     currentStepSelections: master.quiz.currentStepSelections,
-    
+
     // Functions with expected names
     next: master.nextStep,
     previous: master.previousStep,
@@ -768,7 +771,7 @@ export const useQuiz21Steps = () => {
     submit: master.submitQuiz,
     reset: master.resetQuiz,
     resetQuiz: master.resetQuiz,
-    
+
     // Helper functions
     getProgress: () => master.quiz.progress,
     getStepRequirements: () => ({

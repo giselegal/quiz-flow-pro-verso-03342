@@ -2,7 +2,7 @@ import { CanvasDropZone } from '@/components/editor/canvas/CanvasDropZone.simple
 import { Quiz21StepsNavigation } from '@/components/quiz/Quiz21StepsNavigation';
 import { QuizOptimizedRenderer } from '@/components/quiz/QuizOptimizedRenderer';
 import { FunnelMasterProvider, useQuiz21Steps } from '@/providers/FunnelMasterProvider';
-import { useEditor } from '@/components/editor/EditorProviderMigrationAdapter';
+import { useEditor } from '@/components/editor/provider-alias';
 import { EditorProvider } from '@/components/editor/EditorProvider';
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
@@ -53,10 +53,10 @@ const QuizIntegratedRenderer: React.FC = () => {
   }, []);
 
   const computed = (editorContext as any)?.computed || { currentBlocks: [] };
-  const blockActions = (editorContext as any)?.blockActions || { 
-    setSelectedBlockId: () => {}, 
-    updateBlock: () => Promise.resolve(), 
-    deleteBlock: () => {} 
+  const blockActions = (editorContext as any)?.blockActions || {
+    setSelectedBlockId: () => { },
+    updateBlock: () => Promise.resolve(),
+    deleteBlock: () => { }
   };
 
   const { currentStep } = quizContext;
@@ -92,17 +92,17 @@ const QuizIntegratedRenderer: React.FC = () => {
                 Responda com sinceridade para descobrir seu estilo predominante
               </p>
             </div>
-            
+
             <div className="flex items-center space-x-2">
-              <Button 
-                onClick={() => setViewMode('standard')} 
+              <Button
+                onClick={() => setViewMode('standard')}
                 variant={viewMode === 'standard' ? 'default' : 'outline'}
                 size="sm"
               >
                 Standard
               </Button>
-              <Button 
-                onClick={() => setViewMode('optimized')} 
+              <Button
+                onClick={() => setViewMode('optimized')}
                 variant={viewMode === 'optimized' ? 'default' : 'outline'}
                 size="sm"
                 className="bg-gradient-to-r from-purple-500 to-blue-500"
@@ -126,7 +126,7 @@ const QuizIntegratedRenderer: React.FC = () => {
                   scopeId={currentStep}
                 />
               </div>
-              
+
               {/* 📊 FOOTER BÁSICO */}
               <div className="text-center mt-8 text-sm text-stone-500">
                 <div className="flex justify-center items-center space-x-6">
@@ -136,7 +136,7 @@ const QuizIntegratedRenderer: React.FC = () => {
                 </div>
               </div>
             </TabsContent>
-            
+
             <TabsContent value="optimized">
               {/* MODO OTIMIZADO - Backend Integration */}
               <QuizOptimizedRenderer

@@ -1,11 +1,11 @@
-import { useEditor } from '@/components/editor/EditorProviderMigrationAdapter';
+import { useEditor } from '@/components/editor/provider-alias';
 import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
 import React from 'react';
 
 const DebugStep02: React.FC = () => {
   const { state, actions } = useEditor();
   const computed = { currentBlocks: [], selectedBlock: { id: 'mock-id' } };
-  const stageActions = { setActiveStage: () => {} };
+  const stageActions = { setActiveStage: () => { } };
   const blockActions = { addBlock: async (type: string) => 'new-id' };
   const activeStageId = 'step-1';
 

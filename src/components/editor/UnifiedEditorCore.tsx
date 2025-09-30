@@ -16,7 +16,7 @@
  */
 
 import React, { Suspense, useMemo, useCallback } from 'react';
-import { useEditor } from '@/components/editor/EditorProviderMigrationAdapter';
+import { useEditor } from '@/components/editor/provider-alias';
 import { logger } from '@/utils/debugLogger';
 
 // 🎯 LAZY LOADED COMPONENTS (código splitting inteligente)

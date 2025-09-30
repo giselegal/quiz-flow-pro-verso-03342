@@ -6,7 +6,7 @@
  */
 
 import React, { useMemo, useCallback } from 'react';
-import { useEditor } from '@/components/editor/EditorProviderMigrationAdapter';
+import { useEditor } from '@/components/editor/provider-alias';
 import { logger } from '@/utils/debugLogger';
 
 export interface UniversalPropertiesPanelProps {

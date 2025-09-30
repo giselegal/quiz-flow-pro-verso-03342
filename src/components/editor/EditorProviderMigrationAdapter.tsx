@@ -1,10 +1,10 @@
 /**
- * 🔄 MIGRATION ADAPTER - CONSOLIDAÇÃO DOS PROVIDERS
- * 
- * Este arquivo serve como adaptador durante a migração do
- * @/context/EditorContext para @/components/editor/EditorProvider
- * 
- * OBJETIVO: Eliminar conflitos mantendo compatibilidade
+ * 🔄 MIGRATION ADAPTER - (DEPRECATED)
+ * --------------------------------------------------------------
+ * STATUS: Este adaptador está em fase de descontinuação.
+ * Use sempre: import { EditorProvider, useEditor } from '@/components/editor/provider-alias';
+ * Próximas etapas: remover este arquivo após migração total dos imports.
+ * (Mantido temporariamente para evitar quebra em componentes legados.)
  */
 
 import React, { createContext, useContext, ReactNode } from 'react';
@@ -42,12 +42,12 @@ export const MigrationEditorProvider: React.FC<{
   enableSupabase?: boolean;
   legacyMode?: boolean; // Para forçar modo legacy durante testes
 }> = ({ children, funnelId, quizId, enableSupabase, legacyMode = false }) => {
-  
+
   // 🚀 DETECÇÃO AUTOMÁTICA: Usar provider moderno por padrão
   if (legacyMode) {
     // Fallback para contexto legacy apenas em casos especiais
     console.warn('🔄 MigrationEditorProvider: Usando modo legacy - considere migrar');
-    
+
     // Importação dinâmica do EditorContext legacy
     return (
       <LegacyEditorFallback funnelId={funnelId}>
@@ -108,7 +108,7 @@ const LegacyEditorFallback: React.FC<{
 export const useUnifiedEditor = (): UnifiedEditorContextType => {
   // 1. Tentar usar provider moderno primeiro
   const modernContext = useEditorOptional();
-  
+
   if (modernContext) {
     console.log('✅ useUnifiedEditor: Usando provider moderno');
     return {
@@ -121,7 +121,7 @@ export const useUnifiedEditor = (): UnifiedEditorContextType => {
   try {
     // Importação dinâmica para evitar dependência circular
     const legacyContext = React.useContext(React.createContext(null));
-    
+
     if (legacyContext) {
       console.warn('⚠️ useUnifiedEditor: Fallback para provider legacy');
       return adaptLegacyContext(legacyContext as any);
@@ -151,22 +151,22 @@ function adaptLegacyContext(legacyContext: any): UnifiedEditorContextType {
       isLoading: false,
     },
     actions: {
-      setCurrentStep: () => {},
-      setSelectedBlockId: () => {},
-      setStepValid: () => {},
-      loadDefaultTemplate: () => {},
-      addBlock: async () => {},
-      addBlockAtIndex: async () => {},
-      removeBlock: async () => {},
-      reorderBlocks: async () => {},
-      updateBlock: async () => {},
-      ensureStepLoaded: async () => {},
-      undo: () => {},
-      redo: () => {},
+      setCurrentStep: () => { },
+      setSelectedBlockId: () => { },
+      setStepValid: () => { },
+      loadDefaultTemplate: () => { },
+      addBlock: async () => { },
+      addBlockAtIndex: async () => { },
+      removeBlock: async () => { },
+      reorderBlocks: async () => { },
+      updateBlock: async () => { },
+      ensureStepLoaded: async () => { },
+      undo: () => { },
+      redo: () => { },
       canUndo: false,
       canRedo: false,
       exportJSON: () => '{}',
-      importJSON: () => {},
+      importJSON: () => { },
     },
     legacy: {
       funnelId: legacyContext.funnelId,
@@ -227,9 +227,9 @@ function extractLegacyInterface(modernContext: EditorContextValue): UnifiedEdito
  */
 function createFallbackContext(): UnifiedEditorContextType {
   console.warn('🚨 Criando contexto de fallback - verifique se o EditorProvider está envolvendo o componente');
-  
-  const noopAsync = async () => {};
-  const noop = () => {};
+
+  const noopAsync = async () => { };
+  const noop = () => { };
 
   return {
     state: {
@@ -302,7 +302,7 @@ export const EditorMigrationUtils = {
   detectActiveProvider: (): 'modern' | 'legacy' | 'fallback' => {
     const modernContext = useEditorOptional();
     if (modernContext) return 'modern';
-    
+
     // Lógica para detectar legacy provider seria aqui
     return 'fallback';
   },

@@ -1,6 +1,6 @@
 import { getStepTemplate } from '@/config/templates/templates';
 // @ts-nocheck
-import { useEditor } from '@/components/editor/EditorProviderMigrationAdapter';
+import { useEditor } from '@/components/editor/provider-alias';
 import { Block } from '@/types/editor';
 import { useCallback, useEffect, useState } from 'react';
 
@@ -48,7 +48,7 @@ export function useTemplateLoader(): UseTemplateLoaderResult {
 
         // Importar adapter dinâmico
         const { QuizToEditorAdapter } = await import('@/adapters/QuizToEditorAdapter');
-        
+
         // Obter configuração da etapa específica
         const stepConfig = await QuizToEditorAdapter.getStepConfiguration(stepNumber);
         if (!stepConfig) {
@@ -61,7 +61,7 @@ export function useTemplateLoader(): UseTemplateLoaderResult {
         const blocks = editorData.stepBlocks[stepId] || [];
 
         console.log(`✅ Quiz template loaded for step ${stepNumber}: ${blocks.length} blocks`);
-        
+
         return { blocks };
       } catch (err) {
         console.error('❌ Error loading quiz template:', err);

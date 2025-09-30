@@ -24,25 +24,25 @@ const CONFIG = {
     '**/build/**',
     '**/*.test.*',
     '**/*.spec.*',
-    '**/EditorProviderMigrationAdapter.tsx', // Não migrar o próprio adaptador
+    '**/EditorProviderMigrationAdapter.tsx', // Não migrar o próprio adaptador @allow-legacy-adapter
   ],
   patterns: {
     // Padrões de importação a serem migrados
     legacyContext: {
       pattern: /import\s*{\s*([^}]*useEditor[^}]*)\s*}\s*from\s*['"]@\/context\/EditorContext['"];?/g,
-      replacement: "import { useEditor } from '@/components/editor/EditorProviderMigrationAdapter';"
+      replacement: "import { useEditor } from '@/components/editor/EditorProviderMigrationAdapter'; // @allow-legacy-adapter"
     },
     legacyContextWithProvider: {
       pattern: /import\s*{\s*([^}]*EditorProvider[^}]*)\s*}\s*from\s*['"]@\/context\/EditorContext['"];?/g,
-      replacement: "import { EditorProvider } from '@/components/editor/EditorProviderMigrationAdapter';"
+      replacement: "import { EditorProvider } from '@/components/editor/EditorProviderMigrationAdapter'; // @allow-legacy-adapter"
     },
     modernProvider: {
       pattern: /import\s*{\s*([^}]*useEditor[^}]*)\s*}\s*from\s*['"]@\/components\/editor\/EditorProvider['"];?/g,
-      replacement: "import { useEditor } from '@/components/editor/EditorProviderMigrationAdapter';"
+      replacement: "import { useEditor } from '@/components/editor/EditorProviderMigrationAdapter'; // @allow-legacy-adapter"
     },
     modernProviderWithProvider: {
       pattern: /import\s*{\s*([^}]*EditorProvider[^}]*)\s*}\s*from\s*['"]@\/components\/editor\/EditorProvider['"];?/g,
-      replacement: "import { EditorProvider } from '@/components/editor/EditorProviderMigrationAdapter';"
+      replacement: "import { EditorProvider } from '@/components/editor/EditorProviderMigrationAdapter'; // @allow-legacy-adapter"
     }
   }
 };
@@ -61,7 +61,7 @@ class EditorImportMigrator {
 
   async migrate() {
     console.log('🔄 INICIANDO MIGRAÇÃO DE IMPORTS DO EDITOR\n');
-    
+
     if (this.dryRun) {
       console.log('🧪 MODO DRY-RUN: Apenas simulando mudanças\n');
     } else if (this.apply) {
@@ -106,7 +106,7 @@ class EditorImportMigrator {
 
   async processFile(filePath) {
     this.stats.filesScanned++;
-    
+
     try {
       const content = fs.readFileSync(filePath, 'utf8');
       const originalContent = content;
@@ -116,10 +116,10 @@ class EditorImportMigrator {
       // Aplicar cada padrão de migração
       for (const [name, config] of Object.entries(CONFIG.patterns)) {
         const matches = [...modifiedContent.matchAll(config.pattern)];
-        
+
         if (matches.length > 0) {
           console.log(`🔍 ${filePath}: Encontradas ${matches.length} importações para migrar (${name})`);
-          
+
           for (const match of matches) {
             console.log(`  - ${match[0].trim()}`);
             this.stats.importsReplaced++;
@@ -133,19 +133,19 @@ class EditorImportMigrator {
       // Verificar e aplicar mudanças se necessário
       if (hasChanges) {
         this.stats.filesModified++;
-        
+
         if (this.apply) {
           // Criar backup
           const backupPath = `${filePath}.backup-migration`;
           fs.writeFileSync(backupPath, originalContent);
-          
+
           // Aplicar mudanças
           fs.writeFileSync(filePath, modifiedContent);
           console.log(`✅ ${filePath}: Migrado (backup em ${backupPath})`);
         } else {
           console.log(`🧪 ${filePath}: Seria migrado`);
         }
-        
+
         console.log(''); // Linha em branco para separar
       }
 

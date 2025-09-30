@@ -1,4 +1,5 @@
-import { createClient } from '@supabase/supabase-js';
+// Supabase centralizado
+import { getSupabase } from '@/supabase/config';
 import { useCallback, useEffect, useState } from 'react';
 
 // ============================================================================
@@ -56,11 +57,8 @@ export const useReusableComponents = (quizId?: string) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Supabase client (opcional - se não configurado, usa dados mock)
-  const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-  const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
-
-  const supabase = supabaseUrl && supabaseKey ? createClient(supabaseUrl, supabaseKey) : null;
+  // Supabase client central (pode ser null se vars ausentes)
+  const supabase = getSupabase();
 
   // ============================================================================
   // CARREGAR TIPOS DE COMPONENTES DISPONÍVEIS

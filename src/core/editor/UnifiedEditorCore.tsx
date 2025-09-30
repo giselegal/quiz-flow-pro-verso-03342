@@ -7,7 +7,7 @@
 
 import React from 'react';
 import { ErrorBoundary } from '@/components/editor/ErrorBoundary';
-import { EditorProvider } from '@/components/editor/EditorProviderMigrationAdapter';
+import { EditorProvider } from '@/components/editor/provider-alias';
 
 // Simple components for now to avoid complex type issues
 const SimpleEditorLayout: React.FC<{ isPreview: boolean }> = ({ isPreview }) => {

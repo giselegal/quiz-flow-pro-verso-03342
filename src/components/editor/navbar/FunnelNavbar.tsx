@@ -18,7 +18,7 @@ import {
   Cog,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { useEditor } from '@/components/editor/EditorProviderMigrationAdapter';
+import { useEditor } from '@/components/editor/provider-alias';
 
 interface FunnelNavbarProps {
   onSave?: () => void;
@@ -169,11 +169,10 @@ const FunnelNavbar: React.FC<FunnelNavbarProps> = ({
                   key={item.id}
                   variant="ghost"
                   size="sm"
-                  className={`h-10 px-4 py-2 ${
-                    isActive
+                  className={`h-10 px-4 py-2 ${isActive
                       ? 'bg-primary text-foreground'
                       : 'hover:bg-primary hover:text-foreground'
-                  }`}
+                    }`}
                   onClick={() => setActiveTab(item.id)}
                 >
                   <Icon className="md:mr-2 md:mx-0 mx-4 h-4 w-4" />

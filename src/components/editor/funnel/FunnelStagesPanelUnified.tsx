@@ -5,8 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Plus, GripVertical, Eye, Settings, Copy, Trash2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { useEditor } from '@/components/editor/EditorProviderMigrationAdapter';
-import { useEditor } from '@/components/editor/EditorProviderMigrationAdapter';
+import { useEditor } from '@/components/editor/provider-alias';
 
 interface FunnelStagesPanelProps {
   className?: string;
