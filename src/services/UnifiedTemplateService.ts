@@ -24,7 +24,8 @@ class UnifiedTemplateService {
     private readonly CRITICAL_TEMPLATES = [
         'step-1', 'step-2', // Só templates que sabemos que existem
         // 'step-12', 'step-20', 'step-21', // Comentado temporariamente
-        'quiz21StepsComplete', // Template principal
+    'quiz21StepsComplete', // Template principal (legacy alias)
+    'quiz-estilo-21-steps', // Canônico
         // 'quiz-style-express' // Comentado até ser configurado corretamente
     ];
 
@@ -67,8 +68,8 @@ class UnifiedTemplateService {
                 return true; // Steps sempre existem
             }
 
-            if (templateId === 'quiz21StepsComplete') {
-                return true; // Template principal sempre existe
+            if (templateId === 'quiz21StepsComplete' || templateId === 'quiz-estilo-21-steps') {
+                return true; // Template principal (alias ou canônico) sempre existe
             }
 
             return false; // Outros templates precisam ser verificados
@@ -200,44 +201,45 @@ class UnifiedTemplateService {
     private async getStaticTemplate(templateId: string): Promise<any | null> {
         try {
             // 🎯 PRIORIDADE 1: Template completo real (quiz21StepsComplete)
-            if (templateId === 'quiz21StepsComplete' || templateId.startsWith('step-')) {
-                console.log(`🎯 Carregando template REAL: ${templateId}`);
-
-                // Importar template real completo via barrel
-                const { getQuiz21StepsTemplate } = await import('@/templates/imports');
-                const QUIZ_STYLE_21_STEPS_TEMPLATE = getQuiz21StepsTemplate();
-
-                if (templateId === 'quiz21StepsComplete') {
-                    // Retornar estrutura completa do template real
-                    return {
-                        id: 'quiz21StepsComplete',
-                        name: 'Quiz 21 Steps Complete (REAL)',
-                        totalSteps: 21,
-                        steps: QUIZ_STYLE_21_STEPS_TEMPLATE,
-                        metadata: {
-                            source: 'QUIZ_STYLE_21_STEPS_TEMPLATE',
-                            isReal: true,
-                            loadedAt: new Date().toISOString()
+            if (templateId === 'quiz21StepsComplete' || templateId === 'quiz-estilo-21-steps' || templateId.startsWith('step-')) {
+                console.log(`🎯 Carregando template quiz-estilo (published-first): ${templateId}`);
+                const { loadQuizEstiloCanonical } = await import('@/domain/quiz/quizEstiloPublishedFirstLoader');
+                const loaded = await loadQuizEstiloCanonical();
+                if (loaded) {
+                    if (templateId === 'quiz21StepsComplete' || templateId === 'quiz-estilo-21-steps') {
+                        return {
+                            id: 'quiz-estilo-21-steps',
+                            name: 'Quiz Estilo 21 Steps (Canonical)',
+                            totalSteps: loaded.questions.length,
+                            steps: loaded.stepBlocks,
+                            questions: loaded.questions,
+                            styles: loaded.styles,
+                            scoringMatrix: loaded.scoringMatrix,
+                            metadata: {
+                                source: `quiz-estilo:${loaded.source}`,
+                                isReal: true,
+                                loadedAt: new Date().toISOString()
+                            }
+                        };
+                    }
+                    if (templateId.startsWith('step-')) {
+                        const step = loaded.stepBlocks[templateId];
+                        if (step) {
+                            return {
+                                id: templateId,
+                                name: `Step ${templateId} (quiz-estilo)`,
+                                blocks: step.blocks || [],
+                                metadata: {
+                                    source: `quiz-estilo:${loaded.source}`,
+                                    isReal: true,
+                                    loadedAt: new Date().toISOString()
+                                }
+                            };
                         }
-                    };
+                    }
                 }
-
-                // Para steps individuais, extrair do template real
-                const stepBlocks = QUIZ_STYLE_21_STEPS_TEMPLATE[templateId];
-                if (stepBlocks && Array.isArray(stepBlocks)) {
-                    console.log(`✅ Template REAL carregado: ${templateId} com ${stepBlocks.length} blocos`);
-                    return {
-                        id: templateId,
-                        name: `Step ${templateId} (REAL)`,
-                        blocks: stepBlocks,
-                        metadata: {
-                            source: 'QUIZ_STYLE_21_STEPS_TEMPLATE',
-                            isReal: true,
-                            loadedAt: new Date().toISOString()
-                        }
-                    };
-                } else {
-                    // Se não há template real, usar blocos gerados dinamicamente
+                // Fallback para geração se não encontrado
+                if (templateId.startsWith('step-')) {
                     const generatedBlocks = this.generateStepBlocks(parseInt(templateId.replace('step-', '')));
                     return {
                         id: templateId,

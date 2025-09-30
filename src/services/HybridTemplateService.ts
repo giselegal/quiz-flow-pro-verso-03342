@@ -67,17 +67,46 @@ class HybridTemplateService {
             }
 
             // 2. Verificar se é um template específico
-            if (templateId === 'quiz21StepsComplete') {
-                // Fallback para template TypeScript
-                try {
-                    // Usar import centralizado para evitar warning do Vite
+                if (templateId === 'quiz21StepsComplete' || templateId === 'quiz-estilo-21-steps') {
+                    // Published-first loader
+                    try {
+                        const { loadQuizEstiloCanonical } = await import('@/domain/quiz/quizEstiloPublishedFirstLoader');
+                        const loaded = await loadQuizEstiloCanonical();
+                        if (loaded) {
+                            return {
+                                id: 'quiz-estilo-21-steps',
+                                name: 'Quiz Estilo 21 Steps (Hybrid Published-First)',
+                                steps: loaded.stepBlocks,
+                                questions: loaded.questions,
+                                styles: loaded.styles,
+                                scoringMatrix: loaded.scoringMatrix,
+                                metadata: {
+                                    source: `hybrid:quiz-estilo:${loaded.source}`,
+                                    loadedAt: new Date().toISOString(),
+                                    strategy: 'published-first'
+                                }
+                            };
+                        }
+                    } catch (e) {
+                        console.warn('⚠️ Falha ao carregar published-first quiz-estilo, tentando caminhos legados', e);
+                    }
+
+                    // Caminhos legados (overrides + master JSON) removidos - agora fallback direto para TS
+
+                    // Final TS fallback legacy
                     const { getQuiz21StepsTemplate } = await import('@/templates/imports');
                     const QUIZ_STYLE_21_STEPS_TEMPLATE = getQuiz21StepsTemplate();
-                    return QUIZ_STYLE_21_STEPS_TEMPLATE;
-                } catch (error) {
-                    console.error('❌ Erro ao carregar quiz21StepsComplete:', error);
+                    return {
+                        id: 'quiz-estilo-21-steps',
+                        name: 'Quiz Estilo 21 Steps (TS Legacy Fallback)',
+                        steps: QUIZ_STYLE_21_STEPS_TEMPLATE,
+                        metadata: {
+                            source: 'QUIZ_STYLE_21_STEPS_TEMPLATE',
+                            loadedAt: new Date().toISOString(),
+                            strategy: 'legacy-ts-fallback'
+                        }
+                    };
                 }
-            }
 
             // 3. Tentar carregar do master template
             if (this.masterTemplate && this.masterTemplate.steps && this.masterTemplate.steps[templateId]) {
