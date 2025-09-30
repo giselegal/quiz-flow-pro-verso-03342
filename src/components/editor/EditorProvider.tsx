@@ -346,21 +346,71 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
         const loaded = await loadQuizEstiloCanonical();
         if (loaded) {
           console.log(`✅ quiz-estilo carregado (${loaded.source}) :: perguntas=${loaded.questions.length}`);
-          // Converter stepBlocks para formato usado internamente (array de Blocks por step) – aqui mantemos vazio até mapeamento real
-          const stepBlocks: Record<string, Block[]> = {};
-          Object.keys(loaded.stepBlocks).forEach(stepId => {
-            // Placeholder: mantendo vazio para edição granular; poderia mapear question -> inline block
-            stepBlocks[stepId] = [];
+          // Gerar blocks dinamicamente para cada pergunta
+          const dynamicStepBlocks: Record<string, Block[]> = {};
+          loaded.questions.forEach((q: any, index: number) => {
+            const stepId = `step-${index + 1}`;
+            const questionBlock: Block = {
+              id: q.id || `q-${index + 1}`,
+              type: 'quiz-question-inline',
+              order: 0,
+              properties: {
+                questionId: q.id,
+                title: q.title || q.text || `Pergunta ${index + 1}`,
+                options: q.options || q.answers || [],
+                scoring: q.scoring || null,
+                variant: q.uiVariant || 'default',
+                autoAdvance: index + 1 >= 2 && index + 1 <= 11, // regra alinhada às global rules
+                requiredSelections: index + 1 >= 2 && index + 1 <= 11 ? 3 : (index + 1 >= 13 && index + 1 <= 18 ? 1 : undefined)
+              },
+              content: {
+                prompt: q.prompt || q.title || q.text || '',
+                description: q.description || '',
+              }
+            };
+            dynamicStepBlocks[stepId] = [questionBlock];
           });
+
+          // Mesclar blocks de transição para etapas estratégicas (12 e 19) se não existirem
+          const addTransitionIfMissing = (stepNumber: number, label: string) => {
+            const stepKey = `step-${stepNumber}`;
+            if (!dynamicStepBlocks[stepKey]) {
+              dynamicStepBlocks[stepKey] = [{
+                id: `transition-${stepNumber}`,
+                type: 'quiz-transition',
+                order: 0,
+                properties: { label },
+                content: { title: label }
+              }];
+            }
+          };
+          addTransitionIfMissing(12, 'Transição Estratégica');
+          addTransitionIfMissing(19, 'Pré-Resultados');
+
+          // Garantir oferta/resultados finais placeholders se faltarem
+          const ensurePlaceholder = (stepNumber: number, type: string, title: string) => {
+            const stepKey = `step-${stepNumber}`;
+            if (!dynamicStepBlocks[stepKey]) {
+              dynamicStepBlocks[stepKey] = [{
+                id: `${type}-${stepNumber}`,
+                type: type as any,
+                order: 0,
+                properties: { title },
+                content: { title }
+              }];
+            }
+          };
+          ensurePlaceholder(20, 'quiz-result', 'Resultados');
+          ensurePlaceholder(21, 'quiz-offer', 'Oferta');
+
           setState((prev: EditorState) => ({
             ...prev,
-            stepBlocks: { ...prev.stepBlocks, ...stepBlocks },
+            stepBlocks: { ...prev.stepBlocks, ...dynamicStepBlocks },
             isLoading: false
           }));
           return; // Evitar fluxo antigo
-        } else {
-          console.warn('⚠️ quiz-estilo não carregado via loader; fallback para fluxo genérico');
         }
+        console.warn('⚠️ quiz-estilo não carregado via loader; fallback para fluxo genérico');
       } catch (err) {
         console.error('❌ Erro no published-first loader quiz-estilo:', err);
       }
