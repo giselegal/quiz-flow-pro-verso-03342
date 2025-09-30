@@ -1,27 +1,27 @@
 // 📊 QUIZ DATA SERVICE
-import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
+import { quizLegacyTemplateAdapter } from '@/services/legacy/QuizLegacyTemplateAdapter';
 
 export class QuizDataService {
   /**
    * Buscar dados de uma etapa específica
    */
-  static getStepData(stepNumber: number) {
+  static async getStepData(stepNumber: number) {
     const stepKey = `step-${stepNumber}`;
-    return QUIZ_STYLE_21_STEPS_TEMPLATE[stepKey] || [];
+    return quizLegacyTemplateAdapter.getStep(stepKey);
   }
 
   /**
    * Buscar todas as etapas
    */
-  static getAllSteps() {
-    return QUIZ_STYLE_21_STEPS_TEMPLATE;
+  static async getAllSteps() {
+    return quizLegacyTemplateAdapter.getAll();
   }
 
   /**
    * Obter configuração de uma etapa
    */
-  static getStepConfig(stepNumber: number) {
-    const blocks = this.getStepData(stepNumber);
+  static async getStepConfig(stepNumber: number) {
+    const blocks = await this.getStepData(stepNumber);
 
     return {
       stepNumber,
@@ -36,8 +36,8 @@ export class QuizDataService {
   /**
    * Validar estrutura de uma etapa
    */
-  static validateStep(stepNumber: number) {
-    const blocks = this.getStepData(stepNumber);
+  static async validateStep(stepNumber: number) {
+    const blocks = await this.getStepData(stepNumber);
 
     return {
       isValid: blocks.length > 0,

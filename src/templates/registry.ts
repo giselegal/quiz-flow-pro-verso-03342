@@ -8,7 +8,8 @@
  */
 
 // Legacy template import (ainda necessário até migrar para published runtime)
-import { QUIZ_STYLE_21_STEPS_TEMPLATE } from './quiz21StepsComplete';
+// Legacy removido: agora usamos adapter para evitar acoplamento direto
+import { quizLegacyTemplateAdapter } from '@/services/legacy/QuizLegacyTemplateAdapter';
 import { QUIZ_ESTILO_TEMPLATE_ID, canonicalizeQuizEstiloId, warnIfDeprecatedQuizEstilo } from '@/domain/quiz/quiz-estilo-ids';
 import { Block } from '@/types/editor';
 
@@ -51,7 +52,8 @@ async function loadQuiz21StepsTemplate(): Promise<FullTemplate> {
   let totalSteps = 0;
 
   // Converter cada step do template para formato do editor
-  for (const [stepKey, stepBlocks] of Object.entries(QUIZ_STYLE_21_STEPS_TEMPLATE)) {
+  const all = await quizLegacyTemplateAdapter.getAll();
+  for (const [stepKey, stepBlocks] of Object.entries(all)) {
     if (stepKey.startsWith('step-') && Array.isArray(stepBlocks)) {
       steps[stepKey] = stepBlocks as Block[];
       totalSteps++;
