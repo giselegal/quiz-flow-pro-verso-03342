@@ -30,6 +30,7 @@ export default function QuizEstiloPessoalPage({ funnelId }: QuizEstiloPessoalPag
     const search = useSearchParams();
     const refresh = search?.get('refresh') === '1';
     const templateId = 'quiz-estilo';
+    // Hook carrega template publicado; refresh=1 força recarga ignorando cache
     const { data, loading, error } = usePublishedTemplate({ templateId, refreshFlag: refresh });
 
     const effectiveQuestions = useMemo(() => {

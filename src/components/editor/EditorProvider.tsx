@@ -1333,15 +1333,22 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
   useEffect(() => {
     // Antes: carregava o template quando !funnelId (isso preenchia o canvas ao criar novo funil)
     // Agora: só carrega automaticamente se um template específico for solicitado
+    const stepBlocksCount = Object.keys(rawState.stepBlocks || {}).length;
     const shouldLoadDefault = funnelId === 'quiz-estilo-completo' || (typeof funnelId === 'string' && funnelId.startsWith('template-'));
 
-    console.log('🔍 EditorProvider - Verificação de carregamento automático:', {
-      funnelId,
-      shouldLoadDefault,
-      currentStepBlocks: Object.keys(rawState.stepBlocks || {}).length
-    });
+    // Evitar logs redundantes / execuções repetidas: assinatura única
+    const signatureRef = (window as any).__EDITOR_AUTOLOAD_SIGNATURE__ || ((window as any).__EDITOR_AUTOLOAD_SIGNATURE__ = new Set());
+    const signature = `${funnelId || 'null'}:${shouldLoadDefault}:${stepBlocksCount}`;
+    if (!signatureRef.has(signature)) {
+      signatureRef.add(signature);
+      console.log('🔍 EditorProvider - Verificação de carregamento automático:', {
+        funnelId,
+        shouldLoadDefault,
+        currentStepBlocks: stepBlocksCount
+      });
+    }
 
-    if (shouldLoadDefault && Object.keys(rawState.stepBlocks || {}).length === 0) {
+    if (shouldLoadDefault && stepBlocksCount === 0) {
       console.log('🚀 EditorProvider - Carregando template padrão automaticamente...');
       loadDefaultTemplate();
     }
