@@ -3,7 +3,9 @@ import { getBlocksForStep, mergeStepBlocks, normalizeStepBlocks } from '@/config
 import { DraftPersistence } from '@/services/editor/DraftPersistence';
 import { useEditorSupabaseIntegration } from '@/hooks/useEditorSupabaseIntegration';
 import { useHistoryStateIndexedDB } from '@/hooks/useHistoryStateIndexedDB';
-import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
+// Removido import direto do template legacy – agora usamos loader published-first
+import { loadQuizEstiloCanonical } from '@/domain/quiz/quizEstiloPublishedFirstLoader';
+import { QUIZ_ESTILO_TEMPLATE_ID, canonicalizeQuizEstiloId } from '@/domain/quiz/quiz-estilo-ids';
 import { Block, BlockType } from '@/types/editor';
 import { extractStepNumberFromKey } from '@/utils/supabaseMapper';
 import { arrayMove } from '@dnd-kit/sortable';
@@ -320,6 +322,37 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
     if (!funnelId) {
       console.log('📋 EditorProvider: Sem funnelId, mantendo canvas vazio');
       return;
+    }
+
+    // 🔁 Canonicalização rápida (alias legacy -> canônico)
+    const canonical = canonicalizeQuizEstiloId(funnelId) || funnelId;
+
+    // 🚀 Novo caminho: se for o quiz-estilo canônico, tentar published-first loader
+    if (canonical === QUIZ_ESTILO_TEMPLATE_ID) {
+      try {
+        console.log('🚀 EditorProvider: Carregando quiz-estilo via published-first loader...');
+        setState((prev: EditorState) => ({ ...prev, isLoading: true }));
+        const loaded = await loadQuizEstiloCanonical();
+        if (loaded) {
+          console.log(`✅ quiz-estilo carregado (${loaded.source}) :: perguntas=${loaded.questions.length}`);
+          // Converter stepBlocks para formato usado internamente (array de Blocks por step) – aqui mantemos vazio até mapeamento real
+          const stepBlocks: Record<string, Block[]> = {};
+          Object.keys(loaded.stepBlocks).forEach(stepId => {
+            // Placeholder: mantendo vazio para edição granular; poderia mapear question -> inline block
+            stepBlocks[stepId] = [];
+          });
+          setState((prev: EditorState) => ({
+            ...prev,
+            stepBlocks: { ...prev.stepBlocks, ...stepBlocks },
+            isLoading: false
+          }));
+          return; // Evitar fluxo antigo
+        } else {
+          console.warn('⚠️ quiz-estilo não carregado via loader; fallback para fluxo genérico');
+        }
+      } catch (err) {
+        console.error('❌ Erro no published-first loader quiz-estilo:', err);
+      }
     }
 
     // Carregar template se funnelId indica template
