@@ -14,6 +14,8 @@ import { unifiedCRUDService } from './UnifiedCRUDService';
 import { versioningService } from './VersioningService';
 import { historyManager } from './HistoryManager';
 import { analyticsServiceAdapter as analyticsService } from '@/analytics/compat/analyticsServiceAdapter';
+import definition from '@/domain/quiz/quiz-definition';
+import { canonicalToFunnelComponents } from '@/utils/canonicalQuizAdapters';
 
 export interface QuizPageComponent {
   id: string;
@@ -67,157 +69,19 @@ export class QuizPageIntegrationService {
   /**
    * Criar funil quiz padrão
    */
-  async createDefaultQuizFunnel(funnelId: string = 'quiz-estilo-21-steps'): Promise<QuizPageFunnel> {
-    const defaultComponents: QuizPageComponent[] = [
-      {
-        id: 'intro-step',
-        type: 'intro',
-        name: 'Etapa de Introdução',
-        description: 'Coleta o nome do usuário',
-        step: 1,
-        isEditable: true,
-        properties: {
-          showLogo: true,
-          logoUrl: '/logo.png',
-          title: 'Descubra seu Estilo Pessoal',
-          subtitle: 'Responda algumas perguntas e descubra seu estilo único',
-          inputPlaceholder: 'Digite seu nome',
-          buttonText: 'Começar Quiz'
-        },
-        styles: {
-          backgroundColor: '#ffffff',
-          textColor: '#333333',
-          buttonColor: '#3b82f6',
-          borderRadius: '8px'
-        },
-        content: {
-          title: 'Descubra seu Estilo Pessoal',
-          description: 'Responda algumas perguntas e descubra seu estilo único',
-          buttonText: 'Começar Quiz'
-        }
-      },
-      {
-        id: 'question-step-1',
-        type: 'question',
-        name: 'Pergunta 1',
-        description: 'Primeira pergunta do quiz',
-        step: 2,
-        isEditable: true,
-        properties: {
-          question: 'Qual é sua cor favorita?',
-          options: [
-            { id: '1', text: 'Azul', value: 'blue' },
-            { id: '2', text: 'Verde', value: 'green' },
-            { id: '3', text: 'Vermelho', value: 'red' },
-            { id: '4', text: 'Roxo', value: 'purple' }
-          ],
-          allowMultiple: false,
-          required: true
-        },
-        styles: {
-          backgroundColor: '#ffffff',
-          textColor: '#333333',
-          optionColor: '#f8f9fa',
-          selectedColor: '#3b82f6'
-        },
-        content: {
-          title: 'Qual é sua cor favorita?',
-          options: [
-            { id: '1', text: 'Azul', value: 'blue' },
-            { id: '2', text: 'Verde', value: 'green' },
-            { id: '3', text: 'Vermelho', value: 'red' },
-            { id: '4', text: 'Roxo', value: 'purple' }
-          ]
-        }
-      },
-      {
-        id: 'strategic-question-1',
-        type: 'strategic',
-        name: 'Pergunta Estratégica 1',
-        description: 'Pergunta estratégica sobre estilo',
-        step: 3,
-        isEditable: true,
-        properties: {
-          question: 'Como você se veste para uma ocasião especial?',
-          options: [
-            { id: '1', text: 'Elegante e sofisticado', value: 'elegant' },
-            { id: '2', text: 'Casual e confortável', value: 'casual' },
-            { id: '3', text: 'Ousado e único', value: 'bold' },
-            { id: '4', text: 'Clássico e atemporal', value: 'classic' }
-          ],
-          allowMultiple: false,
-          required: true
-        },
-        styles: {
-          backgroundColor: '#ffffff',
-          textColor: '#333333',
-          optionColor: '#f8f9fa',
-          selectedColor: '#3b82f6'
-        },
-        content: {
-          title: 'Como você se veste para uma ocasião especial?',
-          options: [
-            { id: '1', text: 'Elegante e sofisticado', value: 'elegant' },
-            { id: '2', text: 'Casual e confortável', value: 'casual' },
-            { id: '3', text: 'Ousado e único', value: 'bold' },
-            { id: '4', text: 'Clássico e atemporal', value: 'classic' }
-          ]
-        }
-      },
-      {
-        id: 'transition-step-1',
-        type: 'transition',
-        name: 'Transição 1',
-        description: 'Etapa de transição entre perguntas',
-        step: 4,
-        isEditable: true,
-        properties: {
-          title: 'Ótimo! Vamos continuar...',
-          description: 'Agora vamos descobrir mais sobre seu estilo',
-          buttonText: 'Próxima Pergunta',
-          showProgress: true,
-          progress: 20
-        },
-        styles: {
-          backgroundColor: '#f8f9fa',
-          textColor: '#333333',
-          buttonColor: '#3b82f6',
-          progressColor: '#3b82f6'
-        },
-        content: {
-          title: 'Ótimo! Vamos continuar...',
-          description: 'Agora vamos descobrir mais sobre seu estilo',
-          buttonText: 'Próxima Pergunta'
-        }
-      },
-      {
-        id: 'result-step',
-        type: 'result',
-        name: 'Resultado',
-        description: 'Exibição do resultado do quiz',
-        step: 21,
-        isEditable: true,
-        properties: {
-          title: 'Seu Estilo Pessoal',
-          description: 'Baseado nas suas respostas, descobrimos seu estilo único',
-          showScore: true,
-          showRecommendations: true,
-          buttonText: 'Ver Recomendações',
-          shareText: 'Descobri meu estilo pessoal!'
-        },
-        styles: {
-          backgroundColor: '#ffffff',
-          textColor: '#333333',
-          buttonColor: '#3b82f6',
-          resultColor: '#10b981'
-        },
-        content: {
-          title: 'Seu Estilo Pessoal',
-          description: 'Baseado nas suas respostas, descobrimos seu estilo único',
-          buttonText: 'Ver Recomendações'
-        }
-      }
-    ];
+  async createDefaultQuizFunnel(funnelId: string = definition.id): Promise<QuizPageFunnel> {
+    // Derivar diretamente do canonical
+    const canonicalComponents = canonicalToFunnelComponents(definition).map(c => ({
+      id: c.id,
+      type: c.type as QuizPageComponent['type'],
+      name: c.name,
+      description: c.description,
+      step: c.step,
+      isEditable: true,
+      properties: c.properties,
+      styles: c.styles,
+      content: c.content
+    }));
 
     const quizFunnel: QuizPageFunnel = {
       id: funnelId,
@@ -225,9 +89,9 @@ export class QuizPageIntegrationService {
       description: 'Quiz completo para descobrir o estilo pessoal do usuário',
       type: 'quiz',
       status: 'draft',
-      version: '1.0.0',
-      totalSteps: 21,
-      components: defaultComponents,
+      version: definition.version,
+      totalSteps: canonicalComponents.length,
+      components: canonicalComponents,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString()
     };
@@ -239,7 +103,7 @@ export class QuizPageIntegrationService {
       description: quizFunnel.description,
       type: 'quiz',
       status: 'draft',
-      stages: defaultComponents.map(comp => ({
+      stages: canonicalComponents.map(comp => ({
         id: comp.id,
         name: comp.name,
         type: comp.type,
