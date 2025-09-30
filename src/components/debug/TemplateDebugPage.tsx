@@ -3,7 +3,7 @@
  */
 
 import React, { useEffect, useState } from 'react';
-import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
+import { quizLegacyTemplateAdapter } from '@/services/legacy/QuizLegacyTemplateAdapter';
 import { normalizeStepBlocks } from '@/config/quizStepsComplete';
 
 const TemplateDebugPage: React.FC = () => {
@@ -11,48 +11,42 @@ const TemplateDebugPage: React.FC = () => {
     const [normalizedInfo, setNormalizedInfo] = useState<any>(null);
 
     useEffect(() => {
-        console.log('🔍 TemplateDebugPage mounted');
-
-        // 1. Verificar template bruto
-        const templateData = {
-            hasTemplate: !!QUIZ_STYLE_21_STEPS_TEMPLATE,
-            templateType: typeof QUIZ_STYLE_21_STEPS_TEMPLATE,
-            templateKeys: QUIZ_STYLE_21_STEPS_TEMPLATE ? Object.keys(QUIZ_STYLE_21_STEPS_TEMPLATE) : [],
-            keyCount: QUIZ_STYLE_21_STEPS_TEMPLATE ? Object.keys(QUIZ_STYLE_21_STEPS_TEMPLATE).length : 0,
-            sampleEntries: QUIZ_STYLE_21_STEPS_TEMPLATE ?
-                Object.entries(QUIZ_STYLE_21_STEPS_TEMPLATE).slice(0, 3).map(([k, v]) => [
-                    k,
-                    Array.isArray(v) ? `Array[${v.length}]` : typeof v
-                ]) : []
-        };
-
-        console.log('📦 Raw template data:', templateData);
-        setTemplateInfo(templateData);
-
-        // 2. Verificar normalização
-        if (QUIZ_STYLE_21_STEPS_TEMPLATE) {
-            const normalized = normalizeStepBlocks(QUIZ_STYLE_21_STEPS_TEMPLATE);
-            const normalizedData = {
-                normalizedKeys: Object.keys(normalized),
-                keyCount: Object.keys(normalized).length,
-                stepBlocks: Object.entries(normalized).map(([k, v]) => [k, v.length]),
-                specificSteps: {}
-            };
-
-            // Teste steps específicos
-            for (let i = 1; i <= 5; i++) {
-                const stepKey = `step-${i}`;
-                const blocks = normalized[stepKey];
-                (normalizedData.specificSteps as any)[i] = {
-                    hasBlocks: !!blocks,
-                    count: blocks?.length || 0,
-                    types: blocks?.slice(0, 3).map(b => b.type) || []
+        (async () => {
+            console.log('🔍 TemplateDebugPage mounted');
+            try {
+                const all = await quizLegacyTemplateAdapter.getAll();
+                const templateData = {
+                    hasTemplate: !!all,
+                    templateType: typeof all,
+                    templateKeys: Object.keys(all),
+                    keyCount: Object.keys(all).length,
+                    sampleEntries: Object.entries(all).slice(0, 3).map(([k, v]) => [k, Array.isArray(v) ? `Array[${(v as any[]).length}]` : typeof v])
                 };
-            }
+                console.log('📦 Raw template data:', templateData);
+                setTemplateInfo(templateData);
 
-            console.log('🔧 Normalized data:', normalizedData);
-            setNormalizedInfo(normalizedData);
-        }
+                const normalized = normalizeStepBlocks(all as any);
+                const normalizedData = {
+                    normalizedKeys: Object.keys(normalized),
+                    keyCount: Object.keys(normalized).length,
+                    stepBlocks: Object.entries(normalized).map(([k, v]) => [k, (v as any[]).length]),
+                    specificSteps: {} as any
+                };
+                for (let i = 1; i <= 5; i++) {
+                    const stepKey = `step-${i}`;
+                    const blocks = (normalized as any)[stepKey];
+                    normalizedData.specificSteps[i] = {
+                        hasBlocks: !!blocks,
+                        count: blocks?.length || 0,
+                        types: blocks?.slice(0, 3).map((b: any) => b.type) || []
+                    };
+                }
+                console.log('🔧 Normalized data:', normalizedData);
+                setNormalizedInfo(normalizedData);
+            } catch (err) {
+                console.error('TemplateDebugPage load error', err);
+            }
+        })();
     }, []);
 
     return (
