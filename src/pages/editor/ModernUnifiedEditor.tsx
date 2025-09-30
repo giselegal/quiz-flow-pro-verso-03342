@@ -10,6 +10,7 @@
  */
 
 import React, { useState, useCallback, Suspense, useEffect } from 'react';
+import { QUIZ_ESTILO_TEMPLATE_ID } from '../../domain/quiz/quiz-estilo-ids';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -464,8 +465,9 @@ const UnifiedEditorCore: React.FC<ModernUnifiedEditorProps> = ({
             console.log('✅ Template encontrado via query param:', templateParam);
 
             // 🎯 QUIZ-ESTILO: Detectar template do quiz
-            if (templateParam === 'quiz-estilo-21-steps') {
-                console.log('🎯 Detectado template quiz-estilo-21-steps');
+            // Centralização de ID via constante
+            if (templateParam === QUIZ_ESTILO_TEMPLATE_ID) {
+                console.log(`🎯 Detectado template ${QUIZ_ESTILO_TEMPLATE_ID}`);
                 return { templateId: templateParam, funnelId: null, type: 'quiz-template' };
             }
 
@@ -503,7 +505,7 @@ const UnifiedEditorCore: React.FC<ModernUnifiedEditorProps> = ({
     }, [funnelId, templateId]);
 
     // 🎯 QUIZ-ESTILO: Detectar e redirecionar para página especializada
-    if (extractedInfo.type === 'quiz-template' && extractedInfo.templateId === 'quiz-estilo-21-steps') {
+    if (extractedInfo.type === 'quiz-template' && extractedInfo.templateId === QUIZ_ESTILO_TEMPLATE_ID) {
         console.log('🚀 Redirecionando para QuizEditorIntegratedPage...');
 
         // Importar dinamicamente a página especializada

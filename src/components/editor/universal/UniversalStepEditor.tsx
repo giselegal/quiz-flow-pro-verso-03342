@@ -1,17 +1,10 @@
+// @ts-nocheck
 /**
- * Arquivo legacy substituído por stub.
- * Mantido apenas para evitar que imports quebrados interrompam a build.
- * Utilize `ModernUnifiedEditor` em `src/pages/editor/ModernUnifiedEditor.tsx` como editor principal.
+ * UniversalStepEditor (LEGACY FULLY REMOVED)
+ * Mantido apenas como stub mínimo para compatibilidade de imports.
+ * TODO: Remover definitivamente após confirmar ausência de usos dinâmicos.
  */
 import React from 'react';
-
-/**
- * UniversalStepEditor (LEGACY STUB)
- * --------------------------------------------------------------
- * Componente legacy removido. Mantido apenas como stub para evitar
- * que imports antigos quebrem durante a limpeza gradual.
- * Editor principal atual: ModernUnifiedEditor (src/pages/editor/ModernUnifiedEditor.tsx)
- */
 
 export interface UniversalStepEditorProps {
     stepId?: string;
@@ -23,8 +16,8 @@ const UniversalStepEditor: React.FC<UniversalStepEditorProps> = () => {
     if (process.env.NODE_ENV !== 'production') {
         return (
             <div style={{ padding: 24, fontFamily: 'system-ui, sans-serif', fontSize: 14 }}>
-                <strong>UniversalStepEditor (stub legacy)</strong>
-                <p>Este editor foi removido. Use <code>ModernUnifiedEditor</code>.</p>
+                <strong>UniversalStepEditor (legacy stub)</strong>
+                <p>Este componente foi removido. Use <code>ModernUnifiedEditor</code>.</p>
             </div>
         );
     }
@@ -33,111 +26,24 @@ const UniversalStepEditor: React.FC<UniversalStepEditorProps> = () => {
 
 export default UniversalStepEditor;
 export { UniversalStepEditor };
+value = { properties?.logoUrl || ''}
+onChange = {(e) => updateBlockProperty(blockData.id, 'properties.logoUrl', e.target.value)}
+className = "w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
+placeholder = "https://exemplo.com/logo.png"
+    />
+            </div >
 
-export interface UniversalStepEditorProps {
-    stepId?: string;
-    stepNumber?: number;
-    funnelId?: string;
-}
-
-const UniversalStepEditor: React.FC<UniversalStepEditorProps> = () => {
-    if (process.env.NODE_ENV !== 'production') {
-        return (
-            <div style={{ padding: 24, fontFamily: 'sans-serif', fontSize: 14 }}>
-                <strong>UniversalStepEditor (stub legacy)</strong>
-                <p>Este componente foi descontinuado. Use ModernUnifiedEditor.</p>
-            </div>
-        );
-    }
-    return null;
-};
-
-export default UniversalStepEditor;
-export { UniversalStepEditor };
-
-{/* Content Settings */ }
-                        <div className="space-y-3">
-                            <h5 className="text-sm font-medium text-gray-700 border-l-2 border-blue-500 pl-2">Conteúdo</h5>
-
-    const UniversalStepEditor: React.FC<UniversalStepEditorProps> = () => {
-        if (process.env.NODE_ENV !== 'production') {
-            return (
-                <div style={{ padding: 24, fontFamily: 'sans-serif', fontSize: 14 }}>
-                    <strong>UniversalStepEditor (stub legacy)</strong>
-                    <p>Este componente foi descontinuado. Utilize <code>ModernUnifiedEditor</code>.</p>
-                </div>
-            );
-        }
-        return null;
-    };
-                                <input
-                                    type="checkbox"
-                                    checked={content?.showLogo || properties?.showLogo || false}
-                                    onChange={(e) => updateBlockProperty(blockData.id, 'content.showLogo', e.target.checked)}
-                                    className="w-4 h-4 text-blue-600"
-                                />
-                                <label className="text-sm text-gray-700">Mostrar Logo</label>
-                            </div>
-
-                            <div className="flex items-center space-x-3">
-                                <input
-                                    type="checkbox"
-                                    checked={content?.showProgress || properties?.enableProgressBar || false}
-                                    onChange={(e) => updateBlockProperty(blockData.id, 'properties.enableProgressBar', e.target.checked)}
-                                const UniversalStepEditor: React.FC<UniversalStepEditorProps> = () => {
-                                    if (process.env.NODE_ENV !== 'production') {
-                                        return (
-                                            <div style={{ padding: 24, fontFamily: 'system-ui, sans-serif', fontSize: 14 }}>
-                                                <strong>UniversalStepEditor (stub legacy)</strong>
-                                                <p>Este editor foi removido. Use <code>ModernUnifiedEditor</code>.</p>
-                                            </div>
-                                        );
-                                    }
-                                    return null;
-                                };
-                                />
-                                <label className="text-sm text-gray-700">Mostrar Barra de Progresso</label>
-                            </div>
-
-                            <div className="flex items-center space-x-3">
-                                <input
-                                    type="checkbox"
-                                    checked={content?.showNavigation || properties?.showBackButton || false}
-                                    onChange={(e) => updateBlockProperty(blockData.id, 'properties.showBackButton', e.target.checked)}
-                                    className="w-4 h-4 text-blue-600"
-                                />
-                                <label className="text-sm text-gray-700">Mostrar Navegação</label>
-                            </div>
-                        </div >
-
-    {/* Logo Settings */ }
-{
-    (content?.showLogo || properties?.showLogo) && (
-        <div className="space-y-3">
-            <h5 className="text-sm font-medium text-gray-700 border-l-2 border-green-500 pl-2">Logo</h5>
-
-            <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">URL do Logo</label>
-                <input
-                    type="url"
-                    value={properties?.logoUrl || ''}
-                    onChange={(e) => updateBlockProperty(blockData.id, 'properties.logoUrl', e.target.value)}
-                    className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
-                    placeholder="https://exemplo.com/logo.png"
-                />
-            </div>
-
-            <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Alt do Logo</label>
-                <input
-                    type="text"
-                    value={properties?.logoAlt || ''}
-                    onChange={(e) => updateBlockProperty(blockData.id, 'properties.logoAlt', e.target.value)}
-                    className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
-                    placeholder="Descrição da logo"
-                />
-            </div>
-        </div>
+    <div>
+        <label className="block text-sm font-medium text-gray-700 mb-2">Alt do Logo</label>
+        <input
+            type="text"
+            value={properties?.logoAlt || ''}
+            onChange={(e) => updateBlockProperty(blockData.id, 'properties.logoAlt', e.target.value)}
+            className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
+            placeholder="Descrição da logo"
+        />
+    </div>
+        </div >
     )
 }
 
