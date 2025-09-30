@@ -27,8 +27,8 @@ interface QuizEstiloPessoalPageProps {
 }
 
 export default function QuizEstiloPessoalPage({ funnelId }: QuizEstiloPessoalPageProps) {
-    const search = useSearchParams();
-    const refresh = search?.get('refresh') === '1';
+    const [searchParams] = useSearchParams();
+    const refresh = searchParams.get('refresh') === '1';
     const templateId = 'quiz-estilo';
     // Hook carrega template publicado; refresh=1 força recarga ignorando cache
     const { data, loading, error } = usePublishedTemplate({ templateId, refreshFlag: refresh });

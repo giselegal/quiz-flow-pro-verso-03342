@@ -13,13 +13,18 @@ import React, { useState, useCallback, Suspense, useEffect } from 'react';
 import { QUIZ_ESTILO_TEMPLATE_ID, canonicalizeQuizEstiloId, warnIfDeprecatedQuizEstilo } from '../../domain/quiz/quiz-estilo-ids';
 import useEditorRouteInfo from './modern/hooks/useEditorRouteInfo';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-// (Tabs removidos - não usados atualmente)
-import { Separator } from '@/components/ui/separator';
-import { Brain, Target, CheckCircle, Activity } from 'lucide-react';
-import FunnelTypePanel from './modern/components/FunnelTypePanel';
-import EditorStatusBar from './modern/components/EditorStatusBar';
-import UnifiedEditorCanvas from './modern/components/UnifiedEditorCanvas';
+import { LoadingSpinner } from '@/components/ui/loading-spinner';
+import { useUnifiedCRUD, UnifiedCRUDProvider } from '@/context/UnifiedCRUDProvider';
+import { useUnifiedEditor } from '@/hooks';
+import useTemplateLifecycle from './modern/hooks/useTemplateLifecycle';
+import useFunnelSyncLogic from './modern/hooks/useFunnelSync';
+import useQuizSyncBridge from './modern/hooks/useQuizSyncBridge';
+import { useEditorCrudOperations } from './modern/logic/crudOperations';
+// Lazy heavy components
+import type { EditorMode as ToolbarEditorMode } from './modern/components/ModernToolbar';
+const ModernToolbar = React.lazy(() => import('./modern/components/ModernToolbar'));
+const UnifiedEditorCanvas = React.lazy(() => import('./modern/components/UnifiedEditorCanvas'));
+const EditorStatusBar = React.lazy(() => import('./modern/components/EditorStatusBar'));
 
 // 📡 Publication Settings Integration
 // PublicationSettingsButton removido (não utilizado diretamente nesta composição)
@@ -31,27 +36,13 @@ import UnifiedEditorCanvas from './modern/components/UnifiedEditorCanvas';
 // Toolbar extraída
 import ModernToolbar, { EditorMode as ToolbarEditorMode } from './modern/components/ModernToolbar';
 // CRUD hook extraído
-import { useEditorCrudOperations } from './modern/logic/crudOperations';
-// Tipos & serviços usados no arquivo (garantir importes explícitos)
-import { LoadingSpinner } from '@/components/ui/loading-spinner';
-// FunnelTypeDetector importado via hook; tipos internos não usados aqui
-// import FunnelTypeDetector from '@/components/editor/FunnelTypeDetector';
-// import { FunnelType } from '@/services/FunnelTypesRegistry';
-import { EditorProUnified } from '@/components/editor/EditorProUnified';
-import { TemplateLoadingSkeleton } from '@/components/ui/template-loading-skeleton';
-import { TemplateErrorBoundary } from '@/components/error/UnifiedErrorBoundary';
-import { FunnelMasterProvider } from '@/providers/FunnelMasterProvider';
-import PureBuilderProvider from '@/components/editor/PureBuilderProvider';
-import { getQuizDynamicMode, QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsAdapter';
-import { useUnifiedCRUD, UnifiedCRUDProvider } from '@/context/UnifiedCRUDProvider';
-import { useUnifiedEditor } from '@/hooks';
-// Removidos serviços e conversões agora encapsulados em hooks
-// import { EditorDashboardSyncService } from '@/services/core/EditorDashboardSyncService';
-// import { convertTemplateToEditorBlocks, createFallbackTemplate } from './modern/logic/templateConversion';
-// import { loadFullTemplate, convertTemplateToEditorFormat } from '@/templates/registry';
-import useTemplateLifecycle from './modern/hooks/useTemplateLifecycle';
-import useFunnelSyncLogic from './modern/hooks/useFunnelSync';
-import useQuizSyncBridge from './modern/hooks/useQuizSyncBridge';
+// Imports removidos (mantidos como comentário de referência, podem ser reintroduzidos se necessário)
+// import { EditorProUnified } from '@/components/editor/EditorProUnified';
+// import { TemplateLoadingSkeleton } from '@/components/ui/template-loading-skeleton';
+// import { TemplateErrorBoundary } from '@/components/error/UnifiedErrorBoundary';
+// import { FunnelMasterProvider } from '@/providers/FunnelMasterProvider';
+// import PureBuilderProvider from '@/components/editor/PureBuilderProvider';
+// import { getQuizDynamicMode } from '@/templates/quiz21StepsAdapter';
 
 // Tipos locais (fallback simples para EditorMode caso não exista global)
 interface ModernUnifiedEditorProps { funnelId?: string; templateId?: string; mode?: ToolbarEditorMode; className?: string; }
@@ -215,51 +206,63 @@ const UnifiedEditorCore: React.FC<ModernUnifiedEditorProps> = ({
         );
     }
 
+    // Normalização de modo e estado para toolbar (evita recriar objeto grande em cada render)
+    const allowed: ToolbarEditorMode[] = ['visual', 'builder', 'funnel', 'headless', 'admin-integrated'];
+    const normalizedMode: ToolbarEditorMode = allowed.includes(editorState.mode as ToolbarEditorMode)
+        ? editorState.mode as ToolbarEditorMode
+        : 'visual';
+    const toolbarState = {
+        mode: normalizedMode,
+        aiAssistantActive: editorState.aiAssistantActive,
+        previewMode: editorState.previewMode,
+        realExperienceMode: editorState.realExperienceMode
+    } as const;
+
+    const ToolbarFallback = () => (
+        <div className="h-12 border-b flex items-center px-4 text-sm text-muted-foreground bg-background/60">Carregando editor…</div>
+    );
+    const CanvasFallback = () => (
+        <div className="flex-1 flex items-center justify-center"><LoadingSpinner /></div>
+    );
+    const StatusFallback = () => (
+        <div className="h-6 border-t text-xs px-3 flex items-center text-muted-foreground bg-background/50">Inicializando…</div>
+    );
+
     return (
         <div className={`h-screen w-full bg-background flex flex-col ${className}`}>
-            {/* Toolbar Moderno com CRUD Actions */}
-            {/** Normalizar mode para tipos válidos do toolbar */}
-            {(() => {
-                const allowed: ToolbarEditorMode[] = ['visual', 'builder', 'funnel', 'headless', 'admin-integrated'];
-                const normalizedMode: ToolbarEditorMode = allowed.includes(editorState.mode as ToolbarEditorMode)
-                    ? editorState.mode as ToolbarEditorMode
-                    : 'visual';
-                const toolbarState: { mode: ToolbarEditorMode; aiAssistantActive: boolean; previewMode: boolean; realExperienceMode: boolean } = {
-                    mode: normalizedMode,
-                    aiAssistantActive: editorState.aiAssistantActive,
-                    previewMode: editorState.previewMode,
-                    realExperienceMode: editorState.realExperienceMode
-                } as const;
-                return (
-                    <ModernToolbar
-                        editorState={toolbarState as any}
-                        onStateChange={handleStateChange as any}
-                        funnelId={extractedInfo.funnelId || crudContext.currentFunnel?.id}
-                        mode={normalizedMode}
-                        onSave={handleSave}
-                        onCreateNew={handleCreateNew}
-                        onDuplicate={handleDuplicate}
-                        onTestCRUD={handleTestCRUD}
-                    />
-                );
-            })()}
+            <Suspense fallback={<ToolbarFallback />}>
+                <ModernToolbar
+                    editorState={toolbarState as any}
+                    onStateChange={handleStateChange as any}
+                    funnelId={extractedInfo.funnelId || crudContext.currentFunnel?.id}
+                    mode={normalizedMode}
+                    onSave={handleSave}
+                    onCreateNew={handleCreateNew}
+                    onDuplicate={handleDuplicate}
+                    onTestCRUD={handleTestCRUD}
+                />
+            </Suspense>
 
-            <UnifiedEditorCanvas
-                extractedInfo={extractedInfo as any}
-                detectorElement={DetectorElement}
-                detectedFunnelType={detectedFunnelType}
-                isDetectingType={isDetectingType}
-                pureBuilderTargetId={pureBuilderTargetId}
-                realExperienceMode={editorState.realExperienceMode}
-            />
+            <Suspense fallback={<CanvasFallback />}>
+                <UnifiedEditorCanvas
+                    extractedInfo={extractedInfo as any}
+                    detectorElement={DetectorElement}
+                    detectedFunnelType={detectedFunnelType}
+                    isDetectingType={isDetectingType}
+                    pureBuilderTargetId={pureBuilderTargetId}
+                    realExperienceMode={editorState.realExperienceMode}
+                />
+            </Suspense>
 
-            <EditorStatusBar
-                mode={editorState.mode}
-                unifiedEditor={unifiedEditor}
-                aiActive={editorState.aiAssistantActive}
-                detectedFunnelType={detectedFunnelType}
-                funnelData={funnelData}
-            />
+            <Suspense fallback={<StatusFallback />}>
+                <EditorStatusBar
+                    mode={editorState.mode}
+                    unifiedEditor={unifiedEditor}
+                    aiActive={editorState.aiAssistantActive}
+                    detectedFunnelType={detectedFunnelType}
+                    funnelData={funnelData}
+                />
+            </Suspense>
             {quizBridge.active && (
                 <div className="absolute top-2 right-4 text-xs text-muted-foreground flex gap-2 items-center">
                     <span className="px-2 py-1 rounded bg-secondary/40 border border-border">Quiz: {quizBridge.answersCount} respostas</span>
