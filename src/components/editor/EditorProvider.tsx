@@ -756,7 +756,7 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
     } else {
       ensureStepLoadedRef.current?.(1);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Failsafe: se após a inicialização todas as etapas estiverem vazias, recarregar o template padrão

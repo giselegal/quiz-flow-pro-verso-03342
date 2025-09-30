@@ -230,7 +230,7 @@ export const useQuizFlow = ({
         }
       })();
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Helpers derivados
