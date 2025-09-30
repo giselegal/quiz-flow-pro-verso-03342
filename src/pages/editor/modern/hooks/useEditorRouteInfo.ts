@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
-import { QUIZ_ESTILO_TEMPLATE_ID } from '../../../domain/quiz/quiz-estilo-ids';
+// Ajuste de caminho: uso de alias para evitar profundidade relativa incorreta
+import { QUIZ_ESTILO_TEMPLATE_ID } from '@/domain/quiz/quiz-estilo-ids';
 
 export interface RouteExtraction {
     funnelId: string | null;
