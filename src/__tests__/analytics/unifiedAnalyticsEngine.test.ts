@@ -34,15 +34,15 @@ function buildRows(rows: any[]) {
 }
 
 describe('UnifiedAnalyticsEngine', () => {
-        beforeEach(() => {
-            const c = getChain();
-            c.select.mockReset();
-            c.eq.mockReset();
-            c.gte.mockReset();
-            c.in.mockReset();
-            c.not.mockReset();
-            c.order.mockReset();
-        });
+    beforeEach(() => {
+        const c = getChain();
+        c.select.mockReset();
+        c.eq.mockReset();
+        c.gte.mockReset();
+        c.in.mockReset();
+        c.not.mockReset();
+        c.order.mockReset();
+    });
 
     it('calcula FunnelSummary básico', async () => {
         const now = Date.now();
@@ -51,9 +51,9 @@ describe('UnifiedAnalyticsEngine', () => {
             { session_id: 's1', event_type: 'quiz_completed', occurred_at: new Date(now - 1000).toISOString() },
             { session_id: 's2', event_type: 'session_start', occurred_at: new Date(now - 4000).toISOString() }
         ]);
-            getChain().select.mockReturnValueOnce({
-                eq: () => ({ gte: () => Promise.resolve({ data: rows, error: null }) })
-            });
+        getChain().select.mockReturnValueOnce({
+            eq: () => ({ gte: () => Promise.resolve({ data: rows, error: null }) })
+        });
         const summary = await unifiedAnalyticsEngine.getFunnelSummary('f1', '24h');
         expect(summary.totalSessions).toBe(2);
         expect(summary.completedSessions).toBe(1);
@@ -69,9 +69,9 @@ describe('UnifiedAnalyticsEngine', () => {
             { session_id: 's2', event_type: 'step_viewed', step_id: 'step1', occurred_at: new Date(now - 2000).toISOString() },
             { session_id: 's2', event_type: 'quiz_completed', occurred_at: new Date(now - 1000).toISOString() }
         ]);
-            getChain().select.mockReturnValueOnce({
-                eq: () => ({ gte: () => Promise.resolve({ data: rows, error: null }) })
-            });
+        getChain().select.mockReturnValueOnce({
+            eq: () => ({ gte: () => Promise.resolve({ data: rows, error: null }) })
+        });
         const snap = await unifiedAnalyticsEngine.getRealtimeSnapshot('f1');
         expect(snap.activeUsers).toBe(2);
         expect(snap.recentCompletions).toBe(1);
@@ -89,9 +89,9 @@ describe('UnifiedAnalyticsEngine', () => {
             { session_id: 's2', event_type: 'step_viewed', step_id: 'A', occurred_at: new Date(now - 4000).toISOString() },
             { session_id: 's2', event_type: 'question_answered', step_id: 'A', occurred_at: new Date(now - 3000).toISOString() }
         ]);
-            getChain().select.mockReturnValueOnce({
-                eq: () => ({ gte: () => ({ not: () => Promise.resolve({ data: rows, error: null }) }) })
-            });
+        getChain().select.mockReturnValueOnce({
+            eq: () => ({ gte: () => ({ not: () => Promise.resolve({ data: rows, error: null }) }) })
+        });
         const drop = await unifiedAnalyticsEngine.getStepDropoff('f1', '24h');
         const stepA = drop.find(d => d.stepId === 'A');
         const stepB = drop.find(d => d.stepId === 'B');
@@ -105,9 +105,9 @@ describe('UnifiedAnalyticsEngine', () => {
             { session_id: 's2', event_type: 'conversion', payload: { styleCategory: 'beta' } },
             { session_id: 's3', event_type: 'quiz_completed', payload: { style_result: 'alpha' } }
         ]);
-            getChain().select.mockReturnValueOnce({
-                eq: () => ({ gte: () => ({ in: () => Promise.resolve({ data: rows, error: null }) }) })
-            });
+        getChain().select.mockReturnValueOnce({
+            eq: () => ({ gte: () => ({ in: () => Promise.resolve({ data: rows, error: null }) }) })
+        });
         const styles = await unifiedAnalyticsEngine.getStyleDistribution('f1', '24h');
         const alpha = styles.find(s => s.style === 'alpha');
         expect(alpha?.count).toBe(2);
@@ -121,9 +121,9 @@ describe('UnifiedAnalyticsEngine', () => {
             { session_id: 's3', event_type: 'session_start', device: { type: 'tablet' } },
             { session_id: 's4', event_type: 'session_start', device: { type: 'mobile' } }
         ]);
-            getChain().select.mockReturnValueOnce({
-                eq: () => ({ gte: () => ({ not: () => Promise.resolve({ data: rows, error: null }) }) })
-            });
+        getChain().select.mockReturnValueOnce({
+            eq: () => ({ gte: () => ({ not: () => Promise.resolve({ data: rows, error: null }) }) })
+        });
         const devices = await unifiedAnalyticsEngine.getDeviceBreakdown('f1', '24h');
         expect(devices.desktop).toBe(1);
         expect(devices.mobile).toBe(2);
@@ -136,9 +136,15 @@ describe('UnifiedAnalyticsEngine', () => {
             { session_id: 's2', event_type: 'question_answered', step_id: 'Q1', payload: { answer: 'B' } },
             { session_id: 's3', event_type: 'question_answered', step_id: 'Q1', payload: { answer: 'A' } }
         ]);
-            getChain().select.mockReturnValueOnce({
-                eq: () => ({ eq: () => ({ gte: () => Promise.resolve({ data: rows, error: null }) }) })
-            });
+        getChain().select.mockReturnValueOnce({
+            eq: () => ({
+                eq: () => ({
+                    gte: () => ({
+                        eq: () => Promise.resolve({ data: rows, error: null })
+                    })
+                })
+            })
+        });
         const dist = await unifiedAnalyticsEngine.getAnswerDistribution('f1', 'Q1', '24h');
         const optA = dist.options.find(o => o.value === 'A');
         expect(optA?.count).toBe(2);
