@@ -180,7 +180,7 @@ const TemplateInvestigationPage: React.FC = () => {
                         <h2 className="text-xl font-bold mb-4">📋 Templates Configurados</h2>
                         <p className="mb-2"><strong>Total:</strong> {AVAILABLE_TEMPLATES.length}</p>
                         <p className="mb-2"><strong>Ativos:</strong> {TemplateService.getActiveTemplates().length}</p>
-                        <p className="mb-4"><strong>Quiz21:</strong> {TemplateService.getTemplate('quiz21StepsComplete') ? '✅' : '❌'}</p>
+                        <p className="mb-4"><strong>Quiz Estilo (canônico):</strong> {TemplateService.getTemplate('quiz-estilo-21-steps') ? '✅' : '❌'}</p>
 
                         <div className="text-sm space-y-1">
                             {AVAILABLE_TEMPLATES.slice(0, 5).map(t => (
@@ -298,9 +298,9 @@ const TemplateInvestigationPage: React.FC = () => {
                             </ul>
                         </div>
                         <div>
-                            <h3 className="font-semibold mb-2">🎯 Quiz21StepsComplete:</h3>
+                            <h3 className="font-semibold mb-2">🎯 Quiz Estilo 21 Steps (canônico):</h3>
                             <ul className="text-sm space-y-1">
-                                <li>{TemplateService.getTemplate('quiz21StepsComplete') ? '✅' : '❌'} No config/templates</li>
+                                <li>{TemplateService.getTemplate('quiz-estilo-21-steps') ? '✅' : '❌'} No config/templates</li>
                                 <li>{userTemplates.find(t => t.id.includes('quiz21')) ? '✅' : '❌'} Nos templates do usuário</li>
                                 <li>🔍 Verificação completa realizada</li>
                             </ul>

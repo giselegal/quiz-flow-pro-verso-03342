@@ -85,7 +85,7 @@ const ModelosFunisPage: React.FC = () => {
           editorUrl: template.editorUrl
         }));
 
-        // Adicionar modelos específicos do quiz21StepsComplete
+        // Adicionar modelos específicos do quiz-estilo-21-steps (antigo quiz21StepsComplete)
         const quiz21Models: FunnelModel[] = [
           {
             id: 'quiz-estilo-21-steps',
@@ -106,8 +106,8 @@ const ModelosFunisPage: React.FC = () => {
               'Múltiplos tipos de questão'
             ],
             isActive: true,
-            templatePath: '/templates/quiz21StepsComplete',
-            editorUrl: '/editor?template=quiz21StepsComplete'
+            templatePath: '/templates/quiz-estilo-21-steps',
+            editorUrl: '/editor?template=quiz-estilo-21-steps'
           },
           {
             id: 'quiz-estilo-simplificado',
@@ -382,8 +382,8 @@ const ModelosFunisPage: React.FC = () => {
                     <Badge
                       variant="outline"
                       className={`text-xs ${model.difficulty === 'Fácil' ? 'bg-green-50 text-green-700' :
-                          model.difficulty === 'Intermediário' ? 'bg-yellow-50 text-yellow-700' :
-                            'bg-red-50 text-red-700'
+                        model.difficulty === 'Intermediário' ? 'bg-yellow-50 text-yellow-700' :
+                          'bg-red-50 text-red-700'
                         }`}
                     >
                       {model.difficulty}

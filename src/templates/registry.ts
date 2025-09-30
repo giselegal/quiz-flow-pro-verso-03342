@@ -7,7 +7,9 @@
  * - Gerenciar cache de templates
  */
 
+// Legacy template import (ainda necessário até migrar para published runtime)
 import { QUIZ_STYLE_21_STEPS_TEMPLATE } from './quiz21StepsComplete';
+import { QUIZ_ESTILO_TEMPLATE_ID, canonicalizeQuizEstiloId, warnIfDeprecatedQuizEstilo } from '@/domain/quiz/quiz-estilo-ids';
 import { Block } from '@/types/editor';
 
 export interface TemplateMetadata {
@@ -32,7 +34,8 @@ export interface FullTemplate {
 
 // 🎯 REGISTRY DE TEMPLATES DISPONÍVEIS
 const TEMPLATE_REGISTRY: Record<string, () => Promise<FullTemplate>> = {
-  'quiz21StepsComplete': () => loadQuiz21StepsTemplate(),
+  // Mapear sempre o ID canônico - aliases resolvidos em loadFullTemplate
+  [QUIZ_ESTILO_TEMPLATE_ID]: () => loadQuiz21StepsTemplate(),
   'testTemplate': () => loadTestTemplate(),
   'leadMagnetFashion': () => loadLeadMagnetTemplate(),
   'webinarSignup': () => loadWebinarTemplate(),
@@ -42,8 +45,8 @@ const TEMPLATE_REGISTRY: Record<string, () => Promise<FullTemplate>> = {
 
 // 🎯 TEMPLATE LOADER PRINCIPAL - QUIZ 21 STEPS
 async function loadQuiz21StepsTemplate(): Promise<FullTemplate> {
-  console.log('🎯 [TemplateRegistry] Carregando quiz21StepsComplete...');
-  
+  console.log('🎯 [TemplateRegistry] Carregando quiz-estilo (legacy quiz21StepsComplete)...');
+
   const steps: Record<string, Block[]> = {};
   let totalSteps = 0;
 
@@ -56,10 +59,10 @@ async function loadQuiz21StepsTemplate(): Promise<FullTemplate> {
   }
 
   const template: FullTemplate = {
-    id: 'quiz21StepsComplete',
+    id: QUIZ_ESTILO_TEMPLATE_ID,
     name: 'Quiz de Estilo Pessoal (21 Etapas)',
     metadata: {
-      id: 'quiz21StepsComplete',
+      id: QUIZ_ESTILO_TEMPLATE_ID,
       name: 'Quiz de Estilo Pessoal (21 Etapas)',
       description: 'Quiz completo com 21 etapas: coleta de nome, 10 questões pontuadas, 6 questões estratégicas, resultado personalizado e oferta',
       version: '2.0.0',
@@ -188,9 +191,11 @@ async function loadROITemplate(): Promise<FullTemplate> {
  * Carrega template completo por ID
  */
 export async function loadFullTemplate(templateId: string): Promise<FullTemplate | null> {
-  console.log(`🎯 [TemplateRegistry] Tentando carregar template: ${templateId}`);
-  
-  const loader = TEMPLATE_REGISTRY[templateId];
+  warnIfDeprecatedQuizEstilo(templateId);
+  const canonical = canonicalizeQuizEstiloId(templateId) || templateId;
+  console.log(`🎯 [TemplateRegistry] Tentando carregar template: ${templateId} (canonical: ${canonical})`);
+
+  const loader = TEMPLATE_REGISTRY[canonical];
   if (!loader) {
     console.warn(`⚠️ [TemplateRegistry] Template não encontrado: ${templateId}`);
     console.log('📋 [TemplateRegistry] Templates disponíveis:', Object.keys(TEMPLATE_REGISTRY));
@@ -199,10 +204,15 @@ export async function loadFullTemplate(templateId: string): Promise<FullTemplate
 
   try {
     const template = await loader();
-    console.log(`✅ [TemplateRegistry] Template carregado com sucesso: ${templateId}`);
+    if (template.id !== canonical) {
+      // Normalizar id interno
+      (template as any).id = canonical;
+      (template as any).metadata.id = canonical;
+    }
+    console.log(`✅ [TemplateRegistry] Template carregado com sucesso: ${canonical}`);
     return template;
   } catch (error) {
-    console.error(`❌ [TemplateRegistry] Erro ao carregar template ${templateId}:`, error);
+    console.error(`❌ [TemplateRegistry] Erro ao carregar template ${canonical}:`, error);
     return null;
   }
 }
@@ -212,7 +222,7 @@ export async function loadFullTemplate(templateId: string): Promise<FullTemplate
  */
 export function convertTemplateToEditorFormat(template: FullTemplate): any {
   console.log(`🔄 [TemplateRegistry] Convertendo template para formato do editor: ${template.id}`);
-  
+
   // O formato já está correto (steps com Block[])
   return {
     id: template.id,
@@ -233,7 +243,8 @@ export function getAvailableTemplates(): string[] {
  * Verifica se template existe
  */
 export function templateExists(templateId: string): boolean {
-  return templateId in TEMPLATE_REGISTRY;
+  const canonical = canonicalizeQuizEstiloId(templateId) || templateId;
+  return canonical in TEMPLATE_REGISTRY;
 }
 
 /**

@@ -10,7 +10,7 @@
  */
 
 import React, { useState, useCallback, Suspense, useEffect } from 'react';
-import { QUIZ_ESTILO_TEMPLATE_ID } from '../../domain/quiz/quiz-estilo-ids';
+import { QUIZ_ESTILO_TEMPLATE_ID, canonicalizeQuizEstiloId, warnIfDeprecatedQuizEstilo } from '../../domain/quiz/quiz-estilo-ids';
 import useEditorRouteInfo from './modern/hooks/useEditorRouteInfo';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -91,7 +91,9 @@ const UnifiedEditorCore: React.FC<ModernUnifiedEditorProps> = ({
     }
 
     const pureBuilderTargetId = React.useMemo(() => {
-        return extractedInfo.funnelId || extractedInfo.templateId || funnelId || templateId || 'quiz21StepsComplete';
+        const raw = extractedInfo.funnelId || extractedInfo.templateId || funnelId || templateId || QUIZ_ESTILO_TEMPLATE_ID;
+        warnIfDeprecatedQuizEstilo(raw);
+        return canonicalizeQuizEstiloId(raw) || QUIZ_ESTILO_TEMPLATE_ID;
     }, [extractedInfo.funnelId, extractedInfo.templateId, funnelId, templateId]);
 
     // 🎯 UNIFIED CRUD CONTEXT (mover acima para uso em hooks subsequentes)
@@ -281,15 +283,19 @@ const ModernUnifiedEditor: React.FC<ModernUnifiedEditorProps> = (props) => {
             // Verificar se é um template conhecido
             const knownTemplates = [
                 'testTemplate',
-                'quiz21StepsComplete',
+                QUIZ_ESTILO_TEMPLATE_ID, // novo canônico
                 'leadMagnetFashion',
                 'webinarSignup',
                 'npseSurvey',
                 'roiCalculator'
-            ]; const isTemplate = knownTemplates.includes(identifier);
+            ];
+            // Guard de alias legado
+            warnIfDeprecatedQuizEstilo(identifier);
+            const canonical = canonicalizeQuizEstiloId(identifier);
+            const isTemplate = knownTemplates.includes(canonical || identifier);
 
             if (isTemplate) {
-                return { templateId: identifier, funnelId: null };
+                return { templateId: canonical || identifier, funnelId: null };
             } else {
                 return { templateId: null, funnelId: identifier };
             }

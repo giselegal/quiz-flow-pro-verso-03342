@@ -206,6 +206,8 @@ interface UnifiedDashboardMetrics extends RealtimeMetricsSnapshot {
     geographicData?: Array<{ country: string; users: number }>;
     conversionsByHour?: Array<{ hour: number; conversions: number }>;
     topDevices?: Array<{ name: string; percentage: number }>;
+    // Campo derivado para compat (substitui activeUsersRealTime antigo)
+    activeUsers?: number;
 }
 
 const EnhancedRealTimeDashboard: React.FC = () => {
@@ -225,8 +227,15 @@ const EnhancedRealTimeDashboard: React.FC = () => {
 
             // Adapter retorna snapshot reduzido; enriquecemos com placeholders até consolidar fonte completa.
             const snap = await enhancedUnifiedDataServiceAdapter.getRealTimeMetrics();
+            // Calcular activeUsers derivado se não vier no snapshot
+            const activeUsersDerived = (snap as any).activeUsersRealTime
+                || (snap as any).activeUsers
+                || (snap as any).currentActiveUsers
+                || 0;
+
             const enriched: UnifiedDashboardMetrics = {
                 ...snap,
+                activeUsers: activeUsersDerived,
                 // Valores placeholder herdados do serviço legacy (até termos fonte unificada completa ou remover do layout)
                 totalSessions: realTimeMetrics?.totalSessions || 0,
                 completedSessions: realTimeMetrics?.completedSessions || 0,
@@ -327,7 +336,7 @@ const EnhancedRealTimeDashboard: React.FC = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 <MetricCard
                     title="Usuários Ativos Agora"
-                    value={realTimeMetrics?.activeUsersRealTime.toString() || '0'}
+                    value={(realTimeMetrics?.activeUsers ?? 0).toString()}
                     icon={<Users />}
                     color="green"
                     change={`+${realTimeMetrics?.sessionsLastHour || 0} na última hora`}
@@ -336,16 +345,16 @@ const EnhancedRealTimeDashboard: React.FC = () => {
 
                 <MetricCard
                     title="Sessões Totais"
-                    value={realTimeMetrics?.totalSessions.toLocaleString() || '0'}
+                    value={(realTimeMetrics?.totalSessions ?? 0).toLocaleString()}
                     icon={<Activity />}
                     color="blue"
-                    change={`${realTimeMetrics?.conversionRate.toFixed(1) || '0'}% conversão`}
+                    change={`${(realTimeMetrics?.conversionRate ?? 0).toFixed(1)}% conversão`}
                     trend="up"
                 />
 
                 <MetricCard
                     title="Conversões Hoje"
-                    value={realTimeMetrics?.completedSessions.toString() || '0'}
+                    value={(realTimeMetrics?.completedSessions ?? 0).toString()}
                     icon={<Target />}
                     color="purple"
                     change={`+${realTimeMetrics?.conversionsLastHour || 0} última hora`}
@@ -354,10 +363,10 @@ const EnhancedRealTimeDashboard: React.FC = () => {
 
                 <MetricCard
                     title="Receita Total"
-                    value={`R$ ${realTimeMetrics?.totalRevenue.toLocaleString() || '0'}`}
+                    value={`R$ ${(realTimeMetrics?.totalRevenue ?? 0).toLocaleString()}`}
                     icon={<Award />}
                     color="orange"
-                    change={`R$ ${realTimeMetrics?.revenueToday.toLocaleString() || '0'} hoje`}
+                    change={`R$ ${(realTimeMetrics?.revenueToday ?? 0).toLocaleString()} hoje`}
                     trend="up"
                 />
             </div>
@@ -366,16 +375,16 @@ const EnhancedRealTimeDashboard: React.FC = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 <MetricCard
                     title="Taxa de Conversão"
-                    value={`${realTimeMetrics?.conversionRate.toFixed(1) || '0'}%`}
+                    value={`${(realTimeMetrics?.conversionRate ?? 0).toFixed(1)}%`}
                     icon={<TrendingUp />}
                     color="green"
                     change="Meta: 65%"
-                    trend={realTimeMetrics && realTimeMetrics.conversionRate > 65 ? 'up' : 'neutral'}
+                    trend={realTimeMetrics && (realTimeMetrics.conversionRate ?? 0) > 65 ? 'up' : 'neutral'}
                 />
 
                 <MetricCard
                     title="Sessões/Hora"
-                    value={realTimeMetrics?.sessionsLastHour.toString() || '0'}
+                    value={(realTimeMetrics?.sessionsLastHour ?? 0).toString()}
                     icon={<Clock />}
                     color="blue"
                     change="Última hora"
@@ -384,16 +393,16 @@ const EnhancedRealTimeDashboard: React.FC = () => {
 
                 <MetricCard
                     title="Funis Ativos"
-                    value={realTimeMetrics?.activeFunnels.toString() || '0'}
+                    value={(realTimeMetrics?.activeFunnels ?? 0).toString()}
                     icon={<BarChart3 />}
                     color="brand"
-                    change={`${realTimeMetrics?.totalFunnels || 0} total`}
+                    change={`${realTimeMetrics?.totalFunnels ?? 0} total`}
                     trend="neutral"
                 />
 
                 <MetricCard
                     title="Revenue/Mês"
-                    value={`R$ ${realTimeMetrics?.revenueThisMonth.toLocaleString() || '0'}`}
+                    value={`R$ ${(realTimeMetrics?.revenueThisMonth ?? 0).toLocaleString()}`}
                     icon={<Award />}
                     color="purple"
                     change="Estimativa"
@@ -412,9 +421,9 @@ const EnhancedRealTimeDashboard: React.FC = () => {
                         </CardTitle>
                     </CardHeader>
                     <CardContent>
-                        {realTimeMetrics && (
+                        {realTimeMetrics && realTimeMetrics.topDevices && (
                             <SimpleBarChart
-                                data={realTimeMetrics.topDevices.map(device => ({
+                                data={(realTimeMetrics.topDevices || []).map(device => ({
                                     label: device.name,
                                     value: device.percentage,
                                     color: device.name === 'Desktop' ? 'bg-blue-500' :
@@ -434,9 +443,9 @@ const EnhancedRealTimeDashboard: React.FC = () => {
                         </CardTitle>
                     </CardHeader>
                     <CardContent>
-                        {realTimeMetrics && (
+                        {realTimeMetrics && realTimeMetrics.geographicData && (
                             <SimpleBarChart
-                                data={realTimeMetrics.geographicData.map((country, index) => ({
+                                data={(realTimeMetrics.geographicData || []).map((country, index) => ({
                                     label: country.country,
                                     value: country.users,
                                     color: index === 0 ? 'bg-green-500' :
@@ -456,9 +465,9 @@ const EnhancedRealTimeDashboard: React.FC = () => {
                         </CardTitle>
                     </CardHeader>
                     <CardContent>
-                        {realTimeMetrics && (
+                        {realTimeMetrics && realTimeMetrics.conversionsByHour && (
                             <SimpleLineChart
-                                data={realTimeMetrics.conversionsByHour}
+                                data={realTimeMetrics.conversionsByHour || []}
                             />
                         )}
                     </CardContent>
@@ -474,9 +483,9 @@ const EnhancedRealTimeDashboard: React.FC = () => {
                     </CardTitle>
                 </CardHeader>
                 <CardContent>
-                    {realTimeMetrics && (
+                    {realTimeMetrics && realTimeMetrics.topBrowsers && (
                         <SimpleBarChart
-                            data={realTimeMetrics.topBrowsers.map((browser, index) => ({
+                            data={(realTimeMetrics.topBrowsers || []).map((browser, index) => ({
                                 label: browser.name,
                                 value: browser.percentage,
                                 color: index === 0 ? 'bg-orange-500' :

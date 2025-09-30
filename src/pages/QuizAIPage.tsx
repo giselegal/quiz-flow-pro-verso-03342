@@ -8,6 +8,7 @@
 import React, { Suspense } from 'react';
 import { QuizErrorBoundary } from '@/components/RouteErrorBoundary';
 import { LoadingFallback } from '@/components/ui/loading-fallback';
+import { QUIZ_ESTILO_TEMPLATE_ID } from '@/domain/quiz/quiz-estilo-ids';
 
 const ModernUnifiedEditor = React.lazy(() => import('@/pages/editor/ModernUnifiedEditor'));
 
@@ -84,7 +85,7 @@ export const QuizAIPage: React.FC<QuizAIPageProps> = () => {
                 <Suspense fallback={<LoadingFallback />}>
                     <div data-testid="quiz-ai-editor">
                         <ModernUnifiedEditor
-                            funnelId="quiz21StepsComplete"
+                            funnelId={QUIZ_ESTILO_TEMPLATE_ID}
                             key="ai-quiz-editor"
                         />
                     </div>
