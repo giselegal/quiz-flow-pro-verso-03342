@@ -128,10 +128,35 @@ const QuizUnifiedPropertiesPanel: React.FC<QuizUnifiedPropertiesPanelProps> = ({
                                     <Input value={opt.text} onChange={e => updateOption(idx, 'text', e.target.value)} />
                                 </div>
                                 <div>
-                                    <Label>Imagem (URL)</Label>
+                                    <Label>Imagem (URL / Upload)</Label>
                                     <div className="flex items-start gap-2">
-                                        <Input className="flex-1" value={opt.image || ''} onChange={e => updateOption(idx, 'image', e.target.value)} placeholder="https://..." />
-                                        {opt.image && /^https?:\/\//.test(opt.image) && (
+                                        <Input className="flex-1" value={opt.image || ''} onChange={e => updateOption(idx, 'image', e.target.value)} placeholder="https://... ou upload" />
+                                        <input
+                                            type="file"
+                                            accept="image/*"
+                                            className="hidden"
+                                            id={`upload-${question.id}-${opt.id}`}
+                                            onChange={e => {
+                                                const file = e.target.files?.[0];
+                                                if (file) {
+                                                    const reader = new FileReader();
+                                                    reader.onload = (ev) => {
+                                                        const dataUrl = ev.target?.result as string;
+                                                        updateOption(idx, 'image', dataUrl);
+                                                    };
+                                                    reader.readAsDataURL(file);
+                                                }
+                                            }}
+                                        />
+                                        <Button
+                                            type="button"
+                                            variant="outline"
+                                            size="sm"
+                                            onClick={() => document.getElementById(`upload-${question.id}-${opt.id}`)?.click()}
+                                        >
+                                            Upload
+                                        </Button>
+                                        {opt.image && (
                                             <div className="w-14 h-14 border rounded overflow-hidden flex items-center justify-center bg-muted">
                                                 <img src={opt.image} alt="preview" className="object-cover w-full h-full" onError={(ev) => { (ev.currentTarget as any).style.display = 'none'; }} />
                                             </div>

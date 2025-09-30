@@ -48,6 +48,7 @@ import type { QuizStep } from '@/data/quizSteps';
 // Migrado para tracker unificado
 import { unifiedEventTracker } from '@/analytics/UnifiedEventTracker';
 import { performanceOptimizer } from '@/services/PerformanceOptimizer';
+import QuizGlobalScoringEditor from '../quiz/QuizGlobalScoringEditor';
 import QuizAnalyticsDashboard from '@/components/analytics/QuizAnalyticsDashboard';
 
 // ===============================
@@ -62,7 +63,7 @@ interface QuizEditorModeProps {
 }
 
 interface QuizEditorState {
-  activeTab: 'editor' | 'properties' | 'analytics' | 'preview' | 'performance';
+  activeTab: 'editor' | 'properties' | 'analytics' | 'preview' | 'performance' | 'scoring';
   isPreviewMode: boolean;
   isRealExperience: boolean;
   selectedStepNumber: number;
@@ -567,12 +568,13 @@ const QuizEditorMode: React.FC<QuizEditorModeProps> = ({
           onValueChange={(tab) => setState(prev => ({ ...prev, activeTab: tab as any }))}
           className="h-full flex flex-col"
         >
-          <TabsList className="grid grid-cols-5 w-full max-w-2xl mx-auto m-4">
+          <TabsList className="grid grid-cols-6 w-full max-w-3xl mx-auto m-4">
             <TabsTrigger value="editor">Editor</TabsTrigger>
             <TabsTrigger value="preview">Preview</TabsTrigger>
             <TabsTrigger value="properties">Propriedades</TabsTrigger>
             <TabsTrigger value="analytics">Analytics</TabsTrigger>
             <TabsTrigger value="performance">Performance</TabsTrigger>
+            <TabsTrigger value="scoring">Scoring</TabsTrigger>
           </TabsList>
 
           <div className="flex-1 overflow-hidden px-4 pb-4">
@@ -859,6 +861,17 @@ const QuizEditorMode: React.FC<QuizEditorModeProps> = ({
                     )}
                   </CardContent>
                 </Card>
+              </div>
+            </TabsContent>
+
+            {/* Aba Global Scoring */}
+            <TabsContent value="scoring" className="h-full m-0">
+              <div className="h-full space-y-4 overflow-auto pb-6">
+                <QuizGlobalScoringEditor
+                  questions={state.questions}
+                  styles={state.styles}
+                  onQuestionsChange={(qs) => setState(prev => ({ ...prev, questions: qs, isDirty: true }))}
+                />
               </div>
             </TabsContent>
           </div>

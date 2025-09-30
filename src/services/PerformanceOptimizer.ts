@@ -323,9 +323,25 @@ export class PerformanceOptimizer {
     private async loadLazyComponent(element: HTMLElement): Promise<void> {
         const componentName = element.getAttribute('data-component');
         if (componentName) {
-            // Simular carregamento dinâmico de componente
-            const component = await import(`@/components/${componentName}`);
-            // Lógica de renderização do componente
+            // Carregamento dinâmico de componente
+            // IMPORTANTE: O plugin vite:dynamic-import-vars exige que a parte estática contenha a extensão.
+            // Exemplo válido: import(`./foo/${bar}.js`)
+            // Portanto adicionamos ".tsx" ao final garantindo que o bundler consiga gerar os glob patterns.
+            try {
+                const module = await import(`@/components/${componentName}.tsx`);
+                // Opcional: se o componente tiver export default podemos anexar ao elemento
+                const Exported: any = module.default || module[componentName];
+                if (Exported) {
+                    // Estratégia simples: criar um container e renderizar via React apenas quando disponível
+                    // Para evitar dependência direta aqui, emitimos um evento customizado que outra parte do app pode escutar
+                    const event = new CustomEvent('lazy-component-loaded', {
+                        detail: { element, component: Exported, name: componentName }
+                    });
+                    window.dispatchEvent(event);
+                }
+            } catch (err) {
+                console.warn(`⚠️ Falha ao carregar componente lazy: ${componentName}`, err);
+            }
         }
     }
 

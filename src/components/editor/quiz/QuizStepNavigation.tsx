@@ -176,7 +176,7 @@ const QuizStepNavigation: React.FC<QuizStepNavigationProps> = ({
                                                 </div>
 
                                                 {/* Indicadores de status */}
-                                                <div className="flex items-center gap-2 mt-1">
+                                                <div className="flex items-center gap-2 mt-1 flex-wrap">
                                                     <Badge
                                                         variant={stepInfo.hasAnswers ? "default" : "outline"}
                                                         className="text-xs"
@@ -190,6 +190,22 @@ const QuizStepNavigation: React.FC<QuizStepNavigationProps> = ({
                                                     >
                                                         {stepInfo.hasScoring ? "Com pontuação" : "Sem pontuação"}
                                                     </Badge>
+                                                    {stepInfo.rawType === 'offer' && (
+                                                        <Badge
+                                                            variant={(stepInfo.question as any).variants?.length ? 'secondary' : 'outline'}
+                                                            className="text-xs"
+                                                        >
+                                                            {(stepInfo.question as any).variants?.length ? `${(stepInfo.question as any).variants.length} variantes` : 'Sem variantes'}
+                                                        </Badge>
+                                                    )}
+                                                    {stepInfo.rawType === 'strategic-question' && (
+                                                        <Badge
+                                                            variant={(stepInfo.question as any).answers?.some((a: any) => a.matchValue || a.strategyKey) ? 'secondary' : 'outline'}
+                                                            className="text-xs"
+                                                        >
+                                                            Mapping {(stepInfo.question as any).answers?.some((a: any) => a.matchValue || a.strategyKey) ? 'ok' : 'pendente'}
+                                                        </Badge>
+                                                    )}
                                                 </div>
                                             </div>
 
