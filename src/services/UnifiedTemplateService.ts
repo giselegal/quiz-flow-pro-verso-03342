@@ -17,16 +17,17 @@ interface CachedTemplate {
     ttl: number;
 }
 
+import { QUIZ_ESTILO_TEMPLATE_ID, canonicalizeQuizEstiloId, isQuizEstiloId } from '@/domain/quiz/quiz-estilo-ids';
+
 class UnifiedTemplateService {
     private cache = new Map<string, CachedTemplate>();
     private preloadingPromises = new Map<string, Promise<any>>();
     private readonly DEFAULT_TTL = 5 * 60 * 1000; // 5 minutos
     private readonly CRITICAL_TEMPLATES = [
-        'step-1', 'step-2', // Só templates que sabemos que existem
-        // 'step-12', 'step-20', 'step-21', // Comentado temporariamente
-        'quiz21StepsComplete', // Template principal (legacy alias)
-        'quiz-estilo-21-steps', // Canônico
-        // 'quiz-style-express' // Comentado até ser configurado corretamente
+        'step-1', 'step-2',
+        // Legacy alias mantido até remoção definitiva
+        'quiz21StepsComplete',
+        QUIZ_ESTILO_TEMPLATE_ID
     ];
 
     /**
@@ -68,9 +69,7 @@ class UnifiedTemplateService {
                 return true; // Steps sempre existem
             }
 
-            if (templateId === 'quiz21StepsComplete' || templateId === 'quiz-estilo-21-steps') {
-                return true; // Template principal (alias ou canônico) sempre existe
-            }
+            if (isQuizEstiloId(templateId)) return true;
 
             return false; // Outros templates precisam ser verificados
         } catch {
@@ -201,14 +200,14 @@ class UnifiedTemplateService {
     private async getStaticTemplate(templateId: string): Promise<any | null> {
         try {
             // 🎯 PRIORIDADE 1: Template completo real (quiz21StepsComplete)
-            if (templateId === 'quiz21StepsComplete' || templateId === 'quiz-estilo-21-steps' || templateId.startsWith('step-')) {
+            if (isQuizEstiloId(templateId) || templateId.startsWith('step-')) {
                 console.log(`🎯 Carregando template quiz-estilo (published-first): ${templateId}`);
                 const { loadQuizEstiloCanonical } = await import('@/domain/quiz/quizEstiloPublishedFirstLoader');
                 const loaded = await loadQuizEstiloCanonical();
                 if (loaded) {
-                    if (templateId === 'quiz21StepsComplete' || templateId === 'quiz-estilo-21-steps') {
+                    if (isQuizEstiloId(templateId)) {
                         return {
-                            id: 'quiz-estilo-21-steps',
+                            id: QUIZ_ESTILO_TEMPLATE_ID,
                             name: 'Quiz Estilo 21 Steps (Canonical)',
                             totalSteps: loaded.questions.length,
                             steps: loaded.stepBlocks,

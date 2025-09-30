@@ -78,7 +78,7 @@ export class TemplateFunnelService {
   }
 
   /**
-   * Aplica dados específicos do template quiz21StepsComplete
+   * Aplica dados específicos do template quiz-estilo (canônico)
    */
   private async applyQuiz21StepsTemplate(funnel: any): Promise<void> {
     try {
@@ -140,7 +140,7 @@ export class TemplateFunnelService {
       title: page.title || `Step ${index + 1}`,
       blocks: page.blocks || [],
       metadata: {
-        originalTemplate: 'quiz21StepsComplete',
+        originalTemplate: QUIZ_ESTILO_TEMPLATE_ID,
         stepNumber: index + 1,
         ...page.metadata
       }
@@ -151,10 +151,8 @@ export class TemplateFunnelService {
    * Extrai o nome do template do ID do funil
    */
   private extractTemplateFromId(funnelId: string): string {
-    // Exemplo: quiz21StepsComplete-1758520854105_l81ndl -> quiz21StepsComplete
-    if (funnelId.startsWith('quiz21StepsComplete')) {
-      return QUIZ_ESTILO_TEMPLATE_ID;
-    }
+    // Exemplo legado: quiz21StepsComplete-1758520854105_l81ndl -> canônico
+    if (funnelId.startsWith('quiz21StepsComplete')) return QUIZ_ESTILO_TEMPLATE_ID;
 
     // Adicionar outros patterns conforme necessário
     if (funnelId.includes('quiz-style-express')) {
@@ -187,7 +185,7 @@ export class TemplateFunnelService {
   shouldCreateFromTemplate(funnelId: string): boolean {
     // IDs que seguem padrão de template: templateName-timestamp_hash
     const templatePatterns = [
-      /^quiz21StepsComplete-\d+_.+$/,
+      /^quiz21StepsComplete-\d+_.+$/, // legacy alias ainda suportado
       /^quiz-style-express-\d+_.+$/,
       /^com-que-roupa-eu-vou-\d+_.+$/
     ];

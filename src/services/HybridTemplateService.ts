@@ -51,6 +51,8 @@ export interface MasterTemplate {
     steps: Record<string, StepTemplate>;
 }
 
+import { QUIZ_ESTILO_TEMPLATE_ID, isQuizEstiloId } from '@/domain/quiz/quiz-estilo-ids';
+
 class HybridTemplateService {
     private static masterTemplate: MasterTemplate | null = null;
     private static overrideCache = new Map<string, any>();
@@ -67,14 +69,14 @@ class HybridTemplateService {
             }
 
             // 2. Verificar se é um template específico
-            if (templateId === 'quiz21StepsComplete' || templateId === 'quiz-estilo-21-steps') {
+            if (isQuizEstiloId(templateId)) {
                 // Published-first loader
                 try {
                     const { loadQuizEstiloCanonical } = await import('@/domain/quiz/quizEstiloPublishedFirstLoader');
                     const loaded = await loadQuizEstiloCanonical();
                     if (loaded) {
                         return {
-                            id: 'quiz-estilo-21-steps',
+                            id: QUIZ_ESTILO_TEMPLATE_ID,
                             name: 'Quiz Estilo 21 Steps (Hybrid Published-First)',
                             steps: loaded.stepBlocks,
                             questions: loaded.questions,
@@ -97,7 +99,7 @@ class HybridTemplateService {
                 const { getQuiz21StepsTemplate } = await import('@/templates/imports');
                 const QUIZ_STYLE_21_STEPS_TEMPLATE = getQuiz21StepsTemplate();
                 return {
-                    id: 'quiz-estilo-21-steps',
+                    id: QUIZ_ESTILO_TEMPLATE_ID,
                     name: 'Quiz Estilo 21 Steps (TS Legacy Fallback)',
                     steps: QUIZ_STYLE_21_STEPS_TEMPLATE,
                     metadata: {
