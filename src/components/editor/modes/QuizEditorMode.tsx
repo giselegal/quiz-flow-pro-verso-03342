@@ -567,16 +567,50 @@ const QuizEditorMode: React.FC<QuizEditorModeProps> = ({
                   try {
                     addNotification('🚀 Publicando template...', 'info');
                     unifiedEventTracker.track('editor_publish_attempt', { funnelId });
+                    // Construir scoringMatrix derivando dos answers (caso não esteja em state)
+                    const scoringMatrix: Record<string, Record<string, Record<string, number>>> = {};
+                    state.questions.forEach(q => {
+                      (q.answers || []).forEach((ans: any) => {
+                        const stylePoints = ans.stylePoints || {};
+                        if (!stylePoints || Object.keys(stylePoints).length === 0) return;
+                        if (!scoringMatrix[q.id]) scoringMatrix[q.id] = {};
+                        scoringMatrix[q.id][ans.id] = {};
+                        Object.entries(stylePoints).forEach(([styleId, val]) => {
+                          if (typeof val === 'number' && !isNaN(val)) {
+                            scoringMatrix[q.id][ans.id][styleId] = val;
+                          }
+                        });
+                      });
+                    });
+
+                    // Gerar stepBlocks dinamicamente a partir das questões atuais
+                    // Estrutura mínima esperada: { [stepId]: { id, type, questionId, order } }
+                    const stepBlocks: Record<string, any> = {};
+                    state.questions.forEach((q, index) => {
+                      const stepId = `step-${index + 1}`;
+                      stepBlocks[stepId] = {
+                        id: stepId,
+                        type: q.rawType || q.type || 'question',
+                        questionId: q.id,
+                        order: index + 1,
+                        title: q.title,
+                        meta: {
+                          requiredSelections: q.requiredSelections || null
+                        }
+                      };
+                    });
+
                     const canonicalState: any = {
                       id: funnelId || 'quiz-estilo',
                       name: 'Quiz Estilo Pessoal',
                       description: 'Template publicado via editor',
                       questions: state.questions,
                       styles: state.styles,
-                      scoringMatrix: (state as any).scoringMatrix,
-                      stepBlocks: {},
+                      scoringMatrix: Object.keys(scoringMatrix).length ? scoringMatrix : undefined,
+                      stepBlocks,
                       isDirty: false,
-                      version: QUIZ_EDITOR_VERSION
+                      version: QUIZ_EDITOR_VERSION,
+                      updatedAt: new Date().toISOString()
                     };
                     const result = await templatePublishingService.publish(canonicalState);
                     if (!result.success) {

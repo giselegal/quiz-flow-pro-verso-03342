@@ -33,8 +33,7 @@ const EditorStatusBar = React.lazy(() => import('./modern/components/EditorStatu
 // 🎛️ NoCode Configuration Panel
 // EditorNoCodePanel removido (não utilizado após extrações)
 // import EditorNoCodePanel from '@/components/editor/EditorNoCodePanel';
-// Toolbar extraída
-import ModernToolbar, { EditorMode as ToolbarEditorMode } from './modern/components/ModernToolbar';
+// Toolbar extraída (já carregada via React.lazy acima)
 // CRUD hook extraído
 // Imports removidos (mantidos como comentário de referência, podem ser reintroduzidos se necessário)
 // import { EditorProUnified } from '@/components/editor/EditorProUnified';
