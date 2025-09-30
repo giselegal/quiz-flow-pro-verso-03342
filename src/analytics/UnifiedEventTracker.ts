@@ -16,7 +16,11 @@ import {
  * - Retry exponencial
  * - Persistência offline (localStorage) se falhar após retries
  */
-class EventTracker implements UnifiedEventTracker {
+/**
+ * EventTracker
+ * Exportado explicitamente para permitir construção de instâncias isoladas em testes.
+ */
+export class EventTracker implements UnifiedEventTracker {
     private buffer: UnifiedAnalyticsEvent[] = [];
     private globalContext: Partial<EventContext> = {};
     private enabled = true;
@@ -25,7 +29,7 @@ class EventTracker implements UnifiedEventTracker {
     private listeners: Array<(r: FlushResult) => void> = [];
     private readonly maxBuffer = 20;
     private readonly flushIntervalMs = 5000;
-    private readonly featureEnabled: boolean;
+    private featureEnabled: boolean; // mutável apenas para overrides de teste controlados
 
     constructor() {
         // Permitir override em testes: globalThis.__UNIFIED_ANALYTICS_FORCE = true|false
@@ -83,6 +87,40 @@ class EventTracker implements UnifiedEventTracker {
         return () => {
             this.listeners = this.listeners.filter(l => l !== listener);
         };
+    }
+
+    // --------------------------------------------------
+    // Métodos de suporte a testes (não documentados publicamente)
+    // --------------------------------------------------
+    /**
+     * Força override do estado da feature para testes sem recriar módulo.
+     * Retorna valor anterior para permitir restauração.
+     */
+    _setFeatureEnabledForTests(next: boolean): boolean {
+        const prev = this.featureEnabled;
+        this.featureEnabled = next;
+        return prev as boolean;
+    }
+
+    /**
+     * Dispara manualmente rotina de recuperação offline (ex: após simular reload).
+     */
+    _recoverOfflineForTests() {
+        this.recoverOfflineEvents();
+    }
+
+    /**
+     * Exposição somente leitura ao buffer para asserções específicas.
+     */
+    _getBufferForTests() {
+        return [...this.buffer];
+    }
+
+    /**
+     * Limpa buffer (uso exclusivo em testes para estado determinístico).
+     */
+    _clearBufferForTests() {
+        this.buffer.length = 0;
     }
 
     enable(): void { this.enabled = true; }
