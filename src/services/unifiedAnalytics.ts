@@ -1,6 +1,8 @@
 /**
  * 🚀 UNIFIED ANALYTICS SERVICE - Simplified Version
  */
+export const DEPRECATED = true; // stub será removido
+(() => { if (typeof console !== 'undefined' && !(globalThis as any).__DEP_LOG_UNIFIED_ANALYTICS_STUB) { (globalThis as any).__DEP_LOG_UNIFIED_ANALYTICS_STUB = true; console.warn('[DEPRECATED][unifiedAnalytics stub] Será substituído por UnifiedAnalyticsEngine real.'); } })();
 
 export interface DashboardMetrics {
   totalParticipants: number;

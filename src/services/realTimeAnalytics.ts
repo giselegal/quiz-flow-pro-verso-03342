@@ -3,6 +3,8 @@
  * 
  * Coleta e persiste métricas reais do uso do quiz
  */
+export const DEPRECATED = true;
+(() => { if (typeof console !== 'undefined' && !(globalThis as any).__DEP_LOG_REALTIME_ANALYTICS) { (globalThis as any).__DEP_LOG_REALTIME_ANALYTICS = true; console.warn('[DEPRECATED][realTimeAnalytics] Use unifiedEventTracker + UnifiedAnalyticsEngine.'); } })();
 
 import { supabase } from '@/lib/supabase';
 

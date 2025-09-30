@@ -7,6 +7,8 @@
  * 
  * Fase 2: Monitoramento Analytics - Roadmap de Escalabilidade
  */
+export const DEPRECATED = true; // Será substituído por UnifiedAnalyticsEngine
+(() => { if (typeof console !== 'undefined' && !(globalThis as any).__DEP_LOG_ANALYTICS_ENGINE) { (globalThis as any).__DEP_LOG_ANALYTICS_ENGINE = true; console.warn('[DEPRECATED][analyticsEngine] Migre para UnifiedAnalyticsEngine (em desenvolvimento).'); } })();
 
 import { getLogger } from '@/utils/logging';
 

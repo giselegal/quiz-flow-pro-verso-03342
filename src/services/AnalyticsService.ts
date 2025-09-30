@@ -6,6 +6,8 @@
  * Serviço completo de analytics para coleta de métricas,
  * tracking de eventos e análise de performance do quiz-editor.
  */
+export const DEPRECATED = true; // Migrar para unifiedEventTracker
+(() => { if (typeof console !== 'undefined' && !(globalThis as any).__DEP_LOG_CORE_ANALYTICS) { (globalThis as any).__DEP_LOG_CORE_ANALYTICS = true; console.warn('[DEPRECATED][AnalyticsService] Use unifiedEventTracker (src/analytics/UnifiedEventTracker.ts).'); } })();
 
 import { QUIZ_STEPS, getStepById, STRATEGIC_ANSWER_TO_OFFER_KEY } from '@/data/quizSteps';
 import { styleConfigGisele } from '@/data/styles';

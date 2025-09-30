@@ -2,6 +2,8 @@
  * 📊 ANALYTICS SERVICE - Phase 3 Implementation
  * Google Analytics 4 + Custom Editor Metrics
  */
+export const DEPRECATED = true;
+(() => { if (typeof console !== 'undefined' && !(globalThis as any).__DEP_LOG_MONITORING_ANALYTICS) { (globalThis as any).__DEP_LOG_MONITORING_ANALYTICS = true; console.warn('[DEPRECATED][monitoring/AnalyticsService] Substituído pelo unifiedEventTracker.'); } })();
 
 export interface CustomEvent {
   event_name: string;
@@ -64,7 +66,7 @@ class AnalyticsService {
 
     // Configurar gtag
     window.dataLayer = window.dataLayer || [];
-    window.gtag = window.gtag || function() {
+    window.gtag = window.gtag || function () {
       if (window.dataLayer) {
         window.dataLayer.push(arguments);
       }
@@ -310,7 +312,7 @@ class AnalyticsService {
   private calculateCompletionRate(): number {
     const totalActions = this.editorMetrics.blocksAdded + this.editorMetrics.templatesUsed.length;
     if (totalActions === 0) return 0;
-    
+
     return Math.min(100, (totalActions / 10) * 100);
   }
 }
