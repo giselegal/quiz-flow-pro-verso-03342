@@ -7,13 +7,14 @@
 
 import { FunnelUnifiedService, CreateFunnelOptions } from './FunnelUnifiedService';
 import { FunnelContext } from '@/core/contexts/FunnelContext';
-import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
+import { loadQuizEstiloCanonical } from '@/domain/quiz/quizEstiloPublishedFirstLoader';
+import { canonicalizeQuizEstiloId, QUIZ_ESTILO_TEMPLATE_ID } from '@/domain/quiz/quiz-estilo-ids';
 
 export class TemplateFunnelService {
   private static instance: TemplateFunnelService;
   private funnelService = FunnelUnifiedService.getInstance();
 
-  private constructor() {}
+  private constructor() { }
 
   static getInstance(): TemplateFunnelService {
     if (!this.instance) {
@@ -27,7 +28,7 @@ export class TemplateFunnelService {
    */
   async createFunnelFromTemplate(
     funnelId: string,
-    templateId: string = 'quiz21StepsComplete'
+    templateId: string = QUIZ_ESTILO_TEMPLATE_ID
   ): Promise<any> {
     console.log('🎯 TemplateFunnelService: Creating funnel from template', { funnelId, templateId });
 
@@ -41,7 +42,7 @@ export class TemplateFunnelService {
 
       // Extrair template base do ID
       const templateName = this.extractTemplateFromId(funnelId);
-      
+
       // Definir opções de criação
       const createOptions: CreateFunnelOptions = {
         name: this.generateFunnelName(templateName),
@@ -54,7 +55,7 @@ export class TemplateFunnelService {
       };
 
       // Aplicar dados do template
-      if (templateName === 'quiz21StepsComplete') {
+      if (templateName === QUIZ_ESTILO_TEMPLATE_ID) {
         createOptions.name = 'Quiz 21 Passos - Estilo Pessoal';
         createOptions.description = 'Quiz interativo para descobrir seu estilo pessoal único';
       }
@@ -63,7 +64,7 @@ export class TemplateFunnelService {
       const newFunnel = await this.funnelService.createFunnel(createOptions);
 
       // Aplicar dados específicos do template
-      if (templateName === 'quiz21StepsComplete') {
+      if (templateName === QUIZ_ESTILO_TEMPLATE_ID) {
         await this.applyQuiz21StepsTemplate(newFunnel);
       }
 
@@ -82,8 +83,30 @@ export class TemplateFunnelService {
   private async applyQuiz21StepsTemplate(funnel: any): Promise<void> {
     try {
       // Convert template steps to funnel pages
-      const pages = this.convertTemplateToPages(QUIZ_STYLE_21_STEPS_TEMPLATE);
-      
+      const loaded = await loadQuizEstiloCanonical();
+      const questions = loaded?.questions || [];
+      // Construir páginas simples a partir das perguntas (placeholder: páginas com um bloco virtual referenciando questionId)
+      const pages = questions.map((q: any, index: number) => ({
+        id: `step-${index + 1}`,
+        page_order: index + 1,
+        page_type: 'step',
+        title: q.title || `Step ${index + 1}`,
+        blocks: [
+          {
+            id: `qblock-${q.id}`,
+            type: 'quiz-question-inline',
+            order: 0,
+            properties: {
+              questionId: q.id,
+              title: q.title,
+              answers: q.answers || []
+            },
+            content: { title: q.title, description: q.subtitle || '' }
+          }
+        ],
+        metadata: { originalTemplate: QUIZ_ESTILO_TEMPLATE_ID, stepNumber: index + 1 }
+      }));
+
       // Update funnel with template data
       await this.funnelService.updateFunnel(funnel.id, {
         pages,
@@ -130,16 +153,16 @@ export class TemplateFunnelService {
   private extractTemplateFromId(funnelId: string): string {
     // Exemplo: quiz21StepsComplete-1758520854105_l81ndl -> quiz21StepsComplete
     if (funnelId.startsWith('quiz21StepsComplete')) {
-      return 'quiz21StepsComplete';
+      return QUIZ_ESTILO_TEMPLATE_ID;
     }
-    
+
     // Adicionar outros patterns conforme necessário
     if (funnelId.includes('quiz-style-express')) {
       return 'quiz-style-express';
     }
 
     // Default fallback
-    return 'quiz21StepsComplete';
+    return QUIZ_ESTILO_TEMPLATE_ID;
   }
 
   /**
@@ -147,10 +170,10 @@ export class TemplateFunnelService {
    */
   private generateFunnelName(templateName: string): string {
     const timestamp = new Date().toLocaleString('pt-BR');
-    
+
     switch (templateName) {
-      case 'quiz21StepsComplete':
-        return `Quiz 21 Passos - ${timestamp}`;
+      case QUIZ_ESTILO_TEMPLATE_ID:
+        return `Quiz Estilo 21 Passos - ${timestamp}`;
       case 'quiz-style-express':
         return `Quiz Express - ${timestamp}`;
       default:
