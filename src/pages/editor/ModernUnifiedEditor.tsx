@@ -9,7 +9,7 @@
  * ✅ Elimina conflitos entre editores fragmentados
  */
 
-import React, { useState, useCallback, Suspense } from 'react';
+import React, { useState, useCallback, Suspense, useEffect } from 'react';
 import { QUIZ_ESTILO_TEMPLATE_ID } from '../../domain/quiz/quiz-estilo-ids';
 import useEditorRouteInfo from './modern/hooks/useEditorRouteInfo';
 import { Button } from '@/components/ui/button';
@@ -300,6 +300,18 @@ const ModernUnifiedEditor: React.FC<ModernUnifiedEditorProps> = (props) => {
             templateId: props.templateId || null
         };
     }, [props.funnelId, props.templateId]);
+
+    // Listener para carregamento lazy de componentes via PerformanceOptimizer
+    useEffect(() => {
+        function handleLazy(e: Event) {
+            const detail: any = (e as CustomEvent).detail;
+            if (!detail?.name) return;
+            // Placeholder: poderíamos injetar dinamicamente em um registry ou disparar outro evento.
+            console.log('[lazy-component-loaded]', detail.name, detail);
+        }
+        window.addEventListener('lazy-component-loaded', handleLazy as any);
+        return () => window.removeEventListener('lazy-component-loaded', handleLazy as any);
+    }, []);
 
     return (
         <UnifiedCRUDProvider

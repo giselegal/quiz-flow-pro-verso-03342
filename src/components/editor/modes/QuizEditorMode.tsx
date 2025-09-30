@@ -47,6 +47,7 @@ import type { QuizStep } from '@/data/quizSteps';
 // FASE 4 - Analytics e Performance
 // Migrado para tracker unificado
 import { unifiedEventTracker } from '@/analytics/UnifiedEventTracker';
+import { quizSupabaseService } from '@/services/quizSupabaseService';
 import { performanceOptimizer } from '@/services/PerformanceOptimizer';
 import QuizGlobalScoringEditor from '../quiz/QuizGlobalScoringEditor';
 import QuizAnalyticsDashboard from '@/components/analytics/QuizAnalyticsDashboard';
@@ -259,16 +260,31 @@ const QuizEditorMode: React.FC<QuizEditorModeProps> = ({
   }, [state.analyticsEnabled, funnelId]);
 
   const trackEditorAction = useCallback((action: string, data: any) => {
-    if (state.analyticsEnabled) {
-      unifiedEventTracker.track({
-        type: 'editor_action',
-        funnelId: funnelId || 'unknown',
-        sessionId: `sess_${Date.now()}`,
-        userId: 'editor-user',
-        payload: { action, ...data, currentStep: state.selectedStepNumber, ts: Date.now() }
-      });
-    }
-  }, [state.analyticsEnabled, state.selectedStepNumber]);
+    if (!state.analyticsEnabled) return;
+    const payload = { action, ...data, currentStep: state.selectedStepNumber, ts: Date.now() };
+    const funnel = funnelId || 'unknown';
+    // Tracker interno
+    unifiedEventTracker.track({
+      type: 'editor_action',
+      funnelId: funnel,
+      sessionId: `sess_${Date.now()}`,
+      userId: 'editor-user',
+      payload
+    });
+    // Bridge Supabase (best-effort)
+    (async () => {
+      try {
+        await quizSupabaseService.trackEvent({
+          funnelId: funnel,
+          eventType: 'editor_action',
+          eventData: payload
+        });
+      } catch (e) {
+        // Silencioso para não afetar UX
+        if (import.meta.env.DEV) console.warn('Editor action supabase track falhou', e);
+      }
+    })();
+  }, [state.analyticsEnabled, state.selectedStepNumber, funnelId]);
 
   const loadRealQuizData = useCallback(async () => {
     try {

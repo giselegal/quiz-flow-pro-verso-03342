@@ -6,8 +6,10 @@
  */
 
 import { Block } from '@/types/editor';
-import { QuizStep } from '@/data/quizSteps';
+import { QUIZ_STEPS, STEP_ORDER } from '@/data/quizSteps';
 import { QuizQuestion } from '@/types/quiz';
+import { QuizEditorPersistenceService } from '@/services/QuizEditorPersistenceService';
+import { QUIZ_EDITOR_VERSION, QuizTemplateData } from '@/types/quizEditor';
 
 // Tipo simples para QuizAnswer no contexto do adapter
 export interface QuizAnswer {
@@ -27,6 +29,8 @@ export interface EditorQuizState {
   description: string;
   questions: QuizQuestion[];
   styles: any[];
+  stepBlocks: Record<string, Block[]>; // 🔄 blocos por step (placeholder)
+  scoringMatrix?: Record<string, Record<string, Record<string, number>>>; // matriz agregada
   isDirty: boolean;
   lastSaved?: string;
   version: string;
@@ -72,23 +76,41 @@ export class QuizToEditorAdapter {
   /**
    * 🔄 Converter quiz para estado do editor
    */
-  async convertQuizToEditor(quizData: any): Promise<EditorQuizState> {
+  async convertQuizToEditor(quizData?: any | { funnelId?: string; templateId?: string }): Promise<EditorQuizState> {
     try {
       console.log('🔄 Convertendo quiz para editor...');
+      // 1) Se nenhum objeto for passado, derivar do runtime canonical (QUIZ_STEPS)
+      let source: any = quizData;
+      if (!source || (source && !Array.isArray(source?.questions))) {
+        source = this.buildFromCanonical();
+      }
+
+      // 2) Carregar scoringMatrix já persistida (se existir)
+      let scoringMatrix: EditorQuizState['scoringMatrix'];
+      const persisted = await QuizEditorPersistenceService.load(source.id || 'quiz-estilo');
+      if (persisted?.scoringMatrix) scoringMatrix = persisted.scoringMatrix;
+
+      // 3) Placeholder de stepBlocks (cada step id → array vazia por enquanto)
+      const stepBlocks: Record<string, Block[]> = {};
+      for (const stepId of Object.keys(QUIZ_STEPS)) {
+        stepBlocks[stepId] = [];
+      }
 
       const editorState: EditorQuizState = {
-        id: quizData.id || `quiz-${Date.now()}`,
-        name: quizData.name || 'Quiz Personalizado',
-        description: quizData.description || '',
-        questions: this.extractQuestions(quizData),
-        styles: this.extractStyles(quizData),
+        id: source.id || `quiz-${Date.now()}`,
+        name: source.name || 'Quiz Personalizado',
+        description: source.description || '',
+        questions: this.extractQuestions(source),
+        styles: this.extractStyles(source),
+        stepBlocks,
+        scoringMatrix,
         isDirty: false,
-        version: quizData.version || '1.0.0'
+        version: source.version || QUIZ_EDITOR_VERSION
       };
 
       this.currentState = editorState;
       console.log('✅ Conversão concluída:', editorState);
-      
+
       return editorState;
     } catch (error) {
       console.error('❌ Erro na conversão:', error);
@@ -175,12 +197,48 @@ export class QuizToEditorAdapter {
   }
 
   /**
+   * 📦 Construir estrutura base a partir de QUIZ_STEPS canonical
+   */
+  private buildFromCanonical() {
+    const questions: any[] = [];
+    const styles: any[] = []; // Estilos podem ser resolvidos em outra camada; manter vazio por ora
+    STEP_ORDER.forEach((stepId, index) => {
+      const step: any = (QUIZ_STEPS as any)[stepId];
+      if (!step) return;
+      if (['question', 'strategic-question', 'offer', 'result', 'intro', 'transition', 'transition-result'].includes(step.type)) {
+        questions.push({
+          id: stepId,
+          type: step.type === 'question' ? 'multiple-choice' : step.type,
+          title: step.questionText || step.title || `Step ${index + 1}`,
+          description: step.text || '',
+          required: step.requiredSelections ? step.requiredSelections > 0 : false,
+          answers: (step.options || []).map((opt: any) => ({
+            id: opt.id,
+            text: opt.text,
+            stylePoints: {},
+          })),
+          order: index + 1,
+          variants: step.offerMap ? Object.entries(step.offerMap).map(([matchValue, v]: any) => ({
+            id: matchValue,
+            matchValue,
+            title: v.title,
+            description: v.description,
+            buttonText: v.buttonText,
+            testimonial: v.testimonial
+          })) : undefined
+        });
+      }
+    });
+    return { id: 'quiz-estilo', name: 'Quiz Estilo Pessoal', questions, styles, version: QUIZ_EDITOR_VERSION };
+  }
+
+  /**
    * 💾 Salvar alterações no quiz
    */
   async saveChangesToQuiz(editorState: EditorQuizState): Promise<SyncResult> {
     try {
       console.log('💾 Salvando alterações do editor...');
-      
+
       // Marcar como limpo
       this.isDirty = false;
       this.currentState = {
@@ -188,23 +246,23 @@ export class QuizToEditorAdapter {
         isDirty: false,
         lastSaved: new Date().toISOString()
       };
-      
+
       // Notificar listeners
       this.notifyListeners({
         type: 'data-saved',
         payload: this.currentState,
         timestamp: new Date().toISOString()
       });
-      
-        return {
+
+      return {
         success: true,
         data: this.currentState,
         timestamp: new Date().toISOString()
       };
-      
+
     } catch (error) {
       console.error('❌ Erro ao salvar:', error);
-        return {
+      return {
         success: false,
         error: error instanceof Error ? error.message : 'Erro desconhecido',
         timestamp: new Date().toISOString()
@@ -219,14 +277,14 @@ export class QuizToEditorAdapter {
     if (this.autoSaveInterval) {
       clearInterval(this.autoSaveInterval);
     }
-    
+
     this.autoSaveInterval = setInterval(() => {
       if (this.isDirty && this.currentState) {
         console.log('⏰ Auto-save triggered');
         this.saveChangesToQuiz(this.currentState);
       }
     }, intervalMs);
-    
+
     console.log(`⏰ Auto-save iniciado (${intervalMs}ms)`);
   }
 
@@ -274,7 +332,7 @@ export class QuizToEditorAdapter {
   markDirty(state: EditorQuizState): void {
     this.isDirty = true;
     this.currentState = { ...state, isDirty: true };
-    
+
     this.notifyListeners({
       type: 'question-updated',
       payload: state,
@@ -287,36 +345,36 @@ export class QuizToEditorAdapter {
    */
   static validateQuizData(data: any): boolean {
     if (!data || typeof data !== 'object') return false;
-    
+
     const required = ['questions', 'styles'];
     return required.every(key => key in data && Array.isArray(data[key]));
-}
+  }
 
   /**
    * 🎯 Obter configuração específica para uma etapa
    */
   static async getStepConfiguration(stepNumber: number): Promise<QuizStepData | null> {
-  const stepId = `step-${stepNumber}`;
+    const stepId = `step-${stepNumber}`;
 
-  // Determinar tipo da etapa baseado no número
-  let type: QuizStepData['type'];
+    // Determinar tipo da etapa baseado no número
+    let type: QuizStepData['type'];
     if (stepNumber === 1) type = 'intro';
     else if (stepNumber >= 2 && stepNumber <= 11) type = 'question';
-else if (stepNumber === 12 || stepNumber === 19) type = 'transition';
-else if (stepNumber >= 13 && stepNumber <= 18) type = 'strategic-question';
-else if (stepNumber === 20) type = 'result';
-else if (stepNumber === 21) type = 'offer';
-else type = 'question';
+    else if (stepNumber === 12 || stepNumber === 19) type = 'transition';
+    else if (stepNumber >= 13 && stepNumber <= 18) type = 'strategic-question';
+    else if (stepNumber === 20) type = 'result';
+    else if (stepNumber === 21) type = 'offer';
+    else type = 'question';
 
-return {
-  type,
-  stepNumber,
+    return {
+      type,
+      stepNumber,
       blocks: [], // TODO: Implementar geração de blocos
-  metadata: {
-    isQuizStep: true,
-    originalQuizStep: stepNumber
-  }
-};
+      metadata: {
+        isQuizStep: true,
+        originalQuizStep: stepNumber
+      }
+    };
   }
 
 }
