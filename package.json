@@ -83,7 +83,8 @@
     "quiz:diff-blocks": "tsx scripts/diff-legacy-vs-dynamic-blocks.ts",
     "quiz:verify-blocks": "tsx scripts/verify-blocks-parity.ts",
     "quiz:edit:smoke": "tsx --tsconfig tsconfig.smoke.json scripts/quiz-edit-smoke.ts",
-    "audit:adapter": "node scripts/audit/check-no-legacy-adapter.mjs"
+    "audit:adapter": "node scripts/audit/check-no-legacy-adapter.mjs",
+    "lint:legacy-analytics": "node scripts/check-legacy-analytics.mjs"
   },
   "smoke": {
     "step20": "node scripts/smoke-step20.mjs"
