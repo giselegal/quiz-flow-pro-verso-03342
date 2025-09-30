@@ -13,6 +13,17 @@ import React, { createContext, ReactNode, useCallback, useContext, useEffect } f
 import { unifiedQuizStorage } from '@/services/core/UnifiedQuizStorage';
 import { useFunnels } from '@/context/FunnelsContext';
 
+// 🔐 SHIM LEGACY TEMPORÁRIO
+// O template legacy QUIZ_STYLE_21_STEPS_TEMPLATE foi removido do import direto.
+// Para evitar ReferenceError em pontos ainda não refatorados, definimos um objeto vazio.
+// Próximos passos (TODO #5): substituir todos os usos de NORMALIZAÇÃO por dados carregados dinamicamente via loadQuizEstiloCanonical.
+// Se o window tiver sido populado por algum script legado, reutilizamos para manter compatibilidade.
+// Isso garante que chamadas como Object.keys(QUIZ_STYLE_21_STEPS_TEMPLATE) não quebrem.
+// Nunca confiar nisso para dados reais daqui em diante.
+// @deprecated: remover após refatoração completa dos componentes dependentes.
+// eslint-disable-next-line @typescript-eslint/naming-convention
+const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any[]> = (typeof window !== 'undefined' && (window as any).QUIZ_STYLE_21_STEPS_TEMPLATE) || {};
+
 // Utilitário simples para aguardar o próximo tick do event loop (garante flush de setState em testes)
 const waitNextTick = (ms: number = 0) => new Promise<void>(resolve => setTimeout(resolve, ms));
 
