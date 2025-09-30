@@ -1,6 +1,10 @@
 import QuizApp from '@/components/quiz/QuizApp';
 import { Helmet } from 'react-helmet-async';
 import '@/styles/globals.css';
+import { useSearchParams } from 'react-router-dom';
+import { usePublishedTemplate } from '@/hooks/usePublishedTemplate';
+import { QUIZ_STEPS } from '@/data/quizSteps';
+import { useMemo } from 'react';
 
 /**
  * 🎯 QUIZ ESTILO PESSOAL - GISELE GALVÃO
@@ -23,6 +27,17 @@ interface QuizEstiloPessoalPageProps {
 }
 
 export default function QuizEstiloPessoalPage({ funnelId }: QuizEstiloPessoalPageProps) {
+    const search = useSearchParams();
+    const refresh = search?.get('refresh') === '1';
+    const templateId = 'quiz-estilo';
+    const { data, loading, error } = usePublishedTemplate({ templateId, refreshFlag: refresh });
+
+    const effectiveQuestions = useMemo(() => {
+        if (data && data.questions?.length) return data.questions;
+        // Fallback derivado de QUIZ_STEPS para manter compatibilidade
+        return Object.values(QUIZ_STEPS).filter((s: any) => s.type !== 'intro-metadata');
+    }, [data]);
+
     return (
         <div className="quiz-estilo-page">
             {/* Meta tags para SEO */}
@@ -41,6 +56,16 @@ export default function QuizEstiloPessoalPage({ funnelId }: QuizEstiloPessoalPag
 
             {/* Componente principal do quiz */}
             <main className="min-h-screen">
+                {loading && (
+                    <div className="p-6 text-center text-sm text-muted-foreground">
+                        Carregando template publicado...
+                    </div>
+                )}
+                {error && (
+                    <div className="p-6 text-center text-sm text-red-500">
+                        Erro ao carregar versão publicada. Usando fallback local.
+                    </div>
+                )}
                 <QuizApp funnelId={funnelId} />
             </main>
 
@@ -50,6 +75,7 @@ export default function QuizEstiloPessoalPage({ funnelId }: QuizEstiloPessoalPag
                     __html: `
                         // Google Analytics ou outras ferramentas
                         console.log('Quiz Gisele Galvão - Página carregada');
+                        console.log('Versão publicada carregada?', !!${'data'});
                         
                         // Tracking de início do quiz
                         if (typeof gtag !== 'undefined') {
