@@ -590,10 +590,18 @@ export class FunnelErrorHandler {
      * Inicializar contexto global
      */
     private initializeContext(): ErrorHandlerContext {
+        let urlRef = 'Unknown';
+        if (typeof window !== 'undefined') {
+            try {
+                urlRef = window.location && window.location.href ? window.location.href : 'Unknown';
+            } catch {
+                urlRef = 'Unknown';
+            }
+        }
         return {
             sessionId: this.generateSessionId(),
             userAgent: typeof navigator !== 'undefined' ? navigator.userAgent : 'Unknown',
-            url: typeof window !== 'undefined' ? window.location.href : 'Unknown',
+            url: urlRef,
             timestamp: new Date().toISOString(),
             errorCount: 0,
             errorRate: 0
@@ -611,7 +619,7 @@ export class FunnelErrorHandler {
      * Configurar captura global de erros
      */
     private setupGlobalErrorHandling(): void {
-        if (typeof window === 'undefined') return;
+        if (typeof window === 'undefined' || typeof window.addEventListener !== 'function') return;
 
         // Capturar erros JavaScript não tratados
         window.addEventListener('error', (event) => {
