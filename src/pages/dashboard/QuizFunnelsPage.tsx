@@ -15,12 +15,12 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { 
-  Plus, 
-  Search, 
-  Filter, 
-  Grid, 
-  List, 
+import {
+  Plus,
+  Search,
+  Filter,
+  Grid,
+  List,
   RefreshCw,
   BarChart3,
   Settings,
@@ -33,7 +33,7 @@ import {
 import { QuizFunnelCard } from '@/components/dashboard/QuizFunnelCard';
 import { unifiedCRUDService } from '@/services/UnifiedCRUDService';
 import { versioningService } from '@/services/versioningService';
-import { analyticsService } from '@/services/analyticsService';
+import { unifiedAnalyticsEngine } from '@/analytics/UnifiedAnalyticsEngine';
 
 interface QuizFunnel {
   id: string;
@@ -77,7 +77,7 @@ const QuizFunnelsPage: React.FC = () => {
 
     // Filtro por busca
     if (searchTerm.trim()) {
-      filtered = filtered.filter(funnel => 
+      filtered = filtered.filter(funnel =>
         funnel.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         funnel.description.toLowerCase().includes(searchTerm.toLowerCase())
       );
@@ -89,7 +89,7 @@ const QuizFunnelsPage: React.FC = () => {
   const loadQuizFunnels = async () => {
     try {
       setIsLoading(true);
-      
+
       // Carregar funis do UnifiedCRUDService
       // Mock de funis para demonstração
       const allFunnels = [
@@ -105,10 +105,10 @@ const QuizFunnelsPage: React.FC = () => {
           updatedAt: new Date()
         }
       ];
-      
+
       // Filtrar apenas funis quiz
-      const quizFunnels = allFunnels.filter((funnel: any) => 
-        funnel.id.includes('quiz') || 
+      const quizFunnels = allFunnels.filter((funnel: any) =>
+        funnel.id.includes('quiz') ||
         funnel.name.toLowerCase().includes('quiz') ||
         funnel.type === 'quiz'
       );
@@ -117,9 +117,9 @@ const QuizFunnelsPage: React.FC = () => {
       const formattedFunnels: QuizFunnel[] = await Promise.all(
         quizFunnels.map(async (funnel: any) => {
           // Carregar analytics
-          const analytics = await analyticsService.getMetricsByCategory('usage');
-          const views = analytics.find(m => m.name === 'pageViews')?.value || 0;
-          const completions = analytics.find(m => m.name === 'conversions')?.value || 0;
+          const summary = await unifiedAnalyticsEngine.getFunnelSummary(funnel.id).catch(() => ({ totalSessions: 0, completions: 0 } as any));
+          const views = summary.totalSessions || 0;
+          const completions = summary.completions || 0;
           const conversionRate = views > 0 ? (completions / views) * 100 : 0;
 
           // Carregar versões
@@ -181,7 +181,7 @@ const QuizFunnelsPage: React.FC = () => {
         const funnel = funnelResult.data;
         // Criar snapshot de publicação
         await versioningService.createSnapshot(funnel, 'manual', 'Publicação do funil');
-        
+
         // Atualizar status
         await unifiedCRUDService.saveFunnel({
           ...funnel,
@@ -266,7 +266,7 @@ const QuizFunnelsPage: React.FC = () => {
             />
           </div>
         </div>
-        
+
         <div className="flex items-center space-x-2">
           {statusOptions.map(option => (
             <Button
@@ -329,7 +329,7 @@ const QuizFunnelsPage: React.FC = () => {
             </div>
           ) : (
             <div className={
-              viewMode === 'grid' 
+              viewMode === 'grid'
                 ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'
                 : 'space-y-4'
             }>

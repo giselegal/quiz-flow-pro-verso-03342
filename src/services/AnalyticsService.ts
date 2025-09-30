@@ -1,10 +1,13 @@
 'use client';
 
 /**
- * 📊 ANALYTICS SERVICE - FASE 4
- * 
- * Serviço completo de analytics para coleta de métricas,
- * tracking de eventos e análise de performance do quiz-editor.
+ * 📊 ANALYTICS SERVICE (LEGACY)
+ * STATUS: DEPRECATED – substituído por unifiedEventTracker + unifiedAnalyticsEngine.
+ * SUNSET PLAN:
+ *   - Data de corte aceite: 2025-10-15 (parar novas referências)
+ *   - Remoção física prevista: 2025-10-31
+ *   - Ações restantes: remover adapters dependentes e migrar exemplos finais.
+ * Após 31/10 este arquivo deverá ser excluído do repositório.
  */
 export const DEPRECATED = true; // Migrar para unifiedEventTracker
 (() => { if (typeof console !== 'undefined' && !(globalThis as any).__DEP_LOG_CORE_ANALYTICS) { (globalThis as any).__DEP_LOG_CORE_ANALYTICS = true; console.warn('[DEPRECATED][AnalyticsService] Use unifiedEventTracker (src/analytics/UnifiedEventTracker.ts).'); } })();

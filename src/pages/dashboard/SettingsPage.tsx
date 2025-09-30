@@ -3,7 +3,7 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { EnhancedUnifiedDataService } from '@/services/core/EnhancedUnifiedDataService';
+// (Nenhuma dependência de analytics direta necessária aqui)
 import { Button } from '@/components/ui/button';
 import { Settings } from 'lucide-react';
 

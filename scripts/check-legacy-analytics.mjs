@@ -24,7 +24,8 @@ const DEPRECATED_PATTERNS = [
 // Padrões que, se presentes na linha de import, representam uso permitido (adapters novos)
 const ADAPTER_ALLOW_PATTERNS = [
     /compat\/analyticsEngineAdapter/,
-    /compat\/analyticsServiceAdapter/
+    /compat\/analyticsServiceAdapter/,
+    /compat\/enhancedUnifiedDataServiceAdapter/
 ];
 
 // Arquivos que podem conter imports legacy por motivo de compat (whitelist)

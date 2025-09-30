@@ -23,6 +23,20 @@ function ensureSession(funnelId: string, provided?: string): string {
     return sessionCache.get(funnelId)!;
 }
 
+// Tipos mínimos replicados do engine legado para não precisar importar o arquivo depreciado
+export interface ABTestExperiment {
+    id: string; name: string; description: string; funnelId: string; status: string;
+    variants: Array<{ id: string; name: string; description: string; weight: number; isControl: boolean; changes: any[] }>;
+    trafficSplit: number; startDate: Date; endDate?: Date; hypothesis: string;
+    successMetric: { type: string; name: string; description: string }; createdBy: string; organizationId: string;
+    results?: any;
+}
+
+export interface PerformanceAlert {
+    id: string; type: string; severity: 'low' | 'medium' | 'high' | 'critical'; title: string; description: string;
+    funnelId: string; stepId?: string; threshold: number; currentValue: number; triggeredAt: Date; resolved: boolean; resolvedAt?: Date;
+}
+
 export const analyticsEngineAdapter = {
     __ADAPTER__: true,
     DEPRECATED: true,
@@ -76,6 +90,23 @@ export const analyticsEngineAdapter = {
         return unifiedAnalyticsEngine.getRealtimeSnapshot(funnelId);
     },
     async flush() { await unifiedEventTracker.flush({ force: true }); }
+    ,
+    trackGoogleAnalyticsEvent(eventName: string, params?: Record<string, any>) {
+        // Mantém compat com chamadas existentes que esperam integração GA
+        try {
+            if (typeof window !== 'undefined' && (window as any).gtag) {
+                (window as any).gtag('event', eventName, params || {});
+            }
+        } catch { }
+        unifiedEventTracker.track({
+            type: 'custom',
+            funnelId: params?.funnel_id || 'global',
+            sessionId: params?.session_id || `sess_${Date.now()}`,
+            userId: params?.user_id || 'anonymous',
+            payload: { gaEvent: eventName, ...params },
+            context: { source: 'legacy-adapter-ga' }
+        } as any);
+    }
 };
 
 export const analyticsEngine = analyticsEngineAdapter; // nome legado compat

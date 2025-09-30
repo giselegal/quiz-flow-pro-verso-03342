@@ -5,13 +5,13 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { EnhancedUnifiedDataService } from '@/services/core/EnhancedUnifiedDataService';
+import { enhancedUnifiedDataServiceAdapter as EnhancedUnifiedDataService } from '@/analytics/compat/enhancedUnifiedDataServiceAdapter';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { 
+import {
   BarChart3,
   TrendingUp,
   Users,
@@ -37,8 +37,8 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 const useQuizRealTimeAnalytics = () => ({
   analytics: {},
   isTracking: true,
-  startTracking: () => {},
-  stopTracking: () => {},
+  startTracking: () => { },
+  stopTracking: () => { },
   getSessionAnalytics: () => ({})
 });
 
@@ -48,8 +48,8 @@ export const AdvancedAnalyticsPage: React.FC = () => {
   const [advancedMetrics, setAdvancedMetrics] = useState<any>(null);
   const [selectedFunnel, setSelectedFunnel] = useState<string>('all');
   const [timeRange, setTimeRange] = useState<string>('7d');
-  
-  const { 
+
+  const {
     analytics = {},
     isTracking,
     startTracking,
@@ -276,7 +276,7 @@ export const AdvancedAnalyticsPage: React.FC = () => {
                     </div>
                     <Badge className="bg-red-500 hover:bg-red-600">32%</Badge>
                   </div>
-                  
+
                   <div className="flex items-center justify-between p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
                     <div>
                       <div className="font-medium text-yellow-900">Página de Resultados</div>

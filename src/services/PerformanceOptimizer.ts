@@ -5,7 +5,8 @@
  * lazy loading e otimizações automáticas para o quiz-editor.
  */
 
-import { analyticsService } from '@/services/AnalyticsService';
+// Migração: substituir uso direto de AnalyticsService pelo adapter unificado
+import { analyticsServiceAdapter as analyticsService } from '@/analytics/compat/analyticsServiceAdapter';
 import { QUIZ_STEPS, getStepById } from '@/data/quizSteps';
 import { styleConfigGisele } from '@/data/styles';
 
@@ -129,11 +130,15 @@ export class PerformanceOptimizer {
             this.updateCacheMetrics();
 
             // Analytics tracking
-            analyticsService.trackEvent('performance', {
-                action: 'cache_set',
-                key,
-                size,
-                cacheSize: this.cache.size
+            analyticsService.trackEvent({
+                funnelId: 'global-performance',
+                type: 'performance_metric',
+                payload: {
+                    action: 'cache_set',
+                    key,
+                    size,
+                    cacheSize: this.cache.size
+                }
             });
 
         } catch (error) {
@@ -170,10 +175,14 @@ export class PerformanceOptimizer {
             : entry.data;
 
         // Analytics tracking
-        analyticsService.trackEvent('performance', {
-            action: 'cache_hit',
-            key,
-            accessCount: entry.accessCount
+        analyticsService.trackEvent({
+            funnelId: 'global-performance',
+            type: 'performance_metric',
+            payload: {
+                action: 'cache_hit',
+                key,
+                accessCount: entry.accessCount
+            }
         });
 
         return data as T;
@@ -282,10 +291,14 @@ export class PerformanceOptimizer {
             }
 
             // Analytics tracking
-            analyticsService.trackEvent('performance', {
-                action: 'lazy_load',
-                type,
-                elementId: element.id
+            analyticsService.trackEvent({
+                funnelId: 'global-performance',
+                type: 'performance_metric',
+                payload: {
+                    action: 'lazy_load',
+                    lazyType: type,
+                    elementId: element.id
+                }
             });
 
         } catch (error) {
@@ -395,9 +408,13 @@ export class PerformanceOptimizer {
         this.metrics.renderTime = this.measureRenderTime();
 
         // Track para analytics
-        analyticsService.trackEvent('performance', {
-            action: 'metrics_update',
-            metrics: this.metrics
+        analyticsService.trackEvent({
+            funnelId: 'global-performance',
+            type: 'performance_metric',
+            payload: {
+                action: 'metrics_update',
+                metrics: this.metrics
+            }
         });
     }
 
@@ -460,9 +477,13 @@ export class PerformanceOptimizer {
                         await rule.action(this);
                         console.log(`✅ Executed optimization: ${rule.name}`);
 
-                        analyticsService.trackEvent('performance', {
-                            action: 'optimization_applied',
-                            rule: rule.id
+                        analyticsService.trackEvent({
+                            funnelId: 'global-performance',
+                            type: 'performance_metric',
+                            payload: {
+                                action: 'optimization_applied',
+                                rule: rule.id
+                            }
                         });
                     } catch (error) {
                         console.warn(`⚠️ Optimization failed: ${rule.name}`, error);
@@ -495,7 +516,7 @@ export class PerformanceOptimizer {
         if (this.cache.size === 0) return;
 
         const entries = Array.from(this.cache.entries())
-            .map(([key, entry]) => ({ key, ...entry }))
+            .map(([key, entry]) => ({ ...entry, key }))
             .sort((a, b) => {
                 // Estratégia adaptativa de evicção
                 if (this.cacheConfig.strategy === 'lru') {

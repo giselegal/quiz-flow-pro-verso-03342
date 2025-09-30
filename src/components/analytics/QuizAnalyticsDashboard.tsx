@@ -20,8 +20,18 @@ import {
     LineChart, MousePointer, Smartphone, Monitor
 } from 'lucide-react';
 
-// Analytics Service
-import { analyticsService, UserEvent, QuizMetrics, UserSession } from '@/services/AnalyticsService';
+// Hook unificado de métricas do funil
+import { useFunnelAnalytics } from '@/analytics/hooks/useFunnelAnalytics';
+// Tipos mínimos substitutos (enquanto legacy não removido)
+type UserEvent = { type: string; data: any; timestamp?: string };
+type QuizMetrics = {
+    totalSessions: number;
+    completionRate: number;
+    averageTimeToComplete: number;
+    performanceMetrics: { averageLoadTime: number };
+    styleDistribution: Record<string, number>;
+};
+type UserSession = any;
 import { QUIZ_STEPS, getStepById } from '@/data/quizSteps';
 import { styleConfigGisele } from '@/data/styles';
 import type { QuizStep } from '@/data/quizSteps';
@@ -76,49 +86,28 @@ export default function QuizAnalyticsDashboard({
     // 🔄 EFEITOS E ATUALIZAÇÕES
     // ===============================
 
-    useEffect(() => {
-        loadAnalyticsData();
+    // Consome engine unificada (funnelId fixo de exemplo por enquanto)
+    const funnelId = 'quiz-global';
+    const funnelAnalytics = useFunnelAnalytics({ funnelId, realtime: realTimeUpdates, realtimeIntervalMs: refreshInterval });
 
-        if (realTimeUpdates) {
-            const interval = setInterval(loadAnalyticsData, refreshInterval);
-            return () => clearInterval(interval);
+    useEffect(() => {
+        if (!funnelAnalytics.loading && funnelAnalytics.summary) {
+            setMetrics({
+                totalSessions: funnelAnalytics.summary.totalSessions || 0,
+                completionRate: (funnelAnalytics.summary.completions || 0) / Math.max(funnelAnalytics.summary.totalSessions || 1, 1),
+                averageTimeToComplete: funnelAnalytics.summary.averageTimeToComplete || 0,
+                performanceMetrics: { averageLoadTime: 0 },
+                styleDistribution: Object.fromEntries((funnelAnalytics.styleDistribution || []).map((s: any) => [s.name || s.style || 'unknown', s.count || s.value || 0]))
+            });
         }
-    }, [activeTimeRange, realTimeUpdates, refreshInterval]);
+    }, [funnelAnalytics.summary, funnelAnalytics.loading, funnelAnalytics.styleDistribution]);
 
-    useEffect(() => {
-        const handleAnalyticsEvent = (event: UserEvent) => {
-            setEvents(prev => [...prev, event]);
-            loadAnalyticsData(); // Refresh metrics
-        };
-
-        analyticsService.addEventListener(handleAnalyticsEvent);
-        return () => analyticsService.removeEventListener(handleAnalyticsEvent);
-    }, []);
+    // Eventos simulados legacy removidos; futuro: derivar de unified events stream
 
     const loadAnalyticsData = useCallback(async () => {
-        setIsLoading(true);
-        try {
-            // Carregar métricas em tempo real
-            const currentMetrics = analyticsService.getRealTimeMetrics();
-            setMetrics(currentMetrics);
-
-            // Carregar eventos no período selecionado
-            const timeRange = getTimeRangeForPeriod(activeTimeRange);
-            const periodEvents = analyticsService.getEventsInTimeRange(
-                timeRange.start,
-                timeRange.end
-            );
-            setEvents(periodEvents);
-
-            // Simular sessions (em implementação real, viria do analytics service)
-            setSessions([]);
-
-        } catch (error) {
-            console.error('Erro ao carregar dados de analytics:', error);
-        } finally {
-            setIsLoading(false);
-        }
-    }, [activeTimeRange]);
+        setIsLoading(funnelAnalytics.loading);
+        if (!funnelAnalytics.loading) setIsLoading(false);
+    }, [funnelAnalytics.loading]);
 
     // ===============================
     // 📈 PROCESSAMENTO DE DADOS
@@ -149,21 +138,20 @@ export default function QuizAnalyticsDashboard({
     const getStepCompletionData = (): ChartData => {
         const stepNavEvents = events.filter(e => e.type === 'step_navigation');
         const stepCounts: Record<string, number> = {};
-
         stepNavEvents.forEach(event => {
-            const { toStep } = event.data;
+            const toStep = event.data?.toStep;
+            if (!toStep) return;
             stepCounts[toStep] = (stepCounts[toStep] || 0) + 1;
         });
-
-        const labels = Object.keys(QUIZ_STEPS).slice(0, 10); // Primeiros 10 steps
-        const data = labels.map(stepId => stepCounts[stepId] || 0);
+        const labels = Object.keys(QUIZ_STEPS).slice(0, 10);
+        const data: number[] = labels.map(stepId => stepCounts[stepId] || 0);
 
         return {
             labels: labels.map(id => `Step ${id.split('-')[1]}`),
             datasets: [{
                 label: 'Usuários por Etapa',
                 data,
-                backgroundColor: 'rgba(139, 92, 246, 0.8)',
+                backgroundColor: ['rgba(139, 92, 246, 0.8)'],
                 borderColor: 'rgb(139, 92, 246)',
                 tension: 0.3
             }]
@@ -173,9 +161,9 @@ export default function QuizAnalyticsDashboard({
     const getStyleDistributionData = (): ChartData => {
         if (!metrics?.styleDistribution) return { labels: [], datasets: [] };
 
-        const styles = Object.entries(metrics.styleDistribution);
+        const styles = Object.entries(metrics.styleDistribution || {});
         const labels = styles.map(([style]) => style);
-        const data = styles.map(([, count]) => count);
+        const data: number[] = styles.map(([, count]) => Number(count));
 
         const colors = [
             '#8B5CF6', '#06B6D4', '#10B981', '#F59E0B',
@@ -188,18 +176,19 @@ export default function QuizAnalyticsDashboard({
                 label: 'Distribuição de Estilos',
                 data,
                 backgroundColor: colors.slice(0, labels.length),
-                borderColor: colors.slice(0, labels.length)
+                borderColor: 'rgba(139,92,246,1)'
             }]
         };
     };
 
     const getAnswerHeatmapData = () => {
-        const heatmap = analyticsService.getAnswerHeatmap();
-        return Object.entries(heatmap).slice(0, 5); // Top 5 questões
+        // Placeholder: derivar de answerDistribution unificado
+        const dist = funnelAnalytics.answerDistribution.global || {};
+        return Object.entries(dist).slice(0, 5);
     };
 
     const getDropOffAnalysis = () => {
-        return analyticsService.getDropOffAnalysis();
+        return funnelAnalytics.dropoff || [];
     };
 
     // ===============================
@@ -293,7 +282,7 @@ export default function QuizAnalyticsDashboard({
         );
     };
 
-    if (isLoading) {
+    if (isLoading || funnelAnalytics.loading) {
         return (
             <div className="flex items-center justify-center h-96">
                 <div className="text-center">
@@ -340,22 +329,7 @@ export default function QuizAnalyticsDashboard({
                     </Button>
 
                     {/* Export Button */}
-                    <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => {
-                            const data = analyticsService.exportMetricsAsJSON();
-                            const blob = new Blob([data], { type: 'application/json' });
-                            const url = URL.createObjectURL(blob);
-                            const a = document.createElement('a');
-                            a.href = url;
-                            a.download = `quiz-analytics-${new Date().toISOString().split('T')[0]}.json`;
-                            a.click();
-                        }}
-                    >
-                        <Download className="h-4 w-4 mr-2" />
-                        Exportar
-                    </Button>
+                    {/* TODO: Reimplementar export utilizando unifiedAnalyticsEngine agregando múltiplas métricas */}
                 </div>
             </div>
 
@@ -449,7 +423,7 @@ export default function QuizAnalyticsDashboard({
                                                 </span>
                                             </div>
                                             <span className="text-xs text-gray-500">
-                                                {new Date(event.timestamp).toLocaleTimeString()}
+                                                {event.timestamp ? new Date(event.timestamp).toLocaleTimeString() : ''}
                                             </span>
                                         </div>
                                     ))}
@@ -527,9 +501,10 @@ export default function QuizAnalyticsDashboard({
                                     <div key={questionId} className="p-4 border rounded-lg">
                                         <h4 className="font-medium mb-3">Questão {questionId}</h4>
                                         <div className="grid gap-2">
-                                            {Object.entries(answers).slice(0, 3).map(([answer, count]) => {
-                                                const total = Object.values(answers).reduce((a: number, b: number) => a + b, 0);
-                                                const percentage = (count / total) * 100;
+                                            {Object.entries(answers as Record<string, number>).slice(0, 3).map(([answer, count]) => {
+                                                const numericEntries = Object.entries(answers as Record<string, number>);
+                                                const total = numericEntries.reduce((acc, [, v]) => acc + (typeof v === 'number' ? v : 0), 0) || 1;
+                                                const percentage = (Number(count) / total) * 100;
 
                                                 return (
                                                     <div key={answer} className="flex items-center justify-between">
@@ -544,7 +519,7 @@ export default function QuizAnalyticsDashboard({
                                                                 />
                                                             </div>
                                                             <span className="text-xs text-gray-600 w-12 text-right">
-                                                                {count}
+                                                                {String(count)}
                                                             </span>
                                                         </div>
                                                     </div>
@@ -578,13 +553,13 @@ export default function QuizAnalyticsDashboard({
                                 <div className="flex justify-between items-center">
                                     <span className="text-sm">Tempo de Resposta</span>
                                     <span className="font-medium">
-                                        {Math.round(metrics?.performanceMetrics.averageResponseTime || 0)}ms
+                                        {Math.round((metrics as any)?.performanceMetrics.averageResponseTime || 0)}ms
                                     </span>
                                 </div>
                                 <div className="flex justify-between items-center">
                                     <span className="text-sm">Taxa de Erro</span>
                                     <span className="font-medium">
-                                        {(metrics?.performanceMetrics.errorRate || 0).toFixed(2)}%
+                                        {(((metrics as any)?.performanceMetrics.errorRate) || 0).toFixed(2)}%
                                     </span>
                                 </div>
                             </CardContent>

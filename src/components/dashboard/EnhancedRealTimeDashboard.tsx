@@ -9,7 +9,9 @@ import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { EnhancedUnifiedDataService, type RealTimeMetrics } from '@/services/core/EnhancedUnifiedDataService';
+// MIGRATION NOTE: Migrated from EnhancedUnifiedDataService (legacy) to enhancedUnifiedDataServiceAdapter
+// Adapter fornece snapshot simplificado em torno do unifiedAnalyticsEngine.
+import { enhancedUnifiedDataServiceAdapter, type RealtimeMetricsSnapshot } from '@/analytics/compat/enhancedUnifiedDataServiceAdapter';
 import {
     Users,
     TrendingUp,
@@ -147,7 +149,7 @@ const SimpleLineChart: React.FC<SimpleLineChartProps> = ({ data, title }) => {
         y: 100 - (item.conversions / maxValue) * 80
     }));
 
-    const pathData = points.map((point, index) => 
+    const pathData = points.map((point, index) =>
         `${index === 0 ? 'M' : 'L'} ${point.x} ${point.y}`
     ).join(' ');
 
@@ -188,8 +190,26 @@ const SimpleLineChart: React.FC<SimpleLineChartProps> = ({ data, title }) => {
 // MAIN DASHBOARD COMPONENT
 // ============================================================================
 
+interface UnifiedDashboardMetrics extends RealtimeMetricsSnapshot {
+    // Campos derivados que existiam no dashboard anterior (mantidos para não quebrar layout)
+    totalSessions?: number;
+    completedSessions?: number;
+    conversionRate?: number;
+    sessionsLastHour?: number;
+    conversionsLastHour?: number;
+    totalFunnels?: number;
+    activeFunnels?: number;
+    totalRevenue?: number;
+    revenueToday?: number;
+    revenueThisMonth?: number;
+    topBrowsers?: Array<{ name: string; percentage: number }>;
+    geographicData?: Array<{ country: string; users: number }>;
+    conversionsByHour?: Array<{ hour: number; conversions: number }>;
+    topDevices?: Array<{ name: string; percentage: number }>;
+}
+
 const EnhancedRealTimeDashboard: React.FC = () => {
-    const [realTimeMetrics, setRealTimeMetrics] = useState<RealTimeMetrics | null>(null);
+    const [realTimeMetrics, setRealTimeMetrics] = useState<UnifiedDashboardMetrics | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [lastUpdated, setLastUpdated] = useState<Date>(new Date());
     const [refreshing, setRefreshing] = useState(false);
@@ -201,19 +221,31 @@ const EnhancedRealTimeDashboard: React.FC = () => {
     const loadDashboardData = async () => {
         try {
             setIsLoading(true);
-            console.log('📊 EnhancedRealTimeDashboard: Carregando métricas em tempo real...');
+            console.log('📊 EnhancedRealTimeDashboard: Carregando métricas em tempo real (adapter)...');
 
-            const metrics = await EnhancedUnifiedDataService.getRealTimeMetrics();
-            setRealTimeMetrics(metrics);
+            // Adapter retorna snapshot reduzido; enriquecemos com placeholders até consolidar fonte completa.
+            const snap = await enhancedUnifiedDataServiceAdapter.getRealTimeMetrics();
+            const enriched: UnifiedDashboardMetrics = {
+                ...snap,
+                // Valores placeholder herdados do serviço legacy (até termos fonte unificada completa ou remover do layout)
+                totalSessions: realTimeMetrics?.totalSessions || 0,
+                completedSessions: realTimeMetrics?.completedSessions || 0,
+                conversionRate: realTimeMetrics?.conversionRate || 0,
+                sessionsLastHour: realTimeMetrics?.sessionsLastHour || 0,
+                conversionsLastHour: realTimeMetrics?.conversionsLastHour || 0,
+                totalFunnels: realTimeMetrics?.totalFunnels || 0,
+                activeFunnels: realTimeMetrics?.activeFunnels || 0,
+                totalRevenue: realTimeMetrics?.totalRevenue || 0,
+                revenueToday: realTimeMetrics?.revenueToday || 0,
+                revenueThisMonth: realTimeMetrics?.revenueThisMonth || 0,
+                topBrowsers: realTimeMetrics?.topBrowsers || [],
+                geographicData: realTimeMetrics?.geographicData || [],
+                conversionsByHour: realTimeMetrics?.conversionsByHour || Array.from({ length: 24 }, (_, hour) => ({ hour, conversions: 0 })),
+                topDevices: realTimeMetrics?.topDevices || []
+            };
+            setRealTimeMetrics(enriched);
             setLastUpdated(new Date());
-
-            console.log('✅ Real-time metrics loaded:', {
-                totalSessions: metrics.totalSessions,
-                activeUsersRealTime: metrics.activeUsersRealTime,
-                sessionsLastHour: metrics.sessionsLastHour,
-                conversionRate: metrics.conversionRate,
-                source: 'EnhancedUnifiedDataService (Supabase)'
-            });
+            console.log('✅ Real-time metrics snapshot (adapter) loaded');
 
         } catch (error) {
             console.error('❌ Erro ao carregar métricas em tempo real:', error);
@@ -224,7 +256,6 @@ const EnhancedRealTimeDashboard: React.FC = () => {
 
     const handleRefresh = async () => {
         setRefreshing(true);
-        await EnhancedUnifiedDataService.forceRefresh();
         await loadDashboardData();
         setRefreshing(false);
     };
@@ -235,17 +266,9 @@ const EnhancedRealTimeDashboard: React.FC = () => {
 
     useEffect(() => {
         loadDashboardData();
-
-        // Set up real-time subscription
-        const unsubscribe = EnhancedUnifiedDataService.subscribeToRealTimeUpdates((metrics) => {
-            setRealTimeMetrics(metrics);
-            setLastUpdated(new Date());
-            console.log('🔄 Real-time data updated automatically');
-        });
-
-        return () => {
-            unsubscribe();
-        };
+        // Polling simples a cada 30s (até termos streaming nativo no adapter)
+        const interval = setInterval(loadDashboardData, 30000);
+        return () => clearInterval(interval);
     }, []);
 
     // ============================================================================
@@ -288,9 +311,9 @@ const EnhancedRealTimeDashboard: React.FC = () => {
                         </Badge>
                     </p>
                 </div>
-                <Button 
-                    onClick={handleRefresh} 
-                    variant="outline" 
+                <Button
+                    onClick={handleRefresh}
+                    variant="outline"
                     size="sm"
                     disabled={refreshing}
                     className="flex items-center space-x-2"
@@ -394,8 +417,8 @@ const EnhancedRealTimeDashboard: React.FC = () => {
                                 data={realTimeMetrics.topDevices.map(device => ({
                                     label: device.name,
                                     value: device.percentage,
-                                    color: device.name === 'Desktop' ? 'bg-blue-500' : 
-                                           device.name === 'Mobile' ? 'bg-green-500' : 'bg-purple-500'
+                                    color: device.name === 'Desktop' ? 'bg-blue-500' :
+                                        device.name === 'Mobile' ? 'bg-green-500' : 'bg-purple-500'
                                 }))}
                             />
                         )}
@@ -416,8 +439,8 @@ const EnhancedRealTimeDashboard: React.FC = () => {
                                 data={realTimeMetrics.geographicData.map((country, index) => ({
                                     label: country.country,
                                     value: country.users,
-                                    color: index === 0 ? 'bg-green-500' : 
-                                           index === 1 ? 'bg-blue-500' : 'bg-gray-500'
+                                    color: index === 0 ? 'bg-green-500' :
+                                        index === 1 ? 'bg-blue-500' : 'bg-gray-500'
                                 }))}
                             />
                         )}
@@ -456,9 +479,9 @@ const EnhancedRealTimeDashboard: React.FC = () => {
                             data={realTimeMetrics.topBrowsers.map((browser, index) => ({
                                 label: browser.name,
                                 value: browser.percentage,
-                                color: index === 0 ? 'bg-orange-500' : 
-                                       index === 1 ? 'bg-blue-500' : 
-                                       index === 2 ? 'bg-red-500' : 'bg-gray-500'
+                                color: index === 0 ? 'bg-orange-500' :
+                                    index === 1 ? 'bg-blue-500' :
+                                        index === 2 ? 'bg-red-500' : 'bg-gray-500'
                             }))}
                         />
                     )}

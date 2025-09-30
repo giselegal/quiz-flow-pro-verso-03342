@@ -1,8 +1,10 @@
 /**
- * 📊 REAL DATA ANALYTICS SERVICE
- * 
- * Substitui múltiplos serviços fragmentados por um serviço consolidado
- * que trabalha exclusivamente com dados reais do Supabase
+ * 📊 REAL DATA ANALYTICS SERVICE (LEGACY)
+ * STATUS: DEPRECATED – substituído por enhancedUnifiedDataServiceAdapter + unifiedAnalyticsEngine.
+ * SUNSET PLAN:
+ *   - Último dia para dependências diretas: 2025-10-05
+ *   - Verificação de ausência de imports: 2025-10-15
+ *   - Remoção final: 2025-10-31
  */
 
 import { BaseUnifiedService } from './UnifiedServiceManager';
@@ -19,25 +21,25 @@ export interface RealMetrics {
   completedSessions: number;
   abandonedSessions: number;
   conversionRate: number;
-  
+
   // Performance Metrics
   averageCompletionTime: number;
   averageSessionDuration: number;
   dropOffRate: number;
-  
+
   // User Behavior
   deviceStats: Array<{ device: string; count: number; percentage: number }>;
   hourlyActivity: Array<{ hour: number; count: number }>;
   dailyTrends: Array<{ date: string; sessions: number; completions: number }>;
-  
+
   // Business Metrics
   leadGeneration: number;
   topPerformingFunnels: Array<{ id: string; name: string; sessions: number; rate: number }>;
-  
+
   // Real-time Data
   activeUsersNow: number;
   recentActivity: Array<{ sessionId: string; funnelId: string; timestamp: string; event: string }>;
-  
+
   // Metadata
   lastUpdated: Date;
   dataSource: 'supabase';
@@ -88,7 +90,7 @@ export class RealDataAnalyticsService extends BaseUnifiedService {
         .from('quiz_sessions')
         .select('count(*)')
         .limit(1);
-      
+
       return !error;
     } catch (error) {
       return false;
@@ -126,7 +128,7 @@ export class RealDataAnalyticsService extends BaseUnifiedService {
       const activeSessions = sessionsData.filter(s => s.status === 'active').length;
       const completedSessions = sessionsData.filter(s => s.status === 'completed').length;
       const abandonedSessions = sessionsData.filter(s => s.status === 'abandoned').length;
-      const conversionRate = totalSessions > 0 ? 
+      const conversionRate = totalSessions > 0 ?
         Math.round((completedSessions / totalSessions) * 100 * 10) / 10 : 0;
 
       // Performance metrics
@@ -145,7 +147,7 @@ export class RealDataAnalyticsService extends BaseUnifiedService {
           return sum + (end - start);
         }, 0) / sessionsData.length / 1000) : 0;
 
-      const dropOffRate = totalSessions > 0 ? 
+      const dropOffRate = totalSessions > 0 ?
         Math.round((abandonedSessions / totalSessions) * 100 * 10) / 10 : 0;
 
       // Device statistics
@@ -217,7 +219,7 @@ export class RealDataAnalyticsService extends BaseUnifiedService {
 
       // Real-time metrics
       const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000).toISOString();
-      const activeUsersNow = sessionsData.filter(s => 
+      const activeUsersNow = sessionsData.filter(s =>
         s.last_activity && s.last_activity > fiveMinutesAgo
       ).length;
 
@@ -291,7 +293,7 @@ export class RealDataAnalyticsService extends BaseUnifiedService {
 
       // Get results and responses for these sessions
       const sessionIds = (sessions || []).map(s => s.id);
-      
+
       const [{ data: results }, { data: responses }] = await Promise.all([
         supabase.from('quiz_results').select('*').in('session_id', sessionIds),
         supabase.from('quiz_step_responses').select('session_id').in('session_id', sessionIds)
@@ -299,7 +301,7 @@ export class RealDataAnalyticsService extends BaseUnifiedService {
 
       const resultsMap = new Map((results || []).map(r => [r.session_id, r]));
       const responsesMap = new Map<string, number>();
-      
+
       (responses || []).forEach(r => {
         responsesMap.set(r.session_id, (responsesMap.get(r.session_id) || 0) + 1);
       });
@@ -307,7 +309,7 @@ export class RealDataAnalyticsService extends BaseUnifiedService {
       const participants: ParticipantData[] = (sessions || []).map(session => {
         const result = resultsMap.get(session.id);
         const responseCount = responsesMap.get(session.id) || 0;
-        
+
         let timeSpent = 0;
         if (session.completed_at && session.started_at) {
           const start = new Date(session.started_at).getTime();
@@ -321,7 +323,7 @@ export class RealDataAnalyticsService extends BaseUnifiedService {
 
         const metadata = session.metadata as any;
         const deviceType = metadata?.device_info?.type || 'unknown';
-        const completionPercentage = (session.total_steps || 0) > 0 ? 
+        const completionPercentage = (session.total_steps || 0) > 0 ?
           Math.round(((session.current_step || 0) / (session.total_steps || 1)) * 100) : 0;
 
         return {

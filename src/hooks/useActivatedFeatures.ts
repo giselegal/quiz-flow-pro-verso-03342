@@ -3,7 +3,8 @@
  */
 
 import { useState, useEffect } from 'react';
-import { activatedAnalytics } from '@/services/ActivatedAnalytics';
+import { unifiedEventTracker } from '@/analytics/UnifiedEventTracker';
+import { unifiedAnalyticsEngine } from '@/analytics/UnifiedAnalyticsEngine';
 
 export const useActivatedFeatures = () => {
   const [features, setFeatures] = useState({
@@ -12,7 +13,7 @@ export const useActivatedFeatures = () => {
     realtimeAnalytics: true,
     premiumTemplates: true,
     abTesting: true,
-    
+
     // FASE 2: Coming soon
     fashionAI: false,
     predictiveAnalytics: false,
@@ -31,8 +32,22 @@ export const useActivatedFeatures = () => {
   const loadAIInsights = async () => {
     setIsLoading(true);
     try {
-      const data = await activatedAnalytics.getAIPoweredInsights();
+      // Placeholder: gerar insights simulados via unifiedAnalyticsEngine (funnel default)
+      const summary = await unifiedAnalyticsEngine.getFunnelSummary('default');
+      const data = {
+        topFunnel: (summary as any).funnelId || 'default',
+        completionRate: (summary as any).completionRate || 0,
+        totalParticipants: (summary as any).totalParticipants || 0,
+        generatedAt: new Date().toISOString()
+      };
       setInsights(data);
+      unifiedEventTracker.track({
+        type: 'editor_action',
+        funnelId: 'feature-center',
+        sessionId: 'feature-session',
+        userId: 'system',
+        payload: { feature: 'aiInsights', action: 'load_insights' }
+      });
     } catch (error) {
       console.error('Failed to load AI insights:', error);
     } finally {
@@ -45,7 +60,14 @@ export const useActivatedFeatures = () => {
       ...prev,
       [featureName]: true
     }));
-    
+
+    unifiedEventTracker.track({
+      type: 'editor_action',
+      funnelId: 'feature-center',
+      sessionId: 'feature-session',
+      userId: 'system',
+      payload: { feature: featureName }
+    });
     console.log(`🚀 Feature activated: ${featureName}`);
   };
 

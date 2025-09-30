@@ -5,7 +5,8 @@
  */
 
 import React from 'react';
-import { EnhancedUnifiedDataService } from '@/services/core/EnhancedUnifiedDataService';
+// MIGRATION: removido import direto de EnhancedUnifiedDataService
+// (uso indireto via componentes já migrados)
 import EnhancedRealTimeDashboard from '@/components/dashboard/EnhancedRealTimeDashboard';
 
 const AnalyticsPage: React.FC = () => {

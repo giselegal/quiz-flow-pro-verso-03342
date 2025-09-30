@@ -6,7 +6,8 @@
 
 import React, { useState, useCallback } from 'react';
 import ParticipantsTable from '@/components/dashboard/ParticipantsTable';
-import { realDataAnalyticsService } from '@/services/core/RealDataAnalyticsService';
+// MIGRATION: substituído realDataAnalyticsService por adapter unificado
+import { enhancedUnifiedDataServiceAdapter } from '@/analytics/compat/enhancedUnifiedDataServiceAdapter';
 import AnalyticsDashboard from '@/components/dashboard/AnalyticsDashboard';
 import AdvancedAnalytics from '@/components/dashboard/AdvancedAnalytics';
 import ReportGenerator from '@/components/dashboard/ReportGenerator';
@@ -25,9 +26,10 @@ const ParticipantsPage: React.FC = () => {
     React.useEffect(() => {
         const loadRealData = async () => {
             try {
-                const metrics = await realDataAnalyticsService.getRealMetrics();
-                setRealMetrics(metrics);
-                console.log('✅ Participants page carregado com dados reais:', metrics);
+                const metrics = await enhancedUnifiedDataServiceAdapter.getRealTimeMetrics();
+                const normalized = { totalSessions: metrics.activeUsers, completedSessions: 0 };
+                setRealMetrics(normalized);
+                console.log('✅ Participants page snapshot unificado:', normalized);
             } catch (error) {
                 console.error('❌ Erro ao carregar dados dos participantes:', error);
             }

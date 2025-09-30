@@ -5,12 +5,13 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { EnhancedUnifiedDataService } from '@/services/EnhancedUnifiedDataService';
+// MIGRATION: substituído EnhancedUnifiedDataService por adapter unificado
+import { enhancedUnifiedDataServiceAdapter } from '@/analytics/compat/enhancedUnifiedDataServiceAdapter';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
-import { 
+import {
   Activity,
   Server,
   Database,
@@ -30,11 +31,11 @@ import {
 export const MonitoringPage: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [realTimeMetrics, setRealTimeMetrics] = useState<any>(null);
-  
+
   useEffect(() => {
     const loadRealData = async () => {
       try {
-        const metrics = await EnhancedUnifiedDataService.getRealTimeMetrics();
+        const metrics = await enhancedUnifiedDataServiceAdapter.getRealTimeMetrics();
         setRealTimeMetrics(metrics);
         console.log('✅ MonitoringPage carregado com dados reais:', metrics);
       } catch (error) {
@@ -43,9 +44,9 @@ export const MonitoringPage: React.FC = () => {
         setIsLoading(false);
       }
     };
-    
+
     loadRealData();
-    
+
     // Atualizar a cada 30 segundos
     const interval = setInterval(loadRealData, 30000);
     return () => clearInterval(interval);
@@ -277,19 +278,19 @@ export const MonitoringPage: React.FC = () => {
                     <CheckCircle className="w-5 h-5 text-blue-500" />
                   )}
                 </div>
-                
+
                 <div className="flex-1">
                   <div className="flex items-center justify-between">
                     <div className="font-medium">{alert.title}</div>
                     <div className="flex items-center space-x-2">
                       <span className="text-xs text-gray-500">{alert.timestamp}</span>
-                      <Badge 
+                      <Badge
                         className={
-                          alert.severity === 'high' 
-                            ? 'bg-red-500 hover:bg-red-600' 
+                          alert.severity === 'high'
+                            ? 'bg-red-500 hover:bg-red-600'
                             : alert.severity === 'medium'
-                            ? 'bg-orange-500 hover:bg-orange-600'
-                            : 'bg-blue-500 hover:bg-blue-600'
+                              ? 'bg-orange-500 hover:bg-orange-600'
+                              : 'bg-blue-500 hover:bg-blue-600'
                         }
                       >
                         {alert.severity === 'high' ? 'Alto' : alert.severity === 'medium' ? 'Médio' : 'Baixo'}

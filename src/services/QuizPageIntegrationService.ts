@@ -13,7 +13,7 @@
 import { unifiedCRUDService } from './UnifiedCRUDService';
 import { versioningService } from './VersioningService';
 import { historyManager } from './HistoryManager';
-import { analyticsService } from './AnalyticsService';
+import { analyticsServiceAdapter as analyticsService } from '@/analytics/compat/analyticsServiceAdapter';
 
 export interface QuizPageComponent {
   id: string;
@@ -393,10 +393,10 @@ export class QuizPageIntegrationService {
       });
 
       // Analytics
-      await analyticsService.trackEvent('funnel_published', {
+      analyticsService.trackEvent({
         funnelId,
-        type: 'quiz',
-        version: quizFunnel.version
+        type: 'funnel_published',
+        payload: { funnelId, funnelType: 'quiz', version: quizFunnel.version }
       });
     } catch (error) {
       console.error('❌ Erro ao publicar funil quiz:', error);
@@ -410,8 +410,8 @@ export class QuizPageIntegrationService {
   async getAllQuizFunnels(): Promise<QuizPageFunnel[]> {
     try {
       const allFunnels = await unifiedCRUDService.getAllFunnels();
-      const quizFunnels = allFunnels.filter(funnel => 
-        funnel.type === 'quiz' || 
+      const quizFunnels = allFunnels.filter(funnel =>
+        funnel.type === 'quiz' ||
         funnel.id.includes('quiz') ||
         funnel.name.toLowerCase().includes('quiz')
       );
@@ -481,7 +481,7 @@ export class QuizPageIntegrationService {
    */
   async getFunnelAnalytics(funnelId: string): Promise<any> {
     try {
-      const analytics = await analyticsService.getMetricsByCategory('usage');
+      const analytics = analyticsService.getMetricsByCategory('usage') as any[];
       return {
         views: analytics.find(m => m.name === 'pageViews')?.value || 0,
         completions: analytics.find(m => m.name === 'conversions')?.value || 0,

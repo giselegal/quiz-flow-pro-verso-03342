@@ -1,11 +1,10 @@
 /**
- * 🚀 ENHANCED UNIFIED DATA SERVICE - VERSÃO OTIMIZADA
- * 
- * Extensão do UnifiedDataService com funcionalidades avançadas:
- * - Métricas em tempo real com WebSockets
- * - Cache inteligente com invalidação automática
- * - Consolidação de todas as fontes de dados
- * - Sincronização automática entre admin/dashboard/editor
+ * 🚀 ENHANCED UNIFIED DATA SERVICE (LEGACY BRIDGE)
+ * STATUS: DEPRECATED – funcionalidade atendida por adapters + unifiedAnalyticsEngine snapshots.
+ * SUNSET PLAN:
+ *   - Congelado em 2025-09-30 – não adicionar novos usos.
+ *   - Remover importações restantes do alias até 2025-10-10.
+ *   - Excluir arquivo em 2025-10-31 após validação de equivalência de métricas.
  */
 
 import { supabase } from '@/integrations/supabase/client';
@@ -203,8 +202,8 @@ class EnhancedUnifiedDataServiceImpl {
             const completionTimes = completedSessions
                 .filter(s => s.completed_at && s.started_at)
                 .map(s => new Date(s.completed_at!).getTime() - new Date(s.started_at).getTime());
-            
-            const averageTimeOnPage = completionTimes.length > 0 
+
+            const averageTimeOnPage = completionTimes.length > 0
                 ? Math.round(completionTimes.reduce((sum, time) => sum + time, 0) / completionTimes.length / 1000)
                 : 0;
 
@@ -311,7 +310,7 @@ class EnhancedUnifiedDataServiceImpl {
 
     subscribeToRealTimeUpdates(callback: (metrics: RealTimeMetrics) => void): () => void {
         console.log('🔗 Setting up real-time metrics subscription...');
-        
+
         // Update metrics every 30 seconds
         this.metricsUpdateInterval = setInterval(async () => {
             try {
@@ -346,7 +345,7 @@ class EnhancedUnifiedDataServiceImpl {
         try {
             const now = new Date();
             let daysBack = 7;
-            
+
             switch (period) {
                 case 'day': daysBack = 1; break;
                 case 'week': daysBack = 7; break;

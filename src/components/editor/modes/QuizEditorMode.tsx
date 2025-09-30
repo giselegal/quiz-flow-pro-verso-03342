@@ -41,7 +41,8 @@ import { useQuizState } from '@/hooks/useQuizState';
 import type { QuizStep } from '@/data/quizSteps';
 
 // FASE 4 - Analytics e Performance
-import { analyticsService } from '@/services/AnalyticsService';
+// Migrado para tracker unificado
+import { unifiedEventTracker } from '@/analytics/UnifiedEventTracker';
 import { reportGenerator } from '@/services/ReportGenerator';
 import { performanceOptimizer } from '@/services/PerformanceOptimizer';
 import QuizAnalyticsDashboard from '@/components/analytics/QuizAnalyticsDashboard';
@@ -217,10 +218,12 @@ const QuizEditorMode: React.FC<QuizEditorModeProps> = ({
   const initializeAnalytics = useCallback(() => {
     if (state.analyticsEnabled) {
       // Inicializar tracking de eventos
-      analyticsService.trackEvent('page_view', {
-        page: 'quiz-editor',
-        mode: 'quiz-estilo',
-        funnelId: funnelId
+      unifiedEventTracker.track({
+        type: 'quiz_started',
+        funnelId: funnelId || 'unknown',
+        sessionId: `sess_${Date.now()}`,
+        userId: 'editor-user',
+        payload: { page: 'quiz-editor', mode: 'quiz-estilo' }
       });
 
       // Inicializar otimizador de performance
@@ -232,10 +235,12 @@ const QuizEditorMode: React.FC<QuizEditorModeProps> = ({
 
   const trackEditorAction = useCallback((action: string, data: any) => {
     if (state.analyticsEnabled) {
-      analyticsService.trackEditorAction(action, {
-        ...data,
-        currentStep: state.selectedStepNumber,
-        timestamp: new Date().toISOString()
+      unifiedEventTracker.track({
+        type: 'editor_action',
+        funnelId: funnelId || 'unknown',
+        sessionId: `sess_${Date.now()}`,
+        userId: 'editor-user',
+        payload: { action, ...data, currentStep: state.selectedStepNumber, ts: Date.now() }
       });
     }
   }, [state.analyticsEnabled, state.selectedStepNumber]);

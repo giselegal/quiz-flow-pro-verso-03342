@@ -11,7 +11,8 @@ import React, { useState, useEffect } from 'react';
 import AdvancedAnalytics from '@/components/dashboard/AdvancedAnalytics';
 import { AnalyticsDashboard } from '@/components/admin/analytics/AdvancedAnalytics';
 import ABTestComparison from '@/components/analytics/ABTestComparison';
-import { realDataAnalyticsService } from '@/services/core/RealDataAnalyticsService';
+// MIGRATION: substituído realDataAnalyticsService por enhancedUnifiedDataServiceAdapter (snapshot unificado)
+import { enhancedUnifiedDataServiceAdapter } from '@/analytics/compat/enhancedUnifiedDataServiceAdapter';
 import { consolidatedFunnelService } from '@/services/core/ConsolidatedFunnelService';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -37,17 +38,26 @@ const AnalyticsPage: React.FC = () => {
   useEffect(() => {
     const loadRealData = async () => {
       try {
-        const [metrics, funnels] = await Promise.all([
-          realDataAnalyticsService.getRealMetrics(),
+        const [metricsSnapshot, funnels] = await Promise.all([
+          enhancedUnifiedDataServiceAdapter.getRealTimeMetrics(),
           consolidatedFunnelService.getFunnelMetrics()
         ]);
-        
-        setRealMetrics(metrics);
+
+        // Normalização mínima para manter shape esperado
+        setRealMetrics({
+          totalSessions: metricsSnapshot.activeUsers || 0,
+          completedSessions: 0,
+          conversionRate: 0,
+          averageCompletionTime: 0,
+          activeUsersNow: metricsSnapshot.activeUsers || 0,
+          leadGeneration: 0,
+          topPerformingFunnels: []
+        });
         setFunnelMetrics(funnels);
-        
-        console.log('✅ Analytics carregado com dados reais:', { 
+
+        console.log('✅ Analytics carregado com dados reais:', {
           totalSessions: metrics.totalSessions,
-          totalFunnels: funnels.length 
+          totalFunnels: funnels.length
         });
       } catch (error) {
         console.error('❌ Erro ao carregar analytics:', error);

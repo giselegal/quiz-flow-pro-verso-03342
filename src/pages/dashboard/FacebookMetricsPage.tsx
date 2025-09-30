@@ -5,7 +5,7 @@
  */
 
 import React from 'react';
-import { EnhancedUnifiedDataService } from '@/services/core/EnhancedUnifiedDataService';
+import { enhancedUnifiedDataServiceAdapter as EnhancedUnifiedDataService } from '@/analytics/compat/enhancedUnifiedDataServiceAdapter';
 import FacebookMetricsDashboard from '@/components/dashboard/FacebookMetricsDashboard';
 
 const FacebookMetricsPage: React.FC = () => {
@@ -15,7 +15,7 @@ const FacebookMetricsPage: React.FC = () => {
                 <h1 className="text-2xl font-bold text-gray-900">Métricas do Facebook</h1>
                 <p className="text-gray-600">Acompanhe o desempenho das suas campanhas do Facebook Ads</p>
             </div>
-            
+
             <FacebookMetricsDashboard showComparison={true} />
         </div>
     );

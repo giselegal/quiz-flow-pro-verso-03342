@@ -49,7 +49,17 @@ export const analyticsServiceAdapter = {
     // Métricas agregadas
     getFunnelSummary(funnelId: string) { return unifiedAnalyticsEngine.getFunnelSummary(funnelId); },
     getRealtimeSnapshot(funnelId: string) { return unifiedAnalyticsEngine.getRealtimeSnapshot(funnelId); },
-    flush() { return unifiedEventTracker.flush({ force: true }); }
+    flush() { return unifiedEventTracker.flush({ force: true }); },
+    // Métodos legacy simulados para compat temporária -------------------
+    addEventListener(_cb: (...args: any[]) => void) { /* noop legacy */ },
+    removeEventListener(_cb: (...args: any[]) => void) { /* noop */ },
+    getRealTimeMetrics() { return { totalSessions: 0, completionRate: 0, averageTimeToComplete: 0, performanceMetrics: { averageLoadTime: 0 }, styleDistribution: {}, dropOff: {} }; },
+    getEventsInTimeRange(_start: string, _end: string) { return [] as any[]; },
+    getAnswerHeatmap() { return {}; },
+    getDropOffAnalysis() { return []; },
+    // Stub adicional usado por alguns serviços (ReportGenerator / QuizPageIntegrationService)
+    getMetricsByCategory(_category: string) { return [] as any[]; },
+    exportMetricsAsJSON() { return JSON.stringify({ generatedAt: new Date().toISOString() }); }
 };
 
 export const analyticsService = analyticsServiceAdapter; // nome legado
