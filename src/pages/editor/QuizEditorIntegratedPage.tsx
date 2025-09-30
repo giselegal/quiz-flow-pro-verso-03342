@@ -79,7 +79,7 @@ const QuizEditorIntegratedPageCore: React.FC<QuizEditorIntegratedPageProps> = ({
       console.log('🎯 Carregando dados do quiz para edição...');
 
       // Converter quiz para formato do editor
-      const editorData = await QuizToEditorAdapter.convertQuizToEditor(funnelId);
+      const editorData = await QuizToEditorAdapter.convert(funnelId);
 
       if (!QuizToEditorAdapter.validateQuizData(editorData)) {
         throw new Error('Dados do quiz inválidos após conversão');
