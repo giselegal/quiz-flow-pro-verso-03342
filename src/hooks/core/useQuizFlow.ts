@@ -2,6 +2,9 @@ import { useQuizLogic } from '@/hooks/useQuizLogic';
 import { QuizDataService } from '@/services/core/QuizDataService';
 import { getStepInfo as coreGetStepInfo } from '@/utils/quiz21StepsRenderer';
 import { TemplateManager } from '@/utils/TemplateManager';
+import { quizEstiloLoaderGateway } from '@/domain/quiz/gateway';
+import { mapStepsToStepBlocks } from '@/domain/quiz/gateway';
+import { QUIZ_ESTILO_TEMPLATE_ID, canonicalizeQuizEstiloId } from '@/domain/quiz/quiz-estilo-ids';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { StorageService } from '@/services/core/StorageService';
 import useOptimizedScheduler from '@/hooks/useOptimizedScheduler';
@@ -201,10 +204,34 @@ export const useQuizFlow = ({
   }, [quizResult]);
 
   // Buscar dados da etapa atual
+  const canonicalCacheRef = useState<{ blocks: Record<string, any[]> | null }>({ blocks: null })[0];
+
   const getStepData = useCallback(() => {
     const stepKey = `step-${currentStep}`;
-    return QUIZ_STYLE_21_STEPS_TEMPLATE[stepKey] || [];
+    // Preferir cache canônico se presente
+    if (canonicalCacheRef.blocks && canonicalCacheRef.blocks[stepKey]) {
+      return canonicalCacheRef.blocks[stepKey];
+    }
+    return [];
   }, [currentStep]);
+
+  // Pré-carregar definição canônica se este fluxo for quiz-estilo
+  useEffect(() => {
+    const canonicalId = canonicalizeQuizEstiloId('quiz-estilo') || '';
+    if (canonicalId === QUIZ_ESTILO_TEMPLATE_ID && !canonicalCacheRef.blocks) {
+      (async () => {
+        try {
+          const def = await quizEstiloLoaderGateway.load();
+          if (def) {
+            canonicalCacheRef.blocks = mapStepsToStepBlocks(def.steps as any);
+          }
+        } catch (e) {
+          console.warn('useQuizFlow: falha ao carregar definição canônica', e);
+        }
+      })();
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // Helpers derivados
   const stepInfo = useMemo(() => {
