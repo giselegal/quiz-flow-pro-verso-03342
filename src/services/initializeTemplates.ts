@@ -1,5 +1,5 @@
 import { supabase } from '../integrations/supabase/client';
-import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '../templates/quiz21StepsComplete';
+import { quizEstiloLoaderGateway } from '@/domain/quiz/gateway';
 
 /**
  * Script para popular templates iniciais no Supabase
@@ -10,25 +10,23 @@ export async function populateInitialTemplates() {
 
   try {
     // Template principal - Quiz 21 Etapas
+    // Gera estrutura canônica atual para persistência inicial
+    const canonical = await quizEstiloLoaderGateway.load();
     const quiz21Template = {
-      name: 'Quiz Profissional 21 Etapas',
-      description:
-        'Sistema completo de descoberta de estilo pessoal com 21 etapas estruturadas, incluindo questões de personalidade, análise de estilo e ofertas estratégicas.',
+      name: 'Quiz Estilo (Canônico)',
+      description: 'Definição derivada do gateway canônico (substitui quiz21StepsComplete).',
       category: 'quiz',
       template_data: {
-        version: '2.0.0',
-        type: '21-steps-quiz',
-        description: 'Template completo com 21 etapas',
-        hasIntro: true,
-        hasQuestions: true,
-        hasResult: true,
-        hasOffer: true,
-        stepsData: QUIZ_STYLE_21_STEPS_TEMPLATE,
+        version: canonical.version,
+        type: 'quiz-estilo-canonical',
+        description: 'Template canônico unificado',
+        stepsData: canonical.steps,
+        source: canonical.source,
       },
-      tags: ['quiz', 'personalidade', 'estilo', '21-etapas'],
+      tags: ['quiz', 'canonical', 'estilo'],
       is_public: true,
       usage_count: 0,
-    };
+    } as any;
 
     console.log('📋 Inserindo Quiz 21 Etapas...');
     const { error: error1 } = await (supabase as any)
