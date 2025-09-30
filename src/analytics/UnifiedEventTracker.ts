@@ -30,6 +30,8 @@ export class EventTracker implements UnifiedEventTracker {
     private readonly maxBuffer = 20;
     private readonly flushIntervalMs = 5000;
     private featureEnabled: boolean; // mutável apenas para overrides de teste controlados
+    // Métricas internas para rollback automático
+    private flushLog: Array<{ t: number; failed: number; succeeded: number }> = [];
 
     constructor() {
         // Permitir override em testes: globalThis.__UNIFIED_ANALYTICS_FORCE = true|false
@@ -182,6 +184,10 @@ export class EventTracker implements UnifiedEventTracker {
             durationMs: performance.now() - start,
             error: lastError
         };
+        // Registrar métricas de flush para possível rollback
+        this.flushLog.push({ t: Date.now(), failed, succeeded });
+        // Limitar tamanho do log em memória
+        if (this.flushLog.length > 200) this.flushLog.splice(0, this.flushLog.length - 200);
         this.listeners.forEach(l => l(result));
         return result;
     }
@@ -275,6 +281,37 @@ export class EventTracker implements UnifiedEventTracker {
         } catch (e) {
             console.warn('[UnifiedAnalytics] Falha ao recuperar offline', e);
         }
+    }
+
+    // --------------------------------------------------
+    // Plano de rollback / auto-disable helpers
+    // --------------------------------------------------
+    /**
+     * Retorna estatísticas de falhas de flush numa janela (ms).
+     */
+    getFlushFailureStats(windowMs = 5 * 60_000) {
+        const cutoff = Date.now() - windowMs;
+        const recent = this.flushLog.filter(r => r.t >= cutoff);
+        const failed = recent.reduce((a, r) => a + r.failed, 0);
+        const succeeded = recent.reduce((a, r) => a + r.succeeded, 0);
+        const attempted = failed + succeeded;
+        const failureRate = attempted > 0 ? (failed / attempted) * 100 : 0;
+        return { windowMs, attempted, failed, succeeded, failureRate };
+    }
+
+    /**
+     * Avalia e desabilita analytics se taxa de falha exceder threshold (%) dentro da janela.
+     * Retorna true se desabilitou.
+     */
+    evaluateAutoDisable(thresholdPercent = 30, windowMs = 5 * 60_000): boolean {
+        if (!this.featureEnabled) return false;
+        const stats = this.getFlushFailureStats(windowMs);
+        if (stats.attempted >= 10 && stats.failureRate >= thresholdPercent) {
+            console.error('[UnifiedAnalytics] Desativando automaticamente - alta taxa de falha', stats);
+            this.featureEnabled = false;
+            return true;
+        }
+        return false;
     }
 }
 

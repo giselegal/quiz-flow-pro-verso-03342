@@ -136,6 +136,29 @@ export interface AnswerDistribution {
     total: number;
 }
 
+// -------------------------
+// Métricas avançadas de funil
+// -------------------------
+export interface CommonPath {
+    sequence: string[]; // ordem de steps visitados
+    count: number;
+    percentage: number; // relativo ao total de sessões analisadas
+}
+
+export interface CumulativeAbandonment {
+    stepId: string;
+    reached: number; // sessões que chegaram neste step
+    completedAfter: number; // dessas, quantas completaram o funil posteriormente
+    abandonmentRate: number; // (reached - completedAfter)/reached * 100
+}
+
+export interface StepTransitionTime {
+    fromStep: string;
+    toStep: string;
+    avgTimeSec: number; // tempo médio entre view de fromStep e view de toStep
+    samples: number;
+}
+
 export type TimeRange = '24h' | '7d' | '30d' | '90d';
 
 export type InvalidateScope =
@@ -170,6 +193,10 @@ export interface UnifiedAnalyticsEngine {
         range?: TimeRange
     ): Promise<AnswerDistribution>;
     getSessionPathSamples(funnelId: string, limit?: number): Promise<string[][]>;
+    // Avançadas
+    getCommonPaths(funnelId: string, range?: TimeRange, limit?: number): Promise<CommonPath[]>;
+    getCumulativeAbandonment(funnelId: string, range?: TimeRange): Promise<CumulativeAbandonment[]>;
+    getStepTransitionTimes(funnelId: string, range?: TimeRange): Promise<StepTransitionTime[]>;
     warmCache(funnelId: string): Promise<void>;
     invalidate(scope: InvalidateScope, funnelId?: string): void;
 }

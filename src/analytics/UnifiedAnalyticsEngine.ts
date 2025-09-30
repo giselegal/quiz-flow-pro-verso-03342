@@ -1,20 +1,33 @@
 import { getSupabase } from '@/supabase/config';
 import {
     AnswerDistribution,
+    CommonPath,
+    CumulativeAbandonment,
     DeviceBreakdownCounts,
     FunnelSummary,
     InvalidateScope,
     RealtimeSnapshot,
     StepDropoff,
     StyleSlice,
+    StepTransitionTime,
     TimeRange,
     UnifiedAnalyticsEngine
 } from './types';
 
 interface CacheEntry<T> { value: T; expires: number; }
 
-const TTL_DEFAULT = 30_000; // 30s
-const TTL_REALTIME = 10_000; // 10s
+// TTLs configuráveis via variáveis de ambiente (fallback para defaults seguros)
+const ENV_TTL_DEFAULT = Number(import.meta?.env?.VITE_ANALYTICS_CACHE_TTL) || 30_000;
+const ENV_TTL_REALTIME = Number(import.meta?.env?.VITE_ANALYTICS_RT_TTL) || 10_000;
+
+let TTL_DEFAULT = ENV_TTL_DEFAULT;
+let TTL_REALTIME = ENV_TTL_REALTIME;
+
+// Método auxiliar (uso test / futura ergonomia) para ajustar dinamicamente TTLs.
+export function __setAnalyticsCacheTTLs(opts: { defaultTtl?: number; realtimeTtl?: number }) {
+    if (typeof opts.defaultTtl === 'number') TTL_DEFAULT = opts.defaultTtl;
+    if (typeof opts.realtimeTtl === 'number') TTL_REALTIME = opts.realtimeTtl;
+}
 
 function rangeCutoff(range: TimeRange): Date {
     const now = new Date();
@@ -46,6 +59,8 @@ class Engine implements UnifiedAnalyticsEngine {
         if (scope === 'style') prefixes.push('style');
         if (scope === 'step') prefixes.push('stepdrop');
         if (scope === 'device') prefixes.push('device');
+        // novos prefixos métricas avançadas
+        if (scope === 'step') prefixes.push('paths', 'abandon', 'transition');
         for (const k of Array.from(this.cache.keys())) {
             if (prefixes.some(p => k.startsWith(p + '::')) && (!funnelId || k.includes(`::${funnelId}::`))) {
                 this.cache.delete(k);
@@ -83,9 +98,13 @@ class Engine implements UnifiedAnalyticsEngine {
             const s = sessions.get(row.session_id)!;
             if (row.event_type === 'quiz_completed' || row.event_type === 'conversion') {
                 if (!s.completed) {
-                    s.completed = true; s.end = row.occurred_at; completions++;
-                    const dur = new Date(s.end).getTime() - new Date(s.start).getTime();
-                    if (dur > 0) totalCompletionDuration += dur;
+                    s.completed = true;
+                    s.end = row.occurred_at;
+                    completions++;
+                    if (s.end) {
+                        const dur = new Date(s.end).getTime() - new Date(s.start).getTime();
+                        if (dur > 0) totalCompletionDuration += dur;
+                    }
                 }
             }
         }
@@ -295,6 +314,133 @@ class Engine implements UnifiedAnalyticsEngine {
         }
         const result = Object.values(paths).slice(0, limit);
         this.set(key, result, 60_000);
+        return result;
+    }
+
+    // --------------------------------------------------
+    // Métricas avançadas
+    // --------------------------------------------------
+    private async fetchOrderedStepEvents(funnelId: string, range: TimeRange): Promise<any[]> {
+        const supabase = getSupabase();
+        if (!supabase) throw new Error('Supabase não configurado');
+        const cutoff = rangeCutoff(range).toISOString();
+        const { data, error } = await supabase
+            .from('unified_events')
+            .select('session_id, step_id, event_type, occurred_at')
+            .eq('funnel_id', funnelId)
+            .gte('occurred_at', cutoff)
+            .order('occurred_at', { ascending: true });
+        if (error) throw error;
+        return data || [];
+    }
+
+    async getCommonPaths(funnelId: string, range: TimeRange = '7d', limit = 10): Promise<CommonPath[]> {
+        const key = this.key(['paths-common', funnelId, range, limit]);
+        const cached = this.get<CommonPath[]>(key);
+        if (cached) return cached;
+        const rows = await this.fetchOrderedStepEvents(funnelId, range);
+        const sequences: Record<string, number> = {};
+        let totalSessions = 0;
+        const MAX_LEN = 15;
+        const seenSessions = new Set<string>();
+        for (const row of rows) {
+            if (row.event_type !== 'step_viewed' || !row.step_id) continue;
+            if (!sequences[`__SESSION_MARK__${row.session_id}`]) {
+                totalSessions++; // primeira vez que vemos esta sessão
+                sequences[`__SESSION_MARK__${row.session_id}`] = 1; // marcador interno
+            }
+        }
+        // reconstruir paths completos
+        const perSession: Record<string, string[]> = {};
+        for (const r of rows) {
+            if (r.event_type === 'step_viewed' && r.step_id) {
+                perSession[r.session_id] = perSession[r.session_id] || [];
+                const arr = perSession[r.session_id];
+                if (arr.length < MAX_LEN) arr.push(r.step_id);
+            }
+        }
+        for (const seq of Object.values(perSession)) {
+            const keySeq = seq.join('>');
+            sequences[keySeq] = (sequences[keySeq] || 0) + 1;
+        }
+        // filtrar chaves reais (ignorar marcadores)
+        const entries = Object.entries(sequences)
+            .filter(([k]) => !k.startsWith('__SESSION_MARK__'))
+            .map(([k, count]) => ({ sequence: k.split('>'), count }));
+        const sorted = entries.sort((a, b) => b.count - a.count).slice(0, limit);
+        const result: CommonPath[] = sorted.map(e => ({
+            sequence: e.sequence,
+            count: e.count,
+            percentage: totalSessions > 0 ? (e.count / totalSessions) * 100 : 0
+        }));
+        this.set(key, result);
+        return result;
+    }
+
+    async getCumulativeAbandonment(funnelId: string, range: TimeRange = '7d'): Promise<CumulativeAbandonment[]> {
+        const key = this.key(['abandon', funnelId, range]);
+        const cached = this.get<CumulativeAbandonment[]>(key);
+        if (cached) return cached;
+        const rows = await this.fetchOrderedStepEvents(funnelId, range);
+        const completionsSessions = new Set<string>();
+        const stepReached: Record<string, Set<string>> = {};
+        for (const r of rows) {
+            if (r.event_type === 'step_viewed' && r.step_id) {
+                stepReached[r.step_id] = stepReached[r.step_id] || new Set();
+                stepReached[r.step_id].add(r.session_id);
+            }
+            if (r.event_type === 'quiz_completed' || r.event_type === 'conversion') {
+                completionsSessions.add(r.session_id);
+            }
+        }
+        const result: CumulativeAbandonment[] = Object.entries(stepReached).map(([stepId, sessions]) => {
+            let completedAfter = 0;
+            sessions.forEach(sid => { if (completionsSessions.has(sid)) completedAfter++; });
+            const reached = sessions.size;
+            return {
+                stepId,
+                reached,
+                completedAfter,
+                abandonmentRate: reached > 0 ? ((reached - completedAfter) / reached) * 100 : 0
+            };
+        }).sort((a, b) => a.stepId.localeCompare(b.stepId));
+        this.set(key, result);
+        return result;
+    }
+
+    async getStepTransitionTimes(funnelId: string, range: TimeRange = '7d'): Promise<StepTransitionTime[]> {
+        const key = this.key(['transition', funnelId, range]);
+        const cached = this.get<StepTransitionTime[]>(key);
+        if (cached) return cached;
+        const rows = await this.fetchOrderedStepEvents(funnelId, range);
+        interface Tmp { total: number; count: number; }
+        const accumulator: Record<string, Tmp> = {};
+        const perSession: Record<string, { lastStep?: string; lastTime?: number }> = {};
+        for (const r of rows) {
+            if (r.event_type !== 'step_viewed' || !r.step_id) continue;
+            const t = new Date(r.occurred_at).getTime();
+            const session = perSession[r.session_id] || {};
+            if (session.lastStep && session.lastTime) {
+                const keyPair = `${session.lastStep}>${r.step_id}`;
+                const diff = t - session.lastTime;
+                if (diff > 0) {
+                    accumulator[keyPair] = accumulator[keyPair] || { total: 0, count: 0 };
+                    accumulator[keyPair].total += diff;
+                    accumulator[keyPair].count++;
+                }
+            }
+            perSession[r.session_id] = { lastStep: r.step_id, lastTime: t };
+        }
+        const result: StepTransitionTime[] = Object.entries(accumulator).map(([k, v]) => {
+            const [fromStep, toStep] = k.split('>');
+            return {
+                fromStep,
+                toStep,
+                avgTimeSec: Math.round((v.total / v.count) / 1000),
+                samples: v.count
+            };
+        }).sort((a, b) => b.samples - a.samples);
+        this.set(key, result);
         return result;
     }
 }
