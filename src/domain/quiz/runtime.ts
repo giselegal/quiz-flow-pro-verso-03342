@@ -6,13 +6,21 @@ let cached: QuizDefinition | null = null;
 let loadError: Error | null = null;
 
 export function getQuizDefinition(): QuizDefinition | null {
-    if (cached || loadError) return cached;
-    const { definition, warnings } = loadQuizDefinition();
-    if (warnings.length) {
-        console.warn('quiz-definition warnings:', warnings);
-    }
-    cached = definition;
-    return cached;
+    // Retorna cache se já carregado ou se erro previamente registrado
+    if (cached) return cached;
+    if (loadError) return null;
+        try {
+            const { definition, warnings } = loadQuizDefinition();
+            if (warnings.length) {
+                console.warn('quiz-definition warnings:', warnings);
+            }
+            cached = definition;
+            return cached;
+        } catch (err) {
+            loadError = err instanceof Error ? err : new Error(String(err));
+            console.error('[quiz-estilo] Falha ao carregar definição canônica:', loadError.message);
+            return null;
+        }
 }
 
 export function findStep(stepId: string) {
