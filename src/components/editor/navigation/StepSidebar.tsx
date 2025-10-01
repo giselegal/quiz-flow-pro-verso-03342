@@ -1,4 +1,11 @@
 import React from 'react';
+/**
+ * DEPRECATED StepSidebar (versão simples)
+ * --------------------------------------
+ * Use a versão avançada em: src/components/editor/sidebars/StepSidebar.tsx
+ * Esta variante permanece apenas para compatibilidade temporária.
+ * Será removida após consolidação do ModernUnifiedEditor.
+ */
 
 export interface StepItem {
     id: string;
