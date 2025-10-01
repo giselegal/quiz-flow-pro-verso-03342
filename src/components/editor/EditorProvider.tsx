@@ -32,6 +32,8 @@ export interface EditorState {
   isSupabaseEnabled: boolean;
   databaseMode: 'local' | 'supabase';
   isLoading: boolean;
+  // ✅ Total de etapas conhecido (ex: 21 para quiz-estilo)
+  totalSteps?: number;
 }
 
 export interface EditorActions {
@@ -64,7 +66,10 @@ export interface EditorActions {
   importJSON: (json: string) => void;
 
   // Bulk replace (quiz adapter / migrations)
-  bulkReplaceStepBlocks?: (data: Record<string, Block[]>, options?: { resetValidation?: boolean; setCurrentStep?: number }) => void;
+  bulkReplaceStepBlocks: (
+    data: Record<string, Block[]>,
+    options?: { resetValidation?: boolean; setCurrentStep?: number; totalSteps?: number; replace?: boolean }
+  ) => void;
 
   // Supabase operations
   loadSupabaseComponents?: () => Promise<void>;
@@ -251,6 +256,7 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
       isSupabaseEnabled: enableSupabase,
       databaseMode: enableSupabase ? 'supabase' : 'local',
       isLoading: false,
+      totalSteps: 1,
       ...safeInitial, // 🛡️ USAR safeInitial ao invés de initial
     };
 
@@ -1381,18 +1387,20 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
     loadSupabaseComponents,
     bulkReplaceStepBlocks: (data: Record<string, Block[]>, options) => {
       setState(prev => {
-        const merged = { ...data };
+        const replace = options?.replace ?? true;
+        const merged = replace ? { ...data } : mergeStepBlocks(prev.stepBlocks, data);
         const validation: Record<number, boolean> = {};
-        Object.keys(merged).forEach(k => {
+        Object.entries(merged).forEach(([k, blocks]) => {
           const num = parseInt(k.replace(/[^0-9]/g, ''), 10);
-          if (Number.isFinite(num)) validation[num] = (merged as any)[k].length > 0;
+          if (Number.isFinite(num)) validation[num] = Array.isArray(blocks) && blocks.length > 0;
         });
         return {
           ...prev,
           stepBlocks: merged,
           stepValidation: options?.resetValidation ? validation : { ...prev.stepValidation, ...validation },
           currentStep: options?.setCurrentStep || prev.currentStep || 1,
-        };
+          totalSteps: options?.totalSteps || prev.totalSteps || Object.keys(merged).length || 1
+        } as EditorState;
       });
     }
   };
