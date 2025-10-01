@@ -29,10 +29,14 @@ export interface UserResponse {
 
 // Legacy compatibility
 export interface QuizAnswer {
+  id?: string; // Answer ID
   questionId: string;
   selectedOptions: string[];
   value: string | string[];
   timestamp: string;
+  text?: string; // Answer text
+  description?: string; // Answer description
+  stylePoints?: Record<string, number>; // Style scoring
   optionId?: string; // Legacy compatibility
   weight?: number; // Legacy compatibility
   weights?: Record<string, number>; // Legacy compatibility
@@ -53,9 +57,11 @@ export interface QuizQuestion {
   title: string;
   text?: string; // Legacy compatibility
   question?: string; // Legacy compatibility
+  subtitle?: string; // Question subtitle
   description?: string;
   required: boolean;
   options?: QuizOption[];
+  answers?: QuizAnswer[]; // Question answers
   multiSelect?: number;
   order?: number;
   validation?: {
@@ -139,3 +145,14 @@ export type BlockType = string | {
 
 // Export ComputedResult for backward compatibility
 export interface ComputedResult extends QuizResult {}
+
+// Export QuizStyle and QuizState for backward compatibility
+export type QuizStyle = StyleType;
+export interface QuizState {
+  currentStep: number;
+  currentStepId: string;
+  answers: Record<string, any>;
+  scores: Record<string, number>;
+  isCompleted: boolean;
+  completedAt?: string;
+}

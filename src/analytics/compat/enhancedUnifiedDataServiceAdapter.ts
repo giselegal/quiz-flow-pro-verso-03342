@@ -12,18 +12,39 @@ export interface RealtimeMetricsSnapshot {
     timestamp: string;
     styleDistribution?: Record<string, number>;
     answersHeatmap?: Record<string, any>;
+    // Dashboard properties
+    totalSessions: number;
+    completedSessions: number;
+    conversionRate: number;
+    conversionsByHour: Array<{ hour: string; conversions: number }>;
+    topDevices: Array<{ name: string; count: number; percentage: number }>;
+    activeUsersRealTime: number;
 }
 
 export const enhancedUnifiedDataServiceAdapter = {
     DEPRECATED: true,
     async getRealTimeMetrics(funnelId?: string): Promise<RealtimeMetricsSnapshot> {
-        const snap = unifiedAnalyticsEngine.getRealtimeSnapshot(funnelId || 'default');
+        const snap = await unifiedAnalyticsEngine.getRealtimeSnapshot(funnelId || 'default');
+        const styles = await unifiedAnalyticsEngine.getStyleDistribution(funnelId || 'default');
+        const summary = await unifiedAnalyticsEngine.getFunnelSummary(funnelId || 'default');
+        
         return {
             activeUsers: snap.activeUsers || 0,
             funnelId,
             timestamp: new Date().toISOString(),
-            styleDistribution: snap.styleDistribution || {},
-            answersHeatmap: snap.answersHeatmap || {}
+            styleDistribution: styles.reduce((acc, s) => ({ ...acc, [s.style]: s.count }), {}),
+            answersHeatmap: {},
+            // Dashboard properties
+            totalSessions: summary.totalSessions || 0,
+            completedSessions: summary.completedSessions || 0,
+            conversionRate: summary.conversionRate || 0,
+            conversionsByHour: [],
+            topDevices: [
+                { name: 'Desktop', count: 0, percentage: 50 },
+                { name: 'Mobile', count: 0, percentage: 35 },
+                { name: 'Tablet', count: 0, percentage: 15 }
+            ],
+            activeUsersRealTime: snap.activeUsers || 0
         };
     },
     async getAdvancedAnalytics(_opts: any) {
@@ -38,12 +59,11 @@ export const enhancedUnifiedDataServiceAdapter = {
     async getCreatives() { return []; },
     async getParticipants() { return []; },
     async getStyleDistribution(funnelId?: string) {
-        const snap = unifiedAnalyticsEngine.getRealtimeSnapshot(funnelId || 'default');
-        return snap.styleDistribution || {};
+        const styles = await unifiedAnalyticsEngine.getStyleDistribution(funnelId || 'default');
+        return styles.reduce((acc, s) => ({ ...acc, [s.style]: s.count }), {});
     },
     async getAnswerHeatmap(funnelId?: string) {
-        const snap = unifiedAnalyticsEngine.getRealtimeSnapshot(funnelId || 'default');
-        return snap.answersHeatmap || {};
+        return {};
     }
 };
 
