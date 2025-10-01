@@ -1,5 +1,6 @@
 import { QuizComponentData } from './quizBuilder';
 import { Block } from './editor';
+import { StyleType } from './quiz';
 
 export interface UnifiedEditorState {
   activeTab: 'quiz' | 'result' | 'sales';
@@ -19,7 +20,7 @@ export interface UnifiedEditorState {
 }
 
 export interface ResultPageConfig {
-  styleType: string;
+  styleType: StyleType;
   title?: string;
   header: {
     visible: boolean;

@@ -27,8 +27,9 @@ export interface UseUnifiedAnalyticsApi {
     flush: () => Promise<void>;
     getFunnelSummary: (range?: TimeRange) => Promise<FunnelSummary>;
     getRealtimeSnapshot: () => Promise<RealtimeSnapshot>;
-    getStyleDistribution: (range?: TimeRange) => Promise<ReturnType<typeof unifiedAnalyticsEngine.getStyleDistribution>>;
-    getStepDropoff: (range?: TimeRange) => Promise<ReturnType<typeof unifiedAnalyticsEngine.getStepDropoff>>;
+    // Ajuste: evitar Promise<Promise<T>> usando Awaited
+    getStyleDistribution: (range?: TimeRange) => ReturnType<typeof unifiedAnalyticsEngine.getStyleDistribution>;
+    getStepDropoff: (range?: TimeRange) => ReturnType<typeof unifiedAnalyticsEngine.getStepDropoff>;
 }
 
 function generateSessionId() {

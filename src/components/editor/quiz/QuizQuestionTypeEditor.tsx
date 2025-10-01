@@ -94,14 +94,19 @@ const QuizQuestionTypeEditor: React.FC<QuizQuestionTypeEditorProps> = ({
 
         setSelectedType(typeId);
 
+        const now = new Date().toISOString();
         const updatedQuestion: QuizQuestion = {
             ...question,
             type: typeId as any,
             answers: typeConfig.defaultAnswers.map((defaultAnswer, index) => ({
                 id: `answer-${Date.now()}-${index}`,
+                questionId: question.id,
+                selectedOptions: [],
+                value: defaultAnswer.text || `valor-${index + 1}`,
                 text: defaultAnswer.text || '',
                 description: defaultAnswer.description || '',
-                stylePoints: {} // Será configurado no painel de pontuação
+                timestamp: now,
+                stylePoints: {}
             }))
         };
 
@@ -117,10 +122,14 @@ const QuizQuestionTypeEditor: React.FC<QuizQuestionTypeEditorProps> = ({
 
     const handleAnswerChange = useCallback((answerIndex: number, field: string, value: string) => {
         const updatedAnswers = [...(question.answers || [])];
+        const existing = updatedAnswers[answerIndex];
+        if (!existing) return;
         updatedAnswers[answerIndex] = {
-            ...updatedAnswers[answerIndex],
-            [field]: value
-        };
+            ...existing,
+            [field]: value,
+            // Garante que value reflita texto se campo "text" mudar e value estava igual ao antigo
+            ...(field === 'text' && existing.value === existing.text ? { value } : {})
+        } as any;
 
         onQuestionChange({
             ...question,
@@ -129,10 +138,16 @@ const QuizQuestionTypeEditor: React.FC<QuizQuestionTypeEditorProps> = ({
     }, [question, onQuestionChange]);
 
     const handleAddAnswer = useCallback(() => {
+        const index = (question.answers?.length || 0) + 1;
+        const now = new Date().toISOString();
         const newAnswer: QuizAnswer = {
             id: `answer-${Date.now()}`,
-            text: `Nova opção ${(question.answers?.length || 0) + 1}`,
+            questionId: question.id,
+            selectedOptions: [],
+            value: `nova-opcao-${index}`,
+            text: `Nova opção ${index}`,
             description: '',
+            timestamp: now,
             stylePoints: {}
         };
 
@@ -183,10 +198,10 @@ const QuizQuestionTypeEditor: React.FC<QuizQuestionTypeEditorProps> = ({
                             <Card key={answer.id} className="cursor-pointer hover:ring-2 hover:ring-primary transition-all">
                                 <CardContent className="p-4 text-center">
                                     <div className="text-2xl mb-2">
-                                        {answer.text.split(' ')[0]}
+                                        {(answer.text || '').split(' ')[0]}
                                     </div>
                                     <div className="font-medium text-sm">
-                                        {answer.text.replace(/^[^\s]+ /, '')}
+                                        {(answer.text || '').replace(/^[^\s]+ /, '')}
                                     </div>
                                     {answer.description && (
                                         <div className="text-xs text-muted-foreground mt-1">
@@ -203,11 +218,11 @@ const QuizQuestionTypeEditor: React.FC<QuizQuestionTypeEditorProps> = ({
                 return (
                     <RadioGroup className="space-y-3">
                         {question.answers?.map((answer) => (
-                            <div key={answer.id} className="flex items-start space-x-3 p-3 rounded-lg border hover:bg-accent transition-colors">
-                                <RadioGroupItem value={answer.id} id={answer.id} className="mt-1" />
+                            <div key={answer.id || 'no-id'} className="flex items-start space-x-3 p-3 rounded-lg border hover:bg-accent transition-colors">
+                                <RadioGroupItem value={answer.id || ''} id={answer.id || ''} className="mt-1" />
                                 <div className="flex-1">
                                     <Label htmlFor={answer.id} className="font-medium cursor-pointer">
-                                        {answer.text}
+                                        {answer.text || 'Sem texto'}
                                     </Label>
                                     {answer.description && (
                                         <p className="text-sm text-muted-foreground mt-1">
@@ -342,7 +357,7 @@ const QuizQuestionTypeEditor: React.FC<QuizQuestionTypeEditorProps> = ({
                                             <Input
                                                 id={`answer-text-${index}`}
                                                 placeholder="Digite o texto da resposta..."
-                                                value={answer.text}
+                                                value={answer.text || ''}
                                                 onChange={(e) => handleAnswerChange(index, 'text', e.target.value)}
                                             />
                                         </div>
@@ -362,7 +377,7 @@ const QuizQuestionTypeEditor: React.FC<QuizQuestionTypeEditorProps> = ({
                                         variant="ghost"
                                         size="sm"
                                         onClick={() => handleRemoveAnswer(index)}
-                                        disabled={question.answers?.length <= 2}
+                                        disabled={(question.answers?.length || 0) <= 2}
                                     >
                                         <Minus className="w-4 h-4" />
                                     </Button>

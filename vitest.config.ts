@@ -113,7 +113,6 @@ export default defineConfig({
       '@migration': path.resolve(__dirname, './src/migration'),
       '@testing': path.resolve(__dirname, './src/testing')
     },
-    // Garante uma única instância de React durante os testes
     dedupe: ['react', 'react-dom'],
   },
 });

@@ -72,14 +72,14 @@ export interface QuizQuestion {
 }
 
 // Define StyleType as union of style string literals
-export type StyleType = 
-  | 'natural' 
-  | 'classico' 
-  | 'contemporâneo' 
-  | 'elegante' 
-  | 'romântico' 
-  | 'sexy' 
-  | 'dramático' 
+export type StyleType =
+  | 'natural'
+  | 'classico'
+  | 'contemporâneo'
+  | 'elegante'
+  | 'romântico'
+  | 'sexy'
+  | 'dramático'
   | 'criativo';
 
 export interface StyleResult {
@@ -90,7 +90,7 @@ export interface StyleResult {
   score: number;
   characteristics: string[];
   recommendations: string[];
-  colors: string[];
+  colors?: string[]; // Tornado opcional para alinhar com base STYLE_DEFINITIONS
   images: string[];
   imageUrl?: string; // Legacy compatibility
   guideImageUrl?: string; // Legacy compatibility
@@ -104,7 +104,7 @@ export interface StyleResult {
 }
 
 // Legacy compatibility export
-export interface Style extends StyleResult {}
+export interface Style extends StyleResult { }
 export type StyleTypeCompat = string;
 export type QuizComponentStyle = string;
 
@@ -144,7 +144,7 @@ export type BlockType = string | {
 };
 
 // Export ComputedResult for backward compatibility
-export interface ComputedResult extends QuizResult {}
+export interface ComputedResult extends QuizResult { }
 
 // Export QuizStyle and QuizState for backward compatibility
 export type QuizStyle = StyleType;

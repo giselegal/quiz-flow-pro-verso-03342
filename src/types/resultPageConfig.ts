@@ -1,4 +1,5 @@
 import { Block } from './editor';
+import { StyleType } from './quiz';
 
 export interface StyleOptions {
   fontSize?: string;
@@ -122,7 +123,7 @@ export interface MentorSection {
 }
 
 export interface ResultPageConfig {
-  styleType: string;
+  styleType: StyleType; // Agora usa enum de estilos para segurança de tipos
   header: Section;
   mainContent: Section;
   secondaryStyles?: Section;
