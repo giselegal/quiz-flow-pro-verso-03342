@@ -43,6 +43,7 @@ interface EditorCoreContextValue {
         addStep(afterIndex?: number): string; // retorna novo stepKey
         removeStep(stepKey: string): void;
         duplicateStep(stepKey: string): string | null; // retorna novo stepKey
+    duplicateBlock(stepKey: string, blockId: string): string | null;
         /**
          * Executa várias mutações sobre coreStepBlocks atomically, disparando somente um repaint.
          * Uso: coreActions.batch(draft => { draft['step-1'].push(...); });
@@ -301,6 +302,21 @@ export const EditorCoreProvider: React.FC<{ children: React.ReactNode; funnelId?
                     const cloned = source.map(b => ({ ...b, id: b.id ? `${b.id}-copy-${Date.now()}` : undefined }));
                     setCoreStepBlocks(prev => ({ ...prev, [newKey]: cloned }));
                     return newKey;
+                },
+                duplicateBlock: (stepKey: string, blockId: string) => {
+                    const blocks = coreStepBlocks[stepKey];
+                    if (!blocks) return null;
+                    const target = blocks.find(b => b.id === blockId);
+                    if (!target) return null;
+                    const newId = `${blockId}-copy-${Date.now()}`;
+                    const clone = { ...target, id: newId };
+                    setCoreStepBlocks(prev => {
+                        const arr = (prev[stepKey] || []).slice();
+                        const index = arr.findIndex(b => b.id === blockId);
+                        arr.splice(index + 1, 0, clone);
+                        return { ...prev, [stepKey]: arr };
+                    });
+                    return newId;
                 },
                 updateBlock: (stepKey: string, blockId: string, updates: Record<string, any>) => {
                     const apply = (source: Record<string, any[]>) => {
