@@ -66,7 +66,7 @@ interface EditorState { mode: ToolbarEditorMode; aiAssistantActive: boolean; pre
 // 🎯 UNIFIED EDITOR WITH CRUD
 // ===============================
 
-const UnifiedEditorCore: React.FC<ModernUnifiedEditorProps> = ({
+export const UnifiedEditorCore: React.FC<ModernUnifiedEditorProps> = ({
     funnelId,
     templateId,
     mode = 'visual',
@@ -270,7 +270,7 @@ const UnifiedEditorCore: React.FC<ModernUnifiedEditorProps> = ({
     }, [coreV2, coreQuiz, coreCtx]);
 
     return (
-        <div className={`h-screen w-full flex flex-col bg-gradient-to-br from-background via-background to-muted/30 ${className}`}>
+        <div className={`h-screen w-full flex flex-col bg-gradient-to-br from-background via-background to-muted/30 ${className} relative`}>
             <div className="relative border-b backdrop-blur supports-[backdrop-filter]:bg-background/70 bg-background/90">
                 <Suspense fallback={<ToolbarFallback />}>
                     <ModernToolbar
@@ -295,7 +295,7 @@ const UnifiedEditorCore: React.FC<ModernUnifiedEditorProps> = ({
                 </div>
             </div>
             <FourColumnEditorLayout
-                className="flex-1"
+                className="flex-1 relative z-[1]"
                 sidebar={<StepSidebar steps={derivedSteps} currentStepId={selectedStepId || undefined} onSelectStep={handleSelectStep} />}
                 palette={<BlockPalette onInsert={(t) => console.log('Inserir bloco futuro', t)} />}
                 canvas={
@@ -333,8 +333,10 @@ const UnifiedEditorCore: React.FC<ModernUnifiedEditorProps> = ({
                 </Suspense>
             </div>
             {quizBridge.active && (
-                <div className="absolute top-2 right-4 text-[10px] text-muted-foreground flex gap-2 items-center">
-                    <span className="px-2 py-1 rounded bg-secondary/40 border border-border">Quiz: {quizBridge.answersCount} respostas</span>
+                <div className="pointer-events-none select-none absolute top-[4.25rem] right-4 text-[10px] text-muted-foreground flex gap-2 items-center z-[5]">
+                    <span className="px-2 py-1 rounded bg-secondary/40 border border-border shadow-sm">
+                        Quiz: {quizBridge.answersCount} respostas
+                    </span>
                 </div>
             )}
         </div>
