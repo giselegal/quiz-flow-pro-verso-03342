@@ -31,11 +31,13 @@ import FourColumnEditorLayout from '@/components/editor/layout/FourColumnEditorL
 import StepSidebar from '@/components/editor/sidebars/StepSidebar';
 import BlockPalette from '@/components/editor/palette/BlockPalette';
 import { PropertiesPanel } from '@/components/editor/properties/PropertiesPanel';
+import QuizStepPropertiesPanel from '@/components/editor/properties/QuizStepPropertiesPanel';
 import RealExperienceCanvas from '@/pages/editor/modern/runtime/RealExperienceCanvas';
 // Utilidades/UI básicas
 // Lógica de steps extraída para hooks dedicados
 import { useRuntimeSteps } from './modern/hooks/useRuntimeSteps';
 import { useDerivedSteps } from './modern/hooks/useDerivedSteps';
+import { useUnifiedStepsAdapter } from './modern/hooks/useUnifiedStepsAdapter';
 import { Button } from '@/components/ui/button';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 // Lazy heavy components
@@ -162,8 +164,9 @@ export const UnifiedEditorCore: React.FC<ModernUnifiedEditorProps> = ({
     // 🎯 QUIZ SYNC BRIDGE
     const quizBridge = useQuizSyncBridge({ extractedInfo: extractedInfo as any, unifiedEditor, crudContext });
 
-    // 🧱 DERIVAÇÃO DE STEPS PARA SIDEBAR (agora isolada)
+    // 🧱 DERIVAÇÃO DE STEPS PARA SIDEBAR (legacy) + Adapter unificado editável
     const derivedSteps = useDerivedSteps({ quizBridge, unifiedEditor });
+    const unifiedStepsAdapter = useUnifiedStepsAdapter();
 
     const [selectedStepId, setSelectedStepId] = useState<string | null>(null);
     const selectedBlock = useMemo(() => {
@@ -188,8 +191,13 @@ export const UnifiedEditorCore: React.FC<ModernUnifiedEditorProps> = ({
     }, []);
 
     const handleUpdateSelected = useCallback((updates: Record<string, any>) => {
-        console.log('[PropertiesPanel] updates pendentes de integração', updates);
-    }, []);
+        if (selectedStepId && unifiedStepsAdapter.getStep(selectedStepId)) {
+            unifiedStepsAdapter.updateStep(selectedStepId, updates);
+            console.log('[QuizStepPropertiesPanel] step updated', selectedStepId, updates);
+        } else {
+            console.log('[PropertiesPanel] updates pendentes de integração', updates);
+        }
+    }, [selectedStepId, unifiedStepsAdapter]);
 
     const handleStateChange = useCallback((updates: Partial<EditorState>) => {
         debugLog('handleStateChange chamado', { updates });
@@ -341,7 +349,13 @@ export const UnifiedEditorCore: React.FC<ModernUnifiedEditorProps> = ({
                         </LocalLazyBoundary>
                     )
                 }
-                properties={<PropertiesPanel selectedBlock={selectedBlock as any} onUpdate={handleUpdateSelected} />}
+                properties={(() => {
+                    const quizStep = selectedStepId ? unifiedStepsAdapter.getStep(selectedStepId) : null;
+                    if (quizStep) {
+                        return <QuizStepPropertiesPanel step={quizStep as any} onChange={(id, u) => handleUpdateSelected(u)} />;
+                    }
+                    return <PropertiesPanel selectedBlock={selectedBlock as any} onUpdate={handleUpdateSelected} />;
+                })()}
             />
             <div className="border-t bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">
                 <LocalLazyBoundary fallback={<StatusFallback />}>
@@ -359,7 +373,7 @@ export const UnifiedEditorCore: React.FC<ModernUnifiedEditorProps> = ({
             {quizBridge.active && (
                 <div className="pointer-events-none select-none absolute top-[4.25rem] right-4 text-[10px] text-muted-foreground flex gap-2 items-center z-[5]">
                     <span className="px-2 py-1 rounded bg-secondary/40 border border-border shadow-sm">
-                        Quiz: {quizBridge.answersCount} respostas
+                        Quiz: {quizBridge.answersCount} respostas {unifiedStepsAdapter.dirty ? '• alterações locais' : ''}
                     </span>
                 </div>
             )}

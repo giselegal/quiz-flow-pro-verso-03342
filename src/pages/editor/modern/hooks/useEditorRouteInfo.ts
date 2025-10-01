@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 // Ajuste de caminho: uso de alias para evitar profundidade relativa incorreta
-import { QUIZ_ESTILO_TEMPLATE_ID, canonicalizeQuizEstiloId, warnIfDeprecatedQuizEstilo, isQuizEstiloId } from '@/domain/quiz/quiz-estilo-ids';
+import { QUIZ_ESTILO_TEMPLATE_ID, canonicalizeQuizEstiloId, warnIfDeprecatedQuizEstilo, isQuizEstiloId, ALL_QUIZ_ESTILO_ALIASES } from '../../../../domain/quiz/quiz-estilo-ids';
 
 export interface RouteExtraction {
     funnelId: string | null;
@@ -36,13 +36,22 @@ export function useEditorRouteInfo({ funnelIdProp, templateIdProp }: UseEditorRo
             const identifier = path.replace('/editor/', '');
             warnIfDeprecatedQuizEstilo(identifier);
             const canonical = canonicalizeQuizEstiloId(identifier) || identifier;
-            const looksLikeTemplate = /^(step-|template|quiz|test|funnel|default-|optimized-|style-|quiz-estilo)/i.test(identifier);
-            if (isQuizEstiloId(identifier)) {
-                return { templateId: canonical, funnelId: null, type: 'quiz-template' };
+
+            // Conjunto rápido para match exato de aliases quiz-estilo.
+            const quizAliasSet = new Set(ALL_QUIZ_ESTILO_ALIASES);
+            if (quizAliasSet.has(identifier)) {
+                return { templateId: QUIZ_ESTILO_TEMPLATE_ID, funnelId: null, type: 'quiz-template' };
             }
-            if (looksLikeTemplate) {
+
+            // Prefixos reconhecidos explicitamente como templates genéricos.
+            const TEMPLATE_PREFIXES = ['template-', 'default-', 'optimized-', 'style-', 'step-'];
+            const isGenericTemplate = TEMPLATE_PREFIXES.some(p => identifier.startsWith(p));
+
+            if (isGenericTemplate) {
                 return { templateId: canonical, funnelId: null, type: 'template' };
             }
+
+            // Qualquer outro id não listado é tratado como funnelId (instância concreta), mesmo que contenha "quiz-estilo-" seguido de sufixo (ex: quiz-estilo-demo).
             return { templateId: null, funnelId: canonical, type: 'funnel' };
         }
 
