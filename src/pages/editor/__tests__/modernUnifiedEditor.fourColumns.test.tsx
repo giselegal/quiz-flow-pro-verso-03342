@@ -30,15 +30,15 @@ jest.mock('../modern/hooks/useEditorRouteInfo', () => ({ __esModule: true, defau
 
 // Evitar redirecionamento quiz-estilo
 jest.mock('../../domain/quiz/quiz-estilo-ids', () => ({
-  QUIZ_ESTILO_TEMPLATE_ID: 'quiz-estilo',
-  canonicalizeQuizEstiloId: (id: string) => id,
-  warnIfDeprecatedQuizEstilo: () => {}
+    QUIZ_ESTILO_TEMPLATE_ID: 'quiz-estilo',
+    canonicalizeQuizEstiloId: (id: string) => id,
+    warnIfDeprecatedQuizEstilo: () => { }
 }));
 
 // Mock providers e hooks mais pesados
 jest.mock('@/context/UnifiedCRUDProvider', () => ({
-  UnifiedCRUDProvider: ({ children }: any) => <div data-testid="crud-provider">{children}</div>,
-  useUnifiedCRUD: () => ({ currentFunnel: null })
+    UnifiedCRUDProvider: ({ children }: any) => <div data-testid="crud-provider">{children}</div>,
+    useUnifiedCRUD: () => ({ currentFunnel: null })
 }));
 jest.mock('@/context/EditorRuntimeProviders', () => ({ __esModule: true, default: ({ children }: any) => <div data-testid="runtime-providers">{children}</div> }));
 jest.mock('@/hooks', () => ({ useUnifiedEditor: () => ({ stepBlocks: [] }) }));
@@ -49,17 +49,17 @@ jest.mock('@/utils/editorFeatureFlags', () => ({ isEditorCoreV2Enabled: () => fa
 // Execução
 
 describe('ModernUnifiedEditor - Layout 4 colunas', () => {
-  it('renderiza as quatro colunas (sidebar, palette, canvas, properties)', async () => {
-    render(<ModernUnifiedEditor />);
+    it('renderiza as quatro colunas (sidebar, palette, canvas, properties)', async () => {
+        render(<ModernUnifiedEditor />);
 
-    // Grid container
-    const grid = document.querySelector('.grid-cols-[260px_240px_1fr_360px]');
-    expect(grid).toBeTruthy();
+        // Grid container
+        const grid = document.querySelector('.grid-cols-[260px_240px_1fr_360px]');
+        expect(grid).toBeTruthy();
 
-    // Colunas por data-testid (vêm dos mocks ou do DOM real)
-    expect(await screen.findByTestId('sidebar')).toBeInTheDocument();
-    expect(await screen.findByTestId('palette')).toBeInTheDocument();
-    expect(await screen.findByTestId('canvas')).toBeInTheDocument();
-    expect(await screen.findByTestId('properties')).toBeInTheDocument();
-  });
+        // Colunas por data-testid (vêm dos mocks ou do DOM real)
+        expect(await screen.findByTestId('sidebar')).toBeInTheDocument();
+        expect(await screen.findByTestId('palette')).toBeInTheDocument();
+        expect(await screen.findByTestId('canvas')).toBeInTheDocument();
+        expect(await screen.findByTestId('properties')).toBeInTheDocument();
+    });
 });
