@@ -1,6 +1,6 @@
 import React from 'react';
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/components/ui/resizable';
-import { useEditor } from '@/components/editor/provider-alias';
+import { useEditor } from '@/components/editor/EditorProviderMigrationAdapter';
 import { StyleResult } from '@/types/quiz';
 import ComponentsSidebar from '../components/ComponentsSidebar';
 import { PreviewPanel } from './PreviewPanel';

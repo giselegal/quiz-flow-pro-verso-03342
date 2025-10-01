@@ -6,8 +6,7 @@
  */
 
 import React, { useEffect } from 'react';
-// Substituição: usar bridge compat enquanto migração completa não finalizada
-import { legacyAnalyticsEngineBridge as analyticsEngine } from '@/analytics/compat/legacyAnalyticsEngineBridge';
+import { analyticsEngine } from '@/services/analyticsEngine';
 import { useAnalytics, useFunnelAnalytics, useABTest } from '@/hooks/useAnalytics';
 
 // ============================================================================

@@ -7,7 +7,7 @@
  */
 
 import { QuizPropertiesPanelModular } from '@/components/editor/quiz/QuizPropertiesPanelModular';
-import { useEditor } from '@/components/editor/provider-alias';
+import { useEditor } from '@/components/editor/EditorProviderMigrationAdapter';
 import { useQuizFlow } from '@/hooks/core/useQuizFlow';
 import { Block } from '@/types/editor';
 import React, { useState } from 'react';
@@ -107,8 +107,9 @@ export const QuizFlowPageModular: React.FC = () => {
                         <div>
                           <span className="text-muted-foreground">Válida:</span>
                           <span
-                            className={`ml-2 font-medium ${isValid ? 'text-green-600' : 'text-red-600'
-                              }`}
+                            className={`ml-2 font-medium ${
+                              isValid ? 'text-green-600' : 'text-red-600'
+                            }`}
                           >
                             {isValid ? 'Sim' : 'Não'}
                           </span>

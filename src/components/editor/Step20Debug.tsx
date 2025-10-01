@@ -1,6 +1,6 @@
 // @ts-nocheck
 import React from 'react';
-import { useEditor } from '@/components/editor/provider-alias';
+import { useEditor } from '@/components/editor/EditorProviderMigrationAdapter';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 
@@ -12,13 +12,13 @@ export const Step20Debug: React.FC = () => {
     return null;
   }
 
-  const isStep20 = activeStageId === 'step-20' ||
-    activeStageId === 'step20' ||
-    activeStageId?.includes('20') ||
-    window.location.pathname.includes('step20') ||
-    window.location.pathname.includes('step-20');
+  const isStep20 = activeStageId === 'step-20' || 
+                   activeStageId === 'step20' || 
+                   activeStageId?.includes('20') ||
+                   window.location.pathname.includes('step20') ||
+                   window.location.pathname.includes('step-20');
 
-  const step20Blocks = state.blocks.filter(block =>
+  const step20Blocks = state.blocks.filter(block => 
     block.type.startsWith('step20-') || block.type.includes('step20')
   );
 
@@ -34,11 +34,11 @@ export const Step20Debug: React.FC = () => {
               Stage: {activeStageId || 'undefined'}
             </span>
           </div>
-
+          
           <div className="text-muted-foreground">
             URL: {typeof window !== 'undefined' ? window.location.pathname : 'N/A'}
           </div>
-
+          
           {step20Blocks.length > 0 && (
             <div>
               <div className="font-medium">Blocos Step 20:</div>

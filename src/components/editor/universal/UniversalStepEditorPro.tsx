@@ -1,6 +1,6 @@
 import React, { Suspense, useMemo, useState, useCallback, useRef } from 'react';
 import { useNotification } from '@/components/ui/Notification';
-import { useEditor } from '@/components/editor/provider-alias';
+import { useEditor } from '@/components/editor/EditorProviderMigrationAdapter';
 import './UniversalStepEditorPro.css';
 import './UniversalStepEditorPro-premium.css';
 import { StepDndProvider } from '@/components/editor/dnd/StepDndProvider';

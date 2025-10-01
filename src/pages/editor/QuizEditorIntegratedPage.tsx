@@ -4,22 +4,21 @@
  * Página integrada que permite editar o quiz-estilo no ambiente
  * do editor unificado. Esta é a implementação da Fase 1 do plano.
  * 
- * URL: /editor?template=QUIZ_ESTILO_TEMPLATE_ID (valor atual: quiz-estilo-21-steps)
+ * URL: /editor?template=quiz-estilo-21-steps
  */
 
 import React, { useState, useCallback, useEffect, Suspense } from 'react';
-import { QUIZ_ESTILO_TEMPLATE_ID } from '../../domain/quiz/quiz-estilo-ids';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import {
-  Target, Brain, Settings, Crown,
+import { 
+  Target, Brain, Settings, Crown, 
   CheckCircle, AlertTriangle, Info
 } from 'lucide-react';
 
 // Providers necessários
-import { EditorProvider } from '@/components/editor/provider-alias';
+import { EditorProvider } from '@/components/editor/EditorProviderMigrationAdapter';
 import { FunnelMasterProvider } from '@/providers/FunnelMasterProvider';
 import UnifiedCRUDProvider from '@/context/UnifiedCRUDProvider';
 
@@ -93,7 +92,7 @@ const QuizEditorIntegratedPageCore: React.FC<QuizEditorIntegratedPageProps> = ({
       }));
 
       addNotification('✅ Quiz carregado com sucesso no editor', 'success');
-
+      
       console.log('✅ Quiz carregado:', {
         totalSteps: editorData.totalSteps,
         stepsConverted: Object.keys(editorData.stepBlocks).length,
@@ -102,7 +101,7 @@ const QuizEditorIntegratedPageCore: React.FC<QuizEditorIntegratedPageProps> = ({
 
     } catch (error) {
       console.error('❌ Erro ao carregar quiz:', error);
-
+      
       setState(prev => ({
         ...prev,
         hasError: true,
@@ -117,11 +116,11 @@ const QuizEditorIntegratedPageCore: React.FC<QuizEditorIntegratedPageProps> = ({
   const handleSave = useCallback(async () => {
     try {
       console.log('💾 Salvando alterações do quiz...');
-
+      
       // Aqui será implementada a sincronização bidirecional na Fase 3
       // Por enquanto, simular o salvamento
       await new Promise(resolve => setTimeout(resolve, 1000));
-
+      
       addNotification('💾 Quiz salvo com sucesso', 'success');
     } catch (error) {
       console.error('❌ Erro ao salvar:', error);
@@ -131,11 +130,11 @@ const QuizEditorIntegratedPageCore: React.FC<QuizEditorIntegratedPageProps> = ({
 
   const handlePreview = useCallback(() => {
     console.log('👁️ Abrindo preview do quiz...');
-
+    
     // Abrir em nova aba o quiz funcional
     const previewUrl = `/quiz-estilo${funnelId ? `?funnel=${funnelId}` : ''}`;
     window.open(previewUrl, '_blank');
-
+    
     addNotification('👁️ Preview aberto em nova aba', 'info');
   }, [funnelId, addNotification]);
 
@@ -203,7 +202,7 @@ const QuizEditorIntegratedPageCore: React.FC<QuizEditorIntegratedPageProps> = ({
               <h1 className="text-xl font-bold">Quiz Editor</h1>
               <Badge variant="secondary">FASE 1 - Implementado</Badge>
             </div>
-
+            
             {funnelId && (
               <Badge variant="outline">
                 Funil: {funnelId}
@@ -242,7 +241,7 @@ const QuizEditorIntegratedPageCore: React.FC<QuizEditorIntegratedPageProps> = ({
             <Info className="w-4 h-4" />
             <span>Quiz de Estilo Pessoal - 21 Etapas</span>
           </div>
-
+          
           {state.quizMetadata && (
             <div className="flex items-center gap-2">
               <Target className="w-4 h-4" />

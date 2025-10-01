@@ -1,13 +1,13 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
-import { useEditor } from '@/components/editor/provider-alias';
+import { useEditor } from '@/components/editor/EditorProviderMigrationAdapter';
 
 const FunnelStagesPanel: React.FC = () => {
   const { state, actions } = useEditor();
-  const stages = [{
-    id: 'step-1',
-    name: 'Step 1',
-    order: 1,
+  const stages = [{ 
+    id: 'step-1', 
+    name: 'Step 1', 
+    order: 1, 
     description: 'First step',
     metadata: { blocksCount: 0 }
   }]; // Mock stages

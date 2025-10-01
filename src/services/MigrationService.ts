@@ -4,13 +4,22 @@
  * Executa migrações de schema automaticamente via código
  */
 
-import { getSupabase } from '@/supabase/config';
+import { createClient } from '@supabase/supabase-js';
 
 // ============================================================================
 // CONFIGURAÇÃO DO SUPABASE COM PERMISSÕES ADMIN
 // ============================================================================
 
-const supabase = getSupabase();
+const supabase = createClient(
+  import.meta.env.VITE_SUPABASE_URL || '',
+  import.meta.env.VITE_SUPABASE_ANON_KEY || '',
+  {
+    auth: {
+      autoRefreshToken: false,
+      persistSession: false,
+    },
+  }
+);
 
 // ============================================================================
 // INTERFACE E TIPOS

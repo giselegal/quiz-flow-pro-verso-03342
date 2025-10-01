@@ -19,7 +19,7 @@ import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { getPropertiesForComponentType } from './core/PropertyDiscovery';
-import { useEditor } from '@/components/editor/provider-alias';
+import { useEditor } from '@/components/editor/EditorProviderMigrationAdapter';
 import { PropertyType } from '@/hooks/useUnifiedProperties';
 import type { Block } from '@/types/editor';
 import OptionsGridQuickPanel from './quick/OptionsGridQuickPanel';

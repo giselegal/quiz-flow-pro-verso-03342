@@ -17,12 +17,8 @@ export default function QuestionStep({
     currentAnswers,
     onAnswersChange
 }: QuestionStepProps) {
-    // Detectar se há imagens nas opções
-    const hasImages = data.options?.some(option => option.image && option.image.trim() !== '');
-    
-    // Configuração de colunas baseada na presença de imagens
-    // Questões com imagens: 2 colunas, Questões só texto: 1 coluna
-    const gridClass = hasImages ? 'grid-cols-1 md:grid-cols-2' : 'grid-cols-1';
+    const hasImages = data.options?.[0]?.image;
+    const gridClass = hasImages ? 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3' : 'grid-cols-1';
 
     const handleOptionClick = (optionId: string) => {
         const isSelected = currentAnswers.includes(optionId);
@@ -57,7 +53,7 @@ export default function QuestionStep({
                 {selectionText} ({currentAnswers.length}/{data.requiredSelections || 1})
             </p>
 
-            <div className={`grid ${gridClass} gap-8 mb-8`}>
+            <div className={`grid ${gridClass} gap-6 mb-8`}>
                 {data.options?.map((option) => (
                     <div
                         key={option.id}
@@ -71,7 +67,7 @@ export default function QuestionStep({
                             <img
                                 src={option.image}
                                 alt={option.text}
-                                className="rounded-md w-full mb-4 object-cover h-64"
+                                className="rounded-md w-full mb-2 object-cover max-h-48"
                             />
                         )}
                         <p className="text-center font-medium text-sm leading-relaxed">{option.text}</p>

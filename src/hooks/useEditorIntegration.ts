@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { useEditor } from '@/components/editor/provider-alias';
+import { useEditor } from '@/components/editor/EditorProviderMigrationAdapter';
 import { Block } from '@/types/editor';
 import { useInlineEditor } from './useInlineEditor';
 import { useStepValidation } from './useStepValidation';
@@ -15,18 +15,18 @@ interface EditorIntegrationState {
 interface UseEditorIntegrationReturn {
   // Estado
   integrationState: EditorIntegrationState;
-
+  
   // Hooks integrados
   inlineEditor: ReturnType<typeof useInlineEditor>;
   stepValidation: ReturnType<typeof useStepValidation>;
-
+  
   // Ações
   toggleInteractiveMode: () => void;
   toggleDraftMode: () => void;
   saveChanges: () => Promise<void>;
   publishChanges: () => Promise<void>;
   resetToLastSaved: () => void;
-
+  
   // Editor Provider Integration
   currentStepBlocks: Block[];
   updateStepBlocks: (blocks: Block[]) => void;
@@ -52,7 +52,7 @@ export const useEditorIntegration = (): UseEditorIntegrationReturn => {
   // Initialize integrated hooks
   const inlineEditor = useInlineEditor((blockId: string, changes: Partial<Block>) => {
     updateStepBlocks(
-      currentStepBlocks.map(block =>
+      currentStepBlocks.map(block => 
         block.id === blockId ? { ...block, ...changes } : block
       )
     );
@@ -81,8 +81,8 @@ export const useEditorIntegration = (): UseEditorIntegrationReturn => {
   const updateStepBlocks = useCallback((blocks: Block[]) => {
     // In a real implementation, this would update via EditorProvider actions
     console.log('🔄 Updating step blocks:', blocks.length);
-    setIntegrationState(prev => ({
-      ...prev,
+    setIntegrationState(prev => ({ 
+      ...prev, 
       hasUnsavedChanges: true,
       syncStatus: 'idle'
     }));
@@ -106,13 +106,13 @@ export const useEditorIntegration = (): UseEditorIntegrationReturn => {
 
   const saveChanges = useCallback(async () => {
     setIntegrationState(prev => ({ ...prev, syncStatus: 'syncing' }));
-
+    
     try {
       // In a real app, this would sync with backend
       await new Promise(resolve => setTimeout(resolve, 1000));
-
-      setIntegrationState(prev => ({
-        ...prev,
+      
+      setIntegrationState(prev => ({ 
+        ...prev, 
         hasUnsavedChanges: false,
         lastSaved: new Date(),
         syncStatus: 'success'
@@ -130,23 +130,23 @@ export const useEditorIntegration = (): UseEditorIntegrationReturn => {
 
   const publishChanges = useCallback(async () => {
     await saveChanges();
-
-    setIntegrationState(prev => ({
-      ...prev,
-      isDraftMode: false
+    
+    setIntegrationState(prev => ({ 
+      ...prev, 
+      isDraftMode: false 
     }));
-
+    
     console.log('🚀 Publishing changes to production...');
   }, [saveChanges]);
 
   const resetToLastSaved = useCallback(() => {
     // In a real app, this would reload from backend
-    setIntegrationState(prev => ({
-      ...prev,
+    setIntegrationState(prev => ({ 
+      ...prev, 
       hasUnsavedChanges: false,
       syncStatus: 'idle'
     }));
-
+    
     console.log('🔄 Resetting to last saved state...');
   }, []);
 

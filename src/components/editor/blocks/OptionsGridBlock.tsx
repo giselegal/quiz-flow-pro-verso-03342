@@ -1,9 +1,3 @@
-/**
- * OptionsGridBlock
- * @deprecated Será gradualmente substituído pelo alias 'multi-select-question'.
- * Mantido como wrapper para compatibilidade até que todos os registries e
- * templates usem somente o novo tipo canônico.
- */
 import type { BlockComponentProps } from '@/types/blocks';
 import React from 'react';
 import useOptimizedScheduler from '@/hooks/useOptimizedScheduler';

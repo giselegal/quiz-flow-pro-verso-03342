@@ -4,13 +4,20 @@
 // ============================================================================
 // 📦 IMPORTS
 // ============================================================================
-import { getSupabase } from '@/supabase/config';
+import { createClient } from '@supabase/supabase-js';
 
 // ============================================================================
 // ⚙️ CONFIGURAÇÃO DO SUPABASE
 // ============================================================================
 // Carrega as variáveis de ambiente do Supabase
-const supabase = getSupabase() || createMockSupabaseClient();
+const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL as string;
+const SUPABASE_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY as string;
+
+// Cria um cliente Supabase real ou simulado
+const supabase =
+  SUPABASE_URL && SUPABASE_KEY
+    ? createClient(SUPABASE_URL, SUPABASE_KEY)
+    : createMockSupabaseClient();
 
 // Função para criar um cliente Supabase simulado (para testes locais)
 function createMockSupabaseClient() {

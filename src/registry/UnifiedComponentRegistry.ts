@@ -19,7 +19,7 @@ import BasicContainerBlock from '@/components/editor/blocks/BasicContainerBlock'
 import FormInputBlock from '@/components/editor/blocks/FormInputBlock';
 import ImageInlineBlock from '@/components/editor/blocks/ImageInlineBlock';
 import LegalNoticeInlineBlock from '@/components/editor/blocks/LegalNoticeInlineBlock';
-import OptionsGridBlock from '@/components/editor/blocks/OptionsGridBlock'; // @deprecated usar 'multi-select-question'
+import OptionsGridBlock from '@/components/editor/blocks/OptionsGridBlock';
 import QuizIntroHeaderBlock from '@/components/editor/blocks/QuizIntroHeaderBlock';
 import TextInlineBlock from '@/components/editor/blocks/TextInlineBlock';
 import SalesHeroBlock from '@/components/editor/blocks/SalesHeroBlock';
@@ -60,8 +60,7 @@ export const UNIFIED_COMPONENT_REGISTRY: Record<string, ComponentType<any> | (()
     'button-inline': ButtonInlineBlock,
     'legal-notice': LegalNoticeInlineBlock,
     'legal-notice-inline': LegalNoticeInlineBlock,
-    'options-grid': OptionsGridBlock, // @deprecated manter até migração completa
-    'multi-select-question': OptionsGridBlock, // alias canônico
+    'options-grid': OptionsGridBlock,
     'container': BasicContainerBlock,
     'section': BasicContainerBlock,
     'box': BasicContainerBlock,

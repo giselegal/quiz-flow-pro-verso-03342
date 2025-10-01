@@ -1,6 +1,5 @@
 import { useCallback, useMemo } from 'react';
-import { useEditor } from '@/components/editor/provider-alias';
-import { toStepKey } from '@/components/editor/navigation/stepMapping';
+import { useEditor } from '@/components/editor/EditorProviderMigrationAdapter';
 
 /**
  * 🎯 HOOK UNIFICADO DE NAVEGAÇÃO - SINGLE SOURCE OF TRUTH
@@ -47,52 +46,96 @@ export interface UseUnifiedStepNavigationReturn {
 
 export const useUnifiedStepNavigation = (): UseUnifiedStepNavigationReturn => {
     const { state, actions } = useEditor();
-    const { currentStep, stepBlocks, stepValidation, isLoading, totalSteps: providerTotalSteps } = state as any;
+    const { currentStep, stepBlocks, stepValidation, isLoading } = state;
     const { setCurrentStep } = actions;
 
-    // Delegar contagem primária ao provider; fallback para tamanho de stepBlocks;
+    // 🔧 CORREÇÃO: Constantes dinâmicas baseadas nos dados reais E template info
     const TOTAL_STEPS = useMemo(() => {
-        if (providerTotalSteps && providerTotalSteps > 0) return providerTotalSteps;
-        const count = Object.keys(stepBlocks || {}).length;
-        return count > 0 ? count : 1;
-    }, [providerTotalSteps, stepBlocks]);
+        // Primeiro tentar contar steps dos stepBlocks
+        const stepsFromBlocks = Object.keys(stepBlocks).length;
+        if (stepsFromBlocks > 0) return stepsFromBlocks;
 
-    const currentStepId = useMemo(() => toStepKey(currentStep), [currentStep]);
-    const activeStageId = currentStepId;
-    const currentStepBlocks = useMemo(() => stepBlocks?.[currentStepId] || [], [stepBlocks, currentStepId]);
-    const isCurrentStepValid = stepValidation?.[currentStep] !== false;
+        // Fallback mínimo
+        return 1;
+    }, [stepBlocks]);
 
+    // IDs formatados
+    const currentStepId = useMemo(() => `step-${currentStep}`, [currentStep]);
+    const activeStageId = currentStepId; // Alias para compatibilidade
+
+    // Blocos do step atual
+    const currentStepBlocks = useMemo(() => {
+        return stepBlocks[currentStepId] || [];
+    }, [stepBlocks, currentStepId]);
+
+    // Estado de validação
+    const isCurrentStepValid = useMemo(() => {
+        return stepValidation[currentStep] !== false; // Default true se não definido
+    }, [stepValidation, currentStep]);
+
+    // Estados de navegação
     const canGoPrevious = currentStep > 1;
     const canGoNext = currentStep < TOTAL_STEPS;
     const isFirstStep = currentStep === 1;
     const isLastStep = currentStep === TOTAL_STEPS;
-    const progressPercentage = useMemo(() => Math.round((currentStep / TOTAL_STEPS) * 100), [currentStep, TOTAL_STEPS]);
 
+    // Progresso percentual
+    const progressPercentage = useMemo(() => {
+        return Math.round((currentStep / TOTAL_STEPS) * 100);
+    }, [currentStep, TOTAL_STEPS]);
+
+    // Navegação principal
     const goToStep = useCallback((targetStep: number) => {
-        if (targetStep < 1 || targetStep > TOTAL_STEPS) return;
-        if (targetStep === currentStep) return; // evita renders desnecessários
-        setCurrentStep(targetStep);
-        if (process.env.NODE_ENV === 'development') {
-            console.log('🧭 nav ->', { from: currentStep, to: targetStep, stepId: toStepKey(targetStep) });
-        }
-    }, [currentStep, setCurrentStep, TOTAL_STEPS]);
+        if (targetStep >= 1 && targetStep <= TOTAL_STEPS) {
+            setCurrentStep(targetStep);
 
-    const goToNext = useCallback(() => canGoNext && goToStep(currentStep + 1), [canGoNext, currentStep, goToStep]);
-    const goToPrevious = useCallback(() => canGoPrevious && goToStep(currentStep - 1), [canGoPrevious, currentStep, goToStep]);
+            if (process.env.NODE_ENV === 'development') {
+                console.log('🧭 useUnifiedStepNavigation: Navegando para step', {
+                    from: currentStep,
+                    to: targetStep,
+                    stepId: `step-${targetStep}`,
+                    hasBlocks: stepBlocks[`step-${targetStep}`]?.length || 0
+                });
+            }
+        }
+    }, [currentStep, setCurrentStep, stepBlocks]);
+
+    const goToNext = useCallback(() => {
+        if (canGoNext) {
+            goToStep(currentStep + 1);
+        }
+    }, [canGoNext, currentStep, goToStep]);
+
+    const goToPrevious = useCallback(() => {
+        if (canGoPrevious) {
+            goToStep(currentStep - 1);
+        }
+    }, [canGoPrevious, currentStep, goToStep]);
 
     return {
+        // Estado atual
         currentStep,
         totalSteps: TOTAL_STEPS,
+
+        // IDs formatados
         currentStepId,
         activeStageId,
+
+        // Navegação
         goToStep,
         goToNext,
         goToPrevious,
+
+        // Estado da navegação
         canGoNext,
         canGoPrevious,
         isFirstStep,
         isLastStep,
+
+        // Progresso
         progressPercentage,
+
+        // Dados do step atual
         currentStepBlocks,
         isCurrentStepValid,
         isStepLoading: isLoading

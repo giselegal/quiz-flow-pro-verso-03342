@@ -18,14 +18,19 @@
 - ✅ **Arquivos de backup** removidos do bundle
 
 ### **📈 Métricas de Impacto:**
-**39 arquivos** migrados com segurança <!-- @allow-legacy-adapter: referência histórica -->
+- **85 importações** mapeadas e analisadas
+- **39 arquivos** migrados com segurança
+- **4 arquivos legados** removidos (backup/broken/disabled)
+- **100% compatibilidade** mantida durante transição
+- **0 erros** de build após migração
+
 ---
 
 ## 🛠️ **IMPLEMENTAÇÃO TÉCNICA**
 
 ### **1. Criação do Adaptador Unificado:**
 ```typescript
-📁 src/components/editor/EditorProviderMigrationAdapter.tsx <!-- @allow-legacy-adapter: referência documental -->
+📁 src/components/editor/EditorProviderMigrationAdapter.tsx
 ├── 🎯 Interface unificada (UnifiedEditorContextType)
 ├── 🔄 Adaptador de migração (MigrationEditorProvider)
 ├── 🛡️ Fallback legacy seguro

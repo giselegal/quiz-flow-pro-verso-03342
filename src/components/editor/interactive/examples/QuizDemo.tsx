@@ -1,4 +1,4 @@
-import { EditorProvider } from '@/components/editor/provider-alias';
+import { EditorProvider } from '@/components/editor/EditorProviderMigrationAdapter';
 // import { Block } from '@/types/editor'; - removido pois não é usado
 import React, { useState } from 'react';
 import { InteractiveQuizCanvas } from '../InteractiveQuizCanvas';

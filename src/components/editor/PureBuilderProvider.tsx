@@ -1,5 +1,4 @@
 import React, { createContext, useContext, useState, useCallback, useRef, useEffect, useMemo } from 'react';
-import { useEditorOptional } from '@/components/editor/provider-alias'; // 🔗 Integração com EditorProvider (unificação currentStep)
 // 🚀 BUILDER SYSTEM - Imports corrigidos para compatibilidade
 import type { Block } from '@/types/editor';
 import { getTemplateInfo } from '@/utils/funnelNormalizer';
@@ -286,8 +285,6 @@ export const PureBuilderProvider: React.FC<{
     children
 }) => {
         // ⚡ STATE OTIMIZADO - Agora dinâmico baseado no template
-        const externalEditor = useEditorOptional(); // Pode ser undefined fora do ambiente do editor
-        const warnedRef = useRef(false);
         const [state, setState] = useState<PureBuilderState>({
             currentStep: 1,
             selectedBlockId: null,
@@ -480,15 +477,8 @@ export const PureBuilderProvider: React.FC<{
                     console.warn(`⚠️ Tentativa de navegar para step inválido: ${step} (range válido: 1-${totalSteps})`);
                     return;
                 }
-                // Se o EditorProvider moderno existe, ele é a fonte de verdade
-                if (externalEditor?.actions?.setCurrentStep) {
-                    externalEditor.actions.setCurrentStep(step);
-                    // Mantém espelho interno (derivado) apenas para compatibilidade até remoção
-                    setState(prev => ({ ...prev, currentStep: step }));
-                } else {
-                    setState(prev => ({ ...prev, currentStep: step }));
-                }
-            }, [totalSteps, externalEditor]),
+                setState(prev => ({ ...prev, currentStep: step }));
+            }, [totalSteps]),
 
             setSelectedBlockId: useCallback((blockId: string | null) => {
                 setState(prev => ({ ...prev, selectedBlockId: blockId }));
@@ -693,7 +683,6 @@ export const PureBuilderProvider: React.FC<{
 
         // 🔧 CORREÇÃO: Memoizar state para evitar re-renders desnecessários
         const memoizedState = useMemo(() => {
-            const derivedCurrentStep = externalEditor?.state?.currentStep ?? state.currentStep;
             let derivedStatus: 'loading' | 'ready' | 'empty' | 'error';
             if (state.isLoading || state.templateLoading || state.apiStatus === 'loading') derivedStatus = 'loading';
             else if (state.apiStatus === 'error') derivedStatus = 'error';
@@ -701,20 +690,10 @@ export const PureBuilderProvider: React.FC<{
             else derivedStatus = 'ready';
             return {
                 ...state,
-                // 🔄 currentStep agora derivado do EditorProvider quando disponível
-                currentStep: derivedCurrentStep,
                 totalSteps,
                 machineStatus: derivedStatus
             };
-        }, [state, totalSteps, externalEditor?.state?.currentStep]);
-
-        // Aviso único de depreciação quando operando em modo derivado
-        useEffect(() => {
-            if (externalEditor && !warnedRef.current) {
-                console.warn('[PureBuilderProvider] currentStep agora é derivado do EditorProvider. Evite usar diretamente este estado para navegação.');
-                warnedRef.current = true;
-            }
-        }, [externalEditor]);
+        }, [state, totalSteps]);
 
         // 🛠️ INSTRUMENTAÇÃO: Expor snapshot em window para diagnóstico (somente em desenvolvimento)
         useEffect(() => {
@@ -778,12 +757,12 @@ export const PureBuilderProvider: React.FC<{
 // Export hook compatível
 export const useOptimizedEditor = usePureBuilder;
 // 🔄 MIGRAÇÃO: Hook legado mantido para compatibilidade
-// DEPRECATED: Use useEditor from '@/components/editor/provider-alias'
+// DEPRECATED: Use useEditor from EditorProviderMigrationAdapter
 export const useBuilderEditor = usePureBuilder;
 
 // 🎯 ADAPTADOR MODERNO: Nova interface unificada
 export const useLegacyBuilderEditor = () => {
-    console.warn('⚠️ useLegacyBuilderEditor is deprecated. Use useEditor from provider-alias em vez do adapter.');
+    console.warn('⚠️ useLegacyBuilderEditor is deprecated. Use useEditor from EditorProviderMigrationAdapter instead.');
     return usePureBuilder();
 };
 

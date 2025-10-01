@@ -174,23 +174,18 @@ export const QuizQuestion: React.FC<QuizQuestionProps> = ({
   const [hasAnswered, setHasAnswered] = useState(false);
   const [validationError, setValidationError] = useState<string | null>(null);
 
-  // Detectar se há imagens nas opções
-  const hasImages = options?.some(option => option.imageUrl && option.imageUrl.trim() !== '');
-  
-  // Classes de layout baseadas na presença de imagens
+  // Classes de layout
   const layoutClasses = {
     vertical: 'flex flex-col space-y-3',
     horizontal: 'flex flex-wrap gap-3',
-    grid: hasImages 
-      ? (deviceView === 'mobile' ? 'grid grid-cols-1 gap-4' : 'grid grid-cols-2 gap-6')
-      : 'grid grid-cols-1 gap-3',
+    grid: deviceView === 'mobile' ? 'grid grid-cols-1 gap-3' : 'grid grid-cols-2 gap-4',
   };
 
-  // Classes para tamanhos de imagem - Aumentar tamanhos para melhor visualização
+  // Classes para tamanhos de imagem
   const imageSizeClasses = {
-    small: 'h-32',
-    medium: 'h-48',
-    large: 'h-64',
+    small: 'h-24',
+    medium: 'h-32',
+    large: 'h-40',
   };
 
   // Classes de alinhamento

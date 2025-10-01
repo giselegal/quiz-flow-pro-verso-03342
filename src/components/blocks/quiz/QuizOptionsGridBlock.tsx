@@ -307,10 +307,10 @@ const QuizOptionsGridBlock: React.FC<QuizOptionsGridBlockProps> = ({
     columns = 'auto', // 'auto' detecta automaticamente: 2 com imagens, 1 só texto
     layoutOrientation = 'vertical',
     contentType = 'text-and-image',
-    // Imagens - Aumentar tamanho para melhor visualização
+    // Imagens - 256x256 como no exemplo fornecido
     showImages = true,
     imagePosition = 'top',
-    imageSize = 300, // Aumentar para 300x300 para melhor visualização
+    imageSize = 256, // 256x256 como no exemplo fornecido
     imageWidth,
     imageHeight,
     // Bordas e Estilo Visual
@@ -333,7 +333,7 @@ const QuizOptionsGridBlock: React.FC<QuizOptionsGridBlockProps> = ({
     // Seleção
     multipleSelection = true,
     selectionStyle = 'border',
-    gridGap = 16, // Aumentar gap para acomodar imagens maiores
+    gridGap = 8, // gap-2 (0.5rem = 8px) como no exemplo
     responsiveColumns = true,
   } = properties || {};
 
@@ -348,7 +348,7 @@ const QuizOptionsGridBlock: React.FC<QuizOptionsGridBlockProps> = ({
   const layoutClass = layoutOrientation === 'horizontal' ? 'grid' : 'flex flex-col';
   const gridColumnsClass = responsiveColumns
     ? (hasImages
-      ? 'grid-cols-1 md:grid-cols-2'   // Com imagens: 1 coluna mobile, 2 colunas desktop
+      ? 'grid-cols-2'                 // Com imagens: 2 colunas em todos os dispositivos
       : 'grid-cols-1'                 // Só texto: sempre 1 coluna
     )
     : `grid-cols-${finalColumns}`;

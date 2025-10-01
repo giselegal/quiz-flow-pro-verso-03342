@@ -2,8 +2,6 @@
  * 🚀 ACTIVATED ANALYTICS - Phase 1 Implementation
  * Transforming existing analytics into a premium service
  */
-export const DEPRECATED = true;
-(() => { if (typeof console !== 'undefined' && !(globalThis as any).__DEP_LOG_ACTIVATED_ANALYTICS) { (globalThis as any).__DEP_LOG_ACTIVATED_ANALYTICS = true; console.warn('[DEPRECATED][ActivatedAnalytics] Insights serão servidos pela UnifiedAnalyticsEngine.'); } })();
 
 import { unifiedAnalytics } from './unifiedAnalytics';
 
@@ -13,7 +11,7 @@ export class ActivatedAnalyticsService {
    */
   static async getAIPoweredInsights() {
     const baseMetrics = await unifiedAnalytics.getDashboardMetrics();
-
+    
     return {
       ...baseMetrics,
       aiInsights: {
@@ -34,7 +32,7 @@ export class ActivatedAnalyticsService {
    */
   static async getRealtimeInsights() {
     const realtimeData = await unifiedAnalytics.getRealTimeData();
-
+    
     return {
       ...realtimeData,
       alerts: [

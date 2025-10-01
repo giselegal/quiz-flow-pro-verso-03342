@@ -4,7 +4,6 @@ interface StrategicQuestionStepProps {
     data: QuizStep;
     currentAnswer: string;
     onAnswerChange: (answer: string) => void;
-    onNext?: () => void;
 }
 
 /**
@@ -16,8 +15,7 @@ interface StrategicQuestionStepProps {
 export default function StrategicQuestionStep({
     data,
     currentAnswer,
-    onAnswerChange,
-    onNext
+    onAnswerChange
 }: StrategicQuestionStepProps) {
     const handleOptionClick = (optionId: string) => {
         onAnswerChange(optionId);
@@ -61,15 +59,13 @@ export default function StrategicQuestionStep({
                 ))}
             </div>
 
-            {/* Botão de avanço manual */}
-            {currentAnswer && onNext && (
+            {/* Indicador de progresso */}
+            {currentAnswer && (
                 <div className="mt-8 text-center">
-                    <button
-                        onClick={onNext}
-                        className="bg-[#deac6d] hover:bg-[#c49548] text-white font-bold py-3 px-8 rounded-full shadow-lg transition-all duration-300 transform hover:scale-105 hover:shadow-xl"
-                    >
-                        Continuar
-                    </button>
+                    <div className="inline-flex items-center px-4 py-2 bg-[#deac6d]/10 rounded-full">
+                        <div className="animate-spin rounded-full h-4 w-4 border-2 border-[#deac6d] border-t-transparent mr-2"></div>
+                        <span className="text-[#deac6d] font-medium text-sm">Processando resposta...</span>
+                    </div>
                 </div>
             )}
         </div>
