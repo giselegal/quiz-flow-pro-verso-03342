@@ -4,6 +4,7 @@ import CanvasDropZone from '@/components/editor/canvas/CanvasDropZone.simple';
 import { isEditorCoreV2Enabled } from '@/utils/editorFeatureFlags';
 import { useCoreStepDiff } from '@/context/useCoreStepDiff';
 import { globalBlockElementCache } from '@/utils/BlockElementCache';
+import { incrementBlockRender } from '@/utils/BlockRenderMetrics';
 import { useStepSelection } from '@/hooks/useStepSelection';
 import { UnifiedPreviewEngine } from '@/components/editor/unified/UnifiedPreviewEngine'; // Import para experiência real
 
@@ -131,6 +132,12 @@ const EditorCanvas: React.FC<EditorCanvasProps> = ({
     // Apenas retornar blocks atuais; criação de elementos fica para CanvasDropZone que já cria dinamicamente
     return blocks;
   }, [blocks, coreV2, diff]);
+
+  // Métricas de render por bloco
+  React.useEffect(() => {
+    if (!coreV2) return;
+    effectiveBlocks.forEach(b => incrementBlockRender(b.id));
+  }, [effectiveBlocks, coreV2]);
 
   if (coreV2 && diff && (import.meta as any)?.env?.VITE_EDITOR_DEBUG === 'true') {
     // Log de estatísticas de cache
