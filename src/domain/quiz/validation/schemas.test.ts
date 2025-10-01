@@ -1,7 +1,8 @@
 import { describe, it, expect } from 'vitest';
 import {
     CanonicalStepSchema,
-    CanonicalQuizDefinitionSchema
+    CanonicalQuizDefinitionSchema,
+    PublishPayloadSchema
 } from './schemas';
 
 // Helpers para criar variantes mínimas válidas
@@ -110,5 +111,66 @@ describe('CanonicalQuizDefinitionSchema', () => {
         };
         const parsed = CanonicalQuizDefinitionSchema.safeParse(definition);
         expect(parsed.success).toBe(false);
+    });
+});
+
+describe('PublishPayloadSchema', () => {
+    const buildCanonical = () => {
+        const steps = [
+            intro('intro-1', 'q-1'),
+            { id: 'q-1', type: 'question', questionText: 'P', requiredSelections: 1, options: [{ id: 'q-1-o1', text: 'A' }, { id: 'q-1-o2', text: 'B' }], next: 'sq-1' },
+            { id: 'sq-1', type: 'strategic-question', questionText: 'S', options: [{ id: 'sq-1-o1', text: 'A' }, { id: 'sq-1-o2', text: 'B' }], next: 'tr-1' },
+            { id: 'tr-1', type: 'transition', title: 'T1', next: 'trr-1' },
+            { id: 'trr-1', type: 'transition-result', title: 'TR', next: 'res-1' },
+            { id: 'res-1', type: 'result', title: 'Resultado', next: 'offer-1' },
+            { id: 'offer-1', type: 'offer', variants: [{ matchValue: 'any', title: 'T', description: 'D', buttonText: 'Go', testimonial: { quote: 'Q', author: 'Z' } }] }
+        ];
+        return {
+            version: '1.0.0',
+            hash: 'abcd1234',
+            steps,
+            offerMapping: { strategicFinalStepId: 'sq-1' },
+            progress: { countedStepIds: steps.filter(s => s.type !== 'intro').map(s => s.id) }
+        };
+    };
+
+    it('aceita payload básico válido', () => {
+        const canonical = buildCanonical();
+        const payload = {
+            id: 'publish-1',
+            canonical,
+            version: 1
+        };
+        expect(PublishPayloadSchema.safeParse(payload).success).toBe(true);
+    });
+
+    it('aceita publishedAt ISO opcional', () => {
+        const canonical = buildCanonical();
+        const payload = {
+            id: 'publish-1',
+            canonical,
+            version: 2,
+            publishedAt: new Date().toISOString()
+        };
+        expect(PublishPayloadSchema.safeParse(payload).success).toBe(true);
+    });
+
+    it('rejeita version não positivo', () => {
+        const canonical = buildCanonical();
+        const payload: any = {
+            id: 'publish-1',
+            canonical,
+            version: 0
+        };
+        expect(PublishPayloadSchema.safeParse(payload).success).toBe(false);
+    });
+
+    it('rejeita canonical inválido', () => {
+        const payload: any = {
+            id: 'publish-1',
+            canonical: { steps: [] },
+            version: 1
+        };
+        expect(PublishPayloadSchema.safeParse(payload).success).toBe(false);
     });
 });

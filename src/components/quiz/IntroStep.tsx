@@ -6,9 +6,10 @@ import type { QuizStep } from '../../data/quizSteps';
 interface IntroStepProps {
     data: QuizStep;
     onNameSubmit: (name: string) => void;
+    hideDebug?: boolean;
 }
 
-export default function IntroStep({ data, onNameSubmit }: IntroStepProps) {
+export default function IntroStep({ data, onNameSubmit, hideDebug }: IntroStepProps) {
     const [nome, setNome] = useState('');
 
     // 🔍 DEBUG: Vamos ver exatamente o que está chegando
@@ -188,13 +189,14 @@ export default function IntroStep({ data, onNameSubmit }: IntroStepProps) {
                 </p>
             </footer>
 
-            {/* DEBUG INFO - REMOVER EM PRODUÇÃO */}
-            <div className="fixed bottom-0 left-0 bg-black text-white p-2 text-xs max-w-sm overflow-auto max-h-32">
-                <strong>🔍 DEBUG:</strong><br />
-                Data exists: {data ? '✅' : '❌'}<br />
-                Title: {safeData.title ? '✅' : '❌'}<br />
-                ButtonText: {safeData.buttonText ? '✅' : '❌'}
-            </div>
+            {!hideDebug && (
+                <div className="fixed bottom-0 left-0 bg-black text-white p-2 text-xs max-w-sm overflow-auto max-h-32">
+                    <strong>🔍 DEBUG:</strong><br />
+                    Data exists: {data ? '✅' : '❌'}<br />
+                    Title: {safeData.title ? '✅' : '❌'}<br />
+                    ButtonText: {safeData.buttonText ? '✅' : '❌'}
+                </div>
+            )}
         </main>
     );
 }

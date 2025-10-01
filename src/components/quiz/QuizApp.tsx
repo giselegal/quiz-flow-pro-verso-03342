@@ -20,9 +20,19 @@ import OfferStep from './OfferStep';
 
 interface QuizAppProps {
     funnelId?: string;
+    hideDebug?: boolean;
+    enableAutoAdvance?: boolean;
+    questionAutoAdvanceDelayMs?: number; // default 1000
+    strategicAutoAdvanceDelayMs?: number; // default 500
 }
 
-export default function QuizApp({ funnelId }: QuizAppProps) {
+export default function QuizApp({
+    funnelId,
+    hideDebug,
+    enableAutoAdvance = true,
+    questionAutoAdvanceDelayMs = 1000,
+    strategicAutoAdvanceDelayMs = 500
+}: QuizAppProps) {
     const {
         state,
         currentStepData,
@@ -71,6 +81,7 @@ export default function QuizApp({ funnelId }: QuizAppProps) {
                 {currentStepData.type === 'intro' && (
                     <IntroStep
                         data={currentStepData}
+                        hideDebug={hideDebug}
                         onNameSubmit={(name: string) => {
                             setUserName(name);
                             nextStep();
@@ -86,9 +97,8 @@ export default function QuizApp({ funnelId }: QuizAppProps) {
                                 currentAnswers={state.answers[state.currentStep] || []}
                                 onAnswersChange={(answers: string[]) => {
                                     addAnswer(state.currentStep, answers);
-                                    // Avanço automático após 1 segundo quando completo
-                                    if (answers.length === currentStepData.requiredSelections) {
-                                        setTimeout(() => nextStep(), 1000);
+                                    if (enableAutoAdvance && answers.length === currentStepData.requiredSelections) {
+                                        setTimeout(() => nextStep(), questionAutoAdvanceDelayMs);
                                     }
                                 }}
                             />
@@ -105,7 +115,9 @@ export default function QuizApp({ funnelId }: QuizAppProps) {
                                 onAnswerChange={(answer: string) => {
                                     addAnswer(state.currentStep, [answer]);
                                     addStrategicAnswer(currentStepData.questionText!, answer);
-                                    setTimeout(() => nextStep(), 500);
+                                    if (enableAutoAdvance) {
+                                        setTimeout(() => nextStep(), strategicAutoAdvanceDelayMs);
+                                    }
                                 }}
                             />
                         </div>

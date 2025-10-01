@@ -1,4 +1,5 @@
 
+
 /**
  * 🎯 MODERN UNIFIED EDITOR - EDITOR DEFINITIVO
  * 
@@ -9,10 +10,16 @@
  * ✅ Elimina conflitos entre editores fragmentados
  */
 
-import React, { useState, useCallback, Suspense, useEffect } from 'react';
+import React, { useState, useCallback, Suspense, useEffect, useMemo } from 'react';
 import { QUIZ_ESTILO_TEMPLATE_ID, canonicalizeQuizEstiloId, warnIfDeprecatedQuizEstilo } from '../../domain/quiz/quiz-estilo-ids';
 import useEditorRouteInfo from './modern/hooks/useEditorRouteInfo';
 import { Button } from '@/components/ui/button';
+// Novo layout 4 colunas e componentes auxiliares
+import FourColumnEditorLayout from '@/components/editor/layout/FourColumnEditorLayout';
+import StepSidebar from '@/components/editor/navigation/StepSidebar';
+import BlockPalette from '@/components/editor/palette/BlockPalette';
+import { PropertiesPanel } from '@/components/editor/properties/PropertiesPanel';
+import RealExperienceCanvas from '@/pages/editor/modern/runtime/RealExperienceCanvas';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { useUnifiedCRUD, UnifiedCRUDProvider } from '@/context/UnifiedCRUDProvider';
 import EditorRuntimeProviders from '@/context/EditorRuntimeProviders';
@@ -64,18 +71,11 @@ const UnifiedEditorCore: React.FC<ModernUnifiedEditorProps> = ({
     // 🎯 QUIZ-ESTILO: Detectar e redirecionar para página especializada
     if (extractedInfo.type === 'quiz-template' && extractedInfo.templateId === QUIZ_ESTILO_TEMPLATE_ID) {
         console.log('🚀 Redirecionando para QuizEditorIntegratedPage...');
-
-        // Importar dinamicamente a página especializada
-        const QuizEditorIntegratedPage = React.lazy(() =>
-            import('./QuizEditorIntegratedPage')
-        );
-
+        const QuizEditorIntegratedPage = React.lazy(() => import('./QuizEditorIntegratedPage'));
         return (
             <div className={`modern-unified-editor ${className}`}>
                 <Suspense fallback={<LoadingSpinner />}>
-                    <QuizEditorIntegratedPage
-                        funnelId={extractedInfo.funnelId || undefined}
-                    />
+                    <QuizEditorIntegratedPage funnelId={extractedInfo.funnelId || undefined} />
                 </Suspense>
             </div>
         );
@@ -87,15 +87,9 @@ const UnifiedEditorCore: React.FC<ModernUnifiedEditorProps> = ({
         return canonicalizeQuizEstiloId(raw) || QUIZ_ESTILO_TEMPLATE_ID;
     }, [extractedInfo.funnelId, extractedInfo.templateId, funnelId, templateId]);
 
-    // 🎯 UNIFIED CRUD CONTEXT (mover acima para uso em hooks subsequentes)
+    // 🎯 UNIFIED CRUD CONTEXT
     const crudContext = useUnifiedCRUD();
-
-    // 🎯 TEMPLATE LIFECYCLE (hook)
     const { isLoadingTemplate, templateError } = useTemplateLifecycle({ extractedInfo: extractedInfo as any, crudContext });
-
-    // (crudContext já definido acima)
-
-    // 🎯 UNIFIED EDITOR HOOK - CRUD INTEGRATION
     const unifiedEditor = useUnifiedEditor();
 
     // Estado do editor UI
@@ -103,10 +97,10 @@ const UnifiedEditorCore: React.FC<ModernUnifiedEditorProps> = ({
         mode: mode as ToolbarEditorMode,
         aiAssistantActive: false,
         previewMode: false,
-        realExperienceMode: false // Inicialmente desabilitado
+        realExperienceMode: false
     });
 
-    // 🎯 FUNNEL SYNC & TYPE DETECTION (hook)
+    // 🎯 FUNNEL SYNC
     const { detectedFunnelType, funnelData, isDetectingType, DetectorElement } = useFunnelSyncLogic({
         funnelId: extractedInfo.funnelId,
         crudContext,
@@ -116,9 +110,49 @@ const UnifiedEditorCore: React.FC<ModernUnifiedEditorProps> = ({
     // 🎯 QUIZ SYNC BRIDGE
     const quizBridge = useQuizSyncBridge({ extractedInfo: extractedInfo as any, unifiedEditor, crudContext });
 
-    // Handler para mudanças de estado
+    // 🧱 DERIVAÇÃO DE STEPS PARA SIDEBAR
+    const derivedSteps = useMemo(() => {
+        const quizSteps: any[] = (quizBridge as any)?.steps || [];
+        if (quizBridge.active && quizSteps.length) {
+            return quizSteps.map((s: any, idx: number) => ({
+                id: s.id || s.key || `step-${idx}`,
+                label: s.title || s.id || s.key || `Step ${idx + 1}`,
+                type: s.type || 'unknown'
+            }));
+        }
+        if ((unifiedEditor as any)?.stepBlocks?.length) {
+            return (unifiedEditor as any).stepBlocks.map((b: any, idx: number) => ({
+                id: b.id || `block-${idx}`,
+                label: b.type || `Block ${idx + 1}`,
+                type: b.type || 'block'
+            }));
+        }
+        return [];
+    }, [quizBridge.active, (quizBridge as any)?.steps, unifiedEditor]);
+
+    const [selectedStepId, setSelectedStepId] = useState<string | null>(null);
+    const selectedBlock = useMemo(() => {
+        if (!selectedStepId) return null;
+        if ((unifiedEditor as any)?.stepBlocks) {
+            const found = (unifiedEditor as any).stepBlocks.find((b: any) => b.id === selectedStepId);
+            if (found) return found;
+        }
+        const quizSteps: any[] = (quizBridge as any)?.steps || [];
+        if (quizBridge.active && quizSteps.length) {
+            return quizSteps.find((s: any) => (s.id || s.key) === selectedStepId) || null;
+        }
+        return null;
+    }, [selectedStepId, unifiedEditor, quizBridge]);
+
+    const handleSelectStep = useCallback((id: string) => {
+        setSelectedStepId(id);
+    }, []);
+
+    const handleUpdateSelected = useCallback((updates: Record<string, any>) => {
+        console.log('[PropertiesPanel] updates pendentes de integração', updates);
+    }, []);
+
     const handleStateChange = useCallback((updates: Partial<EditorState>) => {
-        // Gate de logs para evitar ruído em produção
         const DEBUG = (import.meta as any)?.env?.VITE_EDITOR_DEBUG === 'true';
         if (DEBUG) {
             console.log('🎯 [DEBUG] handleStateChange chamado:', updates);
@@ -131,11 +165,6 @@ const UnifiedEditorCore: React.FC<ModernUnifiedEditorProps> = ({
         });
     }, [editorState]);
 
-    // ========================================================================
-    // 🔥 CRUD OPERATIONS - UNIFIED IMPLEMENTATION
-    // ========================================================================
-
-    // 🔄 CRUD OPERATIONS via hook extraído
     const {
         handleSave,
         handleCreateNew,
@@ -149,35 +178,6 @@ const UnifiedEditorCore: React.FC<ModernUnifiedEditorProps> = ({
         }
     );
 
-    // ========================================================================
-    // 🚀 INITIALIZATION
-    // ========================================================================
-
-    // (Sincronização movida para useFunnelSync)
-
-    console.log('🎯 UnifiedEditorCore estado:', {
-        mode: editorState.mode,
-        type: extractedInfo.type,
-        funnelId: extractedInfo.funnelId,
-        templateId: extractedInfo.templateId,
-        crudFunnelId: crudContext.currentFunnel?.id,
-        editorFunnelId: unifiedEditor.funnel?.id,
-        isLoading: crudContext.isLoading || unifiedEditor.isLoading,
-        isLoadingTemplate,
-        templateError,
-        error: crudContext.error || unifiedEditor.error,
-        aiActive: editorState.aiAssistantActive
-    });
-
-    if (quizBridge.active) {
-        console.log('🧩 QuizBridge:', {
-            step: quizBridge.currentStepKey,
-            answersCount: quizBridge.answersCount,
-            scores: quizBridge.scores
-        });
-    }
-
-    // Mostrar loading se template está carregando
     if (isLoadingTemplate) {
         return (
             <div className={`h-screen w-full bg-background flex flex-col ${className}`}>
@@ -185,8 +185,6 @@ const UnifiedEditorCore: React.FC<ModernUnifiedEditorProps> = ({
             </div>
         );
     }
-
-    // Mostrar erro se template falhou ao carregar
     if (templateError) {
         return (
             <div className={`h-screen w-full bg-background flex flex-col ${className}`}>
@@ -194,19 +192,13 @@ const UnifiedEditorCore: React.FC<ModernUnifiedEditorProps> = ({
                     <div className="text-center">
                         <div className="text-red-500 text-lg mb-4">❌ Erro ao carregar template</div>
                         <p className="text-muted-foreground">{templateError}</p>
-                        <Button
-                            onClick={() => window.location.reload()}
-                            className="mt-4"
-                        >
-                            Tentar novamente
-                        </Button>
+                        <Button onClick={() => window.location.reload()} className="mt-4">Tentar novamente</Button>
                     </div>
                 </div>
             </div>
         );
     }
 
-    // Normalização de modo e estado para toolbar (evita recriar objeto grande em cada render)
     const allowed: ToolbarEditorMode[] = ['visual', 'builder', 'funnel', 'headless', 'admin-integrated'];
     const normalizedMode: ToolbarEditorMode = allowed.includes(editorState.mode as ToolbarEditorMode)
         ? editorState.mode as ToolbarEditorMode
@@ -218,15 +210,9 @@ const UnifiedEditorCore: React.FC<ModernUnifiedEditorProps> = ({
         realExperienceMode: editorState.realExperienceMode
     } as const;
 
-    const ToolbarFallback = () => (
-        <div className="h-12 border-b flex items-center px-4 text-sm text-muted-foreground bg-background/60">Carregando editor…</div>
-    );
-    const CanvasFallback = () => (
-        <div className="flex-1 flex items-center justify-center"><LoadingSpinner /></div>
-    );
-    const StatusFallback = () => (
-        <div className="h-6 border-t text-xs px-3 flex items-center text-muted-foreground bg-background/50">Inicializando…</div>
-    );
+    const ToolbarFallback = () => (<div className="h-12 border-b flex items-center px-4 text-sm text-muted-foreground bg-background/60">Carregando editor…</div>);
+    const CanvasFallback = () => (<div className="flex-1 flex items-center justify-center"><LoadingSpinner /></div>);
+    const StatusFallback = () => (<div className="h-6 border-t text-xs px-3 flex items-center text-muted-foreground bg-background/50">Inicializando…</div>);
 
     return (
         <div className={`h-screen w-full bg-background flex flex-col ${className}`}>
@@ -242,18 +228,32 @@ const UnifiedEditorCore: React.FC<ModernUnifiedEditorProps> = ({
                     onTestCRUD={handleTestCRUD}
                 />
             </Suspense>
-
-            <Suspense fallback={<CanvasFallback />}>
-                <UnifiedEditorCanvas
-                    extractedInfo={extractedInfo as any}
-                    detectorElement={DetectorElement}
-                    detectedFunnelType={detectedFunnelType}
-                    isDetectingType={isDetectingType}
-                    pureBuilderTargetId={pureBuilderTargetId}
-                    realExperienceMode={editorState.realExperienceMode}
-                />
-            </Suspense>
-
+            <FourColumnEditorLayout
+                className="flex-1"
+                sidebar={<StepSidebar steps={derivedSteps} currentStepId={selectedStepId || undefined} onSelectStep={handleSelectStep} />}
+                palette={<BlockPalette onInsert={(t) => console.log('Inserir bloco futuro', t)} />}
+                canvas={
+                    editorState.realExperienceMode ? (
+                        <RealExperienceCanvas
+                            funnelId={extractedInfo.funnelId || undefined}
+                            onExit={() => handleStateChange({ realExperienceMode: false })}
+                            onReset={() => {/* placeholder para futuro reset manual */ }}
+                        />
+                    ) : (
+                        <Suspense fallback={<CanvasFallback />}>
+                            <UnifiedEditorCanvas
+                                extractedInfo={extractedInfo as any}
+                                detectorElement={DetectorElement}
+                                detectedFunnelType={detectedFunnelType}
+                                isDetectingType={isDetectingType}
+                                pureBuilderTargetId={pureBuilderTargetId}
+                                realExperienceMode={editorState.realExperienceMode}
+                            />
+                        </Suspense>
+                    )
+                }
+                properties={<PropertiesPanel selectedBlock={selectedBlock as any} onUpdate={handleUpdateSelected} />}
+            />
             <Suspense fallback={<StatusFallback />}>
                 <EditorStatusBar
                     mode={editorState.mode}
