@@ -21,10 +21,12 @@ interface UseRuntimeStepsParams {
 export function useRuntimeSteps({ coreV2, coreQuiz, unifiedEditor }: UseRuntimeStepsParams) {
     return useMemo(() => {
         if (coreV2 && coreQuiz) {
-            return coreQuiz.steps;
+            const steps = Array.isArray(coreQuiz.steps) ? coreQuiz.steps : [];
+            return steps;
         }
         const sb = unifiedEditor?.state?.stepBlocks;
-        if (sb && typeof sb === 'object') {
+        const isPlainObject = sb && typeof sb === 'object' && !Array.isArray(sb);
+        if (isPlainObject) {
             try {
                 return mapEditorBlocksToQuizSteps(sb);
             } catch (e) {

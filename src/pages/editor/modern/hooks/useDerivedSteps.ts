@@ -15,7 +15,8 @@ interface UseDerivedStepsParams {
  */
 export function useDerivedSteps({ quizBridge, unifiedEditor }: UseDerivedStepsParams) {
     return useMemo(() => {
-        const quizSteps: any[] = quizBridge?.steps || [];
+        const quizStepsRaw = quizBridge?.steps;
+        const quizSteps: any[] = Array.isArray(quizStepsRaw) ? quizStepsRaw : [];
         if (quizBridge?.active && quizSteps.length) {
             return quizSteps.map((s: any, idx: number) => ({
                 id: s.id || s.key || `step-${idx}`,
@@ -23,8 +24,10 @@ export function useDerivedSteps({ quizBridge, unifiedEditor }: UseDerivedStepsPa
                 type: s.type || 'unknown'
             }));
         }
-        if (unifiedEditor?.stepBlocks?.length) {
-            return unifiedEditor.stepBlocks.map((b: any, idx: number) => ({
+        const blocksRaw = unifiedEditor?.stepBlocks;
+        const blocks: any[] = Array.isArray(blocksRaw) ? blocksRaw : [];
+        if (blocks.length) {
+            return blocks.map((b: any, idx: number) => ({
                 id: b.id || `block-${idx}`,
                 label: b.type || `Block ${idx + 1}`,
                 type: b.type || 'block'

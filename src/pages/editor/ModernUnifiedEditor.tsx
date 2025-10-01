@@ -43,8 +43,30 @@ import type { EditorMode as ToolbarEditorMode } from './modern/components/Modern
 const ModernToolbar = React.lazy(() => import('./modern/components/ModernToolbar'));
 const UnifiedEditorCanvas = React.lazy(() => import('./modern/components/UnifiedEditorCanvas'));
 const EditorStatusBar = React.lazy(() => import('./modern/components/EditorStatusBar'));
+// ✅ Mover lazy de QuizEditorIntegratedPage para topo para garantir chunk estável
+const QuizEditorIntegratedPage = React.lazy(() => import('./QuizEditorIntegratedPage'));
 
-// 📡 Publication Settings Integration
+// � ErrorBoundary local simples para evitar travar em fallback infinito silencioso
+interface LocalLazyBoundaryProps { fallback?: React.ReactNode; children?: React.ReactNode }
+class LocalLazyBoundary extends React.Component<LocalLazyBoundaryProps, { error: any }> {
+    constructor(props: any) { super(props); this.state = { error: null }; }
+    static getDerivedStateFromError(error: any) { return { error }; }
+    componentDidCatch(error: any, info: any) { console.error('[Editor][LazyBoundary] erro em lazy chunk', error, info); }
+    render() {
+        if (this.state.error) {
+            return this.props.fallback || <div className="p-2 text-xs text-red-500">Falha ao carregar componente.</div>;
+        }
+        return <>{this.props.children}</>;
+    }
+}
+
+// 🪵 Util seguro de debug para evitar quebra fora do Vite
+function isEditorDebug() {
+    try { return typeof import.meta !== 'undefined' && (import.meta as any)?.env?.VITE_EDITOR_DEBUG === 'true'; } catch { return false; }
+}
+function debugLog(...args: any[]) { if (isEditorDebug()) console.log('[EditorDebug]', ...args); }
+
+// �📡 Publication Settings Integration
 // PublicationSettingsButton removido (não utilizado diretamente nesta composição)
 // import { PublicationSettingsButton } from '@/components/editor/publication/PublicationButton';
 
@@ -91,13 +113,14 @@ export const UnifiedEditorCore: React.FC<ModernUnifiedEditorProps> = ({
 
     // 🎯 QUIZ-ESTILO: Detectar e redirecionar para página especializada
     if (extractedInfo.type === 'quiz-template' && extractedInfo.templateId === QUIZ_ESTILO_TEMPLATE_ID) {
-        console.log('🚀 Redirecionando para QuizEditorIntegratedPage...');
-        const QuizEditorIntegratedPage = React.lazy(() => import('./QuizEditorIntegratedPage'));
+        debugLog('Redirecionando para QuizEditorIntegratedPage...');
         return (
             <div className={`modern-unified-editor ${className}`}>
-                <Suspense fallback={<LoadingSpinner />}>
-                    <QuizEditorIntegratedPage funnelId={extractedInfo.funnelId || undefined} />
-                </Suspense>
+                <LocalLazyBoundary fallback={<LoadingSpinner />}>
+                    <Suspense fallback={<LoadingSpinner />}>
+                        <QuizEditorIntegratedPage funnelId={extractedInfo.funnelId || undefined} />
+                    </Suspense>
+                </LocalLazyBoundary>
             </div>
         );
     }
@@ -105,7 +128,11 @@ export const UnifiedEditorCore: React.FC<ModernUnifiedEditorProps> = ({
     const pureBuilderTargetId = React.useMemo(() => {
         const raw = extractedInfo.funnelId || extractedInfo.templateId || funnelId || templateId || QUIZ_ESTILO_TEMPLATE_ID;
         warnIfDeprecatedQuizEstilo(raw);
-        return canonicalizeQuizEstiloId(raw) || QUIZ_ESTILO_TEMPLATE_ID;
+        const canonical = canonicalizeQuizEstiloId(raw);
+        if (!canonical) {
+            debugLog('fallback canonical quiz-estilo aplicado', { raw });
+        }
+        return canonical || QUIZ_ESTILO_TEMPLATE_ID;
     }, [extractedInfo.funnelId, extractedInfo.templateId, funnelId, templateId]);
 
     // 🎯 UNIFIED CRUD CONTEXT
@@ -141,12 +168,13 @@ export const UnifiedEditorCore: React.FC<ModernUnifiedEditorProps> = ({
     const [selectedStepId, setSelectedStepId] = useState<string | null>(null);
     const selectedBlock = useMemo(() => {
         if (!selectedStepId) return null;
-        if ((unifiedEditor as any)?.stepBlocks) {
-            const found = (unifiedEditor as any).stepBlocks.find((b: any) => b.id === selectedStepId);
+        const blocks = (unifiedEditor as any)?.stepBlocks;
+        if (Array.isArray(blocks)) {
+            const found = blocks.find((b: any) => b.id === selectedStepId);
             if (found) return found;
         }
         const quizSteps: any[] = (quizBridge as any)?.steps || [];
-        if (quizBridge.active && quizSteps.length) {
+        if (quizBridge.active && Array.isArray(quizSteps) && quizSteps.length) {
             return quizSteps.find((s: any) => (s.id || s.key) === selectedStepId) || null;
         }
         return null;
@@ -164,17 +192,13 @@ export const UnifiedEditorCore: React.FC<ModernUnifiedEditorProps> = ({
     }, []);
 
     const handleStateChange = useCallback((updates: Partial<EditorState>) => {
-        const DEBUG = (import.meta as any)?.env?.VITE_EDITOR_DEBUG === 'true';
-        if (DEBUG) {
-            console.log('🎯 [DEBUG] handleStateChange chamado:', updates);
-            console.log('🎯 [DEBUG] Estado anterior:', editorState);
-        }
+        debugLog('handleStateChange chamado', { updates });
         setEditorState(prev => {
             const newState = { ...prev, ...updates };
-            if (DEBUG) console.log('🎯 [DEBUG] Novo estado:', newState);
+            debugLog('novo estado', newState);
             return newState;
         });
-    }, [editorState]);
+    }, []);
 
     const {
         handleSave,
@@ -256,18 +280,20 @@ export const UnifiedEditorCore: React.FC<ModernUnifiedEditorProps> = ({
     return (
         <div className={`h-screen w-full flex flex-col bg-gradient-to-br from-background via-background to-muted/30 ${className} relative`}>
             <div className="relative border-b backdrop-blur supports-[backdrop-filter]:bg-background/70 bg-background/90">
-                <Suspense fallback={<ToolbarFallback />}>
-                    <ModernToolbar
-                        editorState={toolbarState as any}
-                        onStateChange={handleStateChange as any}
-                        funnelId={extractedInfo.funnelId || crudContext.currentFunnel?.id}
-                        mode={normalizedMode}
-                        onSave={handleSave}
-                        onCreateNew={handleCreateNew}
-                        onDuplicate={handleDuplicate}
-                        onTestCRUD={handleTestCRUD}
-                    />
-                </Suspense>
+                <LocalLazyBoundary fallback={<ToolbarFallback />}>
+                    <Suspense fallback={<ToolbarFallback />}>
+                        <ModernToolbar
+                            editorState={toolbarState as any}
+                            onStateChange={handleStateChange as any}
+                            funnelId={extractedInfo.funnelId || crudContext.currentFunnel?.id}
+                            mode={normalizedMode}
+                            onSave={handleSave}
+                            onCreateNew={handleCreateNew}
+                            onDuplicate={handleDuplicate}
+                            onTestCRUD={handleTestCRUD}
+                        />
+                    </Suspense>
+                </LocalLazyBoundary>
                 <div className="flex items-center gap-2 px-4 py-1 border-t bg-muted/40 text-[10px] uppercase tracking-wide font-medium text-muted-foreground">
                     <span className="px-1.5 py-0.5 rounded bg-secondary/50 border border-border/60">Core {coreV2 ? 'V2' : 'Legacy'}</span>
                     {runtimeSteps.length > 0 && (
@@ -301,30 +327,34 @@ export const UnifiedEditorCore: React.FC<ModernUnifiedEditorProps> = ({
                             onReset={() => {/* noop future */ }}
                         />
                     ) : (
-                        <Suspense fallback={<CanvasFallback />}>
-                            <UnifiedEditorCanvas
-                                extractedInfo={extractedInfo as any}
-                                detectorElement={DetectorElement}
-                                detectedFunnelType={detectedFunnelType}
-                                isDetectingType={isDetectingType}
-                                pureBuilderTargetId={pureBuilderTargetId}
-                                realExperienceMode={editorState.realExperienceMode}
-                            />
-                        </Suspense>
+                        <LocalLazyBoundary fallback={<CanvasFallback />}>
+                            <Suspense fallback={<CanvasFallback />}>
+                                <UnifiedEditorCanvas
+                                    extractedInfo={extractedInfo as any}
+                                    detectorElement={DetectorElement}
+                                    detectedFunnelType={detectedFunnelType}
+                                    isDetectingType={isDetectingType}
+                                    pureBuilderTargetId={pureBuilderTargetId}
+                                    realExperienceMode={editorState.realExperienceMode}
+                                />
+                            </Suspense>
+                        </LocalLazyBoundary>
                     )
                 }
                 properties={<PropertiesPanel selectedBlock={selectedBlock as any} onUpdate={handleUpdateSelected} />}
             />
             <div className="border-t bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-                <Suspense fallback={<StatusFallback />}>
-                    <EditorStatusBar
-                        mode={editorState.mode}
-                        unifiedEditor={unifiedEditor}
-                        aiActive={editorState.aiAssistantActive}
-                        detectedFunnelType={detectedFunnelType}
-                        funnelData={funnelData}
-                    />
-                </Suspense>
+                <LocalLazyBoundary fallback={<StatusFallback />}>
+                    <Suspense fallback={<StatusFallback />}>
+                        <EditorStatusBar
+                            mode={editorState.mode}
+                            unifiedEditor={unifiedEditor}
+                            aiActive={editorState.aiAssistantActive}
+                            detectedFunnelType={detectedFunnelType}
+                            funnelData={funnelData}
+                        />
+                    </Suspense>
+                </LocalLazyBoundary>
             </div>
             {quizBridge.active && (
                 <div className="pointer-events-none select-none absolute top-[4.25rem] right-4 text-[10px] text-muted-foreground flex gap-2 items-center z-[5]">
@@ -395,7 +425,7 @@ const ModernUnifiedEditor: React.FC<ModernUnifiedEditorProps> = (props) => {
     return (
         <UnifiedCRUDProvider
             funnelId={extractedInfo.funnelId || undefined}
-            autoLoad={true}
+            autoLoad={Boolean(extractedInfo.funnelId)}
             debug={false}
         >
             <EditorRuntimeProviders funnelId={extractedInfo.funnelId || undefined} debugMode={false}>
