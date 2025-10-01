@@ -9,18 +9,18 @@ export function getQuizDefinition(): QuizDefinition | null {
     // Retorna cache se já carregado ou se erro previamente registrado
     if (cached) return cached;
     if (loadError) return null;
-        try {
-            const { definition, warnings } = loadQuizDefinition();
-            if (warnings.length) {
-                console.warn('quiz-definition warnings:', warnings);
-            }
-            cached = definition;
-            return cached;
-        } catch (err) {
-            loadError = err instanceof Error ? err : new Error(String(err));
-            console.error('[quiz-estilo] Falha ao carregar definição canônica:', loadError.message);
-            return null;
+    try {
+        const { definition, warnings } = loadQuizDefinition();
+        if (warnings.length) {
+            console.warn('quiz-definition warnings:', warnings);
         }
+        cached = definition;
+        return cached;
+    } catch (err) {
+        loadError = err instanceof Error ? err : new Error(String(err));
+        console.error('[quiz-estilo] Falha ao carregar definição canônica:', loadError.message);
+        return null;
+    }
 }
 
 export function findStep(stepId: string) {
