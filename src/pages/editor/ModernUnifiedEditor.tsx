@@ -12,27 +12,29 @@
 
 import React, { useState, useCallback, Suspense, useEffect, useMemo } from 'react';
 import { QUIZ_ESTILO_TEMPLATE_ID, canonicalizeQuizEstiloId, warnIfDeprecatedQuizEstilo } from '../../domain/quiz/quiz-estilo-ids';
+// Core & estado
 import useEditorRouteInfo from './modern/hooks/useEditorRouteInfo';
-import { Button } from '@/components/ui/button';
-// Novo layout 4 colunas e componentes auxiliares
+import { useUnifiedEditor } from '@/hooks';
+import { useUnifiedCRUD, UnifiedCRUDProvider } from '@/context/UnifiedCRUDProvider';
+import EditorRuntimeProviders from '@/context/EditorRuntimeProviders';
+import useTemplateLifecycle from './modern/hooks/useTemplateLifecycle';
+import useFunnelSyncLogic from './modern/hooks/useFunnelSync';
+import useQuizSyncBridge from './modern/hooks/useQuizSyncBridge';
+import { useEditorCrudOperations } from './modern/logic/crudOperations';
+import { isEditorCoreV2Enabled } from '@/utils/editorFeatureFlags';
+import { useEditorCoreSelectors } from '@/context/useEditorCoreSelectors';
+import { useCoreQuizSteps } from '@/context/useCoreQuizSteps';
+import { useEditorCore } from '@/context/EditorCoreProvider';
+// UI Layout / painéis / canvas
 import FourColumnEditorLayout from '@/components/editor/layout/FourColumnEditorLayout';
 import StepSidebar from '@/components/editor/navigation/StepSidebar';
 import BlockPalette from '@/components/editor/palette/BlockPalette';
 import { PropertiesPanel } from '@/components/editor/properties/PropertiesPanel';
 import RealExperienceCanvas from '@/pages/editor/modern/runtime/RealExperienceCanvas';
+// Utilidades/UI básicas
 import { mapEditorBlocksToQuizSteps } from '@/utils/mapEditorBlocksToQuizSteps';
-import { isEditorCoreV2Enabled } from '@/utils/editorFeatureFlags';
-import { useEditorCoreSelectors } from '@/context/useEditorCoreSelectors';
-import { useCoreQuizSteps } from '@/context/useCoreQuizSteps';
-import { useEditorCore } from '@/context/EditorCoreProvider';
+import { Button } from '@/components/ui/button';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
-import { useUnifiedCRUD, UnifiedCRUDProvider } from '@/context/UnifiedCRUDProvider';
-import EditorRuntimeProviders from '@/context/EditorRuntimeProviders';
-import { useUnifiedEditor } from '@/hooks';
-import useTemplateLifecycle from './modern/hooks/useTemplateLifecycle';
-import useFunnelSyncLogic from './modern/hooks/useFunnelSync';
-import useQuizSyncBridge from './modern/hooks/useQuizSyncBridge';
-import { useEditorCrudOperations } from './modern/logic/crudOperations';
 // Lazy heavy components
 import type { EditorMode as ToolbarEditorMode } from './modern/components/ModernToolbar';
 const ModernToolbar = React.lazy(() => import('./modern/components/ModernToolbar'));
@@ -236,9 +238,15 @@ const UnifiedEditorCore: React.FC<ModernUnifiedEditorProps> = ({
         realExperienceMode: editorState.realExperienceMode
     } as const;
 
-    const ToolbarFallback = () => (<div className="h-12 border-b flex items-center px-4 text-sm text-muted-foreground bg-background/60">Carregando editor…</div>);
-    const CanvasFallback = () => (<div className="flex-1 flex items-center justify-center"><LoadingSpinner /></div>);
-    const StatusFallback = () => (<div className="h-6 border-t text-xs px-3 flex items-center text-muted-foreground bg-background/50">Inicializando…</div>);
+    const ToolbarFallback = () => (
+        <div className="h-12 border-b flex items-center px-4 text-sm text-muted-foreground bg-gradient-to-r from-background to-muted/30 animate-pulse">Carregando editor…</div>
+    );
+    const CanvasFallback = () => (
+        <div className="flex-1 flex items-center justify-center"><LoadingSpinner /></div>
+    );
+    const StatusFallback = () => (
+        <div className="h-6 border-t text-xs px-3 flex items-center text-muted-foreground bg-background/50">Inicializando…</div>
+    );
 
     const handleExportJson = useCallback(() => {
         if (!coreV2 || !coreQuiz || !coreCtx) return;
@@ -262,25 +270,29 @@ const UnifiedEditorCore: React.FC<ModernUnifiedEditorProps> = ({
     }, [coreV2, coreQuiz, coreCtx]);
 
     return (
-        <div className={`h-screen w-full bg-background flex flex-col ${className}`}>
-            <Suspense fallback={<ToolbarFallback />}>
-                <ModernToolbar
-                    editorState={toolbarState as any}
-                    onStateChange={handleStateChange as any}
-                    funnelId={extractedInfo.funnelId || crudContext.currentFunnel?.id}
-                    mode={normalizedMode}
-                    onSave={handleSave}
-                    onCreateNew={handleCreateNew}
-                    onDuplicate={handleDuplicate}
-                    onTestCRUD={handleTestCRUD}
-                />
-            </Suspense>
-            <div className="flex items-center justify-end px-4 py-1 gap-2 border-b bg-background/60">
-                {coreV2 && (
-                    <button onClick={handleExportJson} className="text-xs px-2 py-1 border rounded hover:bg-accent/50 transition">
-                        Export JSON
-                    </button>
-                )}
+        <div className={`h-screen w-full flex flex-col bg-gradient-to-br from-background via-background to-muted/30 ${className}`}>
+            <div className="relative border-b backdrop-blur supports-[backdrop-filter]:bg-background/70 bg-background/90">
+                <Suspense fallback={<ToolbarFallback />}>
+                    <ModernToolbar
+                        editorState={toolbarState as any}
+                        onStateChange={handleStateChange as any}
+                        funnelId={extractedInfo.funnelId || crudContext.currentFunnel?.id}
+                        mode={normalizedMode}
+                        onSave={handleSave}
+                        onCreateNew={handleCreateNew}
+                        onDuplicate={handleDuplicate}
+                        onTestCRUD={handleTestCRUD}
+                    />
+                </Suspense>
+                <div className="flex items-center gap-2 px-4 py-1 border-t bg-muted/40 text-[10px] uppercase tracking-wide font-medium text-muted-foreground">
+                    <span className="px-1.5 py-0.5 rounded bg-secondary/50 border border-border/60">Core {coreV2 ? 'V2' : 'Legacy'}</span>
+                    {runtimeSteps.length > 0 && (
+                        <span className="px-1.5 py-0.5 rounded bg-secondary/30 border border-border/60">{runtimeSteps.length} steps</span>
+                    )}
+                    {coreV2 && coreQuiz && (
+                        <button onClick={handleExportJson} className="px-1.5 py-0.5 rounded border border-border/60 hover:bg-accent/50 transition text-[10px]">Export JSON</button>
+                    )}
+                </div>
             </div>
             <FourColumnEditorLayout
                 className="flex-1"
@@ -292,7 +304,7 @@ const UnifiedEditorCore: React.FC<ModernUnifiedEditorProps> = ({
                             funnelId={extractedInfo.funnelId || undefined}
                             stepsSource={runtimeSteps}
                             onExit={() => handleStateChange({ realExperienceMode: false })}
-                            onReset={() => {/* placeholder para futuro reset manual */ }}
+                            onReset={() => {/* noop future */ }}
                         />
                     ) : (
                         <Suspense fallback={<CanvasFallback />}>
@@ -309,17 +321,19 @@ const UnifiedEditorCore: React.FC<ModernUnifiedEditorProps> = ({
                 }
                 properties={<PropertiesPanel selectedBlock={selectedBlock as any} onUpdate={handleUpdateSelected} />}
             />
-            <Suspense fallback={<StatusFallback />}>
-                <EditorStatusBar
-                    mode={editorState.mode}
-                    unifiedEditor={unifiedEditor}
-                    aiActive={editorState.aiAssistantActive}
-                    detectedFunnelType={detectedFunnelType}
-                    funnelData={funnelData}
-                />
-            </Suspense>
+            <div className="border-t bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+                <Suspense fallback={<StatusFallback />}>
+                    <EditorStatusBar
+                        mode={editorState.mode}
+                        unifiedEditor={unifiedEditor}
+                        aiActive={editorState.aiAssistantActive}
+                        detectedFunnelType={detectedFunnelType}
+                        funnelData={funnelData}
+                    />
+                </Suspense>
+            </div>
             {quizBridge.active && (
-                <div className="absolute top-2 right-4 text-xs text-muted-foreground flex gap-2 items-center">
+                <div className="absolute top-2 right-4 text-[10px] text-muted-foreground flex gap-2 items-center">
                     <span className="px-2 py-1 rounded bg-secondary/40 border border-border">Quiz: {quizBridge.answersCount} respostas</span>
                 </div>
             )}

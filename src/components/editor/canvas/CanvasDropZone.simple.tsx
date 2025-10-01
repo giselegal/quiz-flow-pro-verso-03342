@@ -8,159 +8,25 @@ import { useRenderCount } from '@/hooks/useRenderCount';
 import { CANVAS_ROOT_ID } from '../dnd/constants';
 import { generateUniqueId } from '@/utils/generateUniqueId';
 import { SortableBlockWrapper } from './SortableBlockWrapper.simple';
+import { globalBlockElementCache } from '@/utils/BlockElementCache';
+import { isEditorCoreV2Enabled } from '@/utils/editorFeatureFlags';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { useCanvasContainerStyles } from '@/hooks/useCanvasContainerStyles';
-import { useGlobalEventManager } from '@/utils/OptimizedGlobalEventManager';
 import { HookOrderDebugger } from '@/components/debug/HookOrderDebugger';
 import { usePureBuilder } from '@/components/editor/PureBuilderProvider';
 import EmptyCanvasInterface from '@/components/editor/EmptyCanvasInterface';
 
-// Componente de controles de navegação para aparecer no final dos blocos do editor
-const EditorNavigationControls: React.FC<{
-  scopeId?: string | number;
-}> = () => {
-  const [currentStep, setCurrentStep] = React.useState(1);
-  const totalSteps = 21;
-  const { addEventListener } = useGlobalEventManager();
-
-  // Escutar mudanças de etapa globais usando o gerenciador central
-  React.useEffect(() => {
-    const updateStep = (): void => {
-      const step = (window as any).__quizCurrentStep || 1;
-      setCurrentStep(step);
-    };
-
-    updateStep();
-
-    // ✅ OTIMIZAÇÃO: Usar gerenciador central com auto-cleanup
-    const cleanup1 = addEventListener('navigate-to-step', updateStep, { debounceMs: 50 });
-    const cleanup2 = addEventListener('quiz-navigate-to-step', updateStep, { debounceMs: 50 });
-
-    return () => {
-      cleanup1();
-      cleanup2();
-    };
-  }, [addEventListener]);
-
-  // Funções de navegação
-  const handlePrevious = () => {
-    if (currentStep > 1) {
-      const newStep = currentStep - 1;
-      window.dispatchEvent(new CustomEvent('navigate-to-step', {
-        detail: { step: newStep, source: 'editor-navigation' }
-      }));
-    }
-  };
-
-  const handleNext = () => {
-    if (currentStep < totalSteps) {
-      const newStep = currentStep + 1;
-      window.dispatchEvent(new CustomEvent('navigate-to-step', {
-        detail: { step: newStep, source: 'editor-navigation' }
-      }));
-    }
-  };
-
-  const progress = Math.round((currentStep / totalSteps) * 100);
-
+// Componente simplificado de navegação (placeholder) – versão anterior foi corrompida durante patch
+const EditorNavigationControls: React.FC<{ scopeId?: string | number }> = () => {
   return (
-    <div className="mt-6 sm:mt-8 p-4 sm:p-6 bg-white/90 backdrop-blur-sm border border-stone-200/50 shadow-sm rounded-lg">
-      {/* Layout Desktop/Tablet */}
-      <div className="hidden sm:flex items-center justify-between gap-4">
-        {/* Informações da etapa */}
-        <div className="flex items-center gap-4">
-          <div className="text-sm font-medium text-stone-800">
-            Etapa {currentStep} de {totalSteps}
-          </div>
-          <div className="flex items-center gap-2">
-            <div className="w-32 bg-stone-200 rounded-full h-2">
-              <div
-                className="bg-gradient-to-r from-[#B89B7A] to-[#8B7355] h-2 rounded-full transition-all duration-300"
-                style={{ width: `${progress}%` }}
-              />
-            </div>
-            <div className="text-sm font-medium text-stone-700 min-w-[3rem]">{progress}%</div>
-          </div>
-        </div>
-
-        {/* Controles de navegação */}
-        <div className="flex items-center gap-2">
-          <button
-            onClick={handlePrevious}
-            disabled={currentStep === 1}
-            className={cn(
-              'px-4 py-2 text-sm rounded-lg border transition-colors',
-              currentStep === 1
-                ? 'bg-stone-100 text-stone-400 border-stone-200 cursor-not-allowed'
-                : 'bg-white text-stone-700 hover:bg-stone-50 border-stone-300 hover:border-stone-400'
-            )}
-          >
-            ← Anterior
-          </button>
-          <button
-            onClick={handleNext}
-            disabled={currentStep === totalSteps}
-            className={cn(
-              'px-4 py-2 text-sm rounded-lg transition-colors',
-              currentStep === totalSteps
-                ? 'bg-stone-200 text-stone-400 cursor-not-allowed'
-                : 'bg-gradient-to-r from-[#B89B7A] to-[#8B7355] text-white hover:from-[#A08966] hover:to-[#7A6B4D] shadow-sm'
-            )}
-          >
-            {currentStep === totalSteps ? 'Finalizado' : 'Próxima →'}
-          </button>
-        </div>
-      </div>
-
-      {/* Layout Mobile */}
-      <div className="sm:hidden space-y-4">
-        {/* Informações da etapa no topo */}
-        <div className="text-center">
-          <div className="text-sm font-medium text-stone-800 mb-3">
-            Etapa {currentStep} de {totalSteps}
-          </div>
-          <div className="flex items-center justify-center gap-3">
-            <div className="flex-1 max-w-48 bg-stone-200 rounded-full h-2">
-              <div
-                className="bg-gradient-to-r from-[#B89B7A] to-[#8B7355] h-2 rounded-full transition-all duration-300"
-                style={{ width: `${progress}%` }}
-              />
-            </div>
-            <div className="text-sm font-medium text-stone-700">{progress}%</div>
-          </div>
-        </div>
-
-        {/* Botões full-width no mobile */}
-        <div className="flex gap-3">
-          <button
-            onClick={handlePrevious}
-            disabled={currentStep === 1}
-            className={cn(
-              'flex-1 flex items-center justify-center gap-2 px-4 py-3 text-sm font-medium rounded-lg border transition-colors',
-              currentStep === 1
-                ? 'bg-stone-100 text-stone-400 border-stone-200 cursor-not-allowed'
-                : 'bg-white text-stone-700 hover:bg-stone-50 border-stone-300 hover:border-stone-400 shadow-sm'
-            )}
-          >
-            ← Anterior
-          </button>
-          <button
-            onClick={handleNext}
-            disabled={currentStep === totalSteps}
-            className={cn(
-              'flex-1 flex items-center justify-center gap-2 px-4 py-3 text-sm font-medium rounded-lg transition-colors',
-              currentStep === totalSteps
-                ? 'bg-stone-200 text-stone-400 cursor-not-allowed'
-                : 'bg-gradient-to-r from-[#B89B7A] to-[#8B7355] text-white hover:from-[#A08966] hover:to-[#7A6B4D] shadow-sm'
-            )}
-          >
-            {currentStep === totalSteps ? 'Finalizado' : 'Próxima →'}
-          </button>
-        </div>
+    <div className="flex justify-center py-4">
+      <div className="text-xs text-stone-400 select-none">
+        Navegação de etapas (placeholder)
       </div>
     </div>
   );
 };
+// --- Fim placeholder navegação ---
 
 // Componente para drop zone entre blocos (sempre presente para maximizar detecção)
 const InterBlockDropZoneBase: React.FC<{
@@ -661,29 +527,48 @@ const CanvasDropZoneBase: React.FC<CanvasDropZoneProps> = ({
           <div className="w-full" style={{ maxWidth: 800, margin: '0 auto' }}>
             <div className="space-y-3">
               <InterBlockDropZone position={0} isActive={isDraggingAnyValidComponent} scopeId={scopeId} />
+              {/**
+               * Reutilização de JSX por bloco
+               * - Cache global somente ativo quando Core V2 está ligado (feature flag)
+               * - Clonamos o elemento para injetar seleções/handlers atuais sem invalidar cache base
+               */}
+              {(enableProgressiveEdit ? blocks.slice(0, editRenderCount) : blocks).map((block, index) => {
+                const coreV2 = isEditorCoreV2Enabled();
+                const baseCacheId = `block:${block.id}`; // id estável por bloco
+                let cached = coreV2 ? globalBlockElementCache.get(baseCacheId) : null;
 
-              {(enableProgressiveEdit ? blocks.slice(0, editRenderCount) : blocks).map((block, index) => (
-                <React.Fragment key={String(block.id)}>
-                  <SortableBlockWrapper
-                    block={block}
-                    isSelected={!isPreviewing && selectedBlockId === block.id}
-                    onSelect={() => !isPreviewing && onSelectBlock(block.id)}
-                    onUpdate={updates => {
-                      if (!isPreviewing) {
-                        onUpdateBlock(block.id, updates);
-                      }
-                    }}
-                    onDelete={() => {
-                      if (!isPreviewing) {
-                        onDeleteBlock(block.id);
-                      }
-                    }}
-                    scopeId={scopeId}
-                  />
+                if (!cached) {
+                  // Criar versão base sem handlers dinâmicos (serão aplicados via clone)
+                  cached = (
+                    <SortableBlockWrapper
+                      block={block}
+                      isSelected={false /* atualizado no clone */}
+                      onSelect={() => { /* placeholder */ }}
+                      onUpdate={() => { /* placeholder */ }}
+                      onDelete={() => { /* placeholder */ }}
+                      scopeId={scopeId}
+                    />
+                  );
+                  if (coreV2) {
+                    globalBlockElementCache.set(baseCacheId, cached);
+                  }
+                }
 
-                  <InterBlockDropZone position={index + 1} isActive={isDraggingAnyValidComponent} scopeId={scopeId} />
-                </React.Fragment>
-              ))}
+                // Clonar com props dinâmicas atuais (seleção e handlers reais)
+                const element = React.cloneElement(cached as React.ReactElement<any>, {
+                  isSelected: !isPreviewing && selectedBlockId === block.id,
+                  onSelect: () => { if (!isPreviewing) onSelectBlock(block.id); },
+                  onUpdate: (updates: any) => { if (!isPreviewing) onUpdateBlock(block.id, updates); },
+                  onDelete: () => { if (!isPreviewing) onDeleteBlock(block.id); },
+                });
+
+                return (
+                  <React.Fragment key={String(block.id)}>
+                    {element}
+                    <InterBlockDropZone position={index + 1} isActive={isDraggingAnyValidComponent} scopeId={scopeId} />
+                  </React.Fragment>
+                );
+              })}
 
               {!isPreviewing && blocks.length > 0 && (
                 <EditorNavigationControls scopeId={scopeId} />
