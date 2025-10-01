@@ -43,7 +43,7 @@ interface EditorCoreContextValue {
         addStep(afterIndex?: number): string; // retorna novo stepKey
         removeStep(stepKey: string): void;
         duplicateStep(stepKey: string): string | null; // retorna novo stepKey
-    duplicateBlock(stepKey: string, blockId: string): string | null;
+        duplicateBlock(stepKey: string, blockId: string): string | null;
         /**
          * Executa várias mutações sobre coreStepBlocks atomically, disparando somente um repaint.
          * Uso: coreActions.batch(draft => { draft['step-1'].push(...); });
