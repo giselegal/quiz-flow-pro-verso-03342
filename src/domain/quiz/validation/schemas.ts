@@ -37,12 +37,22 @@ export const StrategicQuestionStepSchema = z.object({
     next: IdSchema
 });
 
-export const TransitionStepSchema = z.object({
+// Transition variants (separated for discriminated union correctness)
+const TransitionBaseShape = {
     id: IdSchema,
-    type: z.union([z.literal('transition'), z.literal('transition-result')]),
     title: z.string().min(1),
     text: z.string().optional(),
     next: IdSchema
+};
+
+export const TransitionStepSchema = z.object({
+    ...TransitionBaseShape,
+    type: z.literal('transition')
+});
+
+export const TransitionResultStepSchema = z.object({
+    ...TransitionBaseShape,
+    type: z.literal('transition-result')
 });
 
 export const ResultStepSchema = z.object({
@@ -75,6 +85,7 @@ export const CanonicalStepSchema = z.discriminatedUnion('type', [
     QuestionStepSchema,
     StrategicQuestionStepSchema,
     TransitionStepSchema,
+    TransitionResultStepSchema,
     ResultStepSchema,
     OfferStepSchema
 ]);
