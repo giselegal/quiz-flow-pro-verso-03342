@@ -1385,7 +1385,7 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
         const validation: Record<number, boolean> = {};
         Object.keys(merged).forEach(k => {
           const num = parseInt(k.replace(/[^0-9]/g, ''), 10);
-            if (Number.isFinite(num)) validation[num] = (merged as any)[k].length > 0;
+          if (Number.isFinite(num)) validation[num] = (merged as any)[k].length > 0;
         });
         return {
           ...prev,
