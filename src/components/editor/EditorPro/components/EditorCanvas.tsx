@@ -149,23 +149,23 @@ const EditorCanvas: React.FC<EditorCanvasProps> = ({
   }
 
   return (
-      <div
-        key={canvasKey}
-        data-testid="canvas-editor"
-        className="flex-1 min-h-0 relative bg-gradient-to-br from-[#FAF9F7] via-[#F5F2E9] to-[#EEEBE1] isolate"
-      >
-        <div className="h-full w-full overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
-          <CanvasDropZone
-            blocks={effectiveBlocks}
-            selectedBlockId={selectedBlock?.id || null}
-            onSelectBlock={handleBlockSelection}
-            onUpdateBlock={onUpdateBlock}
-            onDeleteBlock={onDeleteBlock}
-            scopeId={currentStep}
-          />
-        </div>
+    <div
+      key={canvasKey}
+      data-testid="canvas-editor"
+      className="flex-1 min-h-0 relative bg-gradient-to-br from-[#FAF9F7] via-[#F5F2E9] to-[#EEEBE1] isolate"
+    >
+      <div className="h-full w-full overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
+        <CanvasDropZone
+          blocks={effectiveBlocks}
+          selectedBlockId={selectedBlock?.id || null}
+          onSelectBlock={handleBlockSelection}
+          onUpdateBlock={onUpdateBlock}
+          onDeleteBlock={onDeleteBlock}
+          scopeId={currentStep}
+        />
       </div>
-    );
+    </div>
+  );
 };
 
 // 🚀 OTIMIZAÇÃO AVANÇADA: Comparação profunda para eliminar re-renders desnecessários

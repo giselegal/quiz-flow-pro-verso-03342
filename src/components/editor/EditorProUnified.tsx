@@ -499,7 +499,7 @@ export const EditorProUnified: React.FC<EditorProUnifiedProps> = ({
                 onUpdateBlock={handleUpdateBlock}
                 onDeleteBlock={handleDeleteBlock}
                 isPreviewMode={isPreviewMode}
-                onStepChange={coreV2 ? () => {} : actions.setCurrentStep}
+                onStepChange={coreV2 ? () => { } : actions.setCurrentStep}
                 realExperienceMode={realExperienceMode} // Passar prop para EditorCanvas
               />
             </QuizCanvasErrorBoundary>
