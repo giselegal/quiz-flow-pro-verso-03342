@@ -568,7 +568,13 @@ const QuizEditorMode: React.FC<QuizEditorModeProps> = ({
                 onClick={async () => {
                   try {
                     addNotification('🚀 Publicando template...', 'info');
-                    unifiedEventTracker.track('editor_publish_attempt', { funnelId });
+                    unifiedEventTracker.track({
+                      type: 'editor_action',
+                      funnelId: funnelId || 'unknown',
+                      sessionId: `sess_${Date.now()}`,
+                      userId: 'editor-user',
+                      payload: { subType: 'publish_attempt', funnelId }
+                    });
                     // Construir scoringMatrix derivando dos answers (caso não esteja em state)
                     const scoringMatrix: Record<string, Record<string, Record<string, number>>> = {};
                     state.questions.forEach(q => {
@@ -618,10 +624,22 @@ const QuizEditorMode: React.FC<QuizEditorModeProps> = ({
                     const result = await templatePublishingService.publish(canonicalState);
                     if (!result.success) {
                       addNotification(`❌ Falha na publicação: ${result.error}`, 'error');
-                      unifiedEventTracker.track('editor_publish_failed', { error: result.error });
+                      unifiedEventTracker.track({
+                        type: 'editor_action',
+                        funnelId: funnelId || 'unknown',
+                        sessionId: `sess_${Date.now()}`,
+                        userId: 'editor-user',
+                        payload: { subType: 'publish_failed', error: result.error }
+                      });
                     } else {
                       addNotification(`✅ Publicado versão ${result.version}`, 'success');
-                      unifiedEventTracker.track('editor_publish_success', { version: result.version });
+                      unifiedEventTracker.track({
+                        type: 'editor_action',
+                        funnelId: funnelId || 'unknown',
+                        sessionId: `sess_${Date.now()}`,
+                        userId: 'editor-user',
+                        payload: { subType: 'publish_success', version: result.version }
+                      });
                     }
                   } catch (err: any) {
                     console.error('Erro ao publicar template', err);

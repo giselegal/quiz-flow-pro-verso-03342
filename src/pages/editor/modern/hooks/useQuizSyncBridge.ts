@@ -15,6 +15,7 @@ interface QuizBridgeState {
     scores?: Record<string, number>;
     answersCount?: number;
     service?: QuizEditorSyncService;
+    applyAnswer?: (stepKey: string, answerIds: string[]) => void; // exposto diretamente
 }
 
 /**
@@ -160,5 +161,9 @@ export default function useQuizSyncBridge({ extractedInfo, unifiedEditor, crudCo
         svc.applyAnswer(stepKey, answerIds);
     }, []);
 
-    return useMemo(() => ({ ...state, service: serviceRef.current || undefined, applyAnswer }) as QuizBridgeState & { applyAnswer: typeof applyAnswer }, [state, applyAnswer]);
+    return useMemo(() => ({
+        ...state,
+        service: serviceRef.current || undefined,
+        applyAnswer
+    } as QuizBridgeState), [state, applyAnswer]);
 }

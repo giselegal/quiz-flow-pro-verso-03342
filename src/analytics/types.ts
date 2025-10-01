@@ -97,7 +97,7 @@ export interface FunnelSummary {
 
 export interface RealtimeSnapshot {
     funnelId: string;
-    activeUsers: number;
+    activeUsers?: number; // opcional para compatibilidade com adapters parciais
     recentEvents: number;
     recentCompletions: number;
     avgStepTimeSec?: number;
