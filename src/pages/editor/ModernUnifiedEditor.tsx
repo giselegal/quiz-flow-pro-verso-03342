@@ -151,6 +151,9 @@ const UnifiedEditorCore: React.FC<ModernUnifiedEditorProps> = ({
 
     // Steps derivados para runtime preview (fase atual: apenas quando existirem stepBlocks estruturados em objeto)
     const runtimeSteps = useMemo(() => {
+        // TODO(Migration Core): Após internalizar stepBlocks no EditorCoreProvider
+        // substituir acesso '(unifiedEditor as any)?.state?.stepBlocks' por seletor direto
+        // evitando dependência do provider legado.
         // V2: usar hash para recalcular somente quando estrutura muda
         if (coreV2 && coreSelectors) {
             try {
