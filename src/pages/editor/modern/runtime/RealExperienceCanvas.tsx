@@ -1,5 +1,6 @@
 import React, { useMemo, useRef, useState, useCallback } from 'react';
 import QuizApp from '@/components/quiz/QuizApp';
+import QuizAppRuntime, { QuizAppRuntimeHandle } from './QuizAppRuntime';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 
 interface RealExperienceCanvasProps {
@@ -13,16 +14,20 @@ interface RealExperienceCanvasProps {
  * Runtime isolado do quiz para o modo "Experiência Real" no editor.
  * Fase 1: usa diretamente QuizApp (estado próprio hook interno) sem sincronização reversa.
  */
-const RealExperienceCanvas: React.FC<RealExperienceCanvasProps> = ({ funnelId, onExit, onReset }) => {
+const RealExperienceCanvas: React.FC<RealExperienceCanvasProps> = ({ funnelId, stepsSource, onExit, onReset }) => {
     const [isMounting] = useState(false);
     const containerRef = useRef<HTMLDivElement | null>(null);
     const [enableAutoAdvance, setEnableAutoAdvance] = useState(true);
     const [questionDelay, setQuestionDelay] = useState(1000);
     const [strategicDelay, setStrategicDelay] = useState(500);
 
+    const runtimeRef = useRef<QuizAppRuntimeHandle | null>(null);
     const handleResetRuntime = () => {
-        // Fase 2 simples: recarregar forçando remount via key dinâmica
-        setRuntimeKey(k => k + 1);
+        if (stepsSource && stepsSource.length > 0 && runtimeRef.current) {
+            runtimeRef.current.reset();
+        } else {
+            setRuntimeKey(k => k + 1); // fallback legacy
+        }
         onReset?.();
     };
     const [runtimeKey, setRuntimeKey] = useState(0);
@@ -73,14 +78,29 @@ const RealExperienceCanvas: React.FC<RealExperienceCanvasProps> = ({ funnelId, o
             )}
             {/* Execução isolada do quiz */}
             <div className="min-h-full">
-                <QuizApp
-                    key={runtimeKey}
-                    funnelId={funnelId}
-                    hideDebug
-                    enableAutoAdvance={enableAutoAdvance}
-                    questionAutoAdvanceDelayMs={questionDelay}
-                    strategicAutoAdvanceDelayMs={strategicDelay}
-                />
+                {/* Fase futura: adaptar QuizApp para aceitar steps injetadas. */}
+                {stepsSource && stepsSource.length > 0 ? (
+                    <QuizAppRuntime
+                        ref={runtimeRef}
+                        key={runtimeKey}
+                        steps={stepsSource as any}
+                        hideDebug
+                        autoAdvance={enableAutoAdvance}
+                        questionDelay={questionDelay}
+                        strategicDelay={strategicDelay}
+                    />
+                ) : stepsSource && stepsSource.length === 0 ? (
+                    <div className="p-6 text-sm text-amber-600">Nenhum step válido foi mapeado a partir dos blocos atuais. Adicione um bloco do tipo intro ou question.</div>
+                ) : (
+                    <QuizApp
+                        key={runtimeKey}
+                        funnelId={funnelId}
+                        hideDebug
+                        enableAutoAdvance={enableAutoAdvance}
+                        questionAutoAdvanceDelayMs={questionDelay}
+                        strategicAutoAdvanceDelayMs={strategicDelay}
+                    />
+                )}
             </div>
         </div>
     );

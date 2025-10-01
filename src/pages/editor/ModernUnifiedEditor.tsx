@@ -20,6 +20,7 @@ import StepSidebar from '@/components/editor/navigation/StepSidebar';
 import BlockPalette from '@/components/editor/palette/BlockPalette';
 import { PropertiesPanel } from '@/components/editor/properties/PropertiesPanel';
 import RealExperienceCanvas from '@/pages/editor/modern/runtime/RealExperienceCanvas';
+import { mapEditorBlocksToQuizSteps } from '@/utils/mapEditorBlocksToQuizSteps';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { useUnifiedCRUD, UnifiedCRUDProvider } from '@/context/UnifiedCRUDProvider';
 import EditorRuntimeProviders from '@/context/EditorRuntimeProviders';
@@ -144,6 +145,19 @@ const UnifiedEditorCore: React.FC<ModernUnifiedEditorProps> = ({
         return null;
     }, [selectedStepId, unifiedEditor, quizBridge]);
 
+    // Steps derivados para runtime preview (fase atual: apenas quando existirem stepBlocks estruturados em objeto)
+    const runtimeSteps = useMemo(() => {
+        const sb = (unifiedEditor as any)?.state?.stepBlocks; // verificar shape do provider
+        if (sb && typeof sb === 'object') {
+            try {
+                return mapEditorBlocksToQuizSteps(sb);
+            } catch (e) {
+                console.warn('[RealPreview] Falha ao mapear stepBlocks -> quiz steps', e);
+            }
+        }
+        return [] as any[];
+    }, [unifiedEditor]);
+
     const handleSelectStep = useCallback((id: string) => {
         setSelectedStepId(id);
     }, []);
@@ -236,6 +250,7 @@ const UnifiedEditorCore: React.FC<ModernUnifiedEditorProps> = ({
                     editorState.realExperienceMode ? (
                         <RealExperienceCanvas
                             funnelId={extractedInfo.funnelId || undefined}
+                            stepsSource={runtimeSteps}
                             onExit={() => handleStateChange({ realExperienceMode: false })}
                             onReset={() => {/* placeholder para futuro reset manual */ }}
                         />
