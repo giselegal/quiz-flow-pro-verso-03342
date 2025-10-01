@@ -40,6 +40,9 @@ interface EditorCoreContextValue {
         reorderBlocks(stepKey: string, sourceIndex: number, targetIndex: number): void;
         setCurrentStep(step: number): void;
         selectBlock(blockId: string | null): void;
+        addStep(afterIndex?: number): string; // retorna novo stepKey
+        removeStep(stepKey: string): void;
+        duplicateStep(stepKey: string): string | null; // retorna novo stepKey
         /**
          * Executa várias mutações sobre coreStepBlocks atomically, disparando somente um repaint.
          * Uso: coreActions.batch(draft => { draft['step-1'].push(...); });
@@ -65,7 +68,9 @@ export const EditorCoreProvider: React.FC<{ children: React.ReactNode; funnelId?
         hashCount: 0,
         mapCount: 0,
         lastHashDurationMs: 0,
-        lastMapDurationMs: 0
+        lastMapDurationMs: 0,
+        batchCount: 0,
+        lastBatchMutationCount: 0
     });
     const [coreStepBlocks, setCoreStepBlocks] = useState<Record<string, any[]>>({});
     const batchingRef = useRef<boolean>(false);
@@ -255,6 +260,48 @@ export const EditorCoreProvider: React.FC<{ children: React.ReactNode; funnelId?
                     setSelectedBlockIdInternal(blockId);
                     if (!(window as any).EDITOR_CORE_NO_COMPAT) editorActions?.setSelectedBlockId?.(blockId);
                 },
+                addStep: (afterIndex?: number) => {
+                    // Gera novo índice: se afterIndex não fornecido, adiciona ao final
+                    const stepKeys = Object.keys(coreStepBlocks).sort();
+                    const numeric = stepKeys.map(k => parseInt(k.replace('step-', ''), 10)).filter(n => !Number.isNaN(n));
+                    const targetIndex = typeof afterIndex === 'number' ? afterIndex : numeric.length;
+                    const newNumber = Math.max(1, targetIndex + 1 + (afterIndex ? 0 : 0));
+                    let candidate = newNumber;
+                    while (numeric.includes(candidate)) candidate++;
+                    const newKey = `step-${candidate}`;
+                    setCoreStepBlocks(prev => ({ ...prev, [newKey]: [] }));
+                    return newKey;
+                },
+                removeStep: (stepKey: string) => {
+                    setCoreStepBlocks(prev => {
+                        if (!prev[stepKey]) return prev;
+                        const entries = Object.entries(prev).filter(([k]) => k !== stepKey);
+                        const next: Record<string, any[]> = {};
+                        for (const [k, v] of entries) next[k] = v;
+                        return next;
+                    });
+                    // Ajustar currentStep se necessário
+                    setCurrentStepInternal(curr => {
+                        if (stepKey === `step-${curr}`) {
+                            return Math.max(1, curr - 1);
+                        }
+                        return curr;
+                    });
+                },
+                duplicateStep: (stepKey: string) => {
+                    const source = coreStepBlocks[stepKey];
+                    if (!source) return null;
+                    const stepNumber = parseInt(stepKey.replace('step-', ''), 10);
+                    let candidate = stepNumber + 1;
+                    const existingNumbers = new Set(
+                        Object.keys(coreStepBlocks).map(k => parseInt(k.replace('step-', ''), 10))
+                    );
+                    while (existingNumbers.has(candidate)) candidate++;
+                    const newKey = `step-${candidate}`;
+                    const cloned = source.map(b => ({ ...b, id: b.id ? `${b.id}-copy-${Date.now()}` : undefined }));
+                    setCoreStepBlocks(prev => ({ ...prev, [newKey]: cloned }));
+                    return newKey;
+                },
                 updateBlock: (stepKey: string, blockId: string, updates: Record<string, any>) => {
                     const apply = (source: Record<string, any[]>) => {
                         const arr = (source[stepKey] || []).map(b => (b.id === blockId ? { ...b, ...updates } : b));
@@ -310,10 +357,21 @@ export const EditorCoreProvider: React.FC<{ children: React.ReactNode; funnelId?
                     }
                     batchingRef.current = true;
                     pendingBatchRef.current = { ...coreStepBlocks };
+                    let mutationCounter = 0;
+                    const draftProxy = new Proxy(pendingBatchRef.current, {
+                        set(target, prop, value) {
+                            mutationCounter++;
+                            // @ts-ignore
+                            target[prop] = value;
+                            return true;
+                        }
+                    });
                     try {
-                        mutator(pendingBatchRef.current);
+                        mutator(draftProxy as any);
                         const finalDraft = pendingBatchRef.current;
                         setCoreStepBlocks(finalDraft);
+                        metricsRef.current.batchCount += 1;
+                        metricsRef.current.lastBatchMutationCount = mutationCounter;
                     } catch (err) {
                         console.error('[EditorCoreProvider] Erro em batch()', err);
                     } finally {
