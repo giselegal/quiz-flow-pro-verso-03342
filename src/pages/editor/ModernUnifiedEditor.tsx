@@ -297,7 +297,17 @@ export const UnifiedEditorCore: React.FC<ModernUnifiedEditorProps> = ({
             </div>
             <FourColumnEditorLayout
                 className="flex-1 relative z-[1]"
-                sidebar={<StepSidebar steps={derivedSteps} currentStepId={selectedStepId || undefined} onSelectStep={handleSelectStep} />}
+                sidebar={<StepSidebar
+                    currentStep={selectedStepId ? (parseInt(selectedStepId.replace('step-', ''), 10) || 1) : 1}
+                    totalSteps={(derivedSteps?.length || runtimeSteps.length || 1)}
+                    stepHasBlocks={Object.fromEntries(
+                        (derivedSteps || []).map((_: any, i: number) => [i + 1, true])
+                    ) as Record<number, boolean>}
+                    stepValidation={{}}
+                    onSelectStep={(n: number) => handleSelectStep(`step-${n}`)}
+                    getStepAnalysis={(n: number) => ({ icon: 'info', label: derivedSteps[n - 1]?.label || `Step ${n}`, desc: derivedSteps[n - 1]?.type || '—' })}
+                    renderIcon={() => <span className="w-4 h-4 text-gray-400">ⓘ</span>}
+                />}
                 palette={<BlockPalette onInsert={(t) => console.log('Inserir bloco futuro', t)} />}
                 canvas={
                     editorState.realExperienceMode ? (
