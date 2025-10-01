@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Debug Step Templates</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+      }
+      .step {
+        margin: 20px 0;
+        padding: 15px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+      }
+      .step h3 {
+        margin: 0 0 10px 0;
+        color: #333;
+      }
+      .blocks {
+        margin: 10px 0;
+      }
+      .block {
+        padding: 8px;
+        margin: 5px 0;
+        background: #f5f5f5;
+        border-radius: 4px;
+      }
+      .error {
+        color: red;
+        background: #ffe6e6;
+      }
+      .success {
+        color: green;
+        background: #e6ffe6;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>🔍 Debug Step Templates</h1>
+    <div id="results"></div>
+
+    <script type="module">
+      async function testStepTemplates() {
+        const results = document.getElementById('results');
+
+        try {
+          // Simular o que o stepTemplateService deveria fazer
+          console.log('🔄 Testando templates das etapas...');
+
+          for (let i = 1; i <= 21; i++) {
+            const stepDiv = document.createElement('div');
+            stepDiv.className = 'step';
+
+            try {
+              // Simular chamada para getStepTemplate
+              const stepNumber = i;
+              const stepId = `etapa-${i}`;
+
+              stepDiv.innerHTML = `
+                            <h3>Etapa ${i}</h3>
+                            <div class="info">ID: ${stepId}</div>
+                            <div class="info">Número: ${stepNumber}</div>
+                            <div class="blocks">
+                                <div class="block success">✅ Template deve ser carregado aqui</div>
+                                <div class="block">Tentando carregar Step${i.toString().padStart(2, '0')}Template...</div>
+                            </div>
+                        `;
+
+              console.log(`Step ${i}: OK`);
+            } catch (error) {
+              stepDiv.innerHTML = `
+                            <h3>Etapa ${i} - ERRO</h3>
+                            <div class="block error">❌ ${error.message}</div>
+                        `;
+              console.error(`Step ${i}: ERROR`, error);
+            }
+
+            results.appendChild(stepDiv);
+          }
+
+          console.log('✅ Teste concluído');
+        } catch (error) {
+          results.innerHTML = `<div class="error">❌ Erro geral: ${error.message}</div>`;
+          console.error('Erro geral:', error);
+        }
+      }
+
+      // Executar teste
+      testStepTemplates();
+    </script>
+  </body>
+</html>

@@ -1,4 +1,2 @@
-// Shim de compatibilidade para caminho antigo
+export { default } from '../EnhancedComponentsSidebar';
 export * from '../EnhancedComponentsSidebar';
-import EnhancedComponentsSidebar from '../EnhancedComponentsSidebar';
-export default EnhancedComponentsSidebar;

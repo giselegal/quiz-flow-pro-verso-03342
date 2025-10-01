@@ -1,0 +1,394 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard Quiz Analytics</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: #333;
+        min-height: 100vh;
+      }
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+      .header {
+        text-align: center;
+        color: white;
+        margin-bottom: 30px;
+      }
+      .header h1 {
+        font-size: 2.5em;
+        margin-bottom: 10px;
+      }
+      .header p {
+        opacity: 0.9;
+        font-size: 1.1em;
+      }
+      .controls {
+        background: white;
+        padding: 25px;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
+      }
+      .button-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 15px;
+        margin-top: 20px;
+      }
+      .button {
+        background: linear-gradient(45deg, #667eea, #764ba2);
+        color: white;
+        padding: 15px 25px;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+        font-size: 1em;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+      }
+      .button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+      }
+      .button:active {
+        transform: translateY(0);
+      }
+      .data-card {
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+      }
+      .data-header {
+        background: linear-gradient(45deg, #667eea, #764ba2);
+        color: white;
+        padding: 20px;
+        text-align: center;
+      }
+      .data-content {
+        padding: 25px;
+        max-height: 600px;
+        overflow-y: auto;
+      }
+      .loading {
+        text-align: center;
+        color: #666;
+        font-style: italic;
+        padding: 40px;
+      }
+      .error {
+        color: #e74c3c;
+        background: #fdf2f2;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 4px solid #e74c3c;
+      }
+      .success {
+        color: #27ae60;
+        background: #f0f9f0;
+        padding: 15px;
+        border-radius: 8px;
+        border-left: 4px solid #27ae60;
+        margin-bottom: 20px;
+      }
+      pre {
+        background: #f8f9fa;
+        padding: 20px;
+        border-radius: 8px;
+        overflow-x: auto;
+        font-size: 0.9em;
+        line-height: 1.5;
+      }
+      .stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 15px;
+        margin-bottom: 20px;
+      }
+      .stat-card {
+        background: #f8f9fa;
+        padding: 20px;
+        border-radius: 10px;
+        text-align: center;
+        border-left: 4px solid #667eea;
+      }
+      .stat-number {
+        font-size: 2em;
+        font-weight: bold;
+        color: #667eea;
+      }
+      .stat-label {
+        color: #666;
+        margin-top: 5px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1>📊 Dashboard Quiz Analytics</h1>
+        <p>Acesse todos os dados dos usuários através das APIs REST</p>
+      </div>
+
+      <div class="controls">
+        <h2>🎯 Controles de API</h2>
+        <p>Clique nos botões abaixo para carregar diferentes tipos de dados:</p>
+        <div class="button-grid">
+          <button class="button" onclick="loadQuizResults()">🎯 Resultados Quiz</button>
+          <button class="button" onclick="loadConversionEvents()">📊 Eventos Conversão</button>
+          <button class="button" onclick="loadHotmartPurchases()">💰 Vendas Hotmart</button>
+          <button class="button" onclick="loadUtmAnalytics()">📈 Analytics UTM</button>
+          <button class="button" onclick="loadParticipants()">👥 Participantes</button>
+          <button class="button" onclick="testAllAPIs()">🚀 Testar Todas APIs</button>
+        </div>
+      </div>
+
+      <div class="data-card">
+        <div class="data-header">
+          <h2 id="data-title">📋 Dados da API</h2>
+        </div>
+        <div class="data-content">
+          <div id="results" class="loading">
+            <h3>🎯 Bem-vindo ao Dashboard!</h3>
+            <p>Para começar, clique em um dos botões acima para carregar os dados.</p>
+            <br />
+            <p><strong>URLs das APIs disponíveis:</strong></p>
+            <ul style="text-align: left; display: inline-block; margin-top: 10px">
+              <li><code>GET /api/quiz-results</code> - Respostas dos quizzes</li>
+              <li><code>GET /api/conversion-events</code> - Eventos de conversão</li>
+              <li><code>GET /api/hotmart-purchases</code> - Vendas confirmadas</li>
+              <li><code>GET /api/utm-analytics</code> - Dados de tráfego</li>
+              <li><code>GET /api/quiz-participants</code> - Dados dos participantes</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Configuração da URL base - AJUSTE CONFORME NECESSÁRIO
+      const BASE_URL = 'http://localhost:3000/api';
+      const resultsDiv = document.getElementById('results');
+      const titleDiv = document.getElementById('data-title');
+
+      // Função principal para carregar dados
+      async function loadData(endpoint, title, emoji) {
+        try {
+          titleDiv.textContent = `${emoji} ${title}`;
+          resultsDiv.innerHTML = '<div class="loading">⏳ Carregando dados...</div>';
+
+          const response = await fetch(`${BASE_URL}${endpoint}`);
+
+          if (!response.ok) {
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+          }
+
+          const data = await response.json();
+
+          // Criar estatísticas
+          const stats = createStats(data.data, title);
+
+          // Exibir resultados
+          resultsDiv.innerHTML = `
+                    <div class="success">
+                        ✅ <strong>Sucesso!</strong> Dados carregados de: <code>${BASE_URL}${endpoint}</code>
+                    </div>
+                    
+                    ${stats}
+                    
+                    <h3>📋 Dados Completos:</h3>
+                    <pre>${JSON.stringify(data, null, 2)}</pre>
+                `;
+        } catch (error) {
+          console.error('Erro ao carregar dados:', error);
+          resultsDiv.innerHTML = `
+                    <div class="error">
+                        <h3>❌ Erro ao carregar dados</h3>
+                        <p><strong>Endpoint:</strong> <code>${BASE_URL}${endpoint}</code></p>
+                        <p><strong>Erro:</strong> ${error.message}</p>
+                        <br>
+                        <h4>💡 Possíveis soluções:</h4>
+                        <ul>
+                            <li>Verifique se o servidor está rodando: <code>npm run dev</code></li>
+                            <li>Confirme se a porta está correta (3000, 5173, etc.)</li>
+                            <li>Teste no navegador: <a href="${BASE_URL}${endpoint}" target="_blank">${BASE_URL}${endpoint}</a></li>
+                        </ul>
+                    </div>
+                `;
+        }
+      }
+
+      // Função para criar estatísticas visuais
+      function createStats(data, title) {
+        if (!data || !Array.isArray(data)) {
+          return '<div class="stat-card"><div class="stat-number">0</div><div class="stat-label">Nenhum dado encontrado</div></div>';
+        }
+
+        let statsHtml = '<div class="stats">';
+
+        statsHtml += `
+                <div class="stat-card">
+                    <div class="stat-number">${data.length}</div>
+                    <div class="stat-label">Total de Registros</div>
+                </div>
+            `;
+
+        // Estatísticas específicas por tipo
+        if (title.includes('Quiz')) {
+          const styles = [...new Set(data.map(item => item.predominantStyle).filter(Boolean))];
+          statsHtml += `
+                    <div class="stat-card">
+                        <div class="stat-number">${styles.length}</div>
+                        <div class="stat-label">Estilos Diferentes</div>
+                    </div>
+                `;
+        } else if (title.includes('Eventos')) {
+          const types = [...new Set(data.map(item => item.eventType).filter(Boolean))];
+          statsHtml += `
+                    <div class="stat-card">
+                        <div class="stat-number">${types.length}</div>
+                        <div class="stat-label">Tipos de Eventos</div>
+                    </div>
+                `;
+        } else if (title.includes('Vendas')) {
+          const total = data.reduce((sum, item) => sum + (parseFloat(item.amount) || 0), 0);
+          statsHtml += `
+                    <div class="stat-card">
+                        <div class="stat-number">R$ ${total.toFixed(2)}</div>
+                        <div class="stat-label">Receita Total</div>
+                    </div>
+                `;
+        }
+
+        // Data do último registro
+        if (data.length > 0 && data[0].createdAt) {
+          const lastDate = new Date(data[0].createdAt).toLocaleDateString('pt-BR');
+          statsHtml += `
+                    <div class="stat-card">
+                        <div class="stat-number">${lastDate}</div>
+                        <div class="stat-label">Último Registro</div>
+                    </div>
+                `;
+        }
+
+        statsHtml += '</div>';
+        return statsHtml;
+      }
+
+      // Funções específicas para cada API
+      function loadQuizResults() {
+        loadData('/quiz-results', 'Resultados dos Quizzes', '🎯');
+      }
+
+      function loadConversionEvents() {
+        loadData('/conversion-events', 'Eventos de Conversão', '📊');
+      }
+
+      function loadHotmartPurchases() {
+        loadData('/hotmart-purchases', 'Vendas Hotmart', '💰');
+      }
+
+      function loadUtmAnalytics() {
+        loadData('/utm-analytics', 'Analytics UTM', '📈');
+      }
+
+      function loadParticipants() {
+        loadData('/quiz-participants', 'Participantes', '👥');
+      }
+
+      // Função para testar todas as APIs
+      async function testAllAPIs() {
+        titleDiv.textContent = '🚀 Testando Todas as APIs';
+        resultsDiv.innerHTML = '<div class="loading">🔄 Testando todas as APIs...</div>';
+
+        const apis = [
+          { endpoint: '/quiz-results', name: 'Quiz Results' },
+          { endpoint: '/conversion-events', name: 'Conversion Events' },
+          { endpoint: '/hotmart-purchases', name: 'Hotmart Purchases' },
+          { endpoint: '/utm-analytics', name: 'UTM Analytics' },
+          { endpoint: '/quiz-participants', name: 'Quiz Participants' },
+        ];
+
+        let results = [];
+
+        for (const api of apis) {
+          try {
+            const response = await fetch(`${BASE_URL}${api.endpoint}`);
+            const status = response.ok ? '✅' : '❌';
+            const data = await response.json();
+            const count = data.data ? data.data.length : 0;
+
+            results.push({
+              name: api.name,
+              endpoint: api.endpoint,
+              status: status,
+              count: count,
+              response: response.status,
+            });
+          } catch (error) {
+            results.push({
+              name: api.name,
+              endpoint: api.endpoint,
+              status: '❌',
+              count: 0,
+              error: error.message,
+            });
+          }
+        }
+
+        // Exibir resultados do teste
+        let html = '<div class="success">🧪 <strong>Teste Completo das APIs</strong></div>';
+        html += '<div class="stats">';
+
+        results.forEach(result => {
+          html += `
+                    <div class="stat-card">
+                        <div class="stat-number">${result.status}</div>
+                        <div class="stat-label">${result.name}<br>
+                            <code>${result.endpoint}</code><br>
+                            ${result.count} registros
+                        </div>
+                    </div>
+                `;
+        });
+
+        html += '</div>';
+        html += '<h3>📋 Detalhes Completos:</h3>';
+        html += `<pre>${JSON.stringify(results, null, 2)}</pre>`;
+
+        resultsDiv.innerHTML = html;
+      }
+
+      // Função para testar conexão na inicialização
+      async function checkConnection() {
+        try {
+          const response = await fetch(`${BASE_URL}/quiz-results`);
+          if (response.ok) {
+            console.log('✅ Conexão com API estabelecida');
+          } else {
+            console.warn('⚠️ API respondeu mas com erro:', response.status);
+          }
+        } catch (error) {
+          console.warn('⚠️ Não foi possível conectar com a API:', error.message);
+        }
+      }
+
+      // Verificar conexão ao carregar a página
+      document.addEventListener('DOMContentLoaded', checkConnection);
+    </script>
+  </body>
+</html>

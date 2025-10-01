@@ -63,12 +63,7 @@ const strategicStepSchema = baseStepSchema.extend({
 });
 
 const transitionStepSchema = baseStepSchema.extend({
-    type: z.literal('transition'),
-    text: z.string().optional()
-});
-
-const transitionResultStepSchema = baseStepSchema.extend({
-    type: z.literal('transition-result'),
+    type: z.union([z.literal('transition'), z.literal('transition-result')]),
     text: z.string().optional()
 });
 
@@ -100,7 +95,6 @@ export const anyStepSchema = z.union([
     questionStepSchema,
     strategicStepSchema,
     transitionStepSchema,
-    transitionResultStepSchema,
     resultStepSchema,
     offerStepSchema,
     baseStepSchema // fallback (intro)

@@ -3,8 +3,7 @@ import { StorageService } from './StorageService';
 import EVENTS from '@/core/constants/events';
 import { quizSupabaseService } from '@/services/quizSupabaseService';
 import { isUUID } from '@/core/utils/id';
-// Substituído template legacy por loader published-first
-import { loadQuizEstiloCanonical } from '@/domain/quiz/quizEstiloPublishedFirstLoader';
+import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
 import { toCanonicalAny } from './adapters';
 import { accumulateScores as accumulateCanonicalScores } from './CanonicalScorer';
 import { STYLE_TIEBREAK_ORDER, stabilizeScoresOrder } from '@/utils/styleKeywordMap';
@@ -37,9 +36,7 @@ export const ResultOrchestrator = {
         const summed = Object.values(scores).reduce((a, b) => a + b, 0);
         if (!summed) {
             try {
-                // Carregar versão publicada (ou fallback legacy) apenas quando necessário
-                const loaded = await loadQuizEstiloCanonical();
-                const canonical = toCanonicalAny(loaded || {});
+                const canonical = toCanonicalAny(QUIZ_STYLE_21_STEPS_TEMPLATE);
                 const canonTotals = accumulateCanonicalScores(canonical, selectionsByQuestion);
                 const compat: Record<string, string> = {
                     natural: 'Natural',

@@ -10,8 +10,7 @@ import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-// MIGRATION: substituído EnhancedUnifiedDataService pelo adapter unificado
-import { enhancedUnifiedDataServiceAdapter } from '@/analytics/compat/enhancedUnifiedDataServiceAdapter';
+import { EnhancedUnifiedDataService, type RealTimeMetrics } from '@/services/core/EnhancedUnifiedDataService';
 
 // ============================================================================
 // TIPOS E INTERFACES
@@ -231,8 +230,8 @@ export const RealTimeDashboard: React.FC = () => {
     const loadData = async () => {
         try {
             setIsLoading(true);
-            console.log('📊 RealTimeDashboard: Carregando dados via enhancedUnifiedDataServiceAdapter...');
-            const metrics = await enhancedUnifiedDataServiceAdapter.getRealTimeMetrics();
+            console.log('📊 RealTimeDashboard: Carregando dados via EnhancedUnifiedDataService...');
+            const metrics = await EnhancedUnifiedDataService.getRealTimeMetrics();
 
             // Converter métricas do EnhancedUnifiedDataService para DashboardData
             const data: DashboardData = {

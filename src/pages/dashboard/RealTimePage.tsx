@@ -5,11 +5,11 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { enhancedUnifiedDataServiceAdapter as EnhancedUnifiedDataService } from '@/analytics/compat/enhancedUnifiedDataServiceAdapter';
+import { EnhancedUnifiedDataService } from '@/services/EnhancedUnifiedDataService';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import {
+import { 
   Activity,
   Users,
   Eye,
@@ -36,7 +36,7 @@ export const RealTimePage: React.FC = () => {
       try {
         const metrics = await EnhancedUnifiedDataService.getRealTimeMetrics();
         setRealTimeMetrics(metrics);
-
+        
         // Adicionar aos dados históricos
         const timestamp = new Date().toLocaleTimeString();
         setHistoricalData(prev => [
@@ -48,7 +48,7 @@ export const RealTimePage: React.FC = () => {
             conversions: metrics?.conversions || 12
           }
         ]);
-
+        
         console.log('✅ Real-time metrics updated:', metrics);
       } catch (error) {
         console.error('❌ Erro ao carregar métricas em tempo real:', error);
@@ -96,9 +96,9 @@ export const RealTimePage: React.FC = () => {
             <Activity className="w-3 h-3 mr-1" />
             {isTracking ? 'Monitorando' : 'Pausado'}
           </Badge>
-          <Button
-            variant="outline"
-            size="sm"
+          <Button 
+            variant="outline" 
+            size="sm" 
             onClick={() => setIsTracking(!isTracking)}
           >
             {isTracking ? <Pause className="w-4 h-4 mr-2" /> : <Play className="w-4 h-4 mr-2" />}
@@ -208,24 +208,24 @@ export const RealTimePage: React.FC = () => {
                 <XAxis dataKey="time" />
                 <YAxis />
                 <Tooltip />
-                <Line
-                  type="monotone"
-                  dataKey="users"
-                  stroke="#8884d8"
+                <Line 
+                  type="monotone" 
+                  dataKey="users" 
+                  stroke="#8884d8" 
                   strokeWidth={2}
                   name="Usuários Online"
                 />
-                <Line
-                  type="monotone"
-                  dataKey="views"
-                  stroke="#82ca9d"
+                <Line 
+                  type="monotone" 
+                  dataKey="views" 
+                  stroke="#82ca9d" 
                   strokeWidth={2}
                   name="Visualizações"
                 />
-                <Line
-                  type="monotone"
-                  dataKey="conversions"
-                  stroke="#ffc658"
+                <Line 
+                  type="monotone" 
+                  dataKey="conversions" 
+                  stroke="#ffc658" 
                   strokeWidth={2}
                   name="Conversões"
                 />
@@ -252,24 +252,25 @@ export const RealTimePage: React.FC = () => {
             <div className="space-y-3 max-h-80 overflow-y-auto">
               {recentActivity.map((activity) => (
                 <div key={activity.id} className="flex items-center space-x-3 p-2 hover:bg-gray-50 rounded-lg transition-colors">
-                  <div className={`w-2 h-2 rounded-full ${activity.type === 'conversion' ? 'bg-green-500' :
-                      activity.type === 'visit' ? 'bg-blue-500' :
-                        activity.type === 'progress' ? 'bg-purple-500' :
-                          activity.type === 'share' ? 'bg-yellow-500' :
-                            'bg-red-500'
-                    } animate-pulse`}></div>
+                  <div className={`w-2 h-2 rounded-full ${
+                    activity.type === 'conversion' ? 'bg-green-500' :
+                    activity.type === 'visit' ? 'bg-blue-500' :
+                    activity.type === 'progress' ? 'bg-purple-500' :
+                    activity.type === 'share' ? 'bg-yellow-500' :
+                    'bg-red-500'
+                  } animate-pulse`}></div>
                   <div className="flex-1">
                     <div className="text-sm">{activity.action}</div>
                     <div className="text-xs text-muted-foreground">{activity.time}</div>
                   </div>
-                  <Badge
+                  <Badge 
                     variant="outline"
                     className={
                       activity.type === 'conversion' ? 'border-green-200 text-green-700' :
-                        activity.type === 'visit' ? 'border-blue-200 text-blue-700' :
-                          activity.type === 'progress' ? 'border-purple-200 text-purple-700' :
-                            activity.type === 'share' ? 'border-yellow-200 text-yellow-700' :
-                              'border-red-200 text-red-700'
+                      activity.type === 'visit' ? 'border-blue-200 text-blue-700' :
+                      activity.type === 'progress' ? 'border-purple-200 text-purple-700' :
+                      activity.type === 'share' ? 'border-yellow-200 text-yellow-700' :
+                      'border-red-200 text-red-700'
                     }
                   >
                     {activity.type}
@@ -292,11 +293,12 @@ export const RealTimePage: React.FC = () => {
               {topPages.map((page, index) => (
                 <div key={page.page} className="flex items-center justify-between p-3 border rounded-lg">
                   <div className="flex items-center space-x-3">
-                    <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-medium ${index === 0 ? 'bg-yellow-100 text-yellow-800' :
-                        index === 1 ? 'bg-gray-100 text-gray-800' :
-                          index === 2 ? 'bg-orange-100 text-orange-800' :
-                            'bg-blue-100 text-blue-800'
-                      }`}>
+                    <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-medium ${
+                      index === 0 ? 'bg-yellow-100 text-yellow-800' :
+                      index === 1 ? 'bg-gray-100 text-gray-800' :
+                      index === 2 ? 'bg-orange-100 text-orange-800' :
+                      'bg-blue-100 text-blue-800'
+                    }`}>
                       {index + 1}
                     </div>
                     <div>

@@ -1,6 +1,6 @@
-import React, { useMemo, useState, useEffect } from 'react';
+import React, { useMemo, useState } from 'react';
 import UniversalBlockRenderer from '@/components/editor/blocks/UniversalBlockRenderer';
-import { quizLegacyTemplateAdapter } from '@/services/legacy/QuizLegacyTemplateAdapter';
+import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
 import { Block } from '@/types/editor';
 import { PropertiesColumn } from '@/components/editor/properties/PropertiesColumn';
 
@@ -10,25 +10,17 @@ const StepsShowcase: React.FC = () => {
     const [mode, setMode] = useState<RenderMode>('preview');
 
     // Clonar template para estado local e permitir edição no painel
-    const [stepsMap, setStepsMap] = useState<Record<string, Block[]>>({});
-    useEffect(() => {
-        (async () => {
-            try {
-                const all = await quizLegacyTemplateAdapter.getAll();
-                const cloned: Record<string, Block[]> = {};
-                Object.entries(all).forEach(([k, arr]) => {
-                    cloned[k] = (arr || []).map((b: any) => ({
-                        ...b,
-                        properties: { ...(b.properties || {}) },
-                        content: { ...(b.content || {}) },
-                    }));
-                });
-                setStepsMap(cloned);
-            } catch (err) {
-                console.error('StepsShowcase load error', err);
-            }
-        })();
-    }, []);
+    const [stepsMap, setStepsMap] = useState<Record<string, Block[]>>(() => {
+        const cloned: Record<string, Block[]> = {};
+        Object.entries(QUIZ_STYLE_21_STEPS_TEMPLATE).forEach(([k, arr]) => {
+            cloned[k] = (arr || []).map((b: any) => ({
+                ...b,
+                properties: { ...(b.properties || {}) },
+                content: { ...(b.content || {}) },
+            }));
+        });
+        return cloned;
+    });
 
     // Seleção atual
     const [selected, setSelected] = useState<{ stepKey: string | null; blockId: string | null }>({ stepKey: null, blockId: null });

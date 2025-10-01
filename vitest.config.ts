@@ -6,33 +6,15 @@ export default defineConfig({
   plugins: [react()],
   test: {
     globals: true,
-    environment: 'happy-dom', // default para testes de UI
-    projects: [
-      // UI / DOM-focused tests
-      {
-        test: {
-          environment: 'happy-dom',
-          include: [
-            'src/components/**/*.{test,spec}.{js,ts,jsx,tsx}',
-            'src/pages/**/*.{test,spec}.{js,ts,jsx,tsx}'
-          ]
-        }
-      },
-      // Node environment for domain/core logic
-      {
-        test: {
-          environment: 'node',
-          include: [
-            'src/utils/**/*.{test,spec}.{js,ts,jsx,tsx}',
-            'src/services/**/*.{test,spec}.{js,ts,jsx,tsx}',
-            'src/core/**/*.{test,spec}.{js,ts,jsx,tsx}',
-            'src/consolidated/**/*.{test,spec}.{js,ts,jsx,tsx}',
-            'src/optimization/**/*.{test,spec}.{js,ts,jsx,tsx}',
-            'src/migration/**/*.{test,spec}.{js,ts,jsx,tsx}',
-            'src/domain/**/*.{test,spec}.{js,ts,jsx,tsx}'
-          ]
-        }
-      }
+    environment: 'happy-dom', // Otimizado para React
+    // Usa ambiente node para pastas sem necessidade de DOM, reduzindo memória
+    environmentMatchGlobs: [
+      ['src/utils/**', 'node'],
+      ['src/services/**', 'node'],
+      ['src/core/**', 'node'],
+      ['src/consolidated/**', 'node'],
+      ['src/optimization/**', 'node'],
+      ['src/migration/**', 'node'],
     ],
     setupFiles: ['./src/test/setup.ts'],
     css: true,
@@ -72,7 +54,7 @@ export default defineConfig({
       'src/**/*.{test,spec}.{js,ts,jsx,tsx}',
       'src/**/__tests__/**/*.{js,ts,jsx,tsx}',
       'src/tests/**/*.{test,spec}.{js,ts,jsx,tsx}',
-      'src/testing/**/*.test.ts'
+      'src/testing/**/*.test.ts', // Nossos testes consolidados
     ],
     exclude: [
       'node_modules/**',
@@ -131,6 +113,7 @@ export default defineConfig({
       '@migration': path.resolve(__dirname, './src/migration'),
       '@testing': path.resolve(__dirname, './src/testing')
     },
+    // Garante uma única instância de React durante os testes
     dedupe: ['react', 'react-dom'],
   },
 });

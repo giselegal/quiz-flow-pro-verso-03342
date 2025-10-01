@@ -1,10 +1,4 @@
 // @ts-nocheck
-/**
- * DEPRECATED ComponentsSidebar (minimal registry-driven)
- * ------------------------------------------------------
- * Use a versão canônica: src/components/editor/sidebars/ComponentsSidebar.tsx
- * Esta variante só deve ser usada em protótipos isolados até remoção.
- */
 import { Button } from '@/components/ui/button';
 import { useMemo } from 'react';
 import { generateBlockDefinitions } from '@/config/enhancedBlockRegistry';

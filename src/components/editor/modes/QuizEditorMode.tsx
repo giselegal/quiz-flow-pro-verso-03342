@@ -27,34 +27,24 @@ import { useQuizConfig } from '@/hooks/useQuizConfig';
 import { useTemplateLoader } from '@/hooks/useTemplateLoader';
 
 // Componentes da Fase 2
+import QuizPropertiesPanel from '../panels/QuizPropertiesPanel';
 import QuizPreviewIntegrated from '../quiz/QuizPreviewIntegrated';
 import QuizStepNavigation from '../quiz/QuizStepNavigation';
 import QuizQuestionTypeEditor from '../quiz/QuizQuestionTypeEditor';
-// Painel unificado Fase 3
-import QuizUnifiedPropertiesPanel from '../quiz/QuizUnifiedPropertiesPanel';
+import QuizScoringSystem from '../quiz/QuizScoringSystem';
 
 // FASE 3 - Sincronização e dados reais
 import { RealTimeSyncService } from '@/services/RealTimeSyncService';
 import { QUIZ_STEPS, getStepById, STRATEGIC_ANSWER_TO_OFFER_KEY } from '@/data/quizSteps';
-import { buildQuizEditableModel } from '@/utils/quizQuestionBuilder';
-import { QuizEditorPersistenceService } from '@/services/QuizEditorPersistenceService';
-import { useUnifiedAutoSave } from '@/hooks/useUnifiedAutoSave';
-import { QUIZ_EDITOR_VERSION, QuizTemplateData } from '@/types/quizEditor';
 import { styleConfigGisele } from '@/data/styles';
 import { useQuizState } from '@/hooks/useQuizState';
 import type { QuizStep } from '@/data/quizSteps';
 
 // FASE 4 - Analytics e Performance
-// Migrado para tracker unificado
-import { unifiedEventTracker } from '@/analytics/UnifiedEventTracker';
-import { quizSupabaseService } from '@/services/quizSupabaseService';
+import { analyticsService } from '@/services/AnalyticsService';
+import { reportGenerator } from '@/services/ReportGenerator';
 import { performanceOptimizer } from '@/services/PerformanceOptimizer';
-import QuizGlobalScoringEditor from '../quiz/QuizGlobalScoringEditor';
 import QuizAnalyticsDashboard from '@/components/analytics/QuizAnalyticsDashboard';
-import { templatePublishingService } from '@/services/TemplatePublishingService';
-import { canonicalizeQuizEstiloId } from '@/domain/quiz/quiz-estilo-ids';
-import { QuizToEditorAdapter } from '@/adapters/QuizToEditorAdapter';
-import { useNotification } from '@/components/ui/Notification';
 
 // ===============================
 // 🎯 INTERFACES E TIPOS
@@ -68,7 +58,7 @@ interface QuizEditorModeProps {
 }
 
 interface QuizEditorState {
-  activeTab: 'editor' | 'properties' | 'analytics' | 'preview' | 'performance' | 'scoring';
+  activeTab: 'editor' | 'properties' | 'analytics' | 'preview' | 'performance';
   isPreviewMode: boolean;
   isRealExperience: boolean;
   selectedStepNumber: number;
@@ -84,7 +74,7 @@ interface QuizEditorState {
   conflicts: any[];
   // FASE 4 - Estado de analytics
   analyticsEnabled: boolean;
-  performanceMetrics: any | null;
+  performanceMetrics: any;
   realtimeUpdates: boolean;
 }
 
@@ -135,9 +125,6 @@ const QuizEditorMode: React.FC<QuizEditorModeProps> = ({
   const navigation = useUnifiedStepNavigation();
   const quizConfig = useQuizConfig();
   const templateLoader = useTemplateLoader();
-  const { addNotification } = useNotification();
-  const adapterRef = useRef<QuizToEditorAdapter | null>(null);
-  if (!adapterRef.current) adapterRef.current = new QuizToEditorAdapter();
 
   // FASE 3 - Hook de estado do quiz seguindo padrão de referência
   const {
@@ -194,56 +181,34 @@ const QuizEditorMode: React.FC<QuizEditorModeProps> = ({
     });
   }, []);
 
-  // ===============================
-  // 💾 Auto-save Unificado (Substitui scheduleAutoSave anterior)
-  // ===============================
-  const persistTemplate = useCallback(async () => {
-    // Construir scoringMatrix a partir das questões (se houver stylePoints)
-    const scoringMatrix: Record<string, Record<string, Record<string, number>>> = {};
-    state.questions.forEach(q => {
-      if (!q.answers) return;
-      q.answers.forEach((ans: any) => {
-        const stylePoints = ans.stylePoints || {};
-        if (Object.keys(stylePoints).length === 0) return;
-        scoringMatrix[q.id] = scoringMatrix[q.id] || {};
-        scoringMatrix[q.id][ans.id] = {};
-        for (const styleId of Object.keys(stylePoints)) {
-          const val = stylePoints[styleId];
-          if (typeof val === 'number' && !isNaN(val)) {
-            scoringMatrix[q.id][ans.id][styleId] = val;
-          }
-        }
-      });
-    });
-    const canonicalTemplateId = canonicalizeQuizEstiloId(funnelId || 'quiz-estilo') || (funnelId || 'quiz-estilo');
-    const payload: QuizTemplateData = {
-      templateId: canonicalTemplateId,
-      version: QUIZ_EDITOR_VERSION,
-      questions: state.questions,
-      styles: state.styles,
-      scoringMatrix: Object.keys(scoringMatrix).length ? scoringMatrix : undefined,
-      updatedAt: new Date().toISOString()
-    };
-    const result = await QuizEditorPersistenceService.save(payload);
-    if (result.success) {
-      handleSyncEvent({ id: Date.now().toString(), type: 'sync-success', timestamp: new Date().toISOString() });
-    } else {
-      handleSyncEvent({ id: Date.now().toString(), type: 'sync-error', timestamp: new Date().toISOString(), data: result.error });
-    }
-  }, [funnelId, state.questions, state.styles, handleSyncEvent]);
+  const scheduleAutoSave = useCallback((changes: any) => {
+    setState(prev => ({ ...prev, isDirty: true }));
 
-  useUnifiedAutoSave({
-    data: { q: state.questions, s: state.styles },
-    isDirty: state.isDirty,
-    onSave: persistTemplate,
-    debounce: 2500,
-    enabled: true,
-    onState: phase => {
-      if (phase.phase === 'saving') {
-        handleSyncEvent({ id: Date.now().toString(), type: 'sync-start', timestamp: new Date().toISOString() });
-      }
+    if (debounceTimerRef.current) {
+      clearTimeout(debounceTimerRef.current);
     }
-  });
+
+    debounceTimerRef.current = setTimeout(async () => {
+      if (syncServiceRef.current) {
+        console.log('💾 Auto-saving changes:', changes);
+        // Simular sincronização - será implementado na integração real
+        handleSyncEvent({
+          id: Date.now().toString(),
+          type: 'sync-start',
+          timestamp: new Date().toISOString()
+        });
+
+        // Simular sucesso após delay
+        setTimeout(() => {
+          handleSyncEvent({
+            id: Date.now().toString(),
+            type: 'sync-success',
+            timestamp: new Date().toISOString()
+          });
+        }, 1000);
+      }
+    }, 2000);
+  }, [handleSyncEvent]);
 
   // ===============================
   // 📊 FASE 4 - MÉTODOS DE ANALYTICS
@@ -252,12 +217,10 @@ const QuizEditorMode: React.FC<QuizEditorModeProps> = ({
   const initializeAnalytics = useCallback(() => {
     if (state.analyticsEnabled) {
       // Inicializar tracking de eventos
-      unifiedEventTracker.track({
-        type: 'quiz_started',
-        funnelId: funnelId || 'unknown',
-        sessionId: `sess_${Date.now()}`,
-        userId: 'editor-user',
-        payload: { page: 'quiz-editor', mode: 'quiz-estilo' }
+      analyticsService.trackEvent('page_view', {
+        page: 'quiz-editor',
+        mode: 'quiz-estilo',
+        funnelId: funnelId
       });
 
       // Inicializar otimizador de performance
@@ -268,81 +231,74 @@ const QuizEditorMode: React.FC<QuizEditorModeProps> = ({
   }, [state.analyticsEnabled, funnelId]);
 
   const trackEditorAction = useCallback((action: string, data: any) => {
-    if (!state.analyticsEnabled) return;
-    const payload = { action, ...data, currentStep: state.selectedStepNumber, ts: Date.now() };
-    const funnel = funnelId || 'unknown';
-    // Tracker interno
-    unifiedEventTracker.track({
-      type: 'editor_action',
-      funnelId: funnel,
-      sessionId: `sess_${Date.now()}`,
-      userId: 'editor-user',
-      payload
-    });
-    // Bridge Supabase (best-effort)
-    (async () => {
-      try {
-        await quizSupabaseService.trackEvent({
-          funnelId: funnel,
-          eventType: 'editor_action',
-          eventData: payload
-        });
-      } catch (e) {
-        // Silencioso para não afetar UX
-        if (import.meta.env.DEV) console.warn('Editor action supabase track falhou', e);
+    if (state.analyticsEnabled) {
+      analyticsService.trackEditorAction(action, {
+        ...data,
+        currentStep: state.selectedStepNumber,
+        timestamp: new Date().toISOString()
+      });
+    }
+  }, [state.analyticsEnabled, state.selectedStepNumber]);
+
+  const generateQuickReport = useCallback(async () => {
+    try {
+      const report = await reportGenerator.generateReport({
+        id: 'quick-editor-report',
+        name: 'Editor Quick Report',
+        description: 'Relatório rápido do editor de quiz',
+        type: 'summary',
+        timeRange: {
+          start: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
+          end: new Date().toISOString()
+        },
+        format: 'json'
+      });
+
+      console.log('📊 Quick report generated:', report);
+      return report;
+    } catch (error) {
+      console.error('❌ Failed to generate report:', error);
+      return null;
+    }
+  }, []);
+
+  const updatePerformanceMetrics = useCallback(() => {
+    const metrics = performanceOptimizer.getMetrics();
+    const cacheStats = performanceOptimizer.getCacheStats();
+
+    setState(prev => ({
+      ...prev,
+      performanceMetrics: {
+        ...metrics,
+        cache: cacheStats
       }
-    })();
-  }, [state.analyticsEnabled, state.selectedStepNumber, funnelId]);
+    }));
+  }, []);
+
+  // ===============================
+  // 📊 CARREGAMENTO DE DADOS REAIS
+  // ===============================
 
   const loadRealQuizData = useCallback(async () => {
     try {
-      // 1) Tentar carregar persistido
-      const persisted = await QuizEditorPersistenceService.load(funnelId || 'quiz-estilo');
-      if (persisted) {
-        console.log('✅ Dados carregados do storage (persistência quiz).');
-        setState(prev => ({ ...prev, questions: persisted.questions, styles: persisted.styles, syncStatus: 'synced' }));
-        return;
-      }
+      console.log('🔄 FASE 3: Carregando dados reais do quiz-estilo...');
 
-      // 2) (Opcional) gerar relatório – mantido para futuras métricas; ignoramos retorno agora
-      // (Relatórios desativados temporariamente nesta fase)
-
-      // 3) Fallback: construir do modelo legacy -> normalizado
-      const { questions, styles } = buildQuizEditableModel();
-      console.log('✅ Modelo derivado (legacy -> normalizado):', { q: questions.length, s: styles.length });
-      setState(prev => ({ ...prev, questions, styles, syncStatus: 'synced' }));
       // Converter passos do quiz em questões editáveis
       const realQuestions = Object.entries(QUIZ_STEPS)
-        .filter(([key, step]) => ['question', 'strategic-question', 'offer', 'result', 'transition', 'transition-result', 'intro'].includes(step.type))
-        .map(([key, step], index) => {
-          const base: any = {
-            id: key,
-            title: (step as any).questionText || (step as any).title || `Step ${index + 1}`,
-            subtitle: (step as any).title && (step as any).questionText ? (step as any).title : '',
-            rawType: step.type,
-            type: step.type === 'question' ? 'multiple-choice' : step.type,
-            stepNumber: parseInt(key.replace('step-', '')) || index + 1,
-            requiredSelections: (step as any).requiredSelections || null,
-            answers: (step as any).options?.map((option: any) => ({
-              id: `${key}-${option.id}`,
-              text: option.text,
-              image: option.image,
-              description: '',
-              stylePoints: {}
-            })) || []
-          };
-          if (step.type === 'offer' && (step as any).offerMap) {
-            base.variants = Object.entries((step as any).offerMap).map(([matchValue, v]: any) => ({
-              id: matchValue,
-              matchValue,
-              title: v.title,
-              description: v.description,
-              buttonText: v.buttonText,
-              testimonial: v.testimonial
-            }));
-          }
-          return base;
-        });
+        .filter(([key, step]) => step.type === 'question')
+        .map(([key, step], index) => ({
+          id: key,
+          title: step.questionText || `Questão ${index + 1}`,
+          subtitle: step.title || '',
+          type: 'multiple-choice',
+          stepNumber: parseInt(key.replace('step-', '')),
+          answers: step.options?.map((option, optIndex) => ({
+            id: `${key}-${option.id}`,
+            text: option.text,
+            description: '',
+            stylePoints: {} // Será preenchido com lógica real
+          })) || []
+        }));
 
       // Converter estilos reais
       const realStyles = Object.values(styleConfigGisele).map(style => ({
@@ -390,7 +346,14 @@ const QuizEditorMode: React.FC<QuizEditorModeProps> = ({
   // FASE 4 - Inicializar Analytics
   useEffect(() => {
     initializeAnalytics();
-  }, [initializeAnalytics]);
+
+    // Atualizar métricas periodicamente
+    const metricsInterval = setInterval(updatePerformanceMetrics, 30000);
+
+    return () => {
+      clearInterval(metricsInterval);
+    };
+  }, [initializeAnalytics, updatePerformanceMetrics]);
 
   // ===============================
   // 🎮 HANDLERS DE INTERAÇÃO
@@ -414,7 +377,8 @@ const QuizEditorMode: React.FC<QuizEditorModeProps> = ({
   const handleQuestionChange = useCallback((question: any) => {
     const updatedQuestions = [...state.questions];
     updatedQuestions[state.selectedQuestionIndex] = question;
-    setState(prev => ({ ...prev, questions: updatedQuestions, isDirty: true }));
+
+    setState(prev => ({ ...prev, questions: updatedQuestions }));
 
     // FASE 4: Track question editing
     trackEditorAction('question_edit', {
@@ -424,19 +388,35 @@ const QuizEditorMode: React.FC<QuizEditorModeProps> = ({
     });
 
     // FASE 3: Auto-save com sincronização
-  }, [state.questions, state.selectedQuestionIndex, trackEditorAction]);
+    scheduleAutoSave({
+      type: 'question-update',
+      questionIndex: state.selectedQuestionIndex,
+      question: question,
+      timestamp: new Date().toISOString()
+    });
+  }, [state.questions, state.selectedQuestionIndex, scheduleAutoSave, trackEditorAction]);
 
   const handleAddQuestion = useCallback(() => {
     const newQuestion = {
       id: `q${state.questions.length + 1}`,
       title: `Nova questão ${state.questions.length + 1}`,
       subtitle: '',
-      rawType: 'question',
       type: 'multiple-choice',
       answers: []
     };
-    setState(prev => ({ ...prev, questions: [...prev.questions, newQuestion], selectedQuestionIndex: prev.questions.length, isDirty: true }));
-  }, [state.questions.length]);
+
+    setState(prev => ({
+      ...prev,
+      questions: [...prev.questions, newQuestion],
+      selectedQuestionIndex: prev.questions.length
+    }));
+
+    scheduleAutoSave({
+      type: 'question-add',
+      question: newQuestion,
+      timestamp: new Date().toISOString()
+    });
+  }, [state.questions.length, scheduleAutoSave]);
 
   const handleQuestionEdit = useCallback((questionIndex: number) => {
     setState(prev => ({
@@ -451,16 +431,28 @@ const QuizEditorMode: React.FC<QuizEditorModeProps> = ({
   }, []);
 
   const handleStylesChange = useCallback((styles: any[]) => {
-    setState(prev => ({ ...prev, styles, isDirty: true }));
-  }, []);
+    setState(prev => ({ ...prev, styles }));
+
+    scheduleAutoSave({
+      type: 'styles-update',
+      styles: styles,
+      timestamp: new Date().toISOString()
+    });
+  }, [scheduleAutoSave]);
 
   const handleSaveChanges = useCallback(async () => {
     console.log('💾 Salvando alterações manualmente...');
     if (onSave) {
       await onSave();
     }
-    await persistTemplate();
-  }, [onSave, persistTemplate]);
+
+    // Forçar sincronização
+    handleSyncEvent({
+      id: Date.now().toString(),
+      type: 'sync-success',
+      timestamp: new Date().toISOString()
+    });
+  }, [onSave, handleSyncEvent]);
 
   const handleTogglePreview = useCallback(() => {
     setState(prev => ({ ...prev, isPreviewMode: !prev.isPreviewMode }));
@@ -512,7 +504,6 @@ const QuizEditorMode: React.FC<QuizEditorModeProps> = ({
   };
 
   const currentQuestion = state.questions[state.selectedQuestionIndex];
-  const perf = state.performanceMetrics || { cacheHitRate: 0, renderTime: 0, memoryUsage: 0, bundleSize: 0 };
 
   // ===============================
   // 🖼️ RENDER PRINCIPAL
@@ -562,93 +553,6 @@ const QuizEditorMode: React.FC<QuizEditorModeProps> = ({
                 <Save className="w-4 h-4 mr-2" />
                 {state.isSyncing ? 'Salvando...' : 'Salvar'}
               </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={async () => {
-                  try {
-                    addNotification('🚀 Publicando template...', 'info');
-                    unifiedEventTracker.track({
-                      type: 'editor_action',
-                      funnelId: funnelId || 'unknown',
-                      sessionId: `sess_${Date.now()}`,
-                      userId: 'editor-user',
-                      payload: { subType: 'publish_attempt', funnelId }
-                    });
-                    // Construir scoringMatrix derivando dos answers (caso não esteja em state)
-                    const scoringMatrix: Record<string, Record<string, Record<string, number>>> = {};
-                    state.questions.forEach(q => {
-                      (q.answers || []).forEach((ans: any) => {
-                        const stylePoints = ans.stylePoints || {};
-                        if (!stylePoints || Object.keys(stylePoints).length === 0) return;
-                        if (!scoringMatrix[q.id]) scoringMatrix[q.id] = {};
-                        scoringMatrix[q.id][ans.id] = {};
-                        Object.entries(stylePoints).forEach(([styleId, val]) => {
-                          if (typeof val === 'number' && !isNaN(val)) {
-                            scoringMatrix[q.id][ans.id][styleId] = val;
-                          }
-                        });
-                      });
-                    });
-
-                    // Gerar stepBlocks dinamicamente a partir das questões atuais
-                    // Estrutura mínima esperada: { [stepId]: { id, type, questionId, order } }
-                    const stepBlocks: Record<string, any> = {};
-                    state.questions.forEach((q, index) => {
-                      const stepId = `step-${index + 1}`;
-                      stepBlocks[stepId] = {
-                        id: stepId,
-                        type: q.rawType || q.type || 'question',
-                        questionId: q.id,
-                        order: index + 1,
-                        title: q.title,
-                        meta: {
-                          requiredSelections: q.requiredSelections || null
-                        }
-                      };
-                    });
-
-                    const publishId = canonicalizeQuizEstiloId(funnelId || 'quiz-estilo') || (funnelId || 'quiz-estilo');
-                    const canonicalState: any = {
-                      id: publishId,
-                      name: 'Quiz Estilo Pessoal',
-                      description: 'Template publicado via editor',
-                      questions: state.questions,
-                      styles: state.styles,
-                      scoringMatrix: Object.keys(scoringMatrix).length ? scoringMatrix : undefined,
-                      stepBlocks,
-                      isDirty: false,
-                      version: QUIZ_EDITOR_VERSION,
-                      updatedAt: new Date().toISOString()
-                    };
-                    const result = await templatePublishingService.publish(canonicalState);
-                    if (!result.success) {
-                      addNotification(`❌ Falha na publicação: ${result.error}`, 'error');
-                      unifiedEventTracker.track({
-                        type: 'editor_action',
-                        funnelId: funnelId || 'unknown',
-                        sessionId: `sess_${Date.now()}`,
-                        userId: 'editor-user',
-                        payload: { subType: 'publish_failed', error: result.error }
-                      });
-                    } else {
-                      addNotification(`✅ Publicado versão ${result.version}`, 'success');
-                      unifiedEventTracker.track({
-                        type: 'editor_action',
-                        funnelId: funnelId || 'unknown',
-                        sessionId: `sess_${Date.now()}`,
-                        userId: 'editor-user',
-                        payload: { subType: 'publish_success', version: result.version }
-                      });
-                    }
-                  } catch (err: any) {
-                    console.error('Erro ao publicar template', err);
-                    addNotification('❌ Erro inesperado na publicação', 'error');
-                  }
-                }}
-              >
-                <Cloud className="w-4 h-4 mr-2" /> Publicar
-              </Button>
             </div>
           </div>
         </div>
@@ -679,13 +583,12 @@ const QuizEditorMode: React.FC<QuizEditorModeProps> = ({
           onValueChange={(tab) => setState(prev => ({ ...prev, activeTab: tab as any }))}
           className="h-full flex flex-col"
         >
-          <TabsList className="grid grid-cols-6 w-full max-w-3xl mx-auto m-4">
+          <TabsList className="grid grid-cols-5 w-full max-w-2xl mx-auto m-4">
             <TabsTrigger value="editor">Editor</TabsTrigger>
             <TabsTrigger value="preview">Preview</TabsTrigger>
             <TabsTrigger value="properties">Propriedades</TabsTrigger>
             <TabsTrigger value="analytics">Analytics</TabsTrigger>
             <TabsTrigger value="performance">Performance</TabsTrigger>
-            <TabsTrigger value="scoring">Scoring</TabsTrigger>
           </TabsList>
 
           <div className="flex-1 overflow-hidden px-4 pb-4">
@@ -737,17 +640,28 @@ const QuizEditorMode: React.FC<QuizEditorModeProps> = ({
               />
             </TabsContent>
 
-            {/* Aba de Propriedades (Unificada) */}
+            {/* Aba de Propriedades */}
             <TabsContent value="properties" className="h-full m-0">
               <div className="space-y-6 h-full overflow-auto">
-                {currentQuestion ? (
-                  <QuizUnifiedPropertiesPanel
-                    question={currentQuestion}
-                    styles={state.styles}
-                    onQuestionChange={handleQuestionChange}
-                    onStylesChange={handleStylesChange}
-                  />
-                ) : (
+                {currentQuestion && (
+                  <>
+                    <QuizQuestionTypeEditor
+                      question={currentQuestion}
+                      onQuestionChange={handleQuestionChange}
+                    />
+
+                    <Separator />
+
+                    <QuizScoringSystem
+                      question={currentQuestion}
+                      styles={state.styles}
+                      onQuestionChange={handleQuestionChange}
+                      onStylesChange={handleStylesChange}
+                    />
+                  </>
+                )}
+
+                {!currentQuestion && (
                   <Card className="h-full flex items-center justify-center">
                     <CardContent className="text-center">
                       <Settings className="w-12 h-12 mx-auto mb-4 text-muted-foreground" />
@@ -803,8 +717,8 @@ const QuizEditorMode: React.FC<QuizEditorModeProps> = ({
                     <CardTitle className="flex items-center gap-2">
                       <Zap className="w-5 h-5" />
                       Métricas de Performance
-                      <Badge variant={perf.cacheHitRate > 0.8 ? "default" : "secondary"}>
-                        {perf.cacheHitRate > 0.8 ? "Otimizada" : "Monitorando"}
+                      <Badge variant={state.performanceMetrics.cacheHitRate > 0.8 ? "default" : "secondary"}>
+                        {state.performanceMetrics.cacheHitRate > 0.8 ? "Otimizada" : "Monitorando"}
                       </Badge>
                     </CardTitle>
                     <CardDescription>
@@ -815,25 +729,25 @@ const QuizEditorMode: React.FC<QuizEditorModeProps> = ({
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
                       <div className="text-center">
                         <div className="text-2xl font-bold text-blue-600">
-                          {Math.round(perf.renderTime)}ms
+                          {Math.round(state.performanceMetrics.renderTime)}ms
                         </div>
                         <div className="text-sm text-muted-foreground">Render Time</div>
                       </div>
                       <div className="text-center">
                         <div className="text-2xl font-bold text-green-600">
-                          {Math.round(perf.cacheHitRate * 100)}%
+                          {Math.round(state.performanceMetrics.cacheHitRate * 100)}%
                         </div>
                         <div className="text-sm text-muted-foreground">Cache Hit Rate</div>
                       </div>
                       <div className="text-center">
                         <div className="text-2xl font-bold text-purple-600">
-                          {perf.memoryUsage}MB
+                          {state.performanceMetrics.memoryUsage}MB
                         </div>
                         <div className="text-sm text-muted-foreground">Memory Usage</div>
                       </div>
                       <div className="text-center">
                         <div className="text-2xl font-bold text-orange-600">
-                          {perf.bundleSize}KB
+                          {state.performanceMetrics.bundleSize}KB
                         </div>
                         <div className="text-sm text-muted-foreground">Bundle Size</div>
                       </div>
@@ -843,9 +757,9 @@ const QuizEditorMode: React.FC<QuizEditorModeProps> = ({
                       <div>
                         <div className="flex justify-between text-sm mb-2">
                           <span>Performance Score</span>
-                          <span>{Math.round(perf.cacheHitRate * 100)}/100</span>
+                          <span>{Math.round(state.performanceMetrics.cacheHitRate * 100)}/100</span>
                         </div>
-                        <Progress value={perf.cacheHitRate * 100} className="h-2" />
+                        <Progress value={state.performanceMetrics.cacheHitRate * 100} className="h-2" />
                       </div>
 
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -903,15 +817,15 @@ const QuizEditorMode: React.FC<QuizEditorModeProps> = ({
                         <Button
                           size="sm"
                           variant="outline"
-                          disabled
+                          onClick={() => generateQuickReport()}
                         >
                           <Download className="w-4 h-4 mr-2" />
-                          Relatório (desativado)
+                          Relatório Performance
                         </Button>
                         <Button
                           size="sm"
                           variant="outline"
-                          disabled
+                          onClick={() => updatePerformanceMetrics()}
                         >
                           <Activity className="w-4 h-4 mr-2" />
                           Atualizar Métricas
@@ -920,69 +834,6 @@ const QuizEditorMode: React.FC<QuizEditorModeProps> = ({
                     </div>
                   </CardContent>
                 </Card>
-                {/* Resumo Global de Pontuação */}
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="text-sm flex items-center gap-2">
-                      <Target className="w-4 h-4" /> Resumo de Pontuação (Sessão Atual)
-                    </CardTitle>
-                    <CardDescription>Pontuação agregada por estilo e por questão (não persistida até salvar).</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    {state.questions.length === 0 ? (
-                      <p className="text-sm text-muted-foreground">Nenhuma questão carregada.</p>
-                    ) : (
-                      <div className="space-y-4">
-                        <div className="overflow-auto">
-                          <table className="w-full text-xs border">
-                            <thead>
-                              <tr className="bg-muted/30">
-                                <th className="text-left p-2">Questão</th>
-                                {state.styles.map(s => (
-                                  <th key={s.id} className="text-left p-2">{s.name}</th>
-                                ))}
-                                <th className="text-left p-2">Total</th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                              {state.questions.map(q => {
-                                const styleTotals: Record<string, number> = {};
-                                (q.answers || []).forEach((a: any) => {
-                                  Object.entries(a.stylePoints || {}).forEach(([sid, val]) => {
-                                    if (typeof val === 'number') {
-                                      styleTotals[sid] = (styleTotals[sid] || 0) + val;
-                                    }
-                                  });
-                                });
-                                const grand = Object.values(styleTotals).reduce((acc, v) => acc + v, 0);
-                                return (
-                                  <tr key={q.id} className="border-t">
-                                    <td className="p-2 font-medium whitespace-nowrap">{q.title?.slice(0, 40) || q.id}</td>
-                                    {state.styles.map(s => (
-                                      <td key={s.id} className="p-2">{styleTotals[s.id] || 0}</td>
-                                    ))}
-                                    <td className="p-2 font-semibold">{grand}</td>
-                                  </tr>
-                                );
-                              })}
-                            </tbody>
-                          </table>
-                        </div>
-                      </div>
-                    )}
-                  </CardContent>
-                </Card>
-              </div>
-            </TabsContent>
-
-            {/* Aba Global Scoring */}
-            <TabsContent value="scoring" className="h-full m-0">
-              <div className="h-full space-y-4 overflow-auto pb-6">
-                <QuizGlobalScoringEditor
-                  questions={state.questions}
-                  styles={state.styles}
-                  onQuestionsChange={(qs) => setState(prev => ({ ...prev, questions: qs, isDirty: true }))}
-                />
               </div>
             </TabsContent>
           </div>

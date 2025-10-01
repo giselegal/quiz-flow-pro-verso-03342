@@ -11,28 +11,18 @@ import fs from 'fs';
 import path from 'path';
 
 // Lista de padrões de módulos deprecated (parciais para detectar caminhos relativos ou alias)
-// Atenção: manter padrões do mais específico para o mais genérico.
 const DEPRECATED_PATTERNS = [
-    'monitoring/AnalyticsService',
-    'EnhancedUnifiedDataService',
+    'analyticsEngine',
     'realTimeAnalytics',
     'ActivatedAnalytics',
-    'analyticsEngine',
+    'EnhancedUnifiedDataService',
+    'monitoring/AnalyticsService',
     'AnalyticsService' // manter por último (evitar falso positivo em nomes compostos)
-];
-
-// Padrões que, se presentes na linha de import, representam uso permitido (adapters novos)
-const ADAPTER_ALLOW_PATTERNS = [
-    /compat\/analyticsEngineAdapter/,
-    /compat\/analyticsServiceAdapter/,
-    /compat\/enhancedUnifiedDataServiceAdapter/
 ];
 
 // Arquivos que podem conter imports legacy por motivo de compat (whitelist)
 const ALLOWLIST = new Set([
     'src/analytics/compat/legacyAnalyticsEngineBridge.ts',
-    'src/analytics/compat/analyticsEngineAdapter.ts',
-    'src/analytics/compat/analyticsServiceAdapter.ts',
     'src/analytics/UnifiedEventTracker.ts', // pode logar deprecation
     'src/analytics/UnifiedAnalyticsEngine.ts'
 ]);
@@ -55,8 +45,6 @@ async function main() {
                 if (/legacy-allow/.test(line)) continue;
                 const regex = new RegExp(pattern.replace(/[.*+?^${}()|[\]\\]/g, r => `\\${r}`));
                 if (regex.test(line)) {
-                    // Se linha referencia explicitamente um adapter permitido, ignora
-                    if (ADAPTER_ALLOW_PATTERNS.some(r => r.test(line))) continue;
                     violations.push({ file, line: line.trim(), pattern });
                 }
             }
@@ -64,13 +52,10 @@ async function main() {
     }
 
     if (violations.length) {
-        console.error('\n[Legacy Analytics Check] Foram encontrados imports proibidos de serviços legacy:\n');
+        console.error('\n[Legacy Analytics Check] Foram encontrados imports proibidos:\n');
         for (const v of violations) {
             console.error(`- ${v.file}: '${v.line}' (padrão: ${v.pattern})`);
         }
-        console.error('\nSubstitua por imports dos adapters quando aplicável:');
-        console.error("  - analyticsEngine  -> '@/analytics/compat/analyticsEngineAdapter' (named import)");
-        console.error("  - AnalyticsService -> '@/analytics/compat/analyticsServiceAdapter'");
         console.error('\nPara exceções temporárias adicione comentário // legacy-allow na linha específica (evite uso prolongado).');
         process.exit(1);
     } else {

@@ -4,8 +4,6 @@ import { FunnelMasterProvider } from '@/providers/FunnelMasterProvider';
 import { EditorProvider } from '@/components/editor/provider-alias';
 import { LegacyCompatibilityWrapper } from '@/core/contexts/LegacyCompatibilityWrapper';
 import { FunnelContext } from '@/core/contexts/FunnelContext';
-import { isEditorCoreV2Enabled } from '@/utils/editorFeatureFlags';
-import { EditorCoreProvider } from '@/context/EditorCoreProvider';
 
 /**
  * EditorRuntimeProviders (Fase 2 - CONSOLIDADO)
@@ -52,9 +50,7 @@ export const EditorRuntimeProviders: React.FC<EditorRuntimeProvidersProps> = ({
     debugMode = false,
     supabaseConfig = { enabled: false },
 }) => {
-    const v2 = isEditorCoreV2Enabled();
-
-    const coreTree = (
+    return (
         <FunnelMasterProvider
             funnelId={funnelId}
             debugMode={debugMode}
@@ -75,17 +71,6 @@ export const EditorRuntimeProviders: React.FC<EditorRuntimeProvidersProps> = ({
                 </LegacyCompatibilityWrapper>
             </EditorProvider>
         </FunnelMasterProvider>
-    );
-
-    if (!v2) return coreTree;
-
-    // V2: Encapsula cadeia dentro do EditorCoreProvider para futura migração de estado.
-    // TODO (Fase 2): Substituir ordem: <EditorCoreProvider><FunnelMasterProvider/><EditorProvider/></EditorCoreProvider>
-    // após mover estado primário. Avaliar impactos em hooks existentes.
-    return (
-        <EditorCoreProvider funnelId={funnelId}>
-            {coreTree}
-        </EditorCoreProvider>
     );
 };
 

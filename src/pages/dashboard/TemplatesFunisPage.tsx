@@ -21,7 +21,7 @@ const TemplatesFunisPage: React.FC = () => {
         AVAILABLE_TEMPLATES,
         totalTemplates: AVAILABLE_TEMPLATES.length,
         activeTemplates: TemplateService.getActiveTemplates(),
-        quiz21Template: TemplateService.getTemplate('quiz-estilo-21-steps')
+        quiz21Template: TemplateService.getTemplate('quiz21StepsComplete')
     });
 
     const filteredTemplates = React.useMemo(() => {
@@ -87,7 +87,7 @@ const TemplatesFunisPage: React.FC = () => {
                     </div>
                     <div>
                         <strong>Quiz21 Encontrado:</strong> {
-                            TemplateService.getTemplate('quiz-estilo-21-steps') ? '✅' : '❌'
+                            TemplateService.getTemplate('quiz21StepsComplete') ? '✅' : '❌'
                         }
                     </div>
                     <div>

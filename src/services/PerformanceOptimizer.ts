@@ -5,8 +5,7 @@
  * lazy loading e otimizações automáticas para o quiz-editor.
  */
 
-// Migração: substituir uso direto de AnalyticsService pelo adapter unificado
-import { analyticsServiceAdapter as analyticsService } from '@/analytics/compat/analyticsServiceAdapter';
+import { analyticsService } from '@/services/AnalyticsService';
 import { QUIZ_STEPS, getStepById } from '@/data/quizSteps';
 import { styleConfigGisele } from '@/data/styles';
 
@@ -130,15 +129,11 @@ export class PerformanceOptimizer {
             this.updateCacheMetrics();
 
             // Analytics tracking
-            analyticsService.trackEvent({
-                funnelId: 'global-performance',
-                type: 'performance_metric',
-                payload: {
-                    action: 'cache_set',
-                    key,
-                    size,
-                    cacheSize: this.cache.size
-                }
+            analyticsService.trackEvent('performance', {
+                action: 'cache_set',
+                key,
+                size,
+                cacheSize: this.cache.size
             });
 
         } catch (error) {
@@ -175,14 +170,10 @@ export class PerformanceOptimizer {
             : entry.data;
 
         // Analytics tracking
-        analyticsService.trackEvent({
-            funnelId: 'global-performance',
-            type: 'performance_metric',
-            payload: {
-                action: 'cache_hit',
-                key,
-                accessCount: entry.accessCount
-            }
+        analyticsService.trackEvent('performance', {
+            action: 'cache_hit',
+            key,
+            accessCount: entry.accessCount
         });
 
         return data as T;
@@ -291,14 +282,10 @@ export class PerformanceOptimizer {
             }
 
             // Analytics tracking
-            analyticsService.trackEvent({
-                funnelId: 'global-performance',
-                type: 'performance_metric',
-                payload: {
-                    action: 'lazy_load',
-                    lazyType: type,
-                    elementId: element.id
-                }
+            analyticsService.trackEvent('performance', {
+                action: 'lazy_load',
+                type,
+                elementId: element.id
             });
 
         } catch (error) {
@@ -323,25 +310,9 @@ export class PerformanceOptimizer {
     private async loadLazyComponent(element: HTMLElement): Promise<void> {
         const componentName = element.getAttribute('data-component');
         if (componentName) {
-            // Carregamento dinâmico de componente
-            // IMPORTANTE: O plugin vite:dynamic-import-vars exige que a parte estática contenha a extensão.
-            // Exemplo válido: import(`./foo/${bar}.js`)
-            // Portanto adicionamos ".tsx" ao final garantindo que o bundler consiga gerar os glob patterns.
-            try {
-                const module = await import(`@/components/${componentName}.tsx`);
-                // Opcional: se o componente tiver export default podemos anexar ao elemento
-                const Exported: any = module.default || module[componentName];
-                if (Exported) {
-                    // Estratégia simples: criar um container e renderizar via React apenas quando disponível
-                    // Para evitar dependência direta aqui, emitimos um evento customizado que outra parte do app pode escutar
-                    const event = new CustomEvent('lazy-component-loaded', {
-                        detail: { element, component: Exported, name: componentName }
-                    });
-                    window.dispatchEvent(event);
-                }
-            } catch (err) {
-                console.warn(`⚠️ Falha ao carregar componente lazy: ${componentName}`, err);
-            }
+            // Simular carregamento dinâmico de componente
+            const component = await import(`@/components/${componentName}`);
+            // Lógica de renderização do componente
         }
     }
 
@@ -424,13 +395,9 @@ export class PerformanceOptimizer {
         this.metrics.renderTime = this.measureRenderTime();
 
         // Track para analytics
-        analyticsService.trackEvent({
-            funnelId: 'global-performance',
-            type: 'performance_metric',
-            payload: {
-                action: 'metrics_update',
-                metrics: this.metrics
-            }
+        analyticsService.trackEvent('performance', {
+            action: 'metrics_update',
+            metrics: this.metrics
         });
     }
 
@@ -493,13 +460,9 @@ export class PerformanceOptimizer {
                         await rule.action(this);
                         console.log(`✅ Executed optimization: ${rule.name}`);
 
-                        analyticsService.trackEvent({
-                            funnelId: 'global-performance',
-                            type: 'performance_metric',
-                            payload: {
-                                action: 'optimization_applied',
-                                rule: rule.id
-                            }
+                        analyticsService.trackEvent('performance', {
+                            action: 'optimization_applied',
+                            rule: rule.id
                         });
                     } catch (error) {
                         console.warn(`⚠️ Optimization failed: ${rule.name}`, error);
@@ -532,7 +495,7 @@ export class PerformanceOptimizer {
         if (this.cache.size === 0) return;
 
         const entries = Array.from(this.cache.entries())
-            .map(([key, entry]) => ({ ...entry, key }))
+            .map(([key, entry]) => ({ key, ...entry }))
             .sort((a, b) => {
                 // Estratégia adaptativa de evicção
                 if (this.cacheConfig.strategy === 'lru') {

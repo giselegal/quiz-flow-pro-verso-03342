@@ -6,11 +6,8 @@
  */
 
 import { Block } from '@/types/editor';
-import { QUIZ_STEPS, STEP_ORDER } from '@/data/quizSteps';
-import { toStepKey } from '@/components/editor/navigation/stepMapping';
+import { QuizStep } from '@/data/quizSteps';
 import { QuizQuestion } from '@/types/quiz';
-import { QuizEditorPersistenceService } from '@/services/QuizEditorPersistenceService';
-import { QUIZ_EDITOR_VERSION, QuizTemplateData } from '@/types/quizEditor';
 
 // Tipo simples para QuizAnswer no contexto do adapter
 export interface QuizAnswer {
@@ -30,8 +27,6 @@ export interface EditorQuizState {
   description: string;
   questions: QuizQuestion[];
   styles: any[];
-  stepBlocks: Record<string, Block[]>; // 🔄 blocos por step (sempre keys normalizadas step-<n>)
-  scoringMatrix?: Record<string, Record<string, Record<string, number>>>; // matriz agregada
   isDirty: boolean;
   lastSaved?: string;
   version: string;
@@ -74,66 +69,26 @@ export class QuizToEditorAdapter {
     console.log('🎯 QuizToEditorAdapter inicializado');
   }
 
-  // =============================================================================
-  // 🔁 NOVO CONTRATO SIMPLIFICADO (Fase Arquitetura Ideal)
-  // =============================================================================
-  /**
-   * API estática de conversão usada pela `QuizEditorIntegratedPage`.
-   * Gera blocos normalizados (step-<n>) e metadados.
-   */
-  static async convert(funnelId?: string) {
-    const adapter = new QuizToEditorAdapter();
-    const state = await adapter.convertQuizToEditor({ funnelId });
-
-    const totalSteps = Object.keys(state.stepBlocks).length;
-    const quizMetadata = {
-      questions: state.questions.length,
-      styles: state.styles.length,
-      version: state.version,
-      funnelId: funnelId || state.id,
-    };
-    return {
-      stepBlocks: state.stepBlocks,
-      totalSteps,
-      quizMetadata,
-    };
-  }
-
   /**
    * 🔄 Converter quiz para estado do editor
    */
-  async convertQuizToEditor(quizData?: any | { funnelId?: string; templateId?: string }): Promise<EditorQuizState> {
+  async convertQuizToEditor(quizData: any): Promise<EditorQuizState> {
     try {
       console.log('🔄 Convertendo quiz para editor...');
-      // 1) Se nenhum objeto for passado, derivar do runtime canonical (QUIZ_STEPS)
-      let source: any = quizData;
-      if (!source || (source && !Array.isArray(source?.questions))) {
-        source = this.buildFromCanonical();
-      }
-
-      // 2) Carregar scoringMatrix já persistida (se existir)
-      let scoringMatrix: EditorQuizState['scoringMatrix'];
-      const persisted = await QuizEditorPersistenceService.load(source.id || 'quiz-estilo');
-      if (persisted?.scoringMatrix) scoringMatrix = persisted.scoringMatrix;
-
-      // 3) Gerar stepBlocks normalizados (step-1..n) com blocos mínimos já prontos
-      const stepBlocks: Record<string, Block[]> = this.generateNormalizedStepBlocks();
 
       const editorState: EditorQuizState = {
-        id: source.id || `quiz-${Date.now()}`,
-        name: source.name || 'Quiz Personalizado',
-        description: source.description || '',
-        questions: this.extractQuestions(source),
-        styles: this.extractStyles(source),
-        stepBlocks,
-        scoringMatrix,
+        id: quizData.id || `quiz-${Date.now()}`,
+        name: quizData.name || 'Quiz Personalizado',
+        description: quizData.description || '',
+        questions: this.extractQuestions(quizData),
+        styles: this.extractStyles(quizData),
         isDirty: false,
-        version: source.version || QUIZ_EDITOR_VERSION
+        version: quizData.version || '1.0.0'
       };
 
       this.currentState = editorState;
       console.log('✅ Conversão concluída:', editorState);
-
+      
       return editorState;
     } catch (error) {
       console.error('❌ Erro na conversão:', error);
@@ -148,7 +103,18 @@ export class QuizToEditorAdapter {
     try {
       console.log('🔄 Convertendo editor para quiz...');
 
-      const quizData = this.buildCanonicalPayload(editorState);
+      const quizData = {
+        id: editorState.id,
+        name: editorState.name,
+        description: editorState.description,
+        questions: editorState.questions,
+        styles: editorState.styles,
+        version: editorState.version,
+        metadata: {
+          lastModified: new Date().toISOString(),
+          source: 'editor'
+        }
+      };
 
       console.log('✅ Conversão concluída:', quizData);
       return quizData;
@@ -156,25 +122,6 @@ export class QuizToEditorAdapter {
       console.error('❌ Erro na conversão:', error);
       throw error;
     }
-  }
-
-  /**
-   * 🧱 Monta payload canônico para publicação / persistência remota
-   */
-  buildCanonicalPayload(editorState: EditorQuizState) {
-    return {
-      id: editorState.id,
-      name: editorState.name,
-      description: editorState.description,
-      questions: editorState.questions,
-      styles: editorState.styles,
-      scoringMatrix: editorState.scoringMatrix,
-      version: editorState.version,
-      metadata: {
-        lastModified: new Date().toISOString(),
-        source: 'editor',
-      }
-    };
   }
 
   /**
@@ -228,116 +175,12 @@ export class QuizToEditorAdapter {
   }
 
   /**
-   * 📦 Construir estrutura base a partir de QUIZ_STEPS canonical
-   */
-  private buildFromCanonical() {
-    const questions: any[] = [];
-    const styles: any[] = []; // Estilos podem ser resolvidos em outra camada; manter vazio por ora
-    STEP_ORDER.forEach((stepId, index) => {
-      const step: any = (QUIZ_STEPS as any)[stepId];
-      if (!step) return;
-      if (['question', 'strategic-question', 'offer', 'result', 'intro', 'transition', 'transition-result'].includes(step.type)) {
-        questions.push({
-          id: stepId,
-          type: step.type === 'question' ? 'multiple-choice' : step.type,
-          title: step.questionText || step.title || `Step ${index + 1}`,
-          description: step.text || '',
-          required: step.requiredSelections ? step.requiredSelections > 0 : false,
-          answers: (step.options || []).map((opt: any) => ({
-            id: opt.id,
-            text: opt.text,
-            stylePoints: {},
-          })),
-          order: index + 1,
-          variants: step.offerMap ? Object.entries(step.offerMap).map(([matchValue, v]: any) => ({
-            id: matchValue,
-            matchValue,
-            title: v.title,
-            description: v.description,
-            buttonText: v.buttonText,
-            testimonial: v.testimonial
-          })) : undefined
-        });
-      }
-    });
-    return { id: 'quiz-estilo', name: 'Quiz Estilo Pessoal', questions, styles, version: QUIZ_EDITOR_VERSION };
-  }
-
-  /**
-   * 🔧 Gera blocos padronizados por etapa a partir do canonical (mínimo viável).
-   * Cada etapa recebe (quando aplicável) um bloco representativo para facilitar
-   * edição imediata no EditorProvider.
-   */
-  private generateNormalizedStepBlocks(): Record<string, Block[]> {
-    const blocks: Record<string, Block[]> = {};
-
-    STEP_ORDER.forEach((canonicalStepId, index) => {
-      const quizStep: any = (QUIZ_STEPS as any)[canonicalStepId];
-      const stepNumber = index + 1;
-      const stepKey = toStepKey(stepNumber);
-
-      // Determinar tipo de bloco principal
-      const blockType = this.mapQuizStepTypeToBlockType(quizStep?.type);
-      const baseTitle = quizStep?.title || quizStep?.questionText || `Etapa ${stepNumber}`;
-      const baseDescription = quizStep?.text || '';
-
-      // Para etapas sem conteúdo editável (ex: transition) podemos deixar vazio
-      if (blockType) {
-        const block: Block = {
-          id: `${stepKey}-primary`,
-          type: blockType,
-          order: 0,
-          properties: {
-            question: quizStep?.questionText || quizStep?.title,
-            options: (quizStep?.options || []).map((o: any) => ({ id: o.id, text: o.text })),
-            required: quizStep?.requiredSelections ? quizStep.requiredSelections > 0 : true,
-            stepNumber,
-            canonicalId: canonicalStepId,
-            quizType: quizStep?.type,
-          },
-          content: {
-            title: baseTitle,
-            description: baseDescription,
-          },
-        } as any;
-        blocks[stepKey] = [block];
-      } else {
-        blocks[stepKey] = [];
-      }
-    });
-
-    return blocks;
-  }
-
-  /**
-   * Mapeia o tipo de step de quiz para um BlockType representativo.
-   */
-  private mapQuizStepTypeToBlockType(stepType?: string): string | null {
-    switch (stepType) {
-      case 'intro':
-        return 'quiz-intro-header';
-      case 'question':
-      case 'strategic-question':
-        return 'quiz-question-inline';
-      case 'transition':
-      case 'transition-result':
-        return 'quiz-transition-step';
-      case 'result':
-        return 'quiz-result-inline';
-      case 'offer':
-        return 'quiz-offer-cta-inline';
-      default:
-        return null;
-    }
-  }
-
-  /**
    * 💾 Salvar alterações no quiz
    */
   async saveChangesToQuiz(editorState: EditorQuizState): Promise<SyncResult> {
     try {
       console.log('💾 Salvando alterações do editor...');
-
+      
       // Marcar como limpo
       this.isDirty = false;
       this.currentState = {
@@ -345,23 +188,23 @@ export class QuizToEditorAdapter {
         isDirty: false,
         lastSaved: new Date().toISOString()
       };
-
+      
       // Notificar listeners
       this.notifyListeners({
         type: 'data-saved',
         payload: this.currentState,
         timestamp: new Date().toISOString()
       });
-
-      return {
+      
+        return {
         success: true,
         data: this.currentState,
         timestamp: new Date().toISOString()
       };
-
+      
     } catch (error) {
       console.error('❌ Erro ao salvar:', error);
-      return {
+        return {
         success: false,
         error: error instanceof Error ? error.message : 'Erro desconhecido',
         timestamp: new Date().toISOString()
@@ -376,14 +219,14 @@ export class QuizToEditorAdapter {
     if (this.autoSaveInterval) {
       clearInterval(this.autoSaveInterval);
     }
-
+    
     this.autoSaveInterval = setInterval(() => {
       if (this.isDirty && this.currentState) {
         console.log('⏰ Auto-save triggered');
         this.saveChangesToQuiz(this.currentState);
       }
     }, intervalMs);
-
+    
     console.log(`⏰ Auto-save iniciado (${intervalMs}ms)`);
   }
 
@@ -431,7 +274,7 @@ export class QuizToEditorAdapter {
   markDirty(state: EditorQuizState): void {
     this.isDirty = true;
     this.currentState = { ...state, isDirty: true };
-
+    
     this.notifyListeners({
       type: 'question-updated',
       payload: state,
@@ -444,36 +287,36 @@ export class QuizToEditorAdapter {
    */
   static validateQuizData(data: any): boolean {
     if (!data || typeof data !== 'object') return false;
-
+    
     const required = ['questions', 'styles'];
     return required.every(key => key in data && Array.isArray(data[key]));
-  }
+}
 
   /**
    * 🎯 Obter configuração específica para uma etapa
    */
   static async getStepConfiguration(stepNumber: number): Promise<QuizStepData | null> {
-    const stepId = `step-${stepNumber}`;
+  const stepId = `step-${stepNumber}`;
 
-    // Determinar tipo da etapa baseado no número
-    let type: QuizStepData['type'];
+  // Determinar tipo da etapa baseado no número
+  let type: QuizStepData['type'];
     if (stepNumber === 1) type = 'intro';
     else if (stepNumber >= 2 && stepNumber <= 11) type = 'question';
-    else if (stepNumber === 12 || stepNumber === 19) type = 'transition';
-    else if (stepNumber >= 13 && stepNumber <= 18) type = 'strategic-question';
-    else if (stepNumber === 20) type = 'result';
-    else if (stepNumber === 21) type = 'offer';
-    else type = 'question';
+else if (stepNumber === 12 || stepNumber === 19) type = 'transition';
+else if (stepNumber >= 13 && stepNumber <= 18) type = 'strategic-question';
+else if (stepNumber === 20) type = 'result';
+else if (stepNumber === 21) type = 'offer';
+else type = 'question';
 
-    return {
-      type,
-      stepNumber,
+return {
+  type,
+  stepNumber,
       blocks: [], // TODO: Implementar geração de blocos
-      metadata: {
-        isQuizStep: true,
-        originalQuizStep: stepNumber
-      }
-    };
+  metadata: {
+    isQuizStep: true,
+    originalQuizStep: stepNumber
+  }
+};
   }
 
 }

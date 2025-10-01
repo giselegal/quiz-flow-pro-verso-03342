@@ -19,8 +19,9 @@ import {
 } from 'lucide-react';
 
 // Providers necessários
-import EditorRuntimeProviders from '@/context/EditorRuntimeProviders';
-import { useEditor } from '@/components/editor/provider-alias';
+import { EditorProvider } from '@/components/editor/provider-alias';
+import { FunnelMasterProvider } from '@/providers/FunnelMasterProvider';
+import UnifiedCRUDProvider from '@/context/UnifiedCRUDProvider';
 
 // Components especializados
 import QuizEditorMode from '@/components/editor/modes/QuizEditorMode';
@@ -66,12 +67,9 @@ const QuizEditorIntegratedPageCore: React.FC<QuizEditorIntegratedPageProps> = ({
   const templateLoader = useTemplateLoader();
   const { addNotification } = useNotification();
 
-  const { actions } = useEditor();
-
-  // Carregar dados do quiz na inicialização apenas uma vez
+  // Carregar dados do quiz na inicialização
   useEffect(() => {
     loadQuizData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const loadQuizData = useCallback(async () => {
@@ -81,19 +79,25 @@ const QuizEditorIntegratedPageCore: React.FC<QuizEditorIntegratedPageProps> = ({
       console.log('🎯 Carregando dados do quiz para edição...');
 
       // Converter quiz para formato do editor
-      const { stepBlocks, totalSteps, quizMetadata } = await QuizToEditorAdapter.convert(funnelId);
+      const editorData = await QuizToEditorAdapter.convertQuizToEditor(funnelId);
 
-      // Aplicar blocos diretamente ao EditorProvider (bulk replace)
-      actions.bulkReplaceStepBlocks?.(stepBlocks, { resetValidation: true, setCurrentStep: 1 });
+      if (!QuizToEditorAdapter.validateQuizData(editorData)) {
+        throw new Error('Dados do quiz inválidos após conversão');
+      }
 
-      setState(prev => ({ ...prev, isLoaded: true, totalSteps, quizMetadata }));
+      setState(prev => ({
+        ...prev,
+        isLoaded: true,
+        totalSteps: editorData.totalSteps,
+        quizMetadata: editorData.quizMetadata
+      }));
 
       addNotification('✅ Quiz carregado com sucesso no editor', 'success');
 
       console.log('✅ Quiz carregado:', {
-        totalSteps,
-        stepsConverted: Object.keys(stepBlocks).length,
-        metadata: quizMetadata
+        totalSteps: editorData.totalSteps,
+        stepsConverted: Object.keys(editorData.stepBlocks).length,
+        metadata: editorData.quizMetadata
       });
 
     } catch (error) {
@@ -266,19 +270,25 @@ const QuizEditorIntegratedPageCore: React.FC<QuizEditorIntegratedPageProps> = ({
 };
 
 // Wrapped component with providers
-const QuizEditorIntegratedPage: React.FC<QuizEditorIntegratedPageProps> = (props) => (
-  <EditorRuntimeProviders funnelId={props.funnelId} debugMode={false}>
-    <Suspense fallback={
-      <div className="flex items-center justify-center h-screen">
-        <div className="text-center">
-          <div className="w-12 h-12 mx-auto mb-4 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
-          <p className="text-muted-foreground">Carregando Quiz Editor...</p>
-        </div>
-      </div>
-    }>
-      <QuizEditorIntegratedPageCore {...props} />
-    </Suspense>
-  </EditorRuntimeProviders>
-);
+const QuizEditorIntegratedPage: React.FC<QuizEditorIntegratedPageProps> = (props) => {
+  return (
+    <UnifiedCRUDProvider>
+      <FunnelMasterProvider>
+        <EditorProvider>
+          <Suspense fallback={
+            <div className="flex items-center justify-center h-screen">
+              <div className="text-center">
+                <div className="w-12 h-12 mx-auto mb-4 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+                <p className="text-muted-foreground">Carregando Quiz Editor...</p>
+              </div>
+            </div>
+          }>
+            <QuizEditorIntegratedPageCore {...props} />
+          </Suspense>
+        </EditorProvider>
+      </FunnelMasterProvider>
+    </UnifiedCRUDProvider>
+  );
+};
 
 export default QuizEditorIntegratedPage;

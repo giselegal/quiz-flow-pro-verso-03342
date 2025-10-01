@@ -29,14 +29,10 @@ export interface UserResponse {
 
 // Legacy compatibility
 export interface QuizAnswer {
-  id?: string; // Answer ID
   questionId: string;
   selectedOptions: string[];
   value: string | string[];
   timestamp: string;
-  text?: string; // Answer text
-  description?: string; // Answer description
-  stylePoints?: Record<string, number>; // Style scoring
   optionId?: string; // Legacy compatibility
   weight?: number; // Legacy compatibility
   weights?: Record<string, number>; // Legacy compatibility
@@ -57,11 +53,9 @@ export interface QuizQuestion {
   title: string;
   text?: string; // Legacy compatibility
   question?: string; // Legacy compatibility
-  subtitle?: string; // Question subtitle
   description?: string;
   required: boolean;
   options?: QuizOption[];
-  answers?: QuizAnswer[]; // Question answers
   multiSelect?: number;
   order?: number;
   validation?: {
@@ -72,14 +66,14 @@ export interface QuizQuestion {
 }
 
 // Define StyleType as union of style string literals
-export type StyleType =
-  | 'natural'
-  | 'classico'
-  | 'contemporâneo'
-  | 'elegante'
-  | 'romântico'
-  | 'sexy'
-  | 'dramático'
+export type StyleType = 
+  | 'natural' 
+  | 'classico' 
+  | 'contemporâneo' 
+  | 'elegante' 
+  | 'romântico' 
+  | 'sexy' 
+  | 'dramático' 
   | 'criativo';
 
 export interface StyleResult {
@@ -90,7 +84,7 @@ export interface StyleResult {
   score: number;
   characteristics: string[];
   recommendations: string[];
-  colors?: string[]; // Tornado opcional para alinhar com base STYLE_DEFINITIONS
+  colors: string[];
   images: string[];
   imageUrl?: string; // Legacy compatibility
   guideImageUrl?: string; // Legacy compatibility
@@ -104,7 +98,7 @@ export interface StyleResult {
 }
 
 // Legacy compatibility export
-export interface Style extends StyleResult { }
+export interface Style extends StyleResult {}
 export type StyleTypeCompat = string;
 export type QuizComponentStyle = string;
 
@@ -144,15 +138,4 @@ export type BlockType = string | {
 };
 
 // Export ComputedResult for backward compatibility
-export interface ComputedResult extends QuizResult { }
-
-// Export QuizStyle and QuizState for backward compatibility
-export type QuizStyle = StyleType;
-export interface QuizState {
-  currentStep: number;
-  currentStepId: string;
-  answers: Record<string, any>;
-  scores: Record<string, number>;
-  isCompleted: boolean;
-  completedAt?: string;
-}
+export interface ComputedResult extends QuizResult {}

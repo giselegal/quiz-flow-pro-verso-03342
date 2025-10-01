@@ -1,10 +1,3 @@
-/**
- * DEPRECATED ComponentsSidebar (catálogo estático grande)
- * ------------------------------------------------------
- * Preferir: src/components/editor/sidebars/ComponentsSidebar.tsx (versão com DnD e grouping)
- * e/ou components/ComponentsSidebar.tsx (registry-driven minimal) apenas para casos isolados.
- * Mantido temporariamente para telas legado e Step20 extras.
- */
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';

@@ -14,7 +14,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { quizPageIntegrationService, QuizPageFunnel, QuizPageComponent } from '@/services/QuizPageIntegrationService';
 import { versioningService } from '@/services/VersioningService';
 import { historyManager } from '@/services/HistoryManager';
-import { unifiedEventTracker } from '@/analytics/UnifiedEventTracker';
+import { analyticsService } from '@/services/AnalyticsService';
 
 export interface UseQuizPageEditorReturn {
   // Estado
@@ -23,22 +23,22 @@ export interface UseQuizPageEditorReturn {
   isLoading: boolean;
   isSaving: boolean;
   error: string | null;
-
+  
   // Ações
   loadFunnel: (funnelId: string) => Promise<void>;
   saveFunnel: () => Promise<void>;
   publishFunnel: () => Promise<void>;
   updateComponent: (componentId: string, updates: Partial<QuizPageComponent>) => Promise<void>;
-
+  
   // Versões
   versions: any[];
   createVersion: (name: string, description: string) => Promise<void>;
   restoreVersion: (versionId: string) => Promise<void>;
-
+  
   // Analytics
   analytics: any;
   refreshAnalytics: () => Promise<void>;
-
+  
   // Histórico
   history: any[];
   refreshHistory: () => Promise<void>;
@@ -59,7 +59,7 @@ export function useQuizPageEditor(funnelId?: string): UseQuizPageEditorReturn {
     try {
       setIsLoading(true);
       setError(null);
-
+      
       const quizFunnel = await quizPageIntegrationService.loadQuizFunnel(id);
       if (!quizFunnel) {
         // Criar funil padrão se não existir
@@ -81,26 +81,26 @@ export function useQuizPageEditor(funnelId?: string): UseQuizPageEditorReturn {
   // Salvar funil
   const saveFunnel = useCallback(async () => {
     if (!funnel) return;
-
+    
     try {
       setIsSaving(true);
       setError(null);
-
+      
       const updatedFunnel = {
         ...funnel,
         components,
         updatedAt: new Date().toISOString()
       };
-
+      
       await quizPageIntegrationService.saveQuizFunnel(updatedFunnel);
       setFunnel(updatedFunnel);
-
+      
       // Rastrear mudança
       await historyManager.trackCRUDChange('update', 'funnel', funnel.id, {
         name: funnel.name,
         components: components.length
       });
-
+      
     } catch (err) {
       console.error('❌ Erro ao salvar funil:', err);
       setError(err instanceof Error ? err.message : 'Erro ao salvar');
@@ -112,13 +112,13 @@ export function useQuizPageEditor(funnelId?: string): UseQuizPageEditorReturn {
   // Publicar funil
   const publishFunnel = useCallback(async () => {
     if (!funnel) return;
-
+    
     try {
       setIsSaving(true);
       setError(null);
-
+      
       await quizPageIntegrationService.publishQuizFunnel(funnel.id);
-
+      
       // Atualizar estado local
       const updatedFunnel = {
         ...funnel,
@@ -126,29 +126,22 @@ export function useQuizPageEditor(funnelId?: string): UseQuizPageEditorReturn {
         publishedAt: new Date().toISOString(),
         publishedVersion: funnel.version
       };
-
+      
       setFunnel(updatedFunnel);
-
+      
       // Rastrear publicação
       await historyManager.trackCRUDChange('publish', 'funnel', funnel.id, {
         name: funnel.name,
         version: funnel.version
       });
-
+      
       // Analytics
-      unifiedEventTracker.track({
-        type: 'conversion',
+      await analyticsService.trackEvent('funnel_published', {
         funnelId: funnel.id,
-        sessionId: 'editor-session',
-        userId: undefined,
-        payload: {
-          event: 'funnel_published',
-          funnelType: 'quiz',
-          version: funnel.version
-        },
-        context: { source: 'quiz-page-editor' }
+        type: 'quiz',
+        version: funnel.version
       });
-
+      
     } catch (err) {
       console.error('❌ Erro ao publicar funil:', err);
       setError(err instanceof Error ? err.message : 'Erro ao publicar');
@@ -160,25 +153,25 @@ export function useQuizPageEditor(funnelId?: string): UseQuizPageEditorReturn {
   // Atualizar componente
   const updateComponent = useCallback(async (componentId: string, updates: Partial<QuizPageComponent>) => {
     if (!funnel) return;
-
+    
     try {
       setError(null);
-
+      
       await quizPageIntegrationService.updateComponent(funnel.id, componentId, updates);
-
+      
       // Atualizar estado local
-      const updatedComponents = components.map(comp =>
+      const updatedComponents = components.map(comp => 
         comp.id === componentId ? { ...comp, ...updates } : comp
       );
-
+      
       setComponents(updatedComponents);
-
+      
       // Rastrear mudança
       await historyManager.trackCRUDChange('update', 'component', componentId, {
         funnelId: funnel.id,
         componentType: updates.type || 'unknown'
       });
-
+      
     } catch (err) {
       console.error('❌ Erro ao atualizar componente:', err);
       setError(err instanceof Error ? err.message : 'Erro ao atualizar componente');
@@ -188,22 +181,22 @@ export function useQuizPageEditor(funnelId?: string): UseQuizPageEditorReturn {
   // Criar versão
   const createVersion = useCallback(async (name: string, description: string) => {
     if (!funnel) return;
-
+    
     try {
       setError(null);
-
+      
       await versioningService.createSnapshot(funnel, 'manual', description);
-
+      
       // Recarregar versões
       const funnelVersions = await versioningService.getVersions(funnel.id);
       setVersions(funnelVersions);
-
+      
       // Rastrear criação de versão
       await historyManager.trackCRUDChange('create', 'version', funnel.id, {
         name,
         description
       });
-
+      
     } catch (err) {
       console.error('❌ Erro ao criar versão:', err);
       setError(err instanceof Error ? err.message : 'Erro ao criar versão');
@@ -213,29 +206,29 @@ export function useQuizPageEditor(funnelId?: string): UseQuizPageEditorReturn {
   // Restaurar versão
   const restoreVersion = useCallback(async (versionId: string) => {
     if (!funnel) return;
-
+    
     try {
       setError(null);
-
+      
       const version = await versioningService.getVersion(funnel.id, versionId);
       if (!version) {
         throw new Error('Versão não encontrada');
       }
-
+      
       // Restaurar funil
       const restoredFunnel = version.data as QuizPageFunnel;
       setFunnel(restoredFunnel);
       setComponents(restoredFunnel.components);
-
+      
       // Salvar versão restaurada
       await quizPageIntegrationService.saveQuizFunnel(restoredFunnel);
-
+      
       // Rastrear restauração
       await historyManager.trackCRUDChange('restore', 'version', versionId, {
         funnelId: funnel.id,
         version: version.version
       });
-
+      
     } catch (err) {
       console.error('❌ Erro ao restaurar versão:', err);
       setError(err instanceof Error ? err.message : 'Erro ao restaurar versão');
@@ -245,7 +238,7 @@ export function useQuizPageEditor(funnelId?: string): UseQuizPageEditorReturn {
   // Carregar versões
   const loadVersions = useCallback(async () => {
     if (!funnel) return;
-
+    
     try {
       const funnelVersions = await versioningService.getVersions(funnel.id);
       setVersions(funnelVersions);
@@ -257,7 +250,7 @@ export function useQuizPageEditor(funnelId?: string): UseQuizPageEditorReturn {
   // Carregar analytics
   const refreshAnalytics = useCallback(async () => {
     if (!funnel) return;
-
+    
     try {
       const funnelAnalytics = await quizPageIntegrationService.getFunnelAnalytics(funnel.id);
       setAnalytics(funnelAnalytics);
@@ -269,7 +262,7 @@ export function useQuizPageEditor(funnelId?: string): UseQuizPageEditorReturn {
   // Carregar histórico
   const refreshHistory = useCallback(async () => {
     if (!funnel) return;
-
+    
     try {
       const funnelHistory = await historyManager.getHistory(funnel.id);
       setHistory(funnelHistory);
@@ -300,22 +293,22 @@ export function useQuizPageEditor(funnelId?: string): UseQuizPageEditorReturn {
     isLoading,
     isSaving,
     error,
-
+    
     // Ações
     loadFunnel,
     saveFunnel,
     publishFunnel,
     updateComponent,
-
+    
     // Versões
     versions,
     createVersion,
     restoreVersion,
-
+    
     // Analytics
     analytics,
     refreshAnalytics,
-
+    
     // Histórico
     history,
     refreshHistory

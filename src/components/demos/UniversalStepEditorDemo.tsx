@@ -6,8 +6,7 @@
  */
 
 import React from 'react';
-// Após migração: usar somente ModernUnifiedEditor
-import ModernUnifiedEditor from '@/pages/editor/ModernUnifiedEditor';
+import { UniversalStepEditor } from '@/components/editor/universal/UniversalStepEditor';
 import { useUniversalStepEditorSimple } from '@/hooks/useUniversalStepEditor.simple';
 
 // ============================================================================
@@ -25,7 +24,7 @@ export const UniversalStepEditorDemo: React.FC = () => {
         loadStep,
         saveStep
     } = useUniversalStepEditorSimple();
-
+    
     // Remove unused variables
     const editorState = {
         isLoading,
@@ -35,7 +34,7 @@ export const UniversalStepEditorDemo: React.FC = () => {
         error: null as Error | null,
         funnelStep: { components: [] }
     };
-
+    
     const editorActions = {
         goToStep: (stepId: string) => loadStep(stepId),
         saveStep: () => saveStep('current-step', {}),
@@ -229,9 +228,33 @@ export const UniversalStepEditorDemo: React.FC = () => {
 
                 {/* Editor Area */}
                 <div className="flex-1 flex flex-col">
-                    <div className="h-full border-l bg-white">
-                        <ModernUnifiedEditor templateId={"quiz-estilo"} />
-                    </div>
+                    {editorState.error ? (
+                        <div className="p-6 bg-red-50 border-l-4 border-red-400">
+                            <div className="flex">
+                                <div className="flex-shrink-0">
+                                    <svg className="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                                    </svg>
+                                </div>
+                                <div className="ml-3">
+                                    <h3 className="text-sm font-medium text-red-800">
+                                        Erro no Editor
+                                    </h3>
+                                    <div className="mt-2 text-sm text-red-700">
+                                        {editorState.error?.message}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    ) : (
+                        <UniversalStepEditor
+                            stepId={selectedStepId}
+                            stepNumber={selectedStepNumber}
+                            onStepChange={handleStepSelect}
+                            onSave={editorActions.saveStep}
+                            showNavigation={true}
+                        />
+                    )}
                 </div>
             </div>
 

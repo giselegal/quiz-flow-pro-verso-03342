@@ -148,10 +148,10 @@ describe('⚡ Performance e Tempo de Carregamento', () => {
 
       Object.entries(mockAnswers).forEach(([_, answers]) => {
         answers.forEach(answer => {
-          const styleDef = (styleMapping as any)[answer];
-          // O teste de performance apenas precisa simular alguma computação leve
-          if (styleDef && styleDef.id && (styleDef.id in scores)) {
-            scores[styleDef.id as keyof typeof scores] += 1;
+          if (styleMapping[answer]) {
+            Object.entries(styleMapping[answer]).forEach(([style, points]) => {
+              scores[style as keyof typeof scores] += points;
+            });
           }
         });
       });

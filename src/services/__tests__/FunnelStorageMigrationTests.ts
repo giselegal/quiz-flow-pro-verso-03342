@@ -9,7 +9,6 @@
  * - Fallback para localStorage em caso de erro
  */
 
-import { describe, it, expect, beforeEach } from 'vitest';
 import { advancedFunnelStorage } from '../AdvancedFunnelStorage';
 import { funnelDataMigration } from '../FunnelDataMigration';
 import { funnelLocalStore } from '../FunnelStorageAdapter';
@@ -93,18 +92,71 @@ class TestHelper {
 // TEST RUNNER
 // ============================================================================
 
-// Conversão para suíte Vitest padrão (reduz complexidade e integra ao reporter).
+class TestRunner {
+    private tests: Array<{ name: string; fn: () => Promise<void> }> = [];
+    private results: Array<{ name: string; success: boolean; error?: string; duration: number }> = [];
+
+    test(name: string, fn: () => Promise<void>) {
+        this.tests.push({ name, fn });
+    }
+
+    async run(): Promise<void> {
+        console.log('🧪 Starting Funnel Storage Migration Tests...\n');
+
+        for (const test of this.tests) {
+            const startTime = Date.now();
+            try {
+                await TestHelper.clearAllStorage();
+                await test.fn();
+                const duration = Date.now() - startTime;
+                this.results.push({ name: test.name, success: true, duration });
+                console.log(`✅ ${test.name} (${duration}ms)`);
+            } catch (error) {
+                const duration = Date.now() - startTime;
+                this.results.push({
+                    name: test.name,
+                    success: false,
+                    error: error instanceof Error ? error.message : String(error),
+                    duration
+                });
+                console.error(`❌ ${test.name} (${duration}ms):`, error);
+            }
+        }
+
+        this.printSummary();
+    }
+
+    private printSummary() {
+        const passed = this.results.filter(r => r.success).length;
+        const failed = this.results.filter(r => !r.success).length;
+        const totalDuration = this.results.reduce((sum, r) => sum + r.duration, 0);
+
+        console.log(`\n📊 Test Summary:`);
+        console.log(`✅ Passed: ${passed}`);
+        console.log(`❌ Failed: ${failed}`);
+        console.log(`⏱️  Total Duration: ${totalDuration}ms`);
+
+        if (failed > 0) {
+            console.log('\n❌ Failed Tests:');
+            this.results
+                .filter(r => !r.success)
+                .forEach(r => console.log(`  - ${r.name}: ${r.error}`));
+        }
+    }
+}
 
 // ============================================================================
 // TEST IMPLEMENTATION
 // ============================================================================
 
-beforeEach(async () => {
-    await TestHelper.clearAllStorage();
-});
+async function runMigrationTests(): Promise<void> {
+    const runner = new TestRunner();
 
-describe('Funnel Storage Migration (schema + adapters)', () => {
-    it('Advanced Storage - Basic CRUD Operations', async () => {
+    // ============================================================================
+    // BASIC FUNCTIONALITY TESTS
+    // ============================================================================
+
+    runner.test('Advanced Storage - Basic CRUD Operations', async () => {
         const testFunnel = {
             id: 'crud-test-1',
             name: 'CRUD Test Funnel',
@@ -147,7 +199,7 @@ describe('Funnel Storage Migration (schema + adapters)', () => {
         }
     });
 
-    it('Advanced Storage - Settings Operations', async () => {
+    runner.test('Advanced Storage - Settings Operations', async () => {
         const funnelId = 'settings-test-1';
         const testSettings = {
             name: 'Settings Test',
@@ -180,7 +232,7 @@ describe('Funnel Storage Migration (schema + adapters)', () => {
     // MIGRATION TESTS
     // ============================================================================
 
-    it('Migration - LocalStorage to IndexedDB', async () => {
+    runner.test('Migration - LocalStorage to IndexedDB', async () => {
         const mockData = TestHelper.createMockFunnelData();
         TestHelper.setupMockLocalStorage(mockData);
 
@@ -218,7 +270,7 @@ describe('Funnel Storage Migration (schema + adapters)', () => {
         }
     });
 
-    it('Migration - Data Integrity Verification', async () => {
+    runner.test('Migration - Data Integrity Verification', async () => {
         const mockData = TestHelper.createMockFunnelData();
         TestHelper.setupMockLocalStorage(mockData);
 
@@ -257,7 +309,7 @@ describe('Funnel Storage Migration (schema + adapters)', () => {
     // ADAPTER COMPATIBILITY TESTS
     // ============================================================================
 
-    it('Storage Adapter - Backward Compatibility', async () => {
+    runner.test('Storage Adapter - Backward Compatibility', async () => {
         // Test that the old API still works
         const testFunnel = {
             id: 'compat-test-1',
@@ -287,7 +339,7 @@ describe('Funnel Storage Migration (schema + adapters)', () => {
         }
     });
 
-    it('Storage Adapter - Settings Compatibility', async () => {
+    runner.test('Storage Adapter - Settings Compatibility', async () => {
         const funnelId = 'settings-compat-test';
         const testSettings = funnelLocalStore.defaultSettings();
         testSettings.name = 'Test Settings Compatibility';
@@ -315,7 +367,7 @@ describe('Funnel Storage Migration (schema + adapters)', () => {
     // FALLBACK AND ERROR HANDLING TESTS
     // ============================================================================
 
-    it('Fallback - LocalStorage When IndexedDB Fails', async () => {
+    runner.test('Fallback - LocalStorage When IndexedDB Fails', async () => {
         // This is difficult to test in a real environment, but we can test
         // that the fallback methods work correctly
         const testFunnel = {
@@ -345,7 +397,7 @@ describe('Funnel Storage Migration (schema + adapters)', () => {
     // PERFORMANCE AND STRESS TESTS
     // ============================================================================
 
-    it('Performance - Large Dataset Migration', async () => {
+    runner.test('Performance - Large Dataset Migration', async () => {
         // Create a larger dataset for performance testing
         const largeFunnelList = Array.from({ length: 50 }, (_, i) => ({
             id: `perf-test-${i}`,
@@ -392,7 +444,7 @@ describe('Funnel Storage Migration (schema + adapters)', () => {
     // BACKUP AND RESTORE TESTS
     // ============================================================================
 
-    it('Backup and Restore - Full Data Cycle', async () => {
+    runner.test('Backup and Restore - Full Data Cycle', async () => {
         const mockData = TestHelper.createMockFunnelData();
         TestHelper.setupMockLocalStorage(mockData);
 
@@ -431,6 +483,19 @@ describe('Funnel Storage Migration (schema + adapters)', () => {
             throw new Error('Restored funnel data incorrect');
         }
     });
-});
 
-export { TestHelper };
+    // Run all tests
+    await runner.run();
+}
+
+// ============================================================================
+// EXPORT FOR TESTING
+// ============================================================================
+
+export { runMigrationTests, TestHelper };
+
+// Auto-run tests if this file is imported in development
+if (typeof window !== 'undefined' && window.location.hostname === 'localhost') {
+    // Only run automatically in development
+    console.log('🧪 Funnel Storage Migration Tests available. Run runMigrationTests() to execute.');
+}

@@ -48,19 +48,17 @@ export function useTemplateLoader(): UseTemplateLoaderResult {
 
         // Importar adapter dinâmico
         const { QuizToEditorAdapter } = await import('@/adapters/QuizToEditorAdapter');
-        // Instanciar adapter (suporta conversão sem parâmetros agora)
-        const adapter = new QuizToEditorAdapter();
 
-        // Obter configuração básica (placeholder) – ainda usada para metadados
+        // Obter configuração da etapa específica
         const stepConfig = await QuizToEditorAdapter.getStepConfiguration(stepNumber);
         if (!stepConfig) {
           throw new Error(`Quiz step ${stepNumber} not found`);
         }
 
-        // Converter quiz canonical -> estado de editor (agora com stepBlocks placeholder)
-        const editorData = await adapter.convertQuizToEditor();
+        // Converter para formato de blocos do editor
         const stepId = `step-${stepNumber}`;
-        const blocks = editorData.stepBlocks?.[stepId] || [];
+        const editorData = await QuizToEditorAdapter.convertQuizToEditor();
+        const blocks = editorData.stepBlocks[stepId] || [];
 
         console.log(`✅ Quiz template loaded for step ${stepNumber}: ${blocks.length} blocks`);
 

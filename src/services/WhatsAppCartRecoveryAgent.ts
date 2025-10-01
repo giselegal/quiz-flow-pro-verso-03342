@@ -15,7 +15,7 @@
 
 import { HotmartWebhookManager } from './HotmartWebhookManager';
 import { WhatsAppBusinessAPI } from './WhatsAppBusinessAPI';
-import { analyticsServiceAdapter as analyticsService } from '@/analytics/compat/analyticsServiceAdapter';
+import { AnalyticsService } from './AnalyticsService';
 
 // Mock interfaces for compatibility
 interface HotmartWebhookData {
@@ -55,19 +55,19 @@ interface RecoveryAnalytics {
 
 export class WhatsAppCartRecoveryAgent {
   private whatsappAPI: WhatsAppBusinessAPI;
-  // Uso do adapter unificado em vez de instância própria
-  private analytics = analyticsService;
+  private analyticsService: AnalyticsService;
   private recoverySequences: Map<string, RecoverySequence>;
   private activeRecoveries: Map<string, any>;
-
+  
   constructor(
     whatsappToken: string,
     phoneNumberId: string
   ) {
     this.whatsappAPI = new WhatsAppBusinessAPI(whatsappToken, phoneNumberId);
+    this.analyticsService = new AnalyticsService();
     this.recoverySequences = new Map();
     this.activeRecoveries = new Map();
-
+    
     this.setupDefaultSequences();
     this.setupHotmartIntegration();
   }
@@ -112,14 +112,10 @@ export class WhatsAppCartRecoveryAgent {
       });
 
       // Analytics
-      this.analytics.trackEvent({
-        funnelId: 'global-commerce',
-        type: 'cart_abandoned',
-        payload: {
-          buyerId: data.buyer?.id,
-          productName: 'Quiz de Estilo Premium',
-          value: data.purchase?.price
-        }
+      this.analyticsService.trackEvent('cart_abandoned', {
+        buyerId: data.buyer?.id,
+        productName: 'Quiz de Estilo Premium',
+        value: data.purchase?.price
       });
 
     } catch (error) {
@@ -133,13 +129,13 @@ export class WhatsAppCartRecoveryAgent {
   async handlePurchaseComplete(data: HotmartWebhookData): Promise<void> {
     try {
       const buyerEmail = data.buyer?.email;
-
+      
       // Cancelar recuperação ativa se existir
       for (const [recoveryId, recovery] of this.activeRecoveries) {
         if (recovery.buyerEmail === buyerEmail) {
           recovery.status = 'converted';
           recovery.convertedAt = new Date();
-
+          
           console.log('✅ Venda recuperada com sucesso!', {
             recoveryId,
             buyer: recovery.buyerName,
@@ -148,14 +144,10 @@ export class WhatsAppCartRecoveryAgent {
           });
 
           // Analytics de conversão
-          this.analytics.trackEvent({
-            funnelId: 'global-commerce',
-            type: 'cart_recovered',
-            payload: {
-              recoveryId,
-              timToConversion: Date.now() - recovery.abandonedAt.getTime(),
-              recoveryAttempts: recovery.recoveryAttempts
-            }
+          this.analyticsService.trackEvent('cart_recovered', {
+            recoveryId,
+            timToConversion: Date.now() - recovery.abandonedAt.getTime(),
+            recoveryAttempts: recovery.recoveryAttempts
           });
 
           break;
@@ -175,7 +167,7 @@ export class WhatsAppCartRecoveryAgent {
       if (!recovery || recovery.status !== 'pending') return;
 
       const sequence = this.getSequenceForRecovery(recovery);
-
+      
       for (let i = 0; i < sequence.messages.length; i++) {
         // Aguardar delay entre mensagens
         if (i > 0) {
@@ -187,7 +179,7 @@ export class WhatsAppCartRecoveryAgent {
         if (currentRecovery?.status !== 'pending') break;
 
         await this.sendRecoveryMessage(recoveryId, sequence.messages[i], i);
-
+        
         recovery.recoveryAttempts++;
       }
 
@@ -200,7 +192,7 @@ export class WhatsAppCartRecoveryAgent {
    * 📤 ENVIAR MENSAGEM DE RECUPERAÇÃO
    */
   async sendRecoveryMessage(
-    recoveryId: string,
+    recoveryId: string, 
     message: RecoveryMessage,
     sequenceStep: number
   ): Promise<void> {
@@ -228,15 +220,11 @@ export class WhatsAppCartRecoveryAgent {
       });
 
       // Analytics
-      this.analytics.trackEvent({
-        funnelId: 'global-commerce',
-        type: 'recovery_message_sent',
-        payload: {
-          recoveryId,
-          sequenceStep,
-          template: message.name,
-          phone: recovery.buyerPhone
-        }
+      this.analyticsService.trackEvent('recovery_message_sent', {
+        recoveryId,
+        sequenceStep,
+        template: message.name,
+        phone: recovery.buyerPhone
       });
 
     } catch (error) {
@@ -262,21 +250,21 @@ export class WhatsAppCartRecoveryAgent {
 
       // Analisar resposta
       const intent = this.analyzeUserIntent(message);
-
+      
       switch (intent) {
         case 'interested':
           await this.sendCheckoutReminder(activeRecovery);
           break;
-
+          
         case 'not_interested':
           activeRecovery.status = 'opted_out';
           await this.sendOptOutConfirmation(phone);
           break;
-
+          
         case 'question':
           await this.sendFAQResponse(phone, message);
           break;
-
+          
         default:
           await this.sendGenericResponse(phone);
       }
@@ -291,22 +279,22 @@ export class WhatsAppCartRecoveryAgent {
    */
   private analyzeUserIntent(message: string): string {
     const lowerMessage = message.toLowerCase();
-
-    if (lowerMessage.includes('sim') || lowerMessage.includes('interessado') ||
-      lowerMessage.includes('quero') || lowerMessage.includes('comprar')) {
+    
+    if (lowerMessage.includes('sim') || lowerMessage.includes('interessado') || 
+        lowerMessage.includes('quero') || lowerMessage.includes('comprar')) {
       return 'interested';
     }
-
-    if (lowerMessage.includes('não') || lowerMessage.includes('nao') ||
-      lowerMessage.includes('desinteressado') || lowerMessage.includes('parar')) {
+    
+    if (lowerMessage.includes('não') || lowerMessage.includes('nao') || 
+        lowerMessage.includes('desinteressado') || lowerMessage.includes('parar')) {
       return 'not_interested';
     }
-
-    if (lowerMessage.includes('?') || lowerMessage.includes('dúvida') ||
-      lowerMessage.includes('duvida') || lowerMessage.includes('pergunta')) {
+    
+    if (lowerMessage.includes('?') || lowerMessage.includes('dúvida') || 
+        lowerMessage.includes('duvida') || lowerMessage.includes('pergunta')) {
       return 'question';
     }
-
+    
     return 'unclear';
   }
 
@@ -351,7 +339,7 @@ export class WhatsAppCartRecoveryAgent {
     const totalAbandoned = recoveries.length;
     const converted = recoveries.filter(r => r.status === 'converted');
     const contacted = recoveries.filter(r => r.recoveryAttempts > 0);
-
+    
     return {
       totalAbandoned,
       messagesSent: recoveries.reduce((sum, r) => sum + r.recoveryAttempts, 0),
@@ -389,7 +377,7 @@ export class WhatsAppCartRecoveryAgent {
       const totalAbandoned = recoveries.length;
       const converted = recoveries.filter(r => r.status === 'converted');
       const messagesSent = recoveries.reduce((sum, r) => sum + r.recoveryAttempts, 0);
-
+      
       return {
         totalAbandoned,
         messagesSent,

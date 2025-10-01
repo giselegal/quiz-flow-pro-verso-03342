@@ -1,42 +1,27 @@
-// 📊 QUIZ DATA SERVICE (refatorado para usar gateway canônico)
-import { quizEstiloLoaderGateway, mapStepsToStepBlocks } from '@/domain/quiz/gateway';
-import type { CanonicalStep } from '@/domain/quiz/gateway/QuizEstiloLoaderGateway';
-
-interface CachedData { stepBlocks: Record<string, any[]>; loadedAt: number }
-const CACHE_TTL = 60_000; // 1 min
-let _cache: CachedData | null = null;
-
-async function ensureCache() {
-  const now = Date.now();
-  if (_cache && (now - _cache.loadedAt) < CACHE_TTL) return _cache.stepBlocks;
-  const def = await quizEstiloLoaderGateway.load();
-  const mapped = mapStepsToStepBlocks(def.steps as CanonicalStep[]);
-  _cache = { stepBlocks: mapped, loadedAt: now };
-  return mapped;
-}
+// 📊 QUIZ DATA SERVICE
+import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
 
 export class QuizDataService {
   /**
    * Buscar dados de uma etapa específica
    */
-  static async getStepData(stepNumber: number) {
+  static getStepData(stepNumber: number) {
     const stepKey = `step-${stepNumber}`;
-    const blocks = await ensureCache();
-    return blocks[stepKey] || [];
+    return QUIZ_STYLE_21_STEPS_TEMPLATE[stepKey] || [];
   }
 
   /**
    * Buscar todas as etapas
    */
-  static async getAllSteps() {
-    return ensureCache();
+  static getAllSteps() {
+    return QUIZ_STYLE_21_STEPS_TEMPLATE;
   }
 
   /**
    * Obter configuração de uma etapa
    */
-  static async getStepConfig(stepNumber: number) {
-    const blocks = await this.getStepData(stepNumber);
+  static getStepConfig(stepNumber: number) {
+    const blocks = this.getStepData(stepNumber);
 
     return {
       stepNumber,
@@ -51,8 +36,8 @@ export class QuizDataService {
   /**
    * Validar estrutura de uma etapa
    */
-  static async validateStep(stepNumber: number) {
-    const blocks = await this.getStepData(stepNumber);
+  static validateStep(stepNumber: number) {
+    const blocks = this.getStepData(stepNumber);
 
     return {
       isValid: blocks.length > 0,

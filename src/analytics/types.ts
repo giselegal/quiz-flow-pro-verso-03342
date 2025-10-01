@@ -97,23 +97,11 @@ export interface FunnelSummary {
 
 export interface RealtimeSnapshot {
     funnelId: string;
-    activeUsers?: number; // opcional para compatibilidade com adapters parciais
+    activeUsers: number;
     recentEvents: number;
     recentCompletions: number;
     avgStepTimeSec?: number;
     generatedAt: string;
-}
-
-// Extended realtime metrics for dashboards
-export interface RealtimeMetricsSnapshot extends RealtimeSnapshot {
-    totalSessions: number;
-    completedSessions: number;
-    conversionRate: number;
-    conversionsByHour?: Array<{ hour: string; conversions: number }>;
-    topDevices?: Array<{ name: string; count: number }>;
-    activeUsersRealTime?: number;
-    styleDistribution?: StyleSlice[];
-    answersHeatmap?: AnswerDistribution[];
 }
 
 export interface StepDropoff {

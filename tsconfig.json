@@ -37,6 +37,7 @@
     "archived-examples/**",
     "docs/**",
     "src/config/__tests__/**",
+    "src/tests/**",
     "src/utils/EditorDiagnostics.ts",
     "src/utils/editorDiagnosticsShim.ts"
   ]

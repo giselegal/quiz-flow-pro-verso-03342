@@ -10,12 +10,12 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import {
-  BarChart3,
-  TrendingUp,
-  TrendingDown,
-  Users,
-  Clock,
+import { 
+  BarChart3, 
+  TrendingUp, 
+  TrendingDown, 
+  Users, 
+  Clock, 
   AlertTriangle,
   Download,
   Filter,
@@ -28,12 +28,7 @@ import {
   GitBranch,
   Settings
 } from 'lucide-react';
-// MIGRATION: substituído analyticsService legacy por analyticsServiceAdapter (compat layer)
-import { analyticsServiceAdapter as analyticsService } from '@/analytics/compat/analyticsServiceAdapter';
-// Tipos mínimos locais (até remoção completa do legacy)
-interface Metric { name: string; category: string; value: number; timestamp: Date; }
-interface AnalyticsEvent { id: string; type: string; timestamp: string; }
-interface Alert { id: string; title: string; message: string; severity: 'low' | 'medium' | 'high' | 'critical'; threshold: number; currentValue: number; timestamp: string; }
+import { analyticsService, Metric, AnalyticsEvent, Alert } from '../../../services/AnalyticsService';
 
 interface AnalyticsDashboardProps {
   funnelId: string;
@@ -66,62 +61,22 @@ export function AnalyticsDashboard({
     setIsLoading(true);
     try {
       // Carregar métricas
-      // Adapter ainda não fornece métricas categorizadas reais; gerar stubs a partir de snapshot e placeholders
-      const snapshot = analyticsService.getRealtimeSnapshot(funnelId);
-      const now = new Date();
-      const makeMetric = (name: string, category: string, value: number): Metric => ({ name, category, value, timestamp: now });
-      const perf: Metric[] = [
-        makeMetric('editorLoadTime', 'performance', Math.random() * 800 + 200),
-        makeMetric('stageLoadTime', 'performance', Math.random() * 400 + 120),
-        makeMetric('blockRenderTime', 'performance', Math.random() * 120 + 30),
-        makeMetric('memoryUsage', 'performance', Math.random() * 300 + 150),
-        makeMetric('networkLatency', 'performance', Math.random() * 120 + 40),
-        makeMetric('cacheHitRate', 'performance', Math.random())
-      ];
-      const collab: Metric[] = [
-        makeMetric('activeUsers', 'collaboration', snapshot.activeUsers || 0),
-        makeMetric('concurrentEditors', 'collaboration', Math.floor((snapshot.activeUsers || 0) * 0.4)),
-        makeMetric('chatMessages', 'collaboration', Math.floor(Math.random() * 50)),
-        makeMetric('changesPerMinute', 'collaboration', Math.floor(Math.random() * 20)),
-        makeMetric('conflictsResolved', 'collaboration', Math.floor(Math.random() * 5)),
-        makeMetric('commentsAdded', 'collaboration', Math.floor(Math.random() * 15))
-      ];
-      const versioning: Metric[] = [
-        makeMetric('snapshotsCreated', 'versioning', Math.floor(Math.random() * 40)),
-        makeMetric('versionsCompared', 'versioning', Math.floor(Math.random() * 25)),
-        makeMetric('rollbacksPerformed', 'versioning', Math.floor(Math.random() * 5)),
-        makeMetric('historyEntries', 'versioning', Math.floor(Math.random() * 120)),
-        makeMetric('storageUsed', 'versioning', Math.floor(Math.random() * 500)),
-        makeMetric('compressionRatio', 'versioning', Math.random())
-      ];
-      const usage: Metric[] = [
-        makeMetric('pageViews', 'usage', Math.floor(Math.random() * 1000)),
-        makeMetric('uniqueUsers', 'usage', Math.floor(Math.random() * 300)),
-        makeMetric('sessionDuration', 'usage', Math.floor(Math.random() * 25) + 5),
-        makeMetric('bounceRate', 'usage', Math.random()),
-        makeMetric('userRetention', 'usage', Math.random()),
-        makeMetric('conversionRate', 'usage', Math.random())
-      ];
-      setMetrics([...perf, ...collab, ...versioning, ...usage]);
-
-      // Eventos fictícios básicos a partir de métricas recentes
-      const eventsGenerated: AnalyticsEvent[] = Array.from({ length: 6 }).map((_, i) => ({
-        id: `evt-${Date.now()}-${i}`,
-        type: i % 2 === 0 ? 'page_view' : 'user_action',
-        timestamp: new Date(Date.now() - i * 60000).toISOString()
-      }));
-      setEvents(eventsGenerated);
-
-      // Alertas simulados se thresholds superados
-      const alertsGenerated: Alert[] = [];
-      if (perf[0].value > 1200) {
-        alertsGenerated.push({ id: 'alert-load', title: 'Tempo de carregamento alto', message: 'Editor acima de 1200ms', severity: 'medium', threshold: 1200, currentValue: perf[0].value, timestamp: now.toISOString() });
-      }
-      if ((perf.find(m => m.name === 'errorRate')?.value || 0) > 0.05) {
-        alertsGenerated.push({ id: 'alert-error', title: 'Taxa de erro elevada', message: 'Erros acima de 5%', severity: 'high', threshold: 0.05, currentValue: perf.find(m => m.name === 'errorRate')!.value, timestamp: now.toISOString() });
-      }
-      setAlerts(alertsGenerated);
-
+      const performanceMetrics = analyticsService.getMetricsByCategory('performance');
+      const collaborationMetrics = analyticsService.getMetricsByCategory('collaboration');
+      const versioningMetrics = analyticsService.getMetricsByCategory('versioning');
+      const usageMetrics = analyticsService.getMetricsByCategory('usage');
+      
+      setMetrics([...performanceMetrics, ...collaborationMetrics, ...versioningMetrics, ...usageMetrics]);
+      
+      // Carregar eventos
+      const pageViews = analyticsService.getEventsByType('page_view');
+      const userActions = analyticsService.getEventsByType('user_action');
+      
+      setEvents([...pageViews, ...userActions]);
+      
+      // Carregar alertas
+      setAlerts(analyticsService.getActiveAlerts());
+      
       setLastRefresh(new Date());
     } catch (error) {
       console.error('❌ Erro ao carregar dados de analytics:', error);
@@ -143,7 +98,7 @@ export function AnalyticsDashboard({
       timeRange,
       funnelId
     };
-
+    
     const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -163,12 +118,12 @@ export function AnalyticsDashboard({
       .filter(m => m.name === name && m.category === category)
       .sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime())
       .slice(0, 2);
-
+    
     if (recentMetrics.length < 2) return 'stable';
-
+    
     const current = recentMetrics[0].value;
     const previous = recentMetrics[1].value;
-
+    
     if (current > previous * 1.1) return 'up';
     if (current < previous * 0.9) return 'down';
     return 'stable';
@@ -242,10 +197,11 @@ export function AnalyticsDashboard({
             <button
               key={id}
               onClick={() => setActiveTab(id as any)}
-              className={`flex items-center space-x-2 px-4 py-2 text-sm font-medium border-b-2 transition-colors ${activeTab === id
+              className={`flex items-center space-x-2 px-4 py-2 text-sm font-medium border-b-2 transition-colors ${
+                activeTab === id
                   ? 'border-blue-500 text-blue-600'
                   : 'border-transparent text-gray-500 hover:text-gray-700'
-                }`}
+              }`}
             >
               <Icon className="w-4 h-4" />
               <span>{label}</span>
@@ -443,7 +399,7 @@ export function AnalyticsDashboard({
                       <div key={name} className="bg-white border rounded-lg p-4 shadow-sm">
                         <h3 className="font-medium mb-2">{label}</h3>
                         <div className="text-2xl font-bold text-blue-600">
-                          {name.includes('Rate')
+                          {name.includes('Rate') 
                             ? (getMetricValue(name, 'performance') * 100).toFixed(1)
                             : getMetricValue(name, 'performance').toFixed(0)
                           }{unit}
@@ -457,7 +413,7 @@ export function AnalyticsDashboard({
                           )}
                           <span className="text-sm text-gray-600">
                             {getMetricTrend(name, 'performance') === 'up' ? 'Aumentando' :
-                              getMetricTrend(name, 'performance') === 'down' ? 'Diminuindo' : 'Estável'}
+                             getMetricTrend(name, 'performance') === 'down' ? 'Diminuindo' : 'Estável'}
                           </span>
                         </div>
                       </div>
@@ -504,7 +460,7 @@ export function AnalyticsDashboard({
                       <div key={name} className="bg-white border rounded-lg p-4 shadow-sm">
                         <h3 className="font-medium mb-2">{label}</h3>
                         <div className="text-2xl font-bold text-purple-600">
-                          {name.includes('Ratio')
+                          {name.includes('Ratio') 
                             ? (getMetricValue(name, 'versioning') * 100).toFixed(1)
                             : getMetricValue(name, 'versioning')
                           }{unit}

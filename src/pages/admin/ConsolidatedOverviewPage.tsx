@@ -5,8 +5,7 @@ import { Progress } from '@/components/ui/progress';
 import { useNavigationSafe } from '@/hooks/useNavigationSafe';
 import { serviceManager } from '@/services/core/UnifiedServiceManager';
 import { consolidatedFunnelService } from '@/services/core/ConsolidatedFunnelService';
-// MIGRATION: substituído realDataAnalyticsService por adapter unificado
-import { enhancedUnifiedDataServiceAdapter } from '@/analytics/compat/enhancedUnifiedDataServiceAdapter';
+import { realDataAnalyticsService } from '@/services/core/RealDataAnalyticsService';
 import {
     Activity,
     ArrowUpRight,
@@ -75,24 +74,24 @@ const ConsolidatedOverviewPage: React.FC = () => {
             try {
                 // Registrar services no UnifiedServiceManager
                 serviceManager.registerService(consolidatedFunnelService);
-                // serviceManager.registerService(realDataAnalyticsService); // removido (legacy)
+                serviceManager.registerService(realDataAnalyticsService);
 
                 // Carregar dados reais do Supabase
-                const [funnelSummary, realSnapshot] = await Promise.all([
+                const [funnelSummary, realMetrics] = await Promise.all([
                     consolidatedFunnelService.getDashboardSummary(),
-                    enhancedUnifiedDataServiceAdapter.getRealTimeMetrics()
+                    realDataAnalyticsService.getRealMetrics()
                 ]);
 
                 setDashboardData({
                     funnelSummary,
                     realMetrics: {
-                        totalSessions: realSnapshot.activeUsers || 0,
-                        completedSessions: 0,
-                        conversionRate: 0,
-                        averageCompletionTime: 0,
-                        activeUsersNow: realSnapshot.activeUsers || 0,
-                        leadGeneration: 0,
-                        topPerformingFunnels: []
+                        totalSessions: realMetrics.totalSessions,
+                        completedSessions: realMetrics.completedSessions,
+                        conversionRate: realMetrics.conversionRate,
+                        averageCompletionTime: realMetrics.averageCompletionTime,
+                        activeUsersNow: realMetrics.activeUsersNow,
+                        leadGeneration: realMetrics.leadGeneration,
+                        topPerformingFunnels: realMetrics.topPerformingFunnels,
                     },
                 });
 

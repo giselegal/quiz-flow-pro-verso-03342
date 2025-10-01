@@ -36,8 +36,6 @@
     "test:coverage": "vitest run --coverage",
     "test:watch": "vitest --watch",
     "test:properties:coverage": "vitest --config vitest.config.properties.ts run --coverage",
-    "test:schemas": "vitest run src/domain/quiz/validation/schemas.test.ts",
-    "test:schemas:coverage": "vitest run --coverage src/domain/quiz/validation/schemas.test.ts",
     "test:comprehensive": "ts-node scripts/test-runner.ts",
     "test:unit": "ts-node scripts/test-runner.ts --type unit",
     "test:integration": "ts-node scripts/test-runner.ts --type integration",

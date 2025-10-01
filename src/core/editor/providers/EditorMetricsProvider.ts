@@ -22,8 +22,7 @@ import {
 // Importar serviços de monitoramento existentes
 import { MonitoringService } from '../../../services/core/MonitoringService';
 import { PerformanceMonitor } from '../../../utils/performanceMonitoring';
-import { unifiedEventTracker } from '@/analytics/UnifiedEventTracker';
-import { unifiedAnalyticsEngine } from '@/analytics/UnifiedAnalyticsEngine';
+import { RealTimeAnalytics } from '../../../services/realTimeAnalytics';
 
 // ============================================================================
 // IMPLEMENTAÇÃO PRINCIPAL
@@ -40,7 +39,7 @@ export class EditorMetricsProviderImpl implements EditorMetricsProvider {
 
     private monitoringService: MonitoringService;
     private performanceMonitor: PerformanceMonitor;
-    // Removido RealTimeAnalytics legacy: usar unifiedEventTracker/unifiedAnalyticsEngine
+    private realTimeAnalytics: RealTimeAnalytics;
 
     private flushTimer?: NodeJS.Timeout;
     private sessionId: string;
@@ -53,7 +52,7 @@ export class EditorMetricsProviderImpl implements EditorMetricsProvider {
         // Integrar com serviços existentes
         this.monitoringService = new MonitoringService();
         this.performanceMonitor = PerformanceMonitor.getInstance();
-        // Nenhuma instância necessária: unifiedEventTracker é singleton
+        this.realTimeAnalytics = RealTimeAnalytics.getInstance();
 
         this.initializeCollection();
     }
@@ -284,18 +283,13 @@ export class EditorMetricsProviderImpl implements EditorMetricsProvider {
         this.usageMetrics.push(metrics);
 
         // Integrar com analytics em tempo real
-        unifiedEventTracker.track({
-            type: 'editor_session_complete',
-            funnelId: metrics.funnelId || 'editor-global',
+        this.realTimeAnalytics.trackEvent('editor_session_complete', {
             sessionId: metrics.sessionId,
-            userId: 'editor-system',
-            payload: {
-                duration: metrics.duration,
-                operationCounts: metrics.operationCounts,
-                errorCount: metrics.errorCount,
-                successfulSaves: metrics.successfulSaves,
-                performanceIssues: metrics.performanceIssues
-            }
+            duration: metrics.duration,
+            operationCounts: metrics.operationCounts,
+            errorCount: metrics.errorCount,
+            successfulSaves: metrics.successfulSaves,
+            performanceIssues: metrics.performanceIssues
         });
     }
 
@@ -498,12 +492,11 @@ export class EditorMetricsProviderImpl implements EditorMetricsProvider {
         });
 
         // Integrar com analytics para alertas críticos
-        unifiedEventTracker.track({
-            type: 'editor_alert',
-            funnelId: data?.funnelId || 'editor-global',
+        this.realTimeAnalytics.trackEvent('editor_alert', {
+            type,
+            message,
             sessionId: this.sessionId,
-            userId: 'editor-system',
-            payload: { alertType: type, message, ...data }
+            ...data
         });
     }
 

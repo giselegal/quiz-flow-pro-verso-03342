@@ -1,0 +1,32 @@
+/* CSS para forçar visibilidade dos botões de exclusão durante debug */
+.sortable-block-item .opacity-0,
+.group .opacity-0 {
+  opacity: 1 !important;
+}
+
+.group-hover\:opacity-90 {
+  opacity: 1 !important;
+}
+
+/* Destacar botões de exclusão */
+button[class*='hover:bg-red'] {
+  background-color: rgba(239, 68, 68, 0.1) !important;
+  border: 1px solid #ef4444 !important;
+}
+
+/* Destacar componentes/blocos */
+[data-block-id] {
+  border: 2px dashed #3b82f6 !important;
+  margin: 4px !important;
+}
+
+/* Debug: Mostrar todos os botões */
+button {
+  border: 1px solid #ccc !important;
+}
+
+/* Específico para ícones de lixeira */
+svg[class*='lucide-trash'] {
+  color: red !important;
+  font-size: 16px !important;
+}

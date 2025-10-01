@@ -13,7 +13,8 @@ import { Separator } from '@/components/ui/separator';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import {
     ChevronLeft, ChevronRight, Plus, Edit3, Check, AlertCircle,
-    Target, Brain, Crown, Star, Play, Shuffle
+    Target, Brain, Heart, Crown, Palette, Users, Zap, Star,
+    Settings, Play, Eye
 } from 'lucide-react';
 
 import { QuizQuestion } from '@/types/quiz';
@@ -29,11 +30,10 @@ interface QuizStepNavigationProps {
 
 interface StepInfo {
     index: number;
-    question: QuizQuestion & { rawType?: string };
+    question: QuizQuestion;
     isComplete: boolean;
     hasAnswers: boolean;
     hasScoring: boolean;
-    rawType: string;
 }
 
 const QuizStepNavigation: React.FC<QuizStepNavigationProps> = ({
@@ -45,30 +45,22 @@ const QuizStepNavigation: React.FC<QuizStepNavigationProps> = ({
     className = ''
 }) => {
     // Processar informações dos passos
-    const stepInfos: StepInfo[] = questions.map((question: any, index) => ({
+    const stepInfos: StepInfo[] = questions.map((question, index) => ({
         index,
         question,
         isComplete: Boolean(
             question.title?.trim() &&
             question.answers?.length >= 2 &&
-            question.answers.every((answer: any) => answer.text?.trim() && answer.stylePoints)
+            question.answers.every(answer => answer.text?.trim() && answer.stylePoints)
         ),
         hasAnswers: question.answers?.length >= 2,
-        hasScoring: question.answers?.every((answer: any) => answer.stylePoints) || false,
-        rawType: question.rawType || question.type || 'question'
+        hasScoring: question.answers?.every(answer => answer.stylePoints) || false
     }));
 
     const completedSteps = stepInfos.filter(step => step.isComplete).length;
     const progress = questions.length > 0 ? (completedSteps / questions.length) * 100 : 0;
 
     const getStepIcon = useCallback((step: StepInfo) => {
-        // Ícones diferenciados por tipo/base
-        const t = step.rawType;
-        if (t === 'strategic-question') return Brain;
-        if (t === 'offer') return Crown;
-        if (t === 'result' || t === 'transition-result') return Star;
-        if (t === 'intro') return Play;
-        if (t === 'transition') return Shuffle;
         if (step.isComplete) return Check;
         if (step.hasAnswers && !step.hasScoring) return AlertCircle;
         return Edit3;
@@ -123,41 +115,35 @@ const QuizStepNavigation: React.FC<QuizStepNavigationProps> = ({
 
             <CardContent className="pt-0">
                 {/* Lista de questões */}
-                <ScrollArea className="h-[400px]" role="navigation" aria-label="Navegação de questões do quiz">
-                    <div className="space-y-2" role="list">
+                <ScrollArea className="h-[400px]">
+                    <div className="space-y-2">
                         {stepInfos.map((stepInfo, index) => {
                             const Icon = getStepIcon(stepInfo);
                             const isCurrent = currentStep === index;
 
                             return (
-                                <div key={stepInfo.question.id || index} role="listitem">
+                                <div key={stepInfo.question.id || index}>
                                     <Button
                                         variant={getStepColor(stepInfo, isCurrent) as any}
                                         className={`w-full justify-start h-auto p-3 ${isCurrent ? 'ring-2 ring-primary ring-offset-2' : ''
                                             }`}
                                         onClick={() => onStepChange(index)}
-                                        aria-current={isCurrent ? 'true' : undefined}
-                                        aria-label={`Ir para questão ${index + 1}${stepInfo.isComplete ? ' completa' : ''}`}
-                                        tabIndex={0}
                                     >
                                         <div className="flex items-center gap-3 w-full">
                                             {/* Ícone do status */}
                                             <div className={`p-1 rounded-full ${stepInfo.isComplete ? 'bg-green-100 text-green-600' :
-                                                stepInfo.hasAnswers ? 'bg-yellow-100 text-yellow-600' :
-                                                    'bg-gray-100 text-gray-600'
+                                                    stepInfo.hasAnswers ? 'bg-yellow-100 text-yellow-600' :
+                                                        'bg-gray-100 text-gray-600'
                                                 }`}>
                                                 <Icon className="w-4 h-4" />
                                             </div>
 
                                             {/* Conteúdo da questão */}
                                             <div className="flex-1 text-left">
-                                                <div className="flex items-center gap-2 flex-wrap">
+                                                <div className="flex items-center gap-2">
                                                     <span className="font-medium">
                                                         Questão {index + 1}
                                                     </span>
-                                                    <Badge variant="outline" className="text-xs capitalize">
-                                                        {stepInfo.rawType.replace('-', ' ')}
-                                                    </Badge>
                                                     {stepInfo.isComplete && (
                                                         <Badge variant="secondary" className="text-xs">
                                                             Completa
@@ -176,12 +162,12 @@ const QuizStepNavigation: React.FC<QuizStepNavigationProps> = ({
                                                 </div>
 
                                                 {/* Indicadores de status */}
-                                                <div className="flex items-center gap-2 mt-1 flex-wrap">
+                                                <div className="flex items-center gap-2 mt-1">
                                                     <Badge
                                                         variant={stepInfo.hasAnswers ? "default" : "outline"}
                                                         className="text-xs"
                                                     >
-                                                        {(stepInfo.question as any).answers?.length || 0} respostas
+                                                        {stepInfo.question.answers?.length || 0} respostas
                                                     </Badge>
 
                                                     <Badge
@@ -190,22 +176,6 @@ const QuizStepNavigation: React.FC<QuizStepNavigationProps> = ({
                                                     >
                                                         {stepInfo.hasScoring ? "Com pontuação" : "Sem pontuação"}
                                                     </Badge>
-                                                    {stepInfo.rawType === 'offer' && (
-                                                        <Badge
-                                                            variant={(stepInfo.question as any).variants?.length ? 'secondary' : 'outline'}
-                                                            className="text-xs"
-                                                        >
-                                                            {(stepInfo.question as any).variants?.length ? `${(stepInfo.question as any).variants.length} variantes` : 'Sem variantes'}
-                                                        </Badge>
-                                                    )}
-                                                    {stepInfo.rawType === 'strategic-question' && (
-                                                        <Badge
-                                                            variant={(stepInfo.question as any).answers?.some((a: any) => a.matchValue || a.strategyKey) ? 'secondary' : 'outline'}
-                                                            className="text-xs"
-                                                        >
-                                                            Mapping {(stepInfo.question as any).answers?.some((a: any) => a.matchValue || a.strategyKey) ? 'ok' : 'pendente'}
-                                                        </Badge>
-                                                    )}
                                                 </div>
                                             </div>
 

@@ -5,11 +5,7 @@
  * exportação de dados e análises personalizadas do quiz-analytics.
  */
 
-// Migração: substituir uso de AnalyticsService legacy pelo adapter unificado
-import { analyticsServiceAdapter as analyticsService } from '@/analytics/compat/analyticsServiceAdapter';
-// Tipos mínimos locais para compatibilidade (remover após adoção completa do unified engine)
-interface UserEvent { type: string; timestamp: string; sessionId?: string; data: any; metadata?: any; }
-interface QuizMetrics { totalSessions: number; completionRate: number; averageTimeToComplete: number; styleDistribution: Record<string, number>; performanceMetrics: any; }
+import { analyticsService, UserEvent, QuizMetrics, UserSession } from '@/services/AnalyticsService';
 import { QUIZ_STEPS, getStepById, STRATEGIC_ANSWER_TO_OFFER_KEY } from '@/data/quizSteps';
 import { styleConfigGisele } from '@/data/styles';
 import type { QuizStep } from '@/data/quizSteps';
@@ -306,7 +302,7 @@ export class ReportGenerator {
                 title: 'Análise de Abandono',
                 type: 'chart',
                 data: analyticsService.getDropOffAnalysis(),
-                insights: this.generateDropOffInsights(analyticsService.getDropOffAnalysis() as any)
+                insights: this.generateDropOffInsights(analyticsService.getDropOffAnalysis())
             }
         ];
     }
@@ -458,9 +454,9 @@ export class ReportGenerator {
         const recommendations: string[] = [];
 
         // Recomendações baseadas em drop-off
-        const dropAnalysis: any = analyticsService.getDropOffAnalysis();
-        const highDropSteps = Object.entries(dropAnalysis as Record<string, any>)
-            .filter(([, analysis]: any) => analysis.dropRate > 0.3)
+        const dropAnalysis = analyticsService.getDropOffAnalysis();
+        const highDropSteps = Object.entries(dropAnalysis)
+            .filter(([, analysis]) => analysis.dropRate > 0.3)
             .map(([stepId]) => stepId);
 
         if (highDropSteps.length > 0) {
@@ -547,7 +543,7 @@ export class ReportGenerator {
     }
 
     private getUniqueSessions(events: UserEvent[]): string[] {
-        return [...new Set(events.map(e => e.sessionId).filter((v): v is string => !!v))];
+        return [...new Set(events.map(e => e.sessionId))];
     }
 
     private assessDataQuality(events: UserEvent[]): 'high' | 'medium' | 'low' {

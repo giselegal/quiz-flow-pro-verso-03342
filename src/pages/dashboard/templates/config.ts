@@ -39,7 +39,7 @@ export interface TemplateConfig {
 // 🎯 TEMPLATES FUNCIONAIS CONFIRMADOS E TESTADOS
 export const FUNCTIONAL_TEMPLATES: TemplateConfig[] = [
     {
-        id: 'quiz-estilo-21-steps',
+        id: 'quiz21StepsComplete',
         name: 'Quiz 21 Steps Complete',
         description: 'Quiz interativo completo com 21 etapas, sistema de pontuação avançado, resultados personalizados e analytics detalhado',
         type: 'quiz',

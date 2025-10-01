@@ -6,6 +6,7 @@
  * para editor, preview e produção
  */
 
+import { QuizPropertiesPanelModular } from '@/components/editor/quiz/QuizPropertiesPanelModular';
 import { useEditor } from '@/components/editor/provider-alias';
 import { useQuizFlow } from '@/hooks/core/useQuizFlow';
 import { Block } from '@/types/editor';
@@ -134,7 +135,18 @@ export const QuizFlowPageModular: React.FC = () => {
         </div>
 
         {/* Properties Panel */}
-        {/* Painel modular de propriedades removido na unificação Fase 3 */}
+        {propertiesOpen && mode === 'editor' && selectedBlockId && (
+          <div className="fixed right-0 top-0 h-full w-80 border-l bg-background z-50">
+            <QuizPropertiesPanelModular
+              selectedBlock={null} // Será passado os dados do bloco quando disponível
+              onClose={() => {
+                setPropertiesOpen(false);
+                setSelectedBlockId(null);
+              }}
+              onUpdate={handleBlockUpdate}
+            />
+          </div>
+        )}
       </div>
     </div>
   );

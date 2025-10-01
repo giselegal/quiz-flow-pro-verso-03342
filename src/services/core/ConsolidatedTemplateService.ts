@@ -11,8 +11,6 @@
 
 import { BaseUnifiedService, ServiceConfig } from './UnifiedServiceManager';
 import { Block } from '@/types/editor';
-import { quizEstiloLoaderGateway } from '@/domain/quiz/gateway';
-import type { CanonicalQuizDefinition, CanonicalStep } from '@/domain/quiz/gateway/QuizEstiloLoaderGateway';
 
 // ============================================================================
 // INTERFACES
@@ -77,9 +75,9 @@ export class ConsolidatedTemplateService extends BaseUnifiedService {
 
   async healthCheck(): Promise<boolean> {
     try {
-      // Agora health check baseado no gateway canônico
-      const canonical = await quizEstiloLoaderGateway.load();
-      return !!canonical?.steps?.length;
+      // Verificar se consegue carregar template básico
+      const testTemplate = await this.getTemplate('quiz21StepsComplete');
+      return testTemplate !== null;
     } catch {
       return false;
     }
@@ -123,16 +121,6 @@ export class ConsolidatedTemplateService extends BaseUnifiedService {
    * 🔄 LOAD TEMPLATE INTERNAL - Carregamento com fallbacks
    */
   private async loadTemplateInternal(templateId: string): Promise<FullTemplate | null> {
-    // Integração direta: se o templateId solicitado for o canônico (ou pattern step-*), construímos via gateway.
-    if (templateId === 'quiz21StepsComplete' || templateId === 'quiz-estilo' || /^step-\d+$/.test(templateId)) {
-      try {
-        const canonical = await quizEstiloLoaderGateway.load();
-        return this.convertCanonicalDefinition(canonical);
-      } catch (e) {
-        console.warn('⚠️ Falha ao carregar definição canônica, fallback métodos tradicionais', e);
-      }
-    }
-
     const loadMethods = [
       () => this.loadFromRegistry(templateId),
       () => this.loadFromTypeScript(templateId),
@@ -177,9 +165,17 @@ export class ConsolidatedTemplateService extends BaseUnifiedService {
   /**
    * 📋 LOAD FROM TYPESCRIPT
    */
-  private async loadFromTypeScript(_templateId: string): Promise<FullTemplate | null> {
-    // Desativado: anteriormente carregava QUIZ_STYLE_21_STEPS_TEMPLATE.
-    return null;
+  private async loadFromTypeScript(templateId: string): Promise<FullTemplate | null> {
+    try {
+      if (templateId === 'quiz21StepsComplete') {
+        const { QUIZ_STYLE_21_STEPS_TEMPLATE } = await import('@/templates/quiz21StepsComplete');
+        return this.convertLegacyTemplate(QUIZ_STYLE_21_STEPS_TEMPLATE, templateId);
+      }
+      return null;
+    } catch (error) {
+      console.warn('TypeScript load failed:', error);
+      return null;
+    }
   }
 
   /**
@@ -205,7 +201,7 @@ export class ConsolidatedTemplateService extends BaseUnifiedService {
    */
   private generateFallback(templateId: string): FullTemplate {
     const stepNumber = this.extractStepNumber(templateId);
-
+    
     return {
       id: templateId,
       name: `Template ${templateId}`,
@@ -240,102 +236,102 @@ export class ConsolidatedTemplateService extends BaseUnifiedService {
    */
   private generateDefaultBlocks(stepNumber: number): Block[] {
     const baseContent = { text: '', placeholder: '' };
-
+    
     switch (stepNumber) {
       case 1:
         return [
-          {
-            id: 'intro-1',
-            type: 'text',
+          { 
+            id: 'intro-1', 
+            type: 'text', 
             content: baseContent,
             order: 0,
-            properties: { text: 'Bem-vindo!' }
+            properties: { text: 'Bem-vindo!' } 
           },
-          {
-            id: 'name-input-1',
-            type: 'form-input',
+          { 
+            id: 'name-input-1', 
+            type: 'form-input', 
             content: baseContent,
             order: 1,
-            properties: { placeholder: 'Seu nome' }
+            properties: { placeholder: 'Seu nome' } 
           },
-          {
-            id: 'start-btn-1',
-            type: 'button',
+          { 
+            id: 'start-btn-1', 
+            type: 'button', 
             content: baseContent,
             order: 2,
-            properties: { text: 'Começar' }
+            properties: { text: 'Começar' } 
           }
         ];
       case 20:
         return [
-          {
-            id: 'result-header-20',
-            type: 'text',
+          { 
+            id: 'result-header-20', 
+            type: 'text', 
             content: baseContent,
             order: 0,
-            properties: { text: 'Seu Resultado' }
+            properties: { text: 'Seu Resultado' } 
           },
-          {
-            id: 'style-reveal-20',
-            type: 'result-display',
+          { 
+            id: 'style-reveal-20', 
+            type: 'result-display', 
             content: baseContent,
             order: 1,
-            properties: {}
+            properties: {} 
           },
-          {
-            id: 'offer-20',
-            type: 'button',
+          { 
+            id: 'offer-20', 
+            type: 'button', 
             content: baseContent,
             order: 2,
-            properties: {}
+            properties: {} 
           }
         ];
       case 21:
         return [
-          {
-            id: 'sales-hero-21',
-            type: 'text',
+          { 
+            id: 'sales-hero-21', 
+            type: 'text', 
             content: baseContent,
             order: 0,
-            properties: { text: 'Oferta Especial' }
+            properties: { text: 'Oferta Especial' } 
           },
-          {
-            id: 'timer-21',
-            type: 'countdown-inline',
+          { 
+            id: 'timer-21', 
+            type: 'countdown-inline', 
             content: baseContent,
             order: 1,
-            properties: {}
+            properties: {} 
           },
-          {
-            id: 'cta-21',
-            type: 'button',
+          { 
+            id: 'cta-21', 
+            type: 'button', 
             content: baseContent,
             order: 2,
-            properties: { text: 'Garantir Agora' }
+            properties: { text: 'Garantir Agora' } 
           }
         ];
       default:
         return [
-          {
-            id: `question-${stepNumber}`,
-            type: 'text',
+          { 
+            id: `question-${stepNumber}`, 
+            type: 'text', 
             content: baseContent,
             order: 0,
-            properties: { text: `Pergunta ${stepNumber}` }
+            properties: { text: `Pergunta ${stepNumber}` } 
           },
-          {
-            id: `options-${stepNumber}`,
-            type: 'options-grid',
+          { 
+            id: `options-${stepNumber}`, 
+            type: 'options-grid', 
             content: baseContent,
             order: 1,
-            properties: {}
+            properties: {} 
           },
-          {
-            id: `next-${stepNumber}`,
-            type: 'button',
+          { 
+            id: `next-${stepNumber}`, 
+            type: 'button', 
             content: baseContent,
             order: 2,
-            properties: { text: 'Continuar' }
+            properties: { text: 'Continuar' } 
           }
         ];
     }
@@ -366,66 +362,34 @@ export class ConsolidatedTemplateService extends BaseUnifiedService {
     };
   }
 
-  private convertLegacyTemplate(_legacyTemplate: any, templateId: string): FullTemplate {
-    // Mantido apenas para compatibilidade de assinatura; não mais usado.
-    return this.generateFallback(templateId);
-  }
-
-  /**
-   * 🔄 Converte definição canônica (gateway) em FullTemplate para consumidores antigos.
-   */
-  private convertCanonicalDefinition(def: CanonicalQuizDefinition): FullTemplate {
+  private convertLegacyTemplate(legacyTemplate: any, templateId: string): FullTemplate {
     return {
-      id: def.templateId,
-      name: 'Quiz Estilo (Canônico)',
-      description: `Fonte: ${def.source}`,
+      id: templateId,
+      name: legacyTemplate.name || templateId,
+      description: legacyTemplate.description || '',
       category: 'quiz',
-      version: def.version,
-      stepCount: def.steps.length,
-      tags: ['quiz', 'canonical'],
+      version: '1.0.0',
+      stepCount: legacyTemplate.pages?.length || 21,
+      tags: ['quiz', 'legacy'],
       createdAt: new Date(),
       updatedAt: new Date(),
       isOfficial: true,
       usageCount: 0,
-      steps: def.steps.map((s, index) => this.mapCanonicalStep(s, index)),
-      globalConfig: {
+      steps: legacyTemplate.pages?.map((page: any, index: number) => ({
+        stepNumber: index + 1,
+        blocks: page.blocks || [],
+        metadata: {
+          type: page.type || 'step',
+          validation: page.validation,
+          behavior: page.behavior
+        }
+      })) || [],
+      globalConfig: legacyTemplate.config || {
         theme: { primaryColor: '#007bff' },
         navigation: { allowBack: true },
         analytics: { enabled: true }
       }
     };
-  }
-
-  private mapCanonicalStep(step: CanonicalStep, index: number): TemplateStep {
-    return {
-      stepNumber: index + 1,
-      blocks: this.generateBlocksFromCanonical(step),
-      metadata: {
-        type: step.kind,
-        validation: { requiredSelections: step.requiredSelections },
-        behavior: { autoAdvance: step.autoAdvance }
-      }
-    };
-  }
-
-  private generateBlocksFromCanonical(step: CanonicalStep): Block[] {
-    // Reuso parcial da lógica de mapStepToBlocks sem importar diretamente (evitar acoplamento cíclico aqui).
-    const baseId = step.id;
-    switch (step.kind) {
-      case 'intro':
-        return [{ id: `${baseId}-intro-heading`, type: 'heading', content: {}, order: 0, properties: { text: step.title || 'Bem-vinda!', level: 1 } } as any];
-      case 'question':
-      case 'strategic-question':
-        return [{ id: `${baseId}-question`, type: 'quiz-question-inline', content: {}, order: 0, properties: { title: step.title || 'Pergunta', options: step.options || [], requiredSelections: step.requiredSelections, autoAdvance: step.autoAdvance } } as any];
-      case 'transition':
-        return [{ id: `${baseId}-transition`, type: 'quiz-transition', content: {}, order: 0, properties: { label: step.title || 'Transição' } } as any];
-      case 'result':
-        return [{ id: `${baseId}-result`, type: 'quiz-result', content: {}, order: 0, properties: { title: step.title || 'Resultados' } } as any];
-      case 'offer':
-        return [{ id: `${baseId}-offer`, type: 'quiz-offer', content: {}, order: 0, properties: { title: step.title || 'Oferta' } } as any];
-      default:
-        return [{ id: `${baseId}-fallback`, type: 'heading', content: {}, order: 0, properties: { text: step.title || baseId } } as any];
-    }
   }
 
   private convertJSONTemplate(jsonData: any, templateId: string): FullTemplate {
@@ -467,16 +431,25 @@ export class ConsolidatedTemplateService extends BaseUnifiedService {
   }
 
   async preloadCriticalTemplates(): Promise<void> {
-    console.log('🚀 Preloading canonical quiz steps...');
+    const criticalTemplates = [
+      'quiz21StepsComplete',
+      'step-1', 'step-2', 'step-12', 'step-20', 'step-21'
+    ];
+
+    console.log('🚀 Preloading critical templates...');
     const startTime = performance.now();
-    try {
-      const canonical = await quizEstiloLoaderGateway.load();
-      // Carregar representação full (para compat) apenas uma vez
-      await this.getTemplate(canonical.templateId);
-      console.log(`✅ Canonical template cached: ${canonical.templateId}`);
-    } catch (err) {
-      console.warn('⚠️ Failed canonical preload', err);
-    }
+
+    const preloadPromises = criticalTemplates.map(async (templateId) => {
+      try {
+        await this.getTemplate(templateId);
+        console.log(`✅ Preloaded: ${templateId}`);
+      } catch (error) {
+        console.warn(`⚠️ Failed to preload ${templateId}:`, error);
+      }
+    });
+
+    await Promise.allSettled(preloadPromises);
+    
     const duration = performance.now() - startTime;
     console.log(`🎯 Preload completed in ${duration.toFixed(2)}ms`);
   }
@@ -485,9 +458,9 @@ export class ConsolidatedTemplateService extends BaseUnifiedService {
    * 📊 GET CACHE STATS
    */
   getCacheStats() {
-    const hitRate = this.loadedTemplates.size > 0 ?
+    const hitRate = this.loadedTemplates.size > 0 ? 
       ((this.loadedTemplates.size / (this.loadedTemplates.size + this.preloadingPromises.size)) * 100).toFixed(1) : '0';
-
+    
     return {
       loaded: this.loadedTemplates.size,
       preloading: this.preloadingPromises.size,

@@ -8,7 +8,7 @@
 
 import React, { useState, useEffect, useMemo } from 'react';
 import { useFunnelAnalytics, useABTest } from '@/hooks/useAnalytics';
-import { analyticsEngine, ABTestExperiment, PerformanceAlert } from '@/analytics/compat/analyticsEngineAdapter';
+import { analyticsEngine, ABTestExperiment, PerformanceAlert } from '@/services/analyticsEngine';
 
 // ============================================================================
 // INTERFACES

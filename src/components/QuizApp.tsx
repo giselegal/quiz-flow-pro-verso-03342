@@ -1,12 +1,14 @@
 'use client';
 
-import { useQuizState } from '@/hooks/useQuizState';
-import IntroStep from '@/components/quiz/IntroStep';
-import QuestionStep from '@/components/quiz/QuestionStep';
-import StrategicQuestionStep from '@/components/quiz/StrategicQuestionStep';
-import TransitionStep from '@/components/quiz/TransitionStep';
-import ResultStep from '@/components/quiz/ResultStep';
-import OfferStep from '@/components/quiz/OfferStep';
+import { useQuizState } from 'hooks/useQuizState';
+import { useQuizEditing } from 'hooks/useQuizEditing';
+import { useQuizPreview } from '../../hooks/useQuizPreview';
+import IntroStep from './IntroStep';
+import QuestionStep from './QuestionStep';
+import StrategicQuestionStep from './StrategicQuestionStep';
+import TransitionStep from './TransitionStep';
+import ResultStep from './ResultStep';
+import OfferStep from './OfferStep';
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -33,12 +35,12 @@ interface QuizAppProps {
     onLoad?: () => Promise<any[]>;
 }
 
-export default function QuizApp({
-    funnelId,
-    editMode = false,
+export default function QuizApp({ 
+    funnelId, 
+    editMode = false, 
     onEditModeChange,
     onSave,
-    onLoad
+    onLoad 
 }: QuizAppProps) {
     const {
         state,
@@ -52,6 +54,19 @@ export default function QuizApp({
     } = useQuizState(funnelId);
 
     // Hooks de edição
+    const editingState = useQuizEditing({
+        autoSave: true,
+        onSave: onSave ? async (steps) => onSave(steps) : undefined,
+        onLoad: onLoad,
+        initialSteps: []
+    });
+
+    const previewState = useQuizPreview({
+        steps: editingState.steps,
+        onStepChange: (stepId) => editingState.selectStep(stepId),
+        onComplete: () => console.log('Preview completo')
+    });
+
     const [showEditControls, setShowEditControls] = useState(false);
 
     // Detectar modo de edição
@@ -82,7 +97,23 @@ export default function QuizApp({
             {/* Controles de edição */}
             {showEditControls && (
                 <div className="fixed top-4 right-4 z-50 flex items-center space-x-2">
-                    {/* Placeholder para futura integração de edição persistente */}
+                    {editingState.hasUnsavedChanges && (
+                        <Badge variant="destructive" className="flex items-center gap-1">
+                            <span className="w-2 h-2 bg-red-500 rounded-full"></span>
+                            Alterações não salvas
+                        </Badge>
+                    )}
+                    
+                    <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => editingState.save()}
+                        disabled={!editingState.hasUnsavedChanges}
+                    >
+                        <Save className="w-4 h-4 mr-2" />
+                        Salvar
+                    </Button>
+                    
                     <Button
                         variant="outline"
                         size="sm"

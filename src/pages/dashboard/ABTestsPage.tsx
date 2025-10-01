@@ -3,7 +3,7 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { enhancedUnifiedDataServiceAdapter as EnhancedUnifiedDataService } from '@/analytics/compat/enhancedUnifiedDataServiceAdapter';
+import { EnhancedUnifiedDataService } from '@/services/core/EnhancedUnifiedDataService';
 import { Button } from '@/components/ui/button';
 import { Plus } from 'lucide-react';
 

@@ -1,23 +1,15 @@
-import { getBlocksForStep, mergeStepBlocks } from '@/config/quizStepsComplete';
+// @ts-nocheck
+import { getBlocksForStep, mergeStepBlocks, normalizeStepBlocks } from '@/config/quizStepsComplete';
 import { DraftPersistence } from '@/services/editor/DraftPersistence';
 import { useEditorSupabaseIntegration } from '@/hooks/useEditorSupabaseIntegration';
 import { useHistoryStateIndexedDB } from '@/hooks/useHistoryStateIndexedDB';
-// Removido import direto do template legacy – agora usamos loader published-first
-import { loadQuizEstiloCanonical } from '@/domain/quiz/quizEstiloPublishedFirstLoader';
-import { quizEstiloLoaderGateway } from '@/domain/quiz/gateway';
-import { mapStepsToStepBlocks } from '@/domain/quiz/gateway';
-import { QUIZ_ESTILO_TEMPLATE_ID, canonicalizeQuizEstiloId } from '@/domain/quiz/quiz-estilo-ids';
-import { blockRegistry } from '@/domain/blocks';
+import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
 import { Block, BlockType } from '@/types/editor';
 import { extractStepNumberFromKey } from '@/utils/supabaseMapper';
 import { arrayMove } from '@dnd-kit/sortable';
 import React, { createContext, ReactNode, useCallback, useContext, useEffect } from 'react';
 import { unifiedQuizStorage } from '@/services/core/UnifiedQuizStorage';
 import { useFunnels } from '@/context/FunnelsContext';
-
-// ✅ LEGACY REMOVIDO: O antigo QUIZ_STYLE_21_STEPS_TEMPLATE foi eliminado.
-// Toda fonte de verdade agora vem do quizEstiloLoaderGateway (published-first canonical) ou de dados reais de funil.
-// Qualquer código que dependia do shim deve usar actions.ensureStepLoaded / loadDefaultTemplate.
 
 // Utilitário simples para aguardar o próximo tick do event loop (garante flush de setState em testes)
 const waitNextTick = (ms: number = 0) => new Promise<void>(resolve => setTimeout(resolve, ms));
@@ -32,8 +24,6 @@ export interface EditorState {
   isSupabaseEnabled: boolean;
   databaseMode: 'local' | 'supabase';
   isLoading: boolean;
-  // ✅ Total de etapas conhecido (ex: 21 para quiz-estilo)
-  totalSteps?: number;
 }
 
 export interface EditorActions {
@@ -64,12 +54,6 @@ export interface EditorActions {
   // Import/Export
   exportJSON: () => string;
   importJSON: (json: string) => void;
-
-  // Bulk replace (quiz adapter / migrations)
-  bulkReplaceStepBlocks: (
-    data: Record<string, Block[]>,
-    options?: { resetValidation?: boolean; setCurrentStep?: number; totalSteps?: number; replace?: boolean }
-  ) => void;
 
   // Supabase operations
   loadSupabaseComponents?: () => Promise<void>;
@@ -256,7 +240,6 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
       isSupabaseEnabled: enableSupabase,
       databaseMode: enableSupabase ? 'supabase' : 'local',
       isLoading: false,
-      totalSteps: 1,
       ...safeInitial, // 🛡️ USAR safeInitial ao invés de initial
     };
 
@@ -337,32 +320,6 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
     if (!funnelId) {
       console.log('📋 EditorProvider: Sem funnelId, mantendo canvas vazio');
       return;
-    }
-
-    // 🔁 Canonicalização rápida (alias legacy -> canônico)
-    const canonical = canonicalizeQuizEstiloId(funnelId) || funnelId;
-
-    // 🚀 Novo caminho: se for o quiz-estilo canônico, tentar published-first loader
-    if (canonical === QUIZ_ESTILO_TEMPLATE_ID) {
-      try {
-        console.log('🚀 EditorProvider: Carregando quiz-estilo via published-first loader...');
-        setState((prev: EditorState) => ({ ...prev, isLoading: true }));
-        // Novo caminho unificado: Gateway retorna definição canônica (published/runtime/fallback)
-        const canonicalDef = await quizEstiloLoaderGateway.load();
-        if (canonicalDef) {
-          console.log(`✅ quiz-estilo canonical (${canonicalDef.source}) :: steps=${canonicalDef.steps.length}`);
-          const mapped = mapStepsToStepBlocks(canonicalDef.steps as any);
-          setState((prev: EditorState) => ({
-            ...prev,
-            stepBlocks: { ...prev.stepBlocks, ...mapped },
-            isLoading: false
-          }));
-          return;
-        }
-        console.warn('⚠️ quiz-estilo: Gateway não retornou definição; fallback para fluxo genérico');
-      } catch (err) {
-        console.error('❌ Erro no published-first loader quiz-estilo:', err);
-      }
     }
 
     // Carregar template se funnelId indica template
@@ -678,15 +635,48 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
   const stateRef = React.useRef(rawState);
   useEffect(() => { stateRef.current = rawState; }, [rawState]);
 
-  const canonicalCacheRef = React.useRef<Record<string, Block[]> | null>(null);
   const ensureStepLoaded = useCallback(
     async (step: number | string) => {
-      if (process.env.NODE_ENV === 'test') return;
+      // Em ambiente de teste, não auto-carregar templates para manter estado previsível
+      if (process.env.NODE_ENV === 'test') {
+        return;
+      }
       const existingBlocks = getBlocksForStep(step, stateRef.current.stepBlocks);
-      if (existingBlocks && existingBlocks.length > 0) return;
 
-      // 1) Supabase (se habilitado)
+      if (existingBlocks && existingBlocks.length > 0) {
+        // Merge local draft over existing if draft is newer
+        try {
+          const stepNum = typeof step === 'number' ? step : parseInt(String(step), 10);
+          const stepKey = Number.isFinite(stepNum) ? `step-${stepNum}` : String(step);
+          const draftKey = quizId || funnelId || 'local-funnel';
+          if (draftKey) {
+            const draft = DraftPersistence.loadStepDraft(draftKey, stepKey);
+            if (draft && Array.isArray(draft.blocks) && draft.blocks.length > 0) {
+              setState(prev => {
+                const prevBlocks = prev.stepBlocks[stepKey] ?? [];
+                // Prefer draft by id but keep order from prev when possible
+                const byId = new Map<string, any>(prevBlocks.map(b => [String(b.id), b]));
+                const merged = draft.blocks.map(db => {
+                  const found = byId.get(String(db.id));
+                  return found
+                    ? {
+                      ...found,
+                      ...db,
+                      properties: { ...(found.properties || {}), ...(db.properties || {}) },
+                      content: { ...(found.content || {}), ...(db.content || {}) },
+                    }
+                    : db;
+                });
+                return { ...prev, stepBlocks: { ...prev.stepBlocks, [stepKey]: merged } };
+              });
+            }
+          }
+        } catch { }
+        return; // Step already loaded
+      }
+
       try {
+        // First try to fetch from Supabase if enabled
         if (state.isSupabaseEnabled && supabaseIntegration?.loadSupabaseComponents) {
           const comps = await supabaseIntegration.loadSupabaseComponents();
           const components = Array.isArray(comps) ? comps : (supabaseIntegration.components ?? []);
@@ -694,44 +684,63 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
             setState(prev => {
               const grouped = groupByStepKey(components);
               const merged = mergeStepBlocks(prev.stepBlocks, grouped);
-              return { ...prev, stepBlocks: merged };
+              return {
+                ...prev,
+                stepBlocks: merged,
+              };
             });
             return;
           }
         }
-      } catch (e) {
-        console.warn('ensureStepLoaded: falha ao carregar via Supabase (ignorando)', e);
-      }
 
-      // 2) Canonical quiz-estilo
-      const canonicalId = canonicalizeQuizEstiloId(funnelId || '') || '';
-      if (canonicalId === QUIZ_ESTILO_TEMPLATE_ID) {
-        try {
-          if (!canonicalCacheRef.current) {
-            const def = await quizEstiloLoaderGateway.load();
-            if (def) {
-              canonicalCacheRef.current = mapStepsToStepBlocks(def.steps as any);
-            } else {
-              canonicalCacheRef.current = {};
-            }
-          }
-          const stepNum = typeof step === 'number' ? step : parseInt(String(step), 10);
-          const stepKey = Number.isFinite(stepNum) ? `step-${stepNum}` : String(step);
-          const blocks = (canonicalCacheRef.current || {})[stepKey] || [];
-          if (blocks.length > 0) {
+        // Fallback: Try to load from template service or use default templates
+        const stepNum = typeof step === 'number' ? step : parseInt(String(step), 10);
+        if (stepNum && QUIZ_STYLE_21_STEPS_TEMPLATE) {
+          const stepKey = `step-${stepNum}`;
+          const defaultBlocks = (QUIZ_STYLE_21_STEPS_TEMPLATE as any)[stepKey] || [];
+          if (defaultBlocks.length > 0) {
             setState(prev => ({
               ...prev,
-              stepBlocks: { ...prev.stepBlocks, [stepKey]: blocks },
-              stepValidation: { ...(prev.stepValidation || {}), [stepNum]: true },
+              stepBlocks: {
+                ...prev.stepBlocks,
+                [stepKey]: defaultBlocks,
+              },
+              stepValidation: {
+                ...(prev.stepValidation || {}),
+                [stepNum]: defaultBlocks.length > 0,
+              },
             }));
+
+            // After loading defaults, merge draft if exists
+            const draftKey = quizId || funnelId || 'local-funnel';
+            if (draftKey) {
+              const draft = DraftPersistence.loadStepDraft(draftKey, stepKey);
+              if (draft && Array.isArray(draft.blocks) && draft.blocks.length > 0) {
+                setState(prev => {
+                  const prevBlocks = prev.stepBlocks[stepKey] ?? [];
+                  const byId = new Map<string, any>(prevBlocks.map(b => [String(b.id), b]));
+                  const merged = draft.blocks.map(db => {
+                    const found = byId.get(String(db.id));
+                    return found
+                      ? {
+                        ...found,
+                        ...db,
+                        properties: { ...(found.properties || {}), ...(db.properties || {}) },
+                        content: { ...(found.content || {}), ...(db.content || {}) },
+                      }
+                      : db;
+                  });
+                  return { ...prev, stepBlocks: { ...prev.stepBlocks, [stepKey]: merged } };
+                });
+              }
+            }
           }
-        } catch (e) {
-          console.error('ensureStepLoaded: erro ao carregar canonical quiz-estilo', e);
         }
+      } catch (error) {
+        console.error('Failed to ensure step loaded:', error);
       }
-      // Caso contrário: não há fallback legacy — step permanecerá vazio até dados reais chegarem
     },
-    [funnelId, setState, state.isSupabaseEnabled, supabaseIntegration]
+    [setState, state.isSupabaseEnabled, supabaseIntegration, funnelId, quizId]
   );
 
   // Stable ref to ensureStepLoaded for effects that should not re-run on identity change
@@ -740,36 +749,93 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
 
   // Initialize step 1 automatically on mount and when template data is available
   useEffect(() => {
-    if (process.env.NODE_ENV === 'test') return;
-    // Apenas pré-carregar canonical se o funnelId for quiz-estilo
-    const canonicalId = canonicalizeQuizEstiloId(funnelId || '') || '';
-    if (canonicalId === QUIZ_ESTILO_TEMPLATE_ID) {
-      (async () => {
-        try {
-          const def = await quizEstiloLoaderGateway.load();
-          if (def) {
-            const mapped = mapStepsToStepBlocks(def.steps as any);
-            canonicalCacheRef.current = mapped;
-            setState(prev => ({
-              ...prev,
-              stepBlocks: mergeStepBlocks(prev.stepBlocks, mapped),
-              stepValidation: Object.fromEntries(Object.keys(mapped).map(k => [parseInt(k.replace(/[^0-9]/g, ''), 10), (mapped as any)[k].length > 0])) as Record<number, boolean>
-            }));
-          }
-        } catch (e) {
-          console.warn('Falha ao pré-carregar quiz-estilo canonical', e);
-        } finally {
-          ensureStepLoadedRef.current?.(1);
+    // 🚨 CORREÇÃO CRÍTICA: Always force template reload on mount (exceto em testes para reduzir memória)
+    const isTestEnv = process.env.NODE_ENV === 'test';
+    if (!isTestEnv) {
+      // Detect minimal persisted state and rehydrate (variável removida por não uso)
+      const normalizedBlocks = normalizeStepBlocks(QUIZ_STYLE_21_STEPS_TEMPLATE);
+      if (process.env.NODE_ENV === 'development') {
+        console.log('🔧 FORCE RELOAD TEMPLATE:', {
+          normalizedBlocks,
+          keys: Object.keys(normalizedBlocks),
+          totalSteps: Object.keys(normalizedBlocks).length,
+          blockCounts: Object.entries(normalizedBlocks).map(([key, blocks]) => [key, Array.isArray(blocks) ? blocks.length : 0]),
+          isTestEnv,
+          templateSource: QUIZ_STYLE_21_STEPS_TEMPLATE
+        });
+      }
+
+      // 🚨 FORÇA CARREGAMENTO: Aplicar template normalizado por merge não-destrutivo e computar validação
+      setState(prev => {
+        const mergedBlocks = mergeStepBlocks(prev.stepBlocks, normalizedBlocks);
+        const initialValidation: Record<number, boolean> = {};
+        for (let i = 1; i <= 21; i++) {
+          const key = `step-${i}`;
+          initialValidation[i] = Array.isArray((mergedBlocks as any)[key]) && (mergedBlocks as any)[key].length > 0;
         }
-      })();
+        return {
+          ...prev,
+          stepBlocks: mergedBlocks,
+          stepValidation: {
+            ...(prev.stepValidation || {}),
+            ...initialValidation,
+          },
+          // Preserve any pre-set currentStep (e.g., from initial props or URL)
+          currentStep: prev.currentStep || 1,
+        };
+      });
+
+      // 🚨 GARANTIA DUPLA: Ensure step 1 is loaded on initialization
+      setTimeout(() => {
+        ensureStepLoadedRef.current?.(1);
+        // Em produção, podemos pré-aquecer outras etapas se necessário
+        // Em testes, evitamos para não inflar o heap
+        if (process.env.NODE_ENV !== 'test') {
+          for (let i = 1; i <= 21; i++) {
+            ensureStepLoadedRef.current?.(i);
+          }
+        }
+      }, 100);
     } else {
-      ensureStepLoadedRef.current?.(1);
+      // Em testes, não carregar templates automaticamente nem fazer merges
+      setState(prev => ({
+        ...prev,
+        currentStep: 1,
+        // mantém stepBlocks como já inicializado vazio pelo getInitialState()
+      }));
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, []); // Empty dependency array - run only once on mount
 
   // Failsafe: se após a inicialização todas as etapas estiverem vazias, recarregar o template padrão
-  // Failsafe legacy removido – não recarregamos mais template padrão automático.
+  useEffect(() => {
+    if (process.env.NODE_ENV === 'test') return;
+    const timer = setTimeout(() => {
+      try {
+        const total = Object.values(rawState.stepBlocks || {}).reduce((acc, arr: any) => acc + (Array.isArray(arr) ? arr.length : 0), 0);
+        if (total === 0) {
+          if (process.env.NODE_ENV === 'development') {
+            console.warn('⚠️ Nenhum bloco encontrado após o mount. Recarregando template padrão...');
+          }
+          const normalizedBlocks = normalizeStepBlocks(QUIZ_STYLE_21_STEPS_TEMPLATE);
+          setState(prev => {
+            const mergedBlocks = mergeStepBlocks(prev.stepBlocks, normalizedBlocks);
+            const validation: Record<number, boolean> = {};
+            for (let i = 1; i <= 21; i++) {
+              const key = `step-${i}`;
+              validation[i] = Array.isArray((mergedBlocks as any)[key]) && (mergedBlocks as any)[key].length > 0;
+            }
+            return {
+              ...prev,
+              stepBlocks: mergedBlocks,
+              stepValidation: { ...(prev.stepValidation || {}), ...validation },
+              currentStep: prev.currentStep || 1,
+            };
+          });
+        }
+      } catch { }
+    }, 600);
+    return () => clearTimeout(timer);
+  }, [rawState.stepBlocks, setState]);
 
   // 🚨 CORREÇÃO: Ensure step is loaded when currentStep changes
   useEffect(() => {
@@ -1228,43 +1294,55 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
   );
 
   const loadDefaultTemplate = useCallback(() => {
-    console.log('🚀 EditorProvider: loadDefaultTemplate (canonical/gateway)');
-    (async () => {
-      try {
-        const def = await quizEstiloLoaderGateway.load();
-        if (!def) {
-          console.warn('⚠️ loadDefaultTemplate: canonical definition indisponível');
-          return;
+    console.log('🚀 EditorProvider: loadDefaultTemplate iniciado');
+    try {
+      console.log('📦 Template original keys:', Object.keys(QUIZ_STYLE_21_STEPS_TEMPLATE));
+      console.log('📦 Template step-1 blocks:', QUIZ_STYLE_21_STEPS_TEMPLATE['step-1']?.length || 0);
+      console.log('📦 Template step-2 blocks:', QUIZ_STYLE_21_STEPS_TEMPLATE['step-2']?.length || 0);
+
+      const normalizedBlocks = normalizeStepBlocks(QUIZ_STYLE_21_STEPS_TEMPLATE);
+      console.log('🔄 Normalized blocks keys:', Object.keys(normalizedBlocks));
+
+      setState(prev => {
+        const mergedBlocks = mergeStepBlocks(prev.stepBlocks, normalizedBlocks);
+        console.log('🔀 Merged blocks keys:', Object.keys(mergedBlocks));
+        console.log('🔀 Merged step-1 blocks:', (mergedBlocks as any)['step-1']?.length || 0);
+
+        const validation: Record<number, boolean> = {};
+        for (let i = 1; i <= 21; i++) {
+          const key = `step-${i}`;
+          validation[i] = Array.isArray((mergedBlocks as any)[key]) && (mergedBlocks as any)[key].length > 0;
         }
-        const mapped = mapStepsToStepBlocks(def.steps as any);
-        canonicalCacheRef.current = mapped;
-        setState(prev => {
-          const mergedBlocks = mergeStepBlocks(prev.stepBlocks, mapped);
-          const validation: Record<number, boolean> = {};
-          Object.keys(mapped).forEach(k => {
-            const num = parseInt(k.replace(/[^0-9]/g, ''), 10);
-            if (Number.isFinite(num)) validation[num] = (mapped as any)[k].length > 0;
-          });
-          return {
-            ...prev,
-            stepBlocks: mergedBlocks,
-            stepValidation: { ...(prev.stepValidation || {}), ...validation },
-            currentStep: prev.currentStep || 1,
-          };
-        });
-      } catch (e) {
-        console.error('❌ loadDefaultTemplate: falha ao carregar canonical', e);
-      }
-    })();
+
+        console.log('✅ Validation summary:', validation);
+
+        return {
+          ...prev,
+          stepBlocks: mergedBlocks,
+          stepValidation: { ...(prev.stepValidation || {}), ...validation },
+          currentStep: prev.currentStep || 1,
+        };
+      });
+      console.log('💾 Estado atualizado com sucesso');
+    } catch (err) {
+      console.error('❌ Failed to load default template:', err);
+    }
   }, [setState]);
 
   // 🚀 AUTO LOAD: Carregar template padrão apenas quando explicitamente indicado
   useEffect(() => {
-    const stepBlocksCount = Object.keys(rawState.stepBlocks || {}).length;
-    const canonicalId = canonicalizeQuizEstiloId(funnelId || '') || '';
-    const shouldLoadDefault = canonicalId === QUIZ_ESTILO_TEMPLATE_ID && stepBlocksCount === 0;
-    if (shouldLoadDefault) {
-      console.log('🚀 EditorProvider - Autoload canonical quiz-estilo');
+    // Antes: carregava o template quando !funnelId (isso preenchia o canvas ao criar novo funil)
+    // Agora: só carrega automaticamente se um template específico for solicitado
+    const shouldLoadDefault = funnelId === 'quiz-estilo-completo' || (typeof funnelId === 'string' && funnelId.startsWith('template-'));
+
+    console.log('🔍 EditorProvider - Verificação de carregamento automático:', {
+      funnelId,
+      shouldLoadDefault,
+      currentStepBlocks: Object.keys(rawState.stepBlocks || {}).length
+    });
+
+    if (shouldLoadDefault && Object.keys(rawState.stepBlocks || {}).length === 0) {
+      console.log('🚀 EditorProvider - Carregando template padrão automaticamente...');
       loadDefaultTemplate();
     }
   }, [funnelId, rawState.stepBlocks, loadDefaultTemplate]);
@@ -1385,24 +1463,6 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
     exportJSON,
     importJSON,
     loadSupabaseComponents,
-    bulkReplaceStepBlocks: (data: Record<string, Block[]>, options) => {
-      setState(prev => {
-        const replace = options?.replace ?? true;
-        const merged = replace ? { ...data } : mergeStepBlocks(prev.stepBlocks, data);
-        const validation: Record<number, boolean> = {};
-        Object.entries(merged).forEach(([k, blocks]) => {
-          const num = parseInt(k.replace(/[^0-9]/g, ''), 10);
-          if (Number.isFinite(num)) validation[num] = Array.isArray(blocks) && blocks.length > 0;
-        });
-        return {
-          ...prev,
-          stepBlocks: merged,
-          stepValidation: options?.resetValidation ? validation : { ...prev.stepValidation, ...validation },
-          currentStep: options?.setCurrentStep || prev.currentStep || 1,
-          totalSteps: options?.totalSteps || prev.totalSteps || Object.keys(merged).length || 1
-        } as EditorState;
-      });
-    }
   };
 
   const contextValue: EditorContextValue = {

@@ -6,11 +6,7 @@
 
 import { EditorPropertiesPanel } from '@/components/editor/unified/EditorPropertiesPanel';
 import { ScrollArea } from '@/components/ui/scroll-area';
-/**
- * 🚨 DEPRECATED: QuizPropertiesPanelModular
- * Substituído pelo painel unificado Fase 3 (QuizUnifiedPropertiesPanel).
- * Mantido temporariamente apenas como referência.
- */
+import React from 'react';
 
 export interface QuizPropertiesPanelModularProps {
   blockId?: string;
@@ -45,7 +41,7 @@ export const QuizPropertiesPanelModular: React.FC<QuizPropertiesPanelModularProp
           {selectedBlock ? (
             <EditorPropertiesPanel
               selectedBlock={selectedBlock}
-              onBlockUpdate={onUpdate || (() => { })}
+              onBlockUpdate={onUpdate || (() => {})}
               onBlockDelete={id => console.log('Delete:', id)}
               onBlockDuplicate={id => console.log('Duplicate:', id)}
               previewMode={false}

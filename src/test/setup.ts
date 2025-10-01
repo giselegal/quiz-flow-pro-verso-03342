@@ -34,34 +34,24 @@ const localStorageMock = (() => {
     };
 })();
 
-// Garante que window exista em ambiente node
-if (!(globalThis as any).window) {
-    (globalThis as any).window = globalThis;
-}
-
-if (!(window as any).localStorage) {
-    Object.defineProperty(window, 'localStorage', {
-        value: localStorageMock,
-        configurable: true
-    });
-}
+Object.defineProperty(window, 'localStorage', {
+    value: localStorageMock,
+});
 
 // Mock global do matchMedia
-if (!(window as any).matchMedia) {
-    Object.defineProperty(window, 'matchMedia', {
-        writable: true,
-        value: vi.fn().mockImplementation(query => ({
-            matches: false,
-            media: query,
-            onchange: null,
-            addListener: vi.fn(),
-            removeListener: vi.fn(),
-            addEventListener: vi.fn(),
-            removeEventListener: vi.fn(),
-            dispatchEvent: vi.fn(),
-        })),
-    });
-}
+Object.defineProperty(window, 'matchMedia', {
+    writable: true,
+    value: vi.fn().mockImplementation(query => ({
+        matches: false,
+        media: query,
+        onchange: null,
+        addListener: vi.fn(),
+        removeListener: vi.fn(),
+        addEventListener: vi.fn(),
+        removeEventListener: vi.fn(),
+        dispatchEvent: vi.fn(),
+    })),
+});
 
 // Mock global do ResizeObserver
 class ResizeObserverMock {
@@ -76,6 +66,4 @@ class ResizeObserverMock {
     }
 }
 
-if (!(window as any).ResizeObserver) {
-    (window as any).ResizeObserver = ResizeObserverMock;
-}
+window.ResizeObserver = ResizeObserverMock;

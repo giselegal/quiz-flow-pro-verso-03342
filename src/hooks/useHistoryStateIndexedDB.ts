@@ -151,18 +151,14 @@ export const useHistoryStateIndexedDB = <T>(initialState: T, options: UseHistory
         };
     }, [history, enablePersistence, storageKey, storageManager, persistPresentOnly, persistDebounceMs, serialize, namespace, compression]);
 
-    // Accept both direct state objects and functional updaters (prev => next)
-    const push = useCallback((newState: T | ((prev: T) => T)) => {
+    const push = useCallback((newState: T) => {
         setHistory(prevHistory => {
-            const computed = typeof newState === 'function'
-                ? (newState as (prev: T) => T)(prevHistory.present)
-                : newState;
             const newPast = [...prevHistory.past, prevHistory.present].slice(-historyLimit);
             return {
                 past: newPast,
-                present: computed,
+                present: newState,
                 future: [],
-            } as HistoryState<T>;
+            };
         });
     }, [historyLimit]);
 

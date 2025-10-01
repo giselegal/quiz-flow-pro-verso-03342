@@ -11,10 +11,6 @@
  */
 
 import React, { useState, useCallback, useMemo, useRef, useEffect } from 'react';
-import { isEditorCoreV2Enabled } from '@/utils/editorFeatureFlags';
-import { useCoreSelection } from '@/context/useCoreSelection';
-import { useCoreStepBlocks } from '@/context/useCoreStepBlocks';
-import { useCoreStepDiff } from '@/context/useCoreStepDiff';
 import { Bot, Sparkles, Settings } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -32,6 +28,7 @@ import StepSidebar from './sidebars/StepSidebar';
 import ComponentsSidebar from './sidebars/ComponentsSidebar';
 // import RegistryPropertiesPanel from '@/components/universal/RegistryPropertiesPanel'; // ❌ DESABILITADO - API Panel fixo
 import DynamicPropertiesPanelImproved from '../../core/editor/DynamicPropertiesPanelImproved'; // ✅ NOVO - Improved Properties Panel
+import QuizPropertiesPanel from '@/components/editor/quiz/QuizPropertiesPanel';
 import GlobalQuizConfigPanel from '@/components/editor/quiz/GlobalQuizConfigPanel';
 import MasterJSONPreviewPanel from '@/components/editor/quiz/MasterJSONPreviewPanel';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
@@ -197,48 +194,18 @@ export const EditorProUnified: React.FC<EditorProUnifiedProps> = ({
   }, []);
 
   // Computed State
-  const coreV2 = isEditorCoreV2Enabled();
-  const { currentStep: coreCurrentStep } = coreV2 ? useCoreSelection() : { currentStep: state.currentStep } as any;
-  const coreBlocks = coreV2 ? useCoreStepBlocks(coreCurrentStep) : [];
-  const coreDiff = coreV2 ? useCoreStepDiff(coreCurrentStep) : null;
-
-  const elementCacheRef = useRef<Map<string, React.ReactElement>>(new Map());
-  const lastVersionRef = useRef<number>(0);
-
   const currentStepBlocks = useMemo(() => {
-    if (coreV2) {
-      // Usar blocks do Core diretamente (já fonte de verdade no modo V2)
-      const blocks = coreBlocks as any[];
-      if (coreDiff && coreDiff.version !== lastVersionRef.current) {
-        // Atualizar cache incremental
-        coreDiff.removed.forEach(b => elementCacheRef.current.delete(b.id));
-        coreDiff.updated.forEach(({ after }) => elementCacheRef.current.delete(after.id));
-        coreDiff.added.forEach(b => {
-          // será adicionado na construção abaixo
-        });
-        lastVersionRef.current = coreDiff.version;
-        if ((import.meta as any)?.env?.VITE_EDITOR_DEBUG === 'true') {
-          console.log('[CoreDiff] step', coreCurrentStep, {
-            version: coreDiff.version,
-            added: coreDiff.added.length,
-            removed: coreDiff.removed.length,
-            updated: coreDiff.updated.length,
-            stable: coreDiff.stable.length
-          });
-        }
-      }
-      return blocks;
-    }
-    // Legado
+    // Builder blocks originais
     const stepKey = `step-${state.currentStep}`;
     const builderBlocks = state.stepBlocks[stepKey] || [];
+    // Tentar mapear para step do quiz (index = currentStep-1)
     const quizIndex = state.currentStep - 1;
     const quizStep = quiz.state.steps[quizIndex];
     if (quizStep && quiz.state.blocks[quizStep.id]) {
-      return quiz.state.blocks[quizStep.id] as any[];
+      return quiz.state.blocks[quizStep.id] as any[]; // usar blocks gerados dinâmicos do quiz
     }
     return builderBlocks;
-  }, [coreV2, coreBlocks, coreDiff, state.stepBlocks, state.currentStep, quiz.state.blocks, quiz.state.steps]);
+  }, [state.stepBlocks, state.currentStep, quiz.state.blocks, quiz.state.steps]);
 
   const selectedBlock = useMemo(() => {
     if (!selectedBlockId) return null;
@@ -493,13 +460,13 @@ export const EditorProUnified: React.FC<EditorProUnifiedProps> = ({
               <EditorCanvas
                 blocks={currentStepBlocks}
                 selectedBlock={selectedBlock}
-                currentStep={coreV2 ? coreCurrentStep : state.currentStep}
+                currentStep={state.currentStep}
                 funnelId={funnelId} // Passar funnelId dinâmico para o canvas
                 onSelectBlock={handleSelectBlock}
                 onUpdateBlock={handleUpdateBlock}
                 onDeleteBlock={handleDeleteBlock}
                 isPreviewMode={isPreviewMode}
-                onStepChange={coreV2 ? () => { } : actions.setCurrentStep}
+                onStepChange={actions.setCurrentStep}
                 realExperienceMode={realExperienceMode} // Passar prop para EditorCanvas
               />
             </QuizCanvasErrorBoundary>
@@ -535,7 +502,7 @@ export const EditorProUnified: React.FC<EditorProUnifiedProps> = ({
                 </TabsList>
               </div>
               <TabsContent value="step" className="mt-0 focus:outline-none">
-                {/* Painel de propriedades legado removido em favor do painel unificado Fase 3 */}
+                <QuizPropertiesPanel />
                 <div className="border-t">
                   <DynamicPropertiesPanelImproved />
                 </div>
