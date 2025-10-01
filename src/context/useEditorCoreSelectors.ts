@@ -2,6 +2,10 @@ import { useEditorCore } from './EditorCoreProvider';
 
 /**
  * Hook de selectors derivados do estado core (fase incremental).
+ * Exemplo de uso combinado com useCoreStepBlocks:
+ * const { currentStep, hash } = useEditorCoreSelectors();
+ * const blocks = useCoreStepBlocks(currentStep);
+ * // hash muda quando estrutura de stepBlocks muda, mantendo blocks coerente
  */
 export function useEditorCoreSelectors() {
     const { state } = useEditorCore();
