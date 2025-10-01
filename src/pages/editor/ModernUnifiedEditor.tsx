@@ -33,7 +33,9 @@ import BlockPalette from '@/components/editor/palette/BlockPalette';
 import { PropertiesPanel } from '@/components/editor/properties/PropertiesPanel';
 import RealExperienceCanvas from '@/pages/editor/modern/runtime/RealExperienceCanvas';
 // Utilidades/UI básicas
-import { mapEditorBlocksToQuizSteps } from '@/utils/mapEditorBlocksToQuizSteps';
+// Lógica de steps extraída para hooks dedicados
+import { useRuntimeSteps } from './modern/hooks/useRuntimeSteps';
+import { useDerivedSteps } from './modern/hooks/useDerivedSteps';
 import { Button } from '@/components/ui/button';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 // Lazy heavy components
@@ -67,6 +69,17 @@ interface EditorState { mode: ToolbarEditorMode; aiAssistantActive: boolean; pre
 // 🎯 UNIFIED EDITOR WITH CRUD
 // ===============================
 
+/**
+ * UnifiedEditorCore
+ * Orquestra o fluxo principal do Editor:
+ *  1. Resolve funnelId/templateId (useEditorRouteInfo)
+ *  2. Redireciona para editor especializado se for quiz-estilo canônico
+ *  3. Carrega template/contexto CRUD (useTemplateLifecycle + UnifiedCRUD)
+ *  4. Sincroniza funnel (useFunnelSyncLogic) e quiz (useQuizSyncBridge)
+ *  5. Deriva steps para UI (useDerivedSteps) e runtime preview (useRuntimeSteps)
+ *  6. Gerencia estado de UI (toolbarState + modos realtime / preview)
+ *  7. Renderiza layout em 4 colunas com sidebars, palette, canvas e properties
+ */
 export const UnifiedEditorCore: React.FC<ModernUnifiedEditorProps> = ({
     funnelId,
     templateId,
@@ -122,25 +135,8 @@ export const UnifiedEditorCore: React.FC<ModernUnifiedEditorProps> = ({
     // 🎯 QUIZ SYNC BRIDGE
     const quizBridge = useQuizSyncBridge({ extractedInfo: extractedInfo as any, unifiedEditor, crudContext });
 
-    // 🧱 DERIVAÇÃO DE STEPS PARA SIDEBAR
-    const derivedSteps = useMemo(() => {
-        const quizSteps: any[] = (quizBridge as any)?.steps || [];
-        if (quizBridge.active && quizSteps.length) {
-            return quizSteps.map((s: any, idx: number) => ({
-                id: s.id || s.key || `step-${idx}`,
-                label: s.title || s.id || s.key || `Step ${idx + 1}`,
-                type: s.type || 'unknown'
-            }));
-        }
-        if ((unifiedEditor as any)?.stepBlocks?.length) {
-            return (unifiedEditor as any).stepBlocks.map((b: any, idx: number) => ({
-                id: b.id || `block-${idx}`,
-                label: b.type || `Block ${idx + 1}`,
-                type: b.type || 'block'
-            }));
-        }
-        return [];
-    }, [quizBridge.active, (quizBridge as any)?.steps, unifiedEditor]);
+    // 🧱 DERIVAÇÃO DE STEPS PARA SIDEBAR (agora isolada)
+    const derivedSteps = useDerivedSteps({ quizBridge, unifiedEditor });
 
     const [selectedStepId, setSelectedStepId] = useState<string | null>(null);
     const selectedBlock = useMemo(() => {
@@ -156,22 +152,8 @@ export const UnifiedEditorCore: React.FC<ModernUnifiedEditorProps> = ({
         return null;
     }, [selectedStepId, unifiedEditor, quizBridge]);
 
-    // Steps derivados para runtime preview (fase atual: apenas quando existirem stepBlocks estruturados em objeto)
-    const runtimeSteps = useMemo(() => {
-        if (coreV2 && coreQuiz) {
-            return coreQuiz.steps;
-        }
-        // Legado (V1) - mantém comportamento anterior
-        const sb = (unifiedEditor as any)?.state?.stepBlocks;
-        if (sb && typeof sb === 'object') {
-            try {
-                return mapEditorBlocksToQuizSteps(sb);
-            } catch (e) {
-                console.warn('[RealPreview][V1] Falha ao mapear stepBlocks -> quiz steps', e);
-            }
-        }
-        return [] as any[];
-    }, [unifiedEditor, coreV2, coreQuiz?.hash]);
+    // Steps para runtime preview (Core V2 ou fallback legado)
+    const runtimeSteps = useRuntimeSteps({ coreV2, coreQuiz, unifiedEditor });
 
     const handleSelectStep = useCallback((id: string) => {
         setSelectedStepId(id);
@@ -249,6 +231,7 @@ export const UnifiedEditorCore: React.FC<ModernUnifiedEditorProps> = ({
         <div className="h-6 border-t text-xs px-3 flex items-center text-muted-foreground bg-background/50">Inicializando…</div>
     );
 
+    // Exporta JSON (somente Core V2) - útil para debug/migração
     const handleExportJson = useCallback(() => {
         if (!coreV2 || !coreQuiz || !coreCtx) return;
         const payload = {
@@ -358,6 +341,11 @@ export const UnifiedEditorCore: React.FC<ModernUnifiedEditorProps> = ({
 // 🎯 WRAPPER WITH PROVIDERS
 // ===============================
 
+/**
+ * ModernUnifiedEditor (Wrapper)
+ * Adiciona providers de contexto (CRUD + Runtime) e faz detecção inicial
+ * de funnelId/templateId diretamente da URL como fallback quando props não são passadas.
+ */
 const ModernUnifiedEditor: React.FC<ModernUnifiedEditorProps> = (props) => {
     // Extrair info (funnelId ou templateId) da URL também no wrapper
     const extractedInfo = React.useMemo(() => {
