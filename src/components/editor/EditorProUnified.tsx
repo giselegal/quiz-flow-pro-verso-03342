@@ -11,6 +11,10 @@
  */
 
 import React, { useState, useCallback, useMemo, useRef, useEffect } from 'react';
+import { isEditorCoreV2Enabled } from '@/utils/editorFeatureFlags';
+import { useCoreSelection } from '@/context/useCoreSelection';
+import { useCoreStepBlocks } from '@/context/useCoreStepBlocks';
+import { useCoreStepDiff } from '@/context/useCoreStepDiff';
 import { Bot, Sparkles, Settings } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -193,18 +197,48 @@ export const EditorProUnified: React.FC<EditorProUnifiedProps> = ({
   }, []);
 
   // Computed State
+  const coreV2 = isEditorCoreV2Enabled();
+  const { currentStep: coreCurrentStep } = coreV2 ? useCoreSelection() : { currentStep: state.currentStep } as any;
+  const coreBlocks = coreV2 ? useCoreStepBlocks(coreCurrentStep) : [];
+  const coreDiff = coreV2 ? useCoreStepDiff(coreCurrentStep) : null;
+
+  const elementCacheRef = useRef<Map<string, React.ReactElement>>(new Map());
+  const lastVersionRef = useRef<number>(0);
+
   const currentStepBlocks = useMemo(() => {
-    // Builder blocks originais
+    if (coreV2) {
+      // Usar blocks do Core diretamente (já fonte de verdade no modo V2)
+      const blocks = coreBlocks as any[];
+      if (coreDiff && coreDiff.version !== lastVersionRef.current) {
+        // Atualizar cache incremental
+        coreDiff.removed.forEach(b => elementCacheRef.current.delete(b.id));
+        coreDiff.updated.forEach(({ after }) => elementCacheRef.current.delete(after.id));
+        coreDiff.added.forEach(b => {
+          // será adicionado na construção abaixo
+        });
+        lastVersionRef.current = coreDiff.version;
+        if ((import.meta as any)?.env?.VITE_EDITOR_DEBUG === 'true') {
+          console.log('[CoreDiff] step', coreCurrentStep, {
+            version: coreDiff.version,
+            added: coreDiff.added.length,
+            removed: coreDiff.removed.length,
+            updated: coreDiff.updated.length,
+            stable: coreDiff.stable.length
+          });
+        }
+      }
+      return blocks;
+    }
+    // Legado
     const stepKey = `step-${state.currentStep}`;
     const builderBlocks = state.stepBlocks[stepKey] || [];
-    // Tentar mapear para step do quiz (index = currentStep-1)
     const quizIndex = state.currentStep - 1;
     const quizStep = quiz.state.steps[quizIndex];
     if (quizStep && quiz.state.blocks[quizStep.id]) {
-      return quiz.state.blocks[quizStep.id] as any[]; // usar blocks gerados dinâmicos do quiz
+      return quiz.state.blocks[quizStep.id] as any[];
     }
     return builderBlocks;
-  }, [state.stepBlocks, state.currentStep, quiz.state.blocks, quiz.state.steps]);
+  }, [coreV2, coreBlocks, coreDiff, state.stepBlocks, state.currentStep, quiz.state.blocks, quiz.state.steps]);
 
   const selectedBlock = useMemo(() => {
     if (!selectedBlockId) return null;
@@ -459,13 +493,13 @@ export const EditorProUnified: React.FC<EditorProUnifiedProps> = ({
               <EditorCanvas
                 blocks={currentStepBlocks}
                 selectedBlock={selectedBlock}
-                currentStep={state.currentStep}
+                currentStep={coreV2 ? coreCurrentStep : state.currentStep}
                 funnelId={funnelId} // Passar funnelId dinâmico para o canvas
                 onSelectBlock={handleSelectBlock}
                 onUpdateBlock={handleUpdateBlock}
                 onDeleteBlock={handleDeleteBlock}
                 isPreviewMode={isPreviewMode}
-                onStepChange={actions.setCurrentStep}
+                onStepChange={coreV2 ? () => {} : actions.setCurrentStep}
                 realExperienceMode={realExperienceMode} // Passar prop para EditorCanvas
               />
             </QuizCanvasErrorBoundary>
