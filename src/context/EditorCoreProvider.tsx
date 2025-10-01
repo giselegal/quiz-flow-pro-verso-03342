@@ -40,6 +40,11 @@ interface EditorCoreContextValue {
         reorderBlocks(stepKey: string, sourceIndex: number, targetIndex: number): void;
         setCurrentStep(step: number): void;
         selectBlock(blockId: string | null): void;
+        /**
+         * Executa várias mutações sobre coreStepBlocks atomically, disparando somente um repaint.
+         * Uso: coreActions.batch(draft => { draft['step-1'].push(...); });
+         */
+        batch(mutator: (draft: Record<string, any[]>) => void): void;
     };
     getStepDiff(stepKey: string): {
         added: any[];
@@ -63,6 +68,8 @@ export const EditorCoreProvider: React.FC<{ children: React.ReactNode; funnelId?
         lastMapDurationMs: 0
     });
     const [coreStepBlocks, setCoreStepBlocks] = useState<Record<string, any[]>>({});
+    const batchingRef = useRef<boolean>(false);
+    const pendingBatchRef = useRef<Record<string, any[]> | null>(null);
     const [currentStepInternal, setCurrentStepInternal] = useState<number>(1);
     const [selectedBlockIdInternal, setSelectedBlockIdInternal] = useState<string | null>(null);
     const isHydratedRef = useRef(false);
@@ -226,11 +233,18 @@ export const EditorCoreProvider: React.FC<{ children: React.ReactNode; funnelId?
             markInitialized: () => setInitialized(true),
             coreActions: {
                 addBlock: (stepKey: string, block: any) => {
-                    setCoreStepBlocks(prev => {
-                        const arr = (prev[stepKey] || []).slice();
+                    if (batchingRef.current && pendingBatchRef.current) {
+                        const draft = pendingBatchRef.current;
+                        const arr = (draft[stepKey] || []).slice();
                         arr.push(block);
-                        return { ...prev, [stepKey]: arr };
-                    });
+                        draft[stepKey] = arr;
+                    } else {
+                        setCoreStepBlocks(prev => {
+                            const arr = (prev[stepKey] || []).slice();
+                            arr.push(block);
+                            return { ...prev, [stepKey]: arr };
+                        });
+                    }
                     if (!(window as any).EDITOR_CORE_NO_COMPAT) editorActions?.addBlock?.(stepKey, block);
                 },
                 setCurrentStep: (next: number) => {
@@ -242,28 +256,70 @@ export const EditorCoreProvider: React.FC<{ children: React.ReactNode; funnelId?
                     if (!(window as any).EDITOR_CORE_NO_COMPAT) editorActions?.setSelectedBlockId?.(blockId);
                 },
                 updateBlock: (stepKey: string, blockId: string, updates: Record<string, any>) => {
-                    setCoreStepBlocks(prev => {
-                        const arr = (prev[stepKey] || []).map(b => (b.id === blockId ? { ...b, ...updates } : b));
-                        return { ...prev, [stepKey]: arr };
-                    });
+                    const apply = (source: Record<string, any[]>) => {
+                        const arr = (source[stepKey] || []).map(b => (b.id === blockId ? { ...b, ...updates } : b));
+                        source[stepKey] = arr;
+                    };
+                    if (batchingRef.current && pendingBatchRef.current) {
+                        apply(pendingBatchRef.current);
+                    } else {
+                        setCoreStepBlocks(prev => {
+                            const draft = { ...prev };
+                            apply(draft);
+                            return draft;
+                        });
+                    }
                     if (!(window as any).EDITOR_CORE_NO_COMPAT) editorActions?.updateBlock?.(stepKey, blockId, updates);
                 },
                 removeBlock: (stepKey: string, blockId: string) => {
-                    setCoreStepBlocks(prev => {
-                        const arr = (prev[stepKey] || []).filter(b => b.id !== blockId);
-                        return { ...prev, [stepKey]: arr };
-                    });
+                    if (batchingRef.current && pendingBatchRef.current) {
+                        const draft = pendingBatchRef.current;
+                        const arr = (draft[stepKey] || []).filter(b => b.id !== blockId);
+                        draft[stepKey] = arr;
+                    } else {
+                        setCoreStepBlocks(prev => {
+                            const arr = (prev[stepKey] || []).filter(b => b.id !== blockId);
+                            return { ...prev, [stepKey]: arr };
+                        });
+                    }
                     if (!(window as any).EDITOR_CORE_NO_COMPAT) editorActions?.removeBlock?.(stepKey, blockId);
                 },
                 reorderBlocks: (stepKey: string, sourceIndex: number, targetIndex: number) => {
-                    setCoreStepBlocks(prev => {
-                        const arr = (prev[stepKey] || []).slice();
-                        if (sourceIndex < 0 || sourceIndex >= arr.length || targetIndex < 0 || targetIndex >= arr.length) return prev;
+                    const apply = (source: Record<string, any[]>) => {
+                        const arr = (source[stepKey] || []).slice();
+                        if (sourceIndex < 0 || sourceIndex >= arr.length || targetIndex < 0 || targetIndex >= arr.length) return;
                         const [moved] = arr.splice(sourceIndex, 1);
                         arr.splice(targetIndex, 0, moved);
-                        return { ...prev, [stepKey]: arr };
-                    });
+                        source[stepKey] = arr;
+                    };
+                    if (batchingRef.current && pendingBatchRef.current) {
+                        apply(pendingBatchRef.current);
+                    } else {
+                        setCoreStepBlocks(prev => {
+                            const draft = { ...prev };
+                            apply(draft);
+                            return draft;
+                        });
+                    }
                     if (!(window as any).EDITOR_CORE_NO_COMPAT) editorActions?.reorderBlocks?.(stepKey, sourceIndex, targetIndex);
+                },
+                batch: (mutator: (draft: Record<string, any[]>) => void) => {
+                    if (batchingRef.current) {
+                        console.warn('[EditorCoreProvider] batch() já em andamento; ignorando chamada aninhada');
+                        return;
+                    }
+                    batchingRef.current = true;
+                    pendingBatchRef.current = { ...coreStepBlocks };
+                    try {
+                        mutator(pendingBatchRef.current);
+                        const finalDraft = pendingBatchRef.current;
+                        setCoreStepBlocks(finalDraft);
+                    } catch (err) {
+                        console.error('[EditorCoreProvider] Erro em batch()', err);
+                    } finally {
+                        batchingRef.current = false;
+                        pendingBatchRef.current = null;
+                    }
                 }
             },
             getStepDiff
