@@ -23,6 +23,7 @@ import RealExperienceCanvas from '@/pages/editor/modern/runtime/RealExperienceCa
 import { mapEditorBlocksToQuizSteps } from '@/utils/mapEditorBlocksToQuizSteps';
 import { isEditorCoreV2Enabled } from '@/utils/editorFeatureFlags';
 import { useEditorCoreSelectors } from '@/context/useEditorCoreSelectors';
+import { useCoreQuizSteps } from '@/context/useCoreQuizSteps';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { useUnifiedCRUD, UnifiedCRUDProvider } from '@/context/UnifiedCRUDProvider';
 import EditorRuntimeProviders from '@/context/EditorRuntimeProviders';
@@ -96,6 +97,7 @@ const UnifiedEditorCore: React.FC<ModernUnifiedEditorProps> = ({
     const unifiedEditor = useUnifiedEditor();
     const coreV2 = isEditorCoreV2Enabled();
     const coreSelectors = coreV2 ? useEditorCoreSelectors() : null;
+    const coreQuiz = coreV2 ? useCoreQuizSteps() : null;
 
     // Estado do editor UI
     const [editorState, setEditorState] = useState<EditorState>({
@@ -151,33 +153,20 @@ const UnifiedEditorCore: React.FC<ModernUnifiedEditorProps> = ({
 
     // Steps derivados para runtime preview (fase atual: apenas quando existirem stepBlocks estruturados em objeto)
     const runtimeSteps = useMemo(() => {
-        // TODO(Migration Core): Após internalizar stepBlocks no EditorCoreProvider
-        // substituir acesso '(unifiedEditor as any)?.state?.stepBlocks' por seletor direto
-        // evitando dependência do provider legado.
-        // V2: usar hash para recalcular somente quando estrutura muda
-        if (coreV2 && coreSelectors) {
-            try {
-                const editorState = (unifiedEditor as any)?.state;
-                const sb = editorState?.stepBlocks;
-                if (sb && typeof sb === 'object') {
-                    return mapEditorBlocksToQuizSteps(sb);
-                }
-            } catch (e) {
-                console.warn('[RealPreview][V2] Erro ao mapear stepBlocks -> quiz steps', e);
-            }
-            return [] as any[];
+        if (coreV2 && coreQuiz) {
+            return coreQuiz.steps;
         }
-        // Legado (V1)
+        // Legado (V1) - mantém comportamento anterior
         const sb = (unifiedEditor as any)?.state?.stepBlocks;
         if (sb && typeof sb === 'object') {
             try {
                 return mapEditorBlocksToQuizSteps(sb);
             } catch (e) {
-                console.warn('[RealPreview] Falha ao mapear stepBlocks -> quiz steps', e);
+                console.warn('[RealPreview][V1] Falha ao mapear stepBlocks -> quiz steps', e);
             }
         }
         return [] as any[];
-    }, [unifiedEditor, coreV2, coreSelectors?.hash]);
+    }, [unifiedEditor, coreV2, coreQuiz?.hash]);
 
     const handleSelectStep = useCallback((id: string) => {
         setSelectedStepId(id);

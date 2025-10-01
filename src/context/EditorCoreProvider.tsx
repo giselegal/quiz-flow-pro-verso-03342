@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useMemo, useState, useEffect } from 'react';
+import { mapEditorBlocksToQuizSteps } from '@/utils/mapEditorBlocksToQuizSteps';
 import { useEditor } from '@/components/editor/provider-alias';
 
 /**
@@ -19,6 +20,7 @@ export interface EditorCoreState {
     stepKeys: string[];
     stepBlocksHash: string; // Hash leve para detectar mudanças
     selectedBlockId?: string | null;
+    quizSteps?: any[]; // derivado memoizado
 }
 
 interface EditorCoreContextValue {
@@ -39,6 +41,16 @@ export const EditorCoreProvider: React.FC<{ children: React.ReactNode; funnelId?
     const [initialized, setInitialized] = useState(false);
     const [hash, setHash] = useState('');
 
+    /**
+     * TODO(Fase 4 - Ownership): Migrar stepBlocks para estado interno do Core
+     * Estratégia:
+     * 1. Introduzir estado interno: const [coreStepBlocks, setCoreStepBlocks]
+     * 2. Sincronizar uma única vez a partir de editorState.stepBlocks quando provider monta (se ainda não migrado)
+     * 3. Redirecionar coreActions.* para operar sobre coreStepBlocks e emitir eventos/diffs
+     * 4. Fornecer mecanismo de compatibilidade opcional para EditorProvider consumir diff até sua remoção
+     * 5. Remover uso de editorState.stepBlocks das dependências de memo após transição
+     */
+
     // Hash leve (não criptográfico) baseado em tamanhos e tipos — evita custo de JSON completo aqui.
     useEffect(() => {
         const keys = Object.keys(editorState.stepBlocks || {});
@@ -58,6 +70,17 @@ export const EditorCoreProvider: React.FC<{ children: React.ReactNode; funnelId?
         setHash((h >>> 0).toString(16));
     }, [editorState.stepBlocks]);
 
+    // Derivação memoizada de quizSteps baseada no hash estrutural
+    const quizSteps = useMemo(() => {
+        try {
+            if (!editorState?.stepBlocks) return [];
+            return mapEditorBlocksToQuizSteps(editorState.stepBlocks as any);
+        } catch (err) {
+            console.warn('[EditorCoreProvider] Falha ao derivar quizSteps', err);
+            return [];
+        }
+    }, [hash, editorState.stepBlocks]);
+
     const value = useMemo<EditorCoreContextValue>(() => {
         const stepKeys = Object.keys(editorState.stepBlocks || {}).sort();
         return {
@@ -69,7 +92,8 @@ export const EditorCoreProvider: React.FC<{ children: React.ReactNode; funnelId?
                 totalSteps: stepKeys.length,
                 stepKeys,
                 stepBlocksHash: hash,
-                selectedBlockId: editorState.selectedBlockId || null
+                selectedBlockId: editorState.selectedBlockId || null,
+                quizSteps
             },
             markInitialized: () => setInitialized(true),
             coreActions: {
@@ -79,7 +103,7 @@ export const EditorCoreProvider: React.FC<{ children: React.ReactNode; funnelId?
                 reorderBlocks: (stepKey: string, sourceIndex: number, targetIndex: number) => editorActions?.reorderBlocks?.(stepKey, sourceIndex, targetIndex)
             }
         };
-    }, [initialized, editorState.currentStep, editorState.stepBlocks, editorState.selectedBlockId, hash, editorActions]);
+    }, [initialized, editorState.currentStep, editorState.stepBlocks, editorState.selectedBlockId, hash, quizSteps, editorActions]);
 
     return (
         <EditorCoreContext.Provider value={value}>
