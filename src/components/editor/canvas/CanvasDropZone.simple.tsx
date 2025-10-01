@@ -4,6 +4,7 @@ import { useDndContext, useDroppable } from '@dnd-kit/core';
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { mark } from '@/utils/perf';
 import React from 'react';
+import { useVirtualList } from '@/hooks/useVirtualList';
 import { useRenderCount } from '@/hooks/useRenderCount';
 import { CANVAS_ROOT_ID } from '../dnd/constants';
 import { generateUniqueId } from '@/utils/generateUniqueId';
@@ -241,10 +242,10 @@ const CanvasDropZoneBase: React.FC<CanvasDropZoneProps> = ({
   // Modo preview controlado por prop (default: false)
   const isPreviewing = !!isPreviewingProp;
 
-  // 🚀 OTIMIZAÇÃO: Constantes de virtualização
+  // 🚀 OTIMIZAÇÃO: Constantes de virtualização (baseline)
   const VIRTUALIZE_THRESHOLD = React.useMemo(() => 120, []);
-  const AVG_ITEM_HEIGHT = React.useMemo(() => 120, []); // px (estimativa)
-  const OVERSCAN = React.useMemo(() => 8, []); // itens
+  const AVG_ITEM_HEIGHT = React.useMemo(() => 120, []); // altura estimada média
+  const OVERSCAN = React.useMemo(() => 8, []); // itens extras antes/depois
 
   // 🚀 OTIMIZAÇÃO: Flag dinâmica para permitir alternância em tempo real (memoizada)
   const [virtDisabledDynamic, setVirtDisabledDynamic] = React.useState<boolean>(() => {
@@ -293,55 +294,20 @@ const CanvasDropZoneBase: React.FC<CanvasDropZoneProps> = ({
     [isPreviewing, isDraggingAnyValidComponent, virtDisabledDynamic, blocks.length, VIRTUALIZE_THRESHOLD]
   );
 
-  const scrollRef = React.useRef<HTMLDivElement | null>(null);
-  const [scrollTop, setScrollTop] = React.useState(0);
-  const [containerHeight, setContainerHeight] = React.useState<number>(600);
+  // 🚀 OTIMIZAÇÃO: Hook de virtualização (substitui lógica manual de scroll/resize)
+  const virtual = useVirtualList({
+    items: blocks,
+    itemHeight: AVG_ITEM_HEIGHT,
+    overscan: OVERSCAN,
+    enabled: enableVirtualization,
+  });
 
-  // 🚀 OTIMIZAÇÃO: Observa altura do container com debounce
-  React.useEffect(() => {
-    const el = scrollRef.current;
-    if (!el) return;
-
-    let timeoutId: NodeJS.Timeout | null = null;
-
-    const ro = new ResizeObserver(() => {
-      if (timeoutId) clearTimeout(timeoutId);
-      timeoutId = setTimeout(() => {
-        setContainerHeight(el.clientHeight || 600);
-      }, 100); // Debounce de 100ms
-    });
-
-    ro.observe(el);
-    setContainerHeight(el.clientHeight || 600);
-
-    return () => {
-      if (timeoutId) clearTimeout(timeoutId);
-      ro.disconnect();
-    };
-  }, []); // Empty dependency array - only runs once on mount
-
-  // 🚀 OTIMIZAÇÃO: Scroll handler com debounce para evitar re-renders excessivos
-  const onScroll = React.useCallback(() => {
-    const el = scrollRef.current;
-    if (!el || !enableVirtualization) return;
-
-    requestAnimationFrame(() => {
-      setScrollTop(el.scrollTop || 0);
-    });
-  }, [enableVirtualization]);
-
-  const visibleMeta = React.useMemo(() => {
-    const visibleCount = Math.max(1, Math.ceil(containerHeight / AVG_ITEM_HEIGHT));
-    let startIndex = Math.max(0, Math.floor(scrollTop / AVG_ITEM_HEIGHT) - OVERSCAN);
-    let endIndex = Math.min(blocks.length, startIndex + visibleCount + OVERSCAN * 2);
-    // Ajuste final caso end alcance o fim
-    if (endIndex - startIndex < visibleCount && endIndex === blocks.length) {
-      startIndex = Math.max(0, blocks.length - (visibleCount + OVERSCAN * 2));
-    }
-    const topPad = startIndex * AVG_ITEM_HEIGHT;
-    const bottomPad = Math.max(0, (blocks.length - endIndex) * AVG_ITEM_HEIGHT);
-    return { startIndex, endIndex, topPad, bottomPad };
-  }, [scrollTop, containerHeight, blocks.length]);
+  const visibleMeta = React.useMemo(() => ({
+    startIndex: virtual.startIndex,
+    endIndex: virtual.endIndex,
+    topPad: virtual.topPad,
+    bottomPad: virtual.bottomPad,
+  }), [virtual.startIndex, virtual.endIndex, virtual.topPad, virtual.bottomPad]);
 
   // Renderização progressiva no modo edição para listas enormes (reduz pico de render)
   const EDIT_PROGRESSIVE_THRESHOLD = 200;
@@ -481,9 +447,11 @@ const CanvasDropZoneBase: React.FC<CanvasDropZoneProps> = ({
         </div>
       ) : enableVirtualization ? (
         <div
-          ref={scrollRef}
-          onScroll={onScroll}
+          ref={virtual.containerRef}
           className="w-full"
+          data-virtualized
+          data-virt-window={`${visibleMeta.startIndex}-${visibleMeta.endIndex}`}
+          data-virt-total={blocks.length}
           style={{ maxWidth: 800, margin: '0 auto', height: 'auto' }}
         >
           {blocks.length > 0 ? (
