@@ -15,6 +15,7 @@ import useEditorRouteInfo from './modern/hooks/useEditorRouteInfo';
 import { Button } from '@/components/ui/button';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { useUnifiedCRUD, UnifiedCRUDProvider } from '@/context/UnifiedCRUDProvider';
+import EditorRuntimeProviders from '@/context/EditorRuntimeProviders';
 import { useUnifiedEditor } from '@/hooks';
 import useTemplateLifecycle from './modern/hooks/useTemplateLifecycle';
 import useFunnelSyncLogic from './modern/hooks/useFunnelSync';
@@ -327,7 +328,9 @@ const ModernUnifiedEditor: React.FC<ModernUnifiedEditorProps> = (props) => {
             autoLoad={true}
             debug={false}
         >
-            <UnifiedEditorCore {...props} />
+            <EditorRuntimeProviders funnelId={extractedInfo.funnelId || undefined} debugMode={false}>
+                <UnifiedEditorCore {...props} />
+            </EditorRuntimeProviders>
         </UnifiedCRUDProvider>
     );
 };

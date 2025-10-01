@@ -7,6 +7,7 @@
 
 import { Block } from '@/types/editor';
 import { QUIZ_STEPS, STEP_ORDER } from '@/data/quizSteps';
+import { toStepKey } from '@/components/editor/navigation/stepMapping';
 import { QuizQuestion } from '@/types/quiz';
 import { QuizEditorPersistenceService } from '@/services/QuizEditorPersistenceService';
 import { QUIZ_EDITOR_VERSION, QuizTemplateData } from '@/types/quizEditor';
@@ -29,7 +30,7 @@ export interface EditorQuizState {
   description: string;
   questions: QuizQuestion[];
   styles: any[];
-  stepBlocks: Record<string, Block[]>; // 🔄 blocos por step (placeholder)
+  stepBlocks: Record<string, Block[]>; // 🔄 blocos por step (sempre keys normalizadas step-<n>)
   scoringMatrix?: Record<string, Record<string, Record<string, number>>>; // matriz agregada
   isDirty: boolean;
   lastSaved?: string;
@@ -73,6 +74,31 @@ export class QuizToEditorAdapter {
     console.log('🎯 QuizToEditorAdapter inicializado');
   }
 
+  // =============================================================================
+  // 🔁 NOVO CONTRATO SIMPLIFICADO (Fase Arquitetura Ideal)
+  // =============================================================================
+  /**
+   * API estática de conversão usada pela `QuizEditorIntegratedPage`.
+   * Gera blocos normalizados (step-<n>) e metadados.
+   */
+  static async convert(funnelId?: string) {
+    const adapter = new QuizToEditorAdapter();
+    const state = await adapter.convertQuizToEditor({ funnelId });
+
+    const totalSteps = Object.keys(state.stepBlocks).length;
+    const quizMetadata = {
+      questions: state.questions.length,
+      styles: state.styles.length,
+      version: state.version,
+      funnelId: funnelId || state.id,
+    };
+    return {
+      stepBlocks: state.stepBlocks,
+      totalSteps,
+      quizMetadata,
+    };
+  }
+
   /**
    * 🔄 Converter quiz para estado do editor
    */
@@ -90,11 +116,8 @@ export class QuizToEditorAdapter {
       const persisted = await QuizEditorPersistenceService.load(source.id || 'quiz-estilo');
       if (persisted?.scoringMatrix) scoringMatrix = persisted.scoringMatrix;
 
-      // 3) Placeholder de stepBlocks (cada step id → array vazia por enquanto)
-      const stepBlocks: Record<string, Block[]> = {};
-      for (const stepId of Object.keys(QUIZ_STEPS)) {
-        stepBlocks[stepId] = [];
-      }
+      // 3) Gerar stepBlocks normalizados (step-1..n) com blocos mínimos já prontos
+      const stepBlocks: Record<string, Block[]> = this.generateNormalizedStepBlocks();
 
       const editorState: EditorQuizState = {
         id: source.id || `quiz-${Date.now()}`,
@@ -238,6 +261,74 @@ export class QuizToEditorAdapter {
       }
     });
     return { id: 'quiz-estilo', name: 'Quiz Estilo Pessoal', questions, styles, version: QUIZ_EDITOR_VERSION };
+  }
+
+  /**
+   * 🔧 Gera blocos padronizados por etapa a partir do canonical (mínimo viável).
+   * Cada etapa recebe (quando aplicável) um bloco representativo para facilitar
+   * edição imediata no EditorProvider.
+   */
+  private generateNormalizedStepBlocks(): Record<string, Block[]> {
+    const blocks: Record<string, Block[]> = {};
+
+    STEP_ORDER.forEach((canonicalStepId, index) => {
+      const quizStep: any = (QUIZ_STEPS as any)[canonicalStepId];
+      const stepNumber = index + 1;
+      const stepKey = toStepKey(stepNumber);
+
+      // Determinar tipo de bloco principal
+      const blockType = this.mapQuizStepTypeToBlockType(quizStep?.type);
+      const baseTitle = quizStep?.title || quizStep?.questionText || `Etapa ${stepNumber}`;
+      const baseDescription = quizStep?.text || '';
+
+      // Para etapas sem conteúdo editável (ex: transition) podemos deixar vazio
+      if (blockType) {
+        const block: Block = {
+          id: `${stepKey}-primary`,
+          type: blockType,
+          order: 0,
+          properties: {
+            question: quizStep?.questionText || quizStep?.title,
+            options: (quizStep?.options || []).map((o: any) => ({ id: o.id, text: o.text })),
+            required: quizStep?.requiredSelections ? quizStep.requiredSelections > 0 : true,
+            stepNumber,
+            canonicalId: canonicalStepId,
+            quizType: quizStep?.type,
+          },
+          content: {
+            title: baseTitle,
+            description: baseDescription,
+          },
+        } as any;
+        blocks[stepKey] = [block];
+      } else {
+        blocks[stepKey] = [];
+      }
+    });
+
+    return blocks;
+  }
+
+  /**
+   * Mapeia o tipo de step de quiz para um BlockType representativo.
+   */
+  private mapQuizStepTypeToBlockType(stepType?: string): string | null {
+    switch (stepType) {
+      case 'intro':
+        return 'quiz-intro-header';
+      case 'question':
+      case 'strategic-question':
+        return 'quiz-question-inline';
+      case 'transition':
+      case 'transition-result':
+        return 'quiz-transition-step';
+      case 'result':
+        return 'quiz-result-inline';
+      case 'offer':
+        return 'quiz-offer-cta-inline';
+      default:
+        return null;
+    }
   }
 
   /**

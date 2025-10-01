@@ -63,6 +63,9 @@ export interface EditorActions {
   exportJSON: () => string;
   importJSON: (json: string) => void;
 
+  // Bulk replace (quiz adapter / migrations)
+  bulkReplaceStepBlocks?: (data: Record<string, Block[]>, options?: { resetValidation?: boolean; setCurrentStep?: number }) => void;
+
   // Supabase operations
   loadSupabaseComponents?: () => Promise<void>;
 }
@@ -1376,6 +1379,22 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
     exportJSON,
     importJSON,
     loadSupabaseComponents,
+    bulkReplaceStepBlocks: (data: Record<string, Block[]>, options) => {
+      setState(prev => {
+        const merged = { ...data };
+        const validation: Record<number, boolean> = {};
+        Object.keys(merged).forEach(k => {
+          const num = parseInt(k.replace(/[^0-9]/g, ''), 10);
+            if (Number.isFinite(num)) validation[num] = (merged as any)[k].length > 0;
+        });
+        return {
+          ...prev,
+          stepBlocks: merged,
+          stepValidation: options?.resetValidation ? validation : { ...prev.stepValidation, ...validation },
+          currentStep: options?.setCurrentStep || prev.currentStep || 1,
+        };
+      });
+    }
   };
 
   const contextValue: EditorContextValue = {
