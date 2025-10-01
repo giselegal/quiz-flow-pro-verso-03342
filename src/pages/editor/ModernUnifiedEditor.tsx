@@ -27,7 +27,8 @@ import { useCoreQuizSteps } from '@/context/useCoreQuizSteps';
 import { useEditorCore } from '@/context/EditorCoreProvider';
 // UI Layout / painéis / canvas
 import FourColumnEditorLayout from '@/components/editor/layout/FourColumnEditorLayout';
-import StepSidebar from '@/components/editor/navigation/StepSidebar';
+// Substituído: usar StepSidebar canônico (sidebars)
+import StepSidebar from '@/components/editor/sidebars/StepSidebar';
 import BlockPalette from '@/components/editor/palette/BlockPalette';
 import { PropertiesPanel } from '@/components/editor/properties/PropertiesPanel';
 import RealExperienceCanvas from '@/pages/editor/modern/runtime/RealExperienceCanvas';
