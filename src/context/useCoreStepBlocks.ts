@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { useEditor } from '@/components/editor/provider-alias';
+import { useEditorCore } from './EditorCoreProvider';
 import { useEditorCoreSelectors } from './useEditorCoreSelectors';
 
 /**
@@ -9,11 +9,15 @@ import { useEditorCoreSelectors } from './useEditorCoreSelectors';
  */
 export function useCoreStepBlocks(step: number) {
     const { hash } = useEditorCoreSelectors();
-    const { state } = useEditor();
+    const { state } = useEditorCore();
     return useMemo(() => {
-        const key = `step-${step}`;
-        return (state.stepBlocks?.[key] || []) as any[];
-        // Dependências: hash garante atualização quando estrutura muda,
-        // step tira proveito do parâmetro, state.stepBlocks acessa atual.
+        // Ainda não expomos coreStepBlocks diretamente fora do provider, mas quizSteps é derivado;
+        // para acesso granular continuamos derivando do mirror interno (future: fornecer seletor direto).
+        // Como fallback, reconstituímos a partir de quizSteps se disponível.
+        // Aqui assumimos que stepKeys está ordenada e cada step-* representa uma etapa sequencial.
+        // Nota: Melhorar fornecendo state.coreStepBlocks no futuro (quando estabilizado o ownership completo).
+        const k = `step-${step}`;
+        const core = state.stepBlocks || {};
+        return (core[k] || []) as any[];
     }, [hash, state.stepBlocks, step]);
 }

@@ -24,6 +24,7 @@ import { mapEditorBlocksToQuizSteps } from '@/utils/mapEditorBlocksToQuizSteps';
 import { isEditorCoreV2Enabled } from '@/utils/editorFeatureFlags';
 import { useEditorCoreSelectors } from '@/context/useEditorCoreSelectors';
 import { useCoreQuizSteps } from '@/context/useCoreQuizSteps';
+import { useEditorCore } from '@/context/EditorCoreProvider';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { useUnifiedCRUD, UnifiedCRUDProvider } from '@/context/UnifiedCRUDProvider';
 import EditorRuntimeProviders from '@/context/EditorRuntimeProviders';
@@ -98,6 +99,7 @@ const UnifiedEditorCore: React.FC<ModernUnifiedEditorProps> = ({
     const coreV2 = isEditorCoreV2Enabled();
     const coreSelectors = coreV2 ? useEditorCoreSelectors() : null;
     const coreQuiz = coreV2 ? useCoreQuizSteps() : null;
+    const coreCtx = coreV2 ? useEditorCore() : null;
 
     // Estado do editor UI
     const [editorState, setEditorState] = useState<EditorState>({
@@ -238,6 +240,27 @@ const UnifiedEditorCore: React.FC<ModernUnifiedEditorProps> = ({
     const CanvasFallback = () => (<div className="flex-1 flex items-center justify-center"><LoadingSpinner /></div>);
     const StatusFallback = () => (<div className="h-6 border-t text-xs px-3 flex items-center text-muted-foreground bg-background/50">Inicializando…</div>);
 
+    const handleExportJson = useCallback(() => {
+        if (!coreV2 || !coreQuiz || !coreCtx) return;
+        const payload = {
+            meta: {
+                generatedAt: new Date().toISOString(),
+                steps: coreQuiz.steps.length,
+                hash: coreQuiz.hash,
+                metrics: coreCtx.state.metrics || null,
+                version: coreCtx.state.version
+            },
+            steps: coreQuiz.steps
+        };
+        const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `quiz-export-${coreQuiz.hash}.json`;
+        a.click();
+        URL.revokeObjectURL(url);
+    }, [coreV2, coreQuiz, coreCtx]);
+
     return (
         <div className={`h-screen w-full bg-background flex flex-col ${className}`}>
             <Suspense fallback={<ToolbarFallback />}>
@@ -252,6 +275,13 @@ const UnifiedEditorCore: React.FC<ModernUnifiedEditorProps> = ({
                     onTestCRUD={handleTestCRUD}
                 />
             </Suspense>
+            <div className="flex items-center justify-end px-4 py-1 gap-2 border-b bg-background/60">
+                {coreV2 && (
+                    <button onClick={handleExportJson} className="text-xs px-2 py-1 border rounded hover:bg-accent/50 transition">
+                        Export JSON
+                    </button>
+                )}
+            </div>
             <FourColumnEditorLayout
                 className="flex-1"
                 sidebar={<StepSidebar steps={derivedSteps} currentStepId={selectedStepId || undefined} onSelectStep={handleSelectStep} />}
