@@ -97,4 +97,91 @@ export const OfferCoreBlock = defineBlock({
     )
 });
 
-export const DEFAULT_BLOCK_DEFINITIONS: BlockDefinition<any>[] = [ResultHeadlineBlock, OfferCoreBlock];
+// Lista de estilos secundários
+export const ResultSecondaryListBlock = defineBlock({
+    id: 'result.secondaryList',
+    label: 'Resultado: Estilos Secundários',
+    category: 'resultado',
+    schema: z.object({
+        title: z.string().default('Outros estilos que combinam com você:'),
+        bulletPrefix: z.string().default('•'),
+        emptyText: z.string().default('Nenhum estilo secundário calculado'),
+        max: z.number().int().positive().max(10).default(3)
+    }),
+    defaultConfig: { title: 'Outros estilos que combinam com você:', bulletPrefix: '•', emptyText: 'Nenhum estilo secundário calculado', max: 3 },
+    render: ({ config, state }) => {
+        const secondary = (state?.userProfile?.secondaryStyles || []).slice(0, config.max);
+        return (
+            <div className="text-sm space-y-2">
+                <h4 className="font-semibold text-primary text-center text-base">{config.title}</h4>
+                {secondary.length ? (
+                    <ul className="list-disc pl-5 space-y-1">
+                        {secondary.map((s: string) => <li key={s} className="text-xs">{config.bulletPrefix} {s}</li>)}
+                    </ul>
+                ) : <p className="text-xs italic text-muted-foreground text-center">{config.emptyText}</p>}
+            </div>
+        );
+    }
+});
+
+// Urgência / Contagem regressiva simples (client-side)
+export const OfferUrgencyBlock = defineBlock({
+    id: 'offer.urgency',
+    label: 'Oferta: Urgência',
+    category: 'oferta',
+    schema: z.object({
+        deadlineISO: z.string().default(() => new Date(Date.now() + 3600_000).toISOString()),
+        headline: z.string().default('Oferta expira em:'),
+        expiredText: z.string().default('Oferta expirada'),
+        accent: z.string().default('#bd0000')
+    }),
+    defaultConfig: { deadlineISO: new Date(Date.now() + 3600_000).toISOString(), headline: 'Oferta expira em:', expiredText: 'Oferta expirada', accent: '#bd0000' },
+    render: ({ config }) => {
+        const deadlineStr = config.deadlineISO || new Date(Date.now() + 3600_000).toISOString();
+        const deadline = new Date(deadlineStr).getTime();
+        const now = Date.now();
+        const diff = Math.max(0, deadline - now);
+        const totalSec = Math.floor(diff / 1000);
+        const h = Math.floor(totalSec / 3600).toString().padStart(2, '0');
+        const m = Math.floor((totalSec % 3600) / 60).toString().padStart(2, '0');
+        const s = Math.floor(totalSec % 60).toString().padStart(2, '0');
+        const expired = diff <= 0;
+        return (
+            <div className="border rounded p-3 text-center" style={{ borderColor: config.accent }}>
+                <p className="text-xs font-semibold mb-1" style={{ color: config.accent }}>{config.headline}</p>
+                <div className="font-mono text-lg tracking-widest" style={{ color: config.accent }}>
+                    {expired ? config.expiredText : `${h}:${m}:${s}`}
+                </div>
+            </div>
+        );
+    }
+});
+
+// Testimonial / Depoimento simples
+export const OfferTestimonialBlock = defineBlock({
+    id: 'offer.testimonial',
+    label: 'Oferta: Depoimento',
+    category: 'oferta',
+    schema: z.object({
+        quote: z.string().default('Esse programa transformou minha relação com meu guarda-roupa!'),
+        author: z.string().default('Aluna satisfeita'),
+        accent: z.string().default('#432818')
+    }),
+    defaultConfig: { quote: 'Esse programa transformou minha relação com meu guarda-roupa!', author: 'Aluna satisfeita', accent: '#432818' },
+    render: ({ config }) => (
+        <figure className="border rounded p-4 bg-muted/30" style={{ borderColor: config.accent }}>
+            <blockquote className="text-sm italic mb-2" style={{ color: config.accent }}>
+                “{config.quote}”
+            </blockquote>
+            <figcaption className="text-xs opacity-80">— {config.author}</figcaption>
+        </figure>
+    )
+});
+
+export const DEFAULT_BLOCK_DEFINITIONS: BlockDefinition<any>[] = [
+    ResultHeadlineBlock,
+    ResultSecondaryListBlock,
+    OfferCoreBlock,
+    OfferUrgencyBlock,
+    OfferTestimonialBlock
+];

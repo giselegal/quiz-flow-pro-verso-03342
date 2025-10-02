@@ -16,6 +16,8 @@ import StrategicQuestionStep from './StrategicQuestionStep';
 import TransitionStep from './TransitionStep';
 import ResultStep from './ResultStep';
 import OfferStep from './OfferStep';
+import { BlockRegistryProvider, DEFAULT_BLOCK_DEFINITIONS, useBlockRegistry } from '@/runtime/quiz/blocks/BlockRegistry';
+import sanitizeHtml from '@/utils/sanitizeHtml';
 import { useEffect, useState } from 'react';
 import type { QuizConfig } from '@/types/quiz-config';
 
@@ -185,6 +187,27 @@ export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', ed
         '--font-family': mergedConfig.fontFamily || 'Inter, sans-serif',
     } as React.CSSProperties;
 
+    // Util de placeholders (result/offer blocks)
+    const applyPlaceholders = (value: any): any => {
+        if (value == null) return value;
+        if (typeof value === 'string') {
+            const userName = state.userProfile?.userName || 'Usuária';
+            const primary = state.userProfile?.resultStyle || 'estilo';
+            const secondary = (state.userProfile?.secondaryStyles || []).join(', ');
+            return value
+                .replace(/\{userName\}/g, userName)
+                .replace(/\{primaryStyle\}/g, primary)
+                .replace(/\{secondaryStyles\}/g, secondary);
+        }
+        if (Array.isArray(value)) return value.map(v => applyPlaceholders(v));
+        if (typeof value === 'object') {
+            const out: Record<string, any> = {};
+            Object.keys(value).forEach(k => { out[k] = applyPlaceholders(value[k]); });
+            return out;
+        }
+        return value;
+    };
+
     // ============================================================================
     // PROGRESS BAR CONFIGURATION
     // ============================================================================
@@ -229,145 +252,195 @@ export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', ed
     // RENDER WITH API-DRIVEN CONFIGURATION
     // ============================================================================
 
-    return (
-        <div className="min-h-screen" style={dynamicStyles}>
-            <div className="quiz-container mx-auto">
-
-                {/* Editor Overlay */}
-                {EditorOverlay && <EditorOverlay />}
-
-                {/* Progress Bar Configurável */}
-                {showProgress && (
-                    <div className="mb-6 max-w-6xl mx-auto px-4 py-8">
-                        <div
-                            className={`w-full bg-${progressConfig.backgroundColor} rounded-full mb-4`}
-                            style={{ height: `${progressConfig.height}px` }}
-                        >
-                            <div
-                                className="h-full rounded-full transition-all"
-                                style={{
-                                    width: `${progress}%`,
-                                    backgroundColor: 'var(--progress-color)',
-                                    transitionDuration: `${progressConfig.animationDuration}ms`
-                                }}
-                            ></div>
-                        </div>
-
-                        {progressConfig.showPercentage && (
-                            <p className="text-sm text-center mb-4">
-                                Progresso: {progress}%
-                            </p>
-                        )}
-
-                        {progressConfig.showStepInfo && (
-                            <p className="text-xs text-center text-gray-500">
-                                Etapa {currentStepNumber} de 21 • {currentStepData.type}
-                            </p>
-                        )}
-                    </div>
-                )}
-
-                {/* Renderização da Etapa Atual com Configurações API */}
-                {currentStepData.type === 'intro' && (
-                    <IntroStep
-                        data={{ ...currentStepData, ...currentStepConfig }}
-                        onNameSubmit={(name: string) => {
-                            setUserName(name);
-                            nextStep();
-                        }}
-                    />
-                )}
-
-                {currentStepData.type === 'question' && (
-                    <div
-                        className="min-h-screen"
-                        style={{ backgroundColor: 'var(--background-color)', color: 'var(--text-color)' }}
-                    >
-                        <div className="max-w-6xl mx-auto px-4 py-8">
-                            <QuestionStep
-                                data={{ ...currentStepData, ...currentStepConfig }}
-                                currentAnswers={state.answers[state.currentStep] || []}
-                                onAnswersChange={(answers: string[]) => {
-                                    addAnswer(state.currentStep, answers);
-
-                                    // Configuração dinâmica de auto-advance
-                                    const autoAdvanceEnabled = (mergedConfig.autoAdvance as any)?.enabled ?? mergedConfig.autoAdvance !== false;
-                                    const autoAdvanceDelay = (mergedConfig.autoAdvance as any)?.delay ?? (mergedConfig as any).autoAdvanceDelay ?? 1000;
-                                    const requiredSelections = (mergedConfig as any).requiredSelections || currentStepData.requiredSelections || 3;
-
-                                    if (autoAdvanceEnabled && answers.length === requiredSelections) {
-                                        setTimeout(() => nextStep(), Number(autoAdvanceDelay) || 1000);
-                                    }
-                                }}
-                            />
-                        </div>
-                    </div>
-                )}
-
-                {currentStepData.type === 'strategic-question' && (
-                    <div
-                        className="min-h-screen"
-                        style={{ backgroundColor: 'var(--background-color)', color: 'var(--text-color)' }}
-                    >
-                        <div className="max-w-6xl mx-auto px-4 py-8">
-                            <StrategicQuestionStep
-                                data={{ ...currentStepData, ...currentStepConfig }}
-                                currentAnswer={state.answers[state.currentStep]?.[0] || ''}
-                                onAnswerChange={(answer: string) => {
-                                    addStrategicAnswer(state.currentStep, answer);
-
-                                    // Strategic questions não têm auto-advance por padrão
-                                    const strategicAutoAdvance = (mergedConfig as any).strategicAutoAdvance === true;
-                                    if (strategicAutoAdvance) {
-                                        setTimeout(() => nextStep(), Number((mergedConfig as any).strategicAutoAdvanceDelay) || 2000);
-                                    }
-                                }}
-                            />
-                        </div>
-                    </div>
-                )}
-
-                {currentStepData.type === 'transition' && (
-                    <TransitionStep
-                        data={{ ...currentStepData, ...currentStepConfig }}
-                        onComplete={() => nextStep()}
-                    />
-                )}
-
-                {currentStepData.type === 'transition-result' && (
-                    <TransitionStep
-                        data={{ ...currentStepData, ...currentStepConfig }}
-                        onComplete={() => nextStep()}
-                    />
-                )}
-
-                {currentStepData.type === 'result' && (
-                    <ResultStep
-                        data={{ ...currentStepData, ...currentStepConfig }}
-                        userProfile={state.userProfile}
-                    />
-                )}
-
-                {currentStepData.type === 'offer' && (
-                    <OfferStep
-                        data={{ ...currentStepData, ...currentStepConfig }}
-                        userProfile={state.userProfile}
-                        offerKey={getOfferKey()}
-                    />
-                )}
-
-                {/* Debug Info (modo editor) */}
-                {editorMode && (
-                    <div className="fixed bottom-4 right-4 bg-black/80 text-white p-3 rounded-lg font-mono text-xs max-w-md">
-                        <div className="space-y-1">
-                            <div>🔧 <strong>Editor Mode Active</strong></div>
-                            <div>📡 API: {connectionStatus}</div>
-                            <div>⚡ Real-time: {mergedConfig.realTimeSync ? 'ON' : 'OFF'}</div>
-                            <div>💾 Auto-save: {mergedConfig.autoSave ? 'ON' : 'OFF'}</div>
-                        </div>
-                    </div>
-                )}
+    // ================= BLOCO RUNTIME RENDERER =================
+    const BlocksRuntimeRenderer: React.FC<{ blocks: any[]; context: any; stepType: string }> = ({ blocks, context, stepType }) => {
+        const registry = useBlockRegistry();
+        if (!blocks || !blocks.length) return null;
+        return (
+            <div className="space-y-6">
+                {blocks.map(b => {
+                    const def = registry.get(b.type);
+                    if (!def) {
+                        return <div key={b.id} className="text-xs text-red-600 border border-red-300 rounded p-2 bg-red-50">Bloco não encontrado: <strong>{b.type}</strong></div>;
+                    }
+                    let rendered: any;
+                    try {
+                        const processedConfig = applyPlaceholders(b.config || def.defaultConfig);
+                        rendered = def.render({ config: processedConfig, state: { ...context, applyPlaceholders } });
+                    } catch (e: any) {
+                        return <div key={b.id} className="text-xs text-red-600 border border-red-300 rounded p-2 bg-red-50">Erro ao renderizar bloco {b.type}: {e.message}</div>;
+                    }
+                    return <div key={b.id} data-block-id={b.id} data-block-type={b.type} className="runtime-block-wrapper">{rendered}</div>;
+                })}
             </div>
-        </div>
+        );
+    };
+
+    return (
+        <BlockRegistryProvider definitions={DEFAULT_BLOCK_DEFINITIONS}>
+            <div className="min-h-screen" style={dynamicStyles}>
+                <div className="quiz-container mx-auto">
+
+                    {/* Editor Overlay */}
+                    {EditorOverlay && <EditorOverlay />}
+
+                    {/* Progress Bar Configurável */}
+                    {showProgress && (
+                        <div className="mb-6 max-w-6xl mx-auto px-4 py-8">
+                            <div
+                                className={`w-full bg-${progressConfig.backgroundColor} rounded-full mb-4`}
+                                style={{ height: `${progressConfig.height}px` }}
+                            >
+                                <div
+                                    className="h-full rounded-full transition-all"
+                                    style={{
+                                        width: `${progress}%`,
+                                        backgroundColor: 'var(--progress-color)',
+                                        transitionDuration: `${progressConfig.animationDuration}ms`
+                                    }}
+                                ></div>
+                            </div>
+
+                            {progressConfig.showPercentage && (
+                                <p className="text-sm text-center mb-4">
+                                    Progresso: {progress}%
+                                </p>
+                            )}
+
+                            {progressConfig.showStepInfo && (
+                                <p className="text-xs text-center text-gray-500">
+                                    Etapa {currentStepNumber} de 21 • {currentStepData.type}
+                                </p>
+                            )}
+                        </div>
+                    )}
+
+                    {/* Renderização da Etapa Atual com Configurações API */}
+                    {currentStepData.type === 'intro' && (
+                        <IntroStep
+                            data={{ ...currentStepData, ...currentStepConfig }}
+                            onNameSubmit={(name: string) => {
+                                setUserName(name);
+                                nextStep();
+                            }}
+                        />
+                    )}
+
+                    {currentStepData.type === 'question' && (
+                        <div
+                            className="min-h-screen"
+                            style={{ backgroundColor: 'var(--background-color)', color: 'var(--text-color)' }}
+                        >
+                            <div className="max-w-6xl mx-auto px-4 py-8">
+                                <QuestionStep
+                                    data={{ ...currentStepData, ...currentStepConfig }}
+                                    currentAnswers={state.answers[state.currentStep] || []}
+                                    onAnswersChange={(answers: string[]) => {
+                                        addAnswer(state.currentStep, answers);
+
+                                        // Configuração dinâmica de auto-advance
+                                        const autoAdvanceEnabled = (mergedConfig.autoAdvance as any)?.enabled ?? mergedConfig.autoAdvance !== false;
+                                        const autoAdvanceDelay = (mergedConfig.autoAdvance as any)?.delay ?? (mergedConfig as any).autoAdvanceDelay ?? 1000;
+                                        const requiredSelections = (mergedConfig as any).requiredSelections || currentStepData.requiredSelections || 3;
+
+                                        if (autoAdvanceEnabled && answers.length === requiredSelections) {
+                                            setTimeout(() => nextStep(), Number(autoAdvanceDelay) || 1000);
+                                        }
+                                    }}
+                                />
+                            </div>
+                        </div>
+                    )}
+
+                    {currentStepData.type === 'strategic-question' && (
+                        <div
+                            className="min-h-screen"
+                            style={{ backgroundColor: 'var(--background-color)', color: 'var(--text-color)' }}
+                        >
+                            <div className="max-w-6xl mx-auto px-4 py-8">
+                                <StrategicQuestionStep
+                                    data={{ ...currentStepData, ...currentStepConfig }}
+                                    currentAnswer={state.answers[state.currentStep]?.[0] || ''}
+                                    onAnswerChange={(answer: string) => {
+                                        addStrategicAnswer(state.currentStep, answer);
+
+                                        // Strategic questions não têm auto-advance por padrão
+                                        const strategicAutoAdvance = (mergedConfig as any).strategicAutoAdvance === true;
+                                        if (strategicAutoAdvance) {
+                                            setTimeout(() => nextStep(), Number((mergedConfig as any).strategicAutoAdvanceDelay) || 2000);
+                                        }
+                                    }}
+                                />
+                            </div>
+                        </div>
+                    )}
+
+                    {currentStepData.type === 'transition' && (
+                        <TransitionStep
+                            data={{ ...currentStepData, ...currentStepConfig }}
+                            onComplete={() => nextStep()}
+                        />
+                    )}
+
+                    {currentStepData.type === 'transition-result' && (
+                        <TransitionStep
+                            data={{ ...currentStepData, ...currentStepConfig }}
+                            onComplete={() => nextStep()}
+                        />
+                    )}
+
+                    {currentStepData.type === 'result' && (
+                        currentStepData.blocks?.length ? (
+                            <div className="max-w-4xl mx-auto px-4 py-8">
+                                <BlocksRuntimeRenderer
+                                    stepType="result"
+                                    blocks={currentStepData.blocks as any}
+                                    context={{ userProfile: state.userProfile, step: currentStepData }}
+                                />
+                            </div>
+                        ) : (
+                            <ResultStep
+                                data={{ ...currentStepData, ...currentStepConfig }}
+                                userProfile={state.userProfile}
+                            />
+                        )
+                    )}
+
+                    {currentStepData.type === 'offer' && (
+                        currentStepData.blocks?.length ? (
+                            <div className="max-w-4xl mx-auto px-4 py-8">
+                                <BlocksRuntimeRenderer
+                                    stepType="offer"
+                                    blocks={currentStepData.blocks as any}
+                                    context={{ userProfile: state.userProfile, offerKey: getOfferKey(), step: currentStepData }}
+                                />
+                            </div>
+                        ) : (
+                            (() => {
+                                const offerKey = getOfferKey();
+                                const cloned: any = { ...currentStepData };
+                                if (cloned.offerMap && offerKey && cloned.offerMap[offerKey]) {
+                                    cloned.offerMap = { ...cloned.offerMap };
+                                    cloned.offerMap[offerKey] = applyPlaceholders(cloned.offerMap[offerKey]);
+                                }
+                                return <OfferStep data={{ ...cloned, ...currentStepConfig }} userProfile={state.userProfile} offerKey={offerKey} />;
+                            })()
+                        )
+                    )}
+
+                    {/* Debug Info (modo editor) */}
+                    {editorMode && (
+                        <div className="fixed bottom-4 right-4 bg-black/80 text-white p-3 rounded-lg font-mono text-xs max-w-md">
+                            <div className="space-y-1">
+                                <div>🔧 <strong>Editor Mode Active</strong></div>
+                                <div>📡 API: {connectionStatus}</div>
+                                <div>⚡ Real-time: {mergedConfig.realTimeSync ? 'ON' : 'OFF'}</div>
+                                <div>💾 Auto-save: {mergedConfig.autoSave ? 'ON' : 'OFF'}</div>
+                            </div>
+                        </div>
+                    )}
+                </div>
+            </div>
+        </BlockRegistryProvider>
     );
 }
