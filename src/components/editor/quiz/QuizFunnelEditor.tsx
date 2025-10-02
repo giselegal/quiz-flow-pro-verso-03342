@@ -939,6 +939,7 @@ const QuizFunnelEditor: React.FC<QuizFunnelEditorProps> = ({ funnelId, templateI
             {/* Barra de controle de simulação */}
             <div className="h-10 border-b flex items-center gap-2 px-3 text-xs bg-muted/30">
                 <span className="font-semibold">Quiz Editor</span>
+                <Button size="sm" variant="ghost" onClick={() => window.open('/quiz-analytics', '_blank')} className="text-[11px]">Analytics</Button>
                 {cycleReport.hasCycle && (
                     <span className="text-[10px] px-2 py-0.5 rounded bg-red-600 text-white" title={`Ciclo detectado: ${cycleReport.path.join(' -> ')}`}>
                         Ciclo!
