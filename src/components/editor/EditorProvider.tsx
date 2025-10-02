@@ -581,14 +581,26 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
     }, 2000);
   }, [funnelsContext]);
 
-  // Compose derived state (ensure defaults)
+  // Compose derived state (ensure defaults) com fallback robusto para evitar
+  // "TypeError: Cannot convert undefined or null to object" ao espalhar rawState undefined.
+  const baseState: EditorState = (rawState && typeof rawState === 'object')
+    ? (rawState as EditorState)
+    : getInitialState();
+
+  if (!rawState || typeof rawState !== 'object') {
+    // Log diagnóstico apenas em desenvolvimento para não poluir produção
+    if (process.env.NODE_ENV === 'development') {
+      console.warn('⚠️ EditorProvider: rawState indefinido no primeiro render – usando getInitialState() como fallback seguro');
+    }
+  }
+
   const state: EditorState = {
-    ...rawState,
-    currentStep: rawState.currentStep || 1,
+    ...baseState,
+    currentStep: baseState.currentStep || 1,
     isSupabaseEnabled: supabaseIntegration?.isSupabaseEnabled ?? !!enableSupabase,
     databaseMode: supabaseIntegration?.isSupabaseEnabled
       ? 'supabase'
-      : (rawState.databaseMode ?? (enableSupabase ? 'supabase' : 'local')),
+      : (baseState.databaseMode ?? (enableSupabase ? 'supabase' : 'local')),
   };
 
   // Load components from Supabase when integration becomes available / config changes
