@@ -56,9 +56,17 @@ Consolidar carregamento, gestão de estado, operações CRUD e UX progressiva do
 - Suspense para `QuizFunnelEditor` e para `FunnelTypeDetector` isolam custos.
 - Possível etapa futura: prefetch assíncrono de bundles quando usuário abre listagem de funis.
 
+### Mitigação de Erro React #310 (Lazy/Suspense)
+- Problema observado: uso de `React.lazy` recriado dentro de `useMemo` em `ModernUnifiedEditor` causando caminho condicional sem boundary estável.
+- Ação tomada: mover declaração `const QuizFunnelEditor = React.lazy(...)` para o topo do módulo e introduzir utilitário `LazyBoundary` (`src/components/common/LazyBoundary.tsx`).
+- Substituição de `<Suspense>` direto por `<LazyBoundary>` padronizando fallback e reduzindo risco de múltiplos boundaries inconsistentes.
+- Removidos lazy imports não utilizados (`EditorProUnified`, `TemplateErrorBoundary`, `TemplateLoadingSkeleton`) para minimizar carga cognitiva e potenciais caminhos faltando fallback.
+- Resultado esperado: eliminar paths não protegidos que podem disparar React 18 Suspense minified error #310 durante resolução de promessas lazy.
+
 ## Testes Adicionados
 - `useOperationsManager.dedupe.test.ts`: garante rejeição em corrida de operação deduplicada.
 - `useEditorBootstrap.parse.test.ts`: valida parsing real via função exportada `parseAndNormalizeParams` (funnel, template, modo, precedência de query params).
+- (Planejado) Teste de montagem smoke do `ModernUnifiedEditor` envolvendo fallback de `LazyBoundary` para prevenir regressões futuras.
 
 ## Observabilidade
 Pronto para: registrar performance marks adicionais (ex: post-ready warm features) + integrar logger externo ouvindo `editorEvents`.
