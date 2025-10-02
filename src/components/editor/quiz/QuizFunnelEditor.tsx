@@ -104,11 +104,6 @@ const QuizFunnelEditor: React.FC<QuizFunnelEditorProps> = ({ funnelId, templateI
     const stepById = useCallback((id: string | null) => orderedSteps.find(s => s.id === id), [orderedSteps]);
 
     const startSimulation = () => {
-        const selectedStep = useMemo(() => steps.find(s => s.id === selectedId), [steps, selectedId]);
-        
-        const updateStep = (id: string, patch: Partial<EditableQuizStep>) => {
-            setSteps(prev => prev.map(s => (s.id === id ? { ...s, ...patch } : s)));
-        };
         if (!orderedSteps.length) return;
         const first = orderedSteps[0];
         setSimState({ currentStepId: first.id, userName: '', answers: {}, strategicAnswers: {}, resultStyle: undefined, secondaryStyles: undefined });
@@ -191,8 +186,36 @@ const QuizFunnelEditor: React.FC<QuizFunnelEditorProps> = ({ funnelId, templateI
 
     const simulationCurrentStep = simActive ? stepById(simState.currentStepId || '') : null;
 
+    // ================= ALCANCE / STEPS ÓRFÃOS =================
+    const reachableInfo = useMemo(() => {
+        if (!steps.length) return { reachable: new Set<string>(), orphans: new Set<string>() };
+        const idToStep = new Map(steps.map(s => [s.id, s] as const));
+        const start = steps[0].id;
+        const visited = new Set<string>();
+        const stack = [start];
+        while (stack.length) {
+            const current = stack.pop()!;
+            if (visited.has(current)) continue;
+            visited.add(current);
+            const st = idToStep.get(current);
+            if (st?.nextStep && idToStep.has(st.nextStep) && !visited.has(st.nextStep)) {
+                stack.push(st.nextStep);
+            }
+        }
+        const allIds = steps.map(s => s.id);
+        const orphans = new Set(allIds.filter(id => !visited.has(id)));
+        return { reachable: visited, orphans };
+    }, [steps]);
+
+    const isOrphan = useCallback((id: string) => reachableInfo.orphans.has(id), [reachableInfo]);
+
     // Conjunto de IDs para validação rápida
     const stepIds = useMemo(() => new Set(steps.map(s => s.id)), [steps]);
+
+    // Função de atualização de step (deve vir antes de callbacks que dependem)
+    const updateStep = useCallback((id: string, patch: Partial<EditableQuizStep>) => {
+        setSteps(prev => prev.map(s => (s.id === id ? { ...s, ...patch } : s)));
+    }, []);
 
     type NextStepStatus = 'ok' | 'missing' | 'invalid';
     const getNextStepStatus = useCallback((step: EditableQuizStep, index: number): NextStepStatus => {
@@ -262,9 +285,7 @@ const QuizFunnelEditor: React.FC<QuizFunnelEditorProps> = ({ funnelId, templateI
 
     const selectedStep = useMemo(() => steps.find(s => s.id === selectedId), [steps, selectedId]);
 
-    const updateStep = (id: string, patch: Partial<EditableQuizStep>) => {
-        setSteps(prev => prev.map(s => (s.id === id ? { ...s, ...patch } : s)));
-    };
+    // removido: definição duplicada de updateStep
 
     const addStepAfter = (afterId?: string, type: QuizStep['type'] = 'question') => {
         setSteps(prev => {
@@ -566,6 +587,56 @@ const QuizFunnelEditor: React.FC<QuizFunnelEditorProps> = ({ funnelId, templateI
             {/* Barra de controle de simulação */}
             <div className="h-10 border-b flex items-center gap-2 px-3 text-xs bg-muted/30">
                 <span className="font-semibold">Quiz Editor</span>
+                <Button size="sm" variant="outline" onClick={() => {
+                    const data = {
+                        version: 1,
+                        exportedAt: new Date().toISOString(),
+                        steps: steps,
+                    };
+                    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = 'quiz-funnel.json';
+                    a.click();
+                    URL.revokeObjectURL(url);
+                }}>Exportar</Button>
+                <div>
+                    <input
+                        type="file"
+                        accept="application/json"
+                        id="quiz-import-input"
+                        className="hidden"
+                        onChange={(e) => {
+                            const file = e.target.files?.[0];
+                            if (!file) return;
+                            const reader = new FileReader();
+                            reader.onload = (ev) => {
+                                try {
+                                    const json = JSON.parse(String(ev.target?.result || '{}'));
+                                    if (!Array.isArray(json.steps)) throw new Error('Formato inválido: steps ausente.');
+                                    // Normalização básica de IDs duplicados
+                                    const seen = new Set<string>();
+                                    const normalized: EditableQuizStep[] = [];
+                                    json.steps.forEach((st: any, idx: number) => {
+                                        if (!st.id || typeof st.id !== 'string') st.id = `imp-${idx}`;
+                                        if (seen.has(st.id)) st.id = `${st.id}-${Date.now()}-${idx}`;
+                                        seen.add(st.id);
+                                        normalized.push({ ...st });
+                                    });
+                                    setSteps(normalized);
+                                    setSelectedId(normalized[0]?.id || '');
+                                } catch (err: any) {
+                                    alert('Falha ao importar JSON: ' + err.message);
+                                } finally {
+                                    e.target.value = '';
+                                }
+                            };
+                            reader.readAsText(file);
+                        }}
+                    />
+                    <Button size="sm" variant="outline" onClick={() => document.getElementById('quiz-import-input')?.click()}>Importar</Button>
+                </div>
                 <Separator orientation="vertical" className="h-4" />
                 {!simActive && <Button size="sm" variant="secondary" onClick={startSimulation}>▶ Iniciar Simulação</Button>}
                 {simActive && (
@@ -586,7 +657,14 @@ const QuizFunnelEditor: React.FC<QuizFunnelEditorProps> = ({ funnelId, templateI
                 {/* COL 1 - STEPS LIST */}
                 <div className="w-60 border-r flex flex-col">
                     <div className="p-3 flex items-center justify-between border-b">
-                        <span className="text-xs font-semibold">Etapas</span>
+                        <div className="flex items-center gap-2">
+                            <span className="text-xs font-semibold">Etapas</span>
+                            {reachableInfo.orphans.size > 0 && (
+                                <span className="text-[10px] px-2 py-0.5 rounded bg-pink-600 text-white" title="Existem etapas que não são alcançadas a partir da primeira.">
+                                    {reachableInfo.orphans.size} órfã(s)
+                                </span>
+                            )}
+                        </div>
                         <Badge variant="secondary" className="text-[10px]">{steps.length}</Badge>
                     </div>
                     <div className="flex-1 overflow-auto text-xs">
@@ -595,11 +673,13 @@ const QuizFunnelEditor: React.FC<QuizFunnelEditorProps> = ({ funnelId, templateI
                             const nStatus = getNextStepStatus(s, idx);
                             const statusColor = nStatus === 'ok' ? 'bg-emerald-500' : nStatus === 'missing' ? 'bg-amber-500' : 'bg-red-500';
                             const statusTitle = nStatus === 'ok' ? 'Fluxo OK' : nStatus === 'missing' ? 'nextStep ausente (pode impedir fluxo)' : 'nextStep inválido (ID não encontrado)';
+                            const orphan = isOrphan(s.id);
                             return (
                                 <div key={s.id} className={`px-3 py-2 border-b cursor-pointer group ${active ? 'bg-primary/10' : 'hover:bg-muted/50'}`} onClick={() => setSelectedId(s.id)}>
                                     <div className="flex items-center gap-2">
                                         <span className="font-medium truncate">{idx + 1}. {s.type}</span>
                                         <span className={`w-2 h-2 rounded-full ${statusColor}`} title={statusTitle} />
+                                        {orphan && <span className="text-[9px] px-1 py-0.5 rounded bg-pink-600 text-white" title="Step não alcançável a partir da origem">ÓRFÃO</span>}
                                     </div>
                                     <div className="flex gap-1 mt-1 opacity-0 group-hover:opacity-100 transition">
                                         <Button size="icon" variant="ghost" className="h-5 w-5" disabled={idx === 0} onClick={(e) => { e.stopPropagation(); moveStep(s.id, -1); }}><ArrowUp className="w-3 h-3" /></Button>
@@ -782,8 +862,8 @@ const QuizFunnelEditor: React.FC<QuizFunnelEditorProps> = ({ funnelId, templateI
                                             {/* Lista de chaves */}
                                             <div className="space-y-3 max-h-64 overflow-auto pr-1 border rounded p-2 bg-muted/30">
                                                 {(() => {
-                                                    const map = selectedStep.offerMap || {} as Record<string, OfferContent>;
-                                                    const orderedKeys = [...Object.keys(map)].sort((a,b)=>a.localeCompare(b));
+                                                    const map = selectedStep.offerMap || {} as Record<string, ExtendedOfferContent>;
+                                                    const orderedKeys = [...Object.keys(map)].sort((a, b) => a.localeCompare(b));
                                                     if (!orderedKeys.length) return <div className="text-[10px] text-muted-foreground">Nenhuma chave. Clique em Sync Keys.</div>;
                                                     return orderedKeys.map(k => {
                                                         const extra = !strategicKeys.includes(k);
@@ -806,7 +886,7 @@ const QuizFunnelEditor: React.FC<QuizFunnelEditorProps> = ({ funnelId, templateI
                                                                     value={(map as any)[k]?.title || ''}
                                                                     onChange={e => {
                                                                         const clone = { ...(selectedStep.offerMap || {}) } as Record<string, ExtendedOfferContent>;
-                                                                        clone[k] = { ...(clone[k]||{}), title: e.target.value };
+                                                                        clone[k] = { ...(clone[k] || {}), title: e.target.value };
                                                                         updateStep(selectedStep.id, { offerMap: clone as any });
                                                                     }}
                                                                 />
@@ -817,7 +897,7 @@ const QuizFunnelEditor: React.FC<QuizFunnelEditorProps> = ({ funnelId, templateI
                                                                     value={(map as any)[k]?.description || ''}
                                                                     onChange={e => {
                                                                         const clone = { ...(selectedStep.offerMap || {}) } as Record<string, ExtendedOfferContent>;
-                                                                        clone[k] = { ...(clone[k]||{}), description: e.target.value };
+                                                                        clone[k] = { ...(clone[k] || {}), description: e.target.value };
                                                                         updateStep(selectedStep.id, { offerMap: clone as any });
                                                                     }}
                                                                 />
@@ -828,7 +908,7 @@ const QuizFunnelEditor: React.FC<QuizFunnelEditorProps> = ({ funnelId, templateI
                                                                         value={(map as any)[k]?.ctaLabel || ''}
                                                                         onChange={e => {
                                                                             const clone = { ...(selectedStep.offerMap || {}) } as Record<string, ExtendedOfferContent>;
-                                                                            clone[k] = { ...(clone[k]||{}), ctaLabel: e.target.value };
+                                                                            clone[k] = { ...(clone[k] || {}), ctaLabel: e.target.value };
                                                                             updateStep(selectedStep.id, { offerMap: clone as any });
                                                                         }}
                                                                     />
@@ -838,7 +918,7 @@ const QuizFunnelEditor: React.FC<QuizFunnelEditorProps> = ({ funnelId, templateI
                                                                         value={(map as any)[k]?.ctaUrl || ''}
                                                                         onChange={e => {
                                                                             const clone = { ...(selectedStep.offerMap || {}) } as Record<string, ExtendedOfferContent>;
-                                                                            clone[k] = { ...(clone[k]||{}), ctaUrl: e.target.value };
+                                                                            clone[k] = { ...(clone[k] || {}), ctaUrl: e.target.value };
                                                                             updateStep(selectedStep.id, { offerMap: clone as any });
                                                                         }}
                                                                     />
@@ -849,7 +929,7 @@ const QuizFunnelEditor: React.FC<QuizFunnelEditorProps> = ({ funnelId, templateI
                                                                     value={(map as any)[k]?.image || ''}
                                                                     onChange={e => {
                                                                         const clone = { ...(selectedStep.offerMap || {}) } as Record<string, ExtendedOfferContent>;
-                                                                        clone[k] = { ...(clone[k]||{}), image: e.target.value };
+                                                                        clone[k] = { ...(clone[k] || {}), image: e.target.value };
                                                                         updateStep(selectedStep.id, { offerMap: clone as any });
                                                                     }}
                                                                 />
