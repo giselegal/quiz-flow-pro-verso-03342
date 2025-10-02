@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { z } from 'zod';
 import { useUnifiedCRUD } from '@/context/UnifiedCRUDProvider';
+import { editorEvents } from '@/events/editorEvents';
 import { QUIZ_STEPS } from '@/data/quizSteps';
 
 // Reusar tipo de modo localmente (evitar import circular se houver)
@@ -81,6 +82,7 @@ export function useEditorBootstrap(): UseEditorBootstrapResult {
 
     // Parsing inicial já feito; avançar para funnel
     useEffect(() => {
+        editorEvents.emit('EDITOR_BOOTSTRAP_PHASE', { phase });
         if (phase === 'parsing') {
             setPhase('funnel');
         }
@@ -144,6 +146,7 @@ export function useEditorBootstrap(): UseEditorBootstrapResult {
             setSeedApplied(false);
             setPhase('ready');
             try { performance.mark('editor_bootstrap_ready'); performance.measure('editor_TTI', 'editor_bootstrap_start', 'editor_bootstrap_ready'); } catch { }
+            editorEvents.emit('EDITOR_BOOTSTRAP_READY', { funnelId: funnel.id });
             return;
         }
 
@@ -158,9 +161,11 @@ export function useEditorBootstrap(): UseEditorBootstrapResult {
             }
             setPhase('ready');
             try { performance.mark('editor_bootstrap_ready'); performance.measure('editor_TTI', 'editor_bootstrap_start', 'editor_bootstrap_ready'); } catch { }
+            editorEvents.emit('EDITOR_BOOTSTRAP_READY', { funnelId: funnel.id });
         } catch (e: any) {
             setError(e instanceof Error ? e : new Error(String(e)));
             setPhase('error');
+            editorEvents.emit('EDITOR_BOOTSTRAP_ERROR', { error: String(e) });
         }
     }, [phase, crud]);
 
