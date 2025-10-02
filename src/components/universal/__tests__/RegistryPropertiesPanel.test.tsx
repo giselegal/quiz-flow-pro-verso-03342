@@ -45,7 +45,7 @@ describe('RegistryPropertiesPanel', () => {
 
     it('dispara onUpdate ao alterar campo de texto', async () => {
         const onUpdate = vi.fn();
-        const { getByLabelText } = render(
+        const { container, getByTestId } = render(
             <RegistryPropertiesPanel
                 selectedBlock={mockBlock as any}
                 onUpdate={onUpdate}
@@ -53,17 +53,15 @@ describe('RegistryPropertiesPanel', () => {
                 onDelete={() => { }}
             />
         );
-
-        const input = getByLabelText(/Título/i) as HTMLInputElement;
+        // Localiza input de título via testid estável
+        const input = getByTestId('prop-input-title') as HTMLInputElement;
+        expect(input).toBeTruthy();
         fireEvent.change(input, { target: { value: 'Novo Título' } });
-
-        await waitFor(() => {
-            expect(onUpdate).toHaveBeenCalled();
-        });
+        await waitFor(() => expect(onUpdate).toHaveBeenCalled());
     });
 
-    it('exibe algum valor atual das propriedades (snapshot JSON)', () => {
-        const { getByText } = render(
+    it('exibe valor inicial do campo de título (via value)', () => {
+        const { container, getByDisplayValue } = render(
             <RegistryPropertiesPanel
                 selectedBlock={mockBlock as any}
                 onUpdate={() => { }}
@@ -71,8 +69,9 @@ describe('RegistryPropertiesPanel', () => {
                 onDelete={() => { }}
             />
         );
-        // O painel atual não tem cabeçalho "Preview Propriedades", então validamos a presença do valor serializado
-        expect(getByText(/Título Original/)).toBeInTheDocument();
+        // Prefer getByDisplayValue; se não existir, fallback manual
+        const input = getByDisplayValue('Título Original') as HTMLInputElement | undefined;
+        expect(input || container.querySelector('input[value="Título Original"]')).toBeTruthy();
     });
 
     it('renderiza botões de reset para campos específicos', () => {

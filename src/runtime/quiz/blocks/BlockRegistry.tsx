@@ -50,6 +50,11 @@ export function useBlockRegistry() {
     return ctx;
 }
 
+// Variante opcional para cenários de teste / fallback onde preferimos não lançar exceção
+export function useBlockRegistryOptional() {
+    return useContext(BlockRegistryContext);
+}
+
 // Helpers para criação rápida de blocos
 export function defineBlock<Cfg extends Record<string, any>>(def: Omit<BlockDefinition<Cfg>, 'version'> & { version?: number }): BlockDefinition<Cfg> {
     return { version: 1, ...def } as BlockDefinition<Cfg>;

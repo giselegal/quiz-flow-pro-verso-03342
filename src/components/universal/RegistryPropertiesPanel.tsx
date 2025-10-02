@@ -508,6 +508,7 @@ const ModernFieldRenderer: React.FC<{
             onChange={(e) => onUpdate(e.target.value)}
             placeholder={schema.placeholder || `Digite ${schema.label.toLowerCase()}...`}
             className="w-full"
+            data-testid={schema.key === 'title' ? 'prop-input-title' : undefined}
           />
         );
 
