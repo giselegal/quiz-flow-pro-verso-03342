@@ -44,6 +44,7 @@ const TemplateLoadingSkeleton = React.lazy(() =>
 import { FunnelMasterProvider } from '@/providers/FunnelMasterProvider';
 import { useNotification } from '@/components/ui/Notification';
 import UnifiedCRUDProvider, { useUnifiedCRUD } from '@/context/UnifiedCRUDProvider';
+import useEditorBootstrap from '@/hooks/editor/useEditorBootstrap';
 
 // 🎯 CRUD Services Integration
 import { useUnifiedEditor } from '@/hooks/core/useUnifiedEditor';
@@ -445,80 +446,18 @@ const ModernToolbar: React.FC<ModernToolbarProps> = ({
 // 🎯 UNIFIED EDITOR WITH CRUD
 // ===============================
 
-const UnifiedEditorCore: React.FC<ModernUnifiedEditorProps> = ({
-    funnelId,
-    templateId,
-    mode = 'visual',
-    className = ''
-}) => {
-    // 🎯 EXTRAIR FUNNEL ID OU TEMPLATE ID DA URL 
-    const extractedInfo = React.useMemo(() => {
-        const path = window.location.pathname;
-        const urlParams = new URLSearchParams(window.location.search);
-        const templateParam = urlParams.get('template');
-        const funnelParam = urlParams.get('funnel');
+const UnifiedEditorCore: React.FC<ModernUnifiedEditorProps> = ({ funnelId, templateId, mode = 'visual', className = '' }) => {
+    // Novo hook central de bootstrap consolida parsing, criação e seed
+    const bootstrap = useEditorBootstrap();
+    const extractedInfo = useMemo(() => ({
+        funnelId: bootstrap.params.funnelId,
+        templateId: bootstrap.params.templateId,
+        type: bootstrap.params.funnelId ? 'funnel' : (bootstrap.params.templateId ? 'template' : 'auto')
+    }), [bootstrap.params.funnelId, bootstrap.params.templateId]);
 
-        console.log('🔍 Analisando URL:', { path, templateParam, funnelParam });
-
-        // 🚨 CORREÇÃO CRÍTICA: Processar query parameter funnel primeiro
-        if (funnelParam) {
-            console.log('✅ Funnel encontrado via query param:', funnelParam);
-            return { templateId: null, funnelId: funnelParam, type: 'funnel' };
-        }
-
-        // 🚨 CORREÇÃO CRÍTICA: Processar query parameter template segundo
-        if (templateParam) {
-            console.log('✅ Template encontrado via query param:', templateParam);
-
-            // 🎯 QUIZ-ESTILO: Detectar template do quiz
-            if (templateParam === 'quiz-estilo-21-steps') {
-                console.log('🎯 Detectado template quiz-estilo-21-steps');
-                return { templateId: templateParam, funnelId: null, type: 'quiz-template' };
-            }
-
-            return { templateId: templateParam, funnelId: null, type: 'template' };
-        }
-
-        // Detectar se é template ou funil na URL path
-        if (path.startsWith('/editor/') && path.length > '/editor/'.length) {
-            const identifier = path.replace('/editor/', '');
-
-            // 🎯 DETECÇÃO DINÂMICA: Verificar se existe como template ou tratar como funnel
-            // Primeiro assumir que pode ser qualquer coisa
-            console.log('✅ Identificador encontrado no path:', identifier);
-
-            // 🎯 DETECÇÃO MELHORADA: Incluir mais padrões de template
-            const looksLikeTemplate = /^(step-|template|quiz|test|funnel|default-|optimized-|style-)/i.test(identifier);
-
-            if (looksLikeTemplate) {
-                console.log('✅ Identificador parece ser template:', identifier);
-                return { templateId: identifier, funnelId: null, type: 'template' };
-            } else {
-                console.log('✅ Identificador tratado como funnelId:', identifier);
-                return { templateId: null, funnelId: identifier, type: 'funnel' };
-            }
-        }
-
-        console.log('⚠️ Usando props: funnelId =', funnelId, 'templateId =', templateId);
-
-        // ⚡ DINÂMICO: Não forçar template específico, deixar o sistema detectar automaticamente
-        return {
-            funnelId: funnelId || null,
-            templateId: templateId || null, // ⚡ Não forçar template específico
-            type: templateId ? 'template' : (funnelId ? 'funnel' : 'auto') // ⚡ Modo automático
-        };
-    }, [funnelId, templateId]);
-
-    // 🎯 QUIZ-ESTILO: Detectar template especial e usar modo interno de edição (sem redirecionar)
-    const isQuizTemplate = extractedInfo.type === 'quiz-template' && extractedInfo.templateId === 'quiz-estilo-21-steps'; // legacy detection (não mais requisito para modo quiz)
-
-    const pureBuilderTargetId = React.useMemo(() => {
-        return extractedInfo.funnelId || extractedInfo.templateId || funnelId || templateId || 'quiz21StepsComplete';
-    }, [extractedInfo.funnelId, extractedInfo.templateId, funnelId, templateId]);
-
-    // 🎯 TEMPLATE LOADING STATE
-    const [isLoadingTemplate, setIsLoadingTemplate] = useState(false);
-    const [templateError, setTemplateError] = useState<string | null>(null);
+    // Estados de erro/loader de template anteriores agora integrados na fase do bootstrap
+    const isLoadingTemplate = bootstrap.phase !== 'ready' && bootstrap.phase !== 'error';
+    const templateError = bootstrap.error?.message || null;
 
     // 🎯 UNIFIED CRUD CONTEXT
     const crudContext = useUnifiedCRUD();
@@ -547,10 +486,6 @@ const UnifiedEditorCore: React.FC<ModernUnifiedEditorProps> = ({
         previewMode: false,
         realExperienceMode: false
     });
-
-    // 🛡️ SENTINELA: Evitar seed/creation duplicada em StrictMode ou re-renders
-    const quizSeedAppliedRef = React.useRef(false);
-    const lastSeedContextRef = React.useRef<any>(null);
 
     // 🎯 FUNNEL TYPE DETECTION STATE
     const [detectedFunnelType, setDetectedFunnelType] = useState<FunnelType | null>(null);
@@ -583,101 +518,7 @@ const UnifiedEditorCore: React.FC<ModernUnifiedEditorProps> = ({
         return disconnect;
     }, [extractedInfo.funnelId]);
 
-    // 🎯 TEMPLATE LOADING EFFECT - CORREÇÃO PARA quiz21StepsComplete
-    // 🆕 EFFECT: Carregamento dinâmico para modo Quiz substituindo template fixo
-    useEffect(() => {
-        // Se o usuário entrou com ?templateId=quiz21StepsComplete queremos agora usar o funil quiz real
-        // Ou se o modo padrão for quiz sem funil, criamos um funil com base nas QUIZ_STEPS iniciais.
-        const wantsQuizTemplate = extractedInfo.templateId === 'quiz21StepsComplete';
-        if (wantsQuizTemplate || editorState.mode === 'quiz') {
-            setIsLoadingTemplate(true);
-            setTemplateError(null);
-            try {
-                if (quizSeedAppliedRef.current) {
-                    console.log('⏭️ Seed quiz já aplicado - ignorando nova tentativa.', {
-                        lastSeed: lastSeedContextRef.current
-                    });
-                    setIsLoadingTemplate(false);
-                    return;
-                }
-                // Verifica se já existe um funnel corrente com quizSteps
-                const current = crudContext?.currentFunnel as any;
-                if (!crudContext) {
-                    console.warn('⚠️ ModernUnifiedEditor: crudContext indisponível ainda, adiando seed.');
-                    setIsLoadingTemplate(false);
-                    return;
-                }
-                if (current && Array.isArray(current.quizSteps) && current.quizSteps.length > 0) {
-                    console.log('✅ Usando quizSteps existentes do funil atual (persistidos).');
-                    quizSeedAppliedRef.current = true; // Considerar seed já resolvido
-                    setIsLoadingTemplate(false);
-                    return;
-                }
-
-                // Se não existe funil atual, criamos um novo funil 'Quiz Funnel'
-                if (!current) {
-                    console.log('🆕 Criando novo funil para Quiz (sem template fixo).');
-                    crudContext.createFunnel('Quiz Funnel', { kind: 'quiz' })
-                        .then(f => {
-                            // Atribui QUIZ_STEPS iniciais
-                            // QUIZ_STEPS pode ser array ou objeto indexado; normalizar
-                            const quizSeedArray = Array.isArray(QUIZ_STEPS)
-                                ? (QUIZ_STEPS as any[])
-                                : Object.values(QUIZ_STEPS as any);
-                            (f as any).quizSteps = quizSeedArray.map((s: any) => ({ ...s }));
-                            quizSeedAppliedRef.current = true;
-                            lastSeedContextRef.current = {
-                                createdAt: new Date().toISOString(),
-                                funnelId: f?.id,
-                                seedCount: quizSeedArray.length,
-                                path: window?.location?.pathname,
-                                wantsQuizTemplate,
-                                mode: editorState.mode
-                            };
-                            // 🛡️ Guardar: só salvar se ID válido existir
-                            if (f && f.id) {
-                                crudContext.saveFunnel().catch(err => console.warn('⚠️ Falha ao salvar funil recém-criado (adiado):', err));
-                            } else {
-                                console.warn('⚠️ Funil criado sem ID válido - adiando save automático.');
-                            }
-                            console.log('✅ Funil Quiz criado e seeds aplicadas (QUIZ_STEPS).');
-                        })
-                        .catch(e => {
-                            console.error('❌ Erro criando funil quiz:', e);
-                            setTemplateError('Erro criando funil quiz');
-                        })
-                        .finally(() => setIsLoadingTemplate(false));
-                    return;
-                }
-
-                // Se existe funil mas sem quizSteps, sem template fixo: seed com QUIZ_STEPS
-                console.log('ℹ️ Funil atual sem quizSteps - aplicando seeds.');
-                const quizSeedArray = Array.isArray(QUIZ_STEPS)
-                    ? (QUIZ_STEPS as any[])
-                    : Object.values(QUIZ_STEPS as any);
-                current.quizSteps = quizSeedArray.map((s: any) => ({ ...s }));
-                quizSeedAppliedRef.current = true;
-                lastSeedContextRef.current = {
-                    appliedAt: new Date().toISOString(),
-                    existingFunnelId: current?.id,
-                    seedCount: quizSeedArray.length,
-                    path: window?.location?.pathname,
-                    wantsQuizTemplate,
-                    mode: editorState.mode
-                };
-                if (current.id) {
-                    crudContext.saveFunnel().catch(err => console.warn('⚠️ Falha ao salvar funil (aplicando seeds):', err));
-                } else {
-                    console.warn('⚠️ Funil atual sem ID durante seed - save adiado.');
-                }
-                setIsLoadingTemplate(false);
-            } catch (err) {
-                console.error('❌ Erro geral no carregamento dinâmico do Quiz:', err);
-                setTemplateError('Falha ao preparar funil Quiz');
-                setIsLoadingTemplate(false);
-            }
-        }
-    }, [extractedInfo.templateId, editorState.mode]);
+    // Lógica de seed removida (centralizada em useEditorBootstrap)
 
     // Handler para mudanças de estado
     const handleStateChange = useCallback((updates: Partial<EditorState>) => {
@@ -768,10 +609,22 @@ const UnifiedEditorCore: React.FC<ModernUnifiedEditorProps> = ({
     });
 
     // Mostrar loading se template está carregando
+    // Boundary de carregamento progressivo
     if (isLoadingTemplate) {
         return (
             <div className={`h-screen w-full bg-background flex flex-col ${className}`}>
-                <LoadingSpinner message="Carregando template..." />
+                <ModernToolbar
+                    editorState={editorState}
+                    onStateChange={handleStateChange}
+                    funnelId={undefined}
+                    mode={editorState.mode}
+                    onSave={async () => { }}
+                    onCreateNew={async () => { }}
+                />
+                <div className="flex-1 flex flex-col items-center justify-center gap-4">
+                    <LoadingSpinner message={`${bootstrap.progress.label} (${bootstrap.progress.step}/${bootstrap.progress.total})`} />
+                    <div className="text-xs text-muted-foreground">Fase: {bootstrap.phase}</div>
+                </div>
             </div>
         );
     }
@@ -978,38 +831,9 @@ const UnifiedEditorCore: React.FC<ModernUnifiedEditorProps> = ({
 // ===============================
 
 const ModernUnifiedEditor: React.FC<ModernUnifiedEditorProps> = (props) => {
-    // Extrair info (funnelId ou templateId) da URL também no wrapper
-    const extractedInfo = React.useMemo(() => {
-        const path = window.location.pathname;
-        if (path.startsWith('/editor/') && path.length > '/editor/'.length) {
-            const identifier = path.replace('/editor/', '');
-
-            // Verificar se é um template conhecido
-            const knownTemplates = [
-                'testTemplate',
-                'quiz21StepsComplete',
-                'leadMagnetFashion',
-                'webinarSignup',
-                'npseSurvey',
-                'roiCalculator'
-            ]; const isTemplate = knownTemplates.includes(identifier);
-
-            if (isTemplate) {
-                return { templateId: identifier, funnelId: null };
-            } else {
-                return { templateId: null, funnelId: identifier };
-            }
-        }
-
-        return {
-            funnelId: props.funnelId || null,
-            templateId: props.templateId || null
-        };
-    }, [props.funnelId, props.templateId]);
-
     return (
         <UnifiedCRUDProvider
-            funnelId={extractedInfo.funnelId || undefined}
+            funnelId={props.funnelId}
             autoLoad={true}
             debug={false}
         >
