@@ -40,6 +40,7 @@ import useOperationsManager from '@/hooks/editor/useOperationsManager';
 import EditorBootstrapProgress from '@/components/editor/EditorBootstrapProgress';
 import OperationsPanel from '@/components/editor/OperationsPanel';
 import { editorEvents } from '@/events/editorEvents';
+import LazyBoundary from '@/components/common/LazyBoundary';
 
 // 🎯 CRUD Services Integration
 import { useUnifiedEditor } from '@/hooks/core/useUnifiedEditor';
@@ -786,13 +787,13 @@ const UnifiedEditorCore: React.FC<ModernUnifiedEditorProps> = ({ funnelId, templ
                         </div>
                     )}
 
-                    <Suspense fallback={<LoadingSpinner message={'Carregando editor de quiz...'} />}>
+                    <LazyBoundary fallback={<LoadingSpinner message={'Carregando editor de quiz...'} />}>
                         <QuizFunnelEditor
                             key={`quiz-funnel-${extractedInfo.templateId || extractedInfo.funnelId || crudContext.currentFunnel?.id || 'new'}`}
                             templateId={extractedInfo.templateId || undefined}
                             funnelId={extractedInfo.funnelId || crudContext.currentFunnel?.id}
                         />
-                    </Suspense>
+                    </LazyBoundary>
                 </FunnelMasterProvider>
             </div>
 
