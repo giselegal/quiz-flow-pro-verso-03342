@@ -92,15 +92,18 @@ interface InternalState {
 
 export class QuizFunnelEditingFacade implements IFunnelEditingFacade {
     private state: InternalState;
+    // Tipagem flexível: armazenamos por event chaveado e validamos na emissão
     private listeners: { [K in FunnelFacadeEvent]?: Array<(p: any) => void> } = {};
+    private persistFn?: (snapshot: FunnelSnapshot) => Promise<void>;
 
-    constructor(snapshot: FunnelSnapshot) {
+    constructor(snapshot: FunnelSnapshot, persistFn?: (snapshot: FunnelSnapshot) => Promise<void>) {
         this.state = {
             steps: [...snapshot.steps].sort((a, b) => a.order - b.order),
             selectedStepId: snapshot.steps[0]?.id || null,
             dirty: false,
             meta: snapshot.meta || {}
         };
+        this.persistFn = persistFn;
     }
 
     // -------------- helpers internos --------------
@@ -136,8 +139,22 @@ export class QuizFunnelEditingFacade implements IFunnelEditingFacade {
         const start = Date.now();
         this.emit('save/start', { timestamp: start });
         try {
-            // Fase 1: não persiste ainda, apenas simula (futuro: integrar useUnifiedCRUD.saveFunnel)
-            await new Promise(r => setTimeout(r, 50));
+            const snapshot: FunnelSnapshot = {
+                steps: this.state.steps.map(s => ({
+                    id: s.id,
+                    title: s.title,
+                    order: s.order,
+                    blocks: s.blocks.map(b => ({ id: b.id, type: b.type, data: b.data })),
+                    meta: s.meta
+                })),
+                meta: { ...this.state.meta, updatedAt: Date.now() }
+            };
+            if (this.persistFn) {
+                await this.persistFn(snapshot);
+            } else {
+                // fallback simulado
+                await new Promise(r => setTimeout(r, 30));
+            }
             this.setDirty(false);
             const end = Date.now();
             this.emit('save/success', { timestamp: end, duration: end - start });
@@ -150,7 +167,8 @@ export class QuizFunnelEditingFacade implements IFunnelEditingFacade {
 
     // -------------- eventos --------------
     on<E extends FunnelFacadeEvent>(event: E, handler: (payload: FunnelFacadeEventMap[E]) => void): () => void {
-        (this.listeners[event] ||= []).push(handler as any);
+        const list = this.listeners[event] as Array<(p: any) => void> | undefined;
+        if (list) list.push(handler as any); else this.listeners[event] = [handler as any];
         return () => this.off(event, handler as any);
     }
     off<E extends FunnelFacadeEvent>(event: E, handler: (payload: FunnelFacadeEventMap[E]) => void): void {

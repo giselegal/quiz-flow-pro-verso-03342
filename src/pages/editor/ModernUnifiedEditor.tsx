@@ -68,7 +68,21 @@ const ModernUnifiedEditor: React.FC<ModernUnifiedEditorProps> = (props) => {
     // Criar facade apenas quando não legacy; recria se trocar de funil
     const facade = useMemo(() => {
         if (isLegacy) return null;
-        return new QuizFunnelEditingFacade(buildInitialSnapshot(crud));
+        const persist = async (snapshot: FunnelSnapshot) => {
+            if (!crud.currentFunnel) return; // nada para salvar
+            const quizSteps = snapshot.steps.map(s => ({
+                id: s.id,
+                title: s.title,
+                order: s.order,
+                type: s.meta?.type,
+                nextStep: s.meta?.nextStep,
+                blocks: s.blocks.map(b => ({ id: b.id, type: b.type, config: b.data }))
+            }));
+            const updated = { ...crud.currentFunnel, quizSteps } as any;
+            crud.setCurrentFunnel(updated);
+            await crud.saveFunnel(updated);
+        };
+        return new QuizFunnelEditingFacade(buildInitialSnapshot(crud), persist);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isLegacy, crud.currentFunnel?.id]);
 
