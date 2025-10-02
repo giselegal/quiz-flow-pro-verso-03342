@@ -99,8 +99,11 @@ describe('persistência', () => {
     let ls: any;
     beforeEach(() => {
         ls = mockLocalStorage();
-        // @ts-ignore
-        global.localStorage = ls;
+        // Patch via Object.defineProperty para contornar readonly
+        Object.defineProperty(globalThis, 'localStorage', {
+            value: ls,
+            configurable: true
+        });
     });
 
     it('persistResultPayload salva dados básicos', () => {
