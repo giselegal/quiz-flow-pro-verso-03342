@@ -171,7 +171,7 @@ describe('InteractiveQuizCanvas', () => {
       expect(screen.queryByText('Anterior')).not.toBeInTheDocument();
     });
 
-  it('deve permitir voltar etapas', async () => {
+    it('deve permitir voltar etapas', async () => {
       render(
         <TestWrapper>
           <InteractiveQuizCanvas />
@@ -183,14 +183,10 @@ describe('InteractiveQuizCanvas', () => {
       fireEvent.click(opcaoAzul);
 
       const proximoBtn = screen.getByText('Próximo');
-      // Simular timers para acelerar avanço (canvas usa setTimeout de 1000ms)
-      vi.useFakeTimers();
       fireEvent.click(proximoBtn);
-      vi.advanceTimersByTime(1000);
       await waitFor(() => {
         expect(screen.getByText('Etapa 2')).toBeInTheDocument();
       });
-      vi.useRealTimers();
 
       // Voltar para etapa anterior
       const anteriorBtn = screen.getByText('Anterior');
@@ -233,13 +229,10 @@ describe('InteractiveQuizCanvas', () => {
       fireEvent.click(opcaoAzul);
 
       const proximoBtn = screen.getByText('Próximo');
-      vi.useFakeTimers();
       fireEvent.click(proximoBtn);
-      vi.advanceTimersByTime(1000);
       await waitFor(() => {
         expect(screen.getByText('Etapa 2')).toBeInTheDocument();
       });
-      vi.useRealTimers();
 
       // Tentar continuar sem preencher campo obrigatório
       const proximoBtn2 = screen.getByText('Próximo');
