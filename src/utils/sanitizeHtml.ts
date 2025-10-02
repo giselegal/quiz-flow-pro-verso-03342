@@ -37,7 +37,11 @@ export function sanitizeHtml(input?: string | null): string {
                 .replace(/<style[^>]*>.*?<\/style>/gi, '');
             // Expandir tags não permitidas em texto simples removendo-as mas mantendo conteúdo interno aproximado
             // Estratégia simples: remover tags de abertura/fechamento que não sejam permitidas
-            html = html.replace(/<([^>\/\s]+)([^>]*)>/gi, (full, tag) => ALLOWED_TAGS.has(tag.toLowerCase()) ? full : '');
+            html = html.replace(/<([^>\/\s]+)([^>]*)>/gi, (full, tag, attrs) => {
+                if (!ALLOWED_TAGS.has(tag.toLowerCase())) return '';
+                // remove atributos residuais (ex: espaços extras após remoção de on*)
+                return `<${tag.toLowerCase()}>`;
+            });
             html = html.replace(/<\/(?!p|div|span|strong|b|i|em|u|br|ul|ol|li|blockquote)[^>]+>/gi, '');
             return html.trim();
         }
