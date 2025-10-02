@@ -46,6 +46,7 @@ import { useNotification } from '@/components/ui/Notification';
 import UnifiedCRUDProvider, { useUnifiedCRUD } from '@/context/UnifiedCRUDProvider';
 import useEditorBootstrap from '@/hooks/editor/useEditorBootstrap';
 import useOperationsManager from '@/hooks/editor/useOperationsManager';
+import EditorBootstrapProgress from '@/components/editor/EditorBootstrapProgress';
 
 // 🎯 CRUD Services Integration
 import { useUnifiedEditor } from '@/hooks/core/useUnifiedEditor';
@@ -613,9 +614,14 @@ const UnifiedEditorCore: React.FC<ModernUnifiedEditorProps> = ({ funnelId, templ
                     onSave={async () => { }}
                     onCreateNew={async () => { }}
                 />
-                <div className="flex-1 flex flex-col items-center justify-center gap-4">
-                    <LoadingSpinner message={`${bootstrap.progress.label} (${bootstrap.progress.step}/${bootstrap.progress.total})`} />
-                    <div className="text-xs text-muted-foreground">Fase: {bootstrap.phase}</div>
+                <div className="flex-1 flex flex-col items-center justify-center gap-8">
+                    <EditorBootstrapProgress
+                        step={bootstrap.progress.step}
+                        total={bootstrap.progress.total}
+                        label={bootstrap.progress.label}
+                        phase={bootstrap.phase}
+                    />
+                    <LoadingSpinner message="Preparando ambiente" />
                 </div>
             </div>
         );
@@ -701,27 +707,26 @@ const UnifiedEditorCore: React.FC<ModernUnifiedEditorProps> = ({ funnelId, templ
                     {/* 🔍 FUNNEL TYPE DETECTION - apenas para funnels específicos */}
                     {extractedInfo.funnelId && (
                         <div className="p-4 border-b bg-background">
-                            <FunnelTypeDetector
-                                funnelId={extractedInfo.funnelId}
-                                onFunnelLoaded={(data) => {
-                                    console.log('✅ Funnel data loaded:', data);
-                                    setFunnelData(data);
-                                    setIsDetectingType(false);
-                                }}
-                                onTypeDetected={(type) => {
-                                    console.log('✅ Funnel type detected:', type);
-                                    setDetectedFunnelType(type);
-
-                                    // Ajustar configurações do editor baseado no tipo
-                                    if (type.editorConfig.showProgressBar) {
-                                        console.log('🔧 Habilitando barra de progresso');
-                                    }
-                                    if (type.supportsAI) {
-                                        console.log('🤖 Suporte a IA detectado');
-                                    }
-                                }}
-                            />
-                            {/* Exibir informações do funnel detectado */}
+                            <Suspense fallback={<div className="text-xs text-muted-foreground flex items-center gap-2"><div className="w-3 h-3 border-2 border-primary border-t-transparent rounded-full animate-spin"></div><span>Detectando tipo...</span></div>}>
+                                <FunnelTypeDetector
+                                    funnelId={extractedInfo.funnelId}
+                                    onFunnelLoaded={(data) => {
+                                        console.log('✅ Funnel data loaded:', data);
+                                        setFunnelData(data);
+                                        setIsDetectingType(false);
+                                    }}
+                                    onTypeDetected={(type) => {
+                                        console.log('✅ Funnel type detected:', type);
+                                        setDetectedFunnelType(type);
+                                        if (type.editorConfig.showProgressBar) {
+                                            console.log('🔧 Habilitando barra de progresso');
+                                        }
+                                        if (type.supportsAI) {
+                                            console.log('🤖 Suporte a IA detectado');
+                                        }
+                                    }}
+                                />
+                            </Suspense>
                             {detectedFunnelType && (
                                 <div className="mt-2 p-2 bg-primary/5 rounded-md">
                                     <div className="flex items-center gap-2">
