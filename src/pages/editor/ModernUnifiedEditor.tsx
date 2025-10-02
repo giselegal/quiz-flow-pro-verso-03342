@@ -591,6 +591,11 @@ const UnifiedEditorCore: React.FC<ModernUnifiedEditorProps> = ({
             try {
                 // Verifica se já existe um funnel corrente com quizSteps
                 const current = crudContext?.currentFunnel as any;
+                if (!crudContext) {
+                    console.warn('⚠️ ModernUnifiedEditor: crudContext indisponível ainda, adiando seed.');
+                    setIsLoadingTemplate(false);
+                    return;
+                }
                 if (current && Array.isArray(current.quizSteps) && current.quizSteps.length > 0) {
                     console.log('✅ Usando quizSteps existentes do funil atual (persistidos).');
                     setIsLoadingTemplate(false);
@@ -608,7 +613,12 @@ const UnifiedEditorCore: React.FC<ModernUnifiedEditorProps> = ({
                                 ? (QUIZ_STEPS as any[])
                                 : Object.values(QUIZ_STEPS as any);
                             (f as any).quizSteps = quizSeedArray.map((s: any) => ({ ...s }));
-                            crudContext.saveFunnel();
+                            // 🛡️ Guardar: só salvar se ID válido existir
+                            if (f && f.id) {
+                                crudContext.saveFunnel().catch(err => console.warn('⚠️ Falha ao salvar funil recém-criado (adiado):', err));
+                            } else {
+                                console.warn('⚠️ Funil criado sem ID válido - adiando save automático.');
+                            }
                             console.log('✅ Funil Quiz criado e seeds aplicadas (QUIZ_STEPS).');
                         })
                         .catch(e => {
@@ -625,7 +635,11 @@ const UnifiedEditorCore: React.FC<ModernUnifiedEditorProps> = ({
                     ? (QUIZ_STEPS as any[])
                     : Object.values(QUIZ_STEPS as any);
                 current.quizSteps = quizSeedArray.map((s: any) => ({ ...s }));
-                crudContext.saveFunnel();
+                if (current.id) {
+                    crudContext.saveFunnel().catch(err => console.warn('⚠️ Falha ao salvar funil (aplicando seeds):', err));
+                } else {
+                    console.warn('⚠️ Funil atual sem ID durante seed - save adiado.');
+                }
                 setIsLoadingTemplate(false);
             } catch (err) {
                 console.error('❌ Erro geral no carregamento dinâmico do Quiz:', err);
