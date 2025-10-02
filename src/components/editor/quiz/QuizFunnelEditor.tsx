@@ -15,6 +15,7 @@ import { editorStepsToRuntimeMap } from '@/runtime/quiz/editorAdapter';
 import QuizAppConnected from '@/components/quiz/QuizAppConnected';
 import { useBlockRegistry } from '@/runtime/quiz/blocks/BlockRegistry';
 import { BlockRegistryProvider, DEFAULT_BLOCK_DEFINITIONS } from '@/runtime/quiz/blocks/BlockRegistry';
+import { BlockRegistryProvider as BRP, useBlockRegistry as useBR } from '@/runtime/quiz/blocks/BlockRegistry';
 
 /**
  * QuizFunnelEditor
@@ -116,9 +117,12 @@ const AnyStepSchema = z.discriminatedUnion('type', [
 ]);
 
 const StepsArraySchema = z.array(AnyStepSchema).min(1);
+// Schema de export com metadados de blocos para futura migração
+const BlockExportMetaSchema = z.object({ id: z.string(), version: z.number().int() });
 const ExportSchema = z.object({
     version: z.number().int().default(1),
     exportedAt: z.string().optional(),
+    blockRegistry: z.array(BlockExportMetaSchema).default([]),
     steps: StepsArraySchema
 });
 
@@ -249,6 +253,8 @@ const QuizFunnelEditor: React.FC<QuizFunnelEditorProps> = ({ funnelId, templateI
     const [editingBlockId, setEditingBlockId] = useState<string | null>(null);
     const [blockConfigDraft, setBlockConfigDraft] = useState<string>('');
     const [blockConfigError, setBlockConfigError] = useState<string | null>(null);
+    // Preview dedicado de blocos
+    const [activeBlockPreviewId, setActiveBlockPreviewId] = useState<string | null>(null);
     // Placeholders Preview (FASE 3)
     const [phUserName, setPhUserName] = useState<string>('Usuária Teste');
     const [phPrimaryStyle, setPhPrimaryStyle] = useState<string>('elegante');
@@ -1034,7 +1040,16 @@ const QuizFunnelEditor: React.FC<QuizFunnelEditorProps> = ({ funnelId, templateI
                                 console.error('Ciclo detectado:', cycle);
                                 return;
                             }
-                            const data = ExportSchema.parse({ version: 1, exportedAt: new Date().toISOString(), steps: parsed.data });
+                            // Coletar metadados de blocos usados
+                            const blockMetaMap = new Map<string, number>();
+                            parsed.data.forEach(st => {
+                                (st as any).blocks?.forEach((b: any) => {
+                                    // versão é best-effort (não temos store de versões por bloco no runtime agora) -> assume 1
+                                    if (!blockMetaMap.has(b.type)) blockMetaMap.set(b.type, 1);
+                                });
+                            });
+                            const blockRegistry = Array.from(blockMetaMap.entries()).map(([id, version]) => ({ id, version }));
+                            const data = ExportSchema.parse({ version: 1, exportedAt: new Date().toISOString(), steps: parsed.data, blockRegistry });
                             const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
                             const url = URL.createObjectURL(blob);
                             const a = document.createElement('a');
@@ -1062,6 +1077,14 @@ const QuizFunnelEditor: React.FC<QuizFunnelEditorProps> = ({ funnelId, templateI
                                                 alert('Falha de validação do JSON importado. Ver console.');
                                                 return;
                                             }
+                                            // Validar blocos declarados versus disponíveis (warning apenas)
+                                            try {
+                                                const available = new Set(blockRegistry.list.map(b => b.id));
+                                                const missingBlocks = (parsed.data.blockRegistry || []).filter(b => !available.has(b.id));
+                                                if (missingBlocks.length) {
+                                                    console.warn('⚠️ Blocos ausentes no registry atual:', missingBlocks.map(b => b.id));
+                                                }
+                                            } catch (e) { /* ignore */ }
                                             const importedSteps = parsed.data.steps;
                                             // Normalização de IDs duplicados pós-validação
                                             const seen = new Set<string>();
@@ -1079,6 +1102,15 @@ const QuizFunnelEditor: React.FC<QuizFunnelEditorProps> = ({ funnelId, templateI
                                                 alert('Import falhou após normalização de IDs.');
                                                 return;
                                             }
+                                            // Validação leve de blocos por step (schema base já aceitou, aqui fazemos sanity extra)
+                                            second.data.forEach((st: any) => {
+                                                if (st.blocks) {
+                                                    st.blocks = st.blocks.map((b: any) => {
+                                                        if (!b.id) b.id = `${b.type}-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
+                                                        return b;
+                                                    });
+                                                }
+                                            });
                                             // Calcular diff
                                             const currentById = new Map(steps.map(s => [s.id, s] as const));
                                             const nextById = new Map(second.data.map(s => [s.id, s] as const));
@@ -1269,9 +1301,29 @@ const QuizFunnelEditor: React.FC<QuizFunnelEditorProps> = ({ funnelId, templateI
                         </div>
 
                         {/* COL 3 - CANVAS */}
-                        <div className="flex-1 border-r relative bg-muted/10">
-                            <div className="absolute inset-0 overflow-auto">
-                                {simActive ? renderSimulation() : renderPreview()}
+                        <div className="flex-1 border-r relative bg-muted/10 flex flex-col">
+                            {/* Painel preview de bloco (se houver bloco selecionado) */}
+                            {selectedStep && (selectedStep.type === 'result' || selectedStep.type === 'offer') && activeBlockPreviewId && (
+                                <div className="border-b bg-background/70 backdrop-blur p-2 text-[11px] flex items-center justify-between">
+                                    <span className="font-semibold">Preview Bloco: {activeBlockPreviewId}</span>
+                                    <Button size="sm" variant="ghost" className="h-6 px-2" onClick={() => setActiveBlockPreviewId(null)}>Fechar</Button>
+                                </div>
+                            )}
+                            <div className="flex-1 overflow-auto">
+                                {activeBlockPreviewId && selectedStep?.blocks?.length ? (
+                                    (() => {
+                                        const blk = (selectedStep.blocks || []).find(b => b.id === activeBlockPreviewId);
+                                        const def = blk && blockRegistry.get(blk.type);
+                                        if (!blk || !def) return <div className="p-4 text-[11px] text-red-600">Bloco não encontrado.</div>;
+                                        let node: React.ReactNode = null;
+                                        try { node = def.render({ config: blk.config || def.defaultConfig, state: { step: selectedStep } }); } catch (e: any) { node = <div className="text-red-600">Erro render: {e.message}</div>; }
+                                        return <div className="p-4">{node}</div>;
+                                    })()
+                                ) : (
+                                    <div className="absolute inset-0 overflow-auto">
+                                        {simActive ? renderSimulation() : renderPreview()}
+                                    </div>
+                                )}
                             </div>
                         </div>
 
@@ -1320,10 +1372,11 @@ const QuizFunnelEditor: React.FC<QuizFunnelEditorProps> = ({ funnelId, templateI
                                                         const def = blockRegistry.get(b.type);
                                                         const isEditing = editingBlockId === b.id;
                                                         return (
-                                                            <div key={b.id} className="bg-background rounded border p-2 space-y-1">
+                                                            <div key={b.id} className={`bg-background rounded border p-2 space-y-1 ${activeBlockPreviewId === b.id ? 'ring-1 ring-primary' : ''}`}>
                                                                 <div className="flex items-center justify-between text-[11px]">
                                                                     <span className="truncate font-medium" title={b.type}>{def?.label || b.type}</span>
                                                                     <div className="flex gap-1">
+                                                                        <Button size="icon" variant="ghost" className="h-5 w-5" title="Preview" onClick={() => setActiveBlockPreviewId(p => p === b.id ? null : b.id)}>👁</Button>
                                                                         <Button size="icon" variant="ghost" className="h-5 w-5" title={isEditing ? 'Fechar' : 'Editar'} onClick={() => {
                                                                             if (isEditing) {
                                                                                 setEditingBlockId(null); setBlockConfigError(null);
@@ -1376,6 +1429,8 @@ const QuizFunnelEditor: React.FC<QuizFunnelEditorProps> = ({ funnelId, templateI
                                                                                     if (idx !== -1) { arr[idx] = { ...arr[idx], config: json }; }
                                                                                     updateStep(selectedStep.id, { blocks: arr as any });
                                                                                     setEditingBlockId(null);
+                                                                                    // Atualizar preview se estiver ativo
+                                                                                    if (activeBlockPreviewId === b.id) setActiveBlockPreviewId(b.id);
                                                                                 } catch (err: any) {
                                                                                     setBlockConfigError('JSON inválido: ' + err.message);
                                                                                 }
