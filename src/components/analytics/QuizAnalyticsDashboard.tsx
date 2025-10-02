@@ -82,12 +82,13 @@ const QuizAnalyticsDashboard: React.FC = () => {
                 <h1 className="text-xl font-semibold">Quiz Analytics Dashboard</h1>
                 <p className="text-xs text-muted-foreground">Eventos locais armazenados em localStorage (buffer limitado a 500).</p>
             </header>
-            <section className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+            <section className="grid grid-cols-2 md:grid-cols-5 gap-4 text-sm">
                 <div className="p-3 border rounded bg-muted/30"><div className="text-[11px] uppercase">Steps</div><div className="font-bold">{metrics.totalSteps}</div></div>
                 <div className="p-3 border rounded bg-muted/30"><div className="text-[11px] uppercase">Resultados</div><div className="font-bold">{metrics.totalResultComputes}</div></div>
                 <div className="p-3 border rounded bg-muted/30"><div className="text-[11px] uppercase">Ofertas</div><div className="font-bold">{metrics.totalOffers}</div></div>
                 <div className="p-3 border rounded bg-muted/30"><div className="text-[11px] uppercase">CTA Clicks</div><div className="font-bold">{metrics.totalCtaClicks}</div></div>
                 <div className="p-3 border rounded bg-muted/30"><div className="text-[11px] uppercase">Sessões</div><div className="font-bold">{metrics.distinctSessions}</div></div>
+                <div className="p-3 border rounded bg-muted/30 col-span-2 md:col-span-1"><div className="text-[11px] uppercase">Usuários</div><div className="font-bold">{metrics.distinctUsers}</div></div>
                 <div className="p-3 border rounded bg-muted/30"><div className="text-[11px] uppercase">Ans/Resultado</div><div className="font-bold">{fmt(metrics.avgAnswersPerResult)}</div></div>
                 <div className="p-3 border rounded bg-muted/30"><div className="text-[11px] uppercase">Offer/Result</div><div className="font-bold">{fmt(metrics.conversionRateOfferPerResult)}</div></div>
                 <div className="p-3 border rounded bg-muted/30"><div className="text-[11px] uppercase">CTA/Offer</div><div className="font-bold">{fmt(metrics.ctaClickThroughPerOffer)}</div></div>

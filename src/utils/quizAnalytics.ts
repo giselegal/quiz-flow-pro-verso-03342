@@ -2,7 +2,7 @@ import { z } from 'zod';
 import { trackEvent } from './analytics';
 export type QuizAnalyticsEventType = 'step_view' | 'result_compute' | 'offer_view' | 'cta_click';
 
-interface BaseEvt { type: QuizAnalyticsEventType; ts: string; sessionId: string; }
+interface BaseEvt { type: QuizAnalyticsEventType; ts: string; sessionId: string; userId?: string; }
 export type QuizAnalyticsEvent =
     | (BaseEvt & { type: 'step_view'; stepId: string; stepType: string; position: number })
     | (BaseEvt & { type: 'result_compute'; primary?: string; secondary?: string[]; answersCount: number })
@@ -15,6 +15,7 @@ const STORAGE_KEY = 'quizAnalyticsEvents';
 const baseSchema = z.object({
     ts: z.string().optional(),
     sessionId: z.string().optional(),
+    userId: z.string().optional(),
     type: z.enum(['step_view', 'result_compute', 'offer_view', 'cta_click'])
 });
 
@@ -57,8 +58,26 @@ function load(): QuizAnalyticsEvent[] {
 function save(evts: QuizAnalyticsEvent[]) { try { localStorage.setItem(STORAGE_KEY, JSON.stringify(evts.slice(-500))); } catch { } }
 
 // Tornar emit mais permissivo para evitar ruído de tipagem caso campos não estritamente mapeados evoluam.
+function resolveUserId(): string | undefined {
+    try {
+        // Prioridade: localStorage userProfile.userId > localStorage.userId > sessionStorage.userId
+        const profileRaw = localStorage.getItem('userProfile');
+        if (profileRaw) {
+            const p = JSON.parse(profileRaw);
+            if (p && typeof p === 'object') {
+                if (p.userId) return String(p.userId);
+                if (p.id) return String(p.id);
+                if (p.uid) return String(p.uid);
+            }
+        }
+        const direct = localStorage.getItem('userId') || sessionStorage.getItem('userId');
+        if (direct) return direct;
+    } catch { }
+    return undefined;
+}
+
 export function emitQuizEvent(evt: any) {
-    const draft = { ...evt, ts: new Date().toISOString(), sessionId };
+    const draft = { ...evt, ts: new Date().toISOString(), sessionId, userId: resolveUserId() };
     const parsed = anyEventSchema.safeParse(draft);
     if (!parsed.success) {
         if (typeof console !== 'undefined') console.warn('[QuizAnalytics] Evento inválido descartado', parsed.error.flatten());
@@ -95,6 +114,7 @@ export interface QuizMetrics {
     totalOffers: number;
     totalCtaClicks: number;
     distinctSessions: number;
+    distinctUsers: number;
     avgAnswersPerResult: number;
     conversionRateOfferPerResult: number; // offer_view / result_compute
     ctaClickThroughPerOffer: number; // cta_click / offer_view
@@ -114,6 +134,7 @@ export function getQuizMetrics(filter: MetricsFilter = {}): QuizMetrics {
     const offers = evts.filter(e => e.type === 'offer_view');
     const ctas = evts.filter(e => e.type === 'cta_click');
     const sessions = new Set(evts.map(e => e.sessionId));
+    const users = new Set(evts.map(e => (e as any).userId).filter(Boolean));
     const avgAnswers = results.length ? (results.reduce((a, r) => a + (r.answersCount || 0), 0) / results.length) : 0;
     const conversion = results.length ? offers.length / results.length : 0;
     const ctaRate = offers.length ? ctas.length / offers.length : 0;
@@ -123,6 +144,7 @@ export function getQuizMetrics(filter: MetricsFilter = {}): QuizMetrics {
         totalOffers: offers.length,
         totalCtaClicks: ctas.length,
         distinctSessions: sessions.size,
+        distinctUsers: users.size,
         avgAnswersPerResult: Number(avgAnswers.toFixed(2)),
         conversionRateOfferPerResult: Number(conversion.toFixed(3)),
         ctaClickThroughPerOffer: Number(ctaRate.toFixed(3))
