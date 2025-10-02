@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { emitQuizEvent, getQuizEvents, clearQuizEvents, getQuizMetrics, flushQuizEvents } from '../quizAnalytics';
+import { emitQuizEvent, getQuizEvents, clearQuizEvents, getQuizMetrics, flushQuizEvents, flushQuizEventsWithRetry } from '../quizAnalytics';
 
 function mockFetch(success = true) {
     // @ts-ignore
@@ -37,6 +37,40 @@ describe('quizAnalytics', () => {
         expect(m.totalResultComputes).toBe(1);
         expect(m.totalOffers).toBe(1);
         expect(m.totalCtaClicks).toBe(1);
+    });
+
+    it('enriquece com userId e conta distinctUsers', () => {
+        // mock userProfile
+        // @ts-ignore
+        global.localStorage = {
+            store: {} as Record<string, string>,
+            getItem(k: string) { return this.store[k] || null; },
+            setItem(k: string, v: string) { this.store[k] = v; },
+            removeItem(k: string) { delete this.store[k]; }
+        };
+        localStorage.setItem('userProfile', JSON.stringify({ userId: 'user-123' }));
+        emitQuizEvent({ type: 'step_view', stepId: 'a', stepType: 'intro', position: 0 });
+        // second user
+        localStorage.setItem('userProfile', JSON.stringify({ userId: 'user-456' }));
+        emitQuizEvent({ type: 'result_compute', primary: 'x', answersCount: 2 });
+        const evts = getQuizEvents();
+        expect(evts.every(e => e.userId)).toBe(true);
+        const m = getQuizMetrics();
+        expect(m.distinctUsers).toBe(2);
+    });
+
+    it('flush com retry/backoff envia batches mesmo após falhas iniciais', async () => {
+        clearQuizEvents();
+        for (let i = 0; i < 3; i++) emitQuizEvent({ type: 'step_view', stepId: 's' + i, stepType: 'q', position: i });
+        let call = 0;
+        // @ts-ignore
+        global.fetch = async () => {
+            call++;
+            if (call < 2) return { ok: false, status: 500 }; // primeira tentativa falha
+            return { ok: true, status: 200 };
+        };
+        const res = await flushQuizEventsWithRetry({ endpoint: 'https://api.test/quiz-events', batchSize: 2, maxRetries: 3, backoffBaseMs: 1 });
+        expect(res.flushed).toBeGreaterThan(0);
     });
 
     it('flush remove eventos enviados', async () => {
