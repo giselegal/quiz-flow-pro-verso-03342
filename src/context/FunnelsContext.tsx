@@ -670,7 +670,7 @@ export const FunnelsProvider: React.FC<FunnelsProviderProps> = ({ children, debu
       );
     } else if (currentFunnelId) {
       console.error(`❌ [${timestamp}] FunnelsContext: Template não encontrado:`, currentFunnelId);
-      try { console.log(`📁 [${timestamp}] Templates disponíveis:`, Object.keys(safeFunnelTemplates)); } catch {}
+      try { console.log(`📁 [${timestamp}] Templates disponíveis:`, Object.keys(safeFunnelTemplates)); } catch { }
 
       // ✅ FASE 3: Fallback para template padrão
       const fallbackTemplate = safeFunnelTemplates['funil-21-etapas'];
