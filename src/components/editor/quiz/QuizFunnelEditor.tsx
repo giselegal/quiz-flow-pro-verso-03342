@@ -7,6 +7,7 @@ import { Separator } from '@/components/ui/separator';
 import { QUIZ_STEPS, type QuizStep } from '@/data/quizSteps';
 import { styleConfigGisele } from '@/data/styles';
 import { Plus, Save, Trash2, ArrowUp, ArrowDown, Copy, RefreshCw } from 'lucide-react';
+import { Undo2, Redo2 } from 'lucide-react';
 
 /**
  * QuizFunnelEditor
@@ -220,6 +221,69 @@ const QuizFunnelEditor: React.FC<QuizFunnelEditorProps> = ({ funnelId, templateI
     const [selectedId, setSelectedId] = useState<string>('');
     const [isSaving, setIsSaving] = useState(false);
     const [previewSelections, setPreviewSelections] = useState<Record<string, string[]>>({});
+    // Undo/Redo stacks
+    const [history, setHistory] = useState<EditableQuizStep[][]>([]);
+    const [future, setFuture] = useState<EditableQuizStep[][]>([]);
+    const MAX_HISTORY = 40;
+    // Diff Viewer state
+    const [pendingImport, setPendingImport] = useState<EditableQuizStep[] | null>(null);
+    const [importDiff, setImportDiff] = useState<null | {
+        added: EditableQuizStep[];
+        removed: EditableQuizStep[];
+        modified: Array<{ before: EditableQuizStep; after: EditableQuizStep; changes: string[] }>;
+    }>(null);
+
+    const pushHistory = useCallback((prev: EditableQuizStep[]) => {
+        setHistory(h => {
+            const clone = [...h, prev.map(s => ({ ...s }))];
+            if (clone.length > MAX_HISTORY) clone.splice(0, clone.length - MAX_HISTORY);
+            return clone;
+        });
+        // ao criar novo estado invalida o futuro
+        setFuture([]);
+    }, []);
+
+    const undo = useCallback(() => {
+        setHistory(h => {
+            if (!h.length) return h;
+            setSteps(current => {
+                const prev = h[h.length - 1];
+                setFuture(f => [current.map(s => ({ ...s })), ...f]);
+                return prev.map(s => ({ ...s }));
+            });
+            return h.slice(0, -1);
+        });
+    }, []);
+
+    const redo = useCallback(() => {
+        setFuture(f => {
+            if (!f.length) return f;
+            setSteps(current => {
+                const next = f[0];
+                setHistory(h => [...h, current.map(s => ({ ...s }))]);
+                return next.map(s => ({ ...s }));
+            });
+            return f.slice(1);
+        });
+    }, []);
+
+    // Capturar alterações de steps para empilhar histórico (exceto inicial carregamento)
+    const initializedRef = useRef(false);
+    useEffect(() => {
+        if (!initializedRef.current) { // primeira atribuição acontece no carregamento inicial
+            initializedRef.current = true;
+            return;
+        }
+        pushHistory(steps);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [steps.map(s => JSON.stringify({
+        ...s, // serializar campos principais para detectar mudança estrutural
+        id: s.id,
+        type: s.type,
+        nextStep: s.nextStep,
+        options: s.type === 'question' || s.type === 'strategic-question' ? s.options : undefined,
+        offerMap: s.type === 'offer' ? s.offerMap : undefined
+    })).join('|')]);
 
     // ===================== MODO SIMULAÇÃO (Preview Real) =====================
     const [simActive, setSimActive] = useState(false);
@@ -235,6 +299,21 @@ const QuizFunnelEditor: React.FC<QuizFunnelEditorProps> = ({ funnelId, templateI
 
     const orderedSteps = useMemo(() => steps, [steps]);
     const stepById = useCallback((id: string | null) => orderedSteps.find(s => s.id === id), [orderedSteps]);
+
+    // Atalhos de teclado: Ctrl+Z / Ctrl+Y
+    useEffect(() => {
+        const handler = (e: KeyboardEvent) => {
+            if ((e.ctrlKey || e.metaKey) && !e.shiftKey && e.key.toLowerCase() === 'z') {
+                e.preventDefault();
+                undo();
+            } else if ((e.ctrlKey || e.metaKey) && (e.key.toLowerCase() === 'y' || (e.shiftKey && e.key.toLowerCase() === 'z'))) {
+                e.preventDefault();
+                redo();
+            }
+        };
+        window.addEventListener('keydown', handler);
+        return () => window.removeEventListener('keydown', handler);
+    }, [undo, redo]);
 
     const startSimulation = () => {
         if (!orderedSteps.length) return;
@@ -733,6 +812,57 @@ const QuizFunnelEditor: React.FC<QuizFunnelEditorProps> = ({ funnelId, templateI
     // ================= RENDER =================
     return (
         <div className="h-full w-full flex flex-col bg-background">
+            {importDiff && pendingImport && (
+                <div className="absolute inset-x-0 top-0 z-50 flex justify-center">
+                    <div className="mt-4 w-[720px] border rounded shadow-lg bg-background p-4 text-xs space-y-3">
+                        <div className="flex items-center justify-between">
+                            <h3 className="text-sm font-semibold">Pré-visualização de Importação</h3>
+                            <div className="flex gap-2">
+                                <Button size="sm" variant="outline" onClick={() => { setImportDiff(null); setPendingImport(null); }}>Cancelar</Button>
+                                <Button size="sm" onClick={() => {
+                                    setSteps(pendingImport);
+                                    setSelectedId(pendingImport[0]?.id || '');
+                                    setImportDiff(null);
+                                    setPendingImport(null);
+                                }}>Aplicar</Button>
+                            </div>
+                        </div>
+                        <Separator />
+                        <div className="grid grid-cols-3 gap-4">
+                            <div>
+                                <div className="font-medium mb-1">Adicionados ({importDiff.added.length})</div>
+                                <ul className="space-y-1 max-h-40 overflow-auto">
+                                    {importDiff.added.map(s => <li key={s.id} className="px-2 py-1 rounded bg-emerald-600/10 text-emerald-700 dark:text-emerald-300 border border-emerald-600/30">{s.id} <span className="opacity-60">[{s.type}]</span></li>)}
+                                    {!importDiff.added.length && <li className="text-muted-foreground italic">Nenhum</li>}
+                                </ul>
+                            </div>
+                            <div>
+                                <div className="font-medium mb-1">Removidos ({importDiff.removed.length})</div>
+                                <ul className="space-y-1 max-h-40 overflow-auto">
+                                    {importDiff.removed.map(s => <li key={s.id} className="px-2 py-1 rounded bg-red-600/10 text-red-700 dark:text-red-300 border border-red-600/30">{s.id} <span className="opacity-60">[{s.type}]</span></li>)}
+                                    {!importDiff.removed.length && <li className="text-muted-foreground italic">Nenhum</li>}
+                                </ul>
+                            </div>
+                            <div>
+                                <div className="font-medium mb-1">Modificados ({importDiff.modified.length})</div>
+                                <ul className="space-y-1 max-h-40 overflow-auto">
+                                    {importDiff.modified.map(m => (
+                                        <li key={m.before.id} className="px-2 py-1 rounded bg-amber-500/10 text-amber-700 dark:text-amber-300 border border-amber-500/30">
+                                            {m.before.id} <span className="opacity-60">[{m.before.type}→{m.after.type}]</span>
+                                            <div className="mt-1 flex flex-wrap gap-1">
+                                                {m.changes.map(c => <span key={c} className="px-1 py-0.5 rounded bg-amber-600/20">{c}</span>)}
+                                            </div>
+                                        </li>
+                                    ))}
+                                    {!importDiff.modified.length && <li className="text-muted-foreground italic">Nenhum</li>}
+                                </ul>
+                            </div>
+                        </div>
+                        <Separator />
+                        <p className="text-[10px] text-muted-foreground">Revise as alterações antes de aplicar. A ação Aplicar substitui completamente o fluxo atual.</p>
+                    </div>
+                </div>
+            )}
             {/* Barra de controle de simulação */}
             <div className="h-10 border-b flex items-center gap-2 px-3 text-xs bg-muted/30">
                 <span className="font-semibold">Quiz Editor</span>
@@ -741,6 +871,12 @@ const QuizFunnelEditor: React.FC<QuizFunnelEditorProps> = ({ funnelId, templateI
                         Ciclo!
                     </span>
                 )}
+                <Button size="sm" variant="ghost" disabled={!history.length} onClick={undo} title="Undo (Ctrl+Z)">
+                    <Undo2 className="w-3 h-3" />
+                </Button>
+                <Button size="sm" variant="ghost" disabled={!future.length} onClick={redo} title="Redo (Ctrl+Y)">
+                    <Redo2 className="w-3 h-3" />
+                </Button>
                 <Button size="sm" variant="outline" onClick={() => {
                     const parsed = StepsArraySchema.safeParse(steps);
                     if (!parsed.success) {
@@ -799,8 +935,44 @@ const QuizFunnelEditor: React.FC<QuizFunnelEditorProps> = ({ funnelId, templateI
                                         alert('Import falhou após normalização de IDs.');
                                         return;
                                     }
-                                    setSteps(second.data as EditableQuizStep[]);
-                                    setSelectedId(second.data[0]?.id || '');
+                                    // Calcular diff
+                                    const currentById = new Map(steps.map(s => [s.id, s] as const));
+                                    const nextById = new Map(second.data.map(s => [s.id, s] as const));
+                                    const added: EditableQuizStep[] = [];
+                                    const removed: EditableQuizStep[] = [];
+                                    const modified: Array<{ before: EditableQuizStep; after: EditableQuizStep; changes: string[] }> = [];
+                                    // Added
+                                    for (const [id, st] of nextById.entries()) {
+                                        if (!currentById.has(id)) added.push(st as EditableQuizStep);
+                                    }
+                                    // Removed
+                                    for (const [id, st] of currentById.entries()) {
+                                        if (!nextById.has(id)) removed.push(st as EditableQuizStep);
+                                    }
+                                    // Modified
+                                    for (const [id, before] of currentById.entries()) {
+                                        const after = nextById.get(id) as EditableQuizStep | undefined;
+                                        if (!after) continue;
+                                        const changes: string[] = [];
+                                        const fields: Array<keyof EditableQuizStep> = ['type', 'nextStep', 'questionText', 'questionNumber', 'title', 'formQuestion', 'placeholder', 'buttonText'];
+                                        fields.forEach(f => {
+                                            if ((before as any)[f] !== (after as any)[f]) changes.push(String(f));
+                                        });
+                                        // options length / ids
+                                        if ((before as any).options || (after as any).options) {
+                                            const bOpts = ((before as any).options || []).map((o: any) => o.id + ':' + o.text).join('|');
+                                            const aOpts = ((after as any).options || []).map((o: any) => o.id + ':' + o.text).join('|');
+                                            if (bOpts !== aOpts) changes.push('options');
+                                        }
+                                        if (before.type === 'offer' || after.type === 'offer') {
+                                            const bMap = JSON.stringify((before as any).offerMap || {});
+                                            const aMap = JSON.stringify((after as any).offerMap || {});
+                                            if (bMap !== aMap) changes.push('offerMap');
+                                        }
+                                        if (changes.length) modified.push({ before: before as EditableQuizStep, after: after as EditableQuizStep, changes });
+                                    }
+                                    setImportDiff({ added, removed, modified });
+                                    setPendingImport(second.data as EditableQuizStep[]);
                                 } catch (err: any) {
                                     alert('Falha ao importar JSON: ' + err.message);
                                 } finally {
