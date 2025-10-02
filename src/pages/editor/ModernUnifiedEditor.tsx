@@ -16,6 +16,8 @@ export interface ModernUnifiedEditorProps {
 }
 
 const QuizFunnelEditor = React.lazy(() => import('../../components/editor/quiz/QuizFunnelEditor'));
+// Provider de blocos do quiz
+import { BlockRegistryProvider, ResultHeadlineBlock, OfferCoreBlock, ResultSecondaryListBlock, OfferUrgencyBlock } from '@/runtime/quiz/blocks/BlockRegistry';
 const LegacyModernUnifiedEditor = React.lazy(() => import('./ModernUnifiedEditor.legacy'));
 
 const TransitionBanner: React.FC<{ isLegacy: boolean }> = ({ isLegacy }) => {
@@ -196,7 +198,9 @@ const ModernUnifiedEditor: React.FC<ModernUnifiedEditorProps> = (props) => {
                         <LegacyModernUnifiedEditor {...props} />
                     ) : facade ? (
                         <FunnelFacadeContext.Provider value={facade}>
-                            <QuizFunnelEditor funnelId={props.funnelId} templateId={props.templateId} />
+                            <BlockRegistryProvider definitions={[ResultHeadlineBlock, OfferCoreBlock, ResultSecondaryListBlock, OfferUrgencyBlock]}>
+                                <QuizFunnelEditor funnelId={props.funnelId} templateId={props.templateId} />
+                            </BlockRegistryProvider>
                         </FunnelFacadeContext.Provider>
                     ) : null}
                 </Suspense>
