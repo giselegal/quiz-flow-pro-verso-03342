@@ -1,4 +1,5 @@
 import React, { Suspense, useMemo, useState, useCallback, useRef } from 'react';
+import LazyBoundary from '@/components/common/LazyBoundary';
 import { useNotification } from '@/components/ui/Notification';
 import { useEditor } from '@/components/editor/EditorProviderMigrationAdapter';
 import './UniversalStepEditorPro.css';
@@ -188,7 +189,7 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
                     <div className="hidden lg:flex lg:flex-col h-screen w-full">
                         {/* Header Superior - Acima de todas as colunas */}
                         <div className="flex-shrink-0 border-b border-gray-800/50">
-                            <Suspense fallback={<div className="h-16 bg-gray-900 border-b border-gray-800/50" />}>
+                            <LazyBoundary fallback={<div className="h-16 bg-gray-900 border-b border-gray-800/50" />}>
                                 <EditorHeader
                                     mode={mode}
                                     setMode={setMode}
@@ -201,14 +202,14 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
                                     renderIcon={renderIcon}
                                     getStepAnalysis={getStepAnalysis}
                                 />
-                            </Suspense>
+                            </LazyBoundary>
                         </div>
 
                         {/* Grid das 4 colunas */}
                         <div className="flex-1 editor-grid">
                             {/* Sidebar de Steps */}
                             <div className="bg-gray-900 border-r border-gray-800/50 overflow-y-auto">
-                                <Suspense fallback={<div className="w-full bg-gray-900 border-r border-gray-800/50 h-full" />}>
+                                <LazyBoundary fallback={<div className="w-full bg-gray-900 border-r border-gray-800/50 h-full" />}>
                                     <StepSidebar
                                         currentStep={safeCurrentStep}
                                         totalSteps={21}
@@ -218,22 +219,22 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
                                         getStepAnalysis={getStepAnalysis}
                                         renderIcon={renderIcon}
                                     />
-                                </Suspense>
+                                </LazyBoundary>
                             </div>
 
                             {/* Sidebar de Componentes */}
                             <div className="bg-gray-900 border-r border-gray-800/50 overflow-y-auto">
-                                <Suspense fallback={<div className="w-full bg-gray-900 border-r border-gray-800/50 h-full" />}>
+                                <LazyBoundary fallback={<div className="w-full bg-gray-900 border-r border-gray-800/50 h-full" />}>
                                     <ComponentsSidebar
                                         groupedComponents={groupedComponents}
                                         renderIcon={renderIcon}
                                     />
-                                </Suspense>
+                                </LazyBoundary>
                             </div>
 
                             {/* Área do Canvas Central - Sem Header interno */}
                             <div className="flex flex-col bg-gray-100 dark:bg-gray-800 overflow-y-auto" ref={canvasRef}>
-                                <Suspense fallback={<div className="h-full flex items-center justify-center">Carregando Canvas...</div>}>
+                                <LazyBoundary fallback={<div className="h-full flex items-center justify-center">Carregando Canvas...</div>}>
                                     <CanvasAreaLayout
                                         className="flex-1"
                                         containerRef={canvasRef}
@@ -245,19 +246,19 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
                                         actions={actions as any}
                                         isDragging={isDragging}
                                     />
-                                </Suspense>
+                                </LazyBoundary>
                             </div>
 
                             {/* Painel de Propriedades */}
                             <div className="bg-gray-900/80 backdrop-blur-sm border-l border-gray-700/50 overflow-y-auto">
-                                <Suspense fallback={<div className="w-full bg-gray-900 border-l border-gray-800/50 h-full" />}>
+                                <LazyBoundary fallback={<div className="w-full bg-gray-900 border-l border-gray-800/50 h-full" />}>
                                     <PropertiesColumn
                                         selectedBlock={selectedBlock}
                                         onUpdate={handleUpdateBlock}
                                         onDelete={handleDeleteBlock}
                                         onClose={() => actions.setSelectedBlockId?.(null)}
                                     />
-                                </Suspense>
+                                </LazyBoundary>
                             </div>
                         </div>
                     </div>
@@ -265,7 +266,7 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
                     {/* Mobile Layout */}
                     <div className="lg:hidden h-screen flex flex-col bg-gradient-to-br from-slate-50 via-gray-50 to-slate-100 dark:from-gray-900 dark:via-slate-900 dark:to-gray-900">
                         {/* Header Mobile */}
-                        <Suspense fallback={<div className="h-20 flex items-center justify-center">Carregando...</div>}>
+                        <LazyBoundary fallback={<div className="h-20 flex items-center justify-center">Carregando...</div>}>
                             <EditorHeader
                                 mode={mode}
                                 setMode={setMode}
@@ -278,11 +279,11 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
                                 renderIcon={renderIcon}
                                 getStepAnalysis={getStepAnalysis}
                             />
-                        </Suspense>
+                        </LazyBoundary>
 
                         {/* Canvas Mobile */}
                         <div className="flex-1 min-h-0">
-                            <Suspense fallback={<div className="h-full flex items-center justify-center">Carregando Canvas...</div>}>
+                            <LazyBoundary fallback={<div className="h-full flex items-center justify-center">Carregando Canvas...</div>}>
                                 <CanvasAreaLayout
                                     className="h-full"
                                     containerRef={canvasRef}
@@ -294,7 +295,7 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
                                     actions={actions as any}
                                     isDragging={isDragging}
                                 />
-                            </Suspense>
+                            </LazyBoundary>
                         </div>
                     </div>
                 </div>

@@ -16,6 +16,7 @@
  */
 
 import React, { Suspense, useMemo, useCallback } from 'react';
+import LazyBoundary from '@/components/common/LazyBoundary';
 import { useEditor } from '@/components/editor/EditorProviderMigrationAdapter';
 import { logger } from '@/utils/debugLogger';
 
@@ -27,9 +28,9 @@ const CanvasDropZone = React.lazy(() => import('@/components/editor/canvas/Canva
 const UltraUnifiedPropertiesPanel = React.lazy(() => import('@/components/editor/properties/UltraUnifiedPropertiesPanel'));
 
 // 🎯 FALLBACK COMPONENTS
-const ModularEditorProFallback = React.lazy(() =>
-  import('@/components/editor/EditorPro/components/ModularEditorPro')
-);
+const ModularEditorProFallback = React.lazy(() => import('@/components/editor/EditorPro/components/ModularEditorPro'));
+// 💡 Produção (quiz renderer) declarado no topo para evitar recriações
+const ScalableQuizRenderer = React.lazy(() => import('@/components/core/ScalableQuizRenderer'));
 
 export interface UnifiedEditorCoreProps {
   mode?: 'visual' | 'headless' | 'production' | 'funnel';
@@ -96,15 +97,15 @@ const ModeRenderer: React.FC<{
         return (
           <div className="h-full w-full flex flex-col">
             {/* Toolbar Superior */}
-            <Suspense fallback={<ComponentLoadingFallback name="Toolbar" />}>
+            <LazyBoundary fallback={<ComponentLoadingFallback name="Toolbar" />}>
               <EditorToolbar />
-            </Suspense>
+            </LazyBoundary>
 
             {/* Layout Principal 4 Colunas */}
             <div className="flex-1 overflow-hidden flex">
               {/* Sidebar Esquerda - Etapas */}
               <div className="w-64 border-r border-border bg-card">
-                <Suspense fallback={<ComponentLoadingFallback name="Etapas" />}>
+                <LazyBoundary fallback={<ComponentLoadingFallback name="Etapas" />}>
                   <StepSidebar
                     currentStep={state.currentStep}
                     totalSteps={totalSteps}
@@ -120,12 +121,12 @@ const ModeRenderer: React.FC<{
                     })}
                     renderIcon={(_name, className) => <span className={className}>🎯</span>}
                   />
-                </Suspense>
+                </LazyBoundary>
               </div>
 
               {/* Sidebar Esquerda - Componentes */}
               <div className="w-64 border-r border-border bg-card">
-                <Suspense fallback={<ComponentLoadingFallback name="Componentes" />}>
+                <LazyBoundary fallback={<ComponentLoadingFallback name="Componentes" />}>
                   <UnifiedComponentsPanel
                     onAddComponent={(componentId, metadata) => {
                       // Handle component addition
@@ -133,12 +134,12 @@ const ModeRenderer: React.FC<{
                     }}
                     compactMode={true}
                   />
-                </Suspense>
+                </LazyBoundary>
               </div>
 
               {/* Canvas Principal */}
               <div className="flex-1 bg-background">
-                <Suspense fallback={<ComponentLoadingFallback name="Canvas" />}>
+                <LazyBoundary fallback={<ComponentLoadingFallback name="Canvas" />}>
                   <CanvasDropZone
                     blocks={state.stepBlocks[`step-${state.currentStep}`] || []}
                     selectedBlockId={state.selectedBlockId}
@@ -146,16 +147,16 @@ const ModeRenderer: React.FC<{
                     onUpdateBlock={(blockId, updates) => actions.updateBlock(`step-${state.currentStep}`, blockId, updates)}
                     onDeleteBlock={(blockId) => actions.removeBlock(`step-${state.currentStep}`, blockId)}
                   />
-                </Suspense>
+                </LazyBoundary>
               </div>
 
               {/* Sidebar Direita - Propriedades */}
               <div className="w-80 border-l border-border bg-card">
-                <Suspense fallback={<ComponentLoadingFallback name="Propriedades" />}>
+                <LazyBoundary fallback={<ComponentLoadingFallback name="Propriedades" />}>
                   <UltraUnifiedPropertiesPanel
                     onUpdate={() => { }}
                   />
-                </Suspense>
+                </LazyBoundary>
               </div>
             </div>
           </div>
@@ -164,7 +165,7 @@ const ModeRenderer: React.FC<{
       case 'headless':
         return (
           <div className="h-full w-full p-4">
-            <Suspense fallback={<ComponentLoadingFallback name="Canvas Headless" />}>
+            <LazyBoundary fallback={<ComponentLoadingFallback name="Canvas Headless" />}>
               <CanvasDropZone
                 blocks={state.stepBlocks[`step-${state.currentStep}`] || []}
                 selectedBlockId={state.selectedBlockId}
@@ -173,24 +174,19 @@ const ModeRenderer: React.FC<{
                 onDeleteBlock={(blockId) => actions.removeBlock(`step-${state.currentStep}`, blockId)}
                 className="h-full border border-border rounded-lg"
               />
-            </Suspense>
+            </LazyBoundary>
           </div>
         );
 
       case 'production':
-        // Para modo produção, usar ScalableQuizRenderer
-        const ScalableQuizRenderer = React.lazy(() =>
-          import('@/components/core/ScalableQuizRenderer')
-        );
-
         return (
-          <Suspense fallback={<ComponentLoadingFallback name="Quiz Renderer" />}>
+          <LazyBoundary fallback={<ComponentLoadingFallback name="Quiz Renderer" />}>
             <ScalableQuizRenderer
               funnelId={funnelId || 'quiz21StepsComplete'}
               mode="production"
               className="h-full"
             />
-          </Suspense>
+          </LazyBoundary>
         );
 
       case 'funnel':
@@ -199,7 +195,7 @@ const ModeRenderer: React.FC<{
             {/* Layout simplificado para funnel */}
             <div className="flex h-full">
               <div className="w-64 border-r border-border">
-                <Suspense fallback={<ComponentLoadingFallback name="Etapas" />}>
+                <LazyBoundary fallback={<ComponentLoadingFallback name="Etapas" />}>
                   <StepSidebar
                     currentStep={state.currentStep}
                     totalSteps={totalSteps}
@@ -215,10 +211,10 @@ const ModeRenderer: React.FC<{
                     })}
                     renderIcon={(_name, className) => <span className={className}>🎯</span>}
                   />
-                </Suspense>
+                </LazyBoundary>
               </div>
               <div className="flex-1">
-                <Suspense fallback={<ComponentLoadingFallback name="Canvas" />}>
+                <LazyBoundary fallback={<ComponentLoadingFallback name="Canvas" />}>
                   <CanvasDropZone
                     blocks={state.stepBlocks[`step-${state.currentStep}`] || []}
                     selectedBlockId={state.selectedBlockId}
@@ -226,14 +222,14 @@ const ModeRenderer: React.FC<{
                     onUpdateBlock={(blockId, updates) => actions.updateBlock(`step-${state.currentStep}`, blockId, updates)}
                     onDeleteBlock={(blockId) => actions.removeBlock(`step-${state.currentStep}`, blockId)}
                   />
-                </Suspense>
+                </LazyBoundary>
               </div>
               <div className="w-80 border-l border-border">
-                <Suspense fallback={<ComponentLoadingFallback name="Propriedades" />}>
+                <LazyBoundary fallback={<ComponentLoadingFallback name="Propriedades" />}>
                   <UltraUnifiedPropertiesPanel
                     onUpdate={() => { }}
                   />
-                </Suspense>
+                </LazyBoundary>
               </div>
             </div>
           </div>
@@ -242,9 +238,9 @@ const ModeRenderer: React.FC<{
       default:
         logger.warn('UnifiedEditorCore: Modo desconhecido, usando fallback', mode);
         return (
-          <Suspense fallback={<EditorLoadingFallback />}>
+          <LazyBoundary fallback={<EditorLoadingFallback />}>
             <ModularEditorProFallback />
-          </Suspense>
+          </LazyBoundary>
         );
     }
   }, [mode, funnelId, state.currentStep, state.stepBlocks, actions]);
@@ -291,9 +287,9 @@ export const UnifiedEditorCore: React.FC<UnifiedEditorCoreProps> = ({
 
   return (
     <div className={`unified-editor-core ${className} bg-background`}>
-      <React.Suspense fallback={<EditorLoadingFallback />}>
+      <LazyBoundary fallback={<EditorLoadingFallback />}>
         <ModeRenderer mode={mode} funnelId={funnelId} />
-      </React.Suspense>
+      </LazyBoundary>
     </div>
   );
 };

@@ -1,4 +1,5 @@
 import React from 'react';
+import LazyBoundary from '@/components/common/LazyBoundary';
 import { cn } from '@/lib/utils';
 import CanvasDropZone from '@/components/editor/canvas/CanvasDropZone.simple';
 import type { Block } from '@/types/editor';
@@ -58,16 +59,18 @@ const CanvasArea: React.FC<CanvasAreaProps> = ({
         previewDevice === 'xl' && 'max-w-6xl'
       )}>
         {mode === 'preview' ? (
-          <LazyScalableQuizRenderer
-            funnelId={funnelId}
-            mode="preview"
-            debugMode={true}
-            className="w-full canvas-area-preview"
-            onStepChange={(step, data) => {
-              actions.setCurrentStep(step);
-              console.log('📍 Canvas area step change:', step, data);
-            }}
-          />
+          <LazyBoundary fallback={<div className="py-12 text-center text-sm text-muted-foreground">Carregando preview...</div>}>
+            <LazyScalableQuizRenderer
+              funnelId={funnelId}
+              mode="preview"
+              debugMode={true}
+              className="w-full canvas-area-preview"
+              onStepChange={(step, data) => {
+                actions.setCurrentStep(step);
+                console.log('📍 Canvas area step change:', step, data);
+              }}
+            />
+          </LazyBoundary>
         ) : (
           <CanvasDropZone
             blocks={currentStepData}

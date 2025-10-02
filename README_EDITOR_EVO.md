@@ -63,6 +63,26 @@ Consolidar carregamento, gestão de estado, operações CRUD e UX progressiva do
 - Removidos lazy imports não utilizados (`EditorProUnified`, `TemplateErrorBoundary`, `TemplateLoadingSkeleton`) para minimizar carga cognitiva e potenciais caminhos faltando fallback.
 - Resultado esperado: eliminar paths não protegidos que podem disparar React 18 Suspense minified error #310 durante resolução de promessas lazy.
 
+### Guideline Padrão para Lazy/Suspense
+1. Declarar todos os `React.lazy(...)` no topo do módulo (fora de componentes/hooks).
+2. Sempre envolver renderizações lazy em `<LazyBoundary>` com fallback específico e leve.
+3. Evitar criação dinâmica de lazy dentro de `useMemo`, `useEffect` ou branches condicionais.
+4. Fallbacks devem ser semanticamente próximos (ex: "Carregando Canvas...", "Carregando Propriedades...") para UX clara.
+5. Remover imports lazy não utilizados para reduzir custo cognitivo e evitar árvores de código mortas.
+6. Ao adicionar novo módulo lazy, atualizar testes smoke se aplicável.
+7. Em produção, monitorar eventos ou logs para qualquer novo `React.lazy` que não apareça em boundaries instrumentados.
+
+Snippet recomendado:
+```tsx
+// Top-level
+const HeavyPanel = React.lazy(() => import('./HeavyPanel'));
+
+// Uso
+<LazyBoundary fallback={<InlineSpinner label="Carregando painel" />}> 
+	<HeavyPanel />
+</LazyBoundary>
+```
+
 ## Testes Adicionados
 - `useOperationsManager.dedupe.test.ts`: garante rejeição em corrida de operação deduplicada.
 - `useEditorBootstrap.parse.test.ts`: valida parsing real via função exportada `parseAndNormalizeParams` (funnel, template, modo, precedência de query params).
