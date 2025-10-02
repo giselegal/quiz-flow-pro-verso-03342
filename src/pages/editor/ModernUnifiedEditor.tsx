@@ -25,20 +25,11 @@ import { PublicationSettingsButton } from '@/components/editor/publication/Publi
 // 🎛️ NoCode Configuration Panel
 import EditorNoCodePanel from '@/components/editor/EditorNoCodePanel';
 
-// Lazy loading do editor principal
-const EditorProUnified = React.lazy(() =>
-    import('../../components/editor/EditorProUnified')
-);
+// NOTE: EditorProUnified lazy removido (não utilizado diretamente neste arquivo após unificação)
 
 import PureBuilderProvider from '@/components/editor/PureBuilderProvider';
 
-// 🔧 CORREÇÃO: Lazy loading dos componentes de error e loading
-const TemplateErrorBoundary = React.lazy(() =>
-    import('../../components/error/TemplateErrorBoundary')
-);
-const TemplateLoadingSkeleton = React.lazy(() =>
-    import('../../components/ui/template-loading-skeleton')
-);
+// NOTE: TemplateErrorBoundary & TemplateLoadingSkeleton removidos (não utilizados após refator de bootstrap progressivo)
 
 // Providers necessários
 import { FunnelMasterProvider } from '@/providers/FunnelMasterProvider';
@@ -68,6 +59,8 @@ import testCRUDOperations from '@/utils/testCRUDOperations';
 
 // 🔍 FUNNEL TYPE DETECTION
 import FunnelTypeDetector from '@/components/editor/FunnelTypeDetector';
+// Declarar fora para garantir instância única e evitar recriação em cada render
+const QuizFunnelEditor = React.lazy(() => import('../../components/editor/quiz/QuizFunnelEditor'));
 import type { FunnelType } from '@/services/FunnelTypesRegistry';
 
 // ===============================
@@ -687,8 +680,7 @@ const UnifiedEditorCore: React.FC<ModernUnifiedEditorProps> = ({ funnelId, templ
         );
     }
 
-    // 🔁 Lazy import do editor de quiz
-    const QuizFunnelEditor = React.useMemo(() => React.lazy(() => import('../../components/editor/quiz/QuizFunnelEditor')), []);
+    // QuizFunnelEditor agora declarado no topo (evita recriação e possíveis inconsistências de Suspense)
 
     // ✅ Tela inicial vazia quando não existe funnelId/carregamento de funil
     if (!extractedInfo.funnelId && !crudContext.currentFunnel?.id) {
