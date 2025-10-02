@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useCallback, useMemo, useRef } from 'react';
+import { emitQuizEvent } from '@/utils/quizAnalytics';
 import sanitizeHtml from '@/utils/sanitizeHtml';
 import { z } from 'zod';
 import { useUnifiedCRUD } from '@/context/UnifiedCRUDProvider';
@@ -422,7 +423,7 @@ const QuizFunnelEditor: React.FC<QuizFunnelEditorProps> = ({ funnelId, templateI
         }
     }, [simState.resultStyle, simState.secondaryStyles, simState.userName, simActive]);
 
-    // Avanço automático para transições / cálculo resultado
+    // Avanço automático para transições / cálculo resultado + instrumentação
     useEffect(() => {
         if (!simActive) return;
         const current = stepById(simState.currentStepId || '');
@@ -433,11 +434,20 @@ const QuizFunnelEditor: React.FC<QuizFunnelEditorProps> = ({ funnelId, templateI
             // calcular resultado e avançar depois
             const r = computeResult();
             setSimState(prev => ({ ...prev, resultStyle: r.primary, secondaryStyles: r.secondary }));
+            emitQuizEvent({ type: 'result_compute', primary: r.primary, secondary: r.secondary, answersCount: Object.values(simState.answers).reduce((a, c) => a + c.length, 0) });
             if (current.nextStep) autoAdvance(current);
         }
     }, [simActive, simState.currentStepId, stepById, computeResult]);
 
     const simulationCurrentStep = simActive ? stepById(simState.currentStepId || '') : null;
+
+    // Instrumentação step_view
+    useEffect(() => {
+        if (!simActive) return;
+        if (!simulationCurrentStep) return;
+        const idx = steps.findIndex(s => s.id === simulationCurrentStep.id);
+        emitQuizEvent({ type: 'step_view', stepId: simulationCurrentStep.id, stepType: simulationCurrentStep.type, position: idx });
+    }, [simActive, simulationCurrentStep?.id]);
 
     // ================= ALCANCE / STEPS ÓRFÃOS =================
     const reachableInfo = useMemo(() => {
@@ -842,6 +852,7 @@ const QuizFunnelEditor: React.FC<QuizFunnelEditorProps> = ({ funnelId, templateI
                     } catch (e) {
                         console.warn('Falha ao persistir quizSelectedOffer', e);
                     }
+                    emitQuizEvent({ type: 'offer_view', offerKey: primary || secondaries[0], hasImage: !!offer.image });
                 }
                 return (
                     <div className="p-6 max-w-xl space-y-4 text-sm">
@@ -856,6 +867,7 @@ const QuizFunnelEditor: React.FC<QuizFunnelEditorProps> = ({ funnelId, templateI
                                             href={(offer as any).ctaUrl}
                                             target="_blank"
                                             className="inline-block mt-2 bg-primary text-primary-foreground px-3 py-1 rounded text-xs hover:opacity-90"
+                                            onClick={() => emitQuizEvent({ type: 'cta_click', offerKey: primary || secondaries[0], url: (offer as any).ctaUrl })}
                                         >{(offer as any).ctaLabel}</a>
                                     </div>
                                 )}
