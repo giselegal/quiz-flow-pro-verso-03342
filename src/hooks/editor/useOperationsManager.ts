@@ -1,4 +1,5 @@
 import { useCallback, useRef, useState } from 'react';
+import { editorEvents } from '@/events/editorEvents';
 
 export interface OperationStatus {
     key: string;
@@ -36,6 +37,7 @@ export function useOperationsManager(): UseOperationsManagerResult {
             return Promise.reject(new Error(`Operação '${key}' já em execução`));
         }
         const startedAt = performance.now();
+        editorEvents.emit('EDITOR_OPERATION_START', { key });
         setStatuses(prev => ({
             ...prev,
             [key]: { key, running: true, startedAt, error: null, progress: { value: 0 } }
@@ -56,6 +58,7 @@ export function useOperationsManager(): UseOperationsManagerResult {
                 ...prev,
                 [key]: { ...prev[key], running: false, finishedAt, progress: { value: 100, label: prev[key].progress?.label }, error: null }
             }));
+            editorEvents.emit('EDITOR_OPERATION_END', { key, durationMs: finishedAt - startedAt });
             return result;
         } catch (e: any) {
             const error = e instanceof Error ? e : new Error(String(e));
@@ -65,6 +68,7 @@ export function useOperationsManager(): UseOperationsManagerResult {
                 ...prev,
                 [key]: { ...prev[key], running: false, finishedAt, error }
             }));
+            editorEvents.emit('EDITOR_OPERATION_END', { key, durationMs: finishedAt - startedAt, error: error.message });
             throw error;
         }
     }, [isRunning]);

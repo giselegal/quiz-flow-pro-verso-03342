@@ -33,7 +33,7 @@ const EditorParamsSchema = z.object({
 });
 
 // Parse e normaliza parâmetros da URL de forma resiliente
-function parseAndNormalizeParams(): BootstrapParams {
+export function parseAndNormalizeParams(): BootstrapParams {
     if (typeof window === 'undefined') {
         return { funnelId: null, templateId: null, mode: 'visual' };
     }

@@ -489,7 +489,13 @@ const UnifiedEditorCore: React.FC<ModernUnifiedEditorProps> = ({ funnelId, templ
     const [detectedFunnelType, setDetectedFunnelType] = useState<FunnelType | null>(null);
     const [funnelData, setFunnelData] = useState<any>(null);
     const [isDetectingType, setIsDetectingType] = useState(false);
-    const [showOpsPanel, setShowOpsPanel] = useState(false);
+    const [showOpsPanel, setShowOpsPanel] = useState<boolean>(() => {
+        if (typeof window === 'undefined') return false;
+        try { return localStorage.getItem('editor.showOpsPanel') === '1'; } catch { return false; }
+    });
+    useEffect(() => {
+        try { localStorage.setItem('editor.showOpsPanel', showOpsPanel ? '1' : '0'); } catch {}
+    }, [showOpsPanel]);
     const autosaveTimerRef = React.useRef<number | null>(null);
 
     // 🎯 EFFECT: Iniciar detecção quando funnel for carregado
