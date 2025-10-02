@@ -1347,17 +1347,26 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
     // Agora: só carrega automaticamente se um template específico for solicitado
     const shouldLoadDefault = funnelId === 'quiz-estilo-completo' || (typeof funnelId === 'string' && funnelId.startsWith('template-'));
 
+    const safeStepBlocks = (rawState && typeof rawState === 'object' && rawState.stepBlocks) ? rawState.stepBlocks : {};
+    let stepBlocksCount = 0;
+    try { stepBlocksCount = Object.keys(safeStepBlocks).length; } catch { stepBlocksCount = 0; }
+
     console.log('🔍 EditorProvider - Verificação de carregamento automático:', {
       funnelId,
       shouldLoadDefault,
-      currentStepBlocks: Object.keys(rawState.stepBlocks).length
+      currentStepBlocks: stepBlocksCount
     });
 
-    if (shouldLoadDefault && Object.keys(rawState.stepBlocks).length === 0) {
+    if (!rawState || !rawState.stepBlocks) {
+      console.warn('⚠️ EditorProvider: rawState.stepBlocks indefinido durante verificação de auto load (adiando carregamento).');
+      return; // Evita exceção até que estado seja inicializado
+    }
+
+    if (shouldLoadDefault && stepBlocksCount === 0) {
       console.log('🚀 EditorProvider - Carregando template padrão automaticamente...');
       loadDefaultTemplate();
     }
-  }, [funnelId, rawState.stepBlocks, loadDefaultTemplate]);
+  }, [funnelId, rawState, rawState?.stepBlocks, loadDefaultTemplate]);
 
   const exportJSON = useCallback(() => {
     // Normalize step keys to canonical format step-<n>

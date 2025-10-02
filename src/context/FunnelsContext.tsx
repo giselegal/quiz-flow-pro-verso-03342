@@ -513,8 +513,8 @@ export const FunnelsProvider: React.FC<FunnelsProviderProps> = ({ children, debu
       }
 
       // ❌ REMOVIDO: Fallback automático para template de 21 etapas
-      console.log('🔍 FunnelsContext: sem funnelId específico, deixar vazio para detecção dinâmica');
-      return ''; // Vazio para permitir detecção dinâmica
+      console.log('🔍 FunnelsContext: sem funnelId inicial — aguardando seleção ou import. (estado inicial neutro)');
+      return ''; // Mantém vazio para evitar fallback prematuro
     } catch (error) {
       console.error('❌ Erro ao obter funnelId:', error);
       return ''; // Vazio ao invés de forçar template específico
@@ -633,14 +633,25 @@ export const FunnelsProvider: React.FC<FunnelsProviderProps> = ({ children, debu
   useEffect(() => {
     const timestamp = new Date().toLocaleTimeString();
 
+    // 🛡️ GUARD: Se provider ainda não tem funnelId definido, apenas log leve e aborta
+    if (!currentFunnelId) {
+      if (debug) {
+        console.log(`⚠️ [${timestamp}] FunnelsContext: currentFunnelId vazio - aguardando seleção antes de resolver templates.`);
+      }
+      return; // Evita acessar Object.keys em cenários de inicialização parcial
+    }
+
+    const safeFunnelTemplates = FUNNEL_TEMPLATES || {} as typeof FUNNEL_TEMPLATES;
+    const safeQuizTemplate = QUIZ_STYLE_21_STEPS_TEMPLATE || {} as typeof QUIZ_STYLE_21_STEPS_TEMPLATE;
+
     console.log(`🔍 [${timestamp}] FunnelsContext Debug Completo:`);
     console.log(`📂 currentFunnelId:`, currentFunnelId);
-    console.log(`📊 FUNNEL_TEMPLATES keys:`, Object.keys(FUNNEL_TEMPLATES));
-    console.log(`📋 QUIZ_STYLE_21_STEPS_TEMPLATE keys:`, Object.keys(QUIZ_STYLE_21_STEPS_TEMPLATE));
-    console.log(`🎯 Template existe?`, !!FUNNEL_TEMPLATES[currentFunnelId]);
+    try { console.log(`📊 FUNNEL_TEMPLATES keys:`, Object.keys(safeFunnelTemplates)); } catch { console.warn('⚠️ Não foi possível ler keys de FUNNEL_TEMPLATES'); }
+    try { console.log(`📋 QUIZ_STYLE_21_STEPS_TEMPLATE keys:`, Object.keys(safeQuizTemplate)); } catch { console.warn('⚠️ Não foi possível ler keys de QUIZ_STYLE_21_STEPS_TEMPLATE'); }
+    console.log(`🎯 Template existe?`, !!safeFunnelTemplates[currentFunnelId]);
 
-    if (FUNNEL_TEMPLATES[currentFunnelId]) {
-      const template = FUNNEL_TEMPLATES[currentFunnelId];
+    if (safeFunnelTemplates[currentFunnelId]) {
+      const template = safeFunnelTemplates[currentFunnelId];
       console.log(`✅ [${timestamp}] Template encontrado:`, template.name);
       console.log(`📊 [${timestamp}] Steps no template:`, template.defaultSteps.length);
 
@@ -657,12 +668,12 @@ export const FunnelsProvider: React.FC<FunnelsProviderProps> = ({ children, debu
         `🎯 [${timestamp}] Dados das steps:`,
         template.defaultSteps.map(s => `${s.id}: ${s.name}`)
       );
-    } else {
+    } else if (currentFunnelId) {
       console.error(`❌ [${timestamp}] FunnelsContext: Template não encontrado:`, currentFunnelId);
-      console.log(`📁 [${timestamp}] Templates disponíveis:`, Object.keys(FUNNEL_TEMPLATES));
+      try { console.log(`📁 [${timestamp}] Templates disponíveis:`, Object.keys(safeFunnelTemplates)); } catch {}
 
       // ✅ FASE 3: Fallback para template padrão
-      const fallbackTemplate = FUNNEL_TEMPLATES['funil-21-etapas'];
+      const fallbackTemplate = safeFunnelTemplates['funil-21-etapas'];
       if (fallbackTemplate) {
         setSteps(fallbackTemplate.defaultSteps);
         console.log(`🔄 [${timestamp}] Aplicando fallback para template padrão`);
