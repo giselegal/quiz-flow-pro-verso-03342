@@ -1,148 +1,66 @@
+// =============================================================
+// ModernUnifiedEditor (Pivot Wrapper v3)
+// Default => QuizFunnelEditor | ?legacy=1 => ModernUnifiedEditor.legacy
+// =============================================================
+import React, { useMemo } from 'react';
 
-/**
- * 🎯 MODERN UNIFIED EDITOR - EDITOR DEFINITIVO
- * 
- * Editor 100% moderno que CONSOLIDA TODOS os editores em uma interface única:
- * ✅ Rota principal: /editor
- * ✅ Interface unificada baseada no EditorProUnified
- * ✅ Performance otimizada com lazy loading
- * ✅ Elimina conflitos entre editores fragmentados
- */
-
-import React, { useState, useCallback, Suspense, useEffect, useMemo } from 'react';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Separator } from '@/components/ui/separator';
-import {
-    Layout, Brain, Settings, Target,
-    Component, Crown, Eye, CheckCircle, Activity
-} from 'lucide-react';
-
-// 📡 Publication Settings Integration
-import { PublicationSettingsButton } from '@/components/editor/publication/PublicationButton';
-
-// 🎛️ NoCode Configuration Panel
-import EditorNoCodePanel from '@/components/editor/EditorNoCodePanel';
-
-// NOTE: EditorProUnified lazy removido (não utilizado diretamente neste arquivo após unificação)
-
-import PureBuilderProvider from '@/components/editor/PureBuilderProvider';
-
-// NOTE: TemplateErrorBoundary & TemplateLoadingSkeleton removidos (não utilizados após refator de bootstrap progressivo)
-
-// Providers necessários
-import { FunnelMasterProvider } from '@/providers/FunnelMasterProvider';
-import { useNotification } from '@/components/ui/Notification';
-import UnifiedCRUDProvider, { useUnifiedCRUD } from '@/context/UnifiedCRUDProvider';
-import useEditorBootstrap from '@/hooks/editor/useEditorBootstrap';
-import useOperationsManager from '@/hooks/editor/useOperationsManager';
-import EditorBootstrapProgress from '@/components/editor/EditorBootstrapProgress';
-import OperationsPanel from '@/components/editor/OperationsPanel';
-import { editorEvents } from '@/events/editorEvents';
-import LazyBoundary from '@/components/common/LazyBoundary';
-
-// 🎯 CRUD Services Integration
-import { useUnifiedEditor } from '@/hooks/core/useUnifiedEditor';
-
-// 🔄 Editor-Dashboard Sync Integration
-import { EditorDashboardSyncService } from '@/services/core/EditorDashboardSyncService';
-import { UnifiedRoutingService } from '@/services/core/UnifiedRoutingService';
-
-// 🎯 TEMPLATE REGISTRY INTEGRATION
-import { loadFullTemplate, convertTemplateToEditorFormat } from '@/templates/registry';
-// REMOÇÃO DO FUNIL FIXO: substituímos o template estático de 21 steps para usar o funil Quiz dinâmico persistido
-// import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
-import { QUIZ_STEPS } from '@/data/quizSteps';
-
-// 🧪 Development Testing
-import testCRUDOperations from '@/utils/testCRUDOperations';
-
-// 🔍 FUNNEL TYPE DETECTION
-import FunnelTypeDetector from '@/components/editor/FunnelTypeDetector';
-// Declarar fora para garantir instância única e evitar recriação em cada render
 const QuizFunnelEditor = React.lazy(() => import('../../components/editor/quiz/QuizFunnelEditor'));
-import type { FunnelType } from '@/services/FunnelTypesRegistry';
+const LegacyModernUnifiedEditor = React.lazy(() => import('./ModernUnifiedEditor.legacy'));
 
-// ===============================
-// 🔧 TEMPLATE CONVERSION UTILITIES
-// ===============================
-
-/**
- * Converte QUIZ_STYLE_21_STEPS_TEMPLATE para formato compatível com o editor
- */
-function convertTemplateToEditorBlocks(templateData: Record<string, any[]>): any[] {
-    const allBlocks: any[] = [];
-
-    Object.entries(templateData).forEach(([stepKey, stepBlocks]) => {
-        if (stepKey.startsWith('step-') && Array.isArray(stepBlocks)) {
-            stepBlocks.forEach((block, index) => {
-                allBlocks.push({
-                    ...block,
-                    id: `${stepKey}-${block.id}`,
-                    stepId: stepKey,
-                    stepNumber: parseInt(stepKey.replace('step-', '')),
-                    order: (parseInt(stepKey.replace('step-', '')) - 1) * 100 + index
-                });
-            });
-        }
-    });
-
-    // Mantido apenas para compat; função não mais usada após remoção do template fixo
-    console.log(`(LEGACY) convertTemplateToEditorBlocks chamada (template fixo removido). Steps: ${Object.keys(templateData).length}`);
-    return allBlocks; // Retorno inalterado para evitar efeitos colaterais
-}
-
-/**
- * Sistema de fallback para templates não encontrados
- */
-function createFallbackTemplate(templateId: string) {
-    console.log(`⚠️ Criando template de fallback para: ${templateId}`);
-    return {
-        'step-1': [
-            {
-                id: 'fallback-welcome',
-                type: 'text-inline',
-                properties: {
-                    content: `Template "${templateId}" não encontrado. Este é um template de demonstração.`,
-                    textAlign: 'center',
-                    fontSize: 'text-xl',
-                    fontWeight: 'font-bold',
-                    color: '#1A365D'
-                },
-                content: {},
-                order: 0
-            },
-            {
-                id: 'fallback-description',
-                type: 'text-inline',
-                properties: {
-                    content: 'Por favor, verifique se o template existe ou entre em contato com o suporte.',
-                    textAlign: 'center',
-                    fontSize: 'text-base',
-                    color: '#718096'
-                },
-                content: {},
-                order: 1
-            }
-        ]
-    };
-}
-
-// ===============================
-// 🎯 TYPES & INTERFACES
-// ===============================
-
-// 🔧 Adicionado 'quiz' para modo de edição do funil quiz-estilo
-type EditorMode = 'visual' | 'builder' | 'funnel' | 'headless' | 'admin-integrated' | 'quiz';
-
-interface ModernUnifiedEditorProps {
+export interface ModernUnifiedEditorProps {
     funnelId?: string;
     templateId?: string;
-    mode?: EditorMode;
+    mode?: string;
     className?: string;
 }
 
+const Banner: React.FC<{ legacy?: boolean }> = ({ legacy }) => {
+    const params = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
+    const isLegacy = params?.get('legacy') === '1';
+    const path = typeof window !== 'undefined' ? window.location.pathname : '';
+    const build = (wantLegacy: boolean) => {
+        if (typeof window === 'undefined') return '#';
+        const p = new URLSearchParams(window.location.search);
+        if (wantLegacy) p.set('legacy', '1'); else p.delete('legacy');
+        const s = p.toString();
+        return s ? `${path}?${s}` : path;
+    };
+    return (
+        <div style={{ background: legacy ? '#B45309' : '#065F46', color: '#fff', fontSize: 12, padding: '4px 8px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}>
+            <span>{legacy ? 'LEGACY MODE: Editor unificado anterior (remoção futura).' : 'PIVOT QUIZ MODE: QuizFunnelEditor ativo.'}</span>
+            <span style={{ display: 'flex', gap: 12 }}>
+                {!legacy && !isLegacy && <a href={build(true)} style={{ color: '#FDE68A', textDecoration: 'underline' }}>Legacy</a>}
+                {legacy && <a href={build(false)} style={{ color: '#FDE68A', textDecoration: 'underline' }}>Voltar Pivot</a>}
+            </span>
+        </div>
+    );
+};
+
+const ModernUnifiedEditor: React.FC<ModernUnifiedEditorProps> = (props) => {
+    const isLegacy = useMemo(() => {
+        if (typeof window === 'undefined') return false;
+        return new URLSearchParams(window.location.search).get('legacy') === '1';
+    }, []);
+
+    if (isLegacy) {
+        return (
+            <React.Suspense fallback={<div style={{ padding: 24 }}>Carregando legacy editor...</div>}>
+                <Banner legacy />
+                <LegacyModernUnifiedEditor {...props} />
+            </React.Suspense>
+        );
+    }
+
+    return (
+        <React.Suspense fallback={<div style={{ padding: 24 }}>Carregando editor de quiz...</div>}>
+            <Banner />
+            <QuizFunnelEditor funnelId={props.funnelId} templateId={props.templateId} />
+        </React.Suspense>
+    );
+};
+
+export default ModernUnifiedEditor;
+export default ModernUnifiedEditor; // arquivo contém apenas wrapper pivot
 interface EditorState {
     mode: EditorMode;
     aiAssistantActive: boolean;
