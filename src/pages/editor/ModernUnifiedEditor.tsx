@@ -548,6 +548,10 @@ const UnifiedEditorCore: React.FC<ModernUnifiedEditorProps> = ({
         realExperienceMode: false
     });
 
+    // 🛡️ SENTINELA: Evitar seed/creation duplicada em StrictMode ou re-renders
+    const quizSeedAppliedRef = React.useRef(false);
+    const lastSeedContextRef = React.useRef<any>(null);
+
     // 🎯 FUNNEL TYPE DETECTION STATE
     const [detectedFunnelType, setDetectedFunnelType] = useState<FunnelType | null>(null);
     const [funnelData, setFunnelData] = useState<any>(null);
@@ -589,6 +593,13 @@ const UnifiedEditorCore: React.FC<ModernUnifiedEditorProps> = ({
             setIsLoadingTemplate(true);
             setTemplateError(null);
             try {
+                if (quizSeedAppliedRef.current) {
+                    console.log('⏭️ Seed quiz já aplicado - ignorando nova tentativa.', {
+                        lastSeed: lastSeedContextRef.current
+                    });
+                    setIsLoadingTemplate(false);
+                    return;
+                }
                 // Verifica se já existe um funnel corrente com quizSteps
                 const current = crudContext?.currentFunnel as any;
                 if (!crudContext) {
@@ -598,6 +609,7 @@ const UnifiedEditorCore: React.FC<ModernUnifiedEditorProps> = ({
                 }
                 if (current && Array.isArray(current.quizSteps) && current.quizSteps.length > 0) {
                     console.log('✅ Usando quizSteps existentes do funil atual (persistidos).');
+                    quizSeedAppliedRef.current = true; // Considerar seed já resolvido
                     setIsLoadingTemplate(false);
                     return;
                 }
@@ -613,6 +625,15 @@ const UnifiedEditorCore: React.FC<ModernUnifiedEditorProps> = ({
                                 ? (QUIZ_STEPS as any[])
                                 : Object.values(QUIZ_STEPS as any);
                             (f as any).quizSteps = quizSeedArray.map((s: any) => ({ ...s }));
+                            quizSeedAppliedRef.current = true;
+                            lastSeedContextRef.current = {
+                                createdAt: new Date().toISOString(),
+                                funnelId: f?.id,
+                                seedCount: quizSeedArray.length,
+                                path: window?.location?.pathname,
+                                wantsQuizTemplate,
+                                mode: editorState.mode
+                            };
                             // 🛡️ Guardar: só salvar se ID válido existir
                             if (f && f.id) {
                                 crudContext.saveFunnel().catch(err => console.warn('⚠️ Falha ao salvar funil recém-criado (adiado):', err));
@@ -635,6 +656,15 @@ const UnifiedEditorCore: React.FC<ModernUnifiedEditorProps> = ({
                     ? (QUIZ_STEPS as any[])
                     : Object.values(QUIZ_STEPS as any);
                 current.quizSteps = quizSeedArray.map((s: any) => ({ ...s }));
+                quizSeedAppliedRef.current = true;
+                lastSeedContextRef.current = {
+                    appliedAt: new Date().toISOString(),
+                    existingFunnelId: current?.id,
+                    seedCount: quizSeedArray.length,
+                    path: window?.location?.pathname,
+                    wantsQuizTemplate,
+                    mode: editorState.mode
+                };
                 if (current.id) {
                     crudContext.saveFunnel().catch(err => console.warn('⚠️ Falha ao salvar funil (aplicando seeds):', err));
                 } else {
