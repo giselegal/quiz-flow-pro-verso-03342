@@ -29,6 +29,7 @@ export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', ed
     let externalSteps: Record<string, any> | undefined;
     try {
         const registry = useQuizRuntimeRegistry();
+        // Se houver steps no registry usamos como override runtime sem depender de salvar o funil
         if (registry.steps && Object.keys(registry.steps).length) {
             externalSteps = registry.steps;
         }

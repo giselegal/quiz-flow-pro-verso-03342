@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { editorStepsToRuntimeMap } from '@/runtime/quiz/editorAdapter';
+import { editorStepsToRuntimeMap } from '../../../runtime/quiz/editorAdapter';
 
 // Mock type minimal
 interface EditableQuizStep {
@@ -28,7 +28,7 @@ describe('editorStepsToRuntimeMap', () => {
         const map = editorStepsToRuntimeMap(steps as any);
 
         expect(Object.keys(map)).toEqual(['step-1', 'step-2', 'step-3']);
-        expect(map['step-2'].options?.length).toBe(1);
+        expect((map['step-2'].options || []).length).toBe(1);
         expect(map['step-2'].questionText).toBe('Qual estilo?');
         expect(map['step-1'].formQuestion).toBe('Nome?');
         expect(map['step-3'].type).toBe('result');
