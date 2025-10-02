@@ -9,7 +9,7 @@
  * ✅ Elimina conflitos entre editores fragmentados
  */
 
-import React, { useState, useCallback, Suspense, useEffect } from 'react';
+import React, { useState, useCallback, Suspense, useEffect, useMemo } from 'react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -48,6 +48,7 @@ import useEditorBootstrap from '@/hooks/editor/useEditorBootstrap';
 import useOperationsManager from '@/hooks/editor/useOperationsManager';
 import EditorBootstrapProgress from '@/components/editor/EditorBootstrapProgress';
 import OperationsPanel from '@/components/editor/OperationsPanel';
+import { editorEvents } from '@/events/editorEvents';
 
 // 🎯 CRUD Services Integration
 import { useUnifiedEditor } from '@/hooks/core/useUnifiedEditor';
@@ -325,7 +326,7 @@ const ModernToolbar: React.FC<ModernToolbarProps> = ({
                             variant="outline"
                             size="sm"
                             onClick={handleBackToAdmin}
-                            disabled={isOperating}
+                            disabled={ops.isRunning('save') || ops.isRunning('create')}
                             className="border-blue-200 text-blue-700 hover:bg-blue-50"
                         >
                             🔙 Voltar ao Admin
@@ -449,6 +450,9 @@ const UnifiedEditorCore: React.FC<ModernUnifiedEditorProps> = ({ funnelId, templ
         type: bootstrap.params.funnelId ? 'funnel' : (bootstrap.params.templateId ? 'template' : 'auto')
     }), [bootstrap.params.funnelId, bootstrap.params.templateId]);
 
+    // Elevar operations manager para compartilhar com painel
+    const ops = useOperationsManager();
+
     // Estados de erro/loader de template anteriores agora integrados na fase do bootstrap
     const isLoadingTemplate = bootstrap.phase !== 'ready' && bootstrap.phase !== 'error';
     const templateError = bootstrap.error?.message || null;
@@ -486,6 +490,7 @@ const UnifiedEditorCore: React.FC<ModernUnifiedEditorProps> = ({ funnelId, templ
     const [funnelData, setFunnelData] = useState<any>(null);
     const [isDetectingType, setIsDetectingType] = useState(false);
     const [showOpsPanel, setShowOpsPanel] = useState(false);
+    const autosaveTimerRef = React.useRef<number | null>(null);
 
     // 🎯 EFFECT: Iniciar detecção quando funnel for carregado
     useEffect(() => {
@@ -588,6 +593,33 @@ const UnifiedEditorCore: React.FC<ModernUnifiedEditorProps> = ({ funnelId, templ
             unifiedEditor.loadFunnel(crudContext.currentFunnel.id).catch(console.error);
         }
     }, [crudContext.currentFunnel, unifiedEditor]);
+
+    // Autosave debounce (5s após última modificação e somente se dirty)
+    useEffect(() => {
+        if (!crudContext.currentFunnel) return;
+        if (!unifiedEditor.isDirty) return;
+        if (bootstrap.phase !== 'ready') return;
+
+        if (autosaveTimerRef.current) window.clearTimeout(autosaveTimerRef.current);
+        autosaveTimerRef.current = window.setTimeout(() => {
+            editorEvents.emit('EDITOR_AUTOSAVE_START', { dirty: true });
+            // usar ops manager para evitar conflito com save manual
+            // reutiliza ops do escopo
+            ops.runOperation('autosave', async ({ setProgress }) => {
+                setProgress(10, 'Validando');
+                await crudContext.saveFunnel();
+                setProgress(90, 'Finalizando');
+            }, { dedupe: true }).then(() => {
+                editorEvents.emit('EDITOR_AUTOSAVE_SUCCESS', { savedAt: Date.now() });
+            }).catch(err => {
+                editorEvents.emit('EDITOR_AUTOSAVE_ERROR', { error: String(err) });
+            });
+        }, 5000);
+
+        return () => {
+            if (autosaveTimerRef.current) window.clearTimeout(autosaveTimerRef.current);
+        };
+    }, [unifiedEditor.isDirty, crudContext.currentFunnel, bootstrap.phase]);
 
     console.log('🎯 UnifiedEditorCore estado:', {
         mode: editorState.mode,
@@ -831,7 +863,7 @@ const UnifiedEditorCore: React.FC<ModernUnifiedEditorProps> = ({ funnelId, templ
             {showOpsPanel && (
                 <div className="fixed bottom-8 right-0 top-0 w-80 shadow-lg z-40 bg-background border-l border-border">
                     <OperationsPanel
-                        statuses={(useOperationsManager as any).statuses || {}}
+                        statuses={ops.statuses}
                         onClose={() => setShowOpsPanel(false)}
                     />
                 </div>
