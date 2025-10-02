@@ -421,6 +421,35 @@ class HybridTemplateService {
         this.overrideCache.clear();
         console.log('🔄 Cache limpo');
     }
+
+    /**
+     * 🔍 Expor configuração global (navegação/validação) do master template
+     * Necessário para integração em `loadFunnelConfig` (FunnelTypesRegistry)
+     * Mantido estático porque o service é utilizado como referência de classe (não instância)
+     */
+    static getGlobalConfig(): MasterTemplate['globalConfig'] | { navigation: any; validation: any } {
+        if (!this.masterTemplate) {
+            // Fallback seguro quando master ainda não foi carregado (ex: chamada antecipada)
+            return {
+                navigation: {
+                    autoAdvanceSteps: [],
+                    manualAdvanceSteps: [],
+                    autoAdvanceDelay: 0
+                },
+                validation: {
+                    rules: {}
+                }
+            };
+        }
+        return this.masterTemplate.globalConfig || {
+            navigation: {
+                autoAdvanceSteps: [],
+                manualAdvanceSteps: [],
+                autoAdvanceDelay: 0
+            },
+            validation: { rules: {} }
+        };
+    }
 }
 
 export default HybridTemplateService;

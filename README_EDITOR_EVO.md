@@ -83,6 +83,9 @@ const HeavyPanel = React.lazy(() => import('./HeavyPanel'));
 </LazyBoundary>
 ```
 
+### Notas de Serviços (Atualização HybridTemplateService)
+Adicionado método estático `getGlobalConfig()` ao `HybridTemplateService` para suportar `FunnelTypesRegistry.loadFunnelConfig` ao montar a estrutura de quiz (necessário para ler regras globais de navegação/validação antes da resolução completa de steps). Fallback seguro retorna estrutura vazia quando master ainda não foi carregado, evitando falhas como `a.templateService.getGlobalConfig is not a function`.
+
 ## Testes Adicionados
 - `useOperationsManager.dedupe.test.ts`: garante rejeição em corrida de operação deduplicada.
 - `useEditorBootstrap.parse.test.ts`: valida parsing real via função exportada `parseAndNormalizeParams` (funnel, template, modo, precedência de query params).
