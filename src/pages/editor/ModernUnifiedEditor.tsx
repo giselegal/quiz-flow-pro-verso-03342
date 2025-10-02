@@ -45,6 +45,7 @@ import { FunnelMasterProvider } from '@/providers/FunnelMasterProvider';
 import { useNotification } from '@/components/ui/Notification';
 import UnifiedCRUDProvider, { useUnifiedCRUD } from '@/context/UnifiedCRUDProvider';
 import useEditorBootstrap from '@/hooks/editor/useEditorBootstrap';
+import useOperationsManager from '@/hooks/editor/useOperationsManager';
 
 // 🎯 CRUD Services Integration
 import { useUnifiedEditor } from '@/hooks/core/useUnifiedEditor';
@@ -195,67 +196,58 @@ const ModernToolbar: React.FC<ModernToolbarProps> = ({
     onTestCRUD
 }) => {
     const { addNotification } = useNotification();
-    const [isOperating, setIsOperating] = useState(false);
+    const ops = useOperationsManager();
 
     const handleSave = useCallback(async () => {
-        if (isOperating || !onSave) return;
-
-        setIsOperating(true);
-        try {
+        if (!onSave) return;
+        await ops.runOperation('save', async ({ setProgress }) => {
+            setProgress(10, 'Preparando');
             await onSave();
+            setProgress(90, 'Finalizando');
+        }, { dedupe: true }).then(() => {
             addNotification('💾 Projeto salvo com sucesso!', 'success');
-        } catch (error) {
+        }).catch(error => {
             console.error('Erro ao salvar:', error);
             addNotification('❌ Erro ao salvar projeto', 'error');
-        } finally {
-            setIsOperating(false);
-        }
-    }, [onSave, addNotification, isOperating]);
+        });
+    }, [onSave, addNotification, ops]);
 
     const handleCreateNew = useCallback(async () => {
-        if (isOperating || !onCreateNew) return;
-
-        setIsOperating(true);
-        try {
+        if (!onCreateNew) return;
+        await ops.runOperation('create', async ({ setProgress }) => {
+            setProgress(15, 'Inicializando');
             await onCreateNew();
+        }, { dedupe: true }).then(() => {
             addNotification('🎉 Novo projeto criado!', 'success');
-        } catch (error) {
+        }).catch(error => {
             console.error('Erro ao criar projeto:', error);
             addNotification('❌ Erro ao criar projeto', 'error');
-        } finally {
-            setIsOperating(false);
-        }
-    }, [onCreateNew, addNotification, isOperating]);
+        });
+    }, [onCreateNew, addNotification, ops]);
 
     const handleDuplicate = useCallback(async () => {
-        if (isOperating || !onDuplicate || !funnelId) return;
-
-        setIsOperating(true);
-        try {
+        if (!onDuplicate || !funnelId) return;
+        await ops.runOperation('duplicate', async () => {
             await onDuplicate();
+        }, { dedupe: true }).then(() => {
             addNotification('📋 Projeto duplicado com sucesso!', 'success');
-        } catch (error) {
+        }).catch(error => {
             console.error('Erro ao duplicar projeto:', error);
             addNotification('❌ Erro ao duplicar projeto', 'error');
-        } finally {
-            setIsOperating(false);
-        }
-    }, [onDuplicate, addNotification, isOperating, funnelId]);
+        });
+    }, [onDuplicate, addNotification, funnelId, ops]);
 
     const handleTestCRUD = useCallback(async () => {
-        if (isOperating || !onTestCRUD) return;
-
-        setIsOperating(true);
-        try {
+        if (!onTestCRUD) return;
+        await ops.runOperation('test', async () => {
             await onTestCRUD();
+        }, { dedupe: true }).then(() => {
             addNotification('🧪 Testes CRUD executados - veja o console', 'info');
-        } catch (error) {
+        }).catch(error => {
             console.error('Erro ao executar testes:', error);
             addNotification('❌ Erro nos testes CRUD', 'error');
-        } finally {
-            setIsOperating(false);
-        }
-    }, [onTestCRUD, addNotification, isOperating]);
+        });
+    }, [onTestCRUD, addNotification, ops]);
 
     const handleBackToAdmin = useCallback(() => {
         if (mode === 'admin-integrated' && funnelId) {
@@ -344,10 +336,10 @@ const ModernToolbar: React.FC<ModernToolbarProps> = ({
                     variant="secondary"
                     size="sm"
                     onClick={handleCreateNew}
-                    disabled={isOperating}
+                    disabled={ops.isRunning('create')}
                 >
                     <Target className="w-4 h-4 mr-2" />
-                    Novo
+                    {ops.isRunning('create') ? 'Criando...' : 'Novo'}
                 </Button>
 
                 {funnelId && (
@@ -355,10 +347,10 @@ const ModernToolbar: React.FC<ModernToolbarProps> = ({
                         variant="outline"
                         size="sm"
                         onClick={handleDuplicate}
-                        disabled={isOperating}
+                        disabled={ops.isRunning('duplicate')}
                     >
                         <Component className="w-4 h-4 mr-2" />
-                        Duplicar
+                        {ops.isRunning('duplicate') ? 'Duplicando...' : 'Duplicar'}
                     </Button>
                 )}
 
@@ -369,7 +361,7 @@ const ModernToolbar: React.FC<ModernToolbarProps> = ({
                     variant="outline"
                     size="sm"
                     onClick={handleTestCRUD}
-                    disabled={isOperating}
+                    disabled={ops.isRunning('test')}
                     title="Executar testes CRUD (Development)"
                 >
                     🧪 Test
@@ -381,7 +373,7 @@ const ModernToolbar: React.FC<ModernToolbarProps> = ({
                     variant={editorState.aiAssistantActive ? "default" : "outline"}
                     size="sm"
                     onClick={handleAIToggle}
-                    disabled={isOperating}
+                    disabled={ops.isRunning('save') || ops.isRunning('create') || ops.isRunning('duplicate')}
                 >
                     <Brain className="w-4 h-4 mr-2" />
                     IA
@@ -391,7 +383,7 @@ const ModernToolbar: React.FC<ModernToolbarProps> = ({
                     variant="outline"
                     size="sm"
                     onClick={() => onStateChange({ previewMode: !editorState.previewMode })}
-                    disabled={isOperating}
+                    disabled={ops.isRunning('save')}
                 >
                     <Eye className="w-4 h-4 mr-2" />
                     Preview
@@ -406,7 +398,7 @@ const ModernToolbar: React.FC<ModernToolbarProps> = ({
                         console.log('🎯 [DEBUG] Novo estado:', newState);
                         onStateChange({ realExperienceMode: newState });
                     }}
-                    disabled={isOperating}
+                    disabled={ops.isRunning('save') || ops.isRunning('create')}
                     title="Ativar experiência real com QuizOrchestrator"
                     className={editorState.realExperienceMode ? "bg-green-600 hover:bg-green-700" : ""}
                 >
@@ -432,10 +424,10 @@ const ModernToolbar: React.FC<ModernToolbarProps> = ({
                     variant="default"
                     size="sm"
                     onClick={handleSave}
-                    disabled={isOperating || !onSave}
+                    disabled={ops.isRunning('save') || !onSave}
                 >
                     <CheckCircle className="w-4 h-4 mr-2" />
-                    {isOperating ? 'Salvando...' : 'Salvar'}
+                    {ops.isRunning('save') ? 'Salvando...' : 'Salvar'}
                 </Button>
             </div>
         </div>
