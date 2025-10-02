@@ -26,6 +26,7 @@ import { serviceManager } from './services/core/UnifiedServiceManager';
 import { RedirectRoute } from './components/RedirectRoute';
 import { QuizErrorBoundary } from './components/RouteErrorBoundary';
 import { EditorErrorBoundary } from './components/error/EditorErrorBoundary';
+import UnifiedCRUDProvider from '@/context/UnifiedCRUDProvider';
 
 // 🏠 PÁGINAS ESSENCIAIS
 const Home = lazy(() => import('./pages/Home'));
@@ -71,7 +72,7 @@ function App() {
         serviceManager.healthCheckAll().then(results => {
           console.log('🔧 Service Health Check:', results);
         });
-      } catch {}
+      } catch { }
     };
 
     if ('requestIdleCallback' in window) {
@@ -105,8 +106,10 @@ function App() {
                           <Route path="/editor">
                             <EditorErrorBoundary>
                               <div data-testid="modern-unified-editor-page">
-                                {/* ✅ ATIVADO: Editor mais completo com IA + CRUD + Templates */}
-                                <ModernUnifiedEditor />
+                                <UnifiedCRUDProvider autoLoad={true}>
+                                  {/* ✅ ATIVADO: Editor mais completo com IA + CRUD + Templates */}
+                                  <ModernUnifiedEditor />
+                                </UnifiedCRUDProvider>
                               </div>
                             </EditorErrorBoundary>
                           </Route>
@@ -128,8 +131,10 @@ function App() {
                             {(params) => (
                               <EditorErrorBoundary>
                                 <div data-testid="modern-unified-editor-funnel-page">
-                                  {/* ✅ ATIVADO: Editor com suporte a funnelId dinâmico */}
-                                  <ModernUnifiedEditor funnelId={params.funnelId} />
+                                  <UnifiedCRUDProvider funnelId={params.funnelId} autoLoad={true}>
+                                    {/* ✅ ATIVADO: Editor com suporte a funnelId dinâmico */}
+                                    <ModernUnifiedEditor funnelId={params.funnelId} />
+                                  </UnifiedCRUDProvider>
                                 </div>
                               </EditorErrorBoundary>
                             )}
@@ -203,10 +208,9 @@ function App() {
                             {(params) => (
                               <EditorErrorBoundary>
                                 <div data-testid="admin-integrated-editor-page">
-                                  <ModernUnifiedEditor
-                                    funnelId={params.id}
-                                    mode="admin-integrated"
-                                  />
+                                  <UnifiedCRUDProvider funnelId={params.id} autoLoad={true}>
+                                    <ModernUnifiedEditor funnelId={params.id} />
+                                  </UnifiedCRUDProvider>
                                 </div>
                               </EditorErrorBoundary>
                             )}
