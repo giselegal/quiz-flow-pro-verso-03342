@@ -30,11 +30,14 @@ export function sanitizeHtml(input?: string | null): string {
                 .replace(/src="javascript:[^"]*"/gi, '')
                 .replace(/src='javascript:[^']*'/gi, '');
             // Remover totalmente tags perigosas remanescentes
-            html = html.replace(/<script[^>]*>.*?<\/script>/gi, '')
-                .replace(/<iframe[^>]*>.*?<\/iframe>/gi, '')
-                .replace(/<object[^>]*>.*?<\/object>/gi, '')
-                .replace(/<embed[^>]*>.*?<\/embed>/gi, '')
-                .replace(/<style[^>]*>.*?<\/style>/gi, '');
+            // Remover blocos <script> com conteúdo (modo guloso e não guloso)
+            html = html
+                .replace(/<script[^>]*>[\s\S]*?<\/script>/gi, '')
+                .replace(/alert\([^)]*\)/gi, '')
+                .replace(/<iframe[^>]*>[\s\S]*?<\/iframe>/gi, '')
+                .replace(/<object[^>]*>[\s\S]*?<\/object>/gi, '')
+                .replace(/<embed[^>]*>[\s\S]*?<\/embed>/gi, '')
+                .replace(/<style[^>]*>[\s\S]*?<\/style>/gi, '');
             // Expandir tags não permitidas em texto simples removendo-as mas mantendo conteúdo interno aproximado
             // Estratégia simples: remover tags de abertura/fechamento que não sejam permitidas
             html = html.replace(/<([^>\/\s]+)([^>]*)>/gi, (full, tag, attrs) => {
