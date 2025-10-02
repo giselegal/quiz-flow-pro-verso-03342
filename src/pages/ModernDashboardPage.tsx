@@ -38,8 +38,7 @@ const CreativesPage = lazy(() => import('./dashboard/CreativesPage'));
 const IntegrationsPage = lazy(() => import('./dashboard/IntegrationsPage'));
 const SettingsPage = lazy(() => import('./dashboard/SettingsPage'));
 
-// Página de teste para templates
-const TemplateTestPage = lazy(() => import('./TemplateTestPage'));
+// Páginas de debug para templates
 const TemplateDebugPage = lazy(() => import('./dashboard/TemplateDebugPage'));
 const TemplateInvestigationPage = lazy(() => import('./dashboard/TemplateInvestigationPage'));
 
@@ -272,8 +271,7 @@ const ModernDashboardPage: React.FC = () => {
                     <Route path="/dashboard/integrations" component={IntegrationsPage} />
                     <Route path="/dashboard/settings" component={SettingsPage} />
 
-                    {/* TESTE - Página de teste para templates */}
-                    <Route path="/dashboard/template-test" component={TemplateTestPage} />
+                    {/* DEBUG - Páginas de debug para templates */}
                     <Route path="/dashboard/template-debug" component={TemplateDebugPage} />
                     <Route path="/dashboard/template-investigation" component={TemplateInvestigationPage} />
 

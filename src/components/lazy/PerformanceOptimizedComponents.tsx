@@ -36,12 +36,6 @@ const LazyEnhancedPropertiesPanel = lazy(() =>
     }))
 );
 
-const LazyQuizModularPage = lazy(() =>
-    import('@/pages/QuizModularPage').then(module => ({
-        default: module.default
-    }))
-);
-
 const LazyParticipantsPage = lazy(() =>
     import('@/pages/admin/ParticipantsPage').then(module => ({
         default: module.default
@@ -121,12 +115,6 @@ export const OptimizedEditorProvider = ({ children, ...props }: any) => (
 export const OptimizedEnhancedPropertiesPanel = (props: any) => (
     <Suspense fallback={<PropertiesSkeleton />}>
         <LazyEnhancedPropertiesPanel {...props} />
-    </Suspense>
-);
-
-export const OptimizedQuizModularPage = (props: any) => (
-    <Suspense fallback={<PageSkeleton />}>
-        <LazyQuizModularPage {...props} />
     </Suspense>
 );
 
