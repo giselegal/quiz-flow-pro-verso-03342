@@ -54,7 +54,7 @@ describe('RegistryPropertiesPanel', () => {
             />
         );
 
-    const input = getByLabelText(/Título/i) as HTMLInputElement;
+        const input = getByLabelText(/Título/i) as HTMLInputElement;
         fireEvent.change(input, { target: { value: 'Novo Título' } });
 
         await waitFor(() => {
