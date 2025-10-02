@@ -3,13 +3,18 @@ import { parseAndNormalizeParams } from '../useEditorBootstrap';
 
 // Util para mockar window location
 function withLocation(url: string, fn: () => void) {
-    const old = window.location;
-    // @ts-ignore
-    delete window.location;
-    // @ts-ignore
-    window.location = new URL(url) as any;
+    const oldHref = window.location.href;
+    const newUrl = new URL(url);
+    // @ts-ignore sobrescrevendo propriedades específicas
+    Object.assign(window.location, {
+        href: newUrl.href,
+        pathname: newUrl.pathname,
+        search: newUrl.search,
+        hash: newUrl.hash
+    });
     try { fn(); } finally {
-        window.location = old;
+        // @ts-ignore revert
+        Object.assign(window.location, { href: oldHref });
     }
 }
 

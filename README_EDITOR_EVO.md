@@ -33,11 +33,11 @@ Consolidar carregamento, gestão de estado, operações CRUD e UX progressiva do
 | Autosave | Ausente | Debounced com eventos |
 
 ## Próximos Incrementos (Sugeridos)
-- Persistir preferências (exibir/ocultar OperationsPanel) no localStorage.
+- Persistência de preferências (OK para painel de operações, expandir para layout/painéis).
 - Integração de telemetria: enviar durations (operation, ms) ao servidor.
 - Error Boundary especializado para falhas de bootstrap com ação de recuperação.
 - Estratégias/factories para tipos de funil (quiz/survey/etc.).
-- Testes unitários mais específicos para parsing interno (exportar função de parsing).
+- Ampliar testes de parsing para cenários de hash/param combos.
 
 ## Eventos Disponíveis
 | Evento | Payload |
@@ -58,7 +58,7 @@ Consolidar carregamento, gestão de estado, operações CRUD e UX progressiva do
 
 ## Testes Adicionados
 - `useOperationsManager.dedupe.test.ts`: garante rejeição em corrida de operação deduplicada.
-- Placeholder para parsing (refatorar para export em iteração futura se necessário).
+- `useEditorBootstrap.parse.test.ts`: valida parsing real via função exportada `parseAndNormalizeParams` (funnel, template, modo, precedência de query params).
 
 ## Observabilidade
 Pronto para: registrar performance marks adicionais (ex: post-ready warm features) + integrar logger externo ouvindo `editorEvents`.

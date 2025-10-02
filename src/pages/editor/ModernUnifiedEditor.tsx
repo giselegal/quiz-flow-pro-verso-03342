@@ -494,7 +494,7 @@ const UnifiedEditorCore: React.FC<ModernUnifiedEditorProps> = ({ funnelId, templ
         try { return localStorage.getItem('editor.showOpsPanel') === '1'; } catch { return false; }
     });
     useEffect(() => {
-        try { localStorage.setItem('editor.showOpsPanel', showOpsPanel ? '1' : '0'); } catch {}
+        try { localStorage.setItem('editor.showOpsPanel', showOpsPanel ? '1' : '0'); } catch { }
     }, [showOpsPanel]);
     const autosaveTimerRef = React.useRef<number | null>(null);
 
