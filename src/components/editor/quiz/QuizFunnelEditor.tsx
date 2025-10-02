@@ -249,6 +249,10 @@ const QuizFunnelEditor: React.FC<QuizFunnelEditorProps> = ({ funnelId, templateI
     const [editingBlockId, setEditingBlockId] = useState<string | null>(null);
     const [blockConfigDraft, setBlockConfigDraft] = useState<string>('');
     const [blockConfigError, setBlockConfigError] = useState<string | null>(null);
+    // Placeholders Preview (FASE 3)
+    const [phUserName, setPhUserName] = useState<string>('Usuária Teste');
+    const [phPrimaryStyle, setPhPrimaryStyle] = useState<string>('elegante');
+    const [phSecondaryStyles, setPhSecondaryStyles] = useState<string>('casual,dramatico');
     // Diff Viewer state
     const [pendingImport, setPendingImport] = useState<EditableQuizStep[] | null>(null);
     const [importDiff, setImportDiff] = useState<null | {
@@ -464,6 +468,19 @@ const QuizFunnelEditor: React.FC<QuizFunnelEditorProps> = ({ funnelId, templateI
 
     const simulationCurrentStep = simActive ? stepById(simState.currentStepId || '') : null;
 
+    // ================= PLACEHOLDERS (aplicação no preview não-simulação) =================
+    const applyPlaceholders = useCallback((text?: string): string => {
+        if (!text) return '';
+        const primary = phPrimaryStyle || 'principal';
+        const secondaries = phSecondaryStyles.split(',').map(s => s.trim()).filter(Boolean);
+        const repl = (src: string, token: string, value: string) => src.replace(new RegExp(token.replace(/[{}]/g, m => '\\' + m), 'g'), value);
+        let out = text;
+        out = repl(out, '{userName}', phUserName || 'Usuária');
+        out = repl(out, '{primaryStyle}', primary);
+        out = repl(out, '{secondaryStyles}', secondaries.join(', '));
+        return out;
+    }, [phUserName, phPrimaryStyle, phSecondaryStyles]);
+
     // Instrumentação step_view
     useEffect(() => {
         if (!simActive) return;
@@ -669,7 +686,7 @@ const QuizFunnelEditor: React.FC<QuizFunnelEditorProps> = ({ funnelId, templateI
             case 'intro':
                 return (
                     <div className="p-4 space-y-4">
-                        <div className="prose" dangerouslySetInnerHTML={{ __html: sanitizeHtml(selectedStep.title || '') }} />
+                        <div className="prose" dangerouslySetInnerHTML={{ __html: sanitizeHtml(applyPlaceholders(selectedStep.title || '')) }} />
                         {selectedStep.image && <img src={selectedStep.image} className="rounded max-w-sm" />}
                         <div>
                             <p className="font-semibold text-sm mb-2">{selectedStep.formQuestion}</p>
@@ -739,7 +756,7 @@ const QuizFunnelEditor: React.FC<QuizFunnelEditorProps> = ({ funnelId, templateI
                 const style = styleConfigGisele['elegante'] || Object.values(styleConfigGisele)[0];
                 return (
                     <div className="p-4 space-y-3 text-sm">
-                        <h3 className="font-bold text-primary">{selectedStep.title?.replace('{userName}', 'Usuária')}</h3>
+                        <h3 className="font-bold text-primary">{applyPlaceholders(selectedStep.title || '')}</h3>
                         {style && <p><strong>Estilo:</strong> {style.name}</p>}
                         {style?.specialTips && (
                             <ul className="list-disc pl-4 text-xs space-y-1">
@@ -1262,6 +1279,27 @@ const QuizFunnelEditor: React.FC<QuizFunnelEditorProps> = ({ funnelId, templateI
                         <div className="w-80 flex flex-col">
                             <div className="p-3 border-b text-xs font-semibold">Propriedades</div>
                             <div className="flex-1 overflow-auto p-4 text-xs space-y-4">
+                                {/* Painel Placeholders */}
+                                <div className="border rounded p-2 bg-muted/20 space-y-2">
+                                    <div className="flex items-center justify-between">
+                                        <span className="text-[11px] font-semibold">Placeholders Preview</span>
+                                    </div>
+                                    <div className="grid grid-cols-2 gap-2">
+                                        <div>
+                                            <label className="block mb-1 font-medium">userName</label>
+                                            <input value={phUserName} onChange={e => setPhUserName(e.target.value)} className="w-full border rounded px-2 py-1 text-[11px]" />
+                                        </div>
+                                        <div>
+                                            <label className="block mb-1 font-medium">primaryStyle</label>
+                                            <input value={phPrimaryStyle} onChange={e => setPhPrimaryStyle(e.target.value)} className="w-full border rounded px-2 py-1 text-[11px]" />
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label className="block mb-1 font-medium">secondaryStyles (csv)</label>
+                                        <input value={phSecondaryStyles} onChange={e => setPhSecondaryStyles(e.target.value)} className="w-full border rounded px-2 py-1 text-[11px]" />
+                                    </div>
+                                    <p className="text-[10px] text-muted-foreground">Use tokens: {'{userName}'} {'{primaryStyle}'} {'{secondaryStyles}'}</p>
+                                </div>
                                 {!selectedStep && <div className="text-muted-foreground text-[11px]">Selecione uma etapa.</div>}
                                 {selectedStep && (
                                     <>
