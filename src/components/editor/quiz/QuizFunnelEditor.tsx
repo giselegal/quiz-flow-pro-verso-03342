@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useCallback, useMemo, useRef } from 'react';
+import { z } from 'zod';
 import { useUnifiedCRUD } from '@/context/UnifiedCRUDProvider';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -24,6 +25,138 @@ export interface EditableQuizStep extends QuizStep { id: string; }
 interface QuizFunnelEditorProps {
     funnelId?: string;
     templateId?: string;
+}
+
+// ================== ZOD SCHEMAS (Step / OfferMap / Export) ==================
+const OfferContentSchema = z.object({
+    title: z.string().optional(),
+    description: z.string().optional(),
+    buttonText: z.string().optional(),
+    testimonial: z.object({
+        quote: z.string().optional(),
+        author: z.string().optional()
+    }).optional(),
+    ctaLabel: z.string().optional(),
+    ctaUrl: z.string().url().optional().or(z.literal('')).optional(),
+    image: z.string().optional()
+});
+
+const BaseStepSchema = z.object({
+    id: z.string().min(1),
+    type: z.enum(['intro', 'question', 'strategic-question', 'transition', 'transition-result', 'result', 'offer']),
+    nextStep: z.string().optional().or(z.literal(''))
+});
+
+const IntroStepSchema = BaseStepSchema.extend({
+    type: z.literal('intro'),
+    title: z.string().optional(),
+    formQuestion: z.string().optional(),
+    placeholder: z.string().optional(),
+    buttonText: z.string().optional(),
+    image: z.string().optional()
+});
+
+const QuestionOptionSchema = z.object({ id: z.string(), text: z.string(), image: z.string().optional() });
+const QuestionStepSchema = BaseStepSchema.extend({
+    type: z.literal('question'),
+    questionNumber: z.string().optional(),
+    questionText: z.string().optional(),
+    requiredSelections: z.number().int().positive().max(20).optional(),
+    options: z.array(QuestionOptionSchema).default([])
+});
+
+const StrategicQuestionStepSchema = BaseStepSchema.extend({
+    type: z.literal('strategic-question'),
+    questionText: z.string().optional(),
+    options: z.array(z.object({ id: z.string(), text: z.string() })).default([])
+});
+
+const TransitionStepSchema = BaseStepSchema.extend({
+    type: z.literal('transition'),
+    title: z.string().optional(),
+    text: z.string().optional()
+});
+const TransitionResultStepSchema = BaseStepSchema.extend({
+    type: z.literal('transition-result'),
+    title: z.string().optional()
+});
+const ResultStepSchema = BaseStepSchema.extend({
+    type: z.literal('result'),
+    title: z.string().optional()
+});
+const OfferStepSchema = BaseStepSchema.extend({
+    type: z.literal('offer'),
+    offerMap: z.record(OfferContentSchema).default({}),
+    image: z.string().optional()
+});
+
+const AnyStepSchema = z.discriminatedUnion('type', [
+    IntroStepSchema,
+    QuestionStepSchema,
+    StrategicQuestionStepSchema,
+    TransitionStepSchema,
+    TransitionResultStepSchema,
+    ResultStepSchema,
+    OfferStepSchema
+]);
+
+const StepsArraySchema = z.array(AnyStepSchema).min(1);
+const ExportSchema = z.object({
+    version: z.number().int().default(1),
+    exportedAt: z.string().optional(),
+    steps: StepsArraySchema
+});
+
+type ParsedStep = z.infer<typeof AnyStepSchema>;
+
+// ================== DETECÇÃO DE CICLOS ==================
+interface CycleReport {
+    hasCycle: boolean;
+    path: string[];
+    cycles: string[][];
+}
+
+function detectCycle(steps: ParsedStep[]): CycleReport {
+    const idMap = new Map<string, ParsedStep>();
+    steps.forEach(s => idMap.set(s.id, s));
+    const visiting = new Set<string>();
+    const visited = new Set<string>();
+    const cycles: string[][] = [];
+    const pathStack: string[] = [];
+
+    function dfs(id: string): boolean { // retorna true se ciclo
+        if (visiting.has(id)) {
+            // Encontramos ciclo - extrair sequência
+            const idx = pathStack.indexOf(id);
+            if (idx !== -1) {
+                const cyc = pathStack.slice(idx).concat(id);
+                cycles.push(cyc);
+            }
+            return true;
+        }
+        if (visited.has(id)) return false;
+        visiting.add(id);
+        pathStack.push(id);
+        const step = idMap.get(id);
+        if (step?.nextStep && idMap.has(step.nextStep)) {
+            if (dfs(step.nextStep)) {
+                visiting.delete(id);
+                pathStack.pop();
+                visited.add(id);
+                return true; // early stop se desejado
+            }
+        }
+        visiting.delete(id);
+        pathStack.pop();
+        visited.add(id);
+        return false;
+    }
+
+    // Considerar primeiro step como raiz; mas buscar ciclos em qualquer componente alcançável
+    for (const s of steps) {
+        if (!visited.has(s.id)) dfs(s.id);
+    }
+    return { hasCycle: cycles.length > 0, path: cycles[0] || [], cycles };
 }
 
 const STEP_TYPES: Array<QuizStep['type']> = [
@@ -207,6 +340,8 @@ const QuizFunnelEditor: React.FC<QuizFunnelEditorProps> = ({ funnelId, templateI
         return { reachable: visited, orphans };
     }, [steps]);
 
+    const cycleReport = useMemo(() => detectCycle(steps as any), [steps]);
+
     const isOrphan = useCallback((id: string) => reachableInfo.orphans.has(id), [reachableInfo]);
 
     // Conjunto de IDs para validação rápida
@@ -339,7 +474,21 @@ const QuizFunnelEditor: React.FC<QuizFunnelEditorProps> = ({ funnelId, templateI
         if (!crud.currentFunnel) return;
         setIsSaving(true);
         try {
-            (crud.currentFunnel as any).quizSteps = steps;
+            // Validação antes de salvar
+            const parsed = StepsArraySchema.safeParse(steps);
+            if (!parsed.success) {
+                console.error('❌ Validação falhou ao salvar:', parsed.error.format());
+                alert('Falha de validação: ver console para detalhes.');
+                return;
+            }
+            // Checar ciclos antes de salvar
+            const cycle = detectCycle(parsed.data as any);
+            if (cycle.hasCycle) {
+                console.error('❌ Ciclo detectado ao salvar:', cycle);
+                alert('Não é possível salvar: ciclo detectado no fluxo.');
+                return;
+            }
+            (crud.currentFunnel as any).quizSteps = parsed.data;
             await crud.saveFunnel();
         } catch (e) {
             console.error('Erro ao salvar quizSteps', e);
@@ -587,12 +736,25 @@ const QuizFunnelEditor: React.FC<QuizFunnelEditorProps> = ({ funnelId, templateI
             {/* Barra de controle de simulação */}
             <div className="h-10 border-b flex items-center gap-2 px-3 text-xs bg-muted/30">
                 <span className="font-semibold">Quiz Editor</span>
+                {cycleReport.hasCycle && (
+                    <span className="text-[10px] px-2 py-0.5 rounded bg-red-600 text-white" title={`Ciclo detectado: ${cycleReport.path.join(' -> ')}`}>
+                        Ciclo!
+                    </span>
+                )}
                 <Button size="sm" variant="outline" onClick={() => {
-                    const data = {
-                        version: 1,
-                        exportedAt: new Date().toISOString(),
-                        steps: steps,
-                    };
+                    const parsed = StepsArraySchema.safeParse(steps);
+                    if (!parsed.success) {
+                        alert('Export bloqueado: validação falhou. Ver console.');
+                        console.error(parsed.error.flatten());
+                        return;
+                    }
+                    const cycle = detectCycle(parsed.data as any);
+                    if (cycle.hasCycle) {
+                        alert('Export bloqueado: ciclo detectado. Ver console.');
+                        console.error('Ciclo detectado:', cycle);
+                        return;
+                    }
+                    const data = ExportSchema.parse({ version: 1, exportedAt: new Date().toISOString(), steps: parsed.data });
                     const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
                     const url = URL.createObjectURL(blob);
                     const a = document.createElement('a');
@@ -614,18 +776,31 @@ const QuizFunnelEditor: React.FC<QuizFunnelEditorProps> = ({ funnelId, templateI
                             reader.onload = (ev) => {
                                 try {
                                     const json = JSON.parse(String(ev.target?.result || '{}'));
-                                    if (!Array.isArray(json.steps)) throw new Error('Formato inválido: steps ausente.');
-                                    // Normalização básica de IDs duplicados
+                                    const parsed = ExportSchema.safeParse(json);
+                                    if (!parsed.success) {
+                                        console.error('❌ Erros de validação no import:', parsed.error.flatten());
+                                        alert('Falha de validação do JSON importado. Ver console.');
+                                        return;
+                                    }
+                                    const importedSteps = parsed.data.steps;
+                                    // Normalização de IDs duplicados pós-validação
                                     const seen = new Set<string>();
                                     const normalized: EditableQuizStep[] = [];
-                                    json.steps.forEach((st: any, idx: number) => {
+                                    importedSteps.forEach((st: any, idx: number) => {
                                         if (!st.id || typeof st.id !== 'string') st.id = `imp-${idx}`;
                                         if (seen.has(st.id)) st.id = `${st.id}-${Date.now()}-${idx}`;
                                         seen.add(st.id);
                                         normalized.push({ ...st });
                                     });
-                                    setSteps(normalized);
-                                    setSelectedId(normalized[0]?.id || '');
+                                    // Segunda validação para garantir consistência após normalização de ID
+                                    const second = StepsArraySchema.safeParse(normalized);
+                                    if (!second.success) {
+                                        console.error('❌ Erro após normalização de IDs:', second.error.flatten());
+                                        alert('Import falhou após normalização de IDs.');
+                                        return;
+                                    }
+                                    setSteps(second.data as EditableQuizStep[]);
+                                    setSelectedId(second.data[0]?.id || '');
                                 } catch (err: any) {
                                     alert('Falha ao importar JSON: ' + err.message);
                                 } finally {
