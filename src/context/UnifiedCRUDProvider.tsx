@@ -108,18 +108,18 @@ export const UnifiedCRUDProvider: React.FC<UnifiedCRUDProviderProps> = ({
 
         } catch (err) {
             const errorMessage = err instanceof Error ? err.message : 'Erro ao criar funil';
-            
+
             console.error('🚨 UnifiedCRUDProvider: Erro detalhado ao criar funnel:', {
                 error: err,
                 stack: err instanceof Error ? err.stack : 'N/A',
                 funcName: 'createFunnel',
                 params: { name, options }
             });
-            
+
             setError(`Erro ao criar funil: ${errorMessage}`);
-            
+
             if (debug) console.error('❌ Error creating funnel:', err);
-            
+
             // Re-throw com mais contexto
             throw new Error(`Falha na criação do funil "${name}": ${errorMessage}`);
         } finally {
@@ -137,27 +137,27 @@ export const UnifiedCRUDProvider: React.FC<UnifiedCRUDProviderProps> = ({
             // ✅ NORMALIZAR ID ANTES DE BUSCAR
             const normalized = normalizeFunnelId(id);
             const searchId = normalized.baseId;
-            
+
             console.log('🔍 Normalizando funnelId:', { original: id, normalized: searchId });
 
             const funnel = await enhancedFunnelService.getFunnelWithFallback(searchId);
 
             if (!funnel) {
                 console.warn(`⚠️ Funil não encontrado com ID normalizado: ${searchId} (original: ${id})`);
-            const fallbackFunnel = await enhancedFunnelService.createFallbackFunnel(id);
-            if (!fallbackFunnel) {
-                throw new Error(`Funil não encontrado: ${id}`);
-            }
-            setCurrentFunnel(fallbackFunnel);
-            
-            // Atualizar lista se não estiver presente
-            setFunnels(prev => {
-                const exists = prev.find(f => f.id === fallbackFunnel.id);
-                if (!exists) {
-                    return [fallbackFunnel, ...prev];
+                const fallbackFunnel = await enhancedFunnelService.createFallbackFunnel(id);
+                if (!fallbackFunnel) {
+                    throw new Error(`Funil não encontrado: ${id}`);
                 }
-                return prev;
-            });
+                setCurrentFunnel(fallbackFunnel);
+
+                // Atualizar lista se não estiver presente
+                setFunnels(prev => {
+                    const exists = prev.find(f => f.id === fallbackFunnel.id);
+                    if (!exists) {
+                        return [fallbackFunnel, ...prev];
+                    }
+                    return prev;
+                });
             }
 
             if (funnel) {
@@ -386,6 +386,11 @@ export const useUnifiedCRUD = (): UnifiedCRUDContextType => {
     }
 
     return context;
+};
+
+// Variante opcional: retorna null ao invés de lançar erro se provider não estiver presente.
+export const useUnifiedCRUDOptional = (): UnifiedCRUDContextType | null => {
+    return useContext(UnifiedCRUDContext);
 };
 
 // ============================================================================

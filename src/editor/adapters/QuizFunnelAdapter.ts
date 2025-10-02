@@ -7,8 +7,10 @@ export class QuizFunnelAdapter implements IFunnelAdapter {
 
     supports(funnel: UnifiedFunnelData | null): boolean {
         // heurística simples: presença de quizSteps ou templateId começando com 'quiz'
-        if (!funnel) return true; // criação nova
-        return Array.isArray((funnel as any).quizSteps) || (funnel.templateId?.startsWith('quiz'));
+        if (!funnel) return true; // criação nova sempre suportada
+        const hasQuizSteps = Array.isArray((funnel as any).quizSteps);
+        const templateIsQuiz = !!funnel.templateId && funnel.templateId.startsWith('quiz');
+        return hasQuizSteps || templateIsQuiz;
     }
 
     toSnapshot(funnel: UnifiedFunnelData | null): FunnelSnapshot {

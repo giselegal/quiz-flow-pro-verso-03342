@@ -6,7 +6,7 @@
 import React, { Suspense, useMemo, createContext, useContext, useEffect, useRef, useState } from 'react';
 import { QuizFunnelEditingFacade, type IFunnelEditingFacade, type FunnelSnapshot } from '@/editor/facade/FunnelEditingFacade';
 import { resolveAdapter, applySnapshotAndPersist } from '@/editor/adapters/FunnelAdapterRegistry';
-import { useUnifiedCRUD } from '@/context/UnifiedCRUDProvider';
+import { useUnifiedCRUDOptional } from '@/context/UnifiedCRUDProvider';
 import { useFunnelPublication } from '@/hooks/useFunnelPublication';
 
 export interface ModernUnifiedEditorProps {
@@ -44,8 +44,8 @@ const TransitionBanner: React.FC<{ isLegacy: boolean }> = ({ isLegacy }) => {
 // Botão de Publicação Integrado (usa hook real e eventos da fachada)
 const PublishIntegratedButton: React.FC = () => {
     const facade = useOptionalFunnelFacade();
-    const crud = useUnifiedCRUD();
-    const funnelId = crud.currentFunnel?.id;
+    const crud = useUnifiedCRUDOptional();
+    const funnelId = crud?.currentFunnel?.id;
     const { publishFunnel, isPublishing, getPublicationStatus } = useFunnelPublication(funnelId || 'unknown');
     const status = getPublicationStatus();
     if (!facade || !funnelId) return null;
@@ -100,8 +100,8 @@ export const useFunnelFacade = () => {
 export const useOptionalFunnelFacade = () => useContext(FunnelFacadeContext);
 
 // buildInitialSnapshot agora via adapter registry
-const buildInitialSnapshot = (crud: ReturnType<typeof useUnifiedCRUD>): { snapshot: FunnelSnapshot; adapterType: string } => {
-    const { adapter, snapshot } = resolveAdapter(crud.currentFunnel);
+const buildInitialSnapshot = (crud: ReturnType<typeof useUnifiedCRUDOptional>): { snapshot: FunnelSnapshot; adapterType: string } => {
+    const { adapter, snapshot } = resolveAdapter(crud?.currentFunnel || null);
     return { snapshot, adapterType: adapter.type };
 };
 
@@ -110,10 +110,10 @@ const ModernUnifiedEditor: React.FC<ModernUnifiedEditorProps> = (props) => {
         if (typeof window === 'undefined') return false;
         return new URLSearchParams(window.location.search).get('legacy') === '1';
     }, []);
-    const crud = useUnifiedCRUD();
+    const crud = useUnifiedCRUDOptional();
     // Criar facade apenas quando não legacy; recria se trocar de funil
     const facade = useMemo(() => {
-        if (isLegacy) return null;
+        if (isLegacy || !crud) return null;
         const { snapshot } = buildInitialSnapshot(crud);
         const persist = async (snap: FunnelSnapshot) => {
             if (!crud.currentFunnel) return;
@@ -143,7 +143,7 @@ const ModernUnifiedEditor: React.FC<ModernUnifiedEditorProps> = (props) => {
         };
         return base;
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [isLegacy, crud.currentFunnel?.id]);
+    }, [isLegacy, crud?.currentFunnel?.id]);
 
     // ================= Autosave & Logging Básico =================
     const autosaveTimerRef = useRef<number | null>(null);
@@ -188,7 +188,11 @@ const ModernUnifiedEditor: React.FC<ModernUnifiedEditorProps> = (props) => {
             <TransitionBanner isLegacy={isLegacy} />
             <div className="flex-1 min-h-0">
                 <Suspense fallback={<div className="p-4 text-sm text-muted-foreground">Carregando editor...</div>}>
-                    {isLegacy ? (
+                    {!crud && !isLegacy ? (
+                        <div className="p-6 text-sm text-red-600" data-testid="missing-crud-provider">
+                            ⚠️ UnifiedCRUDProvider ausente. Envolva <code>ModernUnifiedEditor</code> com <code>&lt;UnifiedCRUDProvider&gt;</code>.
+                        </div>
+                    ) : isLegacy ? (
                         <LegacyModernUnifiedEditor {...props} />
                     ) : facade ? (
                         <FunnelFacadeContext.Provider value={facade}>
