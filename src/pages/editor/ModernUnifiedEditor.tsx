@@ -524,8 +524,21 @@ const UnifiedEditorCore: React.FC<ModernUnifiedEditorProps> = ({
     const unifiedEditor = useUnifiedEditor();
 
     // Estado do editor UI
+    // 🔧 Suporte a query param ?mode=quiz (ou outro modo válido) para deep-linking
+    const urlModeParam = React.useMemo(() => {
+        try {
+            const params = new URLSearchParams(window.location.search);
+            const raw = params.get('mode');
+            const allowed: EditorMode[] = ['visual', 'builder', 'funnel', 'headless', 'admin-integrated', 'quiz'];
+            if (raw && allowed.includes(raw as EditorMode)) {
+                return raw as EditorMode;
+            }
+        } catch { /* noop (SSR safe) */ }
+        return null;
+    }, []);
+
     const [editorState, setEditorState] = useState<EditorState>({
-        mode: isQuizTemplate ? 'quiz' : mode,
+        mode: urlModeParam ? urlModeParam : (isQuizTemplate ? 'quiz' : mode),
         aiAssistantActive: false,
         previewMode: false,
         realExperienceMode: false // Inicialmente desabilitado
