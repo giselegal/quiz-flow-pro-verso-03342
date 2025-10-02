@@ -3,7 +3,7 @@
 // Default => QuizFunnelEditor | ?legacy=1 => ModernUnifiedEditor.legacy
 // Pronto para futura injeção da FunnelEditingFacade
 // =============================================================
-import React, { Suspense, useMemo, createContext, useContext, useEffect, useRef } from 'react';
+import React, { Suspense, useMemo, createContext, useContext, useEffect, useRef, useState } from 'react';
 import { QuizFunnelEditingFacade, type IFunnelEditingFacade, type FunnelSnapshot } from '@/editor/facade/FunnelEditingFacade';
 import { useUnifiedCRUD } from '@/context/UnifiedCRUDProvider';
 
@@ -27,11 +27,57 @@ const TransitionBanner: React.FC<{ isLegacy: boolean }> = ({ isLegacy }) => {
         return qs ? `${path}?${qs}` : path;
     };
     return (
-        <div className="w-full bg-amber-50 border-b border-amber-200 px-3 py-1 text-xs text-amber-800 flex items-center gap-3">
-            <strong className="font-medium">Pivot ativo:</strong>
-            <span>{isLegacy ? 'Legacy ModernUnifiedEditor' : 'QuizFunnelEditor (novo padrão)'}</span>
-            <a href={toggleUrl(!isLegacy)} className="underline hover:opacity-80">{isLegacy ? 'Ir para novo' : 'Voltar legacy'}</a>
+        <div className="w-full bg-amber-50 border-b border-amber-200 px-3 py-1 text-xs text-amber-800 flex items-center gap-3 justify-between">
+            <div className="flex items-center gap-3">
+                <strong className="font-medium">Pivot ativo:</strong>
+                <span>{isLegacy ? 'Legacy ModernUnifiedEditor' : 'QuizFunnelEditor (novo padrão)'}</span>
+                <a href={toggleUrl(!isLegacy)} className="underline hover:opacity-80">{isLegacy ? 'Ir para novo' : 'Voltar legacy'}</a>
+            </div>
+            {!isLegacy && <PublishStub />}
         </div>
+    );
+};
+
+// ============================================
+// Botão de Publicação (Stub Fase 1)
+// - Executa save() via facade se dirty
+// - Emite logs estruturados de ciclo publish
+// Futuro: integrar com serviço real de publicação + status
+// ============================================
+const PublishStub: React.FC = () => {
+    const facade = useOptionalFunnelFacade();
+    const [isPublishing, setIsPublishing] = useState(false);
+    if (!facade) return null;
+    const handlePublish = async () => {
+        if (isPublishing) return;
+        setIsPublishing(true);
+        const startedAt = Date.now();
+        try {
+            // eslint-disable-next-line no-console
+            console.log('[Publish:start]', { dirty: facade.isDirty(), ts: startedAt });
+            if (facade.isDirty()) {
+                await facade.save();
+            }
+            // Simula pequena operação de validação
+            await new Promise(r => setTimeout(r, 300));
+            // eslint-disable-next-line no-console
+            console.log('[Publish:success]', { durationMs: Date.now() - startedAt });
+        } catch (err) {
+            // eslint-disable-next-line no-console
+            console.error('[Publish:error]', { error: String(err) });
+        } finally {
+            setIsPublishing(false);
+        }
+    };
+    return (
+        <button
+            onClick={handlePublish}
+            disabled={isPublishing}
+            className={`px-2 py-1 rounded border text-amber-900 bg-amber-100 hover:bg-amber-200 transition text-[11px] font-medium flex items-center gap-1 ${isPublishing ? 'opacity-60 cursor-not-allowed' : ''}`}
+            title="Publicar (stub)"
+        >
+            {isPublishing ? 'Publicando...' : 'Publicar (stub)'}
+        </button>
     );
 };
 
@@ -44,6 +90,8 @@ export const useFunnelFacade = () => {
     if (!ctx) throw new Error('useFunnelFacade deve ser usado dentro de <FunnelFacadeContext.Provider>');
     return ctx;
 };
+// Versão opcional (uso em componentes que podem renderizar antes da fachada existir)
+export const useOptionalFunnelFacade = () => useContext(FunnelFacadeContext);
 
 const buildInitialSnapshot = (crud: ReturnType<typeof useUnifiedCRUD>): FunnelSnapshot => {
     // Extrair steps do funil atual se existir e tiver quizSteps

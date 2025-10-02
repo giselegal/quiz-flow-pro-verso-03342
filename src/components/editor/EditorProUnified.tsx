@@ -35,6 +35,10 @@ import OptimizedAIFeatures from '@/components/ai/OptimizedAIFeatures';
 import SystemStatus from '@/components/system/SystemStatus';
 import { type FunnelTemplate } from '@/services/FunnelAIAgent';
 
+/**
+ * @deprecated EditorProUnified será removido após consolidação do pivot para QuizFunnelEditor.
+ * Use o novo fluxo via ModernUnifiedEditor (wrapper) + FunnelEditingFacade.
+ */
 interface EditorProUnifiedProps {
   funnelId?: string;
   showProFeatures?: boolean;
