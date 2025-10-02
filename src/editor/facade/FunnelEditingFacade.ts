@@ -46,6 +46,9 @@ export type FunnelFacadeEventMap = {
     'save/start': { timestamp: number; };
     'save/success': { timestamp: number; duration: number; };
     'save/error': { timestamp: number; error: string; };
+    'publish/start': { timestamp: number; };
+    'publish/success': { timestamp: number; duration: number; url?: string; };
+    'publish/error': { timestamp: number; error: string; };
 };
 
 export type FunnelFacadeEvent = keyof FunnelFacadeEventMap;
@@ -63,6 +66,7 @@ export interface IFunnelEditingFacade {
 
     // Persistência (fase 1: apenas stub save)
     save(): Promise<void>; // Internamente emitirá eventos save/start|success|error
+    publish?(opts?: { ensureSaved?: boolean }): Promise<void>;
 
     // Assinatura de eventos
     on<E extends FunnelFacadeEvent>(event: E, handler: (payload: FunnelFacadeEventMap[E]) => void): () => void;

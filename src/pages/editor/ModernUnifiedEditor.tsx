@@ -5,7 +5,9 @@
 // =============================================================
 import React, { Suspense, useMemo, createContext, useContext, useEffect, useRef, useState } from 'react';
 import { QuizFunnelEditingFacade, type IFunnelEditingFacade, type FunnelSnapshot } from '@/editor/facade/FunnelEditingFacade';
+import { resolveAdapter, applySnapshotAndPersist } from '@/editor/adapters/FunnelAdapterRegistry';
 import { useUnifiedCRUD } from '@/context/UnifiedCRUDProvider';
+import { useFunnelPublication } from '@/hooks/useFunnelPublication';
 
 export interface ModernUnifiedEditorProps {
     funnelId?: string;
@@ -33,40 +35,44 @@ const TransitionBanner: React.FC<{ isLegacy: boolean }> = ({ isLegacy }) => {
                 <span>{isLegacy ? 'Legacy ModernUnifiedEditor' : 'QuizFunnelEditor (novo padrão)'}</span>
                 <a href={toggleUrl(!isLegacy)} className="underline hover:opacity-80">{isLegacy ? 'Ir para novo' : 'Voltar legacy'}</a>
             </div>
-            {!isLegacy && <PublishStub />}
+            {!isLegacy && <PublishIntegratedButton />}
         </div>
     );
 };
 
 // ============================================
-// Botão de Publicação (Stub Fase 1)
-// - Executa save() via facade se dirty
-// - Emite logs estruturados de ciclo publish
-// Futuro: integrar com serviço real de publicação + status
-// ============================================
-const PublishStub: React.FC = () => {
+// Botão de Publicação Integrado (usa hook real e eventos da fachada)
+const PublishIntegratedButton: React.FC = () => {
     const facade = useOptionalFunnelFacade();
-    const [isPublishing, setIsPublishing] = useState(false);
-    if (!facade) return null;
+    const crud = useUnifiedCRUD();
+    const funnelId = crud.currentFunnel?.id;
+    const { publishFunnel, isPublishing, getPublicationStatus } = useFunnelPublication(funnelId || 'unknown');
+    const status = getPublicationStatus();
+    if (!facade || !funnelId) return null;
+    const labelByStatus: Record<string, string> = {
+        draft: 'Publicar',
+        published: 'Atualizar',
+        error: 'Tentar novamente'
+    };
     const handlePublish = async () => {
         if (isPublishing) return;
-        setIsPublishing(true);
         const startedAt = Date.now();
+        // Emit publish/start via facade (se suportar)
         try {
-            // eslint-disable-next-line no-console
-            console.log('[Publish:start]', { dirty: facade.isDirty(), ts: startedAt });
+            (facade as any).emit && (facade as any).emit('publish/start', { timestamp: startedAt });
+        } catch { }
+        try {
             if (facade.isDirty()) {
                 await facade.save();
             }
-            // Simula pequena operação de validação
-            await new Promise(r => setTimeout(r, 300));
+            await publishFunnel();
+            const end = Date.now();
+            try { (facade as any).emit && (facade as any).emit('publish/success', { timestamp: end, duration: end - startedAt }); } catch { }
+        } catch (err: any) {
+            const end = Date.now();
+            try { (facade as any).emit && (facade as any).emit('publish/error', { timestamp: end, error: String(err) }); } catch { }
             // eslint-disable-next-line no-console
-            console.log('[Publish:success]', { durationMs: Date.now() - startedAt });
-        } catch (err) {
-            // eslint-disable-next-line no-console
-            console.error('[Publish:error]', { error: String(err) });
-        } finally {
-            setIsPublishing(false);
+            console.error('[PublishIntegrated:error]', err);
         }
     };
     return (
@@ -74,9 +80,9 @@ const PublishStub: React.FC = () => {
             onClick={handlePublish}
             disabled={isPublishing}
             className={`px-2 py-1 rounded border text-amber-900 bg-amber-100 hover:bg-amber-200 transition text-[11px] font-medium flex items-center gap-1 ${isPublishing ? 'opacity-60 cursor-not-allowed' : ''}`}
-            title="Publicar (stub)"
+            title="Publicar"
         >
-            {isPublishing ? 'Publicando...' : 'Publicar (stub)'}
+            {isPublishing ? 'Publicando...' : labelByStatus[status] || 'Publicar'}
         </button>
     );
 };
@@ -93,18 +99,10 @@ export const useFunnelFacade = () => {
 // Versão opcional (uso em componentes que podem renderizar antes da fachada existir)
 export const useOptionalFunnelFacade = () => useContext(FunnelFacadeContext);
 
-const buildInitialSnapshot = (crud: ReturnType<typeof useUnifiedCRUD>): FunnelSnapshot => {
-    // Extrair steps do funil atual se existir e tiver quizSteps
-    const rawSteps: any[] = (crud.currentFunnel as any)?.quizSteps || [];
-    // Normalizar para FunnelStep mínimo (order = index)
-    const steps = rawSteps.map((s, idx) => ({
-        id: s.id || `step-${idx}`,
-        title: s.title || s.questionText || s.type || `Step ${idx + 1}`,
-        order: idx,
-        blocks: (s.blocks || []).map((b: any) => ({ id: b.id || `blk-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`, type: b.type || 'unknown', data: b.config || {} })),
-        meta: { type: s.type, nextStep: s.nextStep }
-    }));
-    return { steps, meta: { id: crud.currentFunnel?.id, templateId: crud.currentFunnel?.templateId, updatedAt: Date.now() } };
+// buildInitialSnapshot agora via adapter registry
+const buildInitialSnapshot = (crud: ReturnType<typeof useUnifiedCRUD>): { snapshot: FunnelSnapshot; adapterType: string } => {
+    const { adapter, snapshot } = resolveAdapter(crud.currentFunnel);
+    return { snapshot, adapterType: adapter.type };
 };
 
 const ModernUnifiedEditor: React.FC<ModernUnifiedEditorProps> = (props) => {
@@ -116,21 +114,34 @@ const ModernUnifiedEditor: React.FC<ModernUnifiedEditorProps> = (props) => {
     // Criar facade apenas quando não legacy; recria se trocar de funil
     const facade = useMemo(() => {
         if (isLegacy) return null;
-        const persist = async (snapshot: FunnelSnapshot) => {
-            if (!crud.currentFunnel) return; // nada para salvar
-            const quizSteps = snapshot.steps.map(s => ({
-                id: s.id,
-                title: s.title,
-                order: s.order,
-                type: s.meta?.type,
-                nextStep: s.meta?.nextStep,
-                blocks: s.blocks.map(b => ({ id: b.id, type: b.type, config: b.data }))
-            }));
-            const updated = { ...crud.currentFunnel, quizSteps } as any;
+        const { snapshot } = buildInitialSnapshot(crud);
+        const persist = async (snap: FunnelSnapshot) => {
+            if (!crud.currentFunnel) return;
+            // Usar adapter resolvido novamente (garantir consistência com tipo atual)
+            const { adapter } = resolveAdapter(crud.currentFunnel);
+            const updated = adapter.applySnapshot(snap, crud.currentFunnel);
             crud.setCurrentFunnel(updated);
             await crud.saveFunnel(updated);
         };
-        return new QuizFunnelEditingFacade(buildInitialSnapshot(crud), persist);
+        const base = new QuizFunnelEditingFacade(snapshot, persist);
+        // Decorator para adicionar método publish padronizado que emite eventos (usa botão/hook externo)
+        (base as any).publish = async ({ ensureSaved = true } = {}) => {
+            const startedAt = Date.now();
+            try { (base as any).emit && (base as any).emit('publish/start', { timestamp: startedAt }); } catch { }
+            try {
+                if (ensureSaved && base.isDirty()) {
+                    await base.save();
+                }
+                // Publicação real é disparada externamente (hook); aqui apenas marca sucesso imediato
+                const end = Date.now();
+                try { (base as any).emit && (base as any).emit('publish/success', { timestamp: end, duration: end - startedAt }); } catch { }
+            } catch (err: any) {
+                const end = Date.now();
+                try { (base as any).emit && (base as any).emit('publish/error', { timestamp: end, error: String(err) }); } catch { }
+                throw err;
+            }
+        };
+        return base;
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isLegacy, crud.currentFunnel?.id]);
 
@@ -163,6 +174,9 @@ const ModernUnifiedEditor: React.FC<ModernUnifiedEditorProps> = (props) => {
                 autosaveTimerRef.current = null;
             }
         }));
+        dispose.push(facade.on('publish/start', p => log('publish/start', p)));
+        dispose.push(facade.on('publish/success', p => log('publish/success', p)));
+        dispose.push(facade.on('publish/error', p => log('publish/error', p)));
         return () => {
             dispose.forEach(fn => fn());
             if (autosaveTimerRef.current) window.clearTimeout(autosaveTimerRef.current);
