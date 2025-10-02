@@ -228,18 +228,62 @@ export async function loadFunnelConfig(funnelId: string, typeId: string) {
         console.log('🎯 Carregando quiz usando HybridTemplateService...');
 
         try {
-            // Carregar todas as etapas do quiz
-            const steps = [];
-            for (let i = 1; i <= 21; i++) {
-                const stepConfig = await funnelType.templateService.getStepConfig(i);
-                steps.push({
-                    stepNumber: i,
-                    ...stepConfig
-                });
+            const svc = funnelType.templateService;
+            const stepCount = funnelType.defaultSteps || 21;
+
+            const hasGetStepConfig = typeof svc.getStepConfig === 'function';
+            const hasGetGlobalConfig = typeof svc.getGlobalConfig === 'function';
+
+            if (!hasGetStepConfig) {
+                console.warn('⚠️ templateService.getStepConfig ausente – usando steps placeholders');
+            }
+            if (!hasGetGlobalConfig) {
+                console.warn('⚠️ templateService.getGlobalConfig ausente – usando globalConfig fallback');
             }
 
-            // Carregar configurações globais
-            const globalConfig = funnelType.templateService.getGlobalConfig();
+            // Carregar todas as etapas (com fallback resiliente)
+            const steps = [] as any[];
+            for (let i = 1; i <= stepCount; i++) {
+                try {
+                    const stepConfig = hasGetStepConfig ? await svc.getStepConfig(i) : null;
+                    steps.push({
+                        stepNumber: i,
+                        ...(stepConfig || {
+                            name: `Etapa ${i}`,
+                            type: 'generic',
+                            blocks: [],
+                            placeholder: true
+                        })
+                    });
+                } catch (stepErr) {
+                    console.warn(`⚠️ Falha carregando step ${i}, usando placeholder:`, stepErr);
+                    steps.push({
+                        stepNumber: i,
+                        name: `Etapa ${i}`,
+                        type: 'generic',
+                        blocks: [],
+                        error: true,
+                        placeholder: true
+                    });
+                }
+            }
+
+            // Config global com fallback mínimo
+            let globalConfig: any;
+            try {
+                globalConfig = hasGetGlobalConfig ? svc.getGlobalConfig() : null;
+            } catch (gcErr) {
+                console.warn('⚠️ Erro ao obter globalConfig, usando fallback:', gcErr);
+                globalConfig = null;
+            }
+            if (!globalConfig || typeof globalConfig !== 'object') {
+                globalConfig = {
+                    navigation: { autoAdvanceSteps: [], manualAdvanceSteps: [], defaultAutoAdvanceDelay: 1500 },
+                    validation: { globalRules: {}, strictMode: false },
+                    ui: { theme: 'default' },
+                    analytics: { enabled: false }
+                };
+            }
 
             return {
                 id: funnelId,
@@ -247,8 +291,12 @@ export async function loadFunnelConfig(funnelId: string, typeId: string) {
                 name: `Quiz de Estilo - ${funnelId}`,
                 steps,
                 globalConfig,
-                totalSteps: 21,
-                isQuiz: true
+                totalSteps: stepCount,
+                isQuiz: true,
+                _resilience: {
+                    hasGetStepConfig,
+                    hasGetGlobalConfig
+                }
             };
         } catch (error) {
             console.error('Erro ao carregar quiz:', error);
