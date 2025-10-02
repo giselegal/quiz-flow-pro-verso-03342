@@ -131,7 +131,8 @@ function createFallbackTemplate(templateId: string) {
 // 🎯 TYPES & INTERFACES
 // ===============================
 
-type EditorMode = 'visual' | 'builder' | 'funnel' | 'headless' | 'admin-integrated';
+// 🔧 Adicionado 'quiz' para modo de edição do funil quiz-estilo
+type EditorMode = 'visual' | 'builder' | 'funnel' | 'headless' | 'admin-integrated' | 'quiz';
 
 interface ModernUnifiedEditorProps {
     funnelId?: string;
@@ -286,7 +287,7 @@ const ModernToolbar: React.FC<ModernToolbarProps> = ({
                 <Tabs value={editorState.mode} onValueChange={(mode) =>
                     onStateChange({ mode: mode as EditorMode })
                 }>
-                    <TabsList className="grid w-full grid-cols-4">
+                    <TabsList className="grid w-full grid-cols-5">
                         <TabsTrigger value="visual" className="text-xs">
                             <Layout className="w-4 h-4 mr-1" />
                             Visual
@@ -302,6 +303,10 @@ const ModernToolbar: React.FC<ModernToolbarProps> = ({
                         <TabsTrigger value="headless" className="text-xs">
                             <Settings className="w-4 h-4 mr-1" />
                             Headless
+                        </TabsTrigger>
+                        <TabsTrigger value="quiz" className="text-xs">
+                            <Target className="w-4 h-4 mr-1" />
+                            Quiz
                         </TabsTrigger>
                     </TabsList>
                 </Tabs>
@@ -461,13 +466,13 @@ const UnifiedEditorCore: React.FC<ModernUnifiedEditorProps> = ({
         // 🚨 CORREÇÃO CRÍTICA: Processar query parameter template segundo
         if (templateParam) {
             console.log('✅ Template encontrado via query param:', templateParam);
-            
+
             // 🎯 QUIZ-ESTILO: Detectar template do quiz
             if (templateParam === 'quiz-estilo-21-steps') {
                 console.log('🎯 Detectado template quiz-estilo-21-steps');
                 return { templateId: templateParam, funnelId: null, type: 'quiz-template' };
             }
-            
+
             return { templateId: templateParam, funnelId: null, type: 'template' };
         }
 
@@ -501,25 +506,8 @@ const UnifiedEditorCore: React.FC<ModernUnifiedEditorProps> = ({
         };
     }, [funnelId, templateId]);
 
-    // 🎯 QUIZ-ESTILO: Detectar e redirecionar para página especializada
-    if (extractedInfo.type === 'quiz-template' && extractedInfo.templateId === 'quiz-estilo-21-steps') {
-        console.log('🚀 Redirecionando para QuizEditorIntegratedPage...');
-        
-        // Importar dinamicamente a página especializada
-        const QuizEditorIntegratedPage = React.lazy(() => 
-            import('./QuizEditorIntegratedPage')
-        );
-        
-        return (
-            <div className={`modern-unified-editor ${className}`}>
-                <Suspense fallback={<LoadingSpinner message="Carregando Quiz Editor..." />}>
-                    <QuizEditorIntegratedPage 
-                        funnelId={extractedInfo.funnelId || undefined} 
-                    />
-                </Suspense>
-            </div>
-        );
-    }
+    // 🎯 QUIZ-ESTILO: Detectar template especial e usar modo interno de edição (sem redirecionar)
+    const isQuizTemplate = extractedInfo.type === 'quiz-template' && extractedInfo.templateId === 'quiz-estilo-21-steps'; // legacy detection (não mais requisito para modo quiz)
 
     const pureBuilderTargetId = React.useMemo(() => {
         return extractedInfo.funnelId || extractedInfo.templateId || funnelId || templateId || 'quiz21StepsComplete';
@@ -537,7 +525,7 @@ const UnifiedEditorCore: React.FC<ModernUnifiedEditorProps> = ({
 
     // Estado do editor UI
     const [editorState, setEditorState] = useState<EditorState>({
-        mode,
+        mode: isQuizTemplate ? 'quiz' : mode,
         aiAssistantActive: false,
         previewMode: false,
         realExperienceMode: false // Inicialmente desabilitado
@@ -772,6 +760,9 @@ const UnifiedEditorCore: React.FC<ModernUnifiedEditorProps> = ({
         );
     }
 
+    // 🔁 Lazy import do editor de quiz
+    const QuizFunnelEditor = React.useMemo(() => React.lazy(() => import('../../components/editor/quiz/QuizFunnelEditor')), []);
+
     return (
         <div className={`h-screen w-full bg-background flex flex-col ${className}`}>
             {/* Toolbar Moderno com CRUD Actions */}
@@ -844,27 +835,33 @@ const UnifiedEditorCore: React.FC<ModernUnifiedEditorProps> = ({
                         </div>
                     )}
 
-                    <Suspense fallback={
-                        <Suspense fallback={<LoadingSpinner message="Carregando componentes..." />}>
-                            <TemplateLoadingSkeleton />
-                        </Suspense>
-                    }>
-                        <Suspense fallback={<LoadingSpinner message="Carregando error boundary..." />}>
-                            <PureBuilderProvider
-                                key={`pure-builder-${pureBuilderTargetId}`}
-                                funnelId={pureBuilderTargetId}
-                                enableSupabase={false}
-                            >
-                                <TemplateErrorBoundary>
-                                    <EditorProUnified
-                                        funnelId={extractedInfo.funnelId || undefined}
-                                        realExperienceMode={editorState.realExperienceMode}
-                                        showProFeatures={true}
-                                        className="h-full"
-                                    />
-                                </TemplateErrorBoundary>
-                            </PureBuilderProvider>
-                        </Suspense>
+                    <Suspense fallback={<LoadingSpinner message={isQuizTemplate ? 'Carregando editor de quiz...' : 'Carregando editor...'} />}>
+                        {editorState.mode === 'quiz' ? (
+                            <QuizFunnelEditor
+                                key={`quiz-funnel-${extractedInfo.templateId || extractedInfo.funnelId || 'new'}`}
+                                templateId={extractedInfo.templateId || undefined}
+                                funnelId={extractedInfo.funnelId || crudContext.currentFunnel?.id}
+                            />
+                        ) : (
+                            <Suspense fallback={<TemplateLoadingSkeleton />}>
+                                <Suspense fallback={<LoadingSpinner message="Carregando error boundary..." />}>
+                                    <PureBuilderProvider
+                                        key={`pure-builder-${pureBuilderTargetId}`}
+                                        funnelId={pureBuilderTargetId}
+                                        enableSupabase={false}
+                                    >
+                                        <TemplateErrorBoundary>
+                                            <EditorProUnified
+                                                funnelId={extractedInfo.funnelId || undefined}
+                                                realExperienceMode={editorState.realExperienceMode}
+                                                showProFeatures={true}
+                                                className="h-full"
+                                            />
+                                        </TemplateErrorBoundary>
+                                    </PureBuilderProvider>
+                                </Suspense>
+                            </Suspense>
+                        )}
                     </Suspense>
                 </FunnelMasterProvider>
             </div>
