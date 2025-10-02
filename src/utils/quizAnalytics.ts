@@ -159,4 +159,63 @@ export async function flushQuizEvents(opts: FlushOptions) {
     return { flushed };
 }
 
+// ===== Retry / Backoff Flush Avançado =====
+export interface RetryFlushOptions extends FlushOptions {
+    maxRetries?: number;            // total de tentativas por batch
+    backoffBaseMs?: number;         // base do backoff exponencial
+    signal?: AbortSignal;           // permite abortar externamente
+    onProgress?: (info: {
+        batchIndex: number;
+        batchTotal: number;
+        attempt: number;
+        success: boolean;
+        error?: any;
+        flushedSoFar: number;
+    }) => void;
+}
+
+export async function flushQuizEventsWithRetry(opts: RetryFlushOptions) {
+    const { endpoint, batchSize = 100, onSuccessRemove = true, maxRetries = 3, backoffBaseMs = 500, signal, onProgress } = opts;
+    const all = getQuizEvents();
+    if (!all.length) return { flushed: 0, batches: 0 };
+    let flushed = 0;
+    const batchTotal = Math.ceil(all.length / batchSize);
+    for (let batchIndex = 0; batchIndex < batchTotal; batchIndex++) {
+        const start = batchIndex * batchSize;
+        const slice = all.slice(start, start + batchSize);
+        let attempt = 0; let sent = false; let lastErr: any;
+        while (attempt < maxRetries && !sent) {
+            if (signal?.aborted) throw new Error('Abortado pelo sinal externo');
+            attempt++;
+            try {
+                const res = await fetch(endpoint, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ events: slice, batch: batchIndex, totalBatches: batchTotal, attempt })
+                });
+                if (!res.ok) throw new Error('Status ' + res.status);
+                flushed += slice.length;
+                sent = true;
+                onProgress?.({ batchIndex, batchTotal, attempt, success: true, flushedSoFar: flushed });
+            } catch (error) {
+                lastErr = error;
+                onProgress?.({ batchIndex, batchTotal, attempt, success: false, error, flushedSoFar: flushed });
+                if (attempt < maxRetries) {
+                    const delay = backoffBaseMs * Math.pow(2, attempt - 1);
+                    await new Promise(r => setTimeout(r, delay));
+                }
+            }
+        }
+        if (!sent) {
+            console.warn('[QuizAnalytics] Batch falhou após retries', { batchIndex, lastErr });
+            break; // interrompe cadeia
+        }
+    }
+    if (onSuccessRemove && flushed) {
+        const remaining = all.slice(flushed);
+        save(remaining as any);
+    }
+    return { flushed, batches: Math.ceil(flushed / batchSize) };
+}
+
 export default { emitQuizEvent, getQuizEvents, clearQuizEvents };

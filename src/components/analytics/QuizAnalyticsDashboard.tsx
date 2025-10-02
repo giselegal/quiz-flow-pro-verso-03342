@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-import { getQuizEvents, getQuizMetrics, clearQuizEvents, flushQuizEvents } from '@/utils/quizAnalytics';
+import { getQuizEvents, getQuizMetrics, clearQuizEvents, flushQuizEvents, flushQuizEventsWithRetry } from '@/utils/quizAnalytics';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 
@@ -17,6 +17,10 @@ const QuizAnalyticsDashboard: React.FC = () => {
     const [filter, setFilter] = useState<FilterState>({ sessionId: '', from: '', to: '' });
     const [flushUrl, setFlushUrl] = useState('');
     const [isFlushing, setIsFlushing] = useState(false);
+    const [useRetryFlush, setUseRetryFlush] = useState(true);
+    const [flushLog, setFlushLog] = useState<string[]>([]);
+    const [lastFlushResult, setLastFlushResult] = useState<{ flushed: number; batches?: number } | null>(null);
+    const appendLog = (line: string) => setFlushLog(l => [...l.slice(-200), `[${new Date().toLocaleTimeString()}] ${line}`]);
     const [autoRefresh, setAutoRefresh] = useState(false);
     const [refreshInterval, setRefreshInterval] = useState(15000); // default 15s
     const [lastAutoRefresh, setLastAutoRefresh] = useState<number | null>(null);
@@ -138,16 +142,49 @@ const QuizAnalyticsDashboard: React.FC = () => {
                 <h2 className="text-sm font-semibold">Flush</h2>
                 <div className="flex flex-col md:flex-row gap-2 items-start md:items-end">
                     <input className="border rounded px-2 py-1 text-xs flex-1" placeholder="https://api.seuservico.com/quiz-events" value={flushUrl} onChange={e => setFlushUrl(e.target.value)} />
-                    <Button size="sm" disabled={!flushUrl || isFlushing} onClick={async () => {
-                        setIsFlushing(true);
-                        try {
-                            const res = await flushQuizEvents({ endpoint: flushUrl, batchSize: 100 });
-                            console.log('Flush result', res);
-                            load();
-                        } finally { setIsFlushing(false); }
-                    }}>{isFlushing ? 'Enviando...' : 'Flush'}</Button>
+                    <div className="flex items-center gap-2">
+                        <label className="flex items-center gap-1 text-[10px] cursor-pointer select-none">
+                            <input type="checkbox" className="scale-75" checked={useRetryFlush} onChange={e => setUseRetryFlush(e.target.checked)} /> Retry/Backoff
+                        </label>
+                        <Button size="sm" disabled={!flushUrl || isFlushing} onClick={async () => {
+                            setIsFlushing(true); setFlushLog([]); setLastFlushResult(null);
+                            try {
+                                if (useRetryFlush) {
+                                    const controller = new AbortController();
+                                    const res = await flushQuizEventsWithRetry({
+                                        endpoint: flushUrl,
+                                        batchSize: 100,
+                                        maxRetries: 3,
+                                        backoffBaseMs: 500,
+                                        onProgress: info => {
+                                            appendLog(`Batch ${info.batchIndex + 1}/${info.batchTotal} tentativa ${info.attempt} => ${info.success ? 'OK' : 'FAIL'}`);
+                                        }
+                                    });
+                                    setLastFlushResult(res);
+                                    appendLog(`Concluído. Eventos enviados: ${res.flushed}`);
+                                } else {
+                                    const res = await flushQuizEvents({ endpoint: flushUrl, batchSize: 100 });
+                                    setLastFlushResult(res as any);
+                                    appendLog(`Flush simples concluído. Eventos enviados: ${res.flushed}`);
+                                }
+                                load();
+                            } catch (err: any) {
+                                appendLog('Erro: ' + (err?.message || String(err)));
+                            } finally { setIsFlushing(false); }
+                        }}>{isFlushing ? 'Enviando...' : 'Flush'}</Button>
+                    </div>
                     <Button size="sm" variant="destructive" onClick={() => { clearQuizEvents(); load(); }}>Limpar Eventos</Button>
                 </div>
+                {(lastFlushResult || flushLog.length) && (
+                    <div className="w-full border rounded bg-muted/20 p-2 space-y-1 max-h-40 overflow-auto">
+                        {lastFlushResult && (
+                            <div className="text-[11px] text-foreground/90 font-medium">
+                                Resultado: {lastFlushResult.flushed} eventos enviados{lastFlushResult.batches !== undefined ? ` | Batches: ${lastFlushResult.batches}` : ''}
+                            </div>
+                        )}
+                        {flushLog.map((l, i) => <div key={i} className="text-[10px] font-mono leading-tight">{l}</div>)}
+                    </div>
+                )}
             </section>
             <Separator />
             <section className="space-y-6">
