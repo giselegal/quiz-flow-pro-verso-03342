@@ -8,7 +8,7 @@ import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { QUIZ_STEPS, type QuizStep } from '@/data/quizSteps';
 import { styleConfigGisele } from '@/data/styles';
-import { Plus, Save, Trash2, ArrowUp, ArrowDown, Copy, RefreshCw } from 'lucide-react';
+import { Plus, Save, Trash2, ArrowUp, ArrowDown, Copy, RefreshCw, ListTree } from 'lucide-react';
 import { Undo2, Redo2 } from 'lucide-react';
 
 /**
@@ -1121,9 +1121,12 @@ const QuizFunnelEditor: React.FC<QuizFunnelEditorProps> = ({ funnelId, templateI
                     </div>
                 </div>
 
-                {/* COL 2 - COMPONENTES / TIPO */}
-                <div className="w-64 border-r flex flex-col">
-                    <div className="p-3 border-b flex items-center justify-between text-xs font-semibold">Componentes</div>
+                {/* COL 2 - COMPONENTES / TIPO + INVENTÁRIO */}
+                <div className="w-72 border-r flex flex-col">
+                    <div className="p-3 border-b flex items-center justify-between text-xs font-semibold">
+                        <span className="flex items-center gap-1"><ListTree className="w-3 h-3" /> Componentes</span>
+                        <Badge variant="secondary" className="text-[10px]">{steps.length}</Badge>
+                    </div>
                     <div className="flex-1 overflow-auto p-3 text-xs space-y-4">
                         {selectedStep && (
                             <div className="space-y-2">
@@ -1155,11 +1158,27 @@ const QuizFunnelEditor: React.FC<QuizFunnelEditorProps> = ({ funnelId, templateI
                                 )}
                             </div>
                         )}
+                        {/* Inventário de componentes por tipo de etapa */}
+                        <div className="pt-2 border-t space-y-2">
+                            <div className="text-[10px] font-semibold uppercase tracking-wide">Inventário</div>
+                            {(() => {
+                                const groups: Record<string, number> = {};
+                                steps.forEach(s => { groups[s.type] = (groups[s.type] || 0) + 1; });
+                                const entries = Object.entries(groups).sort((a, b) => a[0].localeCompare(b[0]));
+                                return entries.map(([type, count]) => (
+                                    <div key={type} className="flex items-center justify-between bg-muted/40 rounded px-2 py-1">
+                                        <button type="button" className={`text-left text-[11px] font-medium hover:underline ${selectedStep?.type === type ? 'text-primary' : ''}`} onClick={() => {
+                                            const firstOfType = steps.find(s => s.type === type); if (firstOfType) setSelectedId(firstOfType.id);
+                                        }}>{type}</button>
+                                        <span className="text-[10px] bg-background/60 px-1 rounded border" title="Quantidade deste tipo">{count}</span>
+                                    </div>
+                                ));
+                            })()}
+                        </div>
                     </div>
                     <div className="p-2 border-t flex gap-2">
                         <Button size="sm" className="flex-1" onClick={handleSave} disabled={isSaving}>{isSaving ? 'Salvando...' : 'Salvar'}</Button>
                         <Button size="sm" variant="outline" onClick={() => {
-                            // Recarregar do funnel ou fallback
                             const existing = (crud.currentFunnel as any)?.quizSteps as EditableQuizStep[] | undefined;
                             if (existing?.length) {
                                 setSteps(existing.map(s => ({ ...s })));

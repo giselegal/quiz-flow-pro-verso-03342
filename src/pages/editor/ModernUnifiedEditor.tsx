@@ -538,10 +538,11 @@ const UnifiedEditorCore: React.FC<ModernUnifiedEditorProps> = ({
     }, []);
 
     const [editorState, setEditorState] = useState<EditorState>({
-        mode: urlModeParam ? urlModeParam : (isQuizTemplate ? 'quiz' : mode),
+        // ✅ Agora o quiz é padrão sempre que houver funnelId
+        mode: 'quiz',
         aiAssistantActive: false,
         previewMode: false,
-        realExperienceMode: false // Inicialmente desabilitado
+        realExperienceMode: false
     });
 
     // 🎯 FUNNEL TYPE DETECTION STATE
@@ -776,6 +777,39 @@ const UnifiedEditorCore: React.FC<ModernUnifiedEditorProps> = ({
     // 🔁 Lazy import do editor de quiz
     const QuizFunnelEditor = React.useMemo(() => React.lazy(() => import('../../components/editor/quiz/QuizFunnelEditor')), []);
 
+    // ✅ Tela inicial vazia quando não existe funnelId/carregamento de funil
+    if (!extractedInfo.funnelId && !crudContext.currentFunnel?.id) {
+        return (
+            <div className={`h-screen w-full bg-background flex flex-col ${className}`}>
+                <ModernToolbar
+                    editorState={editorState}
+                    onStateChange={(u) => setEditorState(prev => ({ ...prev, ...u }))}
+                    funnelId={undefined}
+                    mode={editorState.mode}
+                    onSave={async () => { /* nada a salvar sem funil */ }}
+                    onCreateNew={async () => {
+                        const created = await crudContext.createFunnel('Novo Funil Quiz', { templateId: 'quiz-estilo-21-steps' });
+                        if (created?.id) {
+                            window.history.replaceState({}, '', `/editor/${created.id}?mode=quiz`);
+                        }
+                    }}
+                />
+                <div className="flex-1 flex items-center justify-center">
+                    <div className="text-center max-w-sm p-6 border rounded-lg bg-muted/30">
+                        <h2 className="text-lg font-semibold mb-2">Nenhum funil carregado</h2>
+                        <p className="text-sm text-muted-foreground mb-4">Crie um novo funil de Quiz para começar a editar as etapas.</p>
+                        <Button onClick={async () => {
+                            const created = await crudContext.createFunnel('Novo Funil Quiz', { templateId: 'quiz-estilo-21-steps' });
+                            if (created?.id) {
+                                window.history.replaceState({}, '', `/editor/${created.id}?mode=quiz`);
+                            }
+                        }}>Criar Funil Quiz</Button>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
     return (
         <div className={`h-screen w-full bg-background flex flex-col ${className}`}>
             {/* Toolbar Moderno com CRUD Actions */}
@@ -848,33 +882,12 @@ const UnifiedEditorCore: React.FC<ModernUnifiedEditorProps> = ({
                         </div>
                     )}
 
-                    <Suspense fallback={<LoadingSpinner message={isQuizTemplate ? 'Carregando editor de quiz...' : 'Carregando editor...'} />}>
-                        {editorState.mode === 'quiz' ? (
-                            <QuizFunnelEditor
-                                key={`quiz-funnel-${extractedInfo.templateId || extractedInfo.funnelId || 'new'}`}
-                                templateId={extractedInfo.templateId || undefined}
-                                funnelId={extractedInfo.funnelId || crudContext.currentFunnel?.id}
-                            />
-                        ) : (
-                            <Suspense fallback={<TemplateLoadingSkeleton />}>
-                                <Suspense fallback={<LoadingSpinner message="Carregando error boundary..." />}>
-                                    <PureBuilderProvider
-                                        key={`pure-builder-${pureBuilderTargetId}`}
-                                        funnelId={pureBuilderTargetId}
-                                        enableSupabase={false}
-                                    >
-                                        <TemplateErrorBoundary>
-                                            <EditorProUnified
-                                                funnelId={extractedInfo.funnelId || undefined}
-                                                realExperienceMode={editorState.realExperienceMode}
-                                                showProFeatures={true}
-                                                className="h-full"
-                                            />
-                                        </TemplateErrorBoundary>
-                                    </PureBuilderProvider>
-                                </Suspense>
-                            </Suspense>
-                        )}
+                    <Suspense fallback={<LoadingSpinner message={'Carregando editor de quiz...'} />}>
+                        <QuizFunnelEditor
+                            key={`quiz-funnel-${extractedInfo.templateId || extractedInfo.funnelId || crudContext.currentFunnel?.id || 'new'}`}
+                            templateId={extractedInfo.templateId || undefined}
+                            funnelId={extractedInfo.funnelId || crudContext.currentFunnel?.id}
+                        />
                     </Suspense>
                 </FunnelMasterProvider>
             </div>

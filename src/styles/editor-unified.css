@@ -38,6 +38,92 @@
   /* ✅ CORRIGIDO: Evitar zoom indesejado durante DnD */
   transform: none !important;
   will-change: auto;
+  color: var(--brand-text, #1A0F3D);
+}
+
+/* ===== CONTRASTE & LEGIBILIDADE FORÇADA ===== */
+/* Força cor de texto legível em áreas onde pode estar herdando branco */
+.unified-editor-container,
+.unified-editor-container *:not(svg):not(path) {
+  --_text-color-fallback: var(--brand-text, #1A0F3D);
+}
+
+/* Corrige elementos que acabaram com color: inherit em backgrounds claros */
+.unified-editor-container .text-inverted,
+.unified-editor-container .force-text-dark,
+.unified-editor-container [class*='editor'] p,
+.unified-editor-container [class*='editor'] span,
+.unified-editor-container [class*='editor'] li,
+.unified-editor-container [class*='panel'] p,
+.unified-editor-container [class*='panel'] span,
+.unified-editor-container [class*='panel'] label,
+.unified-editor-container [data-editor-surface] {
+  color: var(--brand-text, #1A0F3D) !important;
+}
+
+/* Garanti contraste em botões outline que possam herdar branco */
+.unified-editor-container button,
+.unified-editor-container .btn,
+.unified-editor-container [role='button'] {
+  color: var(--brand-text, #1A0F3D);
+}
+
+/* Badges / tags claros com texto invisível */
+.unified-editor-container .badge,
+.unified-editor-container .Badge,
+.unified-editor-container [class*='badge'] {
+  color: #1A0F3D;
+}
+
+/* Inputs / selects / textareas */
+.unified-editor-container input,
+.unified-editor-container select,
+.unified-editor-container textarea {
+  color: #1A0F3D !important;
+  caret-color: #1A0F3D;
+}
+
+/* Placeholder contrast */
+.unified-editor-container ::placeholder {
+  color: rgba(26, 15, 61, 0.55);
+}
+
+/* Evita que temas escuros invertam para branco se não houver tokens adaptados */
+[data-theme='dark'] .unified-editor-container {
+  color: #F5F7FA;
+}
+
+[data-theme='dark'] .unified-editor-container button,
+[data-theme='dark'] .unified-editor-container input,
+[data-theme='dark'] .unified-editor-container select,
+[data-theme='dark'] .unified-editor-container textarea {
+  color: #F5F7FA !important;
+}
+
+/* Ajuste rápido para headings se estiverem herdando branco */
+.unified-editor-container h1,
+.unified-editor-container h2,
+.unified-editor-container h3,
+.unified-editor-container h4,
+.unified-editor-container h5,
+.unified-editor-container h6 {
+  color: var(--brand-text, #1A0F3D);
+}
+
+/* Classes utilitárias */
+.force-text-dark {
+  color: #1A0F3D !important;
+}
+
+.text-readable {
+  color: var(--brand-text, #1A0F3D) !important;
+}
+
+/* Detecção de background claro inadvertido com texto claro (heurística) */
+.unified-editor-container [style*='background: white'] *,
+.unified-editor-container [style*='background: #fff'] *,
+.unified-editor-container [style*='background:#fff'] * {
+  color: #1A0F3D;
 }
 
 /* ===== CORREÇÕES DRAG & DROP ===== */
