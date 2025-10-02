@@ -10,6 +10,11 @@ export type QuizAnalyticsEvent =
     | (BaseEvt & { type: 'cta_click'; offerKey?: string; url?: string });
 
 const STORAGE_KEY = 'quizAnalyticsEvents';
+let ANALYTICS_NAMESPACE: string | null = null;
+
+export function setQuizAnalyticsNamespace(ns: string | null) {
+    ANALYTICS_NAMESPACE = ns ? ns.replace(/[:\s]+$/, '').trim() : null;
+}
 
 // ================= ZOD SCHEMAS =================
 const baseSchema = z.object({
@@ -77,7 +82,11 @@ function resolveUserId(): string | undefined {
 }
 
 export function emitQuizEvent(evt: any) {
-    const draft = { ...evt, ts: new Date().toISOString(), sessionId, userId: resolveUserId() };
+    const draftBase = { ...evt };
+    if (ANALYTICS_NAMESPACE && typeof draftBase.type === 'string') {
+        draftBase.type = `${ANALYTICS_NAMESPACE}:${draftBase.type}`;
+    }
+    const draft = { ...draftBase, ts: new Date().toISOString(), sessionId, userId: resolveUserId() };
     const parsed = anyEventSchema.safeParse(draft);
     if (!parsed.success) {
         if (typeof console !== 'undefined') console.warn('[QuizAnalytics] Evento inválido descartado', parsed.error.flatten());
@@ -86,8 +95,10 @@ export function emitQuizEvent(evt: any) {
     const full = parsed.data as QuizAnalyticsEvent;
     const all = load(); all.push(full); save(all);
     // Bridge p/ analytics principal (GA4) - nomes simplificados
+    // Se namespaced, separar tipo original para GA4 (mantém painéis existentes)
+    const rawType = (full.type.includes(':') ? full.type.split(':').slice(-1)[0] : full.type) as QuizAnalyticsEventType;
     try {
-        switch (full.type) {
+        switch (rawType) {
             case 'step_view':
                 trackEvent('quiz_step_view', { step_id: (full as any).stepId, step_type: (full as any).stepType, position: (full as any).position });
                 break;

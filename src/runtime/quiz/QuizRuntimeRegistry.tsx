@@ -18,6 +18,8 @@ export interface RuntimeStepOverride {
     buttonText?: string;
     title?: string;
     text?: string;
+    // Novo: blocos modulares (fase 2). Cada step pode carregar uma lista de BlockInstance serializada simples.
+    blocks?: Array<{ id: string; type: string; config: Record<string, any> }>;
 }
 
 interface RegistryContextValue {

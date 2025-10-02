@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { editorStepsToRuntimeMap } from '../../../runtime/quiz/editorAdapter';
+import { editorStepsToRuntimeMap } from '@/runtime/quiz/editorAdapter';
 
 // Mock type minimal
 interface EditableQuizStep {
