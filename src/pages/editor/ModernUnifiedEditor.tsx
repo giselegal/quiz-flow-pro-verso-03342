@@ -54,7 +54,9 @@ import { UnifiedRoutingService } from '@/services/core/UnifiedRoutingService';
 
 // 🎯 TEMPLATE REGISTRY INTEGRATION
 import { loadFullTemplate, convertTemplateToEditorFormat } from '@/templates/registry';
-import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
+// REMOÇÃO DO FUNIL FIXO: substituímos o template estático de 21 steps para usar o funil Quiz dinâmico persistido
+// import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
+import { QUIZ_STEPS } from '@/data/quizSteps';
 
 // 🧪 Development Testing
 import testCRUDOperations from '@/utils/testCRUDOperations';
@@ -87,8 +89,9 @@ function convertTemplateToEditorBlocks(templateData: Record<string, any[]>): any
         }
     });
 
-    console.log(`📊 Convertidos ${allBlocks.length} blocos de ${Object.keys(templateData).length} steps`);
-    return allBlocks;
+    // Mantido apenas para compat; função não mais usada após remoção do template fixo
+    console.log(`(LEGACY) convertTemplateToEditorBlocks chamada (template fixo removido). Steps: ${Object.keys(templateData).length}`);
+    return allBlocks; // Retorno inalterado para evitar efeitos colaterais
 }
 
 /**
@@ -577,85 +580,60 @@ const UnifiedEditorCore: React.FC<ModernUnifiedEditorProps> = ({
     }, [extractedInfo.funnelId]);
 
     // 🎯 TEMPLATE LOADING EFFECT - CORREÇÃO PARA quiz21StepsComplete
+    // 🆕 EFFECT: Carregamento dinâmico para modo Quiz substituindo template fixo
     useEffect(() => {
-        if (extractedInfo.type === 'template' && extractedInfo.templateId) {
-            console.log('🎯 Carregando template:', extractedInfo.templateId);
+        // Se o usuário entrou com ?templateId=quiz21StepsComplete queremos agora usar o funil quiz real
+        // Ou se o modo padrão for quiz sem funil, criamos um funil com base nas QUIZ_STEPS iniciais.
+        const wantsQuizTemplate = extractedInfo.templateId === 'quiz21StepsComplete';
+        if (wantsQuizTemplate || editorState.mode === 'quiz') {
             setIsLoadingTemplate(true);
             setTemplateError(null);
-
-            // 🚨 CORREÇÃO CRÍTICA: Carregar quiz21StepsComplete diretamente
-            if (extractedInfo.templateId === 'quiz21StepsComplete') {
-                try {
-                    console.log('🎯 Carregando QUIZ_STYLE_21_STEPS_TEMPLATE diretamente...');
-
-                    // Verificar se o template existe e tem conteúdo
-                    if (!QUIZ_STYLE_21_STEPS_TEMPLATE || Object.keys(QUIZ_STYLE_21_STEPS_TEMPLATE).length === 0) {
-                        throw new Error('Template quiz21StepsComplete está vazio ou não existe');
-                    }
-
-                    // Converter template para formato compatível com o editor
-                    const convertedBlocks = convertTemplateToEditorBlocks(QUIZ_STYLE_21_STEPS_TEMPLATE);
-
-                    if (convertedBlocks.length === 0) {
-                        throw new Error('Template quiz21StepsComplete não produziu blocos válidos');
-                    }
-
-                    console.log('✅ Template quiz21StepsComplete convertido:', {
-                        totalSteps: Object.keys(QUIZ_STYLE_21_STEPS_TEMPLATE).length,
-                        totalBlocks: convertedBlocks.length
-                    });
-
-                    // Simular carregamento assíncrono para consistência
-                    setTimeout(() => {
-                        setIsLoadingTemplate(false);
-                        console.log('✅ Template quiz21StepsComplete carregado com sucesso');
-                    }, 100);
-
-                } catch (error) {
-                    console.error('❌ Erro ao carregar template quiz21StepsComplete:', error);
-                    console.log('🔄 Tentando sistema de fallback...');
-
-                    const errorMessage = error instanceof Error ? error.message : String(error);
-
-                    try {
-                        // Sistema de fallback
-                        const fallbackTemplate = createFallbackTemplate('quiz21StepsComplete');
-                        const fallbackBlocks = convertTemplateToEditorBlocks(fallbackTemplate);
-                        console.log('✅ Template de fallback criado com sucesso');
-                        setTemplateError(`Template original falhou, usando fallback: ${errorMessage}`);
-                    } catch (fallbackError) {
-                        const fallbackErrorMessage = fallbackError instanceof Error ? fallbackError.message : String(fallbackError);
-                        console.error('❌ Erro crítico: Fallback também falhou:', fallbackError);
-                        setTemplateError(`Erro crítico: ${errorMessage}. Fallback falhou: ${fallbackErrorMessage}`);
-                    }
-
+            try {
+                // Verifica se já existe um funnel corrente com quizSteps
+                const current = crudContext?.currentFunnel as any;
+                if (current && Array.isArray(current.quizSteps) && current.quizSteps.length > 0) {
+                    console.log('✅ Usando quizSteps existentes do funil atual (persistidos).');
                     setIsLoadingTemplate(false);
+                    return;
                 }
-            } else {
-                // Fallback para outros templates
-                loadFullTemplate(extractedInfo.templateId)
-                    .then(template => {
-                        if (template) {
-                            console.log('✅ Template carregado:', template);
-                            const editorFormat = convertTemplateToEditorFormat(template);
-                            console.log('✅ Template convertido para formato do editor:', editorFormat);
 
-                            // Criar um novo funil baseado no template
-                            return crudContext.createFunnel(template.name, { templateId: template.id });
-                        } else {
-                            throw new Error(`Template ${extractedInfo.templateId} não encontrado`);
-                        }
-                    })
-                    .catch(error => {
-                        console.error('❌ Erro ao carregar template:', error);
-                        setTemplateError(error.message);
-                    })
-                    .finally(() => {
-                        setIsLoadingTemplate(false);
-                    });
+                // Se não existe funil atual, criamos um novo funil 'Quiz Funnel'
+                if (!current) {
+                    console.log('🆕 Criando novo funil para Quiz (sem template fixo).');
+                    crudContext.createFunnel('Quiz Funnel', { kind: 'quiz' })
+                        .then(f => {
+                            // Atribui QUIZ_STEPS iniciais
+                            // QUIZ_STEPS pode ser array ou objeto indexado; normalizar
+                            const quizSeedArray = Array.isArray(QUIZ_STEPS)
+                                ? (QUIZ_STEPS as any[])
+                                : Object.values(QUIZ_STEPS as any);
+                            (f as any).quizSteps = quizSeedArray.map((s: any) => ({ ...s }));
+                            crudContext.saveFunnel();
+                            console.log('✅ Funil Quiz criado e seeds aplicadas (QUIZ_STEPS).');
+                        })
+                        .catch(e => {
+                            console.error('❌ Erro criando funil quiz:', e);
+                            setTemplateError('Erro criando funil quiz');
+                        })
+                        .finally(() => setIsLoadingTemplate(false));
+                    return;
+                }
+
+                // Se existe funil mas sem quizSteps, sem template fixo: seed com QUIZ_STEPS
+                console.log('ℹ️ Funil atual sem quizSteps - aplicando seeds.');
+                const quizSeedArray = Array.isArray(QUIZ_STEPS)
+                    ? (QUIZ_STEPS as any[])
+                    : Object.values(QUIZ_STEPS as any);
+                current.quizSteps = quizSeedArray.map((s: any) => ({ ...s }));
+                crudContext.saveFunnel();
+                setIsLoadingTemplate(false);
+            } catch (err) {
+                console.error('❌ Erro geral no carregamento dinâmico do Quiz:', err);
+                setTemplateError('Falha ao preparar funil Quiz');
+                setIsLoadingTemplate(false);
             }
         }
-    }, [extractedInfo.templateId, extractedInfo.type]); // 🔧 FIXED: Removido crudContext das dependências
+    }, [extractedInfo.templateId, editorState.mode]);
 
     // Handler para mudanças de estado
     const handleStateChange = useCallback((updates: Partial<EditorState>) => {
