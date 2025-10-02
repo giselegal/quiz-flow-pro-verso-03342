@@ -369,17 +369,57 @@ const QuizFunnelEditor: React.FC<QuizFunnelEditorProps> = ({ funnelId, templateI
     };
 
     const computeResult = useCallback(() => {
-        // Somar frequências dos IDs de opções (assumindo que ID = estilo)
-        const counts: Record<string, number> = {};
+        // Algoritmo Avançado:
+        // 1. Cada opção conta 1 ponto por padrão (peso base = 1).
+        // 2. Se step.questionNumber contém padrão "(x2)" ou similar, aplica multiplicador.
+        // 3. Desempate multi-critério: maior peso total > maior diversidade de steps > ordem de aparecimento.
+        // 4. Retorna top 1 como primary e próximas até 3 como secondary.
+        const score: Record<string, { total: number; steps: Set<string>; firstIndex: number }> = {};
+        let globalIndex = 0;
         Object.entries(simState.answers).forEach(([stepId, opts]) => {
             const s = stepById(stepId);
             if (!s || s.type !== 'question') return;
-            opts.forEach(o => { counts[o] = (counts[o] || 0) + 1; });
+            // Heurística de multiplicador a partir do questionNumber (ex: "3 de 7 (x2)")
+            let multiplier = 1;
+            if (s.questionNumber && /x(\d+)/i.test(s.questionNumber)) {
+                const m = s.questionNumber.match(/x(\d+)/i);
+                if (m) multiplier = Math.max(1, parseInt(m[1]!, 10));
+            }
+            opts.forEach(oId => {
+                if (!score[oId]) score[oId] = { total: 0, steps: new Set(), firstIndex: globalIndex };
+                score[oId].total += 1 * multiplier;
+                score[oId].steps.add(stepId);
+                globalIndex++;
+            });
         });
-        const sorted = Object.entries(counts).sort((a, b) => b[1] - a[1]);
-        if (!sorted.length) return { primary: undefined as string | undefined, secondary: [] as string[] };
-        return { primary: sorted[0][0], secondary: sorted.slice(1, 4).map(s => s[0]) };
+        const entries = Object.entries(score);
+        if (!entries.length) return { primary: undefined as string | undefined, secondary: [] as string[] };
+        entries.sort((a, b) => {
+            const A = a[1];
+            const B = b[1];
+            if (B.total !== A.total) return B.total - A.total; // maior pontuação
+            if (B.steps.size !== A.steps.size) return B.steps.size - A.steps.size; // mais diversidade de steps
+            return A.firstIndex - B.firstIndex; // apareceu antes
+        });
+        return { primary: entries[0][0], secondary: entries.slice(1, 4).map(e => e[0]) };
     }, [simState.answers, stepById]);
+
+    // Persistir resultado quando calculado (apenas quando primary definido ou mudança relevante)
+    useEffect(() => {
+        if (!simActive) return;
+        if (!simState.resultStyle) return;
+        try {
+            const payload = {
+                userName: simState.userName,
+                primaryStyle: simState.resultStyle,
+                secondaryStyles: simState.secondaryStyles,
+                timestamp: new Date().toISOString()
+            };
+            localStorage.setItem('quizResultPayload', JSON.stringify(payload));
+        } catch (e) {
+            console.warn('Falha ao persistir quizResultPayload', e);
+        }
+    }, [simState.resultStyle, simState.secondaryStyles, simState.userName, simActive]);
 
     // Avanço automático para transições / cálculo resultado
     useEffect(() => {
@@ -778,10 +818,30 @@ const QuizFunnelEditor: React.FC<QuizFunnelEditorProps> = ({ funnelId, templateI
                 );
             }
             case 'offer': {
-                const answerMap = simState.strategicAnswers;
-                const finalKey = Object.values(answerMap).slice(-1)[0];
+                // Nova lógica: usar estilo primário calculado; fallback para secundários; fallback final para primeira chave existente
                 const offerKeyMap = step.offerMap || {};
-                const offer = finalKey ? (offerKeyMap as any)[finalKey] || Object.values(offerKeyMap)[0] : Object.values(offerKeyMap)[0];
+                const primary = simState.resultStyle;
+                const secondaries = simState.secondaryStyles || [];
+                const candidateKeys = [primary, ...secondaries].filter(Boolean) as string[];
+                let offer: any = null;
+                for (const k of candidateKeys) {
+                    if (k && (offerKeyMap as any)[k]) { offer = (offerKeyMap as any)[k]; break; }
+                }
+                if (!offer) {
+                    // fallback legado: última resposta estratégica
+                    const answerMap = simState.strategicAnswers;
+                    const finalKey = Object.values(answerMap).slice(-1)[0];
+                    if (finalKey && (offerKeyMap as any)[finalKey]) offer = (offerKeyMap as any)[finalKey];
+                }
+                if (!offer) offer = Object.values(offerKeyMap)[0];
+                // Persistir oferta selecionada para ResultPage
+                if (offer) {
+                    try {
+                        localStorage.setItem('quizSelectedOffer', JSON.stringify(offer));
+                    } catch (e) {
+                        console.warn('Falha ao persistir quizSelectedOffer', e);
+                    }
+                }
                 return (
                     <div className="p-6 max-w-xl space-y-4 text-sm">
                         <h2 className="font-bold">Oferta</h2>
