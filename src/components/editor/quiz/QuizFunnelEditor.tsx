@@ -104,6 +104,11 @@ const QuizFunnelEditor: React.FC<QuizFunnelEditorProps> = ({ funnelId, templateI
     const stepById = useCallback((id: string | null) => orderedSteps.find(s => s.id === id), [orderedSteps]);
 
     const startSimulation = () => {
+        const selectedStep = useMemo(() => steps.find(s => s.id === selectedId), [steps, selectedId]);
+        
+        const updateStep = (id: string, patch: Partial<EditableQuizStep>) => {
+            setSteps(prev => prev.map(s => (s.id === id ? { ...s, ...patch } : s)));
+        };
         if (!orderedSteps.length) return;
         const first = orderedSteps[0];
         setSimState({ currentStepId: first.id, userName: '', answers: {}, strategicAnswers: {}, resultStyle: undefined, secondaryStyles: undefined });
@@ -198,6 +203,47 @@ const QuizFunnelEditor: React.FC<QuizFunnelEditorProps> = ({ funnelId, templateI
         if (!stepIds.has(step.nextStep)) return 'invalid';
         return 'ok';
     }, [stepIds, steps.length]);
+
+    // ================= OFFER MAP SUPPORT =================
+    // Extendemos de forma compatível: campos originais + novos opcionais (ctaLabel, ctaUrl, image)
+    type ExtendedOfferContent = {
+        title?: string;
+        description?: string;
+        buttonText?: string;
+        testimonial?: { quote?: string; author?: string };
+        ctaLabel?: string;
+        ctaUrl?: string;
+        image?: string;
+    };
+    const strategicKeys = useMemo(() => {
+        const keys = new Set<string>();
+        steps.forEach(s => {
+            if (s.type === 'strategic-question') {
+                (s.options || []).forEach(o => keys.add(o.id));
+            }
+        });
+        return Array.from(keys);
+    }, [steps]);
+
+    const addMissingOfferKeys = useCallback((offerStep: EditableQuizStep) => {
+        if (offerStep.type !== 'offer') return;
+        const map = { ...(offerStep.offerMap || {}) } as Record<string, ExtendedOfferContent>;
+        let changed = false;
+        strategicKeys.forEach(k => {
+            if (!map[k]) { map[k] = { title: `Título para ${k}`, description: '', buttonText: '', ctaLabel: '', ctaUrl: '', image: '' }; changed = true; }
+        });
+        if (changed) updateStep(offerStep.id, { offerMap: map as any });
+    }, [strategicKeys, updateStep]);
+
+    const removeExtraOfferKeys = useCallback((offerStep: EditableQuizStep) => {
+        if (offerStep.type !== 'offer') return;
+        const map = { ...(offerStep.offerMap || {}) } as Record<string, ExtendedOfferContent>;
+        let changed = false;
+        Object.keys(map).forEach(k => {
+            if (!strategicKeys.includes(k)) { delete map[k]; changed = true; }
+        });
+        if (changed) updateStep(offerStep.id, { offerMap: map as any });
+    }, [strategicKeys, updateStep]);
 
     // Carregar steps iniciais
     useEffect(() => {
@@ -486,7 +532,7 @@ const QuizFunnelEditor: React.FC<QuizFunnelEditorProps> = ({ funnelId, templateI
                 const answerMap = simState.strategicAnswers;
                 const finalKey = Object.values(answerMap).slice(-1)[0];
                 const offerKeyMap = step.offerMap || {};
-                const offer = finalKey ? offerKeyMap[finalKey] || Object.values(offerKeyMap)[0] : Object.values(offerKeyMap)[0];
+                const offer = finalKey ? (offerKeyMap as any)[finalKey] || Object.values(offerKeyMap)[0] : Object.values(offerKeyMap)[0];
                 return (
                     <div className="p-6 max-w-xl space-y-4 text-sm">
                         <h2 className="font-bold">Oferta</h2>
@@ -494,6 +540,16 @@ const QuizFunnelEditor: React.FC<QuizFunnelEditorProps> = ({ funnelId, templateI
                             <>
                                 <p className="font-medium" dangerouslySetInnerHTML={{ __html: offer.title?.replace?.('{userName}', simState.userName || 'Usuária') || '' }} />
                                 <p className="text-xs">{offer.description}</p>
+                                {(offer as any).ctaLabel && (offer as any).ctaUrl && (
+                                    <div>
+                                        <a
+                                            href={(offer as any).ctaUrl}
+                                            target="_blank"
+                                            className="inline-block mt-2 bg-primary text-primary-foreground px-3 py-1 rounded text-xs hover:opacity-90"
+                                        >{(offer as any).ctaLabel}</a>
+                                    </div>
+                                )}
+                                {(offer as any).image && <img src={(offer as any).image} className="rounded max-w-sm" />}
                             </>
                         ) : <p className="text-xs text-muted-foreground">Sem oferta configurada.</p>}
                     </div>
@@ -714,10 +770,99 @@ const QuizFunnelEditor: React.FC<QuizFunnelEditorProps> = ({ funnelId, templateI
                                             <label className="block mb-1 font-medium">Imagem Oferta</label>
                                             <input value={selectedStep.image || ''} onChange={e => updateStep(selectedStep.id, { image: e.target.value })} className="w-full border rounded px-2 py-1 text-[11px]" />
                                         </div>
-                                        <div>
-                                            <label className="block mb-1 font-medium">Offer Map Keys (somente visão)</label>
-                                            <div className="text-[10px] bg-muted/30 rounded p-2">
-                                                {Object.keys(selectedStep.offerMap || {}).length || 0} chaves configuradas.
+                                        <div className="space-y-2">
+                                            <div className="flex items-center justify-between">
+                                                <label className="block font-medium">Offer Map</label>
+                                                <div className="flex gap-1">
+                                                    <Button size="sm" variant="outline" className="h-6 px-2" onClick={() => addMissingOfferKeys(selectedStep)}>Sync Keys</Button>
+                                                    <Button size="sm" variant="outline" className="h-6 px-2" onClick={() => removeExtraOfferKeys(selectedStep)}>Limpar Extras</Button>
+                                                </div>
+                                            </div>
+                                            <p className="text-[10px] text-muted-foreground">Chaves estratégicas detectadas: {strategicKeys.length || 0} {strategicKeys.length === 0 && '(nenhuma strategic-question)'}.</p>
+                                            {/* Lista de chaves */}
+                                            <div className="space-y-3 max-h-64 overflow-auto pr-1 border rounded p-2 bg-muted/30">
+                                                {(() => {
+                                                    const map = selectedStep.offerMap || {} as Record<string, OfferContent>;
+                                                    const orderedKeys = [...Object.keys(map)].sort((a,b)=>a.localeCompare(b));
+                                                    if (!orderedKeys.length) return <div className="text-[10px] text-muted-foreground">Nenhuma chave. Clique em Sync Keys.</div>;
+                                                    return orderedKeys.map(k => {
+                                                        const extra = !strategicKeys.includes(k);
+                                                        return (
+                                                            <div key={k} className="border rounded bg-background p-2 space-y-1">
+                                                                <div className="flex items-center justify-between">
+                                                                    <span className="text-[11px] font-semibold flex items-center gap-2">
+                                                                        {k}
+                                                                        <span className={`w-2 h-2 rounded-full ${extra ? 'bg-amber-500' : 'bg-emerald-500'}`} title={extra ? 'Chave não usada por strategic-question' : 'Chave válida'} />
+                                                                    </span>
+                                                                    <Button size="icon" variant="ghost" className="h-5 w-5" onClick={() => {
+                                                                        const clone = { ...(selectedStep.offerMap || {}) } as Record<string, ExtendedOfferContent>;
+                                                                        delete clone[k];
+                                                                        updateStep(selectedStep.id, { offerMap: clone as any });
+                                                                    }}><Trash2 className="w-3 h-3 text-red-500" /></Button>
+                                                                </div>
+                                                                <input
+                                                                    placeholder="Título"
+                                                                    className="w-full border rounded px-1 py-0.5 text-[11px]"
+                                                                    value={(map as any)[k]?.title || ''}
+                                                                    onChange={e => {
+                                                                        const clone = { ...(selectedStep.offerMap || {}) } as Record<string, ExtendedOfferContent>;
+                                                                        clone[k] = { ...(clone[k]||{}), title: e.target.value };
+                                                                        updateStep(selectedStep.id, { offerMap: clone as any });
+                                                                    }}
+                                                                />
+                                                                <textarea
+                                                                    placeholder="Descrição"
+                                                                    rows={2}
+                                                                    className="w-full border rounded px-1 py-0.5 text-[11px]"
+                                                                    value={(map as any)[k]?.description || ''}
+                                                                    onChange={e => {
+                                                                        const clone = { ...(selectedStep.offerMap || {}) } as Record<string, ExtendedOfferContent>;
+                                                                        clone[k] = { ...(clone[k]||{}), description: e.target.value };
+                                                                        updateStep(selectedStep.id, { offerMap: clone as any });
+                                                                    }}
+                                                                />
+                                                                <div className="grid grid-cols-2 gap-1">
+                                                                    <input
+                                                                        placeholder="CTA Label"
+                                                                        className="border rounded px-1 py-0.5 text-[11px]"
+                                                                        value={(map as any)[k]?.ctaLabel || ''}
+                                                                        onChange={e => {
+                                                                            const clone = { ...(selectedStep.offerMap || {}) } as Record<string, ExtendedOfferContent>;
+                                                                            clone[k] = { ...(clone[k]||{}), ctaLabel: e.target.value };
+                                                                            updateStep(selectedStep.id, { offerMap: clone as any });
+                                                                        }}
+                                                                    />
+                                                                    <input
+                                                                        placeholder="CTA URL"
+                                                                        className="border rounded px-1 py-0.5 text-[11px]"
+                                                                        value={(map as any)[k]?.ctaUrl || ''}
+                                                                        onChange={e => {
+                                                                            const clone = { ...(selectedStep.offerMap || {}) } as Record<string, ExtendedOfferContent>;
+                                                                            clone[k] = { ...(clone[k]||{}), ctaUrl: e.target.value };
+                                                                            updateStep(selectedStep.id, { offerMap: clone as any });
+                                                                        }}
+                                                                    />
+                                                                </div>
+                                                                <input
+                                                                    placeholder="Imagem (URL)"
+                                                                    className="w-full border rounded px-1 py-0.5 text-[11px]"
+                                                                    value={(map as any)[k]?.image || ''}
+                                                                    onChange={e => {
+                                                                        const clone = { ...(selectedStep.offerMap || {}) } as Record<string, ExtendedOfferContent>;
+                                                                        clone[k] = { ...(clone[k]||{}), image: e.target.value };
+                                                                        updateStep(selectedStep.id, { offerMap: clone as any });
+                                                                    }}
+                                                                />
+                                                            </div>
+                                                        );
+                                                    });
+                                                })()}
+                                            </div>
+                                            <div className="text-[10px] flex flex-wrap gap-1">
+                                                {strategicKeys.map(k => {
+                                                    const has = !!(selectedStep.offerMap || {})[k];
+                                                    return <span key={k} className={`px-2 py-0.5 rounded border ${has ? 'bg-emerald-500/20 border-emerald-500 text-emerald-700' : 'bg-amber-500/10 border-amber-500 text-amber-700'}`}>{k}</span>;
+                                                })}
                                             </div>
                                         </div>
                                     </>
