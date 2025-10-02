@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useCallback, useMemo, useRef } from 'react';
+import sanitizeHtml from '@/utils/sanitizeHtml';
 import { z } from 'zod';
 import { useUnifiedCRUD } from '@/context/UnifiedCRUDProvider';
 import { Button } from '@/components/ui/button';
@@ -623,7 +624,7 @@ const QuizFunnelEditor: React.FC<QuizFunnelEditorProps> = ({ funnelId, templateI
             case 'intro':
                 return (
                     <div className="p-4 space-y-4">
-                        <div className="prose" dangerouslySetInnerHTML={{ __html: selectedStep.title || '' }} />
+                        <div className="prose" dangerouslySetInnerHTML={{ __html: sanitizeHtml(selectedStep.title || '') }} />
                         {selectedStep.image && <img src={selectedStep.image} className="rounded max-w-sm" />}
                         <div>
                             <p className="font-semibold text-sm mb-2">{selectedStep.formQuestion}</p>
@@ -725,7 +726,7 @@ const QuizFunnelEditor: React.FC<QuizFunnelEditorProps> = ({ funnelId, templateI
             case 'intro':
                 return (
                     <div className="p-6 max-w-lg space-y-4">
-                        {step.title && <div className="prose" dangerouslySetInnerHTML={{ __html: step.title }} />}
+                        {step.title && <div className="prose" dangerouslySetInnerHTML={{ __html: sanitizeHtml(step.title) }} />}
                         {step.image && <img src={step.image} className="rounded" />}
                         <div className="space-y-2">
                             <p className="font-medium text-sm">{step.formQuestion}</p>
@@ -847,7 +848,7 @@ const QuizFunnelEditor: React.FC<QuizFunnelEditorProps> = ({ funnelId, templateI
                         <h2 className="font-bold">Oferta</h2>
                         {offer ? (
                             <>
-                                <p className="font-medium" dangerouslySetInnerHTML={{ __html: offer.title?.replace?.('{userName}', simState.userName || 'Usuária') || '' }} />
+                                <p className="font-medium" dangerouslySetInnerHTML={{ __html: sanitizeHtml(offer.title?.replace?.('{userName}', simState.userName || 'Usuária') || '') }} />
                                 <p className="text-xs">{offer.description}</p>
                                 {(offer as any).ctaLabel && (offer as any).ctaUrl && (
                                     <div>

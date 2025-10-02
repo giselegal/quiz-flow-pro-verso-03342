@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useMemo } from 'react';
+import sanitizeHtml from '@/utils/sanitizeHtml';
 import { styleConfigGisele } from '@/data/styles';
 
 interface PersistedResultPayload {
@@ -108,7 +109,7 @@ const ResultPage: React.FC = () => {
                 {offer ? (
                     <div className="rounded border p-6 bg-gradient-to-br from-background to-muted/30 space-y-3 text-sm">
                         {offer.image && <img src={offer.image} className="rounded max-w-sm" />}
-                        {offer.title && <h4 className="text-primary font-semibold" dangerouslySetInnerHTML={{ __html: offer.title.replace?.('{userName}', userName) }} />}
+                        {offer.title && <h4 className="text-primary font-semibold" dangerouslySetInnerHTML={{ __html: sanitizeHtml(offer.title.replace?.('{userName}', userName)) }} />}
                         {offer.description && <p className="text-muted-foreground whitespace-pre-line">{offer.description}</p>}
                         {offer.testimonial?.quote && (
                             <blockquote className="border-l-2 pl-3 italic text-xs opacity-80">
