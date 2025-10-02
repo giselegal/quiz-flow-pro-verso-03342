@@ -47,6 +47,7 @@ import UnifiedCRUDProvider, { useUnifiedCRUD } from '@/context/UnifiedCRUDProvid
 import useEditorBootstrap from '@/hooks/editor/useEditorBootstrap';
 import useOperationsManager from '@/hooks/editor/useOperationsManager';
 import EditorBootstrapProgress from '@/components/editor/EditorBootstrapProgress';
+import OperationsPanel from '@/components/editor/OperationsPanel';
 
 // 🎯 CRUD Services Integration
 import { useUnifiedEditor } from '@/hooks/core/useUnifiedEditor';
@@ -484,6 +485,7 @@ const UnifiedEditorCore: React.FC<ModernUnifiedEditorProps> = ({ funnelId, templ
     const [detectedFunnelType, setDetectedFunnelType] = useState<FunnelType | null>(null);
     const [funnelData, setFunnelData] = useState<any>(null);
     const [isDetectingType, setIsDetectingType] = useState(false);
+    const [showOpsPanel, setShowOpsPanel] = useState(false);
 
     // 🎯 EFFECT: Iniciar detecção quando funnel for carregado
     useEffect(() => {
@@ -815,10 +817,25 @@ const UnifiedEditorCore: React.FC<ModernUnifiedEditorProps> = ({ funnelId, templ
                         </>
                     )}
                 </div>
-                <div className="text-xs text-muted-foreground">
-                    Neural Editor v2.0 - CRUD Unificado ✅
+                <div className="flex items-center gap-4 text-xs text-muted-foreground">
+                    <button
+                        onClick={() => setShowOpsPanel(v => !v)}
+                        className="px-2 py-1 border rounded hover:bg-muted/50 transition"
+                        title="Mostrar operações"
+                    >
+                        Ops {showOpsPanel ? '▼' : '▲'}
+                    </button>
+                    <span>Neural Editor v2.0 - CRUD Unificado ✅</span>
                 </div>
             </div>
+            {showOpsPanel && (
+                <div className="fixed bottom-8 right-0 top-0 w-80 shadow-lg z-40 bg-background border-l border-border">
+                    <OperationsPanel
+                        statuses={(useOperationsManager as any).statuses || {}}
+                        onClose={() => setShowOpsPanel(false)}
+                    />
+                </div>
+            )}
         </div>
     );
 };
