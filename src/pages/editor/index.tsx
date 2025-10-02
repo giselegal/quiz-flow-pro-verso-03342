@@ -6,9 +6,14 @@
 
 import React from 'react';
 import ModernUnifiedEditor from './ModernUnifiedEditor';
+import UnifiedCRUDProvider from '@/context/UnifiedCRUDProvider';
 
 export const EditorRoutes: React.FC = () => {
-    return <ModernUnifiedEditor />;
+    return (
+        <UnifiedCRUDProvider autoLoad={true} debug={false}>
+            <ModernUnifiedEditor />
+        </UnifiedCRUDProvider>
+    );
 };
 
 export default EditorRoutes;
