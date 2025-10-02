@@ -68,16 +68,19 @@ const initialState: QuizState = {
   userProfile: { ...initialUserProfile },
 };
 
-export function useQuizState(funnelId?: string) {
+export function useQuizState(funnelId?: string, externalSteps?: Record<string, any>) {
   const [state, setState] = useState<QuizState>(initialState);
 
   // Navegar para próxima etapa
   const nextStep = useCallback((stepId?: string) => {
-    setState(prev => ({
-      ...prev,
-      currentStep: stepId || QUIZ_STEPS[prev.currentStep]?.nextStep || prev.currentStep
-    }));
-  }, []);
+    setState(prev => {
+      const source = externalSteps || QUIZ_STEPS;
+      return {
+        ...prev,
+        currentStep: stepId || source[prev.currentStep]?.nextStep || prev.currentStep
+      };
+    });
+  }, [externalSteps]);
 
   // Navegar para etapa anterior
   const previousStep = useCallback(() => {
@@ -222,7 +225,8 @@ export function useQuizState(funnelId?: string) {
 
   // Verificar se etapa atual tem respostas suficientes
   const isCurrentStepComplete = useMemo(() => {
-    const currentStepData = QUIZ_STEPS[state.currentStep];
+    const source = externalSteps || QUIZ_STEPS;
+    const currentStepData = source[state.currentStep];
 
     if (!currentStepData) return false;
 
@@ -252,6 +256,7 @@ export function useQuizState(funnelId?: string) {
 
   // Obter dados da etapa atual (com suporte a personalização via funnelId)
   const currentStepData = useMemo(() => {
+    const source = externalSteps || QUIZ_STEPS;
     if (funnelId) {
       // Usar template personalizado se funnelId foi fornecido
       const personalizedTemplate = getPersonalizedStepTemplate(state.currentStep, funnelId);
@@ -260,8 +265,8 @@ export function useQuizState(funnelId?: string) {
       }
     }
     // Fallback para o template padrão
-    return QUIZ_STEPS[state.currentStep];
-  }, [state.currentStep, funnelId]);
+    return source[state.currentStep];
+  }, [state.currentStep, funnelId, externalSteps]);
 
   // Verificar se pode voltar
   const canGoBack = useMemo(() => {

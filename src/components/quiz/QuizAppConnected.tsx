@@ -8,6 +8,7 @@
 'use client';
 
 import { useQuizState } from '../../hooks/useQuizState';
+import { useQuizRuntimeRegistry } from '@/runtime/quiz/QuizRuntimeRegistry';
 import { useComponentConfiguration } from '../../hooks/useComponentConfiguration';
 import IntroStep from './IntroStep';
 import QuestionStep from './QuestionStep';
@@ -24,6 +25,16 @@ interface QuizAppConnectedProps {
 }
 
 export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', editorMode = false }: QuizAppConnectedProps) {
+    // Overrides de steps vindos do editor (quando provider estiver presente)
+    let externalSteps: Record<string, any> | undefined;
+    try {
+        const registry = useQuizRuntimeRegistry();
+        if (registry.steps && Object.keys(registry.steps).length) {
+            externalSteps = registry.steps;
+        }
+    } catch (_e) {
+        // Provider não presente: ignora silenciosamente
+    }
 
     // ============================================================================
     // CONFIGURATION HOOKS - Conecta com API
@@ -65,7 +76,7 @@ export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', ed
         addAnswer,
         addStrategicAnswer,
         getOfferKey,
-    } = useQuizState(funnelId);
+    } = useQuizState(funnelId, externalSteps);
 
     // ============================================================================
     // DYNAMIC STEP CONFIGURATION
