@@ -40,7 +40,7 @@ export default function ModularOfferStep({
     onBlockSelect,
     onOpenProperties
 }: ModularOfferStepProps) {
-    
+
     const safeData = {
         title: data.title || 'Oferta Especial Para Você!',
         subtitle: data.subtitle || 'Consultoria de Imagem Personalizada',
@@ -83,7 +83,7 @@ export default function ModularOfferStep({
                         onOpenProperties={onOpenProperties}
                         isDraggable={true}
                     >
-                        <h1 
+                        <h1
                             className="text-2xl md:text-3xl font-bold text-[#432818] mb-2"
                             style={{ fontFamily: '"Playfair Display", serif' }}
                         >
@@ -232,11 +232,7 @@ export default function ModularOfferStep({
                             🔒 Compra 100% segura • Garantia de 7 dias
                         </p>
 
-                        {isEditable && (
-                            <p className="text-xs text-blue-500">
-                                ✏️ Editável via Painel de Propriedades
-                            </p>
-                        )}
+
                     </SelectableBlock>
                 </div>
             </main>
