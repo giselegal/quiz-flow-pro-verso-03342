@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { QUIZ_STEPS, type QuizStep } from '@/data/quizSteps';
 import { Plus, Save, Trash2, ArrowUp, ArrowDown, Copy } from 'lucide-react';
+import './QuizEditorStyles.css';
 
 interface QuizFunnelEditorProps {
     funnelId?: string;
@@ -154,7 +155,7 @@ const QuizFunnelEditorSimplified: React.FC<QuizFunnelEditorProps> = ({ funnelId,
     }, [steps, crud]);
 
     return (
-        <div className="h-full w-full flex flex-col bg-background">
+        <div className="quiz-editor-container h-full w-full flex flex-col bg-background">
             <div className="h-10 border-b flex items-center gap-2 px-3 text-xs bg-muted/30">
                 <span className="font-semibold">Quiz Editor (Simplificado)</span>
                 <Button size="sm" variant="outline" onClick={handleSave} disabled={isSaving}>
