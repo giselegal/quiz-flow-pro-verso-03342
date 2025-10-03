@@ -1,6 +1,6 @@
 import React, { Suspense, useEffect, useState } from 'react';
 
-const QuizFunnelEditorOriginal = React.lazy(() => import('../../editor/quiz/QuizFunnelEditor'));
+const QuizFunnelEditorOriginal = React.lazy(() => import('../editor/quiz/QuizFunnelEditor'));
 
 interface Props {
     funnelId?: string;

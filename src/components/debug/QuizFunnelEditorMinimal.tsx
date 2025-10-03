@@ -23,7 +23,7 @@ const QuizFunnelEditorMinimal: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
                     <h2 className="font-semibold mb-2">Status CRUD:</h2>
                     <p>Current Funnel: <code>{crud.currentFunnel?.name || 'nenhum'}</code></p>
                     <p>Funnels Count: <code>{crud.funnels.length}</code></p>
-                    <p>Loading: <code>{crud.loading ? 'sim' : 'não'}</code></p>
+                    <p>Loading: <code>{crud.isLoading ? 'sim' : 'não'}</code></p>
                     <p>Error: <code>{crud.error || 'nenhum'}</code></p>
                 </div>
 
