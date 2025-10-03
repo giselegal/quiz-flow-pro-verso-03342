@@ -575,92 +575,51 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
                         <Badge variant="secondary" className="text-[10px]">{steps.length}</Badge>
                     </div>
                     <div className="flex-1 overflow-auto text-xs">
-                        {steps.map((s, idx) => {
-                            const active = s.id === selectedId;
-                            return (
-                                <div key={s.id}>
-                                    {/* Zona de Inserção no Topo (apenas no primeiro elemento) */}
-                                    {idx === 0 && (
-                                        <div className="group/insert relative">
-                                            <div className="h-1 hover:h-8 transition-all bg-transparent hover:bg-blue-50 border-2 border-dashed border-transparent hover:border-blue-300 flex items-center justify-center">
-                                                <div className="opacity-0 group-hover/insert:opacity-100 transition-opacity">
-                                                    <div className="relative">
-                                                        <Button
-                                                            size="sm"
-                                                            variant="outline"
-                                                            className="h-6 text-[10px] bg-white shadow-sm"
-                                                            onClick={() => setActiveInsertDropdown(activeInsertDropdown === `before-${s.id}` ? null : `before-${s.id}`)}
-                                                        >
-                                                            <Plus className="w-3 h-3 mr-1" /> Inserir no Início
-                                                            <ChevronDown className="w-3 h-3 ml-1" />
-                                                        </Button>
+                        {/* Lista Reordenável de Steps com DragDropManager */}
+                        <DragDropManager
+                            items={steps}
+                            onReorder={handleStepReorder}
+                            enabled={dragEnabled}
+                            renderItem={(step, index, isDragging) => {
+                                const active = step.id === selectedId;
 
-                                                        {/* Dropdown Menu */}
-                                                        {activeInsertDropdown === `before-${s.id}` && (
-                                                            <div className="absolute top-full left-0 mt-1 bg-white border rounded shadow-lg z-50 min-w-32">
-                                                                {STEP_TYPES.map(type => (
-                                                                    <button
-                                                                        key={type}
-                                                                        className="w-full px-3 py-2 text-left text-[11px] hover:bg-gray-50 flex items-center gap-2"
-                                                                        onClick={() => {
-                                                                            addStepBefore(s.id, type);
-                                                                            setActiveInsertDropdown(null);
-                                                                        }}
-                                                                    >
-                                                                        <span>
-                                                                            {type === 'intro' && '🏠'}
-                                                                            {type === 'question' && '❓'}
-                                                                            {type === 'strategic-question' && '🎯'}
-                                                                            {type === 'transition' && '⏳'}
-                                                                            {type === 'transition-result' && '🔄'}
-                                                                            {type === 'result' && '🏆'}
-                                                                            {type === 'offer' && '🎁'}
-                                                                        </span>
-                                                                        {type.replace('-', ' ')}
-                                                                    </button>
-                                                                ))}
-                                                            </div>
-                                                        )}
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    )}
-
-                                    {/* Elemento Step */}
-                                    <div
-                                        className={`relative border-b cursor-pointer group transition-all ${active ? 'bg-blue-50 border-blue-200' : 'hover:bg-gray-50'
-                                            }`}
-                                        onClick={() => setSelectedId(s.id)}
-                                    >
+                                return (
+                                    <div className={cn(
+                                        "relative border-b cursor-pointer group transition-all",
+                                        active ? 'bg-blue-50 border-blue-200' : 'hover:bg-gray-50',
+                                        isDragging && "opacity-50 scale-95"
+                                    )}>
                                         {/* Indicador de Posição */}
                                         <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-blue-500 to-purple-500" />
 
-                                        <div className="pl-4 pr-3 py-3">
+                                        <div
+                                            className="pl-4 pr-3 py-3"
+                                            onClick={() => setSelectedId(step.id)}
+                                        >
                                             <div className="flex items-center gap-2 mb-1">
                                                 <div className="w-6 h-6 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center text-white text-[10px] font-bold">
-                                                    {idx + 1}
+                                                    {index + 1}
                                                 </div>
                                                 <span className="font-medium truncate flex-1">
-                                                    {s.type === 'intro' && '🏠 Introdução'}
-                                                    {s.type === 'question' && '❓ Pergunta'}
-                                                    {s.type === 'strategic-question' && '🎯 Estratégica'}
-                                                    {s.type === 'transition' && '⏳ Transição'}
-                                                    {s.type === 'transition-result' && '🔄 Trans. Result'}
-                                                    {s.type === 'result' && '🏆 Resultado'}
-                                                    {s.type === 'offer' && '🎁 Oferta'}
+                                                    {step.type === 'intro' && '🏠 Introdução'}
+                                                    {step.type === 'question' && '❓ Pergunta'}
+                                                    {step.type === 'strategic-question' && '🎯 Estratégica'}
+                                                    {step.type === 'transition' && '⏳ Transição'}
+                                                    {step.type === 'transition-result' && '🔄 Trans. Result'}
+                                                    {step.type === 'result' && '🏆 Resultado'}
+                                                    {step.type === 'offer' && '🎁 Oferta'}
                                                 </span>
                                             </div>
 
                                             {/* Preview do conteúdo */}
                                             <div className="text-[10px] text-gray-500 mb-2 truncate">
-                                                {s.type === 'intro' && (s.title || 'Introdução do Quiz')}
-                                                {s.type === 'question' && (s.questionText || 'Pergunta do Quiz')}
-                                                {s.type === 'strategic-question' && (s.questionText || 'Pergunta Estratégica')}
-                                                {s.type === 'transition' && (s.title || 'Tela de Transição')}
-                                                {s.type === 'transition-result' && (s.title || 'Preparando Resultado')}
-                                                {s.type === 'result' && (s.title || 'Resultado do Quiz')}
-                                                {s.type === 'offer' && 'Oferta Personalizada'}
+                                                {step.type === 'intro' && (step.title || 'Introdução do Quiz')}
+                                                {step.type === 'question' && (step.questionText || 'Pergunta do Quiz')}
+                                                {step.type === 'strategic-question' && (step.questionText || 'Pergunta Estratégica')}
+                                                {step.type === 'transition' && (step.title || 'Tela de Transição')}
+                                                {step.type === 'transition-result' && (step.title || 'Preparando Resultado')}
+                                                {step.type === 'result' && (step.title || 'Resultado do Quiz')}
+                                                {step.type === 'offer' && 'Oferta Personalizada'}
                                             </div>
 
                                             {/* Controles de Ação */}
@@ -668,28 +627,8 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
                                                 <Button
                                                     size="icon"
                                                     variant="ghost"
-                                                    className="h-6 w-6 text-blue-500 hover:bg-blue-100"
-                                                    disabled={idx === 0}
-                                                    onClick={(e) => { e.stopPropagation(); moveStep(s.id, -1); }}
-                                                    title="Mover para cima"
-                                                >
-                                                    <ArrowUp className="w-3 h-3" />
-                                                </Button>
-                                                <Button
-                                                    size="icon"
-                                                    variant="ghost"
-                                                    className="h-6 w-6 text-blue-500 hover:bg-blue-100"
-                                                    disabled={idx === steps.length - 1}
-                                                    onClick={(e) => { e.stopPropagation(); moveStep(s.id, 1); }}
-                                                    title="Mover para baixo"
-                                                >
-                                                    <ArrowDown className="w-3 h-3" />
-                                                </Button>
-                                                <Button
-                                                    size="icon"
-                                                    variant="ghost"
                                                     className="h-6 w-6 text-green-500 hover:bg-green-100"
-                                                    onClick={(e) => { e.stopPropagation(); duplicateStep(s.id); }}
+                                                    onClick={(e) => { e.stopPropagation(); duplicateStep(step.id); }}
                                                     title="Duplicar"
                                                 >
                                                     <Copy className="w-3 h-3" />
@@ -698,7 +637,7 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
                                                     size="icon"
                                                     variant="ghost"
                                                     className="h-6 w-6 text-red-500 hover:bg-red-100"
-                                                    onClick={(e) => { e.stopPropagation(); removeStep(s.id); }}
+                                                    onClick={(e) => { e.stopPropagation(); removeStep(step.id); }}
                                                     title="Remover"
                                                 >
                                                     <Trash2 className="w-3 h-3" />
@@ -707,59 +646,14 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
                                         </div>
 
                                         {/* Conexão Visual para o Próximo Step */}
-                                        {idx < steps.length - 1 && (
+                                        {index < steps.length - 1 && (
                                             <div className="absolute bottom-0 left-7 w-0.5 h-3 bg-gradient-to-b from-purple-400 to-blue-400" />
                                         )}
                                     </div>
-
-                                    {/* Zona de Inserção Entre Elementos */}
-                                    <div className="group/insert relative">
-                                        <div className="h-1 hover:h-8 transition-all bg-transparent hover:bg-green-50 border-2 border-dashed border-transparent hover:border-green-300 flex items-center justify-center">
-                                            <div className="opacity-0 group-hover/insert:opacity-100 transition-opacity">
-                                                <div className="relative">
-                                                    <Button
-                                                        size="sm"
-                                                        variant="outline"
-                                                        className="h-6 text-[10px] bg-white shadow-sm border-green-300 text-green-600 hover:bg-green-50"
-                                                        onClick={() => setActiveInsertDropdown(activeInsertDropdown === `after-${s.id}` ? null : `after-${s.id}`)}
-                                                    >
-                                                        <Plus className="w-3 h-3 mr-1" /> Inserir Após
-                                                        <ChevronDown className="w-3 h-3 ml-1" />
-                                                    </Button>
-
-                                                    {/* Dropdown Menu */}
-                                                    {activeInsertDropdown === `after-${s.id}` && (
-                                                        <div className="absolute top-full left-0 mt-1 bg-white border rounded shadow-lg z-50 min-w-32">
-                                                            {STEP_TYPES.map(type => (
-                                                                <button
-                                                                    key={type}
-                                                                    className="w-full px-3 py-2 text-left text-[11px] hover:bg-gray-50 flex items-center gap-2"
-                                                                    onClick={() => {
-                                                                        addStepAfter(s.id, type);
-                                                                        setActiveInsertDropdown(null);
-                                                                    }}
-                                                                >
-                                                                    <span>
-                                                                        {type === 'intro' && '🏠'}
-                                                                        {type === 'question' && '❓'}
-                                                                        {type === 'strategic-question' && '🎯'}
-                                                                        {type === 'transition' && '⏳'}
-                                                                        {type === 'transition-result' && '🔄'}
-                                                                        {type === 'result' && '🏆'}
-                                                                        {type === 'offer' && '🎁'}
-                                                                    </span>
-                                                                    {type.replace('-', ' ')}
-                                                                </button>
-                                                            ))}
-                                                        </div>
-                                                    )}
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            );
-                        })}
+                                );
+                            }}
+                            className="space-y-0"
+                        />
                     </div>
 
                     {/* Adicionar no Final */}
