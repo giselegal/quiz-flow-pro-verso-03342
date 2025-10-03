@@ -147,3 +147,77 @@
 .quiz-editor-container .font-semibold {
     color: #111827 !important;
 }
+
+/* Garantir contraste adequado para dropdowns e seleções */
+.quiz-editor-container option {
+    background-color: white !important;
+    color: #1a1716 !important;
+}
+
+/* Correção para placeholders */
+.quiz-editor-container input::placeholder,
+.quiz-editor-container textarea::placeholder {
+    color: #9ca3af !important;
+}
+
+/* Correção para badges e elementos pequenos */
+.quiz-editor-container .badge,
+.quiz-editor-container [class*="badge"] {
+    background-color: #f3f4f6 !important;
+    color: #374151 !important;
+}
+
+/* Correção específica para elementos ativos/selecionados */
+.quiz-editor-container .bg-primary\/10 {
+    background-color: rgba(168, 85, 247, 0.1) !important;
+    color: #1f2937 !important;
+}
+
+/* Garantir que elementos de navegação sejam visíveis */
+.quiz-editor-container .cursor-pointer {
+    color: #374151 !important;
+}
+
+.quiz-editor-container .cursor-pointer:hover {
+    background-color: rgba(249, 250, 251, 0.8) !important;
+}
+
+/* Garantir que ícones sejam sempre visíveis */
+.quiz-editor-container svg {
+    color: currentColor !important;
+}
+
+/* Correção para elementos de loading */
+.quiz-editor-container .animate-spin {
+    border-color: #a855f7 !important;
+    border-top-color: transparent !important;
+}
+
+/* Garantir que todos os textos sejam legíveis */
+.quiz-editor-container * {
+    color: inherit !important;
+}
+
+.quiz-editor-container .text-sm {
+    color: #374151 !important;
+}
+
+.quiz-editor-container .truncate {
+    color: inherit !important;
+}
+
+/* Override final para forçar tema claro */
+.quiz-editor-container,
+.quiz-editor-container * {
+    filter: none !important;
+}
+
+/* Garantir que elementos com opacity sejam visíveis */
+.quiz-editor-container .opacity-0 {
+    opacity: 0 !important;
+}
+
+.quiz-editor-container .group-hover\:opacity-100:hover,
+.quiz-editor-container .group:hover .group-hover\:opacity-100 {
+    opacity: 1 !important;
+}
