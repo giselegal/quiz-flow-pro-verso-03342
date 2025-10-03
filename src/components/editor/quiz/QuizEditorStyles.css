@@ -1,0 +1,149 @@
+/* 🎨 ESTILOS ESPECÍFICOS PARA CORRIGIR PROBLEMAS DE RENDERIZAÇÃO DO EDITOR */
+
+/* Forçar tema claro para todo o editor */
+.quiz-editor-container {
+    background: white !important;
+    color: #1a1716 !important;
+    --background: 0 0% 100% !important;
+    --foreground: 224 71.4% 4.1% !important;
+    --card: 0 0% 100% !important;
+    --card-foreground: 224 71.4% 4.1% !important;
+    --popover: 0 0% 100% !important;
+    --popover-foreground: 224 71.4% 4.1% !important;
+    --primary: 262.1 83.3% 57.8% !important;
+    --primary-foreground: 210 20% 98% !important;
+    --secondary: 220 14.3% 95.9% !important;
+    --secondary-foreground: 220.9 39.3% 11% !important;
+    --muted: 220 14.3% 95.9% !important;
+    --muted-foreground: 220 8.9% 46.1% !important;
+    --accent: 220 14.3% 95.9% !important;
+    --accent-foreground: 220.9 39.3% 11% !important;
+    --destructive: 0 84.2% 60.2% !important;
+    --destructive-foreground: 210 20% 98% !important;
+    --border: 220 13% 91% !important;
+    --input: 220 13% 91% !important;
+    --ring: 262.1 83.3% 57.8% !important;
+}
+
+/* Forçar contrastes adequados para texto */
+.quiz-editor-container .text-muted-foreground {
+    color: #6b7280 !important;
+}
+
+.quiz-editor-container .bg-muted {
+    background-color: #f9fafb !important;
+}
+
+.quiz-editor-container .bg-muted\/10 {
+    background-color: rgba(249, 250, 251, 0.1) !important;
+}
+
+.quiz-editor-container .bg-muted\/30 {
+    background-color: rgba(249, 250, 251, 0.3) !important;
+}
+
+.quiz-editor-container .bg-muted\/50 {
+    background-color: rgba(249, 250, 251, 0.5) !important;
+}
+
+/* Corrigir backgrounds específicos */
+.quiz-editor-container .bg-background {
+    background-color: white !important;
+}
+
+.quiz-editor-container .bg-primary\/10 {
+    background-color: rgba(168, 85, 247, 0.1) !important;
+}
+
+/* Forçar estilos para inputs e selects */
+.quiz-editor-container input,
+.quiz-editor-container select,
+.quiz-editor-container textarea {
+    background-color: white !important;
+    color: #1a1716 !important;
+    border-color: #d1d5db !important;
+}
+
+.quiz-editor-container input:disabled,
+.quiz-editor-container select:disabled,
+.quiz-editor-container textarea:disabled {
+    background-color: #f3f4f6 !important;
+    color: #6b7280 !important;
+}
+
+/* Garantir que bordas sejam visíveis */
+.quiz-editor-container .border {
+    border-color: #e5e7eb !important;
+}
+
+.quiz-editor-container .border-b {
+    border-bottom-color: #e5e7eb !important;
+}
+
+.quiz-editor-container .border-r {
+    border-right-color: #e5e7eb !important;
+}
+
+.quiz-editor-container .border-t {
+    border-top-color: #e5e7eb !important;
+}
+
+/* Garantir que botões tenham contraste adequado */
+.quiz-editor-container .bg-gray-50 {
+    background-color: #f9fafb !important;
+    color: #1f2937 !important;
+}
+
+.quiz-editor-container .bg-white {
+    background-color: white !important;
+    color: #1a1716 !important;
+}
+
+/* Correção específica para badges e labels */
+.quiz-editor-container .text-\[10px\],
+.quiz-editor-container .text-\[11px\],
+.quiz-editor-container .text-xs {
+    color: #374151 !important;
+}
+
+/* Garantir que elementos com hover funcionem corretamente */
+.quiz-editor-container .hover\:bg-muted\/50:hover {
+    background-color: rgba(249, 250, 251, 0.5) !important;
+}
+
+/* Correção para spinner de loading */
+.quiz-editor-container .border-primary {
+    border-color: #a855f7 !important;
+}
+
+.quiz-editor-container .border-t-transparent {
+    border-top-color: transparent !important;
+}
+
+/* Garantir que o texto primário seja sempre legível */
+.quiz-editor-container .text-primary {
+    color: #a855f7 !important;
+}
+
+/* Força modo claro removendo qualquer classe dark */
+.quiz-editor-container.dark,
+.quiz-editor-container .dark {
+    background: white !important;
+    color: #1a1716 !important;
+}
+
+/* Remover override de tema escuro se aplicado */
+.quiz-editor-container * {
+    color: inherit;
+}
+
+.quiz-editor-container .text-red-500 {
+    color: #ef4444 !important;
+}
+
+/* Garantir que labels e textos pequenos sejam sempre visíveis */
+.quiz-editor-container label,
+.quiz-editor-container .font-medium,
+.quiz-editor-container .font-semibold {
+    color: #111827 !important;
+}
