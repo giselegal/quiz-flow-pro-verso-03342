@@ -18,6 +18,11 @@ import OfferStep from '@/components/quiz/OfferStep';
 import EditableIntroStep from '@/components/quiz/editable/EditableIntroStep';
 import EditableQuestionStep from '@/components/quiz/editable/EditableQuestionStep';
 
+// ✨ NOVO: Sistema Modular de Steps
+import { StepRenderer } from '@/components/step-registry/StepRenderer';
+import { stepRegistry } from '@/components/step-registry/StepRegistry';
+import '@/components/steps'; // Inicializar todos os steps registrados
+
 interface QuizFunnelEditorProps {
     funnelId?: string;
     templateId?: string;
@@ -274,6 +279,13 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
         const isEditMode = previewMode === 'edit';
         const WrapperComponent = isEditMode ? EditableWrapper : SelectableWrapper;
 
+        // 🔍 DEBUG: Log dos steps disponíveis no sistema modular
+        if (step.id === 'step-1') {
+            const allRegisteredSteps = stepRegistry.getAll();
+            console.log('🎯 Sistema Modular - Steps registrados:', allRegisteredSteps.map(s => s.id));
+            console.log('🔍 Tentando encontrar step:', step.id);
+        }
+
         // Props básicas para os componentes
         const mockProps = {
             onNameSubmit: () => console.log('Nome submetido'),
@@ -294,10 +306,36 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
             offerKey: 'default'
         };
 
+        // ✨ NOVO: Tentar usar sistema modular primeiro
+        const stepComponent = stepRegistry.get(step.id);
+        if (stepComponent) {
+            return (
+                <WrapperComponent blockId={`${step.id}-modular`} label={`${stepComponent.name} (Modular)`} isEditable={isEditMode}>
+                    <StepRenderer
+                        stepId={step.id}
+                        stepNumber={parseInt(step.id.replace('step-', '')) || 1}
+                        isActive={true}
+                        isEditable={isEditMode}
+                        onNext={() => console.log('Next step')}
+                        onPrevious={() => console.log('Previous step')}
+                        onSave={(data) => {
+                            console.log('Saving step data:', data);
+                            // Integrar com updateStep existente
+                            Object.keys(data).forEach(key => {
+                                updateStep(step.id, { [key]: data[key] });
+                            });
+                        }}
+                        data={step}
+                    />
+                </WrapperComponent>
+            );
+        }
+
+        // 🔄 FALLBACK: Sistema antigo para steps não modulares
         switch (step.type) {
             case 'intro':
                 return (
-                    <WrapperComponent blockId={`${step.id}-intro`} label="Introdução" isEditable={isEditMode}>
+                    <WrapperComponent blockId={`${step.id}-intro`} label="Introdução (Legacy)" isEditable={isEditMode}>
                         <EditableIntroStep
                             data={step}
                             onNameSubmit={mockProps.onNameSubmit}
