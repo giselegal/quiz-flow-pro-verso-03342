@@ -14,12 +14,12 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
-import { 
-    X, 
-    Save, 
-    Copy, 
-    Trash2, 
-    Plus, 
+import {
+    X,
+    Save,
+    Copy,
+    Trash2,
+    Plus,
     Minus,
     Settings,
     Eye,
@@ -117,7 +117,7 @@ export const QuizPropertiesPanel: React.FC<QuizPropertiesPanelProps> = ({
 
     const handleOptionUpdate = useCallback((optionsKey: string, optionId: string, text: string) => {
         const currentOptions = localProperties[optionsKey] || [];
-        const updatedOptions = currentOptions.map((opt: any) => 
+        const updatedOptions = currentOptions.map((opt: any) =>
             opt.id === optionId ? { ...opt, text } : opt
         );
         handlePropertyChange(optionsKey, updatedOptions);
@@ -174,7 +174,7 @@ export const QuizPropertiesPanel: React.FC<QuizPropertiesPanelProps> = ({
                                 {isPreviewMode ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                             </Button>
                         )}
-                        
+
                         {/* Close Button */}
                         <Button
                             variant="ghost"
@@ -186,7 +186,7 @@ export const QuizPropertiesPanel: React.FC<QuizPropertiesPanelProps> = ({
                         </Button>
                     </div>
                 </div>
-                
+
                 {/* Step ID */}
                 <div className="text-xs text-muted-foreground">
                     ID: {selectedStep.id}
@@ -197,13 +197,13 @@ export const QuizPropertiesPanel: React.FC<QuizPropertiesPanelProps> = ({
             <CardContent className="flex-1 overflow-hidden p-0">
                 <ScrollArea className="h-full px-6">
                     <div className="space-y-6 pb-6">
-                        
+
                         {/* Common Properties */}
                         <div className="space-y-4">
                             <h4 className="font-medium text-sm text-muted-foreground uppercase tracking-wide">
                                 Propriedades Gerais
                             </h4>
-                            
+
                             {/* Title (for intro, transition, result) */}
                             {(['intro', 'transition', 'transition-result', 'result'].includes(stepType)) && (
                                 <div className="space-y-2">
@@ -370,7 +370,7 @@ export const QuizPropertiesPanel: React.FC<QuizPropertiesPanelProps> = ({
                                 Duplicar
                             </Button>
                         )}
-                        
+
                         {/* Delete */}
                         {onDeleteStep && (
                             <Button
@@ -396,7 +396,7 @@ export const QuizPropertiesPanel: React.FC<QuizPropertiesPanelProps> = ({
                                 Cancelar
                             </Button>
                         )}
-                        
+
                         <Button
                             size="sm"
                             onClick={handleSave}

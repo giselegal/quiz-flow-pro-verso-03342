@@ -86,10 +86,10 @@ export const DragDropManager: React.FC<DragDropManagerProps> = ({
 
         setDraggedIndex(index);
         draggedItemRef.current = items[index];
-        
+
         e.dataTransfer.effectAllowed = 'move';
         e.dataTransfer.setData('text/plain', index.toString());
-        
+
         // Add ghost image
         const ghostElement = e.currentTarget.cloneNode(true) as HTMLElement;
         ghostElement.style.opacity = '0.8';
@@ -98,10 +98,10 @@ export const DragDropManager: React.FC<DragDropManagerProps> = ({
         ghostElement.style.border = '2px solid #3b82f6';
         ghostElement.style.borderRadius = '8px';
         ghostElement.style.padding = '8px';
-        
+
         document.body.appendChild(ghostElement);
         e.dataTransfer.setDragImage(ghostElement, 0, 0);
-        
+
         // Remove ghost element after drag starts
         setTimeout(() => {
             document.body.removeChild(ghostElement);
@@ -117,7 +117,7 @@ export const DragDropManager: React.FC<DragDropManagerProps> = ({
 
     const handleDragOver = useCallback((e: React.DragEvent, index: number) => {
         if (!enabled || draggedIndex === null) return;
-        
+
         e.preventDefault();
         e.dataTransfer.dropEffect = 'move';
 
@@ -158,7 +158,7 @@ export const DragDropManager: React.FC<DragDropManagerProps> = ({
 
     const shouldShowDropZone = useCallback((position: 'before' | 'after', index: number) => {
         if (!enabled || draggedIndex === null) return false;
-        
+
         const targetIndex = position === 'before' ? index : index + 1;
         return dragOverIndex === index && dragOverPosition === position && draggedIndex !== targetIndex;
     }, [enabled, draggedIndex, dragOverIndex, dragOverPosition]);
@@ -186,7 +186,7 @@ export const DragDropManager: React.FC<DragDropManagerProps> = ({
                         isActive={shouldShowDropZone('before', index)}
                         onDrop={handleDrop}
                     />
-                    
+
                     {/* Draggable item */}
                     <div
                         draggable
@@ -201,7 +201,7 @@ export const DragDropManager: React.FC<DragDropManagerProps> = ({
                     >
                         {renderItem(item, index, isItemDragging(index))}
                     </div>
-                    
+
                     {/* Drop zone after last item */}
                     {index === items.length - 1 && (
                         <DropZone

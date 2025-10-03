@@ -54,7 +54,7 @@ export const SelectableBlock: React.FC<SelectableBlockProps> = ({
         // Só intercepta se não estiver clicando em um input/textarea/button
         const target = e.target as HTMLElement;
         const isInteractiveElement = target.closest('input, textarea, button, select, [contenteditable]');
-        
+
         if (!isInteractiveElement && isEditable) {
             e.preventDefault();
             e.stopPropagation();
@@ -73,7 +73,7 @@ export const SelectableBlock: React.FC<SelectableBlockProps> = ({
             e.preventDefault();
             return;
         }
-        
+
         e.dataTransfer.effectAllowed = 'move';
         e.dataTransfer.setData('text/plain', blockId);
         onDragStart?.(blockId, blockIndex);
@@ -118,7 +118,7 @@ export const SelectableBlock: React.FC<SelectableBlockProps> = ({
                     <div className="bg-blue-500 text-white text-xs px-2 py-1 rounded-md font-medium shadow-sm">
                         {blockType} #{blockIndex + 1}
                     </div>
-                    
+
                     {/* Properties Button */}
                     {onOpenProperties && (
                         <button
@@ -129,10 +129,10 @@ export const SelectableBlock: React.FC<SelectableBlockProps> = ({
                             <Settings className="w-3 h-3" />
                         </button>
                     )}
-                    
+
                     {/* Drag Handle */}
                     {isDraggable && (
-                        <div 
+                        <div
                             className="bg-gray-700 text-white p-1 rounded-md shadow-sm cursor-move"
                             title="Arrastar para Reordenar"
                         >
@@ -159,12 +159,12 @@ export const SelectableBlock: React.FC<SelectableBlockProps> = ({
             {/* Drop Zone Indicator (for drag & drop) */}
             {isEditable && (
                 <>
-                    <div 
+                    <div
                         className="absolute -top-1 left-0 right-0 h-2 bg-blue-500/20 opacity-0 transition-opacity"
                         data-drop-zone="before"
                         data-block-index={blockIndex}
                     />
-                    <div 
+                    <div
                         className="absolute -bottom-1 left-0 right-0 h-2 bg-blue-500/20 opacity-0 transition-opacity"
                         data-drop-zone="after"
                         data-block-index={blockIndex}

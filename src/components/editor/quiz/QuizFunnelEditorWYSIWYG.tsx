@@ -97,7 +97,7 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
     const [isSaving, setIsSaving] = useState(false);
     const [previewMode, setPreviewMode] = useState<'edit' | 'preview'>('edit');
     const [activeInsertDropdown, setActiveInsertDropdown] = useState<string | null>(null);
-    
+
     // 🎯 NOVOS: Estados para editor aprimorado
     const [showPropertiesPanel, setShowPropertiesPanel] = useState(true);
     const [isPreviewMode, setIsPreviewMode] = useState(false);
@@ -200,6 +200,40 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
             setIsSaving(false);
         }
     }, [steps, crud]);
+
+    // 🎯 NOVOS: Callbacks para editor aprimorado
+    const handleStepSelect = useCallback((stepId: string) => {
+        setSelectedId(stepId);
+        setSelectedBlockId(''); // Clear block selection when step changes
+    }, []);
+
+    const handleBlockSelect = useCallback((blockId: string) => {
+        setSelectedBlockId(blockId);
+        // Extract step ID from block ID (format: step-id-type)
+        const stepId = blockId.split('-').slice(0, 2).join('-');
+        if (stepId && stepId !== selectedId) {
+            setSelectedId(stepId);
+        }
+    }, [selectedId]);
+
+    const handleStepReorder = useCallback((fromIndex: number, toIndex: number) => {
+        setSteps(prev => {
+            const newSteps = [...prev];
+            const [movedStep] = newSteps.splice(fromIndex, 1);
+            newSteps.splice(toIndex, 0, movedStep);
+            return newSteps;
+        });
+    }, []);
+
+    const handlePropertiesPanelClose = useCallback(() => {
+        setShowPropertiesPanel(false);
+        setSelectedBlockId('');
+    }, []);
+
+    const handleOpenProperties = useCallback((blockId: string) => {
+        setSelectedBlockId(blockId);
+        setShowPropertiesPanel(true);
+    }, []);
 
     // Mock de resultados para o componente ResultStep
     const mockResults = {
