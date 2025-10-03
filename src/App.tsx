@@ -39,7 +39,7 @@ const TemplateDiagnosticPage = lazy(() => import('./pages/TemplateDiagnosticPage
 // �🚀 MODERN UNIFIED EDITOR - EDITOR OFICIAL (MAIS COMPLETO)
 const QuizFunnelEditorSimplified = lazy(() => import('./components/editor/quiz/QuizFunnelEditorSimplified').then(module => ({ default: module.default })));
 const QuizFunnelEditorWYSIWYG = lazy(() => import('./components/editor/quiz/QuizFunnelEditorWYSIWYG').then(module => ({ default: module.default })));
-const ModernUnifiedEditor = lazy(() => import('./components/editor/ModernUnifiedEditor').then(module => ({ default: module.default })));
+const ModernUnifiedEditor = lazy(() => import('./pages/editor/ModernUnifiedEditor').then(module => ({ default: module.default })));
 
 // ❌ HYBRID EDITOR PRO - DESATIVADO (substituído pelo ModernUnifiedEditor)
 // const HybridEditorPro = lazy(() => import('./components/editor/EditorPro/components/HybridEditorPro'));
