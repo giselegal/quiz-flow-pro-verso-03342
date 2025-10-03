@@ -300,9 +300,9 @@ export default function EditableOptions({
 export function EditableOptionsWithProperties(props: EditableOptionsProps) {
     return (
         <EditableField
-            label="Opções de Quiz"
-            isEditable={props.isEditable}
-            onEdit={props.onEdit}
+            value={''}
+            onChange={() => { }}
+            isEditable={props.isEditable ?? true}
         >
             <EditableOptions {...props} />
         </EditableField>

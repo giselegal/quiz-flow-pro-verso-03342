@@ -180,9 +180,9 @@ export default function EditableOptionsGrid({
 export function EditableOptionsGridWithProperties(props: EditableOptionsGridProps) {
     return (
         <EditableField
-            label="Grade de Opções"
-            isEditable={props.isEditable}
-            onEdit={props.onEdit}
+            value={''}
+            onChange={() => { }}
+            isEditable={props.isEditable ?? true}
         >
             <EditableOptionsGrid {...props} />
         </EditableField>
