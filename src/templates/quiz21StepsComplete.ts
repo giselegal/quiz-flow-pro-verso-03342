@@ -1562,7 +1562,8 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = IS_TEST ? M
   ],
 
   // 🎯 ETAPA 3: QUESTÃO 2 - PERSONALIDADE (CORRIGIDO - MOVIDO PARA POSIÇÃO CORRETA)
-  'step-3': [
+  '
+  ': [
     {
       id: 'step3-quiz-header',
       type: 'quiz-intro-header',
