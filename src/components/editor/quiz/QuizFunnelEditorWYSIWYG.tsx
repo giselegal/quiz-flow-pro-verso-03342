@@ -319,9 +319,10 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
     };
 
     // Função para renderizar componente real no preview
-    const renderRealComponent = (step: EditableQuizStep) => {
+    const renderRealComponent = (step: EditableQuizStep, index: number) => {
         const isEditMode = previewMode === 'edit';
-        const WrapperComponent = isEditMode ? EditableWrapper : SelectableWrapper;
+        const blockId = `${step.id}-${step.type}`;
+        const isSelected = selectedBlockId === blockId;
 
         // 🔍 DEBUG: Log dos steps disponíveis no sistema modular
         if (step.id === 'step-1') {
@@ -354,7 +355,16 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
         const stepComponent = stepRegistry.get(step.id);
         if (stepComponent) {
             return (
-                <WrapperComponent blockId={`${step.id}-modular`} label={`${stepComponent.name} (Modular)`} isEditable={isEditMode}>
+                <SelectableBlock
+                    blockId={blockId}
+                    isSelected={isSelected}
+                    isEditable={isEditMode}
+                    onSelect={handleBlockSelect}
+                    blockType={`${stepComponent.name} (Modular)`}
+                    blockIndex={index}
+                    onOpenProperties={handleOpenProperties}
+                    isDraggable={dragEnabled}
+                >
                     <StepRenderer
                         stepId={step.id}
                         stepNumber={parseInt(step.id.replace('step-', '')) || 1}
@@ -371,7 +381,7 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
                         }}
                         data={step}
                     />
-                </WrapperComponent>
+                </SelectableBlock>
             );
         }
 
@@ -379,18 +389,36 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
         switch (step.type) {
             case 'intro':
                 return (
-                    <WrapperComponent blockId={`${step.id}-intro`} label="Introdução (Legacy)" isEditable={isEditMode}>
+                    <SelectableBlock
+                        blockId={blockId}
+                        isSelected={isSelected}
+                        isEditable={isEditMode}
+                        onSelect={handleBlockSelect}
+                        blockType="Introdução (Legacy)"
+                        blockIndex={index}
+                        onOpenProperties={handleOpenProperties}
+                        isDraggable={dragEnabled}
+                    >
                         <EditableIntroStep
                             data={step}
                             onNameSubmit={mockProps.onNameSubmit}
                             isEditable={isEditMode}
                             onEdit={(field, value) => updateStep(step.id, { [field]: value })}
                         />
-                    </WrapperComponent>
+                    </SelectableBlock>
                 );
             case 'question':
                 return (
-                    <WrapperComponent blockId={`${step.id}-question`} label="Pergunta" isEditable={isEditMode}>
+                    <SelectableBlock
+                        blockId={blockId}
+                        isSelected={isSelected}
+                        isEditable={isEditMode}
+                        onSelect={handleBlockSelect}
+                        blockType="Pergunta"
+                        blockIndex={index}
+                        onOpenProperties={handleOpenProperties}
+                        isDraggable={dragEnabled}
+                    >
                         <EditableQuestionStep
                             data={step}
                             currentAnswers={mockProps.currentAnswers}
@@ -398,54 +426,99 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
                             isEditable={isEditMode}
                             onEdit={(field, value) => updateStep(step.id, { [field]: value })}
                         />
-                    </WrapperComponent>
+                    </SelectableBlock>
                 );
             case 'strategic-question':
                 return (
-                    <WrapperComponent blockId={`${step.id}-strategic`} label="Pergunta Estratégica" isEditable={isEditMode}>
+                    <SelectableBlock
+                        blockId={blockId}
+                        isSelected={isSelected}
+                        isEditable={isEditMode}
+                        onSelect={handleBlockSelect}
+                        blockType="Pergunta Estratégica"
+                        blockIndex={index}
+                        onOpenProperties={handleOpenProperties}
+                        isDraggable={dragEnabled}
+                    >
                         <StrategicQuestionStep
                             data={step}
                             currentAnswer={mockProps.currentAnswer}
                             onAnswerChange={mockProps.onAnswerChange}
                         />
-                    </WrapperComponent>
+                    </SelectableBlock>
                 );
             case 'transition':
                 return (
-                    <WrapperComponent blockId={`${step.id}-transition`} label="Transição" isEditable={isEditMode}>
+                    <SelectableBlock
+                        blockId={blockId}
+                        isSelected={isSelected}
+                        isEditable={isEditMode}
+                        onSelect={handleBlockSelect}
+                        blockType="Transição"
+                        blockIndex={index}
+                        onOpenProperties={handleOpenProperties}
+                        isDraggable={dragEnabled}
+                    >
                         <TransitionStep
                             data={step}
                             onComplete={mockProps.onComplete}
                         />
-                    </WrapperComponent>
+                    </SelectableBlock>
                 );
             case 'transition-result':
                 return (
-                    <WrapperComponent blockId={`${step.id}-transition-result`} label="Transição p/ Resultado" isEditable={isEditMode}>
+                    <SelectableBlock
+                        blockId={blockId}
+                        isSelected={isSelected}
+                        isEditable={isEditMode}
+                        onSelect={handleBlockSelect}
+                        blockType="Transição p/ Resultado"
+                        blockIndex={index}
+                        onOpenProperties={handleOpenProperties}
+                        isDraggable={dragEnabled}
+                    >
                         <TransitionStep
                             data={step}
                             onComplete={mockProps.onComplete}
                         />
-                    </WrapperComponent>
+                    </SelectableBlock>
                 );
             case 'result':
                 return (
-                    <WrapperComponent blockId={`${step.id}-result`} label="Resultado" isEditable={isEditMode}>
+                    <SelectableBlock
+                        blockId={blockId}
+                        isSelected={isSelected}
+                        isEditable={isEditMode}
+                        onSelect={handleBlockSelect}
+                        blockType="Resultado"
+                        blockIndex={index}
+                        onOpenProperties={handleOpenProperties}
+                        isDraggable={dragEnabled}
+                    >
                         <ResultStep
                             data={step}
                             userProfile={offerProps.userProfile}
                         />
-                    </WrapperComponent>
+                    </SelectableBlock>
                 );
             case 'offer':
                 return (
-                    <WrapperComponent blockId={`${step.id}-offer`} label="Oferta" isEditable={isEditMode}>
+                    <SelectableBlock
+                        blockId={blockId}
+                        isSelected={isSelected}
+                        isEditable={isEditMode}
+                        onSelect={handleBlockSelect}
+                        blockType="Oferta"
+                        blockIndex={index}
+                        onOpenProperties={handleOpenProperties}
+                        isDraggable={dragEnabled}
+                    >
                         <OfferStep
                             data={step}
                             userProfile={offerProps.userProfile}
                             offerKey={offerProps.offerKey}
                         />
-                    </WrapperComponent>
+                    </SelectableBlock>
                 );
             default:
                 return (
@@ -882,7 +955,7 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
                         ) : (
                             // Renderizar componente real SEMPRE (edit ou preview)
                             <div className="min-h-full">
-                                {renderRealComponent(selectedStep)}
+                                {renderRealComponent(selectedStep, steps.findIndex(s => s.id === selectedStep.id))}
                             </div>
                         )}
                     </div>
