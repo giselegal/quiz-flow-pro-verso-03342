@@ -15,14 +15,15 @@ class EditorEventBus {
     private listeners: { [K in keyof EventMap]?: Listener<EventMap[K]>[] } = {};
 
     on<K extends keyof EventMap>(event: K, listener: Listener<EventMap[K]>) {
-        this.listeners[event] = (this.listeners[event] || []).concat(listener);
+        const currentListeners = this.listeners[event] as Listener<EventMap[K]>[] | undefined;
+        this.listeners[event] = (currentListeners || []).concat(listener) as any;
         return () => this.off(event, listener);
     }
 
     off<K extends keyof EventMap>(event: K, listener: Listener<EventMap[K]>) {
-        const arr = this.listeners[event];
+        const arr = this.listeners[event] as Listener<EventMap[K]>[] | undefined;
         if (!arr) return;
-        this.listeners[event] = arr.filter(l => l !== listener);
+        this.listeners[event] = arr.filter(l => l !== listener) as any;
     }
 
     emit<K extends keyof EventMap>(event: K, payload: EventMap[K]) {

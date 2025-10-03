@@ -25,13 +25,13 @@ export function computeResultAdvanced(steps: QuizStep[], answers: Record<string,
     let globalIndex = 0;
     for (const st of steps) {
         if (st.type !== 'question') continue;
-        const selected = answers[st.id] || [];
+        const selected = answers[(st as any).id] || [];
         if (!selected.length) continue;
         const multiplier = extractMultiplier((st as any).questionNumber);
         for (const optId of selected) {
             if (!score[optId]) score[optId] = { total: 0, steps: new Set(), firstIndex: globalIndex };
             score[optId].total += 1 * multiplier;
-            score[optId].steps.add(st.id);
+            score[optId].steps.add((st as any).id);
             globalIndex++;
         }
     }

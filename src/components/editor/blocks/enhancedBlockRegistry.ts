@@ -1,2 +1,2 @@
-export * from './enhancedBlockRegistry.tsx';
-export { default } from './enhancedBlockRegistry.tsx';
+export * from './EnhancedBlockRegistry.tsx';
+export { default } from './EnhancedBlockRegistry.tsx';
