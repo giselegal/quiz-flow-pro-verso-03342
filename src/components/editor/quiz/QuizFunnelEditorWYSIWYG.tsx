@@ -695,9 +695,75 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
                             </React.Suspense>
                         );
 
-                    // TODO: Criar versões modulares dos outros steps
+                    case 'strategic-question':
+                        const ModularStrategicQuestionStep = React.lazy(() => import('@/components/editor/quiz-estilo/ModularStrategicQuestionStep'));
+                        return (
+                            <React.Suspense fallback={<div>Carregando...</div>}>
+                                <ModularStrategicQuestionStep
+                                    data={step}
+                                    currentAnswer={mockProps.currentAnswer}
+                                    onAnswerChange={mockProps.onAnswerChange}
+                                    onEdit={(field, value) => updateStep(step.id, { [field]: value })}
+                                    isEditable={true}
+                                    selectedBlockId={selectedBlockId}
+                                    onBlockSelect={setSelectedBlockId}
+                                    onOpenProperties={handleOpenProperties}
+                                />
+                            </React.Suspense>
+                        );
+
+                    case 'transition':
+                    case 'transition-result':
+                        const ModularTransitionStep = React.lazy(() => import('@/components/editor/quiz-estilo/ModularTransitionStep'));
+                        return (
+                            <React.Suspense fallback={<div>Carregando...</div>}>
+                                <ModularTransitionStep
+                                    data={step}
+                                    onComplete={mockProps.onComplete}
+                                    onEdit={(field, value) => updateStep(step.id, { [field]: value })}
+                                    isEditable={true}
+                                    selectedBlockId={selectedBlockId}
+                                    onBlockSelect={setSelectedBlockId}
+                                    onOpenProperties={handleOpenProperties}
+                                />
+                            </React.Suspense>
+                        );
+
+                    case 'result':
+                        const ModularResultStep = React.lazy(() => import('@/components/editor/quiz-estilo/ModularResultStep'));
+                        return (
+                            <React.Suspense fallback={<div>Carregando...</div>}>
+                                <ModularResultStep
+                                    data={step}
+                                    userProfile={offerProps.userProfile}
+                                    onEdit={(field, value) => updateStep(step.id, { [field]: value })}
+                                    isEditable={true}
+                                    selectedBlockId={selectedBlockId}
+                                    onBlockSelect={setSelectedBlockId}
+                                    onOpenProperties={handleOpenProperties}
+                                />
+                            </React.Suspense>
+                        );
+
+                    case 'offer':
+                        const ModularOfferStep = React.lazy(() => import('@/components/editor/quiz-estilo/ModularOfferStep'));
+                        return (
+                            <React.Suspense fallback={<div>Carregando...</div>}>
+                                <ModularOfferStep
+                                    data={step}
+                                    userProfile={offerProps.userProfile}
+                                    offerKey={offerProps.offerKey}
+                                    onEdit={(field, value) => updateStep(step.id, { [field]: value })}
+                                    isEditable={true}
+                                    selectedBlockId={selectedBlockId}
+                                    onBlockSelect={setSelectedBlockId}
+                                    onOpenProperties={handleOpenProperties}
+                                />
+                            </React.Suspense>
+                        );
+
                     default:
-                        return <div className="p-8 text-center text-gray-500">Versão modular para {step.type} em desenvolvimento...</div>;
+                        return <div className="p-8 text-center text-gray-500">Tipo de step não suportado: {step.type}</div>;
                 }
             } else {
                 // MODO PREVIEW: Componentes idênticos ao /quiz-estilo
