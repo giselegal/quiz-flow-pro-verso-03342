@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { QUIZ_STEPS, type QuizStep } from '@/data/quizSteps';
 import { Plus, Save, Trash2, ArrowUp, ArrowDown, Copy, Eye, ChevronDown, Settings, RefreshCw } from 'lucide-react';
+import { cn } from '@/lib/utils';
 import './QuizEditorStyles.css';
 
 // Importar componentes reais de produção para preview WYSIWYG
@@ -1002,165 +1003,20 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
                     </div>
                 </div>
 
-                {/* COL 4 - PROPRIEDADES */}
-                <div className="w-80 flex flex-col">
-                    <div className="p-3 border-b text-xs font-semibold">
-                        Propriedades
-                        {selectedBlockId && (
-                            <div className="text-[10px] text-blue-600 mt-1">
-                                Editando: {selectedBlockId}
-                            </div>
-                        )}
+                {/* COL 4 - PAINEL DE PROPRIEDADES APRIMORADO */}
+                {showPropertiesPanel && (
+                    <div className="w-80">
+                        <QuizPropertiesPanel
+                            selectedStep={selectedBlockId ? selectedStep : null}
+                            onUpdateStep={updateStep}
+                            onClose={handlePropertiesPanelClose}
+                            onDeleteStep={removeStep}
+                            onDuplicateStep={duplicateStep}
+                            isPreviewMode={isPreviewMode}
+                            onTogglePreview={() => setIsPreviewMode(!isPreviewMode)}
+                        />
                     </div>
-                    <div className="flex-1 overflow-auto p-4 text-xs space-y-4">
-                        {!selectedStep ? (
-                            <div className="text-muted-foreground text-[11px]">Selecione uma etapa.</div>
-                        ) : (
-                            <>
-                                <div>
-                                    <label className="block mb-1 font-medium">ID</label>
-                                    <input disabled value={selectedStep.id} className="w-full border rounded px-2 py-1 text-[11px] bg-muted/30" />
-                                </div>
-
-                                {selectedStep.type === 'intro' && (
-                                    <>
-                                        <div>
-                                            <label className="block mb-1 font-medium">Título</label>
-                                            <textarea
-                                                rows={3}
-                                                value={selectedStep.title || ''}
-                                                onChange={e => updateStep(selectedStep.id, { title: e.target.value })}
-                                                className="w-full border rounded px-2 py-1 text-[11px]"
-                                            />
-                                        </div>
-                                        <div>
-                                            <label className="block mb-1 font-medium">Pergunta do Form</label>
-                                            <input
-                                                value={selectedStep.formQuestion || ''}
-                                                onChange={e => updateStep(selectedStep.id, { formQuestion: e.target.value })}
-                                                className="w-full border rounded px-2 py-1 text-[11px]"
-                                            />
-                                        </div>
-                                        <div>
-                                            <label className="block mb-1 font-medium">Placeholder</label>
-                                            <input
-                                                value={selectedStep.placeholder || ''}
-                                                onChange={e => updateStep(selectedStep.id, { placeholder: e.target.value })}
-                                                className="w-full border rounded px-2 py-1 text-[11px]"
-                                            />
-                                        </div>
-                                        <div>
-                                            <label className="block mb-1 font-medium">Texto do Botão</label>
-                                            <input
-                                                value={selectedStep.buttonText || ''}
-                                                onChange={e => updateStep(selectedStep.id, { buttonText: e.target.value })}
-                                                className="w-full border rounded px-2 py-1 text-[11px]"
-                                            />
-                                        </div>
-                                        <div>
-                                            <label className="block mb-1 font-medium">URL da Imagem</label>
-                                            <input
-                                                value={selectedStep.image || ''}
-                                                onChange={e => updateStep(selectedStep.id, { image: e.target.value })}
-                                                className="w-full border rounded px-2 py-1 text-[11px]"
-                                                placeholder="https://..."
-                                            />
-                                            {selectedStep.image && (
-                                                <img
-                                                    src={selectedStep.image}
-                                                    alt="Preview"
-                                                    className="w-full h-16 object-cover rounded mt-1"
-                                                    onError={(e) => {
-                                                        (e.target as HTMLImageElement).style.display = 'none';
-                                                    }}
-                                                />
-                                            )}
-                                        </div>
-                                    </>
-                                )}
-
-                                {selectedStep.type === 'question' && (
-                                    <>
-                                        <div>
-                                            <label className="block mb-1 font-medium">Número da Pergunta</label>
-                                            <input
-                                                value={selectedStep.questionNumber || ''}
-                                                onChange={e => updateStep(selectedStep.id, { questionNumber: e.target.value })}
-                                                className="w-full border rounded px-2 py-1 text-[11px]"
-                                            />
-                                        </div>
-                                        <div>
-                                            <label className="block mb-1 font-medium">Texto da Pergunta</label>
-                                            <textarea
-                                                rows={3}
-                                                value={selectedStep.questionText || ''}
-                                                onChange={e => updateStep(selectedStep.id, { questionText: e.target.value })}
-                                                className="w-full border rounded px-2 py-1 text-[11px]"
-                                            />
-                                        </div>
-                                        <div>
-                                            <label className="block mb-1 font-medium">Seleções Obrigatórias</label>
-                                            <input
-                                                type="number"
-                                                value={selectedStep.requiredSelections || 1}
-                                                onChange={e => updateStep(selectedStep.id, { requiredSelections: parseInt(e.target.value) || 1 })}
-                                                className="w-full border rounded px-2 py-1 text-[11px]"
-                                            />
-                                        </div>
-                                    </>
-                                )}
-
-                                {selectedStep.type === 'strategic-question' && (
-                                    <div>
-                                        <label className="block mb-1 font-medium">Pergunta Estratégica</label>
-                                        <textarea
-                                            rows={3}
-                                            value={selectedStep.questionText || ''}
-                                            onChange={e => updateStep(selectedStep.id, { questionText: e.target.value })}
-                                            className="w-full border rounded px-2 py-1 text-[11px]"
-                                        />
-                                    </div>
-                                )}
-
-                                {(selectedStep.type === 'transition' || selectedStep.type === 'transition-result') && (
-                                    <div>
-                                        <label className="block mb-1 font-medium">Título</label>
-                                        <input
-                                            value={selectedStep.title || ''}
-                                            onChange={e => updateStep(selectedStep.id, { title: e.target.value })}
-                                            className="w-full border rounded px-2 py-1 text-[11px]"
-                                        />
-                                    </div>
-                                )}
-
-                                {selectedStep.type === 'result' && (
-                                    <div>
-                                        <label className="block mb-1 font-medium">Título do Resultado</label>
-                                        <input
-                                            value={selectedStep.title || ''}
-                                            onChange={e => updateStep(selectedStep.id, { title: e.target.value })}
-                                            className="w-full border rounded px-2 py-1 text-[11px]"
-                                        />
-                                    </div>
-                                )}
-
-                                <div>
-                                    <label className="block mb-1 font-medium">Próximo Step</label>
-                                    <select
-                                        value={selectedStep.nextStep || ''}
-                                        onChange={e => updateStep(selectedStep.id, { nextStep: e.target.value })}
-                                        className="w-full border rounded px-2 py-1 text-[11px]"
-                                    >
-                                        <option value="">Selecione...</option>
-                                        {steps.map(s => (
-                                            <option key={s.id} value={s.id}>{s.id} ({s.type})</option>
-                                        ))}
-                                    </select>
-                                </div>
-                            </>
-                        )}
-                    </div>
-                </div>
+                )}
             </div>
         </div>
     );
