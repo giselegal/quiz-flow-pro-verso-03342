@@ -200,11 +200,6 @@ export default function ModularIntroStep({
 
                         <p className="text-xs text-center text-gray-500 pt-1">
                             Seu nome é necessário para personalizar sua experiência.
-                            {isEditable && (
-                                <span className="block text-blue-500 mt-1">
-                                    ✏️ Editável via Painel de Propriedades
-                                </span>
-                            )}
                         </p>
                     </form>
                 </div>
