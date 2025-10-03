@@ -190,8 +190,8 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
             ({ children, blockId, label }) => (
                 <div
                     className={`relative cursor-pointer transition-all duration-200 ${selectedBlockId === blockId
-                            ? 'ring-2 ring-blue-500 ring-offset-2 bg-blue-50'
-                            : 'hover:ring-1 hover:ring-gray-300'
+                        ? 'ring-2 ring-blue-500 ring-offset-2 bg-blue-50'
+                        : 'hover:ring-1 hover:ring-gray-300'
                         }`}
                     onClick={(e) => {
                         e.stopPropagation();
@@ -249,10 +249,12 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
                         <SelectableWrapper blockId={`${step.id}-result`} label="Resultado">
                             <ResultStep
                                 data={step}
+                                userProfile={{
+                                    userName: mockProps.userName,
+                                    resultStyle: 'Preview Style',
+                                    secondaryStyles: []
+                                }}
                                 scores={mockProps.scores}
-                                strategicAnswers={mockProps.strategicAnswers}
-                                userName={mockProps.userName}
-                                onNext={() => console.log('Mock: Próximo')}
                             />
                         </SelectableWrapper>
                     );
@@ -261,7 +263,11 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
                         <SelectableWrapper blockId={`${step.id}-offer`} label="Oferta">
                             <OfferStep
                                 data={step}
-                                userName={mockProps.userName}
+                                userProfile={{
+                                    userName: mockProps.userName,
+                                    resultStyle: 'Preview Style'
+                                }}
+                                offerKey="default"
                             />
                         </SelectableWrapper>
                     );
