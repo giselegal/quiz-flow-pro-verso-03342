@@ -3,6 +3,7 @@ import type { QuizStep } from '../../../data/quizSteps';
 import { EditableField } from './EditableField';
 import { Plus, Trash2, Image } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { DragDropManager } from '@/components/editor/DragDropManager';
 
 interface EditableQuestionStepProps {
     data: QuizStep;
@@ -125,92 +126,146 @@ export default function EditableQuestionStep({
                 {isEditable ? `Configurado para: ${data.requiredSelections || 1} seleção(ões)` : selectionText}
             </p>
 
-            {/* Opções */}
-            <div className={`grid ${gridClass} gap-4 mb-6`}>
-                {(data.options || []).map((option) => {
-                    const isSelected = localAnswers.includes(option.id);
-                    return (
-                        <div
-                            key={option.id}
-                            className={`relative group cursor-pointer p-4 border-2 rounded-lg transition-all duration-200 ${isSelected && !isEditable
-                                    ? 'border-[#deac6d] bg-[#deac6d]/10'
-                                    : isEditable
-                                        ? 'border-blue-200 bg-blue-50 hover:border-blue-400'
-                                        : 'border-gray-200 hover:border-[#deac6d] hover:bg-gray-50'
-                                }`}
-                            onClick={() => handleOptionClick(option.id)}
-                        >
-                            {/* Botão de Remover Opção (Modo Edição) */}
-                            {isEditable && (data.options?.length || 0) > 1 && (
-                                <button
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        handleRemoveOption(option.id);
-                                    }}
-                                    className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10"
-                                    title="Remover opção"
+            {/* Opções com Drag & Drop */}
+            <div className="mb-6">
+                {isEditable ? (
+                    <DragDropManager
+                        items={data.options || []}
+                        onReorder={(fromIndex: number, toIndex: number) => {
+                            const options = [...(data.options || [])];
+                            const [movedOption] = options.splice(fromIndex, 1);
+                            options.splice(toIndex, 0, movedOption);
+                            onEdit('options', options);
+                        }}
+                        enabled={true}
+                        renderItem={(option: any, index: number, isDragging: boolean) => {
+                            const isSelected = localAnswers.includes(option.id);
+                            return (
+                                <div
+                                    className={`relative group cursor-pointer p-4 border-2 rounded-lg transition-all duration-200 ${isSelected && !isEditable
+                                            ? 'border-[#deac6d] bg-[#deac6d]/10'
+                                            : isEditable
+                                                ? 'border-blue-200 bg-blue-50 hover:border-blue-400'
+                                                : 'border-gray-200 hover:border-[#deac6d] hover:bg-gray-50'
+                                        } ${isDragging ? 'opacity-50 scale-95' : ''}`}
+                                    onClick={() => !isDragging && handleOptionClick(option.id)}
                                 >
-                                    <Trash2 className="w-3 h-3" />
-                                </button>
-                            )}
-
-                            {/* Imagem da Opção (se houver) */}
-                            {option.image && (
-                                <div className="mb-3 relative">
-                                    <img
-                                        src={option.image}
-                                        alt={option.text}
-                                        className="w-full h-32 object-cover rounded"
-                                        onError={(e) => {
-                                            (e.target as HTMLImageElement).src = '/api/placeholder/150/150';
-                                        }}
-                                    />
-                                    {isEditable && (
+                                    {/* Botão de Remover Opção (Modo Edição) */}
+                                    {isEditable && (data.options?.length || 0) > 1 && (
                                         <button
                                             onClick={(e) => {
                                                 e.stopPropagation();
-                                                const newUrl = prompt('URL da nova imagem:', option.image);
-                                                if (newUrl !== null) {
-                                                    handleOptionEdit(option.id, 'image', newUrl);
-                                                }
+                                                handleRemoveOption(option.id);
                                             }}
-                                            className="absolute inset-0 bg-black bg-opacity-50 opacity-0 hover:opacity-100 transition-opacity duration-200 flex items-center justify-center text-white text-sm"
+                                            className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10"
+                                            title="Remover opção"
                                         >
-                                            <Image className="w-4 h-4 mr-1" />
-                                            Alterar
+                                            <Trash2 className="w-3 h-3" />
                                         </button>
                                     )}
-                                </div>
-                            )}
 
-                            {/* Texto da Opção - EDITÁVEL */}
-                            <EditableField
-                                value={option.text}
-                                onChange={(value) => handleOptionEdit(option.id, 'text', value)}
-                                isEditable={isEditable}
-                                className="font-medium text-gray-800"
-                                placeholder="Texto da opção..."
-                            />
+                                    {/* Imagem da Opção (se houver) */}
+                                    {option.image && (
+                                        <div className="mb-3 relative">
+                                            <img
+                                                src={option.image}
+                                                alt={option.text}
+                                                className="w-full h-32 object-cover rounded"
+                                                onError={(e) => {
+                                                    (e.target as HTMLImageElement).src = '/api/placeholder/150/150';
+                                                }}
+                                            />
+                                            {isEditable && (
+                                                <button
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        const newUrl = prompt('URL da nova imagem:', option.image);
+                                                        if (newUrl !== null) {
+                                                            handleOptionEdit(option.id, 'image', newUrl);
+                                                        }
+                                                    }}
+                                                    className="absolute inset-0 bg-black bg-opacity-50 opacity-0 hover:opacity-100 transition-opacity duration-200 flex items-center justify-center text-white text-sm"
+                                                >
+                                                    <Image className="w-4 h-4 mr-1" />
+                                                    Alterar
+                                                </button>
+                                            )}
+                                        </div>
+                                    )}
 
-                            {/* Indicador de Seleção */}
-                            {isSelected && !isEditable && (
-                                <div className="absolute top-2 right-2 w-6 h-6 bg-[#deac6d] rounded-full flex items-center justify-center">
-                                    <span className="text-white text-sm">✓</span>
+                                    {/* Texto da Opção - EDITÁVEL */}
+                                    <EditableField
+                                        value={option.text}
+                                        onChange={(value) => handleOptionEdit(option.id, 'text', value)}
+                                        isEditable={isEditable}
+                                        className="font-medium text-gray-800"
+                                        placeholder="Texto da opção..."
+                                    />
+
+                                    {/* Indicador de Seleção */}
+                                    {isSelected && !isEditable && (
+                                        <div className="absolute top-2 right-2 w-6 h-6 bg-[#deac6d] rounded-full flex items-center justify-center">
+                                            <span className="text-white text-sm">✓</span>
+                                        </div>
+                                    )}
                                 </div>
-                            )}
-                        </div>
-                    );
-                })}
+                            );
+                        }}
+                        className={`grid ${gridClass} gap-4`}
+                    />
+                ) : (
+                    <div className={`grid ${gridClass} gap-4`}>
+                        {(data.options || []).map((option) => {
+                            const isSelected = localAnswers.includes(option.id);
+                            return (
+                                <div
+                                    key={option.id}
+                                    className={`relative group cursor-pointer p-4 border-2 rounded-lg transition-all duration-200 ${isSelected && !isEditable
+                                            ? 'border-[#deac6d] bg-[#deac6d]/10'
+                                            : 'border-gray-200 hover:border-[#deac6d] hover:bg-gray-50'
+                                        }`}
+                                    onClick={() => handleOptionClick(option.id)}
+                                >
+                                    {/* Imagem da Opção (se houver) */}
+                                    {option.image && (
+                                        <div className="mb-3 relative">
+                                            <img
+                                                src={option.image}
+                                                alt={option.text}
+                                                className="w-full h-32 object-cover rounded"
+                                                onError={(e) => {
+                                                    (e.target as HTMLImageElement).src = '/api/placeholder/150/150';
+                                                }}
+                                            />
+                                        </div>
+                                    )}
+
+                                    {/* Texto da Opção */}
+                                    <div className="font-medium text-gray-800">{option.text}</div>
+
+                                    {/* Indicador de Seleção */}
+                                    {isSelected && !isEditable && (
+                                        <div className="absolute top-2 right-2 w-6 h-6 bg-[#deac6d] rounded-full flex items-center justify-center">
+                                            <span className="text-white text-sm">✓</span>
+                                        </div>
+                                    )}
+                                </div>
+                            );
+                        })}
+                    </div>
+                )}
 
                 {/* Botão Adicionar Opção (Modo Edição) */}
                 {isEditable && (
-                    <button
-                        onClick={handleAddOption}
-                        className="p-6 border-2 border-dashed border-blue-300 rounded-lg hover:border-blue-500 hover:bg-blue-50 transition-all duration-200 flex flex-col items-center justify-center text-blue-600 hover:text-blue-800"
-                    >
-                        <Plus className="w-8 h-8 mb-2" />
-                        <span className="text-sm font-medium">Adicionar Opção</span>
-                    </button>
+                    <div className={`grid ${gridClass} gap-4 mt-4`}>
+                        <button
+                            onClick={handleAddOption}
+                            className="p-6 border-2 border-dashed border-blue-300 rounded-lg hover:border-blue-500 hover:bg-blue-50 transition-all duration-200 flex flex-col items-center justify-center text-blue-600 hover:text-blue-800"
+                        >
+                            <Plus className="w-8 h-8 mb-2" />
+                            <span className="text-sm font-medium">Adicionar Opção</span>
+                        </button>
+                    </div>
                 )}
             </div>
 
