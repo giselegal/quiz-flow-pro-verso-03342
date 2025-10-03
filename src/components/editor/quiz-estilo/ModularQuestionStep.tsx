@@ -144,6 +144,11 @@ export default function ModularQuestionStep({
                     >
                         <p className="text-sm text-gray-600 mb-8">
                             {selectionText} ({currentAnswers.length}/{safeData.requiredSelections})
+                            {isEditable && (
+                                <span className="block text-blue-500 mt-1 text-xs">
+                                    ✏️ Editável via Painel de Propriedades
+                                </span>
+                            )}
                         </p>
                     </SelectableBlock>
 

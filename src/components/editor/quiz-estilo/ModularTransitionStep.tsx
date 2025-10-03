@@ -142,7 +142,11 @@ export default function ModularTransitionStep({
                             <div className="w-3 h-3 bg-[#B89B7A] rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
                         </div>
 
-
+                        {isEditable && (
+                            <p className="text-xs text-blue-500">
+                                ✏️ Editável via Painel de Propriedades
+                            </p>
+                        )}
                     </SelectableBlock>
                 </div>
             </main>

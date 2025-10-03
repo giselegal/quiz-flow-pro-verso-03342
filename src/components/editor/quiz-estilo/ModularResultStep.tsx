@@ -180,7 +180,11 @@ export default function ModularResultStep({
                             Descobrir Minha Consultoria Personalizada
                         </button>
 
-
+                        {isEditable && (
+                            <p className="text-xs text-blue-500 mt-4">
+                                ✏️ Editável via Painel de Propriedades
+                            </p>
+                        )}
                     </SelectableBlock>
                 </div>
             </main>
