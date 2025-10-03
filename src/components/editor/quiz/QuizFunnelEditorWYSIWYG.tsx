@@ -28,13 +28,14 @@ import EditableScript from '@/components/quiz/editable/EditableScript';
 import EditableHeading from '@/components/quiz/editable/EditableHeading';
 import EditableOptionsGrid, { QuizOption } from '@/components/quiz/editable/EditableOptionsGrid';
 import EditableOptions, { EditableOptionsProps } from '@/components/quiz/editable/EditableOptions';
+import EditableRichText from '@/components/quiz/editable/EditableRichText';
 
 interface QuizFunnelEditorProps {
     funnelId?: string;
     templateId?: string;
 }
 
-type ExtendedStepType = QuizStep['type'] | 'header' | 'spacer' | 'advanced-options' | 'button' | 'script' | 'heading' | 'options-grid' | 'options';
+type ExtendedStepType = QuizStep['type'] | 'header' | 'spacer' | 'advanced-options' | 'button' | 'script' | 'heading' | 'options-grid' | 'options' | 'rich-text';
 
 type EditableQuizStep = (QuizStep | {
     type: 'header';
@@ -112,12 +113,28 @@ type EditableQuizStep = (QuizStep | {
     // Geral
     maxWidth?: number;
     generalAlignment?: 'start' | 'center' | 'end';
+} | {
+    type: 'rich-text';
+    // Conteúdo
+    content?: string;
+    placeholder?: string;
+    // Layout
+    maxWidth?: number;
+    generalAlignment?: 'start' | 'center' | 'end';
+    // Configurações do Editor
+    showToolbar?: boolean;
+    minHeight?: number;
+    // Personalização
+    backgroundColor?: string;
+    borderColor?: string;
+    // Avançado
+    componentId?: string;
 }) & { id: string };
 
 const STEP_TYPES: Array<string> = [
     'intro', 'question', 'strategic-question', 'transition', 'transition-result', 'result', 'offer',
     // Novos tipos baseados no modelo do funil:
-    'header', 'spacer', 'advanced-options', 'button', 'script', 'heading', 'options-grid', 'options'
+    'header', 'spacer', 'advanced-options', 'button', 'script', 'heading', 'options-grid', 'options', 'rich-text'
 ];
 
 function createBlankStep(type: ExtendedStepType): EditableQuizStep {
@@ -329,6 +346,25 @@ function createBlankStep(type: ExtendedStepType): EditableQuizStep {
                 // Geral
                 maxWidth: 100,
                 generalAlignment: 'start'
+            };
+        case 'rich-text':
+            return {
+                id: baseId,
+                type: 'rich-text',
+                // Conteúdo
+                content: '<h2>Título</h2><p><br></p><p>Preencha o texto.</p>',
+                placeholder: 'Digite seu texto aqui...',
+                // Layout
+                maxWidth: 100,
+                generalAlignment: 'start',
+                // Configurações do Editor
+                showToolbar: true,
+                minHeight: 150,
+                // Personalização
+                backgroundColor: '#ffffff',
+                borderColor: '#e5e7eb',
+                // Avançado
+                componentId: ''
             };
         default:
             return { id: baseId, type: 'question', questionText: 'Pergunta...', options: [], nextStep: '' };
@@ -836,6 +872,32 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
                     </WrapperComponent>
                 );
 
+            case 'rich-text':
+                return (
+                    <WrapperComponent blockId={`${step.id}-rich-text`} label="Editor de Texto Rico" isEditable={isEditMode}>
+                        <EditableRichText
+                            // Conteúdo
+                            content={(step as any).content || '<h2>Título</h2><p><br></p><p>Preencha o texto.</p>'}
+                            placeholder={(step as any).placeholder || 'Digite seu texto aqui...'}
+                            // Layout
+                            maxWidth={(step as any).maxWidth || 100}
+                            generalAlignment={(step as any).generalAlignment || 'start'}
+                            // Configurações do Editor
+                            showToolbar={(step as any).showToolbar !== false}
+                            minHeight={(step as any).minHeight || 150}
+                            // Personalização
+                            backgroundColor={(step as any).backgroundColor || '#ffffff'}
+                            borderColor={(step as any).borderColor || '#e5e7eb'}
+                            // Avançado
+                            componentId={(step as any).componentId || ''}
+                            // Controle
+                            isEditable={isEditMode}
+                            onEdit={(field, value) => updateStep(step.id, { [field]: value })}
+                            onChange={(content) => updateStep(step.id, { content })}
+                        />
+                    </WrapperComponent>
+                );
+
             default:
                 return (
                     <div className="p-4 border border-red-300 bg-red-50 rounded">
@@ -929,6 +991,7 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
                                                                             {type === 'transition-result' && '🔄'}
                                                                             {type === 'result' && '🏆'}
                                                                             {type === 'offer' && '🎁'}
+                                                                            {type === 'rich-text' && '📝'}
                                                                         </span>
                                                                         {type.replace('-', ' ')}
                                                                     </button>
@@ -1061,6 +1124,7 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
                                                                         {type === 'transition-result' && '🔄'}
                                                                         {type === 'result' && '🏆'}
                                                                         {type === 'offer' && '🎁'}
+                                                                        {type === 'rich-text' && '📝'}
                                                                     </span>
                                                                     {type.replace('-', ' ')}
                                                                 </button>
@@ -1250,6 +1314,7 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
                                                     {t === 'button' && '🔘 Botão'}
                                                     {t === 'script' && '💻 Script'}
                                                     {t === 'heading' && '📝 Título'}
+                                                    {t === 'rich-text' && '📝 Texto Rico'}
                                                     {t === 'options-grid' && '🎛️ Grade de Opções'}
                                                     {t === 'options' && '📝 Opções do Quiz'}
                                                 </option>
