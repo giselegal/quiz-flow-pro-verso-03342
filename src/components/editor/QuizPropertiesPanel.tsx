@@ -69,7 +69,7 @@ export const QuizPropertiesPanel: React.FC<QuizPropertiesPanelProps> = ({
     }, [selectedStep]);
 
     const handlePropertyChange = useCallback((key: string, value: any) => {
-        setLocalProperties(prev => ({
+        setLocalProperties((prev: any) => ({
             ...prev,
             [key]: value
         }));
@@ -77,7 +77,7 @@ export const QuizPropertiesPanel: React.FC<QuizPropertiesPanelProps> = ({
     }, []);
 
     const handleNestedPropertyChange = useCallback((parentKey: string, childKey: string, value: any) => {
-        setLocalProperties(prev => ({
+        setLocalProperties((prev: any) => ({
             ...prev,
             [parentKey]: {
                 ...prev[parentKey],
@@ -142,7 +142,7 @@ export const QuizPropertiesPanel: React.FC<QuizPropertiesPanelProps> = ({
     }
 
     const stepType = localProperties.type;
-    const stepTypeLabels = {
+    const stepTypeLabels: Record<string, string> = {
         'intro': 'Introdução',
         'question': 'Pergunta',
         'strategic-question': 'Pergunta Estratégica',
