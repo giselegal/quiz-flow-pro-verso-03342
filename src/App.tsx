@@ -37,9 +37,7 @@ const NotFound = lazy(() => import('./pages/NotFound'));
 const TemplateDiagnosticPage = lazy(() => import('./pages/TemplateDiagnosticPage'));
 
 // �🚀 MODERN UNIFIED EDITOR - EDITOR OFICIAL (MAIS COMPLETO)
-const QuizFunnelEditorSimplified = lazy(() => import('./components/editor/quiz/QuizFunnelEditorSimplified').then(module => ({ default: module.default })));
-const QuizFunnelEditorWYSIWYG = lazy(() => import('./components/editor/quiz/QuizFunnelEditorWYSIWYG').then(module => ({ default: module.default })));
-const ModernUnifiedEditor = lazy(() => import('./pages/editor/ModernUnifiedEditor').then(module => ({ default: module.default })));
+const ModernUnifiedEditor = lazy(() => import('./pages/editor/ModernUnifiedEditor'));
 
 // ❌ HYBRID EDITOR PRO - DESATIVADO (substituído pelo ModernUnifiedEditor)
 // const HybridEditorPro = lazy(() => import('./components/editor/EditorPro/components/HybridEditorPro'));
@@ -104,13 +102,13 @@ function App() {
                             </div>
                           </Route>
 
-                          {/* 🚀 QUIZ EDITOR WYSIWYG - EDITOR OFICIAL ATIVO COM PREVIEW REAL */}
+                          {/* 🚀 MODERN UNIFIED EDITOR - EDITOR OFICIAL ATIVO */}
                           <Route path="/editor">
                             <EditorErrorBoundary>
-                              <div data-testid="quiz-editor-wysiwyg-page">
+                              <div data-testid="modern-unified-editor-page">
                                 <UnifiedCRUDProvider autoLoad={true}>
-                                  {/* ✅ ATIVADO: Editor WYSIWYG com componentes reais de produção */}
-                                  <QuizFunnelEditorWYSIWYG />
+                                  {/* ✅ ATIVADO: Editor mais completo com IA + CRUD + Templates */}
+                                  <ModernUnifiedEditor />
                                 </UnifiedCRUDProvider>
                               </div>
                             </EditorErrorBoundary>
@@ -132,10 +130,10 @@ function App() {
                           <Route path="/editor/:funnelId">
                             {(params) => (
                               <EditorErrorBoundary>
-                                <div data-testid="quiz-editor-wysiwyg-funnel-page">
+                                <div data-testid="modern-unified-editor-funnel-page">
                                   <UnifiedCRUDProvider funnelId={params.funnelId} autoLoad={true}>
-                                    {/* ✅ ATIVADO: Editor WYSIWYG com suporte a funnelId dinâmico */}
-                                    <QuizFunnelEditorWYSIWYG funnelId={params.funnelId} />
+                                    {/* ✅ ATIVADO: Editor com suporte a funnelId dinâmico */}
+                                    <ModernUnifiedEditor funnelId={params.funnelId} />
                                   </UnifiedCRUDProvider>
                                 </div>
                               </EditorErrorBoundary>
