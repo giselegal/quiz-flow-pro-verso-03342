@@ -52,6 +52,13 @@ class IndexedDBService {
           cacheStore.createIndex('timestamp', 'timestamp', { unique: false });
         }
 
+        // Criar object store para configurações se não existir
+        if (!db.objectStoreNames.contains('configurations')) {
+          const configStore = db.createObjectStore('configurations', { keyPath: 'id' });
+          configStore.createIndex('timestamp', 'timestamp', { unique: false });
+          configStore.createIndex('userId', 'metadata.userId', { unique: false });
+        }
+
         console.log('✅ IndexedDB schema atualizado');
       };
     });
