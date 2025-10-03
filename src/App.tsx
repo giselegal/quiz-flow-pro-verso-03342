@@ -87,7 +87,7 @@ function App() {
     <HelmetProvider>
       <GlobalErrorBoundary showResetButton={true}>
         <ThemeProvider defaultTheme="light">
-          <CustomThemeProvider defaultTheme="dark">
+          <CustomThemeProvider defaultTheme="light">
             <AuthProvider>
               <SecurityProvider>
                 <MonitoringProvider enableAlerts={true} enableAnalytics={true}>
