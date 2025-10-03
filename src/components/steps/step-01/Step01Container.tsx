@@ -104,5 +104,9 @@ const Step01Container: React.FC<BaseStepProps> = ({
                     Categoria: {metadata.category}<br />
                     Tempo estimado: {metadata.estimatedTime}s
                 </div>
-            )}\n    </main>\n  ); \n
-}; \n\nexport default Step01Container;
+            )}
+        </main>
+    );
+};
+
+export default Step01Container;
