@@ -390,8 +390,8 @@ const QuizFunnelEditorSimplified: React.FC<QuizFunnelEditorProps> = ({ funnelId,
                                         </div>
                                     )}
                                 </div>
+                            )}
                             </div>
-                        )}
                     </div>
                 </div>
 
@@ -442,25 +442,6 @@ const QuizFunnelEditorSimplified: React.FC<QuizFunnelEditorProps> = ({ funnelId,
                                                 onChange={e => updateStep(selectedStep.id, { buttonText: e.target.value })}
                                                 className="w-full border rounded px-2 py-1 text-[11px]"
                                             />
-                                        </div>
-                                        <div>
-                                            <label className="block mb-1 font-medium">URL da Imagem</label>
-                                            <input
-                                                value={selectedStep.image || ''}
-                                                onChange={e => updateStep(selectedStep.id, { image: e.target.value })}
-                                                className="w-full border rounded px-2 py-1 text-[11px]"
-                                                placeholder="https://..."
-                                            />
-                                            {selectedStep.image && (
-                                                <img
-                                                    src={selectedStep.image}
-                                                    alt="Preview"
-                                                    className="w-full h-16 object-cover rounded mt-1"
-                                                    onError={(e) => {
-                                                        e.currentTarget.style.display = 'none';
-                                                    }}
-                                                />
-                                            )}
                                         </div>
                                     </>
                                 )}
@@ -549,7 +530,8 @@ const QuizFunnelEditorSimplified: React.FC<QuizFunnelEditorProps> = ({ funnelId,
                 </div>
             </div>
         </div>
-    );
+            </div >
+            );
 };
 
 export default QuizFunnelEditorSimplified;
