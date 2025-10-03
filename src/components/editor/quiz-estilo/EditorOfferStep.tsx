@@ -85,7 +85,7 @@ export default function EditorOfferStep({
                         O que você vai receber:
                     </h4>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-left">
-                        {safeData.benefits.map((benefit, index) => (
+                        {safeData.benefits.map((benefit: any, index: number) => (
                             <div key={index} className="flex items-center space-x-3">
                                 <div className="w-6 h-6 bg-[#B89B7A] rounded-full flex items-center justify-center flex-shrink-0">
                                     <span className="text-white text-xs font-bold">✓</span>
