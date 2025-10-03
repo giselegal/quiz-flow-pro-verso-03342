@@ -39,7 +39,7 @@ export interface HybridComponentProps {
     isEditable?: boolean;
     onEdit?: (field: string, value: any) => void;
     onChange?: (content: any) => void;
-    
+
     // Props específicas para componentes de produção
     onNameSubmit?: (name: string) => void;
     currentAnswers?: string[];
@@ -49,7 +49,7 @@ export interface HybridComponentProps {
     onComplete?: () => void;
     userProfile?: any;
     offerKey?: string;
-    
+
     // Props de controle
     mode?: 'edit' | 'preview' | 'production';
 }
@@ -91,17 +91,17 @@ export const HybridStepRenderer: React.FC<HybridComponentProps> = ({
                         isEditable={isEditable}
                         onEdit={onEdit}
                     />
-                    
+
                     {/* Conteúdo principal usando dados reais */}
                     <IntroStep
                         data={step} // DADOS REAIS DO FUNIL
-                        onNameSubmit={props.onNameSubmit || (() => {})}
+                        onNameSubmit={props.onNameSubmit || (() => { })}
                     />
                 </div>
             ) : (
                 <IntroStep
                     data={step} // DADOS REAIS DO FUNIL
-                    onNameSubmit={props.onNameSubmit || (() => {})}
+                    onNameSubmit={props.onNameSubmit || (() => { })}
                 />
             );
 
@@ -118,7 +118,7 @@ export const HybridStepRenderer: React.FC<HybridComponentProps> = ({
                         isEditable={isEditable}
                         onEdit={onEdit}
                     />
-                    
+
                     {/* Título da questão usando dados reais */}
                     <EditableHeading
                         content={`${step.questionNumber} - ${step.questionText}`} // DADOS REAIS
@@ -127,9 +127,9 @@ export const HybridStepRenderer: React.FC<HybridComponentProps> = ({
                         isEditable={isEditable}
                         onEdit={onEdit}
                     />
-                    
+
                     <EditableSpacer height={24} isEditable={isEditable} onEdit={onEdit} />
-                    
+
                     {/* Opções usando dados reais */}
                     <EditableOptionsGrid
                         options={step.options} // DADOS REAIS DO FUNIL
@@ -145,7 +145,7 @@ export const HybridStepRenderer: React.FC<HybridComponentProps> = ({
                 <QuestionStep
                     data={step} // DADOS REAIS DO FUNIL
                     currentAnswers={props.currentAnswers || []}
-                    onAnswersChange={props.onAnswersChange || (() => {})}
+                    onAnswersChange={props.onAnswersChange || (() => { })}
                 />
             );
 
@@ -161,7 +161,7 @@ export const HybridStepRenderer: React.FC<HybridComponentProps> = ({
                         isEditable={isEditable}
                         onEdit={onEdit}
                     />
-                    
+
                     <EditableHeading
                         content={step.questionText} // DADOS REAIS
                         alignment="center"
@@ -169,7 +169,7 @@ export const HybridStepRenderer: React.FC<HybridComponentProps> = ({
                         isEditable={isEditable}
                         onEdit={onEdit}
                     />
-                    
+
                     <EditableOptions
                         options={step.options} // DADOS REAIS DO FUNIL
                         selectedOptions={props.currentAnswer ? [props.currentAnswer] : []}
@@ -183,7 +183,7 @@ export const HybridStepRenderer: React.FC<HybridComponentProps> = ({
                 <StrategicQuestionStep
                     data={step} // DADOS REAIS DO FUNIL
                     currentAnswer={props.currentAnswer || ''}
-                    onAnswerChange={props.onAnswerChange || (() => {})}
+                    onAnswerChange={props.onAnswerChange || (() => { })}
                 />
             );
 
@@ -200,7 +200,7 @@ export const HybridStepRenderer: React.FC<HybridComponentProps> = ({
                         isEditable={isEditable}
                         onEdit={onEdit}
                     />
-                    
+
                     <EditableHeading
                         content={step.title || step.text} // DADOS REAIS
                         alignment="center"
@@ -208,7 +208,7 @@ export const HybridStepRenderer: React.FC<HybridComponentProps> = ({
                         isEditable={isEditable}
                         onEdit={onEdit}
                     />
-                    
+
                     {/* Script de transição real */}
                     <EditableScript
                         code={getTransitionScript(step)} // LÓGICA REAL DE TRANSIÇÃO
@@ -220,7 +220,7 @@ export const HybridStepRenderer: React.FC<HybridComponentProps> = ({
             ) : (
                 <TransitionStep
                     data={step} // DADOS REAIS DO FUNIL
-                    onComplete={props.onComplete || (() => {})}
+                    onComplete={props.onComplete || (() => { })}
                 />
             );
 
@@ -236,7 +236,7 @@ export const HybridStepRenderer: React.FC<HybridComponentProps> = ({
                         isEditable={isEditable}
                         onEdit={onEdit}
                     />
-                    
+
                     <EditableRichText
                         content={generateResultContent(step, props.userProfile)} // CONTEÚDO REAL DINÂMICO
                         isEditable={isEditable}
@@ -263,14 +263,14 @@ export const HybridStepRenderer: React.FC<HybridComponentProps> = ({
                         isEditable={isEditable}
                         onEdit={onEdit}
                     />
-                    
-                                            <EditableRichText
+
+                    <EditableRichText
                         content={generateOfferContent(step, props.userProfile, props.offerKey || 'default')} // OFERTA REAL DINÂMICA
                         isEditable={isEditable}
                         onEdit={onEdit}
                         onChange={onChange}
                     />
-                    
+
                     <EditableButton
                         text={getOfferButtonText(step, props.offerKey || 'default')} // TEXTO REAL DO BOTÃO
                         variant="default"
@@ -348,7 +348,7 @@ function calculateProgress(step: any): number {
  */
 function generateResultContent(step: any, userProfile: any): string {
     if (!userProfile) return step.title || 'Seu resultado';
-    
+
     return `
         <h1>${userProfile.userName}, seu estilo é:</h1>
         <h2 style="color: #B89B7A;">${userProfile.resultStyle}</h2>
@@ -365,7 +365,7 @@ function generateResultContent(step: any, userProfile: any): string {
 function generateOfferContent(step: any, userProfile: any, offerKey: string): string {
     const offerData = step.offerMap?.[offerKey] || step.offerMap?.['default'];
     if (!offerData) return '<h2>Oferta Especial</h2><p>Personalize sua jornada de estilo!</p>';
-    
+
     return `
         <h1>${offerData.title}</h1>
         <p>${offerData.description}</p>

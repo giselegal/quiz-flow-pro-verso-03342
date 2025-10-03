@@ -660,9 +660,9 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
 
         // Renderizar usando o sistema híbrido que consome dados reais
         return (
-            <WrapperComponent 
-                blockId={`${step.id}-${step.type}`} 
-                label={getStepLabel(step.type)} 
+            <WrapperComponent
+                blockId={`${step.id}-${step.type}`}
+                label={getStepLabel(step.type)}
                 isEditable={isEditMode}
             >
                 <HybridStepRenderer
