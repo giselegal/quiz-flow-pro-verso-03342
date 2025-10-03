@@ -18,18 +18,50 @@ import OfferStep from '@/components/quiz/OfferStep';
 import EditableIntroStep from '@/components/quiz/editable/EditableIntroStep';
 import EditableQuestionStep from '@/components/quiz/editable/EditableQuestionStep';
 
+// Importar novos componentes baseados no modelo do funil
+import EditableHeader from '@/components/quiz/editable/EditableHeader';
+import EditableSpacer from '@/components/quiz/editable/EditableSpacer';
+import EditableAdvancedOptions from '@/components/quiz/editable/EditableAdvancedOptions';
+import EditableButton from '@/components/quiz/editable/EditableButton';
+import EditableScript from '@/components/quiz/editable/EditableScript';
+
 interface QuizFunnelEditorProps {
     funnelId?: string;
     templateId?: string;
 }
 
-type EditableQuizStep = QuizStep & { id: string };
+type ExtendedStepType = QuizStep['type'] | 'header' | 'spacer' | 'advanced-options' | 'button' | 'script';
 
-const STEP_TYPES: Array<QuizStep['type']> = [
-    'intro', 'question', 'strategic-question', 'transition', 'transition-result', 'result', 'offer'
+type EditableQuizStep = (QuizStep | {
+    type: 'header';
+    logo?: string;
+    progress?: number;
+} | {
+    type: 'spacer';
+    height?: number;
+} | {
+    type: 'advanced-options';
+    options?: Array<{ id: string; text: string; htmlContent?: string; prefix?: string }>;
+    multiSelect?: boolean;
+} | {
+    type: 'button';
+    text?: string;
+    variant?: string;
+    size?: string;
+    fullWidth?: boolean;
+} | {
+    type: 'script';
+    code?: string;
+    visible?: boolean;
+}) & { id: string };
+
+const STEP_TYPES: Array<string> = [
+    'intro', 'question', 'strategic-question', 'transition', 'transition-result', 'result', 'offer',
+    // Novos tipos baseados no modelo do funil:
+    'header', 'spacer', 'advanced-options', 'button', 'script'
 ];
 
-function createBlankStep(type: QuizStep['type']): EditableQuizStep {
+function createBlankStep(type: ExtendedStepType): EditableQuizStep {
     const baseId = `step-${Date.now()}`;
     switch (type) {
         case 'intro':
@@ -74,6 +106,24 @@ function createBlankStep(type: QuizStep['type']): EditableQuizStep {
             return { id: baseId, type: 'result', title: '{userName}, seu estilo é:', nextStep: '' };
         case 'offer':
             return { id: baseId, type: 'offer', offerMap: {}, image: '' };
+        case 'header':
+            return { id: baseId, type: 'header', logo: '', progress: 0 };
+        case 'spacer':
+            return { id: baseId, type: 'spacer', height: 32 };
+        case 'advanced-options':
+            return {
+                id: baseId,
+                type: 'advanced-options',
+                options: [
+                    { id: 'opt-1', text: 'Opção A', prefix: 'A)' },
+                    { id: 'opt-2', text: 'Opção B', prefix: 'B)' }
+                ],
+                multiSelect: false
+            };
+        case 'button':
+            return { id: baseId, type: 'button', text: 'Clique aqui', variant: 'default', size: 'default', fullWidth: true };
+        case 'script':
+            return { id: baseId, type: 'script', code: '// Digite seu código JavaScript aqui', visible: false };
         default:
             return { id: baseId, type: 'question', questionText: 'Pergunta...', options: [], nextStep: '' };
     }
@@ -107,7 +157,7 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
         setSteps(prev => prev.map(s => (s.id === id ? { ...s, ...patch } : s)));
     }, []);
 
-    const addStepAfter = (afterId?: string, type: QuizStep['type'] = 'question') => {
+    const addStepAfter = (afterId?: string, type: ExtendedStepType = 'question') => {
         setSteps(prev => {
             const idx = afterId ? prev.findIndex(s => s.id === afterId) : prev.length - 1;
             const newStep = createBlankStep(type);
@@ -119,7 +169,7 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
         });
     };
 
-    const addStepBefore = (beforeId: string, type: QuizStep['type'] = 'question') => {
+    const addStepBefore = (beforeId: string, type: ExtendedStepType = 'question') => {
         setSteps(prev => {
             const idx = prev.findIndex(s => s.id === beforeId);
             if (idx === -1) return prev;
@@ -132,7 +182,7 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
         });
     };
 
-    const addStepAtEnd = (type: QuizStep['type'] = 'question') => {
+    const addStepAtEnd = (type: ExtendedStepType = 'question') => {
         const newStep = createBlankStep(type);
         setSteps(prev => [...prev, newStep]);
         setSelectedId(newStep.id);
@@ -365,10 +415,75 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
                         />
                     </WrapperComponent>
                 );
+
+            // Novos componentes baseados no modelo do funil:
+            case 'header':
+                return (
+                    <WrapperComponent blockId={`${step.id}-header`} label="Header" isEditable={isEditMode}>
+                        <EditableHeader
+                            logo={(step as any).logo || ''}
+                            progress={(step as any).progress || 0}
+                            isEditable={isEditMode}
+                            onEdit={(field, value) => updateStep(step.id, { [field]: value })}
+                        />
+                    </WrapperComponent>
+                );
+
+            case 'spacer':
+                return (
+                    <WrapperComponent blockId={`${step.id}-spacer`} label="Espaçador" isEditable={isEditMode}>
+                        <EditableSpacer
+                            height={(step as any).height || 32}
+                            isEditable={isEditMode}
+                            onEdit={(field, value) => updateStep(step.id, { [field]: value })}
+                        />
+                    </WrapperComponent>
+                );
+
+            case 'advanced-options':
+                return (
+                    <WrapperComponent blockId={`${step.id}-advanced-options`} label="Opções Avançadas" isEditable={isEditMode}>
+                        <EditableAdvancedOptions
+                            options={(step as any).options || []}
+                            selectedOptions={[]}
+                            onOptionsChange={() => { }}
+                            multiSelect={(step as any).multiSelect || false}
+                            isEditable={isEditMode}
+                            onEdit={(field, value) => updateStep(step.id, { [field]: value })}
+                        />
+                    </WrapperComponent>
+                );
+
+            case 'button':
+                return (
+                    <WrapperComponent blockId={`${step.id}-button`} label="Botão" isEditable={isEditMode}>
+                        <EditableButton
+                            text={(step as any).text || 'Clique aqui'}
+                            variant={(step as any).variant || 'default'}
+                            size={(step as any).size || 'default'}
+                            fullWidth={(step as any).fullWidth !== false}
+                            isEditable={isEditMode}
+                            onEdit={(field, value) => updateStep(step.id, { [field]: value })}
+                        />
+                    </WrapperComponent>
+                );
+
+            case 'script':
+                return (
+                    <WrapperComponent blockId={`${step.id}-script`} label="Script" isEditable={isEditMode}>
+                        <EditableScript
+                            code={(step as any).code || ''}
+                            visible={(step as any).visible || false}
+                            isEditable={isEditMode}
+                            onEdit={(field, value) => updateStep(step.id, { [field]: value })}
+                        />
+                    </WrapperComponent>
+                );
+
             default:
                 return (
                     <div className="p-4 border border-red-300 bg-red-50 rounded">
-                        <p className="text-red-600">Tipo de componente não reconhecido: {step.type}</p>
+                        <p className="text-red-600">Tipo de componente não reconhecido: {(step as any).type}</p>
                     </div>
                 );
         }
@@ -446,7 +561,7 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
                                                                         key={type}
                                                                         className="w-full px-3 py-2 text-left text-[11px] hover:bg-gray-50 flex items-center gap-2"
                                                                         onClick={() => {
-                                                                            addStepBefore(s.id, type);
+                                                                            addStepBefore(s.id, type as ExtendedStepType);
                                                                             setActiveInsertDropdown(null);
                                                                         }}
                                                                     >
@@ -578,7 +693,7 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
                                                                     key={type}
                                                                     className="w-full px-3 py-2 text-left text-[11px] hover:bg-gray-50 flex items-center gap-2"
                                                                     onClick={() => {
-                                                                        addStepAfter(s.id, type);
+                                                                        addStepAfter(s.id, type as ExtendedStepType);
                                                                         setActiveInsertDropdown(null);
                                                                     }}
                                                                 >
@@ -628,7 +743,7 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
                                             className="w-full px-3 py-2 text-left text-[11px] hover:bg-gray-50 flex items-center gap-2 border-b last:border-b-0"
                                             onClick={(e) => {
                                                 e.stopPropagation();
-                                                addStepAtEnd(type);
+                                                addStepAtEnd(type as ExtendedStepType);
                                                 setActiveInsertDropdown(null);
                                             }}
                                         >
@@ -677,7 +792,7 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
                                     size="sm"
                                     variant="outline"
                                     className="text-[10px] h-8 flex flex-col items-center p-1"
-                                    onClick={() => addStepAfter(selectedId, type)}
+                                    onClick={() => addStepAfter(selectedId, type as ExtendedStepType)}
                                 >
                                     <span className="truncate w-full text-center">
                                         {type === 'intro' && '🏠 Intro'}
@@ -948,19 +1063,126 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
                                     </div>
                                 )}
 
-                                <div>
-                                    <label className="block mb-1 font-medium">Próximo Step</label>
-                                    <select
-                                        value={selectedStep.nextStep || ''}
-                                        onChange={e => updateStep(selectedStep.id, { nextStep: e.target.value })}
-                                        className="w-full border rounded px-2 py-1 text-[11px]"
-                                    >
-                                        <option value="">Selecione...</option>
-                                        {steps.map(s => (
-                                            <option key={s.id} value={s.id}>{s.id} ({s.type})</option>
-                                        ))}
-                                    </select>
-                                </div>
+                                {/* Novos campos para componentes do modelo do funil */}
+                                {selectedStep.type === 'header' && (
+                                    <>
+                                        <div>
+                                            <label className="block mb-1 font-medium">URL do Logo</label>
+                                            <input
+                                                value={(selectedStep as any).logo || ''}
+                                                onChange={e => updateStep(selectedStep.id, { logo: e.target.value })}
+                                                className="w-full border rounded px-2 py-1 text-[11px]"
+                                                placeholder="https://..."
+                                            />
+                                        </div>
+                                        <div>
+                                            <label className="block mb-1 font-medium">Progresso (%)</label>
+                                            <input
+                                                type="number"
+                                                min="0"
+                                                max="100"
+                                                value={(selectedStep as any).progress || 0}
+                                                onChange={e => updateStep(selectedStep.id, { progress: parseInt(e.target.value) || 0 })}
+                                                className="w-full border rounded px-2 py-1 text-[11px]"
+                                            />
+                                        </div>
+                                    </>
+                                )}
+
+                                {selectedStep.type === 'spacer' && (
+                                    <div>
+                                        <label className="block mb-1 font-medium">Altura (px)</label>
+                                        <input
+                                            type="number"
+                                            min="10"
+                                            max="200"
+                                            value={(selectedStep as any).height || 32}
+                                            onChange={e => updateStep(selectedStep.id, { height: parseInt(e.target.value) || 32 })}
+                                            className="w-full border rounded px-2 py-1 text-[11px]"
+                                        />
+                                    </div>
+                                )}
+
+                                {selectedStep.type === 'button' && (
+                                    <>
+                                        <div>
+                                            <label className="block mb-1 font-medium">Texto do Botão</label>
+                                            <input
+                                                value={(selectedStep as any).text || ''}
+                                                onChange={e => updateStep(selectedStep.id, { text: e.target.value })}
+                                                className="w-full border rounded px-2 py-1 text-[11px]"
+                                            />
+                                        </div>
+                                        <div>
+                                            <label className="block mb-1 font-medium">Variante</label>
+                                            <select
+                                                value={(selectedStep as any).variant || 'default'}
+                                                onChange={e => updateStep(selectedStep.id, { variant: e.target.value })}
+                                                className="w-full border rounded px-2 py-1 text-[11px]"
+                                            >
+                                                <option value="default">Padrão</option>
+                                                <option value="destructive">Destrutivo</option>
+                                                <option value="outline">Contorno</option>
+                                                <option value="secondary">Secundário</option>
+                                                <option value="ghost">Fantasma</option>
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <label className="block mb-1 font-medium">Tamanho</label>
+                                            <select
+                                                value={(selectedStep as any).size || 'default'}
+                                                onChange={e => updateStep(selectedStep.id, { size: e.target.value })}
+                                                className="w-full border rounded px-2 py-1 text-[11px]"
+                                            >
+                                                <option value="sm">Pequeno</option>
+                                                <option value="default">Médio</option>
+                                                <option value="lg">Grande</option>
+                                            </select>
+                                        </div>
+                                    </>
+                                )}
+
+                                {selectedStep.type === 'script' && (
+                                    <>
+                                        <div>
+                                            <label className="block mb-1 font-medium">Código JavaScript</label>
+                                            <textarea
+                                                rows={8}
+                                                value={(selectedStep as any).code || ''}
+                                                onChange={e => updateStep(selectedStep.id, { code: e.target.value })}
+                                                className="w-full border rounded px-2 py-1 text-[11px] font-mono"
+                                                placeholder="// Digite seu código aqui..."
+                                            />
+                                        </div>
+                                        <div>
+                                            <label className="flex items-center gap-2">
+                                                <input
+                                                    type="checkbox"
+                                                    checked={(selectedStep as any).visible || false}
+                                                    onChange={e => updateStep(selectedStep.id, { visible: e.target.checked })}
+                                                />
+                                                <span className="text-[11px]">Visível no preview</span>
+                                            </label>
+                                        </div>
+                                    </>
+                                )}
+
+                                {/* Próximo Step - apenas para tipos que suportam */}
+                                {selectedStep.type !== 'header' && selectedStep.type !== 'spacer' && selectedStep.type !== 'script' && (
+                                    <div>
+                                        <label className="block mb-1 font-medium">Próximo Step</label>
+                                        <select
+                                            value={(selectedStep as any).nextStep || ''}
+                                            onChange={e => updateStep(selectedStep.id, { nextStep: e.target.value })}
+                                            className="w-full border rounded px-2 py-1 text-[11px]"
+                                        >
+                                            <option value="">Selecione...</option>
+                                            {steps.map(s => (
+                                                <option key={s.id} value={s.id}>{s.id} ({s.type})</option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                )}
                             </>
                         )}
                     </div>
