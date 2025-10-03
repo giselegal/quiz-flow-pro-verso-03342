@@ -7,6 +7,7 @@ import { QuizFunnelEditingFacade, type IFunnelEditingFacade, type FunnelSnapshot
 import { resolveAdapter, applySnapshotAndPersist } from '@/editor/adapters/FunnelAdapterRegistry';
 import { useUnifiedCRUDOptional } from '@/context/UnifiedCRUDProvider';
 import { useFunnelPublication } from '@/hooks/useFunnelPublication';
+import '../../components/editor/quiz/QuizEditorStyles.css';
 
 export interface ModernUnifiedEditorProps {
     funnelId?: string;
@@ -112,7 +113,7 @@ const ModernUnifiedEditor: React.FC<ModernUnifiedEditorProps> = (props) => {
     }, [facade]);
 
     return (
-        <div className={`flex flex-col w-full h-full ${props.className || ''}`}>
+        <div className={`quiz-editor-container flex flex-col w-full h-full ${props.className || ''}`}>
             <div className="flex-1 min-h-0">
                 <Suspense fallback={<div className="p-4 text-sm text-muted-foreground">Carregando editor...</div>}>
                     {!crud ? (
