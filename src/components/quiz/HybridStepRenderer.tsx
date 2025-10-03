@@ -84,7 +84,7 @@ export const HybridStepRenderer: React.FC<HybridComponentProps> = ({
                     data={step} // DADOS REAIS DO FUNIL
                     isEditable={isEditable}
                     onEdit={onEdit}
-                    onNameSubmit={props.onNameSubmit || (() => {})}
+                    onNameSubmit={props.onNameSubmit || (() => { })}
                 />
             ) : (
                 <IntroStep
@@ -100,7 +100,7 @@ export const HybridStepRenderer: React.FC<HybridComponentProps> = ({
                     isEditable={isEditable}
                     onEdit={onEdit}
                     currentAnswers={props.currentAnswers || []}
-                    onAnswersChange={props.onAnswersChange || (() => {})}
+                    onAnswersChange={props.onAnswersChange || (() => { })}
                 />
             ) : (
                 <QuestionStep

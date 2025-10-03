@@ -1056,7 +1056,7 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
                                             </div>
                                         </button>
                                     ))}
-                                    
+
                                     {/* Seção de Componentes */}
                                     <div className="px-2 py-1 bg-blue-100 text-[9px] font-semibold text-blue-600">🧩 COMPONENTES</div>
                                     {COMPONENT_TYPES.map(type => (
