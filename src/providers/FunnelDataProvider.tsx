@@ -9,7 +9,7 @@
  */
 
 import React, { useEffect } from 'react';
-import { useEditor } from '@/components/editor/EditorProviderMigrationAdapter';
+import { useEditor } from '@/components/editor/EditorProvider';
 import { useFunnels } from '@/context/FunnelsContext';
 import { blockPropertiesAPI, type FunnelDataProvider } from '@/api/internal/BlockPropertiesAPI';
 

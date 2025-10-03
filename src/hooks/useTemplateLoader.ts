@@ -1,6 +1,6 @@
 import { getStepTemplate } from '@/config/templates/templates';
 // @ts-nocheck
-import { useEditor } from '@/components/editor/EditorProviderMigrationAdapter';
+import { useEditor } from '@/components/editor/EditorProvider';
 import { Block } from '@/types/editor';
 import { useCallback, useEffect, useState } from 'react';
 

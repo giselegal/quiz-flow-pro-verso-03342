@@ -17,7 +17,7 @@
 
 import React, { Suspense, useMemo, useCallback } from 'react';
 import LazyBoundary from '@/components/common/LazyBoundary';
-import { useEditor } from '@/components/editor/EditorProviderMigrationAdapter';
+import { useEditor } from '@/components/editor/EditorProvider';
 import { logger } from '@/utils/debugLogger';
 
 // 🎯 LAZY LOADED COMPONENTS (código splitting inteligente)

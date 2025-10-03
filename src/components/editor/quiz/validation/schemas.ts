@@ -84,9 +84,9 @@ export const AnyStepSchema = z.discriminatedUnion('type', [
 export const StepsArraySchema = z.array(AnyStepSchema).min(1);
 
 // Schema de export com metadados de blocos para futura migração
-const BlockExportMetaSchema = z.object({ 
-    id: z.string(), 
-    version: z.number().int() 
+const BlockExportMetaSchema = z.object({
+    id: z.string(),
+    version: z.number().int()
 });
 
 export const ExportSchema = z.object({

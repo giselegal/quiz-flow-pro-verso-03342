@@ -18,7 +18,7 @@ import {
 } from 'lucide-react';
 
 // Providers necessários
-import { EditorProvider } from '@/components/editor/EditorProviderMigrationAdapter';
+import { EditorProvider } from '@/components/editor/EditorProvider';
 import { FunnelMasterProvider } from '@/providers/FunnelMasterProvider';
 import UnifiedCRUDProvider from '@/context/UnifiedCRUDProvider';
 

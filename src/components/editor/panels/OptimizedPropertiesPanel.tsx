@@ -6,7 +6,7 @@
  */
 
 import React, { useMemo, useCallback } from 'react';
-// import { useEditor } from '@/components/editor/EditorProviderMigrationAdapter'; // Commented until interface is updated
+// import { useEditor } from '@/components/editor/EditorProvider'; // Commented until interface is updated
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';

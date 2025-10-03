@@ -3,7 +3,7 @@ import { StepNavigationPropertyEditor } from '@/components/editor/properties/edi
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { useEditor } from '@/components/editor/EditorProviderMigrationAdapter';
+import { useEditor } from '@/components/editor/EditorProvider';
 import { useFunnels } from '@/context/FunnelsContext';
 import { cn } from '@/lib/utils';
 import { useStepNavigationStore } from '@/stores/useStepNavigationStore';

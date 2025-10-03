@@ -61,7 +61,7 @@ function migrateFile(filePath) {
             console.log(`✅ Migrado: ${filePath}`);
             return true;
         }
-        
+
         return false;
     } catch (error) {
         console.error(`❌ Erro ao migrar ${filePath}:`, error.message);
@@ -71,7 +71,7 @@ function migrateFile(filePath) {
 
 function main() {
     console.log('🔄 Iniciando migração do EditorProviderMigrationAdapter...\n');
-    
+
     let totalFiles = 0;
     let migratedFiles = 0;
 
@@ -84,7 +84,13 @@ function main() {
 
         for (const file of files) {
             totalFiles++;
-            
+
+            // Verificar se o arquivo existe
+            if (!fs.existsSync(file)) {
+                console.log(`⚠️  Arquivo não encontrado: ${file}`);
+                continue;
+            }
+
             // Verificar se o arquivo contém imports do adapter
             const content = fs.readFileSync(file, 'utf8');
             if (content.includes('EditorProviderMigrationAdapter')) {
@@ -98,7 +104,7 @@ function main() {
     console.log(`\n📊 Resumo da migração:`);
     console.log(`   Arquivos verificados: ${totalFiles}`);
     console.log(`   Arquivos migrados: ${migratedFiles}`);
-    
+
     if (migratedFiles > 0) {
         console.log(`\n✅ Migração concluída! ${migratedFiles} arquivos foram atualizados.`);
         console.log(`\nPróximos passos:`);

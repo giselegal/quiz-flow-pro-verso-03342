@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { useEditor } from '@/components/editor/EditorProviderMigrationAdapter';
+import { useEditor } from '@/components/editor/EditorProvider';
 import { Block } from '@/types/editor';
 import { useInlineEditor } from './useInlineEditor';
 import { useStepValidation } from './useStepValidation';

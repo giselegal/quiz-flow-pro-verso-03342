@@ -9,7 +9,7 @@ export interface CycleReport {
 export function detectCycle(steps: EditableQuizStep[]): CycleReport {
     const idMap = new Map<string, EditableQuizStep>();
     steps.forEach(s => idMap.set(s.id, s));
-    
+
     const visiting = new Set<string>();
     const visited = new Set<string>();
     const cycles: string[][] = [];
@@ -25,12 +25,12 @@ export function detectCycle(steps: EditableQuizStep[]): CycleReport {
             }
             return true;
         }
-        
+
         if (visited.has(id)) return false;
-        
+
         visiting.add(id);
         pathStack.push(id);
-        
+
         const step = idMap.get(id);
         if (step?.nextStep && idMap.has(step.nextStep)) {
             if (dfs(step.nextStep)) {
@@ -40,7 +40,7 @@ export function detectCycle(steps: EditableQuizStep[]): CycleReport {
                 return true; // early stop se desejado
             }
         }
-        
+
         visiting.delete(id);
         pathStack.pop();
         visited.add(id);
@@ -53,10 +53,10 @@ export function detectCycle(steps: EditableQuizStep[]): CycleReport {
             dfs(s.id);
         }
     }
-    
-    return { 
-        hasCycle: cycles.length > 0, 
-        path: cycles[0] || [], 
-        cycles 
+
+    return {
+        hasCycle: cycles.length > 0,
+        path: cycles[0] || [],
+        cycles
     };
 }
