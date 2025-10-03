@@ -3,7 +3,7 @@ import { useUnifiedCRUD } from '@/context/UnifiedCRUDProvider';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { QUIZ_STEPS, type QuizStep } from '@/data/quizSteps';
-import { Plus, Save, Trash2, ArrowUp, ArrowDown, Copy, Eye, ChevronDown } from 'lucide-react';
+import { Plus, Save, Trash2, ArrowUp, ArrowDown, Copy, Eye, ChevronDown, Settings } from 'lucide-react';
 import './QuizEditorStyles.css';
 
 // Importar componentes reais de produção para preview WYSIWYG
@@ -182,135 +182,187 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
         }
     }, [steps, crud]);
 
+    // Mock de resultados para o componente ResultStep
+    const mockResults = {
+        userProfile: 'Empreendedor Visionário',
+        categories: ['Liderança', 'Inovação', 'Estratégia']
+    };
+
+    // Wrapper simples para componentes no modo preview
+    const SelectableWrapper: React.FC<{
+        children: React.ReactNode;
+        blockId: string;
+        label: string;
+    }> = ({ children, blockId, label }) => {
+        return (
+            <div
+                className={`relative transition-all duration-200 group ${selectedBlockId === blockId
+                        ? 'ring-2 ring-blue-500 ring-offset-2'
+                        : 'hover:ring-1 hover:ring-gray-300'
+                    }`}
+                onClick={(e) => {
+                    e.stopPropagation();
+                    setSelectedBlockId(blockId);
+                }}
+            >
+                <div className="absolute -top-6 left-0 bg-gray-600 text-white px-2 py-1 text-xs rounded z-10 opacity-0 group-hover:opacity-100 transition-opacity">
+                    {label}
+                </div>
+                {children}
+            </div>
+        );
+    };
+
+    // Wrapper para componentes editáveis
+    const EditableWrapper: React.FC<{
+        children: React.ReactNode;
+        blockId: string;
+        label: string;
+        isEditable?: boolean;
+    }> = ({ children, blockId, label, isEditable = false }) => {
+        return (
+            <div
+                className={`relative transition-all duration-200 group ${selectedBlockId === blockId
+                        ? 'ring-2 ring-blue-500 ring-offset-2 bg-blue-50/50'
+                        : 'hover:ring-1 hover:ring-blue-300'
+                    } ${isEditable ? 'cursor-pointer' : ''}`}
+                onClick={(e) => {
+                    e.stopPropagation();
+                    setSelectedBlockId(blockId);
+                }}
+            >
+                {/* Label do componente */}
+                <div className="absolute -top-6 left-0 bg-blue-500 text-white px-2 py-1 text-xs rounded z-10 opacity-0 group-hover:opacity-100 transition-opacity">
+                    {label} {isEditable && '(Editável)'}
+                </div>
+
+                {/* Toolbar de edição para modo editável */}
+                {isEditable && (
+                    <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity z-20">
+                        <div className="flex gap-1 bg-white shadow-lg rounded p-1 border">
+                            <Button size="sm" variant="ghost" className="h-6 w-6 p-0" title="Configurações">
+                                <Copy className="w-3 h-3" />
+                            </Button>
+                            <Button
+                                size="sm"
+                                variant="ghost"
+                                className="h-6 w-6 p-0 text-red-500 hover:text-red-700"
+                                title="Remover"
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    const stepId = blockId.split('-')[0];
+                                    removeStep(stepId);
+                                }}
+                            >
+                                <Trash2 className="w-3 h-3" />
+                            </Button>
+                        </div>
+                    </div>
+                )}
+
+                {children}
+            </div>
+        );
+    };
+
     // Função para renderizar componente real no preview
     const renderRealComponent = (step: EditableQuizStep) => {
+        const isEditMode = previewMode === 'edit';
+        const WrapperComponent = isEditMode ? EditableWrapper : SelectableWrapper;
+
+        // Props básicas para os componentes
         const mockProps = {
-            onNameSubmit: () => console.log('Mock: Nome submetido'),
-            onAnswersChange: () => console.log('Mock: Respostas alteradas'),
-            onComplete: () => console.log('Mock: Transição completa'),
-            currentAnswers: [],
-            scores: {
-                natural: 0,
-                classico: 0,
-                contemporaneo: 0,
-                elegante: 0,
-                extravagante: 0,
-                casual: 0,
-                colorido: 0,
-                minimalista: 0,
-                romantico: 0,
-                sexy: 0,
-                dramatico: 0,
-                criativo: 0
-            },
-            strategicAnswers: {},
-            userName: 'Preview'
+            onNameSubmit: () => console.log('Nome submetido'),
+            onComplete: () => console.log('Transição completa'),
+            currentAnswers: [] as string[],
+            onAnswersChange: (answers: string[]) => console.log('Respostas alteradas:', answers),
+            currentAnswer: '',
+            onAnswerChange: (answer: string) => console.log('Resposta alterada:', answer),
         };
 
-        // Wrapper para capturar cliques e tornar selecionável
-        const SelectableWrapper: React.FC<{ children: React.ReactNode; blockId: string; label: string }> =
-            ({ children, blockId, label }) => (
-                <div
-                    className={`relative cursor-pointer transition-all duration-200 ${selectedBlockId === blockId
-                        ? 'ring-2 ring-blue-500 ring-offset-2 bg-blue-50'
-                        : 'hover:ring-1 hover:ring-gray-300'
-                        }`}
-                    onClick={(e) => {
-                        e.stopPropagation();
-                        setSelectedBlockId(blockId);
-                    }}
-                    data-block-id={blockId}
-                    data-block-label={label}
-                >
-                    {selectedBlockId === blockId && (
-                        <div className="absolute -top-6 left-0 bg-blue-500 text-white px-2 py-1 text-xs rounded z-10">
-                            {label}
-                        </div>
-                    )}
-                    {children}
-                </div>
-            );
+        // Props específicas para o OfferStep
+        const offerProps = {
+            userProfile: {
+                userName: 'João',
+                resultStyle: 'Empreendedor Visionário',
+                secondaryStyles: ['Liderança', 'Inovação']
+            },
+            offerKey: 'default'
+        };
 
-        try {
-            switch (step.type) {
-                case 'intro':
-                    return (
-                        <SelectableWrapper blockId={`${step.id}-intro`} label="Introdução">
-                            <IntroStep data={step} onNameSubmit={mockProps.onNameSubmit} />
-                        </SelectableWrapper>
-                    );
-                case 'question':
-                    return (
-                        <SelectableWrapper blockId={`${step.id}-question`} label="Pergunta">
-                            <QuestionStep
-                                data={step}
-                                currentAnswers={mockProps.currentAnswers}
-                                onAnswersChange={mockProps.onAnswersChange}
-                            />
-                        </SelectableWrapper>
-                    );
-                case 'strategic-question':
-                    return (
-                        <SelectableWrapper blockId={`${step.id}-strategic`} label="Pergunta Estratégica">
-                            <StrategicQuestionStep
-                                data={step}
-                                currentAnswer=""
-                                onAnswerChange={() => console.log('Mock: Resposta estratégica')}
-                            />
-                        </SelectableWrapper>
-                    );
-                case 'transition':
-                case 'transition-result':
-                    return (
-                        <SelectableWrapper blockId={`${step.id}-transition`} label="Transição">
-                            <TransitionStep data={step} onComplete={mockProps.onComplete} />
-                        </SelectableWrapper>
-                    );
-                case 'result':
-                    return (
-                        <SelectableWrapper blockId={`${step.id}-result`} label="Resultado">
-                            <ResultStep
-                                data={step}
-                                userProfile={{
-                                    userName: mockProps.userName,
-                                    resultStyle: 'Preview Style',
-                                    secondaryStyles: []
-                                }}
-                                scores={mockProps.scores}
-                            />
-                        </SelectableWrapper>
-                    );
-                case 'offer':
-                    return (
-                        <SelectableWrapper blockId={`${step.id}-offer`} label="Oferta">
-                            <OfferStep
-                                data={step}
-                                userProfile={{
-                                    userName: mockProps.userName,
-                                    resultStyle: 'Preview Style'
-                                }}
-                                offerKey="default"
-                            />
-                        </SelectableWrapper>
-                    );
-                default:
-                    return (
-                        <SelectableWrapper blockId={`${step.id}-unknown`} label="Tipo Desconhecido">
-                            <div className="p-4 border-2 border-dashed border-gray-300 rounded">
-                                Tipo de step desconhecido: {step.type}
-                            </div>
-                        </SelectableWrapper>
-                    );
-            }
-        } catch (error) {
-            return (
-                <SelectableWrapper blockId={`${step.id}-error`} label="Erro">
-                    <div className="p-4 border-2 border-red-300 bg-red-50 rounded">
-                        <p className="text-red-600 font-semibold">Erro ao renderizar componente</p>
-                        <p className="text-red-500 text-sm">{String(error)}</p>
+        switch (step.type) {
+            case 'intro':
+                return (
+                    <WrapperComponent blockId={`${step.id}-intro`} label="Introdução" isEditable={isEditMode}>
+                        <IntroStep
+                            data={step}
+                            onNameSubmit={mockProps.onNameSubmit}
+                        />
+                    </WrapperComponent>
+                );
+            case 'question':
+                return (
+                    <WrapperComponent blockId={`${step.id}-question`} label="Pergunta" isEditable={isEditMode}>
+                        <QuestionStep
+                            data={step}
+                            currentAnswers={mockProps.currentAnswers}
+                            onAnswersChange={mockProps.onAnswersChange}
+                        />
+                    </WrapperComponent>
+                );
+            case 'strategic-question':
+                return (
+                    <WrapperComponent blockId={`${step.id}-strategic`} label="Pergunta Estratégica" isEditable={isEditMode}>
+                        <StrategicQuestionStep
+                            data={step}
+                            currentAnswer={mockProps.currentAnswer}
+                            onAnswerChange={mockProps.onAnswerChange}
+                        />
+                    </WrapperComponent>
+                );
+            case 'transition':
+                return (
+                    <WrapperComponent blockId={`${step.id}-transition`} label="Transição" isEditable={isEditMode}>
+                        <TransitionStep
+                            data={step}
+                            onComplete={mockProps.onComplete}
+                        />
+                    </WrapperComponent>
+                );
+            case 'transition-result':
+                return (
+                    <WrapperComponent blockId={`${step.id}-transition-result`} label="Transição p/ Resultado" isEditable={isEditMode}>
+                        <TransitionStep
+                            data={step}
+                            onComplete={mockProps.onComplete}
+                        />
+                    </WrapperComponent>
+                );
+            case 'result':
+                return (
+                    <WrapperComponent blockId={`${step.id}-result`} label="Resultado" isEditable={isEditMode}>
+                        <ResultStep
+                            data={step}
+                            userProfile={offerProps.userProfile}
+                        />
+                    </WrapperComponent>
+                );
+            case 'offer':
+                return (
+                    <WrapperComponent blockId={`${step.id}-offer`} label="Oferta" isEditable={isEditMode}>
+                        <OfferStep
+                            data={step}
+                            userProfile={offerProps.userProfile}
+                            offerKey={offerProps.offerKey}
+                        />
+                    </WrapperComponent>
+                );
+            default:
+                return (
+                    <div className="p-4 border border-red-300 bg-red-50 rounded">
+                        <p className="text-red-600">Tipo de componente não reconhecido: {step.type}</p>
                     </div>
-                </SelectableWrapper>
-            );
+                );
         }
     };
 
@@ -737,28 +789,10 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
                             <div className="flex items-center justify-center h-full text-sm text-muted-foreground">
                                 Selecione uma etapa para ver o preview
                             </div>
-                        ) : previewMode === 'preview' ? (
-                            // Renderizar componente real de produção
+                        ) : (
+                            // Renderizar componente real SEMPRE (edit ou preview)
                             <div className="min-h-full">
                                 {renderRealComponent(selectedStep)}
-                            </div>
-                        ) : (
-                            // Modo de edição com preview simplificado
-                            <div className="p-4">
-                                <div className="bg-white p-4 rounded border shadow-sm">
-                                    <h4 className="font-semibold mb-2">{selectedStep.type}</h4>
-                                    <p className="text-sm text-gray-600 mb-4">
-                                        Clique em "Preview" para ver o componente real
-                                    </p>
-                                    <Button
-                                        size="sm"
-                                        onClick={() => setPreviewMode('preview')}
-                                        className="w-full"
-                                    >
-                                        <Eye className="w-4 h-4 mr-2" />
-                                        Ver Preview Real
-                                    </Button>
-                                </div>
                             </div>
                         )}
                     </div>
