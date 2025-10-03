@@ -16,7 +16,7 @@ import './utils/blockLovableInDev';
 // 🎯 PERFORMANCE: Controle de debug do canvas para melhor performance
 import './utils/canvasPerformanceControl';
 // ✨ MODULAR STEPS: Sistema modular de steps - auto-registro dos componentes
-import './components/steps/step-01';
+import './components/steps';
 // 🤖 AI: IA do funil auto-ativada via utils
 // import { activateFunnelAI } from './utils/funnelAIActivator'; // Removido - não utilizado
 // import "./utils/hotmartWebhookSimulator"; // Carregar simulador de webhook - temporariamente desabilitado
