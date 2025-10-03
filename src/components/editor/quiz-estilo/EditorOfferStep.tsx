@@ -19,14 +19,14 @@ interface EditorOfferStepProps {
  * 
  * Versão para o editor que replica o visual exato do quiz de produção
  */
-export default function EditorOfferStep({ 
-    data, 
+export default function EditorOfferStep({
+    data,
     userProfile,
     offerKey = 'default',
     onEdit,
-    isEditable = false 
+    isEditable = false
 }: EditorOfferStepProps) {
-    
+
     // Dados seguros com fallbacks
     const safeData = {
         title: data.title || 'Oferta Especial Para Você!',
@@ -49,7 +49,7 @@ export default function EditorOfferStep({
         <QuizEstiloWrapper showHeader={false} showProgress={false}>
             <div className="bg-white p-6 md:p-12 rounded-lg shadow-lg text-center max-w-4xl mx-auto">
                 {/* Título personalizado */}
-                <h1 
+                <h1
                     className="text-2xl md:text-3xl font-bold text-[#432818] mb-2"
                     style={{ fontFamily: '"Playfair Display", serif' }}
                 >

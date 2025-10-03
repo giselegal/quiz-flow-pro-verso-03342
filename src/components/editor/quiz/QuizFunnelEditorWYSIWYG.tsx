@@ -635,28 +635,134 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
 
     const renderRealComponent = (step: EditableQuizStep, index: number) => {
         const isEditMode = previewMode === 'edit';
+        const blockId = `step-${step.id}`;
+        const isSelected = selectedBlockId === blockId;
 
-        // 🎯 NOVO: Usar sistema modular para renderizar steps antigos
-        const modularStep = convertStepToModular(step);
+        // Props mockadas para compatibilidade
+        const mockProps = {
+            onNameSubmit: () => console.log('Nome submetido'),
+            onComplete: () => console.log('Transição completa'),
+            currentAnswers: [] as string[],
+            onAnswersChange: (answers: string[]) => console.log('Respostas alteradas:', answers),
+            currentAnswer: '',
+            onAnswerChange: (answer: string) => console.log('Resposta alterada:', answer),
+        };
+
+        const offerProps = {
+            userProfile: {
+                userName: 'João',
+                resultStyle: 'Empreendedor Visionário',
+                secondaryStyles: ['Liderança', 'Inovação']
+            },
+            offerKey: 'default'
+        };
+
+        // 🎨 NOVO: Usar componentes com design do /quiz-estilo
+        const renderStepWithQuizEstiloDesign = () => {
+            switch (step.type) {
+                case 'intro':
+                    const EditorIntroStep = React.lazy(() => import('@/components/editor/quiz-estilo/EditorIntroStep'));
+                    return (
+                        <React.Suspense fallback={<div>Carregando...</div>}>
+                            <EditorIntroStep
+                                data={step}
+                                onEdit={(field, value) => updateStep(step.id, { [field]: value })}
+                                isEditable={isEditMode}
+                            />
+                        </React.Suspense>
+                    );
+
+                case 'question':
+                    const EditorQuestionStep = React.lazy(() => import('@/components/editor/quiz-estilo/EditorQuestionStep'));
+                    return (
+                        <React.Suspense fallback={<div>Carregando...</div>}>
+                            <EditorQuestionStep
+                                data={step}
+                                currentAnswers={mockProps.currentAnswers}
+                                onAnswersChange={mockProps.onAnswersChange}
+                                onEdit={(field, value) => updateStep(step.id, { [field]: value })}
+                                isEditable={isEditMode}
+                            />
+                        </React.Suspense>
+                    );
+
+                case 'strategic-question':
+                    const EditorStrategicQuestionStep = React.lazy(() => import('@/components/editor/quiz-estilo/EditorStrategicQuestionStep'));
+                    return (
+                        <React.Suspense fallback={<div>Carregando...</div>}>
+                            <EditorStrategicQuestionStep
+                                data={step}
+                                currentAnswer={mockProps.currentAnswer}
+                                onAnswerChange={mockProps.onAnswerChange}
+                                onEdit={(field, value) => updateStep(step.id, { [field]: value })}
+                                isEditable={isEditMode}
+                            />
+                        </React.Suspense>
+                    );
+
+                case 'transition':
+                case 'transition-result':
+                    const EditorTransitionStep = React.lazy(() => import('@/components/editor/quiz-estilo/EditorTransitionStep'));
+                    return (
+                        <React.Suspense fallback={<div>Carregando...</div>}>
+                            <EditorTransitionStep
+                                data={step}
+                                onComplete={mockProps.onComplete}
+                                onEdit={(field, value) => updateStep(step.id, { [field]: value })}
+                                isEditable={isEditMode}
+                            />
+                        </React.Suspense>
+                    );
+
+                case 'result':
+                    const EditorResultStep = React.lazy(() => import('@/components/editor/quiz-estilo/EditorResultStep'));
+                    return (
+                        <React.Suspense fallback={<div>Carregando...</div>}>
+                            <EditorResultStep
+                                data={step}
+                                userProfile={offerProps.userProfile}
+                                onEdit={(field, value) => updateStep(step.id, { [field]: value })}
+                                isEditable={isEditMode}
+                            />
+                        </React.Suspense>
+                    );
+
+                case 'offer':
+                    const EditorOfferStep = React.lazy(() => import('@/components/editor/quiz-estilo/EditorOfferStep'));
+                    return (
+                        <React.Suspense fallback={<div>Carregando...</div>}>
+                            <EditorOfferStep
+                                data={step}
+                                userProfile={offerProps.userProfile}
+                                offerKey={offerProps.offerKey}
+                                onEdit={(field, value) => updateStep(step.id, { [field]: value })}
+                                isEditable={isEditMode}
+                            />
+                        </React.Suspense>
+                    );
+
+                default:
+                    return (
+                        <div className="p-4 border border-red-300 bg-red-50 rounded">
+                            <p className="text-red-600">Tipo de componente não reconhecido: {step.type}</p>
+                        </div>
+                    );
+            }
+        };
 
         return (
-            <ModularStepRenderer
-                step={modularStep}
+            <SelectableBlock
+                blockId={blockId}
+                isSelected={isSelected}
                 isEditable={isEditMode}
-                selectedComponentId={selectedComponentId}
-                onUpdateStep={(stepId, updates) => {
-                    // Converter updates modulares de volta para step antigo
-                    if (updates.components) {
-                        const updatedStep = convertModularToStep(updates.components, step);
-                        updateStep(stepId, updatedStep);
-                    }
-                }}
-                onSelectComponent={setSelectedComponentId}
-                onOpenComponentProperties={(componentId) => {
-                    setSelectedBlockId(componentId);
-                    setShowPropertiesPanel(true);
-                }}
-            />
+                onSelect={handleBlockSelect}
+                blockType={`${step.type.charAt(0).toUpperCase() + step.type.slice(1)} (/quiz-estilo)`}
+                blockIndex={index}
+                onOpenProperties={handleOpenProperties}
+                isDraggable={dragEnabled}
+            >
+                {renderStepWithQuizEstiloDesign()}
+            </SelectableBlock>
         );
     };
 

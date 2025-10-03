@@ -18,13 +18,13 @@ interface EditorResultStepProps {
  * 
  * Versão para o editor que replica o visual exato do quiz de produção
  */
-export default function EditorResultStep({ 
-    data, 
+export default function EditorResultStep({
+    data,
     userProfile,
     onEdit,
-    isEditable = false 
+    isEditable = false
 }: EditorResultStepProps) {
-    
+
     // Dados seguros com fallbacks
     const safeData = {
         title: data.title || 'Seu Estilo Predominante é:',
@@ -43,7 +43,7 @@ export default function EditorResultStep({
         <QuizEstiloWrapper showHeader={false} showProgress={false}>
             <div className="bg-white p-6 md:p-12 rounded-lg shadow-lg text-center max-w-4xl mx-auto">
                 {/* Título */}
-                <h1 
+                <h1
                     className="text-2xl md:text-3xl font-bold text-[#432818] mb-2"
                     style={{ fontFamily: '"Playfair Display", serif' }}
                 >
@@ -56,7 +56,7 @@ export default function EditorResultStep({
 
                 {/* Resultado Principal */}
                 <div className="bg-gradient-to-br from-[#B89B7A] to-[#A1835D] text-white p-6 rounded-lg shadow-lg mb-8">
-                    <h3 
+                    <h3
                         className="text-3xl md:text-4xl font-bold mb-4"
                         style={{ fontFamily: '"Playfair Display", serif' }}
                     >
@@ -85,7 +85,7 @@ export default function EditorResultStep({
                     </h4>
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                         {safeData.characteristics.map((characteristic, index) => (
-                            <div 
+                            <div
                                 key={index}
                                 className="bg-white p-3 rounded-md shadow-sm border-l-4 border-[#B89B7A]"
                             >

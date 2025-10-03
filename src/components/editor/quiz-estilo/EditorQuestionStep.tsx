@@ -15,14 +15,14 @@ interface EditorQuestionStepProps {
  * 
  * Versão para o editor que replica o visual exato do quiz de produção
  */
-export default function EditorQuestionStep({ 
-    data, 
+export default function EditorQuestionStep({
+    data,
     currentAnswers = [],
     onAnswersChange,
     onEdit,
-    isEditable = false 
+    isEditable = false
 }: EditorQuestionStepProps) {
-    
+
     // Dados seguros com fallbacks
     const safeData = {
         questionNumber: data.questionNumber || 'Pergunta 1',
@@ -70,7 +70,7 @@ export default function EditorQuestionStep({
                     {safeData.questionNumber}
                 </h2>
 
-                <p 
+                <p
                     className="text-xl md:text-2xl font-bold text-[#deac6d] mb-4"
                     style={{ fontFamily: '"Playfair Display", serif' }}
                 >

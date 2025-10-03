@@ -15,14 +15,14 @@ interface EditorStrategicQuestionStepProps {
  * 
  * Versão para o editor que replica o visual exato do quiz de produção
  */
-export default function EditorStrategicQuestionStep({ 
-    data, 
+export default function EditorStrategicQuestionStep({
+    data,
     currentAnswer = '',
     onAnswerChange,
     onEdit,
-    isEditable = false 
+    isEditable = false
 }: EditorStrategicQuestionStepProps) {
-    
+
     // Dados seguros com fallbacks
     const safeData = {
         questionNumber: data.questionNumber || 'Pergunta Estratégica',
@@ -50,7 +50,7 @@ export default function EditorStrategicQuestionStep({
                     {safeData.questionNumber}
                 </h2>
 
-                <p 
+                <p
                     className="text-xl md:text-2xl font-bold text-[#deac6d] mb-8"
                     style={{ fontFamily: '"Playfair Display", serif' }}
                 >
@@ -68,11 +68,10 @@ export default function EditorStrategicQuestionStep({
                         <button
                             key={option.id}
                             onClick={() => handleOptionClick(option.id)}
-                            className={`p-4 border-2 rounded-lg transition-all duration-200 hover:border-[#deac6d] hover:shadow-md ${
-                                currentAnswer === option.id
+                            className={`p-4 border-2 rounded-lg transition-all duration-200 hover:border-[#deac6d] hover:shadow-md ${currentAnswer === option.id
                                     ? 'border-[#5b4135] bg-gradient-to-br from-white to-[#f8f5f0] shadow-lg'
                                     : 'border-gray-200'
-                            }`}
+                                }`}
                         >
                             <p className="font-medium text-sm text-[#432818]">
                                 {option.text}
@@ -88,11 +87,10 @@ export default function EditorStrategicQuestionStep({
 
                 <button
                     disabled={!currentAnswer}
-                    className={`font-bold py-3 px-6 rounded-full shadow-md transition-all ${
-                        currentAnswer
+                    className={`font-bold py-3 px-6 rounded-full shadow-md transition-all ${currentAnswer
                             ? 'bg-[#deac6d] text-white hover:bg-[#c19a5d]'
                             : 'bg-[#e6ddd4] text-[#8a7663] opacity-50 cursor-not-allowed'
-                    }`}
+                        }`}
                 >
                     {currentAnswer ? 'Próxima' : 'Selecione uma opção'}
                 </button>

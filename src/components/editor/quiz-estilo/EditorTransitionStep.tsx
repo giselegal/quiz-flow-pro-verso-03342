@@ -14,13 +14,13 @@ interface EditorTransitionStepProps {
  * 
  * Versão para o editor que replica o visual exato do quiz de produção
  */
-export default function EditorTransitionStep({ 
-    data, 
+export default function EditorTransitionStep({
+    data,
     onComplete,
     onEdit,
-    isEditable = false 
+    isEditable = false
 }: EditorTransitionStepProps) {
-    
+
     // Dados seguros com fallbacks
     const safeData = {
         title: data.title || 'Preparando seu resultado...',
@@ -36,7 +36,7 @@ export default function EditorTransitionStep({
                 console.log('Transição completa (demo)');
             }
         }, 3000);
-        
+
         return () => clearTimeout(timer);
     }, [onComplete]);
 
@@ -44,7 +44,7 @@ export default function EditorTransitionStep({
         <QuizEstiloWrapper showHeader={false} showProgress={false}>
             <div className="bg-white p-6 md:p-12 rounded-lg shadow-lg text-center max-w-2xl mx-auto">
                 {/* Título */}
-                <h1 
+                <h1
                     className="text-2xl md:text-3xl font-bold text-[#432818] mb-4"
                     style={{ fontFamily: '"Playfair Display", serif' }}
                 >

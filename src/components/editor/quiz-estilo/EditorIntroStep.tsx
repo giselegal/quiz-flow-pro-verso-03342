@@ -13,10 +13,10 @@ interface EditorIntroStepProps {
  * 
  * Versão para o editor que replica o visual exato do quiz de produção
  */
-export default function EditorIntroStep({ 
-    data, 
+export default function EditorIntroStep({
+    data,
     onEdit,
-    isEditable = false 
+    isEditable = false
 }: EditorIntroStepProps) {
     const [nome, setNome] = useState('');
 
