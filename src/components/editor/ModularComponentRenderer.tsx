@@ -29,10 +29,41 @@ const ModularComponentRenderer: React.FC<ModularComponentRendererProps> = ({
             const headerComp = component as any;
             return (
                 <div className={cn(
-                    'mb-4',
+                    'mb-4 border border-dashed border-gray-200 p-3 rounded-lg',
+                    isEditable && 'bg-blue-50',
                     headerComp.alignment === 'center' && 'text-center',
                     headerComp.alignment === 'right' && 'text-right'
                 )}>
+                    {/* Controles de Edição */}
+                    {isEditable && (
+                        <div className="mb-3 flex gap-2 items-center text-xs bg-white p-2 rounded border">
+                            <select
+                                value={headerComp.size || 'medium'}
+                                onChange={(e) => handleUpdate('size', e.target.value)}
+                                className="border rounded px-1 py-0.5"
+                            >
+                                <option value="small">Pequeno</option>
+                                <option value="medium">Médio</option>
+                                <option value="large">Grande</option>
+                            </select>
+                            <select
+                                value={headerComp.alignment || 'left'}
+                                onChange={(e) => handleUpdate('alignment', e.target.value)}
+                                className="border rounded px-1 py-0.5"
+                            >
+                                <option value="left">Esquerda</option>
+                                <option value="center">Centro</option>
+                                <option value="right">Direita</option>
+                            </select>
+                            <button
+                                onClick={() => handleUpdate('subtitle', headerComp.subtitle ? '' : 'Subtítulo')}
+                                className="px-2 py-0.5 bg-blue-500 text-white rounded text-xs"
+                            >
+                                {headerComp.subtitle ? 'Remover' : 'Adicionar'} Subtítulo
+                            </button>
+                        </div>
+                    )}
+
                     <EditableField
                         value={headerComp.title}
                         onChange={(value) => handleUpdate('title', value)}
@@ -61,10 +92,35 @@ const ModularComponentRenderer: React.FC<ModularComponentRendererProps> = ({
             const textComp = component as any;
             return (
                 <div className={cn(
-                    'mb-4',
+                    'mb-4 border border-dashed border-gray-200 p-3 rounded-lg',
+                    isEditable && 'bg-green-50',
                     textComp.alignment === 'center' && 'text-center',
                     textComp.alignment === 'right' && 'text-right'
                 )}>
+                    {/* Controles de Edição */}
+                    {isEditable && (
+                        <div className="mb-3 flex gap-2 items-center text-xs bg-white p-2 rounded border">
+                            <select
+                                value={textComp.size || 'medium'}
+                                onChange={(e) => handleUpdate('size', e.target.value)}
+                                className="border rounded px-1 py-0.5"
+                            >
+                                <option value="small">Pequeno</option>
+                                <option value="medium">Médio</option>
+                                <option value="large">Grande</option>
+                            </select>
+                            <select
+                                value={textComp.alignment || 'left'}
+                                onChange={(e) => handleUpdate('alignment', e.target.value)}
+                                className="border rounded px-1 py-0.5"
+                            >
+                                <option value="left">Esquerda</option>
+                                <option value="center">Centro</option>
+                                <option value="right">Direita</option>
+                            </select>
+                        </div>
+                    )}
+
                     <EditableField
                         value={textComp.content}
                         onChange={(value) => handleUpdate('content', value)}
@@ -84,10 +140,52 @@ const ModularComponentRenderer: React.FC<ModularComponentRendererProps> = ({
             const imageComp = component as any;
             return (
                 <div className={cn(
-                    'mb-4',
+                    'mb-4 border border-dashed border-gray-200 p-3 rounded-lg',
+                    isEditable && 'bg-purple-50',
                     imageComp.alignment === 'center' && 'flex justify-center',
                     imageComp.alignment === 'right' && 'flex justify-end'
                 )}>
+                    {/* Controles de Edição */}
+                    {isEditable && (
+                        <div className="mb-3 grid grid-cols-2 gap-2 text-xs bg-white p-2 rounded border">
+                            <input
+                                placeholder="URL da imagem"
+                                value={imageComp.src || ''}
+                                onChange={(e) => handleUpdate('src', e.target.value)}
+                                className="border rounded px-1 py-0.5 col-span-2"
+                            />
+                            <input
+                                placeholder="Texto alternativo"
+                                value={imageComp.alt || ''}
+                                onChange={(e) => handleUpdate('alt', e.target.value)}
+                                className="border rounded px-1 py-0.5 col-span-2"
+                            />
+                            <input
+                                placeholder="Largura (px)"
+                                type="number"
+                                value={imageComp.width || ''}
+                                onChange={(e) => handleUpdate('width', parseInt(e.target.value) || undefined)}
+                                className="border rounded px-1 py-0.5"
+                            />
+                            <input
+                                placeholder="Altura (px)"
+                                type="number"
+                                value={imageComp.height || ''}
+                                onChange={(e) => handleUpdate('height', parseInt(e.target.value) || undefined)}
+                                className="border rounded px-1 py-0.5"
+                            />
+                            <select
+                                value={imageComp.alignment || 'left'}
+                                onChange={(e) => handleUpdate('alignment', e.target.value)}
+                                className="border rounded px-1 py-0.5 col-span-2"
+                            >
+                                <option value="left">Esquerda</option>
+                                <option value="center">Centro</option>
+                                <option value="right">Direita</option>
+                            </select>
+                        </div>
+                    )}
+
                     <div className="relative group">
                         <img
                             src={imageComp.src}
@@ -103,16 +201,8 @@ const ModularComponentRenderer: React.FC<ModularComponentRendererProps> = ({
                             }}
                         />
                         {isEditable && (
-                            <div className="absolute inset-0 bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-lg flex items-center justify-center">
-                                <button
-                                    onClick={() => {
-                                        const newSrc = prompt('URL da nova imagem:', imageComp.src);
-                                        if (newSrc) handleUpdate('src', newSrc);
-                                    }}
-                                    className="text-white text-sm px-3 py-1 bg-blue-500 rounded hover:bg-blue-600"
-                                >
-                                    Alterar Imagem
-                                </button>
+                            <div className="absolute top-2 right-2 bg-black bg-opacity-70 text-white text-xs px-2 py-1 rounded">
+                                🖼️ Imagem
                             </div>
                         )}
                     </div>
@@ -122,41 +212,133 @@ const ModularComponentRenderer: React.FC<ModularComponentRendererProps> = ({
         case 'button':
             const buttonComp = component as any;
             return (
-                <div className="mb-4 flex justify-center">
-                    <EditableField
-                        value={buttonComp.text}
-                        onChange={(value) => handleUpdate('text', value)}
-                        isEditable={isEditable}
-                        className={cn(
-                            'px-6 py-3 rounded-lg font-medium transition-colors cursor-pointer',
-                            buttonComp.style === 'primary' && 'bg-blue-500 text-white hover:bg-blue-600',
-                            buttonComp.style === 'secondary' && 'bg-gray-500 text-white hover:bg-gray-600',
-                            buttonComp.style === 'outline' && 'border-2 border-blue-500 text-blue-500 hover:bg-blue-50'
-                        )}
-                        placeholder="Texto do botão..."
-                    />
+                <div className={cn(
+                    'mb-4 border border-dashed border-gray-200 p-3 rounded-lg',
+                    isEditable && 'bg-orange-50'
+                )}>
+                    {/* Controles de Edição */}
+                    {isEditable && (
+                        <div className="mb-3 flex gap-2 items-center text-xs bg-white p-2 rounded border">
+                            <select
+                                value={buttonComp.style || 'primary'}
+                                onChange={(e) => handleUpdate('style', e.target.value)}
+                                className="border rounded px-1 py-0.5"
+                            >
+                                <option value="primary">Primário</option>
+                                <option value="secondary">Secundário</option>
+                                <option value="outline">Contorno</option>
+                            </select>
+                            <select
+                                value={buttonComp.action || 'next'}
+                                onChange={(e) => handleUpdate('action', e.target.value)}
+                                className="border rounded px-1 py-0.5"
+                            >
+                                <option value="next">Próximo</option>
+                                <option value="submit">Enviar</option>
+                                <option value="custom">Personalizado</option>
+                            </select>
+                            {buttonComp.action === 'custom' && (
+                                <input
+                                    placeholder="Ação personalizada"
+                                    value={buttonComp.customAction || ''}
+                                    onChange={(e) => handleUpdate('customAction', e.target.value)}
+                                    className="border rounded px-1 py-0.5"
+                                />
+                            )}
+                        </div>
+                    )}
+
+                    <div className="flex justify-center">
+                        <EditableField
+                            value={buttonComp.text}
+                            onChange={(value) => handleUpdate('text', value)}
+                            isEditable={isEditable}
+                            className={cn(
+                                'px-6 py-3 rounded-lg font-medium transition-colors cursor-pointer',
+                                buttonComp.style === 'primary' && 'bg-blue-500 text-white hover:bg-blue-600',
+                                buttonComp.style === 'secondary' && 'bg-gray-500 text-white hover:bg-gray-600',
+                                buttonComp.style === 'outline' && 'border-2 border-blue-500 text-blue-500 hover:bg-blue-50'
+                            )}
+                            placeholder="Texto do botão..."
+                        />
+                    </div>
                 </div>
             );
 
         case 'spacer':
             const spacerComp = component as any;
             return (
-                <div
-                    className="mb-4"
-                    style={{ height: `${spacerComp.height}px` }}
-                >
+                <div className={cn(
+                    'mb-4 border border-dashed border-gray-200 p-3 rounded-lg',
+                    isEditable && 'bg-gray-50'
+                )}>
+                    {/* Controles de Edição */}
                     {isEditable && (
-                        <div className="flex items-center justify-center h-full border-2 border-dashed border-gray-300 rounded text-gray-500 text-sm">
-                            Espaçador ({spacerComp.height}px)
+                        <div className="mb-3 flex gap-2 items-center text-xs bg-white p-2 rounded border">
+                            <label>Altura:</label>
+                            <input
+                                type="number"
+                                min="8"
+                                max="200"
+                                value={spacerComp.height || 32}
+                                onChange={(e) => handleUpdate('height', parseInt(e.target.value) || 32)}
+                                className="border rounded px-1 py-0.5 w-16"
+                            />
+                            <span>px</span>
                         </div>
                     )}
+
+                    <div
+                        className="flex items-center justify-center border-2 border-dashed border-gray-300 rounded text-gray-500 text-sm"
+                        style={{ height: `${spacerComp.height || 32}px` }}
+                    >
+                        📏 Espaçador ({spacerComp.height || 32}px)
+                    </div>
                 </div>
             );
 
         case 'question':
             const questionComp = component as any;
             return (
-                <div className="mb-6">
+                <div className={cn(
+                    'mb-6 border border-dashed border-gray-200 p-3 rounded-lg',
+                    isEditable && 'bg-red-50'
+                )}>
+                    {/* Controles de Edição */}
+                    {isEditable && (
+                        <div className="mb-3 flex gap-2 items-center text-xs bg-white p-2 rounded border">
+                            <label>Seleções obrigatórias:</label>
+                            <input
+                                type="number"
+                                min="1"
+                                max={questionComp.options?.length || 1}
+                                value={questionComp.requiredSelections || 1}
+                                onChange={(e) => handleUpdate('requiredSelections', parseInt(e.target.value) || 1)}
+                                className="border rounded px-1 py-0.5 w-16"
+                            />
+                            <label className="flex items-center gap-1 ml-2">
+                                <input
+                                    type="checkbox"
+                                    checked={questionComp.multipleChoice || false}
+                                    onChange={(e) => handleUpdate('multipleChoice', e.target.checked)}
+                                />
+                                Múltipla escolha
+                            </label>
+                            <button
+                                onClick={() => {
+                                    const newOptions = [...(questionComp.options || []), {
+                                        id: `opt-${Date.now()}`,
+                                        text: 'Nova opção'
+                                    }];
+                                    handleUpdate('options', newOptions);
+                                }}
+                                className="px-2 py-0.5 bg-green-500 text-white rounded text-xs ml-2"
+                            >
+                                + Opção
+                            </button>
+                        </div>
+                    )}
+
                     <EditableField
                         value={questionComp.questionText}
                         onChange={(value) => handleUpdate('questionText', value)}
@@ -168,8 +350,19 @@ const ModularComponentRenderer: React.FC<ModularComponentRendererProps> = ({
                         {questionComp.options?.map((option: any, index: number) => (
                             <div
                                 key={option.id}
-                                className="p-4 border-2 border-gray-200 rounded-lg hover:border-blue-400 cursor-pointer transition-colors"
+                                className="relative p-4 border-2 border-gray-200 rounded-lg hover:border-blue-400 cursor-pointer transition-colors group"
                             >
+                                {isEditable && questionComp.options.length > 2 && (
+                                    <button
+                                        onClick={() => {
+                                            const newOptions = questionComp.options.filter((_: any, i: number) => i !== index);
+                                            handleUpdate('options', newOptions);
+                                        }}
+                                        className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 text-xs opacity-0 group-hover:opacity-100 transition-opacity"
+                                    >
+                                        ×
+                                    </button>
+                                )}
                                 <EditableField
                                     value={option.text}
                                     onChange={(value) => {
@@ -190,7 +383,40 @@ const ModularComponentRenderer: React.FC<ModularComponentRendererProps> = ({
         case 'input':
             const inputComp = component as any;
             return (
-                <div className="mb-4">
+                <div className={cn(
+                    'mb-4 border border-dashed border-gray-200 p-3 rounded-lg',
+                    isEditable && 'bg-yellow-50'
+                )}>
+                    {/* Controles de Edição */}
+                    {isEditable && (
+                        <div className="mb-3 grid grid-cols-2 gap-2 text-xs bg-white p-2 rounded border">
+                            <select
+                                value={inputComp.inputType || 'text'}
+                                onChange={(e) => handleUpdate('inputType', e.target.value)}
+                                className="border rounded px-1 py-0.5"
+                            >
+                                <option value="text">Texto</option>
+                                <option value="email">Email</option>
+                                <option value="tel">Telefone</option>
+                                <option value="number">Número</option>
+                            </select>
+                            <label className="flex items-center gap-1">
+                                <input
+                                    type="checkbox"
+                                    checked={inputComp.required || false}
+                                    onChange={(e) => handleUpdate('required', e.target.checked)}
+                                />
+                                Obrigatório
+                            </label>
+                            <input
+                                placeholder="Placeholder do campo"
+                                value={inputComp.placeholder || ''}
+                                onChange={(e) => handleUpdate('placeholder', e.target.value)}
+                                className="border rounded px-1 py-0.5 col-span-2"
+                            />
+                        </div>
+                    )}
+
                     <EditableField
                         value={inputComp.label}
                         onChange={(value) => handleUpdate('label', value)}
@@ -210,7 +436,7 @@ const ModularComponentRenderer: React.FC<ModularComponentRendererProps> = ({
         default:
             return (
                 <div className="mb-4 p-4 border-2 border-dashed border-red-300 rounded-lg text-red-500 text-center">
-                    Componente desconhecido: {component.type}
+                    Componente desconhecido: {(component as any).type}
                 </div>
             );
     }

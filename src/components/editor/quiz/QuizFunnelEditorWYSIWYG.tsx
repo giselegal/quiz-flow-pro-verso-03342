@@ -487,214 +487,177 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
     };
 
     // Função para renderizar componente real no preview
-    const renderRealComponent = (step: EditableQuizStep, index: number) => {
-        const isEditMode = previewMode === 'edit';
-        const blockId = `${step.id}-${step.type}`;
-        const isSelected = selectedBlockId === blockId;
+    // Função para converter step antigo em step modular
+    const convertStepToModular = (step: EditableQuizStep): ModularStep => {
+        const components: StepComponent[] = [];
 
-        // 🔍 DEBUG: Log dos steps disponíveis no sistema modular
-        if (step.id === 'step-1') {
-            const allRegisteredSteps = stepRegistry.getAll();
-            console.log('🎯 Sistema Modular - Steps registrados:', allRegisteredSteps.map(s => s.id));
-            console.log('🔍 Tentando encontrar step:', step.id);
-        }
-
-        // Props básicas para os componentes
-        const mockProps = {
-            onNameSubmit: () => console.log('Nome submetido'),
-            onComplete: () => console.log('Transição completa'),
-            currentAnswers: [] as string[],
-            onAnswersChange: (answers: string[]) => console.log('Respostas alteradas:', answers),
-            currentAnswer: '',
-            onAnswerChange: (answer: string) => console.log('Resposta alterada:', answer),
-        };
-
-        // Props específicas para o OfferStep
-        const offerProps = {
-            userProfile: {
-                userName: 'João',
-                resultStyle: 'Empreendedor Visionário',
-                secondaryStyles: ['Liderança', 'Inovação']
-            },
-            offerKey: 'default'
-        };
-
-        // ✨ NOVO: Tentar usar sistema modular primeiro
-        const stepComponent = stepRegistry.get(step.id);
-        if (stepComponent) {
-            return (
-                <SelectableBlock
-                    blockId={blockId}
-                    isSelected={isSelected}
-                    isEditable={isEditMode}
-                    onSelect={handleBlockSelect}
-                    blockType={`${stepComponent.name} (Modular)`}
-                    blockIndex={index}
-                    onOpenProperties={handleOpenProperties}
-                    isDraggable={dragEnabled}
-                >
-                    <StepRenderer
-                        stepId={step.id}
-                        stepNumber={parseInt(step.id.replace('step-', '')) || 1}
-                        isActive={true}
-                        isEditable={isEditMode}
-                        onNext={() => console.log('Next step')}
-                        onPrevious={() => console.log('Previous step')}
-                        onSave={(data) => {
-                            console.log('Saving step data:', data);
-                            // Integrar com updateStep existente
-                            Object.keys(data).forEach(key => {
-                                updateStep(step.id, { [key]: data[key] });
-                            });
-                        }}
-                        data={step}
-                    />
-                </SelectableBlock>
-            );
-        }
-
-        // 🔄 FALLBACK: Sistema antigo para steps não modulares
         switch (step.type) {
             case 'intro':
-                return (
-                    <SelectableBlock
-                        blockId={blockId}
-                        isSelected={isSelected}
-                        isEditable={isEditMode}
-                        onSelect={handleBlockSelect}
-                        blockType="Introdução (Legacy)"
-                        blockIndex={index}
-                        onOpenProperties={handleOpenProperties}
-                        isDraggable={dragEnabled}
-                    >
-                        <EditableIntroStep
-                            data={step}
-                            onNameSubmit={mockProps.onNameSubmit}
-                            isEditable={isEditMode}
-                            onEdit={(field, value) => updateStep(step.id, { [field]: value })}
-                        />
-                    </SelectableBlock>
-                );
+                // Converter intro step para componentes modulares
+                if (step.title) {
+                    components.push({
+                        id: `comp-${Date.now()}-1`,
+                        type: 'header',
+                        order: 0,
+                        title: step.title,
+                        alignment: 'center',
+                        size: 'large'
+                    } as any);
+                }
+
+                if (step.formQuestion) {
+                    components.push({
+                        id: `comp-${Date.now()}-2`,
+                        type: 'input',
+                        order: 1,
+                        label: step.formQuestion,
+                        placeholder: step.placeholder || 'Digite aqui...',
+                        inputType: 'text',
+                        required: true
+                    } as any);
+                }
+
+                if (step.buttonText) {
+                    components.push({
+                        id: `comp-${Date.now()}-3`,
+                        type: 'button',
+                        order: 2,
+                        text: step.buttonText,
+                        action: 'next',
+                        style: 'primary'
+                    } as any);
+                }
+                break;
+
             case 'question':
-                return (
-                    <SelectableBlock
-                        blockId={blockId}
-                        isSelected={isSelected}
-                        isEditable={isEditMode}
-                        onSelect={handleBlockSelect}
-                        blockType="Pergunta"
-                        blockIndex={index}
-                        onOpenProperties={handleOpenProperties}
-                        isDraggable={dragEnabled}
-                    >
-                        <EditableQuestionStep
-                            data={step}
-                            currentAnswers={mockProps.currentAnswers}
-                            onAnswersChange={mockProps.onAnswersChange}
-                            isEditable={isEditMode}
-                            onEdit={(field, value) => updateStep(step.id, { [field]: value })}
-                        />
-                    </SelectableBlock>
-                );
-            case 'strategic-question':
-                return (
-                    <SelectableBlock
-                        blockId={blockId}
-                        isSelected={isSelected}
-                        isEditable={isEditMode}
-                        onSelect={handleBlockSelect}
-                        blockType="Pergunta Estratégica"
-                        blockIndex={index}
-                        onOpenProperties={handleOpenProperties}
-                        isDraggable={dragEnabled}
-                    >
-                        <StrategicQuestionStep
-                            data={step}
-                            currentAnswer={mockProps.currentAnswer}
-                            onAnswerChange={mockProps.onAnswerChange}
-                        />
-                    </SelectableBlock>
-                );
-            case 'transition':
-                return (
-                    <SelectableBlock
-                        blockId={blockId}
-                        isSelected={isSelected}
-                        isEditable={isEditMode}
-                        onSelect={handleBlockSelect}
-                        blockType="Transição"
-                        blockIndex={index}
-                        onOpenProperties={handleOpenProperties}
-                        isDraggable={dragEnabled}
-                    >
-                        <TransitionStep
-                            data={step}
-                            onComplete={mockProps.onComplete}
-                        />
-                    </SelectableBlock>
-                );
-            case 'transition-result':
-                return (
-                    <SelectableBlock
-                        blockId={blockId}
-                        isSelected={isSelected}
-                        isEditable={isEditMode}
-                        onSelect={handleBlockSelect}
-                        blockType="Transição p/ Resultado"
-                        blockIndex={index}
-                        onOpenProperties={handleOpenProperties}
-                        isDraggable={dragEnabled}
-                    >
-                        <TransitionStep
-                            data={step}
-                            onComplete={mockProps.onComplete}
-                        />
-                    </SelectableBlock>
-                );
+                // Converter question step para componentes modulares
+                if (step.questionText) {
+                    components.push({
+                        id: `comp-${Date.now()}-1`,
+                        type: 'question',
+                        order: 0,
+                        questionText: step.questionText,
+                        options: step.options || [],
+                        requiredSelections: step.requiredSelections || 1,
+                        multipleChoice: (step.requiredSelections || 1) > 1
+                    } as any);
+                }
+
+                components.push({
+                    id: `comp-${Date.now()}-2`,
+                    type: 'button',
+                    order: 1,
+                    text: 'Continuar',
+                    action: 'next',
+                    style: 'primary'
+                } as any);
+                break;
+
             case 'result':
-                return (
-                    <SelectableBlock
-                        blockId={blockId}
-                        isSelected={isSelected}
-                        isEditable={isEditMode}
-                        onSelect={handleBlockSelect}
-                        blockType="Resultado"
-                        blockIndex={index}
-                        onOpenProperties={handleOpenProperties}
-                        isDraggable={dragEnabled}
-                    >
-                        <ResultStep
-                            data={step}
-                            userProfile={offerProps.userProfile}
-                        />
-                    </SelectableBlock>
-                );
-            case 'offer':
-                return (
-                    <SelectableBlock
-                        blockId={blockId}
-                        isSelected={isSelected}
-                        isEditable={isEditMode}
-                        onSelect={handleBlockSelect}
-                        blockType="Oferta"
-                        blockIndex={index}
-                        onOpenProperties={handleOpenProperties}
-                        isDraggable={dragEnabled}
-                    >
-                        <OfferStep
-                            data={step}
-                            userProfile={offerProps.userProfile}
-                            offerKey={offerProps.offerKey}
-                        />
-                    </SelectableBlock>
-                );
+                // Converter result step para componentes modulares
+                if (step.title) {
+                    components.push({
+                        id: `comp-${Date.now()}-1`,
+                        type: 'header',
+                        order: 0,
+                        title: step.title,
+                        alignment: 'center',
+                        size: 'large'
+                    } as any);
+                }
+
+                if (step.text) {
+                    components.push({
+                        id: `comp-${Date.now()}-2`,
+                        type: 'text',
+                        order: 1,
+                        content: step.text,
+                        alignment: 'center',
+                        size: 'medium'
+                    } as any);
+                }
+                break;
+
             default:
-                return (
-                    <div className="p-4 border border-red-300 bg-red-50 rounded">
-                        <p className="text-red-600">Tipo de componente não reconhecido: {step.type}</p>
-                    </div>
-                );
+                // Step genérico - apenas um header
+                components.push({
+                    id: `comp-${Date.now()}-1`,
+                    type: 'header',
+                    order: 0,
+                    title: step.title || `${step.type} Step`,
+                    alignment: 'center',
+                    size: 'medium'
+                } as any);
         }
+
+        return {
+            id: step.id,
+            name: `${step.type.charAt(0).toUpperCase() + step.type.slice(1)} Step`,
+            type: step.type as any,
+            components
+        };
+    };
+
+    // Função para converter componentes modulares de volta para step antigo
+    const convertModularToStep = (components: StepComponent[], originalStep: EditableQuizStep): Partial<EditableQuizStep> => {
+        const updates: Partial<EditableQuizStep> = {};
+
+        components.forEach(comp => {
+            switch (comp.type) {
+                case 'header':
+                    const headerComp = comp as any;
+                    updates.title = headerComp.title;
+                    break;
+                case 'text':
+                    const textComp = comp as any;
+                    updates.text = textComp.content;
+                    break;
+                case 'input':
+                    const inputComp = comp as any;
+                    updates.formQuestion = inputComp.label;
+                    updates.placeholder = inputComp.placeholder;
+                    break;
+                case 'button':
+                    const buttonComp = comp as any;
+                    updates.buttonText = buttonComp.text;
+                    break;
+                case 'question':
+                    const questionComp = comp as any;
+                    updates.questionText = questionComp.questionText;
+                    updates.options = questionComp.options;
+                    updates.requiredSelections = questionComp.requiredSelections;
+                    break;
+            }
+        });
+
+        return updates;
+    };
+
+    const renderRealComponent = (step: EditableQuizStep, index: number) => {
+        const isEditMode = previewMode === 'edit';
+
+        // 🎯 NOVO: Usar sistema modular para renderizar steps antigos
+        const modularStep = convertStepToModular(step);
+
+        return (
+            <ModularStepRenderer
+                step={modularStep}
+                isEditable={isEditMode}
+                selectedComponentId={selectedComponentId}
+                onUpdateStep={(stepId, updates) => {
+                    // Converter updates modulares de volta para step antigo
+                    if (updates.components) {
+                        const updatedStep = convertModularToStep(updates.components, step);
+                        updateStep(stepId, updatedStep);
+                    }
+                }}
+                onSelectComponent={setSelectedComponentId}
+                onOpenComponentProperties={(componentId) => {
+                    setSelectedBlockId(componentId);
+                    setShowPropertiesPanel(true);
+                }}
+            />
+        );
     };
 
     return (
