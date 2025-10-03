@@ -14,7 +14,7 @@ export interface ModernUnifiedEditorProps {
     className?: string;
 }
 
-const QuizFunnelEditor = React.lazy(() => import('../../components/debug/QuizFunnelEditorDebug'));
+const QuizFunnelEditor = React.lazy(() => import('../../components/debug/SafeQuizFunnelEditor'));
 // Provider de blocos do quiz
 import { BlockRegistryProvider, ResultHeadlineBlock, OfferCoreBlock, ResultSecondaryListBlock, OfferUrgencyBlock } from '@/runtime/quiz/blocks/BlockRegistry';
 
