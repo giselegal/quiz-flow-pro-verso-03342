@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback, useMemo } from 'react';
 import { useUnifiedCRUD } from '@/context/UnifiedCRUDProvider';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -126,9 +126,13 @@ type EditableQuizStep = (QuizStep | {
     componentId?: string;
 }) & { id: string };
 
+// Tipos que são ETAPAS COMPLETAS do funil
 const STEP_TYPES: Array<string> = [
-    'intro', 'question', 'strategic-question', 'transition', 'transition-result', 'result', 'offer',
-    // Novos tipos baseados no modelo do funil:
+    'intro', 'question', 'strategic-question', 'transition', 'transition-result', 'result', 'offer'
+];
+
+// Tipos que são COMPONENTES INDIVIDUAIS 
+const COMPONENT_TYPES: Array<string> = [
     'header', 'spacer', 'advanced-options', 'button', 'script', 'heading', 'options-grid', 'options', 'rich-text'
 ];
 
@@ -553,18 +557,22 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
                     ? 'ring-2 ring-blue-500 ring-offset-2'
                     : 'hover:ring-1 hover:ring-gray-300'
                     }`}
-                onClick={(e) => {
-                    e.stopPropagation();
-                    setSelectedBlockId(blockId);
-                    // Extrair stepId do blockId (formato: "stepId-tipo")
-                    const stepId = blockId.split('-')[0];
-                    setSelectedId(stepId);
+                onMouseDown={(e) => {
+                    // Usar onMouseDown em vez de onClick para melhor responsividade
+                    // e evitar conflitos com outros event handlers
+                    if (e.button === 0) { // Left click only
+                        setSelectedBlockId(blockId);
+                        const stepId = blockId.split('-')[0];
+                        setSelectedId(stepId);
+                    }
                 }}
             >
-                <div className="absolute -top-6 left-0 bg-gray-600 text-white px-2 py-1 text-xs rounded z-10 opacity-0 group-hover:opacity-100 transition-opacity">
+                <div className="absolute -top-6 left-0 bg-gray-600 text-white px-2 py-1 text-xs rounded z-10 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
                     {label}
                 </div>
-                {children}
+                <div className="relative z-0">
+                    {children}
+                </div>
             </div>
         );
     };
@@ -582,16 +590,17 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
                     ? 'ring-2 ring-blue-500 ring-offset-2 bg-blue-50/50'
                     : 'hover:ring-1 hover:ring-blue-300'
                     } ${isEditable ? 'cursor-pointer' : ''}`}
-                onClick={(e) => {
-                    e.stopPropagation();
-                    setSelectedBlockId(blockId);
-                    // Extrair stepId do blockId (formato: "stepId-tipo")
-                    const stepId = blockId.split('-')[0];
-                    setSelectedId(stepId);
+                onMouseDown={(e) => {
+                    // Usar onMouseDown para melhor responsividade
+                    if (e.button === 0) { // Left click only
+                        setSelectedBlockId(blockId);
+                        const stepId = blockId.split('-')[0];
+                        setSelectedId(stepId);
+                    }
                 }}
             >
                 {/* Label do componente */}
-                <div className="absolute -top-6 left-0 bg-blue-500 text-white px-2 py-1 text-xs rounded z-10 opacity-0 group-hover:opacity-100 transition-opacity">
+                <div className="absolute -top-6 left-0 bg-blue-500 text-white px-2 py-1 text-xs rounded z-10 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
                     {label} {isEditable && '(Editável)'}
                 </div>
 
@@ -607,7 +616,8 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
                                 variant="ghost"
                                 className="h-6 w-6 p-0 text-red-500 hover:text-red-700"
                                 title="Remover"
-                                onClick={(e) => {
+                                onMouseDown={(e) => {
+                                    e.preventDefault();
                                     e.stopPropagation();
                                     const stepId = blockId.split('-')[0];
                                     removeStep(stepId);
@@ -619,44 +629,45 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
                     </div>
                 )}
 
-                {children}
+                <div className="relative z-0">
+                    {children}
+                </div>
             </div>
         );
     };
 
-    // Função para renderizar componente híbrido que consome dados reais do funil
-    const renderRealComponent = (step: EditableQuizStep) => {
+    // Props estáveis para evitar re-renderizações
+    const stableRealProps = useMemo(() => ({
+        onNameSubmit: (name: string) => {
+            console.log('Nome real submetido:', name);
+            // Aqui integraria com o sistema real de coleta de nomes
+        },
+        onComplete: () => {
+            console.log('Transição real completa');
+            // Aqui integraria com o sistema real de navegação
+        },
+        currentAnswers: [] as string[], // Seria obtido do estado real do quiz
+        onAnswersChange: (answers: string[]) => {
+            console.log('Respostas reais alteradas:', answers);
+            // Aqui integraria com o sistema real de pontuação
+        },
+        currentAnswer: '', // Seria obtido do estado real do quiz
+        onAnswerChange: (answer: string) => {
+            console.log('Resposta real alterada:', answer);
+            // Aqui integraria com o sistema real de pontuação
+        },
+    }), []);
+
+    const stableUserProfile = useMemo(() => ({
+        userName: 'Usuário', // Seria obtido do estado real
+        resultStyle: 'Estilo Calculado', // Baseado nas respostas reais
+        secondaryStyles: ['Característica 1', 'Característica 2'] // Calculado dinamicamente
+    }), []);
+
+    // Função para renderizar componente híbrido que consome dados reais do funil (Memoizada)
+    const renderRealComponent = useCallback((step: EditableQuizStep) => {
         const isEditMode = previewMode === 'edit';
         const WrapperComponent = isEditMode ? EditableWrapper : SelectableWrapper;
-
-        // Props reais para os componentes (não mock - dados reais do funil)
-        const realProps = {
-            onNameSubmit: (name: string) => {
-                console.log('Nome real submetido:', name);
-                // Aqui integraria com o sistema real de coleta de nomes
-            },
-            onComplete: () => {
-                console.log('Transição real completa');
-                // Aqui integraria com o sistema real de navegação
-            },
-            currentAnswers: [] as string[], // Seria obtido do estado real do quiz
-            onAnswersChange: (answers: string[]) => {
-                console.log('Respostas reais alteradas:', answers);
-                // Aqui integraria com o sistema real de pontuação
-            },
-            currentAnswer: '', // Seria obtido do estado real do quiz
-            onAnswerChange: (answer: string) => {
-                console.log('Resposta real alterada:', answer);
-                // Aqui integraria com o sistema real de pontuação
-            },
-        };
-
-        // Props reais do usuário (baseadas no estado real do funil)
-        const realUserProfile = {
-            userName: 'Usuário', // Seria obtido do estado real
-            resultStyle: 'Estilo Calculado', // Baseado nas respostas reais
-            secondaryStyles: ['Característica 1', 'Característica 2'] // Calculado dinamicamente
-        };
 
         // Renderizar usando o sistema híbrido que consome dados reais
         return (
@@ -672,18 +683,18 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
                     onEdit={(field, value) => updateStep(step.id, { [field]: value })}
                     onChange={(content) => updateStep(step.id, { content })}
                     // Props específicas para componentes de produção
-                    onNameSubmit={realProps.onNameSubmit}
-                    currentAnswers={realProps.currentAnswers}
-                    onAnswersChange={realProps.onAnswersChange}
-                    currentAnswer={realProps.currentAnswer}
-                    onAnswerChange={realProps.onAnswerChange}
-                    onComplete={realProps.onComplete}
-                    userProfile={realUserProfile}
+                    onNameSubmit={stableRealProps.onNameSubmit}
+                    currentAnswers={stableRealProps.currentAnswers}
+                    onAnswersChange={stableRealProps.onAnswersChange}
+                    currentAnswer={stableRealProps.currentAnswer}
+                    onAnswerChange={stableRealProps.onAnswerChange}
+                    onComplete={stableRealProps.onComplete}
+                    userProfile={stableUserProfile}
                     offerKey="default" // Seria calculado dinamicamente
                 />
             </WrapperComponent>
         );
-    };
+    }, [previewMode, updateStep, stableRealProps, stableUserProfile]);
 
     // Função auxiliar para obter labels dos componentes
     const getStepLabel = (type: string): string => {
@@ -774,11 +785,13 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
 
                                                         {/* Dropdown Menu */}
                                                         {activeInsertDropdown === `before-${s.id}` && (
-                                                            <div className="absolute top-full left-0 mt-1 bg-white border rounded shadow-lg z-50 min-w-32">
+                                                            <div className="absolute top-full left-0 mt-1 bg-white border rounded shadow-lg z-50 min-w-48 max-h-80 overflow-y-auto">
+                                                                {/* Etapas */}
+                                                                <div className="px-2 py-1 bg-gray-100 text-[9px] font-semibold text-gray-600">🏗️ ETAPAS</div>
                                                                 {STEP_TYPES.map(type => (
                                                                     <button
                                                                         key={type}
-                                                                        className="w-full px-3 py-2 text-left text-[11px] hover:bg-gray-50 flex items-center gap-2"
+                                                                        className="w-full px-3 py-2 text-left text-[11px] hover:bg-gray-50 flex items-center gap-2 border-b"
                                                                         onClick={() => {
                                                                             addStepBefore(s.id, type as ExtendedStepType);
                                                                             setActiveInsertDropdown(null);
@@ -792,6 +805,30 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
                                                                             {type === 'transition-result' && '🔄'}
                                                                             {type === 'result' && '🏆'}
                                                                             {type === 'offer' && '🎁'}
+                                                                        </span>
+                                                                        {type.replace('-', ' ')}
+                                                                    </button>
+                                                                ))}
+                                                                {/* Componentes */}
+                                                                <div className="px-2 py-1 bg-blue-100 text-[9px] font-semibold text-blue-600">🧩 COMPONENTES</div>
+                                                                {COMPONENT_TYPES.map(type => (
+                                                                    <button
+                                                                        key={type}
+                                                                        className="w-full px-3 py-2 text-left text-[11px] hover:bg-blue-50 flex items-center gap-2 border-b last:border-b-0"
+                                                                        onClick={() => {
+                                                                            addStepBefore(s.id, type as ExtendedStepType);
+                                                                            setActiveInsertDropdown(null);
+                                                                        }}
+                                                                    >
+                                                                        <span>
+                                                                            {type === 'header' && '📋'}
+                                                                            {type === 'spacer' && '📏'}
+                                                                            {type === 'advanced-options' && '🎛️'}
+                                                                            {type === 'button' && '🔘'}
+                                                                            {type === 'script' && '📜'}
+                                                                            {type === 'heading' && '📝'}
+                                                                            {type === 'options-grid' && '🔢'}
+                                                                            {type === 'options' && '☑️'}
                                                                             {type === 'rich-text' && '📝'}
                                                                         </span>
                                                                         {type.replace('-', ' ')}
@@ -907,11 +944,13 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
 
                                                     {/* Dropdown Menu */}
                                                     {activeInsertDropdown === `after-${s.id}` && (
-                                                        <div className="absolute top-full left-0 mt-1 bg-white border rounded shadow-lg z-50 min-w-32">
+                                                        <div className="absolute top-full left-0 mt-1 bg-white border rounded shadow-lg z-50 min-w-48 max-h-80 overflow-y-auto">
+                                                            {/* Etapas */}
+                                                            <div className="px-2 py-1 bg-gray-100 text-[9px] font-semibold text-gray-600">🏗️ ETAPAS</div>
                                                             {STEP_TYPES.map(type => (
                                                                 <button
                                                                     key={type}
-                                                                    className="w-full px-3 py-2 text-left text-[11px] hover:bg-gray-50 flex items-center gap-2"
+                                                                    className="w-full px-3 py-2 text-left text-[11px] hover:bg-gray-50 flex items-center gap-2 border-b"
                                                                     onClick={() => {
                                                                         addStepAfter(s.id, type as ExtendedStepType);
                                                                         setActiveInsertDropdown(null);
@@ -925,6 +964,30 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
                                                                         {type === 'transition-result' && '🔄'}
                                                                         {type === 'result' && '🏆'}
                                                                         {type === 'offer' && '🎁'}
+                                                                    </span>
+                                                                    {type.replace('-', ' ')}
+                                                                </button>
+                                                            ))}
+                                                            {/* Componentes */}
+                                                            <div className="px-2 py-1 bg-blue-100 text-[9px] font-semibold text-blue-600">🧩 COMPONENTES</div>
+                                                            {COMPONENT_TYPES.map(type => (
+                                                                <button
+                                                                    key={type}
+                                                                    className="w-full px-3 py-2 text-left text-[11px] hover:bg-blue-50 flex items-center gap-2 border-b last:border-b-0"
+                                                                    onClick={() => {
+                                                                        addStepAfter(s.id, type as ExtendedStepType);
+                                                                        setActiveInsertDropdown(null);
+                                                                    }}
+                                                                >
+                                                                    <span>
+                                                                        {type === 'header' && '📋'}
+                                                                        {type === 'spacer' && '📏'}
+                                                                        {type === 'advanced-options' && '🎛️'}
+                                                                        {type === 'button' && '🔘'}
+                                                                        {type === 'script' && '📜'}
+                                                                        {type === 'heading' && '📝'}
+                                                                        {type === 'options-grid' && '🔢'}
+                                                                        {type === 'options' && '☑️'}
                                                                         {type === 'rich-text' && '📝'}
                                                                     </span>
                                                                     {type.replace('-', ' ')}
@@ -957,11 +1020,13 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
 
                             {/* Dropdown Menu para adicionar no final */}
                             {activeInsertDropdown === 'end' && (
-                                <div className="absolute bottom-full left-0 mb-1 bg-white border rounded shadow-lg z-50 w-full">
+                                <div className="absolute bottom-full left-0 mb-1 bg-white border rounded shadow-lg z-50 w-full max-h-80 overflow-y-auto">
+                                    {/* Seção de Etapas */}
+                                    <div className="px-2 py-1 bg-gray-100 text-[9px] font-semibold text-gray-600">🏗️ ETAPAS DO FUNIL</div>
                                     {STEP_TYPES.map(type => (
                                         <button
                                             key={type}
-                                            className="w-full px-3 py-2 text-left text-[11px] hover:bg-gray-50 flex items-center gap-2 border-b last:border-b-0"
+                                            className="w-full px-3 py-2 text-left text-[11px] hover:bg-gray-50 flex items-center gap-2 border-b"
                                             onClick={(e) => {
                                                 e.stopPropagation();
                                                 addStepAtEnd(type as ExtendedStepType);
@@ -991,6 +1056,46 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
                                             </div>
                                         </button>
                                     ))}
+                                    
+                                    {/* Seção de Componentes */}
+                                    <div className="px-2 py-1 bg-blue-100 text-[9px] font-semibold text-blue-600">🧩 COMPONENTES</div>
+                                    {COMPONENT_TYPES.map(type => (
+                                        <button
+                                            key={type}
+                                            className="w-full px-3 py-2 text-left text-[11px] hover:bg-blue-50 flex items-center gap-2 border-b last:border-b-0"
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                addStepAtEnd(type as ExtendedStepType);
+                                                setActiveInsertDropdown(null);
+                                            }}
+                                        >
+                                            <span>
+                                                {type === 'header' && '📋'}
+                                                {type === 'spacer' && '📏'}
+                                                {type === 'advanced-options' && '🎛️'}
+                                                {type === 'button' && '🔘'}
+                                                {type === 'script' && '📜'}
+                                                {type === 'heading' && '📝'}
+                                                {type === 'options-grid' && '🔢'}
+                                                {type === 'options' && '☑️'}
+                                                {type === 'rich-text' && '📝'}
+                                            </span>
+                                            <div>
+                                                <div className="font-medium">{type.replace('-', ' ')}</div>
+                                                <div className="text-[9px] text-gray-500">
+                                                    {type === 'header' && 'Cabeçalho com logo e progresso'}
+                                                    {type === 'spacer' && 'Espaçamento vertical'}
+                                                    {type === 'advanced-options' && 'Opções avançadas customizáveis'}
+                                                    {type === 'button' && 'Botão de ação'}
+                                                    {type === 'script' && 'Código JavaScript'}
+                                                    {type === 'heading' && 'Título editável'}
+                                                    {type === 'options-grid' && 'Grade de opções'}
+                                                    {type === 'options' && 'Lista de opções'}
+                                                    {type === 'rich-text' && 'Editor de texto rico'}
+                                                </div>
+                                            </div>
+                                        </button>
+                                    ))}
                                 </div>
                             )}
                         </div>
@@ -1001,10 +1106,10 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
                 <div className="w-72 border-r flex flex-col">
                     <div className="p-3 border-b text-xs font-semibold">Biblioteca de Componentes</div>
 
-                    {/* Seção de Componentes Disponíveis */}
+                    {/* Seção de Etapas do Funil */}
                     <div className="p-3 border-b">
                         <label className="block text-[10px] uppercase tracking-wide text-muted-foreground mb-2">
-                            Adicionar Componente
+                            🏗️ Etapas do Funil
                         </label>
                         <div className="grid grid-cols-2 gap-2">
                             {STEP_TYPES.map(type => (
@@ -1023,12 +1128,36 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
                                         {type === 'transition-result' && '🔄 Trans. Result'}
                                         {type === 'result' && '🏆 Resultado'}
                                         {type === 'offer' && '🎁 Oferta'}
+                                    </span>
+                                </Button>
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* Seção de Componentes Individuais */}
+                    <div className="p-3 border-b">
+                        <label className="block text-[10px] uppercase tracking-wide text-muted-foreground mb-2">
+                            🧩 Componentes
+                        </label>
+                        <div className="grid grid-cols-2 gap-2">
+                            {COMPONENT_TYPES.map(type => (
+                                <Button
+                                    key={type}
+                                    size="sm"
+                                    variant="ghost"
+                                    className="text-[10px] h-8 flex flex-col items-center p-1 border border-dashed border-blue-300 hover:border-blue-500 hover:bg-blue-50"
+                                    onClick={() => addStepAfter(selectedId, type as ExtendedStepType)}
+                                >
+                                    <span className="truncate w-full text-center">
                                         {type === 'header' && '📋 Header'}
                                         {type === 'spacer' && '📏 Spacer'}
                                         {type === 'advanced-options' && '🎛️ Opções+'}
                                         {type === 'button' && '🔘 Botão'}
                                         {type === 'script' && '📜 Script'}
                                         {type === 'heading' && '📝 Título'}
+                                        {type === 'options-grid' && '🔢 Grade Opções'}
+                                        {type === 'options' && '☑️ Opções'}
+                                        {type === 'rich-text' && '📝 Texto Rico'}
                                     </span>
                                 </Button>
                             ))}
@@ -1050,7 +1179,12 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
                     </div>
                     <div
                         className="flex-1 overflow-auto"
-                        onClick={() => setSelectedBlockId('')} // Limpar seleção ao clicar no fundo
+                        onClick={(e) => {
+                            // Limpar seleção APENAS se clicou diretamente no fundo, não nos componentes
+                            if (e.target === e.currentTarget) {
+                                setSelectedBlockId('');
+                            }
+                        }}
                     >
                         {!selectedStep ? (
                             <div className="flex items-center justify-center h-full text-sm text-muted-foreground">

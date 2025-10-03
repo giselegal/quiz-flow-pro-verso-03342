@@ -78,26 +78,14 @@ export const HybridStepRenderer: React.FC<HybridComponentProps> = ({
 
     switch (step.type) {
         case 'intro':
-            // CONSOLIDADO: Sempre usa dados reais, mas permite edição
+            // RENDERIZAÇÃO ÚNICA: Somente componente editável OU produção
             return useEditableComponents ? (
-                <div className="hybrid-intro-container">
-                    {/* Header do funil real */}
-                    <EditableHeader
-                        logo="https://cakto-quiz-br01.b-cdn.net/uploads/47fd613e-91a9-48cf-bd52-a9d4e180d5ab.png"
-                        progress={0}
-                        showLogo={true}
-                        showProgress={false}
-                        allowReturn={false}
-                        isEditable={isEditable}
-                        onEdit={onEdit}
-                    />
-
-                    {/* Conteúdo principal usando dados reais */}
-                    <IntroStep
-                        data={step} // DADOS REAIS DO FUNIL
-                        onNameSubmit={props.onNameSubmit || (() => { })}
-                    />
-                </div>
+                <EditableIntroStep
+                    data={step} // DADOS REAIS DO FUNIL
+                    isEditable={isEditable}
+                    onEdit={onEdit}
+                    onNameSubmit={props.onNameSubmit || (() => {})}
+                />
             ) : (
                 <IntroStep
                     data={step} // DADOS REAIS DO FUNIL
@@ -107,40 +95,13 @@ export const HybridStepRenderer: React.FC<HybridComponentProps> = ({
 
         case 'question':
             return useEditableComponents ? (
-                <div className="hybrid-question-container">
-                    {/* Header com progresso real */}
-                    <EditableHeader
-                        logo="https://cakto-quiz-br01.b-cdn.net/uploads/47fd613e-91a9-48cf-bd52-a9d4e180d5ab.png"
-                        progress={calculateProgress(step)} // CÁLCULO REAL
-                        showLogo={true}
-                        showProgress={true}
-                        allowReturn={true}
-                        isEditable={isEditable}
-                        onEdit={onEdit}
-                    />
-
-                    {/* Título da questão usando dados reais */}
-                    <EditableHeading
-                        content={`${step.questionNumber} - ${step.questionText}`} // DADOS REAIS
-                        alignment="center"
-                        headingLevel={1}
-                        isEditable={isEditable}
-                        onEdit={onEdit}
-                    />
-
-                    <EditableSpacer height={24} isEditable={isEditable} onEdit={onEdit} />
-
-                    {/* Opções usando dados reais */}
-                    <EditableOptionsGrid
-                        options={step.options} // DADOS REAIS DO FUNIL
-                        selectedOptions={props.currentAnswers || []}
-                        multiSelect={step.requiredSelections > 1}
-                        maxSelections={step.requiredSelections}
-                        onSelectionChange={props.onAnswersChange}
-                        isEditable={isEditable}
-                        onEdit={onEdit}
-                    />
-                </div>
+                <EditableQuestionStep
+                    data={step} // DADOS REAIS DO FUNIL
+                    isEditable={isEditable}
+                    onEdit={onEdit}
+                    currentAnswers={props.currentAnswers || []}
+                    onAnswersChange={props.onAnswersChange || (() => {})}
+                />
             ) : (
                 <QuestionStep
                     data={step} // DADOS REAIS DO FUNIL
@@ -151,34 +112,13 @@ export const HybridStepRenderer: React.FC<HybridComponentProps> = ({
 
         case 'strategic-question':
             return useEditableComponents ? (
-                <div className="hybrid-strategic-container">
-                    <EditableHeader
-                        logo="https://cakto-quiz-br01.b-cdn.net/uploads/47fd613e-91a9-48cf-bd52-a9d4e180d5ab.png"
-                        progress={calculateProgress(step)}
-                        showLogo={true}
-                        showProgress={true}
-                        allowReturn={true}
-                        isEditable={isEditable}
-                        onEdit={onEdit}
-                    />
-
-                    <EditableHeading
-                        content={step.questionText} // DADOS REAIS
-                        alignment="center"
-                        headingLevel={1}
-                        isEditable={isEditable}
-                        onEdit={onEdit}
-                    />
-
-                    <EditableOptions
-                        options={step.options} // DADOS REAIS DO FUNIL
-                        selectedOptions={props.currentAnswer ? [props.currentAnswer] : []}
-                        multipleChoice={false}
-                        onSelectionChange={(selected) => props.onAnswerChange?.(selected[0] || '')}
-                        isEditable={isEditable}
-                        onEdit={onEdit}
-                    />
-                </div>
+                <EditableQuestionStep
+                    data={step} // DADOS REAIS
+                    isEditable={isEditable}
+                    onEdit={onEdit}
+                    currentAnswers={props.currentAnswer ? [props.currentAnswer] : []}
+                    onAnswersChange={(answers) => props.onAnswerChange?.(answers[0] || '')}
+                />
             ) : (
                 <StrategicQuestionStep
                     data={step} // DADOS REAIS DO FUNIL
@@ -189,35 +129,8 @@ export const HybridStepRenderer: React.FC<HybridComponentProps> = ({
 
         case 'transition':
         case 'transition-result':
-            return useEditableComponents ? (
-                <div className="hybrid-transition-container">
-                    <EditableHeader
-                        logo="https://cakto-quiz-br01.b-cdn.net/uploads/47fd613e-91a9-48cf-bd52-a9d4e180d5ab.png"
-                        progress={calculateProgress(step)}
-                        showLogo={true}
-                        showProgress={true}
-                        allowReturn={false}
-                        isEditable={isEditable}
-                        onEdit={onEdit}
-                    />
-
-                    <EditableHeading
-                        content={step.title || step.text} // DADOS REAIS
-                        alignment="center"
-                        headingLevel={1}
-                        isEditable={isEditable}
-                        onEdit={onEdit}
-                    />
-
-                    {/* Script de transição real */}
-                    <EditableScript
-                        code={getTransitionScript(step)} // LÓGICA REAL DE TRANSIÇÃO
-                        visible={false}
-                        isEditable={isEditable}
-                        onEdit={onEdit}
-                    />
-                </div>
-            ) : (
+            // Para transições, usar sempre componente de produção (não há versão editável específica)
+            return (
                 <TransitionStep
                     data={step} // DADOS REAIS DO FUNIL
                     onComplete={props.onComplete || (() => { })}
@@ -225,26 +138,8 @@ export const HybridStepRenderer: React.FC<HybridComponentProps> = ({
             );
 
         case 'result':
-            return useEditableComponents ? (
-                <div className="hybrid-result-container">
-                    <EditableHeader
-                        logo="https://cakto-quiz-br01.b-cdn.net/uploads/47fd613e-91a9-48cf-bd52-a9d4e180d5ab.png"
-                        progress={100}
-                        showLogo={true}
-                        showProgress={true}
-                        allowReturn={false}
-                        isEditable={isEditable}
-                        onEdit={onEdit}
-                    />
-
-                    <EditableRichText
-                        content={generateResultContent(step, props.userProfile)} // CONTEÚDO REAL DINÂMICO
-                        isEditable={isEditable}
-                        onEdit={onEdit}
-                        onChange={onChange}
-                    />
-                </div>
-            ) : (
+            // Para resultados, usar sempre componente de produção (lógica complexa)
+            return (
                 <ResultStep
                     data={step} // DADOS REAIS DO FUNIL
                     userProfile={props.userProfile}
@@ -252,34 +147,8 @@ export const HybridStepRenderer: React.FC<HybridComponentProps> = ({
             );
 
         case 'offer':
-            return useEditableComponents ? (
-                <div className="hybrid-offer-container">
-                    <EditableHeader
-                        logo="https://cakto-quiz-br01.b-cdn.net/uploads/47fd613e-91a9-48cf-bd52-a9d4e180d5ab.png"
-                        progress={100}
-                        showLogo={true}
-                        showProgress={false}
-                        allowReturn={false}
-                        isEditable={isEditable}
-                        onEdit={onEdit}
-                    />
-
-                    <EditableRichText
-                        content={generateOfferContent(step, props.userProfile, props.offerKey || 'default')} // OFERTA REAL DINÂMICA
-                        isEditable={isEditable}
-                        onEdit={onEdit}
-                        onChange={onChange}
-                    />
-
-                    <EditableButton
-                        text={getOfferButtonText(step, props.offerKey || 'default')} // TEXTO REAL DO BOTÃO
-                        variant="default"
-                        fullWidth={true}
-                        isEditable={isEditable}
-                        onEdit={onEdit}
-                    />
-                </div>
-            ) : (
+            // Para ofertas, usar sempre componente de produção (lógica de conversão complexa)
+            return (
                 <OfferStep
                     data={step} // DADOS REAIS DO FUNIL
                     userProfile={props.userProfile}
@@ -319,7 +188,111 @@ export const HybridStepRenderer: React.FC<HybridComponentProps> = ({
                 />
             );
 
-        // ... outros casos
+        case 'spacer':
+            return (
+                <EditableSpacer
+                    height={step.height || 24}
+                    isEditable={isEditable}
+                    onEdit={onEdit}
+                />
+            );
+
+        case 'heading':
+            return (
+                <EditableHeading
+                    content={step.content}
+                    alignment={step.alignment}
+                    backgroundColor={step.backgroundColor}
+                    textColor={step.textColor}
+                    borderColor={step.borderColor}
+                    componentId={step.componentId}
+                    maxWidth={step.maxWidth}
+                    generalAlignment={step.generalAlignment}
+                    headingLevel={step.headingLevel}
+                    isEditable={isEditable}
+                    onEdit={onEdit}
+                />
+            );
+
+        case 'button':
+            return (
+                <EditableButton
+                    text={step.text}
+                    variant={step.variant}
+                    size={step.size}
+                    fullWidth={step.fullWidth}
+                    isEditable={isEditable}
+                    onEdit={onEdit}
+                />
+            );
+
+        case 'script':
+            return (
+                <EditableScript
+                    code={step.code}
+                    visible={step.visible}
+                    isEditable={isEditable}
+                    onEdit={onEdit}
+                />
+            );
+
+        case 'options-grid':
+            return (
+                <EditableOptionsGrid
+                    options={step.options || []}
+                    selectedOptions={step.selectedOptions || []}
+                    multiSelect={step.multiSelect}
+                    maxSelections={step.maxSelections}
+                    columns={step.columns}
+                    gap={step.gap}
+                    showImages={step.showImages}
+                    showPrefixes={step.showPrefixes}
+                    buttonStyle={step.buttonStyle}
+                    imageSize={step.imageSize}
+                    orientation={step.orientation}
+                    isEditable={isEditable}
+                    onEdit={onEdit}
+                />
+            );
+
+        case 'options':
+            return (
+                <EditableOptions
+                    options={step.options || []}
+                    selectedOptions={step.selectedOptions || []}
+                    columns={step.columns}
+                    direction={step.direction}
+                    disposition={step.disposition}
+                    multipleChoice={step.multipleChoice}
+                    required={step.required}
+                    autoProceed={step.autoProceed}
+                    borders={step.borders}
+                    shadows={step.shadows}
+                    spacing={step.spacing}
+                    detail={step.detail}
+                    style={step.style}
+                    backgroundColor={step.backgroundColor}
+                    textColor={step.textColor}
+                    borderColor={step.borderColor}
+                    componentId={step.componentId}
+                    maxWidth={step.maxWidth}
+                    generalAlignment={step.generalAlignment}
+                    isEditable={isEditable}
+                    onEdit={onEdit}
+                />
+            );
+
+        case 'advanced-options':
+            return (
+                <EditableAdvancedOptions
+                    options={step.options || []}
+                    selectedOptions={step.selectedOptions || []}
+                    multiSelect={step.multiSelect}
+                    onOptionsChange={(selected) => onEdit?.('selectedOptions', selected)}
+                    isEditable={isEditable}
+                    onEdit={onEdit}
+                />
+            );
 
         default:
             return (
