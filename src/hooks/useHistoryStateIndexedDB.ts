@@ -64,7 +64,7 @@ export const useHistoryStateIndexedDB = <T>(initialState: T, options: UseHistory
     const getInitialState = useCallback(async (): Promise<HistoryState<T>> => {
         if (enablePersistence && storageKey && storageManager) {
             try {
-                const saved = await storageManager.get(storageKey, { namespace });
+                const saved = await storageManager.getItem(storageKey, namespace);
                 if (saved) {
                     return {
                         past: saved.past || [],
@@ -111,13 +111,10 @@ export const useHistoryStateIndexedDB = <T>(initialState: T, options: UseHistory
         let timer: number | null = null;
         const save = async () => {
             try {
-                await storageManager.set(storageKey, toPersist, {
+                await storageManager.setItem(storageKey, toPersist, {
                     namespace,
-                    compression,
-                    metadata: {
-                        timestamp: Date.now(),
-                        type: 'editorHistory',
-                    }
+                    compress: compression,
+                    tags: ['editorHistory'],
                 });
                 console.log('✅ History state saved to IndexedDB');
             } catch (error: any) {
@@ -219,7 +216,7 @@ export const useHistoryStateIndexedDB = <T>(initialState: T, options: UseHistory
         storageReady: !!storageManager,
         clearHistory: useCallback(() => {
             if (storageManager && storageKey) {
-                storageManager.delete(storageKey, { namespace }).catch(console.error);
+                storageManager.deleteItem(storageKey, namespace).catch(console.error);
             }
             reset();
         }, [storageManager, storageKey, namespace, reset]),
