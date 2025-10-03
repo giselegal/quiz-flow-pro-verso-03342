@@ -566,6 +566,7 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
                 className="flex-1 flex overflow-hidden"
                 onClick={() => setActiveInsertDropdown(null)} // Fechar dropdowns ao clicar fora
             >
+                {/* Layout Aprimorado: Sidebar de Steps + Canvas + Properties Panel */}
                 {/* COL 1 - SEQUÊNCIA DE ETAPAS */}
                 <div className="w-60 border-r flex flex-col">
                     <div className="p-3 flex items-center justify-between border-b">
@@ -934,29 +935,69 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
                     </div>
                 </div>
 
-                {/* COL 3 - PREVIEW WYSIWYG */}
+                {/* COL 3 - CANVAS COM DRAG & DROP */}
                 <div className="flex-1 border-r bg-gray-50 flex flex-col">
-                    <div className="p-3 border-b text-xs font-semibold flex items-center gap-2">
-                        Preview WYSIWYG
-                        {selectedBlockId && (
-                            <Badge variant="outline" className="text-[10px]">
-                                Bloco selecionado
-                            </Badge>
-                        )}
+                    <div className="p-3 border-b text-xs font-semibold flex items-center gap-2 justify-between">
+                        <div className="flex items-center gap-2">
+                            <span>Canvas Visual</span>
+                            {selectedBlockId && (
+                                <Badge variant="outline" className="text-[10px]">
+                                    Selecionado
+                                </Badge>
+                            )}
+                        </div>
+                        <div className="flex items-center gap-2">
+                            <Button
+                                size="sm"
+                                variant={dragEnabled ? "default" : "outline"}
+                                onClick={() => setDragEnabled(!dragEnabled)}
+                                className="h-6 text-[10px]"
+                            >
+                                Drag & Drop
+                            </Button>
+                            <Button
+                                size="sm"
+                                variant={showPropertiesPanel ? "default" : "outline"}
+                                onClick={() => setShowPropertiesPanel(!showPropertiesPanel)}
+                                className="h-6 text-[10px]"
+                            >
+                                <Settings className="w-3 h-3 mr-1" />
+                                Props
+                            </Button>
+                        </div>
                     </div>
                     <div
-                        className="flex-1 overflow-auto"
-                        onClick={() => setSelectedBlockId('')} // Limpar seleção ao clicar no fundo
+                        className="flex-1 overflow-auto p-4"
+                        onClick={(e) => {
+                            // Se clicar no fundo (não em um bloco), limpar seleção
+                            if (e.target === e.currentTarget) {
+                                setSelectedBlockId('');
+                            }
+                        }}
                     >
-                        {!selectedStep ? (
+                        {steps.length === 0 ? (
                             <div className="flex items-center justify-center h-full text-sm text-muted-foreground">
-                                Selecione uma etapa para ver o preview
+                                <div className="text-center">
+                                    <div className="text-lg mb-2">🎯</div>
+                                    <div>Nenhum step criado ainda</div>
+                                    <div className="text-xs">Use a sidebar para adicionar steps</div>
+                                </div>
                             </div>
                         ) : (
-                            // Renderizar componente real SEMPRE (edit ou preview)
-                            <div className="min-h-full">
-                                {renderRealComponent(selectedStep, steps.findIndex(s => s.id === selectedStep.id))}
-                            </div>
+                            <DragDropManager
+                                items={steps}
+                                onReorder={handleStepReorder}
+                                enabled={dragEnabled && previewMode === 'edit'}
+                                renderItem={(step, index, isDragging) => (
+                                    <div className={cn(
+                                        "mb-4 transition-all duration-200",
+                                        isDragging && "opacity-50 scale-95"
+                                    )}>
+                                        {renderRealComponent(step, index)}
+                                    </div>
+                                )}
+                                className="space-y-4"
+                            />
                         )}
                     </div>
                 </div>
