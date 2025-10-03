@@ -5,6 +5,25 @@
     color: #1a1716 !important;
 }
 
+/* REGRA COM MAIOR ESPECIFICIDADE PARA SOBRESCREVER QUALQUER OUTRO CSS */
+div.quiz-editor-container * {
+    color: #1a1716 !important;
+}
+
+div.quiz-editor-container div * {
+    color: #1a1716 !important;
+}
+
+/* Forçar cor específica para elementos que podem ter texto branco */
+.quiz-editor-container span,
+.quiz-editor-container p,
+.quiz-editor-container div,
+.quiz-editor-container label,
+.quiz-editor-container button,
+.quiz-editor-container input {
+    color: #1a1716 !important;
+}
+
 /* Forçar tema claro para todo o editor */
 .quiz-editor-container {
     background: white !important;
