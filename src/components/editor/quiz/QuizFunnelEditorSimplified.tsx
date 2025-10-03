@@ -301,7 +301,17 @@ const QuizFunnelEditorSimplified: React.FC<QuizFunnelEditorProps> = ({ funnelId,
                                             <div className="grid grid-cols-2 gap-2">
                                                 {(selectedStep.options || []).map(opt => (
                                                     <div key={opt.id} className="border rounded p-2 text-sm bg-gray-50">
-                                                        {opt.text}
+                                                        {opt.image && (
+                                                            <img 
+                                                                src={opt.image} 
+                                                                alt={opt.text}
+                                                                className="w-full h-20 object-cover rounded mb-2"
+                                                                onError={(e) => {
+                                                                    e.currentTarget.style.display = 'none';
+                                                                }}
+                                                            />
+                                                        )}
+                                                        <div className="text-xs">{opt.text}</div>
                                                     </div>
                                                 ))}
                                             </div>
@@ -313,7 +323,17 @@ const QuizFunnelEditorSimplified: React.FC<QuizFunnelEditorProps> = ({ funnelId,
                                             <div className="space-y-2">
                                                 {(selectedStep.options || []).map(opt => (
                                                     <div key={opt.id} className="border rounded p-2 text-sm bg-gray-50">
-                                                        {opt.text}
+                                                        {opt.image && (
+                                                            <img 
+                                                                src={opt.image} 
+                                                                alt={opt.text}
+                                                                className="w-full h-20 object-cover rounded mb-2"
+                                                                onError={(e) => {
+                                                                    e.currentTarget.style.display = 'none';
+                                                                }}
+                                                            />
+                                                        )}
+                                                        <div className="text-xs">{opt.text}</div>
                                                     </div>
                                                 ))}
                                             </div>

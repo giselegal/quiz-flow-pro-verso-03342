@@ -221,3 +221,44 @@
 .quiz-editor-container .group:hover .group-hover\:opacity-100 {
     opacity: 1 !important;
 }
+
+/* Estilos específicos para imagens */
+.quiz-editor-container img {
+    max-width: 100% !important;
+    height: auto !important;
+    display: block !important;
+}
+
+.quiz-editor-container .object-cover {
+    object-fit: cover !important;
+}
+
+.quiz-editor-container .rounded {
+    border-radius: 0.375rem !important;
+}
+
+.quiz-editor-container .h-12 {
+    height: 3rem !important;
+}
+
+.quiz-editor-container .h-16 {
+    height: 4rem !important;
+}
+
+.quiz-editor-container .h-20 {
+    height: 5rem !important;
+}
+
+.quiz-editor-container .h-32 {
+    height: 8rem !important;
+}
+
+/* Garantir que containers das imagens tenham fundo adequado */
+.quiz-editor-container .bg-gray-50 {
+    background-color: #f9fafb !important;
+}
+
+/* Loading state para imagens */
+.quiz-editor-container img[src=""] {
+    display: none !important;
+}
