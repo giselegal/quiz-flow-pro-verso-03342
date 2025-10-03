@@ -2,6 +2,7 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { useUnifiedCRUD } from '@/context/UnifiedCRUDProvider';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Switch } from '@/components/ui/switch';
 import { QUIZ_STEPS, type QuizStep } from '@/data/quizSteps';
 import { Plus, Save, Trash2, ArrowUp, ArrowDown, Copy, Eye, ChevronDown, Settings } from 'lucide-react';
 import './QuizEditorStyles.css';
@@ -24,18 +25,24 @@ import EditableSpacer from '@/components/quiz/editable/EditableSpacer';
 import EditableAdvancedOptions from '@/components/quiz/editable/EditableAdvancedOptions';
 import EditableButton from '@/components/quiz/editable/EditableButton';
 import EditableScript from '@/components/quiz/editable/EditableScript';
+import EditableHeading from '@/components/quiz/editable/EditableHeading';
+import EditableOptionsGrid, { QuizOption } from '@/components/quiz/editable/EditableOptionsGrid';
+import EditableOptions, { EditableOptionsProps } from '@/components/quiz/editable/EditableOptions';
 
 interface QuizFunnelEditorProps {
     funnelId?: string;
     templateId?: string;
 }
 
-type ExtendedStepType = QuizStep['type'] | 'header' | 'spacer' | 'advanced-options' | 'button' | 'script';
+type ExtendedStepType = QuizStep['type'] | 'header' | 'spacer' | 'advanced-options' | 'button' | 'script' | 'heading' | 'options-grid' | 'options';
 
 type EditableQuizStep = (QuizStep | {
     type: 'header';
     logo?: string;
     progress?: number;
+    showLogo?: boolean;
+    showProgress?: boolean;
+    allowReturn?: boolean;
 } | {
     type: 'spacer';
     height?: number;
@@ -53,12 +60,64 @@ type EditableQuizStep = (QuizStep | {
     type: 'script';
     code?: string;
     visible?: boolean;
+} | {
+    type: 'heading';
+    content?: string;
+    alignment?: 'left' | 'center' | 'right';
+    backgroundColor?: string;
+    textColor?: string;
+    borderColor?: string;
+    componentId?: string;
+    maxWidth?: number;
+    generalAlignment?: 'start' | 'center' | 'end';
+    headingLevel?: 1 | 2 | 3 | 4 | 5 | 6;
+} | {
+    type: 'options-grid';
+    options?: QuizOption[];
+    selectedOptions?: string[];
+    multiSelect?: boolean;
+    maxSelections?: number;
+    columns?: 1 | 2 | 3 | 4;
+    gap?: number;
+    showImages?: boolean;
+    showPrefixes?: boolean;
+    buttonStyle?: 'default' | 'outline' | 'ghost';
+    imageSize?: 'small' | 'medium' | 'large';
+    orientation?: 'vertical' | 'horizontal';
+} | {
+    type: 'options';
+    // Layout
+    columns?: 1 | 2 | 3 | 4;
+    direction?: 'vertical' | 'horizontal';
+    disposition?: 'image-text' | 'text-image' | 'text-only' | 'image-only';
+    // Opções
+    options?: QuizOption[];
+    selectedOptions?: string[];
+    // Validações
+    multipleChoice?: boolean;
+    required?: boolean;
+    autoProceed?: boolean;
+    // Estilização
+    borders?: 'small' | 'medium' | 'large' | 'none';
+    shadows?: 'none' | 'small' | 'medium' | 'large';
+    spacing?: 'small' | 'medium' | 'large';
+    detail?: 'none' | 'subtle' | 'prominent';
+    style?: 'simple' | 'rounded' | 'modern';
+    // Personalização
+    backgroundColor?: string;
+    textColor?: string;
+    borderColor?: string;
+    // Avançado
+    componentId?: string;
+    // Geral
+    maxWidth?: number;
+    generalAlignment?: 'start' | 'center' | 'end';
 }) & { id: string };
 
 const STEP_TYPES: Array<string> = [
     'intro', 'question', 'strategic-question', 'transition', 'transition-result', 'result', 'offer',
     // Novos tipos baseados no modelo do funil:
-    'header', 'spacer', 'advanced-options', 'button', 'script'
+    'header', 'spacer', 'advanced-options', 'button', 'script', 'heading', 'options-grid', 'options'
 ];
 
 function createBlankStep(type: ExtendedStepType): EditableQuizStep {
@@ -107,7 +166,15 @@ function createBlankStep(type: ExtendedStepType): EditableQuizStep {
         case 'offer':
             return { id: baseId, type: 'offer', offerMap: {}, image: '' };
         case 'header':
-            return { id: baseId, type: 'header', logo: '', progress: 0 };
+            return {
+                id: baseId,
+                type: 'header',
+                logo: 'https://cakto-quiz-br01.b-cdn.net/uploads/47fd613e-91a9-48cf-bd52-a9d4e180d5ab.png',
+                progress: 28.57,
+                showLogo: true,
+                showProgress: true,
+                allowReturn: true
+            };
         case 'spacer':
             return { id: baseId, type: 'spacer', height: 32 };
         case 'advanced-options':
@@ -124,6 +191,145 @@ function createBlankStep(type: ExtendedStepType): EditableQuizStep {
             return { id: baseId, type: 'button', text: 'Clique aqui', variant: 'default', size: 'default', fullWidth: true };
         case 'script':
             return { id: baseId, type: 'script', code: '// Digite seu código JavaScript aqui', visible: false };
+        case 'heading':
+            return {
+                id: baseId,
+                type: 'heading',
+                content: '4- O que mais chama sua atenção nos detalhes das roupas?',
+                alignment: 'center',
+                backgroundColor: '#ffffff',
+                textColor: '#000000',
+                borderColor: '#000000',
+                componentId: '',
+                maxWidth: 100,
+                generalAlignment: 'start',
+                headingLevel: 1
+            };
+        case 'options-grid':
+            return {
+                id: baseId,
+                type: 'options-grid',
+                options: [
+                    {
+                        id: 'opt-1',
+                        text: '<strong>Poucos detalhes</strong>, básico e prático.',
+                        prefix: 'A)',
+                        image: 'https://cakto-quiz-br01.b-cdn.net/uploads/36e5a642-0988-479b-908d-e8507e0068e0.png',
+                        htmlContent: '<p>A) <strong>Poucos detalhes</strong>, básico e prático.</p>'
+                    },
+                    {
+                        id: 'opt-2',
+                        text: '<strong>Bem discretos e sutis,</strong> clean e clássico.',
+                        prefix: 'B)',
+                        image: 'https://cakto-quiz-br01.b-cdn.net/uploads/24ae72b9-e8a6-4292-af76-c3f8de4f12fc.png',
+                        htmlContent: '<p>B) <strong>Bem discretos e sutis,</strong> clean e clássico.</p>'
+                    },
+                    {
+                        id: 'opt-3',
+                        text: '<strong>Básico</strong>, mas <strong>com um toque de estilo.</strong>',
+                        prefix: 'C)',
+                        image: 'https://cakto-quiz-br01.b-cdn.net/uploads/bc764766-f9c4-4c66-945a-60e7de7c196f.png',
+                        htmlContent: '<p>C) <strong>Básico</strong>, mas <strong>com um toque de estilo.</strong></p>'
+                    },
+                    {
+                        id: 'opt-4',
+                        text: '<strong>Detalhes refinados</strong>, elegantes e que deem status.',
+                        prefix: 'D)',
+                        image: 'https://cakto-quiz-br01.b-cdn.net/uploads/7d4ab0ef-7b82-48f0-aa6a-a964c99bed7b.png',
+                        htmlContent: '<p>D) <strong>Detalhes refinados</strong>, elegantes e que deem status.</p>'
+                    }
+                ],
+                selectedOptions: [],
+                multiSelect: true,
+                maxSelections: 3,
+                columns: 2,
+                gap: 2,
+                showImages: true,
+                showPrefixes: true,
+                buttonStyle: 'default',
+                imageSize: 'medium',
+                orientation: 'vertical'
+            };
+        case 'options':
+            return {
+                id: baseId,
+                type: 'options',
+                // Layout
+                columns: 2,
+                direction: 'vertical',
+                disposition: 'image-text',
+                // Opções
+                options: [
+                    {
+                        id: 'opt-1',
+                        text: '<strong>Poucos detalhes</strong>, básico e prático.',
+                        image: 'https://cakto-quiz-br01.b-cdn.net/uploads/36e5a642-0988-479b-908d-e8507e0068e0.png',
+                        htmlContent: '<p>A) <strong>Poucos detalhes</strong>, básico e prático.</p>'
+                    },
+                    {
+                        id: 'opt-2',
+                        text: '<strong>Bem discretos e sutis,</strong> clean e clássico.',
+                        image: 'https://cakto-quiz-br01.b-cdn.net/uploads/24ae72b9-e8a6-4292-af76-c3f8de4f12fc.png',
+                        htmlContent: '<p>B) <strong>Bem discretos e sutis,</strong> clean e clássico.</p>'
+                    },
+                    {
+                        id: 'opt-3',
+                        text: '<strong>Básico</strong>, mas <strong>com um toque de estilo.</strong>',
+                        image: 'https://cakto-quiz-br01.b-cdn.net/uploads/bc764766-f9c4-4c66-945a-60e7de7c196f.png',
+                        htmlContent: '<p>C) <strong>Básico</strong>, mas <strong>com um toque de estilo.</strong></p>'
+                    },
+                    {
+                        id: 'opt-4',
+                        text: '<strong>Detalhes refinados</strong>, elegantes e que deem status.',
+                        image: 'https://cakto-quiz-br01.b-cdn.net/uploads/7d4ab0ef-7b82-48f0-aa6a-a964c99bed7b.png',
+                        htmlContent: '<p>D) <strong>Detalhes refinados</strong>, elegantes e que deem status.</p>'
+                    },
+                    {
+                        id: 'opt-5',
+                        text: '<strong>Detalhes delicados</strong>, como laços ou babados.',
+                        image: 'https://cakto-quiz-br01.b-cdn.net/uploads/c1f924db-b6ca-47c4-8781-c5cf3c7433f8.png',
+                        htmlContent: '<p>E) <strong>Detalhes delicados</strong>, como laços ou babados.</p>'
+                    },
+                    {
+                        id: 'opt-6',
+                        text: '<strong>Detalhes que valorizem o corpo</strong>, como couro, zíper e fendas.',
+                        image: 'https://cakto-quiz-br01.b-cdn.net/uploads/f2537fb2-3014-407b-b866-0d86aa3b628d.png',
+                        htmlContent: '<p>F) <strong>Detalhes que valorizem o corpo</strong>, como couro, zíper e fendas.</p>'
+                    },
+                    {
+                        id: 'opt-7',
+                        text: '<strong>Detalhes marcantes, </strong>com firmeza e peso.',
+                        image: 'https://cakto-quiz-br01.b-cdn.net/uploads/c2729a10-f8d1-4124-8fb8-63ea834a1272.png',
+                        htmlContent: '<p>G) <strong>Detalhes marcantes, </strong>com firmeza e peso.</p>'
+                    },
+                    {
+                        id: 'opt-8',
+                        text: '<strong>Detalhes diferentes</strong> do convencional, produções ousadas.',
+                        image: 'https://cakto-quiz-br01.b-cdn.net/uploads/37bdd83d-a0f5-4f23-8c26-3d4d7563043d.png',
+                        htmlContent: '<p>H) <strong>Detalhes diferentes</strong> do convencional, produções ousadas.</p>'
+                    }
+                ],
+                selectedOptions: [],
+                // Validações
+                multipleChoice: true,
+                required: true,
+                autoProceed: false,
+                // Estilização
+                borders: 'small',
+                shadows: 'none',
+                spacing: 'small',
+                detail: 'none',
+                style: 'simple',
+                // Personalização
+                backgroundColor: '#ffffff',
+                textColor: '#000000',
+                borderColor: '#e5e7eb',
+                // Avançado
+                componentId: '',
+                // Geral
+                maxWidth: 100,
+                generalAlignment: 'start'
+            };
         default:
             return { id: baseId, type: 'question', questionText: 'Pergunta...', options: [], nextStep: '' };
     }
@@ -138,7 +344,7 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
     const [previewMode, setPreviewMode] = useState<'edit' | 'preview'>('edit');
     const [activeInsertDropdown, setActiveInsertDropdown] = useState<string | null>(null);
 
-    // Carregar steps iniciais
+    // Carregar steps iniciais com estrutura modularizada
     useEffect(() => {
         const existing = (crud.currentFunnel as any)?.quizSteps as EditableQuizStep[] | undefined;
         if (existing && existing.length) {
@@ -146,9 +352,69 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
             setSelectedId(existing[0].id);
             return;
         }
-        const conv: EditableQuizStep[] = Object.entries(QUIZ_STEPS).map(([id, step]) => ({ id, ...step as QuizStep }));
-        setSteps(conv);
-        if (conv.length) setSelectedId(conv[0].id);
+
+        // Converter automaticamente para estrutura modularizada
+        const modularizedSteps: EditableQuizStep[] = [];
+        const quizStepsArray = Object.entries(QUIZ_STEPS);
+
+        quizStepsArray.forEach(([id, step], index) => {
+            const stepNumber = index + 1;
+            const totalSteps = quizStepsArray.length;
+            const progressPercentage = Math.round((stepNumber / totalSteps) * 100);
+
+            // 1. Adicionar Header para cada etapa
+            modularizedSteps.push({
+                id: `${id}-header`,
+                type: 'header',
+                logo: 'https://cakto-quiz-br01.b-cdn.net/uploads/47fd613e-91a9-48cf-bd52-a9d4e180d5ab.png',
+                progress: progressPercentage,
+                showLogo: true,
+                showProgress: true,
+                allowReturn: stepNumber > 1
+            });
+
+            // 2. Adicionar Heading para questões
+            if (step.type === 'question' || step.type === 'strategic-question') {
+                const headingContent = step.questionNumber
+                    ? `${step.questionNumber} - ${step.questionText}`
+                    : step.questionText || 'Pergunta';
+
+                modularizedSteps.push({
+                    id: `${id}-heading`,
+                    type: 'heading',
+                    content: headingContent,
+                    alignment: 'center',
+                    headingLevel: 1,
+                    textColor: '#000000',
+                    backgroundColor: '#ffffff',
+                    maxWidth: 100,
+                    generalAlignment: 'center'
+                });
+
+                // Adicionar espaçador após heading
+                modularizedSteps.push({
+                    id: `${id}-spacer`,
+                    type: 'spacer',
+                    height: 24
+                });
+            }
+
+            // 3. Adicionar a etapa original
+            modularizedSteps.push({
+                id,
+                ...step as QuizStep
+            });
+
+            // 4. Adicionar espaçador final para separar etapas
+            modularizedSteps.push({
+                id: `${id}-spacer-end`,
+                type: 'spacer',
+                height: 32
+            });
+        });
+
+        setSteps(modularizedSteps);
+        if (modularizedSteps.length) setSelectedId(modularizedSteps[0].id);
     }, [crud.currentFunnel]);
 
     const selectedStep = steps.find(s => s.id === selectedId);
@@ -236,6 +502,8 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
         }
     }, [steps, crud]);
 
+
+
     // Mock de resultados para o componente ResultStep
     const mockResults = {
         userProfile: 'Empreendedor Visionário',
@@ -257,6 +525,9 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
                 onClick={(e) => {
                     e.stopPropagation();
                     setSelectedBlockId(blockId);
+                    // Extrair stepId do blockId (formato: "stepId-tipo")
+                    const stepId = blockId.split('-')[0];
+                    setSelectedId(stepId);
                 }}
             >
                 <div className="absolute -top-6 left-0 bg-gray-600 text-white px-2 py-1 text-xs rounded z-10 opacity-0 group-hover:opacity-100 transition-opacity">
@@ -283,6 +554,9 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
                 onClick={(e) => {
                     e.stopPropagation();
                     setSelectedBlockId(blockId);
+                    // Extrair stepId do blockId (formato: "stepId-tipo")
+                    const stepId = blockId.split('-')[0];
+                    setSelectedId(stepId);
                 }}
             >
                 {/* Label do componente */}
@@ -351,7 +625,7 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
                         <EditableIntroStep
                             data={step}
                             onNameSubmit={mockProps.onNameSubmit}
-                            isEditable={isEditMode}
+                            isEditable={false}
                             onEdit={(field, value) => updateStep(step.id, { [field]: value })}
                         />
                     </WrapperComponent>
@@ -363,7 +637,7 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
                             data={step}
                             currentAnswers={mockProps.currentAnswers}
                             onAnswersChange={mockProps.onAnswersChange}
-                            isEditable={isEditMode}
+                            isEditable={false}
                             onEdit={(field, value) => updateStep(step.id, { [field]: value })}
                         />
                     </WrapperComponent>
@@ -423,7 +697,10 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
                         <EditableHeader
                             logo={(step as any).logo || ''}
                             progress={(step as any).progress || 0}
-                            isEditable={isEditMode}
+                            showLogo={(step as any).showLogo !== false}
+                            showProgress={(step as any).showProgress !== false}
+                            allowReturn={(step as any).allowReturn !== false}
+                            isEditable={false}
                             onEdit={(field, value) => updateStep(step.id, { [field]: value })}
                         />
                     </WrapperComponent>
@@ -434,7 +711,7 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
                     <WrapperComponent blockId={`${step.id}-spacer`} label="Espaçador" isEditable={isEditMode}>
                         <EditableSpacer
                             height={(step as any).height || 32}
-                            isEditable={isEditMode}
+                            isEditable={false}
                             onEdit={(field, value) => updateStep(step.id, { [field]: value })}
                         />
                     </WrapperComponent>
@@ -448,7 +725,7 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
                             selectedOptions={[]}
                             onOptionsChange={() => { }}
                             multiSelect={(step as any).multiSelect || false}
-                            isEditable={isEditMode}
+                            isEditable={false}
                             onEdit={(field, value) => updateStep(step.id, { [field]: value })}
                         />
                     </WrapperComponent>
@@ -462,7 +739,7 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
                             variant={(step as any).variant || 'default'}
                             size={(step as any).size || 'default'}
                             fullWidth={(step as any).fullWidth !== false}
-                            isEditable={isEditMode}
+                            isEditable={false}
                             onEdit={(field, value) => updateStep(step.id, { [field]: value })}
                         />
                     </WrapperComponent>
@@ -474,8 +751,87 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
                         <EditableScript
                             code={(step as any).code || ''}
                             visible={(step as any).visible || false}
-                            isEditable={isEditMode}
+                            isEditable={false}
                             onEdit={(field, value) => updateStep(step.id, { [field]: value })}
+                        />
+                    </WrapperComponent>
+                );
+
+            case 'heading':
+                return (
+                    <WrapperComponent blockId={`${step.id}-heading`} label="Título" isEditable={isEditMode}>
+                        <EditableHeading
+                            content={(step as any).content || 'Digite seu título aqui...'}
+                            alignment={(step as any).alignment || 'center'}
+                            backgroundColor={(step as any).backgroundColor || '#ffffff'}
+                            textColor={(step as any).textColor || '#000000'}
+                            borderColor={(step as any).borderColor || '#000000'}
+                            componentId={(step as any).componentId || ''}
+                            maxWidth={(step as any).maxWidth || 100}
+                            generalAlignment={(step as any).generalAlignment || 'start'}
+                            headingLevel={(step as any).headingLevel || 1}
+                            isEditable={false}
+                            onEdit={(field, value) => updateStep(step.id, { [field]: value })}
+                        />
+                    </WrapperComponent>
+                );
+
+            case 'options-grid':
+                return (
+                    <WrapperComponent blockId={`${step.id}-options-grid`} label="Grade de Opções" isEditable={isEditMode}>
+                        <EditableOptionsGrid
+                            options={(step as any).options || []}
+                            selectedOptions={(step as any).selectedOptions || []}
+                            multiSelect={(step as any).multiSelect !== false}
+                            maxSelections={(step as any).maxSelections || 3}
+                            columns={(step as any).columns || 2}
+                            gap={(step as any).gap || 2}
+                            showImages={(step as any).showImages !== false}
+                            showPrefixes={(step as any).showPrefixes !== false}
+                            buttonStyle={(step as any).buttonStyle || 'default'}
+                            imageSize={(step as any).imageSize || 'medium'}
+                            orientation={(step as any).orientation || 'vertical'}
+                            isEditable={false}
+                            onEdit={(field, value) => updateStep(step.id, { [field]: value })}
+                            onSelectionChange={(selected) => updateStep(step.id, { selectedOptions: selected })}
+                        />
+                    </WrapperComponent>
+                );
+
+            case 'options':
+                return (
+                    <WrapperComponent blockId={`${step.id}-options`} label="Opções do Quiz" isEditable={isEditMode}>
+                        <EditableOptions
+                            // Layout
+                            columns={(step as any).columns || 2}
+                            direction={(step as any).direction || 'vertical'}
+                            disposition={(step as any).disposition || 'image-text'}
+                            // Opções
+                            options={(step as any).options || []}
+                            selectedOptions={(step as any).selectedOptions || []}
+                            // Validações
+                            multipleChoice={(step as any).multipleChoice !== false}
+                            required={(step as any).required !== false}
+                            autoProceed={(step as any).autoProceed || false}
+                            // Estilização
+                            borders={(step as any).borders || 'small'}
+                            shadows={(step as any).shadows || 'none'}
+                            spacing={(step as any).spacing || 'small'}
+                            detail={(step as any).detail || 'none'}
+                            style={(step as any).style || 'simple'}
+                            // Personalização
+                            backgroundColor={(step as any).backgroundColor || '#ffffff'}
+                            textColor={(step as any).textColor || '#000000'}
+                            borderColor={(step as any).borderColor || '#e5e7eb'}
+                            // Avançado
+                            componentId={(step as any).componentId || ''}
+                            // Geral
+                            maxWidth={(step as any).maxWidth || 100}
+                            generalAlignment={(step as any).generalAlignment || 'start'}
+                            // Controle
+                            isEditable={false}
+                            onEdit={(field, value) => updateStep(step.id, { [field]: value })}
+                            onSelectionChange={(selected) => updateStep(step.id, { selectedOptions: selected })}
                         />
                     </WrapperComponent>
                 );
@@ -802,96 +1158,19 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
                                         {type === 'transition-result' && '🔄 Trans. Result'}
                                         {type === 'result' && '🏆 Resultado'}
                                         {type === 'offer' && '🎁 Oferta'}
+                                        {type === 'header' && '📋 Header'}
+                                        {type === 'spacer' && '📏 Spacer'}
+                                        {type === 'advanced-options' && '🎛️ Opções+'}
+                                        {type === 'button' && '🔘 Botão'}
+                                        {type === 'script' && '📜 Script'}
+                                        {type === 'heading' && '📝 Título'}
                                     </span>
                                 </Button>
                             ))}
                         </div>
                     </div>
 
-                    {/* Configuração do Componente Selecionado */}
-                    <div className="flex-1 overflow-auto p-3 text-xs space-y-4">
-                        {selectedStep && (
-                            <div className="space-y-2">
-                                <label className="block text-[10px] uppercase tracking-wide text-muted-foreground">
-                                    Configurar Componente
-                                </label>
-                                <div className="bg-blue-50 p-2 rounded border">
-                                    <div className="font-medium text-blue-700 mb-1">
-                                        {selectedStep.type.toUpperCase()}
-                                    </div>
-                                    <div className="text-[10px] text-blue-600">
-                                        Componente selecionado para edição
-                                    </div>
-                                </div>
-                                <select
-                                    className="w-full border rounded px-2 py-1 text-xs"
-                                    value={selectedStep.type}
-                                    onChange={e => updateStep(selectedStep.id, { type: e.target.value as any })}
-                                >
-                                    {STEP_TYPES.map(t => <option key={t} value={t}>{t}</option>)}
-                                </select>
 
-                                {selectedStep.type === 'question' && (
-                                    <div className="pt-2 border-t space-y-2">
-                                        <div className="flex items-center justify-between text-[10px] font-medium">
-                                            <span>Opções</span>
-                                            <Button size="sm" variant="ghost" onClick={() =>
-                                                updateStep(selectedStep.id, {
-                                                    options: [...(selectedStep.options || []),
-                                                    { id: `opt-${Date.now()}`, text: 'Nova opção' }]
-                                                })
-                                            }>+ Add</Button>
-                                        </div>
-                                        <div className="space-y-2">
-                                            {(selectedStep.options || []).map((opt: any, oi: number) => (
-                                                <div key={opt.id} className="border rounded p-2 space-y-1">
-                                                    <div className="flex items-center gap-1">
-                                                        <input
-                                                            className="flex-1 border rounded px-1 py-0.5 text-[11px]"
-                                                            placeholder="Texto da opção"
-                                                            value={opt.text}
-                                                            onChange={(e) => {
-                                                                const clone = [...(selectedStep.options || [])];
-                                                                clone[oi] = { ...clone[oi], text: e.target.value };
-                                                                updateStep(selectedStep.id, { options: clone });
-                                                            }}
-                                                        />
-                                                        <Button size="icon" variant="ghost" className="h-5 w-5"
-                                                            onClick={() => {
-                                                                const clone = (selectedStep.options || []).filter((_: any, i: number) => i !== oi);
-                                                                updateStep(selectedStep.id, { options: clone });
-                                                            }}>
-                                                            <Trash2 className="w-3 h-3" />
-                                                        </Button>
-                                                    </div>
-                                                    <input
-                                                        className="w-full border rounded px-1 py-0.5 text-[11px]"
-                                                        placeholder="URL da imagem (opcional)"
-                                                        value={opt.image || ''}
-                                                        onChange={(e) => {
-                                                            const clone = [...(selectedStep.options || [])];
-                                                            clone[oi] = { ...clone[oi], image: e.target.value || undefined };
-                                                            updateStep(selectedStep.id, { options: clone });
-                                                        }}
-                                                    />
-                                                    {opt.image && (
-                                                        <img
-                                                            src={opt.image}
-                                                            alt="Preview"
-                                                            className="w-full h-12 object-cover rounded"
-                                                            onError={(e) => {
-                                                                (e.target as HTMLImageElement).style.display = 'none';
-                                                            }}
-                                                        />
-                                                    )}
-                                                </div>
-                                            ))}
-                                        </div>
-                                    </div>
-                                )}
-                            </div>
-                        )}
-                    </div>
                 </div>
 
                 {/* COL 3 - PREVIEW WYSIWYG */}
@@ -936,6 +1215,50 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
                             <div className="text-muted-foreground text-[11px]">Selecione uma etapa.</div>
                         ) : (
                             <>
+                                {/* Seção Configurar Componente */}
+                                <div className="space-y-2 pb-4 border-b">
+                                    <label className="block text-[10px] uppercase tracking-wide text-muted-foreground font-semibold">
+                                        Configurar Componente
+                                    </label>
+                                    <div className="bg-blue-50 p-2 rounded border">
+                                        <div className="font-medium text-blue-700 mb-1">
+                                            {selectedStep.type.toUpperCase()}
+                                        </div>
+                                        <div className="text-[10px] text-blue-600">
+                                            Componente selecionado para edição
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label className="block mb-1 font-medium text-[11px]">Tipo do Componente</label>
+                                        <select
+                                            className="w-full border rounded px-2 py-1 text-[11px]"
+                                            value={selectedStep.type}
+                                            onChange={e => updateStep(selectedStep.id, { type: e.target.value as any })}
+                                        >
+                                            {STEP_TYPES.map(t => (
+                                                <option key={t} value={t}>
+                                                    {t === 'intro' && '🏠 Introdução'}
+                                                    {t === 'question' && '❓ Pergunta'}
+                                                    {t === 'strategic-question' && '🎯 Estratégica'}
+                                                    {t === 'transition' && '⏳ Transição'}
+                                                    {t === 'transition-result' && '🔄 Trans. Result'}
+                                                    {t === 'result' && '🏆 Resultado'}
+                                                    {t === 'offer' && '🎁 Oferta'}
+                                                    {t === 'header' && '📋 Header'}
+                                                    {t === 'spacer' && '📏 Espaçador'}
+                                                    {t === 'advanced-options' && '🎛️ Opções Avançadas'}
+                                                    {t === 'button' && '🔘 Botão'}
+                                                    {t === 'script' && '💻 Script'}
+                                                    {t === 'heading' && '📝 Título'}
+                                                    {t === 'options-grid' && '🎛️ Grade de Opções'}
+                                                    {t === 'options' && '📝 Opções do Quiz'}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                </div>
+
+                                {/* Seção ID */}
                                 <div>
                                     <label className="block mb-1 font-medium">ID</label>
                                     <input disabled value={selectedStep.id} className="w-full border rounded px-2 py-1 text-[11px] bg-muted/30" />
@@ -1066,6 +1389,45 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
                                 {/* Novos campos para componentes do modelo do funil */}
                                 {selectedStep.type === 'header' && (
                                     <>
+                                        {/* Switches de Controle */}
+                                        <div className="space-y-3 p-3 bg-gray-50 rounded border">
+                                            <h4 className="text-xs font-semibold text-gray-700">Controles de Visibilidade</h4>
+
+                                            <div className="flex items-center space-x-2">
+                                                <Switch
+                                                    checked={(selectedStep as any).showLogo !== false}
+                                                    onCheckedChange={(checked) => updateStep(selectedStep.id, { showLogo: checked })}
+                                                    id="show-logo"
+                                                />
+                                                <label htmlFor="show-logo" className="text-sm font-medium">
+                                                    Mostrar Logo
+                                                </label>
+                                            </div>
+
+                                            <div className="flex items-center space-x-2">
+                                                <Switch
+                                                    checked={(selectedStep as any).showProgress !== false}
+                                                    onCheckedChange={(checked) => updateStep(selectedStep.id, { showProgress: checked })}
+                                                    id="show-progress"
+                                                />
+                                                <label htmlFor="show-progress" className="text-sm font-medium">
+                                                    Mostrar Progresso
+                                                </label>
+                                            </div>
+
+                                            <div className="flex items-center space-x-2">
+                                                <Switch
+                                                    checked={(selectedStep as any).allowReturn !== false}
+                                                    onCheckedChange={(checked) => updateStep(selectedStep.id, { allowReturn: checked })}
+                                                    id="allow-return"
+                                                />
+                                                <label htmlFor="allow-return" className="text-sm font-medium">
+                                                    Permitir Voltar
+                                                </label>
+                                            </div>
+                                        </div>
+
+                                        {/* Campos de Configuração */}
                                         <div>
                                             <label className="block mb-1 font-medium">URL do Logo</label>
                                             <input
@@ -1077,14 +1439,21 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
                                         </div>
                                         <div>
                                             <label className="block mb-1 font-medium">Progresso (%)</label>
-                                            <input
-                                                type="number"
-                                                min="0"
-                                                max="100"
-                                                value={(selectedStep as any).progress || 0}
-                                                onChange={e => updateStep(selectedStep.id, { progress: parseInt(e.target.value) || 0 })}
-                                                className="w-full border rounded px-2 py-1 text-[11px]"
-                                            />
+                                            <div className="space-y-2">
+                                                <input
+                                                    type="range"
+                                                    min="0"
+                                                    max="100"
+                                                    value={(selectedStep as any).progress || 0}
+                                                    onChange={e => updateStep(selectedStep.id, { progress: parseFloat(e.target.value) || 0 })}
+                                                    className="w-full"
+                                                />
+                                                <div className="flex justify-between text-xs text-gray-500">
+                                                    <span>0%</span>
+                                                    <span className="font-medium">{((selectedStep as any).progress || 0).toFixed(1)}%</span>
+                                                    <span>100%</span>
+                                                </div>
+                                            </div>
                                         </div>
                                     </>
                                 )}
@@ -1167,8 +1536,419 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
                                     </>
                                 )}
 
+                                {selectedStep.type === 'heading' && (
+                                    <>
+                                        {/* Seção Estilo */}
+                                        <div className="space-y-3 p-3 bg-gray-50 rounded border">
+                                            <h4 className="text-xs font-semibold text-gray-700">Estilo</h4>
+
+                                            <div>
+                                                <label className="block mb-1 font-medium">Conteúdo</label>
+                                                <input
+                                                    value={(selectedStep as any).content || ''}
+                                                    onChange={e => updateStep(selectedStep.id, { content: e.target.value })}
+                                                    className="w-full border rounded px-2 py-1 text-[11px]"
+                                                    placeholder="Digite seu título aqui..."
+                                                />
+                                            </div>
+
+                                            <div>
+                                                <label className="block mb-1 font-medium">Alinhamento</label>
+                                                <select
+                                                    value={(selectedStep as any).alignment || 'center'}
+                                                    onChange={e => updateStep(selectedStep.id, { alignment: e.target.value as 'left' | 'center' | 'right' })}
+                                                    className="w-full border rounded px-2 py-1 text-[11px]"
+                                                >
+                                                    <option value="left">Esquerda</option>
+                                                    <option value="center">Centralizado</option>
+                                                    <option value="right">Direita</option>
+                                                </select>
+                                            </div>
+
+                                            <div>
+                                                <label className="block mb-1 font-medium">Nível do Título</label>
+                                                <select
+                                                    value={(selectedStep as any).headingLevel || 1}
+                                                    onChange={e => updateStep(selectedStep.id, { headingLevel: parseInt(e.target.value) as 1 | 2 | 3 | 4 | 5 | 6 })}
+                                                    className="w-full border rounded px-2 py-1 text-[11px]"
+                                                >
+                                                    <option value={1}>H1 - Título Principal</option>
+                                                    <option value={2}>H2 - Subtítulo</option>
+                                                    <option value={3}>H3 - Título de Seção</option>
+                                                    <option value={4}>H4 - Título Pequeno</option>
+                                                    <option value={5}>H5 - Título Menor</option>
+                                                    <option value={6}>H6 - Título Mínimo</option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        {/* Seção Personalização */}
+                                        <div className="space-y-3 p-3 bg-gray-50 rounded border">
+                                            <h4 className="text-xs font-semibold text-gray-700">Personalização</h4>
+
+                                            <div className="grid grid-cols-3 gap-2">
+                                                <div>
+                                                    <label className="block mb-1 text-xs font-medium">Cor de Fundo</label>
+                                                    <input
+                                                        type="color"
+                                                        value={(selectedStep as any).backgroundColor || '#ffffff'}
+                                                        onChange={e => updateStep(selectedStep.id, { backgroundColor: e.target.value })}
+                                                        className="w-full h-8 border rounded cursor-pointer"
+                                                    />
+                                                </div>
+
+                                                <div>
+                                                    <label className="block mb-1 text-xs font-medium">Cor do Texto</label>
+                                                    <input
+                                                        type="color"
+                                                        value={(selectedStep as any).textColor || '#000000'}
+                                                        onChange={e => updateStep(selectedStep.id, { textColor: e.target.value })}
+                                                        className="w-full h-8 border rounded cursor-pointer"
+                                                    />
+                                                </div>
+
+                                                <div>
+                                                    <label className="block mb-1 text-xs font-medium">Cor da Borda</label>
+                                                    <input
+                                                        type="color"
+                                                        value={(selectedStep as any).borderColor || '#000000'}
+                                                        onChange={e => updateStep(selectedStep.id, { borderColor: e.target.value })}
+                                                        className="w-full h-8 border rounded cursor-pointer"
+                                                    />
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {/* Seção Avançado */}
+                                        <div className="space-y-3 p-3 bg-gray-50 rounded border">
+                                            <h4 className="text-xs font-semibold text-gray-700">Avançado</h4>
+
+                                            <div>
+                                                <label className="block mb-1 font-medium">ID do Componente</label>
+                                                <input
+                                                    value={(selectedStep as any).componentId || ''}
+                                                    onChange={e => updateStep(selectedStep.id, { componentId: e.target.value })}
+                                                    className="w-full border rounded px-2 py-1 text-[11px]"
+                                                    placeholder="Digite o ID..."
+                                                />
+                                            </div>
+                                        </div>
+
+                                        {/* Seção Geral */}
+                                        <div className="space-y-3 p-3 bg-gray-50 rounded border">
+                                            <h4 className="text-xs font-semibold text-gray-700">Geral</h4>
+
+                                            <div>
+                                                <label className="block mb-1 font-medium">Tamanho Máximo (%)</label>
+                                                <div className="space-y-2">
+                                                    <input
+                                                        type="range"
+                                                        min="10"
+                                                        max="100"
+                                                        value={(selectedStep as any).maxWidth || 100}
+                                                        onChange={e => updateStep(selectedStep.id, { maxWidth: parseInt(e.target.value) })}
+                                                        className="w-full"
+                                                    />
+                                                    <div className="flex justify-between text-xs text-gray-500">
+                                                        <span>10%</span>
+                                                        <span className="font-medium">{(selectedStep as any).maxWidth || 100}%</span>
+                                                        <span>100%</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div>
+                                                <label className="block mb-1 font-medium">Alinhamento Geral</label>
+                                                <select
+                                                    value={(selectedStep as any).generalAlignment || 'start'}
+                                                    onChange={e => updateStep(selectedStep.id, { generalAlignment: e.target.value as 'start' | 'center' | 'end' })}
+                                                    className="w-full border rounded px-2 py-1 text-[11px]"
+                                                >
+                                                    <option value="start">Começo</option>
+                                                    <option value="center">Centro</option>
+                                                    <option value="end">Fim</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </>
+                                )}
+
+                                {selectedStep.type === 'options' && (
+                                    <>
+                                        {/* Seção Layout */}
+                                        <div className="space-y-3 p-3 bg-gray-50 rounded border">
+                                            <h4 className="text-xs font-semibold text-gray-700">Layout</h4>
+
+                                            <div className="grid grid-cols-2 gap-2">
+                                                <div>
+                                                    <label className="block mb-1 font-medium">Colunas</label>
+                                                    <select
+                                                        value={(selectedStep as any).columns || 2}
+                                                        onChange={e => updateStep(selectedStep.id, { columns: parseInt(e.target.value) as 1 | 2 | 3 | 4 })}
+                                                        className="w-full border rounded px-2 py-1 text-[11px]"
+                                                    >
+                                                        <option value={1}>1 Coluna</option>
+                                                        <option value={2}>2 Colunas</option>
+                                                        <option value={3}>3 Colunas</option>
+                                                        <option value={4}>4 Colunas</option>
+                                                    </select>
+                                                </div>
+
+                                                <div>
+                                                    <label className="block mb-1 font-medium">Direção</label>
+                                                    <select
+                                                        value={(selectedStep as any).direction || 'vertical'}
+                                                        onChange={e => updateStep(selectedStep.id, { direction: e.target.value as 'vertical' | 'horizontal' })}
+                                                        className="w-full border rounded px-2 py-1 text-[11px]"
+                                                    >
+                                                        <option value="vertical">Vertical</option>
+                                                        <option value="horizontal">Horizontal</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                            <div>
+                                                <label className="block mb-1 font-medium">Disposição</label>
+                                                <select
+                                                    value={(selectedStep as any).disposition || 'image-text'}
+                                                    onChange={e => updateStep(selectedStep.id, { disposition: e.target.value as 'image-text' | 'text-image' | 'text-only' | 'image-only' })}
+                                                    className="w-full border rounded px-2 py-1 text-[11px]"
+                                                >
+                                                    <option value="image-text">Imagem | Texto</option>
+                                                    <option value="text-image">Texto | Imagem</option>
+                                                    <option value="text-only">Apenas Texto</option>
+                                                    <option value="image-only">Apenas Imagem</option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        {/* Seção Opções */}
+                                        <div className="space-y-3 p-3 bg-gray-50 rounded border">
+                                            <h4 className="text-xs font-semibold text-gray-700">Opções</h4>
+                                            <div className="text-xs text-gray-600">
+                                                {((selectedStep as any).options || []).length} opções configuradas
+                                            </div>
+                                            <Button size="sm" className="w-full text-xs" onClick={() => {
+                                                const currentOptions = (selectedStep as any).options || [];
+                                                const newOption = {
+                                                    id: `opt-${Date.now()}`,
+                                                    text: 'Nova opção',
+                                                    htmlContent: '<p>Nova opção</p>',
+                                                    image: 'https://via.placeholder.com/256x256?text=Nova+Op%C3%A7%C3%A3o'
+                                                };
+                                                updateStep(selectedStep.id, { options: [...currentOptions, newOption] });
+                                            }}>
+                                                + Adicionar Opção
+                                            </Button>
+                                        </div>
+
+                                        {/* Seção Validações */}
+                                        <div className="space-y-3 p-3 bg-gray-50 rounded border">
+                                            <h4 className="text-xs font-semibold text-gray-700">Validações</h4>
+
+                                            <div className="flex items-center space-x-2">
+                                                <Switch
+                                                    checked={(selectedStep as any).multipleChoice !== false}
+                                                    onCheckedChange={(checked) => updateStep(selectedStep.id, { multipleChoice: checked })}
+                                                    id="multiple-choice"
+                                                />
+                                                <label htmlFor="multiple-choice" className="text-sm font-medium">
+                                                    Múltipla Escolha
+                                                </label>
+                                            </div>
+
+                                            <div className="flex items-center space-x-2">
+                                                <Switch
+                                                    checked={(selectedStep as any).required !== false}
+                                                    onCheckedChange={(checked) => updateStep(selectedStep.id, { required: checked })}
+                                                    id="required"
+                                                />
+                                                <label htmlFor="required" className="text-sm font-medium">
+                                                    Obrigatório
+                                                </label>
+                                            </div>
+
+                                            <div className="flex items-center space-x-2">
+                                                <Switch
+                                                    checked={(selectedStep as any).autoProceed || false}
+                                                    onCheckedChange={(checked) => updateStep(selectedStep.id, { autoProceed: checked })}
+                                                    id="auto-proceed"
+                                                />
+                                                <label htmlFor="auto-proceed" className="text-sm font-medium">
+                                                    Auto-avançar
+                                                </label>
+                                            </div>
+                                        </div>
+
+                                        {/* Seção Estilização */}
+                                        <div className="space-y-3 p-3 bg-gray-50 rounded border">
+                                            <h4 className="text-xs font-semibold text-gray-700">Estilização</h4>
+
+                                            <div className="grid grid-cols-3 gap-2">
+                                                <div>
+                                                    <label className="block mb-1 font-medium">Bordas</label>
+                                                    <select
+                                                        value={(selectedStep as any).borders || 'small'}
+                                                        onChange={e => updateStep(selectedStep.id, { borders: e.target.value as 'small' | 'medium' | 'large' | 'none' })}
+                                                        className="w-full border rounded px-2 py-1 text-[11px]"
+                                                    >
+                                                        <option value="none">Nenhuma</option>
+                                                        <option value="small">Pequena</option>
+                                                        <option value="medium">Média</option>
+                                                        <option value="large">Grande</option>
+                                                    </select>
+                                                </div>
+
+                                                <div>
+                                                    <label className="block mb-1 font-medium">Sombras</label>
+                                                    <select
+                                                        value={(selectedStep as any).shadows || 'none'}
+                                                        onChange={e => updateStep(selectedStep.id, { shadows: e.target.value as 'none' | 'small' | 'medium' | 'large' })}
+                                                        className="w-full border rounded px-2 py-1 text-[11px]"
+                                                    >
+                                                        <option value="none">Sem Sombras</option>
+                                                        <option value="small">Pequena</option>
+                                                        <option value="medium">Média</option>
+                                                        <option value="large">Grande</option>
+                                                    </select>
+                                                </div>
+
+                                                <div>
+                                                    <label className="block mb-1 font-medium">Espaçamento</label>
+                                                    <select
+                                                        value={(selectedStep as any).spacing || 'small'}
+                                                        onChange={e => updateStep(selectedStep.id, { spacing: e.target.value as 'small' | 'medium' | 'large' })}
+                                                        className="w-full border rounded px-2 py-1 text-[11px]"
+                                                    >
+                                                        <option value="small">Pequeno</option>
+                                                        <option value="medium">Médio</option>
+                                                        <option value="large">Grande</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                            <div className="grid grid-cols-2 gap-2">
+                                                <div>
+                                                    <label className="block mb-1 font-medium">Detalhe</label>
+                                                    <select
+                                                        value={(selectedStep as any).detail || 'none'}
+                                                        onChange={e => updateStep(selectedStep.id, { detail: e.target.value as 'none' | 'subtle' | 'prominent' })}
+                                                        className="w-full border rounded px-2 py-1 text-[11px]"
+                                                    >
+                                                        <option value="none">Nenhum</option>
+                                                        <option value="subtle">Sutil</option>
+                                                        <option value="prominent">Proeminente</option>
+                                                    </select>
+                                                </div>
+
+                                                <div>
+                                                    <label className="block mb-1 font-medium">Estilo</label>
+                                                    <select
+                                                        value={(selectedStep as any).style || 'simple'}
+                                                        onChange={e => updateStep(selectedStep.id, { style: e.target.value as 'simple' | 'rounded' | 'modern' })}
+                                                        className="w-full border rounded px-2 py-1 text-[11px]"
+                                                    >
+                                                        <option value="simple">Simples</option>
+                                                        <option value="rounded">Arredondado</option>
+                                                        <option value="modern">Moderno</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {/* Seção Personalização */}
+                                        <div className="space-y-3 p-3 bg-gray-50 rounded border">
+                                            <h4 className="text-xs font-semibold text-gray-700">Personalização</h4>
+
+                                            <div className="grid grid-cols-3 gap-2">
+                                                <div>
+                                                    <label className="block mb-1 text-xs font-medium">Cor</label>
+                                                    <input
+                                                        type="color"
+                                                        value={(selectedStep as any).backgroundColor || '#ffffff'}
+                                                        onChange={e => updateStep(selectedStep.id, { backgroundColor: e.target.value })}
+                                                        className="w-full h-8 border rounded cursor-pointer"
+                                                    />
+                                                </div>
+
+                                                <div>
+                                                    <label className="block mb-1 text-xs font-medium">Texto</label>
+                                                    <input
+                                                        type="color"
+                                                        value={(selectedStep as any).textColor || '#000000'}
+                                                        onChange={e => updateStep(selectedStep.id, { textColor: e.target.value })}
+                                                        className="w-full h-8 border rounded cursor-pointer"
+                                                    />
+                                                </div>
+
+                                                <div>
+                                                    <label className="block mb-1 text-xs font-medium">Borda</label>
+                                                    <input
+                                                        type="color"
+                                                        value={(selectedStep as any).borderColor || '#e5e7eb'}
+                                                        onChange={e => updateStep(selectedStep.id, { borderColor: e.target.value })}
+                                                        className="w-full h-8 border rounded cursor-pointer"
+                                                    />
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {/* Seção Avançado */}
+                                        <div className="space-y-3 p-3 bg-gray-50 rounded border">
+                                            <h4 className="text-xs font-semibold text-gray-700">Avançado</h4>
+
+                                            <div>
+                                                <label className="block mb-1 font-medium">ID do Componente</label>
+                                                <input
+                                                    value={(selectedStep as any).componentId || ''}
+                                                    onChange={e => updateStep(selectedStep.id, { componentId: e.target.value })}
+                                                    className="w-full border rounded px-2 py-1 text-[11px]"
+                                                    placeholder="Digite o ID..."
+                                                />
+                                            </div>
+                                        </div>
+
+                                        {/* Seção Geral */}
+                                        <div className="space-y-3 p-3 bg-gray-50 rounded border">
+                                            <h4 className="text-xs font-semibold text-gray-700">Geral</h4>
+
+                                            <div>
+                                                <label className="block mb-1 font-medium">Tamanho Máximo (%)</label>
+                                                <div className="space-y-2">
+                                                    <input
+                                                        type="range"
+                                                        min="10"
+                                                        max="100"
+                                                        value={(selectedStep as any).maxWidth || 100}
+                                                        onChange={e => updateStep(selectedStep.id, { maxWidth: parseInt(e.target.value) })}
+                                                        className="w-full"
+                                                    />
+                                                    <div className="flex justify-between text-xs text-gray-500">
+                                                        <span>10%</span>
+                                                        <span className="font-medium">{(selectedStep as any).maxWidth || 100}%</span>
+                                                        <span>100%</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div>
+                                                <label className="block mb-1 font-medium">Alinhamento</label>
+                                                <select
+                                                    value={(selectedStep as any).generalAlignment || 'start'}
+                                                    onChange={e => updateStep(selectedStep.id, { generalAlignment: e.target.value as 'start' | 'center' | 'end' })}
+                                                    className="w-full border rounded px-2 py-1 text-[11px]"
+                                                >
+                                                    <option value="start">Começo</option>
+                                                    <option value="center">Centro</option>
+                                                    <option value="end">Fim</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </>
+                                )}
+
                                 {/* Próximo Step - apenas para tipos que suportam */}
-                                {selectedStep.type !== 'header' && selectedStep.type !== 'spacer' && selectedStep.type !== 'script' && (
+                                {selectedStep.type !== 'header' && selectedStep.type !== 'spacer' && selectedStep.type !== 'script' && selectedStep.type !== 'heading' && selectedStep.type !== 'options' && (
                                     <div>
                                         <label className="block mb-1 font-medium">Próximo Step</label>
                                         <select

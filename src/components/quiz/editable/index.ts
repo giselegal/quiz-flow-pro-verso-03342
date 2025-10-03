@@ -16,6 +16,9 @@ export { default as EditableSpacer } from './EditableSpacer';
 export { default as EditableAdvancedOptions } from './EditableAdvancedOptions';
 export { default as EditableButton } from './EditableButton';
 export { default as EditableScript } from './EditableScript';
+export { default as EditableHeading } from './EditableHeading';
+export { default as EditableOptionsGrid } from './EditableOptionsGrid';
+export { default as EditableOptions } from './EditableOptions';
 
 // TODO: Adicionar outros componentes editáveis conforme necessário
 // export { default as EditableStrategicQuestionStep } from './EditableStrategicQuestionStep';

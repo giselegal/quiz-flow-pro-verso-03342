@@ -6,6 +6,9 @@ import { EditableField } from './EditableField';
 interface EditableHeaderProps {
     logo?: string;
     progress?: number; // 0-100
+    showLogo?: boolean;
+    showProgress?: boolean;
+    allowReturn?: boolean;
     onBack?: () => void;
     isEditable?: boolean;
     onEdit?: (field: string, value: any) => void;
@@ -22,6 +25,9 @@ interface EditableHeaderProps {
 export default function EditableHeader({
     logo = '',
     progress = 0,
+    showLogo = true,
+    showProgress = true,
+    allowReturn = true,
     onBack = () => { },
     isEditable = false,
     onEdit = () => { }
@@ -31,79 +37,85 @@ export default function EditableHeader({
 
     return (
         <div className="flex flex-row w-full h-auto justify-center relative">
-            {/* Botão Voltar */}
-            <Button
-                variant="ghost"
-                size="icon"
-                className="absolute left-0 h-10 w-10"
-                onClick={isEditable ? () => { } : onBack}
-                disabled={isEditable}
-            >
-                <ArrowLeft className="h-4 w-4" />
-            </Button>
+            {/* Botão Voltar - Condicional */}
+            {allowReturn && (
+                <Button
+                    variant="ghost"
+                    size="icon"
+                    className="absolute left-0 h-10 w-10"
+                    onClick={isEditable ? () => { } : onBack}
+                    disabled={isEditable}
+                >
+                    <ArrowLeft className="h-4 w-4" />
+                </Button>
+            )}
 
             {/* Container Central */}
             <div className="flex flex-col w-full customizable-width justify-start items-center gap-4">
-                {/* Logo Editável */}
-                <div className="relative group">
-                    <img
-                        width="96"
-                        height="96"
-                        className="max-w-24 object-cover rounded"
-                        alt="Logo"
-                        src={logo || '/api/placeholder/96/96'}
-                        onError={(e) => {
-                            (e.target as HTMLImageElement).src = '/api/placeholder/96/96';
-                        }}
-                    />
+                {/* Logo Editável - Condicional */}
+                {showLogo && (
+                    <div className="relative group">
+                        <img
+                            width="96"
+                            height="96"
+                            className="max-w-24 object-cover rounded"
+                            alt="Logo"
+                            src={logo || '/api/placeholder/96/96'}
+                            onError={(e) => {
+                                (e.target as HTMLImageElement).src = '/api/placeholder/96/96';
+                            }}
+                        />
 
-                    {isEditable && (
-                        <>
-                            <div className="absolute inset-0 bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded flex items-center justify-center">
-                                <button
-                                    className="text-white text-xs px-2 py-1 bg-blue-500 rounded hover:bg-blue-600"
-                                    onClick={() => {
-                                        const newUrl = prompt('URL do novo logo:', logo);
-                                        if (newUrl !== null) onEdit('logo', newUrl);
-                                    }}
-                                >
-                                    Alterar Logo
-                                </button>
+                        {isEditable && (
+                            <>
+                                <div className="absolute inset-0 bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded flex items-center justify-center">
+                                    <button
+                                        className="text-white text-xs px-2 py-1 bg-blue-500 rounded hover:bg-blue-600"
+                                        onClick={() => {
+                                            const newUrl = prompt('URL do novo logo:', logo);
+                                            if (newUrl !== null) onEdit('logo', newUrl);
+                                        }}
+                                    >
+                                        Alterar Logo
+                                    </button>
+                                </div>
+                                <EditableField
+                                    value={logo}
+                                    onChange={(value) => onEdit('logo', value)}
+                                    isEditable={true}
+                                    className="absolute -bottom-8 left-0 right-0 text-xs text-center text-gray-500 bg-white/80 p-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                                    placeholder="URL do logo..."
+                                />
+                            </>
+                        )}
+                    </div>
+                )}
+
+                {/* Barra de Progresso - Condicional */}
+                {showProgress && (
+                    <div className="relative w-full overflow-hidden rounded-full bg-zinc-300 h-2">
+                        <div
+                            className="h-full bg-primary transition-all duration-500 ease-out"
+                            style={{
+                                transform: `translateX(-${translateX}%)`,
+                                width: '100%'
+                            }}
+                        />
+                        {isEditable && (
+                            <div className="absolute -bottom-6 left-0 right-0 text-xs text-center text-gray-500">
+                                <input
+                                    type="range"
+                                    min="0"
+                                    max="100"
+                                    value={progressPercentage}
+                                    onChange={(e) => onEdit('progress', parseInt(e.target.value))}
+                                    className="w-full h-1"
+                                />
+                                <span className="text-xs">{progressPercentage}%</span>
                             </div>
-                            <EditableField
-                                value={logo}
-                                onChange={(value) => onEdit('logo', value)}
-                                isEditable={true}
-                                className="absolute -bottom-8 left-0 right-0 text-xs text-center text-gray-500 bg-white/80 p-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                                placeholder="URL do logo..."
-                            />
-                        </>
-                    )}
-                </div>
-
-                {/* Barra de Progresso */}
-                <div className="relative w-full overflow-hidden rounded-full bg-zinc-300 h-2">
-                    <div
-                        className="h-full bg-primary transition-all duration-500 ease-out"
-                        style={{
-                            transform: `translateX(-${translateX}%)`,
-                            width: '100%'
-                        }}
-                    />
-                    {isEditable && (
-                        <div className="absolute -bottom-6 left-0 right-0 text-xs text-center text-gray-500">
-                            <input
-                                type="range"
-                                min="0"
-                                max="100"
-                                value={progressPercentage}
-                                onChange={(e) => onEdit('progress', parseInt(e.target.value))}
-                                className="w-full h-1"
-                            />
-                            <span className="text-xs">{progressPercentage}%</span>
-                        </div>
-                    )}
-                </div>
+                        )}
+                    </div>
+                )}
             </div>
 
             {/* Indicador de Modo Edição */}
