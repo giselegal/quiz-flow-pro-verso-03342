@@ -984,21 +984,19 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
                                     <div className="text-xs">Use a sidebar para adicionar steps</div>
                                 </div>
                             </div>
+                        ) : selectedStep ? (
+                            // Renderizar apenas o step selecionado
+                            <div className="p-4">
+                                {renderRealComponent(selectedStep, steps.findIndex(s => s.id === selectedStep.id))}
+                            </div>
                         ) : (
-                            <DragDropManager
-                                items={steps}
-                                onReorder={handleStepReorder}
-                                enabled={dragEnabled && previewMode === 'edit'}
-                                renderItem={(step, index, isDragging) => (
-                                    <div className={cn(
-                                        "mb-4 transition-all duration-200",
-                                        isDragging && "opacity-50 scale-95"
-                                    )}>
-                                        {renderRealComponent(step, index)}
-                                    </div>
-                                )}
-                                className="space-y-4"
-                            />
+                            <div className="flex items-center justify-center h-full text-sm text-muted-foreground">
+                                <div className="text-center">
+                                    <div className="text-lg mb-2">📝</div>
+                                    <div>Selecione um step para editar</div>
+                                    <div className="text-xs">Use a sidebar à esquerda para selecionar</div>
+                                </div>
+                            </div>
                         )}
                     </div>
                 </div>
