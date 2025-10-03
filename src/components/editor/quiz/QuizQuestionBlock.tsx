@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { QUIZ_CONFIGURATION } from '@/config/quizConfiguration';
-import { useEditor } from '@/components/editor/EditorProvider';
+import { useEditor } from '@/components/editor/EditorProviderMigrationAdapter';
 import { ArrowRight, CheckCircle2, Circle, RotateCcw } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 

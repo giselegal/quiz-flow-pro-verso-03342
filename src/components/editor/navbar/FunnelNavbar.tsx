@@ -18,7 +18,7 @@ import {
   Cog,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { useEditor } from '@/components/editor/EditorProvider';
+import { useEditor } from '@/components/editor/EditorProviderMigrationAdapter';
 
 interface FunnelNavbarProps {
   onSave?: () => void;

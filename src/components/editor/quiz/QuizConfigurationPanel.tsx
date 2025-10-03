@@ -18,7 +18,7 @@ import {
 } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { QUIZ_CONFIGURATION } from '@/config/quizConfiguration';
-import { useEditor } from '@/components/editor/EditorProvider';
+import { useEditor } from '@/components/editor/EditorProviderMigrationAdapter';
 import { Settings, Grid, Eye, Palette } from 'lucide-react';
 import React, { useState, useEffect } from 'react';
 

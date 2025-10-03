@@ -18,28 +18,68 @@ import { migratedFunnelValidationService } from '@/services/migratedFunnelValida
 import { errorManager, createValidationError } from '@/utils/errorHandling';
 import { deepClone } from '@/utils/cloneFunnel';
 
-// UNIFIED SCHEMAS: Import from centralized type definitions
-import {
-    UnifiedFunnelData,
-    CreateFunnelOptions,
-    UpdateFunnelOptions,
-    ListFunnelOptions,
-    FunnelPermissions,
-    validateUnifiedFunnelData,
-    validateCreateFunnelOptions,
-    validateUpdateFunnelOptions,
-    normalizePages,
-    normalizeUnifiedFunnelData
-} from '@/types/schemas';
+// ============================================================================
+// INTERFACES E TYPES
+// ============================================================================
 
-// Re-export for backward compatibility
-export type {
-    UnifiedFunnelData,
-    CreateFunnelOptions,
-    UpdateFunnelOptions,
-    ListFunnelOptions,
-    FunnelPermissions
-};
+export interface UnifiedFunnelData {
+    id: string;
+    name: string;
+    description?: string;
+    category?: string;
+    context: FunnelContext;
+    userId: string;
+
+    // Dados do funil
+    settings: any;
+    pages: any[];
+
+    // Metadados
+    isPublished: boolean;
+    version: number;
+    createdAt: Date;
+    updatedAt: Date;
+
+    // Template info
+    templateId?: string;
+    isFromTemplate?: boolean;
+}
+
+export interface CreateFunnelOptions {
+    name: string;
+    description?: string;
+    category?: string;
+    context: FunnelContext;
+    templateId?: string;
+    userId?: string;
+    autoPublish?: boolean;
+}
+
+export interface UpdateFunnelOptions {
+    name?: string;
+    description?: string;
+    category?: string;
+    settings?: any;
+    pages?: any[];
+    isPublished?: boolean;
+}
+
+export interface ListFunnelOptions {
+    context?: FunnelContext;
+    userId?: string;
+    includeUnpublished?: boolean;
+    category?: string;
+    limit?: number;
+    offset?: number;
+}
+
+export interface FunnelPermissions {
+    canRead: boolean;
+    canEdit: boolean;
+    canDelete: boolean;
+    canPublish: boolean;
+    isOwner: boolean;
+}
 
 // ============================================================================
 // CACHE INTELIGENTE
@@ -852,7 +892,7 @@ export class FunnelUnifiedService {
                 .order('page_order');
 
             const funnel = this.convertFromSupabaseFormat(data);
-            funnel.pages = normalizePages(pages || []);
+            funnel.pages = pages || [];
 
             return funnel;
 

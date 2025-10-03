@@ -116,15 +116,6 @@ export const DATABASE_CONFIG: StorageConfig = {
             ]
         },
         {
-            name: 'configurations',
-            keyPath: 'id',
-            indexes: [
-                { name: 'funnelId', keyPath: 'funnelId' },
-                { name: 'componentType', keyPath: 'componentType' },
-                { name: 'timestamp', keyPath: 'timestamp' }
-            ]
-        },
-        {
             name: 'metadata',
             keyPath: 'key',
             indexes: [

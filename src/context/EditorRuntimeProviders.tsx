@@ -1,7 +1,7 @@
 // @ts-nocheck
 import React from 'react';
 import { FunnelMasterProvider } from '@/providers/FunnelMasterProvider';
-import { EditorProvider } from '@/components/editor/EditorProvider';
+import { EditorProvider } from '@/components/editor/EditorProviderMigrationAdapter';
 import { LegacyCompatibilityWrapper } from '@/core/contexts/LegacyCompatibilityWrapper';
 import { FunnelContext } from '@/core/contexts/FunnelContext';
 

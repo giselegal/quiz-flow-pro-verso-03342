@@ -7,7 +7,7 @@
  */
 
 import { QuizPropertiesPanelModular } from '@/components/editor/quiz/QuizPropertiesPanelModular';
-import { useEditor } from '@/components/editor/EditorProvider';
+import { useEditor } from '@/components/editor/EditorProviderMigrationAdapter';
 import { useQuizFlow } from '@/hooks/core/useQuizFlow';
 import { Block } from '@/types/editor';
 import React, { useState } from 'react';
