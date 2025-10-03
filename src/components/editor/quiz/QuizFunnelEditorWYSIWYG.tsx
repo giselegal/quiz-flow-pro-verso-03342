@@ -23,6 +23,11 @@ import { StepRenderer } from '@/components/step-registry/StepRenderer';
 import { stepRegistry } from '@/components/step-registry/StepRegistry';
 import '@/components/steps'; // Inicializar todos os steps registrados
 
+// 🎯 NOVO: Componentes de Editor Aprimorado
+import SelectableBlock from '@/components/editor/SelectableBlock';
+import QuizPropertiesPanel from '@/components/editor/QuizPropertiesPanel';
+import DragDropManager from '@/components/editor/DragDropManager';
+
 interface QuizFunnelEditorProps {
     funnelId?: string;
     templateId?: string;
@@ -92,6 +97,11 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
     const [isSaving, setIsSaving] = useState(false);
     const [previewMode, setPreviewMode] = useState<'edit' | 'preview'>('edit');
     const [activeInsertDropdown, setActiveInsertDropdown] = useState<string | null>(null);
+    
+    // 🎯 NOVOS: Estados para editor aprimorado
+    const [showPropertiesPanel, setShowPropertiesPanel] = useState(true);
+    const [isPreviewMode, setIsPreviewMode] = useState(false);
+    const [dragEnabled, setDragEnabled] = useState(true);
 
     // Carregar steps iniciais
     useEffect(() => {
