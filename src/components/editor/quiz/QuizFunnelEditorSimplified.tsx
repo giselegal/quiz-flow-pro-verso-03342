@@ -155,10 +155,10 @@ const QuizFunnelEditorSimplified: React.FC<QuizFunnelEditorProps> = ({ funnelId,
     }, [steps, crud]);
 
     return (
-        <div 
+        <div
             className="quiz-editor-container h-full w-full flex flex-col bg-background"
-            style={{ 
-                color: '#1a1716', 
+            style={{
+                color: '#1a1716',
                 backgroundColor: 'white',
                 '--tw-text-opacity': '1'
             } as React.CSSProperties}
