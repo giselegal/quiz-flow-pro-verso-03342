@@ -3,7 +3,7 @@ import { useUnifiedCRUD } from '@/context/UnifiedCRUDProvider';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { QUIZ_STEPS, type QuizStep } from '@/data/quizSteps';
-import { Plus, Save, Trash2, ArrowUp, ArrowDown, Copy, Eye } from 'lucide-react';
+import { Plus, Save, Trash2, ArrowUp, ArrowDown, Copy, Eye, ChevronDown } from 'lucide-react';
 import './QuizEditorStyles.css';
 
 // Importar componentes reais de produção para preview WYSIWYG
@@ -82,6 +82,7 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
     const [selectedBlockId, setSelectedBlockId] = useState<string>(''); // Para seleção de blocos no canvas
     const [isSaving, setIsSaving] = useState(false);
     const [previewMode, setPreviewMode] = useState<'edit' | 'preview'>('edit');
+    const [activeInsertDropdown, setActiveInsertDropdown] = useState<string | null>(null);
 
     // Carregar steps iniciais
     useEffect(() => {
@@ -108,8 +109,29 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
             const newStep = createBlankStep(type);
             const clone = [...prev];
             clone.splice(idx + 1, 0, newStep);
+            // Selecionar automaticamente o novo step
+            setSelectedId(newStep.id);
             return clone;
         });
+    };
+
+    const addStepBefore = (beforeId: string, type: QuizStep['type'] = 'question') => {
+        setSteps(prev => {
+            const idx = prev.findIndex(s => s.id === beforeId);
+            if (idx === -1) return prev;
+            const newStep = createBlankStep(type);
+            const clone = [...prev];
+            clone.splice(idx, 0, newStep);
+            // Selecionar automaticamente o novo step
+            setSelectedId(newStep.id);
+            return clone;
+        });
+    };
+
+    const addStepAtEnd = (type: QuizStep['type'] = 'question') => {
+        const newStep = createBlankStep(type);
+        setSteps(prev => [...prev, newStep]);
+        setSelectedId(newStep.id);
     };
 
     const removeStep = (id: string) => {
@@ -325,68 +347,307 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
                 </div>
             </div>
 
-            <div className="flex-1 flex overflow-hidden">
-                {/* COL 1 - STEPS LIST */}
+            <div
+                className="flex-1 flex overflow-hidden"
+                onClick={() => setActiveInsertDropdown(null)} // Fechar dropdowns ao clicar fora
+            >
+                {/* COL 1 - SEQUÊNCIA DE ETAPAS */}
                 <div className="w-60 border-r flex flex-col">
                     <div className="p-3 flex items-center justify-between border-b">
-                        <span className="text-xs font-semibold">Etapas</span>
+                        <span className="text-xs font-semibold">Sequência do Funil</span>
                         <Badge variant="secondary" className="text-[10px]">{steps.length}</Badge>
                     </div>
                     <div className="flex-1 overflow-auto text-xs">
                         {steps.map((s, idx) => {
                             const active = s.id === selectedId;
                             return (
-                                <div
-                                    key={s.id}
-                                    className={`px-3 py-2 border-b cursor-pointer group ${active ? 'bg-primary/10' : 'hover:bg-muted/50'}`}
-                                    onClick={() => setSelectedId(s.id)}
-                                >
-                                    <div className="flex items-center gap-2">
-                                        <span className="font-medium truncate">{idx + 1}. {s.type}</span>
+                                <div key={s.id}>
+                                    {/* Zona de Inserção no Topo (apenas no primeiro elemento) */}
+                                    {idx === 0 && (
+                                        <div className="group/insert relative">
+                                            <div className="h-1 hover:h-8 transition-all bg-transparent hover:bg-blue-50 border-2 border-dashed border-transparent hover:border-blue-300 flex items-center justify-center">
+                                                <div className="opacity-0 group-hover/insert:opacity-100 transition-opacity">
+                                                    <div className="relative">
+                                                        <Button
+                                                            size="sm"
+                                                            variant="outline"
+                                                            className="h-6 text-[10px] bg-white shadow-sm"
+                                                            onClick={() => setActiveInsertDropdown(activeInsertDropdown === `before-${s.id}` ? null : `before-${s.id}`)}
+                                                        >
+                                                            <Plus className="w-3 h-3 mr-1" /> Inserir no Início
+                                                            <ChevronDown className="w-3 h-3 ml-1" />
+                                                        </Button>
+
+                                                        {/* Dropdown Menu */}
+                                                        {activeInsertDropdown === `before-${s.id}` && (
+                                                            <div className="absolute top-full left-0 mt-1 bg-white border rounded shadow-lg z-50 min-w-32">
+                                                                {STEP_TYPES.map(type => (
+                                                                    <button
+                                                                        key={type}
+                                                                        className="w-full px-3 py-2 text-left text-[11px] hover:bg-gray-50 flex items-center gap-2"
+                                                                        onClick={() => {
+                                                                            addStepBefore(s.id, type);
+                                                                            setActiveInsertDropdown(null);
+                                                                        }}
+                                                                    >
+                                                                        <span>
+                                                                            {type === 'intro' && '🏠'}
+                                                                            {type === 'question' && '❓'}
+                                                                            {type === 'strategic-question' && '🎯'}
+                                                                            {type === 'transition' && '⏳'}
+                                                                            {type === 'transition-result' && '🔄'}
+                                                                            {type === 'result' && '🏆'}
+                                                                            {type === 'offer' && '🎁'}
+                                                                        </span>
+                                                                        {type.replace('-', ' ')}
+                                                                    </button>
+                                                                ))}
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    {/* Elemento Step */}
+                                    <div
+                                        className={`relative border-b cursor-pointer group transition-all ${active ? 'bg-blue-50 border-blue-200' : 'hover:bg-gray-50'
+                                            }`}
+                                        onClick={() => setSelectedId(s.id)}
+                                    >
+                                        {/* Indicador de Posição */}
+                                        <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-blue-500 to-purple-500" />
+
+                                        <div className="pl-4 pr-3 py-3">
+                                            <div className="flex items-center gap-2 mb-1">
+                                                <div className="w-6 h-6 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center text-white text-[10px] font-bold">
+                                                    {idx + 1}
+                                                </div>
+                                                <span className="font-medium truncate flex-1">
+                                                    {s.type === 'intro' && '🏠 Introdução'}
+                                                    {s.type === 'question' && '❓ Pergunta'}
+                                                    {s.type === 'strategic-question' && '🎯 Estratégica'}
+                                                    {s.type === 'transition' && '⏳ Transição'}
+                                                    {s.type === 'transition-result' && '🔄 Trans. Result'}
+                                                    {s.type === 'result' && '🏆 Resultado'}
+                                                    {s.type === 'offer' && '🎁 Oferta'}
+                                                </span>
+                                            </div>
+
+                                            {/* Preview do conteúdo */}
+                                            <div className="text-[10px] text-gray-500 mb-2 truncate">
+                                                {s.type === 'intro' && (s.title || 'Introdução do Quiz')}
+                                                {s.type === 'question' && (s.questionText || 'Pergunta do Quiz')}
+                                                {s.type === 'strategic-question' && (s.questionText || 'Pergunta Estratégica')}
+                                                {s.type === 'transition' && (s.title || 'Tela de Transição')}
+                                                {s.type === 'transition-result' && (s.title || 'Preparando Resultado')}
+                                                {s.type === 'result' && (s.title || 'Resultado do Quiz')}
+                                                {s.type === 'offer' && 'Oferta Personalizada'}
+                                            </div>
+
+                                            {/* Controles de Ação */}
+                                            <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                                <Button
+                                                    size="icon"
+                                                    variant="ghost"
+                                                    className="h-6 w-6 text-blue-500 hover:bg-blue-100"
+                                                    disabled={idx === 0}
+                                                    onClick={(e) => { e.stopPropagation(); moveStep(s.id, -1); }}
+                                                    title="Mover para cima"
+                                                >
+                                                    <ArrowUp className="w-3 h-3" />
+                                                </Button>
+                                                <Button
+                                                    size="icon"
+                                                    variant="ghost"
+                                                    className="h-6 w-6 text-blue-500 hover:bg-blue-100"
+                                                    disabled={idx === steps.length - 1}
+                                                    onClick={(e) => { e.stopPropagation(); moveStep(s.id, 1); }}
+                                                    title="Mover para baixo"
+                                                >
+                                                    <ArrowDown className="w-3 h-3" />
+                                                </Button>
+                                                <Button
+                                                    size="icon"
+                                                    variant="ghost"
+                                                    className="h-6 w-6 text-green-500 hover:bg-green-100"
+                                                    onClick={(e) => { e.stopPropagation(); duplicateStep(s.id); }}
+                                                    title="Duplicar"
+                                                >
+                                                    <Copy className="w-3 h-3" />
+                                                </Button>
+                                                <Button
+                                                    size="icon"
+                                                    variant="ghost"
+                                                    className="h-6 w-6 text-red-500 hover:bg-red-100"
+                                                    onClick={(e) => { e.stopPropagation(); removeStep(s.id); }}
+                                                    title="Remover"
+                                                >
+                                                    <Trash2 className="w-3 h-3" />
+                                                </Button>
+                                            </div>
+                                        </div>
+
+                                        {/* Conexão Visual para o Próximo Step */}
+                                        {idx < steps.length - 1 && (
+                                            <div className="absolute bottom-0 left-7 w-0.5 h-3 bg-gradient-to-b from-purple-400 to-blue-400" />
+                                        )}
                                     </div>
-                                    <div className="flex gap-1 mt-1 opacity-0 group-hover:opacity-100 transition">
-                                        <Button size="icon" variant="ghost" className="h-5 w-5" disabled={idx === 0}
-                                            onClick={(e) => { e.stopPropagation(); moveStep(s.id, -1); }}>
-                                            <ArrowUp className="w-3 h-3" />
-                                        </Button>
-                                        <Button size="icon" variant="ghost" className="h-5 w-5" disabled={idx === steps.length - 1}
-                                            onClick={(e) => { e.stopPropagation(); moveStep(s.id, 1); }}>
-                                            <ArrowDown className="w-3 h-3" />
-                                        </Button>
-                                        <Button size="icon" variant="ghost" className="h-5 w-5"
-                                            onClick={(e) => { e.stopPropagation(); duplicateStep(s.id); }}>
-                                            <Copy className="w-3 h-3" />
-                                        </Button>
-                                        <Button size="icon" variant="ghost" className="h-5 w-5 text-red-500"
-                                            onClick={(e) => { e.stopPropagation(); removeStep(s.id); }}>
-                                            <Trash2 className="w-3 h-3" />
-                                        </Button>
+
+                                    {/* Zona de Inserção Entre Elementos */}
+                                    <div className="group/insert relative">
+                                        <div className="h-1 hover:h-8 transition-all bg-transparent hover:bg-green-50 border-2 border-dashed border-transparent hover:border-green-300 flex items-center justify-center">
+                                            <div className="opacity-0 group-hover/insert:opacity-100 transition-opacity">
+                                                <div className="relative">
+                                                    <Button
+                                                        size="sm"
+                                                        variant="outline"
+                                                        className="h-6 text-[10px] bg-white shadow-sm border-green-300 text-green-600 hover:bg-green-50"
+                                                        onClick={() => setActiveInsertDropdown(activeInsertDropdown === `after-${s.id}` ? null : `after-${s.id}`)}
+                                                    >
+                                                        <Plus className="w-3 h-3 mr-1" /> Inserir Após
+                                                        <ChevronDown className="w-3 h-3 ml-1" />
+                                                    </Button>
+
+                                                    {/* Dropdown Menu */}
+                                                    {activeInsertDropdown === `after-${s.id}` && (
+                                                        <div className="absolute top-full left-0 mt-1 bg-white border rounded shadow-lg z-50 min-w-32">
+                                                            {STEP_TYPES.map(type => (
+                                                                <button
+                                                                    key={type}
+                                                                    className="w-full px-3 py-2 text-left text-[11px] hover:bg-gray-50 flex items-center gap-2"
+                                                                    onClick={() => {
+                                                                        addStepAfter(s.id, type);
+                                                                        setActiveInsertDropdown(null);
+                                                                    }}
+                                                                >
+                                                                    <span>
+                                                                        {type === 'intro' && '🏠'}
+                                                                        {type === 'question' && '❓'}
+                                                                        {type === 'strategic-question' && '🎯'}
+                                                                        {type === 'transition' && '⏳'}
+                                                                        {type === 'transition-result' && '🔄'}
+                                                                        {type === 'result' && '🏆'}
+                                                                        {type === 'offer' && '🎁'}
+                                                                    </span>
+                                                                    {type.replace('-', ' ')}
+                                                                </button>
+                                                            ))}
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             );
                         })}
                     </div>
-                    <div className="p-2 border-t space-y-2">
-                        <Button size="sm" variant="secondary" className="w-full"
-                            onClick={() => addStepAfter(selectedId, 'question')}>
-                            <Plus className="w-4 h-4 mr-1" /> Nova Pergunta
-                        </Button>
-                        <Button size="sm" variant="outline" className="w-full"
-                            onClick={() => addStepAfter(selectedId, 'strategic-question')}>
-                            + Estratégica
-                        </Button>
+
+                    {/* Adicionar no Final */}
+                    <div className="p-3 border-t bg-gradient-to-r from-purple-50 to-blue-50">
+                        <div className="text-[10px] font-medium text-gray-700 mb-2">ADICIONAR NO FINAL</div>
+                        <div className="relative">
+                            <Button
+                                size="sm"
+                                variant="default"
+                                className="w-full text-[10px] h-8 bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600"
+                                onClick={() => setActiveInsertDropdown(activeInsertDropdown === 'end' ? null : 'end')}
+                            >
+                                <Plus className="w-3 h-3 mr-1" /> Novo Componente
+                                <ChevronDown className="w-3 h-3 ml-1" />
+                            </Button>
+
+                            {/* Dropdown Menu para adicionar no final */}
+                            {activeInsertDropdown === 'end' && (
+                                <div className="absolute bottom-full left-0 mb-1 bg-white border rounded shadow-lg z-50 w-full">
+                                    {STEP_TYPES.map(type => (
+                                        <button
+                                            key={type}
+                                            className="w-full px-3 py-2 text-left text-[11px] hover:bg-gray-50 flex items-center gap-2 border-b last:border-b-0"
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                addStepAtEnd(type);
+                                                setActiveInsertDropdown(null);
+                                            }}
+                                        >
+                                            <span>
+                                                {type === 'intro' && '🏠'}
+                                                {type === 'question' && '❓'}
+                                                {type === 'strategic-question' && '🎯'}
+                                                {type === 'transition' && '⏳'}
+                                                {type === 'transition-result' && '🔄'}
+                                                {type === 'result' && '🏆'}
+                                                {type === 'offer' && '🎁'}
+                                            </span>
+                                            <div>
+                                                <div className="font-medium">{type.replace('-', ' ')}</div>
+                                                <div className="text-[9px] text-gray-500">
+                                                    {type === 'intro' && 'Introdução do quiz'}
+                                                    {type === 'question' && 'Pergunta múltipla escolha'}
+                                                    {type === 'strategic-question' && 'Pergunta estratégica'}
+                                                    {type === 'transition' && 'Tela de transição'}
+                                                    {type === 'transition-result' && 'Transição para resultado'}
+                                                    {type === 'result' && 'Resultado do quiz'}
+                                                    {type === 'offer' && 'Oferta personalizada'}
+                                                </div>
+                                            </div>
+                                        </button>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
                     </div>
                 </div>
 
-                {/* COL 2 - TIPO & OPCOES */}
+                {/* COL 2 - BIBLIOTECA DE COMPONENTES */}
                 <div className="w-72 border-r flex flex-col">
-                    <div className="p-3 border-b text-xs font-semibold">Componentes</div>
+                    <div className="p-3 border-b text-xs font-semibold">Biblioteca de Componentes</div>
+
+                    {/* Seção de Componentes Disponíveis */}
+                    <div className="p-3 border-b">
+                        <label className="block text-[10px] uppercase tracking-wide text-muted-foreground mb-2">
+                            Adicionar Componente
+                        </label>
+                        <div className="grid grid-cols-2 gap-2">
+                            {STEP_TYPES.map(type => (
+                                <Button
+                                    key={type}
+                                    size="sm"
+                                    variant="outline"
+                                    className="text-[10px] h-8 flex flex-col items-center p-1"
+                                    onClick={() => addStepAfter(selectedId, type)}
+                                >
+                                    <span className="truncate w-full text-center">
+                                        {type === 'intro' && '🏠 Intro'}
+                                        {type === 'question' && '❓ Pergunta'}
+                                        {type === 'strategic-question' && '🎯 Estratégica'}
+                                        {type === 'transition' && '⏳ Transição'}
+                                        {type === 'transition-result' && '🔄 Trans. Result'}
+                                        {type === 'result' && '🏆 Resultado'}
+                                        {type === 'offer' && '🎁 Oferta'}
+                                    </span>
+                                </Button>
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* Configuração do Componente Selecionado */}
                     <div className="flex-1 overflow-auto p-3 text-xs space-y-4">
                         {selectedStep && (
                             <div className="space-y-2">
                                 <label className="block text-[10px] uppercase tracking-wide text-muted-foreground">
-                                    Tipo da Etapa
+                                    Configurar Componente
                                 </label>
+                                <div className="bg-blue-50 p-2 rounded border">
+                                    <div className="font-medium text-blue-700 mb-1">
+                                        {selectedStep.type.toUpperCase()}
+                                    </div>
+                                    <div className="text-[10px] text-blue-600">
+                                        Componente selecionado para edição
+                                    </div>
+                                </div>
                                 <select
                                     className="w-full border rounded px-2 py-1 text-xs"
                                     value={selectedStep.type}
