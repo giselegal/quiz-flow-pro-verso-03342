@@ -1,5 +1,10 @@
 /* 🎨 ESTILOS ESPECÍFICOS PARA CORRIGIR PROBLEMAS DE RENDERIZAÇÃO DO EDITOR */
 
+/* RESET AGRESSIVO PARA GARANTIR TEXTO VISÍVEL */
+.quiz-editor-container * {
+    color: #1a1716 !important;
+}
+
 /* Forçar tema claro para todo o editor */
 .quiz-editor-container {
     background: white !important;
@@ -25,9 +30,55 @@
     --ring: 262.1 83.3% 57.8% !important;
 }
 
+/* REGRAS ESPECÍFICAS PARA GARANTIR TEXTO VISÍVEL */
+.quiz-editor-container,
+.quiz-editor-container *,
+.quiz-editor-container span,
+.quiz-editor-container div,
+.quiz-editor-container p,
+.quiz-editor-container h1,
+.quiz-editor-container h2,
+.quiz-editor-container h3,
+.quiz-editor-container h4,
+.quiz-editor-container h5,
+.quiz-editor-container h6,
+.quiz-editor-container label,
+.quiz-editor-container button {
+    color: #1a1716 !important;
+}
+
 /* Forçar contrastes adequados para texto */
 .quiz-editor-container .text-muted-foreground {
     color: #6b7280 !important;
+}
+
+/* Sobrescrever todas as classes de texto do Tailwind */
+.quiz-editor-container .text-xs,
+.quiz-editor-container .text-sm,
+.quiz-editor-container .text-base,
+.quiz-editor-container .text-lg,
+.quiz-editor-container .text-xl,
+.quiz-editor-container .text-2xl,
+.quiz-editor-container .text-3xl,
+.quiz-editor-container .text-4xl,
+.quiz-editor-container .text-5xl,
+.quiz-editor-container .text-6xl {
+    color: #1a1716 !important;
+}
+
+/* Sobrescrever classes específicas que podem estar causando problema */
+.quiz-editor-container .text-white,
+.quiz-editor-container .text-gray-100,
+.quiz-editor-container .text-gray-200,
+.quiz-editor-container .text-slate-100,
+.quiz-editor-container .text-slate-200 {
+    color: #1a1716 !important;
+}
+
+.quiz-editor-container .font-semibold,
+.quiz-editor-container .font-bold,
+.quiz-editor-container .font-medium {
+    color: #1a1716 !important;
 }
 
 .quiz-editor-container .bg-muted {
@@ -210,6 +261,37 @@
 .quiz-editor-container,
 .quiz-editor-container * {
     filter: none !important;
+}
+
+/* Regras específicas para elementos do editor */
+.quiz-editor-container .border-b,
+.quiz-editor-container .border-r,
+.quiz-editor-container .border-t,
+.quiz-editor-container .border-l,
+.quiz-editor-container .border {
+    border-color: #e5e7eb !important;
+}
+
+/* Garantir que botões tenham texto visível */
+.quiz-editor-container button,
+.quiz-editor-container button * {
+    color: #1a1716 !important;
+}
+
+.quiz-editor-container button[data-variant="ghost"] {
+    color: #1a1716 !important;
+}
+
+.quiz-editor-container button[data-variant="outline"] {
+    color: #1a1716 !important;
+    border-color: #e5e7eb !important;
+}
+
+/* Garantir que badges tenham contraste adequado */
+.quiz-editor-container .badge,
+.quiz-editor-container [class*="badge"] {
+    background-color: #f3f4f6 !important;
+    color: #1a1716 !important;
 }
 
 /* Garantir que elementos com opacity sejam visíveis */
