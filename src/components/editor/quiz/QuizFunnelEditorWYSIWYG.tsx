@@ -657,96 +657,139 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
             offerKey: 'default'
         };
 
-        // 🎨 NOVO: Usar componentes com design do /quiz-estilo
+        // 🎨 Componentes com design /quiz-estilo - MODULAR vs PREVIEW
+
         const renderStepWithQuizEstiloDesign = () => {
-            switch (step.type) {
-                case 'intro':
-                    const EditorIntroStep = React.lazy(() => import('@/components/editor/quiz-estilo/EditorIntroStep'));
-                    return (
-                        <React.Suspense fallback={<div>Carregando...</div>}>
-                            <EditorIntroStep
-                                data={step}
-                                onEdit={(field, value) => updateStep(step.id, { [field]: value })}
-                                isEditable={isEditMode}
-                            />
-                        </React.Suspense>
-                    );
+            if (isEditMode) {
+                // MODO EDITOR: Componentes modularizados com blocos editáveis
+                switch (step.type) {
+                    case 'intro':
+                        const ModularIntroStep = React.lazy(() => import('@/components/editor/quiz-estilo/ModularIntroStep'));
+                        return (
+                            <React.Suspense fallback={<div>Carregando...</div>}>
+                                <ModularIntroStep
+                                    data={step}
+                                    onEdit={(field, value) => updateStep(step.id, { [field]: value })}
+                                    isEditable={true}
+                                    selectedBlockId={selectedBlockId}
+                                    onBlockSelect={setSelectedBlockId}
+                                    onOpenProperties={handleOpenProperties}
+                                />
+                            </React.Suspense>
+                        );
 
-                case 'question':
-                    const EditorQuestionStep = React.lazy(() => import('@/components/editor/quiz-estilo/EditorQuestionStep'));
-                    return (
-                        <React.Suspense fallback={<div>Carregando...</div>}>
-                            <EditorQuestionStep
-                                data={step}
-                                currentAnswers={mockProps.currentAnswers}
-                                onAnswersChange={mockProps.onAnswersChange}
-                                onEdit={(field, value) => updateStep(step.id, { [field]: value })}
-                                isEditable={isEditMode}
-                            />
-                        </React.Suspense>
-                    );
+                    case 'question':
+                        const ModularQuestionStep = React.lazy(() => import('@/components/editor/quiz-estilo/ModularQuestionStep'));
+                        return (
+                            <React.Suspense fallback={<div>Carregando...</div>}>
+                                <ModularQuestionStep
+                                    data={step}
+                                    currentAnswers={mockProps.currentAnswers}
+                                    onAnswersChange={mockProps.onAnswersChange}
+                                    onEdit={(field, value) => updateStep(step.id, { [field]: value })}
+                                    isEditable={true}
+                                    selectedBlockId={selectedBlockId}
+                                    onBlockSelect={setSelectedBlockId}
+                                    onOpenProperties={handleOpenProperties}
+                                />
+                            </React.Suspense>
+                        );
 
-                case 'strategic-question':
-                    const EditorStrategicQuestionStep = React.lazy(() => import('@/components/editor/quiz-estilo/EditorStrategicQuestionStep'));
-                    return (
-                        <React.Suspense fallback={<div>Carregando...</div>}>
-                            <EditorStrategicQuestionStep
-                                data={step}
-                                currentAnswer={mockProps.currentAnswer}
-                                onAnswerChange={mockProps.onAnswerChange}
-                                onEdit={(field, value) => updateStep(step.id, { [field]: value })}
-                                isEditable={isEditMode}
-                            />
-                        </React.Suspense>
-                    );
+                    // TODO: Criar versões modulares dos outros steps
+                    default:
+                        return <div className="p-8 text-center text-gray-500">Versão modular para {step.type} em desenvolvimento...</div>;
+                }
+            } else {
+                // MODO PREVIEW: Componentes idênticos ao /quiz-estilo
+                switch (step.type) {
+                    case 'intro':
+                        const EditorIntroStep = React.lazy(() => import('@/components/editor/quiz-estilo/EditorIntroStep'));
+                        return (
+                            <React.Suspense fallback={<div>Carregando...</div>}>
+                                <EditorIntroStep
+                                    data={step}
+                                    onEdit={(field, value) => updateStep(step.id, { [field]: value })}
+                                    isEditable={false}
+                                />
+                            </React.Suspense>
+                        );
 
-                case 'transition':
-                case 'transition-result':
-                    const EditorTransitionStep = React.lazy(() => import('@/components/editor/quiz-estilo/EditorTransitionStep'));
-                    return (
-                        <React.Suspense fallback={<div>Carregando...</div>}>
-                            <EditorTransitionStep
-                                data={step}
-                                onComplete={mockProps.onComplete}
-                                onEdit={(field, value) => updateStep(step.id, { [field]: value })}
-                                isEditable={isEditMode}
-                            />
-                        </React.Suspense>
-                    );
+                    case 'question':
+                        const EditorQuestionStep = React.lazy(() => import('@/components/editor/quiz-estilo/EditorQuestionStep'));
+                        return (
+                            <React.Suspense fallback={<div>Carregando...</div>}>
+                                <EditorQuestionStep
+                                    data={step}
+                                    currentAnswers={mockProps.currentAnswers}
+                                    onAnswersChange={mockProps.onAnswersChange}
+                                    onEdit={(field, value) => updateStep(step.id, { [field]: value })}
+                                    isEditable={isEditMode}
+                                />
+                            </React.Suspense>
+                        );
 
-                case 'result':
-                    const EditorResultStep = React.lazy(() => import('@/components/editor/quiz-estilo/EditorResultStep'));
-                    return (
-                        <React.Suspense fallback={<div>Carregando...</div>}>
-                            <EditorResultStep
-                                data={step}
-                                userProfile={offerProps.userProfile}
-                                onEdit={(field, value) => updateStep(step.id, { [field]: value })}
-                                isEditable={isEditMode}
-                            />
-                        </React.Suspense>
-                    );
+                    case 'strategic-question':
+                        const EditorStrategicQuestionStep = React.lazy(() => import('@/components/editor/quiz-estilo/EditorStrategicQuestionStep'));
+                        return (
+                            <React.Suspense fallback={<div>Carregando...</div>}>
+                                <EditorStrategicQuestionStep
+                                    data={step}
+                                    currentAnswer={mockProps.currentAnswer}
+                                    onAnswerChange={mockProps.onAnswerChange}
+                                    onEdit={(field, value) => updateStep(step.id, { [field]: value })}
+                                    isEditable={isEditMode}
+                                />
+                            </React.Suspense>
+                        );
 
-                case 'offer':
-                    const EditorOfferStep = React.lazy(() => import('@/components/editor/quiz-estilo/EditorOfferStep'));
-                    return (
-                        <React.Suspense fallback={<div>Carregando...</div>}>
-                            <EditorOfferStep
-                                data={step}
-                                userProfile={offerProps.userProfile}
-                                offerKey={offerProps.offerKey}
-                                onEdit={(field, value) => updateStep(step.id, { [field]: value })}
-                                isEditable={isEditMode}
-                            />
-                        </React.Suspense>
-                    );
+                    case 'transition':
+                    case 'transition-result':
+                        const EditorTransitionStep = React.lazy(() => import('@/components/editor/quiz-estilo/EditorTransitionStep'));
+                        return (
+                            <React.Suspense fallback={<div>Carregando...</div>}>
+                                <EditorTransitionStep
+                                    data={step}
+                                    onComplete={mockProps.onComplete}
+                                    onEdit={(field, value) => updateStep(step.id, { [field]: value })}
+                                    isEditable={isEditMode}
+                                />
+                            </React.Suspense>
+                        );
 
-                default:
-                    return (
-                        <div className="p-4 border border-red-300 bg-red-50 rounded">
-                            <p className="text-red-600">Tipo de componente não reconhecido: {step.type}</p>
-                        </div>
-                    );
+                    case 'result':
+                        const EditorResultStep = React.lazy(() => import('@/components/editor/quiz-estilo/EditorResultStep'));
+                        return (
+                            <React.Suspense fallback={<div>Carregando...</div>}>
+                                <EditorResultStep
+                                    data={step}
+                                    userProfile={offerProps.userProfile}
+                                    onEdit={(field, value) => updateStep(step.id, { [field]: value })}
+                                    isEditable={isEditMode}
+                                />
+                            </React.Suspense>
+                        );
+
+                    case 'offer':
+                        const EditorOfferStep = React.lazy(() => import('@/components/editor/quiz-estilo/EditorOfferStep'));
+                        return (
+                            <React.Suspense fallback={<div>Carregando...</div>}>
+                                <EditorOfferStep
+                                    data={step}
+                                    userProfile={offerProps.userProfile}
+                                    offerKey={offerProps.offerKey}
+                                    onEdit={(field, value) => updateStep(step.id, { [field]: value })}
+                                    isEditable={isEditMode}
+                                />
+                            </React.Suspense>
+                        );
+
+                    default:
+                        return (
+                            <div className="p-4 border border-red-300 bg-red-50 rounded">
+                                <p className="text-red-600">Tipo de componente não reconhecido: {step.type}</p>
+                            </div>
+                        );
+                }
             }
         };
 
