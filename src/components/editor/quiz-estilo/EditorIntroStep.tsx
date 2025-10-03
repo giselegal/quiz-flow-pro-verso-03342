@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import type { EditableQuizStep } from '@/types/EditableQuizStep';
+// Tipo any para compatibilidade - dados vêm do QuizFunnelEditorWYSIWYG
 import QuizEstiloWrapper from './QuizEstiloWrapper';
 
 interface EditorIntroStepProps {
-    data: EditableQuizStep;
+    data: any;
     onEdit?: (field: string, value: any) => void;
     isEditable?: boolean;
 }

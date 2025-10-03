@@ -1,9 +1,8 @@
 import React from 'react';
-import type { EditableQuizStep } from '@/types/EditableQuizStep';
 import QuizEstiloWrapper from './QuizEstiloWrapper';
 
 interface EditorTransitionStepProps {
-    data: EditableQuizStep;
+    data: any;
     onComplete?: () => void;
     onEdit?: (field: string, value: any) => void;
     isEditable?: boolean;

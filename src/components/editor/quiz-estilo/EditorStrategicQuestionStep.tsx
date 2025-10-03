@@ -1,9 +1,8 @@
 import React from 'react';
-import type { EditableQuizStep } from '@/types/EditableQuizStep';
 import QuizEstiloWrapper from './QuizEstiloWrapper';
 
 interface EditorStrategicQuestionStepProps {
-    data: EditableQuizStep;
+    data: any;
     currentAnswer?: string;
     onAnswerChange?: (answer: string) => void;
     onEdit?: (field: string, value: any) => void;
@@ -64,7 +63,7 @@ export default function EditorStrategicQuestionStep({
                 )}
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8 max-w-2xl mx-auto">
-                    {safeData.options.map((option) => (
+                    {safeData.options.map((option: any) => (
                         <button
                             key={option.id}
                             onClick={() => handleOptionClick(option.id)}

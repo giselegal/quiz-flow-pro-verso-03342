@@ -1,9 +1,8 @@
 import React from 'react';
-import type { EditableQuizStep } from '@/types/EditableQuizStep';
 import QuizEstiloWrapper from './QuizEstiloWrapper';
 
 interface EditorOfferStepProps {
-    data: EditableQuizStep;
+    data: any;
     userProfile?: {
         userName: string;
         resultStyle: string;

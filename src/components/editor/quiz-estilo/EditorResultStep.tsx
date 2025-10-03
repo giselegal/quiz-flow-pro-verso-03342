@@ -1,9 +1,8 @@
 import React from 'react';
-import type { EditableQuizStep } from '@/types/EditableQuizStep';
 import QuizEstiloWrapper from './QuizEstiloWrapper';
 
 interface EditorResultStepProps {
-    data: EditableQuizStep;
+    data: any;
     userProfile?: {
         userName: string;
         resultStyle: string;
@@ -84,7 +83,7 @@ export default function EditorResultStep({
                         Suas principais características:
                     </h4>
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                        {safeData.characteristics.map((characteristic, index) => (
+                        {safeData.characteristics.map((characteristic: any, index: number) => (
                             <div
                                 key={index}
                                 className="bg-white p-3 rounded-md shadow-sm border-l-4 border-[#B89B7A]"
