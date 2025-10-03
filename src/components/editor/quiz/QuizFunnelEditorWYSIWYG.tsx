@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback, useMemo } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useUnifiedCRUD } from '@/context/UnifiedCRUDProvider';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -7,8 +7,13 @@ import { QUIZ_STEPS, type QuizStep } from '@/data/quizSteps';
 import { Plus, Save, Trash2, ArrowUp, ArrowDown, Copy, Eye, ChevronDown, Settings } from 'lucide-react';
 import './QuizEditorStyles.css';
 
-// Importar sistema híbrido consolidado que consome dados reais do funil
-import { HybridStepRenderer } from '@/components/quiz/HybridStepRenderer';
+// Importar componentes reais de produção para preview WYSIWYG
+import IntroStep from '@/components/quiz/IntroStep';
+import QuestionStep from '@/components/quiz/QuestionStep';
+import StrategicQuestionStep from '@/components/quiz/StrategicQuestionStep';
+import TransitionStep from '@/components/quiz/TransitionStep';
+import ResultStep from '@/components/quiz/ResultStep';
+import OfferStep from '@/components/quiz/OfferStep';
 
 // Importar componentes editáveis híbridos
 import EditableIntroStep from '@/components/quiz/editable/EditableIntroStep';
@@ -126,13 +131,9 @@ type EditableQuizStep = (QuizStep | {
     componentId?: string;
 }) & { id: string };
 
-// Tipos que são ETAPAS COMPLETAS do funil
 const STEP_TYPES: Array<string> = [
-    'intro', 'question', 'strategic-question', 'transition', 'transition-result', 'result', 'offer'
-];
-
-// Tipos que são COMPONENTES INDIVIDUAIS 
-const COMPONENT_TYPES: Array<string> = [
+    'intro', 'question', 'strategic-question', 'transition', 'transition-result', 'result', 'offer',
+    // Novos tipos baseados no modelo do funil:
     'header', 'spacer', 'advanced-options', 'button', 'script', 'heading', 'options-grid', 'options', 'rich-text'
 ];
 
@@ -557,22 +558,18 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
                     ? 'ring-2 ring-blue-500 ring-offset-2'
                     : 'hover:ring-1 hover:ring-gray-300'
                     }`}
-                onMouseDown={(e) => {
-                    // Usar onMouseDown em vez de onClick para melhor responsividade
-                    // e evitar conflitos com outros event handlers
-                    if (e.button === 0) { // Left click only
-                        setSelectedBlockId(blockId);
-                        const stepId = blockId.split('-')[0];
-                        setSelectedId(stepId);
-                    }
+                onClick={(e) => {
+                    e.stopPropagation();
+                    setSelectedBlockId(blockId);
+                    // Extrair stepId do blockId (formato: "stepId-tipo")
+                    const stepId = blockId.split('-')[0];
+                    setSelectedId(stepId);
                 }}
             >
-                <div className="absolute -top-6 left-0 bg-gray-600 text-white px-2 py-1 text-xs rounded z-10 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+                <div className="absolute -top-6 left-0 bg-gray-600 text-white px-2 py-1 text-xs rounded z-10 opacity-0 group-hover:opacity-100 transition-opacity">
                     {label}
                 </div>
-                <div className="relative z-0">
-                    {children}
-                </div>
+                {children}
             </div>
         );
     };
@@ -590,17 +587,16 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
                     ? 'ring-2 ring-blue-500 ring-offset-2 bg-blue-50/50'
                     : 'hover:ring-1 hover:ring-blue-300'
                     } ${isEditable ? 'cursor-pointer' : ''}`}
-                onMouseDown={(e) => {
-                    // Usar onMouseDown para melhor responsividade
-                    if (e.button === 0) { // Left click only
-                        setSelectedBlockId(blockId);
-                        const stepId = blockId.split('-')[0];
-                        setSelectedId(stepId);
-                    }
+                onClick={(e) => {
+                    e.stopPropagation();
+                    setSelectedBlockId(blockId);
+                    // Extrair stepId do blockId (formato: "stepId-tipo")
+                    const stepId = blockId.split('-')[0];
+                    setSelectedId(stepId);
                 }}
             >
                 {/* Label do componente */}
-                <div className="absolute -top-6 left-0 bg-blue-500 text-white px-2 py-1 text-xs rounded z-10 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+                <div className="absolute -top-6 left-0 bg-blue-500 text-white px-2 py-1 text-xs rounded z-10 opacity-0 group-hover:opacity-100 transition-opacity">
                     {label} {isEditable && '(Editável)'}
                 </div>
 
@@ -616,8 +612,7 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
                                 variant="ghost"
                                 className="h-6 w-6 p-0 text-red-500 hover:text-red-700"
                                 title="Remover"
-                                onMouseDown={(e) => {
-                                    e.preventDefault();
+                                onClick={(e) => {
                                     e.stopPropagation();
                                     const stepId = blockId.split('-')[0];
                                     removeStep(stepId);
@@ -629,94 +624,287 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
                     </div>
                 )}
 
-                <div className="relative z-0">
-                    {children}
-                </div>
+                {children}
             </div>
         );
     };
 
-    // Props estáveis para evitar re-renderizações
-    const stableRealProps = useMemo(() => ({
-        onNameSubmit: (name: string) => {
-            console.log('Nome real submetido:', name);
-            // Aqui integraria com o sistema real de coleta de nomes
-        },
-        onComplete: () => {
-            console.log('Transição real completa');
-            // Aqui integraria com o sistema real de navegação
-        },
-        currentAnswers: [] as string[], // Seria obtido do estado real do quiz
-        onAnswersChange: (answers: string[]) => {
-            console.log('Respostas reais alteradas:', answers);
-            // Aqui integraria com o sistema real de pontuação
-        },
-        currentAnswer: '', // Seria obtido do estado real do quiz
-        onAnswerChange: (answer: string) => {
-            console.log('Resposta real alterada:', answer);
-            // Aqui integraria com o sistema real de pontuação
-        },
-    }), []);
-
-    const stableUserProfile = useMemo(() => ({
-        userName: 'Usuário', // Seria obtido do estado real
-        resultStyle: 'Estilo Calculado', // Baseado nas respostas reais
-        secondaryStyles: ['Característica 1', 'Característica 2'] // Calculado dinamicamente
-    }), []);
-
-    // Função para renderizar componente híbrido que consome dados reais do funil (Memoizada)
-    const renderRealComponent = useCallback((step: EditableQuizStep) => {
+    // Função para renderizar componente real no preview
+    const renderRealComponent = (step: EditableQuizStep) => {
         const isEditMode = previewMode === 'edit';
         const WrapperComponent = isEditMode ? EditableWrapper : SelectableWrapper;
 
-        // Renderizar usando o sistema híbrido que consome dados reais
-        return (
-            <WrapperComponent
-                blockId={`${step.id}-${step.type}`}
-                label={getStepLabel(step.type)}
-                isEditable={isEditMode}
-            >
-                <HybridStepRenderer
-                    step={step} // DADOS REAIS DO FUNIL
-                    isEditable={isEditMode}
-                    mode={isEditMode ? 'edit' : 'preview'}
-                    onEdit={(field, value) => updateStep(step.id, { [field]: value })}
-                    onChange={(content) => updateStep(step.id, { content })}
-                    // Props específicas para componentes de produção
-                    onNameSubmit={stableRealProps.onNameSubmit}
-                    currentAnswers={stableRealProps.currentAnswers}
-                    onAnswersChange={stableRealProps.onAnswersChange}
-                    currentAnswer={stableRealProps.currentAnswer}
-                    onAnswerChange={stableRealProps.onAnswerChange}
-                    onComplete={stableRealProps.onComplete}
-                    userProfile={stableUserProfile}
-                    offerKey="default" // Seria calculado dinamicamente
-                />
-            </WrapperComponent>
-        );
-    }, [previewMode, updateStep, stableRealProps, stableUserProfile]);
-
-    // Função auxiliar para obter labels dos componentes
-    const getStepLabel = (type: string): string => {
-        const labels: Record<string, string> = {
-            'intro': 'Introdução',
-            'question': 'Pergunta',
-            'strategic-question': 'Pergunta Estratégica',
-            'transition': 'Transição',
-            'transition-result': 'Transição p/ Resultado',
-            'result': 'Resultado',
-            'offer': 'Oferta',
-            'header': 'Header',
-            'spacer': 'Espaçador',
-            'advanced-options': 'Opções Avançadas',
-            'button': 'Botão',
-            'script': 'Script',
-            'heading': 'Título',
-            'options-grid': 'Grade de Opções',
-            'options': 'Opções do Quiz',
-            'rich-text': 'Editor de Texto Rico'
+        // Props básicas para os componentes
+        const mockProps = {
+            onNameSubmit: () => console.log('Nome submetido'),
+            onComplete: () => console.log('Transição completa'),
+            currentAnswers: [] as string[],
+            onAnswersChange: (answers: string[]) => console.log('Respostas alteradas:', answers),
+            currentAnswer: '',
+            onAnswerChange: (answer: string) => console.log('Resposta alterada:', answer),
         };
-        return labels[type] || 'Componente';
+
+        // Props específicas para o OfferStep
+        const offerProps = {
+            userProfile: {
+                userName: 'João',
+                resultStyle: 'Empreendedor Visionário',
+                secondaryStyles: ['Liderança', 'Inovação']
+            },
+            offerKey: 'default'
+        };
+
+        switch (step.type) {
+            case 'intro':
+                return (
+                    <WrapperComponent blockId={`${step.id}-intro`} label="Introdução" isEditable={isEditMode}>
+                        <EditableIntroStep
+                            data={step}
+                            onNameSubmit={mockProps.onNameSubmit}
+                            isEditable={false}
+                            onEdit={(field, value) => updateStep(step.id, { [field]: value })}
+                        />
+                    </WrapperComponent>
+                );
+            case 'question':
+                return (
+                    <WrapperComponent blockId={`${step.id}-question`} label="Pergunta" isEditable={isEditMode}>
+                        <EditableQuestionStep
+                            data={step}
+                            currentAnswers={mockProps.currentAnswers}
+                            onAnswersChange={mockProps.onAnswersChange}
+                            isEditable={false}
+                            onEdit={(field, value) => updateStep(step.id, { [field]: value })}
+                        />
+                    </WrapperComponent>
+                );
+            case 'strategic-question':
+                return (
+                    <WrapperComponent blockId={`${step.id}-strategic`} label="Pergunta Estratégica" isEditable={isEditMode}>
+                        <StrategicQuestionStep
+                            data={step}
+                            currentAnswer={mockProps.currentAnswer}
+                            onAnswerChange={mockProps.onAnswerChange}
+                        />
+                    </WrapperComponent>
+                );
+            case 'transition':
+                return (
+                    <WrapperComponent blockId={`${step.id}-transition`} label="Transição" isEditable={isEditMode}>
+                        <TransitionStep
+                            data={step}
+                            onComplete={mockProps.onComplete}
+                        />
+                    </WrapperComponent>
+                );
+            case 'transition-result':
+                return (
+                    <WrapperComponent blockId={`${step.id}-transition-result`} label="Transição p/ Resultado" isEditable={isEditMode}>
+                        <TransitionStep
+                            data={step}
+                            onComplete={mockProps.onComplete}
+                        />
+                    </WrapperComponent>
+                );
+            case 'result':
+                return (
+                    <WrapperComponent blockId={`${step.id}-result`} label="Resultado" isEditable={isEditMode}>
+                        <ResultStep
+                            data={step}
+                            userProfile={offerProps.userProfile}
+                        />
+                    </WrapperComponent>
+                );
+            case 'offer':
+                return (
+                    <WrapperComponent blockId={`${step.id}-offer`} label="Oferta" isEditable={isEditMode}>
+                        <OfferStep
+                            data={step}
+                            userProfile={offerProps.userProfile}
+                            offerKey={offerProps.offerKey}
+                        />
+                    </WrapperComponent>
+                );
+
+            // Novos componentes baseados no modelo do funil:
+            case 'header':
+                return (
+                    <WrapperComponent blockId={`${step.id}-header`} label="Header" isEditable={isEditMode}>
+                        <EditableHeader
+                            logo={(step as any).logo || ''}
+                            progress={(step as any).progress || 0}
+                            showLogo={(step as any).showLogo !== false}
+                            showProgress={(step as any).showProgress !== false}
+                            allowReturn={(step as any).allowReturn !== false}
+                            isEditable={false}
+                            onEdit={(field, value) => updateStep(step.id, { [field]: value })}
+                        />
+                    </WrapperComponent>
+                );
+
+            case 'spacer':
+                return (
+                    <WrapperComponent blockId={`${step.id}-spacer`} label="Espaçador" isEditable={isEditMode}>
+                        <EditableSpacer
+                            height={(step as any).height || 32}
+                            isEditable={false}
+                            onEdit={(field, value) => updateStep(step.id, { [field]: value })}
+                        />
+                    </WrapperComponent>
+                );
+
+            case 'advanced-options':
+                return (
+                    <WrapperComponent blockId={`${step.id}-advanced-options`} label="Opções Avançadas" isEditable={isEditMode}>
+                        <EditableAdvancedOptions
+                            options={(step as any).options || []}
+                            selectedOptions={[]}
+                            onOptionsChange={() => { }}
+                            multiSelect={(step as any).multiSelect || false}
+                            isEditable={false}
+                            onEdit={(field, value) => updateStep(step.id, { [field]: value })}
+                        />
+                    </WrapperComponent>
+                );
+
+            case 'button':
+                return (
+                    <WrapperComponent blockId={`${step.id}-button`} label="Botão" isEditable={isEditMode}>
+                        <EditableButton
+                            text={(step as any).text || 'Clique aqui'}
+                            variant={(step as any).variant || 'default'}
+                            size={(step as any).size || 'default'}
+                            fullWidth={(step as any).fullWidth !== false}
+                            isEditable={false}
+                            onEdit={(field, value) => updateStep(step.id, { [field]: value })}
+                        />
+                    </WrapperComponent>
+                );
+
+            case 'script':
+                return (
+                    <WrapperComponent blockId={`${step.id}-script`} label="Script" isEditable={isEditMode}>
+                        <EditableScript
+                            code={(step as any).code || ''}
+                            visible={(step as any).visible || false}
+                            isEditable={false}
+                            onEdit={(field, value) => updateStep(step.id, { [field]: value })}
+                        />
+                    </WrapperComponent>
+                );
+
+            case 'heading':
+                return (
+                    <WrapperComponent blockId={`${step.id}-heading`} label="Título" isEditable={isEditMode}>
+                        <EditableHeading
+                            content={(step as any).content || 'Digite seu título aqui...'}
+                            alignment={(step as any).alignment || 'center'}
+                            backgroundColor={(step as any).backgroundColor || '#ffffff'}
+                            textColor={(step as any).textColor || '#000000'}
+                            borderColor={(step as any).borderColor || '#000000'}
+                            componentId={(step as any).componentId || ''}
+                            maxWidth={(step as any).maxWidth || 100}
+                            generalAlignment={(step as any).generalAlignment || 'start'}
+                            headingLevel={(step as any).headingLevel || 1}
+                            isEditable={false}
+                            onEdit={(field, value) => updateStep(step.id, { [field]: value })}
+                        />
+                    </WrapperComponent>
+                );
+
+            case 'options-grid':
+                return (
+                    <WrapperComponent blockId={`${step.id}-options-grid`} label="Grade de Opções" isEditable={isEditMode}>
+                        <EditableOptionsGrid
+                            options={(step as any).options || []}
+                            selectedOptions={(step as any).selectedOptions || []}
+                            multiSelect={(step as any).multiSelect !== false}
+                            maxSelections={(step as any).maxSelections || 3}
+                            columns={(step as any).columns || 2}
+                            gap={(step as any).gap || 2}
+                            showImages={(step as any).showImages !== false}
+                            showPrefixes={(step as any).showPrefixes !== false}
+                            buttonStyle={(step as any).buttonStyle || 'default'}
+                            imageSize={(step as any).imageSize || 'medium'}
+                            orientation={(step as any).orientation || 'vertical'}
+                            isEditable={false}
+                            onEdit={(field, value) => updateStep(step.id, { [field]: value })}
+                            onSelectionChange={(selected) => updateStep(step.id, { selectedOptions: selected })}
+                        />
+                    </WrapperComponent>
+                );
+
+            case 'options':
+                return (
+                    <WrapperComponent blockId={`${step.id}-options`} label="Opções do Quiz" isEditable={isEditMode}>
+                        <EditableOptions
+                            // Layout
+                            columns={(step as any).columns || 2}
+                            direction={(step as any).direction || 'vertical'}
+                            disposition={(step as any).disposition || 'image-text'}
+                            // Opções
+                            options={(step as any).options || []}
+                            selectedOptions={(step as any).selectedOptions || []}
+                            // Validações
+                            multipleChoice={(step as any).multipleChoice !== false}
+                            required={(step as any).required !== false}
+                            autoProceed={(step as any).autoProceed || false}
+                            // Estilização
+                            borders={(step as any).borders || 'small'}
+                            shadows={(step as any).shadows || 'none'}
+                            spacing={(step as any).spacing || 'small'}
+                            detail={(step as any).detail || 'none'}
+                            style={(step as any).style || 'simple'}
+                            // Personalização
+                            backgroundColor={(step as any).backgroundColor || '#ffffff'}
+                            textColor={(step as any).textColor || '#000000'}
+                            borderColor={(step as any).borderColor || '#e5e7eb'}
+                            // Avançado
+                            componentId={(step as any).componentId || ''}
+                            // Geral
+                            maxWidth={(step as any).maxWidth || 100}
+                            generalAlignment={(step as any).generalAlignment || 'start'}
+                            // Controle
+                            isEditable={false}
+                            onEdit={(field, value) => updateStep(step.id, { [field]: value })}
+                            onSelectionChange={(selected) => updateStep(step.id, { selectedOptions: selected })}
+                        />
+                    </WrapperComponent>
+                );
+
+            case 'rich-text':
+                return (
+                    <WrapperComponent blockId={`${step.id}-rich-text`} label="Editor de Texto Rico" isEditable={isEditMode}>
+                        <EditableRichText
+                            // Conteúdo
+                            content={(step as any).content || '<h2>Título</h2><p><br></p><p>Preencha o texto.</p>'}
+                            placeholder={(step as any).placeholder || 'Digite seu texto aqui...'}
+                            // Layout
+                            maxWidth={(step as any).maxWidth || 100}
+                            generalAlignment={(step as any).generalAlignment || 'start'}
+                            // Configurações do Editor
+                            showToolbar={(step as any).showToolbar !== false}
+                            minHeight={(step as any).minHeight || 150}
+                            // Personalização
+                            backgroundColor={(step as any).backgroundColor || '#ffffff'}
+                            borderColor={(step as any).borderColor || '#e5e7eb'}
+                            // Avançado
+                            componentId={(step as any).componentId || ''}
+                            // Controle
+                            isEditable={isEditMode}
+                            onEdit={(field, value) => updateStep(step.id, { [field]: value })}
+                            onChange={(content) => updateStep(step.id, { content })}
+                        />
+                    </WrapperComponent>
+                );
+
+            default:
+                return (
+                    <div className="p-4 border border-red-300 bg-red-50 rounded">
+                        <p className="text-red-600">Tipo de componente não reconhecido: {(step as any).type}</p>
+                    </div>
+                );
+        }
     };
 
     return (
@@ -785,13 +973,11 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
 
                                                         {/* Dropdown Menu */}
                                                         {activeInsertDropdown === `before-${s.id}` && (
-                                                            <div className="absolute top-full left-0 mt-1 bg-white border rounded shadow-lg z-50 min-w-48 max-h-80 overflow-y-auto">
-                                                                {/* Etapas */}
-                                                                <div className="px-2 py-1 bg-gray-100 text-[9px] font-semibold text-gray-600">🏗️ ETAPAS</div>
+                                                            <div className="absolute top-full left-0 mt-1 bg-white border rounded shadow-lg z-50 min-w-32">
                                                                 {STEP_TYPES.map(type => (
                                                                     <button
                                                                         key={type}
-                                                                        className="w-full px-3 py-2 text-left text-[11px] hover:bg-gray-50 flex items-center gap-2 border-b"
+                                                                        className="w-full px-3 py-2 text-left text-[11px] hover:bg-gray-50 flex items-center gap-2"
                                                                         onClick={() => {
                                                                             addStepBefore(s.id, type as ExtendedStepType);
                                                                             setActiveInsertDropdown(null);
@@ -805,30 +991,6 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
                                                                             {type === 'transition-result' && '🔄'}
                                                                             {type === 'result' && '🏆'}
                                                                             {type === 'offer' && '🎁'}
-                                                                        </span>
-                                                                        {type.replace('-', ' ')}
-                                                                    </button>
-                                                                ))}
-                                                                {/* Componentes */}
-                                                                <div className="px-2 py-1 bg-blue-100 text-[9px] font-semibold text-blue-600">🧩 COMPONENTES</div>
-                                                                {COMPONENT_TYPES.map(type => (
-                                                                    <button
-                                                                        key={type}
-                                                                        className="w-full px-3 py-2 text-left text-[11px] hover:bg-blue-50 flex items-center gap-2 border-b last:border-b-0"
-                                                                        onClick={() => {
-                                                                            addStepBefore(s.id, type as ExtendedStepType);
-                                                                            setActiveInsertDropdown(null);
-                                                                        }}
-                                                                    >
-                                                                        <span>
-                                                                            {type === 'header' && '📋'}
-                                                                            {type === 'spacer' && '📏'}
-                                                                            {type === 'advanced-options' && '🎛️'}
-                                                                            {type === 'button' && '🔘'}
-                                                                            {type === 'script' && '📜'}
-                                                                            {type === 'heading' && '📝'}
-                                                                            {type === 'options-grid' && '🔢'}
-                                                                            {type === 'options' && '☑️'}
                                                                             {type === 'rich-text' && '📝'}
                                                                         </span>
                                                                         {type.replace('-', ' ')}
@@ -944,13 +1106,11 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
 
                                                     {/* Dropdown Menu */}
                                                     {activeInsertDropdown === `after-${s.id}` && (
-                                                        <div className="absolute top-full left-0 mt-1 bg-white border rounded shadow-lg z-50 min-w-48 max-h-80 overflow-y-auto">
-                                                            {/* Etapas */}
-                                                            <div className="px-2 py-1 bg-gray-100 text-[9px] font-semibold text-gray-600">🏗️ ETAPAS</div>
+                                                        <div className="absolute top-full left-0 mt-1 bg-white border rounded shadow-lg z-50 min-w-32">
                                                             {STEP_TYPES.map(type => (
                                                                 <button
                                                                     key={type}
-                                                                    className="w-full px-3 py-2 text-left text-[11px] hover:bg-gray-50 flex items-center gap-2 border-b"
+                                                                    className="w-full px-3 py-2 text-left text-[11px] hover:bg-gray-50 flex items-center gap-2"
                                                                     onClick={() => {
                                                                         addStepAfter(s.id, type as ExtendedStepType);
                                                                         setActiveInsertDropdown(null);
@@ -964,30 +1124,6 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
                                                                         {type === 'transition-result' && '🔄'}
                                                                         {type === 'result' && '🏆'}
                                                                         {type === 'offer' && '🎁'}
-                                                                    </span>
-                                                                    {type.replace('-', ' ')}
-                                                                </button>
-                                                            ))}
-                                                            {/* Componentes */}
-                                                            <div className="px-2 py-1 bg-blue-100 text-[9px] font-semibold text-blue-600">🧩 COMPONENTES</div>
-                                                            {COMPONENT_TYPES.map(type => (
-                                                                <button
-                                                                    key={type}
-                                                                    className="w-full px-3 py-2 text-left text-[11px] hover:bg-blue-50 flex items-center gap-2 border-b last:border-b-0"
-                                                                    onClick={() => {
-                                                                        addStepAfter(s.id, type as ExtendedStepType);
-                                                                        setActiveInsertDropdown(null);
-                                                                    }}
-                                                                >
-                                                                    <span>
-                                                                        {type === 'header' && '📋'}
-                                                                        {type === 'spacer' && '📏'}
-                                                                        {type === 'advanced-options' && '🎛️'}
-                                                                        {type === 'button' && '🔘'}
-                                                                        {type === 'script' && '📜'}
-                                                                        {type === 'heading' && '📝'}
-                                                                        {type === 'options-grid' && '🔢'}
-                                                                        {type === 'options' && '☑️'}
                                                                         {type === 'rich-text' && '📝'}
                                                                     </span>
                                                                     {type.replace('-', ' ')}
@@ -1020,13 +1156,11 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
 
                             {/* Dropdown Menu para adicionar no final */}
                             {activeInsertDropdown === 'end' && (
-                                <div className="absolute bottom-full left-0 mb-1 bg-white border rounded shadow-lg z-50 w-full max-h-80 overflow-y-auto">
-                                    {/* Seção de Etapas */}
-                                    <div className="px-2 py-1 bg-gray-100 text-[9px] font-semibold text-gray-600">🏗️ ETAPAS DO FUNIL</div>
+                                <div className="absolute bottom-full left-0 mb-1 bg-white border rounded shadow-lg z-50 w-full">
                                     {STEP_TYPES.map(type => (
                                         <button
                                             key={type}
-                                            className="w-full px-3 py-2 text-left text-[11px] hover:bg-gray-50 flex items-center gap-2 border-b"
+                                            className="w-full px-3 py-2 text-left text-[11px] hover:bg-gray-50 flex items-center gap-2 border-b last:border-b-0"
                                             onClick={(e) => {
                                                 e.stopPropagation();
                                                 addStepAtEnd(type as ExtendedStepType);
@@ -1056,46 +1190,6 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
                                             </div>
                                         </button>
                                     ))}
-
-                                    {/* Seção de Componentes */}
-                                    <div className="px-2 py-1 bg-blue-100 text-[9px] font-semibold text-blue-600">🧩 COMPONENTES</div>
-                                    {COMPONENT_TYPES.map(type => (
-                                        <button
-                                            key={type}
-                                            className="w-full px-3 py-2 text-left text-[11px] hover:bg-blue-50 flex items-center gap-2 border-b last:border-b-0"
-                                            onClick={(e) => {
-                                                e.stopPropagation();
-                                                addStepAtEnd(type as ExtendedStepType);
-                                                setActiveInsertDropdown(null);
-                                            }}
-                                        >
-                                            <span>
-                                                {type === 'header' && '📋'}
-                                                {type === 'spacer' && '📏'}
-                                                {type === 'advanced-options' && '🎛️'}
-                                                {type === 'button' && '🔘'}
-                                                {type === 'script' && '📜'}
-                                                {type === 'heading' && '📝'}
-                                                {type === 'options-grid' && '🔢'}
-                                                {type === 'options' && '☑️'}
-                                                {type === 'rich-text' && '📝'}
-                                            </span>
-                                            <div>
-                                                <div className="font-medium">{type.replace('-', ' ')}</div>
-                                                <div className="text-[9px] text-gray-500">
-                                                    {type === 'header' && 'Cabeçalho com logo e progresso'}
-                                                    {type === 'spacer' && 'Espaçamento vertical'}
-                                                    {type === 'advanced-options' && 'Opções avançadas customizáveis'}
-                                                    {type === 'button' && 'Botão de ação'}
-                                                    {type === 'script' && 'Código JavaScript'}
-                                                    {type === 'heading' && 'Título editável'}
-                                                    {type === 'options-grid' && 'Grade de opções'}
-                                                    {type === 'options' && 'Lista de opções'}
-                                                    {type === 'rich-text' && 'Editor de texto rico'}
-                                                </div>
-                                            </div>
-                                        </button>
-                                    ))}
                                 </div>
                             )}
                         </div>
@@ -1106,10 +1200,10 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
                 <div className="w-72 border-r flex flex-col">
                     <div className="p-3 border-b text-xs font-semibold">Biblioteca de Componentes</div>
 
-                    {/* Seção de Etapas do Funil */}
+                    {/* Seção de Componentes Disponíveis */}
                     <div className="p-3 border-b">
                         <label className="block text-[10px] uppercase tracking-wide text-muted-foreground mb-2">
-                            🏗️ Etapas do Funil
+                            Adicionar Componente
                         </label>
                         <div className="grid grid-cols-2 gap-2">
                             {STEP_TYPES.map(type => (
@@ -1128,36 +1222,12 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
                                         {type === 'transition-result' && '🔄 Trans. Result'}
                                         {type === 'result' && '🏆 Resultado'}
                                         {type === 'offer' && '🎁 Oferta'}
-                                    </span>
-                                </Button>
-                            ))}
-                        </div>
-                    </div>
-
-                    {/* Seção de Componentes Individuais */}
-                    <div className="p-3 border-b">
-                        <label className="block text-[10px] uppercase tracking-wide text-muted-foreground mb-2">
-                            🧩 Componentes
-                        </label>
-                        <div className="grid grid-cols-2 gap-2">
-                            {COMPONENT_TYPES.map(type => (
-                                <Button
-                                    key={type}
-                                    size="sm"
-                                    variant="ghost"
-                                    className="text-[10px] h-8 flex flex-col items-center p-1 border border-dashed border-blue-300 hover:border-blue-500 hover:bg-blue-50"
-                                    onClick={() => addStepAfter(selectedId, type as ExtendedStepType)}
-                                >
-                                    <span className="truncate w-full text-center">
                                         {type === 'header' && '📋 Header'}
                                         {type === 'spacer' && '📏 Spacer'}
                                         {type === 'advanced-options' && '🎛️ Opções+'}
                                         {type === 'button' && '🔘 Botão'}
                                         {type === 'script' && '📜 Script'}
                                         {type === 'heading' && '📝 Título'}
-                                        {type === 'options-grid' && '🔢 Grade Opções'}
-                                        {type === 'options' && '☑️ Opções'}
-                                        {type === 'rich-text' && '📝 Texto Rico'}
                                     </span>
                                 </Button>
                             ))}
@@ -1179,12 +1249,7 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
                     </div>
                     <div
                         className="flex-1 overflow-auto"
-                        onClick={(e) => {
-                            // Limpar seleção APENAS se clicou diretamente no fundo, não nos componentes
-                            if (e.target === e.currentTarget) {
-                                setSelectedBlockId('');
-                            }
-                        }}
+                        onClick={() => setSelectedBlockId('')} // Limpar seleção ao clicar no fundo
                     >
                         {!selectedStep ? (
                             <div className="flex items-center justify-center h-full text-sm text-muted-foreground">
