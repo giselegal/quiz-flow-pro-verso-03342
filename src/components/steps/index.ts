@@ -20,6 +20,9 @@ export { StepRenderer } from '../step-registry/StepRenderer';
 // Export de utilitários
 export type { BaseStepProps, StepDefinition } from '../step-registry/StepTypes';
 
+// Importar stepRegistry localmente para usar no log
+import { stepRegistry } from '../step-registry/StepRegistry';
+
 console.log('📱 Steps modulares carregados:', {
     total: stepRegistry.getAll().length,
     steps: stepRegistry.getAll().map(s => s.name)
