@@ -14,6 +14,10 @@ import TransitionStep from '@/components/quiz/TransitionStep';
 import ResultStep from '@/components/quiz/ResultStep';
 import OfferStep from '@/components/quiz/OfferStep';
 
+// Importar componentes editáveis híbridos
+import EditableIntroStep from '@/components/quiz/editable/EditableIntroStep';
+import EditableQuestionStep from '@/components/quiz/editable/EditableQuestionStep';
+
 interface QuizFunnelEditorProps {
     funnelId?: string;
     templateId?: string;
@@ -197,8 +201,8 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
         return (
             <div
                 className={`relative transition-all duration-200 group ${selectedBlockId === blockId
-                        ? 'ring-2 ring-blue-500 ring-offset-2'
-                        : 'hover:ring-1 hover:ring-gray-300'
+                    ? 'ring-2 ring-blue-500 ring-offset-2'
+                    : 'hover:ring-1 hover:ring-gray-300'
                     }`}
                 onClick={(e) => {
                     e.stopPropagation();
@@ -223,8 +227,8 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
         return (
             <div
                 className={`relative transition-all duration-200 group ${selectedBlockId === blockId
-                        ? 'ring-2 ring-blue-500 ring-offset-2 bg-blue-50/50'
-                        : 'hover:ring-1 hover:ring-blue-300'
+                    ? 'ring-2 ring-blue-500 ring-offset-2 bg-blue-50/50'
+                    : 'hover:ring-1 hover:ring-blue-300'
                     } ${isEditable ? 'cursor-pointer' : ''}`}
                 onClick={(e) => {
                     e.stopPropagation();
@@ -294,19 +298,23 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
             case 'intro':
                 return (
                     <WrapperComponent blockId={`${step.id}-intro`} label="Introdução" isEditable={isEditMode}>
-                        <IntroStep
+                        <EditableIntroStep
                             data={step}
                             onNameSubmit={mockProps.onNameSubmit}
+                            isEditable={isEditMode}
+                            onEdit={(field, value) => updateStep(step.id, { [field]: value })}
                         />
                     </WrapperComponent>
                 );
             case 'question':
                 return (
                     <WrapperComponent blockId={`${step.id}-question`} label="Pergunta" isEditable={isEditMode}>
-                        <QuestionStep
+                        <EditableQuestionStep
                             data={step}
                             currentAnswers={mockProps.currentAnswers}
                             onAnswersChange={mockProps.onAnswersChange}
+                            isEditable={isEditMode}
+                            onEdit={(field, value) => updateStep(step.id, { [field]: value })}
                         />
                     </WrapperComponent>
                 );
