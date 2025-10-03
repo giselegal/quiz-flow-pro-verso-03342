@@ -18,7 +18,7 @@ export { stepRegistry } from '../step-registry/StepRegistry';
 export { StepRenderer } from '../step-registry/StepRenderer';
 
 // Export de utilitários
-export type { BaseStepProps, StepDefinition } from '../step-registry/StepTypes';
+export type { BaseStepProps, StepComponent } from '../step-registry/StepTypes';
 
 // Importar stepRegistry localmente para usar no log
 import { stepRegistry } from '../step-registry/StepRegistry';
