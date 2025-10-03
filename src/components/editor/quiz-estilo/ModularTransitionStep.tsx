@@ -30,7 +30,7 @@ export default function ModularTransitionStep({
     onBlockSelect,
     onOpenProperties
 }: ModularTransitionStepProps) {
-    
+
     const safeData = {
         title: data.title || 'Preparando seu resultado...',
         subtitle: data.subtitle || 'Analisando suas respostas',
@@ -44,7 +44,7 @@ export default function ModularTransitionStep({
                 console.log('Transição completa (demo)');
             }
         }, 3000);
-        
+
         return () => clearTimeout(timer);
     }, [onComplete]);
 
@@ -69,7 +69,7 @@ export default function ModularTransitionStep({
                         onOpenProperties={onOpenProperties}
                         isDraggable={true}
                     >
-                        <h1 
+                        <h1
                             className="text-2xl md:text-3xl font-bold text-[#432818] mb-4"
                             style={{ fontFamily: '"Playfair Display", serif' }}
                         >
