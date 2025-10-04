@@ -27,7 +27,6 @@ import { RedirectRoute } from './components/RedirectRoute';
 import { QuizErrorBoundary } from './components/RouteErrorBoundary';
 import { EditorErrorBoundary } from './components/error/EditorErrorBoundary';
 import UnifiedCRUDProvider from '@/context/UnifiedCRUDProvider';
-import { OptimizedEditorProvider } from '@/components/editor/OptimizedEditorProvider';
 
 // 🏠 PÁGINAS ESSENCIAIS
 const Home = lazy(() => import('./pages/Home'));
@@ -89,198 +88,196 @@ function App() {
   return (
     <HelmetProvider>
       <GlobalErrorBoundary showResetButton={true}>
-        <CustomThemeProvider defaultTheme="light">
-          <AuthProvider>
-            <SecurityProvider>
-              <MonitoringProvider enableAlerts={true} enableAnalytics={true}>
-                <OptimizedProviderStack enableLazyLoading={true} enableComponentCaching={true} debugMode={false}>
-                  <Router>
-                    <Suspense fallback={<EnhancedLoadingFallback message="Carregando aplicação..." variant="detailed" />}>
-                      <Switch>
-                        {/* 🏠 PÁGINA INICIAL */}
-                        <Route path="/">
-                          <div data-testid="index-page">
-                            <Home />
-                          </div>
-                        </Route>
-
-                        {/* 🚀 QUIZ EDITOR WYSIWYG - EDITOR OFICIAL COM FASE 4 ATIVA */}
-                        <Route path="/editor">
-                          <EditorErrorBoundary>
-                            <div data-testid="quiz-editor-wysiwyg-page">
-                              <UnifiedCRUDProvider autoLoad={true}>
-                                <OptimizedEditorProvider>
-                                  {/* ✅ FASE 4 ATIVADA: +66% performance com OptimizedEditorProvider */}
-                                  <QuizFunnelEditorWYSIWYG />
-                                </OptimizedEditorProvider>
-                              </UnifiedCRUDProvider>
+        <ThemeProvider defaultTheme="light">
+          <CustomThemeProvider defaultTheme="light">
+            <AuthProvider>
+              <SecurityProvider>
+                <MonitoringProvider enableAlerts={true} enableAnalytics={true}>
+                  <OptimizedProviderStack enableLazyLoading={true} enableComponentCaching={true} debugMode={false}>
+                    <Router>
+                      <Suspense fallback={<EnhancedLoadingFallback message="Carregando aplicação..." variant="detailed" />}>
+                        <Switch>
+                          {/* 🏠 PÁGINA INICIAL */}
+                          <Route path="/">
+                            <div data-testid="index-page">
+                              <Home />
                             </div>
-                          </EditorErrorBoundary>
-                        </Route>
+                          </Route>
 
-                        <Route path="/editor/templates">
-                          <div data-testid="editor-templates-page">
-                            <EditorTemplatesPage />
-                          </div>
-                        </Route>
-
-                        {/* 🔍 PÁGINA DE DIAGNÓSTICO DE TEMPLATES - TEMPORÁRIA */}
-                        <Route path="/debug/templates">
-                          <div data-testid="template-diagnostic-page">
-                            <TemplateDiagnosticPage />
-                          </div>
-                        </Route>
-
-                        <Route path="/editor/:funnelId">
-                          {(params) => (
+                          {/* 🚀 QUIZ EDITOR WYSIWYG - EDITOR OFICIAL ATIVO COM PREVIEW REAL */}
+                          <Route path="/editor">
                             <EditorErrorBoundary>
-                              <div data-testid="quiz-editor-wysiwyg-funnel-page">
-                                <UnifiedCRUDProvider funnelId={params.funnelId} autoLoad={true}>
-                                  <OptimizedEditorProvider>
-                                    {/* ✅ FASE 4 ATIVADA: Editor otimizado com funnelId dinâmico */}
+                              <div data-testid="quiz-editor-wysiwyg-page">
+                                <UnifiedCRUDProvider autoLoad={true}>
+                                  {/* ✅ ATIVADO: Editor WYSIWYG com componentes reais de produção */}
+                                  <QuizFunnelEditorWYSIWYG />
+                                </UnifiedCRUDProvider>
+                              </div>
+                            </EditorErrorBoundary>
+                          </Route>
+
+                          <Route path="/editor/templates">
+                            <div data-testid="editor-templates-page">
+                              <EditorTemplatesPage />
+                            </div>
+                          </Route>
+
+                          {/* 🔍 PÁGINA DE DIAGNÓSTICO DE TEMPLATES - TEMPORÁRIA */}
+                          <Route path="/debug/templates">
+                            <div data-testid="template-diagnostic-page">
+                              <TemplateDiagnosticPage />
+                            </div>
+                          </Route>
+
+                          <Route path="/editor/:funnelId">
+                            {(params) => (
+                              <EditorErrorBoundary>
+                                <div data-testid="quiz-editor-wysiwyg-funnel-page">
+                                  <UnifiedCRUDProvider funnelId={params.funnelId} autoLoad={true}>
+                                    {/* ✅ ATIVADO: Editor WYSIWYG com suporte a funnelId dinâmico */}
                                     <QuizFunnelEditorWYSIWYG funnelId={params.funnelId} />
-                                  </OptimizedEditorProvider>
-                                </UnifiedCRUDProvider>
-                              </div>
-                            </EditorErrorBoundary>
-                          )}
-                        </Route>
+                                  </UnifiedCRUDProvider>
+                                </div>
+                              </EditorErrorBoundary>
+                            )}
+                          </Route>
 
-                        {/* 🎯 QUIZ INTEGRADO COM BACKEND COMPLETO */}
-                        <Route path="/quiz">
-                          <QuizErrorBoundary>
-                            <QuizIntegratedPage />
-                          </QuizErrorBoundary>
-                        </Route>
-
-                        {/* 🤖 QUIZ COM IA - ROTA ESPECIAL */}
-                        <Route path="/quiz-ai-21-steps">
-                          <QuizAIPage />
-                        </Route>
-
-                        {/* 🎨 PÁGINA DE TEMPLATES GERAL */}
-                        <Route path="/templates">
-                          <TemplatesPage />
-                        </Route>
-
-                        {/* 🧭 NAVEGADOR DE TIPOS DE FUNIS */}
-                        <Route path="/funnel-types">
-                          <FunnelTypesPage />
-                        </Route>
-
-                        {/* 🔄 LEGACY EDITORS: removidos → manter apenas ModernUnifiedEditor */}
-
-                        {/* 🧪 QUIZ DE ESTILO PESSOAL */}
-                        <Route path="/quiz-estilo">
-                          <QuizErrorBoundary>
-                            <QuizEstiloPessoalPage />
-                          </QuizErrorBoundary>
-                        </Route>
-
-                        {/* 🧪 QUIZ DINÂMICO COM SUPORTE A DIFERENTES TEMPLATES */}
-                        <Route path="/quiz/:funnelId">
-                          {(params) => (
+                          {/* 🎯 QUIZ INTEGRADO COM BACKEND COMPLETO */}
+                          <Route path="/quiz">
                             <QuizErrorBoundary>
-                              <QuizEstiloPessoalPage funnelId={params.funnelId} />
+                              <QuizIntegratedPage />
                             </QuizErrorBoundary>
-                          )}
-                        </Route>
+                          </Route>
 
-                        <Route path="/resultado">
-                          <QuizErrorBoundary>
-                            <QuizEstiloPessoalPage />
-                          </QuizErrorBoundary>
-                        </Route>
+                          {/* 🤖 QUIZ COM IA - ROTA ESPECIAL */}
+                          <Route path="/quiz-ai-21-steps">
+                            <QuizAIPage />
+                          </Route>
 
-                        {/* 🔐 AUTENTICAÇÃO */}
-                        <Route path="/auth">
-                          <AuthPage />
-                        </Route>
+                          {/* 🎨 PÁGINA DE TEMPLATES GERAL */}
+                          <Route path="/templates">
+                            <TemplatesPage />
+                          </Route>
 
-                        {/* 🏢 ADMIN DASHBOARD - ROTAS UNIFICADAS */}
-                        <Route path="/admin/dashboard">
-                          <div data-testid="admin-dashboard-page">
-                            <ModernDashboardPage />
-                          </div>
-                        </Route>
+                          {/* 🧭 NAVEGADOR DE TIPOS DE FUNIS */}
+                          <Route path="/funnel-types">
+                            <FunnelTypesPage />
+                          </Route>
 
-                        <Route path="/admin/funnels">
-                          <div data-testid="admin-funnels-page">
-                            <ModernDashboardPage />
-                          </div>
-                        </Route>
+                          {/* 🔄 LEGACY EDITORS: removidos → manter apenas ModernUnifiedEditor */}
 
-                        <Route path="/admin/funnels/:id/edit">
-                          {(params) => (
-                            <EditorErrorBoundary>
-                              <div data-testid="admin-integrated-editor-page">
-                                <UnifiedCRUDProvider funnelId={params.id} autoLoad={true}>
-                                  <ModernUnifiedEditor funnelId={params.id} />
-                                </UnifiedCRUDProvider>
-                              </div>
-                            </EditorErrorBoundary>
-                          )}
-                        </Route>
+                          {/* 🧪 QUIZ DE ESTILO PESSOAL */}
+                          <Route path="/quiz-estilo">
+                            <QuizErrorBoundary>
+                              <QuizEstiloPessoalPage />
+                            </QuizErrorBoundary>
+                          </Route>
 
-                        <Route path="/admin/analytics">
-                          <div data-testid="admin-analytics-page">
-                            <ModernDashboardPage />
-                          </div>
-                        </Route>
+                          {/* 🧪 QUIZ DINÂMICO COM SUPORTE A DIFERENTES TEMPLATES */}
+                          <Route path="/quiz/:funnelId">
+                            {(params) => (
+                              <QuizErrorBoundary>
+                                <QuizEstiloPessoalPage funnelId={params.funnelId} />
+                              </QuizErrorBoundary>
+                            )}
+                          </Route>
 
-                        {/* 🎯 ADMIN DASHBOARD CONSOLIDADO */}
-                        <Route path="/admin">
-                          <div data-testid="modern-admin-dashboard">
-                            <ModernAdminDashboard />
-                          </div>
-                        </Route>
-                        <Route path="/admin/*">
-                          <div data-testid="modern-admin-dashboard-subroutes">
-                            <ModernAdminDashboard />
-                          </div>
-                        </Route>
-                        <Route path="/dashboard">
-                          <RedirectRoute to="/admin/dashboard" />
-                        </Route>
-                        <Route path="/dashboard/:page">
-                          {(params) => <RedirectRoute to={`/admin/${params.page}`} />}
-                        </Route>
+                          <Route path="/resultado">
+                            <QuizErrorBoundary>
+                              <QuizEstiloPessoalPage />
+                            </QuizErrorBoundary>
+                          </Route>
 
-                        {/* 🚀 PHASE 2 ENTERPRISE DASHBOARD */}
-                        <Route path="/phase2">
-                          <div data-testid="phase2-dashboard-page">
-                            <Phase2Dashboard />
-                          </div>
-                        </Route>
+                          {/* 🔐 AUTENTICAÇÃO */}
+                          <Route path="/auth">
+                            <AuthPage />
+                          </Route>
 
-                        {/* 🔧 DESENVOLVIMENTO */}
-                        <Route path="/diagnostics">
-                          <SystemDiagnosticPage />
-                        </Route>
+                          {/* 🏢 ADMIN DASHBOARD - ROTAS UNIFICADAS */}
+                          <Route path="/admin/dashboard">
+                            <div data-testid="admin-dashboard-page">
+                              <ModernDashboardPage />
+                            </div>
+                          </Route>
 
-                        {/* 🧪 TESTE CORREÇÃO SUPABASE */}
-                        <Route path="/test-supabase-fix">
-                          <SupabaseFixTestPage />
-                        </Route>
+                          <Route path="/admin/funnels">
+                            <div data-testid="admin-funnels-page">
+                              <ModernDashboardPage />
+                            </div>
+                          </Route>
 
-                        {/* 🗃️ TESTE MIGRAÇÃO INDEXEDDB */}
-                        <Route path="/test-indexeddb-migration">
-                          <IndexedDBMigrationTestPage />
-                        </Route>
+                          <Route path="/admin/funnels/:id/edit">
+                            {(params) => (
+                              <EditorErrorBoundary>
+                                <div data-testid="admin-integrated-editor-page">
+                                  <UnifiedCRUDProvider funnelId={params.id} autoLoad={true}>
+                                    <ModernUnifiedEditor funnelId={params.id} />
+                                  </UnifiedCRUDProvider>
+                                </div>
+                              </EditorErrorBoundary>
+                            )}
+                          </Route>
 
-                        {/* 🚫 PÁGINA 404 PERSONALIZADA */}
-                        <Route>
-                          <NotFound />
-                        </Route>
-                      </Switch>
-                    </Suspense>
-                  </Router>
-                  <Toaster />
-                </OptimizedProviderStack>
-              </MonitoringProvider>
-            </SecurityProvider>
-          </AuthProvider>
-        </CustomThemeProvider>
+                          <Route path="/admin/analytics">
+                            <div data-testid="admin-analytics-page">
+                              <ModernDashboardPage />
+                            </div>
+                          </Route>
+
+                          {/* 🎯 ADMIN DASHBOARD CONSOLIDADO */}
+                          <Route path="/admin">
+                            <div data-testid="modern-admin-dashboard">
+                              <ModernAdminDashboard />
+                            </div>
+                          </Route>
+                          <Route path="/admin/*">
+                            <div data-testid="modern-admin-dashboard-subroutes">
+                              <ModernAdminDashboard />
+                            </div>
+                          </Route>
+                          <Route path="/dashboard">
+                            <RedirectRoute to="/admin/dashboard" />
+                          </Route>
+                          <Route path="/dashboard/:page">
+                            {(params) => <RedirectRoute to={`/admin/${params.page}`} />}
+                          </Route>
+
+                          {/* 🚀 PHASE 2 ENTERPRISE DASHBOARD */}
+                          <Route path="/phase2">
+                            <div data-testid="phase2-dashboard-page">
+                              <Phase2Dashboard />
+                            </div>
+                          </Route>
+
+                          {/* 🔧 DESENVOLVIMENTO */}
+                          <Route path="/diagnostics">
+                            <SystemDiagnosticPage />
+                          </Route>
+
+                          {/* 🧪 TESTE CORREÇÃO SUPABASE */}
+                          <Route path="/test-supabase-fix">
+                            <SupabaseFixTestPage />
+                          </Route>
+
+                          {/* 🗃️ TESTE MIGRAÇÃO INDEXEDDB */}
+                          <Route path="/test-indexeddb-migration">
+                            <IndexedDBMigrationTestPage />
+                          </Route>
+
+                          {/* 🚫 PÁGINA 404 PERSONALIZADA */}
+                          <Route>
+                            <NotFound />
+                          </Route>
+                        </Switch>
+                      </Suspense>
+                    </Router>
+                    <Toaster />
+                  </OptimizedProviderStack>
+                </MonitoringProvider>
+              </SecurityProvider>
+            </AuthProvider>
+          </CustomThemeProvider>
+        </ThemeProvider>
       </GlobalErrorBoundary>
     </HelmetProvider>
   );
