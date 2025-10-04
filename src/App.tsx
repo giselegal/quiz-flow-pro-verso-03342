@@ -1,5 +1,11 @@
 /**
- * 🎯 APP.TSX com ROTEAMENTO SPA OTIMIZADO
+ * 🎯 APP.TSX com ROTEAMENTO SPA OT// 🚀 MODERN UNIFIED EDITOR - EDITOR OFICIAL (MAIS COMPLETO)
+const QuizFunnelEditorSimplified = lazy(() => import('./components/editor/quiz/QuizFunnelEditorSimplified').then(module => ({ default: module.default })));
+const QuizFunnelEditorWYSIWYG = lazy(() => import('./components/editor/quiz/QuizFunnelEditorWYSIWYG').then(module => ({ default: module.default })));
+const ModernUnifiedEditor = lazy(() => import('./pages/editor/ModernUnifiedEditor').then(module => ({ default: module.default })));
+
+// 🧩 SISTEMA MODULAR - NOVA ARQUITETURA
+const ModularQuizEditor = lazy(() => import('./components/editor/modular/ModularQuizEditor'));ADO
  * 
  * MELHORIAS v2.0:
  * ✅ Roteamento aninhado para admin
@@ -216,6 +222,33 @@ function App() {
                               <div data-testid="admin-integrated-editor-page">
                                 <UnifiedCRUDProvider funnelId={params.id} autoLoad={true}>
                                   <ModernUnifiedEditor funnelId={params.id} />
+                                </UnifiedCRUDProvider>
+                              </div>
+                            </EditorErrorBoundary>
+                          )}
+                        </Route>
+
+                        {/* 🧩 EDITOR MODULAR - NOVA ARQUITETURA */}
+                        <Route path="/editor">
+                          <EditorErrorBoundary>
+                            <div data-testid="modular-editor-page">
+                              <UnifiedCRUDProvider autoLoad={false}>
+                                <OptimizedEditorProvider>
+                                  <ModularQuizEditor />
+                                </OptimizedEditorProvider>
+                              </UnifiedCRUDProvider>
+                            </div>
+                          </EditorErrorBoundary>
+                        </Route>
+
+                        <Route path="/editor/:id">
+                          {(params) => (
+                            <EditorErrorBoundary>
+                              <div data-testid="modular-editor-with-id-page">
+                                <UnifiedCRUDProvider funnelId={params.id} autoLoad={true}>
+                                  <OptimizedEditorProvider>
+                                    <ModularQuizEditor />
+                                  </OptimizedEditorProvider>
                                 </UnifiedCRUDProvider>
                               </div>
                             </EditorErrorBoundary>
