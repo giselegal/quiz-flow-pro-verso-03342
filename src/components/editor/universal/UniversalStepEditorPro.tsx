@@ -1,7 +1,7 @@
 import React, { Suspense, useMemo, useState, useCallback, useRef } from 'react';
 import LazyBoundary from '@/components/common/LazyBoundary';
 import { useNotification } from '@/components/ui/Notification';
-import { useEditor } from '@/components/editor/EditorProviderMigrationAdapter';
+import { useEditor } from '@/hooks/useUnifiedEditor';
 import './UniversalStepEditorPro.css';
 import './UniversalStepEditorPro-premium.css';
 import { StepDndProvider } from '@/components/editor/dnd/StepDndProvider';
