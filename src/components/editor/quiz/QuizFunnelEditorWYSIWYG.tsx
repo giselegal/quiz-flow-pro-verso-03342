@@ -124,15 +124,18 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
 
         if (existing && existing.length) {
             // Usar etapas modulares existentes
+            console.log('🧩 Carregando etapas modulares existentes:', existing.length);
             setModularSteps(existing.map(s => ({ ...s })));
             setSelectedId(existing[0].id);
         } else {
             // Criar etapas modulares padrão
+            console.log('🧩 Criando etapas modulares padrão');
             const defaultModularSteps: ModularStep[] = [
                 createModularStep('intro'),
                 createModularStep('question'),
                 createModularStep('result')
             ];
+            console.log('🧩 Etapas criadas:', defaultModularSteps);
             setModularSteps(defaultModularSteps);
             setSelectedId(defaultModularSteps[0].id);
         }
@@ -140,7 +143,7 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
         // Sistema modular: sempre usar componentes atômicos por padrão
     }, [crud.currentFunnel]);
 
-    const selectedStep = steps.find(s => s.id === selectedId);
+    const selectedModularStep = modularSteps.find(s => s.id === selectedId);
 
     // Função para criar step modular
 
@@ -798,85 +801,24 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
 
                     {/* Configuração do Componente Selecionado */}
                     <div className="flex-1 overflow-auto p-3 text-xs space-y-4">
-                        {selectedStep && (
+                        {selectedModularStep && (
                             <div className="space-y-2">
                                 <label className="block text-[10px] uppercase tracking-wide text-muted-foreground">
-                                    Configurar Componente
+                                    Etapa Modular Selecionada
                                 </label>
                                 <div className="bg-blue-50 p-2 rounded border">
                                     <div className="font-medium text-blue-700 mb-1">
-                                        {selectedStep.type.toUpperCase()}
+                                        {selectedModularStep.type.toUpperCase()}
                                     </div>
                                     <div className="text-[10px] text-blue-600">
-                                        Componente selecionado para edição
+                                        Use os componentes atômicos para editar
                                     </div>
                                 </div>
-                                <select
-                                    className="w-full border rounded px-2 py-1 text-xs"
-                                    value={selectedStep.type}
-                                    onChange={e => updateStep(selectedStep.id, { type: e.target.value as any })}
-                                >
-                                    {STEP_TYPES.map(t => <option key={t} value={t}>{t}</option>)}
-                                </select>
+                                <div className="text-xs text-gray-500 p-2 border rounded">
+                                    Sistema modular ativo - edite via componentes atômicos no canvas
+                                </div>
 
-                                {selectedStep.type === 'question' && (
-                                    <div className="pt-2 border-t space-y-2">
-                                        <div className="flex items-center justify-between text-[10px] font-medium">
-                                            <span>Opções</span>
-                                            <Button size="sm" variant="ghost" onClick={() =>
-                                                updateStep(selectedStep.id, {
-                                                    options: [...(selectedStep.options || []),
-                                                    { id: `opt-${Date.now()}`, text: 'Nova opção' }]
-                                                })
-                                            }>+ Add</Button>
-                                        </div>
-                                        <div className="space-y-2">
-                                            {(selectedStep.options || []).map((opt: any, oi: number) => (
-                                                <div key={opt.id} className="border rounded p-2 space-y-1">
-                                                    <div className="flex items-center gap-1">
-                                                        <input
-                                                            className="flex-1 border rounded px-1 py-0.5 text-[11px]"
-                                                            placeholder="Texto da opção"
-                                                            value={opt.text}
-                                                            onChange={(e) => {
-                                                                const clone = [...(selectedStep.options || [])];
-                                                                clone[oi] = { ...clone[oi], text: e.target.value };
-                                                                updateStep(selectedStep.id, { options: clone });
-                                                            }}
-                                                        />
-                                                        <Button size="icon" variant="ghost" className="h-5 w-5"
-                                                            onClick={() => {
-                                                                const clone = (selectedStep.options || []).filter((_: any, i: number) => i !== oi);
-                                                                updateStep(selectedStep.id, { options: clone });
-                                                            }}>
-                                                            <Trash2 className="w-3 h-3" />
-                                                        </Button>
-                                                    </div>
-                                                    <input
-                                                        className="w-full border rounded px-1 py-0.5 text-[11px]"
-                                                        placeholder="URL da imagem (opcional)"
-                                                        value={opt.image || ''}
-                                                        onChange={(e) => {
-                                                            const clone = [...(selectedStep.options || [])];
-                                                            clone[oi] = { ...clone[oi], image: e.target.value || undefined };
-                                                            updateStep(selectedStep.id, { options: clone });
-                                                        }}
-                                                    />
-                                                    {opt.image && (
-                                                        <img
-                                                            src={opt.image}
-                                                            alt="Preview"
-                                                            className="w-full h-12 object-cover rounded"
-                                                            onError={(e) => {
-                                                                (e.target as HTMLImageElement).style.display = 'none';
-                                                            }}
-                                                        />
-                                                    )}
-                                                </div>
-                                            ))}
-                                        </div>
-                                    </div>
-                                )}
+
                             </div>
                         )}
                     </div>
@@ -979,7 +921,7 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
                 {showPropertiesPanel && (
                     <div className="w-80">
                         <QuizPropertiesPanel
-                            selectedStep={selectedBlockId ? selectedStep : null}
+                            selectedStep={null}
                             onUpdateStep={updateStep}
                             onClose={handlePropertiesPanelClose}
                             onDeleteStep={removeStep}
