@@ -8,7 +8,8 @@
  */
 
 import React, { createContext, useContext, ReactNode } from 'react';
-import { EditorProvider as ModernEditorProvider, useEditor as useModernEditor, useEditorOptional } from './EditorProvider';
+import { OptimizedEditorProvider, useEditor as useOptimizedEditor, useEditorOptional } from './OptimizedEditorProvider';
+import { EditorProvider as LegacyEditorProvider, useEditor as useLegacyEditor } from './EditorProvider';
 import type { EditorContextValue } from './EditorProvider';
 
 /**

@@ -1,7 +1,25 @@
 /**
  * Editor Components Index
  * Exportações centralizadas dos componentes do editor
+ * 
+ * 🎯 FASE 4 - SISTEMAS UNIFICADOS:
+ * ✅ OptimizedEditorProvider (novo sistema principal)
+ * ✅ useEditor unificado (@/hooks/useUnifiedEditor)
+ * ✅ Compatibilidade com legacy providers
  */
+
+// ============================================================================
+// FASE 4 - PROVIDERS OTIMIZADOS
+// ============================================================================
+
+// Provider principal otimizado (recomendado)
+export { OptimizedEditorProvider, useEditor as useOptimizedEditor, useEditorOptional } from './OptimizedEditorProvider';
+
+// Hook unificado canônico
+export { useEditor, useEditorOptional as useUnifiedEditorOptional } from '@/hooks/useUnifiedEditor';
+
+// Legacy providers (manter durante transição)
+export { EditorProviderMigrationAdapter } from './EditorProviderMigrationAdapter';
 
 // ============================================================================
 // COMPONENTES ORIGINAIS
