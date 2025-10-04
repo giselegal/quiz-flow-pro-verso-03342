@@ -23,6 +23,19 @@ import SelectableBlock from '@/components/editor/SelectableBlock';
 import QuizPropertiesPanel from '@/components/editor/QuizPropertiesPanel';
 import DragDropManager from '@/components/editor/DragDropManager';
 
+// 🧩 NOVO: Sistema de Componentes Atômicos Modulares
+import {
+    ModularStepContainer,
+    ModularStep,
+    AtomicComponent,
+    AtomicComponentType,
+    createModularStep,
+    createAtomicComponent,
+    reorderComponents,
+    insertComponent,
+    removeComponent
+} from '@/components/editor/atomic-components';
+
 interface QuizFunnelEditorProps {
     funnelId?: string;
     templateId?: string;
@@ -101,18 +114,35 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
     const [isPreviewMode, setIsPreviewMode] = useState(false);
     const [dragEnabled, setDragEnabled] = useState(true);
 
-    // Carregar steps iniciais - Sistema Unificado usando componentes editáveis
+    // 🧩 NOVOS: Estados para sistema de componentes atômicos
+    const [modularSteps, setModularSteps] = useState<ModularStep[]>([]);
+    const [selectedComponentId, setSelectedComponentId] = useState<string>('');
+    const [useAtomicSystem, setUseAtomicSystem] = useState(true);
+
+    // Carregar steps iniciais - Sistema Atômico vs Sistema Editável
     useEffect(() => {
-        const existing = (crud.currentFunnel as any)?.quizSteps as EditableQuizStep[] | undefined;
-        if (existing && existing.length) {
-            setSteps(existing.map(s => ({ ...s })));
-            setSelectedId(existing[0].id);
-            return;
+        if (useAtomicSystem) {
+            // 🧩 Sistema Atômico: Inicializar com etapas modulares
+            const defaultModularSteps: ModularStep[] = [
+                createModularStep('intro'),
+                createModularStep('question'),
+                createModularStep('result')
+            ];
+            setModularSteps(defaultModularSteps);
+            setSelectedId(defaultModularSteps[0].id);
+        } else {
+            // Sistema Editável: Manter compatibilidade
+            const existing = (crud.currentFunnel as any)?.quizSteps as EditableQuizStep[] | undefined;
+            if (existing && existing.length) {
+                setSteps(existing.map(s => ({ ...s })));
+                setSelectedId(existing[0].id);
+                return;
+            }
+            const conv: EditableQuizStep[] = Object.entries(QUIZ_STEPS).map(([id, step]) => ({ id, ...step as QuizStep }));
+            setSteps(conv);
+            if (conv.length) setSelectedId(conv[0].id);
         }
-        const conv: EditableQuizStep[] = Object.entries(QUIZ_STEPS).map(([id, step]) => ({ id, ...step as QuizStep }));
-        setSteps(conv);
-        if (conv.length) setSelectedId(conv[0].id);
-    }, [crud.currentFunnel]);
+    }, [crud.currentFunnel, useAtomicSystem]);
 
     const selectedStep = steps.find(s => s.id === selectedId);
 
@@ -259,6 +289,109 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
             }
         }, 100);
     }, []);
+
+    // 🧩 HANDLERS PARA SISTEMA ATÔMICO
+    const handleUpdateModularStep = useCallback((stepId: string, updates: Partial<ModularStep>) => {
+        setModularSteps(prev => prev.map(step =>
+            step.id === stepId ? { ...step, ...updates } : step
+        ));
+    }, []);
+
+    const handleUpdateAtomicComponent = useCallback((stepId: string, componentId: string, updates: Partial<AtomicComponent>) => {
+        setModularSteps(prev => prev.map(step => {
+            if (step.id !== stepId) return step;
+
+            return {
+                ...step,
+                components: step.components.map(comp =>
+                    comp.id === componentId ? { ...comp, ...updates } as AtomicComponent : comp
+                )
+            };
+        }));
+    }, []);
+
+    const handleSelectAtomicComponent = useCallback((componentId: string) => {
+        setSelectedComponentId(componentId);
+        setShowPropertiesPanel(true);
+    }, []);
+
+    const handleDeleteAtomicComponent = useCallback((stepId: string, componentId: string) => {
+        setModularSteps(prev => prev.map(step => {
+            if (step.id !== stepId) return step;
+
+            return {
+                ...step,
+                components: removeComponent(step.components, componentId)
+            };
+        }));
+
+        // Se o componente deletado estava selecionado, limpar seleção
+        if (selectedComponentId === componentId) {
+            setSelectedComponentId('');
+        }
+    }, [selectedComponentId]);
+
+    const handleDuplicateAtomicComponent = useCallback((stepId: string, componentId: string) => {
+        setModularSteps(prev => prev.map(step => {
+            if (step.id !== stepId) return step;
+
+            const component = step.components.find(c => c.id === componentId);
+            if (!component) return step;
+
+            const duplicatedComponent = {
+                ...component,
+                id: `${component.id}-copy-${Date.now()}`,
+                order: component.order + 0.1
+            };
+
+            return {
+                ...step,
+                components: [...step.components, duplicatedComponent]
+                    .sort((a, b) => a.order - b.order)
+                    .map((comp, index) => ({ ...comp, order: index }))
+            };
+        }));
+    }, []);
+
+    const handleReorderAtomicComponents = useCallback((stepId: string, fromIndex: number, toIndex: number) => {
+        setModularSteps(prev => prev.map(step => {
+            if (step.id !== stepId) return step;
+
+            return {
+                ...step,
+                components: reorderComponents(step.components, fromIndex, toIndex)
+            };
+        }));
+    }, []);
+
+    const handleInsertAtomicComponent = useCallback((stepId: string, afterComponentId: string | null, componentType: AtomicComponentType) => {
+        setModularSteps(prev => prev.map(step => {
+            if (step.id !== stepId) return step;
+
+            const newComponent = createAtomicComponent(componentType);
+
+            return {
+                ...step,
+                components: insertComponent(step.components, afterComponentId, newComponent)
+            };
+        }));
+    }, []);
+
+    const handleAddModularStep = useCallback((type: 'intro' | 'question' | 'result' | 'custom' = 'custom') => {
+        const newStep = createModularStep(type);
+        setModularSteps(prev => [...prev, newStep]);
+        setSelectedId(newStep.id);
+    }, []);
+
+    const handleRemoveModularStep = useCallback((stepId: string) => {
+        setModularSteps(prev => {
+            const filtered = prev.filter(step => step.id !== stepId);
+            if (selectedId === stepId && filtered.length > 0) {
+                setSelectedId(filtered[0].id);
+            }
+            return filtered;
+        });
+    }, [selectedId]);
 
     // Mock de resultados para o componente ResultStep
     const mockResults = {
@@ -445,15 +578,17 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
                 {/* COL 1 - SEQUÊNCIA DE ETAPAS */}
                 <div className="w-60 border-r flex flex-col">
                     <div className="p-3 flex items-center justify-between border-b">
-                        <span className="text-xs font-semibold">Sequência do Funil</span>
+                        <span className="text-xs font-semibold">
+                            {useAtomicSystem ? 'Etapas Modulares' : 'Sequência do Funil'}
+                        </span>
                         <Badge variant="secondary" className="text-[10px]">
-                            {steps.length}
+                            {useAtomicSystem ? modularSteps.length : steps.length}
                         </Badge>
                     </div>
                     <div className="flex-1 overflow-auto text-xs">
                         {/* Lista Reordenável de Steps com DragDropManager */}
                         <DragDropManager
-                            items={steps}
+                            items={useAtomicSystem ? modularSteps : steps}
                             onReorder={handleStepReorder}
                             enabled={dragEnabled}
                             renderItem={(step, index, isDragging) => {
@@ -489,16 +624,29 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
 
                                             {/* Preview do conteúdo */}
                                             <div className="text-[10px] text-gray-500 mb-2 truncate">
-                                                {step.type === 'intro' && ((step as any).title || 'Introdução do Quiz')}
-                                                {step.type === 'question' && ((step as any).questionText || 'Pergunta do Quiz')}
-                                                {step.type === 'strategic-question' && ((step as any).questionText || 'Pergunta Estratégica')}
-                                                {step.type === 'transition' && ((step as any).title || 'Tela de Transição')}
-                                                {step.type === 'transition-result' && ((step as any).title || 'Preparando Resultado')}
-                                                {step.type === 'result' && ((step as any).title || 'Resultado do Quiz')}
-                                                {step.type === 'offer' && 'Oferta Personalizada'}
-                                            </div>
-
-                                            {/* Controles de Ação */}
+                                                {useAtomicSystem ? (
+                                                    // Visualização para sistema atômico
+                                                    (() => {
+                                                        const modularStep = modularSteps.find(s => s.id === step.id);
+                                                        if (modularStep && modularStep.components.length > 0) {
+                                                            const firstComponent = modularStep.components[0];
+                                                            return `${modularStep.components.length} componentes - ${firstComponent.type}`;
+                                                        }
+                                                        return 'Etapa vazia';
+                                                    })()
+                                                ) : (
+                                                    // Visualização para sistema original
+                                                    <>
+                                                        {step.type === 'intro' && ((step as any).title || 'Introdução do Quiz')}
+                                                        {step.type === 'question' && ((step as any).questionText || 'Pergunta do Quiz')}
+                                                        {step.type === 'strategic-question' && ((step as any).questionText || 'Pergunta Estratégica')}
+                                                        {step.type === 'transition' && ((step as any).title || 'Tela de Transição')}
+                                                        {step.type === 'transition-result' && ((step as any).title || 'Preparando Resultado')}
+                                                        {step.type === 'result' && ((step as any).title || 'Resultado do Quiz')}
+                                                        {step.type === 'offer' && 'Oferta Personalizada'}
+                                                    </>
+                                                )}
+                                            </div>                                            {/* Controles de Ação */}
                                             <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                                                 <Button
                                                     size="icon"
@@ -753,27 +901,104 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
                             }
                         }}
                     >
-                        {steps.length === 0 ? (
-                            <div className="flex items-center justify-center h-full text-sm text-muted-foreground">
-                                <div className="text-center">
-                                    <div className="text-lg mb-2">🎯</div>
-                                    <div>Nenhum step criado ainda</div>
-                                    <div className="text-xs">Use a sidebar para adicionar steps</div>
+                        {/* 🎛️ Toggle entre Sistema Editável e Sistema Atômico */}
+                        <div className="mb-4 flex items-center gap-2 p-2 bg-gray-50 rounded-lg">
+                            <Button
+                                size="sm"
+                                variant={!useAtomicSystem ? "default" : "outline"}
+                                onClick={() => setUseAtomicSystem(false)}
+                                className="h-7 text-xs"
+                            >
+                                📝 Sistema Editável
+                            </Button>
+                            <Button
+                                size="sm"
+                                variant={useAtomicSystem ? "default" : "outline"}
+                                onClick={() => setUseAtomicSystem(true)}
+                                className="h-7 text-xs"
+                            >
+                                🧩 Sistema Atômico
+                            </Button>
+                        </div>
+
+                        {useAtomicSystem ? (
+                            // 🧩 SISTEMA ATÔMICO: Componentes modulares independentes
+                            modularSteps.length === 0 ? (
+                                <div className="flex items-center justify-center h-full text-sm text-muted-foreground">
+                                    <div className="text-center">
+                                        <div className="text-lg mb-2">🧩</div>
+                                        <div>Nenhuma etapa criada ainda</div>
+                                        <div className="text-xs mb-4">Use a sidebar para adicionar etapas modulares</div>
+                                        <Button
+                                            size="sm"
+                                            onClick={() => handleAddModularStep('intro')}
+                                            className="text-xs"
+                                        >
+                                            Criar primeira etapa
+                                        </Button>
+                                    </div>
                                 </div>
-                            </div>
-                        ) : selectedStep ? (
-                            // 🚀 FASE 3: COMPONENTES EDITÁVEIS ENCAPSULADOS - Sistema Unificado
-                            <div className="p-4">
-                                {renderRealComponent(selectedStep, steps.findIndex(s => s.id === selectedStep.id))}
-                            </div>
+                            ) : (
+                                (() => {
+                                    const selectedModularStep = modularSteps.find(s => s.id === selectedId);
+                                    return selectedModularStep ? (
+                                        <ModularStepContainer
+                                            step={selectedModularStep}
+                                            isEditable={previewMode === 'edit'}
+                                            selectedComponentId={selectedComponentId}
+                                            onUpdateStep={(updates) => handleUpdateModularStep(selectedModularStep.id, updates)}
+                                            onUpdateComponent={(componentId, updates) =>
+                                                handleUpdateAtomicComponent(selectedModularStep.id, componentId, updates)
+                                            }
+                                            onSelectComponent={handleSelectAtomicComponent}
+                                            onDeleteComponent={(componentId) =>
+                                                handleDeleteAtomicComponent(selectedModularStep.id, componentId)
+                                            }
+                                            onDuplicateComponent={(componentId) =>
+                                                handleDuplicateAtomicComponent(selectedModularStep.id, componentId)
+                                            }
+                                            onReorderComponents={(fromIndex, toIndex) =>
+                                                handleReorderAtomicComponents(selectedModularStep.id, fromIndex, toIndex)
+                                            }
+                                            onInsertComponent={(afterComponentId, componentType) =>
+                                                handleInsertAtomicComponent(selectedModularStep.id, afterComponentId, componentType)
+                                            }
+                                        />
+                                    ) : (
+                                        <div className="flex items-center justify-center h-full text-sm text-muted-foreground">
+                                            <div className="text-center">
+                                                <div className="text-lg mb-2">📝</div>
+                                                <div>Selecione uma etapa para editar</div>
+                                                <div className="text-xs">Use a sidebar à esquerda para selecionar</div>
+                                            </div>
+                                        </div>
+                                    );
+                                })()
+                            )
                         ) : (
-                            <div className="flex items-center justify-center h-full text-sm text-muted-foreground">
-                                <div className="text-center">
-                                    <div className="text-lg mb-2">📝</div>
-                                    <div>Selecione um step para editar</div>
-                                    <div className="text-xs">Use a sidebar à esquerda para selecionar</div>
+                            // 📝 SISTEMA EDITÁVEL: Componentes encapsulados por etapa
+                            steps.length === 0 ? (
+                                <div className="flex items-center justify-center h-full text-sm text-muted-foreground">
+                                    <div className="text-center">
+                                        <div className="text-lg mb-2">🎯</div>
+                                        <div>Nenhum step criado ainda</div>
+                                        <div className="text-xs">Use a sidebar para adicionar steps</div>
+                                    </div>
                                 </div>
-                            </div>
+                            ) : selectedStep ? (
+                                // 🚀 FASE 3: COMPONENTES EDITÁVEIS ENCAPSULADOS - Sistema Unificado
+                                <div className="p-4">
+                                    {renderRealComponent(selectedStep, steps.findIndex(s => s.id === selectedStep.id))}
+                                </div>
+                            ) : (
+                                <div className="flex items-center justify-center h-full text-sm text-muted-foreground">
+                                    <div className="text-center">
+                                        <div className="text-lg mb-2">📝</div>
+                                        <div>Selecione um step para editar</div>
+                                        <div className="text-xs">Use a sidebar à esquerda para selecionar</div>
+                                    </div>
+                                </div>
+                            )
                         )}
                     </div>
                 </div>
