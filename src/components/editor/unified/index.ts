@@ -47,6 +47,7 @@ export type {
 
 // 🔄 SISTEMA DE VERSIONAMENTO
 export { VersioningPanel } from './VersioningPanel';
+
 // Hooks e serviços serão importados quando implementados
 
 // 👥 SISTEMA DE COLABORAÇÃO
@@ -154,7 +155,15 @@ export {
   type RenderMode
 } from './UnifiedStepRenderer';
 
-// Re-export do stepRegistry para conveniência
+// 🚀 OTIMIZAÇÕES DE PERFORMANCE
+export {
+  STEP_CHUNKS_CONFIG,
+  PRELOAD_STRATEGY,
+  PERFORMANCE_TARGETS,
+  getChunkForStep,
+  getPreloadSteps,
+  getWebpackChunkConfig
+} from './ChunkOptimization';// Re-export do stepRegistry para conveniência
 export { stepRegistry } from '@/components/step-registry/StepRegistry';
 
 // Export do registro de steps de produção

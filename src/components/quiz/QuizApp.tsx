@@ -1,12 +1,10 @@
 'use client';
 
 import { useQuizState } from '../../hooks/useQuizState';
-import IntroStep from './IntroStep';
-import QuestionStep from './QuestionStep';
-import StrategicQuestionStep from './StrategicQuestionStep';
-import TransitionStep from './TransitionStep';
-import ResultStep from './ResultStep';
-import OfferStep from './OfferStep';
+
+// 🎯 FASE 3: Sistema Unificado de Renderização
+import { UnifiedStepRenderer, registerProductionSteps } from '@/components/editor/unified';
+import { useEffect } from 'react';
 
 /**
  * 🎯 COMPONENTE PRINCIPAL DO QUIZ - GISELE GALVÃO
@@ -23,6 +21,11 @@ interface QuizAppProps {
 }
 
 export default function QuizApp({ funnelId }: QuizAppProps) {
+    // 🎯 FASE 3: Registrar steps de produção no stepRegistry (uma vez)
+    useEffect(() => {
+        registerProductionSteps();
+    }, []);
+
     const {
         state,
         currentStepData,
@@ -34,8 +37,40 @@ export default function QuizApp({ funnelId }: QuizAppProps) {
         getOfferKey,
     } = useQuizState(funnelId);
 
-    // Resultado já é calculado automaticamente durante as questões estratégicas
-    // O cálculo ocorre em tempo real conforme o usuário responde
+    // 🎯 FASE 3: Mapear step atual para stepId do registry
+    const getStepIdFromCurrentStep = (currentStep: string): string => {
+        // Mapear steps do quiz para IDs do registry
+        const stepMapping: Record<string, string> = {
+            'step-1': 'step-01',  // intro
+            'step-2': 'step-02',  // question 1
+            'step-3': 'step-03',  // question 2
+            'step-4': 'step-04',  // question 3
+            'step-5': 'step-05',  // question 4
+            'step-6': 'step-06',  // question 5
+            'step-7': 'step-07',  // question 6
+            'step-8': 'step-08',  // question 7
+            'step-9': 'step-09',  // question 8
+            'step-10': 'step-10', // question 9
+            'step-11': 'step-11', // question 10
+            'step-12': 'step-12', // strategic question
+            'step-13': 'step-13', // transition
+            'step-14': 'step-14', // result
+            'step-15': 'step-15', // offer
+        };
+        return stepMapping[currentStep] || 'step-01';
+    };
+
+    const currentStepId = getStepIdFromCurrentStep(state.currentStep);
+
+    // Preparar quiz state para UnifiedStepRenderer
+    const unifiedQuizState = {
+        currentStep: parseInt(state.currentStep.replace('step-', '')) || 1,
+        userName: state.userProfile.userName,
+        answers: state.answers,
+        strategicAnswers: state.userProfile.strategicAnswers,
+        resultStyle: state.userProfile.resultStyle,
+        secondaryStyles: state.userProfile.secondaryStyles
+    };
 
     if (!currentStepData) {
         return (
@@ -67,85 +102,43 @@ export default function QuizApp({ funnelId }: QuizAppProps) {
                     </div>
                 )}
 
-                {/* Renderização da Etapa Atual */}
-                {currentStepData.type === 'intro' && (
-                    <IntroStep
-                        data={currentStepData}
-                        onNameSubmit={(name: string) => {
-                            setUserName(name);
-                            nextStep();
-                        }}
-                    />
-                )}
-
-                {currentStepData.type === 'question' && (
-                    <div className="bg-[#fefefe] text-[#5b4135] min-h-screen">
-                        <div className="max-w-6xl mx-auto px-4 py-8">
-                            <QuestionStep
-                                data={currentStepData}
-                                currentAnswers={state.answers[state.currentStep] || []}
-                                onAnswersChange={(answers: string[]) => {
-                                    addAnswer(state.currentStep, answers);
-                                    // Avanço automático após 1 segundo quando completo
-                                    if (answers.length === currentStepData.requiredSelections) {
-                                        setTimeout(() => nextStep(), 1000);
+                {/* 🎯 FASE 3: Renderização Unificada */}
+                <div className="bg-[#fefefe] text-[#5b4135] min-h-screen">
+                    <div className="max-w-6xl mx-auto px-4 py-8">
+                        <UnifiedStepRenderer
+                            stepId={currentStepId}
+                            mode="production"
+                            stepProps={currentStepData}
+                            quizState={unifiedQuizState}
+                            onStepUpdate={(stepId, updates) => {
+                                // Processar atualizações específicas por tipo
+                                if (updates.userName) {
+                                    setUserName(updates.userName);
+                                }
+                                if (updates[state.currentStep]) {
+                                    // Atualizar respostas
+                                    const answers = updates[state.currentStep];
+                                    if (Array.isArray(answers)) {
+                                        addAnswer(state.currentStep, answers);
                                     }
-                                }}
-                            />
-                        </div>
+                                }
+                                if (currentStepData.questionText && updates[state.currentStep]) {
+                                    // Strategic question
+                                    addStrategicAnswer(currentStepData.questionText, updates[state.currentStep]);
+                                }
+                            }}
+                            onNext={() => {
+                                // Auto-advance lógica já implementada nos adapters
+                                nextStep();
+                            }}
+                            onPrevious={() => {
+                                // Implementar navegação para trás se necessário
+                                console.log('Navegar para step anterior');
+                            }}
+                            className="unified-production-step"
+                        />
                     </div>
-                )}
-
-                {currentStepData.type === 'strategic-question' && (
-                    <div className="bg-[#fefefe] text-[#5b4135] min-h-screen">
-                        <div className="max-w-6xl mx-auto px-4 py-8">
-                            <StrategicQuestionStep
-                                data={currentStepData}
-                                currentAnswer={state.answers[state.currentStep]?.[0] || ''}
-                                onAnswerChange={(answer: string) => {
-                                    addAnswer(state.currentStep, [answer]);
-                                    addStrategicAnswer(currentStepData.questionText!, answer);
-                                    setTimeout(() => nextStep(), 500);
-                                }}
-                            />
-                        </div>
-                    </div>
-                )}
-
-                {(currentStepData.type === 'transition' || currentStepData.type === 'transition-result') && (
-                    <div className="bg-[#fefefe] text-[#5b4135] min-h-screen">
-                        <div className="max-w-6xl mx-auto px-4 py-8">
-                            <TransitionStep
-                                data={currentStepData}
-                                onComplete={() => nextStep()}
-                            />
-                        </div>
-                    </div>
-                )}
-
-                {currentStepData.type === 'result' && (
-                    <div className="bg-[#fefefe] text-[#5b4135] min-h-screen">
-                        <div className="max-w-6xl mx-auto px-4 py-8">
-                            <ResultStep
-                                data={currentStepData}
-                                userProfile={state.userProfile}
-                                scores={state.scores}
-                            />
-                        </div>
-                    </div>
-                )}
-
-                {currentStepData.type === 'offer' && (
-                    <div className="bg-[#fefefe] text-[#5b4135] min-h-screen">
-                        <div className="max-w-6xl mx-auto px-4 py-8">
-                            <OfferStep
-                                data={currentStepData}
-                                userProfile={state.userProfile}
-                                offerKey={getOfferKey()}
-                            />
-                        </div>
-                    </div>
-                )}
+                </div>
             </div>
         </div>
     );

@@ -4,23 +4,38 @@ import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { cn } from '@/lib/utils';
 import { getPreloadSteps, getChunkForStep, PERFORMANCE_TARGETS } from './ChunkOptimization';
 
-/**
- * 🎯 UNIFIED STEP RENDERER - FASE 3
- * 
- * Componente central que unifica os 3 sistemas de renderização:
- * 1. QuizFunnelEditorWYSIWYG (preview/edição)
- * 2. Componentes de produção (QuizApp.tsx)  
- * 3. StepRegistry (sistema modular)
- * 
- * BENEFÍCIOS:
- * ✅ Fonte única de verdade para renderização
- * ✅ Elimina duplicação de código (~30% redução bundle)
- * ✅ Modos unificados: preview | production | editable
- * ✅ Lazy loading otimizado
- * ✅ Manutenção centralizada
- */
+preloadSteps.forEach(async (preloadStepId) => {
+    if (preloadStepId !== stepId && preloadStepId in LazyStepComponents) {
+        try {
+            // Pré-carregar componente em background
+            const chunkName = getChunkForStep(preloadStepId);
+            const maxLoadTime = PERFORMANCE_TARGETS.loadingTargets[chunkName as keyof typeof PERFORMANCE_TARGETS.loadingTargets] || 500;
 
-export type RenderMode = 'preview' | 'production' | 'editable';
+            // Timeout para evitar preload muito lento
+            const preloadPromise = LazyStepComponents[preloadStepId as LazyStepId]();
+            const timeoutPromise = new Promise((_, reject) =>
+                setTimeout(() => reject(new Error('Preload timeout')), maxLoadTime)
+            );
+
+            await Promise.race([preloadPromise, timeoutPromise]);
+
+            if (process.env.NODE_ENV === 'development') {
+                console.log(`✅ Preloaded step: ${preloadStepId} (chunk: ${chunkName})`);
+            }
+        } catch (error) {
+            // Falha silenciosa no preload - não bloqueia a UI
+            if (process.env.NODE_ENV === 'development') {
+                console.warn(`⚠️ Failed to preload step ${preloadStepId}:`, error);
+            }
+        }
+    }
+});
+    }
+  }, [stepId, mode]);
+
+// ⚠️ Step não encontradoom '@/components/ui/loading-spinner';
+import { cn } from '@/lib/utils';
+import { getPreloadSteps, getChunkForStep, PERFORMANCE_TARGETS } from './ChunkOptimization';
 
 /**
  * 🚀 LAZY LOADING OPTIMIZADO - FASE 3
@@ -58,6 +73,24 @@ const LazyStepComponents = {
 } as const;
 
 type LazyStepId = keyof typeof LazyStepComponents;
+
+/**
+ * 🎯 UNIFIED STEP RENDERER - FASE 3
+ * 
+ * Componente central que unifica os 3 sistemas de renderização:
+ * 1. QuizFunnelEditorWYSIWYG (preview/edição)
+ * 2. Componentes de produção (QuizApp.tsx)  
+ * 3. StepRegistry (sistema modular)
+ * 
+ * BENEFÍCIOS:
+ * ✅ Fonte única de verdade para renderização
+ * ✅ Elimina duplicação de código (~30% redução bundle)
+ * ✅ Modos unificados: preview | production | editable
+ * ✅ Lazy loading otimizado
+ * ✅ Manutenção centralizada
+ */
+
+export type RenderMode = 'preview' | 'production' | 'editable';
 
 export interface UnifiedStepRendererProps {
     /** ID do step no StepRegistry */
@@ -104,6 +137,11 @@ export interface UnifiedStepRendererProps {
 }
 
 /**
+ * 🎨 UNIFIED STEP RENDERER
+ * 
+ * Renderiza qualquer step através do StepRegistry unificado
+ */
+/**
  * 🎯 SELETOR DE COMPONENTE OTIMIZADO
  * 
  * Determina se usa lazy loading ou registry baseado no modo e stepId
@@ -139,11 +177,6 @@ const useOptimizedStepComponent = (stepId: string, mode: RenderMode) => {
     }, [stepId, mode]);
 };
 
-/**
- * 🎨 UNIFIED STEP RENDERER
- * 
- * Renderiza qualquer step através do StepRegistry unificado
- */
 export const UnifiedStepRenderer: React.FC<UnifiedStepRendererProps> = ({
     stepId,
     mode = 'production',
@@ -163,50 +196,8 @@ export const UnifiedStepRenderer: React.FC<UnifiedStepRendererProps> = ({
     isSelected = false,
     isEditable = false,
 }) => {
-    // 🚀 OTIMIZAÇÃO: Usar lazy loading para produção, registry para editor
-    const stepComponentInfo = useOptimizedStepComponent(stepId, mode);
-
-    // 🎯 PRELOADING INTELIGENTE - Carregar próximos steps em background
-    useEffect(() => {
-        if (mode === 'production') {
-            const preloadSteps = getPreloadSteps(stepId);
-
-            preloadSteps.forEach(async (preloadStepId: string) => {
-                if (preloadStepId !== stepId && preloadStepId in LazyStepComponents) {
-                    try {
-                        // Pré-carregar componente em background
-                        const chunkName = getChunkForStep(preloadStepId);
-                        const maxLoadTime = PERFORMANCE_TARGETS.loadingTargets[chunkName as keyof typeof PERFORMANCE_TARGETS.loadingTargets] || 500;
-
-                        // Usar preload baseado no stepId específico (sem dynamic imports)
-                        if (!(preloadStepId in LazyStepComponents)) {
-                            // Fallback - pular preload para steps não mapeados
-                            return;
-                        }
-
-                        // Usar o componente lazy já definido
-                        const LazyComponent = LazyStepComponents[preloadStepId as LazyStepId];
-                        const preloadPromise = Promise.resolve(LazyComponent); const timeoutPromise = new Promise((_, reject) =>
-                            setTimeout(() => reject(new Error('Preload timeout')), maxLoadTime)
-                        );
-
-                        await Promise.race([preloadPromise, timeoutPromise]);
-
-                        if (process.env.NODE_ENV === 'development') {
-                            console.log(`✅ Preloaded step: ${preloadStepId} (chunk: ${chunkName})`);
-                        }
-                    } catch (error) {
-                        // Falha silenciosa no preload - não bloqueia a UI
-                        if (process.env.NODE_ENV === 'development') {
-                            console.warn(`⚠️ Failed to preload step ${preloadStepId}:`, error);
-                        }
-                    }
-                }
-            });
-        }
-    }, [stepId, mode]);
-
-    // ⚠️ Step não encontrado
+    // � OTIMIZAÇÃO: Usar lazy loading para produção, registry para editor
+    const stepComponentInfo = useOptimizedStepComponent(stepId, mode);    // ⚠️ Step não encontrado
     if (stepComponentInfo.type === 'error' || !stepComponentInfo.component) {
         return (
             <div className={cn(
@@ -284,9 +275,7 @@ export const UnifiedStepRenderer: React.FC<UnifiedStepRendererProps> = ({
     }), [
         stepId, mode, stepProps, quizState, onStepUpdate, onStepSelect,
         onNext, onPrevious, theme, isSelected, isEditable
-    ]);
-
-    // 🎯 Renderizar baseado no modo
+    ]);    // 🎯 Renderizar baseado no modo
     const renderStep = () => {
         // Wrapper base com estilos do modo
         const wrapperClasses = cn(
@@ -351,19 +340,6 @@ export const UnifiedStepRenderer: React.FC<UnifiedStepRendererProps> = ({
     };
 
     return renderStep();
-};
-
-/**
- * Helper para mapear stepId para nome do arquivo do componente
- */
-const getComponentFileForStep = (stepId: string): string => {
-    if (stepId === 'step-01') return 'IntroStep';
-    if (stepId.match(/step-0[2-9]/) || stepId.match(/step-1[01]/)) return 'QuestionStep';
-    if (stepId === 'step-12') return 'StrategicQuestionStep';
-    if (stepId === 'step-13') return 'TransitionStep';
-    if (stepId === 'step-14') return 'ResultStep';
-    if (stepId === 'step-15') return 'OfferStep';
-    return 'QuestionStep'; // fallback
 };
 
 // 🎨 Estilos CSS para o UnifiedStepRenderer

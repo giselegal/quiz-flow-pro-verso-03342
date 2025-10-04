@@ -11,14 +11,14 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { 
-  Users, 
-  MessageCircle, 
-  Bell, 
-  Settings, 
-  UserPlus, 
-  Crown, 
-  Edit, 
+import {
+  Users,
+  MessageCircle,
+  Bell,
+  Settings,
+  UserPlus,
+  Crown,
+  Edit,
   Eye,
   MoreHorizontal,
   Send,
@@ -26,8 +26,8 @@ import {
   Check,
   AlertTriangle,
   Clock,
-  Online,
-  Offline
+  Wifi,
+  WifiOff
 } from 'lucide-react';
 import { useUnifiedCollaboration } from '../../../hooks/core/useUnifiedCollaboration';
 
@@ -82,7 +82,7 @@ export function CollaborationPanel({
     isSaving,
     lastSync,
     conflictCount,
-    
+
     // Ações
     createSession,
     joinSession,
@@ -152,7 +152,7 @@ export function CollaborationPanel({
             <h2 className="text-lg font-semibold">Colaboração</h2>
             {isConnected && (
               <div className="flex items-center space-x-1 text-green-600">
-                <Online className="w-4 h-4" />
+                <Wifi className="w-4 h-4" />
                 <span className="text-sm">Conectado</span>
               </div>
             )}
@@ -177,11 +177,10 @@ export function CollaborationPanel({
             <button
               key={id}
               onClick={() => setActiveTab(id as any)}
-              className={`flex items-center space-x-2 px-4 py-2 text-sm font-medium border-b-2 transition-colors ${
-                activeTab === id
+              className={`flex items-center space-x-2 px-4 py-2 text-sm font-medium border-b-2 transition-colors ${activeTab === id
                   ? 'border-blue-500 text-blue-600'
                   : 'border-transparent text-gray-500 hover:text-gray-700'
-              }`}
+                }`}
             >
               <Icon className="w-4 h-4" />
               <span>{label}</span>
@@ -213,7 +212,7 @@ export function CollaborationPanel({
                   )}
                 </div>
               </div>
-              
+
               <div className="flex-1 overflow-y-auto p-4">
                 {activeUsers.map((user) => (
                   <div
@@ -230,11 +229,10 @@ export function CollaborationPanel({
                           </span>
                         )}
                       </div>
-                      <div className={`absolute -bottom-1 -right-1 w-4 h-4 rounded-full border-2 border-white ${
-                        user.isOnline ? 'bg-green-500' : 'bg-gray-400'
-                      }`} />
+                      <div className={`absolute -bottom-1 -right-1 w-4 h-4 rounded-full border-2 border-white ${user.isOnline ? 'bg-green-500' : 'bg-gray-400'
+                        }`} />
                     </div>
-                    
+
                     <div className="flex-1">
                       <div className="flex items-center space-x-2">
                         <span className="font-medium">{user.name}</span>
@@ -243,11 +241,11 @@ export function CollaborationPanel({
                         {user.role === 'viewer' && <Eye className="w-4 h-4 text-gray-500" />}
                       </div>
                       <div className="text-sm text-gray-500">
-                        {user.role === 'owner' ? 'Proprietário' : 
-                         user.role === 'editor' ? 'Editor' : 'Visualizador'}
+                        {user.role === 'owner' ? 'Proprietário' :
+                          user.role === 'editor' ? 'Editor' : 'Visualizador'}
                       </div>
                     </div>
-                    
+
                     {canManage && user.id !== userId && (
                       <button
                         onClick={() => setSelectedUser(user.id)}
@@ -289,7 +287,7 @@ export function CollaborationPanel({
                   </div>
                 ))}
               </div>
-              
+
               <div className="border-t p-4">
                 <div className="flex space-x-2">
                   <input
@@ -318,7 +316,7 @@ export function CollaborationPanel({
               <div className="p-4 border-b">
                 <h3 className="font-medium">Comentários</h3>
               </div>
-              
+
               <div className="flex-1 overflow-y-auto p-4 space-y-4">
                 {comments.map((comment) => (
                   <div key={comment.id} className="border rounded-lg p-3">
@@ -354,7 +352,7 @@ export function CollaborationPanel({
                   </div>
                 ))}
               </div>
-              
+
               <div className="border-t p-4">
                 <div className="flex space-x-2">
                   <input
@@ -393,7 +391,7 @@ export function CollaborationPanel({
                   )}
                 </div>
               </div>
-              
+
               <div className="flex-1 overflow-y-auto">
                 {notifications.length === 0 ? (
                   <div className="p-8 text-center text-gray-500">
@@ -405,17 +403,15 @@ export function CollaborationPanel({
                     {notifications.map((notification) => (
                       <div
                         key={notification.id}
-                        className={`p-3 rounded-lg border ${
-                          notification.read ? 'bg-gray-50' : 'bg-blue-50 border-blue-200'
-                        }`}
+                        className={`p-3 rounded-lg border ${notification.read ? 'bg-gray-50' : 'bg-blue-50 border-blue-200'
+                          }`}
                       >
                         <div className="flex items-start space-x-3">
-                          <div className={`w-2 h-2 rounded-full mt-2 ${
-                            notification.type === 'error' ? 'bg-red-500' :
-                            notification.type === 'warning' ? 'bg-yellow-500' :
-                            notification.type === 'success' ? 'bg-green-500' :
-                            'bg-blue-500'
-                          }`} />
+                          <div className={`w-2 h-2 rounded-full mt-2 ${notification.type === 'error' ? 'bg-red-500' :
+                              notification.type === 'warning' ? 'bg-yellow-500' :
+                                notification.type === 'success' ? 'bg-green-500' :
+                                  'bg-blue-500'
+                            }`} />
                           <div className="flex-1">
                             <div className="flex items-center justify-between">
                               <h4 className="font-medium text-sm">{notification.title}</h4>
@@ -453,7 +449,7 @@ export function CollaborationPanel({
               <div className="p-4 border-b">
                 <h3 className="font-medium">Configurações de Colaboração</h3>
               </div>
-              
+
               <div className="flex-1 overflow-y-auto p-4 space-y-6">
                 {/* Status da Sessão */}
                 <div>
@@ -557,7 +553,7 @@ export function CollaborationPanel({
                 <X className="w-5 h-5" />
               </button>
             </div>
-            
+
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-medium mb-2">Email</label>
@@ -569,7 +565,7 @@ export function CollaborationPanel({
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
               </div>
-              
+
               <div>
                 <label className="block text-sm font-medium mb-2">Função</label>
                 <select
@@ -582,7 +578,7 @@ export function CollaborationPanel({
                 </select>
               </div>
             </div>
-            
+
             <div className="flex space-x-3 mt-6">
               <button
                 onClick={() => setShowInviteModal(false)}
