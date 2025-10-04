@@ -117,12 +117,17 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
     // 🧩 NOVOS: Estados para sistema de componentes atômicos
     const [modularSteps, setModularSteps] = useState<ModularStep[]>([]);
     const [selectedComponentId, setSelectedComponentId] = useState<string>('');
-    const [useAtomicSystem, setUseAtomicSystem] = useState(true);
-
-    // Carregar steps iniciais - Sistema Atômico vs Sistema Editável
+    // 🧩 SISTEMA EDITÁVEL MODULAR: Sempre usar componentes atômicos
     useEffect(() => {
-        if (useAtomicSystem) {
-            // 🧩 Sistema Atômico: Inicializar com etapas modulares
+        // Verificar se já existem etapas modulares salvas 
+        const existing = (crud.currentFunnel as any)?.modularSteps as ModularStep[] | undefined;
+
+        if (existing && existing.length) {
+            // Usar etapas modulares existentes
+            setModularSteps(existing.map(s => ({ ...s })));
+            setSelectedId(existing[0].id);
+        } else {
+            // Criar etapas modulares padrão
             const defaultModularSteps: ModularStep[] = [
                 createModularStep('intro'),
                 createModularStep('question'),
@@ -130,19 +135,10 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
             ];
             setModularSteps(defaultModularSteps);
             setSelectedId(defaultModularSteps[0].id);
-        } else {
-            // Sistema Editável: Manter compatibilidade
-            const existing = (crud.currentFunnel as any)?.quizSteps as EditableQuizStep[] | undefined;
-            if (existing && existing.length) {
-                setSteps(existing.map(s => ({ ...s })));
-                setSelectedId(existing[0].id);
-                return;
-            }
-            const conv: EditableQuizStep[] = Object.entries(QUIZ_STEPS).map(([id, step]) => ({ id, ...step as QuizStep }));
-            setSteps(conv);
-            if (conv.length) setSelectedId(conv[0].id);
         }
-    }, [crud.currentFunnel, useAtomicSystem]);
+
+        // Sistema modular: sempre usar componentes atômicos por padrão
+    }, [crud.currentFunnel]);
 
     const selectedStep = steps.find(s => s.id === selectedId);
 
@@ -579,16 +575,16 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
                 <div className="w-60 border-r flex flex-col">
                     <div className="p-3 flex items-center justify-between border-b">
                         <span className="text-xs font-semibold">
-                            {useAtomicSystem ? 'Etapas Modulares' : 'Sequência do Funil'}
+                            Etapas Modulares
                         </span>
                         <Badge variant="secondary" className="text-[10px]">
-                            {useAtomicSystem ? modularSteps.length : steps.length}
+                            {modularSteps.length}
                         </Badge>
                     </div>
                     <div className="flex-1 overflow-auto text-xs">
                         {/* Lista Reordenável de Steps com DragDropManager */}
                         <DragDropManager
-                            items={useAtomicSystem ? modularSteps : steps}
+                            items={modularSteps}
                             onReorder={handleStepReorder}
                             enabled={dragEnabled}
                             renderItem={(step, index, isDragging) => {
@@ -624,28 +620,14 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
 
                                             {/* Preview do conteúdo */}
                                             <div className="text-[10px] text-gray-500 mb-2 truncate">
-                                                {useAtomicSystem ? (
-                                                    // Visualização para sistema atômico
-                                                    (() => {
-                                                        const modularStep = modularSteps.find(s => s.id === step.id);
-                                                        if (modularStep && modularStep.components.length > 0) {
-                                                            const firstComponent = modularStep.components[0];
-                                                            return `${modularStep.components.length} componentes - ${firstComponent.type}`;
-                                                        }
-                                                        return 'Etapa vazia';
-                                                    })()
-                                                ) : (
-                                                    // Visualização para sistema original
-                                                    <>
-                                                        {step.type === 'intro' && ((step as any).title || 'Introdução do Quiz')}
-                                                        {step.type === 'question' && ((step as any).questionText || 'Pergunta do Quiz')}
-                                                        {step.type === 'strategic-question' && ((step as any).questionText || 'Pergunta Estratégica')}
-                                                        {step.type === 'transition' && ((step as any).title || 'Tela de Transição')}
-                                                        {step.type === 'transition-result' && ((step as any).title || 'Preparando Resultado')}
-                                                        {step.type === 'result' && ((step as any).title || 'Resultado do Quiz')}
-                                                        {step.type === 'offer' && 'Oferta Personalizada'}
-                                                    </>
-                                                )}
+                                                {(() => {
+                                                    const modularStep = modularSteps.find(s => s.id === step.id);
+                                                    if (modularStep && modularStep.components.length > 0) {
+                                                        const firstComponent = modularStep.components[0];
+                                                        return `${modularStep.components.length} componentes - ${firstComponent.type}`;
+                                                    }
+                                                    return 'Etapa vazia';
+                                                })()}
                                             </div>                                            {/* Controles de Ação */}
                                             <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                                                 <Button
@@ -746,103 +728,73 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
                 {/* COL 2 - BIBLIOTECA DE COMPONENTES */}
                 <div className="w-72 border-r flex flex-col">
                     <div className="p-3 border-b text-xs font-semibold">
-                        {useAtomicSystem ? 'Componentes Atômicos' : 'Biblioteca de Componentes'}
+                        Biblioteca de Componentes
                     </div>
 
-                    {useAtomicSystem ? (
-                        /* 🧩 SISTEMA ATÔMICO: Componentes modulares */
-                        <>
-                            {/* Adicionar Etapas Modulares */}
-                            <div className="p-3 border-b">
-                                <label className="block text-[10px] uppercase tracking-wide text-muted-foreground mb-2">
-                                    Adicionar Etapa
-                                </label>
-                                <div className="grid grid-cols-2 gap-2">
-                                    <Button
-                                        size="sm"
-                                        variant="outline"
-                                        className="text-[10px] h-8 flex flex-col items-center p-1"
-                                        onClick={() => handleAddModularStep('intro')}
-                                    >
-                                        <span className="truncate w-full text-center">🏠 Intro</span>
-                                    </Button>
-                                    <Button
-                                        size="sm"
-                                        variant="outline"
-                                        className="text-[10px] h-8 flex flex-col items-center p-1"
-                                        onClick={() => handleAddModularStep('question')}
-                                    >
-                                        <span className="truncate w-full text-center">❓ Pergunta</span>
-                                    </Button>
-                                    <Button
-                                        size="sm"
-                                        variant="outline"
-                                        className="text-[10px] h-8 flex flex-col items-center p-1"
-                                        onClick={() => handleAddModularStep('result')}
-                                    >
-                                        <span className="truncate w-full text-center">🏆 Resultado</span>
-                                    </Button>
-                                    <Button
-                                        size="sm"
-                                        variant="outline"
-                                        className="text-[10px] h-8 flex flex-col items-center p-1"
-                                        onClick={() => handleAddModularStep('custom')}
-                                    >
-                                        <span className="truncate w-full text-center">🧩 Custom</span>
-                                    </Button>
-                                </div>
-                            </div>
-
-                            {/* Componentes Atômicos */}
-                            <div className="p-3 border-b">
-                                <label className="block text-[10px] uppercase tracking-wide text-muted-foreground mb-2">
-                                    Componentes (Dentro da Etapa)
-                                </label>
-                                <div className="text-[9px] text-muted-foreground mb-2">
-                                    Use os botões "+" dentro das etapas para adicionar componentes
-                                </div>
-                                <div className="grid grid-cols-2 gap-1 text-[9px]">
-                                    <div className="p-2 border rounded bg-gray-50">📝 Título</div>
-                                    <div className="p-2 border rounded bg-gray-50">📄 Texto</div>
-                                    <div className="p-2 border rounded bg-gray-50">🔘 Botão</div>
-                                    <div className="p-2 border rounded bg-gray-50">📝 Input</div>
-                                    <div className="p-2 border rounded bg-gray-50">🖼️ Imagem</div>
-                                    <div className="p-2 border rounded bg-gray-50">📏 Espaço</div>
-                                    <div className="p-2 border rounded bg-gray-50">➖ Divisor</div>
-                                    <div className="p-2 border rounded bg-gray-50">❓ Pergunta</div>
-                                    <div className="p-2 border rounded bg-gray-50">☑️ Opções</div>
-                                </div>
-                            </div>
-                        </>
-                    ) : (
-                        /* 📝 SISTEMA EDITÁVEL: Componentes por etapa */
+                    {/* 🧩 SISTEMA EDITÁVEL MODULAR: Componentes modulares integrados */}
+                    <>
+                        {/* Adicionar Etapas */}
                         <div className="p-3 border-b">
                             <label className="block text-[10px] uppercase tracking-wide text-muted-foreground mb-2">
-                                Adicionar Componente
+                                Adicionar Etapa
                             </label>
                             <div className="grid grid-cols-2 gap-2">
-                                {STEP_TYPES.map(type => (
-                                    <Button
-                                        key={type}
-                                        size="sm"
-                                        variant="outline"
-                                        className="text-[10px] h-8 flex flex-col items-center p-1"
-                                        onClick={() => addStepAfter(selectedId, type)}
-                                    >
-                                        <span className="truncate w-full text-center">
-                                            {type === 'intro' && '🏠 Intro'}
-                                            {type === 'question' && '❓ Pergunta'}
-                                            {type === 'strategic-question' && '🎯 Estratégica'}
-                                            {type === 'transition' && '⏳ Transição'}
-                                            {type === 'transition-result' && '🔄 Trans. Result'}
-                                            {type === 'result' && '🏆 Resultado'}
-                                            {type === 'offer' && '🎁 Oferta'}
-                                        </span>
-                                    </Button>
-                                ))}
+                                <Button
+                                    size="sm"
+                                    variant="outline"
+                                    className="text-[10px] h-8 flex flex-col items-center p-1"
+                                    onClick={() => handleAddModularStep('intro')}
+                                >
+                                    <span className="truncate w-full text-center">🏠 Intro</span>
+                                </Button>
+                                <Button
+                                    size="sm"
+                                    variant="outline"
+                                    className="text-[10px] h-8 flex flex-col items-center p-1"
+                                    onClick={() => handleAddModularStep('question')}
+                                >
+                                    <span className="truncate w-full text-center">❓ Pergunta</span>
+                                </Button>
+                                <Button
+                                    size="sm"
+                                    variant="outline"
+                                    className="text-[10px] h-8 flex flex-col items-center p-1"
+                                    onClick={() => handleAddModularStep('result')}
+                                >
+                                    <span className="truncate w-full text-center">🏆 Resultado</span>
+                                </Button>
+                                <Button
+                                    size="sm"
+                                    variant="outline"
+                                    className="text-[10px] h-8 flex flex-col items-center p-1"
+                                    onClick={() => handleAddModularStep('custom')}
+                                >
+                                    <span className="truncate w-full text-center">🧩 Custom</span>
+                                </Button>
                             </div>
                         </div>
-                    )}
+
+                        {/* Componentes Modulares */}
+                        <div className="p-3 border-b">
+                            <label className="block text-[10px] uppercase tracking-wide text-muted-foreground mb-2">
+                                Componentes Modulares
+                            </label>
+                            <div className="text-[9px] text-muted-foreground mb-2">
+                                Use os botões "+" dentro das etapas para adicionar componentes
+                            </div>
+                            <div className="grid grid-cols-2 gap-1 text-[9px]">
+                                <div className="p-2 border rounded bg-gray-50">📝 Título</div>
+                                <div className="p-2 border rounded bg-gray-50">📄 Texto</div>
+                                <div className="p-2 border rounded bg-gray-50">🔘 Botão</div>
+                                <div className="p-2 border rounded bg-gray-50">📝 Input</div>
+                                <div className="p-2 border rounded bg-gray-50">🖼️ Imagem</div>
+                                <div className="p-2 border rounded bg-gray-50">📏 Espaço</div>
+                                <div className="p-2 border rounded bg-gray-50">➖ Divisor</div>
+                                <div className="p-2 border rounded bg-gray-50">❓ Pergunta</div>
+                                <div className="p-2 border rounded bg-gray-50">☑️ Opções</div>
+                            </div>
+                        </div>
+                    </>
 
                     {/* Configuração do Componente Selecionado */}
                     <div className="flex-1 overflow-auto p-3 text-xs space-y-4">
@@ -970,104 +922,55 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
                             }
                         }}
                     >
-                        {/* 🎛️ Toggle entre Sistema Editável e Sistema Atômico */}
-                        <div className="mb-4 flex items-center gap-2 p-2 bg-gray-50 rounded-lg">
-                            <Button
-                                size="sm"
-                                variant={!useAtomicSystem ? "default" : "outline"}
-                                onClick={() => setUseAtomicSystem(false)}
-                                className="h-7 text-xs"
-                            >
-                                📝 Sistema Editável
-                            </Button>
-                            <Button
-                                size="sm"
-                                variant={useAtomicSystem ? "default" : "outline"}
-                                onClick={() => setUseAtomicSystem(true)}
-                                className="h-7 text-xs"
-                            >
-                                🧩 Sistema Atômico
-                            </Button>
-                        </div>
+                        {/* 🧩 Sistema Editável Modular - Componentes Atômicos Integrados */}
 
-                        {useAtomicSystem ? (
-                            // 🧩 SISTEMA ATÔMICO: Componentes modulares independentes
-                            modularSteps.length === 0 ? (
-                                <div className="flex items-center justify-center h-full text-sm text-muted-foreground">
-                                    <div className="text-center">
-                                        <div className="text-lg mb-2">🧩</div>
-                                        <div>Nenhuma etapa criada ainda</div>
-                                        <div className="text-xs mb-4">Use a sidebar para adicionar etapas modulares</div>
-                                        <Button
-                                            size="sm"
-                                            onClick={() => handleAddModularStep('intro')}
-                                            className="text-xs"
-                                        >
-                                            Criar primeira etapa
-                                        </Button>
-                                    </div>
+                        {/* 🧩 SISTEMA EDITÁVEL MODULAR: Sempre usar componentes modulares */}
+                        {modularSteps.length === 0 ? (
+                            <div className="flex items-center justify-center h-full text-sm text-muted-foreground">
+                                <div className="text-center">
+                                    <div className="text-lg mb-2">🧩</div>
+                                    <div>Nenhuma etapa criada ainda</div>
+                                    <div className="text-xs mb-4">Use a sidebar para adicionar etapas</div>
+                                    <Button
+                                        size="sm"
+                                        onClick={() => handleAddModularStep('intro')}
+                                        className="text-xs"
+                                    >
+                                        Criar primeira etapa
+                                    </Button>
                                 </div>
-                            ) : (
-                                (() => {
-                                    const selectedModularStep = modularSteps.find(s => s.id === selectedId);
-                                    return selectedModularStep ? (
-                                        <ModularStepContainer
-                                            step={selectedModularStep}
-                                            isEditable={previewMode === 'edit'}
-                                            selectedComponentId={selectedComponentId}
-                                            onUpdateStep={(updates) => handleUpdateModularStep(selectedModularStep.id, updates)}
-                                            onUpdateComponent={(componentId, updates) =>
-                                                handleUpdateAtomicComponent(selectedModularStep.id, componentId, updates)
-                                            }
-                                            onSelectComponent={handleSelectAtomicComponent}
-                                            onDeleteComponent={(componentId) =>
-                                                handleDeleteAtomicComponent(selectedModularStep.id, componentId)
-                                            }
-                                            onDuplicateComponent={(componentId) =>
-                                                handleDuplicateAtomicComponent(selectedModularStep.id, componentId)
-                                            }
-                                            onReorderComponents={(fromIndex, toIndex) =>
-                                                handleReorderAtomicComponents(selectedModularStep.id, fromIndex, toIndex)
-                                            }
-                                            onInsertComponent={(afterComponentId, componentType) =>
-                                                handleInsertAtomicComponent(selectedModularStep.id, afterComponentId, componentType)
-                                            }
-                                        />
-                                    ) : (
-                                        <div className="flex items-center justify-center h-full text-sm text-muted-foreground">
-                                            <div className="text-center">
-                                                <div className="text-lg mb-2">📝</div>
-                                                <div>Selecione uma etapa para editar</div>
-                                                <div className="text-xs">Use a sidebar à esquerda para selecionar</div>
-                                            </div>
-                                        </div>
-                                    );
-                                })()
-                            )
+                            </div>
+                        ) : selectedId && modularSteps.find(s => s.id === selectedId) ? (
+                            <ModularStepContainer
+                                step={modularSteps.find(s => s.id === selectedId)!}
+                                isEditable={previewMode === 'edit'}
+                                selectedComponentId={selectedComponentId}
+                                onUpdateStep={(updates) => handleUpdateModularStep(selectedId, updates)}
+                                onUpdateComponent={(componentId, updates) =>
+                                    handleUpdateAtomicComponent(selectedId, componentId, updates)
+                                }
+                                onSelectComponent={handleSelectAtomicComponent}
+                                onDeleteComponent={(componentId) =>
+                                    handleDeleteAtomicComponent(selectedId, componentId)
+                                }
+                                onDuplicateComponent={(componentId) =>
+                                    handleDuplicateAtomicComponent(selectedId, componentId)
+                                }
+                                onReorderComponents={(fromIndex, toIndex) =>
+                                    handleReorderAtomicComponents(selectedId, fromIndex, toIndex)
+                                }
+                                onInsertComponent={(afterComponentId, componentType) =>
+                                    handleInsertAtomicComponent(selectedId, afterComponentId, componentType)
+                                }
+                            />
                         ) : (
-                            // 📝 SISTEMA EDITÁVEL: Componentes encapsulados por etapa
-                            steps.length === 0 ? (
-                                <div className="flex items-center justify-center h-full text-sm text-muted-foreground">
-                                    <div className="text-center">
-                                        <div className="text-lg mb-2">🎯</div>
-                                        <div>Nenhum step criado ainda</div>
-                                        <div className="text-xs">Use a sidebar para adicionar steps</div>
-                                    </div>
+                            <div className="flex items-center justify-center h-full text-sm text-muted-foreground">
+                                <div className="text-center">
+                                    <div className="text-lg mb-2">📝</div>
+                                    <div>Selecione uma etapa para editar</div>
+                                    <div className="text-xs">Use a sidebar à esquerda para selecionar</div>
                                 </div>
-                            ) : selectedStep ? (
-                                // 🚀 FASE 3: COMPONENTES EDITÁVEIS ENCAPSULADOS - Sistema Unificado
-                                <div className="p-4">
-                                    {renderRealComponent(selectedStep, steps.findIndex(s => s.id === selectedStep.id))}
-                                </div>
-                            ) : (
-                                <div className="flex items-center justify-center h-full text-sm text-muted-foreground">
-                                    <div className="text-center">
-                                        <div className="text-lg mb-2">📝</div>
-                                        <div>Selecione um step para editar</div>
-                                        <div className="text-xs">Use a sidebar à esquerda para selecionar</div>
-                                    </div>
-                                </div>
-                            )
+                            </div>
                         )}
                     </div>
                 </div>
