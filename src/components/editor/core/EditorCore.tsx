@@ -109,21 +109,21 @@ export interface EditorState {
     // Core data
     elements: Map<string, EditorElement>;
     elementOrder: string[];
-    
+
     // View state
     viewport: EditorViewport;
     selection: EditorSelection;
-    
+
     // UI state
     mode: EditorMode;
     activePanel: string | null;
     activeTool: string;
-    
+
     // Configuration
     grid: EditorGrid;
     guides: EditorGuides;
     preferences: EditorPreferences;
-    
+
     // Meta state
     isLoading: boolean;
     isDirty: boolean;
@@ -157,7 +157,7 @@ export type EditorAction =
 const createInitialState = (): EditorState => ({
     elements: new Map(),
     elementOrder: [],
-    
+
     viewport: {
         x: 0,
         y: 0,
@@ -165,16 +165,16 @@ const createInitialState = (): EditorState => ({
         width: 1200,
         height: 800
     },
-    
+
     selection: {
         mode: 'single',
         elements: []
     },
-    
+
     mode: 'design',
     activePanel: null,
     activeTool: 'select',
-    
+
     grid: {
         enabled: true,
         type: 'dots',
@@ -184,7 +184,7 @@ const createInitialState = (): EditorState => ({
         color: '#e5e5e5',
         opacity: 0.5
     },
-    
+
     guides: {
         enabled: true,
         horizontal: [],
@@ -193,7 +193,7 @@ const createInitialState = (): EditorState => ({
         showDistances: true,
         color: '#3b82f6'
     },
-    
+
     preferences: {
         autoSave: true,
         autoSaveInterval: 30000, // 30 seconds
@@ -210,7 +210,7 @@ const createInitialState = (): EditorState => ({
         theme: 'light',
         language: 'pt-BR'
     },
-    
+
     isLoading: false,
     isDirty: false,
     lastSaved: Date.now(),
@@ -223,20 +223,20 @@ const editorReducer = (state: EditorState, action: EditorAction): EditorState =>
     switch (action.type) {
         case 'SET_MODE':
             return { ...state, mode: action.payload };
-            
+
         case 'SET_VIEWPORT':
             return {
                 ...state,
                 viewport: { ...state.viewport, ...action.payload }
             };
-            
+
         case 'SET_SELECTION':
             return { ...state, selection: action.payload };
-            
+
         case 'ADD_ELEMENT': {
             const newElements = new Map(state.elements);
             newElements.set(action.payload.id, action.payload);
-            
+
             return {
                 ...state,
                 elements: newElements,
@@ -244,11 +244,11 @@ const editorReducer = (state: EditorState, action: EditorAction): EditorState =>
                 isDirty: true
             };
         }
-        
+
         case 'UPDATE_ELEMENT': {
             const newElements = new Map(state.elements);
             const existing = newElements.get(action.payload.id);
-            
+
             if (existing) {
                 newElements.set(action.payload.id, {
                     ...existing,
@@ -259,18 +259,18 @@ const editorReducer = (state: EditorState, action: EditorAction): EditorState =>
                     }
                 });
             }
-            
+
             return {
                 ...state,
                 elements: newElements,
                 isDirty: true
             };
         }
-        
+
         case 'DELETE_ELEMENT': {
             const newElements = new Map(state.elements);
             newElements.delete(action.payload);
-            
+
             return {
                 ...state,
                 elements: newElements,
@@ -282,59 +282,59 @@ const editorReducer = (state: EditorState, action: EditorAction): EditorState =>
                 isDirty: true
             };
         }
-        
+
         case 'REORDER_ELEMENTS':
             return {
                 ...state,
                 elementOrder: action.payload,
                 isDirty: true
             };
-            
+
         case 'SET_GRID':
             return {
                 ...state,
                 grid: { ...state.grid, ...action.payload }
             };
-            
+
         case 'SET_GUIDES':
             return {
                 ...state,
                 guides: { ...state.guides, ...action.payload }
             };
-            
+
         case 'SET_PREFERENCES':
             return {
                 ...state,
                 preferences: { ...state.preferences, ...action.payload }
             };
-            
+
         case 'SET_ACTIVE_PANEL':
             return { ...state, activePanel: action.payload };
-            
+
         case 'SET_ACTIVE_TOOL':
             return { ...state, activeTool: action.payload };
-            
+
         case 'ADD_ERROR':
             return {
                 ...state,
                 errors: [...state.errors, action.payload]
             };
-            
+
         case 'CLEAR_ERRORS':
             return { ...state, errors: [] };
-            
+
         case 'SET_LOADING':
             return { ...state, isLoading: action.payload };
-            
+
         case 'SET_DIRTY':
             return { ...state, isDirty: action.payload };
-            
+
         case 'RESET_STATE':
             return createInitialState();
-            
+
         case 'LOAD_STATE':
             return { ...state, ...action.payload };
-            
+
         default:
             return state;
     }
@@ -347,12 +347,12 @@ export interface EditorPlugin {
     version: string;
     enabled: boolean;
     dependencies: string[];
-    
+
     // Lifecycle hooks
     onActivate?: (core: EditorCore) => void;
     onDeactivate?: (core: EditorCore) => void;
     onStateChange?: (state: EditorState, action: EditorAction) => void;
-    
+
     // Extension points
     tools?: Record<string, any>;
     panels?: Record<string, React.ComponentType<any>>;
@@ -363,24 +363,24 @@ export interface EditorPlugin {
 export class PluginManager {
     private plugins = new Map<string, EditorPlugin>();
     private loadOrder: string[] = [];
-    
+
     register(plugin: EditorPlugin): void {
         if (this.plugins.has(plugin.id)) {
             console.warn(`Plugin ${plugin.id} is already registered`);
             return;
         }
-        
+
         // Check dependencies
         for (const dep of plugin.dependencies) {
             if (!this.plugins.has(dep)) {
                 throw new Error(`Plugin ${plugin.id} depends on ${dep} which is not registered`);
             }
         }
-        
+
         this.plugins.set(plugin.id, plugin);
         this.loadOrder.push(plugin.id);
     }
-    
+
     unregister(pluginId: string): void {
         const plugin = this.plugins.get(pluginId);
         if (plugin) {
@@ -389,7 +389,7 @@ export class PluginManager {
             this.loadOrder = this.loadOrder.filter(id => id !== pluginId);
         }
     }
-    
+
     enable(pluginId: string, core: EditorCore): void {
         const plugin = this.plugins.get(pluginId);
         if (plugin && !plugin.enabled) {
@@ -397,7 +397,7 @@ export class PluginManager {
             plugin.onActivate?.(core);
         }
     }
-    
+
     disable(pluginId: string, core: EditorCore): void {
         const plugin = this.plugins.get(pluginId);
         if (plugin && plugin.enabled) {
@@ -405,40 +405,40 @@ export class PluginManager {
             plugin.onDeactivate?.(core);
         }
     }
-    
+
     getEnabled(): EditorPlugin[] {
         return this.loadOrder
             .map(id => this.plugins.get(id))
             .filter((plugin): plugin is EditorPlugin => plugin?.enabled === true);
     }
-    
+
     getTools(): Record<string, any> {
         const tools: Record<string, any> = {};
-        
+
         for (const plugin of this.getEnabled()) {
             if (plugin.tools) {
                 Object.assign(tools, plugin.tools);
             }
         }
-        
+
         return tools;
     }
-    
+
     getPanels(): Record<string, React.ComponentType<any>> {
         const panels: Record<string, React.ComponentType<any>> = {};
-        
+
         for (const plugin of this.getEnabled()) {
             if (plugin.panels) {
                 Object.assign(panels, plugin.panels);
             }
         }
-        
+
         return panels;
     }
-    
+
     validateElement(element: EditorElement): string[] {
         const errors: string[] = [];
-        
+
         for (const plugin of this.getEnabled()) {
             if (plugin.validators) {
                 for (const validator of plugin.validators) {
@@ -446,7 +446,7 @@ export class PluginManager {
                 }
             }
         }
-        
+
         return errors;
     }
 }
@@ -458,7 +458,7 @@ export class EditorCore {
     private pluginManager: PluginManager;
     private cache: any;
     private eventListeners = new Map<string, Set<Function>>();
-    
+
     constructor(
         dispatch: React.Dispatch<EditorAction>,
         state: EditorState,
@@ -469,41 +469,41 @@ export class EditorCore {
         this.pluginManager = new PluginManager();
         this.cache = cache;
     }
-    
+
     // State management
     getState(): EditorState {
         return this.state;
     }
-    
+
     setState(updates: Partial<EditorState>): void {
         this.dispatch({ type: 'LOAD_STATE', payload: updates });
     }
-    
+
     // Element management
     addElement(element: EditorElement): void {
         this.dispatch({ type: 'ADD_ELEMENT', payload: element });
         this.emit('elementAdded', element);
     }
-    
+
     updateElement(id: string, updates: Partial<EditorElement>): void {
         this.dispatch({ type: 'UPDATE_ELEMENT', payload: { id, updates } });
         this.emit('elementUpdated', { id, updates });
     }
-    
+
     deleteElement(id: string): void {
         this.dispatch({ type: 'DELETE_ELEMENT', payload: id });
         this.emit('elementDeleted', id);
     }
-    
+
     getElement(id: string): EditorElement | undefined {
         return this.state.elements.get(id);
     }
-    
+
     getElementsByType(type: string): EditorElement[] {
         return Array.from(this.state.elements.values())
             .filter(element => element.type === type);
     }
-    
+
     // Selection management
     selectElement(id: string): void {
         this.dispatch({
@@ -515,7 +515,7 @@ export class EditorCore {
         });
         this.emit('selectionChanged', [id]);
     }
-    
+
     selectElements(ids: string[]): void {
         this.dispatch({
             type: 'SET_SELECTION',
@@ -526,7 +526,7 @@ export class EditorCore {
         });
         this.emit('selectionChanged', ids);
     }
-    
+
     clearSelection(): void {
         this.dispatch({
             type: 'SET_SELECTION',
@@ -537,62 +537,62 @@ export class EditorCore {
         });
         this.emit('selectionChanged', []);
     }
-    
+
     getSelectedElements(): EditorElement[] {
         return this.state.selection.elements
             .map(id => this.state.elements.get(id))
             .filter((element): element is EditorElement => element !== undefined);
     }
-    
+
     // Viewport management
     setViewport(viewport: Partial<EditorViewport>): void {
         this.dispatch({ type: 'SET_VIEWPORT', payload: viewport });
         this.emit('viewportChanged', viewport);
     }
-    
+
     zoomIn(factor: number = 1.2): void {
         const newZoom = Math.min(this.state.viewport.zoom * factor, 5);
         this.setViewport({ zoom: newZoom });
     }
-    
+
     zoomOut(factor: number = 1.2): void {
         const newZoom = Math.max(this.state.viewport.zoom / factor, 0.1);
         this.setViewport({ zoom: newZoom });
     }
-    
+
     zoomToFit(): void {
         // Calculate bounds of all elements
         const elements = Array.from(this.state.elements.values());
         if (elements.length === 0) return;
-        
+
         let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
-        
+
         for (const element of elements) {
             minX = Math.min(minX, element.position.x);
             minY = Math.min(minY, element.position.y);
             maxX = Math.max(maxX, element.position.x + element.size.width);
             maxY = Math.max(maxY, element.position.y + element.size.height);
         }
-        
+
         const contentWidth = maxX - minX;
         const contentHeight = maxY - minY;
         const padding = 50;
-        
+
         const zoomX = (this.state.viewport.width - padding * 2) / contentWidth;
         const zoomY = (this.state.viewport.height - padding * 2) / contentHeight;
         const zoom = Math.min(zoomX, zoomY, 1);
-        
+
         const x = minX - (this.state.viewport.width / zoom - contentWidth) / 2;
         const y = minY - (this.state.viewport.height / zoom - contentHeight) / 2;
-        
+
         this.setViewport({ x, y, zoom });
     }
-    
+
     // Plugin management
     getPluginManager(): PluginManager {
         return this.pluginManager;
     }
-    
+
     // Event system
     on(event: string, listener: Function): void {
         if (!this.eventListeners.has(event)) {
@@ -600,27 +600,27 @@ export class EditorCore {
         }
         this.eventListeners.get(event)!.add(listener);
     }
-    
+
     off(event: string, listener: Function): void {
         const listeners = this.eventListeners.get(event);
         if (listeners) {
             listeners.delete(listener);
         }
     }
-    
+
     emit(event: string, data?: any): void {
         const listeners = this.eventListeners.get(event);
         if (listeners) {
             listeners.forEach(listener => listener(data));
         }
     }
-    
+
     // Persistence
     async save(): Promise<void> {
         if (!this.cache) return;
-        
+
         this.dispatch({ type: 'SET_LOADING', payload: true });
-        
+
         try {
             const serializedState = {
                 elements: Array.from(this.state.elements.entries()),
@@ -630,15 +630,15 @@ export class EditorCore {
                 guides: this.state.guides,
                 preferences: this.state.preferences
             };
-            
+
             await this.cache.set('editor-state', serializedState, {
                 ttl: 3600000, // 1 hour
                 persistent: true
             });
-            
+
             this.dispatch({ type: 'SET_DIRTY', payload: false });
             this.emit('saved');
-            
+
         } catch (error) {
             this.dispatch({ type: 'ADD_ERROR', payload: `Save failed: ${error}` });
             throw error;
@@ -646,18 +646,18 @@ export class EditorCore {
             this.dispatch({ type: 'SET_LOADING', payload: false });
         }
     }
-    
+
     async load(): Promise<void> {
         if (!this.cache) return;
-        
+
         this.dispatch({ type: 'SET_LOADING', payload: true });
-        
+
         try {
             const serializedState = await this.cache.get('editor-state');
-            
+
             if (serializedState) {
                 const elements = new Map(serializedState.elements);
-                
+
                 this.dispatch({
                     type: 'LOAD_STATE',
                     payload: {
@@ -670,10 +670,10 @@ export class EditorCore {
                         isDirty: false
                     }
                 });
-                
+
                 this.emit('loaded');
             }
-            
+
         } catch (error) {
             this.dispatch({ type: 'ADD_ERROR', payload: `Load failed: ${error}` });
             throw error;
@@ -711,43 +711,43 @@ export const EditorCoreProvider: React.FC<EditorCoreProviderProps> = ({
         ...createInitialState(),
         ...initialState
     });
-    
+
     const coreRef = useRef<EditorCore | null>(null);
-    
+
     // Initialize core
     if (!coreRef.current) {
         coreRef.current = new EditorCore(dispatch, state, cache);
     }
-    
+
     // Update core state reference
     useEffect(() => {
         if (coreRef.current) {
             (coreRef.current as any).state = state;
         }
     }, [state]);
-    
+
     // Auto-save functionality
     useEffect(() => {
         if (!autoSave || !state.isDirty || !coreRef.current) return;
-        
+
         const timer = setTimeout(() => {
             coreRef.current?.save().catch(console.error);
         }, autoSaveInterval);
-        
+
         return () => clearTimeout(timer);
     }, [autoSave, autoSaveInterval, state.isDirty]);
-    
+
     // Load initial state
     useEffect(() => {
         coreRef.current?.load().catch(console.error);
     }, []);
-    
+
     const contextValue = useMemo<EditorCoreContextType>(() => ({
         core: coreRef.current!,
         state,
         dispatch
     }), [state]);
-    
+
     return (
         <EditorCoreContext.Provider value={contextValue}>
             {children}
@@ -767,7 +767,7 @@ export const useEditorCore = () => {
 // 🎯 SPECIALIZED HOOKS
 export const useEditorElements = () => {
     const { core, state } = useEditorCore();
-    
+
     return useMemo(() => ({
         elements: Array.from(state.elements.values()),
         elementOrder: state.elementOrder,
@@ -782,7 +782,7 @@ export const useEditorElements = () => {
 
 export const useEditorSelection = () => {
     const { core, state } = useEditorCore();
-    
+
     return useMemo(() => ({
         selection: state.selection,
         selectedElements: core.getSelectedElements(),
@@ -794,7 +794,7 @@ export const useEditorSelection = () => {
 
 export const useEditorViewport = () => {
     const { core, state } = useEditorCore();
-    
+
     return useMemo(() => ({
         viewport: state.viewport,
         setViewport: (viewport: Partial<EditorViewport>) => core.setViewport(viewport),
@@ -806,7 +806,7 @@ export const useEditorViewport = () => {
 
 export const useEditorTools = () => {
     const { core, state, dispatch } = useEditorCore();
-    
+
     return useMemo(() => ({
         activeTool: state.activeTool,
         availableTools: core.getPluginManager().getTools(),
@@ -818,7 +818,7 @@ export const useEditorTools = () => {
 
 export const useEditorPersistence = () => {
     const { core, state } = useEditorCore();
-    
+
     return useMemo(() => ({
         isDirty: state.isDirty,
         isLoading: state.isLoading,

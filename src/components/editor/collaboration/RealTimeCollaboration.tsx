@@ -88,18 +88,18 @@ class WebSocketManager {
     private heartbeatInterval: NodeJS.Timeout | null = null;
     private messageQueue: any[] = [];
     private isConnected = false;
-    
+
     constructor(
         private url: string,
         private onMessage: (event: CollaborationEvent) => void,
         private onConnectionChange: (connected: boolean) => void
-    ) {}
-    
+    ) { }
+
     connect(): Promise<void> {
         return new Promise((resolve, reject) => {
             try {
                 this.ws = new WebSocket(this.url);
-                
+
                 this.ws.onopen = () => {
                     this.isConnected = true;
                     this.reconnectAttempts = 0;
@@ -108,7 +108,7 @@ class WebSocketManager {
                     this.flushMessageQueue();
                     resolve();
                 };
-                
+
                 this.ws.onmessage = (event) => {
                     try {
                         const data = JSON.parse(event.data);
@@ -117,25 +117,25 @@ class WebSocketManager {
                         console.error('Error parsing WebSocket message:', error);
                     }
                 };
-                
+
                 this.ws.onclose = () => {
                     this.isConnected = false;
                     this.onConnectionChange(false);
                     this.stopHeartbeat();
                     this.handleReconnect();
                 };
-                
+
                 this.ws.onerror = (error) => {
                     console.error('WebSocket error:', error);
                     reject(error);
                 };
-                
+
             } catch (error) {
                 reject(error);
             }
         });
     }
-    
+
     disconnect() {
         this.isConnected = false;
         this.stopHeartbeat();
@@ -144,7 +144,7 @@ class WebSocketManager {
             this.ws = null;
         }
     }
-    
+
     send(data: any) {
         if (this.isConnected && this.ws) {
             this.ws.send(JSON.stringify(data));
@@ -152,7 +152,7 @@ class WebSocketManager {
             this.messageQueue.push(data);
         }
     }
-    
+
     private handleReconnect() {
         if (this.reconnectAttempts < this.maxReconnectAttempts) {
             this.reconnectAttempts++;
@@ -161,7 +161,7 @@ class WebSocketManager {
             }, this.reconnectDelay * this.reconnectAttempts);
         }
     }
-    
+
     private startHeartbeat() {
         this.heartbeatInterval = setInterval(() => {
             if (this.isConnected && this.ws) {
@@ -169,14 +169,14 @@ class WebSocketManager {
             }
         }, 30000);
     }
-    
+
     private stopHeartbeat() {
         if (this.heartbeatInterval) {
             clearInterval(this.heartbeatInterval);
             this.heartbeatInterval = null;
         }
     }
-    
+
     private flushMessageQueue() {
         while (this.messageQueue.length > 0) {
             const message = this.messageQueue.shift();
@@ -192,15 +192,15 @@ class OperationalTransform {
         if (op1.elementId === op2.elementId) {
             return this.transformSameElement(op1, op2);
         }
-        
+
         // Different element operations - no conflict
         return { op1, op2 };
     }
-    
+
     private static transformSameElement(op1: Operation, op2: Operation): { op1: Operation | null; op2: Operation | null } {
         const timestamp1 = op1.timestamp.getTime();
         const timestamp2 = op2.timestamp.getTime();
-        
+
         // Concurrent operations on same element
         if (Math.abs(timestamp1 - timestamp2) < 100) {
             // Use user ID as tiebreaker for deterministic resolution
@@ -210,27 +210,27 @@ class OperationalTransform {
                 return { op1: null, op2 }; // op2 wins
             }
         }
-        
+
         // Different operation types
         if (op1.type !== op2.type) {
             return this.transformDifferentTypes(op1, op2);
         }
-        
+
         // Same operation types
         return this.transformSameType(op1, op2);
     }
-    
+
     private static transformDifferentTypes(op1: Operation, op2: Operation): { op1: Operation | null; op2: Operation | null } {
         // Delete beats everything
         if (op1.type === 'delete') return { op1, op2: null };
         if (op2.type === 'delete') return { op1: null, op2 };
-        
+
         // Create has precedence over update/move/resize
         if (op1.type === 'create') return { op1, op2: null };
         if (op2.type === 'create') return { op1: null, op2 };
-        
+
         // For update vs move/resize, merge the operations
-        if ((op1.type === 'update' && op2.type === 'move') || 
+        if ((op1.type === 'update' && op2.type === 'move') ||
             (op1.type === 'move' && op2.type === 'update')) {
             const mergedOp: Operation = {
                 ...op1,
@@ -240,21 +240,21 @@ class OperationalTransform {
             };
             return { op1: mergedOp, op2: null };
         }
-        
+
         return { op1, op2 };
     }
-    
+
     private static transformSameType(op1: Operation, op2: Operation): { op1: Operation | null; op2: Operation | null } {
         const timestamp1 = op1.timestamp.getTime();
         const timestamp2 = op2.timestamp.getTime();
-        
+
         // Last write wins for same operation type
         if (timestamp1 > timestamp2) {
             return { op1, op2: null };
         } else if (timestamp2 > timestamp1) {
             return { op1: null, op2 };
         }
-        
+
         // Use user ID as tiebreaker
         return op1.userId < op2.userId ? { op1, op2: null } : { op1: null, op2 };
     }
@@ -266,23 +266,23 @@ interface CollaborationContextType {
     isConnected: boolean;
     connect: (sessionId: string, user: User) => Promise<void>;
     disconnect: () => void;
-    
+
     // Users & Presence
     users: Map<string, User>;
     presence: Map<string, UserPresence>;
     currentUser: User | null;
     updatePresence: (presence: Partial<UserPresence>) => void;
-    
+
     // Operations
     operations: Operation[];
     sendOperation: (operation: Omit<Operation, 'id' | 'userId' | 'timestamp'>) => void;
     undoOperation: (operationId: string) => void;
     redoOperation: (operationId: string) => void;
-    
+
     // Conflict Resolution
     conflicts: Operation[];
     resolveConflict: (conflictId: string, resolution: 'accept' | 'reject') => void;
-    
+
     // Permissions
     hasPermission: (permission: keyof UserPermissions) => boolean;
     updateUserPermissions: (userId: string, permissions: Partial<UserPermissions>) => void;
@@ -308,7 +308,7 @@ export const CollaborationProvider: React.FC<CollaborationProviderProps> = ({
 }) => {
     const { core } = useEditorCore();
     const { elements, updateElement, addElement, removeElement } = useEditorElements();
-    
+
     const [isConnected, setIsConnected] = useState(false);
     const [users] = useState(new Map<string, User>());
     const [presence] = useState(new Map<string, UserPresence>());
@@ -316,44 +316,44 @@ export const CollaborationProvider: React.FC<CollaborationProviderProps> = ({
     const [operations, setOperations] = useState<Operation[]>([]);
     const [conflicts, setConflicts] = useState<Operation[]>([]);
     const [sessionId, setSessionId] = useState(initialSessionId);
-    
+
     const wsManager = useRef<WebSocketManager | null>(null);
     const operationQueue = useRef<Operation[]>([]);
     const syncTimer = useRef<NodeJS.Timeout | null>(null);
-    
+
     // 🎯 WEBSOCKET HANDLERS
     const handleWebSocketMessage = useCallback((event: CollaborationEvent) => {
         switch (event.type) {
             case 'user-joined':
                 users.set(event.data.id, event.data);
                 break;
-                
+
             case 'user-left':
                 users.delete(event.data.userId);
                 presence.delete(event.data.userId);
                 break;
-                
+
             case 'presence-update':
                 presence.set(event.data.userId, event.data);
                 break;
-                
+
             case 'operation':
                 handleRemoteOperation(event.data);
                 break;
-                
+
             case 'sync':
                 handleSync(event.data);
                 break;
-                
+
             case 'conflict':
                 setConflicts(prev => [...prev, event.data]);
                 break;
         }
     }, [users, presence]);
-    
+
     const handleConnectionChange = useCallback((connected: boolean) => {
         setIsConnected(connected);
-        
+
         if (connected && operationQueue.current.length > 0) {
             // Send queued operations when reconnected
             operationQueue.current.forEach(op => {
@@ -365,58 +365,58 @@ export const CollaborationProvider: React.FC<CollaborationProviderProps> = ({
             operationQueue.current = [];
         }
     }, []);
-    
+
     // 🎯 OPERATION HANDLERS
     const handleRemoteOperation = useCallback((remoteOp: Operation) => {
         // Check for conflicts with local operations
-        const localOps = operations.filter(op => 
+        const localOps = operations.filter(op =>
             Math.abs(op.timestamp.getTime() - remoteOp.timestamp.getTime()) < 1000
         );
-        
+
         let finalOperation = remoteOp;
         let hasConflicts = false;
-        
+
         for (const localOp of localOps) {
             const { op1, op2 } = OperationalTransform.transform(localOp, remoteOp);
-            
+
             if (!op1 || !op2) {
                 hasConflicts = true;
                 finalOperation = op1 || op2 || remoteOp;
                 break;
             }
         }
-        
+
         if (hasConflicts) {
             setConflicts(prev => [...prev, remoteOp]);
             return;
         }
-        
+
         // Apply operation to elements
         applyOperation(finalOperation);
         setOperations(prev => [...prev, finalOperation]);
-        
+
     }, [operations]);
-    
+
     const applyOperation = useCallback((operation: Operation) => {
         switch (operation.type) {
             case 'create':
                 addElement(operation.data);
                 break;
-                
+
             case 'update':
                 updateElement(operation.elementId, operation.data);
                 break;
-                
+
             case 'delete':
                 removeElement(operation.elementId);
                 break;
-                
+
             case 'move':
                 updateElement(operation.elementId, {
                     position: operation.data.position
                 });
                 break;
-                
+
             case 'resize':
                 updateElement(operation.elementId, {
                     size: operation.data.size
@@ -424,21 +424,21 @@ export const CollaborationProvider: React.FC<CollaborationProviderProps> = ({
                 break;
         }
     }, [addElement, updateElement, removeElement]);
-    
+
     const sendOperation = useCallback((opData: Omit<Operation, 'id' | 'userId' | 'timestamp'>) => {
         if (!currentUser) return;
-        
+
         const operation: Operation = {
             ...opData,
             id: `op_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
             userId: currentUser.id,
             timestamp: new Date()
         };
-        
+
         // Apply locally first
         applyOperation(operation);
         setOperations(prev => [...prev, operation]);
-        
+
         // Send to server
         if (isConnected && wsManager.current) {
             wsManager.current.send({
@@ -449,20 +449,20 @@ export const CollaborationProvider: React.FC<CollaborationProviderProps> = ({
             operationQueue.current.push(operation);
         }
     }, [currentUser, isConnected, enableOfflineSupport, applyOperation]);
-    
+
     // 🎯 PRESENCE MANAGEMENT
     const updatePresence = useCallback((presenceUpdate: Partial<UserPresence>) => {
         if (!currentUser) return;
-        
+
         const newPresence: UserPresence = {
             userId: currentUser.id,
             isActive: true,
             lastUpdate: new Date(),
             ...presenceUpdate
         };
-        
+
         presence.set(currentUser.id, newPresence);
-        
+
         if (isConnected && wsManager.current) {
             wsManager.current.send({
                 type: 'presence-update',
@@ -470,19 +470,19 @@ export const CollaborationProvider: React.FC<CollaborationProviderProps> = ({
             });
         }
     }, [currentUser, presence, isConnected]);
-    
+
     // 🎯 CONFLICT RESOLUTION
     const resolveConflict = useCallback((conflictId: string, resolution: 'accept' | 'reject') => {
         const conflict = conflicts.find(c => c.id === conflictId);
         if (!conflict) return;
-        
+
         if (resolution === 'accept') {
             applyOperation(conflict);
             setOperations(prev => [...prev, conflict]);
         }
-        
+
         setConflicts(prev => prev.filter(c => c.id !== conflictId));
-        
+
         // Notify server of resolution
         if (isConnected && wsManager.current) {
             wsManager.current.send({
@@ -491,20 +491,20 @@ export const CollaborationProvider: React.FC<CollaborationProviderProps> = ({
             });
         }
     }, [conflicts, applyOperation, isConnected]);
-    
+
     // 🎯 PERMISSIONS
     const hasPermission = useCallback((permission: keyof UserPermissions): boolean => {
         return currentUser?.permissions[permission] || false;
     }, [currentUser]);
-    
+
     const updateUserPermissions = useCallback((userId: string, permissions: Partial<UserPermissions>) => {
         if (!hasPermission('canManageUsers')) return;
-        
+
         const user = users.get(userId);
         if (user) {
             const updatedUser = { ...user, permissions: { ...user.permissions, ...permissions } };
             users.set(userId, updatedUser);
-            
+
             if (isConnected && wsManager.current) {
                 wsManager.current.send({
                     type: 'update-permissions',
@@ -513,42 +513,42 @@ export const CollaborationProvider: React.FC<CollaborationProviderProps> = ({
             }
         }
     }, [users, hasPermission, isConnected]);
-    
+
     // 🎯 CONNECTION MANAGEMENT
     const connect = useCallback(async (sessionId: string, user: User) => {
         setSessionId(sessionId);
         setCurrentUser(user);
-        
+
         const url = `${websocketUrl}?sessionId=${sessionId}&userId=${user.id}`;
         wsManager.current = new WebSocketManager(url, handleWebSocketMessage, handleConnectionChange);
-        
+
         await wsManager.current.connect();
-        
+
         // Request initial sync
         wsManager.current.send({
             type: 'sync-request',
             data: { timestamp: new Date().toISOString() }
         });
-        
+
     }, [websocketUrl, handleWebSocketMessage, handleConnectionChange]);
-    
+
     const disconnect = useCallback(() => {
         if (wsManager.current) {
             wsManager.current.disconnect();
             wsManager.current = null;
         }
-        
+
         if (syncTimer.current) {
             clearInterval(syncTimer.current);
             syncTimer.current = null;
         }
-        
+
         setIsConnected(false);
         setCurrentUser(null);
         users.clear();
         presence.clear();
     }, [users, presence]);
-    
+
     // 🎯 SYNC MANAGEMENT
     const handleSync = useCallback((syncData: any) => {
         // Handle full state synchronization
@@ -559,11 +559,11 @@ export const CollaborationProvider: React.FC<CollaborationProviderProps> = ({
                 elements: syncData.elements
             }));
         }
-        
+
         if (syncData.operations) {
             setOperations(syncData.operations);
         }
-        
+
         if (syncData.users) {
             users.clear();
             syncData.users.forEach((user: User) => {
@@ -571,7 +571,7 @@ export const CollaborationProvider: React.FC<CollaborationProviderProps> = ({
             });
         }
     }, [core, users]);
-    
+
     // 🎯 PERIODIC SYNC
     useEffect(() => {
         if (isConnected && enableOfflineSupport) {
@@ -584,25 +584,25 @@ export const CollaborationProvider: React.FC<CollaborationProviderProps> = ({
                 }
             }, syncInterval);
         }
-        
+
         return () => {
             if (syncTimer.current) {
                 clearInterval(syncTimer.current);
             }
         };
     }, [isConnected, enableOfflineSupport, syncInterval]);
-    
+
     // 🎯 UNDO/REDO
     const undoOperation = useCallback((operationId: string) => {
         const operation = operations.find(op => op.id === operationId);
         if (!operation || operation.userId !== currentUser?.id) return;
-        
+
         // Create inverse operation
         let inverseOp: Partial<Operation> = {
             type: operation.type,
             elementId: operation.elementId
         };
-        
+
         switch (operation.type) {
             case 'create':
                 inverseOp.type = 'delete';
@@ -621,10 +621,10 @@ export const CollaborationProvider: React.FC<CollaborationProviderProps> = ({
                 }
                 break;
         }
-        
+
         sendOperation(inverseOp as Omit<Operation, 'id' | 'userId' | 'timestamp'>);
     }, [operations, currentUser, elements, sendOperation]);
-    
+
     const redoOperation = useCallback((operationId: string) => {
         // Implementation would depend on how undo/redo history is tracked
         const operation = operations.find(op => op.id === operationId);
@@ -636,7 +636,7 @@ export const CollaborationProvider: React.FC<CollaborationProviderProps> = ({
             });
         }
     }, [operations, sendOperation]);
-    
+
     const contextValue: CollaborationContextType = {
         isConnected,
         connect,
@@ -654,7 +654,7 @@ export const CollaborationProvider: React.FC<CollaborationProviderProps> = ({
         hasPermission,
         updateUserPermissions
     };
-    
+
     return (
         <CollaborationContext.Provider value={contextValue}>
             {children}
@@ -684,18 +684,18 @@ export const UserAvatars: React.FC<UserAvatarsProps> = ({
     className = ''
 }) => {
     const { users, currentUser } = useCollaboration();
-    
+
     const visibleUsers = useMemo(() => {
         const userList = Array.from(users.values())
             .filter(user => user.id !== currentUser?.id)
             .filter(user => showOfflineUsers || user.isOnline)
             .slice(0, maxVisible);
-        
+
         return userList;
     }, [users, currentUser, showOfflineUsers, maxVisible]);
-    
+
     const remainingCount = users.size - visibleUsers.length - 1; // -1 for current user
-    
+
     return (
         <div className={`user-avatars ${className}`} style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
             {visibleUsers.map(user => (
@@ -740,7 +740,7 @@ export const UserAvatars: React.FC<UserAvatarsProps> = ({
                     )}
                 </div>
             ))}
-            
+
             {remainingCount > 0 && (
                 <div
                     style={{
@@ -766,18 +766,18 @@ export const UserAvatars: React.FC<UserAvatarsProps> = ({
 // 🎯 SHARED CURSORS COMPONENT
 export const SharedCursors: React.FC = () => {
     const { presence, currentUser } = useCollaboration();
-    
+
     const cursors = useMemo(() => {
         return Array.from(presence.values())
             .filter(p => p.userId !== currentUser?.id && p.cursor && p.isActive);
     }, [presence, currentUser]);
-    
+
     return (
         <>
             {cursors.map(cursor => {
                 const user = presence.get(cursor.userId);
                 if (!user?.cursor) return null;
-                
+
                 return (
                     <div
                         key={cursor.userId}
@@ -826,9 +826,9 @@ interface CollaborationStatusProps {
 
 export const CollaborationStatus: React.FC<CollaborationStatusProps> = ({ className = '' }) => {
     const { isConnected, users, conflicts } = useCollaboration();
-    
+
     const onlineCount = Array.from(users.values()).filter(user => user.isOnline).length;
-    
+
     return (
         <div className={`collaboration-status ${className}`} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <div
@@ -842,7 +842,7 @@ export const CollaborationStatus: React.FC<CollaborationStatusProps> = ({ classN
             <span style={{ fontSize: '12px', color: '#6b7280' }}>
                 {isConnected ? `${onlineCount} online` : 'Offline'}
             </span>
-            
+
             {conflicts.length > 0 && (
                 <div
                     style={{

@@ -20,12 +20,12 @@ import React, {
 import { useEditorCore, useEditorElements, useEditorSelection, EditorElement } from '../core/EditorCore';
 
 // 🎯 PROPERTY TYPES
-export type PropertyType = 
-    | 'string' 
-    | 'number' 
-    | 'boolean' 
-    | 'color' 
-    | 'select' 
+export type PropertyType =
+    | 'string'
+    | 'number'
+    | 'boolean'
+    | 'color'
+    | 'select'
     | 'multiselect'
     | 'range'
     | 'textarea'
@@ -256,7 +256,7 @@ const PROPERTY_SCHEMAS: Record<string, PropertySchema> = {
             }
         }
     },
-    
+
     button: {
         elementType: 'button',
         groups: [
@@ -472,10 +472,10 @@ const PropertyInput: React.FC<PropertyInputProps> = ({
     const [suggestions, setSuggestions] = useState<string[]>([]);
     const [showSuggestions, setShowSuggestions] = useState(false);
     const inputRef = useRef<HTMLInputElement | HTMLTextAreaElement>(null);
-    
+
     const handleInputChange = (newValue: any) => {
         onChange(newValue);
-        
+
         // Filter suggestions
         if (definition.suggestions && typeof newValue === 'string') {
             const filtered = definition.suggestions.filter(s =>
@@ -485,7 +485,7 @@ const PropertyInput: React.FC<PropertyInputProps> = ({
             setShowSuggestions(filtered.length > 0 && newValue.length > 0);
         }
     };
-    
+
     const renderInput = () => {
         const baseProps = {
             value: value ?? definition.defaultValue ?? '',
@@ -501,7 +501,7 @@ const PropertyInput: React.FC<PropertyInputProps> = ({
                 outline: 'none'
             }
         };
-        
+
         switch (definition.type) {
             case 'string':
             case 'url':
@@ -554,7 +554,7 @@ const PropertyInput: React.FC<PropertyInputProps> = ({
                         )}
                     </div>
                 );
-                
+
             case 'textarea':
                 return (
                     <textarea
@@ -564,7 +564,7 @@ const PropertyInput: React.FC<PropertyInputProps> = ({
                         style={{ ...baseProps.style, resize: 'vertical' }}
                     />
                 );
-                
+
             case 'number':
                 return (
                     <input
@@ -575,7 +575,7 @@ const PropertyInput: React.FC<PropertyInputProps> = ({
                         onChange={(e) => handleInputChange(parseFloat(e.target.value) || 0)}
                     />
                 );
-                
+
             case 'range':
                 return (
                     <div>
@@ -605,7 +605,7 @@ const PropertyInput: React.FC<PropertyInputProps> = ({
                         </div>
                     </div>
                 );
-                
+
             case 'boolean':
                 return (
                     <label style={{
@@ -623,7 +623,7 @@ const PropertyInput: React.FC<PropertyInputProps> = ({
                         <span>{definition.label}</span>
                     </label>
                 );
-                
+
             case 'color':
                 return (
                     <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
@@ -647,7 +647,7 @@ const PropertyInput: React.FC<PropertyInputProps> = ({
                         />
                     </div>
                 );
-                
+
             case 'select':
                 return (
                     <select
@@ -665,7 +665,7 @@ const PropertyInput: React.FC<PropertyInputProps> = ({
                         ))}
                     </select>
                 );
-                
+
             case 'multiselect':
                 return (
                     <select
@@ -688,7 +688,7 @@ const PropertyInput: React.FC<PropertyInputProps> = ({
                         ))}
                     </select>
                 );
-                
+
             case 'file':
                 return (
                     <input
@@ -705,7 +705,7 @@ const PropertyInput: React.FC<PropertyInputProps> = ({
                         style={baseProps.style}
                     />
                 );
-                
+
             case 'date':
                 return (
                     <input
@@ -714,7 +714,7 @@ const PropertyInput: React.FC<PropertyInputProps> = ({
                         onChange={(e) => handleInputChange(e.target.value)}
                     />
                 );
-                
+
             case 'time':
                 return (
                     <input
@@ -723,7 +723,7 @@ const PropertyInput: React.FC<PropertyInputProps> = ({
                         onChange={(e) => handleInputChange(e.target.value)}
                     />
                 );
-                
+
             case 'json':
                 return (
                     <textarea
@@ -741,7 +741,7 @@ const PropertyInput: React.FC<PropertyInputProps> = ({
                         }}
                     />
                 );
-                
+
             case 'code':
                 return (
                     <textarea
@@ -755,7 +755,7 @@ const PropertyInput: React.FC<PropertyInputProps> = ({
                         }}
                     />
                 );
-                
+
             default:
                 return (
                     <input
@@ -765,7 +765,7 @@ const PropertyInput: React.FC<PropertyInputProps> = ({
                 );
         }
     };
-    
+
     return (
         <div style={{ marginBottom: '16px' }}>
             {definition.type !== 'boolean' && (
@@ -781,9 +781,9 @@ const PropertyInput: React.FC<PropertyInputProps> = ({
                     {definition.unit && <span style={{ color: '#6b7280' }}> ({definition.unit})</span>}
                 </label>
             )}
-            
+
             {renderInput()}
-            
+
             {error && (
                 <div style={{
                     marginTop: '4px',
@@ -793,7 +793,7 @@ const PropertyInput: React.FC<PropertyInputProps> = ({
                     {error}
                 </div>
             )}
-            
+
             {definition.description && (
                 <div style={{
                     marginTop: '4px',
@@ -833,19 +833,19 @@ export const AdvancedPropertiesPanel: React.FC<AdvancedPropertiesPanelProps> = (
 }) => {
     const { core } = useEditorCore();
     const { selectedElements: coreSelectedElements } = useEditorSelection();
-    
+
     const elements = selectedElements.length > 0 ? selectedElements : coreSelectedElements;
     const [collapsedGroups, setCollapsedGroups] = useState<Set<string>>(new Set());
     const [searchQuery, setSearchQuery] = useState('');
     const [validationErrors, setValidationErrors] = useState<Record<string, Record<string, string>>>({});
     const [changeHistory, setChangeHistory] = useState<Array<{ elementId: string; property: string; oldValue: any; newValue: any; timestamp: number }>>([]);
-    
+
     // Merge schemas
     const allSchemas = useMemo(() => ({
         ...PROPERTY_SCHEMAS,
         ...customSchemas
     }), [customSchemas]);
-    
+
     // Get schema for current selection
     const currentSchema = useMemo(() => {
         if (elements.length === 0) return null;
@@ -856,11 +856,11 @@ export const AdvancedPropertiesPanel: React.FC<AdvancedPropertiesPanelProps> = (
         const commonType = elements.every(el => el.type === elements[0].type) ? elements[0].type : 'mixed';
         return allSchemas[commonType] || null;
     }, [elements, allSchemas]);
-    
+
     // Filter properties by search
     const filteredProperties = useMemo(() => {
         if (!currentSchema || !searchQuery) return currentSchema?.properties || {};
-        
+
         const filtered: Record<string, PropertyDefinition> = {};
         Object.entries(currentSchema.properties).forEach(([key, prop]) => {
             if (
@@ -871,14 +871,14 @@ export const AdvancedPropertiesPanel: React.FC<AdvancedPropertiesPanelProps> = (
                 filtered[key] = prop;
             }
         });
-        
+
         return filtered;
     }, [currentSchema, searchQuery]);
-    
+
     // Group filtered properties
     const groupedProperties = useMemo(() => {
         if (!currentSchema) return [];
-        
+
         return currentSchema.groups
             .sort((a, b) => (a.order || 0) - (b.order || 0))
             .map(group => ({
@@ -887,47 +887,47 @@ export const AdvancedPropertiesPanel: React.FC<AdvancedPropertiesPanelProps> = (
             }))
             .filter(group => group.properties.length > 0);
     }, [currentSchema, filteredProperties]);
-    
+
     // Validate property value
     const validateProperty = useCallback((definition: PropertyDefinition, value: any): string | null => {
         if (definition.required && (value === undefined || value === null || value === '')) {
             return `${definition.label} is required`;
         }
-        
+
         if (definition.validation) {
             const { min, max, pattern, custom } = definition.validation;
-            
+
             if (min !== undefined && (typeof value === 'number' && value < min)) {
                 return `${definition.label} must be at least ${min}`;
             }
-            
+
             if (max !== undefined && (typeof value === 'number' && value > max)) {
                 return `${definition.label} must be at most ${max}`;
             }
-            
+
             if (pattern && typeof value === 'string') {
                 const regex = new RegExp(pattern);
                 if (!regex.test(value)) {
                     return `${definition.label} format is invalid`;
                 }
             }
-            
+
             if (custom) {
                 return custom(value);
             }
         }
-        
+
         return null;
     }, []);
-    
+
     // Handle property change
     const handlePropertyChange = useCallback((elementId: string, propertyKey: string, newValue: any) => {
         const element = elements.find(el => el.id === elementId);
         if (!element) return;
-        
+
         const definition = currentSchema?.properties[propertyKey];
         if (!definition) return;
-        
+
         // Validate
         const error = validateProperty(definition, newValue);
         if (error) {
@@ -952,7 +952,7 @@ export const AdvancedPropertiesPanel: React.FC<AdvancedPropertiesPanelProps> = (
                 return newErrors;
             });
         }
-        
+
         // Store history
         if (enableHistory) {
             const oldValue = element.properties[propertyKey];
@@ -967,7 +967,7 @@ export const AdvancedPropertiesPanel: React.FC<AdvancedPropertiesPanelProps> = (
                 }
             ]);
         }
-        
+
         // Update element
         const updates: Partial<EditorElement> = {
             properties: {
@@ -975,18 +975,18 @@ export const AdvancedPropertiesPanel: React.FC<AdvancedPropertiesPanelProps> = (
                 [propertyKey]: newValue
             }
         };
-        
+
         onElementUpdate?.(elementId, updates);
         core.updateElement(elementId, updates);
-        
+
     }, [elements, currentSchema, validateProperty, enableHistory, onElementUpdate, core]);
-    
+
     // Handle batch change (for multiple selection)
     const handleBatchChange = useCallback((propertyKey: string, newValue: any) => {
         if (!enableBatchEditing || elements.length <= 1) return;
-        
+
         const updates: Record<string, Partial<EditorElement>> = {};
-        
+
         elements.forEach(element => {
             updates[element.id] = {
                 properties: {
@@ -995,16 +995,16 @@ export const AdvancedPropertiesPanel: React.FC<AdvancedPropertiesPanelProps> = (
                 }
             };
         });
-        
+
         onBatchUpdate?.(updates);
-        
+
         // Update each element individually
         Object.entries(updates).forEach(([elementId, elementUpdates]) => {
             core.updateElement(elementId, elementUpdates);
         });
-        
+
     }, [elements, enableBatchEditing, onBatchUpdate, core]);
-    
+
     // Toggle group collapse
     const toggleGroup = useCallback((groupId: string) => {
         setCollapsedGroups(prev => {
@@ -1017,14 +1017,14 @@ export const AdvancedPropertiesPanel: React.FC<AdvancedPropertiesPanelProps> = (
             return newSet;
         });
     }, []);
-    
+
     // Check if property should be shown based on conditional logic
     const shouldShowProperty = useCallback((definition: PropertyDefinition, element: EditorElement): boolean => {
         if (!definition.conditional) return true;
-        
+
         const { property, value, operator = '===' } = definition.conditional;
         const actualValue = element.properties[property];
-        
+
         switch (operator) {
             case '===':
                 return actualValue === value;
@@ -1040,7 +1040,7 @@ export const AdvancedPropertiesPanel: React.FC<AdvancedPropertiesPanelProps> = (
                 return true;
         }
     }, []);
-    
+
     if (elements.length === 0) {
         return (
             <div
@@ -1063,7 +1063,7 @@ export const AdvancedPropertiesPanel: React.FC<AdvancedPropertiesPanelProps> = (
             </div>
         );
     }
-    
+
     return (
         <div
             className={`advanced-properties-panel ${className}`}
@@ -1098,7 +1098,7 @@ export const AdvancedPropertiesPanel: React.FC<AdvancedPropertiesPanelProps> = (
                         </span>
                     )}
                 </h3>
-                
+
                 {/* Search */}
                 <input
                     type="text"
@@ -1115,7 +1115,7 @@ export const AdvancedPropertiesPanel: React.FC<AdvancedPropertiesPanelProps> = (
                     }}
                 />
             </div>
-            
+
             {/* Content */}
             <div style={{
                 flex: 1,
@@ -1124,7 +1124,7 @@ export const AdvancedPropertiesPanel: React.FC<AdvancedPropertiesPanelProps> = (
             }}>
                 {groupedProperties.map(group => {
                     const isCollapsed = collapsedGroups.has(group.id);
-                    
+
                     return (
                         <div key={group.id} style={{ marginBottom: '16px' }}>
                             {/* Group Header */}
@@ -1151,7 +1151,7 @@ export const AdvancedPropertiesPanel: React.FC<AdvancedPropertiesPanelProps> = (
                                     ▼
                                 </span>
                             </button>
-                            
+
                             {/* Group Content */}
                             {!isCollapsed && (
                                 <div style={{
@@ -1164,15 +1164,15 @@ export const AdvancedPropertiesPanel: React.FC<AdvancedPropertiesPanelProps> = (
                                     {group.properties.map(propKey => {
                                         const definition = filteredProperties[propKey];
                                         if (!definition) return null;
-                                        
+
                                         // For single element
                                         if (elements.length === 1) {
                                             const element = elements[0];
-                                            
+
                                             if (!shouldShowProperty(definition, element)) {
                                                 return null;
                                             }
-                                            
+
                                             return (
                                                 <PropertyInput
                                                     key={propKey}
@@ -1183,13 +1183,13 @@ export const AdvancedPropertiesPanel: React.FC<AdvancedPropertiesPanelProps> = (
                                                 />
                                             );
                                         }
-                                        
+
                                         // For multiple elements (batch editing)
                                         if (enableBatchEditing) {
-                                            const commonValue = elements.every(el => 
+                                            const commonValue = elements.every(el =>
                                                 el.properties[propKey] === elements[0].properties[propKey]
                                             ) ? elements[0].properties[propKey] : '(mixed)';
-                                            
+
                                             return (
                                                 <PropertyInput
                                                     key={propKey}
@@ -1200,7 +1200,7 @@ export const AdvancedPropertiesPanel: React.FC<AdvancedPropertiesPanelProps> = (
                                                 />
                                             );
                                         }
-                                        
+
                                         return null;
                                     })}
                                 </div>
@@ -1209,7 +1209,7 @@ export const AdvancedPropertiesPanel: React.FC<AdvancedPropertiesPanelProps> = (
                     );
                 })}
             </div>
-            
+
             {/* Footer - History */}
             {enableHistory && changeHistory.length > 0 && (
                 <div style={{

@@ -57,10 +57,10 @@ export abstract class SmartComponentBase<T extends SmartComponentProps = SmartCo
         renderTime: 0,
         updateCount: 0
     };
-    
+
     constructor(props: T) {
         super(props);
-        
+
         this.config = {
             autoResize: true,
             responsiveBreakpoints: { mobile: 480, tablet: 768, desktop: 1024 },
@@ -71,43 +71,43 @@ export abstract class SmartComponentBase<T extends SmartComponentProps = SmartCo
             performanceOptimized: true
         };
     }
-    
+
     componentDidMount() {
         if (this.props.autoConfig) {
             this.autoConfigureComponent();
         }
-        
+
         if (this.props.validation) {
             this.validateProperties();
         }
-        
+
         if (this.config.performanceOptimized) {
             this.startPerformanceTracking();
         }
     }
-    
+
     componentDidUpdate() {
         this.performanceMetrics.updateCount++;
-        
+
         if (this.props.validation) {
             this.validateProperties();
         }
     }
-    
+
     protected autoConfigureComponent(): void {
         // Override in subclasses
     }
-    
+
     protected validateProperties(): void {
         this.validationErrors = [];
-        
+
         // Check required properties
         for (const prop of this.config.requiredProperties) {
             if (!(prop in this.props)) {
                 this.validationErrors.push(`Required property '${prop}' is missing`);
             }
         }
-        
+
         // Run custom validation rules
         for (const [prop, validator] of Object.entries(this.config.validationRules)) {
             const value = (this.props as any)[prop];
@@ -116,71 +116,71 @@ export abstract class SmartComponentBase<T extends SmartComponentProps = SmartCo
                 this.validationErrors.push(error);
             }
         }
-        
+
         if (this.validationErrors.length > 0) {
             this.props.onError?.(this.props.id, this.validationErrors.join(', '));
         }
     }
-    
+
     protected startPerformanceTracking(): void {
         const startTime = performance.now();
-        
+
         setTimeout(() => {
             this.performanceMetrics.renderTime = performance.now() - startTime;
         }, 0);
     }
-    
+
     protected getResponsiveValue<V>(values: { mobile?: V; tablet?: V; desktop?: V; default: V }): V {
         const width = window.innerWidth;
-        
+
         if (width <= this.config.responsiveBreakpoints.mobile && values.mobile !== undefined) {
             return values.mobile;
         }
-        
+
         if (width <= this.config.responsiveBreakpoints.tablet && values.tablet !== undefined) {
             return values.tablet;
         }
-        
+
         if (width >= this.config.responsiveBreakpoints.desktop && values.desktop !== undefined) {
             return values.desktop;
         }
-        
+
         return values.default;
     }
-    
+
     protected generateA11yProps(): Record<string, any> {
         if (!this.config.a11yEnabled) return {};
-        
+
         return {
             'aria-label': this.getA11yLabel(),
             'role': this.getA11yRole(),
             'tabIndex': this.isInteractive() ? 0 : -1
         };
     }
-    
+
     protected abstract getA11yLabel(): string;
     protected abstract getA11yRole(): string;
     protected abstract isInteractive(): boolean;
-    
+
     render() {
         const startTime = performance.now();
-        
+
         try {
             const content = this.renderContent();
-            
+
             if (this.config.performanceOptimized) {
                 this.performanceMetrics.renderTime = performance.now() - startTime;
             }
-            
+
             return content;
         } catch (error) {
             this.props.onError?.(this.props.id, `Render error: ${error}`);
             return this.renderError();
         }
     }
-    
+
     protected abstract renderContent(): ReactNode;
-    
+
     protected renderError(): ReactNode {
         return (
             <div className="smart-component-error" style={{
@@ -216,7 +216,7 @@ interface SmartButtonProps extends SmartComponentProps {
 export class SmartButton extends SmartComponentBase<SmartButtonProps> {
     constructor(props: SmartButtonProps) {
         super(props);
-        
+
         this.config = {
             ...this.config,
             defaultProperties: {
@@ -240,14 +240,14 @@ export class SmartButton extends SmartComponentBase<SmartButtonProps> {
             }
         };
     }
-    
+
     protected autoConfigureComponent(): void {
         // Auto-configure based on context
         const { text = 'Button' } = this.props;
-        
+
         // Suggest variant based on text content
         let suggestedVariant: SmartButtonProps['variant'] = 'primary';
-        
+
         if (text.toLowerCase().includes('delete') || text.toLowerCase().includes('remove')) {
             suggestedVariant = 'danger';
         } else if (text.toLowerCase().includes('save') || text.toLowerCase().includes('submit')) {
@@ -257,7 +257,7 @@ export class SmartButton extends SmartComponentBase<SmartButtonProps> {
         } else if (text.toLowerCase().includes('warn') || text.toLowerCase().includes('alert')) {
             suggestedVariant = 'warning';
         }
-        
+
         // Auto-size based on text length
         let suggestedSize: SmartButtonProps['size'] = 'md';
         if (text.length > 20) {
@@ -265,7 +265,7 @@ export class SmartButton extends SmartComponentBase<SmartButtonProps> {
         } else if (text.length < 8) {
             suggestedSize = 'sm';
         }
-        
+
         // Update component if auto-optimization is enabled
         if (this.props.autoOptimize) {
             this.props.onUpdate?.(this.props.id, {
@@ -277,25 +277,25 @@ export class SmartButton extends SmartComponentBase<SmartButtonProps> {
             });
         }
     }
-    
+
     protected getA11yLabel(): string {
         const { text = 'Button', loading, disabled } = this.props;
-        
+
         let label = text;
         if (loading) label += ' (loading)';
         if (disabled) label += ' (disabled)';
-        
+
         return label;
     }
-    
+
     protected getA11yRole(): string {
         return 'button';
     }
-    
+
     protected isInteractive(): boolean {
         return !this.props.disabled && !this.props.loading;
     }
-    
+
     protected renderContent(): ReactNode {
         const {
             text = 'Button',
@@ -310,7 +310,7 @@ export class SmartButton extends SmartComponentBase<SmartButtonProps> {
             editorMode = false,
             preview = false
         } = this.props;
-        
+
         const variantStyles = {
             primary: { background: '#3b82f6', color: 'white', border: 'none' },
             secondary: { background: '#6b7280', color: 'white', border: 'none' },
@@ -318,20 +318,20 @@ export class SmartButton extends SmartComponentBase<SmartButtonProps> {
             warning: { background: '#f59e0b', color: 'white', border: 'none' },
             danger: { background: '#ef4444', color: 'white', border: 'none' }
         };
-        
+
         const sizeStyles = {
             sm: { padding: '6px 12px', fontSize: '14px', borderRadius: '4px' },
             md: { padding: '8px 16px', fontSize: '16px', borderRadius: '6px' },
             lg: { padding: '12px 24px', fontSize: '18px', borderRadius: '8px' }
         };
-        
+
         const responsivePadding = this.getResponsiveValue({
             mobile: '6px 12px',
             tablet: '8px 16px',
             desktop: '12px 24px',
             default: sizeStyles[size].padding
         });
-        
+
         const buttonStyle: CSSProperties = {
             ...variantStyles[variant],
             ...sizeStyles[size],
@@ -347,9 +347,9 @@ export class SmartButton extends SmartComponentBase<SmartButtonProps> {
             outline: 'none',
             ...style
         };
-        
+
         const a11yProps = this.generateA11yProps();
-        
+
         return (
             <button
                 className={`smart-button smart-button-${variant} smart-button-${size} ${className}`}
@@ -368,13 +368,13 @@ export class SmartButton extends SmartComponentBase<SmartButtonProps> {
                         animation: 'spin 1s linear infinite'
                     }} />
                 )}
-                
+
                 {icon && !loading && (
                     <span className="button-icon">{icon}</span>
                 )}
-                
+
                 <span className="button-text">{text}</span>
-                
+
                 {preview && (
                     <div className="preview-overlay" style={{
                         position: 'absolute',
@@ -418,12 +418,12 @@ interface SmartInputProps extends SmartComponentProps {
 
 export class SmartInput extends SmartComponentBase<SmartInputProps> {
     private inputRef = React.createRef<HTMLInputElement>();
-    private [value, setValue] = [this.props.value || '', (v: string) => {}];
-    private [errors, setErrors] = [[] as string[], (e: string[]) => {}];
-    
+    private [value, setValue] =[this.props.value || '', (v: string) => { }];
+    private [errors, setErrors] =[[] as string[], (e: string[]) => { }];
+
     constructor(props: SmartInputProps) {
         super(props);
-        
+
         this.config = {
             ...this.config,
             defaultProperties: {
@@ -464,27 +464,27 @@ export class SmartInput extends SmartComponentBase<SmartInputProps> {
             }
         };
     }
-    
+
     protected autoConfigureComponent(): void {
         const { placeholder, type = 'text' } = this.props;
-        
+
         // Auto-suggest input type based on placeholder or label
         let suggestedType = type;
         const text = (placeholder || this.props.label || '').toLowerCase();
-        
+
         if (text.includes('email')) suggestedType = 'email';
         else if (text.includes('password')) suggestedType = 'password';
         else if (text.includes('phone') || text.includes('tel')) suggestedType = 'tel';
         else if (text.includes('url') || text.includes('website')) suggestedType = 'url';
         else if (text.includes('number') || text.includes('age') || text.includes('count')) suggestedType = 'number';
-        
+
         // Auto-suggest autocomplete
         let autoComplete = '';
         if (text.includes('name')) autoComplete = 'name';
         else if (text.includes('email')) autoComplete = 'email';
         else if (text.includes('phone')) autoComplete = 'tel';
         else if (text.includes('address')) autoComplete = 'address-line1';
-        
+
         if (this.props.autoConfig && (suggestedType !== type || autoComplete)) {
             this.props.onUpdate?.(this.props.id, {
                 properties: {
@@ -495,47 +495,47 @@ export class SmartInput extends SmartComponentBase<SmartInputProps> {
             });
         }
     }
-    
+
     protected getA11yLabel(): string {
         const { label, placeholder, required } = this.props;
         let a11yLabel = label || placeholder || 'Input field';
         if (required) a11yLabel += ' (required)';
         return a11yLabel;
     }
-    
+
     protected getA11yRole(): string {
         return 'textbox';
     }
-    
+
     protected isInteractive(): boolean {
         return true;
     }
-    
+
     private validateInput = (inputValue: string): string[] => {
         const validationErrors: string[] = [];
-        
+
         for (const [rule, validator] of Object.entries(this.config.validationRules)) {
             const error = validator(inputValue);
             if (error) {
                 validationErrors.push(error);
             }
         }
-        
+
         return validationErrors;
     };
-    
+
     private handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const newValue = e.target.value;
         setValue(newValue);
-        
+
         if (this.props.autoValidate) {
             const newErrors = this.validateInput(newValue);
             setErrors(newErrors);
         }
-        
+
         this.props.onChange?.(newValue);
     };
-    
+
     protected renderContent(): ReactNode {
         const {
             type = 'text',
@@ -547,9 +547,9 @@ export class SmartInput extends SmartComponentBase<SmartInputProps> {
             editorMode = false,
             preview = false
         } = this.props;
-        
+
         const hasErrors = errors.length > 0;
-        
+
         const inputStyle: CSSProperties = {
             width: '100%',
             padding: '12px 16px',
@@ -561,14 +561,14 @@ export class SmartInput extends SmartComponentBase<SmartInputProps> {
             backgroundColor: 'white',
             ...style
         };
-        
+
         const focusStyle: CSSProperties = {
             borderColor: hasErrors ? '#ef4444' : '#3b82f6',
             boxShadow: `0 0 0 3px ${hasErrors ? 'rgba(239, 68, 68, 0.1)' : 'rgba(59, 130, 246, 0.1)'}`
         };
-        
+
         const a11yProps = this.generateA11yProps();
-        
+
         return (
             <div className={`smart-input-wrapper ${className}`}>
                 {label && (
@@ -583,7 +583,7 @@ export class SmartInput extends SmartComponentBase<SmartInputProps> {
                         {required && <span style={{ color: '#ef4444' }}>*</span>}
                     </label>
                 )}
-                
+
                 <div style={{ position: 'relative' }}>
                     <input
                         ref={this.inputRef}
@@ -605,7 +605,7 @@ export class SmartInput extends SmartComponentBase<SmartInputProps> {
                         disabled={editorMode}
                         {...a11yProps}
                     />
-                    
+
                     {preview && (
                         <div className="preview-overlay" style={{
                             position: 'absolute',
@@ -628,7 +628,7 @@ export class SmartInput extends SmartComponentBase<SmartInputProps> {
                         </div>
                     )}
                 </div>
-                
+
                 {hasErrors && (
                     <div className="smart-input-errors" style={{
                         marginTop: '6px'
@@ -665,13 +665,13 @@ interface SmartImageProps extends SmartComponentProps {
 
 export class SmartImage extends SmartComponentBase<SmartImageProps> {
     private imageRef = React.createRef<HTMLImageElement>();
-    private [loading, setLoading] = [true, (l: boolean) => {}];
-    private [error, setError] = [false, (e: boolean) => {}];
-    private [naturalSize, setNaturalSize] = [{ width: 0, height: 0 }, (s: any) => {}];
-    
+    private [loading, setLoading] =[true, (l: boolean) => { }];
+    private [error, setError] =[false, (e: boolean) => { }];
+    private [naturalSize, setNaturalSize] =[{ width: 0, height: 0 }, (s: any) => { }];
+
     constructor(props: SmartImageProps) {
         super(props);
-        
+
         this.config = {
             ...this.config,
             defaultProperties: {
@@ -699,15 +699,15 @@ export class SmartImage extends SmartComponentBase<SmartImageProps> {
             }
         };
     }
-    
+
     protected autoConfigureComponent(): void {
         const { src, alt } = this.props;
-        
+
         // Auto-generate alt text if missing
         if (!alt && src) {
             const filename = src.split('/').pop()?.split('.')[0];
             const suggestedAlt = filename ? filename.replace(/[-_]/g, ' ') : 'Image';
-            
+
             if (this.props.autoOptimize) {
                 this.props.onUpdate?.(this.props.id, {
                     properties: {
@@ -718,23 +718,23 @@ export class SmartImage extends SmartComponentBase<SmartImageProps> {
             }
         }
     }
-    
+
     protected getA11yLabel(): string {
         return this.props.alt || 'Image';
     }
-    
+
     protected getA11yRole(): string {
         return 'img';
     }
-    
+
     protected isInteractive(): boolean {
         return false;
     }
-    
+
     private handleLoad = () => {
         setLoading(false);
         setError(false);
-        
+
         if (this.imageRef.current) {
             setNaturalSize({
                 width: this.imageRef.current.naturalWidth,
@@ -742,13 +742,13 @@ export class SmartImage extends SmartComponentBase<SmartImageProps> {
             });
         }
     };
-    
+
     private handleError = () => {
         setLoading(false);
         setError(true);
         this.props.onError?.(this.props.id, 'Failed to load image');
     };
-    
+
     protected renderContent(): ReactNode {
         const {
             src = '',
@@ -764,7 +764,7 @@ export class SmartImage extends SmartComponentBase<SmartImageProps> {
             style = {},
             preview = false
         } = this.props;
-        
+
         const containerStyle: CSSProperties = {
             position: 'relative',
             display: 'inline-block',
@@ -774,16 +774,16 @@ export class SmartImage extends SmartComponentBase<SmartImageProps> {
             overflow: 'hidden',
             ...style
         };
-        
+
         const imageStyle: CSSProperties = {
             width: '100%',
             height: '100%',
             objectFit,
             transition: 'opacity 0.3s ease'
         };
-        
+
         const a11yProps = this.generateA11yProps();
-        
+
         if (error && fallback) {
             return (
                 <div className={`smart-image-wrapper ${className}`} style={containerStyle}>
@@ -796,7 +796,7 @@ export class SmartImage extends SmartComponentBase<SmartImageProps> {
                 </div>
             );
         }
-        
+
         if (error) {
             return (
                 <div className={`smart-image-error ${className}`} style={{
@@ -817,7 +817,7 @@ export class SmartImage extends SmartComponentBase<SmartImageProps> {
                 </div>
             );
         }
-        
+
         return (
             <div className={`smart-image-wrapper ${className}`} style={containerStyle}>
                 {loading && placeholder && (
@@ -836,7 +836,7 @@ export class SmartImage extends SmartComponentBase<SmartImageProps> {
                         {placeholder}
                     </div>
                 )}
-                
+
                 <img
                     ref={this.imageRef}
                     src={src}
@@ -852,7 +852,7 @@ export class SmartImage extends SmartComponentBase<SmartImageProps> {
                     onError={this.handleError}
                     {...a11yProps}
                 />
-                
+
                 {preview && (
                     <div className="preview-overlay" style={{
                         position: 'absolute',
@@ -872,7 +872,7 @@ export class SmartImage extends SmartComponentBase<SmartImageProps> {
                         PREVIEW
                     </div>
                 )}
-                
+
                 {/* Performance info for debugging */}
                 {this.props.editorMode && (
                     <div className="image-info" style={{
@@ -901,21 +901,21 @@ export class SmartComponentFactory {
         ['input', SmartInput],
         ['image', SmartImage]
     ]);
-    
+
     static register(type: string, component: typeof SmartComponentBase): void {
         this.components.set(type, component);
     }
-    
+
     static create(type: string, props: SmartComponentProps): React.ReactElement | null {
         const ComponentClass = this.components.get(type);
         if (!ComponentClass) {
             console.warn(`Unknown smart component type: ${type}`);
             return null;
         }
-        
+
         return React.createElement(ComponentClass, props);
     }
-    
+
     static getAvailableTypes(): string[] {
         return Array.from(this.components.keys());
     }

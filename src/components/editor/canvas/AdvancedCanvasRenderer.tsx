@@ -126,12 +126,12 @@ export const AdvancedCanvasRenderer: React.FC<AdvancedCanvasRendererProps> = ({
     const { elements } = useEditorElements();
     const { viewport, setViewport, zoomIn, zoomOut } = useEditorViewport();
     const { selection, selectElement, clearSelection } = useEditorSelection();
-    
+
     const canvasRef = useRef<HTMLDivElement>(null);
     const [isDragging, setIsDragging] = useState(false);
     const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
     const [isTransforming, setIsTransforming] = useState(false);
-    
+
     // 🎯 DEVICE PREVIEW DIMENSIONS
     const deviceDimensions = useMemo(() => {
         switch (devicePreview) {
@@ -145,68 +145,68 @@ export const AdvancedCanvasRenderer: React.FC<AdvancedCanvasRendererProps> = ({
                 return { width, height, name: 'Custom' };
         }
     }, [devicePreview, width, height]);
-    
+
     // 🎯 GRID PATTERN GENERATOR
     const generateGridPattern = useCallback(() => {
         const { size, color, opacity, type } = grid;
         const scaledSize = size * viewport.zoom;
-        
+
         if (!grid.showGrid || scaledSize < 5) return undefined;
-        
+
         const patternId = `grid-${type}-${size}-${viewport.zoom}`;
-        
+
         const gridSVG = `
             <svg width="${scaledSize}" height="${scaledSize}" xmlns="http://www.w3.org/2000/svg">
                 <defs>
                     <pattern id="${patternId}" width="${scaledSize}" height="${scaledSize}" patternUnits="userSpaceOnUse">
-                        ${type === 'dots' 
-                            ? `<circle cx="${scaledSize/2}" cy="${scaledSize/2}" r="1" fill="${color}" opacity="${opacity}" />`
-                            : `<path d="M ${scaledSize} 0 L 0 0 0 ${scaledSize}" fill="none" stroke="${color}" stroke-width="1" opacity="${opacity}" />`
-                        }
+                        ${type === 'dots'
+                ? `<circle cx="${scaledSize / 2}" cy="${scaledSize / 2}" r="1" fill="${color}" opacity="${opacity}" />`
+                : `<path d="M ${scaledSize} 0 L 0 0 0 ${scaledSize}" fill="none" stroke="${color}" stroke-width="1" opacity="${opacity}" />`
+            }
                     </pattern>
                 </defs>
                 <rect width="100%" height="100%" fill="url(#${patternId})" />
             </svg>
         `;
-        
+
         return `url("data:image/svg+xml,${encodeURIComponent(gridSVG)}")`;
     }, [grid, viewport.zoom]);
-    
+
     // 🎯 COORDINATE TRANSFORMATION
     const screenToCanvas = useCallback((screenX: number, screenY: number) => {
         const rect = canvasRef.current?.getBoundingClientRect();
         if (!rect) return { x: 0, y: 0 };
-        
+
         const x = (screenX - rect.left - viewport.x) / viewport.zoom;
         const y = (screenY - rect.top - viewport.y) / viewport.zoom;
-        
+
         return { x, y };
     }, [viewport]);
-    
+
     const canvasToScreen = useCallback((canvasX: number, canvasY: number) => {
         return {
             x: canvasX * viewport.zoom + viewport.x,
             y: canvasY * viewport.zoom + viewport.y
         };
     }, [viewport]);
-    
+
     // 🎯 SNAP TO GRID
     const snapToGrid = useCallback((x: number, y: number) => {
         if (!grid.snapToGrid) return { x, y };
-        
+
         const snappedX = Math.round(x / grid.size) * grid.size;
         const snappedY = Math.round(y / grid.size) * grid.size;
-        
+
         return { x: snappedX, y: snappedY };
     }, [grid]);
-    
+
     // 🎯 SNAP TO GUIDES
     const snapToGuides = useCallback((x: number, y: number) => {
         if (!guides.enabled) return { x, y };
-        
+
         let snappedX = x;
         let snappedY = y;
-        
+
         // Snap to vertical guides
         for (const guide of guides.vertical) {
             if (Math.abs(x - guide) <= guides.snapDistance) {
@@ -214,7 +214,7 @@ export const AdvancedCanvasRenderer: React.FC<AdvancedCanvasRendererProps> = ({
                 break;
             }
         }
-        
+
         // Snap to horizontal guides
         for (const guide of guides.horizontal) {
             if (Math.abs(y - guide) <= guides.snapDistance) {
@@ -222,10 +222,10 @@ export const AdvancedCanvasRenderer: React.FC<AdvancedCanvasRendererProps> = ({
                 break;
             }
         }
-        
+
         return { x: snappedX, y: snappedY };
     }, [guides]);
-    
+
     // 🎯 VIEWPORT CULLING
     const getVisibleElements = useCallback(() => {
         const viewBounds = {
@@ -234,7 +234,7 @@ export const AdvancedCanvasRenderer: React.FC<AdvancedCanvasRendererProps> = ({
             right: (-viewport.x + width) / viewport.zoom,
             bottom: (-viewport.y + height) / viewport.zoom
         };
-        
+
         return elements.filter(element => {
             const elementBounds = {
                 left: element.position.x,
@@ -242,7 +242,7 @@ export const AdvancedCanvasRenderer: React.FC<AdvancedCanvasRendererProps> = ({
                 right: element.position.x + element.size.width,
                 bottom: element.position.y + element.size.height
             };
-            
+
             return !(
                 elementBounds.right < viewBounds.left ||
                 elementBounds.left > viewBounds.right ||
@@ -251,13 +251,13 @@ export const AdvancedCanvasRenderer: React.FC<AdvancedCanvasRendererProps> = ({
             );
         });
     }, [elements, viewport, width, height]);
-    
+
     // 🎯 MOUSE EVENTS
     const handleMouseDown = useCallback((e: React.MouseEvent) => {
         if (e.button !== 0) return; // Only left mouse button
-        
+
         const canvasPos = screenToCanvas(e.clientX, e.clientY);
-        
+
         // Check if clicking on an element
         const clickedElement = elements.find(element => {
             const bounds = {
@@ -266,7 +266,7 @@ export const AdvancedCanvasRenderer: React.FC<AdvancedCanvasRendererProps> = ({
                 right: element.position.x + element.size.width,
                 bottom: element.position.y + element.size.height
             };
-            
+
             return (
                 canvasPos.x >= bounds.left &&
                 canvasPos.x <= bounds.right &&
@@ -274,68 +274,68 @@ export const AdvancedCanvasRenderer: React.FC<AdvancedCanvasRendererProps> = ({
                 canvasPos.y <= bounds.bottom
             );
         });
-        
+
         if (clickedElement) {
             selectElement(clickedElement.id);
             onElementClick?.(clickedElement.id, e);
         } else {
             clearSelection();
             onCanvasClick?.(canvasPos, e);
-            
+
             // Start panning
             setIsDragging(true);
             setDragStart({ x: e.clientX, y: e.clientY });
         }
     }, [elements, screenToCanvas, selectElement, clearSelection, onElementClick, onCanvasClick]);
-    
+
     const handleMouseMove = useCallback((e: React.MouseEvent) => {
         if (!isDragging) return;
-        
+
         const deltaX = e.clientX - dragStart.x;
         const deltaY = e.clientY - dragStart.y;
-        
+
         setViewport({
             x: viewport.x + deltaX,
             y: viewport.y + deltaY
         });
-        
+
         setDragStart({ x: e.clientX, y: e.clientY });
     }, [isDragging, dragStart, viewport, setViewport]);
-    
+
     const handleMouseUp = useCallback(() => {
         setIsDragging(false);
     }, []);
-    
+
     const handleWheel = useCallback((e: React.WheelEvent) => {
         e.preventDefault();
-        
+
         const rect = canvasRef.current?.getBoundingClientRect();
         if (!rect) return;
-        
+
         const mouseX = e.clientX - rect.left;
         const mouseY = e.clientY - rect.top;
-        
+
         const scaleFactor = e.deltaY > 0 ? 0.9 : 1.1;
         const newZoom = Math.max(
             viewportSettings.minZoom,
             Math.min(viewportSettings.maxZoom, viewport.zoom * scaleFactor)
         );
-        
+
         if (newZoom !== viewport.zoom) {
             const zoomRatio = newZoom / viewport.zoom;
             const newX = mouseX - (mouseX - viewport.x) * zoomRatio;
             const newY = mouseY - (mouseY - viewport.y) * zoomRatio;
-            
+
             setViewport({
                 x: newX,
                 y: newY,
                 zoom: newZoom
             });
-            
+
             onViewportChange?.({ ...viewport, x: newX, y: newY, zoom: newZoom });
         }
     }, [viewport, viewportSettings, setViewport, onViewportChange]);
-    
+
     // 🎯 KEYBOARD SHORTCUTS
     useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {
@@ -357,16 +357,16 @@ export const AdvancedCanvasRenderer: React.FC<AdvancedCanvasRendererProps> = ({
                 }
             }
         };
-        
+
         window.addEventListener('keydown', handleKeyDown);
         return () => window.removeEventListener('keydown', handleKeyDown);
     }, [zoomIn, zoomOut, setViewport]);
-    
+
     // 🎯 RENDER ELEMENT
     const renderElement = useCallback((element: any) => {
         const isSelected = selection.elements.includes(element.id);
         const screenPos = canvasToScreen(element.position.x, element.position.y);
-        
+
         const elementStyle: CSSProperties = {
             position: 'absolute',
             left: screenPos.x,
@@ -380,7 +380,7 @@ export const AdvancedCanvasRenderer: React.FC<AdvancedCanvasRendererProps> = ({
             transformOrigin: '0 0',
             ...element.styles
         };
-        
+
         return (
             <div
                 key={element.id}
@@ -404,7 +404,7 @@ export const AdvancedCanvasRenderer: React.FC<AdvancedCanvasRendererProps> = ({
                 <div className="element-content">
                     {renderElementContent(element)}
                 </div>
-                
+
                 {/* Selection bounds */}
                 {isSelected && showElementBounds && (
                     <div className="element-bounds" style={{
@@ -418,7 +418,7 @@ export const AdvancedCanvasRenderer: React.FC<AdvancedCanvasRendererProps> = ({
                         pointerEvents: 'none'
                     }} />
                 )}
-                
+
                 {/* Element name */}
                 {showElementNames && (
                     <div className="element-name" style={{
@@ -440,13 +440,13 @@ export const AdvancedCanvasRenderer: React.FC<AdvancedCanvasRendererProps> = ({
             </div>
         );
     }, [selection, viewport, canvasToScreen, showElementBounds, showElementNames, onElementClick, onElementDoubleClick, onElementContextMenu]);
-    
+
     // 🎯 RENDER ELEMENT CONTENT
     const renderElementContent = useCallback((element: any) => {
         switch (element.type) {
             case 'text':
                 return (
-                    <div style={{ 
+                    <div style={{
                         ...element.styles,
                         width: '100%',
                         height: '100%',
@@ -457,7 +457,7 @@ export const AdvancedCanvasRenderer: React.FC<AdvancedCanvasRendererProps> = ({
                         {element.properties.content || 'Text Element'}
                     </div>
                 );
-                
+
             case 'button':
                 return (
                     <button style={{
@@ -474,7 +474,7 @@ export const AdvancedCanvasRenderer: React.FC<AdvancedCanvasRendererProps> = ({
                         {element.properties.text || 'Button'}
                     </button>
                 );
-                
+
             case 'image':
                 return (
                     <img
@@ -488,7 +488,7 @@ export const AdvancedCanvasRenderer: React.FC<AdvancedCanvasRendererProps> = ({
                         }}
                     />
                 );
-                
+
             case 'container':
                 return (
                     <div style={{
@@ -505,7 +505,7 @@ export const AdvancedCanvasRenderer: React.FC<AdvancedCanvasRendererProps> = ({
                         Container
                     </div>
                 );
-                
+
             default:
                 return (
                     <div style={{
@@ -524,11 +524,11 @@ export const AdvancedCanvasRenderer: React.FC<AdvancedCanvasRendererProps> = ({
                 );
         }
     }, []);
-    
+
     // 🎯 RENDER GUIDES
     const renderGuides = useCallback(() => {
         if (!guides.enabled) return null;
-        
+
         return (
             <div className="canvas-guides" style={{
                 position: 'absolute',
@@ -554,7 +554,7 @@ export const AdvancedCanvasRenderer: React.FC<AdvancedCanvasRendererProps> = ({
                         }}
                     />
                 ))}
-                
+
                 {/* Vertical guides */}
                 {guides.vertical.map((x, index) => (
                     <div
@@ -573,10 +573,10 @@ export const AdvancedCanvasRenderer: React.FC<AdvancedCanvasRendererProps> = ({
             </div>
         );
     }, [guides, canvasToScreen]);
-    
+
     const visibleElements = getVisibleElements();
     const gridPattern = generateGridPattern();
-    
+
     return (
         <div
             ref={canvasRef}
@@ -606,11 +606,11 @@ export const AdvancedCanvasRenderer: React.FC<AdvancedCanvasRendererProps> = ({
             }}>
                 {/* Render elements */}
                 {visibleElements.map(renderElement)}
-                
+
                 {/* Render guides */}
                 {renderGuides()}
             </div>
-            
+
             {/* Viewport info */}
             <div className="viewport-info" style={{
                 position: 'absolute',

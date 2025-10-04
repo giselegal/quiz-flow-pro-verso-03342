@@ -78,7 +78,7 @@ describe('EditorCore Integration Tests', () => {
         const { result } = renderHook(() => useEditorCore(), {
             wrapper: EditorTestWrapper
         });
-        
+
         expect(result.current.core).toBeDefined();
         expect(result.current.core.getState()).toMatchObject({
             elements: [],
@@ -94,7 +94,7 @@ describe('EditorCore Integration Tests', () => {
             })
         });
     });
-    
+
     test('should add and remove elements', async () => {
         const { result } = renderHook(() => ({
             core: useEditorCore(),
@@ -102,7 +102,7 @@ describe('EditorCore Integration Tests', () => {
         }), {
             wrapper: EditorTestWrapper
         });
-        
+
         const testElement = {
             id: 'test-element',
             type: 'text',
@@ -110,26 +110,26 @@ describe('EditorCore Integration Tests', () => {
             size: { width: 200, height: 50 },
             properties: { text: 'Test Text' }
         };
-        
+
         act(() => {
             result.current.elements.addElement(testElement);
         });
-        
+
         expect(result.current.elements.elements).toHaveLength(1);
         expect(result.current.elements.elements[0]).toMatchObject(testElement);
-        
+
         act(() => {
             result.current.elements.removeElement('test-element');
         });
-        
+
         expect(result.current.elements.elements).toHaveLength(0);
     });
-    
+
     test('should handle plugin registration and execution', async () => {
         const { result } = renderHook(() => useEditorCore(), {
             wrapper: EditorTestWrapper
         });
-        
+
         const mockPlugin = {
             name: 'test-plugin',
             version: '1.0.0',
@@ -137,18 +137,18 @@ describe('EditorCore Integration Tests', () => {
             destroy: jest.fn(),
             hooks: {}
         };
-        
+
         act(() => {
             result.current.core.registerPlugin(mockPlugin);
         });
-        
+
         expect(mockPlugin.initialize).toHaveBeenCalled();
         expect(result.current.core.getPlugins()).toContain(mockPlugin);
-        
+
         act(() => {
             result.current.core.unregisterPlugin('test-plugin');
         });
-        
+
         expect(mockPlugin.destroy).toHaveBeenCalled();
     });
 });
@@ -173,16 +173,16 @@ describe('AdvancedCanvasRenderer Integration Tests', () => {
                 />
             </EditorTestWrapper>
         );
-        
+
         const canvas = screen.getByRole('img'); // Canvas has img role
         expect(canvas).toBeInTheDocument();
         expect(canvas).toHaveAttribute('width', '800');
         expect(canvas).toHaveAttribute('height', '600');
     });
-    
+
     test('should handle zoom and pan operations', async () => {
         const user = userEvent.setup();
-        
+
         render(
             <EditorTestWrapper>
                 <AdvancedCanvasRenderer
@@ -194,18 +194,18 @@ describe('AdvancedCanvasRenderer Integration Tests', () => {
                 />
             </EditorTestWrapper>
         );
-        
+
         const canvas = screen.getByRole('img');
-        
+
         // Test zoom with wheel
         await user.hover(canvas);
         fireEvent.wheel(canvas, { deltaY: -100, ctrlKey: true });
-        
+
         // Test pan with mouse drag
         fireEvent.mouseDown(canvas, { clientX: 100, clientY: 100 });
         fireEvent.mouseMove(canvas, { clientX: 150, clientY: 150 });
         fireEvent.mouseUp(canvas);
-        
+
         expect(canvas).toBeInTheDocument();
     });
 });
@@ -216,7 +216,7 @@ describe('SmartComponentLibrary Integration Tests', () => {
         const { result } = renderHook(() => useEditorElements(), {
             wrapper: EditorTestWrapper
         });
-        
+
         // Add context elements that should influence auto-configuration
         act(() => {
             result.current.addElement({
@@ -224,14 +224,14 @@ describe('SmartComponentLibrary Integration Tests', () => {
                 type: 'button',
                 position: { x: 100, y: 100 },
                 size: { width: 120, height: 40 },
-                properties: { 
+                properties: {
                     text: 'Primary Action',
                     variant: 'primary',
                     size: 'large'
                 }
             });
         });
-        
+
         render(
             <EditorTestWrapper>
                 <SmartButton
@@ -240,7 +240,7 @@ describe('SmartComponentLibrary Integration Tests', () => {
                 />
             </EditorTestWrapper>
         );
-        
+
         await waitFor(() => {
             const button = screen.getByRole('button');
             expect(button).toBeInTheDocument();
@@ -248,10 +248,10 @@ describe('SmartComponentLibrary Integration Tests', () => {
             expect(button).toHaveClass('smart-component');
         });
     });
-    
+
     test('should validate properties in real-time', async () => {
         const user = userEvent.setup();
-        
+
         render(
             <EditorTestWrapper>
                 <SmartButton
@@ -264,16 +264,16 @@ describe('SmartComponentLibrary Integration Tests', () => {
                 />
             </EditorTestWrapper>
         );
-        
+
         // Should show validation error for empty text
         await waitFor(() => {
             expect(screen.getByText(/text is required/i)).toBeInTheDocument();
         });
-        
+
         // Fix validation error
         const textInput = screen.getByLabelText(/text/i);
         await user.type(textInput, 'Valid Button Text');
-        
+
         await waitFor(() => {
             expect(screen.queryByText(/text is required/i)).not.toBeInTheDocument();
         });
@@ -294,25 +294,25 @@ describe('AdvancedPropertiesPanel Integration Tests', () => {
                 color: '#000000'
             }
         };
-        
+
         render(
             <EditorTestWrapper>
                 <AdvancedPropertiesPanel
                     selectedElements={[testElement]}
-                    onUpdateElement={() => {}}
+                    onUpdateElement={() => { }}
                 />
             </EditorTestWrapper>
         );
-        
+
         expect(screen.getByDisplayValue('Test Text')).toBeInTheDocument();
         expect(screen.getByDisplayValue('16')).toBeInTheDocument();
         expect(screen.getByDisplayValue('#000000')).toBeInTheDocument();
     });
-    
+
     test('should handle batch editing for multiple elements', async () => {
         const user = userEvent.setup();
         const mockUpdateElement = jest.fn();
-        
+
         const elements = [
             {
                 id: 'element-1',
@@ -329,7 +329,7 @@ describe('AdvancedPropertiesPanel Integration Tests', () => {
                 properties: { fontSize: 14, color: '#000000' }
             }
         ];
-        
+
         render(
             <EditorTestWrapper>
                 <AdvancedPropertiesPanel
@@ -339,15 +339,15 @@ describe('AdvancedPropertiesPanel Integration Tests', () => {
                 />
             </EditorTestWrapper>
         );
-        
+
         // Should show mixed values indicator
         expect(screen.getByText(/mixed values/i)).toBeInTheDocument();
-        
+
         // Change color for all selected elements
         const colorInput = screen.getByLabelText(/color/i);
         await user.clear(colorInput);
         await user.type(colorInput, '#ff0000');
-        
+
         await waitFor(() => {
             expect(mockUpdateElement).toHaveBeenCalledTimes(2);
             expect(mockUpdateElement).toHaveBeenCalledWith('element-1', expect.objectContaining({
@@ -365,7 +365,7 @@ describe('DragDropSystem Integration Tests', () => {
     test('should handle drag and drop operations', async () => {
         const user = userEvent.setup();
         const mockOnDrop = jest.fn();
-        
+
         render(
             <EditorTestWrapper>
                 <div style={{ width: '800px', height: '600px', position: 'relative' }}>
@@ -374,7 +374,7 @@ describe('DragDropSystem Integration Tests', () => {
                             Drag me
                         </div>
                     </Draggable>
-                    
+
                     <DropZone
                         id="drop-zone"
                         onDrop={mockOnDrop}
@@ -392,23 +392,23 @@ describe('DragDropSystem Integration Tests', () => {
                 </div>
             </EditorTestWrapper>
         );
-        
+
         const draggableElement = screen.getByText('Drag me');
         const dropZone = screen.getByText('Drop here');
-        
+
         // Simulate drag and drop
         fireEvent.mouseDown(draggableElement, { clientX: 50, clientY: 50 });
         fireEvent.mouseMove(document, { clientX: 300, clientY: 300 });
         fireEvent.mouseUp(document);
-        
+
         await waitFor(() => {
             expect(mockOnDrop).toHaveBeenCalled();
         });
     });
-    
+
     test('should respect drag constraints', async () => {
         const mockOnDragMove = jest.fn();
-        
+
         render(
             <EditorTestWrapper>
                 <DragProvider
@@ -429,14 +429,14 @@ describe('DragDropSystem Integration Tests', () => {
                 </DragProvider>
             </EditorTestWrapper>
         );
-        
+
         const draggableElement = screen.getByText('Constrained');
-        
+
         // Try to drag beyond constraints
         fireEvent.mouseDown(draggableElement, { clientX: 25, clientY: 25 });
         fireEvent.mouseMove(document, { clientX: 500, clientY: 400 }); // Beyond max constraints
         fireEvent.mouseUp(document);
-        
+
         await waitFor(() => {
             expect(mockOnDragMove).toHaveBeenCalled();
             // Position should be constrained to max values
@@ -459,7 +459,7 @@ describe('RealTimeCollaboration Integration Tests', () => {
                 </EditorTestWrapper>
             )
         });
-        
+
         const testUser = {
             id: 'user-1',
             name: 'Test User',
@@ -476,28 +476,28 @@ describe('RealTimeCollaboration Integration Tests', () => {
                 isOwner: false
             }
         };
-        
+
         await act(async () => {
             await result.current.connect('test-session', testUser);
         });
-        
+
         expect(result.current.currentUser).toEqual(testUser);
         expect(result.current.isConnected).toBe(true);
-        
+
         act(() => {
             result.current.updatePresence({
                 cursor: { x: 100, y: 100 },
                 selection: ['element-1']
             });
         });
-        
+
         expect(result.current.presence.get('user-1')).toMatchObject({
             userId: 'user-1',
             cursor: { x: 100, y: 100 },
             selection: ['element-1']
         });
     });
-    
+
     test('should resolve operation conflicts', async () => {
         const { result } = renderHook(() => useCollaboration(), {
             wrapper: ({ children }) => (
@@ -508,7 +508,7 @@ describe('RealTimeCollaboration Integration Tests', () => {
                 </EditorTestWrapper>
             )
         });
-        
+
         const testUser = {
             id: 'user-1',
             name: 'Test User',
@@ -525,11 +525,11 @@ describe('RealTimeCollaboration Integration Tests', () => {
                 isOwner: false
             }
         };
-        
+
         await act(async () => {
             await result.current.connect('test-session', testUser);
         });
-        
+
         // Send conflicting operations
         act(() => {
             result.current.sendOperation({
@@ -538,7 +538,7 @@ describe('RealTimeCollaboration Integration Tests', () => {
                 data: { properties: { text: 'Version A' } }
             });
         });
-        
+
         // Simulate receiving conflicting operation from another user
         const conflictOperation = {
             id: 'conflict-op',
@@ -548,13 +548,13 @@ describe('RealTimeCollaboration Integration Tests', () => {
             userId: 'user-2',
             timestamp: new Date()
         };
-        
+
         // This would typically be handled by the WebSocket message handler
         // For testing, we'll simulate the conflict resolution
         act(() => {
             result.current.resolveConflict('conflict-op', 'accept');
         });
-        
+
         expect(result.current.conflicts).toHaveLength(0);
     });
 });
@@ -571,18 +571,18 @@ describe('PerformanceOptimization Integration Tests', () => {
                 </EditorTestWrapper>
             )
         });
-        
+
         act(() => {
             result.current.startProfiling();
         });
-        
+
         // Simulate some work
         await act(async () => {
             await new Promise(resolve => setTimeout(resolve, 10));
         });
-        
+
         const metrics = result.current.stopProfiling();
-        
+
         expect(metrics).toMatchObject({
             renderTime: expect.any(Number),
             memoryUsage: expect.any(Number),
@@ -594,7 +594,7 @@ describe('PerformanceOptimization Integration Tests', () => {
             lastUpdate: expect.any(Date)
         });
     });
-    
+
     test('should cache and retrieve data efficiently', async () => {
         const { result } = renderHook(() => usePerformance(), {
             wrapper: ({ children }) => (
@@ -605,21 +605,21 @@ describe('PerformanceOptimization Integration Tests', () => {
                 </EditorTestWrapper>
             )
         });
-        
+
         const testData = { id: 'test', value: 'cached data' };
-        
+
         act(() => {
             result.current.cache.set('test-key', testData);
         });
-        
+
         const retrievedData = result.current.cache.get('test-key');
         expect(retrievedData).toEqual(testData);
-        
+
         // Test cache miss
         const missedData = result.current.cache.get('non-existent-key');
         expect(missedData).toBeNull();
     });
-    
+
     test('should execute worker tasks', async () => {
         const { result } = renderHook(() => usePerformance(), {
             wrapper: ({ children }) => (
@@ -630,7 +630,7 @@ describe('PerformanceOptimization Integration Tests', () => {
                 </EditorTestWrapper>
             )
         });
-        
+
         const taskResult = await act(async () => {
             return result.current.executeWorkerTask({
                 type: 'heavy-calculation',
@@ -638,7 +638,7 @@ describe('PerformanceOptimization Integration Tests', () => {
                 priority: 1
             });
         });
-        
+
         expect(taskResult).toMatchObject({
             result: expect.any(Number),
             duration: expect.any(Number)
@@ -651,7 +651,7 @@ describe('End-to-End Integration Tests', () => {
     test('should complete full editor workflow', async () => {
         const user = userEvent.setup();
         const mockSaveCallback = jest.fn();
-        
+
         render(
             <EditorTestWrapper>
                 <div data-testid="editor-app">
@@ -663,36 +663,36 @@ describe('End-to-End Integration Tests', () => {
                     <SmartComponentLibrary />
                     <AdvancedPropertiesPanel
                         selectedElements={[]}
-                        onUpdateElement={() => {}}
+                        onUpdateElement={() => { }}
                     />
                     <button onClick={mockSaveCallback}>Save</button>
                 </div>
             </EditorTestWrapper>
         );
-        
+
         const editorApp = screen.getByTestId('editor-app');
         expect(editorApp).toBeInTheDocument();
-        
+
         const canvas = screen.getByRole('img');
         expect(canvas).toBeInTheDocument();
-        
+
         const saveButton = screen.getByText('Save');
         await user.click(saveButton);
-        
+
         expect(mockSaveCallback).toHaveBeenCalled();
     });
-    
+
     test('should handle complex multi-user collaboration scenario', async () => {
         const mockWebSocketSend = jest.fn();
         mockWebSocket.send = mockWebSocketSend;
-        
+
         const { result } = renderHook(() => ({
             collaboration: useCollaboration(),
             elements: useEditorElements()
         }), {
             wrapper: EditorTestWrapper
         });
-        
+
         const user1 = {
             id: 'user-1',
             name: 'User 1',
@@ -709,12 +709,12 @@ describe('End-to-End Integration Tests', () => {
                 isOwner: true
             }
         };
-        
+
         // Connect user
         await act(async () => {
             await result.current.collaboration.connect('e2e-session', user1);
         });
-        
+
         // Add element
         act(() => {
             result.current.elements.addElement({
@@ -725,7 +725,7 @@ describe('End-to-End Integration Tests', () => {
                 properties: { text: 'Collaborative Text' }
             });
         });
-        
+
         // Send operation
         act(() => {
             result.current.collaboration.sendOperation({
@@ -739,7 +739,7 @@ describe('End-to-End Integration Tests', () => {
                 }
             });
         });
-        
+
         // Update presence
         act(() => {
             result.current.collaboration.updatePresence({
@@ -747,7 +747,7 @@ describe('End-to-End Integration Tests', () => {
                 selection: ['e2e-element']
             });
         });
-        
+
         expect(result.current.collaboration.isConnected).toBe(true);
         expect(result.current.elements.elements).toHaveLength(1);
         expect(mockWebSocketSend).toHaveBeenCalled();
@@ -758,11 +758,11 @@ describe('End-to-End Integration Tests', () => {
 describe('Performance Benchmarks', () => {
     test('should handle large number of elements efficiently', async () => {
         const startTime = performance.now();
-        
+
         const { result } = renderHook(() => useEditorElements(), {
             wrapper: EditorTestWrapper
         });
-        
+
         // Add 1000 elements
         act(() => {
             for (let i = 0; i < 1000; i++) {
@@ -775,14 +775,14 @@ describe('Performance Benchmarks', () => {
                 });
             }
         });
-        
+
         const endTime = performance.now();
         const duration = endTime - startTime;
-        
+
         expect(result.current.elements).toHaveLength(1000);
         expect(duration).toBeLessThan(1000); // Should complete within 1 second
     });
-    
+
     test('should maintain smooth performance with complex operations', async () => {
         const { result } = renderHook(() => ({
             elements: useEditorElements(),
@@ -790,11 +790,11 @@ describe('Performance Benchmarks', () => {
         }), {
             wrapper: EditorTestWrapper
         });
-        
+
         act(() => {
             result.current.performance.startProfiling();
         });
-        
+
         // Perform complex operations
         act(() => {
             // Add elements
@@ -807,22 +807,22 @@ describe('Performance Benchmarks', () => {
                     properties: { text: `Element ${i}` }
                 });
             }
-            
+
             // Update elements
             for (let i = 0; i < 50; i++) {
                 result.current.elements.updateElement(`complex-element-${i}`, {
                     position: { x: Math.random() * 800, y: Math.random() * 600 }
                 });
             }
-            
+
             // Remove some elements
             for (let i = 90; i < 100; i++) {
                 result.current.elements.removeElement(`complex-element-${i}`);
             }
         });
-        
+
         const metrics = result.current.performance.stopProfiling();
-        
+
         expect(metrics.renderTime).toBeLessThan(16); // 60 FPS target
         expect(result.current.elements.elements).toHaveLength(90);
     });

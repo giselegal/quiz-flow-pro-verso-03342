@@ -73,73 +73,73 @@ export interface WorkerTask {
 class AdvancedCache<T = any> {
     private cache = new Map<string, { value: T; timestamp: Date; hits: number }>();
     private accessOrder: string[] = [];
-    
-    constructor(private config: CacheConfig) {}
-    
+
+    constructor(private config: CacheConfig) { }
+
     get(key: string): T | null {
         const item = this.cache.get(key);
         if (!item) return null;
-        
+
         // Check TTL
         if (Date.now() - item.timestamp.getTime() > this.config.ttl) {
             this.delete(key);
             return null;
         }
-        
+
         // Update access pattern
         item.hits++;
         this.updateAccessOrder(key);
-        
+
         return item.value;
     }
-    
+
     set(key: string, value: T): void {
         // Evict if at capacity
         if (this.cache.size >= this.config.maxSize) {
             this.evict();
         }
-        
+
         this.cache.set(key, {
             value,
             timestamp: new Date(),
             hits: 1
         });
-        
+
         this.updateAccessOrder(key);
     }
-    
+
     delete(key: string): boolean {
         const result = this.cache.delete(key);
         this.accessOrder = this.accessOrder.filter(k => k !== key);
         return result;
     }
-    
+
     clear(): void {
         this.cache.clear();
         this.accessOrder = [];
     }
-    
+
     getHitRate(): number {
         if (this.cache.size === 0) return 0;
         const totalHits = Array.from(this.cache.values()).reduce((sum, item) => sum + item.hits, 0);
         return totalHits / this.cache.size;
     }
-    
+
     private updateAccessOrder(key: string): void {
         this.accessOrder = this.accessOrder.filter(k => k !== key);
         this.accessOrder.push(key);
     }
-    
+
     private evict(): void {
         let keyToEvict: string;
-        
+
         switch (this.config.strategy) {
             case 'lru':
                 keyToEvict = this.accessOrder[0];
                 break;
             case 'lfu':
                 const items = Array.from(this.cache.entries());
-                const lfu = items.reduce((min, [key, item]) => 
+                const lfu = items.reduce((min, [key, item]) =>
                     item.hits < min.hits ? { key, hits: item.hits } : min,
                     { key: items[0][0], hits: items[0][1].hits }
                 );
@@ -150,7 +150,7 @@ class AdvancedCache<T = any> {
                 keyToEvict = this.cache.keys().next().value;
                 break;
         }
-        
+
         this.delete(keyToEvict);
     }
 }
@@ -161,14 +161,14 @@ class WebWorkerManager {
     private taskQueue: WorkerTask[] = [];
     private activeTasks: Map<string, WorkerTask> = new Map();
     private maxWorkers = navigator.hardwareConcurrency || 4;
-    
+
     constructor() {
         // Create worker pool
         for (let i = 0; i < this.maxWorkers; i++) {
             this.createWorker(`worker_${i}`);
         }
     }
-    
+
     private createWorker(id: string): void {
         const workerCode = `
             self.onmessage = function(e) {
@@ -217,32 +217,32 @@ class WebWorkerManager {
                 return data.map(item => ({ ...item, processed: true }));
             }
         `;
-        
+
         const blob = new Blob([workerCode], { type: 'application/javascript' });
         const worker = new Worker(URL.createObjectURL(blob));
-        
+
         worker.onmessage = (e) => {
             const { taskId, result, error, success } = e.data;
             const task = this.activeTasks.get(taskId);
-            
+
             if (task) {
                 this.activeTasks.delete(taskId);
-                
+
                 // Dispatch result
                 if (success) {
                     this.dispatchTaskResult(task, result);
                 } else {
                     this.dispatchTaskError(task, error);
                 }
-                
+
                 // Process next task
                 this.processNextTask(id);
             }
         };
-        
+
         this.workers.set(id, worker);
     }
-    
+
     executeTask(task: WorkerTask): Promise<any> {
         return new Promise((resolve, reject) => {
             const enhancedTask = {
@@ -250,36 +250,36 @@ class WebWorkerManager {
                 resolve,
                 reject
             };
-            
+
             this.taskQueue.push(enhancedTask);
             this.taskQueue.sort((a, b) => b.priority - a.priority);
-            
+
             this.processNextTask();
         });
     }
-    
+
     private processNextTask(workerId?: string): void {
         if (this.taskQueue.length === 0) return;
-        
-        const availableWorkers = workerId ? 
-            [workerId] : 
+
+        const availableWorkers = workerId ?
+            [workerId] :
             Array.from(this.workers.keys()).filter(id => !this.getWorkerCurrentTask(id));
-        
+
         if (availableWorkers.length === 0) return;
-        
+
         const task = this.taskQueue.shift()!;
         const selectedWorker = availableWorkers[0];
         const worker = this.workers.get(selectedWorker);
-        
+
         if (worker) {
             this.activeTasks.set(task.id, task);
-            
+
             worker.postMessage({
                 taskId: task.id,
                 type: task.type,
                 data: task.data
             });
-            
+
             // Set timeout if specified
             if (task.timeout) {
                 setTimeout(() => {
@@ -291,29 +291,29 @@ class WebWorkerManager {
             }
         }
     }
-    
+
     private getWorkerCurrentTask(workerId: string): WorkerTask | null {
-        return Array.from(this.activeTasks.values()).find(task => 
+        return Array.from(this.activeTasks.values()).find(task =>
             Array.from(this.workers.keys()).indexOf(workerId) !== -1
         ) || null;
     }
-    
+
     private dispatchTaskResult(task: any, result: any): void {
         if (task.resolve) {
             task.resolve(result);
         }
     }
-    
+
     private dispatchTaskError(task: any, error: string): void {
         if (task.reject) {
             task.reject(new Error(error));
         }
     }
-    
+
     getActiveTaskCount(): number {
         return this.activeTasks.size;
     }
-    
+
     terminate(): void {
         this.workers.forEach(worker => worker.terminate());
         this.workers.clear();
@@ -330,46 +330,46 @@ export const useVirtualization = (
 ) => {
     const [scrollTop, setScrollTop] = useState(0);
     const [visibleRange, setVisibleRange] = useState({ start: 0, end: 0 });
-    
+
     const updateVisibleRange = useCallback(() => {
         if (!containerRef.current) return;
-        
+
         const startIndex = Math.floor(scrollTop / config.itemHeight);
         const endIndex = Math.min(
             startIndex + Math.ceil(config.containerHeight / config.itemHeight) + config.overscan,
             items.length
         );
-        
+
         setVisibleRange({ start: Math.max(0, startIndex - config.overscan), end: endIndex });
     }, [scrollTop, config, items.length, containerRef]);
-    
+
     useEffect(() => {
         updateVisibleRange();
     }, [updateVisibleRange]);
-    
+
     const handleScroll = useCallback((e: Event) => {
         const target = e.target as HTMLElement;
         setScrollTop(target.scrollTop);
     }, []);
-    
+
     useEffect(() => {
         const container = containerRef.current;
         if (!container) return;
-        
+
         container.addEventListener('scroll', handleScroll, { passive: true });
         return () => container.removeEventListener('scroll', handleScroll);
     }, [handleScroll, containerRef]);
-    
+
     const visibleItems = useMemo(() => {
         return items.slice(visibleRange.start, visibleRange.end).map((item, index) => ({
             ...item,
             index: visibleRange.start + index
         }));
     }, [items, visibleRange]);
-    
+
     const totalHeight = items.length * config.itemHeight;
     const offsetY = visibleRange.start * config.itemHeight;
-    
+
     return {
         visibleItems,
         totalHeight,
@@ -383,7 +383,7 @@ export const useLazyLoading = (config: LazyLoadConfig) => {
     const [loadedItems, setLoadedItems] = useState(new Set<string>());
     const [loadingItems, setLoadingItems] = useState(new Set<string>());
     const observerRef = useRef<IntersectionObserver | null>(null);
-    
+
     const observe = useCallback((element: HTMLElement, itemId: string) => {
         if (!observerRef.current) {
             observerRef.current = new IntersectionObserver(
@@ -391,11 +391,11 @@ export const useLazyLoading = (config: LazyLoadConfig) => {
                     entries.forEach(entry => {
                         const id = entry.target.getAttribute('data-item-id');
                         if (!id) return;
-                        
+
                         if (entry.isIntersecting) {
                             if (!loadedItems.has(id) && !loadingItems.has(id)) {
                                 setLoadingItems(prev => new Set(prev).add(id));
-                                
+
                                 // Simulate loading delay
                                 setTimeout(() => {
                                     setLoadedItems(prev => new Set(prev).add(id));
@@ -414,7 +414,7 @@ export const useLazyLoading = (config: LazyLoadConfig) => {
                                 Math.abs(rect.top),
                                 Math.abs(rect.bottom - viewportHeight)
                             );
-                            
+
                             if (distance > config.unloadDistance) {
                                 setLoadedItems(prev => {
                                     const newSet = new Set(prev);
@@ -431,17 +431,17 @@ export const useLazyLoading = (config: LazyLoadConfig) => {
                 }
             );
         }
-        
+
         element.setAttribute('data-item-id', itemId);
         observerRef.current.observe(element);
     }, [config, loadedItems, loadingItems]);
-    
+
     const unobserve = useCallback((element: HTMLElement) => {
         if (observerRef.current) {
             observerRef.current.unobserve(element);
         }
     }, []);
-    
+
     useEffect(() => {
         return () => {
             if (observerRef.current) {
@@ -449,7 +449,7 @@ export const useLazyLoading = (config: LazyLoadConfig) => {
             }
         };
     }, []);
-    
+
     return {
         observe,
         unobserve,
@@ -496,7 +496,7 @@ export const PerformanceProvider: React.FC<PerformanceProviderProps> = ({
         frameRate: 0,
         lastUpdate: new Date()
     });
-    
+
     const cache = useMemo(() => new AdvancedCache({
         maxSize: 1000,
         ttl: 5 * 60 * 1000, // 5 minutes
@@ -504,14 +504,14 @@ export const PerformanceProvider: React.FC<PerformanceProviderProps> = ({
         compressionEnabled: false,
         ...cacheConfig
     }), [cacheConfig]);
-    
-    const workerManager = useMemo(() => 
+
+    const workerManager = useMemo(() =>
         enableWorkers ? new WebWorkerManager() : null
-    , [enableWorkers]);
-    
+        , [enableWorkers]);
+
     const profilingStart = useRef<number>(0);
     const frameRateCounter = useRef<number[]>([]);
-    
+
     // 🎯 PERFORMANCE MONITORING
     const updateMetrics = useCallback(() => {
         const newMetrics: PerformanceMetrics = {
@@ -524,28 +524,28 @@ export const PerformanceProvider: React.FC<PerformanceProviderProps> = ({
             frameRate: calculateFrameRate(),
             lastUpdate: new Date()
         };
-        
+
         setMetrics(newMetrics);
     }, [cache, workerManager]);
-    
+
     const calculateFrameRate = useCallback(() => {
         const now = performance.now();
         frameRateCounter.current.push(now);
-        
+
         // Keep only last second of frames
         frameRateCounter.current = frameRateCounter.current.filter(
             time => now - time < 1000
         );
-        
+
         return frameRateCounter.current.length;
     }, []);
-    
+
     const startProfiling = useCallback(() => {
         if (enableProfiling) {
             profilingStart.current = performance.now();
         }
     }, [enableProfiling]);
-    
+
     const stopProfiling = useCallback(() => {
         if (enableProfiling) {
             updateMetrics();
@@ -553,54 +553,54 @@ export const PerformanceProvider: React.FC<PerformanceProviderProps> = ({
         }
         return metrics;
     }, [enableProfiling, updateMetrics, metrics]);
-    
+
     // 🎯 WORKER TASK EXECUTION
     const executeWorkerTask = useCallback(async (taskData: Omit<WorkerTask, 'id' | 'timestamp'>) => {
         if (!workerManager) {
             throw new Error('Web Workers are disabled');
         }
-        
+
         const task: WorkerTask = {
             ...taskData,
             id: `task_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
             timestamp: new Date()
         };
-        
+
         return await workerManager.executeTask(task);
     }, [workerManager]);
-    
+
     // 🎯 MEMORY OPTIMIZATION
     const optimizeMemory = useCallback(() => {
         // Clear cache
         cache.clear();
-        
+
         // Force garbage collection if available
         if ((window as any).gc) {
             (window as any).gc();
         }
-        
+
         // Remove unused event listeners
         document.querySelectorAll('[data-cleanup-listeners]').forEach(element => {
             element.remove();
         });
-        
+
         // Clear worker task queue
         if (workerManager) {
             // Clear completed tasks
             workerManager.getActiveTaskCount(); // This will trigger cleanup
         }
-        
+
         updateMetrics();
     }, [cache, workerManager, updateMetrics]);
-    
+
     // 🎯 PERIODIC METRICS UPDATE
     useEffect(() => {
         if (!enableProfiling) return;
-        
+
         const interval = setInterval(updateMetrics, 1000);
         return () => clearInterval(interval);
     }, [enableProfiling, updateMetrics]);
-    
+
     // 🎯 CLEANUP
     useEffect(() => {
         return () => {
@@ -609,7 +609,7 @@ export const PerformanceProvider: React.FC<PerformanceProviderProps> = ({
             }
         };
     }, [workerManager]);
-    
+
     const contextValue: PerformanceContextType = {
         metrics,
         cache,
@@ -620,7 +620,7 @@ export const PerformanceProvider: React.FC<PerformanceProviderProps> = ({
         clearCache: () => cache.clear(),
         optimizeMemory
     };
-    
+
     return (
         <PerformanceContext.Provider value={contextValue}>
             {children}
@@ -648,17 +648,17 @@ export const useOptimizedDebounce = <T extends (...args: any[]) => void>(
     const maxTimeoutRef = useRef<NodeJS.Timeout>();
     const lastCallTimeRef = useRef<number>(0);
     const lastInvokeTimeRef = useRef<number>(0);
-    
+
     const debouncedCallback = useCallback((...args: Parameters<T>) => {
         const now = Date.now();
         const sinceLastCall = now - lastCallTimeRef.current;
         const sinceLastInvoke = now - lastInvokeTimeRef.current;
-        
+
         lastCallTimeRef.current = now;
-        
+
         const shouldInvokeLeading = leading && sinceLastCall >= delay;
         const shouldInvokeMaxWait = maxWait && sinceLastInvoke >= maxWait;
-        
+
         if (shouldInvokeLeading || shouldInvokeMaxWait) {
             if (timeoutRef.current) {
                 clearTimeout(timeoutRef.current);
@@ -668,23 +668,23 @@ export const useOptimizedDebounce = <T extends (...args: any[]) => void>(
                 clearTimeout(maxTimeoutRef.current);
                 maxTimeoutRef.current = undefined;
             }
-            
+
             lastInvokeTimeRef.current = now;
             callback(...args);
             return;
         }
-        
+
         if (timeoutRef.current) {
             clearTimeout(timeoutRef.current);
         }
-        
+
         if (trailing) {
             timeoutRef.current = setTimeout(() => {
                 lastInvokeTimeRef.current = Date.now();
                 callback(...args);
             }, delay);
         }
-        
+
         if (maxWait && !maxTimeoutRef.current) {
             maxTimeoutRef.current = setTimeout(() => {
                 if (timeoutRef.current) {
@@ -696,14 +696,14 @@ export const useOptimizedDebounce = <T extends (...args: any[]) => void>(
             }, maxWait);
         }
     }, [callback, delay, leading, trailing, maxWait]) as T;
-    
+
     useEffect(() => {
         return () => {
             if (timeoutRef.current) clearTimeout(timeoutRef.current);
             if (maxTimeoutRef.current) clearTimeout(maxTimeoutRef.current);
         };
     }, []);
-    
+
     return debouncedCallback;
 };
 
@@ -718,20 +718,20 @@ export const PerformanceMonitor: React.FC<PerformanceMonitorProps> = memo(({
     showDetails = false
 }) => {
     const { metrics } = usePerformance();
-    
+
     const getPerformanceColor = (value: number, thresholds: [number, number]) => {
         if (value < thresholds[0]) return '#10b981'; // Good
         if (value < thresholds[1]) return '#f59e0b'; // Warning
         return '#ef4444'; // Poor
     };
-    
+
     const formatBytes = (bytes: number) => {
         const sizes = ['Bytes', 'KB', 'MB', 'GB'];
         if (bytes === 0) return '0 Bytes';
         const i = Math.floor(Math.log(bytes) / Math.log(1024));
         return Math.round(bytes / Math.pow(1024, i) * 100) / 100 + ' ' + sizes[i];
     };
-    
+
     return (
         <div className={`performance-monitor ${className}`} style={{
             position: 'fixed',
@@ -756,7 +756,7 @@ export const PerformanceMonitor: React.FC<PerformanceMonitorProps> = memo(({
                     {formatBytes(metrics.memoryUsage)}
                 </div>
             </div>
-            
+
             {showDetails && (
                 <div style={{ marginTop: '4px', fontSize: '10px', opacity: 0.8 }}>
                     <div>Elements: {metrics.elementsCount} ({metrics.visibleElements} visible)</div>
@@ -788,27 +788,27 @@ export const VirtualizedList = memo(<T,>({
 }: VirtualizedListProps<T>) => {
     const containerRef = useRef<HTMLDivElement>(null);
     const { startProfiling, stopProfiling } = usePerformance();
-    
+
     const virtualizationConfig: VirtualizationConfig = {
         itemHeight,
         containerHeight: height,
         overscan,
         threshold: items.length
     };
-    
+
     const { visibleItems, totalHeight, offsetY } = useVirtualization(
         items,
         virtualizationConfig,
         containerRef
     );
-    
+
     useEffect(() => {
         startProfiling();
         return () => {
             stopProfiling();
         };
     }, [startProfiling, stopProfiling]);
-    
+
     return (
         <div
             ref={containerRef}

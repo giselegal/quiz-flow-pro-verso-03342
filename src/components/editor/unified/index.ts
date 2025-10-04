@@ -2,7 +2,7 @@
  * 🎯 UNIFIED EDITOR COMPONENTS - EXPORTS CONSOLIDADOS
  * 
  * Ponto único de exportação para todos os componentes unificados do editor,
- * incluindo as correções do Ticket #2: Pipeline de Etapas e Preview em Tempo Real.
+ * incluindo FASE 3: Unificação de Renderização.
  * 
  * COMPONENTES INCLUÍDOS:
  * ✅ RealStagesProvider - Pipeline robusto de etapas
@@ -10,6 +10,7 @@
  * ✅ UnifiedPreviewEngine - Preview com imports ESM
  * ✅ UnifiedPreviewWithFallbacks - Preview com fallbacks robustos
  * ✅ InteractivePreviewEngine - Preview interativo
+ * ✅ UnifiedStepRenderer - Sistema unificado de renderização (FASE 3)
  */
 
 // 🏗️ PROVIDERS E CONTEXTOS
@@ -144,6 +145,17 @@ export const getUnifiedSystemDiagnostics = () => {
     },
   };
 };
+
+// 🎯 FASE 3: SISTEMA UNIFICADO DE RENDERIZAÇÃO
+export { 
+  UnifiedStepRenderer, 
+  UnifiedStepRendererStyles,
+  type UnifiedStepRendererProps,
+  type RenderMode
+} from './UnifiedStepRenderer';
+
+// Re-export do StepRegistry para conveniência
+export { StepRegistry } from '@/components/step-registry/StepRegistry';
 
 // 🎯 EXPORT DEFAULT PARA INTEGRAÇÃO RÁPIDA
 export default UnifiedEditorSystem;
