@@ -125,56 +125,56 @@ export const UnifiedStepRenderer: React.FC<UnifiedStepRendererProps> = ({
         );
     }
 
-  // 🎨 Preparar props unificadas para o componente
-  const unifiedProps = useMemo(() => ({
-    // Props obrigatórias da BaseStepProps
-    stepId,
-    stepNumber: quizState?.currentStep || 1,
-    isActive: true, // Sempre ativo quando renderizado
-    isEditable,
-    onNext: onNext || (() => {}),
-    onPrevious: onPrevious || (() => {}),
-    onSave: (data: any) => onStepUpdate?.(stepId, data),
-    
-    // Props básicas
-    mode,
-    data: stepProps,
-    
-    // Estado do quiz
-    quizState,
-    currentStep: quizState?.currentStep,
-    userName: quizState?.userName,
-    answers: quizState?.answers || {},
-    strategicAnswers: quizState?.strategicAnswers || {},
-    resultStyle: quizState?.resultStyle,
-    secondaryStyles: quizState?.secondaryStyles,
-    
-    // Callbacks de interação
-    onUpdate: onStepUpdate,
-    onSelect: onStepSelect,
-    
-    // Configuração visual
-    theme,
-    
-    // Estados do editor
-    isSelected,
-    isEditorMode: mode === 'editable',
-    isPreviewMode: mode === 'preview',
-    isProductionMode: mode === 'production',
-    
-    // Props específicas por modo
-    ...(mode === 'editable' && {
-      onEdit: (field: string, value: any) => {
-        onStepUpdate?.(stepId, { [field]: value });
-      },
-    }),
-    
-    // Props específicas do step (override)
-    ...stepProps,
-  }), [
-    stepId, mode, stepProps, quizState, onStepUpdate, onStepSelect, 
-    onNext, onPrevious, theme, isSelected, isEditable
-  ]);    // 🎯 Renderizar baseado no modo
+    // 🎨 Preparar props unificadas para o componente
+    const unifiedProps = useMemo(() => ({
+        // Props obrigatórias da BaseStepProps
+        stepId,
+        stepNumber: quizState?.currentStep || 1,
+        isActive: true, // Sempre ativo quando renderizado
+        isEditable,
+        onNext: onNext || (() => { }),
+        onPrevious: onPrevious || (() => { }),
+        onSave: (data: any) => onStepUpdate?.(stepId, data),
+
+        // Props básicas
+        mode,
+        data: stepProps,
+
+        // Estado do quiz
+        quizState,
+        currentStep: quizState?.currentStep,
+        userName: quizState?.userName,
+        answers: quizState?.answers || {},
+        strategicAnswers: quizState?.strategicAnswers || {},
+        resultStyle: quizState?.resultStyle,
+        secondaryStyles: quizState?.secondaryStyles,
+
+        // Callbacks de interação
+        onUpdate: onStepUpdate,
+        onSelect: onStepSelect,
+
+        // Configuração visual
+        theme,
+
+        // Estados do editor
+        isSelected,
+        isEditorMode: mode === 'editable',
+        isPreviewMode: mode === 'preview',
+        isProductionMode: mode === 'production',
+
+        // Props específicas por modo
+        ...(mode === 'editable' && {
+            onEdit: (field: string, value: any) => {
+                onStepUpdate?.(stepId, { [field]: value });
+            },
+        }),
+
+        // Props específicas do step (override)
+        ...stepProps,
+    }), [
+        stepId, mode, stepProps, quizState, onStepUpdate, onStepSelect,
+        onNext, onPrevious, theme, isSelected, isEditable
+    ]);    // 🎯 Renderizar baseado no modo
     const renderStep = () => {
         const Component = stepComponent.component;
 
