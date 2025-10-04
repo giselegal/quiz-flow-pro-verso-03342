@@ -263,21 +263,21 @@ const OfferStepAdapter: React.FC<BaseStepProps> = (props) => {
  * 🏭 CONFIGURAÇÕES DOS STEPS PARA REGISTRO
  */
 const createStepConfig = (overrides: Partial<StepConfig> = {}): StepConfig => ({
-  allowNavigation: {
-    next: true,
-    previous: true,
-    ...overrides.allowNavigation
-  },
-  validation: {
-    required: false,
-    rules: [],
-    ...overrides.validation
-  },
-  metadata: {
-    category: 'question',
-    ...overrides.metadata
-  },
-  ...overrides
+    allowNavigation: {
+        next: true,
+        previous: true,
+        ...overrides.allowNavigation
+    },
+    validation: {
+        required: false,
+        rules: [],
+        ...overrides.validation
+    },
+    metadata: {
+        category: 'question',
+        ...overrides.metadata
+    },
+    ...overrides
 });/**
  * 📋 DEFINIÇÕES DOS STEPS DE PRODUÇÃO
  */
@@ -289,7 +289,7 @@ export const PRODUCTION_STEPS: StepComponent[] = [
         config: createStepConfig({
             allowNavigation: { next: true, previous: false },
             validation: { required: true, rules: [{ field: 'userName', required: true }] },
-            metadata: { category: 'intro', tags: ['production', 'start'] }
+            metadata: { category: 'intro' }
         })
     },
 
@@ -299,7 +299,7 @@ export const PRODUCTION_STEPS: StepComponent[] = [
         name: `Pergunta ${i + 1}`,
         component: QuestionStepAdapter,
         config: createStepConfig({
-            metadata: { category: 'question', tags: ['production', 'quiz'] }
+            metadata: { category: 'question' }
         })
     })),
 
@@ -310,7 +310,7 @@ export const PRODUCTION_STEPS: StepComponent[] = [
         component: StrategicQuestionStepAdapter,
         config: createStepConfig({
             validation: { required: true },
-            metadata: { category: 'strategic', tags: ['production', 'decision'] }
+            metadata: { category: 'strategic' }
         })
     },
 
@@ -321,7 +321,7 @@ export const PRODUCTION_STEPS: StepComponent[] = [
         component: TransitionStepAdapter,
         config: createStepConfig({
             allowNavigation: { next: false, previous: false }, // Auto-navigation
-            metadata: { category: 'transition', tags: ['production', 'loading'] }
+            metadata: { category: 'transition' }
         })
     },
 
@@ -331,7 +331,7 @@ export const PRODUCTION_STEPS: StepComponent[] = [
         name: 'Seu Resultado',
         component: ResultStepAdapter,
         config: createStepConfig({
-            metadata: { category: 'result', tags: ['production', 'outcome'] }
+            metadata: { category: 'result' }
         })
     },
 
@@ -342,7 +342,7 @@ export const PRODUCTION_STEPS: StepComponent[] = [
         component: OfferStepAdapter,
         config: createStepConfig({
             allowNavigation: { next: false, previous: true }, // Final step
-            metadata: { category: 'offer', tags: ['production', 'conversion'] }
+            metadata: { category: 'offer' }
         })
     }
 ];

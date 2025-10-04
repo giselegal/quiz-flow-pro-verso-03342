@@ -158,7 +158,7 @@ export {
 export { stepRegistry } from '@/components/step-registry/StepRegistry';
 
 // Export do registro de steps de produção
-export { 
+export {
   registerProductionSteps,
   PRODUCTION_STEPS,
   IntroStepAdapter,
