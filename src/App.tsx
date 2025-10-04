@@ -42,8 +42,6 @@ const QuizFunnelEditorSimplified = lazy(() => import('./components/editor/quiz/Q
 const QuizFunnelEditorWYSIWYG = lazy(() => import('./components/editor/quiz/QuizFunnelEditorWYSIWYG').then(module => ({ default: module.default })));
 const ModernUnifiedEditor = lazy(() => import('./pages/editor/ModernUnifiedEditor').then(module => ({ default: module.default })));
 
-// 🧩 SISTEMA MODULAR - NOVA ARQUITETURA
-const ModularQuizEditor = lazy(() => import('./components/editor/modular/ModularQuizEditor'));
 
 // ❌ HYBRID EDITOR PRO - DESATIVADO (substituído pelo ModernUnifiedEditor)
 // const HybridEditorPro = lazy(() => import('./components/editor/EditorPro/components/HybridEditorPro'));
@@ -225,14 +223,12 @@ function App() {
                           )}
                         </Route>
 
-                        {/* 🧩 EDITOR MODULAR - NOVA ARQUITETURA */}
+                        {/* 🚀 QUIZ EDITOR WYSIWYG - EDITOR OFICIAL ATIVO COM PREVIEW REAL */}
                         <Route path="/editor">
                           <EditorErrorBoundary>
-                            <div data-testid="modular-editor-page">
-                              <UnifiedCRUDProvider autoLoad={false}>
-                                <OptimizedEditorProvider>
-                                  <ModularQuizEditor />
-                                </OptimizedEditorProvider>
+                            <div data-testid="quiz-editor-wysiwyg-page">
+                              <UnifiedCRUDProvider autoLoad={true}>
+                                <QuizFunnelEditorWYSIWYG />
                               </UnifiedCRUDProvider>
                             </div>
                           </EditorErrorBoundary>
@@ -241,11 +237,9 @@ function App() {
                         <Route path="/editor/:id">
                           {(params) => (
                             <EditorErrorBoundary>
-                              <div data-testid="modular-editor-with-id-page">
+                              <div data-testid="quiz-editor-wysiwyg-with-id-page">
                                 <UnifiedCRUDProvider funnelId={params.id} autoLoad={true}>
-                                  <OptimizedEditorProvider>
-                                    <ModularQuizEditor />
-                                  </OptimizedEditorProvider>
+                                  <QuizFunnelEditorWYSIWYG />
                                 </UnifiedCRUDProvider>
                               </div>
                             </EditorErrorBoundary>
