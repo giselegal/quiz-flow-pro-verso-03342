@@ -75,9 +75,9 @@ const EditableOfferStep: React.FC<EditableOfferStepProps> = ({
                     'Suporte por 30 dias'
                 ],
                 buttonText: 'Quero Transformar Meu Estilo Agora!',
-                testimonial: { 
-                    quote: 'Transformou completamente minha forma de me vestir!', 
-                    author: 'Maria S.' 
+                testimonial: {
+                    quote: 'Transformou completamente minha forma de me vestir!',
+                    author: 'Maria S.'
                 }
             },
             'premium': {
@@ -94,9 +94,9 @@ const EditableOfferStep: React.FC<EditableOfferStepProps> = ({
                     'Guia de compras personalizado'
                 ],
                 buttonText: 'Quero a Transformação Completa!',
-                testimonial: { 
-                    quote: 'Melhor investimento que fiz para meu estilo!', 
-                    author: 'Ana L.' 
+                testimonial: {
+                    quote: 'Melhor investimento que fiz para meu estilo!',
+                    author: 'Ana L.'
                 }
             }
         }
