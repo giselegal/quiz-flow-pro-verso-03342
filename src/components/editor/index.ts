@@ -19,7 +19,7 @@ export { OptimizedEditorProvider, useEditor as useOptimizedEditor, useEditorOpti
 export { useEditor, useEditorOptional as useUnifiedEditorOptional } from '@/hooks/useUnifiedEditor';
 
 // Legacy providers (manter durante transição)
-export { EditorProviderMigrationAdapter } from './EditorProviderMigrationAdapter';
+export { MigrationEditorProvider, EditorProvider as LegacyEditorProvider } from './EditorProviderMigrationAdapter';
 
 // ============================================================================
 // COMPONENTES ORIGINAIS

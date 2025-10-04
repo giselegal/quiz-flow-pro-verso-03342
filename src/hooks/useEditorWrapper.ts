@@ -21,22 +21,22 @@ import { useEditor as useUnifiedEditor, useEditorOptional as useUnifiedEditorOpt
  * Wrapper temporário para useEditor que adiciona logging
  */
 export const useEditor = () => {
-  if (process.env.NODE_ENV === 'development') {
-    console.log('🔄 [MIGRATION] useEditor called - consider updating to direct import from @/hooks/useUnifiedEditor');
-  }
-  
-  return useUnifiedEditor();
+    if (process.env.NODE_ENV === 'development') {
+        console.log('🔄 [MIGRATION] useEditor called - consider updating to direct import from @/hooks/useUnifiedEditor');
+    }
+
+    return useUnifiedEditor();
 };
 
 /**
  * Wrapper temporário para useEditorOptional
  */
 export const useEditorOptional = () => {
-  if (process.env.NODE_ENV === 'development') {
-    console.log('🔄 [MIGRATION] useEditorOptional called - consider updating to direct import from @/hooks/useUnifiedEditor');
-  }
-  
-  return useUnifiedEditorOptional();
+    if (process.env.NODE_ENV === 'development') {
+        console.log('🔄 [MIGRATION] useEditorOptional called - consider updating to direct import from @/hooks/useUnifiedEditor');
+    }
+
+    return useUnifiedEditorOptional();
 };
 
 // ============================================================================
