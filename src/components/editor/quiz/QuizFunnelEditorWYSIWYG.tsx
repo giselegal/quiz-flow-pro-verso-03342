@@ -7,48 +7,26 @@ import { Plus, Save, Trash2, ArrowUp, ArrowDown, Copy, Eye, ChevronDown, Setting
 import { cn } from '@/lib/utils';
 import './QuizEditorStyles.css';
 
-// 🎯 SISTEMA DE QUIZ EM PRODUÇÃO - Integração com /quiz-estilo
-import { useQuizState } from '@/hooks/useQuizState';
-import { useQuizRuntimeRegistry } from '@/runtime/quiz/QuizRuntimeRegistry';
-import { useComponentConfiguration } from '@/hooks/useComponentConfiguration';
-import IntroStep from '@/components/quiz/IntroStep';
-import QuestionStep from '@/components/quiz/QuestionStep';
-import StrategicQuestionStep from '@/components/quiz/StrategicQuestionStep';
-import TransitionStep from '@/components/quiz/TransitionStep';
-import ResultStep from '@/components/quiz/ResultStep';
-import OfferStep from '@/components/quiz/OfferStep';
-import { BlockRegistryProvider, DEFAULT_BLOCK_DEFINITIONS, useBlockRegistry } from '@/runtime/quiz/blocks/BlockRegistry';
-import sanitizeHtml from '@/utils/sanitizeHtml';
-import type { QuizConfig } from '@/types/quiz-config';
+// 🗑️ REMOVIDO - FASE 3: Imports duplicados substituídos pelo UnifiedStepRenderer
+// Anteriormente importava: IntroStep, QuestionStep, StrategicQuestionStep, etc.
+// Agora tudo é renderizado via stepRegistry unificado
 
-// � FASE 3: COMPONENTES EDITÁVEIS ENCAPSULADOS - Sistema Modularizado
-import {
-    EditableIntroStep,
-    EditableQuestionStep,
-    EditableStrategicQuestionStep,
-    EditableTransitionStep,
-    EditableResultStep,
-    EditableOfferStep,
-    type EditableStepProps
-} from '@/components/editor/editable-steps';
+// ✨ NOVO: Sistema Modular de Steps
+import { StepRenderer } from '@/components/step-registry/StepRenderer';
+import { stepRegistry } from '@/components/step-registry/StepRegistry';
+import '@/components/steps'; // Inicializar todos os steps registrados
+
+// 🎯 FASE 3: Sistema Unificado de Renderização
+import { UnifiedStepRenderer, registerProductionSteps } from '@/components/editor/unified';
 
 // 🎯 NOVO: Componentes de Editor Aprimorado
 import SelectableBlock from '@/components/editor/SelectableBlock';
 import QuizPropertiesPanel from '@/components/editor/QuizPropertiesPanel';
 import DragDropManager from '@/components/editor/DragDropManager';
+import ModularStepRenderer from '@/components/editor/ModularStepRenderer';
 
-// 🧩 NOVO: Sistema de Componentes Atômicos Modulares
-import {
-    ModularStepContainer,
-    ModularStep,
-    AtomicComponent,
-    AtomicComponentType,
-    createModularStep,
-    createAtomicComponent,
-    reorderComponents,
-    insertComponent,
-    removeComponent
-} from '@/components/editor/atomic-components';
+// 🎯 NOVO: Tipos modulares
+import { ModularStep, StepComponent, COMPONENT_TEMPLATES } from '@/types/ComponentTypes';
 
 interface QuizFunnelEditorProps {
     funnelId?: string;
@@ -114,7 +92,10 @@ function createBlankStep(type: QuizStep['type']): EditableQuizStep {
 const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, templateId }) => {
     const crud = useUnifiedCRUD();
 
-    // 🚀 FASE 3: Componentes editáveis já integrados - não precisa registrar steps
+    // 🎯 FASE 3: Registrar steps de produção no stepRegistry (uma vez)
+    useEffect(() => {
+        registerProductionSteps();
+    }, []);
 
     const [steps, setSteps] = useState<EditableQuizStep[]>([]);
     const [selectedId, setSelectedId] = useState<string>('');
@@ -127,93 +108,195 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
     const [showPropertiesPanel, setShowPropertiesPanel] = useState(true);
     const [isPreviewMode, setIsPreviewMode] = useState(false);
     const [dragEnabled, setDragEnabled] = useState(true);
-    const [showProductionView, setShowProductionView] = useState(false);
 
-    // 🧩 NOVOS: Estados para sistema de componentes atômicos
+    // 🎯 NOVO: Estados para sistema modular
     const [modularSteps, setModularSteps] = useState<ModularStep[]>([]);
     const [selectedComponentId, setSelectedComponentId] = useState<string>('');
+    const [useModularSystem, setUseModularSystem] = useState(true);
 
-    // 🎯 INTEGRAÇÃO COM SISTEMA DE QUIZ EM PRODUÇÃO
-    const quizState = useQuizState();
-    const quizRegistry = useQuizRuntimeRegistry();
-    const componentConfig = useComponentConfiguration({
-        componentId: selectedComponentId || 'editor-main',
-        funnelId: funnelId || 'quiz-estilo-21-steps',
-        realTimeSync: true,
-        cacheEnabled: true
-    });
-
-    // 🧩 SISTEMA EDITÁVEL MODULAR: Sempre usar componentes atômicos
+    // Carregar steps iniciais
     useEffect(() => {
-        // Verificar se já existem etapas modulares salvas 
-        const existing = (crud.currentFunnel as any)?.modularSteps as ModularStep[] | undefined;
-
-        if (existing && existing.length) {
-            // Usar etapas modulares existentes
-            setModularSteps(existing.map(s => ({ ...s })));
-            setSelectedId(existing[0].id);
-        } else {
-            // Criar as 21 etapas modulares específicas do /quiz-estilo
+        if (useModularSystem) {
+            // Inicializar sistema modular com steps padrão
             const defaultModularSteps: ModularStep[] = [
-                // 🏠 ETAPA 1: Introdução - Coleta de Nome
-                createModularStep('intro'),
-
-                // ❓ ETAPAS 2-11: 10 Questões de Estilo (3 seleções obrigatórias)
-                createModularStep('question'), // Pergunta 1: Ocasiões
-                createModularStep('question'), // Pergunta 2: Cores 
-                createModularStep('question'), // Pergunta 3: Silhuetas
-                createModularStep('question'), // Pergunta 4: Estampas
-                createModularStep('question'), // Pergunta 5: Acessórios (Imagens)
-                createModularStep('question'), // Pergunta 6: Cabelo e Maquiagem
-                createModularStep('question'), // Pergunta 7: Inspirações
-                createModularStep('question'), // Pergunta 8: Calçados
-                createModularStep('question'), // Pergunta 9: Acessórios (Texto)
-                createModularStep('question'), // Pergunta 10: Tecidos
-
-                // ⏳ ETAPA 12: Transição para Questões Estratégicas
-                createModularStep('custom'),
-
-                // 🎯 ETAPAS 13-18: 6 Questões Estratégicas (1 seleção obrigatória)
-                createModularStep('question'), // Estratégica 1: Prioridades de Vida
-                createModularStep('question'), // Estratégica 2: Personalidade
-                createModularStep('question'), // Estratégica 3: Lifestyle
-                createModularStep('question'), // Estratégica 4: Objetivos de Imagem
-                createModularStep('question'), // Estratégica 5: Desafios
-                createModularStep('question'), // Estratégica 6: Expectativas
-
-                // ⏳ ETAPA 19: Transição para Resultado
-                createModularStep('custom'),
-
-                // 🏆 ETAPA 20: Resultado Personalizado
-                createModularStep('result'),
-
-                // 🎁 ETAPA 21: Oferta/Conversão
-                createModularStep('custom')
+                createBlankModularStep('intro'),
+                createBlankModularStep('question'),
+                createBlankModularStep('result')
             ];
             setModularSteps(defaultModularSteps);
             setSelectedId(defaultModularSteps[0].id);
+        } else {
+            // Sistema antigo
+            const existing = (crud.currentFunnel as any)?.quizSteps as EditableQuizStep[] | undefined;
+            if (existing && existing.length) {
+                setSteps(existing.map(s => ({ ...s })));
+                setSelectedId(existing[0].id);
+                return;
+            }
+            const conv: EditableQuizStep[] = Object.entries(QUIZ_STEPS).map(([id, step]) => ({ id, ...step as QuizStep }));
+            setSteps(conv);
+            if (conv.length) setSelectedId(conv[0].id);
         }
+    }, [crud.currentFunnel, useModularSystem]);
 
-        // Sistema modular: sempre usar componentes atômicos por padrão
-    }, [crud.currentFunnel]);
-
+    const selectedStep = steps.find(s => s.id === selectedId);
     const selectedModularStep = modularSteps.find(s => s.id === selectedId);
 
     // Função para criar step modular
+    const createBlankModularStep = (type: string): ModularStep => {
+        const baseId = `step-${Date.now()}`;
+        const defaultComponents: StepComponent[] = [];
 
+        // Criar componentes padrão baseados no tipo
+        switch (type) {
+            case 'intro':
+                defaultComponents.push(
+                    {
+                        id: `comp-${Date.now()}-1`,
+                        type: 'header',
+                        order: 0,
+                        title: 'Bem-vindos!',
+                        alignment: 'center',
+                        size: 'large'
+                    } as any,
+                    {
+                        id: `comp-${Date.now()}-2`,
+                        type: 'text',
+                        order: 1,
+                        content: 'Descubra seu estilo personalizado respondendo algumas perguntas.',
+                        alignment: 'center',
+                        size: 'medium'
+                    } as any,
+                    {
+                        id: `comp-${Date.now()}-3`,
+                        type: 'input',
+                        order: 2,
+                        label: 'Como posso te chamar?',
+                        placeholder: 'Digite seu nome',
+                        inputType: 'text',
+                        required: true
+                    } as any,
+                    {
+                        id: `comp-${Date.now()}-4`,
+                        type: 'button',
+                        order: 3,
+                        text: 'Começar Quiz',
+                        action: 'next',
+                        style: 'primary'
+                    } as any
+                );
+                break;
+            case 'question':
+                defaultComponents.push(
+                    {
+                        id: `comp-${Date.now()}-1`,
+                        type: 'question',
+                        order: 0,
+                        questionText: 'Nova pergunta?',
+                        options: [
+                            { id: 'opt1', text: 'Opção 1' },
+                            { id: 'opt2', text: 'Opção 2' }
+                        ],
+                        requiredSelections: 1
+                    } as any,
+                    {
+                        id: `comp-${Date.now()}-2`,
+                        type: 'button',
+                        order: 1,
+                        text: 'Continuar',
+                        action: 'next',
+                        style: 'primary'
+                    } as any
+                );
+                break;
+            case 'result':
+                defaultComponents.push(
+                    {
+                        id: `comp-${Date.now()}-1`,
+                        type: 'header',
+                        order: 0,
+                        title: 'Seu Resultado!',
+                        alignment: 'center',
+                        size: 'large'
+                    } as any,
+                    {
+                        id: `comp-${Date.now()}-2`,
+                        type: 'text',
+                        order: 1,
+                        content: 'Baseado nas suas respostas, descobrimos seu estilo único.',
+                        alignment: 'center',
+                        size: 'medium'
+                    } as any,
+                    {
+                        id: `comp-${Date.now()}-3`,
+                        type: 'button',
+                        order: 2,
+                        text: 'Ver Detalhes',
+                        action: 'next',
+                        style: 'primary'
+                    } as any
+                );
+                break;
+            default:
+                // Step básico com apenas um cabeçalho
+                defaultComponents.push({
+                    id: `comp-${Date.now()}-1`,
+                    type: 'header',
+                    order: 0,
+                    title: 'Nova Etapa',
+                    alignment: 'center',
+                    size: 'medium'
+                } as any);
+        }
+
+        return {
+            id: baseId,
+            name: `${type.charAt(0).toUpperCase() + type.slice(1)} Step`,
+            type: type as any,
+            components: defaultComponents
+        };
+    };
 
     const updateStep = useCallback((id: string, patch: Partial<EditableQuizStep>) => {
         setSteps(prev => prev.map(s => (s.id === id ? { ...s, ...patch } : s)));
     }, []);
 
-    const handleStepReorder = useCallback((fromIndex: number, toIndex: number) => {
-        setSteps(prev => {
-            const reordered = [...prev];
-            const [movedStep] = reordered.splice(fromIndex, 1);
-            reordered.splice(toIndex, 0, movedStep);
-            return reordered;
-        });
+    // Handlers para sistema modular
+    const updateModularStep = useCallback((stepId: string, updates: Partial<ModularStep>) => {
+        setModularSteps(prev => prev.map(s => (s.id === stepId ? { ...s, ...updates } : s)));
     }, []);
+
+    const handleStepReorder = useCallback((fromIndex: number, toIndex: number) => {
+        if (useModularSystem) {
+            setModularSteps(prev => {
+                const reordered = [...prev];
+                const [movedStep] = reordered.splice(fromIndex, 1);
+                reordered.splice(toIndex, 0, movedStep);
+                return reordered;
+            });
+        } else {
+            setSteps(prev => {
+                const reordered = [...prev];
+                const [movedStep] = reordered.splice(fromIndex, 1);
+                reordered.splice(toIndex, 0, movedStep);
+                return reordered;
+            });
+        }
+    }, [useModularSystem]);
+
+    const addModularStep = (type: string) => {
+        const newStep = createBlankModularStep(type);
+        setModularSteps(prev => [...prev, newStep]);
+        setSelectedId(newStep.id);
+    };
+
+    const removeModularStep = (stepId: string) => {
+        setModularSteps(prev => prev.filter(s => s.id !== stepId));
+        if (selectedId === stepId && modularSteps.length > 1) {
+            const remaining = modularSteps.filter(s => s.id !== stepId);
+            setSelectedId(remaining[0].id);
+        }
+    };
 
     const addStepAfter = (afterId?: string, type: QuizStep['type'] = 'question') => {
         setSteps(prev => {
@@ -321,250 +404,6 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
         setShowPropertiesPanel(true);
     }, []);
 
-    // 🎨 FASE 3: Handler para cliques em propriedades editáveis
-    const handlePropertyClick = useCallback((propKey: string, element: HTMLElement, stepId: string) => {
-        console.log('[QuizFunnelEditor] Propriedade clicada:', { propKey, stepId, element });
-
-        // Garantir que o step está selecionado
-        setSelectedId(stepId);
-        setSelectedBlockId(`step-${stepId}`);
-
-        // Abrir painel de propriedades
-        setShowPropertiesPanel(true);
-
-        // Focar no campo da propriedade no painel (integração futura)
-        // Isso será usado para destacar/focar o campo específico no QuizPropertiesPanel
-        setTimeout(() => {
-            const propertyInput = document.querySelector(`[data-property="${propKey}"]`) as HTMLElement;
-            if (propertyInput) {
-                propertyInput.focus();
-                propertyInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            }
-        }, 100);
-    }, []);
-
-    // 🧩 HANDLERS PARA SISTEMA ATÔMICO
-    const handleUpdateModularStep = useCallback((stepId: string, updates: Partial<ModularStep>) => {
-        setModularSteps(prev => prev.map(step =>
-            step.id === stepId ? { ...step, ...updates } : step
-        ));
-    }, []);
-
-    const handleUpdateAtomicComponent = useCallback((stepId: string, componentId: string, updates: Partial<AtomicComponent>) => {
-        setModularSteps(prev => prev.map(step => {
-            if (step.id !== stepId) return step;
-
-            return {
-                ...step,
-                components: step.components.map(comp =>
-                    comp.id === componentId ? { ...comp, ...updates } as AtomicComponent : comp
-                )
-            };
-        }));
-    }, []);
-
-    const handleSelectAtomicComponent = useCallback((componentId: string) => {
-        setSelectedComponentId(componentId);
-        setShowPropertiesPanel(true);
-    }, []);
-
-    const handleDeleteAtomicComponent = useCallback((stepId: string, componentId: string) => {
-        setModularSteps(prev => prev.map(step => {
-            if (step.id !== stepId) return step;
-
-            return {
-                ...step,
-                components: removeComponent(step.components, componentId)
-            };
-        }));
-
-        // Se o componente deletado estava selecionado, limpar seleção
-        if (selectedComponentId === componentId) {
-            setSelectedComponentId('');
-        }
-    }, [selectedComponentId]);
-
-    const handleDuplicateAtomicComponent = useCallback((stepId: string, componentId: string) => {
-        setModularSteps(prev => prev.map(step => {
-            if (step.id !== stepId) return step;
-
-            const component = step.components.find(c => c.id === componentId);
-            if (!component) return step;
-
-            const duplicatedComponent = {
-                ...component,
-                id: `${component.id}-copy-${Date.now()}`,
-                order: component.order + 0.1
-            };
-
-            return {
-                ...step,
-                components: [...step.components, duplicatedComponent]
-                    .sort((a, b) => a.order - b.order)
-                    .map((comp, index) => ({ ...comp, order: index }))
-            };
-        }));
-    }, []);
-
-    const handleReorderAtomicComponents = useCallback((stepId: string, fromIndex: number, toIndex: number) => {
-        setModularSteps(prev => prev.map(step => {
-            if (step.id !== stepId) return step;
-
-            return {
-                ...step,
-                components: reorderComponents(step.components, fromIndex, toIndex)
-            };
-        }));
-    }, []);
-
-    const handleInsertAtomicComponent = useCallback((stepId: string, afterComponentId: string | null, componentType: AtomicComponentType) => {
-        setModularSteps(prev => prev.map(step => {
-            if (step.id !== stepId) return step;
-
-            const newComponent = createAtomicComponent(componentType);
-
-            return {
-                ...step,
-                components: insertComponent(step.components, afterComponentId, newComponent)
-            };
-        }));
-    }, []);
-
-    const handleAddModularStep = useCallback((type: 'intro' | 'question' | 'result' | 'custom' = 'custom') => {
-        const newStep = createModularStep(type);
-        setModularSteps(prev => [...prev, newStep]);
-        setSelectedId(newStep.id);
-    }, []);
-
-    const handleRemoveModularStep = useCallback((stepId: string) => {
-        setModularSteps(prev => {
-            const filtered = prev.filter(step => step.id !== stepId);
-            if (selectedId === stepId && filtered.length > 0) {
-                setSelectedId(filtered[0].id);
-            }
-            return filtered;
-        });
-    }, [selectedId]);
-
-    // 🎯 RENDERIZAÇÃO DE COMPONENTES DE QUIZ DE PRODUÇÃO
-    const renderQuizProductionComponent = useCallback((step: ModularStep, stepIndex: number) => {
-        // Dados mock baseados no template de produção para cada etapa
-        const generateStepData = (index: number): QuizStep => {
-            const baseStep = {
-                title: `Etapa ${index + 1}`,
-                backgroundColor: '#ffffff',
-                textColor: '#1a1716'
-            };
-
-            // Personalizar dados baseados no índice da etapa
-            switch (index) {
-                case 0: // Introdução
-                    return { ...baseStep, type: 'intro', title: 'Vamos descobrir seu estilo!' };
-                case 1: // Ocasiões
-                    return {
-                        ...baseStep,
-                        type: 'question',
-                        title: 'Para quais ocasiões você mais se veste?',
-                        questionText: 'Selecione até 3 opções:',
-                        options: [
-                            { id: 'work', text: 'Trabalho/Profissional', image: '/images/quiz/ocasioes-trabalho.jpg' },
-                            { id: 'casual', text: 'Casual/Dia a dia', image: '/images/quiz/ocasioes-casual.jpg' },
-                            { id: 'social', text: 'Eventos sociais', image: '/images/quiz/ocasioes-social.jpg' }
-                        ]
-                    };
-                default:
-                    return {
-                        ...baseStep,
-                        type: 'question',
-                        questionText: `Pergunta da etapa ${index + 1}`,
-                        options: []
-                    };
-            }
-        };
-
-        const stepData = generateStepData(stepIndex);
-
-        // Renderizar componente apropriado baseado no tipo e índice
-        switch (step.type) {
-            case 'intro':
-                return (
-                    <IntroStep
-                        data={stepData}
-                        onNameSubmit={(name: string) => {
-                            console.log(`Nome coletado: ${name}`);
-                            // Integrar com sistema de estado do quiz
-                        }}
-                    />
-                );
-
-            case 'question':
-                if (stepIndex >= 12 && stepIndex <= 17) {
-                    // Questões estratégicas
-                    return (
-                        <StrategicQuestionStep
-                            data={stepData}
-                            currentAnswer=""
-                            onAnswerChange={(answer: string) => {
-                                console.log(`Resposta estratégica: ${answer}`);
-                            }}
-                        />
-                    );
-                } else {
-                    // Questões de estilo
-                    return (
-                        <QuestionStep
-                            data={stepData}
-                            currentAnswers={[]}
-                            onAnswersChange={(answers: string[]) => {
-                                console.log(`Respostas: ${answers.join(', ')}`);
-                            }}
-                        />
-                    );
-                }
-
-            case 'custom':
-                if (stepIndex === 11 || stepIndex === 18) {
-                    // Transições
-                    return (
-                        <TransitionStep
-                            data={stepData}
-                            onComplete={() => {
-                                console.log(`Transição da etapa ${stepIndex} completa`);
-                            }}
-                        />
-                    );
-                } else if (stepIndex === 20) {
-                    // Oferta
-                    return (
-                        <OfferStep
-                            data={stepData}
-                            userProfile={{
-                                userName: "Usuário",
-                                resultStyle: "Estilo Personalizado"
-                            }}
-                            offerKey="estilo-completo"
-                        />
-                    );
-                }
-                return <div className="p-4 text-center text-gray-500">Etapa personalizada {stepIndex + 1}</div>;
-
-            case 'result':
-                return (
-                    <ResultStep
-                        data={stepData}
-                        userProfile={{
-                            userName: "Usuário",
-                            resultStyle: "Seu Estilo Único",
-                            secondaryStyles: ["Moderno", "Elegante"]
-                        }}
-                    />
-                );
-
-            default:
-                return <div className="p-4 text-center text-gray-500">Tipo de etapa não reconhecido: {step.type}</div>;
-        }
-    }, []);
-
     // Mock de resultados para o componente ResultStep
     const mockResults = {
         userProfile: 'Empreendedor Visionário',
@@ -650,235 +489,419 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
 
     // Função para renderizar componente real no preview
     // Função para converter step antigo em step modular
+    const convertStepToModular = (step: EditableQuizStep): ModularStep => {
+        const components: StepComponent[] = [];
 
+        switch (step.type) {
+            case 'intro':
+                // Converter intro step para componentes modulares
+                if (step.title) {
+                    components.push({
+                        id: `comp-${Date.now()}-1`,
+                        type: 'header',
+                        order: 0,
+                        title: step.title,
+                        alignment: 'center',
+                        size: 'large'
+                    } as any);
+                }
 
-    // 🚀 FASE 3: COMPONENTES EDITÁVEIS ENCAPSULADOS - Sistema Modularizado
+                if (step.formQuestion) {
+                    components.push({
+                        id: `comp-${Date.now()}-2`,
+                        type: 'input',
+                        order: 1,
+                        label: step.formQuestion,
+                        placeholder: step.placeholder || 'Digite aqui...',
+                        inputType: 'text',
+                        required: true
+                    } as any);
+                }
+
+                if (step.buttonText) {
+                    components.push({
+                        id: `comp-${Date.now()}-3`,
+                        type: 'button',
+                        order: 2,
+                        text: step.buttonText,
+                        action: 'next',
+                        style: 'primary'
+                    } as any);
+                }
+                break;
+
+            case 'question':
+                // Converter question step para componentes modulares
+                if (step.questionText) {
+                    components.push({
+                        id: `comp-${Date.now()}-1`,
+                        type: 'question',
+                        order: 0,
+                        questionText: step.questionText,
+                        options: step.options || [],
+                        requiredSelections: step.requiredSelections || 1,
+                        multipleChoice: (step.requiredSelections || 1) > 1
+                    } as any);
+                }
+
+                components.push({
+                    id: `comp-${Date.now()}-2`,
+                    type: 'button',
+                    order: 1,
+                    text: 'Continuar',
+                    action: 'next',
+                    style: 'primary'
+                } as any);
+                break;
+
+            case 'result':
+                // Converter result step para componentes modulares
+                if (step.title) {
+                    components.push({
+                        id: `comp-${Date.now()}-1`,
+                        type: 'header',
+                        order: 0,
+                        title: step.title,
+                        alignment: 'center',
+                        size: 'large'
+                    } as any);
+                }
+
+                if (step.text) {
+                    components.push({
+                        id: `comp-${Date.now()}-2`,
+                        type: 'text',
+                        order: 1,
+                        content: step.text,
+                        alignment: 'center',
+                        size: 'medium'
+                    } as any);
+                }
+                break;
+
+            default:
+                // Step genérico - apenas um header
+                components.push({
+                    id: `comp-${Date.now()}-1`,
+                    type: 'header',
+                    order: 0,
+                    title: step.title || `${step.type} Step`,
+                    alignment: 'center',
+                    size: 'medium'
+                } as any);
+        }
+
+        return {
+            id: step.id,
+            name: `${step.type.charAt(0).toUpperCase() + step.type.slice(1)} Step`,
+            type: step.type as any,
+            components
+        };
+    };
+
+    // Função para converter componentes modulares de volta para step antigo
+    const convertModularToStep = (components: StepComponent[], originalStep: EditableQuizStep): Partial<EditableQuizStep> => {
+        const updates: Partial<EditableQuizStep> = {};
+
+        components.forEach(comp => {
+            switch (comp.type) {
+                case 'header':
+                    const headerComp = comp as any;
+                    updates.title = headerComp.title;
+                    break;
+                case 'text':
+                    const textComp = comp as any;
+                    updates.text = textComp.content;
+                    break;
+                case 'input':
+                    const inputComp = comp as any;
+                    updates.formQuestion = inputComp.label;
+                    updates.placeholder = inputComp.placeholder;
+                    break;
+                case 'button':
+                    const buttonComp = comp as any;
+                    updates.buttonText = buttonComp.text;
+                    break;
+                case 'question':
+                    const questionComp = comp as any;
+                    updates.questionText = questionComp.questionText;
+                    updates.options = questionComp.options;
+                    updates.requiredSelections = questionComp.requiredSelections;
+                    break;
+            }
+        });
+
+        return updates;
+    };
+
+    // 🎯 FASE 3: UNIFIED STEP RENDERER - Substitui toda a lógica complexa anterior
     const renderRealComponent = (step: EditableQuizStep, index: number) => {
         const isEditMode = previewMode === 'edit';
         const blockId = `step-${step.id}`;
         const isSelected = selectedBlockId === blockId;
 
-        // 🎯 Mapear tipo de step para componente editável correspondente
-        const EditableComponent = {
-            'intro': EditableIntroStep,
-            'question': EditableQuestionStep,
-            'strategic-question': EditableStrategicQuestionStep,
-            'transition': EditableTransitionStep,
-            'transition-result': EditableTransitionStep, // Reutilizar TransitionStep
-            'result': EditableResultStep,
-            'offer': EditableOfferStep
-        }[step.type];
+        // Mapear step.id para formato do StepRegistry
+        const stepId = `step-${String(index + 1).padStart(2, '0')}`;
 
-        // Se o tipo não for suportado, mostrar erro
-        if (!EditableComponent) {
-            return (
-                <div className="p-4 border-2 border-red-300 bg-red-50 rounded-lg">
-                    <div className="text-red-600 font-semibold">
-                        ⚠️ Tipo de step não suportado: {step.type}
-                    </div>
-                    <div className="text-red-500 text-sm mt-1">
-                        Componente editável não encontrado para este tipo de step.
-                    </div>
-                </div>
-            );
-        }
-
-        // 🎨 Props para o componente editável
-        const editableProps: EditableStepProps = {
-            data: step,
-            isEditable: isEditMode,
-            isSelected: isSelected,
-            onUpdate: (updates) => updateStep(step.id, updates),
-            onSelect: () => {
-                setSelectedId(step.id);
-                setSelectedBlockId(blockId);
-            },
-            onPropertyClick: (propKey: string, element: HTMLElement) => {
-                handlePropertyClick(propKey, element, step.id);
-            },
-            onDuplicate: () => duplicateStep(step.id),
-            onDelete: () => removeStep(step.id),
-            onMoveUp: index > 0 ? () => moveStep(step.id, -1) : undefined,
-            onMoveDown: index < steps.length - 1 ? () => moveStep(step.id, 1) : undefined,
-            canMoveUp: index > 0,
-            canMoveDown: index < steps.length - 1,
-            canDelete: steps.length > 1,
-            blockId: blockId
+        // Preparar quiz state mockado para compatibilidade
+        const mockQuizState = {
+            currentStep: index + 1,
+            userName: 'Usuário',
+            answers: {},
+            strategicAnswers: {},
+            resultStyle: 'classic',
+            secondaryStyles: []
         };
 
-        return <EditableComponent {...editableProps} />;
+        // Determinar modo de renderização
+        const renderMode = isEditMode ? 'editable' : 'preview';
+
+        return (
+            <SelectableBlock
+                blockId={blockId}
+                isSelected={isSelected}
+                isEditable={isEditMode}
+                onSelect={handleBlockSelect}
+                blockType={`${step.type.charAt(0).toUpperCase() + step.type.slice(1)} (Unified)`}
+                blockIndex={index}
+                onOpenProperties={handleOpenProperties}
+                isDraggable={dragEnabled}
+            >
+                <UnifiedStepRenderer
+                    stepId={stepId}
+                    mode={renderMode}
+                    stepProps={step}
+                    quizState={mockQuizState}
+                    onStepUpdate={(stepId, updates) => {
+                        updateStep(step.id, updates);
+                    }}
+                    onStepSelect={(stepId) => {
+                        setSelectedBlockId(blockId);
+                    }}
+                    onNext={() => console.log('Próximo step')}
+                    onPrevious={() => console.log('Step anterior')}
+                    isSelected={isSelected}
+                    isEditable={isEditMode}
+                    className="unified-step-wrapper"
+                />
+            </SelectableBlock>
+        );
     };
 
     return (
-        <BlockRegistryProvider definitions={DEFAULT_BLOCK_DEFINITIONS}>
-            <div
-                className="quiz-editor-container h-full w-full flex flex-col bg-background"
-                style={{
-                    color: '#1a1716',
-                    backgroundColor: 'white',
-                    '--tw-text-opacity': '1'
-                } as React.CSSProperties}
-            >
-                <div className="h-10 border-b flex items-center gap-2 px-3 text-xs bg-muted/30">
-                    <span className="font-semibold">Quiz Editor WYSIWYG</span>
-                    <Button size="sm" variant="outline" onClick={handleSave} disabled={isSaving}>
-                        {isSaving ? 'Salvando...' : 'Salvar'}
+        <div
+            className="quiz-editor-container h-full w-full flex flex-col bg-background"
+            style={{
+                color: '#1a1716',
+                backgroundColor: 'white',
+                '--tw-text-opacity': '1'
+            } as React.CSSProperties}
+        >
+            <div className="h-10 border-b flex items-center gap-2 px-3 text-xs bg-muted/30">
+                <span className="font-semibold">Quiz Editor WYSIWYG</span>
+                <Button size="sm" variant="outline" onClick={handleSave} disabled={isSaving}>
+                    {isSaving ? 'Salvando...' : 'Salvar'}
+                </Button>
+                <div className="ml-auto flex gap-2">
+                    <Button
+                        size="sm"
+                        variant={previewMode === 'edit' ? 'default' : 'outline'}
+                        onClick={() => setPreviewMode('edit')}
+                    >
+                        Editar
                     </Button>
-                    <div className="ml-auto flex gap-2">
-                        <Button
-                            size="sm"
-                            variant={previewMode === 'edit' ? 'default' : 'outline'}
-                            onClick={() => setPreviewMode('edit')}
-                        >
-                            Editar
-                        </Button>
-                        <Button
-                            size="sm"
-                            variant={previewMode === 'preview' ? 'default' : 'outline'}
-                            onClick={() => setPreviewMode('preview')}
-                        >
-                            <Eye className="w-4 h-4 mr-1" />
-                            Preview
-                        </Button>
-                    </div>
+                    <Button
+                        size="sm"
+                        variant={previewMode === 'preview' ? 'default' : 'outline'}
+                        onClick={() => setPreviewMode('preview')}
+                    >
+                        <Eye className="w-4 h-4 mr-1" />
+                        Preview
+                    </Button>
                 </div>
+            </div>
 
-                <div
-                    className="flex-1 flex overflow-hidden"
-                    onClick={() => setActiveInsertDropdown(null)} // Fechar dropdowns ao clicar fora
-                >
-                    {/* Layout Aprimorado: Sidebar de Steps + Canvas + Properties Panel */}
-                    {/* COL 1 - SEQUÊNCIA DE ETAPAS */}
-                    <div className="w-60 border-r flex flex-col">
-                        <div className="p-3 flex items-center justify-between border-b">
-                            <span className="text-xs font-semibold">
-                                Etapas Modulares
-                            </span>
-                            <Badge variant="secondary" className="text-[10px]">
-                                {modularSteps.length}
-                            </Badge>
-                        </div>
-                        <div className="flex-1 overflow-auto text-xs">
-                            {/* Lista Reordenável de Steps com DragDropManager */}
-                            <DragDropManager
-                                items={modularSteps}
-                                onReorder={handleStepReorder}
-                                enabled={dragEnabled}
-                                renderItem={(step, index, isDragging) => {
-                                    const active = step.id === selectedId;
+            <div
+                className="flex-1 flex overflow-hidden"
+                onClick={() => setActiveInsertDropdown(null)} // Fechar dropdowns ao clicar fora
+            >
+                {/* Layout Aprimorado: Sidebar de Steps + Canvas + Properties Panel */}
+                {/* COL 1 - SEQUÊNCIA DE ETAPAS */}
+                <div className="w-60 border-r flex flex-col">
+                    <div className="p-3 flex items-center justify-between border-b">
+                        <span className="text-xs font-semibold">Sequência do Funil</span>
+                        <Badge variant="secondary" className="text-[10px]">
+                            {useModularSystem ? modularSteps.length : steps.length}
+                        </Badge>
+                    </div>
+                    <div className="flex-1 overflow-auto text-xs">
+                        {/* Lista Reordenável de Steps com DragDropManager */}
+                        <DragDropManager
+                            items={useModularSystem ? modularSteps : steps}
+                            onReorder={handleStepReorder}
+                            enabled={dragEnabled}
+                            renderItem={(step, index, isDragging) => {
+                                const active = step.id === selectedId;
 
-                                    return (
-                                        <div className={cn(
-                                            "relative border-b cursor-pointer group transition-all",
-                                            active ? 'bg-blue-50 border-blue-200' : 'hover:bg-gray-50',
-                                            isDragging && "opacity-50 scale-95"
-                                        )}>
-                                            {/* Indicador de Posição */}
-                                            <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-blue-500 to-purple-500" />
+                                return (
+                                    <div className={cn(
+                                        "relative border-b cursor-pointer group transition-all",
+                                        active ? 'bg-blue-50 border-blue-200' : 'hover:bg-gray-50',
+                                        isDragging && "opacity-50 scale-95"
+                                    )}>
+                                        {/* Indicador de Posição */}
+                                        <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-blue-500 to-purple-500" />
 
-                                            <div
-                                                className="pl-4 pr-3 py-3"
-                                                onClick={() => setSelectedId(step.id)}
-                                            >
-                                                <div className="flex items-center gap-2 mb-1">
-                                                    <div className="w-6 h-6 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center text-white text-[10px] font-bold">
-                                                        {index + 1}
-                                                    </div>
-                                                    <span className="font-medium truncate flex-1 text-[11px]">
-                                                        {/* 21 Etapas Específicas do Quiz de Estilo */}
-                                                        {index === 0 && '🏠 Introdução - Nome'}
-                                                        {index === 1 && '❓ Ocasiões'}
-                                                        {index === 2 && '🎨 Cores'}
-                                                        {index === 3 && '👗 Silhuetas'}
-                                                        {index === 4 && '🌸 Estampas'}
-                                                        {index === 5 && '💍 Acessórios (Imagens)'}
-                                                        {index === 6 && '💄 Cabelo e Maquiagem'}
-                                                        {index === 7 && '✨ Inspirações'}
-                                                        {index === 8 && '👠 Calçados'}
-                                                        {index === 9 && '📿 Acessórios (Texto)'}
-                                                        {index === 10 && '🧵 Tecidos'}
-                                                        {index === 11 && '⏳ Trans. Estratégicas'}
-                                                        {index === 12 && '🎯 Prioridades de Vida'}
-                                                        {index === 13 && '🌟 Personalidade'}
-                                                        {index === 14 && '🏡 Lifestyle'}
-                                                        {index === 15 && '🎊 Objetivos de Imagem'}
-                                                        {index === 16 && '⚡ Desafios'}
-                                                        {index === 17 && '💫 Expectativas'}
-                                                        {index === 18 && '⏳ Trans. Resultado'}
-                                                        {index === 19 && '🏆 Resultado Final'}
-                                                        {index === 20 && '🎁 Oferta'}
-                                                        {index >= 19 && index <= 20 && `🎁 Oferta ${index - 18}`}
-                                                    </span>
+                                        <div
+                                            className="pl-4 pr-3 py-3"
+                                            onClick={() => setSelectedId(step.id)}
+                                        >
+                                            <div className="flex items-center gap-2 mb-1">
+                                                <div className="w-6 h-6 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center text-white text-[10px] font-bold">
+                                                    {index + 1}
                                                 </div>
-
-                                                {/* Preview do conteúdo */}
-                                                <div className="text-[10px] text-gray-500 mb-2 truncate">
-                                                    {(() => {
-                                                        const modularStep = modularSteps.find(s => s.id === step.id);
-                                                        if (modularStep && modularStep.components.length > 0) {
-                                                            const firstComponent = modularStep.components[0];
-                                                            return `${modularStep.components.length} componentes - ${firstComponent.type}`;
-                                                        }
-                                                        return 'Etapa vazia';
-                                                    })()}
-                                                </div>                                            {/* Controles de Ação */}
-                                                <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                                                    <Button
-                                                        size="icon"
-                                                        variant="ghost"
-                                                        className="h-6 w-6 text-green-500 hover:bg-green-100"
-                                                        onClick={(e) => {
-                                                            e.stopPropagation();
-                                                            duplicateStep(step.id);
-                                                        }}
-                                                        title="Duplicar"
-                                                    >
-                                                        <Copy className="w-3 h-3" />
-                                                    </Button>
-                                                    <Button
-                                                        size="icon"
-                                                        variant="ghost"
-                                                        className="h-6 w-6 text-red-500 hover:bg-red-100"
-                                                        onClick={(e) => {
-                                                            e.stopPropagation();
-                                                            removeStep(step.id);
-                                                        }}
-                                                        title="Remover"
-                                                    >
-                                                        <Trash2 className="w-3 h-3" />
-                                                    </Button>
-                                                </div>
+                                                <span className="font-medium truncate flex-1">
+                                                    {useModularSystem ? (
+                                                        // Sistema modular - mostrar nome customizado
+                                                        <>
+                                                            {step.type === 'intro' && '🏠'}
+                                                            {step.type === 'question' && '❓'}
+                                                            {step.type === 'result' && '🏆'}
+                                                            {step.type === 'custom' && '⚙️'}
+                                                            {' '}
+                                                            {(step as ModularStep).name}
+                                                        </>
+                                                    ) : (
+                                                        // Sistema antigo
+                                                        <>
+                                                            {step.type === 'intro' && '🏠 Introdução'}
+                                                            {step.type === 'question' && '❓ Pergunta'}
+                                                            {step.type === 'strategic-question' && '🎯 Estratégica'}
+                                                            {step.type === 'transition' && '⏳ Transição'}
+                                                            {step.type === 'transition-result' && '🔄 Trans. Result'}
+                                                            {step.type === 'result' && '🏆 Resultado'}
+                                                            {step.type === 'offer' && '🎁 Oferta'}
+                                                        </>
+                                                    )}
+                                                </span>
                                             </div>
 
-                                            {/* Conexão Visual para o Próximo Step */}
-                                            {index < steps.length - 1 && (
-                                                <div className="absolute bottom-0 left-7 w-0.5 h-3 bg-gradient-to-b from-purple-400 to-blue-400" />
-                                            )}
+                                            {/* Preview do conteúdo */}
+                                            <div className="text-[10px] text-gray-500 mb-2 truncate">
+                                                {useModularSystem ? (
+                                                    // Sistema modular - mostrar número de componentes
+                                                    `${(step as ModularStep).components.length} componente(s)`
+                                                ) : (
+                                                    // Sistema antigo
+                                                    <>
+                                                        {step.type === 'intro' && ((step as any).title || 'Introdução do Quiz')}
+                                                        {step.type === 'question' && ((step as any).questionText || 'Pergunta do Quiz')}
+                                                        {step.type === 'strategic-question' && ((step as any).questionText || 'Pergunta Estratégica')}
+                                                        {step.type === 'transition' && ((step as any).title || 'Tela de Transição')}
+                                                        {step.type === 'transition-result' && ((step as any).title || 'Preparando Resultado')}
+                                                        {step.type === 'result' && ((step as any).title || 'Resultado do Quiz')}
+                                                        {step.type === 'offer' && 'Oferta Personalizada'}
+                                                    </>
+                                                )}
+                                            </div>
+
+                                            {/* Controles de Ação */}
+                                            <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                                <Button
+                                                    size="icon"
+                                                    variant="ghost"
+                                                    className="h-6 w-6 text-green-500 hover:bg-green-100"
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        if (useModularSystem) {
+                                                            // Duplicar step modular
+                                                            const modularStep = step as ModularStep;
+                                                            const duplicated = createBlankModularStep(modularStep.type);
+                                                            duplicated.name = `${modularStep.name} (Cópia)`;
+                                                            duplicated.components = modularStep.components.map(comp => ({
+                                                                ...comp,
+                                                                id: `comp-${Date.now()}-${Math.random()}`
+                                                            }));
+                                                            setModularSteps(prev => [...prev, duplicated]);
+                                                        } else {
+                                                            duplicateStep(step.id);
+                                                        }
+                                                    }}
+                                                    title="Duplicar"
+                                                >
+                                                    <Copy className="w-3 h-3" />
+                                                </Button>
+                                                <Button
+                                                    size="icon"
+                                                    variant="ghost"
+                                                    className="h-6 w-6 text-red-500 hover:bg-red-100"
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        if (useModularSystem) {
+                                                            removeModularStep(step.id);
+                                                        } else {
+                                                            removeStep(step.id);
+                                                        }
+                                                    }}
+                                                    title="Remover"
+                                                >
+                                                    <Trash2 className="w-3 h-3" />
+                                                </Button>
+                                            </div>
                                         </div>
-                                    );
-                                }}
-                                className="space-y-0"
-                            />
-                        </div>
 
-                        {/* Adicionar no Final */}
-                        <div className="p-3 border-t bg-gradient-to-r from-purple-50 to-blue-50">
-                            <div className="text-[10px] font-medium text-gray-700 mb-2">ADICIONAR NO FINAL</div>
-                            <div className="relative">
-                                <Button
-                                    size="sm"
-                                    variant="default"
-                                    className="w-full text-[10px] h-8 bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600"
-                                    onClick={() => setActiveInsertDropdown(activeInsertDropdown === 'end' ? null : 'end')}
-                                >
-                                    <Plus className="w-3 h-3 mr-1" /> Novo Componente
-                                    <ChevronDown className="w-3 h-3 ml-1" />
-                                </Button>
+                                        {/* Conexão Visual para o Próximo Step */}
+                                        {index < steps.length - 1 && (
+                                            <div className="absolute bottom-0 left-7 w-0.5 h-3 bg-gradient-to-b from-purple-400 to-blue-400" />
+                                        )}
+                                    </div>
+                                );
+                            }}
+                            className="space-y-0"
+                        />
+                    </div>
 
-                                {/* Dropdown Menu para adicionar no final */}
-                                {activeInsertDropdown === 'end' && (
-                                    <div className="absolute bottom-full left-0 mb-1 bg-white border rounded shadow-lg z-50 w-full">
-                                        {STEP_TYPES.map(type => (
+                    {/* Adicionar no Final */}
+                    <div className="p-3 border-t bg-gradient-to-r from-purple-50 to-blue-50">
+                        <div className="text-[10px] font-medium text-gray-700 mb-2">ADICIONAR NO FINAL</div>
+                        <div className="relative">
+                            <Button
+                                size="sm"
+                                variant="default"
+                                className="w-full text-[10px] h-8 bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600"
+                                onClick={() => setActiveInsertDropdown(activeInsertDropdown === 'end' ? null : 'end')}
+                            >
+                                <Plus className="w-3 h-3 mr-1" /> Novo Componente
+                                <ChevronDown className="w-3 h-3 ml-1" />
+                            </Button>
+
+                            {/* Dropdown Menu para adicionar no final */}
+                            {activeInsertDropdown === 'end' && (
+                                <div className="absolute bottom-full left-0 mb-1 bg-white border rounded shadow-lg z-50 w-full">
+                                    {useModularSystem ? (
+                                        // Opções para sistema modular
+                                        ['intro', 'question', 'result', 'custom'].map(type => (
+                                            <button
+                                                key={type}
+                                                className="w-full px-3 py-2 text-left text-[11px] hover:bg-gray-50 flex items-center gap-2 border-b last:border-b-0"
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    addModularStep(type);
+                                                    setActiveInsertDropdown(null);
+                                                }}
+                                            >
+                                                <span>
+                                                    {type === 'intro' && '🏠'}
+                                                    {type === 'question' && '❓'}
+                                                    {type === 'result' && '🏆'}
+                                                    {type === 'custom' && '⚙️'}
+                                                </span>
+                                                {type.charAt(0).toUpperCase() + type.slice(1)}
+                                            </button>
+                                        ))
+                                    ) : (
+                                        // Opções para sistema antigo
+                                        STEP_TYPES.map(type => (
                                             <button
                                                 key={type}
                                                 className="w-full px-3 py-2 text-left text-[11px] hover:bg-gray-50 flex items-center gap-2 border-b last:border-b-0"
@@ -911,247 +934,266 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
                                                 </div>
                                             </button>
                                         ))
-                                        }
-                                    </div>
-                                )}
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* COL 2 - BIBLIOTECA DE COMPONENTES */}
-                    <div className="w-72 border-r flex flex-col">
-                        <div className="p-3 border-b text-xs font-semibold">
-                            Biblioteca de Componentes
-                        </div>
-
-                        {/* 🧩 SISTEMA EDITÁVEL MODULAR: Componentes modulares integrados */}
-                        <>
-                            {/* Adicionar Etapas */}
-                            <div className="p-3 border-b">
-                                <label className="block text-[10px] uppercase tracking-wide text-muted-foreground mb-2">
-                                    Adicionar Etapa
-                                </label>
-                                <div className="grid grid-cols-2 gap-2">
-                                    <Button
-                                        size="sm"
-                                        variant="outline"
-                                        className="text-[10px] h-8 flex flex-col items-center p-1"
-                                        onClick={() => handleAddModularStep('intro')}
-                                    >
-                                        <span className="truncate w-full text-center">🏠 Intro</span>
-                                    </Button>
-                                    <Button
-                                        size="sm"
-                                        variant="outline"
-                                        className="text-[10px] h-8 flex flex-col items-center p-1"
-                                        onClick={() => handleAddModularStep('question')}
-                                    >
-                                        <span className="truncate w-full text-center">❓ Pergunta</span>
-                                    </Button>
-                                    <Button
-                                        size="sm"
-                                        variant="outline"
-                                        className="text-[10px] h-8 flex flex-col items-center p-1"
-                                        onClick={() => handleAddModularStep('result')}
-                                    >
-                                        <span className="truncate w-full text-center">🏆 Resultado</span>
-                                    </Button>
-                                    <Button
-                                        size="sm"
-                                        variant="outline"
-                                        className="text-[10px] h-8 flex flex-col items-center p-1"
-                                        onClick={() => handleAddModularStep('custom')}
-                                    >
-                                        <span className="truncate w-full text-center">🧩 Custom</span>
-                                    </Button>
-                                </div>
-                            </div>
-
-                            {/* Componentes Modulares */}
-                            <div className="p-3 border-b">
-                                <label className="block text-[10px] uppercase tracking-wide text-muted-foreground mb-2">
-                                    Componentes Modulares
-                                </label>
-                                <div className="text-[9px] text-muted-foreground mb-2">
-                                    Use os botões "+" dentro das etapas para adicionar componentes
-                                </div>
-                                <div className="grid grid-cols-2 gap-1 text-[9px]">
-                                    <div className="p-2 border rounded bg-gray-50">📝 Título</div>
-                                    <div className="p-2 border rounded bg-gray-50">📄 Texto</div>
-                                    <div className="p-2 border rounded bg-gray-50">🔘 Botão</div>
-                                    <div className="p-2 border rounded bg-gray-50">📝 Input</div>
-                                    <div className="p-2 border rounded bg-gray-50">🖼️ Imagem</div>
-                                    <div className="p-2 border rounded bg-gray-50">📏 Espaço</div>
-                                    <div className="p-2 border rounded bg-gray-50">➖ Divisor</div>
-                                    <div className="p-2 border rounded bg-gray-50">❓ Pergunta</div>
-                                    <div className="p-2 border rounded bg-gray-50">☑️ Opções</div>
-                                </div>
-                            </div>
-                        </>
-
-                        {/* Configuração do Componente Selecionado */}
-                        <div className="flex-1 overflow-auto p-3 text-xs space-y-4">
-                            {selectedModularStep && (
-                                <div className="space-y-2">
-                                    <label className="block text-[10px] uppercase tracking-wide text-muted-foreground">
-                                        Etapa Modular Selecionada
-                                    </label>
-                                    <div className="bg-blue-50 p-2 rounded border">
-                                        <div className="font-medium text-blue-700 mb-1">
-                                            {selectedModularStep.type.toUpperCase()}
-                                        </div>
-                                        <div className="text-[10px] text-blue-600">
-                                            Use os componentes atômicos para editar
-                                        </div>
-                                    </div>
-                                    <div className="text-xs text-gray-500 p-2 border rounded">
-                                        Sistema modular ativo - edite via componentes atômicos no canvas
-                                    </div>
-
-
+                                    )}
                                 </div>
                             )}
                         </div>
                     </div>
+                </div>
 
-                    {/* COL 3 - CANVAS COM DRAG & DROP */}
-                    <div className="flex-1 border-r bg-gray-50 flex flex-col">
-                        <div className="p-3 border-b text-xs font-semibold flex items-center gap-2 justify-between">
-                            <div className="flex items-center gap-2">
-                                <span>Canvas Visual</span>
-                                {selectedBlockId && (
-                                    <Badge variant="outline" className="text-[10px]">
-                                        Selecionado
-                                    </Badge>
-                                )}
-                            </div>
-                            <div className="flex items-center gap-2">
+                {/* COL 2 - BIBLIOTECA DE COMPONENTES */}
+                <div className="w-72 border-r flex flex-col">
+                    <div className="p-3 border-b text-xs font-semibold">Biblioteca de Componentes</div>
+
+                    {/* Seção de Componentes Disponíveis */}
+                    <div className="p-3 border-b">
+                        <label className="block text-[10px] uppercase tracking-wide text-muted-foreground mb-2">
+                            Adicionar Componente
+                        </label>
+                        <div className="grid grid-cols-2 gap-2">
+                            {STEP_TYPES.map(type => (
                                 <Button
+                                    key={type}
                                     size="sm"
-                                    variant={showProductionView ? "default" : "outline"}
-                                    onClick={() => setShowProductionView(!showProductionView)}
-                                    className="h-6 text-[10px]"
-                                    title="Alternar entre visão modular e visão de produção"
+                                    variant="outline"
+                                    className="text-[10px] h-8 flex flex-col items-center p-1"
+                                    onClick={() => addStepAfter(selectedId, type)}
                                 >
-                                    {showProductionView ? '🎯 Produção' : '🧩 Modular'}
+                                    <span className="truncate w-full text-center">
+                                        {type === 'intro' && '🏠 Intro'}
+                                        {type === 'question' && '❓ Pergunta'}
+                                        {type === 'strategic-question' && '🎯 Estratégica'}
+                                        {type === 'transition' && '⏳ Transição'}
+                                        {type === 'transition-result' && '🔄 Trans. Result'}
+                                        {type === 'result' && '🏆 Resultado'}
+                                        {type === 'offer' && '🎁 Oferta'}
+                                    </span>
                                 </Button>
-                                <Button
-                                    size="sm"
-                                    variant={dragEnabled ? "default" : "outline"}
-                                    onClick={() => setDragEnabled(!dragEnabled)}
-                                    className="h-6 text-[10px]"
-                                >
-                                    Drag & Drop
-                                </Button>
-                                <Button
-                                    size="sm"
-                                    variant={showPropertiesPanel ? "default" : "outline"}
-                                    onClick={() => setShowPropertiesPanel(!showPropertiesPanel)}
-                                    className="h-6 text-[10px]"
-                                >
-                                    <Settings className="w-3 h-3 mr-1" />
-                                    Props
-                                </Button>
-                            </div>
+                            ))}
                         </div>
-                        <div
-                            className="flex-1 overflow-auto p-4"
-                            onClick={(e) => {
-                                // Se clicar no fundo (não em um bloco), limpar seleção
-                                if (e.target === e.currentTarget) {
-                                    setSelectedBlockId('');
-                                }
-                            }}
-                        >
-                            {/* 🧩 Sistema Editável Modular - Componentes Atômicos Integrados */}
+                    </div>
 
-                            {/* 🧩 SISTEMA EDITÁVEL MODULAR: Sempre usar componentes modulares */}
-                            {modularSteps.length === 0 ? (
-                                <div className="flex items-center justify-center h-full text-sm text-muted-foreground">
-                                    <div className="text-center">
-                                        <div className="text-lg mb-2">🧩</div>
-                                        <div>Nenhuma etapa criada ainda</div>
-                                        <div className="text-xs mb-4">Use a sidebar para adicionar etapas</div>
-                                        <Button
-                                            size="sm"
-                                            onClick={() => handleAddModularStep('intro')}
-                                            className="text-xs"
-                                        >
-                                            Criar primeira etapa
-                                        </Button>
+                    {/* Configuração do Componente Selecionado */}
+                    <div className="flex-1 overflow-auto p-3 text-xs space-y-4">
+                        {selectedStep && (
+                            <div className="space-y-2">
+                                <label className="block text-[10px] uppercase tracking-wide text-muted-foreground">
+                                    Configurar Componente
+                                </label>
+                                <div className="bg-blue-50 p-2 rounded border">
+                                    <div className="font-medium text-blue-700 mb-1">
+                                        {selectedStep.type.toUpperCase()}
+                                    </div>
+                                    <div className="text-[10px] text-blue-600">
+                                        Componente selecionado para edição
                                     </div>
                                 </div>
-                            ) : selectedId && modularSteps.find(s => s.id === selectedId) ? (
-                                showProductionView ? (
-                                    // 🎯 VISÃO DE PRODUÇÃO: Componentes reais do /quiz-estilo
-                                    <div className="p-4">
-                                        <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-4">
-                                            <div className="text-sm font-medium text-yellow-800">
-                                                🎯 Visão de Produção Ativa
-                                            </div>
-                                            <div className="text-xs text-yellow-700 mt-1">
-                                                Mostrando como aparece no /quiz-estilo real
-                                            </div>
+                                <select
+                                    className="w-full border rounded px-2 py-1 text-xs"
+                                    value={selectedStep.type}
+                                    onChange={e => updateStep(selectedStep.id, { type: e.target.value as any })}
+                                >
+                                    {STEP_TYPES.map(t => <option key={t} value={t}>{t}</option>)}
+                                </select>
+
+                                {selectedStep.type === 'question' && (
+                                    <div className="pt-2 border-t space-y-2">
+                                        <div className="flex items-center justify-between text-[10px] font-medium">
+                                            <span>Opções</span>
+                                            <Button size="sm" variant="ghost" onClick={() =>
+                                                updateStep(selectedStep.id, {
+                                                    options: [...(selectedStep.options || []),
+                                                    { id: `opt-${Date.now()}`, text: 'Nova opção' }]
+                                                })
+                                            }>+ Add</Button>
                                         </div>
-                                        {renderQuizProductionComponent(
-                                            modularSteps.find(s => s.id === selectedId)!,
-                                            modularSteps.findIndex(s => s.id === selectedId)
-                                        )}
+                                        <div className="space-y-2">
+                                            {(selectedStep.options || []).map((opt: any, oi: number) => (
+                                                <div key={opt.id} className="border rounded p-2 space-y-1">
+                                                    <div className="flex items-center gap-1">
+                                                        <input
+                                                            className="flex-1 border rounded px-1 py-0.5 text-[11px]"
+                                                            placeholder="Texto da opção"
+                                                            value={opt.text}
+                                                            onChange={(e) => {
+                                                                const clone = [...(selectedStep.options || [])];
+                                                                clone[oi] = { ...clone[oi], text: e.target.value };
+                                                                updateStep(selectedStep.id, { options: clone });
+                                                            }}
+                                                        />
+                                                        <Button size="icon" variant="ghost" className="h-5 w-5"
+                                                            onClick={() => {
+                                                                const clone = (selectedStep.options || []).filter((_: any, i: number) => i !== oi);
+                                                                updateStep(selectedStep.id, { options: clone });
+                                                            }}>
+                                                            <Trash2 className="w-3 h-3" />
+                                                        </Button>
+                                                    </div>
+                                                    <input
+                                                        className="w-full border rounded px-1 py-0.5 text-[11px]"
+                                                        placeholder="URL da imagem (opcional)"
+                                                        value={opt.image || ''}
+                                                        onChange={(e) => {
+                                                            const clone = [...(selectedStep.options || [])];
+                                                            clone[oi] = { ...clone[oi], image: e.target.value || undefined };
+                                                            updateStep(selectedStep.id, { options: clone });
+                                                        }}
+                                                    />
+                                                    {opt.image && (
+                                                        <img
+                                                            src={opt.image}
+                                                            alt="Preview"
+                                                            className="w-full h-12 object-cover rounded"
+                                                            onError={(e) => {
+                                                                (e.target as HTMLImageElement).style.display = 'none';
+                                                            }}
+                                                        />
+                                                    )}
+                                                </div>
+                                            ))}
+                                        </div>
                                     </div>
-                                ) : (
-                                    // 🧩 VISÃO MODULAR: Componentes atômicos editáveis
-                                    <ModularStepContainer
-                                        step={modularSteps.find(s => s.id === selectedId)!}
-                                        isEditable={previewMode === 'edit'}
-                                        selectedComponentId={selectedComponentId}
-                                        onUpdateStep={(updates) => handleUpdateModularStep(selectedId, updates)}
-                                        onUpdateComponent={(componentId, updates) =>
-                                            handleUpdateAtomicComponent(selectedId, componentId, updates)
-                                        }
-                                        onSelectComponent={handleSelectAtomicComponent}
-                                        onDeleteComponent={(componentId) =>
-                                            handleDeleteAtomicComponent(selectedId, componentId)
-                                        }
-                                        onDuplicateComponent={(componentId) =>
-                                            handleDuplicateAtomicComponent(selectedId, componentId)
-                                        }
-                                        onReorderComponents={(fromIndex, toIndex) =>
-                                            handleReorderAtomicComponents(selectedId, fromIndex, toIndex)
-                                        }
-                                        onInsertComponent={(afterComponentId, componentType) =>
-                                            handleInsertAtomicComponent(selectedId, afterComponentId, componentType)
-                                        }
-                                    />
-                                )
+                                )}
+                            </div>
+                        )}
+                    </div>
+                </div>
+
+                {/* COL 3 - CANVAS COM DRAG & DROP */}
+                <div className="flex-1 border-r bg-gray-50 flex flex-col">
+                    <div className="p-3 border-b text-xs font-semibold flex items-center gap-2 justify-between">
+                        <div className="flex items-center gap-2">
+                            <span>Canvas Visual</span>
+                            {selectedBlockId && (
+                                <Badge variant="outline" className="text-[10px]">
+                                    Selecionado
+                                </Badge>
+                            )}
+                        </div>
+                        <div className="flex items-center gap-2">
+                            <Button
+                                size="sm"
+                                variant={dragEnabled ? "default" : "outline"}
+                                onClick={() => setDragEnabled(!dragEnabled)}
+                                className="h-6 text-[10px]"
+                            >
+                                Drag & Drop
+                            </Button>
+                            <Button
+                                size="sm"
+                                variant={showPropertiesPanel ? "default" : "outline"}
+                                onClick={() => setShowPropertiesPanel(!showPropertiesPanel)}
+                                className="h-6 text-[10px]"
+                            >
+                                <Settings className="w-3 h-3 mr-1" />
+                                Props
+                            </Button>
+                        </div>
+                    </div>
+                    <div
+                        className="flex-1 overflow-auto p-4"
+                        onClick={(e) => {
+                            // Se clicar no fundo (não em um bloco), limpar seleção
+                            if (e.target === e.currentTarget) {
+                                setSelectedBlockId('');
+                            }
+                        }}
+                    >
+                        {/* Toggle entre sistema antigo e modular */}
+                        <div className="mb-4 flex items-center gap-2">
+                            <Button
+                                size="sm"
+                                variant={useModularSystem ? "default" : "outline"}
+                                onClick={() => setUseModularSystem(true)}
+                                className="h-6 text-[10px]"
+                            >
+                                🎯 Sistema Modular
+                            </Button>
+                            <Button
+                                size="sm"
+                                variant={!useModularSystem ? "default" : "outline"}
+                                onClick={() => setUseModularSystem(false)}
+                                className="h-6 text-[10px]"
+                            >
+                                🔧 Sistema Antigo
+                            </Button>
+                        </div>
+
+                        {useModularSystem ? (
+                            // NOVO SISTEMA MODULAR
+                            modularSteps.length === 0 ? (
+                                <div className="flex items-center justify-center h-full text-sm text-muted-foreground">
+                                    <div className="text-center">
+                                        <div className="text-lg mb-2">🎯</div>
+                                        <div>Nenhum step criado ainda</div>
+                                        <div className="text-xs">Use a sidebar para adicionar steps</div>
+                                    </div>
+                                </div>
+                            ) : selectedModularStep ? (
+                                <ModularStepRenderer
+                                    step={selectedModularStep}
+                                    isEditable={previewMode === 'edit'}
+                                    selectedComponentId={selectedComponentId}
+                                    onUpdateStep={updateModularStep}
+                                    onSelectComponent={setSelectedComponentId}
+                                    onOpenComponentProperties={(componentId) => {
+                                        setSelectedBlockId(componentId);
+                                        setShowPropertiesPanel(true);
+                                    }}
+                                />
                             ) : (
                                 <div className="flex items-center justify-center h-full text-sm text-muted-foreground">
                                     <div className="text-center">
                                         <div className="text-lg mb-2">📝</div>
-                                        <div>Selecione uma etapa para editar</div>
+                                        <div>Selecione um step para editar</div>
                                         <div className="text-xs">Use a sidebar à esquerda para selecionar</div>
                                     </div>
                                 </div>
-                            )}
-                        </div>
+                            )
+                        ) : (
+                            // SISTEMA ANTIGO
+                            steps.length === 0 ? (
+                                <div className="flex items-center justify-center h-full text-sm text-muted-foreground">
+                                    <div className="text-center">
+                                        <div className="text-lg mb-2">🎯</div>
+                                        <div>Nenhum step criado ainda</div>
+                                        <div className="text-xs">Use a sidebar para adicionar steps</div>
+                                    </div>
+                                </div>
+                            ) : selectedStep ? (
+                                // Renderizar apenas o step selecionado
+                                <div className="p-4">
+                                    {renderRealComponent(selectedStep, steps.findIndex(s => s.id === selectedStep.id))}
+                                </div>
+                            ) : (
+                                <div className="flex items-center justify-center h-full text-sm text-muted-foreground">
+                                    <div className="text-center">
+                                        <div className="text-lg mb-2">📝</div>
+                                        <div>Selecione um step para editar</div>
+                                        <div className="text-xs">Use a sidebar à esquerda para selecionar</div>
+                                    </div>
+                                </div>
+                            )
+                        )}
                     </div>
-
-                    {/* COL 4 - PAINEL DE PROPRIEDADES APRIMORADO */}
-                    {showPropertiesPanel && (
-                        <div className="w-80">
-                            <QuizPropertiesPanel
-                                selectedStep={null}
-                                onUpdateStep={updateStep}
-                                onClose={handlePropertiesPanelClose}
-                                onDeleteStep={removeStep}
-                                onDuplicateStep={duplicateStep}
-                                isPreviewMode={isPreviewMode}
-                                onTogglePreview={() => setIsPreviewMode(!isPreviewMode)}
-                            />
-                        </div>
-                    )}
                 </div>
+
+                {/* COL 4 - PAINEL DE PROPRIEDADES APRIMORADO */}
+                {showPropertiesPanel && (
+                    <div className="w-80">
+                        <QuizPropertiesPanel
+                            selectedStep={selectedBlockId ? selectedStep : null}
+                            onUpdateStep={updateStep}
+                            onClose={handlePropertiesPanelClose}
+                            onDeleteStep={removeStep}
+                            onDuplicateStep={duplicateStep}
+                            isPreviewMode={isPreviewMode}
+                            onTogglePreview={() => setIsPreviewMode(!isPreviewMode)}
+                        />
+                    </div>
+                )}
             </div>
-        </BlockRegistryProvider>
+        </div>
     );
 };
 
