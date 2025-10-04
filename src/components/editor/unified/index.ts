@@ -157,5 +157,17 @@ export {
 // Re-export do stepRegistry para conveniência
 export { stepRegistry } from '@/components/step-registry/StepRegistry';
 
+// Export do registro de steps de produção
+export { 
+  registerProductionSteps,
+  PRODUCTION_STEPS,
+  IntroStepAdapter,
+  QuestionStepAdapter,
+  StrategicQuestionStepAdapter,
+  TransitionStepAdapter,
+  ResultStepAdapter,
+  OfferStepAdapter
+} from '@/components/step-registry/ProductionStepsRegistry';
+
 // 🎯 EXPORT DEFAULT PARA INTEGRAÇÃO RÁPIDA
 export default UnifiedEditorSystem;
