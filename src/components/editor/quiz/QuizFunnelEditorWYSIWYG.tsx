@@ -7,17 +7,16 @@ import { Plus, Save, Trash2, ArrowUp, ArrowDown, Copy, Eye, ChevronDown, Setting
 import { cn } from '@/lib/utils';
 import './QuizEditorStyles.css';
 
-// 🗑️ REMOVIDO - FASE 3: Imports duplicados substituídos pelo UnifiedStepRenderer
-// Anteriormente importava: IntroStep, QuestionStep, StrategicQuestionStep, etc.
-// Agora tudo é renderizado via stepRegistry unificado
-
-// ✨ NOVO: Sistema Modular de Steps
-import { StepRenderer } from '@/components/step-registry/StepRenderer';
-import { stepRegistry } from '@/components/step-registry/StepRegistry';
-import '@/components/steps'; // Inicializar todos os steps registrados
-
-// 🎯 FASE 3: Sistema Unificado de Renderização
-import { UnifiedStepRenderer, registerProductionSteps } from '@/components/editor/unified';
+// � FASE 3: COMPONENTES EDITÁVEIS ENCAPSULADOS - Sistema Modularizado
+import {
+    EditableIntroStep,
+    EditableQuestionStep,
+    EditableStrategicQuestionStep,
+    EditableTransitionStep,
+    EditableResultStep,
+    EditableOfferStep,
+    type EditableStepProps
+} from '@/components/editor/editable-steps';
 
 // 🎯 NOVO: Componentes de Editor Aprimorado
 import SelectableBlock from '@/components/editor/SelectableBlock';
@@ -92,10 +91,7 @@ function createBlankStep(type: QuizStep['type']): EditableQuizStep {
 const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, templateId }) => {
     const crud = useUnifiedCRUD();
 
-    // 🎯 FASE 3: Registrar steps de produção no stepRegistry (uma vez)
-    useEffect(() => {
-        registerProductionSteps();
-    }, []);
+    // 🚀 FASE 3: Componentes editáveis já integrados - não precisa registrar steps
 
     const [steps, setSteps] = useState<EditableQuizStep[]>([]);
     const [selectedId, setSelectedId] = useState<string>('');
@@ -404,6 +400,28 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
         setShowPropertiesPanel(true);
     }, []);
 
+    // 🎨 FASE 3: Handler para cliques em propriedades editáveis
+    const handlePropertyClick = useCallback((propKey: string, element: HTMLElement, stepId: string) => {
+        console.log('[QuizFunnelEditor] Propriedade clicada:', { propKey, stepId, element });
+
+        // Garantir que o step está selecionado
+        setSelectedId(stepId);
+        setSelectedBlockId(`step-${stepId}`);
+
+        // Abrir painel de propriedades
+        setShowPropertiesPanel(true);
+
+        // Focar no campo da propriedade no painel (integração futura)
+        // Isso será usado para destacar/focar o campo específico no QuizPropertiesPanel
+        setTimeout(() => {
+            const propertyInput = document.querySelector(`[data-property="${propKey}"]`) as HTMLElement;
+            if (propertyInput) {
+                propertyInput.focus();
+                propertyInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        }, 100);
+    }, []);
+
     // Mock de resultados para o componente ResultStep
     const mockResults = {
         userProfile: 'Empreendedor Visionário',
@@ -634,58 +652,61 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
         return updates;
     };
 
-    // 🎯 FASE 3: UNIFIED STEP RENDERER - Substitui toda a lógica complexa anterior
+    // 🚀 FASE 3: COMPONENTES EDITÁVEIS ENCAPSULADOS - Sistema Modularizado
     const renderRealComponent = (step: EditableQuizStep, index: number) => {
         const isEditMode = previewMode === 'edit';
         const blockId = `step-${step.id}`;
         const isSelected = selectedBlockId === blockId;
 
-        // Mapear step.id para formato do StepRegistry
-        const stepId = `step-${String(index + 1).padStart(2, '0')}`;
+        // 🎯 Mapear tipo de step para componente editável correspondente
+        const EditableComponent = {
+            'intro': EditableIntroStep,
+            'question': EditableQuestionStep,
+            'strategic-question': EditableStrategicQuestionStep,
+            'transition': EditableTransitionStep,
+            'transition-result': EditableTransitionStep, // Reutilizar TransitionStep
+            'result': EditableResultStep,
+            'offer': EditableOfferStep
+        }[step.type];
 
-        // Preparar quiz state mockado para compatibilidade
-        const mockQuizState = {
-            currentStep: index + 1,
-            userName: 'Usuário',
-            answers: {},
-            strategicAnswers: {},
-            resultStyle: 'classic',
-            secondaryStyles: []
+        // Se o tipo não for suportado, mostrar erro
+        if (!EditableComponent) {
+            return (
+                <div className="p-4 border-2 border-red-300 bg-red-50 rounded-lg">
+                    <div className="text-red-600 font-semibold">
+                        ⚠️ Tipo de step não suportado: {step.type}
+                    </div>
+                    <div className="text-red-500 text-sm mt-1">
+                        Componente editável não encontrado para este tipo de step.
+                    </div>
+                </div>
+            );
+        }
+
+        // 🎨 Props para o componente editável
+        const editableProps: EditableStepProps = {
+            data: step,
+            isEditable: isEditMode,
+            isSelected: isSelected,
+            onUpdate: (updates) => updateStep(step.id, updates),
+            onSelect: () => {
+                setSelectedId(step.id);
+                setSelectedBlockId(blockId);
+            },
+            onPropertyClick: (propKey: string, element: HTMLElement) => {
+                handlePropertyClick(propKey, element, step.id);
+            },
+            onDuplicate: () => duplicateStep(step.id),
+            onDelete: () => removeStep(step.id),
+            onMoveUp: index > 0 ? () => moveStep(step.id, -1) : undefined,
+            onMoveDown: index < steps.length - 1 ? () => moveStep(step.id, 1) : undefined,
+            canMoveUp: index > 0,
+            canMoveDown: index < steps.length - 1,
+            canDelete: steps.length > 1,
+            blockId: blockId
         };
 
-        // Determinar modo de renderização
-        const renderMode = isEditMode ? 'editable' : 'preview';
-
-        return (
-            <SelectableBlock
-                blockId={blockId}
-                isSelected={isSelected}
-                isEditable={isEditMode}
-                onSelect={handleBlockSelect}
-                blockType={`${step.type.charAt(0).toUpperCase() + step.type.slice(1)} (Unified)`}
-                blockIndex={index}
-                onOpenProperties={handleOpenProperties}
-                isDraggable={dragEnabled}
-            >
-                <UnifiedStepRenderer
-                    stepId={stepId}
-                    mode={renderMode}
-                    stepProps={step}
-                    quizState={mockQuizState}
-                    onStepUpdate={(stepId, updates) => {
-                        updateStep(step.id, updates);
-                    }}
-                    onStepSelect={(stepId) => {
-                        setSelectedBlockId(blockId);
-                    }}
-                    onNext={() => console.log('Próximo step')}
-                    onPrevious={() => console.log('Step anterior')}
-                    isSelected={isSelected}
-                    isEditable={isEditMode}
-                    className="unified-step-wrapper"
-                />
-            </SelectableBlock>
-        );
+        return <EditableComponent {...editableProps} />;
     };
 
     return (
