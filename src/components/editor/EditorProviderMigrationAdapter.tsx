@@ -4,6 +4,7 @@
 
 import React, { ReactNode } from 'react';
 import { OptimizedEditorProvider, useEditor as useOptimizedEditor } from './OptimizedEditorProvider';
+import { UnifiedCRUDProvider } from '@/context/UnifiedCRUDProvider';
 
 export type UnifiedEditorContextType = ReturnType<typeof useOptimizedEditor>;
 
@@ -15,15 +16,17 @@ export const MigrationEditorProvider: React.FC<{
   legacyMode?: boolean;
 }> = ({ children }) => {
   return (
-    <OptimizedEditorProvider>
-      {children}
-    </OptimizedEditorProvider>
+    <UnifiedCRUDProvider>
+      <OptimizedEditorProvider>
+        {children}
+      </OptimizedEditorProvider>
+    </UnifiedCRUDProvider>
   );
 };
 
 export const useUnifiedEditor = (): UnifiedEditorContextType => {
   const context = useOptimizedEditor();
-  
+
   if (!context) {
     throw new Error('useUnifiedEditor deve ser usado dentro de MigrationEditorProvider');
   }
