@@ -119,25 +119,25 @@ interface SuperUnifiedState {
     // Core data
     funnels: UnifiedFunnelData[];
     currentFunnel: UnifiedFunnelData | null;
-    
+
     // Auth state
     auth: AuthState;
-    
+
     // Theme state
     theme: ThemeState;
-    
+
     // Editor state
     editor: EditorState;
-    
+
     // UI state
     ui: UIState;
-    
+
     // Cache state
     cache: CacheState;
-    
+
     // Performance metrics
     performance: PerformanceMetrics;
-    
+
     // Feature flags
     features: {
         enableCache: boolean;
@@ -148,7 +148,7 @@ interface SuperUnifiedState {
 }
 
 // 🎯 ACTION TYPES
-type SuperUnifiedAction = 
+type SuperUnifiedAction =
     | { type: 'SET_LOADING'; payload: { section: string; loading: boolean; message?: string } }
     | { type: 'SET_ERROR'; payload: { section: string; error: string | null } }
     | { type: 'SET_FUNNELS'; payload: UnifiedFunnelData[] }
@@ -168,14 +168,14 @@ type SuperUnifiedAction =
 const initialState: SuperUnifiedState = {
     funnels: [],
     currentFunnel: null,
-    
+
     auth: {
         user: null,
         isAuthenticated: false,
         isLoading: false,
         error: null
     },
-    
+
     theme: {
         theme: 'light',
         primaryColor: '#4F46E5',
@@ -183,7 +183,7 @@ const initialState: SuperUnifiedState = {
         fontFamily: 'Inter, sans-serif',
         borderRadius: '8px'
     },
-    
+
     editor: {
         currentStep: 1,
         selectedBlockId: null,
@@ -192,7 +192,7 @@ const initialState: SuperUnifiedState = {
         dragEnabled: true,
         clipboardData: null
     },
-    
+
     ui: {
         showSidebar: true,
         showPropertiesPanel: false,
@@ -201,7 +201,7 @@ const initialState: SuperUnifiedState = {
         isLoading: false,
         loadingMessage: ''
     },
-    
+
     cache: {
         funnels: {},
         templates: {},
@@ -209,7 +209,7 @@ const initialState: SuperUnifiedState = {
         lastUpdated: {},
         hitRate: 0
     },
-    
+
     performance: {
         providersLoaded: 1, // Apenas 1 provider!
         renderCount: 0,
@@ -218,7 +218,7 @@ const initialState: SuperUnifiedState = {
         memoryUsage: 0,
         lastOptimization: Date.now()
     },
-    
+
     features: {
         enableCache: true,
         enableAnalytics: true,
@@ -239,15 +239,15 @@ const superUnifiedReducer = (state: SuperUnifiedState, action: SuperUnifiedActio
                     loadingMessage: action.payload.message || state.ui.loadingMessage
                 }
             };
-            
+
         case 'SET_ERROR':
             return {
                 ...state,
-                auth: action.payload.section === 'auth' 
+                auth: action.payload.section === 'auth'
                     ? { ...state.auth, error: action.payload.error }
                     : state.auth
             };
-            
+
         case 'SET_FUNNELS':
             return {
                 ...state,
@@ -264,13 +264,13 @@ const superUnifiedReducer = (state: SuperUnifiedState, action: SuperUnifiedActio
                     }
                 }
             };
-            
+
         case 'SET_CURRENT_FUNNEL':
             return {
                 ...state,
                 currentFunnel: action.payload
             };
-            
+
         case 'UPDATE_FUNNEL':
             const updatedFunnels = state.funnels.map(funnel =>
                 funnel.id === action.payload.id
@@ -294,31 +294,31 @@ const superUnifiedReducer = (state: SuperUnifiedState, action: SuperUnifiedActio
                     }
                 }
             };
-            
+
         case 'SET_AUTH_STATE':
             return {
                 ...state,
                 auth: { ...state.auth, ...action.payload }
             };
-            
+
         case 'SET_THEME':
             return {
                 ...state,
                 theme: { ...state.theme, ...action.payload }
             };
-            
+
         case 'SET_EDITOR_STATE':
             return {
                 ...state,
                 editor: { ...state.editor, ...action.payload }
             };
-            
+
         case 'SET_UI_STATE':
             return {
                 ...state,
                 ui: { ...state.ui, ...action.payload }
             };
-            
+
         case 'ADD_TOAST':
             return {
                 ...state,
@@ -327,7 +327,7 @@ const superUnifiedReducer = (state: SuperUnifiedState, action: SuperUnifiedActio
                     toasts: [...state.ui.toasts, action.payload]
                 }
             };
-            
+
         case 'REMOVE_TOAST':
             return {
                 ...state,
@@ -336,7 +336,7 @@ const superUnifiedReducer = (state: SuperUnifiedState, action: SuperUnifiedActio
                     toasts: state.ui.toasts.filter(toast => toast.id !== action.payload)
                 }
             };
-            
+
         case 'UPDATE_CACHE':
             return {
                 ...state,
@@ -349,7 +349,7 @@ const superUnifiedReducer = (state: SuperUnifiedState, action: SuperUnifiedActio
                     }
                 }
             };
-            
+
         case 'UPDATE_PERFORMANCE':
             return {
                 ...state,
@@ -359,7 +359,7 @@ const superUnifiedReducer = (state: SuperUnifiedState, action: SuperUnifiedActio
                     renderCount: state.performance.renderCount + 1
                 }
             };
-            
+
         case 'TOGGLE_FEATURE':
             return {
                 ...state,
@@ -368,7 +368,7 @@ const superUnifiedReducer = (state: SuperUnifiedState, action: SuperUnifiedActio
                     [action.payload.feature]: action.payload.enabled
                 }
             };
-            
+
         default:
             return state;
     }
@@ -378,7 +378,7 @@ const superUnifiedReducer = (state: SuperUnifiedState, action: SuperUnifiedActio
 interface SuperUnifiedContextType {
     // State
     state: SuperUnifiedState;
-    
+
     // Funnel operations
     loadFunnels: () => Promise<void>;
     loadFunnel: (id: string) => Promise<void>;
@@ -386,16 +386,16 @@ interface SuperUnifiedContextType {
     createFunnel: (name: string, options?: any) => Promise<UnifiedFunnelData>;
     deleteFunnel: (id: string) => Promise<boolean>;
     duplicateFunnel: (id: string, newName?: string) => Promise<UnifiedFunnelData>;
-    
+
     // Auth operations
     signIn: (email: string, password: string) => Promise<void>;
     signOut: () => Promise<void>;
     signUp: (email: string, password: string) => Promise<void>;
-    
+
     // Theme operations
     setTheme: (theme: 'light' | 'dark' | 'system') => void;
     updateThemeColors: (colors: Partial<ThemeState>) => void;
-    
+
     // Editor operations
     setCurrentStep: (step: number) => void;
     setSelectedBlock: (blockId: string | null) => void;
@@ -403,7 +403,7 @@ interface SuperUnifiedContextType {
     enableDragDrop: (enabled: boolean) => void;
     copyToClipboard: (data: any) => void;
     pasteFromClipboard: () => any;
-    
+
     // UI operations
     showToast: (toast: Omit<ToastMessage, 'id'>) => void;
     hideToast: (id: string) => void;
@@ -412,15 +412,15 @@ interface SuperUnifiedContextType {
     toggleSidebar: () => void;
     togglePropertiesPanel: () => void;
     setLoading: (loading: boolean, message?: string) => void;
-    
+
     // Cache operations
     clearCache: (section?: string) => void;
     getCacheStats: () => { hitRate: number; itemCount: number; memoryUsage: number };
-    
+
     // Performance operations
     getPerformanceMetrics: () => PerformanceMetrics;
     optimizePerformance: () => void;
-    
+
     // Feature flags
     toggleFeature: (feature: keyof SuperUnifiedState['features'], enabled?: boolean) => void;
     isFeatureEnabled: (feature: keyof SuperUnifiedState['features']) => boolean;
@@ -450,41 +450,41 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
         ...initialState,
         features: { ...initialState.features, ...initialFeatures }
     });
-    
+
     const [renderStartTime] = useState(() => performance.now());
-    
+
     // 📊 Performance tracking
     useEffect(() => {
         const endTime = performance.now();
         const renderTime = endTime - renderStartTime;
-        
+
         dispatch({
             type: 'UPDATE_PERFORMANCE',
-            payload: { 
+            payload: {
                 averageRenderTime: renderTime,
                 lastOptimization: Date.now()
             }
         });
-        
+
         if (debugMode) {
             console.log('🚀 SuperUnifiedProvider render time:', renderTime.toFixed(2) + 'ms');
         }
     }, [renderStartTime, debugMode]);
-    
+
     // 🎯 Funnel Operations
     const loadFunnels = useCallback(async () => {
         dispatch({ type: 'SET_LOADING', payload: { section: 'funnels', loading: true, message: 'Carregando funis...' } });
-        
+
         try {
             const { data, error } = await supabase
                 .from('funnels')
                 .select('*')
                 .order('created_at', { ascending: false });
-                
+
             if (error) throw error;
-            
+
             dispatch({ type: 'SET_FUNNELS', payload: data || [] });
-            
+
             if (debugMode) {
                 console.log('✅ Funnels loaded:', data?.length || 0);
             }
@@ -494,34 +494,34 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
             dispatch({ type: 'SET_LOADING', payload: { section: 'funnels', loading: false } });
         }
     }, [debugMode]);
-    
+
     const loadFunnel = useCallback(async (id: string) => {
         // Check cache first
         if (state.cache.funnels[id] && state.features.enableCache) {
             const cached = state.cache.funnels[id];
             const cacheAge = Date.now() - (state.cache.lastUpdated[id] || 0);
-            
+
             if (cacheAge < 300000) { // 5 minutes
                 dispatch({ type: 'SET_CURRENT_FUNNEL', payload: cached });
-                dispatch({ 
-                    type: 'UPDATE_PERFORMANCE', 
-                    payload: { cacheHitRate: state.performance.cacheHitRate + 1 } 
+                dispatch({
+                    type: 'UPDATE_PERFORMANCE',
+                    payload: { cacheHitRate: state.performance.cacheHitRate + 1 }
                 });
                 return;
             }
         }
-        
+
         dispatch({ type: 'SET_LOADING', payload: { section: 'funnel', loading: true, message: 'Carregando funil...' } });
-        
+
         try {
             const { data, error } = await supabase
                 .from('funnels')
                 .select('*')
                 .eq('id', id)
                 .single();
-                
+
             if (error) throw error;
-            
+
             dispatch({ type: 'SET_CURRENT_FUNNEL', payload: data });
         } catch (error: any) {
             dispatch({ type: 'SET_ERROR', payload: { section: 'funnel', error: error.message } });
@@ -529,13 +529,13 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
             dispatch({ type: 'SET_LOADING', payload: { section: 'funnel', loading: false } });
         }
     }, [state.cache.funnels, state.cache.lastUpdated, state.features.enableCache, state.performance.cacheHitRate]);
-    
+
     const saveFunnel = useCallback(async (funnel?: UnifiedFunnelData) => {
         const funnelToSave = funnel || state.currentFunnel;
         if (!funnelToSave) return;
-        
+
         dispatch({ type: 'SET_LOADING', payload: { section: 'save', loading: true, message: 'Salvando...' } });
-        
+
         try {
             const { data, error } = await supabase
                 .from('funnels')
@@ -545,11 +545,11 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
                 })
                 .select()
                 .single();
-                
+
             if (error) throw error;
-            
+
             dispatch({ type: 'UPDATE_FUNNEL', payload: { id: data.id, updates: data } });
-            
+
             // Show success toast
             dispatch({
                 type: 'ADD_TOAST',
@@ -577,10 +577,10 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
             dispatch({ type: 'SET_LOADING', payload: { section: 'save', loading: false } });
         }
     }, [state.currentFunnel]);
-    
+
     const createFunnel = useCallback(async (name: string, options: any = {}) => {
         dispatch({ type: 'SET_LOADING', payload: { section: 'create', loading: true, message: 'Criando funil...' } });
-        
+
         try {
             const { data, error } = await supabase
                 .from('funnels')
@@ -595,12 +595,12 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
                 })
                 .select()
                 .single();
-                
+
             if (error) throw error;
-            
+
             dispatch({ type: 'SET_FUNNELS', payload: [data, ...state.funnels] });
             dispatch({ type: 'SET_CURRENT_FUNNEL', payload: data });
-            
+
             return data;
         } catch (error: any) {
             dispatch({ type: 'SET_ERROR', payload: { section: 'create', error: error.message } });
@@ -609,33 +609,33 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
             dispatch({ type: 'SET_LOADING', payload: { section: 'create', loading: false } });
         }
     }, [state.funnels]);
-    
+
     const deleteFunnel = useCallback(async (id: string) => {
         try {
             const { error } = await supabase
                 .from('funnels')
                 .delete()
                 .eq('id', id);
-                
+
             if (error) throw error;
-            
+
             dispatch({ type: 'SET_FUNNELS', payload: state.funnels.filter(f => f.id !== id) });
-            
+
             if (state.currentFunnel?.id === id) {
                 dispatch({ type: 'SET_CURRENT_FUNNEL', payload: null });
             }
-            
+
             return true;
         } catch (error: any) {
             dispatch({ type: 'SET_ERROR', payload: { section: 'delete', error: error.message } });
             return false;
         }
     }, [state.funnels, state.currentFunnel]);
-    
+
     const duplicateFunnel = useCallback(async (id: string, newName?: string) => {
         const originalFunnel = state.funnels.find(f => f.id === id);
         if (!originalFunnel) throw new Error('Funil não encontrado');
-        
+
         const duplicated = await createFunnel(
             newName || `${originalFunnel.name} (Cópia)`,
             {
@@ -645,112 +645,112 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
                 quizSteps: originalFunnel.quizSteps
             }
         );
-        
+
         return duplicated;
     }, [state.funnels, createFunnel]);
-    
+
     // 🔐 Auth Operations
     const signIn = useCallback(async (email: string, password: string) => {
         dispatch({ type: 'SET_AUTH_STATE', payload: { isLoading: true, error: null } });
-        
+
         try {
             const { data, error } = await supabase.auth.signInWithPassword({ email, password });
             if (error) throw error;
-            
-            dispatch({ 
-                type: 'SET_AUTH_STATE', 
-                payload: { 
-                    user: data.user, 
-                    isAuthenticated: true, 
-                    isLoading: false 
-                } 
+
+            dispatch({
+                type: 'SET_AUTH_STATE',
+                payload: {
+                    user: data.user,
+                    isAuthenticated: true,
+                    isLoading: false
+                }
             });
         } catch (error: any) {
-            dispatch({ 
-                type: 'SET_AUTH_STATE', 
-                payload: { 
-                    error: error.message, 
-                    isLoading: false 
-                } 
+            dispatch({
+                type: 'SET_AUTH_STATE',
+                payload: {
+                    error: error.message,
+                    isLoading: false
+                }
             });
         }
     }, []);
-    
+
     const signOut = useCallback(async () => {
         try {
             await supabase.auth.signOut();
-            dispatch({ 
-                type: 'SET_AUTH_STATE', 
-                payload: { 
-                    user: null, 
-                    isAuthenticated: false, 
-                    error: null 
-                } 
+            dispatch({
+                type: 'SET_AUTH_STATE',
+                payload: {
+                    user: null,
+                    isAuthenticated: false,
+                    error: null
+                }
             });
         } catch (error: any) {
             dispatch({ type: 'SET_AUTH_STATE', payload: { error: error.message } });
         }
     }, []);
-    
+
     const signUp = useCallback(async (email: string, password: string) => {
         dispatch({ type: 'SET_AUTH_STATE', payload: { isLoading: true, error: null } });
-        
+
         try {
             const { data, error } = await supabase.auth.signUp({ email, password });
             if (error) throw error;
-            
-            dispatch({ 
-                type: 'SET_AUTH_STATE', 
-                payload: { 
-                    user: data.user, 
-                    isAuthenticated: !!data.user, 
-                    isLoading: false 
-                } 
+
+            dispatch({
+                type: 'SET_AUTH_STATE',
+                payload: {
+                    user: data.user,
+                    isAuthenticated: !!data.user,
+                    isLoading: false
+                }
             });
         } catch (error: any) {
-            dispatch({ 
-                type: 'SET_AUTH_STATE', 
-                payload: { 
-                    error: error.message, 
-                    isLoading: false 
-                } 
+            dispatch({
+                type: 'SET_AUTH_STATE',
+                payload: {
+                    error: error.message,
+                    isLoading: false
+                }
             });
         }
     }, []);
-    
+
     // 🎨 Theme Operations
     const setTheme = useCallback((theme: 'light' | 'dark' | 'system') => {
         dispatch({ type: 'SET_THEME', payload: { theme } });
         localStorage.setItem('theme', theme);
     }, []);
-    
+
     const updateThemeColors = useCallback((colors: Partial<ThemeState>) => {
         dispatch({ type: 'SET_THEME', payload: colors });
     }, []);
-    
+
     // ✏️ Editor Operations
     const setCurrentStep = useCallback((step: number) => {
         dispatch({ type: 'SET_EDITOR_STATE', payload: { currentStep: step } });
     }, []);
-    
+
     const setSelectedBlock = useCallback((blockId: string | null) => {
         dispatch({ type: 'SET_EDITOR_STATE', payload: { selectedBlockId: blockId } });
     }, []);
-    
+
     const togglePreviewMode = useCallback(() => {
-        dispatch({ 
-            type: 'SET_EDITOR_STATE', 
-            payload: { isPreviewMode: !state.editor.isPreviewMode } 
+        dispatch({
+            type: 'SET_EDITOR_STATE',
+            payload: { isPreviewMode: !state.editor.isPreviewMode }
         });
     }, [state.editor.isPreviewMode]);
-    
+
     const enableDragDrop = useCallback((enabled: boolean) => {
         dispatch({ type: 'SET_EDITOR_STATE', payload: { dragEnabled: enabled } });
     }, []);
-    
+
     const copyToClipboard = useCallback((data: any) => {
         dispatch({ type: 'SET_EDITOR_STATE', payload: { clipboardData: data } });
-        
+
         // Show toast
         dispatch({
             type: 'ADD_TOAST',
@@ -763,19 +763,19 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
             }
         });
     }, []);
-    
+
     const pasteFromClipboard = useCallback(() => {
         return state.editor.clipboardData;
     }, [state.editor.clipboardData]);
-    
+
     // 🎪 UI Operations
     const showToast = useCallback((toast: Omit<ToastMessage, 'id'>) => {
         const id = Date.now().toString();
-        dispatch({ 
-            type: 'ADD_TOAST', 
-            payload: { ...toast, id } 
+        dispatch({
+            type: 'ADD_TOAST',
+            payload: { ...toast, id }
         });
-        
+
         // Auto remove toast
         if (toast.duration !== 0) {
             setTimeout(() => {
@@ -783,121 +783,121 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
             }, toast.duration || 4000);
         }
     }, []);
-    
+
     const hideToast = useCallback((id: string) => {
         dispatch({ type: 'REMOVE_TOAST', payload: id });
     }, []);
-    
+
     const openModal = useCallback((modalId: string) => {
         dispatch({ type: 'SET_UI_STATE', payload: { activeModal: modalId } });
     }, []);
-    
+
     const closeModal = useCallback(() => {
         dispatch({ type: 'SET_UI_STATE', payload: { activeModal: null } });
     }, []);
-    
+
     const toggleSidebar = useCallback(() => {
-        dispatch({ 
-            type: 'SET_UI_STATE', 
-            payload: { showSidebar: !state.ui.showSidebar } 
+        dispatch({
+            type: 'SET_UI_STATE',
+            payload: { showSidebar: !state.ui.showSidebar }
         });
     }, [state.ui.showSidebar]);
-    
+
     const togglePropertiesPanel = useCallback(() => {
-        dispatch({ 
-            type: 'SET_UI_STATE', 
-            payload: { showPropertiesPanel: !state.ui.showPropertiesPanel } 
+        dispatch({
+            type: 'SET_UI_STATE',
+            payload: { showPropertiesPanel: !state.ui.showPropertiesPanel }
         });
     }, [state.ui.showPropertiesPanel]);
-    
+
     const setLoading = useCallback((loading: boolean, message?: string) => {
-        dispatch({ 
-            type: 'SET_LOADING', 
-            payload: { section: 'general', loading, message } 
+        dispatch({
+            type: 'SET_LOADING',
+            payload: { section: 'general', loading, message }
         });
     }, []);
-    
+
     // 🗄️ Cache Operations
     const clearCache = useCallback((section?: string) => {
         if (section) {
-            dispatch({ 
-                type: 'UPDATE_CACHE', 
-                payload: { key: section, data: {} } 
+            dispatch({
+                type: 'UPDATE_CACHE',
+                payload: { key: section, data: {} }
             });
         } else {
             // Clear all cache
             Object.keys(state.cache).forEach(key => {
                 if (key !== 'hitRate') {
-                    dispatch({ 
-                        type: 'UPDATE_CACHE', 
-                        payload: { key, data: {} } 
+                    dispatch({
+                        type: 'UPDATE_CACHE',
+                        payload: { key, data: {} }
                     });
                 }
             });
         }
     }, [state.cache]);
-    
+
     const getCacheStats = useCallback(() => {
-        const itemCount = Object.keys(state.cache.funnels).length + 
-                         Object.keys(state.cache.templates).length + 
-                         Object.keys(state.cache.users).length;
-        
+        const itemCount = Object.keys(state.cache.funnels).length +
+            Object.keys(state.cache.templates).length +
+            Object.keys(state.cache.users).length;
+
         return {
             hitRate: state.cache.hitRate,
             itemCount,
             memoryUsage: JSON.stringify(state.cache).length
         };
     }, [state.cache]);
-    
+
     // 📈 Performance Operations
     const getPerformanceMetrics = useCallback(() => {
         return state.performance;
     }, [state.performance]);
-    
+
     const optimizePerformance = useCallback(() => {
         // Clear old cache entries
         const now = Date.now();
         const maxAge = 600000; // 10 minutes
-        
+
         Object.keys(state.cache.lastUpdated).forEach(key => {
             if (now - state.cache.lastUpdated[key] > maxAge) {
-                dispatch({ 
-                    type: 'UPDATE_CACHE', 
-                    payload: { key, data: {} } 
+                dispatch({
+                    type: 'UPDATE_CACHE',
+                    payload: { key, data: {} }
                 });
             }
         });
-        
-        dispatch({ 
-            type: 'UPDATE_PERFORMANCE', 
-            payload: { lastOptimization: now } 
+
+        dispatch({
+            type: 'UPDATE_PERFORMANCE',
+            payload: { lastOptimization: now }
         });
     }, [state.cache.lastUpdated]);
-    
+
     // 🎛️ Feature Flag Operations
     const toggleFeature = useCallback((feature: keyof SuperUnifiedState['features'], enabled?: boolean) => {
         const newValue = enabled !== undefined ? enabled : !state.features[feature];
-        dispatch({ 
-            type: 'TOGGLE_FEATURE', 
-            payload: { feature, enabled: newValue } 
+        dispatch({
+            type: 'TOGGLE_FEATURE',
+            payload: { feature, enabled: newValue }
         });
     }, [state.features]);
-    
+
     const isFeatureEnabled = useCallback((feature: keyof SuperUnifiedState['features']) => {
         return state.features[feature];
     }, [state.features]);
-    
+
     // 🚀 Auto load data
     useEffect(() => {
         if (autoLoad) {
             loadFunnels();
         }
-        
+
         if (funnelId && funnelId !== state.currentFunnel?.id) {
             loadFunnel(funnelId);
         }
     }, [autoLoad, funnelId, loadFunnels, loadFunnel, state.currentFunnel?.id]);
-    
+
     // 🔐 Auth listener
     useEffect(() => {
         const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
@@ -910,24 +910,24 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
                 }
             });
         });
-        
+
         return () => subscription.unsubscribe();
     }, []);
-    
+
     // 📊 Performance monitoring
     useEffect(() => {
         const interval = setInterval(() => {
             optimizePerformance();
         }, 300000); // 5 minutes
-        
+
         return () => clearInterval(interval);
     }, [optimizePerformance]);
-    
+
     // 🎯 Context value
     const contextValue = useMemo<SuperUnifiedContextType>(() => ({
         // State
         state,
-        
+
         // Funnel operations
         loadFunnels,
         loadFunnel,
@@ -935,16 +935,16 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
         createFunnel,
         deleteFunnel,
         duplicateFunnel,
-        
+
         // Auth operations
         signIn,
         signOut,
         signUp,
-        
+
         // Theme operations
         setTheme,
         updateThemeColors,
-        
+
         // Editor operations
         setCurrentStep,
         setSelectedBlock,
@@ -952,7 +952,7 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
         enableDragDrop,
         copyToClipboard,
         pasteFromClipboard,
-        
+
         // UI operations
         showToast,
         hideToast,
@@ -961,15 +961,15 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
         toggleSidebar,
         togglePropertiesPanel,
         setLoading,
-        
+
         // Cache operations
         clearCache,
         getCacheStats,
-        
+
         // Performance operations
         getPerformanceMetrics,
         optimizePerformance,
-        
+
         // Feature flags
         toggleFeature,
         isFeatureEnabled
@@ -984,7 +984,7 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
         getPerformanceMetrics, optimizePerformance,
         toggleFeature, isFeatureEnabled
     ]);
-    
+
     if (debugMode) {
         console.log('🚀 SuperUnifiedProvider state update:', {
             funnelsCount: state.funnels.length,
@@ -995,7 +995,7 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
             cacheStats: getCacheStats()
         });
     }
-    
+
     return (
         <SuperUnifiedContext.Provider value={contextValue}>
             {children}
@@ -1033,16 +1033,16 @@ export const useUnifiedTheme = () => {
 };
 
 export const useUnifiedEditor = () => {
-    const { 
-        state, 
-        setCurrentStep, 
-        setSelectedBlock, 
-        togglePreviewMode, 
+    const {
+        state,
+        setCurrentStep,
+        setSelectedBlock,
+        togglePreviewMode,
         enableDragDrop,
         copyToClipboard,
         pasteFromClipboard
     } = useSuperUnified();
-    
+
     return {
         ...state.editor,
         setCurrentStep,
@@ -1055,17 +1055,17 @@ export const useUnifiedEditor = () => {
 };
 
 export const useUnifiedUI = () => {
-    const { 
-        state, 
-        showToast, 
-        hideToast, 
-        openModal, 
-        closeModal, 
-        toggleSidebar, 
+    const {
+        state,
+        showToast,
+        hideToast,
+        openModal,
+        closeModal,
+        toggleSidebar,
         togglePropertiesPanel,
         setLoading
     } = useSuperUnified();
-    
+
     return {
         ...state.ui,
         showToast,
@@ -1079,16 +1079,16 @@ export const useUnifiedUI = () => {
 };
 
 export const useUnifiedFunnels = () => {
-    const { 
-        state, 
-        loadFunnels, 
-        loadFunnel, 
-        saveFunnel, 
-        createFunnel, 
-        deleteFunnel, 
-        duplicateFunnel 
+    const {
+        state,
+        loadFunnels,
+        loadFunnel,
+        saveFunnel,
+        createFunnel,
+        deleteFunnel,
+        duplicateFunnel
     } = useSuperUnified();
-    
+
     return {
         funnels: state.funnels,
         currentFunnel: state.currentFunnel,

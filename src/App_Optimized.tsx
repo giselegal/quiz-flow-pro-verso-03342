@@ -38,9 +38,9 @@ import { serviceManager } from './services/core/UnifiedServiceManager';
 
 // 🚀 NOVO: Super Unified Provider
 import SuperUnifiedProvider from '@/providers/SuperUnifiedProvider';
-import ContextComposer, { 
-    createDataSlice, 
-    createAsyncSlice, 
+import ContextComposer, {
+    createDataSlice,
+    createAsyncSlice,
     createUISlice,
     SmartProviderLoader,
     ContextDebugger
@@ -85,14 +85,14 @@ const createAppContextSlices = () => [
         previousPath: null,
         navigationCount: 0
     }),
-    
+
     createAsyncSlice('diagnostics', {
         systemHealth: null,
         performanceMetrics: null
     }),
-    
+
     createUISlice('globalUI'),
-    
+
     createDataSlice('featureFlags', {
         useNewEditor: process.env.REACT_APP_USE_NEW_EDITOR === 'true',
         enableDiagnostics: process.env.NODE_ENV === 'development',
@@ -127,7 +127,7 @@ function App() {
         <HelmetProvider>
             <GlobalErrorBoundary showResetButton={true}>
                 {/* 🚀 SUPER UNIFIED PROVIDER - Substitui 7+ providers */}
-                <SuperUnifiedProvider 
+                <SuperUnifiedProvider
                     autoLoad={true}
                     debugMode={process.env.NODE_ENV === 'development'}
                     initialFeatures={{
@@ -138,15 +138,15 @@ function App() {
                     }}
                 >
                     {/* 🧩 CONTEXT COMPOSER - Para contextos específicos */}
-                    <ContextComposer 
+                    <ContextComposer
                         slices={createAppContextSlices()}
                         debugMode={process.env.NODE_ENV === 'development'}
                     >
                         <Router>
                             <Suspense fallback={
-                                <EnhancedLoadingFallback 
-                                    message="Carregando aplicação..." 
-                                    variant="detailed" 
+                                <EnhancedLoadingFallback
+                                    message="Carregando aplicação..."
+                                    variant="detailed"
                                 />
                             }>
                                 <Switch>
