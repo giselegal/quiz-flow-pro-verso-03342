@@ -5,32 +5,18 @@
  * @/context/EditorContext para @/components/editor/EditorProvider
  * 
  * OBJETIVO: Eliminar conflitos mantendo compatibilidade
+ * 
+ * ✅ SIMPLIFICADO - FASE 5: Usar apenas OptimizedEditorProvider
  */
 
-import React, { createContext, useContext, ReactNode } from 'react';
-import { OptimizedEditorProvider, useEditor as useOptimizedEditor, useEditorOptional } from './OptimizedEditorProvider';
-import { EditorProvider as LegacyEditorProvider, useEditor as useLegacyEditor } from './EditorProvider';
-import type { EditorContextValue } from './EditorProvider';
+import React, { ReactNode } from 'react';
+import { OptimizedEditorProvider, useEditor as useOptimizedEditor } from './OptimizedEditorProvider';
 
 /**
- * 🎯 INTERFACE UNIFICADA
- * Combina as melhores práticas de ambos os providers
+ * 🎯 INTERFACE SIMPLIFICADA
+ * Usa diretamente o OptimizedEditorProvider como base
  */
-export interface UnifiedEditorContextType extends EditorContextValue {
-  // Propriedades legacy para compatibilidade reversa
-  legacy?: {
-    funnelId?: string;
-    setFunnelId?: (id: string) => void;
-    isPreviewing?: boolean;
-    setIsPreviewing?: (preview: boolean) => void;
-    selectedBlockId?: string | null;
-    setSelectedBlockId?: (id: string | null) => void;
-    addBlock?: (type: any) => Promise<string>;
-    updateBlock?: (id: string, content: any) => Promise<void>;
-    deleteBlock?: (id: string) => Promise<void>;
-    save?: () => Promise<void>;
-  };
-}
+export type UnifiedEditorContextType = ReturnType<typeof useOptimizedEditor>;
 
 /**
  * 🔄 ADAPTADOR DE MIGRAÇÃO
@@ -59,13 +45,9 @@ export const MigrationEditorProvider: React.FC<{
 
   // ✅ PROVIDER MODERNO (padrão)
   return (
-    <ModernEditorProvider
-      funnelId={funnelId}
-      quizId={quizId}
-      enableSupabase={enableSupabase}
-    >
+    <OptimizedEditorProvider>
       {children}
-    </ModernEditorProvider>
+    </OptimizedEditorProvider>
   );
 };
 
@@ -114,7 +96,13 @@ export const useUnifiedEditor = (): UnifiedEditorContextType => {
     console.log('✅ useUnifiedEditor: Usando provider moderno');
     return {
       ...modernContext,
-      legacy: extractLegacyInterface(modernContext),
+      legacy: {
+        selectedBlockId: modernContext.state.selectedBlockId,
+        setSelectedBlockId: modernContext.actions.setSelectedBlockId,
+        addBlock: modernContext.actions.addBlock,
+        updateBlock: modernContext.actions.updateBlock,
+        deleteBlock: modernContext.actions.deleteBlock,
+      },
     };
   }
 
