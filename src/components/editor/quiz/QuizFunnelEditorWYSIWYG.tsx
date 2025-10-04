@@ -745,35 +745,104 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
 
                 {/* COL 2 - BIBLIOTECA DE COMPONENTES */}
                 <div className="w-72 border-r flex flex-col">
-                    <div className="p-3 border-b text-xs font-semibold">Biblioteca de Componentes</div>
-
-                    {/* Seção de Componentes Disponíveis */}
-                    <div className="p-3 border-b">
-                        <label className="block text-[10px] uppercase tracking-wide text-muted-foreground mb-2">
-                            Adicionar Componente
-                        </label>
-                        <div className="grid grid-cols-2 gap-2">
-                            {STEP_TYPES.map(type => (
-                                <Button
-                                    key={type}
-                                    size="sm"
-                                    variant="outline"
-                                    className="text-[10px] h-8 flex flex-col items-center p-1"
-                                    onClick={() => addStepAfter(selectedId, type)}
-                                >
-                                    <span className="truncate w-full text-center">
-                                        {type === 'intro' && '🏠 Intro'}
-                                        {type === 'question' && '❓ Pergunta'}
-                                        {type === 'strategic-question' && '🎯 Estratégica'}
-                                        {type === 'transition' && '⏳ Transição'}
-                                        {type === 'transition-result' && '🔄 Trans. Result'}
-                                        {type === 'result' && '🏆 Resultado'}
-                                        {type === 'offer' && '🎁 Oferta'}
-                                    </span>
-                                </Button>
-                            ))}
-                        </div>
+                    <div className="p-3 border-b text-xs font-semibold">
+                        {useAtomicSystem ? 'Componentes Atômicos' : 'Biblioteca de Componentes'}
                     </div>
+
+                    {useAtomicSystem ? (
+                        /* 🧩 SISTEMA ATÔMICO: Componentes modulares */
+                        <>
+                            {/* Adicionar Etapas Modulares */}
+                            <div className="p-3 border-b">
+                                <label className="block text-[10px] uppercase tracking-wide text-muted-foreground mb-2">
+                                    Adicionar Etapa
+                                </label>
+                                <div className="grid grid-cols-2 gap-2">
+                                    <Button
+                                        size="sm"
+                                        variant="outline"
+                                        className="text-[10px] h-8 flex flex-col items-center p-1"
+                                        onClick={() => handleAddModularStep('intro')}
+                                    >
+                                        <span className="truncate w-full text-center">🏠 Intro</span>
+                                    </Button>
+                                    <Button
+                                        size="sm"
+                                        variant="outline"
+                                        className="text-[10px] h-8 flex flex-col items-center p-1"
+                                        onClick={() => handleAddModularStep('question')}
+                                    >
+                                        <span className="truncate w-full text-center">❓ Pergunta</span>
+                                    </Button>
+                                    <Button
+                                        size="sm"
+                                        variant="outline"
+                                        className="text-[10px] h-8 flex flex-col items-center p-1"
+                                        onClick={() => handleAddModularStep('result')}
+                                    >
+                                        <span className="truncate w-full text-center">🏆 Resultado</span>
+                                    </Button>
+                                    <Button
+                                        size="sm"
+                                        variant="outline"
+                                        className="text-[10px] h-8 flex flex-col items-center p-1"
+                                        onClick={() => handleAddModularStep('custom')}
+                                    >
+                                        <span className="truncate w-full text-center">🧩 Custom</span>
+                                    </Button>
+                                </div>
+                            </div>
+
+                            {/* Componentes Atômicos */}
+                            <div className="p-3 border-b">
+                                <label className="block text-[10px] uppercase tracking-wide text-muted-foreground mb-2">
+                                    Componentes (Dentro da Etapa)
+                                </label>
+                                <div className="text-[9px] text-muted-foreground mb-2">
+                                    Use os botões "+" dentro das etapas para adicionar componentes
+                                </div>
+                                <div className="grid grid-cols-2 gap-1 text-[9px]">
+                                    <div className="p-2 border rounded bg-gray-50">📝 Título</div>
+                                    <div className="p-2 border rounded bg-gray-50">📄 Texto</div>
+                                    <div className="p-2 border rounded bg-gray-50">🔘 Botão</div>
+                                    <div className="p-2 border rounded bg-gray-50">📝 Input</div>
+                                    <div className="p-2 border rounded bg-gray-50">🖼️ Imagem</div>
+                                    <div className="p-2 border rounded bg-gray-50">📏 Espaço</div>
+                                    <div className="p-2 border rounded bg-gray-50">➖ Divisor</div>
+                                    <div className="p-2 border rounded bg-gray-50">❓ Pergunta</div>
+                                    <div className="p-2 border rounded bg-gray-50">☑️ Opções</div>
+                                </div>
+                            </div>
+                        </>
+                    ) : (
+                        /* 📝 SISTEMA EDITÁVEL: Componentes por etapa */
+                        <div className="p-3 border-b">
+                            <label className="block text-[10px] uppercase tracking-wide text-muted-foreground mb-2">
+                                Adicionar Componente
+                            </label>
+                            <div className="grid grid-cols-2 gap-2">
+                                {STEP_TYPES.map(type => (
+                                    <Button
+                                        key={type}
+                                        size="sm"
+                                        variant="outline"
+                                        className="text-[10px] h-8 flex flex-col items-center p-1"
+                                        onClick={() => addStepAfter(selectedId, type)}
+                                    >
+                                        <span className="truncate w-full text-center">
+                                            {type === 'intro' && '🏠 Intro'}
+                                            {type === 'question' && '❓ Pergunta'}
+                                            {type === 'strategic-question' && '🎯 Estratégica'}
+                                            {type === 'transition' && '⏳ Transição'}
+                                            {type === 'transition-result' && '🔄 Trans. Result'}
+                                            {type === 'result' && '🏆 Resultado'}
+                                            {type === 'offer' && '🎁 Oferta'}
+                                        </span>
+                                    </Button>
+                                ))}
+                            </div>
+                        </div>
+                    )}
 
                     {/* Configuração do Componente Selecionado */}
                     <div className="flex-1 overflow-auto p-3 text-xs space-y-4">
