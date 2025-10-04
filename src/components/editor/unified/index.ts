@@ -36,13 +36,13 @@ export type { CacheConfig, CacheStats } from '@/services/TemplatesCacheService';
 
 // 🎯 SERVIÇOS CRUD
 export { unifiedCRUDService } from '@/services/UnifiedCRUDService';
-export type { 
-  UnifiedFunnel, 
-  UnifiedStage, 
-  FunnelSettings, 
-  StageSettings, 
-  CRUDOperation, 
-  CRUDResult 
+export type {
+  UnifiedFunnel,
+  UnifiedStage,
+  FunnelSettings,
+  StageSettings,
+  CRUDOperation,
+  CRUDResult
 } from '@/services/UnifiedCRUDService';
 
 // 🔄 SISTEMA DE VERSIONAMENTO
@@ -147,15 +147,15 @@ export const getUnifiedSystemDiagnostics = () => {
 };
 
 // 🎯 FASE 3: SISTEMA UNIFICADO DE RENDERIZAÇÃO
-export { 
-  UnifiedStepRenderer, 
+export {
+  UnifiedStepRenderer,
   UnifiedStepRendererStyles,
   type UnifiedStepRendererProps,
   type RenderMode
 } from './UnifiedStepRenderer';
 
-// Re-export do StepRegistry para conveniência
-export { StepRegistry } from '@/components/step-registry/StepRegistry';
+// Re-export do stepRegistry para conveniência
+export { stepRegistry } from '@/components/step-registry/StepRegistry';
 
 // 🎯 EXPORT DEFAULT PARA INTEGRAÇÃO RÁPIDA
 export default UnifiedEditorSystem;
