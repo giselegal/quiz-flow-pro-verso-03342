@@ -7,8 +7,39 @@
 import React, { useState } from 'react';
 import { DndContext, closestCenter, DragEndEvent } from '@dnd-kit/core';
 import { arrayMove, SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
-import { useSortable } from '@dnd-kit/sortable';
-import { CSS } from '@dnd-kit/utilities';
+import { useSortable } from '@dnd-kit/sortable'                        <HStack gap={16} align="center">
+    <Heading size="lg" weight="bold" color="var(--modern-primary)">
+        🎯 Editor Modular
+    </Heading>
+    <VStack gap={4} align="start">
+        <Text size="sm" color="var(--modern-gray-500)">
+            {components.length} componentes
+        </Text>
+        <HStack gap={8} align="center">
+            <Text size="xs" color="var(--modern-gray-600)">
+                Etapa {currentStepIndex + 1} de {funnel.steps.length}: {currentStep?.name}
+            </Text>
+            <HStack gap={4}>
+                <IconButton
+                    icon={<ChevronLeftIcon size={14} />}
+                    size="sm"
+                    variant="ghost"
+                    isDisabled={currentStepIndex === 0}
+                    onClick={handlePreviousStep}
+                    title="Etapa Anterior"
+                />
+                <IconButton
+                    icon={<ChevronRightIcon size={14} />}
+                    size="sm"
+                    variant="ghost"
+                    isDisabled={currentStepIndex === funnel.steps.length - 1}
+                    onClick={handleNextStep}
+                    title="Próxima Etapa"
+                />
+            </HStack>
+        </HStack>
+    </VStack>
+</HStack> { CSS } from '@dnd-kit/utilities';
 
 // UI Components modernos
 import {
@@ -71,6 +102,7 @@ interface SortableComponentProps {
 interface ComponentPaletteProps {
     isOpen: boolean;
     onToggle: () => void;
+    currentStep: any;
 }
 
 // ============================================================================
@@ -184,9 +216,8 @@ const SortableComponent: React.FC<SortableComponentProps> = ({
 // PALETA DE COMPONENTES
 // ============================================================================
 
-const ComponentPalette: React.FC<ComponentPaletteProps> = ({ isOpen, onToggle }) => {
-    const { addComponent, funnel } = useQuizEditor();
-    const currentStep = funnel.steps[0]; // Para simplificar, usar primeira etapa
+const ComponentPalette: React.FC<ComponentPaletteProps> = ({ isOpen, onToggle, currentStep }) => {
+    const { addComponent } = useQuizEditor();
 
     const componentTypes: Array<{
         type: ComponentType;
@@ -325,8 +356,9 @@ const ModernModularEditor: React.FC<ModernModularEditorProps> = ({ className = '
 
     const [paletteOpen, setPaletteOpen] = useState(true);
     const [previewMode, setPreviewMode] = useState(false);
+    const [currentStepIndex, setCurrentStepIndex] = useState(0);
 
-    const currentStep = funnel.steps[0] || { id: 'default', components: [] };
+    const currentStep = funnel.steps[currentStepIndex] || funnel.steps[0] || { id: 'default', components: [] };
     const components = currentStep.components || [];
 
     const handleDragEnd = (event: DragEndEvent) => {
@@ -356,6 +388,19 @@ const ModernModularEditor: React.FC<ModernModularEditorProps> = ({ className = '
 
     const handleDeleteComponent = (componentId: string) => {
         deleteComponent(currentStep.id, componentId);
+    };
+
+    // Navegação entre etapas
+    const handlePreviousStep = () => {
+        if (currentStepIndex > 0) {
+            setCurrentStepIndex(currentStepIndex - 1);
+        }
+    };
+
+    const handleNextStep = () => {
+        if (currentStepIndex < funnel.steps.length - 1) {
+            setCurrentStepIndex(currentStepIndex + 1);
+        }
     };
 
     return (
@@ -400,6 +445,7 @@ const ModernModularEditor: React.FC<ModernModularEditorProps> = ({ className = '
                     <ComponentPalette
                         isOpen={paletteOpen}
                         onToggle={() => setPaletteOpen(!paletteOpen)}
+                        currentStep={currentStep}
                     />
 
                     {/* Canvas do Editor */}
@@ -466,7 +512,7 @@ const ModernModularEditor: React.FC<ModernModularEditorProps> = ({ className = '
                     <Box style={{ width: '320px', maxWidth: '320px', borderLeft: '1px solid var(--modern-gray-200)' }}>
                         <AdvancedPropertiesPanel
                             selectedComponent={selectedComponent || undefined}
-                            onPropertyChange={(componentId, propertyKey, value) => {
+                            onPropertyChange={(componentId: string, propertyKey: string, value: any) => {
                                 if (selectedComponent) {
                                     updateComponent(currentStep.id, componentId, {
                                         props: {
@@ -476,7 +522,7 @@ const ModernModularEditor: React.FC<ModernModularEditorProps> = ({ className = '
                                     });
                                 }
                             }}
-                            onPreviewToggle={(enabled) => {
+                            onPreviewToggle={(enabled: boolean) => {
                                 setPreviewMode(enabled);
                             }}
                         />
