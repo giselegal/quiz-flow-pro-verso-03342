@@ -414,10 +414,10 @@ interface PropertyEditorProps {
 }
 
 const TextPropertyEditor: React.FC<PropertyEditorProps> = ({ property, value, onChange }) => (
-    <VStack spacing={2} align="stretch">
-        <Text fontSize="sm" fontWeight="medium">{property.label}</Text>
+    <VStack gap={8} align="stretch">
+        <Text size="sm" weight="medium">{property.label}</Text>
         {property.description && (
-            <Text fontSize="xs" color="gray.600">{property.description}</Text>
+            <Text size="xs" color="var(--modern-gray-600)">{property.description}</Text>
         )}
         <input
             type="text"
@@ -430,8 +430,8 @@ const TextPropertyEditor: React.FC<PropertyEditorProps> = ({ property, value, on
 );
 
 const TextareaPropertyEditor: React.FC<PropertyEditorProps> = ({ property, value, onChange }) => (
-    <VStack spacing={2} align="stretch">
-        <Text fontSize="sm" fontWeight="medium">{property.label}</Text>
+    <VStack gap={8} align="stretch">
+        <Text size="sm" weight="medium">{property.label}</Text>
         <textarea
             value={value || property.defaultValue || ''}
             onChange={(e) => onChange(e.target.value)}
@@ -443,8 +443,8 @@ const TextareaPropertyEditor: React.FC<PropertyEditorProps> = ({ property, value
 );
 
 const SelectPropertyEditor: React.FC<PropertyEditorProps> = ({ property, value, onChange }) => (
-    <VStack spacing={2} align="stretch">
-        <Text fontSize="sm" fontWeight="medium">{property.label}</Text>
+    <VStack gap={8} align="stretch">
+        <Text size="sm" weight="medium">{property.label}</Text>
         <select
             value={value || property.defaultValue || ''}
             onChange={(e) => onChange(e.target.value)}
@@ -462,10 +462,10 @@ const SelectPropertyEditor: React.FC<PropertyEditorProps> = ({ property, value, 
 const RangePropertyEditor: React.FC<PropertyEditorProps> = ({ property, value, onChange }) => {
     const currentValue = value !== undefined ? value : property.defaultValue;
     return (
-        <VStack spacing={2} align="stretch">
-            <HStack justify="space-between">
+        <VStack gap={8} align="stretch">
+            <HStack justify="between">
                 <Text fontSize="sm" fontWeight="medium">{property.label}</Text>
-                <Text fontSize="xs" color="gray.600">{currentValue}{property.type === 'spacing' ? 'px' : ''}</Text>
+                <Text size="xs" color="var(--modern-gray-600)">{currentValue}{property.type === 'spacing' ? 'px' : ''}</Text>
             </HStack>
             <input
                 type="range"
@@ -476,17 +476,17 @@ const RangePropertyEditor: React.FC<PropertyEditorProps> = ({ property, value, o
                 onChange={(e) => onChange(Number(e.target.value))}
                 className="advanced-range"
             />
-            <HStack justify="space-between" fontSize="xs" color="gray.500">
-                <Text>{property.min}</Text>
-                <Text>{property.max}</Text>
+            <HStack justify="between">
+                <Text size="xs" color="var(--modern-gray-500)">{property.min}</Text>
+                <Text size="xs" color="var(--modern-gray-500)">{property.max}</Text>
             </HStack>
         </VStack>
     );
 };
 
 const ColorPropertyEditor: React.FC<PropertyEditorProps> = ({ property, value, onChange }) => (
-    <VStack spacing={2} align="stretch">
-        <Text fontSize="sm" fontWeight="medium">{property.label}</Text>
+    <VStack gap={8} align="stretch">
+        <Text size="sm" weight="medium">{property.label}</Text>
         <HStack spacing={3}>
             <input
                 type="color"
@@ -506,11 +506,11 @@ const ColorPropertyEditor: React.FC<PropertyEditorProps> = ({ property, value, o
 );
 
 const BooleanPropertyEditor: React.FC<PropertyEditorProps> = ({ property, value, onChange }) => (
-    <HStack justify="space-between" align="center">
-        <VStack spacing={1} align="start">
-            <Text fontSize="sm" fontWeight="medium">{property.label}</Text>
+    <HStack justify="between" align="center">
+        <VStack gap={4} align="start">
+            <Text size="sm" weight="medium">{property.label}</Text>
             {property.description && (
-                <Text fontSize="xs" color="gray.600">{property.description}</Text>
+                <Text size="xs" color="var(--modern-gray-600)">{property.description}</Text>
             )}
         </VStack>
         <input
@@ -579,7 +579,7 @@ const AdvancedPropertiesPanel: React.FC<AdvancedPropertiesPanelProps> = ({
 
     // Renderizar editor de propriedade
     const renderPropertyEditor = useCallback((property: PropertyConfig) => {
-        const currentValue = selectedComponent?.properties?.[property.key];
+        const currentValue = selectedComponent?.props?.[property.key];
 
         const props = {
             property,
@@ -633,7 +633,7 @@ const AdvancedPropertiesPanel: React.FC<AdvancedPropertiesPanelProps> = ({
         <Card className={`advanced-properties-panel ${className}`}>
             {/* Header */}
             <div className="properties-header">
-                <HStack justify="space-between" align="center">
+                <HStack justify="between" align="center">
                     <HStack spacing={3}>
                         <componentSchema.icon size={20} />
                         <VStack spacing={0} align="start">
@@ -646,7 +646,7 @@ const AdvancedPropertiesPanel: React.FC<AdvancedPropertiesPanelProps> = ({
                         <Tooltip label={previewEnabled ? 'Desabilitar Preview' : 'Habilitar Preview'}>
                             <IconButton
                                 size="sm"
-                                variant={previewEnabled ? 'solid' : 'outline'}
+                                variant={previewEnabled ? 'primary' : 'secondary'}
                                 onClick={handlePreviewToggle}
                             >
                                 <EyeIcon size={16} />
@@ -654,7 +654,7 @@ const AdvancedPropertiesPanel: React.FC<AdvancedPropertiesPanelProps> = ({
                         </Tooltip>
 
                         <Tooltip label="Salvar Configurações">
-                            <IconButton size="sm" variant="outline">
+                            <IconButton size="sm" variant="secondary">
                                 <SaveIcon size={16} />
                             </IconButton>
                         </Tooltip>
@@ -670,7 +670,7 @@ const AdvancedPropertiesPanel: React.FC<AdvancedPropertiesPanelProps> = ({
                         <Button
                             key={mode}
                             size="xs"
-                            variant={responsiveMode === mode ? 'solid' : 'outline'}
+                            variant={responsiveMode === mode ? 'primary' : 'secondary'}
                             onClick={() => setResponsiveMode(mode)}
                         >
                             <DeviceIcon size={14} />
@@ -687,7 +687,7 @@ const AdvancedPropertiesPanel: React.FC<AdvancedPropertiesPanelProps> = ({
                         <Button
                             key={category}
                             size="sm"
-                            variant={activeCategory === category ? 'solid' : 'ghost'}
+                            variant={activeCategory === category ? 'primary' : 'ghost'}
                             onClick={() => setActiveCategory(category)}
                         >
                             {category === 'content' ? '📝 Conteúdo' :
