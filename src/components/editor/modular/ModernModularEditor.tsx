@@ -51,6 +51,9 @@ import { ComponentType, ModularComponent } from '@/types/modular-editor';
 import AdvancedPropertiesPanel from '@/components/editor/advanced-properties/SafeAdvancedPropertiesPanel';
 import '@/components/editor/advanced-properties/advanced-properties.css';
 
+// Renderizador de componentes visuais
+import { ComponentRenderer } from '@/components/editor/modular/ComponentRenderer';
+
 // ============================================================================
 // TIPOS E INTERFACES
 // ============================================================================
@@ -513,15 +516,98 @@ const ModernModularEditor: React.FC<ModernModularEditorProps> = ({ className = '
                                 >
                                     <VStack gap={16} align="stretch">
                                         {components.map((component) => (
-                                            <SortableComponent
+                                            <Box
                                                 key={component.id}
-                                                component={component}
-                                                isSelected={selectedComponent?.id === component.id}
-                                                onSelect={handleSelectComponent}
-                                                onEdit={handleEditComponent}
-                                                onDuplicate={handleDuplicateComponent}
-                                                onDelete={handleDeleteComponent}
-                                            />
+                                                onClick={() => handleSelectComponent(component.id)}
+                                                style={{
+                                                    position: 'relative',
+                                                    cursor: 'pointer',
+                                                    border: selectedComponent?.id === component.id ? '2px solid var(--modern-primary)' : '1px solid var(--modern-gray-200)',
+                                                    borderRadius: '8px',
+                                                    padding: '16px',
+                                                    backgroundColor: selectedComponent?.id === component.id ? 'var(--modern-primary-50)' : 'white',
+                                                    transition: 'all 0.2s ease'
+                                                }}
+                                            >
+                                                {/* Renderização visual do componente */}
+                                                <ComponentRenderer
+                                                    component={component}
+                                                    isEditable={false}
+                                                    isSelected={selectedComponent?.id === component.id}
+                                                    renderContext="editor"
+                                                />
+                                                
+                                                {/* Overlay de ações quando selecionado */}
+                                                {selectedComponent?.id === component.id && (
+                                                    <Box
+                                                        style={{
+                                                            position: 'absolute',
+                                                            top: '8px',
+                                                            right: '8px',
+                                                            background: 'white',
+                                                            borderRadius: '6px',
+                                                            boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+                                                            padding: '4px'
+                                                        }}
+                                                    >
+                                                        <HStack gap={2}>
+                                                            <Tooltip label="Editar">
+                                                                <IconButton
+                                                                    icon={<EditIcon size={14} />}
+                                                                    size="sm"
+                                                                    variant="ghost"
+                                                                    aria-label="Editar componente"
+                                                                    onClick={(e) => {
+                                                                        e.stopPropagation();
+                                                                        handleEditComponent(component.id);
+                                                                    }}
+                                                                />
+                                                            </Tooltip>
+                                                            <Tooltip label="Duplicar">
+                                                                <IconButton
+                                                                    icon={<CopyIcon size={14} />}
+                                                                    size="sm"
+                                                                    variant="ghost"
+                                                                    aria-label="Duplicar componente"
+                                                                    onClick={(e) => {
+                                                                        e.stopPropagation();
+                                                                        handleDuplicateComponent(component.id);
+                                                                    }}
+                                                                />
+                                                            </Tooltip>
+                                                            <Tooltip label="Excluir">
+                                                                <IconButton
+                                                                    icon={<DeleteIcon size={14} />}
+                                                                    size="sm"
+                                                                    variant="ghost"
+                                                                    aria-label="Excluir componente"
+                                                                    onClick={(e) => {
+                                                                        e.stopPropagation();
+                                                                        handleDeleteComponent(component.id);
+                                                                    }}
+                                                                />
+                                                            </Tooltip>
+                                                        </HStack>
+                                                    </Box>
+                                                )}
+                                                
+                                                {/* Badge com tipo do componente */}
+                                                <Box
+                                                    style={{
+                                                        position: 'absolute',
+                                                        top: '8px',
+                                                        left: '8px',
+                                                        background: 'var(--modern-primary)',
+                                                        color: 'white',
+                                                        fontSize: '11px',
+                                                        padding: '2px 6px',
+                                                        borderRadius: '4px',
+                                                        fontWeight: '500'
+                                                    }}
+                                                >
+                                                    {component.type}
+                                                </Box>
+                                            </Box>
                                         ))}
                                     </VStack>
                                 </SortableContext>
