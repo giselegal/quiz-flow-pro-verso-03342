@@ -293,6 +293,13 @@ function App() {
                           </div>
                         </Route>
 
+                        {/* 🎨 DEMONSTRAÇÃO DA INTERFACE MODERNA - FASE 4 */}
+                        <Route path="/modern-interface">
+                          <div data-testid="modern-interface-demo">
+                            <ModernInterfaceDemo />
+                          </div>
+                        </Route>
+
                         {/* 🔧 DESENVOLVIMENTO */}
                         <Route path="/diagnostics">
                           <SystemDiagnosticPage />
