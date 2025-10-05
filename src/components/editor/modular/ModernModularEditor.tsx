@@ -465,14 +465,16 @@ const ModernModularEditor: React.FC<ModernModularEditorProps> = ({ className = '
                     {/* Painel de Propriedades Avançado - Fase 5 */}
                     <Box style={{ width: '320px', maxWidth: '320px', borderLeft: '1px solid var(--modern-gray-200)' }}>
                         <AdvancedPropertiesPanel
-                            selectedComponent={selectedComponent}
+                            selectedComponent={selectedComponent || undefined}
                             onPropertyChange={(componentId, propertyKey, value) => {
-                                updateComponent(currentStep.id, componentId, {
-                                    properties: {
-                                        ...selectedComponent?.properties,
-                                        [propertyKey]: value
-                                    }
-                                });
+                                if (selectedComponent) {
+                                    updateComponent(currentStep.id, componentId, {
+                                        props: {
+                                            ...selectedComponent.props,
+                                            [propertyKey]: value
+                                        }
+                                    });
+                                }
                             }}
                             onPreviewToggle={(enabled) => {
                                 setPreviewMode(enabled);
