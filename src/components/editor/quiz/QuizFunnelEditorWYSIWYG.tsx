@@ -1,8 +1,8 @@
 import React, { memo } from 'react';
 import { useUnifiedCRUD } from '@/context/UnifiedCRUDProvider';
 
-// 🔥 NOVO: Hook central de estado
-import { useQuizEditorState } from './hooks/useQuizEditorState';
+// 🔥 NOVO: Hook central de estado COM CACHE INTELIGENTE
+import { useQuizEditorStateWithCache } from './hooks/useQuizEditorStateWithCache';
 
 // 🔥 NOVO: Componentes modulares
 import QuizEditorCanvas from './components/QuizEditorCanvas';
@@ -72,7 +72,7 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = memo(({
         updateSteps,
         updateModularSteps,
         updateState,
-    } = useQuizEditorState();
+    } = useQuizEditorStateWithCache(funnelId);
 
     // 🔧 Handlers simplificados
     const handleSave = async () => {
