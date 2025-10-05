@@ -430,4 +430,13 @@ export interface QuizEditorContextType {
     copyComponent: (componentId: string) => void;
     pasteComponent: (stepId: string, index?: number) => void;
     canPaste: boolean;
+
+    // Configuração do editor
+    _config?: {
+        theme: string;
+        layout: string;
+        showPreview: boolean;
+        autoSave: boolean;
+        debug: boolean;
+    };
 }
