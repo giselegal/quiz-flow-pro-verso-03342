@@ -28,27 +28,27 @@ import {
     UpDownIcon,
 } from '@chakra-ui/icons';
 import {
-  DndContext,
-  closestCenter,
-  KeyboardSensor,
-  PointerSensor,
-  useSensor,
-  useSensors,
-  DragEndEvent,
+    DndContext,
+    closestCenter,
+    KeyboardSensor,
+    PointerSensor,
+    useSensor,
+    useSensors,
+    DragEndEvent,
 } from '@dnd-kit/core';
 import {
-  arrayMove,
-  SortableContext,
-  sortableKeyboardCoordinates,
-  verticalListSortingStrategy,
+    arrayMove,
+    SortableContext,
+    sortableKeyboardCoordinates,
+    verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
 import {
-  useSortable,
+    useSortable,
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 
 import { useQuizEditor } from '@/context/QuizEditorContext';
-import { ComponentType, ModularComponent, ModularStep } from '@/types/modular-editor';
+import { ComponentType, ModularComponent, ModularQuizStep } from '@/types/modular-editor';
 import { createDefaultComponent } from './ComponentRegistry';
 import { ComponentListRenderer } from './ComponentRenderer';
 import ComponentSidebar from './ComponentSidebar';
