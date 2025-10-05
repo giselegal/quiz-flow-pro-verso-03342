@@ -2,7 +2,12 @@ import React, { memo } from 'react';
 import { useUnifiedCRUD } from '@/context/UnifiedCRUDProvider';
 
 // 🔥 NOVO: Hook central de estado
-import { useQuizEditorState } from './hooks/useQuizEditorState';
+import { useQuizEditorState } from './hooks/useQui        */
+});
+
+QuizFunnelEditorWYSIWYGStable.displayName = 'QuizFunnelEditorWYSIWYGStable';
+
+export default QuizFunnelEditorWYSIWYGStable;State';
 
 // 🔥 NOVO: Componentes modulares
 import QuizEditorCanvas from './components/QuizEditorCanvas';
@@ -42,15 +47,15 @@ const QuizFunnelEditorWYSIWYGStable: React.FC<QuizFunnelEditorProps> = memo(({
             <p className="text-gray-600 mb-4">
                 Esta versão está em desenvolvimento. Use o editor principal.
             </p>
-            <a 
-                href="/editor" 
+            <a
+                href="/editor"
                 className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
             >
                 Ir para Editor Principal
             </a>
         </div>
     );
-    
+
     /*
     const crud = useUnifiedCRUD();
 
@@ -127,65 +132,65 @@ const QuizFunnelEditorWYSIWYGStable: React.FC<QuizFunnelEditorProps> = memo(({
         <div className="quiz-editor-container">
             {/* 🔧 Toolbar Principal */}
             <QuizEditorToolbar
-                funnelId={funnelId || ''}
-                steps={steps}
-                modularSteps={modularSteps}
-                isSaving={isSaving}
-                hasUnsavedChanges={hasUnsavedChanges}
-                previewMode={previewMode}
-                dragEnabled={dragEnabled}
-                useModularSystem={useModularSystem}
-                showPropertiesPanel={showPropertiesPanel}
-                onSave={handleSave}
-                onReset={handleReset}
-                onTogglePreview={() => setPreviewMode(!previewMode)}
-                onToggleDrag={() => setDragEnabled(!dragEnabled)}
-                onToggleModular={() => setUseModularSystem(!useModularSystem)}
-                onToggleProperties={() => setShowPropertiesPanel(!showPropertiesPanel)}
-                onAddStep={handleAddStep}
+        funnelId={funnelId || ''}
+        steps={steps}
+        modularSteps={modularSteps}
+        isSaving={isSaving}
+        hasUnsavedChanges={hasUnsavedChanges}
+        previewMode={previewMode}
+        dragEnabled={dragEnabled}
+        useModularSystem={useModularSystem}
+        showPropertiesPanel={showPropertiesPanel}
+        onSave={handleSave}
+        onReset={handleReset}
+        onTogglePreview={() => setPreviewMode(!previewMode)}
+        onToggleDrag={() => setDragEnabled(!dragEnabled)}
+        onToggleModular={() => setUseModularSystem(!useModularSystem)}
+        onToggleProperties={() => setShowPropertiesPanel(!showPropertiesPanel)}
+        onAddStep={handleAddStep}
+    />
+
+    <div className="quiz-editor-body">
+        {/* 🗂️ Sidebar de Steps */}
+        <QuizEditorSidebar
+            steps={steps}
+            modularSteps={modularSteps}
+            selectedId={selectedId}
+            useModularSystem={useModularSystem}
+            dragEnabled={dragEnabled}
+            isSaving={isSaving}
+            onSelectId={setSelectedId}
+            onReorderSteps={handleReorderSteps}
+            onDuplicateStep={handleDuplicateStep}
+            onDeleteStep={handleDeleteStep}
+        />
+
+        {/* 🎨 Canvas Principal */}
+        <QuizEditorCanvas
+            steps={steps}
+            modularSteps={modularSteps}
+            selectedId={selectedId}
+            selectedBlockId={selectedBlockId}
+            previewMode={previewMode}
+            useModularSystem={useModularSystem}
+            dragEnabled={dragEnabled}
+            onSelectId={setSelectedId}
+            onSelectBlockId={setSelectedBlockId}
+            onUpdateStep={handleUpdateStep}
+        />
+
+        {/* ⚙️ Painel de Propriedades */}
+        {showPropertiesPanel && (
+            <QuizEditorPropertiesPanel
+                selectedStep={selectedStep || null}
+                selectedBlockId={selectedBlockId}
+                isVisible={showPropertiesPanel}
+                onUpdateStep={handleUpdateStep}
+                onClose={() => setShowPropertiesPanel(false)}
             />
-
-            <div className="quiz-editor-body">
-                {/* 🗂️ Sidebar de Steps */}
-                <QuizEditorSidebar
-                    steps={steps}
-                    modularSteps={modularSteps}
-                    selectedId={selectedId}
-                    useModularSystem={useModularSystem}
-                    dragEnabled={dragEnabled}
-                    isSaving={isSaving}
-                    onSelectId={setSelectedId}
-                    onReorderSteps={handleReorderSteps}
-                    onDuplicateStep={handleDuplicateStep}
-                    onDeleteStep={handleDeleteStep}
-                />
-
-                {/* 🎨 Canvas Principal */}
-                <QuizEditorCanvas
-                    steps={steps}
-                    modularSteps={modularSteps}
-                    selectedId={selectedId}
-                    selectedBlockId={selectedBlockId}
-                    previewMode={previewMode}
-                    useModularSystem={useModularSystem}
-                    dragEnabled={dragEnabled}
-                    onSelectId={setSelectedId}
-                    onSelectBlockId={setSelectedBlockId}
-                    onUpdateStep={handleUpdateStep}
-                />
-
-                {/* ⚙️ Painel de Propriedades */}
-                {showPropertiesPanel && (
-                    <QuizEditorPropertiesPanel
-                        selectedStep={selectedStep || null}
-                        selectedBlockId={selectedBlockId}
-                        isVisible={showPropertiesPanel}
-                        onUpdateStep={handleUpdateStep}
-                        onClose={() => setShowPropertiesPanel(false)}
-                    />
-                )}
-            </div>
-        </div>
+        )}
+    </div>
+        </div >
     );
 });
 
