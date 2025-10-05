@@ -1,5 +1,13 @@
 import React, { useEffect, useState, useCallback, useMemo } from 'react';
-import { useUnifiedCRUD } from '@/context/UnifiedCRUDProvider';
+import { useUnifiedCR    // 🔥 MIGRAÇÃO: useState → useStepsStore (Mapa O(1))
+    const initialSteps = useMemo(() =>
+        Object.entries(QUIZ_STEPS).map(([stepId, step], index) => ({
+            ...step,
+            id: stepId,
+            order: index
+        })),
+        []
+    );m '@/context/UnifiedCRUDProvider';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { QUIZ_STEPS, type QuizStep } from '@/data/quizSteps';
@@ -94,7 +102,7 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
     const crud = useUnifiedCRUD();
 
     // � MIGRAÇÃO: useState → useStepsStore (Mapa O(1))
-    const initialSteps = useMemo(() => 
+    const initialSteps = useMemo(() =>
         QUIZ_STEPS.map((step, index) => ({
             ...step,
             id: `step-${index + 1}`
@@ -104,10 +112,10 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
 
     const stepsStore = useStepsStore(initialSteps);
     const steps = stepsStore.getStepsByOrder(); // O(1) vs O(n)
-    
+
     // 🔥 INTEGRAÇÃO: Drag & Drop funcional
     const { dragState, components: { DndContext, DragHandle } } = useFunctionalDragDrop(stepsStore);
-    
+
     const [selectedId, setSelectedId] = useState<string>('');
     const [selectedBlockId, setSelectedBlockId] = useState<string>(''); // Para seleção de blocos no canvas
     const [isSaving, setIsSaving] = useState(false);
@@ -143,7 +151,7 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
     const updateStep = useCallback((stepId: string, updates: Partial<EditableQuizStep>) => {
         // ✅ O(1) vs O(n) - só atualiza o step específico
         stepsStore.updateStep(stepId, updates);
-        
+
         // Validar após atualização
         const updatedStep = stepsStore.getStep(stepId);
         if (updatedStep) {
@@ -392,8 +400,8 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
                 ...step,
                 order: index,
                 data: (step as any).content || step,
-                meta: { 
-                    createdAt: Date.now(), 
+                meta: {
+                    createdAt: Date.now(),
                     lastModified: Date.now(),
                     isLocked: false,
                     isVisible: true,
