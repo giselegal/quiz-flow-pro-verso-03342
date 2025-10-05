@@ -84,6 +84,7 @@
     "step20": "node scripts/smoke-step20.mjs"
   },
   "dependencies": {
+    "@chakra-ui/icons": "^2.2.4",
     "@chakra-ui/react": "^3.27.0",
     "@craftjs/core": "^0.2.12",
     "@craftjs/layers": "^0.2.7",

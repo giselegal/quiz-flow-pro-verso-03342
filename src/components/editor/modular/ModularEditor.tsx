@@ -6,18 +6,17 @@
 
 import React, { useState, useEffect } from 'react';
 import {
-    Box,
-    VStack,
-    HStack,
-    Button,
-    Text,
-    useDisclosure,
-    Container,
-    Flex,
-    IconButton,
-    Tooltip,
-    useToast,
-    Portal,
+  Box,
+  VStack,
+  HStack,
+  Button,
+  Text,
+  useDisclosure,
+  Container,
+  Flex,
+  IconButton,
+  Tooltip,
+  Portal,
 } from '@chakra-ui/react';
 import {
     AddIcon,
@@ -176,18 +175,13 @@ export const ModularEditor: React.FC<ModularEditorProps> = ({
     onPreview,
     onBack,
 }) => {
-    const toast = useToast();
-    const {
-        funnel,
-        steps,
-        updateStep,
-        addComponent,
-        updateComponent,
-        removeComponent,
-        reorderStepComponents,
-    } = useQuizEditor();
-
-    // Estado local
+  const { 
+    funnel, 
+    addComponent, 
+    updateComponent, 
+    deleteComponent,
+    reorderComponents,
+  } = useQuizEditor();    // Estado local
     const [selectedComponentId, setSelectedComponentId] = useState<string>('');
     const [isPreviewMode, setIsPreviewMode] = useState(false);
     const { open: isSidebarOpen, onToggle: toggleSidebar } = useDisclosure({ defaultOpen: true });
@@ -200,22 +194,14 @@ export const ModularEditor: React.FC<ModularEditorProps> = ({
         })
     );
 
-    // Obter etapa atual
-    const currentStep = steps.find(step => step.id === stepId);
+  // Obter etapa atual
+  const currentStep = funnel.steps.find((step: any) => step.id === stepId);
 
-    useEffect(() => {
-        if (!currentStep) {
-            toast({
-                title: 'Etapa não encontrada',
-                description: `A etapa com ID ${stepId} não foi encontrada.`,
-                status: 'error',
-                duration: 5000,
-                isClosable: true,
-            });
-        }
-    }, [currentStep, stepId, toast]);
-
+  useEffect(() => {
     if (!currentStep) {
+      console.error(`Etapa com ID ${stepId} não foi encontrada.`);
+    }
+  }, [currentStep, stepId]);    if (!currentStep) {
         return (
             <Box p={8} textAlign="center">
                 <Text color="gray.500">Etapa não encontrada</Text>
@@ -229,120 +215,65 @@ export const ModularEditor: React.FC<ModularEditorProps> = ({
     }
 
     // Handlers para componentes
-    const handleAddComponent = (type: ComponentType) => {
-        try {
-            const newComponent = createDefaultComponent(type);
-            addComponent(stepId, newComponent);
-            setSelectedComponentId(newComponent.id);
-
-            toast({
-                title: 'Componente adicionado',
-                description: `${type} foi adicionado à etapa.`,
-                status: 'success',
-                duration: 3000,
-                isClosable: true,
-            });
-        } catch (error) {
-            toast({
-                title: 'Erro ao adicionar componente',
-                description: error instanceof Error ? error.message : 'Erro desconhecido',
-                status: 'error',
-                duration: 5000,
-                isClosable: true,
-            });
-        }
-    };
-
-    const handleComponentSelect = (componentId: string) => {
+  const handleAddComponent = (type: ComponentType) => {
+    try {
+      const newComponent = createDefaultComponent(type);
+      addComponent(stepId, newComponent);
+      setSelectedComponentId(newComponent.id);
+      console.log(`Componente ${type} adicionado à etapa.`);
+    } catch (error) {
+      console.error('Erro ao adicionar componente:', error);
+    }
+  };    const handleComponentSelect = (componentId: string) => {
         setSelectedComponentId(componentId);
     };
 
-    const handleComponentUpdate = (componentId: string, newProps: any) => {
-        const component = currentStep.components.find((c: ModularComponent) => c.id === componentId);
-        if (component) {
-            updateComponent(stepId, componentId, {
-                ...component,
-                props: { ...component.props, ...newProps }
-            });
+  const handleComponentUpdate = (componentId: string, newProps: any) => {
+    updateComponent(stepId, componentId, newProps);
+    console.log('Componente atualizado');
+  };
 
-            toast({
-                title: 'Componente atualizado',
-                status: 'success',
-                duration: 2000,
-                isClosable: true,
-            });
-        }
-    };
+  const handleComponentDelete = (componentId: string) => {
+    if (selectedComponentId === componentId) {
+      setSelectedComponentId('');
+    }
+    
+    deleteComponent(stepId, componentId);
+    console.log('Componente removido');
+  };
 
-    const handleComponentDelete = (componentId: string) => {
-        if (selectedComponentId === componentId) {
-            setSelectedComponentId('');
-        }
+  const handleComponentDuplicate = (componentId: string) => {
+    const component = currentStep.components.find((c: ModularComponent) => c.id === componentId);
+    if (component) {
+      const duplicatedComponent: ModularComponent = {
+        ...component,
+        id: `${component.type}_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+      };
+      
+      addComponent(stepId, duplicatedComponent);
+      setSelectedComponentId(duplicatedComponent.id);
+      console.log('Componente duplicado');
+    }
+  };
 
-        removeComponent(stepId, componentId);
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
 
-        toast({
-            title: 'Componente removido',
-            status: 'info',
-            duration: 3000,
-            isClosable: true,
-        });
-    };
+    if (over && active.id !== over.id) {
+      const oldIndex = currentStep.components.findIndex((c: ModularComponent) => c.id === active.id);
+      const newIndex = currentStep.components.findIndex((c: ModularComponent) => c.id === over.id);
 
-    const handleComponentDuplicate = (componentId: string) => {
-        const component = currentStep.components.find((c: ModularComponent) => c.id === componentId);
-        if (component) {
-            const duplicatedComponent: ModularComponent = {
-                ...component,
-                id: `${component.type}_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
-            };
+      reorderComponents(stepId, oldIndex, newIndex);
+      console.log('Ordem dos componentes alterada');
+    }
+  };
 
-            addComponent(stepId, duplicatedComponent);
-            setSelectedComponentId(duplicatedComponent.id);
-
-            toast({
-                title: 'Componente duplicado',
-                status: 'success',
-                duration: 3000,
-                isClosable: true,
-            });
-        }
-    };
-
-    const handleDragEnd = (event: DragEndEvent) => {
-        const { active, over } = event;
-
-        if (over && active.id !== over.id) {
-            const oldIndex = currentStep.components.findIndex((c: ModularComponent) => c.id === active.id);
-            const newIndex = currentStep.components.findIndex((c: ModularComponent) => c.id === over.id);
-
-            reorderStepComponents(stepId, oldIndex, newIndex);
-
-            toast({
-                title: 'Ordem alterada',
-                description: 'A ordem dos componentes foi atualizada.',
-                status: 'info',
-                duration: 2000,
-                isClosable: true,
-            });
-        }
-    };
-
-    const handleSave = () => {
-        if (onSave) {
-            onSave(currentStep);
-        }
-
-        toast({
-            title: 'Etapa salva',
-            description: 'As alterações foram salvas com sucesso.',
-            status: 'success',
-            duration: 3000,
-            isClosable: true,
-        });
-    };
-
-    const handlePreview = () => {
+  const handleSave = () => {
+    if (onSave) {
+      onSave(currentStep);
+    }
+    console.log('Etapa salva');
+  };    const handlePreview = () => {
         setIsPreviewMode(!isPreviewMode);
         if (onPreview && !isPreviewMode) {
             onPreview(currentStep);
@@ -378,7 +309,9 @@ export const ModularEditor: React.FC<ModularEditorProps> = ({
 
                     <VStack gap={0} align="start">
                         <Text fontSize="lg" fontWeight="semibold">
-                            {currentStep.title || `Etapa ${currentStep.order}`}
+                                        <Text fontSize="lg" fontWeight="semibold">
+              {currentStep.name || `Etapa ${currentStep.order}`}
+            </Text>
                         </Text>
                         <Text fontSize="xs" color="gray.500">
                             {currentStep.components.length} componente(s)
@@ -480,8 +413,8 @@ export const ModularEditor: React.FC<ModularEditorProps> = ({
                                             stepData={{
                                                 stepId,
                                                 stepOrder: currentStep.order,
-                                                stepTitle: currentStep.title,
-                                                totalSteps: steps.length,
+                                                stepTitle: currentStep.name,
+                                                totalSteps: funnel.steps.length,
                                             }}
                                         />
                                     ))}
