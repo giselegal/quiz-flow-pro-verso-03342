@@ -24,6 +24,8 @@ import { BlockRegistryProvider, ResultHeadlineBlock, OfferCoreBlock, ResultSecon
 import { QuizEditorProvider } from '@/context/QuizEditorContext';
 // Funil de exemplo
 import { exampleFunnel } from '../../components/editor/modular/ModularEditorExample';
+import SimpleModularEditor from '../../components/editor/modular/SimpleModularEditor';
+import MinimalTest from '../../components/editor/modular/MinimalTest';
 
 
 // ============================================
@@ -131,8 +133,8 @@ const ModernUnifiedEditor: React.FC<ModernUnifiedEditorProps> = (props) => {
                             <QuizEditorProvider initialFunnel={exampleFunnel}>
                                 <BlockRegistryProvider definitions={[ResultHeadlineBlock, OfferCoreBlock, ResultSecondaryListBlock, OfferUrgencyBlock]}>
                                     <div data-testid="quiz-editor-modular-container">
-                                        {/* ✅ SISTEMA MODULAR INTEGRADO: Componentes modulares, drag & drop, Chakra UI */}
-                                        <ModularEditorExample funnelId={props.funnelId} />
+                                        {/* ✅ EDITOR MODULAR SIMPLIFICADO - FUNCIONAL */}
+                                        <SimpleModularEditor />
                                     </div>
                                 </BlockRegistryProvider>
                             </QuizEditorProvider>
