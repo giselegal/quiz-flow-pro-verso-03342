@@ -214,7 +214,7 @@ export interface QuizOption {
 // Interface base para todos os componentes modulares
 export interface ModularComponent {
     id: string;
-    type: ComponentType;  
+    type: ComponentType;
     props: Record<string, any>;
     style?: ComponentStyle;
     validation?: ComponentValidation;

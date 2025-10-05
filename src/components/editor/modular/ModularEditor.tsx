@@ -4,7 +4,27 @@
  * Componente principal que integra todo o sistema modular
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, use                    <div title="Duplicar">
+    <IconButton
+        aria-label="Duplicar componente"
+        size="xs"
+        variant="solid"
+        colorScheme="blue"
+        onClick={() => onDuplicate?.(component.id)}
+    >
+        <CopyIcon />
+    </IconButton>
+</div>r < div title = "Excluir" >
+    <IconButton
+        aria-label="Excluir componente"
+        size="xs"
+        variant="solid"
+        colorScheme="red"
+        onClick={() => onDelete?.(component.id)}
+    >
+        <DeleteIcon />
+    </IconButton>
+                    </div >;
 import {
     Box,
     VStack,
@@ -116,12 +136,11 @@ const SortableItem: React.FC<SortableItemProps> = ({
                     transition="opacity 0.2s"
                     _hover={{ opacity: 1 }}
                 >
-                    <Tooltip label="Arrastar">
+                    <div title="Arrastar">
                         <IconButton
                             {...attributes}
                             {...listeners}
                             aria-label="Arrastar componente"
-                            icon={<DragHandleIcon />}
                             size="xs"
                             variant="solid"
                             colorScheme="gray"

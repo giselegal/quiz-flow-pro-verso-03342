@@ -42,7 +42,11 @@ const TemplateDiagnosticPage = lazy(() => import('./pages/TemplateDiagnosticPage
 // 🚀 MODERN UNIFIED EDITOR - EDITOR OFICIAL (MAIS COMPLETO)
 const QuizFunnelEditorSimplified = lazy(() => import('./components/editor/quiz/QuizFunnelEditorSimplified').then(module => ({ default: module.default })));
 const QuizFunnelEditorWYSIWYG = lazy(() => import('./components/editor/quiz/QuizFunnelEditorWYSIWYG').then(module => ({ default: module.default })));
+// 🎯 MODERNUNIFIEDEDITOR - Editor unificado com sistema modular integrado
 const ModernUnifiedEditor = lazy(() => import('./pages/editor/ModernUnifiedEditor').then(module => ({ default: module.default })));
+
+// 🧪 TESTE DO SISTEMA MODULAR
+const ModularSystemTest = lazy(() => import('./pages/ModularSystemTest'));
 
 
 // ❌ HYBRID EDITOR PRO - DESATIVADO (substituído pelo ModernUnifiedEditor)
@@ -276,6 +280,13 @@ function App() {
                         <Route path="/phase2">
                           <div data-testid="phase2-dashboard-page">
                             <Phase2Dashboard />
+                          </div>
+                        </Route>
+
+                        {/* 🧪 TESTE DO SISTEMA MODULAR */}
+                        <Route path="/modular-test">
+                          <div data-testid="modular-system-test">
+                            <ModularSystemTest />
                           </div>
                         </Route>
 
