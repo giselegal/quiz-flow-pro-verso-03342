@@ -2,18 +2,78 @@
  * 🎯 PAINEL DE PROPRIEDADES PARA COMPONENTES REAIS
  * 
  * Painel específico para editar propriedades dos componentes modulares das 21 etapas reais
+ * Baseado no design profissional do sistema Cakto
  */
 
 import React from 'react';
 import { RealComponentProps, RealComponentType } from './types';
 import { cn } from '@/lib/utils';
-import { Settings, X, Edit3, Palette, Layout, Zap } from 'lucide-react';
+import { Settings, X, Edit3, Palette, Layout, ArrowLeft, Image, BarChart3 } from 'lucide-react';
 
 interface RealComponentPropertiesPanelProps {
     component: RealComponentProps | null;
     onUpdate: (updates: Partial<RealComponentProps>) => void;
     onClose: () => void;
 }
+
+// 🎛️ Componente Switch profissional
+const Switch: React.FC<{
+    id: string;
+    checked: boolean;
+    onChange: (checked: boolean) => void;
+    label: string;
+}> = ({ id, checked, onChange, label }) => (
+    <div className="flex items-center space-x-2">
+        <button
+            type="button"
+            role="switch"
+            aria-checked={checked}
+            data-state={checked ? "checked" : "unchecked"}
+            value="on"
+            className={cn(
+                "peer inline-flex h-6 w-11 shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent transition-colors",
+                "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+                "disabled:cursor-not-allowed disabled:opacity-50",
+                checked ? "bg-primary" : "bg-input"
+            )}
+            id={id}
+            onClick={() => onChange(!checked)}
+        >
+            <span
+                data-state={checked ? "checked" : "unchecked"}
+                className={cn(
+                    "pointer-events-none block h-5 w-5 rounded-full bg-background shadow-lg ring-0 transition-transform",
+                    checked ? "translate-x-5" : "translate-x-0"
+                )}
+            />
+        </button>
+        <label
+            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+            htmlFor={id}
+        >
+            {label}
+        </label>
+    </div>
+);
+
+// 🎨 Componente Card
+const Card: React.FC<{
+    title: string;
+    children: React.ReactNode;
+    icon?: React.ReactNode;
+}> = ({ title, children, icon }) => (
+    <div className="rounded-lg border bg-card text-card-foreground shadow-sm">
+        <div className="flex flex-col space-y-1.5 p-6">
+            <div className="flex items-center space-x-2">
+                {icon}
+                <p className="text-sm text-muted-foreground">{title}</p>
+            </div>
+        </div>
+        <div className="p-6 pt-0">
+            {children}
+        </div>
+    </div>
+);
 
 export const RealComponentPropertiesPanel: React.FC<RealComponentPropertiesPanelProps> = ({
     component,
@@ -22,13 +82,17 @@ export const RealComponentPropertiesPanel: React.FC<RealComponentPropertiesPanel
 }) => {
     if (!component) {
         return (
-            <div className="w-80 bg-white border-l border-gray-200 p-6">
-                <div className="text-center text-gray-500">
-                    <Settings size={48} className="mx-auto mb-4 text-gray-300" />
-                    <h3 className="text-lg font-medium mb-2">Nenhum componente selecionado</h3>
-                    <p className="text-sm">
-                        Clique em um componente no canvas para editar suas propriedades
-                    </p>
+            <div className="overflow-hidden canvas-editor hidden md:block w-full max-w-[24rem] relative border-l">
+                <div className="h-full w-full rounded-[inherit] overflow-hidden">
+                    <div className="grid gap-4 px-4 pb-4 pt-2 my-4">
+                        <div className="text-center text-muted-foreground py-12">
+                            <Settings size={48} className="mx-auto mb-4 text-muted-foreground/50" />
+                            <h3 className="text-lg font-medium mb-2">Nenhum componente selecionado</h3>
+                            <p className="text-sm">
+                                Clique em um componente no canvas para editar suas propriedades
+                            </p>
+                        </div>
+                    </div>
                 </div>
             </div>
         );
@@ -47,105 +111,71 @@ export const RealComponentPropertiesPanel: React.FC<RealComponentPropertiesPanel
     };
 
     return (
-        <div className="w-80 bg-white border-l border-gray-200 flex flex-col h-full">
-            {/* Header */}
-            <div className="p-4 border-b border-gray-200">
-                <div className="flex items-center justify-between">
-                    <div>
-                        <h3 className="text-lg font-semibold text-gray-900">Propriedades</h3>
-                        <p className="text-sm text-gray-500">{component.type}</p>
-                    </div>
-                    <button
-                        onClick={onClose}
-                        className="p-1 hover:bg-gray-100 rounded"
-                    >
-                        <X size={16} className="text-gray-500" />
-                    </button>
-                </div>
-            </div>
+        <div className="overflow-hidden canvas-editor hidden md:block w-full max-w-[24rem] relative border-l">
+            <div className="h-full w-full rounded-[inherit]" style={{ overflow: "hidden scroll" }}>
+                <div className="grid gap-4 px-4 pb-4 pt-2 my-4">
 
-            {/* Content */}
-            <div className="flex-1 overflow-y-auto p-4 space-y-6">
-                {/* Informações básicas */}
-                <div className="space-y-3">
-                    <div className="flex items-center space-x-2 text-sm font-medium text-gray-700">
-                        <Edit3 size={16} />
-                        <span>Informações Básicas</span>
+                    {/* Header com botão fechar */}
+                    <div className="flex items-center justify-between mb-2">
+                        <div>
+                            <h3 className="text-lg font-semibold">Propriedades</h3>
+                            <p className="text-sm text-muted-foreground">{component.type}</p>
+                        </div>
+                        <button
+                            onClick={onClose}
+                            className="p-1 hover:bg-muted rounded"
+                        >
+                            <X size={16} className="text-muted-foreground" />
+                        </button>
                     </div>
 
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                            ID do Componente
-                        </label>
-                        <input
-                            type="text"
-                            value={component.id}
-                            readOnly
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50 text-sm"
-                        />
-                    </div>
+                    {/* Card: Informações do Componente */}
+                    <Card title="Informações do Componente" icon={<Edit3 size={16} />}>
+                        <div className="grid gap-3">
+                            <div>
+                                <label className="text-sm font-medium" htmlFor="componentId">
+                                    ID do Componente
+                                </label>
+                                <input
+                                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
+                                    id="componentId"
+                                    type="text"
+                                    value={component.id}
+                                    readOnly
+                                />
+                            </div>
+                            <div>
+                                <label className="text-sm font-medium" htmlFor="componentOrder">
+                                    Ordem
+                                </label>
+                                <input
+                                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
+                                    id="componentOrder"
+                                    type="number"
+                                    value={component.order || 0}
+                                    onChange={(e) => onUpdate({ order: parseInt(e.target.value) || 0 })}
+                                />
+                            </div>
+                        </div>
+                    </Card>
 
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                            Tipo
-                        </label>
-                        <input
-                            type="text"
-                            value={component.type}
-                            readOnly
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50 text-sm"
-                        />
-                    </div>
+                    {/* Card: Conteúdo Específico do Componente */}
+                    {renderContentCard(component.type as RealComponentType, component.content, handleContentUpdate)}
 
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                            Ordem
-                        </label>
-                        <input
-                            type="number"
-                            value={component.order || 0}
-                            onChange={(e) => onUpdate({ order: parseInt(e.target.value) || 0 })}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
-                        />
-                    </div>
-                </div>
+                    {/* Card: Configurações de Estilo */}
+                    <Card title="Configurações de Estilo" icon={<Palette size={16} />}>
+                        {renderStyleControls(component.properties, handlePropertiesUpdate)}
+                    </Card>
 
-                {/* Conteúdo Específico */}
-                <div className="space-y-3">
-                    <div className="flex items-center space-x-2 text-sm font-medium text-gray-700">
-                        <Edit3 size={16} />
-                        <span>Conteúdo</span>
-                    </div>
-
-                    {renderContentEditor(component.type as RealComponentType, component.content, handleContentUpdate)}
-                </div>
-
-                {/* Propriedades de Estilo */}
-                <div className="space-y-3">
-                    <div className="flex items-center space-x-2 text-sm font-medium text-gray-700">
-                        <Palette size={16} />
-                        <span>Estilo</span>
-                    </div>
-
-                    {renderStyleEditor(component.properties, handlePropertiesUpdate)}
-                </div>
-
-                {/* Layout */}
-                <div className="space-y-3">
-                    <div className="flex items-center space-x-2 text-sm font-medium text-gray-700">
-                        <Layout size={16} />
-                        <span>Layout</span>
-                    </div>
-
-                    {renderLayoutEditor(component.properties, handlePropertiesUpdate)}
+                    <div className="py-4"></div>
                 </div>
             </div>
         </div>
     );
 };
 
-// 📝 Renderizar editor de conteúdo específico por tipo
-function renderContentEditor(
+// 📝 Renderizar card de conteúdo específico por tipo
+function renderContentCard(
     type: RealComponentType,
     content: Record<string, any>,
     onUpdate: (updates: Record<string, any>) => void
@@ -153,191 +183,257 @@ function renderContentEditor(
     switch (type) {
         case 'quiz-intro-header':
             return (
-                <div className="space-y-3">
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Título</label>
-                        <input
-                            type="text"
-                            value={content.title || ''}
-                            onChange={(e) => onUpdate({ title: e.target.value })}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
-                            placeholder="Título do cabeçalho"
-                        />
-                    </div>
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Subtítulo</label>
-                        <input
-                            type="text"
-                            value={content.subtitle || ''}
-                            onChange={(e) => onUpdate({ subtitle: e.target.value })}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
-                            placeholder="Subtítulo"
-                        />
-                    </div>
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Descrição</label>
-                        <textarea
-                            value={content.description || ''}
-                            onChange={(e) => onUpdate({ description: e.target.value })}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
-                            rows={3}
-                            placeholder="Descrição do cabeçalho"
-                        />
-                    </div>
-                    <div className="flex items-center space-x-4">
-                        <label className="flex items-center space-x-2">
+                <Card title="Header" icon={<ArrowLeft size={16} />}>
+                    <div className="grid gap-2">
+                        <div>
+                            <label className="text-sm font-medium" htmlFor="headerTitle">
+                                Título
+                            </label>
                             <input
-                                type="checkbox"
+                                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
+                                id="headerTitle"
+                                type="text"
+                                value={content.title || ''}
+                                onChange={(e) => onUpdate({ title: e.target.value })}
+                                placeholder="Digite o título..."
+                            />
+                        </div>
+
+                        <div>
+                            <label className="text-sm font-medium" htmlFor="headerSubtitle">
+                                Subtítulo
+                            </label>
+                            <input
+                                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
+                                id="headerSubtitle"
+                                type="text"
+                                value={content.subtitle || ''}
+                                onChange={(e) => onUpdate({ subtitle: e.target.value })}
+                                placeholder="Digite o subtítulo..."
+                            />
+                        </div>
+
+                        <div>
+                            <label className="text-sm font-medium" htmlFor="headerDescription">
+                                Descrição
+                            </label>
+                            <textarea
+                                className="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
+                                id="headerDescription"
+                                value={content.description || ''}
+                                onChange={(e) => onUpdate({ description: e.target.value })}
+                                placeholder="Digite a descrição..."
+                            />
+                        </div>
+
+                        <div className="space-y-3 mt-4">
+                            <Switch
+                                id="show-logo"
                                 checked={content.showLogo || false}
-                                onChange={(e) => onUpdate({ showLogo: e.target.checked })}
+                                onChange={(checked) => onUpdate({ showLogo: checked })}
+                                label="Mostrar Logo"
                             />
-                            <span className="text-sm">Mostrar Logo</span>
-                        </label>
-                        <label className="flex items-center space-x-2">
-                            <input
-                                type="checkbox"
+                            <Switch
+                                id="show-progress"
                                 checked={content.showProgress || false}
-                                onChange={(e) => onUpdate({ showProgress: e.target.checked })}
+                                onChange={(checked) => onUpdate({ showProgress: checked })}
+                                label="Mostrar Progresso"
                             />
-                            <span className="text-sm">Mostrar Progresso</span>
-                        </label>
+                            <Switch
+                                id="allow-return"
+                                checked={content.allowReturn || false}
+                                onChange={(checked) => onUpdate({ allowReturn: checked })}
+                                label="Permitir Voltar"
+                            />
+                        </div>
+
+                        {content.showLogo && (
+                            <div className="mt-4">
+                                <label className="text-sm font-medium" htmlFor="logoUrl">
+                                    URL do Logo
+                                </label>
+                                <input
+                                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
+                                    id="logoUrl"
+                                    type="url"
+                                    value={content.logoUrl || ''}
+                                    onChange={(e) => onUpdate({ logoUrl: e.target.value })}
+                                    placeholder="https://example.com/logo.png"
+                                />
+                            </div>
+                        )}
                     </div>
-                </div>
+                </Card>
             );
 
         case 'text':
         case 'text-inline':
             return (
-                <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Texto</label>
-                    <textarea
-                        value={content.text || ''}
-                        onChange={(e) => onUpdate({ text: e.target.value })}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
-                        rows={4}
-                        placeholder="Digite o texto..."
-                    />
-                </div>
+                <Card title="Conteúdo de Texto" icon={<Edit3 size={16} />}>
+                    <div>
+                        <label className="text-sm font-medium" htmlFor="textContent">
+                            Texto
+                        </label>
+                        <textarea
+                            className="flex min-h-[100px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
+                            id="textContent"
+                            value={content.text || ''}
+                            onChange={(e) => onUpdate({ text: e.target.value })}
+                            placeholder="Digite o texto..."
+                        />
+                    </div>
+                </Card>
             );
 
         case 'options-grid':
             return (
-                <div className="space-y-3">
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Pergunta</label>
-                        <input
-                            type="text"
-                            value={content.question || ''}
-                            onChange={(e) => onUpdate({ question: e.target.value })}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
-                            placeholder="Digite a pergunta..."
-                        />
-                    </div>
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                            Opções ({(content.options || []).length})
-                        </label>
-                        <div className="text-xs text-gray-500 mb-2">
-                            Use o editor avançado para gerenciar opções individualmente
+                <Card title="Opções de Resposta" icon={<Layout size={16} />}>
+                    <div className="space-y-3">
+                        <div>
+                            <label className="text-sm font-medium" htmlFor="questionText">
+                                Pergunta
+                            </label>
+                            <input
+                                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
+                                id="questionText"
+                                type="text"
+                                value={content.question || ''}
+                                onChange={(e) => onUpdate({ question: e.target.value })}
+                                placeholder="Digite a pergunta..."
+                            />
                         </div>
-                        <div className="max-h-32 overflow-y-auto border rounded p-2 bg-gray-50">
-                            {(content.options || []).map((option: any, index: number) => (
-                                <div key={index} className="text-sm py-1">
-                                    {index + 1}. {option.text || 'Opção sem texto'}
-                                </div>
-                            ))}
+
+                        <div>
+                            <label className="text-sm font-medium">
+                                Opções ({(content.options || []).length})
+                            </label>
+                            <div className="text-xs text-muted-foreground mb-2">
+                                Use o editor avançado para gerenciar opções individualmente
+                            </div>
+                            <div className="max-h-32 overflow-y-auto border rounded p-2 bg-muted/50">
+                                {(content.options || []).map((option: any, index: number) => (
+                                    <div key={index} className="text-sm py-1">
+                                        {index + 1}. {option.text || 'Opção sem texto'}
+                                    </div>
+                                ))}
+                            </div>
                         </div>
                     </div>
-                </div>
+                </Card>
             );
 
         case 'form-container':
             return (
-                <div className="space-y-3">
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Tipo de Campo</label>
-                        <select
-                            value={content.fieldType || 'text'}
-                            onChange={(e) => onUpdate({ fieldType: e.target.value })}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
-                        >
-                            <option value="text">Texto</option>
-                            <option value="email">E-mail</option>
-                            <option value="tel">Telefone</option>
-                            <option value="password">Senha</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Label</label>
-                        <input
-                            type="text"
-                            value={content.label || ''}
-                            onChange={(e) => onUpdate({ label: e.target.value })}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
-                            placeholder="Label do campo"
-                        />
-                    </div>
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Placeholder</label>
-                        <input
-                            type="text"
-                            value={content.placeholder || ''}
-                            onChange={(e) => onUpdate({ placeholder: e.target.value })}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
-                            placeholder="Placeholder do campo"
-                        />
-                    </div>
-                    <label className="flex items-center space-x-2">
-                        <input
-                            type="checkbox"
+                <Card title="Campo de Formulário" icon={<Edit3 size={16} />}>
+                    <div className="space-y-3">
+                        <div>
+                            <label className="text-sm font-medium" htmlFor="fieldType">
+                                Tipo de Campo
+                            </label>
+                            <select
+                                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
+                                id="fieldType"
+                                value={content.fieldType || 'text'}
+                                onChange={(e) => onUpdate({ fieldType: e.target.value })}
+                            >
+                                <option value="text">Texto</option>
+                                <option value="email">E-mail</option>
+                                <option value="tel">Telefone</option>
+                                <option value="password">Senha</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label className="text-sm font-medium" htmlFor="fieldLabel">
+                                Label
+                            </label>
+                            <input
+                                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
+                                id="fieldLabel"
+                                type="text"
+                                value={content.label || ''}
+                                onChange={(e) => onUpdate({ label: e.target.value })}
+                                placeholder="Label do campo"
+                            />
+                        </div>
+
+                        <div>
+                            <label className="text-sm font-medium" htmlFor="fieldPlaceholder">
+                                Placeholder
+                            </label>
+                            <input
+                                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
+                                id="fieldPlaceholder"
+                                type="text"
+                                value={content.placeholder || ''}
+                                onChange={(e) => onUpdate({ placeholder: e.target.value })}
+                                placeholder="Placeholder do campo"
+                            />
+                        </div>
+
+                        <Switch
+                            id="field-required"
                             checked={content.required || false}
-                            onChange={(e) => onUpdate({ required: e.target.checked })}
+                            onChange={(checked) => onUpdate({ required: checked })}
+                            label="Campo obrigatório"
                         />
-                        <span className="text-sm">Campo obrigatório</span>
-                    </label>
-                </div>
+                    </div>
+                </Card>
             );
 
         default:
             return (
-                <div className="text-sm text-gray-500 p-3 bg-gray-50 rounded">
-                    Editor específico para {type} será implementado em breve.
-                </div>
+                <Card title="Configuração de Componente" icon={<Settings size={16} />}>
+                    <div className="text-sm text-muted-foreground p-3 bg-muted/50 rounded">
+                        Editor específico para <strong>{type}</strong> será implementado em breve.
+                    </div>
+                </Card>
             );
     }
 }
 
-// 🎨 Renderizar editor de propriedades de estilo
-function renderStyleEditor(
+// 🎨 Renderizar controles de estilo
+function renderStyleControls(
     properties: Record<string, any>,
     onUpdate: (updates: Record<string, any>) => void
 ) {
     return (
         <div className="space-y-3">
             <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Cor de Fundo</label>
+                <label className="text-sm font-medium" htmlFor="bgColor">
+                    Cor de Fundo
+                </label>
                 <input
+                    className="w-full h-10 border border-input rounded cursor-pointer"
+                    id="bgColor"
                     type="color"
                     value={properties.backgroundColor || '#FFFFFF'}
                     onChange={(e) => onUpdate({ backgroundColor: e.target.value })}
-                    className="w-full h-8 border border-gray-300 rounded cursor-pointer"
                 />
             </div>
+
             <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Cor do Texto</label>
+                <label className="text-sm font-medium" htmlFor="textColor">
+                    Cor do Texto
+                </label>
                 <input
+                    className="w-full h-10 border border-input rounded cursor-pointer"
+                    id="textColor"
                     type="color"
                     value={properties.color || '#000000'}
                     onChange={(e) => onUpdate({ color: e.target.value })}
-                    className="w-full h-8 border border-gray-300 rounded cursor-pointer"
                 />
             </div>
+
             <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Alinhamento</label>
+                <label className="text-sm font-medium" htmlFor="textAlign">
+                    Alinhamento
+                </label>
                 <select
+                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
+                    id="textAlign"
                     value={properties.textAlign || 'left'}
                     onChange={(e) => onUpdate({ textAlign: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
                 >
                     <option value="left">Esquerda</option>
                     <option value="center">Centro</option>
@@ -345,55 +441,21 @@ function renderStyleEditor(
                     <option value="justify">Justificado</option>
                 </select>
             </div>
+
+            <div>
+                <label className="text-sm font-medium" htmlFor="padding">
+                    Padding
+                </label>
+                <input
+                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
+                    id="padding"
+                    type="text"
+                    value={properties.padding || ''}
+                    onChange={(e) => onUpdate({ padding: e.target.value })}
+                    placeholder="ex: 16px, 1rem"
+                />
+            </div>
         </div>
     );
 }
 
-// 📐 Renderizar editor de propriedades de layout
-function renderLayoutEditor(
-    properties: Record<string, any>,
-    onUpdate: (updates: Record<string, any>) => void
-) {
-    return (
-        <div className="space-y-3">
-            <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Padding</label>
-                <input
-                    type="text"
-                    value={properties.padding || ''}
-                    onChange={(e) => onUpdate({ padding: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
-                    placeholder="ex: 16px, 1rem"
-                />
-            </div>
-            <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Margem Superior</label>
-                <input
-                    type="number"
-                    value={properties.marginTop || 0}
-                    onChange={(e) => onUpdate({ marginTop: parseInt(e.target.value) || 0 })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
-                />
-            </div>
-            <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Margem Inferior</label>
-                <input
-                    type="number"
-                    value={properties.marginBottom || 0}
-                    onChange={(e) => onUpdate({ marginBottom: parseInt(e.target.value) || 0 })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
-                />
-            </div>
-            <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Border Radius</label>
-                <input
-                    type="text"
-                    value={properties.borderRadius || ''}
-                    onChange={(e) => onUpdate({ borderRadius: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
-                    placeholder="ex: 8px, 0.5rem"
-                />
-            </div>
-        </div>
-    );
-}
