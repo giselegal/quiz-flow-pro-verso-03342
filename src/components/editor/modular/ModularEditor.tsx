@@ -55,12 +55,10 @@ import ComponentSidebar from './ComponentSidebar';
 
 interface ModularEditorProps {
     stepId: string;
-    onSave?: (step: QuizStep) => void;
-    onPreview?: (step: QuizStep) => void;
+    onSave?: (step: ModularQuizStep) => void;
+    onPreview?: (step: ModularQuizStep) => void;
     onBack?: () => void;
-}
-
-export const ModularEditor: React.FC<ModularEditorProps> = ({
+}export const ModularEditor: React.FC<ModularEditorProps> = ({
     stepId,
     onSave,
     onPreview,
