@@ -17,12 +17,12 @@ const ModularTransitionStep = React.lazy(() => import('../../quiz-estilo/Modular
 const ModularResultStep = React.lazy(() => import('../../quiz-estilo/ModularResultStep'));
 const ModularOfferStep = React.lazy(() => import('../../quiz-estilo/ModularOfferStep'));
 
-const EditorIntroStep = React.lazy(() => import('../EditorIntroStep'));
-const EditorQuestionStep = React.lazy(() => import('../EditorQuestionStep'));
-const EditorStrategicQuestionStep = React.lazy(() => import('../EditorStrategicQuestionStep'));
-const EditorTransitionStep = React.lazy(() => import('../EditorTransitionStep'));
-const EditorResultStep = React.lazy(() => import('../EditorResultStep'));
-const EditorOfferStep = React.lazy(() => import('../EditorOfferStep'));
+const EditorIntroStep = React.lazy(() => import('../../editable-steps/EditableIntroStep'));
+const EditorQuestionStep = React.lazy(() => import('../../editable-steps/EditableQuestionStep'));
+const EditorStrategicQuestionStep = React.lazy(() => import('../../editable-steps/EditableStrategicQuestionStep'));
+const EditorTransitionStep = React.lazy(() => import('../../editable-steps/EditableTransitionStep'));
+const EditorResultStep = React.lazy(() => import('../../editable-steps/EditableResultStep'));
+const EditorOfferStep = React.lazy(() => import('../../editable-steps/EditableOfferStep'));
 
 export interface QuizEditorCanvasProps {
     steps: EditableQuizStep[];
@@ -182,9 +182,11 @@ const QuizEditorCanvas: React.FC<QuizEditorCanvasProps> = memo(({
             >
                 <Suspense fallback={<div className="loading-step">Carregando...</div>}>
                     <Component
-                        step={step}
+                        data={step}
                         isEditable={false}
-                        onUpdateStep={() => { }} // Preview mode - no editing
+                        isSelected={false}
+                        onUpdate={() => { }}
+                        onSelect={() => { }}
                     />
                 </Suspense>
             </div>
