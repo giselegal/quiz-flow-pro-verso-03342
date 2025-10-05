@@ -97,6 +97,28 @@ export class StepComponentFactory {
 
     // 🏗️ Criar componente
     create(step: EditorStep, props: Partial<EditableStepProps> = {}): React.ReactElement {
+        // 🛡️ Validação de segurança - verificar se step existe e tem propriedades mínimas
+        if (!step) {
+            return React.createElement(DefaultErrorFallback, {
+                error: 'Step é null ou undefined',
+                stepType: 'unknown'
+            });
+        }
+
+        if (!step.id) {
+            return React.createElement(DefaultErrorFallback, {
+                error: 'Step deve ter um ID válido',
+                stepType: step.type || 'unknown'
+            });
+        }
+
+        if (!step.type) {
+            return React.createElement(DefaultErrorFallback, {
+                error: 'Step deve ter um tipo válido',
+                stepType: 'unknown'
+            });
+        }
+
         const config = this.registry.get(step.type);
 
         if (!config) {

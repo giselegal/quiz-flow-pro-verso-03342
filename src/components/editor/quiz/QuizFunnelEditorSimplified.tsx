@@ -154,6 +154,24 @@ const QuizFunnelEditorSimplified: React.FC<QuizFunnelEditorProps> = ({ funnelId,
         }
     }, [steps, crud]);
 
+    // Verificação de segurança - garantir que sempre há um step selecionado
+    if (!steps.length) {
+        return (
+            <div className="flex items-center justify-center h-full">
+                <div className="text-center">
+                    <p className="text-gray-500 mb-4">Nenhum step encontrado</p>
+                    <Button onClick={() => window.location.reload()}>Recarregar</Button>
+                </div>
+            </div>
+        );
+    }
+
+    // Se selectedStep for undefined, selecionar o primeiro
+    if (!selectedStep && steps.length > 0) {
+        setSelectedId(steps[0].id);
+        return null; // Re-render será triggado
+    }
+
     return (
         <div
             className="quiz-editor-container h-full w-full flex flex-col bg-background"
@@ -315,7 +333,7 @@ const QuizFunnelEditorSimplified: React.FC<QuizFunnelEditorProps> = ({ funnelId,
                                     <h4 className="font-semibold mb-2">{selectedStep.type}</h4>
                                     {selectedStep.type === 'intro' && (
                                         <div>
-                                            {selectedStep.image && (
+                                            {selectedStep?.image && (
                                                 <img
                                                     src={selectedStep.image}
                                                     alt="Imagem de introdução"
@@ -325,14 +343,14 @@ const QuizFunnelEditorSimplified: React.FC<QuizFunnelEditorProps> = ({ funnelId,
                                                     }}
                                                 />
                                             )}
-                                            <h3 className="font-bold mb-2" dangerouslySetInnerHTML={{ __html: selectedStep.title || '' }}></h3>
-                                            <p className="mb-2">{selectedStep.formQuestion}</p>
+                                            <h3 className="font-bold mb-2" dangerouslySetInnerHTML={{ __html: selectedStep?.title || 'Sem título' }}></h3>
+                                            <p className="mb-2">{selectedStep?.formQuestion || ''}</p>
                                             <input
                                                 disabled
-                                                placeholder={selectedStep.placeholder}
+                                                placeholder={selectedStep?.placeholder || ''}
                                                 className="border rounded px-2 py-1 w-full mb-2"
                                             />
-                                            <Button size="sm" disabled>{selectedStep.buttonText}</Button>
+                                            <Button size="sm" disabled>{selectedStep?.buttonText || 'Continuar'}</Button>
                                         </div>
                                     )}
                                     {selectedStep.type === 'question' && (
@@ -382,12 +400,12 @@ const QuizFunnelEditorSimplified: React.FC<QuizFunnelEditorProps> = ({ funnelId,
                                     {(selectedStep.type === 'transition' || selectedStep.type === 'transition-result') && (
                                         <div className="text-center">
                                             <div className="w-6 h-6 mx-auto border-2 border-primary border-t-transparent rounded-full animate-spin mb-2" />
-                                            <p className="font-medium">{selectedStep.title}</p>
+                                            <p className="font-medium">{selectedStep?.title || 'Sem título'}</p>
                                         </div>
                                     )}
                                     {selectedStep.type === 'result' && (
                                         <div>
-                                            <h3 className="font-bold text-primary">{selectedStep.title}</h3>
+                                            <h3 className="font-bold text-primary">{selectedStep?.title || 'Sem título'}</h3>
                                         </div>
                                     )}
                                     {selectedStep.type === 'offer' && (
@@ -421,7 +439,7 @@ const QuizFunnelEditorSimplified: React.FC<QuizFunnelEditorProps> = ({ funnelId,
                                             <label className="block mb-1 font-medium">Título</label>
                                             <textarea
                                                 rows={3}
-                                                value={selectedStep.title || ''}
+                                                value={selectedStep?.title || ''}
                                                 onChange={e => updateStep(selectedStep.id, { title: e.target.value })}
                                                 className="w-full border rounded px-2 py-1 text-[11px]"
                                             />
