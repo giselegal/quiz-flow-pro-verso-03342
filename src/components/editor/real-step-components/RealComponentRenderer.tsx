@@ -22,17 +22,17 @@ export const RealComponentRenderer: React.FC<RealComponentRendererProps> = (prop
     // 🎯 Renderizar componente específico baseado no tipo
     switch (type) {
         case 'quiz-intro-header':
-            return <QuizIntroHeaderEditor {...componentProps} type={type} />;
+            return <QuizIntroHeaderEditor {...componentProps} type={type} content={componentProps.content as any} />;
 
         case 'options-grid':
-            return <OptionsGridEditor {...componentProps} type={type} />;
+            return <OptionsGridEditor {...componentProps} type={type} content={componentProps.content as any} />;
 
         case 'form-container':
-            return <FormContainerEditor {...componentProps} type={type} />;
+            return <FormContainerEditor {...componentProps} type={type} content={componentProps.content as any} />;
 
         case 'text':
         case 'text-inline':
-            return <TextEditor {...componentProps} type={type} />;
+            return <TextEditor {...componentProps} type={type} content={componentProps.content as any} />;
 
         // 🚧 Componentes básicos (implementação simples)
         case 'image':

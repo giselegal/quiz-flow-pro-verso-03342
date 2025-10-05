@@ -51,8 +51,8 @@ const QuizFunnelEditorWYSIWYGStable: React.FC<QuizFunnelEditorProps> = memo(({
 
         // Editor state
         isSaving,
-        hasUnsavedChanges,
-        error,
+        // hasUnsavedChanges, // TODO: Implementar
+        // error, // TODO: Implementar
 
         // Actions
         setSelectedId,
@@ -61,18 +61,14 @@ const QuizFunnelEditorWYSIWYGStable: React.FC<QuizFunnelEditorProps> = memo(({
         setShowPropertiesPanel,
         setDragEnabled,
         setUseModularSystem,
-        handleSave,
-        handleReset,
-        handleAddStep,
-        handleUpdateStep,
-        handleDeleteStep,
-        handleDuplicateStep,
-        handleReorderSteps,
-    } = useQuizEditorState({
-        funnelId,
-        templateId,
-        crud
-    });
+        // handleSave, // TODO: Implementar
+        // handleReset, // TODO: Implementar
+        // handleAddStep, // TODO: Implementar
+        // handleUpdateStep, // TODO: Implementar
+        // handleDeleteStep, // TODO: Implementar
+        // handleDuplicateStep, // TODO: Implementar
+        // handleReorderSteps, // TODO: Implementar
+    } = useQuizEditorState();
 
     // Step selecionado
     const selectedStep = useModularSystem
