@@ -34,6 +34,9 @@ const Home = lazy(() => import('./pages/Home'));
 const AuthPage = lazy(() => import('./pages/AuthPage'));
 const NotFound = lazy(() => import('./pages/NotFound'));
 
+// 🎯 EDITOR MODULAR - SISTEMA COMPLETO
+const ModularEditorPage = lazy(() => import('./pages/ModularEditorPage'));
+
 // � PÁGINAS DE DIAGNÓSTICO - TEMPORÁRIAS
 const TemplateDiagnosticPage = lazy(() => import('./pages/TemplateDiagnosticPage'));
 
@@ -274,6 +277,13 @@ function App() {
                         <Route path="/phase2">
                           <div data-testid="phase2-dashboard-page">
                             <Phase2Dashboard />
+                          </div>
+                        </Route>
+
+                        {/* 🎯 EDITOR MODULAR - SISTEMA COMPLETO DE COMPONENTES MODULARES */}
+                        <Route path="/modular-editor">
+                          <div data-testid="modular-editor-page">
+                            <ModularEditorPage />
                           </div>
                         </Route>
 
