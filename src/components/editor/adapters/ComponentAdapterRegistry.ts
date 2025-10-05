@@ -482,3 +482,6 @@ export function validateRegistry(): { isValid: boolean; errors: string[] } {
         errors
     };
 }
+
+// 🎯 Instância singleton para uso em toda aplicação
+export const adapterRegistry = new ComponentAdapterRegistry();
