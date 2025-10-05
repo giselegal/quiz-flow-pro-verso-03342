@@ -8,7 +8,7 @@ import React, { useState } from 'react';
 import { ChakraProvider } from '@chakra-ui/react';
 import { QuizEditorProvider } from '@/context/QuizEditorContext';
 import { editorTheme } from '@/theme/editor-theme';
-import ModularEditor from './ModularEditor';
+import ModernModularEditor from './ModernModularEditor';
 import { ModularQuizStep, ModularFunnel } from '@/types/modular-editor';
 
 interface ModularEditorExampleProps {
@@ -223,11 +223,8 @@ export const ModularEditorExample: React.FC<ModularEditorExampleProps> = ({ funn
     return (
         <ChakraProvider theme={editorTheme}>
             <QuizEditorProvider initialFunnel={exampleFunnel}>
-                <ModularEditor
-                    stepId={currentStepId}
-                    onSave={handleSave}
-                    onPreview={handlePreview}
-                    onBack={handleBack}
+                <ModernModularEditor
+                    className=""
                 />
             </QuizEditorProvider>
         </ChakraProvider>
@@ -274,11 +271,8 @@ export const useModularEditor = () => {
         if (!isEditorOpen || !currentStepId) return null;
 
         return (
-            <ModularEditor
-                stepId={currentStepId}
-                onSave={props?.onSave}
-                onPreview={props?.onPreview}
-                onBack={closeEditor}
+            <ModernModularEditor
+                className=""
             />
         );
     };
