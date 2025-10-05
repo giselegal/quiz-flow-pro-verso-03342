@@ -37,7 +37,7 @@ export interface EditableStepProps {
 
 // 🔧 Componente de loading padrão
 const DefaultLoadingFallback: React.FC = () => {
-    return React.createElement('div', 
+    return React.createElement('div',
         { className: 'animate-pulse p-4 border rounded-lg bg-gray-50' },
         React.createElement('div', { className: 'h-4 bg-gray-200 rounded w-3/4 mb-2' }),
         React.createElement('div', { className: 'h-4 bg-gray-200 rounded w-1/2' })
