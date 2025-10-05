@@ -158,8 +158,27 @@ export const exampleFunnel: ModularQuizFunnel = {
         },
     ],
     settings: {
-        showProgressBar: true,
+        title: 'Quiz Modular de Exemplo',
+        language: 'pt-BR',
+        theme: {
+            colors: {
+                primary: '#0090FF',
+                secondary: '#718096',
+                accent: '#38A169',
+                background: '#FFFFFF',
+                text: '#1A202C',
+            },
+            fonts: {
+                heading: 'Inter',
+                body: 'Inter',
+            },
+            borderRadius: '8px',
+            shadows: true,
+        },
         allowBackNavigation: true,
+        showProgressBar: true,
+        saveProgress: true,
+        resultCalculation: 'points',
         shuffleQuestions: false,
         showResults: true,
         collectEmail: false,
