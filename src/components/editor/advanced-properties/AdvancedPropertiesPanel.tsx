@@ -26,19 +26,29 @@ import {
 
 // Ícones modernos
 import {
-    SettingsIcon,
-    PaletteIcon,
-    DeviceIcon,
-    EyeIcon,
-    SaveIcon,
-    RefreshIcon,
-    ChevronDownIcon,
+    AddIcon,
+    DeleteIcon,
+    CopyIcon,
+    EditIcon,
+    ViewIcon,
+    DragHandleIcon,
+    ChevronLeftIcon,
     ChevronRightIcon,
-    GridIcon,
+    SettingsIcon,
+    HeaderIcon,
     TextIcon,
     ImageIcon,
-    ButtonIcon
+    ButtonIcon,
+    GridIcon,
+    ChevronDownIcon
 } from '@/components/ui/modern-icons';
+
+// Ícones substitutos para os não disponíveis
+const PaletteIcon = SettingsIcon;
+const DeviceIcon = ViewIcon;
+const EyeIcon = ViewIcon;
+const SaveIcon = CopyIcon;
+const RefreshIcon = SettingsIcon;
 
 // Types
 import { ComponentType, ModularComponent } from '@/types/modular-editor';
@@ -621,7 +631,7 @@ const AdvancedPropertiesPanel: React.FC<AdvancedPropertiesPanelProps> = ({
                 <div className="no-selection">
                     <SettingsIcon size={48} />
                     <Heading size="md">Editor de Propriedades</Heading>
-                    <Text color="gray.600" textAlign="center">
+                    <Text color="var(--modern-gray-600)" style={{ textAlign: 'center' }}>
                         Selecione um componente para editar suas propriedades avançadas
                     </Text>
                 </div>
@@ -634,29 +644,32 @@ const AdvancedPropertiesPanel: React.FC<AdvancedPropertiesPanelProps> = ({
             {/* Header */}
             <div className="properties-header">
                 <HStack justify="between" align="center">
-                    <HStack spacing={3}>
+                    <HStack gap={12}>
                         <componentSchema.icon size={20} />
-                        <VStack spacing={0} align="start">
+                        <VStack gap={0} align="start">
                             <Heading size="sm">{componentSchema.name}</Heading>
-                            <Text fontSize="xs" color="gray.600">ID: {selectedComponent.id}</Text>
+                            <Text size="xs" color="var(--modern-gray-600)">ID: {selectedComponent.id}</Text>
                         </VStack>
                     </HStack>
 
-                    <HStack spacing={2}>
+                    <HStack gap={8}>
                         <Tooltip label={previewEnabled ? 'Desabilitar Preview' : 'Habilitar Preview'}>
                             <IconButton
+                                icon={<EyeIcon size={16} />}
+                                aria-label={previewEnabled ? 'Desabilitar Preview' : 'Habilitar Preview'}
                                 size="sm"
                                 variant={previewEnabled ? 'primary' : 'secondary'}
                                 onClick={handlePreviewToggle}
-                            >
-                                <EyeIcon size={16} />
-                            </IconButton>
+                            />
                         </Tooltip>
 
                         <Tooltip label="Salvar Configurações">
-                            <IconButton size="sm" variant="secondary">
-                                <SaveIcon size={16} />
-                            </IconButton>
+                            <IconButton
+                                icon={<SaveIcon size={16} />}
+                                aria-label="Salvar Configurações"
+                                size="sm"
+                                variant="secondary"
+                            />
                         </Tooltip>
                     </HStack>
                 </HStack>
