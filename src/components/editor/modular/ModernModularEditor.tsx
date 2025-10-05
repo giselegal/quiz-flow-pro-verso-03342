@@ -74,6 +74,12 @@ interface ComponentPaletteProps {
     currentStep: any;
 }
 
+interface StepsPanelProps {
+    steps: any[];
+    currentStepIndex: number;
+    onStepSelect: (index: number) => void;
+}
+
 // ============================================================================
 // COMPONENTE SORTABLE
 // ============================================================================
@@ -255,68 +261,45 @@ const ComponentPalette: React.FC<ComponentPaletteProps> = ({ isOpen, onToggle, c
     };
 
     return (
-        <Card
-            variant="elevated"
-            padding="md"
-            className="component-palette"
-            style={{
-                width: isOpen ? '280px' : '60px',
-                transition: 'width 0.3s ease',
-                minHeight: '400px'
-            }}
-        >
-            <Flex justify="between" align="center" style={{ marginBottom: '16px' }}>
-                {isOpen && (
-                    <Heading as="h3" size="sm" weight="semibold">
-                        Componentes
-                    </Heading>
-                )}
-                <IconButton
-                    icon={isOpen ? <ChevronLeftIcon /> : <ChevronRightIcon />}
-                    size="sm"
-                    variant="ghost"
-                    aria-label={isOpen ? "Recolher painel" : "Expandir painel"}
-                    onClick={onToggle}
-                />
-            </Flex>
-
-            {isOpen && (
-                <VStack gap={8} align="stretch">
-                    {componentTypes.map((component) => (
-                        <Tooltip
-                            key={component.type}
-                            label={component.description}
-                            placement="right"
+        <Box>
+            <Heading size="sm" weight="semibold" style={{ marginBottom: '16px' }}>
+                🧩 Componentes
+            </Heading>
+            <VStack gap={8} align="stretch">
+                {componentTypes.map((component) => (
+                    <Tooltip
+                        key={component.type}
+                        label={component.description}
+                        placement="right"
+                    >
+                        <Card
+                            variant="ghost"
+                            padding="sm"
+                            className="component-palette-item"
+                            onClick={() => handleAddComponent(component.type)}
+                            style={{
+                                cursor: 'pointer',
+                                transition: 'all 0.2s ease'
+                            }}
                         >
-                            <Card
-                                variant="ghost"
-                                padding="sm"
-                                className="component-palette-item"
-                                onClick={() => handleAddComponent(component.type)}
-                                style={{
-                                    cursor: 'pointer',
-                                    transition: 'all 0.2s ease'
-                                }}
-                            >
-                                <HStack gap={12} align="center">
-                                    <Box style={{ color: 'var(--modern-primary)' }}>
-                                        {component.icon}
-                                    </Box>
-                                    <VStack gap={2} align="start">
-                                        <Text size="sm" weight="medium">
-                                            {component.name}
-                                        </Text>
-                                        <Text size="xs" color="var(--modern-gray-500)">
-                                            {component.description}
-                                        </Text>
-                                    </VStack>
-                                </HStack>
-                            </Card>
-                        </Tooltip>
-                    ))}
-                </VStack>
-            )}
-        </Card>
+                            <HStack gap={12} align="center">
+                                <Box style={{ color: 'var(--modern-primary)' }}>
+                                    {component.icon}
+                                </Box>
+                                <VStack gap={2} align="start">
+                                    <Text size="sm" weight="medium">
+                                        {component.name}
+                                    </Text>
+                                    <Text size="xs" color="var(--modern-gray-500)">
+                                        {component.description}
+                                    </Text>
+                                </VStack>
+                            </HStack>
+                        </Card>
+                    </Tooltip>
+                ))}
+            </VStack>
+        </Box>
     );
 };
 
@@ -445,66 +428,121 @@ const ModernModularEditor: React.FC<ModernModularEditorProps> = ({ className = '
                     </Flex>
                 </Card>
 
-                {/* Área Principal */}
-                <Flex style={{ flex: 1 }}>
-                    {/* Painel Lateral */}
-                    <ComponentPalette
-                        isOpen={paletteOpen}
-                        onToggle={() => setPaletteOpen(!paletteOpen)}
-                        currentStep={currentStep}
-                    />
+                {/* Layout de 4 Colunas */}
+                <HStack gap={0} align="stretch" style={{ flex: 1, minHeight: '600px' }}>
 
-                    {/* Canvas do Editor */}
-                    <Box style={{ flex: 1, padding: '24px' }}>
-                        <Card
-                            variant="outlined"
-                            padding="lg"
-                            style={{
-                                minHeight: '600px',
-                                background: previewMode ? 'white' : 'var(--modern-gray-50)'
-                            }}
-                        >
-                            {components.length === 0 ? (
-                                <Flex justify="center" align="center" style={{ minHeight: '300px' }}>
-                                    <VStack gap={16} align="center">
-                                        <Text color="var(--modern-gray-400)" size="lg" weight="medium">
-                                            Nenhum componente adicionado
+                    {/* COLUNA 1: ETAPAS */}
+                    <Card
+                        variant="outlined"
+                        padding="md"
+                        style={{
+                            width: '250px',
+                            minWidth: '250px',
+                            borderRadius: 0,
+                            borderRight: '1px solid var(--modern-gray-200)'
+                        }}
+                    >
+                        <Heading size="sm" weight="semibold" style={{ marginBottom: '16px' }}>
+                            📋 Etapas ({funnel.steps.length})
+                        </Heading>
+                        <VStack gap={8} align="stretch" style={{ maxHeight: '500px', overflowY: 'auto' }}>
+                            {funnel.steps.map((step: any, index: number) => (
+                                <Card
+                                    key={step.id}
+                                    variant={index === currentStepIndex ? "elevated" : "ghost"}
+                                    padding="sm"
+                                    onClick={() => setCurrentStepIndex(index)}
+                                    style={{
+                                        cursor: 'pointer',
+                                        transition: 'all 0.2s ease',
+                                        backgroundColor: index === currentStepIndex ? 'var(--modern-primary-50)' : 'transparent'
+                                    }}
+                                >
+                                    <VStack gap={4} align="start">
+                                        <Text size="sm" weight="medium">
+                                            {index + 1}. {step.name}
                                         </Text>
-                                        <Text color="var(--modern-gray-500)" size="sm" style={{ textAlign: 'center' }}>
-                                            Use a paleta lateral para adicionar componentes à sua página
+                                        <Text size="xs" color="var(--modern-gray-500)">
+                                            {step.components?.length || 0} componentes
                                         </Text>
                                     </VStack>
-                                </Flex>
-                            ) : (
-                                <DndContext
-                                    collisionDetection={closestCenter}
-                                    onDragEnd={handleDragEnd}
+                                </Card>
+                            ))}
+                        </VStack>
+                    </Card>
+
+                    {/* COLUNA 2: COMPONENTES */}
+                    <Card
+                        variant="outlined"
+                        padding="md"
+                        style={{
+                            width: '280px',
+                            minWidth: '280px',
+                            borderRadius: 0,
+                            borderRight: '1px solid var(--modern-gray-200)'
+                        }}
+                    >
+                        <ComponentPalette
+                            isOpen={true}
+                            onToggle={() => setPaletteOpen(!paletteOpen)}
+                            currentStep={currentStep}
+                        />
+                    </Card>
+
+                    {/* COLUNA 3: CANVAS */}
+                    <Box style={{ flex: 1, padding: '24px', backgroundColor: previewMode ? 'white' : 'var(--modern-gray-50)' }}>
+                        {components.length === 0 ? (
+                            <Flex justify="center" align="center" style={{ minHeight: '400px' }}>
+                                <VStack gap={16} align="center">
+                                    <Text color="var(--modern-gray-400)" size="lg" weight="medium">
+                                        Nenhum componente adicionado
+                                    </Text>
+                                    <Text color="var(--modern-gray-500)" size="sm" style={{ textAlign: 'center' }}>
+                                        Selecione componentes da coluna 2 para adicionar à etapa
+                                    </Text>
+                                </VStack>
+                            </Flex>
+                        ) : (
+                            <DndContext
+                                collisionDetection={closestCenter}
+                                onDragEnd={handleDragEnd}
+                            >
+                                <SortableContext
+                                    items={components.map(c => c.id)}
+                                    strategy={verticalListSortingStrategy}
                                 >
-                                    <SortableContext
-                                        items={components.map(c => c.id)}
-                                        strategy={verticalListSortingStrategy}
-                                    >
-                                        <VStack gap={12} align="stretch">
-                                            {components.map((component) => (
-                                                <SortableComponent
-                                                    key={component.id}
-                                                    component={component}
-                                                    isSelected={selectedComponent?.id === component.id}
-                                                    onSelect={handleSelectComponent}
-                                                    onEdit={handleEditComponent}
-                                                    onDuplicate={handleDuplicateComponent}
-                                                    onDelete={handleDeleteComponent}
-                                                />
-                                            ))}
-                                        </VStack>
-                                    </SortableContext>
-                                </DndContext>
-                            )}
-                        </Card>
+                                    <VStack gap={16} align="stretch">
+                                        {components.map((component) => (
+                                            <SortableComponent
+                                                key={component.id}
+                                                component={component}
+                                                isSelected={selectedComponent?.id === component.id}
+                                                onSelect={handleSelectComponent}
+                                                onEdit={handleEditComponent}
+                                                onDuplicate={handleDuplicateComponent}
+                                                onDelete={handleDeleteComponent}
+                                            />
+                                        ))}
+                                    </VStack>
+                                </SortableContext>
+                            </DndContext>
+                        )}
                     </Box>
 
-                    {/* Painel de Propriedades */}
-                    <Box style={{ width: '320px', maxWidth: '320px', borderLeft: '1px solid var(--modern-gray-200)' }}>
+                    {/* COLUNA 4: PAINEL DE PROPRIEDADES */}
+                    <Card
+                        variant="outlined"
+                        padding="md"
+                        style={{
+                            width: '320px',
+                            minWidth: '320px',
+                            borderRadius: 0,
+                            borderLeft: '1px solid var(--modern-gray-200)'
+                        }}
+                    >
+                        <Heading size="sm" weight="semibold" style={{ marginBottom: '16px' }}>
+                            ⚙️ Propriedades
+                        </Heading>
                         <AdvancedPropertiesPanel
                             selectedComponent={selectedComponent || undefined}
                             onPropertyChange={(componentId: string, propertyKey: string, value: any) => {
@@ -521,8 +559,8 @@ const ModernModularEditor: React.FC<ModernModularEditorProps> = ({ className = '
                                 setPreviewMode(enabled);
                             }}
                         />
-                    </Box>
-                </Flex>
+                    </Card>
+                </HStack>
             </VStack>
         </Container>
     );
