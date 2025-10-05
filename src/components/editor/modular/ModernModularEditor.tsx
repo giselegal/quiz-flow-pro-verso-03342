@@ -536,7 +536,7 @@ const ModernModularEditor: React.FC<ModernModularEditorProps> = ({ className = '
                                                     isSelected={selectedComponent?.id === component.id}
                                                     renderContext="editor"
                                                 />
-                                                
+
                                                 {/* Overlay de ações quando selecionado */}
                                                 {selectedComponent?.id === component.id && (
                                                     <Box
@@ -590,7 +590,7 @@ const ModernModularEditor: React.FC<ModernModularEditorProps> = ({ className = '
                                                         </HStack>
                                                     </Box>
                                                 )}
-                                                
+
                                                 {/* Badge com tipo do componente */}
                                                 <Box
                                                     style={{
