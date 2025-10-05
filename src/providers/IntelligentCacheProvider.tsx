@@ -668,8 +668,8 @@ export const IntelligentCacheProvider: React.FC<IntelligentCacheProviderProps> =
 
     const contextValue = useMemo<IntelligentCacheContextType>(() => ({
         cache: cacheManager,
-        get: <T>(key: string) => cacheManager.get<T>(key),
-            set: <T>(key: string, data: T, options?: any) => cacheManager.set(key, data, options),
+        get: <T extends any>(key: string) => cacheManager.get<T>(key),
+        set: <T extends any>(key: string, data: T, options?: any) => cacheManager.set(key, data, options),
         delete: (key: string) => cacheManager.delete(key),
         clear: (tags?: string[]) => cacheManager.clear(tags),
         getStats: () => cacheManager.getStats()
@@ -678,15 +678,15 @@ export const IntelligentCacheProvider: React.FC<IntelligentCacheProviderProps> =
     // Debug logging
     useEffect(() => {
         if (debugMode && stats) {
-                    console.log('🧠 Intelligent Cache Stats:', stats);
+            console.log('🧠 Intelligent Cache Stats:', stats);
         }
     }, [debugMode, stats]);
 
-                return (
-                <IntelligentCacheContext.Provider value={contextValue}>
-                    {children}
-                    {debugMode && stats && (
-                        <div style={{
+    return (
+        <IntelligentCacheContext.Provider value={contextValue}>
+            {children}
+            {debugMode && stats && (
+                <div style={{
                             position: 'fixed',
                             top: '10px',
                             left: '10px',
@@ -712,21 +712,21 @@ export const IntelligentCacheProvider: React.FC<IntelligentCacheProviderProps> =
 // 🎯 HOOK
 export const useIntelligentCache = () => {
     const context = useContext(IntelligentCacheContext);
-                if (!context) {
+    if (!context) {
         throw new Error('useIntelligentCache must be used within IntelligentCacheProvider');
     }
-                return context;
+    return context;
 };
 
-                // 🎯 SPECIALIZED CACHE HOOKS
-                export const useCachedData = <T>(
-                    key: string,
+// 🎯 SPECIALIZED CACHE HOOKS
+export const useCachedData = <T extends any>(
+    key: string,
     fetcher: () => Promise<T>,
-                        options: {
-                            ttl ?: number;
-                        refreshInterval?: number;
-                        persistent?: boolean;
-    } = { }
+    options: {
+        ttl?: number;
+        refreshInterval?: number;
+        persistent?: boolean;
+    } = {}
 ) => {
     const {get, set} = useIntelligentCache();
                         const [data, setData] = useState<T | null>(null);
