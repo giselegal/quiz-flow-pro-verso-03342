@@ -5,18 +5,15 @@
  */
 
 import React, { useState } from 'react';
-import { ChakraProvider } from '@chakra-ui/react';
-import { QuizEditorProvider } from '@/context/QuizEditorContext';
-import { editorTheme } from '@/theme/editor-theme';
 import ModernModularEditor from './ModernModularEditor';
-import { ModularQuizStep, ModularFunnel } from '@/types/modular-editor';
+import { ModularQuizStep, ModularQuizFunnel } from '@/types/modular-editor';
 
 interface ModularEditorExampleProps {
     funnelId?: string;
 }
 
 // Exemplo de funil com etapas modulares
-const exampleFunnel: ModularFunnel = {
+const exampleFunnel: ModularQuizFunnel = {
     id: 'funnel_exemplo',
     title: 'Quiz Modular de Exemplo',
     description: 'Demonstração do sistema modular',
@@ -221,13 +218,9 @@ export const ModularEditorExample: React.FC<ModularEditorExampleProps> = ({ funn
     }
 
     return (
-        <ChakraProvider theme={editorTheme}>
-            <QuizEditorProvider initialFunnel={exampleFunnel}>
-                <ModernModularEditor
-                    className=""
-                />
-            </QuizEditorProvider>
-        </ChakraProvider>
+        <ModernModularEditor
+            className=""
+        />
     );
 };
 
