@@ -666,6 +666,15 @@ export const QuizEditorProvider: React.FC<QuizEditorProviderProps> = ({
         copyComponent,
         pasteComponent,
         canPaste,
+
+        // Configuração do editor
+        _config: {
+            theme: 'modern',
+            layout: 'horizontal',
+            showPreview: true,
+            autoSave: true,
+            debug: false
+        }
     };
 
     return (
