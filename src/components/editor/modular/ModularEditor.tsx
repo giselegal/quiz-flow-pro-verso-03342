@@ -6,17 +6,17 @@
 
 import React, { useState, useEffect } from 'react';
 import {
-  Box,
-  VStack,
-  HStack,
-  Button,
-  Text,
-  useDisclosure,
-  Container,
-  Flex,
-  IconButton,
-  Tooltip,
-  Portal,
+    Box,
+    VStack,
+    HStack,
+    Button,
+    Text,
+    useDisclosure,
+    Container,
+    Flex,
+    IconButton,
+    Tooltip,
+    Portal,
 } from '@chakra-ui/react';
 import {
     AddIcon,
@@ -175,13 +175,13 @@ export const ModularEditor: React.FC<ModularEditorProps> = ({
     onPreview,
     onBack,
 }) => {
-  const { 
-    funnel, 
-    addComponent, 
-    updateComponent, 
-    deleteComponent,
-    reorderComponents,
-  } = useQuizEditor();    // Estado local
+    const {
+        funnel,
+        addComponent,
+        updateComponent,
+        deleteComponent,
+        reorderComponents,
+    } = useQuizEditor();    // Estado local
     const [selectedComponentId, setSelectedComponentId] = useState<string>('');
     const [isPreviewMode, setIsPreviewMode] = useState(false);
     const { open: isSidebarOpen, onToggle: toggleSidebar } = useDisclosure({ defaultOpen: true });
@@ -194,14 +194,14 @@ export const ModularEditor: React.FC<ModularEditorProps> = ({
         })
     );
 
-  // Obter etapa atual
-  const currentStep = funnel.steps.find((step: any) => step.id === stepId);
+    // Obter etapa atual
+    const currentStep = funnel.steps.find((step: any) => step.id === stepId);
 
-  useEffect(() => {
-    if (!currentStep) {
-      console.error(`Etapa com ID ${stepId} não foi encontrada.`);
-    }
-  }, [currentStep, stepId]);    if (!currentStep) {
+    useEffect(() => {
+        if (!currentStep) {
+            console.error(`Etapa com ID ${stepId} não foi encontrada.`);
+        }
+    }, [currentStep, stepId]); if (!currentStep) {
         return (
             <Box p={8} textAlign="center">
                 <Text color="gray.500">Etapa não encontrada</Text>
@@ -215,65 +215,65 @@ export const ModularEditor: React.FC<ModularEditorProps> = ({
     }
 
     // Handlers para componentes
-  const handleAddComponent = (type: ComponentType) => {
-    try {
-      const newComponent = createDefaultComponent(type);
-      addComponent(stepId, newComponent);
-      setSelectedComponentId(newComponent.id);
-      console.log(`Componente ${type} adicionado à etapa.`);
-    } catch (error) {
-      console.error('Erro ao adicionar componente:', error);
-    }
-  };    const handleComponentSelect = (componentId: string) => {
+    const handleAddComponent = (type: ComponentType) => {
+        try {
+            const newComponent = createDefaultComponent(type);
+            addComponent(stepId, newComponent);
+            setSelectedComponentId(newComponent.id);
+            console.log(`Componente ${type} adicionado à etapa.`);
+        } catch (error) {
+            console.error('Erro ao adicionar componente:', error);
+        }
+    }; const handleComponentSelect = (componentId: string) => {
         setSelectedComponentId(componentId);
     };
 
-  const handleComponentUpdate = (componentId: string, newProps: any) => {
-    updateComponent(stepId, componentId, newProps);
-    console.log('Componente atualizado');
-  };
+    const handleComponentUpdate = (componentId: string, newProps: any) => {
+        updateComponent(stepId, componentId, newProps);
+        console.log('Componente atualizado');
+    };
 
-  const handleComponentDelete = (componentId: string) => {
-    if (selectedComponentId === componentId) {
-      setSelectedComponentId('');
-    }
-    
-    deleteComponent(stepId, componentId);
-    console.log('Componente removido');
-  };
+    const handleComponentDelete = (componentId: string) => {
+        if (selectedComponentId === componentId) {
+            setSelectedComponentId('');
+        }
 
-  const handleComponentDuplicate = (componentId: string) => {
-    const component = currentStep.components.find((c: ModularComponent) => c.id === componentId);
-    if (component) {
-      const duplicatedComponent: ModularComponent = {
-        ...component,
-        id: `${component.type}_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
-      };
-      
-      addComponent(stepId, duplicatedComponent);
-      setSelectedComponentId(duplicatedComponent.id);
-      console.log('Componente duplicado');
-    }
-  };
+        deleteComponent(stepId, componentId);
+        console.log('Componente removido');
+    };
 
-  const handleDragEnd = (event: DragEndEvent) => {
-    const { active, over } = event;
+    const handleComponentDuplicate = (componentId: string) => {
+        const component = currentStep.components.find((c: ModularComponent) => c.id === componentId);
+        if (component) {
+            const duplicatedComponent: ModularComponent = {
+                ...component,
+                id: `${component.type}_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+            };
 
-    if (over && active.id !== over.id) {
-      const oldIndex = currentStep.components.findIndex((c: ModularComponent) => c.id === active.id);
-      const newIndex = currentStep.components.findIndex((c: ModularComponent) => c.id === over.id);
+            addComponent(stepId, duplicatedComponent);
+            setSelectedComponentId(duplicatedComponent.id);
+            console.log('Componente duplicado');
+        }
+    };
 
-      reorderComponents(stepId, oldIndex, newIndex);
-      console.log('Ordem dos componentes alterada');
-    }
-  };
+    const handleDragEnd = (event: DragEndEvent) => {
+        const { active, over } = event;
 
-  const handleSave = () => {
-    if (onSave) {
-      onSave(currentStep);
-    }
-    console.log('Etapa salva');
-  };    const handlePreview = () => {
+        if (over && active.id !== over.id) {
+            const oldIndex = currentStep.components.findIndex((c: ModularComponent) => c.id === active.id);
+            const newIndex = currentStep.components.findIndex((c: ModularComponent) => c.id === over.id);
+
+            reorderComponents(stepId, oldIndex, newIndex);
+            console.log('Ordem dos componentes alterada');
+        }
+    };
+
+    const handleSave = () => {
+        if (onSave) {
+            onSave(currentStep);
+        }
+        console.log('Etapa salva');
+    }; const handlePreview = () => {
         setIsPreviewMode(!isPreviewMode);
         if (onPreview && !isPreviewMode) {
             onPreview(currentStep);
@@ -309,9 +309,9 @@ export const ModularEditor: React.FC<ModularEditorProps> = ({
 
                     <VStack gap={0} align="start">
                         <Text fontSize="lg" fontWeight="semibold">
-                                        <Text fontSize="lg" fontWeight="semibold">
-              {currentStep.name || `Etapa ${currentStep.order}`}
-            </Text>
+                            <Text fontSize="lg" fontWeight="semibold">
+                                {currentStep.name || `Etapa ${currentStep.order}`}
+                            </Text>
                         </Text>
                         <Text fontSize="xs" color="gray.500">
                             {currentStep.components.length} componente(s)
