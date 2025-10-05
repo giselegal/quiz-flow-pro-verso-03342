@@ -48,6 +48,9 @@ const ModernUnifiedEditor = lazy(() => import('./pages/editor/ModernUnifiedEdito
 // 🧪 TESTE DO SISTEMA MODULAR
 const ModularSystemTest = lazy(() => import('./pages/ModularSystemTest'));
 
+// 🎨 DEMONSTRAÇÃO DA INTERFACE MODERNA - FASE 4
+const ModernInterfaceDemo = lazy(() => import('./pages/ModernInterfaceDemo'));
+
 
 // ❌ HYBRID EDITOR PRO - DESATIVADO (substituído pelo ModernUnifiedEditor)
 // const HybridEditorPro = lazy(() => import('./components/editor/EditorPro/components/HybridEditorPro'));
