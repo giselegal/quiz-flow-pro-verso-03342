@@ -117,7 +117,7 @@ export const RealComponentPropertiesPanel: React.FC<RealComponentPropertiesPanel
                         <span>Conteúdo</span>
                     </div>
 
-                    {renderContentEditor(component.type, component.content, handleContentUpdate)}
+                    {renderContentEditor(component.type as RealComponentType, component.content, handleContentUpdate)}
                 </div>
 
                 {/* Propriedades de Estilo */}
