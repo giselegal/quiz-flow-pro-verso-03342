@@ -546,7 +546,7 @@ const AdvancedPropertiesPanel: React.FC<AdvancedPropertiesPanelProps> = ({
     // Agrupar propriedades por categoria
     const propertiesByCategory = useMemo(() => {
         if (!componentSchema) return {};
-        
+
         const grouped: Record<string, PropertyConfig[]> = {};
         componentSchema.properties.forEach(prop => {
             if (!grouped[prop.category]) {
@@ -554,7 +554,7 @@ const AdvancedPropertiesPanel: React.FC<AdvancedPropertiesPanelProps> = ({
             }
             grouped[prop.category].push(prop);
         });
-        
+
         return grouped;
     }, [componentSchema]);
 
@@ -580,7 +580,7 @@ const AdvancedPropertiesPanel: React.FC<AdvancedPropertiesPanelProps> = ({
     // Renderizar editor de propriedade
     const renderPropertyEditor = useCallback((property: PropertyConfig) => {
         const currentValue = selectedComponent?.properties?.[property.key];
-        
+
         const props = {
             property,
             value: currentValue,
@@ -641,7 +641,7 @@ const AdvancedPropertiesPanel: React.FC<AdvancedPropertiesPanelProps> = ({
                             <Text fontSize="xs" color="gray.600">ID: {selectedComponent.id}</Text>
                         </VStack>
                     </HStack>
-                    
+
                     <HStack spacing={2}>
                         <Tooltip label={previewEnabled ? 'Desabilitar Preview' : 'Habilitar Preview'}>
                             <IconButton
@@ -652,7 +652,7 @@ const AdvancedPropertiesPanel: React.FC<AdvancedPropertiesPanelProps> = ({
                                 <EyeIcon size={16} />
                             </IconButton>
                         </Tooltip>
-                        
+
                         <Tooltip label="Salvar Configurações">
                             <IconButton size="sm" variant="outline">
                                 <SaveIcon size={16} />
@@ -691,10 +691,10 @@ const AdvancedPropertiesPanel: React.FC<AdvancedPropertiesPanelProps> = ({
                             onClick={() => setActiveCategory(category)}
                         >
                             {category === 'content' ? '📝 Conteúdo' :
-                             category === 'style' ? '🎨 Estilo' :
-                             category === 'layout' ? '📐 Layout' :
-                             category === 'behavior' ? '⚡ Comportamento' :
-                             '📱 Responsivo'}
+                                category === 'style' ? '🎨 Estilo' :
+                                    category === 'layout' ? '📐 Layout' :
+                                        category === 'behavior' ? '⚡ Comportamento' :
+                                            '📱 Responsivo'}
                         </Button>
                     ))}
                 </HStack>
@@ -715,12 +715,12 @@ const AdvancedPropertiesPanel: React.FC<AdvancedPropertiesPanelProps> = ({
                                     w="full"
                                 >
                                     {category === 'content' ? '📝 Conteúdo' :
-                                     category === 'style' ? '🎨 Estilo' :
-                                     category === 'layout' ? '📐 Layout' :
-                                     category === 'behavior' ? '⚡ Comportamento' :
-                                     '📱 Responsivo'}
+                                        category === 'style' ? '🎨 Estilo' :
+                                            category === 'layout' ? '📐 Layout' :
+                                                category === 'behavior' ? '⚡ Comportamento' :
+                                                    '📱 Responsivo'}
                                 </Button>
-                                
+
                                 {expandedSections.has(category) && (
                                     <VStack spacing={4} align="stretch" pl={4}>
                                         {propertiesByCategory[category]?.map(property => (
