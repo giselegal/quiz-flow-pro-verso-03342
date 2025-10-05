@@ -127,7 +127,7 @@ export const COMPONENT_REGISTRY: Record<ComponentType, ComponentInfo> = {
     'spacer': {
         component: ({ height = 4, ...props }) => (
             <div style= {{ height: `${height * 4}px` }} {...props } />
-    ),
+        ),
 name: 'Espaçador',
     description: 'Espaço em branco configurável',
         category: 'layout',

@@ -3,7 +3,7 @@
 // Combina FunnelEditingFacade + Sistema Modular (componentes modulares, drag & drop, Chakra UI)
 // Implementa a arquitetura solicitada: "cada etapa composta por componentes modulares, independentes e editáveis"
 // =============================================================
-import React, { Suspense, useMemo, createContext, useContext, useEffect, useRef, useState } from 'react';
+import React, { useMemo, createContext, useContext, useEffect, useRef, useState } from 'react';
 import { QuizFunnelEditingFacade, type IFunnelEditingFacade, type FunnelSnapshot } from '@/editor/facade/FunnelEditingFacade';
 import { resolveAdapter, applySnapshotAndPersist } from '@/editor/adapters/FunnelAdapterRegistry';
 import { useUnifiedCRUDOptional } from '@/context/UnifiedCRUDProvider';
@@ -17,15 +17,15 @@ export interface ModernUnifiedEditorProps {
 }
 
 // 🎯 SISTEMA MODULAR INTEGRADO - Componentes modulares, independentes e editáveis
-const ModularEditorExample = React.lazy(() => import('../../components/editor/modular/ModularEditorExample'));
+import ModularEditorExample, { exampleFunnel } from '../../components/editor/modular/ModularEditorExample';
 // Provider de blocos do quiz
 import { BlockRegistryProvider, ResultHeadlineBlock, OfferCoreBlock, ResultSecondaryListBlock, OfferUrgencyBlock } from '@/runtime/quiz/blocks/BlockRegistry';
 // Context do sistema modular
 import { QuizEditorProvider } from '@/context/QuizEditorContext';
-// Funil de exemplo
-import { exampleFunnel } from '../../components/editor/modular/ModularEditorExample';
+// Editor simplificado para debug
 import SimpleModularEditor from '../../components/editor/modular/SimpleModularEditor';
 import MinimalTest from '../../components/editor/modular/MinimalTest';
+import FunctionalModularEditor from '../../components/editor/modular/FunctionalModularEditor';
 
 
 // ============================================
@@ -123,24 +123,24 @@ const ModernUnifiedEditor: React.FC<ModernUnifiedEditorProps> = (props) => {
     return (
         <div className={`quiz-editor-container flex flex-col w-full h-full ${props.className || ''}`}>
             <div className="flex-1 min-h-0">
-                <Suspense fallback={<div className="p-4 text-sm text-muted-foreground">Carregando editor...</div>}>
-                    {!crud ? (
-                        <div className="p-6 text-sm text-red-600" data-testid="missing-crud-provider">
-                            ⚠️ UnifiedCRUDProvider ausente. Envolva <code>ModernUnifiedEditor</code> com <code>&lt;UnifiedCRUDProvider&gt;</code>.
-                        </div>
-                    ) : facade ? (
-                        <FunnelFacadeContext.Provider value={facade}>
-                            <QuizEditorProvider initialFunnel={exampleFunnel}>
-                                <BlockRegistryProvider definitions={[ResultHeadlineBlock, OfferCoreBlock, ResultSecondaryListBlock, OfferUrgencyBlock]}>
-                                    <div data-testid="quiz-editor-modular-container">
-                                        {/* ✅ EDITOR MODULAR SIMPLIFICADO - FUNCIONAL */}
-                                        <SimpleModularEditor />
-                                    </div>
-                                </BlockRegistryProvider>
-                            </QuizEditorProvider>
-                        </FunnelFacadeContext.Provider>
-                    ) : null}
-                </Suspense>
+                {!crud ? (
+                    <div className="p-6 text-sm text-red-600" data-testid="missing-crud-provider">
+                        ⚠️ UnifiedCRUDProvider ausente. Envolva <code>ModernUnifiedEditor</code> com <code>&lt;UnifiedCRUDProvider&gt;</code>.
+                    </div>
+                ) : facade ? (
+                    <FunnelFacadeContext.Provider value={facade}>
+                        <QuizEditorProvider initialFunnel={exampleFunnel}>
+                            <BlockRegistryProvider definitions={[ResultHeadlineBlock, OfferCoreBlock, ResultSecondaryListBlock, OfferUrgencyBlock]}>
+                                <div data-testid="quiz-editor-modular-container">
+                                    {/* � EDITOR MODULAR FUNCIONAL - 4 COLUNAS COMPLETAS */}
+                                    <FunctionalModularEditor />
+                                </div>
+                            </BlockRegistryProvider>
+                        </QuizEditorProvider>
+                    </FunnelFacadeContext.Provider>
+                ) : (
+                    <div className="p-4 text-sm text-muted-foreground">Carregando editor...</div>
+                )}
             </div>
         </div>
     );
