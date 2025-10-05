@@ -148,7 +148,7 @@ export const ModularQuizEditorRefactored: React.FC<ModularQuizEditorRefactoredPr
 
                 {/* 📋 Lista de Steps - resolve GARGALO #1 com Map */}
                 <div className="flex-1 overflow-y-auto">
-                    {orderedSteps.map((step, index) => (
+                    {orderedSteps.map((step: any, index: number) => (
                         <div
                             key={step.id}
                             className={`
