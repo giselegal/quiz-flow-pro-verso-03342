@@ -28,6 +28,9 @@ import SelectableBlock from '@/components/editor/SelectableBlock';
 import QuizPropertiesPanel from '@/components/editor/QuizPropertiesPanel';
 import DragDropManager from '@/components/editor/DragDropManager';
 
+// 🔧 COMPONENTES MODULARES REAIS
+import { RealComponentPropertiesPanel } from '../real-step-components/RealComponentPropertiesPanel';
+
 interface QuizFunnelEditorProps {
     funnelId?: string;
     templateId?: string;
@@ -162,6 +165,25 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
         // Se não funcionar, usar índice + 1
         const index = steps.findIndex(s => s.id === stepId);
         return index >= 0 ? index + 1 : null;
+    };
+
+    // 🎯 NOVO: Função para encontrar componente selecionado
+    const getSelectedComponent = (): RealComponentProps | null => {
+        if (!selectedComponentId || !currentStepComponents.length) return null;
+        return currentStepComponents.find(c => c.id === selectedComponentId) || null;
+    };
+
+    // 🎯 NOVO: Função para atualizar componente selecionado
+    const updateSelectedComponent = (updates: Partial<RealComponentProps>) => {
+        if (!selectedComponentId) return;
+
+        setCurrentStepComponents(prev =>
+            prev.map(component =>
+                component.id === selectedComponentId
+                    ? { ...component, ...updates }
+                    : component
+            )
+        );
     };
 
     // Função para criar step modular
@@ -436,16 +458,16 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
                                 <RealComponentRenderer
                                     {...component}
                                     type={component.type as RealComponentType}
-                                    isEditing={isEditMode}
+                                    isEditing={false} // 🎯 CANVAS APENAS PARA SELEÇÃO VISUAL
                                     isSelected={selectedComponentId === component.id}
                                     onUpdate={(updates) => {
-                                        setCurrentStepComponents(prev =>
-                                            prev.map(comp =>
-                                                comp.id === component.id ? { ...comp, ...updates } : comp
-                                            )
-                                        );
+                                        // Não permitir edição direta no canvas
+                                        console.log('Edição movida para o Painel de Propriedades');
                                     }}
-                                    onSelect={() => setSelectedComponentId(component.id)}
+                                    onSelect={() => {
+                                        console.log(`🎯 Componente selecionado: ${component.type} (${component.id})`);
+                                        setSelectedComponentId(component.id);
+                                    }}
                                 />
                             </div>
                         ))}
@@ -900,15 +922,25 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
                 {/* COL 4 - PAINEL DE PROPRIEDADES APRIMORADO */}
                 {showPropertiesPanel && (
                     <div className="w-80">
-                        <QuizPropertiesPanel
-                            selectedStep={selectedBlockId ? selectedStep : null}
-                            onUpdateStep={updateStep}
-                            onClose={handlePropertiesPanelClose}
-                            onDeleteStep={removeStep}
-                            onDuplicateStep={duplicateStep}
-                            isPreviewMode={isPreviewMode}
-                            onTogglePreview={() => setIsPreviewMode(!isPreviewMode)}
-                        />
+                        {useRealComponents && selectedComponentId ? (
+                            // 🎯 PAINEL ESPECÍFICO PARA COMPONENTES REAIS MODULARES
+                            <RealComponentPropertiesPanel
+                                component={getSelectedComponent()}
+                                onUpdate={updateSelectedComponent}
+                                onClose={() => setSelectedComponentId(null)}
+                            />
+                        ) : (
+                            // 🎯 PAINEL CLÁSSICO PARA MODO TRADICIONAL
+                            <QuizPropertiesPanel
+                                selectedStep={selectedBlockId ? selectedStep : null}
+                                onUpdateStep={updateStep}
+                                onClose={handlePropertiesPanelClose}
+                                onDeleteStep={removeStep}
+                                onDuplicateStep={duplicateStep}
+                                isPreviewMode={isPreviewMode}
+                                onTogglePreview={() => setIsPreviewMode(!isPreviewMode)}
+                            />
+                        )}
                     </div>
                 )}
             </div>
