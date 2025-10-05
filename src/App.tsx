@@ -63,6 +63,7 @@ const EditorTemplatesPage = lazy(() => import('./pages/editor-templates/index'))
 const FunnelTypesPage = lazy(() => import('./pages/SimpleFunnelTypesPage'));
 const SupabaseFixTestPage = lazy(() => import('./pages/SupabaseFixTestPage'));
 const IndexedDBMigrationTestPage = lazy(() => import('./pages/IndexedDBMigrationTestPage'));
+const CanvasEditorDemoPage = lazy(() => import('./pages/CanvasEditorDemoPage'));
 
 function App() {
   useEffect(() => {
@@ -114,7 +115,12 @@ function App() {
                           </EditorErrorBoundary>
                         </Route>
 
-                        <Route path="/editor/templates">
+                        {/* 🎨 CANVAS EDITOR DEMO - SISTEMA HÍBRIDO */}
+                        <Route path="/canvas-demo">
+                          <div data-testid="canvas-demo-page">
+                            <CanvasEditorDemoPage />
+                          </div>
+                        </Route>                        <Route path="/editor/templates">
                           <div data-testid="editor-templates-page">
                             <EditorTemplatesPage />
                           </div>
