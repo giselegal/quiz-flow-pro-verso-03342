@@ -47,6 +47,10 @@ export interface ComponentStyle {
     height?: string;
     padding?: string;
     margin?: string;
+    marginTop?: string;
+    marginBottom?: string;
+    marginLeft?: string;
+    marginRight?: string;
 
     // Tipografia
     fontSize?: string;
@@ -239,8 +243,10 @@ export interface StepSettings {
     // Navegação
     canGoBack?: boolean;
     canSkip?: boolean;
+    allowSkip?: boolean;
     autoAdvance?: boolean;
     timeLimit?: number;
+    showProgress?: boolean;
 
     // Validação
     requireCompletion?: boolean;
@@ -265,6 +271,7 @@ export interface ModularQuizStep {
     id: string;
     type: StepType;
     name: string;
+    title?: string;
     description?: string;
     components: ModularComponent[];
     settings: StepSettings;
@@ -310,6 +317,10 @@ export interface FunnelSettings {
     showProgressBar: boolean;
     saveProgress: boolean;
     timeLimit?: number;
+    shuffleQuestions?: boolean;
+    showResults?: boolean;
+    collectEmail?: boolean;
+    collectName?: boolean;
 
     // Integrações
     webhooks?: Array<{
