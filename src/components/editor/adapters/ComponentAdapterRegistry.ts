@@ -1,19 +1,13 @@
 /**
- * � COMPONENT ADAPTER REGISTRY
+ * 📋 COMPONENT ADAPTER REGISTRY
  * 
- * Sistema de adaptadores para isolamento total entre editor e produção.
- * Resolve GARGALO #2: Acoplamento forte com componentes de produção
- * 
- * BENEFÍCIOS:
- * ✅ Isolamento completo editor/produção
- * ✅ Componentes de produção não precisam "saber" sobre edição
- * ✅ Fácil adicionar novos tipos de step
- * ✅ Mocking automático de callbacks de produção
+ * Registro central de todos os adaptadores de componentes.
+ * Mapeia tipos de step para seus respectivos adaptadores.
+ * Parte da FASE 1 do plano de modularização.
  */
 
-import React from 'react';
-import type { EditorStep } from '../types/EditorStepTypes';
-import type { QuizStep } from '@/data/quizSteps';
+import { EditorComponentAdapter, ExtendedEditorComponentAdapter, createAdapter } from './EditorComponentAdapter';
+import { QuizStep } from '../../../data/quizSteps';
 
 // Imports dos componentes de produção
 import IntroStep from '../../quiz/IntroStep';
@@ -482,6 +476,3 @@ export function validateRegistry(): { isValid: boolean; errors: string[] } {
         errors
     };
 }
-
-// 🎯 Instância singleton para uso em toda aplicação
-export const adapterRegistry = new ComponentAdapterRegistry();

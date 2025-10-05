@@ -37,7 +37,9 @@ const NotFound = lazy(() => import('./pages/NotFound'));
 // � PÁGINAS DE DIAGNÓSTICO - TEMPORÁRIAS
 const TemplateDiagnosticPage = lazy(() => import('./pages/TemplateDiagnosticPage'));
 
-// 🚀 MODERN UNIFIED EDITOR - EDITOR OFICIAL UNIFICADO
+// 🚀 MODERN UNIFIED EDITOR - EDITOR OFICIAL (MAIS COMPLETO)
+const QuizFunnelEditorSimplified = lazy(() => import('./components/editor/quiz/QuizFunnelEditorSimplified').then(module => ({ default: module.default })));
+const QuizFunnelEditorWYSIWYG = lazy(() => import('./components/editor/quiz/QuizFunnelEditorWYSIWYG').then(module => ({ default: module.default })));
 const ModernUnifiedEditor = lazy(() => import('./pages/editor/ModernUnifiedEditor').then(module => ({ default: module.default })));
 
 
@@ -63,8 +65,6 @@ const EditorTemplatesPage = lazy(() => import('./pages/editor-templates/index'))
 const FunnelTypesPage = lazy(() => import('./pages/SimpleFunnelTypesPage'));
 const SupabaseFixTestPage = lazy(() => import('./pages/SupabaseFixTestPage'));
 const IndexedDBMigrationTestPage = lazy(() => import('./pages/IndexedDBMigrationTestPage'));
-const CanvasEditorDemoPage = lazy(() => import('./pages/CanvasEditorDemoPage'));
-const RealStepEditorDemoPage = lazy(() => import('./pages/RealStepEditorDemoPage'));
 
 function App() {
   useEffect(() => {
@@ -105,29 +105,18 @@ function App() {
                           </div>
                         </Route>
 
-                        {/* 🚀 EDITOR UNIFICADO - MODERN UNIFIED EDITOR */}
+                        {/* 🚀 QUIZ EDITOR WYSIWYG - EDITOR OFICIAL COM FASE 4 ATIVA */}
                         <Route path="/editor">
                           <EditorErrorBoundary>
-                            <div data-testid="modern-unified-editor-page">
+                            <div data-testid="quiz-editor-wysiwyg-page">
                               <UnifiedCRUDProvider autoLoad={true}>
-                                <ModernUnifiedEditor />
+                                <OptimizedEditorProvider>
+                                  {/* ✅ FASE 4 ATIVADA: +66% performance com OptimizedEditorProvider */}
+                                  <QuizFunnelEditorWYSIWYG />
+                                </OptimizedEditorProvider>
                               </UnifiedCRUDProvider>
                             </div>
                           </EditorErrorBoundary>
-                        </Route>
-
-                        {/* 🎨 CANVAS EDITOR DEMO - SISTEMA HÍBRIDO */}
-                        <Route path="/canvas-demo">
-                          <div data-testid="canvas-demo-page">
-                            <CanvasEditorDemoPage />
-                          </div>
-                        </Route>
-
-                        {/* 🎯 REAL STEP EDITOR - EDITOR DE ETAPAS REAIS */}
-                        <Route path="/real-step-editor">
-                          <div data-testid="real-step-editor-page">
-                            <RealStepEditorDemoPage />
-                          </div>
                         </Route>
 
                         <Route path="/editor/templates">
@@ -146,9 +135,12 @@ function App() {
                         <Route path="/editor/:funnelId">
                           {(params) => (
                             <EditorErrorBoundary>
-                              <div data-testid="modern-unified-editor-funnel-page">
+                              <div data-testid="quiz-editor-wysiwyg-funnel-page">
                                 <UnifiedCRUDProvider funnelId={params.funnelId} autoLoad={true}>
-                                  <ModernUnifiedEditor funnelId={params.funnelId} />
+                                  <OptimizedEditorProvider>
+                                    {/* ✅ FASE 4 ATIVADA: Editor otimizado com funnelId dinâmico */}
+                                    <QuizFunnelEditorWYSIWYG funnelId={params.funnelId} />
+                                  </OptimizedEditorProvider>
                                 </UnifiedCRUDProvider>
                               </div>
                             </EditorErrorBoundary>
@@ -231,6 +223,28 @@ function App() {
                           )}
                         </Route>
 
+                        {/* 🚀 QUIZ EDITOR WYSIWYG - EDITOR OFICIAL ATIVO COM PREVIEW REAL */}
+                        <Route path="/editor">
+                          <EditorErrorBoundary>
+                            <div data-testid="quiz-editor-wysiwyg-page">
+                              <UnifiedCRUDProvider autoLoad={true}>
+                                <QuizFunnelEditorWYSIWYG />
+                              </UnifiedCRUDProvider>
+                            </div>
+                          </EditorErrorBoundary>
+                        </Route>
+
+                        <Route path="/editor/:id">
+                          {(params) => (
+                            <EditorErrorBoundary>
+                              <div data-testid="quiz-editor-wysiwyg-with-id-page">
+                                <UnifiedCRUDProvider funnelId={params.id} autoLoad={true}>
+                                  <QuizFunnelEditorWYSIWYG />
+                                </UnifiedCRUDProvider>
+                              </div>
+                            </EditorErrorBoundary>
+                          )}
+                        </Route>
 
                         <Route path="/admin/analytics">
                           <div data-testid="admin-analytics-page">

@@ -41,7 +41,6 @@ export default function QuizEstiloPessoalPage({ funnelId }: QuizEstiloPessoalPag
 
             {/* Componente principal do quiz */}
             <main className="min-h-screen">
-                {/* Componente principal do quiz */}
                 <QuizApp funnelId={funnelId} />
             </main>
 
