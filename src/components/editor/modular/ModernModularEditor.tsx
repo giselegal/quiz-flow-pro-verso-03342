@@ -133,62 +133,62 @@ const SortableComponent: React.FC<SortableComponentProps> = ({
                 className="sortable-component"
                 onClick={() => onSelect(component.id)}
             >
-            <Flex justify="between" align="center">
-                <HStack gap={8} align="center">
-                    <Box {...attributes} {...listeners} style={{ cursor: 'grab' }}>
-                        <DragHandleIcon size={14} />
-                    </Box>
-                    {getComponentIcon(component.type)}
-                    <VStack gap={2} align="start">
-                        <Text size="sm" weight="medium">
-                            {getComponentName(component.type)}
-                        </Text>
-                        <Text size="xs" color="var(--modern-gray-500)">
-                            ID: {component.id}
-                        </Text>
-                    </VStack>
-                </HStack>
+                <Flex justify="between" align="center">
+                    <HStack gap={8} align="center">
+                        <Box {...attributes} {...listeners} style={{ cursor: 'grab' }}>
+                            <DragHandleIcon size={14} />
+                        </Box>
+                        {getComponentIcon(component.type)}
+                        <VStack gap={2} align="start">
+                            <Text size="sm" weight="medium">
+                                {getComponentName(component.type)}
+                            </Text>
+                            <Text size="xs" color="var(--modern-gray-500)">
+                                ID: {component.id}
+                            </Text>
+                        </VStack>
+                    </HStack>
 
-                <HStack gap={4}>
-                    <Tooltip label="Editar">
-                        <IconButton
-                            icon={<EditIcon size={14} />}
-                            size="sm"
-                            variant="ghost"
-                            aria-label="Editar componente"
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                onEdit(component.id);
-                            }}
-                        />
-                    </Tooltip>
-                    <Tooltip label="Duplicar">
-                        <IconButton
-                            icon={<CopyIcon size={14} />}
-                            size="sm"
-                            variant="ghost"
-                            aria-label="Duplicar componente"
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                onDuplicate(component.id);
-                            }}
-                        />
-                    </Tooltip>
-                    <Tooltip label="Excluir">
-                        <IconButton
-                            icon={<DeleteIcon size={14} />}
-                            size="sm"
-                            variant="ghost"
-                            aria-label="Excluir componente"
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                onDelete(component.id);
-                            }}
-                        />
-                    </Tooltip>
-                </HStack>
-            </Flex>
-        </Card>
+                    <HStack gap={4}>
+                        <Tooltip label="Editar">
+                            <IconButton
+                                icon={<EditIcon size={14} />}
+                                size="sm"
+                                variant="ghost"
+                                aria-label="Editar componente"
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    onEdit(component.id);
+                                }}
+                            />
+                        </Tooltip>
+                        <Tooltip label="Duplicar">
+                            <IconButton
+                                icon={<CopyIcon size={14} />}
+                                size="sm"
+                                variant="ghost"
+                                aria-label="Duplicar componente"
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    onDuplicate(component.id);
+                                }}
+                            />
+                        </Tooltip>
+                        <Tooltip label="Excluir">
+                            <IconButton
+                                icon={<DeleteIcon size={14} />}
+                                size="sm"
+                                variant="ghost"
+                                aria-label="Excluir componente"
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    onDelete(component.id);
+                                }}
+                            />
+                        </Tooltip>
+                    </HStack>
+                </Flex>
+            </Card>
         </div>
     );
 };
