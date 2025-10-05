@@ -47,8 +47,8 @@ import {
 import { useQuizEditor } from '@/context/QuizEditorContext';
 import { ComponentType, ModularComponent } from '@/types/modular-editor';
 
-// Editor de Propriedades Avançado - Fase 5
-import AdvancedPropertiesPanel from '@/components/editor/advanced-properties/AdvancedPropertiesPanel';
+// Editor de Propriedades Avançado - Fase 5 (Safe Wrapper)
+import AdvancedPropertiesPanel from '@/components/editor/advanced-properties/SafeAdvancedPropertiesPanel';
 import '@/components/editor/advanced-properties/advanced-properties.css';
 
 // ============================================================================
