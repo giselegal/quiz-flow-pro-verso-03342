@@ -324,7 +324,7 @@ export const useQuizEditor = (): QuizEditorContextType => {
     if (!context) {
         throw new Error('useQuizEditor deve ser usado dentro de QuizEditorProvider');
     }
-    
+
     // Garantir que _config sempre existe no contexto
     const safeContext = {
         ...context,
@@ -336,7 +336,7 @@ export const useQuizEditor = (): QuizEditorContextType => {
             debug: false
         }
     };
-    
+
     return safeContext as QuizEditorContextType;
 };
 
