@@ -350,6 +350,7 @@ export interface FunnelSettings {
 export interface ModularQuizFunnel {
     id: string;
     name: string;
+    title?: string;
     description?: string;
     status: 'draft' | 'published' | 'archived';
     steps: ModularQuizStep[];

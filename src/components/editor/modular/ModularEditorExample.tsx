@@ -20,6 +20,7 @@ export const exampleFunnel: ModularQuizFunnel = {
     steps: [
         {
             id: 'step_intro',
+            name: 'Introdução',
             title: 'Introdução',
             type: 'intro',
             order: 1,
@@ -85,6 +86,7 @@ export const exampleFunnel: ModularQuizFunnel = {
         },
         {
             id: 'step_question_1',
+            name: 'Pergunta 1',
             title: 'Pergunta 1',
             type: 'question',
             order: 2,
