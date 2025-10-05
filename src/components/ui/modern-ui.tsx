@@ -126,7 +126,7 @@ export const Flex: React.FC<FlexProps> = ({
                     justify === 'around' ? 'space-around' :
                         justify === 'evenly' ? 'space-evenly' : 'center',
         gap: gap ? `${gap}px` : undefined,
-        flexWrap: wrap ? 'wrap' : 'nowrap',
+        flexWrap: (wrap ? 'wrap' : 'nowrap') as React.CSSProperties['flexWrap'],
         ...style
     };
 
