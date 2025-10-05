@@ -1,6 +1,7 @@
 // =============================================================
-// ModernUnifiedEditor - Editor Unificado com FunnelEditingFacade
-// Renderiza QuizFunnelEditor integrado com sistema de persistência unificado
+// ModernUnifiedEditor - Editor Unificado com Sistema Modular Integrado
+// Combina FunnelEditingFacade + Sistema Modular (componentes modulares, drag & drop, Chakra UI)
+// Implementa a arquitetura solicitada: "cada etapa composta por componentes modulares, independentes e editáveis"
 // =============================================================
 import React, { Suspense, useMemo, createContext, useContext, useEffect, useRef, useState } from 'react';
 import { QuizFunnelEditingFacade, type IFunnelEditingFacade, type FunnelSnapshot } from '@/editor/facade/FunnelEditingFacade';
@@ -15,9 +16,12 @@ export interface ModernUnifiedEditorProps {
     className?: string;
 }
 
-const QuizFunnelEditor = React.lazy(() => import('../../components/editor/quiz/QuizFunnelEditorSimplified'));
+// 🎯 SISTEMA MODULAR INTEGRADO - Componentes modulares, independentes e editáveis
+const ModularEditorExample = React.lazy(() => import('../../components/editor/modular/ModularEditorExample'));
 // Provider de blocos do quiz
 import { BlockRegistryProvider, ResultHeadlineBlock, OfferCoreBlock, ResultSecondaryListBlock, OfferUrgencyBlock } from '@/runtime/quiz/blocks/BlockRegistry';
+// Context do sistema modular
+import { QuizEditorProvider } from '@/context/QuizEditorContext';
 
 
 // ============================================
@@ -122,11 +126,14 @@ const ModernUnifiedEditor: React.FC<ModernUnifiedEditorProps> = (props) => {
                         </div>
                     ) : facade ? (
                         <FunnelFacadeContext.Provider value={facade}>
-                            <BlockRegistryProvider definitions={[ResultHeadlineBlock, OfferCoreBlock, ResultSecondaryListBlock, OfferUrgencyBlock]}>
-                                <div data-testid="quiz-editor-container">
-                                    <QuizFunnelEditor funnelId={props.funnelId} templateId={props.templateId} />
-                                </div>
-                            </BlockRegistryProvider>
+                            <QuizEditorProvider>
+                                <BlockRegistryProvider definitions={[ResultHeadlineBlock, OfferCoreBlock, ResultSecondaryListBlock, OfferUrgencyBlock]}>
+                                    <div data-testid="quiz-editor-modular-container">
+                                        {/* ✅ SISTEMA MODULAR INTEGRADO: Componentes modulares, drag & drop, Chakra UI */}
+                                        <ModularEditorExample funnelId={props.funnelId} />
+                                    </div>
+                                </BlockRegistryProvider>
+                            </QuizEditorProvider>
                         </FunnelFacadeContext.Provider>
                     ) : null}
                 </Suspense>

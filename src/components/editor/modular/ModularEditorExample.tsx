@@ -11,6 +11,10 @@ import { editorTheme } from '@/theme/editor-theme';
 import ModularEditor from './ModularEditor';
 import { ModularQuizStep, ModularFunnel } from '@/types/modular-editor';
 
+interface ModularEditorExampleProps {
+  funnelId?: string;
+}
+
 // Exemplo de funil com etapas modulares
 const exampleFunnel: ModularFunnel = {
     id: 'funnel_exemplo',
@@ -172,7 +176,7 @@ const exampleFunnel: ModularFunnel = {
     },
 };
 
-export const ModularEditorExample: React.FC = () => {
+export const ModularEditorExample: React.FC<ModularEditorExampleProps> = ({ funnelId }) => {
     const [currentStepId, setCurrentStepId] = useState('step_intro');
     const [showEditor, setShowEditor] = useState(true);
 

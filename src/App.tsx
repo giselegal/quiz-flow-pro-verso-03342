@@ -34,8 +34,7 @@ const Home = lazy(() => import('./pages/Home'));
 const AuthPage = lazy(() => import('./pages/AuthPage'));
 const NotFound = lazy(() => import('./pages/NotFound'));
 
-// 🎯 EDITOR MODULAR - SISTEMA COMPLETO
-const ModularEditorPage = lazy(() => import('./pages/ModularEditorPage'));
+// 🎯 MODERNUNIFIEDEDITOR - Editor unificado com sistema modular integrado
 
 // � PÁGINAS DE DIAGNÓSTICO - TEMPORÁRIAS
 const TemplateDiagnosticPage = lazy(() => import('./pages/TemplateDiagnosticPage'));
@@ -108,14 +107,14 @@ function App() {
                           </div>
                         </Route>
 
-                        {/* 🚀 QUIZ EDITOR WYSIWYG - EDITOR OFICIAL COM FASE 4 ATIVA */}
+                        {/* 🎯 QUIZ EDITOR MODULAR - MODERNUNIFIEDEDITOR COM SISTEMA MODULAR INTEGRADO */}
                         <Route path="/editor">
                           <EditorErrorBoundary>
-                            <div data-testid="quiz-editor-wysiwyg-page">
+                            <div data-testid="quiz-editor-unified-page">
                               <UnifiedCRUDProvider autoLoad={true}>
                                 <OptimizedEditorProvider>
-                                  {/* ✅ FASE 4 ATIVADA: +66% performance com OptimizedEditorProvider */}
-                                  <QuizFunnelEditorWYSIWYG />
+                                  {/* ✅ MODERNUNIFIEDEDITOR COM SISTEMA MODULAR: Facade + Componentes modulares */}
+                                  <ModernUnifiedEditor />
                                 </OptimizedEditorProvider>
                               </UnifiedCRUDProvider>
                             </div>
@@ -138,11 +137,11 @@ function App() {
                         <Route path="/editor/:funnelId">
                           {(params) => (
                             <EditorErrorBoundary>
-                              <div data-testid="quiz-editor-wysiwyg-funnel-page">
+                              <div data-testid="quiz-editor-unified-funnel-page">
                                 <UnifiedCRUDProvider funnelId={params.funnelId} autoLoad={true}>
                                   <OptimizedEditorProvider>
-                                    {/* ✅ FASE 4 ATIVADA: Editor otimizado com funnelId dinâmico */}
-                                    <QuizFunnelEditorWYSIWYG funnelId={params.funnelId} />
+                                    {/* ✅ MODERNUNIFIEDEDITOR COM FUNNEL ID: Facade + Sistema modular com funnelId */}
+                                    <ModernUnifiedEditor funnelId={params.funnelId} />
                                   </OptimizedEditorProvider>
                                 </UnifiedCRUDProvider>
                               </div>
@@ -277,13 +276,6 @@ function App() {
                         <Route path="/phase2">
                           <div data-testid="phase2-dashboard-page">
                             <Phase2Dashboard />
-                          </div>
-                        </Route>
-
-                        {/* 🎯 EDITOR MODULAR - SISTEMA COMPLETO DE COMPONENTES MODULARES */}
-                        <Route path="/modular-editor">
-                          <div data-testid="modular-editor-page">
-                            <ModularEditorPage />
                           </div>
                         </Route>
 
