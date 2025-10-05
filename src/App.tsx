@@ -64,6 +64,7 @@ const FunnelTypesPage = lazy(() => import('./pages/SimpleFunnelTypesPage'));
 const SupabaseFixTestPage = lazy(() => import('./pages/SupabaseFixTestPage'));
 const IndexedDBMigrationTestPage = lazy(() => import('./pages/IndexedDBMigrationTestPage'));
 const CanvasEditorDemoPage = lazy(() => import('./pages/CanvasEditorDemoPage'));
+const RealStepEditorDemoPage = lazy(() => import('./pages/RealStepEditorDemoPage'));
 
 function App() {
   useEffect(() => {
@@ -120,7 +121,16 @@ function App() {
                           <div data-testid="canvas-demo-page">
                             <CanvasEditorDemoPage />
                           </div>
-                        </Route>                        <Route path="/editor/templates">
+                        </Route>
+
+                        {/* 🎯 REAL STEP EDITOR - EDITOR DE ETAPAS REAIS */}
+                        <Route path="/real-step-editor">
+                          <div data-testid="real-step-editor-page">
+                            <RealStepEditorDemoPage />
+                          </div>
+                        </Route>
+
+                        <Route path="/editor/templates">
                           <div data-testid="editor-templates-page">
                             <EditorTemplatesPage />
                           </div>

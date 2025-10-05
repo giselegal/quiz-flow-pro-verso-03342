@@ -18,6 +18,11 @@ import {
     type EditableStepProps
 } from '@/components/editor/editable-steps';
 
+// 🎯 NOVO: COMPONENTES MODULARES ESPECÍFICOS DAS 21 ETAPAS REAIS
+import { RealComponentRenderer } from '@/components/editor/real-step-components/RealComponentRenderer';
+import { RealComponentProps, RealComponentType } from '@/components/editor/real-step-components/types';
+import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
+
 // 🎯 NOVO: Componentes de Editor Aprimorado
 import SelectableBlock from '@/components/editor/SelectableBlock';
 import QuizPropertiesPanel from '@/components/editor/QuizPropertiesPanel';
@@ -101,6 +106,11 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
     const [isPreviewMode, setIsPreviewMode] = useState(false);
     const [dragEnabled, setDragEnabled] = useState(true);
 
+    // 🎯 NOVO: Estados para sistema modular das 21 etapas reais
+    const [useRealComponents, setUseRealComponents] = useState(true); // Ativar componentes reais por padrão
+    const [currentStepComponents, setCurrentStepComponents] = useState<RealComponentProps[]>([]);
+    const [selectedComponentId, setSelectedComponentId] = useState<string | null>(null);
+
     // Carregar steps iniciais - Sistema Unificado usando componentes editáveis
     useEffect(() => {
         const existing = (crud.currentFunnel as any)?.quizSteps as EditableQuizStep[] | undefined;
@@ -114,7 +124,45 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
         if (conv.length) setSelectedId(conv[0].id);
     }, [crud.currentFunnel]);
 
+    // 🎯 NOVO: Carregar componentes reais da etapa selecionada
+    useEffect(() => {
+        if (!useRealComponents || !selectedStep) return;
+
+        // Mapear ID do step para número da etapa (step-1, step-2, etc.)
+        const stepNumber = getStepNumberFromId(selectedStep.id);
+        if (stepNumber) {
+            const stepKey = `step-${stepNumber}`;
+            const realStepData = QUIZ_STYLE_21_STEPS_TEMPLATE[stepKey];
+
+            if (realStepData && Array.isArray(realStepData)) {
+                const loadedComponents: RealComponentProps[] = realStepData.map((block: any) => ({
+                    id: block.id,
+                    type: block.type as RealComponentType,
+                    order: block.order || 0,
+                    content: block.content || {},
+                    properties: block.properties || {},
+                    isEditing: previewMode === 'edit',
+                    isSelected: false
+                }));
+
+                setCurrentStepComponents(loadedComponents);
+                setSelectedComponentId(null);
+            }
+        }
+    }, [selectedId, useRealComponents, previewMode, steps]);
+
     const selectedStep = steps.find(s => s.id === selectedId);
+
+    // 🎯 NOVO: Função utilitária para mapear ID do step para número da etapa
+    const getStepNumberFromId = (stepId: string): number | null => {
+        // Tentar extrair número do ID (ex: "step-1" -> 1)
+        const match = stepId.match(/step-(\d+)/);
+        if (match) return parseInt(match[1]);
+
+        // Se não funcionar, usar índice + 1
+        const index = steps.findIndex(s => s.id === stepId);
+        return index >= 0 ? index + 1 : null;
+    };
 
     // Função para criar step modular
 
@@ -353,7 +401,59 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
         const blockId = `step-${step.id}`;
         const isSelected = selectedBlockId === blockId;
 
-        // 🎯 Mapear tipo de step para componente editável correspondente
+        // 🎯 NOVO: Se useRealComponents está ativado e é a etapa selecionada, usar componentes modulares específicos
+        if (useRealComponents && step.id === selectedId && currentStepComponents.length > 0) {
+            return (
+                <div className="real-components-container space-y-4">
+                    <div className="flex items-center justify-between mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                        <div className="flex items-center space-x-2">
+                            <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                            <span className="text-sm font-medium text-blue-800">
+                                Etapa {getStepNumberFromId(step.id)} - Componentes Modulares Específicos
+                            </span>
+                            <span className="text-xs text-blue-600">
+                                ({currentStepComponents.length} componentes)
+                            </span>
+                        </div>
+                        <button
+                            onClick={() => setUseRealComponents(false)}
+                            className="text-xs text-blue-600 hover:text-blue-800 underline"
+                        >
+                            Voltar ao modo clássico
+                        </button>
+                    </div>
+
+                    {currentStepComponents
+                        .sort((a, b) => (a.order || 0) - (b.order || 0))
+                        .map((component, componentIndex) => (
+                            <div
+                                key={component.id}
+                                className={cn(
+                                    'transition-all duration-200',
+                                    selectedComponentId === component.id && 'ring-2 ring-blue-500 ring-offset-2'
+                                )}
+                            >
+                                <RealComponentRenderer
+                                    {...component}
+                                    type={component.type as RealComponentType}
+                                    isEditing={isEditMode}
+                                    isSelected={selectedComponentId === component.id}
+                                    onUpdate={(updates) => {
+                                        setCurrentStepComponents(prev =>
+                                            prev.map(comp =>
+                                                comp.id === component.id ? { ...comp, ...updates } : comp
+                                            )
+                                        );
+                                    }}
+                                    onSelect={() => setSelectedComponentId(component.id)}
+                                />
+                            </div>
+                        ))}
+                </div>
+            );
+        }
+
+        // 🎯 Modo clássico: Mapear tipo de step para componente editável correspondente
         const EditableComponent = {
             'intro': EditableIntroStep,
             'question': EditableQuestionStep,
@@ -374,6 +474,14 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
                     <div className="text-red-500 text-sm mt-1">
                         Componente editável não encontrado para este tipo de step.
                     </div>
+                    {!useRealComponents && (
+                        <button
+                            onClick={() => setUseRealComponents(true)}
+                            className="mt-2 text-xs text-blue-600 hover:text-blue-800 underline"
+                        >
+                            Tentar componentes modulares específicos
+                        </button>
+                    )}
                 </div>
             );
         }
@@ -419,6 +527,17 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
                     {isSaving ? 'Salvando...' : 'Salvar'}
                 </Button>
                 <div className="ml-auto flex gap-2">
+                    {/* 🎯 NOVO: Controle para modo modular */}
+                    <Button
+                        size="sm"
+                        variant={useRealComponents ? 'default' : 'outline'}
+                        onClick={() => setUseRealComponents(!useRealComponents)}
+                        className="text-xs"
+                    >
+                        <Settings className="w-3 h-3 mr-1" />
+                        {useRealComponents ? 'Modular' : 'Clássico'}
+                    </Button>
+
                     <Button
                         size="sm"
                         variant={previewMode === 'edit' ? 'default' : 'outline'}
