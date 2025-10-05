@@ -12,7 +12,7 @@ import ModularEditor from './ModularEditor';
 import { ModularQuizStep, ModularFunnel } from '@/types/modular-editor';
 
 interface ModularEditorExampleProps {
-  funnelId?: string;
+    funnelId?: string;
 }
 
 // Exemplo de funil com etapas modulares

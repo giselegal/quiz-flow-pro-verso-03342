@@ -15,7 +15,7 @@ import { ModularEditorExample } from '@/components/editor/modular/ModularEditorE
 import { QuizEditorProvider } from '@/context/QuizEditorContext';
 
 interface ModularEditorPageProps {
-  funnelId?: string;
+    funnelId?: string;
 }
 
 /**
