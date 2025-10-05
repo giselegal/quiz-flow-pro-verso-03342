@@ -4,10 +4,11 @@
  * Configuração personalizada do tema Chakra UI para o editor de quiz
  */
 
-import { extendTheme, type ThemeConfig } from '@chakra-ui/react';
+// Para Chakra UI v3.x, vamos criar um tema customizado simples
+const createTheme = (config: any) => config;
 
 // Configuração do tema
-const config: ThemeConfig = {
+const config = {
     initialColorMode: 'light',
     useSystemColorMode: false,
 };

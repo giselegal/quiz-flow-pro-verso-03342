@@ -342,7 +342,7 @@ export const QuizEditorProvider: React.FC<QuizEditorProviderProps> = ({
 }) => {
     const [state, dispatch] = useReducer(editorReducer, {
         ...initialState,
-        funnel: initialFunnel || initialFunnel,
+        funnel: initialFunnel || initialState.funnel,
     });
 
     // Inicializar com funnel fornecido
@@ -350,7 +350,7 @@ export const QuizEditorProvider: React.FC<QuizEditorProviderProps> = ({
         if (initialFunnel && initialFunnel.id !== state.funnel.id) {
             dispatch({ type: 'SET_FUNNEL', payload: initialFunnel });
         }
-    }, [initialFunnel]);
+    }, [initialFunnel, state.funnel.id]);
 
     // ============================================================================
     // AÇÕES DO FUNIL
@@ -379,7 +379,7 @@ export const QuizEditorProvider: React.FC<QuizEditorProviderProps> = ({
 
     const addStep = useCallback((type: StepType, afterStepId?: string): ModularQuizStep => {
         const afterIndex = afterStepId
-            ? state.funnel.steps.findIndex(step => step.id === afterStepId)
+            ? state.funnel.steps.findIndex((step: ModularQuizStep) => step.id === afterStepId)
             : -1;
 
         const newStep: ModularQuizStep = {
@@ -412,20 +412,20 @@ export const QuizEditorProvider: React.FC<QuizEditorProviderProps> = ({
     }, []);
 
     const duplicateStep = useCallback((stepId: string): ModularQuizStep => {
-        const originalStep = state.funnel.steps.find(step => step.id === stepId);
+        const originalStep = state.funnel.steps.find((step: ModularQuizStep) => step.id === stepId);
         if (!originalStep) throw new Error('Etapa não encontrada');
 
         const duplicatedStep: ModularQuizStep = {
             ...originalStep,
             id: `step-${Date.now()}`,
             name: `${originalStep.name} (Cópia)`,
-            components: originalStep.components.map(comp => ({
+            components: originalStep.components.map((comp: ModularComponent) => ({
                 ...comp,
                 id: `comp-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
             })),
         };
 
-        const originalIndex = state.funnel.steps.findIndex(step => step.id === stepId);
+        const originalIndex = state.funnel.steps.findIndex((step: ModularQuizStep) => step.id === stepId);
         dispatch({
             type: 'ADD_STEP',
             payload: { step: duplicatedStep, afterIndex: originalIndex }
@@ -479,8 +479,8 @@ export const QuizEditorProvider: React.FC<QuizEditorProviderProps> = ({
     }, []);
 
     const duplicateComponent = useCallback((stepId: string, componentId: string): ModularComponent => {
-        const step = state.funnel.steps.find(s => s.id === stepId);
-        const originalComponent = step?.components.find(c => c.id === componentId);
+        const step = state.funnel.steps.find((s: ModularQuizStep) => s.id === stepId);
+        const originalComponent = step?.components.find((c: ModularComponent) => c.id === componentId);
 
         if (!originalComponent) throw new Error('Componente não encontrado');
 
