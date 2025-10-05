@@ -113,6 +113,8 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
     const [useRealComponents, setUseRealComponents] = useState(true); // Ativar componentes reais por padrão
     const [currentStepComponents, setCurrentStepComponents] = useState<RealComponentProps[]>([]);
     const [selectedComponentId, setSelectedComponentId] = useState<string | null>(null);
+    // 🔄 Estado para armazenar modificações feitas pelo usuário
+    const [modifiedStepsData, setModifiedStepsData] = useState<Record<string, any>>({});
 
     // Carregar steps iniciais - Sistema Unificado usando componentes editáveis
     useEffect(() => {
@@ -135,7 +137,9 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
         const stepNumber = getStepNumberFromId(selectedStep.id);
         if (stepNumber) {
             const stepKey = `step-${stepNumber}`;
-            const realStepData = QUIZ_STYLE_21_STEPS_TEMPLATE[stepKey];
+
+            // 🔄 Usar dados modificados se disponíveis, senão usar template original
+            const realStepData = modifiedStepsData[stepKey] || QUIZ_STYLE_21_STEPS_TEMPLATE[stepKey];
 
             if (realStepData && Array.isArray(realStepData)) {
                 const loadedComponents: RealComponentProps[] = realStepData.map((block: any) => ({
@@ -150,9 +154,12 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
 
                 setCurrentStepComponents(loadedComponents);
                 setSelectedComponentId(null);
+
+                // 📝 Log para debug
+                console.log('🎯 Componentes carregados para etapa:', stepKey, loadedComponents);
             }
         }
-    }, [selectedId, useRealComponents, previewMode, steps]);
+    }, [selectedId, useRealComponents, previewMode, steps, modifiedStepsData]);
 
     const selectedStep = steps.find(s => s.id === selectedId);
 
@@ -175,15 +182,39 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
 
     // 🎯 NOVO: Função para atualizar componente selecionado
     const updateSelectedComponent = (updates: Partial<RealComponentProps>) => {
-        if (!selectedComponentId) return;
+        if (!selectedComponentId || !selectedStep) return;
 
-        setCurrentStepComponents(prev =>
-            prev.map(component =>
-                component.id === selectedComponentId
-                    ? { ...component, ...updates }
-                    : component
-            )
+        // 📝 Log para debug
+        console.log('🔄 Atualizando componente:', selectedComponentId, updates);
+
+        // Atualizar o estado local dos componentes
+        const updatedComponents = currentStepComponents.map(component =>
+            component.id === selectedComponentId
+                ? { ...component, ...updates }
+                : component
         );
+
+        setCurrentStepComponents(updatedComponents);
+
+        // 💾 Persistir mudanças nos dados modificados
+        const stepNumber = getStepNumberFromId(selectedStep.id);
+        if (stepNumber) {
+            const stepKey = `step-${stepNumber}`;
+
+            setModifiedStepsData(prev => ({
+                ...prev,
+                [stepKey]: updatedComponents.map(comp => ({
+                    id: comp.id,
+                    type: comp.type,
+                    order: comp.order,
+                    content: comp.content,
+                    properties: comp.properties
+                }))
+            }));
+
+            // 📝 Log para debug
+            console.log('💾 Dados persistidos para etapa:', stepKey);
+        }
     };
 
     // Função para criar step modular
@@ -467,6 +498,7 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
                                     onSelect={() => {
                                         console.log(`🎯 Componente selecionado: ${component.type} (${component.id})`);
                                         setSelectedComponentId(component.id);
+                                        setShowPropertiesPanel(true); // 🔧 Forçar abertura do painel
                                     }}
                                 />
                             </div>
@@ -924,11 +956,14 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
                     <div className="w-80">
                         {useRealComponents && selectedComponentId ? (
                             // 🎯 PAINEL ESPECÍFICO PARA COMPONENTES REAIS MODULARES
-                            <RealComponentPropertiesPanel
-                                component={getSelectedComponent()}
-                                onUpdate={updateSelectedComponent}
-                                onClose={() => setSelectedComponentId(null)}
-                            />
+                            <>
+                                {console.log('🎯 Renderizando RealComponentPropertiesPanel:', { selectedComponentId, component: getSelectedComponent() })}
+                                <RealComponentPropertiesPanel
+                                    component={getSelectedComponent()}
+                                    onUpdate={updateSelectedComponent}
+                                    onClose={() => setSelectedComponentId(null)}
+                                />
+                            </>
                         ) : (
                             // 🎯 PAINEL CLÁSSICO PARA MODO TRADICIONAL
                             <QuizPropertiesPanel

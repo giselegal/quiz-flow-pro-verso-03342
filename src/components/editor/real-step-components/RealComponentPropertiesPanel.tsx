@@ -87,10 +87,19 @@ export const RealComponentPropertiesPanel: React.FC<RealComponentPropertiesPanel
                     <div className="grid gap-4 px-4 pb-4 pt-2 my-4">
                         <div className="text-center text-muted-foreground py-12">
                             <Settings size={48} className="mx-auto mb-4 text-muted-foreground/50" />
-                            <h3 className="text-lg font-medium mb-2">Nenhum componente selecionado</h3>
-                            <p className="text-sm">
-                                Clique em um componente no canvas para editar suas propriedades
+                            <h3 className="text-lg font-medium mb-2">Selecione um Componente</h3>
+                            <p className="text-sm mb-4">
+                                Clique em qualquer componente no canvas para editar suas propriedades
                             </p>
+                            <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg text-left">
+                                <h4 className="font-medium text-blue-900 mb-2">💡 Como usar:</h4>
+                                <ul className="text-xs text-blue-700 space-y-1">
+                                    <li>• Clique em um componente no canvas</li>
+                                    <li>• Veja o componente destacado em azul</li>
+                                    <li>• Use este painel para editar propriedades</li>
+                                    <li>• Mudanças são salvas automaticamente</li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -119,7 +128,13 @@ export const RealComponentPropertiesPanel: React.FC<RealComponentPropertiesPanel
                     <div className="flex items-center justify-between mb-2">
                         <div>
                             <h3 className="text-lg font-semibold">Propriedades</h3>
-                            <p className="text-sm text-muted-foreground">{component.type}</p>
+                            <div className="flex items-center space-x-2">
+                                <p className="text-sm text-muted-foreground">{component.type}</p>
+                                <div className="flex items-center space-x-1 text-xs text-green-600 bg-green-50 px-2 py-1 rounded">
+                                    <div className="w-1.5 h-1.5 bg-green-500 rounded-full"></div>
+                                    <span>Auto-save</span>
+                                </div>
+                            </div>
                         </div>
                         <button
                             onClick={onClose}
