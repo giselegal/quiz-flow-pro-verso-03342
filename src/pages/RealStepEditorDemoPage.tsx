@@ -103,36 +103,36 @@ export default function RealStepEditorDemoPage() {
                 </div>
             </div>
 
-      {/* 🎨 Editor principal */}
-      <div className="flex-1 min-h-0 flex items-center justify-center">
-        <div className="text-center p-8">
-          <h2 className="text-2xl font-bold text-gray-800 mb-4">
-            🎯 Sistema Modular Integrado!
-          </h2>
-          <p className="text-gray-600 mb-6">
-            O sistema de componentes modulares específicos foi integrado diretamente no editor principal.
-          </p>
-          <div className="space-y-2">
-            <p className="text-sm text-gray-500">
-              ✅ Acesse <strong>/editor</strong> e clique no botão <strong>"Modular"</strong>
-            </p>
-            <p className="text-sm text-gray-500">
-              ✅ Selecione qualquer etapa para ver seus componentes específicos
-            </p>
-            <p className="text-sm text-gray-500">
-              ✅ Edite cada componente de forma modular e independente
-            </p>
-          </div>
-          <div className="mt-6">
-            <a
-              href="/editor"
-              className="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
-            >
-              Ir para o Editor Principal
-            </a>
-          </div>
-        </div>
-      </div>            {/* 📝 Informações do sistema */}
+            {/* 🎨 Editor principal */}
+            <div className="flex-1 min-h-0 flex items-center justify-center">
+                <div className="text-center p-8">
+                    <h2 className="text-2xl font-bold text-gray-800 mb-4">
+                        🎯 Sistema Modular Integrado!
+                    </h2>
+                    <p className="text-gray-600 mb-6">
+                        O sistema de componentes modulares específicos foi integrado diretamente no editor principal.
+                    </p>
+                    <div className="space-y-2">
+                        <p className="text-sm text-gray-500">
+                            ✅ Acesse <strong>/editor</strong> e clique no botão <strong>"Modular"</strong>
+                        </p>
+                        <p className="text-sm text-gray-500">
+                            ✅ Selecione qualquer etapa para ver seus componentes específicos
+                        </p>
+                        <p className="text-sm text-gray-500">
+                            ✅ Edite cada componente de forma modular e independente
+                        </p>
+                    </div>
+                    <div className="mt-6">
+                        <a
+                            href="/editor"
+                            className="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+                        >
+                            Ir para o Editor Principal
+                        </a>
+                    </div>
+                </div>
+            </div>            {/* 📝 Informações do sistema */}
             <footer className="bg-white border-t border-gray-200 px-6 py-3">
                 <div className="flex items-center justify-between text-sm text-gray-600">
                     <div>
