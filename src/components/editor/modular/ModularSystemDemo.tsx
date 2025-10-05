@@ -220,7 +220,7 @@ const SimpleModularEditor: React.FC = () => {
 // App principal
 export const ModularSystemDemo: React.FC = () => {
     return (
-        <ChakraProvider theme={editorTheme}>
+        <ChakraProvider>
             <QuizEditorProvider initialFunnel={exampleFunnel}>
                 <SimpleModularEditor />
             </QuizEditorProvider>
