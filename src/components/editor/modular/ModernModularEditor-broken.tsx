@@ -7,8 +7,39 @@
 import React, { useState } from 'react';
 import { DndContext, closestCenter, DragEndEvent } from '@dnd-kit/core';
 import { arrayMove, SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
-import { useSortable } from '@dnd-kit/sortable';
-import { CSS } from '@dnd-kit/utilities';
+import { useSortable } from '@dnd-kit/sortable'                        <HStack gap={16} align="center">
+    <Heading size="lg" weight="bold" color="var(--modern-primary)">
+        🎯 Editor Modular
+    </Heading>
+    <VStack gap={4} align="start">
+        <Text size="sm" color="var(--modern-gray-500)">
+            {components.length} componentes
+        </Text>
+        <HStack gap={8} align="center">
+            <Text size="xs" color="var(--modern-gray-600)">
+                Etapa {currentStepIndex + 1} de {funnel.steps.length}: {currentStep?.name}
+            </Text>
+            <HStack gap={4}>
+                <IconButton
+                    icon={<ChevronLeftIcon size={14} />}
+                    size="sm"
+                    variant="ghost"
+                    isDisabled={currentStepIndex === 0}
+                    onClick={handlePreviousStep}
+                    title="Etapa Anterior"
+                />
+                <IconButton
+                    icon={<ChevronRightIcon size={14} />}
+                    size="sm"
+                    variant="ghost"
+                    isDisabled={currentStepIndex === funnel.steps.length - 1}
+                    onClick={handleNextStep}
+                    title="Próxima Etapa"
+                />
+            </HStack>
+        </HStack>
+    </VStack>
+</HStack> { CSS } from '@dnd-kit/utilities';
 
 // UI Components modernos
 import {
@@ -101,94 +132,82 @@ const SortableComponent: React.FC<SortableComponentProps> = ({
         opacity: isDragging ? 0.5 : 1,
     };
 
-    const getComponentIcon = (type: ComponentType) => {
-        switch (type) {
-            case 'header': return <HeaderIcon size={16} />;
-            case 'title': return <TextIcon size={16} />;
-            case 'text': return <TextIcon size={16} />;
-            case 'image': return <ImageIcon size={16} />;
-            case 'button': return <ButtonIcon size={16} />;
-            case 'options-grid': return <GridIcon size={16} />;
-            default: return <Box style={{ width: 16, height: 16 }} />;
-        }
-    };
-
-    const getComponentName = (type: ComponentType) => {
-        switch (type) {
-            case 'header': return 'Cabeçalho';
-            case 'title': return 'Título';
-            case 'text': return 'Texto';
-            case 'image': return 'Imagem';
-            case 'button': return 'Botão';
-            case 'options-grid': return 'Grade de Opções';
-            default: return type;
-        }
-    };
-
     return (
-        <div ref={setNodeRef} style={style}>
+        <div ref={setNodeRef} style={style} className="sortable-component">
             <Card
-                variant={isSelected ? "elevated" : "outlined"}
+                variant={isSelected ? "outlined" : "ghost"}
                 padding="sm"
-                className="sortable-component"
+                className={`component-card ${isSelected ? 'component-card--selected' : ''}`}
                 onClick={() => onSelect(component.id)}
+                style={{
+                    cursor: 'pointer',
+                    borderColor: isSelected ? 'var(--modern-primary)' : undefined,
+                    borderWidth: isSelected ? '2px' : undefined
+                }}
             >
-            <Flex justify="between" align="center">
-                <HStack gap={8} align="center">
-                    <Box {...attributes} {...listeners} style={{ cursor: 'grab' }}>
-                        <DragHandleIcon size={14} />
-                    </Box>
-                    {getComponentIcon(component.type)}
-                    <VStack gap={2} align="start">
-                        <Text size="sm" weight="medium">
-                            {getComponentName(component.type)}
-                        </Text>
-                        <Text size="xs" color="var(--modern-gray-500)">
-                            ID: {component.id}
-                        </Text>
-                    </VStack>
-                </HStack>
+                <Flex justify="between" align="center">
+                    <HStack gap={12} align="center">
+                        <Tooltip label="Arrastar para reordenar">
+                            <div {...attributes} {...listeners} style={{ cursor: 'grab' }}>
+                                <DragHandleIcon size={16} color="var(--modern-gray-400)" />
+                            </div>
+                        </Tooltip>
 
-                <HStack gap={4}>
-                    <Tooltip label="Editar">
-                        <IconButton
-                            icon={<EditIcon size={14} />}
-                            size="sm"
-                            variant="ghost"
-                            aria-label="Editar componente"
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                onEdit(component.id);
-                            }}
-                        />
-                    </Tooltip>
-                    <Tooltip label="Duplicar">
-                        <IconButton
-                            icon={<CopyIcon size={14} />}
-                            size="sm"
-                            variant="ghost"
-                            aria-label="Duplicar componente"
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                onDuplicate(component.id);
-                            }}
-                        />
-                    </Tooltip>
-                    <Tooltip label="Excluir">
-                        <IconButton
-                            icon={<DeleteIcon size={14} />}
-                            size="sm"
-                            variant="ghost"
-                            aria-label="Excluir componente"
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                onDelete(component.id);
-                            }}
-                        />
-                    </Tooltip>
-                </HStack>
-            </Flex>
-        </Card>
+                        <Flex align="center" gap={8}>
+                            {getComponentIcon(component.type)}
+                            <VStack gap={2} align="start">
+                                <Text size="sm" weight="medium">
+                                    {getComponentName(component.type)}
+                                </Text>
+                                <Text size="xs" color="var(--modern-gray-500)">
+                                    ID: {component.id}
+                                </Text>
+                            </VStack>
+                        </Flex>
+                    </HStack>
+
+                    <HStack gap={4}>
+                        <Tooltip label="Editar">
+                            <IconButton
+                                icon={<EditIcon size={14} />}
+                                size="xs"
+                                variant="ghost"
+                                aria-label="Editar componente"
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    onEdit(component.id);
+                                }}
+                            />
+                        </Tooltip>
+
+                        <Tooltip label="Duplicar">
+                            <IconButton
+                                icon={<CopyIcon size={14} />}
+                                size="xs"
+                                variant="ghost"
+                                aria-label="Duplicar componente"
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    onDuplicate(component.id);
+                                }}
+                            />
+                        </Tooltip>
+
+                        <Tooltip label="Excluir">
+                            <IconButton
+                                icon={<DeleteIcon size={14} />}
+                                size="xs"
+                                variant="ghost"
+                                aria-label="Excluir componente"
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    onDelete(component.id);
+                                }}
+                            />
+                        </Tooltip>
+                    </HStack>
+                </Flex>
+            </Card>
         </div>
     );
 };
@@ -394,39 +413,14 @@ const ModernModularEditor: React.FC<ModernModularEditorProps> = ({ className = '
                             <Heading size="lg" weight="bold" color="var(--modern-primary)">
                                 🎯 Editor Modular
                             </Heading>
-                            <VStack gap={4} align="start">
-                                <Text size="sm" color="var(--modern-gray-500)">
-                                    {components.length} componentes
-                                </Text>
-                                <HStack gap={8} align="center">
-                                    <Text size="xs" color="var(--modern-gray-600)">
-                                        Etapa {currentStepIndex + 1} de {funnel.steps.length}: {currentStep?.name}
-                                    </Text>
-                                    <HStack gap={4}>
-                                        <IconButton
-                                            icon={<ChevronLeftIcon size={14} />}
-                                            size="sm"
-                                            variant="ghost"
-                                            disabled={currentStepIndex === 0}
-                                            onClick={handlePreviousStep}
-                                            aria-label="Etapa Anterior"
-                                        />
-                                        <IconButton
-                                            icon={<ChevronRightIcon size={14} />}
-                                            size="sm"
-                                            variant="ghost"
-                                            disabled={currentStepIndex === funnel.steps.length - 1}
-                                            onClick={handleNextStep}
-                                            aria-label="Próxima Etapa"
-                                        />
-                                    </HStack>
-                                </HStack>
-                            </VStack>
+                            <Text size="sm" color="var(--modern-gray-500)">
+                                {components.length} componente{components.length !== 1 ? 's' : ''}
+                            </Text>
                         </HStack>
 
-                        <HStack gap={12}>
+                        <HStack gap={8}>
                             <Button
-                                variant="secondary"
+                                variant={previewMode ? 'primary' : 'secondary'}
                                 size="sm"
                                 leftIcon={<ViewIcon size={16} />}
                                 onClick={() => setPreviewMode(!previewMode)}
@@ -465,14 +459,25 @@ const ModernModularEditor: React.FC<ModernModularEditorProps> = ({ className = '
                             }}
                         >
                             {components.length === 0 ? (
-                                <Flex justify="center" align="center" style={{ minHeight: '300px' }}>
+                                <Flex
+                                    justify="center"
+                                    align="center"
+                                    style={{
+                                        minHeight: '400px',
+                                        border: '2px dashed var(--modern-gray-300)',
+                                        borderRadius: 'var(--modern-radius-lg)'
+                                    }}
+                                >
                                     <VStack gap={16} align="center">
-                                        <Text color="var(--modern-gray-400)" size="lg" weight="medium">
-                                            Nenhum componente adicionado
-                                        </Text>
-                                        <Text color="var(--modern-gray-500)" size="sm" style={{ textAlign: 'center' }}>
-                                            Use a paleta lateral para adicionar componentes à sua página
-                                        </Text>
+                                        <Box style={{ fontSize: '48px' }}>🎨</Box>
+                                        <VStack gap={8} align="center">
+                                            <Heading size="md" color="var(--modern-gray-600)">
+                                                Nenhum componente ainda
+                                            </Heading>
+                                            <Text size="sm" color="var(--modern-gray-500)" style={{ textAlign: 'center' }}>
+                                                Adicione componentes da paleta lateral para começar a construir sua etapa
+                                            </Text>
+                                        </VStack>
                                     </VStack>
                                 </Flex>
                             ) : (
@@ -481,7 +486,7 @@ const ModernModularEditor: React.FC<ModernModularEditorProps> = ({ className = '
                                     onDragEnd={handleDragEnd}
                                 >
                                     <SortableContext
-                                        items={components.map(c => c.id)}
+                                        items={components.map(comp => comp.id)}
                                         strategy={verticalListSortingStrategy}
                                     >
                                         <VStack gap={12} align="stretch">
@@ -503,7 +508,7 @@ const ModernModularEditor: React.FC<ModernModularEditorProps> = ({ className = '
                         </Card>
                     </Box>
 
-                    {/* Painel de Propriedades */}
+                    {/* Painel de Propriedades Avançado - Fase 5 */}
                     <Box style={{ width: '320px', maxWidth: '320px', borderLeft: '1px solid var(--modern-gray-200)' }}>
                         <AdvancedPropertiesPanel
                             selectedComponent={selectedComponent || undefined}
@@ -527,5 +532,45 @@ const ModernModularEditor: React.FC<ModernModularEditorProps> = ({ className = '
         </Container>
     );
 };
+
+// ============================================================================
+// FUNÇÕES AUXILIARES
+// ============================================================================
+
+function getComponentIcon(type: ComponentType): React.ReactNode {
+    const iconProps = { size: 18, color: 'var(--modern-primary)' };
+
+    switch (type) {
+        case 'header': return <HeaderIcon {...iconProps} />;
+        case 'title': return <TextIcon {...iconProps} />;
+        case 'text': return <TextIcon {...iconProps} />;
+        case 'image': return <ImageIcon {...iconProps} />;
+        case 'button': return <ButtonIcon {...iconProps} />;
+        case 'options-grid': return <GridIcon {...iconProps} />;
+        default: return <Box {...iconProps} />;
+    }
+}
+
+function getComponentName(type: ComponentType): string {
+    const names: Record<ComponentType, string> = {
+        'header': 'Cabeçalho',
+        'title': 'Título',
+        'text': 'Texto',
+        'image': 'Imagem',
+        'form-field': 'Campo de Formulário',
+        'options-grid': 'Grade de Opções',
+        'button': 'Botão',
+        'spacer': 'Espaçador',
+        'divider': 'Divisor',
+        'video': 'Vídeo',
+        'custom-html': 'HTML Customizado',
+        'result-display': 'Exibição de Resultado',
+        'progress-bar': 'Barra de Progresso',
+        'countdown-timer': 'Timer',
+        'social-share': 'Compartilhamento Social'
+    };
+
+    return names[type] || type;
+}
 
 export default ModernModularEditor;
