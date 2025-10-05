@@ -133,7 +133,7 @@ const ModernUnifiedEditor: React.FC<ModernUnifiedEditorProps> = (props) => {
                             <BlockRegistryProvider definitions={[ResultHeadlineBlock, OfferCoreBlock, ResultSecondaryListBlock, OfferUrgencyBlock]}>
                                 <div data-testid="quiz-editor-modular-container">
                                     {/* � EDITOR MODULAR FUNCIONAL - 4 COLUNAS COMPLETAS */}
-                                    <FunctionalModularEditor />
+                                    <MinimalTest />
                                 </div>
                             </BlockRegistryProvider>
                         </QuizEditorProvider>

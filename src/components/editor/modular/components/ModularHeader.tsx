@@ -13,7 +13,7 @@ import {
     Progress,
     useTheme,
 } from '@chakra-ui/react';
-import { ArrowBackIcon } from '@chakra-ui/icons';
+// import { ArrowBackIcon } from '@chakra-ui/icons'; // Temporariamente comentado
 import { HeaderBlockProps } from '@/types/modular-editor';
 
 interface ModularHeaderProps extends HeaderBlockProps {

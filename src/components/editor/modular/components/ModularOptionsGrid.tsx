@@ -28,7 +28,7 @@ import {
     Switch,
     Divider,
 } from '@chakra-ui/react';
-import { AddIcon, DeleteIcon, EditIcon } from '@chakra-ui/icons';
+// import { AddIcon, DeleteIcon, EditIcon } from '@chakra-ui/icons'; // Temporariamente comentado
 import { OptionsGridBlockProps, QuizOption } from '@/types/modular-editor';
 
 interface ModularOptionsGridProps extends OptionsGridBlockProps {

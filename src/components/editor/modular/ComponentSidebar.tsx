@@ -35,11 +35,12 @@ import {
     AccordionIcon,
 } from '@chakra-ui/react';
 import {
-    AddIcon,
-    ChevronDownIcon,
-    ChevronUpIcon,
-    SearchIcon,
-    SettingsIcon,
+    // AddIcon,
+    // DeleteIcon,
+    // EditIcon,
+    // ChevronDownIcon,
+    // ChevronUpIcon,
+    // DragHandleIcon,
 } from '@chakra-ui/icons';
 import { ComponentType } from '@/types/modular-editor';
 import {

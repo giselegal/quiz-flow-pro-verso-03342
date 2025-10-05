@@ -25,7 +25,7 @@ import {
     Icon,
     Flex,
 } from '@chakra-ui/react';
-import { AttachmentIcon, EditIcon } from '@chakra-ui/icons';
+// import { AttachmentIcon, EditIcon } from '@chakra-ui/icons'; // Temporariamente comentado
 import { ImageBlockProps } from '@/types/modular-editor';
 
 interface ModularImageProps extends ImageBlockProps {
