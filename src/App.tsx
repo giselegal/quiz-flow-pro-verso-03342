@@ -232,28 +232,7 @@ function App() {
                           )}
                         </Route>
 
-                        {/* 🚀 QUIZ EDITOR WYSIWYG - EDITOR OFICIAL ATIVO COM PREVIEW REAL */}
-                        <Route path="/editor">
-                          <EditorErrorBoundary>
-                            <div data-testid="quiz-editor-wysiwyg-page">
-                              <UnifiedCRUDProvider autoLoad={true}>
-                                <QuizFunnelEditorWYSIWYG />
-                              </UnifiedCRUDProvider>
-                            </div>
-                          </EditorErrorBoundary>
-                        </Route>
-
-                        <Route path="/editor/:id">
-                          {(params) => (
-                            <EditorErrorBoundary>
-                              <div data-testid="quiz-editor-wysiwyg-with-id-page">
-                                <UnifiedCRUDProvider funnelId={params.id} autoLoad={true}>
-                                  <QuizFunnelEditorWYSIWYG />
-                                </UnifiedCRUDProvider>
-                              </div>
-                            </EditorErrorBoundary>
-                          )}
-                        </Route>
+                        {/* 🚀 ROTA LEGACY REMOVIDA - USAR APENAS ModernUnifiedEditor */}
 
                         <Route path="/admin/analytics">
                           <div data-testid="admin-analytics-page">
