@@ -13,7 +13,7 @@ interface ModularEditorExampleProps {
 }
 
 // Exemplo de funil com etapas modulares
-const exampleFunnel: ModularQuizFunnel = {
+export const exampleFunnel: ModularQuizFunnel = {
     id: 'funnel_exemplo',
     title: 'Quiz Modular de Exemplo',
     description: 'Demonstração do sistema modular',

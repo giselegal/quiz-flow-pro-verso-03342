@@ -22,6 +22,8 @@ const ModularEditorExample = React.lazy(() => import('../../components/editor/mo
 import { BlockRegistryProvider, ResultHeadlineBlock, OfferCoreBlock, ResultSecondaryListBlock, OfferUrgencyBlock } from '@/runtime/quiz/blocks/BlockRegistry';
 // Context do sistema modular
 import { QuizEditorProvider } from '@/context/QuizEditorContext';
+// Funil de exemplo
+import { exampleFunnel } from '../../components/editor/modular/ModularEditorExample';
 
 
 // ============================================
@@ -126,7 +128,7 @@ const ModernUnifiedEditor: React.FC<ModernUnifiedEditorProps> = (props) => {
                         </div>
                     ) : facade ? (
                         <FunnelFacadeContext.Provider value={facade}>
-                            <QuizEditorProvider>
+                            <QuizEditorProvider initialFunnel={exampleFunnel}>
                                 <BlockRegistryProvider definitions={[ResultHeadlineBlock, OfferCoreBlock, ResultSecondaryListBlock, OfferUrgencyBlock]}>
                                     <div data-testid="quiz-editor-modular-container">
                                         {/* ✅ SISTEMA MODULAR INTEGRADO: Componentes modulares, drag & drop, Chakra UI */}
