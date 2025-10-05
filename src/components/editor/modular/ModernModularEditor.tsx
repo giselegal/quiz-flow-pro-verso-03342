@@ -461,6 +461,24 @@ const ModernModularEditor: React.FC<ModernModularEditorProps> = ({ className = '
                             )}
                         </Card>
                     </Box>
+
+                    {/* Painel de Propriedades Avançado - Fase 5 */}
+                    <Box style={{ width: '320px', maxWidth: '320px', borderLeft: '1px solid var(--modern-gray-200)' }}>
+                        <AdvancedPropertiesPanel
+                            selectedComponent={selectedComponent}
+                            onPropertyChange={(componentId, propertyKey, value) => {
+                                updateComponent(currentStep.id, componentId, {
+                                    properties: {
+                                        ...selectedComponent?.properties,
+                                        [propertyKey]: value
+                                    }
+                                });
+                            }}
+                            onPreviewToggle={(enabled) => {
+                                setPreviewMode(enabled);
+                            }}
+                        />
+                    </Box>
                 </Flex>
             </VStack>
         </Container>
