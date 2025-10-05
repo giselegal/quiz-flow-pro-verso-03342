@@ -11,6 +11,7 @@ import { ModularQuizFunnel } from '@/types/modular-editor';
 
 // CSS dos componentes modernos
 import '@/components/ui/modern-ui.css';
+import '@/components/editor/modular/modern-editor.css';
 
 // Funnel de exemplo para demonstração
 const demoFunnel: ModularQuizFunnel = {

@@ -1,0 +1,257 @@
+/**
+ * 🎨 ESTILOS ESPECÍFICOS DO EDITOR MODULAR MODERNO
+ * 
+ * Estilos complementares para o editor visual
+ */
+
+/* ============================================================================
+   EDITOR MODULAR
+   ============================================================================ */
+
+.modern-modular-editor {
+  font-family: var(--modern-font-family);
+  color: var(--modern-gray-800);
+}
+
+/* ============================================================================
+   COMPONENTES DO EDITOR
+   ============================================================================ */
+
+.component-card {
+  transition: all var(--modern-transition-fast);
+  position: relative;
+}
+
+.component-card:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--modern-shadow-md);
+}
+
+.component-card--selected {
+  box-shadow: 0 0 0 2px var(--modern-primary);
+}
+
+.sortable-component {
+  margin: 0;
+}
+
+/* ============================================================================
+   PALETA DE COMPONENTES
+   ============================================================================ */
+
+.component-palette {
+  height: 100vh;
+  overflow-y: auto;
+  border-right: 1px solid var(--modern-gray-200);
+}
+
+.component-palette-item {
+  transition: all var(--modern-transition-fast);
+}
+
+.component-palette-item:hover {
+  background: var(--modern-gray-100) !important;
+  transform: translateX(4px);
+}
+
+/* ============================================================================
+   DRAG AND DROP
+   ============================================================================ */
+
+.sortable-component [data-testid="drag-handle"] {
+  cursor: grab;
+}
+
+.sortable-component [data-testid="drag-handle"]:active {
+  cursor: grabbing;
+}
+
+/* Estado de drag ativo */
+.sortable-component.dragging {
+  opacity: 0.5;
+  transform: rotate(5deg);
+}
+
+/* Área de drop */
+.drop-zone {
+  min-height: 100px;
+  border: 2px dashed var(--modern-gray-300);
+  border-radius: var(--modern-radius-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--modern-gray-500);
+  transition: all var(--modern-transition-normal);
+}
+
+.drop-zone--active {
+  border-color: var(--modern-primary);
+  background: rgba(0, 144, 255, 0.05);
+  color: var(--modern-primary);
+}
+
+/* ============================================================================
+   RESPONSIVIDADE
+   ============================================================================ */
+
+@media (max-width: 1024px) {
+  .component-palette {
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 1000;
+    box-shadow: var(--modern-shadow-xl);
+  }
+  
+  .component-palette[data-closed="true"] {
+    transform: translateX(-100%);
+  }
+}
+
+@media (max-width: 768px) {
+  .modern-modular-editor .modern-container {
+    padding: 0;
+  }
+  
+  .component-card {
+    padding: var(--modern-space-sm);
+  }
+  
+  .component-palette {
+    width: 100% !important;
+  }
+}
+
+/* ============================================================================
+   ANIMAÇÕES
+   ============================================================================ */
+
+@keyframes slideInFromLeft {
+  from {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideInFromRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.animate-slide-in-left {
+  animation: slideInFromLeft 0.3s ease;
+}
+
+.animate-slide-in-right {
+  animation: slideInFromRight 0.3s ease;
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.3s ease;
+}
+
+/* ============================================================================
+   SCROLLBAR CUSTOMIZADA
+   ============================================================================ */
+
+.component-palette::-webkit-scrollbar {
+  width: 6px;
+}
+
+.component-palette::-webkit-scrollbar-track {
+  background: var(--modern-gray-100);
+}
+
+.component-palette::-webkit-scrollbar-thumb {
+  background: var(--modern-gray-300);
+  border-radius: 3px;
+}
+
+.component-palette::-webkit-scrollbar-thumb:hover {
+  background: var(--modern-gray-400);
+}
+
+/* ============================================================================
+   ESTADOS DE LOADING E FEEDBACK
+   ============================================================================ */
+
+.editor-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  color: var(--modern-gray-500);
+}
+
+.editor-loading .modern-spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid var(--modern-gray-300);
+  border-top: 3px solid var(--modern-primary);
+}
+
+.editor-empty-state {
+  text-align: center;
+  padding: var(--modern-space-xl);
+  color: var(--modern-gray-500);
+}
+
+.editor-empty-state h3 {
+  margin-bottom: var(--modern-space-md);
+  color: var(--modern-gray-600);
+}
+
+/* ============================================================================
+   FEEDBACK VISUAL
+   ============================================================================ */
+
+.component-added {
+  animation: fadeInUp 0.5s ease;
+}
+
+.component-removed {
+  animation: slideOutRight 0.3s ease;
+}
+
+@keyframes slideOutRight {
+  to {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+/* Highlight para novos componentes */
+.component-highlight {
+  box-shadow: 0 0 20px rgba(0, 144, 255, 0.3);
+  animation: highlight-pulse 1s ease;
+}
+
+@keyframes highlight-pulse {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(0, 144, 255, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(0, 144, 255, 0.5);
+  }
+}
