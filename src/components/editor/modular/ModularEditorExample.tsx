@@ -15,6 +15,7 @@ interface ModularEditorExampleProps {
 // Exemplo de funil com etapas modulares
 export const exampleFunnel: ModularQuizFunnel = {
     id: 'funnel_exemplo',
+    name: 'Quiz Modular de Exemplo',
     title: 'Quiz Modular de Exemplo',
     description: 'Demonstração do sistema modular',
     steps: [
@@ -186,12 +187,11 @@ export const exampleFunnel: ModularQuizFunnel = {
         collectEmail: false,
         collectName: false,
     },
-    metadata: {
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-        version: '1.0.0',
-        createdBy: 'sistema_modular',
-    },
+    status: 'draft',
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    createdBy: 'sistema_modular',
+    version: 1,
 };
 
 export const ModularEditorExample: React.FC<ModularEditorExampleProps> = ({ funnelId }) => {
