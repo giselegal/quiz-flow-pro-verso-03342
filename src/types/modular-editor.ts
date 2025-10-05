@@ -211,8 +211,18 @@ export interface QuizOption {
     isCorrect?: boolean;
 }
 
-// Union type para todos os componentes
-export type ModularComponent =
+// Interface base para todos os componentes modulares
+export interface ModularComponent {
+    id: string;
+    type: ComponentType;  
+    props: Record<string, any>;
+    style?: ComponentStyle;
+    validation?: ComponentValidation;
+    order?: number;
+}
+
+// Union type para props específicos dos componentes
+export type ComponentProps =
     | HeaderBlockProps
     | TitleBlockProps
     | TextBlockProps

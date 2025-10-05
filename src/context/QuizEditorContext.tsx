@@ -487,7 +487,7 @@ export const QuizEditorProvider: React.FC<QuizEditorProviderProps> = ({
         const duplicatedComponent: ModularComponent = {
             ...originalComponent,
             id: `comp-${Date.now()}`,
-            order: originalComponent.order + 1,
+            order: (originalComponent.order || 0) + 1,
         };
 
         dispatch({
