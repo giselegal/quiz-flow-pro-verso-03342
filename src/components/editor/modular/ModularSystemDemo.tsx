@@ -65,15 +65,12 @@ const exampleFunnel: ModularQuizFunnel = {
             secondaryColor: '#64748b',
             fontFamily: 'Inter',
             colors: {
-                background: '#ffffff',
-
-                text: '#1e293b',
-
-                accent: '#3b82f6',
-                success: '#10b981',
-                warning: '#f59e0b',
-                error: '#ef4444',
-            },
+        primary: '#0090ff',
+        secondary: '#64748b',
+        accent: '#3b82f6',
+        background: '#ffffff',
+        text: '#1e293b',
+      },
             fonts: {
                 heading: 'Inter',
                 body: 'Inter',
