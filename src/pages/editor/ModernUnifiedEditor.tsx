@@ -1,6 +1,7 @@
 // =============================================================
-// ModernUnifiedEditor - Editor WYSIWYG Unificado
-// Renderiza QuizFunnelEditorWYSIWYG integrado com sistema UnifiedCRUD
+// ModernUnifiedEditor - Editor WYSIWYG Unificado (VERSÃO ATUAL ESTÁVEL)
+// Renderiza QuizFunnelEditorWYSIWYG.legacy integrado com sistema UnifiedCRUD
+// Versão funcional atual com 4 colunas WYSIWYG
 // =============================================================
 import React, { Suspense } from 'react';
 import { useUnifiedCRUDOptional } from '@/context/UnifiedCRUDProvider';
