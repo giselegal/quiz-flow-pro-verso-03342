@@ -328,7 +328,7 @@ const breakpoints = {
 };
 
 // Tema final
-export const editorTheme = extendTheme({
+export const editorTheme = createTheme({
     config,
     colors,
     fonts,
