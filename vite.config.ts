@@ -89,11 +89,6 @@ export default defineConfig({
       define: {
         global: 'globalThis',
       },
-      external: [
-        'chromium-bidi/lib/cjs/bidiMapper/BidiMapper',
-        'chromium-bidi/lib/cjs/cdp/CdpConnection',
-        'playwright-core'
-      ],
     },
     // Ignorar arquivos HTML de teste/debug na raiz
     entries: ['src/**/*.{tsx,ts,jsx,js}', 'index.html'],
