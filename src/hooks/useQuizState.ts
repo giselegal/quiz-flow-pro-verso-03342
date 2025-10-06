@@ -62,7 +62,7 @@ const initialUserProfile: UserProfile = {
 };
 
 const initialState: QuizState = {
-  currentStep: 'step-1',
+  currentStep: 'step-01',
   answers: {},
   scores: { ...initialScores },
   userProfile: { ...initialUserProfile },
@@ -71,28 +71,38 @@ const initialState: QuizState = {
 export function useQuizState(funnelId?: string, externalSteps?: Record<string, any>) {
   const [state, setState] = useState<QuizState>(initialState);
 
+  // Normalização de IDs para formato padded (step-01)
+  const normalizeStepId = useCallback((id: string): string => {
+    if (!id) return 'step-01';
+    const n = id.replace('step-', '');
+    return `step-${n.padStart(2, '0')}`;
+  }, []);
+
   // Navegar para próxima etapa
   const nextStep = useCallback((stepId?: string) => {
     setState(prev => {
-      const source = externalSteps || QUIZ_STEPS;
-      return {
-        ...prev,
-        currentStep: stepId || source[prev.currentStep]?.nextStep || prev.currentStep
-      };
+      // Se foi passado stepId diretamente, normalizar e usar
+      if (stepId) {
+        return { ...prev, currentStep: normalizeStepId(stepId) };
+      }
+
+      // Baseado em STEP_ORDER (independente de QUIZ_STEPS com outra nomenclatura)
+      const currentIndex = STEP_ORDER.map(normalizeStepId).indexOf(normalizeStepId(prev.currentStep));
+      const normalizedOrder = STEP_ORDER.map(normalizeStepId);
+      const next = normalizedOrder[currentIndex + 1] || normalizedOrder[currentIndex];
+      return { ...prev, currentStep: next };
     });
-  }, [externalSteps]);
+  }, [normalizeStepId]);
 
   // Navegar para etapa anterior
   const previousStep = useCallback(() => {
-    const currentIndex = STEP_ORDER.indexOf(state.currentStep);
+    const normalizedOrder = STEP_ORDER.map(normalizeStepId);
+    const currentIndex = normalizedOrder.indexOf(normalizeStepId(state.currentStep));
     if (currentIndex > 0) {
-      const prevStepId = STEP_ORDER[currentIndex - 1];
-      setState(prev => ({
-        ...prev,
-        currentStep: prevStepId
-      }));
+      const prevStepId = normalizedOrder[currentIndex - 1];
+      setState(prev => ({ ...prev, currentStep: prevStepId }));
     }
-  }, [state.currentStep]);
+  }, [state.currentStep, normalizeStepId]);
 
   // Definir nome do usuário
   const setUserName = useCallback((userName: string) => {

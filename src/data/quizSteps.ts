@@ -388,8 +388,8 @@ export const getNextStep = (currentStepId: string): string | undefined => {
 
 // Lista de IDs de etapas em ordem
 export const STEP_ORDER = [
-    'step-1', 'step-2', 'step-3', 'step-4', 'step-5', 'step-6', 'step-7',
-    'step-8', 'step-9', 'step-10', 'step-11', 'step-12', 'step-13', 'step-14',
+    'step-01', 'step-02', 'step-03', 'step-04', 'step-05', 'step-06', 'step-07',
+    'step-08', 'step-09', 'step-10', 'step-11', 'step-12', 'step-13', 'step-14',
     'step-15', 'step-16', 'step-17', 'step-18', 'step-19', 'step-20', 'step-21'
 ];
 
