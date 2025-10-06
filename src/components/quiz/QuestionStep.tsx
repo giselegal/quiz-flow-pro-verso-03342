@@ -17,9 +17,16 @@ export default function QuestionStep({
     currentAnswers,
     onAnswersChange
 }: QuestionStepProps) {
+    // Fallback defensivo: impedir TypeError se prop vier incorretamente definida
+    const safeOnAnswersChange: (answers: string[]) => void =
+        typeof onAnswersChange === 'function' ? onAnswersChange : () => {
+            if (process.env.NODE_ENV === 'development') {
+                console.warn('[QuestionStep] onAnswersChange ausente ou inválido – usando noop. Verifique adaptador/registry.');
+            }
+        };
     // Verificação de segurança para currentAnswers
     const safeCurrentAnswers = currentAnswers || [];
-    
+
     const hasImages = data.options?.[0]?.image;
     const gridClass = hasImages ? 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3' : 'grid-cols-1';
 
@@ -29,11 +36,11 @@ export default function QuestionStep({
         if (isSelected) {
             // Remove seleção
             const newAnswers = safeCurrentAnswers.filter(id => id !== optionId);
-            onAnswersChange(newAnswers);
+            safeOnAnswersChange(newAnswers);
         } else if (safeCurrentAnswers.length < (data.requiredSelections || 1)) {
             // Adiciona seleção se não atingiu o limite
             const newAnswers = [...safeCurrentAnswers, optionId];
-            onAnswersChange(newAnswers);
+            safeOnAnswersChange(newAnswers);
         }
     };
 
