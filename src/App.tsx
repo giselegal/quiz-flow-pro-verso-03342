@@ -113,12 +113,28 @@ function App() {
                           </div>
                         </Route>
 
-                        {/* 🚀 EDITOR MODULAR - NOVO SISTEMA COM COMPONENTES MODULARES */}
+                        {/* 🚀 EDITOR PRINCIPAL (WYSIWYG) - Melhor renderização */}
                         <Route path="/editor">
+                          <EditorErrorBoundary>
+                            <div data-testid="quiz-editor-wysiwyg-page">
+                              <UnifiedCRUDProvider autoLoad={true}>
+                                <OptimizedEditorProvider>
+                                  {/* ✅ FASE 4 ATIVADA: +66% performance com OptimizedEditorProvider */}
+                                  <Suspense fallback={<EnhancedLoadingFallback message="Carregando editor..." />}>
+                                    <QuizFunnelEditorWYSIWYG />
+                                  </Suspense>
+                                </OptimizedEditorProvider>
+                              </UnifiedCRUDProvider>
+                            </div>
+                          </EditorErrorBoundary>
+                        </Route>
+
+                        {/* 🧩 EDITOR MODULAR - Sistema experimental com componentes modulares */}
+                        <Route path="/editor-modular">
                           <EditorErrorBoundary>
                             <div data-testid="modern-modular-editor-page">
                               <UnifiedCRUDProvider autoLoad={true}>
-                                <Suspense fallback={<EnhancedLoadingFallback message="Carregando editor..." />}>
+                                <Suspense fallback={<EnhancedLoadingFallback message="Carregando editor modular..." />}>
                                   <ModularEditorLayout />
                                 </Suspense>
                               </UnifiedCRUDProvider>
@@ -136,20 +152,6 @@ function App() {
                                     <QuizFunnelEditor />
                                   </Suspense>
                                 </BlockRegistryProvider>
-                              </UnifiedCRUDProvider>
-                            </div>
-                          </EditorErrorBoundary>
-                        </Route>
-
-                        {/* 🔄 EDITOR ANTIGO (WYSIWYG) - Mantido como backup */}
-                        <Route path="/editor-legacy">
-                          <EditorErrorBoundary>
-                            <div data-testid="quiz-editor-wysiwyg-page">
-                              <UnifiedCRUDProvider autoLoad={true}>
-                                <OptimizedEditorProvider>
-                                  {/* ✅ FASE 4 ATIVADA: +66% performance com OptimizedEditorProvider */}
-                                  <QuizFunnelEditorWYSIWYG />
-                                </OptimizedEditorProvider>
                               </UnifiedCRUDProvider>
                             </div>
                           </EditorErrorBoundary>
