@@ -244,12 +244,6 @@ const QuizFunnelEditor: React.FC<QuizFunnelEditorProps> = ({ funnelId, templateI
     const [steps, setSteps] = useState<EditableQuizStep[]>([]);
     const [selectedId, setSelectedId] = useState<string>('');
     const [isInitialized, setIsInitialized] = useState(false); // Flag para evitar re-carregamento
-
-    // DEBUG: Monitorar mudanças no selectedId
-    useEffect(() => {
-        console.log('🔴 selectedId mudou para:', selectedId);
-    }, [selectedId]);
-
     const [isSaving, setIsSaving] = useState(false);
     const [previewSelections, setPreviewSelections] = useState<Record<string, string[]>>({});
     // Undo/Redo stacks
@@ -588,30 +582,22 @@ const QuizFunnelEditor: React.FC<QuizFunnelEditorProps> = ({ funnelId, templateI
 
     // Carregar steps iniciais (APENAS UMA VEZ)
     useEffect(() => {
-        if (isInitialized) {
-            console.log('⏭️ Pulando re-carregamento - já inicializado');
-            return;
-        }
+        if (isInitialized) return;
         
-        console.log('🟡 useEffect carregar steps - PRIMEIRA VEZ');
         // Se funil tiver quizSteps, usar; caso contrário montar de QUIZ_STEPS
         const existing = (crud.currentFunnel as any)?.quizSteps as EditableQuizStep[] | undefined;
         if (existing && existing.length) {
-            console.log('✅ Carregando', existing.length, 'steps do currentFunnel');
             setSteps(existing.map(s => ({ ...s })));
             setSelectedId(existing[0].id);
             setIsInitialized(true);
             return;
         }
         // Converter QUIZ_STEPS (Record) para array
-        console.log('⚠️ Carregando steps de QUIZ_STEPS (fallback)');
         const conv: EditableQuizStep[] = Object.entries(QUIZ_STEPS).map(([id, step]) => ({ id, ...step }));
         setSteps(conv);
         if (conv.length) setSelectedId(conv[0].id);
         setIsInitialized(true);
-    }, [crud.currentFunnel, isInitialized]);
-
-    const selectedStep = useMemo(() => steps.find(s => s.id === selectedId), [steps, selectedId]);
+    }, [crud.currentFunnel, isInitialized]);    const selectedStep = useMemo(() => steps.find(s => s.id === selectedId), [steps, selectedId]);
 
     // Auto inicialização de blocos para tipos suportados se ainda não houver
     useEffect(() => {
