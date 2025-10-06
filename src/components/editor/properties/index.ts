@@ -26,3 +26,41 @@ export type {
   PropertyEditorRegistry,
   PropertyInputProps,
 } from './interfaces/PropertyEditor';
+
+// ============================================================
+// 🆕 SISTEMA MODULAR DE PAINÉIS (FASE 2)
+// ============================================================
+
+// Registry
+export { PropertiesPanelRegistry, createPanelDefinition } from './PropertiesPanelRegistry';
+export type { PropertiesPanelProps, PropertiesPanelDefinition } from './PropertiesPanelRegistry';
+
+// Painel Orquestrador
+export { DynamicPropertiesPanel } from './DynamicPropertiesPanel';
+export type { DynamicPropertiesPanelProps } from './DynamicPropertiesPanel';
+
+// Painéis Modulares Individuais
+export { 
+    QuestionPropertiesPanel, 
+    QuestionPropertiesPanelDefinition, 
+    StrategicQuestionPropertiesPanelDefinition 
+} from './QuestionPropertiesPanel';
+
+export { 
+    ResultPropertiesPanel, 
+    ResultPropertiesPanelDefinition, 
+    TransitionResultPropertiesPanelDefinition 
+} from './ResultPropertiesPanel';
+
+export { 
+    OfferPropertiesPanel, 
+    OfferPropertiesPanelDefinition 
+} from './OfferPropertiesPanel';
+
+export { 
+    CommonPropertiesPanel, 
+    CommonPropertiesPanelDefinition, 
+    IntroPropertiesPanelDefinition, 
+    TransitionPropertiesPanelDefinition 
+} from './CommonPropertiesPanel';
+
