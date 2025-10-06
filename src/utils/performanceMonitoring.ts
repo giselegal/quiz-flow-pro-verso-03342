@@ -317,14 +317,19 @@ class PerformanceMonitor {
 
 // Hook para usar performance monitoring
 export const usePerformanceMonitoring = () => {
-  React.useEffect(() => {
-    const monitor = PerformanceMonitor.getInstance();
-    monitor.startMonitoring();
+  const [metrics, setMetrics] = React.useState<PerformanceMetrics>({
+    fps: 0,
+    memoryUsage: 0,
+    loadTime: 0,
+    bundleSize: 0,
+    renderTime: 0,
+    interactionTime: 0,
+  });
 
-    return () => monitor.stopMonitoring();
-  }, []);
-
-  return PerformanceMonitor.getInstance();
+  return metrics;
 };
+
+export { PerformanceMonitor };
+export default PerformanceMonitor;
 
 export default PerformanceMonitor;
