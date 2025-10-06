@@ -56,7 +56,8 @@ export class JsonMasterService {
             return data;
         } catch (error) {
             console.error('❌ [JsonMasterService] Erro ao carregar JSON:', error);
-            throw new Error(`Falha ao carregar quiz21-complete.json: ${error.message}`);
+            const errorMessage = error instanceof Error ? error.message : String(error);
+            throw new Error(`Falha ao carregar quiz21-complete.json: ${errorMessage}`);
         }
     }
 

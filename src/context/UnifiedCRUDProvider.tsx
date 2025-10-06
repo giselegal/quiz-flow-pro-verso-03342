@@ -5,7 +5,13 @@
  * - FunnelsProvider
  * - PureBuilderProvider  
  * - UnifiedFunnelProvider
- * - Integração com FunnelUnifiedService
+ * - Integração co                const funnel: UnifiedFunnelData = {
+                    id: masterData.metadata.id,
+                    name: masterData.metadata.name,
+                    description: masterData.metadata.description,
+                    category: masterData.metadata.category || 'quiz',
+                    context: FunnelContext.TEMPLATES,
+                    userId: 'master-template',lUnifiedService
  * - Cache inteligente e sincronização
  */
 
