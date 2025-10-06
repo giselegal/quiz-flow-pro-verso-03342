@@ -5,11 +5,13 @@
 // =============================================================
 import React, { useMemo, useEffect, useRef, useState } from 'react';
 import { QuizFunnelEditingFacade, type FunnelSnapshot } from '@/editor/facade/FunnelEditingFacade';
-import { resolveAdapter, applySnapshotAndPersist } from '@/editor/adapters/FunnelAdapterRegistry';
+import { resolveAdapter } from '@/editor/adapters/FunnelAdapterRegistry';
 import { useUnifiedCRUDOptional } from '@/context/UnifiedCRUDProvider';
 import { useFunnelPublication } from '@/hooks/useFunnelPublication';
 import '../../components/editor/quiz/QuizEditorStyles.css';
 import { FunnelFacadeContext, useFunnelFacade, useOptionalFunnelFacade } from '@/editor/facade/FunnelFacadeContext';
+import { FeatureFlagManager } from '@/utils/FeatureFlagManager';
+import QuizFunnelEditorWYSIWYG from '@/components/editor/quiz/QuizFunnelEditorWYSIWYG';
 
 export interface ModernUnifiedEditorProps {
     funnelId?: string;
@@ -38,13 +40,32 @@ const buildInitialSnapshot = (crud: ReturnType<typeof useUnifiedCRUDOptional>): 
 };
 
 const ModernUnifiedEditor: React.FC<ModernUnifiedEditorProps> = (props) => {
-    // 🎛️ CONTROLE DE EDITOR: true = EditableStepsEditor, false = StableModularEditor (estável)
-    const useAdvancedEditor = false; // ← Usando editor estável devido a problemas do Chakra UI
-
     const crud = useUnifiedCRUDOptional();
-    // Criar facade; recria se trocar de funil
+    const [flagsVersion, setFlagsVersion] = useState(0);
+
+    useEffect(() => {
+        const handleFlagUpdate = () => setFlagsVersion(prev => prev + 1);
+        const handleStorage = (event: StorageEvent) => {
+            if (!event.key || event.key.startsWith('flag_')) {
+                handleFlagUpdate();
+            }
+        };
+        window.addEventListener('feature-flags:update', handleFlagUpdate as EventListener);
+        window.addEventListener('storage', handleStorage);
+        return () => {
+            window.removeEventListener('feature-flags:update', handleFlagUpdate as EventListener);
+            window.removeEventListener('storage', handleStorage);
+        };
+    }, []);
+
+    const shouldUseFacadeEditor = useMemo(() => {
+        const manager = FeatureFlagManager.getInstance();
+        return manager.shouldForceUnifiedInEditor() || manager.shouldEnableUnifiedEditorFacade();
+    }, [flagsVersion]);
+
+    // Criar facade; recria se trocar de funil ou quando feature flag muda
     const facade = useMemo(() => {
-        if (!crud) return null;
+        if (!crud || !shouldUseFacadeEditor) return null;
         const { snapshot } = buildInitialSnapshot(crud);
         const persist = async (snap: FunnelSnapshot) => {
             if (!crud.currentFunnel) return;
@@ -74,12 +95,12 @@ const ModernUnifiedEditor: React.FC<ModernUnifiedEditorProps> = (props) => {
         };
         return base;
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [crud?.currentFunnel?.id]);
+    }, [crud?.currentFunnel?.id, shouldUseFacadeEditor]);
 
     // ================= Autosave & Logging Básico =================
     const autosaveTimerRef = useRef<number | null>(null);
     useEffect(() => {
-        if (!facade) return;
+        if (!facade || !shouldUseFacadeEditor) return;
         const dispose: Array<() => void> = [];
         const log = (label: string, payload: any) => {
             // Logs estruturados (podemos trocar depois por instrumentation real)
@@ -112,7 +133,7 @@ const ModernUnifiedEditor: React.FC<ModernUnifiedEditorProps> = (props) => {
             dispose.forEach(fn => fn());
             if (autosaveTimerRef.current) window.clearTimeout(autosaveTimerRef.current);
         };
-    }, [facade]);
+    }, [facade, shouldUseFacadeEditor]);
 
     return (
         <div className={`quiz-editor-container flex flex-col w-full h-full ${props.className || ''}`}>
@@ -121,19 +142,23 @@ const ModernUnifiedEditor: React.FC<ModernUnifiedEditorProps> = (props) => {
                     <div className="p-6 text-sm text-red-600" data-testid="missing-crud-provider">
                         ⚠️ UnifiedCRUDProvider ausente. Envolva <code>ModernUnifiedEditor</code> com <code>&lt;UnifiedCRUDProvider&gt;</code>.
                     </div>
-                ) : facade ? (
-                    <FunnelFacadeContext.Provider value={facade}>
-                        <QuizEditorProvider initialFunnel={exampleFunnel}>
-                            <BlockRegistryProvider definitions={[ResultHeadlineBlock, OfferCoreBlock, ResultSecondaryListBlock, OfferUrgencyBlock]}>
-                                <div data-testid="quiz-editor-modular-container">
-                                    {/* 🔧 EDITOR SIMPLES - SEM DEPENDÊNCIAS PROBLEMÁTICAS */}
-                                    <StableEditableStepsEditor />
-                                </div>
-                            </BlockRegistryProvider>
-                        </QuizEditorProvider>
-                    </FunnelFacadeContext.Provider>
+                ) : shouldUseFacadeEditor ? (
+                    facade ? (
+                        <FunnelFacadeContext.Provider value={facade}>
+                            <QuizFunnelEditorWYSIWYG funnelId={props.funnelId} templateId={props.templateId} />
+                        </FunnelFacadeContext.Provider>
+                    ) : (
+                        <div className="p-4 text-sm text-muted-foreground">Carregando editor unificado...</div>
+                    )
                 ) : (
-                    <div className="p-4 text-sm text-muted-foreground">Carregando editor...</div>
+                    <QuizEditorProvider initialFunnel={exampleFunnel}>
+                        <BlockRegistryProvider definitions={[ResultHeadlineBlock, OfferCoreBlock, ResultSecondaryListBlock, OfferUrgencyBlock]}>
+                            <div data-testid="quiz-editor-modular-container">
+                                {/* 🔧 EDITOR SIMPLES - SEM DEPENDÊNCIAS PROBLEMÁTICAS */}
+                                <StableEditableStepsEditor />
+                            </div>
+                        </BlockRegistryProvider>
+                    </QuizEditorProvider>
                 )}
             </div>
         </div>
