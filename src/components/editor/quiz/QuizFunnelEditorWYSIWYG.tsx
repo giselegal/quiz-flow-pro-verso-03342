@@ -420,7 +420,7 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
                 <Button size="sm" variant="outline" onClick={handleSave} disabled={isSaving}>
                     {isSaving ? 'Salvando...' : 'Salvar'}
                 </Button>
-                
+
                 {/* 🎯 NOVO: Toggle Blocos Modulares */}
                 <Button
                     size="sm"
@@ -430,7 +430,7 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
                 >
                     📦 Blocos {useModularBlocks ? 'ON' : 'OFF'}
                 </Button>
-                
+
                 <div className="ml-auto flex gap-2">
                     <Button
                         size="sm"
@@ -781,6 +781,45 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
                                     const isSelected = selectedId === step.id;
                                     const blockId = `step-${step.id}`;
 
+                                    // 🎯 NOVO: Usar blocos modulares se ativado
+                                    if (useModularBlocks) {
+                                        return (
+                                            <ModularCanvasRenderer
+                                                key={step.id}
+                                                step={step}
+                                                index={index}
+                                                totalSteps={steps.length}
+                                                isSelected={isSelected}
+                                                selectedBlockId={selectedBlockId}
+                                                isEditMode={previewMode === 'edit'}
+                                                onSelectStep={() => {
+                                                    setSelectedId(step.id);
+                                                    setSelectedBlockId(blockId);
+                                                }}
+                                                onSelectBlock={(blockId) => {
+                                                    setSelectedBlockId(blockId);
+                                                    setSelectedId(step.id);
+                                                }}
+                                                onUpdateBlock={(blockId, props) => {
+                                                    // TODO: implementar atualização de bloco individual
+                                                    console.log('Update block:', blockId, props);
+                                                }}
+                                                onReorderBlock={(blockId, direction) => {
+                                                    // TODO: implementar reordenação de bloco
+                                                    console.log('Reorder block:', blockId, direction);
+                                                }}
+                                                onMoveStep={(direction) => moveStep(step.id, direction)}
+                                                onDuplicateStep={() => duplicateStep(step.id)}
+                                                onDeleteStep={() => {
+                                                    if (confirm(`Remover step ${index + 1}?`)) {
+                                                        removeStep(step.id);
+                                                    }
+                                                }}
+                                            />
+                                        );
+                                    }
+
+                                    // 🔄 MODO ANTIGO: Renderização tradicional
                                     return (
                                         <div
                                             key={step.id}
