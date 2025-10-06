@@ -33,25 +33,25 @@ const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
     stepIndex,
     onClose
 }) => {
-    const { 
-        getBlock, 
-        updateBlock, 
-        deleteBlock, 
+    const {
+        getBlock,
+        updateBlock,
+        deleteBlock,
         duplicateBlock,
         moveBlockUp,
         moveBlockDown,
         getBlockIndex,
         blocks
     } = useStepBlocks(stepIndex);
-    
+
     const [localValues, setLocalValues] = useState<Record<string, any>>({});
     const [hasChanges, setHasChanges] = useState(false);
-    
+
     // Obter bloco atual
     const block = blockId ? getBlock(blockId) : null;
     const definition = block ? getBlockDefinition(block.type) : null;
     const blockIndex = blockId ? getBlockIndex(blockId) : -1;
-    
+
     // Inicializar valores locais quando bloco muda
     useEffect(() => {
         if (block) {
@@ -62,16 +62,16 @@ const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
             setHasChanges(false);
         }
     }, [block?.id]);
-    
+
     // Debounced update
     useEffect(() => {
         if (!hasChanges || !blockId) return;
-        
+
         const timer = setTimeout(() => {
             // Separar content e properties
             const content: Record<string, any> = {};
             const properties: Record<string, any> = {};
-            
+
             Object.entries(localValues).forEach(([key, value]) => {
                 // Se está nas defaultProps.content, vai para content
                 if (definition?.defaultProps.content && key in definition.defaultProps.content) {
@@ -80,18 +80,18 @@ const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
                     properties[key] = value;
                 }
             });
-            
+
             updateBlock(blockId, {
                 content: Object.keys(content).length > 0 ? content : undefined,
                 properties: Object.keys(properties).length > 0 ? properties : undefined
             });
-            
+
             setHasChanges(false);
         }, 300);
-        
+
         return () => clearTimeout(timer);
     }, [localValues, hasChanges, blockId, updateBlock, definition]);
-    
+
     // Handler genérico de mudança
     const handleChange = useCallback((key: string, value: any) => {
         setLocalValues(prev => ({
@@ -100,7 +100,7 @@ const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
         }));
         setHasChanges(true);
     }, []);
-    
+
     // Ações
     const handleDelete = useCallback(() => {
         if (!blockId) return;
@@ -109,29 +109,29 @@ const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
             onClose?.();
         }
     }, [blockId, deleteBlock, onClose]);
-    
+
     const handleDuplicate = useCallback(() => {
         if (!blockId) return;
         duplicateBlock(blockId);
     }, [blockId, duplicateBlock]);
-    
+
     const handleMoveUp = useCallback(() => {
         if (!blockId) return;
         moveBlockUp(blockId);
     }, [blockId, moveBlockUp]);
-    
+
     const handleMoveDown = useCallback(() => {
         if (!blockId) return;
         moveBlockDown(blockId);
     }, [blockId, moveBlockDown]);
-    
+
     // ========================================================================
     // RENDER FIELD - Gera campo baseado no tipo
     // ========================================================================
-    
+
     const renderField = (key: string, value: any, type?: string) => {
         const currentValue = localValues[key] ?? value;
-        
+
         // Detectar tipo automaticamente se não especificado
         if (!type) {
             if (typeof value === 'boolean') type = 'boolean';
@@ -141,9 +141,9 @@ const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
             else if (typeof value === 'string' && value.length > 50) type = 'textarea';
             else type = 'text';
         }
-        
+
         const label = key.charAt(0).toUpperCase() + key.slice(1).replace(/([A-Z])/g, ' $1');
-        
+
         switch (type) {
             case 'boolean':
                 return (
@@ -158,7 +158,7 @@ const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
                         />
                     </div>
                 );
-            
+
             case 'number':
                 return (
                     <div key={key} className="space-y-1">
@@ -172,7 +172,7 @@ const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
                         />
                     </div>
                 );
-            
+
             case 'color':
                 return (
                     <div key={key} className="space-y-1">
@@ -195,7 +195,7 @@ const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
                         </div>
                     </div>
                 );
-            
+
             case 'textarea':
             case 'html':
                 return (
@@ -210,11 +210,11 @@ const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
                         />
                     </div>
                 );
-            
+
             case 'select':
                 // TODO: Adicionar opções customizadas
                 return null;
-            
+
             default: // text
                 return (
                     <div key={key} className="space-y-1">
@@ -230,11 +230,11 @@ const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
                 );
         }
     };
-    
+
     // ========================================================================
     // EMPTY STATE
     // ========================================================================
-    
+
     if (!blockId || !block) {
         return (
             <div className="w-80 border-l bg-gray-50 flex items-center justify-center">
@@ -246,7 +246,7 @@ const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
             </div>
         );
     }
-    
+
     if (!definition) {
         return (
             <div className="w-80 border-l bg-gray-50 flex items-center justify-center">
@@ -258,11 +258,11 @@ const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
             </div>
         );
     }
-    
+
     // ========================================================================
     // RENDER PANEL
     // ========================================================================
-    
+
     return (
         <div className="w-80 border-l bg-white flex flex-col h-full">
             {/* Header */}
@@ -287,7 +287,7 @@ const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
                         </Button>
                     )}
                 </div>
-                
+
                 <div className="flex items-center gap-2 mt-2">
                     <Badge variant="outline" className="text-xs">
                         {block.type}
@@ -300,7 +300,7 @@ const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
                     )}
                 </div>
             </div>
-            
+
             {/* Content - Scrollable */}
             <ScrollArea className="flex-1">
                 <div className="p-4 space-y-4">
@@ -312,13 +312,13 @@ const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
                                 <span className="text-xs font-medium text-gray-500 uppercase">Conteúdo</span>
                                 <div className="h-px flex-1 bg-gray-200" />
                             </div>
-                            
+
                             {Object.entries(definition.defaultProps.content).map(([key, value]) =>
                                 renderField(key, value)
                             )}
                         </div>
                     )}
-                    
+
                     {/* Style Properties */}
                     {definition.defaultProps.properties && Object.keys(definition.defaultProps.properties).length > 0 && (
                         <div className="space-y-3">
@@ -327,13 +327,13 @@ const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
                                 <span className="text-xs font-medium text-gray-500 uppercase">Estilo</span>
                                 <div className="h-px flex-1 bg-gray-200" />
                             </div>
-                            
+
                             {Object.entries(definition.defaultProps.properties).map(([key, value]) =>
                                 renderField(key, value)
                             )}
                         </div>
                     )}
-                    
+
                     {/* Debug Info (dev only) */}
                     {import.meta.env.DEV && (
                         <div className="pt-4 border-t">
@@ -349,7 +349,7 @@ const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
                     )}
                 </div>
             </ScrollArea>
-            
+
             {/* Actions - Footer */}
             <div className="p-4 border-t bg-gray-50 space-y-2">
                 {/* Move Buttons */}
@@ -375,9 +375,9 @@ const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
                         Descer
                     </Button>
                 </div>
-                
+
                 <Separator />
-                
+
                 {/* Action Buttons */}
                 <div className="flex gap-2">
                     <Button
@@ -399,7 +399,7 @@ const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
                         Deletar
                     </Button>
                 </div>
-                
+
                 {/* Info */}
                 <p className="text-[10px] text-gray-400 text-center mt-2">
                     Posição: {blockIndex + 1} de {blocks.length}
