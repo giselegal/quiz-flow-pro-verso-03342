@@ -933,4 +933,7 @@ export const SmartComponentWrapper: React.FC<{
     return SmartComponentFactory.create(type, props);
 };
 
+// Alias for backwards compatibility
+export const SmartComponentLibrary = SmartComponentFactory;
+
 export default SmartComponentFactory;
