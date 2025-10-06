@@ -13,6 +13,8 @@ import React, { createContext, useContext, useCallback, useEffect, useState } fr
 import { funnelUnifiedService, UnifiedFunnelData } from '@/services/FunnelUnifiedService';
 import { enhancedFunnelService } from '@/services/EnhancedFunnelService';
 import { normalizeFunnelId } from '@/utils/funnelNormalizer';
+import { jsonMasterService } from '@/services/JsonMasterService';
+import { FunnelContext } from '@/core/contexts/FunnelContext';
 
 // ============================================================================
 // TYPES & INTERFACES
@@ -175,7 +177,45 @@ export const UnifiedCRUDProvider: React.FC<UnifiedCRUDProviderProps> = ({
         try {
             if (debug) console.log('📂 UnifiedCRUDProvider: Loading funnel', id);
 
-            // ✅ NORMALIZAR ID ANTES DE BUSCAR
+            // 🎯 CASO ESPECIAL: Quiz 21 Steps usa JSON MASTER!
+            if (id === 'quiz21StepsComplete' || id === 'quiz21-steps-complete') {
+                console.log('🎯 [UnifiedCRUDProvider] Carregando do JSON MASTER!');
+
+                const masterData = await jsonMasterService.loadQuiz21Steps();
+
+                // Converter JSON master para UnifiedFunnelData
+                const funnel: UnifiedFunnelData = {
+                    id: masterData.metadata.id,
+                    name: masterData.metadata.name,
+                    description: masterData.metadata.description,
+                    category: masterData.metadata.category || 'quiz',
+                    context: FunnelContext.QUIZ,
+                    userId: 'json-master-template',
+                    settings: masterData.globalConfig || {},
+                    pages: [],
+                    quizSteps: masterData.steps || [],
+                    isPublished: true,
+                    version: 1,
+                    createdAt: new Date(masterData.metadata.createdAt || Date.now()),
+                    updatedAt: new Date(masterData.metadata.updatedAt || Date.now()),
+                    templateId: masterData.metadata.id,
+                    isFromTemplate: true
+                };
+
+                console.log('✅ [UnifiedCRUDProvider] JSON Master carregado:', {
+                    id: funnel.id,
+                    name: funnel.name,
+                    stepCount: funnel.quizSteps?.length,
+                    size: JSON.stringify(masterData).length + ' bytes'
+                });
+
+                const normalizedFunnel = ensureQuizSteps(funnel) || funnel;
+                setCurrentFunnel(normalizedFunnel);
+                setIsLoading(false);
+                return;
+            }
+
+            // ✅ NORMALIZAR ID ANTES DE BUSCAR (outros funis)
             const normalized = normalizeFunnelId(id);
             const searchId = normalized.baseId;
 
