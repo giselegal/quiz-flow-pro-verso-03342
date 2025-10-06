@@ -11,7 +11,7 @@ import {
     Image,
     IconButton,
     Progress,
-    // useTheme, // Temporariamente comentado - não disponível na versão atual
+    // useTheme, // Não disponível na versão atual - usando tema customizado
 } from '@chakra-ui/react';
 // import { ArrowBackIcon } from '@chakra-ui/icons'; // Temporariamente comentado
 import { HeaderBlockProps } from '@/types/modular-editor';
@@ -43,7 +43,19 @@ export const ModularHeader: React.FC<ModularHeaderProps> = ({
     onSelect,
     style,
 }) => {
-    // const theme = useTheme(); // Temporariamente comentado
+    // const theme = useTheme(); // Substituído por tema customizado
+    const customTheme = {
+        colors: {
+            primary: '#4299e1',
+            secondary: '#ed8936',
+            gray: {
+                50: '#f7fafc',
+                100: '#edf2f7',
+                200: '#e2e8f0',
+                500: '#718096'
+            }
+        }
+    };
 
     const progressPercentage = totalSteps > 0 ? (currentStep / totalSteps) * 100 : 0;
 

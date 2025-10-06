@@ -25,7 +25,7 @@ import { QuizEditorProvider } from '@/context/QuizEditorContext';
 // ✅ NOVO: Editor com componentes editáveis modulares
 import EditableStepsEditor from '../../components/editor/modular/EditableStepsEditor';
 // 🔧 STABLE: Editor estável sem dependências externas problemáticas
-import StableModularEditor from '../../components/editor/modular/StableModularEditor';
+import StableEditableStepsEditor from '../../components/editor/modular/StableEditableStepsEditor';
 
 
 // ============================================
@@ -136,7 +136,7 @@ const ModernUnifiedEditor: React.FC<ModernUnifiedEditorProps> = (props) => {
                             <BlockRegistryProvider definitions={[ResultHeadlineBlock, OfferCoreBlock, ResultSecondaryListBlock, OfferUrgencyBlock]}>
                                 <div data-testid="quiz-editor-modular-container">
                                     {/* 🔧 EDITOR SIMPLES - SEM DEPENDÊNCIAS PROBLEMÁTICAS */}
-                                    <StableModularEditor />
+                                    <StableEditableStepsEditor />
                                 </div>
                             </BlockRegistryProvider>
                         </QuizEditorProvider>

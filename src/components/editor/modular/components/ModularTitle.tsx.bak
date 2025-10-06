@@ -9,8 +9,10 @@ import {
     Box,
     Heading,
     Input,
-    // useTheme, // Temporariamente comentado - não disponível na versão atual
-    Editable,
+    Heading,
+    useTheme,
+} from '@chakra-ui/react';
+Editable,
     EditableInput,
     EditablePreview,
 } from '@chakra-ui/react';
@@ -38,7 +40,19 @@ export const ModularTitle: React.FC<ModularTitleProps> = ({
     onUpdate,
     style,
 }) => {
-    // const theme = useTheme(); // Temporariamente comentado
+    // const theme = useTheme(); // Substituído por tema customizado
+    const customTheme = {
+        colors: {
+            primary: '#4299e1',
+            secondary: '#ed8936',
+            gray: {
+                50: '#f7fafc',
+                100: '#edf2f7',
+                200: '#e2e8f0',
+                500: '#718096'
+            }
+        }
+    };
     const [localText, setLocalText] = useState(text || "Título");
     const [isEditing, setIsEditing] = useState(false);
 
