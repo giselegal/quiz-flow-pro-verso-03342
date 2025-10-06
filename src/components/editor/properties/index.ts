@@ -36,7 +36,7 @@ export { PropertiesPanelRegistry, createPanelDefinition } from './PropertiesPane
 export type { PropertiesPanelProps, PropertiesPanelDefinition } from './PropertiesPanelRegistry';
 
 // Painel Orquestrador
-export { DynamicPropertiesPanel } from './DynamicPropertiesPanel';
+export { DynamicPropertiesPanel, default as DynamicPropertiesPanelDefault } from './DynamicPropertiesPanel';
 export type { DynamicPropertiesPanelProps } from './DynamicPropertiesPanel';
 
 // Painéis Modulares Individuais
