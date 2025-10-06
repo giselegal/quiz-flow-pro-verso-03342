@@ -640,7 +640,7 @@ export const COMPONENT_REGISTRY: Record<ComponentType, ComponentInfo> = {
         category: 'content',
         icon: '🏆',
         defaultProps: {
-            title: 'Parabéns, {userName}! Seu estilo predominante é:',
+            title: 'Seu estilo predominante é:',
             subtitle: 'Seu resultado foi calculado com base nas suas respostas, {userName}.',
             userName: 'João',
             resultStyle: 'Clássico Elegante',
@@ -656,6 +656,7 @@ export const COMPONENT_REGISTRY: Record<ComponentType, ComponentInfo> = {
             backgroundColor: '#fff8f0',
             textColor: '#432818',
             accentColor: '#B89B7A',
+            accentColorSecondary: '#A1835D',
             showEditableHint: true,
         },
     },

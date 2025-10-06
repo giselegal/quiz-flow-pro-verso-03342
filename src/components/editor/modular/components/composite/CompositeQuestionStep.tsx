@@ -75,14 +75,17 @@ const CompositeQuestionStep: React.FC<CompositeQuestionStepProps> = ({
         if (requiredSelections && requiredSelections > 1) {
             return `Selecione ${requiredSelections} opções (${selectedIds.length}/${requiredSelections})`;
         }
-        return `Selecione ${allowMultipleSelection ? 'uma opção' : 'uma opção'} (${selectedIds.length}/${allowMultipleSelection ? 1 : 1})`;
-    }, [requiredSelections, selectedIds.length, allowMultipleSelection]);
+        return `Selecione uma opção (${selectedIds.length}/1)`;
+    }, [requiredSelections, selectedIds.length]);
 
     const gridColumns = hasImages ? 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3' : 'grid-cols-1';
 
     return (
         <QuizEstiloWrapper showHeader={false} showProgress progress={progress} className="py-8">
-            <div className="bg-white p-6 md:p-12 rounded-lg shadow-lg text-center max-w-6xl mx-auto" style={{ backgroundColor }}>
+            <div
+                className="bg-white p-6 md:p-12 rounded-lg shadow-lg text-center max-w-6xl mx-auto"
+                style={{ backgroundColor }}
+            >
                 {questionNumber && (
                     <h2 className="text-xl md:text-2xl font-bold mb-4" style={{ color: textColor }}>
                         {questionNumber}
@@ -99,16 +102,17 @@ const CompositeQuestionStep: React.FC<CompositeQuestionStepProps> = ({
                     {questionText}
                 </p>
 
-                {(subtitle || requiredSelections) && (
-                    <p className="text-sm text-gray-600 mb-8">
-                        {subtitle || selectionText}
-                        {editableHint && (
-                            <span className="block text-blue-500 mt-1 text-xs">
-                                ✏️ Editável via Painel de Propriedades
-                            </span>
-                        )}
-                    </p>
-                )}
+                <p className="text-sm text-gray-600 mb-8">
+                    {subtitle || selectionText}
+                    {subtitle && (
+                        <span className="block text-xs text-gray-500 mt-1">{selectionText}</span>
+                    )}
+                    {editableHint && (
+                        <span className="block text-blue-500 mt-1 text-xs">
+                            ✏️ Editável via Painel de Propriedades
+                        </span>
+                    )}
+                </p>
 
                 <div className={`grid ${gridColumns} gap-6 mb-8 max-w-4xl mx-auto`}>
                     {options.map((option) => {
@@ -118,8 +122,8 @@ const CompositeQuestionStep: React.FC<CompositeQuestionStepProps> = ({
                                 key={option.id}
                                 onClick={() => handleOptionClick(option.id)}
                                 className={`flex flex-col items-center p-4 border-2 rounded-lg cursor-pointer transition-all duration-200 ${isSelected
-                                        ? 'border-[#5b4135] bg-gradient-to-br from-white to-[#f8f5f0] shadow-lg transform -translate-y-1'
-                                        : 'border-gray-200 hover:border-[#deac6d] hover:shadow-md'
+                                    ? 'border-[#5b4135] bg-gradient-to-br from-white to-[#f8f5f0] shadow-lg transform -translate-y-1'
+                                    : 'border-gray-200 hover:border-[#deac6d] hover:shadow-md'
                                     }`}
                             >
                                 {option.image && (
@@ -145,12 +149,10 @@ const CompositeQuestionStep: React.FC<CompositeQuestionStepProps> = ({
                 <button
                     disabled={!canProceed}
                     className={`font-bold py-3 px-6 rounded-full shadow-md transition-all ${canProceed
-                            ? 'text-white animate-pulse'
-                            : 'bg-[#e6ddd4] text-[#8a7663] opacity-50 cursor-not-allowed'
+                        ? 'bg-[#deac6d] text-white animate-pulse'
+                        : 'bg-[#e6ddd4] text-[#8a7663] opacity-50 cursor-not-allowed'
                         }`}
-                    style={{
-                        backgroundColor: canProceed ? accentColor : undefined,
-                    }}
+                    style={canProceed ? { backgroundColor: accentColor } : undefined}
                 >
                     {canProceed ? 'Avançando...' : 'Próxima'}
                 </button>

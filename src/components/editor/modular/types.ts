@@ -239,6 +239,7 @@ export interface StepResultComponentProps extends BaseComponentProps {
     backgroundColor?: string;
     textColor?: string;
     accentColor?: string;
+    accentColorSecondary?: string;
     showEditableHint?: boolean;
 }
 

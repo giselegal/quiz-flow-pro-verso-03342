@@ -63,8 +63,8 @@ const CompositeStrategicQuestionStep: React.FC<CompositeStrategicQuestionStepPro
                                 key={option.id}
                                 onClick={() => setSelectedId(option.id)}
                                 className={`p-4 border-2 rounded-lg transition-all duration-200 ${isSelected
-                                        ? 'border-[#5b4135] bg-gradient-to-br from-white to-[#f8f5f0] shadow-lg'
-                                        : 'border-gray-200 hover:border-[#deac6d] hover:shadow-md'
+                                    ? 'border-[#5b4135] bg-gradient-to-br from-white to-[#f8f5f0] shadow-lg'
+                                    : 'border-gray-200 hover:border-[#deac6d] hover:shadow-md'
                                     }`}
                                 style={{ color: textColor }}
                             >
@@ -84,10 +84,10 @@ const CompositeStrategicQuestionStep: React.FC<CompositeStrategicQuestionStepPro
                 <button
                     disabled={!selectedId}
                     className={`font-bold py-3 px-6 rounded-full shadow-md transition-all ${selectedId
-                            ? 'text-white'
-                            : 'bg-[#e6ddd4] text-[#8a7663] opacity-50 cursor-not-allowed'
+                        ? 'bg-[#deac6d] text-white hover:bg-[#c19a5d]'
+                        : 'bg-[#e6ddd4] text-[#8a7663] opacity-50 cursor-not-allowed'
                         }`}
-                    style={{ backgroundColor: selectedId ? accentColor : undefined }}
+                    style={selectedId ? { backgroundColor: accentColor } : undefined}
                 >
                     {selectedId ? 'Próxima' : 'Selecione uma opção'}
                 </button>

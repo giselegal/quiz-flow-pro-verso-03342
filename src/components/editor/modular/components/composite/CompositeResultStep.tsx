@@ -14,6 +14,7 @@ export interface CompositeResultStepProps {
     backgroundColor?: string;
     textColor?: string;
     accentColor?: string;
+    accentColorSecondary?: string;
     showEditableHint?: boolean;
 }
 
@@ -30,13 +31,17 @@ const CompositeResultStep: React.FC<CompositeResultStepProps> = ({
     backgroundColor = '#ffffff',
     textColor = '#432818',
     accentColor = '#B89B7A',
+    accentColorSecondary = '#A1835D',
     showEditableHint = false,
 }) => {
-    const headline = title.replace('{userName}', userName);
-    const subtitleText = (subtitle || '').replace('{userName}', userName);
+    const headline = `Parabéns, ${userName}!`;
+    const sectionTitle = title.replace('{userName}', userName).replace('{resultStyle}', resultStyle);
+    const subtitleText = subtitle?.replace('{userName}', userName).replace('{resultStyle}', resultStyle);
+    const resultText = (resultStyle || resultPlaceholder || '').replace('{userName}', userName);
+    const descriptionText = description?.replace('{userName}', userName).replace('{resultStyle}', resultStyle);
 
     return (
-        <QuizEstiloWrapper showHeader={false} showProgress={false} className="py-10">
+        <QuizEstiloWrapper showHeader={false} showProgress={false}>
             <div className="bg-white p-6 md:p-12 rounded-lg shadow-lg text-center max-w-4xl mx-auto" style={{ backgroundColor }}>
                 <h1
                     className="text-2xl md:text-3xl font-bold mb-2"
@@ -45,23 +50,27 @@ const CompositeResultStep: React.FC<CompositeResultStepProps> = ({
                     {headline}
                 </h1>
 
-                {subtitle && (
-                    <h2 className="text-lg mb-6" style={{ color: '#4a5568' }}>
+                <h2 className="text-lg text-gray-600 mb-6">
+                    {sectionTitle}
+                </h2>
+
+                {subtitleText && (
+                    <p className="text-sm text-gray-500 mb-4">
                         {subtitleText}
-                    </h2>
+                    </p>
                 )}
 
                 <div
-                    className="text-white p-6 rounded-lg shadow-lg mb-8"
+                    className="bg-gradient-to-br from-[#B89B7A] to-[#A1835D] text-white p-6 rounded-lg shadow-lg mb-8"
                     style={{
-                        background: `linear-gradient(135deg, ${accentColor}, ${accentColor}cc)`
+                        backgroundImage: `linear-gradient(135deg, ${accentColor}, ${accentColorSecondary})`,
                     }}
                 >
                     <h3
                         className="text-3xl md:text-4xl font-bold mb-4"
                         style={{ fontFamily: '"Playfair Display", serif' }}
                     >
-                        {resultStyle || resultPlaceholder}
+                        {resultText || resultPlaceholder}
                     </h3>
                 </div>
 
@@ -69,15 +78,15 @@ const CompositeResultStep: React.FC<CompositeResultStepProps> = ({
                     <div className="w-full max-w-sm mx-auto mb-6">
                         <img
                             src={image}
-                            alt={`Estilo ${resultStyle}`}
+                            alt={`Estilo ${resultText}`}
                             className="w-full h-auto rounded-lg shadow-sm"
                         />
                     </div>
                 )}
 
-                {description && (
+                {descriptionText && (
                     <p className="text-gray-700 mb-8 leading-relaxed text-lg">
-                        {description}
+                        {descriptionText}
                     </p>
                 )}
 
@@ -103,10 +112,8 @@ const CompositeResultStep: React.FC<CompositeResultStepProps> = ({
                 )}
 
                 <button
-                    className="text-white font-bold py-4 px-8 rounded-full shadow-lg transition-all duration-300 transform hover:scale-105"
-                    style={{
-                        background: `linear-gradient(135deg, ${accentColor}, ${accentColor}cc)`
-                    }}
+                    className="bg-[#B89B7A] hover:bg-[#A1835D] text-white font-bold py-4 px-8 rounded-full shadow-lg transition-all duration-300 transform hover:scale-105"
+                    style={{ backgroundColor: accentColor }}
                 >
                     {ctaText}
                 </button>
