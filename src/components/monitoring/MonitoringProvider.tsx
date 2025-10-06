@@ -44,27 +44,10 @@ export const MonitoringProvider: React.FC<MonitoringProviderProps> = ({
 
   const isHealthy = healthStatus?.status === 'healthy' || false;
 
-  useEffect(() => {
-    // Inicializar serviços
-    if (enableAnalytics) {
-      analyticsService.initialize();
-    }
-
-    // Configurar listeners
-    const handleHealthChange = (status: HealthStatus) => {
-      setHealthStatus(status);
-      
-      // Alertas críticos
-      if (enableAlerts && status.status === 'unhealthy') {
-        toast({
-          title: "⚠️ Sistema Crítico",
-          description: "Detectados problemas no sistema. Verificando...",
-          variant: "destructive"
-        });
-      }
-    };
-
-    const handleError = (error: ErrorReport) => {
+  // Mover handleError para useCallback para evitar setState durante render
+  const handleError = React.useCallback((error: ErrorReport) => {
+    // Usar setTimeout para evitar setState durante render
+    setTimeout(() => {
       setLastError(error);
       setErrorCount(prev => prev + 1);
 
@@ -76,7 +59,27 @@ export const MonitoringProvider: React.FC<MonitoringProviderProps> = ({
           variant: "destructive"
         });
       }
-    };
+    }, 0);
+  }, [enableAlerts, toast]);
+
+  const handleHealthChange = React.useCallback((status: HealthStatus) => {
+    setHealthStatus(status);
+    
+    // Alertas críticos
+    if (enableAlerts && status.status === 'unhealthy') {
+      toast({
+        title: "⚠️ Sistema Crítico",
+        description: "Detectados problemas no sistema. Verificando...",
+        variant: "destructive"
+      });
+    }
+  }, [enableAlerts, toast]);
+
+  useEffect(() => {
+    // Inicializar serviços
+    if (enableAnalytics) {
+      analyticsService.initialize();
+    }
 
     healthCheckService.onHealthChange(handleHealthChange);
     errorTrackingService.onError(handleError);
@@ -88,7 +91,7 @@ export const MonitoringProvider: React.FC<MonitoringProviderProps> = ({
       stopMonitoring();
       errorTrackingService.offError(handleError);
     };
-  }, [enableAlerts, enableAnalytics, toast]);
+  }, [enableAlerts, enableAnalytics, handleError, handleHealthChange]);
 
   const startMonitoring = () => {
     if (!isMonitoring) {

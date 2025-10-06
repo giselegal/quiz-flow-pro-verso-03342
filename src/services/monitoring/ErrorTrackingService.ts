@@ -182,6 +182,11 @@ class ErrorTrackingService {
    * Obter estatísticas de erro
    */
   getErrorStats(): ErrorStats {
+    // Verificação de segurança para evitar erro de length
+    if (!this.errors || !Array.isArray(this.errors)) {
+      this.errors = [];
+    }
+
     const byLevel = this.errors.reduce((acc, error) => {
       acc[error.level] = (acc[error.level] || 0) + 1;
       return acc;
@@ -224,6 +229,11 @@ class ErrorTrackingService {
     limit?: number;
     since?: Date;
   }): ErrorReport[] {
+    // Verificação de segurança para evitar erro de length
+    if (!this.errors || !Array.isArray(this.errors)) {
+      this.errors = [];
+    }
+
     let filtered = this.errors;
 
     if (filter?.level) {
@@ -287,9 +297,17 @@ class ErrorTrackingService {
    * Notificar callbacks
    */
   private notifyCallbacks(error: ErrorReport) {
+    // Verificação de segurança para evitar erro de length
+    if (!this.errorCallbacks || !Array.isArray(this.errorCallbacks)) {
+      this.errorCallbacks = [];
+      return;
+    }
+
     this.errorCallbacks.forEach(callback => {
       try {
-        callback(error);
+        if (typeof callback === 'function') {
+          callback(error);
+        }
       } catch (e) {
         console.error('Error in error callback:', e);
       }

@@ -17,24 +17,27 @@ export default function QuestionStep({
     currentAnswers,
     onAnswersChange
 }: QuestionStepProps) {
+    // Verificação de segurança para currentAnswers
+    const safeCurrentAnswers = currentAnswers || [];
+    
     const hasImages = data.options?.[0]?.image;
     const gridClass = hasImages ? 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3' : 'grid-cols-1';
 
     const handleOptionClick = (optionId: string) => {
-        const isSelected = currentAnswers.includes(optionId);
+        const isSelected = safeCurrentAnswers.includes(optionId);
 
         if (isSelected) {
             // Remove seleção
-            const newAnswers = currentAnswers.filter(id => id !== optionId);
+            const newAnswers = safeCurrentAnswers.filter(id => id !== optionId);
             onAnswersChange(newAnswers);
-        } else if (currentAnswers.length < (data.requiredSelections || 1)) {
+        } else if (safeCurrentAnswers.length < (data.requiredSelections || 1)) {
             // Adiciona seleção se não atingiu o limite
-            const newAnswers = [...currentAnswers, optionId];
+            const newAnswers = [...safeCurrentAnswers, optionId];
             onAnswersChange(newAnswers);
         }
     };
 
-    const canProceed = currentAnswers.length === (data.requiredSelections || 1);
+    const canProceed = safeCurrentAnswers.length === (data.requiredSelections || 1);
     const selectionText = data.requiredSelections && data.requiredSelections > 1
         ? `Selecione ${data.requiredSelections} opções`
         : 'Selecione uma opção';
@@ -50,7 +53,7 @@ export default function QuestionStep({
             </p>
 
             <p className="text-sm text-gray-600 mb-8">
-                {selectionText} ({currentAnswers.length}/{data.requiredSelections || 1})
+                {selectionText} ({safeCurrentAnswers.length}/{data.requiredSelections || 1})
             </p>
 
             <div className={`grid ${gridClass} gap-6 mb-8`}>
@@ -58,7 +61,7 @@ export default function QuestionStep({
                     <div
                         key={option.id}
                         onClick={() => handleOptionClick(option.id)}
-                        className={`flex flex-col items-center p-4 border-2 rounded-lg cursor-pointer transition-all duration-200 hover:border-[#deac6d] hover:shadow-md ${currentAnswers.includes(option.id)
+                        className={`flex flex-col items-center p-4 border-2 rounded-lg cursor-pointer transition-all duration-200 hover:border-[#deac6d] hover:shadow-md ${safeCurrentAnswers.includes(option.id)
                             ? 'border-[#5b4135] bg-gradient-to-br from-white to-[#f8f5f0] shadow-lg transform -translate-y-1'
                             : 'border-gray-200'
                             }`}
@@ -73,7 +76,7 @@ export default function QuestionStep({
                         <p className="text-center font-medium text-sm leading-relaxed">{option.text}</p>
 
                         {/* Indicador visual de seleção */}
-                        {currentAnswers.includes(option.id) && (
+                        {safeCurrentAnswers.includes(option.id) && (
                             <div className="mt-2 w-6 h-6 bg-[#deac6d] rounded-full flex items-center justify-center">
                                 <span className="text-white text-xs font-bold">✓</span>
                             </div>
