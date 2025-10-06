@@ -583,7 +583,7 @@ const QuizFunnelEditor: React.FC<QuizFunnelEditorProps> = ({ funnelId, templateI
     // Carregar steps iniciais (APENAS UMA VEZ)
     useEffect(() => {
         if (isInitialized) return;
-        
+
         // Se funil tiver quizSteps, usar; caso contrário montar de QUIZ_STEPS
         const existing = (crud.currentFunnel as any)?.quizSteps as EditableQuizStep[] | undefined;
         if (existing && existing.length) {
@@ -597,7 +597,7 @@ const QuizFunnelEditor: React.FC<QuizFunnelEditorProps> = ({ funnelId, templateI
         setSteps(conv);
         if (conv.length) setSelectedId(conv[0].id);
         setIsInitialized(true);
-    }, [crud.currentFunnel, isInitialized]);    const selectedStep = useMemo(() => steps.find(s => s.id === selectedId), [steps, selectedId]);
+    }, [crud.currentFunnel, isInitialized]); const selectedStep = useMemo(() => steps.find(s => s.id === selectedId), [steps, selectedId]);
 
     // Auto inicialização de blocos para tipos suportados se ainda não houver
     useEffect(() => {
@@ -1205,10 +1205,7 @@ const QuizFunnelEditor: React.FC<QuizFunnelEditorProps> = ({ funnelId, templateI
                                     const statusTitle = nStatus === 'ok' ? 'Fluxo OK' : nStatus === 'missing' ? 'nextStep ausente (pode impedir fluxo)' : 'nextStep inválido (ID não encontrado)';
                                     const orphan = isOrphan(s.id);
                                     return (
-                                        <div key={s.id} className={`px-3 py-2 border-b cursor-pointer group ${active ? 'bg-primary/10' : 'hover:bg-muted/50'}`} onClick={() => {
-                                            console.log('🔵 CLICK na etapa:', s.id, 'selectedId atual:', selectedId);
-                                            setSelectedId(s.id);
-                                        }}>
+                                        <div key={s.id} className={`px-3 py-2 border-b cursor-pointer group ${active ? 'bg-primary/10' : 'hover:bg-muted/50'}`} onClick={() => setSelectedId(s.id)}>
                                             <div className="flex items-center gap-2">
                                                 <span className="font-medium truncate">{idx + 1}. {s.type}</span>
                                                 <span className={`w-2 h-2 rounded-full ${statusColor}`} title={statusTitle} />
