@@ -24,6 +24,10 @@ import QuizPropertiesPanel from '@/components/editor/QuizPropertiesPanel';
 import DragDropManager from '@/components/editor/DragDropManager';
 import ModularCanvasRenderer from '@/editor/components/ModularCanvasRenderer';
 
+// 🚀 SISTEMA HÍBRIDO: Blocos modulares dentro de steps
+import { stepToBlocks } from '@/editor/utils/stepToBlocks';
+import { BlockRenderer } from '@/editor/components/BlockRenderer';
+
 interface QuizFunnelEditorProps {
     funnelId?: string;
     templateId?: string;
@@ -367,10 +371,11 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
 
 
     // 🚀 COMPONENTES DE PRODUÇÃO REAIS - Sistema Unificado
-    const renderRealComponent = (step: EditableQuizStep, index: number) => {
+    // 🚀 SISTEMA HÍBRIDO UNIFICADO - Blocos Visuais com Reordenação Independente
+    const renderHybridStep = (step: EditableQuizStep, index: number) => {
         const isEditMode = previewMode === 'edit';
-        const blockId = `step-${step.id}`;
-        const isSelected = selectedBlockId === blockId;
+        const stepBlockId = `step-${step.id}`;
+        const isStepSelected = selectedBlockId === stepBlockId;
 
         // 🎯 DADOS COMPLETOS DO FUNIL (mesmo formato do /quiz-estilo)
         const productionStepData = {
@@ -388,54 +393,163 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
             utm: step.utm || {}
         };
 
-        // 🎯 MAPEAMENTO DE COMPONENTES EDITÁVEIS (consumindo dados completos)
-        const EditableComponent = {
-            'intro': EditableIntroStep,
-            'question': EditableQuestionStep,
-            'strategic-question': EditableStrategicQuestionStep,
-            'transition': EditableTransitionStep,
-            'transition-result': EditableTransitionStep,
-            'result': EditableResultStep,
-            'offer': EditableOfferStep
-        }[step.type];
+        // 🎯 DECOMPOSIÇÃO EM BLOCOS MODULARES
+        const blocks = stepToBlocks(productionStepData);
 
-        if (!EditableComponent) {
-            return (
-                <div className="p-4 border-2 border-red-300 bg-red-50 rounded-lg">
-                    <div className="text-red-600 font-semibold">
-                        ⚠️ Tipo de step não suportado: {step.type}
-                    </div>
-                    <div className="text-red-500 text-sm mt-1">
-                        Componente não encontrado para este tipo de step.
-                    </div>
-                </div>
-            );
-        }
-
-        // 🎨 Props completas para o componente editável (com dados de produção)
-        const editableProps: EditableStepProps = {
-            data: productionStepData, // ✅ DADOS COMPLETOS DE PRODUÇÃO
-            isEditable: isEditMode,
-            isSelected: isSelected,
-            onUpdate: (updates) => updateStep(step.id, updates),
-            onSelect: () => {
-                setSelectedId(step.id);
-                setSelectedBlockId(blockId);
-            },
-            onPropertyClick: (propKey: string, element: HTMLElement) => {
-                handlePropertyClick(propKey, element, step.id);
-            },
-            onDuplicate: () => duplicateStep(step.id),
-            onDelete: () => removeStep(step.id),
-            onMoveUp: index > 0 ? () => moveStep(step.id, -1) : undefined,
-            onMoveDown: index < steps.length - 1 ? () => moveStep(step.id, 1) : undefined,
-            canMoveUp: index > 0,
-            canMoveDown: index < steps.length - 1,
-            canDelete: steps.length > 1,
-            blockId: blockId
+        // 🎨 HANDLERS PARA BLOCOS
+        const handleBlockSelect = (blockId: string) => {
+            setSelectedBlockId(blockId);
+            setSelectedId(step.id); // Garantir que o step também esteja selecionado
         };
 
-        return <EditableComponent {...editableProps} />;        // � DADOS COMPLETOS DO FUNIL (mesmo formato do /quiz-estilo)
+        const handleBlockUpdate = (blockId: string, updates: any) => {
+            // TODO: Implementar atualização individual de blocos
+            console.log('Atualizando bloco:', blockId, updates);
+        };
+
+        const handleBlockReorder = (blockId: string, direction: 'up' | 'down') => {
+            // TODO: Implementar reordenação de blocos dentro do step
+            console.log('Reordenando bloco:', blockId, direction);
+        };
+
+        return (
+            <div className="hybrid-step-container">
+                {/* Header do Step */}
+                <div className="flex items-center justify-between mb-3 p-2 bg-gray-50 rounded-t-lg border">
+                    <div className="flex items-center gap-2">
+                        <Badge variant="default" className="text-xs">
+                            Step {index + 1} / {steps.length}
+                        </Badge>
+                        <span className="text-sm font-semibold text-blue-700">
+                            {step.type.toUpperCase().replace('-', ' ')}
+                        </span>
+                    </div>
+                    
+                    {/* Controles do Step */}
+                    <div className="flex gap-1">
+                        <Button
+                            size="sm"
+                            variant="ghost"
+                            className="h-7 w-7 p-0"
+                            onClick={() => index > 0 && setSelectedId(steps[index - 1].id)}
+                            title="Step anterior"
+                            disabled={index === 0}
+                        >
+                            <ChevronLeft className="w-3 h-3" />
+                        </Button>
+                        <Button
+                            size="sm"
+                            variant="ghost"
+                            className="h-7 w-7 p-0"
+                            onClick={() => index < steps.length - 1 && setSelectedId(steps[index + 1].id)}
+                            title="Próximo step"
+                            disabled={index === steps.length - 1}
+                        >
+                            <ChevronRight className="w-3 h-3" />
+                        </Button>
+                        <Button
+                            size="sm"
+                            variant="ghost"
+                            className="h-7 w-7 p-0"
+                            onClick={() => duplicateStep(step.id)}
+                            title="Duplicar step"
+                        >
+                            <Copy className="w-3 h-3" />
+                        </Button>
+                        <Button
+                            size="sm"
+                            variant="ghost"
+                            className="h-7 w-7 p-0 text-red-500 hover:text-red-700"
+                            onClick={() => {
+                                if (confirm(`Remover step ${index + 1}?`)) {
+                                    removeStep(step.id);
+                                }
+                            }}
+                            title="Remover step"
+                            disabled={steps.length === 1}
+                        >
+                            <Trash2 className="w-3 h-3" />
+                        </Button>
+                    </div>
+                </div>
+
+                {/* Blocos Modulares do Step */}
+                <div className="step-blocks-container space-y-2">
+                    {blocks.map((block, blockIndex) => {
+                        const isBlockSelected = selectedBlockId === block.id;
+                        
+                        return (
+                            <div
+                                key={block.id}
+                                className={cn(
+                                    "block-section relative border rounded-lg p-3 bg-white transition-all duration-200 cursor-pointer group",
+                                    isBlockSelected 
+                                        ? "ring-2 ring-blue-500 bg-blue-50/30" 
+                                        : "border-gray-200 hover:border-blue-300"
+                                )}
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleBlockSelect(block.id);
+                                }}
+                            >
+                                {/* Label do Bloco */}
+                                <div className="flex items-center justify-between mb-2">
+                                    <div className="flex items-center gap-2">
+                                        <span className="text-xs text-gray-500">
+                                            {block.metadata?.icon} {block.metadata?.label}
+                                        </span>
+                                        <Badge variant="outline" className="text-[10px]">
+                                            {block.type}
+                                        </Badge>
+                                    </div>
+                                    
+                                    {/* Controles de Reordenação do Bloco */}
+                                    {isEditMode && (
+                                        <div className="opacity-0 group-hover:opacity-100 transition-opacity flex gap-1">
+                                            <Button
+                                                size="sm"
+                                                variant="ghost"
+                                                className="h-5 w-5 p-0 text-gray-400 hover:text-gray-600"
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    handleBlockReorder(block.id, 'up');
+                                                }}
+                                                title="Mover bloco para cima"
+                                                disabled={blockIndex === 0}
+                                            >
+                                                <ArrowUp className="w-3 h-3" />
+                                            </Button>
+                                            <Button
+                                                size="sm"
+                                                variant="ghost"
+                                                className="h-5 w-5 p-0 text-gray-400 hover:text-gray-600"
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    handleBlockReorder(block.id, 'down');
+                                                }}
+                                                title="Mover bloco para baixo"
+                                                disabled={blockIndex === blocks.length - 1}
+                                            >
+                                                <ArrowDown className="w-3 h-3" />
+                                            </Button>
+                                        </div>
+                                    )}
+                                </div>
+
+                                {/* Renderização do Bloco */}
+                                <BlockRenderer
+                                    block={block}
+                                    isEditable={isEditMode}
+                                    isSelected={isBlockSelected}
+                                    onUpdate={(updates) => handleBlockUpdate(block.id, updates)}
+                                />
+                            </div>
+                        );
+                    })}
+                </div>
+            </div>
+        );
+    };        // � DADOS COMPLETOS DO FUNIL (mesmo formato do /quiz-estilo)
         const productionStepData = {
             ...step,
             // Garantir que todas as configurações estejam presentes
@@ -887,7 +1001,7 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
                                                 selectedBlockId={selectedBlockId}
                                                 isEditMode={previewMode === 'edit'}
                                                 steps={steps} // Passar lista completa de steps
-                                                renderComponent={renderRealComponent} // Usar a mesma função do modo OFF
+                                                renderComponent={renderHybridStep} // Usar o sistema híbrido unificado
                                                 onSelectStep={() => {
                                                     setSelectedId(step.id);
                                                     setSelectedBlockId(blockId);
@@ -1007,9 +1121,9 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
                                                 </div>
                                             </div>
 
-                                            {/* Renderizar componente modular */}
+                                            {/* Renderizar sistema híbrido */}
                                             <div className="transition-opacity opacity-100">
-                                                {renderRealComponent(step, index)}
+                                                {renderHybridStep(step, index)}
                                             </div>
                                         </div>
                                     );
