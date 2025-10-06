@@ -424,7 +424,7 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
                             {step.type.toUpperCase().replace('-', ' ')}
                         </span>
                     </div>
-                    
+
                     {/* Controles do Step */}
                     <div className="flex gap-1">
                         <Button
@@ -477,14 +477,14 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
                 <div className="step-blocks-container space-y-2">
                     {blocks.map((block, blockIndex) => {
                         const isBlockSelected = selectedBlockId === block.id;
-                        
+
                         return (
                             <div
                                 key={block.id}
                                 className={cn(
                                     "block-section relative border rounded-lg p-3 bg-white transition-all duration-200 cursor-pointer group",
-                                    isBlockSelected 
-                                        ? "ring-2 ring-blue-500 bg-blue-50/30" 
+                                    isBlockSelected
+                                        ? "ring-2 ring-blue-500 bg-blue-50/30"
                                         : "border-gray-200 hover:border-blue-300"
                                 )}
                                 onClick={(e) => {
@@ -502,7 +502,7 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
                                             {block.type}
                                         </Badge>
                                     </div>
-                                    
+
                                     {/* Controles de Reordenação do Bloco */}
                                     {isEditMode && (
                                         <div className="opacity-0 group-hover:opacity-100 transition-opacity flex gap-1">
@@ -550,179 +550,551 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
             </div>
         );
     };        // � DADOS COMPLETOS DO FUNIL (mesmo formato do /quiz-estilo)
-        const productionStepData = {
-            ...step,
-            // Garantir que todas as configurações estejam presentes
-            scoreValues: step.scoreValues || {},
-            columns: step.columns || 2,
-            imageSize: step.imageSize || { width: 256, height: 256 },
-            autoAdvance: step.autoAdvance || false,
-            transition: step.transition || { type: 'fade', duration: 500 },
-            validationRules: step.validationRules || { required: true },
-            analytics: step.analytics || { trackSelections: true },
-            seo: step.seo || {},
-            pixel: step.pixel || {},
-            utm: step.utm || {}
-        };
-
-        // 🎯 PROPS IGUAIS AO /QUIZ-ESTILO
-        const productionProps = {
-            stepData: productionStepData,
-            data: productionStepData,
-            currentAnswers: [], // Mock para preview
-            onAnswersChange: (answers: string[]) => {
-                console.log('Preview - answers changed:', answers);
-            },
-            onNext: () => {
-                console.log('Preview - next step');
-            },
-            userName: 'Preview User',
-            progress: ((index + 1) / steps.length) * 100,
-            // Props específicos por tipo
-            ...(step.type === 'strategic-question' && {
-                currentAnswer: '',
-                onAnswerChange: (answer: string) => {
-                    console.log('Preview - strategic answer:', answer);
-                }
-            }),
-            ...(step.type === 'result' && {
-                resultStyle: 'Clássico',
-                secondaryStyles: ['Elegante', 'Natural'],
-                onCalculate: () => {
-                    console.log('Preview - calculate result');
-                }
-            }),
-            ...(step.type === 'offer' && {
-                strategicAnswers: {},
-                offerKey: 'default'
-            })
-        };
-
-        // 🎯 RENDERIZAR COMPONENTE DE PRODUÇÃO COM LAZY LOADING
-        const LazyProductionComponent = React.lazy(ProductionComponent);
-
-        return (
-            <React.Suspense fallback={
-                <div className="flex items-center justify-center h-64">
-                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
-                </div>
-            }>
-                <LazyProductionComponent {...productionProps} />
-            </React.Suspense>
-        );
+    const productionStepData = {
+        ...step,
+        // Garantir que todas as configurações estejam presentes
+        scoreValues: step.scoreValues || {},
+        columns: step.columns || 2,
+        imageSize: step.imageSize || { width: 256, height: 256 },
+        autoAdvance: step.autoAdvance || false,
+        transition: step.transition || { type: 'fade', duration: 500 },
+        validationRules: step.validationRules || { required: true },
+        analytics: step.analytics || { trackSelections: true },
+        seo: step.seo || {},
+        pixel: step.pixel || {},
+        utm: step.utm || {}
     };
 
-    return (
-        <div
-            className="quiz-editor-container h-full w-full flex flex-col bg-background"
-            style={{
-                color: '#1a1716',
-                backgroundColor: 'white',
-                '--tw-text-opacity': '1'
-            } as React.CSSProperties}
-        >
-            <div className="h-10 border-b flex items-center gap-2 px-3 text-xs bg-muted/30">
-                <span className="font-semibold">Quiz Editor WYSIWYG</span>
-                <Button size="sm" variant="outline" onClick={handleSave} disabled={isSaving}>
-                    {isSaving ? 'Salvando...' : 'Salvar'}
-                </Button>
+    // 🎯 PROPS IGUAIS AO /QUIZ-ESTILO
+    const productionProps = {
+        stepData: productionStepData,
+        data: productionStepData,
+        currentAnswers: [], // Mock para preview
+        onAnswersChange: (answers: string[]) => {
+            console.log('Preview - answers changed:', answers);
+        },
+        onNext: () => {
+            console.log('Preview - next step');
+        },
+        userName: 'Preview User',
+        progress: ((index + 1) / steps.length) * 100,
+        // Props específicos por tipo
+        ...(step.type === 'strategic-question' && {
+            currentAnswer: '',
+            onAnswerChange: (answer: string) => {
+                console.log('Preview - strategic answer:', answer);
+            }
+        }),
+        ...(step.type === 'result' && {
+            resultStyle: 'Clássico',
+            secondaryStyles: ['Elegante', 'Natural'],
+            onCalculate: () => {
+                console.log('Preview - calculate result');
+            }
+        }),
+        ...(step.type === 'offer' && {
+            strategicAnswers: {},
+            offerKey: 'default'
+        })
+    };
 
-                {/* 🎯 NOVO: Toggle Blocos Modulares */}
+    // 🎯 RENDERIZAR COMPONENTE DE PRODUÇÃO COM LAZY LOADING
+    const LazyProductionComponent = React.lazy(ProductionComponent);
+
+    return (
+        <React.Suspense fallback={
+            <div className="flex items-center justify-center h-64">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+            </div>
+        }>
+            <LazyProductionComponent {...productionProps} />
+        </React.Suspense>
+    );
+};
+
+return (
+    <div
+        className="quiz-editor-container h-full w-full flex flex-col bg-background"
+        style={{
+            color: '#1a1716',
+            backgroundColor: 'white',
+            '--tw-text-opacity': '1'
+        } as React.CSSProperties}
+    >
+        <div className="h-10 border-b flex items-center gap-2 px-3 text-xs bg-muted/30">
+            <span className="font-semibold">Quiz Editor WYSIWYG</span>
+            <Button size="sm" variant="outline" onClick={handleSave} disabled={isSaving}>
+                {isSaving ? 'Salvando...' : 'Salvar'}
+            </Button>
+
+            {/* 🎯 NOVO: Toggle Blocos Modulares */}
+            <Button
+                size="sm"
+                variant={useModularBlocks ? 'default' : 'outline'}
+                onClick={() => setUseModularBlocks(!useModularBlocks)}
+                title="Ativar/Desativar Blocos Modulares"
+            >
+                📦 Blocos {useModularBlocks ? 'ON' : 'OFF'}
+            </Button>
+
+            <div className="ml-auto flex gap-2">
                 <Button
                     size="sm"
-                    variant={useModularBlocks ? 'default' : 'outline'}
-                    onClick={() => setUseModularBlocks(!useModularBlocks)}
-                    title="Ativar/Desativar Blocos Modulares"
+                    variant={previewMode === 'edit' ? 'default' : 'outline'}
+                    onClick={() => setPreviewMode('edit')}
                 >
-                    📦 Blocos {useModularBlocks ? 'ON' : 'OFF'}
+                    Editar
                 </Button>
+                <Button
+                    size="sm"
+                    variant={previewMode === 'preview' ? 'default' : 'outline'}
+                    onClick={() => setPreviewMode('preview')}
+                >
+                    <Eye className="w-4 h-4 mr-1" />
+                    Preview
+                </Button>
+            </div>
+        </div>
 
-                <div className="ml-auto flex gap-2">
-                    <Button
-                        size="sm"
-                        variant={previewMode === 'edit' ? 'default' : 'outline'}
-                        onClick={() => setPreviewMode('edit')}
-                    >
-                        Editar
-                    </Button>
-                    <Button
-                        size="sm"
-                        variant={previewMode === 'preview' ? 'default' : 'outline'}
-                        onClick={() => setPreviewMode('preview')}
-                    >
-                        <Eye className="w-4 h-4 mr-1" />
-                        Preview
-                    </Button>
+        <div
+            className="flex-1 flex overflow-hidden"
+            onClick={() => setActiveInsertDropdown(null)} // Fechar dropdowns ao clicar fora
+        >
+            {/* Layout Aprimorado: Sidebar de Steps + Canvas + Properties Panel */}
+            {/* COL 1 - SEQUÊNCIA DE ETAPAS */}
+            <div className="w-60 border-r flex flex-col">
+                <div className="p-3 flex items-center justify-between border-b">
+                    <span className="text-xs font-semibold">Sequência do Funil</span>
+                    <Badge variant="secondary" className="text-[10px]">
+                        {steps.length}
+                    </Badge>
+                </div>
+                <div className="flex-1 overflow-auto text-xs">
+                    {/* Lista Reordenável de Steps com DragDropManager */}
+                    <DragDropManager
+                        items={steps}
+                        onReorder={handleStepReorder}
+                        enabled={dragEnabled}
+                        renderItem={(step, index, isDragging) => {
+                            const active = step.id === selectedId;
+
+                            return (
+                                <div className={cn(
+                                    "relative border-b cursor-pointer group transition-all",
+                                    active ? 'bg-blue-50 border-blue-200' : 'hover:bg-gray-50',
+                                    isDragging && "opacity-50 scale-95"
+                                )}>
+                                    {/* Indicador de Posição */}
+                                    <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-blue-500 to-purple-500" />
+
+                                    <div
+                                        className="pl-4 pr-3 py-3"
+                                        onClick={() => setSelectedId(step.id)}
+                                    >
+                                        <div className="flex items-center gap-2 mb-1">
+                                            <div className="w-6 h-6 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center text-white text-[10px] font-bold">
+                                                {index + 1}
+                                            </div>
+                                            <span className="font-medium truncate flex-1">
+                                                {step.type === 'intro' && '🏠 Introdução'}
+                                                {step.type === 'question' && '❓ Pergunta'}
+                                                {step.type === 'strategic-question' && '🎯 Estratégica'}
+                                                {step.type === 'transition' && '⏳ Transição'}
+                                                {step.type === 'transition-result' && '🔄 Trans. Result'}
+                                                {step.type === 'result' && '🏆 Resultado'}
+                                                {step.type === 'offer' && '🎁 Oferta'}
+                                            </span>
+                                        </div>
+
+                                        {/* Preview do conteúdo */}
+                                        <div className="text-[10px] text-gray-500 mb-2 truncate">
+                                            {step.type === 'intro' && ((step as any).title || 'Introdução do Quiz')}
+                                            {step.type === 'question' && ((step as any).questionText || 'Pergunta do Quiz')}
+                                            {step.type === 'strategic-question' && ((step as any).questionText || 'Pergunta Estratégica')}
+                                            {step.type === 'transition' && ((step as any).title || 'Tela de Transição')}
+                                            {step.type === 'transition-result' && ((step as any).title || 'Preparando Resultado')}
+                                            {step.type === 'result' && ((step as any).title || 'Resultado do Quiz')}
+                                            {step.type === 'offer' && 'Oferta Personalizada'}
+                                        </div>
+
+                                        {/* Controles de Ação */}
+                                        <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                            <Button
+                                                size="icon"
+                                                variant="ghost"
+                                                className="h-6 w-6 text-green-500 hover:bg-green-100"
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    duplicateStep(step.id);
+                                                }}
+                                                title="Duplicar"
+                                            >
+                                                <Copy className="w-3 h-3" />
+                                            </Button>
+                                            <Button
+                                                size="icon"
+                                                variant="ghost"
+                                                className="h-6 w-6 text-red-500 hover:bg-red-100"
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    removeStep(step.id);
+                                                }}
+                                                title="Remover"
+                                            >
+                                                <Trash2 className="w-3 h-3" />
+                                            </Button>
+                                        </div>
+                                    </div>
+
+                                    {/* Conexão Visual para o Próximo Step */}
+                                    {index < steps.length - 1 && (
+                                        <div className="absolute bottom-0 left-7 w-0.5 h-3 bg-gradient-to-b from-purple-400 to-blue-400" />
+                                    )}
+                                </div>
+                            );
+                        }}
+                        className="space-y-0"
+                    />
+                </div>
+
+                {/* Adicionar no Final */}
+                <div className="p-3 border-t bg-gradient-to-r from-purple-50 to-blue-50">
+                    <div className="text-[10px] font-medium text-gray-700 mb-2">ADICIONAR NO FINAL</div>
+                    <div className="relative">
+                        <Button
+                            size="sm"
+                            variant="default"
+                            className="w-full text-[10px] h-8 bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600"
+                            onClick={() => setActiveInsertDropdown(activeInsertDropdown === 'end' ? null : 'end')}
+                        >
+                            <Plus className="w-3 h-3 mr-1" /> Novo Componente
+                            <ChevronDown className="w-3 h-3 ml-1" />
+                        </Button>
+
+                        {/* Dropdown Menu para adicionar no final */}
+                        {activeInsertDropdown === 'end' && (
+                            <div className="absolute bottom-full left-0 mb-1 bg-white border rounded shadow-lg z-50 w-full">
+                                {STEP_TYPES.map(type => (
+                                    <button
+                                        key={type}
+                                        className="w-full px-3 py-2 text-left text-[11px] hover:bg-gray-50 flex items-center gap-2 border-b last:border-b-0"
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            addStepAtEnd(type);
+                                            setActiveInsertDropdown(null);
+                                        }}
+                                    >
+                                        <span>
+                                            {type === 'intro' && '🏠'}
+                                            {type === 'question' && '❓'}
+                                            {type === 'strategic-question' && '🎯'}
+                                            {type === 'transition' && '⏳'}
+                                            {type === 'transition-result' && '🔄'}
+                                            {type === 'result' && '🏆'}
+                                            {type === 'offer' && '🎁'}
+                                        </span>
+                                        <div>
+                                            <div className="font-medium">{type.replace('-', ' ')}</div>
+                                            <div className="text-[9px] text-gray-500">
+                                                {type === 'intro' && 'Introdução do quiz'}
+                                                {type === 'question' && 'Pergunta múltipla escolha'}
+                                                {type === 'strategic-question' && 'Pergunta estratégica'}
+                                                {type === 'transition' && 'Tela de transição'}
+                                                {type === 'transition-result' && 'Transição para resultado'}
+                                                {type === 'result' && 'Resultado do quiz'}
+                                                {type === 'offer' && 'Oferta personalizada'}
+                                            </div>
+                                        </div>
+                                    </button>
+                                ))
+                                }
+                            </div>
+                        )}
+                    </div>
                 </div>
             </div>
 
-            <div
-                className="flex-1 flex overflow-hidden"
-                onClick={() => setActiveInsertDropdown(null)} // Fechar dropdowns ao clicar fora
-            >
-                {/* Layout Aprimorado: Sidebar de Steps + Canvas + Properties Panel */}
-                {/* COL 1 - SEQUÊNCIA DE ETAPAS */}
-                <div className="w-60 border-r flex flex-col">
-                    <div className="p-3 flex items-center justify-between border-b">
-                        <span className="text-xs font-semibold">Sequência do Funil</span>
-                        <Badge variant="secondary" className="text-[10px]">
-                            {steps.length}
-                        </Badge>
+            {/* COL 2 - BIBLIOTECA DE COMPONENTES */}
+            <div className="w-72 border-r flex flex-col">
+                <div className="p-3 border-b text-xs font-semibold">Biblioteca de Componentes</div>
+
+                {/* Seção de Componentes Disponíveis */}
+                <div className="p-3 border-b">
+                    <label className="block text-[10px] uppercase tracking-wide text-muted-foreground mb-2">
+                        Adicionar Componente
+                    </label>
+                    <div className="grid grid-cols-2 gap-2">
+                        {STEP_TYPES.map(type => (
+                            <Button
+                                key={type}
+                                size="sm"
+                                variant="outline"
+                                className="text-[10px] h-8 flex flex-col items-center p-1"
+                                onClick={() => addStepAfter(selectedId, type)}
+                            >
+                                <span className="truncate w-full text-center">
+                                    {type === 'intro' && '🏠 Intro'}
+                                    {type === 'question' && '❓ Pergunta'}
+                                    {type === 'strategic-question' && '🎯 Estratégica'}
+                                    {type === 'transition' && '⏳ Transição'}
+                                    {type === 'transition-result' && '🔄 Trans. Result'}
+                                    {type === 'result' && '🏆 Resultado'}
+                                    {type === 'offer' && '🎁 Oferta'}
+                                </span>
+                            </Button>
+                        ))}
                     </div>
-                    <div className="flex-1 overflow-auto text-xs">
-                        {/* Lista Reordenável de Steps com DragDropManager */}
-                        <DragDropManager
-                            items={steps}
-                            onReorder={handleStepReorder}
-                            enabled={dragEnabled}
-                            renderItem={(step, index, isDragging) => {
-                                const active = step.id === selectedId;
+                </div>
 
-                                return (
-                                    <div className={cn(
-                                        "relative border-b cursor-pointer group transition-all",
-                                        active ? 'bg-blue-50 border-blue-200' : 'hover:bg-gray-50',
-                                        isDragging && "opacity-50 scale-95"
-                                    )}>
-                                        {/* Indicador de Posição */}
-                                        <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-blue-500 to-purple-500" />
+                {/* Configuração do Componente Selecionado */}
+                <div className="flex-1 overflow-auto p-3 text-xs space-y-4">
+                    {selectedStep && (
+                        <div className="space-y-2">
+                            <label className="block text-[10px] uppercase tracking-wide text-muted-foreground">
+                                Configurar Componente
+                            </label>
+                            <div className="bg-blue-50 p-2 rounded border">
+                                <div className="font-medium text-blue-700 mb-1">
+                                    {selectedStep.type.toUpperCase()}
+                                </div>
+                                <div className="text-[10px] text-blue-600">
+                                    Componente selecionado para edição
+                                </div>
+                            </div>
+                            <select
+                                className="w-full border rounded px-2 py-1 text-xs"
+                                value={selectedStep.type}
+                                onChange={e => updateStep(selectedStep.id, { type: e.target.value as any })}
+                            >
+                                {STEP_TYPES.map(t => <option key={t} value={t}>{t}</option>)}
+                            </select>
 
-                                        <div
-                                            className="pl-4 pr-3 py-3"
-                                            onClick={() => setSelectedId(step.id)}
-                                        >
-                                            <div className="flex items-center gap-2 mb-1">
-                                                <div className="w-6 h-6 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center text-white text-[10px] font-bold">
-                                                    {index + 1}
+                            {selectedStep.type === 'question' && (
+                                <div className="pt-2 border-t space-y-2">
+                                    <div className="flex items-center justify-between text-[10px] font-medium">
+                                        <span>Opções</span>
+                                        <Button size="sm" variant="ghost" onClick={() =>
+                                            updateStep(selectedStep.id, {
+                                                options: [...(selectedStep.options || []),
+                                                { id: `opt-${Date.now()}`, text: 'Nova opção' }]
+                                            })
+                                        }>+ Add</Button>
+                                    </div>
+                                    <div className="space-y-2">
+                                        {(selectedStep.options || []).map((opt: any, oi: number) => (
+                                            <div key={opt.id} className="border rounded p-2 space-y-1">
+                                                <div className="flex items-center gap-1">
+                                                    <input
+                                                        className="flex-1 border rounded px-1 py-0.5 text-[11px]"
+                                                        placeholder="Texto da opção"
+                                                        value={opt.text}
+                                                        onChange={(e) => {
+                                                            const clone = [...(selectedStep.options || [])];
+                                                            clone[oi] = { ...clone[oi], text: e.target.value };
+                                                            updateStep(selectedStep.id, { options: clone });
+                                                        }}
+                                                    />
+                                                    <Button size="icon" variant="ghost" className="h-5 w-5"
+                                                        onClick={() => {
+                                                            const clone = (selectedStep.options || []).filter((_: any, i: number) => i !== oi);
+                                                            updateStep(selectedStep.id, { options: clone });
+                                                        }}>
+                                                        <Trash2 className="w-3 h-3" />
+                                                    </Button>
                                                 </div>
-                                                <span className="font-medium truncate flex-1">
-                                                    {step.type === 'intro' && '🏠 Introdução'}
-                                                    {step.type === 'question' && '❓ Pergunta'}
-                                                    {step.type === 'strategic-question' && '🎯 Estratégica'}
-                                                    {step.type === 'transition' && '⏳ Transição'}
-                                                    {step.type === 'transition-result' && '🔄 Trans. Result'}
-                                                    {step.type === 'result' && '🏆 Resultado'}
-                                                    {step.type === 'offer' && '🎁 Oferta'}
+                                                <input
+                                                    className="w-full border rounded px-1 py-0.5 text-[11px]"
+                                                    placeholder="URL da imagem (opcional)"
+                                                    value={opt.image || ''}
+                                                    onChange={(e) => {
+                                                        const clone = [...(selectedStep.options || [])];
+                                                        clone[oi] = { ...clone[oi], image: e.target.value || undefined };
+                                                        updateStep(selectedStep.id, { options: clone });
+                                                    }}
+                                                />
+                                                {opt.image && (
+                                                    <img
+                                                        src={opt.image}
+                                                        alt="Preview"
+                                                        className="w-full h-12 object-cover rounded"
+                                                        onError={(e) => {
+                                                            (e.target as HTMLImageElement).style.display = 'none';
+                                                        }}
+                                                    />
+                                                )}
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                    )}
+                </div>
+            </div>
+
+            {/* COL 3 - CANVAS COM DRAG & DROP */}
+            <div className="flex-1 border-r bg-gray-50 flex flex-col">
+                <div className="p-3 border-b text-xs font-semibold flex items-center gap-2 justify-between">
+                    <div className="flex items-center gap-2">
+                        <span>Canvas Visual</span>
+                        {selectedBlockId && (
+                            <Badge variant="outline" className="text-[10px]">
+                                Selecionado
+                            </Badge>
+                        )}
+                    </div>
+                    <div className="flex items-center gap-2">
+                        <Button
+                            size="sm"
+                            variant={dragEnabled ? "default" : "outline"}
+                            onClick={() => setDragEnabled(!dragEnabled)}
+                            className="h-6 text-[10px]"
+                        >
+                            Drag & Drop
+                        </Button>
+                        <Button
+                            size="sm"
+                            variant={showPropertiesPanel ? "default" : "outline"}
+                            onClick={() => setShowPropertiesPanel(!showPropertiesPanel)}
+                            className="h-6 text-[10px]"
+                        >
+                            <Settings className="w-3 h-3 mr-1" />
+                            Props
+                        </Button>
+                    </div>
+                </div>
+                <div
+                    className="flex-1 overflow-auto p-4"
+                    onClick={(e) => {
+                        // Se clicar no fundo (não em um bloco), limpar seleção
+                        if (e.target === e.currentTarget) {
+                            setSelectedBlockId('');
+                        }
+                    }}
+                >
+                    {steps.length === 0 ? (
+                        <div className="flex items-center justify-center h-full text-sm text-muted-foreground">
+                            <div className="text-center">
+                                <div className="text-lg mb-2">🎯</div>
+                                <div>Nenhum step criado ainda</div>
+                                <div className="text-xs">Use a sidebar para adicionar steps</div>
+                            </div>
+                        </div>
+                    ) : selectedStep ? (
+                        // 🎯 CANVAS INDIVIDUAL: APENAS O STEP SELECIONADO
+                        <div className="h-full">
+                            {(() => {
+                                const step = selectedStep;
+                                const index = steps.findIndex(s => s.id === selectedStep.id);
+                                const isSelected = true; // sempre true pois é o step selecionado
+                                const blockId = `step-${step.id}`;
+
+                                // 🎯 NOVO: Usar blocos modulares se ativado
+                                if (useModularBlocks) {
+                                    return (
+                                        <ModularCanvasRenderer
+                                            key={step.id}
+                                            step={step}
+                                            index={index}
+                                            totalSteps={steps.length}
+                                            isSelected={isSelected}
+                                            selectedBlockId={selectedBlockId}
+                                            isEditMode={previewMode === 'edit'}
+                                            steps={steps} // Passar lista completa de steps
+                                            renderComponent={renderHybridStep} // Usar o sistema híbrido unificado
+                                            onSelectStep={() => {
+                                                setSelectedId(step.id);
+                                                setSelectedBlockId(blockId);
+                                            }}
+                                            onSelectBlock={(blockId) => {
+                                                setSelectedBlockId(blockId);
+                                                setSelectedId(step.id);
+                                            }}
+                                            onUpdateBlock={(blockId, props) => {
+                                                // TODO: implementar atualização de bloco individual
+                                                console.log('Update block:', blockId, props);
+                                            }}
+                                            onReorderBlock={(blockId, direction) => {
+                                                // TODO: implementar reordenação de bloco
+                                                console.log('Reorder block:', blockId, direction);
+                                            }}
+                                            onMoveStep={(direction) => moveStep(step.id, direction)}
+                                            onNavigateStep={(stepId) => setSelectedId(stepId)} // Navegação entre steps
+                                            onDuplicateStep={() => duplicateStep(step.id)}
+                                            onDeleteStep={() => {
+                                                if (confirm(`Remover step ${index + 1}?`)) {
+                                                    removeStep(step.id);
+                                                }
+                                            }}
+                                        />
+                                    );
+                                }
+
+                                // 🔄 MODO ANTIGO: Renderização tradicional do step selecionado
+                                return (
+                                    <div
+                                        key={step.id}
+                                        className={cn(
+                                            "border-2 rounded-lg p-4 transition-all duration-200 cursor-pointer relative h-full",
+                                            "border-blue-500 shadow-lg bg-blue-50/30 ring-2 ring-blue-300 ring-offset-2"
+                                        )}
+                                        onClick={() => {
+                                            setSelectedId(step.id);
+                                            setSelectedBlockId(blockId);
+                                        }}
+                                    >
+                                        {/* Header do Step */}
+                                        <div className="flex items-center justify-between mb-3 pb-2 border-b border-gray-200">
+                                            <div className="flex items-center gap-2">
+                                                <Badge variant="default" className="text-xs">
+                                                    Step {index + 1} / {steps.length}
+                                                </Badge>
+                                                <span className="text-sm font-semibold text-blue-700">
+                                                    {step.type.toUpperCase().replace('-', ' ')}
                                                 </span>
+                                                <Badge variant="secondary" className="text-[10px]">
+                                                    ✏️ Editando
+                                                </Badge>
                                             </div>
 
-                                            {/* Preview do conteúdo */}
-                                            <div className="text-[10px] text-gray-500 mb-2 truncate">
-                                                {step.type === 'intro' && ((step as any).title || 'Introdução do Quiz')}
-                                                {step.type === 'question' && ((step as any).questionText || 'Pergunta do Quiz')}
-                                                {step.type === 'strategic-question' && ((step as any).questionText || 'Pergunta Estratégica')}
-                                                {step.type === 'transition' && ((step as any).title || 'Tela de Transição')}
-                                                {step.type === 'transition-result' && ((step as any).title || 'Preparando Resultado')}
-                                                {step.type === 'result' && ((step as any).title || 'Resultado do Quiz')}
-                                                {step.type === 'offer' && 'Oferta Personalizada'}
-                                            </div>
-
-                                            {/* Controles de Ação */}
-                                            <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                            {/* Navegação entre steps */}
+                                            <div className="flex gap-1">
                                                 <Button
-                                                    size="icon"
+                                                    size="sm"
                                                     variant="ghost"
-                                                    className="h-6 w-6 text-green-500 hover:bg-green-100"
+                                                    className="h-7 w-7 p-0"
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        const prevIndex = index - 1;
+                                                        if (prevIndex >= 0) {
+                                                            setSelectedId(steps[prevIndex].id);
+                                                        }
+                                                    }}
+                                                    title="Step anterior"
+                                                    disabled={index === 0}
+                                                >
+                                                    <ChevronLeft className="w-3 h-3" />
+                                                </Button>
+                                                <Button
+                                                    size="sm"
+                                                    variant="ghost"
+                                                    className="h-7 w-7 p-0"
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        const nextIndex = index + 1;
+                                                        if (nextIndex < steps.length) {
+                                                            setSelectedId(steps[nextIndex].id);
+                                                        }
+                                                    }}
+                                                    title="Próximo step"
+                                                    disabled={index === steps.length - 1}
+                                                >
+                                                    <ChevronRight className="w-3 h-3" />
+                                                </Button>
+                                                <Button
+                                                    size="sm"
+                                                    variant="ghost"
+                                                    className="h-7 w-7 p-0"
                                                     onClick={(e) => {
                                                         e.stopPropagation();
                                                         duplicateStep(step.id);
@@ -732,432 +1104,60 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
                                                     <Copy className="w-3 h-3" />
                                                 </Button>
                                                 <Button
-                                                    size="icon"
+                                                    size="sm"
                                                     variant="ghost"
-                                                    className="h-6 w-6 text-red-500 hover:bg-red-100"
+                                                    className="h-7 w-7 p-0 text-red-500 hover:text-red-700 hover:bg-red-50"
                                                     onClick={(e) => {
                                                         e.stopPropagation();
-                                                        removeStep(step.id);
+                                                        if (confirm(`Remover step ${index + 1}?`)) {
+                                                            removeStep(step.id);
+                                                        }
                                                     }}
                                                     title="Remover"
+                                                    disabled={steps.length === 1}
                                                 >
                                                     <Trash2 className="w-3 h-3" />
                                                 </Button>
                                             </div>
                                         </div>
 
-                                        {/* Conexão Visual para o Próximo Step */}
-                                        {index < steps.length - 1 && (
-                                            <div className="absolute bottom-0 left-7 w-0.5 h-3 bg-gradient-to-b from-purple-400 to-blue-400" />
-                                        )}
+                                        {/* Renderizar sistema híbrido */}
+                                        <div className="transition-opacity opacity-100">
+                                            {renderHybridStep(step, index)}
+                                        </div>
                                     </div>
                                 );
-                            }}
-                            className="space-y-0"
-                        />
-                    </div>
-
-                    {/* Adicionar no Final */}
-                    <div className="p-3 border-t bg-gradient-to-r from-purple-50 to-blue-50">
-                        <div className="text-[10px] font-medium text-gray-700 mb-2">ADICIONAR NO FINAL</div>
-                        <div className="relative">
-                            <Button
-                                size="sm"
-                                variant="default"
-                                className="w-full text-[10px] h-8 bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600"
-                                onClick={() => setActiveInsertDropdown(activeInsertDropdown === 'end' ? null : 'end')}
-                            >
-                                <Plus className="w-3 h-3 mr-1" /> Novo Componente
-                                <ChevronDown className="w-3 h-3 ml-1" />
-                            </Button>
-
-                            {/* Dropdown Menu para adicionar no final */}
-                            {activeInsertDropdown === 'end' && (
-                                <div className="absolute bottom-full left-0 mb-1 bg-white border rounded shadow-lg z-50 w-full">
-                                    {STEP_TYPES.map(type => (
-                                        <button
-                                            key={type}
-                                            className="w-full px-3 py-2 text-left text-[11px] hover:bg-gray-50 flex items-center gap-2 border-b last:border-b-0"
-                                            onClick={(e) => {
-                                                e.stopPropagation();
-                                                addStepAtEnd(type);
-                                                setActiveInsertDropdown(null);
-                                            }}
-                                        >
-                                            <span>
-                                                {type === 'intro' && '🏠'}
-                                                {type === 'question' && '❓'}
-                                                {type === 'strategic-question' && '🎯'}
-                                                {type === 'transition' && '⏳'}
-                                                {type === 'transition-result' && '🔄'}
-                                                {type === 'result' && '🏆'}
-                                                {type === 'offer' && '🎁'}
-                                            </span>
-                                            <div>
-                                                <div className="font-medium">{type.replace('-', ' ')}</div>
-                                                <div className="text-[9px] text-gray-500">
-                                                    {type === 'intro' && 'Introdução do quiz'}
-                                                    {type === 'question' && 'Pergunta múltipla escolha'}
-                                                    {type === 'strategic-question' && 'Pergunta estratégica'}
-                                                    {type === 'transition' && 'Tela de transição'}
-                                                    {type === 'transition-result' && 'Transição para resultado'}
-                                                    {type === 'result' && 'Resultado do quiz'}
-                                                    {type === 'offer' && 'Oferta personalizada'}
-                                                </div>
-                                            </div>
-                                        </button>
-                                    ))
-                                    }
-                                </div>
-                            )}
+                            })()}
                         </div>
-                    </div>
+                    ) : (
+                        <div className="flex items-center justify-center h-full text-sm text-muted-foreground">
+                            <div className="text-center">
+                                <div className="text-lg mb-2">🎯</div>
+                                <div>Selecione um step na primeira coluna</div>
+                                <div className="text-xs">Para começar a editar</div>
+                            </div>
+                        </div>
+                    )}
                 </div>
-
-                {/* COL 2 - BIBLIOTECA DE COMPONENTES */}
-                <div className="w-72 border-r flex flex-col">
-                    <div className="p-3 border-b text-xs font-semibold">Biblioteca de Componentes</div>
-
-                    {/* Seção de Componentes Disponíveis */}
-                    <div className="p-3 border-b">
-                        <label className="block text-[10px] uppercase tracking-wide text-muted-foreground mb-2">
-                            Adicionar Componente
-                        </label>
-                        <div className="grid grid-cols-2 gap-2">
-                            {STEP_TYPES.map(type => (
-                                <Button
-                                    key={type}
-                                    size="sm"
-                                    variant="outline"
-                                    className="text-[10px] h-8 flex flex-col items-center p-1"
-                                    onClick={() => addStepAfter(selectedId, type)}
-                                >
-                                    <span className="truncate w-full text-center">
-                                        {type === 'intro' && '🏠 Intro'}
-                                        {type === 'question' && '❓ Pergunta'}
-                                        {type === 'strategic-question' && '🎯 Estratégica'}
-                                        {type === 'transition' && '⏳ Transição'}
-                                        {type === 'transition-result' && '🔄 Trans. Result'}
-                                        {type === 'result' && '🏆 Resultado'}
-                                        {type === 'offer' && '🎁 Oferta'}
-                                    </span>
-                                </Button>
-                            ))}
-                        </div>
-                    </div>
-
-                    {/* Configuração do Componente Selecionado */}
-                    <div className="flex-1 overflow-auto p-3 text-xs space-y-4">
-                        {selectedStep && (
-                            <div className="space-y-2">
-                                <label className="block text-[10px] uppercase tracking-wide text-muted-foreground">
-                                    Configurar Componente
-                                </label>
-                                <div className="bg-blue-50 p-2 rounded border">
-                                    <div className="font-medium text-blue-700 mb-1">
-                                        {selectedStep.type.toUpperCase()}
-                                    </div>
-                                    <div className="text-[10px] text-blue-600">
-                                        Componente selecionado para edição
-                                    </div>
-                                </div>
-                                <select
-                                    className="w-full border rounded px-2 py-1 text-xs"
-                                    value={selectedStep.type}
-                                    onChange={e => updateStep(selectedStep.id, { type: e.target.value as any })}
-                                >
-                                    {STEP_TYPES.map(t => <option key={t} value={t}>{t}</option>)}
-                                </select>
-
-                                {selectedStep.type === 'question' && (
-                                    <div className="pt-2 border-t space-y-2">
-                                        <div className="flex items-center justify-between text-[10px] font-medium">
-                                            <span>Opções</span>
-                                            <Button size="sm" variant="ghost" onClick={() =>
-                                                updateStep(selectedStep.id, {
-                                                    options: [...(selectedStep.options || []),
-                                                    { id: `opt-${Date.now()}`, text: 'Nova opção' }]
-                                                })
-                                            }>+ Add</Button>
-                                        </div>
-                                        <div className="space-y-2">
-                                            {(selectedStep.options || []).map((opt: any, oi: number) => (
-                                                <div key={opt.id} className="border rounded p-2 space-y-1">
-                                                    <div className="flex items-center gap-1">
-                                                        <input
-                                                            className="flex-1 border rounded px-1 py-0.5 text-[11px]"
-                                                            placeholder="Texto da opção"
-                                                            value={opt.text}
-                                                            onChange={(e) => {
-                                                                const clone = [...(selectedStep.options || [])];
-                                                                clone[oi] = { ...clone[oi], text: e.target.value };
-                                                                updateStep(selectedStep.id, { options: clone });
-                                                            }}
-                                                        />
-                                                        <Button size="icon" variant="ghost" className="h-5 w-5"
-                                                            onClick={() => {
-                                                                const clone = (selectedStep.options || []).filter((_: any, i: number) => i !== oi);
-                                                                updateStep(selectedStep.id, { options: clone });
-                                                            }}>
-                                                            <Trash2 className="w-3 h-3" />
-                                                        </Button>
-                                                    </div>
-                                                    <input
-                                                        className="w-full border rounded px-1 py-0.5 text-[11px]"
-                                                        placeholder="URL da imagem (opcional)"
-                                                        value={opt.image || ''}
-                                                        onChange={(e) => {
-                                                            const clone = [...(selectedStep.options || [])];
-                                                            clone[oi] = { ...clone[oi], image: e.target.value || undefined };
-                                                            updateStep(selectedStep.id, { options: clone });
-                                                        }}
-                                                    />
-                                                    {opt.image && (
-                                                        <img
-                                                            src={opt.image}
-                                                            alt="Preview"
-                                                            className="w-full h-12 object-cover rounded"
-                                                            onError={(e) => {
-                                                                (e.target as HTMLImageElement).style.display = 'none';
-                                                            }}
-                                                        />
-                                                    )}
-                                                </div>
-                                            ))}
-                                        </div>
-                                    </div>
-                                )}
-                            </div>
-                        )}
-                    </div>
-                </div>
-
-                {/* COL 3 - CANVAS COM DRAG & DROP */}
-                <div className="flex-1 border-r bg-gray-50 flex flex-col">
-                    <div className="p-3 border-b text-xs font-semibold flex items-center gap-2 justify-between">
-                        <div className="flex items-center gap-2">
-                            <span>Canvas Visual</span>
-                            {selectedBlockId && (
-                                <Badge variant="outline" className="text-[10px]">
-                                    Selecionado
-                                </Badge>
-                            )}
-                        </div>
-                        <div className="flex items-center gap-2">
-                            <Button
-                                size="sm"
-                                variant={dragEnabled ? "default" : "outline"}
-                                onClick={() => setDragEnabled(!dragEnabled)}
-                                className="h-6 text-[10px]"
-                            >
-                                Drag & Drop
-                            </Button>
-                            <Button
-                                size="sm"
-                                variant={showPropertiesPanel ? "default" : "outline"}
-                                onClick={() => setShowPropertiesPanel(!showPropertiesPanel)}
-                                className="h-6 text-[10px]"
-                            >
-                                <Settings className="w-3 h-3 mr-1" />
-                                Props
-                            </Button>
-                        </div>
-                    </div>
-                    <div
-                        className="flex-1 overflow-auto p-4"
-                        onClick={(e) => {
-                            // Se clicar no fundo (não em um bloco), limpar seleção
-                            if (e.target === e.currentTarget) {
-                                setSelectedBlockId('');
-                            }
-                        }}
-                    >
-                        {steps.length === 0 ? (
-                            <div className="flex items-center justify-center h-full text-sm text-muted-foreground">
-                                <div className="text-center">
-                                    <div className="text-lg mb-2">🎯</div>
-                                    <div>Nenhum step criado ainda</div>
-                                    <div className="text-xs">Use a sidebar para adicionar steps</div>
-                                </div>
-                            </div>
-                        ) : selectedStep ? (
-                            // 🎯 CANVAS INDIVIDUAL: APENAS O STEP SELECIONADO
-                            <div className="h-full">
-                                {(() => {
-                                    const step = selectedStep;
-                                    const index = steps.findIndex(s => s.id === selectedStep.id);
-                                    const isSelected = true; // sempre true pois é o step selecionado
-                                    const blockId = `step-${step.id}`;
-
-                                    // 🎯 NOVO: Usar blocos modulares se ativado
-                                    if (useModularBlocks) {
-                                        return (
-                                            <ModularCanvasRenderer
-                                                key={step.id}
-                                                step={step}
-                                                index={index}
-                                                totalSteps={steps.length}
-                                                isSelected={isSelected}
-                                                selectedBlockId={selectedBlockId}
-                                                isEditMode={previewMode === 'edit'}
-                                                steps={steps} // Passar lista completa de steps
-                                                renderComponent={renderHybridStep} // Usar o sistema híbrido unificado
-                                                onSelectStep={() => {
-                                                    setSelectedId(step.id);
-                                                    setSelectedBlockId(blockId);
-                                                }}
-                                                onSelectBlock={(blockId) => {
-                                                    setSelectedBlockId(blockId);
-                                                    setSelectedId(step.id);
-                                                }}
-                                                onUpdateBlock={(blockId, props) => {
-                                                    // TODO: implementar atualização de bloco individual
-                                                    console.log('Update block:', blockId, props);
-                                                }}
-                                                onReorderBlock={(blockId, direction) => {
-                                                    // TODO: implementar reordenação de bloco
-                                                    console.log('Reorder block:', blockId, direction);
-                                                }}
-                                                onMoveStep={(direction) => moveStep(step.id, direction)}
-                                                onNavigateStep={(stepId) => setSelectedId(stepId)} // Navegação entre steps
-                                                onDuplicateStep={() => duplicateStep(step.id)}
-                                                onDeleteStep={() => {
-                                                    if (confirm(`Remover step ${index + 1}?`)) {
-                                                        removeStep(step.id);
-                                                    }
-                                                }}
-                                            />
-                                        );
-                                    }
-
-                                    // 🔄 MODO ANTIGO: Renderização tradicional do step selecionado
-                                    return (
-                                        <div
-                                            key={step.id}
-                                            className={cn(
-                                                "border-2 rounded-lg p-4 transition-all duration-200 cursor-pointer relative h-full",
-                                                "border-blue-500 shadow-lg bg-blue-50/30 ring-2 ring-blue-300 ring-offset-2"
-                                            )}
-                                            onClick={() => {
-                                                setSelectedId(step.id);
-                                                setSelectedBlockId(blockId);
-                                            }}
-                                        >
-                                            {/* Header do Step */}
-                                            <div className="flex items-center justify-between mb-3 pb-2 border-b border-gray-200">
-                                                <div className="flex items-center gap-2">
-                                                    <Badge variant="default" className="text-xs">
-                                                        Step {index + 1} / {steps.length}
-                                                    </Badge>
-                                                    <span className="text-sm font-semibold text-blue-700">
-                                                        {step.type.toUpperCase().replace('-', ' ')}
-                                                    </span>
-                                                    <Badge variant="secondary" className="text-[10px]">
-                                                        ✏️ Editando
-                                                    </Badge>
-                                                </div>
-
-                                                {/* Navegação entre steps */}
-                                                <div className="flex gap-1">
-                                                    <Button
-                                                        size="sm"
-                                                        variant="ghost"
-                                                        className="h-7 w-7 p-0"
-                                                        onClick={(e) => {
-                                                            e.stopPropagation();
-                                                            const prevIndex = index - 1;
-                                                            if (prevIndex >= 0) {
-                                                                setSelectedId(steps[prevIndex].id);
-                                                            }
-                                                        }}
-                                                        title="Step anterior"
-                                                        disabled={index === 0}
-                                                    >
-                                                        <ChevronLeft className="w-3 h-3" />
-                                                    </Button>
-                                                    <Button
-                                                        size="sm"
-                                                        variant="ghost"
-                                                        className="h-7 w-7 p-0"
-                                                        onClick={(e) => {
-                                                            e.stopPropagation();
-                                                            const nextIndex = index + 1;
-                                                            if (nextIndex < steps.length) {
-                                                                setSelectedId(steps[nextIndex].id);
-                                                            }
-                                                        }}
-                                                        title="Próximo step"
-                                                        disabled={index === steps.length - 1}
-                                                    >
-                                                        <ChevronRight className="w-3 h-3" />
-                                                    </Button>
-                                                    <Button
-                                                        size="sm"
-                                                        variant="ghost"
-                                                        className="h-7 w-7 p-0"
-                                                        onClick={(e) => {
-                                                            e.stopPropagation();
-                                                            duplicateStep(step.id);
-                                                        }}
-                                                        title="Duplicar"
-                                                    >
-                                                        <Copy className="w-3 h-3" />
-                                                    </Button>
-                                                    <Button
-                                                        size="sm"
-                                                        variant="ghost"
-                                                        className="h-7 w-7 p-0 text-red-500 hover:text-red-700 hover:bg-red-50"
-                                                        onClick={(e) => {
-                                                            e.stopPropagation();
-                                                            if (confirm(`Remover step ${index + 1}?`)) {
-                                                                removeStep(step.id);
-                                                            }
-                                                        }}
-                                                        title="Remover"
-                                                        disabled={steps.length === 1}
-                                                    >
-                                                        <Trash2 className="w-3 h-3" />
-                                                    </Button>
-                                                </div>
-                                            </div>
-
-                                            {/* Renderizar sistema híbrido */}
-                                            <div className="transition-opacity opacity-100">
-                                                {renderHybridStep(step, index)}
-                                            </div>
-                                        </div>
-                                    );
-                                })()}
-                            </div>
-                        ) : (
-                            <div className="flex items-center justify-center h-full text-sm text-muted-foreground">
-                                <div className="text-center">
-                                    <div className="text-lg mb-2">🎯</div>
-                                    <div>Selecione um step na primeira coluna</div>
-                                    <div className="text-xs">Para começar a editar</div>
-                                </div>
-                            </div>
-                        )}
-                    </div>
-                </div>
-
-                {/* COL 4 - PAINEL DE PROPRIEDADES APRIMORADO */}
-                {showPropertiesPanel && (
-                    <div className="w-80">
-                        <QuizPropertiesPanel
-                            selectedStep={selectedBlockId ? selectedStep : null}
-                            onUpdateStep={updateStep}
-                            onClose={handlePropertiesPanelClose}
-                            onDeleteStep={removeStep}
-                            onDuplicateStep={duplicateStep}
-                            isPreviewMode={isPreviewMode}
-                            onTogglePreview={() => setIsPreviewMode(!isPreviewMode)}
-                        />
-                    </div>
-                )}
             </div>
+
+            {/* COL 4 - PAINEL DE PROPRIEDADES APRIMORADO */}
+            {showPropertiesPanel && (
+                <div className="w-80">
+                    <QuizPropertiesPanel
+                        selectedStep={selectedBlockId ? selectedStep : null}
+                        onUpdateStep={updateStep}
+                        onClose={handlePropertiesPanelClose}
+                        onDeleteStep={removeStep}
+                        onDuplicateStep={duplicateStep}
+                        isPreviewMode={isPreviewMode}
+                        onTogglePreview={() => setIsPreviewMode(!isPreviewMode)}
+                    />
+                </div>
+            )}
         </div>
-    );
+    </div>
+);
 };
 
 export default QuizFunnelEditorWYSIWYG;
