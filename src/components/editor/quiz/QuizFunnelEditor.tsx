@@ -243,6 +243,7 @@ const QuizFunnelEditor: React.FC<QuizFunnelEditorProps> = ({ funnelId, templateI
     const blockRegistry = useBlockRegistry();
     const [steps, setSteps] = useState<EditableQuizStep[]>([]);
     const [selectedId, setSelectedId] = useState<string>('');
+    const [isInitialized, setIsInitialized] = useState(false); // Flag para evitar re-carregamento
 
     // DEBUG: Monitorar mudanças no selectedId
     useEffect(() => {
@@ -585,15 +586,21 @@ const QuizFunnelEditor: React.FC<QuizFunnelEditorProps> = ({ funnelId, templateI
         if (changed) updateStep(offerStep.id, { offerMap: map as any });
     }, [strategicKeys, updateStep]);
 
-    // Carregar steps iniciais
+    // Carregar steps iniciais (APENAS UMA VEZ)
     useEffect(() => {
-        console.log('🟡 useEffect carregar steps - currentFunnel mudou');
+        if (isInitialized) {
+            console.log('⏭️ Pulando re-carregamento - já inicializado');
+            return;
+        }
+        
+        console.log('🟡 useEffect carregar steps - PRIMEIRA VEZ');
         // Se funil tiver quizSteps, usar; caso contrário montar de QUIZ_STEPS
         const existing = (crud.currentFunnel as any)?.quizSteps as EditableQuizStep[] | undefined;
         if (existing && existing.length) {
             console.log('✅ Carregando', existing.length, 'steps do currentFunnel');
             setSteps(existing.map(s => ({ ...s })));
             setSelectedId(existing[0].id);
+            setIsInitialized(true);
             return;
         }
         // Converter QUIZ_STEPS (Record) para array
@@ -601,7 +608,8 @@ const QuizFunnelEditor: React.FC<QuizFunnelEditorProps> = ({ funnelId, templateI
         const conv: EditableQuizStep[] = Object.entries(QUIZ_STEPS).map(([id, step]) => ({ id, ...step }));
         setSteps(conv);
         if (conv.length) setSelectedId(conv[0].id);
-    }, [crud.currentFunnel]);
+        setIsInitialized(true);
+    }, [crud.currentFunnel, isInitialized]);
 
     const selectedStep = useMemo(() => steps.find(s => s.id === selectedId), [steps, selectedId]);
 
