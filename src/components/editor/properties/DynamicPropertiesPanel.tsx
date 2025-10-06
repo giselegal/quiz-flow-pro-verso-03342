@@ -2,7 +2,7 @@
 
  * 🎭 DYNAMIC PROPERTIES PANEL - Orquestrador de Painéis Modulares * 🎨 DYNAMIC PROPERTIES PANEL
 
- *  * 
+    *  * 
 
  * Componente inteligente que: * Painel de propriedades que adapta seu conteúdo baseado no tipo do step selecionado.
 
@@ -10,81 +10,83 @@
 
  * 2. Resolve o painel apropriado via PropertiesPanelRegistry */
 
- * 3. Renderiza o painel com as props corretas
+    * 3. Renderiza o painel com as props corretas
 
- * 4. Gerencia estado e comunicação com a facadeimport React from 'react';
+        * 4. Gerencia estado e comunicação com a facadeimport React from 'react';
 
  */
 
 export interface DynamicPropertiesPanelProps {
 
-import React, { useState, useCallback, useEffect } from 'react';    selectedStep: any;
+import React, { useState, useCallback, useEffect } from 'react'; selectedStep: any;
 
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';    onUpdate: (updates: any) => void;
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'; onUpdate: (updates: any) => void;
 
-import { Button } from '@/components/ui/button';    onDelete: () => void;
+import { Button } from '@/components/ui/button'; onDelete: () => void;
 
 import { ScrollArea } from '@/components/ui/scroll-area';}
 
 import { Badge } from '@/components/ui/badge';
 
-import { Separator } from '@/components/ui/separator';const DynamicPropertiesPanel: React.FC<DynamicPropertiesPanelProps> = ({
+import { Separator } from '@/components/ui/separator'; const DynamicPropertiesPanel: React.FC<DynamicPropertiesPanelProps> = ({
 
-import {     selectedStep,
+    import { selectedStep,
 
-    X,     onUpdate,
+        X, onUpdate,
 
-    Settings,     onDelete
+        Settings, onDelete
 
     Trash2, }) => {
 
     Copy,     if (!selectedStep) {
 
-    Eye,         return (
+        Eye,         return (
 
-    EyeOff,            <div style={{ padding: '16px' }}>
+            EyeOff, <div style={{ padding: '16px' }}>
 
-    AlertCircle                 <p style={{ color: 'hsl(var(--muted-foreground))', fontStyle: 'italic' }}>
+                AlertCircle                 <p style={{ color: 'hsl(var(--muted-foreground))', fontStyle: 'italic' }}>
 
 } from 'lucide-react';                    Selecione uma etapa para editar suas propriedades
 
-import { cn } from '@/lib/utils';                </p>
+                    import {cn} from '@/lib/utils';                </p>
 
-import { PropertiesPanelRegistry } from './PropertiesPanelRegistry';            </div>
+                import {PropertiesPanelRegistry} from './PropertiesPanelRegistry';            </div>
 
 import { Alert, AlertDescription } from '@/components/ui/alert';        );
 
     }
 
-// ============================================================
+    // ============================================================
 
-// IMPORTS DOS PAINÉIS (para auto-registro)    const handleChange = (field: string, value: any) => {
+    // IMPORTS DOS PAINÉIS (para auto-registro)    const handleChange = (field: string, value: any) => {
 
-// ============================================================        onUpdate({
+    // ============================================================        onUpdate({
 
-import {             ...selectedStep,
+    import {             ...selectedStep,
 
-    QuestionPropertiesPanelDefinition,             [field]: value
+        QuestionPropertiesPanelDefinition,             [field]: value
 
-    StrategicQuestionPropertiesPanelDefinition         });
+    StrategicQuestionPropertiesPanelDefinition
+});
 
 } from './QuestionPropertiesPanel';    };
 
-import { 
+import {
 
     ResultPropertiesPanelDefinition,     const inputStyle = {
 
-    TransitionResultPropertiesPanelDefinition         width: '100%',
+        TransitionResultPropertiesPanelDefinition         width: '100%',
 
-} from './ResultPropertiesPanel';        padding: '8px 12px',
+    } from './ResultPropertiesPanel'; padding: '8px 12px',
 
-import { OfferPropertiesPanelDefinition } from './OfferPropertiesPanel';        border: '1px solid hsl(var(--border))',
+import { OfferPropertiesPanelDefinition } from './OfferPropertiesPanel'; border: '1px solid hsl(var(--border))',
 
-import {         borderRadius: '6px',
+import {
+    borderRadius: '6px',
 
-    CommonPropertiesPanelDefinition,        fontSize: '14px',
+    CommonPropertiesPanelDefinition, fontSize: '14px',
 
-    IntroPropertiesPanelDefinition,        background: 'hsl(var(--background))',
+    IntroPropertiesPanelDefinition, background: 'hsl(var(--background))',
 
     TransitionPropertiesPanelDefinition        color: 'hsl(var(--foreground))'
 
@@ -98,39 +100,40 @@ import {         borderRadius: '6px',
 
 // ============================================================        marginBottom: '6px',
 
-        fontSize: '13px',
+fontSize: '13px',
 
-// Registrar todos os painéis no startup        fontWeight: 'bold' as const,
+    // Registrar todos os painéis no startup        fontWeight: 'bold' as const,
 
-PropertiesPanelRegistry.registerMany([        color: 'hsl(var(--foreground))'
+    PropertiesPanelRegistry.registerMany([color: 'hsl(var(--foreground))'
 
     QuestionPropertiesPanelDefinition,    };
 
-    StrategicQuestionPropertiesPanelDefinition,
+StrategicQuestionPropertiesPanelDefinition,
 
     ResultPropertiesPanelDefinition,    const sectionStyle = {
 
-    TransitionResultPropertiesPanelDefinition,        marginBottom: '16px',
+        TransitionResultPropertiesPanelDefinition, marginBottom: '16px',
 
-    OfferPropertiesPanelDefinition,        paddingBottom: '16px',
+        OfferPropertiesPanelDefinition, paddingBottom: '16px',
 
-    IntroPropertiesPanelDefinition,        borderBottom: '1px solid hsl(var(--border))'
+        IntroPropertiesPanelDefinition, borderBottom: '1px solid hsl(var(--border))'
 
-    TransitionPropertiesPanelDefinition,    };
+    TransitionPropertiesPanelDefinition,
+    };
 
 ]);
 
-    // Renderizar campos específicos baseado no tipo
+// Renderizar campos específicos baseado no tipo
 
 // Definir fallback    const renderTypeSpecificFields = () => {
 
-PropertiesPanelRegistry.setFallback(CommonPropertiesPanelDefinition);        switch (selectedStep.type) {
+PropertiesPanelRegistry.setFallback(CommonPropertiesPanelDefinition); switch (selectedStep.type) {
 
-            case 'intro':
+    case 'intro':
 
-console.log('[DynamicPropertiesPanel] Panels auto-registered:', PropertiesPanelRegistry.list().length);                return (
+        console.log('[DynamicPropertiesPanel] Panels auto-registered:', PropertiesPanelRegistry.list().length); return (
 
-                    <>
+            <>
 
 // ============================================================                        <div style={sectionStyle}>
 
@@ -138,13 +141,13 @@ console.log('[DynamicPropertiesPanel] Panels auto-registered:', PropertiesPanelR
 
 // ============================================================                            <textarea
 
-                                value={selectedStep.title || ''}
+                        value={selectedStep.title || ''}
 
-export interface DynamicPropertiesPanelProps {                                onChange={(e) => handleChange('title', e.target.value)}
+                        export interface DynamicPropertiesPanelProps {                                onChange = {(e) => handleChange('title', e.target.value)}
 
     /** Step selecionado para edição */                                style={{ ...inputStyle, minHeight: '80px', resize: 'vertical' }}
 
-    selectedStep: any | null;                                placeholder="Digite o título principal..."
+                    selectedStep: any | null;                                placeholder="Digite o título principal..."
 
                                 />
 
@@ -152,41 +155,41 @@ export interface DynamicPropertiesPanelProps {                                on
 
     onUpdateStep: (stepId: string, updates: any) => void;
 
-                            <div style={sectionStyle}>
+                <div style={sectionStyle}>
 
     /** Callback para fechar o painel */                            <label style={labelStyle}>Pergunta do Formulário:</label>
 
     onClose: () => void;                            <input
 
-                                    type="text"
+                        type="text"
 
-    /** Callback para deletar o step */                                value={selectedStep.formQuestion || ''}
+    /** Callback para deletar o step */ value={selectedStep.formQuestion || ''}
 
-    onDeleteStep?: (stepId: string) => void;                                onChange={(e) => handleChange('formQuestion', e.target.value)}
+                        onDeleteStep?: (stepId: string) => void;                                onChange={(e) => handleChange('formQuestion', e.target.value)}
 
-                                    style={inputStyle}
+                    style={inputStyle}
 
     /** Callback para duplicar o step */                                placeholder="Ex: Como posso te chamar?"
 
     onDuplicateStep?: (stepId: string) => void;                            />
 
-                            </div>
+                </div>
 
     /** Se está no modo preview */
 
-    isPreviewMode?: boolean;                        <div style={sectionStyle}>
+                isPreviewMode?: boolean;                        <div style={sectionStyle}>
 
-                                <label style={labelStyle}>Placeholder do Input:</label>
+                    <label style={labelStyle}>Placeholder do Input:</label>
 
     /** Callback para alternar preview */                            <input
 
-    onTogglePreview?: () => void;                                type="text"
+                        onTogglePreview?: () => void;                                type="text"
 
-                                    value={selectedStep.placeholder || ''}
+                    value={selectedStep.placeholder || ''}
 
     /** Classes CSS adicionais */                                onChange={(e) => handleChange('placeholder', e.target.value)}
 
-    className?: string;                                style={inputStyle}
+                    className?: string;                                style={inputStyle}
 
 }                                placeholder="Ex: Digite seu nome..."
 
@@ -198,41 +201,41 @@ export interface DynamicPropertiesPanelProps {                                on
 
 // ============================================================                        <div style={sectionStyle}>
 
-                            <label style={labelStyle}>Texto do Botão:</label>
+                    <label style={labelStyle}>Texto do Botão:</label>
 
-export const DynamicPropertiesPanel: React.FC<DynamicPropertiesPanelProps> = ({                            <input
+                    export const DynamicPropertiesPanel: React.FC<DynamicPropertiesPanelProps> = ({<input
 
-    selectedStep,                                type="text"
+                        selectedStep, type = "text"
 
     onUpdateStep,                                value={selectedStep.buttonText || ''}
 
-    onClose,                                onChange={(e) => handleChange('buttonText', e.target.value)}
+                        onClose,                                onChange={(e) => handleChange('buttonText', e.target.value)}
 
-    onDeleteStep,                                style={inputStyle}
+                        onDeleteStep,                                style={inputStyle}
 
-    onDuplicateStep,                                placeholder="Ex: Continuar"
+                        onDuplicateStep,                                placeholder="Ex: Continuar"
 
     isPreviewMode = false,                            />
 
-    onTogglePreview,                        </div>
+                        onTogglePreview,                        </div>
 
-    className = ''
+                className = ''
 
-}) => {                        <div style={sectionStyle}>
+}) => {<div style={sectionStyle}>
 
-    const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);                            <label style={labelStyle}>URL da Imagem:</label>
+                    const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);                            <label style={labelStyle}>URL da Imagem:</label>
 
-                            <input
+                    <input
 
-    // Resetar estado quando step muda                                type="url"
+                        // Resetar estado quando step muda                                type="url"
 
-    useEffect(() => {                                value={selectedStep.image || ''}
+                        useEffect(() => {value = { selectedStep.image || '' }
 
         setHasUnsavedChanges(false);                                onChange={(e) => handleChange('image', e.target.value)}
 
     }, [selectedStep?.id]);                                style={inputStyle}
 
-                                placeholder="https://..."
+                    placeholder="https://..."
 
     // Handler para atualizar step                            />
 
@@ -242,27 +245,27 @@ export const DynamicPropertiesPanel: React.FC<DynamicPropertiesPanelProps> = ({ 
 
             onUpdateStep(selectedStep.id, updates);                );
 
-            setHasUnsavedChanges(false);
+        setHasUnsavedChanges(false);
 
-            console.log(`[DynamicPropertiesPanel] Updated step ${selectedStep.id}`, updates);            case 'question':
+        console.log(`[DynamicPropertiesPanel] Updated step ${selectedStep.id}`, updates); case 'question':
 
-        }                return (
+}                return (
 
-    }, [selectedStep, onUpdateStep]);                    <>
+    }, [selectedStep, onUpdateStep]); <>
 
-                        <div style={sectionStyle}>
+    <div style={sectionStyle}>
 
     // Handler para deletar                            <label style={labelStyle}>Número da Questão:</label>
 
-    const handleDelete = useCallback(() => {                            <input
+    const handleDelete = useCallback(() => {<input
 
-        if (selectedStep && onDeleteStep) {                                type="text"
+            if (selectedStep && onDeleteStep) {type = "text"
 
-            if (confirm(`Tem certeza que deseja deletar o step "${selectedStep.title || selectedStep.questionText || selectedStep.id}"?`)) {                                value={selectedStep.questionNumber || ''}
+            if (confirm(`Tem certeza que deseja deletar o step "${selectedStep.title || selectedStep.questionText || selectedStep.id}"?`)) {value = { selectedStep.questionNumber || '' }
 
                 onDeleteStep(selectedStep.id);                                onChange={(e) => handleChange('questionNumber', e.target.value)}
 
-                console.log(`[DynamicPropertiesPanel] Deleted step ${selectedStep.id}`);                                style={inputStyle}
+        console.log(`[DynamicPropertiesPanel] Deleted step ${selectedStep.id}`);                                style={inputStyle}
 
             }                                placeholder="Ex: 1/10"
 
@@ -274,13 +277,13 @@ export const DynamicPropertiesPanel: React.FC<DynamicPropertiesPanelProps> = ({ 
 
     // Handler para duplicar                        <div style={sectionStyle}>
 
-    const handleDuplicate = useCallback(() => {                            <label style={labelStyle}>Texto da Pergunta:</label>
+    const handleDuplicate = useCallback(() => {<label style={labelStyle}>Texto da Pergunta:</label>
 
-        if (selectedStep && onDuplicateStep) {                            <textarea
+        if (selectedStep && onDuplicateStep) {<textarea
 
             onDuplicateStep(selectedStep.id);                                value={selectedStep.questionText || ''}
 
-            console.log(`[DynamicPropertiesPanel] Duplicated step ${selectedStep.id}`);                                onChange={(e) => handleChange('questionText', e.target.value)}
+        console.log(`[DynamicPropertiesPanel] Duplicated step ${selectedStep.id}`);                                onChange={(e) => handleChange('questionText', e.target.value)}
 
         }                                style={{ ...inputStyle, minHeight: '80px', resize: 'vertical' }}
 
@@ -294,83 +297,84 @@ export const DynamicPropertiesPanel: React.FC<DynamicPropertiesPanelProps> = ({ 
 
         return (                        <div style={sectionStyle}>
 
-            <Card className={cn('h-full', className)}>                            <label style={labelStyle}>Seleções Obrigatórias:</label>
+        <Card className={cn('h-full', className)}>                            <label style={labelStyle}>Seleções Obrigatórias:</label>
 
-                <CardContent className="flex items-center justify-center h-full">                            <input
+            <CardContent className="flex items-center justify-center h-full">                            <input
 
-                    <div className="text-center space-y-4 text-muted-foreground">                                type="number"
+                <div className="text-center space-y-4 text-muted-foreground">                                type="number"
 
-                        <Settings className="w-12 h-12 mx-auto opacity-50" />                                value={selectedStep.requiredSelections || 1}
+                <Settings className="w-12 h-12 mx-auto opacity-50" />                                value={selectedStep.requiredSelections || 1}
 
-                        <div>                                onChange={(e) => handleChange('requiredSelections', parseInt(e.target.value) || 1)}
+                <div>                                onChange={(e) => handleChange('requiredSelections', parseInt(e.target.value) || 1)}
 
-                            <h3 className="font-medium text-lg">Painel de Propriedades</h3>                                style={inputStyle}
+                    <h3 className="font-medium text-lg">Painel de Propriedades</h3>                                style={inputStyle}
 
-                            <p className="text-sm">Selecione um step para editar suas propriedades</p>                                min="1"
+                    <p className="text-sm">Selecione um step para editar suas propriedades</p>                                min="1"
 
-                        </div>                            />
+                </div>                            />
 
-                    </div>                        </div>
+            </div>                        </div>
 
-                </CardContent>
+        </CardContent>
 
-            </Card>                        <div style={sectionStyle}>
+    </Card>                        <div style={sectionStyle}>
 
         );                            <label style={labelStyle}>Opções:</label>
 
     }                            <p style={{ fontSize: '12px', color: 'hsl(var(--muted-foreground))', margin: '4px 0 8px 0' }}>
 
-                                {selectedStep.options?.length || 0} opções configuradas
+            {selectedStep.options?.length || 0} opções configuradas
 
     // Resolver painel apropriado                            </p>
 
-    const stepType = selectedStep.type || 'common';                            <button
+        const stepType = selectedStep.type || 'common';                            <button
 
-    const panelDefinition = PropertiesPanelRegistry.resolve(stepType);                                onClick={() => {
+            const panelDefinition= PropertiesPanelRegistry.resolve(stepType);                                onClick={() => {
 
-                                    const newOption = {
+                const newOption = {
 
-    if (!panelDefinition) {                                        id: `opt-${Date.now()}`,
+                    if(!panelDefinition) {
+                        id: `opt-${Date.now()}`,
 
-        return (                                        text: 'Nova opção',
+        return (text: 'Nova opção',
 
-            <Card className={cn('h-full flex flex-col', className)}>                                        image: ''
+            <Card className = { cn('h-full flex flex-col', className)}> image: ''
 
-                <CardHeader>                                    };
+        <CardHeader>                                    };
 
-                    <div className="flex items-center justify-between">                                    const currentOptions = selectedStep.options || [];
+            <div className="flex items-center justify-between">                                    const currentOptions = selectedStep.options || [];
 
-                        <CardTitle>Erro no Painel</CardTitle>                                    handleChange('options', [...currentOptions, newOption]);
+                <CardTitle>Erro no Painel</CardTitle>                                    handleChange('options', [...currentOptions, newOption]);
 
-                        <Button variant="ghost" size="sm" onClick={onClose} className="h-8 w-8 p-0">                                }}
+                <Button variant="ghost" size="sm" onClick={onClose} className="h-8 w-8 p-0">                                }}
 
-                            <X className="w-4 h-4" />                                style={{
+                    <X className="w-4 h-4" />                                style={{
 
                         </Button>                                    padding: '8px 16px',
 
-                    </div>                                    background: 'hsl(var(--primary))',
+            </div>                                    background: 'hsl(var(--primary))',
 
-                </CardHeader>                                    color: 'hsl(var(--primary-foreground))',
+        </CardHeader>                                    color: 'hsl(var(--primary-foreground))',
 
-                <CardContent>                                    border: 'none',
+        <CardContent>                                    border: 'none',
 
-                    <Alert variant="destructive">                                    borderRadius: '6px',
+            <Alert variant="destructive">                                    borderRadius: '6px',
 
-                        <AlertCircle className="h-4 w-4" />                                    cursor: 'pointer',
+                <AlertCircle className="h-4 w-4" />                                    cursor: 'pointer',
 
-                        <AlertDescription>                                    fontSize: '13px'
+                <AlertDescription>                                    fontSize: '13px'
 
-                            Nenhum painel encontrado para o tipo <strong>"{stepType}"</strong>.                                }}
+                    Nenhum painel encontrado para o tipo <strong>"{stepType}"</strong>.                                }}
 
                             Verifique o PropertiesPanelRegistry.                            >
 
-                        </AlertDescription>                                + Adicionar Opção
+                </AlertDescription>                                + Adicionar Opção
 
-                    </Alert>                            </button>
+            </Alert>                            </button>
 
-                </CardContent>                        </div>
+    </CardContent>                        </div >
 
-            </Card>                    </>
+            </Card >                    </>
 
         );                );
 
@@ -378,111 +382,111 @@ export const DynamicPropertiesPanel: React.FC<DynamicPropertiesPanelProps> = ({ 
 
             case 'transition':
 
-    const PanelComponent = panelDefinition.component;            case 'transition-result':
+const PanelComponent = panelDefinition.component;            case 'transition-result':
 
-                    return (
+return (
 
     const stepTypeLabels: Record<string, string> = {                    <>
 
-        'intro': 'Introdução',                        <div style={sectionStyle}>
+        'intro': 'Introdução',                        <div style = { sectionStyle } >
 
-        'question': 'Pergunta',                            <label style={labelStyle}>Mensagem Principal:</label>
+        'question': 'Pergunta',                            <label style = { labelStyle } > Mensagem Principal:</label>
 
-        'strategic-question': 'Pergunta Estratégica',                            <textarea
+            'strategic-question': 'Pergunta Estratégica', <textarea
 
-        'transition': 'Transição',                                value={selectedStep.message || ''}
+        'transition': 'Transição', value = { selectedStep.message || '' }
 
-        'transition-result': 'Transição com Resultado',                                onChange={(e) => handleChange('message', e.target.value)}
+'transition-result': 'Transição com Resultado', onChange = {(e) => handleChange('message', e.target.value)}
 
-        'result': 'Resultado',                                style={{ ...inputStyle, minHeight: '100px', resize: 'vertical' }}
+'result': 'Resultado', style = {{ ...inputStyle, minHeight: '100px', resize: 'vertical' }}
 
-        'offer': 'Oferta'                                placeholder="Digite a mensagem de transição..."
+'offer': 'Oferta'                                placeholder = "Digite a mensagem de transição..."
 
     };                            />
 
-                        </div>
+                        </div >
 
     return (
 
-        <Card className={cn('h-full flex flex-col', className)}>                        <div style={sectionStyle}>
+    <Card className={cn('h-full flex flex-col', className)}>                        <div style={sectionStyle}>
 
-            {/* Header */}                            <label style={labelStyle}>Duração (segundos):</label>
+        {/* Header */}                            <label style={labelStyle}>Duração (segundos):</label>
 
-            <CardHeader className="flex-shrink-0 pb-3">                            <input
+        <CardHeader className="flex-shrink-0 pb-3">                            <input
 
-                <div className="flex items-center justify-between">                                type="number"
+            <div className="flex items-center justify-between">                                type="number"
 
-                    <div className="flex items-center gap-2">                                value={selectedStep.duration || 3}
+            <div className="flex items-center gap-2">                                value={selectedStep.duration || 3}
 
-                        <CardTitle className="text-lg">Propriedades</CardTitle>                                onChange={(e) => handleChange('duration', parseInt(e.target.value) || 3)}
+                <CardTitle className="text-lg">Propriedades</CardTitle>                                onChange={(e) => handleChange('duration', parseInt(e.target.value) || 3)}
 
-                        <Badge variant="secondary">                                style={inputStyle}
+                <Badge variant="secondary">                                style={inputStyle}
 
-                            {panelDefinition.icon} {stepTypeLabels[stepType] || stepType}                                min="1"
+                    {panelDefinition.icon} {stepTypeLabels[stepType] || stepType}                                min="1"
 
-                        </Badge>                                max="10"
+                </Badge>                                max="10"
 
-                    </div>                            />
+            </div>                            />
 
-                                            </div>
+        </div>
 
-                    <div className="flex items-center gap-1">                    </>
+            <div className="flex items-center gap-1">                    </>
 
-                        {/* Preview Toggle */}                );
+            {/* Preview Toggle */}                );
 
-                        {onTogglePreview && (
+            {onTogglePreview && (
 
-                            <Button            case 'result':
+                <Button case 'result':
 
-                                variant="ghost"                return (
+            variant="ghost"                return (
 
-                                size="sm"                    <>
+            size="sm"                    <>
 
-                                onClick={onTogglePreview}                        <div style={sectionStyle}>
+                onClick={onTogglePreview}                        <div style={sectionStyle}>
 
-                                className="h-8 w-8 p-0"                            <label style={labelStyle}>Título do Resultado:</label>
+                    className="h-8 w-8 p-0"                            <label style={labelStyle}>Título do Resultado:</label>
 
-                                title={isPreviewMode ? 'Modo Edição' : 'Modo Preview'}                            <input
+                    title={isPreviewMode ? 'Modo Edição' : 'Modo Preview'}                            <input
 
-                            >                                type="text"
+                    >                                type="text"
 
-                                {isPreviewMode ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}                                value={selectedStep.title || ''}
+                        {isPreviewMode ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}                                value={selectedStep.title || ''}
 
-                            </Button>                                onChange={(e) => handleChange('title', e.target.value)}
+                    </Button>                                onChange={(e) => handleChange('title', e.target.value)}
 
                         )}                                style={inputStyle}
 
-                                placeholder="Ex: Seu resultado está pronto!"
+                    placeholder="Ex: Seu resultado está pronto!"
 
-                        {/* Duplicate Button */}                            />
+                    {/* Duplicate Button */}                            />
 
-                        {onDuplicateStep && (                        </div>
+                    {onDuplicateStep && (                        </div>
 
-                            <Button
+                <Button
 
-                                variant="ghost"                        <div style={sectionStyle}>
+                    variant="ghost"                        <div style={sectionStyle}>
 
-                                size="sm"                            <label style={labelStyle}>Descrição:</label>
+                    size="sm"                            <label style={labelStyle}>Descrição:</label>
 
-                                onClick={handleDuplicate}                            <textarea
+                    onClick={handleDuplicate}                            <textarea
 
-                                className="h-8 w-8 p-0"                                value={selectedStep.description || ''}
+                        className="h-8 w-8 p-0" value={selectedStep.description || ''}
 
-                                title="Duplicar Step"                                onChange={(e) => handleChange('description', e.target.value)}
+                        title="Duplicar Step" onChange={(e) => handleChange('description', e.target.value)}
 
-                            >                                style={{ ...inputStyle, minHeight: '120px', resize: 'vertical' }}
+                    >                                style={{ ...inputStyle, minHeight: '120px', resize: 'vertical' }}
 
-                                <Copy className="w-4 h-4" />                                placeholder="Descreva o resultado..."
+                        <Copy className="w-4 h-4" />                                placeholder="Descreva o resultado..."
 
-                            </Button>                            />
+                    </Button>                            />
 
                         )}                        </div>
 
 
 
-                        {/* Delete Button */}                        <div style={sectionStyle}>
+                {/* Delete Button */}                        <div style={sectionStyle}>
 
-                        {onDeleteStep && (                            <label style={labelStyle}>Estilo Calculado:</label>
+                    {onDeleteStep && (                            <label style={labelStyle}>Estilo Calculado:</label>
 
                             <Button                            <input
 
@@ -508,143 +512,143 @@ export const DynamicPropertiesPanel: React.FC<DynamicPropertiesPanelProps> = ({ 
 
                         {/* Close Button */}                        </div>
 
-                        <Button                    </>
+                <Button                    </>
 
-                            variant="ghost"                );
+            variant="ghost"                );
 
-                            size="sm"
+            size="sm"
 
-                            onClick={onClose}            case 'offer':
+            onClick={onClose}            case 'offer':
 
-                            className="h-8 w-8 p-0"                return (
+            className="h-8 w-8 p-0"                return (
 
-                            title="Fechar Painel"                    <>
+            title="Fechar Painel"                    <>
 
                         >                        <div style={sectionStyle}>
 
-                            <X className="w-4 h-4" />                            <label style={labelStyle}>Título da Oferta:</label>
+                    <X className="w-4 h-4" />                            <label style={labelStyle}>Título da Oferta:</label>
 
-                        </Button>                            <input
+                </Button>                            <input
 
                     </div>                                type="text"
 
-                </div>                                value={selectedStep.title || ''}
+    </div>                                value={selectedStep.title || ''}
 
-                                onChange={(e) => handleChange('title', e.target.value)}
+        onChange={(e) => handleChange('title', e.target.value)}
 
-                {/* Step ID */}                                style={inputStyle}
+        {/* Step ID */}                                style={inputStyle}
 
-                <div className="text-xs text-muted-foreground flex items-center justify-between">                                placeholder="Ex: Oferta Especial"
+        <div className="text-xs text-muted-foreground flex items-center justify-between">                                placeholder="Ex: Oferta Especial"
 
-                    <span>ID: {selectedStep.id}</span>                            />
+            <span>ID: {selectedStep.id}</span>                            />
 
-                    {hasUnsavedChanges && (                        </div>
+            {hasUnsavedChanges && (                        </div>
 
-                        <Badge variant="outline" className="text-[10px] py-0">
+        <Badge variant="outline" className="text-[10px] py-0">
 
-                            Alterações não salvas                        <div style={sectionStyle}>
+            Alterações não salvas                        <div style={sectionStyle}>
 
-                        </Badge>                            <label style={labelStyle}>Descrição:</label>
+        </Badge>                            <label style={labelStyle}>Descrição:</label>
 
                     )}                            <textarea
 
-                </div>                                value={selectedStep.description || ''}
+                </div>                                value = { selectedStep.description || '' }
 
-            </CardHeader>                                onChange={(e) => handleChange('description', e.target.value)}
+            </CardHeader > onChange={ (e) => handleChange('description', e.target.value) }
 
-                                style={{ ...inputStyle, minHeight: '100px', resize: 'vertical' }}
+style = {{ ...inputStyle, minHeight: '100px', resize: 'vertical' }}
 
-            <Separator />                                placeholder="Descreva a oferta..."
+<Separator />                                placeholder = "Descreva a oferta..."
 
-                            />
+    />
 
-            {/* Content - Painel Dinâmico */}                        </div>
+    {/* Content - Painel Dinâmico */ }                        </div >
 
-            <CardContent className="flex-1 overflow-hidden p-0">
+        <CardContent className="flex-1 overflow-hidden p-0">
 
-                <ScrollArea className="h-full px-6 py-6">                        <div style={sectionStyle}>
+            <ScrollArea className="h-full px-6 py-6">                        <div style={sectionStyle}>
 
-                    <PanelComponent                            <label style={labelStyle}>Preço:</label>
+                <PanelComponent                            <label style={labelStyle}>Preço:</label>
 
-                        stepId={selectedStep.id}                            <input
+                stepId={selectedStep.id}                            <input
 
-                        stepType={stepType}                                type="text"
+                    stepType={stepType} type="text"
 
-                        stepData={selectedStep}                                value={selectedStep.price || ''}
+                    stepData={selectedStep} value={selectedStep.price || ''}
 
-                        onUpdate={handleUpdate}                                onChange={(e) => handleChange('price', e.target.value)}
+                    onUpdate={handleUpdate} onChange={(e) => handleChange('price', e.target.value)}
 
-                        onDelete={onDeleteStep ? handleDelete : undefined}                                style={inputStyle}
+                    onDelete={onDeleteStep ? handleDelete : undefined} style={inputStyle}
 
-                    />                                placeholder="Ex: R$ 197,00"
+                />                                placeholder="Ex: R$ 197,00"
 
-                </ScrollArea>                            />
+            </ScrollArea>                            />
 
-            </CardContent>                        </div>
+        </CardContent>                        </div >
 
-        </Card>
+        </Card >
 
-    );                        <div style={sectionStyle}>
+    ); <div style={sectionStyle}>
 
 };                            <label style={labelStyle}>Link do Botão:</label>
 
-                            <input
+    <input
 
-export default DynamicPropertiesPanel;                                type="url"
+        export default DynamicPropertiesPanel;                                type="url"
 
-                                value={selectedStep.buttonLink || ''}
-                                onChange={(e) => handleChange('buttonLink', e.target.value)}
-                                style={inputStyle}
-                                placeholder="https://..."
+    value={selectedStep.buttonLink || ''}
+    onChange={(e) => handleChange('buttonLink', e.target.value)}
+    style={inputStyle}
+    placeholder="https://..."
                             />
-                        </div>
+</div>
                     </>
                 );
 
             default:
-                return (
-                    <div style={sectionStyle}>
-                        <p style={{ color: 'hsl(var(--muted-foreground))' }}>
-                            Propriedades para o tipo "{selectedStep.type}" ainda não foram implementadas.
-                        </p>
-                    </div>
-                );
+return (
+    <div style={sectionStyle}>
+        <p style={{ color: 'hsl(var(--muted-foreground))' }}>
+            Propriedades para o tipo "{selectedStep.type}" ainda não foram implementadas.
+        </p>
+    </div>
+);
         }
     };
 
-    return (
-        <div style={{ padding: '16px' }}>
-            <div style={{ marginBottom: '16px', paddingBottom: '16px', borderBottom: '2px solid hsl(var(--border))' }}>
-                <h4 style={{ margin: '0 0 4px 0', fontSize: '15px', fontWeight: 'bold', color: 'hsl(var(--foreground))' }}>
-                    {selectedStep.title || selectedStep.name || 'Propriedades'}
-                </h4>
-                <p style={{ margin: 0, fontSize: '12px', color: 'hsl(var(--muted-foreground))' }}>
-                    Tipo: <strong>{selectedStep.type}</strong>
-                </p>
-            </div>
-
-            {renderTypeSpecificFields()}
-
-            <div style={{ marginTop: '20px', paddingTop: '16px', borderTop: '1px solid hsl(var(--border))' }}>
-                <button
-                    onClick={onDelete}
-                    style={{
-                        width: '100%',
-                        padding: '10px',
-                        background: 'hsl(var(--destructive))',
-                        color: 'hsl(var(--destructive-foreground))',
-                        border: 'none',
-                        borderRadius: '6px',
-                        cursor: 'pointer',
-                        fontSize: '14px',
-                        fontWeight: 'bold'
-                    }}
-                >
-                    🗑️ Excluir Etapa
-                </button>
-            </div>
+return (
+    <div style={{ padding: '16px' }}>
+        <div style={{ marginBottom: '16px', paddingBottom: '16px', borderBottom: '2px solid hsl(var(--border))' }}>
+            <h4 style={{ margin: '0 0 4px 0', fontSize: '15px', fontWeight: 'bold', color: 'hsl(var(--foreground))' }}>
+                {selectedStep.title || selectedStep.name || 'Propriedades'}
+            </h4>
+            <p style={{ margin: 0, fontSize: '12px', color: 'hsl(var(--muted-foreground))' }}>
+                Tipo: <strong>{selectedStep.type}</strong>
+            </p>
         </div>
-    );
+
+        {renderTypeSpecificFields()}
+
+        <div style={{ marginTop: '20px', paddingTop: '16px', borderTop: '1px solid hsl(var(--border))' }}>
+            <button
+                onClick={onDelete}
+                style={{
+                    width: '100%',
+                    padding: '10px',
+                    background: 'hsl(var(--destructive))',
+                    color: 'hsl(var(--destructive-foreground))',
+                    border: 'none',
+                    borderRadius: '6px',
+                    cursor: 'pointer',
+                    fontSize: '14px',
+                    fontWeight: 'bold'
+                }}
+            >
+                🗑️ Excluir Etapa
+            </button>
+        </div>
+    </div>
+);
 };
 
 export default DynamicPropertiesPanel;
