@@ -6,8 +6,8 @@
  * com mock da lógica de seleção para preview.
  */
 
-import React, { useMemo, useState } from 'react';
-import QuestionStep from '../../quiz/QuestionStep';
+import React, { useMemo } from 'react';
+import CompositeQuestionStep from '../modular/components/composite/CompositeQuestionStep';
 import { EditableBlockWrapper } from './shared/EditableBlockWrapper';
 import { EditableStepProps } from './shared/EditableStepProps';
 
@@ -40,30 +40,7 @@ const EditableQuestionStep: React.FC<EditableQuestionStepProps> = ({
         'requiredSelections'
     ];
 
-    // 🎪 Mock state para currentAnswers (simular seleções no preview)
-    const [mockCurrentAnswers, setMockCurrentAnswers] = useState<string[]>(() => {
-        // Inicializar com uma seleção para mostrar preview
-        if (data.options && data.options.length > 0) {
-            return [data.options[0].id];
-        }
-        return [];
-    });
-
-    // 🎪 Mock callback para onAnswersChange
-    const mockAnswersChange = useMemo(() => (answers: string[]) => {
-        console.log('[Editor Mock] QuestionStep - Respostas alteradas:', answers);
-
-        if (isEditable) {
-            // Atualizar state mock para preview
-            setMockCurrentAnswers(answers);
-
-            // Em produção, isso seria passado para o quiz state
-            // No editor, apenas atualizamos o preview
-            return;
-        }
-    }, [isEditable]);
-
-    // 🎨 Handle property click usando callback da interface
+    // � Handle property click usando callback da interface
     const handlePropertyClick = (propKey: string, element: HTMLElement) => {
         if (onPropertyClick) {
             onPropertyClick(propKey, element);
@@ -71,18 +48,60 @@ const EditableQuestionStep: React.FC<EditableQuestionStepProps> = ({
     };
 
     // 🔧 Garantir estrutura mínima dos dados
-    const safeData = useMemo(() => ({
-        ...data,
-        type: 'question' as const,
-        questionNumber: data.questionNumber || '1/10',
-        questionText: data.questionText || 'Qual opção mais te representa?',
-        options: data.options || [
+    const safeData = useMemo(() => {
+        type QuestionOption = { id?: string; text?: string; image?: string };
+
+        interface QuestionStepDataExtras {
+            questionNumber?: string;
+            questionText?: string;
+            subtitle?: string;
+            options?: QuestionOption[];
+            requiredSelections?: number;
+            allowMultipleSelection?: boolean;
+            backgroundColor?: string;
+            textColor?: string;
+            accentColor?: string;
+            totalSteps?: number;
+            editableHint?: boolean;
+        }
+
+        const stepData = data as QuestionStepDataExtras;
+
+        const fallbackOptions: QuestionOption[] = [
             { id: 'opt1', text: 'Opção 1', image: '' },
             { id: 'opt2', text: 'Opção 2', image: '' },
             { id: 'opt3', text: 'Opção 3', image: '' }
-        ],
-        requiredSelections: data.requiredSelections || 1
-    }), [data]);
+        ];
+
+        const rawOptions: QuestionOption[] = Array.isArray(stepData.options) && stepData.options.length > 0
+            ? stepData.options
+            : fallbackOptions;
+
+        const normalizedOptions = rawOptions.map((option, index) => ({
+            id: option?.id || `option-${index + 1}`,
+            text: option?.text || `Opção ${index + 1}`,
+            image: option?.image
+        }));
+
+        const requiredSelections = stepData.requiredSelections ?? 1;
+        const allowMultipleSelection = stepData.allowMultipleSelection ?? requiredSelections > 1;
+
+        return {
+            ...stepData,
+            type: 'question' as const,
+            questionNumber: stepData.questionNumber || '1/10',
+            questionText: stepData.questionText || 'Qual opção mais te representa?',
+            subtitle: stepData.subtitle,
+            options: normalizedOptions,
+            requiredSelections,
+            allowMultipleSelection,
+            backgroundColor: stepData.backgroundColor || '#ffffff',
+            textColor: stepData.textColor || '#432818',
+            accentColor: stepData.accentColor || '#deac6d',
+            totalSteps: stepData.totalSteps || 21,
+            editableHint: stepData.editableHint ?? isEditable
+        };
+    }, [data, isEditable]);
 
     return (
         <EditableBlockWrapper
@@ -102,11 +121,18 @@ const EditableQuestionStep: React.FC<EditableQuestionStepProps> = ({
             blockId={blockId}
             className="editable-question-step"
         >
-            {/* 🎯 Renderizar componente de produção com mock state */}
-            <QuestionStep
-                data={safeData}
-                currentAnswers={mockCurrentAnswers}
-                onAnswersChange={mockAnswersChange}
+            <CompositeQuestionStep
+                questionNumber={safeData.questionNumber}
+                questionText={safeData.questionText}
+                subtitle={safeData.subtitle}
+                options={safeData.options}
+                requiredSelections={safeData.requiredSelections}
+                allowMultipleSelection={safeData.allowMultipleSelection}
+                backgroundColor={safeData.backgroundColor}
+                textColor={safeData.textColor}
+                accentColor={safeData.accentColor}
+                totalSteps={safeData.totalSteps}
+                editableHint={safeData.editableHint}
             />
         </EditableBlockWrapper>
     );
