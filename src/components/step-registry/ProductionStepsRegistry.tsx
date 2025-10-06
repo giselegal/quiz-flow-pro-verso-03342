@@ -14,6 +14,7 @@
 import React from 'react';
 import { BaseStepProps, StepComponent, StepConfig } from './StepTypes';
 import { stepRegistry } from './StepRegistry';
+import { normalizeStepId } from '@/utils/quizStepIds';
 
 // Import dos componentes de produção originais
 import OriginalIntroStep from '@/components/quiz/IntroStep';
@@ -58,7 +59,13 @@ const IntroStepAdapter: React.FC<BaseStepProps> = (props) => {
             ...data
         },
         onNameSubmit: (name: string) => {
-            onSave({ userName: name });
+            const trimmed = (name || '').trim();
+            if (!trimmed) {
+                console.warn('[quiz:intro] Tentativa de avançar sem nome válido');
+                return;
+            }
+            console.log('[quiz:intro] userName capturado =', trimmed, '→ avançando');
+            onSave({ userName: trimmed });
             onNext();
         },
         // Props adicionais do UnifiedStepRenderer
@@ -357,6 +364,18 @@ export const registerProductionSteps = () => {
 
     PRODUCTION_STEPS.forEach(step => {
         stepRegistry.register(step);
+        // Alias legacy (sem zero) para compatibilidade temporária
+        const legacyId = step.id.replace('step-0', 'step-');
+        if (legacyId !== step.id) {
+            try {
+                stepRegistry.register({ ...step, id: legacyId });
+                if (process.env.NODE_ENV === 'development') {
+                    console.log(`↪️ Alias registrado: ${legacyId} → ${step.id}`);
+                }
+            } catch (e) {
+                // Ignorar se já existir
+            }
+        }
     });
 
     console.log(`✅ ${PRODUCTION_STEPS.length} steps de produção registrados com sucesso!`);

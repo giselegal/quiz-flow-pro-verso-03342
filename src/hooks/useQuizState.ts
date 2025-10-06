@@ -13,6 +13,7 @@
 import { useState, useCallback, useMemo } from 'react';
 import { styleMapping, type StyleId } from '../data/styles';
 import { QUIZ_STEPS, STEP_ORDER } from '../data/quizSteps';
+import { normalizeStepId, getNextFromOrder, getPreviousFromOrder, safeGetStep } from '@/utils/quizStepIds';
 import { getPersonalizedStepTemplate } from '../templates/quiz21StepsSimplified';
 // Note: STRATEGIC_ANSWER_TO_OFFER_KEY commented - not used
 // import { STRATEGIC_ANSWER_TO_OFFER_KEY } from '@/data/quizSteps';
@@ -71,38 +72,26 @@ const initialState: QuizState = {
 export function useQuizState(funnelId?: string, externalSteps?: Record<string, any>) {
   const [state, setState] = useState<QuizState>(initialState);
 
-  // Normalização de IDs para formato padded (step-01)
-  const normalizeStepId = useCallback((id: string): string => {
-    if (!id) return 'step-01';
-    const n = id.replace('step-', '');
-    return `step-${n.padStart(2, '0')}`;
-  }, []);
+  // (agora importado de util) normalizeStepId
 
   // Navegar para próxima etapa
   const nextStep = useCallback((stepId?: string) => {
     setState(prev => {
-      // Se foi passado stepId diretamente, normalizar e usar
       if (stepId) {
         return { ...prev, currentStep: normalizeStepId(stepId) };
       }
-
-      // Baseado em STEP_ORDER (independente de QUIZ_STEPS com outra nomenclatura)
-      const currentIndex = STEP_ORDER.map(normalizeStepId).indexOf(normalizeStepId(prev.currentStep));
-      const normalizedOrder = STEP_ORDER.map(normalizeStepId);
-      const next = normalizedOrder[currentIndex + 1] || normalizedOrder[currentIndex];
+      const next = getNextFromOrder(STEP_ORDER, prev.currentStep);
       return { ...prev, currentStep: next };
     });
-  }, [normalizeStepId]);
+  }, []);
 
   // Navegar para etapa anterior
   const previousStep = useCallback(() => {
-    const normalizedOrder = STEP_ORDER.map(normalizeStepId);
-    const currentIndex = normalizedOrder.indexOf(normalizeStepId(state.currentStep));
-    if (currentIndex > 0) {
-      const prevStepId = normalizedOrder[currentIndex - 1];
-      setState(prev => ({ ...prev, currentStep: prevStepId }));
+    const prevId = getPreviousFromOrder(STEP_ORDER, state.currentStep);
+    if (prevId !== state.currentStep) {
+      setState(prev => ({ ...prev, currentStep: prevId }));
     }
-  }, [state.currentStep, normalizeStepId]);
+  }, [state.currentStep]);
 
   // Definir nome do usuário
   const setUserName = useCallback((userName: string) => {
@@ -123,7 +112,7 @@ export function useQuizState(funnelId?: string, externalSteps?: Record<string, a
 
     // Conta pontos baseado nas respostas das etapas de perguntas (steps 2-11)
     Object.entries(state.answers).forEach(([stepId, selections]) => {
-      const step = QUIZ_STEPS[stepId];
+      const step = safeGetStep(QUIZ_STEPS, stepId);
 
       // Só conta pontos para etapas do tipo 'question' (não strategic-question)
       if (step?.type === 'question' && selections) {
