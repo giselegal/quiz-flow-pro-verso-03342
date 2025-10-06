@@ -143,7 +143,7 @@ const StrategicQuestionStepAdapter: React.FC<BaseStepProps> = (props) => {
     const adaptedProps = {
         data: {
             id: stepId,
-            type: 'strategicQuestion' as const,
+            type: 'strategic-question' as const, // Unificar com restante do sistema
             number: stepNumber,
             title: data.title || `Pergunta Estratégica ${stepNumber}`,
             question: data.question || 'Qual seu principal objetivo?',
@@ -153,8 +153,10 @@ const StrategicQuestionStepAdapter: React.FC<BaseStepProps> = (props) => {
             ],
             ...data
         },
-        onAnswerSelect: (answerId: string) => {
+        onAnswerChange: (answerId: string) => {
+            // Persistir resposta estratégica
             onSave({ [stepId]: answerId });
+            // Avançar imediatamente
             onNext();
         },
         ...otherProps

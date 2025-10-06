@@ -17,8 +17,14 @@ export default function StrategicQuestionStep({
     currentAnswer,
     onAnswerChange
 }: StrategicQuestionStepProps) {
+    const safeOnAnswerChange: (answer: string) => void =
+        typeof onAnswerChange === 'function' ? onAnswerChange : (answer: string) => {
+            if (process.env.NODE_ENV === 'development') {
+                console.warn('[StrategicQuestionStep] onAnswerChange ausente ou inválido – noop usado. answer=', answer);
+            }
+        };
     const handleOptionClick = (optionId: string) => {
-        onAnswerChange(optionId);
+        safeOnAnswerChange(optionId);
     };
 
     return (

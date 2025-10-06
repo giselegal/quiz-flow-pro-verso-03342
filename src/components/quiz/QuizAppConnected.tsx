@@ -21,6 +21,29 @@ import sanitizeHtml from '@/utils/sanitizeHtml';
 import { useEffect, useState } from 'react';
 import type { QuizConfig } from '@/types/quiz-config';
 
+// ============================================================================
+// UTIL: Cálculo consistente de requiredSelections (prioridade clara)
+// 1. Config específica da etapa vinda da API (currentStepConfig.requiredSelections)
+// 2. Definição estática original da etapa (currentStepData.requiredSelections)
+// 3. Regras globais (mergedConfig.steps2to11 / steps13to18)
+// 4. Fallback por tipo: question=3, strategic-question=1, outro=1
+// ============================================================================
+function getEffectiveRequiredSelections(step: any, mergedConfig: any, currentStepConfig: any): number {
+    // API específica da etapa tem precedência
+    if (typeof currentStepConfig?.requiredSelections === 'number') return currentStepConfig.requiredSelections;
+    // Definição original da etapa
+    if (typeof step?.requiredSelections === 'number') return step.requiredSelections;
+    // Regras agregadas (templates globais)
+    if (step?.type === 'question' && mergedConfig?.steps2to11?.requiredSelections)
+        return mergedConfig.steps2to11.requiredSelections;
+    if (step?.type === 'strategic-question' && mergedConfig?.steps13to18?.requiredSelections)
+        return mergedConfig.steps13to18.requiredSelections;
+    // Fallback por tipo
+    if (step?.type === 'question') return 3;
+    if (step?.type === 'strategic-question') return 1;
+    return 1;
+}
+
 interface QuizAppConnectedProps {
     funnelId?: string;
     editorMode?: boolean; // Permite visualização no /editor
@@ -337,12 +360,16 @@ export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', ed
                                     currentAnswers={state.answers[state.currentStep] || []}
                                     onAnswersChange={(answers: string[]) => {
                                         addAnswer(state.currentStep, answers);
+                                        const requiredSelections = getEffectiveRequiredSelections(currentStepData, mergedConfig, currentStepConfig);
+                                        const autoCfg = (mergedConfig.autoAdvance as any) || {};
+                                        const autoAdvanceEnabled = typeof autoCfg === 'object'
+                                            ? (autoCfg.enabled !== false)
+                                            : mergedConfig.autoAdvance !== false;
+                                        const autoAdvanceDelay = typeof autoCfg === 'object'
+                                            ? (autoCfg.delay ?? 1000)
+                                            : (mergedConfig.autoAdvanceDelay ?? 1000);
 
-                                        // Configuração dinâmica de auto-advance
-                                        const autoAdvanceEnabled = (mergedConfig.autoAdvance as any)?.enabled ?? mergedConfig.autoAdvance !== false;
-                                        const autoAdvanceDelay = (mergedConfig.autoAdvance as any)?.delay ?? (mergedConfig as any).autoAdvanceDelay ?? 1000;
-                                        const requiredSelections = (mergedConfig as any).requiredSelections || currentStepData.requiredSelections || 3;
-
+                                        // Avançar apenas quando atingir exatamente o número exigido
                                         if (autoAdvanceEnabled && answers.length === requiredSelections) {
                                             setTimeout(() => nextStep(), Number(autoAdvanceDelay) || 1000);
                                         }
