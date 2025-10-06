@@ -14,7 +14,7 @@ import { funnelLocalStore } from '@/services/funnelLocalStore';
 import { Play, Plus, Sparkles, Zap, Copy, Trash2 } from 'lucide-react';
 import { useLocation } from 'wouter';
 import { AdminBreadcrumbs } from '@/components/admin/AdminBreadcrumbs';
-import { unifiedTemplateManager, type UnifiedTemplateData, type TemplateSearchFilters } from '@/core/templates/UnifiedTemplateManager';
+import { UnifiedTemplateManager as unifiedTemplateManager, type UnifiedTemplateData, type TemplateSearchFilters } from '@/core/templates/UnifiedTemplateManager';
 
 const FunnelPanelPageUnified: React.FC = () => {
     const [, setLocation] = useLocation();
