@@ -40,27 +40,27 @@ export { DynamicPropertiesPanel } from './DynamicPropertiesPanel';
 export type { DynamicPropertiesPanelProps } from './DynamicPropertiesPanel';
 
 // Painéis Modulares Individuais
-export { 
-    QuestionPropertiesPanel, 
-    QuestionPropertiesPanelDefinition, 
-    StrategicQuestionPropertiesPanelDefinition 
+export {
+  QuestionPropertiesPanel,
+  QuestionPropertiesPanelDefinition,
+  StrategicQuestionPropertiesPanelDefinition
 } from './QuestionPropertiesPanel';
 
-export { 
-    ResultPropertiesPanel, 
-    ResultPropertiesPanelDefinition, 
-    TransitionResultPropertiesPanelDefinition 
+export {
+  ResultPropertiesPanel,
+  ResultPropertiesPanelDefinition,
+  TransitionResultPropertiesPanelDefinition
 } from './ResultPropertiesPanel';
 
-export { 
-    OfferPropertiesPanel, 
-    OfferPropertiesPanelDefinition 
+export {
+  OfferPropertiesPanel,
+  OfferPropertiesPanelDefinition
 } from './OfferPropertiesPanel';
 
-export { 
-    CommonPropertiesPanel, 
-    CommonPropertiesPanelDefinition, 
-    IntroPropertiesPanelDefinition, 
-    TransitionPropertiesPanelDefinition 
+export {
+  CommonPropertiesPanel,
+  CommonPropertiesPanelDefinition,
+  IntroPropertiesPanelDefinition,
+  TransitionPropertiesPanelDefinition
 } from './CommonPropertiesPanel';
 
