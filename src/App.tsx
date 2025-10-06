@@ -34,6 +34,7 @@ import { QuizErrorBoundary } from './components/RouteErrorBoundary';
 import { EditorErrorBoundary } from './components/error/EditorErrorBoundary';
 import UnifiedCRUDProvider from '@/context/UnifiedCRUDProvider';
 import { OptimizedEditorProvider } from '@/components/editor/OptimizedEditorProvider';
+import { BlockRegistryProvider } from '@/runtime/quiz/blocks/BlockRegistry';
 
 // 🏠 PÁGINAS ESSENCIAIS
 const Home = lazy(() => import('./pages/Home'));
