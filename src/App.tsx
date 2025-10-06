@@ -1,5 +1,6 @@
 /**
  * 🎯 APP.TSX com ROTEAMENTO SPA OT// 🚀 MODERN UNIFIED EDITOR - EDITOR OFICIAL (MAIS COMPLETO)
+const QuizFunnelEditor = lazy(() => import('./components/editor/quiz/QuizFunnelEditor').then(module => ({ default: module.default })));
 const QuizFunnelEditorSimplified = lazy(() => import('./components/editor/quiz/QuizFunnelEditorSimplified').then(module => ({ default: module.default })));
 const QuizFunnelEditorWYSIWYG = lazy(() => import('./components/editor/quiz/QuizFunnelEditorWYSIWYG').then(module => ({ default: module.default })));
 const ModernUnifiedEditor = lazy(() => import('./pages/editor/ModernUnifiedEditor').then(module => ({ default: module.default })));
@@ -39,13 +40,15 @@ const Home = lazy(() => import('./pages/Home'));
 const AuthPage = lazy(() => import('./pages/AuthPage'));
 const NotFound = lazy(() => import('./pages/NotFound'));
 
-// � PÁGINAS DE DIAGNÓSTICO - TEMPORÁRIAS
+// 🔍 PÁGINAS DE DIAGNÓSTICO - TEMPORÁRIAS
 const TemplateDiagnosticPage = lazy(() => import('./pages/TemplateDiagnosticPage'));
 
-// �🚀 MODERN UNIFIED EDITOR - EDITOR OFICIAL (MAIS COMPLETO)
+// 🚀 EDITORES - OFICIAIS E LEGADOS
+const QuizFunnelEditor = lazy(() => import('./components/editor/quiz/QuizFunnelEditor').then(module => ({ default: module.default })));
 const QuizFunnelEditorSimplified = lazy(() => import('./components/editor/quiz/QuizFunnelEditorSimplified').then(module => ({ default: module.default })));
 const QuizFunnelEditorWYSIWYG = lazy(() => import('./components/editor/quiz/QuizFunnelEditorWYSIWYG').then(module => ({ default: module.default })));
 const ModernUnifiedEditor = lazy(() => import('./pages/editor/ModernUnifiedEditor').then(module => ({ default: module.default })));
+const ModularEditorLayout = lazy(() => import('./editor/components/ModularEditorLayout').then(module => ({ default: module.default })));
 
 // ❌ HYBRID EDITOR PRO - DESATIVADO (substituído pelo ModernUnifiedEditor)
 // const HybridEditorPro = lazy(() => import('./components/editor/EditorPro/components/HybridEditorPro'));
@@ -116,6 +119,19 @@ function App() {
                               <UnifiedCRUDProvider autoLoad={true}>
                                 <Suspense fallback={<EnhancedLoadingFallback message="Carregando editor..." />}>
                                   <ModularEditorLayout />
+                                </Suspense>
+                              </UnifiedCRUDProvider>
+                            </div>
+                          </EditorErrorBoundary>
+                        </Route>
+
+                        {/* 🏆 QUIZ FUNNEL EDITOR - EDITOR MAIS COMPLETO (Undo/Redo, Import/Export, Validação) */}
+                        <Route path="/editor-pro">
+                          <EditorErrorBoundary>
+                            <div data-testid="quiz-funnel-editor-page">
+                              <UnifiedCRUDProvider autoLoad={true}>
+                                <Suspense fallback={<EnhancedLoadingFallback message="Carregando editor profissional..." />}>
+                                  <QuizFunnelEditor />
                                 </Suspense>
                               </UnifiedCRUDProvider>
                             </div>
