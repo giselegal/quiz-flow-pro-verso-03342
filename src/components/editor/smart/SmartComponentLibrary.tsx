@@ -667,7 +667,8 @@ interface SmartImageProps extends SmartComponentProps {
 
 export class SmartImage extends SmartComponentBase<SmartImageProps> {
     private imageRef = React.createRef<HTMLImageElement>();
-    private [loading, setLoading] =[true, (l: boolean) => { }];
+    private loading = true;
+    private setLoading = (l: boolean) => { };
     private [error, setError] =[false, (e: boolean) => { }];
     private [naturalSize, setNaturalSize] =[{ width: 0, height: 0 }, (s: any) => { }];
 

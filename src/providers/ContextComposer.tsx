@@ -224,7 +224,7 @@ export const ContextComposer: React.FC<ContextComposerProps> = ({
 };
 
 // 🎯 SELECTIVE CONTEXT HOOK
-export const useContextSlice = <T>(sliceName: string): T => {
+export const useContextSlice = <T,>(sliceName: string): T => {
     const context = useContext(ComposedContext);
     if (!context) {
         throw new Error('useContextSlice must be used within ContextComposer');
