@@ -7,7 +7,6 @@ import React, { useMemo, useEffect, useRef, useState } from 'react';
 import { QuizFunnelEditingFacade, type FunnelSnapshot } from '@/editor/facade/FunnelEditingFacade';
 import { resolveAdapter } from '@/editor/adapters/FunnelAdapterRegistry';
 import { useUnifiedCRUDOptional } from '@/context/UnifiedCRUDProvider';
-import { useFunnelPublication } from '@/hooks/useFunnelPublication';
 import '../../components/editor/quiz/QuizEditorStyles.css';
 import { FunnelFacadeContext, useFunnelFacade, useOptionalFunnelFacade } from '@/editor/facade/FunnelFacadeContext';
 import { FeatureFlagManager } from '@/utils/FeatureFlagManager';
@@ -20,13 +19,12 @@ export interface ModernUnifiedEditorProps {
 }
 
 // 🎯 SISTEMA MODULAR INTEGRADO - Componentes modulares, independentes e editáveis
-import ModularEditorExample, { exampleFunnel } from '../../components/editor/modular/ModularEditorExample';
+import { exampleFunnel } from '../../components/editor/modular/ModularEditorExample';
 // Provider de blocos do quiz
 import { BlockRegistryProvider, ResultHeadlineBlock, OfferCoreBlock, ResultSecondaryListBlock, OfferUrgencyBlock } from '@/runtime/quiz/blocks/BlockRegistry';
 // Context do sistema modular
 import { QuizEditorProvider } from '@/context/QuizEditorContext';
 // ✅ NOVO: Editor com componentes editáveis modulares
-import EditableStepsEditor from '../../components/editor/modular/EditableStepsEditor';
 // 🔧 STABLE: Editor estável sem dependências externas problemáticas
 import StableEditableStepsEditor from '../../components/editor/modular/StableEditableStepsEditor';
 
