@@ -201,7 +201,7 @@ export function useStepBlocks(stepIndex: number): UseStepBlocksResult {
 
             console.log(`🗑️ Deletando bloco ${blockId} do step ${step.id}`);
 
-            facade.deleteBlock(step.id, blockId);
+            facade.removeBlock(step.id, blockId);
 
             // Forçar re-render
             setUpdateTrigger(prev => prev + 1);
