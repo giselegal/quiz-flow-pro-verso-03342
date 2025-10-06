@@ -43,15 +43,16 @@ const ModernUnifiedEditor: React.FC<ModernUnifiedEditorProps> = (props) => {
 
     useEffect(() => {
         const handleFlagUpdate = () => setFlagsVersion(prev => prev + 1);
+        const handleFeatureEvent = () => handleFlagUpdate();
         const handleStorage = (event: StorageEvent) => {
             if (!event.key || event.key.startsWith('flag_')) {
                 handleFlagUpdate();
             }
         };
-        window.addEventListener('feature-flags:update', handleFlagUpdate as EventListener);
+        window.addEventListener('feature-flags:update', handleFeatureEvent);
         window.addEventListener('storage', handleStorage);
         return () => {
-            window.removeEventListener('feature-flags:update', handleFlagUpdate as EventListener);
+            window.removeEventListener('feature-flags:update', handleFeatureEvent);
             window.removeEventListener('storage', handleStorage);
         };
     }, []);
