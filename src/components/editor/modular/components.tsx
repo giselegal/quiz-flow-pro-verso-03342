@@ -7,6 +7,13 @@
 
 import React from 'react';
 import { ComponentRenderProps, ModularComponent } from './types';
+import CompositeIntroStep from './components/composite/CompositeIntroStep';
+import CompositeQuestionStep from './components/composite/CompositeQuestionStep';
+import CompositeStrategicQuestionStep from './components/composite/CompositeStrategicQuestionStep';
+import CompositeTransitionStep from './components/composite/CompositeTransitionStep';
+import CompositeTransitionResultStep from './components/composite/CompositeTransitionResultStep';
+import CompositeResultStep from './components/composite/CompositeResultStep';
+import CompositeOfferStep from './components/composite/CompositeOfferStep';
 
 // 🎨 Wrapper comum para todos os componentes modulares
 interface ModularWrapperProps {
@@ -361,6 +368,177 @@ export const ProgressBarComponent: React.FC<ComponentRenderProps> = (props) => {
     );
 };
 
+// 🧩 Componentes compostos de etapas
+export const StepIntroComponent: React.FC<ComponentRenderProps> = (props) => {
+    const { component } = props;
+
+    if (component.type !== 'step-intro') return null;
+
+    return (
+        <ModularWrapper {...props}>
+            <CompositeIntroStep
+                title={component.title}
+                formQuestion={component.formQuestion}
+                placeholder={component.placeholder}
+                buttonText={component.buttonText}
+                image={component.image}
+                description={component.description}
+                backgroundColor={component.backgroundColor}
+                textColor={component.textColor}
+                accentColor={component.accentColor}
+                showHeader={component.showHeader}
+                showProgress={component.showProgress}
+                progress={component.progress}
+            />
+        </ModularWrapper>
+    );
+};
+
+export const StepQuestionComponent: React.FC<ComponentRenderProps> = (props) => {
+    const { component } = props;
+
+    if (component.type !== 'step-question') return null;
+
+    return (
+        <ModularWrapper {...props}>
+            <CompositeQuestionStep
+                questionNumber={component.questionNumber}
+                questionText={component.questionText}
+                subtitle={component.subtitle}
+                options={component.options}
+                requiredSelections={component.requiredSelections}
+                allowMultipleSelection={component.allowMultipleSelection}
+                backgroundColor={component.backgroundColor}
+                textColor={component.textColor}
+                accentColor={component.accentColor}
+                totalSteps={component.totalSteps}
+                editableHint={component.editableHint}
+            />
+        </ModularWrapper>
+    );
+};
+
+export const StepStrategicQuestionComponent: React.FC<ComponentRenderProps> = (props) => {
+    const { component } = props;
+
+    if (component.type !== 'step-strategic-question') return null;
+
+    return (
+        <ModularWrapper {...props}>
+            <CompositeStrategicQuestionStep
+                questionText={component.questionText}
+                options={component.options}
+                backgroundColor={component.backgroundColor}
+                textColor={component.textColor}
+                accentColor={component.accentColor}
+                questionNumber={component.questionNumber}
+                progressCurrentStep={component.progressCurrentStep}
+                totalSteps={component.totalSteps}
+                editableHint={component.editableHint}
+            />
+        </ModularWrapper>
+    );
+};
+
+export const StepTransitionComponent: React.FC<ComponentRenderProps> = (props) => {
+    const { component } = props;
+
+    if (component.type !== 'step-transition') return null;
+
+    return (
+        <ModularWrapper {...props}>
+            <CompositeTransitionStep
+                title={component.title}
+                subtitle={component.subtitle}
+                text={component.text}
+                image={component.image}
+                backgroundColor={component.backgroundColor}
+                textColor={component.textColor}
+                accentColor={component.accentColor}
+                showAnimation={component.showAnimation}
+                editableHint={component.editableHint}
+            />
+        </ModularWrapper>
+    );
+};
+
+export const StepTransitionResultComponent: React.FC<ComponentRenderProps> = (props) => {
+    const { component } = props;
+
+    if (component.type !== 'step-transition-result') return null;
+
+    return (
+        <ModularWrapper {...props}>
+            <CompositeTransitionResultStep
+                title={component.title}
+                subtitle={component.subtitle}
+                description={component.description}
+                backgroundColor={component.backgroundColor}
+                textColor={component.textColor}
+                accentColor={component.accentColor}
+                showAnimation={component.showAnimation}
+                editableHint={component.editableHint}
+            />
+        </ModularWrapper>
+    );
+};
+
+export const StepResultComponent: React.FC<ComponentRenderProps> = (props) => {
+    const { component } = props;
+
+    if (component.type !== 'step-result') return null;
+
+    return (
+        <ModularWrapper {...props}>
+            <CompositeResultStep
+                title={component.title}
+                subtitle={component.subtitle}
+                userName={component.userName}
+                resultStyle={component.resultStyle}
+                description={component.description}
+                image={component.image}
+                characteristics={component.characteristics}
+                ctaText={component.ctaText}
+                resultPlaceholder={component.resultPlaceholder}
+                backgroundColor={component.backgroundColor}
+                textColor={component.textColor}
+                accentColor={component.accentColor}
+                showEditableHint={component.showEditableHint}
+            />
+        </ModularWrapper>
+    );
+};
+
+export const StepOfferComponent: React.FC<ComponentRenderProps> = (props) => {
+    const { component } = props;
+
+    if (component.type !== 'step-offer') return null;
+
+    return (
+        <ModularWrapper {...props}>
+            <CompositeOfferStep
+                title={component.title}
+                subtitle={component.subtitle}
+                description={component.description}
+                userName={component.userName}
+                resultStyle={component.resultStyle}
+                buttonText={component.buttonText}
+                image={component.image}
+                testimonial={component.testimonial}
+                price={component.price}
+                originalPrice={component.originalPrice}
+                benefits={component.benefits}
+                ctaText={component.ctaText}
+                secureNote={component.secureNote}
+                backgroundColor={component.backgroundColor}
+                textColor={component.textColor}
+                accentColor={component.accentColor}
+                showEditableHint={component.showEditableHint}
+            />
+        </ModularWrapper>
+    );
+};
+
 // 🏭 Mapa de componentes para renderização
 export const COMPONENT_MAP = {
     title: TitleComponent,
@@ -372,5 +550,12 @@ export const COMPONENT_MAP = {
     spacer: SpacerComponent,
     divider: DividerComponent,
     'help-text': HelpTextComponent,
-    'progress-bar': ProgressBarComponent
+    'progress-bar': ProgressBarComponent,
+    'step-intro': StepIntroComponent,
+    'step-question': StepQuestionComponent,
+    'step-strategic-question': StepStrategicQuestionComponent,
+    'step-transition': StepTransitionComponent,
+    'step-transition-result': StepTransitionResultComponent,
+    'step-result': StepResultComponent,
+    'step-offer': StepOfferComponent
 } as const;

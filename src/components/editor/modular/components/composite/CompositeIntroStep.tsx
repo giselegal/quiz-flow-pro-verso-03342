@@ -1,5 +1,5 @@
-import React from 'react';
-import ModularFormFieldSimple from '../ModularFormFieldSimple';
+import React, { useMemo, useState } from 'react';
+import QuizEstiloWrapper from '@/components/editor/quiz-estilo/QuizEstiloWrapper';
 
 export interface CompositeIntroStepProps {
     title: string;
@@ -7,54 +7,15 @@ export interface CompositeIntroStepProps {
     placeholder: string;
     buttonText: string;
     image?: string;
+    description?: string;
     backgroundColor?: string;
     textColor?: string;
     accentColor?: string;
-    onSubmit?: () => void;
+    showHeader?: boolean;
+    showProgress?: boolean;
+    progress?: number;
+    onSubmit?: (name: string) => void;
 }
-
-const containerStyle: React.CSSProperties = {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    gap: '24px',
-    padding: '32px',
-    borderRadius: '16px',
-    boxShadow: '0 12px 30px rgba(30, 41, 59, 0.12)',
-    maxWidth: '720px',
-    margin: '0 auto',
-};
-
-const titleStyle: React.CSSProperties = {
-    fontSize: '28px',
-    fontWeight: 600,
-    textAlign: 'center',
-    lineHeight: 1.4,
-};
-
-const imageStyle: React.CSSProperties = {
-    width: '100%',
-    maxHeight: '360px',
-    objectFit: 'cover',
-    borderRadius: '12px',
-};
-
-const questionStyle: React.CSSProperties = {
-    fontSize: '18px',
-    fontWeight: 500,
-    textAlign: 'center',
-};
-
-const buttonStyle: React.CSSProperties = {
-    width: '100%',
-    padding: '16px',
-    fontSize: '16px',
-    fontWeight: 600,
-    borderRadius: '999px',
-    border: 'none',
-    cursor: 'pointer',
-    transition: 'transform 0.2s ease, box-shadow 0.2s ease',
-};
 
 const CompositeIntroStep: React.FC<CompositeIntroStepProps> = ({
     title,
@@ -62,52 +23,127 @@ const CompositeIntroStep: React.FC<CompositeIntroStepProps> = ({
     placeholder,
     buttonText,
     image,
+    description = 'Em poucos minutos, descubra seu Estilo Predominante e aprenda a montar looks que refletem sua essência com praticidade e confiança.',
     backgroundColor = '#ffffff',
-    textColor = '#1f2937',
+    textColor = '#432818',
     accentColor = '#B89B7A',
+    showHeader = true,
+    showProgress = false,
+    progress = 0,
     onSubmit,
 }) => {
+    const [name, setName] = useState('');
+
+    const canSubmit = useMemo(() => name.trim().length > 0, [name]);
+
+    const handleSubmit = (event?: React.FormEvent) => {
+        event?.preventDefault();
+        if (!canSubmit) return;
+        onSubmit?.(name.trim());
+    };
+
+    const buttonBaseClasses = 'w-full py-3 px-4 text-base font-semibold rounded-md shadow-md transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2';
+
     return (
-        <section
-            style={{
-                background: `linear-gradient(145deg, ${backgroundColor} 0%, #f8fafc 100%)`,
-                padding: '40px 24px',
-            }}
-        >
-            <div style={{ ...containerStyle, color: textColor, backgroundColor: '#ffffff' }}>
-                {image && (
-                    <img src={image} alt="Intro step" style={imageStyle} />
-                )}
+        <QuizEstiloWrapper showHeader={showHeader} showProgress={showProgress} progress={progress} className="py-8">
+            <div className="flex flex-col items-center justify-start space-y-8" style={{ color: textColor }}>
+                <div className="w-full max-w-xs sm:max-w-md md:max-w-lg px-4 mx-auto">
+                    <h1
+                        className="text-2xl sm:text-3xl md:text-4xl font-bold text-center leading-tight px-2"
+                        style={{
+                            fontFamily: '"Playfair Display", serif',
+                            fontWeight: 400,
+                            color: textColor,
+                        }}
+                    >
+                        <span dangerouslySetInnerHTML={{ __html: title }} />
+                    </h1>
+                </div>
 
-                <div
-                    style={titleStyle}
-                    dangerouslySetInnerHTML={{ __html: title }}
-                />
+                <section className="w-full max-w-xs sm:max-w-md md:max-w-lg px-4 space-y-6 md:space-y-8 mx-auto">
+                    {image && (
+                        <div className="mt-2 w-full mx-auto flex justify-center">
+                            <div
+                                className="overflow-hidden rounded-lg shadow-sm"
+                                style={{
+                                    aspectRatio: '1.47',
+                                    maxHeight: '204px',
+                                    width: '100%',
+                                    maxWidth: '300px',
+                                    backgroundColor,
+                                }}
+                            >
+                                <img
+                                    src={image}
+                                    alt="Descubra seu estilo predominante"
+                                    className="w-full h-full object-contain"
+                                    width={300}
+                                    height={204}
+                                    style={{ objectFit: 'contain' }}
+                                />
+                            </div>
+                        </div>
+                    )}
 
-                <div style={questionStyle}>{formQuestion}</div>
+                    <p className="text-sm sm:text-base text-center leading-relaxed px-2" style={{ color: '#4a5568' }}>
+                        <span dangerouslySetInnerHTML={{ __html: description }} />
+                    </p>
 
-                <ModularFormFieldSimple
-                    label=""
-                    placeholder={placeholder}
-                    required
-                    containerProps={{ style: { width: '100%', marginBottom: 0 } }}
-                    inputProps={{ style: { borderRadius: '12px', padding: '16px', fontSize: '16px' } }}
-                />
+                    <div className="mt-8">
+                        <form onSubmit={handleSubmit} className="w-full space-y-6" autoComplete="off">
+                            <div>
+                                <label
+                                    htmlFor="quiz-intro-name"
+                                    className="block text-xs font-semibold mb-1.5"
+                                    style={{ color: textColor }}
+                                >
+                                    {formQuestion} <span className="text-red-500">*</span>
+                                </label>
+                                <input
+                                    id="quiz-intro-name"
+                                    type="text"
+                                    placeholder={placeholder}
+                                    value={name}
+                                    onChange={(event) => setName(event.target.value)}
+                                    className="w-full p-2.5 rounded-md border-2 focus:outline-none focus:ring-2"
+                                    style={{
+                                        backgroundColor: '#FEFEFE',
+                                        borderColor: accentColor,
+                                        color: textColor,
+                                        boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.05)',
+                                    }}
+                                    onKeyDown={(event) => {
+                                        if (event.key === 'Enter') {
+                                            handleSubmit();
+                                        }
+                                    }}
+                                    required
+                                />
+                            </div>
 
-                <button
-                    type="button"
-                    onClick={onSubmit}
-                    style={{
-                        ...buttonStyle,
-                        backgroundColor: accentColor,
-                        color: '#ffffff',
-                        boxShadow: `0 10px 25px ${accentColor}40`,
-                    }}
-                >
-                    {buttonText}
-                </button>
+                            <button
+                                type="submit"
+                                onClick={() => handleSubmit()}
+                                className={`${buttonBaseClasses}`}
+                                style={{
+                                    backgroundColor: canSubmit ? accentColor : `${accentColor}80`,
+                                    color: '#ffffff',
+                                    boxShadow: canSubmit ? `0 15px 25px ${accentColor}40` : 'none',
+                                    cursor: canSubmit ? 'pointer' : 'not-allowed',
+                                }}
+                                disabled={!canSubmit}
+                            >
+                                {buttonText}
+                            </button>
+
+                            <p className="text-xs text-center" style={{ color: '#718096' }}>
+                                Seu nome é necessário para personalizar sua experiência.
+                            </p>
+                        </form>
+                    </div>
+                </section>
             </div>
-        </section>
+        </QuizEstiloWrapper>
     );
 };
 

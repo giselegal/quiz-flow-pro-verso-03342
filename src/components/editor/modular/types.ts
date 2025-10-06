@@ -152,9 +152,13 @@ export interface StepIntroComponentProps extends BaseComponentProps {
     placeholder: string;
     buttonText: string;
     image?: string;
+    description?: string;
     backgroundColor?: string;
     textColor?: string;
     accentColor?: string;
+    showHeader?: boolean;
+    showProgress?: boolean;
+    progress?: number;
 }
 
 export interface StepQuestionOption {
@@ -174,6 +178,8 @@ export interface StepQuestionComponentProps extends BaseComponentProps {
     backgroundColor?: string;
     textColor?: string;
     accentColor?: string;
+    totalSteps?: number;
+    editableHint?: boolean;
 }
 
 export interface StepStrategicQuestionOption {
@@ -183,38 +189,57 @@ export interface StepStrategicQuestionOption {
 
 export interface StepStrategicQuestionComponentProps extends BaseComponentProps {
     type: 'step-strategic-question';
+    questionNumber?: string;
     questionText: string;
     options: StepStrategicQuestionOption[];
     backgroundColor?: string;
     textColor?: string;
     accentColor?: string;
+    progressCurrentStep?: number;
+    totalSteps?: number;
+    editableHint?: boolean;
 }
 
 export interface StepTransitionComponentProps extends BaseComponentProps {
     type: 'step-transition';
     title: string;
+    subtitle?: string;
     text?: string;
+    image?: string;
     backgroundColor?: string;
     textColor?: string;
     accentColor?: string;
+    showAnimation?: boolean;
+    editableHint?: boolean;
 }
 
 export interface StepTransitionResultComponentProps extends BaseComponentProps {
     type: 'step-transition-result';
     title: string;
+    subtitle?: string;
+    description?: string;
     backgroundColor?: string;
     textColor?: string;
     accentColor?: string;
+    showAnimation?: boolean;
+    editableHint?: boolean;
 }
 
 export interface StepResultComponentProps extends BaseComponentProps {
     type: 'step-result';
     title: string;
     subtitle?: string;
+    userName?: string;
+    resultStyle?: string;
+    description?: string;
+    image?: string;
+    characteristics?: string[];
+    ctaText?: string;
     resultPlaceholder?: string;
     backgroundColor?: string;
     textColor?: string;
     accentColor?: string;
+    showEditableHint?: boolean;
 }
 
 export interface StepOfferTestimonial {
@@ -225,13 +250,22 @@ export interface StepOfferTestimonial {
 export interface StepOfferComponentProps extends BaseComponentProps {
     type: 'step-offer';
     title: string;
+    subtitle?: string;
     description: string;
+    userName?: string;
+    resultStyle?: string;
     buttonText: string;
     image?: string;
     testimonial?: StepOfferTestimonial;
+    price?: string;
+    originalPrice?: string;
+    benefits?: string[];
+    ctaText?: string;
+    secureNote?: string;
     backgroundColor?: string;
     textColor?: string;
     accentColor?: string;
+    showEditableHint?: boolean;
 }
 
 // União de todos os tipos de componentes
