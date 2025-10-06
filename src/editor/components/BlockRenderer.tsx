@@ -7,7 +7,7 @@
 
 import React from 'react';
 import { BlockData, BlockComponentProps } from '@/types/blockTypes';
-import { getBlockComponent } from '@/editor/registry/BlockRegistry';
+import { getBlockComponent } from '@/editor/registry/BlockComponentMap';
 import { cn } from '@/lib/utils';
 import { AlertCircle } from 'lucide-react';
 
