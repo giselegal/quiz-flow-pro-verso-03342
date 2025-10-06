@@ -18,7 +18,6 @@ import React, {
     useRef,
     forwardRef,
     Component,
-    ErrorBoundary,
     ReactNode,
     CSSProperties
 } from 'react';

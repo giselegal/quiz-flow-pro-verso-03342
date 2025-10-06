@@ -23,7 +23,7 @@
  * = 1 provider único
  */
 
-import { Suspense, lazy, useEffect } from 'react';
+import React, { Suspense, lazy, useEffect } from 'react';
 import { Route, Router, Switch } from 'wouter';
 import { HelmetProvider } from 'react-helmet-async';
 import { GlobalErrorBoundary } from './components/error/GlobalErrorBoundary';

@@ -41,10 +41,6 @@ export default defineConfig({
       overlay: false, // Desabilitar overlay de erro para reduzir spam
       clientPort: 8080, // Usar porta específica
       port: 8080, // Porta do HMR
-      // Otimizações para reduzir spam de websocket
-      timeout: 30000, // Timeout para reconexão
-      reconnectDelay: 1000, // Delay entre tentativas
-      maxReconnectAttempts: 5, // Máximo de tentativas
     },
   },
   preview: {
