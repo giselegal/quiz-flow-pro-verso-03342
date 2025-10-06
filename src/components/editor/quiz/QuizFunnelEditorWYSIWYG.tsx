@@ -162,25 +162,34 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
         if (facade) return;
         const existing = (crud.currentFunnel as any)?.quizSteps as EditableQuizStep[] | undefined;
         if (existing && existing.length) {
-            setSteps(existing.map((s, index) => normalizeEditableStep(s, index)));
-            setSelectedId(existing[0].id);
+            const normalizedExisting = existing.map((s, index) => normalizeEditableStep(s, index));
+            setSteps(normalizedExisting);
+            setSelectedId(normalizedExisting[0].id);
+            setSelectedBlockId(normalizedExisting[0].blockId || `${normalizedExisting[0].id}-blk`);
             return;
         }
         const conv: EditableQuizStep[] = Object.entries(QUIZ_STEPS).map(([id, step]) => ({ id, ...step as QuizStep }));
-        setSteps(conv.map((step, index) => normalizeEditableStep({ ...step }, index)));
-        if (conv.length) setSelectedId(conv[0].id);
+        const normalizedSeed = conv.map((step, index) => normalizeEditableStep({ ...step }, index));
+        setSteps(normalizedSeed);
+        if (normalizedSeed.length) {
+            setSelectedId(normalizedSeed[0].id);
+            setSelectedBlockId(normalizedSeed[0].blockId || `${normalizedSeed[0].id}-blk`);
+        }
     }, [crud.currentFunnel, facade]);
 
     useEffect(() => {
         if (!facade) return;
         const syncFromFacade = () => {
             const facadeSteps = facade.getSteps().slice().sort((a, b) => a.order - b.order);
-            setSteps(facadeSteps.map((step, index) => extractEditableFromFacade(step, index)));
+            const editableSteps = facadeSteps.map((step, index) => extractEditableFromFacade(step, index));
+            setSteps(editableSteps);
             setSelectedId(prev => {
-                if (prev && facadeSteps.some(step => step.id === prev)) {
-                    return prev;
-                }
-                return facadeSteps[0]?.id || '';
+                const nextId = prev && editableSteps.some(step => step.id === prev)
+                    ? prev
+                    : editableSteps[0]?.id || '';
+                const nextBlockId = editableSteps.find(step => step.id === nextId)?.blockId || '';
+                setSelectedBlockId(nextBlockId);
+                return nextId;
             });
         };
         syncFromFacade();
@@ -189,6 +198,14 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
         const cleanupSelection = facade.on('step/selected', payload => {
             if (payload.stepId) {
                 setSelectedId(payload.stepId);
+                const facadeStep = facade.getStep(payload.stepId);
+                if (facadeStep) {
+                    const editable = extractEditableFromFacade(facadeStep, facadeStep.order);
+                    setSelectedBlockId(editable.blockId || `${editable.id}-blk`);
+                }
+            } else {
+                setSelectedId('');
+                setSelectedBlockId('');
             }
         });
         return () => {
@@ -248,6 +265,7 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
             clone.splice((idx >= 0 ? idx : prev.length - 1) + 1, 0, newStep);
             const normalized = clone.map((step, index) => normalizeEditableStep(step, index));
             setSelectedId(newStep.id);
+            setSelectedBlockId(newStep.blockId || `${newStep.id}-blk`);
             if (facade) {
                 facade.addStep(buildFacadeStep(newStep, newStep.order ?? normalized.length - 1));
                 facade.selectStep(newStep.id);
@@ -266,6 +284,7 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
             clone.splice(idx, 0, newStep);
             const normalized = clone.map((step, index) => normalizeEditableStep(step, index));
             setSelectedId(newStep.id);
+            setSelectedBlockId(newStep.blockId || `${newStep.id}-blk`);
             if (facade) {
                 facade.addStep(buildFacadeStep(newStep, newStep.order ?? idx));
                 facade.selectStep(newStep.id);
@@ -287,6 +306,7 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
             return normalized;
         });
         setSelectedId(newStep.id);
+        setSelectedBlockId(newStep.blockId || `${newStep.id}-blk`);
     };
 
     const removeStep = (id: string) => {
@@ -294,7 +314,12 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
             const filtered = prev.filter(s => s.id !== id);
             const normalized = filtered.map((step, index) => normalizeEditableStep(step, index));
             if (selectedId === id && normalized.length > 0) {
-                setSelectedId(normalized[0].id);
+                const nextStep = normalized[0];
+                setSelectedId(nextStep.id);
+                setSelectedBlockId(nextStep.blockId || `${nextStep.id}-blk`);
+                if (facade) {
+                    facade.selectStep(nextStep.id);
+                }
             }
             if (facade) {
                 facade.removeStep(id);
@@ -323,10 +348,12 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
             const idx = prev.findIndex(s => s.id === id);
             if (idx === -1) return prev;
             const original = prev[idx];
+            const timestamp = Date.now();
+            const newId = `${original.id}-copy-${timestamp}`;
             const duplicate = normalizeEditableStep({
                 ...original,
-                id: `${original.id}-copy-${Date.now()}`,
-                blockId: `${original.id}-copy-${Date.now()}-blk`
+                id: newId,
+                blockId: `${newId}-blk`
             }, idx + 1);
             const clone = [...prev];
             clone.splice(idx + 1, 0, duplicate);
@@ -336,6 +363,7 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
                 facade.selectStep(duplicate.id);
                 syncOrderWithFacade(normalized);
             }
+            setSelectedBlockId(duplicate.blockId || `${duplicate.id}-blk`);
             return normalized;
         });
     };
@@ -369,9 +397,10 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
     // 🎯 NOVOS: Callbacks para editor aprimorado
     const handleStepSelect = useCallback((stepId: string) => {
         setSelectedId(stepId);
-        setSelectedBlockId(''); // Clear block selection when step changes
+        const blockId = steps.find(step => step.id === stepId)?.blockId || '';
+        setSelectedBlockId(blockId);
         facade?.selectStep(stepId);
-    }, [facade]);
+    }, [facade, steps]);
 
     const handleBlockSelect = useCallback((blockId: string) => {
         setSelectedBlockId(blockId);
