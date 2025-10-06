@@ -119,6 +119,10 @@ export default function QuizApp({ funnelId }: QuizAppProps) {
                                 // Auto-advance lógica já implementada nos adapters
                                 nextStep();
                             }}
+                            onNameSubmit={(name: string) => {
+                                setUserName(name);
+                                nextStep();
+                            }}
                             onPrevious={() => {
                                 // Implementar navegação para trás se necessário
                                 console.log('Navegar para step anterior');

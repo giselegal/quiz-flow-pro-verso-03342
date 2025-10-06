@@ -2,7 +2,7 @@ import react from '@vitejs/plugin-react';
 import path from 'path';
 import { defineConfig } from 'vite';
 
-// Configuração OTIMIZADA para funcionar com Lovable
+// Configura��o OTIMIZADA para funcionar com Lovable
 export default defineConfig({
   base: '/',
   plugins: [react()],
@@ -17,15 +17,18 @@ export default defineConfig({
     port: 8080,
     open: false,
     cors: true,
-    strictPort: true, // Força usar exatamente a porta 8080
+    strictPort: true,
     fs: {
-      allow: ['..'],
-      // Ignorar arquivos HTML na raiz
-      deny: [
-        '**/*.html',
-        '!**/index.html',
-        '!**/public/**/*.html'
+      allow: [
+        '..',
+        '../..',
+        process.cwd(),
+        path.resolve(process.cwd(), '..'),
+        path.resolve(process.cwd(), '../..'),
+        path.resolve(__dirname),
+        __dirname,
       ],
+      deny: [],
     },
     headers: {
       'Access-Control-Allow-Origin': '*',
@@ -33,73 +36,44 @@ export default defineConfig({
       'Access-Control-Allow-Headers': '*',
       'Permissions-Policy': 'camera=(), microphone=(), geolocation=()',
     },
-    // 🚀 Configuração SPA completa para desenvolvimento
     middlewareMode: false,
     proxy: {},
-    // SPA routing será tratado pelo plugin vite
     hmr: {
-      overlay: false, // Desabilitar overlay de erro para reduzir spam
-      clientPort: 8080, // Usar porta específica
-      port: 8080, // Porta do HMR
+      overlay: false,
+      clientPort: 8080,
+      port: 8080,
     },
   },
   preview: {
     host: '0.0.0.0',
-    port: 4173,
+    port: 8080,
     cors: true,
-    headers: {
-      'Access-Control-Allow-Origin': '*',
-      'Permissions-Policy': 'camera=(), microphone=(), geolocation=()',
-    },
-    // 🚀 Configuração para SPA no preview também
     strictPort: true,
   },
   publicDir: 'public',
-  assetsInclude: ['**/*.json'],
+  assetsInclude: ['**/*.svg', '**/*.png', '**/*.jpg', '**/*.jpeg', '**/*.gif'],
   build: {
     outDir: 'dist',
-    assetsDir: 'assets',
-    sourcemap: false,
-    chunkSizeWarningLimit: 2000,
-    copyPublicDir: true,
     rollupOptions: {
-      output: {
-        manualChunks: {
-          vendor: ['react', 'react-dom'],
-          router: ['wouter'],
-          ui: ['@radix-ui/react-dialog', '@radix-ui/react-tabs', '@radix-ui/react-accordion'],
-          utils: ['clsx', 'class-variance-authority', 'tailwind-merge'],
-        },
-        assetFileNames: 'assets/[name]-[hash].[ext]',
-        chunkFileNames: 'assets/[name]-[hash].js',
-        entryFileNames: 'assets/[name]-[hash].js',
+      input: {
+        main: path.resolve(__dirname, 'index.html'),
       },
     },
     commonjsOptions: {
-      transformMixedEsModules: true,
       include: [/node_modules/],
     },
-    target: 'esnext',
-    minify: 'esbuild',
   },
   optimizeDeps: {
-    exclude: ['lucide-react', 'playwright-core', 'chromium-bidi'],
-    include: ['react', 'react-dom', 'wouter'],
+    exclude: ['@vite/client', '@vite/env'],
+    include: ['react', 'react-dom'],
     esbuildOptions: {
-      define: {
-        global: 'globalThis',
-      },
+      target: 'es2020',
     },
-    // Ignorar arquivos HTML de teste/debug na raiz
-    entries: ['src/**/*.{tsx,ts,jsx,js}', 'index.html'],
   },
   define: {
-    __DEV__: JSON.stringify(process.env.NODE_ENV === 'development'),
-    'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development'),
-    'process.env.VITEST': JSON.stringify(process.env.VITEST || false),
+    global: 'globalThis',
   },
   esbuild: {
-    drop: process.env.NODE_ENV === 'production' ? ['console', 'debugger'] : [],
-    legalComments: 'none',
+    target: 'es2020',
   },
 });

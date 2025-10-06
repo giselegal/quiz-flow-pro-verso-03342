@@ -84,6 +84,7 @@ export interface UnifiedStepRendererProps {
     onStepSelect?: (stepId: string) => void;
     onNext?: () => void;
     onPrevious?: () => void;
+    onNameSubmit?: (name: string) => void;
 
     /** Configuração visual */
     theme?: {
@@ -153,6 +154,7 @@ export const UnifiedStepRenderer: React.FC<UnifiedStepRendererProps> = ({
     onStepSelect,
     onNext,
     onPrevious,
+    onNameSubmit,
     theme = {
         primaryColor: '#B89B7A',
         accentColor: '#8B7355',
@@ -244,6 +246,7 @@ export const UnifiedStepRenderer: React.FC<UnifiedStepRendererProps> = ({
         isEditable,
         onNext: onNext || (() => { }),
         onPrevious: onPrevious || (() => { }),
+        onNameSubmit,
         onSave: (data: any) => onStepUpdate?.(stepId, data),
 
         // Props básicas
@@ -399,3 +402,4 @@ export const UnifiedStepRendererStyles = `
 `;
 
 export default UnifiedStepRenderer;
+

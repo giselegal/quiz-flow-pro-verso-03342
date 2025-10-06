@@ -26,7 +26,7 @@ const ModularIntroStep: React.FC<ModularIntroStepProps> = ({
     onNext,
     onNameChange
 }) => {
-    const { userName, funnelId } = useQuizState();
+    const { userName } = useQuizState();
 
     // Dados adaptados para o formato esperado pelo Step01Container
     const adaptedData = {
