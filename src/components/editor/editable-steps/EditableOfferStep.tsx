@@ -6,7 +6,7 @@
  */
 
 import React, { useMemo } from 'react';
-import OfferStep from '../../quiz/OfferStep';
+import CompositeOfferStep, { CompositeOfferTestimonial } from '../modular/components/composite/CompositeOfferStep';
 import { EditableBlockWrapper } from './shared/EditableBlockWrapper';
 import { EditableStepProps } from './shared/EditableStepProps';
 
@@ -34,18 +34,22 @@ const EditableOfferStep: React.FC<EditableOfferStepProps> = ({
     // 🎭 Props editáveis específicas do OfferStep
     const editableProps = [
         'title',
-        'text'
-        // offerMap pode ser editável através de interface específica
+        'subtitle',
+        'description',
+        'userName',
+        'resultStyle',
+        'buttonText',
+        'image',
+        'testimonial',
+        'price',
+        'originalPrice',
+        'benefits',
+        'ctaText',
+        'secureNote',
+        'backgroundColor',
+        'textColor',
+        'accentColor'
     ];
-
-    // 🎪 Mock userProfile para preview
-    const mockUserProfile = useMemo(() => ({
-        userName: 'Preview User',
-        resultStyle: 'clássico'
-    }), []);
-
-    // 🎪 Mock offerKey - usar 'default' que deve existir no offerMap
-    const mockOfferKey = 'default';
 
     // 🎨 Handle property click usando callback da interface
     const handlePropertyClick = (propKey: string, element: HTMLElement) => {
@@ -55,52 +59,69 @@ const EditableOfferStep: React.FC<EditableOfferStepProps> = ({
     };
 
     // 🔧 Garantir estrutura mínima dos dados com offerMap padrão
-    const safeData = useMemo(() => ({
-        ...data,
-        type: 'offer' as const,
-        title: data.title || 'Oferta Especial Para Você!',
-        text: data.text || 'Baseado no seu perfil único, preparamos uma oferta personalizada.',
-        offerMap: data.offerMap || {
-            'default': {
-                title: 'Consultoria de Estilo Personalizada',
-                description: 'Descubra seu estilo único com nossa consultoria especializada. Inclui análise completa do seu perfil, guia de cores personalizado e dicas de combinações.',
-                price: 'R$ 297',
-                originalPrice: 'R$ 497',
-                discount: '40% OFF',
-                image: 'https://res.cloudinary.com/der8kogzu/image/upload/f_png,q_85,w_400,c_limit/v1752443943/Gemini_Generated_Image_i5cst6i5cst6i5cs_fpoukb.png',
-                benefits: [
-                    'Análise completa do seu estilo pessoal',
-                    'Guia de cores personalizado',
-                    'Dicas de combinações práticas',
-                    'Suporte por 30 dias'
-                ],
-                buttonText: 'Quero Transformar Meu Estilo Agora!',
-                testimonial: {
-                    quote: 'Transformou completamente minha forma de me vestir!',
-                    author: 'Maria S.'
-                }
-            },
-            'premium': {
-                title: 'Transformação Completa do Guarda-Roupa',
-                description: 'Pacote completo para renovar seu estilo com acompanhamento personalizado.',
-                price: 'R$ 897',
-                originalPrice: 'R$ 1497',
-                discount: '40% OFF',
-                image: 'https://res.cloudinary.com/der8kogzu/image/upload/f_png,q_85,w_400,c_limit/v1752443943/Gemini_Generated_Image_i5cst6i5cst6i5cs_fpoukb.png',
-                benefits: [
-                    'Consultoria de estilo completa',
-                    'Personal shopper por 3 meses',
-                    'Organização do guarda-roupa',
-                    'Guia de compras personalizado'
-                ],
-                buttonText: 'Quero a Transformação Completa!',
-                testimonial: {
-                    quote: 'Melhor investimento que fiz para meu estilo!',
-                    author: 'Ana L.'
-                }
-            }
+    const safeData = useMemo(() => {
+        interface OfferStepDataExtras {
+            title?: string;
+            subtitle?: string;
+            description?: string;
+            userName?: string;
+            resultStyle?: string;
+            buttonText?: string;
+            image?: string;
+            testimonial?: { quote?: string; author?: string };
+            price?: string;
+            originalPrice?: string;
+            benefits?: string[];
+            ctaText?: string;
+            secureNote?: string;
+            backgroundColor?: string;
+            textColor?: string;
+            accentColor?: string;
+            showEditableHint?: boolean;
         }
-    }), [data]);
+
+        const stepData = data as OfferStepDataExtras;
+
+        const fallbackTestimonial: CompositeOfferTestimonial = {
+            quote: 'Economizei muito depois que aprendi a combinar minhas roupas com segurança.',
+            author: 'Maria S.'
+        };
+
+        const testimonial: CompositeOfferTestimonial | undefined = stepData.testimonial && stepData.testimonial.quote && stepData.testimonial.author
+            ? {
+                quote: stepData.testimonial.quote,
+                author: stepData.testimonial.author
+            }
+            : fallbackTestimonial;
+
+        return {
+            ...stepData,
+            type: 'offer' as const,
+            title: stepData.title || '{userName}, agora que você descobriu que é {resultStyle}...',
+            subtitle: stepData.subtitle || 'Oferta Especial Para Você!',
+            description: stepData.description || 'Receba o plano completo pensado para quem tem o estilo {resultStyle} e quer transformar o guarda-roupa com confiança.',
+            userName: stepData.userName || 'Preview User',
+            resultStyle: stepData.resultStyle || 'Clássico Elegante',
+            buttonText: stepData.buttonText || 'Quero transformar meu estilo agora!',
+            image: stepData.image,
+            testimonial,
+            price: stepData.price || '12x de R$ 97,00',
+            originalPrice: stepData.originalPrice || 'De R$ 1.497,00',
+            benefits: Array.isArray(stepData.benefits) && stepData.benefits.length > 0
+                ? stepData.benefits
+                : [
+                    'Acesso imediato ao método completo',
+                    'Plano de ação personalizado',
+                    'Suporte exclusivo por 30 dias'
+                ],
+            ctaText: stepData.ctaText || 'Oferta por tempo limitado',
+            secureNote: stepData.secureNote || 'Pagamento 100% seguro • Garantia de 7 dias',
+            backgroundColor: stepData.backgroundColor || '#fffaf2',
+            textColor: stepData.textColor || '#5b4135',
+            accentColor: stepData.accentColor || '#deac6d',
+            showEditableHint: stepData.showEditableHint ?? isEditable
+        };
+    }, [data, isEditable]);
 
     return (
         <EditableBlockWrapper
@@ -120,18 +141,31 @@ const EditableOfferStep: React.FC<EditableOfferStepProps> = ({
             blockId={blockId}
             className="editable-offer-step"
         >
-            {/* 🎯 Renderizar componente de produção com dados mock */}
-            <OfferStep
-                data={safeData}
-                userProfile={mockUserProfile}
-                offerKey={mockOfferKey}
+            <CompositeOfferStep
+                title={safeData.title}
+                subtitle={safeData.subtitle}
+                description={safeData.description}
+                userName={safeData.userName}
+                resultStyle={safeData.resultStyle}
+                buttonText={safeData.buttonText}
+                image={safeData.image}
+                testimonial={safeData.testimonial}
+                price={safeData.price}
+                originalPrice={safeData.originalPrice}
+                benefits={safeData.benefits}
+                ctaText={safeData.ctaText}
+                secureNote={safeData.secureNote}
+                backgroundColor={safeData.backgroundColor}
+                textColor={safeData.textColor}
+                accentColor={safeData.accentColor}
+                showEditableHint={safeData.showEditableHint}
             />
 
             {/* 🎮 Overlay informativo para editor */}
             {isEditable && (
                 <div className="absolute top-4 right-4 z-20">
                     <div className="bg-green-600 text-white text-xs px-2 py-1 rounded-full opacity-80">
-                        🎁 Oferta: {mockOfferKey}
+                        🎁 Oferta personalizada
                     </div>
                 </div>
             )}
