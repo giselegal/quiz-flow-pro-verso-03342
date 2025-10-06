@@ -104,8 +104,20 @@ function App() {
                           </div>
                         </Route>
 
-                        {/* 🚀 QUIZ EDITOR WYSIWYG - EDITOR OFICIAL COM FASE 4 ATIVA */}
+                        {/* 🚀 EDITOR MODULAR - NOVO SISTEMA COM COMPONENTES MODULARES */}
                         <Route path="/editor">
+                          <EditorErrorBoundary>
+                            <div data-testid="modern-unified-editor-page">
+                              <UnifiedCRUDProvider autoLoad={true}>
+                                {/* ✅ SISTEMA MODULAR: StepCanvas + PropertiesPanel + BlockRegistry */}
+                                <ModernUnifiedEditor />
+                              </UnifiedCRUDProvider>
+                            </div>
+                          </EditorErrorBoundary>
+                        </Route>
+
+                        {/* 🔄 EDITOR ANTIGO (WYSIWYG) - Mantido como backup */}
+                        <Route path="/editor-legacy">
                           <EditorErrorBoundary>
                             <div data-testid="quiz-editor-wysiwyg-page">
                               <UnifiedCRUDProvider autoLoad={true}>
