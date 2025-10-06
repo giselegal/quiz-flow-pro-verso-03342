@@ -9,7 +9,7 @@ import {
     Box,
     Text,
     Textarea,
-    useTheme,
+    // useTheme, // Temporariamente comentado - não disponível na versão atual
     Editable,
     EditableTextarea,
     EditablePreview,
@@ -40,7 +40,7 @@ export const ModularText: React.FC<ModularTextProps> = ({
     onUpdate,
     style,
 }) => {
-    const theme = useTheme();
+    // const theme = useTheme(); // Temporariamente comentado
     const [localText, setLocalText] = useState(text || "");
     const [isEditing, setIsEditing] = useState(false);
 

@@ -9,7 +9,7 @@ import {
     Box,
     Heading,
     Input,
-    useTheme,
+    // useTheme, // Temporariamente comentado - não disponível na versão atual
     Editable,
     EditableInput,
     EditablePreview,
@@ -38,7 +38,7 @@ export const ModularTitle: React.FC<ModularTitleProps> = ({
     onUpdate,
     style,
 }) => {
-    const theme = useTheme();
+    // const theme = useTheme(); // Temporariamente comentado
     const [localText, setLocalText] = useState(text || "Título");
     const [isEditing, setIsEditing] = useState(false);
 

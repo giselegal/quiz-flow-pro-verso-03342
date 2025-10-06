@@ -24,6 +24,8 @@ import { BlockRegistryProvider, ResultHeadlineBlock, OfferCoreBlock, ResultSecon
 import { QuizEditorProvider } from '@/context/QuizEditorContext';
 // ✅ NOVO: Editor com componentes editáveis modulares
 import EditableStepsEditor from '../../components/editor/modular/EditableStepsEditor';
+// 🔧 FALLBACK: Editor simples sem dependências externas
+import MinimalTest from '../../components/editor/modular/MinimalTest';
 
 
 // ============================================
