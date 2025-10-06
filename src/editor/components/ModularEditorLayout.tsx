@@ -10,7 +10,7 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { useFunnelFacade } from '@/pages/editor/ModernUnifiedEditor';
+import { useUnifiedCRUD } from '@/context/UnifiedCRUDProvider';
 import StepCanvas from './StepCanvas';
 import PropertiesPanel from './PropertiesPanel';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -27,6 +27,10 @@ import {
     Circle,
     AlertCircle
 } from 'lucide-react';
+import type { QuizStep } from '@/data/quizSteps';
+
+// ✅ Mesmo tipo usado no QuizFunnelEditorWYSIWYG
+type EditableQuizStep = QuizStep & { id: string };
 
 const STEP_LABELS = [
     { index: 0, label: 'Introdução', icon: '👋', category: 'intro' },
@@ -53,91 +57,84 @@ const STEP_LABELS = [
 ];
 
 const ModularEditorLayout: React.FC = () => {
-    const facade = useFunnelFacade();
+    // 🎯 USAR MESMA ESTRUTURA DO QuizFunnelEditorWYSIWYG
+    const crud = useUnifiedCRUD();
+    const [steps, setSteps] = useState<EditableQuizStep[]>([]);
     const [currentStepIndex, setCurrentStepIndex] = useState(0);
     const [selectedBlockId, setSelectedBlockId] = useState<string | null>(null);
-    const [isDirty, setIsDirty] = useState(false);
     const [isSaving, setIsSaving] = useState(false);
 
-    // DEBUG: Log facade state ao carregar
+    // ✅ Carregar steps do CRUD (igual ao QuizFunnelEditorWYSIWYG)
     useEffect(() => {
-        if (facade) {
-            const steps = facade.getSteps();
-            console.log('🔍 DEBUG - Total de steps:', steps.length);
-            console.log('🔍 DEBUG - Primeiro step:', steps[0]);
-            console.log('🔍 DEBUG - Blocos do primeiro step:', steps[0]?.blocks?.length || 0);
-            if (steps[0]?.blocks?.[0]) {
-                console.log('🔍 DEBUG - Primeiro bloco:', steps[0].blocks[0]);
-            }
+        const existing = (crud.currentFunnel as any)?.quizSteps as EditableQuizStep[] | undefined;
+        
+        console.log('🔍 DEBUG - crud.currentFunnel:', crud.currentFunnel);
+        console.log('🔍 DEBUG - quizSteps:', existing);
+        
+        if (existing && existing.length) {
+            setSteps(existing.map(s => ({ ...s })));
+            console.log('✅ Carregou', existing.length, 'steps do banco');
+        } else {
+            console.warn('⚠️ Nenhum step encontrado em crud.currentFunnel.quizSteps');
         }
-    }, [facade]);
+    }, [crud.currentFunnel]);
 
-    // Convert stepIndex to stepId (steps are indexed from 0)
-    const getStepId = (index: number): string => {
-        const steps = facade?.getSteps() || [];
-        return steps[index]?.id || `step-${index}`;
-    };
-
-    const getStepIndex = (stepId: string | null): number => {
-        if (!stepId) return 0;
-        const steps = facade?.getSteps() || [];
-        const index = steps.findIndex(s => s.id === stepId);
-        return index >= 0 ? index : 0;
-    };
-
-    // Listen to facade events
-    useEffect(() => {
-        if (!facade) return;
-
-        const disposers = [
-            facade.on('dirty/changed', ({ dirty }) => setIsDirty(dirty)),
-            facade.on('save/start', () => setIsSaving(true)),
-            facade.on('save/success', () => setIsSaving(false)),
-            facade.on('save/error', () => setIsSaving(false)),
-            facade.on('step/selected', ({ stepId }) => {
-                const index = getStepIndex(stepId);
-                setCurrentStepIndex(index);
-                setSelectedBlockId(null); // Clear selection when changing steps
-            })
-        ];
-
-        return () => disposers.forEach(fn => fn());
-    }, [facade]);
+    const currentStep = steps[currentStepIndex];
 
     // Handlers
     const handleSave = async () => {
-        if (!facade) return;
+        if (!crud.currentFunnel) return;
+        
         try {
-            await facade.save();
+            setIsSaving(true);
+            const updated = { ...crud.currentFunnel, quizSteps: steps };
+            crud.setCurrentFunnel(updated);
+            await crud.saveFunnel(updated);
+            console.log('✅ Steps salvos com sucesso');
         } catch (error) {
-            console.error('Save failed:', error);
+            console.error('❌ Erro ao salvar:', error);
+        } finally {
+            setIsSaving(false);
         }
     };
 
     const handleStepSelect = (stepIndex: number) => {
-        if (!facade) return;
-        const stepId = getStepId(stepIndex);
-        facade.selectStep(stepId);
+        setCurrentStepIndex(stepIndex);
+        setSelectedBlockId(null);
     };
 
     const handleBlockSelect = (blockId: string) => {
         setSelectedBlockId(blockId);
-    }; const handlePreview = () => {
-        // TODO: Implement preview
+    };
+
+    const handlePreview = () => {
         console.log('Preview not implemented yet');
     };
 
     const handlePublish = async () => {
-        // TODO: Implement publish
         console.log('Publish not implemented yet');
     };
 
-    if (!facade) {
+    // Loading state
+    if (!crud.currentFunnel) {
         return (
             <div className="flex items-center justify-center h-full">
                 <div className="text-center text-gray-400">
                     <AlertCircle className="w-12 h-12 mx-auto mb-4" />
-                    <p className="font-medium">Facade não disponível</p>
+                    <p className="font-medium">Carregando funil...</p>
+                </div>
+            </div>
+        );
+    }
+
+    // Empty state
+    if (steps.length === 0) {
+        return (
+            <div className="flex items-center justify-center h-full">
+                <div className="text-center text-gray-400">
+                    <AlertCircle className="w-12 h-12 mx-auto mb-4" />
+                    <p className="font-medium">Nenhuma etapa encontrada</p>
+                    <p className="text-sm mt-2">O funil não possui steps definidos</p>
                 </div>
             </div>
         );
@@ -202,13 +199,12 @@ const ModularEditorLayout: React.FC = () => {
                 <div className="p-3 border-t bg-gray-50 space-y-2">
                     <Button
                         onClick={handleSave}
-                        disabled={!isDirty || isSaving}
+                        disabled={isSaving}
                         size="sm"
                         className="w-full h-8"
-                        variant={isDirty ? "default" : "outline"}
                     >
                         <Save className="w-3 h-3 mr-1" />
-                        {isSaving ? 'Salvando...' : isDirty ? 'Salvar' : 'Salvo'}
+                        {isSaving ? 'Salvando...' : 'Salvar'}
                     </Button>
 
                     <div className="flex gap-2">
@@ -249,14 +245,8 @@ const ModularEditorLayout: React.FC = () => {
                         </div>
 
                         <div className="flex items-center gap-2">
-                            {isDirty && (
-                                <Badge variant="outline" className="text-xs">
-                                    <Circle className="w-2 h-2 mr-1 fill-orange-500 text-orange-500" />
-                                    Não salvo
-                                </Badge>
-                            )}
                             <Badge variant="outline" className="text-xs">
-                                Step {currentStepIndex + 1} de 21
+                                Step {currentStepIndex + 1} de {steps.length}
                             </Badge>
                         </div>
                     </div>
