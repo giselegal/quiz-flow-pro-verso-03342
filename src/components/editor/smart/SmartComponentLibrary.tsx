@@ -669,8 +669,10 @@ export class SmartImage extends SmartComponentBase<SmartImageProps> {
     private imageRef = React.createRef<HTMLImageElement>();
     private loading = true;
     private setLoading = (l: boolean) => { };
-    private [error, setError] =[false, (e: boolean) => { }];
-    private [naturalSize, setNaturalSize] =[{ width: 0, height: 0 }, (s: any) => { }];
+    private error = false;
+    private setError = (e: boolean) => { };
+    private naturalSize = { width: 0, height: 0 };
+    private setNaturalSize = (s: any) => { };
 
     constructor(props: SmartImageProps) {
         super(props);

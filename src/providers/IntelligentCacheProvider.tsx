@@ -719,31 +719,31 @@ export const useIntelligentCache = () => {
 };
 
 // 🎯 SPECIALIZED CACHE HOOKS
-export const useCachedData = <T>(
+export const useCachedData = <T,>(
     key: string,
     fetcher: () => Promise<T>,
-        options: {
-            ttl ?: number;
+    options: {
+        ttl?: number;
         refreshInterval?: number;
         persistent?: boolean;
-    } = { }
+    } = {}
 ) => {
-    const {get, set} = useIntelligentCache();
-        const [data, setData] = useState<T | null>(null);
-        const [loading, setLoading] = useState(true);
-        const [error, setError] = useState<Error | null>(null);
+    const { get, set } = useIntelligentCache();
+    const [data, setData] = useState<T | null>(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<Error | null>(null);
 
     const fetchData = useCallback(async () => {
         try {
             setLoading(true);
-        setError(null);
+            setError(null);
 
-        // Try cache first
-        const cached = await get<T>(key);
+            // Try cache first
+            const cached = await get<T>(key);
             if (cached) {
                 setData(cached);
-            setLoading(false);
-            return cached;
+                setLoading(false);
+                return cached;
             }
 
             // Fetch fresh data
@@ -752,15 +752,15 @@ export const useCachedData = <T>(
             setData(fresh);
             return fresh;
         } catch (err) {
-                setError(err as Error);
+            setError(err as Error);
             return null;
         } finally {
-                setLoading(false);
+            setLoading(false);
         }
     }, [key, fetcher, get, set, options]);
 
     useEffect(() => {
-                fetchData();
+        fetchData();
     }, [fetchData]);
 
     // Auto refresh
@@ -771,7 +771,7 @@ export const useCachedData = <T>(
         }
     }, [fetchData, options.refreshInterval]);
 
-            return {data, loading, error, refetch: fetchData };
+    return { data, loading, error, refetch: fetchData };
 };
 
-            export default IntelligentCacheProvider;
+export default IntelligentCacheProvider;
