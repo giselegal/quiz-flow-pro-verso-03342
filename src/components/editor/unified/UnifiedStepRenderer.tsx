@@ -28,33 +28,37 @@ export type RenderMode = 'preview' | 'production' | 'editable';
  * Componentes carregados dinamicamente baseados no stepId
  * Reduz bundle inicial e melhora performance
  */
+// ⚠️ IMPORTANTE: Usamos diretamente os ADAPTERS de produção para garantir
+// que callbacks (onNameSubmit, onAnswersChange, etc.) e defaults sejam aplicados
+// mesmo no modo 'production'. Antes, importávamos os componentes originais e
+// perdíamos a lógica de adaptação → resultando em props ausentes e erros.
 const LazyStepComponents = {
-    // Steps de Introdução
-    'step-01': lazy(() => import('@/components/quiz/IntroStep').then(module => ({ default: module.default }))),
+    // Step de Introdução
+    'step-01': lazy(() => import('@/components/step-registry/ProductionStepsRegistry').then(m => ({ default: m.IntroStepAdapter }))),
 
     // Steps de Perguntas (2-11)
-    'step-02': lazy(() => import('@/components/quiz/QuestionStep').then(module => ({ default: module.default }))),
-    'step-03': lazy(() => import('@/components/quiz/QuestionStep').then(module => ({ default: module.default }))),
-    'step-04': lazy(() => import('@/components/quiz/QuestionStep').then(module => ({ default: module.default }))),
-    'step-05': lazy(() => import('@/components/quiz/QuestionStep').then(module => ({ default: module.default }))),
-    'step-06': lazy(() => import('@/components/quiz/QuestionStep').then(module => ({ default: module.default }))),
-    'step-07': lazy(() => import('@/components/quiz/QuestionStep').then(module => ({ default: module.default }))),
-    'step-08': lazy(() => import('@/components/quiz/QuestionStep').then(module => ({ default: module.default }))),
-    'step-09': lazy(() => import('@/components/quiz/QuestionStep').then(module => ({ default: module.default }))),
-    'step-10': lazy(() => import('@/components/quiz/QuestionStep').then(module => ({ default: module.default }))),
-    'step-11': lazy(() => import('@/components/quiz/QuestionStep').then(module => ({ default: module.default }))),
+    'step-02': lazy(() => import('@/components/step-registry/ProductionStepsRegistry').then(m => ({ default: m.QuestionStepAdapter }))),
+    'step-03': lazy(() => import('@/components/step-registry/ProductionStepsRegistry').then(m => ({ default: m.QuestionStepAdapter }))),
+    'step-04': lazy(() => import('@/components/step-registry/ProductionStepsRegistry').then(m => ({ default: m.QuestionStepAdapter }))),
+    'step-05': lazy(() => import('@/components/step-registry/ProductionStepsRegistry').then(m => ({ default: m.QuestionStepAdapter }))),
+    'step-06': lazy(() => import('@/components/step-registry/ProductionStepsRegistry').then(m => ({ default: m.QuestionStepAdapter }))),
+    'step-07': lazy(() => import('@/components/step-registry/ProductionStepsRegistry').then(m => ({ default: m.QuestionStepAdapter }))),
+    'step-08': lazy(() => import('@/components/step-registry/ProductionStepsRegistry').then(m => ({ default: m.QuestionStepAdapter }))),
+    'step-09': lazy(() => import('@/components/step-registry/ProductionStepsRegistry').then(m => ({ default: m.QuestionStepAdapter }))),
+    'step-10': lazy(() => import('@/components/step-registry/ProductionStepsRegistry').then(m => ({ default: m.QuestionStepAdapter }))),
+    'step-11': lazy(() => import('@/components/step-registry/ProductionStepsRegistry').then(m => ({ default: m.QuestionStepAdapter }))),
 
     // Step Estratégico
-    'step-12': lazy(() => import('@/components/quiz/StrategicQuestionStep').then(module => ({ default: module.default }))),
+    'step-12': lazy(() => import('@/components/step-registry/ProductionStepsRegistry').then(m => ({ default: m.StrategicQuestionStepAdapter }))),
 
     // Transição
-    'step-13': lazy(() => import('@/components/quiz/TransitionStep').then(module => ({ default: module.default }))),
+    'step-13': lazy(() => import('@/components/step-registry/ProductionStepsRegistry').then(m => ({ default: m.TransitionStepAdapter }))),
 
     // Resultado
-    'step-14': lazy(() => import('@/components/quiz/ResultStep').then(module => ({ default: module.default }))),
+    'step-14': lazy(() => import('@/components/step-registry/ProductionStepsRegistry').then(m => ({ default: m.ResultStepAdapter }))),
 
     // Oferta
-    'step-15': lazy(() => import('@/components/quiz/OfferStep').then(module => ({ default: module.default }))),
+    'step-15': lazy(() => import('@/components/step-registry/ProductionStepsRegistry').then(m => ({ default: m.OfferStepAdapter }))),
 } as const;
 
 type LazyStepId = keyof typeof LazyStepComponents;
