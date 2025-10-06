@@ -1158,6 +1158,5 @@ return (
         </div>
     </div>
 );
-};
 
 export default QuizFunnelEditorWYSIWYG;
