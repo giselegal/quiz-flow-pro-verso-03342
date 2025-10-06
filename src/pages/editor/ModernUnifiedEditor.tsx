@@ -48,7 +48,7 @@ const buildInitialSnapshot = (crud: ReturnType<typeof useUnifiedCRUDOptional>): 
 
 const ModernUnifiedEditor: React.FC<ModernUnifiedEditorProps> = (props) => {
     // 🎛️ CONTROLE DE EDITOR: true = EditableStepsEditor, false = MinimalTest (fallback)
-    const useAdvancedEditor = true;
+    const useAdvancedEditor = false; // ← Temporariamente usando fallback devido a problemas do Chakra UI
 
     const crud = useUnifiedCRUDOptional();
     // Criar facade; recria se trocar de funil
@@ -135,13 +135,8 @@ const ModernUnifiedEditor: React.FC<ModernUnifiedEditorProps> = (props) => {
                         <QuizEditorProvider initialFunnel={exampleFunnel}>
                             <BlockRegistryProvider definitions={[ResultHeadlineBlock, OfferCoreBlock, ResultSecondaryListBlock, OfferUrgencyBlock]}>
                                 <div data-testid="quiz-editor-modular-container">
-                                    {useAdvancedEditor ? (
-                                        /* ✅ EDITOR COM COMPONENTES EDITÁVEIS MODULARES - 4 COLUNAS */
-                                        <EditableStepsEditor />
-                                    ) : (
-                                        /* 🔧 EDITOR SIMPLES FALLBACK - SEM DEPENDÊNCIAS EXTERNAS */
-                                        <MinimalTest />
-                                    )}
+                                    {/* 🔧 EDITOR SIMPLES - SEM DEPENDÊNCIAS PROBLEMÁTICAS */}
+                                    <MinimalTest />
                                 </div>
                             </BlockRegistryProvider>
                         </QuizEditorProvider>
