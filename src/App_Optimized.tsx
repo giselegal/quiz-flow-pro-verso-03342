@@ -303,9 +303,15 @@ function App() {
                                 </Route>
 
                                 {/* 🔄 REDIRECTS PARA COMPATIBILIDADE */}
-                                <RedirectRoute from="/dashboard-admin" to="/admin" />
-                                <RedirectRoute from="/editor-pro" to="/editor-new" />
-                                <RedirectRoute from="/quiz-builder" to="/editor" />
+                                <Route path="/dashboard-admin">
+                                    <RedirectRoute to="/admin" />
+                                </Route>
+                                <Route path="/editor-pro">
+                                    <RedirectRoute to="/editor-new" />
+                                </Route>
+                                <Route path="/quiz-builder">
+                                    <RedirectRoute to="/editor" />
+                                </Route>
 
                                 {/* 📄 404 */}
                                 <Route>
