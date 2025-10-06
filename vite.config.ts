@@ -83,12 +83,17 @@ export default defineConfig({
     minify: 'esbuild',
   },
   optimizeDeps: {
-    exclude: ['lucide-react'],
+    exclude: ['lucide-react', 'playwright-core', 'chromium-bidi'],
     include: ['react', 'react-dom', 'wouter'],
     esbuildOptions: {
       define: {
         global: 'globalThis',
       },
+      external: [
+        'chromium-bidi/lib/cjs/bidiMapper/BidiMapper',
+        'chromium-bidi/lib/cjs/cdp/CdpConnection',
+        'playwright-core'
+      ],
     },
     // Ignorar arquivos HTML de teste/debug na raiz
     entries: ['src/**/*.{tsx,ts,jsx,js}', 'index.html'],
