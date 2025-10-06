@@ -14,15 +14,19 @@ export type ComponentType =
     | 'text'
     | 'image'
     | 'form-field'
+    | 'form-input'
     | 'options-grid'
     | 'button'
     | 'spacer'
     | 'divider'
     | 'video'
+    | 'audio'
     | 'custom-html'
     | 'result-display'
     | 'progress-bar'
+    | 'countdown'
     | 'countdown-timer'
+    | 'quiz-result'
     | 'social-share';
 
 export type StepType =
