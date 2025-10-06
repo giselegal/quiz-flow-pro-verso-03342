@@ -3,7 +3,7 @@ import { useUnifiedCRUD } from '@/context/UnifiedCRUDProvider';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { QUIZ_STEPS, type QuizStep } from '@/data/quizSteps';
-import { Plus, Save, Trash2, ArrowUp, ArrowDown, Copy, Eye, ChevronDown, Settings, RefreshCw } from 'lucide-react';
+import { Plus, Save, Trash2, ArrowUp, ArrowDown, Copy, Eye, ChevronDown, ChevronLeft, ChevronRight, Settings, RefreshCw } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import './QuizEditorStyles.css';
 
@@ -774,11 +774,13 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
                                     <div className="text-xs">Use a sidebar para adicionar steps</div>
                                 </div>
                             </div>
-                        ) : (
-                            // 🚀 CANVAS VERTICAL: TODOS OS STEPS EMPILHADOS
-                            <div className="flex flex-col gap-4">
-                                {steps.map((step, index) => {
-                                    const isSelected = selectedId === step.id;
+                        ) : selectedStep ? (
+                            // 🎯 CANVAS INDIVIDUAL: APENAS O STEP SELECIONADO
+                            <div className="h-full">
+                                {(() => {
+                                    const step = selectedStep;
+                                    const index = steps.findIndex(s => s.id === selectedStep.id);
+                                    const isSelected = true; // sempre true pois é o step selecionado
                                     const blockId = `step-${step.id}`;
 
                                     // 🎯 NOVO: Usar blocos modulares se ativado
@@ -819,15 +821,13 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
                                         );
                                     }
 
-                                    // 🔄 MODO ANTIGO: Renderização tradicional
+                                    // 🔄 MODO ANTIGO: Renderização tradicional do step selecionado
                                     return (
                                         <div
                                             key={step.id}
                                             className={cn(
-                                                "border-2 rounded-lg p-4 transition-all duration-200 cursor-pointer relative",
-                                                isSelected
-                                                    ? "border-blue-500 shadow-lg bg-blue-50/30 ring-2 ring-blue-300 ring-offset-2"
-                                                    : "border-gray-200 hover:border-blue-300 hover:shadow-md"
+                                                "border-2 rounded-lg p-4 transition-all duration-200 cursor-pointer relative h-full",
+                                                "border-blue-500 shadow-lg bg-blue-50/30 ring-2 ring-blue-300 ring-offset-2"
                                             )}
                                             onClick={() => {
                                                 setSelectedId(step.id);
@@ -837,39 +837,34 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
                                             {/* Header do Step */}
                                             <div className="flex items-center justify-between mb-3 pb-2 border-b border-gray-200">
                                                 <div className="flex items-center gap-2">
-                                                    <Badge variant={isSelected ? "default" : "outline"} className="text-xs">
+                                                    <Badge variant="default" className="text-xs">
                                                         Step {index + 1} / {steps.length}
                                                     </Badge>
-                                                    <span className={cn(
-                                                        "text-sm font-semibold",
-                                                        isSelected ? "text-blue-700" : "text-gray-700"
-                                                    )}>
+                                                    <span className="text-sm font-semibold text-blue-700">
                                                         {step.type.toUpperCase().replace('-', ' ')}
                                                     </span>
-                                                    {isSelected && (
-                                                        <Badge variant="secondary" className="text-[10px]">
-                                                            ✏️ Editando
-                                                        </Badge>
-                                                    )}
+                                                    <Badge variant="secondary" className="text-[10px]">
+                                                        ✏️ Editando
+                                                    </Badge>
                                                 </div>
 
-                                                {/* Botões de ação - sempre visíveis se hover ou selecionado */}
-                                                <div className={cn(
-                                                    "flex gap-1 transition-opacity",
-                                                    isSelected ? "opacity-100" : "opacity-0 group-hover:opacity-100"
-                                                )}>
+                                                {/* Navegação entre steps */}
+                                                <div className="flex gap-1">
                                                     <Button
                                                         size="sm"
                                                         variant="ghost"
                                                         className="h-7 w-7 p-0"
                                                         onClick={(e) => {
                                                             e.stopPropagation();
-                                                            moveStep(step.id, -1);
+                                                            const prevIndex = index - 1;
+                                                            if (prevIndex >= 0) {
+                                                                setSelectedId(steps[prevIndex].id);
+                                                            }
                                                         }}
-                                                        title="Mover para cima"
+                                                        title="Step anterior"
                                                         disabled={index === 0}
                                                     >
-                                                        <ArrowUp className="w-3 h-3" />
+                                                        <ChevronLeft className="w-3 h-3" />
                                                     </Button>
                                                     <Button
                                                         size="sm"
@@ -877,12 +872,15 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
                                                         className="h-7 w-7 p-0"
                                                         onClick={(e) => {
                                                             e.stopPropagation();
-                                                            moveStep(step.id, 1);
+                                                            const nextIndex = index + 1;
+                                                            if (nextIndex < steps.length) {
+                                                                setSelectedId(steps[nextIndex].id);
+                                                            }
                                                         }}
-                                                        title="Mover para baixo"
+                                                        title="Próximo step"
                                                         disabled={index === steps.length - 1}
                                                     >
-                                                        <ArrowDown className="w-3 h-3" />
+                                                        <ChevronRight className="w-3 h-3" />
                                                     </Button>
                                                     <Button
                                                         size="sm"
@@ -915,15 +913,20 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
                                             </div>
 
                                             {/* Renderizar componente modular */}
-                                            <div className={cn(
-                                                "transition-opacity",
-                                                isSelected ? "opacity-100" : "opacity-90"
-                                            )}>
+                                            <div className="transition-opacity opacity-100">
                                                 {renderRealComponent(step, index)}
                                             </div>
                                         </div>
                                     );
-                                })}
+                                })()}
+                            </div>
+                        ) : (
+                            <div className="flex items-center justify-center h-full text-sm text-muted-foreground">
+                                <div className="text-center">
+                                    <div className="text-lg mb-2">🎯</div>
+                                    <div>Selecione um step na primeira coluna</div>
+                                    <div className="text-xs">Para começar a editar</div>
+                                </div>
                             </div>
                         )}
                     </div>
