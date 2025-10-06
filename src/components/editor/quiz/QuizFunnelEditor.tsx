@@ -243,6 +243,12 @@ const QuizFunnelEditor: React.FC<QuizFunnelEditorProps> = ({ funnelId, templateI
     const blockRegistry = useBlockRegistry();
     const [steps, setSteps] = useState<EditableQuizStep[]>([]);
     const [selectedId, setSelectedId] = useState<string>('');
+    
+    // DEBUG: Monitorar mudanças no selectedId
+    useEffect(() => {
+        console.log('🔴 selectedId mudou para:', selectedId);
+    }, [selectedId]);
+    
     const [isSaving, setIsSaving] = useState(false);
     const [previewSelections, setPreviewSelections] = useState<Record<string, string[]>>({});
     // Undo/Redo stacks
@@ -581,14 +587,17 @@ const QuizFunnelEditor: React.FC<QuizFunnelEditorProps> = ({ funnelId, templateI
 
     // Carregar steps iniciais
     useEffect(() => {
+        console.log('🟡 useEffect carregar steps - currentFunnel mudou');
         // Se funil tiver quizSteps, usar; caso contrário montar de QUIZ_STEPS
         const existing = (crud.currentFunnel as any)?.quizSteps as EditableQuizStep[] | undefined;
         if (existing && existing.length) {
+            console.log('✅ Carregando', existing.length, 'steps do currentFunnel');
             setSteps(existing.map(s => ({ ...s })));
             setSelectedId(existing[0].id);
             return;
         }
         // Converter QUIZ_STEPS (Record) para array
+        console.log('⚠️ Carregando steps de QUIZ_STEPS (fallback)');
         const conv: EditableQuizStep[] = Object.entries(QUIZ_STEPS).map(([id, step]) => ({ id, ...step }));
         setSteps(conv);
         if (conv.length) setSelectedId(conv[0].id);
@@ -1202,7 +1211,10 @@ const QuizFunnelEditor: React.FC<QuizFunnelEditorProps> = ({ funnelId, templateI
                                     const statusTitle = nStatus === 'ok' ? 'Fluxo OK' : nStatus === 'missing' ? 'nextStep ausente (pode impedir fluxo)' : 'nextStep inválido (ID não encontrado)';
                                     const orphan = isOrphan(s.id);
                                     return (
-                                        <div key={s.id} className={`px-3 py-2 border-b cursor-pointer group ${active ? 'bg-primary/10' : 'hover:bg-muted/50'}`} onClick={() => setSelectedId(s.id)}>
+                                        <div key={s.id} className={`px-3 py-2 border-b cursor-pointer group ${active ? 'bg-primary/10' : 'hover:bg-muted/50'}`} onClick={() => {
+                                            console.log('🔵 CLICK na etapa:', s.id, 'selectedId atual:', selectedId);
+                                            setSelectedId(s.id);
+                                        }}>
                                             <div className="flex items-center gap-2">
                                                 <span className="font-medium truncate">{idx + 1}. {s.type}</span>
                                                 <span className={`w-2 h-2 rounded-full ${statusColor}`} title={statusTitle} />
