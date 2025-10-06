@@ -1,5 +1,5 @@
 {
-  "buildTimestamp": "${BUILD_TIMESTAMP}",
-  "commitHash": "${COMMIT_HASH}",
-  "version": "1.0.0"
+    "buildTimestamp": "${BUILD_TIMESTAMP}",
+    "commitHash": "${COMMIT_HASH}",
+    "version": "1.0.0"
 }

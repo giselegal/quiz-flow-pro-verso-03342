@@ -143,6 +143,7 @@ console.log('🔧 DEBUG: main.tsx carregado');
 // 🔧 DIAGNOSTIC: Testar template
 import runTemplateDiagnostic from './utils/templateDiagnostic';
 import { getTemplateStatus } from './utils/hybridIntegration';
+import { startPeriodicVersionCheck } from './utils/checkBuildVersion';
 
 const diagnosticResult = runTemplateDiagnostic();
 console.log('🔬 [MAIN] Template diagnostic:', diagnosticResult);
@@ -153,6 +154,15 @@ getTemplateStatus().then(status => {
 }).catch(error => {
   console.error('❌ [MAIN] Hybrid integration error:', error);
 });
+
+// 🔄 Versão / prevenção de 404 de chunks desatualizados
+if (typeof window !== 'undefined') {
+  try {
+    startPeriodicVersionCheck(180000); // a cada 3 min
+  } catch (e) {
+    console.warn('[VersionCheck] Falha ao iniciar verificação de versão:', e);
+  }
+}
 
 // O serviço é inicializado automaticamente na importação
 
