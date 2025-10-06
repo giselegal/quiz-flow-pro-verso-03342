@@ -13,7 +13,7 @@
 import { useState, useCallback, useMemo } from 'react';
 import { styleMapping, type StyleId } from '../data/styles';
 import { QUIZ_STEPS, STEP_ORDER } from '../data/quizSteps';
-import { normalizeStepId, getNextFromOrder, getPreviousFromOrder, safeGetStep } from '@/utils/quizStepIds';
+import { stepIdVariants, normalizeStepId, getNextFromOrder, getPreviousFromOrder, safeGetStep } from '@/utils/quizStepIds';
 import { getPersonalizedStepTemplate } from '../templates/quiz21StepsSimplified';
 // Note: STRATEGIC_ANSWER_TO_OFFER_KEY commented - not used
 // import { STRATEGIC_ANSWER_TO_OFFER_KEY } from '@/data/quizSteps';
@@ -256,15 +256,20 @@ export function useQuizState(funnelId?: string, externalSteps?: Record<string, a
   // Obter dados da etapa atual (com suporte a personalização via funnelId)
   const currentStepData = useMemo(() => {
     const source = externalSteps || QUIZ_STEPS;
-    if (funnelId) {
-      // Usar template personalizado se funnelId foi fornecido
-      const personalizedTemplate = getPersonalizedStepTemplate(state.currentStep, funnelId);
-      if (personalizedTemplate) {
-        return personalizedTemplate;
+
+    // Tentar variações (padded + legacy)
+    for (const variant of stepIdVariants(state.currentStep)) {
+      if (funnelId) {
+        const personalizedTemplate = getPersonalizedStepTemplate(variant, funnelId);
+        if (personalizedTemplate) return personalizedTemplate;
       }
+      const base = source[variant];
+      if (base) return base;
     }
-    // Fallback para o template padrão
-    return source[state.currentStep];
+
+    // Última tentativa com lookup seguro
+    const fallback = safeGetStep(source, state.currentStep);
+    return fallback;
   }, [state.currentStep, funnelId, externalSteps]);
 
   // Verificar se pode voltar
