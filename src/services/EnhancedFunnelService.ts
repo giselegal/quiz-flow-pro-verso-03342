@@ -101,7 +101,8 @@ export class EnhancedFunnelService {
           theme: 'modern-elegant',
           totalSteps: 21,
           allowBackward: true,
-          saveProgress: true
+          saveProgress: true,
+          quizSteps: []
         },
         pages: Array.from({ length: 21 }, (_, index) => ({
           id: `${funnelId}-step-${index + 1}`,
@@ -114,12 +115,24 @@ export class EnhancedFunnelService {
           created_at: new Date().toISOString(),
           updated_at: new Date().toISOString()
         })),
+        quizSteps: [],
         createdAt: new Date(),
         updatedAt: new Date()
       };
 
       // Save fallback to database
-      await this.funnelService.createFunnel(fallbackFunnel);
+      await this.funnelService.createFunnel({
+        name: fallbackFunnel.name,
+        description: fallbackFunnel.description,
+        category: fallbackFunnel.category,
+        context: fallbackFunnel.context,
+        userId: fallbackFunnel.userId,
+        settings: fallbackFunnel.settings,
+        pages: fallbackFunnel.pages,
+        quizSteps: fallbackFunnel.quizSteps,
+        autoPublish: fallbackFunnel.isPublished,
+        templateId: fallbackFunnel.templateId
+      });
       
       console.log('✅ Fallback funnel created successfully:', funnelId);
       return fallbackFunnel;

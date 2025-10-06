@@ -3,12 +3,13 @@
 // Combina FunnelEditingFacade + Sistema Modular (componentes modulares, drag & drop, Chakra UI)
 // Implementa a arquitetura solicitada: "cada etapa composta por componentes modulares, independentes e editáveis"
 // =============================================================
-import React, { useMemo, createContext, useContext, useEffect, useRef, useState } from 'react';
-import { QuizFunnelEditingFacade, type IFunnelEditingFacade, type FunnelSnapshot } from '@/editor/facade/FunnelEditingFacade';
+import React, { useMemo, useEffect, useRef, useState } from 'react';
+import { QuizFunnelEditingFacade, type FunnelSnapshot } from '@/editor/facade/FunnelEditingFacade';
 import { resolveAdapter, applySnapshotAndPersist } from '@/editor/adapters/FunnelAdapterRegistry';
 import { useUnifiedCRUDOptional } from '@/context/UnifiedCRUDProvider';
 import { useFunnelPublication } from '@/hooks/useFunnelPublication';
 import '../../components/editor/quiz/QuizEditorStyles.css';
+import { FunnelFacadeContext, useFunnelFacade, useOptionalFunnelFacade } from '@/editor/facade/FunnelFacadeContext';
 
 export interface ModernUnifiedEditorProps {
     funnelId?: string;
@@ -28,17 +29,7 @@ import EditableStepsEditor from '../../components/editor/modular/EditableStepsEd
 import StableEditableStepsEditor from '../../components/editor/modular/StableEditableStepsEditor';
 
 
-// ============================================
-// Contexto da Facade (fase de integração)
-// ============================================
-const FunnelFacadeContext = createContext<IFunnelEditingFacade | null>(null);
-export const useFunnelFacade = () => {
-    const ctx = useContext(FunnelFacadeContext);
-    if (!ctx) throw new Error('useFunnelFacade deve ser usado dentro de <FunnelFacadeContext.Provider>');
-    return ctx;
-};
-// Versão opcional (uso em componentes que podem renderizar antes da fachada existir)
-export const useOptionalFunnelFacade = () => useContext(FunnelFacadeContext);
+export { useFunnelFacade, useOptionalFunnelFacade };
 
 // buildInitialSnapshot agora via adapter registry
 const buildInitialSnapshot = (crud: ReturnType<typeof useUnifiedCRUDOptional>): { snapshot: FunnelSnapshot; adapterType: string } => {

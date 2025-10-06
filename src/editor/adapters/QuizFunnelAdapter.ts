@@ -1,6 +1,55 @@
 import { IFunnelAdapter } from './FunnelAdapterTypes';
-import type { FunnelSnapshot } from '@/editor/facade/FunnelEditingFacade';
+import type { FunnelSnapshot, FunnelBlock } from '@/editor/facade/FunnelEditingFacade';
 import type { UnifiedFunnelData } from '@/services/FunnelUnifiedService';
+import type { QuizStep } from '@/data/quizSteps';
+
+const QUIZ_STEP_BLOCK_TYPE = 'quiz-step';
+
+type QuizStepWithId = QuizStep & {
+    id: string;
+    order?: number;
+    blockId?: string;
+};
+
+interface QuizStepSource {
+    quizSteps?: QuizStepWithId[];
+    settings?: Record<string, any> & { quizSteps?: QuizStepWithId[] };
+}
+
+const ensureStepId = (step: QuizStepWithId, idx: number) => step.id || `step-${idx + 1}`;
+
+const toBlock = (step: QuizStepWithId): FunnelBlock => ({
+    id: step.blockId || `${ensureStepId(step, step.order ?? 0)}-blk`,
+    type: QUIZ_STEP_BLOCK_TYPE,
+    data: {
+        ...step,
+        id: ensureStepId(step, step.order ?? 0)
+    }
+});
+
+const fromBlock = (block: FunnelBlock, fallback: Partial<QuizStepWithId> = {}): QuizStepWithId => {
+    const data = (block?.data || {}) as QuizStepWithId;
+    const { id: fallbackId, ...fallbackRest } = fallback;
+    const { id: dataId, ...dataRest } = data || {};
+    const id = dataId || fallbackId || block.id || `step-${Math.random().toString(36).slice(2, 8)}`;
+    return {
+        id,
+        ...(fallbackRest as any),
+        ...(dataRest as any),
+        blockId: block.id
+    } as QuizStepWithId;
+};
+
+const extractQuizSteps = (source: QuizStepSource | null): QuizStepWithId[] => {
+    if (!source) return [];
+    const fromSettings = source.settings?.quizSteps;
+    const steps = (source.quizSteps || fromSettings || []) as QuizStepWithId[];
+    return steps.map((step, idx) => ({
+        ...step,
+        id: ensureStepId(step, idx),
+        order: step.order ?? idx
+    }));
+};
 
 export class QuizFunnelAdapter implements IFunnelAdapter {
     readonly type = 'quiz';
@@ -14,18 +63,18 @@ export class QuizFunnelAdapter implements IFunnelAdapter {
     }
 
     toSnapshot(funnel: UnifiedFunnelData | null): FunnelSnapshot {
-        const quizSteps: any[] = (funnel as any)?.quizSteps || [];
+        const quizSteps = extractQuizSteps(funnel as unknown as QuizStepSource);
         return {
-            steps: quizSteps.map((s, idx) => ({
-                id: s.id || `step-${idx}`,
-                title: s.title || s.questionText || s.type || `Step ${idx + 1}`,
-                order: idx,
-                blocks: (s.blocks || []).map((b: any) => ({
-                    id: b.id || `blk-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
-                    type: b.type || 'unknown',
-                    data: b.config || b.data || {}
-                })),
-                meta: { type: s.type, nextStep: s.nextStep }
+            steps: quizSteps.map((step, idx) => ({
+                id: ensureStepId(step, idx),
+                title: step.title || step.questionText || step.type || `Step ${idx + 1}`,
+                order: step.order ?? idx,
+                blocks: [toBlock(step)],
+                meta: {
+                    type: step.type,
+                    nextStep: (step as any).nextStep,
+                    questionNumber: (step as any).questionNumber
+                }
             })),
             meta: {
                 id: funnel?.id,
@@ -36,15 +85,28 @@ export class QuizFunnelAdapter implements IFunnelAdapter {
     }
 
     applySnapshot(snapshot: FunnelSnapshot, base: UnifiedFunnelData): UnifiedFunnelData {
-        const quizSteps = snapshot.steps.map(s => ({
-            id: s.id,
-            title: s.title,
-            order: s.order,
-            type: s.meta?.type,
-            nextStep: s.meta?.nextStep,
-            blocks: s.blocks.map(b => ({ id: b.id, type: b.type, config: b.data }))
-        }));
-        return { ...base, quizSteps } as any;
+        const quizSteps: QuizStepWithId[] = snapshot.steps.map((step, idx) => {
+            const primaryBlock = step.blocks.find(b => b.type === QUIZ_STEP_BLOCK_TYPE) || step.blocks[0];
+            const baseData: Partial<QuizStepWithId> = {
+                id: step.id || `step-${idx + 1}`,
+                type: (step.meta?.type as QuizStep['type']) || 'question',
+                order: step.order,
+                nextStep: (step.meta as any)?.nextStep,
+                questionNumber: (step.meta as any)?.questionNumber
+            };
+            return fromBlock(primaryBlock, baseData);
+        });
+
+        const nextSettings = {
+            ...base.settings,
+            quizSteps: quizSteps.map(({ blockId, ...rest }) => ({ ...rest }))
+        };
+
+        return {
+            ...base,
+            quizSteps,
+            settings: nextSettings
+        } as any;
     }
 }
 
