@@ -145,13 +145,16 @@ const ModularFormFieldSimple: React.FC<ModularFormFieldSimpleProps> = ({
 
     const renderChoiceList = (inputType: 'checkbox' | 'radio') => {
         const currentValue = Array.isArray(value) ? value : typeof value === 'string' ? [value] : [];
+        const booleanValue = typeof value === 'boolean' ? value : undefined;
 
         return (
-                <div style={optionsContainerStyle}>
+            <div style={optionsContainerStyle}>
                 {options.map((option) => {
-                    const checked = inputType === 'checkbox'
-                        ? currentValue.includes(option.value)
-                        : currentValue[0] === option.value;
+                    const checked = booleanValue !== undefined && options.length <= 1
+                        ? booleanValue
+                        : inputType === 'checkbox'
+                            ? currentValue.includes(option.value)
+                            : currentValue[0] === option.value;
 
                     return (
                         <label key={option.value} style={optionItemStyle}>
@@ -162,8 +165,8 @@ const ModularFormFieldSimple: React.FC<ModularFormFieldSimpleProps> = ({
                                 required={required}
                                 disabled={disabled}
                                 checked={checked}
-                                    onChange={(event) => onChange?.(event)}
-                                    {...optionProps}
+                                onChange={(event) => onChange?.(event)}
+                                {...optionProps}
                             />
                             <span>{option.label}</span>
                         </label>
@@ -194,10 +197,10 @@ const ModularFormFieldSimple: React.FC<ModularFormFieldSimpleProps> = ({
             fieldControl = renderTextInput();
     }
 
-        const { style: containerStyleOverride, ...restContainerProps } = containerProps ?? {};
+    const { style: containerStyleOverride, ...restContainerProps } = containerProps ?? {};
 
-        return (
-            <div style={{ ...containerStyle, ...containerStyleOverride }} {...restContainerProps}>
+    return (
+        <div style={{ ...containerStyle, ...containerStyleOverride }} {...restContainerProps}>
             {label && (
                 <label htmlFor={controlId} style={labelStyle}>
                     {label}
