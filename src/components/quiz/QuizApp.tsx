@@ -39,25 +39,13 @@ export default function QuizApp({ funnelId }: QuizAppProps) {
 
     // 🎯 FASE 3: Mapear step atual para stepId do registry
     const getStepIdFromCurrentStep = (currentStep: string): string => {
-        // Mapear steps do quiz para IDs do registry
-        const stepMapping: Record<string, string> = {
-            'step-1': 'step-01',  // intro
-            'step-2': 'step-02',  // question 1
-            'step-3': 'step-03',  // question 2
-            'step-4': 'step-04',  // question 3
-            'step-5': 'step-05',  // question 4
-            'step-6': 'step-06',  // question 5
-            'step-7': 'step-07',  // question 6
-            'step-8': 'step-08',  // question 7
-            'step-9': 'step-09',  // question 8
-            'step-10': 'step-10', // question 9
-            'step-11': 'step-11', // question 10
-            'step-12': 'step-12', // strategic question
-            'step-13': 'step-13', // transition
-            'step-14': 'step-14', // result
-            'step-15': 'step-15', // offer
-        };
-        return stepMapping[currentStep] || 'step-01';
+        // Novo: suportar ambos formatos. Normalizar para formato com zero padding apenas se existir no registry
+        // Mantém compatibilidade se registry foi registrado com step-01...
+        const numeric = currentStep.replace('step-', '');
+        const padded = `step-${numeric.padStart(2, '0')}`; // step-01
+        const plain = `step-${numeric}`; // step-1
+        // Preferir padded porque registry usa step-01, step-02, etc.
+        return padded;
     };
 
     const currentStepId = getStepIdFromCurrentStep(state.currentStep);
