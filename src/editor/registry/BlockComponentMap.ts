@@ -6,18 +6,18 @@
  */
 
 import React from 'react';
-import { BlockComponentMap } from '@/types/blockTypes';
+import { BlockComponentProps } from '@/types/blockTypes';
 
 // Importar componentes de bloco
-import { TitleBlock } from '../components/blocks/TitleBlock';
-import { ImageBlock } from '../components/blocks/ImageBlock';
-import { ButtonBlockModular } from '../components/blocks/ButtonBlockModular';
-import { QuestionTextBlock } from '../components/blocks/QuestionTextBlock';
-import { OptionsBlock } from '../components/blocks/OptionsBlock';
-import { FormInputBlock } from '../components/blocks/FormInputBlock';
-import { TransitionBlock } from '../components/blocks/TransitionBlock';
-import { ResultBlock } from '../components/blocks/ResultBlock';
-import { OfferBlock } from '../components/blocks/OfferBlock';
+import TitleBlock from '../components/blocks/TitleBlock';
+import ImageBlock from '../components/blocks/ImageBlock';
+import ButtonBlockModular from '../components/blocks/ButtonBlockModular';
+import QuestionTextBlock from '../components/blocks/QuestionTextBlock';
+import OptionsBlock from '../components/blocks/OptionsBlock';
+import FormInputBlock from '../components/blocks/FormInputBlock';
+import TransitionBlock from '../components/blocks/TransitionBlock';
+import ResultBlock from '../components/blocks/ResultBlock';
+import OfferBlock from '../components/blocks/OfferBlock';
 
 /**
  * Mapa de componentes de blocos

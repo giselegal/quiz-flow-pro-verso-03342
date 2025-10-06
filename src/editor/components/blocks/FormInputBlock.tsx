@@ -6,7 +6,7 @@
  */
 
 import React from 'react';
-import { BlockComponentProps } from '@/editor/registry/BlockRegistry';
+import { BlockComponentProps } from '@/types/blockTypes';
 import { cn } from '@/lib/utils';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -17,11 +17,11 @@ const FormInputBlock: React.FC<BlockComponentProps> = ({
     onSelect
 }) => {
     // Extrair propriedades
-    const label = data.content?.label || 'Campo';
-    const placeholder = data.content?.placeholder || 'Digite aqui...';
-    const type = data.content?.type || 'text';
-    const required = data.properties?.required || false;
-    const variableName = data.properties?.variableName || 'inputValue';
+    const label = data.props?.label || 'Campo';
+    const placeholder = data.props?.placeholder || 'Digite aqui...';
+    const type = data.props?.type || 'text';
+    const required = data.props?.required || false;
+    const variableName = data.metadata?.variableName || 'inputValue';
 
     return (
         <div
@@ -30,7 +30,7 @@ const FormInputBlock: React.FC<BlockComponentProps> = ({
                 'hover:ring-1 hover:ring-blue-200',
                 isSelected && 'ring-2 ring-blue-500 ring-offset-2 bg-blue-50/20'
             )}
-            onClick={onSelect}
+            onClick={onSelect ? () => onSelect(data.id) : undefined}
             data-block-id={data.id}
             data-block-type={data.type}
         >
