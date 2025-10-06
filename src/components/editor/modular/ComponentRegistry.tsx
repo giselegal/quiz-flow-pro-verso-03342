@@ -394,7 +394,7 @@ export const COMPONENT_REGISTRY: Record<ComponentType, ComponentInfo> = {
     },
 
     'custom-html': {
-        component: ({ html = '<p>Conteúdo HTML personalizado</p>', ...props }) => (
+        component: ({ html = '<p>Conteúdo HTML personalizado</p>', children: _children, ...props }) => (
             <div
                 dangerouslySetInnerHTML={{ __html: html }}
                 {...props}
