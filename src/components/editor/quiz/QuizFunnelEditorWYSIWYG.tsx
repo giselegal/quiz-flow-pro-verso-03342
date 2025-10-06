@@ -49,6 +49,8 @@ type EditableQuizStep = QuizStep & {
     seo?: { title?: string; description?: string; keywords?: string };
     pixel?: { facebook?: string; google?: string };
     utm?: { source?: string; medium?: string; campaign?: string };
+    // Ordem explícita dos blocos (ids) após reordenação manual
+    blockOrder?: string[];
 };
 
 const STEP_TYPES: Array<QuizStep['type']> = [
@@ -393,7 +395,20 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
         };
 
         // 🎯 DECOMPOSIÇÃO EM BLOCOS MODULARES
-        const blocks = stepToBlocks(productionStepData);
+        let blocks = stepToBlocks(productionStepData);
+        // Aplicar ordem custom se existir
+        if (step.blockOrder && step.blockOrder.length) {
+            const map = new Map(blocks.map(b => [b.id, b]));
+            const ordered: any[] = [];
+            step.blockOrder.forEach(id => {
+                const blk = map.get(id);
+                if (blk) ordered.push(blk);
+            });
+            // Adicionar blocos novos que ainda não estavam em blockOrder
+            blocks.forEach(b => { if (!step.blockOrder?.includes(b.id)) ordered.push(b); });
+            // Reatribuir ordem sequencial
+            blocks = ordered.map((b, i) => ({ ...b, order: i + 1 }));
+        }
 
         // 🎨 HANDLERS PARA BLOCOS
         const handleBlockSelect = (blockId: string) => {
@@ -402,13 +417,44 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
         };
 
         const handleBlockUpdate = (blockId: string, updates: any) => {
-            // TODO: Implementar atualização individual de blocos
-            console.log('Atualizando bloco:', blockId, updates);
+            // Mapear blockId -> propriedade do step
+            // Padrões simples: title, image, formQuestion, buttonText, questionText, options
+            const newStep: Partial<EditableQuizStep> = {};
+            if (blockId.includes('title') && typeof updates.text === 'string') {
+                newStep.title = updates.text;
+            }
+            if (blockId.includes('image') && updates.src) {
+                (newStep as any).image = updates.src;
+            }
+            if (blockId.includes('form-input')) {
+                if (updates.label) newStep.formQuestion = updates.label;
+                if (updates.placeholder !== undefined) newStep.placeholder = updates.placeholder;
+            }
+            if (blockId.includes('button') && updates.text) {
+                newStep.buttonText = updates.text;
+            }
+            if (blockId.includes('question-text') && updates.text) {
+                newStep.questionText = updates.text;
+            }
+            if (blockId.includes('options') && updates.options) {
+                (newStep as any).options = updates.options;
+            }
+            if (Object.keys(newStep).length) {
+                updateStep(step.id, newStep as any);
+            }
         };
 
         const handleBlockReorder = (blockId: string, direction: 'up' | 'down') => {
-            // TODO: Implementar reordenação de blocos dentro do step
-            console.log('Reordenando bloco:', blockId, direction);
+            // Gerar lista atual de ids
+            const currentOrder = step.blockOrder && step.blockOrder.length
+                ? step.blockOrder.slice()
+                : blocks.map(b => b.id);
+            const idx = currentOrder.indexOf(blockId);
+            if (idx === -1) return;
+            const target = direction === 'up' ? idx - 1 : idx + 1;
+            if (target < 0 || target >= currentOrder.length) return;
+            [currentOrder[idx], currentOrder[target]] = [currentOrder[target], currentOrder[idx]];
+            updateStep(step.id, { blockOrder: currentOrder });
         };
 
         return (
@@ -953,8 +999,18 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
                                                     console.log('Update block:', blockId, props);
                                                 }}
                                                 onReorderBlock={(blockId: string, direction: 'up' | 'down') => {
-                                                    // TODO: implementar reordenação de bloco
-                                                    console.log('Reorder block:', blockId, direction);
+                                                    const currentStep = steps.find(s => s.id === step.id);
+                                                    if (!currentStep) return;
+                                                    const currentBlocks = stepToBlocks(currentStep as any);
+                                                    const order = currentStep.blockOrder && currentStep.blockOrder.length
+                                                        ? currentStep.blockOrder.slice()
+                                                        : currentBlocks.map(b => b.id);
+                                                    const idx = order.indexOf(blockId);
+                                                    if (idx === -1) return;
+                                                    const target = direction === 'up' ? idx - 1 : idx + 1;
+                                                    if (target < 0 || target >= order.length) return;
+                                                    [order[idx], order[target]] = [order[target], order[idx]];
+                                                    updateStep(currentStep.id, { blockOrder: order });
                                                 }}
                                                 onMoveStep={(direction: number) => moveStep(step.id, direction)}
                                                 onNavigateStep={(stepId: string) => setSelectedId(stepId)} // Navegação entre steps
