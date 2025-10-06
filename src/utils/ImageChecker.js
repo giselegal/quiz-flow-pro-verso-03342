@@ -17,7 +17,8 @@ export const checkImageStatus = () => {
   console.group('📊 Status das Imagens');
 
   // Estatísticas do cache
-  const cacheSize = imageCache.size;
+  const cache = getImageCache();
+  const cacheSize = Object.keys(cache).length;
   console.log(`📦 Total no Cache: ${cacheSize} imagens`);
 
   // Contadores
@@ -28,7 +29,7 @@ export const checkImageStatus = () => {
   let withLowQuality = 0;
 
   // Verificar cada entrada no cache
-  imageCache.forEach((data, key) => {
+  Object.entries(cache).forEach(([key, data]) => {
     if (data.loadStatus === 'loaded') loaded++;
     else if (data.loadStatus === 'loading') loading++;
     else if (data.loadStatus === 'error') error++;
