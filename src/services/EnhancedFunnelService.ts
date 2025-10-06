@@ -17,7 +17,7 @@ export class EnhancedFunnelService {
   private templateService = TemplateFunnelService.getInstance();
   private cache = new Map<string, UnifiedFunnelData>();
 
-  private constructor() {}
+  private constructor() { }
 
   static getInstance(): EnhancedFunnelService {
     if (!this.instance) {
@@ -42,7 +42,7 @@ export class EnhancedFunnelService {
     try {
       // Tentar carregar funil existente
       let funnel = await this.funnelService.getFunnel(funnelId, userId);
-      
+
       if (funnel) {
         console.log('✅ Funnel found in database:', funnelId);
         this.cache.set(funnelId, funnel);
@@ -52,9 +52,9 @@ export class EnhancedFunnelService {
       // Se não existe e é um ID de template, criar automaticamente
       if (this.templateService.shouldCreateFromTemplate(funnelId)) {
         console.log('🔄 Auto-creating funnel from template:', funnelId);
-        
+
         funnel = await this.templateService.createFunnelFromTemplate(funnelId);
-        
+
         if (funnel) {
           console.log('✅ Funnel created from template:', funnelId);
           this.cache.set(funnelId, funnel);
@@ -71,13 +71,13 @@ export class EnhancedFunnelService {
       return funnel;
     } catch (error) {
       console.error('❌ Error in getFunnelWithFallback:', error);
-      
+
       // Em caso de erro, tentar criar fallback
       const fallback = await this.createFallbackFunnel(funnelId);
       if (fallback) {
         this.cache.set(funnelId, fallback);
       }
-      
+
       return fallback;
     }
   }
@@ -133,7 +133,7 @@ export class EnhancedFunnelService {
         autoPublish: fallbackFunnel.isPublished,
         templateId: fallbackFunnel.templateId
       });
-      
+
       console.log('✅ Fallback funnel created successfully:', funnelId);
       return fallbackFunnel;
     } catch (error) {
