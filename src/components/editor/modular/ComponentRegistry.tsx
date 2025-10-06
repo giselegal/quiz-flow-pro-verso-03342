@@ -13,6 +13,7 @@ import ModularTitleStable from './components/ModularTitleStable';
 import ModularTextStable from './components/ModularTextStable';
 import ModularImageSimple from './components/ModularImageSimple';
 import ModularOptionsGridSimple from './components/ModularOptionsGridSimple';
+import ModularFormFieldSimple from './components/ModularFormFieldSimple';
 
 // Definir interface do registro
 interface ComponentInfo {
@@ -250,6 +251,22 @@ export const COMPONENT_REGISTRY: Record<ComponentType, ComponentInfo> = {
         },
     },
 
+    'form-field': {
+        component: ModularFormFieldSimple,
+        name: 'Campo de Formulário',
+        description: 'Campo versátil com rótulo e opções',
+        category: 'input',
+        icon: '🧾',
+        defaultProps: {
+            label: 'Label do campo',
+            placeholder: 'Digite aqui...',
+            fieldType: 'text',
+            required: false,
+            helpText: '',
+            options: [],
+        },
+    },
+
     'form-input': {
         component: ({ placeholder = 'Digite aqui...', ...props }) => (
             <input
@@ -373,6 +390,128 @@ export const COMPONENT_REGISTRY: Record<ComponentType, ComponentInfo> = {
             successThreshold: 70,
             successMessage: 'Parabéns!',
             failMessage: 'Tente novamente!',
+        },
+    },
+
+    'custom-html': {
+        component: ({ html = '<p>Conteúdo HTML personalizado</p>', ...props }) => (
+            <div
+                dangerouslySetInnerHTML={{ __html: html }}
+                {...props}
+            />
+        ),
+        name: 'HTML Personalizado',
+        description: 'Bloco para inserir HTML personalizado',
+        category: 'content',
+        icon: '🌐',
+        defaultProps: {
+            html: '<p>Conteúdo HTML personalizado</p>',
+        },
+    },
+
+    'result-display': {
+        component: ({ title = 'Resultado', description = 'Resumo do resultado', ...props }) => (
+            <div
+                style={{
+                    padding: '20px',
+                    borderRadius: '8px',
+                    border: '1px solid #e2e8f0',
+                    backgroundColor: '#f8fafc',
+                    textAlign: 'center',
+                }}
+                {...props}
+            >
+                <div style={{ fontSize: '20px', fontWeight: 'bold', marginBottom: '8px' }}>{title}</div>
+                <div style={{ color: '#4a5568', fontSize: '16px' }}>{description}</div>
+            </div>
+        ),
+        name: 'Resumo de Resultado',
+        description: 'Bloco simples para apresentar resultados',
+        category: 'content',
+        icon: '📊',
+        defaultProps: {
+            title: 'Resultado',
+            description: 'Resumo do resultado obtido.',
+        },
+    },
+
+    'countdown-timer': {
+        component: ({ minutes = 0, seconds = 30, ...props }) => (
+            <div
+                style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontSize: '28px',
+                    fontWeight: '600',
+                    color: '#2b6cb0',
+                }}
+                {...props}
+            >
+                🕒 {minutes.toString().padStart(2, '0')}:{seconds.toString().padStart(2, '0')}
+            </div>
+        ),
+        name: 'Temporizador',
+        description: 'Temporizador simples para etapas ou ações',
+        category: 'content',
+        icon: '⌛',
+        defaultProps: {
+            minutes: 0,
+            seconds: 30,
+            autoStart: false,
+        },
+    },
+
+    'social-share': {
+        component: ({ message = 'Compartilhe com seus amigos!', ...props }) => (
+            <div
+                style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '12px',
+                    alignItems: 'center',
+                    padding: '16px',
+                    borderRadius: '8px',
+                    border: '1px solid #e2e8f0',
+                    backgroundColor: '#f7fafc',
+                }}
+                {...props}
+            >
+                <span style={{ fontWeight: '600', color: '#2d3748' }}>{message}</span>
+                <div style={{ display: 'flex', gap: '12px' }}>
+                    <button
+                        style={{
+                            padding: '8px 16px',
+                            borderRadius: '6px',
+                            border: 'none',
+                            backgroundColor: '#0ea5e9',
+                            color: '#fff',
+                            cursor: 'pointer',
+                        }}
+                    >
+                        Compartilhar
+                    </button>
+                    <button
+                        style={{
+                            padding: '8px 16px',
+                            borderRadius: '6px',
+                            border: '1px solid #cbd5f5',
+                            backgroundColor: '#fff',
+                            color: '#2d3748',
+                            cursor: 'pointer',
+                        }}
+                    >
+                        Copiar Link
+                    </button>
+                </div>
+            </div>
+        ),
+        name: 'Compartilhamento Social',
+        description: 'Botões simples para incentivar o compartilhamento',
+        category: 'navigation',
+        icon: '🔗',
+        defaultProps: {
+            message: 'Compartilhe com seus amigos!',
         },
     },
 };
