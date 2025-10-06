@@ -14,14 +14,14 @@ import {
     Input,
     FormControl,
     FormLabel,
-    Modal,
-    ModalOverlay,
-    ModalContent,
-    ModalHeader,
-    ModalFooter,
-    ModalBody,
-    ModalCloseButton,
-    useDisclosure,
+    // Modal, // Temporariamente comentado - problemas de exportação
+    // ModalOverlay,
+    // ModalContent,
+    // ModalHeader,
+    // ModalFooter,
+    // ModalBody,
+    // ModalCloseButton,
+    // useDisclosure,
     Icon,
     Flex,
 } from '@chakra-ui/react';
@@ -54,7 +54,10 @@ export const ModularImage: React.FC<ModularImageProps> = ({
     onUpdate,
     style,
 }) => {
-    const { isOpen, onOpen, onClose } = useDisclosure();
+    // const { isOpen, onOpen, onClose } = useDisclosure(); // Temporariamente desabilitado
+    const isOpen = false;
+    const onOpen = () => { };
+    const onClose = () => { };
     const fileInputRef = useRef<HTMLInputElement>(null);
     const [imageUrl, setImageUrl] = useState(src || "");
     const [altText, setAltText] = useState(alt);

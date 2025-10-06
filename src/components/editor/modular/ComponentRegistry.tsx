@@ -9,10 +9,10 @@ import { ComponentType, ModularComponent } from '@/types/modular-editor';
 
 // Importar todos os componentes modulares
 import ModularHeader from './components/ModularHeader';
-import ModularTitle from './components/ModularTitle';
-import ModularText from './components/ModularText';
-import ModularImage from './components/ModularImage';
-import ModularOptionsGrid from './components/ModularOptionsGrid';
+import ModularTitleStable from './components/ModularTitleStable';
+import ModularTextStable from './components/ModularTextStable';
+import ModularImageSimple from './components/ModularImageSimple';
+import ModularOptionsGridSimple from './components/ModularOptionsGridSimple';
 
 // Definir interface do registro
 interface ComponentInfo {
@@ -47,7 +47,7 @@ export const COMPONENT_REGISTRY: Record<ComponentType, ComponentInfo> = {
     },
 
     'title': {
-        component: ModularTitle,
+        component: ModularTitleStable,
         name: 'Título',
         description: 'Título configurável e editável',
         category: 'content',
@@ -65,7 +65,7 @@ export const COMPONENT_REGISTRY: Record<ComponentType, ComponentInfo> = {
     },
 
     'text': {
-        component: ModularText,
+        component: ModularTextStable,
         name: 'Texto',
         description: 'Bloco de texto configurável',
         category: 'content',
@@ -85,7 +85,7 @@ export const COMPONENT_REGISTRY: Record<ComponentType, ComponentInfo> = {
     },
 
     'image': {
-        component: ModularImage,
+        component: ModularImageSimple,
         name: 'Imagem',
         description: 'Imagem com upload e configurações',
         category: 'media',
@@ -107,7 +107,7 @@ export const COMPONENT_REGISTRY: Record<ComponentType, ComponentInfo> = {
     },
 
     'options-grid': {
-        component: ModularOptionsGrid,
+        component: ModularOptionsGridSimple,
         name: 'Grid de Opções',
         description: 'Grid de opções para quiz/formulário',
         category: 'input',
@@ -126,264 +126,255 @@ export const COMPONENT_REGISTRY: Record<ComponentType, ComponentInfo> = {
 
     'spacer': {
         component: ({ height = 4, ...props }) => (
-            <div style= {{ height: `${height * 4}px` }} {...props } />
+            <div style={{ height: `${height * 4}px` }} {...props} />
         ),
-name: 'Espaçador',
-    description: 'Espaço em branco configurável',
+        name: 'Espaçador',
+        description: 'Espaço em branco configurável',
         category: 'layout',
-            icon: '⬜',
-                defaultProps: {
-    height: 4,
+        icon: '⬜',
+        defaultProps: {
+            height: 4,
+        },
     },
-  },
 
-'divider': {
-    component: ({ style, ...props }) => (
-        <hr
-        style= {{
-        border: 'none',
-            height: '1px',
-                backgroundColor: '#e2e8f0',
-                    margin: '16px 0',
-          ...style,
-        }
-}
-{...props }
-      />
-    ),
-name: 'Divisor',
-    description: 'Linha divisória horizontal',
-        category: 'layout',
-            icon: '➖',
-                defaultProps: {
-    color: 'gray.200',
-        thickness: 1,
-            margin: 4,
-    },
-  },
-
-'button': {
-    component: ({ text = 'Botão', ...props }) => (
-        <button
-        style= {{
-        padding: '12px 24px',
-            backgroundColor: '#0090ff',
-                color: 'white',
+    'divider': {
+        component: ({ style, ...props }) => (
+            <hr
+                style={{
                     border: 'none',
-                        borderRadius: '6px',
-                            cursor: 'pointer',
-                                fontSize: '16px',
-                                    fontWeight: '500',
-        }
-}
-{...props }
-      >
-    { text }
-    </button>
-    ),
-name: 'Botão',
-    description: 'Botão de ação configurável',
-        category: 'input',
-            icon: '🔲',
-                defaultProps: {
-    text: 'Continuar',
-        variant: 'solid',
-            colorScheme: 'brand',
-                size: 'md',
-                    isFullWidth: false,
-                        isDisabled: false,
+                    height: '1px',
+                    backgroundColor: '#e2e8f0',
+                    margin: '16px 0',
+                    ...style,
+                }
+                }
+                {...props}
+            />
+        ),
+        name: 'Divisor',
+        description: 'Linha divisória horizontal',
+        category: 'layout',
+        icon: '➖',
+        defaultProps: {
+            color: 'gray.200',
+            thickness: 1,
+            margin: 4,
+        },
     },
-  },
 
-'video': {
-    component: ({ src, ...props }) => (
-        <video
-        controls
-        style = {{
-        width: '100%',
-            maxWidth: '100%',
-                borderRadius: '8px',
-        }
-}
-{...props }
-      >
-    <source src={ src } />
-        Seu navegador não suporta vídeos.
-      </video>
-    ),
-name: 'Vídeo',
-    description: 'Player de vídeo incorporado',
-        category: 'media',
-            icon: '🎥',
-                defaultProps: {
-    src: '',
-        autoplay: false,
-            controls: true,
-                loop: false,
-                    muted: false,
-                        width: '100%',
-                            height: 'auto',
-    },
-  },
-
-'audio': {
-    component: ({ src, ...props }) => (
-        <audio
-        controls
-        style = {{
-        width: '100%',
-        }
-}
-{...props }
-      >
-    <source src={ src } />
-        Seu navegador não suporta áudio.
-      </audio>
-    ),
-name: 'Áudio',
-    description: 'Player de áudio incorporado',
-        category: 'media',
-            icon: '🎵',
-                defaultProps: {
-    src: '',
-        autoplay: false,
-            controls: true,
-                loop: false,
-                    muted: false,
-    },
-  },
-
-'form-input': {
-    component: ({ placeholder = 'Digite aqui...', ...props }) => (
-        <input
-        type= "text"
-    placeholder = { placeholder }
-    style = {{
-        width: '100%',
-            padding: '12px',
-                border: '1px solid #e2e8f0',
+    'button': {
+        component: ({ text = 'Botão', ...props }) => (
+            <button
+                style={{
+                    padding: '12px 24px',
+                    backgroundColor: '#0090ff',
+                    color: 'white',
+                    border: 'none',
                     borderRadius: '6px',
-                        fontSize: '16px',
-        }
-}
-{...props }
-      />
-    ),
-name: 'Campo de Texto',
-    description: 'Campo de entrada de texto',
+                    cursor: 'pointer',
+                    fontSize: '16px',
+                    fontWeight: '500',
+                }}
+                {...props}
+            >
+                {text}
+            </button>
+        ),
+        name: 'Botão',
+        description: 'Botão de ação configurável',
         category: 'input',
-            icon: '📝',
-                defaultProps: {
-    placeholder: 'Digite aqui...',
-        required: false,
-            maxLength: 255,
-                type: 'text',
-    },
-  },
-
-'countdown': {
-    component: ({ seconds = 30, ...props }) => (
-        <div
-        style= {{
-        display: 'flex',
-            alignItems: 'center',
-                justifyContent: 'center',
-                    fontSize: '24px',
-                        fontWeight: 'bold',
-                            color: '#e53e3e',
-        }
-}
-{...props }
-      >
-        ⏰ { seconds } s
-    </div>
-    ),
-name: 'Contador',
-    description: 'Contador regressivo configurável',
-        category: 'content',
-            icon: '⏰',
-                defaultProps: {
-    seconds: 30,
-        autoStart: false,
-            onComplete: null,
-                color: 'red.500',
-                    fontSize: 'xl',
-    },
-  },
-
-'progress-bar': {
-    component: ({ progress = 0, ...props }) => (
-        <div
-        style= {{
-        width: '100%',
-            height: '8px',
-                backgroundColor: '#e2e8f0',
-                    borderRadius: '4px',
-                        overflow: 'hidden',
-        }
-}
-{...props }
-      >
-    <div
-          style={
-    {
-        width: `${progress}%`,
-            height: '100%',
-                backgroundColor: '#0090ff',
-                    transition: 'width 0.3s ease',
-          }
-}
-        />
-    </div>
-    ),
-name: 'Barra de Progresso',
-    description: 'Indicador de progresso visual',
-        category: 'content',
-            icon: '▶️',
-                defaultProps: {
-    progress: 0,
-        colorScheme: 'brand',
+        icon: '🔲',
+        defaultProps: {
+            text: 'Continuar',
+            variant: 'solid',
+            colorScheme: 'brand',
             size: 'md',
-                hasStripe: false,
-                    isAnimated: false,
+            isFullWidth: false,
+            isDisabled: false,
+        },
     },
-  },
 
-'quiz-result': {
-    component: ({ score = 0, total = 10, ...props }) => (
-        <div
-        style= {{
-        textAlign: 'center',
-            padding: '24px',
-                backgroundColor: '#f7fafc',
+    'video': {
+        component: ({ src, ...props }) => (
+            <video
+                controls
+                style={{
+                    width: '100%',
+                    maxWidth: '100%',
                     borderRadius: '8px',
-                        border: '1px solid #e2e8f0',
-        }
-}
-{...props }
-      >
-    <div style={ { fontSize: '48px', marginBottom: '16px' } }>🎉</div>
-        < div style = {{ fontSize: '24px', fontWeight: 'bold', marginBottom: '8px' }}>
-            { score } / { total }
-            </div>
-            < div style = {{ color: '#4a5568' }}>
-                Pontuação Final
-                    </div>
-                    </div>
-    ),
-name: 'Resultado do Quiz',
-    description: 'Exibição de resultado/pontuação',
-        category: 'content',
-            icon: '🏆',
-                defaultProps: {
-    score: 0,
-        total: 10,
-            showPercentage: true,
-                successThreshold: 70,
-                    successMessage: 'Parabéns!',
-                        failMessage: 'Tente novamente!',
+                }}
+                {...props}
+            >
+                <source src={src} />
+                Seu navegador não suporta vídeos.
+            </video>
+        ),
+        name: 'Vídeo',
+        description: 'Player de vídeo incorporado',
+        category: 'media',
+        icon: '🎥',
+        defaultProps: {
+            src: '',
+            autoplay: false,
+            controls: true,
+            loop: false,
+            muted: false,
+            width: '100%',
+            height: 'auto',
+        },
     },
-  },
+
+    'audio': {
+        component: ({ src, ...props }) => (
+            <audio
+                controls
+                style={{
+                    width: '100%',
+                }}
+                {...props}
+            >
+                <source src={src} />
+                Seu navegador não suporta áudio.
+            </audio>
+        ),
+        name: 'Áudio',
+        description: 'Player de áudio incorporado',
+        category: 'media',
+        icon: '🎵',
+        defaultProps: {
+            src: '',
+            autoplay: false,
+            controls: true,
+            loop: false,
+            muted: false,
+        },
+    },
+
+    'form-input': {
+        component: ({ placeholder = 'Digite aqui...', ...props }) => (
+            <input
+                type="text"
+                placeholder={placeholder}
+                style={{
+                    width: '100%',
+                    padding: '12px',
+                    border: '1px solid #e2e8f0',
+                    borderRadius: '6px',
+                    fontSize: '16px',
+                }}
+                {...props}
+            />
+        ),
+        name: 'Campo de Texto',
+        description: 'Campo de entrada de texto',
+        category: 'input',
+        icon: '📝',
+        defaultProps: {
+            placeholder: 'Digite aqui...',
+            required: false,
+            maxLength: 255,
+            type: 'text',
+        },
+    },
+
+    'countdown': {
+        component: ({ seconds = 30, ...props }) => (
+            <div
+                style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontSize: '24px',
+                    fontWeight: 'bold',
+                    color: '#e53e3e',
+                }}
+                {...props}
+            >
+                ⏰ {seconds} s
+            </div>
+        ),
+        name: 'Contador',
+        description: 'Contador regressivo configurável',
+        category: 'content',
+        icon: '⏰',
+        defaultProps: {
+            seconds: 30,
+            autoStart: false,
+            onComplete: null,
+            color: 'red.500',
+            fontSize: 'xl',
+        },
+    },
+
+    'progress-bar': {
+        component: ({ progress = 0, ...props }) => (
+            <div
+                style={{
+                    width: '100%',
+                    height: '8px',
+                    backgroundColor: '#e2e8f0',
+                    borderRadius: '4px',
+                    overflow: 'hidden',
+                }}
+                {...props}
+            >
+                <div
+                    style={{
+                        width: `${progress}%`,
+                        height: '100%',
+                        backgroundColor: '#0090ff',
+                        transition: 'width 0.3s ease',
+                    }}
+                />
+            </div>
+        ),
+        name: 'Barra de Progresso',
+        description: 'Indicador de progresso visual',
+        category: 'content',
+        icon: '▶️',
+        defaultProps: {
+            progress: 0,
+            colorScheme: 'brand',
+            size: 'md',
+            hasStripe: false,
+            isAnimated: false,
+        },
+    },
+
+    'quiz-result': {
+        component: ({ score = 0, total = 10, ...props }) => (
+            <div
+                style={{
+                    textAlign: 'center',
+                    padding: '24px',
+                    backgroundColor: '#f7fafc',
+                    borderRadius: '8px',
+                    border: '1px solid #e2e8f0',
+                }}
+                {...props}
+            >
+                <div style={{ fontSize: '48px', marginBottom: '16px' }}>🎉</div>
+                <div style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '8px' }}>
+                    {score} / {total}
+                </div>
+                <div style={{ color: '#4a5568' }}>
+                    Pontuação Final
+                </div>
+            </div>
+        ),
+        name: 'Resultado do Quiz',
+        description: 'Exibição de resultado/pontuação',
+        category: 'content',
+        icon: '🏆',
+        defaultProps: {
+            score: 0,
+            total: 10,
+            showPercentage: true,
+            successThreshold: 70,
+            successMessage: 'Parabéns!',
+            failMessage: 'Tente novamente!',
+        },
+    },
 };
 
 // Funções utilitárias
