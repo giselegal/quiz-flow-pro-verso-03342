@@ -24,8 +24,8 @@ import { BlockRegistryProvider, ResultHeadlineBlock, OfferCoreBlock, ResultSecon
 import { QuizEditorProvider } from '@/context/QuizEditorContext';
 // ✅ NOVO: Editor com componentes editáveis modulares
 import EditableStepsEditor from '../../components/editor/modular/EditableStepsEditor';
-// 🔧 FALLBACK: Editor simples sem dependências externas
-import MinimalTest from '../../components/editor/modular/MinimalTest';
+// 🔧 STABLE: Editor estável sem dependências externas problemáticas
+import StableModularEditor from '../../components/editor/modular/StableModularEditor';
 
 
 // ============================================
@@ -47,8 +47,8 @@ const buildInitialSnapshot = (crud: ReturnType<typeof useUnifiedCRUDOptional>): 
 };
 
 const ModernUnifiedEditor: React.FC<ModernUnifiedEditorProps> = (props) => {
-    // 🎛️ CONTROLE DE EDITOR: true = EditableStepsEditor, false = MinimalTest (fallback)
-    const useAdvancedEditor = false; // ← Temporariamente usando fallback devido a problemas do Chakra UI
+    // 🎛️ CONTROLE DE EDITOR: true = EditableStepsEditor, false = StableModularEditor (estável)
+    const useAdvancedEditor = false; // ← Usando editor estável devido a problemas do Chakra UI
 
     const crud = useUnifiedCRUDOptional();
     // Criar facade; recria se trocar de funil
@@ -136,7 +136,7 @@ const ModernUnifiedEditor: React.FC<ModernUnifiedEditorProps> = (props) => {
                             <BlockRegistryProvider definitions={[ResultHeadlineBlock, OfferCoreBlock, ResultSecondaryListBlock, OfferUrgencyBlock]}>
                                 <div data-testid="quiz-editor-modular-container">
                                     {/* 🔧 EDITOR SIMPLES - SEM DEPENDÊNCIAS PROBLEMÁTICAS */}
-                                    <MinimalTest />
+                                    <StableModularEditor />
                                 </div>
                             </BlockRegistryProvider>
                         </QuizEditorProvider>

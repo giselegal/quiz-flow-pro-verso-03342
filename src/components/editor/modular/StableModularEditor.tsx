@@ -28,9 +28,9 @@ const StableModularEditor: React.FC = () => {
     // 🔧 Verificação de segurança
     if (!funnel || !funnel.steps || funnel.steps.length === 0) {
         return (
-            <div style={{ 
-                padding: '20px', 
-                border: '2px solid #f56565', 
+            <div style={{
+                padding: '20px',
+                border: '2px solid #f56565',
                 background: '#fed7d7',
                 borderRadius: '8px',
                 margin: '20px'
@@ -41,10 +41,10 @@ const StableModularEditor: React.FC = () => {
                 </p>
                 <details style={{ marginTop: '12px' }}>
                     <summary style={{ cursor: 'pointer', color: '#742a2a' }}>Ver detalhes técnicos</summary>
-                    <pre style={{ 
-                        background: 'white', 
-                        padding: '8px', 
-                        borderRadius: '4px', 
+                    <pre style={{
+                        background: 'white',
+                        padding: '8px',
+                        borderRadius: '4px',
                         margin: '8px 0 0 0',
                         fontSize: '12px',
                         overflow: 'auto'
@@ -75,7 +75,7 @@ const StableModularEditor: React.FC = () => {
     // 🔧 Handlers
     const handleAddComponent = (type: string) => {
         if (!currentStep) return;
-        
+
         const newComponent = {
             type: type as any,
             props: {
@@ -92,7 +92,7 @@ const StableModularEditor: React.FC = () => {
                 padding: '12px'
             },
         };
-        
+
         addComponent(currentStep.id, newComponent);
     };
 
@@ -109,7 +109,7 @@ const StableModularEditor: React.FC = () => {
     // 🎨 Renderização de componentes
     const renderComponent = (component: any) => {
         const isSelected = selectedComponent?.id === component.id;
-        
+
         const containerStyle = {
             padding: '16px',
             margin: '8px 0',
@@ -169,21 +169,21 @@ const StableModularEditor: React.FC = () => {
                     return (
                         <div style={{ textAlign: 'center' }}>
                             {component.props?.src ? (
-                                <img 
-                                    src={component.props.src} 
-                                    alt={component.props?.alt || 'Imagem'} 
-                                    style={{ 
-                                        maxWidth: '100%', 
-                                        height: 'auto', 
+                                <img
+                                    src={component.props.src}
+                                    alt={component.props?.alt || 'Imagem'}
+                                    style={{
+                                        maxWidth: '100%',
+                                        height: 'auto',
                                         borderRadius: '8px',
                                         boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)'
                                     }}
                                 />
                             ) : (
-                                <div style={{ 
-                                    padding: '60px 20px', 
-                                    background: '#f7fafc', 
-                                    borderRadius: '8px', 
+                                <div style={{
+                                    padding: '60px 20px',
+                                    background: '#f7fafc',
+                                    borderRadius: '8px',
                                     color: '#718096',
                                     border: '2px dashed #cbd5e0'
                                 }}>
@@ -196,11 +196,11 @@ const StableModularEditor: React.FC = () => {
                 case 'button':
                     return (
                         <div style={{ textAlign: 'center' }}>
-                            <button style={{ 
-                                padding: '12px 24px', 
-                                background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', 
-                                color: 'white', 
-                                border: 'none', 
+                            <button style={{
+                                padding: '12px 24px',
+                                background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                                color: 'white',
+                                border: 'none',
                                 borderRadius: '8px',
                                 cursor: 'pointer',
                                 fontSize: '16px',
@@ -208,12 +208,12 @@ const StableModularEditor: React.FC = () => {
                                 boxShadow: '0 4px 15px rgba(102, 126, 234, 0.3)',
                                 transition: 'transform 0.2s ease'
                             }}
-                            onMouseEnter={(e) => {
-                                e.currentTarget.style.transform = 'translateY(-2px)';
-                            }}
-                            onMouseLeave={(e) => {
-                                e.currentTarget.style.transform = 'translateY(0)';
-                            }}
+                                onMouseEnter={(e) => {
+                                    e.currentTarget.style.transform = 'translateY(-2px)';
+                                }}
+                                onMouseLeave={(e) => {
+                                    e.currentTarget.style.transform = 'translateY(0)';
+                                }}
                             >
                                 {component.props?.text || 'Botão'}
                             </button>
@@ -227,41 +227,41 @@ const StableModularEditor: React.FC = () => {
                     return (
                         <div>
                             <h4 style={{ margin: '0 0 16px 0', color: '#2d3748' }}>Selecione uma opção:</h4>
-                            <div style={{ 
-                                display: 'grid', 
-                                gap: '12px', 
-                                gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))' 
+                            <div style={{
+                                display: 'grid',
+                                gap: '12px',
+                                gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))'
                             }}>
                                 {options.map((option: any, index: number) => (
-                                    <div key={option.id || index} style={{ 
-                                        padding: '16px', 
-                                        border: '1px solid #e2e8f0', 
-                                        borderRadius: '8px', 
+                                    <div key={option.id || index} style={{
+                                        padding: '16px',
+                                        border: '1px solid #e2e8f0',
+                                        borderRadius: '8px',
                                         textAlign: 'center',
                                         cursor: 'pointer',
                                         background: 'white',
                                         transition: 'all 0.2s ease',
                                         boxShadow: '0 2px 4px rgba(0, 0, 0, 0.05)'
                                     }}
-                                    onMouseEnter={(e) => {
-                                        e.currentTarget.style.borderColor = '#4299e1';
-                                        e.currentTarget.style.boxShadow = '0 4px 12px rgba(66, 153, 225, 0.15)';
-                                    }}
-                                    onMouseLeave={(e) => {
-                                        e.currentTarget.style.borderColor = '#e2e8f0';
-                                        e.currentTarget.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.05)';
-                                    }}
+                                        onMouseEnter={(e) => {
+                                            e.currentTarget.style.borderColor = '#4299e1';
+                                            e.currentTarget.style.boxShadow = '0 4px 12px rgba(66, 153, 225, 0.15)';
+                                        }}
+                                        onMouseLeave={(e) => {
+                                            e.currentTarget.style.borderColor = '#e2e8f0';
+                                            e.currentTarget.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.05)';
+                                        }}
                                     >
                                         {option.image && (
-                                            <img 
-                                                src={option.image} 
-                                                alt={option.text} 
-                                                style={{ 
-                                                    width: '60px', 
-                                                    height: '60px', 
-                                                    objectFit: 'cover', 
-                                                    borderRadius: '50%', 
-                                                    marginBottom: '12px' 
+                                            <img
+                                                src={option.image}
+                                                alt={option.text}
+                                                style={{
+                                                    width: '60px',
+                                                    height: '60px',
+                                                    objectFit: 'cover',
+                                                    borderRadius: '50%',
+                                                    marginBottom: '12px'
                                                 }}
                                             />
                                         )}
@@ -273,10 +273,10 @@ const StableModularEditor: React.FC = () => {
                     );
                 default:
                     return (
-                        <div style={{ 
-                            padding: '16px', 
-                            border: '1px solid #fed7d7', 
-                            borderRadius: '8px', 
+                        <div style={{
+                            padding: '16px',
+                            border: '1px solid #fed7d7',
+                            borderRadius: '8px',
                             background: '#fef5e7',
                             color: '#744210'
                         }}>
@@ -329,10 +329,10 @@ const StableModularEditor: React.FC = () => {
 
         return (
             <div style={{ padding: '24px' }}>
-                <div style={{ 
-                    borderBottom: '1px solid #e2e8f0', 
-                    paddingBottom: '16px', 
-                    marginBottom: '24px' 
+                <div style={{
+                    borderBottom: '1px solid #e2e8f0',
+                    paddingBottom: '16px',
+                    marginBottom: '24px'
                 }}>
                     <h3 style={{ margin: '0 0 4px 0', fontSize: '18px', color: '#1a202c' }}>
                         🎨 Propriedades
@@ -341,12 +341,12 @@ const StableModularEditor: React.FC = () => {
                         Tipo: <span style={{ fontWeight: '600', color: '#4299e1' }}>{selectedComponent.type}</span>
                     </p>
                 </div>
-                
+
                 <div style={{ marginBottom: '20px' }}>
-                    <label style={{ 
-                        display: 'block', 
-                        marginBottom: '8px', 
-                        fontSize: '14px', 
+                    <label style={{
+                        display: 'block',
+                        marginBottom: '8px',
+                        fontSize: '14px',
                         fontWeight: '600',
                         color: '#2d3748'
                     }}>
@@ -373,10 +373,10 @@ const StableModularEditor: React.FC = () => {
 
                 {selectedComponent.type === 'header' && (
                     <div style={{ marginBottom: '20px' }}>
-                        <label style={{ 
-                            display: 'block', 
-                            marginBottom: '8px', 
-                            fontSize: '14px', 
+                        <label style={{
+                            display: 'block',
+                            marginBottom: '8px',
+                            fontSize: '14px',
                             fontWeight: '600',
                             color: '#2d3748'
                         }}>
@@ -401,10 +401,10 @@ const StableModularEditor: React.FC = () => {
 
                 {selectedComponent.type === 'image' && (
                     <div style={{ marginBottom: '20px' }}>
-                        <label style={{ 
-                            display: 'block', 
-                            marginBottom: '8px', 
-                            fontSize: '14px', 
+                        <label style={{
+                            display: 'block',
+                            marginBottom: '8px',
+                            fontSize: '14px',
                             fontWeight: '600',
                             color: '#2d3748'
                         }}>
@@ -442,10 +442,10 @@ const StableModularEditor: React.FC = () => {
                     </div>
                 )}
 
-                <div style={{ 
-                    marginTop: '32px', 
-                    paddingTop: '20px', 
-                    borderTop: '1px solid #e2e8f0' 
+                <div style={{
+                    marginTop: '32px',
+                    paddingTop: '20px',
+                    borderTop: '1px solid #e2e8f0'
                 }}>
                     <button
                         onClick={handleDelete}
@@ -519,8 +519,8 @@ const StableModularEditor: React.FC = () => {
                                 width: '100%',
                                 padding: '16px 12px',
                                 margin: '0 0 8px 0',
-                                background: currentStepIndex === index 
-                                    ? 'linear-gradient(135deg, #4299e1 0%, #3182ce 100%)' 
+                                background: currentStepIndex === index
+                                    ? 'linear-gradient(135deg, #4299e1 0%, #3182ce 100%)'
                                     : 'white',
                                 color: currentStepIndex === index ? 'white' : '#2d3748',
                                 border: '1px solid #e2e8f0',
@@ -529,8 +529,8 @@ const StableModularEditor: React.FC = () => {
                                 textAlign: 'left',
                                 fontSize: '14px',
                                 transition: 'all 0.2s ease',
-                                boxShadow: currentStepIndex === index 
-                                    ? '0 4px 12px rgba(66, 153, 225, 0.3)' 
+                                boxShadow: currentStepIndex === index
+                                    ? '0 4px 12px rgba(66, 153, 225, 0.3)'
                                     : '0 2px 4px rgba(0, 0, 0, 0.05)'
                             }}
                             onMouseEnter={(e) => {
@@ -625,9 +625,9 @@ const StableModularEditor: React.FC = () => {
                 </div>
                 <div style={{ flex: 1, overflowY: 'auto', padding: '20px' }}>
                     {components.length === 0 ? (
-                        <div style={{ 
-                            textAlign: 'center', 
-                            padding: '80px 20px', 
+                        <div style={{
+                            textAlign: 'center',
+                            padding: '80px 20px',
                             color: '#718096',
                             border: '2px dashed #cbd5e0',
                             borderRadius: '12px',
