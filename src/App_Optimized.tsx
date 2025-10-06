@@ -3,7 +3,6 @@
  * 
  * Versão completamente otimizada do App.tsx que usa:
  * ✅ SuperUnifiedProvider (único provider principal)
- * ✅ ContextComposer para casos específicos
  * ✅ Provider lazy loading
  * ✅ Performance monitoring
  * ✅ Smart provider composition
@@ -21,8 +20,7 @@
  * 
  * DEPOIS (Unified):
  * - SuperUnifiedProvider (consolida tudo)
- * - ContextComposer (casos específicos)
- * = 2 providers máximo
+ * = 1 provider único
  */
 
 import { Suspense, lazy, useEffect } from 'react';
@@ -38,13 +36,6 @@ import { serviceManager } from './services/core/UnifiedServiceManager';
 
 // 🚀 NOVO: Super Unified Provider
 import SuperUnifiedProvider from '@/providers/SuperUnifiedProvider';
-import ContextComposer, {
-    createDataSlice,
-    createAsyncSlice,
-    createUISlice,
-    SmartProviderLoader,
-    ContextDebugger
-} from '@/providers/ContextComposer';
 
 // 🏠 PÁGINAS ESSENCIAIS
 const Home = lazy(() => import('./pages/Home'));
@@ -78,28 +69,7 @@ const FunnelTypesPage = lazy(() => import('./pages/SimpleFunnelTypesPage'));
 const SupabaseFixTestPage = lazy(() => import('./pages/SupabaseFixTestPage'));
 const IndexedDBMigrationTestPage = lazy(() => import('./pages/IndexedDBMigrationTestPage'));
 
-// 🎯 CONTEXT SLICES FOR SPECIFIC FEATURES
-const createAppContextSlices = () => [
-    createDataSlice('routing', {
-        currentPath: '/',
-        previousPath: null,
-        navigationCount: 0
-    }),
 
-    createAsyncSlice('diagnostics', {
-        systemHealth: null,
-        performanceMetrics: null
-    }),
-
-    createUISlice('globalUI'),
-
-    createDataSlice('featureFlags', {
-        useNewEditor: process.env.REACT_APP_USE_NEW_EDITOR === 'true',
-        enableDiagnostics: process.env.NODE_ENV === 'development',
-        enablePerformanceMonitoring: true,
-        enableContextDebugger: process.env.NODE_ENV === 'development'
-    })
-];
 
 function App() {
     useEffect(() => {
@@ -137,228 +107,220 @@ function App() {
                         enableAdvancedEditor: true
                     }}
                 >
-                    {/* 🧩 CONTEXT COMPOSER - Para contextos específicos */}
-                    <ContextComposer
-                        slices={createAppContextSlices()}
-                        debugMode={process.env.NODE_ENV === 'development'}
-                    >
-                        <Router>
-                            <Suspense fallback={
-                                <EnhancedLoadingFallback
-                                    message="Carregando aplicação..."
-                                    variant="detailed"
-                                />
-                            }>
-                                <Switch>
-                                    {/* 🏠 PÁGINA INICIAL */}
-                                    <Route path="/">
-                                        <div data-testid="index-page">
-                                            <Home />
-                                        </div>
-                                    </Route>
 
-                                    {/* 🚀 EDITOR NOVO (REFATORADO) - FASE 2 */}
-                                    <Route path="/editor-new">
+                    <Router>
+                        <Suspense fallback={
+                            <EnhancedLoadingFallback
+                                message="Carregando aplicação..."
+                                variant="detailed"
+                            />
+                        }>
+                            <Switch>
+                                {/* 🏠 PÁGINA INICIAL */}
+                                <Route path="/">
+                                    <div data-testid="index-page">
+                                        <Home />
+                                    </div>
+                                </Route>
+
+                                {/* 🚀 EDITOR NOVO (REFATORADO) - FASE 2 */}
+                                <Route path="/editor-new">
+                                    <EditorErrorBoundary>
+                                        <div data-testid="quiz-editor-refactored-page">
+                                            <QuizFunnelEditorWYSIWYG_Refactored />
+                                        </div>
+                                    </EditorErrorBoundary>
+                                </Route>
+
+                                <Route path="/editor-new/:funnelId">
+                                    {(params) => (
                                         <EditorErrorBoundary>
-                                            <div data-testid="quiz-editor-refactored-page">
-                                                <QuizFunnelEditorWYSIWYG_Refactored />
+                                            <div data-testid="quiz-editor-refactored-funnel-page">
+                                                <QuizFunnelEditorWYSIWYG_Refactored funnelId={params.funnelId} />
                                             </div>
                                         </EditorErrorBoundary>
-                                    </Route>
+                                    )}
+                                </Route>
 
-                                    <Route path="/editor-new/:funnelId">
-                                        {(params) => (
-                                            <EditorErrorBoundary>
-                                                <div data-testid="quiz-editor-refactored-funnel-page">
-                                                    <QuizFunnelEditorWYSIWYG_Refactored funnelId={params.funnelId} />
-                                                </div>
-                                            </EditorErrorBoundary>
-                                        )}
-                                    </Route>
+                                {/* 🚀 EDITOR LEGADO (COMPATIBILIDADE) */}
+                                <Route path="/editor">
+                                    <EditorErrorBoundary>
+                                        <div data-testid="quiz-editor-wysiwyg-page">
+                                            <QuizFunnelEditorWYSIWYG />
+                                        </div>
+                                    </EditorErrorBoundary>
+                                </Route>
 
-                                    {/* 🚀 EDITOR LEGADO (COMPATIBILIDADE) */}
-                                    <Route path="/editor">
+                                <Route path="/editor/:funnelId">
+                                    {(params) => (
                                         <EditorErrorBoundary>
-                                            <div data-testid="quiz-editor-wysiwyg-page">
-                                                <QuizFunnelEditorWYSIWYG />
+                                            <div data-testid="quiz-editor-wysiwyg-funnel-page">
+                                                <QuizFunnelEditorWYSIWYG funnelId={params.funnelId} />
                                             </div>
                                         </EditorErrorBoundary>
-                                    </Route>
+                                    )}
+                                </Route>
 
-                                    <Route path="/editor/:funnelId">
-                                        {(params) => (
-                                            <EditorErrorBoundary>
-                                                <div data-testid="quiz-editor-wysiwyg-funnel-page">
-                                                    <QuizFunnelEditorWYSIWYG funnelId={params.funnelId} />
-                                                </div>
-                                            </EditorErrorBoundary>
-                                        )}
-                                    </Route>
+                                <Route path="/editor/templates">
+                                    <div data-testid="editor-templates-page">
+                                        <EditorTemplatesPage />
+                                    </div>
+                                </Route>
 
-                                    <Route path="/editor/templates">
-                                        <div data-testid="editor-templates-page">
-                                            <EditorTemplatesPage />
-                                        </div>
-                                    </Route>
+                                {/* 🔍 PÁGINAS DE DIAGNÓSTICO */}
+                                <Route path="/debug/templates">
+                                    <div data-testid="template-diagnostic-page">
+                                        <TemplateDiagnosticPage />
+                                    </div>
+                                </Route>
 
-                                    {/* 🔍 PÁGINAS DE DIAGNÓSTICO */}
-                                    <Route path="/debug/templates">
-                                        <div data-testid="template-diagnostic-page">
-                                            <TemplateDiagnosticPage />
-                                        </div>
-                                    </Route>
+                                {/* 🎯 QUIZ INTEGRADO */}
+                                <Route path="/quiz">
+                                    <QuizErrorBoundary>
+                                        <QuizIntegratedPage />
+                                    </QuizErrorBoundary>
+                                </Route>
 
-                                    {/* 🎯 QUIZ INTEGRADO */}
-                                    <Route path="/quiz">
+                                {/* 🤖 QUIZ COM IA */}
+                                <Route path="/quiz-ai-21-steps">
+                                    <QuizAIPage />
+                                </Route>
+
+                                {/* 🎨 TEMPLATES */}
+                                <Route path="/templates">
+                                    <TemplatesPage />
+                                </Route>
+
+                                <Route path="/funnel-types">
+                                    <FunnelTypesPage />
+                                </Route>
+
+                                {/* 🧪 QUIZ DE ESTILO PESSOAL */}
+                                <Route path="/quiz-estilo">
+                                    <QuizErrorBoundary>
+                                        <QuizEstiloPessoalPage />
+                                    </QuizErrorBoundary>
+                                </Route>
+
+                                <Route path="/quiz/:funnelId">
+                                    {(params) => (
                                         <QuizErrorBoundary>
-                                            <QuizIntegratedPage />
+                                            <QuizEstiloPessoalPage funnelId={params.funnelId} />
                                         </QuizErrorBoundary>
-                                    </Route>
+                                    )}
+                                </Route>
 
-                                    {/* 🤖 QUIZ COM IA */}
-                                    <Route path="/quiz-ai-21-steps">
-                                        <QuizAIPage />
-                                    </Route>
+                                <Route path="/resultado">
+                                    <QuizErrorBoundary>
+                                        <QuizEstiloPessoalPage />
+                                    </QuizErrorBoundary>
+                                </Route>
 
-                                    {/* 🎨 TEMPLATES */}
-                                    <Route path="/templates">
-                                        <TemplatesPage />
-                                    </Route>
+                                {/* 🔐 AUTENTICAÇÃO */}
+                                <Route path="/auth">
+                                    <AuthPage />
+                                </Route>
 
-                                    <Route path="/funnel-types">
-                                        <FunnelTypesPage />
-                                    </Route>
+                                {/* 🏢 ADMIN DASHBOARDS */}
+                                <Route path="/admin/dashboard">
+                                    <div data-testid="admin-dashboard-page">
+                                        <ModernDashboardPage />
+                                    </div>
+                                </Route>
 
-                                    {/* 🧪 QUIZ DE ESTILO PESSOAL */}
-                                    <Route path="/quiz-estilo">
-                                        <QuizErrorBoundary>
-                                            <QuizEstiloPessoalPage />
-                                        </QuizErrorBoundary>
-                                    </Route>
+                                <Route path="/admin">
+                                    <div data-testid="modern-admin-dashboard-page">
+                                        <ModernAdminDashboard />
+                                    </div>
+                                </Route>
 
-                                    <Route path="/quiz/:funnelId">
-                                        {(params) => (
-                                            <QuizErrorBoundary>
-                                                <QuizEstiloPessoalPage funnelId={params.funnelId} />
-                                            </QuizErrorBoundary>
-                                        )}
-                                    </Route>
+                                <Route path="/dashboard">
+                                    <div data-testid="phase2-dashboard-page">
+                                        <Phase2Dashboard />
+                                    </div>
+                                </Route>
 
-                                    <Route path="/resultado">
-                                        <QuizErrorBoundary>
-                                            <QuizEstiloPessoalPage />
-                                        </QuizErrorBoundary>
-                                    </Route>
+                                {/* 🔧 PÁGINAS DE SISTEMA */}
+                                <Route path="/system/diagnostic">
+                                    <div data-testid="system-diagnostic-page">
+                                        <SystemDiagnosticPage />
+                                    </div>
+                                </Route>
 
-                                    {/* 🔐 AUTENTICAÇÃO */}
-                                    <Route path="/auth">
-                                        <AuthPage />
-                                    </Route>
+                                <Route path="/system/supabase-fix">
+                                    <div data-testid="supabase-fix-page">
+                                        <SupabaseFixTestPage />
+                                    </div>
+                                </Route>
 
-                                    {/* 🏢 ADMIN DASHBOARDS */}
-                                    <Route path="/admin/dashboard">
-                                        <div data-testid="admin-dashboard-page">
-                                            <ModernDashboardPage />
-                                        </div>
-                                    </Route>
+                                <Route path="/system/indexeddb-migration">
+                                    <div data-testid="indexeddb-migration-page">
+                                        <IndexedDBMigrationTestPage />
+                                    </div>
+                                </Route>
 
-                                    <Route path="/admin">
-                                        <div data-testid="modern-admin-dashboard-page">
-                                            <ModernAdminDashboard />
-                                        </div>
-                                    </Route>
+                                {/* 📊 PÁGINAS ADMINISTRATIVAS EXTRAS */}
+                                <Route path="/admin/analytics">
+                                    <Suspense fallback={<EnhancedLoadingFallback message="Carregando Analytics..." />}>
+                                        {React.createElement(lazy(() => import('./pages/admin/AnalyticsPage')))}
+                                    </Suspense>
+                                </Route>
 
-                                    <Route path="/dashboard">
-                                        <div data-testid="phase2-dashboard-page">
-                                            <Phase2Dashboard />
-                                        </div>
-                                    </Route>
+                                <Route path="/admin/participants">
+                                    <Suspense fallback={<EnhancedLoadingFallback message="Carregando Participantes..." />}>
+                                        {React.createElement(lazy(() => import('./pages/admin/ParticipantsPage')))}
+                                    </Suspense>
+                                </Route>
 
-                                    {/* 🔧 PÁGINAS DE SISTEMA */}
-                                    <Route path="/system/diagnostic">
-                                        <div data-testid="system-diagnostic-page">
-                                            <SystemDiagnosticPage />
-                                        </div>
-                                    </Route>
+                                <Route path="/admin/templates">
+                                    <Suspense fallback={<EnhancedLoadingFallback message="Carregando Templates..." />}>
+                                        {React.createElement(lazy(() => import('./pages/admin/TemplatesPage')))}
+                                    </Suspense>
+                                </Route>
 
-                                    <Route path="/system/supabase-fix">
-                                        <div data-testid="supabase-fix-page">
-                                            <SupabaseFixTestPage />
-                                        </div>
-                                    </Route>
+                                <Route path="/admin/settings">
+                                    <Suspense fallback={<EnhancedLoadingFallback message="Carregando Configurações..." />}>
+                                        {React.createElement(lazy(() => import('./pages/admin/SettingsPage')))}
+                                    </Suspense>
+                                </Route>
 
-                                    <Route path="/system/indexeddb-migration">
-                                        <div data-testid="indexeddb-migration-page">
-                                            <IndexedDBMigrationTestPage />
-                                        </div>
-                                    </Route>
+                                <Route path="/admin/integrations">
+                                    <Suspense fallback={<EnhancedLoadingFallback message="Carregando Integrações..." />}>
+                                        {React.createElement(lazy(() => import('./pages/admin/IntegrationsPage')))}
+                                    </Suspense>
+                                </Route>
 
-                                    {/* 📊 PÁGINAS ADMINISTRATIVAS EXTRAS */}
-                                    <Route path="/admin/analytics">
-                                        <Suspense fallback={<EnhancedLoadingFallback message="Carregando Analytics..." />}>
-                                            {React.createElement(lazy(() => import('./pages/admin/AnalyticsPage')))}
-                                        </Suspense>
-                                    </Route>
+                                <Route path="/admin/ab-tests">
+                                    <Suspense fallback={<EnhancedLoadingFallback message="Carregando Testes A/B..." />}>
+                                        {React.createElement(lazy(() => import('./pages/admin/ABTestsPage')))}
+                                    </Suspense>
+                                </Route>
 
-                                    <Route path="/admin/participants">
-                                        <Suspense fallback={<EnhancedLoadingFallback message="Carregando Participantes..." />}>
-                                            {React.createElement(lazy(() => import('./pages/admin/ParticipantsPage')))}
-                                        </Suspense>
-                                    </Route>
+                                <Route path="/admin/creatives">
+                                    <Suspense fallback={<EnhancedLoadingFallback message="Carregando Criativos..." />}>
+                                        {React.createElement(lazy(() => import('./pages/admin/CreativesPage')))}
+                                    </Suspense>
+                                </Route>
 
-                                    <Route path="/admin/templates">
-                                        <Suspense fallback={<EnhancedLoadingFallback message="Carregando Templates..." />}>
-                                            {React.createElement(lazy(() => import('./pages/admin/TemplatesPage')))}
-                                        </Suspense>
-                                    </Route>
+                                {/* 🔄 REDIRECTS PARA COMPATIBILIDADE */}
+                                <RedirectRoute from="/dashboard-admin" to="/admin" />
+                                <RedirectRoute from="/editor-pro" to="/editor-new" />
+                                <RedirectRoute from="/quiz-builder" to="/editor" />
 
-                                    <Route path="/admin/settings">
-                                        <Suspense fallback={<EnhancedLoadingFallback message="Carregando Configurações..." />}>
-                                            {React.createElement(lazy(() => import('./pages/admin/SettingsPage')))}
-                                        </Suspense>
-                                    </Route>
+                                {/* 📄 404 */}
+                                <Route>
+                                    <div data-testid="not-found-page">
+                                        <NotFound />
+                                    </div>
+                                </Route>
+                            </Switch>
+                        </Suspense>
+                    </Router>
 
-                                    <Route path="/admin/integrations">
-                                        <Suspense fallback={<EnhancedLoadingFallback message="Carregando Integrações..." />}>
-                                            {React.createElement(lazy(() => import('./pages/admin/IntegrationsPage')))}
-                                        </Suspense>
-                                    </Route>
+                    {/* 🍞 TOAST NOTIFICATIONS */}
+                    <Toaster />
 
-                                    <Route path="/admin/ab-tests">
-                                        <Suspense fallback={<EnhancedLoadingFallback message="Carregando Testes A/B..." />}>
-                                            {React.createElement(lazy(() => import('./pages/admin/ABTestsPage')))}
-                                        </Suspense>
-                                    </Route>
 
-                                    <Route path="/admin/creatives">
-                                        <Suspense fallback={<EnhancedLoadingFallback message="Carregando Criativos..." />}>
-                                            {React.createElement(lazy(() => import('./pages/admin/CreativesPage')))}
-                                        </Suspense>
-                                    </Route>
-
-                                    {/* 🔄 REDIRECTS PARA COMPATIBILIDADE */}
-                                    <RedirectRoute from="/dashboard-admin" to="/admin" />
-                                    <RedirectRoute from="/editor-pro" to="/editor-new" />
-                                    <RedirectRoute from="/quiz-builder" to="/editor" />
-
-                                    {/* 📄 404 */}
-                                    <Route>
-                                        <div data-testid="not-found-page">
-                                            <NotFound />
-                                        </div>
-                                    </Route>
-                                </Switch>
-                            </Suspense>
-                        </Router>
-
-                        {/* 🍞 TOAST NOTIFICATIONS */}
-                        <Toaster />
-
-                        {/* 🐛 CONTEXT DEBUGGER (apenas em desenvolvimento) */}
-                        {process.env.NODE_ENV === 'development' && (
-                            <ContextDebugger />
-                        )}
-                    </ContextComposer>
                 </SuperUnifiedProvider>
             </GlobalErrorBoundary>
         </HelmetProvider>
