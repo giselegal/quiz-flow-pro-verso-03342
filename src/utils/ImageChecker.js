@@ -5,7 +5,7 @@
  * Ajuda a diagnosticar problemas de performance e qualidade de imagem
  */
 
-import { imageCache } from '../utils/images/caching';
+import { getImageCache } from '../utils/images/caching';
 import { getAllImages } from '../data/imageBank';
 import { optimizeCloudinaryUrl } from '../utils/images/optimization';
 

@@ -331,5 +331,3 @@ export const usePerformanceMonitoring = () => {
 
 export { PerformanceMonitor };
 export default PerformanceMonitor;
-
-export default PerformanceMonitor;
