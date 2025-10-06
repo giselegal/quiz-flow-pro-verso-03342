@@ -69,6 +69,15 @@ const FunnelTypesPage = lazy(() => import('./pages/SimpleFunnelTypesPage'));
 const SupabaseFixTestPage = lazy(() => import('./pages/SupabaseFixTestPage'));
 const IndexedDBMigrationTestPage = lazy(() => import('./pages/IndexedDBMigrationTestPage'));
 
+// 🛠️ PÁGINAS ADMIN (lazy estáveis)
+const AdminAnalyticsPage = lazy(() => import('./pages/admin/AnalyticsPage'));
+const AdminParticipantsPage = lazy(() => import('./pages/admin/ParticipantsPage'));
+const AdminTemplatesPage = lazy(() => import('./pages/admin/TemplatesPage'));
+const AdminSettingsPage = lazy(() => import('./pages/admin/SettingsPage'));
+const AdminIntegrationsPage = lazy(() => import('./pages/admin/IntegrationsPage'));
+const AdminABTestsPage = lazy(() => import('./pages/admin/ABTestsPage'));
+const AdminCreativesPage = lazy(() => import('./pages/admin/CreativesPage'));
+
 
 
 function App() {
@@ -262,43 +271,43 @@ function App() {
                                 {/* 📊 PÁGINAS ADMINISTRATIVAS EXTRAS */}
                                 <Route path="/admin/analytics">
                                     <Suspense fallback={<EnhancedLoadingFallback message="Carregando Analytics..." />}>
-                                        {React.createElement(lazy(() => import('./pages/admin/AnalyticsPage')))}
+                                        <AdminAnalyticsPage />
                                     </Suspense>
                                 </Route>
 
                                 <Route path="/admin/participants">
                                     <Suspense fallback={<EnhancedLoadingFallback message="Carregando Participantes..." />}>
-                                        {React.createElement(lazy(() => import('./pages/admin/ParticipantsPage')))}
+                                        <AdminParticipantsPage />
                                     </Suspense>
                                 </Route>
 
                                 <Route path="/admin/templates">
                                     <Suspense fallback={<EnhancedLoadingFallback message="Carregando Templates..." />}>
-                                        {React.createElement(lazy(() => import('./pages/admin/TemplatesPage')))}
+                                        <AdminTemplatesPage />
                                     </Suspense>
                                 </Route>
 
                                 <Route path="/admin/settings">
                                     <Suspense fallback={<EnhancedLoadingFallback message="Carregando Configurações..." />}>
-                                        {React.createElement(lazy(() => import('./pages/admin/SettingsPage')))}
+                                        <AdminSettingsPage />
                                     </Suspense>
                                 </Route>
 
                                 <Route path="/admin/integrations">
                                     <Suspense fallback={<EnhancedLoadingFallback message="Carregando Integrações..." />}>
-                                        {React.createElement(lazy(() => import('./pages/admin/IntegrationsPage')))}
+                                        <AdminIntegrationsPage />
                                     </Suspense>
                                 </Route>
 
                                 <Route path="/admin/ab-tests">
                                     <Suspense fallback={<EnhancedLoadingFallback message="Carregando Testes A/B..." />}>
-                                        {React.createElement(lazy(() => import('./pages/admin/ABTestsPage')))}
+                                        <AdminABTestsPage />
                                     </Suspense>
                                 </Route>
 
                                 <Route path="/admin/creatives">
                                     <Suspense fallback={<EnhancedLoadingFallback message="Carregando Criativos..." />}>
-                                        {React.createElement(lazy(() => import('./pages/admin/CreativesPage')))}
+                                        <AdminCreativesPage />
                                     </Suspense>
                                 </Route>
 

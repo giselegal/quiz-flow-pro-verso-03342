@@ -5,7 +5,7 @@ import type { QuizStep } from '../../data/quizSteps';
 
 interface IntroStepProps {
     data: QuizStep;
-    onNameSubmit: (name: string) => void;
+    onNameSubmit?: (name: string) => void; // Tornado opcional para evitar crash em cenários de uso incorreto
 }
 
 export default function IntroStep({ data, onNameSubmit }: IntroStepProps) {
@@ -28,8 +28,17 @@ export default function IntroStep({ data, onNameSubmit }: IntroStepProps) {
 
     const handleSubmit = (e?: React.FormEvent) => {
         e?.preventDefault();
-        if (nome.trim()) {
-            onNameSubmit(nome.trim());
+        if (!nome.trim()) return;
+
+        if (typeof onNameSubmit === 'function') {
+            try {
+                onNameSubmit(nome.trim());
+            } catch (err) {
+                console.error('❌ [IntroStep] Erro ao executar onNameSubmit:', err);
+            }
+        } else {
+            // Evita quebra total do funil e ajuda a diagnosticar ambiente onde a prop veio incorreta
+            console.warn('⚠️ [IntroStep] onNameSubmit ausente ou não é função. Valor recebido:', onNameSubmit);
         }
     };
 
