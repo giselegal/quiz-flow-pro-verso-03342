@@ -22,10 +22,8 @@ import ModularEditorExample, { exampleFunnel } from '../../components/editor/mod
 import { BlockRegistryProvider, ResultHeadlineBlock, OfferCoreBlock, ResultSecondaryListBlock, OfferUrgencyBlock } from '@/runtime/quiz/blocks/BlockRegistry';
 // Context do sistema modular
 import { QuizEditorProvider } from '@/context/QuizEditorContext';
-// Editor simplificado para debug
-import SimpleModularEditor from '../../components/editor/modular/SimpleModularEditor';
-import MinimalTest from '../../components/editor/modular/MinimalTest';
-import FunctionalModularEditor from '../../components/editor/modular/FunctionalModularEditor';
+// ✅ NOVO: Editor com componentes editáveis modulares
+import EditableStepsEditor from '../../components/editor/modular/EditableStepsEditor';
 
 
 // ============================================
@@ -132,8 +130,8 @@ const ModernUnifiedEditor: React.FC<ModernUnifiedEditorProps> = (props) => {
                         <QuizEditorProvider initialFunnel={exampleFunnel}>
                             <BlockRegistryProvider definitions={[ResultHeadlineBlock, OfferCoreBlock, ResultSecondaryListBlock, OfferUrgencyBlock]}>
                                 <div data-testid="quiz-editor-modular-container">
-                                    {/* � EDITOR MODULAR FUNCIONAL - 4 COLUNAS COMPLETAS */}
-                                    <MinimalTest />
+                                    {/* ✅ EDITOR COM COMPONENTES EDITÁVEIS MODULARES - 4 COLUNAS */}
+                                    <EditableStepsEditor />
                                 </div>
                             </BlockRegistryProvider>
                         </QuizEditorProvider>

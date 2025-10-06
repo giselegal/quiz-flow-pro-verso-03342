@@ -1,419 +1,353 @@
 /**
- * 🎛️ DYNAMIC PROPERTIES PANEL - Painel de Propriedades Automático
+ * 🎨 DYNAMIC PROPERTIES PANEL
  * 
- * Painel que carrega automaticamente as propriedades editáveis
- * de qualquer componente baseado na API
+ * Painel de propriedades que adapta seu conteúdo baseado no tipo do step selecionado.
+ * Fornece formulários específicos para cada tipo de componente editável.
  */
 
-import { useState, useMemo } from 'react';
-import { useComponentConfiguration } from '@/hooks/useComponentConfiguration';
-import { PropertyCategory } from '@/hooks/useUnifiedProperties';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { AlertTriangle, Save, RotateCcw, Eye, EyeOff, Zap, Clock } from 'lucide-react';
-import { Alert, AlertDescription } from '@/components/ui/alert';
+import React from 'react';
 
-// Importar editores de propriedades
-import { propertyEditors } from '@/components/editor/properties/core/propertyEditors';
-
-interface DynamicPropertiesPanelProps {
-    componentId: string;
-    funnelId?: string;
-    onPropertyChange?: (key: string, value: any) => void;
-    onPreviewToggle?: (enabled: boolean) => void;
-    onSave?: () => void;
-    onReset?: () => void;
+export interface DynamicPropertiesPanelProps {
+    selectedStep: any;
+    onUpdate: (updates: any) => void;
+    onDelete: () => void;
 }
 
-export default function DynamicPropertiesPanel({
-    componentId,
-    funnelId,
-    onPropertyChange,
-    onPreviewToggle,
-    onSave,
-    onReset
-}: DynamicPropertiesPanelProps) {
-
-    // ============================================================================
-    // STATE AND API CONNECTION
-    // ============================================================================
-
-    const {
-        properties,
-        isLoading,
-        error,
-        connectionStatus,
-        updateProperty,
-        updateProperties,
-        resetToDefaults,
-        componentDefinition,
-        hasUnsavedChanges,
-        lastSaved
-    } = useComponentConfiguration({
-        componentId,
-        funnelId,
-        realTimeSync: true,
-        autoSave: false, // Manual save for editor
-        cacheEnabled: true
-    });
-
-    const [previewEnabled, setPreviewEnabled] = useState(true);
-    const [activeCategory, setActiveCategory] = useState<PropertyCategory>(PropertyCategory.CONTENT);
-
-    // ============================================================================
-    // LOADING STATE
-    // ============================================================================
-
-    if (isLoading) {
+const DynamicPropertiesPanel: React.FC<DynamicPropertiesPanelProps> = ({
+    selectedStep,
+    onUpdate,
+    onDelete
+}) => {
+    if (!selectedStep) {
         return (
-            <div className="p-6 space-y-4">
-                <div className="flex items-center space-x-2">
-                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-500"></div>
-                    <span className="text-sm text-gray-600">Carregando propriedades...</span>
-                </div>
-                <div className="space-y-2">
-                    {[1, 2, 3, 4].map(i => (
-                        <div key={i} className="h-12 bg-gray-100 rounded-lg animate-pulse"></div>
-                    ))}
-                </div>
+            <div style={{ padding: '16px' }}>
+                <p style={{ color: 'hsl(var(--muted-foreground))', fontStyle: 'italic' }}>
+                    Selecione uma etapa para editar suas propriedades
+                </p>
             </div>
         );
     }
 
-    // ============================================================================
-    // ERROR STATE
-    // ============================================================================
-
-    if (error || !componentDefinition) {
-        return (
-            <div className="p-6">
-                <Alert>
-                    <AlertTriangle className="h-4 w-4" />
-                    <AlertDescription>
-                        {error || 'Definição do componente não encontrada'}
-                        <div className="mt-2 text-xs text-gray-500">
-                            Component ID: {componentId}
-                        </div>
-                    </AlertDescription>
-                </Alert>
-            </div>
-        );
-    }
-
-    // ============================================================================
-    // PROPERTIES CATEGORIZATION
-    // ============================================================================
-
-    const categorizedProperties = useMemo(() => {
-        const categories: Record<PropertyCategory, typeof componentDefinition.properties> = {
-            [PropertyCategory.CONTENT]: [],
-            [PropertyCategory.LAYOUT]: [],
-            [PropertyCategory.STYLE]: [],
-            [PropertyCategory.BEHAVIOR]: [],
-            [PropertyCategory.ADVANCED]: [],
-            [PropertyCategory.ANIMATION]: [],
-            [PropertyCategory.ACCESSIBILITY]: [],
-            [PropertyCategory.SEO]: [],
-        };
-
-        componentDefinition.properties.forEach(prop => {
-            // Mapear categoria do componentConfiguration para useUnifiedProperties
-            let category: PropertyCategory;
-            switch (prop.category) {
-                case 'visual':
-                    category = PropertyCategory.STYLE;
-                    break;
-                case 'content':
-                    category = PropertyCategory.CONTENT;
-                    break;
-                case 'layout':
-                    category = PropertyCategory.LAYOUT;
-                    break;
-                case 'behavior':
-                    category = PropertyCategory.BEHAVIOR;
-                    break;
-                default:
-                    category = PropertyCategory.ADVANCED;
-            }
-
-            if (categories[category]) {
-                categories[category].push(prop);
-            }
+    const handleChange = (field: string, value: any) => {
+        onUpdate({
+            ...selectedStep,
+            [field]: value
         });
-
-        // Remover categorias vazias
-        Object.keys(categories).forEach(cat => {
-            if (categories[cat as PropertyCategory].length === 0) {
-                delete categories[cat as PropertyCategory];
-            }
-        });
-
-        return categories;
-    }, [componentDefinition.properties]);
-
-    // ============================================================================
-    // HANDLERS
-    // ============================================================================
-
-    const handlePropertyUpdate = async (key: string, value: any) => {
-        try {
-            await updateProperty(key, value);
-            onPropertyChange?.(key, value);
-        } catch (error) {
-            console.error(`Failed to update property ${key}:`, error);
-        }
     };
 
-    const handleSave = async () => {
-        try {
-            await updateProperties(properties);
-            onSave?.();
-        } catch (error) {
-            console.error('Failed to save properties:', error);
-        }
+    const inputStyle = {
+        width: '100%',
+        padding: '8px 12px',
+        border: '1px solid hsl(var(--border))',
+        borderRadius: '6px',
+        fontSize: '14px',
+        background: 'hsl(var(--background))',
+        color: 'hsl(var(--foreground))'
     };
 
-    const handleReset = async () => {
-        try {
-            await resetToDefaults();
-            onReset?.();
-        } catch (error) {
-            console.error('Failed to reset properties:', error);
-        }
+    const labelStyle = {
+        display: 'block',
+        marginBottom: '6px',
+        fontSize: '13px',
+        fontWeight: 'bold' as const,
+        color: 'hsl(var(--foreground))'
     };
 
-    const handlePreviewToggle = () => {
-        const newState = !previewEnabled;
-        setPreviewEnabled(newState);
-        onPreviewToggle?.(newState);
+    const sectionStyle = {
+        marginBottom: '16px',
+        paddingBottom: '16px',
+        borderBottom: '1px solid hsl(var(--border))'
     };
 
-    // ============================================================================
-    // RENDER PROPERTY EDITOR
-    // ============================================================================
-
-    const renderPropertyEditor = (propDef: typeof componentDefinition.properties[0]) => {
-        const EditorComponent = propertyEditors[propDef.type] || propertyEditors['text'];
-        const currentValue = properties[propDef.key] ?? propDef.defaultValue;
-
-        return (
-            <div key={propDef.key} className="space-y-2">
-                <div className="flex items-center justify-between">
-                    <label className="text-sm font-medium text-gray-700">
-                        {propDef.label}
-                    </label>
-                    {propDef.editor.realTimeSync && (
-                        <Badge variant="secondary" className="text-xs">
-                            <Zap className="w-3 h-3 mr-1" />
-                            Real-time
-                        </Badge>
-                    )}
-                </div>
-
-                {propDef.description && (
-                    <p className="text-xs text-gray-500">{propDef.description}</p>
-                )}
-
-                <EditorComponent
-                    property={{
-                        key: propDef.key,
-                        label: propDef.label,
-                        type: propDef.type as any, // Usar any para compatibilidade entre enums
-                        category: PropertyCategory.ADVANCED, // Categoria padrão
-                        value: currentValue,
-                        ...propDef.editor.props
-                    }}
-                    onChange={handlePropertyUpdate}
-                />
-
-                {propDef.validation?.required && !currentValue && (
-                    <p className="text-xs text-red-500">Este campo é obrigatório</p>
-                )}
-            </div>
-        );
-    };
-
-    // ============================================================================
-    // CATEGORY TABS
-    // ============================================================================
-
-    const categoryLabels = {
-        [PropertyCategory.CONTENT]: 'Conteúdo',
-        [PropertyCategory.LAYOUT]: 'Layout',
-        [PropertyCategory.STYLE]: 'Visual',
-        [PropertyCategory.BEHAVIOR]: 'Comportamento',
-        [PropertyCategory.ADVANCED]: 'Avançado',
-        [PropertyCategory.ANIMATION]: 'Animação',
-        [PropertyCategory.ACCESSIBILITY]: 'Acessibilidade',
-        [PropertyCategory.SEO]: 'SEO',
-    };
-
-    const categoryIcons = {
-        [PropertyCategory.CONTENT]: '📝',
-        [PropertyCategory.LAYOUT]: '📐',
-        [PropertyCategory.STYLE]: '🎨',
-        [PropertyCategory.BEHAVIOR]: '⚡',
-        [PropertyCategory.ADVANCED]: '🔧',
-        [PropertyCategory.ANIMATION]: '🎬',
-        [PropertyCategory.ACCESSIBILITY]: '♿',
-        [PropertyCategory.SEO]: '🔍',
-    };
-
-    // ============================================================================
-    // RENDER
-    // ============================================================================
-
-    return (
-        <div className="h-full flex flex-col bg-white border-l border-gray-200">
-
-            {/* HEADER */}
-            <div className="p-4 border-b border-gray-200">
-                <div className="flex items-center justify-between mb-3">
-                    <div>
-                        <h2 className="text-lg font-semibold text-gray-900">
-                            {componentDefinition.name}
-                        </h2>
-                        <p className="text-sm text-gray-500">{componentDefinition.description}</p>
-                    </div>
-
-                    <div className="flex items-center space-x-2">
-                        {/* API Status */}
-                        <Badge
-                            variant={connectionStatus === 'connected' ? 'default' : 'destructive'}
-                            className="text-xs"
-                        >
-                            {connectionStatus === 'connected' ? '🟢' : '🔴'} API
-                        </Badge>
-
-                        {/* Preview Toggle */}
-                        <Button
-                            size="sm"
-                            variant="outline"
-                            onClick={handlePreviewToggle}
-                            className="flex items-center space-x-1"
-                        >
-                            {previewEnabled ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
-                            <span className="hidden sm:inline">Preview</span>
-                        </Button>
-                    </div>
-                </div>
-
-                {/* Action Buttons */}
-                <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-2">
-                        <Button
-                            size="sm"
-                            onClick={handleSave}
-                            disabled={!hasUnsavedChanges}
-                            className="flex items-center space-x-1"
-                        >
-                            <Save className="w-4 h-4" />
-                            <span>Salvar</span>
-                            {hasUnsavedChanges && (
-                                <Badge variant="secondary" className="ml-1 text-xs">!</Badge>
-                            )}
-                        </Button>
-
-                        <Button
-                            size="sm"
-                            variant="outline"
-                            onClick={handleReset}
-                            className="flex items-center space-x-1"
-                        >
-                            <RotateCcw className="w-4 h-4" />
-                            <span>Reset</span>
-                        </Button>
-                    </div>
-
-                    {lastSaved && (
-                        <div className="text-xs text-gray-500 flex items-center space-x-1">
-                            <Clock className="w-3 h-3" />
-                            <span>Salvo {new Date(lastSaved).toLocaleTimeString()}</span>
+    // Renderizar campos específicos baseado no tipo
+    const renderTypeSpecificFields = () => {
+        switch (selectedStep.type) {
+            case 'intro':
+                return (
+                    <>
+                        <div style={sectionStyle}>
+                            <label style={labelStyle}>Título Principal:</label>
+                            <textarea
+                                value={selectedStep.title || ''}
+                                onChange={(e) => handleChange('title', e.target.value)}
+                                style={{ ...inputStyle, minHeight: '80px', resize: 'vertical' }}
+                                placeholder="Digite o título principal..."
+                            />
                         </div>
-                    )}
-                </div>
-            </div>
 
-            {/* PROPERTIES TABS */}
-            <div className="flex-1 overflow-hidden">
-                <Tabs
-                    value={activeCategory}
-                    onValueChange={(value) => setActiveCategory(value as PropertyCategory)}
-                    className="h-full flex flex-col"
-                >
-                    {/* Tabs List */}
-                    <TabsList className="grid w-full grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 p-1 m-2">
-                        {Object.keys(categorizedProperties).map((category) => (
-                            <TabsTrigger
-                                key={category}
-                                value={category}
-                                className="text-xs flex items-center space-x-1"
+                        <div style={sectionStyle}>
+                            <label style={labelStyle}>Pergunta do Formulário:</label>
+                            <input
+                                type="text"
+                                value={selectedStep.formQuestion || ''}
+                                onChange={(e) => handleChange('formQuestion', e.target.value)}
+                                style={inputStyle}
+                                placeholder="Ex: Como posso te chamar?"
+                            />
+                        </div>
+
+                        <div style={sectionStyle}>
+                            <label style={labelStyle}>Placeholder do Input:</label>
+                            <input
+                                type="text"
+                                value={selectedStep.placeholder || ''}
+                                onChange={(e) => handleChange('placeholder', e.target.value)}
+                                style={inputStyle}
+                                placeholder="Ex: Digite seu nome..."
+                            />
+                        </div>
+
+                        <div style={sectionStyle}>
+                            <label style={labelStyle}>Texto do Botão:</label>
+                            <input
+                                type="text"
+                                value={selectedStep.buttonText || ''}
+                                onChange={(e) => handleChange('buttonText', e.target.value)}
+                                style={inputStyle}
+                                placeholder="Ex: Continuar"
+                            />
+                        </div>
+
+                        <div style={sectionStyle}>
+                            <label style={labelStyle}>URL da Imagem:</label>
+                            <input
+                                type="url"
+                                value={selectedStep.image || ''}
+                                onChange={(e) => handleChange('image', e.target.value)}
+                                style={inputStyle}
+                                placeholder="https://..."
+                            />
+                        </div>
+                    </>
+                );
+
+            case 'question':
+                return (
+                    <>
+                        <div style={sectionStyle}>
+                            <label style={labelStyle}>Número da Questão:</label>
+                            <input
+                                type="text"
+                                value={selectedStep.questionNumber || ''}
+                                onChange={(e) => handleChange('questionNumber', e.target.value)}
+                                style={inputStyle}
+                                placeholder="Ex: 1/10"
+                            />
+                        </div>
+
+                        <div style={sectionStyle}>
+                            <label style={labelStyle}>Texto da Pergunta:</label>
+                            <textarea
+                                value={selectedStep.questionText || ''}
+                                onChange={(e) => handleChange('questionText', e.target.value)}
+                                style={{ ...inputStyle, minHeight: '80px', resize: 'vertical' }}
+                                placeholder="Digite a pergunta..."
+                            />
+                        </div>
+
+                        <div style={sectionStyle}>
+                            <label style={labelStyle}>Seleções Obrigatórias:</label>
+                            <input
+                                type="number"
+                                value={selectedStep.requiredSelections || 1}
+                                onChange={(e) => handleChange('requiredSelections', parseInt(e.target.value) || 1)}
+                                style={inputStyle}
+                                min="1"
+                            />
+                        </div>
+
+                        <div style={sectionStyle}>
+                            <label style={labelStyle}>Opções:</label>
+                            <p style={{ fontSize: '12px', color: 'hsl(var(--muted-foreground))', margin: '4px 0 8px 0' }}>
+                                {selectedStep.options?.length || 0} opções configuradas
+                            </p>
+                            <button
+                                onClick={() => {
+                                    const newOption = {
+                                        id: `opt-${Date.now()}`,
+                                        text: 'Nova opção',
+                                        image: ''
+                                    };
+                                    const currentOptions = selectedStep.options || [];
+                                    handleChange('options', [...currentOptions, newOption]);
+                                }}
+                                style={{
+                                    padding: '8px 16px',
+                                    background: 'hsl(var(--primary))',
+                                    color: 'hsl(var(--primary-foreground))',
+                                    border: 'none',
+                                    borderRadius: '6px',
+                                    cursor: 'pointer',
+                                    fontSize: '13px'
+                                }}
                             >
-                                <span>{categoryIcons[category as PropertyCategory]}</span>
-                                <span className="hidden sm:inline">
-                                    {categoryLabels[category as PropertyCategory]}
-                                </span>
-                                <Badge variant="secondary" className="text-xs">
-                                    {categorizedProperties[category as PropertyCategory].length}
-                                </Badge>
-                            </TabsTrigger>
-                        ))}
-                    </TabsList>
+                                + Adicionar Opção
+                            </button>
+                        </div>
+                    </>
+                );
 
-                    {/* Tabs Content */}
-                    <div className="flex-1 overflow-y-auto">
-                        {Object.entries(categorizedProperties).map(([category, props]) => (
-                            <TabsContent key={category} value={category} className="p-4 space-y-4">
-                                <div className="space-y-6">
-                                    {props.map(renderPropertyEditor)}
-                                </div>
-                            </TabsContent>
-                        ))}
+            case 'transition':
+            case 'transition-result':
+                return (
+                    <>
+                        <div style={sectionStyle}>
+                            <label style={labelStyle}>Mensagem Principal:</label>
+                            <textarea
+                                value={selectedStep.message || ''}
+                                onChange={(e) => handleChange('message', e.target.value)}
+                                style={{ ...inputStyle, minHeight: '100px', resize: 'vertical' }}
+                                placeholder="Digite a mensagem de transição..."
+                            />
+                        </div>
+
+                        <div style={sectionStyle}>
+                            <label style={labelStyle}>Duração (segundos):</label>
+                            <input
+                                type="number"
+                                value={selectedStep.duration || 3}
+                                onChange={(e) => handleChange('duration', parseInt(e.target.value) || 3)}
+                                style={inputStyle}
+                                min="1"
+                                max="10"
+                            />
+                        </div>
+                    </>
+                );
+
+            case 'result':
+                return (
+                    <>
+                        <div style={sectionStyle}>
+                            <label style={labelStyle}>Título do Resultado:</label>
+                            <input
+                                type="text"
+                                value={selectedStep.title || ''}
+                                onChange={(e) => handleChange('title', e.target.value)}
+                                style={inputStyle}
+                                placeholder="Ex: Seu resultado está pronto!"
+                            />
+                        </div>
+
+                        <div style={sectionStyle}>
+                            <label style={labelStyle}>Descrição:</label>
+                            <textarea
+                                value={selectedStep.description || ''}
+                                onChange={(e) => handleChange('description', e.target.value)}
+                                style={{ ...inputStyle, minHeight: '120px', resize: 'vertical' }}
+                                placeholder="Descreva o resultado..."
+                            />
+                        </div>
+
+                        <div style={sectionStyle}>
+                            <label style={labelStyle}>Estilo Calculado:</label>
+                            <input
+                                type="text"
+                                value={selectedStep.styleType || ''}
+                                onChange={(e) => handleChange('styleType', e.target.value)}
+                                style={inputStyle}
+                                placeholder="Ex: Natural, Romântico, etc."
+                                disabled
+                            />
+                            <p style={{ fontSize: '11px', color: 'hsl(var(--muted-foreground))', margin: '4px 0 0 0' }}>
+                                (Calculado automaticamente)
+                            </p>
+                        </div>
+                    </>
+                );
+
+            case 'offer':
+                return (
+                    <>
+                        <div style={sectionStyle}>
+                            <label style={labelStyle}>Título da Oferta:</label>
+                            <input
+                                type="text"
+                                value={selectedStep.title || ''}
+                                onChange={(e) => handleChange('title', e.target.value)}
+                                style={inputStyle}
+                                placeholder="Ex: Oferta Especial"
+                            />
+                        </div>
+
+                        <div style={sectionStyle}>
+                            <label style={labelStyle}>Descrição:</label>
+                            <textarea
+                                value={selectedStep.description || ''}
+                                onChange={(e) => handleChange('description', e.target.value)}
+                                style={{ ...inputStyle, minHeight: '100px', resize: 'vertical' }}
+                                placeholder="Descreva a oferta..."
+                            />
+                        </div>
+
+                        <div style={sectionStyle}>
+                            <label style={labelStyle}>Preço:</label>
+                            <input
+                                type="text"
+                                value={selectedStep.price || ''}
+                                onChange={(e) => handleChange('price', e.target.value)}
+                                style={inputStyle}
+                                placeholder="Ex: R$ 197,00"
+                            />
+                        </div>
+
+                        <div style={sectionStyle}>
+                            <label style={labelStyle}>Link do Botão:</label>
+                            <input
+                                type="url"
+                                value={selectedStep.buttonLink || ''}
+                                onChange={(e) => handleChange('buttonLink', e.target.value)}
+                                style={inputStyle}
+                                placeholder="https://..."
+                            />
+                        </div>
+                    </>
+                );
+
+            default:
+                return (
+                    <div style={sectionStyle}>
+                        <p style={{ color: 'hsl(var(--muted-foreground))' }}>
+                            Propriedades para o tipo "{selectedStep.type}" ainda não foram implementadas.
+                        </p>
                     </div>
-                </Tabs>
-            </div>
+                );
+        }
+    };
 
-            {/* FOOTER - Debug Info */}
-            <div className="p-3 border-t border-gray-100 bg-gray-50">
-                <div className="text-xs text-gray-500 space-y-1">
-                    <div className="flex justify-between">
-                        <span>Component ID: {componentId}</span>
-                        <span>Properties: {componentDefinition.properties.length}</span>
-                    </div>
-                    {funnelId && (
-                        <div>Funnel ID: {funnelId}</div>
-                    )}
-                    <div className="flex justify-between">
-                        <span>Endpoint: {componentDefinition.apiEndpoint}</span>
-                        <span className={`${connectionStatus === 'connected' ? 'text-green-600' : 'text-red-600'}`}>
-                            {connectionStatus}
-                        </span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    );
-}
-
-// ============================================================================
-// SPECIALIZED PANELS
-// ============================================================================
-
-/**
- * Painel específico para componentes de quiz
- */
-export function QuizPropertiesPanel(props: Omit<DynamicPropertiesPanelProps, 'componentId'>) {
-    return <DynamicPropertiesPanel {...props} componentId="quiz-options-grid" />;
-}
-
-/**
- * Painel compacto para sidebar
- */
-export function CompactPropertiesPanel(props: DynamicPropertiesPanelProps) {
     return (
-        <div className="w-80 max-w-sm">
-            <DynamicPropertiesPanel {...props} />
+        <div style={{ padding: '16px' }}>
+            <div style={{ marginBottom: '16px', paddingBottom: '16px', borderBottom: '2px solid hsl(var(--border))' }}>
+                <h4 style={{ margin: '0 0 4px 0', fontSize: '15px', fontWeight: 'bold', color: 'hsl(var(--foreground))' }}>
+                    {selectedStep.title || selectedStep.name || 'Propriedades'}
+                </h4>
+                <p style={{ margin: 0, fontSize: '12px', color: 'hsl(var(--muted-foreground))' }}>
+                    Tipo: <strong>{selectedStep.type}</strong>
+                </p>
+            </div>
+
+            {renderTypeSpecificFields()}
+
+            <div style={{ marginTop: '20px', paddingTop: '16px', borderTop: '1px solid hsl(var(--border))' }}>
+                <button
+                    onClick={onDelete}
+                    style={{
+                        width: '100%',
+                        padding: '10px',
+                        background: 'hsl(var(--destructive))',
+                        color: 'hsl(var(--destructive-foreground))',
+                        border: 'none',
+                        borderRadius: '6px',
+                        cursor: 'pointer',
+                        fontSize: '14px',
+                        fontWeight: 'bold'
+                    }}
+                >
+                    🗑️ Excluir Etapa
+                </button>
+            </div>
         </div>
     );
-}
+};
+
+export default DynamicPropertiesPanel;
