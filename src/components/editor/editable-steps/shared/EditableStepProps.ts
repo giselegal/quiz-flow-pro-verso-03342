@@ -5,14 +5,14 @@
  * Define a estrutura padrão que cada componente editável deve seguir.
  */
 
-import { QuizStep } from '../../../../data/quizSteps';
+import { ModularQuizStep } from '../../../../types/modular-editor';
 
 /**
  * 📋 PROPS BASE PARA COMPONENTES EDITÁVEIS
  */
 export interface EditableStepProps {
-    /** Dados do step (compatível com QuizStep) */
-    data: QuizStep;
+    /** Dados do step (compatível com ModularQuizStep) */
+    data: ModularQuizStep;
 
     /** Se o componente está em modo editável */
     isEditable: boolean;
@@ -21,7 +21,7 @@ export interface EditableStepProps {
     isSelected: boolean;
 
     /** Callback quando propriedades são atualizadas */
-    onUpdate: (updates: Partial<QuizStep>) => void;
+    onUpdate: (updates: Partial<ModularQuizStep>) => void;
 
     /** Callback quando componente é selecionado */
     onSelect: () => void;
@@ -75,7 +75,7 @@ export interface EditablePropInfo {
  * 🔧 FACTORY PARA CRIAR PROPS PADRÃO
  */
 export function createEditableStepProps(
-    data: QuizStep,
+    data: ModularQuizStep,
     overrides?: Partial<EditableStepProps>
 ): EditableStepProps {
     return {

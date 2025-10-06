@@ -63,18 +63,18 @@ const EditableStepsEditor: React.FC = () => {
             isSelected: true,
             onUpdate: (updates: any) => {
                 if (selectedComponent) {
-                    updateComponent(selectedComponent.id, updates);
+                    updateComponent(stepData.id, selectedComponent.id, updates);
                 }
             },
-            onSelect: () => selectComponent(stepData),
+            onSelect: () => selectComponent(stepData.id),
             onDuplicate: () => {
                 if (selectedComponent) {
-                    duplicateComponent(selectedComponent.id);
+                    duplicateComponent(stepData.id, selectedComponent.id);
                 }
             },
             onDelete: () => {
                 if (selectedComponent) {
-                    deleteComponent(selectedComponent.id);
+                    deleteComponent(stepData.id, selectedComponent.id);
                 }
             },
             onMoveUp: () => console.log('Move up'),
@@ -96,7 +96,7 @@ const EditableStepsEditor: React.FC = () => {
             case 'strategic-question':
                 return <EditableStrategicQuestionStep {...componentProps} />;
             case 'transition':
-            case 'transition-result':
+            case 'transition':
                 return <EditableTransitionStep {...componentProps} />;
             case 'result':
                 return <EditableResultStep {...componentProps} />;
@@ -273,12 +273,12 @@ const EditableStepsEditor: React.FC = () => {
                         selectedStep={stepData}
                         onUpdate={(updates) => {
                             if (selectedComponent) {
-                                updateComponent(selectedComponent.id, updates);
+                                updateComponent(stepData.id, selectedComponent.id, updates);
                             }
                         }}
                         onDelete={() => {
                             if (selectedComponent && funnel.steps.length > 1) {
-                                deleteComponent(selectedComponent.id);
+                                deleteComponent(stepData.id, selectedComponent.id);
                             }
                         }}
                     />
