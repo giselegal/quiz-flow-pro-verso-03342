@@ -68,11 +68,11 @@ export const ModularOptionsGridSimple: React.FC<ModularOptionsGridProps> = ({
 
     const handleOptionClick = (optionId: string, e: React.MouseEvent) => {
         e.stopPropagation();
-        
+
         if (!onSelectionChange) return;
 
         let newSelection: string[];
-        
+
         if (allowMultiple) {
             if (selectedOptions.includes(optionId)) {
                 newSelection = selectedOptions.filter(id => id !== optionId);
@@ -82,7 +82,7 @@ export const ModularOptionsGridSimple: React.FC<ModularOptionsGridProps> = ({
         } else {
             newSelection = selectedOptions.includes(optionId) ? [] : [optionId];
         }
-        
+
         onSelectionChange(newSelection);
     };
 
@@ -91,7 +91,7 @@ export const ModularOptionsGridSimple: React.FC<ModularOptionsGridProps> = ({
             <div style={gridStyle}>
                 {options.map((option) => {
                     const isOptionSelected = selectedOptions.includes(option.id);
-                    
+
                     const optionStyle: React.CSSProperties = {
                         padding: '16px',
                         border: isOptionSelected ? '2px solid #4299e1' : '1px solid #e2e8f0',
@@ -136,7 +136,7 @@ export const ModularOptionsGridSimple: React.FC<ModularOptionsGridProps> = ({
                                     }}
                                 />
                             )}
-                            <div style={{ 
+                            <div style={{
                                 fontWeight: isOptionSelected ? '600' : '400',
                                 color: isOptionSelected ? '#1a202c' : '#2d3748'
                             }}>
