@@ -146,6 +146,14 @@ export class FeatureFlagManager {
 
     localStorage.setItem(`flag_${flagName}`, String(value));
     console.log(`🎛️ Flag ${flagName} definida como ${value}`);
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent('feature-flags:update', {
+        detail: {
+          flag: flagName,
+          value
+        }
+      }));
+    }
   }
 
   /**
@@ -162,6 +170,13 @@ export class FeatureFlagManager {
     });
 
     console.log('🔄 Todas as flags foram resetadas');
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent('feature-flags:update', {
+        detail: {
+          reset: true
+        }
+      }));
+    }
   }
 
   /**
