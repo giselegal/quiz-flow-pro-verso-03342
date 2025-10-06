@@ -9,34 +9,45 @@ import React from 'react';
 import { BlockComponentMap } from '@/types/blockTypes';
 
 // Importar componentes de bloco
-import TitleBlock from '@/editor/components/blocks/TitleBlock';
-import FormInputBlock from '@/editor/components/blocks/FormInputBlock';
-import ButtonBlockModular from '@/editor/components/blocks/ButtonBlockModular';
-import QuestionTextBlock from '@/editor/components/blocks/QuestionTextBlock';
-import OptionsBlock from '@/editor/components/blocks/OptionsBlock';
-import ImageBlock from '@/editor/components/blocks/ImageBlock';
+import { TitleBlock } from '../components/blocks/TitleBlock';
+import { ImageBlock } from '../components/blocks/ImageBlock';
+import { ButtonBlockModular } from '../components/blocks/ButtonBlockModular';
+import { QuestionTextBlock } from '../components/blocks/QuestionTextBlock';
+import { OptionsBlock } from '../components/blocks/OptionsBlock';
+import { FormInputBlock } from '../components/blocks/FormInputBlock';
+import { TransitionBlock } from '../components/blocks/TransitionBlock';
+import { ResultBlock } from '../components/blocks/ResultBlock';
+import { OfferBlock } from '../components/blocks/OfferBlock';
 
 /**
- * Mapa de componentes de bloco
+ * Mapa de componentes de blocos
  */
-export const BLOCK_COMPONENT_MAP: BlockComponentMap = {
-    // Blocos básicos
-    'TitleBlock': TitleBlock,
-    'ImageBlock': ImageBlock,
-    'FormInputBlock': FormInputBlock,
-    'ButtonBlock': ButtonBlockModular,
-
-    // Blocos de pergunta
-    'QuestionTextBlock': QuestionTextBlock,
-    'OptionsBlock': OptionsBlock,
-
-    // Aliases para compatibilidade
-    'title': TitleBlock,
-    'image': ImageBlock,
-    'form-input': FormInputBlock,
-    'button': ButtonBlockModular,
-    'question-text': QuestionTextBlock,
-    'options': OptionsBlock,
+export const BLOCK_COMPONENT_MAP: Record<string, React.ComponentType<BlockComponentProps>> = {
+  // Blocos básicos
+  'TitleBlock': TitleBlock,
+  'ImageBlock': ImageBlock,
+  'FormInputBlock': FormInputBlock,
+  'ButtonBlock': ButtonBlockModular,
+  
+  // Blocos de questões
+  'QuestionTextBlock': QuestionTextBlock,
+  'OptionsBlock': OptionsBlock,
+  
+  // Blocos de transição e resultado
+  'TransitionBlock': TransitionBlock,
+  'ResultBlock': ResultBlock,
+  'OfferBlock': OfferBlock,
+  
+  // Aliases
+  'title': TitleBlock,
+  'image': ImageBlock,
+  'form-input': FormInputBlock,
+  'button': ButtonBlockModular,
+  'question-text': QuestionTextBlock,
+  'options': OptionsBlock,
+  'transition': TransitionBlock,
+  'result': ResultBlock,
+  'offer': OfferBlock,
 };
 
 /**
