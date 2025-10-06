@@ -99,6 +99,48 @@
 
   <script type="module" src="/src/main.tsx"></script>
 
+  <!-- 🔄 Chunk Recovery: Recarrega aplicação ao detectar falha de carregamento de chunk (404 / network) -->
+  <script>
+    (function () {
+      const MAX_RELOADS = 2;
+      const FLAG_KEY = 'chunk-reload-attempts';
+      function shouldRetry() {
+        try {
+          const v = parseInt(localStorage.getItem(FLAG_KEY) || '0', 10);
+          if (v < MAX_RELOADS) {
+            localStorage.setItem(FLAG_KEY, String(v + 1));
+            return true;
+          }
+        } catch { }
+        return false;
+      }
+      function clearFlag() {
+        try { localStorage.removeItem(FLAG_KEY); } catch { }
+      }
+      window.addEventListener('load', clearFlag);
+      window.addEventListener('error', function (ev) {
+        // Detecta falhas em scripts dinâmicos (chunks)
+        const target = ev.target || ev.srcElement;
+        if (target && target.tagName === 'SCRIPT' && target.src && /assets\/.*\.js/.test(target.src)) {
+          console.warn('[ChunkRecovery] Falha ao carregar chunk:', target.src);
+          if (shouldRetry()) {
+            const url = new URL(window.location.href);
+            url.searchParams.set('_r', Date.now().toString());
+            console.info('[ChunkRecovery] Recarregando página para tentar recuperar...');
+            window.location.replace(url.toString());
+          } else {
+            console.error('[ChunkRecovery] Limite de tentativas atingido. Mostrar fallback.');
+            // Opcional: exibir mensagem amigável
+            const el = document.createElement('div');
+            el.style.cssText = 'position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:#fff;font-family:sans-serif;z-index:9999;padding:20px;text-align:center;color:#222;';
+            el.innerHTML = '<div><h2 style="margin:0 0 12px;font-size:20px;">Atualizando recursos...</h2><p style="margin:0 0 8px;">Não conseguimos carregar alguns arquivos. Limpe o cache (CTRL+F5) ou tente novamente mais tarde.</p></div>';
+            document.body.appendChild(el);
+          }
+        }
+      }, true);
+    })();
+  </script>
+
   <script>
     // Unregister any existing service workers to avoid caching/fetch conflicts
     if ('serviceWorker' in navigator) {
