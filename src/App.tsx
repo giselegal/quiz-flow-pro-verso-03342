@@ -118,10 +118,10 @@ function App() {
                         <Route path="/editor">
                           <EditorErrorBoundary>
                             <div data-testid="quiz-editor-unified-page">
-                              <UnifiedCRUDProvider autoLoad={true}>
+                              <UnifiedCRUDProvider funnelId="quiz21StepsComplete" autoLoad={true}>
                                 <OptimizedEditorProvider>
-                                  {/* ✅ MODERNUNIFIEDEDITOR COM SISTEMA MODULAR: Facade + Componentes modulares */}
-                                  <ModernUnifiedEditor />
+                                  {/* ✅ MODERNUNIFIEDEDITOR COM 21 ETAPAS: Quiz completo com Facade */}
+                                  <ModernUnifiedEditor funnelId="quiz21StepsComplete" />
                                 </OptimizedEditorProvider>
                               </UnifiedCRUDProvider>
                             </div>
