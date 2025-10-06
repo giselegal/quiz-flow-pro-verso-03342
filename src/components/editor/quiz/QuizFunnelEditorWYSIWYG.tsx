@@ -29,7 +29,24 @@ interface QuizFunnelEditorProps {
     templateId?: string;
 }
 
-type EditableQuizStep = QuizStep & { id: string };
+// 🎯 TIPO ESTENDIDO COM TODAS AS CONFIGURAÇÕES DE PRODUÇÃO
+type EditableQuizStep = QuizStep & { 
+    id: string;
+    // Configurações de pontuação
+    scoreValues?: Record<string, number>;
+    // Layout e visual
+    columns?: number;
+    imageSize?: { width: number; height: number };
+    // Comportamento
+    autoAdvance?: boolean;
+    transition?: { type: string; duration: number };
+    validationRules?: { required: boolean; minSelections?: number; maxSelections?: number };
+    // Analytics e tracking
+    analytics?: { trackSelections: boolean; trackTime?: boolean };
+    seo?: { title?: string; description?: string; keywords?: string };
+    pixel?: { facebook?: string; google?: string };
+    utm?: { source?: string; medium?: string; campaign?: string };
+};
 
 const STEP_TYPES: Array<QuizStep['type']> = [
     'intro', 'question', 'strategic-question', 'transition', 'transition-result', 'result', 'offer'
@@ -349,24 +366,39 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
     // Função para converter step antigo em step modular
 
 
-    // 🚀 FASE 3: COMPONENTES EDITÁVEIS ENCAPSULADOS - Sistema Modularizado
+    // 🚀 COMPONENTES DE PRODUÇÃO REAIS - Sistema Unificado
     const renderRealComponent = (step: EditableQuizStep, index: number) => {
         const isEditMode = previewMode === 'edit';
         const blockId = `step-${step.id}`;
         const isSelected = selectedBlockId === blockId;
 
-        // 🎯 Mapear tipo de step para componente editável correspondente
+        // 🎯 DADOS COMPLETOS DO FUNIL (mesmo formato do /quiz-estilo)
+        const productionStepData = {
+            ...step,
+            // Garantir que todas as configurações de produção estejam presentes
+            scoreValues: step.scoreValues || {},
+            columns: step.columns || 2,
+            imageSize: step.imageSize || { width: 256, height: 256 },
+            autoAdvance: step.autoAdvance || false,
+            transition: step.transition || { type: 'fade', duration: 500 },
+            validationRules: step.validationRules || { required: true },
+            analytics: step.analytics || { trackSelections: true },
+            seo: step.seo || {},
+            pixel: step.pixel || {},
+            utm: step.utm || {}
+        };
+
+                // 🎯 MAPEAMENTO DE COMPONENTES EDITÁVEIS (consumindo dados completos)
         const EditableComponent = {
             'intro': EditableIntroStep,
             'question': EditableQuestionStep,
             'strategic-question': EditableStrategicQuestionStep,
             'transition': EditableTransitionStep,
-            'transition-result': EditableTransitionStep, // Reutilizar TransitionStep
+            'transition-result': EditableTransitionStep,
             'result': EditableResultStep,
             'offer': EditableOfferStep
         }[step.type];
 
-        // Se o tipo não for suportado, mostrar erro
         if (!EditableComponent) {
             return (
                 <div className="p-4 border-2 border-red-300 bg-red-50 rounded-lg">
@@ -374,15 +406,15 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
                         ⚠️ Tipo de step não suportado: {step.type}
                     </div>
                     <div className="text-red-500 text-sm mt-1">
-                        Componente editável não encontrado para este tipo de step.
+                        Componente não encontrado para este tipo de step.
                     </div>
                 </div>
             );
         }
 
-        // 🎨 Props para o componente editável
+        // 🎨 Props completas para o componente editável (com dados de produção)
         const editableProps: EditableStepProps = {
-            data: step,
+            data: productionStepData, // ✅ DADOS COMPLETOS DE PRODUÇÃO
             isEditable: isEditMode,
             isSelected: isSelected,
             onUpdate: (updates) => updateStep(step.id, updates),
@@ -403,7 +435,67 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
             blockId: blockId
         };
 
-        return <EditableComponent {...editableProps} />;
+        return <EditableComponent {...editableProps} />;        // � DADOS COMPLETOS DO FUNIL (mesmo formato do /quiz-estilo)
+        const productionStepData = {
+            ...step,
+            // Garantir que todas as configurações estejam presentes
+            scoreValues: step.scoreValues || {},
+            columns: step.columns || 2,
+            imageSize: step.imageSize || { width: 256, height: 256 },
+            autoAdvance: step.autoAdvance || false,
+            transition: step.transition || { type: 'fade', duration: 500 },
+            validationRules: step.validationRules || { required: true },
+            analytics: step.analytics || { trackSelections: true },
+            seo: step.seo || {},
+            pixel: step.pixel || {},
+            utm: step.utm || {}
+        };
+
+        // 🎯 PROPS IGUAIS AO /QUIZ-ESTILO
+        const productionProps = {
+            stepData: productionStepData,
+            data: productionStepData,
+            currentAnswers: [], // Mock para preview
+            onAnswersChange: (answers: string[]) => {
+                console.log('Preview - answers changed:', answers);
+            },
+            onNext: () => {
+                console.log('Preview - next step');
+            },
+            userName: 'Preview User',
+            progress: ((index + 1) / steps.length) * 100,
+            // Props específicos por tipo
+            ...(step.type === 'strategic-question' && {
+                currentAnswer: '',
+                onAnswerChange: (answer: string) => {
+                    console.log('Preview - strategic answer:', answer);
+                }
+            }),
+            ...(step.type === 'result' && {
+                resultStyle: 'Clássico',
+                secondaryStyles: ['Elegante', 'Natural'],
+                onCalculate: () => {
+                    console.log('Preview - calculate result');
+                }
+            }),
+            ...(step.type === 'offer' && {
+                strategicAnswers: {},
+                offerKey: 'default'
+            })
+        };
+
+        // 🎯 RENDERIZAR COMPONENTE DE PRODUÇÃO COM LAZY LOADING
+        const LazyProductionComponent = React.lazy(ProductionComponent);
+
+        return (
+            <React.Suspense fallback={
+                <div className="flex items-center justify-center h-64">
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+                </div>
+            }>
+                <LazyProductionComponent {...productionProps} />
+            </React.Suspense>
+        );
     };
 
     return (
