@@ -5,7 +5,7 @@ interface FormFieldOption {
     label: string;
 }
 
-export interface ModularFormFieldSimpleProps extends React.HTMLAttributes<HTMLDivElement> {
+export interface ModularFormFieldSimpleProps {
     id?: string;
     name?: string;
     label?: string;
@@ -18,6 +18,11 @@ export interface ModularFormFieldSimpleProps extends React.HTMLAttributes<HTMLDi
     options?: FormFieldOption[];
     value?: string | string[] | boolean;
     onChange?: (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => void;
+    containerProps?: React.HTMLAttributes<HTMLDivElement>;
+    inputProps?: React.InputHTMLAttributes<HTMLInputElement>;
+    textareaProps?: React.TextareaHTMLAttributes<HTMLTextAreaElement>;
+    selectProps?: React.SelectHTMLAttributes<HTMLSelectElement>;
+    optionProps?: React.InputHTMLAttributes<HTMLInputElement>;
 }
 
 const containerStyle: React.CSSProperties = {
@@ -77,8 +82,11 @@ const ModularFormFieldSimple: React.FC<ModularFormFieldSimpleProps> = ({
     options = [],
     value,
     onChange,
-    style,
-    ...rest
+    containerProps,
+    inputProps,
+    textareaProps,
+    selectProps,
+    optionProps,
 }) => {
     const resolvedType = fieldType ?? legacyType ?? 'text';
     const controlId = id ?? name ?? undefined;
@@ -95,7 +103,7 @@ const ModularFormFieldSimple: React.FC<ModularFormFieldSimpleProps> = ({
             value={typeof value === 'string' ? value : undefined}
             onChange={onChange}
             style={baseFieldStyle}
-            {...rest}
+            {...inputProps}
         />
     );
 
@@ -109,7 +117,7 @@ const ModularFormFieldSimple: React.FC<ModularFormFieldSimpleProps> = ({
             value={typeof value === 'string' ? value : undefined}
             onChange={(event) => onChange?.(event)}
             style={{ ...baseFieldStyle, minHeight: '120px', resize: 'vertical' }}
-            {...rest}
+            {...textareaProps}
         />
     );
 
@@ -122,7 +130,7 @@ const ModularFormFieldSimple: React.FC<ModularFormFieldSimpleProps> = ({
             value={typeof value === 'string' ? value : undefined}
             onChange={(event) => onChange?.(event)}
             style={baseFieldStyle}
-            {...rest}
+            {...selectProps}
         >
             <option value="" disabled={required}>
                 {placeholder ?? 'Selecione uma opção'}
@@ -139,7 +147,7 @@ const ModularFormFieldSimple: React.FC<ModularFormFieldSimpleProps> = ({
         const currentValue = Array.isArray(value) ? value : typeof value === 'string' ? [value] : [];
 
         return (
-            <div style={optionsContainerStyle} {...rest}>
+                <div style={optionsContainerStyle}>
                 {options.map((option) => {
                     const checked = inputType === 'checkbox'
                         ? currentValue.includes(option.value)
@@ -154,7 +162,8 @@ const ModularFormFieldSimple: React.FC<ModularFormFieldSimpleProps> = ({
                                 required={required}
                                 disabled={disabled}
                                 checked={checked}
-                                onChange={(event) => onChange?.(event)}
+                                    onChange={(event) => onChange?.(event)}
+                                    {...optionProps}
                             />
                             <span>{option.label}</span>
                         </label>
@@ -185,8 +194,10 @@ const ModularFormFieldSimple: React.FC<ModularFormFieldSimpleProps> = ({
             fieldControl = renderTextInput();
     }
 
-    return (
-        <div style={{ ...containerStyle, ...style }}>
+        const { style: containerStyleOverride, ...restContainerProps } = containerProps ?? {};
+
+        return (
+            <div style={{ ...containerStyle, ...containerStyleOverride }} {...restContainerProps}>
             {label && (
                 <label htmlFor={controlId} style={labelStyle}>
                     {label}
