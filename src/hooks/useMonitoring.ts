@@ -78,7 +78,7 @@ export const useMonitoring = (options?: {
   const startMonitoring = useCallback(async () => {
     try {
       healthCheckService.startMonitoring(healthCheckInterval);
-      
+
       // Verificação inicial
       const initialHealth = await healthCheckService.performHealthCheck();
       setState(prev => ({
@@ -203,30 +203,30 @@ export const useMonitoring = (options?: {
   return {
     // Estado
     ...state,
-    
+
     // Ações
     startMonitoring,
     stopMonitoring,
     checkHealth,
-    
+
     // Tracking
     trackEvent,
     trackError,
     trackPerformance,
     trackEditorAction,
-    
+
     // Dados
     getErrorStats,
     getSessionMetrics,
     clearErrors,
-    
+
     // Utilitários
     isServiceHealthy: (serviceName: string) => {
       if (!state.healthStatus) return null;
       const service = state.healthStatus.services[serviceName as keyof typeof state.healthStatus.services];
       return service?.status === 'up';
     },
-    
+
     getServiceHealth: (serviceName: string) => {
       if (!state.healthStatus) return null;
       return state.healthStatus.services[serviceName as keyof typeof state.healthStatus.services];
@@ -238,15 +238,15 @@ export const useMonitoring = (options?: {
  * Hook específico para componentes do editor
  */
 export const useEditorMonitoring = (componentName: string) => {
-  const monitoring = useMonitoring({ 
+  const monitoring = useMonitoring({
     trackComponent: componentName,
-    autoStart: true 
+    autoStart: true
   });
 
   // Auto-track mount/unmount
   useEffect(() => {
     monitoring.trackEvent('component_mounted', { component: componentName });
-    
+
     return () => {
       monitoring.trackEvent('component_unmounted', { component: componentName });
     };
