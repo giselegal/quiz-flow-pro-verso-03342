@@ -5,13 +5,15 @@
  * Integrado com a nova arquitetura core de funis
  */
 
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useMemo } from 'react';
 // import { useFunnel } from '@/core/funnel';
 import type {
     FunnelPublicationSettings,
     ResultConfiguration,
     KeywordResultMapping
 } from '@/components/editor/publication/FunnelPublicationPanel';
+import { useOptionalFunnelFacade } from '@/editor/facade/FunnelFacadeContext';
+import { FeatureFlagManager } from '@/utils/FeatureFlagManager';
 
 // ============================================================================
 // TYPES
