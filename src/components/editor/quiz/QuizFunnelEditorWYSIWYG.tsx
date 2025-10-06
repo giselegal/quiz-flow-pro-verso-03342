@@ -767,14 +767,14 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
                                 {steps.map((step, index) => {
                                     const isSelected = selectedId === step.id;
                                     const blockId = `step-${step.id}`;
-                                    
+
                                     return (
                                         <div
                                             key={step.id}
                                             className={cn(
                                                 "border-2 rounded-lg p-4 transition-all duration-200 cursor-pointer relative",
-                                                isSelected 
-                                                    ? "border-blue-500 shadow-lg bg-blue-50/30 ring-2 ring-blue-300 ring-offset-2" 
+                                                isSelected
+                                                    ? "border-blue-500 shadow-lg bg-blue-50/30 ring-2 ring-blue-300 ring-offset-2"
                                                     : "border-gray-200 hover:border-blue-300 hover:shadow-md"
                                             )}
                                             onClick={() => {
@@ -800,7 +800,7 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
                                                         </Badge>
                                                     )}
                                                 </div>
-                                                
+
                                                 {/* Botões de ação - sempre visíveis se hover ou selecionado */}
                                                 <div className={cn(
                                                     "flex gap-1 transition-opacity",
