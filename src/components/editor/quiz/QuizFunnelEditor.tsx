@@ -243,12 +243,12 @@ const QuizFunnelEditor: React.FC<QuizFunnelEditorProps> = ({ funnelId, templateI
     const blockRegistry = useBlockRegistry();
     const [steps, setSteps] = useState<EditableQuizStep[]>([]);
     const [selectedId, setSelectedId] = useState<string>('');
-    
+
     // DEBUG: Monitorar mudanças no selectedId
     useEffect(() => {
         console.log('🔴 selectedId mudou para:', selectedId);
     }, [selectedId]);
-    
+
     const [isSaving, setIsSaving] = useState(false);
     const [previewSelections, setPreviewSelections] = useState<Record<string, string[]>>({});
     // Undo/Redo stacks
