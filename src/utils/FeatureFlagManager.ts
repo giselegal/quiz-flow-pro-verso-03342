@@ -11,6 +11,7 @@ export interface FeatureFlags {
   enableCompatibilityLogging: boolean;
   enablePerformanceComparison: boolean;
   forceUnifiedInEditor: boolean;
+  enableUnifiedEditorFacade: boolean;
   allowSystemFallback: boolean;
 }
 
@@ -64,6 +65,7 @@ export class FeatureFlagManager {
       enableCompatibilityLogging: false,
       enablePerformanceComparison: false,
       forceUnifiedInEditor: false,
+      enableUnifiedEditorFacade: false,
       allowSystemFallback: true,
     };
 
@@ -77,6 +79,9 @@ export class FeatureFlagManager {
           enableCompatibilityLogging: true,
           enablePerformanceComparison: true,
           forceUnifiedInEditor: import.meta.env.VITE_FORCE_UNIFIED_EDITOR === 'true',
+          enableUnifiedEditorFacade:
+            import.meta.env.VITE_ENABLE_UNIFIED_EDITOR_FACADE === 'true' ||
+            import.meta.env.VITE_FORCE_UNIFIED_EDITOR === 'true',
           allowSystemFallback: true,
         };
 
@@ -88,6 +93,7 @@ export class FeatureFlagManager {
           enableCompatibilityLogging: true,
           enablePerformanceComparison: false,
           forceUnifiedInEditor: false,
+          enableUnifiedEditorFacade: import.meta.env.VITE_ENABLE_UNIFIED_EDITOR_FACADE === 'true',
           allowSystemFallback: true,
         };
 
@@ -99,6 +105,7 @@ export class FeatureFlagManager {
           enableCompatibilityLogging: false,
           enablePerformanceComparison: false,
           forceUnifiedInEditor: false,
+          enableUnifiedEditorFacade: this.isUserInExperiment('unified_editor_facade_rollout'),
           allowSystemFallback: true,
         };
 
@@ -191,6 +198,10 @@ export class FeatureFlagManager {
 
   shouldForceUnifiedInEditor(): boolean {
     return this.getFlag('forceUnifiedInEditor');
+  }
+
+  shouldEnableUnifiedEditorFacade(): boolean {
+    return this.getFlag('enableUnifiedEditorFacade');
   }
 
   shouldAllowFallback(): boolean {
