@@ -4,22 +4,14 @@
  * Wrapper de segurança para evitar erros de contexto undefined
  */
 
-import React, { ErrorBoundary } from 'react';
+import React from 'react';
 import { Box, Text } from '@/components/ui/modern-ui';
 
-// Import protegido do painel original
-let AdvancedPropertiesPanelComponent: React.ComponentType<any> | null = null;
+// ✅ Import estático ES6 (corrigido - não usar require())
+import AdvancedPropertiesPanelComponent, { type AdvancedPropertiesPanelProps } from './AdvancedPropertiesPanel';
 
-try {
-    // Importação dinâmica segura
-    const module = require('./AdvancedPropertiesPanel');
-    AdvancedPropertiesPanelComponent = module.default || module.AdvancedPropertiesPanel;
-} catch (error) {
-    console.warn('Erro ao carregar AdvancedPropertiesPanel:', error);
-}
-
-interface SafeAdvancedPropertiesPanelProps {
-    [key: string]: any;
+interface SafeAdvancedPropertiesPanelProps extends AdvancedPropertiesPanelProps {
+    // Props adicionais para o wrapper, se necessário
 }
 
 // Componente de fallback
@@ -79,24 +71,6 @@ class PropertiesPanelErrorBoundary extends React.Component<
 
 // Wrapper principal com verificações de segurança
 const SafeAdvancedPropertiesPanel: React.FC<SafeAdvancedPropertiesPanelProps> = (props) => {
-    // Verificar se o componente foi carregado com sucesso
-    if (!AdvancedPropertiesPanelComponent) {
-        return <PropertiesPanelFallback />;
-    }
-
-    // Verificar se as props essenciais estão presentes
-    const safeProps = {
-        ...props,
-        // Garantir que _config sempre existe
-        _config: props._config || {
-            theme: 'modern',
-            layout: 'horizontal',
-            showPreview: true,
-            autoSave: true,
-            debug: false
-        }
-    };
-
     return (
         <PropertiesPanelErrorBoundary
             onError={(error) => {
@@ -104,7 +78,7 @@ const SafeAdvancedPropertiesPanel: React.FC<SafeAdvancedPropertiesPanelProps> = 
                 // Aqui podemos adicionar analytics ou notificações se necessário
             }}
         >
-            <AdvancedPropertiesPanelComponent {...safeProps} />
+            <AdvancedPropertiesPanelComponent {...props} />
         </PropertiesPanelErrorBoundary>
     );
 };
