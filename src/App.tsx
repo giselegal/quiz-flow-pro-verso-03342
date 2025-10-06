@@ -129,6 +129,21 @@ function App() {
                           </EditorErrorBoundary>
                         </Route>
 
+                        {/* ✏️ EDITOR ESPECÍFICO PARA /quiz-estilo - FUNCIONAL E DIRETO */}
+                        <Route path="/editor/quiz-estilo">
+                          <EditorErrorBoundary>
+                            <div data-testid="quiz-estilo-editor-page">
+                              <UnifiedCRUDProvider autoLoad={true}>
+                                <OptimizedEditorProvider>
+                                  <Suspense fallback={<EnhancedLoadingFallback message="Carregando editor do quiz de estilo..." />}>
+                                    <QuizFunnelEditorWYSIWYG />
+                                  </Suspense>
+                                </OptimizedEditorProvider>
+                              </UnifiedCRUDProvider>
+                            </div>
+                          </EditorErrorBoundary>
+                        </Route>
+
                         {/* 🧩 EDITOR MODULAR - Sistema experimental com componentes modulares */}
                         <Route path="/editor-modular">
                           <EditorErrorBoundary>
