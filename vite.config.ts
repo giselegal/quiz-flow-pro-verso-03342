@@ -20,6 +20,12 @@ export default defineConfig({
     strictPort: true, // Força usar exatamente a porta 8080
     fs: {
       allow: ['..'],
+      // Ignorar arquivos HTML na raiz
+      deny: [
+        '**/*.html',
+        '!**/index.html',
+        '!**/public/**/*.html'
+      ],
     },
     headers: {
       'Access-Control-Allow-Origin': '*',
@@ -88,6 +94,8 @@ export default defineConfig({
         global: 'globalThis',
       },
     },
+    // Ignorar arquivos HTML de teste/debug na raiz
+    entries: ['src/**/*.{tsx,ts,jsx,js}', 'index.html'],
   },
   define: {
     __DEV__: JSON.stringify(process.env.NODE_ENV === 'development'),

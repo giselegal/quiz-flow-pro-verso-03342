@@ -668,8 +668,8 @@ export const IntelligentCacheProvider: React.FC<IntelligentCacheProviderProps> =
 
     const contextValue = useMemo<IntelligentCacheContextType>(() => ({
         cache: cacheManager,
-        get: <T>(key: string) => cacheManager.get<T>(key),
-            set: <T>(key: string, data: T, options?: any) => cacheManager.set(key, data, options),
+        get: <T,>(key: string) => cacheManager.get<T>(key),
+        set: <T,>(key: string, data: T, options?: any) => cacheManager.set(key, data, options),
         delete: (key: string) => cacheManager.delete(key),
         clear: (tags?: string[]) => cacheManager.clear(tags),
         getStats: () => cacheManager.getStats()
@@ -678,89 +678,89 @@ export const IntelligentCacheProvider: React.FC<IntelligentCacheProviderProps> =
     // Debug logging
     useEffect(() => {
         if (debugMode && stats) {
-                    console.log('🧠 Intelligent Cache Stats:', stats);
+            console.log('🧠 Intelligent Cache Stats:', stats);
         }
     }, [debugMode, stats]);
 
-                return (
-                <IntelligentCacheContext.Provider value={contextValue}>
-                    {children}
-                    {debugMode && stats && (
-                        <div style={{
-                            position: 'fixed',
-                            top: '10px',
-                            left: '10px',
-                            background: 'rgba(0,0,0,0.8)',
-                            color: 'white',
-                            padding: '10px',
-                            borderRadius: '5px',
-                            fontSize: '12px',
-                            fontFamily: 'monospace',
-                            zIndex: 9999,
-                            maxWidth: '300px'
-                        }}>
-                            <h4>Cache Stats</h4>
-                            <div>Hit Rate: {(stats.overall.overallHitRate * 100).toFixed(1)}%</div>
-                            <div>Memory Entries: {stats.memoryCache.entries}</div>
-                            <div>GC Runs: {stats.overall.gcRuns}</div>
-                        </div>
-                    )}
-                </IntelligentCacheContext.Provider>
-                );
+    return (
+        <IntelligentCacheContext.Provider value={contextValue}>
+            {children}
+            {debugMode && stats && (
+                <div style={{
+                    position: 'fixed',
+                    top: '10px',
+                    left: '10px',
+                    background: 'rgba(0,0,0,0.8)',
+                    color: 'white',
+                    padding: '10px',
+                    borderRadius: '5px',
+                    fontSize: '12px',
+                    fontFamily: 'monospace',
+                    zIndex: 9999,
+                    maxWidth: '300px'
+                }}>
+                    <h4>Cache Stats</h4>
+                    <div>Hit Rate: {(stats.overall.overallHitRate * 100).toFixed(1)}%</div>
+                    <div>Memory Entries: {stats.memoryCache.entries}</div>
+                    <div>GC Runs: {stats.overall.gcRuns}</div>
+                </div>
+            )}
+        </IntelligentCacheContext.Provider>
+    );
 };
 
 // 🎯 HOOK
 export const useIntelligentCache = () => {
     const context = useContext(IntelligentCacheContext);
-                if (!context) {
+    if (!context) {
         throw new Error('useIntelligentCache must be used within IntelligentCacheProvider');
     }
-                return context;
+    return context;
 };
 
-                // 🎯 SPECIALIZED CACHE HOOKS
-                export const useCachedData = <T>(
-                    key: string,
+// 🎯 SPECIALIZED CACHE HOOKS
+export const useCachedData = <T>(
+    key: string,
     fetcher: () => Promise<T>,
-                        options: {
-                            ttl ?: number;
-                        refreshInterval?: number;
-                        persistent?: boolean;
+        options: {
+            ttl ?: number;
+        refreshInterval?: number;
+        persistent?: boolean;
     } = { }
 ) => {
     const {get, set} = useIntelligentCache();
-                        const [data, setData] = useState<T | null>(null);
-                        const [loading, setLoading] = useState(true);
-                        const [error, setError] = useState<Error | null>(null);
+        const [data, setData] = useState<T | null>(null);
+        const [loading, setLoading] = useState(true);
+        const [error, setError] = useState<Error | null>(null);
 
     const fetchData = useCallback(async () => {
         try {
-                            setLoading(true);
-                        setError(null);
+            setLoading(true);
+        setError(null);
 
-                        // Try cache first
-                        const cached = await get<T>(key);
-                            if (cached) {
-                                setData(cached);
-                            setLoading(false);
-                            return cached;
+        // Try cache first
+        const cached = await get<T>(key);
+            if (cached) {
+                setData(cached);
+            setLoading(false);
+            return cached;
             }
 
-                            // Fetch fresh data
-                            const fresh = await fetcher();
-                            await set(key, fresh, options);
-                            setData(fresh);
-                            return fresh;
+            // Fetch fresh data
+            const fresh = await fetcher();
+            await set(key, fresh, options);
+            setData(fresh);
+            return fresh;
         } catch (err) {
-                                setError(err as Error);
-                            return null;
+                setError(err as Error);
+            return null;
         } finally {
-                                setLoading(false);
+                setLoading(false);
         }
     }, [key, fetcher, get, set, options]);
 
     useEffect(() => {
-                                fetchData();
+                fetchData();
     }, [fetchData]);
 
     // Auto refresh
@@ -771,7 +771,7 @@ export const useIntelligentCache = () => {
         }
     }, [fetchData, options.refreshInterval]);
 
-                            return {data, loading, error, refetch: fetchData };
+            return {data, loading, error, refetch: fetchData };
 };
 
-                            export default IntelligentCacheProvider;
+            export default IntelligentCacheProvider;

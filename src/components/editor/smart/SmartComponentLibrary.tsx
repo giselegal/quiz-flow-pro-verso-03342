@@ -418,8 +418,10 @@ interface SmartInputProps extends SmartComponentProps {
 
 export class SmartInput extends SmartComponentBase<SmartInputProps> {
     private inputRef = React.createRef<HTMLInputElement>();
-    private [value, setValue] =[this.props.value || '', (v: string) => { }];
-    private [errors, setErrors] =[[] as string[], (e: string[]) => { }];
+    private value = this.props.value || '';
+    private setValue = (v: string) => { };
+    private errors: string[] = [];
+    private setErrors = (e: string[]) => { };
 
     constructor(props: SmartInputProps) {
         super(props);
