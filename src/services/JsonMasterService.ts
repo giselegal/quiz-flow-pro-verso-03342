@@ -26,7 +26,7 @@ export class JsonMasterService {
      */
     async loadTemplate(templateId: string): Promise<any> {
         const key = templateId;
-        
+
         // Retorna do cache se existir
         if (this.cache.has(key)) {
             console.log(`✅ [JsonMasterService] Retornando do cache: ${templateId}`);
