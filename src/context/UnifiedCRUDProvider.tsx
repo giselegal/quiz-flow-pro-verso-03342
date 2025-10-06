@@ -195,7 +195,7 @@ export const UnifiedCRUDProvider: React.FC<UnifiedCRUDProviderProps> = ({
                     name: masterData.metadata.name,
                     description: masterData.metadata.description,
                     category: masterData.metadata.category || 'quiz',
-                    context: FunnelContext.QUIZ,
+                    context: FunnelContext.TEMPLATES,
                     userId: 'json-master-template',
                     settings: masterData.globalConfig || {},
                     pages: [],
