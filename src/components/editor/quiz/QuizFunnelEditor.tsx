@@ -946,9 +946,27 @@ const QuizFunnelEditor: React.FC<QuizFunnelEditorProps> = ({ funnelId, templateI
     // ================= Runtime Preview Component =================
     const RuntimePreview: React.FC = () => {
         const { setSteps, version } = useQuizRuntimeRegistry();
+
+        // Usar useMemo para evitar recalcular a cada render
+        const runtimeSteps = useMemo(() => editorStepsToRuntimeMap(steps as any), [steps]);
+
+        // Debounce: só atualiza runtime após 500ms sem mudanças
+        const timeoutRef = useRef<number | null>(null);
         useEffect(() => {
-            setSteps(editorStepsToRuntimeMap(steps as any));
-        }, [steps, setSteps]);
+            if (timeoutRef.current) {
+                window.clearTimeout(timeoutRef.current);
+            }
+            timeoutRef.current = window.setTimeout(() => {
+                setSteps(runtimeSteps);
+            }, 500); // 500ms de debounce
+
+            return () => {
+                if (timeoutRef.current) {
+                    window.clearTimeout(timeoutRef.current);
+                }
+            };
+        }, [runtimeSteps, setSteps]);
+
         return (
             <div className="flex flex-col h-full">
                 <div className="flex-1 overflow-auto bg-white">
