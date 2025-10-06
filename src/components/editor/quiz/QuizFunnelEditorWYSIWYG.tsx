@@ -30,7 +30,7 @@ interface QuizFunnelEditorProps {
 }
 
 // 🎯 TIPO ESTENDIDO COM TODAS AS CONFIGURAÇÕES DE PRODUÇÃO
-type EditableQuizStep = QuizStep & { 
+type EditableQuizStep = QuizStep & {
     id: string;
     // Configurações de pontuação
     scoreValues?: Record<string, number>;
@@ -388,7 +388,7 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
             utm: step.utm || {}
         };
 
-                // 🎯 MAPEAMENTO DE COMPONENTES EDITÁVEIS (consumindo dados completos)
+        // 🎯 MAPEAMENTO DE COMPONENTES EDITÁVEIS (consumindo dados completos)
         const EditableComponent = {
             'intro': EditableIntroStep,
             'question': EditableQuestionStep,
