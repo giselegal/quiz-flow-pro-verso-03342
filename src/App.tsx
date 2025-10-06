@@ -131,7 +131,7 @@ function App() {
                           <EditorErrorBoundary>
                             <div data-testid="quiz-funnel-editor-page">
                               <UnifiedCRUDProvider autoLoad={true}>
-                                <BlockRegistryProvider definitions={[]}>
+                                <BlockRegistryProvider definitions={DEFAULT_BLOCK_DEFINITIONS}>
                                   <Suspense fallback={<EnhancedLoadingFallback message="Carregando editor profissional..." />}>
                                     <QuizFunnelEditor />
                                   </Suspense>
