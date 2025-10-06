@@ -250,6 +250,7 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
             setSelectedId(newStep.id);
             if (facade) {
                 facade.addStep(buildFacadeStep(newStep, newStep.order ?? normalized.length - 1));
+                facade.selectStep(newStep.id);
                 syncOrderWithFacade(normalized);
             }
             return normalized;
@@ -267,6 +268,7 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
             setSelectedId(newStep.id);
             if (facade) {
                 facade.addStep(buildFacadeStep(newStep, newStep.order ?? idx));
+                facade.selectStep(newStep.id);
                 syncOrderWithFacade(normalized);
             }
             return normalized;
@@ -279,6 +281,7 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
             const normalized = [...prev, newStep].map((step, index) => normalizeEditableStep(step, index));
             if (facade) {
                 facade.addStep(buildFacadeStep(newStep, newStep.order ?? normalized.length - 1));
+                facade.selectStep(newStep.id);
                 syncOrderWithFacade(normalized);
             }
             return normalized;
@@ -330,6 +333,7 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
             const normalized = clone.map((step, index) => normalizeEditableStep(step, index));
             if (facade) {
                 facade.addStep(buildFacadeStep(duplicate, duplicate.order ?? idx + 1));
+                facade.selectStep(duplicate.id);
                 syncOrderWithFacade(normalized);
             }
             return normalized;
@@ -626,7 +630,7 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
 
                                         <div
                                             className="pl-4 pr-3 py-3"
-                                            onClick={() => setSelectedId(step.id)}
+                                            onClick={() => handleStepSelect(step.id)}
                                         >
                                             <div className="flex items-center gap-2 mb-1">
                                                 <div className="w-6 h-6 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center text-white text-[10px] font-bold">
