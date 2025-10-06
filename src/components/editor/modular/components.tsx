@@ -284,7 +284,7 @@ export const DividerComponent: React.FC<ComponentRenderProps> = (props) => {
                         height: `${component.thickness}px`,
                         backgroundColor: component.color,
                         border: 'none',
-                        borderStyle: component.style
+                        borderStyle: component.borderStyle
                     }}
                 />
             </div>

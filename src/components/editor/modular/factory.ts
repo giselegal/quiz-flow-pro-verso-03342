@@ -117,7 +117,7 @@ const getDefaultComponentProps = (type: ComponentType, order: number = 0): Modul
                 type: 'divider',
                 thickness: 1,
                 color: '#e5e7eb',
-                style: 'solid',
+                borderStyle: 'solid',
                 margin: 16
             };
 

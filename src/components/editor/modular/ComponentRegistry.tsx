@@ -146,13 +146,14 @@ export const COMPONENT_REGISTRY: Record<ComponentType, ComponentInfo> = {
     },
 
     'divider': {
-        component: ({ style, ...props }) => (
+        component: ({ style, borderStyle = 'solid', ...props }) => (
             <hr
                 style={{
                     border: 'none',
                     height: '1px',
                     backgroundColor: '#e2e8f0',
                     margin: '16px 0',
+                    borderStyle,
                     ...style,
                 }
                 }
@@ -167,6 +168,7 @@ export const COMPONENT_REGISTRY: Record<ComponentType, ComponentInfo> = {
             color: 'gray.200',
             thickness: 1,
             margin: 4,
+            borderStyle: 'solid',
         },
     },
 

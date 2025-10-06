@@ -30,7 +30,7 @@ export interface BaseComponentProps {
     order: number;
     visible: boolean;
     className?: string;
-    style?: React.CSSProperties | 'solid' | 'dashed' | 'dotted';
+    style?: React.CSSProperties;
 }
 
 // 📝 Componente de Título
@@ -121,7 +121,7 @@ export interface DividerComponentProps extends BaseComponentProps {
     type: 'divider';
     thickness: number;
     color: string;
-    style: 'solid' | 'dashed' | 'dotted';
+    borderStyle: 'solid' | 'dashed' | 'dotted';
     margin: number;
 }
 
