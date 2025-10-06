@@ -320,6 +320,10 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
                 if (facade) {
                     facade.selectStep(nextStep.id);
                 }
+            } else if (selectedId === id && normalized.length === 0) {
+                setSelectedId('');
+                setSelectedBlockId('');
+                facade?.selectStep(null);
             }
             if (facade) {
                 facade.removeStep(id);
@@ -363,6 +367,7 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
                 facade.selectStep(duplicate.id);
                 syncOrderWithFacade(normalized);
             }
+            setSelectedId(duplicate.id);
             setSelectedBlockId(duplicate.blockId || `${duplicate.id}-blk`);
             return normalized;
         });
@@ -573,9 +578,7 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
             isSelected: isSelected,
             onUpdate: (updates) => updateStep(step.id, updates as Partial<EditableQuizStep>),
             onSelect: () => {
-                setSelectedId(step.id);
-                setSelectedBlockId(blockId);
-                facade?.selectStep(step.id);
+                handleBlockSelect(blockId);
             },
             onPropertyClick: (propKey: string, element: HTMLElement) => {
                 handlePropertyClick(propKey, element, step.id);
