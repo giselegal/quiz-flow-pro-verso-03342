@@ -58,13 +58,16 @@ const ModernUnifiedEditor: React.FC<ModernUnifiedEditorProps> = (props) => {
     }, []);
 
     const shouldUseFacadeEditor = useMemo(() => {
+        // 🚨 FORÇADO TEMPORARIAMENTE - SEMPRE USAR EDITOR NOVO
+        const result = true; // FORÇADO!
+        
         const manager = FeatureFlagManager.getInstance();
         const force = manager.shouldForceUnifiedInEditor();
         const facade = manager.shouldEnableUnifiedEditorFacade();
-        const result = force || facade;
 
         // 🐛 DEBUG: Ver valores das flags
-        console.log('🎛️ [ModernUnifiedEditor] Feature Flags:', {
+        console.log('🎛️ [ModernUnifiedEditor] Feature Flags (FORÇADO=true):', {
+            FORCADO_MANUAL: true,
             forceUnified: force,
             enableFacade: facade,
             shouldUseFacade: result,
