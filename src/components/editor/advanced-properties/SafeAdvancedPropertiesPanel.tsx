@@ -28,12 +28,12 @@ const PropertiesPanelFallback: React.FC = () => (
 
 // Componente de erro
 const PropertiesPanelError: React.FC<{ error?: Error }> = ({ error }) => (
-    <Box 
-        className="advanced-properties-error" 
-        style={{ 
-            padding: '1rem', 
-            backgroundColor: '#fef2f2', 
-            borderRadius: '0.375rem' 
+    <Box
+        className="advanced-properties-error"
+        style={{
+            padding: '1rem',
+            backgroundColor: '#fef2f2',
+            borderRadius: '0.375rem'
         }}
     >
         <Text size="sm" style={{ color: '#dc2626', fontWeight: '500' }}>
