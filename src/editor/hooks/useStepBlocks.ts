@@ -162,12 +162,13 @@ export function useStepBlocks(stepIndex: number): UseStepBlocksResult {
             setIsLoading(true);
             setError(null);
 
-            const newBlock: BlockData = {
+            const newBlock = {
                 id: `block-${type}-${Date.now()}`,
                 type,
-                order: step.blocks.length,
-                properties,
-                content
+                data: {
+                    ...content,
+                    ...properties
+                }
             };
 
             console.log(`➕ Adicionando bloco ao step ${step.id}:`, newBlock);
@@ -233,10 +234,13 @@ export function useStepBlocks(stepIndex: number): UseStepBlocksResult {
                 throw new Error(`Bloco ${blockId} não encontrado`);
             }
 
-            const duplicate: BlockData = {
-                ...original,
+            const duplicate = {
                 id: `block-${original.type}-${Date.now()}`,
-                order: original.order + 1
+                type: original.type,
+                data: {
+                    ...original.content,
+                    ...original.properties
+                }
             };
 
             console.log(`📋 Duplicando bloco ${blockId}:`, duplicate);
@@ -280,12 +284,9 @@ export function useStepBlocks(stepIndex: number): UseStepBlocksResult {
             const [moved] = reordered.splice(fromIndex, 1);
             reordered.splice(toIndex, 0, moved);
 
-            // Atualizar ordem de todos os blocos afetados
-            reordered.forEach((block, index) => {
-                if (block.order !== index) {
-                    facade.updateBlock(step.id, block.id, { order: index });
-                }
-            });
+            // Usar API de reorderBlocks da facade (passa array de IDs na nova ordem)
+            const newOrder = reordered.map(b => b.id);
+            facade.reorderBlocks(step.id, newOrder);
 
             // Forçar re-render
             setUpdateTrigger(prev => prev + 1);
