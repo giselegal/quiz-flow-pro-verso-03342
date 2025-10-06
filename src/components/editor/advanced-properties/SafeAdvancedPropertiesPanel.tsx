@@ -16,11 +16,11 @@ interface SafeAdvancedPropertiesPanelProps extends AdvancedPropertiesPanelProps 
 
 // Componente de fallback
 const PropertiesPanelFallback: React.FC = () => (
-    <Box className="advanced-properties-fallback" p={4}>
-        <Text size="sm" color="gray.600">
+    <Box className="advanced-properties-fallback" style={{ padding: '1rem' }}>
+        <Text size="sm" style={{ color: '#6b7280' }}>
             ⚙️ Painel de Propriedades está carregando...
         </Text>
-        <Text size="xs" color="gray.400" mt={2}>
+        <Text size="xs" style={{ color: '#9ca3af', marginTop: '0.5rem' }}>
             Se o problema persistir, recarregue a página.
         </Text>
     </Box>
@@ -28,14 +28,21 @@ const PropertiesPanelFallback: React.FC = () => (
 
 // Componente de erro
 const PropertiesPanelError: React.FC<{ error?: Error }> = ({ error }) => (
-    <Box className="advanced-properties-error" p={4} bg="red.50" borderRadius="md">
-        <Text size="sm" color="red.600" fontWeight="medium">
+    <Box 
+        className="advanced-properties-error" 
+        style={{ 
+            padding: '1rem', 
+            backgroundColor: '#fef2f2', 
+            borderRadius: '0.375rem' 
+        }}
+    >
+        <Text size="sm" style={{ color: '#dc2626', fontWeight: '500' }}>
             ⚠️ Erro no Painel de Propriedades
         </Text>
-        <Text size="xs" color="red.500" mt={2}>
+        <Text size="xs" style={{ color: '#ef4444', marginTop: '0.5rem' }}>
             {error?.message || 'Erro desconhecido no editor'}
         </Text>
-        <Text size="xs" color="gray.500" mt={2}>
+        <Text size="xs" style={{ color: '#6b7280', marginTop: '0.5rem' }}>
             Tente recarregar a página ou use o editor básico.
         </Text>
     </Box>
