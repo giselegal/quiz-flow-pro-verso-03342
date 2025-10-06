@@ -27,7 +27,14 @@ export type ComponentType =
     | 'countdown'
     | 'countdown-timer'
     | 'quiz-result'
-    | 'social-share';
+    | 'social-share'
+    | 'step-intro'
+    | 'step-question'
+    | 'step-strategic-question'
+    | 'step-transition'
+    | 'step-transition-result'
+    | 'step-result'
+    | 'step-offer';
 
 export type StepType =
     | 'intro'
@@ -219,6 +226,23 @@ export interface QuizOption {
     isCorrect?: boolean;
 }
 
+export interface StrategicOption {
+    id: string;
+    text: string;
+}
+
+export interface OfferTestimonial {
+    quote: string;
+    author: string;
+}
+
+export interface OfferContentBlock {
+    title: string;
+    description: string;
+    buttonText: string;
+    testimonial?: OfferTestimonial;
+}
+
 // Interface base para todos os componentes modulares
 export interface ModularComponent {
     id: string;
@@ -237,7 +261,88 @@ export type ComponentProps =
     | ImageBlockProps
     | FormFieldBlockProps
     | OptionsGridBlockProps
-    | ButtonBlockProps;
+    | ButtonBlockProps
+    | StepIntroBlockProps
+    | StepQuestionBlockProps
+    | StepStrategicQuestionBlockProps
+    | StepTransitionBlockProps
+    | StepTransitionResultBlockProps
+    | StepResultBlockProps
+    | StepOfferBlockProps;
+
+export interface StepIntroBlockProps extends BaseComponentProps {
+    type: 'step-intro';
+    title: string;
+    formQuestion: string;
+    placeholder: string;
+    buttonText: string;
+    image?: string;
+    backgroundColor?: string;
+    textColor?: string;
+    accentColor?: string;
+}
+
+export interface StepQuestionBlockProps extends BaseComponentProps {
+    type: 'step-question';
+    questionNumber?: string;
+    questionText: string;
+    subtitle?: string;
+    options: QuizOption[];
+    requiredSelections?: number;
+    allowMultipleSelection?: boolean;
+    backgroundColor?: string;
+    textColor?: string;
+    accentColor?: string;
+}
+
+export interface StepStrategicQuestionBlockProps extends BaseComponentProps {
+    type: 'step-strategic-question';
+    questionText: string;
+    options: StrategicOption[];
+    backgroundColor?: string;
+    textColor?: string;
+    accentColor?: string;
+}
+
+export interface StepTransitionBlockProps extends BaseComponentProps {
+    type: 'step-transition';
+    title: string;
+    text?: string;
+    backgroundColor?: string;
+    textColor?: string;
+    accentColor?: string;
+}
+
+export interface StepTransitionResultBlockProps extends BaseComponentProps {
+    type: 'step-transition-result';
+    title: string;
+    backgroundColor?: string;
+    textColor?: string;
+    accentColor?: string;
+}
+
+export interface StepResultBlockProps extends BaseComponentProps {
+    type: 'step-result';
+    title: string;
+    subtitle?: string;
+    resultPlaceholder?: string;
+    backgroundColor?: string;
+    textColor?: string;
+    accentColor?: string;
+}
+
+export interface StepOfferBlockProps extends BaseComponentProps {
+    type: 'step-offer';
+    title: string;
+    description: string;
+    buttonText: string;
+    image?: string;
+    testimonial?: OfferTestimonial;
+    backgroundColor?: string;
+    textColor?: string;
+    accentColor?: string;
+    offers?: Record<string, OfferContentBlock>;
+}
 
 // ============================================================================
 // ETAPAS E FUNIL

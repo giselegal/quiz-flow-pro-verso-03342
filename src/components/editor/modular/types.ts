@@ -15,7 +15,14 @@ export type ComponentType =
     | 'spacer'
     | 'divider'
     | 'help-text'
-    | 'progress-bar';
+    | 'progress-bar'
+    | 'step-intro'
+    | 'step-question'
+    | 'step-strategic-question'
+    | 'step-transition'
+    | 'step-transition-result'
+    | 'step-result'
+    | 'step-offer';
 
 export interface BaseComponentProps {
     id: string;
@@ -23,7 +30,7 @@ export interface BaseComponentProps {
     order: number;
     visible: boolean;
     className?: string;
-    style?: React.CSSProperties;
+    style?: React.CSSProperties | 'solid' | 'dashed' | 'dotted';
 }
 
 // 📝 Componente de Título
@@ -138,6 +145,95 @@ export interface ProgressBarComponentProps extends BaseComponentProps {
     backgroundColor: string;
 }
 
+export interface StepIntroComponentProps extends BaseComponentProps {
+    type: 'step-intro';
+    title: string;
+    formQuestion: string;
+    placeholder: string;
+    buttonText: string;
+    image?: string;
+    backgroundColor?: string;
+    textColor?: string;
+    accentColor?: string;
+}
+
+export interface StepQuestionOption {
+    id: string;
+    text: string;
+    image?: string;
+}
+
+export interface StepQuestionComponentProps extends BaseComponentProps {
+    type: 'step-question';
+    questionNumber?: string;
+    questionText: string;
+    subtitle?: string;
+    options: StepQuestionOption[];
+    requiredSelections?: number;
+    allowMultipleSelection?: boolean;
+    backgroundColor?: string;
+    textColor?: string;
+    accentColor?: string;
+}
+
+export interface StepStrategicQuestionOption {
+    id: string;
+    text: string;
+}
+
+export interface StepStrategicQuestionComponentProps extends BaseComponentProps {
+    type: 'step-strategic-question';
+    questionText: string;
+    options: StepStrategicQuestionOption[];
+    backgroundColor?: string;
+    textColor?: string;
+    accentColor?: string;
+}
+
+export interface StepTransitionComponentProps extends BaseComponentProps {
+    type: 'step-transition';
+    title: string;
+    text?: string;
+    backgroundColor?: string;
+    textColor?: string;
+    accentColor?: string;
+}
+
+export interface StepTransitionResultComponentProps extends BaseComponentProps {
+    type: 'step-transition-result';
+    title: string;
+    backgroundColor?: string;
+    textColor?: string;
+    accentColor?: string;
+}
+
+export interface StepResultComponentProps extends BaseComponentProps {
+    type: 'step-result';
+    title: string;
+    subtitle?: string;
+    resultPlaceholder?: string;
+    backgroundColor?: string;
+    textColor?: string;
+    accentColor?: string;
+}
+
+export interface StepOfferTestimonial {
+    quote: string;
+    author: string;
+}
+
+export interface StepOfferComponentProps extends BaseComponentProps {
+    type: 'step-offer';
+    title: string;
+    description: string;
+    buttonText: string;
+    image?: string;
+    testimonial?: StepOfferTestimonial;
+    backgroundColor?: string;
+    textColor?: string;
+    accentColor?: string;
+}
+
 // União de todos os tipos de componentes
 export type ModularComponent =
     | TitleComponentProps
@@ -149,7 +245,14 @@ export type ModularComponent =
     | SpacerComponentProps
     | DividerComponentProps
     | HelpTextComponentProps
-    | ProgressBarComponentProps;
+    | ProgressBarComponentProps
+    | StepIntroComponentProps
+    | StepQuestionComponentProps
+    | StepStrategicQuestionComponentProps
+    | StepTransitionComponentProps
+    | StepTransitionResultComponentProps
+    | StepResultComponentProps
+    | StepOfferComponentProps;
 
 // 🏗️ Etapa Modular
 export interface ModularStep {

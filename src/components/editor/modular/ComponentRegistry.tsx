@@ -14,6 +14,13 @@ import ModularTextStable from './components/ModularTextStable';
 import ModularImageSimple from './components/ModularImageSimple';
 import ModularOptionsGridSimple from './components/ModularOptionsGridSimple';
 import ModularFormFieldSimple from './components/ModularFormFieldSimple';
+import CompositeIntroStep from './components/composite/CompositeIntroStep';
+import CompositeQuestionStep from './components/composite/CompositeQuestionStep';
+import CompositeStrategicQuestionStep from './components/composite/CompositeStrategicQuestionStep';
+import CompositeTransitionStep from './components/composite/CompositeTransitionStep';
+import CompositeTransitionResultStep from './components/composite/CompositeTransitionResultStep';
+import CompositeResultStep from './components/composite/CompositeResultStep';
+import CompositeOfferStep from './components/composite/CompositeOfferStep';
 
 // Definir interface do registro
 interface ComponentInfo {
@@ -512,6 +519,134 @@ export const COMPONENT_REGISTRY: Record<ComponentType, ComponentInfo> = {
         icon: '🔗',
         defaultProps: {
             message: 'Compartilhe com seus amigos!',
+        },
+    },
+
+    'step-intro': {
+        component: CompositeIntroStep,
+        name: 'Etapa: Introdução',
+        description: 'Bloco completo com imagem, chamada e captura de nome.',
+        category: 'layout',
+        icon: '🚀',
+        defaultProps: {
+            title: '<span style="color: #B89B7A; font-weight: 700;">Chega</span> de um guarda-roupa lotado e da sensação de que <strong>nada combina com você.</strong>',
+            formQuestion: 'Como posso te chamar?',
+            placeholder: 'Digite seu primeiro nome aqui...',
+            buttonText: 'Quero Descobrir meu Estilo Agora!',
+            image: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1746838118/20250509_2137_Desordem_e_Reflex%C3%A3o_simple_compose_01jtvszf8sfaytz493z9f16rf2_z1c2up.png',
+            backgroundColor: '#ffffff',
+            textColor: '#1f2937',
+            accentColor: '#B89B7A',
+        },
+    },
+
+    'step-question': {
+        component: CompositeQuestionStep,
+        name: 'Etapa: Pergunta',
+        description: 'Layout padrão das perguntas principais do quiz.',
+        category: 'content',
+        icon: '❓',
+        defaultProps: {
+            questionNumber: '1 de 10',
+            questionText: 'QUAL O SEU TIPO DE ROUPA FAVORITA?',
+            subtitle: 'Selecione até 3 opções',
+            options: [
+                { id: 'natural', text: 'Conforto, leveza e praticidade no vestir', image: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/11_hqmr8l.webp' },
+                { id: 'classico', text: 'Discrição, caimento clássico e sobriedade', image: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp' },
+                { id: 'contemporaneo', text: 'Praticidade com um toque de estilo atual', image: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_snhaym.webp' },
+                { id: 'elegante', text: 'Elegância refinada, moderna e sem exageros', image: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp' },
+            ],
+            requiredSelections: 3,
+            allowMultipleSelection: true,
+            backgroundColor: '#f8fafc',
+            textColor: '#0f172a',
+            accentColor: '#0ea5e9',
+        },
+    },
+
+    'step-strategic-question': {
+        component: CompositeStrategicQuestionStep,
+        name: 'Etapa: Pergunta Estratégica',
+        description: 'Perguntas complementares para personalização da oferta.',
+        category: 'content',
+        icon: '🧠',
+        defaultProps: {
+            questionText: 'Quando você se olha no espelho, como se sente com sua imagem pessoal atualmente?',
+            options: [
+                { id: 'desconectada', text: 'Me sinto desconectada da mulher que sou hoje' },
+                { id: 'duvidas', text: 'Tenho dúvidas sobre o que realmente me valoriza' },
+                { id: 'as-vezes-acerto', text: 'Às vezes acerto, às vezes erro' },
+                { id: 'segura-evoluir', text: 'Me sinto segura, mas sei que posso evoluir' },
+            ],
+            backgroundColor: '#0f172a',
+            textColor: '#ffffff',
+            accentColor: '#38bdf8',
+        },
+    },
+
+    'step-transition': {
+        component: CompositeTransitionStep,
+        name: 'Etapa: Transição',
+        description: 'Mensagem intermediária antes das perguntas estratégicas.',
+        category: 'layout',
+        icon: '🕑',
+        defaultProps: {
+            title: 'Enquanto calculamos o seu resultado...',
+            text: 'Queremos te fazer algumas perguntas que vão tornar sua experiência ainda mais completa. Responda com sinceridade. Isso é só entre você e a sua nova versão.',
+            backgroundColor: '#ffffff',
+            textColor: '#0f172a',
+            accentColor: '#38bdf8',
+        },
+    },
+
+    'step-transition-result': {
+        component: CompositeTransitionResultStep,
+        name: 'Etapa: Transição Resultado',
+        description: 'Mensagem de preparação para o resultado final.',
+        category: 'layout',
+        icon: '⏳',
+        defaultProps: {
+            title: 'Obrigada por compartilhar.',
+            backgroundColor: '',
+            textColor: '#0f172a',
+            accentColor: '#38bdf8',
+        },
+    },
+
+    'step-result': {
+        component: CompositeResultStep,
+        name: 'Etapa: Resultado',
+        description: 'Bloco para exibir o estilo predominante calculado.',
+        category: 'content',
+        icon: '🏆',
+        defaultProps: {
+            title: '{userName}, seu estilo predominante é:',
+            subtitle: 'Seu estilo predominante será calculado com base nas respostas do quiz.',
+            resultPlaceholder: 'Resultado aparecerá aqui...',
+            backgroundColor: '#f8fafc',
+            textColor: '#0f172a',
+            accentColor: '#38bdf8',
+        },
+    },
+
+    'step-offer': {
+        component: CompositeOfferStep,
+        name: 'Etapa: Oferta',
+        description: 'Oferta personalizada após o resultado do quiz.',
+        category: 'content',
+        icon: '🎁',
+        defaultProps: {
+            title: '{userName}, encontramos a solução para <strong>alinhar sua imagem à sua essência!</strong>',
+            description: 'Descubra o potencial escondido no seu próprio guarda-roupa. Esta oferta vai te ajudar a transformar peças esquecidas em looks incríveis.',
+            buttonText: 'Quero transformar meu estilo agora!',
+            image: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735378/offer_image_main_jkldsd.webp',
+            testimonial: {
+                quote: 'Economizei muito depois que aprendi a combinar e usar as minhas roupas de formas que nunca imaginei.',
+                author: 'Ana G., 29 anos, Designer',
+            },
+            backgroundColor: '',
+            textColor: '#0f172a',
+            accentColor: '#ec4899',
         },
     },
 };
