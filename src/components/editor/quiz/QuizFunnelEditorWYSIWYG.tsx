@@ -794,6 +794,8 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
                                                 isSelected={isSelected}
                                                 selectedBlockId={selectedBlockId}
                                                 isEditMode={previewMode === 'edit'}
+                                                steps={steps} // Passar lista completa de steps
+                                                renderComponent={renderRealComponent} // Usar a mesma função do modo OFF
                                                 onSelectStep={() => {
                                                     setSelectedId(step.id);
                                                     setSelectedBlockId(blockId);
@@ -811,6 +813,7 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
                                                     console.log('Reorder block:', blockId, direction);
                                                 }}
                                                 onMoveStep={(direction) => moveStep(step.id, direction)}
+                                                onNavigateStep={(stepId) => setSelectedId(stepId)} // Navegação entre steps
                                                 onDuplicateStep={() => duplicateStep(step.id)}
                                                 onDeleteStep={() => {
                                                     if (confirm(`Remover step ${index + 1}?`)) {

@@ -12,7 +12,7 @@ import { BlockData } from '@/types/blockTypes';
 import { QuizStep } from '@/data/quizSteps';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { ArrowUp, ArrowDown, Copy, Trash2, GripVertical } from 'lucide-react';
+import { ArrowUp, ArrowDown, ChevronLeft, ChevronRight, Copy, Trash2, GripVertical } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 type EditableQuizStep = QuizStep & { id: string };
@@ -24,11 +24,15 @@ interface ModularCanvasRendererProps {
     isSelected: boolean;
     selectedBlockId: string;
     isEditMode: boolean;
+    steps?: EditableQuizStep[]; // Lista completa de steps para navegação
+    renderComponent?: (step: EditableQuizStep, index: number) => React.ReactNode; // Renderizar componente real
+    children?: React.ReactNode; // Alternativamente, aceitar children
     onSelectStep: () => void;
     onSelectBlock: (blockId: string) => void;
     onUpdateBlock: (blockId: string, props: any) => void;
     onReorderBlock: (blockId: string, direction: 'up' | 'down') => void;
     onMoveStep: (direction: number) => void;
+    onNavigateStep?: (stepId: string) => void; // Nova prop para navegação
     onDuplicateStep: () => void;
     onDeleteStep: () => void;
 }
@@ -40,11 +44,15 @@ export const ModularCanvasRenderer: React.FC<ModularCanvasRendererProps> = ({
     isSelected,
     selectedBlockId,
     isEditMode,
+    steps = [],
+    renderComponent,
+    children,
     onSelectStep,
     onSelectBlock,
     onUpdateBlock,
     onReorderBlock,
     onMoveStep,
+    onNavigateStep,
     onDuplicateStep,
     onDeleteStep,
 }) => {
@@ -89,23 +97,26 @@ export const ModularCanvasRenderer: React.FC<ModularCanvasRendererProps> = ({
                     </Badge>
                 </div>
 
-                {/* Botões de ação do step */}
-                <div className={cn(
-                    "flex gap-1 transition-opacity",
-                    isSelected ? "opacity-100" : "opacity-0 group-hover:opacity-100"
-                )}>
+                {/* Navegação entre steps - mesma funcionalidade do modo OFF */}
+                <div className="flex gap-1">
                     <Button
                         size="sm"
                         variant="ghost"
                         className="h-7 w-7 p-0"
                         onClick={(e) => {
                             e.stopPropagation();
-                            onMoveStep(-1);
+                            // Navegar para step anterior (mesma lógica exata do modo OFF)
+                            const prevIndex = index - 1;
+                            if (prevIndex >= 0 && steps[prevIndex]) {
+                                if (onNavigateStep) {
+                                    onNavigateStep(steps[prevIndex].id);
+                                }
+                            }
                         }}
-                        title="Mover step para cima"
+                        title="Step anterior"
                         disabled={index === 0}
                     >
-                        <ArrowUp className="w-3 h-3" />
+                        <ChevronLeft className="w-3 h-3" />
                     </Button>
                     <Button
                         size="sm"
@@ -113,12 +124,18 @@ export const ModularCanvasRenderer: React.FC<ModularCanvasRendererProps> = ({
                         className="h-7 w-7 p-0"
                         onClick={(e) => {
                             e.stopPropagation();
-                            onMoveStep(1);
+                            // Navegar para próximo step (mesma lógica exata do modo OFF)
+                            const nextIndex = index + 1;
+                            if (nextIndex < steps.length && steps[nextIndex]) {
+                                if (onNavigateStep) {
+                                    onNavigateStep(steps[nextIndex].id);
+                                }
+                            }
                         }}
-                        title="Mover step para baixo"
+                        title="Próximo step"
                         disabled={index === totalSteps - 1}
                     >
-                        <ArrowDown className="w-3 h-3" />
+                        <ChevronRight className="w-3 h-3" />
                     </Button>
                     <Button
                         size="sm"
@@ -128,7 +145,7 @@ export const ModularCanvasRenderer: React.FC<ModularCanvasRendererProps> = ({
                             e.stopPropagation();
                             onDuplicateStep();
                         }}
-                        title="Duplicar step"
+                        title="Duplicar"
                     >
                         <Copy className="w-3 h-3" />
                     </Button>
@@ -140,7 +157,7 @@ export const ModularCanvasRenderer: React.FC<ModularCanvasRendererProps> = ({
                             e.stopPropagation();
                             onDeleteStep();
                         }}
-                        title="Deletar step"
+                        title="Remover"
                         disabled={totalSteps === 1}
                     >
                         <Trash2 className="w-3 h-3" />
@@ -148,87 +165,113 @@ export const ModularCanvasRenderer: React.FC<ModularCanvasRendererProps> = ({
                 </div>
             </div>
 
-            {/* Renderizar Blocos Modulares */}
-            <div className="space-y-2">
-                {blocks.length === 0 && (
-                    <div className="text-center text-sm text-muted-foreground py-8">
-                        <div className="text-lg mb-2">📦</div>
-                        <div>Nenhum bloco disponível</div>
-                        <div className="text-xs">Este step não possui propriedades decomponíveis</div>
+            {/* Renderizar Componente Real - mesma funcionalidade do modo OFF */}
+            <div className="transition-opacity opacity-100">
+                {renderComponent ? (
+                    renderComponent(step, index)
+                ) : children ? (
+                    children
+                ) : (
+                    // Fallback se não houver componente para renderizar
+                    <div className="min-h-[200px] bg-gray-50 rounded border-2 border-dashed border-gray-300 flex items-center justify-center">
+                        <div className="text-center text-gray-500">
+                            <div className="text-2xl mb-2">🎯</div>
+                            <div className="font-medium">Componente Real do Step</div>
+                            <div className="text-sm">Aguardando implementação de renderComponent</div>
+                            <div className="text-xs mt-2 opacity-75">
+                                Tipo: {step.type} | ID: {step.id}
+                            </div>
+                        </div>
                     </div>
                 )}
-
-                {blocks.map((block, blockIndex) => {
-                    const isBlockSelected = selectedBlockId === block.id;
-
-                    return (
-                        <div
-                            key={block.id}
-                            className={cn(
-                                "relative group/block",
-                                isBlockSelected && "ring-2 ring-primary rounded-lg"
-                            )}
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                onSelectBlock(block.id);
-                            }}
-                        >
-                            {/* Botões de reordenação do bloco */}
-                            {isEditMode && (
-                                <div className={cn(
-                                    "absolute -left-8 top-1/2 -translate-y-1/2 flex flex-col gap-0.5 z-10",
-                                    "opacity-0 group-hover/block:opacity-100 transition-opacity"
-                                )}>
-                                    <Button
-                                        size="sm"
-                                        variant="ghost"
-                                        className="h-5 w-5 p-0 bg-white border shadow-sm"
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            onReorderBlock(block.id, 'up');
-                                        }}
-                                        title="Mover bloco para cima"
-                                        disabled={blockIndex === 0}
-                                    >
-                                        <ArrowUp className="w-3 h-3" />
-                                    </Button>
-                                    <Button
-                                        size="sm"
-                                        variant="ghost"
-                                        className="h-5 w-5 p-0 bg-white border shadow-sm"
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            onReorderBlock(block.id, 'down');
-                                        }}
-                                        title="Mover bloco para baixo"
-                                        disabled={blockIndex === blocks.length - 1}
-                                    >
-                                        <ArrowDown className="w-3 h-3" />
-                                    </Button>
-                                </div>
-                            )}
-
-                            {/* Label do Bloco (visível apenas se selecionado) */}
-                            {isBlockSelected && (
-                                <div className="absolute -top-2 left-2 z-20">
-                                    <Badge variant="default" className="text-[10px] shadow-sm">
-                                        {block.metadata?.icon} {block.metadata?.label || block.type}
-                                    </Badge>
-                                </div>
-                            )}
-
-                            {/* Renderizar o bloco */}
-                            <BlockRenderer
-                                block={block}
-                                isSelected={isBlockSelected}
-                                isEditable={isEditMode}
-                                onSelect={() => onSelectBlock(block.id)}
-                                onUpdate={(updates) => onUpdateBlock(block.id, updates)}
-                            />
-                        </div>
-                    );
-                })}
             </div>
+
+            {/* Seção de Blocos Modulares (Oculta por padrão para manter paridade) */}
+            <details className="mt-4">
+                <summary className="cursor-pointer text-sm font-medium text-gray-600 hover:text-gray-800">
+                    🔧 Blocos Modulares ({blocks.length})
+                </summary>
+                <div className="mt-2 space-y-2 pl-4 border-l-2 border-blue-200">
+                    {blocks.length === 0 && (
+                        <div className="text-center text-sm text-muted-foreground py-4">
+                            <div className="text-lg mb-2">📦</div>
+                            <div>Nenhum bloco disponível</div>
+                            <div className="text-xs">Este step não possui propriedades decomponíveis</div>
+                        </div>
+                    )}
+
+                    {blocks.map((block, blockIndex) => {
+                        const isBlockSelected = selectedBlockId === block.id;
+
+                        return (
+                            <div
+                                key={block.id}
+                                className={cn(
+                                    "relative group/block",
+                                    isBlockSelected && "ring-2 ring-primary rounded-lg"
+                                )}
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    onSelectBlock(block.id);
+                                }}
+                            >
+                                {/* Botões de reordenação do bloco */}
+                                {isEditMode && (
+                                    <div className={cn(
+                                        "absolute -left-8 top-1/2 -translate-y-1/2 flex flex-col gap-0.5 z-10",
+                                        "opacity-0 group-hover/block:opacity-100 transition-opacity"
+                                    )}>
+                                        <Button
+                                            size="sm"
+                                            variant="ghost"
+                                            className="h-5 w-5 p-0 bg-white border shadow-sm"
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                onReorderBlock(block.id, 'up');
+                                            }}
+                                            title="Mover bloco para cima"
+                                            disabled={blockIndex === 0}
+                                        >
+                                            <ArrowUp className="w-3 h-3" />
+                                        </Button>
+                                        <Button
+                                            size="sm"
+                                            variant="ghost"
+                                            className="h-5 w-5 p-0 bg-white border shadow-sm"
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                onReorderBlock(block.id, 'down');
+                                            }}
+                                            title="Mover bloco para baixo"
+                                            disabled={blockIndex === blocks.length - 1}
+                                        >
+                                            <ArrowDown className="w-3 h-3" />
+                                        </Button>
+                                    </div>
+                                )}
+
+                                {/* Label do Bloco (visível apenas se selecionado) */}
+                                {isBlockSelected && (
+                                    <div className="absolute -top-2 left-2 z-20">
+                                        <Badge variant="default" className="text-[10px] shadow-sm">
+                                            {block.metadata?.icon} {block.metadata?.label || block.type}
+                                        </Badge>
+                                    </div>
+                                )}
+
+                                {/* Renderizar o bloco */}
+                                <BlockRenderer
+                                    block={block}
+                                    isSelected={isBlockSelected}
+                                    isEditable={isEditMode}
+                                    onSelect={() => onSelectBlock(block.id)}
+                                    onUpdate={(updates) => onUpdateBlock(block.id, updates)}
+                                />
+                            </div>
+                        );
+                    })}
+                </div>
+            </details>
         </div>
     );
 };
