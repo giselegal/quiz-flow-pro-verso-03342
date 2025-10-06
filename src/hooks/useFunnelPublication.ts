@@ -92,11 +92,37 @@ export function useFunnelPublication(
     options: UseFunnelPublicationOptions = {}
 ): UseFunnelPublicationReturn {
 
+    const facade = useOptionalFunnelFacade();
     const [settings, setSettings] = useState<FunnelPublicationSettings>(DEFAULT_SETTINGS);
     const [isLoading, setIsLoading] = useState(false);
     const [isSaving, setIsSaving] = useState(false);
     const [isPublishing, setIsPublishing] = useState(false);
     const [error, setError] = useState<Error | null>(null);
+    const [flagVersion, setFlagVersion] = useState(0);
+
+    const { autoSave = false, onPublish: externalOnPublish, onSave: externalOnSave } = options;
+
+    useEffect(() => {
+        if (typeof window === 'undefined') return;
+        const updateVersion = () => setFlagVersion(prev => prev + 1);
+        const handleStorage = (event: StorageEvent) => {
+            if (!event.key || event.key.startsWith('flag_')) {
+                updateVersion();
+            }
+        };
+        window.addEventListener('feature-flags:update', updateVersion);
+        window.addEventListener('storage', handleStorage);
+        return () => {
+            window.removeEventListener('feature-flags:update', updateVersion);
+            window.removeEventListener('storage', handleStorage);
+        };
+    }, []);
+
+    const shouldBridgeFacade = useMemo(() => {
+        if (!facade) return false;
+        const manager = FeatureFlagManager.getInstance();
+        return manager.shouldForceUnifiedInEditor() || manager.shouldEnableUnifiedEditorFacade();
+    }, [facade, flagVersion]);
 
     // ============================================================================
     // LOAD SETTINGS
@@ -186,8 +212,10 @@ export function useFunnelPublication(
 
         try {
             // Salvar no serviço
-            if (options.onSave) {
-                await options.onSave(settings);
+            if (externalOnSave) {
+                await externalOnSave(settings);
+            } else if (shouldBridgeFacade && facade) {
+                await facade.save();
             } else {
                 // Fallback para localStorage
                 localStorage.setItem(`funnel_publication_${funnelId}`, JSON.stringify(settings));
@@ -198,7 +226,7 @@ export function useFunnelPublication(
         } finally {
             setIsSaving(false);
         }
-    }, [settings, funnelId, options]);
+    }, [settings, funnelId, externalOnSave, shouldBridgeFacade, facade]);
 
     const publishFunnel = useCallback(async () => {
         setIsPublishing(true);
@@ -215,8 +243,14 @@ export function useFunnelPublication(
             await saveSettings();
 
             // Publicar
-            if (options.onPublish) {
-                await options.onPublish(settings);
+            if (externalOnPublish) {
+                await externalOnPublish(settings);
+            } else if (shouldBridgeFacade && facade) {
+                if (typeof facade.publish === 'function') {
+                    await facade.publish({ ensureSaved: true });
+                } else {
+                    await facade.save();
+                }
             } else {
                 // Mock de publicação
                 console.log('🚀 Publicando funil:', {
@@ -231,7 +265,7 @@ export function useFunnelPublication(
         } finally {
             setIsPublishing(false);
         }
-    }, [settings, saveSettings, options, funnelId]);
+    }, [settings, saveSettings, externalOnPublish, shouldBridgeFacade, facade, funnelId]);
 
     const resetSettings = useCallback(() => {
         setSettings(DEFAULT_SETTINGS);
@@ -304,14 +338,14 @@ export function useFunnelPublication(
     // ============================================================================
 
     useEffect(() => {
-        if (options.autoSave && !isLoading) {
+        if (autoSave && !isLoading) {
             const timeoutId = setTimeout(() => {
                 saveSettings().catch(console.error);
             }, 2000); // Auto-save após 2 segundos de inatividade
 
             return () => clearTimeout(timeoutId);
         }
-    }, [settings, options.autoSave, isLoading, saveSettings]);
+    }, [settings, autoSave, isLoading, saveSettings]);
 
     // ============================================================================
     // LOAD ON MOUNT

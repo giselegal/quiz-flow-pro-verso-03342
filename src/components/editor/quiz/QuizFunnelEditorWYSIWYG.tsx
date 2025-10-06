@@ -215,6 +215,18 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
         };
     }, [facade]);
 
+    useEffect(() => {
+        if (!facade) return;
+        const disposeStart = facade.on('save/start', () => setIsSaving(true));
+        const disposeSuccess = facade.on('save/success', () => setIsSaving(false));
+        const disposeError = facade.on('save/error', () => setIsSaving(false));
+        return () => {
+            disposeStart?.();
+            disposeSuccess?.();
+            disposeError?.();
+        };
+    }, [facade]);
+
     const selectedStep = steps.find(s => s.id === selectedId);
 
     // Função para criar step modular
