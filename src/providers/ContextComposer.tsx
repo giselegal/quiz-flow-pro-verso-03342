@@ -435,63 +435,63 @@ export const createDataSlice = <T,>(name: string, initialValue: T): ContextSlice
     }
 });
 
-export const createAsyncSlice = <T>(name: string, initialValue: T) => ({
+export const createAsyncSlice = <T,>(name: string, initialValue: T) => ({
     name,
     initialValue: {
         data: initialValue,
-    loading: false,
-    error: null
+        loading: false,
+        error: null
     },
     reducer: (state: any, action: any) => {
         switch (action.type) {
             case 'LOADING':
-    return {...state, loading: true, error: null };
-    case 'SUCCESS':
-    return {data: action.payload, loading: false, error: null };
-    case 'ERROR':
-    return {...state, loading: false, error: action.payload };
-    default:
-    return state;
+                return { ...state, loading: true, error: null };
+            case 'SUCCESS':
+                return { data: action.payload, loading: false, error: null };
+            case 'ERROR':
+                return { ...state, loading: false, error: action.payload };
+            default:
+                return state;
         }
     }
 });
 
 export const createUISlice = (name: string) => ({
-        name,
-        initialValue: {
+    name,
+    initialValue: {
         isOpen: false,
-    activeTab: 0,
-    selectedItems: [],
-    filters: { },
-    searchQuery: ''
+        activeTab: 0,
+        selectedItems: [],
+        filters: {},
+        searchQuery: ''
     },
     reducer: (state: any, action: any) => {
         switch (action.type) {
             case 'TOGGLE':
-    return {...state, isOpen: !state.isOpen };
-    case 'SET_ACTIVE_TAB':
-    return {...state, activeTab: action.payload };
-    case 'SELECT_ITEM':
-    return {
-        ...state,
-        selectedItems: [...state.selectedItems, action.payload] 
+                return { ...state, isOpen: !state.isOpen };
+            case 'SET_ACTIVE_TAB':
+                return { ...state, activeTab: action.payload };
+            case 'SELECT_ITEM':
+                return {
+                    ...state,
+                    selectedItems: [...state.selectedItems, action.payload]
                 };
-    case 'DESELECT_ITEM':
-    return {
-        ...state,
-        selectedItems: state.selectedItems.filter((item: any) => item !== action.payload) 
+            case 'DESELECT_ITEM':
+                return {
+                    ...state,
+                    selectedItems: state.selectedItems.filter((item: any) => item !== action.payload)
                 };
-    case 'SET_FILTER':
-    return {
-        ...state,
-        filters: {...state.filters, [action.key]: action.value } 
+            case 'SET_FILTER':
+                return {
+                    ...state,
+                    filters: { ...state.filters, [action.key]: action.value }
                 };
-    case 'SET_SEARCH':
-    return {...state, searchQuery: action.payload };
-    default:
-    return state;
+            case 'SET_SEARCH':
+                return { ...state, searchQuery: action.payload };
+            default:
+                return state;
         }
     }
 });
 
-    export default ContextComposer;
+export default ContextComposer;
