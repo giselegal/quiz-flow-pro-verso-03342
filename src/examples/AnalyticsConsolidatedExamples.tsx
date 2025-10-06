@@ -285,7 +285,7 @@ export const RealTimeMetricsExample: React.FC<{ funnelId: string }> = ({ funnelI
 // ❌ CÓDIGO ANTIGO (não usar mais):
 /*
 import { trackEvent, trackCustomEvent } from '@/utils/analytics';
-import { analyticsService } from '@/services/analyticsService';
+import { analyticsService } from '@/services/AnalyticsService';
 
 // Old way
 trackEvent('button_click', { button: 'cta-primary' });

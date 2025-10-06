@@ -5,7 +5,7 @@
 
 import { useEffect, useCallback, useState } from 'react';
 import { healthCheckService, type HealthStatus } from '@/services/monitoring/HealthCheckService';
-import { analyticsService } from '@/services/monitoring/AnalyticsService';
+import { analyticsService } from '@/services/AnalyticsService';
 import { errorTrackingService, type ErrorReport } from '@/services/monitoring/ErrorTrackingService';
 
 export interface MonitoringState {

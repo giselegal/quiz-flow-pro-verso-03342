@@ -33,7 +33,7 @@ import {
 import { QuizFunnelCard } from '@/components/dashboard/QuizFunnelCard';
 import { unifiedCRUDService } from '@/services/UnifiedCRUDService';
 import { versioningService } from '@/services/versioningService';
-import { analyticsService } from '@/services/analyticsService';
+import { analyticsService } from '@/services/AnalyticsService';
 
 interface QuizFunnel {
   id: string;

@@ -12,7 +12,7 @@ import {
   Download,
   AlertCircle,
 } from 'lucide-react';
-import { useAnalytics, AnalyticsMetrics, ConversionFunnel } from '../../services/analyticsService';
+import { useAnalytics, AnalyticsMetrics, ConversionFunnel } from '../../services/AnalyticsService';
 
 interface AnalyticsDashboardProps {
   quizId?: string;
