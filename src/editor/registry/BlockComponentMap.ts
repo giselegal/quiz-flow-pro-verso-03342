@@ -23,31 +23,31 @@ import { OfferBlock } from '../components/blocks/OfferBlock';
  * Mapa de componentes de blocos
  */
 export const BLOCK_COMPONENT_MAP: Record<string, React.ComponentType<BlockComponentProps>> = {
-  // Blocos básicos
-  'TitleBlock': TitleBlock,
-  'ImageBlock': ImageBlock,
-  'FormInputBlock': FormInputBlock,
-  'ButtonBlock': ButtonBlockModular,
-  
-  // Blocos de questões
-  'QuestionTextBlock': QuestionTextBlock,
-  'OptionsBlock': OptionsBlock,
-  
-  // Blocos de transição e resultado
-  'TransitionBlock': TransitionBlock,
-  'ResultBlock': ResultBlock,
-  'OfferBlock': OfferBlock,
-  
-  // Aliases
-  'title': TitleBlock,
-  'image': ImageBlock,
-  'form-input': FormInputBlock,
-  'button': ButtonBlockModular,
-  'question-text': QuestionTextBlock,
-  'options': OptionsBlock,
-  'transition': TransitionBlock,
-  'result': ResultBlock,
-  'offer': OfferBlock,
+    // Blocos básicos
+    'TitleBlock': TitleBlock,
+    'ImageBlock': ImageBlock,
+    'FormInputBlock': FormInputBlock,
+    'ButtonBlock': ButtonBlockModular,
+
+    // Blocos de questões
+    'QuestionTextBlock': QuestionTextBlock,
+    'OptionsBlock': OptionsBlock,
+
+    // Blocos de transição e resultado
+    'TransitionBlock': TransitionBlock,
+    'ResultBlock': ResultBlock,
+    'OfferBlock': OfferBlock,
+
+    // Aliases
+    'title': TitleBlock,
+    'image': ImageBlock,
+    'form-input': FormInputBlock,
+    'button': ButtonBlockModular,
+    'question-text': QuestionTextBlock,
+    'options': OptionsBlock,
+    'transition': TransitionBlock,
+    'result': ResultBlock,
+    'offer': OfferBlock,
 };
 
 /**
