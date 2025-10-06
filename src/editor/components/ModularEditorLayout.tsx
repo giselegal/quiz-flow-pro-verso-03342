@@ -59,6 +59,19 @@ const ModularEditorLayout: React.FC = () => {
     const [isDirty, setIsDirty] = useState(false);
     const [isSaving, setIsSaving] = useState(false);
 
+    // DEBUG: Log facade state ao carregar
+    useEffect(() => {
+        if (facade) {
+            const steps = facade.getSteps();
+            console.log('🔍 DEBUG - Total de steps:', steps.length);
+            console.log('🔍 DEBUG - Primeiro step:', steps[0]);
+            console.log('🔍 DEBUG - Blocos do primeiro step:', steps[0]?.blocks?.length || 0);
+            if (steps[0]?.blocks?.[0]) {
+                console.log('🔍 DEBUG - Primeiro bloco:', steps[0].blocks[0]);
+            }
+        }
+    }, [facade]);
+
     // Convert stepIndex to stepId (steps are indexed from 0)
     const getStepId = (index: number): string => {
         const steps = facade?.getSteps() || [];

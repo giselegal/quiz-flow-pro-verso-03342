@@ -70,30 +70,36 @@ export function useStepBlocks(stepIndex: number): UseStepBlocksResult {
 
     const step = useMemo<StepData | null>(() => {
         try {
-            const snapshot = facade.getSnapshot();
-            const pages = snapshot.pages || [];
+            const steps = facade.getSteps();
 
-            if (stepIndex < 0 || stepIndex >= pages.length) {
-                console.warn(`⚠️ stepIndex ${stepIndex} fora do range. Total de páginas: ${pages.length}`);
+            console.log('🔍 useStepBlocks DEBUG - stepIndex:', stepIndex);
+            console.log('🔍 useStepBlocks DEBUG - Total steps:', steps.length);
+
+            if (stepIndex < 0 || stepIndex >= steps.length) {
+                console.warn(`⚠️ stepIndex ${stepIndex} fora do range. Total de steps: ${steps.length}`);
                 return null;
             }
 
-            const page = pages[stepIndex];
+            const funnelStep = steps[stepIndex];
+            console.log('🔍 useStepBlocks DEBUG - Funnel Step:', funnelStep);
+            console.log('🔍 useStepBlocks DEBUG - Blocks:', funnelStep.blocks?.length || 0);
 
             // Normalizar blocos (garantir que todos têm propriedades necessárias)
-            const normalizedBlocks = (page.blocks || []).map((block: any, idx: number) => ({
+            const normalizedBlocks = (funnelStep.blocks || []).map((block, idx) => ({
                 id: block.id || `block-${idx}`,
                 type: block.type || 'text',
-                order: block.order !== undefined ? block.order : idx,
-                content: block.content || {},
-                properties: block.properties || {}
-            })).sort((a, b) => a.order - b.order);
+                order: idx, // Usar índice como order
+                content: block.data || {},
+                properties: block.data || {}
+            }));
+
+            console.log('🔍 useStepBlocks DEBUG - Normalized blocks:', normalizedBlocks);
 
             return {
-                id: page.id || `step-${stepIndex + 1}`,
-                type: page.page_type || 'question',
-                order: page.page_order || stepIndex + 1,
-                title: page.title || `Etapa ${stepIndex + 1}`,
+                id: funnelStep.id || `step-${stepIndex + 1}`,
+                type: 'step', // Tipo genérico
+                order: funnelStep.order || stepIndex + 1,
+                title: funnelStep.title || `Etapa ${stepIndex + 1}`,
                 blocks: normalizedBlocks
             };
         } catch (err) {
