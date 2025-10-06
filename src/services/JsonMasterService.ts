@@ -22,43 +22,66 @@ export class JsonMasterService {
     }
 
     /**
-     * 📄 Carrega o JSON master do Quiz 21 Etapas
+     * 📄 Carrega template genérico por ID
+     */
+    async loadTemplate(templateId: string): Promise<any> {
+        const key = templateId;
+        
+        // Retorna do cache se existir
+        if (this.cache.has(key)) {
+            console.log(`✅ [JsonMasterService] Retornando do cache: ${templateId}`);
+            return structuredClone(this.cache.get(key));
+        }
+
+        // Mapeamento de templates para arquivos JSON
+        const fileMap: Record<string, string> = {
+            quiz21StepsComplete: '/templates/quiz21-complete.json'
+        };
+
+        const url = fileMap[templateId];
+        if (!url) {
+            throw new Error(`JsonMasterService: no mapping for templateId ${templateId}`);
+        }
+
+        console.log(`🔄 [JsonMasterService] Carregando: ${url}`);
+
+        try {
+            const res = await fetch(url, { cache: 'no-store' });
+            if (!res.ok) {
+                throw new Error(`Failed to load ${url}: ${res.status} ${res.statusText}`);
+            }
+
+            const data = await res.json();
+            console.log(`✅ [JsonMasterService] Carregado com sucesso:`, {
+                templateId,
+                steps: data.steps?.length || 0,
+                metadata: data.metadata
+            });
+
+            this.cache.set(key, data);
+            return structuredClone(data);
+        } catch (error) {
+            console.error(`❌ [JsonMasterService] Erro ao carregar ${url}:`, error);
+            throw error;
+        }
+    }
+
+    /**
+     * 📄 Carrega o JSON master do Quiz 21 Etapas (legacy method)
      * SIMPLES: fetch → JSON → pronto!
      */
     async loadQuiz21Steps(): Promise<any> {
-        console.log('🎯 [JsonMasterService] Carregando quiz21-complete.json...');
+        return this.loadTemplate('quiz21StepsComplete');
+    }
 
-        // Cache simples (só durante a sessão)
-        if (this.cache.has('quiz21')) {
-            console.log('✅ [JsonMasterService] Usando cache');
-            return this.cache.get('quiz21');
-        }
-
-        try {
-            const response = await fetch('/templates/quiz21-complete.json');
-
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-
-            const data = await response.json();
-
-            console.log('✅ [JsonMasterService] JSON carregado:', {
-                templateVersion: data.templateVersion,
-                stepCount: data.metadata?.stepCount,
-                stepsLength: data.steps?.length,
-                size: JSON.stringify(data).length + ' bytes'
-            });
-
-            // Cache para próximas chamadas
-            this.cache.set('quiz21', data);
-
-            return data;
-        } catch (error) {
-            console.error('❌ [JsonMasterService] Erro ao carregar JSON:', error);
-            const errorMessage = error instanceof Error ? error.message : String(error);
-            throw new Error(`Falha ao carregar quiz21-complete.json: ${errorMessage}`);
-        }
+    /**
+     * 💾 Salva template genérico
+     */
+    async saveTemplate(templateId: string, payload: any): Promise<void> {
+        this.cache.set(templateId, structuredClone(payload));
+        console.info(`💾 [JsonMasterService] saveTemplate(${templateId}) — cache atualizado`, {
+            steps: payload.steps?.length || 0
+        });
     }
 
     /**
