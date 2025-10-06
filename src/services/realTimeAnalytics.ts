@@ -438,6 +438,7 @@ class RealTimeAnalytics {
 // SINGLETON INSTANCE
 // ============================================================================
 
+export { RealTimeAnalytics };
 export const analytics = new RealTimeAnalytics();
 
 // ============================================================================
