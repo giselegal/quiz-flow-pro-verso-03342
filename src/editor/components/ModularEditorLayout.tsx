@@ -18,10 +18,10 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { cn } from '@/lib/utils';
-import { 
-    Save, 
-    Eye, 
-    Rocket, 
+import {
+    Save,
+    Eye,
+    Rocket,
     ChevronRight,
     CheckCircle2,
     Circle,
@@ -58,25 +58,39 @@ const ModularEditorLayout: React.FC = () => {
     const [selectedBlockId, setSelectedBlockId] = useState<string | null>(null);
     const [isDirty, setIsDirty] = useState(false);
     const [isSaving, setIsSaving] = useState(false);
-    
+
+    // Convert stepIndex to stepId (steps are indexed from 0)
+    const getStepId = (index: number): string => {
+        const steps = facade?.getSteps() || [];
+        return steps[index]?.id || `step-${index}`;
+    };
+
+    const getStepIndex = (stepId: string | null): number => {
+        if (!stepId) return 0;
+        const steps = facade?.getSteps() || [];
+        const index = steps.findIndex(s => s.id === stepId);
+        return index >= 0 ? index : 0;
+    };
+
     // Listen to facade events
     useEffect(() => {
         if (!facade) return;
-        
+
         const disposers = [
             facade.on('dirty/changed', ({ dirty }) => setIsDirty(dirty)),
             facade.on('save/start', () => setIsSaving(true)),
             facade.on('save/success', () => setIsSaving(false)),
             facade.on('save/error', () => setIsSaving(false)),
-            facade.on('step/selected', ({ stepIndex }) => {
-                setCurrentStepIndex(stepIndex);
+            facade.on('step/selected', ({ stepId }) => {
+                const index = getStepIndex(stepId);
+                setCurrentStepIndex(index);
                 setSelectedBlockId(null); // Clear selection when changing steps
             })
         ];
-        
+
         return () => disposers.forEach(fn => fn());
     }, [facade]);
-    
+
     // Handlers
     const handleSave = async () => {
         if (!facade) return;
@@ -86,26 +100,25 @@ const ModularEditorLayout: React.FC = () => {
             console.error('Save failed:', error);
         }
     };
-    
+
     const handleStepSelect = (stepIndex: number) => {
         if (!facade) return;
-        facade.selectStep(stepIndex);
+        const stepId = getStepId(stepIndex);
+        facade.selectStep(stepId);
     };
-    
+
     const handleBlockSelect = (blockId: string) => {
         setSelectedBlockId(blockId);
-    };
-    
-    const handlePreview = () => {
+    }; const handlePreview = () => {
         // TODO: Implement preview
         console.log('Preview not implemented yet');
     };
-    
+
     const handlePublish = async () => {
         // TODO: Implement publish
         console.log('Publish not implemented yet');
     };
-    
+
     if (!facade) {
         return (
             <div className="flex items-center justify-center h-full">
@@ -116,7 +129,7 @@ const ModularEditorLayout: React.FC = () => {
             </div>
         );
     }
-    
+
     return (
         <div className="flex h-full bg-gray-50">
             {/* LEFT SIDEBAR - Steps List */}
@@ -130,14 +143,14 @@ const ModularEditorLayout: React.FC = () => {
                         Selecione uma etapa para editar
                     </p>
                 </div>
-                
+
                 {/* Steps List */}
                 <ScrollArea className="flex-1">
                     <div className="p-2 space-y-1">
                         {STEP_LABELS.map(({ index, label, icon, category }) => {
                             const isActive = index === currentStepIndex;
                             const isCompleted = false; // TODO: Check if step has all required content
-                            
+
                             return (
                                 <button
                                     key={index}
@@ -171,7 +184,7 @@ const ModularEditorLayout: React.FC = () => {
                         })}
                     </div>
                 </ScrollArea>
-                
+
                 {/* Footer Actions */}
                 <div className="p-3 border-t bg-gray-50 space-y-2">
                     <Button
@@ -184,7 +197,7 @@ const ModularEditorLayout: React.FC = () => {
                         <Save className="w-3 h-3 mr-1" />
                         {isSaving ? 'Salvando...' : isDirty ? 'Salvar' : 'Salvo'}
                     </Button>
-                    
+
                     <div className="flex gap-2">
                         <Button
                             onClick={handlePreview}
@@ -207,7 +220,7 @@ const ModularEditorLayout: React.FC = () => {
                     </div>
                 </div>
             </div>
-            
+
             {/* CENTER - Canvas */}
             <div className="flex-1 flex flex-col min-w-0">
                 {/* Header */}
@@ -221,7 +234,7 @@ const ModularEditorLayout: React.FC = () => {
                                 Clique em um bloco para editar suas propriedades
                             </p>
                         </div>
-                        
+
                         <div className="flex items-center gap-2">
                             {isDirty && (
                                 <Badge variant="outline" className="text-xs">
@@ -235,17 +248,17 @@ const ModularEditorLayout: React.FC = () => {
                         </div>
                     </div>
                 </div>
-                
+
                 {/* Canvas */}
                 <div className="flex-1 overflow-auto">
                     <StepCanvas
                         stepIndex={currentStepIndex}
-                        onBlockSelect={handleBlockSelect}
+                        onSelectBlock={handleBlockSelect}
                         selectedBlockId={selectedBlockId}
                     />
                 </div>
             </div>
-            
+
             {/* RIGHT SIDEBAR - Properties Panel */}
             <PropertiesPanel
                 blockId={selectedBlockId}

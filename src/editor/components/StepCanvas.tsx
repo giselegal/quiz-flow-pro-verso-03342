@@ -1,3 +1,4 @@
+
 /**
  * 🎯 STEP CANVAS - Canvas de Preview com Blocos Modulares
  * 
