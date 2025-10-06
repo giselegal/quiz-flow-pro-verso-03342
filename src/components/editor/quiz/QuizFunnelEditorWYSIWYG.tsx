@@ -22,6 +22,7 @@ import {
 import SelectableBlock from '@/components/editor/SelectableBlock';
 import QuizPropertiesPanel from '@/components/editor/QuizPropertiesPanel';
 import DragDropManager from '@/components/editor/DragDropManager';
+import ModularCanvasRenderer from '@/editor/components/ModularCanvasRenderer';
 
 interface QuizFunnelEditorProps {
     funnelId?: string;
@@ -100,6 +101,7 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
     const [showPropertiesPanel, setShowPropertiesPanel] = useState(true);
     const [isPreviewMode, setIsPreviewMode] = useState(false);
     const [dragEnabled, setDragEnabled] = useState(true);
+    const [useModularBlocks, setUseModularBlocks] = useState(true); // 🎯 NOVO: Toggle para blocos modulares
 
     // Carregar steps iniciais - Sistema Unificado usando componentes editáveis
     useEffect(() => {
@@ -418,6 +420,17 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
                 <Button size="sm" variant="outline" onClick={handleSave} disabled={isSaving}>
                     {isSaving ? 'Salvando...' : 'Salvar'}
                 </Button>
+                
+                {/* 🎯 NOVO: Toggle Blocos Modulares */}
+                <Button
+                    size="sm"
+                    variant={useModularBlocks ? 'default' : 'outline'}
+                    onClick={() => setUseModularBlocks(!useModularBlocks)}
+                    title="Ativar/Desativar Blocos Modulares"
+                >
+                    📦 Blocos {useModularBlocks ? 'ON' : 'OFF'}
+                </Button>
+                
                 <div className="ml-auto flex gap-2">
                     <Button
                         size="sm"
