@@ -65,7 +65,7 @@ export const checkImageStatus = () => {
       quality: 85,
       format: 'auto',
     });
-    return !imageCache.has(optimizedUrl);
+    return !cache.hasOwnProperty(optimizedUrl);
   });
 
   if (uncachedImages.length > 0) {
