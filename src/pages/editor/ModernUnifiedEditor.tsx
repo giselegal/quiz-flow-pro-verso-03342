@@ -59,7 +59,21 @@ const ModernUnifiedEditor: React.FC<ModernUnifiedEditorProps> = (props) => {
 
     const shouldUseFacadeEditor = useMemo(() => {
         const manager = FeatureFlagManager.getInstance();
-        return manager.shouldForceUnifiedInEditor() || manager.shouldEnableUnifiedEditorFacade();
+        const force = manager.shouldForceUnifiedInEditor();
+        const facade = manager.shouldEnableUnifiedEditorFacade();
+        const result = force || facade;
+
+        // 🐛 DEBUG: Ver valores das flags
+        console.log('🎛️ [ModernUnifiedEditor] Feature Flags:', {
+            forceUnified: force,
+            enableFacade: facade,
+            shouldUseFacade: result,
+            env_FORCE: import.meta.env.VITE_FORCE_UNIFIED_EDITOR,
+            env_FACADE: import.meta.env.VITE_ENABLE_UNIFIED_EDITOR_FACADE,
+            mode: import.meta.env.MODE
+        });
+
+        return result;
     }, [flagsVersion]);
 
     // Criar facade; recria se trocar de funil ou quando feature flag muda
@@ -136,6 +150,23 @@ const ModernUnifiedEditor: React.FC<ModernUnifiedEditorProps> = (props) => {
 
     return (
         <div className={`quiz-editor-container flex flex-col w-full h-full ${props.className || ''}`}>
+            {/* 🐛 DEBUG: Indicador visual */}
+            <div style={{
+                position: 'fixed',
+                top: 10,
+                right: 10,
+                padding: '8px 12px',
+                background: shouldUseFacadeEditor ? '#22c55e' : '#ef4444',
+                color: 'white',
+                borderRadius: '4px',
+                fontSize: '12px',
+                fontWeight: 'bold',
+                zIndex: 9999,
+                boxShadow: '0 2px 8px rgba(0,0,0,0.2)'
+            }}>
+                {shouldUseFacadeEditor ? '✅ FACADE ATIVO' : '❌ EDITOR ANTIGO'}
+            </div>
+
             <div className="flex-1 min-h-0">
                 {!crud ? (
                     <div className="p-6 text-sm text-red-600" data-testid="missing-crud-provider">
