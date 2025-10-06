@@ -1,5 +1,10 @@
 /**
- * 🎯 APP.TSX com ROTEAMENTO SPA OTIMIZADO
+ * 🎯 APP.TSX com ROTEAMENTO SPA OT// 🚀 MODERN UNIFIED EDITOR - EDITOR OFICIAL (MAIS COMPLETO)
+const QuizFunnelEditorSimplified = lazy(() => import('./components/editor/quiz/QuizFunnelEditorSimplified').then(module => ({ default: module.default })));
+const QuizFunnelEditorWYSIWYG = lazy(() => import('./components/editor/quiz/QuizFunnelEditorWYSIWYG').then(module => ({ default: module.default })));
+const ModernUnifiedEditor = lazy(() => import('./pages/editor/ModernUnifiedEditor').then(module => ({ default: module.default })));
+const ModularEditorLayout = lazy(() => import('./editor/components/ModularEditorLayout').then(module => ({ default: module.default })));
+const ModularEditorLayout = lazy(() => import('./editor/components/ModularEditorLayout').then(module => ({ default: module.default })));ADO
  * 
  * MELHORIAS v2.0:
  * ✅ Roteamento aninhado para admin
@@ -107,10 +112,11 @@ function App() {
                         {/* 🚀 EDITOR MODULAR - NOVO SISTEMA COM COMPONENTES MODULARES */}
                         <Route path="/editor">
                           <EditorErrorBoundary>
-                            <div data-testid="modern-unified-editor-page">
+                            <div data-testid="modern-modular-editor-page">
                               <UnifiedCRUDProvider autoLoad={true}>
-                                {/* ✅ SISTEMA MODULAR: StepCanvas + PropertiesPanel + BlockRegistry */}
-                                <ModernUnifiedEditor />
+                                <Suspense fallback={<EnhancedLoadingFallback message="Carregando editor..." />}>
+                                  <ModularEditorLayout />
+                                </Suspense>
                               </UnifiedCRUDProvider>
                             </div>
                           </EditorErrorBoundary>
