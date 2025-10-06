@@ -34,9 +34,9 @@ const ButtonBlock: React.FC<BlockComponentProps> = ({
     const textColor = data.properties?.textColor;
     const fontSize = data.properties?.fontSize;
     const fontWeight = data.properties?.fontWeight;
-    
+
     const Icon = iconName ? ICONS[iconName] : null;
-    
+
     return (
         <div
             className={cn(
@@ -53,7 +53,7 @@ const ButtonBlock: React.FC<BlockComponentProps> = ({
                     🔘 Button
                 </div>
             )}
-            
+
             <div className={cn('flex flex-col items-center gap-2', fullWidth && 'w-full')}>
                 <Button
                     variant={variant as any}
@@ -73,7 +73,7 @@ const ButtonBlock: React.FC<BlockComponentProps> = ({
                     {text}
                     {Icon && <Icon className="w-4 h-4" />}
                 </Button>
-                
+
                 {subtext && (
                     <p className="text-xs text-gray-500 text-center">
                         {subtext}

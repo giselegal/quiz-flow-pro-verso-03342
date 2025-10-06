@@ -34,11 +34,11 @@ const StepCanvas: React.FC<StepCanvasProps> = ({
 }) => {
     const { step, blocks, isLoading, error } = useStepBlocks(stepIndex);
     const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
-    
+
     // ========================================================================
     // LOADING & ERROR STATES
     // ========================================================================
-    
+
     if (isLoading) {
         return (
             <div className="flex items-center justify-center h-full">
@@ -49,7 +49,7 @@ const StepCanvas: React.FC<StepCanvasProps> = ({
             </div>
         );
     }
-    
+
     if (error) {
         return (
             <div className="flex items-center justify-center h-full">
@@ -61,7 +61,7 @@ const StepCanvas: React.FC<StepCanvasProps> = ({
             </div>
         );
     }
-    
+
     if (!step) {
         return (
             <div className="flex items-center justify-center h-full">
@@ -72,11 +72,11 @@ const StepCanvas: React.FC<StepCanvasProps> = ({
             </div>
         );
     }
-    
+
     // ========================================================================
     // EMPTY STATE
     // ========================================================================
-    
+
     if (blocks.length === 0) {
         return (
             <div className="flex items-center justify-center h-full">
@@ -88,11 +88,11 @@ const StepCanvas: React.FC<StepCanvasProps> = ({
             </div>
         );
     }
-    
+
     // ========================================================================
     // RENDER BLOCKS
     // ========================================================================
-    
+
     return (
         <div className={cn('w-full h-full overflow-auto bg-gray-50', className)}>
             {/* Header do Step */}
@@ -113,13 +113,13 @@ const StepCanvas: React.FC<StepCanvasProps> = ({
                     </div>
                 </div>
             </div>
-            
+
             {/* Blocks Container */}
             <div className="p-4 space-y-2">
                 {blocks.map((block, index) => {
                     // Obter componente do registry
                     const BlockComponent = getBlockComponent(block.type);
-                    
+
                     if (!BlockComponent) {
                         return (
                             <div
@@ -140,10 +140,10 @@ const StepCanvas: React.FC<StepCanvasProps> = ({
                             </div>
                         );
                     }
-                    
+
                     const isSelected = selectedBlockId === block.id;
                     const isDragOver = dragOverIndex === index;
-                    
+
                     return (
                         <div
                             key={block.id}
@@ -168,10 +168,10 @@ const StepCanvas: React.FC<StepCanvasProps> = ({
                                 e.preventDefault();
                                 const fromIndex = Number(e.dataTransfer.getData('blockIndex'));
                                 const toIndex = index;
-                                
+
                                 // TODO: Implementar reordenação via hook
                                 console.log(`Reordenar: ${fromIndex} → ${toIndex}`);
-                                
+
                                 setDragOverIndex(null);
                             }}
                         >
@@ -183,16 +183,16 @@ const StepCanvas: React.FC<StepCanvasProps> = ({
                                     </div>
                                 </div>
                             )}
-                            
+
                             {/* Block Component */}
                             <BlockComponent
                                 data={block}
                                 isSelected={isSelected}
                                 isEditable={isEditable}
                                 onSelect={() => onSelectBlock(block.id)}
-                                onUpdate={() => {}} // Atualização via painel de propriedades
+                                onUpdate={() => { }} // Atualização via painel de propriedades
                             />
-                            
+
                             {/* Order Indicator */}
                             {isSelected && (
                                 <div className="absolute -top-2 -right-2 bg-blue-500 text-white text-xs w-6 h-6 rounded-full flex items-center justify-center shadow-sm">
@@ -203,7 +203,7 @@ const StepCanvas: React.FC<StepCanvasProps> = ({
                     );
                 })}
             </div>
-            
+
             {/* Drop Zone para adicionar no final */}
             {isEditable && (
                 <div

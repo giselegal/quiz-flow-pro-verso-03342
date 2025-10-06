@@ -22,10 +22,10 @@ const TextBlock: React.FC<BlockComponentProps> = ({
     const textColor = data.properties?.textColor || '#334155';
     const lineHeight = data.properties?.lineHeight || '1.6';
     const marginBottom = data.properties?.marginBottom || '1rem';
-    
+
     // Decidir se renderiza HTML ou texto simples
     const hasHtml = html && html.trim() !== '';
-    
+
     return (
         <div
             className={cn(
@@ -42,11 +42,11 @@ const TextBlock: React.FC<BlockComponentProps> = ({
                     📄 Texto
                 </div>
             )}
-            
+
             {hasHtml ? (
                 <div
                     className={`text-${fontSize} prose prose-sm max-w-none`}
-                    style={{ 
+                    style={{
                         color: textColor,
                         lineHeight,
                         marginBottom
@@ -56,7 +56,7 @@ const TextBlock: React.FC<BlockComponentProps> = ({
             ) : (
                 <p
                     className={`text-${fontSize}`}
-                    style={{ 
+                    style={{
                         color: textColor,
                         lineHeight,
                         marginBottom

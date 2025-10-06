@@ -22,7 +22,7 @@ const FormInputBlock: React.FC<BlockComponentProps> = ({
     const type = data.content?.type || 'text';
     const required = data.properties?.required || false;
     const variableName = data.properties?.variableName || 'inputValue';
-    
+
     return (
         <div
             className={cn(
@@ -40,13 +40,13 @@ const FormInputBlock: React.FC<BlockComponentProps> = ({
                     <span className="opacity-70">({variableName})</span>
                 </div>
             )}
-            
+
             <div className="space-y-2">
                 <Label htmlFor={`input-${data.id}`} className="text-sm font-medium">
                     {label}
                     {required && <span className="text-red-500 ml-1">*</span>}
                 </Label>
-                
+
                 <Input
                     id={`input-${data.id}`}
                     type={type}
@@ -54,7 +54,7 @@ const FormInputBlock: React.FC<BlockComponentProps> = ({
                     className="w-full"
                     disabled={true} // Preview mode - não editável inline
                 />
-                
+
                 {required && (
                     <p className="text-xs text-gray-500">
                         * Campo obrigatório

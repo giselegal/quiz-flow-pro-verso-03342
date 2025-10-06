@@ -133,7 +133,7 @@ export const BLOCK_DEFINITIONS: BlockDefinition[] = [
             }
         }
     },
-    
+
     // ========================================================================
     // STEPS 2-11 - QUESTION COMPONENTS
     // ========================================================================
@@ -167,16 +167,16 @@ export const BLOCK_DEFINITIONS: BlockDefinition[] = [
         defaultProps: {
             content: {
                 options: [
-                    { 
-                        id: 'opt-1', 
-                        text: 'Opção 1', 
+                    {
+                        id: 'opt-1',
+                        text: 'Opção 1',
                         image: 'https://via.placeholder.com/300',
                         value: 'romantico',
                         points: 1
                     },
-                    { 
-                        id: 'opt-2', 
-                        text: 'Opção 2', 
+                    {
+                        id: 'opt-2',
+                        text: 'Opção 2',
                         image: 'https://via.placeholder.com/300',
                         value: 'classico',
                         points: 1
@@ -214,7 +214,7 @@ export const BLOCK_DEFINITIONS: BlockDefinition[] = [
             }
         }
     },
-    
+
     // ========================================================================
     // STEPS 12, 19 - TRANSITION COMPONENTS
     // ========================================================================
@@ -261,7 +261,7 @@ export const BLOCK_DEFINITIONS: BlockDefinition[] = [
             }
         }
     },
-    
+
     // ========================================================================
     // STEP 20 - RESULT COMPONENTS
     // ========================================================================
@@ -329,7 +329,7 @@ export const BLOCK_DEFINITIONS: BlockDefinition[] = [
             }
         }
     },
-    
+
     // ========================================================================
     // STEP 21 - OFFER COMPONENTS
     // ========================================================================
@@ -404,7 +404,7 @@ export const BLOCK_DEFINITIONS: BlockDefinition[] = [
             }
         }
     },
-    
+
     // ========================================================================
     // UTILITY COMPONENTS (Usados em múltiplas etapas)
     // ========================================================================
@@ -495,7 +495,7 @@ export function registerBlock(type: string, component: React.FC<BlockComponentPr
     if (BLOCK_REGISTRY[type]) {
         console.warn(`⚠️ Componente ${type} já está registrado. Sobrescrevendo...`);
     }
-    
+
     BLOCK_REGISTRY[type] = component;
     console.log(`✅ Componente ${type} registrado com sucesso`);
 }
@@ -505,12 +505,12 @@ export function registerBlock(type: string, component: React.FC<BlockComponentPr
  */
 export function getBlockComponent(type: string): React.FC<BlockComponentProps> | null {
     const component = BLOCK_REGISTRY[type];
-    
+
     if (!component) {
         console.warn(`⚠️ Componente ${type} não encontrado no registry`);
         return null;
     }
-    
+
     return component;
 }
 
@@ -519,12 +519,12 @@ export function getBlockComponent(type: string): React.FC<BlockComponentProps> |
  */
 export function getBlockDefinition(type: string): BlockDefinition | null {
     const definition = BLOCK_DEFINITIONS.find(def => def.type === type);
-    
+
     if (!definition) {
         console.warn(`⚠️ Definição para ${type} não encontrada`);
         return null;
     }
-    
+
     return definition;
 }
 

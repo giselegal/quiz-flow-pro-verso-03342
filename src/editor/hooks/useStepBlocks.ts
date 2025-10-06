@@ -37,18 +37,18 @@ export interface UseStepBlocksResult {
     blocks: BlockData[];
     isLoading: boolean;
     error: string | null;
-    
+
     // CRUD de blocos
     updateBlock: (blockId: string, updates: Partial<BlockData>) => void;
     addBlock: (type: string, properties?: Record<string, any>, content?: Record<string, any>) => void;
     deleteBlock: (blockId: string) => void;
     duplicateBlock: (blockId: string) => void;
-    
+
     // Reordenação
     reorderBlocks: (fromIndex: number, toIndex: number) => void;
     moveBlockUp: (blockId: string) => void;
     moveBlockDown: (blockId: string) => void;
-    
+
     // Utilitários
     getBlock: (blockId: string) => BlockData | undefined;
     getBlockIndex: (blockId: string) => number;
@@ -63,23 +63,23 @@ export function useStepBlocks(stepIndex: number): UseStepBlocksResult {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [updateTrigger, setUpdateTrigger] = useState(0);
-    
+
     // ========================================================================
     // DERIVAR STEP DO SNAPSHOT
     // ========================================================================
-    
+
     const step = useMemo<StepData | null>(() => {
         try {
             const snapshot = facade.getSnapshot();
             const pages = snapshot.pages || [];
-            
+
             if (stepIndex < 0 || stepIndex >= pages.length) {
                 console.warn(`⚠️ stepIndex ${stepIndex} fora do range. Total de páginas: ${pages.length}`);
                 return null;
             }
-            
+
             const page = pages[stepIndex];
-            
+
             // Normalizar blocos (garantir que todos têm propriedades necessárias)
             const normalizedBlocks = (page.blocks || []).map((block: any, idx: number) => ({
                 id: block.id || `block-${idx}`,
@@ -88,7 +88,7 @@ export function useStepBlocks(stepIndex: number): UseStepBlocksResult {
                 content: block.content || {},
                 properties: block.properties || {}
             })).sort((a, b) => a.order - b.order);
-            
+
             return {
                 id: page.id || `step-${stepIndex + 1}`,
                 type: page.page_type || 'question',
@@ -102,13 +102,13 @@ export function useStepBlocks(stepIndex: number): UseStepBlocksResult {
             return null;
         }
     }, [facade, stepIndex, updateTrigger]);
-    
+
     const blocks = useMemo(() => step?.blocks || [], [step]);
-    
+
     // ========================================================================
     // CRUD DE BLOCOS
     // ========================================================================
-    
+
     /**
      * Atualizar bloco específico
      */
@@ -117,19 +117,19 @@ export function useStepBlocks(stepIndex: number): UseStepBlocksResult {
             console.warn('⚠️ Step não encontrado para atualizar bloco');
             return;
         }
-        
+
         try {
             setIsLoading(true);
             setError(null);
-            
+
             console.log(`🔄 Atualizando bloco ${blockId} no step ${step.id}:`, updates);
-            
+
             // Atualizar via Facade
             facade.updateBlock(step.id, blockId, updates);
-            
+
             // Forçar re-render
             setUpdateTrigger(prev => prev + 1);
-            
+
             console.log(`✅ Bloco ${blockId} atualizado com sucesso`);
         } catch (err) {
             console.error('❌ Erro ao atualizar bloco:', err);
@@ -138,7 +138,7 @@ export function useStepBlocks(stepIndex: number): UseStepBlocksResult {
             setIsLoading(false);
         }
     }, [facade, step]);
-    
+
     /**
      * Adicionar novo bloco
      */
@@ -151,11 +151,11 @@ export function useStepBlocks(stepIndex: number): UseStepBlocksResult {
             console.warn('⚠️ Step não encontrado para adicionar bloco');
             return;
         }
-        
+
         try {
             setIsLoading(true);
             setError(null);
-            
+
             const newBlock: BlockData = {
                 id: `block-${type}-${Date.now()}`,
                 type,
@@ -163,14 +163,14 @@ export function useStepBlocks(stepIndex: number): UseStepBlocksResult {
                 properties,
                 content
             };
-            
+
             console.log(`➕ Adicionando bloco ao step ${step.id}:`, newBlock);
-            
+
             facade.addBlock(step.id, newBlock);
-            
+
             // Forçar re-render
             setUpdateTrigger(prev => prev + 1);
-            
+
             console.log(`✅ Bloco ${newBlock.id} adicionado com sucesso`);
         } catch (err) {
             console.error('❌ Erro ao adicionar bloco:', err);
@@ -179,7 +179,7 @@ export function useStepBlocks(stepIndex: number): UseStepBlocksResult {
             setIsLoading(false);
         }
     }, [facade, step]);
-    
+
     /**
      * Deletar bloco
      */
@@ -188,18 +188,18 @@ export function useStepBlocks(stepIndex: number): UseStepBlocksResult {
             console.warn('⚠️ Step não encontrado para deletar bloco');
             return;
         }
-        
+
         try {
             setIsLoading(true);
             setError(null);
-            
+
             console.log(`🗑️ Deletando bloco ${blockId} do step ${step.id}`);
-            
+
             facade.deleteBlock(step.id, blockId);
-            
+
             // Forçar re-render
             setUpdateTrigger(prev => prev + 1);
-            
+
             console.log(`✅ Bloco ${blockId} deletado com sucesso`);
         } catch (err) {
             console.error('❌ Erro ao deletar bloco:', err);
@@ -208,7 +208,7 @@ export function useStepBlocks(stepIndex: number): UseStepBlocksResult {
             setIsLoading(false);
         }
     }, [facade, step]);
-    
+
     /**
      * Duplicar bloco
      */
@@ -217,29 +217,29 @@ export function useStepBlocks(stepIndex: number): UseStepBlocksResult {
             console.warn('⚠️ Step não encontrado para duplicar bloco');
             return;
         }
-        
+
         try {
             setIsLoading(true);
             setError(null);
-            
+
             const original = step.blocks.find(b => b.id === blockId);
             if (!original) {
                 throw new Error(`Bloco ${blockId} não encontrado`);
             }
-            
+
             const duplicate: BlockData = {
                 ...original,
                 id: `block-${original.type}-${Date.now()}`,
                 order: original.order + 1
             };
-            
+
             console.log(`📋 Duplicando bloco ${blockId}:`, duplicate);
-            
+
             facade.addBlock(step.id, duplicate);
-            
+
             // Forçar re-render
             setUpdateTrigger(prev => prev + 1);
-            
+
             console.log(`✅ Bloco ${blockId} duplicado com sucesso`);
         } catch (err) {
             console.error('❌ Erro ao duplicar bloco:', err);
@@ -248,11 +248,11 @@ export function useStepBlocks(stepIndex: number): UseStepBlocksResult {
             setIsLoading(false);
         }
     }, [facade, step]);
-    
+
     // ========================================================================
     // REORDENAÇÃO
     // ========================================================================
-    
+
     /**
      * Reordenar blocos (drag and drop)
      */
@@ -261,29 +261,29 @@ export function useStepBlocks(stepIndex: number): UseStepBlocksResult {
             console.warn('⚠️ Step não encontrado para reordenar blocos');
             return;
         }
-        
+
         if (fromIndex === toIndex) return;
-        
+
         try {
             setIsLoading(true);
             setError(null);
-            
+
             console.log(`🔄 Reordenando blocos: ${fromIndex} → ${toIndex}`);
-            
+
             const reordered = [...step.blocks];
             const [moved] = reordered.splice(fromIndex, 1);
             reordered.splice(toIndex, 0, moved);
-            
+
             // Atualizar ordem de todos os blocos afetados
             reordered.forEach((block, index) => {
                 if (block.order !== index) {
                     facade.updateBlock(step.id, block.id, { order: index });
                 }
             });
-            
+
             // Forçar re-render
             setUpdateTrigger(prev => prev + 1);
-            
+
             console.log(`✅ Blocos reordenados com sucesso`);
         } catch (err) {
             console.error('❌ Erro ao reordenar blocos:', err);
@@ -292,72 +292,72 @@ export function useStepBlocks(stepIndex: number): UseStepBlocksResult {
             setIsLoading(false);
         }
     }, [facade, step]);
-    
+
     /**
      * Mover bloco para cima
      */
     const moveBlockUp = useCallback((blockId: string) => {
         if (!step) return;
-        
+
         const index = step.blocks.findIndex(b => b.id === blockId);
         if (index > 0) {
             reorderBlocks(index, index - 1);
         }
     }, [step, reorderBlocks]);
-    
+
     /**
      * Mover bloco para baixo
      */
     const moveBlockDown = useCallback((blockId: string) => {
         if (!step) return;
-        
+
         const index = step.blocks.findIndex(b => b.id === blockId);
         if (index >= 0 && index < step.blocks.length - 1) {
             reorderBlocks(index, index + 1);
         }
     }, [step, reorderBlocks]);
-    
+
     // ========================================================================
     // UTILITÁRIOS
     // ========================================================================
-    
+
     const getBlock = useCallback((blockId: string) => {
         return step?.blocks.find(b => b.id === blockId);
     }, [step]);
-    
+
     const getBlockIndex = useCallback((blockId: string) => {
         return step?.blocks.findIndex(b => b.id === blockId) ?? -1;
     }, [step]);
-    
+
     // ========================================================================
     // EVENT LISTENERS (Live Preview)
     // ========================================================================
-    
+
     useEffect(() => {
         if (!facade) return;
-        
+
         // Escutar mudanças nos blocos
         const unsubscribeBlocks = facade.on('blocks/changed', (payload: any) => {
             console.log('📡 Evento blocks/changed recebido:', payload);
             setUpdateTrigger(prev => prev + 1);
         });
-        
+
         // Escutar mudanças nos steps
         const unsubscribeSteps = facade.on('steps/changed', (payload: any) => {
             console.log('📡 Evento steps/changed recebido:', payload);
             setUpdateTrigger(prev => prev + 1);
         });
-        
+
         return () => {
             unsubscribeBlocks();
             unsubscribeSteps();
         };
     }, [facade]);
-    
+
     // ========================================================================
     // RETURN
     // ========================================================================
-    
+
     return {
         step,
         blocks,

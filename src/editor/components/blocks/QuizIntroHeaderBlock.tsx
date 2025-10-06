@@ -24,7 +24,7 @@ const QuizIntroHeaderBlock: React.FC<BlockComponentProps> = ({
     const fontWeight = data.properties?.fontWeight || 'bold';
     const textColor = data.properties?.textColor || '#432818';
     const backgroundColor = data.properties?.backgroundColor || 'transparent';
-    
+
     return (
         <div
             className={cn(
@@ -44,10 +44,10 @@ const QuizIntroHeaderBlock: React.FC<BlockComponentProps> = ({
                     📝 Header Selecionado
                 </div>
             )}
-            
+
             {/* Conteúdo do header */}
             <div className={`text-${alignment}`}>
-                <h1 
+                <h1
                     className={cn(
                         `text-${fontSize}`,
                         `font-${fontWeight}`,
@@ -57,14 +57,14 @@ const QuizIntroHeaderBlock: React.FC<BlockComponentProps> = ({
                 >
                     {title}
                 </h1>
-                
+
                 {subtitle && (
                     <p className="text-lg text-gray-600 mt-2">
                         {subtitle}
                     </p>
                 )}
             </div>
-            
+
             {/* Hover info - só aparece se editável */}
             {isEditable && !isSelected && (
                 <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
