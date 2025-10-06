@@ -67,10 +67,10 @@ const ModularEditorLayout: React.FC = () => {
     // ✅ Carregar steps do CRUD (igual ao QuizFunnelEditorWYSIWYG)
     useEffect(() => {
         const existing = (crud.currentFunnel as any)?.quizSteps as EditableQuizStep[] | undefined;
-        
+
         console.log('🔍 DEBUG - crud.currentFunnel:', crud.currentFunnel);
         console.log('🔍 DEBUG - quizSteps:', existing);
-        
+
         if (existing && existing.length) {
             setSteps(existing.map(s => ({ ...s })));
             console.log('✅ Carregou', existing.length, 'steps do banco');
@@ -84,7 +84,7 @@ const ModularEditorLayout: React.FC = () => {
     // Handlers
     const handleSave = async () => {
         if (!crud.currentFunnel) return;
-        
+
         try {
             setIsSaving(true);
             const updated = { ...crud.currentFunnel, quizSteps: steps };
