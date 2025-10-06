@@ -396,10 +396,10 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
         console.log('[QuizFunnelEditor] Propriedade clicada:', { propKey, stepId, element });
 
         // Garantir que o step está selecionado
-    const blockId = steps.find(step => step.id === stepId)?.blockId || `step-${stepId}`;
-    setSelectedId(stepId);
-    setSelectedBlockId(blockId);
-    facade?.selectStep(stepId);
+        const blockId = steps.find(step => step.id === stepId)?.blockId || `step-${stepId}`;
+        setSelectedId(stepId);
+        setSelectedBlockId(blockId);
+        facade?.selectStep(stepId);
 
         // Abrir painel de propriedades
         setShowPropertiesPanel(true);
@@ -435,7 +435,7 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
                     }`}
                 onClick={(e) => {
                     e.stopPropagation();
-                    setSelectedBlockId(blockId);
+                    handleBlockSelect(blockId);
                 }}
             >
                 <div className="absolute -top-6 left-0 bg-gray-600 text-white px-2 py-1 text-xs rounded z-10 opacity-0 group-hover:opacity-100 transition-opacity">
@@ -461,7 +461,7 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
                     } ${isEditable ? 'cursor-pointer' : ''}`}
                 onClick={(e) => {
                     e.stopPropagation();
-                    setSelectedBlockId(blockId);
+                    handleBlockSelect(blockId);
                 }}
             >
                 {/* Label do componente */}
@@ -505,7 +505,7 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
     // 🚀 FASE 3: COMPONENTES EDITÁVEIS ENCAPSULADOS - Sistema Modularizado
     const renderRealComponent = (step: EditableQuizStep, index: number) => {
         const isEditMode = previewMode === 'edit';
-        const blockId = `step-${step.id}`;
+        const blockId = step.blockId || `step-${step.id}`;
         const isSelected = selectedBlockId === blockId;
 
         // 🎯 Mapear tipo de step para componente editável correspondente
@@ -535,13 +535,14 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
 
         // 🎨 Props para o componente editável
         const editableProps: EditableStepProps = {
-            data: step,
+            data: step as unknown as ModularQuizStep,
             isEditable: isEditMode,
             isSelected: isSelected,
-            onUpdate: (updates) => updateStep(step.id, updates),
+            onUpdate: (updates) => updateStep(step.id, updates as Partial<EditableQuizStep>),
             onSelect: () => {
                 setSelectedId(step.id);
                 setSelectedBlockId(blockId);
+                facade?.selectStep(step.id);
             },
             onPropertyClick: (propKey: string, element: HTMLElement) => {
                 handlePropertyClick(propKey, element, step.id);
