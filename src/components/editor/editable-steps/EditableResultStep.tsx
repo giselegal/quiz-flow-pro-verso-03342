@@ -7,7 +7,7 @@
  */
 
 import React, { useMemo } from 'react';
-import CompositeResultStep from '../modular/components/composite/CompositeResultStep';
+import ResultStep from '../../quiz/ResultStep';
 import { EditableBlockWrapper } from './shared/EditableBlockWrapper';
 import { EditableStepProps } from './shared/EditableStepProps';
 
@@ -35,19 +35,28 @@ const EditableResultStep: React.FC<EditableResultStepProps> = ({
     // 🎭 Props editáveis específicas do ResultStep
     const editableProps = [
         'title',
-        'subtitle',
-        'description',
-        'userName',
-        'resultStyle',
-        'image',
-        'characteristics',
-        'ctaText',
-        'resultPlaceholder',
-        'backgroundColor',
-        'textColor',
-        'accentColor',
-        'accentColorSecondary'
+        'text'
+        // Outras props como styleConfig, ofertas, etc. podem ser adicionadas
     ];
+
+    // 🎪 Mock userProfile para preview
+    const mockUserProfile = useMemo(() => ({
+        userName: 'Preview User',
+        resultStyle: 'clássico', // Usar um estilo que existe no styleConfigGisele
+        secondaryStyles: ['elegante', 'contemporâneo']
+    }), []);
+
+    // 🎪 Mock scores para mostrar as barras de progresso
+    const mockScores = useMemo(() => ({
+        natural: 15,
+        classico: 85,      // Score alto para o estilo principal
+        contemporaneo: 60,
+        elegante: 75,
+        romantico: 25,
+        sexy: 10,
+        dramatico: 30,
+        criativo: 20
+    }), []);
 
     // 🎨 Handle property click usando callback da interface
     const handlePropertyClick = (propKey: string, element: HTMLElement) => {
@@ -55,47 +64,13 @@ const EditableResultStep: React.FC<EditableResultStepProps> = ({
             onPropertyClick(propKey, element);
         }
     };        // 🔧 Garantir que os dados têm estrutura mínima necessária
-    const safeData = useMemo(() => {
-        interface ResultStepDataExtras {
-            title?: string;
-            subtitle?: string;
-            description?: string;
-            userName?: string;
-            resultStyle?: string;
-            image?: string;
-            characteristics?: string[];
-            ctaText?: string;
-            resultPlaceholder?: string;
-            backgroundColor?: string;
-            textColor?: string;
-            accentColor?: string;
-            accentColorSecondary?: string;
-            showEditableHint?: boolean;
-        }
-
-        const stepData = data as ResultStepDataExtras;
-
-        return {
-            ...stepData,
-            type: 'result' as const,
-            title: stepData.title || 'Seu estilo predominante é:',
-            subtitle: stepData.subtitle || 'Seu resultado foi calculado com base nas suas respostas, {userName}.',
-            description: stepData.description || 'Parabéns! Você descobriu seu estilo único e agora tem um guia completo para usar a moda a seu favor.',
-            userName: stepData.userName || 'Preview User',
-            resultStyle: stepData.resultStyle || 'Clássico Elegante',
-            image: stepData.image,
-            characteristics: Array.isArray(stepData.characteristics) && stepData.characteristics.length > 0
-                ? stepData.characteristics
-                : ['Elegante e refinado', 'Atemporal e sofisticado', 'Valoriza qualidade'],
-            ctaText: stepData.ctaText || 'Descobrir Minha Consultoria Personalizada',
-            resultPlaceholder: stepData.resultPlaceholder || 'Resultado aparecerá aqui...',
-            backgroundColor: stepData.backgroundColor || '#fff8f0',
-            textColor: stepData.textColor || '#432818',
-            accentColor: stepData.accentColor || '#B89B7A',
-            accentColorSecondary: stepData.accentColorSecondary || '#A1835D',
-            showEditableHint: stepData.showEditableHint ?? isEditable
-        };
-    }, [data, isEditable]);
+    const safeData = useMemo(() => ({
+        ...data,
+        type: 'result' as const,
+        title: data.title || 'Seu Estilo é: <span style="color: #B89B7A; font-weight: 700;">Elegante Sofisticado</span>',
+        description: data.description || 'Você tem um gosto refinado e aprecia peças de qualidade que transmitem sobriedade e elegância.',
+        resultKey: data.resultKey || 'elegante'
+    }), [data]);
 
     return (
         <EditableBlockWrapper
@@ -115,21 +90,11 @@ const EditableResultStep: React.FC<EditableResultStepProps> = ({
             blockId={blockId}
             className="editable-result-step"
         >
-            <CompositeResultStep
-                title={safeData.title}
-                subtitle={safeData.subtitle}
-                userName={safeData.userName}
-                resultStyle={safeData.resultStyle}
-                description={safeData.description}
-                image={safeData.image}
-                characteristics={safeData.characteristics}
-                ctaText={safeData.ctaText}
-                resultPlaceholder={safeData.resultPlaceholder}
-                backgroundColor={safeData.backgroundColor}
-                textColor={safeData.textColor}
-                accentColor={safeData.accentColor}
-                accentColorSecondary={safeData.accentColorSecondary}
-                showEditableHint={safeData.showEditableHint}
+            {/* 🎯 Renderizar componente de produção com dados mock */}
+            <ResultStep
+                data={safeData}
+                userProfile={mockUserProfile}
+                scores={mockScores}
             />
 
             {/* 🎮 Overlay informativo para editor */}

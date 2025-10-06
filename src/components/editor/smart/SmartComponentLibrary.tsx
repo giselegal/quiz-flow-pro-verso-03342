@@ -18,6 +18,7 @@ import React, {
     useRef,
     forwardRef,
     Component,
+    ErrorBoundary,
     ReactNode,
     CSSProperties
 } from 'react';
@@ -417,8 +418,8 @@ interface SmartInputProps extends SmartComponentProps {
 
 export class SmartInput extends SmartComponentBase<SmartInputProps> {
     private inputRef = React.createRef<HTMLInputElement>();
-    private value = this.props.value || '';
-    private errors: string[] = [];
+    private [value, setValue] =[this.props.value || '', (v: string) => { }];
+    private [errors, setErrors] =[[] as string[], (e: string[]) => { }];
 
     constructor(props: SmartInputProps) {
         super(props);
@@ -525,15 +526,14 @@ export class SmartInput extends SmartComponentBase<SmartInputProps> {
 
     private handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const newValue = e.target.value;
-        this.value = newValue;
+        setValue(newValue);
 
         if (this.props.autoValidate) {
             const newErrors = this.validateInput(newValue);
-            this.errors = newErrors;
+            setErrors(newErrors);
         }
 
         this.props.onChange?.(newValue);
-        this.forceUpdate(); // Força re-render quando state interno muda
     };
 
     protected renderContent(): ReactNode {
@@ -548,7 +548,7 @@ export class SmartInput extends SmartComponentBase<SmartInputProps> {
             preview = false
         } = this.props;
 
-        const hasErrors = this.errors.length > 0;
+        const hasErrors = errors.length > 0;
 
         const inputStyle: CSSProperties = {
             width: '100%',
@@ -589,11 +589,12 @@ export class SmartInput extends SmartComponentBase<SmartInputProps> {
                         ref={this.inputRef}
                         type={type}
                         placeholder={placeholder}
-                        value={this.value}
+                        value={value}
                         required={required}
                         className="smart-input"
                         style={inputStyle}
                         onChange={this.handleChange}
+                        onBlur={this.props.onBlur}
                         onFocus={(e) => {
                             Object.assign(e.target.style, focusStyle);
                         }}
@@ -632,7 +633,7 @@ export class SmartInput extends SmartComponentBase<SmartInputProps> {
                     <div className="smart-input-errors" style={{
                         marginTop: '6px'
                     }}>
-                        {this.errors.map((error, index) => (
+                        {errors.map((error, index) => (
                             <div key={index} style={{
                                 color: '#ef4444',
                                 fontSize: '12px',
@@ -664,9 +665,9 @@ interface SmartImageProps extends SmartComponentProps {
 
 export class SmartImage extends SmartComponentBase<SmartImageProps> {
     private imageRef = React.createRef<HTMLImageElement>();
-    private loading = true;
-    private error = false;
-    private naturalSize = { width: 0, height: 0 };
+    private [loading, setLoading] =[true, (l: boolean) => { }];
+    private [error, setError] =[false, (e: boolean) => { }];
+    private [naturalSize, setNaturalSize] =[{ width: 0, height: 0 }, (s: any) => { }];
 
     constructor(props: SmartImageProps) {
         super(props);
@@ -731,20 +732,20 @@ export class SmartImage extends SmartComponentBase<SmartImageProps> {
     }
 
     private handleLoad = () => {
-        this.loading = false;
-        this.error = false;
+        setLoading(false);
+        setError(false);
 
         if (this.imageRef.current) {
-            this.naturalSize = {
+            setNaturalSize({
                 width: this.imageRef.current.naturalWidth,
                 height: this.imageRef.current.naturalHeight
-            };
+            });
         }
     };
 
     private handleError = () => {
-        this.loading = false;
-        this.error = true;
+        setLoading(false);
+        setError(true);
         this.props.onError?.(this.props.id, 'Failed to load image');
     };
 
@@ -783,7 +784,7 @@ export class SmartImage extends SmartComponentBase<SmartImageProps> {
 
         const a11yProps = this.generateA11yProps();
 
-        if (this.error && fallback) {
+        if (error && fallback) {
             return (
                 <div className={`smart-image-wrapper ${className}`} style={containerStyle}>
                     <img
@@ -796,7 +797,7 @@ export class SmartImage extends SmartComponentBase<SmartImageProps> {
             );
         }
 
-        if (this.error) {
+        if (error) {
             return (
                 <div className={`smart-image-error ${className}`} style={{
                     ...containerStyle,
@@ -819,7 +820,7 @@ export class SmartImage extends SmartComponentBase<SmartImageProps> {
 
         return (
             <div className={`smart-image-wrapper ${className}`} style={containerStyle}>
-                {this.loading && placeholder && (
+                {loading && placeholder && (
                     <div className="image-placeholder" style={{
                         position: 'absolute',
                         top: 0,
@@ -845,7 +846,7 @@ export class SmartImage extends SmartComponentBase<SmartImageProps> {
                     loading={lazy ? 'lazy' : 'eager'}
                     style={{
                         ...imageStyle,
-                        opacity: this.loading ? 0 : 1
+                        opacity: loading ? 0 : 1
                     }}
                     onLoad={this.handleLoad}
                     onError={this.handleError}
@@ -884,8 +885,8 @@ export class SmartImage extends SmartComponentBase<SmartImageProps> {
                         fontSize: '11px',
                         fontFamily: 'monospace'
                     }}>
-                        {this.naturalSize.width}×{this.naturalSize.height}
-                        {this.loading && ' (loading...)'}
+                        {naturalSize.width}×{naturalSize.height}
+                        {loading && ' (loading...)'}
                     </div>
                 )}
             </div>
@@ -894,16 +895,14 @@ export class SmartImage extends SmartComponentBase<SmartImageProps> {
 }
 
 // 🎯 COMPONENT FACTORY
-type SmartComponentConstructor = typeof SmartButton | typeof SmartInput | typeof SmartImage;
-
 export class SmartComponentFactory {
-    private static components = new Map<string, SmartComponentConstructor>([
+    private static components = new Map<string, typeof SmartComponentBase>([
         ['button', SmartButton],
         ['input', SmartInput],
         ['image', SmartImage]
     ]);
 
-    static register(type: string, component: SmartComponentConstructor): void {
+    static register(type: string, component: typeof SmartComponentBase): void {
         this.components.set(type, component);
     }
 
@@ -914,7 +913,7 @@ export class SmartComponentFactory {
             return null;
         }
 
-        return React.createElement(ComponentClass as any, props);
+        return React.createElement(ComponentClass, props);
     }
 
     static getAvailableTypes(): string[] {

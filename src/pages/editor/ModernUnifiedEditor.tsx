@@ -1,16 +1,13 @@
 // =============================================================
-// ModernUnifiedEditor - Editor Unificado com Sistema Modular Integrado
-// Combina FunnelEditingFacade + Sistema Modular (componentes modulares, drag & drop, Chakra UI)
-// Implementa a arquitetura solicitada: "cada etapa composta por componentes modulares, independentes e editáveis"
+// ModernUnifiedEditor - Editor Unificado com FunnelEditingFacade
+// Renderiza QuizFunnelEditor integrado com sistema de persistência unificado
 // =============================================================
-import React, { useMemo, useEffect, useRef, useState } from 'react';
-import { QuizFunnelEditingFacade, type FunnelSnapshot } from '@/editor/facade/FunnelEditingFacade';
-import { resolveAdapter } from '@/editor/adapters/FunnelAdapterRegistry';
+import React, { Suspense, useMemo, createContext, useContext, useEffect, useRef, useState } from 'react';
+import { QuizFunnelEditingFacade, type IFunnelEditingFacade, type FunnelSnapshot } from '@/editor/facade/FunnelEditingFacade';
+import { resolveAdapter, applySnapshotAndPersist } from '@/editor/adapters/FunnelAdapterRegistry';
 import { useUnifiedCRUDOptional } from '@/context/UnifiedCRUDProvider';
+import { useFunnelPublication } from '@/hooks/useFunnelPublication';
 import '../../components/editor/quiz/QuizEditorStyles.css';
-import { FunnelFacadeContext, useFunnelFacade, useOptionalFunnelFacade } from '@/editor/facade/FunnelFacadeContext';
-import { FeatureFlagManager } from '@/utils/FeatureFlagManager';
-import QuizFunnelEditorWYSIWYG from '@/components/editor/quiz/QuizFunnelEditorWYSIWYG';
 
 export interface ModernUnifiedEditorProps {
     funnelId?: string;
@@ -18,18 +15,22 @@ export interface ModernUnifiedEditorProps {
     className?: string;
 }
 
-// 🎯 SISTEMA MODULAR INTEGRADO - Componentes modulares, independentes e editáveis
-import { exampleFunnel } from '../../components/editor/modular/ModularEditorExample';
+const QuizFunnelEditor = React.lazy(() => import('../../components/editor/quiz/QuizFunnelEditorSimplified'));
 // Provider de blocos do quiz
 import { BlockRegistryProvider, ResultHeadlineBlock, OfferCoreBlock, ResultSecondaryListBlock, OfferUrgencyBlock } from '@/runtime/quiz/blocks/BlockRegistry';
-// Context do sistema modular
-import { QuizEditorProvider } from '@/context/QuizEditorContext';
-// ✅ NOVO: Editor com componentes editáveis modulares
-// 🔧 STABLE: Editor estável sem dependências externas problemáticas
-import StableEditableStepsEditor from '../../components/editor/modular/StableEditableStepsEditor';
 
 
-export { useFunnelFacade, useOptionalFunnelFacade };
+// ============================================
+// Contexto da Facade (fase de integração)
+// ============================================
+const FunnelFacadeContext = createContext<IFunnelEditingFacade | null>(null);
+export const useFunnelFacade = () => {
+    const ctx = useContext(FunnelFacadeContext);
+    if (!ctx) throw new Error('useFunnelFacade deve ser usado dentro de <FunnelFacadeContext.Provider>');
+    return ctx;
+};
+// Versão opcional (uso em componentes que podem renderizar antes da fachada existir)
+export const useOptionalFunnelFacade = () => useContext(FunnelFacadeContext);
 
 // buildInitialSnapshot agora via adapter registry
 const buildInitialSnapshot = (crud: ReturnType<typeof useUnifiedCRUDOptional>): { snapshot: FunnelSnapshot; adapterType: string } => {
@@ -39,49 +40,9 @@ const buildInitialSnapshot = (crud: ReturnType<typeof useUnifiedCRUDOptional>): 
 
 const ModernUnifiedEditor: React.FC<ModernUnifiedEditorProps> = (props) => {
     const crud = useUnifiedCRUDOptional();
-    const [flagsVersion, setFlagsVersion] = useState(0);
-
-    useEffect(() => {
-        const handleFlagUpdate = () => setFlagsVersion(prev => prev + 1);
-        const handleFeatureEvent = () => handleFlagUpdate();
-        const handleStorage = (event: StorageEvent) => {
-            if (!event.key || event.key.startsWith('flag_')) {
-                handleFlagUpdate();
-            }
-        };
-        window.addEventListener('feature-flags:update', handleFeatureEvent);
-        window.addEventListener('storage', handleStorage);
-        return () => {
-            window.removeEventListener('feature-flags:update', handleFeatureEvent);
-            window.removeEventListener('storage', handleStorage);
-        };
-    }, []);
-
-    const shouldUseFacadeEditor = useMemo(() => {
-        // 🚨 FORÇADO TEMPORARIAMENTE - SEMPRE USAR EDITOR NOVO
-        const result = true; // FORÇADO!
-
-        const manager = FeatureFlagManager.getInstance();
-        const force = manager.shouldForceUnifiedInEditor();
-        const facade = manager.shouldEnableUnifiedEditorFacade();
-
-        // 🐛 DEBUG: Ver valores das flags
-        console.log('🎛️ [ModernUnifiedEditor] Feature Flags (FORÇADO=true):', {
-            FORCADO_MANUAL: true,
-            forceUnified: force,
-            enableFacade: facade,
-            shouldUseFacade: result,
-            env_FORCE: import.meta.env.VITE_FORCE_UNIFIED_EDITOR,
-            env_FACADE: import.meta.env.VITE_ENABLE_UNIFIED_EDITOR_FACADE,
-            mode: import.meta.env.MODE
-        });
-
-        return result;
-    }, [flagsVersion]);
-
-    // Criar facade; recria se trocar de funil ou quando feature flag muda
+    // Criar facade; recria se trocar de funil
     const facade = useMemo(() => {
-        if (!crud || !shouldUseFacadeEditor) return null;
+        if (!crud) return null;
         const { snapshot } = buildInitialSnapshot(crud);
         const persist = async (snap: FunnelSnapshot) => {
             if (!crud.currentFunnel) return;
@@ -111,12 +72,12 @@ const ModernUnifiedEditor: React.FC<ModernUnifiedEditorProps> = (props) => {
         };
         return base;
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [crud?.currentFunnel?.id, shouldUseFacadeEditor]);
+    }, [crud?.currentFunnel?.id]);
 
     // ================= Autosave & Logging Básico =================
     const autosaveTimerRef = useRef<number | null>(null);
     useEffect(() => {
-        if (!facade || !shouldUseFacadeEditor) return;
+        if (!facade) return;
         const dispose: Array<() => void> = [];
         const log = (label: string, payload: any) => {
             // Logs estruturados (podemos trocar depois por instrumentation real)
@@ -149,50 +110,26 @@ const ModernUnifiedEditor: React.FC<ModernUnifiedEditorProps> = (props) => {
             dispose.forEach(fn => fn());
             if (autosaveTimerRef.current) window.clearTimeout(autosaveTimerRef.current);
         };
-    }, [facade, shouldUseFacadeEditor]);
+    }, [facade]);
 
     return (
         <div className={`quiz-editor-container flex flex-col w-full h-full ${props.className || ''}`}>
-            {/* 🐛 DEBUG: Indicador visual */}
-            <div style={{
-                position: 'fixed',
-                top: 10,
-                right: 10,
-                padding: '8px 12px',
-                background: shouldUseFacadeEditor ? '#22c55e' : '#ef4444',
-                color: 'white',
-                borderRadius: '4px',
-                fontSize: '12px',
-                fontWeight: 'bold',
-                zIndex: 9999,
-                boxShadow: '0 2px 8px rgba(0,0,0,0.2)'
-            }}>
-                {shouldUseFacadeEditor ? '✅ FACADE ATIVO' : '❌ EDITOR ANTIGO'}
-            </div>
-
             <div className="flex-1 min-h-0">
-                {!crud ? (
-                    <div className="p-6 text-sm text-red-600" data-testid="missing-crud-provider">
-                        ⚠️ UnifiedCRUDProvider ausente. Envolva <code>ModernUnifiedEditor</code> com <code>&lt;UnifiedCRUDProvider&gt;</code>.
-                    </div>
-                ) : shouldUseFacadeEditor ? (
-                    facade ? (
+                <Suspense fallback={<div className="p-4 text-sm text-muted-foreground">Carregando editor...</div>}>
+                    {!crud ? (
+                        <div className="p-6 text-sm text-red-600" data-testid="missing-crud-provider">
+                            ⚠️ UnifiedCRUDProvider ausente. Envolva <code>ModernUnifiedEditor</code> com <code>&lt;UnifiedCRUDProvider&gt;</code>.
+                        </div>
+                    ) : facade ? (
                         <FunnelFacadeContext.Provider value={facade}>
-                            <QuizFunnelEditorWYSIWYG funnelId={props.funnelId} templateId={props.templateId} />
+                            <BlockRegistryProvider definitions={[ResultHeadlineBlock, OfferCoreBlock, ResultSecondaryListBlock, OfferUrgencyBlock]}>
+                                <div data-testid="quiz-editor-container">
+                                    <QuizFunnelEditor funnelId={props.funnelId} templateId={props.templateId} />
+                                </div>
+                            </BlockRegistryProvider>
                         </FunnelFacadeContext.Provider>
-                    ) : (
-                        <div className="p-4 text-sm text-muted-foreground">Carregando editor unificado...</div>
-                    )
-                ) : (
-                    <QuizEditorProvider initialFunnel={exampleFunnel}>
-                        <BlockRegistryProvider definitions={[ResultHeadlineBlock, OfferCoreBlock, ResultSecondaryListBlock, OfferUrgencyBlock]}>
-                            <div data-testid="quiz-editor-modular-container">
-                                {/* 🔧 EDITOR SIMPLES - SEM DEPENDÊNCIAS PROBLEMÁTICAS */}
-                                <StableEditableStepsEditor />
-                            </div>
-                        </BlockRegistryProvider>
-                    </QuizEditorProvider>
-                )}
+                    ) : null}
+                </Suspense>
             </div>
         </div>
     );

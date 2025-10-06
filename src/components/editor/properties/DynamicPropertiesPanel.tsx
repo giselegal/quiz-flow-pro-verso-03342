@@ -1,171 +1,419 @@
-import React, { useState, useCallback, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { ScrollArea } from '@/components/ui/scroll-area';
+/**
+ * 🎛️ DYNAMIC PROPERTIES PANEL - Painel de Propriedades Automático
+ * 
+ * Painel que carrega automaticamente as propriedades editáveis
+ * de qualquer componente baseado na API
+ */
+
+import { useState, useMemo } from 'react';
+import { useComponentConfiguration } from '@/hooks/useComponentConfiguration';
+import { PropertyCategory } from '@/hooks/useUnifiedProperties';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
-import { Separator } from '@/components/ui/separator';
-import { X, Settings, Trash2, Copy, Eye, EyeOff, AlertCircle } from 'lucide-react';
-import { cn } from '@/lib/utils';
-import { PropertiesPanelRegistry } from './PropertiesPanelRegistry';
+import { Button } from '@/components/ui/button';
+import { AlertTriangle, Save, RotateCcw, Eye, EyeOff, Zap, Clock } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { QuestionPropertiesPanelDefinition, StrategicQuestionPropertiesPanelDefinition } from './QuestionPropertiesPanel';
-import { ResultPropertiesPanelDefinition, TransitionResultPropertiesPanelDefinition } from './ResultPropertiesPanel';
-import { OfferPropertiesPanelDefinition } from './OfferPropertiesPanel';
-import { CommonPropertiesPanelDefinition, IntroPropertiesPanelDefinition, TransitionPropertiesPanelDefinition } from './CommonPropertiesPanel';
 
-PropertiesPanelRegistry.registerMany([
-    QuestionPropertiesPanelDefinition,
-    StrategicQuestionPropertiesPanelDefinition,
-    ResultPropertiesPanelDefinition,
-    TransitionResultPropertiesPanelDefinition,
-    OfferPropertiesPanelDefinition,
-    IntroPropertiesPanelDefinition,
-    TransitionPropertiesPanelDefinition,
-]);
-PropertiesPanelRegistry.setFallback(CommonPropertiesPanelDefinition);
+// Importar editores de propriedades
+import { propertyEditors } from '@/components/editor/properties/core/propertyEditors';
 
-export interface DynamicPropertiesPanelProps {
-    selectedStep: any | null;
-    onUpdateStep: (stepId: string, updates: any) => void;
-    onClose: () => void;
-    onDeleteStep?: (stepId: string) => void;
-    onDuplicateStep?: (stepId: string) => void;
-    isPreviewMode?: boolean;
-    onTogglePreview?: () => void;
-    className?: string;
+interface DynamicPropertiesPanelProps {
+    componentId: string;
+    funnelId?: string;
+    onPropertyChange?: (key: string, value: any) => void;
+    onPreviewToggle?: (enabled: boolean) => void;
+    onSave?: () => void;
+    onReset?: () => void;
 }
 
-export const DynamicPropertiesPanel: React.FC<DynamicPropertiesPanelProps> = ({
-    selectedStep,
-    onUpdateStep,
-    onClose,
-    onDeleteStep,
-    onDuplicateStep,
-    isPreviewMode = false,
-    onTogglePreview,
-    className = ''
-}) => {
-    const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
+export default function DynamicPropertiesPanel({
+    componentId,
+    funnelId,
+    onPropertyChange,
+    onPreviewToggle,
+    onSave,
+    onReset
+}: DynamicPropertiesPanelProps) {
 
-    useEffect(() => {
-        setHasUnsavedChanges(false);
-    }, [selectedStep?.id]);
+    // ============================================================================
+    // STATE AND API CONNECTION
+    // ============================================================================
 
-    const handleUpdate = useCallback((updates: any) => {
-        if (selectedStep) {
-            onUpdateStep(selectedStep.id, updates);
-            setHasUnsavedChanges(false);
-        }
-    }, [selectedStep, onUpdateStep]);
+    const {
+        properties,
+        isLoading,
+        error,
+        connectionStatus,
+        updateProperty,
+        updateProperties,
+        resetToDefaults,
+        componentDefinition,
+        hasUnsavedChanges,
+        lastSaved
+    } = useComponentConfiguration({
+        componentId,
+        funnelId,
+        realTimeSync: true,
+        autoSave: false, // Manual save for editor
+        cacheEnabled: true
+    });
 
-    const handleDelete = useCallback(() => {
-        if (selectedStep && onDeleteStep) {
-            if (confirm('Deletar step?')) {
-                onDeleteStep(selectedStep.id);
-            }
-        }
-    }, [selectedStep, onDeleteStep]);
+    const [previewEnabled, setPreviewEnabled] = useState(true);
+    const [activeCategory, setActiveCategory] = useState<PropertyCategory>(PropertyCategory.CONTENT);
 
-    const handleDuplicate = useCallback(() => {
-        if (selectedStep && onDuplicateStep) {
-            onDuplicateStep(selectedStep.id);
-        }
-    }, [selectedStep, onDuplicateStep]);
+    // ============================================================================
+    // LOADING STATE
+    // ============================================================================
 
-    if (!selectedStep) {
+    if (isLoading) {
         return (
-            <Card className={cn('h-full', className)}>
-                <CardContent className="flex items-center justify-center h-full">
-                    <div className="text-center space-y-4 text-muted-foreground">
-                        <Settings className="w-12 h-12 mx-auto opacity-50" />
-                        <div>
-                            <h3 className="font-medium text-lg">Painel de Propriedades</h3>
-                            <p className="text-sm">Selecione um step para editar</p>
+            <div className="p-6 space-y-4">
+                <div className="flex items-center space-x-2">
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-500"></div>
+                    <span className="text-sm text-gray-600">Carregando propriedades...</span>
+                </div>
+                <div className="space-y-2">
+                    {[1, 2, 3, 4].map(i => (
+                        <div key={i} className="h-12 bg-gray-100 rounded-lg animate-pulse"></div>
+                    ))}
+                </div>
+            </div>
+        );
+    }
+
+    // ============================================================================
+    // ERROR STATE
+    // ============================================================================
+
+    if (error || !componentDefinition) {
+        return (
+            <div className="p-6">
+                <Alert>
+                    <AlertTriangle className="h-4 w-4" />
+                    <AlertDescription>
+                        {error || 'Definição do componente não encontrada'}
+                        <div className="mt-2 text-xs text-gray-500">
+                            Component ID: {componentId}
                         </div>
-                    </div>
-                </CardContent>
-            </Card>
+                    </AlertDescription>
+                </Alert>
+            </div>
         );
     }
 
-    const stepType = selectedStep.type || 'common';
-    const panelDefinition = PropertiesPanelRegistry.resolve(stepType);
+    // ============================================================================
+    // PROPERTIES CATEGORIZATION
+    // ============================================================================
 
-    if (!panelDefinition) {
+    const categorizedProperties = useMemo(() => {
+        const categories: Record<PropertyCategory, typeof componentDefinition.properties> = {
+            [PropertyCategory.CONTENT]: [],
+            [PropertyCategory.LAYOUT]: [],
+            [PropertyCategory.STYLE]: [],
+            [PropertyCategory.BEHAVIOR]: [],
+            [PropertyCategory.ADVANCED]: [],
+            [PropertyCategory.ANIMATION]: [],
+            [PropertyCategory.ACCESSIBILITY]: [],
+            [PropertyCategory.SEO]: [],
+        };
+
+        componentDefinition.properties.forEach(prop => {
+            // Mapear categoria do componentConfiguration para useUnifiedProperties
+            let category: PropertyCategory;
+            switch (prop.category) {
+                case 'visual':
+                    category = PropertyCategory.STYLE;
+                    break;
+                case 'content':
+                    category = PropertyCategory.CONTENT;
+                    break;
+                case 'layout':
+                    category = PropertyCategory.LAYOUT;
+                    break;
+                case 'behavior':
+                    category = PropertyCategory.BEHAVIOR;
+                    break;
+                default:
+                    category = PropertyCategory.ADVANCED;
+            }
+
+            if (categories[category]) {
+                categories[category].push(prop);
+            }
+        });
+
+        // Remover categorias vazias
+        Object.keys(categories).forEach(cat => {
+            if (categories[cat as PropertyCategory].length === 0) {
+                delete categories[cat as PropertyCategory];
+            }
+        });
+
+        return categories;
+    }, [componentDefinition.properties]);
+
+    // ============================================================================
+    // HANDLERS
+    // ============================================================================
+
+    const handlePropertyUpdate = async (key: string, value: any) => {
+        try {
+            await updateProperty(key, value);
+            onPropertyChange?.(key, value);
+        } catch (error) {
+            console.error(`Failed to update property ${key}:`, error);
+        }
+    };
+
+    const handleSave = async () => {
+        try {
+            await updateProperties(properties);
+            onSave?.();
+        } catch (error) {
+            console.error('Failed to save properties:', error);
+        }
+    };
+
+    const handleReset = async () => {
+        try {
+            await resetToDefaults();
+            onReset?.();
+        } catch (error) {
+            console.error('Failed to reset properties:', error);
+        }
+    };
+
+    const handlePreviewToggle = () => {
+        const newState = !previewEnabled;
+        setPreviewEnabled(newState);
+        onPreviewToggle?.(newState);
+    };
+
+    // ============================================================================
+    // RENDER PROPERTY EDITOR
+    // ============================================================================
+
+    const renderPropertyEditor = (propDef: typeof componentDefinition.properties[0]) => {
+        const EditorComponent = propertyEditors[propDef.type] || propertyEditors['text'];
+        const currentValue = properties[propDef.key] ?? propDef.defaultValue;
+
         return (
-            <Card className={cn('h-full flex flex-col', className)}>
-                <CardHeader>
-                    <div className="flex items-center justify-between">
-                        <CardTitle>Erro no Painel</CardTitle>
-                        <Button variant="ghost" size="sm" onClick={onClose} className="h-8 w-8 p-0">
-                            <X className="w-4 h-4" />
-                        </Button>
-                    </div>
-                </CardHeader>
-                <CardContent>
-                    <Alert variant="destructive">
-                        <AlertCircle className="h-4 h-4" />
-                        <AlertDescription>
-                            Nenhum painel encontrado para o tipo {stepType}
-                        </AlertDescription>
-                    </Alert>
-                </CardContent>
-            </Card>
-        );
-    }
-
-    const PanelComponent = panelDefinition.component;
-    
-    return (
-        <Card className={cn('h-full flex flex-col', className)}>
-            <CardHeader className="flex-shrink-0 pb-3">
+            <div key={propDef.key} className="space-y-2">
                 <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                        <CardTitle className="text-lg">Propriedades</CardTitle>
-                        <Badge variant="secondary">
-                            {panelDefinition.label}
+                    <label className="text-sm font-medium text-gray-700">
+                        {propDef.label}
+                    </label>
+                    {propDef.editor.realTimeSync && (
+                        <Badge variant="secondary" className="text-xs">
+                            <Zap className="w-3 h-3 mr-1" />
+                            Real-time
                         </Badge>
+                    )}
+                </div>
+
+                {propDef.description && (
+                    <p className="text-xs text-gray-500">{propDef.description}</p>
+                )}
+
+                <EditorComponent
+                    property={{
+                        key: propDef.key,
+                        label: propDef.label,
+                        type: propDef.type as any, // Usar any para compatibilidade entre enums
+                        category: PropertyCategory.ADVANCED, // Categoria padrão
+                        value: currentValue,
+                        ...propDef.editor.props
+                    }}
+                    onChange={handlePropertyUpdate}
+                />
+
+                {propDef.validation?.required && !currentValue && (
+                    <p className="text-xs text-red-500">Este campo é obrigatório</p>
+                )}
+            </div>
+        );
+    };
+
+    // ============================================================================
+    // CATEGORY TABS
+    // ============================================================================
+
+    const categoryLabels = {
+        [PropertyCategory.CONTENT]: 'Conteúdo',
+        [PropertyCategory.LAYOUT]: 'Layout',
+        [PropertyCategory.STYLE]: 'Visual',
+        [PropertyCategory.BEHAVIOR]: 'Comportamento',
+        [PropertyCategory.ADVANCED]: 'Avançado',
+        [PropertyCategory.ANIMATION]: 'Animação',
+        [PropertyCategory.ACCESSIBILITY]: 'Acessibilidade',
+        [PropertyCategory.SEO]: 'SEO',
+    };
+
+    const categoryIcons = {
+        [PropertyCategory.CONTENT]: '📝',
+        [PropertyCategory.LAYOUT]: '📐',
+        [PropertyCategory.STYLE]: '🎨',
+        [PropertyCategory.BEHAVIOR]: '⚡',
+        [PropertyCategory.ADVANCED]: '🔧',
+        [PropertyCategory.ANIMATION]: '🎬',
+        [PropertyCategory.ACCESSIBILITY]: '♿',
+        [PropertyCategory.SEO]: '🔍',
+    };
+
+    // ============================================================================
+    // RENDER
+    // ============================================================================
+
+    return (
+        <div className="h-full flex flex-col bg-white border-l border-gray-200">
+
+            {/* HEADER */}
+            <div className="p-4 border-b border-gray-200">
+                <div className="flex items-center justify-between mb-3">
+                    <div>
+                        <h2 className="text-lg font-semibold text-gray-900">
+                            {componentDefinition.name}
+                        </h2>
+                        <p className="text-sm text-gray-500">{componentDefinition.description}</p>
                     </div>
-                    
-                    <div className="flex items-center gap-1">
-                        {onTogglePreview && (
-                            <Button variant="ghost" size="sm" onClick={onTogglePreview} className="h-8 w-8 p-0">
-                                {isPreviewMode ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                            </Button>
-                        )}
-                        {onDuplicateStep && (
-                            <Button variant="ghost" size="sm" onClick={handleDuplicate} className="h-8 w-8 p-0">
-                                <Copy className="w-4 h-4" />
-                            </Button>
-                        )}
-                        {onDeleteStep && (
-                            <Button variant="ghost" size="sm" onClick={handleDelete} className="h-8 w-8 p-0 text-destructive">
-                                <Trash2 className="w-4 h-4" />
-                            </Button>
-                        )}
-                        <Button variant="ghost" size="sm" onClick={onClose} className="h-8 w-8 p-0">
-                            <X className="w-4 h-4" />
+
+                    <div className="flex items-center space-x-2">
+                        {/* API Status */}
+                        <Badge
+                            variant={connectionStatus === 'connected' ? 'default' : 'destructive'}
+                            className="text-xs"
+                        >
+                            {connectionStatus === 'connected' ? '🟢' : '🔴'} API
+                        </Badge>
+
+                        {/* Preview Toggle */}
+                        <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={handlePreviewToggle}
+                            className="flex items-center space-x-1"
+                        >
+                            {previewEnabled ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
+                            <span className="hidden sm:inline">Preview</span>
                         </Button>
                     </div>
                 </div>
-                <div className="text-xs text-muted-foreground">ID: {selectedStep.id}</div>
-            </CardHeader>
 
-            <Separator />
+                {/* Action Buttons */}
+                <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-2">
+                        <Button
+                            size="sm"
+                            onClick={handleSave}
+                            disabled={!hasUnsavedChanges}
+                            className="flex items-center space-x-1"
+                        >
+                            <Save className="w-4 h-4" />
+                            <span>Salvar</span>
+                            {hasUnsavedChanges && (
+                                <Badge variant="secondary" className="ml-1 text-xs">!</Badge>
+                            )}
+                        </Button>
 
-            <CardContent className="flex-1 overflow-hidden p-0">
-                <ScrollArea className="h-full px-6 py-6">
-                    <PanelComponent
-                        stepId={selectedStep.id}
-                        stepType={stepType}
-                        stepData={selectedStep}
-                        onUpdate={handleUpdate}
-                        onDelete={onDeleteStep ? handleDelete : undefined}
-                    />
-                </ScrollArea>
-            </CardContent>
-        </Card>
+                        <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={handleReset}
+                            className="flex items-center space-x-1"
+                        >
+                            <RotateCcw className="w-4 h-4" />
+                            <span>Reset</span>
+                        </Button>
+                    </div>
+
+                    {lastSaved && (
+                        <div className="text-xs text-gray-500 flex items-center space-x-1">
+                            <Clock className="w-3 h-3" />
+                            <span>Salvo {new Date(lastSaved).toLocaleTimeString()}</span>
+                        </div>
+                    )}
+                </div>
+            </div>
+
+            {/* PROPERTIES TABS */}
+            <div className="flex-1 overflow-hidden">
+                <Tabs
+                    value={activeCategory}
+                    onValueChange={(value) => setActiveCategory(value as PropertyCategory)}
+                    className="h-full flex flex-col"
+                >
+                    {/* Tabs List */}
+                    <TabsList className="grid w-full grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 p-1 m-2">
+                        {Object.keys(categorizedProperties).map((category) => (
+                            <TabsTrigger
+                                key={category}
+                                value={category}
+                                className="text-xs flex items-center space-x-1"
+                            >
+                                <span>{categoryIcons[category as PropertyCategory]}</span>
+                                <span className="hidden sm:inline">
+                                    {categoryLabels[category as PropertyCategory]}
+                                </span>
+                                <Badge variant="secondary" className="text-xs">
+                                    {categorizedProperties[category as PropertyCategory].length}
+                                </Badge>
+                            </TabsTrigger>
+                        ))}
+                    </TabsList>
+
+                    {/* Tabs Content */}
+                    <div className="flex-1 overflow-y-auto">
+                        {Object.entries(categorizedProperties).map(([category, props]) => (
+                            <TabsContent key={category} value={category} className="p-4 space-y-4">
+                                <div className="space-y-6">
+                                    {props.map(renderPropertyEditor)}
+                                </div>
+                            </TabsContent>
+                        ))}
+                    </div>
+                </Tabs>
+            </div>
+
+            {/* FOOTER - Debug Info */}
+            <div className="p-3 border-t border-gray-100 bg-gray-50">
+                <div className="text-xs text-gray-500 space-y-1">
+                    <div className="flex justify-between">
+                        <span>Component ID: {componentId}</span>
+                        <span>Properties: {componentDefinition.properties.length}</span>
+                    </div>
+                    {funnelId && (
+                        <div>Funnel ID: {funnelId}</div>
+                    )}
+                    <div className="flex justify-between">
+                        <span>Endpoint: {componentDefinition.apiEndpoint}</span>
+                        <span className={`${connectionStatus === 'connected' ? 'text-green-600' : 'text-red-600'}`}>
+                            {connectionStatus}
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
     );
-};
+}
 
-export default DynamicPropertiesPanel;
+// ============================================================================
+// SPECIALIZED PANELS
+// ============================================================================
+
+/**
+ * Painel específico para componentes de quiz
+ */
+export function QuizPropertiesPanel(props: Omit<DynamicPropertiesPanelProps, 'componentId'>) {
+    return <DynamicPropertiesPanel {...props} componentId="quiz-options-grid" />;
+}
+
+/**
+ * Painel compacto para sidebar
+ */
+export function CompactPropertiesPanel(props: DynamicPropertiesPanelProps) {
+    return (
+        <div className="w-80 max-w-sm">
+            <DynamicPropertiesPanel {...props} />
+        </div>
+    );
+}

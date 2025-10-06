@@ -13,7 +13,6 @@
 import { supabase } from '@/integrations/supabase/client';
 import { indexedDBService } from './storage/IndexedDBService';
 import { FunnelContext } from '@/core/contexts/FunnelContext';
-import type { QuizStep } from '@/data/quizSteps';
 // MIGRATED: Using new validation service
 import { migratedFunnelValidationService } from '@/services/migratedFunnelValidationService';
 import { errorManager, createValidationError } from '@/utils/errorHandling';
@@ -34,7 +33,6 @@ export interface UnifiedFunnelData {
     // Dados do funil
     settings: any;
     pages: any[];
-    quizSteps?: Array<(QuizStep & { id: string; order?: number; blockId?: string })>;
 
     // Metadados
     isPublished: boolean;
@@ -51,13 +49,10 @@ export interface CreateFunnelOptions {
     name: string;
     description?: string;
     category?: string;
-    context?: FunnelContext;
+    context: FunnelContext;
     templateId?: string;
     userId?: string;
     autoPublish?: boolean;
-    settings?: any;
-    pages?: any[];
-    quizSteps?: Array<(QuizStep & { id: string; order?: number; blockId?: string })>;
 }
 
 export interface UpdateFunnelOptions {
@@ -67,7 +62,6 @@ export interface UpdateFunnelOptions {
     settings?: any;
     pages?: any[];
     isPublished?: boolean;
-    quizSteps?: Array<(QuizStep & { id: string; order?: number; blockId?: string })>;
 }
 
 export interface ListFunnelOptions {
@@ -356,13 +350,6 @@ export class FunnelUnifiedService {
         }
 
         try {
-            const quizSteps = deepClone(
-                data.settings?.quizSteps ||
-                (Array.isArray((data as any).quizSteps) ? (data as any).quizSteps : undefined) ||
-                (Array.isArray((data as any).quiz_steps) ? (data as any).quiz_steps : undefined) ||
-                []
-            ) as Array<QuizStep & { id: string; order?: number; blockId?: string }>;
-
             return {
                 id: data.id,
                 name: data.name || 'Funil sem nome',
@@ -370,12 +357,8 @@ export class FunnelUnifiedService {
                 category: data.settings?.category || 'outros', // Extrair categoria de settings
                 context: data.settings?.context || FunnelContext.EDITOR,
                 userId: data.user_id || 'anonymous',
-                settings: {
-                    ...(data.settings || {}),
-                    quizSteps
-                },
+                settings: data.settings || {},
                 pages: data.pages || [],
-                quizSteps,
                 isPublished: data.is_published || false,
                 version: data.version || 1,
                 createdAt: new Date(data.created_at || Date.now()),
@@ -403,7 +386,6 @@ export class FunnelUnifiedService {
             // Gerar ID único
             const id = this.generateUniqueId();
             const userId = options.userId || await this.getCurrentUserId();
-            const context = options.context || FunnelContext.EDITOR;
 
             // Validação de entrada
             if (!options.name?.trim()) {
@@ -416,11 +398,10 @@ export class FunnelUnifiedService {
                 name: options.name.trim(),
                 description: options.description || '',
                 category: options.category || 'outros',
-                context,
+                context: options.context,
                 userId,
-                settings: deepClone(options.settings || {}),
-                pages: deepClone(options.pages || []),
-                quizSteps: deepClone(options.quizSteps || []),
+                settings: {},
+                pages: [],
                 isPublished: options.autoPublish || false,
                 version: 1,
                 createdAt: new Date(),
@@ -428,14 +409,6 @@ export class FunnelUnifiedService {
                 templateId: options.templateId,
                 isFromTemplate: !!options.templateId
             };
-
-            // Garantir quizSteps em settings para compatibilidade legada
-            if (funnelData.quizSteps && funnelData.quizSteps.length) {
-                funnelData.settings = {
-                    ...funnelData.settings,
-                    quizSteps: deepClone(funnelData.quizSteps)
-                };
-            }
 
             // Se for baseado em template, aplicar deep clone
             if (options.templateId) {
@@ -450,7 +423,7 @@ export class FunnelUnifiedService {
                 `funnel:${id}`,
                 savedFunnel,
                 undefined,
-                context,
+                options.context,
                 userId
             );
 
@@ -459,7 +432,7 @@ export class FunnelUnifiedService {
             this.cache.invalidateByUser(userId);
 
             // Emitir evento
-            await this.emit('created', id, savedFunnel, context, userId);
+            await this.emit('created', id, savedFunnel, options.context, userId);
 
             console.log('✅ Funil criado com sucesso:', savedFunnel);
             return savedFunnel;
@@ -796,19 +769,11 @@ export class FunnelUnifiedService {
         console.log('🎨 Aplicando template:', templateId, 'ao funil:', funnel.id);
 
         // Por enquanto, aplicar estrutura básica
-        const quizSteps = funnel.quizSteps ? deepClone(funnel.quizSteps) : undefined;
         funnel.settings = deepClone({
             theme: 'default',
             templateId: templateId,
-            appliedAt: new Date().toISOString(),
-            quizSteps: quizSteps || []
+            appliedAt: new Date().toISOString()
         });
-
-        if (quizSteps) {
-            funnel.quizSteps = quizSteps;
-        } else {
-            funnel.quizSteps = [];
-        }
 
         funnel.pages = [];
     }
@@ -853,8 +818,7 @@ export class FunnelUnifiedService {
                     context: funnel.context,
                     templateId: funnel.templateId,
                     isFromTemplate: funnel.isFromTemplate,
-                    category: funnel.category,
-                    quizSteps: funnel.quizSteps ? deepClone(funnel.quizSteps) : (funnel.settings?.quizSteps || [])
+                    category: funnel.category // Mantém categoria dentro de settings
                 },
                 created_at: funnel.createdAt.toISOString(),
                 updated_at: funnel.updatedAt.toISOString()

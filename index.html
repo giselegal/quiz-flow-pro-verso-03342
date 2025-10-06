@@ -4,16 +4,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Descubra Seu Estilo com Gisele Galvão | Vista-se de Você!</title>
-  <!-- CACHE BUSTING: Force reload with unique content -->
-  <meta name="cache-bust" content="2025-01-01-v3-force-reload" />
-  <meta name="build-version" content="template-fix-v3" />
-  
-  <!-- Fix for deprecated APIs -->
-  <meta name="theme-color" content="#0066CC" />
-  <meta name="color-scheme" content="light" />
+  <title>🚀 Descubra Seu Estilo com Gisele Galvão | Vista-se de Você!</title>
 
-  <meta property="og:title" content="🚀 CACHE BUST - Descubra Seu Estilo com Gisele Galvão | Vista-se de Você!" />
+  <meta property="og:title" content="🚀 Descubra Seu Estilo com Gisele Galvão | Vista-se de Você!" />
   <meta property="og:description"
     content="Cansada do guarda-roupa lotado e nada combina? Faça o quiz da Gisele Galvão e descubra seu estilo com clareza e confiança. Resultado imediato!" />
   <meta property="og:type" content="website" />
@@ -21,22 +14,15 @@
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Descubra Seu Estilo com Gisele Galvão | Vista-se de Você!" />
 
+  <!-- Permissions Policy para suprimir warnings -->
+  <meta http-equiv="Permissions-Policy" content="camera=(), microphone=(), geolocation=()">
+
   <!-- Minimal head for maximum compatibility -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 
   <!-- Essential font loading -->
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet" />
-
-  <!-- Essential shim -->
-  <script src="/require-shim.js"></script>
-  
-  <!-- Fix for deprecated APIs and iframe issues -->
-  <meta http-equiv="Permissions-Policy" content="camera=(), microphone=(), geolocation=(), vr=(), ambient-light-sensor=(), battery=()" />
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https:; frame-src 'none';" />
-
-  <!-- Vite irá injetar os assets corretos no build -->
-  <script type="module" src="/src/main.tsx"></script>
 
   <style>
     .content-placeholder {
@@ -105,8 +91,14 @@
 </head>
 
 <body>
-  <!-- Facebook Pixel noscript será adicionado dinamicamente pelo React quando o pixel ID for definido -->
-  <div id="root"></div>
+  <div id="root">
+    <div class="loading-fallback">
+      <div class="loading-spinner"></div>
+    </div>
+  </div>
+
+  <script type="module" src="/src/main.tsx"></script>
+
   <script>
     // Unregister any existing service workers to avoid caching/fetch conflicts
     if ('serviceWorker' in navigator) {

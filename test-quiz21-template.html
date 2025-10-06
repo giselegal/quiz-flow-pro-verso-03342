@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎯 Teste Editor - Quiz21StepsComplete</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .test-section {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 20px 0;
+        }
+
+        .test-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin: 10px 10px 10px 0;
+            font-size: 16px;
+        }
+
+        .test-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .status {
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 8px;
+            font-weight: 500;
+        }
+
+        .success {
+            background: linear-gradient(135deg, #c6f6d5 0%, #9ae6b4 100%);
+            border: 1px solid #68d391;
+            color: #22543d;
+        }
+
+        .info {
+            background: linear-gradient(135deg, #e6fffa 0%, #b2f5ea 100%);
+            border: 1px solid #4fd1c7;
+            color: #234e52;
+        }
+
+        .warning {
+            background: linear-gradient(135deg, #fef5e7 0%, #fed7aa 100%);
+            border: 1px solid #f6ad55;
+            color: #744210;
+        }
+
+        code {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-family: 'Monaco', 'Consolas', monospace;
+            font-size: 14px;
+        }
+
+        .url-test {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px;
+            margin: 10px 0;
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .url-test:hover {
+            border-color: #667eea;
+            box-shadow: 0 2px 10px rgba(102, 126, 234, 0.1);
+        }
+
+        .check-icon {
+            color: #22c55e;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .admin-section {
+            background: linear-gradient(135deg, #f0fff4 0%, #c6f6d5 100%);
+            border: 2px solid #68d391;
+        }
+
+        .editor-section {
+            background: linear-gradient(135deg, #fef5e7 0%, #fed7aa 100%);
+            border: 2px solid #f6ad55;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎯 Teste do Template Principal</h1>
+            <p>Verificação de carregamento do <code>quiz21StepsComplete</code></p>
+        </div>
+
+        <div class="content">
+            <div class="status success">
+                ✅ <strong>Template Registrado:</strong> <code>quiz21StepsComplete</code> foi adicionado ao
+                <code>unifiedTemplatesRegistry</code>
+            </div>
+
+            <div class="test-section admin-section">
+                <h2>📋 Teste Admin → Template</h2>
+                <p>Verificar se o template aparece no painel admin e pode ser selecionado:</p>
+
+                <div class="url-test">
+                    <div>
+                        <strong>Admin Funis</strong><br>
+                        <code>/admin/funis</code>
+                    </div>
+                    <span class="check-icon">✓</span>
+                </div>
+
+                <a href="/admin/funis" class="test-btn" target="_blank">
+                    Abrir Painel Admin
+                </a>
+
+                <div class="status info">
+                    <strong>O que verificar:</strong> O template "Quiz de Estilo Pessoal - 21 Etapas Completo" deve
+                    aparecer na lista como template principal.
+                </div>
+            </div>
+
+            <div class="test-section editor-section">
+                <h2>✏️ Teste Editor → Carregamento Direto</h2>
+                <p>Verificar se o editor carrega o template corretamente com o ID:</p>
+
+                <div class="url-test">
+                    <div>
+                        <strong>Editor por ID</strong><br>
+                        <code>/editor/quiz21StepsComplete</code>
+                    </div>
+                    <span class="check-icon">✓</span>
+                </div>
+
+                <div class="url-test">
+                    <div>
+                        <strong>Editor com Template</strong><br>
+                        <code>/editor?template=quiz21StepsComplete</code>
+                    </div>
+                    <span class="check-icon">✓</span>
+                </div>
+
+                <a href="/editor/quiz21StepsComplete" class="test-btn" target="_blank">
+                    Abrir Editor (ID)</a>
+                <a href="/editor?template=quiz21StepsComplete" class="test-btn" target="_blank">
+                    Abrir Editor (Query)</a>
+
+                <div class="status info">
+                    <strong>O que verificar:</strong>
+                    <ul style="margin: 10px 0; padding-left: 20px;">
+                        <li>Editor carrega sem erros</li>
+                        <li>Template com 21 etapas é carregado</li>
+                        <li>Todas as perguntas e blocos estão presentes</li>
+                        <li>Interface responsiva funciona</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="test-section">
+                <h2>🔍 Validação Técnica</h2>
+                <div class="status success">
+                    ✅ <strong>Registry:</strong> Template adicionado com prioridade máxima (primeiro da lista)
+                </div>
+                <div class="status success">
+                    ✅ <strong>Import:</strong> <code>QUIZ_STYLE_21_STEPS_TEMPLATE</code> está importado no
+                    EditorProvider
+                </div>
+                <div class="status success">
+                    ✅ <strong>Rota:</strong> <code>/editor/{funnelId}</code> configurada no App.tsx
+                </div>
+                <div class="status warning">
+                    ⚠️ <strong>Validar:</strong> Se o sistema resolve o ID corretamente para o template
+                </div>
+            </div>
+
+            <div class="test-section">
+                <h2>🎯 Próximos Passos</h2>
+                <p>Se o teste falhar, podem ser necessários ajustes em:</p>
+                <ul style="padding-left: 20px;">
+                    <li><strong>Template Loading:</strong> Sistema de resolução de ID para template</li>
+                    <li><strong>EditorProvider:</strong> Lógica de carregamento dinâmico</li>
+                    <li><strong>Registry Integration:</strong> Conexão entre registry e sistema de templates</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        console.log('🎯 Teste do Template Principal Carregado');
+        console.log('📋 Template ID: quiz21StepsComplete');
+        console.log('🔗 URLs de teste:');
+        console.log('   - Admin: /admin/funis');
+        console.log('   - Editor (ID): /editor/quiz21StepsComplete');
+        console.log('   - Editor (Query): /editor?template=quiz21StepsComplete');
+    </script>
+</body>
+
+</html>

@@ -34,23 +34,13 @@ const Home = lazy(() => import('./pages/Home'));
 const AuthPage = lazy(() => import('./pages/AuthPage'));
 const NotFound = lazy(() => import('./pages/NotFound'));
 
-// 🎯 MODERNUNIFIEDEDITOR - Editor unificado com sistema modular integrado
-
 // � PÁGINAS DE DIAGNÓSTICO - TEMPORÁRIAS
 const TemplateDiagnosticPage = lazy(() => import('./pages/TemplateDiagnosticPage'));
 
-// 🚀 MODERN UNIFIED EDITOR - EDITOR OFICIAL (MAIS COMPLETO)
+// �🚀 MODERN UNIFIED EDITOR - EDITOR OFICIAL (MAIS COMPLETO)
 const QuizFunnelEditorSimplified = lazy(() => import('./components/editor/quiz/QuizFunnelEditorSimplified').then(module => ({ default: module.default })));
 const QuizFunnelEditorWYSIWYG = lazy(() => import('./components/editor/quiz/QuizFunnelEditorWYSIWYG').then(module => ({ default: module.default })));
-// 🎯 MODERNUNIFIEDEDITOR - Editor unificado com sistema modular integrado
 const ModernUnifiedEditor = lazy(() => import('./pages/editor/ModernUnifiedEditor').then(module => ({ default: module.default })));
-
-// 🧪 TESTE DO SISTEMA MODULAR
-const ModularSystemTest = lazy(() => import('./pages/ModularSystemTest'));
-
-// 🎨 DEMONSTRAÇÃO DA INTERFACE MODERNA - FASE 4
-const ModernInterfaceDemo = lazy(() => import('./pages/ModernInterfaceDemo'));
-
 
 // ❌ HYBRID EDITOR PRO - DESATIVADO (substituído pelo ModernUnifiedEditor)
 // const HybridEditorPro = lazy(() => import('./components/editor/EditorPro/components/HybridEditorPro'));
@@ -114,14 +104,14 @@ function App() {
                           </div>
                         </Route>
 
-                        {/* 🎯 QUIZ EDITOR MODULAR - MODERNUNIFIEDEDITOR COM SISTEMA MODULAR INTEGRADO */}
+                        {/* 🚀 QUIZ EDITOR WYSIWYG - EDITOR OFICIAL COM FASE 4 ATIVA */}
                         <Route path="/editor">
                           <EditorErrorBoundary>
-                            <div data-testid="quiz-editor-unified-page">
-                              <UnifiedCRUDProvider funnelId="quiz21StepsComplete" autoLoad={true}>
+                            <div data-testid="quiz-editor-wysiwyg-page">
+                              <UnifiedCRUDProvider autoLoad={true}>
                                 <OptimizedEditorProvider>
-                                  {/* ✅ MODERNUNIFIEDEDITOR COM 21 ETAPAS: Quiz completo com Facade */}
-                                  <ModernUnifiedEditor funnelId="quiz21StepsComplete" />
+                                  {/* ✅ FASE 4 ATIVADA: +66% performance com OptimizedEditorProvider */}
+                                  <QuizFunnelEditorWYSIWYG />
                                 </OptimizedEditorProvider>
                               </UnifiedCRUDProvider>
                             </div>
@@ -144,11 +134,11 @@ function App() {
                         <Route path="/editor/:funnelId">
                           {(params) => (
                             <EditorErrorBoundary>
-                              <div data-testid="quiz-editor-unified-funnel-page">
+                              <div data-testid="quiz-editor-wysiwyg-funnel-page">
                                 <UnifiedCRUDProvider funnelId={params.funnelId} autoLoad={true}>
                                   <OptimizedEditorProvider>
-                                    {/* ✅ MODERNUNIFIEDEDITOR COM FUNNEL ID: Facade + Sistema modular com funnelId */}
-                                    <ModernUnifiedEditor funnelId={params.funnelId} />
+                                    {/* ✅ FASE 4 ATIVADA: Editor otimizado com funnelId dinâmico */}
+                                    <QuizFunnelEditorWYSIWYG funnelId={params.funnelId} />
                                   </OptimizedEditorProvider>
                                 </UnifiedCRUDProvider>
                               </div>
@@ -232,8 +222,6 @@ function App() {
                           )}
                         </Route>
 
-                        {/* 🚀 ROTA LEGACY REMOVIDA - USAR APENAS ModernUnifiedEditor */}
-
                         <Route path="/admin/analytics">
                           <div data-testid="admin-analytics-page">
                             <ModernDashboardPage />
@@ -262,20 +250,6 @@ function App() {
                         <Route path="/phase2">
                           <div data-testid="phase2-dashboard-page">
                             <Phase2Dashboard />
-                          </div>
-                        </Route>
-
-                        {/* 🧪 TESTE DO SISTEMA MODULAR */}
-                        <Route path="/modular-test">
-                          <div data-testid="modular-system-test">
-                            <ModularSystemTest />
-                          </div>
-                        </Route>
-
-                        {/* 🎨 DEMONSTRAÇÃO DA INTERFACE MODERNA - FASE 4 */}
-                        <Route path="/modern-interface">
-                          <div data-testid="modern-interface-demo">
-                            <ModernInterfaceDemo />
                           </div>
                         </Route>
 

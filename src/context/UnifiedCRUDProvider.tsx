@@ -5,13 +5,7 @@
  * - FunnelsProvider
  * - PureBuilderProvider  
  * - UnifiedFunnelProvider
- * - Integração co                const funnel: UnifiedFunnelData = {
-                    id: masterData.metadata.id,
-                    name: masterData.metadata.name,
-                    description: masterData.metadata.description,
-                    category: masterData.metadata.category || 'quiz',
-                    context: FunnelContext.TEMPLATES,
-                    userId: 'master-template',lUnifiedService
+ * - Integração com FunnelUnifiedService
  * - Cache inteligente e sincronização
  */
 
@@ -19,8 +13,6 @@ import React, { createContext, useContext, useCallback, useEffect, useState } fr
 import { funnelUnifiedService, UnifiedFunnelData } from '@/services/FunnelUnifiedService';
 import { enhancedFunnelService } from '@/services/EnhancedFunnelService';
 import { normalizeFunnelId } from '@/utils/funnelNormalizer';
-import { jsonMasterService } from '@/services/JsonMasterService';
-import { FunnelContext } from '@/core/contexts/FunnelContext';
 
 // ============================================================================
 // TYPES & INTERFACES
@@ -81,7 +73,7 @@ export const UnifiedCRUDProvider: React.FC<UnifiedCRUDProviderProps> = ({
     // STATE
     // ========================================================================
 
-    const [currentFunnel, setCurrentFunnelState] = useState<UnifiedFunnelData | null>(null);
+    const [currentFunnel, setCurrentFunnel] = useState<UnifiedFunnelData | null>(null);
     const [funnels, setFunnels] = useState<UnifiedFunnelData[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const [isSaving, setIsSaving] = useState(false);
@@ -90,45 +82,6 @@ export const UnifiedCRUDProvider: React.FC<UnifiedCRUDProviderProps> = ({
     // ========================================================================
     // CRUD OPERATIONS
     // ========================================================================
-
-    const ensureQuizSteps = useCallback((funnel: UnifiedFunnelData | null): UnifiedFunnelData | null => {
-        if (!funnel) return null;
-        const fromPrimary = Array.isArray(funnel.quizSteps) ? funnel.quizSteps : [];
-        const fromSettings = Array.isArray((funnel.settings as any)?.quizSteps)
-            ? (funnel.settings as any).quizSteps
-            : [];
-        const source = fromPrimary.length ? fromPrimary : fromSettings;
-        const normalized = source.map((step: any, index: number) => ({
-            ...step,
-            id: step?.id || `step-${index + 1}`,
-            order: typeof step?.order === 'number' ? step.order : index
-        }));
-        const sanitizedSteps = normalized.map((step: any) => {
-            const { blockId, ...rest } = step;
-            return rest;
-        });
-
-        const nextSettings = {
-            ...(funnel.settings || {}),
-            quizSteps: Array.isArray((funnel.settings as any)?.quizSteps)
-                ? (funnel.settings as any).quizSteps
-                : sanitizedSteps
-        };
-        return {
-            ...funnel,
-            quizSteps: normalized,
-            settings: nextSettings
-        };
-    }, []);
-
-    const setCurrentFunnel = useCallback((funnel: UnifiedFunnelData | null) => {
-        if (!funnel) {
-            setCurrentFunnelState(null);
-            return;
-        }
-        const normalized = ensureQuizSteps(funnel) || funnel;
-        setCurrentFunnelState(normalized);
-    }, [ensureQuizSteps]);
 
     const createFunnel = useCallback(async (name: string, options: any = {}): Promise<UnifiedFunnelData> => {
         setIsLoading(true);
@@ -146,14 +99,12 @@ export const UnifiedCRUDProvider: React.FC<UnifiedCRUDProviderProps> = ({
                 ...options
             });
 
-            const normalizedFunnel = ensureQuizSteps(newFunnel) || newFunnel;
-
             // Atualizar listas e estado
-            setCurrentFunnel(normalizedFunnel);
-            setFunnels(prev => [normalizedFunnel, ...prev]);
+            setCurrentFunnel(newFunnel);
+            setFunnels(prev => [newFunnel, ...prev]);
 
-            if (debug) console.log('✅ Funnel created:', normalizedFunnel.id);
-            return normalizedFunnel;
+            if (debug) console.log('✅ Funnel created:', newFunnel.id);
+            return newFunnel;
 
         } catch (err) {
             const errorMessage = err instanceof Error ? err.message : 'Erro ao criar funil';
@@ -174,7 +125,7 @@ export const UnifiedCRUDProvider: React.FC<UnifiedCRUDProviderProps> = ({
         } finally {
             setIsLoading(false);
         }
-    }, [debug, ensureQuizSteps, setCurrentFunnel]);
+    }, [debug]);
 
     const loadFunnel = useCallback(async (id: string): Promise<void> => {
         setIsLoading(true);
@@ -183,45 +134,7 @@ export const UnifiedCRUDProvider: React.FC<UnifiedCRUDProviderProps> = ({
         try {
             if (debug) console.log('📂 UnifiedCRUDProvider: Loading funnel', id);
 
-            // 🎯 CASO ESPECIAL: Quiz 21 Steps usa JSON MASTER!
-            if (id === 'quiz21StepsComplete' || id === 'quiz21-steps-complete') {
-                console.log('🎯 [UnifiedCRUDProvider] Carregando do JSON MASTER!');
-
-                const masterData = await jsonMasterService.loadQuiz21Steps();
-
-                // Converter JSON master para UnifiedFunnelData
-                const funnel: UnifiedFunnelData = {
-                    id: masterData.metadata.id,
-                    name: masterData.metadata.name,
-                    description: masterData.metadata.description,
-                    category: masterData.metadata.category || 'quiz',
-                    context: FunnelContext.TEMPLATES,
-                    userId: 'json-master-template',
-                    settings: masterData.globalConfig || {},
-                    pages: [],
-                    quizSteps: masterData.steps || [],
-                    isPublished: true,
-                    version: 1,
-                    createdAt: new Date(masterData.metadata.createdAt || Date.now()),
-                    updatedAt: new Date(masterData.metadata.updatedAt || Date.now()),
-                    templateId: masterData.metadata.id,
-                    isFromTemplate: true
-                };
-
-                console.log('✅ [UnifiedCRUDProvider] JSON Master carregado:', {
-                    id: funnel.id,
-                    name: funnel.name,
-                    stepCount: funnel.quizSteps?.length,
-                    size: JSON.stringify(masterData).length + ' bytes'
-                });
-
-                const normalizedFunnel = ensureQuizSteps(funnel) || funnel;
-                setCurrentFunnel(normalizedFunnel);
-                setIsLoading(false);
-                return;
-            }
-
-            // ✅ NORMALIZAR ID ANTES DE BUSCAR (outros funis)
+            // ✅ NORMALIZAR ID ANTES DE BUSCAR
             const normalized = normalizeFunnelId(id);
             const searchId = normalized.baseId;
 
@@ -235,33 +148,31 @@ export const UnifiedCRUDProvider: React.FC<UnifiedCRUDProviderProps> = ({
                 if (!fallbackFunnel) {
                     throw new Error(`Funil não encontrado: ${id}`);
                 }
-                const normalizedFallback = ensureQuizSteps(fallbackFunnel) || fallbackFunnel;
-                setCurrentFunnel(normalizedFallback);
+                setCurrentFunnel(fallbackFunnel);
 
                 // Atualizar lista se não estiver presente
                 setFunnels(prev => {
-                    const exists = prev.find(f => f.id === normalizedFallback.id);
+                    const exists = prev.find(f => f.id === fallbackFunnel.id);
                     if (!exists) {
-                        return [normalizedFallback, ...prev];
+                        return [fallbackFunnel, ...prev];
                     }
                     return prev;
                 });
             }
 
             if (funnel) {
-                const normalized = ensureQuizSteps(funnel) || funnel;
-                setCurrentFunnel(normalized);
+                setCurrentFunnel(funnel);
 
                 // Atualizar lista se não estiver presente
                 setFunnels(prev => {
-                    const exists = prev.find(f => f.id === normalized.id);
+                    const exists = prev.find(f => f.id === funnel.id);
                     if (!exists) {
-                        return [normalized, ...prev];
+                        return [funnel, ...prev];
                     }
-                    return prev.map(f => f.id === normalized.id ? normalized : f);
+                    return prev.map(f => f.id === funnel.id ? funnel : f);
                 });
 
-                if (debug) console.log('✅ Funnel loaded:', normalized.id);
+                if (debug) console.log('✅ Funnel loaded:', funnel.id);
             }
 
         } catch (err) {
@@ -272,7 +183,7 @@ export const UnifiedCRUDProvider: React.FC<UnifiedCRUDProviderProps> = ({
         } finally {
             setIsLoading(false);
         }
-    }, [debug, ensureQuizSteps, setCurrentFunnel]);
+    }, [debug]);
 
     const saveFunnel = useCallback(async (funnel?: UnifiedFunnelData): Promise<void> => {
         const targetFunnel = funnel || currentFunnel;
@@ -293,18 +204,15 @@ export const UnifiedCRUDProvider: React.FC<UnifiedCRUDProviderProps> = ({
                     name: targetFunnel.name,
                     description: targetFunnel.description,
                     settings: targetFunnel.settings,
-                    pages: targetFunnel.pages,
-                    quizSteps: targetFunnel.quizSteps
+                    pages: targetFunnel.pages
                 }
             );
 
-            const normalized = ensureQuizSteps(updatedFunnel) || updatedFunnel;
-
             // Atualizar estado
-            setCurrentFunnel(normalized);
-            setFunnels(prev => prev.map(f => f.id === normalized.id ? normalized : f));
+            setCurrentFunnel(updatedFunnel);
+            setFunnels(prev => prev.map(f => f.id === updatedFunnel.id ? updatedFunnel : f));
 
-            if (debug) console.log('✅ Funnel saved:', normalized.id);
+            if (debug) console.log('✅ Funnel saved:', updatedFunnel.id);
 
         } catch (err) {
             const errorMessage = err instanceof Error ? err.message : 'Erro ao salvar funil';
@@ -314,7 +222,7 @@ export const UnifiedCRUDProvider: React.FC<UnifiedCRUDProviderProps> = ({
         } finally {
             setIsSaving(false);
         }
-    }, [currentFunnel, debug, ensureQuizSteps, setCurrentFunnel]);
+    }, [currentFunnel, debug]);
 
     const duplicateFunnel = useCallback(async (id: string, newName?: string): Promise<UnifiedFunnelData> => {
         setIsLoading(true);
@@ -324,14 +232,13 @@ export const UnifiedCRUDProvider: React.FC<UnifiedCRUDProviderProps> = ({
             if (debug) console.log('📋 UnifiedCRUDProvider: Duplicating funnel', id);
 
             const duplicatedFunnel = await funnelUnifiedService.duplicateFunnel(id, newName);
-            const normalized = ensureQuizSteps(duplicatedFunnel) || duplicatedFunnel;
 
             // Atualizar listas
-            setFunnels(prev => [normalized, ...prev]);
-            setCurrentFunnel(normalized);
+            setFunnels(prev => [duplicatedFunnel, ...prev]);
+            setCurrentFunnel(duplicatedFunnel);
 
-            if (debug) console.log('✅ Funnel duplicated:', normalized.id);
-            return normalized;
+            if (debug) console.log('✅ Funnel duplicated:', duplicatedFunnel.id);
+            return duplicatedFunnel;
 
         } catch (err) {
             const errorMessage = err instanceof Error ? err.message : 'Erro ao duplicar funil';
@@ -341,7 +248,7 @@ export const UnifiedCRUDProvider: React.FC<UnifiedCRUDProviderProps> = ({
         } finally {
             setIsLoading(false);
         }
-    }, [debug, ensureQuizSteps, setCurrentFunnel]);
+    }, [debug]);
 
     const deleteFunnel = useCallback(async (id: string): Promise<boolean> => {
         setIsLoading(true);
@@ -371,7 +278,7 @@ export const UnifiedCRUDProvider: React.FC<UnifiedCRUDProviderProps> = ({
         } finally {
             setIsLoading(false);
         }
-    }, [currentFunnel, debug, setCurrentFunnel]);
+    }, [currentFunnel, debug]);
 
     const refreshFunnels = useCallback(async (): Promise<void> => {
         setIsLoading(true);
@@ -385,7 +292,7 @@ export const UnifiedCRUDProvider: React.FC<UnifiedCRUDProviderProps> = ({
                 limit: 50
             });
 
-            setFunnels(funnelList.map(f => ensureQuizSteps(f) || f));
+            setFunnels(funnelList);
 
             if (debug) console.log(`✅ ${funnelList.length} funnels loaded`);
 
@@ -396,7 +303,7 @@ export const UnifiedCRUDProvider: React.FC<UnifiedCRUDProviderProps> = ({
         } finally {
             setIsLoading(false);
         }
-    }, [debug, ensureQuizSteps]);
+    }, [debug]);
 
     // ========================================================================
     // UTILITY FUNCTIONS
