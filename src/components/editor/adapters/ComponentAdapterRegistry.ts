@@ -286,9 +286,21 @@ export const OfferStepAdapter = createAdapter<OfferStepProps>({
             offerMap: {
                 'default': {
                     title: 'Consultoria de Estilo Personalizada',
-                    description: 'Descubra seu estilo único com nossa consultoria especializada.',
-                    price: 'R$ 297',
-                    image: ''
+                    description: 'Descubra seu estilo único com nossa consultoria especializada e dê o próximo passo rumo à sua melhor versão.',
+                    buttonText: 'Quero Minha Transformação',
+                    testimonial: {
+                        quote: 'Depois dessa jornada nunca mais tive dúvida ao montar um look — economizei tempo, dinheiro e ganhei confiança.',
+                        author: 'Cliente Real (Exemplo)'
+                    }
+                },
+                'upgrade': {
+                    title: 'Mentoria Exclusiva Premium',
+                    description: 'Acesso direto, acompanhamento guiado e materiais avançados para acelerar seus resultados.',
+                    buttonText: 'Quero Acesso Premium',
+                    testimonial: {
+                        quote: 'O acompanhamento premium encurtou meu caminho – em semanas já estava com um guarda‑roupa funcional e estratégico.',
+                        author: 'Aluna Premium'
+                    }
                 }
             }
         } as QuizStep,
