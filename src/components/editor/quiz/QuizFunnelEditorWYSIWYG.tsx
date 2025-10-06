@@ -761,18 +761,117 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
                                     <div className="text-xs">Use a sidebar para adicionar steps</div>
                                 </div>
                             </div>
-                        ) : selectedStep ? (
-                            // 🚀 FASE 3: COMPONENTES EDITÁVEIS ENCAPSULADOS - Sistema Unificado
-                            <div className="p-4">
-                                {renderRealComponent(selectedStep, steps.findIndex(s => s.id === selectedStep.id))}
-                            </div>
                         ) : (
-                            <div className="flex items-center justify-center h-full text-sm text-muted-foreground">
-                                <div className="text-center">
-                                    <div className="text-lg mb-2">📝</div>
-                                    <div>Selecione um step para editar</div>
-                                    <div className="text-xs">Use a sidebar à esquerda para selecionar</div>
-                                </div>
+                            // 🚀 CANVAS VERTICAL: TODOS OS STEPS EMPILHADOS
+                            <div className="flex flex-col gap-4">
+                                {steps.map((step, index) => {
+                                    const isSelected = selectedId === step.id;
+                                    const blockId = `step-${step.id}`;
+                                    
+                                    return (
+                                        <div
+                                            key={step.id}
+                                            className={cn(
+                                                "border-2 rounded-lg p-4 transition-all duration-200 cursor-pointer relative",
+                                                isSelected 
+                                                    ? "border-blue-500 shadow-lg bg-blue-50/30 ring-2 ring-blue-300 ring-offset-2" 
+                                                    : "border-gray-200 hover:border-blue-300 hover:shadow-md"
+                                            )}
+                                            onClick={() => {
+                                                setSelectedId(step.id);
+                                                setSelectedBlockId(blockId);
+                                            }}
+                                        >
+                                            {/* Header do Step */}
+                                            <div className="flex items-center justify-between mb-3 pb-2 border-b border-gray-200">
+                                                <div className="flex items-center gap-2">
+                                                    <Badge variant={isSelected ? "default" : "outline"} className="text-xs">
+                                                        Step {index + 1} / {steps.length}
+                                                    </Badge>
+                                                    <span className={cn(
+                                                        "text-sm font-semibold",
+                                                        isSelected ? "text-blue-700" : "text-gray-700"
+                                                    )}>
+                                                        {step.type.toUpperCase().replace('-', ' ')}
+                                                    </span>
+                                                    {isSelected && (
+                                                        <Badge variant="secondary" className="text-[10px]">
+                                                            ✏️ Editando
+                                                        </Badge>
+                                                    )}
+                                                </div>
+                                                
+                                                {/* Botões de ação - sempre visíveis se hover ou selecionado */}
+                                                <div className={cn(
+                                                    "flex gap-1 transition-opacity",
+                                                    isSelected ? "opacity-100" : "opacity-0 group-hover:opacity-100"
+                                                )}>
+                                                    <Button
+                                                        size="sm"
+                                                        variant="ghost"
+                                                        className="h-7 w-7 p-0"
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            moveStep(step.id, -1);
+                                                        }}
+                                                        title="Mover para cima"
+                                                        disabled={index === 0}
+                                                    >
+                                                        <ArrowUp className="w-3 h-3" />
+                                                    </Button>
+                                                    <Button
+                                                        size="sm"
+                                                        variant="ghost"
+                                                        className="h-7 w-7 p-0"
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            moveStep(step.id, 1);
+                                                        }}
+                                                        title="Mover para baixo"
+                                                        disabled={index === steps.length - 1}
+                                                    >
+                                                        <ArrowDown className="w-3 h-3" />
+                                                    </Button>
+                                                    <Button
+                                                        size="sm"
+                                                        variant="ghost"
+                                                        className="h-7 w-7 p-0"
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            duplicateStep(step.id);
+                                                        }}
+                                                        title="Duplicar"
+                                                    >
+                                                        <Copy className="w-3 h-3" />
+                                                    </Button>
+                                                    <Button
+                                                        size="sm"
+                                                        variant="ghost"
+                                                        className="h-7 w-7 p-0 text-red-500 hover:text-red-700 hover:bg-red-50"
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            if (confirm(`Remover step ${index + 1}?`)) {
+                                                                removeStep(step.id);
+                                                            }
+                                                        }}
+                                                        title="Remover"
+                                                        disabled={steps.length === 1}
+                                                    >
+                                                        <Trash2 className="w-3 h-3" />
+                                                    </Button>
+                                                </div>
+                                            </div>
+
+                                            {/* Renderizar componente modular */}
+                                            <div className={cn(
+                                                "transition-opacity",
+                                                isSelected ? "opacity-100" : "opacity-90"
+                                            )}>
+                                                {renderRealComponent(step, index)}
+                                            </div>
+                                        </div>
+                                    );
+                                })}
                             </div>
                         )}
                     </div>
