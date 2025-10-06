@@ -60,7 +60,7 @@ const ModernUnifiedEditor: React.FC<ModernUnifiedEditorProps> = (props) => {
     const shouldUseFacadeEditor = useMemo(() => {
         // 🚨 FORÇADO TEMPORARIAMENTE - SEMPRE USAR EDITOR NOVO
         const result = true; // FORÇADO!
-        
+
         const manager = FeatureFlagManager.getInstance();
         const force = manager.shouldForceUnifiedInEditor();
         const facade = manager.shouldEnableUnifiedEditorFacade();
