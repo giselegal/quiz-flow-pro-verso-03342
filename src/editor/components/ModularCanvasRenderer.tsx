@@ -219,11 +219,11 @@ export const ModularCanvasRenderer: React.FC<ModularCanvasRendererProps> = ({
 
                             {/* Renderizar o bloco */}
                             <BlockRenderer
-                                data={block}
+                                block={block}
                                 isSelected={isBlockSelected}
                                 isEditable={isEditMode}
-                                onSelect={onSelectBlock}
-                                onUpdate={onUpdateBlock}
+                                onSelect={() => onSelectBlock(block.id)}
+                                onUpdate={(updates) => onUpdateBlock(block.id, updates)}
                             />
                         </div>
                     );
