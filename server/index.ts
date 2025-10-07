@@ -50,6 +50,100 @@ app.get('/health', (req, res) => {
 });
 
 // ==================================================================================
+// Template Engine MVP Routes
+// ==================================================================================
+import { templateService } from './templates/service.js';
+
+const tplRouter = express.Router();
+
+// Create base template
+tplRouter.post('/', (req, res) => {
+  const { name = 'Novo Template', slug = `tpl-${Date.now()}`, sourceTemplateId } = req.body || {};
+  try {
+    const tpl = sourceTemplateId
+      ? templateService.clone(sourceTemplateId, name, slug)
+      : templateService.createBase(name, slug);
+    res.status(201).json(tpl);
+  } catch (e: any) {
+    if (e.message === 'SOURCE_NOT_FOUND') return res.status(404).json({ error: 'SOURCE_NOT_FOUND' });
+    console.error(e); res.status(500).json({ error: 'INTERNAL_ERROR' });
+  }
+});
+
+// Get template
+tplRouter.get('/:id', (req, res) => {
+  try {
+    const tpl = templateService.get(req.params.id);
+    res.json(tpl);
+  } catch (e: any) {
+    if (e.message === 'NOT_FOUND') return res.status(404).json({ error: 'NOT_FOUND' });
+    res.status(500).json({ error: 'INTERNAL_ERROR' });
+  }
+});
+
+// Add stage
+tplRouter.post('/:id/stages', (req, res) => {
+  const { type = 'question' } = req.body || {};
+  try {
+    const tpl = templateService.addStage(req.params.id, type);
+    res.status(201).json(tpl.stages[tpl.stages.length - 1]);
+  } catch (e: any) {
+    if (e.message === 'NOT_FOUND') return res.status(404).json({ error: 'NOT_FOUND' });
+    res.status(500).json({ error: 'INTERNAL_ERROR' });
+  }
+});
+
+// Add component
+tplRouter.post('/:id/stages/:stageId/components', (req, res) => {
+  const { type = 'Heading', props = {} } = req.body || {};
+  try {
+    const tpl = templateService.addComponent(req.params.id, req.params.stageId, type, props);
+    res.status(201).json({ component: tpl.components[Object.keys(tpl.components).slice(-1)[0]] });
+  } catch (e: any) {
+    if (e.message === 'NOT_FOUND') return res.status(404).json({ error: 'NOT_FOUND' });
+    if (e.message === 'STAGE_NOT_FOUND') return res.status(404).json({ error: 'STAGE_NOT_FOUND' });
+    res.status(500).json({ error: 'INTERNAL_ERROR' });
+  }
+});
+
+// Update scoring
+tplRouter.patch('/:id/logic/scoring', (req, res) => {
+  try {
+    const scoring = templateService.updateScoring(req.params.id, req.body || {});
+    res.json(scoring);
+  } catch (e: any) {
+    if (e.message === 'NOT_FOUND') return res.status(404).json({ error: 'NOT_FOUND' });
+    res.status(500).json({ error: 'INTERNAL_ERROR' });
+  }
+});
+
+// Add outcome
+tplRouter.post('/:id/outcomes', (req, res) => {
+  const { min = 0, max, template = 'Resultado' } = req.body || {};
+  try {
+    const outcomes = templateService.addOutcome(req.params.id, { scoreMin: min, scoreMax: max, template });
+    res.status(201).json({ outcomes });
+  } catch (e: any) {
+    if (e.message === 'NOT_FOUND') return res.status(404).json({ error: 'NOT_FOUND' });
+    res.status(500).json({ error: 'INTERNAL_ERROR' });
+  }
+});
+
+// Validate template
+tplRouter.post('/:id/validate', (req, res) => {
+  try {
+    const result = templateService.validate(req.params.id);
+    const statusCode = result.status === 'ok' ? 200 : 422;
+    res.status(statusCode).json(result);
+  } catch (e: any) {
+    if (e.message === 'NOT_FOUND') return res.status(404).json({ error: 'NOT_FOUND' });
+    res.status(500).json({ error: 'INTERNAL_ERROR' });
+  }
+});
+
+app.use('/api/templates', tplRouter);
+
+// ==================================================================================
 // Configuration API endpoints
 // ==================================================================================
 
