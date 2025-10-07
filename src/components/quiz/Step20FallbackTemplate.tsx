@@ -91,46 +91,24 @@ const Step20FallbackTemplate: React.FC<Step20FallbackTemplateProps> = ({
   const resultStyle = resultData?.primaryStyle;
 
   // Estados de erro
+  // Substituir UI de erro por estado de recalculo discreto
   if (error && !fallbackData) {
     return (
       <div className={cn('max-w-4xl mx-auto p-6', className)}>
-        <div className="text-center bg-red-50 border border-red-200 rounded-lg p-8">
-          <AlertCircle className="w-12 h-12 text-red-500 mx-auto mb-4" />
-          <h2 className="text-xl font-bold text-red-800 mb-2">
-            Problema no Cálculo do Resultado
-          </h2>
-          <p className="text-red-700 mb-6">{error}</p>
-
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button
-              onClick={handleForceRecalculate}
-              className="bg-red-600 hover:bg-red-700 text-white"
-            >
-              <RefreshCw className="w-4 h-4 mr-2" />
-              Forçar Recálculo
-            </Button>
-
-            <Button
-              variant="outline"
-              onClick={() => setShowDebug(!showDebug)}
-              className="border-red-300 text-red-700 hover:bg-red-50"
-            >
-              {showDebug ? 'Ocultar' : 'Mostrar'} Debug
-            </Button>
-          </div>
-
+        <div className="text-center p-8 bg-white border border-gray-200 rounded-lg">
+          <div className="animate-pulse w-12 h-12 mx-auto mb-4 rounded-full bg-gradient-to-br from-[#deac6d]/40 to-[#c49548]/40" />
+          <h2 className="text-lg font-semibold text-[#5b4135] mb-2">Preparando seu resultado...</h2>
+          <p className="text-sm text-gray-600 mb-6">Ajustando dados para gerar seu estilo. Isso leva só alguns instantes.</p>
+          <Button
+            onClick={handleForceRecalculate}
+            className="bg-[#deac6d] hover:bg-[#c49548] text-white"
+          >
+            <RefreshCw className="w-4 h-4 mr-2" />
+            Tentar Novamente Agora
+          </Button>
           {showDebug && (
-            <div className="mt-6 text-left bg-white rounded p-4 text-sm">
-              <h4 className="font-medium mb-2">Informações de Debug:</h4>
-              <pre className="text-xs text-gray-600 overflow-auto">
-                {JSON.stringify({
-                  error,
-                  hasResult,
-                  isLoading,
-                  fallbackData: Boolean(fallbackData),
-                  timestamp: new Date().toISOString()
-                }, null, 2)}
-              </pre>
+            <div className="mt-6 text-left bg-gray-50 rounded p-4 text-xs text-gray-600">
+              {error}
             </div>
           )}
         </div>
