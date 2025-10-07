@@ -74,6 +74,9 @@ export function useTemplateRuntime(slug: string, options: UseTemplateRuntimeOpti
         try {
             safeSet({ loading: true, error: undefined });
             const res: AnswerResponse = await templateRuntimeService.answer(slug, state.sessionId, stageId, answers);
+            // Telemetria básica no frontend
+            // eslint-disable-next-line no-console
+            console.debug('[runtime.advance]', { slug, sessionId: state.sessionId, fromStageId: stageId, nextStageId: res.nextStageId, score: res.score, branched: res.branched });
             safeSet({ currentStageId: res.nextStageId, score: res.score, branchedLast: res.branched, loading: false });
             sessionStorage.setItem(storageKey, JSON.stringify({ sessionId: state.sessionId, currentStageId: res.nextStageId, score: res.score }));
             return res;

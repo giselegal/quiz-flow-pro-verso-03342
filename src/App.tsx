@@ -241,14 +241,16 @@ function App() {
                           )}
                         </Route>
 
-                        {/* 🔄 RUNTIME PUBLICADO (DEMO DO NOVO MOTOR) */}
-                        <Route path="/runtime/:slug">
-                          {(params) => (
-                            <div data-testid="runtime-runner-page">
-                              <PublishedTemplateRunner slug={params.slug} />
-                            </div>
-                          )}
-                        </Route>
+                        {/* 🔄 RUNTIME PUBLICADO (DEMO DO NOVO MOTOR) - protegido por feature flag ?runtimeServer=1 */}
+                        {typeof window === 'undefined' || new URLSearchParams(window.location.search).get('runtimeServer') === '1' ? (
+                          <Route path="/runtime/:slug">
+                            {(params) => (
+                              <div data-testid="runtime-runner-page">
+                                <PublishedTemplateRunner slug={params.slug} />
+                              </div>
+                            )}
+                          </Route>
+                        ) : null}
 
                         <Route path="/resultado">
                           <QuizErrorBoundary>

@@ -93,6 +93,7 @@ export class TemplateService {
         // Branching multi-regra: iterar todas as regras cujo fromStageId coincide e aplicar primeira que resulte em avanço
         const rules = Array.isArray(tpl.logic.branching) ? tpl.logic.branching.filter((r: any) => r.fromStageId === stageId) : [];
         let advancedByBranch = false;
+        let appliedRule: any = null;
         for (const rule of rules) {
             const cond = rule.conditionTree || {};
             let pass = true;
@@ -103,6 +104,7 @@ export class TemplateService {
                 if (target) {
                     sess.currentStageId = target.id;
                     advancedByBranch = true;
+                    appliedRule = { type: 'direct', toStageId: target.id, rule };
                     break; // primeira regra vencedora
                 }
             } else if (rule.fallbackStageId) {
@@ -110,6 +112,7 @@ export class TemplateService {
                 if (fb) {
                     sess.currentStageId = fb.id;
                     advancedByBranch = true;
+                    appliedRule = { type: 'fallback', toStageId: fb.id, rule };
                     break;
                 }
             }
@@ -123,6 +126,20 @@ export class TemplateService {
             }
         }
         saveSession(sess);
+        try {
+            // Telemetria básica estruturada
+            console.log(JSON.stringify({
+                evt: 'runtime.advance',
+                mode: advancedByBranch ? 'branch' : 'linear',
+                slug,
+                sessionId,
+                fromStageId: stageId,
+                nextStageId: sess.currentStageId,
+                score: sess.score,
+                ruleApplied: appliedRule,
+                timestamp: new Date().toISOString()
+            }));
+        } catch (_) { /* ignore logging errors */ }
         return { nextStageId: sess.currentStageId, score: sess.score, branched: advancedByBranch };
     }
 
