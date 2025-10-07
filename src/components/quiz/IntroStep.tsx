@@ -197,13 +197,7 @@ export default function IntroStep({ data, onNameSubmit }: IntroStepProps) {
                 </p>
             </footer>
 
-            {/* DEBUG INFO - REMOVER EM PRODUÇÃO */}
-            <div className="fixed bottom-0 left-0 bg-black text-white p-2 text-xs max-w-sm overflow-auto max-h-32">
-                <strong>🔍 DEBUG:</strong><br />
-                Data exists: {data ? '✅' : '❌'}<br />
-                Title: {safeData.title ? '✅' : '❌'}<br />
-                ButtonText: {safeData.buttonText ? '✅' : '❌'}
-            </div>
+            {/* Debug overlay removido para produção */}
         </main>
     );
 }
