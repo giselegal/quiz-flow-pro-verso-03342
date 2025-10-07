@@ -74,16 +74,20 @@ function evaluateConditionTree(node: ConditionNode, context: { score: number; an
 }
 
 export class TemplateService {
+    private repo: any;
+    constructor(repo = templateRepo) {
+        this.repo = repo;
+    }
     createBase(name: string, slug: string): TemplateDraft {
-        return templateRepo.createFromBase(name, slug);
+        return this.repo.createFromBase(name, slug);
     }
 
     clone(sourceId: string, name: string, slug: string): TemplateDraft {
-        return templateRepo.cloneTemplate(sourceId, name, slug);
+        return this.repo.cloneTemplate(sourceId, name, slug);
     }
 
     get(id: string) {
-        const t = templateRepo.get(id);
+        const t = this.repo.get(id);
         if (!t) throw new Error('NOT_FOUND');
         return t;
     }
@@ -91,24 +95,24 @@ export class TemplateService {
     addStage(id: string, type: TemplateDraft['stages'][number]['type']) {
         const t = this.get(id);
         addStage(t, type);
-        templateRepo.appendHistory(t, { op: 'stage.add', details: { type } });
-        templateRepo.save(t);
+        this.repo.appendHistory(t, { op: 'stage.add', details: { type } });
+        this.repo.save(t);
         return t;
     }
 
     addComponent(id: string, stageId: string, type: string, props: Record<string, any>) {
         const t = this.get(id);
         addComponent(t, stageId, type, props);
-        templateRepo.appendHistory(t, { op: 'component.add', details: { stageId, type } });
-        templateRepo.save(t);
+        this.repo.appendHistory(t, { op: 'component.add', details: { stageId, type } });
+        this.repo.save(t);
         return t;
     }
 
     updateScoring(id: string, scoring: Partial<ScoringConfig>) {
         const t = this.get(id);
         updateScoring(t, scoring);
-        templateRepo.appendHistory(t, { op: 'scoring.update', details: { scoring } });
-        templateRepo.save(t);
+        this.repo.appendHistory(t, { op: 'scoring.update', details: { scoring } });
+        this.repo.save(t);
         return t.logic.scoring;
     }
 
@@ -116,15 +120,15 @@ export class TemplateService {
         const t = this.get(id);
         // MVP: aceitar estrutura direta; futura validação
         t.logic.branching = Array.isArray(rules) ? rules : [];
-        templateRepo.save(t);
+        this.repo.save(t);
         return t.logic.branching;
     }
 
     addOutcome(id: string, data: { scoreMin: number; scoreMax?: number; template: string }) {
         const t = this.get(id);
         addOutcome(t, { conditions: { scoreRange: { min: data.scoreMin, max: data.scoreMax } }, template: data.template });
-        templateRepo.appendHistory(t, { op: 'outcome.add', details: { range: { min: data.scoreMin, max: data.scoreMax } } });
-        templateRepo.save(t);
+        this.repo.appendHistory(t, { op: 'outcome.add', details: { range: { min: data.scoreMin, max: data.scoreMax } } });
+        this.repo.save(t);
         return t.outcomes;
     }
 
@@ -137,14 +141,14 @@ export class TemplateService {
             return { status: 'blocked', validation };
         }
         publishTemplate(t);
-        templateRepo.appendHistory(t, { op: 'publish', details: { publishedAt: new Date().toISOString() } });
-        templateRepo.save(t);
+        this.repo.appendHistory(t, { op: 'publish', details: { publishedAt: new Date().toISOString() } });
+        this.repo.save(t);
         logger.info('template.published', { templateId: t.id, slug: t.slug, publishedAt: t.publishedSnapshot?.publishedAt });
         return { status: 'published', publishId: t.publishedSnapshot.publishedAt, snapshot: t.publishedSnapshot };
     }
 
     getPublishedBySlug(slug: string) {
-        const tpl = templateRepo.list().find(t => t.slug === slug && t.publishedSnapshot);
+        const tpl = this.repo.list().find((t: any) => t.slug === slug && t.publishedSnapshot);
         return tpl || null;
     }
 
@@ -222,7 +226,7 @@ export class TemplateService {
         saveSession(sess);
         // pick first matching outcome by score
         const score = sess.score;
-        const outcome = tpl.outcomes.find(o => {
+        const outcome = tpl.outcomes.find((o: any) => {
             const r = o.conditions.scoreRange; if (!r) return false;
             const minOk = score >= r.min;
             const maxOk = r.max !== undefined ? score <= r.max : true;
@@ -238,14 +242,14 @@ export class TemplateService {
         const warnings: string[] = [];
 
         // must have intro
-        if (!t.stages.some(s => s.type === 'intro')) errors.push('MISSING_INTRO_STAGE');
+        if (!t.stages.some((s: any) => s.type === 'intro')) errors.push('MISSING_INTRO_STAGE');
         // question stage needs at least one OptionList component
         for (const s of t.stages.filter(s => s.type === 'question')) {
             const hasOptions = s.componentIds.some(cid => t.components[cid]?.type === 'OptionList');
             if (!hasOptions) warnings.push(`QUESTION_STAGE_NO_OPTIONS:${s.id}`);
         }
         // outcome gap detection (simple)
-        const scoreRanges = t.outcomes.map(o => o.conditions.scoreRange).filter(Boolean) as { min: number; max?: number }[];
+        const scoreRanges = t.outcomes.map((o: any) => o.conditions.scoreRange).filter(Boolean) as { min: number; max?: number }[];
         const sorted = scoreRanges.sort((a, b) => a.min - b.min);
         for (let i = 0; i < sorted.length - 1; i++) {
             const cur = sorted[i]; const next = sorted[i + 1];

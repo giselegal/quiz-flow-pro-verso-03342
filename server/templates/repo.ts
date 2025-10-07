@@ -7,7 +7,7 @@ export interface ITemplateRepository {
     cloneTemplate(sourceId: string, name: string, slug: string): TemplateDraft;
     get(id: string): TemplateDraft | undefined;
     save(template: TemplateDraft): void;
-    appendHistory(template: TemplateDraft, entry: { op: string; details?: any; [k: string]: any }): void;
+    appendHistory(template: TemplateDraft, entry: { op: string; details?: any;[k: string]: any }): void;
     list(): TemplateDraft[];
 }
 
