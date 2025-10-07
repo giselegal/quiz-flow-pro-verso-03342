@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeAll } from 'vitest';
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import { UnifiedStepRenderer, registerProductionSteps } from '@/components/editor/unified';
 
 // Mock simples de indexedDB para evitar erros em hooks de imagem/cache
@@ -41,7 +41,7 @@ const baseQuizState = {
 };
 
 describe('Integração UnifiedStepRenderer → Resultado e Oferta (Maria)', () => {
-    it('renderiza step-20 (resultado) com nome e estilo', () => {
+    it('renderiza step-20 (resultado) com nome e estilo', async () => {
         const { container } = render(
             <UnifiedStepRenderer
                 stepId="step-20"
@@ -53,12 +53,16 @@ describe('Integração UnifiedStepRenderer → Resultado e Oferta (Maria)', () =
                 }}
             />
         );
+        // Espera lazy adapter carregar (spinner some)
+        await waitFor(() => {
+            expect(screen.queryByText(/Carregando\s+Step step-20/i)).toBeNull();
+        }, { timeout: 2000 });
 
         expect(screen.getByText(/Maria, seu estilo predominante é:/i)).toBeTruthy();
         expect(container.firstChild).toMatchSnapshot();
     });
 
-    it('renderiza step-21 (oferta) e mostra CTA correto para objetivo montar looks', () => {
+    it('renderiza step-21 (oferta) e mostra CTA correto para objetivo montar looks', async () => {
         render(
             <UnifiedStepRenderer
                 stepId="step-21"
@@ -77,6 +81,9 @@ describe('Integração UnifiedStepRenderer → Resultado e Oferta (Maria)', () =
                 }}
             />
         );
+        await waitFor(() => {
+            expect(screen.queryByText(/Carregando\s+Step step-21/i)).toBeNull();
+        }, { timeout: 2000 });
 
         expect(screen.getByText(/Maria, solução para montar looks/i)).toBeTruthy();
         expect(screen.getByText('Quero combinar minhas peças')).toBeInTheDocument();

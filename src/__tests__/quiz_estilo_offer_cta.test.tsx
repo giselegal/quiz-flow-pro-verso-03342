@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeAll } from 'vitest';
 import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import { UnifiedStepRenderer, registerProductionSteps } from '@/components/editor/unified';
 
 beforeAll(() => {
@@ -8,7 +8,7 @@ beforeAll(() => {
 });
 
 describe('CTA da oferta (step-21)', () => {
-    it('renderiza link CTA com texto e atributos esperados', () => {
+    it('renderiza link CTA com texto e atributos esperados', async () => {
 
         render(
             <UnifiedStepRenderer
@@ -37,6 +37,10 @@ describe('CTA da oferta (step-21)', () => {
                 }}
             />
         );
+
+        await waitFor(() => {
+            expect(screen.queryByText(/Carregando\s+Step step-21/i)).toBeNull();
+        }, { timeout: 2000 });
 
         const btn = screen.getByRole('link', { name: /quero combinar minhas peças/i });
         expect(btn).toHaveAttribute('href');

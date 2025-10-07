@@ -34,6 +34,7 @@ export default function QuestionStep({
     const gridClass = hasImages
         ? 'grid-cols-2 md:grid-cols-2 lg:grid-cols-3'
         : 'grid-cols-1';
+    const gapClass = hasImages ? 'gap-4 md:gap-5' : 'gap-6';
 
     const handleOptionClick = (optionId: string) => {
         const isSelected = safeCurrentAnswers.includes(optionId);
@@ -68,28 +69,36 @@ export default function QuestionStep({
                 {selectionText} ({safeCurrentAnswers.length}/{data.requiredSelections || 1})
             </p>
 
-            <div className={`grid ${gridClass} gap-6 mb-8`}>
+            <div className={`grid ${gridClass} ${gapClass} mb-8`}>
                 {data.options?.map((option) => (
                     <div
                         key={option.id}
+                        role="button"
+                        tabIndex={0}
+                        aria-pressed={safeCurrentAnswers.includes(option.id)}
                         onClick={() => handleOptionClick(option.id)}
-                        className={`flex flex-col items-center p-4 border-2 rounded-lg cursor-pointer transition-all duration-200 hover:border-[#deac6d] hover:shadow-md ${safeCurrentAnswers.includes(option.id)
-                            ? 'border-[#5b4135] bg-gradient-to-br from-white to-[#f8f5f0] shadow-lg transform -translate-y-1'
-                            : 'border-gray-200'
+                        onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleOptionClick(option.id); } }}
+                        className={`option-button group whitespace-nowrap rounded-lg text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-[#deac6d]/40 disabled:pointer-events-none disabled:opacity-50 overflow-hidden min-w-full flex h-auto py-2 flex-col items-center justify-start border-2 cursor-pointer ${safeCurrentAnswers.includes(option.id)
+                            ? 'border-[#5b4135] bg-white shadow-md'
+                            : 'border-zinc-200 bg-white hover:border-[#deac6d] hover:shadow'
                             }`}
                     >
                         {option.image && (
-                            <img
-                                src={option.image}
-                                alt={option.text}
-                                className="rounded-md w-full mb-2 object-cover max-h-48"
-                            />
+                            <div className="w-full aspect-square bg-white rounded-t-md overflow-hidden">
+                                <img
+                                    src={option.image}
+                                    alt={option.text}
+                                    loading="lazy"
+                                    decoding="async"
+                                    className="w-full h-full object-cover"
+                                />
+                            </div>
                         )}
-                        <p className="text-center font-medium text-sm leading-relaxed">{option.text}</p>
+                        <p className="text-center font-medium text-sm leading-relaxed px-4 py-2 w-full">{option.text}</p>
 
                         {/* Indicador visual de seleção */}
                         {safeCurrentAnswers.includes(option.id) && (
-                            <div className="mt-2 w-6 h-6 bg-[#deac6d] rounded-full flex items-center justify-center">
+                            <div className="absolute top-2 right-2 w-6 h-6 bg-[#deac6d] rounded-full flex items-center justify-center shadow">
                                 <span className="text-white text-xs font-bold">✓</span>
                             </div>
                         )}
