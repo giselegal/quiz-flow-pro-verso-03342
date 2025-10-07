@@ -112,7 +112,21 @@ class InMemoryRuntimeSessionRepository implements IRuntimeSessionRepository {
     }
 }
 
-export const runtimeSessionRepo: IRuntimeSessionRepository = new InMemoryRuntimeSessionRepository();
+let selectedRuntimeRepo: IRuntimeSessionRepository;
+if ((process.env.PERSIST_SESSIONS || '').toLowerCase() === 'sqlite') {
+    // lazy import (CommonJS style not needed, using dynamic ESM import not ideal here; assume compiled bundler handles)
+    try {
+        // @ts-ignore
+        const { SqliteRuntimeSessionRepository } = await import('../persistence/sqlite/runtimeSessionRepo.sqlite.js');
+        selectedRuntimeRepo = new SqliteRuntimeSessionRepository();
+    } catch (e) {
+        console.warn('[persistence] Falling back to in-memory runtime sessions (erro ao carregar SQLite)', e);
+        selectedRuntimeRepo = new InMemoryRuntimeSessionRepository();
+    }
+} else {
+    selectedRuntimeRepo = new InMemoryRuntimeSessionRepository();
+}
+export const runtimeSessionRepo: IRuntimeSessionRepository = selectedRuntimeRepo;
 
 // Simple scoring util
 export function computeScore(template: TemplateDraft, answers: Record<string, string[]>) {
