@@ -179,11 +179,16 @@ function App() {
                           </div>
                         </Route>
 
-                        {/* ⚙️ NOVO: Template Engine CRUD */}
-                        <Route path="/editor/template-engine">
+                        {/* ⚙️ NOVO: Template Engine CRUD (rota dedicada) */}
+                        <Route path="/template-engine">
                           <div data-testid="template-engine-page">
                             <TemplateEnginePage />
                           </div>
+                        </Route>
+
+                        {/* Redirect legado para rota nova */}
+                        <Route path="/editor/template-engine">
+                          <RedirectRoute to="/template-engine" />
                         </Route>
 
                         {/* 🔍 PÁGINA DE DIAGNÓSTICO DE TEMPLATES - TEMPORÁRIA */}

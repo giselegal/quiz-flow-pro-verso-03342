@@ -76,9 +76,9 @@ Response: `{ sessionId, currentStageId }`
 
 ---
 
-## Integração Frontend (/editor/template-engine)
+## Integração Frontend (/template-engine)
 
-Foi adicionada uma rota SPA experimental em `/editor/template-engine` que consome estes endpoints e permite:
+Foi adicionada uma rota SPA específica em `/template-engine` (a rota antiga `/editor/template-engine` agora redireciona) que consome estes endpoints e permite:
 
 ### Capacidades atuais UI
 - Listar templates (GET /api/templates)

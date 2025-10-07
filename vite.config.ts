@@ -20,6 +20,14 @@ export default defineConfig({
     open: false,
     cors: true,
     strictPort: true,
+    proxy: {
+      '/api': {
+        target: 'http://localhost:3001',
+        changeOrigin: true,
+        // Evita reescrever caminhos adicionais: mantém /api/... intacto
+        // Opcional: timeout/ping de WS futuramente
+      }
+    },
     fs: {
       allow: [path.resolve(__dirname), path.resolve(__dirname, '..'), process.cwd()],
     },
