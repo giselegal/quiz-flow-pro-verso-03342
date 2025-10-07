@@ -1,51 +1,76 @@
 import { TemplateListItem, TemplateDraft, ValidationReport, BranchingRule, Outcome, ScoringConfig } from './types';
 
+// Erro estruturado para permitir classificação no frontend (ex: redirect resiliente)
+class ApiError extends Error {
+    code: string;
+    status?: number;
+    snippet?: string;
+    constructor(message: string, code: string, status?: number, snippet?: string) {
+        super(message);
+        this.name = 'ApiError';
+        this.code = code;
+        this.status = status;
+        this.snippet = snippet;
+    }
+}
+
 const BASE = '/api/templates';
 
 async function http<T>(url: string, options: RequestInit = {}): Promise<T> {
-    const res = await fetch(url, {
-        headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-            ...(options.headers || {})
-        },
-        ...options
-    });
+    let res: Response;
+    try {
+        res = await fetch(url, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                ...(options.headers || {})
+            },
+            ...options
+        });
+    } catch (networkErr: any) {
+        // Erro antes de chegar a uma resposta HTTP (queda de backend, CORS, DNS, abort, etc.)
+        throw new ApiError(`Network error fetching ${url}: ${networkErr?.message || networkErr}`, 'NETWORK_ERROR');
+    }
 
     const contentType = res.headers.get('content-type') || '';
 
-    // Função auxiliar para construir erro rico
-    const buildError = async (baseMsg: string) => {
+    // Função auxiliar para construir erro rico com snippet de corpo
+    const buildError = async (baseMsg: string, code: string) => {
         let bodySnippet = '';
         try {
             const text = await res.text();
             bodySnippet = text.slice(0, 300);
         } catch { /* ignore */ }
-        return new Error(`${baseMsg} | status=${res.status} | ct=${contentType || 'n/a'} | body: ${bodySnippet}`);
+        return new ApiError(
+            `${baseMsg} | status=${res.status} | ct=${contentType || 'n/a'} | body: ${bodySnippet}`,
+            code,
+            res.status,
+            bodySnippet
+        );
     };
 
     if (!res.ok) {
-        // Tenta JSON estruturado primeiro
         if (contentType.includes('application/json')) {
             try {
                 const detail = await res.json();
-                throw new Error(detail?.error || `Request failed ${res.status}`);
-            } catch (e) {
-                throw e;
+                throw new ApiError(detail?.error || `Request failed ${res.status}`, 'HTTP_ERROR_JSON', res.status);
+            } catch (e: any) {
+                if (e instanceof ApiError) throw e;
+                throw new ApiError(`Malformed JSON error payload status=${res.status}`, 'HTTP_ERROR_BAD_JSON', res.status);
             }
         }
-        throw await buildError('Request failed (non-JSON)');
+        throw await buildError('Request failed (non-JSON)', 'HTTP_ERROR_NON_JSON');
     }
 
     if (!contentType.includes('application/json')) {
-        // Provavelmente recebeu index.html (fallback SPA) — backend não estava ativo ou proxy incorreto
-        throw await buildError('Unexpected non-JSON response (possible SPA fallback or proxy issue)');
+        // Fallback HTML quase certo → backend offline ou proxy retornou index.html
+        throw await buildError('Unexpected non-JSON response (possible SPA fallback or proxy issue)', 'FALLBACK_HTML');
     }
 
     try {
         return await res.json();
     } catch (e: any) {
-        throw await buildError('Failed to parse JSON');
+        throw await buildError('Failed to parse JSON', 'PARSE_ERROR');
     }
 }
 
