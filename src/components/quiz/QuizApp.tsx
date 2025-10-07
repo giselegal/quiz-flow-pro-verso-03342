@@ -4,6 +4,7 @@ import { useQuizState } from '../../hooks/useQuizState';
 
 // 🎯 FASE 3: Sistema Unificado de Renderização
 import { UnifiedStepRenderer, registerProductionSteps } from '@/components/editor/unified';
+import SharedProgressHeader from '@/components/shared/SharedProgressHeader';
 import { useEffect } from 'react';
 
 /**
@@ -70,16 +71,31 @@ export default function QuizApp({ funnelId }: QuizAppProps) {
         );
     }
 
-    // Renderizar barra de progresso (exceto para intro e transições)
-    const showProgress = !['intro', 'transition', 'transition-result'].includes(currentStepData.type);
+    // Regras header compartilhado:
+    // - Intro (step-01) mantém layout próprio
+    // - Steps 02-19 usam novo SharedProgressHeader
+    // - Steps 20-21 (resultado / oferta) não exibem header compartilhado nem barra antiga
+    const numericCurrent = unifiedQuizState.currentStep; // 1..21
+    const isIntro = numericCurrent === 1;
+    const isResultOrOffer = numericCurrent >= 20; // 20,21
+    const useSharedHeader = !isIntro && !isResultOrOffer; // 2..19
+
+    // Barra de progresso antiga agora só aparece se NÃO usamos header compartilhado
+    // (mantida apenas para compatibilidade futura se necessário)
+    const showLegacyProgressBar = false; // desativada por padrão para evitar duplicação
 
     return (
         <div className="min-h-screen">
             <div className="quiz-container mx-auto">
 
-                {/* Barra de Progresso */}
-                {showProgress && (
-                    <div className="mb-6 max-w-6xl mx-auto px-4 py-8">
+                {/* Header Compartilhado (steps 2-19) */}
+                {useSharedHeader && (
+                    <SharedProgressHeader progress={progress} />
+                )}
+
+                {/* (Opcional) Barra de Progresso Legada - atualmente desativada */}
+                {showLegacyProgressBar && !useSharedHeader && !isIntro && !isResultOrOffer && (
+                    <div className="mb-6 max-w-6xl mx-auto px-4 py-8" data-testid="legacy-progress-bar">
                         <div className="w-full bg-gray-200 rounded-full h-2.5 mb-4">
                             <div
                                 className="bg-[#deac6d] h-2.5 rounded-full transition-all duration-500"

@@ -59,7 +59,7 @@ export default function QuestionStep({
         : 'Selecione uma opção';
 
     return (
-        <div className="bg-white p-4 sm:p-5 md:p-12 rounded-lg shadow-lg text-center max-w-6xl mx-auto">
+        <div className="bg-white px-2 pt-4 pb-6 sm:p-5 md:p-12 rounded-lg shadow-lg text-center max-w-6xl mx-auto">
             <h2 className="text-xl md:text-2xl font-bold mb-4">
                 {data.questionNumber}
             </h2>
@@ -98,7 +98,7 @@ export default function QuestionStep({
                             </div>
                         )}
                         <p
-                            className="text-center font-medium text-sm leading-relaxed px-3 pt-2 w-full break-words hyphens-auto whitespace-normal"
+                            className="text-center font-medium text-sm leading-relaxed px-2 sm:px-3 pt-2 w-full break-words hyphens-auto whitespace-normal"
                             style={{ wordBreak: 'break-word', overflowWrap: 'anywhere' }}
                         >
                             {option.text}
