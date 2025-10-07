@@ -21,7 +21,16 @@ export const TemplateEngineEditorLayout: React.FC<Props> = ({ id, onBack }) => {
     const [selectedHistoryId, setSelectedHistoryId] = useState<string | null>(null);
 
     const [selectedStageId, setSelectedStageId] = useState<string | null>(null);
-    const stagesOrdered = useMemo(() => draft ? [...draft.stages].sort((a, b) => a.order - b.order) : [], [draft?.id, draft?.draftVersion]);
+    const stagesOrdered = useMemo(() => {
+        if (!draft || !Array.isArray(draft.stages)) return [] as any[];
+        return [...draft.stages].filter(s => s && typeof s.order === 'number' && Array.isArray((s as any).componentIds)).sort((a, b) => a.order - b.order);
+    }, [draft?.id, draft?.draftVersion]);
+    // Seleciona automaticamente o primeiro stage quando carregar o draft
+    React.useEffect(() => {
+        if (!selectedStageId && stagesOrdered.length > 0) {
+            setSelectedStageId(stagesOrdered[0].id);
+        }
+    }, [stagesOrdered.length]);
     const activeStage = stagesOrdered.find(s => s.id === selectedStageId) || stagesOrdered[0];
     const [selectedComponentId, setSelectedComponentId] = useState<string | null>(null);
     const selectedComponent = selectedComponentId && draft ? draft.components[selectedComponentId] : null;
@@ -117,7 +126,7 @@ export const TemplateEngineEditorLayout: React.FC<Props> = ({ id, onBack }) => {
                 <div className="w-72 border-r flex flex-col bg-white text-xs">
                     <div className="p-2 border-b font-semibold flex items-center justify-between">
                         <span>Componentes</span>
-                        {activeStage && <span className="text-[10px] text-gray-500">{activeStage.componentIds.length}</span>}
+                        {activeStage && <span className="text-[10px] text-gray-500">{Array.isArray(activeStage.componentIds) ? activeStage.componentIds.length : 0}</span>}
                     </div>
                     {activeStage ? <div className="flex-1 overflow-auto p-2 space-y-3">
                         <div className="space-y-1">
@@ -127,7 +136,7 @@ export const TemplateEngineEditorLayout: React.FC<Props> = ({ id, onBack }) => {
                             </div>
                         </div>
                         <ul className="space-y-2">
-                            {activeStage.componentIds.map((cid, i) => {
+                            {Array.isArray(activeStage.componentIds) && activeStage.componentIds.map((cid: string, i: number) => {
                                 const comp = draft.components[cid];
                                 const publishedComp = published?.components?.[cid];
                                 const diffCount = publishedComp ? diffProps(comp?.props, publishedComp.props).length : 0;
@@ -148,14 +157,14 @@ export const TemplateEngineEditorLayout: React.FC<Props> = ({ id, onBack }) => {
                                     </div>
                                 </li>;
                             })}
-                            {activeStage.componentIds.length === 0 && <li className="text-[11px] text-gray-500">Nenhum componente.</li>}
+                            {Array.isArray(activeStage.componentIds) && activeStage.componentIds.length === 0 && <li className="text-[11px] text-gray-500">Nenhum componente.</li>}
                         </ul>
                     </div> : <div className="flex-1 p-2 text-[11px] text-gray-500">Nenhum stage.</div>}
                 </div>
                 {/* Col 3: Canvas */}
                 <div className="flex-1 border-r bg-gray-50 relative">
                     <div className="absolute inset-0 overflow-auto p-4 grid gap-4">
-                        {activeStage && activeStage.componentIds.map(cid => {
+                        {activeStage && Array.isArray(activeStage.componentIds) && activeStage.componentIds.map((cid: string) => {
                             const comp = draft.components[cid];
                             return <div key={cid} className="border bg-white rounded p-3 text-xs">{comp ? renderComponent({ ...comp, kind: (comp as any).kind || comp.type }, { draft: draft as any, stageId: activeStage.id }) : '—'}</div>;
                         })}
