@@ -401,13 +401,13 @@ export const TemplateEngineEditor: React.FC<{ id: string; onBack: () => void }> 
                         <ul className="space-y-1">
                             {modifiedComponents.map(mc => <li key={mc.id} className="border rounded p-2 bg-white">
                                 <div className="flex items-center gap-2 mb-1">
-                                    <span className="font-mono bg-gray-100 px-1 rounded">{mc.id.slice(0,8)}</span>
+                                    <span className="font-mono bg-gray-100 px-1 rounded">{mc.id.slice(0, 8)}</span>
                                     <span className="text-gray-700 font-medium">{(draft.components[mc.id] as any).type || (draft.components[mc.id] as any).kind}</span>
                                     <span className="ml-auto text-[10px] text-blue-700">{mc.diffs.length} prop(s)</span>
                                     <button onClick={() => setSelectedComponentId(mc.id)} className="text-[10px] text-blue-600 underline">Ir</button>
                                 </div>
                                 <ul className="text-[10px] space-y-0.5">
-                                    {mc.diffs.slice(0,6).map(d => <li key={d.key} className="flex gap-1 items-start">
+                                    {mc.diffs.slice(0, 6).map(d => <li key={d.key} className="flex gap-1 items-start">
                                         <span className="font-semibold text-gray-600">{d.key}:</span>
                                         <span className="text-red-600 line-through max-w-[120px] truncate" title={JSON.stringify(d.before)}>{typeof d.before === 'object' ? JSON.stringify(d.before) : String(d.before)}</span>
                                         <span className="text-gray-400">→</span>
