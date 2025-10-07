@@ -294,7 +294,7 @@ export class TemplateService {
         }
 
         // Reachability (linear + branching edges). Start from first enabled stage by order.
-    const enabledStages = t.stages.filter((s: any) => s.enabled !== false);
+        const enabledStages = t.stages.filter((s: any) => s.enabled !== false);
         if (enabledStages.length) {
             const startStage = enabledStages[0];
             const reach = new Set<string>();
