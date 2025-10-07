@@ -32,6 +32,10 @@ export interface QuizStep {
     options?: QuizOption[];
     nextStep?: string;
     offerMap?: Record<string, OfferContent>;
+    // Novas propriedades opcionais para etapas de transição
+    showContinueButton?: boolean;
+    continueButtonText?: string;
+    duration?: number; // permitir customizar delay de auto avanço
 }
 
 export interface OfferContent {
@@ -240,6 +244,9 @@ export const QUIZ_STEPS: Record<string, QuizStep> = {
         type: 'transition',
         title: '🕐 Enquanto calculamos o seu resultado...',
         text: 'Queremos te fazer algumas perguntas que vão tornar sua experiência ainda mais completa. Responda com sinceridade. Isso é só entre você e a sua nova versão.',
+        showContinueButton: true,
+        continueButtonText: 'Continuar',
+        duration: 3500,
         nextStep: 'step-13',
     },
 

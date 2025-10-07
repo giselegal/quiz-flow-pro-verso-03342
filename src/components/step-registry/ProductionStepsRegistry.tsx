@@ -192,17 +192,32 @@ const TransitionStepAdapter: React.FC<BaseStepProps> = (props) => {
     const adaptedProps = {
         data: {
             id: stepId,
-            type: 'transition' as const,
+            type: data.type === 'transition-result' ? 'transition-result' : 'transition',
             title: data.title || 'Analisando suas respostas...',
+            text: data.text,
             message: data.message || 'Estamos processando suas preferências para criar um resultado personalizado.',
             duration: data.duration || 3000,
+            showContinueButton: data.showContinueButton,
+            continueButtonText: data.continueButtonText || 'Continuar',
             ...data
         },
         onComplete: onNext,
         ...otherProps
     };
 
-    return <OriginalTransitionStep {...adaptedProps} />;
+    return (
+        <div className="flex flex-col items-center">
+            <OriginalTransitionStep {...adaptedProps} />
+            {adaptedProps.data.showContinueButton && (
+                <button
+                    onClick={() => onNext?.()}
+                    className="mt-6 px-8 py-3 rounded-full bg-[#deac6d] text-white font-semibold shadow hover:brightness-110 transition-colors"
+                >
+                    {adaptedProps.data.continueButtonText}
+                </button>
+            )}
+        </div>
+    );
 };
 
 /**
