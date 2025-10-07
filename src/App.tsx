@@ -187,14 +187,13 @@ function App() {
                           </div>
                         </Route>
 
-                        {/* ⚙️ NOVO: Template Engine CRUD (rota dedicada) controlado por flag */}
-                        {import.meta.env.VITE_USE_TEMPLATE_ENGINE === '1' && (
-                          <Route path="/template-engine">
-                            <div data-testid="template-engine-page">
-                              <TemplateEnginePage />
-                            </div>
-                          </Route>
-                        )}
+                        {/* ⚙️ NOVO: Template Engine CRUD (rota dedicada) - agora sempre ativo.
+                            Se a flag estiver desativada, ainda expomos para evitar 404 em links antigos. */}
+                        <Route path="/template-engine">
+                          <div data-testid="template-engine-page">
+                            <TemplateEnginePage />
+                          </div>
+                        </Route>
 
                         {/* Alias adicional para o Template Engine (sempre ativo) */}
                         <Route path="/editor/novo">
@@ -202,8 +201,16 @@ function App() {
                             <TemplateEnginePage />
                           </div>
                         </Route>
+                        {/* Trailing slash redirect para evitar 404 se usuário digitar /editor/novo/ */}
+                        <Route path="/editor/novo/">
+                          <RedirectRoute to="/editor/novo" />
+                        </Route>
+                        {/* Qualquer subrota não suportada de /editor/novo/<algo> volta para base */}
+                        <Route path="/editor/novo/:rest*">
+                          {(params) => <RedirectRoute to="/editor/novo" />}
+                        </Route>
 
-                        {/* Redirect legado para rota nova */}
+                        {/* Redirect legado para rota nova (mantemos ambos apontando ao mesmo componente) */}
                         <Route path="/editor/template-engine">
                           <RedirectRoute to="/template-engine" />
                         </Route>
