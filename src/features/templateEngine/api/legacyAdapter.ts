@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 
 export interface LegacyTemplateDraft {
     id: string;
@@ -26,5 +26,33 @@ export function useLegacyQuizDraft(slug: string | null) {
         queryKey: ['legacy-quiz-draft', slug],
         queryFn: () => fetchLegacyDraft(slug!),
         enabled: !!slug
+    });
+}
+
+interface ApplyDeltaInput {
+    slug: string;
+    meta?: { name?: string; description?: string };
+    stagesReorder?: string[];
+}
+
+async function postLegacyDelta({ slug, ...payload }: ApplyDeltaInput) {
+    const res = await fetch(`/api/quiz-style/${slug}/apply-delta`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+    });
+    if (!res.ok) {
+        throw new Error(`Falha ao aplicar delta (${res.status})`);
+    }
+    return res.json();
+}
+
+export function useApplyLegacyDelta() {
+    const qc = useQueryClient();
+    return useMutation({
+        mutationFn: postLegacyDelta,
+        onSuccess: (_data, vars) => {
+            qc.invalidateQueries({ queryKey: ['legacy-quiz-draft', vars.slug] });
+        }
     });
 }

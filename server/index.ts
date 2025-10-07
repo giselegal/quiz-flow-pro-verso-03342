@@ -4,6 +4,7 @@ import { createServer } from 'http';
 import path, { dirname } from 'path';
 import { templatesRouter } from './templates/controller';
 import { seedTemplates } from './templates/seed';
+import { componentsRouter } from './templates/components.controller';
 import { quizStyleRouter } from './quiz-style/controller';
 import { fileURLToPath } from 'url';
 
@@ -163,6 +164,8 @@ app.get('/api/quizzes/:id', (req, res) => {
 
 // Templates (novo Template Engine)
 app.use('/api/templates', templatesRouter);
+// Components CRUD (in-memory por enquanto)
+app.use('/api/components', componentsRouter);
 // Legacy quiz-style adapter (read-only draft view) controlado por flag USE_QUIZ_STYLE_ADAPTER (default: on)
 if (process.env.USE_QUIZ_STYLE_ADAPTER !== 'false') {
   app.use('/api/quiz-style', quizStyleRouter);
