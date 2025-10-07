@@ -2,7 +2,16 @@ import { TemplateDraft, createBaseTemplate, Component, Stage, Outcome, ScoringCo
 import { nanoid } from 'nanoid';
 
 // In-memory repository (MVP)
-class TemplateRepository {
+export interface ITemplateRepository {
+    createFromBase(name: string, slug: string): TemplateDraft;
+    cloneTemplate(sourceId: string, name: string, slug: string): TemplateDraft;
+    get(id: string): TemplateDraft | undefined;
+    save(template: TemplateDraft): void;
+    appendHistory(template: TemplateDraft, entry: { op: string; details?: any; [k: string]: any }): void;
+    list(): TemplateDraft[];
+}
+
+class TemplateRepository implements ITemplateRepository {
     private templates = new Map<string, TemplateDraft>();
 
     createFromBase(name: string, slug: string): TemplateDraft {
