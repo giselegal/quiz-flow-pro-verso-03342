@@ -41,6 +41,11 @@ class TemplateRepository {
         this.templates.set(template.id, structuredClone(template));
     }
 
+    appendHistory(template: TemplateDraft, entry: Omit<any, 'id' | 'timestamp'> & { op: string; details?: any }) {
+        const histEntry = { id: `h_${template.history.length}`, timestamp: new Date().toISOString(), ...entry };
+        template.history.push(histEntry);
+    }
+
     list(): TemplateDraft[] {
         return Array.from(this.templates.values()).map(t => structuredClone(t));
     }
@@ -73,4 +78,19 @@ export function updateScoring(template: TemplateDraft, cfg: Partial<ScoringConfi
 export function addOutcome(template: TemplateDraft, outcome: Omit<Outcome, 'id'> & { id?: string }) {
     const id = outcome.id || `out_${template.outcomes.length}`;
     template.outcomes.push({ ...outcome, id });
+}
+
+export function publishTemplate(template: TemplateDraft) {
+    const snapshot = structuredClone({
+        id: template.id,
+        slug: template.slug,
+        schemaVersion: template.schemaVersion,
+        stages: template.stages,
+        components: template.components,
+        logic: template.logic,
+        outcomes: template.outcomes,
+        publishedAt: new Date().toISOString()
+    });
+    template.publishedSnapshot = snapshot;
+    template.status = 'published';
 }

@@ -1,0 +1,47 @@
+{
+    "$id": "https://quiz-engine.schemas/v1/logic.schema.json",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "required": [
+        "scoring",
+        "branching"
+    ],
+    "properties": {
+        "scoring": {
+            "type": "object",
+            "required": [
+                "mode",
+                "weights"
+            ],
+            "properties": {
+                "mode": {
+                    "type": "string",
+                    "enum": [
+                        "sum",
+                        "average",
+                        "custom"
+                    ]
+                },
+                "weights": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "number"
+                    }
+                },
+                "normalization": {
+                    "type": "object",
+                    "additionalProperties": true
+                }
+            },
+            "additionalProperties": true
+        },
+        "branching": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "additionalProperties": true
+            }
+        }
+    },
+    "additionalProperties": true
+}

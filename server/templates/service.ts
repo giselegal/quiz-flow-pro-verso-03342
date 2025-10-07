@@ -1,4 +1,4 @@
-import { templateRepo, addStage, addComponent, updateScoring, addOutcome } from './repo';
+import { templateRepo, addStage, addComponent, updateScoring, addOutcome, publishTemplate } from './repo';
 import { TemplateDraft, ScoringConfig } from './models';
 
 export class TemplateService {
@@ -19,6 +19,7 @@ export class TemplateService {
     addStage(id: string, type: TemplateDraft['stages'][number]['type']) {
         const t = this.get(id);
         addStage(t, type);
+        templateRepo.appendHistory(t, { op: 'stage.add', details: { type } });
         templateRepo.save(t);
         return t;
     }
@@ -26,6 +27,7 @@ export class TemplateService {
     addComponent(id: string, stageId: string, type: string, props: Record<string, any>) {
         const t = this.get(id);
         addComponent(t, stageId, type, props);
+        templateRepo.appendHistory(t, { op: 'component.add', details: { stageId, type } });
         templateRepo.save(t);
         return t;
     }
@@ -33,15 +35,38 @@ export class TemplateService {
     updateScoring(id: string, scoring: Partial<ScoringConfig>) {
         const t = this.get(id);
         updateScoring(t, scoring);
+        templateRepo.appendHistory(t, { op: 'scoring.update', details: { scoring } });
         templateRepo.save(t);
         return t.logic.scoring;
+    }
+
+    setBranching(id: string, rules: any[]) {
+        const t = this.get(id);
+        // MVP: aceitar estrutura direta; futura validação
+        t.logic.branching = Array.isArray(rules) ? rules : [];
+        templateRepo.save(t);
+        return t.logic.branching;
     }
 
     addOutcome(id: string, data: { scoreMin: number; scoreMax?: number; template: string }) {
         const t = this.get(id);
         addOutcome(t, { conditions: { scoreRange: { min: data.scoreMin, max: data.scoreMax } }, template: data.template });
+        templateRepo.appendHistory(t, { op: 'outcome.add', details: { range: { min: data.scoreMin, max: data.scoreMax } } });
         templateRepo.save(t);
         return t.outcomes;
+    }
+
+    publish(id: string) {
+        const t = this.get(id);
+        // simple validation reuse
+        const validation = this.validate(id);
+        if (validation.status !== 'ok') {
+            return { status: 'blocked', validation };
+        }
+        publishTemplate(t);
+        templateRepo.appendHistory(t, { op: 'publish', details: { publishedAt: new Date().toISOString() } });
+        templateRepo.save(t);
+        return { status: 'published', publishId: t.publishedSnapshot.publishedAt, snapshot: t.publishedSnapshot };
     }
 
     validate(id: string) {

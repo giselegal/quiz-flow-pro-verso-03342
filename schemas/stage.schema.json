@@ -1,0 +1,40 @@
+{
+    "$id": "https://quiz-engine.schemas/v1/stage.schema.json",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "required": [
+        "id",
+        "type",
+        "order",
+        "enabled",
+        "componentIds"
+    ],
+    "properties": {
+        "id": {
+            "type": "string"
+        },
+        "type": {
+            "type": "string",
+            "enum": [
+                "intro",
+                "question",
+                "result",
+                "transition",
+                "custom"
+            ]
+        },
+        "order": {
+            "type": "integer"
+        },
+        "enabled": {
+            "type": "boolean"
+        },
+        "componentIds": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
+        }
+    },
+    "additionalProperties": true
+}

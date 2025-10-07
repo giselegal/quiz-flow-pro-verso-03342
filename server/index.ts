@@ -117,6 +117,17 @@ tplRouter.patch('/:id/logic/scoring', (req, res) => {
   }
 });
 
+// Set branching rules
+tplRouter.patch('/:id/logic/branching', (req, res) => {
+  try {
+    const rules = templateService.setBranching(req.params.id, req.body?.rules || []);
+    res.json({ rules });
+  } catch (e: any) {
+    if (e.message === 'NOT_FOUND') return res.status(404).json({ error: 'NOT_FOUND' });
+    res.status(500).json({ error: 'INTERNAL_ERROR' });
+  }
+});
+
 // Add outcome
 tplRouter.post('/:id/outcomes', (req, res) => {
   const { min = 0, max, template = 'Resultado' } = req.body || {};
@@ -135,6 +146,29 @@ tplRouter.post('/:id/validate', (req, res) => {
     const result = templateService.validate(req.params.id);
     const statusCode = result.status === 'ok' ? 200 : 422;
     res.status(statusCode).json(result);
+  } catch (e: any) {
+    if (e.message === 'NOT_FOUND') return res.status(404).json({ error: 'NOT_FOUND' });
+    res.status(500).json({ error: 'INTERNAL_ERROR' });
+  }
+});
+
+// Publish template
+tplRouter.post('/:id/publish', (req, res) => {
+  try {
+    const result = templateService.publish(req.params.id);
+    if (result.status === 'blocked') return res.status(412).json(result);
+    res.status(201).json(result);
+  } catch (e: any) {
+    if (e.message === 'NOT_FOUND') return res.status(404).json({ error: 'NOT_FOUND' });
+    res.status(500).json({ error: 'INTERNAL_ERROR' });
+  }
+});
+
+// History (simple)
+tplRouter.get('/:id/history', (req, res) => {
+  try {
+    const tpl = templateService.get(req.params.id);
+    res.json({ history: tpl.history });
   } catch (e: any) {
     if (e.message === 'NOT_FOUND') return res.status(404).json({ error: 'NOT_FOUND' });
     res.status(500).json({ error: 'INTERNAL_ERROR' });
