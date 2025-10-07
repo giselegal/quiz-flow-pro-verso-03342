@@ -242,7 +242,7 @@ export default function ResultStep({
                         </div>
                     </div>
 
-                    {/* Imagem do Guia */}
+                    {/* Imagem do Guia + CTA primário reposicionado */}
                     <div className="mt-6 md:mt-8 text-center">
                         {guideImage.isLoading ? (
                             <div className="mx-auto max-w-md w-full rounded-lg shadow-md bg-gray-100 animate-pulse flex items-center justify-center min-h-[320px] sm:min-h-[360px] md:min-h-[400px]">
@@ -271,6 +271,20 @@ export default function ResultStep({
                                 )}
                             </div>
                         )}
+                        {/* CTA reposicionado */}
+                        <div className="mt-6">
+                            <button
+                                onClick={handleCTAClick}
+                                className="bg-gradient-to-r from-[#deac6d] to-[#c19952] text-white py-3 sm:py-4 px-6 sm:px-8 rounded-lg shadow-lg transition-all duration-300 text-base sm:text-lg font-semibold hover:scale-105 transform w-full sm:w-auto"
+                                onMouseEnter={() => setIsButtonHovered(true)}
+                                onMouseLeave={() => setIsButtonHovered(false)}
+                            >
+                                <span className="flex items-center justify-center gap-3">
+                                    <ShoppingCart className={`w-5 h-5 transition-transform duration-300 ${isButtonHovered ? 'scale-110' : ''}`} />
+                                    Quero Transformar Minha Imagem
+                                </span>
+                            </button>
+                        </div>
                     </div>
                 </div>
 
@@ -300,18 +314,7 @@ export default function ResultStep({
                             ))}
                         </div>
 
-                        {/* Primeiro CTA */}
-                        <button
-                            onClick={handleCTAClick}
-                            className="bg-gradient-to-r from-[#deac6d] to-[#c19952] text-white py-3 sm:py-4 px-6 sm:px-8 rounded-lg shadow-lg transition-all duration-300 text-base sm:text-lg font-semibold hover:scale-105 transform w-full sm:w-auto"
-                            onMouseEnter={() => setIsButtonHovered(true)}
-                            onMouseLeave={() => setIsButtonHovered(false)}
-                        >
-                            <span className="flex items-center justify-center gap-3">
-                                <ShoppingCart className={`w-5 h-5 transition-transform duration-300 ${isButtonHovered ? 'scale-110' : ''}`} />
-                                Quero Transformar Minha Imagem
-                            </span>
-                        </button>
+                        {/* CTA removido desta seção (reposicionado após a imagem do guia) */}
                     </div>
                 </div>
 
