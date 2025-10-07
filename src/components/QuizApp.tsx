@@ -362,14 +362,8 @@ function ResultStep({ stepData, userName, resultStyle, onNext, onCalculate }: Re
         onCalculate();
     }, [onCalculate]);
 
-    const styleConfig = styleConfigGisele[resultStyle];
-    if (!styleConfig) {
-        return (
-            <div className="quiz-card">
-                <p className="text-urgent">Erro: Estilo não encontrado.</p>
-            </div>
-        );
-    }
+    // Fallback silencioso: se não encontrar estilo, usar o primeiro disponível para evitar mensagem de erro
+    const styleConfig = styleConfigGisele[resultStyle] || Object.values(styleConfigGisele)[0];
 
     const handleContinue = () => {
         setTimeout(() => {
