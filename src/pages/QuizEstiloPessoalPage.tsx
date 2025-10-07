@@ -23,6 +23,15 @@ interface QuizEstiloPessoalPageProps {
 }
 
 export default function QuizEstiloPessoalPage({ funnelId }: QuizEstiloPessoalPageProps) {
+    // 🔧 Fallback: rota /quiz-estilo (sem param) agora usa funil padrão consolidado
+    const effectiveFunnelId = funnelId || 'quiz-estilo-21-steps';
+    if (!funnelId) {
+        // Log somente em desenvolvimento para diagnosticar carregamento
+        if (import.meta.env.DEV) {
+            // eslint-disable-next-line no-console
+            console.log('[QuizEstiloPessoalPage] Usando funnelId padrão:', effectiveFunnelId);
+        }
+    }
     return (
         <div className="quiz-estilo-page">
             {/* Meta tags para SEO */}
@@ -41,7 +50,7 @@ export default function QuizEstiloPessoalPage({ funnelId }: QuizEstiloPessoalPag
 
             {/* Componente principal do quiz */}
             <main className="min-h-screen">
-                <QuizApp funnelId={funnelId} />
+                <QuizApp funnelId={effectiveFunnelId} />
             </main>
 
             {/* Scripts de analytics (exemplo) */}

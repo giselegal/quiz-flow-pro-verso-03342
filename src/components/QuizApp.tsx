@@ -30,6 +30,7 @@ export function QuizApp() {
         strategicAnswers,
         resultStyle,
         secondaryStyles,
+        progress,
         navigateToStep,
         setUserName,
         addAnswer,
@@ -104,14 +105,8 @@ export function QuizApp() {
     };
 
     const renderProgressBar = () => {
-        if (['intro', 'transition', 'transition-result'].includes(stepData.type)) {
-            return null;
-        }
-
-        const stepIndex = Object.keys(QUIZ_STEPS).indexOf(currentStep);
-        const totalSteps = Object.keys(QUIZ_STEPS).length - 3; // Exclui transições
-        const progress = Math.min(100, Math.round((stepIndex / totalSteps) * 100));
-
+        // Usa progress já calculado no hook (mais consistente com Unified Renderer)
+        if (['intro', 'transition', 'transition-result', 'result', 'offer'].includes(stepData.type)) return null;
         return (
             <div className="quiz-progress">
                 <div className="quiz-progress-bar" style={{ width: `${progress}%` }}></div>
