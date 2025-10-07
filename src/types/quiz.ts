@@ -128,6 +128,17 @@ export interface QuizFunnel {
   results: StyleResult[];
 }
 
+// QuizStep interface for editor components
+export interface QuizStep {
+  id: string;
+  type: string;
+  title: string;
+  description?: string;
+  resultKey?: string;
+  answers?: QuizOption[];
+  components?: any[];
+}
+
 // Block type can be either string or object
 export type BlockType = string | {
   id: string;

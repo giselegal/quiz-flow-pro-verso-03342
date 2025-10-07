@@ -27,8 +27,8 @@ export default function ModularTransitionStep({
     onEdit,
     isEditable = false,
     selectedBlockId,
-    onBlockSelect,
-    onOpenProperties
+    onBlockSelect = () => {},
+    onOpenProperties = () => {}
 }: ModularTransitionStepProps) {
 
     const safeData = {

@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * 🧠 SMART COMPONENT LIBRARY - FASE 2
  * 

@@ -147,7 +147,7 @@ class AdvancedCache<T = any> {
                 break;
             case 'fifo':
             default:
-                keyToEvict = this.cache.keys().next().value;
+                keyToEvict = this.cache.keys().next().value as string;
                 break;
         }
 

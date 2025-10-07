@@ -29,8 +29,8 @@ export default function ModularStrategicQuestionStep({
     onEdit,
     isEditable = false,
     selectedBlockId,
-    onBlockSelect,
-    onOpenProperties
+    onBlockSelect = () => {},
+    onOpenProperties = () => {}
 }: ModularStrategicQuestionStepProps) {
 
     const safeData = {

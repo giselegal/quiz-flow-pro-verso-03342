@@ -47,6 +47,8 @@ export interface UserPermissions {
 
 export interface UserPresence {
     userId: string;
+    name: string;
+    color: string;
     cursor?: { x: number; y: number };
     selection?: string[];
     viewport?: { x: number; y: number; zoom: number };
@@ -456,6 +458,8 @@ export const CollaborationProvider: React.FC<CollaborationProviderProps> = ({
 
         const newPresence: UserPresence = {
             userId: currentUser.id,
+            name: currentUser.name || 'Unknown',
+            color: currentUser.color || '#3b82f6',
             isActive: true,
             lastUpdate: new Date(),
             ...presenceUpdate
@@ -554,7 +558,7 @@ export const CollaborationProvider: React.FC<CollaborationProviderProps> = ({
         // Handle full state synchronization
         if (syncData.elements) {
             // Replace local elements with server state
-            core.setState(prev => ({
+            core.setState((prev: any) => ({
                 ...prev,
                 elements: syncData.elements
             }));

@@ -67,6 +67,12 @@ export interface InputComponent extends BaseComponent {
     required?: boolean;
 }
 
+// Generic component for quiz-specific types
+export interface GenericComponent extends BaseComponent {
+    type: string;
+    [key: string]: any;
+}
+
 export type StepComponent =
     | HeaderComponent
     | TextComponent
@@ -74,7 +80,8 @@ export type StepComponent =
     | ButtonComponent
     | SpacerComponent
     | QuestionComponent
-    | InputComponent;
+    | InputComponent
+    | GenericComponent;
 
 export interface ModularStep {
     id: string;

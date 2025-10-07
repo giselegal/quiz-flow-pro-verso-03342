@@ -37,8 +37,8 @@ export default function ModularOfferStep({
     onEdit,
     isEditable = false,
     selectedBlockId,
-    onBlockSelect,
-    onOpenProperties
+    onBlockSelect = () => {},
+    onOpenProperties = () => {}
 }: ModularOfferStepProps) {
     
     const safeData = {

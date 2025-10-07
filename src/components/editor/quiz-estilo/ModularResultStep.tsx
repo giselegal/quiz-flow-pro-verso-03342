@@ -32,8 +32,8 @@ export default function ModularResultStep({
     onEdit,
     isEditable = false,
     selectedBlockId,
-    onBlockSelect,
-    onOpenProperties
+    onBlockSelect = () => {},
+    onOpenProperties = () => {}
 }: ModularResultStepProps) {
 
     const safeData = {

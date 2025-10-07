@@ -55,9 +55,11 @@ const EditableTransitionStep: React.FC<EditableTransitionStepProps> = ({
         if (onPropertyClick) {
             onPropertyClick(propKey, element);
         }
-    };    // 🔧 Garantir estrutura mínima dos dados
+    };
+    
+    // 🔧 Garantir estrutura mínima dos dados
     const safeData = useMemo(() => ({
-        type: data.type === 'transition-result' ? 'transition-result' as const : 'transition' as const,
+        stepType: data.type === 'transition-result' ? 'transition-result' as const : 'transition' as const,
         title: data.title || 'Analisando suas respostas...',
         text: data.text || 'Aguarde enquanto preparamos seu resultado personalizado.',
         ...data
