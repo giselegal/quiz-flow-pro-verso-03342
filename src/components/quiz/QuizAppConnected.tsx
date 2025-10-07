@@ -10,14 +10,18 @@
 import { useQuizState } from '../../hooks/useQuizState';
 import { useQuizRuntimeRegistry } from '@/runtime/quiz/QuizRuntimeRegistry';
 import { useComponentConfiguration } from '../../hooks/useComponentConfiguration';
+// Componentes originais (ainda usados como fallback para alguns casos especiais)
 import IntroStep from './IntroStep';
 import QuestionStep from './QuestionStep';
 import StrategicQuestionStep from './StrategicQuestionStep';
 import TransitionStep from './TransitionStep';
 import ResultStep from './ResultStep';
 import OfferStep from './OfferStep';
+// Sistema unificado de renderização (Fase 3)
+import { UnifiedStepRenderer, registerProductionSteps } from '@/components/editor/unified';
 import { BlockRegistryProvider, DEFAULT_BLOCK_DEFINITIONS, useBlockRegistry } from '@/runtime/quiz/blocks/BlockRegistry';
 import sanitizeHtml from '@/utils/sanitizeHtml';
+
 import { useEffect, useState } from 'react';
 import type { QuizConfig } from '@/types/quiz-config';
 import { getEffectiveRequiredSelections } from '@/lib/quiz/requiredSelections';
@@ -28,6 +32,10 @@ interface QuizAppConnectedProps {
 }
 
 export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', editorMode = false }: QuizAppConnectedProps) {
+    // Registrar steps de produção (seguro chamar múltiplas vezes - stepRegistry lida com duplicatas)
+    useEffect(() => {
+        registerProductionSteps();
+    }, []);
     // Overrides de steps vindos do editor (quando provider estiver presente)
     let externalSteps: Record<string, any> | undefined;
     try {
@@ -277,6 +285,85 @@ export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', ed
         );
     };
 
+    // =========================================================================
+    // PREPARAÇÃO PARA UNIFIEDSTEPRENDERER
+    // =========================================================================
+
+    // Normalizar currentStep para ID do registry (usa zero padding)
+    const getStepIdFromCurrentStep = (currentStep: string): string => {
+        const numeric = currentStep.replace('step-', '');
+        const padded = `step-${numeric.padStart(2, '0')}`; // step-01
+        return padded;
+    };
+    const currentStepId = getStepIdFromCurrentStep(state.currentStep);
+
+    // Estado unificado consumido pelo UnifiedStepRenderer / adapters
+    const unifiedQuizState = {
+        currentStep: parseInt(state.currentStep.replace('step-', '')) || 1,
+        userName: state.userProfile.userName,
+        answers: state.answers,
+        strategicAnswers: state.userProfile.strategicAnswers,
+        resultStyle: state.userProfile.resultStyle,
+        secondaryStyles: state.userProfile.secondaryStyles
+    };
+
+    // Calcular requiredSelections efetivo (usa util centralizada)
+    const effectiveRequiredSelections = getEffectiveRequiredSelections({ step: currentStepData, mergedConfig, currentStepConfig });
+
+    // stepProps combinando dados locais + overrides API + regra consolidada
+    const unifiedStepProps = {
+        ...currentStepData,
+        ...currentStepConfig,
+        requiredSelections: effectiveRequiredSelections
+    } as any;
+
+    // Handler de atualização vindo dos adapters via UnifiedStepRenderer
+    const handleStepUpdate = (stepId: string, updates: Record<string, any>) => {
+        if (!updates) return;
+        // Nome do usuário
+        if (typeof updates.userName === 'string') {
+            setUserName(updates.userName);
+        }
+
+        // Respostas (arrays para perguntas normais, string para estratégica)
+        Object.entries(updates).forEach(([key, value]) => {
+            if (key === 'userName') return;
+            // Normalizar key para comparar com step atual (padded vs legacy)
+            const normalizedKey = key.replace('step-', (match) => match); // mantém formato
+            if (normalizedKey === currentStepId || normalizedKey === state.currentStep) {
+                if (Array.isArray(value)) {
+                    addAnswer(state.currentStep, value as string[]);
+                } else if (typeof value === 'string') {
+                    // Pergunta estratégica → manter padrão existente (usa stepId como chave)
+                    if (currentStepData.type === 'strategic-question') {
+                        addStrategicAnswer(state.currentStep, value);
+                    } else {
+                        addAnswer(state.currentStep, [value]);
+                    }
+                }
+            }
+        });
+    };
+
+    // Interceptar avanço para aplicar regra de requiredSelections antes de prosseguir
+    const handleNext = () => {
+        if (currentStepData.type === 'question') {
+            const answers = state.answers[state.currentStep] || [];
+            if (answers.length < effectiveRequiredSelections) {
+                // Ainda não atingiu limite necessário – bloquear avanço automático do adapter
+                return;
+            }
+        }
+        nextStep();
+    };
+
+    // Estratégia de renderização híbrida:
+    // - Para result/offer com blocks dinâmicos: manter caminho custom
+    // - Para transition-result (não registrado): fallback manual
+    // - Demais steps: usar UnifiedStepRenderer
+
+    const shouldUseBlocks = (type: string) => ['result', 'offer'].includes(type) && (currentStepData as any).blocks?.length;
+
     return (
         <BlockRegistryProvider definitions={DEFAULT_BLOCK_DEFINITIONS}>
             <div className="min-h-screen" style={dynamicStyles}>
@@ -316,121 +403,54 @@ export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', ed
                         </div>
                     )}
 
-                    {/* Renderização da Etapa Atual com Configurações API */}
-                    {currentStepData.type === 'intro' && (
-                        <IntroStep
-                            data={{ ...currentStepData, ...currentStepConfig }}
-                            onNameSubmit={(name: string) => {
-                                setUserName(name);
-                                nextStep();
-                            }}
-                        />
-                    )}
-
-                    {currentStepData.type === 'question' && (
-                        <div
-                            className="min-h-screen"
-                            style={{ backgroundColor: 'var(--background-color)', color: 'var(--text-color)' }}
-                        >
-                            <div className="max-w-6xl mx-auto px-4 py-8">
-                                <QuestionStep
-                                    data={{ ...currentStepData, ...currentStepConfig }}
-                                    currentAnswers={state.answers[state.currentStep] || []}
-                                    onAnswersChange={(answers: string[]) => {
-                                        addAnswer(state.currentStep, answers);
-                                        const requiredSelections = getEffectiveRequiredSelections({ step: currentStepData, mergedConfig, currentStepConfig });
-                                        const autoCfg = (mergedConfig.autoAdvance as any) || {};
-                                        const autoAdvanceEnabled = typeof autoCfg === 'object'
-                                            ? (autoCfg.enabled !== false)
-                                            : mergedConfig.autoAdvance !== false;
-                                        const autoAdvanceDelay = typeof autoCfg === 'object'
-                                            ? (autoCfg.delay ?? 1000)
-                                            : (mergedConfig.autoAdvanceDelay ?? 1000);
-
-                                        // Avançar apenas quando atingir exatamente o número exigido
-                                        if (autoAdvanceEnabled && answers.length === requiredSelections) {
-                                            setTimeout(() => nextStep(), Number(autoAdvanceDelay) || 1000);
-                                        }
-                                    }}
-                                />
-                            </div>
-                        </div>
-                    )}
-
-                    {currentStepData.type === 'strategic-question' && (
-                        <div
-                            className="min-h-screen"
-                            style={{ backgroundColor: 'var(--background-color)', color: 'var(--text-color)' }}
-                        >
-                            <div className="max-w-6xl mx-auto px-4 py-8">
-                                <StrategicQuestionStep
-                                    data={{ ...currentStepData, ...currentStepConfig }}
-                                    currentAnswer={state.answers[state.currentStep]?.[0] || ''}
-                                    onAnswerChange={(answer: string) => {
-                                        addStrategicAnswer(state.currentStep, answer);
-
-                                        // Strategic questions não têm auto-advance por padrão
-                                        const strategicAutoAdvance = (mergedConfig as any).strategicAutoAdvance === true;
-                                        if (strategicAutoAdvance) {
-                                            setTimeout(() => nextStep(), Number((mergedConfig as any).strategicAutoAdvanceDelay) || 2000);
-                                        }
-                                    }}
-                                />
-                            </div>
-                        </div>
-                    )}
-
-                    {currentStepData.type === 'transition' && (
-                        <TransitionStep
-                            data={{ ...currentStepData, ...currentStepConfig }}
-                            onComplete={() => nextStep()}
-                        />
-                    )}
-
-                    {currentStepData.type === 'transition-result' && (
-                        <TransitionStep
-                            data={{ ...currentStepData, ...currentStepConfig }}
-                            onComplete={() => nextStep()}
-                        />
-                    )}
-
-                    {currentStepData.type === 'result' && (
-                        currentStepData.blocks?.length ? (
+                    {/* Renderização Híbrida: Blocks dinâmicos para result/offer, Unified para demais */}
+                    {shouldUseBlocks(currentStepData.type) ? (
+                        // Caminho dinâmico (result/offer com blocks)
+                        currentStepData.type === 'result' ? (
                             <div className="max-w-4xl mx-auto px-4 py-8">
                                 <BlocksRuntimeRenderer
                                     stepType="result"
-                                    blocks={currentStepData.blocks as any}
-                                    context={{ userProfile: state.userProfile, step: currentStepData }}
+                                    blocks={(currentStepData as any).blocks as any}
+                                    context={{ userProfile: state.userProfile, step: currentStepData, applyPlaceholders }}
                                 />
                             </div>
                         ) : (
-                            <ResultStep
-                                data={{ ...currentStepData, ...currentStepConfig }}
-                                userProfile={state.userProfile}
-                            />
-                        )
-                    )}
-
-                    {currentStepData.type === 'offer' && (
-                        currentStepData.blocks?.length ? (
                             <div className="max-w-4xl mx-auto px-4 py-8">
                                 <BlocksRuntimeRenderer
                                     stepType="offer"
-                                    blocks={currentStepData.blocks as any}
-                                    context={{ userProfile: state.userProfile, offerKey: getOfferKey(), step: currentStepData }}
+                                    blocks={(currentStepData as any).blocks as any}
+                                    context={{ userProfile: state.userProfile, offerKey: getOfferKey(), step: currentStepData, applyPlaceholders }}
                                 />
                             </div>
-                        ) : (
-                            (() => {
-                                const offerKey = getOfferKey();
-                                const cloned: any = { ...currentStepData };
-                                if (cloned.offerMap && offerKey && cloned.offerMap[offerKey]) {
-                                    cloned.offerMap = { ...cloned.offerMap };
-                                    cloned.offerMap[offerKey] = applyPlaceholders(cloned.offerMap[offerKey]);
-                                }
-                                return <OfferStep data={{ ...cloned, ...currentStepConfig }} userProfile={state.userProfile} offerKey={offerKey} />;
-                            })()
                         )
+                    ) : currentStepData.type === 'transition-result' ? (
+                        // Fallback para tipo legado ainda não registrado
+                        <TransitionStep
+                            data={{ ...currentStepData, ...currentStepConfig }}
+                            onComplete={() => nextStep()}
+                        />
+                    ) : (
+                        <div className="bg-[#fefefe] text-[#5b4135] min-h-screen">
+                            <div className="max-w-6xl mx-auto px-4 py-8">
+                                <UnifiedStepRenderer
+                                    stepId={currentStepId}
+                                    mode="production"
+                                    stepProps={unifiedStepProps}
+                                    quizState={unifiedQuizState}
+                                    onStepUpdate={handleStepUpdate}
+                                    onNext={handleNext}
+                                    onNameSubmit={(name: string) => {
+                                        setUserName(name);
+                                        nextStep();
+                                    }}
+                                    onPrevious={() => {
+                                        // (Opcional) implementar voltar no futuro
+                                        console.log('Navegar para step anterior (não implementado)');
+                                    }}
+                                    className="unified-production-step"
+                                />
+                            </div>
+                        </div>
                     )}
 
                     {/* Debug Info (modo editor) */}

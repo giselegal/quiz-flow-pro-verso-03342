@@ -93,6 +93,9 @@ const QuestionStepAdapter: React.FC<BaseStepProps> = (props) => {
         ...otherProps
     } = props as any;
 
+    // Determinar requiredSelections (se já calculado externamente via stepProps, respeitar; fallback 1)
+    const requiredSelections = (data.requiredSelections && Number(data.requiredSelections)) || 1;
+
     const adaptedProps = {
         data: {
             id: stepId,
@@ -106,14 +109,15 @@ const QuestionStepAdapter: React.FC<BaseStepProps> = (props) => {
                 { id: 'option-3', text: 'Opção 3', style: 'elegante' }
             ],
             imageQuestion: data.imageQuestion || '',
+            requiredSelections,
             ...data
         },
         currentAnswers: quizState?.answers?.[stepId] || [],
         onAnswersChange: (answers: string[]) => {
             onSave({ [stepId]: answers });
-            // Auto-advance após resposta
-            if (answers.length > 0) {
-                setTimeout(onNext, 500);
+            // Auto-advance somente quando atingir exatamente o limite
+            if (answers.length === requiredSelections) {
+                setTimeout(() => onNext(), 400);
             }
         },
         ...otherProps
