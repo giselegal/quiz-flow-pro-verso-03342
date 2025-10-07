@@ -23,37 +23,29 @@ export const SharedProgressHeader: React.FC<SharedProgressHeaderProps> = ({
     const safeProgress = Math.min(100, Math.max(0, Math.round(progress)));
 
     return (
-        <div data-testid="shared-progress-header" className="w-full max-w-6xl mx-auto px-4 pt-6 pb-4 flex flex-col items-center">
-            {/* Logo + barra dourada */}
-            <div className="flex flex-col items-center mb-4">
-                {logoUrl && (
-                    <div className="relative flex flex-col items-center">
-                        <img
-                            src={logoUrl}
-                            alt={logoAlt}
-                            className="h-auto w-[120px] md:w-[140px] lg:w-[160px] object-contain"
-                            style={{ aspectRatio: '120 / 50' }}
-                            width={160}
-                            height={50}
-                        />
-                        <div
-                            className="h-[3px] bg-[#B89B7A] rounded-full mt-1.5"
-                            style={{ width: '300px', maxWidth: '75%' }}
-                        />
-                    </div>
-                )}
-            </div>
+        <div data-testid="shared-progress-header" className="w-full max-w-6xl mx-auto px-4 pt-3 pb-2 flex flex-col items-center">
+            {/* Logo sem barra decorativa */}
+            {logoUrl && (
+                <img
+                    src={logoUrl}
+                    alt={logoAlt}
+                    className="h-auto w-[110px] md:w-[130px] lg:w-[150px] object-contain mb-1"
+                    style={{ aspectRatio: '120 / 50' }}
+                    width={150}
+                    height={50}
+                />
+            )}
 
-            {/* Barra de progresso */}
-            <div className="w-full max-w-2xl">
-                <div className="w-full bg-gray-200 rounded-full h-2.5 overflow-hidden">
+            {/* Barra de progresso ultra-fina */}
+            <div className="w-full max-w-xl -mb-1">
+                <div className="w-full bg-gray-200 rounded-full h-[4px] sm:h-[5px] overflow-hidden">
                     <div
-                        className="bg-[#deac6d] h-2.5 rounded-full transition-all duration-500"
+                        className="bg-[#deac6d] h-full rounded-full transition-all duration-500"
                         style={{ width: `${safeProgress}%` }}
                     />
                 </div>
-                <p className="text-xs sm:text-sm text-center mt-2 text-[#5b4135] font-medium">
-                    Progresso: {safeProgress}%
+                <p className="text-[10px] sm:text-xs text-center mt-1 text-[#5b4135] font-medium tracking-tight">
+                    {safeProgress}%
                 </p>
             </div>
         </div>

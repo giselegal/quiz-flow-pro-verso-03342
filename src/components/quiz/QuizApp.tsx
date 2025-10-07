@@ -108,7 +108,7 @@ export default function QuizApp({ funnelId }: QuizAppProps) {
 
                 {/* 🎯 FASE 3: Renderização Unificada */}
                 <div className="bg-[#fefefe] text-[#5b4135] min-h-screen">
-                    <div className="max-w-6xl mx-auto px-4 py-8">
+                    <div className={`max-w-6xl mx-auto px-4 ${useSharedHeader ? 'pt-4 pb-8' : 'py-8'}`}>
                         <UnifiedStepRenderer
                             stepId={currentStepId}
                             mode="production"
