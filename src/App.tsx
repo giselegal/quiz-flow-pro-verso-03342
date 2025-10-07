@@ -35,6 +35,7 @@ import { EditorErrorBoundary } from './components/error/EditorErrorBoundary';
 import UnifiedCRUDProvider from '@/context/UnifiedCRUDProvider';
 import { OptimizedEditorProvider } from '@/components/editor/OptimizedEditorProvider';
 import { BlockRegistryProvider, DEFAULT_BLOCK_DEFINITIONS } from '@/runtime/quiz/blocks/BlockRegistry';
+import { TemplateEnginePage } from './components/editor/templates/TemplateEnginePage';
 
 // 🏠 PÁGINAS ESSENCIAIS
 const Home = lazy(() => import('./pages/Home'));
@@ -175,6 +176,13 @@ function App() {
                         <Route path="/editor/templates">
                           <div data-testid="editor-templates-page">
                             <EditorTemplatesPage />
+                          </div>
+                        </Route>
+
+                        {/* ⚙️ NOVO: Template Engine CRUD */}
+                        <Route path="/editor/template-engine">
+                          <div data-testid="template-engine-page">
+                            <TemplateEnginePage />
                           </div>
                         </Route>
 
