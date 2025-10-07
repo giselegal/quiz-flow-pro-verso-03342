@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useTemplatesList, useCreateTemplate } from '../../../api/templates/hooks';
+import { useTemplatesList, useCreateTemplate } from '../api/hooks';
 
 export const TemplateEngineList: React.FC<{ onOpen: (id: string) => void }> = ({ onOpen }) => {
     const { data, isLoading, error } = useTemplatesList();

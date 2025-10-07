@@ -35,7 +35,8 @@ import { EditorErrorBoundary } from './components/error/EditorErrorBoundary';
 import UnifiedCRUDProvider from '@/context/UnifiedCRUDProvider';
 import { OptimizedEditorProvider } from '@/components/editor/OptimizedEditorProvider';
 import { BlockRegistryProvider, DEFAULT_BLOCK_DEFINITIONS } from '@/runtime/quiz/blocks/BlockRegistry';
-import { TemplateEnginePage } from './components/editor/templates/TemplateEnginePage';
+// Novo Template Engine (feature flag controlada por VITE_USE_TEMPLATE_ENGINE)
+import { TemplateEnginePage } from '@/features/templateEngine';
 
 // 🏠 PÁGINAS ESSENCIAIS
 const Home = lazy(() => import('./pages/Home'));
@@ -179,12 +180,14 @@ function App() {
                           </div>
                         </Route>
 
-                        {/* ⚙️ NOVO: Template Engine CRUD (rota dedicada) */}
-                        <Route path="/template-engine">
-                          <div data-testid="template-engine-page">
-                            <TemplateEnginePage />
-                          </div>
-                        </Route>
+                        {/* ⚙️ NOVO: Template Engine CRUD (rota dedicada) controlado por flag */}
+                        {import.meta.env.VITE_USE_TEMPLATE_ENGINE === '1' && (
+                          <Route path="/template-engine">
+                            <div data-testid="template-engine-page">
+                              <TemplateEnginePage />
+                            </div>
+                          </Route>
+                        )}
 
                         {/* Redirect legado para rota nova */}
                         <Route path="/editor/template-engine">

@@ -3,13 +3,50 @@ import { TemplateListItem, TemplateDraft, ValidationReport, BranchingRule, Outco
 const BASE = '/api/templates';
 
 async function http<T>(url: string, options: RequestInit = {}): Promise<T> {
-    const res = await fetch(url, { headers: { 'Content-Type': 'application/json', ...(options.headers || {}) }, ...options });
+    const res = await fetch(url, {
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            ...(options.headers || {})
+        },
+        ...options
+    });
+
+    const contentType = res.headers.get('content-type') || '';
+
+    // Função auxiliar para construir erro rico
+    const buildError = async (baseMsg: string) => {
+        let bodySnippet = '';
+        try {
+            const text = await res.text();
+            bodySnippet = text.slice(0, 300);
+        } catch { /* ignore */ }
+        return new Error(`${baseMsg} | status=${res.status} | ct=${contentType || 'n/a'} | body: ${bodySnippet}`);
+    };
+
     if (!res.ok) {
-        let detail: any = undefined;
-        try { detail = await res.json(); } catch { }
-        throw new Error(detail?.error || `Request failed ${res.status}`);
+        // Tenta JSON estruturado primeiro
+        if (contentType.includes('application/json')) {
+            try {
+                const detail = await res.json();
+                throw new Error(detail?.error || `Request failed ${res.status}`);
+            } catch (e) {
+                throw e;
+            }
+        }
+        throw await buildError('Request failed (non-JSON)');
     }
-    return res.json();
+
+    if (!contentType.includes('application/json')) {
+        // Provavelmente recebeu index.html (fallback SPA) — backend não estava ativo ou proxy incorreto
+        throw await buildError('Unexpected non-JSON response (possible SPA fallback or proxy issue)');
+    }
+
+    try {
+        return await res.json();
+    } catch (e: any) {
+        throw await buildError('Failed to parse JSON');
+    }
 }
 
 export const templatesApi = {

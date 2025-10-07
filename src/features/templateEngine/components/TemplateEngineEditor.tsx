@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useTemplateDraft, useUpdateMeta, useAddStage, useReorderStages, usePublish, useValidateDraft } from '../../../api/templates/hooks';
+import { useTemplateDraft, useUpdateMeta, useAddStage, useReorderStages, usePublish, useValidateDraft } from '../api/hooks';
 
 export const TemplateEngineEditor: React.FC<{ id: string; onBack: () => void }> = ({ id, onBack }) => {
     const { data: draft, isLoading, error } = useTemplateDraft(id);
@@ -22,14 +22,8 @@ export const TemplateEngineEditor: React.FC<{ id: string; onBack: () => void }> 
     if (error) return <div>Erro: {(error as Error).message}</div>;
     if (!draft) return null;
 
-    const saveMeta = () => {
-        updateMeta.mutate({ name: localName, description: localDesc });
-    };
-
-    const handleAddStage = () => {
-        addStage.mutate({ type: 'question' });
-    };
-
+    const saveMeta = () => { updateMeta.mutate({ name: localName, description: localDesc }); };
+    const handleAddStage = () => { addStage.mutate({ type: 'question' }); };
     const handleReorderUp = (idx: number) => {
         if (idx === 0) return;
         const ordered = [...draft.stages].sort((a, b) => a.order - b.order);
@@ -38,7 +32,6 @@ export const TemplateEngineEditor: React.FC<{ id: string; onBack: () => void }> 
         ordered[idx] = tmp;
         reorder.mutate(ordered.map(s => s.id));
     };
-
     const handlePublish = () => publishMut.mutate();
 
     return <div className="space-y-4">
@@ -63,7 +56,6 @@ export const TemplateEngineEditor: React.FC<{ id: string; onBack: () => void }> 
                 </div>
             </div>
         </section>
-
         <section className="space-y-2">
             <div className="flex items-center gap-2">
                 <h2 className="font-medium">Stages ({draft.stages.length})</h2>
@@ -78,7 +70,6 @@ export const TemplateEngineEditor: React.FC<{ id: string; onBack: () => void }> 
                 </li>)}
             </ul>
         </section>
-
         <section className="space-y-2">
             <h2 className="font-medium">Validação</h2>
             {!validation && <div className="text-xs text-gray-500">Validando...</div>}
@@ -87,7 +78,6 @@ export const TemplateEngineEditor: React.FC<{ id: string; onBack: () => void }> 
                 {validation.errors.map(e => <li key={e.code}>{e.code}</li>)}
             </ul>}
         </section>
-
         <section className="space-y-2">
             <h2 className="font-medium">Publicação</h2>
             <button onClick={handlePublish} disabled={publishMut.isPending || (validation && validation.errors.length > 0)} className="bg-purple-600 text-white px-3 py-1 rounded disabled:opacity-50 text-sm">Publicar</button>

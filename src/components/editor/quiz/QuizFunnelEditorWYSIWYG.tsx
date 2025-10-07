@@ -108,6 +108,17 @@ function createBlankStep(type: QuizStep['type']): EditableQuizStep {
 }
 
 const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, templateId }) => {
+    // Feature flag Template Engine
+    const useTemplateEngine = (import.meta as any).env?.VITE_USE_TEMPLATE_ENGINE === 'true';
+    // Permitir override por query param ?templateId=xxx
+    const [queryTemplateId, setQueryTemplateId] = useState<string | undefined>(templateId);
+    useEffect(() => {
+        try {
+            const sp = new URLSearchParams(window.location.search);
+            const qid = sp.get('templateId');
+            if (qid) setQueryTemplateId(qid);
+        } catch { }
+    }, []);
     const crud = useUnifiedCRUD();
 
     // 🚀 FASE 3: Componentes editáveis já integrados - não precisa registrar steps
@@ -127,16 +138,19 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = ({ funnelId, te
 
     // Carregar steps iniciais - Sistema Unificado usando componentes editáveis
     useEffect(() => {
-        const existing = (crud.currentFunnel as any)?.quizSteps as EditableQuizStep[] | undefined;
-        if (existing && existing.length) {
-            setSteps(existing.map(s => ({ ...s })));
-            setSelectedId(existing[0].id);
-            return;
+        // Se não estiver com Template Engine, comportamento padrão atual
+        if (!useTemplateEngine || !queryTemplateId) {
+            const existing = (crud.currentFunnel as any)?.quizSteps as EditableQuizStep[] | undefined;
+            if (existing && existing.length) {
+                setSteps(existing.map(s => ({ ...s })));
+                setSelectedId(existing[0].id);
+                return;
+            }
+            const conv: EditableQuizStep[] = Object.entries(QUIZ_STEPS).map(([id, step]) => ({ id, ...step as QuizStep }));
+            setSteps(conv);
+            if (conv.length) setSelectedId(conv[0].id);
         }
-        const conv: EditableQuizStep[] = Object.entries(QUIZ_STEPS).map(([id, step]) => ({ id, ...step as QuizStep }));
-        setSteps(conv);
-        if (conv.length) setSelectedId(conv[0].id);
-    }, [crud.currentFunnel]);
+    }, [crud.currentFunnel, useTemplateEngine, queryTemplateId]);
 
     const selectedStep = steps.find(s => s.id === selectedId);
 
