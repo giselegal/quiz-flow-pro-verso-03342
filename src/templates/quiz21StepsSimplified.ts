@@ -29,14 +29,14 @@ function convertBlocksToQuizStep(blocks: Block[]): any {
 }
 
 export function getPersonalizedStepTemplate(stepId: string, funnelId?: string): any {
-    // Para step-1, sempre retornar a configuração correta
+    // ⚠️ Correção: Só personalizamos a primeira etapa.
+    // As demais estavam retornando um objeto do tipo 'intro' indevido, quebrando o fluxo
+    // (progressão, tipos de pergunta e cálculo de pontuação).
     if (stepId === 'step-1') {
         const blocks = getStepTemplate('step-1');
         if (blocks) {
             return convertBlocksToQuizStep(blocks);
         }
-
-        // Fallback hardcoded para garantir que funciona
         return {
             type: 'intro',
             title: '<span style="color: #B89B7A; font-weight: 700;">Chega</span> de um guarda-roupa lotado e da sensação de que <span style="color: #B89B7A; font-weight: 700;">nada combina com você.</span>',
@@ -47,16 +47,8 @@ export function getPersonalizedStepTemplate(stepId: string, funnelId?: string): 
             nextStep: 'step-2',
         };
     }
-
-    // Para outras etapas, usar o template personalizado se disponível
-    if (funnelId) {
-        const blocks = getStepTemplate(stepId);
-        if (blocks) {
-            return convertBlocksToQuizStep(blocks);
-        }
-    }
-
-    return null; // Fallback para QUIZ_STEPS padrão
+    // Para qualquer outra etapa devolvemos null → useQuizState fará fallback para QUIZ_STEPS.
+    return null;
 }
 
 export function getStepTemplateSimplified(stepId: string): any {
