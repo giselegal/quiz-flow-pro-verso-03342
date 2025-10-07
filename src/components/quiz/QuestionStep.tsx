@@ -34,7 +34,8 @@ export default function QuestionStep({
     // Ajuste: sempre começar em 1 coluna para mobile para dar mais destaque
     // e subir para 2 colunas em sm/md e 3 em lg quando há imagens.
     const gridClass = hasImages
-        ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3'
+        // Menos colunas em desktop para dobrar área visual das imagens; 3 colunas só em telas muito largas
+        ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3'
         : 'grid-cols-1';
     const gapClass = hasImages ? 'gap-5 md:gap-6' : 'gap-6';
 
@@ -58,7 +59,7 @@ export default function QuestionStep({
         : 'Selecione uma opção';
 
     return (
-        <div className="bg-white p-6 md:p-12 rounded-lg shadow-lg text-center max-w-6xl mx-auto">
+        <div className="bg-white p-4 sm:p-5 md:p-12 rounded-lg shadow-lg text-center max-w-6xl mx-auto">
             <h2 className="text-xl md:text-2xl font-bold mb-4">
                 {data.questionNumber}
             </h2>
@@ -86,17 +87,20 @@ export default function QuestionStep({
                             }`}
                     >
                         {option.image && (
-                            <div className="w-full aspect-square bg-white rounded-t-md overflow-hidden relative">
+                            <div className="w-full aspect-[4/5] sm:aspect-square bg-white rounded-t-md overflow-hidden relative">
                                 <img
                                     src={option.image}
                                     alt={option.text}
                                     loading="lazy"
                                     decoding="async"
-                                    className="w-full h-full object-cover scale-[1.02]"
+                                    className="w-full h-full object-cover scale-[1.05]"
                                 />
                             </div>
                         )}
-                        <p className="text-center font-medium text-sm leading-relaxed px-3 pt-2 w-full break-words hyphens-auto">
+                        <p
+                            className="text-center font-medium text-sm leading-relaxed px-3 pt-2 w-full break-words hyphens-auto whitespace-normal"
+                            style={{ wordBreak: 'break-word', overflowWrap: 'anywhere' }}
+                        >
                             {option.text}
                         </p>
 
