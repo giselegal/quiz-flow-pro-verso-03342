@@ -25,3 +25,12 @@ export const TemplateEnginePage: React.FC = () => {
         {legacySlug && !allowLegacy && <div className="text-sm text-red-600">Adapter legacy desabilitado pela flag VITE_QUIZ_STYLE_ADAPTER.</div>}
     </div>;
 };
+
+// Wrapper usado pela rota direta /template-engine/:templateId
+export const TemplateEnginePageWrapperOpen: React.FC<{ id: string }> = ({ id }) => {
+    return (
+        <div className="max-w-6xl mx-auto p-6 space-y-6">
+            <TemplateEngineEditor id={id} onBack={() => { window.location.href = '/template-engine'; }} />
+        </div>
+    );
+};

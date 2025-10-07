@@ -37,6 +37,7 @@ import { OptimizedEditorProvider } from '@/components/editor/OptimizedEditorProv
 import { BlockRegistryProvider, DEFAULT_BLOCK_DEFINITIONS } from '@/runtime/quiz/blocks/BlockRegistry';
 // Novo Template Engine (feature flag controlada por VITE_USE_TEMPLATE_ENGINE)
 import { TemplateEnginePage } from '@/features/templateEngine';
+import { TemplateEnginePageWrapperOpen } from '@/features/templateEngine/components/TemplateEnginePage';
 
 // 🏠 PÁGINAS ESSENCIAIS
 const Home = lazy(() => import('./pages/Home'));
@@ -193,6 +194,15 @@ function App() {
                           <div data-testid="template-engine-page">
                             <TemplateEnginePage />
                           </div>
+                        </Route>
+                        {/* Rota direta com ID para abrir já no layout 4 colunas */}
+                        <Route path="/template-engine/:templateId">
+                          {(params) => (
+                            <div data-testid="template-engine-direct-page">
+                              {/* Reusa página mas injeta openId via query param hack usando history.replace */}
+                              <TemplateEnginePageWrapperOpen id={params.templateId} />
+                            </div>
+                          )}
                         </Route>
 
                         {/* Alias adicional para o Template Engine (sempre ativo) */}

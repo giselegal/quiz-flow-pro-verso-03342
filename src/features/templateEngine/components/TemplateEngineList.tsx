@@ -9,7 +9,7 @@ export const TemplateEngineList: React.FC<{ onOpen: (id: string) => void }> = ({
 
     return <div className="space-y-4">
         <h1 className="text-xl font-semibold">Template Engine (Quiz)</h1>
-        <form onSubmit={e => { e.preventDefault(); if (!name || !slug) return; createMut.mutate({ name, slug }); }} className="flex gap-2 flex-wrap items-end">
+    <form onSubmit={e => { e.preventDefault(); if (!name || !slug) return; createMut.mutate({ name, slug }, { onSuccess: (res: any) => { setName(''); setSlug(''); onOpen(res.id); } }); }} className="flex gap-2 flex-wrap items-end">
             <div className="flex flex-col">
                 <label className="text-xs">Nome</label>
                 <input className="border px-2 py-1 rounded" value={name} onChange={e => setName(e.target.value)} />
@@ -21,7 +21,18 @@ export const TemplateEngineList: React.FC<{ onOpen: (id: string) => void }> = ({
             <button className="bg-blue-600 text-white px-3 py-1 rounded" disabled={createMut.isPending}>Criar</button>
         </form>
         {isLoading && <div>Carregando...</div>}
-        {error && <div className="text-red-600">{(error as Error).message}</div>}
+        {error && (
+            <div className="text-red-600 text-sm space-y-2">
+                <div>{(error as Error).message}</div>
+                {/Unexpected non-JSON/.test((error as Error).message || '') && (
+                    <div className="text-xs bg-red-50 border border-red-200 p-2 rounded">
+                        Backend da Template Engine não respondeu JSON. Execute em paralelo:
+                        <pre className="mt-1 bg-white p-2 rounded border text-[10px] whitespace-pre-wrap">npm run dev:server</pre>
+                        Depois recarregue esta página.
+                    </div>
+                )}
+            </div>
+        )}
         <table className="w-full text-sm border">
             <thead className="bg-gray-50">
                 <tr><th className="p-2 text-left">Nome</th><th className="p-2">Slug</th><th className="p-2">Atualizado</th><th className="p-2">Ações</th></tr>
