@@ -60,13 +60,9 @@ export default function ResultStep({
     }, []);
 
     if (!styleConfig) {
-        return (
-            <div className="bg-white p-6 md:p-12 rounded-lg shadow-lg text-center max-w-4xl mx-auto">
-                <div className="text-red-500 text-xl">
-                    ❌ Erro: Nenhum estilo disponível. Reinicie o quiz.
-                </div>
-            </div>
-        );
+        // Fallback silencioso: usar primeiro estilo definido para evitar mensagem de erro visual
+        const firstKey = Object.keys(styleConfigGisele)[0];
+        styleConfig = styleConfigGisele[firstKey];
     }
 
     // Processar estilos com porcentagens para as barras de progresso
@@ -370,13 +366,7 @@ export default function ResultStep({
                         </h2>
                         <p className="text-base sm:text-lg text-gray-700 mb-6 md:mb-8">Especialmente criado para o seu estilo {styleConfig.name}</p>
 
-                        {/* Countdown de urgência */}
-                        <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6 md:mb-8 max-w-md mx-auto">
-                            <div className="flex items-center justify-center gap-2 text-red-600">
-                                <Clock className="w-5 h-5" />
-                                <span className="font-semibold">Oferta expira ao sair desta página</span>
-                            </div>
-                        </div>
+                        {/* Countdown de urgência removido para reduzir sensação de erro visual */}
 
                         {/* Componentes de valor */}
                         <div className="bg-white p-5 sm:p-6 rounded-lg shadow-md border border-[#deac6d]/20 max-w-lg mx-auto mb-6 md:mb-8">
