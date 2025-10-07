@@ -254,6 +254,66 @@ export class TemplateService {
             if (cur.max !== undefined && next.min <= cur.max) errors.push('OUTCOME_OVERLAP');
         }
 
+        // ---------------- Branching graph analysis ----------------
+        const rules = Array.isArray(t.logic.branching) ? t.logic.branching : [];
+        // Build adjacency including fallbacks (directed edges)
+        const adjacency: Record<string, Set<string>> = {};
+        function addEdge(from: string, to?: string) {
+            if (!to) return; if (!adjacency[from]) adjacency[from] = new Set(); adjacency[from].add(to);
+        }
+        for (const r of rules) {
+            if (r.fromStageId) addEdge(r.fromStageId, r.toStageId);
+            if (r.fromStageId && r.fallbackStageId) addEdge(r.fromStageId, r.fallbackStageId);
+        }
+
+        // Detect cycles via DFS
+        const visiting = new Set<string>();
+        const visited = new Set<string>();
+        let cycleDetected = false;
+        function dfs(node: string) {
+            if (cycleDetected) return;
+            visiting.add(node);
+            const nexts = Array.from(adjacency[node] || []);
+            for (const n of nexts) {
+                if (visiting.has(n)) { cycleDetected = true; errors.push('CYCLE_DETECTED'); return; }
+                if (!visited.has(n)) dfs(n);
+            }
+            visiting.delete(node);
+            visited.add(node);
+        }
+        // Start DFS from every fromStageId to catch disconnected cycles in branching
+        for (const from of Object.keys(adjacency)) {
+            if (!visited.has(from)) dfs(from);
+            if (cycleDetected) break;
+        }
+
+        // Reachability (linear + branching edges). Start from first enabled stage by order.
+        const enabledStages = t.stages.filter(s => s.enabled !== false);
+        if (enabledStages.length) {
+            const startStage = enabledStages[0];
+            const reach = new Set<string>();
+            function traverse(stageId: string) {
+                if (reach.has(stageId)) return;
+                reach.add(stageId);
+                // linear next
+                const current = enabledStages.find(s => s.id === stageId);
+                if (current) {
+                    // Se há regras de branching que partem deste stage, assumimos que linear pode ser desviado
+                    const hasBranch = adjacency[current.id] && adjacency[current.id].size > 0;
+                    if (!hasBranch) {
+                        const linearNext = enabledStages.find(s => s.order === current.order + 1);
+                        if (linearNext) traverse(linearNext.id);
+                    }
+                }
+                // branching edges
+                for (const to of Array.from(adjacency[stageId] || [])) traverse(to);
+            }
+            traverse(startStage.id);
+            for (const s of enabledStages) {
+                if (!reach.has(s.id)) warnings.push(`UNREACHABLE_STAGE:${s.id}`);
+            }
+        }
+
         return { status: errors.length ? 'error' : 'ok', errors, warnings };
     }
 }
