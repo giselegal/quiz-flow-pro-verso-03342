@@ -7,9 +7,13 @@ function setupTemplateWithBranching() {
     const draft = templateRepo.get(tpl.id)!;
     // Adicionar segundo stage de pergunta e um stage de pergunta adicional para branch target
     // Base já tem: stage_intro, stage_q1, stage_result
-    // Vamos inserir manualmente um stage_q2 e stage_q3
-    draft.stages.splice(2, 0, { id: 'stage_q2', type: 'question', order: 2, enabled: true, componentIds: [] });
-    draft.stages.push({ id: 'stage_q3', type: 'question', order: 4, enabled: true, componentIds: [] });
+    // Vamos inserir manualmente stage_q2 e stage_q3 ANTES do stage_result para garantir ordem: intro, q1, q2, q3, result
+    draft.stages.splice(
+        2,
+        0,
+        { id: 'stage_q2', type: 'question', order: 2, enabled: true, componentIds: [] },
+        { id: 'stage_q3', type: 'question', order: 3, enabled: true, componentIds: [] }
+    );
     // Ajustar order coerente
     draft.stages.forEach((s, idx) => (s.order = idx));
     // Pesos de scoring
