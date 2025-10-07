@@ -75,37 +75,44 @@ export interface RuntimeSession {
     completed: boolean;
 }
 
-const runtimeSessions = new Map<string, RuntimeSession>();
-
-export function createRuntimeSession(template: TemplateDraft): RuntimeSession {
-    if (!template.publishedSnapshot) throw new Error('NOT_PUBLISHED');
-    const firstStage = template.publishedSnapshot.stages.find((s: any) => s.enabled !== false) || template.publishedSnapshot.stages[0];
-    const sessionId = `sess_${nanoid(10)}`;
-    const now = new Date().toISOString();
-    const sess: RuntimeSession = {
-        sessionId,
-        templateId: template.id,
-        publishId: template.publishedSnapshot.publishedAt,
-        currentStageId: firstStage.id,
-        answers: {},
-        score: 0,
-        createdAt: now,
-        updatedAt: now,
-        completed: false
-    };
-    runtimeSessions.set(sessionId, sess);
-    return sess;
+export interface IRuntimeSessionRepository {
+    create(template: TemplateDraft): RuntimeSession;
+    get(sessionId: string): RuntimeSession | undefined;
+    save(session: RuntimeSession): void;
 }
 
-export function getSession(sessionId: string): RuntimeSession | undefined {
-    const s = runtimeSessions.get(sessionId);
-    return s && { ...s };
+class InMemoryRuntimeSessionRepository implements IRuntimeSessionRepository {
+    private sessions = new Map<string, RuntimeSession>();
+    create(template: TemplateDraft): RuntimeSession {
+        if (!template.publishedSnapshot) throw new Error('NOT_PUBLISHED');
+        const firstStage = template.publishedSnapshot.stages.find((s: any) => s.enabled !== false) || template.publishedSnapshot.stages[0];
+        const sessionId = `sess_${nanoid(10)}`;
+        const now = new Date().toISOString();
+        const sess: RuntimeSession = {
+            sessionId,
+            templateId: template.id,
+            publishId: template.publishedSnapshot.publishedAt,
+            currentStageId: firstStage.id,
+            answers: {},
+            score: 0,
+            createdAt: now,
+            updatedAt: now,
+            completed: false
+        };
+        this.sessions.set(sessionId, sess);
+        return { ...sess };
+    }
+    get(sessionId: string): RuntimeSession | undefined {
+        const s = this.sessions.get(sessionId);
+        return s && { ...s };
+    }
+    save(s: RuntimeSession): void {
+        s.updatedAt = new Date().toISOString();
+        this.sessions.set(s.sessionId, { ...s });
+    }
 }
 
-export function saveSession(s: RuntimeSession) {
-    s.updatedAt = new Date().toISOString();
-    runtimeSessions.set(s.sessionId, { ...s });
-}
+export const runtimeSessionRepo: IRuntimeSessionRepository = new InMemoryRuntimeSessionRepository();
 
 // Simple scoring util
 export function computeScore(template: TemplateDraft, answers: Record<string, string[]>) {

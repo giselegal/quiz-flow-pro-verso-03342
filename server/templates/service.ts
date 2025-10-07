@@ -1,4 +1,4 @@
-import { templateRepo, addStage, addComponent, updateScoring, addOutcome, publishTemplate, createRuntimeSession, getSession, saveSession, computeScore } from './repo';
+import { templateRepo, addStage, addComponent, updateScoring, addOutcome, publishTemplate, computeScore, runtimeSessionRepo } from './repo';
 import { TemplateDraft, ScoringConfig } from './models';
 import { logger, withCorrelation } from '../lib/logger';
 
@@ -75,8 +75,10 @@ function evaluateConditionTree(node: ConditionNode, context: { score: number; an
 
 export class TemplateService {
     private repo: any;
-    constructor(repo = templateRepo) {
+    private sessionRepo: any;
+    constructor(repo = templateRepo, sessionRepo = runtimeSessionRepo) {
         this.repo = repo;
+        this.sessionRepo = sessionRepo;
     }
     createBase(name: string, slug: string): TemplateDraft {
         return this.repo.createFromBase(name, slug);
@@ -155,7 +157,7 @@ export class TemplateService {
     startRuntime(slug: string) {
         const tpl = this.getPublishedBySlug(slug);
         if (!tpl) throw new Error('NOT_FOUND');
-        const sess = createRuntimeSession(tpl);
+        const sess = this.sessionRepo.create(tpl);
         logger.info('runtime.session.start', withCorrelation({ slug, templateId: tpl.id, sessionId: sess.sessionId, currentStageId: sess.currentStageId }, sess.sessionId));
         return { sessionId: sess.sessionId, currentStageId: sess.currentStageId };
     }
@@ -163,7 +165,7 @@ export class TemplateService {
     answerRuntime(slug: string, sessionId: string, stageId: string, answers: string[]) {
         const tpl = this.getPublishedBySlug(slug);
         if (!tpl) throw new Error('NOT_FOUND');
-        const sess = getSession(sessionId);
+        const sess = this.sessionRepo.get(sessionId);
         if (!sess || sess.templateId !== tpl.id) throw new Error('SESSION_NOT_FOUND');
         if (sess.completed) throw new Error('ALREADY_COMPLETED');
         // store answers (replace for stage)
@@ -203,7 +205,7 @@ export class TemplateService {
                 sess.currentStageId = stages[currentIndex + 1].id;
             }
         }
-        saveSession(sess);
+        this.sessionRepo.save(sess);
         logger.info('runtime.advance', withCorrelation({
             mode: advancedByBranch ? 'branch' : 'linear',
             slug,
@@ -219,11 +221,11 @@ export class TemplateService {
     completeRuntime(slug: string, sessionId: string) {
         const tpl = this.getPublishedBySlug(slug);
         if (!tpl) throw new Error('NOT_FOUND');
-        const sess = getSession(sessionId);
+        const sess = this.sessionRepo.get(sessionId);
         if (!sess || sess.templateId !== tpl.id) throw new Error('SESSION_NOT_FOUND');
         if (sess.completed) throw new Error('ALREADY_COMPLETED');
         sess.completed = true;
-        saveSession(sess);
+        this.sessionRepo.save(sess);
         // pick first matching outcome by score
         const score = sess.score;
         const outcome = tpl.outcomes.find((o: any) => {
@@ -244,8 +246,8 @@ export class TemplateService {
         // must have intro
         if (!t.stages.some((s: any) => s.type === 'intro')) errors.push('MISSING_INTRO_STAGE');
         // question stage needs at least one OptionList component
-        for (const s of t.stages.filter(s => s.type === 'question')) {
-            const hasOptions = s.componentIds.some(cid => t.components[cid]?.type === 'OptionList');
+        for (const s of t.stages.filter((s: any) => s.type === 'question')) {
+            const hasOptions = s.componentIds.some((cid: string) => t.components[cid]?.type === 'OptionList');
             if (!hasOptions) warnings.push(`QUESTION_STAGE_NO_OPTIONS:${s.id}`);
         }
         // outcome gap detection (simple)
@@ -292,7 +294,7 @@ export class TemplateService {
         }
 
         // Reachability (linear + branching edges). Start from first enabled stage by order.
-        const enabledStages = t.stages.filter(s => s.enabled !== false);
+    const enabledStages = t.stages.filter((s: any) => s.enabled !== false);
         if (enabledStages.length) {
             const startStage = enabledStages[0];
             const reach = new Set<string>();
@@ -300,12 +302,12 @@ export class TemplateService {
                 if (reach.has(stageId)) return;
                 reach.add(stageId);
                 // linear next
-                const current = enabledStages.find(s => s.id === stageId);
+                const current = enabledStages.find((s: any) => s.id === stageId);
                 if (current) {
                     // Se há regras de branching que partem deste stage, assumimos que linear pode ser desviado
                     const hasBranch = adjacency[current.id] && adjacency[current.id].size > 0;
                     if (!hasBranch) {
-                        const linearNext = enabledStages.find(s => s.order === current.order + 1);
+                        const linearNext = enabledStages.find((s: any) => s.order === current.order + 1);
                         if (linearNext) traverse(linearNext.id);
                     }
                 }
