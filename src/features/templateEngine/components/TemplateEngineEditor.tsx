@@ -3,6 +3,7 @@ import { useTemplateDraft, useUpdateMeta, useAddStage, useReorderStages, usePubl
 import { renderComponent } from '../render/registry';
 import { TemplateDraftShared } from '../../../shared/templateEngineTypes';
 import { getComponentSchema } from './componentPropSchemas';
+import { diffProps } from '../utils/diffProps';
 // Ajuste: evitar conflito de tipos TemplateDraft (frontend vs server). Vamos tratar draft como 'any' onde passamos para renderComponent.
 
 export const TemplateEngineEditor: React.FC<{ id: string; onBack: () => void }> = ({ id, onBack }) => {
@@ -387,19 +388,10 @@ export const TemplateEngineEditor: React.FC<{ id: string; onBack: () => void }> 
                 const addedComponents = Object.keys(draft.components).filter(cid => !pub.components[cid]);
                 const removedComponents = Object.keys(pub.components).filter((cid: string) => !draft.components[cid]);
                 // Diff de props por componente
-                function diffComponentProps(current: any, previous: any) {
-                    const diffs: { key: string; before: any; after: any }[] = [];
-                    const keys = new Set([...Object.keys(current?.props || {}), ...Object.keys(previous?.props || {})]);
-                    keys.forEach(k => {
-                        const a = current?.props?.[k];
-                        const b = previous?.props?.[k];
-                        if (JSON.stringify(a) !== JSON.stringify(b)) diffs.push({ key: k, before: b, after: a });
-                    });
-                    return diffs;
-                }
-                const modifiedComponents = Object.keys(draft.components).filter(cid => pub.components[cid]).map(cid => {
-                    return { id: cid, diffs: diffComponentProps(draft.components[cid], pub.components[cid]) };
-                }).filter(c => c.diffs.length > 0);
+                const modifiedComponents = Object.keys(draft.components)
+                    .filter(cid => pub.components[cid])
+                    .map(cid => ({ id: cid, diffs: diffProps(draft.components[cid]?.props, pub.components[cid]?.props) }))
+                    .filter(c => c.diffs.length > 0);
                 const totalPropChanges = modifiedComponents.reduce((acc, c) => acc + c.diffs.length, 0);
                 return <div className="text-[11px] space-y-2">
                     <div className="grid grid-cols-2 gap-2">
