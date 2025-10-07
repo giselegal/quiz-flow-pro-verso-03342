@@ -28,6 +28,15 @@ export interface QuizStep {
     buttonText?: string;
     text?: string;
     image?: string;
+    /**
+     * Imagem reflexiva / emocional usada em perguntas estratégicas para ancorar sentimento.
+     * Será exibida logo abaixo do título da questão estratégica.
+     */
+    reflectionImage?: {
+        src: string; // URL da imagem otimizada (WebP/PNG)
+        alt: string; // Texto alternativo acessível
+        prompt?: string; // (Opcional) Prompt IA usado para gerar referência – documentado para reprodutibilidade
+    };
     requiredSelections?: number;
     options?: QuizOption[];
     nextStep?: string;
@@ -253,6 +262,11 @@ export const QUIZ_STEPS: Record<string, QuizStep> = {
     'step-13': {
         type: 'strategic-question',
         questionText: 'Quando você se olha no espelho, como se sente com sua imagem pessoal atualmente?',
+        reflectionImage: {
+            src: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1746900001/strategic_reflection_espelho_mulher_contemplando.webp',
+            alt: 'Mulher em frente ao espelho tocando levemente o vidro, expressão pensativa e suave luz lateral.',
+            prompt: 'cinematic soft light, editorial portrait of a Brazilian woman early 30s in neutral toned minimal bedroom, standing in front of a tall mirror gently touching it, introspective expression, muted beige and warm brown palette, shallow depth of field, medium format look, subtle grain, sense of self reflection, Vogue Brasil minimal aesthetic'
+        },
         options: [
             { id: 'desconectada', text: 'Me sinto desconectada da mulher que sou hoje' },
             { id: 'duvidas', text: 'Tenho dúvidas sobre o que realmente me valoriza' },
@@ -265,6 +279,11 @@ export const QUIZ_STEPS: Record<string, QuizStep> = {
     'step-14': {
         type: 'strategic-question',
         questionText: 'O que mais te desafia na hora de se vestir?',
+        reflectionImage: {
+            src: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1746900002/strategic_gavetas_roupas_dilema.webp',
+            alt: 'Close de mãos separando peças de roupa em tons neutros sobre uma cama organizada.',
+            prompt: 'top-down view soft daylight of hands curating minimalist neutral wardrobe pieces (linen, cotton, knit) on textured beige bed cover, aesthetic flatlay, warm desaturated tones, lifestyle editorial, evokes decision making and style curation, subtle natural shadows'
+        },
         options: [
             { id: 'combinar-pecas', text: 'Tenho peças, mas não sei como combiná-las' },
             { id: 'comprar-impulso', text: 'Compro por impulso e me arrependo depois' },
@@ -289,6 +308,11 @@ export const QUIZ_STEPS: Record<string, QuizStep> = {
     'step-16': {
         type: 'strategic-question',
         questionText: 'Pense no quanto você já gastou com roupas que não usa ou que não representam quem você é... Você acredita que um material estratégico ajudaria?',
+        reflectionImage: {
+            src: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1746900003/strategic_guardarroupa_pecas_paradas.webp',
+            alt: 'Guarda-roupa aberto com poucas peças selecionadas em cabides de madeira, luz suave entrando lateralmente.',
+            prompt: 'minimalist open wardrobe with curated neutral capsule pieces on wooden hangers, soft side window light with gentle dust particles, negative space, warm beige and camel color palette, evokes evaluation of past spending and mindful wardrobe, lifestyle editorial photograph'
+        },
         options: [
             { id: 'sim-quero', text: 'Sim! Se existisse algo assim, eu quero' },
             { id: 'sim-momento-certo', text: 'Sim, mas teria que ser no momento certo' },
@@ -313,6 +337,11 @@ export const QUIZ_STEPS: Record<string, QuizStep> = {
     'step-18': {
         type: 'strategic-question',
         questionText: 'Qual desses resultados você mais gostaria de alcançar?',
+        reflectionImage: {
+            src: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1746900004/strategic_mulher_confiante_rua_dourado.webp',
+            alt: 'Mulher caminhando confiante em rua urbana ao entardecer com luz dourada suave, postura ereta.',
+            prompt: 'golden hour urban candid shot of confident stylish Brazilian woman walking forward, subtle wind movement in hair, soft cinematic glow, neutral chic outfit (linen blazer, tailored pants), warm golden highlights, evokes aspiration and transformation, editorial street style'
+        },
         options: [
             { id: 'montar-looks-facilidade', text: 'Montar looks com mais facilidade e confiança' },
             { id: 'usar-que-tenho', text: 'Usar o que já tenho e me sentir estilosa' },

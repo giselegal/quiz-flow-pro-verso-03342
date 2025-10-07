@@ -36,6 +36,20 @@ export default function StrategicQuestionStep({
                 <p className="text-xl md:text-2xl font-bold text-[#deac6d] playfair-display leading-tight">
                     {data.questionText}
                 </p>
+                {data.reflectionImage && (
+                    <figure className="mt-5 md:mt-6 mb-2 md:mb-4 flex flex-col items-center">
+                        <img
+                            src={data.reflectionImage.src}
+                            alt={data.reflectionImage.alt}
+                            loading="lazy"
+                            decoding="async"
+                            className="w-full max-w-xl rounded-lg shadow-sm object-cover aspect-[16/9] md:aspect-[3/1] select-none pointer-events-none"
+                        />
+                        {data.reflectionImage.alt && (
+                            <figcaption className="sr-only">{data.reflectionImage.alt}</figcaption>
+                        )}
+                    </figure>
+                )}
             </div>
 
             <div className="grid grid-cols-1 gap-4">
