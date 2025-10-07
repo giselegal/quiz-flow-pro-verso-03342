@@ -35,6 +35,7 @@ import { EditorErrorBoundary } from './components/error/EditorErrorBoundary';
 import UnifiedCRUDProvider from '@/context/UnifiedCRUDProvider';
 import { OptimizedEditorProvider } from '@/components/editor/OptimizedEditorProvider';
 import { BlockRegistryProvider, DEFAULT_BLOCK_DEFINITIONS } from '@/runtime/quiz/blocks/BlockRegistry';
+import { PublishedTemplateRunner } from '@/components/runtime/PublishedTemplateRunner';
 
 // 🏠 PÁGINAS ESSENCIAIS
 const Home = lazy(() => import('./pages/Home'));
@@ -237,6 +238,15 @@ function App() {
                             <QuizErrorBoundary>
                               <QuizEstiloPessoalPage funnelId={params.funnelId} />
                             </QuizErrorBoundary>
+                          )}
+                        </Route>
+
+                        {/* 🔄 RUNTIME PUBLICADO (DEMO DO NOVO MOTOR) */}
+                        <Route path="/runtime/:slug">
+                          {(params) => (
+                            <div data-testid="runtime-runner-page">
+                              <PublishedTemplateRunner slug={params.slug} />
+                            </div>
                           )}
                         </Route>
 
