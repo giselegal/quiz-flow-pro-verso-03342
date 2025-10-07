@@ -16,7 +16,10 @@ export default defineConfig({
       ['src/optimization/**', 'node'],
       ['src/migration/**', 'node'],
     ],
-    setupFiles: ['./src/test/setup.ts'],
+    setupFiles: [
+      './src/test/setup.ts',
+      './src/__tests__/setup/indexeddb.mock.ts'
+    ],
     css: true,
     // Garante que mocks e espioes sejam limpos entre testes para evitar retenção de memória
     clearMocks: true,
