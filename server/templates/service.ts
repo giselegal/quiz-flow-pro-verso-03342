@@ -300,6 +300,31 @@ export const templateService = {
         return { sessionId: session.sessionId, currentStageId: session.currentStageId };
     },
 
+    answerRuntimeDraft(id: string, sessionId: string, stageId: string, optionIds: string[]) {
+        const agg = templateRepo.get(id);
+        if (!agg) throw new Error('Template not found');
+        const session = runtimeSessions.get(sessionId);
+        if (!session) throw new Error('Session not found');
+        if (session.templateId !== agg.draft.id) throw new Error('Session/template mismatch');
+        if (session.currentStageId !== stageId) throw new Error('Stage order mismatch');
+        // registra respostas
+        session.answers[stageId] = optionIds;
+        // score usando draft
+        session.score = computeScore(agg, session.answers);
+        session.updatedAt = Date.now();
+        const ordered = agg.draft.stages.filter(s => s.enabled).sort((a, b) => a.order - b.order);
+        const idx = ordered.findIndex(s => s.id === stageId);
+        // Branching draft (reutiliza mesma função com aggregate)
+        const branch = resolveBranching(agg as any, stageId, { score: session.score, answers: session.answers });
+        let nextStageId: string | undefined;
+        let branched = false;
+        if (branch.branched && branch.nextStageId) { nextStageId = branch.nextStageId; branched = true; }
+        else if (idx >= 0 && idx < ordered.length - 1) { nextStageId = ordered[idx + 1].id; }
+        if (nextStageId) session.currentStageId = nextStageId; else { session.completed = true; session.outcomeId = resolveOutcome(agg as any, session.score); }
+        const outcomeText = interpolateOutcome(agg as any, session.outcomeId, session.score);
+        return { branched, nextStageId, completed: session.completed || false, score: session.score, outcomeId: session.outcomeId, outcomeText };
+    },
+
     publish(id: string): TemplatePublishedSnapshot {
         const agg = templateRepo.get(id);
         if (!agg) throw new Error('Template not found');

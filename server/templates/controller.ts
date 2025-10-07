@@ -148,4 +148,14 @@ templatesRouter.post('/:id/runtime/preview/start', (req, res) => {
     } catch (e: any) { res.status(400).json({ error: e.message }); }
 });
 
+// Runtime preview answer (draft)
+templatesRouter.post('/:id/runtime/preview/answer', (req, res) => {
+    try {
+        const { sessionId, stageId, optionIds } = req.body || {};
+        if (!sessionId || !stageId) return res.status(400).json({ error: 'sessionId and stageId required' });
+        const result = templateService.answerRuntimeDraft(req.params.id, sessionId, stageId, optionIds || []);
+        res.json(result);
+    } catch (e: any) { res.status(400).json({ error: e.message }); }
+});
+
 export default templatesRouter;

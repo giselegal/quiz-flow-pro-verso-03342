@@ -120,6 +120,10 @@ export function usePreviewStart(id: string) {
     return useMutation({ mutationFn: () => templatesApi.startPreview(id) });
 }
 
+export function usePreviewAnswer(id: string) {
+    return useMutation({ mutationFn: (p: { sessionId: string; stageId: string; optionIds: string[] }) => templatesApi.answerPreview(id, p) });
+}
+
 export function useUpdateComponentProps(componentId: string, templateId?: string) {
     const qc = useQueryClient();
     return useMutation({

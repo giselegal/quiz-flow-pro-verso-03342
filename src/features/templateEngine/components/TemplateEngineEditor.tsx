@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useTemplateDraft, useUpdateMeta, useAddStage, useReorderStages, usePublish, useValidateDraft, useAddStageComponent, useRemoveStageComponent, useReorderStageComponents, useUpdateComponentProps, usePreviewStart } from '../api/hooks';
+import { useTemplateDraft, useUpdateMeta, useAddStage, useReorderStages, usePublish, useValidateDraft, useAddStageComponent, useRemoveStageComponent, useReorderStageComponents, useUpdateComponentProps, usePreviewStart, usePreviewAnswer } from '../api/hooks';
 import { renderComponent } from '../render/registry';
 import { TemplateDraftShared } from '../../../shared/templateEngineTypes';
 import { getComponentSchema } from './componentPropSchemas';
@@ -49,12 +49,35 @@ export const TemplateEngineEditor: React.FC<{ id: string; onBack: () => void }> 
     const updateComponentProps = selectedComponentId ? useUpdateComponentProps(selectedComponentId, draft.id) : undefined;
     // Preview runtime (draft) - simplificado: apenas inicia e mantém estado local de respostas
     const previewStart = usePreviewStart(draft.id);
+    const answerPreview = usePreviewAnswer(draft.id);
     const [runtime, setRuntime] = useState<{ sessionId: string; currentStageId: string } | null>(null);
     const [runtimeAnswers, setRuntimeAnswers] = useState<Record<string, string[]>>({});
     function startPreview() {
         previewStart.mutate(undefined, { onSuccess: (res: any) => { setRuntime(res); setRuntimeAnswers({}); } });
     }
     const currentRuntimeStage = runtime ? draft.stages.find(s => s.id === runtime.currentStageId) : undefined;
+    function answerOption(stageId: string, optionId: string, multi: boolean) {
+        if (!runtime) return;
+        setRuntimeAnswers(prev => {
+            const current = prev[stageId] || [];
+            let next: string[];
+            if (multi) {
+                next = current.includes(optionId) ? current.filter(o => o !== optionId) : [...current, optionId];
+            } else {
+                next = [optionId];
+            }
+            // dispara chamada para servidor para avançar
+            answerPreview.mutate({ sessionId: runtime.sessionId, stageId, optionIds: next }, {
+                onSuccess: (res: any) => {
+                    if (res.nextStageId) setRuntime(r => r ? { ...r, currentStageId: res.nextStageId } : r);
+                    if (res.completed) {
+                        setRuntime(r => r ? { ...r, currentStageId: r.currentStageId } : r);
+                    }
+                }
+            });
+            return { ...prev, [stageId]: next };
+        });
+    }
 
     function toggleStage(stId: string) { setOpenStageId(prev => prev === stId ? null : stId); }
     function addQuick(kind: string) {
@@ -319,9 +342,19 @@ export const TemplateEngineEditor: React.FC<{ id: string; onBack: () => void }> 
                     <ul className="space-y-2">
                         {currentRuntimeStage.componentIds.map(cid => {
                             const comp = draft.components[cid];
-                            return <li key={cid} className="border rounded p-2">
-                                {renderComponent({ ...comp, kind: (comp as any).kind || (comp as any).type }, { draft: draft as any, stageId: currentRuntimeStage.id })}
-                                {/* Placeholder: sem progressão / branching até termos endpoint draft answer */}
+                            const kind = (comp as any).kind || comp.type;
+                            const isQuestion = kind === 'QuestionSingle' || kind === 'QuestionMulti';
+                            return <li key={cid} className="border rounded p-2 space-y-2">
+                                {renderComponent({ ...comp, kind }, { draft: draft as any, stageId: currentRuntimeStage.id })}
+                                {isQuestion && Array.isArray(comp.props?.options) && <ul className="space-y-1 text-[11px]">
+                                    {comp.props.options.map((o: any) => {
+                                        const multi = kind === 'QuestionMulti';
+                                        const selected = (runtimeAnswers[currentRuntimeStage.id] || []).includes(o.id);
+                                        return <li key={o.id}>
+                                            <button onClick={() => answerOption(currentRuntimeStage.id, o.id, multi)} className={`px-2 py-1 rounded border text-left w-full ${selected ? 'bg-blue-600 text-white border-blue-600' : 'bg-white hover:bg-gray-50'}`}>{o.label}</button>
+                                        </li>;
+                                    })}
+                                </ul>}
                             </li>;
                         })}
                     </ul>

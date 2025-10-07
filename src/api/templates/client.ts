@@ -73,7 +73,10 @@ export const templatesApi = {
     async setBranching(id: string, rules: BranchingRule[]) { return http(`${BASE}/${id}/branching`, { method: 'PUT', body: JSON.stringify({ rules }) }); },
     async validate(id: string): Promise<ValidationReport> { return http(`${BASE}/${id}/validate`, { method: 'POST' }); },
     async publish(id: string) { return http(`${BASE}/${id}/publish`, { method: 'POST' }); },
-    async startPreview(id: string) { return http(`${BASE}/${id}/runtime/preview/start`, { method: 'POST' }); }
+    async startPreview(id: string) { return http(`${BASE}/${id}/runtime/preview/start`, { method: 'POST' }); },
+    async answerPreview(id: string, payload: { sessionId: string; stageId: string; optionIds: string[] }) {
+        return http(`${BASE}/${id}/runtime/preview/answer`, { method: 'POST', body: JSON.stringify(payload) });
+    },
 };
 
 // Client específico para componentes (painel de propriedades)
