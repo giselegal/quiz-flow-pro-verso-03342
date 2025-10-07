@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { useTemplateDraft, useUpdateMeta, useAddStage, useReorderStages, usePublish, useValidateDraft, useAddStageComponent, useRemoveStageComponent, useReorderStageComponents, useUpdateComponentProps, usePreviewStart } from '../api/hooks';
 import { renderComponent } from '../render/registry';
+import { TemplateDraftShared } from '../../../shared/templateEngineTypes';
 import { getComponentSchema } from './componentPropSchemas';
 // Ajuste: evitar conflito de tipos TemplateDraft (frontend vs server). Vamos tratar draft como 'any' onde passamos para renderComponent.
 
 export const TemplateEngineEditor: React.FC<{ id: string; onBack: () => void }> = ({ id, onBack }) => {
-    const { data: draft, isLoading, error } = useTemplateDraft(id);
+    const { data: draft, isLoading, error } = useTemplateDraft(id) as { data: TemplateDraftShared | undefined; isLoading: boolean; error: any };
     const updateMeta = useUpdateMeta(id);
     const addStage = useAddStage(id);
     const reorder = useReorderStages(id);

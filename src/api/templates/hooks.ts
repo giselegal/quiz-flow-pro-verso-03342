@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { templatesApi, componentsApi } from './client';
-import { TemplateDraft } from './types';
+import { TemplateDraftShared } from '../../shared/templateEngineTypes';
 
 const keys = {
     all: ['templates'] as const,
@@ -28,7 +28,7 @@ export function useCreateTemplate() {
 export function useUpdateMeta(id: string) {
     const qc = useQueryClient();
     return useMutation({
-        mutationFn: (patch: Partial<TemplateDraft['meta']>) => templatesApi.updateMeta(id, patch),
+        mutationFn: (patch: Partial<TemplateDraftShared['meta']>) => templatesApi.updateMeta(id, patch),
         onSuccess: () => {
             qc.invalidateQueries({ queryKey: keys.detail(id) });
             qc.invalidateQueries({ queryKey: keys.list() });
@@ -80,7 +80,7 @@ export function useRemoveStageComponent(templateId: string, stageId: string) {
 export function useSetOutcomes(id: string) {
     const qc = useQueryClient();
     return useMutation({
-        mutationFn: (outcomes: TemplateDraft['outcomes']) => templatesApi.setOutcomes(id, outcomes),
+        mutationFn: (outcomes: TemplateDraftShared['outcomes']) => templatesApi.setOutcomes(id, outcomes),
         onSuccess: () => qc.invalidateQueries({ queryKey: keys.detail(id) })
     });
 }
@@ -88,7 +88,7 @@ export function useSetOutcomes(id: string) {
 export function useSetScoring(id: string) {
     const qc = useQueryClient();
     return useMutation({
-        mutationFn: (scoring: Partial<TemplateDraft['logic']['scoring']>) => templatesApi.setScoring(id, scoring),
+        mutationFn: (scoring: Partial<TemplateDraftShared['logic']['scoring']>) => templatesApi.setScoring(id, scoring),
         onSuccess: () => qc.invalidateQueries({ queryKey: keys.detail(id) })
     });
 }
@@ -96,7 +96,7 @@ export function useSetScoring(id: string) {
 export function useSetBranching(id: string) {
     const qc = useQueryClient();
     return useMutation({
-        mutationFn: (rules: TemplateDraft['logic']['branching']) => templatesApi.setBranching(id, rules),
+        mutationFn: (rules: TemplateDraftShared['logic']['branching']) => templatesApi.setBranching(id, rules),
         onSuccess: () => qc.invalidateQueries({ queryKey: keys.detail(id) })
     });
 }
