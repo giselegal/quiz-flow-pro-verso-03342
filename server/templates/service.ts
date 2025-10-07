@@ -1,5 +1,6 @@
 import { templateRepo, addStage, addComponent, updateScoring, addOutcome, publishTemplate, createRuntimeSession, getSession, saveSession, computeScore } from './repo';
 import { TemplateDraft, ScoringConfig } from './models';
+import { logger, withCorrelation } from '../lib/logger';
 
 // ---------------- Condition Tree Evaluator (AND/OR + folhas simples) ----------------
 // Estrutura suportada (exemplos):
@@ -132,11 +133,13 @@ export class TemplateService {
         // simple validation reuse
         const validation = this.validate(id);
         if (validation.status !== 'ok') {
+            logger.warn('template.publish.blocked', { templateId: t.id, slug: t.slug, errors: validation.errors, warnings: validation.warnings });
             return { status: 'blocked', validation };
         }
         publishTemplate(t);
         templateRepo.appendHistory(t, { op: 'publish', details: { publishedAt: new Date().toISOString() } });
         templateRepo.save(t);
+        logger.info('template.published', { templateId: t.id, slug: t.slug, publishedAt: t.publishedSnapshot?.publishedAt });
         return { status: 'published', publishId: t.publishedSnapshot.publishedAt, snapshot: t.publishedSnapshot };
     }
 
@@ -149,6 +152,7 @@ export class TemplateService {
         const tpl = this.getPublishedBySlug(slug);
         if (!tpl) throw new Error('NOT_FOUND');
         const sess = createRuntimeSession(tpl);
+        logger.info('runtime.session.start', withCorrelation({ slug, templateId: tpl.id, sessionId: sess.sessionId, currentStageId: sess.currentStageId }, sess.sessionId));
         return { sessionId: sess.sessionId, currentStageId: sess.currentStageId };
     }
 
@@ -196,20 +200,15 @@ export class TemplateService {
             }
         }
         saveSession(sess);
-        try {
-            // Telemetria básica estruturada
-            console.log(JSON.stringify({
-                evt: 'runtime.advance',
-                mode: advancedByBranch ? 'branch' : 'linear',
-                slug,
-                sessionId,
-                fromStageId: stageId,
-                nextStageId: sess.currentStageId,
-                score: sess.score,
-                ruleApplied: appliedRule,
-                timestamp: new Date().toISOString()
-            }));
-        } catch (_) { /* ignore logging errors */ }
+        logger.info('runtime.advance', withCorrelation({
+            mode: advancedByBranch ? 'branch' : 'linear',
+            slug,
+            sessionId,
+            fromStageId: stageId,
+            nextStageId: sess.currentStageId,
+            score: sess.score,
+            ruleApplied: appliedRule
+        }, sessionId));
         return { nextStageId: sess.currentStageId, score: sess.score, branched: advancedByBranch };
     }
 
@@ -229,6 +228,7 @@ export class TemplateService {
             const maxOk = r.max !== undefined ? score <= r.max : true;
             return minOk && maxOk;
         }) || tpl.outcomes[0];
+        logger.info('runtime.session.complete', withCorrelation({ slug, sessionId, score, outcomeId: outcome?.id }, sessionId));
         return { outcome: outcome && { id: outcome.id, template: outcome.template, score } };
     }
 
