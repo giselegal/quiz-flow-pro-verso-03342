@@ -3,6 +3,8 @@ import express from 'express';
 import { createServer } from 'http';
 import path, { dirname } from 'path';
 import { templatesRouter } from './templates/controller';
+import { seedTemplates } from './templates/seed';
+import { quizStyleRouter } from './quiz-style/controller';
 import { fileURLToPath } from 'url';
 
 // Get __dirname equivalent for ES modules
@@ -161,6 +163,16 @@ app.get('/api/quizzes/:id', (req, res) => {
 
 // Templates (novo Template Engine)
 app.use('/api/templates', templatesRouter);
+// Legacy quiz-style adapter (read-only draft view) controlado por flag USE_QUIZ_STYLE_ADAPTER (default: on)
+if (process.env.USE_QUIZ_STYLE_ADAPTER !== 'false') {
+  app.use('/api/quiz-style', quizStyleRouter);
+  console.log('[quiz-style-adapter] endpoint /api/quiz-style/:slug/as-draft habilitado');
+} else {
+  console.log('[quiz-style-adapter] desabilitado por USE_QUIZ_STYLE_ADAPTER=false');
+}
+
+// Seed inicial (executa apenas se não houver templates)
+seedTemplates();
 
 // Generic error handler
 app.use((err: any, req: any, res: any, next: any) => {
