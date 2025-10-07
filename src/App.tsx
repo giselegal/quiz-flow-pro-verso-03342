@@ -196,6 +196,13 @@ function App() {
                           </Route>
                         )}
 
+                        {/* Alias adicional para o Template Engine (sempre ativo) */}
+                        <Route path="/editor/novo">
+                          <div data-testid="template-engine-alias-page">
+                            <TemplateEnginePage />
+                          </div>
+                        </Route>
+
                         {/* Redirect legado para rota nova */}
                         <Route path="/editor/template-engine">
                           <RedirectRoute to="/template-engine" />
