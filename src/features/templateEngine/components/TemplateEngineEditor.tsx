@@ -271,7 +271,7 @@ export const TemplateEngineEditor: React.FC<{ id: string; onBack: () => void }> 
             {publishMut.isSuccess && <span className="text-xs text-green-700 ml-2">Publicado!</span>}
             {publishMut.error && <span className="text-xs text-red-600 ml-2">Erro: {(publishMut.error as Error).message}</span>}
         </section>
-        { (draft as any).published && <section className="space-y-2 border rounded p-3 bg-white">
+        {(draft as any).published && <section className="space-y-2 border rounded p-3 bg-white">
             <h2 className="font-medium text-sm">Diff vs Publicado</h2>
             {(() => {
                 const pub = (draft as any).published; // caso o modelo draft traga snapshot (ajuste futuro: fetch published separado)
@@ -303,7 +303,7 @@ export const TemplateEngineEditor: React.FC<{ id: string; onBack: () => void }> 
                     {(addedStages.length || removedStages.length || addedComponents.length || removedComponents.length) === 0 && <div className="text-emerald-700">Sem mudanças estruturais desde a publicação.</div>}
                 </div>;
             })()}
-        </section> }
+        </section>}
         <section className="space-y-2 border-t pt-4">
             <h2 className="font-medium">Preview Runtime (Draft)</h2>
             {!runtime && <button onClick={startPreview} disabled={previewStart.isPending} className="bg-gray-800 text-white px-3 py-1 rounded text-sm disabled:opacity-50">Iniciar Preview</button>}
