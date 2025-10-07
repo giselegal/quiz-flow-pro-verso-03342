@@ -7,7 +7,7 @@ import { QUIZ_STEPS } from '@/data/quizSteps';
 
 /**
  * Testes de layout responsivo para etapas de perguntas:
- * - Perguntas com imagens devem aplicar grid de 2 colunas em mobile/tablet e 3 em desktop (classe lg:grid-cols-3)
+ * - Perguntas com imagens devem aplicar grid de 1 coluna em mobile, 2 colunas em sm/md e 3 em desktop (classe lg:grid-cols-3)
  * - Perguntas somente texto devem manter 1 coluna em todos breakpoints (grid-cols-1)
  */
 
@@ -43,7 +43,8 @@ describe('Layout responsivo QuestionStep', () => {
         const grid = document.querySelector('[class*="grid-cols"]');
         expect(grid).toBeTruthy();
         const classList = grid?.className || '';
-        expect(classList).toMatch(/grid-cols-2/); // base 2 colunas
+        expect(classList).toMatch(/grid-cols-1/); // base mobile
+        expect(classList).toMatch(/sm:grid-cols-2/); // small/medium breakpoints
         expect(classList).toMatch(/lg:grid-cols-3/); // desktop 3 colunas
     });
 

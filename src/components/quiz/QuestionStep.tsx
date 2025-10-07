@@ -31,10 +31,12 @@ export default function QuestionStep({
     // Regra solicitada: se houver imagens -> 3 colunas em desktop, 2 colunas em tablet/mobile.
     // Caso contrário (todas texto) -> sempre 1 coluna.
     const hasImages = Array.isArray(data.options) && data.options.some(opt => !!opt.image);
+    // Ajuste: sempre começar em 1 coluna para mobile para dar mais destaque
+    // e subir para 2 colunas em sm/md e 3 em lg quando há imagens.
     const gridClass = hasImages
-        ? 'grid-cols-2 md:grid-cols-2 lg:grid-cols-3'
+        ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3'
         : 'grid-cols-1';
-    const gapClass = hasImages ? 'gap-4 md:gap-5' : 'gap-6';
+    const gapClass = hasImages ? 'gap-5 md:gap-6' : 'gap-6';
 
     const handleOptionClick = (optionId: string) => {
         const isSelected = safeCurrentAnswers.includes(optionId);
@@ -69,7 +71,7 @@ export default function QuestionStep({
                 {selectionText} ({safeCurrentAnswers.length}/{data.requiredSelections || 1})
             </p>
 
-            <div className={`grid ${gridClass} ${gapClass} mb-8`}>
+            <div className={`grid ${gridClass} ${gapClass} mb-6 md:mb-8`}>
                 {data.options?.map((option) => (
                     <div
                         key={option.id}
@@ -78,23 +80,25 @@ export default function QuestionStep({
                         aria-pressed={safeCurrentAnswers.includes(option.id)}
                         onClick={() => handleOptionClick(option.id)}
                         onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleOptionClick(option.id); } }}
-                        className={`option-button group whitespace-nowrap rounded-lg text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-[#deac6d]/40 disabled:pointer-events-none disabled:opacity-50 overflow-hidden min-w-full flex h-auto py-2 flex-col items-center justify-start border-2 cursor-pointer ${safeCurrentAnswers.includes(option.id)
+                        className={`option-button group rounded-lg text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-[#deac6d]/40 disabled:pointer-events-none disabled:opacity-50 overflow-hidden w-full flex h-auto pt-2 pb-3 flex-col items-center justify-start border-2 cursor-pointer break-words whitespace-normal ${safeCurrentAnswers.includes(option.id)
                             ? 'border-[#5b4135] bg-white shadow-md'
                             : 'border-zinc-200 bg-white hover:border-[#deac6d] hover:shadow'
                             }`}
                     >
                         {option.image && (
-                            <div className="w-full aspect-square bg-white rounded-t-md overflow-hidden">
+                            <div className="w-full aspect-square bg-white rounded-t-md overflow-hidden relative">
                                 <img
                                     src={option.image}
                                     alt={option.text}
                                     loading="lazy"
                                     decoding="async"
-                                    className="w-full h-full object-cover"
+                                    className="w-full h-full object-cover scale-[1.02]"
                                 />
                             </div>
                         )}
-                        <p className="text-center font-medium text-sm leading-relaxed px-4 py-2 w-full">{option.text}</p>
+                        <p className="text-center font-medium text-sm leading-relaxed px-3 pt-2 w-full break-words hyphens-auto">
+                            {option.text}
+                        </p>
 
                         {/* Indicador visual de seleção */}
                         {safeCurrentAnswers.includes(option.id) && (
@@ -107,15 +111,17 @@ export default function QuestionStep({
             </div>
 
             {/* Botão desabilitado visualmente, avanço é automático */}
-            <button
-                disabled={!canProceed}
-                className={`font-bold py-3 px-6 rounded-full shadow-md transition-all ${canProceed
-                    ? 'bg-[#deac6d] text-white animate-pulse'
-                    : 'bg-[#e6ddd4] text-[#8a7663] opacity-50 cursor-not-allowed'
-                    }`}
-            >
-                {canProceed ? 'Avançando...' : 'Próxima'}
-            </button>
+            <div className="mt-4">
+                <button
+                    disabled={!canProceed}
+                    className={`font-bold py-3 px-8 rounded-full shadow-md transition-all text-sm sm:text-base ${canProceed
+                        ? 'bg-[#deac6d] text-white animate-pulse'
+                        : 'bg-[#e6ddd4] text-[#8a7663] opacity-50 cursor-not-allowed'
+                        }`}
+                >
+                    {canProceed ? 'Avançando...' : 'Selecionar e Continuar'}
+                </button>
+            </div>
         </div>
     );
 }
