@@ -35,7 +35,6 @@ import { EditorErrorBoundary } from './components/error/EditorErrorBoundary';
 import UnifiedCRUDProvider from '@/context/UnifiedCRUDProvider';
 import { OptimizedEditorProvider } from '@/components/editor/OptimizedEditorProvider';
 import { BlockRegistryProvider, DEFAULT_BLOCK_DEFINITIONS } from '@/runtime/quiz/blocks/BlockRegistry';
-import { PublishedTemplateRunner } from '@/components/runtime/PublishedTemplateRunner';
 
 // 🏠 PÁGINAS ESSENCIAIS
 const Home = lazy(() => import('./pages/Home'));
@@ -240,17 +239,6 @@ function App() {
                             </QuizErrorBoundary>
                           )}
                         </Route>
-
-                        {/* 🔄 RUNTIME PUBLICADO (DEMO DO NOVO MOTOR) - protegido por feature flag ?runtimeServer=1 */}
-                        {typeof window === 'undefined' || new URLSearchParams(window.location.search).get('runtimeServer') === '1' ? (
-                          <Route path="/runtime/:slug">
-                            {(params) => (
-                              <div data-testid="runtime-runner-page">
-                                <PublishedTemplateRunner slug={params.slug} />
-                              </div>
-                            )}
-                          </Route>
-                        ) : null}
 
                         <Route path="/resultado">
                           <QuizErrorBoundary>

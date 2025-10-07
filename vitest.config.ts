@@ -58,7 +58,6 @@ export default defineConfig({
       'src/**/__tests__/**/*.{js,ts,jsx,tsx}',
       'src/tests/**/*.{test,spec}.{js,ts,jsx,tsx}',
       'src/testing/**/*.test.ts', // Nossos testes consolidados
-      'server/templates/__tests__/**/*.{js,ts}', // Testes do motor de templates backend (MVP)
     ],
     exclude: [
       'node_modules/**',
