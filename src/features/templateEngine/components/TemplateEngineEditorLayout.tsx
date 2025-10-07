@@ -70,7 +70,7 @@ export const TemplateEngineEditorLayout: React.FC<Props> = ({ id, onBack }) => {
     if (!draft) return null;
 
     return (
-        <div className="flex flex-col h-full w-full">
+        <div className="flex flex-col h-full w-full" data-testid="template-engine-editor-layout">
             {/* Top bar */}
             <div className="h-11 border-b flex items-center gap-3 px-4 bg-white text-sm">
                 <button onClick={onBack} className="text-blue-600 hover:underline">← Voltar</button>

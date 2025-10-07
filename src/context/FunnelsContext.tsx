@@ -494,6 +494,13 @@ const FUNNEL_TEMPLATES: Record<
 };
 
 export const FunnelsProvider: React.FC<FunnelsProviderProps> = ({ children, debug = true }) => {
+  // BYPASS: Não inicializar contexto legacy em rotas do Template Engine modular
+  const pathname = typeof window !== 'undefined' ? window.location.pathname : '';
+  const isTemplateEngineRoute = pathname.startsWith('/template-engine');
+  if (isTemplateEngineRoute) {
+    if (debug) console.log('[FunnelsProvider] Bypass legacy para rota modular:', pathname);
+    return <>{children}</>;
+  }
   // ✅ CORRIGIDO: Obter funnelId dinamicamente da URL SEM fallback forçado
   const [currentFunnelId, setCurrentFunnelId] = useState<string>(() => {
     try {
