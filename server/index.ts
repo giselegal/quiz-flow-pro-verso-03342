@@ -52,6 +52,10 @@ app.use(express.static(path.join(__dirname, '../dist'), {
 app.get('/health', (req, res) => {
   res.json({ status: 'OK', timestamp: new Date().toISOString() });
 });
+// Alias via namespace /api para facilitar verificação pelo frontend (proxy já cobre /api)
+app.get('/api/health', (req, res) => {
+  res.json({ status: 'OK', timestamp: new Date().toISOString(), alias: true });
+});
 
 // ==================================================================================
 // Configuration API endpoints
