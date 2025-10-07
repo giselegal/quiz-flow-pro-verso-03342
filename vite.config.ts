@@ -1,6 +1,8 @@
 import react from '@vitejs/plugin-react';
 import path from 'path';
 import { defineConfig } from 'vite';
+// Nota: Se o tipo 'test' gerar erro de tipo, garantir que 'vitest' está instalado
+// e que 'types' inclui 'vitest' em tsconfig. Caso contrário remover bloco.
 
 // Configuração consolidada e sanitizada (UTF-8, sem duplicações) + suporte a testes
 export default defineConfig({
@@ -54,6 +56,7 @@ export default defineConfig({
   define: { global: 'globalThis' },
   esbuild: { target: 'es2020' },
   // Configuração de testes Vitest
+  // Bloco de testes Vitest (comenta se types não presentes)
   test: {
     environment: 'jsdom',
     globals: true,
