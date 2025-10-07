@@ -2,7 +2,7 @@ import react from '@vitejs/plugin-react';
 import path from 'path';
 import { defineConfig } from 'vite';
 
-// Configura��o OTIMIZADA para funcionar com Lovable
+// Configuração consolidada e sanitizada (UTF-8, sem duplicações) + suporte a testes
 export default defineConfig({
   base: '/',
   plugins: [react()],
@@ -19,16 +19,7 @@ export default defineConfig({
     cors: true,
     strictPort: true,
     fs: {
-      allow: [
-        '..',
-        '../..',
-        process.cwd(),
-        path.resolve(process.cwd(), '..'),
-        path.resolve(process.cwd(), '../..'),
-        path.resolve(__dirname),
-        __dirname,
-      ],
-      deny: [],
+      allow: [path.resolve(__dirname), path.resolve(__dirname, '..'), process.cwd()],
     },
     headers: {
       'Access-Control-Allow-Origin': '*',
@@ -36,8 +27,6 @@ export default defineConfig({
       'Access-Control-Allow-Headers': '*',
       'Permissions-Policy': 'camera=(), microphone=(), geolocation=()',
     },
-    middlewareMode: false,
-    proxy: {},
     hmr: {
       overlay: false,
       clientPort: 8080,
@@ -55,25 +44,21 @@ export default defineConfig({
   build: {
     outDir: 'dist',
     rollupOptions: {
-      input: {
-        main: path.resolve(__dirname, 'index.html'),
-      },
-    },
-    commonjsOptions: {
-      include: [/node_modules/],
+      input: { main: path.resolve(__dirname, 'index.html') },
     },
   },
   optimizeDeps: {
-    exclude: ['@vite/client', '@vite/env'],
     include: ['react', 'react-dom'],
-    esbuildOptions: {
-      target: 'es2020',
-    },
+    esbuildOptions: { target: 'es2020' },
   },
-  define: {
-    global: 'globalThis',
-  },
-  esbuild: {
-    target: 'es2020',
+  define: { global: 'globalThis' },
+  esbuild: { target: 'es2020' },
+  // Configuração de testes Vitest
+  test: {
+    environment: 'jsdom',
+    globals: true,
+    setupFiles: ['tests/setup/vitest.setup.ts'],
+    clearMocks: true,
+    restoreMocks: true,
   },
 });
