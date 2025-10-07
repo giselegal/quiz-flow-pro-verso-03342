@@ -169,6 +169,68 @@ export const templateService = {
         return agg.draft.stages;
     },
 
+    // --- Component operations inside a stage ---
+    addComponentToStage(templateId: string, stageId: string, input: { componentId?: string; component?: { type: string; props?: any; styleTokens?: any }; position?: number }) {
+        const agg = templateRepo.get(templateId);
+        if (!agg) throw new Error('Template not found');
+        const stage = agg.draft.stages.find(s => s.id === stageId);
+        if (!stage) throw new Error('Stage not found');
+        let compId: string;
+        if (input.componentId) {
+            const existing = agg.draft.components[input.componentId];
+            if (!existing) throw new Error('Component not found');
+            if (stage.componentIds.includes(input.componentId)) throw new Error('Component already in stage');
+            compId = input.componentId;
+        } else if (input.component) {
+            compId = genId('cmp');
+            agg.draft.components[compId] = { id: compId, type: input.component.type, props: input.component.props || {}, styleTokens: input.component.styleTokens || {} };
+        } else {
+            throw new Error('componentId or component required');
+        }
+        const position = input.position !== undefined ? input.position : stage.componentIds.length;
+        if (position < 0 || position > stage.componentIds.length) throw new Error('Invalid position');
+        stage.componentIds.splice(position, 0, compId);
+        agg.draft.updatedAt = new Date().toISOString();
+        agg.draft.draftVersion = (agg.draft.draftVersion || 1) + 1;
+        templateRepo.save(agg);
+        return { stageId: stage.id, componentIds: stage.componentIds.slice(), component: agg.draft.components[compId] };
+    },
+
+    reorderStageComponents(templateId: string, stageId: string, orderedIds: string[]) {
+        const agg = templateRepo.get(templateId);
+        if (!agg) throw new Error('Template not found');
+        const stage = agg.draft.stages.find(s => s.id === stageId);
+        if (!stage) throw new Error('Stage not found');
+        if (orderedIds.length !== stage.componentIds.length) throw new Error('Size mismatch');
+        const set = new Set(orderedIds);
+        if (set.size !== orderedIds.length) throw new Error('Duplicate component ids');
+        for (const id of orderedIds) {
+            if (!stage.componentIds.includes(id)) throw new Error('Unknown component id in reorder');
+        }
+        stage.componentIds = orderedIds.slice();
+        agg.draft.updatedAt = new Date().toISOString();
+        agg.draft.draftVersion = (agg.draft.draftVersion || 1) + 1;
+        templateRepo.save(agg);
+        return { stageId: stage.id, componentIds: stage.componentIds.slice() };
+    },
+
+    removeComponentFromStage(templateId: string, stageId: string, componentId: string) {
+        const agg = templateRepo.get(templateId);
+        if (!agg) throw new Error('Template not found');
+        const stage = agg.draft.stages.find(s => s.id === stageId);
+        if (!stage) throw new Error('Stage not found');
+        const idx = stage.componentIds.indexOf(componentId);
+        if (idx === -1) throw new Error('Component not in stage');
+        stage.componentIds.splice(idx, 1);
+        // remove component object if no other stage references
+        const stillUsed = agg.draft.stages.some(s => s.componentIds.includes(componentId));
+        if (!stillUsed) delete agg.draft.components[componentId];
+        agg.draft.updatedAt = new Date().toISOString();
+        agg.draft.draftVersion = (agg.draft.draftVersion || 1) + 1;
+        templateRepo.save(agg);
+        return { stageId: stage.id, componentIds: stage.componentIds.slice(), removed: componentId, deleted: !stillUsed };
+    },
+
     removeStage(id: string, stageId: string) {
         const agg = templateRepo.get(id);
         if (!agg) throw new Error('Template not found');

@@ -66,6 +66,32 @@ templatesRouter.delete('/:id/stages/:stageId', (req, res) => {
     } catch (e: any) { res.status(400).json({ error: e.message }); }
 });
 
+// --- Stage components operations ---
+// Add (create or attach) component to stage
+templatesRouter.post('/:id/stages/:stageId/components', (req, res) => {
+    try {
+        const result = templateService.addComponentToStage(req.params.id, req.params.stageId, req.body || {});
+        res.status(201).json(result);
+    } catch (e: any) { res.status(400).json({ error: e.message }); }
+});
+
+// Reorder components inside stage
+templatesRouter.post('/:id/stages/:stageId/components/reorder', (req, res) => {
+    try {
+        const { orderedIds } = req.body || {};
+        const result = templateService.reorderStageComponents(req.params.id, req.params.stageId, orderedIds || []);
+        res.json(result);
+    } catch (e: any) { res.status(400).json({ error: e.message }); }
+});
+
+// Remove component from stage
+templatesRouter.delete('/:id/stages/:stageId/components/:componentId', (req, res) => {
+    try {
+        const result = templateService.removeComponentFromStage(req.params.id, req.params.stageId, req.params.componentId);
+        res.json(result);
+    } catch (e: any) { res.status(400).json({ error: e.message }); }
+});
+
 // Set outcomes
 templatesRouter.put('/:id/outcomes', (req, res) => {
     try {
@@ -92,6 +118,14 @@ templatesRouter.put('/:id/branching', (req, res) => {
 
 // Validate draft
 templatesRouter.post('/:id/validate', (req, res) => {
+    try {
+        const report = templateService.validateDraft(req.params.id);
+        res.json(report);
+    } catch (e: any) { res.status(400).json({ error: e.message }); }
+});
+
+// Read-only validation report (idempotente)
+templatesRouter.get('/:id/validation', (req, res) => {
     try {
         const report = templateService.validateDraft(req.params.id);
         res.json(report);
