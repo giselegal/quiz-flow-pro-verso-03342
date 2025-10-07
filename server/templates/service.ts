@@ -90,11 +90,10 @@ export class TemplateService {
         // store answers (replace for stage)
         sess.answers[stageId] = answers;
         sess.score = computeScore(tpl, sess.answers);
-        // Branching simples: procurar regra matching fromStageId
-        const rules = Array.isArray(tpl.logic.branching) ? tpl.logic.branching : [];
-        const rule = rules.find((r: any) => r.fromStageId === stageId);
+        // Branching multi-regra: iterar todas as regras cujo fromStageId coincide e aplicar primeira que resulte em avanço
+        const rules = Array.isArray(tpl.logic.branching) ? tpl.logic.branching.filter((r: any) => r.fromStageId === stageId) : [];
         let advancedByBranch = false;
-        if (rule) {
+        for (const rule of rules) {
             const cond = rule.conditionTree || {};
             let pass = true;
             if (cond.scoreGte !== undefined && !(sess.score >= cond.scoreGte)) pass = false;
@@ -104,12 +103,14 @@ export class TemplateService {
                 if (target) {
                     sess.currentStageId = target.id;
                     advancedByBranch = true;
+                    break; // primeira regra vencedora
                 }
             } else if (rule.fallbackStageId) {
                 const fb = tpl.publishedSnapshot.stages.find((s: any) => s.id === rule.fallbackStageId && s.enabled !== false);
                 if (fb) {
                     sess.currentStageId = fb.id;
                     advancedByBranch = true;
+                    break;
                 }
             }
         }
