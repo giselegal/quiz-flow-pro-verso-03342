@@ -134,39 +134,40 @@ export default function ResultStep({
             <div className="absolute top-0 right-0 w-1/3 h-1/3 bg-[#deac6d]/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
             <div className="absolute bottom-0 left-0 w-1/4 h-1/4 bg-[#c19952]/5 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2"></div>
 
-            <div className="container mx-auto px-4 py-8 max-w-5xl relative z-10">
+            <div className="container mx-auto px-3 sm:px-5 py-6 md:py-8 max-w-5xl relative z-10">
 
                 {/* ====================== SEÇÃO 1: RESULTADO DO QUIZ ====================== */}
-                <div className="bg-white p-6 md:p-12 rounded-lg shadow-lg text-center mb-12">
+                <div className="bg-white p-5 sm:p-6 md:p-12 rounded-lg shadow-lg text-center mb-10 md:mb-12">
                     {/* Celebração */}
-                    <div className="text-6xl mb-4 animate-bounce">🎉</div>
+                    <div className="text-5xl sm:text-6xl mb-4 animate-bounce">🎉</div>
 
                     {/* Título Principal */}
-                    <h1 className="text-3xl md:text-4xl font-bold playfair-display mb-2 text-[#deac6d]">
+                    <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold playfair-display mb-2 text-[#deac6d] tracking-tight">
                         {data.title?.replace('{userName}', userProfile.userName)}
                     </h1>
 
                     {/* Nome do Estilo */}
-                    <p className="text-2xl md:text-3xl font-bold text-[#5b4135] playfair-display mb-8">
+                    <p className="text-xl sm:text-2xl md:text-3xl font-bold text-[#5b4135] playfair-display mb-6 md:mb-8">
                         {styleConfig.name}
                     </p>
 
-                    <div className="grid md:grid-cols-2 gap-8 items-center">
+                    <div className="grid gap-6 md:gap-8 md:grid-cols-2 items-start md:items-center">
                         {/* Coluna da Imagem */}
                         <div className="order-2 md:order-1">
                             <div className="max-w-sm mx-auto relative">
                                 {styleImage.isLoading ? (
-                                    <div className="w-full h-auto rounded-lg shadow-md bg-gray-100 animate-pulse flex items-center justify-center min-h-[300px]">
+                                    <div className="w-full h-auto rounded-lg shadow-md bg-gray-100 animate-pulse flex items-center justify-center min-h-[260px] sm:min-h-[300px] md:min-h-[300px]">
                                         <span className="text-gray-500">Carregando...</span>
                                     </div>
                                 ) : (
-                                    <img
-                                        src={styleImage.src}
-                                        alt={`Estilo ${styleConfig.name}`}
-                                        className={`w-full h-auto rounded-lg shadow-md hover:scale-105 transition-transform duration-300 ${styleImage.isFallback ? 'border-2 border-dashed border-gray-300' : ''
-                                            }`}
-                                        loading="eager"
-                                    />
+                                    <div className="w-full aspect-[4/5] overflow-hidden rounded-lg shadow-md">
+                                        <img
+                                            src={styleImage.src}
+                                            alt={`Estilo ${styleConfig.name}`}
+                                            className={`w-full h-full object-cover hover:scale-105 transition-transform duration-300 ${styleImage.isFallback ? 'border-2 border-dashed border-gray-300' : ''}`}
+                                            loading="eager"
+                                        />
+                                    </div>
                                 )}
                                 {/* Cantos decorativos */}
                                 <div className="absolute -top-2 -right-2 w-8 h-8 border-t-2 border-r-2 border-[#deac6d]"></div>
@@ -176,28 +177,25 @@ export default function ResultStep({
 
                         {/* Coluna do Texto */}
                         <div className="order-1 md:order-2 text-left">
-                            <h3 className="text-xl font-bold text-[#5b4135] mb-4">Seu Perfil de Estilo:</h3>
-                            <p className="text-base md:text-lg mb-6 text-gray-800 leading-relaxed">
+                            <h3 className="text-lg sm:text-xl font-bold text-[#5b4135] mb-3 sm:mb-4">Seu Perfil de Estilo:</h3>
+                            <p className="text-sm sm:text-base md:text-lg mb-5 md:mb-6 text-gray-800 leading-relaxed tracking-normal">
                                 {styleConfig.description}
                             </p>
 
                             {/* Barras de Progresso ou Estilos Complementares */}
                             {stylesWithPercentages.length > 0 && (
                                 <div className="mb-6 p-4 bg-[#deac6d]/10 rounded-lg border border-[#deac6d]/20">
-                                    <h4 className="font-semibold text-[#5b4135] mb-4">Seu Perfil de Estilos:</h4>
-                                    <div className="space-y-3">
+                                    <h4 className="font-semibold text-[#5b4135] mb-3 sm:mb-4">Seu Perfil de Estilos:</h4>
+                                    <div className="space-y-2 sm:space-y-3">
                                         {stylesWithPercentages.map((style, index) => (
                                             <div key={style.key} className="relative">
                                                 <div className="flex justify-between items-center mb-1">
                                                     <span
-                                                        className={`text-sm font-medium ${index === 0
-                                                            ? 'text-[#5b4135]'
-                                                            : 'text-gray-600'
-                                                            }`}
+                                                        className={`text-xs sm:text-sm font-medium ${index === 0 ? 'text-[#5b4135]' : 'text-gray-600'}`}
                                                     >
                                                         {index === 0 && '👑 '}{style.name}
                                                     </span>
-                                                    <span className="text-sm text-[#deac6d] font-medium">
+                                                    <span className="text-xs sm:text-sm text-[#deac6d] font-medium">
                                                         {style.percentage.toFixed(1)}%
                                                     </span>
                                                 </div>
@@ -233,7 +231,7 @@ export default function ResultStep({
 
                             {/* Keywords */}
                             <div className="mb-6">
-                                <h4 className="font-semibold text-[#5b4135] mb-3">Palavras que te definem:</h4>
+                                <h4 className="font-semibold text-[#5b4135] mb-2 sm:mb-3">Palavras que te definem:</h4>
                                 <div className="flex flex-wrap gap-2">
                                     {(styleConfig.keywords || []).map((keyword: string, index: number) => (
                                         <span
@@ -249,18 +247,17 @@ export default function ResultStep({
                     </div>
 
                     {/* Imagem do Guia */}
-                    <div className="mt-8 text-center">
+                    <div className="mt-6 md:mt-8 text-center">
                         {guideImage.isLoading ? (
-                            <div className="mx-auto max-w-md w-full rounded-lg shadow-md bg-gray-100 animate-pulse flex items-center justify-center min-h-[400px]">
+                            <div className="mx-auto max-w-md w-full rounded-lg shadow-md bg-gray-100 animate-pulse flex items-center justify-center min-h-[320px] sm:min-h-[360px] md:min-h-[400px]">
                                 <span className="text-gray-500">Carregando guia...</span>
                             </div>
                         ) : (
-                            <div className="relative mx-auto max-w-md">
+                            <div className="relative mx-auto max-w-md aspect-[4/5] rounded-lg overflow-hidden shadow-md">
                                 <img
                                     src={guideImage.src}
                                     alt={`Guia de Estilo ${styleConfig.name}`}
-                                    className={`mx-auto max-w-md w-full h-auto rounded-lg shadow-md hover:scale-105 transition-transform duration-300 ${guideImage.isFallback ? 'border-2 border-dashed border-gray-300' : ''
-                                        }`}
+                                    className={`w-full h-full object-cover hover:scale-105 transition-transform duration-300 ${guideImage.isFallback ? 'border-2 border-dashed border-gray-300' : ''}`}
                                     loading="lazy"
                                 />
                                 {guideImage.isFallback && (
@@ -282,18 +279,18 @@ export default function ResultStep({
                 </div>
 
                 {/* ====================== SEÇÃO 2: TRANSFORMAÇÃO E VALOR ====================== */}
-                <div className="bg-white p-6 md:p-8 rounded-lg shadow-lg mb-12">
+                <div className="bg-white p-5 sm:p-6 md:p-8 rounded-lg shadow-lg mb-10 md:mb-12">
                     <div className="text-center">
-                        <h2 className="text-3xl md:text-4xl font-bold text-[#5b4135] mb-6">
+                        <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-[#5b4135] mb-5 md:mb-6 tracking-tight">
                             Transforme Sua Imagem, <span className="text-[#deac6d]">Revele Sua Essência</span>
                         </h2>
-                        <p className="text-gray-700 mb-8 leading-relaxed max-w-3xl mx-auto text-lg">
+                        <p className="text-gray-700 mb-6 md:mb-8 leading-relaxed max-w-3xl mx-auto text-base sm:text-lg">
                             Seu estilo é uma ferramenta poderosa. Não se trata apenas de
                             roupas, mas de comunicar quem você é e aspira ser. Com a
                             orientação certa, você pode:
                         </p>
 
-                        <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto mb-8">
+                        <div className="grid gap-4 sm:gap-6 sm:grid-cols-2 max-w-4xl mx-auto mb-6 md:mb-8">
                             {[
                                 { text: "Construir looks com intenção e identidade visual", icon: "🎯" },
                                 { text: "Utilizar cores, modelagens e tecidos a seu favor", icon: "🎨" },
@@ -310,7 +307,7 @@ export default function ResultStep({
                         {/* Primeiro CTA */}
                         <button
                             onClick={handleCTAClick}
-                            className="bg-gradient-to-r from-[#deac6d] to-[#c19952] text-white py-4 px-8 rounded-lg shadow-lg transition-all duration-300 text-lg font-semibold hover:scale-105 transform"
+                            className="bg-gradient-to-r from-[#deac6d] to-[#c19952] text-white py-3 sm:py-4 px-6 sm:px-8 rounded-lg shadow-lg transition-all duration-300 text-base sm:text-lg font-semibold hover:scale-105 transform w-full sm:w-auto"
                             onMouseEnter={() => setIsButtonHovered(true)}
                             onMouseLeave={() => setIsButtonHovered(false)}
                         >
@@ -323,12 +320,12 @@ export default function ResultStep({
                 </div>
 
                 {/* ====================== SEÇÃO 3: PROVA SOCIAL ====================== */}
-                <div className="bg-white p-6 md:p-8 rounded-lg shadow-lg mb-12">
-                    <h3 className="text-2xl font-bold text-center text-[#5b4135] mb-8">
+                <div className="bg-white p-5 sm:p-6 md:p-8 rounded-lg shadow-lg mb-10 md:mb-12">
+                    <h3 className="text-xl sm:text-2xl font-bold text-center text-[#5b4135] mb-6 sm:mb-8 tracking-tight">
                         Veja os Resultados de Quem Já Transformou Sua Imagem
                     </h3>
 
-                    <div className="grid md:grid-cols-3 gap-6">
+                    <div className="grid gap-5 sm:gap-6 md:grid-cols-2 lg:grid-cols-3">
                         {[
                             {
                                 name: "Maria Silva",
@@ -366,15 +363,15 @@ export default function ResultStep({
                 </div>
 
                 {/* ====================== SEÇÃO 4: OFERTA E PREÇO ====================== */}
-                <div className="bg-gradient-to-br from-[#deac6d]/10 to-[#c19952]/5 p-6 md:p-8 rounded-lg shadow-lg mb-12 border-2 border-[#deac6d]/20">
+                <div className="bg-gradient-to-br from-[#deac6d]/10 to-[#c19952]/5 p-5 sm:p-6 md:p-8 rounded-lg shadow-lg mb-10 md:mb-12 border-2 border-[#deac6d]/20">
                     <div className="text-center">
-                        <h2 className="text-3xl font-bold text-[#5b4135] mb-4">
+                        <h2 className="text-2xl sm:text-3xl font-bold text-[#5b4135] mb-4 tracking-tight">
                             O Guia de Estilo Completo
                         </h2>
-                        <p className="text-lg text-gray-700 mb-8">Especialmente criado para o seu estilo {styleConfig.name}</p>
+                        <p className="text-base sm:text-lg text-gray-700 mb-6 md:mb-8">Especialmente criado para o seu estilo {styleConfig.name}</p>
 
                         {/* Countdown de urgência */}
-                        <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-8 max-w-md mx-auto">
+                        <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6 md:mb-8 max-w-md mx-auto">
                             <div className="flex items-center justify-center gap-2 text-red-600">
                                 <Clock className="w-5 h-5" />
                                 <span className="font-semibold">Oferta expira ao sair desta página</span>
@@ -382,23 +379,23 @@ export default function ResultStep({
                         </div>
 
                         {/* Componentes de valor */}
-                        <div className="bg-white p-6 rounded-lg shadow-md border border-[#deac6d]/20 max-w-lg mx-auto mb-8">
-                            <h4 className="text-xl font-semibold text-[#5b4135] mb-4">O Que Você Recebe Hoje</h4>
+                        <div className="bg-white p-5 sm:p-6 rounded-lg shadow-md border border-[#deac6d]/20 max-w-lg mx-auto mb-6 md:mb-8">
+                            <h4 className="text-lg sm:text-xl font-semibold text-[#5b4135] mb-3 sm:mb-4">O Que Você Recebe Hoje</h4>
 
                             <div className="space-y-3 mb-6 text-left">
-                                <div className="flex justify-between items-center p-3 border-b border-gray-100">
+                                <div className="flex justify-between items-center p-2.5 sm:p-3 border-b border-gray-100 text-sm sm:text-base">
                                     <span>✅ Guia Principal de Estilo {styleConfig.name}</span>
                                     <span className="font-medium">R$ 79,00</span>
                                 </div>
-                                <div className="flex justify-between items-center p-3 border-b border-gray-100">
+                                <div className="flex justify-between items-center p-2.5 sm:p-3 border-b border-gray-100 text-sm sm:text-base">
                                     <span>✅ Bônus: Peças-chave do seu tipo</span>
                                     <span className="font-medium">R$ 67,00</span>
                                 </div>
-                                <div className="flex justify-between items-center p-3 border-b border-gray-100">
+                                <div className="flex justify-between items-center p-2.5 sm:p-3 border-b border-gray-100 text-sm sm:text-base">
                                     <span>✅ Bônus: Guia de Cores Personalizadas</span>
                                     <span className="font-medium">R$ 49,00</span>
                                 </div>
-                                <div className="flex justify-between items-center p-3 pt-4 font-bold text-lg border-t-2 border-[#deac6d]">
+                                <div className="flex justify-between items-center p-2.5 sm:p-3 pt-4 font-bold text-base sm:text-lg border-t-2 border-[#deac6d]">
                                     <span>Valor Total</span>
                                     <div className="relative">
                                         <span className="line-through text-gray-500">R$ 195,00</span>
@@ -421,7 +418,7 @@ export default function ResultStep({
                         {/* CTA Principal */}
                         <button
                             onClick={handleCTAClick}
-                            className="bg-gradient-to-r from-emerald-500 to-green-600 text-white py-6 px-8 rounded-lg shadow-xl transition-all duration-300 text-xl font-bold hover:scale-105 transform mb-4"
+                            className="bg-gradient-to-r from-emerald-500 to-green-600 text-white py-4 sm:py-6 px-6 sm:px-8 rounded-lg shadow-xl transition-all duration-300 text-lg sm:text-xl font-bold hover:scale-105 transform mb-4 w-full sm:w-auto"
                             onMouseEnter={() => setIsButtonHovered(true)}
                             onMouseLeave={() => setIsButtonHovered(false)}
                         >
@@ -446,14 +443,14 @@ export default function ResultStep({
                 </div>
 
                 {/* ====================== SEÇÃO 5: GARANTIA ====================== */}
-                <div className="bg-white p-6 md:p-8 rounded-lg shadow-lg text-center">
+                <div className="bg-white p-5 sm:p-6 md:p-8 rounded-lg shadow-lg text-center">
                     <div className="max-w-2xl mx-auto">
-                        <h3 className="text-2xl font-bold text-[#5b4135] mb-4">
+                        <h3 className="text-xl sm:text-2xl font-bold text-[#5b4135] mb-4 tracking-tight">
                             Garantia de Satisfação Total
                         </h3>
                         <div className="bg-green-50 border border-green-200 rounded-lg p-6 mb-6">
                             <Shield className="w-12 h-12 text-green-500 mx-auto mb-4" />
-                            <p className="text-gray-700 text-lg leading-relaxed">
+                            <p className="text-gray-700 text-base sm:text-lg leading-relaxed">
                                 Você tem <strong>7 dias</strong> para testar o guia. Se não ficar 100% satisfeita,
                                 devolvemos seu investimento sem perguntas.
                             </p>

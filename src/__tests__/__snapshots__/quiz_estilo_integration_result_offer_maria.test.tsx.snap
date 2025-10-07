@@ -15,28 +15,28 @@ exports[`Integração UnifiedStepRenderer → Resultado e Oferta (Maria) > rende
       class="absolute bottom-0 left-0 w-1/4 h-1/4 bg-[#c19952]/5 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2"
     />
     <div
-      class="container mx-auto px-4 py-8 max-w-5xl relative z-10"
+      class="container mx-auto px-3 sm:px-5 py-6 md:py-8 max-w-5xl relative z-10"
     >
       <div
-        class="bg-white p-6 md:p-12 rounded-lg shadow-lg text-center mb-12"
+        class="bg-white p-5 sm:p-6 md:p-12 rounded-lg shadow-lg text-center mb-10 md:mb-12"
       >
         <div
-          class="text-6xl mb-4 animate-bounce"
+          class="text-5xl sm:text-6xl mb-4 animate-bounce"
         >
           🎉
         </div>
         <h1
-          class="text-3xl md:text-4xl font-bold playfair-display mb-2 text-[#deac6d]"
+          class="text-2xl sm:text-3xl md:text-4xl font-bold playfair-display mb-2 text-[#deac6d] tracking-tight"
         >
           Maria, seu estilo predominante é:
         </h1>
         <p
-          class="text-2xl md:text-3xl font-bold text-[#5b4135] playfair-display mb-8"
+          class="text-xl sm:text-2xl md:text-3xl font-bold text-[#5b4135] playfair-display mb-6 md:mb-8"
         >
           Elegante
         </p>
         <div
-          class="grid md:grid-cols-2 gap-8 items-center"
+          class="grid gap-6 md:gap-8 md:grid-cols-2 items-start md:items-center"
         >
           <div
             class="order-2 md:order-1"
@@ -45,7 +45,7 @@ exports[`Integração UnifiedStepRenderer → Resultado e Oferta (Maria) > rende
               class="max-w-sm mx-auto relative"
             >
               <div
-                class="w-full h-auto rounded-lg shadow-md bg-gray-100 animate-pulse flex items-center justify-center min-h-[300px]"
+                class="w-full h-auto rounded-lg shadow-md bg-gray-100 animate-pulse flex items-center justify-center min-h-[260px] sm:min-h-[300px] md:min-h-[300px]"
               >
                 <span
                   class="text-gray-500"
@@ -65,12 +65,12 @@ exports[`Integração UnifiedStepRenderer → Resultado e Oferta (Maria) > rende
             class="order-1 md:order-2 text-left"
           >
             <h3
-              class="text-xl font-bold text-[#5b4135] mb-4"
+              class="text-lg sm:text-xl font-bold text-[#5b4135] mb-3 sm:mb-4"
             >
               Seu Perfil de Estilo:
             </h3>
             <p
-              class="text-base md:text-lg mb-6 text-gray-800 leading-relaxed"
+              class="text-sm sm:text-base md:text-lg mb-5 md:mb-6 text-gray-800 leading-relaxed tracking-normal"
             >
               Descubra as cores e texturas que exalam sofisticação no seu estilo, quais peças estratégicas elevam qualquer look e os detalhes que fazem toda a diferença na sua elegância.
             </p>
@@ -97,7 +97,7 @@ exports[`Integração UnifiedStepRenderer → Resultado e Oferta (Maria) > rende
               class="mb-6"
             >
               <h4
-                class="font-semibold text-[#5b4135] mb-3"
+                class="font-semibold text-[#5b4135] mb-2 sm:mb-3"
               >
                 Palavras que te definem:
               </h4>
@@ -134,10 +134,10 @@ exports[`Integração UnifiedStepRenderer → Resultado e Oferta (Maria) > rende
           </div>
         </div>
         <div
-          class="mt-8 text-center"
+          class="mt-6 md:mt-8 text-center"
         >
           <div
-            class="mx-auto max-w-md w-full rounded-lg shadow-md bg-gray-100 animate-pulse flex items-center justify-center min-h-[400px]"
+            class="mx-auto max-w-md w-full rounded-lg shadow-md bg-gray-100 animate-pulse flex items-center justify-center min-h-[320px] sm:min-h-[360px] md:min-h-[400px]"
           >
             <span
               class="text-gray-500"
@@ -148,13 +148,13 @@ exports[`Integração UnifiedStepRenderer → Resultado e Oferta (Maria) > rende
         </div>
       </div>
       <div
-        class="bg-white p-6 md:p-8 rounded-lg shadow-lg mb-12"
+        class="bg-white p-5 sm:p-6 md:p-8 rounded-lg shadow-lg mb-10 md:mb-12"
       >
         <div
           class="text-center"
         >
           <h2
-            class="text-3xl md:text-4xl font-bold text-[#5b4135] mb-6"
+            class="text-2xl sm:text-3xl md:text-4xl font-bold text-[#5b4135] mb-5 md:mb-6 tracking-tight"
           >
             Transforme Sua Imagem, 
             <span
@@ -164,12 +164,12 @@ exports[`Integração UnifiedStepRenderer → Resultado e Oferta (Maria) > rende
             </span>
           </h2>
           <p
-            class="text-gray-700 mb-8 leading-relaxed max-w-3xl mx-auto text-lg"
+            class="text-gray-700 mb-6 md:mb-8 leading-relaxed max-w-3xl mx-auto text-base sm:text-lg"
           >
             Seu estilo é uma ferramenta poderosa. Não se trata apenas de roupas, mas de comunicar quem você é e aspira ser. Com a orientação certa, você pode:
           </p>
           <div
-            class="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto mb-8"
+            class="grid gap-4 sm:gap-6 sm:grid-cols-2 max-w-4xl mx-auto mb-6 md:mb-8"
           >
             <div
               class="flex items-center text-left p-4 bg-[#deac6d]/5 rounded-lg"
@@ -229,7 +229,7 @@ exports[`Integração UnifiedStepRenderer → Resultado e Oferta (Maria) > rende
             </div>
           </div>
           <button
-            class="bg-gradient-to-r from-[#deac6d] to-[#c19952] text-white py-4 px-8 rounded-lg shadow-lg transition-all duration-300 text-lg font-semibold hover:scale-105 transform"
+            class="bg-gradient-to-r from-[#deac6d] to-[#c19952] text-white py-3 sm:py-4 px-6 sm:px-8 rounded-lg shadow-lg transition-all duration-300 text-base sm:text-lg font-semibold hover:scale-105 transform w-full sm:w-auto"
           >
             <span
               class="flex items-center justify-center gap-3"
@@ -266,15 +266,15 @@ exports[`Integração UnifiedStepRenderer → Resultado e Oferta (Maria) > rende
         </div>
       </div>
       <div
-        class="bg-white p-6 md:p-8 rounded-lg shadow-lg mb-12"
+        class="bg-white p-5 sm:p-6 md:p-8 rounded-lg shadow-lg mb-10 md:mb-12"
       >
         <h3
-          class="text-2xl font-bold text-center text-[#5b4135] mb-8"
+          class="text-xl sm:text-2xl font-bold text-center text-[#5b4135] mb-6 sm:mb-8 tracking-tight"
         >
           Veja os Resultados de Quem Já Transformou Sua Imagem
         </h3>
         <div
-          class="grid md:grid-cols-3 gap-6"
+          class="grid gap-5 sm:gap-6 md:grid-cols-2 lg:grid-cols-3"
         >
           <div
             class="bg-[#deac6d]/5 p-6 rounded-lg"
@@ -600,24 +600,24 @@ exports[`Integração UnifiedStepRenderer → Resultado e Oferta (Maria) > rende
         </div>
       </div>
       <div
-        class="bg-gradient-to-br from-[#deac6d]/10 to-[#c19952]/5 p-6 md:p-8 rounded-lg shadow-lg mb-12 border-2 border-[#deac6d]/20"
+        class="bg-gradient-to-br from-[#deac6d]/10 to-[#c19952]/5 p-5 sm:p-6 md:p-8 rounded-lg shadow-lg mb-10 md:mb-12 border-2 border-[#deac6d]/20"
       >
         <div
           class="text-center"
         >
           <h2
-            class="text-3xl font-bold text-[#5b4135] mb-4"
+            class="text-2xl sm:text-3xl font-bold text-[#5b4135] mb-4 tracking-tight"
           >
             O Guia de Estilo Completo
           </h2>
           <p
-            class="text-lg text-gray-700 mb-8"
+            class="text-base sm:text-lg text-gray-700 mb-6 md:mb-8"
           >
             Especialmente criado para o seu estilo 
             Elegante
           </p>
           <div
-            class="bg-red-50 border border-red-200 rounded-lg p-4 mb-8 max-w-md mx-auto"
+            class="bg-red-50 border border-red-200 rounded-lg p-4 mb-6 md:mb-8 max-w-md mx-auto"
           >
             <div
               class="flex items-center justify-center gap-2 text-red-600"
@@ -651,10 +651,10 @@ exports[`Integração UnifiedStepRenderer → Resultado e Oferta (Maria) > rende
             </div>
           </div>
           <div
-            class="bg-white p-6 rounded-lg shadow-md border border-[#deac6d]/20 max-w-lg mx-auto mb-8"
+            class="bg-white p-5 sm:p-6 rounded-lg shadow-md border border-[#deac6d]/20 max-w-lg mx-auto mb-6 md:mb-8"
           >
             <h4
-              class="text-xl font-semibold text-[#5b4135] mb-4"
+              class="text-lg sm:text-xl font-semibold text-[#5b4135] mb-3 sm:mb-4"
             >
               O Que Você Recebe Hoje
             </h4>
@@ -662,7 +662,7 @@ exports[`Integração UnifiedStepRenderer → Resultado e Oferta (Maria) > rende
               class="space-y-3 mb-6 text-left"
             >
               <div
-                class="flex justify-between items-center p-3 border-b border-gray-100"
+                class="flex justify-between items-center p-2.5 sm:p-3 border-b border-gray-100 text-sm sm:text-base"
               >
                 <span>
                   ✅ Guia Principal de Estilo 
@@ -675,7 +675,7 @@ exports[`Integração UnifiedStepRenderer → Resultado e Oferta (Maria) > rende
                 </span>
               </div>
               <div
-                class="flex justify-between items-center p-3 border-b border-gray-100"
+                class="flex justify-between items-center p-2.5 sm:p-3 border-b border-gray-100 text-sm sm:text-base"
               >
                 <span>
                   ✅ Bônus: Peças-chave do seu tipo
@@ -687,7 +687,7 @@ exports[`Integração UnifiedStepRenderer → Resultado e Oferta (Maria) > rende
                 </span>
               </div>
               <div
-                class="flex justify-between items-center p-3 border-b border-gray-100"
+                class="flex justify-between items-center p-2.5 sm:p-3 border-b border-gray-100 text-sm sm:text-base"
               >
                 <span>
                   ✅ Bônus: Guia de Cores Personalizadas
@@ -699,7 +699,7 @@ exports[`Integração UnifiedStepRenderer → Resultado e Oferta (Maria) > rende
                 </span>
               </div>
               <div
-                class="flex justify-between items-center p-3 pt-4 font-bold text-lg border-t-2 border-[#deac6d]"
+                class="flex justify-between items-center p-2.5 sm:p-3 pt-4 font-bold text-base sm:text-lg border-t-2 border-[#deac6d]"
               >
                 <span>
                   Valor Total
@@ -746,7 +746,7 @@ exports[`Integração UnifiedStepRenderer → Resultado e Oferta (Maria) > rende
             </div>
           </div>
           <button
-            class="bg-gradient-to-r from-emerald-500 to-green-600 text-white py-6 px-8 rounded-lg shadow-xl transition-all duration-300 text-xl font-bold hover:scale-105 transform mb-4"
+            class="bg-gradient-to-r from-emerald-500 to-green-600 text-white py-4 sm:py-6 px-6 sm:px-8 rounded-lg shadow-xl transition-all duration-300 text-lg sm:text-xl font-bold hover:scale-105 transform mb-4 w-full sm:w-auto"
           >
             <span
               class="flex items-center justify-center gap-3"
@@ -843,13 +843,13 @@ exports[`Integração UnifiedStepRenderer → Resultado e Oferta (Maria) > rende
         </div>
       </div>
       <div
-        class="bg-white p-6 md:p-8 rounded-lg shadow-lg text-center"
+        class="bg-white p-5 sm:p-6 md:p-8 rounded-lg shadow-lg text-center"
       >
         <div
           class="max-w-2xl mx-auto"
         >
           <h3
-            class="text-2xl font-bold text-[#5b4135] mb-4"
+            class="text-xl sm:text-2xl font-bold text-[#5b4135] mb-4 tracking-tight"
           >
             Garantia de Satisfação Total
           </h3>
@@ -873,7 +873,7 @@ exports[`Integração UnifiedStepRenderer → Resultado e Oferta (Maria) > rende
               />
             </svg>
             <p
-              class="text-gray-700 text-lg leading-relaxed"
+              class="text-gray-700 text-base sm:text-lg leading-relaxed"
             >
               Você tem 
               <strong>
