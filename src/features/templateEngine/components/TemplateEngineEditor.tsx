@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useTemplateDraft, useUpdateMeta, useAddStage, useReorderStages, usePublish, useValidateDraft, useAddStageComponent, useRemoveStageComponent, useReorderStageComponents, useUpdateComponentProps } from '../api/hooks';
 import { renderComponent } from '../render/registry';
+import { getComponentSchema } from './componentPropSchemas';
 // Ajuste: evitar conflito de tipos TemplateDraft (frontend vs server). Vamos tratar draft como 'any' onde passamos para renderComponent.
 
 export const TemplateEngineEditor: React.FC<{ id: string; onBack: () => void }> = ({ id, onBack }) => {
@@ -139,26 +140,92 @@ export const TemplateEngineEditor: React.FC<{ id: string; onBack: () => void }> 
         <section className="space-y-2 border rounded p-3 bg-white">
             <h2 className="font-medium text-sm flex items-center gap-2">Painel de Propriedades {selectedComponent && <span className="text-[10px] text-gray-500">({selectedComponent.type})</span>}</h2>
             {!selectedComponent && <div className="text-[11px] text-gray-500">Selecione um componente para editar.</div>}
-            {selectedComponent && <div className="space-y-3 text-xs">
-                <div className="grid gap-2">
-                    {Object.entries(selectedComponent.props || {}).slice(0, 8).map(([k, v]) => <div key={k} className="flex flex-col">
-                        <label className="text-[10px] uppercase tracking-wide text-gray-500">{k}</label>
-                        <input
-                            className="border rounded px-1 py-0.5 text-xs bg-gray-50"
-                            defaultValue={typeof v === 'string' ? v : JSON.stringify(v)}
-                            onBlur={e => {
-                                let val: any = e.target.value;
-                                if (typeof v !== 'string') {
-                                    try { val = JSON.parse(e.target.value); } catch {/* keep raw */ }
-                                }
-                                updateComponentProps?.mutate({ [k]: val });
-                            }}
-                        />
-                    </div>)}
-                </div>
-                <div className="text-[10px] text-gray-500">(Edição sem inline — futuro: schema dinâmico e validação por campo)</div>
-                {updateComponentProps?.isPending && <div className="text-[10px] text-blue-600">Salvando...</div>}
-            </div>}
+            {selectedComponent && (() => {
+                const schema = getComponentSchema((selectedComponent as any).kind || selectedComponent.type);
+                const props = selectedComponent.props || {};
+                return <div className="space-y-3 text-xs">
+                    {!schema && <div className="text-[11px] text-amber-600">Sem schema registrado — fallback exibindo JSON bruto.</div>}
+                    {schema && <div className="space-y-3">
+                        {schema.fields.map(field => {
+                            const val = props[field.name];
+                            const baseLabel = <label className="text-[10px] uppercase tracking-wide text-gray-500 flex items-center gap-1">{field.label}{field.required && <span className="text-red-500">*</span>}</label>;
+                            if (field.type === 'boolean') {
+                                return <div key={field.name} className="flex items-center gap-2">
+                                    <input type="checkbox" defaultChecked={!!val} onChange={e => updateComponentProps?.mutate({ [field.name]: e.target.checked })} />
+                                    <span className="text-[11px]">{field.label}</span>
+                                </div>;
+                            }
+                            if (field.type === 'text') {
+                                return <div key={field.name} className="flex flex-col">
+                                    {baseLabel}
+                                    <textarea className="border rounded px-1 py-0.5 text-xs bg-gray-50 resize-y min-h-[60px]" defaultValue={val || ''} placeholder={field.placeholder}
+                                        onBlur={e => updateComponentProps?.mutate({ [field.name]: e.target.value })} />
+                                </div>;
+                            }
+                            if (field.type === 'number') {
+                                return <div key={field.name} className="flex flex-col">
+                                    {baseLabel}
+                                    <input type="number" className="border rounded px-1 py-0.5 text-xs bg-gray-50" defaultValue={val ?? ''} placeholder={field.placeholder}
+                                        onBlur={e => {
+                                            const num = e.target.value === '' ? undefined : Number(e.target.value);
+                                            updateComponentProps?.mutate({ [field.name]: num });
+                                        }} />
+                                </div>;
+                            }
+                            if (field.type === 'optionsArray') {
+                                const options = Array.isArray(val) ? val : [];
+                                return <div key={field.name} className="flex flex-col gap-1 border rounded p-2 bg-gray-50">
+                                    <div className="flex items-center justify-between">
+                                        <span className="text-[10px] uppercase tracking-wide text-gray-500">{field.label}</span>
+                                        <button className="text-[10px] text-blue-600" onClick={() => {
+                                            const next = [...options, { id: `opt${options.length + 1}`, label: `Opção ${options.length + 1}` }];
+                                            updateComponentProps?.mutate({ [field.name]: next });
+                                        }}>+ opção</button>
+                                    </div>
+                                    {options.length === 0 && <div className="text-[10px] text-gray-500">Nenhuma opção.</div>}
+                                    <ul className="space-y-1">
+                                        {options.map((o: any, i: number) => <li key={o.id} className="flex items-center gap-1">
+                                            <input className="border rounded px-1 py-0.5 text-[10px] w-16" defaultValue={o.id} title="id" onBlur={e => {
+                                                const next = [...options]; next[i] = { ...next[i], id: e.target.value };
+                                                updateComponentProps?.mutate({ [field.name]: next });
+                                            }} />
+                                            <input className="border rounded px-1 py-0.5 text-[10px] flex-1" defaultValue={o.label} title="label" onBlur={e => {
+                                                const next = [...options]; next[i] = { ...next[i], label: e.target.value };
+                                                updateComponentProps?.mutate({ [field.name]: next });
+                                            }} />
+                                            <input className="border rounded px-1 py-0.5 text-[10px] w-14" defaultValue={o.points ?? ''} placeholder="pts" title="points" onBlur={e => {
+                                                const next = [...options]; const v = e.target.value === '' ? undefined : Number(e.target.value); next[i] = { ...next[i], points: v };
+                                                updateComponentProps?.mutate({ [field.name]: next });
+                                            }} />
+                                            <button className="text-[10px] text-red-600" onClick={() => {
+                                                const next = options.filter((_: any, idx: number) => idx !== i);
+                                                updateComponentProps?.mutate({ [field.name]: next });
+                                            }}>✕</button>
+                                        </li>)}
+                                    </ul>
+                                </div>;
+                            }
+                            if (field.type === 'json') {
+                                return <div key={field.name} className="flex flex-col">
+                                    {baseLabel}
+                                    <textarea className="border rounded px-1 py-0.5 text-xs font-mono bg-gray-50 min-h-[100px]" defaultValue={JSON.stringify(val, null, 2)} onBlur={e => {
+                                        try { const parsed = JSON.parse(e.target.value); updateComponentProps?.mutate({ [field.name]: parsed }); } catch { /* ignore */ }
+                                    }} />
+                                </div>;
+                            }
+                            // default string
+                            return <div key={field.name} className="flex flex-col">
+                                {baseLabel}
+                                <input className="border rounded px-1 py-0.5 text-xs bg-gray-50" defaultValue={val || ''} placeholder={field.placeholder}
+                                    onBlur={e => updateComponentProps?.mutate({ [field.name]: e.target.value })} />
+                            </div>;
+                        })}
+                    </div>}
+                    {!schema && <pre className="text-[10px] max-h-40 overflow-auto border rounded p-2 bg-gray-50">{JSON.stringify(props, null, 2)}</pre>}
+                    <div className="text-[10px] text-gray-500">(Edição sem inline — schema dinâmico alfa)</div>
+                    {updateComponentProps?.isPending && <div className="text-[10px] text-blue-600">Salvando...</div>}
+                </div>;
+            })()}
         </section>
         <section className="space-y-2">
             <h2 className="font-medium">Validação</h2>
