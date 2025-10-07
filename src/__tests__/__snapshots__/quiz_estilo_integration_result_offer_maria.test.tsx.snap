@@ -1,0 +1,901 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Integração UnifiedStepRenderer → Resultado e Oferta (Maria) > renderiza step-20 (resultado) com nome e estilo 1`] = `
+<div
+  class="unified-step-renderer unified-step-renderer--production unified-step-renderer--step-20"
+  style="--theme-primary: #B89B7A; --theme-accent: #8B7355; --theme-background: #FFFFFF; --theme-text: #1F2937;"
+>
+  <div
+    class="min-h-screen bg-gradient-to-br from-[#fffaf7] to-[#faf5f0] relative overflow-hidden"
+  >
+    <div
+      class="absolute top-0 right-0 w-1/3 h-1/3 bg-[#deac6d]/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"
+    />
+    <div
+      class="absolute bottom-0 left-0 w-1/4 h-1/4 bg-[#c19952]/5 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2"
+    />
+    <div
+      class="container mx-auto px-4 py-8 max-w-5xl relative z-10"
+    >
+      <div
+        class="bg-white p-6 md:p-12 rounded-lg shadow-lg text-center mb-12"
+      >
+        <div
+          class="text-6xl mb-4 animate-bounce"
+        >
+          🎉
+        </div>
+        <h1
+          class="text-3xl md:text-4xl font-bold playfair-display mb-2 text-[#deac6d]"
+        >
+          Maria, seu estilo predominante é:
+        </h1>
+        <p
+          class="text-2xl md:text-3xl font-bold text-[#5b4135] playfair-display mb-8"
+        >
+          Elegante
+        </p>
+        <div
+          class="grid md:grid-cols-2 gap-8 items-center"
+        >
+          <div
+            class="order-2 md:order-1"
+          >
+            <div
+              class="max-w-sm mx-auto relative"
+            >
+              <div
+                class="w-full h-auto rounded-lg shadow-md bg-gray-100 animate-pulse flex items-center justify-center min-h-[300px]"
+              >
+                <span
+                  class="text-gray-500"
+                >
+                  Carregando...
+                </span>
+              </div>
+              <div
+                class="absolute -top-2 -right-2 w-8 h-8 border-t-2 border-r-2 border-[#deac6d]"
+              />
+              <div
+                class="absolute -bottom-2 -left-2 w-8 h-8 border-b-2 border-l-2 border-[#deac6d]"
+              />
+            </div>
+          </div>
+          <div
+            class="order-1 md:order-2 text-left"
+          >
+            <h3
+              class="text-xl font-bold text-[#5b4135] mb-4"
+            >
+              Seu Perfil de Estilo:
+            </h3>
+            <p
+              class="text-base md:text-lg mb-6 text-gray-800 leading-relaxed"
+            >
+              Descubra as cores e texturas que exalam sofisticação no seu estilo, quais peças estratégicas elevam qualquer look e os detalhes que fazem toda a diferença na sua elegância.
+            </p>
+            <div
+              class="mb-6 p-4 bg-[#deac6d]/10 rounded-lg border border-[#deac6d]/20"
+            >
+              <h4
+                class="font-semibold text-[#5b4135] mb-2"
+              >
+                Estilos Complementares:
+              </h4>
+              <p
+                class="text-sm text-gray-700"
+              >
+                Você também tem influências de: 
+                <span
+                  class="font-medium text-[#deac6d]"
+                >
+                  Natural
+                </span>
+              </p>
+            </div>
+            <div
+              class="mb-6"
+            >
+              <h4
+                class="font-semibold text-[#5b4135] mb-3"
+              >
+                Palavras que te definem:
+              </h4>
+              <div
+                class="flex flex-wrap gap-2"
+              >
+                <span
+                  class="px-3 py-1 bg-[#deac6d] text-white text-sm rounded-full font-medium"
+                >
+                  refinado
+                </span>
+                <span
+                  class="px-3 py-1 bg-[#deac6d] text-white text-sm rounded-full font-medium"
+                >
+                  polido
+                </span>
+                <span
+                  class="px-3 py-1 bg-[#deac6d] text-white text-sm rounded-full font-medium"
+                >
+                  qualidade
+                </span>
+                <span
+                  class="px-3 py-1 bg-[#deac6d] text-white text-sm rounded-full font-medium"
+                >
+                  sofisticação
+                </span>
+                <span
+                  class="px-3 py-1 bg-[#deac6d] text-white text-sm rounded-full font-medium"
+                >
+                  bom gosto
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="mt-8 text-center"
+        >
+          <div
+            class="mx-auto max-w-md w-full rounded-lg shadow-md bg-gray-100 animate-pulse flex items-center justify-center min-h-[400px]"
+          >
+            <span
+              class="text-gray-500"
+            >
+              Carregando guia...
+            </span>
+          </div>
+        </div>
+      </div>
+      <div
+        class="bg-white p-6 md:p-8 rounded-lg shadow-lg mb-12"
+      >
+        <div
+          class="text-center"
+        >
+          <h2
+            class="text-3xl md:text-4xl font-bold text-[#5b4135] mb-6"
+          >
+            Transforme Sua Imagem, 
+            <span
+              class="text-[#deac6d]"
+            >
+              Revele Sua Essência
+            </span>
+          </h2>
+          <p
+            class="text-gray-700 mb-8 leading-relaxed max-w-3xl mx-auto text-lg"
+          >
+            Seu estilo é uma ferramenta poderosa. Não se trata apenas de roupas, mas de comunicar quem você é e aspira ser. Com a orientação certa, você pode:
+          </p>
+          <div
+            class="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto mb-8"
+          >
+            <div
+              class="flex items-center text-left p-4 bg-[#deac6d]/5 rounded-lg"
+            >
+              <span
+                class="text-2xl mr-4"
+              >
+                🎯
+              </span>
+              <span
+                class="text-gray-700"
+              >
+                Construir looks com intenção e identidade visual
+              </span>
+            </div>
+            <div
+              class="flex items-center text-left p-4 bg-[#deac6d]/5 rounded-lg"
+            >
+              <span
+                class="text-2xl mr-4"
+              >
+                🎨
+              </span>
+              <span
+                class="text-gray-700"
+              >
+                Utilizar cores, modelagens e tecidos a seu favor
+              </span>
+            </div>
+            <div
+              class="flex items-center text-left p-4 bg-[#deac6d]/5 rounded-lg"
+            >
+              <span
+                class="text-2xl mr-4"
+              >
+                💼
+              </span>
+              <span
+                class="text-gray-700"
+              >
+                Alinhar sua imagem aos seus objetivos profissionais
+              </span>
+            </div>
+            <div
+              class="flex items-center text-left p-4 bg-[#deac6d]/5 rounded-lg"
+            >
+              <span
+                class="text-2xl mr-4"
+              >
+                👗
+              </span>
+              <span
+                class="text-gray-700"
+              >
+                Desenvolver um guarda-roupa funcional e inteligente
+              </span>
+            </div>
+          </div>
+          <button
+            class="bg-gradient-to-r from-[#deac6d] to-[#c19952] text-white py-4 px-8 rounded-lg shadow-lg transition-all duration-300 text-lg font-semibold hover:scale-105 transform"
+          >
+            <span
+              class="flex items-center justify-center gap-3"
+            >
+              <svg
+                class="lucide lucide-shopping-cart w-5 h-5 transition-transform duration-300 "
+                fill="none"
+                height="24"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <circle
+                  cx="8"
+                  cy="21"
+                  r="1"
+                />
+                <circle
+                  cx="19"
+                  cy="21"
+                  r="1"
+                />
+                <path
+                  d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"
+                />
+              </svg>
+              Quero Transformar Minha Imagem
+            </span>
+          </button>
+        </div>
+      </div>
+      <div
+        class="bg-white p-6 md:p-8 rounded-lg shadow-lg mb-12"
+      >
+        <h3
+          class="text-2xl font-bold text-center text-[#5b4135] mb-8"
+        >
+          Veja os Resultados de Quem Já Transformou Sua Imagem
+        </h3>
+        <div
+          class="grid md:grid-cols-3 gap-6"
+        >
+          <div
+            class="bg-[#deac6d]/5 p-6 rounded-lg"
+          >
+            <div
+              class="flex mb-3"
+            >
+              <svg
+                class="lucide lucide-star w-4 h-4 fill-[#deac6d] text-[#deac6d]"
+                fill="none"
+                height="24"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <polygon
+                  points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"
+                />
+              </svg>
+              <svg
+                class="lucide lucide-star w-4 h-4 fill-[#deac6d] text-[#deac6d]"
+                fill="none"
+                height="24"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <polygon
+                  points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"
+                />
+              </svg>
+              <svg
+                class="lucide lucide-star w-4 h-4 fill-[#deac6d] text-[#deac6d]"
+                fill="none"
+                height="24"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <polygon
+                  points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"
+                />
+              </svg>
+              <svg
+                class="lucide lucide-star w-4 h-4 fill-[#deac6d] text-[#deac6d]"
+                fill="none"
+                height="24"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <polygon
+                  points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"
+                />
+              </svg>
+              <svg
+                class="lucide lucide-star w-4 h-4 fill-[#deac6d] text-[#deac6d]"
+                fill="none"
+                height="24"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <polygon
+                  points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"
+                />
+              </svg>
+            </div>
+            <p
+              class="text-gray-700 mb-4 italic"
+            >
+              "
+              Finalmente descobri como me vestir com elegância e profissionalismo. Meu guarda-roupa nunca fez tanto sentido!
+              "
+            </p>
+            <div>
+              <p
+                class="font-semibold text-[#5b4135]"
+              >
+                Maria Silva
+              </p>
+              <p
+                class="text-sm text-gray-600"
+              >
+                Advogada
+              </p>
+            </div>
+          </div>
+          <div
+            class="bg-[#deac6d]/5 p-6 rounded-lg"
+          >
+            <div
+              class="flex mb-3"
+            >
+              <svg
+                class="lucide lucide-star w-4 h-4 fill-[#deac6d] text-[#deac6d]"
+                fill="none"
+                height="24"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <polygon
+                  points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"
+                />
+              </svg>
+              <svg
+                class="lucide lucide-star w-4 h-4 fill-[#deac6d] text-[#deac6d]"
+                fill="none"
+                height="24"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <polygon
+                  points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"
+                />
+              </svg>
+              <svg
+                class="lucide lucide-star w-4 h-4 fill-[#deac6d] text-[#deac6d]"
+                fill="none"
+                height="24"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <polygon
+                  points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"
+                />
+              </svg>
+              <svg
+                class="lucide lucide-star w-4 h-4 fill-[#deac6d] text-[#deac6d]"
+                fill="none"
+                height="24"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <polygon
+                  points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"
+                />
+              </svg>
+              <svg
+                class="lucide lucide-star w-4 h-4 fill-[#deac6d] text-[#deac6d]"
+                fill="none"
+                height="24"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <polygon
+                  points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"
+                />
+              </svg>
+            </div>
+            <p
+              class="text-gray-700 mb-4 italic"
+            >
+              "
+              O guia me ajudou a encontrar meu estilo pessoal. Agora me sinto confiante em qualquer ocasião.
+              "
+            </p>
+            <div>
+              <p
+                class="font-semibold text-[#5b4135]"
+              >
+                Ana Costa
+              </p>
+              <p
+                class="text-sm text-gray-600"
+              >
+                Empresária
+              </p>
+            </div>
+          </div>
+          <div
+            class="bg-[#deac6d]/5 p-6 rounded-lg"
+          >
+            <div
+              class="flex mb-3"
+            >
+              <svg
+                class="lucide lucide-star w-4 h-4 fill-[#deac6d] text-[#deac6d]"
+                fill="none"
+                height="24"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <polygon
+                  points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"
+                />
+              </svg>
+              <svg
+                class="lucide lucide-star w-4 h-4 fill-[#deac6d] text-[#deac6d]"
+                fill="none"
+                height="24"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <polygon
+                  points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"
+                />
+              </svg>
+              <svg
+                class="lucide lucide-star w-4 h-4 fill-[#deac6d] text-[#deac6d]"
+                fill="none"
+                height="24"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <polygon
+                  points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"
+                />
+              </svg>
+              <svg
+                class="lucide lucide-star w-4 h-4 fill-[#deac6d] text-[#deac6d]"
+                fill="none"
+                height="24"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <polygon
+                  points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"
+                />
+              </svg>
+              <svg
+                class="lucide lucide-star w-4 h-4 fill-[#deac6d] text-[#deac6d]"
+                fill="none"
+                height="24"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <polygon
+                  points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"
+                />
+              </svg>
+            </div>
+            <p
+              class="text-gray-700 mb-4 italic"
+            >
+              "
+              Economizei muito dinheiro parando de comprar peças que não combinam comigo. Recomendo!
+              "
+            </p>
+            <div>
+              <p
+                class="font-semibold text-[#5b4135]"
+              >
+                Julia Santos
+              </p>
+              <p
+                class="text-sm text-gray-600"
+              >
+                Designer
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="bg-gradient-to-br from-[#deac6d]/10 to-[#c19952]/5 p-6 md:p-8 rounded-lg shadow-lg mb-12 border-2 border-[#deac6d]/20"
+      >
+        <div
+          class="text-center"
+        >
+          <h2
+            class="text-3xl font-bold text-[#5b4135] mb-4"
+          >
+            O Guia de Estilo Completo
+          </h2>
+          <p
+            class="text-lg text-gray-700 mb-8"
+          >
+            Especialmente criado para o seu estilo 
+            Elegante
+          </p>
+          <div
+            class="bg-red-50 border border-red-200 rounded-lg p-4 mb-8 max-w-md mx-auto"
+          >
+            <div
+              class="flex items-center justify-center gap-2 text-red-600"
+            >
+              <svg
+                class="lucide lucide-clock w-5 h-5"
+                fill="none"
+                height="24"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <circle
+                  cx="12"
+                  cy="12"
+                  r="10"
+                />
+                <polyline
+                  points="12 6 12 12 16 14"
+                />
+              </svg>
+              <span
+                class="font-semibold"
+              >
+                Oferta expira ao sair desta página
+              </span>
+            </div>
+          </div>
+          <div
+            class="bg-white p-6 rounded-lg shadow-md border border-[#deac6d]/20 max-w-lg mx-auto mb-8"
+          >
+            <h4
+              class="text-xl font-semibold text-[#5b4135] mb-4"
+            >
+              O Que Você Recebe Hoje
+            </h4>
+            <div
+              class="space-y-3 mb-6 text-left"
+            >
+              <div
+                class="flex justify-between items-center p-3 border-b border-gray-100"
+              >
+                <span>
+                  ✅ Guia Principal de Estilo 
+                  Elegante
+                </span>
+                <span
+                  class="font-medium"
+                >
+                  R$ 79,00
+                </span>
+              </div>
+              <div
+                class="flex justify-between items-center p-3 border-b border-gray-100"
+              >
+                <span>
+                  ✅ Bônus: Peças-chave do seu tipo
+                </span>
+                <span
+                  class="font-medium"
+                >
+                  R$ 67,00
+                </span>
+              </div>
+              <div
+                class="flex justify-between items-center p-3 border-b border-gray-100"
+              >
+                <span>
+                  ✅ Bônus: Guia de Cores Personalizadas
+                </span>
+                <span
+                  class="font-medium"
+                >
+                  R$ 49,00
+                </span>
+              </div>
+              <div
+                class="flex justify-between items-center p-3 pt-4 font-bold text-lg border-t-2 border-[#deac6d]"
+              >
+                <span>
+                  Valor Total
+                </span>
+                <div
+                  class="relative"
+                >
+                  <span
+                    class="line-through text-gray-500"
+                  >
+                    R$ 195,00
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div
+              class="text-center p-4 bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg border border-green-200"
+            >
+              <p
+                class="text-green-700 uppercase font-bold text-sm mb-2"
+              >
+                OFERTA ESPECIAL 
+                ELEGANTE
+              </p>
+              <p
+                class="text-4xl font-bold text-green-600 mb-1"
+              >
+                R$ 39,00
+              </p>
+              <p
+                class="text-sm text-gray-600"
+              >
+                ou 5x de R$ 8,83
+              </p>
+              <div
+                class="mt-3"
+              >
+                <span
+                  class="bg-red-100 text-red-600 px-3 py-1 rounded-full text-xs font-semibold"
+                >
+                  🔥 80% de desconto - HOJE APENAS
+                </span>
+              </div>
+            </div>
+          </div>
+          <button
+            class="bg-gradient-to-r from-emerald-500 to-green-600 text-white py-6 px-8 rounded-lg shadow-xl transition-all duration-300 text-xl font-bold hover:scale-105 transform mb-4"
+          >
+            <span
+              class="flex items-center justify-center gap-3"
+            >
+              <svg
+                class="lucide lucide-shopping-cart w-6 h-6 transition-transform duration-300 "
+                fill="none"
+                height="24"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <circle
+                  cx="8"
+                  cy="21"
+                  r="1"
+                />
+                <circle
+                  cx="19"
+                  cy="21"
+                  r="1"
+                />
+                <path
+                  d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"
+                />
+              </svg>
+              GARANTIR MEU GUIA 
+              ELEGANTE
+               AGORA
+            </span>
+          </button>
+          <div
+            class="flex items-center justify-center gap-6 text-sm text-gray-600 mt-4"
+          >
+            <div
+              class="flex items-center gap-2"
+            >
+              <svg
+                class="lucide lucide-shield w-4 h-4 text-green-500"
+                fill="none"
+                height="24"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"
+                />
+              </svg>
+              <span>
+                Compra Segura
+              </span>
+            </div>
+            <div
+              class="flex items-center gap-2"
+            >
+              <svg
+                class="lucide lucide-lock w-4 h-4 text-green-500"
+                fill="none"
+                height="24"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <rect
+                  height="11"
+                  rx="2"
+                  ry="2"
+                  width="18"
+                  x="3"
+                  y="11"
+                />
+                <path
+                  d="M7 11V7a5 5 0 0 1 10 0v4"
+                />
+              </svg>
+              <span>
+                Dados Protegidos
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="bg-white p-6 md:p-8 rounded-lg shadow-lg text-center"
+      >
+        <div
+          class="max-w-2xl mx-auto"
+        >
+          <h3
+            class="text-2xl font-bold text-[#5b4135] mb-4"
+          >
+            Garantia de Satisfação Total
+          </h3>
+          <div
+            class="bg-green-50 border border-green-200 rounded-lg p-6 mb-6"
+          >
+            <svg
+              class="lucide lucide-shield w-12 h-12 text-green-500 mx-auto mb-4"
+              fill="none"
+              height="24"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+              width="24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"
+              />
+            </svg>
+            <p
+              class="text-gray-700 text-lg leading-relaxed"
+            >
+              Você tem 
+              <strong>
+                7 dias
+              </strong>
+               para testar o guia. Se não ficar 100% satisfeita, devolvemos seu investimento sem perguntas.
+            </p>
+          </div>
+          <p
+            class="text-[#deac6d] font-semibold"
+          >
+            ⚡ Esta é uma oferta exclusiva para o seu estilo 
+            Elegante
+          </p>
+          <p
+            class="text-gray-600 text-sm mt-2"
+          >
+            O preço volta para R$ 195,00 quando você sair desta página
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
