@@ -364,13 +364,23 @@ export const UnifiedStepRenderer: React.FC<UnifiedStepRendererProps> = ({
  * Helper para mapear stepId para nome do arquivo do componente
  */
 const getComponentFileForStep = (stepId: string): string => {
+    // ✅ NOVO MAPEAMENTO 21 ETAPAS
+    // 01 = Intro
     if (stepId === 'step-01') return 'IntroStep';
-    if (stepId.match(/step-0[2-9]/) || stepId.match(/step-1[01]/)) return 'QuestionStep';
-    if (stepId === 'step-12') return 'StrategicQuestionStep';
-    if (stepId === 'step-13') return 'TransitionStep';
-    if (stepId === 'step-14') return 'ResultStep';
-    if (stepId === 'step-15') return 'OfferStep';
-    return 'QuestionStep'; // fallback
+    // 02–11 = Perguntas principais
+    if (/(step-0[2-9])|(step-1[01])/.test(stepId)) return 'QuestionStep';
+    // 12 = Transição inicial para estratégicas
+    if (stepId === 'step-12') return 'TransitionStep';
+    // 13–18 = Estratégicas
+    if (/(step-1[3-8])/.test(stepId)) return 'StrategicQuestionStep';
+    // 19 = Transição resultado
+    if (stepId === 'step-19') return 'TransitionStep';
+    // 20 = Resultado
+    if (stepId === 'step-20') return 'ResultStep';
+    // 21 = Oferta
+    if (stepId === 'step-21') return 'OfferStep';
+    // Fallback genérico
+    return 'QuestionStep';
 };
 
 // 🎨 Estilos CSS para o UnifiedStepRenderer

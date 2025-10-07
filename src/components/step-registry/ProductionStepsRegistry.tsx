@@ -144,13 +144,16 @@ const StrategicQuestionStepAdapter: React.FC<BaseStepProps> = (props) => {
         ...otherProps
     } = props as any;
 
+    // Priorizar questionText real vindo de QUIZ_STEPS (data.questionText)
+    const questionText = (data as any).questionText || (data as any).question || 'Qual seu principal objetivo?';
     const adaptedProps = {
         data: {
             id: stepId,
             type: 'strategic-question' as const,
             number: stepNumber,
-            title: data.title || `Pergunta Estratégica ${stepNumber}`,
-            question: data.question || 'Qual seu principal objetivo?',
+            // Mantemos title somente se realmente fornecido; evitamos título genérico visível
+            title: data.title || undefined,
+            questionText,
             options: data.options || [
                 { id: 'strategic-1', text: 'Objetivo 1', offerKey: 'offer1' },
                 { id: 'strategic-2', text: 'Objetivo 2', offerKey: 'offer2' }
@@ -158,7 +161,6 @@ const StrategicQuestionStepAdapter: React.FC<BaseStepProps> = (props) => {
             ...data
         },
         onAnswerChange: (answerId: string) => {
-            // Persistir resposta estratégica (sem avançar automaticamente)
             onSave({ [stepId]: answerId });
         },
         ...otherProps
