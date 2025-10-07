@@ -39,7 +39,8 @@ describe('SharedProgressHeader', () => {
 
         const header = screen.getByTestId('shared-progress-header');
         expect(header).toBeInTheDocument();
-        expect(header.textContent).toMatch(/Progresso:\s*5%/i);
+        // Agora só mostra o número percentual sem prefixo textual
+        expect(header.textContent).toMatch(/5%/);
         // Logo presente
         const logoImg = header.querySelector('img');
         expect(logoImg).not.toBeNull();
