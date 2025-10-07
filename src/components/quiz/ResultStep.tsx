@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { styleConfigGisele } from '../../data/styles';
+import { resolveStyleId } from '@/utils/styleIds';
 import type { QuizStep } from '../../data/quizSteps';
 import type { QuizScores } from '../../hooks/useQuizState';
 import { useImageWithFallback } from '../../hooks/useImageWithFallback';
@@ -72,15 +73,15 @@ export default function ResultStep({
     const processStylesWithPercentages = () => {
         if (!scores) return [];
 
-        // Converter QuizScores para array de entradas (usando chaves sem acento do QuizScores)
+        // Converter QuizScores para array de entradas (internamente sem acento)
         const scoresEntries = [
             ['natural', scores.natural],
-            ['classico', scores.classico], // sem acento no QuizScores
-            ['contemporaneo', scores.contemporaneo], // sem acento no QuizScores  
+            ['classico', scores.classico],
+            ['contemporaneo', scores.contemporaneo],
             ['elegante', scores.elegante],
-            ['romantico', scores.romantico], // sem acento no QuizScores
+            ['romantico', scores.romantico],
             ['sexy', scores.sexy],
-            ['dramatico', scores.dramatico], // sem acento no QuizScores
+            ['dramatico', scores.dramatico],
             ['criativo', scores.criativo]
         ] as [string, number][];
 
@@ -88,18 +89,10 @@ export default function ResultStep({
         const totalPoints = scoresEntries.reduce((sum, [, score]) => sum + score, 0);
         if (totalPoints === 0) return [];
 
-        // Mapeamento de chave sem acento para com acento (para acessar styleConfigGisele)
-        const keyMapping: Record<string, string> = {
-            'classico': 'clássico',
-            'contemporaneo': 'contemporâneo',
-            'romantico': 'romântico',
-            'dramatico': 'dramático'
-        };
-
         // Ordenar estilos por pontuação e calcular porcentagens
         return scoresEntries
             .map(([styleKey, score]) => {
-                const displayKey = keyMapping[styleKey] || styleKey; // usar chave com acento para display
+                const displayKey = resolveStyleId(styleKey); // chave canônica (acentuada se existir)
                 return {
                     key: styleKey,
                     displayKey: displayKey,

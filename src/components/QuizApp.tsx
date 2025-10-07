@@ -202,7 +202,10 @@ interface QuestionStepProps {
 }
 
 function QuestionStep({ stepData, answers, onAnswer, onNext }: QuestionStepProps) {
-    const currentAnswers = answers[stepData.questionNumber || ''] || [];
+    // Utiliza o id real da etapa para armazenar respostas (evita colisões / inconsistências)
+    // Preferir id canônico; fallback para questionNumber sem espaços como chave estável
+    const answerKey = stepData.id || (stepData.questionNumber ? stepData.questionNumber.replace(/\s+/g, '-').toLowerCase() : '');
+    const currentAnswers = answers[answerKey] || [];
     const hasImages = stepData.options?.[0]?.image;
     const gridClass = hasImages ? 'quiz-options-3col' : 'quiz-options-1col';
 
@@ -211,10 +214,10 @@ function QuestionStep({ stepData, answers, onAnswer, onNext }: QuestionStepProps
 
         if (isSelected) {
             // Remove seleção
-            onAnswer(stepData.questionNumber || '', optionId);
+            onAnswer(answerKey, optionId);
         } else if (currentAnswers.length < (stepData.requiredSelections || 1)) {
             // Adiciona seleção se não atingiu o limite
-            onAnswer(stepData.questionNumber || '', optionId);
+            onAnswer(answerKey, optionId);
         }
     };
 

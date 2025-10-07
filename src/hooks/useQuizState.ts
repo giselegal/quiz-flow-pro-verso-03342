@@ -12,6 +12,7 @@
 
 import { useState, useCallback, useMemo } from 'react';
 import { styleMapping, type StyleId } from '../data/styles';
+import { resolveStyleId } from '@/utils/styleIds';
 import { QUIZ_STEPS, STEP_ORDER } from '../data/quizSteps';
 import { stepIdVariants, normalizeStepId, getNextFromOrder, getPreviousFromOrder, safeGetStep } from '@/utils/quizStepIds';
 import { getPersonalizedStepTemplate } from '../templates/quiz21StepsSimplified';
@@ -129,12 +130,14 @@ export function useQuizState(funnelId?: string, externalSteps?: Record<string, a
     // Ordena estilos por pontuação
     const sortedStyles = Object.entries(newScores)
       .sort(([, a], [, b]) => b - a)
-      .map(([styleId]) => {
-        const style = styleMapping[styleId as StyleId];
-        console.log(`🎨 Mapeando estilo: ${styleId} ->`, style);
+      .map(([plainId]) => {
+        // Converte para id canônico (acentuado) quando necessário
+        const canonicalId = resolveStyleId(plainId);
+        const style = styleMapping[canonicalId as StyleId] || styleMapping[plainId as StyleId];
+        console.log(`🎨 Mapeando estilo: ${plainId} -> canonical: ${canonicalId} =>`, style);
         return style;
       })
-      .filter(style => style !== undefined); // Remove estilos não encontrados
+      .filter(style => style !== undefined);
 
     console.log('🏆 Estilos ordenados:', sortedStyles);
 

@@ -18,6 +18,7 @@ export interface QuizOption {
 }
 
 export interface QuizStep {
+    id?: string; // Identificador único canônico (ex: 'step-02')
     type: 'intro' | 'question' | 'strategic-question' | 'transition' | 'transition-result' | 'result' | 'offer';
     title?: string;
     questionNumber?: string;

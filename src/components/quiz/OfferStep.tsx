@@ -1,4 +1,5 @@
 import { styleConfigGisele } from '../../data/styles';
+import { resolveStyleId } from '@/utils/styleIds';
 import type { QuizStep } from '../../data/quizSteps';
 
 interface OfferStepProps {
@@ -34,11 +35,12 @@ export default function OfferStep({
     }
 
     // Verificação de segurança para o estilo
-    let styleConfig = styleConfigGisele[userProfile.resultStyle];
+    const canonicalStyleId = resolveStyleId(userProfile.resultStyle);
+    let styleConfig = styleConfigGisele[canonicalStyleId] || styleConfigGisele[userProfile.resultStyle];
 
     // Se não encontrar o estilo, usar o primeiro disponível como fallback
     if (!styleConfig) {
-        console.warn(`⚠️ Estilo "${userProfile.resultStyle}" não encontrado no OfferStep, usando fallback`);
+        console.warn(`⚠️ Estilo "${userProfile.resultStyle}" (canonical: ${canonicalStyleId}) não encontrado no OfferStep, usando fallback`);
         const firstStyle = Object.keys(styleConfigGisele)[0];
         styleConfig = styleConfigGisele[firstStyle];
     }

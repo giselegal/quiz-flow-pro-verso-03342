@@ -147,7 +147,7 @@ const StrategicQuestionStepAdapter: React.FC<BaseStepProps> = (props) => {
     const adaptedProps = {
         data: {
             id: stepId,
-            type: 'strategic-question' as const, // Unificar com restante do sistema
+            type: 'strategic-question' as const,
             number: stepNumber,
             title: data.title || `Pergunta Estratégica ${stepNumber}`,
             question: data.question || 'Qual seu principal objetivo?',
@@ -158,15 +158,30 @@ const StrategicQuestionStepAdapter: React.FC<BaseStepProps> = (props) => {
             ...data
         },
         onAnswerChange: (answerId: string) => {
-            // Persistir resposta estratégica
+            // Persistir resposta estratégica (sem avançar automaticamente)
             onSave({ [stepId]: answerId });
-            // Avançar imediatamente
-            onNext();
         },
         ...otherProps
     };
 
-    return <OriginalStrategicQuestionStep {...adaptedProps} />;
+    // Wrapper para injetar botão de avanço manual após seleção
+    return (
+        <div className="flex flex-col gap-6">
+            <OriginalStrategicQuestionStep {...adaptedProps} />
+            <div className="flex justify-center">
+                <button
+                    disabled={!quizState?.answers?.[stepId]}
+                    onClick={() => onNext()}
+                    className={`px-6 py-3 rounded-full font-semibold transition-all shadow-md ${quizState?.answers?.[stepId]
+                        ? 'bg-[#deac6d] text-white hover:brightness-105'
+                        : 'bg-[#e6ddd4] text-[#8a7663] cursor-not-allowed opacity-60'
+                        }`}
+                >
+                    Próxima
+                </button>
+            </div>
+        </div>
+    );
 };
 
 /**
