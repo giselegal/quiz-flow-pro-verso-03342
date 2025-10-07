@@ -1,6 +1,6 @@
 import React from 'react';
-import { describe, it, expect, vi } from 'vitest';
-import { render, fireEvent } from '@testing-library/react';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { render, fireEvent, waitFor } from '@testing-library/react';
 import { QuestionStepAdapter } from '@/components/step-registry/ProductionStepsRegistry';
 
 // Mock do componente OriginalQuestionStep para isolar lógica do adapter
@@ -29,7 +29,15 @@ vi.mock('@/components/quiz/QuestionStep', () => ({
 }));
 
 describe('QuestionStepAdapter', () => {
-    it('só chama onNext quando atingir requiredSelections', () => {
+    beforeEach(() => {
+        vi.useFakeTimers();
+    });
+    afterEach(() => {
+        vi.runOnlyPendingTimers();
+        vi.useRealTimers();
+    });
+
+    it('só chama onNext quando atingir requiredSelections', async () => {
         const onNext = vi.fn();
         const onSave = vi.fn();
 
@@ -51,7 +59,6 @@ describe('QuestionStepAdapter', () => {
                         { id: 'd', text: 'D' },
                     ]
                 }}
-                quizState={{ answers: {} }}
             />
         );
 
@@ -62,10 +69,16 @@ describe('QuestionStepAdapter', () => {
 
         // Seleciona terceira opção -> deve avançar
         fireEvent.click(getByTestId('opt-c'));
-        expect(onNext).toHaveBeenCalledTimes(1);
+
+        // Avançar timers do auto-advance (400ms no adapter)
+        vi.advanceTimersByTime(400);
+
+        await waitFor(() => {
+            expect(onNext).toHaveBeenCalledTimes(1);
+        });
     });
 
-    it('avança com requiredSelections=1 após primeira seleção', () => {
+    it('avança com requiredSelections=1 após primeira seleção', async () => {
         const onNext = vi.fn();
         const onSave = vi.fn();
 
@@ -84,11 +97,13 @@ describe('QuestionStepAdapter', () => {
                         { id: 'y', text: 'Y' }
                     ]
                 }}
-                quizState={{ answers: {} }}
             />
         );
 
         fireEvent.click(getByTestId('opt-x'));
-        expect(onNext).toHaveBeenCalledTimes(1);
+        vi.advanceTimersByTime(400);
+        await waitFor(() => {
+            expect(onNext).toHaveBeenCalledTimes(1);
+        });
     });
 });
