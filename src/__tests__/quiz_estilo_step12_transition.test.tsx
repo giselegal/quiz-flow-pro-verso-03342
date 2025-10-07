@@ -27,13 +27,13 @@ describe('Step-12 (Transição Estratégica) - botão manual de continuar', () =
             />
         );
 
-            // Esperar carregamento do componente real (lazy)
-            await waitFor(() => {
-                expect(screen.queryByText(/Carregando Step step-12/i)).toBeNull();
-            }, { timeout: 2000 });
+        // Esperar carregamento do componente real (lazy)
+        await waitFor(() => {
+            expect(screen.queryByText(/Carregando Step step-12/i)).toBeNull();
+        }, { timeout: 2000 });
 
-            // Título visível após lazy load
-            expect(screen.getByText(/Enquanto calculamos o seu resultado/i)).toBeInTheDocument();
+        // Título visível após lazy load
+        expect(screen.getByText(/Enquanto calculamos o seu resultado/i)).toBeInTheDocument();
 
         // Botão aparece
         const btn = await screen.findByRole('button', { name: /continuar/i });
