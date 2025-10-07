@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { useTemplateDraft, useUpdateMeta, useAddStage, useReorderStages, usePublish, useValidateDraft, useAddStageComponent, useRemoveStageComponent, useReorderStageComponents, useUpdateComponentProps, usePreviewStart, usePreviewAnswer } from '../api/hooks';
+import { useTemplateDraft, useUpdateMeta, useAddStage, useReorderStages, usePublish, useValidateDraft, useAddStageComponent, useRemoveStageComponent, useReorderStageComponents, useUpdateComponentProps, usePreviewStart, usePreviewAnswer, useTemplateHistory } from '../api/hooks';
+import { compareHistoryEntry } from '../utils/historyHashes';
 import { renderComponent } from '../render/registry';
 import { TemplateDraftShared } from '../../../shared/templateEngineTypes';
 import { getComponentSchema } from './componentPropSchemas';
@@ -13,6 +14,8 @@ export const TemplateEngineEditor: React.FC<{ id: string; onBack: () => void }> 
     const reorder = useReorderStages(id);
     const publishMut = usePublish(id);
     const { data: validation } = useValidateDraft(id);
+    const { data: history } = useTemplateHistory(id) as { data: any[] | undefined };
+    const [selectedHistoryId, setSelectedHistoryId] = useState<string | null>(null);
     const [localName, setLocalName] = useState('');
     const [localDesc, setLocalDesc] = useState('');
 
@@ -378,7 +381,7 @@ export const TemplateEngineEditor: React.FC<{ id: string; onBack: () => void }> 
             {publishMut.isSuccess && <span className="text-xs text-green-700 ml-2">Publicado!</span>}
             {publishMut.error && <span className="text-xs text-red-600 ml-2">Erro: {(publishMut.error as Error).message}</span>}
         </section>
-        {(draft as any).published && <section className="space-y-2 border rounded p-3 bg-white">
+        {(draft as any).published ? <section className="space-y-2 border rounded p-3 bg-white">
             <h2 className="font-medium text-sm">Diff vs Publicado</h2>
             {(() => {
                 const pub = (draft as any).published; // caso o modelo draft traga snapshot (ajuste futuro: fetch published separado)
@@ -440,7 +443,48 @@ export const TemplateEngineEditor: React.FC<{ id: string; onBack: () => void }> 
                     {(addedStages.length || removedStages.length || addedComponents.length || removedComponents.length) === 0 && <div className="text-emerald-700">Sem mudanças estruturais desde a publicação.</div>}
                 </div>;
             })()}
-        </section>}
+        </section> : null}
+        <section className="space-y-2 border rounded p-3 bg-white">
+            <h2 className="font-medium text-sm">Timeline</h2>
+            {!history && <div className="text-[11px] text-gray-500">Carregando histórico...</div>}
+            {history && history.length === 0 && <div className="text-[11px] text-gray-500">Nenhuma publicação ainda.</div>}
+            {history && history.length > 0 && <ul className="divide-y border rounded bg-white">
+                {history.map((h: any) => {
+                    const active = h.id === selectedHistoryId;
+                    return <li key={h.id} className={`p-2 text-xs flex flex-col gap-1 ${active ? 'bg-blue-50' : ''}`}>
+                        <div className="flex items-center gap-2">
+                            <button className={`text-[10px] px-1 rounded border ${active ? 'bg-blue-600 text-white' : 'bg-gray-50'}`} onClick={() => setSelectedHistoryId(active ? null : h.id)}>{active ? '✓' : '⟲'}</button>
+                            <span className="font-mono text-[10px]">{h.version ? 'v' + h.version : h.op}</span>
+                            <span className="text-gray-500">{new Date(h.timestamp).toLocaleString()}</span>
+                            <span className="ml-auto text-[10px] text-gray-400">{h.stagesCount} stages / {h.componentsCount} comps</span>
+                        </div>
+                        <div className="flex flex-wrap gap-1 text-[9px] text-gray-500">
+                            <span title="metaHash" className="px-1 rounded bg-gray-100">M:{h.metaHash}</span>
+                            <span title="stagesHash" className="px-1 rounded bg-gray-100">S:{h.stagesHash}</span>
+                            <span title="componentsHash" className="px-1 rounded bg-gray-100">C:{h.componentsHash}</span>
+                        </div>
+                    </li>;
+                })}
+            </ul>}
+            {selectedHistoryId && (() => {
+                const entry = history?.find(h => h.id === selectedHistoryId);
+                if (!entry) return null;
+                const cmp = compareHistoryEntry(draft, entry);
+                // diffs estruturais adicionais
+                const addedStages = draft.stages.filter(s => !(entry as any).stagesHash /* fallback only hash-level */);
+                // Para granularidade real precisaríamos snapshot completo; por enquanto só apresentamos estado hash-level
+                return <div className="text-[11px] mt-2 p-2 border rounded bg-gray-50 space-y-2">
+                    <div className="font-medium mb-1">Diff Snapshot vs Atual</div>
+                    <ul className="list-disc ml-4 space-y-0.5">
+                        <li>Meta: {cmp.metaChanged ? <span className="text-amber-600">alterado</span> : <span className="text-emerald-700">igual</span>}</li>
+                        <li>Stages: {cmp.stagesChanged ? <span className="text-amber-600">alterado</span> : <span className="text-emerald-700">igual</span>}</li>
+                        <li>Componentes: {cmp.componentsChanged ? <span className="text-amber-600">alterado</span> : <span className="text-emerald-700">igual</span>}</li>
+                    </ul>
+                    {(draft as any).published && entry.version === (draft as any).published.version && <div className="text-[10px] text-gray-500">Esta entry é a versão publicada atual — use a seção "Diff vs Publicado" para detalhes de props.</div>}
+                    {(cmp.metaChanged || cmp.stagesChanged || cmp.componentsChanged) === false && <div className="text-[10px] text-gray-500">Nenhuma mudança estrutural agregada detectada (hashes idênticos).</div>}
+                </div>;
+            })()}
+        </section>
         <section className="space-y-2 border-t pt-4">
             <h2 className="font-medium">Preview Runtime (Draft)</h2>
             {!runtime && <button onClick={startPreview} disabled={previewStart.isPending} className="bg-gray-800 text-white px-3 py-1 rounded text-sm disabled:opacity-50">Iniciar Preview</button>}

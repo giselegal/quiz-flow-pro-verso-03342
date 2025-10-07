@@ -77,6 +77,7 @@ export const templatesApi = {
     async answerPreview(id: string, payload: { sessionId: string; stageId: string; optionIds: string[] }) {
         return http(`${BASE}/${id}/runtime/preview/answer`, { method: 'POST', body: JSON.stringify(payload) });
     },
+    async history(id: string) { return http(`${BASE}/${id}/history`); }
 };
 
 // Client específico para componentes (painel de propriedades)

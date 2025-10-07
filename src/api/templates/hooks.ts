@@ -6,7 +6,8 @@ const keys = {
     all: ['templates'] as const,
     list: () => [...keys.all, 'list'] as const,
     detail: (id: string) => [...keys.all, 'detail', id] as const,
-    validate: (id: string) => [...keys.all, 'validate', id] as const
+    validate: (id: string) => [...keys.all, 'validate', id] as const,
+    history: (id: string) => [...keys.all, 'history', id] as const
 };
 
 export function useTemplatesList() {
@@ -122,6 +123,10 @@ export function usePreviewStart(id: string) {
 
 export function usePreviewAnswer(id: string) {
     return useMutation({ mutationFn: (p: { sessionId: string; stageId: string; optionIds: string[] }) => templatesApi.answerPreview(id, p) });
+}
+
+export function useTemplateHistory(id: string | undefined) {
+    return useQuery({ queryKey: id ? keys.history(id) : ['templates', 'history', '_'], queryFn: () => id ? templatesApi.history(id) : Promise.resolve([]), enabled: !!id, staleTime: 5_000 });
 }
 
 export function useUpdateComponentProps(componentId: string, templateId?: string) {
