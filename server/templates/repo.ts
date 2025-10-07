@@ -61,7 +61,21 @@ class TemplateRepository implements ITemplateRepository {
     }
 }
 
-export const templateRepo = new TemplateRepository();
+let templateRepoSelected: ITemplateRepository;
+if ((process.env.PERSIST_TEMPLATES || '').toLowerCase() === 'sqlite') {
+    try {
+        // @ts-ignore
+        const { SqliteTemplateRepository } = await import('../persistence/sqlite/templateRepo.sqlite.js');
+        templateRepoSelected = new SqliteTemplateRepository();
+    } catch (e) {
+        console.warn('[persistence] Falha ao carregar SQLite para templates, usando memória', e);
+        templateRepoSelected = new TemplateRepository();
+    }
+} else {
+    templateRepoSelected = new TemplateRepository();
+}
+logger.info('persistence.templates.driver', { driver: (process.env.PERSIST_TEMPLATES || 'memory').toLowerCase() });
+export const templateRepo = templateRepoSelected;
 
 // Runtime session in-memory (MVP)
 export interface RuntimeSession {

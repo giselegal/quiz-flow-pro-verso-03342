@@ -26,4 +26,15 @@ db.exec(`CREATE TABLE IF NOT EXISTS runtime_sessions (
   completed INTEGER NOT NULL
 );`);
 
+db.exec(`CREATE TABLE IF NOT EXISTS templates (
+  id TEXT PRIMARY KEY,
+  name TEXT NOT NULL,
+  slug TEXT NOT NULL,
+  status TEXT NOT NULL,
+  draft_json TEXT NOT NULL,
+  published_snapshot_json TEXT,
+  created_at TEXT NOT NULL,
+  updated_at TEXT NOT NULL
+);`);
+
 export function nowIso() { return new Date().toISOString(); }
