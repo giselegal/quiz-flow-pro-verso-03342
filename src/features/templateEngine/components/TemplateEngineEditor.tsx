@@ -44,7 +44,14 @@ export const TemplateEngineEditor: React.FC<{ id: string; onBack: () => void }> 
     const addCmp = activeStage ? useAddStageComponent(draft.id, activeStage.id) : undefined;
     const remCmp = activeStage ? useRemoveStageComponent(draft.id, activeStage.id) : undefined;
     const reorderCmps = activeStage ? useReorderStageComponents(draft.id, activeStage.id) : undefined;
-    const [selectedComponentId, setSelectedComponentId] = useState<string | null>(null);
+    const [selectedComponentId, _setSelectedComponentId] = useState<string | null>(null);
+    function setSelectedComponentId(next: string | null) {
+        if (next !== selectedComponentId && dirtyKeys.size > 0) {
+            // flush antes de trocar
+            flush(true);
+        }
+        _setSelectedComponentId(next);
+    }
     const selectedComponent = selectedComponentId ? draft.components[selectedComponentId] : null;
     const updateComponentProps = selectedComponentId ? useUpdateComponentProps(selectedComponentId, draft.id) : undefined;
     // --- Batch / Optimistic props state ---
@@ -218,18 +225,29 @@ export const TemplateEngineEditor: React.FC<{ id: string; onBack: () => void }> 
                             <ul className="space-y-2">
                                 {s.componentIds.map((cid, cIndex) => {
                                     const comp = draft.components[cid];
+                                    // diff vs publicado (se houver snapshot)
+                                    const published = (draft as any).published?.components?.[cid];
+                                    let propDiffCount = 0;
+                                    if (published) {
+                                        const keys = new Set([...Object.keys(comp?.props || {}), ...Object.keys(published.props || {})]);
+                                        keys.forEach(k => { if (JSON.stringify(comp?.props?.[k]) !== JSON.stringify(published.props?.[k])) propDiffCount++; });
+                                    }
+                                    const isSelected = selectedComponentId === cid;
                                     return <li key={cid} className="border rounded p-2 bg-white shadow-sm">
                                         <div className="flex items-center gap-2 text-xs mb-2">
                                             <span className="font-mono bg-gray-100 px-1 rounded">{cIndex}</span>
-                                            <span className="font-semibold">{comp?.type || '??'}</span>
+                                            <span className="font-semibold flex items-center gap-1">{comp?.type || '??'}
+                                                {propDiffCount > 0 && <span title={`${propDiffCount} props alteradas vs publicado`} className="text-[9px] px-1 rounded bg-blue-100 text-blue-700">Δ{propDiffCount}</span>}
+                                            </span>
                                             <span className="text-gray-400">{cid}</span>
+                                            {isSelected && dirtyKeys.size > 0 && <span className="text-[9px] text-amber-600">{dirtyKeys.size} pend.</span>}
                                             <div className="ml-auto flex gap-1">
                                                 <button onClick={() => moveComponent(cIndex, -1)} disabled={cIndex === 0 || reorderCmps?.isPending} className="border px-1 rounded disabled:opacity-40">↑</button>
                                                 <button onClick={() => moveComponent(cIndex, 1)} disabled={cIndex === s.componentIds.length - 1 || reorderCmps?.isPending} className="border px-1 rounded disabled:opacity-40">↓</button>
                                                 <button onClick={() => removeComponent(cid)} disabled={remCmp?.isPending} className="border px-1 rounded text-red-600 disabled:opacity-40">✕</button>
                                             </div>
                                         </div>
-                                        {comp ? <div className={`text-xs cursor-pointer ${selectedComponentId === cid ? 'ring-2 ring-blue-500 rounded' : ''}`} onClick={() => setSelectedComponentId(cid)}>{renderComponent({ ...comp, kind: (comp as any).kind || (comp as any).type }, { draft: draft as any, stageId: s.id })}</div> : <div className="text-xs text-red-600">Componente inexistente</div>}
+                                        {comp ? <div className={`text-xs cursor-pointer ${isSelected ? 'ring-2 ring-blue-500 rounded' : ''}`} onClick={() => setSelectedComponentId(cid)}>{renderComponent({ ...comp, kind: (comp as any).kind || (comp as any).type }, { draft: draft as any, stageId: s.id })}</div> : <div className="text-xs text-red-600">Componente inexistente</div>}
                                     </li>;
                                 })}
                                 {s.componentIds.length === 0 && <li className="text-[11px] text-gray-500">Nenhum componente ainda.</li>}
@@ -281,14 +299,20 @@ export const TemplateEngineEditor: React.FC<{ id: string; onBack: () => void }> 
                             }
                             if (field.type === 'text') {
                                 return <div key={field.name} className="flex flex-col relative">
-                                    <div className="flex items-center gap-1">{baseLabel}{issuesForField.map(is => <span key={is.code} title={is.message} className={`text-[9px] px-1 rounded ${(is as any).severity === 'error' ? 'bg-red-200 text-red-700' : 'bg-amber-200 text-amber-800'}`}>{(is as any).severity === 'error' ? 'E' : 'W'}</span>)}{isDirty && <span className="w-2 h-2 rounded-full bg-blue-500 inline-block" />}</div>
+                                    <div className="flex items-center gap-1">{baseLabel}{issuesForField.map(is => <span key={is.code} title={is.message} className={`text-[9px] px-1 rounded ${(is as any).severity === 'error' ? 'bg-red-200 text-red-700' : 'bg-amber-200 text-amber-800'}`}>{(is as any).severity === 'error' ? 'E' : 'W'}</span>)}{isDirty && <>
+                                        <span className="w-2 h-2 rounded-full bg-blue-500 inline-block" />
+                                        <button type="button" className="text-[9px] text-gray-500 underline" onClick={() => markChange(field.name, serverVal)}>↺</button>
+                                    </>}</div>
                                     <textarea className={`border rounded px-1 py-0.5 text-xs bg-gray-50 resize-y min-h-[60px] ${hasError ? 'border-red-500 ring-1 ring-red-400' : hasWarning ? 'border-amber-400' : ''}`} value={val || ''} placeholder={field.placeholder}
                                         onChange={e => markChange(field.name, e.target.value)} />
                                 </div>;
                             }
                             if (field.type === 'number') {
                                 return <div key={field.name} className="flex flex-col">
-                                    <div className="flex items-center gap-1">{baseLabel}{issuesForField.map(is => <span key={is.code} title={is.message} className={`text-[9px] px-1 rounded ${(is as any).severity === 'error' ? 'bg-red-200 text-red-700' : 'bg-amber-200 text-amber-800'}`}>{(is as any).severity === 'error' ? 'E' : 'W'}</span>)}{isDirty && <span className="w-2 h-2 rounded-full bg-blue-500 inline-block" />}</div>
+                                    <div className="flex items-center gap-1">{baseLabel}{issuesForField.map(is => <span key={is.code} title={is.message} className={`text-[9px] px-1 rounded ${(is as any).severity === 'error' ? 'bg-red-200 text-red-700' : 'bg-amber-200 text-amber-800'}`}>{(is as any).severity === 'error' ? 'E' : 'W'}</span>)}{isDirty && <>
+                                        <span className="w-2 h-2 rounded-full bg-blue-500 inline-block" />
+                                        <button type="button" className="text-[9px] text-gray-500 underline" onClick={() => markChange(field.name, serverVal)}>↺</button>
+                                    </>}</div>
                                     <input type="number" className={`border rounded px-1 py-0.5 text-xs bg-gray-50 ${hasError ? 'border-red-500 ring-1 ring-red-400' : hasWarning ? 'border-amber-400' : ''}`} value={val ?? ''} placeholder={field.placeholder}
                                         onChange={e => {
                                             const num = e.target.value === '' ? undefined : Number(e.target.value);
@@ -325,7 +349,10 @@ export const TemplateEngineEditor: React.FC<{ id: string; onBack: () => void }> 
                             }
                             // default string
                             return <div key={field.name} className="flex flex-col">
-                                <div className="flex items-center gap-1">{baseLabel}{isDirty && <span className="w-2 h-2 rounded-full bg-blue-500 inline-block" />}</div>
+                                <div className="flex items-center gap-1">{baseLabel}{isDirty && <>
+                                    <span className="w-2 h-2 rounded-full bg-blue-500 inline-block" />
+                                    <button type="button" className="text-[9px] text-gray-500 underline" onClick={() => markChange(field.name, serverVal)}>↺</button>
+                                </>}</div>
                                 <input className="border rounded px-1 py-0.5 text-xs bg-gray-50" value={val || ''} placeholder={field.placeholder}
                                     onChange={e => markChange(field.name, e.target.value)} />
                             </div>;
