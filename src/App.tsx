@@ -38,6 +38,7 @@ import { BlockRegistryProvider, DEFAULT_BLOCK_DEFINITIONS } from '@/runtime/quiz
 // Novo Template Engine (feature flag controlada por VITE_USE_TEMPLATE_ENGINE)
 import { TemplateEnginePage } from '@/features/templateEngine';
 import { TemplateEnginePageWrapperOpen } from '@/features/templateEngine/components/TemplateEnginePage';
+import QuizEstiloModularRedirect from '@/features/templateEngine/components/QuizEstiloModularRedirect';
 
 // 🏠 PÁGINAS ESSENCIAIS
 const Home = lazy(() => import('./pages/Home'));
@@ -152,6 +153,12 @@ function App() {
                               </UnifiedCRUDProvider>
                             </div>
                           </EditorErrorBoundary>
+                        </Route>
+                        {/* Versão modular 4 colunas para /quiz-estilo (redirect automático) */}
+                        <Route path="/editor/quiz-estilo-modular">
+                          <div data-testid="quiz-estilo-modular-redirect">
+                            <QuizEstiloModularRedirect />
+                          </div>
                         </Route>
 
                         {/* 🧩 EDITOR MODULAR - Sistema experimental com componentes modulares */}
