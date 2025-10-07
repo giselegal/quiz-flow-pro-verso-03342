@@ -33,11 +33,9 @@ export default function QuestionStep({
     const hasImages = Array.isArray(data.options) && data.options.some(opt => !!opt.image);
     // Ajuste: sempre começar em 1 coluna para mobile para dar mais destaque
     // e subir para 2 colunas em sm/md e 3 em lg quando há imagens.
-    const gridClass = hasImages
-        // Menos colunas em desktop para dobrar área visual das imagens; 3 colunas só em telas muito largas
-        ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3'
-        : 'grid-cols-1';
-    const gapClass = hasImages ? 'gap-5 md:gap-6' : 'gap-6';
+    // NOVA REGRA: Se tem imagens -> já começar em 2 colunas no mobile e manter 2 colunas (maximiza área de cada imagem evitando 3 colunas estreitas)
+    const gridClass = hasImages ? 'grid-cols-2' : 'grid-cols-1';
+    const gapClass = hasImages ? 'gap-3 sm:gap-4' : 'gap-6';
 
     const handleOptionClick = (optionId: string) => {
         const isSelected = safeCurrentAnswers.includes(optionId);
@@ -59,7 +57,7 @@ export default function QuestionStep({
         : 'Selecione uma opção';
 
     return (
-        <div className="bg-white px-2 pt-4 pb-6 sm:p-5 md:p-12 rounded-lg shadow-lg text-center max-w-6xl mx-auto">
+        <div className="bg-white px-1 pt-3 pb-5 sm:px-2 sm:pt-4 sm:pb-6 md:p-8 rounded-lg shadow-lg text-center max-w-6xl mx-auto">
             <h2 className="text-xl md:text-2xl font-bold mb-4">
                 {data.questionNumber}
             </h2>
@@ -72,7 +70,7 @@ export default function QuestionStep({
                 {selectionText} ({safeCurrentAnswers.length}/{data.requiredSelections || 1})
             </p>
 
-            <div className={`grid ${gridClass} ${gapClass} mb-6 md:mb-8`}>
+            <div className={`grid ${gridClass} ${gapClass} mb-5 md:mb-8`}>
                 {data.options?.map((option) => (
                     <div
                         key={option.id}
@@ -81,9 +79,9 @@ export default function QuestionStep({
                         aria-pressed={safeCurrentAnswers.includes(option.id)}
                         onClick={() => handleOptionClick(option.id)}
                         onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleOptionClick(option.id); } }}
-                        className={`option-button group rounded-lg text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-[#deac6d]/40 disabled:pointer-events-none disabled:opacity-50 overflow-hidden w-full flex h-auto pt-2 pb-3 flex-col items-center justify-start border-2 cursor-pointer break-words whitespace-normal ${safeCurrentAnswers.includes(option.id)
-                            ? 'border-[#5b4135] bg-white shadow-md'
-                            : 'border-zinc-200 bg-white hover:border-[#deac6d] hover:shadow'
+                        className={`option-button group rounded-sm text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-[#deac6d]/40 disabled:pointer-events-none disabled:opacity-50 overflow-hidden w-full flex h-auto pt-1 pb-1.5 flex-col items-center justify-start border cursor-pointer break-words whitespace-normal ${safeCurrentAnswers.includes(option.id)
+                            ? 'border-[#5b4135] bg-white shadow-sm'
+                            : 'border-zinc-200 bg-white hover:border-[#deac6d]'
                             }`}
                     >
                         {option.image && (
@@ -98,7 +96,7 @@ export default function QuestionStep({
                             </div>
                         )}
                         <p
-                            className="text-center font-medium text-sm leading-relaxed px-2 sm:px-3 pt-2 w-full break-words hyphens-auto whitespace-normal"
+                            className="text-center font-medium text-xs sm:text-sm leading-snug px-1.5 sm:px-2 pt-1.5 w-full break-words hyphens-auto whitespace-normal tracking-tight"
                             style={{ wordBreak: 'break-word', overflowWrap: 'anywhere' }}
                         >
                             {option.text}

@@ -7,7 +7,7 @@ import { QUIZ_STEPS } from '@/data/quizSteps';
 
 /**
  * Testes de layout responsivo para etapas de perguntas:
- * - Perguntas com imagens devem aplicar grid de 1 coluna em mobile, 2 colunas em sm/md e 3 em desktop (classe lg:grid-cols-3)
+ * - Perguntas com imagens agora devem aplicar 2 colunas já no mobile (grid-cols-2) para maximizar uso do espaço visual
  * - Perguntas somente texto devem manter 1 coluna em todos breakpoints (grid-cols-1)
  */
 
@@ -43,10 +43,8 @@ describe('Layout responsivo QuestionStep', () => {
         const grid = document.querySelector('[class*="grid-cols"]');
         expect(grid).toBeTruthy();
         const classList = grid?.className || '';
-        expect(classList).toMatch(/grid-cols-1/); // base mobile
-        expect(classList).toMatch(/sm:grid-cols-2/); // small/medium breakpoints
-        expect(classList).toMatch(/lg:grid-cols-2/); // desktop padrão agora 2 colunas (imagens maiores)
-        expect(classList).toMatch(/xl:grid-cols-3/); // super desktop 3 colunas
+        expect(classList).toMatch(/grid-cols-2/); // base mobile já 2 colunas com imagens
+        // Não esperamos mais classes responsivas adicionais específicas de colunas para imagens (layout fixo em 2 colunas)
     });
 
     it('step-3 (somente texto) utiliza 1 coluna', async () => {
@@ -79,8 +77,8 @@ describe('Layout responsivo QuestionStep', () => {
         const grid = document.querySelector('[class*="grid-cols"]');
         expect(grid).toBeTruthy();
         const classList = grid?.className || '';
-        // Deve conter apenas grid-cols-1 e não conter lg:grid-cols-3
+        // Deve conter apenas grid-cols-1 (somente texto)
         expect(classList).toMatch(/grid-cols-1/);
-        expect(classList).not.toMatch(/lg:grid-cols-3/);
+        expect(classList).not.toMatch(/grid-cols-2/);
     });
 });
