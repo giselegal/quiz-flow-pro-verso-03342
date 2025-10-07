@@ -27,8 +27,13 @@ export default function QuestionStep({
     // Verificação de segurança para currentAnswers
     const safeCurrentAnswers = currentAnswers || [];
 
-    const hasImages = data.options?.[0]?.image;
-    const gridClass = hasImages ? 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3' : 'grid-cols-1';
+    // Determina se qualquer opção possui imagem para ajustar layout responsivo.
+    // Regra solicitada: se houver imagens -> 3 colunas em desktop, 2 colunas em tablet/mobile.
+    // Caso contrário (todas texto) -> sempre 1 coluna.
+    const hasImages = Array.isArray(data.options) && data.options.some(opt => !!opt.image);
+    const gridClass = hasImages
+        ? 'grid-cols-2 md:grid-cols-2 lg:grid-cols-3'
+        : 'grid-cols-1';
 
     const handleOptionClick = (optionId: string) => {
         const isSelected = safeCurrentAnswers.includes(optionId);
