@@ -78,6 +78,7 @@
     "smoke:step1": "node scripts/smoke-step1.mjs",
     "smoke:step1:persist": "node scripts/smoke-step1-persist.mjs",
     "smoke:e2e:3x": "node scripts/smoke-e2e-3x.mjs",
+    "smoke:full-flow": "node scripts/smoke-full-flow.mjs",
     "simulate:dcc": "node scripts/simulate-dcc.mjs"
   },
   "smoke": {

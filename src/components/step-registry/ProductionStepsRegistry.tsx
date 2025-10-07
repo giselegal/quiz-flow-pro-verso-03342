@@ -310,6 +310,7 @@ const createStepConfig = (overrides: Partial<StepConfig> = {}): StepConfig => ({
  * 📋 DEFINIÇÕES DOS STEPS DE PRODUÇÃO
  */
 export const PRODUCTION_STEPS: StepComponent[] = [
+    // Introdução (1)
     {
         id: 'step-01',
         name: 'Introdução',
@@ -320,56 +321,58 @@ export const PRODUCTION_STEPS: StepComponent[] = [
             metadata: { category: 'intro' }
         })
     },
-
-    // Steps de perguntas (2-11)
+    // Perguntas principais (2–11)
     ...Array.from({ length: 10 }, (_, i) => ({
         id: `step-${String(i + 2).padStart(2, '0')}`,
         name: `Pergunta ${i + 1}`,
         component: QuestionStepAdapter,
-        config: createStepConfig({
-            metadata: { category: 'question' }
-        })
+        config: createStepConfig({ metadata: { category: 'question' } })
     })),
-
-    // Pergunta estratégica (12)
+    // Transição pós-perguntas (12)
     {
         id: 'step-12',
-        name: 'Pergunta Estratégica',
+        name: 'Transição Estratégica',
+        component: TransitionStepAdapter,
+        config: createStepConfig({
+            allowNavigation: { next: false, previous: false },
+            metadata: { category: 'transition' }
+        })
+    },
+    // Perguntas estratégicas (13–18)
+    ...Array.from({ length: 6 }, (_, i) => ({
+        id: `step-${String(i + 13).padStart(2, '0')}`,
+        name: `Pergunta Estratégica ${i + 1}`,
         component: StrategicQuestionStepAdapter,
         config: createStepConfig({
             validation: { required: true },
             metadata: { category: 'strategic' }
         })
-    },
-
-    // Transição (13)
+    })),
+    // Transição para resultado (19)
     {
-        id: 'step-13',
-        name: 'Processando Resultado',
+        id: 'step-19',
+        name: 'Transição Resultado',
         component: TransitionStepAdapter,
         config: createStepConfig({
-            allowNavigation: { next: false, previous: false }, // Auto-navigation
+            allowNavigation: { next: false, previous: false },
+            // Usamos 'transition' como categoria padrão; o componente identifica 'transition-result' pelo tipo real no data source original
             metadata: { category: 'transition' }
         })
     },
-
-    // Resultado (14)
+    // Resultado (20)
     {
-        id: 'step-14',
+        id: 'step-20',
         name: 'Seu Resultado',
         component: ResultStepAdapter,
-        config: createStepConfig({
-            metadata: { category: 'result' }
-        })
+        config: createStepConfig({ metadata: { category: 'result' } })
     },
-
-    // Oferta (15)
+    // Oferta (21)
     {
-        id: 'step-15',
+        id: 'step-21',
         name: 'Oferta Personalizada',
         component: OfferStepAdapter,
         config: createStepConfig({
-            allowNavigation: { next: false, previous: true }, // Final step
+            allowNavigation: { next: false, previous: true },
             metadata: { category: 'offer' }
         })
     }
