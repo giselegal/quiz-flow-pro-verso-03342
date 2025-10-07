@@ -47,6 +47,61 @@ export const TemplateEngineEditor: React.FC<{ id: string; onBack: () => void }> 
     const [selectedComponentId, setSelectedComponentId] = useState<string | null>(null);
     const selectedComponent = selectedComponentId ? draft.components[selectedComponentId] : null;
     const updateComponentProps = selectedComponentId ? useUpdateComponentProps(selectedComponentId, draft.id) : undefined;
+    // --- Batch / Optimistic props state ---
+    const [localProps, setLocalProps] = useState<Record<string, any>>({});
+    const [dirtyKeys, setDirtyKeys] = useState<Set<string>>(new Set());
+    const [isFlushing, setIsFlushing] = useState(false);
+    const [lastSavedAt, setLastSavedAt] = useState<number | null>(null);
+    const debounceRef = React.useRef<any>(null);
+
+    React.useEffect(() => {
+        if (selectedComponent) {
+            setLocalProps({ ...(selectedComponent.props || {}) });
+            setDirtyKeys(new Set());
+        } else {
+            setLocalProps({});
+            setDirtyKeys(new Set());
+        }
+    }, [selectedComponentId, selectedComponent?.id]);
+
+    function markChange(key: string, value: any) {
+        setLocalProps(prev => ({ ...prev, [key]: value }));
+        setDirtyKeys(prev => {
+            const next = new Set(prev);
+            if (selectedComponent && JSON.stringify((selectedComponent.props || {})[key]) === JSON.stringify(value)) next.delete(key); else next.add(key);
+            return next;
+        });
+    }
+    function buildPatch(): Record<string, any> {
+        if (!selectedComponent) return {};
+        const patch: Record<string, any> = {};
+        dirtyKeys.forEach(k => { patch[k] = localProps[k]; });
+        return patch;
+    }
+    function flush(now = false) {
+        if (!updateComponentProps || dirtyKeys.size === 0) return;
+        const patch = buildPatch();
+        if (Object.keys(patch).length === 0) return;
+        setIsFlushing(true);
+        updateComponentProps.mutate(patch, {
+            onSettled: () => setIsFlushing(false),
+            onSuccess: () => { setLastSavedAt(Date.now()); setDirtyKeys(new Set()); }
+        });
+        if (now && debounceRef.current) clearTimeout(debounceRef.current);
+    }
+    React.useEffect(() => {
+        if (dirtyKeys.size === 0) return;
+        if (debounceRef.current) clearTimeout(debounceRef.current);
+        debounceRef.current = setTimeout(() => flush(), 700);
+        return () => { if (debounceRef.current) clearTimeout(debounceRef.current); };
+    }, [Array.from(dirtyKeys).join('|'), localProps]);
+    function revertChanges() {
+        if (!selectedComponent) return;
+        setLocalProps({ ...(selectedComponent.props || {}) });
+        setDirtyKeys(new Set());
+        if (debounceRef.current) clearTimeout(debounceRef.current);
+    }
+
     // Preview runtime (draft) - simplificado: apenas inicia e mantém estado local de respostas
     const previewStart = usePreviewStart(draft.id);
     const answerPreview = usePreviewAnswer(draft.id);
@@ -192,7 +247,16 @@ export const TemplateEngineEditor: React.FC<{ id: string; onBack: () => void }> 
                 const props = selectedComponent.props || {};
                 const compIssues = validation ? [...validation.errors, ...validation.warnings].filter(i => i.message.includes(`[${selectedComponent.id}]`)) : [];
                 const fieldIssues = (fieldName: string) => compIssues.filter(ci => (ci as any).field === fieldName);
+                const statusLabel = isFlushing ? 'Salvando...' : dirtyKeys.size ? `${dirtyKeys.size} pendente(s)` : lastSavedAt ? 'Salvo' : '—';
                 return <div className="space-y-3 text-xs">
+                    <div className="flex items-center gap-2 text-[10px] p-1 rounded bg-gray-50 border">
+                        <span className="font-medium">Sync:</span>
+                        <span className={isFlushing ? 'text-amber-600' : dirtyKeys.size ? 'text-blue-600' : 'text-emerald-700'}>{statusLabel}</span>
+                        <div className="ml-auto flex gap-1">
+                            <button onClick={() => flush(true)} disabled={isFlushing || dirtyKeys.size === 0} className="px-2 py-0.5 rounded border bg-white disabled:opacity-40">Aplicar agora</button>
+                            <button onClick={revertChanges} disabled={isFlushing || dirtyKeys.size === 0} className="px-2 py-0.5 rounded border bg-white text-red-600 disabled:opacity-40">Reverter</button>
+                        </div>
+                    </div>
                     {compIssues.length > 0 && <div className="space-y-1">
                         {compIssues.map(ci => {
                             const sev = (ci as any).severity || (ci.code.includes('ERROR') ? 'error' : 'warning');
@@ -202,31 +266,33 @@ export const TemplateEngineEditor: React.FC<{ id: string; onBack: () => void }> 
                     {!schema && <div className="text-[11px] text-amber-600">Sem schema registrado — fallback exibindo JSON bruto.</div>}
                     {schema && <div className="space-y-3">
                         {schema.fields.map(field => {
-                            const val = props[field.name];
+                            const serverVal = props[field.name];
+                            const val = localProps[field.name];
+                            const isDirty = JSON.stringify(serverVal) !== JSON.stringify(val);
                             const issuesForField = fieldIssues(field.name);
                             const hasError = issuesForField.some(i => (i as any).severity === 'error');
                             const hasWarning = issuesForField.some(i => (i as any).severity === 'warning');
                             const baseLabel = <label className="text-[10px] uppercase tracking-wide text-gray-500 flex items-center gap-1">{field.label}{field.required && <span className="text-red-500">*</span>}</label>;
                             if (field.type === 'boolean') {
                                 return <div key={field.name} className="flex items-center gap-2">
-                                    <input type="checkbox" defaultChecked={!!val} onChange={e => updateComponentProps?.mutate({ [field.name]: e.target.checked })} />
-                                    <span className="text-[11px]">{field.label}</span>
+                                    <input type="checkbox" checked={!!val} onChange={e => markChange(field.name, e.target.checked)} />
+                                    <span className="text-[11px] flex items-center gap-1">{field.label}{isDirty && <span className="w-2 h-2 rounded-full bg-blue-500 inline-block" />}</span>
                                 </div>;
                             }
                             if (field.type === 'text') {
                                 return <div key={field.name} className="flex flex-col relative">
-                                    <div className="flex items-center gap-1">{baseLabel}{issuesForField.map(is => <span key={is.code} title={is.message} className={`text-[9px] px-1 rounded ${(is as any).severity === 'error' ? 'bg-red-200 text-red-700' : 'bg-amber-200 text-amber-800'}`}>{(is as any).severity === 'error' ? 'E' : 'W'}</span>)}</div>
-                                    <textarea className={`border rounded px-1 py-0.5 text-xs bg-gray-50 resize-y min-h-[60px] ${hasError ? 'border-red-500 ring-1 ring-red-400' : hasWarning ? 'border-amber-400' : ''}`} defaultValue={val || ''} placeholder={field.placeholder}
-                                        onBlur={e => updateComponentProps?.mutate({ [field.name]: e.target.value })} />
+                                    <div className="flex items-center gap-1">{baseLabel}{issuesForField.map(is => <span key={is.code} title={is.message} className={`text-[9px] px-1 rounded ${(is as any).severity === 'error' ? 'bg-red-200 text-red-700' : 'bg-amber-200 text-amber-800'}`}>{(is as any).severity === 'error' ? 'E' : 'W'}</span>)}{isDirty && <span className="w-2 h-2 rounded-full bg-blue-500 inline-block" />}</div>
+                                    <textarea className={`border rounded px-1 py-0.5 text-xs bg-gray-50 resize-y min-h-[60px] ${hasError ? 'border-red-500 ring-1 ring-red-400' : hasWarning ? 'border-amber-400' : ''}`} value={val || ''} placeholder={field.placeholder}
+                                        onChange={e => markChange(field.name, e.target.value)} />
                                 </div>;
                             }
                             if (field.type === 'number') {
                                 return <div key={field.name} className="flex flex-col">
-                                    <div className="flex items-center gap-1">{baseLabel}{issuesForField.map(is => <span key={is.code} title={is.message} className={`text-[9px] px-1 rounded ${(is as any).severity === 'error' ? 'bg-red-200 text-red-700' : 'bg-amber-200 text-amber-800'}`}>{(is as any).severity === 'error' ? 'E' : 'W'}</span>)}</div>
-                                    <input type="number" className={`border rounded px-1 py-0.5 text-xs bg-gray-50 ${hasError ? 'border-red-500 ring-1 ring-red-400' : hasWarning ? 'border-amber-400' : ''}`} defaultValue={val ?? ''} placeholder={field.placeholder}
-                                        onBlur={e => {
+                                    <div className="flex items-center gap-1">{baseLabel}{issuesForField.map(is => <span key={is.code} title={is.message} className={`text-[9px] px-1 rounded ${(is as any).severity === 'error' ? 'bg-red-200 text-red-700' : 'bg-amber-200 text-amber-800'}`}>{(is as any).severity === 'error' ? 'E' : 'W'}</span>)}{isDirty && <span className="w-2 h-2 rounded-full bg-blue-500 inline-block" />}</div>
+                                    <input type="number" className={`border rounded px-1 py-0.5 text-xs bg-gray-50 ${hasError ? 'border-red-500 ring-1 ring-red-400' : hasWarning ? 'border-amber-400' : ''}`} value={val ?? ''} placeholder={field.placeholder}
+                                        onChange={e => {
                                             const num = e.target.value === '' ? undefined : Number(e.target.value);
-                                            updateComponentProps?.mutate({ [field.name]: num });
+                                            markChange(field.name, num);
                                         }} />
                                 </div>;
                             }
@@ -234,54 +300,39 @@ export const TemplateEngineEditor: React.FC<{ id: string; onBack: () => void }> 
                                 const options = Array.isArray(val) ? val : [];
                                 return <div key={field.name} className="flex flex-col gap-1 border rounded p-2 bg-gray-50">
                                     <div className="flex items-center justify-between">
-                                        <span className="text-[10px] uppercase tracking-wide text-gray-500 flex items-center gap-1">{field.label}{issuesForField.map(is => <span key={is.code} title={is.message} className={`text-[9px] px-1 rounded ${(is as any).severity === 'error' ? 'bg-red-200 text-red-700' : 'bg-amber-200 text-amber-800'}`}>{(is as any).severity === 'error' ? 'E' : 'W'}</span>)}</span>
+                                        <span className="text-[10px] uppercase tracking-wide text-gray-500 flex items-center gap-1">{field.label}{issuesForField.map(is => <span key={is.code} title={is.message} className={`text-[9px] px-1 rounded ${(is as any).severity === 'error' ? 'bg-red-200 text-red-700' : 'bg-amber-200 text-amber-800'}`}>{(is as any).severity === 'error' ? 'E' : 'W'}</span>)}{isDirty && <span className="w-2 h-2 rounded-full bg-blue-500 inline-block" />}</span>
                                         <button className="text-[10px] text-blue-600" onClick={() => {
                                             const next = [...options, { id: `opt${options.length + 1}`, label: `Opção ${options.length + 1}` }];
-                                            updateComponentProps?.mutate({ [field.name]: next });
+                                            markChange(field.name, next);
                                         }}>+ opção</button>
                                     </div>
                                     {options.length === 0 && <div className="text-[10px] text-gray-500">Nenhuma opção.</div>}
                                     <ul className="space-y-1">
                                         {options.map((o: any, i: number) => <li key={o.id} className="flex items-center gap-1">
-                                            <input className="border rounded px-1 py-0.5 text-[10px] w-16" defaultValue={o.id} title="id" onBlur={e => {
-                                                const next = [...options]; next[i] = { ...next[i], id: e.target.value };
-                                                updateComponentProps?.mutate({ [field.name]: next });
-                                            }} />
-                                            <input className="border rounded px-1 py-0.5 text-[10px] flex-1" defaultValue={o.label} title="label" onBlur={e => {
-                                                const next = [...options]; next[i] = { ...next[i], label: e.target.value };
-                                                updateComponentProps?.mutate({ [field.name]: next });
-                                            }} />
-                                            <input className="border rounded px-1 py-0.5 text-[10px] w-14" defaultValue={o.points ?? ''} placeholder="pts" title="points" onBlur={e => {
-                                                const next = [...options]; const v = e.target.value === '' ? undefined : Number(e.target.value); next[i] = { ...next[i], points: v };
-                                                updateComponentProps?.mutate({ [field.name]: next });
-                                            }} />
-                                            <button className="text-[10px] text-red-600" onClick={() => {
-                                                const next = options.filter((_: any, idx: number) => idx !== i);
-                                                updateComponentProps?.mutate({ [field.name]: next });
-                                            }}>✕</button>
+                                            <input className="border rounded px-1 py-0.5 text-[10px] w-16" value={o.id} title="id" onChange={e => { const next = [...options]; next[i] = { ...next[i], id: e.target.value }; markChange(field.name, next); }} />
+                                            <input className="border rounded px-1 py-0.5 text-[10px] flex-1" value={o.label} title="label" onChange={e => { const next = [...options]; next[i] = { ...next[i], label: e.target.value }; markChange(field.name, next); }} />
+                                            <input className="border rounded px-1 py-0.5 text-[10px] w-14" value={o.points ?? ''} placeholder="pts" title="points" onChange={e => { const next = [...options]; const v = e.target.value === '' ? undefined : Number(e.target.value); next[i] = { ...next[i], points: v }; markChange(field.name, next); }} />
+                                            <button className="text-[10px] text-red-600" onClick={() => { const next = options.filter((_: any, idx: number) => idx !== i); markChange(field.name, next); }}>✕</button>
                                         </li>)}
                                     </ul>
                                 </div>;
                             }
                             if (field.type === 'json') {
                                 return <div key={field.name} className="flex flex-col">
-                                    {baseLabel}
-                                    <textarea className="border rounded px-1 py-0.5 text-xs font-mono bg-gray-50 min-h-[100px]" defaultValue={JSON.stringify(val, null, 2)} onBlur={e => {
-                                        try { const parsed = JSON.parse(e.target.value); updateComponentProps?.mutate({ [field.name]: parsed }); } catch { /* ignore */ }
-                                    }} />
+                                    <div className="flex items-center gap-1">{baseLabel}{isDirty && <span className="w-2 h-2 rounded-full bg-blue-500 inline-block" />}</div>
+                                    <textarea className="border rounded px-1 py-0.5 text-xs font-mono bg-gray-50 min-h-[100px]" value={(() => { try { return JSON.stringify(val, null, 2); } catch { return ''; } })()} onChange={e => { try { const parsed = JSON.parse(e.target.value); markChange(field.name, parsed); } catch { /* ignore until válido */ } }} />
                                 </div>;
                             }
                             // default string
                             return <div key={field.name} className="flex flex-col">
-                                {baseLabel}
-                                <input className="border rounded px-1 py-0.5 text-xs bg-gray-50" defaultValue={val || ''} placeholder={field.placeholder}
-                                    onBlur={e => updateComponentProps?.mutate({ [field.name]: e.target.value })} />
+                                <div className="flex items-center gap-1">{baseLabel}{isDirty && <span className="w-2 h-2 rounded-full bg-blue-500 inline-block" />}</div>
+                                <input className="border rounded px-1 py-0.5 text-xs bg-gray-50" value={val || ''} placeholder={field.placeholder}
+                                    onChange={e => markChange(field.name, e.target.value)} />
                             </div>;
                         })}
                     </div>}
-                    {!schema && <pre className="text-[10px] max-h-40 overflow-auto border rounded p-2 bg-gray-50">{JSON.stringify(props, null, 2)}</pre>}
-                    <div className="text-[10px] text-gray-500">(Edição sem inline — schema dinâmico alfa)</div>
-                    {updateComponentProps?.isPending && <div className="text-[10px] text-blue-600">Salvando...</div>}
+                    {!schema && <pre className="text-[10px] max-h-40 overflow-auto border rounded p-2 bg-gray-50">{JSON.stringify(localProps, null, 2)}</pre>}
+                    <div className="text-[10px] text-gray-500">Batch edit α — alterações agrupadas com debounce (700ms)</div>
                 </div>;
             })()}
         </section>
@@ -308,6 +359,21 @@ export const TemplateEngineEditor: React.FC<{ id: string; onBack: () => void }> 
                 const removedStages = pub.stages.filter((ps: any) => !draft.stages.find(s => s.id === ps.id));
                 const addedComponents = Object.keys(draft.components).filter(cid => !pub.components[cid]);
                 const removedComponents = Object.keys(pub.components).filter((cid: string) => !draft.components[cid]);
+                // Diff de props por componente
+                function diffComponentProps(current: any, previous: any) {
+                    const diffs: { key: string; before: any; after: any }[] = [];
+                    const keys = new Set([...Object.keys(current?.props || {}), ...Object.keys(previous?.props || {})]);
+                    keys.forEach(k => {
+                        const a = current?.props?.[k];
+                        const b = previous?.props?.[k];
+                        if (JSON.stringify(a) !== JSON.stringify(b)) diffs.push({ key: k, before: b, after: a });
+                    });
+                    return diffs;
+                }
+                const modifiedComponents = Object.keys(draft.components).filter(cid => pub.components[cid]).map(cid => {
+                    return { id: cid, diffs: diffComponentProps(draft.components[cid], pub.components[cid]) };
+                }).filter(c => c.diffs.length > 0);
+                const totalPropChanges = modifiedComponents.reduce((acc, c) => acc + c.diffs.length, 0);
                 return <div className="text-[11px] space-y-2">
                     <div className="grid grid-cols-2 gap-2">
                         <div className="bg-gray-50 p-2 rounded border">
@@ -316,6 +382,8 @@ export const TemplateEngineEditor: React.FC<{ id: string; onBack: () => void }> 
                                 <li>Stages atuais: {draft.stages.length} (publicado: {pub.stages.length})</li>
                                 <li>Componentes atuais: {Object.keys(draft.components).length} (publicado: {Object.keys(pub.components).length})</li>
                                 <li>Versão publicada: {pub.version}</li>
+                                <li>Componentes com props alteradas: {modifiedComponents.length}</li>
+                                <li>Total de props alteradas: {totalPropChanges}</li>
                             </ul>
                         </div>
                         <div className="bg-gray-50 p-2 rounded border">
@@ -328,6 +396,28 @@ export const TemplateEngineEditor: React.FC<{ id: string; onBack: () => void }> 
                             </ul>
                         </div>
                     </div>
+                    {modifiedComponents.length > 0 && <div className="bg-gray-50 p-2 rounded border">
+                        <div className="font-semibold mb-1">Diff de Propriedades</div>
+                        <ul className="space-y-1">
+                            {modifiedComponents.map(mc => <li key={mc.id} className="border rounded p-2 bg-white">
+                                <div className="flex items-center gap-2 mb-1">
+                                    <span className="font-mono bg-gray-100 px-1 rounded">{mc.id.slice(0,8)}</span>
+                                    <span className="text-gray-700 font-medium">{(draft.components[mc.id] as any).type || (draft.components[mc.id] as any).kind}</span>
+                                    <span className="ml-auto text-[10px] text-blue-700">{mc.diffs.length} prop(s)</span>
+                                    <button onClick={() => setSelectedComponentId(mc.id)} className="text-[10px] text-blue-600 underline">Ir</button>
+                                </div>
+                                <ul className="text-[10px] space-y-0.5">
+                                    {mc.diffs.slice(0,6).map(d => <li key={d.key} className="flex gap-1 items-start">
+                                        <span className="font-semibold text-gray-600">{d.key}:</span>
+                                        <span className="text-red-600 line-through max-w-[120px] truncate" title={JSON.stringify(d.before)}>{typeof d.before === 'object' ? JSON.stringify(d.before) : String(d.before)}</span>
+                                        <span className="text-gray-400">→</span>
+                                        <span className="text-emerald-700 max-w-[120px] truncate" title={JSON.stringify(d.after)}>{typeof d.after === 'object' ? JSON.stringify(d.after) : String(d.after)}</span>
+                                    </li>)}
+                                    {mc.diffs.length > 6 && <li className="text-[10px] text-gray-500">… {mc.diffs.length - 6} mais</li>}
+                                </ul>
+                            </li>)}
+                        </ul>
+                    </div>}
                     {(addedStages.length || removedStages.length || addedComponents.length || removedComponents.length) === 0 && <div className="text-emerald-700">Sem mudanças estruturais desde a publicação.</div>}
                 </div>;
             })()}
