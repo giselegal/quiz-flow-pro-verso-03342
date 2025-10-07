@@ -28,15 +28,6 @@ export interface QuizStep {
     buttonText?: string;
     text?: string;
     image?: string;
-    /**
-     * Imagem reflexiva / emocional usada em perguntas estratégicas para ancorar sentimento.
-     * Será exibida logo abaixo do título da questão estratégica.
-     */
-    reflectionImage?: {
-        src: string; // URL da imagem otimizada (WebP/PNG)
-        alt: string; // Texto alternativo acessível
-        prompt?: string; // (Opcional) Prompt IA usado para gerar referência – documentado para reprodutibilidade
-    };
     requiredSelections?: number;
     options?: QuizOption[];
     nextStep?: string;
@@ -262,10 +253,6 @@ export const QUIZ_STEPS: Record<string, QuizStep> = {
     'step-13': {
         type: 'strategic-question',
         questionText: 'Quando você se olha no espelho, como se sente com sua imagem pessoal atualmente?',
-        reflectionImage: {
-            src: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1746900001/strategic_reflection_espelho_mulher_contemplando.webp',
-            alt: 'Mulher em frente ao espelho tocando levemente o vidro, expressão pensativa e suave luz lateral.',
-        },
         options: [
             { id: 'desconectada', text: 'Me sinto desconectada da mulher que sou hoje' },
             { id: 'duvidas', text: 'Tenho dúvidas sobre o que realmente me valoriza' },
@@ -278,10 +265,6 @@ export const QUIZ_STEPS: Record<string, QuizStep> = {
     'step-14': {
         type: 'strategic-question',
         questionText: 'O que mais te desafia na hora de se vestir?',
-        reflectionImage: {
-            src: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1746900002/strategic_gavetas_roupas_dilema.webp',
-            alt: 'Close de mãos separando peças de roupa em tons neutros sobre uma cama organizada.',
-        },
         options: [
             { id: 'combinar-pecas', text: 'Tenho peças, mas não sei como combiná-las' },
             { id: 'comprar-impulso', text: 'Compro por impulso e me arrependo depois' },
@@ -306,10 +289,6 @@ export const QUIZ_STEPS: Record<string, QuizStep> = {
     'step-16': {
         type: 'strategic-question',
         questionText: 'Pense no quanto você já gastou com roupas que não usa ou que não representam quem você é... Você acredita que um material estratégico ajudaria?',
-        reflectionImage: {
-            src: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1746900003/strategic_guardarroupa_pecas_paradas.webp',
-            alt: 'Guarda-roupa aberto com poucas peças selecionadas em cabides de madeira, luz suave entrando lateralmente.',
-        },
         options: [
             { id: 'sim-quero', text: 'Sim! Se existisse algo assim, eu quero' },
             { id: 'sim-momento-certo', text: 'Sim, mas teria que ser no momento certo' },
@@ -334,10 +313,6 @@ export const QUIZ_STEPS: Record<string, QuizStep> = {
     'step-18': {
         type: 'strategic-question',
         questionText: 'Qual desses resultados você mais gostaria de alcançar?',
-        reflectionImage: {
-            src: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1746900004/strategic_mulher_confiante_rua_dourado.webp',
-            alt: 'Mulher caminhando confiante em rua urbana ao entardecer com luz dourada suave, postura ereta.',
-        },
         options: [
             { id: 'montar-looks-facilidade', text: 'Montar looks com mais facilidade e confiança' },
             { id: 'usar-que-tenho', text: 'Usar o que já tenho e me sentir estilosa' },
