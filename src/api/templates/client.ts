@@ -58,6 +58,16 @@ export const templatesApi = {
     async reorderStages(id: string, orderedIds: string[]) { return http(`${BASE}/${id}/stages/reorder`, { method: 'POST', body: JSON.stringify({ orderedIds }) }); },
     async updateStage(id: string, stageId: string, patch: any) { return http(`${BASE}/${id}/stages/${stageId}`, { method: 'PATCH', body: JSON.stringify(patch) }); },
     async removeStage(id: string, stageId: string) { return http(`${BASE}/${id}/stages/${stageId}`, { method: 'DELETE' }); },
+    // Operações de componentes dentro de uma stage
+    async addStageComponent(id: string, stageId: string, payload: { componentId?: string; component?: { type: string; props?: any; styleTokens?: any }; position?: number }) {
+        return http(`${BASE}/${id}/stages/${stageId}/components`, { method: 'POST', body: JSON.stringify(payload) });
+    },
+    async reorderStageComponents(id: string, stageId: string, orderedIds: string[]) {
+        return http(`${BASE}/${id}/stages/${stageId}/components/reorder`, { method: 'POST', body: JSON.stringify({ orderedIds }) });
+    },
+    async removeStageComponent(id: string, stageId: string, componentId: string) {
+        return http(`${BASE}/${id}/stages/${stageId}/components/${componentId}`, { method: 'DELETE' });
+    },
     async setOutcomes(id: string, outcomes: Outcome[]) { return http(`${BASE}/${id}/outcomes`, { method: 'PUT', body: JSON.stringify({ outcomes }) }); },
     async setScoring(id: string, scoring: Partial<ScoringConfig>) { return http(`${BASE}/${id}/scoring`, { method: 'PATCH', body: JSON.stringify(scoring) }); },
     async setBranching(id: string, rules: BranchingRule[]) { return http(`${BASE}/${id}/branching`, { method: 'PUT', body: JSON.stringify({ rules }) }); },

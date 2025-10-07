@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { useTemplateDraft, useUpdateMeta, useAddStage, useReorderStages, usePublish, useValidateDraft } from '../api/hooks';
+import { useTemplateDraft, useUpdateMeta, useAddStage, useReorderStages, usePublish, useValidateDraft, useAddStageComponent, useRemoveStageComponent, useReorderStageComponents } from '../api/hooks';
+import { renderComponent } from '../render/registry';
 
 export const TemplateEngineEditor: React.FC<{ id: string; onBack: () => void }> = ({ id, onBack }) => {
     const { data: draft, isLoading, error } = useTemplateDraft(id);
@@ -34,6 +35,36 @@ export const TemplateEngineEditor: React.FC<{ id: string; onBack: () => void }> 
     };
     const handlePublish = () => publishMut.mutate();
 
+    const [openStageId, setOpenStageId] = useState<string | null>(null);
+    const stagesOrdered = [...draft.stages].sort((a, b) => a.order - b.order);
+    const activeStage = openStageId ? stagesOrdered.find(s => s.id === openStageId) : undefined;
+    const addCmp = activeStage ? useAddStageComponent(draft.id, activeStage.id) : undefined;
+    const remCmp = activeStage ? useRemoveStageComponent(draft.id, activeStage.id) : undefined;
+    const reorderCmps = activeStage ? useReorderStageComponents(draft.id, activeStage.id) : undefined;
+
+    function toggleStage(stId: string) { setOpenStageId(prev => prev === stId ? null : stId); }
+    function addQuick(kind: string) {
+        if (!addCmp || !activeStage) return;
+        const defaults: Record<string, any> = {
+            Header: { title: 'Título', subtitle: 'Sub', description: 'Descrição' },
+            Navigation: { showNext: true },
+            QuestionSingle: { title: 'Pergunta', options: [{ id: 'opt1', label: 'Opção 1' }, { id: 'opt2', label: 'Opção 2' }] },
+            QuestionMulti: { title: 'Pergunta Multi', options: [{ id: 'm1', label: 'Item 1' }, { id: 'm2', label: 'Item 2' }] },
+            Transition: { message: 'Transição...' },
+            ResultPlaceholder: { template: 'Seu resultado: {{score}}' }
+        };
+        addCmp.mutate({ component: { type: kind, props: defaults[kind] || {} } });
+    }
+    function moveComponent(index: number, dir: -1 | 1) {
+        if (!activeStage || !reorderCmps) return;
+        const ids = [...activeStage.componentIds];
+        const target = index + dir;
+        if (target < 0 || target >= ids.length) return;
+        const tmp = ids[index]; ids[index] = ids[target]; ids[target] = tmp;
+        reorderCmps.mutate(ids);
+    }
+    function removeComponent(componentId: string) { if (remCmp) remCmp.mutate(componentId); }
+
     return <div className="space-y-4">
         <div className="flex items-center gap-2">
             <button onClick={onBack} className="text-sm text-blue-600 hover:underline">← Voltar</button>
@@ -62,12 +93,43 @@ export const TemplateEngineEditor: React.FC<{ id: string; onBack: () => void }> 
                 <button onClick={handleAddStage} className="bg-blue-600 text-white px-2 py-1 rounded text-xs">Adicionar Stage</button>
             </div>
             <ul className="divide-y border rounded bg-white">
-                {[...draft.stages].sort((a, b) => a.order - b.order).map((s, idx) => <li key={s.id} className="p-2 flex items-center gap-2 text-sm">
-                    <span className="font-mono text-xs bg-gray-100 px-1 rounded">{s.order}</span>
-                    <span>{s.type}</span>
-                    <span className="text-gray-500">{s.id}</span>
-                    <button disabled={idx === 0} onClick={() => handleReorderUp(idx)} className="ml-auto text-xs text-blue-600 disabled:opacity-40">Subir</button>
-                </li>)}
+                {stagesOrdered.map((s, idx) => {
+                    const isOpen = s.id === openStageId;
+                    return <li key={s.id} className="p-2 text-sm space-y-2">
+                        <div className="flex items-center gap-2">
+                            <button onClick={() => toggleStage(s.id)} className="text-xs px-1 rounded border bg-gray-50">{isOpen ? '−' : '+'}</button>
+                            <span className="font-mono text-xs bg-gray-100 px-1 rounded">{s.order}</span>
+                            <span className="font-medium">{s.type}</span>
+                            <span className="text-gray-500 text-xs">{s.id}</span>
+                            <span className="ml-2 text-[10px] text-gray-500">{s.componentIds.length} componentes</span>
+                            <button disabled={idx === 0} onClick={() => handleReorderUp(idx)} className="ml-auto text-xs text-blue-600 disabled:opacity-40">Subir</button>
+                        </div>
+                        {isOpen && <div className="ml-6 space-y-3">
+                            <div className="flex flex-wrap gap-2 text-xs">
+                                {['Header', 'Navigation', 'QuestionSingle', 'QuestionMulti', 'Transition', 'ResultPlaceholder'].map(k => <button key={k} onClick={() => addQuick(k)} disabled={addCmp?.isPending} className="border px-2 py-0.5 rounded hover:bg-gray-50 disabled:opacity-50">+ {k}</button>)}
+                            </div>
+                            <ul className="space-y-2">
+                                {s.componentIds.map((cid, cIndex) => {
+                                    const comp = draft.components[cid];
+                                    return <li key={cid} className="border rounded p-2 bg-white shadow-sm">
+                                        <div className="flex items-center gap-2 text-xs mb-2">
+                                            <span className="font-mono bg-gray-100 px-1 rounded">{cIndex}</span>
+                                            <span className="font-semibold">{comp?.type || '??'}</span>
+                                            <span className="text-gray-400">{cid}</span>
+                                            <div className="ml-auto flex gap-1">
+                                                <button onClick={() => moveComponent(cIndex, -1)} disabled={cIndex === 0 || reorderCmps?.isPending} className="border px-1 rounded disabled:opacity-40">↑</button>
+                                                <button onClick={() => moveComponent(cIndex, 1)} disabled={cIndex === s.componentIds.length - 1 || reorderCmps?.isPending} className="border px-1 rounded disabled:opacity-40">↓</button>
+                                                <button onClick={() => removeComponent(cid)} disabled={remCmp?.isPending} className="border px-1 rounded text-red-600 disabled:opacity-40">✕</button>
+                                            </div>
+                                        </div>
+                                        {comp ? <div className="text-xs">{renderComponent({ ...comp, kind: (comp as any).kind || comp.type }, { draft, stageId: s.id })}</div> : <div className="text-xs text-red-600">Componente inexistente</div>}
+                                    </li>;
+                                })}
+                                {s.componentIds.length === 0 && <li className="text-[11px] text-gray-500">Nenhum componente ainda.</li>}
+                            </ul>
+                        </div>}
+                    </li>;
+                })}
             </ul>
         </section>
         <section className="space-y-2">

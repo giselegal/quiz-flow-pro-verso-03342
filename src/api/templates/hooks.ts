@@ -52,6 +52,31 @@ export function useReorderStages(id: string) {
     });
 }
 
+// ---- Stage Components Hooks ----
+export function useAddStageComponent(templateId: string, stageId: string) {
+    const qc = useQueryClient();
+    return useMutation({
+        mutationFn: (payload: { componentId?: string; component?: { type: string; props?: any; styleTokens?: any }; position?: number }) => templatesApi.addStageComponent(templateId, stageId, payload),
+        onSuccess: () => qc.invalidateQueries({ queryKey: keys.detail(templateId) })
+    });
+}
+
+export function useReorderStageComponents(templateId: string, stageId: string) {
+    const qc = useQueryClient();
+    return useMutation({
+        mutationFn: (orderedIds: string[]) => templatesApi.reorderStageComponents(templateId, stageId, orderedIds),
+        onSuccess: () => qc.invalidateQueries({ queryKey: keys.detail(templateId) })
+    });
+}
+
+export function useRemoveStageComponent(templateId: string, stageId: string) {
+    const qc = useQueryClient();
+    return useMutation({
+        mutationFn: (componentId: string) => templatesApi.removeStageComponent(templateId, stageId, componentId),
+        onSuccess: () => qc.invalidateQueries({ queryKey: keys.detail(templateId) })
+    });
+}
+
 export function useSetOutcomes(id: string) {
     const qc = useQueryClient();
     return useMutation({
