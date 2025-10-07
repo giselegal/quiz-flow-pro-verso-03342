@@ -78,6 +78,13 @@ export const TemplateEngineEditor: React.FC<{ id: string; onBack: () => void }> 
     }
     function removeComponent(componentId: string) { if (remCmp) remCmp.mutate(componentId); }
 
+    // Métricas de decomposição (count tipados vs legacy bundle)
+    const allComponents = Object.values(draft.components || {});
+    const typedCount = allComponents.filter(c => (c as any).kind && (c as any).kind !== 'RawLegacyBundle').length;
+    const legacyCount = allComponents.filter(c => (c as any).kind === 'RawLegacyBundle' || (!('kind' in c) && c.type === 'legacyBlocksBundle')).length;
+    const totalCount = allComponents.length || 1;
+    const typedPct = Math.round((typedCount / totalCount) * 100);
+
     return <div className="space-y-4">
         <div className="flex items-center gap-2">
             <button onClick={onBack} className="text-sm text-blue-600 hover:underline">← Voltar</button>
@@ -104,6 +111,14 @@ export const TemplateEngineEditor: React.FC<{ id: string; onBack: () => void }> 
             <div className="flex items-center gap-2">
                 <h2 className="font-medium">Stages ({draft.stages.length})</h2>
                 <button onClick={handleAddStage} className="bg-blue-600 text-white px-2 py-1 rounded text-xs">Adicionar Stage</button>
+                <div className="ml-auto flex items-center gap-2 text-[10px]">
+                    <div className="flex items-center gap-1"><span className="font-semibold">Tipados:</span><span>{typedCount}</span></div>
+                    <div className="flex items-center gap-1"><span className="font-semibold">Legacy:</span><span>{legacyCount}</span></div>
+                    <div className="w-32 h-2 bg-gray-200 rounded overflow-hidden">
+                        <div className="h-full bg-emerald-500" style={{ width: `${typedPct}%` }} />
+                    </div>
+                    <span className="text-emerald-700 font-medium">{typedPct}%</span>
+                </div>
             </div>
             <ul className="divide-y border rounded bg-white">
                 {stagesOrdered.map((s, idx) => {
