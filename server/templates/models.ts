@@ -53,13 +53,28 @@ export interface ScoringConfig {
     normalization?: { percent?: boolean };
 }
 
+// Predicados suportados no MVP avançado
+export interface PredicateScoreGte { scoreGte: number; }
+export interface PredicateScoreLte { scoreLte: number; }
+export interface PredicateAnswersCountGte { answersCountGte: number; }
+export interface PredicateAnsweredIncludes { answeredIncludes: { stageId: string; optionId: string } }
+export type ConditionPredicate = PredicateScoreGte | PredicateScoreLte | PredicateAnswersCountGte | PredicateAnsweredIncludes;
+
+export interface ConditionTreeNode {
+    op: 'AND' | 'OR' | 'NOT' | 'PREDICATE';
+    conditions?: ConditionTreeNode[]; // filhos para AND/OR/NOT
+    // Para simplificar: quando op !== 'PREDICATE', usamos 'conditions'
+    // Para compatibilidade com testes existentes: eles usam estrutura { op: 'AND', conditions: [ { scoreGte: 10 }, {...} ] }
+    // Logo também permitimos predicados diretos como objetos plain (ConditionPredicate) em 'conditions'.
+    // Para op = 'PREDICATE' não será usado neste estágio - mantemos para evolução.
+    // Nota: Para testes atuais, não exigiremos chave 'op' nos objetos folha (predicados simples).
+}
+
 export interface BranchingRule {
     fromStageId: string;
     toStageId: string;
     fallbackStageId?: string;
-    // Condition tree simplificada MVP: lista de predicados E (todos verdadeiros) para seguir toStageId
-    scoreGte?: number;
-    scoreLte?: number;
+    conditionTree: ConditionTreeNode; // árvore de condições
 }
 
 export interface LogicBlock {

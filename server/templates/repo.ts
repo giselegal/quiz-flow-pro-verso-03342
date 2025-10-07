@@ -1,4 +1,5 @@
 import { TemplateAggregate } from './models';
+import { SqliteTemplateRepository } from '../persistence/sqlite/templateRepo.sqlite';
 
 // Interface do repositório (MVP)
 export interface TemplateRepository {
@@ -41,6 +42,17 @@ class InMemoryTemplateRepository implements TemplateRepository {
     list(): TemplateAggregate[] { return Array.from(this.byId.values()); }
 }
 
-// Futuro: selecionar driver via env PERSIST_TEMPLATES=sqlite
-export const templateRepo: TemplateRepository = new InMemoryTemplateRepository();
+function selectDriver(): TemplateRepository {
+    const driver = process.env.PERSIST_TEMPLATES || 'memory';
+    if (driver === 'sqlite') {
+        return new SqliteTemplateRepository();
+    }
+    return new InMemoryTemplateRepository();
+}
+
+export const templateRepo: TemplateRepository = selectDriver();
+
+if (process.env.NODE_ENV !== 'test') {
+    console.log(`[templates] driver = ${process.env.PERSIST_TEMPLATES || 'memory'}`);
+}
 

@@ -1,5 +1,5 @@
 import { templateRepo } from './repo';
-import { createBaseTemplate, deepClone, TemplateAggregate, TemplatePublishedSnapshot, genId, RuntimeSession } from './models';
+import { createBaseTemplate, deepClone, TemplateAggregate, TemplatePublishedSnapshot, genId, RuntimeSession, BranchingRule, ConditionTreeNode } from './models';
 
 // Armazena sessões em memória (MVP)
 const runtimeSessions = new Map<string, RuntimeSession>();
@@ -28,6 +28,75 @@ function resolveOutcome(aggregate: TemplateAggregate, score: number): string | u
         if (score >= min && score <= max) return o.id;
     }
     return undefined;
+}
+
+function evalPredicate(pred: any, ctx: { score: number; answers: Record<string, string[]> }): boolean {
+    if (pred.scoreGte !== undefined) return ctx.score >= pred.scoreGte;
+    if (pred.scoreLte !== undefined) return ctx.score <= pred.scoreLte;
+    if (pred.answersCountGte !== undefined) {
+        const totalAnswers = Object.values(ctx.answers).reduce((acc, arr) => acc + arr.length, 0);
+        return totalAnswers >= pred.answersCountGte;
+    }
+    if (pred.answeredIncludes) {
+        const { stageId, optionId } = pred.answeredIncludes;
+        return (ctx.answers[stageId] || []).includes(optionId);
+    }
+    return false; // desconhecido
+}
+
+function evalConditionTree(node: ConditionTreeNode, ctx: { score: number; answers: Record<string, string[]> }): boolean {
+    // Compatibilidade: alguns testes mandam objetos como { op:'AND', conditions:[ {scoreGte:10}, {scoreLte:20} ] }
+    if (!node) return false;
+    const op = node.op;
+    const children = node.conditions || [];
+    if (op === 'AND') {
+        return children.every(ch => {
+            if ((ch as any).op) return evalConditionTree(ch as any, ctx);
+            return evalPredicate(ch, ctx);
+        });
+    }
+    if (op === 'OR') {
+        return children.some(ch => {
+            if ((ch as any).op) return evalConditionTree(ch as any, ctx);
+            return evalPredicate(ch, ctx);
+        });
+    }
+    if (op === 'NOT') {
+        if (children.length !== 1) return false;
+        const ch = children[0];
+        if ((ch as any).op) return !evalConditionTree(ch as any, ctx);
+        return !evalPredicate(ch, ctx);
+    }
+    if (op === 'PREDICATE') {
+        // Node explicit predicate container - assume single predicate-like shape in 'conditions'[0]
+        if (children.length !== 1) return false;
+        const p = children[0];
+        return evalPredicate(p, ctx);
+    }
+    return false;
+}
+
+function resolveBranching(aggregate: TemplateAggregate, currentStageId: string, ctx: { score: number; answers: Record<string, string[]> }): { branched: boolean; nextStageId?: string } {
+    const rules = aggregate.draft.logic.branching.filter(r => r.fromStageId === currentStageId);
+    for (const rule of rules) {
+        try {
+            if (evalConditionTree(rule.conditionTree, ctx)) {
+                return { branched: true, nextStageId: rule.toStageId };
+            } else if (rule.fallbackStageId) {
+                // fallback só aplicado se condição falha e não há outra regra que satisfaça; porém
+                // se existir múltiplas regras, continuamos tentando as próximas antes de usar fallback.
+                // Estratégia: guardar fallback para possível uso final.
+                // Para simplicidade: se esta regra falha, mas tem fallback e nenhuma outra regra satisfizer, retornaremos fallback.
+                // Implementação: continuamos loop e se nada satisfizer, retornamos fallback da primeira regra com fallback.
+            }
+        } catch {
+            // erro em avaliação: ignora regra
+        }
+    }
+    // caso nenhuma regra satisfeita, procurar primeiro fallback
+    const fb = rules.find(r => r.fallbackStageId);
+    if (fb) return { branched: true, nextStageId: fb.fallbackStageId };
+    return { branched: false };
 }
 
 export const templateService = {
@@ -92,25 +161,29 @@ export const templateService = {
         session.answers[stageId] = optionIds;
         session.score = computeScore(agg, session.answers);
         session.updatedAt = Date.now();
-        // próximo stage linear (ignora branching MVP)
         const ordered = agg.published.stages.filter(s => s.enabled).sort((a, b) => a.order - b.order);
         const idx = ordered.findIndex(s => s.id === stageId);
+
+        // Primeiro tenta branching
+        const branch = resolveBranching(agg, stageId, { score: session.score, answers: session.answers });
         let nextStageId: string | undefined;
-        if (idx >= 0 && idx < ordered.length - 1) {
-            nextStageId = ordered[idx + 1].id;
+        let branched = false;
+        if (branch.branched && branch.nextStageId) {
+            nextStageId = branch.nextStageId;
+            branched = true;
+        } else {
+            // fallback linear
+            if (idx >= 0 && idx < ordered.length - 1) {
+                nextStageId = ordered[idx + 1].id;
+            }
+        }
+        if (nextStageId) {
             session.currentStageId = nextStageId;
         } else {
-            // finaliza e resolve outcome
             session.completed = true;
             session.outcomeId = resolveOutcome(agg, session.score);
         }
-        return {
-            branched: false,
-            nextStageId,
-            completed: session.completed || false,
-            score: session.score,
-            outcomeId: session.outcomeId
-        };
+        return { branched, nextStageId, completed: session.completed || false, score: session.score, outcomeId: session.outcomeId };
     }
 };
 
