@@ -271,6 +271,39 @@ export const TemplateEngineEditor: React.FC<{ id: string; onBack: () => void }> 
             {publishMut.isSuccess && <span className="text-xs text-green-700 ml-2">Publicado!</span>}
             {publishMut.error && <span className="text-xs text-red-600 ml-2">Erro: {(publishMut.error as Error).message}</span>}
         </section>
+        { (draft as any).published && <section className="space-y-2 border rounded p-3 bg-white">
+            <h2 className="font-medium text-sm">Diff vs Publicado</h2>
+            {(() => {
+                const pub = (draft as any).published; // caso o modelo draft traga snapshot (ajuste futuro: fetch published separado)
+                if (!pub) return <div className="text-[11px] text-gray-500">Nenhum snapshot publicado disponível.</div>;
+                const addedStages = draft.stages.filter(s => !pub.stages.find((ps: any) => ps.id === s.id));
+                const removedStages = pub.stages.filter((ps: any) => !draft.stages.find(s => s.id === ps.id));
+                const addedComponents = Object.keys(draft.components).filter(cid => !pub.components[cid]);
+                const removedComponents = Object.keys(pub.components).filter((cid: string) => !draft.components[cid]);
+                return <div className="text-[11px] space-y-2">
+                    <div className="grid grid-cols-2 gap-2">
+                        <div className="bg-gray-50 p-2 rounded border">
+                            <div className="font-semibold mb-1">Resumo</div>
+                            <ul className="list-disc ml-4 space-y-0.5">
+                                <li>Stages atuais: {draft.stages.length} (publicado: {pub.stages.length})</li>
+                                <li>Componentes atuais: {Object.keys(draft.components).length} (publicado: {Object.keys(pub.components).length})</li>
+                                <li>Versão publicada: {pub.version}</li>
+                            </ul>
+                        </div>
+                        <div className="bg-gray-50 p-2 rounded border">
+                            <div className="font-semibold mb-1">Mudanças Estruturais</div>
+                            <ul className="list-disc ml-4 space-y-0.5">
+                                <li>Stages adicionadas: {addedStages.length}</li>
+                                <li>Stages removidas: {removedStages.length}</li>
+                                <li>Componentes adicionados: {addedComponents.length}</li>
+                                <li>Componentes removidos: {removedComponents.length}</li>
+                            </ul>
+                        </div>
+                    </div>
+                    {(addedStages.length || removedStages.length || addedComponents.length || removedComponents.length) === 0 && <div className="text-emerald-700">Sem mudanças estruturais desde a publicação.</div>}
+                </div>;
+            })()}
+        </section> }
         <section className="space-y-2 border-t pt-4">
             <h2 className="font-medium">Preview Runtime (Draft)</h2>
             {!runtime && <button onClick={startPreview} disabled={previewStart.isPending} className="bg-gray-800 text-white px-3 py-1 rounded text-sm disabled:opacity-50">Iniciar Preview</button>}
