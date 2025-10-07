@@ -15,6 +15,7 @@
 import React from 'react';
 import { useQuizState } from '@/hooks/useQuizState';
 import { QUIZ_STEPS, getStepById, STRATEGIC_ANSWER_TO_OFFER_KEY } from '@/data/quizSteps';
+import StrategicQuestionStep from '@/components/quiz/StrategicQuestionStep';
 import { styleConfigGisele } from '@/data/styles';
 import type { QuizStep } from '@/data/quizSteps';
 
@@ -78,8 +79,23 @@ export function QuizApp() {
                         onNext={navigateToStep}
                     />
                 );
-            case 'strategic-question':
-                return <StrategicQuestionStep stepData={stepData} onAnswer={addStrategicAnswer} onNext={navigateToStep} />;
+            case 'strategic-question': {
+                // Armazenamos a resposta estratégica como string simples em answers[stepData.id]
+                const strategicKey = stepData.id || currentStep;
+                const currentStrategicAnswer = (answers[strategicKey] as unknown as string) || '';
+                return (
+                    <StrategicQuestionStep
+                        data={stepData}
+                        currentAnswer={currentStrategicAnswer}
+                        onAnswerChange={(answerId) => {
+                            // Persistir resposta como array de uma posição para manter compatibilidade estrutural
+                            addAnswer(strategicKey, [answerId]);
+                            addStrategicAnswer(stepData.questionText!, answerId);
+                            setTimeout(() => navigateToStep(stepData.nextStep || ''), 800);
+                        }}
+                    />
+                );
+            }
             case 'transition':
             case 'transition-result':
                 return <TransitionStep stepData={stepData} onNext={navigateToStep} />;
@@ -273,46 +289,7 @@ function QuestionStep({ stepData, answers, onAnswer, onNext }: QuestionStepProps
 // 🎯 COMPONENTE DE PERGUNTA ESTRATÉGICA
 // ================================
 
-interface StrategicQuestionStepProps {
-    stepData: QuizStep;
-    onAnswer: (question: string, answerId: string) => void;
-    onNext: (stepId: string) => void;
-}
-
-function StrategicQuestionStep({ stepData, onAnswer, onNext }: StrategicQuestionStepProps) {
-    const [selectedAnswer, setSelectedAnswer] = React.useState<string>('');
-
-    const handleOptionClick = (optionId: string) => {
-        setSelectedAnswer(optionId);
-        onAnswer(stepData.questionText!, optionId);
-
-        // Avanço automático após seleção
-        setTimeout(() => {
-            onNext(stepData.nextStep!);
-        }, 800);
-    };
-
-    return (
-        <div className="quiz-card">
-            <p className="text-xl font-bold text-primary mb-xl playfair-display">
-                {stepData.questionText}
-            </p>
-
-            <div className="quiz-options quiz-options-1col">
-                {stepData.options?.map((option) => (
-                    <div
-                        key={option.id}
-                        onClick={() => handleOptionClick(option.id)}
-                        className={`quiz-option ${selectedAnswer === option.id ? 'quiz-option-selected' : ''
-                            }`}
-                    >
-                        <p className="quiz-option-text">{option.text}</p>
-                    </div>
-                ))}
-            </div>
-        </div>
-    );
-}
+// Removida implementação inline duplicada de StrategicQuestionStep.
 
 // ================================
 // ⏳ COMPONENTE DE TRANSIÇÃO
