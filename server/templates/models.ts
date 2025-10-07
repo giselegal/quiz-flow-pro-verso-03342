@@ -91,11 +91,22 @@ export interface Outcome {
     template: string; // texto com variáveis
 }
 
+// Histórico de publicações / operações relevantes.
+// Mantemos snapshot leve (metadados + hashes) para não duplicar payload completo.
 export interface HistoryEntry {
-    id: string;
-    timestamp: string;
-    op: string;
-    summary?: string;
+    id: string;              // id único da entry
+    timestamp: string;       // ISO string
+    op: string;              // 'publish' | 'rollback' | futuramente outros
+    version?: number;        // versão publicada associada (se op = publish)
+    summary?: string;        // resumo curto exibido na timeline
+    metaHash: string;        // hash determinístico do meta
+    stagesHash: string;      // hash da estrutura de stages (id, order, enabled, componentIds)
+    componentsHash: string;  // hash do conjunto de componentes (id+type+props keys)
+    componentsCount: number; // quantidade de componentes
+    stagesCount: number;     // quantidade de stages
+    outcomesCount: number;   // quantidade de outcomes
+    draftVersionRef?: number; // draftVersion no momento
+    // Futuro: diffs agregados, tags, author, fullSnapshotPointer
 }
 
 export interface TemplateDraft {
@@ -171,3 +182,25 @@ export function createBaseTemplate(name: string, slug: string): TemplateAggregat
 }
 
 export function deepClone<T>(obj: T): T { return JSON.parse(JSON.stringify(obj)); }
+
+// Hash simples e determinístico (não criptográfico) para sintetizar estado.
+export function stableHash(obj: any): string {
+    const json = JSON.stringify(obj);
+    let h = 0, i = 0, len = json.length;
+    while (i < len) { h = (h << 5) - h + json.charCodeAt(i++) | 0; }
+    return `h${(h >>> 0).toString(36)}`; // força não negativo e compacta
+}
+
+// Funções helpers para construir pedaços de snapshot leve
+export function buildMetaHash(meta: TemplateMeta) {
+    const pick = { name: meta.name, slug: meta.slug, tags: meta.tags || [], tracking: meta.tracking || {}, seo: meta.seo || {} };
+    return stableHash(pick);
+}
+export function buildStagesHash(stages: Stage[]) {
+    const norm = stages.map(s => ({ id: s.id, order: s.order, enabled: s.enabled, comps: [...s.componentIds] })).sort((a, b) => a.order - b.order);
+    return stableHash(norm);
+}
+export function buildComponentsHash(components: Record<string, ComponentBase>) {
+    const norm = Object.values(components).map(c => ({ id: c.id, type: c.type, propKeys: Object.keys(c.props).sort() })).sort((a, b) => a.id.localeCompare(b.id));
+    return stableHash(norm);
+}

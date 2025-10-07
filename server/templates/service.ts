@@ -1,5 +1,5 @@
 import { templateRepo } from './repo';
-import { createBaseTemplate, deepClone, TemplateAggregate, TemplatePublishedSnapshot, genId, RuntimeSession, BranchingRule, ConditionTreeNode } from './models';
+import { createBaseTemplate, deepClone, TemplateAggregate, TemplatePublishedSnapshot, genId, RuntimeSession, BranchingRule, ConditionTreeNode, buildMetaHash, buildStagesHash, buildComponentsHash } from './models';
 import { validateTemplate } from './validation';
 
 // Armazena sessões em memória (MVP)
@@ -341,6 +341,27 @@ export const templateService = {
             version: (agg.published?.version ?? 0) + 1
         };
         agg.published = snapshot;
+        // Acrescenta entrada de histórico leve
+        try {
+            const entry = {
+                id: genId('hist'),
+                timestamp: now,
+                op: 'publish',
+                version: snapshot.version,
+                summary: `v${snapshot.version} publish`,
+                metaHash: buildMetaHash(snapshot.meta),
+                stagesHash: buildStagesHash(snapshot.stages),
+                componentsHash: buildComponentsHash(snapshot.components),
+                componentsCount: Object.keys(snapshot.components).length,
+                stagesCount: snapshot.stages.length,
+                outcomesCount: snapshot.outcomes.length,
+                draftVersionRef: agg.draft.draftVersion
+            } as any; // HistoryEntry (cast para evitar necessidade de import circular em testes)
+            agg.draft.history.push(entry);
+        } catch (err) {
+            // Não bloquear publish se falhar histórico (fail-soft)
+            console.error('history append failed', err);
+        }
         templateRepo.save(agg);
         return snapshot;
     },
@@ -350,6 +371,15 @@ export const templateService = {
     },
 
     getDraft(id: string) { return templateRepo.get(id)?.draft; },
+    listHistory(id: string) {
+        const agg = templateRepo.get(id);
+        if (!agg) throw new Error('Template not found');
+        // Ordena mais recente primeiro (timestamp desc, version desc como tiebreaker)
+        return [...agg.draft.history].sort((a, b) => {
+            if (a.timestamp === b.timestamp) return (b.version || 0) - (a.version || 0);
+            return a.timestamp < b.timestamp ? 1 : -1;
+        });
+    },
     getPublishedBySlug(slug: string) { return templateRepo.getBySlug(slug)?.published; },
 
     startRuntime(slug: string) {

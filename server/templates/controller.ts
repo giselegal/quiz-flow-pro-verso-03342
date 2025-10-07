@@ -140,6 +140,15 @@ templatesRouter.post('/:id/publish', (req, res) => {
     } catch (e: any) { res.status(400).json({ error: e.message }); }
 });
 
+// History list
+templatesRouter.get('/:id/history', (req, res) => {
+    try {
+        const hist = templateService.listHistory(req.params.id);
+        // resposta enxuta já contém metadados relevantes
+        res.json(hist);
+    } catch (e: any) { res.status(400).json({ error: e.message }); }
+});
+
 // Runtime preview (draft)
 templatesRouter.post('/:id/runtime/preview/start', (req, res) => {
     try {
