@@ -1,4 +1,5 @@
 import { TemplateDraft, createBaseTemplate, Component, Stage, Outcome, ScoringConfig } from './models';
+import { logger } from '../lib/logger';
 import { nanoid } from 'nanoid';
 
 // In-memory repository (MVP)
@@ -126,6 +127,7 @@ if ((process.env.PERSIST_SESSIONS || '').toLowerCase() === 'sqlite') {
 } else {
     selectedRuntimeRepo = new InMemoryRuntimeSessionRepository();
 }
+logger.info('persistence.runtimeSessions.driver', { driver: (process.env.PERSIST_SESSIONS || 'memory').toLowerCase() });
 export const runtimeSessionRepo: IRuntimeSessionRepository = selectedRuntimeRepo;
 
 // Simple scoring util
