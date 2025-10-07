@@ -73,3 +73,85 @@ Response: `{ sessionId, currentStageId }`
 - Diff publish vs draft
 - History / rollback
 - Lock otimista (If-Match: draftVersion)
+
+---
+
+## Integração Frontend (/editor/template-engine)
+
+Foi adicionada uma rota SPA experimental em `/editor/template-engine` que consome estes endpoints e permite:
+
+### Capacidades atuais UI
+- Listar templates (GET /api/templates)
+- Criar template base (POST /api/templates)
+- Abrir draft e visualizar metadados + stages
+- Editar nome e descrição (PATCH /:id/meta)
+- Adicionar stage (POST /:id/stages)
+- Reordenar stages (POST /:id/stages/reorder)
+- Ver status de validação (POST /:id/validate – disparado via hook)
+- Publicar (POST /:id/publish)
+
+### Hooks React Query criados
+Arquivo: `src/api/templates/hooks.ts`
+- useTemplatesList()
+- useTemplateDraft(id)
+- useCreateTemplate()
+- useUpdateMeta(id)
+- useAddStage(id)
+- useReorderStages(id)
+- useSetOutcomes(id)
+- useSetScoring(id)
+- useSetBranching(id)
+- useValidateDraft(id)
+- usePublish(id)
+- usePreviewStart(id)
+
+### Componentes principais
+Local: `src/components/editor/templates/`
+- TemplateEngineList.tsx – tabela de drafts + criação
+- TemplateEngineEditor.tsx – edição básica (meta, stages, validação, publish)
+- TemplateEnginePage.tsx – container que alterna lista/editor
+
+### Extensões futuras planejadas na UI
+- Abas para Outcomes / Scoring / Branching
+- Preview (iniciar sessão draft e simular respostas)
+- Exibição do diff antes de publicar
+- Lock otimista usando draftVersion e cabeçalho If-Match
+- Histórico de publicações e rollback
+
+### Convenções de Estado
+- React Query controla cache e invalidação
+- `draftVersion` incrementa a cada mutação (server) – pronto para servir como ETag
+- Validação é refetch manual (hook com staleTime curto)
+
+### Boas práticas de uso (exemplo mínimo)
+```tsx
+import { useTemplateDraft, useUpdateMeta } from '@/api/templates/hooks';
+
+function MetaEditor({ id }: { id: string }) {
+	const { data: draft } = useTemplateDraft(id);
+	const updateMeta = useUpdateMeta(id);
+	if (!draft) return null;
+	return <input defaultValue={draft.meta.name} onBlur={e => updateMeta.mutate({ name: e.target.value })} />;
+}
+```
+
+---
+
+## Fluxo UI resumido
+1. Usuário acessa `/editor/template-engine` → lista chama GET /api/templates
+2. Cria novo template → POST; invalida list; abre item
+3. Edição de meta → PATCH; invalida detail + list
+4. Adição / reorder de stages → mutações e invalidação do draft
+5. Hook de validação obtém erros (se existirem) antes do publish
+6. Publish só habilitado quando não há errors → snapshot versão incrementada
+
+---
+
+## Próximos passos recomendados backend+frontend
+1. Implementar endpoint answer preview (draft) e UI de simulação
+2. Outcomes editor (CRUD + ordenação + normalização visual)
+3. Branching visual builder (árvore condicional)
+4. Diff publish vs draft (servidor gera delta simples: added/removed/changed)
+5. ETag / If-Match para evitar overwrite concorrente
+6. Histórico (append no publish + viewer na UI)
+
