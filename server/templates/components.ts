@@ -72,38 +72,42 @@ export const createResultPlaceholder = (p: ResultPlaceholderProps, meta?: BaseCo
 export const createRawLegacyBundle = (p: RawLegacyBundleProps, meta?: BaseComponentMeta) => base(ComponentKind.RawLegacyBundle, p, meta);
 
 // Simple validations (can be expanded later)
-export interface ComponentValidationIssue { componentId: string; kind: string; message: string; severity: 'error' | 'warning'; }
+export interface ComponentValidationIssue { componentId: string; kind: string; message: string; severity: 'error' | 'warning'; field?: string; }
 
 export function validateComponent(c: AnyComponent): ComponentValidationIssue[] {
     const issues: ComponentValidationIssue[] = [];
     switch (c.kind) {
-        case ComponentKind.Header:
-            if (!(c.props as HeaderProps).title) issues.push(err(c, 'Header sem title'));
+        case ComponentKind.Header: {
+            const p = c.props as HeaderProps;
+            if (!p.title) issues.push(err(c, 'Header sem title', 'error', 'title'));
             break;
+        }
         case ComponentKind.Navigation: {
             const p = c.props as NavigationProps;
-            if (p.showNext && !p.nextButtonText) issues.push(err(c, 'Navigation com showNext mas sem nextButtonText', 'warning'));
+            if (p.showNext && !p.nextButtonText) issues.push(err(c, 'Navigation com showNext mas sem nextButtonText', 'warning', 'nextButtonText'));
             break;
         }
         case ComponentKind.QuestionSingle: {
             const p = c.props as QuestionSingleProps;
-            if (!p.options || p.options.length < 2) issues.push(err(c, 'QuestionSingle exige ao menos 2 options'));
+            if (!p.options || p.options.length < 2) issues.push(err(c, 'QuestionSingle exige ao menos 2 options', 'error', 'options'));
+            if (!p.title) issues.push(err(c, 'QuestionSingle sem title', 'error', 'title'));
             break;
         }
         case ComponentKind.QuestionMulti: {
             const p = c.props as QuestionMultiProps;
-            if (!p.options || p.options.length < 2) issues.push(err(c, 'QuestionMulti exige ao menos 2 options'));
-            if (p.maxSelections && p.maxSelections < 2) issues.push(err(c, 'maxSelections deve ser >= 2', 'warning'));
+            if (!p.options || p.options.length < 2) issues.push(err(c, 'QuestionMulti exige ao menos 2 options', 'error', 'options'));
+            if (!p.title) issues.push(err(c, 'QuestionMulti sem title', 'error', 'title'));
+            if (p.maxSelections && p.maxSelections < 2) issues.push(err(c, 'maxSelections deve ser >= 2', 'warning', 'maxSelections'));
             break;
         }
         case ComponentKind.Transition: {
             const p = c.props as TransitionProps;
-            if (!p.message) issues.push(err(c, 'Transition requer message'));
+            if (!p.message) issues.push(err(c, 'Transition requer message', 'error', 'message'));
             break;
         }
         case ComponentKind.ResultPlaceholder: {
             const p = c.props as ResultPlaceholderProps;
-            if (!p.template) issues.push(err(c, 'ResultPlaceholder sem template'));
+            if (!p.template) issues.push(err(c, 'ResultPlaceholder sem template', 'error', 'template'));
             break;
         }
         default:
@@ -112,6 +116,6 @@ export function validateComponent(c: AnyComponent): ComponentValidationIssue[] {
     return issues;
 }
 
-function err(c: AnyComponent, message: string, severity: 'error' | 'warning' = 'error'): ComponentValidationIssue {
-    return { componentId: c.id, kind: c.kind, message, severity };
+function err(c: AnyComponent, message: string, severity: 'error' | 'warning' = 'error', field?: string): ComponentValidationIssue {
+    return { componentId: c.id, kind: c.kind, message, severity, field };
 }

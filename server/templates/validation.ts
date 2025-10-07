@@ -71,11 +71,7 @@ export function validateTemplate(agg: TemplateAggregate): ValidationReport {
                     const issues = validateNewComponent(comp as any);
                     for (const issue of issues) {
                         const code = `COMP_${issue.kind}_${issue.severity.toUpperCase()}`;
-                        // tentativa heurística: inferir field simples por mensagem (ex: options / title)
-                        let field: string | undefined;
-                        if (/options/i.test(issue.message)) field = 'options';
-                        if (/title/i.test(issue.message) && !field) field = 'title';
-                        const entry: ValidationIssue = { code, message: `[${comp.id}] ${issue.message}`, severity: issue.severity, field };
+                        const entry: ValidationIssue = { code, message: `[${comp.id}] ${issue.message}`, severity: issue.severity, field: issue.field };
                         if (issue.severity === 'error') errors.push(entry); else warnings.push(entry);
                     }
                 } catch (e: any) {

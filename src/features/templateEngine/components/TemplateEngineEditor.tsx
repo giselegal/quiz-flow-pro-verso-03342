@@ -191,6 +191,7 @@ export const TemplateEngineEditor: React.FC<{ id: string; onBack: () => void }> 
                 const schema = getComponentSchema((selectedComponent as any).kind || selectedComponent.type);
                 const props = selectedComponent.props || {};
                 const compIssues = validation ? [...validation.errors, ...validation.warnings].filter(i => i.message.includes(`[${selectedComponent.id}]`)) : [];
+                const fieldIssues = (fieldName: string) => compIssues.filter(ci => (ci as any).field === fieldName);
                 return <div className="space-y-3 text-xs">
                     {compIssues.length > 0 && <div className="space-y-1">
                         {compIssues.map(ci => {
@@ -202,6 +203,9 @@ export const TemplateEngineEditor: React.FC<{ id: string; onBack: () => void }> 
                     {schema && <div className="space-y-3">
                         {schema.fields.map(field => {
                             const val = props[field.name];
+                            const issuesForField = fieldIssues(field.name);
+                            const hasError = issuesForField.some(i => (i as any).severity === 'error');
+                            const hasWarning = issuesForField.some(i => (i as any).severity === 'warning');
                             const baseLabel = <label className="text-[10px] uppercase tracking-wide text-gray-500 flex items-center gap-1">{field.label}{field.required && <span className="text-red-500">*</span>}</label>;
                             if (field.type === 'boolean') {
                                 return <div key={field.name} className="flex items-center gap-2">
@@ -210,16 +214,16 @@ export const TemplateEngineEditor: React.FC<{ id: string; onBack: () => void }> 
                                 </div>;
                             }
                             if (field.type === 'text') {
-                                return <div key={field.name} className="flex flex-col">
-                                    {baseLabel}
-                                    <textarea className="border rounded px-1 py-0.5 text-xs bg-gray-50 resize-y min-h-[60px]" defaultValue={val || ''} placeholder={field.placeholder}
+                                return <div key={field.name} className="flex flex-col relative">
+                                    <div className="flex items-center gap-1">{baseLabel}{issuesForField.map(is => <span key={is.code} title={is.message} className={`text-[9px] px-1 rounded ${(is as any).severity === 'error' ? 'bg-red-200 text-red-700' : 'bg-amber-200 text-amber-800'}`}>{(is as any).severity === 'error' ? 'E' : 'W'}</span>)}</div>
+                                    <textarea className={`border rounded px-1 py-0.5 text-xs bg-gray-50 resize-y min-h-[60px] ${hasError ? 'border-red-500 ring-1 ring-red-400' : hasWarning ? 'border-amber-400' : ''}`} defaultValue={val || ''} placeholder={field.placeholder}
                                         onBlur={e => updateComponentProps?.mutate({ [field.name]: e.target.value })} />
                                 </div>;
                             }
                             if (field.type === 'number') {
                                 return <div key={field.name} className="flex flex-col">
-                                    {baseLabel}
-                                    <input type="number" className="border rounded px-1 py-0.5 text-xs bg-gray-50" defaultValue={val ?? ''} placeholder={field.placeholder}
+                                    <div className="flex items-center gap-1">{baseLabel}{issuesForField.map(is => <span key={is.code} title={is.message} className={`text-[9px] px-1 rounded ${(is as any).severity === 'error' ? 'bg-red-200 text-red-700' : 'bg-amber-200 text-amber-800'}`}>{(is as any).severity === 'error' ? 'E' : 'W'}</span>)}</div>
+                                    <input type="number" className={`border rounded px-1 py-0.5 text-xs bg-gray-50 ${hasError ? 'border-red-500 ring-1 ring-red-400' : hasWarning ? 'border-amber-400' : ''}`} defaultValue={val ?? ''} placeholder={field.placeholder}
                                         onBlur={e => {
                                             const num = e.target.value === '' ? undefined : Number(e.target.value);
                                             updateComponentProps?.mutate({ [field.name]: num });
@@ -230,7 +234,7 @@ export const TemplateEngineEditor: React.FC<{ id: string; onBack: () => void }> 
                                 const options = Array.isArray(val) ? val : [];
                                 return <div key={field.name} className="flex flex-col gap-1 border rounded p-2 bg-gray-50">
                                     <div className="flex items-center justify-between">
-                                        <span className="text-[10px] uppercase tracking-wide text-gray-500">{field.label}</span>
+                                        <span className="text-[10px] uppercase tracking-wide text-gray-500 flex items-center gap-1">{field.label}{issuesForField.map(is => <span key={is.code} title={is.message} className={`text-[9px] px-1 rounded ${(is as any).severity === 'error' ? 'bg-red-200 text-red-700' : 'bg-amber-200 text-amber-800'}`}>{(is as any).severity === 'error' ? 'E' : 'W'}</span>)}</span>
                                         <button className="text-[10px] text-blue-600" onClick={() => {
                                             const next = [...options, { id: `opt${options.length + 1}`, label: `Opção ${options.length + 1}` }];
                                             updateComponentProps?.mutate({ [field.name]: next });

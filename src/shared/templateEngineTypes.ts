@@ -47,5 +47,5 @@ export interface TemplateDraftShared {
     published?: any;
 }
 
-export interface ValidationIssueShared { code: string; message: string; severity?: 'error' | 'warning'; }
+export interface ValidationIssueShared { code: string; message: string; severity?: 'error' | 'warning'; field?: string; }
 export interface ValidationReportShared { errors: ValidationIssueShared[]; warnings: ValidationIssueShared[]; }

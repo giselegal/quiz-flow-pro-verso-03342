@@ -62,6 +62,8 @@ export interface TemplateDraft {
 export interface ValidationIssue {
     code: string;
     message: string;
+    severity?: 'error' | 'warning';
+    field?: string; // mapeia input específico no painel de propriedades
 }
 
 export interface ValidationReport {
