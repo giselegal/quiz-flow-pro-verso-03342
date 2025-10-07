@@ -112,6 +112,13 @@ function App() {
                         <Route path="/">
                           <div data-testid="index-page">
                             <Home />
+                            {import.meta.env.VITE_USE_TEMPLATE_ENGINE === '1' && (
+                              <div className="mt-6 p-4 border rounded bg-white shadow-sm max-w-xl">
+                                <h3 className="text-sm font-semibold mb-2">Template Engine (Beta)</h3>
+                                <p className="text-xs text-gray-600 mb-3">Acesse o novo editor modular de templates para criar e decompor funis.</p>
+                                <a href="/template-engine" className="inline-flex items-center gap-1 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-medium px-3 py-1.5 rounded transition-colors">Abrir Template Engine →</a>
+                              </div>
+                            )}
                           </div>
                         </Route>
 
