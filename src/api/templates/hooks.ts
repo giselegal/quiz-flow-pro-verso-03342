@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { templatesApi } from './client';
+import { templatesApi, componentsApi } from './client';
 import { TemplateDraft } from './types';
 
 const keys = {
@@ -118,4 +118,14 @@ export function usePublish(id: string) {
 
 export function usePreviewStart(id: string) {
     return useMutation({ mutationFn: () => templatesApi.startPreview(id) });
+}
+
+export function useUpdateComponentProps(componentId: string, templateId?: string) {
+    const qc = useQueryClient();
+    return useMutation({
+        mutationFn: (patch: Record<string, any>) => componentsApi.patch(componentId, patch),
+        onSuccess: () => {
+            if (templateId) qc.invalidateQueries({ queryKey: ['templates', 'detail', templateId] });
+        }
+    });
 }

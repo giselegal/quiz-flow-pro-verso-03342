@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { useTemplateDraft, useUpdateMeta, useAddStage, useReorderStages, usePublish, useValidateDraft, useAddStageComponent, useRemoveStageComponent, useReorderStageComponents } from '../api/hooks';
+import { useTemplateDraft, useUpdateMeta, useAddStage, useReorderStages, usePublish, useValidateDraft, useAddStageComponent, useRemoveStageComponent, useReorderStageComponents, useUpdateComponentProps } from '../api/hooks';
 import { renderComponent } from '../render/registry';
+// Ajuste: evitar conflito de tipos TemplateDraft (frontend vs server). Vamos tratar draft como 'any' onde passamos para renderComponent.
 
 export const TemplateEngineEditor: React.FC<{ id: string; onBack: () => void }> = ({ id, onBack }) => {
     const { data: draft, isLoading, error } = useTemplateDraft(id);
@@ -41,6 +42,9 @@ export const TemplateEngineEditor: React.FC<{ id: string; onBack: () => void }> 
     const addCmp = activeStage ? useAddStageComponent(draft.id, activeStage.id) : undefined;
     const remCmp = activeStage ? useRemoveStageComponent(draft.id, activeStage.id) : undefined;
     const reorderCmps = activeStage ? useReorderStageComponents(draft.id, activeStage.id) : undefined;
+    const [selectedComponentId, setSelectedComponentId] = useState<string | null>(null);
+    const selectedComponent = selectedComponentId ? draft.components[selectedComponentId] : null;
+    const updateComponentProps = selectedComponentId ? useUpdateComponentProps(selectedComponentId, draft.id) : undefined;
 
     function toggleStage(stId: string) { setOpenStageId(prev => prev === stId ? null : stId); }
     function addQuick(kind: string) {
@@ -122,7 +126,7 @@ export const TemplateEngineEditor: React.FC<{ id: string; onBack: () => void }> 
                                                 <button onClick={() => removeComponent(cid)} disabled={remCmp?.isPending} className="border px-1 rounded text-red-600 disabled:opacity-40">✕</button>
                                             </div>
                                         </div>
-                                        {comp ? <div className="text-xs">{renderComponent({ ...comp, kind: (comp as any).kind || comp.type }, { draft, stageId: s.id })}</div> : <div className="text-xs text-red-600">Componente inexistente</div>}
+                                        {comp ? <div className={`text-xs cursor-pointer ${selectedComponentId === cid ? 'ring-2 ring-blue-500 rounded' : ''}`} onClick={() => setSelectedComponentId(cid)}>{renderComponent({ ...comp, kind: (comp as any).kind || (comp as any).type }, { draft: draft as any, stageId: s.id })}</div> : <div className="text-xs text-red-600">Componente inexistente</div>}
                                     </li>;
                                 })}
                                 {s.componentIds.length === 0 && <li className="text-[11px] text-gray-500">Nenhum componente ainda.</li>}
@@ -131,6 +135,30 @@ export const TemplateEngineEditor: React.FC<{ id: string; onBack: () => void }> 
                     </li>;
                 })}
             </ul>
+        </section>
+        <section className="space-y-2 border rounded p-3 bg-white">
+            <h2 className="font-medium text-sm flex items-center gap-2">Painel de Propriedades {selectedComponent && <span className="text-[10px] text-gray-500">({selectedComponent.type})</span>}</h2>
+            {!selectedComponent && <div className="text-[11px] text-gray-500">Selecione um componente para editar.</div>}
+            {selectedComponent && <div className="space-y-3 text-xs">
+                <div className="grid gap-2">
+                    {Object.entries(selectedComponent.props || {}).slice(0, 8).map(([k, v]) => <div key={k} className="flex flex-col">
+                        <label className="text-[10px] uppercase tracking-wide text-gray-500">{k}</label>
+                        <input
+                            className="border rounded px-1 py-0.5 text-xs bg-gray-50"
+                            defaultValue={typeof v === 'string' ? v : JSON.stringify(v)}
+                            onBlur={e => {
+                                let val: any = e.target.value;
+                                if (typeof v !== 'string') {
+                                    try { val = JSON.parse(e.target.value); } catch {/* keep raw */ }
+                                }
+                                updateComponentProps?.mutate({ [k]: val });
+                            }}
+                        />
+                    </div>)}
+                </div>
+                <div className="text-[10px] text-gray-500">(Edição sem inline — futuro: schema dinâmico e validação por campo)</div>
+                {updateComponentProps?.isPending && <div className="text-[10px] text-blue-600">Salvando...</div>}
+            </div>}
         </section>
         <section className="space-y-2">
             <h2 className="font-medium">Validação</h2>

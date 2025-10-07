@@ -75,3 +75,9 @@ export const templatesApi = {
     async publish(id: string) { return http(`${BASE}/${id}/publish`, { method: 'POST' }); },
     async startPreview(id: string) { return http(`${BASE}/${id}/runtime/preview/start`, { method: 'POST' }); }
 };
+
+// Client específico para componentes (painel de propriedades)
+export const componentsApi = {
+    async get(id: string) { return http(`/api/components/${id}`); },
+    async patch(id: string, propsPatch: Record<string, any>) { return http(`/api/components/${id}`, { method: 'PATCH', body: JSON.stringify({ props: propsPatch }) }); }
+};
