@@ -229,18 +229,20 @@ const ResultStepAdapter: React.FC<BaseStepProps> = (props) => {
             title: data.title || 'Seu Resultado',
             ...data
         },
-        userName: quizState?.userName || 'Usuário',
-        resultStyle: quizState?.resultStyle || 'classic',
-        secondaryStyles: quizState?.secondaryStyles || [],
+        userProfile: {
+            userName: quizState?.userName || 'Usuário',
+            resultStyle: quizState?.resultStyle || 'classico',
+            secondaryStyles: quizState?.secondaryStyles || []
+        },
+        scores: quizState?.scores || undefined,
         onNext,
         onCalculate: () => {
-            // Lógica de cálculo pode ser chamada via onSave
             onSave({ resultCalculated: true });
         },
         ...otherProps
     };
 
-    return <OriginalResultStep {...adaptedProps} />;
+    return <OriginalResultStep {...(adaptedProps as any)} />;
 };
 
 /**
@@ -260,20 +262,34 @@ const OfferStepAdapter: React.FC<BaseStepProps> = (props) => {
         ...otherProps
     } = props as any;
 
+    // Derivar offerKey similar à lógica de getOfferKey()
+    const strategicAnswers = quizState?.strategicAnswers || {};
+    const answer = strategicAnswers['Qual desses resultados você mais gostaria de alcançar?'];
+    const answerToKey: Record<string, string> = {
+        'montar-looks-facilidade': 'Montar looks com mais facilidade e confiança',
+        'usar-que-tenho': 'Usar o que já tenho e me sentir estilosa',
+        'comprar-consciencia': 'Comprar com mais consciência e sem culpa',
+        'ser-admirada': 'Ser admirada pela imagem que transmito'
+    };
+    const offerKey = answerToKey[answer] || Object.keys(data.offerMap || {})[0] || '';
+
     const adaptedProps = {
         data: {
             id: stepId,
             type: 'offer' as const,
             title: data.title || 'Oferta Especial',
+            offerMap: data.offerMap || {},
             ...data
         },
-        userName: quizState?.userName || 'Usuário',
-        resultStyle: quizState?.resultStyle || 'classic',
-        strategicAnswers: quizState?.strategicAnswers || {},
+        userProfile: {
+            userName: quizState?.userName || 'Usuário',
+            resultStyle: quizState?.resultStyle || 'classico'
+        },
+        offerKey,
         ...otherProps
     };
 
-    return <OriginalOfferStep {...adaptedProps} />;
+    return <OriginalOfferStep {...(adaptedProps as any)} />;
 };
 
 /**
