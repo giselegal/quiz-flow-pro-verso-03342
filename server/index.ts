@@ -178,6 +178,59 @@ tplRouter.get('/:id/history', (req, res) => {
 app.use('/api/templates', tplRouter);
 
 // ==================================================================================
+// Runtime Public Quiz Routes (MVP)
+// ==================================================================================
+const runtimeRouter = express.Router();
+
+// Get published snapshot by slug
+runtimeRouter.get('/quiz/:slug', (req, res) => {
+  try {
+    const tpl = templateService.getPublishedBySlug(req.params.slug);
+    if (!tpl) return res.status(404).json({ error: 'NOT_FOUND' });
+    res.json({ templateId: tpl.id, publishId: tpl.publishedSnapshot.publishedAt, stages: tpl.publishedSnapshot.stages, components: tpl.publishedSnapshot.components, logic: tpl.publishedSnapshot.logic, outcomes: tpl.publishedSnapshot.outcomes });
+  } catch (e: any) {
+    res.status(500).json({ error: 'INTERNAL_ERROR' });
+  }
+});
+
+// Start session
+runtimeRouter.post('/quiz/:slug/start', (req, res) => {
+  try {
+    const data = templateService.startRuntime(req.params.slug);
+    res.status(201).json(data);
+  } catch (e: any) {
+    if (e.message === 'NOT_FOUND') return res.status(404).json({ error: 'NOT_FOUND' });
+    res.status(500).json({ error: 'INTERNAL_ERROR' });
+  }
+});
+
+// Answer stage
+runtimeRouter.post('/quiz/:slug/answer', (req, res) => {
+  const { sessionId, stageId, answers = [] } = req.body || {};
+  try {
+    const result = templateService.answerRuntime(req.params.slug, sessionId, stageId, Array.isArray(answers) ? answers : []);
+    res.json(result);
+  } catch (e: any) {
+    if (['NOT_FOUND', 'SESSION_NOT_FOUND', 'ALREADY_COMPLETED'].includes(e.message)) return res.status(400).json({ error: e.message });
+    res.status(500).json({ error: 'INTERNAL_ERROR' });
+  }
+});
+
+// Complete quiz
+runtimeRouter.post('/quiz/:slug/complete', (req, res) => {
+  const { sessionId } = req.body || {};
+  try {
+    const result = templateService.completeRuntime(req.params.slug, sessionId);
+    res.json(result);
+  } catch (e: any) {
+    if (['NOT_FOUND', 'SESSION_NOT_FOUND'].includes(e.message)) return res.status(400).json({ error: e.message });
+    res.status(500).json({ error: 'INTERNAL_ERROR' });
+  }
+});
+
+app.use('/api/runtime', runtimeRouter);
+
+// ==================================================================================
 // Configuration API endpoints
 // ==================================================================================
 

@@ -53,6 +53,68 @@ class TemplateRepository {
 
 export const templateRepo = new TemplateRepository();
 
+// Runtime session in-memory (MVP)
+export interface RuntimeSession {
+    sessionId: string;
+    templateId: string;
+    publishId: string; // publishedAt
+    currentStageId: string;
+    answers: Record<string, string[]>; // stageId -> optionIds
+    score: number;
+    createdAt: string;
+    updatedAt: string;
+    completed: boolean;
+}
+
+const runtimeSessions = new Map<string, RuntimeSession>();
+
+export function createRuntimeSession(template: TemplateDraft): RuntimeSession {
+    if (!template.publishedSnapshot) throw new Error('NOT_PUBLISHED');
+    const firstStage = template.publishedSnapshot.stages.find((s: any) => s.enabled !== false) || template.publishedSnapshot.stages[0];
+    const sessionId = `sess_${nanoid(10)}`;
+    const now = new Date().toISOString();
+    const sess: RuntimeSession = {
+        sessionId,
+        templateId: template.id,
+        publishId: template.publishedSnapshot.publishedAt,
+        currentStageId: firstStage.id,
+        answers: {},
+        score: 0,
+        createdAt: now,
+        updatedAt: now,
+        completed: false
+    };
+    runtimeSessions.set(sessionId, sess);
+    return sess;
+}
+
+export function getSession(sessionId: string): RuntimeSession | undefined {
+    const s = runtimeSessions.get(sessionId);
+    return s && { ...s };
+}
+
+export function saveSession(s: RuntimeSession) {
+    s.updatedAt = new Date().toISOString();
+    runtimeSessions.set(s.sessionId, { ...s });
+}
+
+// Simple scoring util
+export function computeScore(template: TemplateDraft, answers: Record<string, string[]>) {
+    const weights = template.logic.scoring.weights || {};
+    let total = 0;
+    for (const [stageId, opts] of Object.entries(answers)) {
+        for (const opt of opts) {
+            const key = `${stageId}:${opt}`;
+            if (weights[key]) total += weights[key];
+        }
+    }
+    if (template.logic.scoring.mode === 'average') {
+        const count = Object.values(answers).reduce((acc, arr) => acc + arr.length, 0) || 1;
+        total = total / count;
+    }
+    return total;
+}
+
 // Utility funcs
 export function addStage(template: TemplateDraft, type: Stage['type']): Stage {
     const id = `stage_${template.stages.length}`;
