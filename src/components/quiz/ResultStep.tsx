@@ -249,7 +249,7 @@ export default function ResultStep({
                                 <span className="text-gray-500">Carregando guia...</span>
                             </div>
                         ) : (
-                            <div className="relative mx-auto max-w-md aspect-[4/5] rounded-lg overflow-hidden shadow-md">
+                            <div className="relative mx-auto max-w-md aspect-[4/5] rounded-lg overflow-hidden shadow-md w-[93%] sm:w-full">
                                 <img
                                     src={guideImage.src}
                                     alt={`Guia de Estilo ${styleConfig.name}`}
