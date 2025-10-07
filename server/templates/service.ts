@@ -1,6 +1,77 @@
 import { templateRepo, addStage, addComponent, updateScoring, addOutcome, publishTemplate, createRuntimeSession, getSession, saveSession, computeScore } from './repo';
 import { TemplateDraft, ScoringConfig } from './models';
 
+// ---------------- Condition Tree Evaluator (AND/OR + folhas simples) ----------------
+// Estrutura suportada (exemplos):
+// { scoreGte: 10 }
+// { op: 'AND', conditions: [ { scoreGte: 10 }, { scoreLte: 30 } ] }
+// { op: 'OR', conditions: [ { scoreGte: 50 }, { answeredIncludes: { stageId: 'stage_q1', optionId: 'optX' } } ] }
+// Folhas disponíveis:
+//  - scoreGte / scoreLte
+//  - answersCountGte / answersCountLte (total de opções selecionadas em toda a sessão)
+//  - answeredIncludes { stageId, optionId }
+//  - stageAnswered stageId
+//  - optionCountInStageGte / optionCountInStageLte { stageId, gte|lte }
+// Observação: campos desconhecidos são ignorados (não invalidam a condição).
+
+type ConditionNode = any; // Tipagem flexível para MVP
+
+function evaluateConditionTree(node: ConditionNode, context: { score: number; answers: Record<string, string[]> }): boolean {
+    if (!node || typeof node !== 'object') return true; // nó vazio -> true (permite fallback à lógica existente)
+
+    // Operador composto
+    if (node.op && Array.isArray(node.conditions)) {
+        const op = String(node.op).toUpperCase();
+        if (op === 'AND') {
+            return node.conditions.every((c: any) => evaluateConditionTree(c, context));
+        }
+        if (op === 'OR') {
+            return node.conditions.some((c: any) => evaluateConditionTree(c, context));
+        }
+        // Operador desconhecido -> falha segura
+        return false;
+    }
+
+    // Folhas
+    const { score } = context;
+    if (node.scoreGte !== undefined && !(score >= node.scoreGte)) return false;
+    if (node.scoreLte !== undefined && !(score <= node.scoreLte)) return false;
+
+    const totalAnswers = Object.values(context.answers).reduce((acc, arr) => acc + arr.length, 0);
+    if (node.answersCountGte !== undefined && !(totalAnswers >= node.answersCountGte)) return false;
+    if (node.answersCountLte !== undefined && !(totalAnswers <= node.answersCountLte)) return false;
+
+    if (node.answeredIncludes) {
+        const { stageId, optionId } = node.answeredIncludes || {};
+        if (stageId && optionId) {
+            const list = context.answers[stageId] || [];
+            if (!list.includes(optionId)) return false;
+        }
+    }
+
+    if (node.stageAnswered) {
+        const stageId = node.stageAnswered;
+        if (!context.answers[stageId] || context.answers[stageId].length === 0) return false;
+    }
+
+    if (node.optionCountInStageGte) {
+        const { stageId, gte } = node.optionCountInStageGte || {};
+        if (stageId && typeof gte === 'number') {
+            const count = (context.answers[stageId] || []).length;
+            if (!(count >= gte)) return false;
+        }
+    }
+    if (node.optionCountInStageLte) {
+        const { stageId, lte } = node.optionCountInStageLte || {};
+        if (stageId && typeof lte === 'number') {
+            const count = (context.answers[stageId] || []).length;
+            if (!(count <= lte)) return false;
+        }
+    }
+
+    return true;
+}
+
 export class TemplateService {
     createBase(name: string, slug: string): TemplateDraft {
         return templateRepo.createFromBase(name, slug);
@@ -96,9 +167,8 @@ export class TemplateService {
         let appliedRule: any = null;
         for (const rule of rules) {
             const cond = rule.conditionTree || {};
-            let pass = true;
-            if (cond.scoreGte !== undefined && !(sess.score >= cond.scoreGte)) pass = false;
-            if (cond.scoreLte !== undefined && !(sess.score <= cond.scoreLte)) pass = false;
+            let pass = evaluateConditionTree(cond, { score: sess.score, answers: sess.answers });
+            // (debug removido)
             if (pass) {
                 const target = tpl.publishedSnapshot.stages.find((s: any) => s.id === rule.toStageId && s.enabled !== false);
                 if (target) {
