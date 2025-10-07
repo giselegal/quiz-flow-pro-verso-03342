@@ -58,15 +58,15 @@ export default function IntroStep({ data, onNameSubmit }: IntroStepProps) {
                 <div className="flex flex-col items-center space-y-2">
                     <div className="relative">
                         <img
-                            src="https://res.cloudinary.com/der8kogzu/image/upload/f_png,q_70,w_120,h_50,c_fit/v1752430327/LOGO_DA_MARCA_GISELE_l78gin.png"
+                            src="https://res.cloudinary.com/der8kogzu/image/upload/f_png,q_70,w_132,h_55,c_fit/v1752430327/LOGO_DA_MARCA_GISELE_l78gin.png"
                             alt="Logo Gisele Galvão"
                             className="h-auto mx-auto"
-                            width={120}
-                            height={50}
+                            width={132}
+                            height={55}
                             style={{
                                 objectFit: 'contain',
-                                maxWidth: '120px',
-                                aspectRatio: '120 / 50',
+                                maxWidth: '132px',
+                                aspectRatio: '132 / 55',
                             }}
                         />
                         {/* Barra dourada */}
