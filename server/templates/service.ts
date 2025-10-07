@@ -1,5 +1,6 @@
 import { templateRepo } from './repo';
 import { createBaseTemplate, deepClone, TemplateAggregate, TemplatePublishedSnapshot, genId, RuntimeSession, BranchingRule, ConditionTreeNode } from './models';
+import { validateTemplate } from './validation';
 
 // Armazena sessões em memória (MVP)
 const runtimeSessions = new Map<string, RuntimeSession>();
@@ -28,6 +29,13 @@ function resolveOutcome(aggregate: TemplateAggregate, score: number): string | u
         if (score >= min && score <= max) return o.id;
     }
     return undefined;
+}
+
+function interpolateOutcome(aggregate: TemplateAggregate, outcomeId: string | undefined, score: number): string | undefined {
+    if (!outcomeId) return undefined;
+    const o = aggregate.draft.outcomes.find(o => o.id === outcomeId);
+    if (!o) return undefined;
+    return o.template.replace(/{{\s*score\s*}}/g, String(score));
 }
 
 function evalPredicate(pred: any, ctx: { score: number; answers: Record<string, string[]> }): boolean {
@@ -106,13 +114,138 @@ export const templateService = {
         return agg;
     },
 
+    updateMeta(id: string, metaPatch: Partial<{ name: string; description: string; tags: string[]; seo: any; tracking: any }>) {
+        const agg = templateRepo.get(id);
+        if (!agg) throw new Error('Template not found');
+        Object.assign(agg.draft.meta, metaPatch);
+        agg.draft.updatedAt = new Date().toISOString();
+        agg.draft.draftVersion = (agg.draft.draftVersion || 1) + 1;
+        templateRepo.save(agg);
+        return agg.draft.meta;
+    },
+
+    addStage(id: string, stage: { type: string; afterStageId?: string; label?: string }) {
+        const agg = templateRepo.get(id);
+        if (!agg) throw new Error('Template not found');
+        const newId = genId('stage');
+        const stages = agg.draft.stages;
+        let insertOrder = stages.length;
+        if (stage.afterStageId) {
+            const ref = stages.find(s => s.id === stage.afterStageId);
+            if (ref) insertOrder = ref.order + 1;
+        }
+        stages.forEach(s => { if (s.order >= insertOrder) s.order += 1; });
+        stages.push({ id: newId, type: stage.type as any, order: insertOrder, enabled: true, componentIds: [], meta: { description: stage.label } });
+        stages.sort((a, b) => a.order - b.order).forEach((s, idx) => s.order = idx);
+        agg.draft.updatedAt = new Date().toISOString();
+        agg.draft.draftVersion = (agg.draft.draftVersion || 1) + 1;
+        templateRepo.save(agg);
+        return stages.find(s => s.id === newId)!;
+    },
+
+    updateStage(id: string, stageId: string, patch: Partial<{ type: string; enabled: boolean; meta: any }>) {
+        const agg = templateRepo.get(id);
+        if (!agg) throw new Error('Template not found');
+        const st = agg.draft.stages.find(s => s.id === stageId);
+        if (!st) throw new Error('Stage not found');
+        Object.assign(st, patch);
+        agg.draft.updatedAt = new Date().toISOString();
+        agg.draft.draftVersion = (agg.draft.draftVersion || 1) + 1;
+        templateRepo.save(agg);
+        return st;
+    },
+
+    reorderStages(id: string, orderedIds: string[]) {
+        const agg = templateRepo.get(id);
+        if (!agg) throw new Error('Template not found');
+        const map = new Set(orderedIds);
+        if (map.size !== orderedIds.length) throw new Error('Duplicate IDs in reorder');
+        if (agg.draft.stages.some(s => !map.has(s.id))) throw new Error('Missing stage ids');
+        orderedIds.forEach((sid, idx) => { const st = agg.draft.stages.find(s => s.id === sid)!; st.order = idx; });
+        agg.draft.stages.sort((a, b) => a.order - b.order);
+        agg.draft.updatedAt = new Date().toISOString();
+        agg.draft.draftVersion = (agg.draft.draftVersion || 1) + 1;
+        templateRepo.save(agg);
+        return agg.draft.stages;
+    },
+
+    removeStage(id: string, stageId: string) {
+        const agg = templateRepo.get(id);
+        if (!agg) throw new Error('Template not found');
+        if (['stage_result'].includes(stageId)) throw new Error('Cannot remove base stage');
+        const idx = agg.draft.stages.findIndex(s => s.id === stageId);
+        if (idx === -1) throw new Error('Stage not found');
+        agg.draft.stages.splice(idx, 1);
+        agg.draft.stages.sort((a, b) => a.order - b.order).forEach((s, i) => s.order = i);
+        agg.draft.updatedAt = new Date().toISOString();
+        agg.draft.draftVersion = (agg.draft.draftVersion || 1) + 1;
+        templateRepo.save(agg);
+        return true;
+    },
+
+    setOutcomes(id: string, outcomes: { id?: string; minScore?: number; maxScore?: number; template: string }[]) {
+        const agg = templateRepo.get(id);
+        if (!agg) throw new Error('Template not found');
+        agg.draft.outcomes = outcomes.map(o => ({ id: o.id || genId('out'), minScore: o.minScore, maxScore: o.maxScore, template: o.template }));
+        agg.draft.updatedAt = new Date().toISOString();
+        agg.draft.draftVersion = (agg.draft.draftVersion || 1) + 1;
+        templateRepo.save(agg);
+        return agg.draft.outcomes;
+    },
+
+    setScoring(id: string, scoring: Partial<{ mode: 'sum' | 'average'; weights: Record<string, number> }>) {
+        const agg = templateRepo.get(id);
+        if (!agg) throw new Error('Template not found');
+        Object.assign(agg.draft.logic.scoring, scoring);
+        agg.draft.updatedAt = new Date().toISOString();
+        agg.draft.draftVersion = (agg.draft.draftVersion || 1) + 1;
+        templateRepo.save(agg);
+        return agg.draft.logic.scoring;
+    },
+
+    setBranching(id: string, rules: BranchingRule[]) {
+        const agg = templateRepo.get(id);
+        if (!agg) throw new Error('Template not found');
+        agg.draft.logic.branching = deepClone(rules);
+        agg.draft.updatedAt = new Date().toISOString();
+        agg.draft.draftVersion = (agg.draft.draftVersion || 1) + 1;
+        templateRepo.save(agg);
+        return agg.draft.logic.branching;
+    },
+
+    validateDraft(id: string) {
+        const agg = templateRepo.get(id);
+        if (!agg) throw new Error('Template not found');
+        return validateTemplate(agg);
+    },
+
+    startRuntimeDraft(id: string) {
+        const agg = templateRepo.get(id);
+        if (!agg) throw new Error('Template not found');
+        const first = agg.draft.stages.filter(s => s.enabled).sort((a, b) => a.order - b.order)[0];
+        if (!first) throw new Error('No enabled stages');
+        const session: RuntimeSession = {
+            sessionId: genId('sess'),
+            templateId: agg.draft.id,
+            slug: agg.draft.meta.slug + ':draft',
+            currentStageId: first.id,
+            answers: {},
+            score: 0,
+            createdAt: Date.now(),
+            updatedAt: Date.now()
+        };
+        runtimeSessions.set(session.sessionId, session);
+        return { sessionId: session.sessionId, currentStageId: session.currentStageId };
+    },
+
     publish(id: string): TemplatePublishedSnapshot {
         const agg = templateRepo.get(id);
         if (!agg) throw new Error('Template not found');
         const now = new Date().toISOString();
-        // Validações mínimas
-        if (!agg.draft.stages.some(s => s.type === 'result')) {
-            throw new Error('Cannot publish without a result stage');
+        const report = validateTemplate(agg);
+        if (report.errors.length) {
+            const msg = report.errors.map(e => `${e.code}`).join(', ');
+            throw new Error(`Publish blocked: ${msg}`);
         }
         const snapshot: TemplatePublishedSnapshot = {
             ...deepClone(agg.draft),
@@ -183,7 +316,8 @@ export const templateService = {
             session.completed = true;
             session.outcomeId = resolveOutcome(agg, session.score);
         }
-        return { branched, nextStageId, completed: session.completed || false, score: session.score, outcomeId: session.outcomeId };
+        const outcomeText = interpolateOutcome(agg, session.outcomeId, session.score);
+        return { branched, nextStageId, completed: session.completed || false, score: session.score, outcomeId: session.outcomeId, outcomeText };
     }
 };
 

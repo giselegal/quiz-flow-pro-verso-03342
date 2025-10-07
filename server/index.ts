@@ -2,6 +2,7 @@ import cors from 'cors';
 import express from 'express';
 import { createServer } from 'http';
 import path, { dirname } from 'path';
+import { templatesRouter } from './templates/controller.js';
 import { fileURLToPath } from 'url';
 
 // Get __dirname equivalent for ES modules
@@ -157,6 +158,9 @@ app.get('/api/quizzes/:id', (req, res) => {
   // Mock data - replace with actual database queries
   res.json({ id: req.params.id, title: 'Mock Quiz' });
 });
+
+// Templates (novo Template Engine)
+app.use('/api/templates', templatesRouter);
 
 // Generic error handler
 app.use((err: any, req: any, res: any, next: any) => {

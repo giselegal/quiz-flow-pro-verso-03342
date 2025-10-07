@@ -25,6 +25,8 @@ export interface TemplateMeta {
     slug: string; // único entre templates publicados
     seo?: TemplateMetaSEO;
     tracking?: TemplateTrackingMeta;
+    description?: string;
+    tags?: string[];
 }
 
 export type StageType = 'intro' | 'question' | 'result' | 'transition' | 'custom';
@@ -108,6 +110,7 @@ export interface TemplateDraft {
     history: HistoryEntry[];
     createdAt: string;
     updatedAt: string;
+    draftVersion?: number; // incrementa a cada mutação persistida (controle de concorrência futuro)
 }
 
 export interface TemplatePublishedSnapshot extends Omit<TemplateDraft, 'status'> {
@@ -146,7 +149,7 @@ export function createBaseTemplate(name: string, slug: string): TemplateAggregat
     const draft: TemplateDraft = {
         id: genId('tpl'),
         schemaVersion: '1.0.0',
-        meta: { name, slug, seo: {}, tracking: {} },
+        meta: { name, slug, seo: {}, tracking: {}, description: '', tags: [] },
         stages: [
             { id: 'stage_intro', type: 'intro', order: 0, enabled: true, componentIds: [] },
             { id: 'stage_q1', type: 'question', order: 1, enabled: true, componentIds: [] },
@@ -161,7 +164,8 @@ export function createBaseTemplate(name: string, slug: string): TemplateAggregat
         status: 'draft',
         history: [],
         createdAt,
-        updatedAt: createdAt
+        updatedAt: createdAt,
+        draftVersion: 1
     };
     return { draft };
 }

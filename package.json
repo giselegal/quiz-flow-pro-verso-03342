@@ -34,6 +34,7 @@
     "test:properties:ui": "vitest --config vitest.config.properties.ts --ui",
     "test:properties:run": "vitest --config vitest.config.properties.ts run",
     "test:coverage": "vitest run --coverage",
+    "test:templates": "vitest --config vitest.config.templates.ts run",
     "test:watch": "vitest --watch",
     "test:properties:coverage": "vitest --config vitest.config.properties.ts run --coverage",
     "test:comprehensive": "ts-node scripts/test-runner.ts",
