@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useTemplateDraft, useUpdateMeta, useAddStage, useReorderStages, usePublish, useValidateDraft, useAddStageComponent, useRemoveStageComponent, useReorderStageComponents, useUpdateComponentProps } from '../api/hooks';
+import { useTemplateDraft, useUpdateMeta, useAddStage, useReorderStages, usePublish, useValidateDraft, useAddStageComponent, useRemoveStageComponent, useReorderStageComponents, useUpdateComponentProps, usePreviewStart } from '../api/hooks';
 import { renderComponent } from '../render/registry';
 import { getComponentSchema } from './componentPropSchemas';
 // Ajuste: evitar conflito de tipos TemplateDraft (frontend vs server). Vamos tratar draft como 'any' onde passamos para renderComponent.
@@ -46,6 +46,14 @@ export const TemplateEngineEditor: React.FC<{ id: string; onBack: () => void }> 
     const [selectedComponentId, setSelectedComponentId] = useState<string | null>(null);
     const selectedComponent = selectedComponentId ? draft.components[selectedComponentId] : null;
     const updateComponentProps = selectedComponentId ? useUpdateComponentProps(selectedComponentId, draft.id) : undefined;
+    // Preview runtime (draft) - simplificado: apenas inicia e mantém estado local de respostas
+    const previewStart = usePreviewStart(draft.id);
+    const [runtime, setRuntime] = useState<{ sessionId: string; currentStageId: string } | null>(null);
+    const [runtimeAnswers, setRuntimeAnswers] = useState<Record<string, string[]>>({});
+    function startPreview() {
+        previewStart.mutate(undefined, { onSuccess: (res: any) => { setRuntime(res); setRuntimeAnswers({}); } });
+    }
+    const currentRuntimeStage = runtime ? draft.stages.find(s => s.id === runtime.currentStageId) : undefined;
 
     function toggleStage(stId: string) { setOpenStageId(prev => prev === stId ? null : stId); }
     function addQuick(kind: string) {
@@ -247,6 +255,29 @@ export const TemplateEngineEditor: React.FC<{ id: string; onBack: () => void }> 
             <button onClick={handlePublish} disabled={publishMut.isPending || (validation && validation.errors.length > 0)} className="bg-purple-600 text-white px-3 py-1 rounded disabled:opacity-50 text-sm">Publicar</button>
             {publishMut.isSuccess && <span className="text-xs text-green-700 ml-2">Publicado!</span>}
             {publishMut.error && <span className="text-xs text-red-600 ml-2">Erro: {(publishMut.error as Error).message}</span>}
+        </section>
+        <section className="space-y-2 border-t pt-4">
+            <h2 className="font-medium">Preview Runtime (Draft)</h2>
+            {!runtime && <button onClick={startPreview} disabled={previewStart.isPending} className="bg-gray-800 text-white px-3 py-1 rounded text-sm disabled:opacity-50">Iniciar Preview</button>}
+            {runtime && <div className="space-y-3 text-xs">
+                <div className="flex items-center gap-2">
+                    <span className="font-mono bg-gray-100 px-1 rounded">sess:{runtime.sessionId.slice(0, 8)}</span>
+                    <span className="text-gray-500">Stage atual: {runtime.currentStageId}</span>
+                    <button onClick={() => { setRuntime(null); }} className="ml-auto text-[10px] text-red-600">Encerrar</button>
+                </div>
+                {currentRuntimeStage ? <div className="border rounded p-2 bg-white">
+                    <div className="text-[11px] font-semibold mb-1">Stage #{currentRuntimeStage.order}</div>
+                    <ul className="space-y-2">
+                        {currentRuntimeStage.componentIds.map(cid => {
+                            const comp = draft.components[cid];
+                            return <li key={cid} className="border rounded p-2">
+                                {renderComponent({ ...comp, kind: (comp as any).kind || (comp as any).type }, { draft: draft as any, stageId: currentRuntimeStage.id })}
+                                {/* Placeholder: sem progressão / branching até termos endpoint draft answer */}
+                            </li>;
+                        })}
+                    </ul>
+                </div> : <div className="text-[11px] text-gray-500">Stage atual não encontrada (pode ter sido removida).</div>}
+            </div>}
         </section>
     </div>;
 };
