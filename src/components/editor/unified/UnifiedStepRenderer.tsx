@@ -48,17 +48,25 @@ const LazyStepComponents = {
     'step-10': lazy(() => import('@/components/step-registry/ProductionStepsRegistry').then(m => ({ default: m.QuestionStepAdapter }))),
     'step-11': lazy(() => import('@/components/step-registry/ProductionStepsRegistry').then(m => ({ default: m.QuestionStepAdapter }))),
 
-    // Step Estratégico
-    'step-12': lazy(() => import('@/components/step-registry/ProductionStepsRegistry').then(m => ({ default: m.StrategicQuestionStepAdapter }))),
+    // Transição pós-perguntas (12)
+    'step-12': lazy(() => import('@/components/step-registry/ProductionStepsRegistry').then(m => ({ default: m.TransitionStepAdapter }))),
 
-    // Transição
-    'step-13': lazy(() => import('@/components/step-registry/ProductionStepsRegistry').then(m => ({ default: m.TransitionStepAdapter }))),
+    // Perguntas estratégicas (13–18)
+    'step-13': lazy(() => import('@/components/step-registry/ProductionStepsRegistry').then(m => ({ default: m.StrategicQuestionStepAdapter }))),
+    'step-14': lazy(() => import('@/components/step-registry/ProductionStepsRegistry').then(m => ({ default: m.StrategicQuestionStepAdapter }))),
+    'step-15': lazy(() => import('@/components/step-registry/ProductionStepsRegistry').then(m => ({ default: m.StrategicQuestionStepAdapter }))),
+    'step-16': lazy(() => import('@/components/step-registry/ProductionStepsRegistry').then(m => ({ default: m.StrategicQuestionStepAdapter }))),
+    'step-17': lazy(() => import('@/components/step-registry/ProductionStepsRegistry').then(m => ({ default: m.StrategicQuestionStepAdapter }))),
+    'step-18': lazy(() => import('@/components/step-registry/ProductionStepsRegistry').then(m => ({ default: m.StrategicQuestionStepAdapter }))),
 
-    // Resultado
-    'step-14': lazy(() => import('@/components/step-registry/ProductionStepsRegistry').then(m => ({ default: m.ResultStepAdapter }))),
+    // Transição resultado (19)
+    'step-19': lazy(() => import('@/components/step-registry/ProductionStepsRegistry').then(m => ({ default: m.TransitionStepAdapter }))),
 
-    // Oferta
-    'step-15': lazy(() => import('@/components/step-registry/ProductionStepsRegistry').then(m => ({ default: m.OfferStepAdapter }))),
+    // Resultado (20)
+    'step-20': lazy(() => import('@/components/step-registry/ProductionStepsRegistry').then(m => ({ default: m.ResultStepAdapter }))),
+
+    // Oferta (21)
+    'step-21': lazy(() => import('@/components/step-registry/ProductionStepsRegistry').then(m => ({ default: m.OfferStepAdapter }))),
 } as const;
 
 type LazyStepId = keyof typeof LazyStepComponents;
