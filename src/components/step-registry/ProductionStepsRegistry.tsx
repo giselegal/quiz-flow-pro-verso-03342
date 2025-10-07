@@ -93,31 +93,23 @@ const QuestionStepAdapter: React.FC<BaseStepProps> = (props) => {
         ...otherProps
     } = props as any;
 
-    // Determinar requiredSelections (se já calculado externamente via stepProps, respeitar; fallback 1)
-    const requiredSelections = (data.requiredSelections && Number(data.requiredSelections)) || 1;
-
+    // Usar os campos reais vindos de quizSteps (questionText, questionNumber, requiredSelections)
+    const requiredSelections = Number(data.requiredSelections) || 1;
     const adaptedProps = {
         data: {
             id: stepId,
             type: 'question' as const,
-            number: stepNumber,
-            title: data.title || `Pergunta ${stepNumber}`,
-            question: data.question || 'Qual destas opções mais combina com você?',
-            options: data.options || [
-                { id: 'option-1', text: 'Opção 1', style: 'classic' },
-                { id: 'option-2', text: 'Opção 2', style: 'casual' },
-                { id: 'option-3', text: 'Opção 3', style: 'elegante' }
-            ],
-            imageQuestion: data.imageQuestion || '',
+            questionText: data.questionText,
+            questionNumber: data.questionNumber,
+            options: data.options || [],
             requiredSelections,
             ...data
         },
-        currentAnswers: quizState?.answers?.[stepId] || [],
+        currentAnswers: quizState?.answers?.[stepId] || quizState?.answers?.[stepId.replace('step-0', 'step-')] || [],
         onAnswersChange: (answers: string[]) => {
             onSave({ [stepId]: answers });
-            // Auto-advance somente quando atingir exatamente o limite
             if (answers.length === requiredSelections) {
-                setTimeout(() => onNext(), 400);
+                setTimeout(() => onNext(), 350);
             }
         },
         ...otherProps
@@ -145,23 +137,18 @@ const StrategicQuestionStepAdapter: React.FC<BaseStepProps> = (props) => {
     } = props as any;
 
     // Priorizar questionText real vindo de QUIZ_STEPS (data.questionText)
-    const questionText = (data as any).questionText || (data as any).question || 'Qual seu principal objetivo?';
+    const questionText = (data as any).questionText || (data as any).question || (data as any).title || 'Qual seu principal objetivo?';
     const adaptedProps = {
         data: {
             id: stepId,
             type: 'strategic-question' as const,
-            number: stepNumber,
-            // Mantemos title somente se realmente fornecido; evitamos título genérico visível
-            title: data.title || undefined,
             questionText,
-            options: data.options || [
-                { id: 'strategic-1', text: 'Objetivo 1', offerKey: 'offer1' },
-                { id: 'strategic-2', text: 'Objetivo 2', offerKey: 'offer2' }
-            ],
+            options: data.options || [],
             ...data
         },
+        currentAnswer: quizState?.answers?.[stepId]?.[0] || quizState?.answers?.[stepId.replace('step-0', 'step-')]?.[0] || '',
         onAnswerChange: (answerId: string) => {
-            onSave({ [stepId]: answerId });
+            onSave({ [stepId]: [answerId] });
         },
         ...otherProps
     };
