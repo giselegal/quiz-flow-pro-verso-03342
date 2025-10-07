@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState, useCallback } from 'react';
 import { useTemplateRuntime } from '@/hooks/useTemplateRuntime';
 
 interface Props { slug: string }
@@ -7,6 +7,22 @@ interface Props { slug: string }
 // Futuro: mapear types de stage/component para renderizadores reais.
 export const PublishedTemplateRunner: React.FC<Props> = ({ slug }) => {
     const { snapshot, loading, error, sessionId, currentStageId, score, outcome, branchedLast, answer, complete, restart } = useTemplateRuntime(slug);
+
+    // Respostas locais por stage (array de optionIds selecionadas)
+    const [localAnswers, setLocalAnswers] = useState<Record<string, string[]>>({});
+
+    const setAnswerSelection = useCallback((stageId: string, optionId: string, multi: boolean) => {
+        setLocalAnswers(prev => {
+            const current = prev[stageId] || [];
+            let next: string[];
+            if (multi) {
+                next = current.includes(optionId) ? current.filter(id => id !== optionId) : [...current, optionId];
+            } else {
+                next = current.includes(optionId) ? [] : [optionId];
+            }
+            return { ...prev, [stageId]: next };
+        });
+    }, []);
 
     const currentStage = useMemo(() => snapshot?.stages.find(s => s.id === currentStageId), [snapshot, currentStageId]);
 
@@ -22,8 +38,8 @@ export const PublishedTemplateRunner: React.FC<Props> = ({ slug }) => {
             await complete();
             return;
         }
-        // Placeholder: envia respostas vazias (ou simuladas) pois ainda não temos UI de inputs ligada
-        await answer(currentStage.id, []);
+        const selected = localAnswers[currentStage.id] || [];
+        await answer(currentStage.id, selected);
     };
 
     // Adapter simples para componentes publicados
@@ -36,12 +52,33 @@ export const PublishedTemplateRunner: React.FC<Props> = ({ slug }) => {
             case 'Paragraph':
                 return <p key={cmp.id}>{cmp.props?.text || 'Parágrafo'}</p>;
             case 'OptionList':
+                const options = (cmp.props?.options || []) as any[];
+                const multi = !!cmp.props?.multi; // permitir multi-seleção se definido
+                const sel = localAnswers[currentStageId || ''] || [];
                 return (
-                    <div key={cmp.id} style={{ border: '1px solid #ccc', padding: 8, borderRadius: 4 }}>
-                        <strong>Opções (placeholder)</strong>
-                        <ul style={{ margin: '4px 0 0 16px' }}>
-                            {(cmp.props?.options || []).map((o: any, idx: number) => <li key={idx}>{o.label || o.id || 'Opção'}</li>)}
-                        </ul>
+                    <div key={cmp.id} style={{ border: '1px solid #ccc', padding: 8, borderRadius: 4, display: 'flex', flexDirection: 'column', gap: 4 }}>
+                        <strong>Escolha {multi ? 'uma ou mais opções' : 'uma opção'}:</strong>
+                        {options.length === 0 && <em style={{ opacity: 0.7 }}>Sem opções configuradas</em>}
+                        {options.map((o: any) => {
+                            const id = o.id || o.value || o.label;
+                            const checked = sel.includes(id);
+                            return (
+                                <label key={id} style={{ display: 'flex', alignItems: 'center', gap: 6, cursor: 'pointer' }}>
+                                    <input
+                                        type={multi ? 'checkbox' : 'radio'}
+                                        name={`opt-${currentStageId}`}
+                                        checked={checked}
+                                        onChange={() => setAnswerSelection(currentStageId!, id, multi)}
+                                    />
+                                    <span>{o.label || id}</span>
+                                </label>
+                            );
+                        })}
+                        {options.length > 0 && (
+                            <div style={{ marginTop: 4, fontSize: 12, opacity: 0.8 }}>
+                                Selecionadas: {sel.length || 0}
+                            </div>
+                        )}
                     </div>
                 );
             default:
@@ -70,7 +107,7 @@ export const PublishedTemplateRunner: React.FC<Props> = ({ slug }) => {
                 </div>
             )}
             {!outcome && (
-                <button onClick={handleAdvance} style={{ marginTop: 12 }}>
+                <button onClick={handleAdvance} style={{ marginTop: 12 }} disabled={currentStage?.type === 'question' && (snapshot.components[currentStage.componentIds.find(id => snapshot.components[id].type === 'OptionList') || '']?.props?.requireSelection && !(localAnswers[currentStage.id]?.length))}>
                     {isResult ? 'Finalizar' : 'Avançar'}
                 </button>
             )}
