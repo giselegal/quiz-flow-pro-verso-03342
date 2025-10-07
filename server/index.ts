@@ -2,7 +2,7 @@ import cors from 'cors';
 import express from 'express';
 import { createServer } from 'http';
 import path, { dirname } from 'path';
-import { templatesRouter } from './templates/controller.js';
+import { templatesRouter } from './templates/controller';
 import { fileURLToPath } from 'url';
 
 // Get __dirname equivalent for ES modules
