@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import TemplateEngineEditorLayout from './TemplateEngineEditorLayout';
 import { useTemplateDraft, useUpdateMeta, useAddStage, useReorderStages, usePublish, useValidateDraft, useAddStageComponent, useRemoveStageComponent, useReorderStageComponents, useUpdateComponentProps, usePreviewStart, usePreviewAnswer, useTemplateHistory } from '../api/hooks';
 import { compareHistoryEntry } from '../utils/historyHashes';
 import { renderComponent } from '../render/registry';
@@ -8,6 +9,11 @@ import { diffProps } from '../utils/diffProps';
 // Ajuste: evitar conflito de tipos TemplateDraft (frontend vs server). Vamos tratar draft como 'any' onde passamos para renderComponent.
 
 export const TemplateEngineEditor: React.FC<{ id: string; onBack: () => void }> = ({ id, onBack }) => {
+    // Flag temporária: usar novo layout 4 colunas diretamente
+    const USE_NEW_LAYOUT = true;
+    if (USE_NEW_LAYOUT) {
+        return <TemplateEngineEditorLayout id={id} onBack={onBack} />;
+    }
     const { data: draft, isLoading, error } = useTemplateDraft(id) as { data: TemplateDraftShared | undefined; isLoading: boolean; error: any };
     const updateMeta = useUpdateMeta(id);
     const addStage = useAddStage(id);
