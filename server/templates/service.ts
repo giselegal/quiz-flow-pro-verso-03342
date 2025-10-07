@@ -130,6 +130,7 @@ export class TemplateService {
         if (!tpl) throw new Error('NOT_FOUND');
         const sess = getSession(sessionId);
         if (!sess || sess.templateId !== tpl.id) throw new Error('SESSION_NOT_FOUND');
+        if (sess.completed) throw new Error('ALREADY_COMPLETED');
         sess.completed = true;
         saveSession(sess);
         // pick first matching outcome by score
