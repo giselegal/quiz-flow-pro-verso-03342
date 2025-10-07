@@ -9,7 +9,7 @@ export const TemplateEngineList: React.FC<{ onOpen: (id: string) => void }> = ({
 
     return <div className="space-y-4">
         <h1 className="text-xl font-semibold">Template Engine (Quiz)</h1>
-    <form onSubmit={e => { e.preventDefault(); if (!name || !slug) return; createMut.mutate({ name, slug }, { onSuccess: (res: any) => { setName(''); setSlug(''); onOpen(res.id); } }); }} className="flex gap-2 flex-wrap items-end">
+        <form onSubmit={e => { e.preventDefault(); if (!name || !slug) return; createMut.mutate({ name, slug }, { onSuccess: (res: any) => { setName(''); setSlug(''); onOpen(res.id); } }); }} className="flex gap-2 flex-wrap items-end">
             <div className="flex flex-col">
                 <label className="text-xs">Nome</label>
                 <input className="border px-2 py-1 rounded" value={name} onChange={e => setName(e.target.value)} />
