@@ -143,7 +143,14 @@ export const TemplateEngineEditor: React.FC<{ id: string; onBack: () => void }> 
             {selectedComponent && (() => {
                 const schema = getComponentSchema((selectedComponent as any).kind || selectedComponent.type);
                 const props = selectedComponent.props || {};
+                const compIssues = validation ? [...validation.errors, ...validation.warnings].filter(i => i.message.includes(`[${selectedComponent.id}]`)) : [];
                 return <div className="space-y-3 text-xs">
+                    {compIssues.length > 0 && <div className="space-y-1">
+                        {compIssues.map(ci => {
+                            const sev = (ci as any).severity || (ci.code.includes('ERROR') ? 'error' : 'warning');
+                            return <div key={ci.code} className={`text-[10px] rounded px-1 py-0.5 inline-block ${sev === 'error' ? 'bg-red-100 text-red-700' : 'bg-amber-100 text-amber-700'}`}>{ci.code.split('_').slice(-1)[0]}: {ci.message.replace(`[${selectedComponent.id}] `, '')}</div>;
+                        })}
+                    </div>}
                     {!schema && <div className="text-[11px] text-amber-600">Sem schema registrado — fallback exibindo JSON bruto.</div>}
                     {schema && <div className="space-y-3">
                         {schema.fields.map(field => {
