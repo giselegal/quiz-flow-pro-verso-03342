@@ -309,7 +309,7 @@ export const CollaborationProvider: React.FC<CollaborationProviderProps> = ({
     syncInterval = 5000
 }) => {
     const { core } = useEditorCore();
-    const { elements, updateElement, addElement, removeElement } = useEditorElements();
+    const { elements, updateElement, addElement, deleteElement } = useEditorElements();
 
     const [isConnected, setIsConnected] = useState(false);
     const [users] = useState(new Map<string, User>());
@@ -558,10 +558,9 @@ export const CollaborationProvider: React.FC<CollaborationProviderProps> = ({
         // Handle full state synchronization
         if (syncData.elements) {
             // Replace local elements with server state
-            core.setState((prev: any) => ({
-                ...prev,
+            core.setState({
                 elements: syncData.elements
-            }));
+            });
         }
 
         if (syncData.operations) {
