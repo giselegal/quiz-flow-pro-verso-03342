@@ -68,6 +68,9 @@ export class AICache {
         try {
           const entry = JSON.parse(storedItem);
           if (!this.isExpired(entry)) {
+            if (entry.generation === undefined) {
+              entry.generation = this.generation; // normaliza geração para entradas legadas
+            }
             this.cache.set(fullKey, entry);
           } else {
             localStorage.removeItem(fullKey);
