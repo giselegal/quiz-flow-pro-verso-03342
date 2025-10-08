@@ -61,6 +61,7 @@ import { snippetsManager, BlockSnippet } from '@/utils/snippetsManager';
 import ThemeEditorPanel from './components/ThemeEditorPanel';
 import { EditorThemeProvider, DesignTokens } from '@/theme/editorTheme';
 import { useValidation } from './hooks/useValidation';
+import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from '@/components/ui/tooltip';
 
 // Pré-visualizações especializadas (lazy) dos componentes finais de produção
 const StyleResultCard = React.lazy(() => import('@/components/editor/quiz/components/StyleResultCard').then(m => ({ default: m.StyleResultCard })));
@@ -1034,9 +1035,20 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                                                 <Badge variant="outline" className="text-xs">{index + 1}</Badge>
                                                 <span className="text-sm font-medium truncate">{step.id}</span>
                                                 {byStep[step.id]?.length ? (
-                                                    <span className="ml-auto inline-flex items-center gap-1 text-red-600 text-[10px] font-medium">
-                                                        {byStep[step.id].filter(e => e.severity === 'error').length > 0 && <span className="w-2 h-2 rounded-full bg-red-600" />}
-                                                        {byStep[step.id].length}
+                                                    <span className="ml-auto inline-flex items-center gap-1 text-[10px] font-medium">
+                                                        {(() => {
+                                                            const errs = byStep[step.id];
+                                                            const errorCount = errs.filter(e=>e.severity==='error').length;
+                                                            const warnCount = errs.filter(e=>e.severity==='warning').length;
+                                                            if (!errorCount && !warnCount) return null;
+                                                            return (
+                                                                <>
+                                                                    {errorCount > 0 && <span className="w-2 h-2 rounded-full bg-red-600" />}
+                                                                    {warnCount > 0 && errorCount === 0 && <span className="w-2 h-2 rounded-full bg-amber-500" />}
+                                                                    <span className={cn('px-1 rounded', errorCount>0 ? 'bg-red-50 text-red-600' : 'bg-amber-50 text-amber-700')}>{errorCount || warnCount}</span>
+                                                                </>
+                                                            );
+                                                        })()}
                                                     </span>
                                                 ) : null}
                                             </div>
@@ -1160,6 +1172,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                                                             items={selectedStep.blocks.map(b => b.id)}
                                                             strategy={verticalListSortingStrategy}
                                                         >
+                                                            <TooltipProvider>
                                                             <div className="space-y-2">
                                                                 {selectedStep.blocks
                                                                     .filter(b => !b.parentId)
@@ -1178,9 +1191,22 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                                                                             onClick={(e) => handleBlockClick(e, block)}
                                                                         >
                                                                             {byBlock[block.id]?.length && (
-                                                                                <div className="absolute -top-1 -right-1 bg-red-600 text-white text-[9px] px-1 rounded shadow">
-                                                                                    {byBlock[block.id].length}
-                                                                                </div>
+                                                                                <Tooltip>
+                                                                                    <TooltipTrigger asChild>
+                                                                                        <div className="absolute -top-1 -right-1 text-white text-[9px] px-1 rounded shadow cursor-default select-none" style={{ background: byBlock[block.id].some(e=>e.severity==='error') ? '#dc2626' : '#d97706' }}>
+                                                                                            {byBlock[block.id].length}
+                                                                                        </div>
+                                                                                    </TooltipTrigger>
+                                                                                    <TooltipContent side="left" className="max-w-xs p-2">
+                                                                                        <div className="space-y-1">
+                                                                                            {byBlock[block.id].map(e => (
+                                                                                                <p key={e.id} className={cn('text-[11px] leading-snug', e.severity==='error' ? 'text-red-600' : 'text-amber-600')}>
+                                                                                                    {e.message}
+                                                                                                </p>
+                                                                                            ))}
+                                                                                        </div>
+                                                                                    </TooltipContent>
+                                                                                </Tooltip>
                                                                             )}
                                                                             <div className="absolute left-2 top-2 opacity-70 group-hover:opacity-100 transition-opacity">
                                                                                 <GripVertical className="w-4 h-4 text-gray-400" />
@@ -1221,8 +1247,9 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                                                                                 </Button>
                                                                             </div>
                                                                         </div>
-                                                                    ))}
-                                                            </div>
+                                    ))}
+                                </div>
+                                </TooltipProvider>
                                                         </SortableContext>
                                                     </>
                                                 )}
@@ -1456,11 +1483,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                                         </ScrollArea>
                                     </TabsContent>
                                     <TabsContent value="theme" className="m-0 p-0 h-[calc(100vh-190px)]">
-                                        <ThemeEditorPanel onApply={() => { /* re-render via localStorage + provider outside */ }} />
-                                        <ThemeEditorPanel onApply={(t) => {
-                                            // Atualiza overrides em memória (ThemeEditorPanel já persistiu no localStorage)
-                                            setThemeOverrides(t);
-                                        }} />
+                                        <ThemeEditorPanel onApply={(t) => setThemeOverrides(t)} />
                                     </TabsContent>
                                 </Tabs>
                             </div>
