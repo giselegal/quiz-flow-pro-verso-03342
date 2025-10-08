@@ -286,7 +286,4 @@ describe('6. Logs de Integração', () => {
 
         consoleSpy.mockRestore();
     });
-
-});
-
 });
