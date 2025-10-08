@@ -52,6 +52,8 @@ const TemplateDiagnosticPage = lazy(() => import('./pages/TemplateDiagnosticPage
 const QuizFunnelEditor = lazy(() => import('./components/editor/quiz/QuizFunnelEditor').then(module => ({ default: module.default })));
 const QuizFunnelEditorSimplified = lazy(() => import('./components/editor/quiz/QuizFunnelEditorSimplified').then(module => ({ default: module.default })));
 const QuizFunnelEditorWYSIWYG = lazy(() => import('./components/editor/quiz/QuizFunnelEditorWYSIWYG').then(module => ({ default: module.default })));
+const QuizProductionEditor = lazy(() => import('./components/editor/quiz/QuizProductionEditor').then(module => ({ default: module.default })));
+const QuizModularProductionEditor = lazy(() => import('./components/editor/quiz/QuizModularProductionEditor').then(module => ({ default: module.default })));
 const ModernUnifiedEditor = lazy(() => import('./pages/editor/ModernUnifiedEditor').then(module => ({ default: module.default })));
 const ModularEditorLayout = lazy(() => import('./editor/components/ModularEditorLayout').then(module => ({ default: module.default })));
 
@@ -155,13 +157,28 @@ function App() {
                             </div>
                           </EditorErrorBoundary>
                         </Route>
+
+                        {/* 🎯 NOVO: EDITOR DE PRODUÇÃO COM PREVIEW REAL */}
+                        <Route path="/editor/quiz-estilo-production">
+                          <Suspense fallback={<EnhancedLoadingFallback message="Carregando editor de produção..." />}>
+                            <QuizProductionEditor />
+                          </Suspense>
+                        </Route>
+
+                        {/* 🎯 NOVO: EDITOR MODULAR 4 COLUNAS - COMPLETO */}
+                        <Route path="/editor/quiz-estilo-modular-pro">
+                          <Suspense fallback={<EnhancedLoadingFallback message="Carregando editor modular 4 colunas..." />}>
+                            <QuizModularProductionEditor />
+                          </Suspense>
+                        </Route>
+
                         {/* Versão modular 4 colunas para /quiz-estilo (redirect automático) */}
                         <Route path="/editor/quiz-estilo-modular">
                           <div data-testid="quiz-estilo-modular-redirect">
                             <QuizEstiloModularRedirect />
                           </div>
                         </Route>
-                        
+
                         {/* 🔗 INTEGRAÇÃO TEMPLATE ENGINE → /quiz-estilo */}
                         <Route path="/editor/quiz-estilo-template-engine">
                           <Suspense fallback={<EnhancedLoadingFallback message="Carregando editor avançado..." />}>

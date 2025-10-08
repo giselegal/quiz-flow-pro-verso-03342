@@ -10,12 +10,13 @@
  * - Suporte a templates personalizados via funnelId
  */
 
-import { useState, useCallback, useMemo } from 'react';
+import { useState, useCallback, useMemo, useEffect } from 'react';
 import { styleMapping, type StyleId } from '../data/styles';
 import { resolveStyleId } from '@/utils/styleIds';
 import { QUIZ_STEPS, STEP_ORDER } from '../data/quizSteps';
 import { stepIdVariants, normalizeStepId, getNextFromOrder, getPreviousFromOrder, safeGetStep } from '@/utils/quizStepIds';
 import { getPersonalizedStepTemplate } from '../templates/quiz21StepsSimplified';
+import { quizEditorBridge } from '@/services/QuizEditorBridge';
 // Note: STRATEGIC_ANSWER_TO_OFFER_KEY commented - not used
 // import { STRATEGIC_ANSWER_TO_OFFER_KEY } from '@/data/quizSteps';
 
@@ -72,6 +73,28 @@ const initialState: QuizState = {
 
 export function useQuizState(funnelId?: string, externalSteps?: Record<string, any>) {
   const [state, setState] = useState<QuizState>(initialState);
+  const [loadedSteps, setLoadedSteps] = useState<Record<string, any> | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+
+  // 🎯 NOVO: Carregar steps do bridge se tiver funnelId
+  useEffect(() => {
+    if (funnelId && !externalSteps) {
+      setIsLoading(true);
+      quizEditorBridge.loadForRuntime(funnelId)
+        .then(steps => {
+          console.log('✅ Steps carregados do bridge:', Object.keys(steps).length);
+          setLoadedSteps(steps);
+        })
+        .catch(err => {
+          console.error('❌ Erro ao carregar steps:', err);
+          setLoadedSteps(QUIZ_STEPS); // Fallback
+        })
+        .finally(() => setIsLoading(false));
+    }
+  }, [funnelId, externalSteps]);
+
+  // Determinar source dos steps (prioridade: external > loaded > default)
+  const stepsSource = externalSteps || loadedSteps || QUIZ_STEPS;
 
   // (agora importado de util) normalizeStepId
 
@@ -227,7 +250,7 @@ export function useQuizState(funnelId?: string, externalSteps?: Record<string, a
 
   // Verificar se etapa atual tem respostas suficientes
   const isCurrentStepComplete = useMemo(() => {
-    const source = externalSteps || QUIZ_STEPS;
+    const source = stepsSource;
     const currentStepData = source[state.currentStep];
 
     if (!currentStepData) return false;
@@ -247,7 +270,7 @@ export function useQuizState(funnelId?: string, externalSteps?: Record<string, a
     }
 
     return true; // Para transições, resultado e oferta
-  }, [state.currentStep, state.answers, state.userProfile.userName]);
+  }, [state.currentStep, state.answers, state.userProfile.userName, stepsSource]);
 
   // Obter progresso do quiz
   const progress = useMemo(() => {
@@ -258,7 +281,7 @@ export function useQuizState(funnelId?: string, externalSteps?: Record<string, a
 
   // Obter dados da etapa atual (com suporte a personalização via funnelId)
   const currentStepData = useMemo(() => {
-    const source = externalSteps || QUIZ_STEPS;
+    const source = stepsSource;
 
     // Tentar variações (padded + legacy)
     for (const variant of stepIdVariants(state.currentStep)) {
@@ -273,7 +296,7 @@ export function useQuizState(funnelId?: string, externalSteps?: Record<string, a
     // Última tentativa com lookup seguro
     const fallback = safeGetStep(source, state.currentStep);
     return fallback;
-  }, [state.currentStep, funnelId, externalSteps]);
+  }, [state.currentStep, funnelId, stepsSource]);
 
   // Verificar se pode voltar
   const canGoBack = useMemo(() => {
@@ -304,6 +327,7 @@ export function useQuizState(funnelId?: string, externalSteps?: Record<string, a
     canGoBack,
     canGoForward,
     isCurrentStepComplete,
+    isLoading, // 🎯 NOVO: indicador de carregamento
 
     // Ações de navegação
     nextStep,
