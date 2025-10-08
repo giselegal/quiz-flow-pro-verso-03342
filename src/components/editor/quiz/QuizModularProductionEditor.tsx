@@ -528,10 +528,9 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                 ...step,
                 blocks: step.blocks.map(block => block.id === blockId ? { ...block, properties: { ...block.properties, ...updates } } : block)
             } : step);
-            pushHistory(next);
+            scheduleHistoryPush(next);
             return next;
         });
-
         setIsDirty(true);
     }, []);
 
@@ -542,12 +541,25 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                 ...step,
                 blocks: step.blocks.map(block => block.id === blockId ? { ...block, content: { ...block.content, ...updates } } : block)
             } : step);
-            pushHistory(next);
+            scheduleHistoryPush(next);
             return next;
         });
-
         setIsDirty(true);
     }, []);
+
+    // Debounce para histórico em edições rápidas de conteúdo/propriedades
+    const historyDebounceRef = useRef<any>(null);
+    const pendingHistoryRef = useRef<EditableQuizStep[] | null>(null);
+    const scheduleHistoryPush = (next: EditableQuizStep[]) => {
+        pendingHistoryRef.current = next;
+        if (historyDebounceRef.current) clearTimeout(historyDebounceRef.current);
+        historyDebounceRef.current = setTimeout(() => {
+            if (pendingHistoryRef.current) {
+                pushHistory(pendingHistoryRef.current);
+                pendingHistoryRef.current = null;
+            }
+        }, 400);
+    };
 
     // Multi seleção helpers
     const isMultiSelected = useCallback((id: string) => multiSelectedIds.includes(id), [multiSelectedIds]);
@@ -829,11 +841,12 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
         }
         // Container
         if (type === 'container') {
+            const expanded = expandedContainers.has(id);
             return (
                 <div
                     className={cn(
                         'rounded-md border p-3 bg-gradient-to-br from-white to-slate-50 shadow-sm relative',
-                        'min-h-[60px]'
+                        'min-h-[48px]'
                     )}
                     style={{
                         backgroundColor: properties?.backgroundColor || undefined,
@@ -841,24 +854,44 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                         borderRadius: properties?.borderRadius || undefined
                     }}
                 >
-                    <div className="flex items-center justify-between mb-2">
-                        <p className="text-[11px] font-medium text-slate-500">Container</p>
-                        <span className="text-[10px] text-slate-400">{children.length} filhos</span>
+                    <div className="flex items-center justify-between mb-1">
+                        <button type="button" onClick={(e) => { e.stopPropagation(); toggleContainer(id); }} className="text-[11px] font-medium text-slate-600 inline-flex items-center gap-1">
+                            <span className={cn('transition-transform', expanded ? 'rotate-90' : '')}>▶</span>
+                            Container
+                        </button>
+                        <span className="text-[10px] text-slate-400">{children.length} filho(s)</span>
                     </div>
-                    {children.length === 0 && (
-                        <div className="text-[10px] text-slate-400 italic">Solte blocos aqui</div>
+                    {!expanded && children.length > 0 && (
+                        <div className="text-[10px] text-slate-400 italic">(colapsado)</div>
                     )}
-                    <div className="space-y-2">
-                        {children.map(child => (
-                            <div key={child.id} className="border rounded-md p-2 bg-white/70">
-                                {renderBlockPreview(child, all)}
-                            </div>
-                        ))}
-                    </div>
+                    {expanded && (
+                        <div className="space-y-2">
+                            {children.length === 0 && (
+                                <div className="text-[10px] text-slate-400 italic">Solte blocos aqui</div>
+                            )}
+                            {children.map(child => (
+                                <div key={child.id} className="border rounded-md p-2 bg-white/70">
+                                    {renderBlockPreview(child, all)}
+                                </div>
+                            ))}
+                        </div>
+                    )}
                 </div>
             );
         }
         return <span className="text-xs italic text-slate-400">(Pré-visualização não suportada)</span>;
+    };
+
+    // ========================================
+    // Expansão Lazy de Containers
+    // ========================================
+    const [expandedContainers, setExpandedContainers] = useState<Set<string>>(new Set());
+    const toggleContainer = (id: string) => {
+        setExpandedContainers(prev => {
+            const next = new Set(prev);
+            if (next.has(id)) next.delete(id); else next.add(id);
+            return next;
+        });
     };
 
     // Salvar
