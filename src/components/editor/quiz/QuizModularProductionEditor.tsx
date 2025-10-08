@@ -69,6 +69,7 @@ import { useValidation } from './hooks/useValidation';
 import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from '@/components/ui/tooltip';
 import { sanitizeInlineHtml, looksLikeHtml } from '@/utils/sanitizeInlineHtml';
 import { convertBlocksToStep as convertBlocksToStepUtil } from '@/utils/quizConversionUtils';
+import { autoFillNextSteps } from '@/utils/autoFillNextSteps';
 
 // Pré-visualizações especializadas (lazy) dos componentes finais de produção
 const StyleResultCard = React.lazy(() => import('@/components/editor/quiz/components/StyleResultCard').then(m => ({ default: m.StyleResultCard })));
@@ -1669,20 +1670,10 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
     const handleSave = useCallback(async () => {
         setIsSaving(true);
         try {
-            // Preencher automaticamente nextStep faltantes (exceto última etapa)
-            let adjusted = false;
-            const orderedSteps = [...steps].sort((a, b) => a.order - b.order);
-            for (let i = 0; i < orderedSteps.length - 1; i++) {
-                const s = orderedSteps[i];
-                if (!s.nextStep) {
-                    s.nextStep = orderedSteps[i + 1].id;
-                    adjusted = true;
-                }
-            }
+            const { steps: filledSteps, adjusted } = autoFillNextSteps(steps);
             if (adjusted) {
-                // Atualiza state local para refletir ajustes e manter histórico
                 setSteps(prev => {
-                    const map = new Map(orderedSteps.map(s => [s.id, s.nextStep] as const));
+                    const map = new Map(filledSteps.map(s => [s.id, s.nextStep] as const));
                     const next = prev.map(s => map.has(s.id) ? { ...s, nextStep: map.get(s.id)! } : s);
                     pushHistory(next);
                     return next;
@@ -1692,7 +1683,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                 id: funnelId || 'new-draft',
                 name: 'Quiz Estilo Pessoal - Modular',
                 slug: 'quiz-estilo',
-                steps: steps.map(s => {
+                steps: (adjusted ? filledSteps : steps).map(s => {
                     const reconstructed = convertBlocksToStepUtil(s.id, s.type as any, s.blocks as any);
                     return {
                         id: s.id,
