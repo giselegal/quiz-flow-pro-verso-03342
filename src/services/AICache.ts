@@ -13,6 +13,7 @@ interface CacheEntry<T> {
   timestamp: number;
   ttl: number;
   hash: string;
+  generation: number;
 }
 
 interface CacheStats {
@@ -30,6 +31,7 @@ export class AICache {
     totalRequests: 0,
     hitRate: 0
   };
+  private generation = 0;
 
   constructor(private maxSize = 100) { }
 
@@ -52,6 +54,9 @@ export class AICache {
    */
   get<T>(key: string, params?: any): T | null {
     this.stats.totalRequests++;
+    if (!key) {
+      return null;
+    }
 
     const hash = params ? this.generateHash(params) : '';
     const fullKey = `ai_cache_${hash ? `${key}_${hash}` : key}`;
@@ -75,7 +80,7 @@ export class AICache {
 
     const entry = this.cache.get(fullKey);
 
-    if (!entry || this.isExpired(entry)) {
+    if (!entry || this.isExpired(entry) || entry.generation !== this.generation) {
       this.stats.misses++;
       if (entry) {
         this.cache.delete(fullKey);
@@ -110,7 +115,8 @@ export class AICache {
       data,
       timestamp: Date.now(),
       ttl: ttlMs,
-      hash
+      hash,
+      generation: this.generation
     };
 
     this.cache.set(fullKey, entry);
@@ -167,7 +173,9 @@ export class AICache {
    * Limpa todo o cache
    */
   clear(): void {
-    this.cache.clear();
+    // Recria o Map para evitar retenção em referências internas
+    this.cache = new Map();
+    this.generation++;
 
     // Limpa também o localStorage
     Object.keys(localStorage).forEach(key => {
