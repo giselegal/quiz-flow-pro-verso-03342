@@ -295,7 +295,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
         try {
             const raw = localStorage.getItem('quiz_editor_header_config_v1');
             if (raw) return JSON.parse(raw);
-        } catch {/* ignore */}
+        } catch {/* ignore */ }
         return {
             showLogo: true,
             logoUrl: 'https://via.placeholder.com/140x48?text=Logo',
@@ -308,7 +308,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
             barBackground: '#E5E7EB'
         };
     });
-    useEffect(() => { try { localStorage.setItem('quiz_editor_header_config_v1', JSON.stringify(headerConfig)); } catch {/* ignore */} }, [headerConfig]);
+    useEffect(() => { try { localStorage.setItem('quiz_editor_header_config_v1', JSON.stringify(headerConfig)); } catch {/* ignore */ } }, [headerConfig]);
 
     // Componente de cabeçalho fixo
     const FixedProgressHeader: React.FC<{ config: any; steps: EditableQuizStep[]; currentStepId: string }> = ({ config, steps, currentStepId }) => {
@@ -1956,48 +1956,48 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                                                     <h3 className="text-xs font-semibold uppercase tracking-wide text-slate-600">Cabeçalho Fixo</h3>
                                                     <div className="space-y-3">
                                                         <label className="flex items-center gap-2">
-                                                            <input type="checkbox" checked={headerConfig.showLogo} onChange={e => setHeaderConfig((c:any)=>({...c, showLogo: e.target.checked}))} />
+                                                            <input type="checkbox" checked={headerConfig.showLogo} onChange={e => setHeaderConfig((c: any) => ({ ...c, showLogo: e.target.checked }))} />
                                                             Exibir Logo
                                                         </label>
                                                         {headerConfig.showLogo && (
                                                             <>
                                                                 <div className="space-y-1">
                                                                     <span>Logo URL</span>
-                                                                    <input className="w-full border rounded px-2 py-1" value={headerConfig.logoUrl} onChange={e=>setHeaderConfig((c:any)=>({...c, logoUrl: e.target.value}))} />
+                                                                    <input className="w-full border rounded px-2 py-1" value={headerConfig.logoUrl} onChange={e => setHeaderConfig((c: any) => ({ ...c, logoUrl: e.target.value }))} />
                                                                 </div>
                                                                 <div className="space-y-1">
                                                                     <span>Largura Logo</span>
-                                                                    <input className="w-full border rounded px-2 py-1" value={headerConfig.logoWidth} onChange={e=>setHeaderConfig((c:any)=>({...c, logoWidth: e.target.value}))} />
+                                                                    <input className="w-full border rounded px-2 py-1" value={headerConfig.logoWidth} onChange={e => setHeaderConfig((c: any) => ({ ...c, logoWidth: e.target.value }))} />
                                                                 </div>
                                                             </>
                                                         )}
                                                         <label className="flex items-center gap-2">
-                                                            <input type="checkbox" checked={headerConfig.progressEnabled} onChange={e => setHeaderConfig((c:any)=>({...c, progressEnabled: e.target.checked}))} />
+                                                            <input type="checkbox" checked={headerConfig.progressEnabled} onChange={e => setHeaderConfig((c: any) => ({ ...c, progressEnabled: e.target.checked }))} />
                                                             Exibir Barra de Progresso
                                                         </label>
                                                         {headerConfig.progressEnabled && (
                                                             <>
                                                                 <label className="flex items-center gap-2">
-                                                                    <input type="checkbox" checked={headerConfig.autoProgress} onChange={e=>setHeaderConfig((c:any)=>({...c, autoProgress: e.target.checked}))} />
+                                                                    <input type="checkbox" checked={headerConfig.autoProgress} onChange={e => setHeaderConfig((c: any) => ({ ...c, autoProgress: e.target.checked }))} />
                                                                     Cálculo Automático
                                                                 </label>
                                                                 {!headerConfig.autoProgress && (
                                                                     <div className="space-y-1">
                                                                         <span>Porcentagem Manual</span>
-                                                                        <input type="number" min={0} max={100} className="w-full border rounded px-2 py-1" value={headerConfig.manualPercent} onChange={e=>setHeaderConfig((c:any)=>({...c, manualPercent: Number(e.target.value)}))} />
+                                                                        <input type="number" min={0} max={100} className="w-full border rounded px-2 py-1" value={headerConfig.manualPercent} onChange={e => setHeaderConfig((c: any) => ({ ...c, manualPercent: Number(e.target.value) }))} />
                                                                     </div>
                                                                 )}
                                                                 <div className="space-y-1">
                                                                     <span>Espessura Barra</span>
-                                                                    <input className="w-full border rounded px-2 py-1" value={headerConfig.barHeight} onChange={e=>setHeaderConfig((c:any)=>({...c, barHeight: e.target.value}))} />
+                                                                    <input className="w-full border rounded px-2 py-1" value={headerConfig.barHeight} onChange={e => setHeaderConfig((c: any) => ({ ...c, barHeight: e.target.value }))} />
                                                                 </div>
                                                                 <div className="space-y-1">
                                                                     <span>Cor Barra</span>
-                                                                    <input type="color" className="w-full h-8 border rounded" value={headerConfig.barColor} onChange={e=>setHeaderConfig((c:any)=>({...c, barColor: e.target.value}))} />
+                                                                    <input type="color" className="w-full h-8 border rounded" value={headerConfig.barColor} onChange={e => setHeaderConfig((c: any) => ({ ...c, barColor: e.target.value }))} />
                                                                 </div>
                                                                 <div className="space-y-1">
                                                                     <span>Cor Fundo</span>
-                                                                    <input type="color" className="w-full h-8 border rounded" value={headerConfig.barBackground} onChange={e=>setHeaderConfig((c:any)=>({...c, barBackground: e.target.value}))} />
+                                                                    <input type="color" className="w-full h-8 border rounded" value={headerConfig.barBackground} onChange={e => setHeaderConfig((c: any) => ({ ...c, barBackground: e.target.value }))} />
                                                                 </div>
                                                             </>
                                                         )}
