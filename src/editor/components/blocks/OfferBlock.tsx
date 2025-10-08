@@ -27,25 +27,26 @@ export const OfferBlock: React.FC<BlockComponentProps> = ({
     isSelected,
     isEditable,
     onSelect,
-    onNavigate,
 }) => {
     const props = data.props as OfferBlockProps;
 
     const handleClick = () => {
         if (isEditable && onSelect) {
-            onSelect(data.id);
+            onSelect(); // assinatura padronizada sem argumentos
         }
     };
 
     const handleButtonClick = (e: React.MouseEvent) => {
         e.stopPropagation();
-        if (!isEditable && props.buttonUrl && onNavigate) {
-            onNavigate(props.buttonUrl);
+        if (!isEditable && props.buttonUrl) {
+            // fallback simples: abrir em nova aba; integração futura pode injetar navegação
+            window.open(props.buttonUrl, '_blank', 'noopener,noreferrer');
         }
     };
 
     return (
         <div
+            data-block-id={data.id}
             onClick={handleClick}
             className={`
         relative p-6 rounded-xl transition-all

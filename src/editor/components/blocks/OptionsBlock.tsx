@@ -53,7 +53,7 @@ export const OptionsBlock: React.FC<BlockComponentProps> = ({
                 isSelected && 'ring-2 ring-blue-500 ring-offset-2 bg-blue-50/30',
                 customClassName
             )}
-            onClick={isEditable ? onSelect : undefined}
+            onClick={isEditable ? () => onSelect && onSelect() : undefined}
             data-block-id={data.id}
         >
             {/* Indicador de seleção */}
@@ -77,7 +77,7 @@ export const OptionsBlock: React.FC<BlockComponentProps> = ({
                     layout === 'list' && 'flex flex-col gap-3'
                 )}
             >
-                {options.map((option) => {
+                {options.map((option: QuizOption) => {
                     const isOptionSelected = selectedOptions.includes(option.id);
 
                     return (

@@ -28,7 +28,7 @@ export const ResultBlock: React.FC<BlockComponentProps> = ({
 
     const handleClick = () => {
         if (isEditable && onSelect) {
-            onSelect(data.id);
+            onSelect();
         }
     };
 

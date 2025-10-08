@@ -26,7 +26,7 @@ export const TransitionBlock: React.FC<BlockComponentProps> = ({
 
     const handleClick = () => {
         if (isEditable && onSelect) {
-            onSelect(data.id);
+            onSelect();
         }
     };
 
