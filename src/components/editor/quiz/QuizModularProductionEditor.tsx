@@ -205,23 +205,6 @@ const COMPONENT_LIBRARY: ComponentLibraryItem[] = [
         }
     },
     {
-        type: 'progress-header',
-        label: 'Header Progresso',
-        icon: <Layout className="w-4 h-4" />,
-        category: 'layout',
-        defaultProps: {
-            showLogo: true,
-            logoUrl: 'https://via.placeholder.com/120x40?text=Logo',
-            logoWidth: '120px',
-            progressEnabled: true,
-            progressPercent: 0,
-            autoProgress: true,
-            barHeight: '4px',
-            barColor: '#D4AF37',
-            barBackground: '#E5E7EB'
-        }
-    },
-    {
         type: 'image',
         label: 'Imagem',
         icon: <ImageIcon className="w-4 h-4" />,
@@ -416,25 +399,6 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
         const blocks: BlockComponent[] = [];
         let order = 0;
 
-        const shouldAddProgressHeader = !['result', 'offer'].includes(step.type) && step.id !== 'step-20' && step.id !== 'step-21';
-        if (shouldAddProgressHeader) {
-            blocks.push({
-                id: `${step.id}-progress-header`,
-                type: 'progress-header',
-                order: order++,
-                properties: {
-                    showLogo: true,
-                    logoUrl: 'https://via.placeholder.com/120x40?text=Logo',
-                    logoWidth: '120px',
-                    progressEnabled: true,
-                    autoProgress: true,
-                    barHeight: '4px',
-                    barColor: '#D4AF37',
-                    barBackground: '#E5E7EB'
-                },
-                content: {}
-            });
-        }
 
         // Título
         if (step.title) {
@@ -1095,49 +1059,6 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                             ))}
                         </div>
                     )}
-                </div>
-            );
-            previewCacheRef.current.set(id, { key, node });
-            return node;
-        }
-        // Progress Header
-        if (type === 'progress-header') {
-            const totalSteps = steps.length;
-            const currentIndex = selectedStep ? steps.findIndex(s => s.id === selectedStep.id) : -1;
-            const auto = properties?.autoProgress !== false && properties?.progressEnabled !== false;
-            const percent = auto && currentIndex >= 0 && totalSteps > 0
-                ? Math.min(100, Math.round(((currentIndex + 1) / (totalSteps - 2)) * 100)) // exclui result/offer geralmente últimas 2
-                : (properties?.progressPercent ?? 0);
-            const showLogo = properties?.showLogo !== false;
-            const progressEnabled = properties?.progressEnabled !== false;
-            node = (
-                <div className="w-full flex flex-col gap-2">
-                    <div className="flex items-center justify-between min-h-[40px]">
-                        {showLogo && (
-                            <div className="shrink-0" style={{ maxWidth: properties?.logoWidth || '120px' }}>
-                                {/* eslint-disable-next-line @next/next/no-img-element */}
-                                <img
-                                    src={properties?.logoUrl || 'https://via.placeholder.com/120x40?text=Logo'}
-                                    alt="Logo"
-                                    className="object-contain max-h-12"
-                                />
-                            </div>
-                        )}
-                        {progressEnabled && (
-                            <div className="flex-1 ml-4 flex flex-col">
-                                <div
-                                    className="w-full rounded-full overflow-hidden"
-                                    style={{ background: properties?.barBackground || '#E5E7EB', height: properties?.barHeight || '4px' }}
-                                >
-                                    <div
-                                        className="h-full transition-all"
-                                        style={{ width: `${percent}%`, background: properties?.barColor || '#D4AF37' }}
-                                    />
-                                </div>
-                                <div className="text-[10px] text-slate-500 mt-1 text-right">{percent}%</div>
-                            </div>
-                        )}
-                    </div>
                 </div>
             );
             previewCacheRef.current.set(id, { key, node });
