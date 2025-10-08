@@ -8,13 +8,11 @@ vi.mock('@/components/editor/EditorProUnified', () => ({
     default: () => <div data-testid="editor-pro-unified">Editor Unificado</div>,
 }));
 
-vi.mock('@/pages/Index', () => ({
+vi.mock('@/pages/Home', () => ({
     default: () => <div data-testid="index-page">Página Inicial</div>,
 }));
 
-vi.mock('@/pages/StepsShowcase', () => ({
-    default: () => <div data-testid="steps-showcase">Steps Showcase</div>,
-}));
+// Rota /steps não existe mais no App atual – se necessário futuramente, reintroduzir mock/rota.
 
 vi.mock('@/pages/EditorUnifiedPage', () => ({
     default: () => <div data-testid="editor-unified-page">Editor Unified Page</div>,
@@ -76,27 +74,21 @@ describe('🧭 Sistema de Roteamento com Wouter', () => {
     describe('Rotas Básicas', () => {
         const testRoutes = [
             { path: '/', expectedComponent: 'index-page', description: 'home' },
-            { path: '/steps', expectedComponent: 'steps-showcase', description: 'steps showcase' },
             { path: '/quiz-estilo', expectedComponent: 'quiz-estilo-page', description: 'quiz estilo' }
         ];
-
         testRoutes.forEach(({ path, expectedComponent, description }) => {
-            it(`deve renderizar corretamente a rota ${description} (${path})`, () => {
+            it(`deve renderizar corretamente a rota ${description} (${path})`, async () => {
                 renderPath(path);
-                expect(screen.getByTestId(expectedComponent)).toBeInTheDocument();
+                // Suspense fallback: usar findByTestId
+                expect(await screen.findByTestId(expectedComponent)).toBeInTheDocument();
             });
         });
     });
 
-    describe('Páginas Estáticas', () => {
-        it('deve renderizar página inicial na rota "/"', () => {
+    describe('Página Inicial', () => {
+        it('deve renderizar página inicial na rota "/"', async () => {
             renderPath('/');
-            expect(screen.getByTestId('index-page')).toBeInTheDocument();
-        });
-
-        it('deve renderizar steps showcase na rota "/steps"', () => {
-            renderPath('/steps');
-            expect(screen.getByTestId('steps-showcase')).toBeInTheDocument();
+            expect(await screen.findByTestId('index-page')).toBeInTheDocument();
         });
     });
 
@@ -120,10 +112,10 @@ describe('🧭 Sistema de Roteamento com Wouter', () => {
         });
     });
 
-    describe('Múltiplas Query Parameters', () => {
+    describe('Múltiplos Query Parameters', () => {
         it('deve processar múltiplos parâmetros na URL', () => {
             renderPath('/editor?step=5&theme=dark&mode=preview');
-            expect(screen.getByTestId('editor-unified-page')).toBeInTheDocument();
+            expect(screen.getByTestId('quiz-editor-wysiwyg-page')).toBeInTheDocument();
         });
     });
 
