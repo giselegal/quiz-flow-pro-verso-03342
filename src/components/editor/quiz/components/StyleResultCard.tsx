@@ -27,8 +27,9 @@ import {
     AlertCircle,
     Crown
 } from 'lucide-react';
-import { styleMapping, type StyleId } from '@/data/styles';
+import { styleConfigGisele, type StyleId } from '@/data/styles';
 import { motion } from 'framer-motion';
+import { resolveStyleId } from '@/utils/styleIds';
 
 // Tipos
 export interface StyleResultCardProps {
@@ -39,12 +40,19 @@ export interface StyleResultCardProps {
         userName: string; // Nome do usuário
     };
 
+    // OU dados diretos (para integração com ResultStep existente)
+    resultStyle?: string;
+    userName?: string;
+    secondaryStyles?: string[];
+    scores?: Record<string, number>; // Pontuações dos estilos
+
     // Para preview no editor (quando não tem quizState real)
     previewStyle?: StyleId;
     previewUserName?: string;
 
     mode?: 'result' | 'preview';
     onNext?: () => void;
+    className?: string;
 }
 
 /**
@@ -52,20 +60,34 @@ export interface StyleResultCardProps {
  */
 export function StyleResultCard({
     quizState,
+    resultStyle: propResultStyle,
+    userName: propUserName,
+    secondaryStyles: propSecondaryStyles,
+    scores,
     previewStyle,
     previewUserName = 'Maria',
     mode = 'result',
-    onNext
+    onNext,
+    className = ''
 }: StyleResultCardProps) {
     const [isRevealing, setIsRevealing] = useState(false);
 
-    // Determinar estilo a exibir
-    const styleId = (quizState?.resultStyle || previewStyle || 'clássico') as StyleId;
-    const userName = quizState?.userName || previewUserName;
-    const secondaryStyles = quizState?.secondaryStyles || [];
+    // Determinar estilo a exibir (prioridade: props diretas > quizState > preview)
+    const styleId = (
+        propResultStyle ||
+        quizState?.resultStyle ||
+        previewStyle ||
+        'clássico'
+    ) as StyleId;
+
+    const userName = propUserName || quizState?.userName || previewUserName;
+    const secondaryStyles = propSecondaryStyles || quizState?.secondaryStyles || [];
+
+    // Resolver ID do estilo (normalizar acentos)
+    const resolvedStyleId = resolveStyleId(styleId);
 
     // Buscar dados do estilo
-    const style = styleMapping[styleId];
+    const style = styleConfigGisele[resolvedStyleId];
 
     useEffect(() => {
         // Animação de reveal ao montar
@@ -172,7 +194,7 @@ export function StyleResultCard({
                                     Características do seu estilo:
                                 </h3>
                                 <div className="flex flex-wrap gap-2">
-                                    {style.characteristics?.map((char, index) => (
+                                    {style.characteristics?.map((char: string, index: number) => (
                                         <Badge
                                             key={index}
                                             variant="outline"
@@ -192,7 +214,7 @@ export function StyleResultCard({
                                         Recomendações para você:
                                     </h3>
                                     <ul className="space-y-2">
-                                        {style.recommendations.map((rec, index) => (
+                                        {style.recommendations.map((rec: string, index: number) => (
                                             <li key={index} className="flex items-start gap-3 text-gray-700">
                                                 <Check className="h-5 w-5 text-[#B89B7A] flex-shrink-0 mt-0.5" />
                                                 <span className="capitalize">{rec}</span>
@@ -210,7 +232,8 @@ export function StyleResultCard({
                                     </h3>
                                     <div className="grid grid-cols-2 gap-4">
                                         {secondaryStyles.map((secStyleId, index) => {
-                                            const secStyle = styleMapping[secStyleId as StyleId];
+                                            const resolvedSecId = resolveStyleId(secStyleId);
+                                            const secStyle = styleConfigGisele[resolvedSecId];
                                             if (!secStyle) return null;
 
                                             const SecIcon = styleIcons[secStyleId] || Award;
