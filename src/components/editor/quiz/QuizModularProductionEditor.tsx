@@ -59,6 +59,7 @@ import { useLiveScoring } from '@/hooks/useLiveScoring';
 import { HistoryManager } from '@/utils/historyManager';
 import { snippetsManager, BlockSnippet } from '@/utils/snippetsManager';
 import ThemeEditorPanel from './components/ThemeEditorPanel';
+import { EditorThemeProvider, DesignTokens } from '@/theme/editorTheme';
 
 // Pré-visualizações especializadas (lazy) dos componentes finais de produção
 const StyleResultCard = React.lazy(() => import('@/components/editor/quiz/components/StyleResultCard').then(m => ({ default: m.StyleResultCard })));
@@ -208,6 +209,15 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
     const [isDirty, setIsDirty] = useState(false);
     const [isSaving, setIsSaving] = useState(false);
     const [isPublishing, setIsPublishing] = useState(false);
+    // Theme overrides carregados do localStorage e aplicados via EditorThemeProvider
+    const [themeOverrides, setThemeOverrides] = useState<Partial<DesignTokens>>({});
+
+    useEffect(() => {
+        try {
+            const raw = localStorage.getItem('quiz_editor_theme_overrides_v1');
+            if (raw) setThemeOverrides(JSON.parse(raw));
+        } catch {/* ignore */ }
+    }, []);
     const [isLoading, setIsLoading] = useState(true);
     const [validationErrors, setValidationErrors] = useState<string[]>([]);
     // Undo/Redo
@@ -942,546 +952,548 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
     }
 
     return (
-        <DndContext
-            sensors={sensors}
-            collisionDetection={closestCenter}
-            onDragStart={(event) => setActiveId(event.active.id as string)}
-            onDragEnd={handleDragEnd}
-        >
-            <div className="flex flex-col h-screen bg-gray-50">
-                {/* Header */}
-                <div className="flex items-center justify-between px-6 py-3 bg-white border-b">
-                    <div className="flex items-center gap-4">
-                        <Button variant="ghost" size="sm" onClick={() => setLocation('/quiz-estilo')}>
-                            <ArrowLeft className="w-4 h-4 mr-2" />
-                            Voltar
-                        </Button>
-
-                        <div className="h-6 w-px bg-border" />
-
-                        <div>
-                            <h1 className="text-lg font-semibold">Editor Modular 4 Colunas</h1>
-                            <p className="text-xs text-muted-foreground">
-                                {steps.length} etapas • {selectedStep?.blocks.length || 0} componentes na etapa
-                            </p>
-                        </div>
-
-                        {isDirty && <Badge variant="outline">Não salvo</Badge>}
-                    </div>
-
-                    <div className="flex items-center gap-2">
-                        <Button variant="outline" size="sm" onClick={handleSave} disabled={isSaving || !isDirty}>
-                            {isSaving ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Save className="w-4 h-4 mr-2" />}
-                            Salvar
-                        </Button>
-                        <div className="flex items-center gap-1">
-                            <Button variant="ghost" size="sm" disabled={!canUndo} onClick={handleUndo} className="text-xs px-2">
-                                ⮪ Undo
+        <EditorThemeProvider tokens={themeOverrides}>
+            <DndContext
+                sensors={sensors}
+                collisionDetection={closestCenter}
+                onDragStart={(event) => setActiveId(event.active.id as string)}
+                onDragEnd={handleDragEnd}
+            >
+                <div className="flex flex-col h-screen bg-gray-50">
+                    {/* Header */}
+                    <div className="flex items-center justify-between px-6 py-3 bg-white border-b">
+                        <div className="flex items-center gap-4">
+                            <Button variant="ghost" size="sm" onClick={() => setLocation('/quiz-estilo')}>
+                                <ArrowLeft className="w-4 h-4 mr-2" />
+                                Voltar
                             </Button>
-                            <Button variant="ghost" size="sm" disabled={!canRedo} onClick={handleRedo} className="text-xs px-2">
-                                Redo ⮫
+
+                            <div className="h-6 w-px bg-border" />
+
+                            <div>
+                                <h1 className="text-lg font-semibold">Editor Modular 4 Colunas</h1>
+                                <p className="text-xs text-muted-foreground">
+                                    {steps.length} etapas • {selectedStep?.blocks.length || 0} componentes na etapa
+                                </p>
+                            </div>
+
+                            {isDirty && <Badge variant="outline">Não salvo</Badge>}
+                        </div>
+
+                        <div className="flex items-center gap-2">
+                            <Button variant="outline" size="sm" onClick={handleSave} disabled={isSaving || !isDirty}>
+                                {isSaving ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Save className="w-4 h-4 mr-2" />}
+                                Salvar
+                            </Button>
+                            <div className="flex items-center gap-1">
+                                <Button variant="ghost" size="sm" disabled={!canUndo} onClick={handleUndo} className="text-xs px-2">
+                                    ⮪ Undo
+                                </Button>
+                                <Button variant="ghost" size="sm" disabled={!canRedo} onClick={handleRedo} className="text-xs px-2">
+                                    Redo ⮫
+                                </Button>
+                            </div>
+
+                            <Button size="sm" onClick={handlePublish} disabled={isPublishing}>
+                                {isPublishing ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Upload className="w-4 h-4 mr-2" />}
+                                Publicar
                             </Button>
                         </div>
-
-                        <Button size="sm" onClick={handlePublish} disabled={isPublishing}>
-                            {isPublishing ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Upload className="w-4 h-4 mr-2" />}
-                            Publicar
-                        </Button>
-                    </div>
-                </div>
-
-                {/* Layout 4 colunas */}
-                <div className="flex-1 flex overflow-hidden">
-                    {/* COLUNA 1: ETAPAS */}
-                    <div className="w-64 bg-white border-r flex flex-col">
-                        <div className="px-4 py-3 border-b">
-                            <h2 className="font-semibold text-sm">Etapas</h2>
-                            <p className="text-xs text-muted-foreground">{steps.length} etapas</p>
-                        </div>
-
-                        <ScrollArea className="flex-1">
-                            <div className="p-2 space-y-1">
-                                {steps.map((step, index) => (
-                                    <button
-                                        key={step.id}
-                                        className={cn(
-                                            'w-full text-left px-3 py-2 rounded-lg transition-colors',
-                                            selectedStepId === step.id
-                                                ? 'bg-blue-50 border-2 border-blue-500'
-                                                : 'hover:bg-gray-50 border-2 border-transparent'
-                                        )}
-                                        onClick={() => {
-                                            setSelectedStepId(step.id);
-                                            setSelectedBlockId('');
-                                        }}
-                                    >
-                                        <div className="flex items-center gap-2">
-                                            <Badge variant="outline" className="text-xs">{index + 1}</Badge>
-                                            <span className="text-sm font-medium truncate">{step.id}</span>
-                                        </div>
-                                        <div className="flex items-center gap-2 mt-1">
-                                            <Badge className="text-xs">{step.type}</Badge>
-                                            <span className="text-xs text-muted-foreground">
-                                                {step.blocks.length} blocos
-                                            </span>
-                                        </div>
-                                    </button>
-                                ))}
-                            </div>
-                        </ScrollArea>
                     </div>
 
-                    {/* COLUNA 2: BIBLIOTECA DE COMPONENTES */}
-                    <div className="w-64 bg-white border-r flex flex-col">
-                        <div className="px-4 py-3 border-b">
-                            <h2 className="font-semibold text-sm">Componentes</h2>
-                            <p className="text-xs text-muted-foreground">Arraste para o canvas</p>
-                        </div>
-
-                        <ScrollArea className="flex-1">
-                            <div className="p-3 space-y-3">
-                                {['content', 'interactive', 'media', 'layout'].map(category => {
-                                    const items = COMPONENT_LIBRARY.filter(c => c.category === category);
-
-                                    return (
-                                        <div key={category}>
-                                            <h3 className="text-xs font-semibold text-muted-foreground uppercase mb-2">
-                                                {category === 'content' && 'Conteúdo'}
-                                                {category === 'interactive' && 'Interativo'}
-                                                {category === 'media' && 'Mídia'}
-                                                {category === 'layout' && 'Layout'}
-                                            </h3>
-
-                                            <div className="space-y-1">
-                                                {items.map(component => (
-                                                    <button
-                                                        key={component.type}
-                                                        className="w-full flex items-center gap-2 px-3 py-2 text-sm rounded-lg border hover:bg-blue-50 hover:border-blue-300 transition-colors"
-                                                        onClick={() => selectedStepId && addBlockToStep(selectedStepId, component.type)}
-                                                        disabled={!selectedStepId}
-                                                    >
-                                                        {component.icon}
-                                                        <span>{component.label}</span>
-                                                    </button>
-                                                ))}
-                                            </div>
-                                        </div>
-                                    );
-                                })}
-                            </div>
-                        </ScrollArea>
-                    </div>
-
-                    {/* COLUNA 3: CANVAS */}
-                    <div className="flex-1 bg-gray-100 flex flex-col">
-                        <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as any)} className="flex-1 flex flex-col">
-                            <div className="px-4 py-2 bg-white border-b">
-                                <TabsList>
-                                    <TabsTrigger value="canvas">Canvas</TabsTrigger>
-                                    <TabsTrigger value="preview">Preview</TabsTrigger>
-                                </TabsList>
+                    {/* Layout 4 colunas */}
+                    <div className="flex-1 flex overflow-hidden">
+                        {/* COLUNA 1: ETAPAS */}
+                        <div className="w-64 bg-white border-r flex flex-col">
+                            <div className="px-4 py-3 border-b">
+                                <h2 className="font-semibold text-sm">Etapas</h2>
+                                <p className="text-xs text-muted-foreground">{steps.length} etapas</p>
                             </div>
 
-                            <TabsContent value="canvas" className="flex-1 overflow-auto p-4 m-0">
-                                {selectedStep ? (
-                                    <Card>
-                                        <CardHeader>
-                                            <CardTitle className="flex items-center justify-between">
-                                                <span>Etapa: {selectedStep.id}</span>
-                                                <Badge>{selectedStep.blocks.length} componentes</Badge>
-                                            </CardTitle>
-                                            <CardDescription>
-                                                Arraste os componentes para reordenar
-                                            </CardDescription>
-                                        </CardHeader>
-                                        <CardContent>
-                                            {selectedStep.blocks.length === 0 ? (
-                                                <div className="text-center py-12 text-muted-foreground">
-                                                    <Plus className="w-12 h-12 mx-auto mb-4 opacity-50" />
-                                                    <p>Nenhum componente nesta etapa</p>
-                                                    <p className="text-sm">Adicione da biblioteca ao lado</p>
-                                                </div>
-                                            ) : (
-                                                <>
-                                                    {/* Preview avançado para etapas especiais (result / offer) */}
-                                                    {(selectedStep.id === 'step-20' || selectedStep.id === 'step-21') && (
-                                                        <div className="mb-6">
-                                                            <div className="mb-3 flex items-center justify-between">
-                                                                <h4 className="text-sm font-semibold text-gray-700 flex items-center gap-2">
-                                                                    {selectedStep.id === 'step-20' ? 'Preview de Resultado (StyleResultCard)' : 'Preview de Oferta (OfferMap)'}
-                                                                </h4>
-                                                                <Badge variant="secondary" className="text-[10px]">Renderizado</Badge>
-                                                            </div>
-                                                            <div className="border rounded-lg bg-white p-4">
-                                                                <Suspense fallback={<div className="text-xs text-muted-foreground">Carregando componente...</div>}>
-                                                                    {selectedStep.id === 'step-20' && (
-                                                                        <StyleResultCard
-                                                                            resultStyle={topStyle || 'classico'}
-                                                                            userName="Preview"
-                                                                            secondaryStyles={Object.keys(liveScores).filter(s => s !== (topStyle || 'classico')).slice(0, 2)}
-                                                                            scores={Object.keys(liveScores).length ? liveScores : { classico: 12, natural: 8, romantico: 6 }}
-                                                                            mode="result"
-                                                                        />
-                                                                    )}
-                                                                    {selectedStep.id === 'step-21' && (
-                                                                        <OfferMap
-                                                                            content={{ offerMap: (selectedStep as any).offerMap || {} }}
-                                                                            mode="preview"
-                                                                            userName="Preview"
-                                                                            selectedOfferKey="Montar looks com mais facilidade e confiança"
-                                                                        />
-                                                                    )}
-                                                                </Suspense>
-                                                                <p className="mt-3 text-[11px] text-muted-foreground leading-relaxed">
-                                                                    Esta pré-visualização mostra o componente final de produção. {selectedStep.id === 'step-20' && 'Pontuação dinâmica aplicada a partir das seleções nos blocos de opções.'} A lista de blocos abaixo representa a estrutura editável desta etapa.
-                                                                </p>
-                                                            </div>
-                                                        </div>
-                                                    )}
-
-                                                    <SortableContext
-                                                        items={selectedStep.blocks.map(b => b.id)}
-                                                        strategy={verticalListSortingStrategy}
-                                                    >
-                                                        <div className="space-y-2">
-                                                            {selectedStep.blocks
-                                                                .filter(b => !b.parentId)
-                                                                .sort((a, b) => a.order - b.order)
-                                                                .map(block => (
-                                                                    <div
-                                                                        key={block.id}
-                                                                        className={cn(
-                                                                            'group relative p-3 border rounded-lg cursor-move bg-white overflow-hidden',
-                                                                            (selectedBlockId === block.id || isMultiSelected(block.id))
-                                                                                ? 'border-blue-500 ring-2 ring-blue-200'
-                                                                                : 'border-gray-200 hover:border-gray-300',
-                                                                            isMultiSelected(block.id) && 'bg-blue-50'
-                                                                        )}
-                                                                        onClick={(e) => handleBlockClick(e, block)}
-                                                                    >
-                                                                        <div className="absolute left-2 top-2 opacity-70 group-hover:opacity-100 transition-opacity">
-                                                                            <GripVertical className="w-4 h-4 text-gray-400" />
-                                                                        </div>
-                                                                        <div className="pl-6 pr-8 space-y-2">
-                                                                            <div className="flex items-center gap-2 text-[10px] text-slate-500">
-                                                                                <Badge variant="outline" className="text-[10px] px-1 py-0 font-normal">{block.type}</Badge>
-                                                                                <span className="truncate max-w-[160px]">{block.content.text || block.content.label || block.type}</span>
-                                                                            </div>
-                                                                            <div className="text-left">
-                                                                                {renderBlockPreview(block, selectedStep.blocks)}
-                                                                            </div>
-                                                                        </div>
-                                                                        <div className="absolute right-1 top-1">
-                                                                            <Button
-                                                                                variant="ghost"
-                                                                                size="icon"
-                                                                                className="h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity"
-                                                                                onClick={(e) => {
-                                                                                    e.stopPropagation();
-                                                                                    removeBlock(selectedStep.id, block.id);
-                                                                                }}
-                                                                            >
-                                                                                <Trash2 className="w-3 h-3 text-red-500" />
-                                                                            </Button>
-                                                                            <Button
-                                                                                variant="ghost"
-                                                                                size="icon"
-                                                                                className="h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity"
-                                                                                onClick={(e) => {
-                                                                                    e.stopPropagation();
-                                                                                    setBlockPendingDuplicate(block);
-                                                                                    setTargetStepId(selectedStep.id);
-                                                                                    setDuplicateModalOpen(true);
-                                                                                }}
-                                                                            >
-                                                                                <ArrowRightCircle className="w-3 h-3 text-blue-500" />
-                                                                            </Button>
-                                                                        </div>
-                                                                    </div>
-                                                                ))}
-                                                        </div>
-                                                    </SortableContext>
-                                                </>
+                            <ScrollArea className="flex-1">
+                                <div className="p-2 space-y-1">
+                                    {steps.map((step, index) => (
+                                        <button
+                                            key={step.id}
+                                            className={cn(
+                                                'w-full text-left px-3 py-2 rounded-lg transition-colors',
+                                                selectedStepId === step.id
+                                                    ? 'bg-blue-50 border-2 border-blue-500'
+                                                    : 'hover:bg-gray-50 border-2 border-transparent'
                                             )}
-                                        </CardContent>
-                                    </Card>
-                                ) : (
-                                    <div className="flex items-center justify-center h-full text-muted-foreground">
-                                        Selecione uma etapa para editar
-                                    </div>
-                                )}
-                            </TabsContent>
-
-                            <TabsContent value="preview" className="flex-1 m-0">
-                                <QuizProductionPreview funnelId={funnelId} className="h-full" />
-                            </TabsContent>
-                        </Tabs>
-                    </div>
-
-                    {/* COLUNA 4: PROPRIEDADES / TEMA */}
-                    <div className="w-80 bg-white border-l flex flex-col">
-                        <div className="px-4 pt-3 border-b flex flex-col gap-3">
-                            <div className="flex items-center justify-between">
-                                <div>
-                                    <h2 className="font-semibold text-sm">Painéis</h2>
-                                    <p className="text-xs text-muted-foreground">Configuração de blocos e tema</p>
+                                            onClick={() => {
+                                                setSelectedStepId(step.id);
+                                                setSelectedBlockId('');
+                                            }}
+                                        >
+                                            <div className="flex items-center gap-2">
+                                                <Badge variant="outline" className="text-xs">{index + 1}</Badge>
+                                                <span className="text-sm font-medium truncate">{step.id}</span>
+                                            </div>
+                                            <div className="flex items-center gap-2 mt-1">
+                                                <Badge className="text-xs">{step.type}</Badge>
+                                                <span className="text-xs text-muted-foreground">
+                                                    {step.blocks.length} blocos
+                                                </span>
+                                            </div>
+                                        </button>
+                                    ))}
                                 </div>
-                                <div className="flex gap-1">
-                                    <Button
-                                        size="sm"
-                                        variant="outline"
-                                        disabled={!clipboard || clipboard.length === 0 || !selectedStep}
-                                        onClick={() => selectedStep && pasteBlocks(selectedStep.id)}
-                                        className="h-7 px-2 text-[11px]"
-                                    >Colar</Button>
-                                </div>
+                            </ScrollArea>
+                        </div>
+
+                        {/* COLUNA 2: BIBLIOTECA DE COMPONENTES */}
+                        <div className="w-64 bg-white border-r flex flex-col">
+                            <div className="px-4 py-3 border-b">
+                                <h2 className="font-semibold text-sm">Componentes</h2>
+                                <p className="text-xs text-muted-foreground">Arraste para o canvas</p>
                             </div>
-                            <Tabs defaultValue="props" className="w-full">
-                                <TabsList className="grid grid-cols-2 h-8">
-                                    <TabsTrigger value="props" className="text-[11px]">Propriedades</TabsTrigger>
-                                    <TabsTrigger value="theme" className="text-[11px]">Tema</TabsTrigger>
-                                </TabsList>
-                                <TabsContent value="props" className="m-0 p-0 h-[calc(100vh-190px)]">
-                                    <ScrollArea className="h-full">
-                                        {selectedBlock && selectedStep ? (
-                                            <div className="p-4 space-y-6">
-                                                <DynamicPropertiesForm
-                                                    type={selectedBlock.type}
-                                                    values={{ ...selectedBlock.properties, ...selectedBlock.content }}
-                                                    onChange={(patch) => {
-                                                        // Dividir patch entre properties e content (heurística: se chave existe em content usa content senão properties)
-                                                        const contentKeys = new Set(Object.keys(selectedBlock.content));
-                                                        const propPatch: Record<string, any> = {};
-                                                        const contentPatch: Record<string, any> = {};
-                                                        Object.entries(patch).forEach(([k, v]) => {
-                                                            if (contentKeys.has(k)) contentPatch[k] = v; else propPatch[k] = v;
-                                                        });
-                                                        if (Object.keys(propPatch).length) updateBlockProperties(selectedStep.id, selectedBlock.id, propPatch);
-                                                        if (Object.keys(contentPatch).length) updateBlockContent(selectedStep.id, selectedBlock.id, contentPatch);
-                                                    }}
-                                                />
-                                                <div className="pt-2 border-t space-y-2">
-                                                    <Button
-                                                        variant="outline"
-                                                        size="sm"
-                                                        className="w-full"
-                                                        onClick={() => {
-                                                            const newBlock = { ...selectedBlock, id: `block-${Date.now()}` };
-                                                            setSteps(prev => prev.map(step => step.id === selectedStep.id ? { ...step, blocks: [...step.blocks, newBlock] } : step));
-                                                            setIsDirty(true);
+
+                            <ScrollArea className="flex-1">
+                                <div className="p-3 space-y-3">
+                                    {['content', 'interactive', 'media', 'layout'].map(category => {
+                                        const items = COMPONENT_LIBRARY.filter(c => c.category === category);
+
+                                        return (
+                                            <div key={category}>
+                                                <h3 className="text-xs font-semibold text-muted-foreground uppercase mb-2">
+                                                    {category === 'content' && 'Conteúdo'}
+                                                    {category === 'interactive' && 'Interativo'}
+                                                    {category === 'media' && 'Mídia'}
+                                                    {category === 'layout' && 'Layout'}
+                                                </h3>
+
+                                                <div className="space-y-1">
+                                                    {items.map(component => (
+                                                        <button
+                                                            key={component.type}
+                                                            className="w-full flex items-center gap-2 px-3 py-2 text-sm rounded-lg border hover:bg-blue-50 hover:border-blue-300 transition-colors"
+                                                            onClick={() => selectedStepId && addBlockToStep(selectedStepId, component.type)}
+                                                            disabled={!selectedStepId}
+                                                        >
+                                                            {component.icon}
+                                                            <span>{component.label}</span>
+                                                        </button>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                            </ScrollArea>
+                        </div>
+
+                        {/* COLUNA 3: CANVAS */}
+                        <div className="flex-1 bg-gray-100 flex flex-col">
+                            <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as any)} className="flex-1 flex flex-col">
+                                <div className="px-4 py-2 bg-white border-b">
+                                    <TabsList>
+                                        <TabsTrigger value="canvas">Canvas</TabsTrigger>
+                                        <TabsTrigger value="preview">Preview</TabsTrigger>
+                                    </TabsList>
+                                </div>
+
+                                <TabsContent value="canvas" className="flex-1 overflow-auto p-4 m-0">
+                                    {selectedStep ? (
+                                        <Card>
+                                            <CardHeader>
+                                                <CardTitle className="flex items-center justify-between">
+                                                    <span>Etapa: {selectedStep.id}</span>
+                                                    <Badge>{selectedStep.blocks.length} componentes</Badge>
+                                                </CardTitle>
+                                                <CardDescription className="sr-only">
+                                                    Canvas
+                                                </CardDescription>
+                                            </CardHeader>
+                                            <CardContent>
+                                                {selectedStep.blocks.length === 0 ? (
+                                                    <div className="text-center py-8 text-muted-foreground text-xs border border-dashed rounded-md bg-white/40">
+                                                        (vazio)
+                                                    </div>
+                                                ) : (
+                                                    <>
+                                                        {/* Preview avançado para etapas especiais (result / offer) */}
+                                                        {(selectedStep.id === 'step-20' || selectedStep.id === 'step-21') && (
+                                                            <div className="mb-6">
+                                                                <div className="mb-2 flex items-center justify-between">
+                                                                    <h4 className="text-xs font-medium text-gray-600 flex items-center gap-2">
+                                                                        {selectedStep.id === 'step-20' ? 'Resultado' : 'Oferta'}
+                                                                    </h4>
+                                                                    <Badge variant="secondary" className="text-[9px]">live</Badge>
+                                                                </div>
+                                                                <div className="border rounded-lg bg-white p-4">
+                                                                    <Suspense fallback={<div className="text-xs text-muted-foreground">Carregando componente...</div>}>
+                                                                        {selectedStep.id === 'step-20' && (
+                                                                            <StyleResultCard
+                                                                                resultStyle={topStyle || 'classico'}
+                                                                                userName="Preview"
+                                                                                secondaryStyles={Object.keys(liveScores).filter(s => s !== (topStyle || 'classico')).slice(0, 2)}
+                                                                                scores={Object.keys(liveScores).length ? liveScores : { classico: 12, natural: 8, romantico: 6 }}
+                                                                                mode="result"
+                                                                            />
+                                                                        )}
+                                                                        {selectedStep.id === 'step-21' && (
+                                                                            <OfferMap
+                                                                                content={{ offerMap: (selectedStep as any).offerMap || {} }}
+                                                                                mode="preview"
+                                                                                userName="Preview"
+                                                                                selectedOfferKey="Montar looks com mais facilidade e confiança"
+                                                                            />
+                                                                        )}
+                                                                    </Suspense>
+                                                                    {/* Texto explicativo removido para canvas limpo */}
+                                                                </div>
+                                                            </div>
+                                                        )}
+
+                                                        <SortableContext
+                                                            items={selectedStep.blocks.map(b => b.id)}
+                                                            strategy={verticalListSortingStrategy}
+                                                        >
+                                                            <div className="space-y-2">
+                                                                {selectedStep.blocks
+                                                                    .filter(b => !b.parentId)
+                                                                    .sort((a, b) => a.order - b.order)
+                                                                    .map(block => (
+                                                                        <div
+                                                                            key={block.id}
+                                                                            className={cn(
+                                                                                'group relative p-3 border rounded-lg cursor-move bg-white overflow-hidden',
+                                                                                (selectedBlockId === block.id || isMultiSelected(block.id))
+                                                                                    ? 'border-blue-500 ring-2 ring-blue-200'
+                                                                                    : 'border-gray-200 hover:border-gray-300',
+                                                                                isMultiSelected(block.id) && 'bg-blue-50'
+                                                                            )}
+                                                                            onClick={(e) => handleBlockClick(e, block)}
+                                                                        >
+                                                                            <div className="absolute left-2 top-2 opacity-70 group-hover:opacity-100 transition-opacity">
+                                                                                <GripVertical className="w-4 h-4 text-gray-400" />
+                                                                            </div>
+                                                                            <div className="pl-6 pr-8 space-y-2">
+                                                                                <div className="flex items-center gap-2 text-[10px] text-slate-500">
+                                                                                    <Badge variant="outline" className="text-[10px] px-1 py-0 font-normal">{block.type}</Badge>
+                                                                                    <span className="truncate max-w-[160px]">{block.content.text || block.content.label || block.type}</span>
+                                                                                </div>
+                                                                                <div className="text-left">
+                                                                                    {renderBlockPreview(block, selectedStep.blocks)}
+                                                                                </div>
+                                                                            </div>
+                                                                            <div className="absolute right-1 top-1">
+                                                                                <Button
+                                                                                    variant="ghost"
+                                                                                    size="icon"
+                                                                                    className="h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity"
+                                                                                    onClick={(e) => {
+                                                                                        e.stopPropagation();
+                                                                                        removeBlock(selectedStep.id, block.id);
+                                                                                    }}
+                                                                                >
+                                                                                    <Trash2 className="w-3 h-3 text-red-500" />
+                                                                                </Button>
+                                                                                <Button
+                                                                                    variant="ghost"
+                                                                                    size="icon"
+                                                                                    className="h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity"
+                                                                                    onClick={(e) => {
+                                                                                        e.stopPropagation();
+                                                                                        setBlockPendingDuplicate(block);
+                                                                                        setTargetStepId(selectedStep.id);
+                                                                                        setDuplicateModalOpen(true);
+                                                                                    }}
+                                                                                >
+                                                                                    <ArrowRightCircle className="w-3 h-3 text-blue-500" />
+                                                                                </Button>
+                                                                            </div>
+                                                                        </div>
+                                                                    ))}
+                                                            </div>
+                                                        </SortableContext>
+                                                    </>
+                                                )}
+                                            </CardContent>
+                                        </Card>
+                                    ) : (
+                                        <div className="flex items-center justify-center h-full text-muted-foreground">
+                                            Selecione uma etapa para editar
+                                        </div>
+                                    )}
+                                </TabsContent>
+
+                                <TabsContent value="preview" className="flex-1 m-0">
+                                    <QuizProductionPreview funnelId={funnelId} className="h-full" />
+                                </TabsContent>
+                            </Tabs>
+                        </div>
+
+                        {/* COLUNA 4: PROPRIEDADES / TEMA */}
+                        <div className="w-80 bg-white border-l flex flex-col">
+                            <div className="px-4 pt-3 border-b flex flex-col gap-3">
+                                <div className="flex items-center justify-between">
+                                    <div>
+                                        <h2 className="font-semibold text-sm">Painéis</h2>
+                                        <p className="text-xs text-muted-foreground">Configuração de blocos e tema</p>
+                                    </div>
+                                    <div className="flex gap-1">
+                                        <Button
+                                            size="sm"
+                                            variant="outline"
+                                            disabled={!clipboard || clipboard.length === 0 || !selectedStep}
+                                            onClick={() => selectedStep && pasteBlocks(selectedStep.id)}
+                                            className="h-7 px-2 text-[11px]"
+                                        >Colar</Button>
+                                    </div>
+                                </div>
+                                <Tabs defaultValue="props" className="w-full">
+                                    <TabsList className="grid grid-cols-2 h-8">
+                                        <TabsTrigger value="props" className="text-[11px]">Propriedades</TabsTrigger>
+                                        <TabsTrigger value="theme" className="text-[11px]">Tema</TabsTrigger>
+                                    </TabsList>
+                                    <TabsContent value="props" className="m-0 p-0 h-[calc(100vh-190px)]">
+                                        <ScrollArea className="h-full">
+                                            {selectedBlock && selectedStep ? (
+                                                <div className="p-4 space-y-6">
+                                                    <DynamicPropertiesForm
+                                                        type={selectedBlock.type}
+                                                        values={{ ...selectedBlock.properties, ...selectedBlock.content }}
+                                                        onChange={(patch) => {
+                                                            // Dividir patch entre properties e content (heurística: se chave existe em content usa content senão properties)
+                                                            const contentKeys = new Set(Object.keys(selectedBlock.content));
+                                                            const propPatch: Record<string, any> = {};
+                                                            const contentPatch: Record<string, any> = {};
+                                                            Object.entries(patch).forEach(([k, v]) => {
+                                                                if (contentKeys.has(k)) contentPatch[k] = v; else propPatch[k] = v;
+                                                            });
+                                                            if (Object.keys(propPatch).length) updateBlockProperties(selectedStep.id, selectedBlock.id, propPatch);
+                                                            if (Object.keys(contentPatch).length) updateBlockContent(selectedStep.id, selectedBlock.id, contentPatch);
                                                         }}
-                                                    >
-                                                        <Copy className="w-4 h-4 mr-2" />
-                                                        Duplicar
-                                                    </Button>
-                                                    <Button
-                                                        variant="secondary"
-                                                        size="sm"
-                                                        className="w-full"
-                                                        onClick={() => {
-                                                            setBlockPendingDuplicate(selectedBlock);
-                                                            setTargetStepId(selectedStep.id);
-                                                            setDuplicateModalOpen(true);
-                                                        }}
-                                                    >
-                                                        <ArrowRightCircle className="w-4 h-4 mr-2" />
-                                                        Duplicar em…
-                                                    </Button>
-                                                    {multiSelectedIds.length > 1 && (
+                                                    />
+                                                    <div className="pt-2 border-t space-y-2">
                                                         <Button
                                                             variant="outline"
                                                             size="sm"
                                                             className="w-full"
                                                             onClick={() => {
-                                                                const blocks = selectedStep.blocks.filter(b => multiSelectedIds.includes(b.id));
-                                                                copyMultiple(blocks);
+                                                                const newBlock = { ...selectedBlock, id: `block-${Date.now()}` };
+                                                                setSteps(prev => prev.map(step => step.id === selectedStep.id ? { ...step, blocks: [...step.blocks, newBlock] } : step));
+                                                                setIsDirty(true);
                                                             }}
                                                         >
-                                                            <Copy className="w-4 h-4 mr-2" /> Copiar {multiSelectedIds.length}
+                                                            <Copy className="w-4 h-4 mr-2" />
+                                                            Duplicar
                                                         </Button>
-                                                    )}
-                                                    {multiSelectedIds.length > 1 && (
+                                                        <Button
+                                                            variant="secondary"
+                                                            size="sm"
+                                                            className="w-full"
+                                                            onClick={() => {
+                                                                setBlockPendingDuplicate(selectedBlock);
+                                                                setTargetStepId(selectedStep.id);
+                                                                setDuplicateModalOpen(true);
+                                                            }}
+                                                        >
+                                                            <ArrowRightCircle className="w-4 h-4 mr-2" />
+                                                            Duplicar em…
+                                                        </Button>
+                                                        {multiSelectedIds.length > 1 && (
+                                                            <Button
+                                                                variant="outline"
+                                                                size="sm"
+                                                                className="w-full"
+                                                                onClick={() => {
+                                                                    const blocks = selectedStep.blocks.filter(b => multiSelectedIds.includes(b.id));
+                                                                    copyMultiple(blocks);
+                                                                }}
+                                                            >
+                                                                <Copy className="w-4 h-4 mr-2" /> Copiar {multiSelectedIds.length}
+                                                            </Button>
+                                                        )}
+                                                        {multiSelectedIds.length > 1 && (
+                                                            <Button
+                                                                variant="destructive"
+                                                                size="sm"
+                                                                className="w-full"
+                                                                onClick={removeMultiple}
+                                                            >
+                                                                <Trash2 className="w-4 h-4 mr-2" /> Remover {multiSelectedIds.length}
+                                                            </Button>
+                                                        )}
                                                         <Button
                                                             variant="destructive"
                                                             size="sm"
                                                             className="w-full"
-                                                            onClick={removeMultiple}
+                                                            onClick={() => removeBlock(selectedStep.id, selectedBlock.id)}
                                                         >
-                                                            <Trash2 className="w-4 h-4 mr-2" /> Remover {multiSelectedIds.length}
+                                                            <Trash2 className="w-4 h-4 mr-2" />
+                                                            Remover
                                                         </Button>
-                                                    )}
-                                                    <Button
-                                                        variant="destructive"
-                                                        size="sm"
-                                                        className="w-full"
-                                                        onClick={() => removeBlock(selectedStep.id, selectedBlock.id)}
-                                                    >
-                                                        <Trash2 className="w-4 h-4 mr-2" />
-                                                        Remover
-                                                    </Button>
-                                                    {/* Snippet actions quando múltipla seleção */}
-                                                    {selectedStep && (multiSelectedIds.length > 0 || selectedBlock) && (
-                                                        <Button
-                                                            variant="outline"
-                                                            size="sm"
-                                                            className="w-full"
-                                                            onClick={() => {
-                                                                const ids = multiSelectedIds.length ? multiSelectedIds : [selectedBlock.id];
-                                                                const blocksToSave = selectedStep.blocks.filter(b => ids.includes(b.id));
-                                                                const name = prompt('Nome do snippet:', blocksToSave[0]?.type || 'Snippet');
-                                                                if (!name) return;
-                                                                snippetsManager.create(name, blocksToSave);
-                                                                refreshSnippets();
-                                                                toast({ title: 'Snippet salvo', description: name });
-                                                            }}
-                                                        >
-                                                            <Copy className="w-4 h-4 mr-2" /> Salvar como Snippet
-                                                        </Button>
-                                                    )}
-                                                </div>
-                                                {/* Lista de snippets */}
-                                                <div className="pt-4 border-t space-y-3">
-                                                    <div className="flex items-center justify-between">
-                                                        <h3 className="text-xs font-semibold text-muted-foreground uppercase">Snippets</h3>
-                                                        <button
-                                                            onClick={() => { refreshSnippets(); }}
-                                                            className="text-[10px] text-blue-600 hover:underline"
-                                                        >Atualizar</button>
-                                                    </div>
-                                                    <Input
-                                                        placeholder="Filtrar..."
-                                                        value={snippetFilter}
-                                                        onChange={e => setSnippetFilter(e.target.value)}
-                                                        className="h-7 text-xs"
-                                                    />
-                                                    <div className="space-y-2 max-h-60 overflow-auto pr-1">
-                                                        {snippets.filter(s => !snippetFilter || s.name.toLowerCase().includes(snippetFilter.toLowerCase())).map(s => (
-                                                            <div key={s.id} className="border rounded-md p-2 group relative">
-                                                                <p className="text-xs font-medium truncate">{s.name}</p>
-                                                                <p className="text-[10px] text-muted-foreground">{s.blocks.length} blocos</p>
-                                                                <div className="flex gap-1 mt-1">
-                                                                    <Button
-                                                                        variant="outline"
-                                                                        size="sm"
-                                                                        className="h-6 text-[10px] flex-1"
-                                                                        onClick={() => {
-                                                                            if (!selectedStep) return;
-                                                                            // Inserir clonando mantendo hierarquia
-                                                                            setSteps(prev => {
-                                                                                const next = prev.map(st => {
-                                                                                    if (st.id !== selectedStep.id) return st;
-                                                                                    const baseLen = st.blocks.filter(b => !b.parentId).length; // top-level count para order root
-                                                                                    const timestamp = Date.now();
-                                                                                    const idMap: Record<string, string> = {};
-                                                                                    const cloned = s.blocks.map((b, idx) => {
-                                                                                        const newId = `${b.id}-snip-${timestamp}-${idx}`;
-                                                                                        idMap[b.id] = newId;
-                                                                                        return { ...b, id: newId };
-                                                                                    }).map(b => ({
-                                                                                        ...b,
-                                                                                        parentId: b.parentId ? idMap[b.parentId] : null,
-                                                                                        order: b.parentId ? b.order : baseLen + b.order
-                                                                                    }));
-                                                                                    return { ...st, blocks: [...st.blocks, ...cloned] };
-                                                                                });
-                                                                                pushHistory(next);
-                                                                                return next;
-                                                                            });
-                                                                            setIsDirty(true);
-                                                                            toast({ title: 'Snippet inserido', description: s.name });
-                                                                        }}
-                                                                    >Insert</Button>
-                                                                    <Button
-                                                                        variant="ghost"
-                                                                        size="sm"
-                                                                        className="h-6 text-[10px]"
-                                                                        onClick={() => {
-                                                                            const newName = prompt('Renomear snippet:', s.name);
-                                                                            if (!newName) return;
-                                                                            snippetsManager.update(s.id, { name: newName });
-                                                                            refreshSnippets();
-                                                                        }}
-                                                                    >Renomear</Button>
-                                                                    <Button
-                                                                        variant="destructive"
-                                                                        size="sm"
-                                                                        className="h-6 text-[10px]"
-                                                                        onClick={() => {
-                                                                            if (!confirm('Excluir snippet?')) return;
-                                                                            snippetsManager.remove(s.id);
-                                                                            refreshSnippets();
-                                                                        }}
-                                                                    >Del</Button>
-                                                                </div>
-                                                            </div>
-                                                        ))}
-                                                        {snippets.length === 0 && (
-                                                            <p className="text-[11px] text-muted-foreground">Nenhum snippet salvo</p>
+                                                        {/* Snippet actions quando múltipla seleção */}
+                                                        {selectedStep && (multiSelectedIds.length > 0 || selectedBlock) && (
+                                                            <Button
+                                                                variant="outline"
+                                                                size="sm"
+                                                                className="w-full"
+                                                                onClick={() => {
+                                                                    const ids = multiSelectedIds.length ? multiSelectedIds : [selectedBlock.id];
+                                                                    const blocksToSave = selectedStep.blocks.filter(b => ids.includes(b.id));
+                                                                    const name = prompt('Nome do snippet:', blocksToSave[0]?.type || 'Snippet');
+                                                                    if (!name) return;
+                                                                    snippetsManager.create(name, blocksToSave);
+                                                                    refreshSnippets();
+                                                                    toast({ title: 'Snippet salvo', description: name });
+                                                                }}
+                                                            >
+                                                                <Copy className="w-4 h-4 mr-2" /> Salvar como Snippet
+                                                            </Button>
                                                         )}
                                                     </div>
+                                                    {/* Lista de snippets */}
+                                                    <div className="pt-4 border-t space-y-3">
+                                                        <div className="flex items-center justify-between">
+                                                            <h3 className="text-xs font-semibold text-muted-foreground uppercase">Snippets</h3>
+                                                            <button
+                                                                onClick={() => { refreshSnippets(); }}
+                                                                className="text-[10px] text-blue-600 hover:underline"
+                                                            >Atualizar</button>
+                                                        </div>
+                                                        <Input
+                                                            placeholder="Filtrar..."
+                                                            value={snippetFilter}
+                                                            onChange={e => setSnippetFilter(e.target.value)}
+                                                            className="h-7 text-xs"
+                                                        />
+                                                        <div className="space-y-2 max-h-60 overflow-auto pr-1">
+                                                            {snippets.filter(s => !snippetFilter || s.name.toLowerCase().includes(snippetFilter.toLowerCase())).map(s => (
+                                                                <div key={s.id} className="border rounded-md p-2 group relative">
+                                                                    <p className="text-xs font-medium truncate">{s.name}</p>
+                                                                    <p className="text-[10px] text-muted-foreground">{s.blocks.length} blocos</p>
+                                                                    <div className="flex gap-1 mt-1">
+                                                                        <Button
+                                                                            variant="outline"
+                                                                            size="sm"
+                                                                            className="h-6 text-[10px] flex-1"
+                                                                            onClick={() => {
+                                                                                if (!selectedStep) return;
+                                                                                // Inserir clonando mantendo hierarquia
+                                                                                setSteps(prev => {
+                                                                                    const next = prev.map(st => {
+                                                                                        if (st.id !== selectedStep.id) return st;
+                                                                                        const baseLen = st.blocks.filter(b => !b.parentId).length; // top-level count para order root
+                                                                                        const timestamp = Date.now();
+                                                                                        const idMap: Record<string, string> = {};
+                                                                                        const cloned = s.blocks.map((b, idx) => {
+                                                                                            const newId = `${b.id}-snip-${timestamp}-${idx}`;
+                                                                                            idMap[b.id] = newId;
+                                                                                            return { ...b, id: newId };
+                                                                                        }).map(b => ({
+                                                                                            ...b,
+                                                                                            parentId: b.parentId ? idMap[b.parentId] : null,
+                                                                                            order: b.parentId ? b.order : baseLen + b.order
+                                                                                        }));
+                                                                                        return { ...st, blocks: [...st.blocks, ...cloned] };
+                                                                                    });
+                                                                                    pushHistory(next);
+                                                                                    return next;
+                                                                                });
+                                                                                setIsDirty(true);
+                                                                                toast({ title: 'Snippet inserido', description: s.name });
+                                                                            }}
+                                                                        >Insert</Button>
+                                                                        <Button
+                                                                            variant="ghost"
+                                                                            size="sm"
+                                                                            className="h-6 text-[10px]"
+                                                                            onClick={() => {
+                                                                                const newName = prompt('Renomear snippet:', s.name);
+                                                                                if (!newName) return;
+                                                                                snippetsManager.update(s.id, { name: newName });
+                                                                                refreshSnippets();
+                                                                            }}
+                                                                        >Renomear</Button>
+                                                                        <Button
+                                                                            variant="destructive"
+                                                                            size="sm"
+                                                                            className="h-6 text-[10px]"
+                                                                            onClick={() => {
+                                                                                if (!confirm('Excluir snippet?')) return;
+                                                                                snippetsManager.remove(s.id);
+                                                                                refreshSnippets();
+                                                                            }}
+                                                                        >Del</Button>
+                                                                    </div>
+                                                                </div>
+                                                            ))}
+                                                            {snippets.length === 0 && (
+                                                                <p className="text-[11px] text-muted-foreground">Nenhum snippet salvo</p>
+                                                            )}
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        ) : (
-                                            <div className="flex items-center justify-center h-full text-center text-muted-foreground p-4">
-                                                <div>
-                                                    <Settings className="w-12 h-12 mx-auto mb-4 opacity-50" />
-                                                    <p>Selecione um componente</p>
-                                                    <p className="text-sm">para editar suas propriedades</p>
+                                            ) : (
+                                                <div className="flex items-center justify-center h-full text-center text-muted-foreground p-4">
+                                                    <div>
+                                                        <Settings className="w-12 h-12 mx-auto mb-4 opacity-50" />
+                                                        <p>Selecione um componente</p>
+                                                        <p className="text-sm">para editar suas propriedades</p>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        )}
-                                    </ScrollArea>
-                                </TabsContent>
-                                <TabsContent value="theme" className="m-0 p-0 h-[calc(100vh-190px)]">
-                                    <ThemeEditorPanel onApply={() => { /* re-render via localStorage + provider outside */ }} />
-                                </TabsContent>
-                            </Tabs>
+                                            )}
+                                        </ScrollArea>
+                                    </TabsContent>
+                                    <TabsContent value="theme" className="m-0 p-0 h-[calc(100vh-190px)]">
+                                        <ThemeEditorPanel onApply={() => { /* re-render via localStorage + provider outside */ }} />
+                                        <ThemeEditorPanel onApply={(t) => {
+                                            // Atualiza overrides em memória (ThemeEditorPanel já persistiu no localStorage)
+                                            setThemeOverrides(t);
+                                        }} />
+                                    </TabsContent>
+                                </Tabs>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                {/* Drag Overlay */}
-                <DragOverlay>
-                    {activeId ? (
-                        <div className="bg-white border-2 border-blue-500 rounded-lg p-3 shadow-lg">
-                            <Badge>Arrastando...</Badge>
+                    {/* Drag Overlay */}
+                    <DragOverlay>
+                        {activeId ? (
+                            <div className="bg-white border-2 border-blue-500 rounded-lg p-3 shadow-lg">
+                                <Badge>Arrastando...</Badge>
+                            </div>
+                        ) : null}
+                    </DragOverlay>
+                </div>
+                <Dialog open={duplicateModalOpen} onOpenChange={(o) => { if (!o) { setDuplicateModalOpen(false); setBlockPendingDuplicate(null); } }}>
+                    <DialogContent className="max-w-sm">
+                        <DialogHeader>
+                            <DialogTitle>Duplicar bloco em outra etapa</DialogTitle>
+                            <DialogDescription>
+                                Selecione a etapa destino. O bloco será adicionado ao final da lista.
+                            </DialogDescription>
+                        </DialogHeader>
+                        <div className="space-y-4">
+                            <div>
+                                <p className="text-xs mb-1 text-muted-foreground">Bloco</p>
+                                <p className="text-sm font-medium">{blockPendingDuplicate?.type}</p>
+                            </div>
+                            <div>
+                                <label className="text-xs font-medium mb-1 block">Etapa destino</label>
+                                <select
+                                    className="w-full border rounded-md p-2 text-sm"
+                                    value={targetStepId}
+                                    onChange={(e) => setTargetStepId(e.target.value)}
+                                >
+                                    {steps.map(s => (
+                                        <option key={s.id} value={s.id}>{s.id} ({s.type})</option>
+                                    ))}
+                                </select>
+                            </div>
                         </div>
-                    ) : null}
-                </DragOverlay>
-            </div>
-            <Dialog open={duplicateModalOpen} onOpenChange={(o) => { if (!o) { setDuplicateModalOpen(false); setBlockPendingDuplicate(null); } }}>
-                <DialogContent className="max-w-sm">
-                    <DialogHeader>
-                        <DialogTitle>Duplicar bloco em outra etapa</DialogTitle>
-                        <DialogDescription>
-                            Selecione a etapa destino. O bloco será adicionado ao final da lista.
-                        </DialogDescription>
-                    </DialogHeader>
-                    <div className="space-y-4">
-                        <div>
-                            <p className="text-xs mb-1 text-muted-foreground">Bloco</p>
-                            <p className="text-sm font-medium">{blockPendingDuplicate?.type}</p>
-                        </div>
-                        <div>
-                            <label className="text-xs font-medium mb-1 block">Etapa destino</label>
-                            <select
-                                className="w-full border rounded-md p-2 text-sm"
-                                value={targetStepId}
-                                onChange={(e) => setTargetStepId(e.target.value)}
-                            >
-                                {steps.map(s => (
-                                    <option key={s.id} value={s.id}>{s.id} ({s.type})</option>
-                                ))}
-                            </select>
-                        </div>
-                    </div>
-                    <DialogFooter className="mt-4 flex gap-2 justify-end">
-                        <Button variant="ghost" size="sm" onClick={() => { setDuplicateModalOpen(false); setBlockPendingDuplicate(null); }}>Cancelar</Button>
-                        <Button size="sm" disabled={!targetStepId || !blockPendingDuplicate} onClick={duplicateBlockToAnotherStep}>Duplicar</Button>
-                    </DialogFooter>
-                </DialogContent>
-            </Dialog>
-        </DndContext>
+                        <DialogFooter className="mt-4 flex gap-2 justify-end">
+                            <Button variant="ghost" size="sm" onClick={() => { setDuplicateModalOpen(false); setBlockPendingDuplicate(null); }}>Cancelar</Button>
+                            <Button size="sm" disabled={!targetStepId || !blockPendingDuplicate} onClick={duplicateBlockToAnotherStep}>Duplicar</Button>
+                        </DialogFooter>
+                    </DialogContent>
+                </Dialog>
+            </DndContext>
+        </EditorThemeProvider>
     );
 };
 
