@@ -60,6 +60,7 @@ import { HistoryManager } from '@/utils/historyManager';
 import { snippetsManager, BlockSnippet } from '@/utils/snippetsManager';
 import ThemeEditorPanel from './components/ThemeEditorPanel';
 import { EditorThemeProvider, DesignTokens } from '@/theme/editorTheme';
+import { useValidation } from './hooks/useValidation';
 
 // Pré-visualizações especializadas (lazy) dos componentes finais de produção
 const StyleResultCard = React.lazy(() => import('@/components/editor/quiz/components/StyleResultCard').then(m => ({ default: m.StyleResultCard })));
@@ -211,6 +212,9 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
     const [isPublishing, setIsPublishing] = useState(false);
     // Theme overrides carregados do localStorage e aplicados via EditorThemeProvider
     const [themeOverrides, setThemeOverrides] = useState<Partial<DesignTokens>>({});
+
+    // Validação em tempo real (fase inicial - regras básicas)
+    const { byStep, byBlock } = useValidation(steps);
 
     useEffect(() => {
         try {
@@ -1029,6 +1033,12 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                                             <div className="flex items-center gap-2">
                                                 <Badge variant="outline" className="text-xs">{index + 1}</Badge>
                                                 <span className="text-sm font-medium truncate">{step.id}</span>
+                                                {byStep[step.id]?.length ? (
+                                                    <span className="ml-auto inline-flex items-center gap-1 text-red-600 text-[10px] font-medium">
+                                                        {byStep[step.id].filter(e => e.severity === 'error').length > 0 && <span className="w-2 h-2 rounded-full bg-red-600" />}
+                                                        {byStep[step.id].length}
+                                                    </span>
+                                                ) : null}
                                             </div>
                                             <div className="flex items-center gap-2 mt-1">
                                                 <Badge className="text-xs">{step.type}</Badge>
@@ -1162,10 +1172,16 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                                                                                 (selectedBlockId === block.id || isMultiSelected(block.id))
                                                                                     ? 'border-blue-500 ring-2 ring-blue-200'
                                                                                     : 'border-gray-200 hover:border-gray-300',
+                                                                                byBlock[block.id]?.length && 'border-red-500',
                                                                                 isMultiSelected(block.id) && 'bg-blue-50'
                                                                             )}
                                                                             onClick={(e) => handleBlockClick(e, block)}
                                                                         >
+                                                                            {byBlock[block.id]?.length && (
+                                                                                <div className="absolute -top-1 -right-1 bg-red-600 text-white text-[9px] px-1 rounded shadow">
+                                                                                    {byBlock[block.id].length}
+                                                                                </div>
+                                                                            )}
                                                                             <div className="absolute left-2 top-2 opacity-70 group-hover:opacity-100 transition-opacity">
                                                                                 <GripVertical className="w-4 h-4 text-gray-400" />
                                                                             </div>
