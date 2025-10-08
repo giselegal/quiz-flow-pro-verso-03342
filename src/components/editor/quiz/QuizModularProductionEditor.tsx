@@ -215,6 +215,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
     const [duplicateModalOpen, setDuplicateModalOpen] = useState(false);
     const [blockPendingDuplicate, setBlockPendingDuplicate] = useState<BlockComponent | null>(null);
     const [targetStepId, setTargetStepId] = useState<string>('');
+    const [multiSelectedIds, setMultiSelectedIds] = useState<string[]>([]);
     const sensors = useSensors(
         useSensor(PointerSensor, {
             activationConstraint: {
@@ -452,6 +453,10 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
         setClipboard([JSON.parse(JSON.stringify(block))]);
     }, []);
 
+    const copyMultiple = useCallback((blocks: BlockComponent[]) => {
+        setClipboard(blocks.map(b => JSON.parse(JSON.stringify(b))));
+        toast({ title: 'Copiado', description: `${blocks.length} bloco(s) copiado(s)` });
+    }, [toast]);
     // Colar bloco(s)
     const pasteBlocks = useCallback((stepId: string) => {
         if (!clipboard || clipboard.length === 0) return;
@@ -517,6 +522,48 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
 
         setIsDirty(true);
     }, []);
+
+    // Multi seleção helpers
+    const isMultiSelected = useCallback((id: string) => multiSelectedIds.includes(id), [multiSelectedIds]);
+    const clearMultiSelection = useCallback(() => setMultiSelectedIds([]), []);
+    const handleBlockClick = (e: React.MouseEvent, block: BlockComponent) => {
+        e.stopPropagation();
+        const isShift = e.shiftKey;
+        const isMeta = e.metaKey || e.ctrlKey;
+        if (!isShift && !isMeta) {
+            // seleção simples
+            setSelectedBlockId(block.id);
+            clearMultiSelection();
+            return;
+        }
+        if (isShift && selectedStep) {
+            const ordered = [...selectedStep.blocks].sort((a, b) => a.order - b.order);
+            const last = multiSelectedIds.length ? multiSelectedIds[multiSelectedIds.length - 1] : selectedBlockId || block.id;
+            const startIndex = ordered.findIndex(b => b.id === last);
+            const endIndex = ordered.findIndex(b => b.id === block.id);
+            if (startIndex === -1 || endIndex === -1) return;
+            const [from, to] = startIndex < endIndex ? [startIndex, endIndex] : [endIndex, startIndex];
+            const range = ordered.slice(from, to + 1).map(b => b.id);
+            const merged = Array.from(new Set([...multiSelectedIds, ...range]));
+            setMultiSelectedIds(merged);
+            setSelectedBlockId(block.id);
+            return;
+        }
+        if (isMeta) {
+            setSelectedBlockId(block.id);
+            setMultiSelectedIds(prev => prev.includes(block.id) ? prev.filter(id => id !== block.id) : [...prev, block.id]);
+        }
+    };
+
+    const removeMultiple = () => {
+        if (!selectedStep || multiSelectedIds.length === 0) return;
+        const total = multiSelectedIds.length;
+        setSteps(prev => prev.map(s => s.id === selectedStep.id ? { ...s, blocks: s.blocks.filter(b => !multiSelectedIds.includes(b.id)) } : s));
+        setIsDirty(true);
+        clearMultiSelection();
+        if (multiSelectedIds.includes(selectedBlockId)) setSelectedBlockId('');
+        toast({ title: 'Removidos', description: `${total} bloco(s)` });
+    };
 
     // Reordenar blocos
     const handleDragEnd = (event: any) => {
@@ -981,11 +1028,12 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                                                                         key={block.id}
                                                                         className={cn(
                                                                             'group relative p-3 border rounded-lg cursor-move bg-white overflow-hidden',
-                                                                            selectedBlockId === block.id
+                                                                            (selectedBlockId === block.id || isMultiSelected(block.id))
                                                                                 ? 'border-blue-500 ring-2 ring-blue-200'
-                                                                                : 'border-gray-200 hover:border-gray-300'
+                                                                                : 'border-gray-200 hover:border-gray-300',
+                                                                            isMultiSelected(block.id) && 'bg-blue-50'
                                                                         )}
-                                                                        onClick={() => setSelectedBlockId(block.id)}
+                                                                        onClick={(e) => handleBlockClick(e, block)}
                                                                     >
                                                                         <div className="absolute left-2 top-2 opacity-70 group-hover:opacity-100 transition-opacity">
                                                                             <GripVertical className="w-4 h-4 text-gray-400" />
@@ -1111,6 +1159,29 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                                             <ArrowRightCircle className="w-4 h-4 mr-2" />
                                             Duplicar em…
                                         </Button>
+                                        {multiSelectedIds.length > 1 && (
+                                            <Button
+                                                variant="outline"
+                                                size="sm"
+                                                className="w-full"
+                                                onClick={() => {
+                                                    const blocks = selectedStep.blocks.filter(b => multiSelectedIds.includes(b.id));
+                                                    copyMultiple(blocks);
+                                                }}
+                                            >
+                                                <Copy className="w-4 h-4 mr-2" /> Copiar {multiSelectedIds.length}
+                                            </Button>
+                                        )}
+                                        {multiSelectedIds.length > 1 && (
+                                            <Button
+                                                variant="destructive"
+                                                size="sm"
+                                                className="w-full"
+                                                onClick={removeMultiple}
+                                            >
+                                                <Trash2 className="w-4 h-4 mr-2" /> Remover {multiSelectedIds.length}
+                                            </Button>
+                                        )}
                                         <Button
                                             variant="destructive"
                                             size="sm"
