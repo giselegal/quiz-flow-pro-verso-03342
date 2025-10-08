@@ -67,6 +67,7 @@ interface BlockComponent {
     id: string;
     type: string;
     order: number;
+    parentId?: string | null; // suporte a aninhamento
     properties: Record<string, any>;
     content: Record<string, any>;
 }
@@ -394,6 +395,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
             id: `block-${Date.now()}`,
             type: componentType,
             order: selectedStep?.blocks.length || 0,
+            parentId: null,
             properties: { ...component.defaultProps },
             content: {}
         };
@@ -667,8 +669,13 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
         });
     };
 
-    const renderBlockPreview = (block: BlockComponent) => {
-        const { type, content, properties } = block;
+    // Agrupar filhos por parentId
+    const getChildren = (blocks: BlockComponent[], parentId: string | null = null) =>
+        blocks.filter(b => (b.parentId || null) === parentId).sort((a, b) => a.order - b.order);
+
+    const renderBlockPreview = (block: BlockComponent, all: BlockComponent[]) => {
+        const { type, content, properties, id } = block;
+        const children = getChildren(all, id);
         // Contexto provisório para placeholders (será expandido com scoring dinâmico e dados reais do usuário)
         const placeholderContext = {
             userName: 'Preview',
@@ -772,15 +779,30 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
         if (type === 'container') {
             return (
                 <div
-                    className="rounded-md border p-4 bg-gradient-to-br from-white to-slate-50 shadow-sm"
+                    className={cn(
+                        'rounded-md border p-3 bg-gradient-to-br from-white to-slate-50 shadow-sm relative',
+                        'min-h-[60px]'
+                    )}
                     style={{
                         backgroundColor: properties?.backgroundColor || undefined,
                         padding: properties?.padding || undefined,
                         borderRadius: properties?.borderRadius || undefined
                     }}
                 >
-                    <p className="text-[11px] font-medium text-slate-500 mb-2">Container</p>
-                    <div className="text-xs text-slate-400">(Arraste outros blocos para dentro - futuro)</div>
+                    <div className="flex items-center justify-between mb-2">
+                        <p className="text-[11px] font-medium text-slate-500">Container</p>
+                        <span className="text-[10px] text-slate-400">{children.length} filhos</span>
+                    </div>
+                    {children.length === 0 && (
+                        <div className="text-[10px] text-slate-400 italic">Solte blocos aqui</div>
+                    )}
+                    <div className="space-y-2">
+                        {children.map(child => (
+                            <div key={child.id} className="border rounded-md p-2 bg-white/70">
+                                {renderBlockPreview(child, all)}
+                            </div>
+                        ))}
+                    </div>
                 </div>
             );
         }
@@ -1108,7 +1130,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                                                                                 <span className="truncate max-w-[160px]">{block.content.text || block.content.label || block.type}</span>
                                                                             </div>
                                                                             <div className="text-left">
-                                                                                {renderBlockPreview(block)}
+                                                                                {renderBlockPreview(block, selectedStep.blocks)}
                                                                             </div>
                                                                         </div>
                                                                         <div className="absolute right-1 top-1">
