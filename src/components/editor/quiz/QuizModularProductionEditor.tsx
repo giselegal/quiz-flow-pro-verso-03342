@@ -737,9 +737,29 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
     const getChildren = (blocks: BlockComponent[], parentId: string | null = null) =>
         blocks.filter(b => (b.parentId || null) === parentId).sort((a, b) => a.order - b.order);
 
+    // Cache de pré-visualizações para evitar recomputar nós React pesados
+    const previewCacheRef = useRef<Map<string, { key: string; node: React.ReactNode }>>(new Map());
+
     const renderBlockPreview = (block: BlockComponent, all: BlockComponent[]) => {
         const { type, content, properties, id } = block;
         const children = getChildren(all, id);
+        // Construir hash de dependências (alterações de dados relevantes invalidam cache)
+        const expanded = type === 'container' ? expandedContainers.has(id) : false; // usa state mais abaixo mas é avaliado apenas em execução
+        const childIds = type === 'container' ? children.map(c => c.id).join(',') : '';
+        const dynamicContextHash = JSON.stringify(liveScores); // scores afetam placeholders potenciais ({score:estilo})
+        const key = [
+            id,
+            type,
+            block.order,
+            block.parentId || '',
+            expanded ? '1' : '0',
+            childIds,
+            JSON.stringify(properties || {}),
+            JSON.stringify(content || {}),
+            dynamicContextHash
+        ].join('|');
+        const cached = previewCacheRef.current.get(id);
+        if (cached && cached.key === key) return cached.node;
         // Contexto provisório para placeholders (será expandido com scoring dinâmico e dados reais do usuário)
         const placeholderContext = {
             userName: 'Preview',
@@ -747,11 +767,12 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
             // Futuro: integrar live scoring hook
             scores: { classico: 12, natural: 8, romantico: 6 }
         };
+        let node: React.ReactNode = null;
         // Heading
         if (type === 'heading') {
             const level = properties?.level ?? 2;
             const Tag = (['h1', 'h2', 'h3', 'h4', 'h5', 'h6'][Math.min(Math.max(level - 1, 0), 5)]) as any;
-            return (
+            node = (
                 <Tag className={cn(
                     'font-semibold tracking-tight',
                     level === 1 && 'text-3xl',
@@ -760,14 +781,18 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                     level >= 4 && 'text-lg'
                 )}>{replacePlaceholders(content.text || 'Título', placeholderContext)}</Tag>
             );
+            previewCacheRef.current.set(id, { key, node });
+            return node;
         }
         // Text
         if (type === 'text') {
-            return <p className="text-sm leading-relaxed text-slate-700 whitespace-pre-wrap">{replacePlaceholders(content.text || 'Texto', placeholderContext)}</p>;
+            node = <p className="text-sm leading-relaxed text-slate-700 whitespace-pre-wrap">{replacePlaceholders(content.text || 'Texto', placeholderContext)}</p>;
+            previewCacheRef.current.set(id, { key, node });
+            return node;
         }
         // Image
         if (type === 'image') {
-            return (
+            node = (
                 <div className="w-full flex justify-center">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
@@ -778,10 +803,12 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                     />
                 </div>
             );
+            previewCacheRef.current.set(id, { key, node });
+            return node;
         }
         // Button
         if (type === 'button') {
-            return (
+            node = (
                 <button
                     type="button"
                     className="inline-flex items-center justify-center px-4 py-2 rounded-md text-sm font-medium bg-[#B89B7A] hover:bg-[#a08464] text-white shadow-sm transition-colors"
@@ -789,6 +816,8 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                     {replacePlaceholders(content.text || 'Botão', placeholderContext)}
                 </button>
             );
+            previewCacheRef.current.set(id, { key, node });
+            return node;
         }
         // Quiz Options
         if (type === 'quiz-options') {
@@ -796,7 +825,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
             const multi = properties?.multiSelect ?? false;
             const max = properties?.maxSelections ?? (multi ? options.length : 1);
             const selected = quizSelections[block.id] || [];
-            return (
+            node = (
                 <div className="space-y-2">
                     <div className={cn('grid gap-3',
                         options.length >= 4 && 'grid-cols-2',
@@ -825,10 +854,12 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                     </div>
                 </div>
             );
+            previewCacheRef.current.set(id, { key, node });
+            return node;
         }
         // Form Input
         if (type === 'form-input') {
-            return (
+            node = (
                 <div className="space-y-1">
                     <label className="text-xs font-medium text-slate-600">{content.label || 'Campo'}</label>
                     <input
@@ -838,11 +869,13 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                     />
                 </div>
             );
+            previewCacheRef.current.set(id, { key, node });
+            return node;
         }
         // Container
         if (type === 'container') {
             const expanded = expandedContainers.has(id);
-            return (
+            node = (
                 <div
                     className={cn(
                         'rounded-md border p-3 bg-gradient-to-br from-white to-slate-50 shadow-sm relative',
@@ -878,9 +911,18 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                     )}
                 </div>
             );
+            previewCacheRef.current.set(id, { key, node });
+            return node;
         }
-        return <span className="text-xs italic text-slate-400">(Pré-visualização não suportada)</span>;
+        node = <span className="text-xs italic text-slate-400">(Pré-visualização não suportada)</span>;
+        previewCacheRef.current.set(id, { key, node });
+        return node;
     };
+
+    // Limpar cache ao trocar de etapa selecionada (evita crescimento indefinido e garante contexto correto)
+    useEffect(() => {
+        previewCacheRef.current.clear();
+    }, [selectedStepId]);
 
     // ========================================
     // BlockRow memoizado para reduzir re-renders em listas grandes
