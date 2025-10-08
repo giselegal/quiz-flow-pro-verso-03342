@@ -1243,183 +1243,183 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                                 </TabsList>
                                 <TabsContent value="props" className="m-0 p-0 h-[calc(100vh-190px)]">
                                     <ScrollArea className="h-full">
-                            {selectedBlock && selectedStep ? (
-                                <div className="p-4 space-y-6">
-                                    <DynamicPropertiesForm
-                                        type={selectedBlock.type}
-                                        values={{ ...selectedBlock.properties, ...selectedBlock.content }}
-                                        onChange={(patch) => {
-                                            // Dividir patch entre properties e content (heurística: se chave existe em content usa content senão properties)
-                                            const contentKeys = new Set(Object.keys(selectedBlock.content));
-                                            const propPatch: Record<string, any> = {};
-                                            const contentPatch: Record<string, any> = {};
-                                            Object.entries(patch).forEach(([k, v]) => {
-                                                if (contentKeys.has(k)) contentPatch[k] = v; else propPatch[k] = v;
-                                            });
-                                            if (Object.keys(propPatch).length) updateBlockProperties(selectedStep.id, selectedBlock.id, propPatch);
-                                            if (Object.keys(contentPatch).length) updateBlockContent(selectedStep.id, selectedBlock.id, contentPatch);
-                                        }}
-                                    />
-                                    <div className="pt-2 border-t space-y-2">
-                                        <Button
-                                            variant="outline"
-                                            size="sm"
-                                            className="w-full"
-                                            onClick={() => {
-                                                const newBlock = { ...selectedBlock, id: `block-${Date.now()}` };
-                                                setSteps(prev => prev.map(step => step.id === selectedStep.id ? { ...step, blocks: [...step.blocks, newBlock] } : step));
-                                                setIsDirty(true);
-                                            }}
-                                        >
-                                            <Copy className="w-4 h-4 mr-2" />
-                                            Duplicar
-                                        </Button>
-                                        <Button
-                                            variant="secondary"
-                                            size="sm"
-                                            className="w-full"
-                                            onClick={() => {
-                                                setBlockPendingDuplicate(selectedBlock);
-                                                setTargetStepId(selectedStep.id);
-                                                setDuplicateModalOpen(true);
-                                            }}
-                                        >
-                                            <ArrowRightCircle className="w-4 h-4 mr-2" />
-                                            Duplicar em…
-                                        </Button>
-                                        {multiSelectedIds.length > 1 && (
-                                            <Button
-                                                variant="outline"
-                                                size="sm"
-                                                className="w-full"
-                                                onClick={() => {
-                                                    const blocks = selectedStep.blocks.filter(b => multiSelectedIds.includes(b.id));
-                                                    copyMultiple(blocks);
-                                                }}
-                                            >
-                                                <Copy className="w-4 h-4 mr-2" /> Copiar {multiSelectedIds.length}
-                                            </Button>
-                                        )}
-                                        {multiSelectedIds.length > 1 && (
-                                            <Button
-                                                variant="destructive"
-                                                size="sm"
-                                                className="w-full"
-                                                onClick={removeMultiple}
-                                            >
-                                                <Trash2 className="w-4 h-4 mr-2" /> Remover {multiSelectedIds.length}
-                                            </Button>
-                                        )}
-                                        <Button
-                                            variant="destructive"
-                                            size="sm"
-                                            className="w-full"
-                                            onClick={() => removeBlock(selectedStep.id, selectedBlock.id)}
-                                        >
-                                            <Trash2 className="w-4 h-4 mr-2" />
-                                            Remover
-                                        </Button>
-                                        {/* Snippet actions quando múltipla seleção */}
-                                        {selectedStep && (multiSelectedIds.length > 0 || selectedBlock) && (
-                                            <Button
-                                                variant="outline"
-                                                size="sm"
-                                                className="w-full"
-                                                onClick={() => {
-                                                    const ids = multiSelectedIds.length ? multiSelectedIds : [selectedBlock.id];
-                                                    const blocksToSave = selectedStep.blocks.filter(b => ids.includes(b.id));
-                                                    const name = prompt('Nome do snippet:', blocksToSave[0]?.type || 'Snippet');
-                                                    if (!name) return;
-                                                    snippetsManager.create(name, blocksToSave);
-                                                    refreshSnippets();
-                                                    toast({ title: 'Snippet salvo', description: name });
-                                                }}
-                                            >
-                                                <Copy className="w-4 h-4 mr-2" /> Salvar como Snippet
-                                            </Button>
-                                        )}
-                                    </div>
-                                    {/* Lista de snippets */}
-                                    <div className="pt-4 border-t space-y-3">
-                                        <div className="flex items-center justify-between">
-                                            <h3 className="text-xs font-semibold text-muted-foreground uppercase">Snippets</h3>
-                                            <button
-                                                onClick={() => { refreshSnippets(); }}
-                                                className="text-[10px] text-blue-600 hover:underline"
-                                            >Atualizar</button>
-                                        </div>
-                                        <Input
-                                            placeholder="Filtrar..."
-                                            value={snippetFilter}
-                                            onChange={e => setSnippetFilter(e.target.value)}
-                                            className="h-7 text-xs"
-                                        />
-                                        <div className="space-y-2 max-h-60 overflow-auto pr-1">
-                                            {snippets.filter(s => !snippetFilter || s.name.toLowerCase().includes(snippetFilter.toLowerCase())).map(s => (
-                                                <div key={s.id} className="border rounded-md p-2 group relative">
-                                                    <p className="text-xs font-medium truncate">{s.name}</p>
-                                                    <p className="text-[10px] text-muted-foreground">{s.blocks.length} blocos</p>
-                                                    <div className="flex gap-1 mt-1">
+                                        {selectedBlock && selectedStep ? (
+                                            <div className="p-4 space-y-6">
+                                                <DynamicPropertiesForm
+                                                    type={selectedBlock.type}
+                                                    values={{ ...selectedBlock.properties, ...selectedBlock.content }}
+                                                    onChange={(patch) => {
+                                                        // Dividir patch entre properties e content (heurística: se chave existe em content usa content senão properties)
+                                                        const contentKeys = new Set(Object.keys(selectedBlock.content));
+                                                        const propPatch: Record<string, any> = {};
+                                                        const contentPatch: Record<string, any> = {};
+                                                        Object.entries(patch).forEach(([k, v]) => {
+                                                            if (contentKeys.has(k)) contentPatch[k] = v; else propPatch[k] = v;
+                                                        });
+                                                        if (Object.keys(propPatch).length) updateBlockProperties(selectedStep.id, selectedBlock.id, propPatch);
+                                                        if (Object.keys(contentPatch).length) updateBlockContent(selectedStep.id, selectedBlock.id, contentPatch);
+                                                    }}
+                                                />
+                                                <div className="pt-2 border-t space-y-2">
+                                                    <Button
+                                                        variant="outline"
+                                                        size="sm"
+                                                        className="w-full"
+                                                        onClick={() => {
+                                                            const newBlock = { ...selectedBlock, id: `block-${Date.now()}` };
+                                                            setSteps(prev => prev.map(step => step.id === selectedStep.id ? { ...step, blocks: [...step.blocks, newBlock] } : step));
+                                                            setIsDirty(true);
+                                                        }}
+                                                    >
+                                                        <Copy className="w-4 h-4 mr-2" />
+                                                        Duplicar
+                                                    </Button>
+                                                    <Button
+                                                        variant="secondary"
+                                                        size="sm"
+                                                        className="w-full"
+                                                        onClick={() => {
+                                                            setBlockPendingDuplicate(selectedBlock);
+                                                            setTargetStepId(selectedStep.id);
+                                                            setDuplicateModalOpen(true);
+                                                        }}
+                                                    >
+                                                        <ArrowRightCircle className="w-4 h-4 mr-2" />
+                                                        Duplicar em…
+                                                    </Button>
+                                                    {multiSelectedIds.length > 1 && (
                                                         <Button
                                                             variant="outline"
                                                             size="sm"
-                                                            className="h-6 text-[10px] flex-1"
+                                                            className="w-full"
                                                             onClick={() => {
-                                                                if (!selectedStep) return;
-                                                                // Inserir clonando mantendo hierarquia
-                                                                setSteps(prev => {
-                                                                    const next = prev.map(st => {
-                                                                        if (st.id !== selectedStep.id) return st;
-                                                                        const baseLen = st.blocks.filter(b => !b.parentId).length; // top-level count para order root
-                                                                        const timestamp = Date.now();
-                                                                        const idMap: Record<string, string> = {};
-                                                                        const cloned = s.blocks.map((b, idx) => {
-                                                                            const newId = `${b.id}-snip-${timestamp}-${idx}`;
-                                                                            idMap[b.id] = newId;
-                                                                            return { ...b, id: newId };
-                                                                        }).map(b => ({
-                                                                            ...b,
-                                                                            parentId: b.parentId ? idMap[b.parentId] : null,
-                                                                            order: b.parentId ? b.order : baseLen + b.order
-                                                                        }));
-                                                                        return { ...st, blocks: [...st.blocks, ...cloned] };
-                                                                    });
-                                                                    pushHistory(next);
-                                                                    return next;
-                                                                });
-                                                                setIsDirty(true);
-                                                                toast({ title: 'Snippet inserido', description: s.name });
+                                                                const blocks = selectedStep.blocks.filter(b => multiSelectedIds.includes(b.id));
+                                                                copyMultiple(blocks);
                                                             }}
-                                                        >Insert</Button>
-                                                        <Button
-                                                            variant="ghost"
-                                                            size="sm"
-                                                            className="h-6 text-[10px]"
-                                                            onClick={() => {
-                                                                const newName = prompt('Renomear snippet:', s.name);
-                                                                if (!newName) return;
-                                                                snippetsManager.update(s.id, { name: newName });
-                                                                refreshSnippets();
-                                                            }}
-                                                        >Renomear</Button>
+                                                        >
+                                                            <Copy className="w-4 h-4 mr-2" /> Copiar {multiSelectedIds.length}
+                                                        </Button>
+                                                    )}
+                                                    {multiSelectedIds.length > 1 && (
                                                         <Button
                                                             variant="destructive"
                                                             size="sm"
-                                                            className="h-6 text-[10px]"
+                                                            className="w-full"
+                                                            onClick={removeMultiple}
+                                                        >
+                                                            <Trash2 className="w-4 h-4 mr-2" /> Remover {multiSelectedIds.length}
+                                                        </Button>
+                                                    )}
+                                                    <Button
+                                                        variant="destructive"
+                                                        size="sm"
+                                                        className="w-full"
+                                                        onClick={() => removeBlock(selectedStep.id, selectedBlock.id)}
+                                                    >
+                                                        <Trash2 className="w-4 h-4 mr-2" />
+                                                        Remover
+                                                    </Button>
+                                                    {/* Snippet actions quando múltipla seleção */}
+                                                    {selectedStep && (multiSelectedIds.length > 0 || selectedBlock) && (
+                                                        <Button
+                                                            variant="outline"
+                                                            size="sm"
+                                                            className="w-full"
                                                             onClick={() => {
-                                                                if (!confirm('Excluir snippet?')) return;
-                                                                snippetsManager.remove(s.id);
+                                                                const ids = multiSelectedIds.length ? multiSelectedIds : [selectedBlock.id];
+                                                                const blocksToSave = selectedStep.blocks.filter(b => ids.includes(b.id));
+                                                                const name = prompt('Nome do snippet:', blocksToSave[0]?.type || 'Snippet');
+                                                                if (!name) return;
+                                                                snippetsManager.create(name, blocksToSave);
                                                                 refreshSnippets();
+                                                                toast({ title: 'Snippet salvo', description: name });
                                                             }}
-                                                        >Del</Button>
+                                                        >
+                                                            <Copy className="w-4 h-4 mr-2" /> Salvar como Snippet
+                                                        </Button>
+                                                    )}
+                                                </div>
+                                                {/* Lista de snippets */}
+                                                <div className="pt-4 border-t space-y-3">
+                                                    <div className="flex items-center justify-between">
+                                                        <h3 className="text-xs font-semibold text-muted-foreground uppercase">Snippets</h3>
+                                                        <button
+                                                            onClick={() => { refreshSnippets(); }}
+                                                            className="text-[10px] text-blue-600 hover:underline"
+                                                        >Atualizar</button>
+                                                    </div>
+                                                    <Input
+                                                        placeholder="Filtrar..."
+                                                        value={snippetFilter}
+                                                        onChange={e => setSnippetFilter(e.target.value)}
+                                                        className="h-7 text-xs"
+                                                    />
+                                                    <div className="space-y-2 max-h-60 overflow-auto pr-1">
+                                                        {snippets.filter(s => !snippetFilter || s.name.toLowerCase().includes(snippetFilter.toLowerCase())).map(s => (
+                                                            <div key={s.id} className="border rounded-md p-2 group relative">
+                                                                <p className="text-xs font-medium truncate">{s.name}</p>
+                                                                <p className="text-[10px] text-muted-foreground">{s.blocks.length} blocos</p>
+                                                                <div className="flex gap-1 mt-1">
+                                                                    <Button
+                                                                        variant="outline"
+                                                                        size="sm"
+                                                                        className="h-6 text-[10px] flex-1"
+                                                                        onClick={() => {
+                                                                            if (!selectedStep) return;
+                                                                            // Inserir clonando mantendo hierarquia
+                                                                            setSteps(prev => {
+                                                                                const next = prev.map(st => {
+                                                                                    if (st.id !== selectedStep.id) return st;
+                                                                                    const baseLen = st.blocks.filter(b => !b.parentId).length; // top-level count para order root
+                                                                                    const timestamp = Date.now();
+                                                                                    const idMap: Record<string, string> = {};
+                                                                                    const cloned = s.blocks.map((b, idx) => {
+                                                                                        const newId = `${b.id}-snip-${timestamp}-${idx}`;
+                                                                                        idMap[b.id] = newId;
+                                                                                        return { ...b, id: newId };
+                                                                                    }).map(b => ({
+                                                                                        ...b,
+                                                                                        parentId: b.parentId ? idMap[b.parentId] : null,
+                                                                                        order: b.parentId ? b.order : baseLen + b.order
+                                                                                    }));
+                                                                                    return { ...st, blocks: [...st.blocks, ...cloned] };
+                                                                                });
+                                                                                pushHistory(next);
+                                                                                return next;
+                                                                            });
+                                                                            setIsDirty(true);
+                                                                            toast({ title: 'Snippet inserido', description: s.name });
+                                                                        }}
+                                                                    >Insert</Button>
+                                                                    <Button
+                                                                        variant="ghost"
+                                                                        size="sm"
+                                                                        className="h-6 text-[10px]"
+                                                                        onClick={() => {
+                                                                            const newName = prompt('Renomear snippet:', s.name);
+                                                                            if (!newName) return;
+                                                                            snippetsManager.update(s.id, { name: newName });
+                                                                            refreshSnippets();
+                                                                        }}
+                                                                    >Renomear</Button>
+                                                                    <Button
+                                                                        variant="destructive"
+                                                                        size="sm"
+                                                                        className="h-6 text-[10px]"
+                                                                        onClick={() => {
+                                                                            if (!confirm('Excluir snippet?')) return;
+                                                                            snippetsManager.remove(s.id);
+                                                                            refreshSnippets();
+                                                                        }}
+                                                                    >Del</Button>
+                                                                </div>
+                                                            </div>
+                                                        ))}
+                                                        {snippets.length === 0 && (
+                                                            <p className="text-[11px] text-muted-foreground">Nenhum snippet salvo</p>
+                                                        )}
                                                     </div>
                                                 </div>
-                                            ))}
-                                            {snippets.length === 0 && (
-                                                <p className="text-[11px] text-muted-foreground">Nenhum snippet salvo</p>
-                                            )}
-                                        </div>
-                                    </div>
                                             </div>
                                         ) : (
                                             <div className="flex items-center justify-center h-full text-center text-muted-foreground p-4">
