@@ -6,6 +6,7 @@ interface HeadingInlineProps {
   textAlign?: 'left' | 'center' | 'right';
   color?: string;
   fontWeight?: string;
+  fontFamily?: string; // ✅ NEW: Support custom font family (e.g., 'playfair-display')
   className?: string;
 }
 
@@ -15,16 +16,18 @@ export const HeadingInline: React.FC<HeadingInlineProps> = ({
   textAlign = 'left',
   color = '#000000',
   fontWeight = 'normal',
+  fontFamily, // ✅ NEW: Custom font family support
   className = '',
 }) => {
   const Tag = level;
 
-  const styles = {
+  const styles: React.CSSProperties = {
     textAlign,
     color,
     fontWeight,
     margin: 0,
     padding: 0,
+    ...(fontFamily && { fontFamily }), // Apply custom font if provided
   };
 
   return <Tag style={styles} className={className} dangerouslySetInnerHTML={{ __html: content }} />;

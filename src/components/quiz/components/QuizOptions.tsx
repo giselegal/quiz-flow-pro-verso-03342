@@ -13,8 +13,10 @@ interface QuizOptionsProps {
   question?: string;
   options?: QuizOption[];
   multiSelect?: boolean;
-  hasImages?: boolean;
-  maxSelections?: number;
+  hasImages?: boolean; // Original prop
+  showImages?: boolean; // ✅ NEW: Alias for hasImages (used in QUIZ_STEPS)
+  maxSelections?: number; // Original prop
+  requiredSelections?: number; // ✅ NEW: Alias for maxSelections (used in QUIZ_STEPS)
   onSelectionChange?: (selected: string[]) => void;
   className?: string;
 }
@@ -24,11 +26,17 @@ const QuizOptions: React.FC<QuizOptionsProps> = ({
   options = [],
   multiSelect = false,
   hasImages = false,
+  showImages, // ✅ Alias
   maxSelections = 1,
+  requiredSelections, // ✅ Alias
   onSelectionChange,
   className = '',
 }) => {
   const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
+
+  // Use aliases if provided, otherwise fallback to original props
+  const effectiveShowImages = showImages !== undefined ? showImages : hasImages;
+  const effectiveMaxSelections = requiredSelections !== undefined ? requiredSelections : maxSelections;
 
   const handleOptionClick = (optionId: string) => {
     let newSelection: string[];
@@ -36,7 +44,7 @@ const QuizOptions: React.FC<QuizOptionsProps> = ({
     if (multiSelect) {
       if (selectedOptions.includes(optionId)) {
         newSelection = selectedOptions.filter(id => id !== optionId);
-      } else if (selectedOptions.length < maxSelections) {
+      } else if (selectedOptions.length < effectiveMaxSelections) {
         newSelection = [...selectedOptions, optionId];
       } else {
         return; // Max selections reached
@@ -63,9 +71,9 @@ const QuizOptions: React.FC<QuizOptionsProps> = ({
 
   const optionsContainerStyle: React.CSSProperties = {
     display: 'grid',
-    gridTemplateColumns: hasImages ? 'repeat(auto-fit, minmax(200px, 1fr))' : '1fr',
+    gridTemplateColumns: effectiveShowImages ? 'repeat(auto-fit, minmax(200px, 1fr))' : '1fr',
     gap: '0.75rem',
-    maxWidth: hasImages ? '768px' : '600px',
+    maxWidth: effectiveShowImages ? '768px' : '600px',
     margin: '0 auto',
   };
 
@@ -87,10 +95,10 @@ const QuizOptions: React.FC<QuizOptionsProps> = ({
       <div style={optionsContainerStyle}>
         {options.map(option => {
           const isSelected = selectedOptions.includes(option.id);
-          const isDisabled = !isSelected && selectedOptions.length >= maxSelections && multiSelect;
+          const isDisabled = !isSelected && selectedOptions.length >= effectiveMaxSelections && multiSelect;
 
           const optionStyle: React.CSSProperties = {
-            padding: hasImages ? '0' : '1rem 1.25rem',
+            padding: effectiveShowImages ? '0' : '1rem 1.25rem',
             background: '#ffffff',
             border: isSelected ? '2px solid #b89b7a' : '2px solid #e5e7eb',
             borderRadius: '8px',
@@ -99,18 +107,18 @@ const QuizOptions: React.FC<QuizOptionsProps> = ({
             transition: 'all 0.2s ease',
             position: 'relative',
             display: 'flex',
-            flexDirection: hasImages ? 'column' : 'row',
-            alignItems: hasImages ? 'stretch' : 'center',
-            justifyContent: hasImages ? 'flex-start' : 'space-between',
+            flexDirection: effectiveShowImages ? 'column' : 'row',
+            alignItems: effectiveShowImages ? 'stretch' : 'center',
+            justifyContent: effectiveShowImages ? 'flex-start' : 'space-between',
             backgroundColor: isSelected ? 'rgba(184, 155, 122, 0.05)' : '#ffffff',
           };
 
           const textStyle: React.CSSProperties = {
             color: '#432818',
-            fontSize: hasImages ? '0.9rem' : '1rem',
+            fontSize: effectiveShowImages ? '0.9rem' : '1rem',
             fontWeight: '500',
-            textAlign: hasImages ? 'center' : 'left',
-            padding: hasImages ? '0.75rem' : '0',
+            textAlign: effectiveShowImages ? 'center' : 'left',
+            padding: effectiveShowImages ? '0.75rem' : '0',
             margin: 0,
           };
 
@@ -134,7 +142,7 @@ const QuizOptions: React.FC<QuizOptionsProps> = ({
                 }
               }}
             >
-              {hasImages && option.image && (
+              {effectiveShowImages && option.image && (
                 <img
                   src={option.image}
                   alt={option.text}
@@ -184,13 +192,13 @@ const QuizOptions: React.FC<QuizOptionsProps> = ({
             color: '#6b4f43',
           }}
         >
-          {selectedOptions.length < maxSelections ? (
+          {selectedOptions.length < effectiveMaxSelections ? (
             <span>
-              💡 Selecione até {maxSelections} opções ({selectedOptions.length}/{maxSelections})
+              💡 Selecione até {effectiveMaxSelections} opções ({selectedOptions.length}/{effectiveMaxSelections})
             </span>
           ) : (
             <span style={{ color: '#059669' }}>
-              ✅ Máximo de seleções atingido ({selectedOptions.length}/{maxSelections})
+              ✅ Máximo de seleções atingido ({selectedOptions.length}/{effectiveMaxSelections})
             </span>
           )}
         </div>
