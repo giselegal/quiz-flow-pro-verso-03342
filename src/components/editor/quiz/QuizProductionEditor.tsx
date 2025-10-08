@@ -6,7 +6,7 @@
  */
 
 import React, { useState, useCallback, useEffect, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation } from 'wouter';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription } from '@/components/ui/alert';
@@ -44,7 +44,7 @@ export const QuizProductionEditor: React.FC<QuizProductionEditorProps> = ({
     funnelId: initialFunnelId,
     className
 }) => {
-    const navigate = useNavigate();
+    const [, setLocation] = useLocation();
     const { toast } = useToast();
 
     // Estado do editor
@@ -256,7 +256,7 @@ export const QuizProductionEditor: React.FC<QuizProductionEditorProps> = ({
                     <Button
                         variant="ghost"
                         size="sm"
-                        onClick={() => navigate('/quiz-estilo')}
+                        onClick={() => setLocation('/quiz-estilo')}
                     >
                         <ArrowLeft className="w-4 h-4 mr-2" />
                         Voltar
