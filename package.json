@@ -31,7 +31,7 @@
     "test": "vitest",
     "test:ui": "vitest --ui",
     "test:run": "vitest run",
-  "test:analytics": "vitest run src/tests/analytics/analyticsPersistence.test.ts",
+    "test:analytics": "vitest run src/tests/analytics/analyticsPersistence.test.ts",
     "test:e2e": "playwright test --config=playwright.basic.config.ts",
     "test:e2e:basic": "playwright test tests/e2e/basic.spec.ts --config=playwright.basic.config.ts",
     "test:properties": "vitest --config vitest.config.properties.ts",
