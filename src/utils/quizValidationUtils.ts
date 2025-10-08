@@ -125,17 +125,19 @@ export function getValidStyleIds(): Array<{ value: StyleId; label: string }> {
 /**
  * Valida que o nextStep aponta para uma etapa que existe
  */
-export function validateNextStep(step: QuizStep & { id: string }): ValidationResult {
+export function validateNextStep(step: QuizStep & { id: string }, allStepIds?: string[]): ValidationResult {
     const errors: ValidationError[] = [];
     const warnings: ValidationWarning[] = [];
 
-    // Se é a última etapa (step-21), nextStep deve ser null
-    if (step.id === 'step-21') {
+    // Determinar última etapa dinamicamente (permite excluir step-21)
+    const ids = allStepIds && allStepIds.length > 0 ? allStepIds : STEP_ORDER;
+    const lastId = ids[ids.length - 1];
+    if (step.id === lastId) {
         if (step.nextStep !== null && step.nextStep !== undefined) {
             errors.push({
                 stepId: step.id,
                 field: 'nextStep',
-                message: 'Última etapa (step-21) deve ter nextStep = null',
+                message: `Última etapa (${lastId}) deve ter nextStep = null`,
                 severity: 'error'
             });
         }
@@ -154,19 +156,21 @@ export function validateNextStep(step: QuizStep & { id: string }): ValidationRes
     }
 
     // Verificar se o nextStep existe no QUIZ_STEPS
-    if (!QUIZ_STEPS[step.nextStep]) {
+    // Validar existência – se usamos lista dinâmica, confiar nela
+    const exists = ids.includes(step.nextStep);
+    if (!exists) {
         errors.push({
             stepId: step.id,
             field: 'nextStep',
-            message: `nextStep "${step.nextStep}" não existe. Etapas disponíveis: ${STEP_ORDER.join(', ')}`,
+            message: `nextStep "${step.nextStep}" não existe. Etapas válidas: ${ids.join(', ')}`,
             severity: 'error'
         });
         return { isValid: false, errors, warnings };
     }
 
     // Verificar se o nextStep segue a ordem correta (warning apenas)
-    const currentIndex = STEP_ORDER.indexOf(step.id);
-    const nextIndex = STEP_ORDER.indexOf(step.nextStep);
+    const currentIndex = ids.indexOf(step.id);
+    const nextIndex = ids.indexOf(step.nextStep);
 
     if (currentIndex >= 0 && nextIndex >= 0) {
         // nextStep deve ser o próximo na sequência
@@ -174,7 +178,7 @@ export function validateNextStep(step: QuizStep & { id: string }): ValidationRes
             warnings.push({
                 stepId: step.id,
                 field: 'nextStep',
-                message: `nextStep "${step.nextStep}" não segue a ordem sequencial. Esperado: "${STEP_ORDER[currentIndex + 1]}"`,
+                message: `nextStep "${step.nextStep}" não segue a ordem sequencial. Esperado: "${ids[currentIndex + 1]}"`,
                 severity: 'warning'
             });
         }
@@ -222,12 +226,14 @@ export const OFFER_MAP_KEYS = [
 /**
  * Valida que o offerMap do step-21 tem as 4 chaves obrigatórias
  */
-export function validateOfferMap(step: QuizStep & { id: string }): ValidationResult {
+export function validateOfferMap(step: QuizStep & { id: string }, allStepIds?: string[]): ValidationResult {
     const errors: ValidationError[] = [];
     const warnings: ValidationWarning[] = [];
 
-    // Apenas para step-21 (offer)
-    if (step.type !== 'offer' || step.id !== 'step-21') {
+    // Apenas para a última etapa se ela for offer (dinâmico)
+    const ids = allStepIds && allStepIds.length > 0 ? allStepIds : STEP_ORDER;
+    const lastId = ids[ids.length - 1];
+    if (step.type !== 'offer' || step.id !== lastId) {
         return { isValid: true, errors, warnings };
     }
 
@@ -236,7 +242,7 @@ export function validateOfferMap(step: QuizStep & { id: string }): ValidationRes
         errors.push({
             stepId: step.id,
             field: 'offerMap',
-            message: 'offerMap é obrigatório para step-21',
+            message: `offerMap é obrigatório para última etapa (${step.id})`,
             severity: 'error'
         });
         return { isValid: false, errors, warnings };
@@ -403,7 +409,18 @@ export function validateCompleteFunnel(steps: Record<string, QuizStep>): Validat
     const allErrors: ValidationError[] = [];
     const allWarnings: ValidationWarning[] = [];
 
-    // Validar cada step individualmente
+    const stepIds = Object.keys(steps);
+    // Permitir agora funil de 20 ou 21 etapas (tornando step-21 opcional)
+    if (stepIds.length < 20) {
+        allErrors.push({
+            stepId: 'global',
+            field: 'steps',
+            message: `Funil deve ter ao menos 20 etapas. Encontradas: ${stepIds.length}`,
+            severity: 'error'
+        });
+    }
+
+    // Validar cada step individualmente usando lista dinâmica
     Object.entries(steps).forEach(([stepId, step]) => {
         const stepWithId = { ...step, id: stepId };
 
@@ -413,12 +430,12 @@ export function validateCompleteFunnel(steps: Record<string, QuizStep>): Validat
         allWarnings.push(...styleValidation.warnings);
 
         // Validação 2: nextStep
-        const nextStepValidation = validateNextStep(stepWithId);
+    const nextStepValidation = validateNextStep(stepWithId, stepIds);
         allErrors.push(...nextStepValidation.errors);
         allWarnings.push(...nextStepValidation.warnings);
 
         // Validação 3: OfferMap
-        const offerMapValidation = validateOfferMap(stepWithId);
+    const offerMapValidation = validateOfferMap(stepWithId, stepIds);
         allErrors.push(...offerMapValidation.errors);
         allWarnings.push(...offerMapValidation.warnings);
 
@@ -428,27 +445,18 @@ export function validateCompleteFunnel(steps: Record<string, QuizStep>): Validat
         allWarnings.push(...formInputValidation.warnings);
     });
 
-    // Validações globais
-    // Verificar se tem exatamente 21 etapas
-    if (Object.keys(steps).length !== 21) {
-        allErrors.push({
-            stepId: 'global',
-            field: 'steps',
-            message: `Funil deve ter 21 etapas. Encontradas: ${Object.keys(steps).length}`,
-            severity: 'error'
-        });
-    }
-
-    // Verificar se todas as etapas estão na ordem correta
-    const stepIds = Object.keys(steps);
-    const missingSteps = STEP_ORDER.filter(id => !stepIds.includes(id));
-    if (missingSteps.length > 0) {
-        allErrors.push({
-            stepId: 'global',
-            field: 'steps',
-            message: `Etapas faltando: ${missingSteps.join(', ')}`,
-            severity: 'error'
-        });
+    // Validação global: se estiver usando 21 etapas, checar faltantes; se 20, aceitar ausência de step-21
+    if (stepIds.length >= 20) {
+        const required = STEP_ORDER.filter(id => id !== 'step-21');
+        const missing = required.filter(id => !stepIds.includes(id));
+        if (missing.length > 0) {
+            allErrors.push({
+                stepId: 'global',
+                field: 'steps',
+                message: `Etapas obrigatórias faltando: ${missing.join(', ')}`,
+                severity: 'error'
+            });
+        }
     }
 
     return {
