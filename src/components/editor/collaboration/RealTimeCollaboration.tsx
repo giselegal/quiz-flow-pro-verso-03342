@@ -410,7 +410,7 @@ export const CollaborationProvider: React.FC<CollaborationProviderProps> = ({
                 break;
 
             case 'delete':
-                removeElement(operation.elementId);
+                deleteElement(operation.elementId);
                 break;
 
             case 'move':
@@ -425,7 +425,7 @@ export const CollaborationProvider: React.FC<CollaborationProviderProps> = ({
                 });
                 break;
         }
-    }, [addElement, updateElement, removeElement]);
+    }, [addElement, updateElement, deleteElement]);
 
     const sendOperation = useCallback((opData: Omit<Operation, 'id' | 'userId' | 'timestamp'>) => {
         if (!currentUser) return;

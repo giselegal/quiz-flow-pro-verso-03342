@@ -8,7 +8,17 @@
 /**
  * Configuração de chunks por categoria de step
  */
-export const STEP_CHUNKS_CONFIG = {
+// Tipagem explícita para evitar inferência de 'never' em arrays quando iterado via Object.entries
+interface StepChunkConfigEntry {
+    name: string;
+    priority: number;
+    test: RegExp;
+    steps: readonly string[];
+}
+
+type StepChunksConfig = Record<string, StepChunkConfigEntry>;
+
+export const STEP_CHUNKS_CONFIG: StepChunksConfig = {
     // Chunk para steps de introdução
     intro: {
         name: 'steps-intro',
@@ -48,7 +58,7 @@ export const STEP_CHUNKS_CONFIG = {
         test: /step-(14|15)/,
         steps: ['step-14', 'step-15']
     }
-} as const;
+};
 
 /**
  * Configuração de preload estratégico
@@ -97,8 +107,8 @@ export const PERFORMANCE_TARGETS = {
  * Função para determinar o chunk apropriado para um stepId
  */
 export const getChunkForStep = (stepId: string): string => {
-    for (const [category, config] of Object.entries(STEP_CHUNKS_CONFIG)) {
-        if (config.steps.includes(stepId as any)) {
+    for (const [, config] of Object.entries(STEP_CHUNKS_CONFIG)) {
+        if (config.steps.includes(stepId)) {
             return config.name;
         }
     }
