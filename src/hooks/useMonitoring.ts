@@ -129,13 +129,10 @@ export const useMonitoring = (options?: {
    * Rastrear evento
    */
   const trackEvent = useCallback((eventName: string, properties?: Record<string, any>) => {
-    analyticsService.trackEvent({
-      event_name: eventName,
-      event_category: trackComponent || 'component',
-      custom_parameters: {
-        component: trackComponent,
-        ...properties
-      }
+    // Normaliza para assinatura simples (nome + propriedades)
+    analyticsService.trackEvent(eventName, {
+      component: trackComponent,
+      ...properties
     });
   }, [trackComponent]);
 

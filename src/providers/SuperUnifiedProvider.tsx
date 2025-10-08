@@ -585,13 +585,12 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
             const { data, error } = await supabase
                 .from('funnels')
                 .insert({
+                    id: `f_${Date.now()}`,
                     name,
                     description: options.description || '',
                     settings: options.settings || {},
                     version: 1,
-                    is_published: false,
-                    pages: options.pages || [],
-                    quizSteps: options.quizSteps || []
+                    is_published: false
                 })
                 .select()
                 .single();

@@ -67,9 +67,12 @@ class LegacyProviderDetector {
         });
 
         // Check React context usage patterns
-        const reactFiberNode = document.getElementById('root')?._reactInternalFiber;
-        if (reactFiberNode) {
-            this.scanReactTree(reactFiberNode, providers);
+        // Removido acesso a internals privados (_reactInternalFiber)
+        // Mantemos apenas detecção via data-provider e knownProviders
+        const reactRoot = document.getElementById('root');
+        if (reactRoot?.hasChildNodes()) {
+            // Heurística simples: se há nós filhos assume pelo menos 1 provider montado
+            providers.push('RootMounted');
         }
 
         // Check for specific provider patterns
@@ -119,7 +122,8 @@ class LegacyProviderDetector {
         try {
             // This is a simplified check - in a real implementation,
             // you'd scan the actual module imports and usage
-            return window.__REACT_DEVTOOLS_GLOBAL_HOOK__?.renderers?.size > 0;
+            const devtools = (window as any).__REACT_DEVTOOLS_GLOBAL_HOOK__;
+            return !!devtools && devtools.renderers && devtools.renderers.size > 0;
         } catch {
             return false;
         }
@@ -214,7 +218,7 @@ class MigrationExecutor {
 
         } catch (error) {
             step.status = 'failed';
-            step.error = error.toString();
+            step.error = error instanceof Error ? error.message : String(error);
             step.endTime = Date.now();
             this.log(`❌ Step failed: ${step.name} - ${error}`);
             return false;
@@ -455,6 +459,16 @@ class MigrationExecutor {
     getMigrationLog(): string[] {
         return [...this.migrationLog];
     }
+
+    // Public wrapper seguro para rollback externo
+    public async performRollback(plan: MigrationPlan): Promise<boolean> {
+        try {
+            await this.rollbackMigration(plan);
+            return true;
+        } catch {
+            return false;
+        }
+    }
 }
 
 // 🎯 MIGRATION CONTEXT TYPE
@@ -617,7 +631,7 @@ export const MigrationProvider: React.FC<MigrationProviderProps> = ({
         setIsRunning(true);
 
         try {
-            await executor.rollbackMigration(currentPlan);
+            await executor.performRollback(currentPlan);
             setLogs(executor.getMigrationLog());
             return true;
         } catch (error) {

@@ -48,6 +48,7 @@ export class AnalyticsService {
     private metrics: Map<string, Metric[]> = new Map();
     private events: AnalyticsEvent[] = [];
     private alerts: Alert[] = [];
+    private sessionMetrics: Record<string, number> = {};
 
     constructor() {
         console.log('✅ AnalyticsService inicializado');
@@ -107,6 +108,26 @@ export class AnalyticsService {
 
     trackEvent(eventName: string, properties: Record<string, any> = {}): void {
         console.log(`📊 Tracking event: ${eventName}`, properties);
+    }
+
+    // Métodos adicionais usados por useMonitoring (no-op / simples por enquanto)
+    trackError(error: Error, component?: string) {
+        console.log('🚨 trackError', { message: error.message, component });
+        this.recordMetric('errors.total', 1, 'count', 'system', { component: component || 'unknown' });
+    }
+
+    trackPerformance(metric: string, value: number, unit: string = 'ms') {
+        this.recordMetric(metric, value, unit, 'performance');
+        this.sessionMetrics[metric] = value;
+    }
+
+    trackEditorAction(action: string, details: Record<string, any> = {}) {
+        console.log('🛠️ editorAction', action, details);
+        this.recordEvent('editor_action', details.userId || 'anonymous', details.funnelId || 'unknown', { action, ...details });
+    }
+
+    getSessionMetrics() {
+        return { ...this.sessionMetrics };
     }
 
     getMetricsByCategory(category: Metric['category']): Metric[] {

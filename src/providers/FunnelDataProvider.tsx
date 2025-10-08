@@ -97,9 +97,7 @@ export const FunnelDataProviderWrapper: React.FC<FunnelDataProviderWrapperProps>
                 return funnelsContext?.currentFunnelId || 'local-funnel';
             },
 
-            isSupabaseEnabled: () => {
-                return state.isSupabaseEnabled || false;
-            }
+            isSupabaseEnabled: () => false
         };
 
         // 🔗 Connect the API to real funnel data
@@ -109,7 +107,7 @@ export const FunnelDataProviderWrapper: React.FC<FunnelDataProviderWrapperProps>
             currentStep: state.currentStep,
             funnelId: funnelsContext?.currentFunnelId,
             stepsWithBlocks: Object.keys(state.stepBlocks).length,
-            isSupabaseEnabled: state.isSupabaseEnabled
+            isSupabaseEnabled: false
         });
 
         // Cleanup function
@@ -119,7 +117,6 @@ export const FunnelDataProviderWrapper: React.FC<FunnelDataProviderWrapperProps>
     }, [
         state.currentStep,
         state.stepBlocks,
-        state.isSupabaseEnabled,
         funnelsContext?.currentFunnelId,
         actions
     ]);
