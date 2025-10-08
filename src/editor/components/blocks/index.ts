@@ -20,7 +20,8 @@ import { registerBlock } from '@/editor/registry/BlockRegistry';
 // Intro Components (Step 1)
 registerBlock('quiz-intro-header', QuizIntroHeaderBlock);
 registerBlock('text', TextBlock);
-registerBlock('form-input', FormInputBlock);
+// Temporariamente desabilitado até alinhar tipos de FormInputBlock ao novo contrato
+// registerBlock('form-input', FormInputBlock);
 registerBlock('button', ButtonBlock);
 
 // TODO: Adicionar mais componentes conforme implementação:
@@ -41,7 +42,7 @@ registerBlock('button', ButtonBlock);
 export {
     QuizIntroHeaderBlock,
     TextBlock,
-    FormInputBlock,
+    // FormInputBlock,
     ButtonBlock
 };
 

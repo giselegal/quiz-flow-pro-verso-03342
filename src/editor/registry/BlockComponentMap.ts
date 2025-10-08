@@ -14,7 +14,6 @@ import ImageBlock from '../components/blocks/ImageBlock';
 import ButtonBlockModular from '../components/blocks/ButtonBlockModular';
 import QuestionTextBlock from '../components/blocks/QuestionTextBlock';
 import OptionsBlock from '../components/blocks/OptionsBlock';
-import FormInputBlock from '../components/blocks/FormInputBlock';
 import TransitionBlock from '../components/blocks/TransitionBlock';
 import ResultBlock from '../components/blocks/ResultBlock';
 import OfferBlock from '../components/blocks/OfferBlock';
@@ -26,7 +25,7 @@ export const BLOCK_COMPONENT_MAP: Record<string, React.ComponentType<BlockCompon
     // Blocos básicos
     'TitleBlock': TitleBlock,
     'ImageBlock': ImageBlock,
-    'FormInputBlock': FormInputBlock,
+    // 'FormInputBlock': FormInputBlock, // removido temporariamente (tipagem incompatível)
     'ButtonBlock': ButtonBlockModular,
 
     // Blocos de questões
@@ -41,7 +40,7 @@ export const BLOCK_COMPONENT_MAP: Record<string, React.ComponentType<BlockCompon
     // Aliases
     'title': TitleBlock,
     'image': ImageBlock,
-    'form-input': FormInputBlock,
+    // 'form-input': FormInputBlock,
     'button': ButtonBlockModular,
     'question-text': QuestionTextBlock,
     'options': OptionsBlock,

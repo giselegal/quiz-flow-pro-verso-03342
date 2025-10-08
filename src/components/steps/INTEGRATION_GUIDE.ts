@@ -15,8 +15,9 @@
 // ==============================================
 
 // No topo do arquivo QuizApp.tsx, adicionar:
-import { stepRegistry, StepRenderer } from './steps';
-import ModularIntroStep from './steps/ModularIntroStep';
+// Comentado: módulos experimentais removidos do build para estabilizar type-check.
+// import { stepRegistry, StepRenderer } from './steps';
+// import ModularIntroStep from './steps/ModularIntroStep';
 
 // ==============================================
 // 🔄 MODIFICAÇÃO DO MÉTODO renderStep()
