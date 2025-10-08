@@ -1731,15 +1731,15 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
 
     // Publicar
     const handlePublish = useCallback(async () => {
-    // Export JSON (será finalizado depois)
-    const handleExport = () => {
-        const data = JSON.stringify(steps, null, 2);
-        const blob = new Blob([data], { type: 'application/json' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url; a.download = `funnel-draft.json`; a.click();
-        URL.revokeObjectURL(url);
-    };
+        // Export JSON (será finalizado depois)
+        const handleExport = () => {
+            const data = JSON.stringify(steps, null, 2);
+            const blob = new Blob([data], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url; a.download = `funnel-draft.json`; a.click();
+            URL.revokeObjectURL(url);
+        };
         if (!funnelId || funnelId === 'production') {
             toast({
                 title: 'Salve primeiro',
@@ -1902,8 +1902,8 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                         </div>
 
                         <div className="flex items-center gap-2">
-                <Button variant="outline" size="sm" onClick={() => setNavOpen(true)}>Navegação</Button>
-                <Button variant="outline" size="sm" onClick={handleExport}>Exportar</Button>
+                            <Button variant="outline" size="sm" onClick={() => setNavOpen(true)}>Navegação</Button>
+                            <Button variant="outline" size="sm" onClick={handleExport}>Exportar</Button>
                             <Button variant="outline" size="sm" onClick={handleSave} disabled={isSaving || !isDirty}>
                                 {isSaving ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Save className="w-4 h-4 mr-2" />}
                                 Salvar
