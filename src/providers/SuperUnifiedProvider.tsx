@@ -590,7 +590,8 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
                     description: options.description || '',
                     settings: options.settings || {},
                     version: 1,
-                    is_published: false
+                    is_published: false,
+                    user_id: options.userId || null
                 })
                 .select()
                 .single();
