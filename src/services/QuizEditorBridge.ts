@@ -148,7 +148,7 @@ class QuizEditorBridge {
         }
 
         // Atualizar cache
-    this.cache.set(draftId, { ...funnel, steps: workingSteps as any, id: draftId });
+        this.cache.set(draftId, { ...funnel, steps: workingSteps as any, id: draftId });
 
         console.log('✅ Rascunho salvo:', draftId);
         return draftId;
