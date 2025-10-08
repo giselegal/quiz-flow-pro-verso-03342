@@ -188,7 +188,7 @@ class QuizEditorBridge {
         console.log('✅ Validação passou. Publicando...');
 
         // Converter steps para formato QUIZ_STEPS
-    const quizSteps = this.convertToQuizSteps(publishingSteps as any);
+        const quizSteps = this.convertToQuizSteps(publishingSteps as any);
 
         // Salvar na tabela de produção
         const productionData = {
