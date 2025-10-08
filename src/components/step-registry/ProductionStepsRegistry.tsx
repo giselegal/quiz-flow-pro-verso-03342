@@ -222,6 +222,7 @@ const TransitionStepAdapter: React.FC<BaseStepProps> = (props) => {
 
 /**
  * 🏆 RESULT STEP ADAPTER
+ * ✨ INTEGRADO COM StyleResultCard (Fase 6.6)
  */
 const ResultStepAdapter: React.FC<BaseStepProps> = (props) => {
     const {
@@ -237,27 +238,29 @@ const ResultStepAdapter: React.FC<BaseStepProps> = (props) => {
         ...otherProps
     } = props as any;
 
-    const adaptedProps = {
-        data: {
-            id: stepId,
-            type: 'result' as const,
-            title: data.title || 'Seu Resultado',
-            ...data
-        },
-        userProfile: {
-            userName: quizState?.userName || 'Usuário',
-            resultStyle: quizState?.resultStyle || 'classico',
-            secondaryStyles: quizState?.secondaryStyles || []
-        },
-        scores: quizState?.scores || undefined,
+    // Importar StyleResultCard dinamicamente para evitar dependência circular
+    const StyleResultCard = React.lazy(() => 
+        import('@/components/editor/quiz/components/StyleResultCard').then(m => ({ 
+            default: m.StyleResultCard 
+        }))
+    );
+
+    // Props para o novo componente
+    const cardProps = {
+        resultStyle: quizState?.resultStyle || 'classico',
+        userName: quizState?.userName || 'Usuário',
+        secondaryStyles: quizState?.secondaryStyles || [],
+        scores: quizState?.scores,
+        mode: 'result' as const,
         onNext,
-        onCalculate: () => {
-            onSave({ resultCalculated: true });
-        },
-        ...otherProps
+        className: 'w-full'
     };
 
-    return <OriginalResultStep {...(adaptedProps as any)} />;
+    return (
+        <React.Suspense fallback={<div className="flex items-center justify-center p-12">Carregando resultado...</div>}>
+            <StyleResultCard {...cardProps} />
+        </React.Suspense>
+    );
 };
 
 /**
