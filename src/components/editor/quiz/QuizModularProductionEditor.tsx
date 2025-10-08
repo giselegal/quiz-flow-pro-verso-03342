@@ -1551,12 +1551,12 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
 
                             <div className="h-6 w-px bg-border" />
 
-                            <div>
-                                <h1 className="text-lg font-semibold">Editor Modular 4 Colunas</h1>
-                                <p className="text-xs text-muted-foreground">
-                                    {steps.length} etapas • {selectedStep?.blocks.length || 0} componentes na etapa
-                                </p>
-                            </div>
+                            {/* Logo da marca */}
+                            <img
+                                src="https://res.cloudinary.com/dqljyf76t/image/upload/c_fit,w_192,h_192,f_png/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp"
+                                alt="Logo Gisele Galvão"
+                                style={{ height: 36, width: 36, objectFit: 'contain', borderRadius: 8 }}
+                            />
 
                             {isDirty && <Badge variant="outline">Não salvo</Badge>}
                         </div>
@@ -1694,15 +1694,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                                 <TabsContent value="canvas" className="flex-1 overflow-auto p-4 m-0">
                                     {selectedStep ? (
                                         <Card>
-                                            <CardHeader>
-                                                <CardTitle className="flex items-center justify-between">
-                                                    <span>Etapa: {selectedStep.id}</span>
-                                                    <Badge>{selectedStep.blocks.length} componentes</Badge>
-                                                </CardTitle>
-                                                <CardDescription className="sr-only">
-                                                    Canvas
-                                                </CardDescription>
-                                            </CardHeader>
+                                            {/* Removido CardHeader com nomes e descrições */}
                                             <CardContent>
                                                 {/* Cabeçalho fixo global (logo + progresso) */}
                                                 <div className="mb-6">
@@ -1718,9 +1710,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                                                         {(selectedStep.id === 'step-20' || selectedStep.id === 'step-21') && (
                                                             <div className="mb-6">
                                                                 <div className="mb-2 flex items-center justify-between">
-                                                                    <h4 className="text-xs font-medium text-gray-600 flex items-center gap-2">
-                                                                        {selectedStep.id === 'step-20' ? 'Resultado' : 'Oferta'}
-                                                                    </h4>
+                                                                    {/* Removido nome do step/result/oferta */}
                                                                     <Badge variant="secondary" className="text-[9px]">live</Badge>
                                                                 </div>
                                                                 <div className="border rounded-lg bg-white p-4">
@@ -1743,7 +1733,6 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                                                                             />
                                                                         )}
                                                                     </Suspense>
-                                                                    {/* Texto explicativo removido para canvas limpo */}
                                                                 </div>
                                                             </div>
                                                         )}
