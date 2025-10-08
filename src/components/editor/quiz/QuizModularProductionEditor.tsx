@@ -54,6 +54,8 @@ import { cn } from '@/lib/utils';
 import { quizEditorBridge } from '@/services/QuizEditorBridge';
 import QuizProductionPreview from './QuizProductionPreview';
 import { useToast } from '@/hooks/use-toast';
+import { replacePlaceholders } from '@/utils/placeholderParser';
+import { useLiveScoring } from '@/hooks/useLiveScoring';
 
 // Pré-visualizações especializadas (lazy) dos componentes finais de produção
 const StyleResultCard = React.lazy(() => import('@/components/editor/quiz/components/StyleResultCard').then(m => ({ default: m.StyleResultCard })));
@@ -599,6 +601,24 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
     // ========================================
     const [quizSelections, setQuizSelections] = useState<Record<string, string[]>>({});
 
+    // Mapa de pontuação (futuro: editar via propriedades dos options). Estrutura: blockId -> optionId -> { estilo: valor }
+    const scoringMap = useMemo<Record<string, Record<string, number>>>(() => {
+        // Placeholder: cada opção vale 1 ponto genérico (usado apenas para demonstrar variação)
+        const map: Record<string, Record<string, number>> = {};
+        steps.forEach(step => {
+            step.blocks.filter(b => b.type === 'quiz-options').forEach(b => {
+                const options = b.content.options || [];
+                map[b.id] = options.reduce((acc: any, opt: any) => {
+                    acc[opt.id] = 1;
+                    return acc;
+                }, {});
+            });
+        });
+        return map;
+    }, [steps]);
+
+    const { scores: liveScores, topStyle } = useLiveScoring({ selections: quizSelections, scoringMap });
+
     const toggleQuizOption = (blockId: string, optionId: string, multi = true, max = 1) => {
         setQuizSelections(prev => {
             const current = prev[blockId] || [];
@@ -620,6 +640,13 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
 
     const renderBlockPreview = (block: BlockComponent) => {
         const { type, content, properties } = block;
+        // Contexto provisório para placeholders (será expandido com scoring dinâmico e dados reais do usuário)
+        const placeholderContext = {
+            userName: 'Preview',
+            resultStyle: 'classico',
+            // Futuro: integrar live scoring hook
+            scores: { classico: 12, natural: 8, romantico: 6 }
+        };
         // Heading
         if (type === 'heading') {
             const level = properties?.level ?? 2;
@@ -631,12 +658,12 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                     level === 2 && 'text-2xl',
                     level === 3 && 'text-xl',
                     level >= 4 && 'text-lg'
-                )}>{content.text || 'Título'}</Tag>
+                )}>{replacePlaceholders(content.text || 'Título', placeholderContext)}</Tag>
             );
         }
         // Text
         if (type === 'text') {
-            return <p className="text-sm leading-relaxed text-slate-700 whitespace-pre-wrap">{content.text || 'Texto'}</p>;
+            return <p className="text-sm leading-relaxed text-slate-700 whitespace-pre-wrap">{replacePlaceholders(content.text || 'Texto', placeholderContext)}</p>;
         }
         // Image
         if (type === 'image') {
@@ -659,7 +686,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                     type="button"
                     className="inline-flex items-center justify-center px-4 py-2 rounded-md text-sm font-medium bg-[#B89B7A] hover:bg-[#a08464] text-white shadow-sm transition-colors"
                 >
-                    {content.text || 'Botão'}
+                    {replacePlaceholders(content.text || 'Botão', placeholderContext)}
                 </button>
             );
         }
@@ -993,10 +1020,10 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                                                                 <Suspense fallback={<div className="text-xs text-muted-foreground">Carregando componente...</div>}>
                                                                     {selectedStep.id === 'step-20' && (
                                                                         <StyleResultCard
-                                                                            resultStyle="classico"
+                                                                            resultStyle={topStyle || 'classico'}
                                                                             userName="Preview"
-                                                                            secondaryStyles={['natural', 'romantico']}
-                                                                            scores={{ classico: 12, natural: 8, romantico: 6 }}
+                                                                            secondaryStyles={Object.keys(liveScores).filter(s => s !== (topStyle || 'classico')).slice(0, 2)}
+                                                                            scores={Object.keys(liveScores).length ? liveScores : { classico: 12, natural: 8, romantico: 6 }}
                                                                             mode="result"
                                                                         />
                                                                     )}
@@ -1010,7 +1037,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                                                                     )}
                                                                 </Suspense>
                                                                 <p className="mt-3 text-[11px] text-muted-foreground leading-relaxed">
-                                                                    Esta pré-visualização mostra o componente final de produção. A lista de blocos abaixo representa a estrutura editável bruta desta etapa. Em uma fase posterior os blocos serão sincronizados diretamente com o componente unificado.
+                                                                    Esta pré-visualização mostra o componente final de produção. {selectedStep.id === 'step-20' && 'Pontuação dinâmica aplicada a partir das seleções nos blocos de opções.'} A lista de blocos abaixo representa a estrutura editável desta etapa.
                                                                 </p>
                                                             </div>
                                                         </div>
