@@ -95,7 +95,10 @@ export const INITIAL_BLOCK_SCHEMAS: BlockPropertySchemaDefinition[] = [
         properties: [
             { key: 'options', label: 'Opções', type: 'options-list', required: true, default: [], group: 'content' },
             { key: 'multiSelect', label: 'Multi Seleção', type: 'boolean', default: true, group: 'logic' },
-            { key: 'maxSelections', label: 'Máx Seleções', type: 'number', default: 3, min: 1, group: 'logic', validate: (value, current) => (current.multiSelect && value < 2 ? 'Para multi selecione >=2' : null) },
+            { key: 'requiredSelections', label: 'Seleções Necessárias', type: 'number', default: 1, min: 1, group: 'logic', validate: (value, current) => (current.multiSelect && value < 1 ? 'Valor mínimo 1' : null) },
+            { key: 'maxSelections', label: 'Máx Seleções', type: 'number', default: 3, min: 1, group: 'logic', when: (current) => current.multiSelect, validate: (value, current) => (current.multiSelect && value < (current.requiredSelections || 1) ? 'Máx não pode ser < necessárias' : null) },
+            { key: 'autoAdvance', label: 'Auto Avançar', type: 'boolean', default: true, group: 'logic' },
+            { key: 'showImages', label: 'Mostrar Imagens', type: 'boolean', default: true, group: 'style' },
             { key: 'layout', label: 'Layout', type: 'select', enumValues: ['auto', 'grid-2', 'grid-3'], default: 'auto', group: 'style' }
         ]
     },

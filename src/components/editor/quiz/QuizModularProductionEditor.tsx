@@ -167,7 +167,11 @@ const COMPONENT_LIBRARY: ComponentLibraryItem[] = [
                 { id: 'opt2', text: 'Opção 2' }
             ],
             multiSelect: true,
-            maxSelections: 3
+            requiredSelections: 1,
+            maxSelections: 3,
+            autoAdvance: true,
+            showImages: true,
+            layout: 'auto'
         }
     },
     {
