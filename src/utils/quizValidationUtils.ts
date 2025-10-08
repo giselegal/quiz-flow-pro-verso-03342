@@ -133,7 +133,7 @@ export function validateNextStep(step: QuizStep & { id: string }, allStepIds?: s
     let ids = allStepIds && allStepIds.length > 0 ? allStepIds : STEP_ORDER;
     // Normalização defensiva: se os IDs parecerem numéricos ("0", "1"...) converter para step-XX para manter consistência
     if (ids.every(id => /^\d+$/.test(id))) {
-        ids = ids.map(n => `step-${String(Number(n)+1).padStart(2,'0')}`); // +1 para alinhar com step-01
+        ids = ids.map(n => `step-${String(Number(n) + 1).padStart(2, '0')}`); // +1 para alinhar com step-01
     }
     const lastId = ids[ids.length - 1];
     if (step.id === lastId) {
@@ -417,10 +417,10 @@ export function validateCompleteFunnel(steps: Record<string, QuizStep>): Validat
     // Normalização global de IDs numéricos (origem inconsistente) → step-XX
     const numericOnly = stepIds.length > 0 && stepIds.every(id => /^\d+$/.test(id));
     if (numericOnly) {
-        const remap: Record<string,string> = {};
+        const remap: Record<string, string> = {};
         const newSteps: Record<string, QuizStep> = {};
         stepIds.forEach(id => {
-            const newId = `step-${String(Number(id)+1).padStart(2,'0')}`;
+            const newId = `step-${String(Number(id) + 1).padStart(2, '0')}`;
             remap[id] = newId;
             newSteps[newId] = steps[id];
         });
@@ -453,7 +453,7 @@ export function validateCompleteFunnel(steps: Record<string, QuizStep>): Validat
         allWarnings.push(...styleValidation.warnings);
 
         // Validação 2: nextStep
-    const nextStepValidation = validateNextStep(stepWithId, stepIds);
+        const nextStepValidation = validateNextStep(stepWithId, stepIds);
         allErrors.push(...nextStepValidation.errors);
         allWarnings.push(...nextStepValidation.warnings);
 
