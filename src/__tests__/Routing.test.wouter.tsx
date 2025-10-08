@@ -1,7 +1,6 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { render, screen } from '@testing-library/react';
-import { Router } from 'wouter';
-import { memoryLocation } from 'wouter/memory-location';
+import { screen } from '@testing-library/react';
+import { renderAppAt } from '@/tests/utils/renderWithProviders';
 import App from '@/App';
 
 // Mock dos componentes principais
@@ -25,16 +24,8 @@ vi.mock('@/pages/QuizEstiloPessoalPage', () => ({
     default: () => <div data-testid="quiz-estilo-page">Quiz Estilo Pessoal</div>,
 }));
 
-// Helper para renderizar com Wouter
-const renderWithWouter = (initialPath: string) => {
-    const location = memoryLocation({ path: initialPath });
-
-    return render(
-        <Router hook={location.hook}>
-            <App />
-        </Router>
-    );
-};
+// Helper unificado
+const renderPath = (path: string) => renderAppAt(path, <App />);
 
 describe('🧭 Sistema de Roteamento com Wouter', () => {
     beforeEach(() => {
@@ -55,29 +46,29 @@ describe('🧭 Sistema de Roteamento com Wouter', () => {
 
     describe('Rota Principal /editor', () => {
         it('deve renderizar EditorUnifiedPage na rota /editor', () => {
-            renderWithWouter('/editor');
+            renderPath('/editor');
             expect(screen.getByTestId('editor-unified-page')).toBeInTheDocument();
         });
 
         it('deve aceitar parâmetros de step na URL', () => {
-            renderWithWouter('/editor?step=5');
+            renderPath('/editor?step=5');
             expect(screen.getByTestId('editor-unified-page')).toBeInTheDocument();
         });
 
         it('deve manter estado na navegação', () => {
-            renderWithWouter('/editor');
+            renderPath('/editor');
             expect(screen.getByTestId('editor-unified-page')).toBeInTheDocument();
         });
 
         it('deve aceitar múltiplos parâmetros na URL', () => {
-            renderWithWouter('/editor?step=3');
+            renderPath('/editor?step=3');
             expect(screen.getByTestId('editor-unified-page')).toBeInTheDocument();
         });
     });
 
     describe('Rota /editor-pro', () => {
         it('deve renderizar EditorProUnified na rota /editor-pro', () => {
-            renderWithWouter('/editor-pro');
+            renderPath('/editor-pro');
             expect(screen.getByTestId('editor-pro-unified')).toBeInTheDocument();
         });
     });
@@ -91,7 +82,7 @@ describe('🧭 Sistema de Roteamento com Wouter', () => {
 
         testRoutes.forEach(({ path, expectedComponent, description }) => {
             it(`deve renderizar corretamente a rota ${description} (${path})`, () => {
-                renderWithWouter(path);
+                renderPath(path);
                 expect(screen.getByTestId(expectedComponent)).toBeInTheDocument();
             });
         });
@@ -99,19 +90,19 @@ describe('🧭 Sistema de Roteamento com Wouter', () => {
 
     describe('Páginas Estáticas', () => {
         it('deve renderizar página inicial na rota "/"', () => {
-            renderWithWouter('/');
+            renderPath('/');
             expect(screen.getByTestId('index-page')).toBeInTheDocument();
         });
 
         it('deve renderizar steps showcase na rota "/steps"', () => {
-            renderWithWouter('/steps');
+            renderPath('/steps');
             expect(screen.getByTestId('steps-showcase')).toBeInTheDocument();
         });
     });
 
     describe('Rotas com Parâmetros', () => {
         it('deve processar parâmetros na URL do editor', () => {
-            renderWithWouter('/editor?step=10');
+            renderPath('/editor?step=10');
             expect(screen.getByTestId('editor-unified-page')).toBeInTheDocument();
         });
 
@@ -123,7 +114,7 @@ describe('🧭 Sistema de Roteamento com Wouter', () => {
 
         complexUrls.forEach(url => {
             it(`deve processar URL complexa: ${url}`, () => {
-                renderWithWouter(url);
+                renderPath(url);
                 expect(screen.getByTestId('editor-unified-page')).toBeInTheDocument();
             });
         });
@@ -131,24 +122,24 @@ describe('🧭 Sistema de Roteamento com Wouter', () => {
 
     describe('Múltiplas Query Parameters', () => {
         it('deve processar múltiplos parâmetros na URL', () => {
-            renderWithWouter('/editor?step=5&theme=dark&mode=preview');
+            renderPath('/editor?step=5&theme=dark&mode=preview');
             expect(screen.getByTestId('editor-unified-page')).toBeInTheDocument();
         });
     });
 
     describe('Navegação Entre Rotas', () => {
         it('deve permitir navegação do step 1 para step 5', () => {
-            renderWithWouter('/editor?step=1');
+            renderPath('/editor?step=1');
             expect(screen.getByTestId('editor-unified-page')).toBeInTheDocument();
         });
 
         it('deve permitir navegação para step específico', () => {
-            renderWithWouter('/editor?step=5');
+            renderPath('/editor?step=5');
             expect(screen.getByTestId('editor-unified-page')).toBeInTheDocument();
         });
 
         it('deve renderizar sem parâmetros', () => {
-            renderWithWouter('/editor');
+            renderPath('/editor');
             expect(screen.getByTestId('editor-unified-page')).toBeInTheDocument();
         });
     });
@@ -156,14 +147,14 @@ describe('🧭 Sistema de Roteamento com Wouter', () => {
     describe('Tratamento de Erros', () => {
         it('deve lidar com rotas inexistentes', () => {
             // Wouter renderiza o último Route sem path como fallback
-            renderWithWouter('/rota-inexistente');
+            renderPath('/rota-inexistente');
             // Dependendo da configuração, pode renderizar uma página 404 ou redirect
         });
     });
 
     describe('Funcionalidades Específicas', () => {
         it('deve suportar múltiplas instâncias do editor', () => {
-            renderWithWouter('/editor');
+            renderPath('/editor');
             expect(screen.getByTestId('editor-unified-page')).toBeInTheDocument();
         });
     });
