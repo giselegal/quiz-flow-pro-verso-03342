@@ -21,6 +21,9 @@ import { useLocation } from 'wouter';
 import { DndContext, DragOverlay, closestCenter, PointerSensor, useSensor, useSensors, useDraggable } from '@dnd-kit/core';
 import { SortableContext, verticalListSortingStrategy, arrayMove, useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
+
+// Logo corporativa (centralizada em um único ponto) - reutilizada em cabeçalhos
+const BRAND_LOGO_URL = 'https://res.cloudinary.com/der8kogzu/image/upload/f_png,q_70,w_120,h_50,c_fit/v1752430327/LOGO_DA_MARCA_GISELE_l78gin.png';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -1289,7 +1292,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                             <div className="shrink-0" style={{ maxWidth: properties?.logoWidth || '120px' }}>
                                 {/* eslint-disable-next-line @next/next/no-img-element */}
                                 <img
-                                    src={properties?.logoUrl || 'https://via.placeholder.com/120x40?text=Logo'}
+                                    src={properties?.logoUrl || BRAND_LOGO_URL}
                                     alt="Logo"
                                     className="object-contain max-h-12"
                                 />
@@ -1666,6 +1669,25 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
     const handleSave = useCallback(async () => {
         setIsSaving(true);
         try {
+            // Preencher automaticamente nextStep faltantes (exceto última etapa)
+            let adjusted = false;
+            const orderedSteps = [...steps].sort((a, b) => a.order - b.order);
+            for (let i = 0; i < orderedSteps.length - 1; i++) {
+                const s = orderedSteps[i];
+                if (!s.nextStep) {
+                    s.nextStep = orderedSteps[i + 1].id;
+                    adjusted = true;
+                }
+            }
+            if (adjusted) {
+                // Atualiza state local para refletir ajustes e manter histórico
+                setSteps(prev => {
+                    const map = new Map(orderedSteps.map(s => [s.id, s.nextStep] as const));
+                    const next = prev.map(s => map.has(s.id) ? { ...s, nextStep: map.get(s.id)! } : s);
+                    pushHistory(next);
+                    return next;
+                });
+            }
             const funnel = {
                 id: funnelId || 'new-draft',
                 name: 'Quiz Estilo Pessoal - Modular',
@@ -1691,8 +1713,11 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
 
             toast({
                 title: '✅ Salvo com sucesso',
-                description: `Rascunho ${savedId}`,
+                description: adjusted ? `Rascunho ${savedId} · nextStep(s) preenchidos automaticamente` : `Rascunho ${savedId}`,
             });
+            if (adjusted) {
+                setSaveNotice({ type: 'info', message: 'Links de próxima etapa preenchidos automaticamente.' });
+            }
         } catch (error: any) {
             const message = String(error || 'Erro desconhecido');
             if (/nextstep/i.test(message)) {
