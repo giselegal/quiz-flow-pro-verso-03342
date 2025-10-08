@@ -83,10 +83,10 @@ const OFFER_COLORS = {
 /**
  * Componente Offer Map
  */
-export function OfferMap({ 
-    content, 
-    onUpdate, 
-    mode = 'preview', 
+export function OfferMap({
+    content,
+    onUpdate,
+    mode = 'preview',
     userName = 'Maria',
     selectedOfferKey: propSelectedOfferKey,
     onNext,
