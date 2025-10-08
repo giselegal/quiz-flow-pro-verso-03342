@@ -573,32 +573,62 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
         toast({ title: 'Removidos', description: `${total} bloco(s)` });
     };
 
-    // Reordenar blocos
+    // Reordenar / mover blocos (nested)
     const handleDragEnd = (event: any) => {
         const { active, over } = event;
-
-        if (!over || active.id === over.id || !selectedStepId) return;
-
-        let changed = false;
+        if (!over || active.id === over.id || !selectedStepId) { setActiveId(null); return; }
         setSteps(prev => {
+            let changed = false;
             const next = prev.map(step => {
-                if (step.id === selectedStepId) {
-                    const oldIndex = step.blocks.findIndex(b => b.id === active.id);
-                    const newIndex = step.blocks.findIndex(b => b.id === over.id);
+                if (step.id !== selectedStepId) return step;
+                const blocks = [...step.blocks];
+                const activeBlock = blocks.find(b => b.id === active.id);
+                const overBlock = blocks.find(b => b.id === over.id);
+                if (!activeBlock || !overBlock) return step;
+
+                const isDescendant = (parentId: string, potentialChildId: string): boolean => {
+                    const node = blocks.find(b => b.id === potentialChildId);
+                    if (!node) return false;
+                    if (node.parentId === parentId) return true;
+                    if (!node.parentId) return false;
+                    return isDescendant(parentId, node.parentId);
+                };
+                if (isDescendant(activeBlock.id, overBlock.id)) return step; // impede ciclo
+
+                let targetParentId: string | null;
+                if (overBlock.type === 'container' && activeBlock.id !== overBlock.id) {
+                    targetParentId = overBlock.id;
+                } else {
+                    targetParentId = overBlock.parentId || null;
+                }
+
+                const fromParent = activeBlock.parentId || null;
+                const toParent = targetParentId;
+                const siblings = (pid: string | null) => blocks.filter(b => (b.parentId || null) === pid).sort((a, b) => a.order - b.order);
+
+                if (fromParent !== toParent) {
+                    const oldSibs = siblings(fromParent).filter(b => b.id !== activeBlock.id);
+                    oldSibs.forEach((b, i) => { b.order = i; });
+                    const newSibs = siblings(toParent);
+                    activeBlock.parentId = toParent || undefined;
+                    activeBlock.order = newSibs.length;
+                    changed = true;
+                } else {
+                    const sibs = siblings(fromParent);
+                    const oldIndex = sibs.findIndex(b => b.id === activeBlock.id);
+                    const newIndex = sibs.findIndex(b => b.id === overBlock.id);
                     if (oldIndex !== -1 && newIndex !== -1 && oldIndex !== newIndex) {
+                        const reordered = arrayMove(sibs, oldIndex, newIndex);
+                        reordered.forEach((b, i) => { b.order = i; });
                         changed = true;
-                        const reordered = arrayMove(step.blocks, oldIndex, newIndex).map((block, index) => ({ ...block, order: index }));
-                        return { ...step, blocks: reordered };
                     }
                 }
-                return step;
+                return { ...step, blocks: blocks.map(b => ({ ...b })) };
             });
-            if (changed) pushHistory(next);
+            if (changed) { pushHistory(next); setIsDirty(true); }
+            setActiveId(null);
             return next;
         });
-
-        if (changed) setIsDirty(true);
-        setActiveId(null);
     };
 
     const handleUndo = () => {
@@ -1108,6 +1138,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                                                     >
                                                         <div className="space-y-2">
                                                             {selectedStep.blocks
+                                                                .filter(b => !b.parentId)
                                                                 .sort((a, b) => a.order - b.order)
                                                                 .map(block => (
                                                                     <div
