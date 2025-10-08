@@ -282,26 +282,24 @@ const OfferStepAdapter: React.FC<BaseStepProps> = (props) => {
     } = props as any;
 
     // Importar OfferMap dinamicamente
-    const OfferMap = React.lazy(() =>
-        import('@/components/editor/quiz/components/OfferMap').then(m => ({
-            default: m.OfferMap
+    const OfferMap = React.lazy(() => 
+        import('@/components/editor/quiz/components/OfferMap').then(m => ({ 
+            default: m.OfferMap 
         }))
     );
 
     // Derivar offerKey da resposta estratégica da pergunta 18
     const strategicAnswers = quizState?.strategicAnswers || {};
     const answer = strategicAnswers['Qual desses resultados você mais gostaria de alcançar?'];
-
-    // Mapear resposta para chave da oferta
-    const answerToKey: Record<string, string> = {
+    
+    // Mapear resposta para chave da oferta (OfferKey type)
+    const answerToKey: Record<string, 'Montar looks com mais facilidade e confiança' | 'Usar o que já tenho e me sentir estilosa' | 'Comprar com mais consciência e sem culpa' | 'Ser admirada pela imagem que transmito'> = {
         'montar-looks-facilidade': 'Montar looks com mais facilidade e confiança',
         'usar-que-tenho': 'Usar o que já tenho e me sentir estilosa',
         'comprar-consciencia': 'Comprar com mais consciência e sem culpa',
         'ser-admirada': 'Ser admirada pela imagem que transmito'
     };
-    const offerKey = answerToKey[answer] || 'Montar looks com mais facilidade e confiança';
-
-    // Props para OfferMap
+    const offerKey = answerToKey[answer] || 'Montar looks com mais facilidade e confiança' as const;    // Props para OfferMap
     const offerMapProps = {
         content: {
             offerMap: data.offerMap || {}

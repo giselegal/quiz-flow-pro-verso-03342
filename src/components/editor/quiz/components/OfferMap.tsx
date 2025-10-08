@@ -219,6 +219,7 @@ export function OfferMap({
                         <Button
                             className="w-full bg-[#B89B7A] hover:bg-[#a08464] text-white text-lg py-6"
                             size="lg"
+                            onClick={onNext}
                         >
                             {offer.buttonText}
                         </Button>
@@ -245,13 +246,15 @@ export function OfferMap({
                     </CardContent>
                 </Card>
 
-                {/* Badge de Preview */}
-                <div className="text-center">
-                    <Badge variant="secondary" className="text-xs">
-                        <Sparkles className="h-3 w-3 mr-1" />
-                        Preview - Oferta exibida conforme resposta da pergunta 18
-                    </Badge>
-                </div>
+                {/* Badge de Preview (apenas se não for produção) */}
+                {!propSelectedOfferKey && (
+                    <div className="text-center">
+                        <Badge variant="secondary" className="text-xs">
+                            <Sparkles className="h-3 w-3 mr-1" />
+                            Preview - Oferta exibida conforme resposta da pergunta 18
+                        </Badge>
+                    </div>
+                )}
             </div>
         );
     }
