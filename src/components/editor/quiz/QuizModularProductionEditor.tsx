@@ -1455,7 +1455,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                                 <span className="text-[9px] text-slate-400">{allBlocks.filter(b => b.parentId === block.id).length}</span>
                             </div>
                             <SortableContext
-                                items={[...allBlocks.filter(b => b.parentId === block.id).sort((a,b)=>a.order-b.order).map(c => c.id), `container-slot:${block.id}`]}
+                                items={[...allBlocks.filter(b => b.parentId === block.id).sort((a, b) => a.order - b.order).map(c => c.id), `container-slot:${block.id}`]}
                                 strategy={verticalListSortingStrategy}
                             >
                                 <div
@@ -1471,7 +1471,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                                     {allBlocks.filter(b => b.parentId === block.id).length === 0 && (
                                         <div className="text-[10px] text-slate-400 italic">Solte aqui para aninhar</div>
                                     )}
-                                    {allBlocks.filter(b => b.parentId === block.id).sort((a,b)=>a.order-b.order).map(child => (
+                                    {allBlocks.filter(b => b.parentId === block.id).sort((a, b) => a.order - b.order).map(child => (
                                         <BlockRow
                                             key={child.id}
                                             block={child}
