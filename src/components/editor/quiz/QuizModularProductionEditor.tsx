@@ -1403,6 +1403,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
         };
         const isContainer = block.type === 'container';
         const isHoverTarget = hoverContainerId === block.id;
+        const isExpanded = !isContainer || expandedContainers.has(block.id);
         return (
             <div
                 key={block.id}
@@ -1445,10 +1446,19 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                 </div>
                 <div className="pl-6 pr-8">
                     {/* Metadados (tipo/nome) ocultados para canvas limpo */}
-                    <div className="text-left">
-                        {renderBlockPreview(block, allBlocks)}
+                    <div className="text-left flex items-start gap-2">
+                        {isContainer && (
+                            <button
+                                type="button"
+                                onClick={(e) => { e.stopPropagation(); toggleContainer(block.id); }}
+                                className="mt-1 text-[10px] px-1 rounded border bg-white hover:bg-blue-50"
+                            >
+                                {isExpanded ? '−' : '+'}
+                            </button>
+                        )}
+                        <div className="flex-1">{renderBlockPreview(block, allBlocks)}</div>
                     </div>
-                    {isContainer && (
+                    {isContainer && isExpanded && (
                         <div className="mt-3 relative">
                             <div className="text-[10px] text-slate-400 italic mb-1 flex items-center gap-2">
                                 <span>Conteúdo</span>
@@ -1527,6 +1537,12 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
         if (prev.block.order !== next.block.order) return false;
         if (prev.block.type !== next.block.type) return false;
         if (prev.block.parentId !== next.block.parentId) return false;
+        // Se container, comparar estado expandido e quantidade de filhos
+        if (prev.block.type === 'container') {
+            const prevChildren = prev.allBlocks.filter(b => b.parentId === prev.block.id).length;
+            const nextChildren = next.allBlocks.filter(b => b.parentId === next.block.id).length;
+            if (prevChildren !== nextChildren) return false;
+        }
         if (prev.selectedBlockId === prev.block.id || next.selectedBlockId === next.block.id) {
             if (prev.selectedBlockId !== next.selectedBlockId) return false;
         }
@@ -1565,10 +1581,20 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
     // Expansão Lazy de Containers
     // ========================================
     const [expandedContainers, setExpandedContainers] = useState<Set<string>>(new Set());
+    useEffect(() => {
+        try {
+            const raw = localStorage.getItem('quiz_editor_expanded_containers_v1');
+            if (raw) setExpandedContainers(new Set(JSON.parse(raw)));
+        } catch {/* ignore */ }
+    }, []);
+    const persistExpanded = (next: Set<string>) => {
+        try { localStorage.setItem('quiz_editor_expanded_containers_v1', JSON.stringify(Array.from(next))); } catch {/* ignore */ }
+    };
     const toggleContainer = useCallback((id: string) => {
         setExpandedContainers(prev => {
             const next = new Set(prev);
             if (next.has(id)) next.delete(id); else next.add(id);
+            persistExpanded(next);
             return next;
         });
     }, []);
