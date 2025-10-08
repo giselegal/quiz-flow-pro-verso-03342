@@ -377,68 +377,6 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
         return {
             showLogo: true,
             logoUrl: 'https://via.placeholder.com/140x48?text=Logo',
-                    {navOpen && (
-                        <div className="fixed inset-0 z-50 flex">
-                            <div className="absolute inset-0 bg-black/40" onClick={()=>setNavOpen(false)} />
-                            <div className="relative ml-auto h-full w-[420px] bg-white shadow-xl border-l flex flex-col">
-                                <div className="p-4 border-b flex items-center justify-between">
-                                    <h2 className="text-sm font-semibold">Mapa de Navegação</h2>
-                                    <Button variant="ghost" size="sm" onClick={()=>setNavOpen(false)}>Fechar</Button>
-                                </div>
-                                <div className="p-4 overflow-auto flex-1 space-y-4 text-xs">
-                                    <div>
-                                        <p className="font-medium mb-1">Resumo</p>
-                                        <p>{navAnalysis.steps.length} steps · {navAnalysis.issues.length} problemas</p>
-                                    </div>
-                                    {navAnalysis.issues.length > 0 && (
-                                        <div className="space-y-1">
-                                            {navAnalysis.issues.map(i=> (
-                                                <div key={i.stepId + i.type} className={`px-2 py-1 rounded border text-[11px] ${i.severity==='error' ? 'border-red-300 bg-red-50 text-red-700':'border-amber-300 bg-amber-50 text-amber-700'}`}>[{i.severity}] {i.message}</div>
-                                            ))}
-                                        </div>
-                                    )}
-                                    <div className="space-y-2">
-                                        {navAnalysis.steps.map(s=>{
-                                            const current = steps.find(st=>st.id===s.id)!;
-                                            return (
-                                                <div key={s.id} className="p-2 rounded border bg-slate-50 flex flex-col gap-1">
-                                                    <div className="flex items-center justify-between">
-                                                        <button onClick={()=>{setSelectedStepId(s.id); setNavOpen(false);}} className="text-left font-medium text-[11px] text-slate-800 hover:underline">{s.id}</button>
-                                                        {s.autoLinked && <span className="text-[9px] px-1 py-0.5 rounded bg-indigo-100 text-indigo-600">auto</span>}
-                                                    </div>
-                                                    <div className="flex items-center gap-2">
-                                                        <span className="text-[10px] text-slate-500">→</span>
-                                                        <select
-                                                            value={current.nextStep || ''}
-                                                            onChange={e=>{
-                                                                const value = e.target.value || undefined;
-                                                                setSteps(prev=>prev.map(st=>st.id===s.id?{...st, nextStep:value}:st));
-                                                                setIsDirty(true);
-                                                            }}
-                                                            className="border px-1 py-0.5 text-[11px] rounded bg-white"
-                                                        >
-                                                            <option value="">(finalizar)</option>
-                                                            {steps.filter(t=>t.id!==s.id).map(t=> (
-                                                                <option key={t.id} value={t.id}>{t.id}</option>
-                                                            ))}
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                            );
-                                        })}
-                                    </div>
-                                    <div className="mt-4">
-                                        <p className="font-medium mb-1">Relatório texto</p>
-                                        <pre className="whitespace-pre-wrap bg-slate-900 text-slate-100 p-2 rounded max-h-52 overflow-auto text-[10px]">{formatNavigationReport(navAnalysis)}</pre>
-                                    </div>
-                                </div>
-                                <div className="p-3 border-t flex gap-2">
-                                    <Button size="sm" variant="outline" onClick={()=>{setNavOpen(false);}}>Fechar</Button>
-                                    <Button size="sm" onClick={handleSave} disabled={isSaving}>Salvar Alterações</Button>
-                                </div>
-                            </div>
-                        </div>
-                    )}
             logoWidth: '140px',
             progressEnabled: true,
             autoProgress: true,
@@ -1851,6 +1789,68 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
 
     return (
         <EditorThemeProvider tokens={themeOverrides}>
+            {navOpen && (
+                <div className="fixed inset-0 z-50 flex">
+                    <div className="absolute inset-0 bg-black/40" onClick={() => setNavOpen(false)} />
+                    <div className="relative ml-auto h-full w-[420px] bg-white shadow-xl border-l flex flex-col">
+                        <div className="p-4 border-b flex items-center justify-between">
+                            <h2 className="text-sm font-semibold">Mapa de Navegação</h2>
+                            <Button variant="ghost" size="sm" onClick={() => setNavOpen(false)}>Fechar</Button>
+                        </div>
+                        <div className="p-4 overflow-auto flex-1 space-y-4 text-xs">
+                            <div>
+                                <p className="font-medium mb-1">Resumo</p>
+                                <p>{navAnalysis.steps.length} steps · {navAnalysis.issues.length} problemas</p>
+                            </div>
+                            {navAnalysis.issues.length > 0 && (
+                                <div className="space-y-1">
+                                    {navAnalysis.issues.map(i => (
+                                        <div key={i.stepId + i.type} className={`px-2 py-1 rounded border text-[11px] ${i.severity === 'error' ? 'border-red-300 bg-red-50 text-red-700' : 'border-amber-300 bg-amber-50 text-amber-700'}`}>[{i.severity}] {i.message}</div>
+                                    ))}
+                                </div>
+                            )}
+                            <div className="space-y-2">
+                                {navAnalysis.steps.map(s => {
+                                    const current = steps.find(st => st.id === s.id)!;
+                                    return (
+                                        <div key={s.id} className="p-2 rounded border bg-slate-50 flex flex-col gap-1">
+                                            <div className="flex items-center justify-between">
+                                                <button onClick={() => { setSelectedStepId(s.id); setNavOpen(false); }} className="text-left font-medium text-[11px] text-slate-800 hover:underline">{s.id}</button>
+                                                {s.autoLinked && <span className="text-[9px] px-1 py-0.5 rounded bg-indigo-100 text-indigo-600">auto</span>}
+                                            </div>
+                                            <div className="flex items-center gap-2">
+                                                <span className="text-[10px] text-slate-500">→</span>
+                                                <select
+                                                    value={current.nextStep || ''}
+                                                    onChange={e => {
+                                                        const value = e.target.value || undefined;
+                                                        setSteps(prev => prev.map(st => st.id === s.id ? { ...st, nextStep: value } : st));
+                                                        setIsDirty(true);
+                                                    }}
+                                                    className="border px-1 py-0.5 text-[11px] rounded bg-white"
+                                                >
+                                                    <option value="">(finalizar)</option>
+                                                    {steps.filter(t => t.id !== s.id).map(t => (
+                                                        <option key={t.id} value={t.id}>{t.id}</option>
+                                                    ))}
+                                                </select>
+                                            </div>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                            <div className="mt-4">
+                                <p className="font-medium mb-1">Relatório texto</p>
+                                <pre className="whitespace-pre-wrap bg-slate-900 text-slate-100 p-2 rounded max-h-52 overflow-auto text-[10px]">{formatNavigationReport(navAnalysis)}</pre>
+                            </div>
+                        </div>
+                        <div className="p-3 border-t flex gap-2">
+                            <Button size="sm" variant="outline" onClick={() => { setNavOpen(false); }}>Fechar</Button>
+                            <Button size="sm" onClick={handleSave} disabled={isSaving}>Salvar Alterações</Button>
+                        </div>
+                    </div>
+                </div>
+            )}
             <DndContext
                 sensors={sensors}
                 collisionDetection={closestCenter}
