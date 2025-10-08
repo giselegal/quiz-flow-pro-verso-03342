@@ -18,7 +18,8 @@ import {
     Users,
     TrendingUp,
     Plus,
-    RefreshCw
+    RefreshCw,
+    Loader2
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -78,7 +79,24 @@ const MeusFunisPageReal: React.FC = () => {
     const [selectedStatus, setSelectedStatus] = useState('todos');
     const [sortBy, setSortBy] = useState('updated');
     const [latestPublished, setLatestPublished] = useState<{ version: number; published_at: string } | null>(null);
+    const [publishingDraftId, setPublishingDraftId] = useState<string | null>(null);
+    const [confirmPublishId, setConfirmPublishId] = useState<string | null>(null);
     const { toast } = useToast();
+
+    // persistir highlight via query param
+    useEffect(() => {
+        const url = new URL(window.location.href);
+        const publishedId = url.searchParams.get('published');
+        if (publishedId) {
+            const el = document.getElementById(`funnel-card-${publishedId}`);
+            if (el) {
+                el.classList.add('ring-2', 'ring-indigo-500', 'ring-offset-2');
+                setTimeout(() => {
+                    el.classList.remove('ring-2', 'ring-indigo-500', 'ring-offset-2');
+                }, 4000);
+            }
+        }
+    }, []);
 
     // ========================================================================
     // DATA LOADING
@@ -614,6 +632,7 @@ const MeusFunisPageReal: React.FC = () => {
                                             size="sm"
                                             className="flex-1"
                                             onClick={() => window.open(`/quiz/quiz-estilo?draft=${funil.id}`, '_blank')}
+                                            disabled={publishingDraftId === funil.id}
                                         >
                                             <Eye className="w-4 h-4 mr-2" />
                                             Preview
@@ -622,27 +641,11 @@ const MeusFunisPageReal: React.FC = () => {
                                             variant="default"
                                             size="sm"
                                             className="flex-1"
-                                            onClick={() => {
-                                                if (!confirm('Publicar este rascunho substituirá a versão em produção. Continuar?')) return;
-                                                import('@/services/QuizEditorBridge').then(m => m.quizEditorBridge.publishToProduction(funil.id)
-                                                    .then(() => {
-                                                        toast({ title: 'Publicado!', description: 'Versão enviada para produção.' });
-                                                        // adicionar highlight temporário
-                                                        const el = document.getElementById(`funnel-card-${funil.id}`);
-                                                        if (el) {
-                                                            el.classList.add('ring-2', 'ring-indigo-500', 'ring-offset-2');
-                                                            setTimeout(() => {
-                                                                el.classList.remove('ring-2', 'ring-indigo-500', 'ring-offset-2');
-                                                            }, 2500);
-                                                        }
-                                                        loadFunis();
-                                                    })
-                                                    .catch(err => toast({ title: 'Erro na publicação', description: err.message, variant: 'destructive' }))
-                                                );
-                                            }}
+                                            onClick={() => setConfirmPublishId(funil.id)}
+                                            disabled={publishingDraftId === funil.id}
                                         >
-                                            <Play className="w-4 h-4 mr-2" />
-                                            Publicar
+                                            {publishingDraftId === funil.id ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Play className="w-4 h-4 mr-2" />}
+                                            {publishingDraftId === funil.id ? 'Publicando...' : 'Publicar'}
                                         </Button>
                                     </>
                                 ) : (
@@ -662,6 +665,34 @@ const MeusFunisPageReal: React.FC = () => {
                 ))}
             </div>
 
+            {/* Confirm Publish Modal */}
+
+            {/* Confirm Publish Modal */}
+            {confirmPublishId && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+                    <div className="bg-white rounded-lg shadow-lg w-full max-w-sm p-6 space-y-4">
+                        <h2 className="text-lg font-semibold">Confirmar Publicação</h2>
+                        <p className="text-sm text-gray-600 leading-relaxed">Publicar este rascunho substituirá a versão atual em produção do Quiz Estilo. Deseja continuar?</p>
+                        <div className="flex justify-end gap-2 pt-2">
+                            <Button variant="outline" size="sm" onClick={() => setConfirmPublishId(null)} disabled={publishingDraftId !== null}>Cancelar</Button>
+                            <Button size="sm" onClick={() => {
+                                const draftId = confirmPublishId; setPublishingDraftId(draftId);
+                                import('@/services/QuizEditorBridge').then(m => m.quizEditorBridge.publishToProduction(draftId)
+                                    .then(() => {
+                                        toast({ title: 'Publicado!', description: 'Versão enviada para produção.' });
+                                        const url = new URL(window.location.href); url.searchParams.set('published', draftId); window.history.replaceState({}, '', url.toString());
+                                        setConfirmPublishId(null); setPublishingDraftId(null); loadFunis();
+                                    })
+                                    .catch(err => { toast({ title: 'Erro na publicação', description: err.message, variant: 'destructive' }); setPublishingDraftId(null); })
+                                );
+                            }} disabled={publishingDraftId !== null}>
+                                {publishingDraftId ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Play className="w-4 h-4 mr-2" />}
+                                {publishingDraftId ? 'Publicando...' : 'Confirmar'}
+                            </Button>
+                        </div>
+                    </div>
+                </div>
+            )}
             {/* Empty State */}
             {sortedFunis.length === 0 && (
                 <div className="text-center py-12">
