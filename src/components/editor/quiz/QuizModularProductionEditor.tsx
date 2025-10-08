@@ -761,7 +761,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
         // Construir hash de dependências (alterações de dados relevantes invalidam cache)
         const expanded = type === 'container' ? expandedContainers.has(id) : false; // usa state mais abaixo mas é avaliado apenas em execução
         const childIds = type === 'container' ? children.map(c => c.id).join(',') : '';
-        const dynamicContextHash = JSON.stringify(liveScores); // scores afetam placeholders potenciais ({score:estilo})
+        const dynamicContextHash = JSON.stringify({ liveScores, selections: quizSelections[id] }); // inclui seleções atuais do bloco
         const key = [
             id,
             type,
@@ -836,63 +836,16 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
         }
         // Quiz Options
         if (type === 'quiz-options') {
-            const options = content.options || [];
-            const multi = properties?.multiSelect ?? false;
-            // Priorizar requiredSelections para refletir produção quando presente
-            const required = properties?.requiredSelections || properties?.maxSelections || (multi ? options.length : 1);
-            const selected = quizSelections[block.id] || [];
-            const hasImages = options.some((o: any) => !!o.image);
-            const gridClass = hasImages ? 'quiz-options-3col' : 'quiz-options-1col';
-            // Auto-avance: se propriedade autoAdvance estiver ativa no bloco ou step especial (simulando produção)
-            const autoAdvance = !!properties?.autoAdvance || !!(selectedStep && ['question', 'strategic-question'].includes(selectedStep.type));
-            useEffect(() => {
-                if (autoAdvance && selected.length === required && required > 0) {
-                    const t = setTimeout(() => {
-                        // Simplesmente avança para próximo step se definido
-                        if (selectedStep?.nextStep) {
-                            setSelectedStepId(selectedStep.nextStep);
-                            setSelectedBlockId('');
-                        }
-                    }, 900);
-                    return () => clearTimeout(t);
-                }
-            }, [autoAdvance, selected.length, required, selectedStep]);
             node = (
-                <div className="space-y-2">
-                    <div className={cn('quiz-options', gridClass)}>
-                        {options.map((opt: any) => {
-                            const active = selected.includes(opt.id);
-                            return (
-                                <div
-                                    key={opt.id}
-                                    role="button"
-                                    tabIndex={0}
-                                    onClick={(e) => { e.preventDefault(); toggleQuizOption(block.id, opt.id, multi, required); }}
-                                    onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleQuizOption(block.id, opt.id, multi, required); } }}
-                                    className={cn(
-                                        'quiz-option transition-all',
-                                        active && 'quiz-option-selected',
-                                        !active && 'cursor-pointer'
-                                    )}
-                                >
-                                    {opt.image && (
-                                        <img
-                                            src={opt.image}
-                                            alt={opt.text || 'Opção'}
-                                            className="w-full mb-2 rounded"
-                                        />
-                                    )}
-                                    <p className="quiz-option-text text-xs font-medium leading-snug">{opt.text || 'Opção'}</p>
-                                </div>
-                            );
-                        })}
-                    </div>
-                    <div className="text-[10px] text-muted-foreground">
-                        {multi
-                            ? `${selected.length}/${required} selecionadas`
-                            : (selected.length === 1 ? '1 selecionada' : 'Selecione 1')}
-                    </div>
-                </div>
+                <QuizOptionsPreview
+                    blockId={id}
+                    options={content.options || []}
+                    properties={properties || {}}
+                    selectedStep={selectedStep}
+                    selections={quizSelections[id] || []}
+                    onToggle={(optionId: string, multi: boolean, required: number) => toggleQuizOption(id, optionId, multi, required)}
+                    advanceStep={(nextStepId: string) => { setSelectedStepId(nextStepId); setSelectedBlockId(''); }}
+                />
             );
             previewCacheRef.current.set(id, { key, node });
             return node;
@@ -1154,6 +1107,68 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
             return next;
         });
     }, []);
+
+    // Componente especializado para quiz-options (isolado para respeitar regras de hooks)
+    interface QuizOptionsPreviewProps {
+        blockId: string;
+        options: any[];
+        properties: Record<string, any>;
+        selectedStep?: EditableQuizStep;
+        selections: string[];
+        onToggle: (optionId: string, multi: boolean, required: number) => void;
+        advanceStep: (nextStepId: string) => void;
+    }
+    const QuizOptionsPreview: React.FC<QuizOptionsPreviewProps> = ({ blockId, options, properties, selectedStep, selections, onToggle, advanceStep }) => {
+        const multi = properties?.multiSelect ?? false;
+        const required = properties?.requiredSelections || (multi ? 1 : 1); // requiredSelections explícito; fallback 1
+        const max = properties?.maxSelections || required;
+        const showImages = properties?.showImages !== false;
+        const autoAdvance = !!properties?.autoAdvance || !!(selectedStep && ['question', 'strategic-question'].includes(selectedStep.type));
+        const hasImages = showImages && options.some(o => !!o.image);
+        // Layout automático: se auto e tem imagens usar 3col, se >4 opções sem imagem usar 2col, senão 1col
+        const layout = properties?.layout || 'auto';
+        let gridClass = 'quiz-options-1col';
+        if (layout === 'grid-2') gridClass = 'quiz-options-2col';
+        else if (layout === 'grid-3') gridClass = 'quiz-options-3col';
+        else if (layout === 'auto') {
+            if (hasImages) gridClass = 'quiz-options-3col';
+            else if (options.length >= 4) gridClass = 'quiz-options-2col';
+        }
+        // Efeito de auto-avance
+        useEffect(() => {
+            if (autoAdvance && selections.length === required && required > 0 && selectedStep?.nextStep) {
+                const t = setTimeout(() => advanceStep(selectedStep.nextStep!), 800);
+                return () => clearTimeout(t);
+            }
+        }, [autoAdvance, selections.length, required, selectedStep, advanceStep]);
+        return (
+            <div className="space-y-2">
+                <div className={cn('quiz-options', gridClass)}>
+                    {options.map(opt => {
+                        const active = selections.includes(opt.id);
+                        return (
+                            <div
+                                key={opt.id}
+                                role="button"
+                                tabIndex={0}
+                                onClick={(e) => { e.preventDefault(); onToggle(opt.id, multi, max); }}
+                                onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onToggle(opt.id, multi, max); } }}
+                                className={cn('quiz-option transition-all', active && 'quiz-option-selected', !active && 'cursor-pointer')}
+                            >
+                                {showImages && opt.image && (
+                                    <img src={opt.image} alt={opt.text || 'Opção'} className="w-full mb-2 rounded" />
+                                )}
+                                <p className="quiz-option-text text-xs font-medium leading-snug">{opt.text || 'Opção'}</p>
+                            </div>
+                        );
+                    })}
+                </div>
+                <div className="text-[10px] text-muted-foreground">
+                    {multi ? `${selections.length}/${required} selecionadas` : (selections.length === 1 ? '1 selecionada' : 'Selecione 1')}
+                </div>
+            </div>
+        );
+    };
 
     // Salvar
     const handleSave = useCallback(async () => {
