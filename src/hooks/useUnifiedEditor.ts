@@ -169,7 +169,12 @@ export const useEditor = (): UnifiedEditorContext => {
 
     if (!context) {
         // Fornece um contexto de erro detalhado para debugging
-        const errorDetails = {
+        const errorDetails: {
+            timestamp: string;
+            location: string;
+            availableProviders: string[];
+            suggestions: string[];
+        } = {
             timestamp: new Date().toISOString(),
             location: typeof window !== 'undefined' ? window.location?.href : 'server',
             availableProviders: [],
@@ -261,7 +266,6 @@ export const useEditorViewport = () => {
 // TYPE EXPORTS
 // ============================================================================
 
-export type { UnifiedEditorContext, EditorContextValue };
 
 // Default export for convenience
 export default useEditor;
