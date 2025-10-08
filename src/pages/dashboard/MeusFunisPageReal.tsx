@@ -77,6 +77,7 @@ const MeusFunisPageReal: React.FC = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [selectedStatus, setSelectedStatus] = useState('todos');
     const [sortBy, setSortBy] = useState('updated');
+    const [latestPublished, setLatestPublished] = useState<{ version: number; published_at: string } | null>(null);
     const { toast } = useToast();
 
     // ========================================================================
@@ -86,6 +87,22 @@ const MeusFunisPageReal: React.FC = () => {
     const loadFunis = async () => {
         try {
             setIsLoading(true);
+
+            // buscar versão publicada
+            const { data: prodData } = await (supabase as any)
+                .from('quiz_production')
+                .select('version,published_at')
+                .eq('slug', 'quiz-estilo')
+                .order('published_at', { ascending: false })
+                .limit(1)
+                .maybeSingle?.() ?? await (supabase as any)
+                    .from('quiz_production')
+                    .select('version,published_at')
+                    .eq('slug', 'quiz-estilo')
+                    .order('published_at', { ascending: false })
+                    .limit(1)
+                    .single();
+            if (prodData) setLatestPublished({ version: prodData.version, published_at: prodData.published_at });
 
             // Buscar todos os funis publicados/salvos
             const { data: funnelsData, error: funnelsError } = await supabase
@@ -445,6 +462,17 @@ const MeusFunisPageReal: React.FC = () => {
                 </div>
             </div>
 
+            {/* Última Versão Publicada */}
+            {latestPublished && (
+                <div className="mb-6 p-4 border border-indigo-200 rounded-lg bg-indigo-50 flex items-center justify-between">
+                    <div>
+                        <p className="text-sm text-indigo-700 font-medium">Última versão publicada do Quiz Estilo</p>
+                        <p className="text-xs text-indigo-600 mt-1">Versão v{latestPublished.version} • {new Date(latestPublished.published_at).toLocaleString('pt-BR')}</p>
+                    </div>
+                    <Button variant="outline" size="sm" onClick={() => window.open('/quiz/quiz-estilo', '_blank')}>Ver Produção</Button>
+                </div>
+            )}
+
             {/* Filtros e Ordenação */}
             <div className="mb-6 flex flex-wrap gap-4">
                 <select
@@ -480,7 +508,7 @@ const MeusFunisPageReal: React.FC = () => {
             {/* Funis Grid */}
             <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
                 {sortedFunis.map(funil => (
-                    <Card key={funil.id} className="hover:shadow-lg transition-shadow">
+                    <Card key={funil.id} className="hover:shadow-lg transition-shadow" id={`funnel-card-${funil.id}`}>
                         <CardHeader className="pb-3">
                             <div className="flex justify-between items-start">
                                 <div className="flex-1">
@@ -595,9 +623,18 @@ const MeusFunisPageReal: React.FC = () => {
                                             size="sm"
                                             className="flex-1"
                                             onClick={() => {
+                                                if (!confirm('Publicar este rascunho substituirá a versão em produção. Continuar?')) return;
                                                 import('@/services/QuizEditorBridge').then(m => m.quizEditorBridge.publishToProduction(funil.id)
                                                     .then(() => {
                                                         toast({ title: 'Publicado!', description: 'Versão enviada para produção.' });
+                                                        // adicionar highlight temporário
+                                                        const el = document.getElementById(`funnel-card-${funil.id}`);
+                                                        if (el) {
+                                                            el.classList.add('ring-2', 'ring-indigo-500', 'ring-offset-2');
+                                                            setTimeout(() => {
+                                                                el.classList.remove('ring-2', 'ring-indigo-500', 'ring-offset-2');
+                                                            }, 2500);
+                                                        }
                                                         loadFunis();
                                                     })
                                                     .catch(err => toast({ title: 'Erro na publicação', description: err.message, variant: 'destructive' }))
