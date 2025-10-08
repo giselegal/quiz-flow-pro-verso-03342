@@ -117,6 +117,28 @@ describe('TemplateManager publish/unpublish flow', () => {
     expect(loaded[0].properties?.content).toBe('Published content');
   });
 
+  it('reloadTemplate mantém prioridade dos published blocks após invalidar cache', async () => {
+    const published: Block[] = [
+      {
+        id: 'pb-reload-1',
+        type: 'text-inline',
+        order: 0,
+        properties: { content: 'Published Reload' },
+        content: { content: 'Published Reload' },
+      },
+    ];
+
+    TemplateManager.publishStep(stepId, published);
+
+    const firstLoad = await TemplateManager.loadStepBlocks(stepId);
+    expect(firstLoad[0].id).toBe('pb-reload-1');
+
+    const reloaded = await TemplateManager.reloadTemplate(stepId);
+    expect(reloaded).toHaveLength(1);
+    expect(reloaded[0].id).toBe('pb-reload-1');
+    expect(reloaded[0].properties?.content).toBe('Published Reload');
+  });
+
   it('unpublish should remove override and event should fire; subsequent load uses template service', async () => {
     const published: Block[] = [
       { id: 'pb2', type: 'text-inline', order: 0, properties: { content: 'X' }, content: {} },

@@ -4,7 +4,7 @@
 
 import { templateService } from './service';
 import { templateRepo } from './repo';
-import { genId } from './models';
+import { genId, TemplateDraft } from './models';
 
 function enrichBasicQuiz(templateId: string) {
     // Acessa aggregate completo direto pelo repo para injetar componentes (ainda não há service layer para componentes)
@@ -106,15 +106,30 @@ function createBranchedQuiz() {
     return agg.draft.id;
 }
 
+function ensureQuizEstiloTemplate(existingDrafts: TemplateDraft[]) {
+    const slug = 'quiz-estilo';
+    const existing = existingDrafts.find(d => d.meta.slug === slug);
+    if (existing) {
+        return { id: existing.id, created: false } as const;
+    }
+
+    const basic = templateService.createBase('Quiz Estilo Básico', slug);
+    enrichBasicQuiz(basic.draft.id);
+    return { id: basic.draft.id, created: true } as const;
+}
+
 export function seedTemplates() {
     if (process.env.SEED_TEMPLATES === 'false') {
         return;
     }
-    const already = templateService.listDrafts();
-    if (already.length > 0) return; // não sobrescreve
 
-    const basic = templateService.createBase('Quiz Estilo Básico', 'quiz-estilo-basico');
-    enrichBasicQuiz(basic.draft.id);
-    createBranchedQuiz();
-    console.log('[seed] Templates iniciais criados.');
+    const existingDrafts = templateService.listDrafts();
+    const { created: quizCreated } = ensureQuizEstiloTemplate(existingDrafts);
+
+    if (existingDrafts.length === 0) {
+        createBranchedQuiz();
+        console.log('[seed] Templates iniciais criados.');
+    } else if (quizCreated) {
+        console.log('[seed] Template "quiz-estilo" criado em repositório previamente populado.');
+    }
 }

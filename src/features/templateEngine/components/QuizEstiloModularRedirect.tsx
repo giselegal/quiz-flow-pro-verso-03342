@@ -6,31 +6,32 @@ import { useTemplatesList, useCreateTemplate } from '../api/hooks';
  * Uso: rota /editor/quiz-estilo-modular
  */
 export const QuizEstiloModularRedirect: React.FC = () => {
+    const TARGET_SLUG = 'quiz-estilo';
     const { data, isLoading, error } = useTemplatesList();
     const createMut = useCreateTemplate();
 
     useEffect(() => {
         if (isLoading || createMut.isPending) return;
         if (error) return; // deixamos UI mostrar
-        const existing = (data || []).find(t => t.slug === 'quiz-estilo');
+        const existing = (data || []).find(t => t.slug === TARGET_SLUG);
         if (existing) {
             // Redireciona para rota direta que já abre o layout 4 colunas
             window.location.replace(`/template-engine/${existing.id}`);
             return;
         }
         // Criar template base
-        createMut.mutate({ name: 'Quiz Estilo', slug: 'quiz-estilo' }, {
+        createMut.mutate({ name: 'Quiz Estilo', slug: TARGET_SLUG }, {
             onSuccess: (res: any) => {
                 window.location.replace(`/template-engine/${res.id}`);
             }
         });
-    }, [isLoading, data, error, createMut.isPending]);
+    }, [TARGET_SLUG, isLoading, data, error, createMut.isPending]);
 
     return (
         <div className="max-w-md mx-auto p-8 text-sm space-y-4">
-            <h1 className="text-lg font-semibold">Carregando Editor Modular (quiz-estilo)</h1>
+            <h1 className="text-lg font-semibold">Carregando Editor Modular ({TARGET_SLUG})</h1>
             {isLoading && <p>Buscando templates existentes...</p>}
-            {createMut.isPending && <p>Criando template base 'quiz-estilo'...</p>}
+            {createMut.isPending && <p>Criando template base '{TARGET_SLUG}'...</p>}
             {error && (
                 <div className="text-red-600 text-xs">
                     Falha ao buscar lista de templates.<br />
