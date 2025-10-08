@@ -84,11 +84,23 @@ function createBranchedQuiz() {
         }
     });
     // Branching: se score >= 25 pula para result; caso contrário segue fluxo linear (que já chega no result de qualquer forma)
+    // Branching: condição simples baseada em score >= 25.
+    // Ajustado para formato suportado por ConditionTreeNode (ex: comparação via nó genérico com campo e operador)
     templateService.setBranching(agg.draft.id, [
         {
             fromStageId: 'stage_q1',
             toStageId: 'stage_result',
-            conditionTree: { op: 'AND', conditions: [{ scoreGte: 25 }] }
+            conditionTree: {
+                op: 'AND',
+                conditions: [
+                    {
+                        op: 'COMPARISON',
+                        field: 'score',
+                        operator: 'GTE',
+                        value: 25
+                    } as any // TODO: alinhar quando tipos de ConditionTreeNode forem expostos para comparação de score
+                ]
+            } as any
         }
     ]);
     return agg.draft.id;
