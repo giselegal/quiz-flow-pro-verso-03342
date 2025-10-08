@@ -113,7 +113,7 @@ export const UnifiedAdminLayout: React.FC<UnifiedAdminLayoutProps> = ({
 
         switch (activeView) {
             case 'funnels':
-                breadcrumbs.push({ label: 'Funis', path: '/admin/funnels', active: true });
+                breadcrumbs.push({ label: 'Meus Funis', path: '/admin/funnels', active: true });
                 break;
             case 'analytics':
                 breadcrumbs.push({ label: 'Analytics', path: '/admin/analytics', active: true });
@@ -298,7 +298,7 @@ export const UnifiedAdminLayout: React.FC<UnifiedAdminLayoutProps> = ({
                                         }}
                                     >
                                         <Target className="w-4 h-4" />
-                                        <span className="font-medium">Funis</span>
+                                        <span className="font-medium">Meus Funis</span>
                                     </TabsTrigger>
                                     <TabsTrigger
                                         value="analytics"
