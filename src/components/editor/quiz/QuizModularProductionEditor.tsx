@@ -894,7 +894,15 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
     // Reordenar / mover blocos (nested)
     const handleDragEnd = (event: any) => {
         const { active, over } = event;
-        if (!over || active.id === over.id || !selectedStepId) { setActiveId(null); return; }
+        if (!selectedStepId) { setActiveId(null); return; }
+        if (!over) {
+            // Caso raro: soltar fora de alvo conhecido -> apenas reset
+            setActiveId(null);
+            return;
+        }
+        // Drop no final explícito
+        const droppedAtEnd = over.id === 'canvas-end';
+        if (active.id === over.id && !droppedAtEnd) { setActiveId(null); return; }
         // Inserção de novo bloco vindo da biblioteca (id inicia com lib:tipo)
         if (String(active.id).startsWith('lib:')) {
             const componentType = String(active.id).slice(4);
@@ -920,19 +928,22 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                         newBlock.content = { ...component.defaultContent, ...newBlock.content };
                     }
                     // Determinar posição de inserção (antes do bloco alvo 'over') se existir, senão append
-                    const overIndex = blocks.findIndex(b => b.id === over.id);
                     const rootBlocks = blocks.filter(b => !b.parentId).sort((a, b) => a.order - b.order);
-                    let insertOrder: number;
-                    if (overIndex !== -1) {
-                        const overBlock = blocks[overIndex];
-                        // Insere antes do bloco alvo no mesmo nível root
-                        const beforeOrder = overBlock.parentId ? rootBlocks.length : overBlock.order; // se alvo não for root, apenas append
-                        insertOrder = beforeOrder;
-                    } else {
-                        insertOrder = rootBlocks.length;
+                    let insertOrder = rootBlocks.length; // default append
+                    if (!droppedAtEnd) {
+                        const overIndex = blocks.findIndex(b => b.id === over.id);
+                        if (overIndex !== -1) {
+                            const overBlock = blocks[overIndex];
+                            if (!overBlock.parentId) {
+                                insertOrder = overBlock.order; // inserir antes
+                                // shift orders >= insertOrder
+                                rootBlocks.filter(b => b.order >= insertOrder).forEach(b => { b.order += 1; });
+                            }
+                        }
                     }
-                    // Ajustar orders existentes >= insertOrder
-                    rootBlocks.filter(b => b.order >= insertOrder).forEach(b => { b.order += 1; });
+                    if (droppedAtEnd) {
+                        insertOrder = rootBlocks.length; // garante fim
+                    }
                     newBlock.order = insertOrder;
                     blocks.push(newBlock);
                     return { ...step, blocks: blocks.map(b => ({ ...b })) };
@@ -1656,6 +1667,20 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                 onDragStart={(event) => setActiveId(event.active.id as string)}
                 onDragEnd={handleDragEnd}
             >
+                <DragOverlay>
+                    {activeId ? (
+                        String(activeId).startsWith('lib:') ? (
+                            <div className="px-3 py-2 text-xs rounded-md border bg-white shadow-sm flex items-center gap-2">
+                                <span className="w-2 h-2 rounded-full bg-blue-500" />
+                                {(COMPONENT_LIBRARY.find(c => c.type === String(activeId).slice(4))?.label) || 'Novo componente'}
+                            </div>
+                        ) : (
+                            <div className="px-3 py-2 text-xs rounded-md border bg-white shadow-sm opacity-80">
+                                Bloco
+                            </div>
+                        )
+                    ) : null}
+                </DragOverlay>
                 <div className="flex flex-col h-screen bg-gray-50">
                     {/* Header */}
                     <div className="flex items-center justify-between px-6 py-3 bg-white border-b">
@@ -1884,8 +1909,8 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                                                             return (
                                                                 <div ref={scrollContainerRef} className="space-y-2 max-h-[calc(100vh-240px)] overflow-auto pr-1 border rounded-md bg-white/40">
                                                                     <SortableContext
-                                                                        // Apenas blocos raiz para ordenação vertical principal
-                                                                        items={rootBlocks.map(b => b.id)}
+                                                                        // Blocos raiz + sentinela final para permitir soltar ao fim
+                                                                        items={[...rootBlocks.map(b => b.id), 'canvas-end']}
                                                                         strategy={verticalListSortingStrategy}
                                                                     >
                                                                         <TooltipProvider>
@@ -1909,6 +1934,13 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                                                                                     />
                                                                                 ))}
                                                                                 {vw.enabled && vw.bottomSpacer > 0 && <div style={{ height: vw.bottomSpacer }} />}
+                                                                                {/* Sentinela final visível como alvo de drop */}
+                                                                                <div
+                                                                                    id="canvas-end"
+                                                                                    className="h-8 flex items-center justify-center text-[10px] text-slate-400 border border-dashed mx-2 my-2 rounded"
+                                                                                >
+                                                                                    Soltar aqui para final
+                                                                                </div>
                                                                                 {!vw.enabled && vw.visible.length === 0 && (
                                                                                     <div className="text-[11px] text-muted-foreground italic">(sem blocos raiz)</div>
                                                                                 )}
