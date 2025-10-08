@@ -1,9 +1,9 @@
 import { describe, it, expect } from 'vitest';
-import { autoFillNextSteps } from '@/utils/autoFillNextSteps';
+import { autoFillNextSteps, type StepLike } from '@/utils/autoFillNextSteps';
 
 describe('autoFillNextSteps', () => {
   it('não altera quando todos nextStep já definidos', () => {
-    const steps = [
+    const steps: StepLike[] = [
       { id: 'a', order: 1, nextStep: 'b' },
       { id: 'b', order: 2, nextStep: 'c' },
       { id: 'c', order: 3 }
@@ -14,7 +14,7 @@ describe('autoFillNextSteps', () => {
   });
 
   it('preenche lacunas sequenciais de nextStep', () => {
-    const steps = [
+    const steps: StepLike[] = [
       { id: 'a', order: 1 },
       { id: 'b', order: 2 },
       { id: 'c', order: 3 }
@@ -27,7 +27,7 @@ describe('autoFillNextSteps', () => {
   });
 
   it('mantém imutabilidade do array original', () => {
-    const steps = [
+    const steps: StepLike[] = [
       { id: 'a', order: 2 },
       { id: 'b', order: 1 }
     ];

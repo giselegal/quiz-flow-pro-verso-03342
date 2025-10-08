@@ -9,6 +9,9 @@
 
 import { QUIZ_STEPS, STEP_ORDER, type QuizStep } from '@/data/quizSteps';
 import { supabase } from '@/integrations/supabase/client';
+// @TEMP: Helper para forçar reconhecimento de tabelas recém adicionadas nos tipos gerados
+type AnySupabase = typeof supabase & { from: (table: string) => any };
+const supabaseAny = supabase as AnySupabase;
 
 // ✅ FASE 4: Conversões bidirecionais testadas (600+ linhas, 32 testes)
 import {
@@ -125,7 +128,7 @@ class QuizEditorBridge {
         };
 
         // Salvar no Supabase
-        const { error } = await supabase
+        const { error } = await supabaseAny
             .from(this.DRAFT_TABLE)
             .upsert(draftData);
 
@@ -177,7 +180,7 @@ class QuizEditorBridge {
             source_draft_id: funnelId
         };
 
-        const { error } = await supabase
+        const { error } = await supabaseAny
             .from(this.PRODUCTION_TABLE)
             .upsert(productionData);
 
@@ -210,7 +213,7 @@ class QuizEditorBridge {
      * 📂 Carregar draft do banco
      */
     private async loadDraftFromDatabase(draftId: string): Promise<QuizFunnelData | null> {
-        const { data, error } = await supabase
+        const { data, error } = await supabaseAny
             .from(this.DRAFT_TABLE)
             .select('*')
             .eq('id', draftId)
@@ -272,7 +275,7 @@ class QuizEditorBridge {
      */
     private async getLatestPublished(): Promise<Record<string, QuizStep> | null> {
         try {
-            const { data, error } = await supabase
+            const { data, error } = await supabaseAny
                 .from(this.PRODUCTION_TABLE)
                 .select('steps')
                 .eq('slug', this.PRODUCTION_SLUG)

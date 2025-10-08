@@ -6,6 +6,54 @@
 export interface Database {
   public: {
     Tables: {
+      // =============================================================
+      // Tabelas adicionadas para o QUIZ PRODUCTION EDITOR
+      // Mantidas enxutas: somente campos realmente usados no bridge
+      // =============================================================
+      quiz_drafts: {
+        Row: {
+          id: string;
+          name: string;
+          slug: string;
+          steps: any; // JSONB contendo array de steps editáveis
+          version: number | null;
+          is_published: boolean | null;
+          user_id: string | null;
+          created_at: string | null;
+          updated_at: string | null;
+        };
+        Insert: {
+          id: string;
+          name: string;
+          slug: string;
+          steps: any;
+          version?: number | null;
+          is_published?: boolean | null;
+          user_id?: string | null;
+          created_at?: string | null;
+          updated_at?: string | null;
+        };
+        Update: Partial<Database['public']['Tables']['quiz_drafts']['Insert']>;
+      };
+      quiz_production: {
+        Row: {
+          slug: string;
+          steps: any; // JSONB formato QUIZ_STEPS
+          version: number;
+          published_at: string | null;
+          source_draft_id: string | null;
+          metadata: any | null;
+        };
+        Insert: {
+          slug: string;
+          steps: any;
+          version: number;
+          published_at?: string | null;
+          source_draft_id?: string | null;
+          metadata?: any | null;
+        };
+        Update: Partial<Database['public']['Tables']['quiz_production']['Insert']>;
+      };
       profiles: {
         Row: Profile;
         Insert: Omit<Profile, 'id' | 'created_at' | 'updated_at'>;

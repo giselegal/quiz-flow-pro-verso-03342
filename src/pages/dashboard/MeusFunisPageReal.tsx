@@ -86,9 +86,15 @@ const MeusFunisPageReal: React.FC = () => {
         try {
             setIsLoading(true);
 
-            // Buscar todos os funis
+            // Buscar todos os funis publicados/salvos
             const { data: funnelsData, error: funnelsError } = await supabase
                 .from('funnels')
+                .select('*')
+                .order('updated_at', { ascending: false });
+
+            // Buscar drafts do novo editor (quiz_drafts) – podem não existir ainda
+            const { data: draftsData } = await (supabase as any)
+                .from('quiz_drafts')
                 .select('*')
                 .order('updated_at', { ascending: false });
 
@@ -119,10 +125,11 @@ const MeusFunisPageReal: React.FC = () => {
             }
 
             // Processar dados dos funis
+            // Map funis (tabela antiga)
             const processedFunis: RealFunnel[] = (funnelsData || []).map(funnel => {
                 const funnelSessions = sessionsData?.filter(s => s.funnel_id === funnel.id) || [];
                 const completedSessions = funnelSessions.filter(s => s.status === 'completed');
-                
+
                 const sessions = funnelSessions.length;
                 const completions = completedSessions.length;
                 const conversionRate = sessions > 0 ? (completions / sessions) * 100 : 0;
@@ -144,13 +151,31 @@ const MeusFunisPageReal: React.FC = () => {
                 };
             });
 
-            setFunis(processedFunis);
+            // Map drafts (quiz_drafts) para mesma interface (sem sessões ainda)
+            const draftFunis: RealFunnel[] = (draftsData || []).map((draft: any) => ({
+                id: draft.id,
+                name: draft.name || draft.slug || 'Rascunho sem nome',
+                description: `Rascunho (${draft.slug}) versão ${draft.version || 1}`,
+                is_published: draft.is_published || false,
+                created_at: draft.created_at,
+                updated_at: draft.updated_at,
+                user_id: draft.user_id,
+                settings: {},
+                sessions: 0,
+                completions: 0,
+                conversionRate: 0,
+                lastActivity: draft.updated_at,
+                status: 'draft'
+            }));
+
+            setFunis([...draftFunis, ...processedFunis]);
 
             // Calcular estatísticas gerais
-            const totalViews = processedFunis.reduce((sum, f) => sum + f.sessions, 0);
-            const totalConversions = processedFunis.reduce((sum, f) => sum + f.completions, 0);
-            const avgConversionRate = processedFunis.length > 0 
-                ? processedFunis.reduce((sum, f) => sum + f.conversionRate, 0) / processedFunis.length 
+            const merged = [...draftFunis, ...processedFunis];
+            const totalViews = merged.reduce((sum, f) => sum + f.sessions, 0);
+            const totalConversions = merged.reduce((sum, f) => sum + f.completions, 0);
+            const avgConversionRate = merged.length > 0
+                ? merged.reduce((sum, f) => sum + f.conversionRate, 0) / merged.length
                 : 0;
 
             setStats({
@@ -263,7 +288,7 @@ const MeusFunisPageReal: React.FC = () => {
 
             toast({
                 title: !currentStatus ? "Funil publicado!" : "Funil despublicado!",
-                description: !currentStatus 
+                description: !currentStatus
                     ? "O funil agora está ativo e pode receber participantes."
                     : "O funil foi pausado e não receberá novos participantes.",
             });
@@ -293,14 +318,14 @@ const MeusFunisPageReal: React.FC = () => {
             case 'name':
                 return a.name.localeCompare(b.name);
             case 'created':
-                return (b.created_at && a.created_at) ? 
+                return (b.created_at && a.created_at) ?
                     new Date(b.created_at).getTime() - new Date(a.created_at).getTime() : 0;
             case 'sessions':
                 return b.sessions - a.sessions;
             case 'conversion':
                 return b.conversionRate - a.conversionRate;
             default: // updated
-                return (b.updated_at && a.updated_at) ? 
+                return (b.updated_at && a.updated_at) ?
                     new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime() : 0;
         }
     });
@@ -478,7 +503,7 @@ const MeusFunisPageReal: React.FC = () => {
                                             <Copy className="w-4 h-4 mr-2" />
                                             Duplicar
                                         </DropdownMenuItem>
-                                        <DropdownMenuItem 
+                                        <DropdownMenuItem
                                             onClick={() => handleTogglePublish(funil.id, funil.is_published === true)}
                                         >
                                             {funil.is_published === true ? (
@@ -494,7 +519,7 @@ const MeusFunisPageReal: React.FC = () => {
                                             )}
                                         </DropdownMenuItem>
                                         <DropdownMenuSeparator />
-                                        <DropdownMenuItem 
+                                        <DropdownMenuItem
                                             onClick={() => handleDeleteFunil(funil.id)}
                                             className="text-red-600"
                                         >
@@ -507,8 +532,8 @@ const MeusFunisPageReal: React.FC = () => {
 
                             {/* Status Badge */}
                             <div className="mt-3 flex items-center justify-between">
-                                <Badge 
-                                    variant="secondary" 
+                                <Badge
+                                    variant="secondary"
                                     className={`${statusConfig[funil.status].bgColor} ${statusConfig[funil.status].textColor}`}
                                 >
                                     {statusConfig[funil.status].label}
@@ -518,7 +543,7 @@ const MeusFunisPageReal: React.FC = () => {
                                 </span>
                             </div>
                         </CardHeader>
-                        
+
                         <CardContent className="pt-0">
                             {/* Métricas */}
                             <div className="grid grid-cols-3 gap-3 text-center mb-4">
@@ -538,18 +563,18 @@ const MeusFunisPageReal: React.FC = () => {
 
                             {/* Actions */}
                             <div className="flex space-x-2">
-                                <Button 
-                                    variant="outline" 
-                                    size="sm" 
+                                <Button
+                                    variant="outline"
+                                    size="sm"
                                     className="flex-1"
                                     onClick={() => handleEditFunil(funil.id)}
                                 >
                                     <Edit className="w-4 h-4 mr-2" />
                                     Editar
                                 </Button>
-                                <Button 
-                                    variant="outline" 
-                                    size="sm" 
+                                <Button
+                                    variant="outline"
+                                    size="sm"
                                     className="flex-1"
                                     onClick={() => window.open(`/quiz/${funil.id}`, '_blank')}
                                 >
@@ -572,7 +597,7 @@ const MeusFunisPageReal: React.FC = () => {
                         {selectedStatus === 'todos' ? 'Nenhum funil encontrado' : `Nenhum funil ${selectedStatus} encontrado`}
                     </h3>
                     <p className="text-gray-600 mb-6">
-                        {selectedStatus === 'todos' 
+                        {selectedStatus === 'todos'
                             ? 'Comece criando seu primeiro funil de conversão.'
                             : 'Altere os filtros para ver outros funis.'
                         }
