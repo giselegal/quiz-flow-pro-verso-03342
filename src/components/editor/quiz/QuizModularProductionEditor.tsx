@@ -1794,9 +1794,9 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
 
                             {/* Logo da marca */}
                             <img
-                                src="https://res.cloudinary.com/dqljyf76t/image/upload/c_fit,w_192,h_192,f_png/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp"
+                                src="https://res.cloudinary.com/der8kogzu/image/upload/f_png,q_70,w_120,h_50,c_fit/v1752430327/LOGO_DA_MARCA_GISELE_l78gin.png"
                                 alt="Logo Gisele Galvão"
-                                style={{ height: 36, width: 36, objectFit: 'contain', borderRadius: 8 }}
+                                style={{ height: 36, width: 90, objectFit: 'contain', borderRadius: 8 }}
                             />
 
                             {/* Aviso discreto de validação (NextStep) */}
