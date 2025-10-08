@@ -1343,11 +1343,8 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                 <div className="absolute left-2 top-2 opacity-70 group-hover:opacity-100 transition-opacity">
                     <GripVertical className="w-4 h-4 text-gray-400" />
                 </div>
-                <div className="pl-6 pr-8 space-y-2">
-                    <div className="flex items-center gap-2 text-[10px] text-slate-500">
-                        <Badge variant="outline" className="text-[10px] px-1 py-0 font-normal">{block.type}</Badge>
-                        <span className="truncate max-w-[160px]">{block.content.text || block.content.label || block.type}</span>
-                    </div>
+                <div className="pl-6 pr-8">
+                    {/* Metadados (tipo/nome) ocultados para canvas limpo */}
                     <div className="text-left">
                         {renderBlockPreview(block, allBlocks)}
                     </div>
