@@ -408,34 +408,37 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
         }
     }, [selectedStepId, lastSelectionStepId]);
 
-    // Adicionar bloco ao step
+    // Refs para estados usados apenas para leitura em callbacks estáveis
+    const selectedStepRef = useRef<EditableQuizStep | undefined>(undefined);
+    useEffect(() => { selectedStepRef.current = selectedStep; }, [selectedStep]);
+    const toastRef = useRef(toast);
+    useEffect(() => { toastRef.current = toast; }, [toast]);
+
+    // Adicionar bloco ao step (callback estável)
     const addBlockToStep = useCallback((stepId: string, componentType: string) => {
         const component = COMPONENT_LIBRARY.find(c => c.type === componentType);
         if (!component) return;
-
+        const step = selectedStepRef.current;
         const newBlock: BlockComponent = {
             id: `block-${Date.now()}`,
             type: componentType,
-            order: selectedStep?.blocks.length || 0,
+            order: step?.blocks.length || 0,
             parentId: null,
             properties: { ...component.defaultProps },
             content: {}
         };
-
         setSteps(prev => {
-            const next = prev.map(step => step.id === stepId ? { ...step, blocks: [...step.blocks, newBlock] } : step);
+            const next = prev.map(s => s.id === stepId ? { ...s, blocks: [...s.blocks, newBlock] } : s);
             pushHistory(next);
             return next;
         });
-
         setSelectedBlockId(newBlock.id);
         setIsDirty(true);
-
-        toast({
+        toastRef.current({
             title: 'Componente adicionado',
             description: component.label,
         });
-    }, [selectedStep, toast]);
+    }, []);
 
     // Remover bloco
     const removeBlock = useCallback((stepId: string, blockId: string) => {
@@ -454,10 +457,11 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
 
     // Duplicar bloco
     const duplicateBlock = useCallback((stepId: string, block: BlockComponent) => {
+        const step = selectedStepRef.current;
         const clone: BlockComponent = {
             ...block,
             id: `${block.id}-dup-${Date.now()}`,
-            order: (selectedStep?.blocks.length || 0)
+            order: (step?.blocks.length || 0)
         };
         setSteps(prev => {
             const next = prev.map(s => s.id === stepId ? { ...s, blocks: [...s.blocks, clone] } : s);
@@ -466,16 +470,22 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
         });
         setSelectedBlockId(clone.id);
         setIsDirty(true);
-    }, [selectedStep]);
+    }, []);
 
+    const blockPendingDuplicateRef = useRef<BlockComponent | null>(null);
+    const targetStepIdRef = useRef<string>('');
+    useEffect(() => { blockPendingDuplicateRef.current = blockPendingDuplicate; }, [blockPendingDuplicate]);
+    useEffect(() => { targetStepIdRef.current = targetStepId; }, [targetStepId]);
     const duplicateBlockToAnotherStep = useCallback(() => {
-        if (!blockPendingDuplicate || !targetStepId) return;
+        const blockDup = blockPendingDuplicateRef.current;
+        const target = targetStepIdRef.current;
+        if (!blockDup || !target) return;
         setSteps(prev => {
             const next = prev.map(s => {
-                if (s.id === targetStepId) {
+                if (s.id === target) {
                     const clone: BlockComponent = {
-                        ...blockPendingDuplicate,
-                        id: `${blockPendingDuplicate.id}-xdup-${Date.now()}`,
+                        ...blockDup,
+                        id: `${blockDup.id}-xdup-${Date.now()}`,
                         order: s.blocks.length
                     };
                     return { ...s, blocks: [...s.blocks, clone] };
@@ -489,8 +499,8 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
         setDuplicateModalOpen(false);
         setBlockPendingDuplicate(null);
         setTargetStepId('');
-        toast({ title: 'Bloco duplicado', description: `Copiado para ${targetStepId}` });
-    }, [blockPendingDuplicate, targetStepId, toast]);
+        toastRef.current({ title: 'Bloco duplicado', description: `Copiado para ${target}` });
+    }, []);
 
     // Copiar bloco (ou múltiplos no futuro)
     const copyBlock = useCallback((block: BlockComponent) => {
@@ -499,8 +509,8 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
 
     const copyMultiple = useCallback((blocks: BlockComponent[]) => {
         setClipboard(blocks.map(b => JSON.parse(JSON.stringify(b))));
-        toast({ title: 'Copiado', description: `${blocks.length} bloco(s) copiado(s)` });
-    }, [toast]);
+        toastRef.current({ title: 'Copiado', description: `${blocks.length} bloco(s) copiado(s)` });
+    }, []);
     // Colar bloco(s)
     const pasteBlocks = useCallback((stepId: string) => {
         if (!clipboard || clipboard.length === 0) return;
@@ -714,7 +724,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
 
     const { scores: liveScores, topStyle } = useLiveScoring({ selections: quizSelections, scoringMap });
 
-    const toggleQuizOption = (blockId: string, optionId: string, multi = true, max = 1) => {
+    const toggleQuizOption = useCallback((blockId: string, optionId: string, multi = true, max = 1) => {
         setQuizSelections(prev => {
             const current = prev[blockId] || [];
             let next: string[];
@@ -731,7 +741,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
             }
             return { ...prev, [blockId]: next };
         });
-    };
+    }, []);
 
     // Agrupar filhos por parentId
     const getChildren = (blocks: BlockComponent[], parentId: string | null = null) =>
@@ -1107,13 +1117,13 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
     // Expansão Lazy de Containers
     // ========================================
     const [expandedContainers, setExpandedContainers] = useState<Set<string>>(new Set());
-    const toggleContainer = (id: string) => {
+    const toggleContainer = useCallback((id: string) => {
         setExpandedContainers(prev => {
             const next = new Set(prev);
             if (next.has(id)) next.delete(id); else next.add(id);
             return next;
         });
-    };
+    }, []);
 
     // Salvar
     const handleSave = useCallback(async () => {
