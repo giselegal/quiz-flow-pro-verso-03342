@@ -7,6 +7,9 @@
 
 ## ⚡ ACESSO RÁPIDO
 
+### ⚠️ IMPORTANTE: Correção Aplicada
+Um bug crítico no router foi **CORRIGIDO**. Todas as rotas agora funcionam perfeitamente!
+
 ### 1️⃣ Iniciar Servidor
 ```bash
 cd /workspaces/quiz-quest-challenge-verse
