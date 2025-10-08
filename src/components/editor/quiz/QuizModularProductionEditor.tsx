@@ -46,8 +46,10 @@ import {
     Type,
     List,
     MousePointer,
-    Layout
+    Layout,
+    ArrowRightCircle
 } from 'lucide-react';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from '@/components/ui/dialog';
 import { cn } from '@/lib/utils';
 import { quizEditorBridge } from '@/services/QuizEditorBridge';
 import QuizProductionPreview from './QuizProductionPreview';
@@ -210,6 +212,9 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
     const [activeId, setActiveId] = useState<string | null>(null);
     const [clipboard, setClipboard] = useState<BlockComponent[] | null>(null);
     const [lastSelectionStepId, setLastSelectionStepId] = useState<string>('');
+    const [duplicateModalOpen, setDuplicateModalOpen] = useState(false);
+    const [blockPendingDuplicate, setBlockPendingDuplicate] = useState<BlockComponent | null>(null);
+    const [targetStepId, setTargetStepId] = useState<string>('');
     const sensors = useSensors(
         useSensor(PointerSensor, {
             activationConstraint: {
@@ -421,6 +426,26 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
         setSelectedBlockId(clone.id);
         setIsDirty(true);
     }, [selectedStep]);
+
+    const duplicateBlockToAnotherStep = useCallback(() => {
+        if (!blockPendingDuplicate || !targetStepId) return;
+        setSteps(prev => prev.map(s => {
+            if (s.id === targetStepId) {
+                const clone: BlockComponent = {
+                    ...blockPendingDuplicate,
+                    id: `${blockPendingDuplicate.id}-xdup-${Date.now()}`,
+                    order: s.blocks.length
+                };
+                return { ...s, blocks: [...s.blocks, clone] };
+            }
+            return s;
+        }));
+        setIsDirty(true);
+        setDuplicateModalOpen(false);
+        setBlockPendingDuplicate(null);
+        setTargetStepId('');
+        toast({ title: 'Bloco duplicado', description: `Copiado para ${targetStepId}` });
+    }, [blockPendingDuplicate, targetStepId, toast]);
 
     // Copiar bloco (ou múltiplos no futuro)
     const copyBlock = useCallback((block: BlockComponent) => {
@@ -986,6 +1011,19 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                                                                             >
                                                                                 <Trash2 className="w-3 h-3 text-red-500" />
                                                                             </Button>
+                                                                            <Button
+                                                                                variant="ghost"
+                                                                                size="icon"
+                                                                                className="h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity"
+                                                                                onClick={(e) => {
+                                                                                    e.stopPropagation();
+                                                                                    setBlockPendingDuplicate(block);
+                                                                                    setTargetStepId(selectedStep.id);
+                                                                                    setDuplicateModalOpen(true);
+                                                                                }}
+                                                                            >
+                                                                                <ArrowRightCircle className="w-3 h-3 text-blue-500" />
+                                                                            </Button>
                                                                         </div>
                                                                     </div>
                                                                 ))}
@@ -1061,6 +1099,19 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                                             Duplicar
                                         </Button>
                                         <Button
+                                            variant="secondary"
+                                            size="sm"
+                                            className="w-full"
+                                            onClick={() => {
+                                                setBlockPendingDuplicate(selectedBlock);
+                                                setTargetStepId(selectedStep.id);
+                                                setDuplicateModalOpen(true);
+                                            }}
+                                        >
+                                            <ArrowRightCircle className="w-4 h-4 mr-2" />
+                                            Duplicar em…
+                                        </Button>
+                                        <Button
                                             variant="destructive"
                                             size="sm"
                                             className="w-full"
@@ -1093,6 +1144,38 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                     ) : null}
                 </DragOverlay>
             </div>
+            <Dialog open={duplicateModalOpen} onOpenChange={(o) => { if (!o) { setDuplicateModalOpen(false); setBlockPendingDuplicate(null); } }}>
+                <DialogContent className="max-w-sm">
+                    <DialogHeader>
+                        <DialogTitle>Duplicar bloco em outra etapa</DialogTitle>
+                        <DialogDescription>
+                            Selecione a etapa destino. O bloco será adicionado ao final da lista.
+                        </DialogDescription>
+                    </DialogHeader>
+                    <div className="space-y-4">
+                        <div>
+                            <p className="text-xs mb-1 text-muted-foreground">Bloco</p>
+                            <p className="text-sm font-medium">{blockPendingDuplicate?.type}</p>
+                        </div>
+                        <div>
+                            <label className="text-xs font-medium mb-1 block">Etapa destino</label>
+                            <select
+                                className="w-full border rounded-md p-2 text-sm"
+                                value={targetStepId}
+                                onChange={(e) => setTargetStepId(e.target.value)}
+                            >
+                                {steps.map(s => (
+                                    <option key={s.id} value={s.id}>{s.id} ({s.type})</option>
+                                ))}
+                            </select>
+                        </div>
+                    </div>
+                    <DialogFooter className="mt-4 flex gap-2 justify-end">
+                        <Button variant="ghost" size="sm" onClick={() => { setDuplicateModalOpen(false); setBlockPendingDuplicate(null); }}>Cancelar</Button>
+                        <Button size="sm" disabled={!targetStepId || !blockPendingDuplicate} onClick={duplicateBlockToAnotherStep}>Duplicar</Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
         </DndContext>
     );
 };
