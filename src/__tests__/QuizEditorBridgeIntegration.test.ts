@@ -219,74 +219,74 @@ describe('QuizEditorBridge Integration Tests - Fase 6.5', () => {
             expect(Array.isArray(result.errors)).toBe(true);
             expect(Array.isArray(result.warnings)).toBe(true);
         });
-        });
-
-        it('deve detectar erros com validações da Fase 5', () => {
-            // Criar funil com erro conhecido
-            const invalidFunnel = {
-                id: 'invalid',
-                name: 'Invalid',
-                slug: 'invalid',
-                steps: [
-                    {
-                        id: 'step-01',
-                        type: 'intro',
-                        order: 1
-                        // Faltam propriedades obrigatórias
-                    }
-                ],
-                isPublished: false,
-                version: 1
-            };
-
-            const result = quizEditorBridge.validateFunnel(invalidFunnel as any);
-
-            // Deve detectar erros
-            expect(result.valid).toBe(false);
-            expect(result.errors.length).toBeGreaterThan(0);
-        });
-
     });
 
-    // ============================================================================
-    // TEST GROUP 6: Verificação de Logs
-    // ============================================================================
+    it('deve detectar erros com validações da Fase 5', () => {
+        // Criar funil com erro conhecido
+        const invalidFunnel = {
+            id: 'invalid',
+            name: 'Invalid',
+            slug: 'invalid',
+            steps: [
+                {
+                    id: 'step-01',
+                    type: 'intro',
+                    order: 1
+                    // Faltam propriedades obrigatórias
+                }
+            ],
+            isPublished: false,
+            version: 1
+        };
 
-    describe('6. Logs de Integração', () => {
+        const result = quizEditorBridge.validateFunnel(invalidFunnel as any);
 
-        it('deve logar quando validação é executada', async () => {
-            const consoleSpy = vi.spyOn(console, 'log');
-
-            const funnel = {
-                id: 'test-log',
-                name: 'Test Log',
-                slug: 'test-log',
-                steps: Object.entries(QUIZ_STEPS).map(([id, step], index) => ({
-                    ...step,
-                    id,
-                    order: index + 1
-                })),
-                isPublished: false,
-                version: 1
-            };
-
-            try {
-                await quizEditorBridge.saveDraft(funnel as any);
-            } catch {
-                // Ignorar erros de Supabase
-            }
-
-            // Verificar se logou algo relacionado a validação ou salvamento
-            expect(consoleSpy).toHaveBeenCalled();
-            const logs = consoleSpy.mock.calls.map(call => call.join(' '));
-            const hasValidationLog = logs.some(log => 
-                log.includes('Validando') || log.includes('validação') || log.includes('Salvando')
-            );
-            expect(hasValidationLog).toBe(true);
-
-            consoleSpy.mockRestore();
-        });
-
+        // Deve detectar erros
+        expect(result.valid).toBe(false);
+        expect(result.errors.length).toBeGreaterThan(0);
     });
+
+});
+
+// ============================================================================
+// TEST GROUP 6: Verificação de Logs
+// ============================================================================
+
+describe('6. Logs de Integração', () => {
+
+    it('deve logar quando validação é executada', async () => {
+        const consoleSpy = vi.spyOn(console, 'log');
+
+        const funnel = {
+            id: 'test-log',
+            name: 'Test Log',
+            slug: 'test-log',
+            steps: Object.entries(QUIZ_STEPS).map(([id, step], index) => ({
+                ...step,
+                id,
+                order: index + 1
+            })),
+            isPublished: false,
+            version: 1
+        };
+
+        try {
+            await quizEditorBridge.saveDraft(funnel as any);
+        } catch {
+            // Ignorar erros de Supabase
+        }
+
+        // Verificar se logou algo relacionado a validação ou salvamento
+        expect(consoleSpy).toHaveBeenCalled();
+        const logs = consoleSpy.mock.calls.map(call => call.join(' '));
+        const hasValidationLog = logs.some(log =>
+            log.includes('Validando') || log.includes('validação') || log.includes('Salvando')
+        );
+        expect(hasValidationLog).toBe(true);
+
+        consoleSpy.mockRestore();
+    });
+
+});
 
 });
