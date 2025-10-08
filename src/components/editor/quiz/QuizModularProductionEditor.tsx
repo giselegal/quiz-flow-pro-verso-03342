@@ -449,6 +449,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
 
     // Drag & Drop
     const [activeId, setActiveId] = useState<string | null>(null);
+    const [hoverContainerId, setHoverContainerId] = useState<string | null>(null);
     const [clipboard, setClipboard] = useState<BlockComponent[] | null>(null);
     const [lastSelectionStepId, setLastSelectionStepId] = useState<string>('');
     const [duplicateModalOpen, setDuplicateModalOpen] = useState(false);
@@ -898,11 +899,13 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
         if (!over) {
             // Caso raro: soltar fora de alvo conhecido -> apenas reset
             setActiveId(null);
+            setHoverContainerId(null);
             return;
         }
         // Drop no final explícito
         const droppedAtEnd = over.id === 'canvas-end';
-        if (active.id === over.id && !droppedAtEnd) { setActiveId(null); return; }
+        if (active.id === over.id && !droppedAtEnd) { setActiveId(null); setHoverContainerId(null); return; }
+        const targetContainerId = !droppedAtEnd && String(over.id).startsWith('container-slot:') ? String(over.id).slice('container-slot:'.length) : null;
         // Inserção de novo bloco vindo da biblioteca (id inicia com lib:tipo)
         if (String(active.id).startsWith('lib:')) {
             const componentType = String(active.id).slice(4);
@@ -916,7 +919,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                         id: `block-${Date.now()}`,
                         type: component.blockType || component.type,
                         order: 0,
-                        parentId: null,
+                        parentId: targetContainerId || null,
                         properties: { ...component.defaultProps },
                         content: {}
                     };
@@ -928,23 +931,28 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                         newBlock.content = { ...component.defaultContent, ...newBlock.content };
                     }
                     // Determinar posição de inserção (antes do bloco alvo 'over') se existir, senão append
-                    const rootBlocks = blocks.filter(b => !b.parentId).sort((a, b) => a.order - b.order);
-                    let insertOrder = rootBlocks.length; // default append
-                    if (!droppedAtEnd) {
-                        const overIndex = blocks.findIndex(b => b.id === over.id);
-                        if (overIndex !== -1) {
-                            const overBlock = blocks[overIndex];
-                            if (!overBlock.parentId) {
-                                insertOrder = overBlock.order; // inserir antes
-                                // shift orders >= insertOrder
-                                rootBlocks.filter(b => b.order >= insertOrder).forEach(b => { b.order += 1; });
+                    if (targetContainerId) {
+                        // inserir como último filho
+                        const siblings = blocks.filter(b => b.parentId === targetContainerId).sort((a, b) => a.order - b.order);
+                        newBlock.order = siblings.length;
+                    } else {
+                        const rootBlocks = blocks.filter(b => !b.parentId).sort((a, b) => a.order - b.order);
+                        let insertOrder = rootBlocks.length; // default append
+                        if (!droppedAtEnd && !targetContainerId) {
+                            const overIndex = blocks.findIndex(b => b.id === over.id);
+                            if (overIndex !== -1) {
+                                const overBlock = blocks[overIndex];
+                                if (!overBlock.parentId) {
+                                    insertOrder = overBlock.order; // inserir antes
+                                    rootBlocks.filter(b => b.order >= insertOrder).forEach(b => { b.order += 1; });
+                                }
                             }
                         }
+                        if (droppedAtEnd) {
+                            insertOrder = rootBlocks.length;
+                        }
+                        newBlock.order = insertOrder;
                     }
-                    if (droppedAtEnd) {
-                        insertOrder = rootBlocks.length; // garante fim
-                    }
-                    newBlock.order = insertOrder;
                     blocks.push(newBlock);
                     return { ...step, blocks: blocks.map(b => ({ ...b })) };
                 });
@@ -953,6 +961,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                 return next;
             });
             setActiveId(null);
+            setHoverContainerId(null);
             return;
         }
         setSteps(prev => {
@@ -962,6 +971,21 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                 const blocks = [...step.blocks];
                 const activeBlock = blocks.find(b => b.id === active.id);
                 const overBlock = blocks.find(b => b.id === over.id);
+                // Se soltou em slot de container
+                if (targetContainerId && activeBlock) {
+                    const fromParent = activeBlock.parentId || null;
+                    const toParent = targetContainerId;
+                    if (fromParent !== toParent) {
+                        // Reindexa antigos irmãos de origem
+                        const oldSibs = blocks.filter(b => (b.parentId || null) === fromParent && b.id !== activeBlock.id).sort((a, b) => a.order - b.order);
+                        oldSibs.forEach((b, i) => { b.order = i; });
+                        const newSibs = blocks.filter(b => b.parentId === toParent).sort((a, b) => a.order - b.order);
+                        activeBlock.parentId = toParent;
+                        activeBlock.order = newSibs.length;
+                        changed = true;
+                    }
+                    return { ...step, blocks: blocks.map(b => ({ ...b })) };
+                }
                 if (!activeBlock || !overBlock) return step;
 
                 const isDescendant = (parentId: string, potentialChildId: string): boolean => {
@@ -1005,6 +1029,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
             });
             if (changed) { pushHistory(next); setIsDirty(true); }
             setActiveId(null);
+            setHoverContainerId(null);
             return next;
         });
     };
@@ -1376,6 +1401,8 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
             transform: transform ? CSS.Transform.toString(transform) : undefined,
             transition,
         };
+        const isContainer = block.type === 'container';
+        const isHoverTarget = hoverContainerId === block.id;
         return (
             <div
                 key={block.id}
@@ -1385,7 +1412,9 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                     // Mantém indicador visual mínimo em caso de erro sem violar regra de borda somente ao selecionar
                     hasErrors && !(selectedBlockId === block.id || isMultiSelected(block.id)) && 'shadow-[0_0_0_1px_#dc2626]',
                     isMultiSelected(block.id) && 'bg-blue-50',
-                    isDragging && 'opacity-50'
+                    isDragging && 'opacity-50',
+                    isContainer && 'pb-8',
+                    isContainer && isHoverTarget && 'outline outline-2 outline-blue-400'
                 )}
                 onClick={(e) => handleBlockClick(e, block)}
                 ref={setNodeRef}
@@ -1419,6 +1448,51 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                     <div className="text-left">
                         {renderBlockPreview(block, allBlocks)}
                     </div>
+                    {isContainer && (
+                        <div className="mt-3 relative">
+                            <div className="text-[10px] text-slate-400 italic mb-1 flex items-center gap-2">
+                                <span>Conteúdo</span>
+                                <span className="text-[9px] text-slate-400">{allBlocks.filter(b => b.parentId === block.id).length}</span>
+                            </div>
+                            <SortableContext
+                                items={[...allBlocks.filter(b => b.parentId === block.id).sort((a,b)=>a.order-b.order).map(c => c.id), `container-slot:${block.id}`]}
+                                strategy={verticalListSortingStrategy}
+                            >
+                                <div
+                                    className={cn(
+                                        'min-h-[32px] rounded-md border border-dashed flex flex-col gap-2 p-2 bg-white/40 transition-colors',
+                                        isHoverTarget && 'border-blue-400 bg-blue-50/40'
+                                    )}
+                                    onDragOver={() => setHoverContainerId(block.id)}
+                                    onDragLeave={(e) => {
+                                        if (!e.currentTarget.contains(e.relatedTarget as Node)) setHoverContainerId(prev => prev === block.id ? null : prev);
+                                    }}
+                                >
+                                    {allBlocks.filter(b => b.parentId === block.id).length === 0 && (
+                                        <div className="text-[10px] text-slate-400 italic">Solte aqui para aninhar</div>
+                                    )}
+                                    {allBlocks.filter(b => b.parentId === block.id).sort((a,b)=>a.order-b.order).map(child => (
+                                        <BlockRow
+                                            key={child.id}
+                                            block={child}
+                                            byBlock={byBlock}
+                                            selectedBlockId={selectedBlockId}
+                                            isMultiSelected={isMultiSelected}
+                                            handleBlockClick={handleBlockClick}
+                                            renderBlockPreview={renderBlockPreview}
+                                            allBlocks={allBlocks}
+                                            removeBlock={removeBlock}
+                                            stepId={stepId}
+                                            setBlockPendingDuplicate={setBlockPendingDuplicate}
+                                            setTargetStepId={setTargetStepId}
+                                            setDuplicateModalOpen={setDuplicateModalOpen}
+                                        />
+                                    ))}
+                                    <div id={`container-slot:${block.id}`} className="h-2 w-full" />
+                                </div>
+                            </SortableContext>
+                        </div>
+                    )}
                 </div>
                 <div className="absolute right-1 top-1 flex flex-col gap-1">
                     <Button
