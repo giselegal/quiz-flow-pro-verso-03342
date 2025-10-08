@@ -115,8 +115,15 @@ class QuizEditorBridge {
 
         if (!validation.isValid) {
             // Agrupar erros de nextStep para mensagem mais clara
+            // Determinar última etapa dinamicamente (maior order; fallback pelo maior índice numérico em id)
+            const lastStep = workingSteps.reduce((acc, s) => {
+                if (!acc) return s;
+                if ((s.order ?? 0) > (acc.order ?? 0)) return s;
+                return acc;
+            }, workingSteps[0]);
+            const lastId = lastStep?.id;
             const missingNextStepIds = workingSteps
-                .filter(s => s.id !== 'step-21' && (!s.nextStep || s.nextStep === undefined || s.nextStep === null))
+                .filter(s => s.id !== lastId && (s.nextStep === undefined || s.nextStep === null))
                 .map(s => s.id);
             const baseMsg = validation.errors.map(e => e.message).join('; ');
             const errorMsg = missingNextStepIds.length
