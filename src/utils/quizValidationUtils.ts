@@ -430,12 +430,12 @@ export function validateCompleteFunnel(steps: Record<string, QuizStep>): Validat
         allWarnings.push(...styleValidation.warnings);
 
         // Validação 2: nextStep
-    const nextStepValidation = validateNextStep(stepWithId, stepIds);
+        const nextStepValidation = validateNextStep(stepWithId, stepIds);
         allErrors.push(...nextStepValidation.errors);
         allWarnings.push(...nextStepValidation.warnings);
 
         // Validação 3: OfferMap
-    const offerMapValidation = validateOfferMap(stepWithId, stepIds);
+        const offerMapValidation = validateOfferMap(stepWithId, stepIds);
         allErrors.push(...offerMapValidation.errors);
         allWarnings.push(...offerMapValidation.warnings);
 
