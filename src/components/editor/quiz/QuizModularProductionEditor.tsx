@@ -1585,7 +1585,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                     {/* Layout 4 colunas */}
                     <div className="flex-1 flex overflow-hidden">
                         {/* COLUNA 1: ETAPAS */}
-                        <div className="w-64 bg-white border-r flex flex-col">
+                        <div className="w-72 bg-white border-r flex flex-col overflow-y-auto">
                             <div className="px-4 py-3 border-b">
                                 <h2 className="font-semibold text-sm">Etapas</h2>
                                 <p className="text-xs text-muted-foreground">{steps.length} etapas</p>
@@ -1641,7 +1641,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                         </div>
 
                         {/* COLUNA 2: BIBLIOTECA DE COMPONENTES */}
-                        <div className="w-64 bg-white border-r flex flex-col">
+                        <div className="w-72 bg-white border-r flex flex-col overflow-y-auto">
                             <div className="px-4 py-3 border-b">
                                 <h2 className="font-semibold text-sm">Componentes</h2>
                                 <p className="text-xs text-muted-foreground">Arraste para o canvas</p>
@@ -1682,7 +1682,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                         </div>
 
                         {/* COLUNA 3: CANVAS */}
-                        <div className="flex-1 bg-gray-100 flex flex-col">
+                        <div className="flex-1 bg-gray-100 flex flex-col overflow-y-auto">
                             <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as any)} className="flex-1 flex flex-col">
                                 <div className="px-4 py-2 bg-white border-b">
                                     <TabsList>
@@ -1752,7 +1752,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                                                             const rootBlocks = selectedStep.blocks.filter(b => !b.parentId).sort((a, b) => a.order - b.order);
                                                             const vw = computeVirtualWindow(rootBlocks);
                                                             return (
-                                                                <div ref={scrollContainerRef} className="space-y-2 max-h-[calc(100vh-320px)] overflow-auto pr-1 border rounded-md bg-white/40">
+                                                                <div ref={scrollContainerRef} className="space-y-2 max-h-[calc(100vh-240px)] overflow-auto pr-1 border rounded-md bg-white/40">
                                                                     <SortableContext
                                                                         items={selectedStep.blocks.map(b => b.id)}
                                                                         strategy={verticalListSortingStrategy}
@@ -1810,7 +1810,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                         </div>
 
                         {/* COLUNA 4: PROPRIEDADES / TEMA */}
-                        <div className="w-80 bg-white border-l flex flex-col">
+                        <div className="w-72 bg-white border-l flex flex-col overflow-y-auto">
                             <div className="px-4 pt-3 border-b flex flex-col gap-3">
                                 <div className="flex items-center justify-between">
                                     <div>
