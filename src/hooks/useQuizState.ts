@@ -14,6 +14,7 @@ import { useState, useCallback, useMemo, useEffect } from 'react';
 import { styleMapping, type StyleId } from '../data/styles';
 import { resolveStyleId } from '@/utils/styleIds';
 import { QUIZ_STEPS, STEP_ORDER } from '../data/quizSteps';
+import { mergeRuntimeFlags, type QuizRuntimeFlags } from '@/config/quizRuntimeFlags';
 import { stepIdVariants, normalizeStepId, getNextFromOrder, getPreviousFromOrder, safeGetStep } from '@/utils/quizStepIds';
 import { getPersonalizedStepTemplate } from '../templates/quiz21StepsSimplified';
 import { quizEditorBridge } from '@/services/QuizEditorBridge';
@@ -71,10 +72,13 @@ const initialState: QuizState = {
   userProfile: { ...initialUserProfile },
 };
 
-export function useQuizState(funnelId?: string, externalSteps?: Record<string, any>) {
+export function useQuizState(funnelId?: string, externalSteps?: Record<string, any>, flagsInput?: Partial<QuizRuntimeFlags>) {
   const [state, setState] = useState<QuizState>(initialState);
   const [loadedSteps, setLoadedSteps] = useState<Record<string, any> | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const flags = useMemo(() => mergeRuntimeFlags(flagsInput), [flagsInput]);
+  const autoAdvanceTimerRef = (globalThis as any).__quizAutoAdvanceTimerRef || { current: null as any };
+  ; (globalThis as any).__quizAutoAdvanceTimerRef = autoAdvanceTimerRef;
 
   // 🎯 NOVO: Carregar steps do bridge se tiver funnelId
   useEffect(() => {
@@ -156,7 +160,7 @@ export function useQuizState(funnelId?: string, externalSteps?: Record<string, a
       .map(([plainId]) => {
         // Converte para id canônico (acentuado) quando necessário
         const canonicalId = resolveStyleId(plainId);
-        const style = styleMapping[canonicalId as StyleId] || styleMapping[plainId as StyleId];
+        const style = (styleMapping as any)[canonicalId as StyleId] || (styleMapping as any)[plainId as StyleId];
         console.log(`🎨 Mapeando estilo: ${plainId} -> canonical: ${canonicalId} =>`, style);
         return style;
       })
@@ -197,6 +201,12 @@ export function useQuizState(funnelId?: string, externalSteps?: Record<string, a
 
   // Adicionar resposta para etapa
   const addAnswer = useCallback((stepId: string, selections: string[]) => {
+    // Cancelar auto advance anterior (se usuário clicou rápido em outra opção)
+    if (autoAdvanceTimerRef.current) {
+      clearTimeout(autoAdvanceTimerRef.current);
+      autoAdvanceTimerRef.current = null;
+    }
+
     setState(prev => ({
       ...prev,
       answers: {
@@ -205,14 +215,22 @@ export function useQuizState(funnelId?: string, externalSteps?: Record<string, a
       }
     }));
 
-    // Auto-calcular resultado durante as questões estratégicas
-    const step = QUIZ_STEPS[stepId];
-    if (step?.type === 'strategic-question') {
-      setTimeout(() => {
-        calculateResult();
-      }, 100);
+    const sourceStep = QUIZ_STEPS[stepId];
+    if (sourceStep?.type === 'strategic-question') {
+      setTimeout(() => calculateResult(), 100);
     }
-  }, [calculateResult]);
+
+    // Auto advance: apenas para questions normais
+    if (flags.enableAutoAdvance && sourceStep?.type === 'question') {
+      const nextId = sourceStep.nextStep;
+      if (nextId) {
+        autoAdvanceTimerRef.current = setTimeout(() => {
+          nextStep(nextId);
+          autoAdvanceTimerRef.current = null;
+        }, flags.autoAdvanceDelayMs);
+      }
+    }
+  }, [calculateResult, flags.enableAutoAdvance, flags.autoAdvanceDelayMs, nextStep]);
 
   // Adicionar resposta estratégica
   const addStrategicAnswer = useCallback((question: string, answer: string) => {
@@ -295,8 +313,17 @@ export function useQuizState(funnelId?: string, externalSteps?: Record<string, a
 
     // Última tentativa com lookup seguro
     const fallback = safeGetStep(source, state.currentStep);
-    return fallback;
-  }, [state.currentStep, funnelId, stepsSource]);
+    let stepData = fallback;
+    // Personalização de nome no último passo (resultado/oferta) – substitui {nome}
+    if (flags.personalizeFinalStep && stepData && ['offer', 'result'].includes(stepData.type) && state.userProfile.userName) {
+      const replaceName = (val: any) => typeof val === 'string' ? val.replace(/\{nome\}/gi, state.userProfile.userName) : val;
+      stepData = { ...stepData };
+      ['title', 'description', 'subtitle', 'heading', 'content'].forEach(field => {
+        if (stepData[field]) stepData[field] = replaceName(stepData[field]);
+      });
+    }
+    return stepData;
+  }, [state.currentStep, funnelId, stepsSource, flags.personalizeFinalStep, state.userProfile.userName]);
 
   // Verificar se pode voltar
   const canGoBack = useMemo(() => {
@@ -340,6 +367,7 @@ export function useQuizState(funnelId?: string, externalSteps?: Record<string, a
     calculateResult,
     getOfferKey,
     resetQuiz,
+    flags,
   };
 }
 
