@@ -1038,14 +1038,14 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                                                     <span className="ml-auto inline-flex items-center gap-1 text-[10px] font-medium">
                                                         {(() => {
                                                             const errs = byStep[step.id];
-                                                            const errorCount = errs.filter(e=>e.severity==='error').length;
-                                                            const warnCount = errs.filter(e=>e.severity==='warning').length;
+                                                            const errorCount = errs.filter(e => e.severity === 'error').length;
+                                                            const warnCount = errs.filter(e => e.severity === 'warning').length;
                                                             if (!errorCount && !warnCount) return null;
                                                             return (
                                                                 <>
                                                                     {errorCount > 0 && <span className="w-2 h-2 rounded-full bg-red-600" />}
                                                                     {warnCount > 0 && errorCount === 0 && <span className="w-2 h-2 rounded-full bg-amber-500" />}
-                                                                    <span className={cn('px-1 rounded', errorCount>0 ? 'bg-red-50 text-red-600' : 'bg-amber-50 text-amber-700')}>{errorCount || warnCount}</span>
+                                                                    <span className={cn('px-1 rounded', errorCount > 0 ? 'bg-red-50 text-red-600' : 'bg-amber-50 text-amber-700')}>{errorCount || warnCount}</span>
                                                                 </>
                                                             );
                                                         })()}
@@ -1173,83 +1173,83 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                                                             strategy={verticalListSortingStrategy}
                                                         >
                                                             <TooltipProvider>
-                                                            <div className="space-y-2">
-                                                                {selectedStep.blocks
-                                                                    .filter(b => !b.parentId)
-                                                                    .sort((a, b) => a.order - b.order)
-                                                                    .map(block => (
-                                                                        <div
-                                                                            key={block.id}
-                                                                            className={cn(
-                                                                                'group relative p-3 border rounded-lg cursor-move bg-white overflow-hidden',
-                                                                                (selectedBlockId === block.id || isMultiSelected(block.id))
-                                                                                    ? 'border-blue-500 ring-2 ring-blue-200'
-                                                                                    : 'border-gray-200 hover:border-gray-300',
-                                                                                byBlock[block.id]?.length && 'border-red-500',
-                                                                                isMultiSelected(block.id) && 'bg-blue-50'
-                                                                            )}
-                                                                            onClick={(e) => handleBlockClick(e, block)}
-                                                                        >
-                                                                            {byBlock[block.id]?.length && (
-                                                                                <Tooltip>
-                                                                                    <TooltipTrigger asChild>
-                                                                                        <div className="absolute -top-1 -right-1 text-white text-[9px] px-1 rounded shadow cursor-default select-none" style={{ background: byBlock[block.id].some(e=>e.severity==='error') ? '#dc2626' : '#d97706' }}>
-                                                                                            {byBlock[block.id].length}
-                                                                                        </div>
-                                                                                    </TooltipTrigger>
-                                                                                    <TooltipContent side="left" className="max-w-xs p-2">
-                                                                                        <div className="space-y-1">
-                                                                                            {byBlock[block.id].map(e => (
-                                                                                                <p key={e.id} className={cn('text-[11px] leading-snug', e.severity==='error' ? 'text-red-600' : 'text-amber-600')}>
-                                                                                                    {e.message}
-                                                                                                </p>
-                                                                                            ))}
-                                                                                        </div>
-                                                                                    </TooltipContent>
-                                                                                </Tooltip>
-                                                                            )}
-                                                                            <div className="absolute left-2 top-2 opacity-70 group-hover:opacity-100 transition-opacity">
-                                                                                <GripVertical className="w-4 h-4 text-gray-400" />
-                                                                            </div>
-                                                                            <div className="pl-6 pr-8 space-y-2">
-                                                                                <div className="flex items-center gap-2 text-[10px] text-slate-500">
-                                                                                    <Badge variant="outline" className="text-[10px] px-1 py-0 font-normal">{block.type}</Badge>
-                                                                                    <span className="truncate max-w-[160px]">{block.content.text || block.content.label || block.type}</span>
+                                                                <div className="space-y-2">
+                                                                    {selectedStep.blocks
+                                                                        .filter(b => !b.parentId)
+                                                                        .sort((a, b) => a.order - b.order)
+                                                                        .map(block => (
+                                                                            <div
+                                                                                key={block.id}
+                                                                                className={cn(
+                                                                                    'group relative p-3 border rounded-lg cursor-move bg-white overflow-hidden',
+                                                                                    (selectedBlockId === block.id || isMultiSelected(block.id))
+                                                                                        ? 'border-blue-500 ring-2 ring-blue-200'
+                                                                                        : 'border-gray-200 hover:border-gray-300',
+                                                                                    byBlock[block.id]?.length && 'border-red-500',
+                                                                                    isMultiSelected(block.id) && 'bg-blue-50'
+                                                                                )}
+                                                                                onClick={(e) => handleBlockClick(e, block)}
+                                                                            >
+                                                                                {byBlock[block.id]?.length && (
+                                                                                    <Tooltip>
+                                                                                        <TooltipTrigger asChild>
+                                                                                            <div className="absolute -top-1 -right-1 text-white text-[9px] px-1 rounded shadow cursor-default select-none" style={{ background: byBlock[block.id].some(e => e.severity === 'error') ? '#dc2626' : '#d97706' }}>
+                                                                                                {byBlock[block.id].length}
+                                                                                            </div>
+                                                                                        </TooltipTrigger>
+                                                                                        <TooltipContent side="left" className="max-w-xs p-2">
+                                                                                            <div className="space-y-1">
+                                                                                                {byBlock[block.id].map(e => (
+                                                                                                    <p key={e.id} className={cn('text-[11px] leading-snug', e.severity === 'error' ? 'text-red-600' : 'text-amber-600')}>
+                                                                                                        {e.message}
+                                                                                                    </p>
+                                                                                                ))}
+                                                                                            </div>
+                                                                                        </TooltipContent>
+                                                                                    </Tooltip>
+                                                                                )}
+                                                                                <div className="absolute left-2 top-2 opacity-70 group-hover:opacity-100 transition-opacity">
+                                                                                    <GripVertical className="w-4 h-4 text-gray-400" />
                                                                                 </div>
-                                                                                <div className="text-left">
-                                                                                    {renderBlockPreview(block, selectedStep.blocks)}
+                                                                                <div className="pl-6 pr-8 space-y-2">
+                                                                                    <div className="flex items-center gap-2 text-[10px] text-slate-500">
+                                                                                        <Badge variant="outline" className="text-[10px] px-1 py-0 font-normal">{block.type}</Badge>
+                                                                                        <span className="truncate max-w-[160px]">{block.content.text || block.content.label || block.type}</span>
+                                                                                    </div>
+                                                                                    <div className="text-left">
+                                                                                        {renderBlockPreview(block, selectedStep.blocks)}
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div className="absolute right-1 top-1">
+                                                                                    <Button
+                                                                                        variant="ghost"
+                                                                                        size="icon"
+                                                                                        className="h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity"
+                                                                                        onClick={(e) => {
+                                                                                            e.stopPropagation();
+                                                                                            removeBlock(selectedStep.id, block.id);
+                                                                                        }}
+                                                                                    >
+                                                                                        <Trash2 className="w-3 h-3 text-red-500" />
+                                                                                    </Button>
+                                                                                    <Button
+                                                                                        variant="ghost"
+                                                                                        size="icon"
+                                                                                        className="h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity"
+                                                                                        onClick={(e) => {
+                                                                                            e.stopPropagation();
+                                                                                            setBlockPendingDuplicate(block);
+                                                                                            setTargetStepId(selectedStep.id);
+                                                                                            setDuplicateModalOpen(true);
+                                                                                        }}
+                                                                                    >
+                                                                                        <ArrowRightCircle className="w-3 h-3 text-blue-500" />
+                                                                                    </Button>
                                                                                 </div>
                                                                             </div>
-                                                                            <div className="absolute right-1 top-1">
-                                                                                <Button
-                                                                                    variant="ghost"
-                                                                                    size="icon"
-                                                                                    className="h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity"
-                                                                                    onClick={(e) => {
-                                                                                        e.stopPropagation();
-                                                                                        removeBlock(selectedStep.id, block.id);
-                                                                                    }}
-                                                                                >
-                                                                                    <Trash2 className="w-3 h-3 text-red-500" />
-                                                                                </Button>
-                                                                                <Button
-                                                                                    variant="ghost"
-                                                                                    size="icon"
-                                                                                    className="h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity"
-                                                                                    onClick={(e) => {
-                                                                                        e.stopPropagation();
-                                                                                        setBlockPendingDuplicate(block);
-                                                                                        setTargetStepId(selectedStep.id);
-                                                                                        setDuplicateModalOpen(true);
-                                                                                    }}
-                                                                                >
-                                                                                    <ArrowRightCircle className="w-3 h-3 text-blue-500" />
-                                                                                </Button>
-                                                                            </div>
-                                                                        </div>
-                                    ))}
-                                </div>
-                                </TooltipProvider>
+                                                                        ))}
+                                                                </div>
+                                                            </TooltipProvider>
                                                         </SortableContext>
                                                     </>
                                                 )}
