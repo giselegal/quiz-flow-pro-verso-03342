@@ -169,8 +169,19 @@ export const STYLE_DEFINITIONS: Record<string, Style> = {
 
 // Legacy compatibility exports
 export const styleConfigGisele = STYLE_DEFINITIONS;
-export const styleMapping = STYLE_DEFINITIONS;
-export type StyleId = keyof typeof STYLE_DEFINITIONS;
+
+// ✅ COMPATIBILITY: Add aliases without accents for quiz options
+// Quiz options use IDs without accents (romantico, dramatico, contemporaneo)
+// but STYLE_DEFINITIONS uses accents (romântico, dramático, contemporâneo)
+export const styleMapping = {
+  ...STYLE_DEFINITIONS,
+  // Aliases without accents (used in quizSteps.ts options)
+  'romantico': STYLE_DEFINITIONS['romântico'],
+  'dramatico': STYLE_DEFINITIONS['dramático'],
+  'contemporaneo': STYLE_DEFINITIONS['contemporâneo'],
+} as const;
+
+export type StyleId = keyof typeof STYLE_DEFINITIONS | 'romantico' | 'dramatico' | 'contemporaneo';
 
 // Export compatibility
 export default STYLE_DEFINITIONS;
