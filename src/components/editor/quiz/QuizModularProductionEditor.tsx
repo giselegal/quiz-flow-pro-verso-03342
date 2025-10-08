@@ -1817,7 +1817,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                                         <div key={s.id} className="p-2 rounded border bg-slate-50 flex flex-col gap-1">
                                             <div className="flex items-center justify-between">
                                                 <button onClick={() => { setSelectedStepId(s.id); setNavOpen(false); }} className="text-left font-medium text-[11px] text-slate-800 hover:underline">{s.id}</button>
-                                                {s.autoLinked && <span className="text-[9px] px-1 py-0.5 rounded bg-indigo-100 text-indigo-600">auto</span>}
+                                                {s.autoLinked && <span className="text-[9px] px-1 py-0.5 rounded bg-indigo-100 text-indigo-600" title="Preenchido automaticamente">auto</span>}
                                             </div>
                                             <div className="flex items-center gap-2">
                                                 <span className="text-[10px] text-slate-500">→</span>

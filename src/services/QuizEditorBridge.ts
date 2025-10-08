@@ -114,8 +114,15 @@ class QuizEditorBridge {
         const validation = validateCompleteFunnel(workingSteps as any);
 
         if (!validation.isValid) {
-            const errorMsg = validation.errors.map(e => e.message).join('; ');
-            console.error('❌ Validação falhou:', errorMsg);
+            // Agrupar erros de nextStep para mensagem mais clara
+            const missingNextStepIds = workingSteps
+                .filter(s => s.id !== 'step-21' && (!s.nextStep || s.nextStep === undefined || s.nextStep === null))
+                .map(s => s.id);
+            const baseMsg = validation.errors.map(e => e.message).join('; ');
+            const errorMsg = missingNextStepIds.length
+                ? `${baseMsg}; Etapas faltando: ${missingNextStepIds.join(', ')}`
+                : baseMsg;
+            console.error('❌ Validação falhou:', errorMsg, { missingNextStepIds });
             throw new Error(`Validação falhou: ${errorMsg}`);
         }
 
@@ -131,7 +138,7 @@ class QuizEditorBridge {
             id: draftId,
             name: funnel.name,
             slug: funnel.slug,
-            steps: workingSteps,
+            steps: workingSteps.map(s => ({ ...s, autoLinked: !funnel.steps.find(o => o.id === s.id)?.nextStep && s.nextStep ? true : (s as any).autoLinked })),
             version: (funnel.version || 0) + 1,
             is_published: false,
             updated_at: new Date().toISOString()

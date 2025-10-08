@@ -205,7 +205,11 @@ const MeusFunisPageReal: React.FC = () => {
                 status: 'draft'
             }));
 
-            setFunis([...draftFunis, ...processedFunis]);
+            // Ordenar drafts primeiro por updated_at (ou created_at) desc, depois funis existentes
+            const sortDate = (d: any) => new Date(d.updated_at || d.created_at || 0).getTime();
+            const orderedDrafts = [...draftFunis].sort((a, b) => sortDate(b) - sortDate(a));
+            const orderedExisting = [...processedFunis].sort((a, b) => sortDate(b) - sortDate(a));
+            setFunis([...orderedDrafts, ...orderedExisting]);
 
             // Calcular estatísticas gerais
             const merged = [...draftFunis, ...processedFunis];
