@@ -62,6 +62,7 @@ const ModularEditorLayout = lazy(() => import('./editor/components/ModularEditor
 const QuizEstiloPessoalPage = lazy(() => import('./pages/QuizEstiloPessoalPage'));
 const QuizAIPage = lazy(() => import('./pages/QuizAIPage'));
 const QuizIntegratedPage = lazy(() => import('./pages/QuizIntegratedPage'));
+const TemplateEngineQuizEstiloPage = lazy(() => import('./pages/TemplateEngineQuizEstiloPage'));
 
 // 🏢 LAYOUT ADMINISTRATIVO E DASHBOARD MODERNO
 const ModernDashboardPage = lazy(() => import('./pages/ModernDashboardPage'));
@@ -159,6 +160,13 @@ function App() {
                           <div data-testid="quiz-estilo-modular-redirect">
                             <QuizEstiloModularRedirect />
                           </div>
+                        </Route>
+                        
+                        {/* 🔗 INTEGRAÇÃO TEMPLATE ENGINE → /quiz-estilo */}
+                        <Route path="/editor/quiz-estilo-template-engine">
+                          <Suspense fallback={<EnhancedLoadingFallback message="Carregando editor avançado..." />}>
+                            <TemplateEngineQuizEstiloPage />
+                          </Suspense>
                         </Route>
 
                         {/* 🧩 EDITOR MODULAR - Sistema experimental com componentes modulares */}

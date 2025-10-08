@@ -966,6 +966,54 @@ export type Database = {
         }
         Relationships: []
       }
+      templates: {
+        Row: {
+          created_at: string
+          description: string | null
+          draft_data: Json
+          draft_version: number
+          id: string
+          name: string
+          published_at: string | null
+          published_data: Json | null
+          published_version: number | null
+          schema_version: string
+          slug: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          draft_data?: Json
+          draft_version?: number
+          id?: string
+          name: string
+          published_at?: string | null
+          published_data?: Json | null
+          published_version?: number | null
+          schema_version?: string
+          slug: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          draft_data?: Json
+          draft_version?: number
+          id?: string
+          name?: string
+          published_at?: string | null
+          published_data?: Json | null
+          published_version?: number | null
+          schema_version?: string
+          slug?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_behavior_patterns: {
         Row: {
           action: string
