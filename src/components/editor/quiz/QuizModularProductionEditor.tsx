@@ -454,6 +454,75 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
     const [navOpen, setNavOpen] = useState(false);
     const navAnalysis = useMemo(() => buildNavigationMap(steps.map(s => ({ id: s.id, order: s.order, nextStep: s.nextStep as any, autoLinked: (s as any).autoLinked }))), [steps]);
 
+    // ==========================
+    // Gestão de Etapas (Add / Reorder / Delete)
+    // ==========================
+    const recomputeOrders = (list: EditableQuizStep[]) => list.map((s, i) => ({ ...s, order: i + 1 }));
+
+    const handleMoveStep = useCallback((stepId: string, direction: 'up' | 'down') => {
+        setSteps(prev => {
+            const idx = prev.findIndex(s => s.id === stepId);
+            if (idx < 0) return prev;
+            if (direction === 'up' && idx === 0) return prev;
+            if (direction === 'down' && idx === prev.length - 1) return prev;
+            const targetIdx = direction === 'up' ? idx - 1 : idx + 1;
+            const arr = [...prev];
+            const [moved] = arr.splice(idx, 1);
+            arr.splice(targetIdx, 0, moved);
+            const withOrders = recomputeOrders(arr);
+            pushHistory(withOrders);
+            return withOrders;
+        });
+        setIsDirty(true);
+    }, [pushHistory]);
+
+    const generateNextStepId = (existing: string[]) => {
+        let n = 1;
+        while (true) {
+            const id = `step-${String(n).padStart(2,'0')}`;
+            if (!existing.includes(id)) return id;
+            n++;
+        }
+    };
+
+    const handleAddStep = useCallback(() => {
+        setSteps(prev => {
+            const newId = generateNextStepId(prev.map(s => s.id));
+            const newStep: EditableQuizStep = {
+                id: newId,
+                type: 'question',
+                order: prev.length + 1,
+                blocks: [],
+                title: newId,
+                options: [],
+                nextStep: undefined
+            };
+            const list = [...prev, newStep];
+            pushHistory(list);
+            return list;
+        });
+        setIsDirty(true);
+        toast({ title: 'Etapa adicionada', description: 'Configure a nova etapa e defina o fluxo.' });
+    }, [pushHistory, toast]);
+
+    const handleDeleteStep = useCallback((stepId: string) => {
+        setSteps(prev => {
+            if (prev.length <= 1) return prev;
+            const filtered = prev.filter(s => s.id !== stepId);
+            if (filtered.length === prev.length) return prev;
+            const remainingIds = new Set(filtered.map(s => s.id));
+            const adjusted = recomputeOrders(filtered.map(s => ({ ...s, nextStep: s.nextStep && remainingIds.has(s.nextStep) ? s.nextStep : undefined })));
+            pushHistory(adjusted);
+            if (selectedStepId === stepId) {
+                const prevIdx = prev.findIndex(s => s.id === stepId);
+                const fallback = adjusted[Math.max(0, prevIdx - 1)] || adjusted[0];
+                setSelectedStepId(fallback.id);
+            }
+            return adjusted;
+        });
+        setIsDirty(true);
+    }, [selectedStepId, pushHistory]);
+
     // Drag & Drop
     const [activeId, setActiveId] = useState<string | null>(null);
     const [hoverContainerId, setHoverContainerId] = useState<string | null>(null);
@@ -1937,48 +2006,39 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                             <ScrollArea className="flex-1">
                                 <div className="p-2 space-y-1">
                                     {steps.map((step, index) => (
-                                        <button
-                                            key={step.id}
-                                            className={cn(
-                                                'w-full text-left px-3 py-2 rounded-lg transition-colors',
-                                                selectedStepId === step.id
-                                                    ? 'bg-blue-50 border-2 border-blue-500'
-                                                    : 'hover:bg-gray-50 border-2 border-transparent'
-                                            )}
-                                            onClick={() => {
-                                                setSelectedStepId(step.id);
-                                                setSelectedBlockId('');
-                                            }}
-                                        >
-                                            <div className="flex items-center gap-2">
-                                                <Badge variant="outline" className="text-xs">{index + 1}</Badge>
-                                                <span className="text-sm font-medium truncate">{step.id}</span>
-                                                {byStep[step.id]?.length ? (
-                                                    <span className="ml-auto inline-flex items-center gap-1 text-[10px] font-medium">
-                                                        {(() => {
-                                                            const errs = byStep[step.id];
-                                                            const errorCount = errs.filter(e => e.severity === 'error').length;
-                                                            const warnCount = errs.filter(e => e.severity === 'warning').length;
-                                                            if (!errorCount && !warnCount) return null;
-                                                            return (
-                                                                <>
-                                                                    {errorCount > 0 && <span className="w-2 h-2 rounded-full bg-red-600" />}
-                                                                    {warnCount > 0 && errorCount === 0 && <span className="w-2 h-2 rounded-full bg-amber-500" />}
-                                                                    <span className={cn('px-1 rounded', errorCount > 0 ? 'bg-red-50 text-red-600' : 'bg-amber-50 text-amber-700')}>{errorCount || warnCount}</span>
-                                                                </>
-                                                            );
-                                                        })()}
-                                                    </span>
-                                                ) : null}
+                                        <div key={step.id} className={cn('group rounded-lg border-2 transition-colors', selectedStepId === step.id ? 'bg-blue-50 border-blue-500' : 'border-transparent hover:bg-gray-50')}>
+                                            <div className="w-full text-left px-3 py-2 cursor-pointer" onClick={() => { setSelectedStepId(step.id); setSelectedBlockId(''); }}>
+                                                <div className="flex items-center gap-2">
+                                                    <Badge variant="outline" className="text-xs">{index + 1}</Badge>
+                                                    <span className="text-sm font-medium truncate" title={step.id}>{step.id}</span>
+                                                    {byStep[step.id]?.length ? (
+                                                        <span className="ml-auto inline-flex items-center gap-1 text-[10px] font-medium">
+                                                            {(() => {
+                                                                const errs = byStep[step.id];
+                                                                const errorCount = errs.filter(e => e.severity === 'error').length;
+                                                                const warnCount = errs.filter(e => e.severity === 'warning').length;
+                                                                if (errorCount > 0) return <span className="text-red-600">{errorCount} err</span>;
+                                                                if (warnCount > 0) return <span className="text-amber-600">{warnCount} av</span>;
+                                                                return null;
+                                                            })()}
+                                                        </span>
+                                                    ) : null}
+                                                </div>
+                                                <div className="flex items-center gap-2 mt-1">
+                                                    <Badge className="text-xs">{step.type}</Badge>
+                                                    <span className="text-xs text-muted-foreground">{step.blocks.length} blocos</span>
+                                                </div>
                                             </div>
-                                            <div className="flex items-center gap-2 mt-1">
-                                                <Badge className="text-xs">{step.type}</Badge>
-                                                <span className="text-xs text-muted-foreground">
-                                                    {step.blocks.length} blocos
-                                                </span>
+                                            <div className="flex items-center justify-end gap-1 px-2 pb-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                                <Button variant="ghost" size="icon" className="h-5 w-5" disabled={index===0} onClick={()=>handleMoveStep(step.id,'up')} title="Mover para cima">↑</Button>
+                                                <Button variant="ghost" size="icon" className="h-5 w-5" disabled={index===steps.length-1} onClick={()=>handleMoveStep(step.id,'down')} title="Mover para baixo">↓</Button>
+                                                <Button variant="ghost" size="icon" className="h-5 w-5 text-red-600 hover:text-red-700" onClick={()=>{ if(window.confirm(`Remover ${step.id}?`)) handleDeleteStep(step.id); }} title="Remover etapa">✕</Button>
                                             </div>
-                                        </button>
+                                        </div>
                                     ))}
+                                    <div className="pt-2">
+                                        <Button variant="outline" size="sm" className="w-full text-xs" onClick={handleAddStep}>+ Adicionar etapa</Button>
+                                    </div>
                                 </div>
                             </ScrollArea>
                         </div>
