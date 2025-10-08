@@ -1729,17 +1729,18 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
         }
     }, [steps, funnelId, toast]);
 
+    // Exportar JSON simples (será refinado depois com metadados)
+    const handleExport = useCallback(() => {
+        const data = JSON.stringify(steps, null, 2);
+        const blob = new Blob([data], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url; a.download = 'funnel-draft.json'; a.click();
+        URL.revokeObjectURL(url);
+    }, [steps]);
+
     // Publicar
     const handlePublish = useCallback(async () => {
-        // Export JSON (será finalizado depois)
-        const handleExport = () => {
-            const data = JSON.stringify(steps, null, 2);
-            const blob = new Blob([data], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url; a.download = `funnel-draft.json`; a.click();
-            URL.revokeObjectURL(url);
-        };
         if (!funnelId || funnelId === 'production') {
             toast({
                 title: 'Salve primeiro',
