@@ -339,6 +339,70 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
             });
         }
 
+        // Subtítulo específico (se detectar frase padrão ou campo custom step.subtitle)
+        if (step.subtitle) {
+            blocks.push({
+                id: `${step.id}-subtitle`,
+                type: 'text',
+                order: order++,
+                properties: { textAlign: 'center', fontSize: '18px', color: '#432818' },
+                content: { text: step.subtitle }
+            });
+        } else if (step.id === 'step-01') {
+            const defaultSubtitle = 'Em poucos minutos, descubra seu Estilo Predominante — e aprenda a montar looks que realmente refletem sua essência, com praticidade e confiança.';
+            blocks.push({
+                id: `${step.id}-subtitle`,
+                type: 'text',
+                order: order++,
+                properties: { textAlign: 'center', fontSize: '18px', color: '#432818' },
+                content: { text: defaultSubtitle }
+            });
+        }
+
+        // Campo coleta nome (caso intro)
+        if (step.formQuestion || step.placeholder || step.buttonText) {
+            blocks.push({
+                id: `${step.id}-leadform`,
+                type: 'form-input',
+                order: order++,
+                properties: {
+                    label: step.formQuestion || 'Como posso te chamar?',
+                    placeholder: step.placeholder || 'Digite seu primeiro nome aqui...',
+                    required: true
+                },
+                content: {}
+            });
+            // Help text (nome necessário)
+            blocks.push({
+                id: `${step.id}-name-help`,
+                type: 'text',
+                order: order++,
+                properties: { textAlign: 'center', fontSize: '12px', color: '#6B7280' },
+                content: { text: 'Seu nome é necessário para personalizar sua experiência.' }
+            });
+            // Botão principal
+            if (step.buttonText) {
+                blocks.push({
+                    id: `${step.id}-primary-button`,
+                    type: 'button',
+                    order: order++,
+                    properties: { textColor: '#FFFFFF', backgroundColor: '#B89B7A', action: 'next-step' },
+                    content: { text: step.buttonText }
+                });
+            }
+        }
+
+        // Copyright
+        if (step.id === 'step-01') {
+            blocks.push({
+                id: `${step.id}-copyright`,
+                type: 'text',
+                order: order++,
+                properties: { textAlign: 'center', fontSize: '11px', color: '#6B7280' },
+                content: { text: '© 2025 Gisele Galvão - Todos os direitos reservados' }
+            });
+        }
+
         // Pergunta
         if (step.questionText) {
             blocks.push({
