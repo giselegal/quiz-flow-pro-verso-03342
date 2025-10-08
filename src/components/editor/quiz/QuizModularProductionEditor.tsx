@@ -1439,7 +1439,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
     };
 
     // Salvar
-    const [saveNotice, setSaveNotice] = useState<{ type: 'success' | 'error' | 'warning'; message: string } | null>(null);
+    const [saveNotice, setSaveNotice] = useState<{ type: 'warning' | 'info'; message: string } | null>(null);
     const handleSave = useCallback(async () => {
         setIsSaving(true);
         try {
@@ -1561,6 +1561,15 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                                 alt="Logo Gisele Galvão"
                                 style={{ height: 36, width: 36, objectFit: 'contain', borderRadius: 8 }}
                             />
+
+                            {/* Aviso discreto de validação (NextStep) */}
+                            {saveNotice && (
+                                <div className="text-[10px] px-2 py-1 rounded bg-amber-50 text-amber-700 border border-amber-200 flex items-center gap-1">
+                                    <span className="font-medium">!</span>
+                                    <span className="truncate max-w-[220px]">{saveNotice.message}</span>
+                                    <button onClick={() => setSaveNotice(null)} className="ml-1 text-amber-600 hover:text-amber-800">×</button>
+                                </div>
+                            )}
 
                             {isDirty && <Badge variant="outline">Não salvo</Badge>}
                         </div>
