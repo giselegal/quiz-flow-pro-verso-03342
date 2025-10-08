@@ -120,6 +120,25 @@ export const INITIAL_BLOCK_SCHEMAS: BlockPropertySchemaDefinition[] = [
             { key: 'padding', label: 'Padding', type: 'string', default: '16px', group: 'style' },
             { key: 'borderRadius', label: 'Borda', type: 'string', default: '8px', group: 'style' }
         ]
+    },
+    {
+        type: 'progress-header',
+        groups: [
+            { id: 'content', label: 'Conteúdo', order: 1 },
+            { id: 'appearance', label: 'Aparência', order: 2 },
+            { id: 'logic', label: 'Lógica', order: 3 }
+        ],
+        properties: [
+            { key: 'showLogo', label: 'Exibir Logo', type: 'boolean', default: true, group: 'content' },
+            { key: 'logoUrl', label: 'Logo URL', type: 'string', default: 'https://via.placeholder.com/120x40?text=Logo', group: 'content', when: c => c.showLogo },
+            { key: 'logoWidth', label: 'Largura Logo', type: 'string', default: '120px', group: 'appearance', when: c => c.showLogo },
+            { key: 'progressEnabled', label: 'Exibir Barra', type: 'boolean', default: true, group: 'logic' },
+            { key: 'progressPercent', label: 'Porcentagem', type: 'number', default: 0, min: 0, max: 100, group: 'logic', when: c => c.progressEnabled },
+            { key: 'autoProgress', label: 'Auto (etapas)', type: 'boolean', default: true, group: 'logic', when: c => c.progressEnabled, description: 'Calcula % baseado na posição da etapa atual' },
+            { key: 'barHeight', label: 'Espessura Barra', type: 'string', default: '4px', group: 'appearance', when: c => c.progressEnabled },
+            { key: 'barColor', label: 'Cor Barra', type: 'color', default: '#D4AF37', group: 'appearance', when: c => c.progressEnabled },
+            { key: 'barBackground', label: 'Fundo Barra', type: 'color', default: '#E5E7EB', group: 'appearance', when: c => c.progressEnabled }
+        ]
     }
 ];
 
