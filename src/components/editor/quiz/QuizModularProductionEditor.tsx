@@ -64,6 +64,7 @@ import { EditorThemeProvider, DesignTokens } from '@/theme/editorTheme';
 import { useValidation } from './hooks/useValidation';
 import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from '@/components/ui/tooltip';
 import { sanitizeInlineHtml, looksLikeHtml } from '@/utils/sanitizeInlineHtml';
+import { convertBlocksToStep as convertBlocksToStepUtil } from '@/utils/quizConversionUtils';
 
 // Pré-visualizações especializadas (lazy) dos componentes finais de produção
 const StyleResultCard = React.lazy(() => import('@/components/editor/quiz/components/StyleResultCard').then(m => ({ default: m.StyleResultCard })));
@@ -99,10 +100,15 @@ interface EditableQuizStep {
 }
 
 interface ComponentLibraryItem {
+    /** Identificador único do item na paleta */
     type: string;
+    /** Tipo real do bloco salvo (se diferente) */
+    blockType?: string;
     label: string;
     icon: React.ReactNode;
     defaultProps: Record<string, any>;
+    /** Conteúdo default (ex: text) separado de propriedades */
+    defaultContent?: Record<string, any>;
     category: 'layout' | 'content' | 'interactive' | 'media';
 }
 
@@ -131,6 +137,71 @@ const COMPONENT_LIBRARY: ComponentLibraryItem[] = [
             fontSize: '24px',
             color: '#432818',
             textAlign: 'center'
+        }
+    },
+    // Variantes específicas da Etapa 1 (Intro) e reutilizáveis
+    {
+        type: 'subtitle',
+        blockType: 'text',
+        label: 'Subtítulo',
+        icon: <Type className="w-4 h-4" />,
+        category: 'content',
+        defaultProps: {
+            textAlign: 'center',
+            fontSize: '18px',
+            color: '#432818'
+        },
+        defaultContent: { text: 'Subtítulo descritivo aqui...' }
+    },
+    {
+        type: 'help-text',
+        blockType: 'text',
+        label: 'Texto Ajuda',
+        icon: <Type className="w-3 h-3" />,
+        category: 'content',
+        defaultProps: {
+            textAlign: 'center',
+            fontSize: '12px',
+            color: '#6B7280'
+        },
+        defaultContent: { text: 'Mensagem auxiliar para o usuário.' }
+    },
+    {
+        type: 'primary-button',
+        blockType: 'button',
+        label: 'Botão Primário',
+        icon: <MousePointer className="w-4 h-4" />,
+        category: 'interactive',
+        defaultProps: {
+            text: 'Continuar',
+            backgroundColor: '#B89B7A',
+            textColor: '#FFFFFF',
+            action: 'next-step'
+        }
+    },
+    {
+        type: 'copyright',
+        blockType: 'text',
+        label: 'Copyright',
+        icon: <Type className="w-3 h-3" />,
+        category: 'content',
+        defaultProps: {
+            textAlign: 'center',
+            fontSize: '11px',
+            color: '#6B7280'
+        },
+        defaultContent: { text: '© 2025 Sua Marca - Todos os direitos reservados' }
+    },
+    {
+        type: 'lead-name',
+        blockType: 'form-input',
+        label: 'Nome (Lead)',
+        icon: <Type className="w-4 h-4" />,
+        category: 'interactive',
+        defaultProps: {
+            label: 'Como posso te chamar?',
+            placeholder: 'Digite seu primeiro nome...',
+            required: true
         }
     },
     {
@@ -491,12 +562,21 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
         const step = selectedStepRef.current;
         const newBlock: BlockComponent = {
             id: `block-${Date.now()}`,
-            type: componentType,
+            type: component.blockType || component.type,
             order: step?.blocks.length || 0,
             parentId: null,
             properties: { ...component.defaultProps },
             content: {}
         };
+        // Se propriedades contêm 'text' para tipos textuais, mover para content
+        if (['heading', 'text', 'button'].includes(newBlock.type) && (newBlock.properties as any).text) {
+            newBlock.content.text = (newBlock.properties as any).text;
+            delete (newBlock.properties as any).text;
+        }
+        // Aplicar defaultContent explícito se existir
+        if (component.defaultContent) {
+            newBlock.content = { ...component.defaultContent, ...newBlock.content };
+        }
         setSteps(prev => {
             const next = prev.map(s => s.id === stepId ? { ...s, blocks: [...s.blocks, newBlock] } : s);
             pushHistory(next);
@@ -1254,21 +1334,20 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                 id: funnelId || 'new-draft',
                 name: 'Quiz Estilo Pessoal - Modular',
                 slug: 'quiz-estilo',
-                steps: steps.map(s => ({
-                    id: s.id,
-                    type: s.type,
-                    order: s.order,
-                    title: s.title,
-                    questionText: s.questionText,
-                    options: s.options,
-                    requiredSelections: s.requiredSelections,
-                    image: s.image,
-                    buttonText: s.buttonText,
-                    nextStep: s.nextStep,
-                    offerMap: s.offerMap,
-                    // Persistir blocks em campo auxiliar (não impacta produção)
-                    blocks: s.blocks
-                })),
+                steps: steps.map(s => {
+                    // Reconstruir propriedades canônicas a partir dos blocos (garante persistência semântica)
+                    const reconstructed = convertBlocksToStepUtil(s.id, s.type as any, s.blocks as any);
+                    return {
+                        id: s.id,
+                        order: s.order,
+                        ...(reconstructed as any),
+                        // Fallbacks para campos ainda não cobertos pela conversão
+                        nextStep: (reconstructed as any).nextStep || s.nextStep,
+                        offerMap: (reconstructed as any).offerMap || s.offerMap,
+                        // Armazenar blocos para reabrir no editor
+                        blocks: s.blocks
+                    };
+                }),
                 isPublished: false,
                 version: 1
             };
