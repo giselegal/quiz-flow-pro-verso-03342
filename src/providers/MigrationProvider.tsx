@@ -418,36 +418,11 @@ class MigrationExecutor {
     }
 
     // Helper methods (simplified implementations)
-    private async readFile(path: string): Promise<string> {
-        try {
-            const response = await fetch(`file://${path}`);
-            return await response.text();
-        } catch {
-            return ''; // Fallback
-        }
-    }
-
-    private async writeFile(path: string, content: string): Promise<void> {
-        // In a real implementation, this would write to the file system
-        console.log(`Writing to ${path}: ${content.length} characters`);
-    }
-
-    private async fileExists(path: string): Promise<boolean> {
-        try {
-            await this.readFile(path);
-            return true;
-        } catch {
-            return false;
-        }
-    }
-
-    private async findFilesWithPattern(pattern: string): Promise<string[]> {
-        // In a real implementation, this would search the file system
-        return [
-            '/workspaces/quiz-quest-challenge-verse/src/components/auth/AuthButton.tsx',
-            '/workspaces/quiz-quest-challenge-verse/src/pages/Dashboard.tsx'
-        ];
-    }
+    // Simulação de I/O — substituível por APIs reais (FS via backend ou codemods)
+    private async readFile(path: string): Promise<string> { return `// simulated content of ${path}`; }
+    private async writeFile(path: string, content: string): Promise<void> { console.log(`[simulated write] ${path} (${content.length} chars)`); }
+    private async fileExists(_path: string): Promise<boolean> { return true; }
+    private async findFilesWithPattern(_pattern: string): Promise<string[]> { return []; }
 
     private log(message: string): void {
         const timestamp = new Date().toISOString();

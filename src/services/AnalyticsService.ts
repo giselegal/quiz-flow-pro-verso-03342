@@ -49,9 +49,13 @@ export class AnalyticsService {
     private events: AnalyticsEvent[] = [];
     private alerts: Alert[] = [];
     private sessionMetrics: Record<string, number> = {};
+    private storageKey = 'analytics.v1';
+    private maxStoredEvents = 200;
+    private maxStoredMetricsPerCategory = 100;
 
     constructor() {
         console.log('✅ AnalyticsService inicializado');
+        this.restoreFromStorage();
     }
 
     async recordMetric(
@@ -76,6 +80,7 @@ export class AnalyticsService {
         this.metrics.set(category, categoryMetrics);
 
         console.log(`📊 Métrica registrada: ${name} = ${value} ${unit}`);
+        this.persistToStorage();
         return metric;
     }
 
@@ -103,22 +108,28 @@ export class AnalyticsService {
 
         this.events.push(event);
         console.log(`🎯 Evento registrado: ${type} para usuário ${userId}`);
+        this.pruneIfNeeded();
+        this.persistToStorage();
         return event;
     }
 
     trackEvent(eventName: string, properties: Record<string, any> = {}): void {
         console.log(`📊 Tracking event: ${eventName}`, properties);
+        // Mapear para recordEvent mínimo (anônimo/sem funil) para rastreabilidade leve
+        this.recordEvent(eventName, 'anonymous', 'unknown', properties).catch(() => { /* noop */ });
     }
 
     // Métodos adicionais usados por useMonitoring (no-op / simples por enquanto)
     trackError(error: Error, component?: string) {
         console.log('🚨 trackError', { message: error.message, component });
         this.recordMetric('errors.total', 1, 'count', 'system', { component: component || 'unknown' });
+        this.recordEvent('error', 'anonymous', 'unknown', { message: error.message, component }).catch(() => { /* noop */ });
     }
 
     trackPerformance(metric: string, value: number, unit: string = 'ms') {
         this.recordMetric(metric, value, unit, 'performance');
         this.sessionMetrics[metric] = value;
+        this.persistToStorage();
     }
 
     trackEditorAction(action: string, details: Record<string, any> = {}) {
@@ -128,6 +139,68 @@ export class AnalyticsService {
 
     getSessionMetrics() {
         return { ...this.sessionMetrics };
+    }
+
+    // =============================================================
+    // Local Persistence (Browser Only)
+    // =============================================================
+    private isBrowser(): boolean {
+        return typeof window !== 'undefined' && typeof localStorage !== 'undefined';
+    }
+
+    private persistToStorage() {
+        if (!this.isBrowser()) return;
+        try {
+            const payload = {
+                metrics: Array.from(this.metrics.entries()).map(([cat, arr]) => [cat, arr]),
+                events: this.events,
+                sessionMetrics: this.sessionMetrics,
+                ts: Date.now()
+            };
+            localStorage.setItem(this.storageKey, JSON.stringify(payload));
+        } catch (e) {
+            // Falha silenciosa
+        }
+    }
+
+    private restoreFromStorage() {
+        if (!this.isBrowser()) return;
+        try {
+            const raw = localStorage.getItem(this.storageKey);
+            if (!raw) return;
+            const data = JSON.parse(raw);
+            if (data.metrics) {
+                data.metrics.forEach(([cat, arr]: [string, any[]]) => {
+                    this.metrics.set(cat, arr.map(m => ({ ...m, timestamp: new Date(m.timestamp) })));
+                });
+            }
+            if (data.events) {
+                this.events = data.events.map((e: any) => ({ ...e, timestamp: new Date(e.timestamp) }));
+            }
+            if (data.sessionMetrics) this.sessionMetrics = data.sessionMetrics;
+        } catch (e) {
+            // Ignora corrupção
+        }
+    }
+
+    private pruneIfNeeded() {
+        // Limitar eventos
+        if (this.events.length > this.maxStoredEvents) {
+            this.events.splice(0, this.events.length - this.maxStoredEvents);
+        }
+        // Limitar métricas por categoria
+        for (const [cat, arr] of this.metrics.entries()) {
+            if (arr.length > this.maxStoredMetricsPerCategory) {
+                this.metrics.set(cat, arr.slice(-this.maxStoredMetricsPerCategory));
+            }
+        }
+    }
+
+    flushStorage() {
+        if (!this.isBrowser()) return;
+        try {
+            localStorage.removeItem(this.storageKey);
+        } catch { /* noop */ }
     }
 
     getMetricsByCategory(category: Metric['category']): Metric[] {

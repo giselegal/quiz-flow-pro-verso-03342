@@ -13,6 +13,14 @@ import { useEditor } from '@/components/editor/EditorProviderMigrationAdapter';
 import { useFunnels } from '@/context/FunnelsContext';
 import { blockPropertiesAPI, type FunnelDataProvider } from '@/api/internal/BlockPropertiesAPI';
 
+function detectSupabaseEnabled(): boolean {
+    if (typeof window === 'undefined') return false;
+    // Heurística: presença de objeto global ou env (injetar via build se necessário)
+    const hasClient = !!(window as any).supabase;
+    const hasEnv = !!(import.meta as any).env?.VITE_SUPABASE_URL;
+    return hasClient || hasEnv;
+}
+
 interface FunnelDataProviderWrapperProps {
     children: React.ReactNode;
 }
@@ -97,7 +105,7 @@ export const FunnelDataProviderWrapper: React.FC<FunnelDataProviderWrapperProps>
                 return funnelsContext?.currentFunnelId || 'local-funnel';
             },
 
-            isSupabaseEnabled: () => false
+            isSupabaseEnabled: () => detectSupabaseEnabled()
         };
 
         // 🔗 Connect the API to real funnel data
@@ -107,7 +115,7 @@ export const FunnelDataProviderWrapper: React.FC<FunnelDataProviderWrapperProps>
             currentStep: state.currentStep,
             funnelId: funnelsContext?.currentFunnelId,
             stepsWithBlocks: Object.keys(state.stepBlocks).length,
-            isSupabaseEnabled: false
+            isSupabaseEnabled: detectSupabaseEnabled()
         });
 
         // Cleanup function
