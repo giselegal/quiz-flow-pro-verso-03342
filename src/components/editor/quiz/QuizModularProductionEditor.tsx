@@ -15,7 +15,7 @@
  * - ✅ Publicação para /quiz-estilo
  */
 
-import React, { useState, useCallback, useEffect, useMemo, Suspense } from 'react';
+import React, { useState, useCallback, useEffect, useMemo, Suspense, useRef } from 'react';
 import { useLocation } from 'wouter';
 import { DndContext, DragOverlay, closestCenter, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
 import { SortableContext, verticalListSortingStrategy, arrayMove } from '@dnd-kit/sortable';
@@ -56,6 +56,7 @@ import QuizProductionPreview from './QuizProductionPreview';
 import { useToast } from '@/hooks/use-toast';
 import { replacePlaceholders } from '@/utils/placeholderParser';
 import { useLiveScoring } from '@/hooks/useLiveScoring';
+import { HistoryManager } from '@/utils/historyManager';
 
 // Pré-visualizações especializadas (lazy) dos componentes finais de produção
 const StyleResultCard = React.lazy(() => import('@/components/editor/quiz/components/StyleResultCard').then(m => ({ default: m.StyleResultCard })));
@@ -206,6 +207,24 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
     const [isPublishing, setIsPublishing] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
     const [validationErrors, setValidationErrors] = useState<string[]>([]);
+    // Undo/Redo
+    const historyRef = useRef<HistoryManager<EditableQuizStep[]> | null>(null);
+    const [canUndo, setCanUndo] = useState(false);
+    const [canRedo, setCanRedo] = useState(false);
+
+    const pushHistory = (next: EditableQuizStep[]) => {
+        if (!historyRef.current) return;
+        historyRef.current.push(next);
+        setCanUndo(historyRef.current.canUndo());
+        setCanRedo(historyRef.current.canRedo());
+    };
+    const applyHistorySnapshot = (snap: EditableQuizStep[] | null) => {
+        if (!snap) return;
+        setSteps(snap);
+        setCanUndo(historyRef.current?.canUndo() || false);
+        setCanRedo(historyRef.current?.canRedo() || false);
+        setIsDirty(true);
+    };
 
     // Layout responsivo
     const [activeTab, setActiveTab] = useState<'canvas' | 'preview'>('canvas');
@@ -253,6 +272,9 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
             }));
 
             setSteps(modularSteps);
+            historyRef.current = new HistoryManager<EditableQuizStep[]>(modularSteps);
+            setCanUndo(false);
+            setCanRedo(false);
             setFunnelId(funnel.id);
             setSelectedStepId(modularSteps[0]?.id || '');
 
@@ -376,17 +398,11 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
             content: {}
         };
 
-        setSteps(prev =>
-            prev.map(step => {
-                if (step.id === stepId) {
-                    return {
-                        ...step,
-                        blocks: [...step.blocks, newBlock]
-                    };
-                }
-                return step;
-            })
-        );
+        setSteps(prev => {
+            const next = prev.map(step => step.id === stepId ? { ...step, blocks: [...step.blocks, newBlock] } : step);
+            pushHistory(next);
+            return next;
+        });
 
         setSelectedBlockId(newBlock.id);
         setIsDirty(true);
@@ -399,17 +415,11 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
 
     // Remover bloco
     const removeBlock = useCallback((stepId: string, blockId: string) => {
-        setSteps(prev =>
-            prev.map(step => {
-                if (step.id === stepId) {
-                    return {
-                        ...step,
-                        blocks: step.blocks.filter(b => b.id !== blockId)
-                    };
-                }
-                return step;
-            })
-        );
+        setSteps(prev => {
+            const next = prev.map(step => step.id === stepId ? { ...step, blocks: step.blocks.filter(b => b.id !== blockId) } : step);
+            pushHistory(next);
+            return next;
+        });
 
         if (selectedBlockId === blockId) {
             setSelectedBlockId('');
@@ -425,24 +435,32 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
             id: `${block.id}-dup-${Date.now()}`,
             order: (selectedStep?.blocks.length || 0)
         };
-        setSteps(prev => prev.map(s => s.id === stepId ? { ...s, blocks: [...s.blocks, clone] } : s));
+        setSteps(prev => {
+            const next = prev.map(s => s.id === stepId ? { ...s, blocks: [...s.blocks, clone] } : s);
+            pushHistory(next);
+            return next;
+        });
         setSelectedBlockId(clone.id);
         setIsDirty(true);
     }, [selectedStep]);
 
     const duplicateBlockToAnotherStep = useCallback(() => {
         if (!blockPendingDuplicate || !targetStepId) return;
-        setSteps(prev => prev.map(s => {
-            if (s.id === targetStepId) {
-                const clone: BlockComponent = {
-                    ...blockPendingDuplicate,
-                    id: `${blockPendingDuplicate.id}-xdup-${Date.now()}`,
-                    order: s.blocks.length
-                };
-                return { ...s, blocks: [...s.blocks, clone] };
-            }
-            return s;
-        }));
+        setSteps(prev => {
+            const next = prev.map(s => {
+                if (s.id === targetStepId) {
+                    const clone: BlockComponent = {
+                        ...blockPendingDuplicate,
+                        id: `${blockPendingDuplicate.id}-xdup-${Date.now()}`,
+                        order: s.blocks.length
+                    };
+                    return { ...s, blocks: [...s.blocks, clone] };
+                }
+                return s;
+            });
+            pushHistory(next);
+            return next;
+        });
         setIsDirty(true);
         setDuplicateModalOpen(false);
         setBlockPendingDuplicate(null);
@@ -462,65 +480,47 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
     // Colar bloco(s)
     const pasteBlocks = useCallback((stepId: string) => {
         if (!clipboard || clipboard.length === 0) return;
-        setSteps(prev => prev.map(s => {
-            if (s.id !== stepId) return s;
-            const baseLen = s.blocks.length;
-            const clones = clipboard.map((b, i) => ({
-                ...b,
-                id: `${b.id}-paste-${Date.now()}-${i}`,
-                order: baseLen + i
-            }));
-            return { ...s, blocks: [...s.blocks, ...clones] };
-        }));
+        setSteps(prev => {
+            const next = prev.map(s => {
+                if (s.id !== stepId) return s;
+                const baseLen = s.blocks.length;
+                const clones = clipboard.map((b, i) => ({
+                    ...b,
+                    id: `${b.id}-paste-${Date.now()}-${i}`,
+                    order: baseLen + i
+                }));
+                return { ...s, blocks: [...s.blocks, ...clones] };
+            });
+            pushHistory(next);
+            return next;
+        });
         setIsDirty(true);
     }, [clipboard]);
 
     // Atualizar propriedades do bloco
     const updateBlockProperties = useCallback((stepId: string, blockId: string, updates: Record<string, any>) => {
-        setSteps(prev =>
-            prev.map(step => {
-                if (step.id === stepId) {
-                    return {
-                        ...step,
-                        blocks: step.blocks.map(block => {
-                            if (block.id === blockId) {
-                                return {
-                                    ...block,
-                                    properties: { ...block.properties, ...updates }
-                                };
-                            }
-                            return block;
-                        })
-                    };
-                }
-                return step;
-            })
-        );
+        setSteps(prev => {
+            const next = prev.map(step => step.id === stepId ? {
+                ...step,
+                blocks: step.blocks.map(block => block.id === blockId ? { ...block, properties: { ...block.properties, ...updates } } : block)
+            } : step);
+            pushHistory(next);
+            return next;
+        });
 
         setIsDirty(true);
     }, []);
 
     // Atualizar conteúdo do bloco
     const updateBlockContent = useCallback((stepId: string, blockId: string, updates: Record<string, any>) => {
-        setSteps(prev =>
-            prev.map(step => {
-                if (step.id === stepId) {
-                    return {
-                        ...step,
-                        blocks: step.blocks.map(block => {
-                            if (block.id === blockId) {
-                                return {
-                                    ...block,
-                                    content: { ...block.content, ...updates }
-                                };
-                            }
-                            return block;
-                        })
-                    };
-                }
-                return step;
-            })
-        );
+        setSteps(prev => {
+            const next = prev.map(step => step.id === stepId ? {
+                ...step,
+                blocks: step.blocks.map(block => block.id === blockId ? { ...block, content: { ...block.content, ...updates } } : block)
+            } : step);
+            pushHistory(next);
+            return next;
+        });
 
         setIsDirty(true);
     }, []);
@@ -560,7 +560,11 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
     const removeMultiple = () => {
         if (!selectedStep || multiSelectedIds.length === 0) return;
         const total = multiSelectedIds.length;
-        setSteps(prev => prev.map(s => s.id === selectedStep.id ? { ...s, blocks: s.blocks.filter(b => !multiSelectedIds.includes(b.id)) } : s));
+        setSteps(prev => {
+            const next = prev.map(s => s.id === selectedStep.id ? { ...s, blocks: s.blocks.filter(b => !multiSelectedIds.includes(b.id)) } : s);
+            pushHistory(next);
+            return next;
+        });
         setIsDirty(true);
         clearMultiSelection();
         if (multiSelectedIds.includes(selectedBlockId)) setSelectedBlockId('');
@@ -573,28 +577,53 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
 
         if (!over || active.id === over.id || !selectedStepId) return;
 
-        setSteps(prev =>
-            prev.map(step => {
+        let changed = false;
+        setSteps(prev => {
+            const next = prev.map(step => {
                 if (step.id === selectedStepId) {
                     const oldIndex = step.blocks.findIndex(b => b.id === active.id);
                     const newIndex = step.blocks.findIndex(b => b.id === over.id);
-
-                    if (oldIndex !== -1 && newIndex !== -1) {
-                        const reordered = arrayMove(step.blocks, oldIndex, newIndex).map((block, index) => ({
-                            ...block,
-                            order: index
-                        }));
-
+                    if (oldIndex !== -1 && newIndex !== -1 && oldIndex !== newIndex) {
+                        changed = true;
+                        const reordered = arrayMove(step.blocks, oldIndex, newIndex).map((block, index) => ({ ...block, order: index }));
                         return { ...step, blocks: reordered };
                     }
                 }
                 return step;
-            })
-        );
+            });
+            if (changed) pushHistory(next);
+            return next;
+        });
 
-        setIsDirty(true);
+        if (changed) setIsDirty(true);
         setActiveId(null);
     };
+
+    const handleUndo = () => {
+        if (!historyRef.current || !historyRef.current.canUndo()) return;
+        const snap = historyRef.current.undo();
+        applyHistorySnapshot(snap);
+    };
+    const handleRedo = () => {
+        if (!historyRef.current || !historyRef.current.canRedo()) return;
+        const snap = historyRef.current.redo();
+        applyHistorySnapshot(snap);
+    };
+
+    useEffect(() => {
+        const onKey = (e: KeyboardEvent) => {
+            const meta = e.metaKey || e.ctrlKey;
+            if (meta && e.key.toLowerCase() === 'z') {
+                e.preventDefault();
+                if (e.shiftKey) handleRedo(); else handleUndo();
+            } else if (meta && e.key.toLowerCase() === 'y') {
+                e.preventDefault();
+                handleRedo();
+            }
+        };
+        window.addEventListener('keydown', onKey);
+        return () => window.removeEventListener('keydown', onKey);
+    }, []);
 
     // ========================================
     // Live Preview State & Helpers
@@ -886,6 +915,14 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                             {isSaving ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Save className="w-4 h-4 mr-2" />}
                             Salvar
                         </Button>
+                        <div className="flex items-center gap-1">
+                            <Button variant="ghost" size="sm" disabled={!canUndo} onClick={handleUndo} className="text-xs px-2">
+                                ⮪ Undo
+                            </Button>
+                            <Button variant="ghost" size="sm" disabled={!canRedo} onClick={handleRedo} className="text-xs px-2">
+                                Redo ⮫
+                            </Button>
+                        </div>
 
                         <Button size="sm" onClick={handlePublish} disabled={isPublishing}>
                             {isPublishing ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Upload className="w-4 h-4 mr-2" />}
