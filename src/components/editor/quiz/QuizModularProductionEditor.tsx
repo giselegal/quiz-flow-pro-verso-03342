@@ -1313,11 +1313,10 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
             <div
                 key={block.id}
                 className={cn(
-                    'group relative p-3 border rounded-lg cursor-move bg-white overflow-hidden',
-                    (selectedBlockId === block.id || isMultiSelected(block.id))
-                        ? 'border-blue-500 ring-2 ring-blue-200'
-                        : 'border-gray-200 hover:border-gray-300',
-                    hasErrors && 'border-red-500',
+                    'group relative p-3 rounded-lg cursor-move bg-white overflow-hidden transition-shadow',
+                    (selectedBlockId === block.id || isMultiSelected(block.id)) && 'border border-blue-500 ring-2 ring-blue-200 shadow-sm',
+                    // Mantém indicador visual mínimo em caso de erro sem violar regra de borda somente ao selecionar
+                    hasErrors && !(selectedBlockId === block.id || isMultiSelected(block.id)) && 'shadow-[0_0_0_1px_#dc2626]',
                     isMultiSelected(block.id) && 'bg-blue-50'
                 )}
                 onClick={(e) => handleBlockClick(e, block)}
