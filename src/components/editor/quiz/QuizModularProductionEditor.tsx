@@ -63,6 +63,7 @@ import ThemeEditorPanel from './components/ThemeEditorPanel';
 import { EditorThemeProvider, DesignTokens } from '@/theme/editorTheme';
 import { useValidation } from './hooks/useValidation';
 import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from '@/components/ui/tooltip';
+import { sanitizeInlineHtml, looksLikeHtml } from '@/utils/sanitizeInlineHtml';
 
 // Pré-visualizações especializadas (lazy) dos componentes finais de produção
 const StyleResultCard = React.lazy(() => import('@/components/editor/quiz/components/StyleResultCard').then(m => ({ default: m.StyleResultCard })));
@@ -333,7 +334,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                 id: `${step.id}-title`,
                 type: 'heading',
                 order: order++,
-                properties: { level: 2, textAlign: 'center' },
+                properties: { level: 2, textAlign: 'center', allowHtml: /<\w+[^>]*>/.test(step.title) },
                 content: { text: step.title }
             });
         }
@@ -787,14 +788,25 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
         if (type === 'heading') {
             const level = properties?.level ?? 2;
             const Tag = (['h1', 'h2', 'h3', 'h4', 'h5', 'h6'][Math.min(Math.max(level - 1, 0), 5)]) as any;
+            const rawText = content.text || 'Título';
+            const allowHtml = properties?.allowHtml && looksLikeHtml(rawText);
+            let inner: React.ReactNode;
+            if (allowHtml) {
+                const safe = sanitizeInlineHtml(replacePlaceholders(rawText, placeholderContext));
+                inner = <span dangerouslySetInnerHTML={{ __html: safe }} />;
+            } else {
+                inner = replacePlaceholders(rawText, placeholderContext);
+            }
             node = (
-                <Tag className={cn(
-                    'font-semibold tracking-tight',
-                    level === 1 && 'text-3xl',
-                    level === 2 && 'text-2xl',
-                    level === 3 && 'text-xl',
-                    level >= 4 && 'text-lg'
-                )}>{replacePlaceholders(content.text || 'Título', placeholderContext)}</Tag>
+                <Tag
+                    className={cn(
+                        'font-semibold tracking-tight',
+                        level === 1 && 'text-3xl',
+                        level === 2 && 'text-2xl',
+                        level === 3 && 'text-xl',
+                        level >= 4 && 'text-lg'
+                    )}
+                >{inner}</Tag>
             );
             previewCacheRef.current.set(id, { key, node });
             return node;

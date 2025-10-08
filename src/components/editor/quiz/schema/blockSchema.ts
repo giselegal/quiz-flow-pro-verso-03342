@@ -49,6 +49,7 @@ export const INITIAL_BLOCK_SCHEMAS: BlockPropertySchemaDefinition[] = [
         ],
         properties: [
             { key: 'text', label: 'Texto', type: 'string', required: true, default: 'Novo Título', group: 'content' },
+            { key: 'allowHtml', label: 'Permitir HTML', type: 'boolean', default: false, group: 'content', advanced: true, description: 'Habilita interpretação de spans estilizadas (sanitizado)' },
             { key: 'level', label: 'Nível', type: 'number', default: 2, min: 1, max: 6, group: 'style' },
             { key: 'textAlign', label: 'Alinhamento', type: 'select', enumValues: ['left', 'center', 'right'], default: 'center', group: 'style' },
             { key: 'color', label: 'Cor', type: 'color', default: '#432818', group: 'style' },
