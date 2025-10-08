@@ -15,7 +15,7 @@
  * - ✅ Publicação para /quiz-estilo
  */
 
-import React, { useState, useCallback, useEffect, useMemo } from 'react';
+import React, { useState, useCallback, useEffect, useMemo, Suspense } from 'react';
 import { useLocation } from 'wouter';
 import { DndContext, DragOverlay, closestCenter, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
 import { SortableContext, verticalListSortingStrategy, arrayMove } from '@dnd-kit/sortable';
@@ -52,6 +52,10 @@ import { quizEditorBridge } from '@/services/QuizEditorBridge';
 import QuizProductionPreview from './QuizProductionPreview';
 import { useToast } from '@/hooks/use-toast';
 
+// Pré-visualizações especializadas (lazy) dos componentes finais de produção
+const StyleResultCard = React.lazy(() => import('@/components/editor/quiz/components/StyleResultCard').then(m => ({ default: m.StyleResultCard })));
+const OfferMap = React.lazy(() => import('@/components/editor/quiz/components/OfferMap').then(m => ({ default: m.OfferMap })));
+
 // Tipos
 interface BlockComponent {
     id: string;
@@ -61,11 +65,22 @@ interface BlockComponent {
     content: Record<string, any>;
 }
 
+// Tipagem mais estrita alinhada aos tipos de produção
+type StepType = 'intro' | 'question' | 'strategic-question' | 'transition' | 'transition-result' | 'result' | 'offer';
+
 interface EditableQuizStep {
     id: string;
-    type: string;
+    type: StepType; // restringe para manter compatibilidade com QuizFunnelData
     order: number;
     blocks: BlockComponent[];
+    title?: string;
+    questionText?: string;
+    options?: any[];
+    requiredSelections?: number;
+    image?: string;
+    buttonText?: string;
+    nextStep?: string;
+    offerMap?: Record<string, any>;
     [key: string]: any;
 }
 
@@ -211,9 +226,19 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
             const funnel = await quizEditorBridge.loadFunnelForEdit(initialFunnelId);
 
             // Converter steps para formato modular com blocos
-            const modularSteps = funnel.steps.map(step => ({
-                ...step,
-                blocks: step.blocks || convertStepToBlocks(step)
+            const modularSteps: EditableQuizStep[] = funnel.steps.map((step: any, index: number) => ({
+                id: step.id,
+                type: (step.type || 'question') as StepType,
+                order: step.order ?? index + 1,
+                title: step.title,
+                questionText: step.questionText,
+                options: step.options,
+                requiredSelections: step.requiredSelections,
+                image: step.image,
+                buttonText: step.buttonText,
+                nextStep: step.nextStep,
+                offerMap: step.offerMap,
+                blocks: Array.isArray(step.blocks) ? step.blocks : convertStepToBlocks(step)
             }));
 
             setSteps(modularSteps);
@@ -460,7 +485,21 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                 id: funnelId || 'new-draft',
                 name: 'Quiz Estilo Pessoal - Modular',
                 slug: 'quiz-estilo',
-                steps,
+                steps: steps.map(s => ({
+                    id: s.id,
+                    type: s.type,
+                    order: s.order,
+                    title: s.title,
+                    questionText: s.questionText,
+                    options: s.options,
+                    requiredSelections: s.requiredSelections,
+                    image: s.image,
+                    buttonText: s.buttonText,
+                    nextStep: s.nextStep,
+                    offerMap: s.offerMap,
+                    // Persistir blocks em campo auxiliar (não impacta produção)
+                    blocks: s.blocks
+                })),
                 isPublished: false,
                 version: 1
             };
@@ -686,49 +725,87 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                                                     <p className="text-sm">Adicione da biblioteca ao lado</p>
                                                 </div>
                                             ) : (
-                                                <SortableContext
-                                                    items={selectedStep.blocks.map(b => b.id)}
-                                                    strategy={verticalListSortingStrategy}
-                                                >
-                                                    <div className="space-y-2">
-                                                        {selectedStep.blocks
-                                                            .sort((a, b) => a.order - b.order)
-                                                            .map(block => (
-                                                                <div
-                                                                    key={block.id}
-                                                                    className={cn(
-                                                                        'flex items-center gap-2 p-3 border rounded-lg cursor-move',
-                                                                        selectedBlockId === block.id
-                                                                            ? 'border-blue-500 bg-blue-50'
-                                                                            : 'border-gray-200 hover:border-gray-300'
+                                                <>
+                                                    {/* Preview avançado para etapas especiais (result / offer) */}
+                                                    {(selectedStep.id === 'step-20' || selectedStep.id === 'step-21') && (
+                                                        <div className="mb-6">
+                                                            <div className="mb-3 flex items-center justify-between">
+                                                                <h4 className="text-sm font-semibold text-gray-700 flex items-center gap-2">
+                                                                    {selectedStep.id === 'step-20' ? 'Preview de Resultado (StyleResultCard)' : 'Preview de Oferta (OfferMap)'}
+                                                                </h4>
+                                                                <Badge variant="secondary" className="text-[10px]">Renderizado</Badge>
+                                                            </div>
+                                                            <div className="border rounded-lg bg-white p-4">
+                                                                <Suspense fallback={<div className="text-xs text-muted-foreground">Carregando componente...</div>}>
+                                                                    {selectedStep.id === 'step-20' && (
+                                                                        <StyleResultCard
+                                                                            resultStyle="classico"
+                                                                            userName="Preview"
+                                                                            secondaryStyles={['natural', 'romantico']}
+                                                                            scores={{ classico: 12, natural: 8, romantico: 6 }}
+                                                                            mode="result"
+                                                                        />
                                                                     )}
-                                                                    onClick={() => setSelectedBlockId(block.id)}
-                                                                >
-                                                                    <GripVertical className="w-4 h-4 text-gray-400" />
+                                                                    {selectedStep.id === 'step-21' && (
+                                                                        <OfferMap
+                                                                            content={{ offerMap: (selectedStep as any).offerMap || {} }}
+                                                                            mode="preview"
+                                                                            userName="Preview"
+                                                                            selectedOfferKey="Montar looks com mais facilidade e confiança"
+                                                                        />
+                                                                    )}
+                                                                </Suspense>
+                                                                <p className="mt-3 text-[11px] text-muted-foreground leading-relaxed">
+                                                                    Esta pré-visualização mostra o componente final de produção. A lista de blocos abaixo representa a estrutura editável bruta desta etapa. Em uma fase posterior os blocos serão sincronizados diretamente com o componente unificado.
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                    )}
 
-                                                                    <div className="flex-1">
-                                                                        <div className="flex items-center gap-2">
-                                                                            <Badge variant="outline">{block.type}</Badge>
-                                                                            <span className="text-sm font-medium">
-                                                                                {block.content.text || block.content.label || 'Componente'}
-                                                                            </span>
-                                                                        </div>
-                                                                    </div>
-
-                                                                    <Button
-                                                                        variant="ghost"
-                                                                        size="sm"
-                                                                        onClick={(e) => {
-                                                                            e.stopPropagation();
-                                                                            removeBlock(selectedStep.id, block.id);
-                                                                        }}
+                                                    <SortableContext
+                                                        items={selectedStep.blocks.map(b => b.id)}
+                                                        strategy={verticalListSortingStrategy}
+                                                    >
+                                                        <div className="space-y-2">
+                                                            {selectedStep.blocks
+                                                                .sort((a, b) => a.order - b.order)
+                                                                .map(block => (
+                                                                    <div
+                                                                        key={block.id}
+                                                                        className={cn(
+                                                                            'flex items-center gap-2 p-3 border rounded-lg cursor-move',
+                                                                            selectedBlockId === block.id
+                                                                                ? 'border-blue-500 bg-blue-50'
+                                                                                : 'border-gray-200 hover:border-gray-300'
+                                                                        )}
+                                                                        onClick={() => setSelectedBlockId(block.id)}
                                                                     >
-                                                                        <Trash2 className="w-4 h-4 text-red-500" />
-                                                                    </Button>
-                                                                </div>
-                                                            ))}
-                                                    </div>
-                                                </SortableContext>
+                                                                        <GripVertical className="w-4 h-4 text-gray-400" />
+
+                                                                        <div className="flex-1">
+                                                                            <div className="flex items-center gap-2">
+                                                                                <Badge variant="outline">{block.type}</Badge>
+                                                                                <span className="text-sm font-medium">
+                                                                                    {block.content.text || block.content.label || 'Componente'}
+                                                                                </span>
+                                                                            </div>
+                                                                        </div>
+
+                                                                        <Button
+                                                                            variant="ghost"
+                                                                            size="sm"
+                                                                            onClick={(e) => {
+                                                                                e.stopPropagation();
+                                                                                removeBlock(selectedStep.id, block.id);
+                                                                            }}
+                                                                        >
+                                                                            <Trash2 className="w-4 h-4 text-red-500" />
+                                                                        </Button>
+                                                                    </div>
+                                                                ))}
+                                                        </div>
+                                                    </SortableContext>
+                                                </>
                                             )}
                                         </CardContent>
                                     </Card>
