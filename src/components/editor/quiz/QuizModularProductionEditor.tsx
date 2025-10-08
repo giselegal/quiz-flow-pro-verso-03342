@@ -477,6 +477,143 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
         setActiveId(null);
     };
 
+    // ========================================
+    // Live Preview State & Helpers
+    // ========================================
+    const [quizSelections, setQuizSelections] = useState<Record<string, string[]>>({});
+
+    const toggleQuizOption = (blockId: string, optionId: string, multi = true, max = 1) => {
+        setQuizSelections(prev => {
+            const current = prev[blockId] || [];
+            let next: string[];
+            if (multi) {
+                const exists = current.includes(optionId);
+                if (exists) {
+                    next = current.filter(id => id !== optionId);
+                } else {
+                    if (current.length >= max) return prev; // limita
+                    next = [...current, optionId];
+                }
+            } else {
+                next = [optionId];
+            }
+            return { ...prev, [blockId]: next };
+        });
+    };
+
+    const renderBlockPreview = (block: BlockComponent) => {
+        const { type, content, properties } = block;
+        // Heading
+        if (type === 'heading') {
+            const level = properties?.level ?? 2;
+            const Tag = (['h1', 'h2', 'h3', 'h4', 'h5', 'h6'][Math.min(Math.max(level - 1, 0), 5)]) as any;
+            return (
+                <Tag className={cn(
+                    'font-semibold tracking-tight',
+                    level === 1 && 'text-3xl',
+                    level === 2 && 'text-2xl',
+                    level === 3 && 'text-xl',
+                    level >= 4 && 'text-lg'
+                )}>{content.text || 'Título'}</Tag>
+            );
+        }
+        // Text
+        if (type === 'text') {
+            return <p className="text-sm leading-relaxed text-slate-700 whitespace-pre-wrap">{content.text || 'Texto'}</p>;
+        }
+        // Image
+        if (type === 'image') {
+            return (
+                <div className="w-full flex justify-center">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                        src={content.src || 'https://via.placeholder.com/400x240?text=Imagem'}
+                        alt={content.alt || 'Imagem'}
+                        className="max-w-full rounded-md border shadow-sm"
+                        style={{ objectFit: 'cover' }}
+                    />
+                </div>
+            );
+        }
+        // Button
+        if (type === 'button') {
+            return (
+                <button
+                    type="button"
+                    className="inline-flex items-center justify-center px-4 py-2 rounded-md text-sm font-medium bg-[#B89B7A] hover:bg-[#a08464] text-white shadow-sm transition-colors"
+                >
+                    {content.text || 'Botão'}
+                </button>
+            );
+        }
+        // Quiz Options
+        if (type === 'quiz-options') {
+            const options = content.options || [];
+            const multi = properties?.multiSelect ?? false;
+            const max = properties?.maxSelections ?? (multi ? options.length : 1);
+            const selected = quizSelections[block.id] || [];
+            return (
+                <div className="space-y-2">
+                    <div className={cn('grid gap-3',
+                        options.length >= 4 && 'grid-cols-2',
+                        options.length >= 6 && 'md:grid-cols-3'
+                    )}>
+                        {options.map((opt: any) => {
+                            const active = selected.includes(opt.id);
+                            return (
+                                <button
+                                    key={opt.id}
+                                    type="button"
+                                    onClick={(e) => { e.preventDefault(); toggleQuizOption(block.id, opt.id, multi, max); }}
+                                    className={cn(
+                                        'text-xs px-3 py-2 rounded border text-left transition-all select-none',
+                                        'bg-white hover:border-blue-300 hover:bg-blue-50',
+                                        active && 'border-blue-600 bg-blue-600 text-white shadow'
+                                    )}
+                                >
+                                    {opt.text || 'Opção'}
+                                </button>
+                            );
+                        })}
+                    </div>
+                    <div className="text-[10px] text-muted-foreground">
+                        {multi ? `${selected.length}/${max} selecionadas` : 'Seleção única'}
+                    </div>
+                </div>
+            );
+        }
+        // Form Input
+        if (type === 'form-input') {
+            return (
+                <div className="space-y-1">
+                    <label className="text-xs font-medium text-slate-600">{content.label || 'Campo'}</label>
+                    <input
+                        placeholder={content.placeholder || 'Digite...'}
+                        className="w-full px-3 py-2 rounded-md border text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-200"
+                        disabled
+                    />
+                </div>
+            );
+        }
+        // Container
+        if (type === 'container') {
+            return (
+                <div
+                    className="rounded-md border p-4 bg-gradient-to-br from-white to-slate-50 shadow-sm"
+                    style={{
+                        backgroundColor: properties?.backgroundColor || undefined,
+                        padding: properties?.padding || undefined,
+                        borderRadius: properties?.borderRadius || undefined
+                    }}
+                >
+                    <p className="text-[11px] font-medium text-slate-500 mb-2">Container</p>
+                    <div className="text-xs text-slate-400">(Arraste outros blocos para dentro - futuro)</div>
+                </div>
+            );
+        }
+        return <span className="text-xs italic text-slate-400">(Pré-visualização não suportada)</span>;
+    };
+
     // Salvar
     const handleSave = useCallback(async () => {
         setIsSaving(true);
@@ -773,34 +910,38 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                                                                     <div
                                                                         key={block.id}
                                                                         className={cn(
-                                                                            'flex items-center gap-2 p-3 border rounded-lg cursor-move',
+                                                                            'group relative p-3 border rounded-lg cursor-move bg-white overflow-hidden',
                                                                             selectedBlockId === block.id
-                                                                                ? 'border-blue-500 bg-blue-50'
+                                                                                ? 'border-blue-500 ring-2 ring-blue-200'
                                                                                 : 'border-gray-200 hover:border-gray-300'
                                                                         )}
                                                                         onClick={() => setSelectedBlockId(block.id)}
                                                                     >
-                                                                        <GripVertical className="w-4 h-4 text-gray-400" />
-
-                                                                        <div className="flex-1">
-                                                                            <div className="flex items-center gap-2">
-                                                                                <Badge variant="outline">{block.type}</Badge>
-                                                                                <span className="text-sm font-medium">
-                                                                                    {block.content.text || block.content.label || 'Componente'}
-                                                                                </span>
+                                                                        <div className="absolute left-2 top-2 opacity-70 group-hover:opacity-100 transition-opacity">
+                                                                            <GripVertical className="w-4 h-4 text-gray-400" />
+                                                                        </div>
+                                                                        <div className="pl-6 pr-8 space-y-2">
+                                                                            <div className="flex items-center gap-2 text-[10px] text-slate-500">
+                                                                                <Badge variant="outline" className="text-[10px] px-1 py-0 font-normal">{block.type}</Badge>
+                                                                                <span className="truncate max-w-[160px]">{block.content.text || block.content.label || block.type}</span>
+                                                                            </div>
+                                                                            <div className="text-left">
+                                                                                {renderBlockPreview(block)}
                                                                             </div>
                                                                         </div>
-
-                                                                        <Button
-                                                                            variant="ghost"
-                                                                            size="sm"
-                                                                            onClick={(e) => {
-                                                                                e.stopPropagation();
-                                                                                removeBlock(selectedStep.id, block.id);
-                                                                            }}
-                                                                        >
-                                                                            <Trash2 className="w-4 h-4 text-red-500" />
-                                                                        </Button>
+                                                                        <div className="absolute right-1 top-1">
+                                                                            <Button
+                                                                                variant="ghost"
+                                                                                size="icon"
+                                                                                className="h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity"
+                                                                                onClick={(e) => {
+                                                                                    e.stopPropagation();
+                                                                                    removeBlock(selectedStep.id, block.id);
+                                                                                }}
+                                                                            >
+                                                                                <Trash2 className="w-3 h-3 text-red-500" />
+                                                                            </Button>
+                                                                        </div>
                                                                     </div>
                                                                 ))}
                                                         </div>
