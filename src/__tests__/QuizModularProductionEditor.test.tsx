@@ -1,14 +1,17 @@
 /**
- * 🧪 TESTES: Editor Modular 4 Colunas - Quiz Estilo
+ * 🧪 TESTES ESPECÍFICOS: Editor Modular vs /quiz-estilo REAL
  * 
- * Valida edição completa do funil /quiz-estilo:
- * - Carregar funil de produção
- * - Adicionar/remover componentes
- * - Editar propriedades
- * - Reordenar com drag & drop
- * - Salvar rascunho
- * - Publicar para produção
- * - Validar no runtime
+ * Baseado na análise completa em ANALISE_ESTRUTURA_REAL_QUIZ_ESTILO.md
+ * 
+ * OBJETIVO: Validar se o editor consegue editar 100% do funil /quiz-estilo
+ * 
+ * ESTRUTURA DE TESTES:
+ * 1. Carregar estrutura real de 21 etapas
+ * 2. Validar todos os tipos de componentes necessários
+ * 3. Validar propriedades críticas (IDs de estilos, offerMap, etc.)
+ * 4. Validar conversão bidirecional (editor ↔ runtime)
+ * 5. Validar lógica de negócio (pontuação, ofertas)
+ * 6. Identificar gaps e componentes faltando
  */
 
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
@@ -18,6 +21,7 @@ import { QuizModularProductionEditor } from '@/components/editor/quiz/QuizModula
 import { quizEditorBridge } from '@/services/QuizEditorBridge';
 import { useQuizState } from '@/hooks/useQuizState';
 import QuizApp from '@/components/quiz/QuizApp';
+import { QUIZ_STEPS, STEP_ORDER } from '@/data/quizSteps';
 
 // Mocks
 vi.mock('@/services/QuizEditorBridge');

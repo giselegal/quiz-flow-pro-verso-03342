@@ -50,17 +50,17 @@ export interface OfferContent {
 
 // Estrutura completa das 21 etapas baseada no HTML fornecido
 export const QUIZ_STEPS: Record<string, QuizStep> = {
-    'step-1': {
+    'step-01': {
         type: 'intro',
         title: '<span style="color: #B89B7A; font-weight: 700;" class="playfair-display">Chega</span> <span class="playfair-display">de um guarda-roupa lotado e da sensação de que</span> <span style="color: #B89B7A; font-weight: 700;" class="playfair-display">nada combina com você.</span>',
         formQuestion: 'Como posso te chamar?',
         placeholder: 'Digite seu primeiro nome aqui...',
         buttonText: 'Quero Descobrir meu Estilo Agora!',
         image: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1746838118/20250509_2137_Desordem_e_Reflex%C3%A3o_simple_compose_01jtvszf8sfaytz493z9f16rf2_z1c2up.png',
-        nextStep: 'step-2',
+        nextStep: 'step-02',
     },
 
-    'step-2': {
+    'step-02': {
         type: 'question',
         questionNumber: '1 de 10',
         questionText: 'QUAL O SEU TIPO DE ROUPA FAVORITA?',
@@ -75,10 +75,10 @@ export const QUIZ_STEPS: Record<string, QuizStep> = {
             { id: 'dramatico', text: 'Impacto visual com peças estruturadas e assimétricas', image: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735319/17_m5ogub.webp' },
             { id: 'criativo', text: 'Mix criativo com formas ousadas e originais', image: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/18_j8ipfb.webp' },
         ],
-        nextStep: 'step-3',
+        nextStep: 'step-03',
     },
 
-    'step-3': {
+    'step-03': {
         type: 'question',
         questionNumber: '2 de 10',
         questionText: 'RESUMA A SUA PERSONALIDADE:',
@@ -93,10 +93,10 @@ export const QUIZ_STEPS: Record<string, QuizStep> = {
             { id: 'dramatico', text: 'Cosmopolita, moderna e audaciosa' },
             { id: 'criativo', text: 'Exótica, aventureira, livre' },
         ],
-        nextStep: 'step-4',
+        nextStep: 'step-04',
     },
 
-    'step-4': {
+    'step-04': {
         type: 'question',
         questionNumber: '3 de 10',
         questionText: 'QUAL VISUAL VOCÊ MAIS SE IDENTIFICA?',
@@ -111,10 +111,10 @@ export const QUIZ_STEPS: Record<string, QuizStep> = {
             { id: 'dramatico', text: 'Visual marcante e urbano (jeans + jaqueta)', image: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/8_yqu3hw.webp' },
             { id: 'criativo', text: 'Visual criativo, colorido e ousado', image: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/9_x6so6a.webp' },
         ],
-        nextStep: 'step-5',
+        nextStep: 'step-05',
     },
 
-    'step-5': {
+    'step-05': {
         type: 'question',
         questionNumber: '4 de 10',
         questionText: 'QUAIS DETALHES VOCÊ GOSTA?',
@@ -129,10 +129,10 @@ export const QUIZ_STEPS: Record<string, QuizStep> = {
             { id: 'dramatico', text: 'Detalhes marcantes, firmeza e peso' },
             { id: 'criativo', text: 'Detalhes diferentes do convencional, produções ousadas' },
         ],
-        nextStep: 'step-6',
+        nextStep: 'step-06',
     },
 
-    'step-6': {
+    'step-06': {
         type: 'question',
         questionNumber: '5 de 10',
         questionText: 'QUAIS ESTAMPAS VOCÊ MAIS SE IDENTIFICA?',
@@ -147,10 +147,10 @@ export const QUIZ_STEPS: Record<string, QuizStep> = {
             { id: 'dramatico', text: 'Estampas geométricas, abstratas e exageradas como grandes poás', image: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735371/26_dptanw.webp' },
             { id: 'criativo', text: 'Estampas diferentes do usual, como africanas, xadrez grandes', image: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735372/27_wxmklx.webp' },
         ],
-        nextStep: 'step-7',
+        nextStep: 'step-07',
     },
 
-    'step-7': {
+    'step-07': {
         type: 'question',
         questionNumber: '6 de 10',
         questionText: 'QUAL CASACO É SEU FAVORITO?',
@@ -165,10 +165,10 @@ export const QUIZ_STEPS: Record<string, QuizStep> = {
             { id: 'dramatico', text: 'Jaqueta preta estilo rocker', image: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735379/35_pulzso.webp' },
             { id: 'criativo', text: 'Casaco estampado criativo e colorido', image: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735377/36_cympaq.webp' },
         ],
-        nextStep: 'step-8',
+        nextStep: 'step-08',
     },
 
-    'step-8': {
+    'step-08': {
         type: 'question',
         questionNumber: '7 de 10',
         questionText: 'QUAL SUA CALÇA FAVORITA?',
@@ -183,10 +183,10 @@ export const QUIZ_STEPS: Record<string, QuizStep> = {
             { id: 'dramatico', text: 'Calça reta preta de couro', image: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735424/44_nqgvoq.webp' },
             { id: 'criativo', text: 'Calça estampada floral leve e ampla', image: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735425/45_lp64m8.webp' },
         ],
-        nextStep: 'step-9',
+        nextStep: 'step-09',
     },
 
-    'step-9': {
+    'step-09': {
         type: 'question',
         questionNumber: '8 de 10',
         questionText: 'QUAL DESSES SAPATOS VOCÊ TEM OU MAIS GOSTA?',
