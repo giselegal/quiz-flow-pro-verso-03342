@@ -537,16 +537,85 @@ export const useUnifiedEditor = (): UnifiedEditorReturn => {
     deleteFunnel: async () => false, // TODO: Implement
 
     addStage,
-    updateStage: async () => { }, // TODO: Implement
-    deleteStage: async () => { }, // TODO: Implement
-    reorderStages: async () => { }, // TODO: Implement
+    updateStage: async (id: string, updates: Partial<UnifiedStage>) => {
+      if (!state.funnel) return;
+      const updated = { ...state.funnel, stages: state.funnel.stages.map(s => s.id === id ? { ...s, ...updates } : s) };
+      setState(prev => ({ ...prev, funnel: updated, isDirty: true }));
+      addToHistory(updated);
+    },
+    deleteStage: async (id: string) => {
+      if (!state.funnel) return;
+      const updatedStages = state.funnel.stages.filter(s => s.id !== id).map((s, idx) => ({ ...s, order: idx }));
+      const updated = { ...state.funnel, stages: updatedStages };
+      setState(prev => ({ ...prev, funnel: updated, activeStageId: updatedStages[0]?.id || null, isDirty: true }));
+      addToHistory(updated);
+    },
+    reorderStages: async (fromIndex: number, toIndex: number) => {
+      if (!state.funnel) return;
+      const stages = [...state.funnel.stages];
+      if (fromIndex < 0 || toIndex < 0 || fromIndex >= stages.length || toIndex >= stages.length) return;
+      const [moved] = stages.splice(fromIndex, 1);
+      stages.splice(toIndex, 0, moved);
+      stages.forEach((s, i) => { s.order = i; });
+      const updated = { ...state.funnel, stages: stages.map(s => ({ ...s })) };
+      setState(prev => ({ ...prev, funnel: updated, isDirty: true }));
+      addToHistory(updated);
+    },
     setActiveStage,
 
     addBlock,
     updateBlock,
-    deleteBlock: async () => { }, // TODO: Implement
-    duplicateBlock: async () => '', // TODO: Implement
-    reorderBlocks: async () => { }, // TODO: Implement
+    deleteBlock: async (blockId: string) => {
+      if (!state.funnel) return;
+      const updated = {
+        ...state.funnel, stages: state.funnel.stages.map(stage => ({
+          ...stage,
+          blocks: stage.blocks.filter(b => b.id !== blockId),
+          blockOrder: stage.blockOrder.filter(id => id !== blockId)
+        }))
+      };
+      setState(prev => ({ ...prev, funnel: updated, selectedBlockId: prev.selectedBlockId === blockId ? null : prev.selectedBlockId, selectedBlock: null, isDirty: true }));
+      addToHistory(updated);
+    },
+    duplicateBlock: async (blockId: string) => {
+      if (!state.funnel) return '';
+      let newId = '';
+      const updated = {
+        ...state.funnel, stages: state.funnel.stages.map(stage => {
+          const idx = stage.blocks.findIndex(b => b.id === blockId);
+          if (idx === -1) return stage;
+          const original = stage.blocks[idx];
+          newId = `block_${Date.now()}`;
+          const clone = { ...original, id: newId, order: original.order + 0.1 } as UnifiedBlock;
+          const newBlocks = [...stage.blocks];
+          newBlocks.splice(idx + 1, 0, clone);
+          // Normaliza order
+          newBlocks.forEach((b, i) => b.order = i);
+          return { ...stage, blocks: newBlocks, blockOrder: newBlocks.map(b => b.id) };
+        })
+      };
+      if (newId) {
+        setState(prev => ({ ...prev, funnel: updated, selectedBlockId: newId, selectedBlock: null, isDirty: true }));
+        addToHistory(updated);
+      }
+      return newId;
+    },
+    reorderBlocks: async (stageId: string, fromIndex: number, toIndex: number) => {
+      if (!state.funnel) return;
+      const updated = {
+        ...state.funnel, stages: state.funnel.stages.map(stage => {
+          if (stage.id !== stageId) return stage;
+          const blocks = [...stage.blocks];
+          if (fromIndex < 0 || toIndex < 0 || fromIndex >= blocks.length || toIndex >= blocks.length) return stage;
+          const [moved] = blocks.splice(fromIndex, 1);
+          blocks.splice(toIndex, 0, moved);
+          blocks.forEach((b, i) => b.order = i);
+          return { ...stage, blocks, blockOrder: blocks.map(b => b.id) };
+        })
+      };
+      setState(prev => ({ ...prev, funnel: updated, isDirty: true }));
+      addToHistory(updated);
+    },
     setSelectedBlock,
 
     updateBlockProperty: async () => { }, // TODO: Implement
