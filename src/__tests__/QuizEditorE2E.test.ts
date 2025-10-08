@@ -16,23 +16,23 @@
 
 import { describe, it, expect, beforeEach } from 'vitest';
 import { QUIZ_STEPS } from '@/data/quizSteps';
-import { 
-  convertStepToBlocks, 
-  convertBlocksToStep, 
-  validateRoundTrip 
+import {
+    convertStepToBlocks,
+    convertBlocksToStep,
+    validateRoundTrip
 } from '@/utils/quizConversionUtils';
-import { 
-  validateCompleteFunnel, 
-  validateStyleIds, 
-  validateNextStep, 
-  validateOfferMap, 
-  validateFormInput 
+import {
+    validateCompleteFunnel,
+    validateStyleIds,
+    validateNextStep,
+    validateOfferMap,
+    validateFormInput
 } from '@/utils/quizValidationUtils';
 import type { QuizStep } from '@/data/quizSteps';
 import type { Block } from '@/types/editor';
 
 // Helper: Converter Record para Array
-const QUIZ_STEPS_ARRAY = Object.values(QUIZ_STEPS) as QuizStep[];describe('Quiz Editor E2E Tests', () => {
+const QUIZ_STEPS_ARRAY = Object.values(QUIZ_STEPS) as QuizStep[]; describe('Quiz Editor E2E Tests', () => {
 
     // ============================================================================
     // TEST GROUP 1: Carregar Funnel de Produção
