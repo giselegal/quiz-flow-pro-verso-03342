@@ -207,6 +207,8 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
 
     // Drag & Drop
     const [activeId, setActiveId] = useState<string | null>(null);
+    const [clipboard, setClipboard] = useState<BlockComponent[] | null>(null);
+    const [lastSelectionStepId, setLastSelectionStepId] = useState<string>('');
     const sensors = useSensors(
         useSensor(PointerSensor, {
             activationConstraint: {
@@ -343,6 +345,15 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
         [selectedStep, selectedBlockId]
     );
 
+    // Persistir seleção por etapa (quando alternar, manter bloco selecionado se existir)
+    useEffect(() => {
+        if (!selectedStepId) return;
+        if (lastSelectionStepId !== selectedStepId) {
+            setSelectedBlockId('');
+            setLastSelectionStepId(selectedStepId);
+        }
+    }, [selectedStepId, lastSelectionStepId]);
+
     // Adicionar bloco ao step
     const addBlockToStep = useCallback((stepId: string, componentType: string) => {
         const component = COMPONENT_LIBRARY.find(c => c.type === componentType);
@@ -397,6 +408,39 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
 
         setIsDirty(true);
     }, [selectedBlockId]);
+
+    // Duplicar bloco
+    const duplicateBlock = useCallback((stepId: string, block: BlockComponent) => {
+        const clone: BlockComponent = {
+            ...block,
+            id: `${block.id}-dup-${Date.now()}`,
+            order: (selectedStep?.blocks.length || 0)
+        };
+        setSteps(prev => prev.map(s => s.id === stepId ? { ...s, blocks: [...s.blocks, clone] } : s));
+        setSelectedBlockId(clone.id);
+        setIsDirty(true);
+    }, [selectedStep]);
+
+    // Copiar bloco (ou múltiplos no futuro)
+    const copyBlock = useCallback((block: BlockComponent) => {
+        setClipboard([JSON.parse(JSON.stringify(block))]);
+    }, []);
+
+    // Colar bloco(s)
+    const pasteBlocks = useCallback((stepId: string) => {
+        if (!clipboard || clipboard.length === 0) return;
+        setSteps(prev => prev.map(s => {
+            if (s.id !== stepId) return s;
+            const baseLen = s.blocks.length;
+            const clones = clipboard.map((b, i) => ({
+                ...b,
+                id: `${b.id}-paste-${Date.now()}-${i}`,
+                order: baseLen + i
+            }));
+            return { ...s, blocks: [...s.blocks, ...clones] };
+        }));
+        setIsDirty(true);
+    }, [clipboard]);
 
     // Atualizar propriedades do bloco
     const updateBlockProperties = useCallback((stepId: string, blockId: string, updates: Record<string, any>) => {
@@ -965,11 +1009,22 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
 
                     {/* COLUNA 4: PROPRIEDADES */}
                     <div className="w-80 bg-white border-l flex flex-col">
-                        <div className="px-4 py-3 border-b">
-                            <h2 className="font-semibold text-sm">Propriedades</h2>
-                            <p className="text-xs text-muted-foreground">
-                                {selectedBlock ? `${selectedBlock.type}` : 'Nenhum componente selecionado'}
-                            </p>
+                        <div className="px-4 py-3 border-b flex items-center justify-between">
+                            <div>
+                                <h2 className="font-semibold text-sm">Propriedades</h2>
+                                <p className="text-xs text-muted-foreground">
+                                    {selectedBlock ? `${selectedBlock.type}` : 'Nenhum componente selecionado'}
+                                </p>
+                            </div>
+                            <div className="flex gap-1">
+                                <Button
+                                    size="sm"
+                                    variant="outline"
+                                    disabled={!clipboard || clipboard.length === 0 || !selectedStep}
+                                    onClick={() => selectedStep && pasteBlocks(selectedStep.id)}
+                                    className="h-7 px-2 text-[11px]"
+                                >Colar</Button>
+                            </div>
                         </div>
 
                         <ScrollArea className="flex-1">
