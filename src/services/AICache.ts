@@ -68,9 +68,6 @@ export class AICache {
         try {
           const entry = JSON.parse(storedItem);
           if (!this.isExpired(entry)) {
-            if (entry.generation === undefined) {
-              entry.generation = this.generation; // normaliza geração para entradas legadas
-            }
             this.cache.set(fullKey, entry);
           } else {
             localStorage.removeItem(fullKey);
@@ -177,8 +174,8 @@ export class AICache {
    */
   clear(): void {
     // Recria o Map para evitar retenção em referências internas
-    this.cache = new Map();
-    this.generation++;
+  this.cache = new Map();
+  this.generation++;
 
     // Limpa também o localStorage
     Object.keys(localStorage).forEach(key => {

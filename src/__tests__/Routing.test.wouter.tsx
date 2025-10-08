@@ -47,22 +47,22 @@ describe('🧭 Sistema de Roteamento com Wouter', () => {
     describe('Rota Principal /editor', () => {
         it('deve renderizar EditorUnifiedPage na rota /editor', () => {
             renderPath('/editor');
-            expect(screen.getByTestId('editor-unified-page')).toBeInTheDocument();
+            expect(screen.getByTestId('quiz-editor-wysiwyg-page')).toBeInTheDocument();
         });
 
         it('deve aceitar parâmetros de step na URL', () => {
             renderPath('/editor?step=5');
-            expect(screen.getByTestId('editor-unified-page')).toBeInTheDocument();
+            expect(screen.getByTestId('quiz-editor-wysiwyg-page')).toBeInTheDocument();
         });
 
         it('deve manter estado na navegação', () => {
             renderPath('/editor');
-            expect(screen.getByTestId('editor-unified-page')).toBeInTheDocument();
+            expect(screen.getByTestId('quiz-editor-wysiwyg-page')).toBeInTheDocument();
         });
 
         it('deve aceitar múltiplos parâmetros na URL', () => {
             renderPath('/editor?step=3');
-            expect(screen.getByTestId('editor-unified-page')).toBeInTheDocument();
+            expect(screen.getByTestId('quiz-editor-wysiwyg-page')).toBeInTheDocument();
         });
     });
 
@@ -103,7 +103,7 @@ describe('🧭 Sistema de Roteamento com Wouter', () => {
     describe('Rotas com Parâmetros', () => {
         it('deve processar parâmetros na URL do editor', () => {
             renderPath('/editor?step=10');
-            expect(screen.getByTestId('editor-unified-page')).toBeInTheDocument();
+            expect(screen.getByTestId('quiz-editor-wysiwyg-page')).toBeInTheDocument();
         });
 
         const complexUrls = [
@@ -115,7 +115,7 @@ describe('🧭 Sistema de Roteamento com Wouter', () => {
         complexUrls.forEach(url => {
             it(`deve processar URL complexa: ${url}`, () => {
                 renderPath(url);
-                expect(screen.getByTestId('editor-unified-page')).toBeInTheDocument();
+                expect(screen.getByTestId('quiz-editor-wysiwyg-page')).toBeInTheDocument();
             });
         });
     });
@@ -130,17 +130,17 @@ describe('🧭 Sistema de Roteamento com Wouter', () => {
     describe('Navegação Entre Rotas', () => {
         it('deve permitir navegação do step 1 para step 5', () => {
             renderPath('/editor?step=1');
-            expect(screen.getByTestId('editor-unified-page')).toBeInTheDocument();
+            expect(screen.getByTestId('quiz-editor-wysiwyg-page')).toBeInTheDocument();
         });
 
         it('deve permitir navegação para step específico', () => {
             renderPath('/editor?step=5');
-            expect(screen.getByTestId('editor-unified-page')).toBeInTheDocument();
+            expect(screen.getByTestId('quiz-editor-wysiwyg-page')).toBeInTheDocument();
         });
 
         it('deve renderizar sem parâmetros', () => {
             renderPath('/editor');
-            expect(screen.getByTestId('editor-unified-page')).toBeInTheDocument();
+            expect(screen.getByTestId('quiz-editor-wysiwyg-page')).toBeInTheDocument();
         });
     });
 
@@ -155,7 +155,7 @@ describe('🧭 Sistema de Roteamento com Wouter', () => {
     describe('Funcionalidades Específicas', () => {
         it('deve suportar múltiplas instâncias do editor', () => {
             renderPath('/editor');
-            expect(screen.getByTestId('editor-unified-page')).toBeInTheDocument();
+            expect(screen.getByTestId('quiz-editor-wysiwyg-page')).toBeInTheDocument();
         });
     });
 });
