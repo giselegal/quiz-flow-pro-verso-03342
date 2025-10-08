@@ -25,6 +25,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
+import DynamicPropertiesForm from './components/DynamicPropertiesForm';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -1029,136 +1030,36 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
 
                         <ScrollArea className="flex-1">
                             {selectedBlock && selectedStep ? (
-                                <div className="p-4 space-y-4">
-                                    {/* Conteúdo */}
-                                    <div className="space-y-3">
-                                        <h3 className="font-semibold text-sm">Conteúdo</h3>
-
-                                        {selectedBlock.type === 'text' || selectedBlock.type === 'heading' ? (
-                                            <div>
-                                                <Label>Texto</Label>
-                                                <Textarea
-                                                    value={selectedBlock.content.text || ''}
-                                                    onChange={(e) => updateBlockContent(selectedStep.id, selectedBlock.id, { text: e.target.value })}
-                                                    rows={3}
-                                                />
-                                            </div>
-                                        ) : null}
-
-                                        {selectedBlock.type === 'image' ? (
-                                            <div className="space-y-2">
-                                                <div>
-                                                    <Label>URL da Imagem</Label>
-                                                    <Input
-                                                        value={selectedBlock.content.src || ''}
-                                                        onChange={(e) => updateBlockContent(selectedStep.id, selectedBlock.id, { src: e.target.value })}
-                                                    />
-                                                </div>
-                                                <div>
-                                                    <Label>Texto Alternativo</Label>
-                                                    <Input
-                                                        value={selectedBlock.content.alt || ''}
-                                                        onChange={(e) => updateBlockContent(selectedStep.id, selectedBlock.id, { alt: e.target.value })}
-                                                    />
-                                                </div>
-                                            </div>
-                                        ) : null}
-
-                                        {selectedBlock.type === 'button' ? (
-                                            <div>
-                                                <Label>Texto do Botão</Label>
-                                                <Input
-                                                    value={selectedBlock.content.text || ''}
-                                                    onChange={(e) => updateBlockContent(selectedStep.id, selectedBlock.id, { text: e.target.value })}
-                                                />
-                                            </div>
-                                        ) : null}
-                                    </div>
-
-                                    {/* Estilo */}
-                                    <div className="space-y-3 pt-4 border-t">
-                                        <h3 className="font-semibold text-sm">Estilo</h3>
-
-                                        {(selectedBlock.type === 'text' || selectedBlock.type === 'heading') ? (
-                                            <>
-                                                <div>
-                                                    <Label>Tamanho da Fonte</Label>
-                                                    <Input
-                                                        value={selectedBlock.properties.fontSize || '16px'}
-                                                        onChange={(e) => updateBlockProperties(selectedStep.id, selectedBlock.id, { fontSize: e.target.value })}
-                                                    />
-                                                </div>
-                                                <div>
-                                                    <Label>Cor</Label>
-                                                    <Input
-                                                        type="color"
-                                                        value={selectedBlock.properties.color || '#432818'}
-                                                        onChange={(e) => updateBlockProperties(selectedStep.id, selectedBlock.id, { color: e.target.value })}
-                                                    />
-                                                </div>
-                                                <div>
-                                                    <Label>Alinhamento</Label>
-                                                    <select
-                                                        className="w-full border rounded-md p-2"
-                                                        value={selectedBlock.properties.textAlign || 'left'}
-                                                        onChange={(e) => updateBlockProperties(selectedStep.id, selectedBlock.id, { textAlign: e.target.value })}
-                                                    >
-                                                        <option value="left">Esquerda</option>
-                                                        <option value="center">Centro</option>
-                                                        <option value="right">Direita</option>
-                                                    </select>
-                                                </div>
-                                            </>
-                                        ) : null}
-
-                                        {selectedBlock.type === 'button' ? (
-                                            <>
-                                                <div>
-                                                    <Label>Cor de Fundo</Label>
-                                                    <Input
-                                                        type="color"
-                                                        value={selectedBlock.properties.backgroundColor || '#B89B7A'}
-                                                        onChange={(e) => updateBlockProperties(selectedStep.id, selectedBlock.id, { backgroundColor: e.target.value })}
-                                                    />
-                                                </div>
-                                                <div>
-                                                    <Label>Cor do Texto</Label>
-                                                    <Input
-                                                        type="color"
-                                                        value={selectedBlock.properties.textColor || '#FFFFFF'}
-                                                        onChange={(e) => updateBlockProperties(selectedStep.id, selectedBlock.id, { textColor: e.target.value })}
-                                                    />
-                                                </div>
-                                            </>
-                                        ) : null}
-                                    </div>
-
-                                    {/* Ações */}
-                                    <div className="pt-4 border-t space-y-2">
+                                <div className="p-4 space-y-6">
+                                    <DynamicPropertiesForm
+                                        type={selectedBlock.type}
+                                        values={{ ...selectedBlock.properties, ...selectedBlock.content }}
+                                        onChange={(patch) => {
+                                            // Dividir patch entre properties e content (heurística: se chave existe em content usa content senão properties)
+                                            const contentKeys = new Set(Object.keys(selectedBlock.content));
+                                            const propPatch: Record<string, any> = {};
+                                            const contentPatch: Record<string, any> = {};
+                                            Object.entries(patch).forEach(([k, v]) => {
+                                                if (contentKeys.has(k)) contentPatch[k] = v; else propPatch[k] = v;
+                                            });
+                                            if (Object.keys(propPatch).length) updateBlockProperties(selectedStep.id, selectedBlock.id, propPatch);
+                                            if (Object.keys(contentPatch).length) updateBlockContent(selectedStep.id, selectedBlock.id, contentPatch);
+                                        }}
+                                    />
+                                    <div className="pt-2 border-t space-y-2">
                                         <Button
                                             variant="outline"
                                             size="sm"
                                             className="w-full"
                                             onClick={() => {
                                                 const newBlock = { ...selectedBlock, id: `block-${Date.now()}` };
-                                                setSteps(prev =>
-                                                    prev.map(step => {
-                                                        if (step.id === selectedStep.id) {
-                                                            return {
-                                                                ...step,
-                                                                blocks: [...step.blocks, newBlock]
-                                                            };
-                                                        }
-                                                        return step;
-                                                    })
-                                                );
+                                                setSteps(prev => prev.map(step => step.id === selectedStep.id ? { ...step, blocks: [...step.blocks, newBlock] } : step));
                                                 setIsDirty(true);
                                             }}
                                         >
                                             <Copy className="w-4 h-4 mr-2" />
                                             Duplicar
                                         </Button>
-
                                         <Button
                                             variant="destructive"
                                             size="sm"
