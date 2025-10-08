@@ -9,6 +9,7 @@
 
 import { QUIZ_STEPS, STEP_ORDER, type QuizStep } from '@/data/quizSteps';
 import { supabase } from '@/integrations/supabase/client';
+import { autoFillNextSteps } from '@/utils/autoFillNextSteps';
 // @TEMP: Helper para forçar reconhecimento de tabelas recém adicionadas nos tipos gerados
 type AnySupabase = typeof supabase & { from: (table: string) => any };
 const supabaseAny = supabase as AnySupabase;
@@ -100,8 +101,17 @@ class QuizEditorBridge {
     async saveDraft(funnel: QuizFunnelData): Promise<string> {
         console.log('💾 Salvando rascunho:', funnel.name);
 
-        // ✅ FASE 5: Validar integridade completa antes de salvar
-        const validation = validateCompleteFunnel(funnel.steps as any);
+        // 🔧 Auto-preencher nextStep se faltar (robustez extra caso editor não tenha aplicado)
+        let workingSteps = funnel.steps.map(s => ({ ...s }));
+        const auto = autoFillNextSteps(workingSteps.map(s => ({ id: s.id, order: s.order, nextStep: (s as any).nextStep })) as any);
+        if (auto.adjusted) {
+            const map = new Map(auto.steps.map(s => [s.id, s.nextStep] as const));
+            workingSteps = workingSteps.map(s => ({ ...s, nextStep: map.get(s.id) }));
+            console.log('🛠️ nextStep preenchido automaticamente em', auto.filledCount, 'etapas');
+        }
+
+        // ✅ FASE 5: Validar integridade completa antes de salvar usando steps pós-autoFill
+        const validation = validateCompleteFunnel(workingSteps as any);
 
         if (!validation.isValid) {
             const errorMsg = validation.errors.map(e => e.message).join('; ');
@@ -121,7 +131,7 @@ class QuizEditorBridge {
             id: draftId,
             name: funnel.name,
             slug: funnel.slug,
-            steps: funnel.steps,
+            steps: workingSteps,
             version: (funnel.version || 0) + 1,
             is_published: false,
             updated_at: new Date().toISOString()
@@ -138,7 +148,7 @@ class QuizEditorBridge {
         }
 
         // Atualizar cache
-        this.cache.set(draftId, { ...funnel, id: draftId });
+    this.cache.set(draftId, { ...funnel, steps: workingSteps as any, id: draftId });
 
         console.log('✅ Rascunho salvo:', draftId);
         return draftId;
