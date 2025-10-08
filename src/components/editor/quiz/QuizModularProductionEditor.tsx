@@ -18,8 +18,9 @@
 import React, { useState, useCallback, useEffect, useMemo, Suspense, useRef } from 'react';
 import '@/styles/globals.css'; // garante estilos de produção (quiz-option*, quiz-options-*)
 import { useLocation } from 'wouter';
-import { DndContext, DragOverlay, closestCenter, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
-import { SortableContext, verticalListSortingStrategy, arrayMove } from '@dnd-kit/sortable';
+import { DndContext, DragOverlay, closestCenter, PointerSensor, useSensor, useSensors, useDraggable } from '@dnd-kit/core';
+import { SortableContext, verticalListSortingStrategy, arrayMove, useSortable } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -894,6 +895,55 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
     const handleDragEnd = (event: any) => {
         const { active, over } = event;
         if (!over || active.id === over.id || !selectedStepId) { setActiveId(null); return; }
+        // Inserção de novo bloco vindo da biblioteca (id inicia com lib:tipo)
+        if (String(active.id).startsWith('lib:')) {
+            const componentType = String(active.id).slice(4);
+            setSteps(prev => {
+                const next = prev.map(step => {
+                    if (step.id !== selectedStepId) return step;
+                    const blocks = [...step.blocks];
+                    const component = COMPONENT_LIBRARY.find(c => c.type === componentType);
+                    if (!component) return step;
+                    const newBlock: BlockComponent = {
+                        id: `block-${Date.now()}`,
+                        type: component.blockType || component.type,
+                        order: 0,
+                        parentId: null,
+                        properties: { ...component.defaultProps },
+                        content: {}
+                    };
+                    if (['heading', 'text', 'button'].includes(newBlock.type) && (newBlock.properties as any).text) {
+                        newBlock.content.text = (newBlock.properties as any).text;
+                        delete (newBlock.properties as any).text;
+                    }
+                    if (component.defaultContent) {
+                        newBlock.content = { ...component.defaultContent, ...newBlock.content };
+                    }
+                    // Determinar posição de inserção (antes do bloco alvo 'over') se existir, senão append
+                    const overIndex = blocks.findIndex(b => b.id === over.id);
+                    const rootBlocks = blocks.filter(b => !b.parentId).sort((a, b) => a.order - b.order);
+                    let insertOrder: number;
+                    if (overIndex !== -1) {
+                        const overBlock = blocks[overIndex];
+                        // Insere antes do bloco alvo no mesmo nível root
+                        const beforeOrder = overBlock.parentId ? rootBlocks.length : overBlock.order; // se alvo não for root, apenas append
+                        insertOrder = beforeOrder;
+                    } else {
+                        insertOrder = rootBlocks.length;
+                    }
+                    // Ajustar orders existentes >= insertOrder
+                    rootBlocks.filter(b => b.order >= insertOrder).forEach(b => { b.order += 1; });
+                    newBlock.order = insertOrder;
+                    blocks.push(newBlock);
+                    return { ...step, blocks: blocks.map(b => ({ ...b })) };
+                });
+                pushHistory(next);
+                setIsDirty(true);
+                return next;
+            });
+            setActiveId(null);
+            return;
+        }
         setSteps(prev => {
             let changed = false;
             const next = prev.map(step => {
@@ -1309,6 +1359,12 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
     const BlockRow: React.FC<BlockRowProps> = React.memo((props) => {
         const { block, byBlock, selectedBlockId, isMultiSelected, handleBlockClick, renderBlockPreview, allBlocks, removeBlock, stepId, setBlockPendingDuplicate, setTargetStepId, setDuplicateModalOpen } = props;
         const hasErrors = !!byBlock[block.id]?.length;
+        // DnD sortable hook
+        const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: block.id });
+        const style: React.CSSProperties = {
+            transform: transform ? CSS.Transform.toString(transform) : undefined,
+            transition,
+        };
         return (
             <div
                 key={block.id}
@@ -1317,9 +1373,14 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                     (selectedBlockId === block.id || isMultiSelected(block.id)) && 'border border-blue-500 ring-2 ring-blue-200 shadow-sm',
                     // Mantém indicador visual mínimo em caso de erro sem violar regra de borda somente ao selecionar
                     hasErrors && !(selectedBlockId === block.id || isMultiSelected(block.id)) && 'shadow-[0_0_0_1px_#dc2626]',
-                    isMultiSelected(block.id) && 'bg-blue-50'
+                    isMultiSelected(block.id) && 'bg-blue-50',
+                    isDragging && 'opacity-50'
                 )}
                 onClick={(e) => handleBlockClick(e, block)}
+                ref={setNodeRef}
+                style={style}
+                {...attributes}
+                {...listeners}
             >
                 {hasErrors && (
                     <Tooltip>
@@ -1727,17 +1788,32 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                                                 </h3>
 
                                                 <div className="space-y-1">
-                                                    {items.map(component => (
-                                                        <button
-                                                            key={component.type}
-                                                            className="w-full flex items-center gap-2 px-3 py-2 text-sm rounded-lg border hover:bg-blue-50 hover:border-blue-300 transition-colors"
-                                                            onClick={() => selectedStepId && addBlockToStep(selectedStepId, component.type)}
-                                                            disabled={!selectedStepId}
-                                                        >
-                                                            {component.icon}
-                                                            <span>{component.label}</span>
-                                                        </button>
-                                                    ))}
+                                                    {items.map(component => {
+                                                        // Draggable item da biblioteca
+                                                        const DraggableItem: React.FC = () => {
+                                                            const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({ id: `lib:${component.type}` });
+                                                            const style: React.CSSProperties = {
+                                                                transform: transform ? CSS.Translate.toString(transform) : undefined,
+                                                                opacity: isDragging ? 0.4 : 1,
+                                                            };
+                                                            return (
+                                                                <button
+                                                                    ref={setNodeRef}
+                                                                    {...attributes}
+                                                                    {...listeners}
+                                                                    key={component.type}
+                                                                    className="w-full flex items-center gap-2 px-3 py-2 text-sm rounded-lg border hover:bg-blue-50 hover:border-blue-300 transition-colors"
+                                                                    onClick={() => selectedStepId && addBlockToStep(selectedStepId, component.type)}
+                                                                    disabled={!selectedStepId}
+                                                                    style={style}
+                                                                >
+                                                                    {component.icon}
+                                                                    <span>{component.label}</span>
+                                                                </button>
+                                                            );
+                                                        };
+                                                        return <DraggableItem key={component.type} />;
+                                                    })}
                                                 </div>
                                             </div>
                                         );
@@ -1808,7 +1884,8 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                                                             return (
                                                                 <div ref={scrollContainerRef} className="space-y-2 max-h-[calc(100vh-240px)] overflow-auto pr-1 border rounded-md bg-white/40">
                                                                     <SortableContext
-                                                                        items={selectedStep.blocks.map(b => b.id)}
+                                                                        // Apenas blocos raiz para ordenação vertical principal
+                                                                        items={rootBlocks.map(b => b.id)}
                                                                         strategy={verticalListSortingStrategy}
                                                                     >
                                                                         <TooltipProvider>
