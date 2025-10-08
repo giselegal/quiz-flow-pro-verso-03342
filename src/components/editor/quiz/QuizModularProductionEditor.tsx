@@ -16,7 +16,7 @@
  */
 
 import React, { useState, useCallback, useEffect, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation } from 'wouter';
 import { DndContext, DragOverlay, closestCenter, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
 import { SortableContext, verticalListSortingStrategy, arrayMove } from '@dnd-kit/sortable';
 import { Button } from '@/components/ui/button';
@@ -173,7 +173,7 @@ interface QuizModularProductionEditorProps {
 export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorProps> = ({
     funnelId: initialFunnelId
 }) => {
-    const navigate = useNavigate();
+    const [, setLocation] = useLocation();
     const { toast } = useToast();
 
     // Estados principais
@@ -544,7 +544,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                 {/* Header */}
                 <div className="flex items-center justify-between px-6 py-3 bg-white border-b">
                     <div className="flex items-center gap-4">
-                        <Button variant="ghost" size="sm" onClick={() => navigate('/quiz-estilo')}>
+                        <Button variant="ghost" size="sm" onClick={() => setLocation('/quiz-estilo')}>
                             <ArrowLeft className="w-4 h-4 mr-2" />
                             Voltar
                         </Button>
