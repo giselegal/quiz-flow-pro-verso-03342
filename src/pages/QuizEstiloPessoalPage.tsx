@@ -23,14 +23,23 @@ interface QuizEstiloPessoalPageProps {
 }
 
 export default function QuizEstiloPessoalPage({ funnelId }: QuizEstiloPessoalPageProps) {
-    // 🔧 Fallback: rota /quiz-estilo (sem param) agora usa funil padrão consolidado
-    const effectiveFunnelId = funnelId || 'quiz-estilo-21-steps';
-    if (!funnelId) {
-        // Log somente em desenvolvimento para diagnosticar carregamento
-        if (import.meta.env.DEV) {
-            // eslint-disable-next-line no-console
-            console.log('[QuizEstiloPessoalPage] Usando funnelId padrão:', effectiveFunnelId);
+    // Suporte a preview de draft via ?draft=<draft-id>
+    let queryDraftId: string | null = null;
+    try {
+        if (typeof window !== 'undefined') {
+            const params = new URLSearchParams(window.location.search);
+            queryDraftId = params.get('draft');
         }
+    } catch {
+        // ignore
+    }
+
+    // Prioridade: query ?draft > prop funnelId de rota > fallback fixo
+    const effectiveFunnelId = queryDraftId || funnelId || 'quiz-estilo-21-steps';
+
+    if (import.meta.env.DEV) {
+        // eslint-disable-next-line no-console
+        console.log('[QuizEstiloPessoalPage] funnelId prop:', funnelId, 'draftParam:', queryDraftId, 'effective:', effectiveFunnelId);
     }
     return (
         <div className="quiz-estilo-page">

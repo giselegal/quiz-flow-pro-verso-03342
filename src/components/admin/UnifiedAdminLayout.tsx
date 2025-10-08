@@ -325,6 +325,24 @@ export const UnifiedAdminLayout: React.FC<UnifiedAdminLayoutProps> = ({
                     <div className="flex items-center gap-3">
                         <ThemeToggle size="sm" />
 
+                        {/* Preview Draft: aparece apenas quando estiver no editor e for um draft */}
+                        {activeView === 'editor' && funnelId && funnelId.startsWith('draft-') && (
+                            <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => window.open(`/quiz-estilo?draft=${funnelId}`, '_blank')}
+                                className="transition-colors backdrop-blur-sm shadow-sm border glow-button"
+                                style={{
+                                    borderColor: `${theme.colors.detailsMinor}60`,
+                                    color: theme.colors.text,
+                                    backgroundColor: `${theme.colors.background}50`,
+                                    boxShadow: `0 0 10px ${theme.colors.glowEffect}20`
+                                }}
+                            >
+                                Preview
+                            </Button>
+                        )}
+
                         {activeView === 'editor' && (
                             <Button
                                 variant="outline"
