@@ -12,10 +12,14 @@ class MemoryStorage {
 
 // @ts-ignore
 global.window = global.window || {};
-// @ts-ignore
-global.window.localStorage = new MemoryStorage();
-// @ts-ignore
-global.localStorage = global.window.localStorage;
+if (!(global.window as any).localStorage) {
+    Object.defineProperty(global.window, 'localStorage', {
+        value: new MemoryStorage(),
+        writable: false,
+        configurable: true
+    });
+}
+// Evita atribuição direta a global.localStorage (readonly em alguns ambientes)
 
 describe('snippetsManager', () => {
     beforeEach(() => {

@@ -833,34 +833,45 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
         if (type === 'quiz-options') {
             const options = content.options || [];
             const multi = properties?.multiSelect ?? false;
-            const max = properties?.maxSelections ?? (multi ? options.length : 1);
+            // Priorizar requiredSelections para refletir produção quando presente
+            const required = properties?.requiredSelections || properties?.maxSelections || (multi ? options.length : 1);
             const selected = quizSelections[block.id] || [];
+            const hasImages = options.some((o: any) => !!o.image);
+            const gridClass = hasImages ? 'quiz-options-3col' : 'quiz-options-1col';
             node = (
                 <div className="space-y-2">
-                    <div className={cn('grid gap-3',
-                        options.length >= 4 && 'grid-cols-2',
-                        options.length >= 6 && 'md:grid-cols-3'
-                    )}>
+                    <div className={cn('quiz-options', gridClass)}>
                         {options.map((opt: any) => {
                             const active = selected.includes(opt.id);
                             return (
-                                <button
+                                <div
                                     key={opt.id}
-                                    type="button"
-                                    onClick={(e) => { e.preventDefault(); toggleQuizOption(block.id, opt.id, multi, max); }}
+                                    role="button"
+                                    tabIndex={0}
+                                    onClick={(e) => { e.preventDefault(); toggleQuizOption(block.id, opt.id, multi, required); }}
+                                    onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleQuizOption(block.id, opt.id, multi, required); } }}
                                     className={cn(
-                                        'text-xs px-3 py-2 rounded border text-left transition-all select-none',
-                                        'bg-white hover:border-blue-300 hover:bg-blue-50',
-                                        active && 'border-blue-600 bg-blue-600 text-white shadow'
+                                        'quiz-option transition-all',
+                                        active && 'quiz-option-selected',
+                                        !active && 'cursor-pointer'
                                     )}
                                 >
-                                    {opt.text || 'Opção'}
-                                </button>
+                                    {opt.image && (
+                                        <img
+                                            src={opt.image}
+                                            alt={opt.text || 'Opção'}
+                                            className="w-full mb-2 rounded"
+                                        />
+                                    )}
+                                    <p className="quiz-option-text text-xs font-medium leading-snug">{opt.text || 'Opção'}</p>
+                                </div>
                             );
                         })}
                     </div>
                     <div className="text-[10px] text-muted-foreground">
-                        {multi ? `${selected.length}/${max} selecionadas` : 'Seleção única'}
+                        {multi
+                            ? `${selected.length}/${required} selecionadas`
+                            : (selected.length === 1 ? '1 selecionada' : 'Selecione 1')}
                     </div>
                 </div>
             );
