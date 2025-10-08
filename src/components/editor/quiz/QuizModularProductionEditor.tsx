@@ -925,6 +925,55 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
     }, [selectedStepId]);
 
     // ========================================
+    // Virtualização simples (janela) para blocos top-level
+    // ========================================
+    const VIRTUALIZATION_THRESHOLD = 60; // ativa acima de 60 blocos raiz
+    const ESTIMATED_ROW_HEIGHT = 140; // estimativa média (px)
+    const OVERSCAN = 6; // blocos extras antes/depois
+    const scrollContainerRef = useRef<HTMLDivElement | null>(null);
+    const [scrollState, setScrollState] = useState({ top: 0, height: 0 });
+
+    const updateScrollMetrics = useCallback(() => {
+        const el = scrollContainerRef.current;
+        if (!el) return;
+        setScrollState({ top: el.scrollTop, height: el.clientHeight });
+    }, []);
+
+    useEffect(() => {
+        const el = scrollContainerRef.current;
+        if (!el) return;
+        updateScrollMetrics();
+        const onScroll = () => updateScrollMetrics();
+        el.addEventListener('scroll', onScroll, { passive: true });
+        const onResize = () => updateScrollMetrics();
+        window.addEventListener('resize', onResize);
+        return () => {
+            el.removeEventListener('scroll', onScroll);
+            window.removeEventListener('resize', onResize);
+        };
+    }, [updateScrollMetrics]);
+
+    const computeVirtualWindow = useCallback((rootBlocks: BlockComponent[]) => {
+        if (rootBlocks.length <= VIRTUALIZATION_THRESHOLD) {
+            return { enabled: false, visible: rootBlocks, topSpacer: 0, bottomSpacer: 0 };
+        }
+        // Desativa durante drag para evitar inconsistências de DnD
+        if (activeId) {
+            return { enabled: false, visible: rootBlocks, topSpacer: 0, bottomSpacer: 0 };
+        }
+        const { top, height } = scrollState;
+        const total = rootBlocks.length;
+        const startIndex = Math.max(Math.floor(top / ESTIMATED_ROW_HEIGHT) - OVERSCAN, 0);
+        const viewportCount = Math.ceil(height / ESTIMATED_ROW_HEIGHT) + OVERSCAN * 2;
+        const endIndex = Math.min(startIndex + viewportCount, total);
+        const visible = rootBlocks.slice(startIndex, endIndex);
+        const topSpacer = startIndex * ESTIMATED_ROW_HEIGHT;
+        const bottomSpacer = (total - endIndex) * ESTIMATED_ROW_HEIGHT;
+        return { enabled: true, visible, topSpacer, bottomSpacer };
+    }, [scrollState, activeId]);
+
+
+    // ========================================
     // BlockRow memoizado para reduzir re-renders em listas grandes
     // ========================================
     interface BlockRowProps {
@@ -1373,35 +1422,50 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                                                             </div>
                                                         )}
 
-                                                        <SortableContext
-                                                            items={selectedStep.blocks.map(b => b.id)}
-                                                            strategy={verticalListSortingStrategy}
-                                                        >
-                                                            <TooltipProvider>
-                                                                <div className="space-y-2">
-                                                                    {selectedStep.blocks
-                                                                        .filter(b => !b.parentId)
-                                                                        .sort((a, b) => a.order - b.order)
-                                                                        .map(block => (
-                                                                            <BlockRow
-                                                                                key={block.id}
-                                                                                block={block}
-                                                                                byBlock={byBlock}
-                                                                                selectedBlockId={selectedBlockId}
-                                                                                isMultiSelected={isMultiSelected}
-                                                                                handleBlockClick={handleBlockClick}
-                                                                                renderBlockPreview={renderBlockPreview}
-                                                                                allBlocks={selectedStep.blocks}
-                                                                                removeBlock={removeBlock}
-                                                                                stepId={selectedStep.id}
-                                                                                setBlockPendingDuplicate={setBlockPendingDuplicate}
-                                                                                setTargetStepId={setTargetStepId}
-                                                                                setDuplicateModalOpen={setDuplicateModalOpen}
-                                                                            />
-                                                                        ))}
+                                                        {(() => {
+                                                            const rootBlocks = selectedStep.blocks.filter(b => !b.parentId).sort((a, b) => a.order - b.order);
+                                                            const vw = computeVirtualWindow(rootBlocks);
+                                                            return (
+                                                                <div ref={scrollContainerRef} className="space-y-2 max-h-[calc(100vh-320px)] overflow-auto pr-1 border rounded-md bg-white/40">
+                                                                    <SortableContext
+                                                                        items={selectedStep.blocks.map(b => b.id)}
+                                                                        strategy={verticalListSortingStrategy}
+                                                                    >
+                                                                        <TooltipProvider>
+                                                                            <div style={{ position: 'relative' }}>
+                                                                                {vw.enabled && vw.topSpacer > 0 && <div style={{ height: vw.topSpacer }} />}
+                                                                                {vw.visible.map(block => (
+                                                                                    <BlockRow
+                                                                                        key={block.id}
+                                                                                        block={block}
+                                                                                        byBlock={byBlock}
+                                                                                        selectedBlockId={selectedBlockId}
+                                                                                        isMultiSelected={isMultiSelected}
+                                                                                        handleBlockClick={handleBlockClick}
+                                                                                        renderBlockPreview={renderBlockPreview}
+                                                                                        allBlocks={selectedStep.blocks}
+                                                                                        removeBlock={removeBlock}
+                                                                                        stepId={selectedStep.id}
+                                                                                        setBlockPendingDuplicate={setBlockPendingDuplicate}
+                                                                                        setTargetStepId={setTargetStepId}
+                                                                                        setDuplicateModalOpen={setDuplicateModalOpen}
+                                                                                    />
+                                                                                ))}
+                                                                                {vw.enabled && vw.bottomSpacer > 0 && <div style={{ height: vw.bottomSpacer }} />}
+                                                                                {!vw.enabled && vw.visible.length === 0 && (
+                                                                                    <div className="text-[11px] text-muted-foreground italic">(sem blocos raiz)</div>
+                                                                                )}
+                                                                            </div>
+                                                                        </TooltipProvider>
+                                                                    </SortableContext>
+                                                                    {vw.enabled && (
+                                                                        <div className="sticky bottom-0 left-0 right-0 bg-gradient-to-t from-white via-white/90 to-transparent text-[10px] text-center py-1 text-slate-500 border-t">
+                                                                            Virtualização ativa · {rootBlocks.length} blocos · exibindo {vw.visible.length}
+                                                                        </div>
+                                                                    )}
                                                                 </div>
-                                                            </TooltipProvider>
-                                                        </SortableContext>
+                                                            );
+                                                        })()}
                                                     </>
                                                 )}
                                             </CardContent>
