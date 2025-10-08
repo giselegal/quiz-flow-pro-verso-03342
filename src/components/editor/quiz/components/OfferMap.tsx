@@ -49,6 +49,9 @@ export interface OfferMapProps {
     onUpdate?: (content: OfferMapContent) => void;
     mode?: 'editor' | 'preview';
     userName?: string; // Para substituir {userName} no preview
+    selectedOfferKey?: OfferKey; // Nova prop: chave da oferta a exibir (produção)
+    onNext?: () => void; // Nova prop: callback para botão "Continuar"
+    className?: string;
 }
 
 // 4 Chaves fixas mapeadas da pergunta 18
@@ -80,9 +83,26 @@ const OFFER_COLORS = {
 /**
  * Componente Offer Map
  */
-export function OfferMap({ content, onUpdate, mode = 'preview', userName = 'Maria' }: OfferMapProps) {
-    const [selectedOfferKey, setSelectedOfferKey] = useState<OfferKey>(OFFER_KEYS[0]);
+export function OfferMap({ 
+    content, 
+    onUpdate, 
+    mode = 'preview', 
+    userName = 'Maria',
+    selectedOfferKey: propSelectedOfferKey,
+    onNext,
+    className = ''
+}: OfferMapProps) {
+    const [selectedOfferKey, setSelectedOfferKey] = useState<OfferKey>(
+        propSelectedOfferKey || OFFER_KEYS[0]
+    );
     const [isDirty, setIsDirty] = useState(false);
+
+    // Atualizar selectedOfferKey se prop mudar (produção)
+    React.useEffect(() => {
+        if (propSelectedOfferKey && propSelectedOfferKey !== selectedOfferKey) {
+            setSelectedOfferKey(propSelectedOfferKey);
+        }
+    }, [propSelectedOfferKey]);
 
     // Substituir {userName} nos textos
     const replaceUserName = (text: string): string => {

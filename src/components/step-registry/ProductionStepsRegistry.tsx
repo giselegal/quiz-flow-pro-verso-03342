@@ -239,9 +239,9 @@ const ResultStepAdapter: React.FC<BaseStepProps> = (props) => {
     } = props as any;
 
     // Importar StyleResultCard dinamicamente para evitar dependência circular
-    const StyleResultCard = React.lazy(() => 
-        import('@/components/editor/quiz/components/StyleResultCard').then(m => ({ 
-            default: m.StyleResultCard 
+    const StyleResultCard = React.lazy(() =>
+        import('@/components/editor/quiz/components/StyleResultCard').then(m => ({
+            default: m.StyleResultCard
         }))
     );
 
@@ -265,6 +265,7 @@ const ResultStepAdapter: React.FC<BaseStepProps> = (props) => {
 
 /**
  * 🎁 OFFER STEP ADAPTER
+ * ✨ INTEGRADO COM OfferMap (Fase 6.6)
  */
 const OfferStepAdapter: React.FC<BaseStepProps> = (props) => {
     const {
@@ -280,34 +281,43 @@ const OfferStepAdapter: React.FC<BaseStepProps> = (props) => {
         ...otherProps
     } = props as any;
 
-    // Derivar offerKey similar à lógica de getOfferKey()
+    // Importar OfferMap dinamicamente
+    const OfferMap = React.lazy(() =>
+        import('@/components/editor/quiz/components/OfferMap').then(m => ({
+            default: m.OfferMap
+        }))
+    );
+
+    // Derivar offerKey da resposta estratégica da pergunta 18
     const strategicAnswers = quizState?.strategicAnswers || {};
     const answer = strategicAnswers['Qual desses resultados você mais gostaria de alcançar?'];
+
+    // Mapear resposta para chave da oferta
     const answerToKey: Record<string, string> = {
         'montar-looks-facilidade': 'Montar looks com mais facilidade e confiança',
         'usar-que-tenho': 'Usar o que já tenho e me sentir estilosa',
         'comprar-consciencia': 'Comprar com mais consciência e sem culpa',
         'ser-admirada': 'Ser admirada pela imagem que transmito'
     };
-    const offerKey = answerToKey[answer] || Object.keys(data.offerMap || {})[0] || '';
+    const offerKey = answerToKey[answer] || 'Montar looks com mais facilidade e confiança';
 
-    const adaptedProps = {
-        data: {
-            id: stepId,
-            type: 'offer' as const,
-            title: data.title || 'Oferta Especial',
-            offerMap: data.offerMap || {},
-            ...data
+    // Props para OfferMap
+    const offerMapProps = {
+        content: {
+            offerMap: data.offerMap || {}
         },
-        userProfile: {
-            userName: quizState?.userName || 'Usuário',
-            resultStyle: quizState?.resultStyle || 'classico'
-        },
-        offerKey,
-        ...otherProps
+        mode: 'preview' as const,
+        userName: quizState?.userName || 'Usuário',
+        selectedOfferKey: offerKey,
+        onNext,
+        className: 'w-full'
     };
 
-    return <OriginalOfferStep {...(adaptedProps as any)} />;
+    return (
+        <React.Suspense fallback={<div className="flex items-center justify-center p-12">Carregando oferta...</div>}>
+            <OfferMap {...offerMapProps} />
+        </React.Suspense>
+    );
 };
 
 /**
