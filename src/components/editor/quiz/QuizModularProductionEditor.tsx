@@ -16,6 +16,7 @@
  */
 
 import React, { useState, useCallback, useEffect, useMemo, Suspense, useRef } from 'react';
+import '@/styles/globals.css'; // garante estilos de produção (quiz-option*, quiz-options-*)
 import { useLocation } from 'wouter';
 import { DndContext, DragOverlay, closestCenter, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
 import { SortableContext, verticalListSortingStrategy, arrayMove } from '@dnd-kit/sortable';
@@ -838,6 +839,20 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
             const selected = quizSelections[block.id] || [];
             const hasImages = options.some((o: any) => !!o.image);
             const gridClass = hasImages ? 'quiz-options-3col' : 'quiz-options-1col';
+            // Auto-avance: se propriedade autoAdvance estiver ativa no bloco ou step especial (simulando produção)
+            const autoAdvance = !!properties?.autoAdvance || !!(selectedStep && ['question', 'strategic-question'].includes(selectedStep.type));
+            useEffect(() => {
+                if (autoAdvance && selected.length === required && required > 0) {
+                    const t = setTimeout(() => {
+                        // Simplesmente avança para próximo step se definido
+                        if (selectedStep?.nextStep) {
+                            setSelectedStepId(selectedStep.nextStep);
+                            setSelectedBlockId('');
+                        }
+                    }, 900);
+                    return () => clearTimeout(t);
+                }
+            }, [autoAdvance, selected.length, required, selectedStep]);
             node = (
                 <div className="space-y-2">
                     <div className={cn('quiz-options', gridClass)}>
