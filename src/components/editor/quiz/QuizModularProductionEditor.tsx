@@ -479,7 +479,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
     const generateNextStepId = (existing: string[]) => {
         let n = 1;
         while (true) {
-            const id = `step-${String(n).padStart(2,'0')}`;
+            const id = `step-${String(n).padStart(2, '0')}`;
             if (!existing.includes(id)) return id;
             n++;
         }
@@ -2030,9 +2030,9 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                                                 </div>
                                             </div>
                                             <div className="flex items-center justify-end gap-1 px-2 pb-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                                                <Button variant="ghost" size="icon" className="h-5 w-5" disabled={index===0} onClick={()=>handleMoveStep(step.id,'up')} title="Mover para cima">↑</Button>
-                                                <Button variant="ghost" size="icon" className="h-5 w-5" disabled={index===steps.length-1} onClick={()=>handleMoveStep(step.id,'down')} title="Mover para baixo">↓</Button>
-                                                <Button variant="ghost" size="icon" className="h-5 w-5 text-red-600 hover:text-red-700" onClick={()=>{ if(window.confirm(`Remover ${step.id}?`)) handleDeleteStep(step.id); }} title="Remover etapa">✕</Button>
+                                                <Button variant="ghost" size="icon" className="h-5 w-5" disabled={index === 0} onClick={() => handleMoveStep(step.id, 'up')} title="Mover para cima">↑</Button>
+                                                <Button variant="ghost" size="icon" className="h-5 w-5" disabled={index === steps.length - 1} onClick={() => handleMoveStep(step.id, 'down')} title="Mover para baixo">↓</Button>
+                                                <Button variant="ghost" size="icon" className="h-5 w-5 text-red-600 hover:text-red-700" onClick={() => { if (window.confirm(`Remover ${step.id}?`)) handleDeleteStep(step.id); }} title="Remover etapa">✕</Button>
                                             </div>
                                         </div>
                                     ))}

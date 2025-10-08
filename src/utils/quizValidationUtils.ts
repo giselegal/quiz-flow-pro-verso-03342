@@ -130,7 +130,11 @@ export function validateNextStep(step: QuizStep & { id: string }, allStepIds?: s
     const warnings: ValidationWarning[] = [];
 
     // Determinar última etapa dinamicamente (permite excluir step-21)
-    const ids = allStepIds && allStepIds.length > 0 ? allStepIds : STEP_ORDER;
+    let ids = allStepIds && allStepIds.length > 0 ? allStepIds : STEP_ORDER;
+    // Normalização defensiva: se os IDs parecerem numéricos ("0", "1"...) converter para step-XX para manter consistência
+    if (ids.every(id => /^\d+$/.test(id))) {
+        ids = ids.map(n => `step-${String(Number(n)+1).padStart(2,'0')}`); // +1 para alinhar com step-01
+    }
     const lastId = ids[ids.length - 1];
     if (step.id === lastId) {
         if (step.nextStep !== null && step.nextStep !== undefined) {
@@ -409,7 +413,26 @@ export function validateCompleteFunnel(steps: Record<string, QuizStep>): Validat
     const allErrors: ValidationError[] = [];
     const allWarnings: ValidationWarning[] = [];
 
-    const stepIds = Object.keys(steps);
+    let stepIds = Object.keys(steps);
+    // Normalização global de IDs numéricos (origem inconsistente) → step-XX
+    const numericOnly = stepIds.length > 0 && stepIds.every(id => /^\d+$/.test(id));
+    if (numericOnly) {
+        const remap: Record<string,string> = {};
+        const newSteps: Record<string, QuizStep> = {};
+        stepIds.forEach(id => {
+            const newId = `step-${String(Number(id)+1).padStart(2,'0')}`;
+            remap[id] = newId;
+            newSteps[newId] = steps[id];
+        });
+        steps = newSteps; // substitui o objeto original para validação coerente
+        stepIds = Object.keys(steps);
+        allWarnings.push({
+            stepId: 'global',
+            field: 'ids',
+            message: 'IDs numéricos detectados e normalizados para formato step-XX',
+            severity: 'warning'
+        });
+    }
     // Permitir agora funil de 20 ou 21 etapas (tornando step-21 opcional)
     if (stepIds.length < 20) {
         allErrors.push({
@@ -430,7 +453,7 @@ export function validateCompleteFunnel(steps: Record<string, QuizStep>): Validat
         allWarnings.push(...styleValidation.warnings);
 
         // Validação 2: nextStep
-        const nextStepValidation = validateNextStep(stepWithId, stepIds);
+    const nextStepValidation = validateNextStep(stepWithId, stepIds);
         allErrors.push(...nextStepValidation.errors);
         allWarnings.push(...nextStepValidation.warnings);
 
