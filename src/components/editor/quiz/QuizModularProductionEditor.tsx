@@ -1439,6 +1439,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
     };
 
     // Salvar
+    const [saveNotice, setSaveNotice] = useState<{ type: 'success' | 'error' | 'warning'; message: string } | null>(null);
     const handleSave = useCallback(async () => {
         setIsSaving(true);
         try {
@@ -1447,16 +1448,13 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                 name: 'Quiz Estilo Pessoal - Modular',
                 slug: 'quiz-estilo',
                 steps: steps.map(s => {
-                    // Reconstruir propriedades canônicas a partir dos blocos (garante persistência semântica)
                     const reconstructed = convertBlocksToStepUtil(s.id, s.type as any, s.blocks as any);
                     return {
                         id: s.id,
                         order: s.order,
                         ...(reconstructed as any),
-                        // Fallbacks para campos ainda não cobertos pela conversão
                         nextStep: (reconstructed as any).nextStep || s.nextStep,
                         offerMap: (reconstructed as any).offerMap || s.offerMap,
-                        // Armazenar blocos para reabrir no editor
                         blocks: s.blocks
                     };
                 }),
@@ -1472,12 +1470,18 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                 title: '✅ Salvo com sucesso',
                 description: `Rascunho ${savedId}`,
             });
-        } catch (error) {
-            toast({
-                title: 'Erro ao salvar',
-                description: String(error),
-                variant: 'destructive'
-            });
+        } catch (error: any) {
+            const message = String(error || 'Erro desconhecido');
+            if (/nextstep/i.test(message)) {
+                // aviso discreto
+                setSaveNotice({ type: 'warning', message: message.replace(/Error: /i, '') });
+            } else {
+                toast({
+                    title: 'Erro ao salvar',
+                    description: message,
+                    variant: 'destructive'
+                });
+            }
         } finally {
             setIsSaving(false);
         }
