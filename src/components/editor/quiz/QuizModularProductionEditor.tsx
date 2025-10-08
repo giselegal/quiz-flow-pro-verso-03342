@@ -290,6 +290,56 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
     const [isPublishing, setIsPublishing] = useState(false);
     // Theme overrides carregados do localStorage e aplicados via EditorThemeProvider
     const [themeOverrides, setThemeOverrides] = useState<Partial<DesignTokens>>({});
+    // Configuração global de cabeçalho (logo + progresso) fixo
+    const [headerConfig, setHeaderConfig] = useState(() => {
+        try {
+            const raw = localStorage.getItem('quiz_editor_header_config_v1');
+            if (raw) return JSON.parse(raw);
+        } catch {/* ignore */}
+        return {
+            showLogo: true,
+            logoUrl: 'https://via.placeholder.com/140x48?text=Logo',
+            logoWidth: '140px',
+            progressEnabled: true,
+            autoProgress: true,
+            manualPercent: 0,
+            barHeight: '4px',
+            barColor: '#D4AF37',
+            barBackground: '#E5E7EB'
+        };
+    });
+    useEffect(() => { try { localStorage.setItem('quiz_editor_header_config_v1', JSON.stringify(headerConfig)); } catch {/* ignore */} }, [headerConfig]);
+
+    // Componente de cabeçalho fixo
+    const FixedProgressHeader: React.FC<{ config: any; steps: EditableQuizStep[]; currentStepId: string }> = ({ config, steps, currentStepId }) => {
+        if (!config.showLogo && !config.progressEnabled) return null;
+        const currentIndex = steps.findIndex(s => s.id === currentStepId);
+        // Filtrar etapas que contam (exclui result e offer)
+        const counted = steps.filter(s => !['result', 'offer'].includes(s.type));
+        const idxCounted = counted.findIndex(s => s.id === currentStepId);
+        let percent = config.manualPercent;
+        if (config.progressEnabled && config.autoProgress && idxCounted >= 0 && counted.length > 0) {
+            percent = Math.min(100, Math.round(((idxCounted + 1) / counted.length) * 100));
+        }
+        return (
+            <div className="flex items-center justify-between gap-4">
+                {config.showLogo && (
+                    <div className="shrink-0" style={{ maxWidth: config.logoWidth }}>
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img src={config.logoUrl} alt="Logo" className="object-contain max-h-12" />
+                    </div>
+                )}
+                {config.progressEnabled && (
+                    <div className="flex-1 flex flex-col min-w-[160px]">
+                        <div className="w-full rounded-full overflow-hidden" style={{ background: config.barBackground, height: config.barHeight }}>
+                            <div className="h-full transition-all" style={{ width: `${percent}%`, background: config.barColor }} />
+                        </div>
+                        <div className="text-[10px] text-slate-500 mt-1 text-right">{percent}%</div>
+                    </div>
+                )}
+            </div>
+        );
+    };
 
     // Validação em tempo real (fase inicial - regras básicas)
     const { byStep, byBlock } = useValidation(steps);
@@ -1593,6 +1643,10 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                                                 </CardDescription>
                                             </CardHeader>
                                             <CardContent>
+                                                {/* Cabeçalho fixo global (logo + progresso) */}
+                                                <div className="mb-6">
+                                                    <FixedProgressHeader config={headerConfig} steps={steps} currentStepId={selectedStep.id} />
+                                                </div>
                                                 {selectedStep.blocks.length === 0 ? (
                                                     <div className="text-center py-8 text-muted-foreground text-xs border border-dashed rounded-md bg-white/40">
                                                         (vazio)
@@ -1898,12 +1952,57 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                                                     </div>
                                                 </div>
                                             ) : (
-                                                <div className="flex items-center justify-center h-full text-center text-muted-foreground p-4">
-                                                    <div>
-                                                        <Settings className="w-12 h-12 mx-auto mb-4 opacity-50" />
-                                                        <p>Selecione um componente</p>
-                                                        <p className="text-sm">para editar suas propriedades</p>
+                                                <div className="p-4 space-y-4 text-xs">
+                                                    <h3 className="text-xs font-semibold uppercase tracking-wide text-slate-600">Cabeçalho Fixo</h3>
+                                                    <div className="space-y-3">
+                                                        <label className="flex items-center gap-2">
+                                                            <input type="checkbox" checked={headerConfig.showLogo} onChange={e => setHeaderConfig((c:any)=>({...c, showLogo: e.target.checked}))} />
+                                                            Exibir Logo
+                                                        </label>
+                                                        {headerConfig.showLogo && (
+                                                            <>
+                                                                <div className="space-y-1">
+                                                                    <span>Logo URL</span>
+                                                                    <input className="w-full border rounded px-2 py-1" value={headerConfig.logoUrl} onChange={e=>setHeaderConfig((c:any)=>({...c, logoUrl: e.target.value}))} />
+                                                                </div>
+                                                                <div className="space-y-1">
+                                                                    <span>Largura Logo</span>
+                                                                    <input className="w-full border rounded px-2 py-1" value={headerConfig.logoWidth} onChange={e=>setHeaderConfig((c:any)=>({...c, logoWidth: e.target.value}))} />
+                                                                </div>
+                                                            </>
+                                                        )}
+                                                        <label className="flex items-center gap-2">
+                                                            <input type="checkbox" checked={headerConfig.progressEnabled} onChange={e => setHeaderConfig((c:any)=>({...c, progressEnabled: e.target.checked}))} />
+                                                            Exibir Barra de Progresso
+                                                        </label>
+                                                        {headerConfig.progressEnabled && (
+                                                            <>
+                                                                <label className="flex items-center gap-2">
+                                                                    <input type="checkbox" checked={headerConfig.autoProgress} onChange={e=>setHeaderConfig((c:any)=>({...c, autoProgress: e.target.checked}))} />
+                                                                    Cálculo Automático
+                                                                </label>
+                                                                {!headerConfig.autoProgress && (
+                                                                    <div className="space-y-1">
+                                                                        <span>Porcentagem Manual</span>
+                                                                        <input type="number" min={0} max={100} className="w-full border rounded px-2 py-1" value={headerConfig.manualPercent} onChange={e=>setHeaderConfig((c:any)=>({...c, manualPercent: Number(e.target.value)}))} />
+                                                                    </div>
+                                                                )}
+                                                                <div className="space-y-1">
+                                                                    <span>Espessura Barra</span>
+                                                                    <input className="w-full border rounded px-2 py-1" value={headerConfig.barHeight} onChange={e=>setHeaderConfig((c:any)=>({...c, barHeight: e.target.value}))} />
+                                                                </div>
+                                                                <div className="space-y-1">
+                                                                    <span>Cor Barra</span>
+                                                                    <input type="color" className="w-full h-8 border rounded" value={headerConfig.barColor} onChange={e=>setHeaderConfig((c:any)=>({...c, barColor: e.target.value}))} />
+                                                                </div>
+                                                                <div className="space-y-1">
+                                                                    <span>Cor Fundo</span>
+                                                                    <input type="color" className="w-full h-8 border rounded" value={headerConfig.barBackground} onChange={e=>setHeaderConfig((c:any)=>({...c, barBackground: e.target.value}))} />
+                                                                </div>
+                                                            </>
+                                                        )}
                                                     </div>
+                                                    <p className="text-[10px] text-muted-foreground leading-snug">O cabeçalho se aplica a todas as etapas (exceto resultado e oferta). Desative logo ou barra conforme necessário.</p>
                                                 </div>
                                             )}
                                         </ScrollArea>
