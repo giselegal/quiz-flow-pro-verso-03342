@@ -167,8 +167,17 @@ class QuizEditorBridge {
             throw new Error('Draft não encontrado');
         }
 
-        // ✅ FASE 5: Validação CRÍTICA antes de publicar
-        const validation = validateCompleteFunnel(draft.steps as any);
+        // 🔧 Garantir nextStep preenchido antes de validar/publicar
+        let publishingSteps = draft.steps.map(s => ({ ...s }));
+        const auto = autoFillNextSteps(publishingSteps.map(s => ({ id: s.id, order: s.order, nextStep: (s as any).nextStep })) as any);
+        if (auto.adjusted) {
+            const map = new Map(auto.steps.map(s => [s.id, s.nextStep] as const));
+            publishingSteps = publishingSteps.map(s => ({ ...s, nextStep: map.get(s.id) }));
+            console.log('🛠️ (publish) nextStep preenchido automaticamente em', auto.filledCount, 'etapas');
+        }
+
+        // ✅ FASE 5: Validação CRÍTICA antes de publicar usando steps finalizados
+        const validation = validateCompleteFunnel(publishingSteps as any);
 
         if (!validation.isValid) {
             const errorMsg = validation.errors.map(e => e.message).join('; ');
@@ -179,7 +188,7 @@ class QuizEditorBridge {
         console.log('✅ Validação passou. Publicando...');
 
         // Converter steps para formato QUIZ_STEPS
-        const quizSteps = this.convertToQuizSteps(draft.steps);
+    const quizSteps = this.convertToQuizSteps(publishingSteps as any);
 
         // Salvar na tabela de produção
         const productionData = {
