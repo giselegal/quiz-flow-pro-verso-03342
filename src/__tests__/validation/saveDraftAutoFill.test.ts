@@ -12,6 +12,7 @@ vi.mock('@/integrations/supabase/client', () => ({
 function mkSteps(count = 20): { steps: any[]; asRecord: Record<string, QuizStep> } {
     const stepsArr: any[] = [];
     const record: Record<string, QuizStep> = {} as any;
+    const styleIds = ['classico', 'natural', 'contemporâneo', 'elegante', 'romântico', 'sexy', 'dramático', 'criativo'] as const;
     for (let i = 1; i <= count; i++) {
         const id = `step-${String(i).padStart(2, '0')}`;
         const nextStep = i < count ? `step-${String(i + 1).padStart(2, '0')}` : undefined;
@@ -19,7 +20,7 @@ function mkSteps(count = 20): { steps: any[]; asRecord: Record<string, QuizStep>
             id,
             order: i,
             type: 'question',
-            options: Array.from({ length: 8 }).map((_, idx) => ({ id: `opt${idx}`, text: `Opção ${idx}`, image: 'x.png' })),
+            options: styleIds.map((sid, idx) => ({ id: sid, text: `Opção ${idx + 1}`, image: 'x.png' })),
             nextStep: i % 2 === 0 ? nextStep : undefined // metade sem nextStep para testar autoFill
         };
         stepsArr.push(step);

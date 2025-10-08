@@ -3,9 +3,11 @@ import type { QuizStep } from '@/data/quizSteps';
 
 describe('validateNextStep (dinâmico / normalização)', () => {
     function mk(step: Partial<QuizStep> & { id: string }): QuizStep & { id: string } {
+        // Usar 8 style IDs válidos (incluindo aliases sem acento) para não gerar erros de style
+        const styleIds = ['classico', 'natural', 'contemporâneo', 'elegante', 'romântico', 'sexy', 'dramático', 'criativo'] as const;
         return {
             type: 'question',
-            options: [{ id: 'opt1', text: 'Opção 1', image: 'x.png' }, { id: 'opt2', text: 'Opção 2', image: 'y.png' }, { id: 'opt3', text: 'Opção 3', image: 'y.png' }, { id: 'opt4', text: 'Opção 4', image: 'y.png' }, { id: 'opt5', text: 'Opção 5', image: 'y.png' }, { id: 'opt6', text: 'Opção 6', image: 'y.png' }, { id: 'opt7', text: 'Opção 7', image: 'y.png' }, { id: 'opt8', text: 'Opção 8', image: 'y.png' }],
+            options: styleIds.map((id, idx) => ({ id, text: `Opção ${idx + 1}`, image: 'x.png' })),
             nextStep: undefined,
             ...step
         } as any;
@@ -46,7 +48,7 @@ describe('validateNextStep (dinâmico / normalização)', () => {
         const result = validateCompleteFunnel(steps);
         const missingErrors = result.errors.filter(e => e.field === 'nextStep');
         expect(missingErrors.length).toBeGreaterThan(0);
-        // Mensagem deve citar 999
-        expect(missingErrors[0].message).toContain('999');
+        // Mensagem deve citar 999 (nextStep inválido que mantivemos)
+        expect(missingErrors.some(e => e.message.includes('999'))).toBe(true);
     });
 });

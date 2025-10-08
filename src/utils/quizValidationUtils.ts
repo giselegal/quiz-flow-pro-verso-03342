@@ -422,7 +422,19 @@ export function validateCompleteFunnel(steps: Record<string, QuizStep>): Validat
         stepIds.forEach(id => {
             const newId = `step-${String(Number(id) + 1).padStart(2, '0')}`;
             remap[id] = newId;
-            newSteps[newId] = steps[id];
+        });
+        // Reconstruir steps com novas chaves e atualizar nextStep internos que também eram numéricos
+        stepIds.forEach(oldId => {
+            const newId = remap[oldId];
+            const original = steps[oldId];
+            const cloned: QuizStep = { ...(original as any) };
+            if (cloned.nextStep && /^\d+$/.test(String(cloned.nextStep))) {
+                const mapped = remap[String(cloned.nextStep)];
+                if (mapped) {
+                    cloned.nextStep = mapped as any;
+                }
+            }
+            newSteps[newId] = cloned;
         });
         steps = newSteps; // substitui o objeto original para validação coerente
         stepIds = Object.keys(steps);
