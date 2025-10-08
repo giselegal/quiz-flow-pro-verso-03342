@@ -58,6 +58,7 @@ import { replacePlaceholders } from '@/utils/placeholderParser';
 import { useLiveScoring } from '@/hooks/useLiveScoring';
 import { HistoryManager } from '@/utils/historyManager';
 import { snippetsManager, BlockSnippet } from '@/utils/snippetsManager';
+import ThemeEditorPanel from './components/ThemeEditorPanel';
 
 // Pré-visualizações especializadas (lazy) dos componentes finais de produção
 const StyleResultCard = React.lazy(() => import('@/components/editor/quiz/components/StyleResultCard').then(m => ({ default: m.StyleResultCard })));
@@ -1217,27 +1218,31 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                         </Tabs>
                     </div>
 
-                    {/* COLUNA 4: PROPRIEDADES */}
+                    {/* COLUNA 4: PROPRIEDADES / TEMA */}
                     <div className="w-80 bg-white border-l flex flex-col">
-                        <div className="px-4 py-3 border-b flex items-center justify-between">
-                            <div>
-                                <h2 className="font-semibold text-sm">Propriedades</h2>
-                                <p className="text-xs text-muted-foreground">
-                                    {selectedBlock ? `${selectedBlock.type}` : 'Nenhum componente selecionado'}
-                                </p>
+                        <div className="px-4 pt-3 border-b flex flex-col gap-3">
+                            <div className="flex items-center justify-between">
+                                <div>
+                                    <h2 className="font-semibold text-sm">Painéis</h2>
+                                    <p className="text-xs text-muted-foreground">Configuração de blocos e tema</p>
+                                </div>
+                                <div className="flex gap-1">
+                                    <Button
+                                        size="sm"
+                                        variant="outline"
+                                        disabled={!clipboard || clipboard.length === 0 || !selectedStep}
+                                        onClick={() => selectedStep && pasteBlocks(selectedStep.id)}
+                                        className="h-7 px-2 text-[11px]"
+                                    >Colar</Button>
+                                </div>
                             </div>
-                            <div className="flex gap-1">
-                                <Button
-                                    size="sm"
-                                    variant="outline"
-                                    disabled={!clipboard || clipboard.length === 0 || !selectedStep}
-                                    onClick={() => selectedStep && pasteBlocks(selectedStep.id)}
-                                    className="h-7 px-2 text-[11px]"
-                                >Colar</Button>
-                            </div>
-                        </div>
-
-                        <ScrollArea className="flex-1">
+                            <Tabs defaultValue="props" className="w-full">
+                                <TabsList className="grid grid-cols-2 h-8">
+                                    <TabsTrigger value="props" className="text-[11px]">Propriedades</TabsTrigger>
+                                    <TabsTrigger value="theme" className="text-[11px]">Tema</TabsTrigger>
+                                </TabsList>
+                                <TabsContent value="props" className="m-0 p-0 h-[calc(100vh-190px)]">
+                                    <ScrollArea className="h-full">
                             {selectedBlock && selectedStep ? (
                                 <div className="p-4 space-y-6">
                                     <DynamicPropertiesForm
@@ -1415,17 +1420,23 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                                             )}
                                         </div>
                                     </div>
-                                </div>
-                            ) : (
-                                <div className="flex items-center justify-center h-full text-center text-muted-foreground p-4">
-                                    <div>
-                                        <Settings className="w-12 h-12 mx-auto mb-4 opacity-50" />
-                                        <p>Selecione um componente</p>
-                                        <p className="text-sm">para editar suas propriedades</p>
-                                    </div>
-                                </div>
-                            )}
-                        </ScrollArea>
+                                            </div>
+                                        ) : (
+                                            <div className="flex items-center justify-center h-full text-center text-muted-foreground p-4">
+                                                <div>
+                                                    <Settings className="w-12 h-12 mx-auto mb-4 opacity-50" />
+                                                    <p>Selecione um componente</p>
+                                                    <p className="text-sm">para editar suas propriedades</p>
+                                                </div>
+                                            </div>
+                                        )}
+                                    </ScrollArea>
+                                </TabsContent>
+                                <TabsContent value="theme" className="m-0 p-0 h-[calc(100vh-190px)]">
+                                    <ThemeEditorPanel onApply={() => { /* re-render via localStorage + provider outside */ }} />
+                                </TabsContent>
+                            </Tabs>
+                        </div>
                     </div>
                 </div>
 
