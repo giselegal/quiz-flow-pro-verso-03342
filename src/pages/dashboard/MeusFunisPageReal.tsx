@@ -46,6 +46,7 @@ interface RealFunnel {
     updated_at: string | null;
     user_id: string | null;
     settings: any;
+    version?: number | null; // <- adicionada versão
     // Métricas calculadas
     sessions: number;
     completions: number;
@@ -161,6 +162,7 @@ const MeusFunisPageReal: React.FC = () => {
                 updated_at: draft.updated_at,
                 user_id: draft.user_id,
                 settings: {},
+                version: draft.version || 1,
                 sessions: 0,
                 completions: 0,
                 conversionRate: 0,
@@ -482,7 +484,12 @@ const MeusFunisPageReal: React.FC = () => {
                         <CardHeader className="pb-3">
                             <div className="flex justify-between items-start">
                                 <div className="flex-1">
-                                    <CardTitle className="text-lg line-clamp-1">{funil.name}</CardTitle>
+                                    <CardTitle className="text-lg line-clamp-1 flex items-center gap-2">
+                                        {funil.name}
+                                        {typeof funil.version === 'number' && (
+                                            <span className="text-[10px] px-2 py-0.5 rounded-full bg-indigo-100 text-indigo-600 font-medium tracking-wide">v{funil.version}</span>
+                                        )}
+                                    </CardTitle>
                                     <CardDescription className="text-sm line-clamp-2 mt-1">
                                         {funil.description}
                                     </CardDescription>
@@ -572,15 +579,46 @@ const MeusFunisPageReal: React.FC = () => {
                                     <Edit className="w-4 h-4 mr-2" />
                                     Editar
                                 </Button>
-                                <Button
-                                    variant="outline"
-                                    size="sm"
-                                    className="flex-1"
-                                    onClick={() => window.open(`/quiz/${funil.id}`, '_blank')}
-                                >
-                                    <Eye className="w-4 h-4 mr-2" />
-                                    Visualizar
-                                </Button>
+                                {funil.status === 'draft' ? (
+                                    <>
+                                        <Button
+                                            variant="outline"
+                                            size="sm"
+                                            className="flex-1"
+                                            onClick={() => window.open(`/quiz/quiz-estilo?draft=${funil.id}`, '_blank')}
+                                        >
+                                            <Eye className="w-4 h-4 mr-2" />
+                                            Preview
+                                        </Button>
+                                        <Button
+                                            variant="default"
+                                            size="sm"
+                                            className="flex-1"
+                                            onClick={() => {
+                                                import('@/services/QuizEditorBridge').then(m => m.quizEditorBridge.publishToProduction(funil.id)
+                                                    .then(() => {
+                                                        toast({ title: 'Publicado!', description: 'Versão enviada para produção.' });
+                                                        loadFunis();
+                                                    })
+                                                    .catch(err => toast({ title: 'Erro na publicação', description: err.message, variant: 'destructive' }))
+                                                );
+                                            }}
+                                        >
+                                            <Play className="w-4 h-4 mr-2" />
+                                            Publicar
+                                        </Button>
+                                    </>
+                                ) : (
+                                    <Button
+                                        variant="outline"
+                                        size="sm"
+                                        className="flex-1"
+                                        onClick={() => window.open(`/quiz/${funil.id}`, '_blank')}
+                                    >
+                                        <Eye className="w-4 h-4 mr-2" />
+                                        Visualizar
+                                    </Button>
+                                )}
                             </div>
                         </CardContent>
                     </Card>
