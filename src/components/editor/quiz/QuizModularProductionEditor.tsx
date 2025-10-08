@@ -1367,7 +1367,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                                                                         if (st.id !== selectedStep.id) return st;
                                                                         const baseLen = st.blocks.filter(b => !b.parentId).length; // top-level count para order root
                                                                         const timestamp = Date.now();
-                                                                        const idMap: Record<string,string> = {};
+                                                                        const idMap: Record<string, string> = {};
                                                                         const cloned = s.blocks.map((b, idx) => {
                                                                             const newId = `${b.id}-snip-${timestamp}-${idx}`;
                                                                             idMap[b.id] = newId;
