@@ -355,34 +355,38 @@ export function validateFormInput(step: QuizStep & { id: string }): ValidationRe
         return { isValid: true, errors, warnings };
     }
 
-    // Verificar se tem formQuestion
+    // Em ambiente de edição essas props podem ser definidas pelo runtime/tema.
+    // Estratégia: se ausentes, gerar valores padrão e apenas sinalizar como warning (não bloquear save).
+    const defaulted: string[] = [];
     if (!step.formQuestion) {
-        errors.push({
+        (step as any).formQuestion = 'Qual é seu nome?';
+        warnings.push({
             stepId: step.id,
             field: 'formQuestion',
-            message: 'formQuestion é obrigatório para coletar o nome do usuário',
-            severity: 'error'
+            message: 'formQuestion ausente – valor padrão aplicado (editar se necessário)',
+            severity: 'warning'
         });
+        defaulted.push('formQuestion');
     }
-
-    // Verificar se tem placeholder
     if (!step.placeholder) {
-        errors.push({
+        (step as any).placeholder = 'Digite seu nome';
+        warnings.push({
             stepId: step.id,
             field: 'placeholder',
-            message: 'placeholder é obrigatório para o input de nome',
-            severity: 'error'
+            message: 'placeholder ausente – valor padrão aplicado',
+            severity: 'warning'
         });
+        defaulted.push('placeholder');
     }
-
-    // Verificar se tem buttonText
     if (!step.buttonText) {
-        errors.push({
+        (step as any).buttonText = 'Continuar';
+        warnings.push({
             stepId: step.id,
             field: 'buttonText',
-            message: 'buttonText é obrigatório para o botão de envio',
-            severity: 'error'
+            message: 'buttonText ausente – valor padrão aplicado',
+            severity: 'warning'
         });
+        defaulted.push('buttonText');
     }
 
     // Verificar se tem title
