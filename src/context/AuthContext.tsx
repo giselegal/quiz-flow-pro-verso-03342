@@ -60,54 +60,37 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (OFFLINE) {
-      // Modo offline: não conectar no Supabase, criar perfil padrão
-      setUser(null);
-      setProfile({
-        id: 'offline-user',
-        email: '',
-        role: 'user',
-        plan: 'free',
-        created_at: new Date().toISOString(),
-      });
-      setSession(null);
-      setLoading(false);
-      return;
-    }
-    if (import.meta.env.DEV) console.log('🔑 AuthProvider: Configurando listeners de autenticação');
-    // Configurar listener de auth PRIMEIRO
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (import.meta.env.DEV)
-        console.log('🔑 AuthProvider: Estado de auth mudou:', {
-          event: _event,
-          hasSession: !!session,
-        });
-      setSession(session);
-
-      if (session?.user) {
-        // Definir usuário imediatamente
-        setUser({
-          id: session.user.id,
-          email: session.user.email!,
-          name: session.user.user_metadata?.name,
-        });
-        // Carregar profile em seguida
-        loadUserProfile(session.user.id);
-      } else {
+    const init = async () => {
+      const supabase = await ensureSupabase();
+      if (!supabase) {
         setUser(null);
-        setProfile(null);
+        setProfile({
+          id: 'offline-user',
+          email: '',
+          role: 'user',
+          plan: 'free',
+          created_at: new Date().toISOString(),
+        });
+        setSession(null);
+        setLoading(false);
+        return;
       }
-
-      setLoading(false);
-    });
-
-    // DEPOIS verificar sessão existente
-    if (import.meta.env.DEV) console.log('🔑 AuthProvider: Verificando sessão existente...');
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (import.meta.env.DEV)
-        console.log('🔑 AuthProvider: Sessão obtida:', { hasSession: !!session });
+      const { data: { subscription } } = supabase.auth.onAuthStateChange((_event: any, session: Session | null) => {
+        setSession(session);
+        if (session?.user) {
+          setUser({
+            id: session.user.id,
+            email: session.user.email!,
+            name: session.user.user_metadata?.name,
+          });
+          loadUserProfile(supabase, session.user.id);
+        } else {
+          setUser(null);
+          setProfile(null);
+        }
+        setLoading(false);
+      });
+      const { data: { session } } = await supabase.auth.getSession();
       setSession(session);
       if (session?.user) {
         setUser({
@@ -115,21 +98,15 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           email: session.user.email!,
           name: session.user.user_metadata?.name,
         });
-        loadUserProfile(session.user.id);
-        if (import.meta.env.DEV)
-          console.log('🔑 AuthProvider: Usuário definido:', session.user.email);
-      } else {
-        if (import.meta.env.DEV) console.log('🔑 AuthProvider: Nenhuma sessão ativa');
-        setProfile(null);
+        loadUserProfile(supabase, session.user.id);
       }
       setLoading(false);
-      if (import.meta.env.DEV) console.log('🔑 AuthProvider: Loading concluído');
-    });
-
-    return () => subscription.unsubscribe();
+      return () => subscription.unsubscribe();
+    };
+    init();
   }, []);
 
-  const loadUserProfile = async (userId: string) => {
+  const loadUserProfile = async (supabase: any, userId: string) => {
     try {
       const { data, error } = await supabase.from('profiles').select('*').eq('id', userId).single();
 
@@ -257,7 +234,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       }
 
       // Se Supabase estiver desabilitado, mas sem credenciais locais válidas
-      if (OFFLINE) {
+      if (DISABLE || !ENABLE) {
         throw new Error(
           'Autenticação offline: defina VITE_LOCAL_ADMIN_EMAIL e VITE_LOCAL_ADMIN_PASSWORD para login local.'
         );
@@ -265,15 +242,14 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
       cleanupAuthState();
       try {
-        await supabase.auth.signOut({ scope: 'global' });
+        const supabase = await ensureSupabase();
+        if (supabase) await supabase.auth.signOut({ scope: 'global' });
       } catch (err) {
         // Continue mesmo se falhar
       }
-
-      const { error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
+      const supabase = await ensureSupabase();
+      if (!supabase) throw new Error('Supabase indisponível');
+      const { error } = await supabase.auth.signInWithPassword({ email, password });
 
       if (error) throw error;
     } catch (error) {
@@ -285,7 +261,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const logout = async () => {
     try {
       cleanupAuthState();
-      await supabase.auth.signOut({ scope: 'global' });
+  const supabase = await ensureSupabase();
+  if (supabase) await supabase.auth.signOut({ scope: 'global' });
       setUser(null);
       setSession(null);
     } catch (error) {
@@ -301,7 +278,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     try {
       const redirectUrl = `${window.location.origin}/`;
 
-      const { error } = await supabase.auth.signUp({
+  const supabase = await ensureSupabase();
+  if (!supabase) throw new Error('Supabase indisponível');
+  const { error } = await supabase.auth.signUp({
         email,
         password,
         options: {
