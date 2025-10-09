@@ -716,7 +716,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
         }
         // Text
         if (type === 'text') {
-            node = <p className="text-sm leading-relaxed text-slate-700 whitespace-pre-wrap">{replacePlaceholders(content.text || 'Texto', placeholderContext)}</p>;
+            node = <p className="text-sm leading-relaxed text-slate-700 whitespace-pre-wrap">{replacePlaceholders(content.text || properties?.text || 'Texto', placeholderContext)}</p>;
             previewCacheRef.current.set(id, { key, node });
             return node;
         }
@@ -726,8 +726,8 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                 <div className="w-full flex justify-center">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
-                        src={content.src || INLINE_IMG_PLACEHOLDER}
-                        alt={content.alt || 'Imagem'}
+                        src={content.src || properties?.src || INLINE_IMG_PLACEHOLDER}
+                        alt={content.alt || properties?.alt || 'Imagem'}
                         className="max-w-full rounded-md border shadow-sm"
                         style={{ objectFit: 'cover' }}
                     />
@@ -743,7 +743,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                     type="button"
                     className="inline-flex items-center justify-center px-4 py-2 rounded-md text-sm font-medium bg-[#B89B7A] hover:bg-[#a08464] text-white shadow-sm transition-colors"
                 >
-                    {replacePlaceholders(content.text || 'Botão', placeholderContext)}
+                    {replacePlaceholders(content.text || properties?.text || 'Botão', placeholderContext)}
                 </button>
             );
             previewCacheRef.current.set(id, { key, node });
@@ -769,9 +769,9 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
         if (type === 'form-input') {
             node = (
                 <div className="space-y-1">
-                    <label className="text-xs font-medium text-slate-600">{content.label || 'Campo'}</label>
+                    <label className="text-xs font-medium text-slate-600">{content.label || properties?.label || 'Campo'}</label>
                     <input
-                        placeholder={content.placeholder || 'Digite...'}
+                        placeholder={content.placeholder || properties?.placeholder || 'Digite...'}
                         className="w-full px-3 py-2 rounded-md border text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-200"
                         disabled
                     />
@@ -868,9 +868,9 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
         }
         // Quiz Intro Header
         if (type === 'quiz-intro-header') {
-            const showLogo = properties?.showLogo !== false;
-            const enableProgressBar = properties?.enableProgressBar ?? false;
-            const showBackButton = properties?.showBackButton ?? false;
+            const showLogo = (properties?.showLogo ?? content?.showLogo) !== false;
+            const enableProgressBar = properties?.enableProgressBar ?? content?.showProgress ?? false;
+            const showBackButton = properties?.showBackButton ?? content?.showNavigation ?? false;
             node = (
                 <div className="w-full bg-white rounded-lg p-4 space-y-3 border shadow-sm">
                     <div className="flex items-center justify-between">
@@ -904,19 +904,23 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
         }
         // Options Grid (grade de opções similar a quiz-options mas com layout grid específico)
         if (type === 'options-grid') {
-            const options = content.options || [];
+            const options = Array.isArray(content.options) ? content.options : [];
             const cols = properties?.columns || 2;
             node = (
                 <div className="space-y-2">
                     <div className={cn('grid gap-3', cols === 2 ? 'grid-cols-2' : cols === 3 ? 'grid-cols-3' : 'grid-cols-1')}>
-                        {options.map((opt: any, idx: number) => (
-                            <div key={opt.id || idx} className="border rounded-lg p-3 bg-white hover:border-blue-400 transition-colors cursor-pointer">
-                                {opt.image && (
-                                    <img src={opt.image} alt={opt.label} className="w-full h-24 object-cover rounded mb-2" />
-                                )}
-                                <div className="text-sm font-medium">{opt.label || `Opção ${idx + 1}`}</div>
-                            </div>
-                        ))}
+                        {options.map((opt: any, idx: number) => {
+                            const img = opt.image || opt.imageUrl;
+                            const label = opt.label || opt.text || `Opção ${idx + 1}`;
+                            return (
+                                <div key={opt.id || idx} className="border rounded-lg p-3 bg-white hover:border-blue-400 transition-colors cursor-pointer">
+                                    {img && (
+                                        <img src={img} alt={label} className="w-full h-24 object-cover rounded mb-2" />
+                                    )}
+                                    <div className="text-sm font-medium">{label}</div>
+                                </div>
+                            );
+                        })}
                     </div>
                     <div className="text-[10px] text-slate-400 italic">Options Grid ({options.length} opções)</div>
                 </div>
@@ -950,7 +954,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                     className="inline-flex items-center justify-center px-6 py-3 rounded-md text-sm font-medium shadow-sm transition-colors"
                     style={{ backgroundColor: bgColor, color: textColor }}
                 >
-                    {replacePlaceholders(content.text || content.label || 'Botão', placeholderContext)}
+                    {replacePlaceholders(content.text || content.label || properties?.text || 'Botão', placeholderContext)}
                 </button>
             );
             previewCacheRef.current.set(id, { key, node });
@@ -987,9 +991,20 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
         }
         // Legal Notice (aviso legal)
         if (type === 'legal-notice') {
+            const copy = properties?.copyrightText || content.copyrightText || '© 2025 Sua Marca';
+            const showPrivacy = properties?.showPrivacyLink ?? true;
+            const showTerms = properties?.showTermsLink ?? true;
+            const privacyText = properties?.privacyText || 'Política de Privacidade';
+            const termsText = properties?.termsText || 'Termos de Uso';
+            const privacyUrl = properties?.privacyLinkUrl || '#';
+            const termsUrl = properties?.termsLinkUrl || '#';
             node = (
                 <div className="text-xs text-slate-500 text-center leading-relaxed">
-                    {replacePlaceholders(content.text || 'Aviso legal', placeholderContext)}
+                    <span>{copy}</span>
+                    <div className="mt-1 space-x-3">
+                        {showPrivacy && <a href={privacyUrl} className="underline" target="_blank" rel="noreferrer">{privacyText}</a>}
+                        {showTerms && <a href={termsUrl} className="underline" target="_blank" rel="noreferrer">{termsText}</a>}
+                    </div>
                 </div>
             );
             previewCacheRef.current.set(id, { key, node });
@@ -1011,7 +1026,8 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
         }
         // Testimonials (depoimentos)
         if (type === 'testimonials') {
-            const testimonials = content.testimonials || [];
+            const raw = Array.isArray(content.testimonials) ? content.testimonials : [];
+            const testimonials = raw.map((t: any) => (typeof t === 'string' ? { quote: t } : t));
             node = (
                 <div className="space-y-4">
                     {testimonials.map((t: any, idx: number) => (
@@ -1065,7 +1081,8 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
         }
         // Secondary Styles (estilos secundários)
         if (type === 'secondary-styles') {
-            const styles = content.styles || [];
+            const raw = Array.isArray(content.styles) ? content.styles : [];
+            const styles = raw.map((s: any) => (typeof s === 'string' ? { name: s } : s));
             node = (
                 <div className="space-y-2">
                     <div className="text-sm font-medium text-slate-700 mb-2">Estilos Secundários:</div>
@@ -1077,6 +1094,21 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                             </div>
                         ))}
                     </div>
+                </div>
+            );
+            previewCacheRef.current.set(id, { key, node });
+            return node;
+        }
+        // Conversion (bloco de conversão)
+        if (type === 'conversion') {
+            const headline = content.headline || 'Pronta para transformar seu estilo?';
+            const sub = content.subheadline || 'Conheça nosso programa completo.';
+            const cta = content.ctaText || 'Quero participar';
+            node = (
+                <div className="rounded-lg p-6 border bg-white shadow-sm text-center">
+                    <h3 className="text-xl font-bold text-slate-800 mb-1">{headline}</h3>
+                    <p className="text-sm text-slate-600 mb-4">{sub}</p>
+                    <button type="button" className="px-6 py-3 rounded-md bg-[#B89B7A] text-white font-semibold">{cta}</button>
                 </div>
             );
             previewCacheRef.current.set(id, { key, node });
