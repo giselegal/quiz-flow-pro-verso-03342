@@ -20,6 +20,7 @@ const MeusFunisReal = React.lazy(() => import('./dashboard/MeusFunisPageReal'));
 const TemplatesReal = React.lazy(() => import('./dashboard/TemplatesPage'));
 const TemplatesFunisPage = React.lazy(() => import('./dashboard/TemplatesFunisPage'));
 const ModelosFunisPage = React.lazy(() => import('./dashboard/ModelosFunisPage'));
+const TemplatePreviewPage = React.lazy(() => import('./dashboard/TemplatePreviewPage'));
 const AIInsightsPage = React.lazy(() => import('./dashboard/AIInsightsPage'));
 const AdvancedAnalyticsPage = React.lazy(() => import('./dashboard/AdvancedAnalyticsPage'));
 const ABTestsPage = React.lazy(() => import('./dashboard/ABTestsPage'));
@@ -51,7 +52,7 @@ const routeConfig = {
     title: 'Dashboard Principal',
     description: 'Visão geral das métricas e atividades'
   },
-  
+
   // Analytics e métricas
   '/admin/analytics': {
     component: EnhancedAnalytics,
@@ -68,7 +69,7 @@ const routeConfig = {
     title: 'Métricas do Facebook',
     description: 'Integração com Facebook Ads'
   },
-  
+
   // Gestão de conteúdo
   '/admin/funnels': {
     component: MeusFunisReal,
@@ -80,7 +81,7 @@ const routeConfig = {
     title: 'Templates',
     description: 'Biblioteca de templates'
   },
-  
+
   // Ferramentas
   '/admin/ab-tests': {
     component: ABTestsPage,
@@ -92,14 +93,14 @@ const routeConfig = {
     title: 'Materiais Criativos',
     description: 'Banco de imagens e assets'
   },
-  
+
   // Configurações
   '/admin/settings': {
     component: SettingsPage,
     title: 'Configurações',
     description: 'Configurações da conta e sistema'
   },
-  
+
   // Editor integrado
   '/admin/editor': {
     component: AdminOverview, // Redirect to main dashboard for now
@@ -120,7 +121,7 @@ const routeConfig = {
 
 const ModernAdminDashboard: React.FC = () => {
   const [location] = useLocation();
-  
+
   // Extrair o funnelId da URL se presente
   const urlParams = new URLSearchParams(window.location.search);
   const funnelId = urlParams.get('funnelId') || undefined;
@@ -169,13 +170,17 @@ const ModernAdminDashboard: React.FC = () => {
             <Route path="/admin/templates">
               <TemplatesReal />
             </Route>
-            
+
             {/* Modelos de Funis - Nova rota dedicada */}
             <Route path="/admin/modelos">
               <ModelosFunisPage />
             </Route>
             <Route path="/admin/modelos-funis">
               <ModelosFunisPage />
+            </Route>
+            {/* Preview de templates acessível dentro do admin para conveniência */}
+            <Route path="/templates/preview/:id">
+              <TemplatePreviewPage />
             </Route>
             <Route path="/admin/templates-funis">
               <TemplatesFunisPage />

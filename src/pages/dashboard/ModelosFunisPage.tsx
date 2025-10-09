@@ -11,14 +11,14 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { EnhancedUnifiedDataService } from '@/services/core/EnhancedUnifiedDataService';
-import { 
-  Search, 
-  Filter, 
-  Eye, 
-  Copy, 
-  Star, 
-  Play, 
-  Users, 
+import {
+  Search,
+  Filter,
+  Eye,
+  Copy,
+  Star,
+  Play,
+  Users,
   TrendingUp,
   Zap,
   Award,
@@ -61,13 +61,13 @@ const ModelosFunisPage: React.FC = () => {
     const loadModelsData = async () => {
       try {
         setIsLoading(true);
-        
+
         console.log('📋 Carregando modelos de funis...');
-        
+
         // Carregar dados reais
         const metrics = await EnhancedUnifiedDataService.getRealTimeMetrics();
         setRealTimeMetrics(metrics);
-        
+
         // Converter templates para modelos
         const funnelModels: FunnelModel[] = AVAILABLE_TEMPLATES.map(template => ({
           id: template.id,
@@ -84,7 +84,7 @@ const ModelosFunisPage: React.FC = () => {
           templatePath: template.templatePath,
           editorUrl: template.editorUrl
         }));
-        
+
         // Adicionar modelos específicos do quiz21StepsComplete
         const quiz21Models: FunnelModel[] = [
           {
@@ -173,20 +173,20 @@ const ModelosFunisPage: React.FC = () => {
             editorUrl: '/editor?template=leadMagnetFashion'
           }
         ];
-        
+
         const allModels = [...funnelModels, ...quiz21Models];
         setModels(allModels);
         setFilteredModels(allModels);
-        
+
         console.log('✅ Modelos carregados:', allModels.length);
-        
+
       } catch (error) {
         console.error('❌ Erro ao carregar modelos:', error);
       } finally {
         setIsLoading(false);
       }
     };
-    
+
     loadModelsData();
   }, []);
 
@@ -196,11 +196,11 @@ const ModelosFunisPage: React.FC = () => {
 
   useEffect(() => {
     let filtered = models;
-    
+
     if (selectedCategory !== 'Todos') {
       filtered = filtered.filter(model => model.category === selectedCategory);
     }
-    
+
     if (searchTerm.trim()) {
       filtered = filtered.filter(model =>
         model.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -208,7 +208,7 @@ const ModelosFunisPage: React.FC = () => {
         model.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()))
       );
     }
-    
+
     setFilteredModels(filtered);
   }, [models, selectedCategory, searchTerm]);
 
@@ -218,12 +218,11 @@ const ModelosFunisPage: React.FC = () => {
 
   const handleUseModel = (modelId: string) => {
     console.log('🚀 Usando modelo:', modelId);
-    
-    // Gerar ID único para o novo funil
+    const tpl = TemplateService.getTemplate(modelId);
+    const baseUrl = tpl?.editorUrl || `/editor?template=${modelId}`;
     const newFunnelId = `funnel-${modelId}-${Date.now()}`;
-    
-    // Navegar para editor com template
-    window.open(`/editor?template=${modelId}&funnel=${newFunnelId}`, '_blank');
+    const url = `${baseUrl}${baseUrl.includes('?') ? '&' : '?'}funnel=${newFunnelId}`;
+    window.open(url, '_blank');
   };
 
   const handlePreviewModel = (modelId: string) => {
@@ -233,10 +232,11 @@ const ModelosFunisPage: React.FC = () => {
 
   const handleCloneModel = (modelId: string) => {
     console.log('📋 Clonando modelo:', modelId);
-    
-    // Criar cópia do modelo
+    const tpl = TemplateService.getTemplate(modelId);
+    const baseUrl = tpl?.editorUrl || `/editor?template=${modelId}`;
     const newFunnelId = `clone-${modelId}-${Date.now()}`;
-    window.open(`/editor?template=${modelId}&funnel=${newFunnelId}&mode=clone`, '_blank');
+    const joiner = baseUrl.includes('?') ? '&' : '?';
+    window.open(`${baseUrl}${joiner}funnel=${newFunnelId}&mode=clone`, '_blank');
   };
 
   // ============================================================================
@@ -276,7 +276,7 @@ const ModelosFunisPage: React.FC = () => {
             <span>🎯 Taxa média de conversão: {Math.round(models.reduce((sum, m) => sum + parseInt(m.conversionRate), 0) / models.length)}%</span>
           </div>
         </div>
-        <Button 
+        <Button
           onClick={() => window.open('/editor', '_blank')}
           className="bg-blue-600 hover:bg-blue-700"
         >
@@ -298,7 +298,7 @@ const ModelosFunisPage: React.FC = () => {
             </div>
           </CardContent>
         </Card>
-        
+
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center space-x-2">
@@ -310,7 +310,7 @@ const ModelosFunisPage: React.FC = () => {
             </div>
           </CardContent>
         </Card>
-        
+
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center space-x-2">
@@ -322,7 +322,7 @@ const ModelosFunisPage: React.FC = () => {
             </div>
           </CardContent>
         </Card>
-        
+
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center space-x-2">
@@ -347,7 +347,7 @@ const ModelosFunisPage: React.FC = () => {
             className="pl-10"
           />
         </div>
-        
+
         <div className="flex items-center space-x-2">
           <Filter className="h-4 w-4 text-gray-500" />
           <div className="flex space-x-2">
@@ -379,13 +379,12 @@ const ModelosFunisPage: React.FC = () => {
                     <Badge variant="outline" className="text-xs">
                       {model.category}
                     </Badge>
-                    <Badge 
-                      variant="outline" 
-                      className={`text-xs ${
-                        model.difficulty === 'Fácil' ? 'bg-green-50 text-green-700' :
-                        model.difficulty === 'Intermediário' ? 'bg-yellow-50 text-yellow-700' :
-                        'bg-red-50 text-red-700'
-                      }`}
+                    <Badge
+                      variant="outline"
+                      className={`text-xs ${model.difficulty === 'Fácil' ? 'bg-green-50 text-green-700' :
+                          model.difficulty === 'Intermediário' ? 'bg-yellow-50 text-yellow-700' :
+                            'bg-red-50 text-red-700'
+                        }`}
                     >
                       {model.difficulty}
                     </Badge>
@@ -402,12 +401,12 @@ const ModelosFunisPage: React.FC = () => {
                 </div>
               </div>
             </CardHeader>
-            
+
             <CardContent className="pt-0">
               <p className="text-gray-600 text-sm mb-4 line-clamp-2">
                 {model.description}
               </p>
-              
+
               {/* Conversion Rate */}
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center space-x-2">
@@ -416,7 +415,7 @@ const ModelosFunisPage: React.FC = () => {
                 </div>
                 <span className="text-lg font-bold text-green-600">{model.conversionRate}</span>
               </div>
-              
+
               {/* Features */}
               <div className="mb-4">
                 <p className="text-xs font-medium text-gray-700 mb-2">Principais características:</p>
@@ -429,11 +428,11 @@ const ModelosFunisPage: React.FC = () => {
                   ))}
                 </div>
               </div>
-              
+
               {/* Tags */}
               <div className="flex flex-wrap gap-1 mb-4">
                 {model.tags.slice(0, 4).map((tag, index) => (
-                  <span 
+                  <span
                     key={index}
                     className="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-full"
                   >
@@ -441,10 +440,10 @@ const ModelosFunisPage: React.FC = () => {
                   </span>
                 ))}
               </div>
-              
+
               {/* Actions */}
               <div className="flex space-x-2">
-                <Button 
+                <Button
                   onClick={() => handleUseModel(model.id)}
                   className="flex-1 bg-blue-600 hover:bg-blue-700 text-white"
                   size="sm"
@@ -452,16 +451,16 @@ const ModelosFunisPage: React.FC = () => {
                   <Play className="w-4 h-4 mr-1" />
                   Usar Modelo
                 </Button>
-                
-                <Button 
+
+                <Button
                   onClick={() => handlePreviewModel(model.id)}
                   variant="outline"
                   size="sm"
                 >
                   <Eye className="w-4 h-4" />
                 </Button>
-                
-                <Button 
+
+                <Button
                   onClick={() => handleCloneModel(model.id)}
                   variant="outline"
                   size="sm"
@@ -482,12 +481,12 @@ const ModelosFunisPage: React.FC = () => {
             Nenhum modelo encontrado
           </h3>
           <p className="text-gray-600 mb-4">
-            {searchTerm ? 
+            {searchTerm ?
               `Nenhum modelo corresponde à busca "${searchTerm}"` :
               'Nenhum modelo disponível nesta categoria'
             }
           </p>
-          <Button 
+          <Button
             onClick={() => {
               setSearchTerm('');
               setSelectedCategory('Todos');
