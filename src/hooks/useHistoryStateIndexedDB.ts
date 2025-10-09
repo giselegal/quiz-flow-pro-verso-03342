@@ -148,12 +148,15 @@ export const useHistoryStateIndexedDB = <T>(initialState: T, options: UseHistory
         };
     }, [history, enablePersistence, storageKey, storageManager, persistPresentOnly, persistDebounceMs, serialize, namespace, compression]);
 
-    const push = useCallback((newState: T) => {
+    const push = useCallback((newState: T | ((prev: T) => T)) => {
         setHistory(prevHistory => {
+            const computedPresent = typeof newState === 'function'
+                ? (newState as (prev: T) => T)(prevHistory.present)
+                : newState;
             const newPast = [...prevHistory.past, prevHistory.present].slice(-historyLimit);
             return {
                 past: newPast,
-                present: newState,
+                present: computedPresent,
                 future: [],
             };
         });
