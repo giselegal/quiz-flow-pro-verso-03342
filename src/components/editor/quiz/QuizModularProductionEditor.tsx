@@ -79,6 +79,7 @@ import StepNavigator from './components/StepNavigator';
 import ComponentLibraryPanel from './components/ComponentLibraryPanel';
 import CanvasArea from './components/CanvasArea';
 import PropertiesPanel from './components/PropertiesPanel';
+import DuplicateBlockDialog from './components/DuplicateBlockDialog';
 
 // Pré-visualizações especializadas (lazy) dos componentes finais de produção
 const StyleResultCard = React.lazy(() => import('@/components/editor/quiz/components/StyleResultCard').then(m => ({ default: m.StyleResultCard })));
@@ -2051,30 +2052,16 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                         />
                     )}
                     duplicateDialog={(
-                        <Dialog open={duplicateModalOpen} onOpenChange={(o) => { if (!o) { setDuplicateModalOpen(false); setBlockPendingDuplicate(null); } }}>
-                            <DialogContent className="max-w-sm">
-                                <DialogHeader>
-                                    <DialogTitle>Duplicar bloco em outra etapa</DialogTitle>
-                                    <DialogDescription>Selecione a etapa destino. O bloco será adicionado ao final da lista.</DialogDescription>
-                                </DialogHeader>
-                                <div className="space-y-4">
-                                    <div>
-                                        <p className="text-xs mb-1 text-muted-foreground">Bloco</p>
-                                        <p className="text-sm font-medium">{blockPendingDuplicate?.type}</p>
-                                    </div>
-                                    <div>
-                                        <label className="text-xs font-medium mb-1 block">Etapa destino</label>
-                                        <select className="w-full border rounded-md p-2 text-sm" value={targetStepId} onChange={(e) => setTargetStepId(e.target.value)}>
-                                            {steps.map(s => (<option key={s.id} value={s.id}>{s.id} ({s.type})</option>))}
-                                        </select>
-                                    </div>
-                                </div>
-                                <DialogFooter className="mt-4 flex gap-2 justify-end">
-                                    <Button variant="ghost" size="sm" onClick={() => { setDuplicateModalOpen(false); setBlockPendingDuplicate(null); }}>Cancelar</Button>
-                                    <Button size="sm" disabled={!targetStepId || !blockPendingDuplicate} onClick={duplicateBlockToAnotherStep}>Duplicar</Button>
-                                </DialogFooter>
-                            </DialogContent>
-                        </Dialog>
+                        <DuplicateBlockDialog
+                            open={duplicateModalOpen}
+                            blockType={blockPendingDuplicate?.type}
+                            steps={steps.map(s => ({ id: s.id, type: s.type }))}
+                            targetStepId={targetStepId}
+                            onChangeTarget={setTargetStepId}
+                            onCancel={() => { setDuplicateModalOpen(false); setBlockPendingDuplicate(null); }}
+                            onConfirm={duplicateBlockToAnotherStep}
+                            disabledConfirm={!targetStepId || !blockPendingDuplicate}
+                        />
                     )}
                 />
             </DndContext>
