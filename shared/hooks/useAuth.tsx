@@ -76,31 +76,33 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
     getInitialSession();
 
-    // Listener para mudanças de autenticação
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange(async (event, session) => {
-      if (!mounted) return;
+    // Listener para mudanças de autenticação (protegido)
+    let subscription: { unsubscribe: () => void } | null = null;
+    if (typeof (supabase as any)?.auth?.onAuthStateChange === 'function') {
+      const result = supabase.auth.onAuthStateChange(async (event, session) => {
+        if (!mounted) return;
 
-      console.log('Auth state changed:', event, session?.user?.id);
+        console.log('Auth state changed:', event, session?.user?.id);
 
-      try {
-        if (session?.user) {
-          await setUserFromSession(session);
-        } else {
+        try {
+          if (session?.user) {
+            await setUserFromSession(session);
+          } else {
+            setUser(null);
+            setIsLoading(false);
+          }
+        } catch (error) {
+          console.error('Erro ao processar mudança de auth:', error);
           setUser(null);
           setIsLoading(false);
         }
-      } catch (error) {
-        console.error('Erro ao processar mudança de auth:', error);
-        setUser(null);
-        setIsLoading(false);
-      }
-    });
+      });
+      subscription = (result as any)?.data?.subscription || null;
+    }
 
     return () => {
       mounted = false;
-      subscription.unsubscribe();
+      subscription?.unsubscribe?.();
     };
   }, []);
 
@@ -226,7 +228,11 @@ export function AuthProvider({ children }: AuthProviderProps) {
         return { error: 'Usuário não autenticado' };
       }
 
-      const { error } = await supabase.from('profiles').update(updates).eq('id', user.id);
+      // Em contexto compartilhado, os tipos de Database podem não estar presentes; usar cast seguro
+      const { error } = await (supabase
+        .from('profiles')
+        .update(updates as any)
+        .eq('id', user.id) as any);
 
       if (error) {
         return { error: error.message };
