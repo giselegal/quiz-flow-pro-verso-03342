@@ -5,8 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { TooltipProvider } from '@/components/ui/tooltip';
 
-interface BlockComponent { id: string; type: string; order: number; parentId?: string | null; properties: Record<string, any>; content: Record<string, any>; }
-interface EditableQuizStep { id: string; type: string; order: number; blocks: BlockComponent[]; offerMap?: Record<string, any>; }
+import { BlockComponent, EditableQuizStep } from '../types';
 
 // Virtualização agora tratada internamente via hook
 import { useVirtualBlocks } from '../hooks/useVirtualBlocks';
@@ -23,8 +22,9 @@ export interface CanvasAreaProps {
     byBlock: Record<string, any[]>;
     selectedBlockId: string;
     isMultiSelected: (id: string) => boolean;
-    handleBlockClick: (block: BlockComponent, e: any) => void;
-    renderBlockPreview: (block: BlockComponent, step: EditableQuizStep) => React.ReactNode;
+    /** Handler padronizado: (e, block) */
+    handleBlockClick: (e: React.MouseEvent, block: BlockComponent) => void;
+    renderBlockPreview: (block: BlockComponent, allBlocks: BlockComponent[]) => React.ReactNode;
     removeBlock: (stepId: string, blockId: string) => void;
     setBlockPendingDuplicate: (block: BlockComponent) => void;
     setTargetStepId: (id: string) => void;

@@ -79,6 +79,7 @@ import { usePanelWidths } from './hooks/usePanelWidths.tsx';
 import { useEditorHistory } from './hooks/useEditorHistory';
 import { useStepsBlocks } from './hooks/useStepsBlocks';
 import { useBlocks } from './hooks/useBlocks';
+import { BlockComponent as EditorBlockComponent, EditableQuizStep as EditorEditableQuizStep } from './types';
 import { useSelectionClipboard } from './hooks/useSelectionClipboard';
 import { useVirtualBlocks } from './hooks/useVirtualBlocks';
 import StepNavigator from './components/StepNavigator';
@@ -612,7 +613,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
     // Cache de pré-visualizações para evitar recomputar nós React pesados
     const previewCacheRef = useRef<Map<string, { key: string; node: React.ReactNode }>>(new Map());
 
-    const renderBlockPreview = (block: BlockComponent, all: BlockComponent[]) => {
+    const renderBlockPreview = (block: EditorBlockComponent, all: EditorBlockComponent[]) => {
         const { type, content, properties, id } = block;
         const children = getChildren(all, id);
         // Construir hash de dependências (alterações de dados relevantes invalidam cache)
@@ -1182,21 +1183,28 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                             headerConfig={headerConfig}
                             liveScores={liveScores}
                             topStyle={topStyle || undefined}
-                            BlockRow={BlockRow as any}
-                            byBlock={byBlock as any}
+                            BlockRow={BlockRow}
+                            byBlock={byBlock}
                             selectedBlockId={selectedBlockId}
                             isMultiSelected={isMultiSelected}
-                            handleBlockClick={handleBlockClick as any}
-                            renderBlockPreview={renderBlockPreview as any}
+                            handleBlockClick={(e, block) => {
+                                // orderedBlocks: ordem top-level + filhos linearizada para range com Shift
+                                const ordered = (selectedStep?.blocks || [])
+                                    .filter(b => !b.parentId)
+                                    .sort((a, b) => a.order - b.order)
+                                    .flatMap(root => [root, ...((selectedStep?.blocks || []).filter(c => c.parentId === root.id).sort((a, b) => a.order - b.order))]);
+                                handleBlockClick(e, block, ordered);
+                            }}
+                            renderBlockPreview={renderBlockPreview}
                             removeBlock={removeBlock}
                             setBlockPendingDuplicate={setBlockPendingDuplicate}
                             setTargetStepId={setTargetStepId}
                             setDuplicateModalOpen={setDuplicateModalOpen}
                             activeId={activeId}
                             previewNode={<LivePreviewContainer funnelId={funnelId} steps={steps} />}
-                            FixedProgressHeader={FixedProgressHeader as any}
-                            StyleResultCard={StyleResultCard as any}
-                            OfferMap={OfferMap as any}
+                            FixedProgressHeader={FixedProgressHeader}
+                            StyleResultCard={StyleResultCard}
+                            OfferMap={OfferMap}
                         />
                     )}
                     propsPanel={(
