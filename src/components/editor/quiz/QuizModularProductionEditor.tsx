@@ -76,6 +76,7 @@ import { QuizRuntimeRegistryProvider, useQuizRuntimeRegistry } from '@/runtime/q
 import { editorStepsToRuntimeMap } from '@/runtime/quiz/editorAdapter';
 import { LayoutShell } from './LayoutShell';
 import { usePanelWidths } from './hooks/usePanelWidths.tsx';
+import { useEditorHistory } from './hooks/useEditorHistory';
 import StepNavigator from './components/StepNavigator';
 import ComponentLibraryPanel from './components/ComponentLibraryPanel';
 import CanvasArea from './components/CanvasArea';
@@ -389,22 +390,11 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
     }, []);
     const [isLoading, setIsLoading] = useState(true);
     const [validationErrors, setValidationErrors] = useState<string[]>([]);
-    // Undo/Redo
-    const historyRef = useRef<HistoryManager<EditableQuizStep[]> | null>(null);
-    const [canUndo, setCanUndo] = useState(false);
-    const [canRedo, setCanRedo] = useState(false);
-
-    const pushHistory = (next: EditableQuizStep[]) => {
-        if (!historyRef.current) return;
-        historyRef.current.push(next);
-        setCanUndo(historyRef.current.canUndo());
-        setCanRedo(historyRef.current.canRedo());
-    };
+    // Undo/Redo via hook
+    const { canUndo, canRedo, init: initHistory, push: pushHistory, undo, redo } = useEditorHistory<EditableQuizStep[]>();
     const applyHistorySnapshot = (snap: EditableQuizStep[] | null) => {
         if (!snap) return;
         setSteps(snap);
-        setCanUndo(historyRef.current?.canUndo() || false);
-        setCanRedo(historyRef.current?.canRedo() || false);
         setIsDirty(true);
     };
 
@@ -531,9 +521,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
             }));
 
             setSteps(modularSteps);
-            historyRef.current = new HistoryManager<EditableQuizStep[]>(modularSteps);
-            setCanUndo(false);
-            setCanRedo(false);
+            initHistory(modularSteps);
             setFunnelId(funnel.id);
             setSelectedStepId(modularSteps[0]?.id || '');
 
@@ -1069,16 +1057,8 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
         });
     };
 
-    const handleUndo = () => {
-        if (!historyRef.current || !historyRef.current.canUndo()) return;
-        const snap = historyRef.current.undo();
-        applyHistorySnapshot(snap);
-    };
-    const handleRedo = () => {
-        if (!historyRef.current || !historyRef.current.canRedo()) return;
-        const snap = historyRef.current.redo();
-        applyHistorySnapshot(snap);
-    };
+    const handleUndo = () => applyHistorySnapshot(undo());
+    const handleRedo = () => applyHistorySnapshot(redo());
 
     useEffect(() => {
         const onKey = (e: KeyboardEvent) => {
