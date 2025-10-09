@@ -216,25 +216,34 @@ const ModelosFunisPage: React.FC = () => {
   // HANDLERS
   // ============================================================================
 
-  const handleUseModel = (modelId: string) => {
-    console.log('🚀 Usando modelo:', modelId);
-    const tpl = TemplateService.getTemplate(modelId);
-    const baseUrl = tpl?.editorUrl || `/editor?template=${modelId}`;
-    const newFunnelId = `funnel-${modelId}-${Date.now()}`;
+  const handleUseModel = (model: FunnelModel) => {
+    console.log('🚀 Usando modelo:', model.id);
+    const tpl = TemplateService.getTemplate(model.id);
+    const baseUrl = tpl?.editorUrl || model.editorUrl || `/editor?template=${model.id}`;
+    const newFunnelId = `funnel-${model.id}-${Date.now()}`;
     const url = `${baseUrl}${baseUrl.includes('?') ? '&' : '?'}funnel=${newFunnelId}`;
     window.open(url, '_blank');
   };
 
-  const handlePreviewModel = (modelId: string) => {
-    console.log('👁️ Preview do modelo:', modelId);
-    window.open(`/templates/preview/${modelId}`, '_blank');
+  const handlePreviewModel = (model: FunnelModel) => {
+    console.log('👁️ Preview do modelo:', model.id);
+    const tpl = TemplateService.getTemplate(model.id);
+    let previewId = tpl?.id;
+    if (!previewId && model.editorUrl) {
+      try {
+        const url = new URL(model.editorUrl, window.location.origin);
+        const t = url.searchParams.get('template');
+        if (t) previewId = t;
+      } catch { }
+    }
+    window.open(`/templates/preview/${previewId || model.id}`, '_blank');
   };
 
-  const handleCloneModel = (modelId: string) => {
-    console.log('📋 Clonando modelo:', modelId);
-    const tpl = TemplateService.getTemplate(modelId);
-    const baseUrl = tpl?.editorUrl || `/editor?template=${modelId}`;
-    const newFunnelId = `clone-${modelId}-${Date.now()}`;
+  const handleCloneModel = (model: FunnelModel) => {
+    console.log('📋 Clonando modelo:', model.id);
+    const tpl = TemplateService.getTemplate(model.id);
+    const baseUrl = tpl?.editorUrl || model.editorUrl || `/editor?template=${model.id}`;
+    const newFunnelId = `clone-${model.id}-${Date.now()}`;
     const joiner = baseUrl.includes('?') ? '&' : '?';
     window.open(`${baseUrl}${joiner}funnel=${newFunnelId}&mode=clone`, '_blank');
   };
@@ -382,8 +391,8 @@ const ModelosFunisPage: React.FC = () => {
                     <Badge
                       variant="outline"
                       className={`text-xs ${model.difficulty === 'Fácil' ? 'bg-green-50 text-green-700' :
-                          model.difficulty === 'Intermediário' ? 'bg-yellow-50 text-yellow-700' :
-                            'bg-red-50 text-red-700'
+                        model.difficulty === 'Intermediário' ? 'bg-yellow-50 text-yellow-700' :
+                          'bg-red-50 text-red-700'
                         }`}
                     >
                       {model.difficulty}
@@ -444,7 +453,7 @@ const ModelosFunisPage: React.FC = () => {
               {/* Actions */}
               <div className="flex space-x-2">
                 <Button
-                  onClick={() => handleUseModel(model.id)}
+                  onClick={() => handleUseModel(model)}
                   className="flex-1 bg-blue-600 hover:bg-blue-700 text-white"
                   size="sm"
                 >
@@ -453,7 +462,7 @@ const ModelosFunisPage: React.FC = () => {
                 </Button>
 
                 <Button
-                  onClick={() => handlePreviewModel(model.id)}
+                  onClick={() => handlePreviewModel(model)}
                   variant="outline"
                   size="sm"
                 >
@@ -461,7 +470,7 @@ const ModelosFunisPage: React.FC = () => {
                 </Button>
 
                 <Button
-                  onClick={() => handleCloneModel(model.id)}
+                  onClick={() => handleCloneModel(model)}
                   variant="outline"
                   size="sm"
                 >
