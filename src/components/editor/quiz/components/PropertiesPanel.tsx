@@ -109,7 +109,7 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
         try {
             const payload = JSON.stringify({ tieBreak, weights });
             localStorage.setItem('quiz_editor_runtime_scoring_v1', payload);
-        } catch {/* ignore */}
+        } catch {/* ignore */ }
     }, [tieBreak, weightsText, onRuntimeScoringChange]);
 
     return (
