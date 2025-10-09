@@ -135,11 +135,20 @@ class UnifiedRoutingServiceImpl {
             params
         };
 
-        // Executar navegação
+        // Executar navegação (SPA) e notificar o router (wouter escuta 'popstate')
         if (replace) {
             window.history.replaceState(null, '', path);
         } else {
             window.history.pushState(null, '', path);
+        }
+        // Forçar atualização dos listeners de rota em SPAs que dependem de popstate
+        try {
+            window.dispatchEvent(new PopStateEvent('popstate'));
+        } catch (err) {
+            // Fallback para ambientes que não suportam PopStateEvent diretamente
+            const evt = document.createEvent('Event');
+            evt.initEvent('popstate', false, false);
+            window.dispatchEvent(evt);
         }
 
         console.log(`🧭 UnifiedRouting: Navegando para ${path}`, this.currentContext);

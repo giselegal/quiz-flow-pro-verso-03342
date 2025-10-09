@@ -460,7 +460,7 @@ const AdminDashboard: React.FC = () => {
                                         color="brand"
                                     />
                                     <QuickAction
-                                        title="�📋 Modelos de Funis"
+                                        title="📋 Modelos de Funis"
                                         description="Templates prontos: Quiz 21 Etapas, Lead Magnets e mais"
                                         href="/admin/modelos"
                                         icon={<Plus className="w-5 h-5" />}
