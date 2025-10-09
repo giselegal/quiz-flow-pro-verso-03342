@@ -48,6 +48,7 @@ interface QuizFunnelData {
     runtime?: any;
     results?: any;
     ui?: any;
+    settings?: any;
 }
 
 class QuizEditorBridge {
@@ -157,6 +158,7 @@ class QuizEditorBridge {
             runtime: (funnel as any).runtime,
             results: (funnel as any).results,
             ui: (funnel as any).ui,
+            settings: (funnel as any).settings,
         };
 
         // Salvar no Supabase (melhor esforço) e sempre manter cache local como fallback
@@ -232,6 +234,7 @@ class QuizEditorBridge {
             runtime: (draft as any).runtime,
             results: (draft as any).results,
             ui: (draft as any).ui,
+            settings: (draft as any).settings,
         };
 
         const { error } = await supabaseAny
@@ -293,6 +296,7 @@ class QuizEditorBridge {
             runtime: (data as any).runtime,
             results: (data as any).results,
             ui: (data as any).ui,
+            settings: (data as any).settings,
         };
     }
 
@@ -321,6 +325,7 @@ class QuizEditorBridge {
                     runtime: d.runtime,
                     results: d.results,
                     ui: d.ui,
+                    settings: d.settings,
                 }));
             }
         } catch {
@@ -398,11 +403,11 @@ class QuizEditorBridge {
     /**
      * 📦 Buscar versão publicada mais recente
      */
-    private async getLatestPublished(): Promise<{ steps: Record<string, QuizStep>; runtime?: any; results?: any; ui?: any } | null> {
+    private async getLatestPublished(): Promise<{ steps: Record<string, QuizStep>; runtime?: any; results?: any; ui?: any; settings?: any } | null> {
         try {
             const { data, error } = await supabaseAny
                 .from(this.PRODUCTION_TABLE)
-                .select('steps, runtime, results, ui')
+                .select('steps, runtime, results, ui, settings')
                 .eq('slug', this.PRODUCTION_SLUG)
                 .order('published_at', { ascending: false })
                 .limit(1)
@@ -415,6 +420,7 @@ class QuizEditorBridge {
                 runtime: (data as any).runtime,
                 results: (data as any).results,
                 ui: (data as any).ui,
+                settings: (data as any).settings,
             };
         } catch {
             return null;
@@ -424,22 +430,22 @@ class QuizEditorBridge {
     /**
      * ⚙️ Carregar configuração de runtime/resultados/ui (draft ou produção)
      */
-    async loadRuntimeConfig(funnelId?: string): Promise<{ runtime?: any; results?: any; ui?: any } | null> {
+    async loadRuntimeConfig(funnelId?: string): Promise<{ runtime?: any; results?: any; ui?: any; settings?: any } | null> {
         if (!funnelId) {
             const published = await this.getLatestPublished();
-            return published ? { runtime: published.runtime, results: published.results, ui: published.ui } : null;
+            return published ? { runtime: published.runtime, results: published.results, ui: published.ui, settings: published.settings } : null;
         }
 
         const draft = await this.loadDraftFromDatabase(funnelId);
         if (draft) {
-            const { runtime, results, ui } = draft as any;
-            return { runtime, results, ui };
+            const { runtime, results, ui, settings } = draft as any;
+            return { runtime, results, ui, settings };
         }
 
         const cached = this.cache.get(funnelId);
         if (cached) {
-            const { runtime, results, ui } = cached as any;
-            return { runtime, results, ui };
+            const { runtime, results, ui, settings } = cached as any;
+            return { runtime, results, ui, settings };
         }
 
         // Fallback nulo se não houver

@@ -1545,6 +1545,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                 runtime: (unifiedConfig as any)?.runtime,
                 results: (unifiedConfig as any)?.results,
                 ui: (unifiedConfig as any)?.ui,
+                settings: (unifiedConfig as any)?.settings,
             };
 
             const savedId = await quizEditorBridge.saveDraft(funnel);
@@ -1845,10 +1846,10 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                                     const base = prev || {} as any;
                                     // merge raso por seções, mantendo objetos aninhados existentes quando possível
                                     const next: any = { ...base };
-                                    if (patch.runtime) next.runtime = { ...(base.runtime||{}), ...patch.runtime };
-                                    if (patch.results) next.results = { ...(base.results||{}), ...patch.results };
-                                    if (patch.ui) next.ui = { ...(base.ui||{}), ...patch.ui };
-                                    if (patch.settings) next.settings = { ...(base.settings||{}), ...patch.settings };
+                                    if (patch.runtime) next.runtime = { ...(base.runtime || {}), ...patch.runtime };
+                                    if (patch.results) next.results = { ...(base.results || {}), ...patch.results };
+                                    if (patch.ui) next.ui = { ...(base.ui || {}), ...patch.ui };
+                                    if (patch.settings) next.settings = { ...(base.settings || {}), ...patch.settings };
                                     return next;
                                 });
                             }}
