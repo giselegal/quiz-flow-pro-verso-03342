@@ -81,8 +81,8 @@ export function useSelectionClipboard(opts: UseSelectionClipboardOptions): UseSe
         if (!step) return;
         const sourceIds = ids?.length ? ids : (multiSelectedIds.length ? multiSelectedIds : (selectedBlockId ? [selectedBlockId] : []));
         if (!sourceIds.length) return;
-    const blocks = step.blocks.filter((b: BlockComponent) => sourceIds.includes(b.id));
-    setClipboard(blocks.map((b: BlockComponent) => JSON.parse(JSON.stringify(b))));
+        const blocks = step.blocks.filter((b: BlockComponent) => sourceIds.includes(b.id));
+        setClipboard(blocks.map((b: BlockComponent) => JSON.parse(JSON.stringify(b))));
     }, [steps, selectedStepId, multiSelectedIds, selectedBlockId]);
 
     const paste = useCallback((stepId?: string) => {
