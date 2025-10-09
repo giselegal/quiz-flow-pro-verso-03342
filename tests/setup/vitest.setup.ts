@@ -11,11 +11,11 @@ if (typeof (global as any).indexedDB === 'undefined') {
 if (typeof (global as any).localStorage === 'undefined') {
     const store: Record<string, string> = {};
     (global as any).localStorage = {
-        getItem: k => (k in store ? store[k] : null),
-        setItem: (k, v) => { store[k] = String(v); },
-        removeItem: k => { delete store[k]; },
+        getItem: (k: string) => (k in store ? store[k] : null),
+        setItem: (k: string, v: string) => { store[k] = String(v); },
+        removeItem: (k: string) => { delete store[k]; },
         clear: () => { Object.keys(store).forEach(k => delete store[k]); }
-    };
+    } as Storage;
 }
 
 // Evitar ruído de consola em testes (pode ajustar conforme necessidade)
@@ -33,3 +33,22 @@ try {
 
 // Ajustar timers para testes que usam setTimeout curto
 vi.useFakeTimers();
+
+// Mock fetch para impedir chamadas HTTP reais durante testes (evita ECONNREFUSED)
+if (typeof (global as any).fetch === 'undefined' || !(global as any).__FETCH_MOCK_INSTALLED__) {
+    const mockFetch: typeof fetch = async (input: any, init?: any) => {
+        const url = typeof input === 'string' ? input : input?.url || '';
+        // Interceptar chamadas a localhost ou rotas /api/components
+        if (/localhost:3000|:\\?3000|\/api\/components\//i.test(url)) {
+            // Retornar resposta simulada mínima
+            return new Response(JSON.stringify({}), {
+                status: 200,
+                headers: { 'Content-Type': 'application/json' }
+            }) as any;
+        }
+        // Fallback padrão: resposta vazia
+        return new Response(JSON.stringify({}), { status: 200, headers: { 'Content-Type': 'application/json' } }) as any;
+    };
+    (global as any).fetch = mockFetch;
+    (global as any).__FETCH_MOCK_INSTALLED__ = true;
+}
