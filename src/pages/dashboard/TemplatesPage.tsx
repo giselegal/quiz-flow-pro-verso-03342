@@ -280,7 +280,7 @@ export const TemplatesPage: React.FC = () => {
                   </span>
                   <span className="flex items-center">
                     <Target className="w-4 h-4 mr-1" />
-          {template.conversionRate}{typeof template.conversionRate === 'string' && template.conversionRate.includes('%') ? '' : (template.conversionRate === '—' ? '' : '%')} conversão
+                    {template.conversionRate}{typeof template.conversionRate === 'string' && template.conversionRate.includes('%') ? '' : (template.conversionRate === '—' ? '' : '%')} conversão
                   </span>
                 </div>
 
