@@ -8,7 +8,7 @@
  * - Rastreamento de presença de usuários
  */
 
-import { createClient } from '@supabase/supabase-js';
+import { getSupabaseClient } from '@/integrations/supabase/supabaseLazy';
 
 export interface CollaborationUser {
   id: string;
@@ -67,24 +67,24 @@ class CollaborationService {
   private conflictResolver: ConflictResolver;
 
   constructor() {
-    this.initializeSupabase();
     this.conflictResolver = new ConflictResolver();
   }
 
-  private async initializeSupabase() {
-    try {
-      const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-      const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-      
-      if (supabaseUrl && supabaseKey) {
-        this.supabase = createClient(supabaseUrl, supabaseKey);
-        console.log('✅ CollaborationService: Supabase inicializado');
-      } else {
-        console.log('📝 CollaborationService: Modo offline - sem Supabase');
-      }
-    } catch (error) {
-      console.warn('⚠️ CollaborationService: Erro ao inicializar Supabase:', error);
+  private async ensureClient() {
+    if (this.supabase) return this.supabase;
+    const DISABLE = (import.meta as any)?.env?.VITE_DISABLE_SUPABASE === 'true';
+    const ENABLE = (import.meta as any)?.env?.VITE_ENABLE_SUPABASE !== 'false'; // default true
+    if (DISABLE || !ENABLE) {
+      this.supabase = null;
+      return null;
     }
+    try {
+      this.supabase = await getSupabaseClient();
+    } catch (e) {
+      console.warn('⚠️ CollaborationService: fallback offline');
+      this.supabase = null;
+    }
+    return this.supabase;
   }
 
   /**
@@ -104,9 +104,10 @@ class CollaborationService {
     this.sessions.set(session.id, session);
     
     // Persistir no Supabase se disponível
-    if (this.supabase) {
+    const supabase = await this.ensureClient();
+    if (supabase) {
       try {
-        const { error } = await this.supabase
+        const { error } = await supabase
           .from('collaboration_sessions')
           .insert({
             id: session.id,
