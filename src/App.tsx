@@ -261,9 +261,9 @@ function App() {
                           <QuizAIPage />
                         </Route>
 
-                        {/* 🎨 PÁGINA DE TEMPLATES GERAL */}
+                        {/* 🎨 PÁGINA DE TEMPLATES GERAL (consolidada no dashboard) */}
                         <Route path="/templates">
-                          <TemplatesPage />
+                          <RedirectRoute to="/admin/dashboard" />
                         </Route>
 
                         {/* 🧭 NAVEGADOR DE TIPOS DE FUNIS */}
