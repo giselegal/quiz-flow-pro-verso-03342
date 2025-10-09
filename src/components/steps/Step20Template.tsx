@@ -8,6 +8,7 @@ import { cn } from '@/lib/utils';
 import { getBestUserName } from '@/core/user/name';
 import { getStyleConfig } from '@/config/styleConfig';
 import { ResultDisplay } from '@/components/ui/ResultDisplay';
+import UniversalBlockRenderer from '@/components/editor/blocks/UniversalBlockRenderer';
 // 🎯 FASE 1: Usar apenas o motor principal e cache
 import { quizResultsService } from '@/services/quizResultsService';
 import { unifiedQuizStorage } from '@/services/core/UnifiedQuizStorage';
@@ -44,7 +45,7 @@ const Step20Template: React.FC<Step20TemplateProps> = ({
     const hasEnoughData = unifiedQuizStorage.hasEnoughDataForResult();
     const selectionCount = Object.keys(data.selections).length;
     const formHasName = Boolean(data.formData.userName || data.formData.name);
-    
+
     const errors: string[] = [];
     if (selectionCount === 0) {
       errors.push('Nenhuma resposta foi registrada');
@@ -89,7 +90,7 @@ const Step20Template: React.FC<Step20TemplateProps> = ({
     if (inFlightRef.current) return; // evita concorrência e double-fire do StrictMode
     inFlightRef.current = true;
     setIsLoading(true);
-    
+
     try {
       const { data } = validationResult;
       const userName = data.formData.userName || data.formData.name || '';
@@ -114,17 +115,17 @@ const Step20Template: React.FC<Step20TemplateProps> = ({
       };
 
       const results = await quizResultsService.calculateResults(session);
-      
+
       if (results) {
         // 3. Converter para formato compatível e armazenar no cache
         const compatibleResult = convertToCompatibleFormat(results, userName);
-        
+
         // 4. Armazenar no cache para evitar recálculos futuros
         resultCacheService.set(data.selections, compatibleResult, userName);
-        
+
         // 5. Salvar no armazenamento unificado
         unifiedQuizStorage.saveResult(compatibleResult);
-        
+
         setValidationErrors([]);
         console.log('✅ Resultado calculado e armazenado com sucesso');
       } else {
@@ -142,18 +143,18 @@ const Step20Template: React.FC<Step20TemplateProps> = ({
   // Métodos auxiliares para conversão de dados
   const convertSelectionsToResponses = (selections: Record<string, string[]>): Record<string, any> => {
     const responses: Record<string, any> = {};
-    
+
     Object.entries(selections).forEach(([questionId, selectedOptions]) => {
       // Extrair número da etapa do questionId (ex: "step-3" -> "3")
       const stepMatch = questionId.match(/step-?(\d+)/);
       const stepNumber = stepMatch ? stepMatch[1] : questionId;
-      
+
       responses[stepNumber] = {
         questionId,
         selectedOptions
       };
     });
-    
+
     return responses;
   };
 
@@ -284,13 +285,20 @@ const Step20Template: React.FC<Step20TemplateProps> = ({
           category={styleConfig?.category}
         />
 
-        {/* Render additional blocks if provided */}
+        {/* Renderização real dos blocos modulares adicionais (se existirem) */}
         {blocks.map((block) => (
           <div key={block.id} className="w-full mt-8">
-            {/* Placeholder for block rendering - would integrate with UniversalBlockRenderer */}
-            <div className="text-sm text-gray-500 text-center p-4 bg-gray-50 rounded-lg">
-              Block: {block.type} (ID: {block.id})
-            </div>
+            <UniversalBlockRenderer
+              block={{
+                id: block.id,
+                type: block.type,
+                order: 0,
+                content: {},
+                properties: block.properties || {}
+              } as any}
+              isPreviewing
+              mode="production"
+            />
           </div>
         ))}
       </AnimatedWrapper>

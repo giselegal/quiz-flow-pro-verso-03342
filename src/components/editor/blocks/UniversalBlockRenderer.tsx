@@ -28,6 +28,9 @@ import QuizOptionsGridBlock from '@/components/blocks/quiz/QuizOptionsGridBlock'
 import {
   Step20ResultHeaderBlock,
   Step20StyleRevealBlock,
+  Step20UserGreetingBlock,
+  Step20CompatibilityBlock,
+  Step20SecondaryStylesBlock,
   Step20PersonalizedOfferBlock
 } from './Step20ModularBlocks';
 
@@ -99,7 +102,11 @@ const BlockComponentRegistry: Record<string, React.FC<any>> = {
   // Step20 Components
   'step20-result-header': Step20ResultHeaderBlock,
   'step20-style-reveal': Step20StyleRevealBlock,
+  'step20-user-greeting': Step20UserGreetingBlock,
+  'step20-compatibility': Step20CompatibilityBlock,
+  'step20-secondary-styles': Step20SecondaryStylesBlock,
   'step20-personalized-offer': Step20PersonalizedOfferBlock,
+  'step20-complete-template': Step20ResultHeaderBlock, // TODO: se quiser renderização compacta usar Step20CompleteTemplateBlock diretamente em outro fluxo
   // Fallbacks para tipos básicos
   'text': createFallbackComponent('text'),
   'headline': createFallbackComponent('headline'),
