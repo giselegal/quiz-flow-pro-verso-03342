@@ -75,6 +75,7 @@ import { buildNavigationMap, formatNavigationReport } from '@/utils/funnelNaviga
 import { QuizRuntimeRegistryProvider, useQuizRuntimeRegistry } from '@/runtime/quiz/QuizRuntimeRegistry';
 import { editorStepsToRuntimeMap } from '@/runtime/quiz/editorAdapter';
 import { LayoutShell } from './LayoutShell';
+import StepNavigator from './components/StepNavigator';
 
 // Pré-visualizações especializadas (lazy) dos componentes finais de produção
 const StyleResultCard = React.lazy(() => import('@/components/editor/quiz/components/StyleResultCard').then(m => ({ default: m.StyleResultCard })));
@@ -1969,50 +1970,18 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                             </div>
                         </div>
                     )}
-                    stepsPanel={(<>
-                        <div className="px-4 py-3 border-b">
-                            <h2 className="font-semibold text-sm">Etapas</h2>
-                            <p className="text-xs text-muted-foreground">{steps.length} etapas</p>
-                        </div>
-                        <ScrollArea className="flex-1">
-                            <div className="p-2 space-y-1">
-                                {steps.map((step, index) => (
-                                    <div key={step.id} className={cn('group rounded-lg border-2 transition-colors', selectedStepId === step.id ? 'bg-blue-50 border-blue-500' : 'border-transparent hover:bg-gray-50')}>
-                                        <div className="w-full text-left px-3 py-2 cursor-pointer" onClick={() => { setSelectedStepId(step.id); setSelectedBlockId(''); }}>
-                                            <div className="flex items-center gap-2">
-                                                <Badge variant="outline" className="text-xs">{index + 1}</Badge>
-                                                <span className="text-sm font-medium truncate" title={step.id}>{step.id}</span>
-                                                {byStep[step.id]?.length ? (
-                                                    <span className="ml-auto inline-flex items-center gap-1 text-[10px] font-medium">
-                                                        {(() => {
-                                                            const errs = byStep[step.id];
-                                                            const errorCount = errs.filter(e => e.severity === 'error').length;
-                                                            const warnCount = errs.filter(e => e.severity === 'warning').length;
-                                                            if (errorCount > 0) return <span className="text-red-600">{errorCount} err</span>;
-                                                            if (warnCount > 0) return <span className="text-amber-600">{warnCount} av</span>;
-                                                            return null;
-                                                        })()}
-                                                    </span>
-                                                ) : null}
-                                            </div>
-                                            <div className="flex items-center gap-2 mt-1">
-                                                <Badge className="text-xs">{step.type}</Badge>
-                                                <span className="text-xs text-muted-foreground">{step.blocks.length} blocos</span>
-                                            </div>
-                                        </div>
-                                        <div className="flex items-center justify-end gap-1 px-2 pb-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                                            <Button variant="ghost" size="icon" className="h-5 w-5" disabled={index === 0} onClick={() => handleMoveStep(step.id, 'up')} title="Mover para cima">↑</Button>
-                                            <Button variant="ghost" size="icon" className="h-5 w-5" disabled={index === steps.length - 1} onClick={() => handleMoveStep(step.id, 'down')} title="Mover para baixo">↓</Button>
-                                            <Button variant="ghost" size="icon" className="h-5 w-5 text-red-600 hover:text-red-700" onClick={() => { if (window.confirm(`Remover ${step.id}?`)) handleDeleteStep(step.id); }} title="Remover etapa">✕</Button>
-                                        </div>
-                                    </div>
-                                ))}
-                                <div className="pt-2">
-                                    <Button variant="outline" size="sm" className="w-full text-xs" onClick={handleAddStep}>+ Adicionar etapa</Button>
-                                </div>
-                            </div>
-                        </ScrollArea>
-                    </>)}
+                    stepsPanel={(
+                        <StepNavigator
+                            steps={steps}
+                            selectedStepId={selectedStepId}
+                            byStep={byStep as any}
+                            onSelect={(id) => { setSelectedStepId(id); setSelectedBlockId(''); }}
+                            onAddStep={handleAddStep}
+                            onMoveStep={handleMoveStep}
+                            onDeleteStep={handleDeleteStep}
+                            extractStepMeta={(s: any) => ({ id: s.id, type: s.type, blockCount: s.blocks?.length || 0 })}
+                        />
+                    )}
                     libraryPanel={(<>
                         <div className="px-4 py-3 border-b">
                             <h2 className="font-semibold text-sm">Componentes</h2>
