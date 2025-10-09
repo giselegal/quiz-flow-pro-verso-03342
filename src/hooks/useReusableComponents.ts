@@ -1,5 +1,5 @@
-import { createClient } from '@supabase/supabase-js';
 import { useCallback, useEffect, useState } from 'react';
+import { getSupabaseClient } from '@/integrations/supabase/supabaseLazy';
 
 // ============================================================================
 // TIPOS PARA COMPONENTES REUTILIZÁVEIS
@@ -56,11 +56,18 @@ export const useReusableComponents = (quizId?: string) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Supabase client (opcional - se não configurado, usa dados mock)
-  const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-  const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
-
-  const supabase = supabaseUrl && supabaseKey ? createClient(supabaseUrl, supabaseKey) : null;
+  // Lazy client: somente carregado quando necessário
+  let supabaseRef: any = null;
+  const ensureClient = async () => {
+    if (supabaseRef) return supabaseRef;
+    try {
+      supabaseRef = await getSupabaseClient();
+    } catch (e) {
+      console.warn('[useReusableComponents] Supabase indisponível (mock).');
+      supabaseRef = null;
+    }
+    return supabaseRef;
+  };
 
   // ============================================================================
   // CARREGAR TIPOS DE COMPONENTES DISPONÍVEIS
@@ -70,7 +77,8 @@ export const useReusableComponents = (quizId?: string) => {
     try {
       setLoading(true);
 
-      if (!supabase) {
+  const supabase = await ensureClient();
+  if (!supabase) {
         // Retorna dados mock quando Supabase não está configurado
         const mockData: ComponentType[] = [];
         setComponentTypes(mockData);
@@ -78,7 +86,7 @@ export const useReusableComponents = (quizId?: string) => {
         return;
       }
 
-      const { data, error } = await supabase
+  const { data, error } = await supabase
         .from('component_types')
         .select('*')
         .order('category, display_name');
@@ -102,11 +110,12 @@ export const useReusableComponents = (quizId?: string) => {
 
       try {
         setLoading(true);
-        if (!supabase) {
+  const supabase = await ensureClient();
+  if (!supabase) {
           setStepComponents(prev => ({ ...prev, [stepNumber]: [] }));
           return [];
         }
-        const { data, error } = await supabase!
+  const { data, error } = await supabase
           .from('step_components')
           .select('*')
           .eq('quiz_id', quizId)
@@ -141,11 +150,12 @@ export const useReusableComponents = (quizId?: string) => {
 
     try {
       setLoading(true);
-      if (!supabase) {
+  const supabase = await ensureClient();
+  if (!supabase) {
         setStepComponents({});
         return {} as Record<number, StepComponent[]>;
       }
-      const { data, error } = await supabase!
+  const { data, error } = await supabase
         .from('step_components')
         .select('*')
         .eq('quiz_id', quizId)
