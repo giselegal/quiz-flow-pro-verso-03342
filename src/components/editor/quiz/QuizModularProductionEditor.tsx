@@ -97,7 +97,6 @@ import PropertiesPanel from './components/PropertiesPanel';
 import DuplicateBlockDialog from './components/DuplicateBlockDialog';
 // Cálculo real de resultado (produção)
 import { computeResult } from '@/utils/result/computeResult';
-import { UnifiedConfigProvider } from '@/context/UnifiedConfigContext';
 import type { QuizFunnelSchema } from '@/types/quiz-schema';
 
 // Pré-visualizações especializadas (lazy) dos componentes finais de produção
@@ -406,15 +405,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                             try {
                                 const unified = await QuizTemplateAdapter.convertLegacyTemplate();
                                 if (unified && Array.isArray(unified.steps) && unified.steps.length >= 21) {
-                                    // Disponibilizar runtime/results globalmente para leitura rápida do preview
-                                    try {
-                                        // fallback legado: manter globais por compatibilidade temporária
-                                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                                        (globalThis as any).__unifiedRuntime = unified.runtime || {};
-                                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                                        (globalThis as any).__unifiedResults = unified.results || {};
-                                    } catch { /* noop */ }
-                                    // Guardar em estado local para consumo direto sem hooks internos
+                                    // Guardar em estado local para consumo direto
                                     setUnifiedConfig({ runtime: unified.runtime, results: unified.results, ui: unified.ui });
                                     const initialFromDoc: EditableQuizStep[] = unified.steps
                                         .sort((a, b) => a.order - b.order)
@@ -707,9 +698,9 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
         // Em execuções subsequentes, poderemos armazenar em localStorage/session ou contexto.
         const defaults = { enableAutoAdvance: true, autoAdvanceDelayMs: 800 };
         try {
-            // Preferir estado local quando existir; fallback para globais
+            // Usar somente unifiedConfig (sem globais)
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            const rt = (unifiedConfig?.runtime as any) || (globalThis as any).__unifiedRuntime as { navigation?: { autoAdvance?: { enable?: boolean; delayMs?: number } } } | undefined;
+            const rt = (unifiedConfig?.runtime as any) as { navigation?: { autoAdvance?: { enable?: boolean; delayMs?: number } } } | undefined;
             const enable = rt?.navigation?.autoAdvance?.enable;
             const delay = rt?.navigation?.autoAdvance?.delayMs;
             return {
@@ -796,11 +787,9 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
         ].join('|');
         const cached = previewCacheRef.current.get(id);
         if (cached && cached.key === key) return cached.node;
-        // Dados unificados preferindo estado local; fallback para globais
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const unifiedResultsAny: any = (globalThis as any).__unifiedResults || {};
-        const stylesMap: Record<string, any> = (unifiedConfig?.results?.styles as any) || unifiedResultsAny.styles || {};
-        const offersMap: Record<string, any> = (unifiedConfig?.results?.offersMap as any) || unifiedResultsAny.offersMap || {};
+    // Dados unificados via estado local
+    const stylesMap: Record<string, any> = (unifiedConfig?.results?.styles as any) || {};
+    const offersMap: Record<string, any> = (unifiedConfig?.results?.offersMap as any) || {};
         const primaryId = previewResult?.primaryStyleId;
         const primaryTitle = primaryId && stylesMap[primaryId]?.title ? stylesMap[primaryId].title : (primaryId || 'classico');
         // Contexto provisório para placeholders (será expandido com scoring dinâmico e dados reais do usuário)
@@ -1795,7 +1784,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                             setTargetStepId={setTargetStepId}
                             setDuplicateModalOpen={setDuplicateModalOpen}
                             activeId={activeId}
-                            previewNode={<LivePreviewWithProvider funnelId={funnelId} steps={steps} />}
+                            previewNode={<LivePreviewContainer funnelId={funnelId} steps={steps} />}
                             FixedProgressHeader={FixedProgressHeader}
                             StyleResultCard={StyleResultCard}
                             OfferMap={OfferMap}
