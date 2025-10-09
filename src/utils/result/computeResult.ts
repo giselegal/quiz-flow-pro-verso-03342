@@ -14,10 +14,12 @@
 import { QUIZ_STEPS, type QuizStep } from '@/data/quizSteps';
 import { styleMapping } from '@/data/styles';
 import { toUnaccentedStyleId } from '@/utils/styleIds';
+import type { QuizFunnelSchema } from '@/types/quiz-schema';
 
 export interface ComputeResultInput {
     answers: Record<string, string[]>; // stepId -> optionIds selecionadas
     steps?: Record<string, QuizStep>;
+    scoring?: QuizFunnelSchema['runtime'] extends { scoring?: infer S } ? S : any; // opcional: configurações de scoring do runtime
 }
 
 export interface ComputeResultOutputBasic {
@@ -29,12 +31,15 @@ export interface ComputeResultOutputBasic {
     totalAnswers: number;                 // total de seleções consideradas
 }
 
-export function computeResult({ answers, steps = QUIZ_STEPS }: ComputeResultInput): ComputeResultOutputBasic {
+export function computeResult({ answers, steps = QUIZ_STEPS, scoring }: ComputeResultInput): ComputeResultOutputBasic {
     // Inicializa scores com todos estilos em 0 para consistência de UI
     const scores: Record<string, number> = {};
     Object.keys(styleMapping).forEach(id => { scores[id] = 0; });
 
     let totalAnswers = 0;
+
+    // Pesos opcionais por estilo
+    const weights: Record<string, number> | undefined = (scoring as any)?.weights;
 
     for (const [stepId, selections] of Object.entries(answers)) {
         const step = (steps as any)[stepId];
@@ -44,16 +49,27 @@ export function computeResult({ answers, steps = QUIZ_STEPS }: ComputeResultInpu
             // Mantemos ids internos SEM acento para consistência, convertendo caso venha acentuado
             const internalId = scores[rawOptId] !== undefined ? rawOptId : toUnaccentedStyleId(rawOptId);
             if (scores[internalId] === undefined) continue; // ignora ids não reconhecidos
-            scores[internalId] += 1;
+            const w = (weights && typeof weights[internalId] === 'number') ? weights[internalId] : 1;
+            scores[internalId] += w;
             totalAnswers += 1;
         }
     }
 
     // Ordenar estilos pelo score (desc) e depois id (asc) para desempate estável
+    const tieBreak: string | undefined = (scoring as any)?.tieBreak;
     const orderedStyleIds = Object.keys(scores)
         .sort((a, b) => {
             const diff = scores[b] - scores[a];
             if (diff !== 0) return diff;
+            // desempate configurável (default: alfabético)
+            if (tieBreak === 'random') {
+                return Math.random() - 0.5;
+            }
+            if (tieBreak === 'natural-first') {
+                // exemplo: priorizar 'natural' se empatar
+                if (a === 'natural') return -1;
+                if (b === 'natural') return 1;
+            }
             return a.localeCompare(b, 'pt-BR');
         });
 

@@ -97,6 +97,8 @@ import PropertiesPanel from './components/PropertiesPanel';
 import DuplicateBlockDialog from './components/DuplicateBlockDialog';
 // Cálculo real de resultado (produção)
 import { computeResult } from '@/utils/result/computeResult';
+import { UnifiedConfigProvider } from '@/context/UnifiedConfigContext';
+import type { QuizFunnelSchema } from '@/types/quiz-schema';
 
 // Pré-visualizações especializadas (lazy) dos componentes finais de produção
 const StyleResultCard = React.lazy(() => import('@/components/editor/quiz/components/StyleResultCard').then(m => ({ default: m.StyleResultCard })));
@@ -302,6 +304,12 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
     const [isDirty, setIsDirty] = useState(false);
     const [isSaving, setIsSaving] = useState(false);
     const [isPublishing, setIsPublishing] = useState(false);
+    // Config unificada para consumo no preview
+    const [unifiedConfig, setUnifiedConfig] = useState<{
+        runtime?: QuizFunnelSchema['runtime'];
+        results?: QuizFunnelSchema['results'];
+        ui?: QuizFunnelSchema['ui'];
+    } | null>(null);
     // Theme overrides carregados do localStorage e aplicados via EditorThemeProvider
     const [themeOverrides, setThemeOverrides] = useState<Partial<DesignTokens>>({});
     // Configuração global de cabeçalho (logo + progresso) fixo
@@ -400,11 +408,14 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                                 if (unified && Array.isArray(unified.steps) && unified.steps.length >= 21) {
                                     // Disponibilizar runtime/results globalmente para leitura rápida do preview
                                     try {
+                                        // fallback legado: manter globais por compatibilidade temporária
                                         // eslint-disable-next-line @typescript-eslint/no-explicit-any
                                         (globalThis as any).__unifiedRuntime = unified.runtime || {};
                                         // eslint-disable-next-line @typescript-eslint/no-explicit-any
                                         (globalThis as any).__unifiedResults = unified.results || {};
                                     } catch { /* noop */ }
+                                    // Guardar em estado local para consumo direto sem hooks internos
+                                    setUnifiedConfig({ runtime: unified.runtime, results: unified.results, ui: unified.ui });
                                     const initialFromDoc: EditableQuizStep[] = unified.steps
                                         .sort((a, b) => a.order - b.order)
                                         .map((s, idx) => ({
@@ -696,7 +707,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
         // Em execuções subsequentes, poderemos armazenar em localStorage/session ou contexto.
         const defaults = { enableAutoAdvance: true, autoAdvanceDelayMs: 800 };
         try {
-            // Sem bloqueio: usar window.__unifiedRuntime se algum ponto já setou
+            // Ler via provider se disponível
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const rt = (globalThis as any).__unifiedRuntime as { navigation?: { autoAdvance?: { enable?: boolean; delayMs?: number } } } | undefined;
             const enable = rt?.navigation?.autoAdvance?.enable;
@@ -732,7 +743,13 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
     // Cálculo de resultado real (usa computeResult da produção)
     const previewResult = useMemo(() => {
         try {
-            return computeResult({ answers: previewAnswers });
+            // tentar ler scoring do provider
+            let scoring: any;
+            try {
+                const cfg = useUnifiedConfig();
+                scoring = cfg.runtime?.scoring;
+            } catch { /* hook fora de provider neste escopo — caímos no fallback */ }
+            return computeResult({ answers: previewAnswers, scoring });
         } catch {
             return null;
         }
@@ -784,11 +801,20 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
         ].join('|');
         const cached = previewCacheRef.current.get(id);
         if (cached && cached.key === key) return cached.node;
-        // Dados unificados de resultados/ofertas quando disponíveis (injetados ao carregar documento unificado)
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const unifiedResults: any = (globalThis as any).__unifiedResults || {};
-        const stylesMap = (unifiedResults && unifiedResults.styles) ? unifiedResults.styles : {};
-        const offersMap = (unifiedResults && unifiedResults.offersMap) ? unifiedResults.offersMap : {};
+        // Dados unificados via provider (fallback para globais se necessário)
+        let stylesMap: Record<string, any> = {};
+        let offersMap: Record<string, any> = {};
+        try {
+            const cfg = useUnifiedConfig();
+            stylesMap = (cfg.results?.styles as any) || {};
+            offersMap = (cfg.results?.offersMap as any) || {};
+        } catch {
+            // fallback para globais enquanto provider não está disponível neste escopo
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const unifiedResults: any = (globalThis as any).__unifiedResults || {};
+            stylesMap = unifiedResults.styles || {};
+            offersMap = unifiedResults.offersMap || {};
+        }
         const primaryId = previewResult?.primaryStyleId;
         const primaryTitle = primaryId && stylesMap[primaryId]?.title ? stylesMap[primaryId].title : (primaryId || 'classico');
         // Contexto provisório para placeholders (será expandido com scoring dinâmico e dados reais do usuário)
@@ -1783,7 +1809,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                             setTargetStepId={setTargetStepId}
                             setDuplicateModalOpen={setDuplicateModalOpen}
                             activeId={activeId}
-                            previewNode={<LivePreviewContainer funnelId={funnelId} steps={steps} />}
+                            previewNode={<LivePreviewWithProvider funnelId={funnelId} steps={steps} />}
                             FixedProgressHeader={FixedProgressHeader}
                             StyleResultCard={StyleResultCard}
                             OfferMap={OfferMap}
@@ -1858,6 +1884,20 @@ interface LivePreviewContainerProps {
     funnelId?: string;
     steps: EditableQuizStep[];
 }
+
+// Wrapper que injeta UnifiedConfigProvider e sincroniza com globais (transição)
+const LivePreviewWithProvider: React.FC<LivePreviewContainerProps> = ({ funnelId, steps }) => {
+    // Ler globais populadas na carga do documento unificado
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const unifiedRuntime: any = (globalThis as any).__unifiedRuntime || {};
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const unifiedResults: any = (globalThis as any).__unifiedResults || {};
+    return (
+        <UnifiedConfigProvider initial={{ runtime: unifiedRuntime, results: unifiedResults }}>
+            <LivePreviewContainer funnelId={funnelId} steps={steps} />
+        </UnifiedConfigProvider>
+    );
+};
 
 const LivePreviewContainer: React.FC<LivePreviewContainerProps> = ({ funnelId, steps }) => {
     const [mode, setMode] = React.useState<'production' | 'live'>('live');
