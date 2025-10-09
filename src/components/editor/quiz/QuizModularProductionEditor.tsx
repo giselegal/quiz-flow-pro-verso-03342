@@ -77,6 +77,7 @@ import { editorStepsToRuntimeMap } from '@/runtime/quiz/editorAdapter';
 import { LayoutShell } from './LayoutShell';
 import { usePanelWidths } from './hooks/usePanelWidths.tsx';
 import { useEditorHistory } from './hooks/useEditorHistory';
+import { useStepsBlocks } from './hooks/useStepsBlocks';
 import StepNavigator from './components/StepNavigator';
 import ComponentLibraryPanel from './components/ComponentLibraryPanel';
 import CanvasArea from './components/CanvasArea';
@@ -408,22 +409,14 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
     // ==========================
     const recomputeOrders = (list: EditableQuizStep[]) => list.map((s, i) => ({ ...s, order: i + 1 }));
 
-    const handleMoveStep = useCallback((stepId: string, direction: 'up' | 'down') => {
-        setSteps(prev => {
-            const idx = prev.findIndex(s => s.id === stepId);
-            if (idx < 0) return prev;
-            if (direction === 'up' && idx === 0) return prev;
-            if (direction === 'down' && idx === prev.length - 1) return prev;
-            const targetIdx = direction === 'up' ? idx - 1 : idx + 1;
-            const arr = [...prev];
-            const [moved] = arr.splice(idx, 1);
-            arr.splice(targetIdx, 0, moved);
-            const withOrders = recomputeOrders(arr);
-            pushHistory(withOrders);
-            return withOrders;
-        });
-        setIsDirty(true);
-    }, [pushHistory]);
+    // Hook de etapas (CRUD / reorder)
+    const { addStep: handleAddStep, moveStep: handleMoveStep, deleteStep: handleDeleteStep } = useStepsBlocks<EditableQuizStep>({
+        steps,
+        setSteps,
+        pushHistory,
+        setDirty: setIsDirty,
+        onSelectStep: setSelectedStepId
+    });
 
     const generateNextStepId = (existing: string[]) => {
         let n = 1;
@@ -434,43 +427,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
         }
     };
 
-    const handleAddStep = useCallback(() => {
-        setSteps(prev => {
-            const newId = generateNextStepId(prev.map(s => s.id));
-            const newStep: EditableQuizStep = {
-                id: newId,
-                type: 'question',
-                order: prev.length + 1,
-                blocks: [],
-                title: newId,
-                options: [],
-                nextStep: undefined
-            };
-            const list = [...prev, newStep];
-            pushHistory(list);
-            return list;
-        });
-        setIsDirty(true);
-        toast({ title: 'Etapa adicionada', description: 'Configure a nova etapa e defina o fluxo.' });
-    }, [pushHistory, toast]);
-
-    const handleDeleteStep = useCallback((stepId: string) => {
-        setSteps(prev => {
-            if (prev.length <= 1) return prev;
-            const filtered = prev.filter(s => s.id !== stepId);
-            if (filtered.length === prev.length) return prev;
-            const remainingIds = new Set(filtered.map(s => s.id));
-            const adjusted = recomputeOrders(filtered.map(s => ({ ...s, nextStep: s.nextStep && remainingIds.has(s.nextStep) ? s.nextStep : undefined })));
-            pushHistory(adjusted);
-            if (selectedStepId === stepId) {
-                const prevIdx = prev.findIndex(s => s.id === stepId);
-                const fallback = adjusted[Math.max(0, prevIdx - 1)] || adjusted[0];
-                setSelectedStepId(fallback.id);
-            }
-            return adjusted;
-        });
-        setIsDirty(true);
-    }, [selectedStepId, pushHistory]);
+    // Removido: handleAddStep / handleMoveStep / handleDeleteStep agora vêm do hook
 
     // Drag & Drop
     const [activeId, setActiveId] = useState<string | null>(null);
