@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { cn } from '@/lib/utils';
 
 export interface PanelWidths { steps: number; library: number; props: number }
@@ -44,14 +44,13 @@ export function usePanelWidths(options: UsePanelWidthsOptions = {}) {
         document.body.style.userSelect = 'none';
     };
 
-    const Resizer = ({ panel, side }: { panel: keyof PanelWidths; side: 'right' | 'left' }) => (
-        <div
-      onMouseDown= {(e) => startResize(panel, e)
-}
-className = { cn('resize-handle group w-1 cursor-col-resize relative z-10', 'after:absolute after:inset-0 after:bg-transparent hover:after:bg-blue-300/30') }
-style = {{ width: 6, marginLeft: side === 'right' ? -3 : 0, marginRight: side === 'left' ? -3 : 0, cursor: 'col-resize' }}
-    />
-  );
+    const Resizer = ({ panel, side }: { panel: keyof PanelWidths; side: 'right' | 'left' }) => {
+        return React.createElement('div', {
+            onMouseDown: (e: React.MouseEvent) => startResize(panel, e),
+            className: cn('resize-handle group w-1 cursor-col-resize relative z-10', 'after:absolute after:inset-0 after:bg-transparent hover:after:bg-blue-300/30'),
+            style: { width: 6, marginLeft: side === 'right' ? -3 : 0, marginRight: side === 'left' ? -3 : 0, cursor: 'col-resize' }
+        });
+    };
 
-return { panelWidths, Resizer };
+    return { panelWidths, Resizer };
 }

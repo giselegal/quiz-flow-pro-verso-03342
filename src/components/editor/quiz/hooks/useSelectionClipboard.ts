@@ -1,5 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { BlockComponent, EditableQuizStep } from '../types';
+
+// Definições locais mínimas para evitar dependência externa não existente
+export interface BlockComponent { id: string; type: string; order: number; parentId?: string | null; properties: Record<string, any>; content: Record<string, any>; }
+export interface EditableQuizStep { id: string; type: string; order: number; blocks: BlockComponent[]; }
 
 export interface UseSelectionClipboardOptions {
     steps: EditableQuizStep[];
@@ -78,8 +81,8 @@ export function useSelectionClipboard(opts: UseSelectionClipboardOptions): UseSe
         if (!step) return;
         const sourceIds = ids?.length ? ids : (multiSelectedIds.length ? multiSelectedIds : (selectedBlockId ? [selectedBlockId] : []));
         if (!sourceIds.length) return;
-        const blocks = step.blocks.filter(b => sourceIds.includes(b.id));
-        setClipboard(blocks.map(b => JSON.parse(JSON.stringify(b))));
+    const blocks = step.blocks.filter((b: BlockComponent) => sourceIds.includes(b.id));
+    setClipboard(blocks.map((b: BlockComponent) => JSON.parse(JSON.stringify(b))));
     }, [steps, selectedStepId, multiSelectedIds, selectedBlockId]);
 
     const paste = useCallback((stepId?: string) => {
@@ -107,7 +110,7 @@ export function useSelectionClipboard(opts: UseSelectionClipboardOptions): UseSe
         const ids = multiSelectedIds.length ? multiSelectedIds : (selectedBlockId ? [selectedBlockId] : []);
         if (!step || !ids.length) return;
         setSteps(prev => {
-            const next = prev.map(s => s.id === step.id ? { ...s, blocks: s.blocks.filter(b => !ids.includes(b.id)) } : s);
+            const next = prev.map(s => s.id === step.id ? { ...s, blocks: s.blocks.filter((b: BlockComponent) => !ids.includes(b.id)) } : s);
             pushHistory(next);
             onDirty?.();
             return next;
