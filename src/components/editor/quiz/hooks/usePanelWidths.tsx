@@ -53,3 +53,5 @@ export function usePanelWidths(options: UsePanelWidthsOptions = {}): { panelWidt
 
     return { panelWidths, Resizer };
 }
+
+export default usePanelWidths;

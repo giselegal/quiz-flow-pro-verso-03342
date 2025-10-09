@@ -75,7 +75,7 @@ import { buildNavigationMap, formatNavigationReport } from '@/utils/funnelNaviga
 import { QuizRuntimeRegistryProvider, useQuizRuntimeRegistry } from '@/runtime/quiz/QuizRuntimeRegistry';
 import { editorStepsToRuntimeMap } from '@/runtime/quiz/editorAdapter';
 import { LayoutShell } from './LayoutShell';
-import { usePanelWidths } from './hooks/usePanelWidths';
+import { usePanelWidths } from './hooks/usePanelWidths.tsx';
 import StepNavigator from './components/StepNavigator';
 import ComponentLibraryPanel from './components/ComponentLibraryPanel';
 import CanvasArea from './components/CanvasArea';
