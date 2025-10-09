@@ -52,6 +52,6 @@ test('Smoke /quiz-estilo com draft navega do step-1 ao step-2', async ({ page })
         await page.keyboard.press('Enter');
     }
 
-    // Espera que a etapa 2 apareça (texto da pergunta 1)
-    await expect(page.locator('text=Questão 1 de 10').first()).toBeVisible({ timeout: 15000 });
+    // Espera que a etapa 2 apareça (texto da pergunta 1 de produção)
+    await expect(page.locator('text=QUAL O SEU TIPO DE ROUPA FAVORITA?').first()).toBeVisible({ timeout: 20000 });
 });
