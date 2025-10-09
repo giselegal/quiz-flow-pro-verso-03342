@@ -1880,7 +1880,7 @@ const LiveRuntimePreview: React.FC<LiveRuntimePreviewProps> = ({ steps, funnelId
 };
                 <span>Live Runtime v{version}</span>
                 <span>{Object.keys(runtimeMap).length} steps</span>
-            </div>
-        </div>
+            </div >
+        </div >
     );
 };
