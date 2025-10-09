@@ -20,6 +20,8 @@ export interface RuntimeStepOverride {
     text?: string;
     // Novo: blocos modulares (fase 2). Cada step pode carregar uma lista de BlockInstance serializada simples.
     blocks?: Array<{ id: string; type: string; config: Record<string, any> }>;
+    // Novo: offerMap para etapa final (result / offer custom). Mantém estrutura bruta (validação ocorre em outro nível)
+    offerMap?: Record<string, any>;
 }
 
 interface RegistryContextValue {

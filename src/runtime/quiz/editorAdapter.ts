@@ -22,6 +22,8 @@ export function editorStepsToRuntimeMap(steps: EditableQuizStep[]): Record<strin
             title: (s as any).title,
             text: (s as any).text,
             blocks: Array.isArray((s as any).blocks) ? (s as any).blocks.map((b: any) => ({ id: b.id, type: b.type, config: b.config || {} })) : undefined,
+            // ✅ Novo: incluir offerMap para step de oferta (step-21)
+            offerMap: (s as any).offerMap,
         };
     }
     return map;

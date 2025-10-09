@@ -2433,6 +2433,24 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                                                         </div>
                                                     </div>
                                                 </div>
+                                            ) : selectedStep && selectedStep.type === 'offer' ? (
+                                                <div className="p-4 space-y-4">
+                                                    <h3 className="text-xs font-semibold uppercase tracking-wide text-slate-600">Mapa de Ofertas</h3>
+                                                    <p className="text-[11px] text-muted-foreground leading-relaxed">
+                                                        Edite as 4 variações de oferta personalizadas. Use <code>{'{userName}'}</code> nos textos para personalização dinâmica.
+                                                    </p>
+                                                    <React.Suspense fallback={<div className="text-[11px] text-muted-foreground">Carregando editor de ofertas…</div>}>
+                                                        <OfferMap
+                                                            mode="editor"
+                                                            content={{ offerMap: selectedStep.offerMap || {} }}
+                                                            onUpdate={(c) => {
+                                                                setSteps(prev => prev.map(st => st.id === selectedStep.id ? { ...st, offerMap: c.offerMap } : st));
+                                                                setIsDirty(true);
+                                                            }}
+                                                            userName={"Preview"}
+                                                        />
+                                                    </React.Suspense>
+                                                </div>
                                             ) : (
                                                 <div className="p-4 space-y-4 text-xs">
                                                     <h3 className="text-xs font-semibold uppercase tracking-wide text-slate-600">Cabeçalho Fixo</h3>
