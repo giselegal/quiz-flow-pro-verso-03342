@@ -377,7 +377,7 @@ class QuizEditorBridge {
         if (!funnelId) {
             // Tentar buscar versão publicada mais recente
             const published = await this.getLatestPublished();
-            return published || QUIZ_STEPS;
+            return published?.steps || QUIZ_STEPS;
         }
 
         // Carregar draft específico (preview)
@@ -398,7 +398,7 @@ class QuizEditorBridge {
     /**
      * 📦 Buscar versão publicada mais recente
      */
-    private async getLatestPublished(): Promise<Record<string, QuizStep> | null> {
+    private async getLatestPublished(): Promise<{ steps: Record<string, QuizStep>; runtime?: any; results?: any; ui?: any } | null> {
         try {
             const { data, error } = await supabaseAny
                 .from(this.PRODUCTION_TABLE)
@@ -410,10 +410,40 @@ class QuizEditorBridge {
 
             if (error || !data) return null;
 
-            return data.steps as Record<string, QuizStep>;
+            return {
+                steps: data.steps as Record<string, QuizStep>,
+                runtime: (data as any).runtime,
+                results: (data as any).results,
+                ui: (data as any).ui,
+            };
         } catch {
             return null;
         }
+    }
+
+    /**
+     * ⚙️ Carregar configuração de runtime/resultados/ui (draft ou produção)
+     */
+    async loadRuntimeConfig(funnelId?: string): Promise<{ runtime?: any; results?: any; ui?: any } | null> {
+        if (!funnelId) {
+            const published = await this.getLatestPublished();
+            return published ? { runtime: published.runtime, results: published.results, ui: published.ui } : null;
+        }
+
+        const draft = await this.loadDraftFromDatabase(funnelId);
+        if (draft) {
+            const { runtime, results, ui } = draft as any;
+            return { runtime, results, ui };
+        }
+
+        const cached = this.cache.get(funnelId);
+        if (cached) {
+            const { runtime, results, ui } = cached as any;
+            return { runtime, results, ui };
+        }
+
+        // Fallback nulo se não houver
+        return null;
     }
 
     /**
