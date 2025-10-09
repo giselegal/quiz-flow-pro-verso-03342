@@ -17,8 +17,8 @@
 
 import { QuizFunnelSchema, FunnelStep, StepType } from '@/types/quiz-schema';
 import { Block } from '@/types/editor';
-import { QUIZ_STYLE_21_STEPS_TEMPLATE, QUIZ_GLOBAL_CONFIG, FUNNEL_PERSISTENCE_SCHEMA } from '@/templates/quiz21StepsComplete';
-import { validateFunnelDocument, FunnelDocument } from '@/schemas/funnelDocument';
+// import { QUIZ_STYLE_21_STEPS_TEMPLATE, QUIZ_QUESTIONS_COMPLETE } from '../templates/quiz21StepsComplete';
+// import { FUNNEL_PERSISTENCE_SCHEMA, QUIZ_GLOBAL_CONFIG } from '../templates/quiz21StepsComplete';
 
 // ============================================================================
 // ADAPTADOR PRINCIPAL
@@ -49,10 +49,10 @@ export class QuizTemplateAdapter {
    */
   private static loadLegacyTemplate() {
     return {
-      template: QUIZ_STYLE_21_STEPS_TEMPLATE,
-      questions: [],
-      persistence: FUNNEL_PERSISTENCE_SCHEMA,
-      globalConfig: QUIZ_GLOBAL_CONFIG
+      template: null, // QUIZ_STYLE_21_STEPS_TEMPLATE,
+      questions: [], // QUIZ_QUESTIONS_COMPLETE,
+      persistence: null, // FUNNEL_PERSISTENCE_SCHEMA,
+      globalConfig: null // QUIZ_GLOBAL_CONFIG
     };
   }
 
@@ -245,8 +245,8 @@ export class QuizTemplateAdapter {
     return blocks.map(block => ({
       ...block,
       // Adicionar propriedades do novo esquema se necessário
-      editable: true as any,
-      version: '2.0.0' as any,
+      editable: true,
+      version: '2.0.0'
     }));
   }
 
@@ -359,15 +359,14 @@ export class QuizTemplateAdapter {
    * Converte configurações globais
    */
   private static convertGlobalSettings(globalConfig: any) {
-    const safe = globalConfig || {};
     return {
-      seo: this.convertSEOConfig(safe.seo || {}),
-      analytics: this.convertAnalyticsConfig(safe.analytics || {}),
-      branding: this.convertBrandingConfig(safe.branding || {}),
-      persistence: this.convertPersistenceConfig(safe.persistence || {}),
-      integrations: this.convertIntegrationsConfig(safe.integrations || {}),
-      performance: this.convertPerformanceConfig(safe.performance || {}),
-      legal: this.convertLegalConfig(safe.legal || {})
+      seo: this.convertSEOConfig(globalConfig.seo),
+      analytics: this.convertAnalyticsConfig(globalConfig.analytics),
+      branding: this.convertBrandingConfig(globalConfig.branding),
+      persistence: this.convertPersistenceConfig(globalConfig.persistence),
+      integrations: this.convertIntegrationsConfig(globalConfig.integrations),
+      performance: this.convertPerformanceConfig(globalConfig.performance),
+      legal: this.convertLegalConfig(globalConfig.legal)
     };
   }
 
@@ -670,24 +669,6 @@ export class QuizTemplateAdapter {
 
     if (!unifiedSchema.settings.branding.colors.primary) {
       errors.push('Cor primária da marca é obrigatória');
-    }
-
-    // Validar contra o schema Zod do FunnelDocument para garantir consistência estrutural
-    const zodValidation = validateFunnelDocument({
-      id: unifiedSchema.id,
-      name: unifiedSchema.name,
-      description: unifiedSchema.description,
-      version: unifiedSchema.version,
-      category: unifiedSchema.category,
-      templateType: unifiedSchema.templateType,
-      settings: unifiedSchema.settings as any,
-      steps: unifiedSchema.steps as any,
-      publication: unifiedSchema.publication as any,
-      editorMeta: unifiedSchema.editorMeta as any,
-    } satisfies FunnelDocument as any);
-
-    if (!zodValidation.valid) {
-      errors.push(...(zodValidation.errors || []));
     }
 
     return {
