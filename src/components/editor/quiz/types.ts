@@ -19,7 +19,7 @@ export interface EditableQuizStep {
     blocks: BlockComponent[];
     // Campos opcionais usados em vários pontos
     title?: string;
-    nextStep?: string | null;
+    nextStep?: string; // usar undefined quando ausente; evitar null para compatibilidade com utilidades
     offerMap?: Record<string, any>;
     settings?: Record<string, any>;
     metadata?: Record<string, any>;
