@@ -127,91 +127,61 @@ function App() {
                           </div>
                         </Route>
 
-                        {/* 🚀 EDITOR PRINCIPAL (WYSIWYG) - Melhor renderização */}
+                        {/* 🎯 EDITOR ÚNICO OFICIAL (/editor) → QuizModularProductionEditor */}
                         <Route path="/editor">
                           <EditorErrorBoundary>
-                            <div data-testid="quiz-editor-wysiwyg-page">
-                              <UnifiedCRUDProvider autoLoad={true}>
-                                <OptimizedEditorProvider>
-                                  {/* ✅ FASE 4 ATIVADA: +66% performance com OptimizedEditorProvider */}
-                                  <Suspense fallback={<EnhancedLoadingFallback message="Carregando editor..." />}>
-                                    <QuizFunnelEditorWYSIWYG />
-                                  </Suspense>
-                                </OptimizedEditorProvider>
-                              </UnifiedCRUDProvider>
-                            </div>
-                          </EditorErrorBoundary>
-                        </Route>
-
-                        {/* ✏️ EDITOR ESPECÍFICO PARA /quiz-estilo - FUNCIONAL E DIRETO */}
-                        <Route path="/editor/quiz-estilo">
-                          <EditorErrorBoundary>
-                            <div data-testid="quiz-estilo-editor-page">
-                              <UnifiedCRUDProvider autoLoad={true}>
-                                <OptimizedEditorProvider>
-                                  <Suspense fallback={<EnhancedLoadingFallback message="Carregando editor do quiz de estilo..." />}>
-                                    <QuizFunnelEditorWYSIWYG />
-                                  </Suspense>
-                                </OptimizedEditorProvider>
-                              </UnifiedCRUDProvider>
-                            </div>
-                          </EditorErrorBoundary>
-                        </Route>
-
-                        {/* 🎯 NOVO: EDITOR DE PRODUÇÃO COM PREVIEW REAL */}
-                        <Route path="/editor/quiz-estilo-production">
-                          <Suspense fallback={<EnhancedLoadingFallback message="Carregando editor de produção..." />}>
-                            <QuizProductionEditor />
-                          </Suspense>
-                        </Route>
-
-                        {/* 🎯 NOVO: EDITOR MODULAR 4 COLUNAS - COMPLETO */}
-                        <Route path="/editor/quiz-estilo-modular-pro">
-                          <Suspense fallback={<EnhancedLoadingFallback message="Carregando editor modular 4 colunas..." />}>
-                            <QuizModularProductionEditor />
-                          </Suspense>
-                        </Route>
-
-                        {/* Versão modular 4 colunas para /quiz-estilo (redirect automático) */}
-                        <Route path="/editor/quiz-estilo-modular">
-                          <div data-testid="quiz-estilo-modular-redirect">
-                            <QuizEstiloModularRedirect />
-                          </div>
-                        </Route>
-
-                        {/* 🔗 INTEGRAÇÃO TEMPLATE ENGINE → /quiz-estilo */}
-                        <Route path="/editor/quiz-estilo-template-engine">
-                          <Suspense fallback={<EnhancedLoadingFallback message="Carregando editor avançado..." />}>
-                            <TemplateEngineQuizEstiloPage />
-                          </Suspense>
-                        </Route>
-
-                        {/* 🧩 EDITOR MODULAR - Sistema experimental com componentes modulares */}
-                        <Route path="/editor-modular">
-                          <EditorErrorBoundary>
-                            <div data-testid="modern-modular-editor-page">
+                            <div data-testid="quiz-modular-production-editor-page">
                               <UnifiedCRUDProvider autoLoad={true}>
                                 <Suspense fallback={<EnhancedLoadingFallback message="Carregando editor modular..." />}>
-                                  <ModularEditorLayout />
+                                  <QuizModularProductionEditor />
                                 </Suspense>
                               </UnifiedCRUDProvider>
                             </div>
                           </EditorErrorBoundary>
                         </Route>
 
-                        {/* 🏆 QUIZ FUNNEL EDITOR - EDITOR MAIS COMPLETO (Undo/Redo, Import/Export, Validação) */}
+                        {/* 🔁 REDIRECTS LEGADOS PARA /editor */}
+                        <Route path="/editor/quiz-estilo">
+                          <RedirectRoute to="/editor" />
+                        </Route>
+                        <Route path="/editor/quiz-estilo-production">
+                          <RedirectRoute to="/editor" />
+                        </Route>
+                        <Route path="/editor/quiz-estilo-modular-pro">
+                          <RedirectRoute to="/editor" />
+                        </Route>
+                        <Route path="/editor/quiz-estilo-modular">
+                          <RedirectRoute to="/editor" />
+                        </Route>
+                        <Route path="/editor/quiz-estilo-template-engine">
+                          <RedirectRoute to="/editor" />
+                        </Route>
+                        <Route path="/editor-modular">
+                          <RedirectRoute to="/editor" />
+                        </Route>
+                        <Route path="/modular-editor">
+                          <RedirectRoute to="/editor" />
+                        </Route>
                         <Route path="/editor-pro">
-                          <EditorErrorBoundary>
-                            <div data-testid="quiz-funnel-editor-page">
-                              <UnifiedCRUDProvider autoLoad={true}>
-                                <BlockRegistryProvider definitions={DEFAULT_BLOCK_DEFINITIONS}>
-                                  <Suspense fallback={<EnhancedLoadingFallback message="Carregando editor profissional..." />}>
-                                    <QuizFunnelEditor />
-                                  </Suspense>
-                                </BlockRegistryProvider>
-                              </UnifiedCRUDProvider>
-                            </div>
-                          </EditorErrorBoundary>
+                          <RedirectRoute to="/editor" />
+                        </Route>
+                        <Route path="/editor-v1">
+                          <RedirectRoute to="/editor" />
+                        </Route>
+                        <Route path="/editor-stable">
+                          <RedirectRoute to="/editor" />
+                        </Route>
+                        <Route path="/editor/novo">
+                          <RedirectRoute to="/editor" />
+                        </Route>
+                        <Route path="/editor/novo/">
+                          <RedirectRoute to="/editor" />
+                        </Route>
+                        <Route path="/editor/novo/:rest*">
+                          {(params) => <RedirectRoute to="/editor" />}
+                        </Route>
+                        <Route path="/editor/:funnelId">
+                          {(params) => <RedirectRoute to="/editor" />}
                         </Route>
 
                         <Route path="/editor/templates">
