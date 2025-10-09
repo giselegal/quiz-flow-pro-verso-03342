@@ -682,6 +682,12 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
 
     const { scores: liveScores, topStyle } = useLiveScoring({ selections: quizSelections, scoringMap });
 
+    // Flags simples de preview (serão lidas do FunnelDocument no próximo passo)
+    const previewRuntimeFlags = useMemo(() => ({
+        enableAutoAdvance: true,
+        autoAdvanceDelayMs: 800,
+    }), []);
+
     // Converte seleções locais (por bloco) em respostas por etapa, compatíveis com o runtime de produção
     const previewAnswers = useMemo<Record<string, string[]>>(() => {
         const map: Record<string, string[]> = {};
@@ -1397,7 +1403,8 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
         const required = properties?.requiredSelections || (multi ? 1 : 1); // requiredSelections explícito; fallback 1
         const max = properties?.maxSelections || required;
         const showImages = properties?.showImages !== false;
-        const autoAdvance = !!properties?.autoAdvance || !!(selectedStep && ['question', 'strategic-question'].includes(selectedStep.type));
+        // Alinhar com produção: auto-avanço por padrão apenas para 'question' quando flags habilitam
+        const autoAdvance = previewRuntimeFlags.enableAutoAdvance && !!(selectedStep && selectedStep.type === 'question');
         const hasImages = showImages && options.some(o => !!o.image);
         // Layout automático: se auto e tem imagens usar 3col, se >4 opções sem imagem usar 2col, senão 1col
         const layout = properties?.layout || 'auto';
@@ -1411,7 +1418,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
         // Efeito de auto-avance
         useEffect(() => {
             if (autoAdvance && selections.length === required && required > 0 && selectedStep?.nextStep) {
-                const t = setTimeout(() => advanceStep(selectedStep.nextStep!), 800);
+                const t = setTimeout(() => advanceStep(selectedStep.nextStep!), previewRuntimeFlags.autoAdvanceDelayMs);
                 return () => clearTimeout(t);
             }
         }, [autoAdvance, selections.length, required, selectedStep, advanceStep]);
