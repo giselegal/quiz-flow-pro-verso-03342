@@ -25,6 +25,7 @@ import { serviceManager } from './services/core/UnifiedServiceManager';
 import { RedirectRoute } from './components/RedirectRoute';
 import { QuizErrorBoundary } from './components/RouteErrorBoundary';
 import { EditorErrorBoundary } from './components/error/EditorErrorBoundary';
+import { EditorAccessControl } from '@/components/editor/EditorAccessControl';
 import UnifiedCRUDProvider from '@/context/UnifiedCRUDProvider';
 import { OptimizedEditorProvider } from '@/components/editor/OptimizedEditorProvider';
 import { BlockRegistryProvider, DEFAULT_BLOCK_DEFINITIONS } from '@/runtime/quiz/blocks/BlockRegistry';
@@ -124,16 +125,19 @@ function App() {
                           <RedirectRoute to="/" />
                         </Route>
 
-                        {/* 🎯 EDITOR ÚNICO OFICIAL (/editor) → QuizModularProductionEditor */}
+                        {/* 🎯 EDITOR ÚNICO OFICIAL (/editor) → QuizModularProductionEditor
+                            Agora envolvido por EditorAccessControl para garantir auth/permissions consistentes */}
                         <Route path="/editor">
                           <EditorErrorBoundary>
-                            <div data-testid="quiz-modular-production-editor-page">
-                              <UnifiedCRUDProvider autoLoad={true}>
-                                <Suspense fallback={<EnhancedLoadingFallback message="Carregando editor modular..." />}>
-                                  <QuizModularProductionEditor />
-                                </Suspense>
-                              </UnifiedCRUDProvider>
-                            </div>
+                            <EditorAccessControl feature="editor" requiredPlan="free">
+                              <div data-testid="quiz-modular-production-editor-page">
+                                <UnifiedCRUDProvider autoLoad={true}>
+                                  <Suspense fallback={<EnhancedLoadingFallback message="Carregando editor modular..." />}>                                
+                                    <QuizModularProductionEditor />
+                                  </Suspense>
+                                </UnifiedCRUDProvider>
+                              </div>
+                            </EditorAccessControl>
                           </EditorErrorBoundary>
                         </Route>
 
