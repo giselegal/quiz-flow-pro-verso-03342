@@ -43,6 +43,9 @@ export interface PropertiesPanelProps {
     // Opcional: callbacks para runtime/scoring
     onRuntimeScoringChange?: (scoring: { tieBreak?: string; weights?: Record<string, number> }) => void;
     currentRuntimeScoring?: { tieBreak?: string; weights?: Record<string, number> } | null;
+    // Configs globais/unificadas para exibir e editar na UI
+    unifiedConfig?: { runtime?: any; results?: any; ui?: any; settings?: any } | null;
+    onUnifiedConfigPatch?: (patch: Partial<{ runtime: any; results: any; ui: any; settings: any }>) => void;
 }
 
 export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
@@ -75,6 +78,8 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
     onApplyTheme,
     onRuntimeScoringChange,
     currentRuntimeScoring,
+    unifiedConfig,
+    onUnifiedConfigPatch,
 }) => {
     // Estado local para edição simples de scoring (UI leve)
     const [tieBreak, setTieBreak] = React.useState<'alphabetical' | 'first' | 'natural-first' | 'random'>(
@@ -124,9 +129,11 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
                 </div>
             </div>
             <Tabs defaultValue="props" className="w-full">
-                <TabsList className="grid grid-cols-3 h-8">
+                <TabsList className="grid grid-cols-5 h-8">
                     <TabsTrigger value="props" className="text-[11px]">Propriedades</TabsTrigger>
                     <TabsTrigger value="runtime" className="text-[11px]">Runtime</TabsTrigger>
+                    <TabsTrigger value="results" className="text-[11px]">Resultados</TabsTrigger>
+                    <TabsTrigger value="funnel" className="text-[11px]">Funil</TabsTrigger>
                     <TabsTrigger value="theme" className="text-[11px]">Tema</TabsTrigger>
                 </TabsList>
                 <TabsContent value="props" className="m-0 p-0 h-[calc(100vh-190px)]">
@@ -203,6 +210,93 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
                                 <p className="text-[10px] text-muted-foreground leading-snug">O cabeçalho se aplica a todas as etapas (exceto resultado e oferta). Desative logo ou barra conforme necessário.</p>
                             </div>
                         )}
+                    </ScrollArea>
+                </TabsContent>
+                <TabsContent value="results" className="m-0 p-0 h-[calc(100vh-190px)]">
+                    <ScrollArea className="h-full">
+                        <div className="p-4 space-y-4 text-xs">
+                            <h3 className="text-xs font-semibold uppercase tracking-wide text-slate-600">Exibição do Resultado</h3>
+                            <div className="grid grid-cols-2 gap-3">
+                                <label className="flex items-center gap-2"><input type="checkbox" checked={!!unifiedConfig?.ui?.behavior?.resultDisplay?.showUserName} onChange={e => onUnifiedConfigPatch?.({ ui: { behavior: { ...(unifiedConfig?.ui?.behavior||{}), resultDisplay: { ...(unifiedConfig?.ui?.behavior?.resultDisplay||{}), showUserName: e.target.checked } } } })} />Exibir nome do usuário</label>
+                                <label className="flex items-center gap-2"><input type="checkbox" checked={!!unifiedConfig?.ui?.behavior?.resultDisplay?.showStyleName} onChange={e => onUnifiedConfigPatch?.({ ui: { behavior: { ...(unifiedConfig?.ui?.behavior||{}), resultDisplay: { ...(unifiedConfig?.ui?.behavior?.resultDisplay||{}), showStyleName: e.target.checked } } } })} />Exibir nome do estilo</label>
+                                <label className="flex items-center gap-2"><input type="checkbox" checked={!!unifiedConfig?.ui?.behavior?.resultDisplay?.showPrimaryPercentage} onChange={e => onUnifiedConfigPatch?.({ ui: { behavior: { ...(unifiedConfig?.ui?.behavior||{}), resultDisplay: { ...(unifiedConfig?.ui?.behavior?.resultDisplay||{}), showPrimaryPercentage: e.target.checked } } } })} />Exibir % do estilo predominante</label>
+                                <label className="flex items-center gap-2"><input type="checkbox" checked={!!unifiedConfig?.ui?.behavior?.resultDisplay?.showSecondaryRanking} onChange={e => onUnifiedConfigPatch?.({ ui: { behavior: { ...(unifiedConfig?.ui?.behavior||{}), resultDisplay: { ...(unifiedConfig?.ui?.behavior?.resultDisplay||{}), showSecondaryRanking: e.target.checked } } } })} />Exibir ranking dos secundários</label>
+                            </div>
+                            <div className="grid grid-cols-2 gap-3 items-center">
+                                <span>Qtd. secundários</span>
+                                <input type="number" min={0} max={6} className="border rounded px-2 py-1 text-[12px]" value={unifiedConfig?.ui?.behavior?.resultDisplay?.secondaryCount ?? 2}
+                                    onChange={e => onUnifiedConfigPatch?.({ ui: { behavior: { ...(unifiedConfig?.ui?.behavior||{}), resultDisplay: { ...(unifiedConfig?.ui?.behavior?.resultDisplay||{}), secondaryCount: Number(e.target.value) } } } })} />
+                            </div>
+
+                            <h3 className="text-xs font-semibold uppercase tracking-wide text-slate-600 mt-4">Estilos</h3>
+                            <p className="text-[10px] text-muted-foreground">Edite título, descrição, imagens e metadados de cada estilo</p>
+                            <div className="space-y-3">
+                                {Object.entries((unifiedConfig?.results?.styles||{})).map(([styleId, data]: any) => (
+                                    <div key={styleId} className="border rounded p-3 bg-white">
+                                        <div className="flex items-center justify-between">
+                                            <div className="font-medium">{styleId}</div>
+                                        </div>
+                                        <div className="grid grid-cols-2 gap-3 mt-2">
+                                            <div className="space-y-2">
+                                                <label className="block text-[11px]">Título</label>
+                                                <input className="w-full border rounded px-2 py-1" value={data.title || ''} onChange={e=> onUnifiedConfigPatch?.({ results: { styles: { ...(unifiedConfig?.results?.styles||{}), [styleId]: { ...data, title: e.target.value } } } })} />
+                                                <label className="block text-[11px] mt-2">Descrição</label>
+                                                <textarea className="w-full border rounded px-2 py-1 min-h-[72px]" value={data.description || ''} onChange={e=> onUnifiedConfigPatch?.({ results: { styles: { ...(unifiedConfig?.results?.styles||{}), [styleId]: { ...data, description: e.target.value } } } })} />
+                                                <label className="block text-[11px] mt-2">Categoria</label>
+                                                <input className="w-full border rounded px-2 py-1" value={data.category || ''} onChange={e=> onUnifiedConfigPatch?.({ results: { styles: { ...(unifiedConfig?.results?.styles||{}), [styleId]: { ...data, category: e.target.value } } } })} />
+                                                <label className="block text-[11px] mt-2">Palavras-chave (separadas por vírgula)</label>
+                                                <input className="w-full border rounded px-2 py-1" value={(data.keywords||[]).join(', ')} onChange={e=> onUnifiedConfigPatch?.({ results: { styles: { ...(unifiedConfig?.results?.styles||{}), [styleId]: { ...data, keywords: e.target.value.split(',').map((s:string)=>s.trim()).filter(Boolean) } } } })} />
+                                            </div>
+                                            <div className="space-y-2">
+                                                <label className="block text-[11px]">Imagem do Estilo</label>
+                                                <input className="w-full border rounded px-2 py-1" value={data.image || ''} onChange={e=> onUnifiedConfigPatch?.({ results: { styles: { ...(unifiedConfig?.results?.styles||{}), [styleId]: { ...data, image: e.target.value } } } })} />
+                                                <label className="block text-[11px] mt-2">Imagem do Guia (material)</label>
+                                                <input className="w-full border rounded px-2 py-1" value={data.guideImage || ''} onChange={e=> onUnifiedConfigPatch?.({ results: { styles: { ...(unifiedConfig?.results?.styles||{}), [styleId]: { ...data, guideImage: e.target.value } } } })} />
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
+                                {Object.keys(unifiedConfig?.results?.styles||{}).length === 0 && (
+                                    <div className="text-[11px] text-muted-foreground">Nenhum estilo encontrado no documento unificado</div>
+                                )}
+                            </div>
+                        </div>
+                    </ScrollArea>
+                </TabsContent>
+
+                <TabsContent value="funnel" className="m-0 p-0 h-[calc(100vh-190px)]">
+                    <ScrollArea className="h-full">
+                        <div className="p-4 space-y-4 text-xs">
+                            <h3 className="text-xs font-semibold uppercase tracking-wide text-slate-600">Configurações do Funil</h3>
+                            <div className="grid grid-cols-2 gap-3 items-center">
+                                <span>URL Base</span>
+                                <input className="border rounded px-2 py-1" placeholder="https://seu-dominio.com" value={unifiedConfig?.settings?.seo?.canonical || ''} onChange={e=> onUnifiedConfigPatch?.({ settings: { ...(unifiedConfig?.settings||{}), seo: { ...(unifiedConfig?.settings?.seo||{}), canonical: e.target.value } } })} />
+                                <span>Pixel ID</span>
+                                <input className="border rounded px-2 py-1" placeholder="FB-PIXEL-ID" value={unifiedConfig?.settings?.analytics?.facebookPixel?.pixelId || ''} onChange={e=> onUnifiedConfigPatch?.({ settings: { ...(unifiedConfig?.settings||{}), analytics: { ...(unifiedConfig?.settings?.analytics||{}), facebookPixel: { ...(unifiedConfig?.settings?.analytics?.facebookPixel||{}), pixelId: e.target.value } } } })} />
+                                <span>Token</span>
+                                <input className="border rounded px-2 py-1" placeholder="seu-token" value={unifiedConfig?.settings?.integrations?.custom?.token || ''} onChange={e=> onUnifiedConfigPatch?.({ settings: { ...(unifiedConfig?.settings||{}), integrations: { ...(unifiedConfig?.settings?.integrations||{}), custom: { ...(unifiedConfig?.settings?.integrations?.custom||{}), token: e.target.value } } } })} />
+                                <span>API Base</span>
+                                <input className="border rounded px-2 py-1" placeholder="https://api.exemplo.com" value={unifiedConfig?.settings?.integrations?.custom?.apiBaseUrl || ''} onChange={e=> onUnifiedConfigPatch?.({ settings: { ...(unifiedConfig?.settings||{}), integrations: { ...(unifiedConfig?.settings?.integrations||{}), custom: { ...(unifiedConfig?.settings?.integrations?.custom||{}), apiBaseUrl: e.target.value } } } })} />
+                                <span>Webhook URL</span>
+                                <input className="border rounded px-2 py-1" placeholder="https://hooks.exemplo.com/lead" value={(unifiedConfig?.settings?.integrations?.webhooks?.[0]?.url) || ''} onChange={e=> onUnifiedConfigPatch?.({ settings: { ...(unifiedConfig?.settings||{}), integrations: { ...(unifiedConfig?.settings?.integrations||{}), webhooks: [{ ...(unifiedConfig?.settings?.integrations?.webhooks?.[0]||{ name:'Lead', method:'POST', headers:{}, events:[], active:true, retryPolicy:{maxRetries:3, backoffMultiplier:2}}), url: e.target.value }] } } })} />
+                                <span>UTM (source)</span>
+                                <input className="border rounded px-2 py-1" placeholder="utm_source" value={unifiedConfig?.settings?.analytics?.utm?.source || ''} onChange={e=> onUnifiedConfigPatch?.({ settings: { ...(unifiedConfig?.settings||{}), analytics: { ...(unifiedConfig?.settings?.analytics||{}), utm: { ...(unifiedConfig?.settings?.analytics?.utm||{}), source: e.target.value } } } })} />
+                                <span>UTM (medium)</span>
+                                <input className="border rounded px-2 py-1" placeholder="utm_medium" value={unifiedConfig?.settings?.analytics?.utm?.medium || ''} onChange={e=> onUnifiedConfigPatch?.({ settings: { ...(unifiedConfig?.settings||{}), analytics: { ...(unifiedConfig?.settings?.analytics||{}), utm: { ...(unifiedConfig?.settings?.analytics?.utm||{}), medium: e.target.value } } } })} />
+                                <span>UTM (campaign)</span>
+                                <input className="border rounded px-2 py-1" placeholder="utm_campaign" value={unifiedConfig?.settings?.analytics?.utm?.campaign || ''} onChange={e=> onUnifiedConfigPatch?.({ settings: { ...(unifiedConfig?.settings||{}), analytics: { ...(unifiedConfig?.settings?.analytics||{}), utm: { ...(unifiedConfig?.settings?.analytics?.utm||{}), campaign: e.target.value } } } })} />
+                            </div>
+                            <div className="grid grid-cols-2 gap-3 items-start">
+                                <div>
+                                    <label className="block text-[11px]">SEO Title</label>
+                                    <input className="w-full border rounded px-2 py-1" value={unifiedConfig?.settings?.seo?.title || ''} onChange={e=> onUnifiedConfigPatch?.({ settings: { ...(unifiedConfig?.settings||{}), seo: { ...(unifiedConfig?.settings?.seo||{}), title: e.target.value } } })} />
+                                </div>
+                                <div>
+                                    <label className="block text-[11px]">SEO Description</label>
+                                    <textarea className="w-full border rounded px-2 py-1 min-h-[60px]" value={unifiedConfig?.settings?.seo?.description || ''} onChange={e=> onUnifiedConfigPatch?.({ settings: { ...(unifiedConfig?.settings||{}), seo: { ...(unifiedConfig?.settings?.seo||{}), description: e.target.value } } })} />
+                                </div>
+                            </div>
+                        </div>
                     </ScrollArea>
                 </TabsContent>
                 <TabsContent value="theme" className="m-0 p-0 h-[calc(100vh-190px)]">

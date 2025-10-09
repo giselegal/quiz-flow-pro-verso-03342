@@ -76,6 +76,9 @@ export interface ResultStyleContent {
   title?: string;
   description?: string;
   image?: string;
+  guideImage?: string; // imagem do material/guia
+  category?: string;
+  keywords?: string[];
 }
 
 export interface OfferContent {
@@ -105,6 +108,13 @@ export interface UIConfig {
     validation?: {
       showErrorOnUnderSelection?: boolean;
       errorCopy?: string;
+    };
+    resultDisplay?: {
+      showUserName?: boolean;
+      showStyleName?: boolean;
+      showPrimaryPercentage?: boolean;
+      showSecondaryRanking?: boolean;
+      secondaryCount?: number; // quantos secundários exibir
     };
   };
 }
@@ -360,6 +370,12 @@ export interface IntegrationsConfiguration {
 
   // Webhooks
   webhooks: WebhookConfiguration[];
+
+  // Integrações customizadas simples
+  custom?: {
+    apiBaseUrl?: string;
+    token?: string;
+  };
 }
 
 export interface WebhookConfiguration {

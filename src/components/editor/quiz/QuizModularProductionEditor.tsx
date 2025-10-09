@@ -1839,6 +1839,19 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                                 if (!scoring) return null;
                                 return { tieBreak: scoring.tieBreak, weights: scoring.weights } as any;
                             }, [unifiedConfig])}
+                            unifiedConfig={unifiedConfig as any}
+                            onUnifiedConfigPatch={(patch) => {
+                                setUnifiedConfig(prev => {
+                                    const base = prev || {} as any;
+                                    // merge raso por seções, mantendo objetos aninhados existentes quando possível
+                                    const next: any = { ...base };
+                                    if (patch.runtime) next.runtime = { ...(base.runtime||{}), ...patch.runtime };
+                                    if (patch.results) next.results = { ...(base.results||{}), ...patch.results };
+                                    if (patch.ui) next.ui = { ...(base.ui||{}), ...patch.ui };
+                                    if (patch.settings) next.settings = { ...(base.settings||{}), ...patch.settings };
+                                    return next;
+                                });
+                            }}
                             onRuntimeScoringChange={(scoring) => {
                                 // Atualiza unifiedConfig local para refletir no preview imediatamente
                                 setUnifiedConfig(prev => {
