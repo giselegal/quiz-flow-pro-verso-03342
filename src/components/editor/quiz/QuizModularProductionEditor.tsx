@@ -79,7 +79,7 @@ import { usePanelWidths } from './hooks/usePanelWidths.tsx';
 import { useEditorHistory } from './hooks/useEditorHistory';
 import { useStepsBlocks } from './hooks/useStepsBlocks';
 import { useBlocks } from './hooks/useBlocks';
-import { BlockComponent as EditorBlockComponent, EditableQuizStep as EditorEditableQuizStep } from './types';
+import { BlockComponent as EditorBlockComponent, EditableQuizStep as EditorEditableQuizStep, ComponentLibraryItem } from './types';
 import { useSelectionClipboard } from './hooks/useSelectionClipboard';
 import { useVirtualBlocks } from './hooks/useVirtualBlocks';
 import StepNavigator from './components/StepNavigator';
@@ -96,18 +96,6 @@ const OfferMap = React.lazy(() => import('@/components/editor/quiz/components/Of
 
 // Tipos centrais importados de ./types (removidas definições locais duplicadas)
 
-interface ComponentLibraryItem {
-    /** Identificador único do item na paleta */
-    type: string;
-    /** Tipo real do bloco salvo (se diferente) */
-    blockType?: string;
-    label: string;
-    icon: React.ReactNode;
-    defaultProps: Record<string, any>;
-    /** Conteúdo default (ex: text) separado de propriedades */
-    defaultContent?: Record<string, any>;
-    category: 'layout' | 'content' | 'interactive' | 'media';
-}
 
 // Biblioteca de componentes disponíveis
 const COMPONENT_LIBRARY: ComponentLibraryItem[] = [

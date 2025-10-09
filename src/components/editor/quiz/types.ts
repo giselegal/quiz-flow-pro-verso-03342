@@ -30,3 +30,16 @@ export interface BlockSnippet {
     name: string;
     blocks: BlockComponent[];
 }
+
+// Item da biblioteca de componentes exibida na coluna de arraste
+export interface ComponentLibraryItem {
+    /** Identificador único mostrado/arrastado */
+    type: string;
+    /** Tipo real de bloco se diferente do tipo exposto */
+    blockType?: string;
+    label: string;
+    icon: React.ReactNode;
+    defaultProps: Record<string, any>;
+    defaultContent?: Record<string, any>;
+    category: 'layout' | 'content' | 'interactive' | 'media';
+}
