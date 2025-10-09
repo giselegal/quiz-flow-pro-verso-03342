@@ -679,70 +679,28 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
 
     // Adicionar bloco ao step (callback estável)
     const addBlockToStep = useCallback((stepId: string, componentType: string) => {
-        const component = COMPONENT_LIBRARY.find(c => c.type === componentType);
+        const component = COMPONENT_LIBRARY.find(c => c.type === componentType || c.blockType === componentType);
         if (!component) return;
-        const step = selectedStepRef.current;
-        const newBlock: BlockComponent = {
-            id: `block-${Date.now()}`,
+        addBlock(stepId, {
             type: component.blockType || component.type,
-            order: step?.blocks.length || 0,
-            parentId: null,
             properties: { ...component.defaultProps },
-            content: {}
-        };
-        // Se propriedades contêm 'text' para tipos textuais, mover para content
-        if (['heading', 'text', 'button'].includes(newBlock.type) && (newBlock.properties as any).text) {
-            newBlock.content.text = (newBlock.properties as any).text;
-            delete (newBlock.properties as any).text;
-        }
-        // Aplicar defaultContent explícito se existir
-        if (component.defaultContent) {
-            newBlock.content = { ...component.defaultContent, ...newBlock.content };
-        }
-        setSteps(prev => {
-            const next = prev.map(s => s.id === stepId ? { ...s, blocks: [...s.blocks, newBlock] } : s);
-            pushHistory(next);
-            return next;
-        });
-        setSelectedBlockId(newBlock.id);
+            content: { ...(component.defaultContent || {}) }
+        } as any);
+        // seleção do novo bloco: não temos id exato retornado; poderia ser aprimorado com retorno do hook
         setIsDirty(true);
-        toastRef.current({
-            title: 'Componente adicionado',
-            description: component.label,
-        });
-    }, []);
+        toastRef.current({ title: 'Componente adicionado', description: component.label });
+    }, [addBlock]);
 
     // Remover bloco
     const removeBlock = useCallback((stepId: string, blockId: string) => {
-        setSteps(prev => {
-            const next = prev.map(step => step.id === stepId ? { ...step, blocks: step.blocks.filter(b => b.id !== blockId) } : step);
-            pushHistory(next);
-            return next;
-        });
-
-        if (selectedBlockId === blockId) {
-            setSelectedBlockId('');
-        }
-
-        setIsDirty(true);
-    }, [selectedBlockId]);
+        deleteBlock(stepId, blockId);
+        if (selectedBlockId === blockId) setSelectedBlockId('');
+    }, [deleteBlock, selectedBlockId]);
 
     // Duplicar bloco
     const duplicateBlock = useCallback((stepId: string, block: BlockComponent) => {
-        const step = selectedStepRef.current;
-        const clone: BlockComponent = {
-            ...block,
-            id: `${block.id}-dup-${Date.now()}`,
-            order: (step?.blocks.length || 0)
-        };
-        setSteps(prev => {
-            const next = prev.map(s => s.id === stepId ? { ...s, blocks: [...s.blocks, clone] } : s);
-            pushHistory(next);
-            return next;
-        });
-        setSelectedBlockId(clone.id);
-        setIsDirty(true);
-    }, []);
+        duplicateBlockHook(stepId, block.id);
+    }, [duplicateBlockHook]);
 
     const blockPendingDuplicateRef = useRef<BlockComponent | null>(null);
     const targetStepIdRef = useRef<string>('');
@@ -752,27 +710,12 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
         const blockDup = blockPendingDuplicateRef.current;
         const target = targetStepIdRef.current;
         if (!blockDup || !target) return;
-        setSteps(prev => {
-            const next = prev.map(s => {
-                if (s.id === target) {
-                    const clone: BlockComponent = {
-                        ...blockDup,
-                        id: `${blockDup.id}-xdup-${Date.now()}`,
-                        order: s.blocks.length
-                    };
-                    return { ...s, blocks: [...s.blocks, clone] };
-                }
-                return s;
-            });
-            pushHistory(next);
-            return next;
-        });
-        setIsDirty(true);
+        duplicateBlockHook(blockDup.parentId ? blockDup.parentId : (selectedStepId || ''), blockDup.id, target);
         setDuplicateModalOpen(false);
         setBlockPendingDuplicate(null);
         setTargetStepId('');
         toastRef.current({ title: 'Bloco duplicado', description: `Copiado para ${target}` });
-    }, []);
+    }, [duplicateBlockHook, selectedStepId]);
 
     // Copiar bloco (ou múltiplos no futuro)
     const copyBlock = useCallback((block: BlockComponent) => {
@@ -805,29 +748,13 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
 
     // Atualizar propriedades do bloco
     const updateBlockProperties = useCallback((stepId: string, blockId: string, updates: Record<string, any>) => {
-        setSteps(prev => {
-            const next = prev.map(step => step.id === stepId ? {
-                ...step,
-                blocks: step.blocks.map(block => block.id === blockId ? { ...block, properties: { ...block.properties, ...updates } } : block)
-            } : step);
-            scheduleHistoryPush(next);
-            return next;
-        });
-        setIsDirty(true);
-    }, []);
+        updateBlock(stepId, blockId, { properties: updates });
+    }, [updateBlock]);
 
     // Atualizar conteúdo do bloco
     const updateBlockContent = useCallback((stepId: string, blockId: string, updates: Record<string, any>) => {
-        setSteps(prev => {
-            const next = prev.map(step => step.id === stepId ? {
-                ...step,
-                blocks: step.blocks.map(block => block.id === blockId ? { ...block, content: { ...block.content, ...updates } } : block)
-            } : step);
-            scheduleHistoryPush(next);
-            return next;
-        });
-        setIsDirty(true);
-    }, []);
+        updateBlock(stepId, blockId, { content: updates });
+    }, [updateBlock]);
 
     // Debounce para histórico em edições rápidas de conteúdo/propriedades
     const historyDebounceRef = useRef<any>(null);
