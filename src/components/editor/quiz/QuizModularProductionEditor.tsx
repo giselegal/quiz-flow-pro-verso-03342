@@ -58,6 +58,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogD
 import { cn } from '@/lib/utils';
 import { quizEditorBridge } from '@/services/QuizEditorBridge';
 import QuizProductionPreview from './QuizProductionPreview';
+import QuizAppConnected from '@/components/quiz/QuizAppConnected';
 import { useToast } from '@/hooks/use-toast';
 import { replacePlaceholders } from '@/utils/placeholderParser';
 import { useLiveScoring } from '@/hooks/useLiveScoring';
@@ -71,6 +72,8 @@ import { sanitizeInlineHtml, looksLikeHtml } from '@/utils/sanitizeInlineHtml';
 import { convertBlocksToStep as convertBlocksToStepUtil } from '@/utils/quizConversionUtils';
 import { autoFillNextSteps } from '@/utils/autoFillNextSteps';
 import { buildNavigationMap, formatNavigationReport } from '@/utils/funnelNavigation';
+import { QuizRuntimeRegistryProvider, useQuizRuntimeRegistry } from '@/runtime/quiz/QuizRuntimeRegistry';
+import { editorStepsToRuntimeMap } from '@/runtime/quiz/editorAdapter';
 
 // Pré-visualizações especializadas (lazy) dos componentes finais de produção
 const StyleResultCard = React.lazy(() => import('@/components/editor/quiz/components/StyleResultCard').then(m => ({ default: m.StyleResultCard })));
@@ -2219,8 +2222,9 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                                     )}
                                 </TabsContent>
 
-                                <TabsContent value="preview" className="flex-1 m-0">
-                                    <QuizProductionPreview funnelId={funnelId} className="h-full" />
+                                <TabsContent value="preview" className="flex-1 m-0 p-0">
+                                    {/* Toggle modo de preview */}
+                                    <LivePreviewContainer funnelId={funnelId} steps={steps} />
                                 </TabsContent>
                             </Tabs>
                         </div>
@@ -2541,3 +2545,96 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
 };
 
 export default QuizModularProductionEditor;
+
+// =================== LIVE PREVIEW (Embedded Runtime) ===================
+// Colocado após export principal para evitar alterar lógica existente.
+
+interface LivePreviewContainerProps {
+    funnelId?: string;
+    steps: EditableQuizStep[];
+}
+
+const LivePreviewContainer: React.FC<LivePreviewContainerProps> = ({ funnelId, steps }) => {
+    const [mode, setMode] = React.useState<'production' | 'live'>('live');
+    const [debouncedSteps, setDebouncedSteps] = React.useState(steps);
+    const debounceRef = React.useRef<number | null>(null);
+
+    // Debounce para não repintar runtime a cada digitação
+    React.useEffect(() => {
+        if (debounceRef.current) window.clearTimeout(debounceRef.current);
+        debounceRef.current = window.setTimeout(() => setDebouncedSteps(steps), 400);
+        return () => { if (debounceRef.current) window.clearTimeout(debounceRef.current); };
+    }, [steps]);
+
+    return (
+        <div className="flex flex-col h-full">
+            <div className="flex items-center justify-between px-4 py-2 border-b bg-white">
+                <div className="flex items-center gap-2">
+                    <span className="text-xs font-medium">Preview</span>
+                    <div className="flex items-center gap-1">
+                        <button
+                            className={`text-[11px] px-2 py-1 rounded border ${mode === 'live' ? 'bg-blue-600 text-white border-blue-600' : 'bg-white hover:bg-slate-50'}`}
+                            onClick={() => setMode('live')}
+                        >Live</button>
+                        <button
+                            className={`text-[11px] px-2 py-1 rounded border ${mode === 'production' ? 'bg-blue-600 text-white border-blue-600' : 'bg-white hover:bg-slate-50'}`}
+                            onClick={() => setMode('production')}
+                        >Produção</button>
+                    </div>
+                </div>
+                <div className="flex items-center gap-2 text-[10px] text-muted-foreground">
+                    {mode === 'live' ? (
+                        <>
+                            <span>Atualiza em tempo real (400ms debounce)</span>
+                            <span className="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                        </>
+                    ) : (
+                        <span>Renderizando versão publicada</span>
+                    )}
+                </div>
+            </div>
+            <div className="flex-1 overflow-hidden">
+                {mode === 'production' ? (
+                    <QuizProductionPreview funnelId={funnelId} className="h-full" />
+                ) : (
+                    <QuizRuntimeRegistryProvider>
+                        <LiveRuntimePreview steps={debouncedSteps} funnelId={funnelId} />
+                    </QuizRuntimeRegistryProvider>
+                )}
+            </div>
+        </div>
+    );
+};
+
+interface LiveRuntimePreviewProps {
+    steps: EditableQuizStep[];
+    funnelId?: string;
+}
+
+const LiveRuntimePreview: React.FC<LiveRuntimePreviewProps> = ({ steps, funnelId }) => {
+    const { setSteps, version } = useQuizRuntimeRegistry();
+    const runtimeMap = React.useMemo(() => editorStepsToRuntimeMap(steps as any), [steps]);
+    const mapRef = React.useRef(runtimeMap);
+
+    // Atualizar registry quando mapa muda
+    React.useEffect(() => {
+        const sameKeys = Object.keys(mapRef.current).join('|') === Object.keys(runtimeMap).join('|');
+        mapRef.current = runtimeMap;
+        setSteps(runtimeMap);
+        if (!sameKeys) {
+            console.log('🔁 Live preview registry atualizado', Object.keys(runtimeMap).length, 'steps');
+        }
+    }, [runtimeMap, setSteps]);
+
+    return (
+        <div className="h-full flex flex-col bg-white">
+            <div className="flex-1 overflow-auto">
+                <QuizAppConnected funnelId={funnelId} editorMode />
+            </div>
+            <div className="px-2 py-1 border-t bg-slate-50 text-[10px] text-slate-500 flex items-center justify-between">
+                <span>Live Runtime v{version}</span>
+                <span>{Object.keys(runtimeMap).length} steps</span>
+            </div>
+        </div>
+    );
+};
