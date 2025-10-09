@@ -176,7 +176,15 @@ class QuizEditorBridge {
         console.log('🚀 Publicando para produção:', funnelId);
 
         // Carregar draft
-        const draft = await this.loadDraftFromDatabase(funnelId);
+        let draft = await this.loadDraftFromDatabase(funnelId);
+        // Fallback em memória: em ambientes sem Supabase real, recuperar do cache local
+        if (!draft) {
+            const cached = this.cache.get(funnelId);
+            if (cached) {
+                console.warn('⚠️ Supabase indisponível ou sem dados. Usando draft do cache em memória para publicar.');
+                draft = cached;
+            }
+        }
         if (!draft) {
             throw new Error('Draft não encontrado');
         }
@@ -252,7 +260,12 @@ class QuizEditorBridge {
             .eq('id', draftId)
             .single();
 
-        if (error || !data) return null;
+        if (error || !data) {
+            // Fallback em memória
+            const cached = this.cache.get(draftId);
+            if (cached) return cached;
+            return null;
+        }
 
         return {
             id: data.id,
@@ -297,6 +310,11 @@ class QuizEditorBridge {
         const draft = await this.loadDraftFromDatabase(funnelId);
         if (draft) {
             return this.convertToQuizSteps(draft.steps);
+        }
+        // Fallback em memória: se salvo nesta sessão
+        const cached = this.cache.get(funnelId);
+        if (cached) {
+            return this.convertToQuizSteps(cached.steps as any);
         }
 
         // Fallback para produção
