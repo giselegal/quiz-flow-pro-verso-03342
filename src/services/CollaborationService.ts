@@ -9,6 +9,7 @@
  */
 
 import { getSupabaseClient } from '@/integrations/supabase/supabaseLazy';
+import { isSupabaseDisabled, isSupabaseEnabled } from '@/integrations/supabase/flags';
 
 export interface CollaborationUser {
   id: string;
@@ -72,8 +73,8 @@ class CollaborationService {
 
   private async ensureClient() {
     if (this.supabase) return this.supabase;
-    const DISABLE = (import.meta as any)?.env?.VITE_DISABLE_SUPABASE === 'true';
-    const ENABLE = (import.meta as any)?.env?.VITE_ENABLE_SUPABASE !== 'false'; // default true
+    const DISABLE = isSupabaseDisabled();
+    const ENABLE = isSupabaseEnabled();
     if (DISABLE || !ENABLE) {
       this.supabase = null;
       return null;

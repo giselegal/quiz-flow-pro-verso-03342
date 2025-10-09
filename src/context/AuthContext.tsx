@@ -1,8 +1,9 @@
 import type { Session } from '@supabase/supabase-js';
 import { getSupabaseClient } from '@/integrations/supabase/supabaseLazy';
+import { isSupabaseDisabled, isSupabaseEnabled } from '@/integrations/supabase/flags';
 import React, { createContext, ReactNode, useContext, useEffect, useState } from 'react';
-const DISABLE = import.meta.env.VITE_DISABLE_SUPABASE === 'true';
-const ENABLE = import.meta.env.VITE_ENABLE_SUPABASE !== 'false';
+const DISABLE = isSupabaseDisabled();
+const ENABLE = isSupabaseEnabled();
 let authSupabase: any | null = null;
 async function ensureSupabase() {
   if (authSupabase) return authSupabase;
