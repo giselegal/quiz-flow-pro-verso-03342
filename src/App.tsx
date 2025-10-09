@@ -1,12 +1,5 @@
 /**
- * 🎯 APP.TSX com ROTEAMENTO SPA OT// 🚀 MODERN UNIFIED EDITOR - EDITOR OFICIAL (MAIS COMPLETO)
-const QuizFunnelEditor = lazy(() => import('./components/editor/quiz/QuizFunnelEditor').then(module => ({ default: module.default })));
-const QuizFunnelEditorSimplified = lazy(() => import('./components/editor/quiz/QuizFunnelEditorSimplified').then(module => ({ default: module.default })));
-const QuizFunnelEditorWYSIWYG = lazy(() => import('./components/editor/quiz/QuizFunnelEditorWYSIWYG').then(module => ({ default: module.default })));
-const ModernUnifiedEditor = lazy(() => import('./pages/editor/ModernUnifiedEditor').then(module => ({ default: module.default })));
-const ModularEditorLayout = lazy(() => import('./editor/components/ModularEditorLayout').then(module => ({ default: module.default })));
-const ModularEditorLayout = lazy(() => import('./editor/components/ModularEditorLayout').then(module => ({ default: module.default })));ADO
- * 
+ * 🎯 APP.TSX – Roteamento SPA unificado
  * MELHORIAS v2.0:
  * ✅ Roteamento aninhado para admin
  * ✅ Layout consistente para áreas administrativas
@@ -352,24 +345,24 @@ function App() {
                           {(params) => <RedirectRoute to={`/admin/${params.page}`} />}
                         </Route>
 
-                        {/* EDITOR - manter apenas /editor/quiz-estilo-modular-pro ativo */}
-                        <Route path="/editor">
-                          <RedirectRoute to="/editor/quiz-estilo-modular-pro" />
+                        {/* Redirects legados → novo /editor único */}
+                        <Route path="/editor/quiz-estilo-modular-pro">
+                          <RedirectRoute to="/editor" />
                         </Route>
                         <Route path="/modular-editor">
-                          <RedirectRoute to="/editor/quiz-estilo-modular-pro" />
+                          <RedirectRoute to="/editor" />
                         </Route>
                         <Route path="/editor-modular">
-                          <RedirectRoute to="/editor/quiz-estilo-modular-pro" />
+                          <RedirectRoute to="/editor" />
                         </Route>
                         <Route path="/editor-pro">
-                          <RedirectRoute to="/editor/quiz-estilo-modular-pro" />
+                          <RedirectRoute to="/editor" />
                         </Route>
                         <Route path="/editor-v1">
-                          <RedirectRoute to="/editor/quiz-estilo-modular-pro" />
+                          <RedirectRoute to="/editor" />
                         </Route>
                         <Route path="/editor-stable">
-                          <RedirectRoute to="/editor/quiz-estilo-modular-pro" />
+                          <RedirectRoute to="/editor" />
                         </Route>
 
                         {/* 🚀 PHASE 2 ENTERPRISE DASHBOARD */}
