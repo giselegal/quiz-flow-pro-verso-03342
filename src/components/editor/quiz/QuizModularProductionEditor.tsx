@@ -482,6 +482,13 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
         setIsDirty(true);
     };
 
+    // Memo estável para passar ao PropertiesPanel sem violar as regras de hooks
+    const currentRuntimeScoringMemo = useMemo(() => {
+        const scoring = (unifiedConfig as any)?.runtime?.scoring;
+        if (!scoring) return null;
+        return { tieBreak: scoring.tieBreak, weights: scoring.weights } as any;
+    }, [unifiedConfig]);
+
     // Layout responsivo
     const [activeTab, setActiveTab] = useState<'canvas' | 'preview'>('canvas');
     const [navOpen, setNavOpen] = useState(false);
@@ -1835,11 +1842,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                             onOfferMapUpdate={(c: any) => { if (!selectedStep) return; setSteps(prev => prev.map(st => st.id === selectedStep.id ? { ...st, offerMap: c.offerMap } : st)); setIsDirty(true); }}
                             ThemeEditorPanel={ThemeEditorPanel as any}
                             onApplyTheme={(t) => setThemeOverrides(t)}
-                            currentRuntimeScoring={useMemo(() => {
-                                const scoring = (unifiedConfig as any)?.runtime?.scoring;
-                                if (!scoring) return null;
-                                return { tieBreak: scoring.tieBreak, weights: scoring.weights } as any;
-                            }, [unifiedConfig])}
+                            currentRuntimeScoring={currentRuntimeScoringMemo}
                             unifiedConfig={unifiedConfig as any}
                             onUnifiedConfigPatch={(patch) => {
                                 setUnifiedConfig(prev => {

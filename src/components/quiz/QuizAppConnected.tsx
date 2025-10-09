@@ -8,7 +8,7 @@
 'use client';
 
 import { useQuizState } from '../../hooks/useQuizState';
-import { useQuizRuntimeRegistry } from '@/runtime/quiz/QuizRuntimeRegistry';
+import { useOptionalQuizRuntimeRegistry } from '@/runtime/quiz/QuizRuntimeRegistry';
 import { useComponentConfiguration } from '../../hooks/useComponentConfiguration';
 // Componentes originais (ainda usados como fallback para alguns casos especiais)
 import IntroStep from './IntroStep';
@@ -38,14 +38,9 @@ export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', ed
     }, []);
     // Overrides de steps vindos do editor (quando provider estiver presente)
     let externalSteps: Record<string, any> | undefined;
-    try {
-        const registry = useQuizRuntimeRegistry();
-        // Se houver steps no registry usamos como override runtime sem depender de salvar o funil
-        if (registry.steps && Object.keys(registry.steps).length) {
-            externalSteps = registry.steps;
-        }
-    } catch (_e) {
-        // Provider não presente: ignora silenciosamente
+    const registry = useOptionalQuizRuntimeRegistry();
+    if (registry && registry.steps && Object.keys(registry.steps).length) {
+        externalSteps = registry.steps;
     }
 
     // ============================================================================

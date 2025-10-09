@@ -65,3 +65,8 @@ export function useQuizRuntimeRegistry() {
     if (!ctx) throw new Error('useQuizRuntimeRegistry deve ser usado dentro de QuizRuntimeRegistryProvider');
     return ctx;
 }
+
+// Variante opcional: retorna null quando Provider não está presente (para uso em componentes que funcionam fora do editor)
+export function useOptionalQuizRuntimeRegistry() {
+    return useContext(QuizRuntimeRegistryContext);
+}
