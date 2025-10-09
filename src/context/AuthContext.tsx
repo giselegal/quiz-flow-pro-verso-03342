@@ -93,21 +93,26 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         setLoading(false);
         return;
       }
-      const { data: { subscription } } = supabase.auth.onAuthStateChange((_event: any, session: Session | null) => {
-        setSession(session);
-        if (session?.user) {
-          setUser({
-            id: session.user.id,
-            email: session.user.email!,
-            name: session.user.user_metadata?.name,
-          });
-          loadUserProfile(supabase, session.user.id);
-        } else {
-          setUser(null);
-          setProfile(null);
-        }
-        setLoading(false);
-      });
+      // Listener de auth apenas se suportado pelo cliente
+      let subscription: { unsubscribe: () => void } | null = null;
+      if (typeof supabase.auth?.onAuthStateChange === 'function') {
+        const result = supabase.auth.onAuthStateChange((_event: any, session: Session | null) => {
+          setSession(session);
+          if (session?.user) {
+            setUser({
+              id: session.user.id,
+              email: session.user.email!,
+              name: session.user.user_metadata?.name,
+            });
+            loadUserProfile(supabase, session.user.id);
+          } else {
+            setUser(null);
+            setProfile(null);
+          }
+          setLoading(false);
+        });
+        subscription = result?.data?.subscription || null;
+      }
       const { data: { session } } = await supabase.auth.getSession();
       setSession(session);
       if (session?.user) {
@@ -119,7 +124,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         loadUserProfile(supabase, session.user.id);
       }
       setLoading(false);
-      return () => subscription.unsubscribe();
+      return () => subscription?.unsubscribe?.();
     };
     init();
   }, []);

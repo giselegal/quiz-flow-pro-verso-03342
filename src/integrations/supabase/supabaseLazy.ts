@@ -17,11 +17,31 @@ function hasEnv(): boolean {
 }
 
 function buildMock() {
-    const noop = async () => ({ data: null, error: null });
-    const chain = () => ({ select: noop, upsert: noop, insert: noop, update: noop, delete: noop, eq: () => chain(), order: () => chain() });
+    const ok = { data: null, error: null } as any;
+    const chain = () => ({
+        select: async () => ok,
+        upsert: async () => ok,
+        insert: async () => ok,
+        update: async () => ok,
+        delete: async () => ok,
+        eq: () => chain(),
+        order: () => chain(),
+        single: async () => ok,
+        maybeSingle: async () => ok
+    });
+
+    const subscription = { unsubscribe: () => { /* noop */ } };
+
     return {
         from: () => chain(),
-        auth: { getSession: async () => ({ data: { session: null }, error: null }) }
+        auth: {
+            // Compatível com Supabase v2
+            onAuthStateChange: (_cb: any) => ({ data: { subscription } }),
+            getSession: async () => ({ data: { session: null }, error: null }),
+            getUser: async () => ({ data: { user: null }, error: null }),
+            signInWithPassword: async () => ok,
+            signOut: async () => ok
+        }
     };
 }
 

@@ -900,18 +900,25 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
 
     // 🔐 Auth listener
     useEffect(() => {
-        const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-            dispatch({
-                type: 'SET_AUTH_STATE',
-                payload: {
-                    user: session?.user || null,
-                    isAuthenticated: !!session?.user,
-                    isLoading: false
-                }
+        let subscription: { unsubscribe: () => void } | null = null;
+        if (typeof (supabase as any)?.auth?.onAuthStateChange === 'function') {
+            const result = supabase.auth.onAuthStateChange((event, session) => {
+                dispatch({
+                    type: 'SET_AUTH_STATE',
+                    payload: {
+                        user: session?.user || null,
+                        isAuthenticated: !!session?.user,
+                        isLoading: false
+                    }
+                });
             });
-        });
+            subscription = (result as any)?.data?.subscription || null;
+        } else {
+            // Fallback: marcar auth como não autenticado mas carregado
+            dispatch({ type: 'SET_AUTH_STATE', payload: { isLoading: false } });
+        }
 
-        return () => subscription.unsubscribe();
+        return () => subscription?.unsubscribe?.();
     }, []);
 
     // 📊 Performance monitoring
