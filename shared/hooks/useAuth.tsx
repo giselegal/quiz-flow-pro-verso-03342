@@ -231,11 +231,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
       // Usar cliente tipado para resolver o tipo 'never' no update
       const sb = supabase as unknown as SupabaseClient<SharedDB>;
-      type ProfilesUpdate = SharedDB['public']['Tables']['profiles']['Update'];
-      const { error } = await sb
-        .from('profiles')
-        .update(updates as ProfilesUpdate)
-        .eq('id', user.id);
+      // Converter o builder em any para contornar inferência 'never' em ambiente compartilhado
+      const profilesTable = (sb.from('profiles') as any);
+      const { error } = await profilesTable.update(updates).eq('id', user.id);
 
       if (error) {
         return { error: error.message };
