@@ -57,4 +57,17 @@ describe('computeResult (scoring config)', () => {
         const res = computeResult({ answers, scoring });
         expect(['natural', 'classico']).toContain(res.primaryStyleId);
     });
+
+    it('tieBreak first preserva ordem de inserção quando empata (ex.: dramatico vs contemporaneo)', () => {
+        // Ambos recebem 1 ponto. Em alphabetical, 'contemporaneo' vem antes de 'dramatico'.
+        // Em 'first', deve manter a ordem de inserção (aliases: 'romantico', 'dramatico', 'contemporaneo'), então 'dramatico' vence.
+        const answers = { 'step-02': ['dramatico', 'contemporaneo'] } as Record<string, string[]>;
+        const resFirst = computeResult({ answers, scoring: { tieBreak: 'first' } as any });
+        expect(resFirst.scores.dramatico).toBe(1);
+        expect(resFirst.scores.contemporaneo).toBe(1);
+        expect(resFirst.primaryStyleId).toBe('dramatico');
+
+        const resAlpha = computeResult({ answers, scoring: { tieBreak: 'alphabetical' } as any });
+        expect(resAlpha.primaryStyleId).toBe('contemporaneo');
+    });
 });
