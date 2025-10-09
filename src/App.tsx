@@ -195,15 +195,7 @@ function App() {
                         <Route path="/editor-stable">
                           <RedirectRoute to="/editor" />
                         </Route>
-                        <Route path="/editor/novo">
-                          <RedirectRoute to="/editor" />
-                        </Route>
-                        <Route path="/editor/novo/">
-                          <RedirectRoute to="/editor" />
-                        </Route>
-                        <Route path="/editor/novo/:rest*">
-                          {(params) => <RedirectRoute to="/editor" />}
-                        </Route>
+                        {/* removidos: redirects conflitantes de /editor/novo para /editor */}
                         <Route path="/editor/:funnelId">
                           {(params) => <RedirectRoute to="/editor" />}
                         </Route>
@@ -258,20 +250,8 @@ function App() {
                           </div>
                         </Route>
 
-                        <Route path="/editor/:funnelId">
-                          {(params) => (
-                            <EditorErrorBoundary>
-                              <div data-testid="quiz-editor-wysiwyg-funnel-page">
-                                <UnifiedCRUDProvider funnelId={params.funnelId} autoLoad={true}>
-                                  <OptimizedEditorProvider>
-                                    {/* ✅ FASE 4 ATIVADA: Editor otimizado com funnelId dinâmico */}
-                                    <QuizFunnelEditorWYSIWYG funnelId={params.funnelId} />
-                                  </OptimizedEditorProvider>
-                                </UnifiedCRUDProvider>
-                              </div>
-                            </EditorErrorBoundary>
-                          )}
-                        </Route>
+                        {/* Rota de editor com :funnelId descontinuada – manter apenas /editor. */}
+                        {/* <Route path="/editor/:funnelId"> ...redirecionada acima...</Route> */}
 
                         {/* 🎯 QUIZ INTEGRADO COM BACKEND COMPLETO */}
                         <Route path="/quiz">
@@ -361,25 +341,7 @@ function App() {
                           {(params) => <RedirectRoute to={`/admin/${params.page}`} />}
                         </Route>
 
-                        {/* Redirects legados → novo /editor único */}
-                        <Route path="/editor/quiz-estilo-modular-pro">
-                          <RedirectRoute to="/editor" />
-                        </Route>
-                        <Route path="/modular-editor">
-                          <RedirectRoute to="/editor" />
-                        </Route>
-                        <Route path="/editor-modular">
-                          <RedirectRoute to="/editor" />
-                        </Route>
-                        <Route path="/editor-pro">
-                          <RedirectRoute to="/editor" />
-                        </Route>
-                        <Route path="/editor-v1">
-                          <RedirectRoute to="/editor" />
-                        </Route>
-                        <Route path="/editor-stable">
-                          <RedirectRoute to="/editor" />
-                        </Route>
+                        {/* (removido) Bloco duplicado de redirects legados para /editor */}
 
                         {/* 🚀 PHASE 2 ENTERPRISE DASHBOARD */}
                         <Route path="/phase2">
