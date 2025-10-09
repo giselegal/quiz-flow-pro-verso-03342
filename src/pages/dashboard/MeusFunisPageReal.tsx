@@ -33,6 +33,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import { quizEditorBridge } from '@/services/QuizEditorBridge';
 
 // ============================================================================
 // TYPES
@@ -128,11 +129,45 @@ const MeusFunisPageReal: React.FC = () => {
                 .select('*')
                 .order('updated_at', { ascending: false });
 
-            // Buscar drafts do novo editor (quiz_drafts) – podem não existir ainda
-            const { data: draftsData } = await (supabase as any)
-                .from('quiz_drafts')
-                .select('*')
-                .order('updated_at', { ascending: false });
+            // Buscar drafts do novo editor (quiz_drafts) + fallback cache do bridge
+            let draftsData: any[] = [];
+            try {
+                const resp = await (supabase as any)
+                    .from('quiz_drafts')
+                    .select('*')
+                    .order('updated_at', { ascending: false });
+                draftsData = resp?.data || [];
+            } catch {
+                draftsData = [];
+            }
+            // Mesclar drafts do cache em memória do bridge (sessão atual)
+            const cachedDrafts = await quizEditorBridge.listDrafts();
+            // Normalizar drafts do supabase e do cache para o mesmo shape
+            const supabaseDrafts = (draftsData || []).map((d: any) => ({
+                id: d.id,
+                name: d.name,
+                slug: d.slug,
+                updated_at: d.updated_at,
+                created_at: d.created_at,
+                is_published: d.is_published || false,
+                version: d.version || 1,
+                user_id: d.user_id,
+            }));
+            const memoryDrafts = (cachedDrafts || []).map((d: any) => ({
+                id: d.id,
+                name: d.name,
+                slug: d.slug,
+                updated_at: d.updatedAt,
+                created_at: d.createdAt,
+                is_published: d.isPublished || false,
+                version: d.version || 1,
+                user_id: null,
+            }));
+            // Unificar por id, priorizando supabase
+            const draftsById = new Map<string, any>();
+            supabaseDrafts.forEach(d => draftsById.set(d.id, d));
+            memoryDrafts.forEach(d => { if (!draftsById.has(d.id)) draftsById.set(d.id, d); });
+            const unifiedDrafts = Array.from(draftsById.values());
 
             if (funnelsError) {
                 console.error('Erro ao carregar funis:', funnelsError);
@@ -188,7 +223,7 @@ const MeusFunisPageReal: React.FC = () => {
             });
 
             // Map drafts (quiz_drafts) para mesma interface (sem sessões ainda)
-            const draftFunis: RealFunnel[] = (draftsData || []).map((draft: any) => ({
+            const draftFunis: RealFunnel[] = (unifiedDrafts || []).map((draft: any) => ({
                 id: draft.id,
                 name: draft.name || draft.slug || 'Rascunho sem nome',
                 description: `Rascunho (${draft.slug}) versão ${draft.version || 1}`,

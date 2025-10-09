@@ -280,7 +280,61 @@ class QuizEditorBridge {
     }
 
     /**
-     * 📋 Criar draft baseado na produção
+     * � Listar drafts disponíveis (Supabase + cache em memória)
+     * Útil para o dashboard "Meus Funis" exibir rascunhos mesmo em dev sem backend real.
+     */
+    async listDrafts(): Promise<QuizFunnelData[]> {
+        let drafts: QuizFunnelData[] = [];
+        try {
+            const { data } = await supabaseAny
+                .from(this.DRAFT_TABLE)
+                .select('*')
+                .order('updated_at', { ascending: false });
+
+            if (Array.isArray(data)) {
+                drafts = data.map((d: any) => ({
+                    id: d.id,
+                    name: d.name,
+                    slug: d.slug,
+                    steps: d.steps as EditorQuizStep[],
+                    isPublished: d.is_published || false,
+                    version: d.version || 1,
+                    createdAt: d.created_at,
+                    updatedAt: d.updated_at
+                }));
+            }
+        } catch {
+            // Ignorar erros – usaremos cache
+        }
+
+        // Mesclar com cache em memória
+        const cached = Array.from(this.cache.values());
+
+        // Unificar por id (priorizar supabase e preencher faltantes com cache)
+        const byId = new Map<string, QuizFunnelData>();
+        drafts.forEach(d => byId.set(d.id, d));
+        cached.forEach(c => {
+            if (!byId.has(c.id)) byId.set(c.id, c);
+        });
+
+        // Ordenar por updatedAt/createdAt desc
+        const list = Array.from(byId.values()).sort((a, b) => {
+            const ta = new Date(a.updatedAt || a.createdAt || 0).getTime();
+            const tb = new Date(b.updatedAt || b.createdAt || 0).getTime();
+            return tb - ta;
+        });
+        return list;
+    }
+
+    /**
+     * 🔎 Somente drafts do cache (memória) – útil em dev puro
+     */
+    listCachedDrafts(): QuizFunnelData[] {
+        return Array.from(this.cache.values());
+    }
+
+    /**
+     * �📋 Criar draft baseado na produção
      */
     private createDraftFromProduction(draftId: string): QuizFunnelData {
         const production = this.loadProductionFunnel();
