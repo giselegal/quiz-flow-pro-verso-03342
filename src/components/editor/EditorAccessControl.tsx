@@ -20,6 +20,29 @@ export const EditorAccessControl: React.FC<EditorAccessControlProps> = ({
 }) => {
   const { profile, hasPermission } = useAuth();
 
+  // 🚧 Modo desenvolvimento: permitir acesso anônimo quando abrindo via ?template=
+  // Útil para testes rápidos do editor sem exigir login localmente.
+  let allowAnonymousDev = false;
+  try {
+    const isDev = (import.meta as any).env?.DEV || process.env.NODE_ENV === 'development' || window.location.hostname === 'localhost';
+    const sp = new URLSearchParams(window.location.search);
+    const hasTemplateParam = !!sp.get('template');
+    const explicitAnon = sp.get('allowAnonymous') === '1' || sp.get('anon') === '1';
+    allowAnonymousDev = !!(isDev && (hasTemplateParam || explicitAnon));
+  } catch { /* ignore */ }
+
+  if (!profile && allowAnonymousDev) {
+    return (
+      <>
+        {/* Aviso discreto de modo dev sem login */}
+        <div className="px-3 py-2 text-xs text-amber-700 bg-amber-50 border border-amber-200 rounded mb-2">
+          Modo desenvolvedor: acesso ao editor sem login habilitado para teste rápido.
+        </div>
+        {children}
+      </>
+    );
+  }
+
   // Verificar se o usuário está logado
   if (!profile) {
     return (
@@ -36,6 +59,10 @@ export const EditorAccessControl: React.FC<EditorAccessControlProps> = ({
             <Button asChild className="w-full">
               <a href="/auth">Fazer Login</a>
             </Button>
+            {/* Dica: em dev, pode permitir anônimo via query */}
+            <p className="text-[11px] text-muted-foreground/80">
+              Dica: em ambiente local, acesse com <code>?template=quiz21StepsComplete</code> para testes rápidos.
+            </p>
           </CardContent>
         </Card>
       </div>
