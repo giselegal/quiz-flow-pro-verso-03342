@@ -80,6 +80,7 @@ import { useEditorHistory } from './hooks/useEditorHistory';
 import { useStepsBlocks } from './hooks/useStepsBlocks';
 import { useBlocks } from './hooks/useBlocks';
 import { useSelectionClipboard } from './hooks/useSelectionClipboard';
+import { useVirtualBlocks } from './hooks/useVirtualBlocks';
 import StepNavigator from './components/StepNavigator';
 import ComponentLibraryPanel from './components/ComponentLibraryPanel';
 import CanvasArea from './components/CanvasArea';
