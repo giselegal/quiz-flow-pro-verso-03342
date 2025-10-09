@@ -14,6 +14,7 @@ import { useState, useCallback, useMemo, useEffect } from 'react';
 import { styleMapping, type StyleId } from '../data/styles';
 import { resolveStyleId } from '@/utils/styleIds';
 import { QUIZ_STEPS, STEP_ORDER } from '../data/quizSteps';
+import { computeResult } from '@/utils/result/computeResult';
 import { mergeRuntimeFlags, type QuizRuntimeFlags } from '@/config/quizRuntimeFlags';
 import { stepIdVariants, normalizeStepId, getNextFromOrder, getPreviousFromOrder, safeGetStep } from '@/utils/quizStepIds';
 import { getPersonalizedStepTemplate } from '../templates/quiz21StepsSimplified';
@@ -134,68 +135,29 @@ export function useQuizState(funnelId?: string, externalSteps?: Record<string, a
 
   // Calcular resultado do quiz
   const calculateResult = useCallback(() => {
-    console.log('🔄 Calculando resultado do quiz...');
-    // Reinicia as pontuações
-    const newScores = { ...initialScores };
+    console.log('🔄 [useQuizState] Calculando resultado via computeResult util...');
+    const { primaryStyleId, secondaryStyleIds, scores } = computeResult({ answers: state.answers });
 
-    // Conta pontos baseado nas respostas das etapas de perguntas (steps 2-11)
-    Object.entries(state.answers).forEach(([stepId, selections]) => {
-      const step = safeGetStep(QUIZ_STEPS, stepId);
+    // Mapear estilos canônicos para objetos completos
+    const primaryStyle = (styleMapping as any)[resolveStyleId(primaryStyleId) as StyleId] || (styleMapping as any)[primaryStyleId as StyleId];
+    const secondaryStylesObjects = secondaryStyleIds
+      .map(id => (styleMapping as any)[resolveStyleId(id) as StyleId] || (styleMapping as any)[id as StyleId])
+      .filter(Boolean);
 
-      // Só conta pontos para etapas do tipo 'question' (não strategic-question)
-      if (step?.type === 'question' && selections) {
-        selections.forEach(selectionId => {
-          if (selectionId in newScores) {
-            (newScores as any)[selectionId] += 1;
-          }
-        });
-      }
-    });
-
-    console.log('📊 Pontuações calculadas:', newScores);
-
-    // Ordena estilos por pontuação
-    const sortedStyles = Object.entries(newScores)
-      .sort(([, a], [, b]) => b - a)
-      .map(([plainId]) => {
-        // Converte para id canônico (acentuado) quando necessário
-        const canonicalId = resolveStyleId(plainId);
-        const style = (styleMapping as any)[canonicalId as StyleId] || (styleMapping as any)[plainId as StyleId];
-        console.log(`🎨 Mapeando estilo: ${plainId} -> canonical: ${canonicalId} =>`, style);
-        return style;
-      })
-      .filter(style => style !== undefined);
-
-    console.log('🏆 Estilos ordenados:', sortedStyles);
-
-    // Verifica se há estilos válidos
-    if (sortedStyles.length === 0) {
-      console.warn('⚠️ Nenhum estilo válido encontrado, usando estilo padrão');
-      // Usar primeiro estilo disponível como fallback
-      const fallbackStyle = Object.values(styleMapping)[0];
-      if (fallbackStyle) {
-        sortedStyles.push(fallbackStyle);
-      }
-    }
-
-    const resultStyleId = sortedStyles[0]?.id || 'clássico';
-    console.log('🎯 Estilo resultado:', resultStyleId);
-
-    // Atualiza estado com resultado
     setState(prev => ({
       ...prev,
-      scores: newScores,
+      scores: Object.keys(prev.scores).reduce((acc, k) => { acc[k as keyof typeof prev.scores] = (scores as any)[k] || 0; return acc; }, { ...prev.scores }),
       userProfile: {
         ...prev.userProfile,
-        resultStyle: resultStyleId,
-        secondaryStyles: sortedStyles.slice(1, 3).map(s => s?.id).filter(Boolean)
+        resultStyle: primaryStyle?.id || primaryStyleId,
+        secondaryStyles: secondaryStylesObjects.map(s => s.id)
       }
     }));
 
     return {
-      primaryStyle: sortedStyles[0],
-      secondaryStyles: sortedStyles.slice(1, 3),
-      scores: newScores
+      primaryStyle: primaryStyle,
+      secondaryStyles: secondaryStylesObjects,
+      scores
     };
   }, [state.answers]);
 
@@ -342,6 +304,14 @@ export function useQuizState(funnelId?: string, externalSteps?: Record<string, a
     userName: state.userProfile.userName,
     answers: state.answers,
     scores: state.scores,
+    // Percentuais derivados (0..100). Útil para Step 20 preview avançado.
+    scorePercentages: useMemo(() => {
+      const total = Object.values(state.scores).reduce((a, b) => a + b, 0);
+      if (!total) return {} as Record<string, number>;
+      const pct: Record<string, number> = {};
+      Object.entries(state.scores).forEach(([k, v]) => { pct[k] = (v / total) * 100; });
+      return pct;
+    }, [state.scores]),
     strategicAnswers: state.userProfile.strategicAnswers,
     resultStyle: state.userProfile.resultStyle,
     secondaryStyles: state.userProfile.secondaryStyles,
