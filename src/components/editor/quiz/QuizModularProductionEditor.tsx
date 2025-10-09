@@ -445,13 +445,13 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
 
     // Hook de seleção / clipboard deve vir antes de dependências que usam selectedBlockId
     const selectionApi = useSelectionClipboard({
-        steps: steps as any,
+        steps,
         selectedStepId,
-        setSteps: setSteps as any,
-        pushHistory: ((next: any) => pushHistory(next as any)) as any,
+        setSteps,
+        pushHistory,
         onDirty: () => setIsDirty(true)
     });
-    const { multiSelectedIds, clipboard, copy: copyGeneric, paste: pasteGeneric, removeSelected: removeMultiple, isMultiSelected, handleBlockClick, selectedBlockId, setSelectedBlockId } = selectionApi as any;
+    const { multiSelectedIds, clipboard, copy: copyGeneric, paste: pasteGeneric, removeSelected: removeMultiple, isMultiSelected, handleBlockClick, selectedBlockId, setSelectedBlockId } = selectionApi;
 
     // Bloco selecionado (usa selectedBlockId do hook)
     const selectedBlock = useMemo(() => selectedStep?.blocks.find(b => b.id === selectedBlockId), [selectedStep, selectedBlockId]);
