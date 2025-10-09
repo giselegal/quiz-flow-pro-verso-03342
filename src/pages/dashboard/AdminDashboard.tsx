@@ -453,10 +453,10 @@ const AdminDashboard: React.FC = () => {
                                 </CardHeader>
                                 <CardContent className="space-y-4">
                                     <QuickAction
-                                        title="� Abrir Funil /quiz-estilo"
-                                        description="Ver a versão de produção do funil de estilo"
-                                        href="/quiz-estilo"
-                                        icon={<Eye className="w-5 h-5" />}
+                                        title="🛠️ Editar Funil (quiz-estilo)"
+                                        description="Abrir o editor já com o template de estilo pessoal"
+                                        href="/editor?template=quiz-estilo"
+                                        icon={<Edit className="w-5 h-5" />}
                                         color="brand"
                                     />
                                     <QuickAction
