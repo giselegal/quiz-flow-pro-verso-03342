@@ -79,6 +79,7 @@ import { usePanelWidths } from './hooks/usePanelWidths.tsx';
 import { useEditorHistory } from './hooks/useEditorHistory';
 import { useStepsBlocks } from './hooks/useStepsBlocks';
 import { useBlocks } from './hooks/useBlocks';
+import { useSelectionClipboard } from './hooks/useSelectionClipboard';
 import StepNavigator from './components/StepNavigator';
 import ComponentLibraryPanel from './components/ComponentLibraryPanel';
 import CanvasArea from './components/CanvasArea';
@@ -324,7 +325,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
     const [funnelId, setFunnelId] = useState<string | undefined>(initialFunnelId);
     const [steps, setSteps] = useState<EditableQuizStep[]>([]);
     const [selectedStepId, setSelectedStepId] = useState<string>('');
-    const [selectedBlockId, setSelectedBlockId] = useState<string>('');
+    // selectedBlockId agora fornecido pelo useSelectionClipboard
     const [isDirty, setIsDirty] = useState(false);
     const [isSaving, setIsSaving] = useState(false);
     const [isPublishing, setIsPublishing] = useState(false);
@@ -449,12 +450,10 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
     // Drag & Drop
     const [activeId, setActiveId] = useState<string | null>(null);
     const [hoverContainerId, setHoverContainerId] = useState<string | null>(null);
-    const [clipboard, setClipboard] = useState<BlockComponent[] | null>(null);
-    const [lastSelectionStepId, setLastSelectionStepId] = useState<string>('');
     const [duplicateModalOpen, setDuplicateModalOpen] = useState(false);
     const [blockPendingDuplicate, setBlockPendingDuplicate] = useState<BlockComponent | null>(null);
     const [targetStepId, setTargetStepId] = useState<string>('');
-    const [multiSelectedIds, setMultiSelectedIds] = useState<string[]>([]);
+    // multiSelectedIds também migra para hook
     // Snippets
     const [snippets, setSnippets] = useState<BlockSnippet[]>([]);
     const [snippetFilter, setSnippetFilter] = useState('');
@@ -656,20 +655,20 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
         [steps, selectedStepId]
     );
 
-    // Bloco selecionado
-    const selectedBlock = useMemo(() =>
-        selectedStep?.blocks.find(b => b.id === selectedBlockId),
-        [selectedStep, selectedBlockId]
-    );
+    // Hook de seleção / clipboard deve vir antes de dependências que usam selectedBlockId
+    const selectionApi = useSelectionClipboard({
+        steps,
+        selectedStepId,
+        setSteps,
+        pushHistory,
+        onDirty: () => setIsDirty(true)
+    });
+    const { multiSelectedIds, clipboard, copy: copyGeneric, paste: pasteGeneric, removeSelected: removeMultiple, isMultiSelected, handleBlockClick, selectedBlockId, setSelectedBlockId } = selectionApi as any;
 
-    // Persistir seleção por etapa (quando alternar, manter bloco selecionado se existir)
-    useEffect(() => {
-        if (!selectedStepId) return;
-        if (lastSelectionStepId !== selectedStepId) {
-            setSelectedBlockId('');
-            setLastSelectionStepId(selectedStepId);
-        }
-    }, [selectedStepId, lastSelectionStepId]);
+    // Bloco selecionado (usa selectedBlockId do hook)
+    const selectedBlock = useMemo(() => selectedStep?.blocks.find(b => b.id === selectedBlockId), [selectedStep, selectedBlockId]);
+
+    // Persistência de seleção por etapa agora tratada no hook
 
     // Refs para estados usados apenas para leitura em callbacks estáveis
     const selectedStepRef = useRef<EditableQuizStep | undefined>(undefined);
@@ -717,21 +716,9 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
         toastRef.current({ title: 'Bloco duplicado', description: `Copiado para ${target}` });
     }, [duplicateBlockHook, selectedStepId]);
 
-    // Copiar bloco (ou múltiplos no futuro)
-    const copyBlock = useCallback((block: BlockComponent) => {
-        setClipboard([JSON.parse(JSON.stringify(block))]);
-    }, []);
-
-    const copyMultiple = useCallback((blocks: BlockComponent[]) => {
-        setClipboard(blocks.map(b => JSON.parse(JSON.stringify(b))));
-        toastRef.current({ title: 'Copiado', description: `${blocks.length} bloco(s) copiado(s)` });
-    }, []);
-    // Colar bloco(s)
-    const pasteBlocks = useCallback((stepId: string) => {
-        if (!clipboard || clipboard.length === 0) return;
-        clipboard.forEach(b => addBlockToStep(stepId, b.type)); // propriedades/conteúdo serão padrão; futura melhoria: extender hook para aceitar payload
-        setIsDirty(true);
-    }, [clipboard, addBlockToStep]);
+    const copyBlock = useCallback((block: BlockComponent) => copyGeneric([block.id]), [copyGeneric]);
+    const copyMultiple = useCallback((blocks: BlockComponent[]) => { copyGeneric(blocks.map(b => b.id)); toastRef.current({ title: 'Copiado', description: `${blocks.length} bloco(s) copiado(s)` }); }, [copyGeneric]);
+    const pasteBlocks = useCallback((stepId: string) => pasteGeneric(stepId), [pasteGeneric]);
 
     // Atualizar propriedades do bloco
     const updateBlockProperties = useCallback((stepId: string, blockId: string, updates: Record<string, any>) => {
@@ -743,51 +730,11 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
         updateBlock(stepId, blockId, { content: updates });
     }, [updateBlock]);
 
-    // Debounce de histórico removido: mutações via hooks já registram histórico.
+    // Debounce de histórico removido.
     const scheduleHistoryPush = (next: EditableQuizStep[]) => { pushHistory(next); };
 
 
-    // Multi seleção helpers
-    const isMultiSelected = useCallback((id: string) => multiSelectedIds.includes(id), [multiSelectedIds]);
-    const clearMultiSelection = useCallback(() => setMultiSelectedIds([]), []);
-    const handleBlockClick = (e: React.MouseEvent, block: BlockComponent) => {
-        e.stopPropagation();
-        const isShift = e.shiftKey;
-        const isMeta = e.metaKey || e.ctrlKey;
-        if (!isShift && !isMeta) {
-            // seleção simples
-            setSelectedBlockId(block.id);
-            clearMultiSelection();
-            return;
-        }
-        if (isShift && selectedStep) {
-            const ordered = [...selectedStep.blocks].sort((a, b) => a.order - b.order);
-            const last = multiSelectedIds.length ? multiSelectedIds[multiSelectedIds.length - 1] : selectedBlockId || block.id;
-            const startIndex = ordered.findIndex(b => b.id === last);
-            const endIndex = ordered.findIndex(b => b.id === block.id);
-            if (startIndex === -1 || endIndex === -1) return;
-            const [from, to] = startIndex < endIndex ? [startIndex, endIndex] : [endIndex, startIndex];
-            const range = ordered.slice(from, to + 1).map(b => b.id);
-            const merged = Array.from(new Set([...multiSelectedIds, ...range]));
-            setMultiSelectedIds(merged);
-            setSelectedBlockId(block.id);
-            return;
-        }
-        if (isMeta) {
-            setSelectedBlockId(block.id);
-            setMultiSelectedIds(prev => prev.includes(block.id) ? prev.filter(id => id !== block.id) : [...prev, block.id]);
-        }
-    };
-
-    const removeMultiple = () => {
-        if (!selectedStep || multiSelectedIds.length === 0) return;
-        const total = multiSelectedIds.length;
-        multiSelectedIds.forEach(id => removeBlockHook(selectedStep.id, id));
-        setIsDirty(true);
-        clearMultiSelection();
-        if (multiSelectedIds.includes(selectedBlockId)) setSelectedBlockId('');
-        toast({ title: 'Removidos', description: `${total} bloco(s)` });
-    };
+    // Multi seleção & remoção agora via selectionApi
 
 
     // Reordenar / mover blocos (nested)
