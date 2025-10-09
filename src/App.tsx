@@ -132,7 +132,7 @@ function App() {
                             <EditorAccessControl feature="editor" requiredPlan="free">
                               <div data-testid="quiz-modular-production-editor-page">
                                 <UnifiedCRUDProvider autoLoad={true}>
-                                  <Suspense fallback={<EnhancedLoadingFallback message="Carregando editor modular..." />}>                                
+                                  <Suspense fallback={<EnhancedLoadingFallback message="Carregando editor modular..." />}>
                                     <QuizModularProductionEditor />
                                   </Suspense>
                                 </UnifiedCRUDProvider>

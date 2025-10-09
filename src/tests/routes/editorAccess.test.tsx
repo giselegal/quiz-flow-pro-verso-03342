@@ -8,13 +8,13 @@ import App from '@/App';
 // Para garantir robustez, aceitamos ambos cenários: ou o container do editor OU o título 'Acesso Restrito'.
 
 describe('Rota /editor', () => {
-  it('carrega página de editor ou mostra bloqueio amigável', async () => {
-    window.history.pushState({}, 'Editor', '/editor');
-    render(<App />);
+    it('carrega página de editor ou mostra bloqueio amigável', async () => {
+        window.history.pushState({}, 'Editor', '/editor');
+        render(<App />);
 
-    const editorContainer = await screen.findByTestId('quiz-modular-production-editor-page').catch(() => null);
-    const restricted = screen.queryByText(/Acesso Restrito/i);
+        const editorContainer = await screen.findByTestId('quiz-modular-production-editor-page').catch(() => null);
+        const restricted = screen.queryByText(/Acesso Restrito/i);
 
-    expect(editorContainer || restricted).toBeTruthy();
-  });
+        expect(editorContainer || restricted).toBeTruthy();
+    });
 });
