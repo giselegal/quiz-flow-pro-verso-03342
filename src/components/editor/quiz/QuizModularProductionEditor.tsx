@@ -363,7 +363,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
     useEffect(() => {
         // Carregamento inicial: se houver ?template=, construir steps default
         try {
-            const sp = new URLSearchParams(window.location.search);
+            const sp = new URLSearchParams(typeof window !== 'undefined' && window.location ? window.location.search : '');
             const templateId = sp.get('template');
             const funnelParam = sp.get('funnel') || undefined;
             if (templateId) {
@@ -1274,7 +1274,18 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                             onSnippetRename={(s: any, newName: string) => { snippetsManager.update(s.id, { name: newName }); refreshSnippets(); }}
                             onSnippetDelete={(s: any) => { snippetsManager.remove(s.id); refreshSnippets(); }}
                             onRefreshSnippets={refreshSnippets}
-                            onBlockPatch={(patch) => { if (!selectedBlock || !selectedStep) return; const contentKeys = new Set(Object.keys(selectedBlock.content)); const propPatch: Record<string, any> = {}; const contentPatch: Record<string, any> = {}; Object.entries(patch).forEach(([k, v]) => { if (contentKeys.has(k)) contentPatch[k] = v; else propPatch[k] = v; }); if (Object.keys(propPatch).length) updateBlockProperties(selectedStep.id, selectedBlock.id, propPatch); if (Object.keys(contentPatch).length) updateBlockContent(selectedStep.id, selectedBlock.id, contentPatch); }}
+                            onBlockPatch={(patch) => {
+                                if (!selectedBlock || !selectedStep) return;
+                                const contentObj = selectedBlock.content && typeof selectedBlock.content === 'object' ? selectedBlock.content : {};
+                                const contentKeys = new Set(Object.keys(contentObj));
+                                const propPatch: Record<string, any> = {};
+                                const contentPatch: Record<string, any> = {};
+                                Object.entries(patch).forEach(([k, v]) => {
+                                    if (contentKeys.has(k)) contentPatch[k] = v; else propPatch[k] = v;
+                                });
+                                if (Object.keys(propPatch).length) updateBlockProperties(selectedStep.id, selectedBlock.id, propPatch);
+                                if (Object.keys(contentPatch).length) updateBlockContent(selectedStep.id, selectedBlock.id, contentPatch);
+                            }}
                             isOfferStep={!!(selectedStep && selectedStep.type === 'offer')}
                             OfferMapComponent={OfferMap as any}
                             onOfferMapUpdate={(c: any) => { if (!selectedStep) return; setSteps(prev => prev.map(st => st.id === selectedStep.id ? { ...st, offerMap: c.offerMap } : st)); setIsDirty(true); }}
