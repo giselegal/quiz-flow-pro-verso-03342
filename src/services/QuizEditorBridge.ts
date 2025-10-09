@@ -151,20 +151,22 @@ class QuizEditorBridge {
             updated_at: new Date().toISOString()
         };
 
-        // Salvar no Supabase
-        const { error } = await supabaseAny
-            .from(this.DRAFT_TABLE)
-            .upsert(draftData);
-
-        if (error) {
-            console.error('❌ Erro ao salvar draft:', error);
-            throw new Error(`Falha ao salvar: ${error.message}`);
+        // Salvar no Supabase (melhor esforço) e sempre manter cache local como fallback
+        try {
+            const { error } = await supabaseAny
+                .from(this.DRAFT_TABLE)
+                .upsert(draftData);
+            if (error) {
+                console.warn('⚠️ Supabase indisponível ao salvar draft. Usando cache local:', error?.message || error);
+            }
+        } catch (err) {
+            console.warn('⚠️ Falha geral ao acessar Supabase ao salvar draft. Continuando com cache local.', err);
         }
 
-        // Atualizar cache
+        // Atualizar cache SEMPRE para habilitar fluxo dev/local sem backend
         this.cache.set(draftId, { ...funnel, steps: workingSteps as any, id: draftId });
 
-        console.log('✅ Rascunho salvo:', draftId);
+        console.log('✅ Rascunho salvo (com fallback local se necessário):', draftId);
         return draftId;
     }
 
