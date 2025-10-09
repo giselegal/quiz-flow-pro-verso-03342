@@ -56,7 +56,8 @@ export interface ScoringConfig {
   method: 'sum' | 'weighted' | 'majority';
   // weights pode mapear optionId/styleId → peso numérico
   weights?: Record<string, number>;
-  tieBreak?: 'alphabetical' | 'first';
+  // Opções de desempate — ampliadas para cobrir variações usadas no runtime/preview
+  tieBreak?: 'alphabetical' | 'first' | 'natural-first' | 'random';
 }
 
 export interface NavigationConfig {

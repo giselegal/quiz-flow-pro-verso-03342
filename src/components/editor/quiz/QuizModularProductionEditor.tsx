@@ -1830,6 +1830,19 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                             onOfferMapUpdate={(c: any) => { if (!selectedStep) return; setSteps(prev => prev.map(st => st.id === selectedStep.id ? { ...st, offerMap: c.offerMap } : st)); setIsDirty(true); }}
                             ThemeEditorPanel={ThemeEditorPanel as any}
                             onApplyTheme={(t) => setThemeOverrides(t)}
+                            currentRuntimeScoring={useMemo(() => {
+                                const scoring = (unifiedConfig as any)?.runtime?.scoring;
+                                if (!scoring) return null;
+                                return { tieBreak: scoring.tieBreak, weights: scoring.weights } as any;
+                            }, [unifiedConfig])}
+                            onRuntimeScoringChange={(scoring) => {
+                                // Atualiza unifiedConfig local para refletir no preview imediatamente
+                                setUnifiedConfig(prev => {
+                                    const base = prev || {} as any;
+                                    const nextRuntime = { ...(base.runtime || {}), scoring: { ...(base.runtime?.scoring || {}), ...scoring } };
+                                    return { ...base, runtime: nextRuntime } as any;
+                                });
+                            }}
                         />
                     )}
                     duplicateDialog={(

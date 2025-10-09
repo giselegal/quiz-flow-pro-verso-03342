@@ -40,6 +40,9 @@ export interface PropertiesPanelProps {
     onOfferMapUpdate: (content: any) => void;
     ThemeEditorPanel: React.ComponentType<{ onApply: (t: any) => void }>;
     onApplyTheme: (tokens: any) => void;
+    // Opcional: callbacks para runtime/scoring
+    onRuntimeScoringChange?: (scoring: { tieBreak?: string; weights?: Record<string, number> }) => void;
+    currentRuntimeScoring?: { tieBreak?: string; weights?: Record<string, number> } | null;
 }
 
 export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
@@ -70,7 +73,45 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
     onOfferMapUpdate,
     ThemeEditorPanel,
     onApplyTheme,
+    onRuntimeScoringChange,
+    currentRuntimeScoring,
 }) => {
+    // Estado local para edição simples de scoring (UI leve)
+    const [tieBreak, setTieBreak] = React.useState<'alphabetical' | 'first' | 'natural-first' | 'random'>(
+        (currentRuntimeScoring?.tieBreak as any) || 'alphabetical'
+    );
+    const [weightsText, setWeightsText] = React.useState<string>(
+        currentRuntimeScoring?.weights ? JSON.stringify(currentRuntimeScoring.weights, null, 2) : ''
+    );
+
+    React.useEffect(() => {
+        // Atualizar UI quando props externas mudarem
+        if (currentRuntimeScoring) {
+            setTieBreak((currentRuntimeScoring.tieBreak as any) || 'alphabetical');
+            setWeightsText(currentRuntimeScoring.weights ? JSON.stringify(currentRuntimeScoring.weights, null, 2) : '');
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [JSON.stringify(currentRuntimeScoring || {})]);
+
+    const emitScoring = React.useCallback(() => {
+        let weights: Record<string, number> | undefined;
+        try {
+            const txt = weightsText.trim();
+            if (txt) {
+                const obj = JSON.parse(txt);
+                if (obj && typeof obj === 'object') weights = obj as Record<string, number>;
+            }
+        } catch {
+            // ignore parse errors silently (UI mostrará feedback básico)
+        }
+        onRuntimeScoringChange?.({ tieBreak, weights });
+        // Persistência local opcional (para sessões do editor)
+        try {
+            const payload = JSON.stringify({ tieBreak, weights });
+            localStorage.setItem('quiz_editor_runtime_scoring_v1', payload);
+        } catch {/* ignore */}
+    }, [tieBreak, weightsText, onRuntimeScoringChange]);
+
     return (
         <div className="px-4 pt-3 border-b flex flex-col gap-3">
             <div className="flex items-center justify-between">
@@ -83,8 +124,9 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
                 </div>
             </div>
             <Tabs defaultValue="props" className="w-full">
-                <TabsList className="grid grid-cols-2 h-8">
+                <TabsList className="grid grid-cols-3 h-8">
                     <TabsTrigger value="props" className="text-[11px]">Propriedades</TabsTrigger>
+                    <TabsTrigger value="runtime" className="text-[11px]">Runtime</TabsTrigger>
                     <TabsTrigger value="theme" className="text-[11px]">Tema</TabsTrigger>
                 </TabsList>
                 <TabsContent value="props" className="m-0 p-0 h-[calc(100vh-190px)]">
@@ -165,6 +207,40 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
                 </TabsContent>
                 <TabsContent value="theme" className="m-0 p-0 h-[calc(100vh-190px)]">
                     <ThemeEditorPanel onApply={onApplyTheme} />
+                </TabsContent>
+                <TabsContent value="runtime" className="m-0 p-0 h-[calc(100vh-190px)]">
+                    <ScrollArea className="h-full">
+                        <div className="p-4 space-y-4 text-xs">
+                            <h3 className="text-xs font-semibold uppercase tracking-wide text-slate-600">Pontuação (Scoring)</h3>
+                            <div className="space-y-2">
+                                <label className="block text-[11px] text-slate-600">Desempate (tieBreak)</label>
+                                <select
+                                    className="border rounded px-2 py-1 text-[12px] w-full bg-white"
+                                    value={tieBreak}
+                                    onChange={(e) => setTieBreak(e.target.value as any)}
+                                >
+                                    <option value="alphabetical">Alfabético</option>
+                                    <option value="first">Primeiro</option>
+                                    <option value="natural-first">Natural Primeiro</option>
+                                    <option value="random">Aleatório</option>
+                                </select>
+                                <p className="text-[10px] text-muted-foreground">Critério quando estilos empatam.</p>
+                            </div>
+                            <div className="space-y-2">
+                                <label className="block text-[11px] text-slate-600">Pesos (JSON)</label>
+                                <textarea
+                                    className="w-full min-h-[120px] border rounded px-2 py-1 font-mono text-[11px]"
+                                    placeholder='Ex: {"natural": 1.2, "classico": 1}'
+                                    value={weightsText}
+                                    onChange={(e) => setWeightsText(e.target.value)}
+                                />
+                                <p className="text-[10px] text-muted-foreground">Mapeie styleId → peso. Deixe vazio para pesos padrão (=1).</p>
+                            </div>
+                            <div className="flex gap-2 pt-1">
+                                <Button size="sm" className="h-7 text-[11px]" onClick={emitScoring}>Aplicar no Preview</Button>
+                            </div>
+                        </div>
+                    </ScrollArea>
                 </TabsContent>
             </Tabs>
         </div>
