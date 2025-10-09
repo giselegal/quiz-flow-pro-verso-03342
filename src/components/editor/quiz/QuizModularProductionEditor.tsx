@@ -784,10 +784,17 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
         ].join('|');
         const cached = previewCacheRef.current.get(id);
         if (cached && cached.key === key) return cached.node;
+        // Dados unificados de resultados/ofertas quando disponíveis (injetados ao carregar documento unificado)
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const unifiedResults: any = (globalThis as any).__unifiedResults || {};
+        const stylesMap = (unifiedResults && unifiedResults.styles) ? unifiedResults.styles : {};
+        const offersMap = (unifiedResults && unifiedResults.offersMap) ? unifiedResults.offersMap : {};
+        const primaryId = previewResult?.primaryStyleId;
+        const primaryTitle = primaryId && stylesMap[primaryId]?.title ? stylesMap[primaryId].title : (primaryId || 'classico');
         // Contexto provisório para placeholders (será expandido com scoring dinâmico e dados reais do usuário)
         const placeholderContext = {
             userName: 'Preview',
-            resultStyle: (previewResult?.primaryStyleId || 'classico'),
+            resultStyle: primaryTitle,
             scores: previewResult?.scores || { classico: 0, natural: 0, romantico: 0 }
         };
         let node: React.ReactNode = null;
@@ -1116,13 +1123,28 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
         }
         // Quiz Offer CTA Inline (CTA de oferta do quiz)
         if (type === 'quiz-offer-cta-inline') {
+            // Permite mapear por content.offerKey para buscar no offersMap
+            const offerKey: string | undefined = content.offerKey;
+            const offer = offerKey && offersMap && offersMap[offerKey]
+                ? offersMap[offerKey]
+                : (Object.values(offersMap || {})[0] as any) || null;
+            const title = (offer?.title) || content.title || 'Oferta Especial';
+            const description = (offer?.description) || content.description || 'Aproveite esta oportunidade única';
+            const image = offer?.image || content.image;
+            const ctaLabel = (offer?.ctaLabel) || content.buttonText || 'Quero Aproveitar';
+            const ctaUrl = (offer?.ctaUrl) || content.buttonUrl || '#';
             node = (
                 <div className="bg-gradient-to-r from-[#B89B7A] to-[#D4AF37] text-white rounded-lg p-6 shadow-lg">
-                    <h3 className="text-xl font-bold mb-2">{content.title || 'Oferta Especial'}</h3>
-                    <p className="text-sm mb-4 opacity-90">{content.description || 'Aproveite esta oportunidade única'}</p>
-                    <button type="button" className="bg-white text-[#B89B7A] px-6 py-3 rounded-md font-semibold hover:bg-gray-100 transition-colors">
-                        {content.buttonText || 'Quero Aproveitar'}
-                    </button>
+                    {image && (
+                        <img src={image} alt={title} className="w-full h-40 object-cover rounded mb-3 opacity-95" />
+                    )}
+                    <h3 className="text-xl font-bold mb-2">{title}</h3>
+                    <p className="text-sm mb-4 opacity-90">{description}</p>
+                    <a href={ctaUrl} target="_blank" rel="noreferrer">
+                        <button type="button" className="bg-white text-[#B89B7A] px-6 py-3 rounded-md font-semibold hover:bg-gray-100 transition-colors">
+                            {ctaLabel}
+                        </button>
+                    </a>
                 </div>
             );
             previewCacheRef.current.set(id, { key, node });
@@ -1172,13 +1194,18 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
         }
         // Style Card Inline (cartão de estilo)
         if (type === 'style-card-inline') {
+            const styleId = content.styleId || primaryId;
+            const styleData = styleId ? stylesMap[styleId] : undefined;
+            const title = content.styleName || styleData?.title || 'Seu Estilo';
+            const image = content.image || styleData?.image;
+            const description = content.description || styleData?.description || 'Descrição do estilo';
             node = (
                 <div className="border rounded-lg p-6 bg-gradient-to-br from-white to-slate-50 shadow-sm">
-                    <h3 className="text-lg font-bold mb-2">{content.styleName || 'Seu Estilo'}</h3>
-                    {content.image && (
-                        <img src={content.image} alt={content.styleName} className="w-full h-48 object-cover rounded-lg mb-3" />
+                    <h3 className="text-lg font-bold mb-2">{title}</h3>
+                    {image && (
+                        <img src={image} alt={title} className="w-full h-48 object-cover rounded-lg mb-3" />
                     )}
-                    <p className="text-sm text-slate-600">{content.description || 'Descrição do estilo'}</p>
+                    <p className="text-sm text-slate-600">{description}</p>
                 </div>
             );
             previewCacheRef.current.set(id, { key, node });
@@ -1187,7 +1214,16 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
         // Secondary Styles (estilos secundários)
         if (type === 'secondary-styles') {
             const raw = Array.isArray(content.styles) ? content.styles : [];
-            const styles = raw.map((s: any) => (typeof s === 'string' ? { name: s } : s));
+            let styles = raw.map((s: any) => (typeof s === 'string' ? { name: s } : s));
+            // Se não houver conteúdo definido, derivar top 2 secundários do cálculo de resultado
+            if ((!styles || styles.length === 0) && previewResult?.scores) {
+                const entries = Object.entries(previewResult.scores)
+                    .filter(([k]) => k !== primaryId)
+                    .sort((a, b) => (b[1] - a[1]))
+                    .slice(0, 2)
+                    .map(([k, v]) => ({ id: k, name: stylesMap[k]?.title || k, score: Math.round(v) }));
+                styles = entries as any;
+            }
             node = (
                 <div className="space-y-2">
                     <div className="text-sm font-medium text-slate-700 mb-2">Estilos Secundários:</div>
@@ -1195,7 +1231,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                         {styles.map((style: any, idx: number) => (
                             <div key={idx} className="border rounded-lg p-3 bg-white text-center">
                                 <div className="text-sm font-medium">{style.name || `Estilo ${idx + 1}`}</div>
-                                {style.score && <div className="text-xs text-slate-500">{style.score}%</div>}
+                                {style.score != null && <div className="text-xs text-slate-500">{style.score}%</div>}
                             </div>
                         ))}
                     </div>

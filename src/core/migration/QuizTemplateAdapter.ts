@@ -86,8 +86,39 @@ export class QuizTemplateAdapter {
         }
       },
       results: {
-        styles: {},
-        offersMap: {}
+        styles: {
+          natural: {
+            title: 'Estilo Natural',
+            description: 'Conforto e praticidade com leveza. Peças básicas com bom caimento e tons neutros.',
+            image: 'https://placehold.co/640x360/B89B7A/FFFFFF?text=Natural'
+          },
+          classico: {
+            title: 'Estilo Clássico',
+            description: 'Elegância atemporal, cortes retos e qualidade. Paleta sóbria e sofisticação discreta.',
+            image: 'https://placehold.co/640x360/432818/FFFFFF?text=Classico'
+          },
+          romantico: {
+            title: 'Estilo Romântico',
+            description: 'Delicadeza e feminilidade. Babados leves, florais suaves e curvas suaves.',
+            image: 'https://placehold.co/640x360/D4AF37/FFFFFF?text=Romantico'
+          }
+        },
+        offersMap: {
+          'Montar looks com mais facilidade e confiança': {
+            title: 'Guia Prático de Looks Perfeitos',
+            description: 'Aprenda a combinar peças com confiança diária usando seu estilo predominante.',
+            ctaLabel: 'Quero meu Guia',
+            ctaUrl: '#oferta-looks',
+            image: 'https://placehold.co/640x360/8F7A6A/FFFFFF?text=Guia+Looks'
+          },
+          'Usar o que já tenho e me sentir estilosa': {
+            title: 'Rota do Guarda-Roupa Inteligente',
+            description: 'Maximize o que você já tem com combinações certeiras para seu estilo.',
+            ctaLabel: 'Começar Agora',
+            ctaUrl: '#oferta-guarda-roupa',
+            image: 'https://placehold.co/640x360/AA6B5D/FFFFFF?text=Guarda-Roupa'
+          }
+        }
       },
       ui: {
         behavior: {
