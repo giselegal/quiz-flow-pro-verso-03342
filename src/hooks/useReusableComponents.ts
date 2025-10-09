@@ -168,7 +168,7 @@ export const useReusableComponents = (quizId?: string) => {
 
       // Agrupar por etapa
       const groupedComponents: Record<number, StepComponent[]> = {};
-  (data || []).forEach((component: any) => {
+      (data || []).forEach((component: any) => {
         if (!groupedComponents[component.step_number]) {
           groupedComponents[component.step_number] = [];
         }
