@@ -1,5 +1,26 @@
 import { vi } from 'vitest';
 
+// ============================================================================
+// MOCK DE FETCH (colocado no topo para garantir aplicação antes de imports que o usem)
+// ============================================================================
+; (function ensureFetchMock() {
+    const shouldInstall = true; // Forçar instalação sempre
+    if (shouldInstall) {
+        const mockFetch: typeof fetch = async (input: any, init?: any) => {
+            const url = typeof input === 'string' ? input : input?.url || '';
+            // Interceptar qualquer chamada a localhost:3000 ou rota /api/
+            if (/localhost:3000|:\\?3000|\/_?api\//i.test(url)) {
+                return new Response(JSON.stringify({ mock: true, url, ok: true }), {
+                    status: 200,
+                    headers: { 'Content-Type': 'application/json' }
+                }) as any;
+            }
+            return new Response(JSON.stringify({ mock: true, url }), { status: 200, headers: { 'Content-Type': 'application/json' } }) as any;
+        };
+        (global as any).fetch = mockFetch;
+    }
+})();
+
 // Mock indexedDB mínimo para evitar erros em hooks que o utilizam
 if (typeof (global as any).indexedDB === 'undefined') {
     (global as any).indexedDB = {
@@ -34,21 +55,4 @@ try {
 // Ajustar timers para testes que usam setTimeout curto
 vi.useFakeTimers();
 
-// Mock fetch para impedir chamadas HTTP reais durante testes (evita ECONNREFUSED)
-if (typeof (global as any).fetch === 'undefined' || !(global as any).__FETCH_MOCK_INSTALLED__) {
-    const mockFetch: typeof fetch = async (input: any, init?: any) => {
-        const url = typeof input === 'string' ? input : input?.url || '';
-        // Interceptar chamadas a localhost ou rotas /api/components
-        if (/localhost:3000|:\\?3000|\/api\/components\//i.test(url)) {
-            // Retornar resposta simulada mínima
-            return new Response(JSON.stringify({}), {
-                status: 200,
-                headers: { 'Content-Type': 'application/json' }
-            }) as any;
-        }
-        // Fallback padrão: resposta vazia
-        return new Response(JSON.stringify({}), { status: 200, headers: { 'Content-Type': 'application/json' } }) as any;
-    };
-    (global as any).fetch = mockFetch;
-    (global as any).__FETCH_MOCK_INSTALLED__ = true;
-}
+// (Removido bloco anterior de mock duplicado)
