@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import React, { PropsWithChildren } from 'react';
+import React from 'react';
 import { renderHook, act } from '@testing-library/react';
 import { useSelectionClipboard } from '../useSelectionClipboard';
 import { EditableQuizStep, BlockComponent } from '../../types';
@@ -51,16 +51,14 @@ describe('useSelectionClipboard', () => {
         };
     });
 
-    const wrapper: React.FC<PropsWithChildren<{ selectedStepId: string }>> = ({ children, selectedStepId }) => {
-        return <>{children}</>;
-    };
+    // Wrapper não necessário no momento (sem contextos)
 
     function ordered(step: EditableQuizStep) {
         return step.blocks.filter(b => !b.parentId).sort((a, b) => a.order - b.order);
     }
 
     it('seleção simples substitui seleção anterior e limpa multi', () => {
-        const { result } = renderHook(() => useSelectionClipboard({ steps, selectedStepId: 'step-1', setSteps, pushHistory }), { wrapper, initialProps: { selectedStepId: 'step-1' } });
+        const { result } = renderHook(() => useSelectionClipboard({ steps, selectedStepId: 'step-1', setSteps, pushHistory }));
         const step = steps[0];
         act(() => {
             // click normal em b2
@@ -71,7 +69,7 @@ describe('useSelectionClipboard', () => {
     });
 
     it('meta click alterna multi seleção mantendo selectedBlockId atualizado', () => {
-        const { result } = renderHook(() => useSelectionClipboard({ steps, selectedStepId: 'step-1', setSteps, pushHistory }), { wrapper, initialProps: { selectedStepId: 'step-1' } });
+        const { result } = renderHook(() => useSelectionClipboard({ steps, selectedStepId: 'step-1', setSteps, pushHistory }));
         const step = steps[0];
         act(() => {
             result.current.handleBlockClick({ stopPropagation() { }, shiftKey: false, metaKey: true, ctrlKey: true } as any, step.blocks[0], ordered(step));
@@ -87,12 +85,12 @@ describe('useSelectionClipboard', () => {
     });
 
     it('shift click cria range entre última e atual', () => {
-        const { result } = renderHook(() => useSelectionClipboard({ steps, selectedStepId: 'step-1', setSteps, pushHistory }), { wrapper, initialProps: { selectedStepId: 'step-1' } });
+        const { result } = renderHook(() => useSelectionClipboard({ steps, selectedStepId: 'step-1', setSteps, pushHistory }));
         const step = steps[0];
         act(() => {
-            // primeira seleção simples b1
             result.current.handleBlockClick({ stopPropagation() { }, shiftKey: false, metaKey: false, ctrlKey: false } as any, step.blocks[0], ordered(step));
-            // shift até b3 (inclui b1,b2,b3)
+        });
+        act(() => {
             result.current.handleBlockClick({ stopPropagation() { }, shiftKey: true, metaKey: false, ctrlKey: false } as any, step.blocks[2], ordered(step));
         });
         expect(result.current.multiSelectedIds.sort()).toEqual(['b1', 'b2', 'b3']);
@@ -100,15 +98,16 @@ describe('useSelectionClipboard', () => {
     });
 
     it('copy + paste clona blocos com novos ids', () => {
-        const { result } = renderHook(() => useSelectionClipboard({ steps, selectedStepId: 'step-1', setSteps, pushHistory }), { wrapper, initialProps: { selectedStepId: 'step-1' } });
+        const { result } = renderHook(() => useSelectionClipboard({ steps, selectedStepId: 'step-1', setSteps, pushHistory }));
         const step = steps[0];
         act(() => {
-            // selecionar dois
             result.current.handleBlockClick({ stopPropagation() { }, shiftKey: false, metaKey: true, ctrlKey: true } as any, step.blocks[0], ordered(step));
-            result.current.handleBlockClick({ stopPropagation() { }, shiftKey: false, metaKey: true, ctrlKey: true } as any, step.blocks[1], ordered(step));
-            result.current.copy();
-            result.current.paste('step-1');
         });
+        act(() => {
+            result.current.handleBlockClick({ stopPropagation() { }, shiftKey: false, metaKey: true, ctrlKey: true } as any, step.blocks[1], ordered(step));
+        });
+        act(() => { result.current.copy(); });
+        act(() => { result.current.paste('step-1'); });
         const updated = steps[0];
         expect(updated.blocks.length).toBe(6); // 4 originais + 2 colados
         const pasted = updated.blocks.slice(-2);
@@ -117,13 +116,11 @@ describe('useSelectionClipboard', () => {
     });
 
     it('removeSelected elimina blocos selecionados', () => {
-        const { result } = renderHook(() => useSelectionClipboard({ steps, selectedStepId: 'step-1', setSteps, pushHistory }), { wrapper, initialProps: { selectedStepId: 'step-1' } });
+        const { result } = renderHook(() => useSelectionClipboard({ steps, selectedStepId: 'step-1', setSteps, pushHistory }));
         const step = steps[0];
-        act(() => {
-            result.current.handleBlockClick({ stopPropagation() { }, shiftKey: false, metaKey: true, ctrlKey: true } as any, step.blocks[1], ordered(step));
-            result.current.handleBlockClick({ stopPropagation() { }, shiftKey: false, metaKey: true, ctrlKey: true } as any, step.blocks[2], ordered(step));
-            result.current.removeSelected();
-        });
+        act(() => { result.current.handleBlockClick({ stopPropagation() { }, shiftKey: false, metaKey: true, ctrlKey: true } as any, step.blocks[1], ordered(step)); });
+        act(() => { result.current.handleBlockClick({ stopPropagation() { }, shiftKey: false, metaKey: true, ctrlKey: true } as any, step.blocks[2], ordered(step)); });
+        act(() => { result.current.removeSelected(); });
         const updated = steps[0];
         expect(updated.blocks.map(b => b.id)).toEqual(['b1', 'b4']);
     });
