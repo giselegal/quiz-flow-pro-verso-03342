@@ -357,6 +357,11 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
         } catch {/* ignore */ }
     }, []);
     const [isLoading, setIsLoading] = useState(true);
+    // Evita loop infinito de carregamento: finaliza o loading após mount
+    useEffect(() => {
+        // Caso não haja carregamento assíncrono inicial, podemos encerrar o loading imediatamente
+        setIsLoading(false);
+    }, []);
     const [validationErrors, setValidationErrors] = useState<string[]>([]);
     // Undo/Redo via hook
     const { canUndo, canRedo, init: initHistory, push: pushHistory, undo, redo } = useEditorHistory<EditableQuizStep[]>();
