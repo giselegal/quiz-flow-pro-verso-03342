@@ -23,6 +23,14 @@ export const EditorAccessControl: React.FC<EditorAccessControlProps> = ({
   // 🚧 Bypass controlado: permitir acesso anônimo quando abrindo via ?template=
   // Útil para testes rápidos do editor sem exigir login localmente ou em build preview.
   let allowAnonymousDev = false;
+  // Fallback direto: se a URL contém 'template=' em qualquer posição, liberar acesso
+  try {
+    if (typeof window !== 'undefined' && typeof window.location?.search === 'string') {
+      if (window.location.search.includes('template=')) {
+        allowAnonymousDev = true;
+      }
+    }
+  } catch { /* ignore */ }
   try {
     const host = typeof window !== 'undefined' ? window.location.hostname : '';
     const sp = new URLSearchParams(typeof window !== 'undefined' ? window.location.search : '');
@@ -46,6 +54,7 @@ export const EditorAccessControl: React.FC<EditorAccessControlProps> = ({
     // - Permitir quando há ?template= (independente do ambiente), para garantir edição/visualização rápida
     // - Manter compatibilidade: também permitir se ambiente for dev-like ou houver flag de enable
     allowAnonymousDev = !!(
+      allowAnonymousDev ||
       explicitAnon ||
       (!envDisable && (hasTemplateParam || isDevEnv || isDevHost || envEnable))
     );
