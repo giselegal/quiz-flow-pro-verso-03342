@@ -415,6 +415,21 @@ export const UnifiedAdminLayout: React.FC<UnifiedAdminLayoutProps> = ({
                             Abrir Editor
                         </Button>
 
+                        {/* Atalho direto para o funil de produção (/quiz-estilo) */}
+                        <Button
+                            size="sm"
+                            onClick={() => UnifiedRoutingService.navigate('/quiz-estilo')}
+                            className="shadow-lg hover:shadow-xl transition-all duration-200 px-6 py-2.5 rounded-xl font-medium text-white glow-button"
+                            style={{
+                                background: `linear-gradient(135deg, ${theme.colors.buttons} 0%, ${theme.colors.detailsMinor} 100%)`,
+                                boxShadow: `0 0 20px ${theme.colors.buttons}40, 0 4px 20px rgba(0, 0, 0, 0.2)`
+                            }}
+                            title="Abrir Funil /quiz-estilo"
+                        >
+                            <Target className="w-4 h-4 mr-2" />
+                            Abrir Funil
+                        </Button>
+
                         <Button
                             size="sm"
                             onClick={() => handleNavigateToView('funnels')}
