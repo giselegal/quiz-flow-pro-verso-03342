@@ -77,6 +77,8 @@ import { editorStepsToRuntimeMap } from '@/runtime/quiz/editorAdapter';
 import { LayoutShell } from './LayoutShell';
 import StepNavigator from './components/StepNavigator';
 import ComponentLibraryPanel from './components/ComponentLibraryPanel';
+import CanvasArea from './components/CanvasArea';
+import PropertiesPanel from './components/PropertiesPanel';
 
 // Pré-visualizações especializadas (lazy) dos componentes finais de produção
 const StyleResultCard = React.lazy(() => import('@/components/editor/quiz/components/StyleResultCard').then(m => ({ default: m.StyleResultCard })));
@@ -1991,193 +1993,62 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                         />
                     )}
                     canvasPanel={(
-                        <div className="flex-1 bg-gray-100 flex flex-col overflow-y-auto">
-                            <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as any)} className="flex-1 flex flex-col">
-                                <div className="px-4 py-2 bg-white border-b">
-                                    <TabsList>
-                                        <TabsTrigger value="canvas">Canvas</TabsTrigger>
-                                        <TabsTrigger value="preview">Preview</TabsTrigger>
-                                    </TabsList>
-                                </div>
-                                <TabsContent value="canvas" className="flex-1 overflow-auto p-4 m-0">
-                                    {selectedStep ? (
-                                        <Card>
-                                            <CardContent>
-                                                <div className="mb-6">
-                                                    <FixedProgressHeader config={headerConfig} steps={steps} currentStepId={selectedStep.id} />
-                                                </div>
-                                                {selectedStep.blocks.length === 0 ? (
-                                                    <div className="text-center py-8 text-muted-foreground text-xs border border-dashed rounded-md bg-white/40">(vazio)</div>
-                                                ) : (
-                                                    <>
-                                                        {(selectedStep.id === 'step-20' || selectedStep.id === 'step-21') && (
-                                                            <div className="mb-6">
-                                                                <div className="mb-2 flex items-center justify-between">
-                                                                    <Badge variant="secondary" className="text-[9px]">live</Badge>
-                                                                </div>
-                                                                <div className="border rounded-lg bg-white p-4">
-                                                                    <Suspense fallback={<div className="text-xs text-muted-foreground">Carregando componente...</div>}>
-                                                                        {selectedStep.id === 'step-20' && (
-                                                                            <StyleResultCard
-                                                                                resultStyle={topStyle || 'classico'}
-                                                                                userName="Preview"
-                                                                                secondaryStyles={Object.keys(liveScores).filter(s => s !== (topStyle || 'classico')).slice(0, 2)}
-                                                                                scores={Object.keys(liveScores).length ? liveScores : { classico: 12, natural: 8, romantico: 6 }}
-                                                                                mode="result"
-                                                                            />
-                                                                        )}
-                                                                        {selectedStep.id === 'step-21' && (
-                                                                            <OfferMap
-                                                                                content={{ offerMap: (selectedStep as any).offerMap || {} }}
-                                                                                mode="preview"
-                                                                                userName="Preview"
-                                                                                selectedOfferKey="Montar looks com mais facilidade e confiança"
-                                                                            />
-                                                                        )}
-                                                                    </Suspense>
-                                                                </div>
-                                                            </div>
-                                                        )}
-                                                        {(() => {
-                                                            const rootBlocks = selectedStep.blocks.filter(b => !b.parentId).sort((a, b) => a.order - b.order);
-                                                            const vw = computeVirtualWindow(rootBlocks);
-                                                            return (
-                                                                <div ref={scrollContainerRef} className="space-y-2 max-h-[calc(100vh-240px)] overflow-auto pr-1 border rounded-md bg-white/40">
-                                                                    <SortableContext items={[...rootBlocks.map(b => b.id), 'canvas-end']} strategy={verticalListSortingStrategy}>
-                                                                        <TooltipProvider>
-                                                                            <div style={{ position: 'relative' }}>
-                                                                                {vw.enabled && vw.topSpacer > 0 && <div style={{ height: vw.topSpacer }} />}
-                                                                                {vw.visible.map(block => (
-                                                                                    <BlockRow
-                                                                                        key={block.id}
-                                                                                        block={block}
-                                                                                        byBlock={byBlock}
-                                                                                        selectedBlockId={selectedBlockId}
-                                                                                        isMultiSelected={isMultiSelected}
-                                                                                        handleBlockClick={handleBlockClick}
-                                                                                        renderBlockPreview={renderBlockPreview}
-                                                                                        allBlocks={selectedStep.blocks}
-                                                                                        removeBlock={removeBlock}
-                                                                                        stepId={selectedStep.id}
-                                                                                        setBlockPendingDuplicate={setBlockPendingDuplicate}
-                                                                                        setTargetStepId={setTargetStepId}
-                                                                                        setDuplicateModalOpen={setDuplicateModalOpen}
-                                                                                    />
-                                                                                ))}
-                                                                                {vw.enabled && vw.bottomSpacer > 0 && <div style={{ height: vw.bottomSpacer }} />}
-                                                                                <div id="canvas-end" className="h-8 flex items-center justify-center text-[10px] text-slate-400 border border-dashed mx-2 my-2 rounded">Soltar aqui para final</div>
-                                                                                {!vw.enabled && vw.visible.length === 0 && (<div className="text-[11px] text-muted-foreground italic">(sem blocos raiz)</div>)}
-                                                                            </div>
-                                                                        </TooltipProvider>
-                                                                    </SortableContext>
-                                                                    {vw.enabled && (
-                                                                        <div className="sticky bottom-0 left-0 right-0 bg-gradient-to-t from-white via-white/90 to-transparent text-[10px] text-center py-1 text-slate-500 border-t">
-                                                                            Virtualização ativa · {rootBlocks.length} blocos · exibindo {vw.visible.length}
-                                                                        </div>
-                                                                    )}
-                                                                </div>
-                                                            );
-                                                        })()}
-                                                    </>
-                                                )}
-                                            </CardContent>
-                                        </Card>
-                                    ) : (
-                                        <div className="flex items-center justify-center h-full text-muted-foreground">Selecione uma etapa para editar</div>
-                                    )}
-                                </TabsContent>
-                                <TabsContent value="preview" className="flex-1 m-0 p-0">
-                                    <LivePreviewContainer funnelId={funnelId} steps={steps} />
-                                </TabsContent>
-                            </Tabs>
-                        </div>
+                        <CanvasArea
+                            activeTab={activeTab}
+                            onTabChange={(v) => setActiveTab(v as 'canvas' | 'preview')}
+                            steps={steps}
+                            selectedStep={selectedStep}
+                            headerConfig={headerConfig}
+                            liveScores={liveScores}
+                            topStyle={topStyle || undefined}
+                            BlockRow={BlockRow as any}
+                            byBlock={byBlock as any}
+                            selectedBlockId={selectedBlockId}
+                            isMultiSelected={isMultiSelected}
+                            handleBlockClick={handleBlockClick as any}
+                            renderBlockPreview={renderBlockPreview as any}
+                            removeBlock={removeBlock}
+                            setBlockPendingDuplicate={setBlockPendingDuplicate}
+                            setTargetStepId={setTargetStepId}
+                            setDuplicateModalOpen={setDuplicateModalOpen}
+                            computeVirtualWindow={computeVirtualWindow as any}
+                            scrollContainerRef={scrollContainerRef}
+                            previewNode={<LivePreviewContainer funnelId={funnelId} steps={steps} />}
+                            FixedProgressHeader={FixedProgressHeader as any}
+                            StyleResultCard={StyleResultCard as any}
+                            OfferMap={OfferMap as any}
+                        />
                     )}
                     propsPanel={(
-                        <div className="px-4 pt-3 border-b flex flex-col gap-3">
-                            <div className="flex items-center justify-between">
-                                <div>
-                                    <h2 className="font-semibold text-sm">Painéis</h2>
-                                    <p className="text-xs text-muted-foreground">Configuração de blocos e tema</p>
-                                </div>
-                                <div className="flex gap-1">
-                                    <Button size="sm" variant="outline" disabled={!clipboard || clipboard.length === 0 || !selectedStep} onClick={() => selectedStep && pasteBlocks(selectedStep.id)} className="h-7 px-2 text-[11px]">Colar</Button>
-                                </div>
-                            </div>
-                            <Tabs defaultValue="props" className="w-full">
-                                <TabsList className="grid grid-cols-2 h-8">
-                                    <TabsTrigger value="props" className="text-[11px]">Propriedades</TabsTrigger>
-                                    <TabsTrigger value="theme" className="text-[11px]">Tema</TabsTrigger>
-                                </TabsList>
-                                <TabsContent value="props" className="m-0 p-0 h-[calc(100vh-190px)]">
-                                    <ScrollArea className="h-full">
-                                        {selectedBlock && selectedStep ? (
-                                            <div className="p-4 space-y-6">
-                                                <DynamicPropertiesForm
-                                                    type={selectedBlock.type}
-                                                    values={{ ...selectedBlock.properties, ...selectedBlock.content }}
-                                                    onChange={(patch) => {
-                                                        const contentKeys = new Set(Object.keys(selectedBlock.content));
-                                                        const propPatch: Record<string, any> = {};
-                                                        const contentPatch: Record<string, any> = {};
-                                                        Object.entries(patch).forEach(([k, v]) => { if (contentKeys.has(k)) contentPatch[k] = v; else propPatch[k] = v; });
-                                                        if (Object.keys(propPatch).length) updateBlockProperties(selectedStep.id, selectedBlock.id, propPatch);
-                                                        if (Object.keys(contentPatch).length) updateBlockContent(selectedStep.id, selectedBlock.id, contentPatch);
-                                                    }}
-                                                />
-                                                <div className="pt-2 border-t space-y-2">
-                                                    <Button variant="outline" size="sm" className="w-full" onClick={() => { const newBlock = { ...selectedBlock, id: `block-${Date.now()}` }; setSteps(prev => prev.map(step => step.id === selectedStep.id ? { ...step, blocks: [...step.blocks, newBlock] } : step)); setIsDirty(true); }}><Copy className="w-4 h-4 mr-2" />Duplicar</Button>
-                                                    <Button variant="secondary" size="sm" className="w-full" onClick={() => { setBlockPendingDuplicate(selectedBlock); setTargetStepId(selectedStep.id); setDuplicateModalOpen(true); }}><ArrowRightCircle className="w-4 h-4 mr-2" />Duplicar em…</Button>
-                                                    {multiSelectedIds.length > 1 && (<Button variant="outline" size="sm" className="w-full" onClick={() => { const blocks = selectedStep.blocks.filter(b => multiSelectedIds.includes(b.id)); copyMultiple(blocks); }}><Copy className="w-4 h-4 mr-2" /> Copiar {multiSelectedIds.length}</Button>)}
-                                                    {multiSelectedIds.length > 1 && (<Button variant="destructive" size="sm" className="w-full" onClick={removeMultiple}><Trash2 className="w-4 h-4 mr-2" /> Remover {multiSelectedIds.length}</Button>)}
-                                                    <Button variant="destructive" size="sm" className="w-full" onClick={() => removeBlock(selectedStep.id, selectedBlock.id)}><Trash2 className="w-4 h-4 mr-2" />Remover</Button>
-                                                    {selectedStep && (multiSelectedIds.length > 0 || selectedBlock) && (<Button variant="outline" size="sm" className="w-full" onClick={() => { const ids = multiSelectedIds.length ? multiSelectedIds : [selectedBlock.id]; const blocksToSave = selectedStep.blocks.filter(b => ids.includes(b.id)); const name = prompt('Nome do snippet:', blocksToSave[0]?.type || 'Snippet'); if (!name) return; snippetsManager.create(name, blocksToSave); refreshSnippets(); toast({ title: 'Snippet salvo', description: name }); }}><Copy className="w-4 h-4 mr-2" /> Salvar como Snippet</Button>)}
-                                                </div>
-                                                <div className="pt-4 border-t space-y-3">
-                                                    <div className="flex items-center justify-between"><h3 className="text-xs font-semibold text-muted-foreground uppercase">Snippets</h3><button onClick={() => { refreshSnippets(); }} className="text-[10px] text-blue-600 hover:underline">Atualizar</button></div>
-                                                    <Input placeholder="Filtrar..." value={snippetFilter} onChange={e => setSnippetFilter(e.target.value)} className="h-7 text-xs" />
-                                                    <div className="space-y-2 max-h-60 overflow-auto pr-1">
-                                                        {snippets.filter(s => !snippetFilter || s.name.toLowerCase().includes(snippetFilter.toLowerCase())).map(s => (
-                                                            <div key={s.id} className="border rounded-md p-2 group relative">
-                                                                <p className="text-xs font-medium truncate">{s.name}</p>
-                                                                <p className="text-[10px] text-muted-foreground">{s.blocks.length} blocos</p>
-                                                                <div className="flex gap-1 mt-1">
-                                                                    <Button variant="outline" size="sm" className="h-6 text-[10px] flex-1" onClick={() => { if (!selectedStep) return; setSteps(prev => { const next = prev.map(st => { if (st.id !== selectedStep.id) return st; const baseLen = st.blocks.filter(b => !b.parentId).length; const timestamp = Date.now(); const idMap: Record<string, string> = {}; const cloned = s.blocks.map((b, idx) => { const newId = `${b.id}-snip-${timestamp}-${idx}`; idMap[b.id] = newId; return { ...b, id: newId }; }).map(b => ({ ...b, parentId: b.parentId ? idMap[b.parentId] : null, order: b.parentId ? b.order : baseLen + b.order })); return { ...st, blocks: [...st.blocks, ...cloned] }; }); pushHistory(next); return next; }); setIsDirty(true); toast({ title: 'Snippet inserido', description: s.name }); }}>Insert</Button>
-                                                                    <Button variant="ghost" size="sm" className="h-6 text-[10px]" onClick={() => { const newName = prompt('Renomear snippet:', s.name); if (!newName) return; snippetsManager.update(s.id, { name: newName }); refreshSnippets(); }}>Renomear</Button>
-                                                                    <Button variant="destructive" size="sm" className="h-6 text-[10px]" onClick={() => { if (!confirm('Excluir snippet?')) return; snippetsManager.remove(s.id); refreshSnippets(); }}>Del</Button>
-                                                                </div>
-                                                            </div>
-                                                        ))}
-                                                        {snippets.length === 0 && (<p className="text-[11px] text-muted-foreground">Nenhum snippet salvo</p>)}
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        ) : selectedStep && selectedStep.type === 'offer' ? (
-                                            <div className="p-4 space-y-4">
-                                                <h3 className="text-xs font-semibold uppercase tracking-wide text-slate-600">Mapa de Ofertas</h3>
-                                                <p className="text-[11px] text-muted-foreground leading-relaxed">Edite as 4 variações de oferta personalizadas. Use <code>{'{userName}'}</code> nos textos para personalização dinâmica.</p>
-                                                <React.Suspense fallback={<div className="text-[11px] text-muted-foreground">Carregando editor de ofertas…</div>}>
-                                                    <OfferMap mode="editor" content={{ offerMap: selectedStep.offerMap || {} }} onUpdate={(c) => { setSteps(prev => prev.map(st => st.id === selectedStep.id ? { ...st, offerMap: c.offerMap } : st)); setIsDirty(true); }} userName={"Preview"} />
-                                                </React.Suspense>
-                                            </div>
-                                        ) : (
-                                            <div className="p-4 space-y-4 text-xs">
-                                                <h3 className="text-xs font-semibold uppercase tracking-wide text-slate-600">Cabeçalho Fixo</h3>
-                                                <div className="space-y-3">
-                                                    <label className="flex items-center gap-2"><input type="checkbox" checked={headerConfig.showLogo} onChange={e => setHeaderConfig((c: any) => ({ ...c, showLogo: e.target.checked }))} />Exibir Logo</label>
-                                                    {headerConfig.showLogo && (<><div className="space-y-1"><span>Logo URL</span><input className="w-full border rounded px-2 py-1" value={headerConfig.logoUrl} onChange={e => setHeaderConfig((c: any) => ({ ...c, logoUrl: e.target.value }))} /></div><div className="space-y-1"><span>Largura Logo</span><input className="w-full border rounded px-2 py-1" value={headerConfig.logoWidth} onChange={e => setHeaderConfig((c: any) => ({ ...c, logoWidth: e.target.value }))} /></div></>)}
-                                                    <label className="flex items-center gap-2"><input type="checkbox" checked={headerConfig.progressEnabled} onChange={e => setHeaderConfig((c: any) => ({ ...c, progressEnabled: e.target.checked }))} />Exibir Barra de Progresso</label>
-                                                    {headerConfig.progressEnabled && (<><label className="flex items-center gap-2"><input type="checkbox" checked={headerConfig.autoProgress} onChange={e => setHeaderConfig((c: any) => ({ ...c, autoProgress: e.target.checked }))} />Cálculo Automático</label>{!headerConfig.autoProgress && (<div className="space-y-1"><span>Porcentagem Manual</span><input type="number" min={0} max={100} className="w-full border rounded px-2 py-1" value={headerConfig.manualPercent} onChange={e => setHeaderConfig((c: any) => ({ ...c, manualPercent: Number(e.target.value) }))} /></div>)}<div className="space-y-1"><span>Espessura Barra</span><input className="w-full border rounded px-2 py-1" value={headerConfig.barHeight} onChange={e => setHeaderConfig((c: any) => ({ ...c, barHeight: e.target.value }))} /></div><div className="space-y-1"><span>Cor Barra</span><input type="color" className="w-full h-8 border rounded" value={headerConfig.barColor} onChange={e => setHeaderConfig((c: any) => ({ ...c, barColor: e.target.value }))} /></div><div className="space-y-1"><span>Cor Fundo</span><input type="color" className="w-full h-8 border rounded" value={headerConfig.barBackground} onChange={e => setHeaderConfig((c: any) => ({ ...c, barBackground: e.target.value }))} /></div></>)}
-                                                </div>
-                                                <p className="text-[10px] text-muted-foreground leading-snug">O cabeçalho se aplica a todas as etapas (exceto resultado e oferta). Desative logo ou barra conforme necessário.</p>
-                                            </div>
-                                        )}
-                                    </ScrollArea>
-                                </TabsContent>
-                                <TabsContent value="theme" className="m-0 p-0 h-[calc(100vh-190px)]">
-                                    <ThemeEditorPanel onApply={(t) => setThemeOverrides(t)} />
-                                </TabsContent>
-                            </Tabs>
-                        </div>
+                        <PropertiesPanel
+                            selectedStep={selectedStep}
+                            selectedBlock={selectedBlock}
+                            headerConfig={headerConfig}
+                            onHeaderConfigChange={(patch) => setHeaderConfig((c: any) => ({ ...c, ...patch }))}
+                            clipboard={clipboard}
+                            canPaste={!!clipboard && clipboard.length > 0 && !!selectedStep}
+                            onPaste={() => selectedStep && pasteBlocks(selectedStep.id)}
+                            multiSelectedIds={multiSelectedIds}
+                            onDuplicateInline={() => { if (!selectedStep || !selectedBlock) return; const newBlock = { ...selectedBlock, id: `block-${Date.now()}` }; setSteps(prev => prev.map(step => step.id === selectedStep.id ? { ...step, blocks: [...step.blocks, newBlock] } : step)); setIsDirty(true); }}
+                            onPrepareDuplicateToAnother={() => { if (!selectedStep || !selectedBlock) return; setBlockPendingDuplicate(selectedBlock); setTargetStepId(selectedStep.id); setDuplicateModalOpen(true); }}
+                            onCopyMultiple={() => { if (!selectedStep) return; const blocks = selectedStep.blocks.filter(b => multiSelectedIds.includes(b.id)); copyMultiple(blocks); }}
+                            onRemoveMultiple={removeMultiple}
+                            onRemoveBlock={() => { if (!selectedStep || !selectedBlock) return; removeBlock(selectedStep.id, selectedBlock.id); }}
+                            onSaveAsSnippet={() => { if (!selectedStep) return; const ids = multiSelectedIds.length ? multiSelectedIds : (selectedBlock ? [selectedBlock.id] : []); if (ids.length === 0) return; const blocksToSave = selectedStep.blocks.filter(b => ids.includes(b.id)); const name = prompt('Nome do snippet:', blocksToSave[0]?.type || 'Snippet'); if (!name) return; snippetsManager.create(name, blocksToSave); refreshSnippets(); toast({ title: 'Snippet salvo', description: name }); }}
+                            snippets={snippets as any}
+                            snippetFilter={snippetFilter}
+                            onSnippetFilterChange={setSnippetFilter}
+                            onSnippetInsert={(s: any) => { if (!selectedStep) return; setSteps(prev => { const next = prev.map(st => { if (st.id !== selectedStep.id) return st; const baseLen = st.blocks.filter(b => !b.parentId).length; const timestamp = Date.now(); const idMap: Record<string, string> = {}; const cloned = s.blocks.map((b: any, idx: number) => { const newId = `${b.id}-snip-${timestamp}-${idx}`; idMap[b.id] = newId; return { ...b, id: newId }; }).map((b: any) => ({ ...b, parentId: b.parentId ? idMap[b.parentId] : null, order: b.parentId ? b.order : baseLen + b.order })); return { ...st, blocks: [...st.blocks, ...cloned] }; }); pushHistory(next); return next; }); setIsDirty(true); toast({ title: 'Snippet inserido', description: s.name }); }}
+                            onSnippetRename={(s: any, newName: string) => { snippetsManager.update(s.id, { name: newName }); refreshSnippets(); }}
+                            onSnippetDelete={(s: any) => { snippetsManager.remove(s.id); refreshSnippets(); }}
+                            onRefreshSnippets={refreshSnippets}
+                            onBlockPatch={(patch) => { if (!selectedBlock || !selectedStep) return; const contentKeys = new Set(Object.keys(selectedBlock.content)); const propPatch: Record<string, any> = {}; const contentPatch: Record<string, any> = {}; Object.entries(patch).forEach(([k, v]) => { if (contentKeys.has(k)) contentPatch[k] = v; else propPatch[k] = v; }); if (Object.keys(propPatch).length) updateBlockProperties(selectedStep.id, selectedBlock.id, propPatch); if (Object.keys(contentPatch).length) updateBlockContent(selectedStep.id, selectedBlock.id, contentPatch); }}
+                            isOfferStep={!!(selectedStep && selectedStep.type === 'offer')}
+                            OfferMapComponent={OfferMap as any}
+                            onOfferMapUpdate={(c: any) => { if (!selectedStep) return; setSteps(prev => prev.map(st => st.id === selectedStep.id ? { ...st, offerMap: c.offerMap } : st)); setIsDirty(true); }}
+                            ThemeEditorPanel={ThemeEditorPanel as any}
+                            onApplyTheme={(t) => setThemeOverrides(t)}
+                        />
                     )}
                     duplicateDialog={(
                         <Dialog open={duplicateModalOpen} onOpenChange={(o) => { if (!o) { setDuplicateModalOpen(false); setBlockPendingDuplicate(null); } }}>

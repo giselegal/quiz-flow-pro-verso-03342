@@ -1,0 +1,170 @@
+import React, { Suspense } from 'react';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Card, CardContent } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
+import { TooltipProvider } from '@/components/ui/tooltip';
+
+interface BlockComponent { id: string; type: string; order: number; parentId?: string | null; properties: Record<string, any>; content: Record<string, any>; }
+interface EditableQuizStep { id: string; type: string; order: number; blocks: BlockComponent[]; offerMap?: Record<string, any>; }
+
+interface VirtualWindow {
+    enabled: boolean; topSpacer: number; bottomSpacer: number; visible: BlockComponent[];
+}
+
+export interface CanvasAreaProps {
+    activeTab: string;
+    onTabChange: (tab: string) => void;
+    steps: EditableQuizStep[];
+    selectedStep?: EditableQuizStep;
+    headerConfig: any;
+    liveScores: Record<string, number>;
+    topStyle?: string;
+    BlockRow: React.ComponentType<any>;
+    byBlock: Record<string, any[]>;
+    selectedBlockId: string;
+    isMultiSelected: (id: string) => boolean;
+    handleBlockClick: (block: BlockComponent, e: any) => void;
+    renderBlockPreview: (block: BlockComponent, step: EditableQuizStep) => React.ReactNode;
+    removeBlock: (stepId: string, blockId: string) => void;
+    setBlockPendingDuplicate: (block: BlockComponent) => void;
+    setTargetStepId: (id: string) => void;
+    setDuplicateModalOpen: (open: boolean) => void;
+    computeVirtualWindow: (blocks: BlockComponent[]) => VirtualWindow;
+    scrollContainerRef: React.RefObject<HTMLDivElement>;
+    previewNode: React.ReactNode;
+    FixedProgressHeader: React.ComponentType<{ config: any; steps: EditableQuizStep[]; currentStepId: string }>;
+    StyleResultCard: React.ComponentType<any>;
+    OfferMap: React.ComponentType<any>;
+}
+
+export const CanvasArea: React.FC<CanvasAreaProps> = ({
+    activeTab,
+    onTabChange,
+    steps,
+    selectedStep,
+    headerConfig,
+    liveScores,
+    topStyle,
+    BlockRow,
+    byBlock,
+    selectedBlockId,
+    isMultiSelected,
+    handleBlockClick,
+    renderBlockPreview,
+    removeBlock,
+    setBlockPendingDuplicate,
+    setTargetStepId,
+    setDuplicateModalOpen,
+    computeVirtualWindow,
+    scrollContainerRef,
+    previewNode,
+    FixedProgressHeader,
+    StyleResultCard,
+    OfferMap,
+}) => {
+    return (
+        <div className="flex-1 bg-gray-100 flex flex-col overflow-y-auto">
+            <Tabs value={activeTab} onValueChange={onTabChange} className="flex-1 flex flex-col">
+                <div className="px-4 py-2 bg-white border-b">
+                    <TabsList>
+                        <TabsTrigger value="canvas">Canvas</TabsTrigger>
+                        <TabsTrigger value="preview">Preview</TabsTrigger>
+                    </TabsList>
+                </div>
+                <TabsContent value="canvas" className="flex-1 overflow-auto p-4 m-0">
+                    {selectedStep ? (
+                        <Card>
+                            <CardContent>
+                                <div className="mb-6">
+                                    <FixedProgressHeader config={headerConfig} steps={steps} currentStepId={selectedStep.id} />
+                                </div>
+                                {selectedStep.blocks.length === 0 ? (
+                                    <div className="text-center py-8 text-muted-foreground text-xs border border-dashed rounded-md bg-white/40">(vazio)</div>
+                                ) : (
+                                    <>
+                                        {(selectedStep.id === 'step-20' || selectedStep.id === 'step-21') && (
+                                            <div className="mb-6">
+                                                <div className="mb-2 flex items-center justify-between">
+                                                    <Badge variant="secondary" className="text-[9px]">live</Badge>
+                                                </div>
+                                                <div className="border rounded-lg bg-white p-4">
+                                                    <Suspense fallback={<div className="text-xs text-muted-foreground">Carregando componente...</div>}>
+                                                        {selectedStep.id === 'step-20' && (
+                                                            <StyleResultCard
+                                                                resultStyle={topStyle || 'classico'}
+                                                                userName="Preview"
+                                                                secondaryStyles={Object.keys(liveScores).filter(s => s !== (topStyle || 'classico')).slice(0, 2)}
+                                                                scores={Object.keys(liveScores).length ? liveScores : { classico: 12, natural: 8, romantico: 6 }}
+                                                                mode="result"
+                                                            />
+                                                        )}
+                                                        {selectedStep.id === 'step-21' && (
+                                                            <OfferMap
+                                                                content={{ offerMap: (selectedStep as any).offerMap || {} }}
+                                                                mode="preview"
+                                                                userName="Preview"
+                                                                selectedOfferKey="Montar looks com mais facilidade e confiança"
+                                                            />
+                                                        )}
+                                                    </Suspense>
+                                                </div>
+                                            </div>
+                                        )}
+                                        {(() => {
+                                            const rootBlocks = selectedStep.blocks.filter(b => !b.parentId).sort((a, b) => a.order - b.order);
+                                            const vw = computeVirtualWindow(rootBlocks);
+                                            return (
+                                                <div ref={scrollContainerRef} className="space-y-2 max-h-[calc(100vh-240px)] overflow-auto pr-1 border rounded-md bg-white/40">
+                                                    <SortableContext items={[...rootBlocks.map(b => b.id), 'canvas-end']} strategy={verticalListSortingStrategy}>
+                                                        <TooltipProvider>
+                                                            <div style={{ position: 'relative' }}>
+                                                                {vw.enabled && vw.topSpacer > 0 && <div style={{ height: vw.topSpacer }} />}
+                                                                {vw.visible.map(block => (
+                                                                    <BlockRow
+                                                                        key={block.id}
+                                                                        block={block}
+                                                                        byBlock={byBlock}
+                                                                        selectedBlockId={selectedBlockId}
+                                                                        isMultiSelected={isMultiSelected}
+                                                                        handleBlockClick={handleBlockClick}
+                                                                        renderBlockPreview={renderBlockPreview}
+                                                                        allBlocks={selectedStep.blocks}
+                                                                        removeBlock={removeBlock}
+                                                                        stepId={selectedStep.id}
+                                                                        setBlockPendingDuplicate={setBlockPendingDuplicate}
+                                                                        setTargetStepId={setTargetStepId}
+                                                                        setDuplicateModalOpen={setDuplicateModalOpen}
+                                                                    />
+                                                                ))}
+                                                                {vw.enabled && vw.bottomSpacer > 0 && <div style={{ height: vw.bottomSpacer }} />}
+                                                                <div id="canvas-end" className="h-8 flex items-center justify-center text-[10px] text-slate-400 border border-dashed mx-2 my-2 rounded">Soltar aqui para final</div>
+                                                                {!vw.enabled && vw.visible.length === 0 && (<div className="text-[11px] text-muted-foreground italic">(sem blocos raiz)</div>)}
+                                                            </div>
+                                                        </TooltipProvider>
+                                                    </SortableContext>
+                                                    {vw.enabled && (
+                                                        <div className="sticky bottom-0 left-0 right-0 bg-gradient-to-t from-white via-white/90 to-transparent text-[10px] text-center py-1 text-slate-500 border-t">
+                                                            Virtualização ativa · {rootBlocks.length} blocos · exibindo {vw.visible.length}
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            );
+                                        })()}
+                                    </>
+                                )}
+                            </CardContent>
+                        </Card>
+                    ) : (
+                        <div className="flex items-center justify-center h-full text-muted-foreground">Selecione uma etapa para editar</div>
+                    )}
+                </TabsContent>
+                <TabsContent value="preview" className="flex-1 m-0 p-0">
+                    {previewNode}
+                </TabsContent>
+            </Tabs>
+        </div>
+    );
+};
+
+export default CanvasArea;
