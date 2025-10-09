@@ -39,6 +39,14 @@ export const TemplatesPage: React.FC = () => {
 
   // Unir oficiais e customizados (prefixando IDs customizados para evitar colisão)
   const merged = useMemo(() => {
+    const mapConversionToRating = (conv: string): string => {
+      const num = parseFloat(conv.replace('%', ''));
+      if (isNaN(num)) return '—';
+      // Escala simples: 0-100% -> 0-5 estrelas
+      const rating = Math.max(0, Math.min(5, (num / 100) * 5));
+      return rating.toFixed(1);
+    };
+
     return [
       ...officialTemplates.map(t => ({
         source: 'official' as const,
@@ -48,7 +56,8 @@ export const TemplatesPage: React.FC = () => {
         category: t.category,
         isOfficial: t.isOfficial,
         usageCount: t.usageCount,
-        conversionRate: t.conversionRate,
+        conversionRate: t.conversionRate, // já inclui '%'
+        rating: mapConversionToRating(t.conversionRate),
         tags: t.tags,
         blocks: t.stepCount,
         difficulty: t.stepCount <= 8 ? 'Fácil' : t.stepCount <= 15 ? 'Médio' : 'Avançado',
@@ -63,6 +72,7 @@ export const TemplatesPage: React.FC = () => {
         isOfficial: false,
         usageCount: t.usageCount,
         conversionRate: '—',
+        rating: '—',
         tags: t.tags || [],
         blocks: t.stepCount,
         difficulty: t.stepCount <= 8 ? 'Fácil' : t.stepCount <= 15 ? 'Médio' : 'Avançado',
@@ -270,7 +280,7 @@ export const TemplatesPage: React.FC = () => {
                   </span>
                   <span className="flex items-center">
                     <Target className="w-4 h-4 mr-1" />
-                    {template.conversionRate}% conversão
+          {template.conversionRate}{typeof template.conversionRate === 'string' && template.conversionRate.includes('%') ? '' : (template.conversionRate === '—' ? '' : '%')} conversão
                   </span>
                 </div>
 
