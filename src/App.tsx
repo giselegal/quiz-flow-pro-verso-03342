@@ -301,18 +301,7 @@ function App() {
                           <AuthPage />
                         </Route>
 
-                        {/* 🏢 ADMIN DASHBOARD - ROTAS UNIFICADAS */}
-                        <Route path="/admin/dashboard">
-                          <div data-testid="admin-dashboard-page">
-                            <ModernDashboardPage />
-                          </div>
-                        </Route>
-
-                        <Route path="/admin/funnels">
-                          <div data-testid="admin-funnels-page">
-                            <ModernDashboardPage />
-                          </div>
-                        </Route>
+                        {/* 🏢 ADMIN DASHBOARD - Rotas unificadas via ModernAdminDashboard */}
 
                         <Route path="/admin/funnels/:id/edit">
                           {(params) => (
@@ -326,11 +315,7 @@ function App() {
                           )}
                         </Route>
 
-                        <Route path="/admin/analytics">
-                          <div data-testid="admin-analytics-page">
-                            <ModernDashboardPage />
-                          </div>
-                        </Route>
+
 
                         {/* 🎯 ADMIN DASHBOARD CONSOLIDADO */}
                         <Route path="/admin">

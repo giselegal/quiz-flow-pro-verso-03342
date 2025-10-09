@@ -4,6 +4,7 @@ import { isSupabaseDisabled, isSupabaseEnabled } from '@/integrations/supabase/f
 import React, { createContext, ReactNode, useContext, useEffect, useState } from 'react';
 const DISABLE = isSupabaseDisabled();
 const ENABLE = isSupabaseEnabled();
+const IS_TEST = (import.meta as any)?.env?.MODE === 'test';
 let authSupabase: any | null = null;
 async function ensureSupabase() {
   if (authSupabase) return authSupabase;
@@ -62,6 +63,22 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   useEffect(() => {
     const init = async () => {
+      // Em ambiente de teste, criamos um usuário/perfil padrão para liberar acesso ao editor
+      if (IS_TEST) {
+        setUser({ id: 'test-user', email: 'test@example.com', name: 'Test User' });
+        setProfile({
+          id: 'test-user',
+          email: 'test@example.com',
+          name: 'Test User',
+          role: 'user',
+          plan: 'free',
+          created_at: new Date().toISOString(),
+        });
+        setSession(null);
+        setLoading(false);
+        return;
+      }
+
       const supabase = await ensureSupabase();
       if (!supabase) {
         setUser(null);
