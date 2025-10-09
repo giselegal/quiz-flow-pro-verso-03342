@@ -400,6 +400,21 @@ export const UnifiedAdminLayout: React.FC<UnifiedAdminLayoutProps> = ({
                             </Button>
                         )}
 
+                        {/* Acesso rápido ao Editor a partir do Dashboard */}
+                        <Button
+                            size="sm"
+                            onClick={() => UnifiedRoutingService.navigate('/editor')}
+                            className="shadow-lg hover:shadow-xl transition-all duration-200 px-6 py-2.5 rounded-xl font-medium text-white glow-button"
+                            style={{
+                                background: `linear-gradient(135deg, ${theme.colors.detailsMinor} 0%, ${theme.colors.buttons} 100%)`,
+                                boxShadow: `0 0 20px ${theme.colors.detailsMinor}40, 0 4px 20px rgba(0, 0, 0, 0.2)`
+                            }}
+                            title="Abrir Editor"
+                        >
+                            <Edit className="w-4 h-4 mr-2" />
+                            Abrir Editor
+                        </Button>
+
                         <Button
                             size="sm"
                             onClick={() => handleNavigateToView('funnels')}
