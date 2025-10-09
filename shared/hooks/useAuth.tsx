@@ -4,9 +4,10 @@
 // =============================================================================
 
 import { useState, useEffect, useContext, createContext, ReactNode } from 'react';
-import { User, Session, AuthError } from '@supabase/supabase-js';
+import { User, Session, AuthError, SupabaseClient } from '@supabase/supabase-js';
 import { supabase, createProfile, getCurrentProfile } from '../lib/supabase';
 import { Profile, AuthState, AuthUser } from '../types/supabase';
+import type { Database as SharedDB } from '../types/supabase';
 
 // =============================================================================
 // CONTEXTO DE AUTENTICAÇÃO
@@ -228,11 +229,13 @@ export function AuthProvider({ children }: AuthProviderProps) {
         return { error: 'Usuário não autenticado' };
       }
 
-      // Em contexto compartilhado, os tipos de Database podem não estar presentes; usar cast seguro
-      const { error } = await (supabase
+      // Usar cliente tipado para resolver o tipo 'never' no update
+      const sb = supabase as unknown as SupabaseClient<SharedDB>;
+      type ProfilesUpdate = SharedDB['public']['Tables']['profiles']['Update'];
+      const { error } = await sb
         .from('profiles')
-        .update(updates as any)
-        .eq('id', user.id) as any);
+        .update(updates as ProfilesUpdate)
+        .eq('id', user.id);
 
       if (error) {
         return { error: error.message };
@@ -242,9 +245,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
       setUser(prev =>
         prev
           ? {
-              ...prev,
-              profile: prev.profile ? { ...prev.profile, ...updates } : undefined,
-            }
+            ...prev,
+            profile: prev.profile ? { ...prev.profile, ...updates } : undefined,
+          }
           : null
       );
 
@@ -264,9 +267,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
       setUser(prev =>
         prev
           ? {
-              ...prev,
-              profile: profile || undefined,
-            }
+            ...prev,
+            profile: profile || undefined,
+          }
           : null
       );
     } catch (error) {
