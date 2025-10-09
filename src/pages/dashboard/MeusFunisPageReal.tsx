@@ -124,10 +124,12 @@ const MeusFunisPageReal: React.FC = () => {
             if (prodData) setLatestPublished({ version: prodData.version, published_at: prodData.published_at });
 
             // Buscar todos os funis publicados/salvos
-            const { data: funnelsData, error: funnelsError } = await supabase
+            // Tentar carregar funis existentes (tabela legada). Em ambientes sem Supabase/RLS, seguir sem abortar.
+            const { data: funnelsDataRaw, error: funnelsError } = await supabase
                 .from('funnels')
                 .select('*')
                 .order('updated_at', { ascending: false });
+            const funnelsData = Array.isArray(funnelsDataRaw) ? funnelsDataRaw : [];
 
             // Buscar drafts do novo editor (quiz_drafts) + fallback cache do bridge
             let draftsData: any[] = [];
@@ -170,21 +172,30 @@ const MeusFunisPageReal: React.FC = () => {
             const unifiedDrafts = Array.from(draftsById.values());
 
             if (funnelsError) {
-                console.error('Erro ao carregar funis:', funnelsError);
+                // Não abortar: seguimos apenas com drafts (Supabase pode estar sem schema ou com RLS exigindo login)
+                console.warn('⚠️ Erro ao carregar funis (seguindo com drafts):', funnelsError?.message || funnelsError);
                 toast({
-                    title: "Erro ao carregar funis",
-                    description: funnelsError.message,
-                    variant: "destructive",
+                    title: "Continuando com rascunhos",
+                    description: "Não foi possível carregar funis publicados. Exibindo apenas rascunhos.",
+                    variant: "default",
                 });
-                return;
             }
 
             // Buscar sessões para cada funil
             const funnelIds = funnelsData?.map(f => f.id) || [];
-            const { data: sessionsData } = await supabase
-                .from('quiz_sessions')
-                .select('id, funnel_id, status')
-                .in('funnel_id', funnelIds);
+            let sessionsData: Array<{ id: string; funnel_id: string; status: string }> = [];
+            if (funnelIds.length > 0) {
+                try {
+                    const { data: sessionsRaw } = await supabase
+                        .from('quiz_sessions')
+                        .select('id, funnel_id, status')
+                        .in('funnel_id', funnelIds);
+                    sessionsData = Array.isArray(sessionsRaw) ? sessionsRaw : [];
+                } catch (e) {
+                    console.warn('⚠️ Erro ao carregar sessões (seguindo sem métricas):', e);
+                    sessionsData = [];
+                }
+            }
 
             // Buscar resultados das sessões (para usar futuramente)
             const sessionIds = sessionsData?.map(s => s.id) || [];
@@ -284,7 +295,8 @@ const MeusFunisPageReal: React.FC = () => {
     // ========================================================================
 
     const handleEditFunil = (funilId: string) => {
-        window.location.href = `/editor/${funilId}`;
+        // Editor principal espera ?funnel=ID
+        window.location.href = `/editor?funnel=${encodeURIComponent(funilId)}`;
     };
 
     const handleDuplicateFunil = async (funilId: string) => {
@@ -526,7 +538,7 @@ const MeusFunisPageReal: React.FC = () => {
                         <p className="text-sm text-indigo-700 font-medium">Última versão publicada do Quiz Estilo</p>
                         <p className="text-xs text-indigo-600 mt-1">Versão v{latestPublished.version} • {new Date(latestPublished.published_at).toLocaleString('pt-BR')}</p>
                     </div>
-                    <Button variant="outline" size="sm" onClick={() => window.open('/quiz/quiz-estilo', '_blank')}>Ver Produção</Button>
+                    <Button variant="outline" size="sm" onClick={() => window.open('/quiz-estilo', '_blank')}>Ver Produção</Button>
                 </div>
             )}
 
@@ -670,7 +682,7 @@ const MeusFunisPageReal: React.FC = () => {
                                             variant="outline"
                                             size="sm"
                                             className="flex-1"
-                                            onClick={() => window.open(`/quiz/quiz-estilo?draft=${funil.id}`, '_blank')}
+                                            onClick={() => window.open(`/quiz-estilo?draft=${encodeURIComponent(funil.id)}`, '_blank')}
                                             disabled={publishingDraftId === funil.id}
                                         >
                                             <Eye className="w-4 h-4 mr-2" />
