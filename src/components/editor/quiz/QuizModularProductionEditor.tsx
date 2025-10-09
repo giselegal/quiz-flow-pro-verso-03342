@@ -1540,7 +1540,11 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                     };
                 }),
                 isPublished: false,
-                version: 1
+                version: 1,
+                // Persistir configurações unificadas relevantes
+                runtime: (unifiedConfig as any)?.runtime,
+                results: (unifiedConfig as any)?.results,
+                ui: (unifiedConfig as any)?.ui,
             };
 
             const savedId = await quizEditorBridge.saveDraft(funnel);

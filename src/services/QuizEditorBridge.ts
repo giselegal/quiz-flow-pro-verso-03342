@@ -44,6 +44,10 @@ interface QuizFunnelData {
     version: number;
     createdAt?: string;
     updatedAt?: string;
+    // Campos opcionais adicionais (schema unificado)
+    runtime?: any;
+    results?: any;
+    ui?: any;
 }
 
 class QuizEditorBridge {
@@ -148,7 +152,11 @@ class QuizEditorBridge {
             steps: workingSteps.map(s => ({ ...s, autoLinked: !funnel.steps.find(o => o.id === s.id)?.nextStep && s.nextStep ? true : (s as any).autoLinked })),
             version: (funnel.version || 0) + 1,
             is_published: false,
-            updated_at: new Date().toISOString()
+            updated_at: new Date().toISOString(),
+            // Persistência opcional de runtime/results/ui (pode exigir colunas JSONB no Supabase)
+            runtime: (funnel as any).runtime,
+            results: (funnel as any).results,
+            ui: (funnel as any).ui,
         };
 
         // Salvar no Supabase (melhor esforço) e sempre manter cache local como fallback
@@ -277,7 +285,11 @@ class QuizEditorBridge {
             isPublished: data.is_published || false,
             version: data.version || 1,
             createdAt: data.created_at,
-            updatedAt: data.updated_at
+            updatedAt: data.updated_at,
+            // Campos opcionais
+            runtime: (data as any).runtime,
+            results: (data as any).results,
+            ui: (data as any).ui,
         };
     }
 
@@ -302,7 +314,10 @@ class QuizEditorBridge {
                     isPublished: d.is_published || false,
                     version: d.version || 1,
                     createdAt: d.created_at,
-                    updatedAt: d.updated_at
+                    updatedAt: d.updated_at,
+                    runtime: d.runtime,
+                    results: d.results,
+                    ui: d.ui,
                 }));
             }
         } catch {
