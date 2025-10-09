@@ -78,6 +78,7 @@ import { LayoutShell } from './LayoutShell';
 import { usePanelWidths } from './hooks/usePanelWidths.tsx';
 import { useEditorHistory } from './hooks/useEditorHistory';
 import { useStepsBlocks } from './hooks/useStepsBlocks';
+import { useBlocks } from './hooks/useBlocks';
 import StepNavigator from './components/StepNavigator';
 import ComponentLibraryPanel from './components/ComponentLibraryPanel';
 import CanvasArea from './components/CanvasArea';
@@ -416,6 +417,22 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
         pushHistory,
         setDirty: setIsDirty,
         onSelectStep: setSelectedStepId
+    });
+
+    // Hook de blocos (integração parcial - substituição progressiva dos handlers inline)
+    const {
+        addBlock,
+        updateBlock,
+        deleteBlock: removeBlockHook,
+        reorderOrMove,
+        duplicateBlock: duplicateBlockHook,
+        insertSnippetBlocks
+    } = useBlocks<{ id: string; blocks: any[] } & EditableQuizStep, any>({
+        steps: steps as any,
+        setSteps: setSteps as any,
+        pushHistory,
+        setDirty: setIsDirty,
+        getSelectedStepId: () => selectedStepId
     });
 
     const generateNextStepId = (existing: string[]) => {
