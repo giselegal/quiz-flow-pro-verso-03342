@@ -20,20 +20,25 @@ export interface BlockRowProps {
     setBlockPendingDuplicate: (b: BlockComponent) => void;
     setTargetStepId: (id: string) => void;
     setDuplicateModalOpen: (v: boolean) => void;
-    hoverContainerId: string | null;
-    expandedContainers: Set<string>;
-    toggleContainer: (id: string) => void;
-    setHoverContainerId: React.Dispatch<React.SetStateAction<string | null>>;
+    hoverContainerId?: string | null;
+    expandedContainers?: Set<string>;
+    toggleContainer?: (id: string) => void;
+    setHoverContainerId?: React.Dispatch<React.SetStateAction<string | null>>;
 }
 
 const Inner: React.FC<BlockRowProps> = (props) => {
-    const { block, byBlock, selectedBlockId, isMultiSelected, handleBlockClick, renderBlockPreview, allBlocks, removeBlock, stepId, setBlockPendingDuplicate, setTargetStepId, setDuplicateModalOpen, hoverContainerId, expandedContainers, toggleContainer, setHoverContainerId } = props;
+    const { block, byBlock, selectedBlockId, isMultiSelected, handleBlockClick, renderBlockPreview, allBlocks, removeBlock, stepId, setBlockPendingDuplicate, setTargetStepId, setDuplicateModalOpen } = props;
+    // Defensive defaults for optional props
+    const hoverContainerId = props.hoverContainerId ?? null;
+    const expandedContainers = props.expandedContainers ?? new Set<string>();
+    const toggleContainer = props.toggleContainer;
+    const setHoverContainerId = props.setHoverContainerId;
     const hasErrors = !!byBlock[block.id]?.length;
     const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: block.id });
     const style: React.CSSProperties = { transform: transform ? CSS.Transform.toString(transform) : undefined, transition };
     const isContainer = block.type === 'container';
     const isHoverTarget = hoverContainerId === block.id;
-    const isExpanded = !isContainer || expandedContainers.has(block.id);
+    const isExpanded = !isContainer || (expandedContainers?.has?.(block.id) ?? false);
     return (
         <div
             key={block.id}
@@ -78,7 +83,7 @@ const Inner: React.FC<BlockRowProps> = (props) => {
                     {isContainer && (
                         <button
                             type="button"
-                            onClick={(e) => { e.stopPropagation(); toggleContainer(block.id); }}
+                            onClick={(e) => { e.stopPropagation(); toggleContainer && toggleContainer(block.id); }}
                             className="mt-1 text-[10px] px-1 rounded border bg-white hover:bg-blue-50"
                         >
                             {isExpanded ? '−' : '+'}
@@ -101,9 +106,9 @@ const Inner: React.FC<BlockRowProps> = (props) => {
                                     'min-h-[32px] rounded-md border border-dashed flex flex-col gap-2 p-2 bg-white/40 transition-colors',
                                     isHoverTarget && 'border-blue-400 bg-blue-50/40'
                                 )}
-                                onDragOver={() => setHoverContainerId(block.id)}
+                                onDragOver={() => setHoverContainerId && setHoverContainerId(block.id)}
                                 onDragLeave={(e) => {
-                                    if (!e.currentTarget.contains(e.relatedTarget as Node)) setHoverContainerId(prev => prev === block.id ? null : prev);
+                                    if (!e.currentTarget.contains(e.relatedTarget as Node)) setHoverContainerId && setHoverContainerId((prev: string | null) => (prev === block.id ? null : prev));
                                 }}
                             >
                                 {allBlocks.filter(b => b.parentId === block.id).length === 0 && (
@@ -185,8 +190,8 @@ const comparator = (prev: BlockRowProps, next: BlockRowProps) => {
         }
     }
     if (prev.hoverContainerId !== next.hoverContainerId) return false;
-    const prevExpanded = prev.expandedContainers.has(prev.block.id);
-    const nextExpanded = next.expandedContainers.has(next.block.id);
+    const prevExpanded = prev.expandedContainers?.has?.(prev.block.id) ?? false;
+    const nextExpanded = next.expandedContainers?.has?.(next.block.id) ?? false;
     if (prevExpanded !== nextExpanded) return false;
     return true;
 };

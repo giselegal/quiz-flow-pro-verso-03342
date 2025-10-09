@@ -24,6 +24,8 @@ import { CSS } from '@dnd-kit/utilities';
 
 // Logo corporativa (centralizada em um único ponto) - reutilizada em cabeçalhos
 const BRAND_LOGO_URL = 'https://res.cloudinary.com/der8kogzu/image/upload/f_png,q_70,w_120,h_50,c_fit/v1752430327/LOGO_DA_MARCA_GISELE_l78gin.png';
+// Placeholder inline para imagens (evita URLs externas quebradas)
+const INLINE_IMG_PLACEHOLDER = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="400" height="240"><rect width="100%" height="100%" fill="%23E5E7EB"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="%239CA3AF" font-size="14">Imagem</text></svg>';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -197,7 +199,7 @@ const COMPONENT_LIBRARY: ComponentLibraryItem[] = [
         icon: <ImageIcon className="w-4 h-4" />,
         category: 'media',
         defaultProps: {
-            src: 'https://via.placeholder.com/400x300',
+            src: INLINE_IMG_PLACEHOLDER,
             alt: 'Imagem',
             width: '100%',
             borderRadius: '8px'
@@ -306,7 +308,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
         } catch {/* ignore */ }
         return {
             showLogo: true,
-            logoUrl: 'https://via.placeholder.com/140x48?text=Logo',
+            logoUrl: BRAND_LOGO_URL,
             logoWidth: '140px',
             progressEnabled: true,
             autoProgress: true,
@@ -724,7 +726,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                 <div className="w-full flex justify-center">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
-                        src={content.src || 'https://via.placeholder.com/400x240?text=Imagem'}
+                        src={content.src || INLINE_IMG_PLACEHOLDER}
                         alt={content.alt || 'Imagem'}
                         className="max-w-full rounded-md border shadow-sm"
                         style={{ objectFit: 'cover' }}

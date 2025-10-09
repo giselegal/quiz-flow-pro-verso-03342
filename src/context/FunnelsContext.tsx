@@ -512,6 +512,13 @@ export const FunnelsProvider: React.FC<FunnelsProviderProps> = ({ children, debu
         return funnelFromUrl;
       }
 
+      // Se for uma sessão ad-hoc aberta via ?template=, evitar setar um funnelId inválido aqui
+      const templateFromUrl = url.searchParams.get('template');
+      if (templateFromUrl) {
+        console.log('🔍 FunnelsContext: sessão ad-hoc via template:', templateFromUrl, '— mantendo currentFunnelId vazio para evitar conflito');
+        return '';
+      }
+
       // Segundo, tentar obter do localStorage
       const funnelFromStorage = localStorage.getItem('editor:funnelId');
       if (funnelFromStorage) {
@@ -648,26 +655,44 @@ export const FunnelsProvider: React.FC<FunnelsProviderProps> = ({ children, debu
       return; // Evita acessar Object.keys em cenários de inicialização parcial
     }
 
-    const safeFunnelTemplates = FUNNEL_TEMPLATES || {} as typeof FUNNEL_TEMPLATES;
+  const safeFunnelTemplates = FUNNEL_TEMPLATES || ({} as typeof FUNNEL_TEMPLATES);
     const safeQuizTemplate = QUIZ_STYLE_21_STEPS_TEMPLATE || {} as typeof QUIZ_STYLE_21_STEPS_TEMPLATE;
 
     console.log(`🔍 [${timestamp}] FunnelsContext Debug Completo:`);
     console.log(`📂 currentFunnelId:`, currentFunnelId);
     try { console.log(`📊 FUNNEL_TEMPLATES keys:`, Object.keys(safeFunnelTemplates)); } catch { console.warn('⚠️ Não foi possível ler keys de FUNNEL_TEMPLATES'); }
     try { console.log(`📋 QUIZ_STYLE_21_STEPS_TEMPLATE keys:`, Object.keys(safeQuizTemplate)); } catch { console.warn('⚠️ Não foi possível ler keys de QUIZ_STYLE_21_STEPS_TEMPLATE'); }
-    console.log(`🎯 Template existe?`, !!safeFunnelTemplates[currentFunnelId]);
+    // Resolver ID base quando for sessão ad-hoc (ex.: funnel-quiz21StepsComplete-<timestamp>)
+    let resolvedId = currentFunnelId;
+    try {
+      const url = new URL(window.location.href);
+      const templateFromUrl = url.searchParams.get('template');
+      if ((!resolvedId || resolvedId.startsWith('funnel-')) && templateFromUrl) {
+        // Mapear template conhecido para chave de FUNNEL_TEMPLATES
+        const map: Record<string, string> = {
+          'quiz21StepsComplete': 'quiz21StepsComplete',
+          'fashionStyle21PtBR': 'funil-21-etapas',
+          'quiz-estilo-completo': 'quiz-estilo-completo'
+        };
+        const baseId = map[templateFromUrl] || 'funil-21-etapas';
+        if (debug) console.log('🧭 FunnelsContext: Resolvendo sessão ad-hoc', { currentFunnelId, templateFromUrl, resolvedBase: baseId });
+        resolvedId = baseId;
+      }
+    } catch { /* ignore */ }
 
-    if (safeFunnelTemplates[currentFunnelId]) {
-      const template = safeFunnelTemplates[currentFunnelId];
+    console.log(`🎯 Template existe?`, !!safeFunnelTemplates[resolvedId]);
+
+    if (safeFunnelTemplates[resolvedId]) {
+      const template = safeFunnelTemplates[resolvedId];
       console.log(`✅ [${timestamp}] Template encontrado:`, template.name);
       console.log(`📊 [${timestamp}] Steps no template:`, template.defaultSteps.length);
 
       // ✅ FASE 3: Fallback robusto - só atualiza se realmente necessário
       if (steps.length === 0 || steps[0]?.id !== template.defaultSteps[0]?.id) {
         setSteps(template.defaultSteps);
-        console.log(`🔄 [${timestamp}] FunnelsContext: Atualizando template:`, currentFunnelId);
+        console.log(`🔄 [${timestamp}] FunnelsContext: Atualizando template:`, resolvedId);
       } else {
-        console.log(`✅ [${timestamp}] FunnelsContext: Template já carregado:`, currentFunnelId);
+        console.log(`✅ [${timestamp}] FunnelsContext: Template já carregado:`, resolvedId);
       }
 
       console.log(`📊 [${timestamp}] Steps disponíveis:`, template.defaultSteps.length);
@@ -676,7 +701,12 @@ export const FunnelsProvider: React.FC<FunnelsProviderProps> = ({ children, debu
         template.defaultSteps.map(s => `${s.id}: ${s.name}`)
       );
     } else if (currentFunnelId) {
-      console.error(`❌ [${timestamp}] FunnelsContext: Template não encontrado:`, currentFunnelId);
+      // Se currentFunnelId é ad-hoc e não foi resolvido, preferir não logar erro ruidoso
+      if (!(currentFunnelId.startsWith('funnel-'))) {
+        console.error(`❌ [${timestamp}] FunnelsContext: Template não encontrado:`, currentFunnelId);
+      } else if (debug) {
+        console.warn(`⚠️ [${timestamp}] FunnelsContext: ID ad-hoc sem resolução direta, aplicando fallback silencioso.`);
+      }
       try { console.log(`📁 [${timestamp}] Templates disponíveis:`, Object.keys(safeFunnelTemplates)); } catch { }
 
       // ✅ FASE 3: Fallback para template padrão
