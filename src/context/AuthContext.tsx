@@ -1,7 +1,15 @@
-import { supabase } from '@/integrations/supabase/client';
 import type { Session } from '@supabase/supabase-js';
+import { getSupabaseClient } from '@/integrations/supabase/supabaseLazy';
 import React, { createContext, ReactNode, useContext, useEffect, useState } from 'react';
-const OFFLINE = import.meta.env.VITE_DISABLE_SUPABASE === 'true';
+const DISABLE = import.meta.env.VITE_DISABLE_SUPABASE === 'true';
+const ENABLE = import.meta.env.VITE_ENABLE_SUPABASE !== 'false';
+let authSupabase: any | null = null;
+async function ensureSupabase() {
+  if (authSupabase) return authSupabase;
+  if (DISABLE || !ENABLE) return null;
+  try { authSupabase = await getSupabaseClient(); } catch { authSupabase = null; }
+  return authSupabase;
+}
 
 interface User {
   id: string;
