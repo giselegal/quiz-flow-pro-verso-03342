@@ -854,53 +854,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
         previewCacheRef.current.clear();
     }, [selectedStepId]);
 
-    // ========================================
-    // Virtualização simples (janela) para blocos top-level
-    // ========================================
-    const VIRTUALIZATION_THRESHOLD = 60; // ativa acima de 60 blocos raiz
-    const ESTIMATED_ROW_HEIGHT = 140; // estimativa média (px)
-    const OVERSCAN = 6; // blocos extras antes/depois
-    const scrollContainerRef = useRef<HTMLDivElement | null>(null);
-    const [scrollState, setScrollState] = useState({ top: 0, height: 0 });
-
-    const updateScrollMetrics = useCallback(() => {
-        const el = scrollContainerRef.current;
-        if (!el) return;
-        setScrollState({ top: el.scrollTop, height: el.clientHeight });
-    }, []);
-
-    useEffect(() => {
-        const el = scrollContainerRef.current;
-        if (!el) return;
-        updateScrollMetrics();
-        const onScroll = () => updateScrollMetrics();
-        el.addEventListener('scroll', onScroll, { passive: true });
-        const onResize = () => updateScrollMetrics();
-        window.addEventListener('resize', onResize);
-        return () => {
-            el.removeEventListener('scroll', onScroll);
-            window.removeEventListener('resize', onResize);
-        };
-    }, [updateScrollMetrics]);
-
-    const computeVirtualWindow = useCallback((rootBlocks: BlockComponent[]) => {
-        if (rootBlocks.length <= VIRTUALIZATION_THRESHOLD) {
-            return { enabled: false, visible: rootBlocks, topSpacer: 0, bottomSpacer: 0 };
-        }
-        // Desativa durante drag para evitar inconsistências de DnD
-        if (activeId) {
-            return { enabled: false, visible: rootBlocks, topSpacer: 0, bottomSpacer: 0 };
-        }
-        const { top, height } = scrollState;
-        const total = rootBlocks.length;
-        const startIndex = Math.max(Math.floor(top / ESTIMATED_ROW_HEIGHT) - OVERSCAN, 0);
-        const viewportCount = Math.ceil(height / ESTIMATED_ROW_HEIGHT) + OVERSCAN * 2;
-        const endIndex = Math.min(startIndex + viewportCount, total);
-        const visible = rootBlocks.slice(startIndex, endIndex);
-        const topSpacer = startIndex * ESTIMATED_ROW_HEIGHT;
-        const bottomSpacer = (total - endIndex) * ESTIMATED_ROW_HEIGHT;
-        return { enabled: true, visible, topSpacer, bottomSpacer };
-    }, [scrollState, activeId]);
+    // Virtualização: lógica extraída para hook interno em CanvasArea (remoção da implementação inline anterior)
 
 
     // ========================================
@@ -1448,8 +1402,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                             setBlockPendingDuplicate={setBlockPendingDuplicate}
                             setTargetStepId={setTargetStepId}
                             setDuplicateModalOpen={setDuplicateModalOpen}
-                            computeVirtualWindow={computeVirtualWindow as any}
-                            scrollContainerRef={scrollContainerRef}
+                            activeId={activeId}
                             previewNode={<LivePreviewContainer funnelId={funnelId} steps={steps} />}
                             FixedProgressHeader={FixedProgressHeader as any}
                             StyleResultCard={StyleResultCard as any}
