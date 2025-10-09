@@ -146,9 +146,9 @@ export class ComponentsService {
     try {
       if (!this.isOnline) throw new Error('Serviço offline');
 
-  const client = await ensureClient();
-  if (!client) return false;
-  await client.from('component_instances').delete().eq('stage_key', stageKey);
+      const client = await ensureClient();
+      if (!client) return false;
+      await client.from('component_instances').delete().eq('stage_key', stageKey);
 
       const instances = blocks.map((block, index) => ({
         instance_key: block.id,
@@ -160,7 +160,7 @@ export class ComponentsService {
       }));
 
       if (instances.length > 0) {
-  const { error } = await client.from('component_instances').insert(instances);
+        const { error } = await client.from('component_instances').insert(instances);
         if (error) {
           console.error('Erro ao sincronizar stage:', error);
           return false;
@@ -325,9 +325,9 @@ export class ComponentsService {
    */
   public static async getComponentTypes(): Promise<ComponentType[]> {
     try {
-  const client = await ensureClient();
-  if (!client) return [];
-  const query = client.from('component_types').select('*') as any;
+      const client = await ensureClient();
+      if (!client) return [];
+      const query = client.from('component_types').select('*') as any;
 
       const queryWithOrder = query
         .order('category', { ascending: true })
