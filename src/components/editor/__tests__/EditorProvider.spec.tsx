@@ -51,17 +51,22 @@ describe('EditorProvider actions (unit)', () => {
     // Add B at position 1
     await actionsRef.current.addBlockAtIndex('step-1', blockB, 1);
 
-    // Check current state
-    const list = stateRef.current.stepBlocks['step-1'] || [];
-    expect(list.length).toBeGreaterThanOrEqual(2);
-    expect(String(list[0].id)).toBe('temp-a');
-    expect(String(list[1].id)).toBe('temp-b');
+    // Check current state (aguarda refletir no ConsumerBridge)
+    await waitFor(() => {
+      const list = stateRef.current.stepBlocks['step-1'] || [];
+      expect(list.length).toBeGreaterThanOrEqual(2);
+      expect(String(list[0].id)).toBe('temp-a');
+      expect(String(list[1].id)).toBe('temp-b');
+    });
 
     // Reorder: move index 0 to 1
     await actionsRef.current.reorderBlocks('step-1', 0, 1);
 
-    const list2 = stateRef.current.stepBlocks['step-1'] || [];
-    expect(String(list2[0].id)).toBe('temp-b');
-    expect(String(list2[1].id)).toBe('temp-a');
+    await waitFor(() => {
+      const list2 = stateRef.current.stepBlocks['step-1'] || [];
+      expect(list2.length).toBeGreaterThanOrEqual(2);
+      expect(String(list2[0].id)).toBe('temp-b');
+      expect(String(list2[1].id)).toBe('temp-a');
+    });
   });
 });
