@@ -760,15 +760,9 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
     const historyDebounceRef = useRef<any>(null);
     const pendingHistoryRef = useRef<EditableQuizStep[] | null>(null);
     const scheduleHistoryPush = (next: EditableQuizStep[]) => {
-        pendingHistoryRef.current = next;
-        if (historyDebounceRef.current) clearTimeout(historyDebounceRef.current);
-        historyDebounceRef.current = setTimeout(() => {
-            if (pendingHistoryRef.current) {
-                pushHistory(pendingHistoryRef.current);
-                pendingHistoryRef.current = null;
-            }
-        }, 400);
+        pushHistory(next);
     };
+    
 
     // Multi seleção helpers
     const isMultiSelected = useCallback((id: string) => multiSelectedIds.includes(id), [multiSelectedIds]);
@@ -815,6 +809,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
         if (multiSelectedIds.includes(selectedBlockId)) setSelectedBlockId('');
         toast({ title: 'Removidos', description: `${total} bloco(s)` });
     };
+    
 
     // Reordenar / mover blocos (nested)
     const handleDragEnd = (event: any) => {
