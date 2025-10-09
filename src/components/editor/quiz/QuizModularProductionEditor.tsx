@@ -661,7 +661,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
         const { type, content, properties, id } = block;
         const children = getChildren(all, id);
         // Construir hash de dependências (alterações de dados relevantes invalidam cache)
-        const expanded = type === 'container' ? expandedContainers.has(id) : false; // usa state mais abaixo mas é avaliado apenas em execução
+        const expanded = type === 'container' ? (expandedContainers ? expandedContainers.has(id) : false) : false; // guarda defensiva
         const childIds = type === 'container' ? children.map(c => c.id).join(',') : '';
         const dynamicContextHash = JSON.stringify({ liveScores, selections: quizSelections[id], currentStep: selectedStepId }); // inclui seleções e etapa atual
         const key = [
@@ -780,7 +780,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
         }
         // Container
         if (type === 'container') {
-            const expanded = expandedContainers.has(id);
+            const expanded = expandedContainers ? expandedContainers.has(id) : false;
             node = (
                 <div
                     className={cn(
