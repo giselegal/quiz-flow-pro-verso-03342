@@ -655,7 +655,7 @@ export const FunnelsProvider: React.FC<FunnelsProviderProps> = ({ children, debu
       return; // Evita acessar Object.keys em cenários de inicialização parcial
     }
 
-  const safeFunnelTemplates = FUNNEL_TEMPLATES || ({} as typeof FUNNEL_TEMPLATES);
+    const safeFunnelTemplates = FUNNEL_TEMPLATES || ({} as typeof FUNNEL_TEMPLATES);
     const safeQuizTemplate = QUIZ_STYLE_21_STEPS_TEMPLATE || {} as typeof QUIZ_STYLE_21_STEPS_TEMPLATE;
 
     console.log(`🔍 [${timestamp}] FunnelsContext Debug Completo:`);
