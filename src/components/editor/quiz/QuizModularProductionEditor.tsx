@@ -693,9 +693,9 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
 
     // Remover bloco
     const removeBlock = useCallback((stepId: string, blockId: string) => {
-        deleteBlock(stepId, blockId);
+        removeBlockHook(stepId, blockId);
         if (selectedBlockId === blockId) setSelectedBlockId('');
-    }, [deleteBlock, selectedBlockId]);
+    }, [removeBlockHook, selectedBlockId]);
 
     // Duplicar bloco
     const duplicateBlock = useCallback((stepId: string, block: BlockComponent) => {
