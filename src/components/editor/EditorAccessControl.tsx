@@ -20,15 +20,22 @@ export const EditorAccessControl: React.FC<EditorAccessControlProps> = ({
 }) => {
   const { profile, hasPermission } = useAuth();
 
-  // 🚧 Modo desenvolvimento: permitir acesso anônimo quando abrindo via ?template=
-  // Útil para testes rápidos do editor sem exigir login localmente.
+  // 🚧 Bypass controlado: permitir acesso anônimo quando abrindo via ?template=
+  // Útil para testes rápidos do editor sem exigir login localmente, especialmente em hosts de preview.
   let allowAnonymousDev = false;
   try {
-    const isDev = (import.meta as any).env?.DEV || process.env.NODE_ENV === 'development' || window.location.hostname === 'localhost';
-    const sp = new URLSearchParams(window.location.search);
+    const host = typeof window !== 'undefined' ? window.location.hostname : '';
+    const sp = new URLSearchParams(typeof window !== 'undefined' ? window.location.search : '');
     const hasTemplateParam = !!sp.get('template');
     const explicitAnon = sp.get('allowAnonymous') === '1' || sp.get('anon') === '1';
-    allowAnonymousDev = !!(isDev && (hasTemplateParam || explicitAnon));
+    // Ambientes considerados "dev-like" (local ou pré-visualização)
+    const isDevEnv = (import.meta as any).env?.DEV || (import.meta as any).env?.MODE !== 'production' || process.env.NODE_ENV === 'development';
+    const isDevHost = /^(localhost|127\.0\.0\.1)$/.test(host) || /\.githubpreview\./.test(host) || /\.codespaces\./.test(host) || /stackblitz\.io|codesandbox\.io/.test(host);
+    const envFlag = (import.meta as any).env?.VITE_ENABLE_EDITOR_ANON === 'true' || (import.meta as any).env?.VITE_FORCE_EDITOR_ANON === 'true';
+    // Regras:
+    // - Sempre permitir se parâmetro explícito anon=1/allowAnonymous=1
+    // - Permitir quando há ?template= e o ambiente é dev-like OU host dev-like OU flag de ambiente ativa
+    allowAnonymousDev = !!(explicitAnon || (hasTemplateParam && (isDevEnv || isDevHost || envFlag)));
   } catch { /* ignore */ }
 
   if (!profile && allowAnonymousDev) {

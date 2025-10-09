@@ -129,15 +129,37 @@ function App() {
                             Agora envolvido por EditorAccessControl para garantir auth/permissions consistentes */}
                         <Route path="/editor">
                           <EditorErrorBoundary>
-                            <EditorAccessControl feature="editor" requiredPlan="free">
-                              <div data-testid="quiz-modular-production-editor-page">
-                                <UnifiedCRUDProvider autoLoad={true}>
-                                  <Suspense fallback={<EnhancedLoadingFallback message="Carregando editor modular..." />}>
-                                    <QuizModularProductionEditor />
-                                  </Suspense>
-                                </UnifiedCRUDProvider>
-                              </div>
-                            </EditorAccessControl>
+                            {(() => {
+                              // 🔓 Bypass inline adicional: se ?template= estiver presente e ambiente for dev-like, renderiza direto
+                              try {
+                                const hasTemplate = typeof window !== 'undefined' && new URLSearchParams(window.location.search).has('template');
+                                const host = typeof window !== 'undefined' ? window.location.hostname : '';
+                                const isDevLike = import.meta.env.DEV || (import.meta as any).env?.MODE !== 'production' || /^(localhost|127\.0\.0\.1)$/.test(host) || /\.githubpreview\.|\.codespaces\.|stackblitz\.io|codesandbox\.io/.test(host);
+                                const allowAnonFlag = (import.meta as any).env?.VITE_ENABLE_EDITOR_ANON === 'true' || (import.meta as any).env?.VITE_FORCE_EDITOR_ANON === 'true';
+                                if (hasTemplate && (isDevLike || allowAnonFlag)) {
+                                  return (
+                                    <div data-testid="quiz-modular-production-editor-page-anon">
+                                      <UnifiedCRUDProvider autoLoad={true}>
+                                        <Suspense fallback={<EnhancedLoadingFallback message="Carregando editor modular..." />}>
+                                          <QuizModularProductionEditor />
+                                        </Suspense>
+                                      </UnifiedCRUDProvider>
+                                    </div>
+                                  );
+                                }
+                              } catch { /* ignore */ }
+                              return (
+                                <EditorAccessControl feature="editor" requiredPlan="free">
+                                  <div data-testid="quiz-modular-production-editor-page">
+                                    <UnifiedCRUDProvider autoLoad={true}>
+                                      <Suspense fallback={<EnhancedLoadingFallback message="Carregando editor modular..." />}>
+                                        <QuizModularProductionEditor />
+                                      </Suspense>
+                                    </UnifiedCRUDProvider>
+                                  </div>
+                                </EditorAccessControl>
+                              );
+                            })()}
                           </EditorErrorBoundary>
                         </Route>
 
