@@ -5,8 +5,7 @@ import { GripVertical, Trash2, ArrowRightCircle } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-
-export interface BlockComponent { id: string; type: string; order: number; parentId?: string | null; properties: Record<string, any>; content: Record<string, any>; }
+import { BlockComponent } from '../types';
 
 export interface BlockRowProps {
     block: BlockComponent;

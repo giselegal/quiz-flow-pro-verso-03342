@@ -5,27 +5,7 @@
 
 import { useState, useCallback } from 'react';
 import { nanoid } from 'nanoid';
-
-export interface BlockComponent {
-  id: string;
-  type: string;
-  order: number;
-  parentId?: string | null;
-  properties: Record<string, any>;
-  content: Record<string, any>;
-}
-
-type StepType = 'intro' | 'question' | 'strategic-question' | 'transition' | 'transition-result' | 'result' | 'offer';
-
-export interface EditableQuizStep {
-  id: string;
-  type: StepType;
-  order: number;
-  blocks: BlockComponent[];
-  title?: string;
-  settings?: Record<string, any>;
-  metadata?: Record<string, any>;
-}
+import { EditableQuizStep, BlockComponent, StepType } from '../types';
 
 export interface EditorState {
   steps: EditableQuizStep[];

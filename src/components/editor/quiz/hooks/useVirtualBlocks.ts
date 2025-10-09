@@ -1,7 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-
-// Definição mínima local para evitar dependência circular de types central não existente
-export interface BlockComponent { id: string; type: string; order: number; parentId?: string | null; properties: Record<string, any>; content: Record<string, any>; }
+import { BlockComponent } from '../types';
 
 interface UseVirtualBlocksOptions {
     blocks: BlockComponent[];

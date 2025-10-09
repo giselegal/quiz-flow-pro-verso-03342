@@ -1,8 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-
-// Definições locais mínimas para evitar dependência externa não existente
-export interface BlockComponent { id: string; type: string; order: number; parentId?: string | null; properties: Record<string, any>; content: Record<string, any>; }
-export interface EditableQuizStep { id: string; type: string; order: number; blocks: BlockComponent[]; }
+import { BlockComponent, EditableQuizStep } from '../types';
 
 export interface UseSelectionClipboardOptions {
     steps: EditableQuizStep[];
