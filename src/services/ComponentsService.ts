@@ -4,65 +4,23 @@
 // ============================================================================
 // 📦 IMPORTS
 // ============================================================================
-import { createClient } from '@supabase/supabase-js';
+import { getSupabaseClient } from '@/integrations/supabase/supabaseLazy';
 
 // ============================================================================
 // ⚙️ CONFIGURAÇÃO DO SUPABASE
 // ============================================================================
-// Carrega as variáveis de ambiente do Supabase
-const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL as string;
-const SUPABASE_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY as string;
-
-// Cria um cliente Supabase real ou simulado
-const supabase =
-  SUPABASE_URL && SUPABASE_KEY
-    ? createClient(SUPABASE_URL, SUPABASE_KEY)
-    : createMockSupabaseClient();
-
-// Função para criar um cliente Supabase simulado (para testes locais)
-function createMockSupabaseClient() {
-  console.warn(
-    '⚠️ Usando cliente Supabase simulado! Configure as variáveis de ambiente para usar o cliente real.'
-  );
-  return {
-    from: (table: string) => ({
-      select: (query?: string) => ({
-        eq: (column: string, value: any) => ({
-          order: (column: string, options: { ascending: boolean }) => ({
-            then: (callback: Function) => Promise.resolve(callback({ data: [], error: null })),
-            limit: (num: number) => ({
-              then: (callback: Function) => Promise.resolve(callback({ data: [], error: null })),
-              single: () => Promise.resolve({ data: null, error: null }),
-            }),
-            single: () => Promise.resolve({ data: null, error: null }),
-          }),
-          limit: (num: number) => ({
-            then: (callback: Function) => Promise.resolve(callback({ data: [], error: null })),
-            single: () => Promise.resolve({ data: null, error: null }),
-          }),
-          single: () => Promise.resolve({ data: null, error: null }),
-        }),
-        order: (column: string, options: { ascending: boolean }) => ({
-          then: (callback: Function) => Promise.resolve(callback({ data: [], error: null })),
-        }),
-        limit: (num: number) => ({
-          then: (callback: Function) => Promise.resolve(callback({ data: [], error: null })),
-        }),
-        single: () => Promise.resolve({ data: null, error: null }),
-        then: (callback: Function) => Promise.resolve(callback({ data: [], error: null })),
-      }),
-      insert: (data: any) => Promise.resolve({ data: null, error: null }),
-      update: (data: any) => ({
-        eq: (column: string, value: any) => Promise.resolve({ data: null, error: null }),
-      }),
-      delete: () => ({
-        eq: (column: string, value: any) => Promise.resolve({ data: null, error: null }),
-      }),
-    }),
-    rpc: (func: string, params: any) =>
-      Promise.resolve({ data: `mock-id-${Date.now()}`, error: null }),
-  };
-}
+// Lazy client cache dentro do módulo
+let supabase: any | null = null;
+const ensureClient = async () => {
+  if (supabase) return supabase;
+  try {
+    supabase = await getSupabaseClient();
+  } catch (e) {
+    console.warn('ComponentsService: Supabase indisponível, operações retornam defaults.');
+    supabase = null;
+  }
+  return supabase;
+};
 
 // ============================================================================
 // 📑 INTERFACES E TIPOS
@@ -129,7 +87,9 @@ export class ComponentsService {
     try {
       if (!this.isOnline) throw new Error('Serviço offline');
 
-      const query = supabase
+      const client = await ensureClient();
+      if (!client) return [];
+      const query = client
         .from('component_instances')
         .select(
           `
@@ -186,7 +146,9 @@ export class ComponentsService {
     try {
       if (!this.isOnline) throw new Error('Serviço offline');
 
-      await supabase.from('component_instances').delete().eq('stage_key', stageKey);
+  const client = await ensureClient();
+  if (!client) return false;
+  await client.from('component_instances').delete().eq('stage_key', stageKey);
 
       const instances = blocks.map((block, index) => ({
         instance_key: block.id,
@@ -198,7 +160,7 @@ export class ComponentsService {
       }));
 
       if (instances.length > 0) {
-        const { error } = await supabase.from('component_instances').insert(instances);
+  const { error } = await client.from('component_instances').insert(instances);
         if (error) {
           console.error('Erro ao sincronizar stage:', error);
           return false;
@@ -229,7 +191,9 @@ export class ComponentsService {
     try {
       if (!this.isOnline) throw new Error('Serviço offline');
 
-      const componentQuery = supabase
+      const client = await ensureClient();
+      if (!client) return null;
+      const componentQuery = client
         .from('component_types')
         .select('*')
         .eq('type_key', typeKey)
@@ -243,7 +207,7 @@ export class ComponentsService {
       }
 
       // 2. Gera uma chave única para a instância
-      const { data: result, error } = await supabase.rpc('generate_instance_key', {
+      const { data: result, error } = await client.rpc('generate_instance_key', {
         p_type_key: typeKey,
         p_stage_key: stageKey,
       });
@@ -255,7 +219,7 @@ export class ComponentsService {
 
       const instanceKey = result as string;
 
-      const orderQuery = supabase
+      const orderQuery = client
         .from('component_instances')
         .select('stage_order')
         .eq('stage_key', stageKey)
@@ -267,7 +231,7 @@ export class ComponentsService {
       const nextOrder = (maxOrder?.[0]?.stage_order || 0) + 1;
 
       // 4. Insere a nova instância no banco
-      const { error: insertError } = await supabase.from('component_instances').insert({
+      const { error: insertError } = await client.from('component_instances').insert({
         instance_key: instanceKey,
         type_key: typeKey,
         stage_key: stageKey,
@@ -310,7 +274,9 @@ export class ComponentsService {
         updateData.stage_order = updates.order;
       }
 
-      const { error } = await supabase
+      const client = await ensureClient();
+      if (!client) return false;
+      const { error } = await client
         .from('component_instances')
         .update(updateData)
         .eq('instance_key', instanceKey);
@@ -334,7 +300,9 @@ export class ComponentsService {
    */
   public static async deleteBlock(instanceKey: string): Promise<boolean> {
     try {
-      const { error } = await supabase
+      const client = await ensureClient();
+      if (!client) return false;
+      const { error } = await client
         .from('component_instances')
         .delete()
         .eq('instance_key', instanceKey);
@@ -357,7 +325,9 @@ export class ComponentsService {
    */
   public static async getComponentTypes(): Promise<ComponentType[]> {
     try {
-      const query = supabase.from('component_types').select('*') as any;
+  const client = await ensureClient();
+  if (!client) return [];
+  const query = client.from('component_types').select('*') as any;
 
       const queryWithOrder = query
         .order('category', { ascending: true })
@@ -384,7 +354,9 @@ export class ComponentsService {
    */
   public static async stageExists(stageKey: string): Promise<boolean> {
     try {
-      const query = supabase
+      const client = await ensureClient();
+      if (!client) return false;
+      const query = client
         .from('component_instances')
         .select('id')
         .eq('stage_key', stageKey)
@@ -410,7 +382,9 @@ export class ComponentsService {
    */
   public static async getStagesWithComponents(): Promise<string[]> {
     try {
-      const query = supabase
+      const client = await ensureClient();
+      if (!client) return [];
+      const query = client
         .from('component_instances')
         .select('stage_key')
         .order('stage_key', { ascending: true }) as any;

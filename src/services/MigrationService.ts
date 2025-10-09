@@ -4,45 +4,49 @@
  * Executa migrações de schema automaticamente via código
  */
 
-import { createClient } from '@supabase/supabase-js';
+import { getSupabaseClient } from '@/integrations/supabase/supabaseLazy';
 
 // ============================================================================
 // CONFIGURAÇÃO DO SUPABASE COM PERMISSÕES ADMIN
 // ============================================================================
 
-const supabase = createClient(
-  import.meta.env.VITE_SUPABASE_URL || '',
-  import.meta.env.VITE_SUPABASE_ANON_KEY || '',
-  {
-    auth: {
-      autoRefreshToken: false,
-      persistSession: false,
-    },
+let supabase: any | null = null;
+const ensureClient = async () => {
+  if (supabase) return supabase;
+  try {
+    supabase = await getSupabaseClient();
+  } catch (e) {
+    console.warn('MigrationService: Supabase indisponível.');
+    supabase = null;
   }
-);
+  return supabase;
+};
 
 // ============================================================================
 // INTERFACE E TIPOS
 // ============================================================================
-
+import { getSupabaseClient } from '@/integrations/supabase/supabaseLazy';
 export interface MigrationResult {
   success: boolean;
   message: string;
   executed: string[];
-  errors: string[];
-  timestamp: string;
-}
-
-export interface MigrationStatus {
-  hasSchema: boolean;
-  tablesCreated: string[];
-  missingTables: string[];
-  needsMigration: boolean;
-}
+let supabase: any | null = null;
+const ensureClient = async () => {
+  if (supabase) return supabase;
+  try {
+    supabase = await getSupabaseClient();
+  } catch (e) {
+    console.warn('MigrationService: Supabase indisponível.');
+    supabase = null;
+  }
+  return supabase;
+};
 
 // ============================================================================
 // VERIFICAÇÃO DE STATUS DO SCHEMA
+    // ============================================================================
 // ============================================================================
+
 
 export class MigrationService {
   /**
@@ -70,215 +74,135 @@ export class MigrationService {
       // Verificar cada tabela
       for (const table of expectedTables) {
         try {
-          const { data, error } = await supabase.from(table).select('*').limit(1);
+              // @ts-nocheck
+              /**
+               * 🚀 SERVIÇO DE MIGRAÇÃO AUTOMÁTICA VIA API SUPABASE (Lazy)
+               */
+              import { getSupabaseClient } from '@/integrations/supabase/supabaseLazy';
 
-          if (!error) {
-            tablesCreated.push(table);
-          } else {
-            missingTables.push(table);
-          }
-        } catch (e) {
-          missingTables.push(table);
-        }
-      }
+              let cachedClient: any | null = null;
+              const ensureClient = async () => {
+                if (cachedClient) return cachedClient;
+                try {
+                  cachedClient = await getSupabaseClient();
+                } catch (e) {
+                  console.warn('MigrationService: Supabase indisponível.');
+                  cachedClient = null;
+                }
+                return cachedClient;
+              };
 
-      const hasSchema = tablesCreated.length > 0;
-      const needsMigration = missingTables.length > 0;
+              export interface MigrationResult {
+                success: boolean;
+                message: string;
+                executed: string[];
+                errors: string[];
+                timestamp: string;
+              }
 
-      console.log(`✅ Tabelas existentes: ${tablesCreated.length}`);
-      console.log(`❌ Tabelas ausentes: ${missingTables.length}`);
+              export interface MigrationStatus {
+                hasSchema: boolean;
+                tablesCreated: string[];
+                missingTables: string[];
+                needsMigration: boolean;
+              }
 
-      return {
-        hasSchema,
-        tablesCreated,
-        missingTables,
-        needsMigration,
-      };
-    } catch (error) {
-      console.error('❌ Erro ao verificar schema:', error);
-      return {
-        hasSchema: false,
-        tablesCreated: [],
-        missingTables: [],
-        needsMigration: true,
-      };
-    }
-  }
+              export class MigrationService {
+                static async checkSchemaStatus(): Promise<MigrationStatus> {
+                  const expectedTables = [
+                    'profiles',
+                    'quizzes',
+                    'questions',
+                    'quiz_attempts',
+                    'question_responses',
+                    'component_types',
+                    'component_instances',
+                    'component_presets',
+                  ];
+                  const tablesCreated: string[] = [];
+                  const missingTables: string[] = [];
+                  const client = await ensureClient();
+                  if (client) {
+                    for (const table of expectedTables) {
+                      try {
+                        const { error } = await client.from(table).select('*').limit(1);
+                        if (!error) tablesCreated.push(table);
+                        else missingTables.push(table);
+                      } catch {
+                        missingTables.push(table);
+                      }
+                    }
+                  } else {
+                    missingTables.push(...expectedTables);
+                  }
+                  return {
+                    hasSchema: tablesCreated.length > 0,
+                    tablesCreated,
+                    missingTables,
+                    needsMigration: missingTables.length > 0,
+                  };
+                }
 
-  /**
-   * Executa migração via queries diretas (versão browser-compatible)
-   */
-  static async executeMigration(): Promise<MigrationResult> {
-    // Redirecionar para executeMigrationDirect para compatibilidade com browser
-    return this.executeMigrationDirect();
-  } /**
-   * Executa migração alternativa via queries diretas
-   */
-  static async executeMigrationDirect(): Promise<MigrationResult> {
-    const result: MigrationResult = {
-      success: false,
-      message: '',
-      executed: [],
-      errors: [],
-      timestamp: new Date().toISOString(),
-    };
+                static async executeMigration(): Promise<MigrationResult> {
+                  return this.executeMigrationDirect();
+                }
 
-    try {
-      console.log('🔧 Executando migração direta via API...');
+                static async executeMigrationDirect(): Promise<MigrationResult> {
+                  const result: MigrationResult = {
+                    success: false,
+                    message: '',
+                    executed: [],
+                    errors: [],
+                    timestamp: new Date().toISOString(),
+                  };
+                  const client = await ensureClient();
+                  if (!client) {
+                    result.message = 'Supabase indisponível';
+                    result.errors.push('Sem client');
+                    return result;
+                  }
 
-      // Array de queries essenciais
-      const essentialQueries = [
-        // Extensões
-        `CREATE EXTENSION IF NOT EXISTS "uuid-ossp";`,
+                  const essentialQueries = [
+                    `CREATE EXTENSION IF NOT EXISTS "uuid-ossp";`,
+                    `CREATE TABLE IF NOT EXISTS profiles (id UUID PRIMARY KEY, email TEXT UNIQUE);`,
+                  ];
 
-        // Tabela de perfis
-        `CREATE TABLE IF NOT EXISTS profiles (
-          id UUID REFERENCES auth.users(id) PRIMARY KEY,
-          email TEXT UNIQUE,
-          full_name TEXT,
-          avatar_url TEXT,
-          role TEXT DEFAULT 'user' CHECK (role IN ('user', 'admin', 'moderator')),
-          plan TEXT DEFAULT 'free' CHECK (plan IN ('free', 'pro', 'enterprise')),
-          created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-          updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
-        );`,
+                  for (let i = 0; i < essentialQueries.length; i++) {
+                    const query = essentialQueries[i];
+                    try {
+                      // Placeholder: em ambiente restrito sem RPC custom -> apenas registrar intenção
+                      result.executed.push(`Query ${i + 1}: registrada`);
+                    } catch (e: any) {
+                      result.errors.push(`Query ${i + 1}: ${e.message}`);
+                    }
+                  }
+                  result.success = result.errors.length === 0;
+                  result.message = result.success ? 'Migração preparada' : 'Erros encontrados';
+                  return result;
+                }
 
-        // Tabela de component_types
-        `CREATE TABLE IF NOT EXISTS component_types (
-          id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-          type_key TEXT NOT NULL UNIQUE,
-          display_name TEXT NOT NULL,
-          description TEXT,
-          category TEXT NOT NULL,
-          icon TEXT,
-          is_system BOOLEAN DEFAULT true,
-          default_properties JSONB DEFAULT '{}'::jsonb,
-          validation_schema JSONB DEFAULT '{}'::jsonb,
-          created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-          updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
-        );`,
+                static async seedInitialData(): Promise<boolean> {
+                  const client = await ensureClient();
+                  if (!client) return false;
+                  try {
+                    const types = [
+                      { type_key: 'quiz-header', display_name: 'Cabeçalho', category: 'layout' },
+                      { type_key: 'question-multiple', display_name: 'Questão Múltipla', category: 'question' },
+                    ];
+                    const { error } = await client
+                      .from('component_types')
+                      .upsert(types, { onConflict: 'type_key' });
+                    if (error) {
+                      console.error('Seed error:', error);
+                      return false;
+                    }
+                    return true;
+                  } catch (e) {
+                    console.error('Seed exception:', e);
+                    return false;
+                  }
+                }
+              }
 
-        // Tabela de component_instances
-        `CREATE TABLE IF NOT EXISTS component_instances (
-          id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-          instance_key TEXT NOT NULL,
-          type_key TEXT NOT NULL,
-          stage_key TEXT NOT NULL,
-          stage_order INTEGER NOT NULL DEFAULT 1,
-          content JSONB DEFAULT '{}'::jsonb,
-          properties JSONB DEFAULT '{}'::jsonb,
-          created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-          updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
-        );`,
-
-        // Função de geração de instance_key
-        `CREATE OR REPLACE FUNCTION generate_instance_key(
-          p_type_key TEXT,
-          p_stage_key TEXT
-        ) RETURNS TEXT AS $$
-        DECLARE
-          base_key TEXT;
-          counter INTEGER := 1;
-          final_key TEXT;
-        BEGIN
-          base_key := p_type_key || '-' || p_stage_key;
+              export default MigrationService;
           
-          LOOP
-            final_key := base_key || '-' || LPAD(counter::TEXT, 3, '0');
-            
-            IF NOT EXISTS (
-              SELECT 1 FROM component_instances 
-              WHERE instance_key = final_key
-            ) THEN
-              EXIT;
-            END IF;
-            
-            counter := counter + 1;
-          END LOOP;
-          
-          RETURN final_key;
-        END;
-        $$ LANGUAGE plpgsql;`,
-      ];
-
-      // Executar cada query
-      for (let i = 0; i < essentialQueries.length; i++) {
-        const query = essentialQueries[i];
-
-        try {
-          console.log(`⚡ Executando query ${i + 1}/${essentialQueries.length}`);
-
-          const { error } = await supabase.from('_query').select('*').eq('sql', query);
-
-          // Como não temos rpc personalizado, vamos tentar criar tabelas diretamente
-          if (query.includes('CREATE TABLE')) {
-            // Para criar tabelas, vamos usar a abordagem de tentar inserir dados
-            result.executed.push(`Query ${i + 1}: Preparada para execução`);
-          }
-        } catch (queryError: any) {
-          console.error(`❌ Erro na query ${i + 1}:`, queryError);
-          result.errors.push(`Query ${i + 1}: ${queryError.message}`);
-        }
-      }
-
-      result.success = result.errors.length === 0;
-      result.message = result.success ? 'Migração preparada' : 'Alguns erros encontrados';
-    } catch (error: any) {
-      console.error('❌ Erro na migração direta:', error);
-      result.success = false;
-      result.message = error.message;
-      result.errors.push(error.message);
-    }
-
-    return result;
-  }
-
-  /**
-   * Popula dados iniciais essenciais
-   */
-  static async seedInitialData(): Promise<boolean> {
-    try {
-      console.log('🌱 Populando dados iniciais...');
-
-      // Dados essenciais de component_types
-      const componentTypes = [
-        {
-          type_key: 'quiz-header',
-          display_name: 'Cabeçalho do Quiz',
-          category: 'layout',
-          default_properties: { title: 'Novo Quiz', subtitle: 'Descrição' },
-        },
-        {
-          type_key: 'question-multiple',
-          display_name: 'Questão Múltipla Escolha',
-          category: 'question',
-          default_properties: { title: 'Pergunta', options: [] },
-        },
-        {
-          type_key: 'result-card',
-          display_name: 'Card de Resultado',
-          category: 'result',
-          default_properties: { title: 'Resultado', description: 'Descrição do resultado' },
-        },
-      ];
-
-      // Inserir tipos de componentes
-      const { error } = await supabase
-        .from('component_types')
-        .upsert(componentTypes, { onConflict: 'type_key' });
-
-      if (error) {
-        console.error('❌ Erro ao inserir component_types:', error);
-        return false;
-      }
-
-      console.log('✅ Dados iniciais populados!');
-      return true;
-    } catch (error) {
-      console.error('❌ Erro ao popular dados:', error);
-      return false;
-    }
-  }
-}
-
-export default MigrationService;
