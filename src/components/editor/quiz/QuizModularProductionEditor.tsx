@@ -76,6 +76,7 @@ import { QuizRuntimeRegistryProvider, useQuizRuntimeRegistry } from '@/runtime/q
 import { editorStepsToRuntimeMap } from '@/runtime/quiz/editorAdapter';
 import { LayoutShell } from './LayoutShell';
 import StepNavigator from './components/StepNavigator';
+import ComponentLibraryPanel from './components/ComponentLibraryPanel';
 
 // Pré-visualizações especializadas (lazy) dos componentes finais de produção
 const StyleResultCard = React.lazy(() => import('@/components/editor/quiz/components/StyleResultCard').then(m => ({ default: m.StyleResultCard })));
@@ -1982,56 +1983,13 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                             extractStepMeta={(s: any) => ({ id: s.id, type: s.type, blockCount: s.blocks?.length || 0 })}
                         />
                     )}
-                    libraryPanel={(<>
-                        <div className="px-4 py-3 border-b">
-                            <h2 className="font-semibold text-sm">Componentes</h2>
-                            <p className="text-xs text-muted-foreground">Arraste para o canvas</p>
-                        </div>
-                        <ScrollArea className="flex-1">
-                            <div className="p-3 space-y-3">
-                                {['content', 'interactive', 'media', 'layout'].map(category => {
-                                    const items = COMPONENT_LIBRARY.filter(c => c.category === category);
-                                    return (
-                                        <div key={category}>
-                                            <h3 className="text-xs font-semibold text-muted-foreground uppercase mb-2">
-                                                {category === 'content' && 'Conteúdo'}
-                                                {category === 'interactive' && 'Interativo'}
-                                                {category === 'media' && 'Mídia'}
-                                                {category === 'layout' && 'Layout'}
-                                            </h3>
-                                            <div className="space-y-1">
-                                                {items.map(component => {
-                                                    const DraggableItem: React.FC = () => {
-                                                        const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({ id: `lib:${component.type}` });
-                                                        const style: React.CSSProperties = {
-                                                            transform: transform ? CSS.Translate.toString(transform) : undefined,
-                                                            opacity: isDragging ? 0.4 : 1,
-                                                        };
-                                                        return (
-                                                            <button
-                                                                ref={setNodeRef}
-                                                                {...attributes}
-                                                                {...listeners}
-                                                                key={component.type}
-                                                                className="w-full flex items-center gap-2 px-3 py-2 text-sm rounded-lg border hover:bg-blue-50 hover:border-blue-300 transition-colors"
-                                                                onClick={() => selectedStepId && addBlockToStep(selectedStepId, component.type)}
-                                                                disabled={!selectedStepId}
-                                                                style={style}
-                                                            >
-                                                                {component.icon}
-                                                                <span>{component.label}</span>
-                                                            </button>
-                                                        );
-                                                    };
-                                                    return <DraggableItem key={component.type} />;
-                                                })}
-                                            </div>
-                                        </div>
-                                    );
-                                })}
-                            </div>
-                        </ScrollArea>
-                    </>)}
+                    libraryPanel={(
+                        <ComponentLibraryPanel
+                            components={COMPONENT_LIBRARY as any}
+                            selectedStepId={selectedStepId}
+                            onAdd={(type) => selectedStepId && addBlockToStep(selectedStepId, type)}
+                        />
+                    )}
                     canvasPanel={(
                         <div className="flex-1 bg-gray-100 flex flex-col overflow-y-auto">
                             <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as any)} className="flex-1 flex flex-col">
