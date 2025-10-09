@@ -80,6 +80,8 @@ import { useEditorHistory } from './hooks/useEditorHistory';
 import { useStepsBlocks } from './hooks/useStepsBlocks';
 import { useBlocks } from './hooks/useBlocks';
 import { BlockComponent as EditorBlockComponent, EditableQuizStep as EditorEditableQuizStep, ComponentLibraryItem } from './types';
+import { buildFashionStyle21Steps } from '@/templates/fashionStyle21PtBR';
+import { QUIZ_STYLE_21_STEPS_TEMPLATE, getPersonalizedStepTemplate } from '@/templates/quiz21StepsComplete';
 import { useSelectionClipboard } from './hooks/useSelectionClipboard';
 import { useVirtualBlocks } from './hooks/useVirtualBlocks';
 import StepNavigator from './components/StepNavigator';
@@ -359,8 +361,57 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
     const [isLoading, setIsLoading] = useState(true);
     // Evita loop infinito de carregamento: finaliza o loading após mount
     useEffect(() => {
-        // Caso não haja carregamento assíncrono inicial, podemos encerrar o loading imediatamente
+        // Carregamento inicial: se houver ?template=, construir steps default
+        try {
+            const sp = new URLSearchParams(window.location.search);
+            const templateId = sp.get('template');
+            const funnelParam = sp.get('funnel') || undefined;
+            if (templateId) {
+                if (!steps || steps.length === 0) {
+                    if (templateId === 'fashionStyle21PtBR') {
+                        const initial = buildFashionStyle21Steps(funnelParam);
+                        setSteps(initial);
+                        setSelectedStepId(initial[0]?.id || '');
+                        setFunnelId(funnelParam || `funnel-${templateId}-${Date.now()}`);
+                    } else if (templateId === 'quiz21StepsComplete') {
+                        // Carregar os blocos reais do template completo (com personalização por funil, se houver)
+                        const buildStepType = (idx: number): EditableQuizStep['type'] => {
+                            if (idx === 0) return 'intro';
+                            if (idx >= 1 && idx <= 10) return 'question';
+                            if (idx === 11) return 'transition';
+                            if (idx >= 12 && idx <= 17) return 'strategic-question';
+                            if (idx === 18) return 'transition-result';
+                            if (idx === 19) return 'result';
+                            return 'offer'; // idx === 20
+                        };
+
+                        const initial: EditableQuizStep[] = Array.from({ length: 21 }).map((_, idx) => {
+                            const stepId = `step-${idx + 1}`;
+                            // Preferir template personalizado quando funnelParam é fornecido
+                            const blocks = (funnelParam
+                                ? getPersonalizedStepTemplate(stepId, funnelParam)
+                                : (QUIZ_STYLE_21_STEPS_TEMPLATE as any)[stepId]) || [];
+
+                            return {
+                                id: stepId,
+                                type: buildStepType(idx),
+                                order: idx + 1,
+                                blocks: blocks as any,
+                                nextStep: undefined
+                            } as EditableQuizStep;
+                        });
+
+                        for (let i = 0; i < initial.length - 1; i++) initial[i].nextStep = initial[i + 1].id;
+
+                        setSteps(initial);
+                        setSelectedStepId(initial[0]?.id || '');
+                        setFunnelId(funnelParam || `funnel-${templateId}-${Date.now()}`);
+                    }
+                }
+            }
+        } catch {/* ignore */ }
         setIsLoading(false);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
     const [validationErrors, setValidationErrors] = useState<string[]>([]);
     // Undo/Redo via hook

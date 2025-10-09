@@ -54,6 +54,30 @@ export const AVAILABLE_TEMPLATES: TemplateConfig[] = [
         downloads: 12450
     },
 
+    // === FASHION STYLE 21 (PT-BR) – NOVO TEMPLATE ===
+    {
+        id: 'fashionStyle21PtBR',
+        name: 'Fashion Style 21 (PT-BR)',
+        description: 'Funil completo de 21 etapas para descoberta de estilo pessoal (PT-BR), pronto para editar no editor modular.',
+        category: 'Quiz',
+        segment: 'Quiz',
+        difficulty: 'Intermediário',
+        stepCount: 21,
+        preview: 'https://placehold.co/400x240/B89B7A/ffffff?text=Fashion+Style+21',
+        tags: ['Quiz', 'Estilo', '21 Etapas', 'PT-BR'],
+        features: [
+            'Intro + 10 perguntas principais',
+            '6 perguntas estratégicas',
+            'Resultado e Oferta',
+            'Compatível com editor modular'
+        ],
+        isActive: true,
+        templatePath: '/src/templates/fashionStyle21PtBR.ts',
+        editorUrl: '/editor?template=fashionStyle21PtBR',
+        rating: 4.7,
+        downloads: 145
+    },
+
     // === LEAD MAGNET FASHION ===
     {
         id: 'lead-magnet-fashion',
