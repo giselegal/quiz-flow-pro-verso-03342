@@ -74,6 +74,7 @@ const EditorTemplatesPage = lazy(() => import('./pages/editor-templates/index'))
 const FunnelTypesPage = lazy(() => import('./pages/SimpleFunnelTypesPage'));
 const SupabaseFixTestPage = lazy(() => import('./pages/SupabaseFixTestPage'));
 const IndexedDBMigrationTestPage = lazy(() => import('./pages/IndexedDBMigrationTestPage'));
+const TemplatePreviewPage = lazy(() => import('./pages/dashboard/TemplatePreviewPage'));
 
 function App() {
   useEffect(() => {
@@ -263,6 +264,11 @@ function App() {
                         {/* 🤖 QUIZ COM IA - ROTA ESPECIAL */}
                         <Route path="/quiz-ai-21-steps">
                           <QuizAIPage />
+                        </Route>
+
+                        {/* 🎨 PREVIEW DE TEMPLATES */}
+                        <Route path="/templates/preview/:id">
+                          <TemplatePreviewPage />
                         </Route>
 
                         {/* 🎨 PÁGINA DE TEMPLATES GERAL (consolidada no dashboard) */}
