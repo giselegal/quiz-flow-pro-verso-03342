@@ -441,7 +441,7 @@ const AdminDashboard: React.FC = () => {
                         <div className="lg:col-span-1">
                             <FunnelModelsCard />
                         </div>
-                        
+
                         {/* Ações Rápidas - Design Modernizado */}
                         <div className="lg:col-span-1">
                             <Card className="bg-white/60 backdrop-blur-sm border-white/40 shadow-lg hover:shadow-xl transition-all duration-300">
@@ -621,18 +621,18 @@ const AdminDashboard: React.FC = () => {
                             </CardContent>
                         </Card>
                     </div>
-                    
+
                     {/* Analytics Premium - Design Modernizado */}
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                         {/* Chart de Conversões */}
                         <Card className="bg-white/60 backdrop-blur-sm border-white/40 shadow-lg hover:shadow-xl transition-all duration-300">
-                        <CardHeader>
+                            <CardHeader>
                                 <CardTitle className="text-lg font-semibold text-gray-800 flex items-center gap-2">
                                     <TrendingUp className="w-5 h-5 text-green-600" />
                                     Conversões por Período
-                            </CardTitle>
-                        </CardHeader>
-                        <CardContent>
+                                </CardTitle>
+                            </CardHeader>
+                            <CardContent>
                                 <div className="h-48 flex items-center justify-center border-2 border-dashed border-gray-200 rounded-lg">
                                     <div className="text-center">
                                         <BarChart3 className="w-12 h-12 text-gray-400 mx-auto mb-2" />
@@ -655,9 +655,9 @@ const AdminDashboard: React.FC = () => {
                                     size="sm"
                                     className="bg-white/60 backdrop-blur-sm border-white/40 hover:bg-white/80 shadow-sm"
                                 >
-                                        <Eye className="w-4 h-4 mr-2" />
+                                    <Eye className="w-4 h-4 mr-2" />
                                     Ver Todas
-                                    </Button>
+                                </Button>
                             </CardHeader>
                             <CardContent>
                                 <div className="space-y-4">
@@ -696,9 +696,9 @@ const AdminDashboard: React.FC = () => {
                                             </div>
                                         </div>
                                     ))}
-                            </div>
-                        </CardContent>
-                    </Card>
+                                </div>
+                            </CardContent>
+                        </Card>
                     </div>
                 </TabsContent>
             </Tabs>
