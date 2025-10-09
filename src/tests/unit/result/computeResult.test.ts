@@ -29,3 +29,32 @@ describe('computeResult (basic)', () => {
         expect(Math.round(pctNatural + pctClassico)).toBe(100); // Como só dois estilos com pontos
     });
 });
+
+describe('computeResult (scoring config)', () => {
+    it('aplica pesos por estilo corretamente', () => {
+        // natural e classico com a mesma contagem de seleções, mas natural com peso maior
+        const answers = { 'step-02': ['natural', 'classico'] } as Record<string, string[]>;
+        const scoring = { weights: { natural: 2, classico: 1 } } as any;
+        const res = computeResult({ answers, scoring });
+        expect(res.scores.natural).toBe(2);
+        expect(res.scores.classico).toBe(1);
+        expect(res.primaryStyleId).toBe('natural');
+    });
+
+    it('desempata com natural-first quando configurado', () => {
+        const answers = { 'step-02': ['natural', 'classico'] } as Record<string, string[]>;
+        // sem pesos, fica 1x1; empata
+        const scoring = { tieBreak: 'natural-first' } as any;
+        const res = computeResult({ answers, scoring });
+        expect(res.scores.natural).toBe(1);
+        expect(res.scores.classico).toBe(1);
+        expect(res.primaryStyleId).toBe('natural');
+    });
+
+    it('tieBreak random retorna um dos estilos empatados (não garante determinismo)', () => {
+        const answers = { 'step-02': ['natural', 'classico'] } as Record<string, string[]>;
+        const scoring = { tieBreak: 'random' } as any;
+        const res = computeResult({ answers, scoring });
+        expect(['natural', 'classico']).toContain(res.primaryStyleId);
+    });
+});
