@@ -6,6 +6,7 @@
  */
 
 import React, { Suspense } from 'react';
+import EditorModularProDashboard from './admin/EditorModularProDashboard';
 import { Route, Switch, useLocation } from 'wouter';
 import { UnifiedAdminLayout } from '@/components/admin/UnifiedAdminLayout';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
@@ -104,6 +105,12 @@ const routeConfig = {
     component: AdminOverview, // Redirect to main dashboard for now
     title: 'Editor',
     description: 'Acesso ao editor visual de funis'
+  }
+  ,
+  '/admin/editor/quiz-modular-pro': {
+    component: EditorModularProDashboard,
+    title: 'Editor Modular Pro',
+    description: 'Status do /editor/quiz-estilo-modular-pro com métricas reais'
   }
 };
 
