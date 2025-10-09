@@ -1,0 +1,44 @@
+name: Supabase - Apply RLS Hardening
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "Ambiente alvo (ex.: production)"
+        required: true
+        default: "production"
+
+permissions:
+  contents: read
+
+jobs:
+  apply-migrations:
+    name: Apply Supabase Migrations
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Supabase CLI
+        uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      - name: Link project
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          SUPABASE_PROJECT_REF: ${{ secrets.SUPABASE_PROJECT_REF }}
+        run: |
+          if [ -z "$SUPABASE_ACCESS_TOKEN" ] || [ -z "$SUPABASE_PROJECT_REF" ]; then
+            echo "SUPABASE_ACCESS_TOKEN e SUPABASE_PROJECT_REF precisam estar configurados como secrets do repositório" >&2
+            exit 1
+          fi
+          supabase link --project-ref "$SUPABASE_PROJECT_REF" --access-token "$SUPABASE_ACCESS_TOKEN"
+
+      - name: Push migrations (all pending)
+        run: |
+          supabase db push --debug
+
+      - name: Show status
+        run: |
+          supabase db remote commit --dry-run || true
