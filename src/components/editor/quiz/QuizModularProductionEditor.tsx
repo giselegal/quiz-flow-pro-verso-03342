@@ -398,6 +398,13 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                             try {
                                 const unified = await QuizTemplateAdapter.convertLegacyTemplate();
                                 if (unified && Array.isArray(unified.steps) && unified.steps.length >= 21) {
+                                    // Disponibilizar runtime/results globalmente para leitura rápida do preview
+                                    try {
+                                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                                        (globalThis as any).__unifiedRuntime = unified.runtime || {};
+                                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                                        (globalThis as any).__unifiedResults = unified.results || {};
+                                    } catch { /* noop */ }
                                     const initialFromDoc: EditableQuizStep[] = unified.steps
                                         .sort((a, b) => a.order - b.order)
                                         .map((s, idx) => ({
