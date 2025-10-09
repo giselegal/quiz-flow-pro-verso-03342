@@ -36,15 +36,15 @@ export function computeResult({ answers, steps = QUIZ_STEPS }: ComputeResultInpu
 
     let totalAnswers = 0;
 
-        for (const [stepId, selections] of Object.entries(answers)) {
+    for (const [stepId, selections] of Object.entries(answers)) {
         const step = (steps as any)[stepId];
         if (!step || step.type !== 'question' || !Array.isArray(selections)) continue;
         for (const rawOptId of selections) {
             if (!rawOptId) continue;
-                    // Mantemos ids internos SEM acento para consistência, convertendo caso venha acentuado
-                    const internalId = scores[rawOptId] !== undefined ? rawOptId : toUnaccentedStyleId(rawOptId);
-                    if (scores[internalId] === undefined) continue; // ignora ids não reconhecidos
-                    scores[internalId] += 1;
+            // Mantemos ids internos SEM acento para consistência, convertendo caso venha acentuado
+            const internalId = scores[rawOptId] !== undefined ? rawOptId : toUnaccentedStyleId(rawOptId);
+            if (scores[internalId] === undefined) continue; // ignora ids não reconhecidos
+            scores[internalId] += 1;
             totalAnswers += 1;
         }
     }
