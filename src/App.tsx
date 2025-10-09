@@ -372,11 +372,34 @@ function App() {
                             <ModernAdminDashboard />
                           </div>
                         </Route>
+                        <Route path="/admin/editor">
+                          <RedirectRoute to="/admin/editor/quiz-modular-pro" />
+                        </Route>
                         <Route path="/dashboard">
                           <RedirectRoute to="/admin/dashboard" />
                         </Route>
                         <Route path="/dashboard/:page">
                           {(params) => <RedirectRoute to={`/admin/${params.page}`} />}
+                        </Route>
+
+                        {/* EDITOR - manter apenas /editor/quiz-estilo-modular-pro ativo */}
+                        <Route path="/editor">
+                          <RedirectRoute to="/editor/quiz-estilo-modular-pro" />
+                        </Route>
+                        <Route path="/modular-editor">
+                          <RedirectRoute to="/editor/quiz-estilo-modular-pro" />
+                        </Route>
+                        <Route path="/editor-modular">
+                          <RedirectRoute to="/editor/quiz-estilo-modular-pro" />
+                        </Route>
+                        <Route path="/editor-pro">
+                          <RedirectRoute to="/editor/quiz-estilo-modular-pro" />
+                        </Route>
+                        <Route path="/editor-v1">
+                          <RedirectRoute to="/editor/quiz-estilo-modular-pro" />
+                        </Route>
+                        <Route path="/editor-stable">
+                          <RedirectRoute to="/editor/quiz-estilo-modular-pro" />
                         </Route>
 
                         {/* 🚀 PHASE 2 ENTERPRISE DASHBOARD */}
