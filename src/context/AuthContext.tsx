@@ -156,6 +156,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         'quiz.take': true,
         'quiz.view': true,
         'profile.edit': true,
+        // Permitir acesso básico ao editor para todos os usuários logados
+        'editor.use': true,
       },
       editor: {
         'quiz.create': true,
