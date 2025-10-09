@@ -308,6 +308,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
         runtime?: QuizFunnelSchema['runtime'];
         results?: QuizFunnelSchema['results'];
         ui?: QuizFunnelSchema['ui'];
+        settings?: QuizFunnelSchema['settings'];
     } | null>(null);
     // Theme overrides carregados do localStorage e aplicados via EditorThemeProvider
     const [themeOverrides, setThemeOverrides] = useState<Partial<DesignTokens>>({});
@@ -379,6 +380,26 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
             const sp = new URLSearchParams(typeof window !== 'undefined' && window.location ? window.location.search : '');
             const templateId = sp.get('template');
             const funnelParam = sp.get('funnel') || undefined;
+
+            // 0) Se vier um funnelId, tentar carregar rascunho existente primeiro
+            if (funnelParam && !steps?.length) {
+                (async () => {
+                    try {
+                        const draft = await quizEditorBridge.loadFunnelForEdit(funnelParam);
+                        if (draft && Array.isArray(draft.steps) && draft.steps.length > 0) {
+                            setSteps(draft.steps as any);
+                            setSelectedStepId(draft.steps[0]?.id || '');
+                            setFunnelId(draft.id || funnelParam);
+                            const { runtime, results, ui, settings } = (draft as any);
+                            setUnifiedConfig({ runtime, results, ui, settings });
+                            setIsLoading(false);
+                            return; // sucesso – não continuar fallback
+                        }
+                    } catch (e) {
+                        console.warn('Falha ao carregar rascunho do funil, seguindo para fallback de template', e);
+                    }
+                })();
+            }
             if (templateId) {
                 if (!steps || steps.length === 0) {
                     if (templateId === 'fashionStyle21PtBR') {
@@ -406,7 +427,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                                 const unified = await QuizTemplateAdapter.convertLegacyTemplate();
                                 if (unified && Array.isArray(unified.steps) && unified.steps.length >= 21) {
                                     // Guardar em estado local para consumo direto
-                                    setUnifiedConfig({ runtime: unified.runtime, results: unified.results, ui: unified.ui });
+                                    setUnifiedConfig({ runtime: unified.runtime, results: unified.results, ui: unified.ui, settings: unified.settings as any });
                                     const initialFromDoc: EditableQuizStep[] = unified.steps
                                         .sort((a, b) => a.order - b.order)
                                         .map((s, idx) => ({
