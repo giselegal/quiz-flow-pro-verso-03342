@@ -119,6 +119,10 @@ function App() {
                             )}
                           </div>
                         </Route>
+                        {/* Redirect /home → / para compatibilidade com utilitários que referenciam /home */}
+                        <Route path="/home">
+                          <RedirectRoute to="/" />
+                        </Route>
 
                         {/* 🎯 EDITOR ÚNICO OFICIAL (/editor) → QuizModularProductionEditor */}
                         <Route path="/editor">
