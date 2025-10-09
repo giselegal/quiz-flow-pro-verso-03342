@@ -63,7 +63,7 @@ import { useToast } from '@/hooks/use-toast';
 import { replacePlaceholders } from '@/utils/placeholderParser';
 import { useLiveScoring } from '@/hooks/useLiveScoring';
 import { HistoryManager } from '@/utils/historyManager';
-import { snippetsManager, BlockSnippet } from '@/utils/snippetsManager';
+import { snippetsManager, BlockSnippet as ExternalBlockSnippet } from '@/utils/snippetsManager';
 import ThemeEditorPanel from './components/ThemeEditorPanel';
 import { EditorThemeProvider, DesignTokens } from '@/theme/editorTheme';
 import { useValidation } from './hooks/useValidation';
@@ -85,6 +85,7 @@ import StepNavigator from './components/StepNavigator';
 import ComponentLibraryPanel from './components/ComponentLibraryPanel';
 import CanvasArea from './components/CanvasArea';
 import BlockRow from './components/BlockRow';
+import { BlockComponent, EditableQuizStep, BlockSnippet } from './types';
 import PropertiesPanel from './components/PropertiesPanel';
 import DuplicateBlockDialog from './components/DuplicateBlockDialog';
 
@@ -92,34 +93,7 @@ import DuplicateBlockDialog from './components/DuplicateBlockDialog';
 const StyleResultCard = React.lazy(() => import('@/components/editor/quiz/components/StyleResultCard').then(m => ({ default: m.StyleResultCard })));
 const OfferMap = React.lazy(() => import('@/components/editor/quiz/components/OfferMap').then(m => ({ default: m.OfferMap })));
 
-// Tipos
-interface BlockComponent {
-    id: string;
-    type: string;
-    order: number;
-    parentId?: string | null; // suporte a aninhamento
-    properties: Record<string, any>;
-    content: Record<string, any>;
-}
-
-// Tipagem mais estrita alinhada aos tipos de produção
-type StepType = 'intro' | 'question' | 'strategic-question' | 'transition' | 'transition-result' | 'result' | 'offer';
-
-interface EditableQuizStep {
-    id: string;
-    type: StepType; // restringe para manter compatibilidade com QuizFunnelData
-    order: number;
-    blocks: BlockComponent[];
-    title?: string;
-    questionText?: string;
-    options?: any[];
-    requiredSelections?: number;
-    image?: string;
-    buttonText?: string;
-    nextStep?: string;
-    offerMap?: Record<string, any>;
-    [key: string]: any;
-}
+// Tipos centrais importados de ./types (removidas definições locais duplicadas)
 
 interface ComponentLibraryItem {
     /** Identificador único do item na paleta */
