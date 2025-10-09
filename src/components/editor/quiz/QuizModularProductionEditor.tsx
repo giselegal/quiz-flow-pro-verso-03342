@@ -820,142 +820,20 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
     const handleDragEnd = (event: any) => {
         const { active, over } = event;
         if (!selectedStepId) { setActiveId(null); return; }
-        if (!over) {
-            // Caso raro: soltar fora de alvo conhecido -> apenas reset
-            setActiveId(null);
-            setHoverContainerId(null);
-            return;
-        }
-        // Drop no final explícito
+        if (!over) { setActiveId(null); setHoverContainerId(null); return; }
         const droppedAtEnd = over.id === 'canvas-end';
-        if (active.id === over.id && !droppedAtEnd) { setActiveId(null); setHoverContainerId(null); return; }
         const targetContainerId = !droppedAtEnd && String(over.id).startsWith('container-slot:') ? String(over.id).slice('container-slot:'.length) : null;
-        // Inserção de novo bloco vindo da biblioteca (id inicia com lib:tipo)
+        // Novo bloco da paleta
         if (String(active.id).startsWith('lib:')) {
             const componentType = String(active.id).slice(4);
-            setSteps(prev => {
-                const next = prev.map(step => {
-                    if (step.id !== selectedStepId) return step;
-                    const blocks = [...step.blocks];
-                    const component = COMPONENT_LIBRARY.find(c => c.type === componentType);
-                    if (!component) return step;
-                    const newBlock: BlockComponent = {
-                        id: `block-${Date.now()}`,
-                        type: component.blockType || component.type,
-                        order: 0,
-                        parentId: targetContainerId || null,
-                        properties: { ...component.defaultProps },
-                        content: {}
-                    };
-                    if (['heading', 'text', 'button'].includes(newBlock.type) && (newBlock.properties as any).text) {
-                        newBlock.content.text = (newBlock.properties as any).text;
-                        delete (newBlock.properties as any).text;
-                    }
-                    if (component.defaultContent) {
-                        newBlock.content = { ...component.defaultContent, ...newBlock.content };
-                    }
-                    // Determinar posição de inserção (antes do bloco alvo 'over') se existir, senão append
-                    if (targetContainerId) {
-                        // inserir como último filho
-                        const siblings = blocks.filter(b => b.parentId === targetContainerId).sort((a, b) => a.order - b.order);
-                        newBlock.order = siblings.length;
-                    } else {
-                        const rootBlocks = blocks.filter(b => !b.parentId).sort((a, b) => a.order - b.order);
-                        let insertOrder = rootBlocks.length; // default append
-                        if (!droppedAtEnd && !targetContainerId) {
-                            const overIndex = blocks.findIndex(b => b.id === over.id);
-                            if (overIndex !== -1) {
-                                const overBlock = blocks[overIndex];
-                                if (!overBlock.parentId) {
-                                    insertOrder = overBlock.order; // inserir antes
-                                    rootBlocks.filter(b => b.order >= insertOrder).forEach(b => { b.order += 1; });
-                                }
-                            }
-                        }
-                        if (droppedAtEnd) {
-                            insertOrder = rootBlocks.length;
-                        }
-                        newBlock.order = insertOrder;
-                    }
-                    blocks.push(newBlock);
-                    return { ...step, blocks: blocks.map(b => ({ ...b })) };
-                });
-                pushHistory(next);
-                setIsDirty(true);
-                return next;
-            });
-            setActiveId(null);
-            setHoverContainerId(null);
-            return;
+            addBlockToStep(selectedStepId, componentType);
+            setActiveId(null); setHoverContainerId(null); return;
         }
-        setSteps(prev => {
-            let changed = false;
-            const next = prev.map(step => {
-                if (step.id !== selectedStepId) return step;
-                const blocks = [...step.blocks];
-                const activeBlock = blocks.find(b => b.id === active.id);
-                const overBlock = blocks.find(b => b.id === over.id);
-                // Se soltou em slot de container
-                if (targetContainerId && activeBlock) {
-                    const fromParent = activeBlock.parentId || null;
-                    const toParent = targetContainerId;
-                    if (fromParent !== toParent) {
-                        // Reindexa antigos irmãos de origem
-                        const oldSibs = blocks.filter(b => (b.parentId || null) === fromParent && b.id !== activeBlock.id).sort((a, b) => a.order - b.order);
-                        oldSibs.forEach((b, i) => { b.order = i; });
-                        const newSibs = blocks.filter(b => b.parentId === toParent).sort((a, b) => a.order - b.order);
-                        activeBlock.parentId = toParent;
-                        activeBlock.order = newSibs.length;
-                        changed = true;
-                    }
-                    return { ...step, blocks: blocks.map(b => ({ ...b })) };
-                }
-                if (!activeBlock || !overBlock) return step;
-
-                const isDescendant = (parentId: string, potentialChildId: string): boolean => {
-                    const node = blocks.find(b => b.id === potentialChildId);
-                    if (!node) return false;
-                    if (node.parentId === parentId) return true;
-                    if (!node.parentId) return false;
-                    return isDescendant(parentId, node.parentId);
-                };
-                if (isDescendant(activeBlock.id, overBlock.id)) return step; // impede ciclo
-
-                let targetParentId: string | null;
-                if (overBlock.type === 'container' && activeBlock.id !== overBlock.id) {
-                    targetParentId = overBlock.id;
-                } else {
-                    targetParentId = overBlock.parentId || null;
-                }
-
-                const fromParent = activeBlock.parentId || null;
-                const toParent = targetParentId;
-                const siblings = (pid: string | null) => blocks.filter(b => (b.parentId || null) === pid).sort((a, b) => a.order - b.order);
-
-                if (fromParent !== toParent) {
-                    const oldSibs = siblings(fromParent).filter(b => b.id !== activeBlock.id);
-                    oldSibs.forEach((b, i) => { b.order = i; });
-                    const newSibs = siblings(toParent);
-                    activeBlock.parentId = toParent || undefined;
-                    activeBlock.order = newSibs.length;
-                    changed = true;
-                } else {
-                    const sibs = siblings(fromParent);
-                    const oldIndex = sibs.findIndex(b => b.id === activeBlock.id);
-                    const newIndex = sibs.findIndex(b => b.id === overBlock.id);
-                    if (oldIndex !== -1 && newIndex !== -1 && oldIndex !== newIndex) {
-                        const reordered = arrayMove(sibs, oldIndex, newIndex);
-                        reordered.forEach((b, i) => { b.order = i; });
-                        changed = true;
-                    }
-                }
-                return { ...step, blocks: blocks.map(b => ({ ...b })) };
-            });
-            if (changed) { pushHistory(next); setIsDirty(true); }
-            setActiveId(null);
-            setHoverContainerId(null);
-            return next;
-        });
+        if (active.id === over.id && !targetContainerId && !droppedAtEnd) { setActiveId(null); setHoverContainerId(null); return; }
+        // Reordenação / movimento
+        const overId = String(over.id).startsWith('container-slot:') ? null : over.id;
+        reorderOrMove(selectedStepId, active.id, targetContainerId, overId);
+        setActiveId(null); setHoverContainerId(null);
     };
 
     const handleUndo = () => applyHistorySnapshot(undo());
