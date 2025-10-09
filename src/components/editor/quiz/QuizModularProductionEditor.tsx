@@ -866,7 +866,369 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
             previewCacheRef.current.set(id, { key, node });
             return node;
         }
-        node = <span className="text-xs italic text-slate-400">(Pré-visualização não suportada)</span>;
+        // Quiz Intro Header
+        if (type === 'quiz-intro-header') {
+            const showLogo = properties?.showLogo !== false;
+            const enableProgressBar = properties?.enableProgressBar ?? false;
+            const showBackButton = properties?.showBackButton ?? false;
+            node = (
+                <div className="w-full bg-white rounded-lg p-4 space-y-3 border shadow-sm">
+                    <div className="flex items-center justify-between">
+                        {showLogo && (
+                            <div className="flex-shrink-0">
+                                <img
+                                    src={properties?.logoUrl || BRAND_LOGO_URL}
+                                    alt={properties?.logoAlt || 'Logo'}
+                                    className="h-10 object-contain"
+                                />
+                            </div>
+                        )}
+                        {enableProgressBar && (
+                            <div className="flex-1 ml-4">
+                                <div className="w-full bg-gray-200 rounded-full h-1">
+                                    <div className="bg-[#B89B7A] h-1 rounded-full" style={{ width: '0%' }} />
+                                </div>
+                            </div>
+                        )}
+                        {showBackButton && (
+                            <button type="button" className="ml-2 text-gray-400 hover:text-gray-600 text-sm">
+                                ← Voltar
+                            </button>
+                        )}
+                    </div>
+                    <div className="text-[10px] text-slate-400 italic">Quiz Header</div>
+                </div>
+            );
+            previewCacheRef.current.set(id, { key, node });
+            return node;
+        }
+        // Options Grid (grade de opções similar a quiz-options mas com layout grid específico)
+        if (type === 'options-grid') {
+            const options = content.options || [];
+            const cols = properties?.columns || 2;
+            node = (
+                <div className="space-y-2">
+                    <div className={cn('grid gap-3', cols === 2 ? 'grid-cols-2' : cols === 3 ? 'grid-cols-3' : 'grid-cols-1')}>
+                        {options.map((opt: any, idx: number) => (
+                            <div key={opt.id || idx} className="border rounded-lg p-3 bg-white hover:border-blue-400 transition-colors cursor-pointer">
+                                {opt.image && (
+                                    <img src={opt.image} alt={opt.label} className="w-full h-24 object-cover rounded mb-2" />
+                                )}
+                                <div className="text-sm font-medium">{opt.label || `Opção ${idx + 1}`}</div>
+                            </div>
+                        ))}
+                    </div>
+                    <div className="text-[10px] text-slate-400 italic">Options Grid ({options.length} opções)</div>
+                </div>
+            );
+            previewCacheRef.current.set(id, { key, node });
+            return node;
+        }
+        // Text Inline (texto inline com variações de estilo)
+        if (type === 'text-inline') {
+            const align = properties?.textAlign || 'left';
+            const size = properties?.fontSize || 'base';
+            const weight = properties?.fontWeight || 'normal';
+            const sizeClass = size === 'sm' ? 'text-sm' : size === 'lg' ? 'text-lg' : size === 'xl' ? 'text-xl' : 'text-base';
+            const weightClass = weight === 'bold' ? 'font-bold' : weight === 'semibold' ? 'font-semibold' : 'font-normal';
+            node = (
+                <p className={cn('leading-relaxed text-slate-700', sizeClass, weightClass)} style={{ textAlign: align }}>
+                    {replacePlaceholders(content.text || 'Texto inline', placeholderContext)}
+                </p>
+            );
+            previewCacheRef.current.set(id, { key, node });
+            return node;
+        }
+        // Button Inline (botão inline com estilos específicos)
+        if (type === 'button-inline') {
+            const variant = properties?.variant || 'primary';
+            const bgColor = properties?.backgroundColor || '#B89B7A';
+            const textColor = properties?.textColor || '#FFFFFF';
+            node = (
+                <button
+                    type="button"
+                    className="inline-flex items-center justify-center px-6 py-3 rounded-md text-sm font-medium shadow-sm transition-colors"
+                    style={{ backgroundColor: bgColor, color: textColor }}
+                >
+                    {replacePlaceholders(content.text || content.label || 'Botão', placeholderContext)}
+                </button>
+            );
+            previewCacheRef.current.set(id, { key, node });
+            return node;
+        }
+        // Decorative Bar (barra decorativa)
+        if (type === 'decorative-bar') {
+            const height = properties?.height || '4px';
+            const bgColor = properties?.backgroundColor || '#D4AF37';
+            node = (
+                <div className="w-full flex justify-center my-4">
+                    <div className="w-24 rounded-full" style={{ height, backgroundColor: bgColor }} />
+                </div>
+            );
+            previewCacheRef.current.set(id, { key, node });
+            return node;
+        }
+        // Form Container (container de formulário)
+        if (type === 'form-container') {
+            const childBlocks = children.filter(c => c.type === 'form-input' || c.type === 'button-inline');
+            node = (
+                <div className="border rounded-lg p-4 bg-gradient-to-br from-white to-slate-50 space-y-3">
+                    <div className="text-sm font-medium text-slate-700 mb-2">{content.title || 'Formulário'}</div>
+                    {childBlocks.length === 0 && (
+                        <div className="text-xs text-slate-400 italic">Adicione campos ao formulário</div>
+                    )}
+                    {childBlocks.map(child => (
+                        <div key={child.id}>{renderBlockPreview(child, all)}</div>
+                    ))}
+                </div>
+            );
+            previewCacheRef.current.set(id, { key, node });
+            return node;
+        }
+        // Legal Notice (aviso legal)
+        if (type === 'legal-notice') {
+            node = (
+                <div className="text-xs text-slate-500 text-center leading-relaxed">
+                    {replacePlaceholders(content.text || 'Aviso legal', placeholderContext)}
+                </div>
+            );
+            previewCacheRef.current.set(id, { key, node });
+            return node;
+        }
+        // Quiz Offer CTA Inline (CTA de oferta do quiz)
+        if (type === 'quiz-offer-cta-inline') {
+            node = (
+                <div className="bg-gradient-to-r from-[#B89B7A] to-[#D4AF37] text-white rounded-lg p-6 shadow-lg">
+                    <h3 className="text-xl font-bold mb-2">{content.title || 'Oferta Especial'}</h3>
+                    <p className="text-sm mb-4 opacity-90">{content.description || 'Aproveite esta oportunidade única'}</p>
+                    <button type="button" className="bg-white text-[#B89B7A] px-6 py-3 rounded-md font-semibold hover:bg-gray-100 transition-colors">
+                        {content.buttonText || 'Quero Aproveitar'}
+                    </button>
+                </div>
+            );
+            previewCacheRef.current.set(id, { key, node });
+            return node;
+        }
+        // Testimonials (depoimentos)
+        if (type === 'testimonials') {
+            const testimonials = content.testimonials || [];
+            node = (
+                <div className="space-y-4">
+                    {testimonials.map((t: any, idx: number) => (
+                        <div key={idx} className="bg-white border rounded-lg p-4 shadow-sm">
+                            <p className="text-sm italic text-slate-600 mb-2">"{t.quote || 'Depoimento'}"</p>
+                            <div className="flex items-center gap-2">
+                                {t.image && <img src={t.image} alt={t.author} className="w-10 h-10 rounded-full object-cover" />}
+                                <div>
+                                    <div className="text-sm font-medium">{t.author || 'Cliente'}</div>
+                                    {t.role && <div className="text-xs text-slate-500">{t.role}</div>}
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+                    {testimonials.length === 0 && (
+                        <div className="text-xs text-slate-400 italic">Nenhum depoimento adicionado</div>
+                    )}
+                </div>
+            );
+            previewCacheRef.current.set(id, { key, node });
+            return node;
+        }
+        // Result Header Inline (cabeçalho de resultado)
+        if (type === 'result-header-inline') {
+            node = (
+                <div className="text-center space-y-2 py-4">
+                    <h2 className="text-2xl font-bold text-slate-800">
+                        {replacePlaceholders(content.title || 'Seu Resultado:', placeholderContext)}
+                    </h2>
+                    {content.subtitle && (
+                        <p className="text-sm text-slate-600">{replacePlaceholders(content.subtitle, placeholderContext)}</p>
+                    )}
+                </div>
+            );
+            previewCacheRef.current.set(id, { key, node });
+            return node;
+        }
+        // Style Card Inline (cartão de estilo)
+        if (type === 'style-card-inline') {
+            node = (
+                <div className="border rounded-lg p-6 bg-gradient-to-br from-white to-slate-50 shadow-sm">
+                    <h3 className="text-lg font-bold mb-2">{content.styleName || 'Seu Estilo'}</h3>
+                    {content.image && (
+                        <img src={content.image} alt={content.styleName} className="w-full h-48 object-cover rounded-lg mb-3" />
+                    )}
+                    <p className="text-sm text-slate-600">{content.description || 'Descrição do estilo'}</p>
+                </div>
+            );
+            previewCacheRef.current.set(id, { key, node });
+            return node;
+        }
+        // Secondary Styles (estilos secundários)
+        if (type === 'secondary-styles') {
+            const styles = content.styles || [];
+            node = (
+                <div className="space-y-2">
+                    <div className="text-sm font-medium text-slate-700 mb-2">Estilos Secundários:</div>
+                    <div className="grid grid-cols-2 gap-2">
+                        {styles.map((style: any, idx: number) => (
+                            <div key={idx} className="border rounded-lg p-3 bg-white text-center">
+                                <div className="text-sm font-medium">{style.name || `Estilo ${idx + 1}`}</div>
+                                {style.score && <div className="text-xs text-slate-500">{style.score}%</div>}
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            );
+            previewCacheRef.current.set(id, { key, node });
+            return node;
+        }
+        // Urgency Timer Inline (timer de urgência)
+        if (type === 'urgency-timer-inline') {
+            node = (
+                <div className="bg-red-50 border border-red-200 rounded-lg p-4 text-center">
+                    <div className="text-sm font-medium text-red-700 mb-2">⏰ Oferta Expira em:</div>
+                    <div className="text-2xl font-bold text-red-600 font-mono">00:15:00</div>
+                </div>
+            );
+            previewCacheRef.current.set(id, { key, node });
+            return node;
+        }
+        // Guarantee (garantia)
+        if (type === 'guarantee') {
+            node = (
+                <div className="border-2 border-green-200 bg-green-50 rounded-lg p-4 text-center">
+                    <div className="text-lg font-bold text-green-700 mb-2">✓ {content.title || 'Garantia'}</div>
+                    <p className="text-sm text-green-600">{content.description || 'Satisfação garantida'}</p>
+                </div>
+            );
+            previewCacheRef.current.set(id, { key, node });
+            return node;
+        }
+        // Bonus (bônus)
+        if (type === 'bonus') {
+            node = (
+                <div className="border-2 border-yellow-300 bg-yellow-50 rounded-lg p-4">
+                    <div className="text-lg font-bold text-yellow-700 mb-2">🎁 {content.title || 'Bônus Exclusivo'}</div>
+                    <p className="text-sm text-yellow-600">{content.description || 'Aproveite este bônus'}</p>
+                </div>
+            );
+            previewCacheRef.current.set(id, { key, node });
+            return node;
+        }
+        // Benefits (benefícios)
+        if (type === 'benefits') {
+            const benefits = content.benefits || [];
+            node = (
+                <div className="space-y-2">
+                    {benefits.map((benefit: any, idx: number) => (
+                        <div key={idx} className="flex items-start gap-2">
+                            <span className="text-green-500 font-bold">✓</span>
+                            <span className="text-sm text-slate-700">{benefit.text || benefit}</span>
+                        </div>
+                    ))}
+                    {benefits.length === 0 && (
+                        <div className="text-xs text-slate-400 italic">Nenhum benefício adicionado</div>
+                    )}
+                </div>
+            );
+            previewCacheRef.current.set(id, { key, node });
+            return node;
+        }
+        // Secure Purchase (compra segura)
+        if (type === 'secure-purchase') {
+            node = (
+                <div className="flex items-center justify-center gap-2 text-sm text-slate-600">
+                    <span>🔒</span>
+                    <span>{content.text || 'Compra 100% Segura'}</span>
+                </div>
+            );
+            previewCacheRef.current.set(id, { key, node });
+            return node;
+        }
+        // Value Anchoring (ancoragem de valor)
+        if (type === 'value-anchoring') {
+            node = (
+                <div className="text-center space-y-2">
+                    <div className="text-sm text-slate-500 line-through">{content.oldPrice || 'R$ 297,00'}</div>
+                    <div className="text-3xl font-bold text-green-600">{content.newPrice || 'R$ 97,00'}</div>
+                    <div className="text-sm text-red-600 font-medium">{content.discount || 'Economize 67%'}</div>
+                </div>
+            );
+            previewCacheRef.current.set(id, { key, node });
+            return node;
+        }
+        // Before After Inline (antes e depois)
+        if (type === 'before-after-inline') {
+            node = (
+                <div className="grid grid-cols-2 gap-4">
+                    <div className="text-center">
+                        <div className="text-sm font-medium text-slate-600 mb-2">Antes</div>
+                        {content.beforeImage && <img src={content.beforeImage} alt="Antes" className="w-full rounded-lg" />}
+                        <p className="text-xs text-slate-500 mt-2">{content.beforeText || 'Situação anterior'}</p>
+                    </div>
+                    <div className="text-center">
+                        <div className="text-sm font-medium text-green-600 mb-2">Depois</div>
+                        {content.afterImage && <img src={content.afterImage} alt="Depois" className="w-full rounded-lg" />}
+                        <p className="text-xs text-slate-700 mt-2">{content.afterText || 'Resultado alcançado'}</p>
+                    </div>
+                </div>
+            );
+            previewCacheRef.current.set(id, { key, node });
+            return node;
+        }
+        // Mentor Section Inline (seção de mentor)
+        if (type === 'mentor-section-inline') {
+            node = (
+                <div className="flex items-start gap-4 bg-slate-50 border rounded-lg p-4">
+                    {content.mentorImage && (
+                        <img src={content.mentorImage} alt={content.mentorName} className="w-20 h-20 rounded-full object-cover flex-shrink-0" />
+                    )}
+                    <div className="flex-1">
+                        <div className="text-sm font-bold text-slate-800 mb-1">{content.mentorName || 'Mentor'}</div>
+                        <p className="text-xs text-slate-600">{content.mentorBio || 'Descrição do mentor'}</p>
+                    </div>
+                </div>
+            );
+            previewCacheRef.current.set(id, { key, node });
+            return node;
+        }
+        // Fashion AI Generator (gerador de IA de moda - placeholder)
+        if (type === 'fashion-ai-generator') {
+            node = (
+                <div className="border-2 border-dashed border-purple-300 bg-purple-50 rounded-lg p-6 text-center">
+                    <div className="text-lg font-bold text-purple-700 mb-2">🤖 Fashion AI Generator</div>
+                    <p className="text-sm text-purple-600">Componente interativo de IA</p>
+                </div>
+            );
+            previewCacheRef.current.set(id, { key, node });
+            return node;
+        }
+        // Connected Template Wrapper (wrapper de template conectado - passa children)
+        if (type === 'connected-template-wrapper') {
+            node = (
+                <div className="border rounded-lg p-4 bg-slate-50">
+                    <div className="text-xs text-slate-400 italic mb-2">Connected Template Wrapper</div>
+                    {children.length > 0 ? (
+                        <div className="space-y-2">
+                            {children.map(child => (
+                                <div key={child.id}>{renderBlockPreview(child, all)}</div>
+                            ))}
+                        </div>
+                    ) : (
+                        <div className="text-xs text-slate-400 italic">Adicione blocos internos</div>
+                    )}
+                </div>
+            );
+            previewCacheRef.current.set(id, { key, node });
+            return node;
+        }
+        // Fallback para tipos não suportados
+        node = (
+            <div className="border border-dashed border-amber-300 bg-amber-50 rounded p-3 text-center">
+                <span className="text-xs italic text-amber-700">Tipo: {type}</span>
+                <div className="text-[10px] text-amber-600 mt-1">(Preview em desenvolvimento)</div>
+            </div>
+        );
         previewCacheRef.current.set(id, { key, node });
         return node;
     };
