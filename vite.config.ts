@@ -30,6 +30,7 @@ export default defineConfig({
     },
     fs: {
       allow: [path.resolve(__dirname), path.resolve(__dirname, '..'), process.cwd()],
+      deny: ['**/supabase/functions/**'],
     },
     headers: {
       'Access-Control-Allow-Origin': '*',
@@ -55,6 +56,11 @@ export default defineConfig({
     outDir: 'dist',
     rollupOptions: {
       input: { main: path.resolve(__dirname, 'index.html') },
+      external: [
+        /^supabase\/functions\/.*/,
+        /^https:\/\/deno\.land\/.*/,
+        /^https:\/\/esm\.sh\/.*/
+      ],
     },
   },
   optimizeDeps: {

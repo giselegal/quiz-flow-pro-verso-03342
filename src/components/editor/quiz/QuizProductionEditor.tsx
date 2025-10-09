@@ -30,7 +30,7 @@ import { useToast } from '@/hooks/use-toast';
 
 interface EditableQuizStep {
     id: string;
-    type: string;
+    type: 'intro' | 'question' | 'strategic-question' | 'transition' | 'transition-result' | 'result' | 'offer';
     order: number;
     [key: string]: any;
 }

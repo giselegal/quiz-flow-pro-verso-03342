@@ -468,7 +468,7 @@ export function convertBlocksToStep(
             case 'badge':
                 if (block.id.includes('question-number')) {
                     const match = block.content.text.match(/Pergunta (\d+)/);
-                    if (match) step.questionNumber = parseInt(match[1], 10);
+                    if (match) step.questionNumber = match[1]; // manter como string
                 }
                 break;
 

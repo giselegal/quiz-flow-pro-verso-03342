@@ -1,4 +1,4 @@
-import { ReactNode, lazy } from 'react';
+import { ReactNode, lazy, createElement } from 'react';
 import { Type, Image as ImageIcon, MousePointer, List, Layout } from 'lucide-react';
 import { getBlockSchema } from './blockSchema';
 
@@ -26,12 +26,20 @@ function deriveDefaults(type: string): Record<string, any> {
     return defaults;
 }
 
+// Constantes de ícones
+const textIcon = createElement(Type, { className: "w-4 h-4" });
+const headingIcon = createElement(Type, { className: "w-5 h-5" });
+const imageIcon = createElement(ImageIcon, { className: "w-4 h-4" });
+const buttonIcon = createElement(MousePointer, { className: "w-4 h-4" });
+const listIcon = createElement(List, { className: "w-4 h-4" });
+const layoutIcon = createElement(Layout, { className: "w-4 h-4" });
+
 export const blockRegistry: BlockRegistryItem[] = [
     {
         type: 'text',
         label: 'Texto',
-        icon: <Type className="w-4 h-4" />,
-    category: 'content',
+        icon: textIcon,
+        category: 'content',
         defaultProps: deriveDefaults('text'),
         schemaKeys: getBlockSchema('text')?.properties.map(p => p.key) || [],
         renderer: LazyNotImplemented
@@ -39,8 +47,8 @@ export const blockRegistry: BlockRegistryItem[] = [
     {
         type: 'heading',
         label: 'Título',
-        icon: <Type className="w-5 h-5" />,
-    category: 'content',
+        icon: headingIcon,
+        category: 'content',
         defaultProps: deriveDefaults('heading'),
         schemaKeys: getBlockSchema('heading')?.properties.map(p => p.key) || [],
         renderer: LazyNotImplemented
@@ -48,8 +56,8 @@ export const blockRegistry: BlockRegistryItem[] = [
     {
         type: 'image',
         label: 'Imagem',
-        icon: <ImageIcon className="w-4 h-4" />,
-    category: 'media',
+        icon: imageIcon,
+        category: 'media',
         defaultProps: deriveDefaults('image'),
         schemaKeys: getBlockSchema('image')?.properties.map(p => p.key) || [],
         renderer: LazyNotImplemented
@@ -57,8 +65,8 @@ export const blockRegistry: BlockRegistryItem[] = [
     {
         type: 'button',
         label: 'Botão',
-        icon: <MousePointer className="w-4 h-4" />,
-    category: 'interactive',
+        icon: buttonIcon,
+        category: 'interactive',
         defaultProps: deriveDefaults('button'),
         schemaKeys: getBlockSchema('button')?.properties.map(p => p.key) || [],
         renderer: LazyNotImplemented
@@ -66,8 +74,8 @@ export const blockRegistry: BlockRegistryItem[] = [
     {
         type: 'quiz-options',
         label: 'Opções de Quiz',
-        icon: <List className="w-4 h-4" />,
-    category: 'interactive',
+        icon: listIcon,
+        category: 'interactive',
         defaultProps: deriveDefaults('quiz-options'),
         schemaKeys: getBlockSchema('quiz-options')?.properties.map(p => p.key) || [],
         renderer: LazyNotImplemented
@@ -75,8 +83,8 @@ export const blockRegistry: BlockRegistryItem[] = [
     {
         type: 'form-input',
         label: 'Campo de Texto',
-        icon: <Type className="w-4 h-4" />,
-    category: 'interactive',
+        icon: textIcon,
+        category: 'interactive',
         defaultProps: deriveDefaults('form-input'),
         schemaKeys: getBlockSchema('form-input')?.properties.map(p => p.key) || [],
         renderer: LazyNotImplemented
@@ -84,8 +92,8 @@ export const blockRegistry: BlockRegistryItem[] = [
     {
         type: 'container',
         label: 'Container',
-        icon: <Layout className="w-4 h-4" />,
-    category: 'layout',
+        icon: layoutIcon,
+        category: 'layout',
         defaultProps: deriveDefaults('container'),
         schemaKeys: getBlockSchema('container')?.properties.map(p => p.key) || [],
         renderer: LazyNotImplemented
