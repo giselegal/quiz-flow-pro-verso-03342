@@ -707,9 +707,9 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
         // Em execuções subsequentes, poderemos armazenar em localStorage/session ou contexto.
         const defaults = { enableAutoAdvance: true, autoAdvanceDelayMs: 800 };
         try {
-            // Ler via provider se disponível
+            // Preferir estado local quando existir; fallback para globais
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            const rt = (globalThis as any).__unifiedRuntime as { navigation?: { autoAdvance?: { enable?: boolean; delayMs?: number } } } | undefined;
+            const rt = (unifiedConfig?.runtime as any) || (globalThis as any).__unifiedRuntime as { navigation?: { autoAdvance?: { enable?: boolean; delayMs?: number } } } | undefined;
             const enable = rt?.navigation?.autoAdvance?.enable;
             const delay = rt?.navigation?.autoAdvance?.delayMs;
             return {
@@ -719,7 +719,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
         } catch {
             return defaults;
         }
-    }, []);
+    }, [unifiedConfig]);
 
     // Converte seleções locais (por bloco) em respostas por etapa, compatíveis com o runtime de produção
     const previewAnswers = useMemo<Record<string, string[]>>(() => {
@@ -743,17 +743,12 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
     // Cálculo de resultado real (usa computeResult da produção)
     const previewResult = useMemo(() => {
         try {
-            // tentar ler scoring do provider
-            let scoring: any;
-            try {
-                const cfg = useUnifiedConfig();
-                scoring = cfg.runtime?.scoring;
-            } catch { /* hook fora de provider neste escopo — caímos no fallback */ }
+            const scoring = (unifiedConfig?.runtime as any)?.scoring;
             return computeResult({ answers: previewAnswers, scoring });
         } catch {
             return null;
         }
-    }, [previewAnswers]);
+    }, [previewAnswers, unifiedConfig]);
 
     const toggleQuizOption = useCallback((blockId: string, optionId: string, multi = true, max = 1) => {
         setQuizSelections(prev => {
@@ -801,20 +796,11 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
         ].join('|');
         const cached = previewCacheRef.current.get(id);
         if (cached && cached.key === key) return cached.node;
-        // Dados unificados via provider (fallback para globais se necessário)
-        let stylesMap: Record<string, any> = {};
-        let offersMap: Record<string, any> = {};
-        try {
-            const cfg = useUnifiedConfig();
-            stylesMap = (cfg.results?.styles as any) || {};
-            offersMap = (cfg.results?.offersMap as any) || {};
-        } catch {
-            // fallback para globais enquanto provider não está disponível neste escopo
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            const unifiedResults: any = (globalThis as any).__unifiedResults || {};
-            stylesMap = unifiedResults.styles || {};
-            offersMap = unifiedResults.offersMap || {};
-        }
+        // Dados unificados preferindo estado local; fallback para globais
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const unifiedResultsAny: any = (globalThis as any).__unifiedResults || {};
+        const stylesMap: Record<string, any> = (unifiedConfig?.results?.styles as any) || unifiedResultsAny.styles || {};
+        const offersMap: Record<string, any> = (unifiedConfig?.results?.offersMap as any) || unifiedResultsAny.offersMap || {};
         const primaryId = previewResult?.primaryStyleId;
         const primaryTitle = primaryId && stylesMap[primaryId]?.title ? stylesMap[primaryId].title : (primaryId || 'classico');
         // Contexto provisório para placeholders (será expandido com scoring dinâmico e dados reais do usuário)
