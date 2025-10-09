@@ -21,7 +21,7 @@ export const EditorAccessControl: React.FC<EditorAccessControlProps> = ({
   const { profile, hasPermission } = useAuth();
 
   // 🚧 Bypass controlado: permitir acesso anônimo quando abrindo via ?template=
-  // Útil para testes rápidos do editor sem exigir login localmente, especialmente em hosts de preview.
+  // Útil para testes rápidos do editor sem exigir login localmente ou em build preview.
   let allowAnonymousDev = false;
   try {
     const host = typeof window !== 'undefined' ? window.location.hostname : '';
@@ -30,12 +30,25 @@ export const EditorAccessControl: React.FC<EditorAccessControlProps> = ({
     const explicitAnon = sp.get('allowAnonymous') === '1' || sp.get('anon') === '1';
     // Ambientes considerados "dev-like" (local ou pré-visualização)
     const isDevEnv = (import.meta as any).env?.DEV || (import.meta as any).env?.MODE !== 'production' || process.env.NODE_ENV === 'development';
-    const isDevHost = /^(localhost|127\.0\.0\.1)$/.test(host) || /\.githubpreview\./.test(host) || /\.codespaces\./.test(host) || /stackblitz\.io|codesandbox\.io/.test(host);
-    const envFlag = (import.meta as any).env?.VITE_ENABLE_EDITOR_ANON === 'true' || (import.meta as any).env?.VITE_FORCE_EDITOR_ANON === 'true';
+    const isDevHost =
+      /^(localhost|127\.0\.0\.1)$/.test(host) ||
+      /\.githubpreview\./.test(host) ||
+      /\.codespaces\./.test(host) ||
+      /stackblitz\.io$/.test(host) ||
+      /codesandbox\.io$/.test(host) ||
+      /gitpod\.io$/.test(host);
+    const envEnable = (import.meta as any).env?.VITE_ENABLE_EDITOR_ANON === 'true' || (import.meta as any).env?.VITE_FORCE_EDITOR_ANON === 'true';
+    const envDisable = (import.meta as any).env?.VITE_DISABLE_EDITOR_ANON === 'true';
+
     // Regras:
+    // - Se desabilitado explicitamente via VITE_DISABLE_EDITOR_ANON, não aplicar bypass (a menos que explicitAnon)
     // - Sempre permitir se parâmetro explícito anon=1/allowAnonymous=1
-    // - Permitir quando há ?template= e o ambiente é dev-like OU host dev-like OU flag de ambiente ativa
-    allowAnonymousDev = !!(explicitAnon || (hasTemplateParam && (isDevEnv || isDevHost || envFlag)));
+    // - Permitir quando há ?template= (independente do ambiente), para garantir edição/visualização rápida
+    // - Manter compatibilidade: também permitir se ambiente for dev-like ou houver flag de enable
+    allowAnonymousDev = !!(
+      explicitAnon ||
+      (!envDisable && (hasTemplateParam || isDevEnv || isDevHost || envEnable))
+    );
   } catch { /* ignore */ }
 
   if (!profile && allowAnonymousDev) {

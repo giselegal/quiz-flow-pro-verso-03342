@@ -133,12 +133,13 @@ function App() {
                               // 🔓 Bypass inline adicional: se ?template= estiver presente e ambiente for dev-like, renderiza direto
                               try {
                                 const hasTemplate = typeof window !== 'undefined' && new URLSearchParams(window.location.search).has('template');
-                                const host = typeof window !== 'undefined' ? window.location.hostname : '';
-                                const isDevLike = import.meta.env.DEV || (import.meta as any).env?.MODE !== 'production' || /^(localhost|127\.0\.0\.1)$/.test(host) || /\.githubpreview\.|\.codespaces\.|stackblitz\.io|codesandbox\.io/.test(host);
-                                const allowAnonFlag = (import.meta as any).env?.VITE_ENABLE_EDITOR_ANON === 'true' || (import.meta as any).env?.VITE_FORCE_EDITOR_ANON === 'true';
-                                if (hasTemplate && (isDevLike || allowAnonFlag)) {
+                                const disableAnon = (import.meta as any).env?.VITE_DISABLE_EDITOR_ANON === 'true';
+                                if (hasTemplate && !disableAnon) {
                                   return (
                                     <div data-testid="quiz-modular-production-editor-page-anon">
+                                      <div className="px-3 py-2 text-xs text-amber-700 bg-amber-50 border border-amber-200 rounded mb-2">
+                                        Modo desenvolvedor: acesso ao editor sem login habilitado via parâmetro de template.
+                                      </div>
                                       <UnifiedCRUDProvider autoLoad={true}>
                                         <Suspense fallback={<EnhancedLoadingFallback message="Carregando editor modular..." />}>
                                           <QuizModularProductionEditor />
