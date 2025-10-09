@@ -27,11 +27,85 @@ export interface QuizFunnelSchema {
   // Estrutura do funil
   steps: FunnelStep[];
 
+  // Configurações de runtime (pontuação, navegação)
+  runtime?: RuntimeConfig;
+
+  // Conteúdos e mapas de resultado/oferta
+  results?: ResultsConfig;
+
+  // Preferências de UI/efeitos (opcional)
+  ui?: UIConfig;
+
   // Configurações de publicação
   publication: PublicationSettings;
 
   // Metadados do editor
   editorMeta: EditorMetadata;
+}
+
+// ============================================================================
+// RUNTIME CONFIG (pontuação, navegação)
+// ============================================================================
+
+export interface RuntimeConfig {
+  scoring: ScoringConfig;
+  navigation: NavigationConfig;
+}
+
+export interface ScoringConfig {
+  method: 'sum' | 'weighted' | 'majority';
+  // weights pode mapear optionId/styleId → peso numérico
+  weights?: Record<string, number>;
+  tieBreak?: 'alphabetical' | 'first';
+}
+
+export interface NavigationConfig {
+  autoAdvance: {
+    enable: boolean;
+    delayMs: number;
+    perStepOverrides?: Record<string, number>; // stepId → delayMs
+  };
+}
+
+// ============================================================================
+// RESULTADOS E OFERTAS
+// ============================================================================
+
+export interface ResultStyleContent {
+  title?: string;
+  description?: string;
+  image?: string;
+}
+
+export interface OfferContent {
+  title?: string;
+  description?: string;
+  ctaLabel?: string;
+  ctaUrl?: string;
+  image?: string;
+}
+
+export interface ResultsConfig {
+  styles?: Record<string, ResultStyleContent>; // styleId → conteúdo
+  offersMap?: Record<string, OfferContent>; // chave estratégica → oferta
+}
+
+// ============================================================================
+// UI CONFIG (efeitos/validações visuais – leve)
+// ============================================================================
+
+export interface UIConfig {
+  behavior?: {
+    selectionEffects?: {
+      enabled?: boolean;
+      highlightColor?: string;
+      pulseOnComplete?: boolean;
+    };
+    validation?: {
+      showErrorOnUnderSelection?: boolean;
+      errorCopy?: string;
+    };
+  };
 }
 
 // ============================================================================

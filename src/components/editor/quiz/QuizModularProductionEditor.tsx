@@ -682,11 +682,26 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
 
     const { scores: liveScores, topStyle } = useLiveScoring({ selections: quizSelections, scoringMap });
 
-    // Flags simples de preview (serão lidas do FunnelDocument no próximo passo)
-    const previewRuntimeFlags = useMemo(() => ({
-        enableAutoAdvance: true,
-        autoAdvanceDelayMs: 800,
-    }), []);
+    // Flags de preview: ler do documento unificado quando disponível (fallback: defaults)
+    const previewRuntimeFlags = useMemo(() => {
+        // Tentar obter runtime do adapter (caso já tenha sido carregado no mount)
+        // Observação: convertLegacyTemplate é assíncrono; como fallback usamos defaults.
+        // Em execuções subsequentes, poderemos armazenar em localStorage/session ou contexto.
+        const defaults = { enableAutoAdvance: true, autoAdvanceDelayMs: 800 };
+        try {
+            // Sem bloqueio: usar window.__unifiedRuntime se algum ponto já setou
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const rt = (globalThis as any).__unifiedRuntime as { navigation?: { autoAdvance?: { enable?: boolean; delayMs?: number } } } | undefined;
+            const enable = rt?.navigation?.autoAdvance?.enable;
+            const delay = rt?.navigation?.autoAdvance?.delayMs;
+            return {
+                enableAutoAdvance: typeof enable === 'boolean' ? enable : defaults.enableAutoAdvance,
+                autoAdvanceDelayMs: typeof delay === 'number' ? delay : defaults.autoAdvanceDelayMs,
+            };
+        } catch {
+            return defaults;
+        }
+    }, []);
 
     // Converte seleções locais (por bloco) em respostas por etapa, compatíveis com o runtime de produção
     const previewAnswers = useMemo<Record<string, string[]>>(() => {

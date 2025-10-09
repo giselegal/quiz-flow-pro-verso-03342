@@ -72,6 +72,29 @@ export class QuizTemplateAdapter {
       templateType: 'quiz-complete',
 
       settings,
+      // Runtime e conteúdos padronizados (poderão ser refinados conforme legado)
+      runtime: {
+        scoring: {
+          method: 'sum',
+          tieBreak: 'alphabetical'
+        },
+        navigation: {
+          autoAdvance: {
+            enable: true,
+            delayMs: 800
+          }
+        }
+      },
+      results: {
+        styles: {},
+        offersMap: {}
+      },
+      ui: {
+        behavior: {
+          selectionEffects: { enabled: true, highlightColor: '#B89B7A', pulseOnComplete: true },
+          validation: { showErrorOnUnderSelection: true, errorCopy: 'Selecione as opções necessárias' }
+        }
+      },
       steps,
 
       publication: {
