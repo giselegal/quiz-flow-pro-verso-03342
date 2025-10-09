@@ -1,16 +1,15 @@
-// @ts-nocheck
 /**
- * 🎨 PÁGINA DE TEMPLATES - FASE 3
- * Galeria e gerenciamento de templates de funis
+ * 🎨 PÁGINA DE TEMPLATES (Dados Reais)
+ * Usa TemplateRegistry (oficiais) + useMyTemplates (customizados)
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Input } from '@/components/ui/input';
-import { 
+import {
   Layout,
   Plus,
   Search,
@@ -22,128 +21,68 @@ import {
   Filter,
   Grid,
   List,
-  Palette,
-  Zap,
   Target,
   Users,
   TrendingUp,
-  Calendar,
-  Settings
+  Calendar
 } from 'lucide-react';
-
-// Mock service for compatibility
-const MockDataService = {
-  getRealTimeMetrics: () => Promise.resolve({}),
-  getTemplates: () => Promise.resolve([]),
-  createTemplate: () => Promise.resolve({}),
-  duplicateTemplate: () => Promise.resolve({})
-};
+import { TemplateRegistry } from '@/config/unifiedTemplatesRegistry';
+import useMyTemplates from '@/hooks/useMyTemplates';
 
 export const TemplatesPage: React.FC = () => {
-  // Estados
-  const [isLoading, setIsLoading] = useState(true);
-  const [templates, setTemplates] = useState([]);
+  const { templates: userTemplates, templatesCount: userTemplatesCount } = useMyTemplates();
+  const officialTemplates = useMemo(() => TemplateRegistry.getAll(), []);
+
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
-  
-  useEffect(() => {
-    const loadRealData = async () => {
-      try {
-        const metrics = await MockDataService.getRealTimeMetrics();
-        console.log('✅ TemplatesPage carregado com dados reais:', metrics);
-      } catch (error) {
-        console.error('❌ Erro ao carregar dados reais:', error);
-      }
-    };
-    
-    loadRealData();
-  }, []);
 
-  // Mock templates
-  const templateData = [
-    {
-      id: 'template-001',
-      name: 'Quiz de Estilo Pessoal',
-      description: 'Template completo para descoberta de estilo pessoal com 21 perguntas',
-      category: 'quiz',
-      thumbnail: '/images/templates/quiz-style.jpg',
-      isOfficial: true,
-      rating: 4.8,
-      usageCount: 1247,
-      conversionRate: 18.5,
-      createdAt: '2024-01-10',
-      author: 'Equipe Oficial',
-      tags: ['estilo', 'personalidade', 'quiz'],
-      blocks: 21,
-      difficulty: 'Fácil'
-    },
-    {
-      id: 'template-002',
-      name: 'Lead Magnet Moderno',
-      description: 'Captura de leads com design moderno e alta conversão',
-      category: 'lead-magnet',
-      thumbnail: '/images/templates/lead-magnet.jpg',
-      isOfficial: true,
-      rating: 4.6,
-      usageCount: 890,
-      conversionRate: 22.1,
-      createdAt: '2024-01-08',
-      author: 'Equipe Oficial',
-      tags: ['leads', 'conversão', 'moderno'],
-      blocks: 8,
-      difficulty: 'Fácil'
-    },
-    {
-      id: 'template-003',
-      name: 'Funil de Webinar',
-      description: 'Template completo para inscrições e acompanhamento de webinar',
-      category: 'webinar',
-      thumbnail: '/images/templates/webinar.jpg',
-      isOfficial: false,
-      rating: 4.4,
-      usageCount: 567,
-      conversionRate: 15.3,
-      createdAt: '2024-01-05',
-      author: 'Marketing Pro',
-      tags: ['webinar', 'educação', 'vendas'],
-      blocks: 15,
-      difficulty: 'Médio'
-    },
-    {
-      id: 'template-004',
-      name: 'Calculadora de ROI',
-      description: 'Ferramenta interativa para cálculo de retorno sobre investimento',
-      category: 'calculator',
-      thumbnail: '/images/templates/calculator.jpg',
-      isOfficial: false,
-      rating: 4.2,
-      usageCount: 345,
-      conversionRate: 25.8,
-      createdAt: '2024-01-03',
-      author: 'Tech Solutions',
-      tags: ['calculadora', 'roi', 'finanças'],
-      blocks: 12,
-      difficulty: 'Avançado'
-    }
-  ];
+  // Unir oficiais e customizados (prefixando IDs customizados para evitar colisão)
+  const merged = useMemo(() => {
+    return [
+      ...officialTemplates.map(t => ({
+        source: 'official' as const,
+        id: t.id,
+        name: t.name,
+        description: t.description,
+        category: t.category,
+        isOfficial: t.isOfficial,
+        usageCount: t.usageCount,
+        conversionRate: t.conversionRate,
+        tags: t.tags,
+        blocks: t.stepCount,
+        difficulty: t.stepCount <= 8 ? 'Fácil' : t.stepCount <= 15 ? 'Médio' : 'Avançado',
+        author: 'Oficial',
+      })),
+      ...userTemplates.map(t => ({
+        source: 'custom' as const,
+        id: `custom-${t.id}`,
+        name: t.name,
+        description: t.description,
+        category: t.category || 'custom',
+        isOfficial: false,
+        usageCount: t.usageCount,
+        conversionRate: '—',
+        tags: t.tags || [],
+        blocks: t.stepCount,
+        difficulty: t.stepCount <= 8 ? 'Fácil' : t.stepCount <= 15 ? 'Médio' : 'Avançado',
+        author: 'Meu Template'
+      }))
+    ];
+  }, [officialTemplates, userTemplates]);
 
-  const filteredTemplates = templateData.filter(template => {
+  const filteredTemplates = merged.filter(template => {
     const matchesSearch = template.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         template.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         template.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()));
-    
+      template.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      template.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()));
     const matchesCategory = selectedCategory === 'all' || template.category === selectedCategory;
-    
     return matchesSearch && matchesCategory;
   });
 
+  const categorySet = new Set(merged.map(t => t.category));
   const categories = [
-    { id: 'all', name: 'Todos', count: templateData.length },
-    { id: 'quiz', name: 'Quiz', count: templateData.filter(t => t.category === 'quiz').length },
-    { id: 'lead-magnet', name: 'Lead Magnet', count: templateData.filter(t => t.category === 'lead-magnet').length },
-    { id: 'webinar', name: 'Webinar', count: templateData.filter(t => t.category === 'webinar').length },
-    { id: 'calculator', name: 'Calculadora', count: templateData.filter(t => t.category === 'calculator').length }
+    { id: 'all', name: 'Todos', count: merged.length },
+    ...Array.from(categorySet).map(cat => ({ id: cat, name: cat, count: merged.filter(t => t.category === cat).length }))
   ];
 
   return (
@@ -171,9 +110,9 @@ export const TemplatesPage: React.FC = () => {
             <Layout className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-blue-600">{templateData.length}</div>
+            <div className="text-2xl font-bold text-blue-600">{merged.length}</div>
             <p className="text-xs text-muted-foreground">
-              {templateData.filter(t => t.isOfficial).length} oficiais
+              {officialTemplates.filter(t => t.isOfficial).length} oficiais · {userTemplatesCount} custom
             </p>
           </CardContent>
         </Card>
@@ -184,9 +123,9 @@ export const TemplatesPage: React.FC = () => {
             <TrendingUp className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-green-600">Quiz Style</div>
+            <div className="text-2xl font-bold text-green-600">{officialTemplates[0]?.name || '—'}</div>
             <p className="text-xs text-muted-foreground">
-              1,247 implementações
+              {officialTemplates[0]?.usageCount || 0} implementações
             </p>
           </CardContent>
         </Card>
@@ -197,9 +136,14 @@ export const TemplatesPage: React.FC = () => {
             <Target className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-purple-600">25.8%</div>
+            <div className="text-2xl font-bold text-purple-600">{
+              (() => {
+                const convTemplate = [...officialTemplates].sort((a, b) => parseFloat(b.conversionRate) - parseFloat(a.conversionRate))[0];
+                return convTemplate ? convTemplate.conversionRate : '—';
+              })()
+            }</div>
             <p className="text-xs text-muted-foreground">
-              Calculadora ROI
+              Melhor Conversão
             </p>
           </CardContent>
         </Card>
@@ -210,9 +154,9 @@ export const TemplatesPage: React.FC = () => {
             <Calendar className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-orange-600">8</div>
+            <div className="text-2xl font-bold text-orange-600">{userTemplatesCount}</div>
             <p className="text-xs text-muted-foreground">
-              +60% vs mês anterior
+              Templates criados por você
             </p>
           </CardContent>
         </Card>
@@ -230,7 +174,7 @@ export const TemplatesPage: React.FC = () => {
               className="pl-10"
             />
           </div>
-          
+
           <div className="flex items-center space-x-1 border rounded-lg p-1">
             {categories.map(category => (
               <Button
@@ -241,8 +185,8 @@ export const TemplatesPage: React.FC = () => {
                 className="relative"
               >
                 {category.name}
-                <Badge 
-                  variant="secondary" 
+                <Badge
+                  variant="secondary"
                   className="ml-2 text-xs"
                 >
                   {category.count}
@@ -257,7 +201,7 @@ export const TemplatesPage: React.FC = () => {
             <Filter className="w-4 h-4 mr-2" />
             Filtros
           </Button>
-          
+
           <div className="flex border rounded-lg p-1">
             <Button
               variant={viewMode === 'grid' ? "default" : "ghost"}
@@ -285,28 +229,28 @@ export const TemplatesPage: React.FC = () => {
               <div className="h-48 bg-gradient-to-br from-blue-100 to-purple-100 flex items-center justify-center">
                 <Layout className="w-16 h-16 text-blue-400" />
               </div>
-              
+
               {template.isOfficial && (
                 <Badge className="absolute top-2 left-2 bg-green-500 hover:bg-green-600">
                   Oficial
                 </Badge>
               )}
-              
+
               <div className="absolute top-2 right-2 flex items-center space-x-1 bg-black/50 text-white px-2 py-1 rounded text-xs">
                 <Star className="w-3 h-3 fill-yellow-400 text-yellow-400" />
                 {template.rating}
               </div>
             </div>
-            
+
             <CardHeader className="pb-3">
               <div className="flex items-start justify-between">
                 <CardTitle className="text-lg">{template.name}</CardTitle>
-                <Badge 
+                <Badge
                   variant="outline"
                   className={
                     template.difficulty === 'Fácil' ? 'border-green-200 text-green-700' :
-                    template.difficulty === 'Médio' ? 'border-yellow-200 text-yellow-700' :
-                    'border-red-200 text-red-700'
+                      template.difficulty === 'Médio' ? 'border-yellow-200 text-yellow-700' :
+                        'border-red-200 text-red-700'
                   }
                 >
                   {template.difficulty}
@@ -316,7 +260,7 @@ export const TemplatesPage: React.FC = () => {
                 {template.description}
               </p>
             </CardHeader>
-            
+
             <CardContent className="pt-0">
               <div className="space-y-3">
                 <div className="flex items-center justify-between text-sm text-muted-foreground">
@@ -329,12 +273,12 @@ export const TemplatesPage: React.FC = () => {
                     {template.conversionRate}% conversão
                   </span>
                 </div>
-                
+
                 <div className="flex items-center justify-between text-sm text-muted-foreground">
                   <span>{template.blocks} blocos</span>
                   <span>Por {template.author}</span>
                 </div>
-                
+
                 <div className="flex flex-wrap gap-1">
                   {template.tags.map(tag => (
                     <Badge key={tag} variant="secondary" className="text-xs">
@@ -342,7 +286,7 @@ export const TemplatesPage: React.FC = () => {
                     </Badge>
                   ))}
                 </div>
-                
+
                 <div className="flex items-center space-x-2 pt-2">
                   <Button className="flex-1" size="sm">
                     <Download className="w-4 h-4 mr-1" />
