@@ -62,6 +62,10 @@ export function computeResult({ answers, steps = QUIZ_STEPS, scoring }: ComputeR
             const diff = scores[b] - scores[a];
             if (diff !== 0) return diff;
             // desempate configurável (default: alfabético)
+            if (tieBreak === 'first') {
+                // Mantém a ordem de inserção original (sort estável)
+                return 0;
+            }
             if (tieBreak === 'random') {
                 return Math.random() - 0.5;
             }
