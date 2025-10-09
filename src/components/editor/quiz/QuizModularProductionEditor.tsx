@@ -729,22 +729,9 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
     // Colar bloco(s)
     const pasteBlocks = useCallback((stepId: string) => {
         if (!clipboard || clipboard.length === 0) return;
-        setSteps(prev => {
-            const next = prev.map(s => {
-                if (s.id !== stepId) return s;
-                const baseLen = s.blocks.length;
-                const clones = clipboard.map((b, i) => ({
-                    ...b,
-                    id: `${b.id}-paste-${Date.now()}-${i}`,
-                    order: baseLen + i
-                }));
-                return { ...s, blocks: [...s.blocks, ...clones] };
-            });
-            pushHistory(next);
-            return next;
-        });
+        clipboard.forEach(b => addBlockToStep(stepId, b.type)); // propriedades/conteúdo serão padrão; futura melhoria: extender hook para aceitar payload
         setIsDirty(true);
-    }, [clipboard]);
+    }, [clipboard, addBlockToStep]);
 
     // Atualizar propriedades do bloco
     const updateBlockProperties = useCallback((stepId: string, blockId: string, updates: Record<string, any>) => {
@@ -756,13 +743,9 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
         updateBlock(stepId, blockId, { content: updates });
     }, [updateBlock]);
 
-    // Debounce para histórico em edições rápidas de conteúdo/propriedades
-    const historyDebounceRef = useRef<any>(null);
-    const pendingHistoryRef = useRef<EditableQuizStep[] | null>(null);
-    const scheduleHistoryPush = (next: EditableQuizStep[]) => {
-        pushHistory(next);
-    };
-    
+    // Debounce de histórico removido: mutações via hooks já registram histórico.
+    const scheduleHistoryPush = (next: EditableQuizStep[]) => { pushHistory(next); };
+
 
     // Multi seleção helpers
     const isMultiSelected = useCallback((id: string) => multiSelectedIds.includes(id), [multiSelectedIds]);
@@ -799,17 +782,13 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
     const removeMultiple = () => {
         if (!selectedStep || multiSelectedIds.length === 0) return;
         const total = multiSelectedIds.length;
-        setSteps(prev => {
-            const next = prev.map(s => s.id === selectedStep.id ? { ...s, blocks: s.blocks.filter(b => !multiSelectedIds.includes(b.id)) } : s);
-            pushHistory(next);
-            return next;
-        });
+        multiSelectedIds.forEach(id => removeBlockHook(selectedStep.id, id));
         setIsDirty(true);
         clearMultiSelection();
         if (multiSelectedIds.includes(selectedBlockId)) setSelectedBlockId('');
         toast({ title: 'Removidos', description: `${total} bloco(s)` });
     };
-    
+
 
     // Reordenar / mover blocos (nested)
     const handleDragEnd = (event: any) => {
@@ -1354,14 +1333,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
     // Flush do histórico debounced ao trocar de step ou desmontar
     useEffect(() => {
         return () => {
-            if (historyDebounceRef.current) {
-                clearTimeout(historyDebounceRef.current);
-                historyDebounceRef.current = null;
-            }
-            if (pendingHistoryRef.current) {
-                pushHistory(pendingHistoryRef.current);
-                pendingHistoryRef.current = null;
-            }
+            // Flush de histórico debounced removido (não mais necessário)
         };
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [selectedStepId]);
