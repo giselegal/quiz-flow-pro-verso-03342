@@ -22,6 +22,7 @@ import { UnifiedRoutingService } from '@/services/core/UnifiedRoutingService';
 import { EditorDashboardSyncService } from '@/services/core/EditorDashboardSyncService';
 import { useTheme } from '@/styles/themes';
 import { ThemeToggle } from '@/components/ui/ThemeToggle';
+import { useUserName } from '@/hooks/useUserName';
 
 // Componentes lazy-loaded
 const AdminDashboard = React.lazy(() => import('@/pages/dashboard/AdminDashboard'));
@@ -59,6 +60,16 @@ export const UnifiedAdminLayout: React.FC<UnifiedAdminLayoutProps> = ({
     const [activeView, setActiveView] = useState(currentView);
     const [syncStats, setSyncStats] = useState(EditorDashboardSyncService.getSyncStats());
     const theme = useTheme();
+    const displayName = useUserName();
+
+    // Computa iniciais para avatar simples
+    const initials = React.useMemo(() => {
+        if (!displayName) return '?';
+        const parts = displayName.split(/\s+/).filter(Boolean);
+        if (!parts.length) return '?';
+        if (parts.length === 1) return parts[0].substring(0, 2).toUpperCase();
+        return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+    }, [displayName]);
 
     // ========================================================================
     // NAVIGATION HANDLERS
@@ -324,6 +335,34 @@ export const UnifiedAdminLayout: React.FC<UnifiedAdminLayoutProps> = ({
                     {/* Actions - Design Premium com Nova Identidade */}
                     <div className="flex items-center gap-3">
                         <ThemeToggle size="sm" />
+
+                        {/* User Identity */}
+                        <div
+                            className="flex items-center gap-2 pl-2 pr-3 py-1 rounded-2xl border text-sm font-medium select-none"
+                            style={{
+                                borderColor: `${theme.colors.detailsMinor}40`,
+                                background: `${theme.colors.background}70`,
+                                boxShadow: `0 0 12px ${theme.colors.glowEffect}25`
+                            }}
+                            title={displayName}
+                        >
+                            <div
+                                className="w-8 h-8 rounded-xl flex items-center justify-center text-xs font-bold tracking-wide"
+                                style={{
+                                    background: `linear-gradient(135deg, ${theme.colors.detailsMinor} 0%, ${theme.colors.buttons} 100%)`,
+                                    color: '#fff',
+                                    boxShadow: `0 0 10px ${theme.colors.detailsMinor}50`
+                                }}
+                            >
+                                {initials}
+                            </div>
+                            <span
+                                className="truncate max-w-[140px]"
+                                style={{ color: theme.colors.text }}
+                            >
+                                {displayName}
+                            </span>
+                        </div>
 
                         {/* Preview Draft: aparece apenas quando estiver no editor e for um draft */}
                         {activeView === 'editor' && funnelId && funnelId.startsWith('draft-') && (
