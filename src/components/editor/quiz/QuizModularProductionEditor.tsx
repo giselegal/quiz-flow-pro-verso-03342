@@ -95,6 +95,8 @@ import BlockRow from './components/BlockRow';
 import { BlockComponent, EditableQuizStep, BlockSnippet } from './types';
 import PropertiesPanel from './components/PropertiesPanel';
 import DuplicateBlockDialog from './components/DuplicateBlockDialog';
+// Cálculo real de resultado (produção)
+import { computeResult } from '@/utils/result/computeResult';
 
 // Pré-visualizações especializadas (lazy) dos componentes finais de produção
 const StyleResultCard = React.lazy(() => import('@/components/editor/quiz/components/StyleResultCard').then(m => ({ default: m.StyleResultCard })));
@@ -680,6 +682,34 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
 
     const { scores: liveScores, topStyle } = useLiveScoring({ selections: quizSelections, scoringMap });
 
+    // Converte seleções locais (por bloco) em respostas por etapa, compatíveis com o runtime de produção
+    const previewAnswers = useMemo<Record<string, string[]>>(() => {
+        const map: Record<string, string[]> = {};
+        steps.forEach(step => {
+            // Considera apenas blocos de pergunta (quiz-options)
+            const qBlocks = step.blocks.filter(b => b.type === 'quiz-options');
+            const selections: string[] = [];
+            qBlocks.forEach(b => {
+                const sel = quizSelections[b.id] || [];
+                // Cada seleção representa um estilo/opção
+                sel.forEach(s => selections.push(s));
+            });
+            if (selections.length > 0) {
+                map[step.id] = selections;
+            }
+        });
+        return map;
+    }, [steps, quizSelections]);
+
+    // Cálculo de resultado real (usa computeResult da produção)
+    const previewResult = useMemo(() => {
+        try {
+            return computeResult({ answers: previewAnswers });
+        } catch {
+            return null;
+        }
+    }, [previewAnswers]);
+
     const toggleQuizOption = useCallback((blockId: string, optionId: string, multi = true, max = 1) => {
         setQuizSelections(prev => {
             const current = prev[blockId] || [];
@@ -729,9 +759,8 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
         // Contexto provisório para placeholders (será expandido com scoring dinâmico e dados reais do usuário)
         const placeholderContext = {
             userName: 'Preview',
-            resultStyle: 'classico',
-            // Futuro: integrar live scoring hook
-            scores: { classico: 12, natural: 8, romantico: 6 }
+            resultStyle: (previewResult?.primaryStyleId || 'classico'),
+            scores: previewResult?.scores || { classico: 0, natural: 0, romantico: 0 }
         };
         let node: React.ReactNode = null;
         // Heading
@@ -1099,10 +1128,11 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
         }
         // Result Header Inline (cabeçalho de resultado)
         if (type === 'result-header-inline') {
+            const title = content.title || (previewResult ? `Seu estilo é ${placeholderContext.resultStyle}` : 'Seu Resultado:');
             node = (
                 <div className="text-center space-y-2 py-4">
                     <h2 className="text-2xl font-bold text-slate-800">
-                        {replacePlaceholders(content.title || 'Seu Resultado:', placeholderContext)}
+                        {replacePlaceholders(title, placeholderContext)}
                     </h2>
                     {content.subtitle && (
                         <p className="text-sm text-slate-600">{replacePlaceholders(content.subtitle, placeholderContext)}</p>
@@ -1842,6 +1872,12 @@ const LiveRuntimePreview: React.FC<LiveRuntimePreviewProps> = ({ steps, funnelId
                 <QuizAppConnected funnelId={funnelId} editorMode />
             </div>
             <div className="px-2 py-1 border-t bg-slate-50 text-[10px] text-slate-500 flex items-center justify-between">
+                <span>Live Runtime v{version}</span>
+                <span>{Object.keys(runtimeMap).length} steps</span>
+            </div>
+        </div>
+    );
+};
                 <span>Live Runtime v{version}</span>
                 <span>{Object.keys(runtimeMap).length} steps</span>
             </div>
