@@ -6,7 +6,8 @@
 import { useCallback } from 'react';
 import { nanoid } from 'nanoid';
 import { arrayMove } from '@dnd-kit/sortable';
-import type { BlockComponent, EditableQuizStep } from './useEditorState';
+// Usar tipos centrais do editor para evitar import de hooks
+import type { BlockComponent, EditableQuizStep } from '../types';
 
 interface BlockOperationsProps {
   steps: EditableQuizStep[];
@@ -21,7 +22,7 @@ export function useBlockOperations({
   selectedStepId,
   setSelectedBlockId,
 }: BlockOperationsProps) {
-  
+
   const addBlock = useCallback((type: string, properties: Record<string, any> = {}) => {
     if (!selectedStepId) return;
 
@@ -43,7 +44,7 @@ export function useBlockOperations({
     });
 
     setSteps(updated);
-    
+
     // Seleciona o novo bloco
     const newBlock = updated.find(s => s.id === selectedStepId)?.blocks.slice(-1)[0];
     if (newBlock) setSelectedBlockId(newBlock.id);
@@ -55,8 +56,8 @@ export function useBlockOperations({
     const updated = steps.map(step => {
       if (step.id !== selectedStepId) return step;
 
-      const filtered = step.blocks.filter(b => b.id !== blockId);
-      const reordered = filtered.map((b, idx) => ({ ...b, order: idx }));
+      const filtered = step.blocks.filter((b: BlockComponent) => b.id !== blockId);
+      const reordered = filtered.map((b: BlockComponent, idx: number) => ({ ...b, order: idx }));
 
       return {
         ...step,
@@ -74,7 +75,7 @@ export function useBlockOperations({
     const updated = steps.map(step => {
       if (step.id !== selectedStepId) return step;
 
-      const original = step.blocks.find(b => b.id === blockId);
+      const original = step.blocks.find((b: BlockComponent) => b.id === blockId);
       if (!original) return step;
 
       const duplicate: BlockComponent = {
@@ -104,7 +105,7 @@ export function useBlockOperations({
 
       return {
         ...step,
-        blocks: step.blocks.map(block =>
+        blocks: step.blocks.map((block: BlockComponent) =>
           block.id === blockId
             ? { ...block, properties: { ...block.properties, [key]: value } }
             : block

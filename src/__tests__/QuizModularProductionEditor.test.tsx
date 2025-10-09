@@ -103,7 +103,8 @@ describe('QuizModularProductionEditor - Edição Completa do /quiz-estilo', () =
         vi.mocked(quizEditorBridge.publishToProduction).mockResolvedValue();
         vi.mocked(quizEditorBridge.validateFunnel).mockReturnValue({
             valid: true,
-            errors: []
+            errors: [],
+            warnings: []
         });
     });
 
@@ -358,10 +359,12 @@ describe('QuizModularProductionEditor - Edição Completa do /quiz-estilo', () =
 
             await waitFor(() => {
                 const sizeInput = screen.getByLabelText('Tamanho da Fonte');
-                await user.clear(sizeInput);
-                await user.type(sizeInput, '24px');
-                expect(sizeInput).toHaveValue('24px');
+                expect(sizeInput).toBeInTheDocument();
             });
+            const sizeInput = screen.getByLabelText('Tamanho da Fonte');
+            await user.clear(sizeInput);
+            await user.type(sizeInput, '24px');
+            expect(sizeInput).toHaveValue('24px');
         });
 
         it('deve editar propriedades de botão', async () => {
@@ -530,7 +533,7 @@ describe('QuizModularProductionEditor - Edição Completa do /quiz-estilo', () =
                 }
             };
 
-            vi.mocked(quizEditorBridge.loadForRuntime).mockResolvedValue(mockSteps);
+            vi.mocked(quizEditorBridge.loadForRuntime).mockResolvedValue(mockSteps as any);
 
             // Renderizar QuizApp com funnelId
             const { result } = renderHook(() => useQuizState('draft-123'));
@@ -552,7 +555,7 @@ describe('QuizModularProductionEditor - Edição Completa do /quiz-estilo', () =
                 }
             };
 
-            vi.mocked(quizEditorBridge.loadForRuntime).mockResolvedValue(mockPublishedSteps);
+            vi.mocked(quizEditorBridge.loadForRuntime).mockResolvedValue(mockPublishedSteps as any);
 
             const { result } = renderHook(() => useQuizState());
 
@@ -577,7 +580,8 @@ describe('QuizModularProductionEditor - Edição Completa do /quiz-estilo', () =
 
             vi.mocked(quizEditorBridge.validateFunnel).mockReturnValue({
                 valid: false,
-                errors: ['Etapa 1 deve ser tipo intro']
+                errors: ['Etapa 1 deve ser tipo intro'],
+                warnings: []
             });
 
             await user.click(publicarButton!);
@@ -625,7 +629,8 @@ describe('QuizModularProductionEditor - Edição Completa do /quiz-estilo', () =
             // 5. Publicar
             vi.mocked(quizEditorBridge.validateFunnel).mockReturnValue({
                 valid: true,
-                errors: []
+                errors: [],
+                warnings: []
             });
 
             render(<QuizModularProductionEditor funnelId={savedDraftId!} />);

@@ -79,12 +79,12 @@ const EditorModularProDashboard: React.FC = () => {
       </div>
 
       {/* Estado de carregamento/erro */}
-      {(isLoading.metrics || isLoading.participants || isLoading.realTime) && (
+      {(((isLoading as any)?.metrics) || ((isLoading as any)?.participants) || ((isLoading as any)?.realTime) || (typeof isLoading === 'boolean' && isLoading)) && (
         <div className="flex items-center gap-2 text-gray-600">
           <RefreshCw className="w-4 h-4 animate-spin" /> Carregando dados...
         </div>
       )}
-      {(hasErrors.metrics || hasErrors.participants || hasErrors.realTime) && (
+      {(((hasErrors as any)?.metrics) || ((hasErrors as any)?.participants) || ((hasErrors as any)?.realTime) || (typeof hasErrors === 'boolean' && hasErrors)) && (
         <div className="text-red-600">Erro ao carregar algumas métricas. Tente atualizar.</div>
       )}
 

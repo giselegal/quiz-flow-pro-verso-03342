@@ -12,7 +12,8 @@ import { Plus, Copy, Trash2, GripVertical } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useSortable, SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import type { EditableQuizStep } from '../hooks/useEditorState';
+// Importar tipos centrais do módulo de tipos (evita dependência cíclica com hooks)
+import type { EditableQuizStep } from '../types';
 
 interface StepsPanelProps {
   steps: EditableQuizStep[];
@@ -64,7 +65,7 @@ function SortableStepItem({
           <div {...listeners} className="cursor-grab active:cursor-grabbing">
             <GripVertical className="w-4 h-4 text-muted-foreground mt-1" />
           </div>
-          
+
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 mb-1">
               <Badge variant="outline" className="text-xs">

@@ -108,17 +108,17 @@ describe('🛡️ Quiz Validation Utils', () => {
                 nextStep: null
             };
 
-            const result21 = validateNextStep(step21);
+            const result21 = validateNextStep(step21 as any);
             expect(result21.isValid).toBe(true);
 
             // Mas não deve permitir em outras etapas
             const step01 = {
                 id: 'step-01',
                 type: 'intro' as const,
-                nextStep: null
+                nextStep: undefined
             };
 
-            const result01 = validateNextStep(step01);
+            const result01 = validateNextStep(step01 as any);
             expect(result01.isValid).toBe(false);
         });
 

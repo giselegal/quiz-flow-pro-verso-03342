@@ -73,8 +73,14 @@ class MockIDBDatabase implements IDBDatabase {
     objectStoreNames = { contains: (n: string) => !!this.stores[n], length: 0, item: () => null, [Symbol.iterator]: function* () { } } as any;
     stores: Record<string, MockObjectStore> = {};
     close(): void { /* noop */ }
+    addEventListener(): any { /* noop */ }
+    removeEventListener(): any { /* noop */ }
+    dispatchEvent(): boolean { return true; }
     createObjectStore(name: string, options?: IDBObjectStoreParameters): IDBObjectStore {
-        const store = new MockObjectStore(name, {}, options?.keyPath || null);
+        const keyPath = (typeof options?.keyPath === 'string' || options?.keyPath === null)
+            ? (options?.keyPath as string | null)
+            : null;
+        const store = new MockObjectStore(name, {}, keyPath);
         this.stores[name] = store;
         return store as unknown as IDBObjectStore;
     }
