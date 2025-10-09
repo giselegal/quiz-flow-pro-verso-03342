@@ -1022,8 +1022,10 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
         return nextState;
       });
 
-      // Em modo local (sem Supabase), aguarde um tick para que o React aplique o setState antes de resolver
+      // Em modo local (sem Supabase), aguarde dois ticks para que o React aplique o setState
+      // e o consumidor (ConsumerBridge) reflita a mudança no ref usado pelo teste
       if (!state.isSupabaseEnabled) {
+        await waitNextTick();
         await waitNextTick();
       }
 
@@ -1109,8 +1111,9 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
         return optimisticState!;
       });
 
-      // Em modo local (sem Supabase), aguarde um tick para que o React aplique o setState antes de resolver
+      // Em modo local (sem Supabase), aguarde dois ticks para garantir que os consumidores reflitam o novo estado
       if (!state.isSupabaseEnabled) {
+        await waitNextTick();
         await waitNextTick();
       }
 
