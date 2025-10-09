@@ -222,13 +222,16 @@ class QuizEditorBridge {
         // Converter steps para formato QUIZ_STEPS
         const quizSteps = this.convertToQuizSteps(publishingSteps as any);
 
-        // Salvar na tabela de produção
+        // Salvar na tabela de produção (inclui runtime/results/ui quando disponíveis)
         const productionData = {
             slug: this.PRODUCTION_SLUG,
             steps: quizSteps,
             version: draft.version,
             published_at: new Date().toISOString(),
-            source_draft_id: funnelId
+            source_draft_id: funnelId,
+            runtime: (draft as any).runtime,
+            results: (draft as any).results,
+            ui: (draft as any).ui,
         };
 
         const { error } = await supabaseAny
@@ -399,7 +402,7 @@ class QuizEditorBridge {
         try {
             const { data, error } = await supabaseAny
                 .from(this.PRODUCTION_TABLE)
-                .select('steps')
+                .select('steps, runtime, results, ui')
                 .eq('slug', this.PRODUCTION_SLUG)
                 .order('published_at', { ascending: false })
                 .limit(1)
