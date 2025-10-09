@@ -444,6 +444,25 @@ const MeusFunisPageReal: React.FC = () => {
         );
     }
 
+    // Criar rascunho padrão a partir da produção (21 etapas)
+    const handleCreateDefaultDraft = async () => {
+        try {
+            const production = await quizEditorBridge.loadFunnelForEdit('production');
+            const savedId = await quizEditorBridge.saveDraft({
+                ...production,
+                id: 'production',
+                name: 'Quiz Estilo Pessoal - Rascunho',
+                isPublished: false
+            } as any);
+            toast({ title: 'Rascunho criado', description: `ID: ${savedId}` });
+            // abrir no editor para começar a editar
+            window.location.href = `/editor?funnel=${encodeURIComponent(savedId)}`;
+        } catch (e: any) {
+            console.error('Erro ao criar rascunho padrão:', e);
+            toast({ title: 'Erro ao criar rascunho', description: String(e?.message || e), variant: 'destructive' });
+        }
+    };
+
     return (
         <div className="p-6">
             {/* Header */}
@@ -760,10 +779,16 @@ const MeusFunisPageReal: React.FC = () => {
                         }
                     </p>
                     {selectedStatus === 'todos' && (
-                        <Button onClick={() => window.location.href = '/editor'}>
-                            <Plus className="w-4 h-4 mr-2" />
-                            Criar Primeiro Funil
-                        </Button>
+                        <div className="flex items-center justify-center gap-3">
+                            <Button variant="outline" onClick={() => window.location.href = '/editor?template=quiz21StepsComplete'}>
+                                <Plus className="w-4 h-4 mr-2" />
+                                Abrir Editor com Template
+                            </Button>
+                            <Button onClick={handleCreateDefaultDraft}>
+                                <Plus className="w-4 h-4 mr-2" />
+                                Criar Rascunho Padrão (21 etapas)
+                            </Button>
+                        </div>
                     )}
                 </div>
             )}
