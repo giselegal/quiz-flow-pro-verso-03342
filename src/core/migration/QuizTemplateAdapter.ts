@@ -71,8 +71,8 @@ export class QuizTemplateAdapter {
       category: 'quiz',
       templateType: 'quiz-complete',
 
-  settings,
-  steps,
+      settings,
+      steps,
 
       publication: {
         status: 'draft',
@@ -169,7 +169,7 @@ export class QuizTemplateAdapter {
         customEvents: [`step_${stepNumber}_viewed`]
       },
 
-  blocks: this.convertBlocks(blocks),
+      blocks: this.convertBlocks(blocks),
 
       navigation: this.generateNavigationLogic(stepId, stepNumber, stepType),
 
