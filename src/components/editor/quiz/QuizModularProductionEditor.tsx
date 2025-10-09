@@ -787,9 +787,9 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
         ].join('|');
         const cached = previewCacheRef.current.get(id);
         if (cached && cached.key === key) return cached.node;
-    // Dados unificados via estado local
-    const stylesMap: Record<string, any> = (unifiedConfig?.results?.styles as any) || {};
-    const offersMap: Record<string, any> = (unifiedConfig?.results?.offersMap as any) || {};
+        // Dados unificados via estado local
+        const stylesMap: Record<string, any> = (unifiedConfig?.results?.styles as any) || {};
+        const offersMap: Record<string, any> = (unifiedConfig?.results?.offersMap as any) || {};
         const primaryId = previewResult?.primaryStyleId;
         const primaryTitle = primaryId && stylesMap[primaryId]?.title ? stylesMap[primaryId].title : (primaryId || 'classico');
         // Contexto provisório para placeholders (será expandido com scoring dinâmico e dados reais do usuário)
@@ -1859,20 +1859,6 @@ interface LivePreviewContainerProps {
     funnelId?: string;
     steps: EditableQuizStep[];
 }
-
-// Wrapper que injeta UnifiedConfigProvider e sincroniza com globais (transição)
-const LivePreviewWithProvider: React.FC<LivePreviewContainerProps> = ({ funnelId, steps }) => {
-    // Ler globais populadas na carga do documento unificado
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const unifiedRuntime: any = (globalThis as any).__unifiedRuntime || {};
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const unifiedResults: any = (globalThis as any).__unifiedResults || {};
-    return (
-        <UnifiedConfigProvider initial={{ runtime: unifiedRuntime, results: unifiedResults }}>
-            <LivePreviewContainer funnelId={funnelId} steps={steps} />
-        </UnifiedConfigProvider>
-    );
-};
 
 const LivePreviewContainer: React.FC<LivePreviewContainerProps> = ({ funnelId, steps }) => {
     const [mode, setMode] = React.useState<'production' | 'live'>('live');
