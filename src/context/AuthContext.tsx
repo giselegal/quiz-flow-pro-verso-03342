@@ -261,8 +261,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const logout = async () => {
     try {
       cleanupAuthState();
-  const supabase = await ensureSupabase();
-  if (supabase) await supabase.auth.signOut({ scope: 'global' });
+      const supabase = await ensureSupabase();
+      if (supabase) await supabase.auth.signOut({ scope: 'global' });
       setUser(null);
       setSession(null);
     } catch (error) {
@@ -278,9 +278,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     try {
       const redirectUrl = `${window.location.origin}/`;
 
-  const supabase = await ensureSupabase();
-  if (!supabase) throw new Error('Supabase indisponível');
-  const { error } = await supabase.auth.signUp({
+      const supabase = await ensureSupabase();
+      if (!supabase) throw new Error('Supabase indisponível');
+      const { error } = await supabase.auth.signUp({
         email,
         password,
         options: {
