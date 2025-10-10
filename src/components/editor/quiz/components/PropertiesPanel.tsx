@@ -198,11 +198,23 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
                                         <div className="space-y-1"><span>Logo URL</span><input className="w-full border rounded px-2 py-1" value={headerConfig.logoUrl} onChange={e => onHeaderConfigChange({ logoUrl: e.target.value })} /></div>
                                         <div className="space-y-1"><span>Largura Logo</span><input className="w-full border rounded px-2 py-1" value={headerConfig.logoWidth} onChange={e => onHeaderConfigChange({ logoWidth: e.target.value })} /></div>
                                     </>)}
+                                    <div className="space-y-1">
+                                        <span>Título</span>
+                                        <input className="w-full border rounded px-2 py-1" value={headerConfig.title || ''} onChange={e => onHeaderConfigChange({ title: e.target.value })} />
+                                    </div>
+                                    <div className="space-y-1">
+                                        <span>Alinhamento</span>
+                                        <select className="w-full border rounded px-2 py-1" value={headerConfig.align || 'left'} onChange={e => onHeaderConfigChange({ align: e.target.value })}>
+                                            <option value="left">Esquerda</option>
+                                            <option value="center">Centro</option>
+                                            <option value="right">Direita</option>
+                                        </select>
+                                    </div>
                                     <label className="flex items-center gap-2"><input type="checkbox" checked={headerConfig.progressEnabled} onChange={e => onHeaderConfigChange({ progressEnabled: e.target.checked })} />Exibir Barra de Progresso</label>
                                     {headerConfig.progressEnabled && (<>
                                         <label className="flex items-center gap-2"><input type="checkbox" checked={headerConfig.autoProgress} onChange={e => onHeaderConfigChange({ autoProgress: e.target.checked })} />Cálculo Automático</label>
                                         {!headerConfig.autoProgress && (<div className="space-y-1"><span>Porcentagem Manual</span><input type="number" min={0} max={100} className="w-full border rounded px-2 py-1" value={headerConfig.manualPercent} onChange={e => onHeaderConfigChange({ manualPercent: Number(e.target.value) })} /></div>)}
-                                        <div className="space-y-1"><span>Espessura Barra</span><input className="w-full border rounded px-2 py-1" value={headerConfig.barHeight} onChange={e => onHeaderConfigChange({ barHeight: e.target.value })} /></div>
+                                        <div className="space-y-1"><span>Espessura da Barra</span><input className="w-full border rounded px-2 py-1" value={headerConfig.barHeight} onChange={e => onHeaderConfigChange({ barHeight: e.target.value })} /></div>
                                         <div className="space-y-1"><span>Cor Barra</span><input type="color" className="w-full h-8 border rounded" value={headerConfig.barColor} onChange={e => onHeaderConfigChange({ barColor: e.target.value })} /></div>
                                         <div className="space-y-1"><span>Cor Fundo</span><input type="color" className="w-full h-8 border rounded" value={headerConfig.barBackground} onChange={e => onHeaderConfigChange({ barBackground: e.target.value })} /></div>
                                     </>)}

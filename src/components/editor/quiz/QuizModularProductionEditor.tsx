@@ -327,7 +327,9 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
             manualPercent: 0,
             barHeight: '4px',
             barColor: '#D4AF37',
-            barBackground: '#E5E7EB'
+            barBackground: '#E5E7EB',
+            align: 'left', // 'left' | 'center' | 'right'
+            title: ''
         };
     });
     useEffect(() => { try { localStorage.setItem('quiz_editor_header_config_v1', JSON.stringify(headerConfig)); } catch {/* ignore */ } }, [headerConfig]);
@@ -343,14 +345,22 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
         if (config.progressEnabled && config.autoProgress && idxCounted >= 0 && counted.length > 0) {
             percent = Math.min(100, Math.round(((idxCounted + 1) / counted.length) * 100));
         }
+        const justify = config.align === 'center' ? 'justify-center' : config.align === 'right' ? 'justify-end' : 'justify-between';
         return (
-            <div className="flex items-center justify-between gap-4">
-                {config.showLogo && (
-                    <div className="shrink-0" style={{ maxWidth: config.logoWidth }}>
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img src={config.logoUrl} alt="Logo" className="object-contain max-h-12" />
-                    </div>
-                )}
+            <div className={cn('w-full flex items-center gap-4', justify)}>
+                <div className={cn('flex items-center gap-4', config.align === 'center' && 'justify-center', config.align === 'right' && 'justify-end')}>
+                    {config.showLogo && (
+                        <div className="shrink-0" style={{ maxWidth: config.logoWidth }}>
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                            <img src={config.logoUrl} alt="Logo" className="object-contain max-h-12" />
+                        </div>
+                    )}
+                    {config.title && (
+                        <div className={cn('text-sm font-semibold text-slate-800', config.align === 'center' && 'text-center')}>
+                            {config.title}
+                        </div>
+                    )}
+                </div>
                 {config.progressEnabled && (
                     <div className="flex-1 flex flex-col min-w-[160px]">
                         <div className="w-full rounded-full overflow-hidden" style={{ background: config.barBackground, height: config.barHeight }}>
