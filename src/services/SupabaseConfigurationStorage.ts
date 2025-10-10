@@ -142,9 +142,17 @@ export class SupabaseConfigurationStorage {
 
             // 2. Salvar no IndexedDB (sempre funciona)  
             try {
+                // Garantir que o IndexedDB está pronto
+                if (!this.indexedDBService['db']) {
+                    await this.indexedDBService.initialize();
+                }
                 await this.indexedDBService.set('configurations', key, configWithDefaults);
-            } catch (error) {
+            } catch (error: any) {
                 console.warn('⚠️ IndexedDB save failed:', error);
+                // Não falhar se o IndexedDB não estiver disponível
+                if (error.name === 'NotFoundError') {
+                    console.log('⚙️ Object store configurations será criado na próxima atualização do schema.');
+                }
             }
 
             // 3. Tentar salvar no Supabase se online
@@ -250,13 +258,22 @@ export class SupabaseConfigurationStorage {
 
             // 3. Fallback para IndexedDB
             try {
+                // Garantir que o IndexedDB está pronto
+                if (!this.indexedDBService['db']) {
+                    await this.indexedDBService.initialize();
+                }
+
                 const localData = await this.indexedDBService.get('configurations', key);
                 if (localData) {
                     console.log(`📱 Configuração carregada offline: ${key}`);
                     return localData as StoredConfiguration;
                 }
-            } catch (error) {
+            } catch (error: any) {
                 console.warn('⚠️ IndexedDB load failed:', error);
+                // Se o erro é sobre object store não encontrado, não é crítico
+                if (error.name === 'NotFoundError') {
+                    console.log('⚙️ Object store configurations ainda não existe. Será criado na próxima atualização.');
+                }
             }
 
             console.log(`⚙️ Configuração não encontrada: ${key}`);
@@ -275,7 +292,7 @@ export class SupabaseConfigurationStorage {
                 try {
                     // Use type assertion since table doesn't exist in types yet
                     let query = (supabase as any).from('component_configurations').select('*');
-                    
+
                     if (funnelId) {
                         query = query.eq('funnel_id', funnelId);
                     }
@@ -403,7 +420,7 @@ export class SupabaseConfigurationStorage {
 
     async getStats(funnelId?: string): Promise<ConfigurationStats> {
         const configurations = await this.list(funnelId);
-        
+
         const stats: ConfigurationStats = {
             totalConfigurations: configurations.length,
             byFunnel: {},
