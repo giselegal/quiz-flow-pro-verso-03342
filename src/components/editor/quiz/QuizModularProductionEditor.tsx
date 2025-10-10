@@ -374,27 +374,31 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
         );
     };
 
+    // IMPORTANTE: Todos os hooks devem ser chamados na mesma ordem em cada render
+    const [isLoading, setIsLoading] = useState(true);
+    const [validationErrors, setValidationErrors] = useState<string[]>([]);
+
     // Validação em tempo real (fase inicial - regras básicas)
     const { byStep, byBlock } = useValidation(steps);
 
+    // Carregar theme overrides do localStorage
     useEffect(() => {
         try {
             const raw = localStorage.getItem('quiz_editor_theme_overrides_v1');
             if (raw) setThemeOverrides(JSON.parse(raw));
         } catch {/* ignore */ }
     }, []);
-    const [isLoading, setIsLoading] = useState(true);
-    // Evita loop infinito de carregamento: finaliza o loading após mount
-    useEffect(() => {
-        // Carregamento inicial: se houver ?template=, construir steps default
-        try {
-            const sp = new URLSearchParams(typeof window !== 'undefined' && window.location ? window.location.search : '');
-            const templateId = sp.get('template');
-            const funnelParam = sp.get('funnel') || undefined;
 
-            // 0) Se vier um funnelId, tentar carregar rascunho existente primeiro
-            if (funnelParam && !steps?.length) {
-                (async () => {
+    // Carregamento inicial: se houver ?template=, construir steps default
+    useEffect(() => {
+        const loadInitialData = async () => {
+            try {
+                const sp = new URLSearchParams(typeof window !== 'undefined' && window.location ? window.location.search : '');
+                const templateId = sp.get('template');
+                const funnelParam = sp.get('funnel') || undefined;
+
+                // 0) Se vier um funnelId, tentar carregar rascunho existente primeiro
+                if (funnelParam && !steps?.length) {
                     try {
                         const draft = await quizEditorBridge.loadFunnelForEdit(funnelParam);
                         if (draft && Array.isArray(draft.steps) && draft.steps.length > 0) {
@@ -409,103 +413,106 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                     } catch (e) {
                         console.warn('Falha ao carregar rascunho do funil, seguindo para fallback de template', e);
                     }
-                })();
-            }
-            if (templateId) {
-                if (!steps || steps.length === 0) {
-                    if (templateId === 'fashionStyle21PtBR') {
-                        const initial = buildFashionStyle21Steps(funnelParam);
-                        setSteps(initial);
-                        setSelectedStepId(initial[0]?.id || '');
-                        setFunnelId(funnelParam || `funnel-${templateId}-${Date.now()}`);
-                    } else if (templateId === 'quiz21StepsComplete') {
-                        // Isolar lógica assíncrona em IIFE para evitar await no escopo síncrono do useEffect
-                        (async () => {
-                            // 1) Tentar carregar via documento unificado (schema-driven)
-                            const mapStepType = (t: StepType, indexZeroBased: number): EditableQuizStep['type'] => {
-                                // Mapeamento seguro para tipagem do editor
-                                if (t === 'lead-capture') return 'intro';
-                                if (t === 'quiz-question') return 'question';
-                                if (t === 'strategic-question') return 'strategic-question';
-                                if (t === 'transition') return indexZeroBased === 18 ? 'transition-result' : 'transition';
-                                if (t === 'result') return 'result';
-                                if (t === 'offer') return 'offer';
-                                return 'question';
-                            };
-
-                            let loaded = false;
-                            try {
-                                const unified = await QuizTemplateAdapter.convertLegacyTemplate();
-                                if (unified && Array.isArray(unified.steps) && unified.steps.length >= 21) {
-                                    // Guardar em estado local para consumo direto
-                                    setUnifiedConfig({ runtime: unified.runtime, results: unified.results, ui: unified.ui, settings: unified.settings as any });
-                                    const initialFromDoc: EditableQuizStep[] = unified.steps
-                                        .sort((a, b) => a.order - b.order)
-                                        .map((s, idx) => ({
-                                            id: s.id,
-                                            type: mapStepType(s.type as StepType, idx),
-                                            order: s.order,
-                                            blocks: (s.blocks as any) || [],
-                                            nextStep: s.navigation?.nextStep,
-                                        } as EditableQuizStep));
-                                    // Se tiver personalização de funil, aplicar sobre blocos top-level quando existir stepId igual
-                                    if (funnelParam) {
-                                        initialFromDoc.forEach((step) => {
-                                            const personalized = getPersonalizedStepTemplate(step.id, funnelParam);
-                                            if (Array.isArray(personalized) && personalized.length > 0) {
-                                                step.blocks = personalized as any;
-                                            }
-                                        });
-                                    }
-                                    setSteps(initialFromDoc);
-                                    setSelectedStepId(initialFromDoc[0]?.id || '');
-                                    setFunnelId(funnelParam || `funnel-${templateId}-${Date.now()}`);
-                                    loaded = true;
-                                }
-                            } catch (e) {
-                                // Falha silenciosa: cair para o fallback legacy
-                                console.warn('FunnelDocument load failed, falling back to legacy template:', e);
-                            }
-
-                            // 2) Fallback para template legacy (com personalização por funil, se houver)
-                            if (!loaded) {
-                                const buildStepType = (idx: number): EditableQuizStep['type'] => {
-                                    if (idx === 0) return 'intro';
-                                    if (idx >= 1 && idx <= 10) return 'question';
-                                    if (idx === 11) return 'transition';
-                                    if (idx >= 12 && idx <= 17) return 'strategic-question';
-                                    if (idx === 18) return 'transition-result';
-                                    if (idx === 19) return 'result';
-                                    return 'offer'; // idx === 20
+                }
+                if (templateId) {
+                    if (!steps || steps.length === 0) {
+                        if (templateId === 'fashionStyle21PtBR') {
+                            const initial = buildFashionStyle21Steps(funnelParam);
+                            setSteps(initial);
+                            setSelectedStepId(initial[0]?.id || '');
+                            setFunnelId(funnelParam || `funnel-${templateId}-${Date.now()}`);
+                        } else if (templateId === 'quiz21StepsComplete') {
+                            // Isolar lógica assíncrona em IIFE para evitar await no escopo síncrono do useEffect
+                            (async () => {
+                                // 1) Tentar carregar via documento unificado (schema-driven)
+                                const mapStepType = (t: StepType, indexZeroBased: number): EditableQuizStep['type'] => {
+                                    // Mapeamento seguro para tipagem do editor
+                                    if (t === 'lead-capture') return 'intro';
+                                    if (t === 'quiz-question') return 'question';
+                                    if (t === 'strategic-question') return 'strategic-question';
+                                    if (t === 'transition') return indexZeroBased === 18 ? 'transition-result' : 'transition';
+                                    if (t === 'result') return 'result';
+                                    if (t === 'offer') return 'offer';
+                                    return 'question';
                                 };
 
-                                const initial: EditableQuizStep[] = Array.from({ length: 21 }).map((_, idx) => {
-                                    const stepId = `step-${idx + 1}`;
-                                    const blocks = (funnelParam
-                                        ? getPersonalizedStepTemplate(stepId, funnelParam)
-                                        : (QUIZ_STYLE_21_STEPS_TEMPLATE as any)[stepId]) || [];
-                                    return {
-                                        id: stepId,
-                                        type: buildStepType(idx),
-                                        order: idx + 1,
-                                        blocks: blocks as any,
-                                        nextStep: undefined
-                                    } as EditableQuizStep;
-                                });
-                                for (let i = 0; i < initial.length - 1; i++) initial[i].nextStep = initial[i + 1].id;
-                                setSteps(initial);
-                                setSelectedStepId(initial[0]?.id || '');
-                                setFunnelId(funnelParam || `funnel-${templateId}-${Date.now()}`);
-                            }
-                        })();
+                                let loaded = false;
+                                try {
+                                    const unified = await QuizTemplateAdapter.convertLegacyTemplate();
+                                    if (unified && Array.isArray(unified.steps) && unified.steps.length >= 21) {
+                                        // Guardar em estado local para consumo direto
+                                        setUnifiedConfig({ runtime: unified.runtime, results: unified.results, ui: unified.ui, settings: unified.settings as any });
+                                        const initialFromDoc: EditableQuizStep[] = unified.steps
+                                            .sort((a, b) => a.order - b.order)
+                                            .map((s, idx) => ({
+                                                id: s.id,
+                                                type: mapStepType(s.type as StepType, idx),
+                                                order: s.order,
+                                                blocks: (s.blocks as any) || [],
+                                                nextStep: s.navigation?.nextStep,
+                                            } as EditableQuizStep));
+                                        // Se tiver personalização de funil, aplicar sobre blocos top-level quando existir stepId igual
+                                        if (funnelParam) {
+                                            initialFromDoc.forEach((step) => {
+                                                const personalized = getPersonalizedStepTemplate(step.id, funnelParam);
+                                                if (Array.isArray(personalized) && personalized.length > 0) {
+                                                    step.blocks = personalized as any;
+                                                }
+                                            });
+                                        }
+                                        setSteps(initialFromDoc);
+                                        setSelectedStepId(initialFromDoc[0]?.id || '');
+                                        setFunnelId(funnelParam || `funnel-${templateId}-${Date.now()}`);
+                                        loaded = true;
+                                    }
+                                } catch (e) {
+                                    // Falha silenciosa: cair para o fallback legacy
+                                    console.warn('FunnelDocument load failed, falling back to legacy template:', e);
+                                }
+
+                                // 2) Fallback para template legacy (com personalização por funil, se houver)
+                                if (!loaded) {
+                                    const buildStepType = (idx: number): EditableQuizStep['type'] => {
+                                        if (idx === 0) return 'intro';
+                                        if (idx >= 1 && idx <= 10) return 'question';
+                                        if (idx === 11) return 'transition';
+                                        if (idx >= 12 && idx <= 17) return 'strategic-question';
+                                        if (idx === 18) return 'transition-result';
+                                        if (idx === 19) return 'result';
+                                        return 'offer'; // idx === 20
+                                    };
+
+                                    const initial: EditableQuizStep[] = Array.from({ length: 21 }).map((_, idx) => {
+                                        const stepId = `step-${idx + 1}`;
+                                        const blocks = (funnelParam
+                                            ? getPersonalizedStepTemplate(stepId, funnelParam)
+                                            : (QUIZ_STYLE_21_STEPS_TEMPLATE as any)[stepId]) || [];
+                                        return {
+                                            id: stepId,
+                                            type: buildStepType(idx),
+                                            order: idx + 1,
+                                            blocks: blocks as any,
+                                            nextStep: undefined
+                                        } as EditableQuizStep;
+                                    });
+                                    for (let i = 0; i < initial.length - 1; i++) initial[i].nextStep = initial[i + 1].id;
+                                    setSteps(initial);
+                                    setSelectedStepId(initial[0]?.id || '');
+                                    setFunnelId(funnelParam || `funnel-${templateId}-${Date.now()}`);
+                                }
+                            })();
+                        }
                     }
                 }
-            }
-        } catch {/* ignore */ }
-        setIsLoading(false);
+            } catch {/* ignore */ }
+
+            setIsLoading(false);
+        };
+
+        loadInitialData();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
-    const [validationErrors, setValidationErrors] = useState<string[]>([]);
+
     // Undo/Redo via hook
     const { canUndo, canRedo, init: initHistory, push: pushHistory, undo, redo } = useEditorHistory<EditableQuizStep[]>();
     const applyHistorySnapshot = (snap: EditableQuizStep[] | null) => {
