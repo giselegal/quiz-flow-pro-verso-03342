@@ -13,6 +13,7 @@ import React, { createContext, useContext, useCallback, useEffect, useState } fr
 import { funnelUnifiedService, UnifiedFunnelData } from '@/services/FunnelUnifiedService';
 import { enhancedFunnelService } from '@/services/EnhancedFunnelService';
 import { normalizeFunnelId } from '@/utils/funnelNormalizer';
+import { FunnelContext } from '@/core/contexts/FunnelContext';
 
 // ============================================================================
 // TYPES & INTERFACES
@@ -61,13 +62,16 @@ interface UnifiedCRUDProviderProps {
     funnelId?: string;
     autoLoad?: boolean;
     debug?: boolean;
+    /** Contexto para isolar listas/creates. Default: EDITOR */
+    context?: FunnelContext;
 }
 
 export const UnifiedCRUDProvider: React.FC<UnifiedCRUDProviderProps> = ({
     children,
     funnelId,
     autoLoad = true,
-    debug = false
+    debug = false,
+    context = FunnelContext.EDITOR
 }) => {
     // ========================================================================
     // STATE
@@ -94,7 +98,7 @@ export const UnifiedCRUDProvider: React.FC<UnifiedCRUDProviderProps> = ({
                 name,
                 description: options.description || '',
                 category: options.category || 'outros',
-                context: options.context,
+                context: options.context ?? context,
                 templateId: options.templateId,
                 ...options
             });
@@ -125,7 +129,7 @@ export const UnifiedCRUDProvider: React.FC<UnifiedCRUDProviderProps> = ({
         } finally {
             setIsLoading(false);
         }
-    }, [debug]);
+    }, [debug, context]);
 
     const loadFunnel = useCallback(async (id: string): Promise<void> => {
         setIsLoading(true);
@@ -289,7 +293,8 @@ export const UnifiedCRUDProvider: React.FC<UnifiedCRUDProviderProps> = ({
 
             const funnelList = await funnelUnifiedService.listFunnels({
                 includeUnpublished: true,
-                limit: 50
+                limit: 50,
+                context,
             });
 
             setFunnels(funnelList);
@@ -303,7 +308,7 @@ export const UnifiedCRUDProvider: React.FC<UnifiedCRUDProviderProps> = ({
         } finally {
             setIsLoading(false);
         }
-    }, [debug]);
+    }, [debug, context]);
 
     // ========================================================================
     // UTILITY FUNCTIONS

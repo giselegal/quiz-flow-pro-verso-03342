@@ -24,7 +24,12 @@
       "@/*": [
         "./src/*"
       ]
-    }
+    },
+    "types": [
+      "vitest/globals",
+      "vitest",
+      "node"
+    ]
   },
   "include": [
     "src",

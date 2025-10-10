@@ -1,6 +1,7 @@
 import react from '@vitejs/plugin-react';
 import path from 'path';
-import { defineConfig } from 'vite';
+// Import do vitest/config para tipagem do bloco `test`
+import { defineConfig } from 'vitest/config';
 // Nota: Se o tipo 'test' gerar erro de tipo, garantir que 'vitest' está instalado
 // e que 'types' inclui 'vitest' em tsconfig. Caso contrário remover bloco.
 
