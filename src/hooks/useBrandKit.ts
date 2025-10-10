@@ -1,4 +1,7 @@
 import { useState, useCallback, useEffect } from 'react';
+import { FunnelContext } from '@/core/contexts/FunnelContext';
+import { useUnifiedCRUDOptional } from '@/context/UnifiedCRUDProvider';
+import { safeGetItem as getCtx, safeSetItem as setCtx, safeRemoveItem as removeCtx } from '@/utils/contextualStorage';
 
 /**
  * 🎨 useBrandKit - Hook para gerenciar identidade visual
@@ -63,9 +66,19 @@ const DEFAULT_BRAND_KIT: BrandKitConfig = {
 const STORAGE_KEY = 'brand-kit-config';
 
 export const useBrandKit = () => {
+    // Determinar contexto ativo (fallback EDITOR)
+    let activeContext: FunnelContext = FunnelContext.EDITOR;
+    try {
+        const crud = useUnifiedCRUDOptional();
+        if (crud?.funnelContext) activeContext = crud.funnelContext;
+    } catch { }
+
     const [brandKit, setBrandKit] = useState<BrandKitConfig>(() => {
         try {
-            const saved = localStorage.getItem(STORAGE_KEY);
+            // Tenta chave contextualizada primeiro
+            const savedCtx = getCtx(STORAGE_KEY, activeContext);
+            const savedLegacy = !savedCtx ? localStorage.getItem(STORAGE_KEY) : null;
+            const saved = savedCtx ?? savedLegacy;
             if (saved) {
                 const parsed = JSON.parse(saved);
                 return { ...DEFAULT_BRAND_KIT, ...parsed };
@@ -79,13 +92,16 @@ export const useBrandKit = () => {
     // 💾 Salvar no localStorage quando mudar
     useEffect(() => {
         try {
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(brandKit));
+            const serialized = JSON.stringify(brandKit);
+            // Salvar contextualizado e remover legado para evitar colisões
+            setCtx(STORAGE_KEY, serialized, activeContext);
+            try { localStorage.removeItem(STORAGE_KEY); } catch { }
             // Aplicar CSS variables automaticamente
             applyBrandKitToDOM(brandKit);
         } catch (error) {
             console.warn('⚠️ Erro ao salvar Brand Kit:', error);
         }
-    }, [brandKit]);
+    }, [brandKit, activeContext]);
 
     // 🎨 Atualizar cores
     const updateColors = useCallback((colors: Partial<BrandColors>) => {
