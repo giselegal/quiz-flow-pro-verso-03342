@@ -57,7 +57,7 @@ class UnifiedRoutingServiceImpl {
 
         '/admin/funnels/:id/edit': {
             path: '/admin/funnels/:id/edit',
-            component: 'ModernUnifiedEditor',
+            component: 'QuizModularProductionEditor',
             title: 'Editar Funil',
             description: 'Editor integrado para modificar funil',
             icon: 'Edit',
@@ -85,7 +85,7 @@ class UnifiedRoutingServiceImpl {
         // STANDALONE EDITOR ROUTES
         '/editor': {
             path: '/editor',
-            component: 'ModernUnifiedEditor',
+            component: 'QuizModularProductionEditor',
             title: 'Editor Visual',
             description: 'Editor visual independente',
             icon: 'Layout',
@@ -94,7 +94,7 @@ class UnifiedRoutingServiceImpl {
 
         '/editor/:id': {
             path: '/editor/:id',
-            component: 'ModernUnifiedEditor',
+            component: 'QuizModularProductionEditor',
             title: 'Editar Funil',
             description: 'Editor visual para funil específico',
             icon: 'Edit',
