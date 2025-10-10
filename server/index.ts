@@ -298,10 +298,20 @@ const wss = new WebSocketServer({ server });
 wss.on('connection', (ws: WSClient, req) => {
   try {
     const url = new URL(req.url || '', `http://${req.headers.host}`);
-    const funnelId = url.searchParams.get('funnelId') || 'production';
+    const funnelId = url.searchParams.get('funnelId');
+
+    // Rejeitar conexões sem funnelId ou com funnelId inválido
+    if (!funnelId || funnelId.startsWith('funnel-')) {
+      console.log('🚫 WebSocket: conexão rejeitada - funnelId inválido ou temporário:', funnelId);
+      ws.send(JSON.stringify({ type: 'error', message: 'funnelId inválido ou temporário' }));
+      ws.close();
+      return;
+    }
+
     ws.funnelId = funnelId;
     if (!channels.has(funnelId)) channels.set(funnelId, new Set());
     channels.get(funnelId)!.add(ws);
+    console.log('✅ WebSocket conectado:', funnelId);
     ws.send(JSON.stringify({ type: 'welcome', funnelId }));
 
     ws.on('message', (data) => {

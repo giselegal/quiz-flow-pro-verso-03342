@@ -10,9 +10,11 @@ export function useFunnelLivePreview(funnelId?: string) {
         // Não conectar se não houver funnelId válido
         if (!funnelId || funnelId.startsWith('funnel-')) {
             // funnelId temporário (novo funil não salvo) - não usar WebSocket
+            console.log('🚫 WebSocket: funnelId inválido ou temporário, não conectando:', funnelId);
             return;
         }
 
+        console.log('🔌 Tentando conectar WebSocket para funnelId:', funnelId);
         const id = funnelId;
         const proto = location.protocol === 'https:' ? 'wss' : 'ws';
         // Em dev (Vite em 5173 + backend 3001), conectamos direto no backend para WS
@@ -35,12 +37,14 @@ export function useFunnelLivePreview(funnelId?: string) {
                     // ignore
                 }
             };
-            ws.onerror = () => { /* ignore */ };
+            ws.onerror = (err) => {
+                console.error('❌ WebSocket erro para funnelId:', id, err);
+            };
             ws.onclose = () => {
                 console.log('🔌 WebSocket desconectado para funnelId:', id);
             };
-        } catch {
-            // ignore
+        } catch (err) {
+            console.error('❌ Falha ao criar WebSocket:', err);
         }
         return () => {
             try { wsRef.current?.close(); } catch { /* ignore */ }
