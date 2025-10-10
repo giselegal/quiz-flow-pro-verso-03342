@@ -147,11 +147,11 @@ export const UnifiedCRUDProvider: React.FC<UnifiedCRUDProviderProps> = ({
 
             console.log('🔍 Normalizando funnelId:', { original: id, normalized: searchId });
 
-            const funnel = await enhancedFunnelService.getFunnelWithFallback(searchId);
+            const funnel = await enhancedFunnelService.getFunnelWithFallback(searchId, undefined, context);
 
             if (!funnel) {
                 console.warn(`⚠️ Funil não encontrado com ID normalizado: ${searchId} (original: ${id})`);
-                const fallbackFunnel = await enhancedFunnelService.createFallbackFunnel(id);
+                const fallbackFunnel = await enhancedFunnelService.createFallbackFunnel(id, context);
                 if (!fallbackFunnel) {
                     throw new Error(`Funil não encontrado: ${id}`);
                 }

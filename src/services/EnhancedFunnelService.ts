@@ -30,11 +30,16 @@ export class EnhancedFunnelService {
   /**
    * Obtém funil com auto-criação baseada em template se necessário
    */
-  async getFunnelWithFallback(funnelId: string, userId?: string): Promise<UnifiedFunnelData | null> {
+  async getFunnelWithFallback(
+    funnelId: string,
+    userId?: string,
+    context: FunnelContext = FunnelContext.EDITOR
+  ): Promise<UnifiedFunnelData | null> {
     console.log('🎯 EnhancedFunnelService: Getting funnel with fallback', funnelId);
 
-    // Check cache first
-    const cached = this.cache.get(funnelId);
+    // Check cache first (por contexto)
+    const cacheKey = `${context}:${funnelId}`;
+    const cached = this.cache.get(cacheKey);
     if (cached) {
       console.log('✅ Funnel found in cache:', funnelId);
       return cached;
@@ -46,7 +51,7 @@ export class EnhancedFunnelService {
 
       if (funnel) {
         console.log('✅ Funnel found in database:', funnelId);
-        this.cache.set(funnelId, funnel);
+        this.cache.set(cacheKey, funnel);
         return funnel;
       }
 
@@ -58,15 +63,15 @@ export class EnhancedFunnelService {
 
         if (funnel) {
           console.log('✅ Funnel created from template:', funnelId);
-          this.cache.set(funnelId, funnel);
+          this.cache.set(cacheKey, funnel);
           return funnel;
         }
       }
 
       // Fallback: criar funil básico se não existe
-      funnel = await this.createFallbackFunnel(funnelId);
+      funnel = await this.createFallbackFunnel(funnelId, context);
       if (funnel) {
-        this.cache.set(funnelId, funnel);
+        this.cache.set(cacheKey, funnel);
       }
 
       return funnel;
