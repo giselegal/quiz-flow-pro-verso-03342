@@ -65,11 +65,11 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
             <Tabs value={activeTab} onValueChange={onTabChange} className="flex-1 flex flex-col">
                 <div className="px-4 py-2 bg-white border-b">
                     <TabsList>
-                        <TabsTrigger value="canvas">Canvas</TabsTrigger>
-                        <TabsTrigger value="preview">Preview</TabsTrigger>
+                        <TabsTrigger value="canvas" data-testid="tab-trigger-canvas">Canvas</TabsTrigger>
+                        <TabsTrigger value="preview" data-testid="tab-trigger-preview">Preview</TabsTrigger>
                     </TabsList>
                 </div>
-                <TabsContent value="canvas" className="flex-1 overflow-auto p-4 m-0">
+                <TabsContent value="canvas" className="flex-1 overflow-auto p-4 m-0" data-testid="tab-content-canvas">
                     {selectedStep ? (
                         <Card>
                             <CardContent>
@@ -167,7 +167,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
                         <div className="flex items-center justify-center h-full text-muted-foreground">Selecione uma etapa para editar</div>
                     )}
                 </TabsContent>
-                <TabsContent value="preview" className="flex-1 m-0 p-0">
+                <TabsContent value="preview" className="flex-1 m-0 p-0" forceMount data-testid="tab-content-preview">
                     {previewNode}
                 </TabsContent>
             </Tabs>
