@@ -912,15 +912,24 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                         '--color-primary': properties?.hoverColor || '#d4a05a',
                     } as React.CSSProperties}
                 >
-                    <QuizOptionsPreview
-                        blockId={id}
-                        options={content.options || []}
-                        properties={properties || {}}
-                        selectedStep={selectedStep}
-                        selections={quizSelections[id] || []}
-                        onToggle={(optionId: string, multi: boolean, required: number) => toggleQuizOption(id, optionId, multi, required)}
-                        advanceStep={(nextStepId: string) => { setSelectedStepId(nextStepId); setSelectedBlockId(''); }}
-                    />
+                    <div className="space-y-2">
+                        {properties?.question && (
+                            <div className="text-sm font-medium text-slate-700">
+                                {looksLikeHtml(properties.question)
+                                    ? <span dangerouslySetInnerHTML={{ __html: sanitizeInlineHtml(properties.question) }} />
+                                    : properties.question}
+                            </div>
+                        )}
+                        <QuizOptionsPreview
+                            blockId={id}
+                            options={content.options || []}
+                            properties={properties || {}}
+                            selectedStep={selectedStep}
+                            selections={quizSelections[id] || []}
+                            onToggle={(optionId: string, multi: boolean, required: number) => toggleQuizOption(id, optionId, multi, required)}
+                            advanceStep={(nextStepId: string) => { setSelectedStepId(nextStepId); setSelectedBlockId(''); }}
+                        />
+                    </div>
                 </div>
             );
             previewCacheRef.current.set(id, { key, node });
@@ -1069,6 +1078,13 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
             const cols = properties?.columns || 2;
             node = (
                 <div className="space-y-2">
+                    {properties?.question && (
+                        <div className="text-sm font-medium text-slate-700">
+                            {looksLikeHtml(properties.question)
+                                ? <span dangerouslySetInnerHTML={{ __html: sanitizeInlineHtml(properties.question) }} />
+                                : properties.question}
+                        </div>
+                    )}
                     <div className={cn('grid gap-3', cols === 2 ? 'grid-cols-2' : cols === 3 ? 'grid-cols-3' : 'grid-cols-1')}>
                         {options.map((opt: any, idx: number) => {
                             const img = opt.image || opt.imageUrl;

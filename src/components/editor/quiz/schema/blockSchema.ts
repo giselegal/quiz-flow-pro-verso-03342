@@ -96,6 +96,7 @@ export const INITIAL_BLOCK_SCHEMAS: BlockPropertySchemaDefinition[] = [
         type: 'quiz-options',
         groups: [{ id: 'content', label: 'Conteúdo', order: 1 }, { id: 'logic', label: 'Lógica', order: 2 }, { id: 'style', label: 'Estilo', order: 3 }],
         properties: [
+            { key: 'question', label: 'Pergunta', type: 'richtext', required: false, default: '', group: 'content' },
             { key: 'options', label: 'Opções', type: 'options-list', required: true, default: [], group: 'content' },
             { key: 'multiSelect', label: 'Multi Seleção', type: 'boolean', default: true, group: 'logic' },
             { key: 'requiredSelections', label: 'Seleções Necessárias', type: 'number', default: 1, min: 1, group: 'logic', validate: (value, current) => (current.multiSelect && value < 1 ? 'Valor mínimo 1' : null) },
