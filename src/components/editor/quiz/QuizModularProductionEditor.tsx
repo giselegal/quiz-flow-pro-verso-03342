@@ -2162,9 +2162,9 @@ const LivePreviewContainer: React.FC<LivePreviewContainerProps> = ({ funnelId, s
                     <QuizProductionPreview funnelId={funnelId} className="h-full" refreshToken={refreshToken} />
                 ) : (
                     <QuizRuntimeRegistryProvider>
-                        <LiveRuntimePreview 
-                            steps={debouncedSteps} 
-                            funnelId={funnelId} 
+                        <LiveRuntimePreview
+                            steps={debouncedSteps}
+                            funnelId={funnelId}
                             selectedStepId={selectedStepId}
                             runtimeMap={runtimeMap}
                             version={version}
