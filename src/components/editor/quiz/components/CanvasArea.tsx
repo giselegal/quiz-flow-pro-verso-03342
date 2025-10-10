@@ -153,30 +153,20 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
                                                             <div className="text-[11px] text-muted-foreground italic">(sem blocos raiz)</div>
                                                         )}
                                                     </div>
-                                                </TooltipProvider>
-                                            </SortableContext>
-                                            {virtualizationEnabled && (
-                                                <div className="sticky bottom-0 left-0 right-0 bg-gradient-to-t from-white via-white/90 to-transparent text-[10px] text-center py-1 text-slate-500 border-t">
-                                                    Virtualização ativa · {rootBlocks.length} blocos · exibindo {visible.length}
-                                                </div>
-                                            )}
-                                        </div>
-                                        );
-                                        })()}
-                                    </>
+                                                </>
                                 )}
-                            </CardContent>
-                        </Card>
-                    ) : (
-                        <div className="flex items-center justify-center h-full text-muted-foreground">Selecione uma etapa para editar</div>
+                                            </CardContent>
+                                        </Card>
+                                        ) : (
+                                        <div className="flex items-center justify-center h-full text-muted-foreground">Selecione uma etapa para editar</div>
                     )}
-                </TabsContent>
-                <TabsContent value="preview" className="flex-1 m-0 p-0" forceMount data-testid="tab-content-preview">
-                    {previewNode}
-                </TabsContent>
-            </Tabs>
-        </div>
-    );
+                                    </TabsContent>
+                                <TabsContent value="preview" className="flex-1 m-0 p-0" forceMount data-testid="tab-content-preview">
+                                    {previewNode}
+                                </TabsContent>
+                            </Tabs>
+                        </div>
+                    );
 };
 
-export default CanvasArea;
+                    export default CanvasArea;
