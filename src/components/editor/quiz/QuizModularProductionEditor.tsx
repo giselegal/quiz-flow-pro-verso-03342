@@ -2102,12 +2102,28 @@ const LivePreviewContainer: React.FC<LivePreviewContainerProps> = ({ funnelId, s
     const [debouncedSteps, setDebouncedSteps] = React.useState(steps);
     const debounceRef = React.useRef<number | null>(null);
 
+    // Hooks do LiveRuntimePreview movidos para cá (sempre chamados, independente do modo)
+    const { setSteps, version } = useQuizRuntimeRegistry();
+    const runtimeMap = React.useMemo(() => editorStepsToRuntimeMap(steps as any), [steps]);
+    const mapRef = React.useRef(runtimeMap);
+
     // Debounce para não repintar runtime a cada digitação
     React.useEffect(() => {
         if (debounceRef.current) window.clearTimeout(debounceRef.current);
         debounceRef.current = window.setTimeout(() => setDebouncedSteps(steps), 400);
         return () => { if (debounceRef.current) window.clearTimeout(debounceRef.current); };
     }, [steps]);
+
+    // Atualizar registry quando mapa muda (apenas em modo live)
+    React.useEffect(() => {
+        if (mode !== 'live') return;
+        const sameKeys = Object.keys(mapRef.current).join('|') === Object.keys(runtimeMap).join('|');
+        mapRef.current = runtimeMap;
+        setSteps(runtimeMap);
+        if (!sameKeys) {
+            console.log('🔁 Live preview registry atualizado', Object.keys(runtimeMap).length, 'steps');
+        }
+    }, [runtimeMap, setSteps, mode]);
 
     // Bloquear modo "production" se não houver funnelId
     const canUseProduction = !!funnelId;
@@ -2146,7 +2162,13 @@ const LivePreviewContainer: React.FC<LivePreviewContainerProps> = ({ funnelId, s
                     <QuizProductionPreview funnelId={funnelId} className="h-full" refreshToken={refreshToken} />
                 ) : (
                     <QuizRuntimeRegistryProvider>
-                        <LiveRuntimePreview steps={debouncedSteps} funnelId={funnelId} selectedStepId={selectedStepId} />
+                        <LiveRuntimePreview 
+                            steps={debouncedSteps} 
+                            funnelId={funnelId} 
+                            selectedStepId={selectedStepId}
+                            runtimeMap={runtimeMap}
+                            version={version}
+                        />
                     </QuizRuntimeRegistryProvider>
                 )}
             </div>
