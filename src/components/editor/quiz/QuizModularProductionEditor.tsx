@@ -1745,6 +1745,10 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
         }
     }, [funnelId, toast]);
 
+    // CRITICAL: All hooks must be called BEFORE any early returns
+    const [productionPreviewRefresh, setProductionPreviewRefresh] = useState(0);
+    const { sendSteps } = useFunnelLivePreview(funnelId);
+
     if (isLoading) {
         return (
             <div className="flex items-center justify-center h-screen">
@@ -1755,9 +1759,6 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
             </div>
         );
     }
-
-    const [productionPreviewRefresh, setProductionPreviewRefresh] = useState(0);
-    const { sendSteps } = useFunnelLivePreview(funnelId);
 
     // Autosave leve do draft enquanto edita, para que o preview de produção consiga carregar este draft em tempo quase real
     useEffect(() => {
