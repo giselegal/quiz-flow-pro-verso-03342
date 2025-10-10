@@ -6,6 +6,8 @@
  */
 
 import { StorageService } from './StorageService';
+import { ContextualStorageService } from './ContextualStorageService';
+import { FunnelContext } from '@/core/contexts/FunnelContext';
 import EVENTS from '@/core/constants/events';
 
 export interface UnifiedQuizData {
@@ -31,15 +33,36 @@ export interface UnifiedQuizData {
 class UnifiedQuizStorageService {
   private readonly STORAGE_KEY = 'unifiedQuizData';
   private readonly LEGACY_KEYS = ['userSelections', 'quizAnswers'];
+  private contextualStorage: ContextualStorageService;
+
+  constructor(context: FunnelContext = FunnelContext.EDITOR) {
+    this.contextualStorage = new ContextualStorageService(context);
+  }
+
+  /**
+   * Permite alterar o contexto dinamicamente
+   */
+  setContext(context: FunnelContext): void {
+    this.contextualStorage = new ContextualStorageService(context);
+  }
 
   /**
    * Carrega dados unificados, migrando dados legados se necessário
    */
   loadData(): UnifiedQuizData {
-    // Tentar carregar dados unificados primeiro
-    const unified = StorageService.safeGetJSON<UnifiedQuizData>(this.STORAGE_KEY);
+    // Tentar carregar dados unificados do storage contextual primeiro
+    const unified = this.contextualStorage.getJSON<UnifiedQuizData>(this.STORAGE_KEY);
     if (unified && this.isValidUnifiedData(unified)) {
       return unified;
+    }
+
+    // Fallback: tentar carregar do storage legado (sem contexto)
+    const legacyUnified = StorageService.safeGetJSON<UnifiedQuizData>(this.STORAGE_KEY);
+    if (legacyUnified && this.isValidUnifiedData(legacyUnified)) {
+      // Migrar para storage contextual
+      this.contextualStorage.setJSON(this.STORAGE_KEY, legacyUnified);
+      StorageService.safeRemove(this.STORAGE_KEY);
+      return legacyUnified;
     }
 
     // Se não existir, migrar dados legados
@@ -53,13 +76,13 @@ class UnifiedQuizStorageService {
     data.metadata.lastUpdated = new Date().toISOString();
     data.metadata.version = '2.0';
 
-    const success = StorageService.safeSetJSON(this.STORAGE_KEY, data);
+    const success = this.contextualStorage.setJSON(this.STORAGE_KEY, data);
 
     if (success) {
       // Notificar mudanças para hooks e componentes
       this.dispatchEvents({ skipAnswerEvent: opts?.skipAnswerEvent });
 
-      // Sincronizar com chaves legadas para compatibilidade
+      // Sincronizar com chaves legadas para compatibilidade (temporário)
       this.syncLegacyKeys(data);
     }
 
@@ -149,10 +172,13 @@ class UnifiedQuizStorageService {
    * Limpa todos os dados
    */
   clearAll(): boolean {
-    const success = StorageService.safeRemove(this.STORAGE_KEY);
+    const success = this.contextualStorage.remove(this.STORAGE_KEY);
 
     // Limpar também chaves legadas
-    this.LEGACY_KEYS.forEach(key => StorageService.safeRemove(key));
+    this.LEGACY_KEYS.forEach(key => {
+      StorageService.safeRemove(key);
+      this.contextualStorage.remove(key);
+    });
 
     if (success) {
       this.dispatchEvents();
