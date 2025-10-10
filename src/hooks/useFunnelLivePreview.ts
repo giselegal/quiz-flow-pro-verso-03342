@@ -9,7 +9,10 @@ export function useFunnelLivePreview(funnelId?: string) {
     useEffect(() => {
         const id = funnelId || 'production';
         const proto = location.protocol === 'https:' ? 'wss' : 'ws';
-        const url = `${proto}://${location.host}/?funnelId=${encodeURIComponent(id)}`;
+        // Em dev (Vite em 5173 + backend 3001), conectamos direto no backend para WS
+        const isDev = typeof import.meta !== 'undefined' && (import.meta as any).env && (import.meta as any).env.DEV;
+        const host = isDev ? `${location.hostname}:3001` : location.host;
+        const url = `${proto}://${host}/?funnelId=${encodeURIComponent(id)}`;
         try {
             const ws = new WebSocket(url);
             wsRef.current = ws;
