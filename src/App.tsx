@@ -294,7 +294,7 @@ function App() {
                                 }
                                 const slug = params?.get('slug') || 'quiz-estilo';
                                 const funnel = params?.get('funnel') || undefined;
-                                
+
                                 switch (slug) {
                                   case 'quiz-estilo':
                                     return <QuizEstiloPessoalPage funnelId={funnel} />;
