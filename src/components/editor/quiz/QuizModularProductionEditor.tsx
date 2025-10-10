@@ -2014,7 +2014,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                     canvasPanel={(
                         <CanvasArea
                             activeTab={activeTab}
-                            onTabChange={() => {}} // Preview desabilitado
+                            onTabChange={() => { }} // Preview desabilitado
                             steps={steps}
                             selectedStep={selectedStep}
                             headerConfig={headerConfig}
