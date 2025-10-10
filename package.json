@@ -82,6 +82,8 @@
     "diagnostic:properties-panel": "tsx scripts/diagnostic/checkPropertiesPanel.ts",
     "diagnostic:backfill": "tsx scripts/diagnostic/checkBackfillReady.ts",
     "smoke:step20": "node scripts/smoke-step20.mjs",
+    "smoke:live": "node scripts/smoke/live-preview.mjs",
+    "smoke:package": "node scripts/smoke/package-funnel.mjs",
     "smoke:step1": "node scripts/smoke-step1.mjs",
     "smoke:step1:persist": "node scripts/smoke-step1-persist.mjs",
     "smoke:e2e:3x": "node scripts/smoke-e2e-3x.mjs",
