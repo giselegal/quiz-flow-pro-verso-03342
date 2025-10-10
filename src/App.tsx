@@ -46,7 +46,7 @@ const TemplateDiagnosticPage = lazy(() => import('./pages/TemplateDiagnosticPage
 // 🚀 EDITOR OFICIAL ÚNICO
 const QuizModularProductionEditor = lazy(() => import('./components/editor/quiz/QuizModularProductionEditor').then(module => ({ default: module.default })));
 
-// ❌ HYBRID EDITOR PRO - DESATIVADO (substituído pelo ModernUnifiedEditor)
+// ❌ HYBRID EDITOR PRO - DESATIVADO (substituído pelo QuizModularProductionEditor)
 // const HybridEditorPro = lazy(() => import('./components/editor/EditorPro/components/HybridEditorPro'));
 
 // 🧪 PÁGINAS DE QUIZ
@@ -279,7 +279,7 @@ function App() {
                           <FunnelTypesPage />
                         </Route>
 
-                        {/* 🔄 LEGACY EDITORS: removidos → manter apenas ModernUnifiedEditor */}
+                        {/* 🔄 LEGACY EDITORS: removidos → manter apenas QuizModularProductionEditor */}
 
                         {/* 🧪 QUIZ DE ESTILO PESSOAL */}
                         <Route path="/quiz-estilo">
