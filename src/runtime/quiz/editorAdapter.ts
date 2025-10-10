@@ -1,13 +1,18 @@
-import type { EditableQuizStep } from '@/components/editor/quiz/QuizFunnelEditor';
+// Usar tipo leve para evitar acoplamento com editores específicos
+import type { EditableQuizStepLite } from '@/types/editor-lite';
 import type { RuntimeStepOverride } from './QuizRuntimeRegistry';
 
 /**
  * Converte a lista de steps editáveis do editor para o formato consumido pelo runtime (override).
  */
-export function editorStepsToRuntimeMap(steps: EditableQuizStep[]): Record<string, RuntimeStepOverride> {
+export function editorStepsToRuntimeMap(steps: EditableQuizStepLite[]): Record<string, RuntimeStepOverride> {
     const map: Record<string, RuntimeStepOverride> = {};
     for (const s of steps) {
         if (!s.id) continue;
+        // Normalizar blocks: aceitar formato legacy (config) e modular (properties/content → config)
+        const normalizedBlocks = Array.isArray((s as any).blocks)
+            ? (s as any).blocks.map((b: any) => ({ id: b.id, type: b.type, config: b.config || b.properties || {} }))
+            : undefined;
         map[s.id] = {
             id: s.id,
             type: s.type,
@@ -21,7 +26,7 @@ export function editorStepsToRuntimeMap(steps: EditableQuizStep[]): Record<strin
             buttonText: (s as any).buttonText,
             title: (s as any).title,
             text: (s as any).text,
-            blocks: Array.isArray((s as any).blocks) ? (s as any).blocks.map((b: any) => ({ id: b.id, type: b.type, config: b.config || {} })) : undefined,
+            blocks: normalizedBlocks,
             // ✅ Novo: incluir offerMap para step de oferta (step-21)
             offerMap: (s as any).offerMap,
         };
