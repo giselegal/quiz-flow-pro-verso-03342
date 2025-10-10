@@ -74,7 +74,7 @@ export interface SyncConfig {
 
 export const DATABASE_CONFIG: StorageConfig = {
     dbName: 'QuizQuestStorage',
-    version: 1,
+    version: 2,
     stores: [
         {
             name: 'funnels',
@@ -94,6 +94,16 @@ export const DATABASE_CONFIG: StorageConfig = {
                 { name: 'funnelId', keyPath: 'funnelId' },
                 { name: 'userId', keyPath: 'metadata.userId' },
                 { name: 'timestamp', keyPath: 'timestamp' }
+            ]
+        },
+        {
+            name: 'configurations',
+            keyPath: 'id',
+            indexes: [
+                { name: 'componentId', keyPath: 'data.componentId' },
+                { name: 'funnelId', keyPath: 'data.funnelId' },
+                { name: 'timestamp', keyPath: 'timestamp' },
+                { name: 'namespace', keyPath: 'metadata.namespace' }
             ]
         },
         {
