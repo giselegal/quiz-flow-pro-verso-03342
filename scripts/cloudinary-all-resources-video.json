@@ -1,0 +1,73 @@
+{
+  "fetchedAt": "2025-10-09T23:26:04.503Z",
+  "cloud": "dqljyf76t",
+  "type": "video",
+  "prefix": null,
+  "count": 4,
+  "resources": [
+    {
+      "asset_id": "1767c705a5ffceb6eab0ec928a37c893",
+      "public_id": "samples/elephants",
+      "format": "mp4",
+      "version": 1744734979,
+      "resource_type": "video",
+      "type": "upload",
+      "created_at": "2025-04-15T16:36:19Z",
+      "bytes": 38855178,
+      "width": 1920,
+      "height": 1080,
+      "asset_folder": "",
+      "display_name": "elephants",
+      "url": "http://res.cloudinary.com/dqljyf76t/video/upload/v1744734979/samples/elephants.mp4",
+      "secure_url": "https://res.cloudinary.com/dqljyf76t/video/upload/v1744734979/samples/elephants.mp4"
+    },
+    {
+      "asset_id": "5326be924701abde3252ac5019625492",
+      "public_id": "samples/dance-2",
+      "format": "mp4",
+      "version": 1744734981,
+      "resource_type": "video",
+      "type": "upload",
+      "created_at": "2025-04-15T16:36:21Z",
+      "bytes": 22373558,
+      "width": 3840,
+      "height": 2160,
+      "asset_folder": "",
+      "display_name": "dance-2",
+      "url": "http://res.cloudinary.com/dqljyf76t/video/upload/v1744734981/samples/dance-2.mp4",
+      "secure_url": "https://res.cloudinary.com/dqljyf76t/video/upload/v1744734981/samples/dance-2.mp4"
+    },
+    {
+      "asset_id": "aafb4de319bbcf2b93c78a3157028aa4",
+      "public_id": "samples/cld-sample-video",
+      "format": "mp4",
+      "version": 1744734979,
+      "resource_type": "video",
+      "type": "upload",
+      "created_at": "2025-04-15T16:36:19Z",
+      "bytes": 35988643,
+      "width": 3840,
+      "height": 2160,
+      "asset_folder": "",
+      "display_name": "cld-sample-video",
+      "url": "http://res.cloudinary.com/dqljyf76t/video/upload/v1744734979/samples/cld-sample-video.mp4",
+      "secure_url": "https://res.cloudinary.com/dqljyf76t/video/upload/v1744734979/samples/cld-sample-video.mp4"
+    },
+    {
+      "asset_id": "f49347c58884fe66c261a5ec38b1a1ed",
+      "public_id": "samples/sea-turtle",
+      "format": "mp4",
+      "version": 1744734979,
+      "resource_type": "video",
+      "type": "upload",
+      "created_at": "2025-04-15T16:36:19Z",
+      "bytes": 27932506,
+      "width": 1920,
+      "height": 1080,
+      "asset_folder": "",
+      "display_name": "sea-turtle",
+      "url": "http://res.cloudinary.com/dqljyf76t/video/upload/v1744734979/samples/sea-turtle.mp4",
+      "secure_url": "https://res.cloudinary.com/dqljyf76t/video/upload/v1744734979/samples/sea-turtle.mp4"
+    }
+  ]
+}

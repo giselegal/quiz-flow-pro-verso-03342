@@ -57,6 +57,7 @@
     "cloudinary:today": "node scripts/cloudinary-today.js",
     "cloudinary:analyze": "node scripts/analyze-cloudinary-urls.js",
     "cloudinary:check": "node scripts/check-cloudinary-today.js",
+    "cloudinary:all": "node scripts/get-all-cloudinary-urls.js",
     "cloudinary:test-key": "node scripts/test-api-key.js",
     "cloudinary:test-connection": "node scripts/test-cloudinary-connection.js",
     "test:render": "vitest run -t render",
