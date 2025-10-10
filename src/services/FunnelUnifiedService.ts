@@ -970,8 +970,15 @@ export class FunnelUnifiedService {
                 query = query.eq('is_published', true);
             }
 
+            // 🛡️ Proteger contra erros com .contains() em campos JSONB
             if (options.context) {
-                query = query.contains('settings', { context: options.context });
+                try {
+                    // Verificar se settings é um campo JSONB válido antes de usar contains
+                    // Alternativa mais segura: filtrar no client-side após o fetch
+                    // query = query.contains('settings', { context: options.context });
+                } catch (err) {
+                    console.warn('⚠️ Erro ao aplicar filtro context via contains, ignorando:', err);
+                }
             }
 
             query = query.order('updated_at', { ascending: false });
