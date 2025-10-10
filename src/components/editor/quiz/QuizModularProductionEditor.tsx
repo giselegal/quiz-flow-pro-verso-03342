@@ -286,6 +286,117 @@ interface QuizModularProductionEditorProps {
     funnelId?: string;
 }
 
+// ========================================
+// QuizOptionsPreview Component (Extracted to avoid Rules of Hooks violations)
+// ========================================
+interface QuizOptionsPreviewProps {
+    blockId: string;
+    options: any[];
+    properties: Record<string, any>;
+    selectedStep?: EditableQuizStep;
+    selections: string[];
+    onToggle: (optionId: string, multi: boolean, required: number) => void;
+    advanceStep: (nextStepId: string) => void;
+    previewRuntimeFlags: { enableAutoAdvance: boolean; autoAdvanceDelayMs: number };
+}
+
+const QuizOptionsPreview: React.FC<QuizOptionsPreviewProps> = ({
+    blockId,
+    options,
+    properties,
+    selectedStep,
+    selections,
+    onToggle,
+    advanceStep,
+    previewRuntimeFlags
+}) => {
+    const multi = properties?.multiSelect ?? false;
+    const required = properties?.requiredSelections || (multi ? 1 : 1);
+    const max = properties?.maxSelections || required;
+    const showImages = properties?.showImages !== false;
+    const showNextButton = properties?.showNextButton !== false;
+    const enableButtonOnlyWhenValid = properties?.enableButtonOnlyWhenValid !== false;
+    const nextButtonText = properties?.nextButtonText || 'Avançar';
+    const autoAdvance = (properties?.autoAdvance !== false) && previewRuntimeFlags.enableAutoAdvance && !!(selectedStep && selectedStep.type === 'question');
+    const hasImages = showImages && options.some(o => !!o.image);
+    const layout = properties?.layout || 'auto';
+    let gridClass = 'quiz-options-1col';
+    if (layout === 'grid-2') gridClass = 'quiz-options-2col';
+    else if (layout === 'grid-3') gridClass = 'quiz-options-3col';
+    else if (layout === 'auto') {
+        if (hasImages) gridClass = 'quiz-options-3col';
+        else if (options.length >= 4) gridClass = 'quiz-options-2col';
+    }
+
+    // Auto-advance effect (NOW SAFE - at component top level)
+    useEffect(() => {
+        if (autoAdvance && selections.length === required && required > 0 && selectedStep?.nextStep) {
+            const t = setTimeout(() => advanceStep(selectedStep.nextStep!), previewRuntimeFlags.autoAdvanceDelayMs);
+            return () => clearTimeout(t);
+        }
+    }, [autoAdvance, selections.length, required, selectedStep, advanceStep, previewRuntimeFlags.autoAdvanceDelayMs]);
+
+    const isValid = selections.length >= required && required > 0;
+    const handleNext = () => {
+        if (!selectedStep?.nextStep) return;
+        if (enableButtonOnlyWhenValid && !isValid) return;
+        advanceStep(selectedStep.nextStep);
+    };
+
+    return (
+        <div className="space-y-2">
+            <div className={cn('quiz-options', gridClass)}>
+                {options.map(opt => {
+                    const active = selections.includes(opt.id);
+                    return (
+                        <div
+                            key={opt.id}
+                            role="button"
+                            tabIndex={0}
+                            onClick={(e) => { e.preventDefault(); onToggle(opt.id, multi, max); }}
+                            onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onToggle(opt.id, multi, max); } }}
+                            className={cn('quiz-option transition-all', active && 'quiz-option-selected', !active && 'cursor-pointer')}
+                        >
+                            {showImages && opt.image && (
+                                <img
+                                    src={opt.image}
+                                    alt={opt.text || 'Opção'}
+                                    className="mb-2 rounded"
+                                    style={{
+                                        width: properties?.imageMaxWidth ? `${properties.imageMaxWidth}px` : '100%',
+                                        maxWidth: '100%',
+                                        height: properties?.imageMaxHeight ? `${properties.imageMaxHeight}px` : 'auto',
+                                        objectFit: 'cover'
+                                    }}
+                                />
+                            )}
+                            <p className="quiz-option-text text-xs font-medium leading-snug">{opt.text || 'Opção'}</p>
+                        </div>
+                    );
+                })}
+            </div>
+            <div className="text-[10px] text-muted-foreground">
+                {multi ? `${selections.length}/${required} selecionadas` : (selections.length === 1 ? '1 selecionada' : 'Selecione 1')}
+            </div>
+            {showNextButton && (
+                <div className="pt-1">
+                    <button
+                        type="button"
+                        onClick={handleNext}
+                        className={cn(
+                            'quiz-button px-4 py-2 rounded-full text-sm',
+                            enableButtonOnlyWhenValid && !isValid && 'quiz-button-disabled'
+                        )}
+                        disabled={enableButtonOnlyWhenValid && !isValid}
+                    >
+                        {nextButtonText}
+                    </button>
+                </div>
+            )}
+        </div>
+    );
+};
+
 export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorProps> = ({
     funnelId: initialFunnelId
 }) => {
@@ -1525,103 +1636,6 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
             return next;
         });
     }, []);
-
-    // Componente especializado para quiz-options (isolado para respeitar regras de hooks)
-    interface QuizOptionsPreviewProps {
-        blockId: string;
-        options: any[];
-        properties: Record<string, any>;
-        selectedStep?: EditableQuizStep;
-        selections: string[];
-        onToggle: (optionId: string, multi: boolean, required: number) => void;
-        advanceStep: (nextStepId: string) => void;
-    }
-    const QuizOptionsPreview: React.FC<QuizOptionsPreviewProps> = ({ blockId, options, properties, selectedStep, selections, onToggle, advanceStep }) => {
-        const multi = properties?.multiSelect ?? false;
-        const required = properties?.requiredSelections || (multi ? 1 : 1);
-        const max = properties?.maxSelections || required;
-        const showImages = properties?.showImages !== false;
-        const showNextButton = properties?.showNextButton !== false; // default true
-        const enableButtonOnlyWhenValid = properties?.enableButtonOnlyWhenValid !== false; // default true
-        const nextButtonText = properties?.nextButtonText || 'Avançar';
-        // Auto-avanço: respeita flag global e local (properties.autoAdvance)
-        const autoAdvance = (properties?.autoAdvance !== false) && previewRuntimeFlags.enableAutoAdvance && !!(selectedStep && selectedStep.type === 'question');
-        const hasImages = showImages && options.some(o => !!o.image);
-        // Layout automático: se auto e tem imagens usar 3col, se >4 opções sem imagem usar 2col, senão 1col
-        const layout = properties?.layout || 'auto';
-        let gridClass = 'quiz-options-1col';
-        if (layout === 'grid-2') gridClass = 'quiz-options-2col';
-        else if (layout === 'grid-3') gridClass = 'quiz-options-3col';
-        else if (layout === 'auto') {
-            if (hasImages) gridClass = 'quiz-options-3col';
-            else if (options.length >= 4) gridClass = 'quiz-options-2col';
-        }
-        // Efeito de auto-avance
-        useEffect(() => {
-            if (autoAdvance && selections.length === required && required > 0 && selectedStep?.nextStep) {
-                const t = setTimeout(() => advanceStep(selectedStep.nextStep!), previewRuntimeFlags.autoAdvanceDelayMs);
-                return () => clearTimeout(t);
-            }
-        }, [autoAdvance, selections.length, required, selectedStep, advanceStep]);
-        const isValid = selections.length >= required && required > 0;
-        const handleNext = () => {
-            if (!selectedStep?.nextStep) return;
-            if (enableButtonOnlyWhenValid && !isValid) return;
-            advanceStep(selectedStep.nextStep);
-        };
-        return (
-            <div className="space-y-2">
-                <div className={cn('quiz-options', gridClass)}>
-                    {options.map(opt => {
-                        const active = selections.includes(opt.id);
-                        return (
-                            <div
-                                key={opt.id}
-                                role="button"
-                                tabIndex={0}
-                                onClick={(e) => { e.preventDefault(); onToggle(opt.id, multi, max); }}
-                                onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onToggle(opt.id, multi, max); } }}
-                                className={cn('quiz-option transition-all', active && 'quiz-option-selected', !active && 'cursor-pointer')}
-                            >
-                                {showImages && opt.image && (
-                                    <img
-                                        src={opt.image}
-                                        alt={opt.text || 'Opção'}
-                                        className="mb-2 rounded"
-                                        style={{
-                                            width: properties?.imageMaxWidth ? `${properties.imageMaxWidth}px` : '100%',
-                                            maxWidth: '100%',
-                                            height: properties?.imageMaxHeight ? `${properties.imageMaxHeight}px` : 'auto',
-                                            objectFit: 'cover'
-                                        }}
-                                    />
-                                )}
-                                <p className="quiz-option-text text-xs font-medium leading-snug">{opt.text || 'Opção'}</p>
-                            </div>
-                        );
-                    })}
-                </div>
-                <div className="text-[10px] text-muted-foreground">
-                    {multi ? `${selections.length}/${required} selecionadas` : (selections.length === 1 ? '1 selecionada' : 'Selecione 1')}
-                </div>
-                {showNextButton && (
-                    <div className="pt-1">
-                        <button
-                            type="button"
-                            onClick={handleNext}
-                            className={cn(
-                                'quiz-button px-4 py-2 rounded-full text-sm',
-                                enableButtonOnlyWhenValid && !isValid && 'quiz-button-disabled'
-                            )}
-                            disabled={enableButtonOnlyWhenValid && !isValid}
-                        >
-                            {nextButtonText}
-                        </button>
-                    </div>
-                )}
-            </div>
-        );
-    };
 
     // Salvar
     const [saveNotice, setSaveNotice] = useState<{ type: 'warning' | 'info'; message: string } | null>(null);
