@@ -71,7 +71,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
                 </div>
                 <TabsContent value="canvas" className="flex-1 overflow-visible p-4 m-0" data-testid="tab-content-canvas">
                     {selectedStep ? (
-                        <Card>
+                        <Card className="border-0 shadow-none bg-transparent">
                             <CardContent>
                                 <div className="sticky top-0 z-20 bg-white/90 backdrop-blur supports-[backdrop-filter]:bg-white/80 border-b mb-4">
                                     <div className="px-3 py-2">
@@ -123,7 +123,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
                                                 enabled: virtualizationEnabled,
                                             });
                                             return (
-                                                <div ref={containerRef} className="space-y-2 pr-1 border rounded-md bg-white/40 overflow-visible">
+                                                <div ref={containerRef} className="space-y-2 pr-1 bg-white/40 overflow-visible">
                                                     <SortableContext items={[...rootBlocks.map(b => b.id), 'canvas-end']} strategy={verticalListSortingStrategy}>
                                                         <TooltipProvider>
                                                             <div style={{ position: 'relative' }}>

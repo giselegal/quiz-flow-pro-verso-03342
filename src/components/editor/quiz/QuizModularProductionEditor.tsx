@@ -326,7 +326,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
             autoProgress: true,
             manualPercent: 0,
             barHeight: '4px',
-            barColor: '#D4AF37',
+            barColor: '#ccaa6aff',
             barBackground: '#E5E7EB',
             align: 'left', // 'left' | 'center' | 'right'
             title: ''
