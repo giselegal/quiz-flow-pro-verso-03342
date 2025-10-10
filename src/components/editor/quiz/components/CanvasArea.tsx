@@ -45,7 +45,7 @@ const VirtualizedBlockList: React.FC<VirtualizedBlockListProps> = ({
         .sort((a, b) => a.order - b.order);
     const virtualizationThreshold = 60;
     const virtualizationEnabled = rootBlocks.length > virtualizationThreshold && !activeId;
-    
+
     // ✅ AGORA O HOOK É CHAMADO NO NÍVEL SUPERIOR DO COMPONENTE
     const { visible, topSpacer, bottomSpacer, containerRef } = useVirtualBlocks({
         blocks: rootBlocks,
