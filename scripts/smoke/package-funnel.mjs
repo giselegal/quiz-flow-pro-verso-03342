@@ -27,7 +27,7 @@ async function main() {
         }
         if (!ready) {
             console.error('FAIL wait /api/health timeout');
-            if (spawned) { try { spawned.kill('SIGKILL'); } catch {} }
+            if (spawned) { try { spawned.kill('SIGKILL'); } catch { } }
             process.exit(1);
         }
         const payload = {
@@ -54,9 +54,9 @@ async function main() {
         // consume a little to ensure stream works
         const reader = r.body?.getReader?.();
         if (reader) await reader.read().catch(() => { });
-            console.log('PASS /api/package-funnel');
-            if (spawned) { try { spawned.kill('SIGKILL'); } catch {} }
-            process.exit(0);
+        console.log('PASS /api/package-funnel');
+        if (spawned) { try { spawned.kill('SIGKILL'); } catch { } }
+        process.exit(0);
     } catch (e) {
         console.error('SMOKE ERROR', e);
         process.exit(2);
