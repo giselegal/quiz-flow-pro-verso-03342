@@ -10,6 +10,7 @@
 
 import { FunnelUnifiedService, UnifiedFunnelData } from './FunnelUnifiedService';
 import { TemplateFunnelService } from './TemplateFunnelService';
+import { FunnelContext } from '@/core/contexts/FunnelContext';
 
 export class EnhancedFunnelService {
   private static instance: EnhancedFunnelService;
@@ -17,7 +18,7 @@ export class EnhancedFunnelService {
   private templateService = TemplateFunnelService.getInstance();
   private cache = new Map<string, UnifiedFunnelData>();
 
-  private constructor() {}
+  private constructor() { }
 
   static getInstance(): EnhancedFunnelService {
     if (!this.instance) {
@@ -42,7 +43,7 @@ export class EnhancedFunnelService {
     try {
       // Tentar carregar funil existente
       let funnel = await this.funnelService.getFunnel(funnelId, userId);
-      
+
       if (funnel) {
         console.log('✅ Funnel found in database:', funnelId);
         this.cache.set(funnelId, funnel);
@@ -52,9 +53,9 @@ export class EnhancedFunnelService {
       // Se não existe e é um ID de template, criar automaticamente
       if (this.templateService.shouldCreateFromTemplate(funnelId)) {
         console.log('🔄 Auto-creating funnel from template:', funnelId);
-        
+
         funnel = await this.templateService.createFunnelFromTemplate(funnelId);
-        
+
         if (funnel) {
           console.log('✅ Funnel created from template:', funnelId);
           this.cache.set(funnelId, funnel);
@@ -71,13 +72,13 @@ export class EnhancedFunnelService {
       return funnel;
     } catch (error) {
       console.error('❌ Error in getFunnelWithFallback:', error);
-      
+
       // Em caso de erro, tentar criar fallback
       const fallback = await this.createFallbackFunnel(funnelId);
       if (fallback) {
         this.cache.set(funnelId, fallback);
       }
-      
+
       return fallback;
     }
   }
@@ -85,44 +86,47 @@ export class EnhancedFunnelService {
   /**
    * FASE 1: Criar funil fallback quando não existe
    */
-  async createFallbackFunnel(funnelId: string): Promise<UnifiedFunnelData | null> {
+  async createFallbackFunnel(funnelId: string, context: FunnelContext = FunnelContext.EDITOR): Promise<UnifiedFunnelData | null> {
     try {
       console.log('🔄 Creating fallback funnel:', funnelId);
 
-      const fallbackFunnel: UnifiedFunnelData = {
-        id: funnelId,
+      // 1) Criar funil base usando a API correta
+      const created = await this.funnelService.createFunnel({
         name: `Funil ${funnelId}`,
         description: 'Funil criado automaticamente',
+        category: 'outros',
+        context,
         userId: 'anonymous',
-        context: {} as any,
-        isPublished: false,
-        version: 1,
-        settings: {
-          theme: 'modern-elegant',
-          totalSteps: 21,
-          allowBackward: true,
-          saveProgress: true
-        },
-        pages: Array.from({ length: 21 }, (_, index) => ({
-          id: `${funnelId}-step-${index + 1}`,
-          funnel_id: funnelId,
-          page_type: 'question',
-          page_order: index + 1,
-          title: `Etapa ${index + 1}`,
-          blocks: [],
-          metadata: {},
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString()
-        })),
-        createdAt: new Date(),
-        updatedAt: new Date()
+        autoPublish: false
+      });
+
+      // 2) Montar dados padrão (settings/pages) e aplicar via update
+      const defaultSettings = {
+        theme: 'modern-elegant',
+        totalSteps: 21,
+        allowBackward: true,
+        saveProgress: true
       };
 
-      // Save fallback to database
-      await this.funnelService.createFunnel(fallbackFunnel);
-      
-      console.log('✅ Fallback funnel created successfully:', funnelId);
-      return fallbackFunnel;
+      const defaultPages = Array.from({ length: 21 }, (_, index) => ({
+        id: `${created.id}-step-${index + 1}`,
+        funnel_id: created.id,
+        page_type: 'question',
+        page_order: index + 1,
+        title: `Etapa ${index + 1}`,
+        blocks: [],
+        metadata: {},
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
+      }));
+
+      const updated = await this.funnelService.updateFunnel(created.id, {
+        settings: defaultSettings,
+        pages: defaultPages
+      });
+
+      console.log('✅ Fallback funnel created successfully:', updated.id);
+      return updated;
     } catch (error) {
       console.error('❌ Error creating fallback funnel:', error);
       return null;
