@@ -140,7 +140,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
                         <div className="flex items-center justify-center h-full text-muted-foreground">Selecione uma etapa para editar</div>
                     )}
                 </TabsContent>
-                <TabsContent value="preview" className="flex-1 m-0 p-0" forceMount data-testid="tab-content-preview">
+                <TabsContent value="preview" className="flex-1 m-0 p-0" data-testid="tab-content-preview">
                     {previewNode}
                 </TabsContent>
             </Tabs>
