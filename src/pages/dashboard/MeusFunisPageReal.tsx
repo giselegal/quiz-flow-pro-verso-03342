@@ -719,15 +719,26 @@ const MeusFunisPageReal: React.FC = () => {
                                         </Button>
                                     </>
                                 ) : (
-                                    <Button
-                                        variant="outline"
-                                        size="sm"
-                                        className="flex-1"
-                                        onClick={() => window.open(`/quiz/${funil.id}`, '_blank')}
-                                    >
-                                        <Eye className="w-4 h-4 mr-2" />
-                                        Visualizar
-                                    </Button>
+                                    <>
+                                        <Button
+                                            variant="outline"
+                                            size="sm"
+                                            className="flex-1"
+                                            onClick={() => window.open(`/quiz/${funil.id}`, '_blank')}
+                                        >
+                                            <Eye className="w-4 h-4 mr-2" />
+                                            Preview (produção)
+                                        </Button>
+                                        <Button
+                                            variant="secondary"
+                                            size="sm"
+                                            className="flex-1"
+                                            onClick={() => window.open(`/quiz-estilo?draft=${encodeURIComponent(funil.id)}`, '_blank')}
+                                        >
+                                            <Eye className="w-4 h-4 mr-2" />
+                                            Preview (rascunho)
+                                        </Button>
+                                    </>
                                 )}
                             </div>
                         </CardContent>
