@@ -55,8 +55,8 @@ export { CollaborationPanel } from './CollaborationPanel';
 // Hooks e serviços serão importados quando implementados
 
 // 📊 SISTEMA DE ANALYTICS
-export { AnalyticsDashboard } from './AnalyticsDashboard';
-// Hooks e serviços serão importados quando implementados
+// AnalyticsDashboard foi consolidado em @/components/dashboard/AnalyticsDashboard
+// Use: import { AnalyticsDashboard } from '@/components/dashboard/AnalyticsDashboard';
 
 // 🎯 INTEGRAÇÃO QUIZPAGE
 export { QuizPageEditor } from '../quiz/QuizPageEditor';

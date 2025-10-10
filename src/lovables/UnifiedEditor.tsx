@@ -1,4 +1,4 @@
-import { UnifiedVisualEditor, EditorTab } from '@/components/unified-editor/UnifiedVisualEditor';
+import { UnifiedVisualEditor, EditorTab } from '@/components/editor/unified-alt/UnifiedVisualEditor';
 import { mapToStyleResult } from '@/utils/styleResultMapper';
 
 export default {
