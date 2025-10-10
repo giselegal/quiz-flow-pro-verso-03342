@@ -457,7 +457,34 @@ export class FunnelUnifiedService {
                 return cached;
             }
 
-            // Buscar no Supabase
+            // Offline-first: se offline ou sem sessão, tentar IndexedDB/localStorage primeiro
+            let isOffline = false;
+            try {
+                isOffline = typeof window !== 'undefined' && (window as any)?.navigator && (window as any).navigator.onLine === false;
+            } catch { }
+
+            let hasSession = true;
+            try {
+                const { data: { session } } = await supabase.auth.getSession();
+                hasSession = !!session?.user;
+            } catch { hasSession = false; }
+
+            if (isOffline || !hasSession) {
+                const localFunnel = await this.loadFromIndexedDB(id);
+                if (localFunnel) {
+                    console.log('📦 Offline-first: funil carregado do armazenamento local');
+                    // Popular cache para próximas leituras
+                    this.cache.set(`funnel:${id}`, localFunnel, undefined, localFunnel.context, localFunnel.userId);
+                    return deepClone(localFunnel);
+                }
+                // Se offline e não encontrou local, evitar chamada remota desnecessária
+                if (isOffline) {
+                    console.warn('🌐 Offline e funil não encontrado localmente');
+                    return null;
+                }
+            }
+
+            // Buscar no Supabase (online e com sessão, ou como tentativa final)
             const funnel = await this.loadFromSupabase(id, userId);
 
             if (funnel) {
@@ -552,6 +579,32 @@ export class FunnelUnifiedService {
             if (cached) {
                 console.log('💾 Lista carregada do cache');
                 return cached;
+            }
+
+            // Offline-first: se offline ou sem sessão, tentar IndexedDB/localStorage primeiro
+            let isOffline = false;
+            try {
+                isOffline = typeof window !== 'undefined' && (window as any)?.navigator && (window as any).navigator.onLine === false;
+            } catch { }
+
+            let hasSession = true;
+            try {
+                const { data: { session } } = await supabase.auth.getSession();
+                hasSession = !!session?.user;
+            } catch { hasSession = false; }
+
+            if (isOffline || !hasSession) {
+                const localList = await this.listFromIndexedDB({ ...options, userId });
+                if (localList && localList.length > 0) {
+                    console.log(`📦 Offline-first: ${localList.length} funis carregados do armazenamento local`);
+                    // Cache com TTL menor
+                    this.cache.set(cacheKey, localList, 2 * 60 * 1000, options.context, userId);
+                    return deepClone(localList);
+                }
+                if (isOffline) {
+                    console.warn('🌐 Offline e nenhuma lista encontrada localmente');
+                    return [];
+                }
             }
 
             // Buscar no Supabase
