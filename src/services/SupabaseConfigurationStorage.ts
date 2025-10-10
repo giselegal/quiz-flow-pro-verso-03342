@@ -70,6 +70,15 @@ export class SupabaseConfigurationStorage {
     constructor() {
         this.indexedDBService = IndexedDBStorageService.getInstance();
         this.setupOfflineHandling();
+        this.ensureIndexedDBReady();
+    }
+
+    private async ensureIndexedDBReady(): Promise<void> {
+        try {
+            await this.indexedDBService.initialize();
+        } catch (error) {
+            console.error('❌ Erro ao inicializar IndexedDB:', error);
+        }
     }
 
     static getInstance(): SupabaseConfigurationStorage {
