@@ -677,7 +677,9 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
     }, [unifiedConfig]);
 
     // Layout responsivo
-    const [activeTab, setActiveTab] = useState<'canvas' | 'preview'>('canvas');
+    // 🔧 PREVIEW DESABILITADO TEMPORARIAMENTE - Forçando sempre 'canvas'
+    const [activeTab] = useState<'canvas' | 'preview'>('canvas');
+    const setActiveTab = () => { }; // No-op para evitar erros
     const [navOpen, setNavOpen] = useState(false);
     const navAnalysis = useMemo(() => buildNavigationMap(steps.map(s => ({ id: s.id, order: s.order, nextStep: s.nextStep as any, autoLinked: (s as any).autoLinked }))), [steps]);
 
@@ -1952,10 +1954,11 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                                     <Button variant="ghost" size="sm" disabled={!canRedo} onClick={handleRedo} className="text-xs px-2">Redo ⮫</Button>
                                 </div>
                                 <div className="h-6 w-px bg-border" />
-                                <div className="flex items-center gap-1" data-testid="preview-toggle">
+                                {/* 🔧 PREVIEW TEMPORARIAMENTE DESABILITADO PARA DEBUG */}
+                                {/* <div className="flex items-center gap-1" data-testid="preview-toggle">
                                     <Button variant={activeTab === 'canvas' ? 'default' : 'outline'} size="sm" onClick={() => setActiveTab('canvas')}>Canvas</Button>
                                     <Button variant={activeTab === 'preview' ? 'default' : 'outline'} size="sm" onClick={() => setActiveTab('preview')}>Preview</Button>
-                                </div>
+                                </div> */}
                                 <Button size="sm" onClick={handlePublish} disabled={isPublishing}>{isPublishing ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Upload className="w-4 h-4 mr-2" />}Publicar</Button>
                                 <Button size="sm" variant="outline" onClick={async () => {
                                     try {
