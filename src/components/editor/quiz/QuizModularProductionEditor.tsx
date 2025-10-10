@@ -1053,6 +1053,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                             selections={quizSelections[id] || []}
                             onToggle={(optionId: string, multi: boolean, required: number) => toggleQuizOption(id, optionId, multi, required)}
                             advanceStep={(nextStepId: string) => { setSelectedStepId(nextStepId); setSelectedBlockId(''); }}
+                            previewRuntimeFlags={previewRuntimeFlags}
                         />
                     </div>
                 </div>
