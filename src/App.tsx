@@ -43,14 +43,8 @@ const NotFound = lazy(() => import('./pages/NotFound'));
 // 🔍 PÁGINAS DE DIAGNÓSTICO - TEMPORÁRIAS
 const TemplateDiagnosticPage = lazy(() => import('./pages/TemplateDiagnosticPage'));
 
-// 🚀 EDITORES - OFICIAIS E LEGADOS
-const QuizFunnelEditor = lazy(() => import('./components/editor/quiz/QuizFunnelEditor').then(module => ({ default: module.default })));
-const QuizFunnelEditorSimplified = lazy(() => import('./components/editor/quiz/QuizFunnelEditorSimplified').then(module => ({ default: module.default })));
-const QuizFunnelEditorWYSIWYG = lazy(() => import('./components/editor/quiz/QuizFunnelEditorWYSIWYG').then(module => ({ default: module.default })));
-const QuizProductionEditor = lazy(() => import('./components/editor/quiz/QuizProductionEditor').then(module => ({ default: module.default })));
+// 🚀 EDITOR OFICIAL ÚNICO
 const QuizModularProductionEditor = lazy(() => import('./components/editor/quiz/QuizModularProductionEditor').then(module => ({ default: module.default })));
-const ModernUnifiedEditor = lazy(() => import('./pages/editor/ModernUnifiedEditor').then(module => ({ default: module.default })));
-const ModularEditorLayout = lazy(() => import('./editor/components/ModularEditorLayout').then(module => ({ default: module.default })));
 
 // ❌ HYBRID EDITOR PRO - DESATIVADO (substituído pelo ModernUnifiedEditor)
 // const HybridEditorPro = lazy(() => import('./components/editor/EditorPro/components/HybridEditorPro'));
@@ -318,7 +312,9 @@ function App() {
                             <EditorErrorBoundary>
                               <div data-testid="admin-integrated-editor-page">
                                 <UnifiedCRUDProvider funnelId={params.id} autoLoad={true} context={FunnelContext.EDITOR}>
-                                  <ModernUnifiedEditor funnelId={params.id} />
+                                  <Suspense fallback={<EnhancedLoadingFallback message="Carregando editor modular..." />}>
+                                    <QuizModularProductionEditor />
+                                  </Suspense>
                                 </UnifiedCRUDProvider>
                               </div>
                             </EditorErrorBoundary>
