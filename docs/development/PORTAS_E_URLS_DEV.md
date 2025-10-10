@@ -5,11 +5,11 @@ Este projeto usa as portas abaixo no ambiente de desenvolvimento:
 - Frontend (Vite): http://localhost:5173
 - Backend (Express API + WS): http://localhost:3001
 - Vite Preview (build estático): http://localhost:4173
-- Legacy (compat): http://localhost:8080 → redireciona para 5173 com 307 preservando path e query
+- Legacy (compat): http://localhost:8080 → redireciona para 5173 com 307 preservando path e query (quando o redirecionador está ativo)
 
 Observações:
 - Use 5173 como URL padrão durante o desenvolvimento (ex.: http://localhost:5173/editor).
-- Um redirecionador leve roda em 8080 durante `npm run dev`/`Executar servidor de desenvolvimento` para manter links antigos funcionando.
+- Para compatibilidade com links antigos, há um redirecionador leve em 8080 que envia 307 para 5173; ele é ativado pelos scripts `dev:stack` ou `dev:stack:wait`.
 - Em CI e nos testes e2e, prefira parametrizar a URL base via variável de ambiente `E2E_BASE_URL` (padrão: http://localhost:5173).
 
 Dicas:
