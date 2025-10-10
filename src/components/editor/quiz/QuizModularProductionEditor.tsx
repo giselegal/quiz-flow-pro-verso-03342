@@ -98,6 +98,7 @@ import DuplicateBlockDialog from './components/DuplicateBlockDialog';
 // Cálculo real de resultado (produção)
 import { computeResult } from '@/utils/result/computeResult';
 import type { QuizFunnelSchema } from '@/types/quiz-schema';
+import { useFunnelLivePreview } from '@/hooks/useFunnelLivePreview';
 
 // Pré-visualizações especializadas (lazy) dos componentes finais de produção
 const StyleResultCard = React.lazy(() => import('@/components/editor/quiz/components/StyleResultCard').then(m => ({ default: m.StyleResultCard })));
@@ -1741,6 +1742,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
     }
 
     const [productionPreviewRefresh, setProductionPreviewRefresh] = useState(0);
+    const { sendSteps } = useFunnelLivePreview(funnelId);
 
     // Autosave leve do draft enquanto edita, para que o preview de produção consiga carregar este draft em tempo quase real
     useEffect(() => {
@@ -1769,6 +1771,14 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                 await quizEditorBridge.saveDraft(funnel);
                 // Gera um token de atualização para o Preview de Produção
                 setProductionPreviewRefresh(prev => prev + 1);
+                // Broadcast leve para outros clientes conectados (WS)
+                try {
+                    const stepsMap: Record<string, any> = {};
+                    for (const s of steps) {
+                        stepsMap[s.id] = convertBlocksToStepUtil(s.id, s.type as any, s.blocks as any);
+                    }
+                    sendSteps(stepsMap);
+                } catch { /* ignore */ }
             } catch (e) {
                 // silencioso: autosave best-effort
             }
