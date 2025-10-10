@@ -73,8 +73,10 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
                     {selectedStep ? (
                         <Card>
                             <CardContent>
-                                <div className="mb-6">
-                                    <FixedProgressHeader config={headerConfig} steps={steps} currentStepId={selectedStep.id} />
+                                <div className="sticky top-0 z-20 bg-white/90 backdrop-blur supports-[backdrop-filter]:bg-white/80 border-b mb-4">
+                                    <div className="px-3 py-2">
+                                        <FixedProgressHeader config={headerConfig} steps={steps} currentStepId={selectedStep.id} />
+                                    </div>
                                 </div>
                                 {selectedStep.blocks.length === 0 ? (
                                     <div className="text-center py-8 text-muted-foreground text-xs border border-dashed rounded-md bg-white/40">(vazio)</div>
