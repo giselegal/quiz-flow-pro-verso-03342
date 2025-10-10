@@ -74,7 +74,7 @@ import { sanitizeInlineHtml, looksLikeHtml } from '@/utils/sanitizeInlineHtml';
 import { convertBlocksToStep as convertBlocksToStepUtil } from '@/utils/quizConversionUtils';
 import { autoFillNextSteps } from '@/utils/autoFillNextSteps';
 import { buildNavigationMap, formatNavigationReport } from '@/utils/funnelNavigation';
-import { QuizRuntimeRegistryProvider, useQuizRuntimeRegistry } from '@/runtime/quiz/QuizRuntimeRegistry';
+import { QuizRuntimeRegistryProvider, useQuizRuntimeRegistry, type RuntimeStepOverride } from '@/runtime/quiz/QuizRuntimeRegistry';
 import { editorStepsToRuntimeMap } from '@/runtime/quiz/editorAdapter';
 import { LayoutShell } from './LayoutShell';
 import { usePanelWidths } from './hooks/usePanelWidths.tsx';
@@ -2180,23 +2180,13 @@ interface LiveRuntimePreviewProps {
     steps: EditableQuizStep[];
     funnelId?: string;
     selectedStepId?: string;
+    runtimeMap: Record<string, RuntimeStepOverride>;
+    version: number;
 }
 
-const LiveRuntimePreview: React.FC<LiveRuntimePreviewProps> = ({ steps, funnelId, selectedStepId }) => {
-    const { setSteps, version } = useQuizRuntimeRegistry();
-    const runtimeMap = React.useMemo(() => editorStepsToRuntimeMap(steps as any), [steps]);
-    const mapRef = React.useRef(runtimeMap);
-
-    // Atualizar registry quando mapa muda
-    React.useEffect(() => {
-        const sameKeys = Object.keys(mapRef.current).join('|') === Object.keys(runtimeMap).join('|');
-        mapRef.current = runtimeMap;
-        setSteps(runtimeMap);
-        if (!sameKeys) {
-            console.log('🔁 Live preview registry atualizado', Object.keys(runtimeMap).length, 'steps');
-        }
-    }, [runtimeMap, setSteps]);
-
+const LiveRuntimePreview: React.FC<LiveRuntimePreviewProps> = ({ steps, funnelId, selectedStepId, runtimeMap, version }) => {
+    // Hooks foram movidos para LivePreviewContainer (componente pai)
+    // Este componente agora é apenas presentational
     return (
         <div className="h-full flex flex-col bg-white">
             <div className="flex-1 overflow-auto">
