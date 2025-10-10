@@ -55,6 +55,9 @@ const QuizAIPage = lazy(() => import('./pages/QuizAIPage'));
 const QuizIntegratedPage = lazy(() => import('./pages/QuizIntegratedPage'));
 // const TemplateEngineQuizEstiloPage = lazy(() => import('./pages/TemplateEngineQuizEstiloPage'));
 
+// 🔧 PÁGINA DEV: Diagnóstico de migração de contexto (protegida por flag)
+const ContextMigrationDiagnostics = lazy(() => import('./pages/ContextMigrationDiagnostics'));
+
 // 🏢 LAYOUT ADMINISTRATIVO E DASHBOARD MODERNO
 const ModernDashboardPage = lazy(() => import('./pages/ModernDashboardPage'));
 const ModernAdminDashboard = lazy(() => import('./pages/ModernAdminDashboard'));
@@ -356,6 +359,17 @@ function App() {
                         {/* 🔧 DESENVOLVIMENTO */}
                         <Route path="/diagnostics">
                           <SystemDiagnosticPage />
+                        </Route>
+
+                        {/* 🔧 DEV ONLY: Context Migration Diagnostics (guardado por flag) */}
+                        <Route path="/dev/context-diagnostics">
+                          {import.meta.env.VITE_ENABLE_CONTEXT_DIAGNOSTICS === '1' ? (
+                            <div data-testid="context-migration-diagnostics-page">
+                              <ContextMigrationDiagnostics />
+                            </div>
+                          ) : (
+                            <RedirectRoute to="/diagnostics" />
+                          )}
                         </Route>
 
                         {/* 🧪 TESTE CORREÇÃO SUPABASE */}
