@@ -1,0 +1,98 @@
+# Evolução do Modern Unified Editor (Arquitetura Atualizada)
+
+## Objetivo
+Consolidar carregamento, gestão de estado, operações CRUD e UX progressiva do `/editor` reduzindo gargalos de tempo até interação e riscos de race conditions.
+
+## Componentes Centrais
+- `useEditorBootstrap`: Orquestra parsing de URL, criação/carregamento do funil e seed idempotente (quizSteps). Fases: `parsing -> funnel -> seed -> ready`.
+- `useOperationsManager`: Gerencia operações nomeadas (save, create, duplicate, test, autosave) com dedupe, progresso e métricas (durations disponíveis para telemetria futura).
+- `editorEvents` (event bus): Emite eventos chave (`EDITOR_BOOTSTRAP_PHASE`, `EDITOR_BOOTSTRAP_READY`, `EDITOR_OPERATION_*`, `EDITOR_AUTOSAVE_*`).
+- `EditorBootstrapProgress`: Barra de progresso visual (Radix) desacoplada, exibida no fallback inicial.
+- `OperationsPanel`: Painel colapsável exibindo operações recentes com progresso e duração.
+
+## Fluxo de Bootstrap
+1. Mark `editor_bootstrap_start`.
+2. Parse de URL e normalização (Zod).
+3. Carregamento ou criação do funil.
+4. Seed condicional somente se não houver `quizSteps` (idempotente via ref guard).
+5. Mark `editor_bootstrap_ready` + measure `editor_TTI` + evento `EDITOR_BOOTSTRAP_READY`.
+
+## Autosave
+- Debounce 5s após última modificação (`unifiedEditor.isDirty`).
+- Executado como operação `autosave` (dedupe) → evita conflito com `save` manual.
+- Eventos: `EDITOR_AUTOSAVE_START/SUCCESS/ERROR`.
+
+## Benefícios Obtidos
+| Área | Antes | Depois |
+|------|-------|--------|
+| Parsing & Seed | Effects dispersos | Hook central com fases e marks |
+| Race Conditions Seed | Possível duplicidade StrictMode | Ref guard + fase única |
+| Feedback de Carregamento | Mensagem genérica | Progresso faseado visual + label |
+| Operações CRUD | Flag global `isOperating` | Estados granulares + painel |
+| Extensibilidade | Acoplado à UI | Event bus para telemetria/logging |
+| Autosave | Ausente | Debounced com eventos |
+
+## Próximos Incrementos (Sugeridos)
+- Persistência de preferências (OK para painel de operações, expandir para layout/painéis).
+- Integração de telemetria: enviar durations (operation, ms) ao servidor.
+- Error Boundary especializado para falhas de bootstrap com ação de recuperação.
+- Estratégias/factories para tipos de funil (quiz/survey/etc.).
+- Ampliar testes de parsing para cenários de hash/param combos.
+
+## Eventos Disponíveis
+| Evento | Payload |
+|--------|---------|
+| EDITOR_BOOTSTRAP_PHASE | { phase } |
+| EDITOR_BOOTSTRAP_READY | { funnelId } |
+| EDITOR_BOOTSTRAP_ERROR | { error } |
+| EDITOR_OPERATION_START | { key } |
+| EDITOR_OPERATION_END | { key, durationMs, error? } |
+| EDITOR_AUTOSAVE_START | { dirty } |
+| EDITOR_AUTOSAVE_SUCCESS | { savedAt } |
+| EDITOR_AUTOSAVE_ERROR | { error } |
+
+## Considerações de Performance
+- Progresso não bloqueia UI; toolbar aparece antes do canvas.
+- Suspense para `QuizFunnelEditor` e para `FunnelTypeDetector` isolam custos.
+- Possível etapa futura: prefetch assíncrono de bundles quando usuário abre listagem de funis.
+
+### Mitigação de Erro React #310 (Lazy/Suspense)
+- Problema observado: uso de `React.lazy` recriado dentro de `useMemo` em `ModernUnifiedEditor` causando caminho condicional sem boundary estável.
+- Ação tomada: mover declaração `const QuizFunnelEditor = React.lazy(...)` para o topo do módulo e introduzir utilitário `LazyBoundary` (`src/components/common/LazyBoundary.tsx`).
+- Substituição de `<Suspense>` direto por `<LazyBoundary>` padronizando fallback e reduzindo risco de múltiplos boundaries inconsistentes.
+- Removidos lazy imports não utilizados (`EditorProUnified`, `TemplateErrorBoundary`, `TemplateLoadingSkeleton`) para minimizar carga cognitiva e potenciais caminhos faltando fallback.
+- Resultado esperado: eliminar paths não protegidos que podem disparar React 18 Suspense minified error #310 durante resolução de promessas lazy.
+
+### Guideline Padrão para Lazy/Suspense
+1. Declarar todos os `React.lazy(...)` no topo do módulo (fora de componentes/hooks).
+2. Sempre envolver renderizações lazy em `<LazyBoundary>` com fallback específico e leve.
+3. Evitar criação dinâmica de lazy dentro de `useMemo`, `useEffect` ou branches condicionais.
+4. Fallbacks devem ser semanticamente próximos (ex: "Carregando Canvas...", "Carregando Propriedades...") para UX clara.
+5. Remover imports lazy não utilizados para reduzir custo cognitivo e evitar árvores de código mortas.
+6. Ao adicionar novo módulo lazy, atualizar testes smoke se aplicável.
+7. Em produção, monitorar eventos ou logs para qualquer novo `React.lazy` que não apareça em boundaries instrumentados.
+
+Snippet recomendado:
+```tsx
+// Top-level
+const HeavyPanel = React.lazy(() => import('./HeavyPanel'));
+
+// Uso
+<LazyBoundary fallback={<InlineSpinner label="Carregando painel" />}> 
+	<HeavyPanel />
+</LazyBoundary>
+```
+
+### Notas de Serviços (Atualização HybridTemplateService)
+Adicionado método estático `getGlobalConfig()` ao `HybridTemplateService` para suportar `FunnelTypesRegistry.loadFunnelConfig` ao montar a estrutura de quiz (necessário para ler regras globais de navegação/validação antes da resolução completa de steps). Fallback seguro retorna estrutura vazia quando master ainda não foi carregado, evitando falhas como `a.templateService.getGlobalConfig is not a function`.
+
+## Testes Adicionados
+- `useOperationsManager.dedupe.test.ts`: garante rejeição em corrida de operação deduplicada.
+- `useEditorBootstrap.parse.test.ts`: valida parsing real via função exportada `parseAndNormalizeParams` (funnel, template, modo, precedência de query params).
+- (Planejado) Teste de montagem smoke do `ModernUnifiedEditor` envolvendo fallback de `LazyBoundary` para prevenir regressões futuras.
+
+## Observabilidade
+Pronto para: registrar performance marks adicionais (ex: post-ready warm features) + integrar logger externo ouvindo `editorEvents`.
+
+---
+Documentação inicial; atualizar conforme evoluções futuras de strategies e telemetria.
