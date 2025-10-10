@@ -1036,8 +1036,10 @@ export class FunnelUnifiedService {
     // Backup para localStorage se IndexedDB falhar
     private saveToLocalStorageBackup(funnel: UnifiedFunnelData): void {
         try {
-            const key = `unified_funnel:${funnel.id}`;
-            localStorage.setItem(key, JSON.stringify(funnel));
+            // Nova chave contextualizada por userId e contexto
+            const itemKeyCtx = `unified_funnel:${funnel.userId}:${funnel.context}:${funnel.id}`;
+            const legacyKey = `unified_funnel:${funnel.id}`;
+            localStorage.setItem(itemKeyCtx, JSON.stringify(funnel));
 
             // Atualizar lista
             const listKey = `unified_funnels_list:${funnel.userId}:${funnel.context}`;
@@ -1061,6 +1063,8 @@ export class FunnelUnifiedService {
             }
 
             localStorage.setItem(listKey, JSON.stringify(list));
+            // Limpar chave legada do item, se existir
+            try { localStorage.removeItem(legacyKey); } catch { }
 
         } catch (error) {
             console.error('❌ Erro ao salvar no localStorage backup:', error);
@@ -1096,8 +1100,24 @@ export class FunnelUnifiedService {
     // Backup para localStorage
     private loadFromLocalStorageBackup(id: string): UnifiedFunnelData | null {
         try {
-            const key = `unified_funnel:${id}`;
-            const data = localStorage.getItem(key);
+            // Tentar localizar por todas as combinações conhecidas
+            // 1) Chave legada sem contexto
+            const legacyKey = `unified_funnel:${id}`;
+            let data = localStorage.getItem(legacyKey);
+            if (!data) {
+                // 2) Percorrer chaves contextualizadas e encontrar por id
+                for (let i = 0; i < localStorage.length; i++) {
+                    const key = localStorage.key(i) || '';
+                    if (key.startsWith('unified_funnel:')) {
+                        // unified_funnel:<userId>:<context>:<id>
+                        const parts = key.split(':');
+                        if (parts.length === 4 && parts[3] === id) {
+                            data = localStorage.getItem(key);
+                            if (data) break;
+                        }
+                    }
+                }
+            }
 
             if (!data) return null;
 
