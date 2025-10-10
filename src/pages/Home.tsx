@@ -14,7 +14,7 @@ import {
   Star, 
   ArrowRight
 } from 'lucide-react';
-import { useAuth } from '@/context/AuthContext';
+import { useAuth } from '@/contexts';
 
 export const Home: React.FC = () => {
   const { user, logout } = useAuth();

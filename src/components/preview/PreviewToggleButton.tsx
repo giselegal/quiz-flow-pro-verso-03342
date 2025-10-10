@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { usePreview } from '@/context/PreviewContext';
+import { usePreview } from '@/contexts';
 import { Play, Square } from 'lucide-react';
 import React from 'react';
 

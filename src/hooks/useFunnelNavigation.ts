@@ -2,7 +2,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 // Preferir o contexto moderno do EditorProvider; manter fallback para legacy se necessário
 import { useEditor } from '@/hooks/useUnifiedEditor';
-import { useQuizFlow } from '@/context/QuizFlowProvider';
+import { useQuizFlow } from '@/contexts';
 import {
   calculateProgress,
   getNextStepNumber,
@@ -14,7 +14,7 @@ import {
 } from '@/utils/navigationHelpers';
 import { makeStepKey } from '@/utils/stepKey';
 import { FunnelContext } from '@/core/contexts/FunnelContext';
-import { useUnifiedCRUDOptional } from '@/context/UnifiedCRUDProvider';
+import { useUnifiedCRUDOptional } from '@/contexts';
 import { safeGetItem as safeGetItemCtx, safeSetItem as safeSetItemCtx } from '@/utils/contextualStorage';
 
 /**

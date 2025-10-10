@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { FunnelContext } from '@/core/contexts/FunnelContext';
-import { useUnifiedCRUDOptional } from '@/context/UnifiedCRUDProvider';
+import { useUnifiedCRUDOptional } from '@/contexts';
 import { safeGetItem as getCtx, safeSetItem as setCtx, safeRemoveItem as removeCtx } from '@/utils/contextualStorage';
 
 export interface HistoryState<T> {

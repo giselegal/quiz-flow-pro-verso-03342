@@ -8,7 +8,7 @@
 import React, { Suspense } from 'react';
 import { QuizErrorBoundary } from '@/components/RouteErrorBoundary';
 import { LoadingFallback } from '@/components/ui/loading-fallback';
-import UnifiedCRUDProvider from '@/context/UnifiedCRUDProvider';
+import { UnifiedCRUDProvider } from '@/contexts';
 import { FunnelContext } from '@/core/contexts/FunnelContext';
 const QuizModularProductionEditor = React.lazy(() => import('@/components/editor/quiz/QuizModularProductionEditor').then(m => ({ default: m.default })));
 

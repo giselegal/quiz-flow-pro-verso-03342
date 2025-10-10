@@ -51,7 +51,7 @@ const QuizFunnelEditorWYSIWYG = lazy(() => import('./components/editor/quiz/Quiz
 const QuizFunnelEditorWYSIWYG_Refactored = lazy(() => import('./components/editor/quiz/QuizFunnelEditorWYSIWYG_Refactored').then(module => ({ default: module.default })));
 const ModernUnifiedEditor = lazy(() => import('./pages/editor/ModernUnifiedEditor').then(module => ({ default: module.default })));
 const QuizModularProductionEditor = lazy(() => import('./components/editor/quiz/QuizModularProductionEditor').then(module => ({ default: module.default })));
-import UnifiedCRUDProvider from '@/context/UnifiedCRUDProvider';
+import { UnifiedCRUDProvider } from '@/contexts';
 import { FunnelContext } from '@/core/contexts/FunnelContext';
 
 // 🧪 PÁGINAS DE QUIZ

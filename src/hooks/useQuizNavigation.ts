@@ -4,7 +4,7 @@
  * Hook temporário para compatibilidade
  */
 
-import { useQuizFlow } from '@/context/QuizFlowProvider';
+import { useQuizFlow } from '@/contexts';
 import { useCallback } from 'react';
 
 export interface NavigationState {

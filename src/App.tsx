@@ -12,12 +12,11 @@
 import { Suspense, lazy, useEffect } from 'react';
 import { Route, Router, Switch } from 'wouter';
 // import { ThemeProvider } from './components/theme-provider';
-import { ThemeProvider as CustomThemeProvider } from './contexts/ThemeContext';
+import { ThemeProvider as CustomThemeProvider, AuthProvider, UnifiedCRUDProvider } from '@/contexts';
 import { HelmetProvider } from 'react-helmet-async';
 import { EnhancedLoadingFallback } from './components/ui/enhanced-loading-fallback';
 import { GlobalErrorBoundary } from './components/error/GlobalErrorBoundary';
 import { Toaster } from './components/ui/toaster';
-import { AuthProvider } from './context/AuthContext';
 import OptimizedProviderStack from './providers/OptimizedProviderStack';
 import { SecurityProvider } from './providers/SecurityProvider';
 import { MonitoringProvider } from './components/monitoring/MonitoringProvider';
@@ -26,14 +25,10 @@ import { RedirectRoute } from './components/RedirectRoute';
 import { QuizErrorBoundary } from './components/RouteErrorBoundary';
 import { EditorErrorBoundary } from './components/error/EditorErrorBoundary';
 import { EditorAccessControl } from '@/components/editor/EditorAccessControl';
-import UnifiedCRUDProvider from '@/context/UnifiedCRUDProvider';
 import { FunnelContext } from '@/core/contexts/FunnelContext';
-// import { OptimizedEditorProvider } from '@/components/editor/OptimizedEditorProvider';
-// import { BlockRegistryProvider, DEFAULT_BLOCK_DEFINITIONS } from '@/runtime/quiz/blocks/BlockRegistry';
 // Novo Template Engine (feature flag controlada por VITE_USE_TEMPLATE_ENGINE)
 import { TemplateEnginePage } from '@/features/templateEngine';
 import { TemplateEnginePageWrapperOpen } from '@/features/templateEngine/components/TemplateEnginePage';
-// import QuizEstiloModularRedirect from '@/features/templateEngine/components/QuizEstiloModularRedirect';
 
 // 🏠 PÁGINAS ESSENCIAIS
 const Home = lazy(() => import('./pages/Home'));
@@ -45,9 +40,6 @@ const TemplateDiagnosticPage = lazy(() => import('./pages/TemplateDiagnosticPage
 
 // 🚀 EDITOR OFICIAL ÚNICO
 const QuizModularProductionEditor = lazy(() => import('./components/editor/quiz/QuizModularProductionEditor').then(module => ({ default: module.default })));
-
-// ❌ HYBRID EDITOR PRO - DESATIVADO (substituído pelo QuizModularProductionEditor)
-// const HybridEditorPro = lazy(() => import('./components/editor/EditorPro/components/HybridEditorPro'));
 
 // 🎨 PÁGINAS DE QUIZ
 const QuizEstiloPessoalPage = lazy(() => import('./pages/QuizEstiloPessoalPage'));

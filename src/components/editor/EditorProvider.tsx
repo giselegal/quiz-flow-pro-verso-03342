@@ -9,7 +9,7 @@ import { extractStepNumberFromKey } from '@/utils/supabaseMapper';
 import { arrayMove } from '@dnd-kit/sortable';
 import React, { createContext, ReactNode, useCallback, useContext, useEffect } from 'react';
 import { unifiedQuizStorage } from '@/services/core/UnifiedQuizStorage';
-import { useFunnels } from '@/context/FunnelsContext';
+import { useFunnels } from '@/contexts';
 
 // Utilitário simples para aguardar o próximo tick do event loop (garante flush de setState em testes)
 const waitNextTick = (ms: number = 0) => new Promise<void>(resolve => setTimeout(resolve, ms));

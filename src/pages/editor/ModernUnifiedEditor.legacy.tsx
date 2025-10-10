@@ -16,7 +16,7 @@ import EditorNoCodePanel from '@/components/editor/EditorNoCodePanel';
 import PureBuilderProvider from '@/components/editor/PureBuilderProvider';
 import { FunnelMasterProvider } from '@/providers/FunnelMasterProvider';
 import { useNotification } from '@/components/ui/Notification';
-import UnifiedCRUDProvider, { useUnifiedCRUD } from '@/context/UnifiedCRUDProvider';
+import { UnifiedCRUDProvider, useUnifiedCRUD } from '@/contexts';
 import useEditorBootstrap from '@/hooks/editor/useEditorBootstrap';
 import useOperationsManager from '@/hooks/editor/useOperationsManager';
 import EditorBootstrapProgress from '@/components/editor/EditorBootstrapProgress';

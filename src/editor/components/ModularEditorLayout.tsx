@@ -10,7 +10,7 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { useUnifiedCRUD } from '@/context/UnifiedCRUDProvider';
+import { useUnifiedCRUD } from '@/contexts';
 import StepCanvas from './StepCanvas';
 import PropertiesPanel from './PropertiesPanel';
 import { ScrollArea } from '@/components/ui/scroll-area';

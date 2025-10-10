@@ -20,7 +20,7 @@ import {
 // Providers necessários
 import { EditorProvider } from '@/components/editor/EditorProviderMigrationAdapter';
 import { FunnelMasterProvider } from '@/providers/FunnelMasterProvider';
-import UnifiedCRUDProvider from '@/context/UnifiedCRUDProvider';
+import { UnifiedCRUDProvider } from '@/contexts';
 
 // Components especializados
 import QuizEditorMode from '@/components/editor/modes/QuizEditorMode';

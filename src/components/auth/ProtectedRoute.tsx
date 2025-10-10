@@ -1,5 +1,5 @@
 import React, { Suspense } from 'react';
-import { useAuth } from '@/context/AuthContext';
+import { useAuth } from '@/contexts';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { useLocation } from 'wouter';
 import { Route } from 'wouter';

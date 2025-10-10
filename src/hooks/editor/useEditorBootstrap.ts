@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { z } from 'zod';
-import { useUnifiedCRUD } from '@/context/UnifiedCRUDProvider';
+import { useUnifiedCRUD } from '@/contexts';
 import { editorEvents } from '@/events/editorEvents';
 import { QUIZ_STEPS } from '@/data/quizSteps';
 

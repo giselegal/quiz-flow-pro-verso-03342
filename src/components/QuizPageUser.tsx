@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { useAuth } from '@/context/AuthContext';
+import { useAuth } from '@/contexts';
 import { useLoadingState } from '@/hooks/useLoadingState';
 import { StorageService } from '@/services/core/StorageService';
 

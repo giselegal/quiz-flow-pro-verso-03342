@@ -1,7 +1,7 @@
 import { getEnhancedBlockComponent } from '@/components/editor/blocks/enhancedBlockRegistry';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { usePreview } from '@/context/PreviewContext';
+import { usePreview } from '@/contexts';
 import { useContainerProperties } from '@/hooks/useContainerProperties';
 import { cn } from '@/lib/utils';
 import { Block } from '@/types/editor';

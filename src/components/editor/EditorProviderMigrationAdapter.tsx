@@ -4,7 +4,7 @@
 
 import React, { ReactNode } from 'react';
 import { OptimizedEditorProvider, useEditor as useOptimizedEditor } from './OptimizedEditorProvider';
-import { UnifiedCRUDProvider } from '@/context/UnifiedCRUDProvider';
+import { UnifiedCRUDProvider } from '@/contexts';
 
 export type UnifiedEditorContextType = ReturnType<typeof useOptimizedEditor>;
 

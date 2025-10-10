@@ -1,4 +1,4 @@
-import { useAuth } from '@/context/AuthContext';
+import { useAuth } from '@/contexts';
 import { supabase } from '../integrations/supabase/client';
 import { QuizQuestion } from '@/types/quiz';
 import { Funnel } from '../types/unified-schema';

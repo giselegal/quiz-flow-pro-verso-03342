@@ -6,7 +6,7 @@
 
 import React, { Suspense } from 'react';
 const QuizModularProductionEditor = React.lazy(() => import('@/components/editor/quiz/QuizModularProductionEditor').then(m => ({ default: m.default })));
-import UnifiedCRUDProvider from '@/context/UnifiedCRUDProvider';
+import { UnifiedCRUDProvider } from '@/contexts';
 import { FunnelContext } from '@/core/contexts/FunnelContext';
 
 export const EditorRoutes: React.FC = () => (

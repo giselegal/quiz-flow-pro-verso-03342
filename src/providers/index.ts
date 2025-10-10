@@ -19,5 +19,5 @@ export {
 export { default as OptimizedProviderStack } from './OptimizedProviderStack';
 
 // Legacy Providers (mantidos para compatibilidade)
-export { EditorRuntimeProviders } from '@/context/EditorRuntimeProviders';
-export type { EditorRuntimeProvidersProps } from '@/context/EditorRuntimeProviders';
+export { EditorRuntimeProviders } from '@/contexts';
+export type { EditorRuntimeProvidersProps } from '@/contexts';

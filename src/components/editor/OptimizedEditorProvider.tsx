@@ -17,7 +17,7 @@
 
 import * as React from 'react';
 import { createContext, ReactNode, useCallback, useContext, useEffect, useState } from 'react';
-import { useUnifiedCRUD } from '@/context/UnifiedCRUDProvider';
+import { useUnifiedCRUD } from '@/contexts';
 import { Block, BlockType } from '@/types/editor';
 import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
 

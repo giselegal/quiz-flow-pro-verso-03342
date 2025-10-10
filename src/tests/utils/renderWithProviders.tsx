@@ -4,8 +4,8 @@ import { Router } from 'wouter';
 import { memoryLocation } from 'wouter/memory-location';
 import { HelmetProvider } from 'react-helmet-async';
 // Providers reais (podem ser simplificados/mocados se necessário)
-import { ThemeProvider as CustomThemeProvider } from '@/contexts/ThemeContext';
-import { AuthProvider } from '@/context/AuthContext';
+import { ThemeProvider as CustomThemeProvider } from '@/contexts';
+import { AuthProvider } from '@/contexts';
 import OptimizedProviderStack from '@/providers/OptimizedProviderStack';
 import { SecurityProvider } from '@/providers/SecurityProvider';
 import { MonitoringProvider } from '@/components/monitoring/MonitoringProvider';

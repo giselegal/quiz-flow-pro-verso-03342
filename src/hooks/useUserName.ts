@@ -1,4 +1,4 @@
-import { useAuth } from '@/context/AuthContext';
+import { useAuth } from '@/contexts';
 import { useEffect, useMemo, useState } from 'react';
 
 /**

@@ -8,7 +8,7 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Moon, Sun } from 'lucide-react';
-import { useThemeContext } from '@/contexts/ThemeContext';
+import { useThemeContext } from '@/contexts';
 
 interface ThemeToggleProps {
     className?: string;

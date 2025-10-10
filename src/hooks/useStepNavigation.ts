@@ -1,5 +1,5 @@
 import { toast } from '@/components/ui/use-toast';
-import { useQuizFlow } from '@/context/QuizFlowProvider';
+import { useQuizFlow } from '@/contexts';
 import { quizSupabaseService } from '@/services/quizSupabaseService';
 import { templateService } from '@/services/templateService';
 import { useCallback, useEffect, useState } from 'react';

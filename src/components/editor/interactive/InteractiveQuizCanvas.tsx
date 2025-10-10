@@ -1,4 +1,4 @@
-import { EditorContext } from '@/context/EditorContext';
+import { EditorContext } from '@/contexts';
 import { ValidationResult } from '@/types/validation';
 import React, { memo, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 // import { InteractiveBlockRenderer } from './InteractiveBlockRenderer';

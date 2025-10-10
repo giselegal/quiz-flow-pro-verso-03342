@@ -1,6 +1,6 @@
 // @ts-nocheck
 import { Button } from '@/components/ui/button';
-import { useAuth } from '@/context/AuthContext';
+import { useAuth } from '@/contexts';
 import { QuizResult } from '@/hooks/useQuizResult'; // Corrigido para sem "s"
 import React, { useState } from 'react';
 import StyleGuideModal from './StyleGuideModal';

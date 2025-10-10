@@ -1,4 +1,4 @@
-import { useFunnels } from '@/context/FunnelsContext';
+import { useFunnels } from '@/contexts';
 import { useQuizAnalytics } from '@/hooks/useQuizAnalytics';
 import { useQuizLogic } from '@/hooks/useQuizLogic';
 import { useSupabaseQuiz } from '@/hooks/useSupabaseQuiz';

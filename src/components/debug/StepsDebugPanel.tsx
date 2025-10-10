@@ -1,5 +1,5 @@
 import { useQuiz21Steps } from '@/components/quiz/Quiz21StepsProvider';
-import { useFunnels } from '@/context/FunnelsContext';
+import { useFunnels } from '@/contexts';
 import React from 'react';
 
 // ✅ FASE 3: Interface adaptadora para debug steps

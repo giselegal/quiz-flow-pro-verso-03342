@@ -2,7 +2,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { useAuth } from '@/context/AuthContext';
+import { useAuth } from '@/contexts';
 import { Calendar, FolderOpen, MoreHorizontal, Plus, Search, Settings, Users } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 

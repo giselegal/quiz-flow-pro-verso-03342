@@ -18,7 +18,7 @@ import { EditorProvider } from '@/components/editor/EditorProviderMigrationAdapt
 import { UnifiedDndProvider } from '@/components/editor/dnd/UnifiedDndProvider';
 import { unifiedTemplateService } from '@/services/UnifiedTemplateService';
 import { getUnifiedComponent } from '@/registry/UnifiedComponentRegistry';
-import { FunnelsProvider } from '@/context/FunnelsContext';
+import { FunnelsProvider } from '@/contexts';
 
 // 🎯 CONSOLIDATED CONTEXT - Unifica múltiplos contextos
 interface OptimizedContextValue {

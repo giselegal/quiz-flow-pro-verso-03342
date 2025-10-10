@@ -1,5 +1,5 @@
 import React, { memo } from 'react';
-import { useUnifiedCRUD } from '@/context/UnifiedCRUDProvider';
+import { useUnifiedCRUD } from '@/contexts';
 
 // 🔥 NOVO: Hook central de estado
 import { useQuizEditorState } from './hooks/useQuizEditorState';

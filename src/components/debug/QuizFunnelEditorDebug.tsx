@@ -13,7 +13,7 @@ import sanitizeHtml from '@/utils/sanitizeHtml';
 import { z } from 'zod';
 
 // Imports contexto
-import { useUnifiedCRUD } from '@/context/UnifiedCRUDProvider';
+import { useUnifiedCRUD } from '@/contexts';
 
 // Imports UI
 import { Button } from '@/components/ui/button';

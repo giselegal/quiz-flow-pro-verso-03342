@@ -1,5 +1,5 @@
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/components/ui/resizable';
-import { ScrollSyncProvider } from '@/context/ScrollSyncContext';
+import { ScrollSyncProvider } from '@/contexts';
 import { cn } from '@/lib/utils';
 import React, { useState, useEffect } from 'react';
 import { Menu, X, Settings } from 'lucide-react';

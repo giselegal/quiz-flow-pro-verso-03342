@@ -1,4 +1,4 @@
-import { useAuth } from '@/context/AuthContext';
+import { useAuth } from '@/contexts';
 import { StyleResult } from '@/types/quiz';
 import { useCallback, useEffect, useState } from 'react';
 

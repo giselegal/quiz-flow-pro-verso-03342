@@ -10,7 +10,7 @@
 
 import React from 'react';
 import UniversalStepEditorPro from '@/components/editor/universal/UniversalStepEditorPro';
-import { EditorRuntimeProviders } from '@/context/EditorRuntimeProviders';
+import { EditorRuntimeProviders } from '@/contexts';
 
 const UniversalStepEditorProDemo: React.FC = () => {
     const handleStepChange = (stepId: string) => {

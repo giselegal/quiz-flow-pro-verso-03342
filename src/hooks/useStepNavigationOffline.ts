@@ -1,4 +1,4 @@
-import { useQuizFlow } from '@/context/QuizFlowProvider';
+import { useQuizFlow } from '@/contexts';
 import { useCallback, useEffect, useState } from 'react';
 import { useLocation } from 'wouter';
 

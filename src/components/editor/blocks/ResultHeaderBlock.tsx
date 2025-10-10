@@ -1,7 +1,7 @@
 // @ts-nocheck
 import type { BlockComponentProps } from '@/types/blocks';
 import { cn } from '@/lib/utils';
-import { useAuth } from '@/context/AuthContext';
+import { useAuth } from '@/contexts';
 
 interface ResultHeaderBlockProps {
   title?: string;

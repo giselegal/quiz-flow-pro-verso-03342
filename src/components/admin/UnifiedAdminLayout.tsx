@@ -6,7 +6,7 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import UnifiedCRUDProvider from '@/context/UnifiedCRUDProvider';
+import { UnifiedCRUDProvider } from '@/contexts';
 import { FunnelContext } from '@/core/contexts/FunnelContext';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';

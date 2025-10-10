@@ -1,5 +1,5 @@
 import React from 'react';
-import { useUnifiedCRUD } from '@/context/UnifiedCRUDProvider';
+import { useUnifiedCRUD } from '@/contexts';
 
 interface QuizFunnelEditorProps {
     funnelId?: string;

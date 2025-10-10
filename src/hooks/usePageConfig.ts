@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { FunnelContext } from '@/core/contexts/FunnelContext';
-import { useUnifiedCRUDOptional } from '@/context/UnifiedCRUDProvider';
+import { useUnifiedCRUDOptional } from '@/contexts';
 import { safeGetItem, safeSetItem } from '@/utils/contextualStorage';
 
 interface PageConfig {

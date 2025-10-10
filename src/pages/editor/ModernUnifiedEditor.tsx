@@ -5,7 +5,7 @@
 import React, { Suspense, useMemo, createContext, useContext, useEffect, useRef, useState } from 'react';
 import { QuizFunnelEditingFacade, type IFunnelEditingFacade, type FunnelSnapshot } from '@/editor/facade/FunnelEditingFacade';
 import { resolveAdapter, applySnapshotAndPersist } from '@/editor/adapters/FunnelAdapterRegistry';
-import { useUnifiedCRUDOptional } from '@/context/UnifiedCRUDProvider';
+import { useUnifiedCRUDOptional } from '@/contexts';
 import { useFunnelPublication } from '@/hooks/useFunnelPublication';
 import '../../components/editor/quiz/QuizEditorStyles.css';
 

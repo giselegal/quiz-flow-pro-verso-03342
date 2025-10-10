@@ -4,7 +4,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useEditor } from '@/components/editor/EditorProviderMigrationAdapter';
-import { useFunnels } from '@/context/FunnelsContext';
+import { useFunnels } from '@/contexts';
 import { cn } from '@/lib/utils';
 import { useStepNavigationStore } from '@/stores/useStepNavigationStore';
 import { Copy, Eye, GripVertical, Navigation, Plus, Settings, Trash2 } from 'lucide-react';

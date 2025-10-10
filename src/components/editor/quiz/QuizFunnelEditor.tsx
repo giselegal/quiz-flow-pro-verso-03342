@@ -2,7 +2,7 @@ import React, { useEffect, useState, useCallback, useMemo, useRef } from 'react'
 import { emitQuizEvent, setQuizAnalyticsNamespace } from '@/utils/quizAnalytics';
 import sanitizeHtml from '@/utils/sanitizeHtml';
 import { z } from 'zod';
-import { useUnifiedCRUD } from '@/context/UnifiedCRUDProvider';
+import { useUnifiedCRUD } from '@/contexts';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';

@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import QuizFlowLogo from '@/components/ui/QuizFlowLogo';
-import { useAuth } from '@/context/AuthContext';
+import { useAuth } from '@/contexts';
 import { AlertCircle, Chrome, Lock, Mail } from 'lucide-react';
 import React, { useState } from 'react';
 import { useLocation } from 'wouter';

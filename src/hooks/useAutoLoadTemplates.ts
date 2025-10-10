@@ -1,6 +1,6 @@
 // @ts-nocheck
 import { useEditor } from '@/components/editor/EditorProviderMigrationAdapter';
-import { useFunnels } from '@/context/FunnelsContext';
+import { useFunnels } from '@/contexts';
 import { useEffect } from 'react';
 
 /**

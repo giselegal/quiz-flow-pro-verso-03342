@@ -10,7 +10,7 @@
 
 import React, { useEffect } from 'react';
 import { useEditor } from '@/components/editor/EditorProviderMigrationAdapter';
-import { useFunnels } from '@/context/FunnelsContext';
+import { useFunnels } from '@/contexts';
 import { blockPropertiesAPI, type FunnelDataProvider } from '@/api/internal/BlockPropertiesAPI';
 
 function detectSupabaseEnabled(): boolean {
