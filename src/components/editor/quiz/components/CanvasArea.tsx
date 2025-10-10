@@ -61,7 +61,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
     OfferMap,
 }) => {
     return (
-    <div className="flex-1 bg-gray-100 flex flex-col overflow-y-auto">
+        <div className="flex-1 bg-gray-100 flex flex-col overflow-y-auto">
             <Tabs value={activeTab} onValueChange={onTabChange} className="flex-1 flex flex-col">
                 <div className="px-4 py-2 bg-white border-b">
                     <TabsList>
