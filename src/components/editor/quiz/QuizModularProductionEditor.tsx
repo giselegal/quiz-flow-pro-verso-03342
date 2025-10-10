@@ -1838,6 +1838,13 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                             </div>
                             <div className="flex items-center gap-2">
                                 <Button variant="outline" size="sm" onClick={() => setNavOpen(true)}>Navegação</Button>
+                                <Button variant="outline" size="sm" onClick={() => {
+                                    const previewUrl = `/preview?slug=quiz-estilo${funnelId ? `&funnel=${funnelId}` : ''}`;
+                                    window.open(previewUrl, '_blank');
+                                }} title="Abrir preview de produção em nova aba">
+                                    <Eye className="w-4 h-4 mr-2" />
+                                    Preview Produção
+                                </Button>
                                 <Button variant="outline" size="sm" onClick={handleExport}>Exportar</Button>
                                 <Button variant="outline" size="sm" onClick={handleSave} disabled={isSaving || !isDirty}>{isSaving ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Save className="w-4 h-4 mr-2" />}Salvar</Button>
                                 <div className="flex items-center gap-1">
