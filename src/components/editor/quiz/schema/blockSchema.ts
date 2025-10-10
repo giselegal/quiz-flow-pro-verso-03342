@@ -101,8 +101,16 @@ export const INITIAL_BLOCK_SCHEMAS: BlockPropertySchemaDefinition[] = [
             { key: 'requiredSelections', label: 'Seleções Necessárias', type: 'number', default: 1, min: 1, group: 'logic', validate: (value, current) => (current.multiSelect && value < 1 ? 'Valor mínimo 1' : null) },
             { key: 'maxSelections', label: 'Máx Seleções', type: 'number', default: 3, min: 1, group: 'logic', when: (current) => current.multiSelect, validate: (value, current) => (current.multiSelect && value < (current.requiredSelections || 1) ? 'Máx não pode ser < necessárias' : null) },
             { key: 'autoAdvance', label: 'Auto Avançar', type: 'boolean', default: true, group: 'logic' },
+            { key: 'showNextButton', label: 'Mostrar Botão Avançar', type: 'boolean', default: true, group: 'logic' },
+            { key: 'enableButtonOnlyWhenValid', label: 'Habilitar Botão quando Válido', type: 'boolean', default: true, group: 'logic' },
+            { key: 'nextButtonText', label: 'Texto do Botão', type: 'string', default: 'Avançar', group: 'content' },
             { key: 'showImages', label: 'Mostrar Imagens', type: 'boolean', default: true, group: 'style' },
-            { key: 'layout', label: 'Layout', type: 'select', enumValues: ['auto', 'grid-2', 'grid-3'], default: 'auto', group: 'style' }
+            { key: 'layout', label: 'Layout', type: 'select', enumValues: ['auto', 'grid-2', 'grid-3'], default: 'auto', group: 'style' },
+            // Cores e tamanho (aplicadas no preview via CSS vars e estilos inline)
+            { key: 'selectedColor', label: 'Cor Selecionado', type: 'color', default: '#deac6d', group: 'style' },
+            { key: 'hoverColor', label: 'Cor Hover', type: 'color', default: '#d4a05a', group: 'style' },
+            { key: 'imageMaxWidth', label: 'Largura Máx. Imagem (px)', type: 'number', default: 200, min: 40, group: 'style', when: (c) => c.showImages },
+            { key: 'imageMaxHeight', label: 'Altura Máx. Imagem (px)', type: 'number', default: 160, min: 40, group: 'style', when: (c) => c.showImages }
         ]
     },
     {

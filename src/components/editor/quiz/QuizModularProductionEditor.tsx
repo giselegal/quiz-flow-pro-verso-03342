@@ -862,14 +862,24 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
         }
         // Image
         if (type === 'image') {
+            const align = properties?.alignment || 'center';
+            const justify = align === 'left' ? 'justify-start' : align === 'right' ? 'justify-end' : 'justify-center';
+            const width = properties?.width || content.width;
+            const height = properties?.height || content.height;
+            const borderRadius = properties?.borderRadius || content.borderRadius || '8px';
             node = (
-                <div className="w-full flex justify-center">
+                <div className={cn('w-full flex', justify)}>
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                         src={content.src || properties?.src || INLINE_IMG_PLACEHOLDER}
                         alt={content.alt || properties?.alt || 'Imagem'}
-                        className="max-w-full rounded-md border shadow-sm"
-                        style={{ objectFit: 'cover' }}
+                        className="border shadow-sm"
+                        style={{
+                            objectFit: 'cover',
+                            width: typeof width === 'number' ? `${width}px` : (width || '100%'),
+                            height: typeof height === 'number' ? `${height}px` : (height || 'auto'),
+                            borderRadius
+                        }}
                     />
                 </div>
             );
@@ -892,15 +902,26 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
         // Quiz Options
         if (type === 'quiz-options') {
             node = (
-                <QuizOptionsPreview
-                    blockId={id}
-                    options={content.options || []}
-                    properties={properties || {}}
-                    selectedStep={selectedStep}
-                    selections={quizSelections[id] || []}
-                    onToggle={(optionId: string, multi: boolean, required: number) => toggleQuizOption(id, optionId, multi, required)}
-                    advanceStep={(nextStepId: string) => { setSelectedStepId(nextStepId); setSelectedBlockId(''); }}
-                />
+                <div
+                    style={{
+                        // expõe CSS vars para permitir estilos via globals.css
+                        // fallback para paleta padrão do tema
+                        // @ts-expect-error CSS variables
+                        '--color-selected': properties?.selectedColor || '#deac6d',
+                        // @ts-expect-error CSS variables
+                        '--color-primary': properties?.hoverColor || '#d4a05a',
+                    } as React.CSSProperties}
+                >
+                    <QuizOptionsPreview
+                        blockId={id}
+                        options={content.options || []}
+                        properties={properties || {}}
+                        selectedStep={selectedStep}
+                        selections={quizSelections[id] || []}
+                        onToggle={(optionId: string, multi: boolean, required: number) => toggleQuizOption(id, optionId, multi, required)}
+                        advanceStep={(nextStepId: string) => { setSelectedStepId(nextStepId); setSelectedBlockId(''); }}
+                    />
+                </div>
             );
             previewCacheRef.current.set(id, { key, node });
             return node;
@@ -1487,11 +1508,14 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
     }
     const QuizOptionsPreview: React.FC<QuizOptionsPreviewProps> = ({ blockId, options, properties, selectedStep, selections, onToggle, advanceStep }) => {
         const multi = properties?.multiSelect ?? false;
-        const required = properties?.requiredSelections || (multi ? 1 : 1); // requiredSelections explícito; fallback 1
+        const required = properties?.requiredSelections || (multi ? 1 : 1);
         const max = properties?.maxSelections || required;
         const showImages = properties?.showImages !== false;
-        // Alinhar com produção: auto-avanço por padrão apenas para 'question' quando flags habilitam
-        const autoAdvance = previewRuntimeFlags.enableAutoAdvance && !!(selectedStep && selectedStep.type === 'question');
+        const showNextButton = properties?.showNextButton !== false; // default true
+        const enableButtonOnlyWhenValid = properties?.enableButtonOnlyWhenValid !== false; // default true
+        const nextButtonText = properties?.nextButtonText || 'Avançar';
+        // Auto-avanço: respeita flag global e local (properties.autoAdvance)
+        const autoAdvance = (properties?.autoAdvance !== false) && previewRuntimeFlags.enableAutoAdvance && !!(selectedStep && selectedStep.type === 'question');
         const hasImages = showImages && options.some(o => !!o.image);
         // Layout automático: se auto e tem imagens usar 3col, se >4 opções sem imagem usar 2col, senão 1col
         const layout = properties?.layout || 'auto';
@@ -1509,6 +1533,12 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                 return () => clearTimeout(t);
             }
         }, [autoAdvance, selections.length, required, selectedStep, advanceStep]);
+        const isValid = selections.length >= required && required > 0;
+        const handleNext = () => {
+            if (!selectedStep?.nextStep) return;
+            if (enableButtonOnlyWhenValid && !isValid) return;
+            advanceStep(selectedStep.nextStep);
+        };
         return (
             <div className="space-y-2">
                 <div className={cn('quiz-options', gridClass)}>
@@ -1524,7 +1554,17 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                                 className={cn('quiz-option transition-all', active && 'quiz-option-selected', !active && 'cursor-pointer')}
                             >
                                 {showImages && opt.image && (
-                                    <img src={opt.image} alt={opt.text || 'Opção'} className="w-full mb-2 rounded" />
+                                    <img
+                                        src={opt.image}
+                                        alt={opt.text || 'Opção'}
+                                        className="mb-2 rounded"
+                                        style={{
+                                            width: properties?.imageMaxWidth ? `${properties.imageMaxWidth}px` : '100%',
+                                            maxWidth: '100%',
+                                            height: properties?.imageMaxHeight ? `${properties.imageMaxHeight}px` : 'auto',
+                                            objectFit: 'cover'
+                                        }}
+                                    />
                                 )}
                                 <p className="quiz-option-text text-xs font-medium leading-snug">{opt.text || 'Opção'}</p>
                             </div>
@@ -1534,6 +1574,21 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                 <div className="text-[10px] text-muted-foreground">
                     {multi ? `${selections.length}/${required} selecionadas` : (selections.length === 1 ? '1 selecionada' : 'Selecione 1')}
                 </div>
+                {showNextButton && (
+                    <div className="pt-1">
+                        <button
+                            type="button"
+                            onClick={handleNext}
+                            className={cn(
+                                'quiz-button px-4 py-2 rounded-full text-sm',
+                                enableButtonOnlyWhenValid && !isValid && 'quiz-button-disabled'
+                            )}
+                            disabled={enableButtonOnlyWhenValid && !isValid}
+                        >
+                            {nextButtonText}
+                        </button>
+                    </div>
+                )}
             </div>
         );
     };
