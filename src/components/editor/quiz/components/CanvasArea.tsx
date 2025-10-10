@@ -10,7 +10,7 @@ import { BlockComponent, EditableQuizStep } from '../types';
 // Virtualização agora tratada internamente via hook
 import { useVirtualBlocks } from '../hooks/useVirtualBlocks';
 
-// ✅ COMPONENTE EXTRAÍDO: Virtualização de blocos (evita Hook dentro de IIFE)
+// ✅ COMPONENTE EXTRAÍDO: Virtualização de blocos (evita Hook dentro de IIFE - React #310)
 interface VirtualizedBlockListProps {
     selectedStep: EditableQuizStep;
     activeId: string | null;
@@ -45,7 +45,7 @@ const VirtualizedBlockList: React.FC<VirtualizedBlockListProps> = ({
         .sort((a, b) => a.order - b.order);
     const virtualizationThreshold = 60;
     const virtualizationEnabled = rootBlocks.length > virtualizationThreshold && !activeId;
-
+    
     // ✅ AGORA O HOOK É CHAMADO NO NÍVEL SUPERIOR DO COMPONENTE
     const { visible, topSpacer, bottomSpacer, containerRef } = useVirtualBlocks({
         blocks: rootBlocks,
@@ -194,7 +194,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
                                                 </div>
                                             </div>
                                         )}
-                                        {/* ✅ CORREÇÃO: Mover lógica de virtualização para nível superior */}
+                                        {/* ✅ CORREÇÃO: Componente extraído - Hook não mais dentro de IIFE */}
                                         <VirtualizedBlockList
                                             selectedStep={selectedStep}
                                             activeId={activeId}
@@ -209,48 +209,20 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
                                             setTargetStepId={setTargetStepId}
                                             setDuplicateModalOpen={setDuplicateModalOpen}
                                         />
-                                        <div ref={containerRef} className="space-y-2 pr-1 bg-white/40 overflow-visible">
-                                            <SortableContext items={[...rootBlocks.map(b => b.id), 'canvas-end']} strategy={verticalListSortingStrategy}>
-                                                <TooltipProvider>
-                                                    <div style={{ position: 'relative' }}>
-                                                        {virtualizationEnabled && topSpacer > 0 && <div style={{ height: topSpacer }} />}
-                                                        {visible.map(block => (
-                                                            <BlockRow
-                                                                key={block.id}
-                                                                block={block}
-                                                                byBlock={byBlock}
-                                                                selectedBlockId={selectedBlockId}
-                                                                isMultiSelected={isMultiSelected}
-                                                                handleBlockClick={handleBlockClick}
-                                                                renderBlockPreview={renderBlockPreview}
-                                                                allBlocks={selectedStep.blocks}
-                                                                removeBlock={removeBlock}
-                                                                stepId={selectedStep.id}
-                                                                setBlockPendingDuplicate={setBlockPendingDuplicate}
-                                                                setTargetStepId={setTargetStepId}
-                                                                setDuplicateModalOpen={setDuplicateModalOpen}
-                                                            />
-                                                        ))}
-                                                        {virtualizationEnabled && bottomSpacer > 0 && <div style={{ height: bottomSpacer }} />}
-                                                        <div id="canvas-end" className="h-8 flex items-center justify-center text-[10px] text-slate-400 border border-dashed mx-2 my-2 rounded">Soltar aqui para final</div>
-                                                        {!virtualizationEnabled && visible.length === 0 && (
-                                                            <div className="text-[11px] text-muted-foreground italic">(sem blocos raiz)</div>
-                                                        )}
-                                                    </div>
-                                                </>
+                                    </>
                                 )}
-                                            </CardContent>
-                                        </Card>
-                                        ) : (
-                                        <div className="flex items-center justify-center h-full text-muted-foreground">Selecione uma etapa para editar</div>
+                            </CardContent>
+                        </Card>
+                    ) : (
+                        <div className="flex items-center justify-center h-full text-muted-foreground">Selecione uma etapa para editar</div>
                     )}
-                                    </TabsContent>
-                                <TabsContent value="preview" className="flex-1 m-0 p-0" forceMount data-testid="tab-content-preview">
-                                    {previewNode}
-                                </TabsContent>
-                            </Tabs>
-                        </div>
-                    );
+                </TabsContent>
+                <TabsContent value="preview" className="flex-1 m-0 p-0" forceMount data-testid="tab-content-preview">
+                    {previewNode}
+                </TabsContent>
+            </Tabs>
+        </div>
+    );
 };
 
-                    export default CanvasArea;
+export default CanvasArea;
