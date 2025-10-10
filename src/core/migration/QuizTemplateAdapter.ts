@@ -17,8 +17,8 @@
 
 import { QuizFunnelSchema, FunnelStep, StepType } from '@/types/quiz-schema';
 import { Block } from '@/types/editor';
-import { QUIZ_STYLE_21_STEPS_TEMPLATE, QUIZ_QUESTIONS_COMPLETE } from '../templates/quiz21StepsComplete';
-import { FUNNEL_PERSISTENCE_SCHEMA, QUIZ_GLOBAL_CONFIG } from '../templates/quiz21StepsComplete';
+import { QUIZ_STYLE_21_STEPS_TEMPLATE, QUIZ_QUESTIONS_COMPLETE } from '@/templates/quiz21StepsComplete';
+import { FUNNEL_PERSISTENCE_SCHEMA, QUIZ_GLOBAL_CONFIG } from '@/templates/quiz21StepsComplete';
 
 // ============================================================================
 // ADAPTADOR PRINCIPAL
