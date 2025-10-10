@@ -36,7 +36,7 @@ test.describe('🎯 Fluxo Completo: Dashboard → Editor → Supabase', () => {
         console.log('📊 Teste 1: Acessando dashboard...');
 
         // Acessar o dashboard
-    await page.goto(`${BASE_URL}/dashboard`);
+        await page.goto(`${BASE_URL}/dashboard`);
 
         // Aguardar carregamento
         await page.waitForSelector('[data-testid="dashboard-container"]', { timeout: 10000 });
@@ -237,7 +237,7 @@ test.describe('🎯 Fluxo Completo: Dashboard → Editor → Supabase', () => {
         const startTime = Date.now();
 
         // Navegar para uma nova instância do editor
-    await page.goto(`${BASE_URL}/editor/${funnelId}`);
+        await page.goto(`${BASE_URL}/editor/${funnelId}`);
 
         // Aguardar carregamento completo
         await page.waitForSelector('[data-testid="modern-unified-editor"]');
