@@ -286,117 +286,6 @@ interface QuizModularProductionEditorProps {
     funnelId?: string;
 }
 
-// ========================================
-// QuizOptionsPreview Component (Extracted to avoid Rules of Hooks violations)
-// ========================================
-interface QuizOptionsPreviewProps {
-    blockId: string;
-    options: any[];
-    properties: Record<string, any>;
-    selectedStep?: EditableQuizStep;
-    selections: string[];
-    onToggle: (optionId: string, multi: boolean, required: number) => void;
-    advanceStep: (nextStepId: string) => void;
-    previewRuntimeFlags: { enableAutoAdvance: boolean; autoAdvanceDelayMs: number };
-}
-
-const QuizOptionsPreview: React.FC<QuizOptionsPreviewProps> = ({
-    blockId,
-    options,
-    properties,
-    selectedStep,
-    selections,
-    onToggle,
-    advanceStep,
-    previewRuntimeFlags
-}) => {
-    const multi = properties?.multiSelect ?? false;
-    const required = properties?.requiredSelections || (multi ? 1 : 1);
-    const max = properties?.maxSelections || required;
-    const showImages = properties?.showImages !== false;
-    const showNextButton = properties?.showNextButton !== false;
-    const enableButtonOnlyWhenValid = properties?.enableButtonOnlyWhenValid !== false;
-    const nextButtonText = properties?.nextButtonText || 'Avançar';
-    const autoAdvance = (properties?.autoAdvance !== false) && previewRuntimeFlags.enableAutoAdvance && !!(selectedStep && selectedStep.type === 'question');
-    const hasImages = showImages && options.some(o => !!o.image);
-    const layout = properties?.layout || 'auto';
-    let gridClass = 'quiz-options-1col';
-    if (layout === 'grid-2') gridClass = 'quiz-options-2col';
-    else if (layout === 'grid-3') gridClass = 'quiz-options-3col';
-    else if (layout === 'auto') {
-        if (hasImages) gridClass = 'quiz-options-3col';
-        else if (options.length >= 4) gridClass = 'quiz-options-2col';
-    }
-
-    // Auto-advance effect (NOW SAFE - at component top level)
-    useEffect(() => {
-        if (autoAdvance && selections.length === required && required > 0 && selectedStep?.nextStep) {
-            const t = setTimeout(() => advanceStep(selectedStep.nextStep!), previewRuntimeFlags.autoAdvanceDelayMs);
-            return () => clearTimeout(t);
-        }
-    }, [autoAdvance, selections.length, required, selectedStep, advanceStep, previewRuntimeFlags.autoAdvanceDelayMs]);
-
-    const isValid = selections.length >= required && required > 0;
-    const handleNext = () => {
-        if (!selectedStep?.nextStep) return;
-        if (enableButtonOnlyWhenValid && !isValid) return;
-        advanceStep(selectedStep.nextStep);
-    };
-
-    return (
-        <div className="space-y-2">
-            <div className={cn('quiz-options', gridClass)}>
-                {options.map(opt => {
-                    const active = selections.includes(opt.id);
-                    return (
-                        <div
-                            key={opt.id}
-                            role="button"
-                            tabIndex={0}
-                            onClick={(e) => { e.preventDefault(); onToggle(opt.id, multi, max); }}
-                            onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onToggle(opt.id, multi, max); } }}
-                            className={cn('quiz-option transition-all', active && 'quiz-option-selected', !active && 'cursor-pointer')}
-                        >
-                            {showImages && opt.image && (
-                                <img
-                                    src={opt.image}
-                                    alt={opt.text || 'Opção'}
-                                    className="mb-2 rounded"
-                                    style={{
-                                        width: properties?.imageMaxWidth ? `${properties.imageMaxWidth}px` : '100%',
-                                        maxWidth: '100%',
-                                        height: properties?.imageMaxHeight ? `${properties.imageMaxHeight}px` : 'auto',
-                                        objectFit: 'cover'
-                                    }}
-                                />
-                            )}
-                            <p className="quiz-option-text text-xs font-medium leading-snug">{opt.text || 'Opção'}</p>
-                        </div>
-                    );
-                })}
-            </div>
-            <div className="text-[10px] text-muted-foreground">
-                {multi ? `${selections.length}/${required} selecionadas` : (selections.length === 1 ? '1 selecionada' : 'Selecione 1')}
-            </div>
-            {showNextButton && (
-                <div className="pt-1">
-                    <button
-                        type="button"
-                        onClick={handleNext}
-                        className={cn(
-                            'quiz-button px-4 py-2 rounded-full text-sm',
-                            enableButtonOnlyWhenValid && !isValid && 'quiz-button-disabled'
-                        )}
-                        disabled={enableButtonOnlyWhenValid && !isValid}
-                    >
-                        {nextButtonText}
-                    </button>
-                </div>
-            )}
-        </div>
-    );
-};
-
 export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorProps> = ({
     funnelId: initialFunnelId
 }) => {
@@ -533,78 +422,85 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                             setSelectedStepId(initial[0]?.id || '');
                             setFunnelId(funnelParam || `funnel-${templateId}-${Date.now()}`);
                         } else if (templateId === 'quiz21StepsComplete') {
-                            // Carregamento via documento unificado (schema-driven) ou fallback legacy
-                            const mapStepType = (t: StepType, indexZeroBased: number): EditableQuizStep['type'] => {
-                                if (t === 'lead-capture') return 'intro';
-                                if (t === 'quiz-question') return 'question';
-                                if (t === 'strategic-question') return 'strategic-question';
-                                if (t === 'transition') return indexZeroBased === 18 ? 'transition-result' : 'transition';
-                                if (t === 'result') return 'result';
-                                if (t === 'offer') return 'offer';
-                                return 'question';
-                            };
-
-                            let loaded = false;
-                            try {
-                                const unified = await QuizTemplateAdapter.convertLegacyTemplate();
-                                if (unified && Array.isArray(unified.steps) && unified.steps.length >= 21) {
-                                    setUnifiedConfig({ runtime: unified.runtime, results: unified.results, ui: unified.ui, settings: unified.settings as any });
-                                    const initialFromDoc: EditableQuizStep[] = unified.steps
-                                        .sort((a, b) => a.order - b.order)
-                                        .map((s, idx) => ({
-                                            id: s.id,
-                                            type: mapStepType(s.type as StepType, idx),
-                                            order: s.order,
-                                            blocks: (s.blocks as any) || [],
-                                            nextStep: s.navigation?.nextStep,
-                                        } as EditableQuizStep));
-                                    if (funnelParam) {
-                                        initialFromDoc.forEach((step) => {
-                                            const personalized = getPersonalizedStepTemplate(step.id, funnelParam);
-                                            if (Array.isArray(personalized) && personalized.length > 0) {
-                                                step.blocks = personalized as any;
-                                            }
-                                        });
-                                    }
-                                    setSteps(initialFromDoc);
-                                    setSelectedStepId(initialFromDoc[0]?.id || '');
-                                    setFunnelId(funnelParam || `funnel-${templateId}-${Date.now()}`);
-                                    loaded = true;
-                                }
-                            } catch (e) {
-                                console.warn('FunnelDocument load failed, falling back to legacy template:', e);
-                            }
-
-                            // Fallback para template legacy
-                            if (!loaded) {
-                                const buildStepType = (idx: number): EditableQuizStep['type'] => {
-                                    if (idx === 0) return 'intro';
-                                    if (idx >= 1 && idx <= 10) return 'question';
-                                    if (idx === 11) return 'transition';
-                                    if (idx >= 12 && idx <= 17) return 'strategic-question';
-                                    if (idx === 18) return 'transition-result';
-                                    if (idx === 19) return 'result';
-                                    return 'offer';
+                            // Isolar lógica assíncrona em IIFE para evitar await no escopo síncrono do useEffect
+                            (async () => {
+                                // 1) Tentar carregar via documento unificado (schema-driven)
+                                const mapStepType = (t: StepType, indexZeroBased: number): EditableQuizStep['type'] => {
+                                    // Mapeamento seguro para tipagem do editor
+                                    if (t === 'lead-capture') return 'intro';
+                                    if (t === 'quiz-question') return 'question';
+                                    if (t === 'strategic-question') return 'strategic-question';
+                                    if (t === 'transition') return indexZeroBased === 18 ? 'transition-result' : 'transition';
+                                    if (t === 'result') return 'result';
+                                    if (t === 'offer') return 'offer';
+                                    return 'question';
                                 };
 
-                                const initial: EditableQuizStep[] = Array.from({ length: 21 }).map((_, idx) => {
-                                    const stepId = `step-${idx + 1}`;
-                                    const blocks = (funnelParam
-                                        ? getPersonalizedStepTemplate(stepId, funnelParam)
-                                        : (QUIZ_STYLE_21_STEPS_TEMPLATE as any)[stepId]) || [];
-                                    return {
-                                        id: stepId,
-                                        type: buildStepType(idx),
-                                        order: idx + 1,
-                                        blocks: blocks as any,
-                                        nextStep: undefined
-                                    } as EditableQuizStep;
-                                });
-                                for (let i = 0; i < initial.length - 1; i++) initial[i].nextStep = initial[i + 1].id;
-                                setSteps(initial);
-                                setSelectedStepId(initial[0]?.id || '');
-                                setFunnelId(funnelParam || `funnel-${templateId}-${Date.now()}`);
-                            }
+                                let loaded = false;
+                                try {
+                                    const unified = await QuizTemplateAdapter.convertLegacyTemplate();
+                                    if (unified && Array.isArray(unified.steps) && unified.steps.length >= 21) {
+                                        // Guardar em estado local para consumo direto
+                                        setUnifiedConfig({ runtime: unified.runtime, results: unified.results, ui: unified.ui, settings: unified.settings as any });
+                                        const initialFromDoc: EditableQuizStep[] = unified.steps
+                                            .sort((a, b) => a.order - b.order)
+                                            .map((s, idx) => ({
+                                                id: s.id,
+                                                type: mapStepType(s.type as StepType, idx),
+                                                order: s.order,
+                                                blocks: (s.blocks as any) || [],
+                                                nextStep: s.navigation?.nextStep,
+                                            } as EditableQuizStep));
+                                        // Se tiver personalização de funil, aplicar sobre blocos top-level quando existir stepId igual
+                                        if (funnelParam) {
+                                            initialFromDoc.forEach((step) => {
+                                                const personalized = getPersonalizedStepTemplate(step.id, funnelParam);
+                                                if (Array.isArray(personalized) && personalized.length > 0) {
+                                                    step.blocks = personalized as any;
+                                                }
+                                            });
+                                        }
+                                        setSteps(initialFromDoc);
+                                        setSelectedStepId(initialFromDoc[0]?.id || '');
+                                        setFunnelId(funnelParam || `funnel-${templateId}-${Date.now()}`);
+                                        loaded = true;
+                                    }
+                                } catch (e) {
+                                    // Falha silenciosa: cair para o fallback legacy
+                                    console.warn('FunnelDocument load failed, falling back to legacy template:', e);
+                                }
+
+                                // 2) Fallback para template legacy (com personalização por funil, se houver)
+                                if (!loaded) {
+                                    const buildStepType = (idx: number): EditableQuizStep['type'] => {
+                                        if (idx === 0) return 'intro';
+                                        if (idx >= 1 && idx <= 10) return 'question';
+                                        if (idx === 11) return 'transition';
+                                        if (idx >= 12 && idx <= 17) return 'strategic-question';
+                                        if (idx === 18) return 'transition-result';
+                                        if (idx === 19) return 'result';
+                                        return 'offer'; // idx === 20
+                                    };
+
+                                    const initial: EditableQuizStep[] = Array.from({ length: 21 }).map((_, idx) => {
+                                        const stepId = `step-${idx + 1}`;
+                                        const blocks = (funnelParam
+                                            ? getPersonalizedStepTemplate(stepId, funnelParam)
+                                            : (QUIZ_STYLE_21_STEPS_TEMPLATE as any)[stepId]) || [];
+                                        return {
+                                            id: stepId,
+                                            type: buildStepType(idx),
+                                            order: idx + 1,
+                                            blocks: blocks as any,
+                                            nextStep: undefined
+                                        } as EditableQuizStep;
+                                    });
+                                    for (let i = 0; i < initial.length - 1; i++) initial[i].nextStep = initial[i + 1].id;
+                                    setSteps(initial);
+                                    setSelectedStepId(initial[0]?.id || '');
+                                    setFunnelId(funnelParam || `funnel-${templateId}-${Date.now()}`);
+                                }
+                            })();
                         }
                     }
                 }
@@ -1046,7 +942,6 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                             selections={quizSelections[id] || []}
                             onToggle={(optionId: string, multi: boolean, required: number) => toggleQuizOption(id, optionId, multi, required)}
                             advanceStep={(nextStepId: string) => { setSelectedStepId(nextStepId); setSelectedBlockId(''); }}
-                            previewRuntimeFlags={previewRuntimeFlags}
                         />
                     </div>
                 </div>
@@ -1631,6 +1526,103 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
         });
     }, []);
 
+    // Componente especializado para quiz-options (isolado para respeitar regras de hooks)
+    interface QuizOptionsPreviewProps {
+        blockId: string;
+        options: any[];
+        properties: Record<string, any>;
+        selectedStep?: EditableQuizStep;
+        selections: string[];
+        onToggle: (optionId: string, multi: boolean, required: number) => void;
+        advanceStep: (nextStepId: string) => void;
+    }
+    const QuizOptionsPreview: React.FC<QuizOptionsPreviewProps> = ({ blockId, options, properties, selectedStep, selections, onToggle, advanceStep }) => {
+        const multi = properties?.multiSelect ?? false;
+        const required = properties?.requiredSelections || (multi ? 1 : 1);
+        const max = properties?.maxSelections || required;
+        const showImages = properties?.showImages !== false;
+        const showNextButton = properties?.showNextButton !== false; // default true
+        const enableButtonOnlyWhenValid = properties?.enableButtonOnlyWhenValid !== false; // default true
+        const nextButtonText = properties?.nextButtonText || 'Avançar';
+        // Auto-avanço: respeita flag global e local (properties.autoAdvance)
+        const autoAdvance = (properties?.autoAdvance !== false) && previewRuntimeFlags.enableAutoAdvance && !!(selectedStep && selectedStep.type === 'question');
+        const hasImages = showImages && options.some(o => !!o.image);
+        // Layout automático: se auto e tem imagens usar 3col, se >4 opções sem imagem usar 2col, senão 1col
+        const layout = properties?.layout || 'auto';
+        let gridClass = 'quiz-options-1col';
+        if (layout === 'grid-2') gridClass = 'quiz-options-2col';
+        else if (layout === 'grid-3') gridClass = 'quiz-options-3col';
+        else if (layout === 'auto') {
+            if (hasImages) gridClass = 'quiz-options-3col';
+            else if (options.length >= 4) gridClass = 'quiz-options-2col';
+        }
+        // Efeito de auto-avance
+        useEffect(() => {
+            if (autoAdvance && selections.length === required && required > 0 && selectedStep?.nextStep) {
+                const t = setTimeout(() => advanceStep(selectedStep.nextStep!), previewRuntimeFlags.autoAdvanceDelayMs);
+                return () => clearTimeout(t);
+            }
+        }, [autoAdvance, selections.length, required, selectedStep, advanceStep]);
+        const isValid = selections.length >= required && required > 0;
+        const handleNext = () => {
+            if (!selectedStep?.nextStep) return;
+            if (enableButtonOnlyWhenValid && !isValid) return;
+            advanceStep(selectedStep.nextStep);
+        };
+        return (
+            <div className="space-y-2">
+                <div className={cn('quiz-options', gridClass)}>
+                    {options.map(opt => {
+                        const active = selections.includes(opt.id);
+                        return (
+                            <div
+                                key={opt.id}
+                                role="button"
+                                tabIndex={0}
+                                onClick={(e) => { e.preventDefault(); onToggle(opt.id, multi, max); }}
+                                onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onToggle(opt.id, multi, max); } }}
+                                className={cn('quiz-option transition-all', active && 'quiz-option-selected', !active && 'cursor-pointer')}
+                            >
+                                {showImages && opt.image && (
+                                    <img
+                                        src={opt.image}
+                                        alt={opt.text || 'Opção'}
+                                        className="mb-2 rounded"
+                                        style={{
+                                            width: properties?.imageMaxWidth ? `${properties.imageMaxWidth}px` : '100%',
+                                            maxWidth: '100%',
+                                            height: properties?.imageMaxHeight ? `${properties.imageMaxHeight}px` : 'auto',
+                                            objectFit: 'cover'
+                                        }}
+                                    />
+                                )}
+                                <p className="quiz-option-text text-xs font-medium leading-snug">{opt.text || 'Opção'}</p>
+                            </div>
+                        );
+                    })}
+                </div>
+                <div className="text-[10px] text-muted-foreground">
+                    {multi ? `${selections.length}/${required} selecionadas` : (selections.length === 1 ? '1 selecionada' : 'Selecione 1')}
+                </div>
+                {showNextButton && (
+                    <div className="pt-1">
+                        <button
+                            type="button"
+                            onClick={handleNext}
+                            className={cn(
+                                'quiz-button px-4 py-2 rounded-full text-sm',
+                                enableButtonOnlyWhenValid && !isValid && 'quiz-button-disabled'
+                            )}
+                            disabled={enableButtonOnlyWhenValid && !isValid}
+                        >
+                            {nextButtonText}
+                        </button>
+                    </div>
+                )}
+            </div>
+        );
+    };
+
     // Salvar
     const [saveNotice, setSaveNotice] = useState<{ type: 'warning' | 'info'; message: string } | null>(null);
     const handleSave = useCallback(async () => {
@@ -1745,7 +1737,17 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
         }
     }, [funnelId, toast]);
 
-    // CRITICAL: All hooks must be called BEFORE any early returns
+    if (isLoading) {
+        return (
+            <div className="flex items-center justify-center h-screen">
+                <div className="text-center">
+                    <Loader2 className="w-12 h-12 mx-auto mb-4 animate-spin text-primary" />
+                    <p className="text-muted-foreground">Carregando editor modular...</p>
+                </div>
+            </div>
+        );
+    }
+
     const [productionPreviewRefresh, setProductionPreviewRefresh] = useState(0);
     const { sendSteps } = useFunnelLivePreview(funnelId);
 
@@ -1789,18 +1791,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
             }
         }, 1200); // debounce 1.2s
         return () => clearTimeout(t);
-    }, [steps, funnelId, unifiedConfig, sendSteps]);
-
-    if (isLoading) {
-        return (
-            <div className="flex items-center justify-center h-screen">
-                <div className="text-center">
-                    <Loader2 className="w-12 h-12 mx-auto mb-4 animate-spin text-primary" />
-                    <p className="text-muted-foreground">Carregando editor modular...</p>
-                </div>
-            </div>
-        );
-    }
+    }, [steps, funnelId, unifiedConfig]);
 
     return (
         <EditorThemeProvider tokens={themeOverrides}>
