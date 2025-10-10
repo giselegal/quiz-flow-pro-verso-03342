@@ -2027,31 +2027,6 @@ const LivePreviewContainer: React.FC<LivePreviewContainerProps> = ({ funnelId, s
 
     return (
         <div className="flex flex-col h-full">
-            <div className="flex items-center justify-between px-4 py-2 border-b bg-white">
-                <div className="flex items-center gap-2">
-                    <span className="text-xs font-medium">Preview</span>
-                    <div className="flex items-center gap-1">
-                        <button
-                            className={`text-[11px] px-2 py-1 rounded border ${mode === 'live' ? 'bg-blue-600 text-white border-blue-600' : 'bg-white hover:bg-slate-50'}`}
-                            onClick={() => setMode('live')}
-                        >Live</button>
-                        <button
-                            className={`text-[11px] px-2 py-1 rounded border ${mode === 'production' ? 'bg-blue-600 text-white border-blue-600' : 'bg-white hover:bg-slate-50'}`}
-                            onClick={() => setMode('production')}
-                        >Produção</button>
-                    </div>
-                </div>
-                <div className="flex items-center gap-2 text-[10px] text-muted-foreground">
-                    {mode === 'live' ? (
-                        <>
-                            <span>Atualiza em tempo real (400ms debounce)</span>
-                            <span className="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                        </>
-                    ) : (
-                        <span>Renderizando versão publicada{!funnelId ? ' (sem draft id)' : ''}</span>
-                    )}
-                </div>
-            </div>
             <div className="flex-1 overflow-hidden">
                 {mode === 'production' ? (
                     <QuizProductionPreview funnelId={funnelId} className="h-full" />
