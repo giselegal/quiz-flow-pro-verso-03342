@@ -397,6 +397,57 @@ const QuizOptionsPreview: React.FC<QuizOptionsPreviewProps> = ({
     );
 };
 
+// ============================================================================
+// COMPONENTE DE CABEÇALHO FIXO (movido para fora para evitar React Hook #310)
+// ============================================================================
+interface FixedProgressHeaderProps {
+    config: any;
+    steps: EditableQuizStep[];
+    currentStepId: string;
+}
+
+const FixedProgressHeader: React.FC<FixedProgressHeaderProps> = ({ config, steps, currentStepId }) => {
+    if (!config.showLogo && !config.progressEnabled) return null;
+
+    const currentIndex = steps.findIndex(s => s.id === currentStepId);
+    // Filtrar etapas que contam (exclui result e offer)
+    const counted = steps.filter(s => !['result', 'offer'].includes(s.type));
+    const idxCounted = counted.findIndex(s => s.id === currentStepId);
+    let percent = config.manualPercent;
+
+    if (config.progressEnabled && config.autoProgress && idxCounted >= 0 && counted.length > 0) {
+        percent = Math.min(100, Math.round(((idxCounted + 1) / counted.length) * 100));
+    }
+
+    const justify = config.align === 'center' ? 'justify-center' : config.align === 'right' ? 'justify-end' : 'justify-between';
+
+    return (
+        <div className={cn('w-full flex items-center gap-4', justify)}>
+            <div className={cn('flex items-center gap-4', config.align === 'center' && 'justify-center', config.align === 'right' && 'justify-end')}>
+                {config.showLogo && (
+                    <div className="shrink-0" style={{ maxWidth: config.logoWidth }}>
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img src={config.logoUrl} alt="Logo" className="object-contain max-h-12" />
+                    </div>
+                )}
+                {config.title && (
+                    <div className={cn('text-sm font-semibold text-slate-800', config.align === 'center' && 'text-center')}>
+                        {config.title}
+                    </div>
+                )}
+            </div>
+            {config.progressEnabled && (
+                <div className="flex-1 flex flex-col min-w-[160px]">
+                    <div className="w-full rounded-full overflow-hidden" style={{ background: config.barBackground, height: config.barHeight }}>
+                        <div className="h-full transition-all" style={{ width: `${percent}%`, background: config.barColor }} />
+                    </div>
+                    <div className="text-[10px] text-slate-500 mt-1 text-right">{percent}%</div>
+                </div>
+            )}
+        </div>
+    );
+};
+
 export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorProps> = ({
     funnelId: initialFunnelId
 }) => {
@@ -445,45 +496,6 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
         };
     });
     useEffect(() => { try { localStorage.setItem('quiz_editor_header_config_v1', JSON.stringify(headerConfig)); } catch {/* ignore */ } }, [headerConfig]);
-
-    // Componente de cabeçalho fixo
-    const FixedProgressHeader: React.FC<{ config: any; steps: EditableQuizStep[]; currentStepId: string }> = ({ config, steps, currentStepId }) => {
-        if (!config.showLogo && !config.progressEnabled) return null;
-        const currentIndex = steps.findIndex(s => s.id === currentStepId);
-        // Filtrar etapas que contam (exclui result e offer)
-        const counted = steps.filter(s => !['result', 'offer'].includes(s.type));
-        const idxCounted = counted.findIndex(s => s.id === currentStepId);
-        let percent = config.manualPercent;
-        if (config.progressEnabled && config.autoProgress && idxCounted >= 0 && counted.length > 0) {
-            percent = Math.min(100, Math.round(((idxCounted + 1) / counted.length) * 100));
-        }
-        const justify = config.align === 'center' ? 'justify-center' : config.align === 'right' ? 'justify-end' : 'justify-between';
-        return (
-            <div className={cn('w-full flex items-center gap-4', justify)}>
-                <div className={cn('flex items-center gap-4', config.align === 'center' && 'justify-center', config.align === 'right' && 'justify-end')}>
-                    {config.showLogo && (
-                        <div className="shrink-0" style={{ maxWidth: config.logoWidth }}>
-                            {/* eslint-disable-next-line @next/next/no-img-element */}
-                            <img src={config.logoUrl} alt="Logo" className="object-contain max-h-12" />
-                        </div>
-                    )}
-                    {config.title && (
-                        <div className={cn('text-sm font-semibold text-slate-800', config.align === 'center' && 'text-center')}>
-                            {config.title}
-                        </div>
-                    )}
-                </div>
-                {config.progressEnabled && (
-                    <div className="flex-1 flex flex-col min-w-[160px]">
-                        <div className="w-full rounded-full overflow-hidden" style={{ background: config.barBackground, height: config.barHeight }}>
-                            <div className="h-full transition-all" style={{ width: `${percent}%`, background: config.barColor }} />
-                        </div>
-                        <div className="text-[10px] text-slate-500 mt-1 text-right">{percent}%</div>
-                    </div>
-                )}
-            </div>
-        );
-    };
 
     // Helper para normalizar steps e garantir que blocks sempre existe
     const normalizeSteps = (steps: EditableQuizStep[]): EditableQuizStep[] => {
