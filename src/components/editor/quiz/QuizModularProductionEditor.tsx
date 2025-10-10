@@ -1999,7 +1999,17 @@ interface LivePreviewContainerProps {
 }
 
 const LivePreviewContainer: React.FC<LivePreviewContainerProps> = ({ funnelId, steps, selectedStepId }) => {
-    const [mode, setMode] = React.useState<'production' | 'live'>('live');
+    // Define o modo inicial priorizando query (?preview=live|production), depois localStorage, por fim 'live'
+    const [mode, setMode] = React.useState<'production' | 'live'>(() => {
+        try {
+            const sp = new URLSearchParams(typeof window !== 'undefined' ? window.location.search : '');
+            const q = sp.get('preview');
+            if (q === 'live' || q === 'production') return q;
+            const stored = typeof window !== 'undefined' ? window.localStorage.getItem('editor_preview_mode') : null;
+            if (stored === 'live' || stored === 'production') return stored;
+        } catch {/* ignore */ }
+        return 'live';
+    });
     const [debouncedSteps, setDebouncedSteps] = React.useState(steps);
     const debounceRef = React.useRef<number | null>(null);
 
@@ -2009,6 +2019,11 @@ const LivePreviewContainer: React.FC<LivePreviewContainerProps> = ({ funnelId, s
         debounceRef.current = window.setTimeout(() => setDebouncedSteps(steps), 400);
         return () => { if (debounceRef.current) window.clearTimeout(debounceRef.current); };
     }, [steps]);
+
+    // Persistir preferência de modo
+    React.useEffect(() => {
+        try { window.localStorage.setItem('editor_preview_mode', mode); } catch {/* ignore */ }
+    }, [mode]);
 
     return (
         <div className="flex flex-col h-full">
@@ -2033,7 +2048,7 @@ const LivePreviewContainer: React.FC<LivePreviewContainerProps> = ({ funnelId, s
                             <span className="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
                         </>
                     ) : (
-                        <span>Renderizando versão publicada</span>
+                        <span>Renderizando versão publicada{!funnelId ? ' (sem draft id)' : ''}</span>
                     )}
                 </div>
             </div>
