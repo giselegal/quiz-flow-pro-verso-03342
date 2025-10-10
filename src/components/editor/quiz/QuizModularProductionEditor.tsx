@@ -2051,18 +2051,25 @@ const LiveRuntimePreview: React.FC<LiveRuntimePreviewProps> = ({ steps, funnelId
     const runtimeMap = React.useMemo(() => editorStepsToRuntimeMap(steps as any), [steps]);
     const mapRef = React.useRef(runtimeMap);
 
-    // Atualizar registry quando mapa muda
+    // Hash estável para evitar loops desnecessários
+    const mapHash = React.useMemo(() => {
+        try {
+            return JSON.stringify(Object.keys(runtimeMap).sort().map(k => [k, typeof runtimeMap[k]]));
+        } catch {
+            return String(Date.now());
+        }
+    }, [runtimeMap]);
+    const hashRef = React.useRef(mapHash);
+
+    // Atualizar registry quando mapa realmente muda (baseado em hash estável)
     React.useEffect(() => {
-        const prevKeys = Object.keys(mapRef.current).sort();
-        const nextKeys = Object.keys(runtimeMap).sort();
-        const sameLength = prevKeys.length === nextKeys.length;
-        const sameKeys = sameLength && prevKeys.every((k, i) => k === nextKeys[i]);
-        if (!sameKeys) {
+        if (hashRef.current !== mapHash) {
+            hashRef.current = mapHash;
             mapRef.current = runtimeMap;
             setSteps(runtimeMap);
-            console.log('🔁 Live preview registry atualizado', nextKeys.length, 'steps');
+            console.log('🔁 Live preview registry atualizado', Object.keys(runtimeMap).length, 'steps');
         }
-    }, [runtimeMap, setSteps]);
+    }, [mapHash, runtimeMap, setSteps]);
 
     return (
         <div className="h-full flex flex-col bg-white">

@@ -49,11 +49,14 @@ const QuizModularProductionEditor = lazy(() => import('./components/editor/quiz/
 // ❌ HYBRID EDITOR PRO - DESATIVADO (substituído pelo QuizModularProductionEditor)
 // const HybridEditorPro = lazy(() => import('./components/editor/EditorPro/components/HybridEditorPro'));
 
-// 🧪 PÁGINAS DE QUIZ
+// 🎨 PÁGINAS DE QUIZ
 const QuizEstiloPessoalPage = lazy(() => import('./pages/QuizEstiloPessoalPage'));
 const QuizAIPage = lazy(() => import('./pages/QuizAIPage'));
 const QuizIntegratedPage = lazy(() => import('./pages/QuizIntegratedPage'));
 // const TemplateEngineQuizEstiloPage = lazy(() => import('./pages/TemplateEngineQuizEstiloPage'));
+
+// 📱 PREVIEW DE PRODUÇÃO GENÉRICO
+const ProductionPreviewPage = lazy(() => import('./pages/ProductionPreviewPage'));
 
 // 🔧 PÁGINA DEV: Diagnóstico de migração de contexto (protegida por flag)
 const ContextMigrationDiagnostics = lazy(() => import('./pages/ContextMigrationDiagnostics'));
@@ -280,6 +283,13 @@ function App() {
                         </Route>
 
                         {/* 🔄 LEGACY EDITORS: removidos → manter apenas QuizModularProductionEditor */}
+
+                        {/* 📱 PREVIEW DE PRODUÇÃO GENÉRICO */}
+                        <Route path="/preview">
+                          <div data-testid="production-preview-page">
+                            <ProductionPreviewPage />
+                          </div>
+                        </Route>
 
                         {/* 🧪 QUIZ DE ESTILO PESSOAL */}
                         <Route path="/quiz-estilo">
