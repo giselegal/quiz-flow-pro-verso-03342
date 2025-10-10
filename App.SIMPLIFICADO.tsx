@@ -18,13 +18,15 @@ import { FunnelsProvider } from './context/FunnelsContext';
 import { performanceManager } from './utils/performanceManager';
 import { RedirectRoute } from './components/RedirectRoute';
 import { QuizErrorBoundary } from './components/RouteErrorBoundary';
+import UnifiedCRUDProvider from '@/context/UnifiedCRUDProvider';
+import { FunnelContext } from '@/core/contexts/FunnelContext';
 
 // 🏠 PÁGINAS ESSENCIAIS
 const Home = lazy(() => import('./pages/Home'));
 const AuthPage = lazy(() => import('./pages/AuthPage'));
 
-// 🎯 EDITOR ÚNICO - PONTO DE ENTRADA DEFINITIVO
-const ModernUnifiedEditor = lazy(() => import('./pages/editor/ModernUnifiedEditor'));
+// 🎯 EDITOR ÚNICO - PONTO DE ENTRADA DEFINITIVO (canônico)
+const QuizModularProductionEditor = lazy(() => import('./components/editor/quiz/QuizModularProductionEditor').then(module => ({ default: module.default })));
 
 // 🧪 PÁGINAS DE QUIZ
 const QuizEstiloPessoalPage = lazy(() => import('./pages/QuizEstiloPessoalPage'));
@@ -60,8 +62,12 @@ function App() {
                                 {/* 🎯 EDITOR ÚNICO - TODAS AS VARIAÇÕES */}
                                 <Route path="/editor">
                                     <QuizErrorBoundary>
-                                        <div data-testid="editor-unified-page">
-                                            <ModernUnifiedEditor />
+                                        <div data-testid="quiz-modular-production-editor-page-simplificado">
+                                            <UnifiedCRUDProvider autoLoad={true} context={FunnelContext.EDITOR}>
+                                                <Suspense fallback={<LoadingFallback />}>
+                                                    <QuizModularProductionEditor />
+                                                </Suspense>
+                                            </UnifiedCRUDProvider>
                                         </div>
                                     </QuizErrorBoundary>
                                 </Route>
@@ -69,7 +75,13 @@ function App() {
                                 <Route path="/editor/:funnelId">
                                     {(params) => (
                                         <QuizErrorBoundary>
-                                            <ModernUnifiedEditor funnelId={params.funnelId} />
+                                            <div data-testid="quiz-modular-production-editor-page-simplificado-funnel">
+                                                <UnifiedCRUDProvider funnelId={params.funnelId} autoLoad={true} context={FunnelContext.EDITOR}>
+                                                    <Suspense fallback={<LoadingFallback />}>
+                                                        <QuizModularProductionEditor />
+                                                    </Suspense>
+                                                </UnifiedCRUDProvider>
+                                            </div>
                                         </QuizErrorBoundary>
                                     )}
                                 </Route>
