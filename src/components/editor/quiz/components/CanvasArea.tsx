@@ -1,8 +1,9 @@
-import React, { Suspense } from 'react';
+import React, { Suspense, useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent } from '@/components/ui/card';
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { TooltipProvider } from '@/components/ui/tooltip';
+import { Button } from '@/components/ui/button';
 
 import { BlockComponent, EditableQuizStep } from '../types';
 
@@ -59,6 +60,9 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
     StyleResultCard,
     OfferMap,
 }) => {
+    // Controle de preview responsivo
+    const [previewSize, setPreviewSize] = useState<'desktop' | 'mobile' | 'tablet'>('desktop');
+
     return (
         <div className="flex-1 bg-gray-100 flex flex-col overflow-y-auto">
             <Tabs value={activeTab} onValueChange={onTabChange} className="flex-1 flex flex-col">
@@ -141,7 +145,42 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
                     )}
                 </TabsContent>
                 <TabsContent value="preview" className="flex-1 m-0 p-0" data-testid="tab-content-preview">
-                    {previewNode}
+                    {/* Barra de controle de tamanho do preview */}
+                    <div className="flex items-center gap-2 px-4 py-2 border-b bg-white">
+                        <span className="text-xs text-muted-foreground">Modo preview:</span>
+                        <Button onClick={() => setPreviewSize('mobile')} variant={previewSize === 'mobile' ? 'default' : 'outline'} size="sm" aria-label="Preview Mobile">
+                            📱
+                        </Button>
+                        <Button onClick={() => setPreviewSize('tablet')} variant={previewSize === 'tablet' ? 'default' : 'outline'} size="sm" aria-label="Preview Tablet">
+                            💊
+                        </Button>
+                        <Button onClick={() => setPreviewSize('desktop')} variant={previewSize === 'desktop' ? 'default' : 'outline'} size="sm" aria-label="Preview Desktop">
+                            🖥️
+                        </Button>
+                    </div>
+                    {/* Área do preview com classes condicionais */}
+                    <div className="flex-1 overflow-auto p-4">
+                        <div className="w-full h-full flex items-start justify-center">
+                            <div
+                                className={
+                                    [
+                                        'w-full',
+                                        previewSize === 'mobile' && 'max-w-[375px] border rounded-md shadow-sm',
+                                        previewSize === 'tablet' && 'max-w-[768px] border rounded-md shadow-sm',
+                                        previewSize === 'desktop' && 'max-w-full',
+                                        'bg-white'
+                                    ]
+                                        .filter(Boolean)
+                                        .join(' ')
+                                }
+                                style={{ marginLeft: 'auto', marginRight: 'auto' }}
+                            >
+                                {previewNode || (
+                                    <p className="text-xs text-muted-foreground italic p-6 text-center">Preview indisponível</p>
+                                )}
+                            </div>
+                        </div>
+                    </div>
                 </TabsContent>
             </Tabs>
         </div>
