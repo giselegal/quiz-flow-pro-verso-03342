@@ -485,6 +485,14 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
         );
     };
 
+    // Helper para normalizar steps e garantir que blocks sempre existe
+    const normalizeSteps = (steps: EditableQuizStep[]): EditableQuizStep[] => {
+        return steps.map(step => ({
+            ...step,
+            blocks: step.blocks || []
+        }));
+    };
+
     // IMPORTANTE: Todos os hooks devem ser chamados na mesma ordem em cada render
     const [isLoading, setIsLoading] = useState(true);
     const [validationErrors, setValidationErrors] = useState<string[]>([]);
@@ -513,8 +521,9 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                     try {
                         const draft = await quizEditorBridge.loadFunnelForEdit(funnelParam);
                         if (draft && Array.isArray(draft.steps) && draft.steps.length > 0) {
-                            setSteps(draft.steps as any);
-                            setSelectedStepId(draft.steps[0]?.id || '');
+                            const normalizedSteps = normalizeSteps(draft.steps as any);
+                            setSteps(normalizedSteps);
+                            setSelectedStepId(normalizedSteps[0]?.id || '');
                             setFunnelId(draft.id || funnelParam);
                             const { runtime, results, ui, settings } = (draft as any);
                             setUnifiedConfig({ runtime, results, ui, settings });
@@ -628,7 +637,8 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
     const { canUndo, canRedo, init: initHistory, push: pushHistory, undo, redo } = useEditorHistory<EditableQuizStep[]>();
     const applyHistorySnapshot = (snap: EditableQuizStep[] | null) => {
         if (!snap) return;
-        setSteps(snap);
+        const normalizedSnap = normalizeSteps(snap);
+        setSteps(normalizedSnap);
         setIsDirty(true);
     };
 
