@@ -2,6 +2,7 @@
 /**
  * Smoke: health + live-update
  */
+import { spawn } from 'node:child_process';
 const BASE = process.env.BASE_URL || 'http://localhost:3001';
 
 async function waitFor(url, timeoutMs = 20000, interval = 500) {
@@ -18,10 +19,17 @@ async function waitFor(url, timeoutMs = 20000, interval = 500) {
 
 async function main() {
     try {
-        // aguardar backend
-        const ready = await waitFor(`${BASE}/api/health`, 20000, 500);
+        // tentar health rápido
+        let ready = await waitFor(`${BASE}/api/health`, 1500, 300);
+        let spawned = null;
+        if (!ready) {
+            // iniciar backend localmente
+            spawned = spawn('npm', ['run', 'dev:server'], { stdio: 'inherit', env: process.env });
+            ready = await waitFor(`${BASE}/api/health`, 20000, 500);
+        }
         if (!ready) {
             console.error('FAIL wait /api/health timeout');
+            if (spawned) { try { spawned.kill('SIGKILL'); } catch {} }
             process.exit(1);
         }
         // health
@@ -54,9 +62,10 @@ async function main() {
             console.error('FAIL /api/live-update', { status: r2.status, body: j2 });
             process.exit(1);
         }
-        console.log('PASS /api/live-update', j2);
+            console.log('PASS /api/live-update', j2);
 
-        process.exit(0);
+            if (spawned) { try { spawned.kill('SIGKILL'); } catch {} }
+            process.exit(0);
     } catch (e) {
         console.error('SMOKE ERROR', e);
         process.exit(2);

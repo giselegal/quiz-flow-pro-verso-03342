@@ -2,6 +2,7 @@
 /**
  * Smoke: /api/package-funnel
  */
+import { spawn } from 'node:child_process';
 const BASE = process.env.BASE_URL || 'http://localhost:3001';
 
 async function waitFor(url, timeoutMs = 20000, interval = 500) {
@@ -18,9 +19,15 @@ async function waitFor(url, timeoutMs = 20000, interval = 500) {
 
 async function main() {
     try {
-        const ready = await waitFor(`${BASE}/api/health`, 20000, 500);
+        let ready = await waitFor(`${BASE}/api/health`, 1500, 300);
+        let spawned = null;
+        if (!ready) {
+            spawned = spawn('npm', ['run', 'dev:server'], { stdio: 'inherit', env: process.env });
+            ready = await waitFor(`${BASE}/api/health`, 20000, 500);
+        }
         if (!ready) {
             console.error('FAIL wait /api/health timeout');
+            if (spawned) { try { spawned.kill('SIGKILL'); } catch {} }
             process.exit(1);
         }
         const payload = {
@@ -47,8 +54,9 @@ async function main() {
         // consume a little to ensure stream works
         const reader = r.body?.getReader?.();
         if (reader) await reader.read().catch(() => { });
-        console.log('PASS /api/package-funnel');
-        process.exit(0);
+            console.log('PASS /api/package-funnel');
+            if (spawned) { try { spawned.kill('SIGKILL'); } catch {} }
+            process.exit(0);
     } catch (e) {
         console.error('SMOKE ERROR', e);
         process.exit(2);
