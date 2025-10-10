@@ -970,9 +970,9 @@ export class FunnelUnifiedService {
                 query = query.eq('is_published', true);
             }
 
-            if (options.context) {
-                query = query.contains('settings', { context: options.context });
-            }
+            // Filtrar por context se especificado
+            // Nota: O filtro de context será aplicado após buscar os dados, pois o Supabase
+            // não suporta nativamente query.contains em campos JSONB aninhados de forma confiável
 
             query = query.order('updated_at', { ascending: false });
 
@@ -990,9 +990,20 @@ export class FunnelUnifiedService {
                 throw error;
             }
 
-            return (data || [])
+            // Converter e filtrar os dados
+            let results = (data || [])
                 .filter(item => item && typeof item === 'object') // 🛡️ Filtrar itens inválidos
                 .map(item => this.convertFromSupabaseFormat(item));
+
+            // Aplicar filtro de context após buscar os dados, se especificado
+            if (options.context) {
+                results = results.filter(funnel =>
+                    funnel.context === options.context ||
+                    (funnel.settings && (funnel.settings as any).context === options.context)
+                );
+            }
+
+            return results;
 
         } catch (error) {
             console.error('❌ Erro ao listar do Supabase:', error);
