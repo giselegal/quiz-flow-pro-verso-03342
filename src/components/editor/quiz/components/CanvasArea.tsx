@@ -1,7 +1,6 @@
 import React, { Suspense } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { TooltipProvider } from '@/components/ui/tooltip';
 
@@ -82,34 +81,6 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
                                     <div className="text-center py-8 text-muted-foreground text-xs border border-dashed rounded-md bg-white/40">(vazio)</div>
                                 ) : (
                                     <>
-                                        {(selectedStep.id === 'step-20' || selectedStep.id === 'step-21') && (
-                                            <div className="mb-6">
-                                                <div className="mb-2 flex items-center justify-between">
-                                                    <Badge variant="secondary" className="text-[9px]">live</Badge>
-                                                </div>
-                                                <div className="border rounded-lg bg-white p-4">
-                                                    <Suspense fallback={<div className="text-xs text-muted-foreground">Carregando componente...</div>}>
-                                                        {selectedStep.id === 'step-20' && (
-                                                            <StyleResultCard
-                                                                resultStyle={topStyle || 'classico'}
-                                                                userName="Preview"
-                                                                secondaryStyles={Object.keys(liveScores).filter(s => s !== (topStyle || 'classico')).slice(0, 2)}
-                                                                scores={Object.keys(liveScores).length ? liveScores : { classico: 12, natural: 8, romantico: 6 }}
-                                                                mode="result"
-                                                            />
-                                                        )}
-                                                        {selectedStep.id === 'step-21' && (
-                                                            <OfferMap
-                                                                content={{ offerMap: (selectedStep as any).offerMap || {} }}
-                                                                mode="preview"
-                                                                userName="Preview"
-                                                                selectedOfferKey="Montar looks com mais facilidade e confiança"
-                                                            />
-                                                        )}
-                                                    </Suspense>
-                                                </div>
-                                            </div>
-                                        )}
                                         {(() => {
                                             const rootBlocks = selectedStep.blocks
                                                 .filter(b => !b.parentId)
