@@ -26,10 +26,12 @@ async function waitFor(url, timeoutMs = 15000, interval = 500) {
 }
 
 (async () => {
-    const FRONT_PORT = 8080;
+    const FRONT_PORT = 8080; // legado
     const BACK_PORT = 3001;
+    const VITE_PORT = 5173; // dev server frontend
     await ensurePortFree(FRONT_PORT);
     await ensurePortFree(BACK_PORT);
+    await ensurePortFree(VITE_PORT);
 
     log('Iniciando backend ...');
     const backend = spawn('npm', ['run', 'dev:server'], { stdio: 'inherit', env: process.env });

@@ -4,8 +4,26 @@
  */
 const BASE = process.env.BASE_URL || 'http://localhost:3001';
 
+async function waitFor(url, timeoutMs = 20000, interval = 500) {
+    const start = Date.now();
+    while (Date.now() - start < timeoutMs) {
+        try {
+            const r = await fetch(url);
+            if (r.ok) return true;
+        } catch { }
+        await new Promise(r => setTimeout(r, interval));
+    }
+    return false;
+}
+
 async function main() {
     try {
+        // aguardar backend
+        const ready = await waitFor(`${BASE}/api/health`, 20000, 500);
+        if (!ready) {
+            console.error('FAIL wait /api/health timeout');
+            process.exit(1);
+        }
         // health
         const r = await fetch(`${BASE}/api/health`);
         const ok = r.ok;
