@@ -11,7 +11,7 @@
 
 import { Suspense, lazy, useEffect } from 'react';
 import { Route, Router, Switch } from 'wouter';
-import { ThemeProvider } from './components/theme-provider';
+// import { ThemeProvider } from './components/theme-provider';
 import { ThemeProvider as CustomThemeProvider } from './contexts/ThemeContext';
 import { HelmetProvider } from 'react-helmet-async';
 import { EnhancedLoadingFallback } from './components/ui/enhanced-loading-fallback';
@@ -28,12 +28,12 @@ import { EditorErrorBoundary } from './components/error/EditorErrorBoundary';
 import { EditorAccessControl } from '@/components/editor/EditorAccessControl';
 import UnifiedCRUDProvider from '@/context/UnifiedCRUDProvider';
 import { FunnelContext } from '@/core/contexts/FunnelContext';
-import { OptimizedEditorProvider } from '@/components/editor/OptimizedEditorProvider';
-import { BlockRegistryProvider, DEFAULT_BLOCK_DEFINITIONS } from '@/runtime/quiz/blocks/BlockRegistry';
+// import { OptimizedEditorProvider } from '@/components/editor/OptimizedEditorProvider';
+// import { BlockRegistryProvider, DEFAULT_BLOCK_DEFINITIONS } from '@/runtime/quiz/blocks/BlockRegistry';
 // Novo Template Engine (feature flag controlada por VITE_USE_TEMPLATE_ENGINE)
 import { TemplateEnginePage } from '@/features/templateEngine';
 import { TemplateEnginePageWrapperOpen } from '@/features/templateEngine/components/TemplateEnginePage';
-import QuizEstiloModularRedirect from '@/features/templateEngine/components/QuizEstiloModularRedirect';
+// import QuizEstiloModularRedirect from '@/features/templateEngine/components/QuizEstiloModularRedirect';
 
 // 🏠 PÁGINAS ESSENCIAIS
 const Home = lazy(() => import('./pages/Home'));
@@ -53,7 +53,7 @@ const QuizModularProductionEditor = lazy(() => import('./components/editor/quiz/
 const QuizEstiloPessoalPage = lazy(() => import('./pages/QuizEstiloPessoalPage'));
 const QuizAIPage = lazy(() => import('./pages/QuizAIPage'));
 const QuizIntegratedPage = lazy(() => import('./pages/QuizIntegratedPage'));
-const TemplateEngineQuizEstiloPage = lazy(() => import('./pages/TemplateEngineQuizEstiloPage'));
+// const TemplateEngineQuizEstiloPage = lazy(() => import('./pages/TemplateEngineQuizEstiloPage'));
 
 // 🏢 LAYOUT ADMINISTRATIVO E DASHBOARD MODERNO
 const ModernDashboardPage = lazy(() => import('./pages/ModernDashboardPage'));
