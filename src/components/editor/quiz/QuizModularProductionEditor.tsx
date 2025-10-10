@@ -98,7 +98,6 @@ import DuplicateBlockDialog from './components/DuplicateBlockDialog';
 // Cálculo real de resultado (produção)
 import { computeResult } from '@/utils/result/computeResult';
 import type { QuizFunnelSchema } from '@/types/quiz-schema';
-import { useFunnelLivePreview } from '@/hooks/useFunnelLivePreview';
 
 // Pré-visualizações especializadas (lazy) dos componentes finais de produção
 const StyleResultCard = React.lazy(() => import('@/components/editor/quiz/components/StyleResultCard').then(m => ({ default: m.StyleResultCard })));
@@ -1741,51 +1740,6 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
         );
     }
 
-    const [productionPreviewRefresh, setProductionPreviewRefresh] = useState(0);
-    const { sendSteps } = useFunnelLivePreview(funnelId);
-
-    // Autosave leve do draft enquanto edita, para que o preview de produção consiga carregar este draft em tempo quase real
-    useEffect(() => {
-        // Apenas quando houver um funnelId (draft) e passos não vazios
-        if (!funnelId || !steps || steps.length === 0) return;
-        const t = setTimeout(async () => {
-            try {
-                const funnel = {
-                    id: funnelId,
-                    name: 'Quiz Estilo Pessoal - Modular',
-                    slug: 'quiz-estilo',
-                    steps: steps.map(s => ({
-                        id: s.id,
-                        order: s.order,
-                        ...(convertBlocksToStepUtil(s.id, s.type as any, s.blocks as any) as any),
-                        nextStep: s.nextStep,
-                        blocks: s.blocks
-                    })),
-                    isPublished: false,
-                    version: 0,
-                    runtime: (unifiedConfig as any)?.runtime,
-                    results: (unifiedConfig as any)?.results,
-                    ui: (unifiedConfig as any)?.ui,
-                    settings: (unifiedConfig as any)?.settings,
-                } as any;
-                await quizEditorBridge.saveDraft(funnel);
-                // Gera um token de atualização para o Preview de Produção
-                setProductionPreviewRefresh(prev => prev + 1);
-                // Broadcast leve para outros clientes conectados (WS)
-                try {
-                    const stepsMap: Record<string, any> = {};
-                    for (const s of steps) {
-                        stepsMap[s.id] = convertBlocksToStepUtil(s.id, s.type as any, s.blocks as any);
-                    }
-                    sendSteps(stepsMap);
-                } catch { /* ignore */ }
-            } catch (e) {
-                // silencioso: autosave best-effort
-            }
-        }, 1200); // debounce 1.2s
-        return () => clearTimeout(t);
-    }, [steps, funnelId, unifiedConfig]);
-
     return (
         <EditorThemeProvider tokens={themeOverrides}>
             <DndContext
@@ -1896,35 +1850,6 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                                     <Button variant={activeTab === 'preview' ? 'default' : 'outline'} size="sm" onClick={() => setActiveTab('preview')}>Preview</Button>
                                 </div>
                                 <Button size="sm" onClick={handlePublish} disabled={isPublishing}>{isPublishing ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Upload className="w-4 h-4 mr-2" />}Publicar</Button>
-                                <Button size="sm" variant="outline" onClick={async () => {
-                                    try {
-                                        const payload = {
-                                            id: funnelId || `draft-${Date.now()}`,
-                                            name: 'Quiz Estilo Pessoal - Modular',
-                                            steps,
-                                            runtime: (unifiedConfig as any)?.runtime,
-                                            results: (unifiedConfig as any)?.results,
-                                            ui: (unifiedConfig as any)?.ui,
-                                            settings: (unifiedConfig as any)?.settings,
-                                        };
-                                        const resp = await fetch('/api/package-funnel', {
-                                            method: 'POST',
-                                            headers: { 'Content-Type': 'application/json' },
-                                            body: JSON.stringify(payload)
-                                        });
-                                        if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
-                                        const blob = await resp.blob();
-                                        const url = URL.createObjectURL(blob);
-                                        const a = document.createElement('a');
-                                        a.href = url;
-                                        a.download = `${payload.id}-package.zip`;
-                                        a.click();
-                                        URL.revokeObjectURL(url);
-                                        toast({ title: 'Pacote gerado', description: 'Download iniciado' });
-                                    } catch (e) {
-                                        toast({ title: 'Erro ao empacotar', description: String(e), variant: 'destructive' });
-                                    }
-                                }}>Empacotar (.zip)</Button>
                             </div>
                         </div>
                     )}
@@ -1974,7 +1899,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                             setTargetStepId={setTargetStepId}
                             setDuplicateModalOpen={setDuplicateModalOpen}
                             activeId={activeId}
-                            previewNode={<LivePreviewContainer funnelId={funnelId} steps={steps} selectedStepId={selectedStep?.id} refreshToken={productionPreviewRefresh} />}
+                            previewNode={<LivePreviewContainer funnelId={funnelId} steps={steps} selectedStepId={selectedStep?.id} />}
                             FixedProgressHeader={FixedProgressHeader}
                             StyleResultCard={StyleResultCard}
                             OfferMap={OfferMap}
@@ -2071,10 +1996,9 @@ interface LivePreviewContainerProps {
     funnelId?: string;
     steps: EditableQuizStep[];
     selectedStepId?: string;
-    refreshToken?: number;
 }
 
-const LivePreviewContainer: React.FC<LivePreviewContainerProps> = ({ funnelId, steps, selectedStepId, refreshToken }) => {
+const LivePreviewContainer: React.FC<LivePreviewContainerProps> = ({ funnelId, steps, selectedStepId }) => {
     const [mode, setMode] = React.useState<'production' | 'live'>('live');
     const [debouncedSteps, setDebouncedSteps] = React.useState(steps);
     const debounceRef = React.useRef<number | null>(null);
@@ -2115,7 +2039,7 @@ const LivePreviewContainer: React.FC<LivePreviewContainerProps> = ({ funnelId, s
             </div>
             <div className="flex-1 overflow-hidden">
                 {mode === 'production' ? (
-                    <QuizProductionPreview funnelId={funnelId} className="h-full" refreshToken={refreshToken} />
+                    <QuizProductionPreview funnelId={funnelId} className="h-full" />
                 ) : (
                     <QuizRuntimeRegistryProvider>
                         <LiveRuntimePreview steps={debouncedSteps} funnelId={funnelId} selectedStepId={selectedStepId} />

@@ -71,7 +71,6 @@ const EditorTemplatesPage = lazy(() => import('./pages/editor-templates/index'))
 const FunnelTypesPage = lazy(() => import('./pages/SimpleFunnelTypesPage'));
 const SupabaseFixTestPage = lazy(() => import('./pages/SupabaseFixTestPage'));
 const IndexedDBMigrationTestPage = lazy(() => import('./pages/IndexedDBMigrationTestPage'));
-const LivePreviewPage = lazy(() => import('./pages/LivePreviewPage'));
 
 // 🛠️ PÁGINAS ADMIN (lazy estáveis)
 const AdminAnalyticsPage = lazy(() => import('./pages/admin/AnalyticsPage'));
@@ -223,19 +222,6 @@ function App() {
                                     <QuizErrorBoundary>
                                         <QuizEstiloPessoalPage />
                                     </QuizErrorBoundary>
-                                </Route>
-
-                                {/* 👁️ LIVE PREVIEW por funnelId */}
-                                <Route path="/preview/:funnelId">
-                                    <Suspense fallback={<EnhancedLoadingFallback message="Carregando Preview..." />}>
-                                        <LivePreviewPage />
-                                    </Suspense>
-                                </Route>
-
-                                <Route path="/preview">
-                                    <Suspense fallback={<EnhancedLoadingFallback message="Carregando Preview..." />}>
-                                        <LivePreviewPage />
-                                    </Suspense>
                                 </Route>
 
                                 <Route path="/quiz/:funnelId">
