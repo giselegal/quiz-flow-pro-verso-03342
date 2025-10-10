@@ -7,7 +7,6 @@
 
 import React, { useEffect, useState, useCallback } from 'react';
 import QuizApp from '@/components/quiz/QuizApp';
-import { useFunnelLivePreview } from '@/hooks/useFunnelLivePreview';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription } from '@/components/ui/alert';
@@ -40,8 +39,6 @@ export const QuizProductionPreview: React.FC<QuizProductionPreviewProps> = ({
     onStateChange,
     refreshToken
 }) => {
-    // Live steps via WebSocket (se houver outro cliente broadcastando)
-    const { liveSteps } = useFunnelLivePreview(funnelId);
     const [isPlaying, setIsPlaying] = useState(true);
     const [showControls, setShowControls] = useState(true);
     const [refreshKey, setRefreshKey] = useState(0);
@@ -174,7 +171,7 @@ export const QuizProductionPreview: React.FC<QuizProductionPreviewProps> = ({
             >
                 {isPlaying ? (
                     <div key={refreshKey}>
-                        <QuizApp funnelId={funnelId} externalSteps={liveSteps || undefined as any} />
+                        <QuizApp funnelId={funnelId} />
                     </div>
                 ) : (
                     <div className="flex items-center justify-center h-full">

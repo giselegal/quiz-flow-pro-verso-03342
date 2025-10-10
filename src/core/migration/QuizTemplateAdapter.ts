@@ -17,8 +17,8 @@
 
 import { QuizFunnelSchema, FunnelStep, StepType } from '@/types/quiz-schema';
 import { Block } from '@/types/editor';
-import { QUIZ_STYLE_21_STEPS_TEMPLATE, QUIZ_QUESTIONS_COMPLETE } from '@/templates/quiz21StepsComplete';
-import { FUNNEL_PERSISTENCE_SCHEMA, QUIZ_GLOBAL_CONFIG } from '@/templates/quiz21StepsComplete';
+// import { QUIZ_STYLE_21_STEPS_TEMPLATE, QUIZ_QUESTIONS_COMPLETE } from '../templates/quiz21StepsComplete';
+// import { FUNNEL_PERSISTENCE_SCHEMA, QUIZ_GLOBAL_CONFIG } from '../templates/quiz21StepsComplete';
 
 // ============================================================================
 // ADAPTADOR PRINCIPAL
@@ -49,10 +49,10 @@ export class QuizTemplateAdapter {
    */
   private static loadLegacyTemplate() {
     return {
-      template: QUIZ_STYLE_21_STEPS_TEMPLATE,
-      questions: QUIZ_QUESTIONS_COMPLETE,
-      persistence: FUNNEL_PERSISTENCE_SCHEMA,
-      globalConfig: QUIZ_GLOBAL_CONFIG
+      template: null, // QUIZ_STYLE_21_STEPS_TEMPLATE,
+      questions: [], // QUIZ_QUESTIONS_COMPLETE,
+      persistence: null, // FUNNEL_PERSISTENCE_SCHEMA,
+      globalConfig: null // QUIZ_GLOBAL_CONFIG
     };
   }
 
@@ -181,12 +181,6 @@ export class QuizTemplateAdapter {
    * Converte as etapas do template legacy
    */
   private static async convertSteps(legacyTemplate: Record<string, Block[]>, questions: Record<number, string>): Promise<FunnelStep[]> {
-    // Validação defensiva: se legacyTemplate for null/undefined, retornar array vazio
-    if (!legacyTemplate || typeof legacyTemplate !== 'object') {
-      console.warn('⚠️ QuizTemplateAdapter: legacyTemplate inválido, retornando array vazio');
-      return [];
-    }
-
     const steps: FunnelStep[] = [];
 
     for (const [stepId, blocks] of Object.entries(legacyTemplate)) {

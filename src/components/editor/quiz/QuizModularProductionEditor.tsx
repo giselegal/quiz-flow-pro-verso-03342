@@ -74,7 +74,7 @@ import { sanitizeInlineHtml, looksLikeHtml } from '@/utils/sanitizeInlineHtml';
 import { convertBlocksToStep as convertBlocksToStepUtil } from '@/utils/quizConversionUtils';
 import { autoFillNextSteps } from '@/utils/autoFillNextSteps';
 import { buildNavigationMap, formatNavigationReport } from '@/utils/funnelNavigation';
-import { QuizRuntimeRegistryProvider, useQuizRuntimeRegistry, type RuntimeStepOverride } from '@/runtime/quiz/QuizRuntimeRegistry';
+import { QuizRuntimeRegistryProvider, useQuizRuntimeRegistry } from '@/runtime/quiz/QuizRuntimeRegistry';
 import { editorStepsToRuntimeMap } from '@/runtime/quiz/editorAdapter';
 import { LayoutShell } from './LayoutShell';
 import { usePanelWidths } from './hooks/usePanelWidths.tsx';
@@ -98,7 +98,6 @@ import DuplicateBlockDialog from './components/DuplicateBlockDialog';
 // Cálculo real de resultado (produção)
 import { computeResult } from '@/utils/result/computeResult';
 import type { QuizFunnelSchema } from '@/types/quiz-schema';
-import { useFunnelLivePreview } from '@/hooks/useFunnelLivePreview';
 
 // Pré-visualizações especializadas (lazy) dos componentes finais de produção
 const StyleResultCard = React.lazy(() => import('@/components/editor/quiz/components/StyleResultCard').then(m => ({ default: m.StyleResultCard })));
@@ -286,168 +285,6 @@ interface QuizModularProductionEditorProps {
     funnelId?: string;
 }
 
-// ========================================
-// QuizOptionsPreview Component (Extracted to avoid Rules of Hooks violations)
-// ========================================
-interface QuizOptionsPreviewProps {
-    blockId: string;
-    options: any[];
-    properties: Record<string, any>;
-    selectedStep?: EditableQuizStep;
-    selections: string[];
-    onToggle: (optionId: string, multi: boolean, required: number) => void;
-    advanceStep: (nextStepId: string) => void;
-    previewRuntimeFlags: { enableAutoAdvance: boolean; autoAdvanceDelayMs: number };
-}
-
-const QuizOptionsPreview: React.FC<QuizOptionsPreviewProps> = ({
-    blockId,
-    options,
-    properties,
-    selectedStep,
-    selections,
-    onToggle,
-    advanceStep,
-    previewRuntimeFlags
-}) => {
-    const multi = properties?.multiSelect ?? false;
-    const required = properties?.requiredSelections || (multi ? 1 : 1);
-    const max = properties?.maxSelections || required;
-    const showImages = properties?.showImages !== false;
-    const showNextButton = properties?.showNextButton !== false;
-    const enableButtonOnlyWhenValid = properties?.enableButtonOnlyWhenValid !== false;
-    const nextButtonText = properties?.nextButtonText || 'Avançar';
-    const autoAdvance = (properties?.autoAdvance !== false) && previewRuntimeFlags.enableAutoAdvance && !!(selectedStep && selectedStep.type === 'question');
-    const hasImages = showImages && options.some(o => !!o.image);
-    const layout = properties?.layout || 'auto';
-    let gridClass = 'quiz-options-1col';
-    if (layout === 'grid-2') gridClass = 'quiz-options-2col';
-    else if (layout === 'grid-3') gridClass = 'quiz-options-3col';
-    else if (layout === 'auto') {
-        if (hasImages) gridClass = 'quiz-options-3col';
-        else if (options.length >= 4) gridClass = 'quiz-options-2col';
-    }
-
-    // Auto-advance effect (NOW SAFE - at component top level)
-    useEffect(() => {
-        if (autoAdvance && selections.length === required && required > 0 && selectedStep?.nextStep) {
-            const t = setTimeout(() => advanceStep(selectedStep.nextStep!), previewRuntimeFlags.autoAdvanceDelayMs);
-            return () => clearTimeout(t);
-        }
-    }, [autoAdvance, selections.length, required, selectedStep, advanceStep, previewRuntimeFlags.autoAdvanceDelayMs]);
-
-    const isValid = selections.length >= required && required > 0;
-    const handleNext = () => {
-        if (!selectedStep?.nextStep) return;
-        if (enableButtonOnlyWhenValid && !isValid) return;
-        advanceStep(selectedStep.nextStep);
-    };
-
-    return (
-        <div className="space-y-2">
-            <div className={cn('quiz-options', gridClass)}>
-                {options.map(opt => {
-                    const active = selections.includes(opt.id);
-                    return (
-                        <div
-                            key={opt.id}
-                            role="button"
-                            tabIndex={0}
-                            onClick={(e) => { e.preventDefault(); onToggle(opt.id, multi, max); }}
-                            onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onToggle(opt.id, multi, max); } }}
-                            className={cn('quiz-option transition-all', active && 'quiz-option-selected', !active && 'cursor-pointer')}
-                        >
-                            {showImages && opt.image && (
-                                <img
-                                    src={opt.image}
-                                    alt={opt.text || 'Opção'}
-                                    className="mb-2 rounded"
-                                    style={{
-                                        width: properties?.imageMaxWidth ? `${properties.imageMaxWidth}px` : '100%',
-                                        maxWidth: '100%',
-                                        height: properties?.imageMaxHeight ? `${properties.imageMaxHeight}px` : 'auto',
-                                        objectFit: 'cover'
-                                    }}
-                                />
-                            )}
-                            <p className="quiz-option-text text-xs font-medium leading-snug">{opt.text || 'Opção'}</p>
-                        </div>
-                    );
-                })}
-            </div>
-            <div className="text-[10px] text-muted-foreground">
-                {multi ? `${selections.length}/${required} selecionadas` : (selections.length === 1 ? '1 selecionada' : 'Selecione 1')}
-            </div>
-            {showNextButton && (
-                <div className="pt-1">
-                    <button
-                        type="button"
-                        onClick={handleNext}
-                        className={cn(
-                            'quiz-button px-4 py-2 rounded-full text-sm',
-                            enableButtonOnlyWhenValid && !isValid && 'quiz-button-disabled'
-                        )}
-                        disabled={enableButtonOnlyWhenValid && !isValid}
-                    >
-                        {nextButtonText}
-                    </button>
-                </div>
-            )}
-        </div>
-    );
-};
-
-// ============================================================================
-// COMPONENTE DE CABEÇALHO FIXO (movido para fora para evitar React Hook #310)
-// ============================================================================
-interface FixedProgressHeaderProps {
-    config: any;
-    steps: EditableQuizStep[];
-    currentStepId: string;
-}
-
-const FixedProgressHeader: React.FC<FixedProgressHeaderProps> = ({ config, steps, currentStepId }) => {
-    if (!config.showLogo && !config.progressEnabled) return null;
-
-    const currentIndex = steps.findIndex(s => s.id === currentStepId);
-    // Filtrar etapas que contam (exclui result e offer)
-    const counted = steps.filter(s => !['result', 'offer'].includes(s.type));
-    const idxCounted = counted.findIndex(s => s.id === currentStepId);
-    let percent = config.manualPercent;
-
-    if (config.progressEnabled && config.autoProgress && idxCounted >= 0 && counted.length > 0) {
-        percent = Math.min(100, Math.round(((idxCounted + 1) / counted.length) * 100));
-    }
-
-    const justify = config.align === 'center' ? 'justify-center' : config.align === 'right' ? 'justify-end' : 'justify-between';
-
-    return (
-        <div className={cn('w-full flex items-center gap-4', justify)}>
-            <div className={cn('flex items-center gap-4', config.align === 'center' && 'justify-center', config.align === 'right' && 'justify-end')}>
-                {config.showLogo && (
-                    <div className="shrink-0" style={{ maxWidth: config.logoWidth }}>
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img src={config.logoUrl} alt="Logo" className="object-contain max-h-12" />
-                    </div>
-                )}
-                {config.title && (
-                    <div className={cn('text-sm font-semibold text-slate-800', config.align === 'center' && 'text-center')}>
-                        {config.title}
-                    </div>
-                )}
-            </div>
-            {config.progressEnabled && (
-                <div className="flex-1 flex flex-col min-w-[160px]">
-                    <div className="w-full rounded-full overflow-hidden" style={{ background: config.barBackground, height: config.barHeight }}>
-                        <div className="h-full transition-all" style={{ width: `${percent}%`, background: config.barColor }} />
-                    </div>
-                    <div className="text-[10px] text-slate-500 mt-1 text-right">{percent}%</div>
-                </div>
-            )}
-        </div>
-    );
-};
-
 export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorProps> = ({
     funnelId: initialFunnelId
 }) => {
@@ -497,49 +334,71 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
     });
     useEffect(() => { try { localStorage.setItem('quiz_editor_header_config_v1', JSON.stringify(headerConfig)); } catch {/* ignore */ } }, [headerConfig]);
 
-    // Helper para normalizar steps e garantir que blocks sempre existe
-    const normalizeSteps = (steps: EditableQuizStep[]): EditableQuizStep[] => {
-        return steps.map(step => ({
-            ...step,
-            blocks: step.blocks || []
-        }));
+    // Componente de cabeçalho fixo
+    const FixedProgressHeader: React.FC<{ config: any; steps: EditableQuizStep[]; currentStepId: string }> = ({ config, steps, currentStepId }) => {
+        if (!config.showLogo && !config.progressEnabled) return null;
+        const currentIndex = steps.findIndex(s => s.id === currentStepId);
+        // Filtrar etapas que contam (exclui result e offer)
+        const counted = steps.filter(s => !['result', 'offer'].includes(s.type));
+        const idxCounted = counted.findIndex(s => s.id === currentStepId);
+        let percent = config.manualPercent;
+        if (config.progressEnabled && config.autoProgress && idxCounted >= 0 && counted.length > 0) {
+            percent = Math.min(100, Math.round(((idxCounted + 1) / counted.length) * 100));
+        }
+        const justify = config.align === 'center' ? 'justify-center' : config.align === 'right' ? 'justify-end' : 'justify-between';
+        return (
+            <div className={cn('w-full flex items-center gap-4', justify)}>
+                <div className={cn('flex items-center gap-4', config.align === 'center' && 'justify-center', config.align === 'right' && 'justify-end')}>
+                    {config.showLogo && (
+                        <div className="shrink-0" style={{ maxWidth: config.logoWidth }}>
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                            <img src={config.logoUrl} alt="Logo" className="object-contain max-h-12" />
+                        </div>
+                    )}
+                    {config.title && (
+                        <div className={cn('text-sm font-semibold text-slate-800', config.align === 'center' && 'text-center')}>
+                            {config.title}
+                        </div>
+                    )}
+                </div>
+                {config.progressEnabled && (
+                    <div className="flex-1 flex flex-col min-w-[160px]">
+                        <div className="w-full rounded-full overflow-hidden" style={{ background: config.barBackground, height: config.barHeight }}>
+                            <div className="h-full transition-all" style={{ width: `${percent}%`, background: config.barColor }} />
+                        </div>
+                        <div className="text-[10px] text-slate-500 mt-1 text-right">{percent}%</div>
+                    </div>
+                )}
+            </div>
+        );
     };
-
-    // IMPORTANTE: Todos os hooks devem ser chamados na mesma ordem em cada render
-    const [isLoading, setIsLoading] = useState(true);
-    const [validationErrors, setValidationErrors] = useState<string[]>([]);
 
     // Validação em tempo real (fase inicial - regras básicas)
     const { byStep, byBlock } = useValidation(steps);
 
-    // Carregar theme overrides do localStorage
     useEffect(() => {
         try {
             const raw = localStorage.getItem('quiz_editor_theme_overrides_v1');
             if (raw) setThemeOverrides(JSON.parse(raw));
         } catch {/* ignore */ }
     }, []);
-
-    // Carregamento inicial: se houver ?template=, construir steps default
+    const [isLoading, setIsLoading] = useState(true);
+    // Evita loop infinito de carregamento: finaliza o loading após mount
     useEffect(() => {
-        let isMounted = true; // Flag para evitar setState em componente desmontado
+        // Carregamento inicial: se houver ?template=, construir steps default
+        try {
+            const sp = new URLSearchParams(typeof window !== 'undefined' && window.location ? window.location.search : '');
+            const templateId = sp.get('template');
+            const funnelParam = sp.get('funnel') || undefined;
 
-        const loadInitialData = async () => {
-            try {
-                const sp = new URLSearchParams(typeof window !== 'undefined' && window.location ? window.location.search : '');
-                const templateId = sp.get('template');
-                const funnelParam = sp.get('funnel') || undefined;
-
-                // 0) Se vier um funnelId, tentar carregar rascunho existente primeiro
-                if (funnelParam && !steps?.length) {
+            // 0) Se vier um funnelId, tentar carregar rascunho existente primeiro
+            if (funnelParam && !steps?.length) {
+                (async () => {
                     try {
                         const draft = await quizEditorBridge.loadFunnelForEdit(funnelParam);
                         if (draft && Array.isArray(draft.steps) && draft.steps.length > 0) {
-                            if (!isMounted) return; // Componente desmontado
-
-                            const normalizedSteps = normalizeSteps(draft.steps as any);
-                            setSteps(normalizedSteps);
-                            setSelectedStepId(normalizedSteps[0]?.id || '');
+                            setSteps(draft.steps as any);
+                            setSelectedStepId(draft.steps[0]?.id || '');
                             setFunnelId(draft.id || funnelParam);
                             const { runtime, results, ui, settings } = (draft as any);
                             setUnifiedConfig({ runtime, results, ui, settings });
@@ -549,123 +408,108 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                     } catch (e) {
                         console.warn('Falha ao carregar rascunho do funil, seguindo para fallback de template', e);
                     }
-                }
-                if (templateId) {
-                    if (!steps || steps.length === 0) {
-                        if (templateId === 'fashionStyle21PtBR') {
-                            if (!isMounted) return; // Componente desmontado
+                })();
+            }
+            if (templateId) {
+                if (!steps || steps.length === 0) {
+                    if (templateId === 'fashionStyle21PtBR') {
+                        const initial = buildFashionStyle21Steps(funnelParam);
+                        setSteps(initial);
+                        setSelectedStepId(initial[0]?.id || '');
+                        setFunnelId(funnelParam || `funnel-${templateId}-${Date.now()}`);
+                    } else if (templateId === 'quiz21StepsComplete') {
+                        // Isolar lógica assíncrona em IIFE para evitar await no escopo síncrono do useEffect
+                        (async () => {
+                            // 1) Tentar carregar via documento unificado (schema-driven)
+                            const mapStepType = (t: StepType, indexZeroBased: number): EditableQuizStep['type'] => {
+                                // Mapeamento seguro para tipagem do editor
+                                if (t === 'lead-capture') return 'intro';
+                                if (t === 'quiz-question') return 'question';
+                                if (t === 'strategic-question') return 'strategic-question';
+                                if (t === 'transition') return indexZeroBased === 18 ? 'transition-result' : 'transition';
+                                if (t === 'result') return 'result';
+                                if (t === 'offer') return 'offer';
+                                return 'question';
+                            };
 
-                            const initial = buildFashionStyle21Steps(funnelParam);
-                            setSteps(initial);
-                            setSelectedStepId(initial[0]?.id || '');
-                            setFunnelId(funnelParam || `funnel-${templateId}-${Date.now()}`);
-                        } else if (templateId === 'quiz21StepsComplete') {
-                            // Lógica assíncrona para carregar template
-                            (async () => {
-                                // 1) Tentar carregar via documento unificado (schema-driven)
-                                const mapStepType = (t: StepType, indexZeroBased: number): EditableQuizStep['type'] => {
-                                    // Mapeamento seguro para tipagem do editor
-                                    if (t === 'lead-capture') return 'intro';
-                                    if (t === 'quiz-question') return 'question';
-                                    if (t === 'strategic-question') return 'strategic-question';
-                                    if (t === 'transition') return indexZeroBased === 18 ? 'transition-result' : 'transition';
-                                    if (t === 'result') return 'result';
-                                    if (t === 'offer') return 'offer';
-                                    return 'question';
+                            let loaded = false;
+                            try {
+                                const unified = await QuizTemplateAdapter.convertLegacyTemplate();
+                                if (unified && Array.isArray(unified.steps) && unified.steps.length >= 21) {
+                                    // Guardar em estado local para consumo direto
+                                    setUnifiedConfig({ runtime: unified.runtime, results: unified.results, ui: unified.ui, settings: unified.settings as any });
+                                    const initialFromDoc: EditableQuizStep[] = unified.steps
+                                        .sort((a, b) => a.order - b.order)
+                                        .map((s, idx) => ({
+                                            id: s.id,
+                                            type: mapStepType(s.type as StepType, idx),
+                                            order: s.order,
+                                            blocks: (s.blocks as any) || [],
+                                            nextStep: s.navigation?.nextStep,
+                                        } as EditableQuizStep));
+                                    // Se tiver personalização de funil, aplicar sobre blocos top-level quando existir stepId igual
+                                    if (funnelParam) {
+                                        initialFromDoc.forEach((step) => {
+                                            const personalized = getPersonalizedStepTemplate(step.id, funnelParam);
+                                            if (Array.isArray(personalized) && personalized.length > 0) {
+                                                step.blocks = personalized as any;
+                                            }
+                                        });
+                                    }
+                                    setSteps(initialFromDoc);
+                                    setSelectedStepId(initialFromDoc[0]?.id || '');
+                                    setFunnelId(funnelParam || `funnel-${templateId}-${Date.now()}`);
+                                    loaded = true;
+                                }
+                            } catch (e) {
+                                // Falha silenciosa: cair para o fallback legacy
+                                console.warn('FunnelDocument load failed, falling back to legacy template:', e);
+                            }
+
+                            // 2) Fallback para template legacy (com personalização por funil, se houver)
+                            if (!loaded) {
+                                const buildStepType = (idx: number): EditableQuizStep['type'] => {
+                                    if (idx === 0) return 'intro';
+                                    if (idx >= 1 && idx <= 10) return 'question';
+                                    if (idx === 11) return 'transition';
+                                    if (idx >= 12 && idx <= 17) return 'strategic-question';
+                                    if (idx === 18) return 'transition-result';
+                                    if (idx === 19) return 'result';
+                                    return 'offer'; // idx === 20
                                 };
 
-                                let loaded = false;
-                                try {
-                                    const unified = await QuizTemplateAdapter.convertLegacyTemplate();
-                                    if (!isMounted) return; // Componente desmontado
-
-                                    if (unified && Array.isArray(unified.steps) && unified.steps.length >= 21) {
-                                        // Guardar em estado local para consumo direto
-                                        setUnifiedConfig({ runtime: unified.runtime, results: unified.results, ui: unified.ui, settings: unified.settings as any });
-                                        const initialFromDoc: EditableQuizStep[] = unified.steps
-                                            .sort((a, b) => a.order - b.order)
-                                            .map((s, idx) => ({
-                                                id: s.id,
-                                                type: mapStepType(s.type as StepType, idx),
-                                                order: s.order,
-                                                blocks: (s.blocks as any) || [],
-                                                nextStep: s.navigation?.nextStep,
-                                            } as EditableQuizStep));
-                                        // Se tiver personalização de funil, aplicar sobre blocos top-level quando existir stepId igual
-                                        if (funnelParam) {
-                                            initialFromDoc.forEach((step) => {
-                                                const personalized = getPersonalizedStepTemplate(step.id, funnelParam);
-                                                if (Array.isArray(personalized) && personalized.length > 0) {
-                                                    step.blocks = personalized as any;
-                                                }
-                                            });
-                                        }
-                                        setSteps(initialFromDoc);
-                                        setSelectedStepId(initialFromDoc[0]?.id || '');
-                                        setFunnelId(funnelParam || `funnel-${templateId}-${Date.now()}`);
-                                        loaded = true;
-                                    }
-                                } catch (e) {
-                                    // Falha silenciosa: cair para o fallback legacy
-                                    console.warn('FunnelDocument load failed, falling back to legacy template:', e);
-                                }
-
-                                // 2) Fallback para template legacy (com personalização por funil, se houver)
-                                if (!loaded && isMounted) {
-                                    const buildStepType = (idx: number): EditableQuizStep['type'] => {
-                                        if (idx === 0) return 'intro';
-                                        if (idx >= 1 && idx <= 10) return 'question';
-                                        if (idx === 11) return 'transition';
-                                        if (idx >= 12 && idx <= 17) return 'strategic-question';
-                                        if (idx === 18) return 'transition-result';
-                                        if (idx === 19) return 'result';
-                                        return 'offer'; // idx === 20
-                                    };
-
-                                    const initial: EditableQuizStep[] = Array.from({ length: 21 }).map((_, idx) => {
-                                        const stepId = `step-${idx + 1}`;
-                                        const blocks = (funnelParam
-                                            ? getPersonalizedStepTemplate(stepId, funnelParam)
-                                            : (QUIZ_STYLE_21_STEPS_TEMPLATE as any)[stepId]) || [];
-                                        return {
-                                            id: stepId,
-                                            type: buildStepType(idx),
-                                            order: idx + 1,
-                                            blocks: blocks as any,
-                                            nextStep: undefined
-                                        } as EditableQuizStep;
-                                    });
-                                    for (let i = 0; i < initial.length - 1; i++) initial[i].nextStep = initial[i + 1].id;
-                                    setSteps(initial);
-                                    setSelectedStepId(initial[0]?.id || '');
-                                    setFunnelId(funnelParam || `funnel-${templateId}-${Date.now()}`);
-                                }
-                            })();
-                        }
+                                const initial: EditableQuizStep[] = Array.from({ length: 21 }).map((_, idx) => {
+                                    const stepId = `step-${idx + 1}`;
+                                    const blocks = (funnelParam
+                                        ? getPersonalizedStepTemplate(stepId, funnelParam)
+                                        : (QUIZ_STYLE_21_STEPS_TEMPLATE as any)[stepId]) || [];
+                                    return {
+                                        id: stepId,
+                                        type: buildStepType(idx),
+                                        order: idx + 1,
+                                        blocks: blocks as any,
+                                        nextStep: undefined
+                                    } as EditableQuizStep;
+                                });
+                                for (let i = 0; i < initial.length - 1; i++) initial[i].nextStep = initial[i + 1].id;
+                                setSteps(initial);
+                                setSelectedStepId(initial[0]?.id || '');
+                                setFunnelId(funnelParam || `funnel-${templateId}-${Date.now()}`);
+                            }
+                        })();
                     }
                 }
-            } catch {/* ignore */ }
-
-            if (isMounted) {
-                setIsLoading(false);
             }
-        };
-
-        loadInitialData();
-
-        // Cleanup: marcar componente como desmontado
-        return () => {
-            isMounted = false;
-        };
+        } catch {/* ignore */ }
+        setIsLoading(false);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
-
+    const [validationErrors, setValidationErrors] = useState<string[]>([]);
     // Undo/Redo via hook
     const { canUndo, canRedo, init: initHistory, push: pushHistory, undo, redo } = useEditorHistory<EditableQuizStep[]>();
     const applyHistorySnapshot = (snap: EditableQuizStep[] | null) => {
         if (!snap) return;
-        const normalizedSnap = normalizeSteps(snap);
-        setSteps(normalizedSnap);
+        setSteps(snap);
         setIsDirty(true);
     };
 
@@ -677,9 +521,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
     }, [unifiedConfig]);
 
     // Layout responsivo
-    // 🔧 PREVIEW DESABILITADO TEMPORARIAMENTE - Forçando sempre 'canvas'
-    const [activeTab] = useState<'canvas' | 'preview'>('canvas');
-    const setActiveTab = () => { }; // No-op para evitar erros
+    const [activeTab, setActiveTab] = useState<'canvas' | 'preview'>('canvas');
     const [navOpen, setNavOpen] = useState(false);
     const navAnalysis = useMemo(() => buildNavigationMap(steps.map(s => ({ id: s.id, order: s.order, nextStep: s.nextStep as any, autoLinked: (s as any).autoLinked }))), [steps]);
 
@@ -755,7 +597,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
     const { multiSelectedIds, clipboard, copy: copyGeneric, paste: pasteGeneric, removeSelected: removeMultiple, isMultiSelected, handleBlockClick, selectedBlockId, setSelectedBlockId } = selectionApi;
 
     // Bloco selecionado (usa selectedBlockId do hook)
-    const selectedBlock = useMemo(() => selectedStep?.blocks?.find(b => b.id === selectedBlockId), [selectedStep, selectedBlockId]);
+    const selectedBlock = useMemo(() => selectedStep?.blocks.find(b => b.id === selectedBlockId), [selectedStep, selectedBlockId]);
 
     // Persistência de seleção por etapa agora tratada no hook
 
@@ -874,7 +716,6 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
         // Placeholder: cada opção vale 1 ponto genérico (usado apenas para demonstrar variação)
         const map: Record<string, Record<string, number>> = {};
         steps.forEach(step => {
-            if (!step.blocks) return; // Proteção contra blocks undefined
             step.blocks.filter(b => b.type === 'quiz-options').forEach(b => {
                 const options = b.content.options || [];
                 map[b.id] = options.reduce((acc: any, opt: any) => {
@@ -913,7 +754,6 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
     const previewAnswers = useMemo<Record<string, string[]>>(() => {
         const map: Record<string, string[]> = {};
         steps.forEach(step => {
-            if (!step.blocks) return; // Proteção contra blocks undefined
             // Considera apenas blocos de pergunta (quiz-options)
             const qBlocks = step.blocks.filter(b => b.type === 'quiz-options');
             const selections: string[] = [];
@@ -1094,7 +934,6 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                             selections={quizSelections[id] || []}
                             onToggle={(optionId: string, multi: boolean, required: number) => toggleQuizOption(id, optionId, multi, required)}
                             advanceStep={(nextStepId: string) => { setSelectedStepId(nextStepId); setSelectedBlockId(''); }}
-                            previewRuntimeFlags={previewRuntimeFlags}
                         />
                     </div>
                 </div>
@@ -1679,6 +1518,103 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
         });
     }, []);
 
+    // Componente especializado para quiz-options (isolado para respeitar regras de hooks)
+    interface QuizOptionsPreviewProps {
+        blockId: string;
+        options: any[];
+        properties: Record<string, any>;
+        selectedStep?: EditableQuizStep;
+        selections: string[];
+        onToggle: (optionId: string, multi: boolean, required: number) => void;
+        advanceStep: (nextStepId: string) => void;
+    }
+    const QuizOptionsPreview: React.FC<QuizOptionsPreviewProps> = ({ blockId, options, properties, selectedStep, selections, onToggle, advanceStep }) => {
+        const multi = properties?.multiSelect ?? false;
+        const required = properties?.requiredSelections || (multi ? 1 : 1);
+        const max = properties?.maxSelections || required;
+        const showImages = properties?.showImages !== false;
+        const showNextButton = properties?.showNextButton !== false; // default true
+        const enableButtonOnlyWhenValid = properties?.enableButtonOnlyWhenValid !== false; // default true
+        const nextButtonText = properties?.nextButtonText || 'Avançar';
+        // Auto-avanço: respeita flag global e local (properties.autoAdvance)
+        const autoAdvance = (properties?.autoAdvance !== false) && previewRuntimeFlags.enableAutoAdvance && !!(selectedStep && selectedStep.type === 'question');
+        const hasImages = showImages && options.some(o => !!o.image);
+        // Layout automático: se auto e tem imagens usar 3col, se >4 opções sem imagem usar 2col, senão 1col
+        const layout = properties?.layout || 'auto';
+        let gridClass = 'quiz-options-1col';
+        if (layout === 'grid-2') gridClass = 'quiz-options-2col';
+        else if (layout === 'grid-3') gridClass = 'quiz-options-3col';
+        else if (layout === 'auto') {
+            if (hasImages) gridClass = 'quiz-options-3col';
+            else if (options.length >= 4) gridClass = 'quiz-options-2col';
+        }
+        // Efeito de auto-avance
+        useEffect(() => {
+            if (autoAdvance && selections.length === required && required > 0 && selectedStep?.nextStep) {
+                const t = setTimeout(() => advanceStep(selectedStep.nextStep!), previewRuntimeFlags.autoAdvanceDelayMs);
+                return () => clearTimeout(t);
+            }
+        }, [autoAdvance, selections.length, required, selectedStep, advanceStep]);
+        const isValid = selections.length >= required && required > 0;
+        const handleNext = () => {
+            if (!selectedStep?.nextStep) return;
+            if (enableButtonOnlyWhenValid && !isValid) return;
+            advanceStep(selectedStep.nextStep);
+        };
+        return (
+            <div className="space-y-2">
+                <div className={cn('quiz-options', gridClass)}>
+                    {options.map(opt => {
+                        const active = selections.includes(opt.id);
+                        return (
+                            <div
+                                key={opt.id}
+                                role="button"
+                                tabIndex={0}
+                                onClick={(e) => { e.preventDefault(); onToggle(opt.id, multi, max); }}
+                                onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onToggle(opt.id, multi, max); } }}
+                                className={cn('quiz-option transition-all', active && 'quiz-option-selected', !active && 'cursor-pointer')}
+                            >
+                                {showImages && opt.image && (
+                                    <img
+                                        src={opt.image}
+                                        alt={opt.text || 'Opção'}
+                                        className="mb-2 rounded"
+                                        style={{
+                                            width: properties?.imageMaxWidth ? `${properties.imageMaxWidth}px` : '100%',
+                                            maxWidth: '100%',
+                                            height: properties?.imageMaxHeight ? `${properties.imageMaxHeight}px` : 'auto',
+                                            objectFit: 'cover'
+                                        }}
+                                    />
+                                )}
+                                <p className="quiz-option-text text-xs font-medium leading-snug">{opt.text || 'Opção'}</p>
+                            </div>
+                        );
+                    })}
+                </div>
+                <div className="text-[10px] text-muted-foreground">
+                    {multi ? `${selections.length}/${required} selecionadas` : (selections.length === 1 ? '1 selecionada' : 'Selecione 1')}
+                </div>
+                {showNextButton && (
+                    <div className="pt-1">
+                        <button
+                            type="button"
+                            onClick={handleNext}
+                            className={cn(
+                                'quiz-button px-4 py-2 rounded-full text-sm',
+                                enableButtonOnlyWhenValid && !isValid && 'quiz-button-disabled'
+                            )}
+                            disabled={enableButtonOnlyWhenValid && !isValid}
+                        >
+                            {nextButtonText}
+                        </button>
+                    </div>
+                )}
+            </div>
+        );
+    };
+
     // Salvar
     const [saveNotice, setSaveNotice] = useState<{ type: 'warning' | 'info'; message: string } | null>(null);
     const handleSave = useCallback(async () => {
@@ -1805,7 +1741,6 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
     }
 
     const [productionPreviewRefresh, setProductionPreviewRefresh] = useState(0);
-    const { sendSteps } = useFunnelLivePreview(funnelId);
 
     // Autosave leve do draft enquanto edita, para que o preview de produção consiga carregar este draft em tempo quase real
     useEffect(() => {
@@ -1834,14 +1769,6 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                 await quizEditorBridge.saveDraft(funnel);
                 // Gera um token de atualização para o Preview de Produção
                 setProductionPreviewRefresh(prev => prev + 1);
-                // Broadcast leve para outros clientes conectados (WS)
-                try {
-                    const stepsMap: Record<string, any> = {};
-                    for (const s of steps) {
-                        stepsMap[s.id] = convertBlocksToStepUtil(s.id, s.type as any, s.blocks as any);
-                    }
-                    sendSteps(stepsMap);
-                } catch { /* ignore */ }
             } catch (e) {
                 // silencioso: autosave best-effort
             }
@@ -1954,11 +1881,10 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                                     <Button variant="ghost" size="sm" disabled={!canRedo} onClick={handleRedo} className="text-xs px-2">Redo ⮫</Button>
                                 </div>
                                 <div className="h-6 w-px bg-border" />
-                                {/* 🔧 PREVIEW TEMPORARIAMENTE DESABILITADO PARA DEBUG */}
-                                {/* <div className="flex items-center gap-1" data-testid="preview-toggle">
+                                <div className="flex items-center gap-1" data-testid="preview-toggle">
                                     <Button variant={activeTab === 'canvas' ? 'default' : 'outline'} size="sm" onClick={() => setActiveTab('canvas')}>Canvas</Button>
                                     <Button variant={activeTab === 'preview' ? 'default' : 'outline'} size="sm" onClick={() => setActiveTab('preview')}>Preview</Button>
-                                </div> */}
+                                </div>
                                 <Button size="sm" onClick={handlePublish} disabled={isPublishing}>{isPublishing ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Upload className="w-4 h-4 mr-2" />}Publicar</Button>
                                 <Button size="sm" variant="outline" onClick={async () => {
                                     try {
@@ -2014,7 +1940,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                     canvasPanel={(
                         <CanvasArea
                             activeTab={activeTab}
-                            onTabChange={() => { }} // Preview desabilitado
+                            onTabChange={(v) => setActiveTab(v as 'canvas' | 'preview')}
                             steps={steps}
                             selectedStep={selectedStep}
                             headerConfig={headerConfig}
@@ -2038,7 +1964,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                             setTargetStepId={setTargetStepId}
                             setDuplicateModalOpen={setDuplicateModalOpen}
                             activeId={activeId}
-                            previewNode={<div className="flex items-center justify-center h-full text-muted-foreground">Preview temporariamente desabilitado</div>}
+                            previewNode={<LivePreviewContainer funnelId={funnelId} steps={steps} selectedStepId={selectedStep?.id} refreshToken={productionPreviewRefresh} />}
                             FixedProgressHeader={FixedProgressHeader}
                             StyleResultCard={StyleResultCard}
                             OfferMap={OfferMap}
@@ -2054,16 +1980,16 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                             canPaste={!!clipboard && clipboard.length > 0 && !!selectedStep}
                             onPaste={() => selectedStep && pasteBlocks(selectedStep.id)}
                             multiSelectedIds={multiSelectedIds}
-                            onDuplicateInline={() => { if (!selectedStep || !selectedBlock || !selectedStep.blocks) return; const newBlock = { ...selectedBlock, id: `block-${Date.now()}` }; setSteps(prev => prev.map(step => step.id === selectedStep.id ? { ...step, blocks: [...step.blocks, newBlock] } : step)); setIsDirty(true); }}
+                            onDuplicateInline={() => { if (!selectedStep || !selectedBlock) return; const newBlock = { ...selectedBlock, id: `block-${Date.now()}` }; setSteps(prev => prev.map(step => step.id === selectedStep.id ? { ...step, blocks: [...step.blocks, newBlock] } : step)); setIsDirty(true); }}
                             onPrepareDuplicateToAnother={() => { if (!selectedStep || !selectedBlock) return; setBlockPendingDuplicate(selectedBlock); setTargetStepId(selectedStep.id); setDuplicateModalOpen(true); }}
-                            onCopyMultiple={() => { if (!selectedStep || !selectedStep.blocks) return; const blocks = selectedStep.blocks.filter(b => multiSelectedIds.includes(b.id)); copyMultiple(blocks); }}
+                            onCopyMultiple={() => { if (!selectedStep) return; const blocks = selectedStep.blocks.filter(b => multiSelectedIds.includes(b.id)); copyMultiple(blocks); }}
                             onRemoveMultiple={removeMultiple}
                             onRemoveBlock={() => { if (!selectedStep || !selectedBlock) return; removeBlock(selectedStep.id, selectedBlock.id); }}
-                            onSaveAsSnippet={() => { if (!selectedStep || !selectedStep.blocks) return; const ids = multiSelectedIds.length ? multiSelectedIds : (selectedBlock ? [selectedBlock.id] : []); if (ids.length === 0) return; const blocksToSave = selectedStep.blocks.filter(b => ids.includes(b.id)); const name = prompt('Nome do snippet:', blocksToSave[0]?.type || 'Snippet'); if (!name) return; snippetsManager.create(name, blocksToSave); refreshSnippets(); toast({ title: 'Snippet salvo', description: name }); }}
+                            onSaveAsSnippet={() => { if (!selectedStep) return; const ids = multiSelectedIds.length ? multiSelectedIds : (selectedBlock ? [selectedBlock.id] : []); if (ids.length === 0) return; const blocksToSave = selectedStep.blocks.filter(b => ids.includes(b.id)); const name = prompt('Nome do snippet:', blocksToSave[0]?.type || 'Snippet'); if (!name) return; snippetsManager.create(name, blocksToSave); refreshSnippets(); toast({ title: 'Snippet salvo', description: name }); }}
                             snippets={snippets as any}
                             snippetFilter={snippetFilter}
                             onSnippetFilterChange={setSnippetFilter}
-                            onSnippetInsert={(s: any) => { if (!selectedStep || !selectedStep.blocks) return; setSteps(prev => { const next = prev.map(st => { if (st.id !== selectedStep.id) return st; if (!st.blocks) return st; const baseLen = st.blocks.filter(b => !b.parentId).length; const timestamp = Date.now(); const idMap: Record<string, string> = {}; const cloned = s.blocks.map((b: any, idx: number) => { const newId = `${b.id}-snip-${timestamp}-${idx}`; idMap[b.id] = newId; return { ...b, id: newId }; }).map((b: any) => ({ ...b, parentId: b.parentId ? idMap[b.parentId] : null, order: b.parentId ? b.order : baseLen + b.order })); return { ...st, blocks: [...st.blocks, ...cloned] }; }); pushHistory(next); return next; }); setIsDirty(true); toast({ title: 'Snippet inserido', description: s.name }); }}
+                            onSnippetInsert={(s: any) => { if (!selectedStep) return; setSteps(prev => { const next = prev.map(st => { if (st.id !== selectedStep.id) return st; const baseLen = st.blocks.filter(b => !b.parentId).length; const timestamp = Date.now(); const idMap: Record<string, string> = {}; const cloned = s.blocks.map((b: any, idx: number) => { const newId = `${b.id}-snip-${timestamp}-${idx}`; idMap[b.id] = newId; return { ...b, id: newId }; }).map((b: any) => ({ ...b, parentId: b.parentId ? idMap[b.parentId] : null, order: b.parentId ? b.order : baseLen + b.order })); return { ...st, blocks: [...st.blocks, ...cloned] }; }); pushHistory(next); return next; }); setIsDirty(true); toast({ title: 'Snippet inserido', description: s.name }); }}
                             onSnippetRename={(s: any, newName: string) => { snippetsManager.update(s.id, { name: newName }); refreshSnippets(); }}
                             onSnippetDelete={(s: any) => { snippetsManager.remove(s.id); refreshSnippets(); }}
                             onRefreshSnippets={refreshSnippets}
@@ -2138,28 +2064,10 @@ interface LivePreviewContainerProps {
     refreshToken?: number;
 }
 
-// ✅ CORREÇÃO: Separar Provider de Consumer para evitar React Error #310
-// Provider não pode estar no mesmo componente que usa hooks do contexto
-
-const LivePreviewContainer: React.FC<LivePreviewContainerProps> = (props) => {
-    return (
-        <QuizRuntimeRegistryProvider>
-            <LivePreviewContent {...props} />
-        </QuizRuntimeRegistryProvider>
-    );
-};
-
-// ✅ Componente interno que consome o contexto do Provider
-const LivePreviewContent: React.FC<LivePreviewContainerProps> = ({ funnelId, steps, selectedStepId, refreshToken }) => {
-    // Sempre iniciar em 'live' se não houver funnelId (novo funil)
-    const [mode, setMode] = React.useState<'production' | 'live'>(!funnelId ? 'live' : 'live');
+const LivePreviewContainer: React.FC<LivePreviewContainerProps> = ({ funnelId, steps, selectedStepId, refreshToken }) => {
+    const [mode, setMode] = React.useState<'production' | 'live'>('live');
     const [debouncedSteps, setDebouncedSteps] = React.useState(steps);
     const debounceRef = React.useRef<number | null>(null);
-
-    // ✅ AGORA OS HOOKS ESTÃO DENTRO DO CONTEXTO DO PROVIDER
-    const { setSteps, version } = useQuizRuntimeRegistry();
-    const runtimeMap = React.useMemo(() => editorStepsToRuntimeMap(steps as any), [steps]);
-    const mapRef = React.useRef(runtimeMap);
 
     // Debounce para não repintar runtime a cada digitação
     React.useEffect(() => {
@@ -2167,20 +2075,6 @@ const LivePreviewContent: React.FC<LivePreviewContainerProps> = ({ funnelId, ste
         debounceRef.current = window.setTimeout(() => setDebouncedSteps(steps), 400);
         return () => { if (debounceRef.current) window.clearTimeout(debounceRef.current); };
     }, [steps]);
-
-    // Atualizar registry quando mapa muda (apenas em modo live)
-    React.useEffect(() => {
-        if (mode !== 'live') return;
-        const sameKeys = Object.keys(mapRef.current).join('|') === Object.keys(runtimeMap).join('|');
-        mapRef.current = runtimeMap;
-        setSteps(runtimeMap);
-        if (!sameKeys) {
-            console.log('🔁 Live preview registry atualizado', Object.keys(runtimeMap).length, 'steps');
-        }
-    }, [runtimeMap, setSteps, mode]);
-
-    // Bloquear modo "production" se não houver funnelId
-    const canUseProduction = !!funnelId;
 
     return (
         <div className="flex flex-col h-full">
@@ -2193,10 +2087,8 @@ const LivePreviewContent: React.FC<LivePreviewContainerProps> = ({ funnelId, ste
                             onClick={() => setMode('live')}
                         >Live</button>
                         <button
-                            className={`text-[11px] px-2 py-1 rounded border ${mode === 'production' ? 'bg-blue-600 text-white border-blue-600' : 'bg-white hover:bg-slate-50'} ${!canUseProduction ? 'opacity-50 cursor-not-allowed' : ''}`}
-                            onClick={() => canUseProduction && setMode('production')}
-                            disabled={!canUseProduction}
-                            title={!canUseProduction ? 'Salve o funil primeiro para ver a versão de produção' : 'Ver versão publicada'}
+                            className={`text-[11px] px-2 py-1 rounded border ${mode === 'production' ? 'bg-blue-600 text-white border-blue-600' : 'bg-white hover:bg-slate-50'}`}
+                            onClick={() => setMode('production')}
                         >Produção</button>
                     </div>
                 </div>
@@ -2215,13 +2107,9 @@ const LivePreviewContent: React.FC<LivePreviewContainerProps> = ({ funnelId, ste
                 {mode === 'production' ? (
                     <QuizProductionPreview funnelId={funnelId} className="h-full" refreshToken={refreshToken} />
                 ) : (
-                    <LiveRuntimePreview
-                        steps={debouncedSteps}
-                        funnelId={funnelId}
-                        selectedStepId={selectedStepId}
-                        runtimeMap={runtimeMap}
-                        version={version}
-                    />
+                    <QuizRuntimeRegistryProvider>
+                        <LiveRuntimePreview steps={debouncedSteps} funnelId={funnelId} selectedStepId={selectedStepId} />
+                    </QuizRuntimeRegistryProvider>
                 )}
             </div>
         </div>
@@ -2232,13 +2120,23 @@ interface LiveRuntimePreviewProps {
     steps: EditableQuizStep[];
     funnelId?: string;
     selectedStepId?: string;
-    runtimeMap: Record<string, RuntimeStepOverride>;
-    version: number;
 }
 
-const LiveRuntimePreview: React.FC<LiveRuntimePreviewProps> = ({ steps, funnelId, selectedStepId, runtimeMap, version }) => {
-    // Hooks foram movidos para LivePreviewContainer (componente pai)
-    // Este componente agora é apenas presentational
+const LiveRuntimePreview: React.FC<LiveRuntimePreviewProps> = ({ steps, funnelId, selectedStepId }) => {
+    const { setSteps, version } = useQuizRuntimeRegistry();
+    const runtimeMap = React.useMemo(() => editorStepsToRuntimeMap(steps as any), [steps]);
+    const mapRef = React.useRef(runtimeMap);
+
+    // Atualizar registry quando mapa muda
+    React.useEffect(() => {
+        const sameKeys = Object.keys(mapRef.current).join('|') === Object.keys(runtimeMap).join('|');
+        mapRef.current = runtimeMap;
+        setSteps(runtimeMap);
+        if (!sameKeys) {
+            console.log('🔁 Live preview registry atualizado', Object.keys(runtimeMap).length, 'steps');
+        }
+    }, [runtimeMap, setSteps]);
+
     return (
         <div className="h-full flex flex-col bg-white">
             <div className="flex-1 overflow-auto">

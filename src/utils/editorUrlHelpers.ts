@@ -12,7 +12,7 @@ export interface EditorUrlParams {
 }
 
 /**
- * Constrói URL completa para o editor
+ * Constrói URL completa para o editor-fixed
  */
 export const buildEditorUrl = (baseUrl: string, params: EditorUrlParams = {}): string => {
   const url = new URL(`${baseUrl}/editor`);
@@ -68,31 +68,11 @@ export const updateEditorUrl = (params: EditorUrlParams): void => {
 export const EDITOR_URL_EXAMPLES = {
   // Desenvolvimento local
   local: {
-    // Usa a origem atual quando no browser; fallback para 5173 em ambientes de build/teste
-    get base() {
-      return typeof window !== 'undefined' && window.location?.origin
-        ? window.location.origin
-        : 'http://localhost:5173';
-    },
-    get basic() {
-      return buildEditorUrl(this.base);
-    },
-    get withFunnel() {
-      return buildEditorUrl(this.base, { funnelId: 'quiz-estilo-2024' });
-    },
-    get withTemplate() {
-      return buildEditorUrl(this.base, { template: 'quiz-personalidade' });
-    },
-    get fullConfig() {
-      // viewport válido: 'sm' (mobile), 'md', 'lg', 'xl'
-      return buildEditorUrl(this.base, {
-        funnelId: 'test',
-        template: 'quiz-estilo',
-        stage: 'step-5',
-        preview: true,
-        viewport: 'sm',
-      });
-    },
+    basic: 'http://localhost:8080/editor',
+    withFunnel: 'http://localhost:8080/editor?funnel=quiz-estilo-2024',
+    withTemplate: 'http://localhost:8080/editor?template=quiz-personalidade',
+    fullConfig:
+      'http://localhost:8080/editor?funnel=test&template=quiz-estilo&stage=step-5&preview=true&viewport=mobile',
   },
 
   // Produção
@@ -105,22 +85,13 @@ export const EDITOR_URL_EXAMPLES = {
   // Casos específicos
   useCases: {
     newQuizStyleFunnel: (userId: string) =>
-      buildEditorUrl(
-        (typeof window !== 'undefined' && window.location?.origin) || 'http://localhost:5173',
-        { funnelId: `user-${userId}-quiz-estilo`, template: 'quiz-estilo' },
-      ),
+      `http://localhost:8080/editor?funnel=user-${userId}-quiz-estilo&template=quiz-estilo`,
 
     editSpecificStage: (funnelId: string, stage: number) =>
-      buildEditorUrl(
-        (typeof window !== 'undefined' && window.location?.origin) || 'http://localhost:5173',
-        { funnelId, stage: `step-${stage}` },
-      ),
+      `http://localhost:8080/editor?funnel=${funnelId}&stage=step-${stage}`,
 
     mobilePreview: (funnelId: string) =>
-      buildEditorUrl(
-        (typeof window !== 'undefined' && window.location?.origin) || 'http://localhost:5173',
-        { funnelId, preview: true, viewport: 'sm' },
-      ),
+      `http://localhost:8080/editor?funnel=${funnelId}&preview=true&viewport=sm`,
   },
 };
 

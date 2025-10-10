@@ -971,9 +971,7 @@ export class FunnelUnifiedService {
             }
 
             if (options.context) {
-                // Filtrar pelo campo context dentro do objeto settings (JSONB)
-                // Usando .eq() com navegação JSON correta
-                query = query.eq('settings->context', options.context);
+                query = query.contains('settings', { context: options.context });
             }
 
             query = query.order('updated_at', { ascending: false });
@@ -992,10 +990,8 @@ export class FunnelUnifiedService {
                 throw error;
             }
 
-            // 🛡️ Garantir que data é array antes de filtrar
-            const items = Array.isArray(data) ? data : [];
-            return items
-                .filter(item => item && typeof item === 'object') // Filtrar itens inválidos
+            return (data || [])
+                .filter(item => item && typeof item === 'object') // 🛡️ Filtrar itens inválidos
                 .map(item => this.convertFromSupabaseFormat(item));
 
         } catch (error) {

@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,52 +10,28 @@
             margin: 20px;
             background-color: #f5f5f5;
         }
-
         .debug-panel {
             background: white;
             padding: 20px;
             border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
             margin-bottom: 20px;
         }
-
         .status {
             padding: 10px;
             border-radius: 4px;
             margin: 10px 0;
         }
-
-        .success {
-            background: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
-
-        .error {
-            background: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-        }
-
-        .warning {
-            background: #fff3cd;
-            color: #856404;
-            border: 1px solid #ffeaa7;
-        }
-
-        .info {
-            background: #d1ecf1;
-            color: #0c5460;
-            border: 1px solid #b8daff;
-        }
-
+        .success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .warning { background: #fff3cd; color: #856404; border: 1px solid #ffeaa7; }
+        .info { background: #d1ecf1; color: #0c5460; border: 1px solid #b8daff; }
         iframe {
             width: 100%;
             height: 600px;
             border: 1px solid #ddd;
             border-radius: 4px;
         }
-
         button {
             background: #007bff;
             color: white;
@@ -66,11 +41,9 @@
             cursor: pointer;
             margin: 5px;
         }
-
         button:hover {
             background: #0056b3;
         }
-
         #logs {
             background: #f8f9fa;
             border: 1px solid #e9ecef;
@@ -83,93 +56,92 @@
         }
     </style>
 </head>
-
 <body>
     <div class="debug-panel">
         <h1>🔍 Debug do Funil Quiz21StepsComplete</h1>
-
+        
         <div class="status info">
             <strong>Status do Teste:</strong> Iniciando verificações automáticas...
         </div>
-
+        
         <div id="test-results"></div>
-
+        
         <h3>Ações de Debug:</h3>
         <button onclick="runFullTest()">🧪 Executar Teste Completo</button>
         <button onclick="checkServerStatus()">🌐 Verificar Servidor</button>
         <button onclick="testTemplateLoading()">📋 Testar Carregamento Template</button>
         <button onclick="clearResults()">🗑️ Limpar Resultados</button>
-
+        
         <h3>Logs do Console:</h3>
         <div id="logs"></div>
     </div>
 
     <div class="debug-panel">
         <h3>🖼️ Preview do Funil:</h3>
-        <iframe id="funnel-iframe" src="/editor?template=quiz21StepsComplete"></iframe>
+        <iframe id="funnel-iframe" src="http://localhost:8080/editor?template=quiz21StepsComplete"></iframe>
     </div>
 
     <script>
         let logs = [];
-
+        
         // Capturar logs do console
         const originalLog = console.log;
         const originalError = console.error;
         const originalWarn = console.warn;
-
+        
         function addLog(type, message) {
             const timestamp = new Date().toLocaleTimeString();
             logs.push(`[${timestamp}] ${type}: ${message}`);
             updateLogs();
         }
-
-        console.log = function (...args) {
+        
+        console.log = function(...args) {
             addLog('LOG', args.join(' '));
             originalLog.apply(console, args);
         };
-
-        console.error = function (...args) {
+        
+        console.error = function(...args) {
             addLog('ERROR', args.join(' '));
             originalError.apply(console, args);
         };
-
-        console.warn = function (...args) {
+        
+        console.warn = function(...args) {
             addLog('WARN', args.join(' '));
             originalWarn.apply(console, args);
         };
-
+        
         function updateLogs() {
             document.getElementById('logs').innerHTML = logs.slice(-50).join('\n');
             document.getElementById('logs').scrollTop = document.getElementById('logs').scrollHeight;
         }
-
+        
         function addResult(message, type = 'info') {
             const div = document.createElement('div');
             div.className = `status ${type}`;
             div.innerHTML = `<strong>${new Date().toLocaleTimeString()}:</strong> ${message}`;
             document.getElementById('test-results').appendChild(div);
         }
-
+        
         function clearResults() {
             document.getElementById('test-results').innerHTML = '';
             logs = [];
             updateLogs();
         }
-
+        
         async function checkServerStatus() {
             addResult('Verificando status do servidor...', 'info');
-
+            
             try {
-                const response = await fetch('/');
+                const response = await fetch('http://localhost:8080/');
                 if (response.ok) {
                     addResult(`✅ Servidor respondendo (${response.status})`, 'success');
-
+                    
                     // Testar rota do editor
-                    const editorResponse = await fetch('/editor?template=quiz21StepsComplete');
+                    const editorResponse = await fetch('http://localhost:8080/editor?template=quiz21StepsComplete');
                     if (editorResponse.ok) {
                         addResult('✅ Rota do editor acessível', 'success');
                         const text = await editorResponse.text();
-
+                        
                         if (text.includes('quiz21StepsComplete')) {
                             addResult('✅ Template detectado na resposta HTML', 'success');
                         } else {
@@ -185,25 +157,25 @@
                 addResult(`❌ Erro de conectividade: ${error.message}`, 'error');
             }
         }
-
+        
         async function testTemplateLoading() {
             addResult('Testando carregamento do template...', 'info');
-
+            
             // Recarregar iframe
             const iframe = document.getElementById('funnel-iframe');
             iframe.src = iframe.src + '&_t=' + Date.now();
-
+            
             // Aguardar carregamento
-            iframe.onload = function () {
+            iframe.onload = function() {
                 setTimeout(() => {
                     try {
                         const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
                         const bodyHeight = iframeDoc.body.scrollHeight;
                         const hasContent = bodyHeight > 100;
-
+                        
                         if (hasContent) {
                             addResult(`✅ Iframe carregado com conteúdo (${bodyHeight}px)`, 'success');
-
+                            
                             // Verificar elementos específicos
                             const reactElements = iframeDoc.querySelectorAll('[data-reactroot], [class*="Editor"], [class*="Quiz"]');
                             if (reactElements.length > 0) {
@@ -220,25 +192,24 @@
                 }, 2000);
             };
         }
-
+        
         async function runFullTest() {
             clearResults();
             addResult('🚀 Iniciando teste completo...', 'info');
-
+            
             await checkServerStatus();
             await new Promise(resolve => setTimeout(resolve, 1000));
             await testTemplateLoading();
-
+            
             addResult('🏁 Teste completo finalizado!', 'info');
         }
-
+        
         // Executar teste inicial
         setTimeout(() => {
             runFullTest();
         }, 1000);
-
+        
         console.log('🔧 Debug script carregado. Use os botões acima para testar.');
     </script>
 </body>
-
 </html>

@@ -19,10 +19,9 @@ import { useEffect } from 'react';
 
 interface QuizAppProps {
     funnelId?: string;
-    externalSteps?: Record<string, any>;
 }
 
-export default function QuizApp({ funnelId, externalSteps }: QuizAppProps) {
+export default function QuizApp({ funnelId }: QuizAppProps) {
     // 🎯 FASE 3: Registrar steps de produção no stepRegistry (uma vez)
     useEffect(() => {
         registerProductionSteps();
@@ -37,7 +36,7 @@ export default function QuizApp({ funnelId, externalSteps }: QuizAppProps) {
         addAnswer,
         addStrategicAnswer,
         getOfferKey,
-    } = useQuizState(funnelId, externalSteps);
+    } = useQuizState(funnelId);
 
     // 🎯 FASE 3: Mapear step atual para stepId do registry
     const getStepIdFromCurrentStep = (currentStep: string): string => {

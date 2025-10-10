@@ -111,13 +111,13 @@
         </div>
 
         <div class="test-buttons">
-            <a href="/editor" class="test-button" target="_blank">
+            <a href="http://localhost:8080/editor" class="test-button" target="_blank">
                 🚀 Abrir Editor Principal
             </a>
-            <a href="/quiz-modular" class="test-button secondary" target="_blank">
+            <a href="http://localhost:8080/quiz-modular" class="test-button secondary" target="_blank">
                 👀 Preview Quiz
             </a>
-            <a href="/quiz-integrated" class="test-button secondary" target="_blank">
+            <a href="http://localhost:8080/quiz-integrated" class="test-button secondary" target="_blank">
                 🔗 Quiz Integrado
             </a>
         </div>
@@ -184,10 +184,10 @@
         <script>
             // Log para debug
             console.log('🎯 Página de teste carregada');
-            console.log('Servidor deve estar rodando no host atual (ex.: http://localhost:5173)');
+            console.log('Servidor deve estar rodando em: http://localhost:8080');
 
             // Verificar se o servidor está rodando
-            fetch('/api/health')
+            fetch('http://localhost:8080/api/health')
                 .then(() => {
                     console.log('✅ Servidor detectado e funcionando');
                 })

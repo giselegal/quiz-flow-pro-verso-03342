@@ -10,9 +10,6 @@
 
 import { test, expect, Browser, Page } from '@playwright/test';
 
-// Permite sobrepor a URL base dos testes via env; default para a porta do Vite (5173)
-const BASE_URL = process.env.E2E_BASE_URL || 'http://localhost:5173';
-
 test.describe('🎯 Fluxo Completo: Dashboard → Editor → Supabase', () => {
     let page: Page;
     let funnelId: string;
@@ -36,7 +33,7 @@ test.describe('🎯 Fluxo Completo: Dashboard → Editor → Supabase', () => {
         console.log('📊 Teste 1: Acessando dashboard...');
 
         // Acessar o dashboard
-        await page.goto(`${BASE_URL}/dashboard`);
+        await page.goto('http://localhost:8080/dashboard');
 
         // Aguardar carregamento
         await page.waitForSelector('[data-testid="dashboard-container"]', { timeout: 10000 });
@@ -237,7 +234,7 @@ test.describe('🎯 Fluxo Completo: Dashboard → Editor → Supabase', () => {
         const startTime = Date.now();
 
         // Navegar para uma nova instância do editor
-        await page.goto(`${BASE_URL}/editor/${funnelId}`);
+        await page.goto(`http://localhost:8080/editor/${funnelId}`);
 
         // Aguardar carregamento completo
         await page.waitForSelector('[data-testid="modern-unified-editor"]');

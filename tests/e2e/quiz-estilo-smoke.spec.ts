@@ -32,8 +32,7 @@ async function seedDraft(): Promise<string> {
 
 test('Smoke /quiz-estilo com draft navega do step-1 ao step-2', async ({ page }) => {
     const draftId = await seedDraft();
-    const BASE_URL = process.env.E2E_BASE_URL || 'http://localhost:5173';
-    await page.goto(`${BASE_URL}/quiz-estilo?draft=${draftId}`);
+    await page.goto(`http://localhost:8080/quiz-estilo?draft=${draftId}`);
 
     // Deve mostrar algo da intro
     await expect(page.locator('text=Chega')).toBeVisible({ timeout: 10000 });

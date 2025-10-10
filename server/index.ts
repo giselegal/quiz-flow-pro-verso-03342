@@ -1,7 +1,6 @@
 import cors from 'cors';
 import express from 'express';
 import { createServer } from 'http';
-import { WebSocketServer } from 'ws';
 // imports auxiliares removidos; usaremos dynamic import para 'archiver' dentro do handler
 import path, { dirname } from 'path';
 import { templatesRouter } from './templates/controller';
@@ -18,8 +17,7 @@ const app = express();
 const server = createServer(app);
 
 app.use(cors());
-// Aumentar limite para payloads de funis maiores
-app.use(express.json({ limit: '4mb' }));
+app.use(express.json());
 
 // ==================================================================================
 // In-memory Configuration Storage (server-side) - dev/default backend
@@ -195,34 +193,8 @@ app.use((err: any, req: any, res: any, next: any) => {
 // ==================================================================================
 app.post('/api/package-funnel', async (req, res) => {
   try {
-    // Validação leve com Zod
-    const { z } = await import('zod');
-    const StepSchema = z.object({
-      id: z.string().min(1),
-      order: z.number().int().positive().optional(),
-      type: z.string().optional(),
-      blocks: z.array(z.any()).optional(),
-      nextStep: z.string().optional(),
-    }).passthrough();
-    const FunnelSchema = z.object({
-      id: z.string().min(1),
-      name: z.string().min(1),
-      steps: z.array(StepSchema),
-      runtime: z.any().optional(),
-      results: z.any().optional(),
-      ui: z.any().optional(),
-      settings: z.any().optional(),
-    });
-
     const { default: archiver } = await import('archiver');
-    const parsed = FunnelSchema.safeParse(req.body || {});
-    if (!parsed.success) {
-      return res.status(400).json({
-        error: 'Payload inválido',
-        details: parsed.error.flatten(),
-      });
-    }
-    const { id = `draft-${Date.now()}`, name = 'Funnel', steps = [], runtime, results, ui, settings } = parsed.data;
+    const { id = `draft-${Date.now()}`, name = 'Funnel', steps = [], runtime, results, ui, settings } = req.body || {};
     const manifest = {
       id,
       name,
@@ -277,73 +249,6 @@ Como usar:
     console.error('Erro ao empacotar funil:', e);
     res.status(500).json({ error: String(e?.message || e) });
   }
-});
-
-// ==================================================================================
-// WebSocket: Live preview broadcast por funnelId
-// ==================================================================================
-type WSClient = import('ws').WebSocket & { funnelId?: string };
-const channels = new Map<string, Set<WSClient>>();
-
-function broadcastToFunnel(funnelId: string, message: any) {
-  const set = channels.get(funnelId);
-  if (!set || set.size === 0) return;
-  const payload = JSON.stringify(message);
-  for (const ws of set) {
-    try { ws.send(payload); } catch { /* ignore */ }
-  }
-}
-
-const wss = new WebSocketServer({ server });
-wss.on('connection', (ws: WSClient, req) => {
-  try {
-    const url = new URL(req.url || '', `http://${req.headers.host}`);
-    const funnelId = url.searchParams.get('funnelId');
-
-    // Rejeitar conexões sem funnelId ou com funnelId inválido
-    if (!funnelId || funnelId.startsWith('funnel-')) {
-      console.log('🚫 WebSocket: conexão rejeitada - funnelId inválido ou temporário:', funnelId);
-      ws.send(JSON.stringify({ type: 'error', message: 'funnelId inválido ou temporário' }));
-      ws.close();
-      return;
-    }
-
-    ws.funnelId = funnelId;
-    if (!channels.has(funnelId)) channels.set(funnelId, new Set());
-    channels.get(funnelId)!.add(ws);
-    console.log('✅ WebSocket conectado:', funnelId);
-    ws.send(JSON.stringify({ type: 'welcome', funnelId }));
-
-    ws.on('message', (data) => {
-      try {
-        const msg = JSON.parse(String(data));
-        if (msg && msg.type === 'steps' && msg.steps) {
-          broadcastToFunnel(funnelId, { type: 'steps', steps: msg.steps, ts: Date.now() });
-        }
-      } catch { /* ignore */ }
-    });
-
-    ws.on('close', () => {
-      const set = channels.get(funnelId);
-      if (set) {
-        set.delete(ws);
-        if (set.size === 0) channels.delete(funnelId);
-      }
-    });
-  } catch {
-    // conexão inválida
-    ws.close();
-  }
-});
-
-// Endpoint REST para broadcast (fallback quando não usar WS no cliente)
-app.post('/api/live-update', (req, res) => {
-  const { funnelId = 'production', steps } = req.body || {};
-  if (!funnelId || !steps) {
-    return res.status(400).json({ error: 'funnelId e steps são obrigatórios' });
-  }
-  broadcastToFunnel(funnelId, { type: 'steps', steps, ts: Date.now() });
-  res.json({ ok: true, delivered: channels.get(funnelId)?.size || 0 });
 });
 
 // SPA Fallback - CRÍTICO: deve ser o último middleware
