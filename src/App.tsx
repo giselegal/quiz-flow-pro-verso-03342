@@ -55,9 +55,6 @@ const QuizAIPage = lazy(() => import('./pages/QuizAIPage'));
 const QuizIntegratedPage = lazy(() => import('./pages/QuizIntegratedPage'));
 // const TemplateEngineQuizEstiloPage = lazy(() => import('./pages/TemplateEngineQuizEstiloPage'));
 
-// 📱 PREVIEW DE PRODUÇÃO GENÉRICO
-const ProductionPreviewPage = lazy(() => import('./pages/ProductionPreviewPage'));
-
 // 🔧 PÁGINA DEV: Diagnóstico de migração de contexto (protegida por flag)
 const ContextMigrationDiagnostics = lazy(() => import('./pages/ContextMigrationDiagnostics'));
 
@@ -287,7 +284,30 @@ function App() {
                         {/* 📱 PREVIEW DE PRODUÇÃO GENÉRICO */}
                         <Route path="/preview">
                           <div data-testid="production-preview-page">
-                            <ProductionPreviewPage />
+                            <QuizErrorBoundary>
+                              {(() => {
+                                let params: URLSearchParams | null = null;
+                                try {
+                                  params = new URLSearchParams(window.location.search);
+                                } catch {
+                                  // ignore SSR-like
+                                }
+                                const slug = params?.get('slug') || 'quiz-estilo';
+                                const funnel = params?.get('funnel') || undefined;
+                                
+                                switch (slug) {
+                                  case 'quiz-estilo':
+                                    return <QuizEstiloPessoalPage funnelId={funnel} />;
+                                  default:
+                                    return (
+                                      <div className="p-6">
+                                        <h1 className="text-lg font-semibold">Preview de Produção</h1>
+                                        <p className="text-sm text-muted-foreground mt-2">Slug desconhecido: {slug}</p>
+                                      </div>
+                                    );
+                                }
+                              })()}
+                            </QuizErrorBoundary>
                           </div>
                         </Route>
 
