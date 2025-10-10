@@ -716,7 +716,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
     const { multiSelectedIds, clipboard, copy: copyGeneric, paste: pasteGeneric, removeSelected: removeMultiple, isMultiSelected, handleBlockClick, selectedBlockId, setSelectedBlockId } = selectionApi;
 
     // Bloco selecionado (usa selectedBlockId do hook)
-    const selectedBlock = useMemo(() => selectedStep?.blocks.find(b => b.id === selectedBlockId), [selectedStep, selectedBlockId]);
+    const selectedBlock = useMemo(() => selectedStep?.blocks?.find(b => b.id === selectedBlockId), [selectedStep, selectedBlockId]);
 
     // Persistência de seleção por etapa agora tratada no hook
 
@@ -835,6 +835,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
         // Placeholder: cada opção vale 1 ponto genérico (usado apenas para demonstrar variação)
         const map: Record<string, Record<string, number>> = {};
         steps.forEach(step => {
+            if (!step.blocks) return; // Proteção contra blocks undefined
             step.blocks.filter(b => b.type === 'quiz-options').forEach(b => {
                 const options = b.content.options || [];
                 map[b.id] = options.reduce((acc: any, opt: any) => {
@@ -873,6 +874,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
     const previewAnswers = useMemo<Record<string, string[]>>(() => {
         const map: Record<string, string[]> = {};
         steps.forEach(step => {
+            if (!step.blocks) return; // Proteção contra blocks undefined
             // Considera apenas blocos de pergunta (quiz-options)
             const qBlocks = step.blocks.filter(b => b.type === 'quiz-options');
             const selections: string[] = [];
