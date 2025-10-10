@@ -61,7 +61,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
     OfferMap,
 }) => {
     return (
-        <div className="flex-1 bg-gray-100 flex flex-col overflow-y-auto">
+    <div className="flex-1 bg-gray-100 flex flex-col overflow-y-auto">
             <Tabs value={activeTab} onValueChange={onTabChange} className="flex-1 flex flex-col">
                 <div className="px-4 py-2 bg-white border-b">
                     <TabsList>
@@ -69,7 +69,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
                         <TabsTrigger value="preview" data-testid="tab-trigger-preview">Preview</TabsTrigger>
                     </TabsList>
                 </div>
-                <TabsContent value="canvas" className="flex-1 overflow-auto p-4 m-0" data-testid="tab-content-canvas">
+                <TabsContent value="canvas" className="flex-1 overflow-visible p-4 m-0" data-testid="tab-content-canvas">
                     {selectedStep ? (
                         <Card>
                             <CardContent>
@@ -121,7 +121,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
                                                 enabled: virtualizationEnabled,
                                             });
                                             return (
-                                                <div ref={containerRef} className="space-y-2 max-h-[calc(100vh-240px)] overflow-auto pr-1 border rounded-md bg-white/40">
+                                                <div ref={containerRef} className="space-y-2 pr-1 border rounded-md bg-white/40 overflow-visible">
                                                     <SortableContext items={[...rootBlocks.map(b => b.id), 'canvas-end']} strategy={verticalListSortingStrategy}>
                                                         <TooltipProvider>
                                                             <div style={{ position: 'relative' }}>
