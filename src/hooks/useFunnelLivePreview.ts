@@ -7,7 +7,13 @@ export function useFunnelLivePreview(funnelId?: string) {
     const wsRef = useRef<WebSocket | null>(null);
 
     useEffect(() => {
-        const id = funnelId || 'production';
+        // Não conectar se não houver funnelId válido
+        if (!funnelId || funnelId.startsWith('funnel-')) {
+            // funnelId temporário (novo funil não salvo) - não usar WebSocket
+            return;
+        }
+
+        const id = funnelId;
         const proto = location.protocol === 'https:' ? 'wss' : 'ws';
         // Em dev (Vite em 5173 + backend 3001), conectamos direto no backend para WS
         const isDev = typeof import.meta !== 'undefined' && (import.meta as any).env && (import.meta as any).env.DEV;
@@ -17,7 +23,7 @@ export function useFunnelLivePreview(funnelId?: string) {
             const ws = new WebSocket(url);
             wsRef.current = ws;
             ws.onopen = () => {
-                // noop
+                console.log('🔗 WebSocket conectado para funnelId:', id);
             };
             ws.onmessage = (ev) => {
                 try {
@@ -30,7 +36,9 @@ export function useFunnelLivePreview(funnelId?: string) {
                 }
             };
             ws.onerror = () => { /* ignore */ };
-            ws.onclose = () => { /* ignore */ };
+            ws.onclose = () => {
+                console.log('🔌 WebSocket desconectado para funnelId:', id);
+            };
         } catch {
             // ignore
         }

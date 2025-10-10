@@ -2082,7 +2082,8 @@ interface LivePreviewContainerProps {
 }
 
 const LivePreviewContainer: React.FC<LivePreviewContainerProps> = ({ funnelId, steps, selectedStepId, refreshToken }) => {
-    const [mode, setMode] = React.useState<'production' | 'live'>('live');
+    // Sempre iniciar em 'live' se não houver funnelId (novo funil)
+    const [mode, setMode] = React.useState<'production' | 'live'>(!funnelId ? 'live' : 'live');
     const [debouncedSteps, setDebouncedSteps] = React.useState(steps);
     const debounceRef = React.useRef<number | null>(null);
 
@@ -2092,6 +2093,9 @@ const LivePreviewContainer: React.FC<LivePreviewContainerProps> = ({ funnelId, s
         debounceRef.current = window.setTimeout(() => setDebouncedSteps(steps), 400);
         return () => { if (debounceRef.current) window.clearTimeout(debounceRef.current); };
     }, [steps]);
+
+    // Bloquear modo "production" se não houver funnelId
+    const canUseProduction = !!funnelId;
 
     return (
         <div className="flex flex-col h-full">
@@ -2104,8 +2108,10 @@ const LivePreviewContainer: React.FC<LivePreviewContainerProps> = ({ funnelId, s
                             onClick={() => setMode('live')}
                         >Live</button>
                         <button
-                            className={`text-[11px] px-2 py-1 rounded border ${mode === 'production' ? 'bg-blue-600 text-white border-blue-600' : 'bg-white hover:bg-slate-50'}`}
-                            onClick={() => setMode('production')}
+                            className={`text-[11px] px-2 py-1 rounded border ${mode === 'production' ? 'bg-blue-600 text-white border-blue-600' : 'bg-white hover:bg-slate-50'} ${!canUseProduction ? 'opacity-50 cursor-not-allowed' : ''}`}
+                            onClick={() => canUseProduction && setMode('production')}
+                            disabled={!canUseProduction}
+                            title={!canUseProduction ? 'Salve o funil primeiro para ver a versão de produção' : 'Ver versão publicada'}
                         >Produção</button>
                     </div>
                 </div>
