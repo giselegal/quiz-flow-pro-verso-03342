@@ -2135,13 +2135,25 @@ interface LivePreviewContainerProps {
     refreshToken?: number;
 }
 
-const LivePreviewContainer: React.FC<LivePreviewContainerProps> = ({ funnelId, steps, selectedStepId, refreshToken }) => {
+// ✅ CORREÇÃO: Separar Provider de Consumer para evitar React Error #310
+// Provider não pode estar no mesmo componente que usa hooks do contexto
+
+const LivePreviewContainer: React.FC<LivePreviewContainerProps> = (props) => {
+    return (
+        <QuizRuntimeRegistryProvider>
+            <LivePreviewContent {...props} />
+        </QuizRuntimeRegistryProvider>
+    );
+};
+
+// ✅ Componente interno que consome o contexto do Provider
+const LivePreviewContent: React.FC<LivePreviewContainerProps> = ({ funnelId, steps, selectedStepId, refreshToken }) => {
     // Sempre iniciar em 'live' se não houver funnelId (novo funil)
     const [mode, setMode] = React.useState<'production' | 'live'>(!funnelId ? 'live' : 'live');
     const [debouncedSteps, setDebouncedSteps] = React.useState(steps);
     const debounceRef = React.useRef<number | null>(null);
 
-    // Hooks do LiveRuntimePreview movidos para cá (sempre chamados, independente do modo)
+    // ✅ AGORA OS HOOKS ESTÃO DENTRO DO CONTEXTO DO PROVIDER
     const { setSteps, version } = useQuizRuntimeRegistry();
     const runtimeMap = React.useMemo(() => editorStepsToRuntimeMap(steps as any), [steps]);
     const mapRef = React.useRef(runtimeMap);
@@ -2168,50 +2180,48 @@ const LivePreviewContainer: React.FC<LivePreviewContainerProps> = ({ funnelId, s
     const canUseProduction = !!funnelId;
 
     return (
-        <QuizRuntimeRegistryProvider>
-            <div className="flex flex-col h-full">
-                <div className="flex items-center justify-between px-4 py-2 border-b bg-white">
-                    <div className="flex items-center gap-2">
-                        <span className="text-xs font-medium">Preview</span>
-                        <div className="flex items-center gap-1">
-                            <button
-                                className={`text-[11px] px-2 py-1 rounded border ${mode === 'live' ? 'bg-blue-600 text-white border-blue-600' : 'bg-white hover:bg-slate-50'}`}
-                                onClick={() => setMode('live')}
-                            >Live</button>
-                            <button
-                                className={`text-[11px] px-2 py-1 rounded border ${mode === 'production' ? 'bg-blue-600 text-white border-blue-600' : 'bg-white hover:bg-slate-50'} ${!canUseProduction ? 'opacity-50 cursor-not-allowed' : ''}`}
-                                onClick={() => canUseProduction && setMode('production')}
-                                disabled={!canUseProduction}
-                                title={!canUseProduction ? 'Salve o funil primeiro para ver a versão de produção' : 'Ver versão publicada'}
-                            >Produção</button>
-                        </div>
-                    </div>
-                    <div className="flex items-center gap-2 text-[10px] text-muted-foreground">
-                        {mode === 'live' ? (
-                            <>
-                                <span>Atualiza em tempo real (400ms debounce)</span>
-                                <span className="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                            </>
-                        ) : (
-                            <span>Renderizando versão publicada</span>
-                        )}
+        <div className="flex flex-col h-full">
+            <div className="flex items-center justify-between px-4 py-2 border-b bg-white">
+                <div className="flex items-center gap-2">
+                    <span className="text-xs font-medium">Preview</span>
+                    <div className="flex items-center gap-1">
+                        <button
+                            className={`text-[11px] px-2 py-1 rounded border ${mode === 'live' ? 'bg-blue-600 text-white border-blue-600' : 'bg-white hover:bg-slate-50'}`}
+                            onClick={() => setMode('live')}
+                        >Live</button>
+                        <button
+                            className={`text-[11px] px-2 py-1 rounded border ${mode === 'production' ? 'bg-blue-600 text-white border-blue-600' : 'bg-white hover:bg-slate-50'} ${!canUseProduction ? 'opacity-50 cursor-not-allowed' : ''}`}
+                            onClick={() => canUseProduction && setMode('production')}
+                            disabled={!canUseProduction}
+                            title={!canUseProduction ? 'Salve o funil primeiro para ver a versão de produção' : 'Ver versão publicada'}
+                        >Produção</button>
                     </div>
                 </div>
-                <div className="flex-1 overflow-hidden">
-                    {mode === 'production' ? (
-                        <QuizProductionPreview funnelId={funnelId} className="h-full" refreshToken={refreshToken} />
+                <div className="flex items-center gap-2 text-[10px] text-muted-foreground">
+                    {mode === 'live' ? (
+                        <>
+                            <span>Atualiza em tempo real (400ms debounce)</span>
+                            <span className="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                        </>
                     ) : (
-                        <LiveRuntimePreview
-                            steps={debouncedSteps}
-                            funnelId={funnelId}
-                            selectedStepId={selectedStepId}
-                            runtimeMap={runtimeMap}
-                            version={version}
-                        />
+                        <span>Renderizando versão publicada</span>
                     )}
                 </div>
             </div>
-        </QuizRuntimeRegistryProvider>
+            <div className="flex-1 overflow-hidden">
+                {mode === 'production' ? (
+                    <QuizProductionPreview funnelId={funnelId} className="h-full" refreshToken={refreshToken} />
+                ) : (
+                    <LiveRuntimePreview
+                        steps={debouncedSteps}
+                        funnelId={funnelId}
+                        selectedStepId={selectedStepId}
+                        runtimeMap={runtimeMap}
+                        version={version}
+                    />
+                )}
+            </div>
+        </div>
     );
 };
 
