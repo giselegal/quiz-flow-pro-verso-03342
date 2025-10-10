@@ -29,9 +29,10 @@ import { getEffectiveRequiredSelections } from '@/lib/quiz/requiredSelections';
 interface QuizAppConnectedProps {
     funnelId?: string;
     editorMode?: boolean; // Permite visualização no /editor
+    initialStepId?: string; // Etapa inicial/ativa quando em modo editor
 }
 
-export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', editorMode = false }: QuizAppConnectedProps) {
+export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', editorMode = false, initialStepId }: QuizAppConnectedProps) {
     // Registrar steps de produção (seguro chamar múltiplas vezes - stepRegistry lida com duplicatas)
     useEffect(() => {
         registerProductionSteps();
@@ -84,6 +85,22 @@ export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', ed
         addStrategicAnswer,
         getOfferKey,
     } = useQuizState(funnelId, externalSteps);
+
+    // ========================= SINCRONIZAR ETAPA ATIVA NO MODO EDITOR =========================
+    // Quando usado dentro do editor, opcionalmente alinhar a etapa atual do runtime com a etapa selecionada no editor
+    useEffect(() => {
+        if (!editorMode || !initialStepId) return;
+        // Normalizar ID recebido (aceita step-1 ou step-01)
+        const normalizeIncoming = (id: string) => {
+            const numeric = id.replace('step-', '');
+            return `step-${numeric.padStart(2, '0')}`;
+        };
+        const target = normalizeIncoming(initialStepId);
+        if (state.currentStep !== target) {
+            nextStep(target);
+        }
+        // deps incluem apenas valores estáveis
+    }, [editorMode, initialStepId, state.currentStep, nextStep]);
 
     // ============================================================================
     // DYNAMIC STEP CONFIGURATION

@@ -904,12 +904,8 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
             node = (
                 <div
                     style={{
-                        // expõe CSS vars para permitir estilos via globals.css
-                        // fallback para paleta padrão do tema
-                        // @ts-expect-error CSS variables
-                        '--color-selected': properties?.selectedColor || '#deac6d',
-                        // @ts-expect-error CSS variables
-                        '--color-primary': properties?.hoverColor || '#d4a05a',
+                        ['--color-selected' as any]: properties?.selectedColor || '#deac6d',
+                        ['--color-primary' as any]: properties?.hoverColor || '#d4a05a',
                     } as React.CSSProperties}
                 >
                     <div className="space-y-2">
@@ -1893,7 +1889,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                             setTargetStepId={setTargetStepId}
                             setDuplicateModalOpen={setDuplicateModalOpen}
                             activeId={activeId}
-                            previewNode={<LivePreviewContainer funnelId={funnelId} steps={steps} />}
+                            previewNode={<LivePreviewContainer funnelId={funnelId} steps={steps} selectedStepId={selectedStep?.id} />}
                             FixedProgressHeader={FixedProgressHeader}
                             StyleResultCard={StyleResultCard}
                             OfferMap={OfferMap}
@@ -1989,9 +1985,10 @@ export default QuizModularProductionEditor;
 interface LivePreviewContainerProps {
     funnelId?: string;
     steps: EditableQuizStep[];
+    selectedStepId?: string;
 }
 
-const LivePreviewContainer: React.FC<LivePreviewContainerProps> = ({ funnelId, steps }) => {
+const LivePreviewContainer: React.FC<LivePreviewContainerProps> = ({ funnelId, steps, selectedStepId }) => {
     const [mode, setMode] = React.useState<'production' | 'live'>('live');
     const [debouncedSteps, setDebouncedSteps] = React.useState(steps);
     const debounceRef = React.useRef<number | null>(null);
@@ -2035,7 +2032,7 @@ const LivePreviewContainer: React.FC<LivePreviewContainerProps> = ({ funnelId, s
                     <QuizProductionPreview funnelId={funnelId} className="h-full" />
                 ) : (
                     <QuizRuntimeRegistryProvider>
-                        <LiveRuntimePreview steps={debouncedSteps} funnelId={funnelId} />
+                        <LiveRuntimePreview steps={debouncedSteps} funnelId={funnelId} selectedStepId={selectedStepId} />
                     </QuizRuntimeRegistryProvider>
                 )}
             </div>
@@ -2046,9 +2043,10 @@ const LivePreviewContainer: React.FC<LivePreviewContainerProps> = ({ funnelId, s
 interface LiveRuntimePreviewProps {
     steps: EditableQuizStep[];
     funnelId?: string;
+    selectedStepId?: string;
 }
 
-const LiveRuntimePreview: React.FC<LiveRuntimePreviewProps> = ({ steps, funnelId }) => {
+const LiveRuntimePreview: React.FC<LiveRuntimePreviewProps> = ({ steps, funnelId, selectedStepId }) => {
     const { setSteps, version } = useQuizRuntimeRegistry();
     const runtimeMap = React.useMemo(() => editorStepsToRuntimeMap(steps as any), [steps]);
     const mapRef = React.useRef(runtimeMap);
@@ -2066,7 +2064,7 @@ const LiveRuntimePreview: React.FC<LiveRuntimePreviewProps> = ({ steps, funnelId
     return (
         <div className="h-full flex flex-col bg-white">
             <div className="flex-1 overflow-auto">
-                <QuizAppConnected funnelId={funnelId} editorMode />
+                <QuizAppConnected funnelId={funnelId} editorMode initialStepId={selectedStepId} />
             </div>
             <div className="px-2 py-1 border-t bg-slate-50 text-[10px] text-slate-500 flex items-center justify-between">
                 <span>Live Runtime v{version}</span>
