@@ -13,6 +13,9 @@ import {
   stageIdToNumber,
 } from '@/utils/navigationHelpers';
 import { makeStepKey } from '@/utils/stepKey';
+import { FunnelContext } from '@/core/contexts/FunnelContext';
+import { useUnifiedCRUDOptional } from '@/context/UnifiedCRUDProvider';
+import { safeGetItem as safeGetItemCtx, safeSetItem as safeSetItemCtx } from '@/utils/contextualStorage';
 
 /**
  * HOOK UNIFICADO DE NAVEGAÇÃO DO FUNIL
@@ -22,10 +25,18 @@ export const useFunnelNavigation = () => {
   // Utils seguros para localStorage
   // Desabilita definitivamente após primeira falha (ex.: sandboxes com quota 0)
   const storageDisabledRef = useRef(false);
+  // Determina o contexto ativo (fallback para EDITOR)
+  let activeContext: FunnelContext = FunnelContext.EDITOR;
+  try {
+    const crudCtx = useUnifiedCRUDOptional();
+    if (crudCtx?.funnelContext) activeContext = crudCtx.funnelContext;
+  } catch { }
+
   const safeSetItem = (key: string, value: string) => {
     try {
       if (!storageDisabledRef.current && typeof window !== 'undefined' && window?.localStorage) {
-        window.localStorage.setItem(key, value);
+        // Usa chave contextualizada
+        safeSetItemCtx(key, value, activeContext);
       }
     } catch (e) {
       storageDisabledRef.current = true; // Evita futuras tentativas
@@ -39,7 +50,7 @@ export const useFunnelNavigation = () => {
   const safeGetItem = (key: string) => {
     try {
       if (!storageDisabledRef.current && typeof window !== 'undefined' && window?.localStorage) {
-        return window.localStorage.getItem(key);
+        return safeGetItemCtx(key, activeContext);
       }
     } catch (e) {
       storageDisabledRef.current = true;

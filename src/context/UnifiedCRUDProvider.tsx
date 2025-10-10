@@ -27,6 +27,9 @@ export interface UnifiedCRUDContextType {
     isSaving: boolean;
     error: string | null;
 
+    // Contexto ativo para isolamento
+    funnelContext: FunnelContext;
+
     // Operações CRUD
     createFunnel: (name: string, options?: any) => Promise<UnifiedFunnelData>;
     loadFunnel: (id: string) => Promise<void>;
@@ -347,6 +350,9 @@ export const UnifiedCRUDProvider: React.FC<UnifiedCRUDProviderProps> = ({
         isLoading,
         isSaving,
         error,
+
+        // Contexto ativo
+        funnelContext: context,
 
         // Operações CRUD
         createFunnel,
