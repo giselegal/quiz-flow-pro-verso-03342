@@ -227,7 +227,7 @@ app.post('/api/package-funnel', async (req, res) => {
     res.setHeader('Content-Disposition', `attachment; filename="${id}-package.zip"`);
 
     const archive = archiver('zip', { zlib: { level: 9 } });
-  archive.on('error', (err: unknown) => { throw err; });
+    archive.on('error', (err: unknown) => { throw err; });
     archive.pipe(res);
 
     archive.append(JSON.stringify(manifest, null, 2), { name: 'manifest.json' });
