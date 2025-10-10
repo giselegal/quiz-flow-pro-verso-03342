@@ -1,6 +1,7 @@
 import cors from 'cors';
 import express from 'express';
 import { createServer } from 'http';
+// imports auxiliares removidos; usaremos dynamic import para 'archiver' dentro do handler
 import path, { dirname } from 'path';
 import { templatesRouter } from './templates/controller';
 import { seedTemplates } from './templates/seed';
@@ -185,6 +186,69 @@ seedTemplates();
 app.use((err: any, req: any, res: any, next: any) => {
   console.error(err.stack);
   res.status(500).json({ error: 'Something went wrong!' });
+});
+
+// ==================================================================================
+// Packaging endpoint: gera um .zip com manifest.json e snapshot HTML básico
+// ==================================================================================
+app.post('/api/package-funnel', async (req, res) => {
+  try {
+    const { default: archiver } = await import('archiver');
+    const { id = `draft-${Date.now()}`, name = 'Funnel', steps = [], runtime, results, ui, settings } = req.body || {};
+    const manifest = {
+      id,
+      name,
+      createdAt: new Date().toISOString(),
+      stepsCount: Array.isArray(steps) ? steps.length : 0,
+      runtime,
+      results,
+      ui,
+      settings,
+    };
+
+    // Snapshot HTML simples com container para renderização futura
+    const snapshotHtml = `<!doctype html>
+<html lang="pt-br">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>${name} - Snapshot</title>
+  </head>
+  <body>
+    <div id="app">
+      <h1>${name}</h1>
+      <p>Snapshot gerado em ${new Date().toISOString()}</p>
+      <pre id="steps" style="white-space: pre-wrap; font-family: monospace; font-size: 12px;">${JSON.stringify(steps, null, 2)}</pre>
+    </div>
+  </body>
+</html>`;
+
+    res.setHeader('Content-Type', 'application/zip');
+    res.setHeader('Content-Disposition', `attachment; filename="${id}-package.zip"`);
+
+    const archive = archiver('zip', { zlib: { level: 9 } });
+  archive.on('error', (err: unknown) => { throw err; });
+    archive.pipe(res);
+
+    archive.append(JSON.stringify(manifest, null, 2), { name: 'manifest.json' });
+    archive.append(snapshotHtml, { name: 'snapshot.html' });
+
+    // Incluir um README com instruções mínimas
+    archive.append(`# Pacote de Funil: ${name}
+
+Este pacote contém:
+- manifest.json: metadados e configurações
+- snapshot.html: pré-visualização estática do funil
+
+Como usar:
+- Importe os arquivos no seu ambiente de publicação ou abra snapshot.html para uma visualização estática.
+`, { name: 'README.md' });
+
+    await archive.finalize();
+  } catch (e: any) {
+    console.error('Erro ao empacotar funil:', e);
+    res.status(500).json({ error: String(e?.message || e) });
+  }
 });
 
 // SPA Fallback - CRÍTICO: deve ser o último middleware

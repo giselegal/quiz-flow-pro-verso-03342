@@ -27,12 +27,17 @@ interface QuizProductionPreviewProps {
     funnelId?: string;
     className?: string;
     onStateChange?: (state: any) => void;
+    /**
+     * Quando alterado, força a atualização do preview (ex: após autosave do draft)
+     */
+    refreshToken?: number;
 }
 
 export const QuizProductionPreview: React.FC<QuizProductionPreviewProps> = ({
     funnelId,
     className,
-    onStateChange
+    onStateChange,
+    refreshToken
 }) => {
     const [isPlaying, setIsPlaying] = useState(true);
     const [showControls, setShowControls] = useState(true);
@@ -46,6 +51,13 @@ export const QuizProductionPreview: React.FC<QuizProductionPreviewProps> = ({
     useEffect(() => {
         setRefreshKey(prev => prev + 1);
     }, [funnelId]);
+
+    // Refresh quando refreshToken externo mudar (ex.: autosave do draft)
+    useEffect(() => {
+        if (refreshToken != null) {
+            setRefreshKey(prev => prev + 1);
+        }
+    }, [refreshToken]);
 
     // Notificar mudanças de estado
     useEffect(() => {
