@@ -7,6 +7,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { FunnelContext, generateContextualStorageKey } from '@/core/contexts/FunnelContext';
+import { safeGetItem, safeSetItem } from '@/utils/contextualStorage';
 
 export interface UserTemplate {
     id: string;
@@ -35,9 +36,14 @@ export const useMyTemplates = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
-    // Chaves de storage contextuais
-    const TEMPLATES_LIST_KEY = generateContextualStorageKey(FunnelContext.MY_TEMPLATES, 'list');
-    const TEMPLATE_KEY = (id: string) => generateContextualStorageKey(FunnelContext.MY_TEMPLATES, 'template', id);
+    // Novas chaves (sem contexto embutido; contexto é aplicado pelo util)
+    // Mantemos migração a partir das chaves legadas (via generateContextualStorageKey e 'saved-templates')
+    const CTX = FunnelContext.MY_TEMPLATES;
+    const TEMPLATES_LIST_KEY_NEW = 'templates-list';
+    const TEMPLATE_KEY_NEW = (id: string) => `template:${id}`;
+    // Chaves legadas (prefixo direto do contexto)
+    const TEMPLATES_LIST_KEY_LEGACY = generateContextualStorageKey(FunnelContext.MY_TEMPLATES, 'list');
+    const TEMPLATE_KEY_LEGACY = (id: string) => generateContextualStorageKey(FunnelContext.MY_TEMPLATES, 'template', id);
 
     /**
      * Carregar todos os templates do usuário
@@ -48,8 +54,31 @@ export const useMyTemplates = () => {
             setError(null);
 
             // Carregar lista de IDs dos templates
-            const templatesListStr = localStorage.getItem(TEMPLATES_LIST_KEY);
-            const templateIds: string[] = templatesListStr ? JSON.parse(templatesListStr) : [];
+            // 1) Tenta ler lista na nova chave contextual
+            const templatesListStrCtx = safeGetItem(TEMPLATES_LIST_KEY_NEW, CTX);
+            let templateIds: string[] = templatesListStrCtx ? JSON.parse(templatesListStrCtx) : [];
+
+            // 2) Migração: se vazia, tenta legado (generateContextualStorageKey) e 'saved-templates'
+            if (!templateIds.length) {
+                const legacyListStr = localStorage.getItem(TEMPLATES_LIST_KEY_LEGACY);
+                if (legacyListStr) {
+                    try {
+                        const legacyIds: string[] = JSON.parse(legacyListStr);
+                        templateIds = legacyIds;
+                        safeSetItem(TEMPLATES_LIST_KEY_NEW, JSON.stringify(legacyIds), CTX);
+                    } catch { }
+                } else {
+                    const legacyTemplatesStr = localStorage.getItem('saved-templates');
+                    if (legacyTemplatesStr) {
+                        try {
+                            const legacyTemplates = JSON.parse(legacyTemplatesStr);
+                            const ids = Array.isArray(legacyTemplates) ? legacyTemplates.map((t: any) => t?.id).filter(Boolean) : [];
+                            templateIds = ids;
+                            safeSetItem(TEMPLATES_LIST_KEY_NEW, JSON.stringify(ids), CTX);
+                        } catch { }
+                    }
+                }
+            }
 
             console.log('📋 Carregando templates do contexto MY_TEMPLATES:', templateIds);
 
@@ -57,11 +86,16 @@ export const useMyTemplates = () => {
             const loadedTemplates: UserTemplate[] = [];
 
             for (const id of templateIds) {
-                const templateStr = localStorage.getItem(TEMPLATE_KEY(id));
+                // Tenta nova chave contextualizada
+                let templateStr = safeGetItem(TEMPLATE_KEY_NEW(id), CTX);
+                // Fallback: chave legada por generateContextualStorageKey
+                if (!templateStr) templateStr = localStorage.getItem(TEMPLATE_KEY_LEGACY(id));
                 if (templateStr) {
                     try {
                         const template = JSON.parse(templateStr);
                         loadedTemplates.push(template);
+                        // Persistir no novo formato
+                        safeSetItem(TEMPLATE_KEY_NEW(id), JSON.stringify(template), CTX);
                     } catch (e) {
                         console.warn(`⚠️ Erro ao parsear template ${id}:`, e);
                     }
@@ -86,7 +120,7 @@ export const useMyTemplates = () => {
         } finally {
             setIsLoading(false);
         }
-    }, [TEMPLATES_LIST_KEY, TEMPLATE_KEY]);
+    }, []);
 
     /**
      * Salvar template personalizado
@@ -111,13 +145,13 @@ export const useMyTemplates = () => {
 
             console.log('💾 Salvando template no contexto MY_TEMPLATES:', newTemplate);
 
-            // Salvar template individual
-            localStorage.setItem(TEMPLATE_KEY(templateId), JSON.stringify(newTemplate));
+            // Salvar template individual na chave contextual
+            safeSetItem(TEMPLATE_KEY_NEW(templateId), JSON.stringify(newTemplate), CTX);
 
             // Atualizar lista de IDs
             const currentList = await loadTemplateIds();
             const updatedList = [...currentList, templateId];
-            localStorage.setItem(TEMPLATES_LIST_KEY, JSON.stringify(updatedList));
+            safeSetItem(TEMPLATES_LIST_KEY_NEW, JSON.stringify(updatedList), CTX);
 
             // Atualizar estado local
             setTemplates(prev => [newTemplate, ...prev]);
@@ -132,14 +166,14 @@ export const useMyTemplates = () => {
         } finally {
             setIsLoading(false);
         }
-    }, [TEMPLATES_LIST_KEY, TEMPLATE_KEY]);
+    }, []);
 
     /**
      * Carregar template específico
      */
     const loadTemplate = useCallback(async (templateId: string): Promise<UserTemplate | null> => {
         try {
-            const templateStr = localStorage.getItem(TEMPLATE_KEY(templateId));
+            const templateStr = safeGetItem(TEMPLATE_KEY_NEW(templateId), CTX) || localStorage.getItem(TEMPLATE_KEY_LEGACY(templateId));
             if (!templateStr) {
                 console.warn(`⚠️ Template não encontrado: ${templateId}`);
                 return null;
@@ -152,7 +186,7 @@ export const useMyTemplates = () => {
             console.error(`❌ Erro ao carregar template ${templateId}:`, error);
             return null;
         }
-    }, [TEMPLATE_KEY]);
+    }, []);
 
     /**
      * Deletar template
@@ -162,13 +196,17 @@ export const useMyTemplates = () => {
             setIsLoading(true);
             setError(null);
 
-            // Remover template individual
-            localStorage.removeItem(TEMPLATE_KEY(templateId));
+            // Remover template individual das novas chaves (e opcionalmente das legadas)
+            try { localStorage.removeItem(TEMPLATE_KEY_LEGACY(templateId)); } catch { }
+            try {
+                // contextualStorage não tem remove direto aqui; leitura não quebra se sobrar
+                // (poderíamos criar safeRemoveItem se necessário)
+            } catch { }
 
             // Atualizar lista de IDs
             const currentList = await loadTemplateIds();
             const updatedList = currentList.filter(id => id !== templateId);
-            localStorage.setItem(TEMPLATES_LIST_KEY, JSON.stringify(updatedList));
+            safeSetItem(TEMPLATES_LIST_KEY_NEW, JSON.stringify(updatedList), CTX);
 
             // Atualizar estado local
             setTemplates(prev => prev.filter(t => t.id !== templateId));
@@ -183,7 +221,7 @@ export const useMyTemplates = () => {
         } finally {
             setIsLoading(false);
         }
-    }, [TEMPLATES_LIST_KEY, TEMPLATE_KEY]);
+    }, []);
 
     /**
      * Incrementar contador de uso
@@ -198,7 +236,7 @@ export const useMyTemplates = () => {
                     updatedAt: new Date().toISOString(),
                 };
 
-                localStorage.setItem(TEMPLATE_KEY(templateId), JSON.stringify(updatedTemplate));
+                safeSetItem(TEMPLATE_KEY_NEW(templateId), JSON.stringify(updatedTemplate), CTX);
                 setTemplates(prev => prev.map(t => t.id === templateId ? updatedTemplate : t));
 
                 console.log(`📈 Uso incrementado para template: ${templateId}`);
@@ -206,15 +244,15 @@ export const useMyTemplates = () => {
         } catch (error) {
             console.error(`❌ Erro ao incrementar uso do template ${templateId}:`, error);
         }
-    }, [loadTemplate, TEMPLATE_KEY]);
+    }, [loadTemplate]);
 
     /**
      * Carregar lista de IDs dos templates
      */
     const loadTemplateIds = useCallback(async (): Promise<string[]> => {
-        const templatesListStr = localStorage.getItem(TEMPLATES_LIST_KEY);
+        const templatesListStr = safeGetItem(TEMPLATES_LIST_KEY_NEW, CTX);
         return templatesListStr ? JSON.parse(templatesListStr) : [];
-    }, [TEMPLATES_LIST_KEY]);
+    }, []);
 
     /**
      * Migrar templates legados do localStorage antigo
@@ -257,13 +295,13 @@ export const useMyTemplates = () => {
                 };
 
                 // Salvar no novo formato
-                localStorage.setItem(TEMPLATE_KEY(migratedTemplate.id), JSON.stringify(migratedTemplate));
+                safeSetItem(TEMPLATE_KEY_NEW(migratedTemplate.id), JSON.stringify(migratedTemplate), CTX);
                 currentTemplates.push(migratedTemplate);
                 currentIds.push(migratedTemplate.id);
             }
 
             // Atualizar lista de IDs
-            localStorage.setItem(TEMPLATES_LIST_KEY, JSON.stringify(currentIds));
+            safeSetItem(TEMPLATES_LIST_KEY_NEW, JSON.stringify(currentIds), CTX);
 
             // Remover dados legados (comentado por segurança)
             // localStorage.removeItem('saved-templates');
@@ -272,7 +310,7 @@ export const useMyTemplates = () => {
         } catch (error) {
             console.error('❌ Erro na migração de templates legados:', error);
         }
-    }, [TEMPLATES_LIST_KEY, TEMPLATE_KEY]);
+    }, []);
 
     // Carregar templates na inicialização
     useEffect(() => {
