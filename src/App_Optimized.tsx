@@ -233,7 +233,7 @@ function App() {
                                 </Route>
 
                                 <Route path="/preview">
-                                    <Suspense fallback={<EnhancedLoadingFallback message="Carregando Preview..." />}> 
+                                    <Suspense fallback={<EnhancedLoadingFallback message="Carregando Preview..." />}>
                                         <LivePreviewPage />
                                     </Suspense>
                                 </Route>
