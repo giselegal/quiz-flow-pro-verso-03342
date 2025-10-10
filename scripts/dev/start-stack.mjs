@@ -44,12 +44,16 @@ async function waitFor(url, timeoutMs = 15000, interval = 500) {
     }
     log('Backend OK. Iniciando frontend ...');
     const frontend = spawn('npm', ['run', 'dev'], { stdio: 'inherit', env: process.env });
+    // Inicia redirecionador 8080 -> 5173 para compatibilidade com URLs legadas
+    log('Iniciando redirecionador 8080 -> 5173 ...');
+    const redirector = spawn('npm', ['run', 'dev:redirect-8080'], { stdio: 'inherit', env: process.env });
 
     // Encerrar filhos ao sair
     const shutdown = () => {
         log('Encerrando stack...');
         backend.kill('SIGKILL');
         frontend.kill('SIGKILL');
+        redirector.kill('SIGKILL');
         process.exit(0);
     };
     process.on('SIGINT', shutdown);
