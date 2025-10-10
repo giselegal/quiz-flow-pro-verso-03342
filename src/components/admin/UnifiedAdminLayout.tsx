@@ -7,6 +7,7 @@
 
 import React, { useState, useEffect } from 'react';
 import UnifiedCRUDProvider from '@/context/UnifiedCRUDProvider';
+import { FunnelContext } from '@/core/contexts/FunnelContext';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
@@ -156,7 +157,7 @@ export const UnifiedAdminLayout: React.FC<UnifiedAdminLayoutProps> = ({
                 return <AnalyticsPage />;
             case 'editor':
                 return funnelId ? (
-                    <UnifiedCRUDProvider funnelId={funnelId} autoLoad={true}>
+                    <UnifiedCRUDProvider funnelId={funnelId} autoLoad={true} context={FunnelContext.MY_FUNNELS}>
                         <ModernUnifiedEditor funnelId={funnelId} />
                     </UnifiedCRUDProvider>
                 ) : (

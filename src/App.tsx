@@ -27,6 +27,7 @@ import { QuizErrorBoundary } from './components/RouteErrorBoundary';
 import { EditorErrorBoundary } from './components/error/EditorErrorBoundary';
 import { EditorAccessControl } from '@/components/editor/EditorAccessControl';
 import UnifiedCRUDProvider from '@/context/UnifiedCRUDProvider';
+import { FunnelContext } from '@/core/contexts/FunnelContext';
 import { OptimizedEditorProvider } from '@/components/editor/OptimizedEditorProvider';
 import { BlockRegistryProvider, DEFAULT_BLOCK_DEFINITIONS } from '@/runtime/quiz/blocks/BlockRegistry';
 // Novo Template Engine (feature flag controlada por VITE_USE_TEMPLATE_ENGINE)
@@ -141,7 +142,7 @@ function App() {
                                       <div className="px-3 py-2 text-xs text-amber-700 bg-amber-50 border border-amber-200 rounded mb-2">
                                         Modo desenvolvedor: acesso ao editor sem login habilitado via parâmetro de template.
                                       </div>
-                                      <UnifiedCRUDProvider autoLoad={true}>
+                                      <UnifiedCRUDProvider autoLoad={true} context={FunnelContext.EDITOR}>
                                         <Suspense fallback={<EnhancedLoadingFallback message="Carregando editor modular..." />}>
                                           <QuizModularProductionEditor />
                                         </Suspense>
@@ -153,7 +154,7 @@ function App() {
                               return (
                                 <EditorAccessControl feature="editor" requiredPlan="free">
                                   <div data-testid="quiz-modular-production-editor-page">
-                                    <UnifiedCRUDProvider autoLoad={true}>
+                                    <UnifiedCRUDProvider autoLoad={true} context={FunnelContext.EDITOR}>
                                       <Suspense fallback={<EnhancedLoadingFallback message="Carregando editor modular..." />}>
                                         <QuizModularProductionEditor />
                                       </Suspense>
@@ -316,7 +317,7 @@ function App() {
                           {(params) => (
                             <EditorErrorBoundary>
                               <div data-testid="admin-integrated-editor-page">
-                                <UnifiedCRUDProvider funnelId={params.id} autoLoad={true}>
+                                <UnifiedCRUDProvider funnelId={params.id} autoLoad={true} context={FunnelContext.EDITOR}>
                                   <ModernUnifiedEditor funnelId={params.id} />
                                 </UnifiedCRUDProvider>
                               </div>
