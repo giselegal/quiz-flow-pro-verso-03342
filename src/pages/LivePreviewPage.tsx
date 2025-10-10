@@ -1,11 +1,20 @@
-import React from 'react';
-import { useParams } from 'wouter';
+import React, { useMemo } from 'react';
+import { useRoute } from 'wouter';
 import QuizApp from '@/components/quiz/QuizApp';
 import { useFunnelLivePreview } from '@/hooks/useFunnelLivePreview';
 
 export default function LivePreviewPage() {
-    const params = useParams<{ funnelId?: string }>();
-    const funnelId = params?.funnelId || undefined;
+    const [match, params] = useRoute('/preview/:funnelId');
+    const funnelId = useMemo(() => {
+        if (match) return params?.funnelId as string | undefined;
+        // Fallback: tentar query string ?funnel=...
+        try {
+            const sp = new URLSearchParams(window.location.search);
+            return sp.get('funnel') || undefined;
+        } catch {
+            return undefined;
+        }
+    }, [match, params]);
     const { liveSteps } = useFunnelLivePreview(funnelId);
 
     const isConnected = !!liveSteps;
