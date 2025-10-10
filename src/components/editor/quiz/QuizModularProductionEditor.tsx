@@ -522,6 +522,8 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
 
     // Carregamento inicial: se houver ?template=, construir steps default
     useEffect(() => {
+        let isMounted = true; // Flag para evitar setState em componente desmontado
+
         const loadInitialData = async () => {
             try {
                 const sp = new URLSearchParams(typeof window !== 'undefined' && window.location ? window.location.search : '');
@@ -533,6 +535,8 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                     try {
                         const draft = await quizEditorBridge.loadFunnelForEdit(funnelParam);
                         if (draft && Array.isArray(draft.steps) && draft.steps.length > 0) {
+                            if (!isMounted) return; // Componente desmontado
+
                             const normalizedSteps = normalizeSteps(draft.steps as any);
                             setSteps(normalizedSteps);
                             setSelectedStepId(normalizedSteps[0]?.id || '');
@@ -549,12 +553,14 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                 if (templateId) {
                     if (!steps || steps.length === 0) {
                         if (templateId === 'fashionStyle21PtBR') {
+                            if (!isMounted) return; // Componente desmontado
+
                             const initial = buildFashionStyle21Steps(funnelParam);
                             setSteps(initial);
                             setSelectedStepId(initial[0]?.id || '');
                             setFunnelId(funnelParam || `funnel-${templateId}-${Date.now()}`);
                         } else if (templateId === 'quiz21StepsComplete') {
-                            // Isolar lógica assíncrona em IIFE para evitar await no escopo síncrono do useEffect
+                            // Lógica assíncrona para carregar template
                             (async () => {
                                 // 1) Tentar carregar via documento unificado (schema-driven)
                                 const mapStepType = (t: StepType, indexZeroBased: number): EditableQuizStep['type'] => {
@@ -571,6 +577,8 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                                 let loaded = false;
                                 try {
                                     const unified = await QuizTemplateAdapter.convertLegacyTemplate();
+                                    if (!isMounted) return; // Componente desmontado
+
                                     if (unified && Array.isArray(unified.steps) && unified.steps.length >= 21) {
                                         // Guardar em estado local para consumo direto
                                         setUnifiedConfig({ runtime: unified.runtime, results: unified.results, ui: unified.ui, settings: unified.settings as any });
@@ -603,7 +611,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                                 }
 
                                 // 2) Fallback para template legacy (com personalização por funil, se houver)
-                                if (!loaded) {
+                                if (!loaded && isMounted) {
                                     const buildStepType = (idx: number): EditableQuizStep['type'] => {
                                         if (idx === 0) return 'intro';
                                         if (idx >= 1 && idx <= 10) return 'question';
@@ -638,10 +646,17 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                 }
             } catch {/* ignore */ }
 
-            setIsLoading(false);
+            if (isMounted) {
+                setIsLoading(false);
+            }
         };
 
         loadInitialData();
+
+        // Cleanup: marcar componente como desmontado
+        return () => {
+            isMounted = false;
+        };
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
