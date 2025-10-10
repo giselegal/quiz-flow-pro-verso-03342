@@ -22,6 +22,12 @@ export interface UseHistoryStateOptions {
 }
 
 export const useHistoryState = <T>(initialState: T, options: UseHistoryStateOptions = {}) => {
+  // Determinar contexto ativo (fallback EDITOR) no topo do hook
+  let activeContext: FunnelContext = FunnelContext.EDITOR;
+  try {
+    const crud = useUnifiedCRUDOptional();
+    if (crud?.funnelContext) activeContext = crud.funnelContext;
+  } catch { }
   const {
     historyLimit = 50,
     storageKey,
@@ -35,13 +41,6 @@ export const useHistoryState = <T>(initialState: T, options: UseHistoryStateOpti
   const getInitialState = useCallback((): HistoryState<T> => {
     if (enablePersistence && storageKey && typeof window !== 'undefined') {
       try {
-        // Determinar contexto ativo (fallback EDITOR)
-        let activeContext: FunnelContext = FunnelContext.EDITOR;
-        try {
-          const crud = useUnifiedCRUDOptional?.();
-          if (crud?.funnelContext) activeContext = crud.funnelContext;
-        } catch { }
-
         // Tentar chave contextualizada primeiro
         const saved = getCtx(storageKey, activeContext) ?? localStorage.getItem(storageKey);
         if (saved) {
@@ -61,7 +60,7 @@ export const useHistoryState = <T>(initialState: T, options: UseHistoryStateOpti
       present: initialState,
       future: [],
     };
-  }, [initialState, storageKey, enablePersistence]);
+  }, [initialState, storageKey, enablePersistence, activeContext]);
 
   const [history, setHistory] = useState<HistoryState<T>>(getInitialState);
 
@@ -70,13 +69,6 @@ export const useHistoryState = <T>(initialState: T, options: UseHistoryStateOpti
     if (!enablePersistence || !storageKey || typeof window === 'undefined') return;
     // Allow runtime kill-switch
     if ((window as any).__DISABLE_EDITOR_PERSISTENCE__ === true) return;
-
-    // Determinar contexto ativo (fallback EDITOR)
-    let activeContext: FunnelContext = FunnelContext.EDITOR;
-    try {
-      const crud = useUnifiedCRUDOptional?.();
-      if (crud?.funnelContext) activeContext = crud.funnelContext;
-    } catch { }
 
     const toPersist = persistPresentOnly
       ? { present: serialize ? serialize(history.present) : history.present }
