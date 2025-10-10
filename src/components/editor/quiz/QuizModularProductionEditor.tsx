@@ -2053,11 +2053,14 @@ const LiveRuntimePreview: React.FC<LiveRuntimePreviewProps> = ({ steps, funnelId
 
     // Atualizar registry quando mapa muda
     React.useEffect(() => {
-        const sameKeys = Object.keys(mapRef.current).join('|') === Object.keys(runtimeMap).join('|');
-        mapRef.current = runtimeMap;
-        setSteps(runtimeMap);
+        const prevKeys = Object.keys(mapRef.current).sort();
+        const nextKeys = Object.keys(runtimeMap).sort();
+        const sameLength = prevKeys.length === nextKeys.length;
+        const sameKeys = sameLength && prevKeys.every((k, i) => k === nextKeys[i]);
         if (!sameKeys) {
-            console.log('🔁 Live preview registry atualizado', Object.keys(runtimeMap).length, 'steps');
+            mapRef.current = runtimeMap;
+            setSteps(runtimeMap);
+            console.log('🔁 Live preview registry atualizado', nextKeys.length, 'steps');
         }
     }, [runtimeMap, setSteps]);
 
