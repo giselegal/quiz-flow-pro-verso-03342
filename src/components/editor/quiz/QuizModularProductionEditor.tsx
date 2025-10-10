@@ -1749,17 +1749,6 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
     const [productionPreviewRefresh, setProductionPreviewRefresh] = useState(0);
     const { sendSteps } = useFunnelLivePreview(funnelId);
 
-    if (isLoading) {
-        return (
-            <div className="flex items-center justify-center h-screen">
-                <div className="text-center">
-                    <Loader2 className="w-12 h-12 mx-auto mb-4 animate-spin text-primary" />
-                    <p className="text-muted-foreground">Carregando editor modular...</p>
-                </div>
-            </div>
-        );
-    }
-
     // Autosave leve do draft enquanto edita, para que o preview de produção consiga carregar este draft em tempo quase real
     useEffect(() => {
         // Apenas quando houver um funnelId (draft) e passos não vazios
@@ -1800,7 +1789,18 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
             }
         }, 1200); // debounce 1.2s
         return () => clearTimeout(t);
-    }, [steps, funnelId, unifiedConfig]);
+    }, [steps, funnelId, unifiedConfig, sendSteps]);
+
+    if (isLoading) {
+        return (
+            <div className="flex items-center justify-center h-screen">
+                <div className="text-center">
+                    <Loader2 className="w-12 h-12 mx-auto mb-4 animate-spin text-primary" />
+                    <p className="text-muted-foreground">Carregando editor modular...</p>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <EditorThemeProvider tokens={themeOverrides}>
