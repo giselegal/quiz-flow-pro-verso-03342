@@ -971,7 +971,8 @@ export class FunnelUnifiedService {
             }
 
             if (options.context) {
-                query = query.contains('settings', { context: options.context });
+                // Filtrar pelo campo context dentro do objeto settings (JSONB)
+                query = query.filter('settings->context', 'eq', options.context);
             }
 
             query = query.order('updated_at', { ascending: false });
