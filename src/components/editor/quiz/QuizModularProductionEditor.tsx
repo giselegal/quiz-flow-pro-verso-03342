@@ -2038,7 +2038,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                             setTargetStepId={setTargetStepId}
                             setDuplicateModalOpen={setDuplicateModalOpen}
                             activeId={activeId}
-                            previewNode={<LivePreviewContainer funnelId={funnelId} steps={steps} selectedStepId={selectedStep?.id} refreshToken={productionPreviewRefresh} />}
+                            previewNode={<div className="flex items-center justify-center h-full text-muted-foreground">Preview temporariamente desabilitado</div>}
                             FixedProgressHeader={FixedProgressHeader}
                             StyleResultCard={StyleResultCard}
                             OfferMap={OfferMap}
