@@ -1,5 +1,6 @@
 import react from '@vitejs/plugin-react';
 import path from 'path';
+import { visualizer } from 'rollup-plugin-visualizer';
 // Import do vitest/config para tipagem do bloco `test`
 import { defineConfig } from 'vitest/config';
 // Nota: Se o tipo 'test' gerar erro de tipo, garantir que 'vitest' está instalado
@@ -8,7 +9,17 @@ import { defineConfig } from 'vitest/config';
 // Configuração consolidada e sanitizada (UTF-8, sem duplicações) + suporte a testes
 export default defineConfig({
   base: '/',
-  plugins: [react()],
+  plugins: [
+    react(),
+    // Bundle analyzer - gera stats.html após build
+    visualizer({
+      open: false,
+      filename: 'dist/stats.html',
+      gzipSize: true,
+      brotliSize: true,
+      template: 'treemap', // 'treemap' | 'sunburst' | 'network'
+    }) as any,
+  ],
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
