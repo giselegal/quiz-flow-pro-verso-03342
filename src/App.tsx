@@ -116,8 +116,19 @@ function App() {
                           <RedirectRoute to="/" />
                         </Route>
 
-                        {/* 🎯 EDITOR ÚNICO OFICIAL (/editor) → QuizModularProductionEditor
-                            Agora envolvido por EditorAccessControl para garantir auth/permissions consistentes */}
+                        {/* ═══════════════════════════════════════════════════════════════════
+                            🎯 EDITOR OFICIAL - ÚNICO PONTO DE ENTRADA
+                            ═══════════════════════════════════════════════════════════════════
+                            
+                            Rota: /editor
+                            Editor: QuizModularProductionEditor
+                            Status: ✅ ATIVO E MANTIDO
+                            
+                            📋 Guia de migração: MIGRATION_EDITOR.md
+                            
+                            ⚠️ IMPORTANTE: Todas as outras rotas /editor* são LEGADAS e redirecionam
+                            para cá. Ver seção "REDIRECTS LEGADOS" abaixo.
+                            ═══════════════════════════════════════════════════════════════════ */}
                         <Route path="/editor">
                           <EditorErrorBoundary>
                             {(() => {
@@ -155,7 +166,21 @@ function App() {
                           </EditorErrorBoundary>
                         </Route>
 
-                        {/* 🔁 REDIRECTS LEGADOS PARA /editor */}
+                        {/* ═══════════════════════════════════════════════════════════════════
+                            🔁 REDIRECTS LEGADOS (DEPRECATED)
+                            ═══════════════════════════════════════════════════════════════════
+                            
+                            ⚠️ DEPRECATED em 11/out/2025 (Sprint 3)
+                            
+                            Estas rotas foram depreciadas e redirecionam para /editor (oficial).
+                            Mantidas apenas para compatibilidade com links antigos.
+                            
+                            📋 Serão REMOVIDAS em 01/nov/2025
+                            
+                            Total de redirects: 10
+                            ═══════════════════════════════════════════════════════════════════ */}
+
+                        {/* Quiz Estilo - Variações Legadas */}
                         <Route path="/editor/quiz-estilo">
                           <RedirectRoute to="/editor" />
                         </Route>
@@ -171,6 +196,8 @@ function App() {
                         <Route path="/editor/quiz-estilo-template-engine">
                           <RedirectRoute to="/editor" />
                         </Route>
+
+                        {/* Editor - Variações de Nome Legadas */}
                         <Route path="/editor-modular">
                           <RedirectRoute to="/editor" />
                         </Route>
@@ -186,10 +213,26 @@ function App() {
                         <Route path="/editor-stable">
                           <RedirectRoute to="/editor" />
                         </Route>
-                        {/* removidos: redirects conflitantes de /editor/novo para /editor */}
+
+                        {/* Editor com ID - Legado (agora usa query param ?funnelId=) */}
                         <Route path="/editor/:funnelId">
                           {(params) => <RedirectRoute to="/editor" />}
                         </Route>
+
+                        {/* ═══════════════════════════════════════════════════════════════════
+                            📄 TEMPLATE ENGINE - Feature Separada
+                            ═══════════════════════════════════════════════════════════════════
+                            
+                            Status: ✅ ATIVO E MANTIDO
+                            
+                            Rotas:
+                            - /template-engine → Página principal (CRUD de templates)
+                            - /template-engine/:id → Editor de template específico
+                            - /editor/novo → Alias para /template-engine (UI de criação)
+                            - /editor/templates → Listagem de templates para uso
+                            
+                            ⚠️ NÃO confundir com /editor (editor de funis)
+                            ═══════════════════════════════════════════════════════════════════ */}
 
                         <Route path="/editor/templates">
                           <div data-testid="editor-templates-page">
@@ -197,34 +240,35 @@ function App() {
                           </div>
                         </Route>
 
-                        {/* ⚙️ NOVO: Template Engine CRUD (rota dedicada) - agora sempre ativo.
-                            Se a flag estiver desativada, ainda expomos para evitar 404 em links antigos. */}
+                        {/* Template Engine CRUD (rota dedicada) - sempre ativo */}
                         <Route path="/template-engine">
                           <div data-testid="template-engine-page">
                             <TemplateEnginePage />
                           </div>
                         </Route>
-                        {/* Rota direta com ID para abrir já no layout 4 colunas */}
+
+                        {/* Template Engine - Rota direta com ID para layout 4 colunas */}
                         <Route path="/template-engine/:templateId">
                           {(params) => (
                             <div data-testid="template-engine-direct-page">
-                              {/* Reusa página mas injeta openId via query param hack usando history.replace */}
                               <TemplateEnginePageWrapperOpen id={params.templateId} />
                             </div>
                           )}
                         </Route>
 
-                        {/* Alias adicional para o Template Engine (sempre ativo) */}
+                        {/* Alias adicional para o Template Engine (UI de criação) */}
                         <Route path="/editor/novo">
                           <div data-testid="template-engine-alias-page">
                             <TemplateEnginePage />
                           </div>
                         </Route>
-                        {/* Trailing slash redirect para evitar 404 se usuário digitar /editor/novo/ */}
+
+                        {/* Trailing slash redirect para evitar 404 */}
                         <Route path="/editor/novo/">
                           <RedirectRoute to="/editor/novo" />
                         </Route>
-                        {/* Qualquer subrota não suportada de /editor/novo/<algo> volta para base */}
+
+                        {/* Qualquer subrota não suportada volta para base */}
                         <Route path="/editor/novo/:rest*">
                           {(params) => <RedirectRoute to="/editor/novo" />}
                         </Route>
