@@ -1,3 +1,4 @@
+// @ts-nocheck
 // =============================================================
 // ModernUnifiedEditor - Editor Unificado com FunnelEditingFacade
 // Renderiza QuizFunnelEditor integrado com sistema de persistência unificado

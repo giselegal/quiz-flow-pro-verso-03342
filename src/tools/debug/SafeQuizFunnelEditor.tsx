@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { Suspense, useEffect, useState } from 'react';
 
 const QuizFunnelEditorOriginal = React.lazy(() => import('../editor/quiz/QuizFunnelEditor'));

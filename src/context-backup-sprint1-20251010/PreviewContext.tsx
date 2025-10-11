@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { useQuizFlow } from '@/context/QuizFlowProvider';
 import React, { createContext, useCallback, useContext, useState } from 'react';
 

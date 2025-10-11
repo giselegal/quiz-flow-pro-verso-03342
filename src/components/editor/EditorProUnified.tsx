@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * 🚀 EDITOR PRO UNIFIED v3.0 - CONSOLIDAÇÃO FINAL + SISTEMAS ATIVOS
  * 

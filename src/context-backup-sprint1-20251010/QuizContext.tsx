@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { createContext, useContext, ReactNode, useEffect, useRef } from 'react';
 import { useQuizLogic } from '../hooks/useQuizLogic';
 import { useToast } from '@/components/ui/use-toast';

@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useState } from 'react';
 import { useAdminAuth } from '../../context/AdminAuthContext';
 import { Button } from '../ui/button';

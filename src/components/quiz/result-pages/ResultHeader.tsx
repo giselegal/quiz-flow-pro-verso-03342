@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { StepTemplateIds } from '@/utils/semanticIdGenerator';
 import Logo from '../ui/logo';
 

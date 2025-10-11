@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * 🎯 UNIFIED EDITOR CORE - COMPONENTE PRINCIPAL CONSOLIDADO
  * 

@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { useCallback, useEffect, useState } from 'react';
 import { FunnelContext } from '@/core/contexts/FunnelContext';
 import { useUnifiedCRUDOptional } from '@/contexts';

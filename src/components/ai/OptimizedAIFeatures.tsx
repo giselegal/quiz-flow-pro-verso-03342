@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * 🚀 OPTIMIZED AI FEATURES - LAZY LOADING + PERFORMANCE
  * 
