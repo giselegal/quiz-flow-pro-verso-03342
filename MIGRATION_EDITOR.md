@@ -83,12 +83,39 @@ URL: https://seu-dominio.com/editor
 Rota Interna: /editor
 ```
 
-**Todas as outras rotas foram depreciadas:**
-- ❌ `/editor-modular`
-- ❌ `/modular-editor`
-- ❌ `/editor-pro`
-- ❌ `/editor-unified`
-- ❌ `/editor-v1`, `/editor-v2`, etc.
+#### 🔁 Rotas Depreciadas (Redirecionam para /editor)
+
+**Status:** 🟡 REDIRECT ATIVO (mantido para compatibilidade até Sprint 4)
+
+| Rota Legada | Status | Destino |
+|-------------|--------|---------|
+| `/editor/quiz-estilo` | 🔁 301 Redirect | `/editor` |
+| `/editor/quiz-estilo-production` | 🔁 301 Redirect | `/editor` |
+| `/editor/quiz-estilo-modular-pro` | 🔁 301 Redirect | `/editor` |
+| `/editor/quiz-estilo-modular` | 🔁 301 Redirect | `/editor` |
+| `/editor/quiz-estilo-template-engine` | 🔁 301 Redirect | `/editor` |
+| `/editor-modular` | 🔁 301 Redirect | `/editor` |
+| `/modular-editor` | 🔁 301 Redirect | `/editor` |
+| `/editor-pro` | 🔁 301 Redirect | `/editor` |
+| `/editor-v1` | 🔁 301 Redirect | `/editor` |
+| `/editor-stable` | 🔁 301 Redirect | `/editor` |
+| `/editor/:funnelId` | 🔁 301 Redirect | `/editor` (use ?funnelId=xxx) |
+
+**⚠️ Ação Necessária:**
+- Atualize todos os links para usar `/editor` diretamente
+- Use query params para passar dados: `/editor?funnelId=abc123`
+- Redirects serão removidos no **Sprint 4** (01/nov/2025)
+
+#### 📄 Rotas de Template Engine (Separadas)
+
+Estas rotas são **features distintas** e **não** fazem parte do editor de funis:
+
+| Rota | Função | Status |
+|------|--------|--------|
+| `/template-engine` | CRUD de templates | ✅ ATIVA |
+| `/template-engine/:id` | Editor de template específico | ✅ ATIVA |
+| `/editor/novo` | Alias para template engine | ✅ ATIVA |
+| `/editor/templates` | Listagem de templates | ✅ ATIVA |
 
 ---
 

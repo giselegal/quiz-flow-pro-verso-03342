@@ -52,6 +52,12 @@ export function QuizPageEditor({
   onSave,
   onPreview
 }: QuizPageEditorProps) {
+  // 🚨 Console warning para desenvolvedores
+  console.warn(
+    '⚠️ DEPRECATED: QuizPageEditor será removido em 01/nov/2025. ' +
+    'Migre para QuizModularProductionEditor. Ver MIGRATION_EDITOR.md'
+  );
+
   const {
     funnel,
     components,
@@ -210,8 +216,8 @@ export function QuizPageEditor({
                 <div
                   key={component.id}
                   className={`p-3 rounded-lg cursor-pointer transition-colors ${selectedComponent?.id === component.id
-                      ? 'bg-blue-100 border-blue-300'
-                      : 'bg-white border border-gray-200 hover:bg-gray-50'
+                    ? 'bg-blue-100 border-blue-300'
+                    : 'bg-white border border-gray-200 hover:bg-gray-50'
                     }`}
                   onClick={() => handleComponentSelect(component)}
                 >

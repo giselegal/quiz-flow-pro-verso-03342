@@ -25,6 +25,12 @@ export default function IntegratedQuizEditor({
   onPreview,
   className,
 }: IntegratedQuizEditorProps = {}) {
+  // 🚨 Console warning para desenvolvedores
+  console.warn(
+    '⚠️ DEPRECATED: IntegratedQuizEditor será removido em 01/nov/2025. ' +
+    'Migre para QuizModularProductionEditor. Ver MIGRATION_EDITOR.md'
+  );
+
   const [activeTab, setActiveTab] = useState('edit');
   const [savedQuizzes, setSavedQuizzes] = useState<SavedQuiz[]>([]);
 
@@ -148,10 +154,10 @@ export default function IntegratedQuizEditor({
         <div className="mb-6 text-center">
           <div
             className={`inline-flex items-center px-3 py-1 rounded-full text-sm ${connectionStatus === 'connected'
-                ? 'bg-green-100 text-green-800'
-                : connectionStatus === 'error'
-                  ? 'bg-red-100 text-red-800'
-                  : 'bg-yellow-100 text-yellow-800'
+              ? 'bg-green-100 text-green-800'
+              : connectionStatus === 'error'
+                ? 'bg-red-100 text-red-800'
+                : 'bg-yellow-100 text-yellow-800'
               }`}
           >
             <Database className="w-4 h-4 mr-2" />
@@ -459,10 +465,10 @@ export default function IntegratedQuizEditor({
                     <div className="flex items-center gap-2">
                       <div
                         className={`w-3 h-3 rounded-full ${connectionStatus === 'connected'
-                            ? 'bg-green-500'
-                            : connectionStatus === 'error'
-                              ? 'bg-red-500'
-                              : 'bg-yellow-500'
+                          ? 'bg-green-500'
+                          : connectionStatus === 'error'
+                            ? 'bg-red-500'
+                            : 'bg-yellow-500'
                           }`}
                       />
                       <span className="text-blue-700">

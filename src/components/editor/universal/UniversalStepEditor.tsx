@@ -32,6 +32,12 @@ const UniversalStepEditor: React.FC<UniversalStepEditorProps> = ({
     readOnly = false,
     showNavigation = true
 }) => {
+    // 🚨 Console warning para desenvolvedores
+    console.warn(
+        '⚠️ DEPRECATED: UniversalStepEditor será removido em 01/nov/2025. ' +
+        'Migre para QuizModularProductionEditor. Ver MIGRATION_EDITOR.md'
+    );
+
     const [isLoading, setIsLoading] = React.useState(true);
     const [currentStepData, setCurrentStepData] = React.useState<any>(null);
     const [selectedBlockId, setSelectedBlockId] = React.useState<string | null>(null);

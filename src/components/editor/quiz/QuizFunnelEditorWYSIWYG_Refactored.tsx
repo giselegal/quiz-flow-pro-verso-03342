@@ -36,6 +36,12 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = memo(({
     funnelId,
     templateId
 }) => {
+    // 🚨 Console warning para desenvolvedores
+    console.warn(
+        '⚠️ DEPRECATED: QuizFunnelEditorWYSIWYG_Refactored será removido em 01/nov/2025. ' +
+        'Migre para QuizModularProductionEditor. Ver MIGRATION_EDITOR.md'
+    );
+
     const crud = useUnifiedCRUD();
 
     // 🎯 Estado centralizado

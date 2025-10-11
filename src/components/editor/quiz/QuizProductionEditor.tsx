@@ -49,6 +49,12 @@ export const QuizProductionEditor: React.FC<QuizProductionEditorProps> = ({
     funnelId: initialFunnelId,
     className
 }) => {
+    // 🚨 Console warning para desenvolvedores
+    console.warn(
+        '⚠️ DEPRECATED: QuizProductionEditor será removido em 01/nov/2025. ' +
+        'Migre para QuizModularProductionEditor. Ver MIGRATION_EDITOR.md'
+    );
+
     const [, setLocation] = useLocation();
     const { toast } = useToast();
 

@@ -153,6 +153,12 @@ export const EditorProUnified: React.FC<EditorProUnifiedProps> = ({
   className = "",
   realExperienceMode = false // Nova prop para ativar QuizOrchestrator
 }) => {
+  // 🚨 Console warning para desenvolvedores
+  console.warn(
+    '⚠️ DEPRECATED: EditorProUnified será removido em 01/nov/2025. ' +
+    'Migre para QuizModularProductionEditor. Ver MIGRATION_EDITOR.md'
+  );
+
   console.log('🎯 [DEBUG] EditorProUnified recebeu realExperienceMode:', realExperienceMode);
 
   // Pure Builder System State

@@ -42,6 +42,12 @@ export const MasterEditorWorkspace: React.FC<MasterEditorWorkspaceProps> = ({
   userName,
   className,
 }) => {
+  // 🚨 Console warning para desenvolvedores
+  console.warn(
+    '⚠️ DEPRECATED: MasterEditorWorkspace será removido em 01/nov/2025. ' +
+    'Migre para QuizModularProductionEditor. Ver MIGRATION_EDITOR.md'
+  );
+
   const [activeTab, setActiveTab] = useState<WorkspaceTab>('editor');
   const [selectedBlockForStyling, setSelectedBlockForStyling] = useState<Block | null>(null);
 

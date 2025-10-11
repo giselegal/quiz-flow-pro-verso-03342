@@ -262,6 +262,12 @@ const EditableContainer: React.FC = () => {
 
 // Componente principal do editor
 export const ModularResultEditor: React.FC = () => {
+    // 🚨 Console warning para desenvolvedores
+    console.warn(
+        '⚠️ DEPRECATED: ModularResultEditor será removido em 01/nov/2025. ' +
+        'Migre para QuizModularProductionEditor. Ver MIGRATION_EDITOR.md'
+    );
+
     const [showLayers, setShowLayers] = useState(false);
 
     return (
