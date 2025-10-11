@@ -3,6 +3,36 @@
  * 
  * Este componente é responsável por renderizar blocos no contexto do editor,
  * fornecendo funcionalidades específicas como seleção, edição inline e preview.
+ * 
+ * @deprecated Este componente será removido no Sprint 4.
+ * Use EnhancedBlockRenderer de @/components/editor/unified/EnhancedBlockRenderer
+ * 
+ * Motivo: Funcionalidade consolidada no EnhancedBlockRenderer oficial que:
+ * - Suporte a DnD completo
+ * - Gestão de seleção otimizada
+ * - Features de edição avançadas
+ * - Performance superior
+ * 
+ * Migração:
+ * ```tsx
+ * // ANTES:
+ * import { EditorBlockRenderer } from '@/components/editor/unified/EditorBlockRenderer';
+ * <EditorBlockRenderer 
+ *   block={block}
+ *   isSelected={true}
+ *   onUpdate={handleUpdate}
+ * />
+ * 
+ * // DEPOIS:
+ * import { EnhancedBlockRenderer } from '@/components/editor/unified/EnhancedBlockRenderer';
+ * <EnhancedBlockRenderer 
+ *   block={block}
+ *   isSelected={true}
+ *   onUpdate={handleUpdate}
+ * />
+ * ```
+ * 
+ * Data de remoção prevista: Sprint 4 - Dia 2 (22/out/2024)
  */
 
 import React, { Suspense } from 'react';
@@ -67,13 +97,13 @@ const EditorBlockWrapper: React.FC<{
           </div>
         </div>
       )}
-      
+
       {/* Overlay de hover */}
       <div className={cn(
         'absolute inset-0 bg-primary/5 rounded-lg pointer-events-none transition-opacity',
         (isHovering || isSelected) ? 'opacity-100' : 'opacity-0'
       )} />
-      
+
       {children}
     </div>
   );
@@ -93,6 +123,15 @@ export const EditorBlockRenderer: React.FC<EditorBlockRendererProps> = ({
   onUpdate,
   className = '',
 }) => {
+  // ⚠️ AVISO DE DEPRECIAÇÃO
+  if (process.env.NODE_ENV === 'development') {
+    console.warn(
+      '⚠️ [DEPRECATED] EditorBlockRenderer será removido no Sprint 4.\n' +
+      'Use EnhancedBlockRenderer de src/components/editor/enhanced/EnhancedBlockRenderer.tsx\n' +
+      'Veja documentação no topo do arquivo para guia de migração.'
+    );
+  }
+
   const Component = getEnhancedBlockComponent(block.type);
 
   if (!Component) {
