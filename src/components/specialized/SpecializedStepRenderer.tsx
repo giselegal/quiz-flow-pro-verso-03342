@@ -1,4 +1,42 @@
 /**
+ * @deprecated Este componente será removido no Sprint 4.
+ * Use UnifiedStepRenderer de src/components/editor/unified/UnifiedStepRenderer.tsx
+ * 
+ * Motivo: Substituído por UnifiedStepRenderer que oferece:
+ * - Suporte nativo para steps especializados (intro, resultado, finalização)
+ * - Integração completa com sistema de blocos modulares
+ * - Melhor gestão de estado e navegação
+ * - Suporte a drag-and-drop com @dnd-kit
+ * - Compatibilidade com editor visual unificado
+ * 
+ * Migração:
+ * ```tsx
+ * // ANTES:
+ * import { SpecializedStepRenderer } from '@/components/specialized/SpecializedStepRenderer';
+ * 
+ * <SpecializedStepRenderer
+ *   stepNumber={1}
+ *   data={data}
+ *   onNext={handleNext}
+ *   onBack={handleBack}
+ *   funnelId="quiz21StepsComplete"
+ * />
+ * 
+ * // DEPOIS:
+ * import { UnifiedStepRenderer } from '@/components/editor/unified/UnifiedStepRenderer';
+ * 
+ * <UnifiedStepRenderer
+ *   step={stepData}
+ *   isPreview={true}
+ *   onNavigate={handleNavigate}
+ *   funnelId="quiz21StepsComplete"
+ * />
+ * ```
+ * 
+ * Data de remoção prevista: Sprint 4 - Dia 2 (22/out/2024)
+ */
+
+/**
  * 🎯 SPECIALIZED STEP RENDERER
  * 
  * Conecta páginas especializadas existentes com o fluxo principal do quiz
@@ -29,6 +67,14 @@ export const SpecializedStepRenderer: React.FC<SpecializedStepRendererProps> = (
     onBack,
     funnelId = 'quiz21StepsComplete'
 }) => {
+    // ⚠️ AVISO DE DEPRECIAÇÃO
+    if (process.env.NODE_ENV === 'development') {
+        console.warn(
+            '⚠️ [DEPRECATED] SpecializedStepRenderer será removido no Sprint 4.\n' +
+            'Use UnifiedStepRenderer de src/components/editor/unified/UnifiedStepRenderer.tsx\n' +
+            'Veja documentação no topo do arquivo para guia de migração.'
+        );
+    }
 
     // Usar QuizStepRouter para determinar tipo de step
     const stepInfo = QuizStepRouter.getStepInfo(stepNumber);
