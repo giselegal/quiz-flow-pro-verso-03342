@@ -37,6 +37,9 @@ export default function QuizApp({ funnelId, externalSteps }: QuizAppProps) {
         addAnswer,
         addStrategicAnswer,
         getOfferKey,
+        isLoadingTemplate, // 🎯 FASE 2: Loading de templates JSON
+        templateError, // 🎯 FASE 2: Erro ao carregar template
+        useJsonTemplates, // 🎯 FASE 2: Flag indicando uso de JSON
     } = useQuizState(funnelId, externalSteps);
 
     // 🎯 FASE 3: Mapear step atual para stepId do registry
@@ -61,6 +64,45 @@ export default function QuizApp({ funnelId, externalSteps }: QuizAppProps) {
         resultStyle: state.userProfile.resultStyle,
         secondaryStyles: state.userProfile.secondaryStyles
     };
+
+    // 🎯 FASE 2: Loading State
+    if (isLoadingTemplate) {
+        return (
+            <div className="min-h-screen bg-[#fefefe] flex items-center justify-center">
+                <div className="text-center">
+                    <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-[#deac6d] mb-4"></div>
+                    <p className="text-[#5b4135] text-lg">Carregando template...</p>
+                    {useJsonTemplates && (
+                        <p className="text-[#5b4135]/60 text-sm mt-2">Usando Templates JSON</p>
+                    )}
+                </div>
+            </div>
+        );
+    }
+
+    // 🎯 FASE 2: Error State com Retry
+    if (templateError) {
+        return (
+            <div className="min-h-screen bg-[#fefefe] flex items-center justify-center">
+                <div className="text-center max-w-md mx-auto p-6">
+                    <div className="text-red-500 text-5xl mb-4">⚠️</div>
+                    <h2 className="text-2xl font-bold text-[#5b4135] mb-2">Erro ao Carregar Template</h2>
+                    <p className="text-[#5b4135]/70 mb-4">
+                        {templateError?.message || String(templateError)}
+                    </p>
+                    <button
+                        onClick={() => window.location.reload()}
+                        className="bg-[#deac6d] hover:bg-[#c99a5d] text-white px-6 py-3 rounded-lg transition-colors font-medium"
+                    >
+                        Tentar Novamente
+                    </button>
+                    <p className="text-[#5b4135]/50 text-xs mt-4">
+                        Etapa: {state.currentStep}
+                    </p>
+                </div>
+            </div>
+        );
+    }
 
     if (!currentStepData) {
         return (
