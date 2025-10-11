@@ -8,7 +8,7 @@
  */
 
 import { describe, it, expect, vi } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import React from 'react';
 
 describe('🎛️ Painel de Propriedades do Editor - Teste Específico', () => {
@@ -63,7 +63,7 @@ describe('🎛️ Painel de Propriedades do Editor - Teste Específico', () => {
                     <div>
                         <input
                             data-testid="text-input"
-                            value={selectedBlock.properties?.text || ''}
+                            defaultValue={selectedBlock.properties?.text || ''}
                             onChange={(e) => onUpdate({ text: e.target.value })}
                         />
                     </div>
@@ -83,10 +83,13 @@ describe('🎛️ Painel de Propriedades do Editor - Teste Específico', () => {
                 />
             );
 
-            const input = screen.getByTestId('text-input');
-            input.dispatchEvent(new Event('change', { bubbles: true }));
+            const input = screen.getByTestId('text-input') as HTMLInputElement;
+
+            // Usar fireEvent.change do @testing-library
+            fireEvent.change(input, { target: { value: 'Novo valor' } });
 
             expect(mockUpdate).toHaveBeenCalled();
+            expect(mockUpdate).toHaveBeenCalledWith({ text: 'Novo valor' });
         });
 
         it('deve permitir alterar múltiplas propriedades', () => {
