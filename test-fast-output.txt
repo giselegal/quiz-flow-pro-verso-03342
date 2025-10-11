@@ -1,0 +1,33 @@
+
+> rest-express@1.0.0 test:fast
+> vitest run src/__tests__/validation src/utils/__tests__
+
+ DEPRECATED  "environmentMatchGlobs" is deprecated. Use `test.projects` to define different configurations instead.
+
+ RUN  v3.2.4 /workspaces/quiz-quest-challenge-verse
+
+ ✓ src/__tests__/validation/validateNextStepDynamic.test.ts > validateNextStep (dinâmico / normalização) > aceita última etapa sem nextStep com 20 etapas 4ms
+ ✓ src/__tests__/validation/validateNextStepDynamic.test.ts > validateNextStep (dinâmico / normalização) > normaliza ids numéricos 0..19 e valida com sucesso 1ms
+ ✓ src/__tests__/validation/validateNextStepDynamic.test.ts > validateNextStep (dinâmico / normalização) > detecta nextStep inexistente após normalização 1ms
+ ✓ src/__tests__/validation/publishNormalizeIds.test.ts > publishToProduction normaliza IDs numéricos > publica funil com ids 0..19 após normalização 10ms
+ ✓ src/__tests__/validation/saveDraftAutoFill.test.ts > saveDraft autoFill integração > preenche nextStep ausentes antes de validar e salva sem erro 7ms
+ ✓ src/utils/__tests__/sanitizeHtml.test.ts > sanitizeHtml > remove script tag mantendo texto 6ms
+ ✓ src/utils/__tests__/sanitizeHtml.test.ts > sanitizeHtml > remove atributos on* 2ms
+ ✓ src/utils/__tests__/sanitizeHtml.test.ts > sanitizeHtml > remove javascript: em href 0ms
+ ✓ src/utils/__tests__/sanitizeHtml.test.ts > sanitizeHtml > mantém tags permitidas 0ms
+ ✓ src/utils/__tests__/quizAnalytics.test.ts > quizAnalytics > valida e persiste step_view 7ms
+ ✓ src/utils/__tests__/quizAnalytics.test.ts > quizAnalytics > descarta evento inválido 2ms
+ ✓ src/utils/__tests__/quizAnalytics.test.ts > quizAnalytics > calcula métricas básicas 4ms
+ ✓ src/utils/__tests__/quizAnalytics.test.ts > quizAnalytics > enriquece com userId e conta distinctUsers 1ms
+ ✓ src/utils/__tests__/quizAnalytics.test.ts > quizAnalytics > flush com retry/backoff envia batches mesmo após falhas iniciais 4ms
+ ✓ src/utils/__tests__/quizAnalytics.test.ts > quizAnalytics > flush remove eventos enviados 1ms
+ ✓ src/__tests__/validation/saveDraftFormInputFallback.test.ts > Fallback de formInput (step-01) > salva draft mesmo sem campos de formInput iniciais 5ms
+
+ Test Files  6 passed (6)
+      Tests  16 passed (16)
+   Start at  04:07:04
+   Duration  3.32s (transform 365ms, setup 2.63s, collect 574ms, tests 69ms, environment 2.98s, prepare 1.08s)
+
+JSON report written to /workspaces/quiz-quest-challenge-verse/coverage/test-results.json
+ HTML  Report is generated
+       You can run npx vite preview --outDir coverage to see the test results.

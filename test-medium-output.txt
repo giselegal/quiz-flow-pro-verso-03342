@@ -1,0 +1,57 @@
+
+> rest-express@1.0.0 test:medium
+> vitest run src/tests/editor-core src/tests/templates
+
+ DEPRECATED  "environmentMatchGlobs" is deprecated. Use `test.projects` to define different configurations instead.
+
+ RUN  v3.2.4 /workspaces/quiz-quest-challenge-verse
+
+ ✓ src/tests/templates/components.validation.integrated.test.ts > template validation integra componentes > reporta issues de componente tipado 3ms
+ ✓ src/tests/templates/adapter.fallback.test.ts > legacy adapter fallback > retorna fallback quando load falha e flag ativa 36ms
+ ✓ src/tests/templates/adapter.fallback.test.ts > legacy adapter fallback > propaga erro quando flag desativada 2ms
+ ✓ src/tests/templates/branching.conditionTree.test.ts > conditionTree evaluator (src copy) > AND simples score entre faixa direciona para stage_q2 9ms
+ ✓ src/tests/templates/branching.conditionTree.test.ts > conditionTree evaluator (src copy) > AND falha (score fora da faixa) usa fallback 1ms
+ ✓ src/tests/templates/branching.conditionTree.test.ts > conditionTree evaluator (src copy) > OR passa quando scoreGte >= 20 mesmo se answeredIncludes falha 1ms
+ ✓ src/tests/templates/branching.conditionTree.test.ts > conditionTree evaluator (src copy) > Nested AND/OR avalia corretamente 1ms
+ ✓ src/tests/templates/components.repo.test.ts > components repo > cria e lista componentes 3ms
+ ✓ src/tests/templates/components.repo.test.ts > components repo > filtra por kind e recupera individual 1ms
+ ✓ src/tests/templates/components.repo.test.ts > components repo > deleta componente e validações básicas 1ms
+ ✓ src/tests/editor-core/snippetsManager.test.ts > snippetsManager > cria e lista snippet 3ms
+ ✓ src/tests/editor-core/snippetsManager.test.ts > snippetsManager > atualiza snippet 1ms
+ ✓ src/tests/editor-core/snippetsManager.test.ts > snippetsManager > remove snippet 0ms
+ ✓ src/tests/editor-core/computeVirtualWindow.test.ts > computeVirtualWindow > desativa abaixo do threshold 5ms
+ ✓ src/tests/editor-core/computeVirtualWindow.test.ts > computeVirtualWindow > calcula janela básica 1ms
+ ✓ src/tests/editor-core/computeVirtualWindow.test.ts > computeVirtualWindow > honra disable 1ms
+ ✓ src/tests/templates/runtime.basic.test.ts > Runtime básico (src copy) > cria, publica e executa fluxo linear com score 3ms
+ ✓ src/tests/templates/render.registry.smoke.test.tsx > render registry smoke > render Header 2ms
+ ✓ src/tests/templates/render.registry.smoke.test.tsx > render registry smoke > render Navigation 0ms
+ ✓ src/tests/templates/render.registry.smoke.test.tsx > render registry smoke > render QuestionSingle 0ms
+ ✓ src/tests/templates/render.registry.smoke.test.tsx > render registry smoke > render QuestionMulti 0ms
+ ✓ src/tests/templates/render.registry.smoke.test.tsx > render registry smoke > render Transition 0ms
+ ✓ src/tests/templates/render.registry.smoke.test.tsx > render registry smoke > render ResultPlaceholder 0ms
+ ✓ src/tests/templates/render.registry.smoke.test.tsx > render registry smoke > render RawLegacyBundle 0ms
+ ✓ src/tests/templates/render.registry.smoke.test.tsx > render registry smoke > fallback para tipo desconhecido 0ms
+ ✓ src/tests/editor-core/historyManager.test.ts > HistoryManager > realiza push e undo/redo básico 4ms
+ ✓ src/tests/editor-core/historyManager.test.ts > HistoryManager > limita histórico ao limite configurado 3ms
+ ✓ src/tests/templates/outcome.interpolation.test.ts > Outcome interpolation > substitui {{score}} no outcome final 3ms
+ ✓ src/tests/editor-core/useLiveScoring.test.tsx > useLiveScoring > agrega scores corretamente 19ms
+ ✓ src/tests/editor-core/placeholderParser.test.ts > placeholderParser > substitui placeholders básicos 2ms
+ ✓ src/tests/editor-core/placeholderParser.test.ts > placeholderParser > substitui score:estilo com fallback 0 1ms
+ ✓ src/tests/editor-core/placeholderParser.test.ts > placeholderParser > extrai placeholders únicos 1ms
+ ✓ src/tests/editor-core/placeholderParser.test.ts > placeholderParser > detecta existência de placeholders 1ms
+ ✓ src/tests/templates/validation.outcomes.test.ts > Validation outcomes > bloqueia publish com gap de outcomes 4ms
+ ✓ src/tests/templates/adapter.validation.test.ts > legacy adapter validation warnings > emite warnings esperados para draft adaptado 13ms
+ ✓ src/tests/editor-core/progressHeaderSchema.test.ts > progress-header schema > define defaults principais 3ms
+ ✓ src/tests/templates/components.api.test.ts > components API > cria, lista e recupera 51ms
+ ✓ src/tests/templates/components.api.test.ts > components API > patch atualiza props 5ms
+ ✓ src/tests/templates/components.api.test.ts > components API > delete remove componente 6ms
+ ✓ src/tests/templates/template.validation.endpoint.test.ts > template validation endpoint > retorna relatório de validação 22ms
+
+ Test Files  17 passed (17)
+      Tests  40 passed (40)
+   Start at  04:07:19
+   Duration  8.69s (transform 644ms, setup 4.04s, collect 2.70s, tests 265ms, environment 7.07s, prepare 2.42s)
+
+JSON report written to /workspaces/quiz-quest-challenge-verse/coverage/test-results.json
+ HTML  Report is generated
+       You can run npx vite preview --outDir coverage to see the test results.
