@@ -3,6 +3,9 @@ import { getStepTemplate } from '@/config/templates/templates';
 import { useEditor } from '@/components/editor/EditorProviderMigrationAdapter';
 import { Block } from '@/types/editor';
 import { useCallback, useEffect, useState } from 'react';
+import type { QuizStep } from '@/data/quizSteps';
+import { QUIZ_STEPS } from '@/data/quizSteps';
+import { QuizStepAdapter } from '@/adapters/QuizStepAdapter';
 
 type StageTemplate = any;
 
@@ -15,12 +18,23 @@ interface TemplateMetadata {
   blocksCount: number;
 }
 
+interface TemplateCache {
+  [key: string]: QuizStep;
+}
+
+const templateCache: TemplateCache = {};
+
 interface UseTemplateLoaderResult {
   // Template Loading
   loadTemplate: (stageId: string) => Promise<StageTemplate | null>;
   loadTemplateBlocks: (stageId: string) => Promise<Block[]>;
   getTemplateMetadata: (stageId: string) => TemplateMetadata | null;
-  loadQuizEstiloTemplate: (stepNumber: number) => Promise<{ blocks: Block[] }>; // 🎯 NOVO
+  loadQuizEstiloTemplate: (stepNumber: number) => Promise<QuizStep>; // 🎯 ATUALIZADO
+
+  // 🎯 NOVOS métodos para JSON templates
+  loadAllTemplates: () => Promise<Record<string, QuizStep>>;
+  prefetchNextSteps: (currentStep: number, count?: number) => Promise<void>;
+  clearCache: () => void;
 
   // Estado
   isLoading: boolean;
@@ -39,40 +53,142 @@ export function useTemplateLoader(): UseTemplateLoaderResult {
   const [templatesMetadata, setTemplatesMetadata] = useState<Record<string, TemplateMetadata>>({});
   const [cachedTemplates, setCachedTemplates] = useState<Record<string, StageTemplate>>({});
 
-  // 🎯 NOVO: Carregar template quiz-estilo-21-steps
+  /**
+   * 🎯 NOVO: Carrega template JSON do step específico
+   */
   const loadQuizEstiloTemplate = useCallback(
-    async (stepNumber: number): Promise<{ blocks: Block[] }> => {
-      try {
-        setIsLoading(true);
-        setError(null);
+    async (stepNumber: number): Promise<QuizStep> => {
+      const stepId = `step-${stepNumber.toString().padStart(2, '0')}`;
 
-        // Importar adapter dinâmico
-        const { QuizToEditorAdapter } = await import('@/adapters/QuizToEditorAdapter');
-        
-        // Obter configuração da etapa específica
-        const stepConfig = await QuizToEditorAdapter.getStepConfiguration(stepNumber);
-        if (!stepConfig) {
-          throw new Error(`Quiz step ${stepNumber} not found`);
+      // 1. Verificar cache
+      if (templateCache[stepId]) {
+        console.log(`✅ Template ${stepId} carregado do cache`);
+        return templateCache[stepId];
+      }
+
+      setIsLoading(true);
+      setError(null);
+
+      try {
+        // 2. Tentar carregar JSON
+        console.log(`📥 Carregando template JSON: ${stepId}`);
+
+        const jsonModule = await import(
+          /* @vite-ignore */
+          `/templates/${stepId}-template.json`
+        );
+
+        const jsonTemplate = jsonModule.default || jsonModule;
+
+        // 3. Adaptar para QuizStep
+        console.log(`🔄 Adaptando template ${stepId} de JSON para QuizStep`);
+        const adapted = QuizStepAdapter.fromJSON(jsonTemplate);
+
+        // 4. Salvar no cache
+        templateCache[stepId] = adapted;
+
+        console.log(`✅ Template ${stepId} carregado com sucesso do JSON`);
+        return adapted;
+
+      } catch (err) {
+        console.warn(
+          `⚠️ Erro ao carregar template JSON ${stepId}, usando fallback QUIZ_STEPS`,
+          err
+        );
+
+        // 5. Fallback para QUIZ_STEPS
+        const fallbackStep = QUIZ_STEPS[stepId];
+
+        if (!fallbackStep) {
+          const error = new Error(`Step ${stepId} não encontrado em nenhum template`);
+          setError(error);
+          throw error;
         }
 
-        // Converter para formato de blocos do editor
-        const stepId = `step-${stepNumber}`;
-        const editorData = await QuizToEditorAdapter.convertQuizToEditor();
-        const blocks = editorData.stepBlocks[stepId] || [];
+        // Salvar fallback no cache
+        templateCache[stepId] = fallbackStep;
 
-        console.log(`✅ Quiz template loaded for step ${stepNumber}: ${blocks.length} blocks`);
-        
-        return { blocks };
-      } catch (err) {
-        console.error('❌ Error loading quiz template:', err);
-        setError(err as Error);
-        throw err;
+        return fallbackStep;
+
       } finally {
         setIsLoading(false);
       }
     },
     []
   );
+
+  /**
+   * 🎯 NOVO: Carrega todos os templates de uma vez (prefetch)
+   */
+  const loadAllTemplates = useCallback(
+    async (): Promise<Record<string, QuizStep>> => {
+      setIsLoading(true);
+      setError(null);
+
+      try {
+        const promises = Array.from({ length: 21 }, (_, i) => {
+          const stepNumber = i + 1;
+          return loadQuizEstiloTemplate(stepNumber)
+            .then(step => [
+              `step-${stepNumber.toString().padStart(2, '0')}`,
+              step
+            ])
+            .catch(err => {
+              console.error(`Erro ao carregar step ${stepNumber}:`, err);
+              return null;
+            });
+        });
+
+        const results = await Promise.all(promises);
+        const validResults = results.filter(Boolean) as [string, QuizStep][];
+
+        const stepsMap = Object.fromEntries(validResults);
+
+        console.log(`✅ Templates carregados: ${Object.keys(stepsMap).length}/21`);
+
+        return stepsMap;
+
+      } catch (err) {
+        console.error('❌ Erro ao carregar templates:', err);
+        setError(err as Error);
+
+        // Fallback completo para QUIZ_STEPS
+        return QUIZ_STEPS;
+
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [loadQuizEstiloTemplate]
+  );
+
+  /**
+   * 🎯 NOVO: Prefetch dos próximos steps
+   */
+  const prefetchNextSteps = useCallback(
+    async (currentStep: number, count: number = 2) => {
+      const promises = Array.from({ length: count }, (_, i) => {
+        const nextStep = currentStep + i + 1;
+        if (nextStep <= 21) {
+          return loadQuizEstiloTemplate(nextStep).catch(() => null);
+        }
+        return Promise.resolve(null);
+      });
+
+      await Promise.all(promises);
+    },
+    [loadQuizEstiloTemplate]
+  );
+
+  /**
+   * 🎯 NOVO: Limpa cache de templates
+   */
+  const clearCache = useCallback(() => {
+    Object.keys(templateCache).forEach(key => {
+      delete templateCache[key];
+    });
+    console.log('🗑️ Cache de templates limpo');
+  }, []);
 
   // Carregar metadata de todos os templates
   useEffect(() => {
@@ -165,6 +281,9 @@ export function useTemplateLoader(): UseTemplateLoaderResult {
     loadTemplateBlocks,
     getTemplateMetadata,
     loadQuizEstiloTemplate, // 🎯 NOVO: Método específico do quiz
+    loadAllTemplates, // 🎯 NOVO
+    prefetchNextSteps, // 🎯 NOVO
+    clearCache, // 🎯 NOVO
     isLoading,
     error,
     templatesMetadata,
