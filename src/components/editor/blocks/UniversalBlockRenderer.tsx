@@ -34,6 +34,22 @@ import {
   Step20PersonalizedOfferBlock
 } from './Step20ModularBlocks';
 
+// ✅ FASE 3A: Importações dos novos componentes inline
+import ImageDisplayInlineBlock from '@/components/blocks/inline/ImageDisplayInlineBlock';
+import DecorativeBarInlineBlock from '@/components/blocks/inline/DecorativeBarInlineBlock';
+import LeadFormBlock from '@/components/blocks/inline/LeadFormBlock';
+import ResultCardInlineBlock from '@/components/blocks/inline/ResultCardInlineBlock';
+import ResultDisplayBlock from '@/components/blocks/inline/ResultDisplayBlock';
+import LoadingAnimationBlock from '@/components/blocks/inline/LoadingAnimationBlock';
+import SpinnerBlock from '@/components/blocks/inline/SpinnerBlock';
+import OfferHeaderInlineBlock from '@/components/blocks/inline/OfferHeaderInlineBlock';
+import OfferHeroSectionInlineBlock from '@/components/blocks/inline/OfferHeroSectionInlineBlock';
+import BenefitsInlineBlock from '@/components/blocks/inline/BenefitsInlineBlock';
+import TestimonialsInlineBlock from '@/components/blocks/inline/TestimonialsInlineBlock';
+import QuizOfferPricingInlineBlock from '@/components/blocks/inline/QuizOfferPricingInlineBlock';
+import OfferFaqSectionInlineBlock from '@/components/blocks/inline/OfferFaqSectionInlineBlock';
+import QuizOfferCTAInlineBlock from '@/components/blocks/inline/QuizOfferCTAInlineBlock';
+
 export interface UniversalBlockRendererProps {
   block: Block;
   isSelected?: boolean;
@@ -107,6 +123,22 @@ const BlockComponentRegistry: Record<string, React.FC<any>> = {
   'step20-secondary-styles': Step20SecondaryStylesBlock,
   'step20-personalized-offer': Step20PersonalizedOfferBlock,
   'step20-complete-template': Step20ResultHeaderBlock, // TODO: se quiser renderização compacta usar Step20CompleteTemplateBlock diretamente em outro fluxo
+  // ✅ FASE 3A: Componentes inline específicos
+  'image-display-inline': ImageDisplayInlineBlock,
+  'decorative-bar-inline': DecorativeBarInlineBlock,
+  'lead-form': LeadFormBlock,
+  'result-card-inline': ResultCardInlineBlock,
+  'result-display': ResultDisplayBlock,
+  'loading-animation': LoadingAnimationBlock,
+  'spinner': SpinnerBlock,
+  // ✅ FASE 3A: Componentes de Offer
+  'offer-header': OfferHeaderInlineBlock,
+  'offer-hero-section': OfferHeroSectionInlineBlock,
+  'offer-benefits-list': BenefitsInlineBlock,
+  'offer-testimonials': TestimonialsInlineBlock,
+  'offer-pricing-table': QuizOfferPricingInlineBlock,
+  'offer-faq-section': OfferFaqSectionInlineBlock,
+  'offer-cta-section': QuizOfferCTAInlineBlock,
   // Fallbacks para tipos básicos
   'text': createFallbackComponent('text'),
   'headline': createFallbackComponent('headline'),
