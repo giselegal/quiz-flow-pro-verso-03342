@@ -1,6 +1,6 @@
 import { StyleResult } from '@/types/quiz';
 import { Card } from '@/components/ui/card';
-import SecondaryStylesSection from '@/components/quiz-result/SecondaryStylesSection';
+import SecondaryStylesSection from '@/components/quiz/result-pages/SecondaryStylesSection';
 import { useIsMobile } from '@/hooks/use-mobile';
 
 interface StyleResultSectionProps {

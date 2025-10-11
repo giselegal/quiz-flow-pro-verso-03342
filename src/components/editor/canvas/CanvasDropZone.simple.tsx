@@ -11,7 +11,7 @@ import { SortableBlockWrapper } from './SortableBlockWrapper.simple';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { useCanvasContainerStyles } from '@/hooks/useCanvasContainerStyles';
 import { useGlobalEventManager } from '@/utils/OptimizedGlobalEventManager';
-import { HookOrderDebugger } from '@/components/debug/HookOrderDebugger';
+import { HookOrderDebugger } from '@/tools/debug/HookOrderDebugger';
 import { usePureBuilder } from '@/components/editor/PureBuilderProvider';
 import EmptyCanvasInterface from '@/components/editor/EmptyCanvasInterface';
 

@@ -5,12 +5,12 @@ import { getSalesPageConfig } from '@/config/salesPageConfig';
 import type { StyleResult } from '@/types/quiz';
 
 // Blocos reutilizáveis já existentes em quiz-result/sales
-import HeroSection from '@/components/quiz-result/sales/HeroSection';
-import ProductShowcase from '@/components/quiz-result/sales/ProductShowcase';
-import BenefitList from '@/components/quiz-result/sales/BenefitList';
-import Testimonials from '@/components/quiz-result/sales/Testimonials';
-import Guarantee from '@/components/quiz-result/sales/Guarantee';
-import PricingSection from '@/components/quiz-result/sales/PricingSection';
+import HeroSection from "@/components/quiz/result-pages/sales/HeroSection';
+import ProductShowcase from "@/components/quiz/result-pages/sales/ProductShowcase';
+import BenefitList from "@/components/quiz/result-pages/sales/BenefitList';
+import Testimonials from "@/components/quiz/result-pages/sales/Testimonials';
+import Guarantee from "@/components/quiz/result-pages/sales/Guarantee';
+import PricingSection from "@/components/quiz/result-pages/sales/PricingSection';
 import TransformationBlock from '@/components/sales/TransformationBlock';
 
 type SalesPageFromConfigProps = {

@@ -4,10 +4,10 @@ import { StyleResult } from '@/types/quiz';
 import { Card } from '@/components/ui/card';
 import { ResultPageConfig, OfferContent } from '@/types/resultPageConfig';
 import { EditSectionOverlay } from './EditSectionOverlay';
-import ResultHeader from '../quiz-result/ResultHeader';
-import PrimaryStyleCard from '../quiz-result/PrimaryStyleCard';
-import SecondaryStylesSection from '../quiz-result/SecondaryStylesSection';
-import OfferCard from '../quiz-result/sales/OfferCard';
+import ResultHeader from "../quiz/result-pages/ResultHeader';
+import PrimaryStyleCard from "../quiz/result-pages/PrimaryStyleCard';
+import SecondaryStylesSection from "../quiz/result-pages/SecondaryStylesSection';
+import OfferCard from "../quiz/result-pages/sales/OfferCard';
 
 interface EditableSectionsProps {
   primaryStyle: StyleResult;
