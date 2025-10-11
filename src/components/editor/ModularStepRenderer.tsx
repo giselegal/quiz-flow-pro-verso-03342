@@ -3,6 +3,37 @@
  * 
  * Renderiza um step completo com múltiplos componentes modulares
  * e funcionalidade de drag & drop para reordenar componentes
+ * 
+ * @deprecated Este componente será removido no Sprint 4.
+ * Use UnifiedStepRenderer de @/components/editor/unified/UnifiedStepRenderer
+ * 
+ * Motivo: Funcionalidade consolidada no UnifiedStepRenderer oficial que:
+ * - Suporta 3 modos (preview | production | editable)
+ * - Lazy loading otimizado de steps
+ * - Chunk optimization
+ * - Performance superior
+ * 
+ * Migração:
+ * ```tsx
+ * // ANTES:
+ * import { ModularStepRenderer } from '@/components/editor/ModularStepRenderer';
+ * <ModularStepRenderer 
+ *   step={step} 
+ *   isEditable={true}
+ *   onUpdateStep={handleUpdate}
+ * />
+ * 
+ * // DEPOIS:
+ * import { UnifiedStepRenderer } from '@/components/editor/unified/UnifiedStepRenderer';
+ * <UnifiedStepRenderer 
+ *   stepNumber={step.id} 
+ *   mode="editable"
+ *   blocks={step.components}
+ *   onUpdate={handleUpdate}
+ * />
+ * ```
+ * 
+ * Data de remoção prevista: Sprint 4 - Dia 2 (22/out/2024)
  */
 
 import React, { useState } from 'react';
@@ -31,6 +62,15 @@ const ModularStepRenderer: React.FC<ModularStepRendererProps> = ({
     onSelectComponent = () => { },
     onOpenComponentProperties = () => { }
 }) => {
+    // ⚠️ AVISO DE DEPRECIAÇÃO
+    if (process.env.NODE_ENV === 'development') {
+        console.warn(
+            '⚠️ [DEPRECATED] ModularStepRenderer será removido no Sprint 4.\n' +
+            'Use UnifiedStepRenderer de @/components/editor/unified/UnifiedStepRenderer\n' +
+            'Veja documentação no topo do arquivo para guia de migração.'
+        );
+    }
+
     const [showComponentMenu, setShowComponentMenu] = useState(false);
 
     // Componentes ordenados por order
