@@ -1,144 +1,97 @@
 {
-  "templateVersion": "1.0",
+  "templateVersion": "2.0",
+  "metadata": {
+    "id": "quiz-step-05",
+    "name": "Step step-05",
+    "description": "question step for quiz",
+    "category": "quiz-question",
+    "tags": [
+      "quiz",
+      "style",
+      "question"
+    ],
+    "createdAt": "2025-10-11T10:44:14.171Z",
+    "updatedAt": "2025-10-11T10:44:14.171Z"
+  },
   "layout": {
     "containerWidth": "full",
     "spacing": "small",
-    "backgroundColor": "transparent",
+    "backgroundColor": "#FAF9F7",
     "responsive": true
   },
-  "validation": {
-    "required": true,
-    "minAnswers": 1,
-    "maxAnswers": 3,
-    "validationMessage": "Selecione pelo menos uma opção!"
-  },
+  "validation": {},
   "analytics": {
-    "events": ["page_view", "option_selected", "validation_error", "completion"],
-    "trackingId": "step-05-quiz-question"
-  },
-  "metadata": {
-    "id": "quiz-step-05",
-    "name": "Q4 - Ocasiões",
-    "description": "Questão sobre ocasiões de uso",
-    "category": "quiz-question",
-    "tags": ["quiz", "style", "quiz-question"],
-    "createdAt": "2025-08-11T01:02:19.341Z",
-    "updatedAt": "2025-08-11T01:02:19.341Z"
+    "events": [
+      "page_view",
+      "step_completed"
+    ],
+    "trackingId": "step-05",
+    "utmParams": true,
+    "customEvents": [
+      "component_mounted",
+      "user_interaction"
+    ]
   },
   "blocks": [
     {
-      "id": "step05-header",
-      "type": "quiz-intro-header",
+      "id": "undefined-question",
+      "type": "text-inline",
       "position": 0,
       "properties": {
-        "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
-        "logoAlt": "Logo Gisele Galvão",
-        "logoWidth": 96,
-        "logoHeight": 96,
-        "progressValue": 24,
-        "progressTotal": 100,
-        "showProgress": true,
-        "containerWidth": "full",
-        "spacing": "small"
+        "content": "QUAIS DETALHES VOCÊ GOSTA?",
+        "fontSize": "text-xl",
+        "fontWeight": "font-bold"
       }
     },
     {
-      "id": "step05-question-title",
-      "type": "text-inline",
-      "position": 1,
-      "properties": {
-        "content": "Q4 - OCASIÕES",
-        "fontSize": "text-2xl",
-        "fontWeight": "font-bold",
-        "textAlign": "text-center",
-        "color": "#432818",
-        "containerWidth": "full",
-        "spacing": "small"
-      }
-    },
-    {
-      "id": "step05-question-counter",
-      "type": "text-inline",
-      "position": 2,
-      "properties": {
-        "content": "Questão 4 de 13",
-        "fontSize": "text-sm",
-        "textAlign": "text-center",
-        "color": "#6B7280",
-        "marginBottom": 24,
-        "containerWidth": "full",
-        "spacing": "small"
-      }
-    },
-    {
-      "id": "step05-options-grid",
+      "id": "undefined-options",
       "type": "options-grid",
-      "position": 3,
+      "position": 1,
       "properties": {
         "options": [
           {
-            "id": "5a",
-            "text": "Opção A - Descrição personalizada",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/11_hqmr8l.webp",
-            "value": "5a",
-            "category": "Natural",
-            "points": 1
+            "id": "natural",
+            "text": "Poucos detalhes, básico e prático",
+            "styleId": "natural"
           },
           {
-            "id": "5b",
-            "text": "Opção B - Descrição personalizada",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp",
-            "value": "5b",
-            "category": "Clássico",
-            "points": 2
+            "id": "classico",
+            "text": "Bem discretos e sutis, clean e clássico",
+            "styleId": "classico"
           },
           {
-            "id": "5c",
-            "text": "Opção C - Descrição personalizada",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_snhaym.webp",
-            "value": "5c",
-            "category": "Contemporâneo",
-            "points": 2
+            "id": "contemporaneo",
+            "text": "Básico, mas com um toque de estilo",
+            "styleId": "contemporaneo"
           },
           {
-            "id": "5d",
-            "text": "Opção D - Descrição personalizada",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp",
-            "value": "5d",
-            "category": "Elegante",
-            "points": 3
+            "id": "elegante",
+            "text": "Detalhes refinados, chic e que deem status",
+            "styleId": "elegante"
+          },
+          {
+            "id": "romantico",
+            "text": "Detalhes delicados, laços, babados",
+            "styleId": "romantico"
+          },
+          {
+            "id": "sexy",
+            "text": "Roupas que valorizem meu corpo: couro, zíper, fendas",
+            "styleId": "sexy"
+          },
+          {
+            "id": "dramatico",
+            "text": "Detalhes marcantes, firmeza e peso",
+            "styleId": "dramatico"
+          },
+          {
+            "id": "criativo",
+            "text": "Detalhes diferentes do convencional, produções ousadas",
+            "styleId": "criativo"
           }
         ],
-        "columns": 2,
-        "imageSize": 256,
-        "showImages": true,
-        "multipleSelection": true,
-        "minSelections": 1,
-        "maxSelections": 3,
-        "borderColor": "#E5E7EB",
-        "selectedBorderColor": "#B89B7A",
-        "hoverColor": "#F3E8D3",
-        "containerWidth": "full",
-        "spacing": "small",
-        "marginBottom": 16
-      }
-    },
-    {
-      "id": "step05-continue-button",
-      "type": "button-inline",
-      "position": 4,
-      "properties": {
-        "text": "Próxima Questão →",
-        "textWhenDisabled": "Selecione pelo menos 1 opção",
-        "variant": "primary",
-        "size": "large",
-        "fullWidth": true,
-        "backgroundColor": "#B89B7A",
-        "textColor": "#ffffff",
-        "enableOnSelection": true,
-        "containerWidth": "full",
-        "spacing": "small",
-        "marginTop": 24
+        "requiredSelections": 3,
+        "columns": 2
       }
     }
   ]

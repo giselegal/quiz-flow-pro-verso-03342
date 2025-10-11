@@ -1,71 +1,43 @@
 {
-  "templateVersion": "1.0",
+  "templateVersion": "2.0",
+  "metadata": {
+    "id": "quiz-step-20",
+    "name": "{userName}, seu estilo predominante é:",
+    "description": "result step for quiz",
+    "category": "quiz-result",
+    "tags": [
+      "quiz",
+      "style",
+      "result"
+    ],
+    "createdAt": "2025-10-11T10:44:14.174Z",
+    "updatedAt": "2025-10-11T10:44:14.174Z"
+  },
   "layout": {
     "containerWidth": "full",
     "spacing": "small",
-    "backgroundColor": "transparent",
+    "backgroundColor": "#FAF9F7",
     "responsive": true
   },
-  "validation": {
-    "required": true,
-    "minAnswers": 1,
-    "maxAnswers": 3,
-    "validationMessage": "Selecione pelo menos uma opção!"
-  },
+  "validation": {},
   "analytics": {
-    "events": ["page_view", "option_selected", "validation_error", "completion"],
-    "trackingId": "step-20-lead"
-  },
-  "metadata": {
-    "id": "quiz-step-20",
-    "name": "Lead Capture",
-    "description": "Coleta de dados para contato",
-    "category": "lead",
-    "tags": ["quiz", "style", "lead"],
-    "createdAt": "2025-08-11T01:02:19.345Z",
-    "updatedAt": "2025-08-11T01:02:19.345Z"
+    "events": [
+      "page_view",
+      "step_completed"
+    ],
+    "trackingId": "step-20",
+    "utmParams": true,
+    "customEvents": [
+      "component_mounted",
+      "user_interaction"
+    ]
   },
   "blocks": [
     {
-      "id": "step20-header",
-      "type": "quiz-intro-header",
+      "id": "undefined-result",
+      "type": "result-display",
       "position": 0,
-      "properties": {
-        "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
-        "logoAlt": "Logo Gisele Galvão",
-        "logoWidth": 96,
-        "logoHeight": 96,
-        "progressValue": 95,
-        "progressTotal": 100,
-        "showProgress": true,
-        "containerWidth": "full",
-        "spacing": "small"
-      }
-    },
-    {
-      "id": "step20-title",
-      "type": "text-inline",
-      "position": 1,
-      "properties": {
-        "content": "RECEBA SEU GUIA DE ESTILO COMPLETO",
-        "fontSize": "text-2xl",
-        "fontWeight": "font-bold",
-        "textAlign": "text-center",
-        "color": "#432818",
-        "containerWidth": "full",
-        "spacing": "small"
-      }
-    },
-    {
-      "id": "step20-form",
-      "type": "lead-form",
-      "position": 2,
-      "properties": {
-        "fields": ["name", "email", "phone"],
-        "submitText": "Receber Guia Gratuito",
-        "containerWidth": "full",
-        "spacing": "small"
-      }
+      "properties": {}
     }
   ]
 }

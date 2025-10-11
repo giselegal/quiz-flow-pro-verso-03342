@@ -1,144 +1,105 @@
 {
-  "templateVersion": "1.0",
+  "templateVersion": "2.0",
+  "metadata": {
+    "id": "quiz-step-10",
+    "name": "Step step-10",
+    "description": "question step for quiz",
+    "category": "quiz-question",
+    "tags": [
+      "quiz",
+      "style",
+      "question"
+    ],
+    "createdAt": "2025-10-11T10:44:14.172Z",
+    "updatedAt": "2025-10-11T10:44:14.172Z"
+  },
   "layout": {
     "containerWidth": "full",
     "spacing": "small",
-    "backgroundColor": "transparent",
+    "backgroundColor": "#FAF9F7",
     "responsive": true
   },
-  "validation": {
-    "required": true,
-    "minAnswers": 1,
-    "maxAnswers": 3,
-    "validationMessage": "Selecione pelo menos uma opção!"
-  },
+  "validation": {},
   "analytics": {
-    "events": ["page_view", "option_selected", "validation_error", "completion"],
-    "trackingId": "step-10-quiz-question"
-  },
-  "metadata": {
-    "id": "quiz-step-10",
-    "name": "Q9 - Inspiração",
-    "description": "Questão sobre fontes de inspiração",
-    "category": "quiz-question",
-    "tags": ["quiz", "style", "quiz-question"],
-    "createdAt": "2025-08-11T01:02:19.343Z",
-    "updatedAt": "2025-08-11T01:02:19.343Z"
+    "events": [
+      "page_view",
+      "step_completed"
+    ],
+    "trackingId": "step-10",
+    "utmParams": true,
+    "customEvents": [
+      "component_mounted",
+      "user_interaction"
+    ]
   },
   "blocks": [
     {
-      "id": "step10-header",
-      "type": "quiz-intro-header",
+      "id": "undefined-question",
+      "type": "text-inline",
       "position": 0,
       "properties": {
-        "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
-        "logoAlt": "Logo Gisele Galvão",
-        "logoWidth": 96,
-        "logoHeight": 96,
-        "progressValue": 48,
-        "progressTotal": 100,
-        "showProgress": true,
-        "containerWidth": "full",
-        "spacing": "small"
+        "content": "QUE TIPO DE ACESSÓRIOS VOCÊ GOSTA?",
+        "fontSize": "text-xl",
+        "fontWeight": "font-bold"
       }
     },
     {
-      "id": "step10-question-title",
-      "type": "text-inline",
-      "position": 1,
-      "properties": {
-        "content": "Q9 - INSPIRAÇÃO",
-        "fontSize": "text-2xl",
-        "fontWeight": "font-bold",
-        "textAlign": "text-center",
-        "color": "#432818",
-        "containerWidth": "full",
-        "spacing": "small"
-      }
-    },
-    {
-      "id": "step10-question-counter",
-      "type": "text-inline",
-      "position": 2,
-      "properties": {
-        "content": "Questão 9 de 13",
-        "fontSize": "text-sm",
-        "textAlign": "text-center",
-        "color": "#6B7280",
-        "marginBottom": 24,
-        "containerWidth": "full",
-        "spacing": "small"
-      }
-    },
-    {
-      "id": "step10-options-grid",
+      "id": "undefined-options",
       "type": "options-grid",
-      "position": 3,
+      "position": 1,
       "properties": {
         "options": [
           {
-            "id": "10a",
-            "text": "Opção A - Descrição personalizada",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/11_hqmr8l.webp",
-            "value": "10a",
-            "category": "Natural",
-            "points": 1
+            "id": "natural",
+            "text": "Pequenos e discretos, às vezes nem uso",
+            "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735479/56_htzoxy.png",
+            "styleId": "natural"
           },
           {
-            "id": "10b",
-            "text": "Opção B - Descrição personalizada",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp",
-            "value": "10b",
-            "category": "Clássico",
-            "points": 2
+            "id": "classico",
+            "text": "Brincos pequenos e discretos. Corrente fininha",
+            "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735479/57_whzmff.png",
+            "styleId": "classico"
           },
           {
-            "id": "10c",
-            "text": "Opção C - Descrição personalizada",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_snhaym.webp",
-            "value": "10c",
-            "category": "Contemporâneo",
-            "points": 2
+            "id": "contemporaneo",
+            "text": "Acessórios que elevem meu look com um toque moderno",
+            "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735482/61_joafud.png",
+            "styleId": "contemporaneo"
           },
           {
-            "id": "10d",
-            "text": "Opção D - Descrição personalizada",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp",
-            "value": "10d",
-            "category": "Elegante",
-            "points": 3
+            "id": "elegante",
+            "text": "Acessórios sofisticados, joias ou semijoias",
+            "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735482/60_vzsnps.png",
+            "styleId": "elegante"
+          },
+          {
+            "id": "romantico",
+            "text": "Peças delicadas e com um toque feminino",
+            "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735482/59_dwaqrx.png",
+            "styleId": "romantico"
+          },
+          {
+            "id": "sexy",
+            "text": "Brincos longos, colares que valorizem minha beleza",
+            "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735487/63_lwgokn.png",
+            "styleId": "sexy"
+          },
+          {
+            "id": "dramatico",
+            "text": "Acessórios pesados, que causem um impacto",
+            "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735485/62_mno8wg.png",
+            "styleId": "dramatico"
+          },
+          {
+            "id": "criativo",
+            "text": "Acessórios diferentes, grandes e marcantes",
+            "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735480/58_njdjoh.png",
+            "styleId": "criativo"
           }
         ],
-        "columns": 2,
-        "imageSize": 256,
-        "showImages": true,
-        "multipleSelection": true,
-        "minSelections": 1,
-        "maxSelections": 3,
-        "borderColor": "#E5E7EB",
-        "selectedBorderColor": "#B89B7A",
-        "hoverColor": "#F3E8D3",
-        "containerWidth": "full",
-        "spacing": "small",
-        "marginBottom": 16
-      }
-    },
-    {
-      "id": "step10-continue-button",
-      "type": "button-inline",
-      "position": 4,
-      "properties": {
-        "text": "Próxima Questão →",
-        "textWhenDisabled": "Selecione pelo menos 1 opção",
-        "variant": "primary",
-        "size": "large",
-        "fullWidth": true,
-        "backgroundColor": "#B89B7A",
-        "textColor": "#ffffff",
-        "enableOnSelection": true,
-        "containerWidth": "full",
-        "spacing": "small",
-        "marginTop": 24
+        "requiredSelections": 3,
+        "columns": 2
       }
     }
   ]

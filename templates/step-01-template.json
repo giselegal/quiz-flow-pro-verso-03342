@@ -1,5 +1,18 @@
 {
   "templateVersion": "2.0",
+  "metadata": {
+    "id": "quiz-step-01",
+    "name": "<span style=\"color: #B89B7A; font-weight: 700;\" cl",
+    "description": "intro step for quiz",
+    "category": "quiz-intro",
+    "tags": [
+      "quiz",
+      "style",
+      "intro"
+    ],
+    "createdAt": "2025-10-11T10:44:14.169Z",
+    "updatedAt": "2025-10-11T10:44:14.170Z"
+  },
   "layout": {
     "containerWidth": "full",
     "spacing": "small",
@@ -16,189 +29,66 @@
     }
   },
   "analytics": {
-    "events": ["page_view", "form_submit", "validation_error", "completion"],
-    "trackingId": "step-01-quiz-intro",
+    "events": [
+      "page_view",
+      "step_completed"
+    ],
+    "trackingId": "step-01",
     "utmParams": true,
-    "customEvents": ["component_mounted", "lcp_rendered", "user_interaction"]
-  },
-  "metadata": {
-    "id": "quiz-step-01",
-    "name": "Intro - Descubra seu Estilo",
-    "description": "Introdução ao Quiz de Estilo com coleta de lead",
-    "category": "quiz-intro",
-    "tags": ["quiz", "style", "intro", "lead-capture"],
-    "createdAt": "2025-08-15T22:20:00.000Z",
-    "updatedAt": "2025-08-15T22:20:00.000Z"
+    "customEvents": [
+      "component_mounted",
+      "user_interaction"
+    ]
   },
   "blocks": [
     {
-      "id": "step01-skip-link",
-      "type": "accessibility-skip-link",
-      "position": 0,
-      "properties": {
-        "target": "#quiz-form",
-        "text": "Pular para o formulário",
-        "className": "sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 z-50 bg-white text-[#432818] px-4 py-2 rounded-md shadow-md"
-      }
-    },
-    {
-      "id": "step01-header",
+      "id": "undefined-header",
       "type": "quiz-intro-header",
-      "position": 1,
+      "position": 0,
       "properties": {
         "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
         "logoAlt": "Logo Gisele Galvão",
-        "logoWidth": 120,
-        "logoHeight": 50,
-        "showProgress": false,
-        "showBackButton": false,
-        "containerWidth": "full",
-        "spacing": "small"
+        "showProgress": false
       }
     },
     {
-      "id": "step01-decorative-bar",
-      "type": "decorative-bar",
+      "id": "undefined-title",
+      "type": "text-inline",
+      "position": 1,
+      "properties": {
+        "content": "<span style=\"color: #B89B7A; font-weight: 700;\" class=\"playfair-display\">Chega</span> <span class=\"playfair-display\">de um guarda-roupa lotado e da sensação de que</span> <span style=\"color: #B89B7A; font-weight: 700;\" class=\"playfair-display\">nada combina com você.</span>",
+        "fontSize": "text-2xl",
+        "fontWeight": "font-bold",
+        "textAlign": "text-center"
+      }
+    },
+    {
+      "id": "undefined-image",
+      "type": "image-display-inline",
       "position": 2,
       "properties": {
-        "height": 4,
-        "backgroundColor": "#B89B7A",
-        "gradientFrom": "#B89B7A",
-        "gradientTo": "#D4C2A8",
-        "borderRadius": "2",
-        "marginTop": 8,
-        "marginBottom": 16,
-        "width": "100%",
-        "opacity": 1
+        "src": "https://res.cloudinary.com/dqljyf76t/image/upload/v1746838118/20250509_2137_Desordem_e_Reflex%C3%A3o_simple_compose_01jtvszf8sfaytz493z9f16rf2_z1c2up.png",
+        "alt": "Quiz image"
       }
     },
     {
-      "id": "step01-main-title",
-      "type": "text-inline",
+      "id": "undefined-input",
+      "type": "form-input",
       "position": 3,
       "properties": {
-        "content": "<span class=\"text-[#B89B7A]\">Chega</span> de um guarda-roupa lotado e da sensação de que nada combina com <span class=\"text-[#B89B7A]\">Você</span>.",
-        "fontSize": "text-2xl sm:text-3xl md:text-4xl",
-        "fontWeight": "font-bold",
-        "textAlign": "text-center",
-        "color": "#432818",
-        "fontFamily": "'Playfair Display', serif",
-        "containerWidth": "full",
-        "spacing": "small",
-        "marginBottom": 24
+        "label": "Como posso te chamar?",
+        "placeholder": "Digite seu primeiro nome aqui...",
+        "inputType": "text",
+        "required": true
       }
     },
     {
-      "id": "step01-hero-image",
-      "type": "image-display-inline",
+      "id": "undefined-button",
+      "type": "button-inline",
       "position": 4,
       "properties": {
-        "src": "https://res.cloudinary.com/dqljyf76t/image/upload/v1746838118/20250509_2137_Desordem_e_Reflex%C3%A3o_simple_compose_01jtvszf8sfaytz493z9f16rf2_z1c2up.webp",
-        "alt": "Descubra seu estilo predominante e transforme seu guarda-roupa",
-        "width": 400,
-        "height": 300,
-        "aspectRatio": "4/3",
-        "className": "mx-auto rounded-lg shadow-sm",
-        "containerWidth": "full",
-        "spacing": "small",
-        "priority": true,
-        "loading": "eager",
-        "marginBottom": 24
-      }
-    },
-    {
-      "id": "step01-description",
-      "type": "text-inline",
-      "position": 5,
-      "properties": {
-        "content": "Em poucos minutos, descubra seu <span class=\"font-semibold text-[#B89B7A]\">Estilo Predominante</span> — e aprenda a montar looks que realmente refletem sua <span class=\"font-semibold text-[#432818]\">essência</span>, com praticidade e <span class=\"font-semibold text-[#432818]\">confiança</span>.",
-        "fontSize": "text-sm sm:text-base md:text-lg",
-        "textAlign": "text-center",
-        "color": "#6B7280",
-        "marginTop": 16,
-        "marginBottom": 32,
-        "containerWidth": "full",
-        "spacing": "small"
-      }
-    },
-    {
-      "id": "step01-name-input",
-      "type": "form-input",
-      "position": 6,
-      "properties": {
-        "label": "COMO VOCÊ GOSTARIA DE SER CHAMADA?",
-        "placeholder": "Digite seu nome aqui...",
-        "inputType": "text",
-        "required": true,
-        "fullWidth": true,
-        "name": "userName",
-        "backgroundColor": "#FFFFFF",
-        "borderColor": "#B89B7A",
-        "textColor": "#432818",
-        "labelColor": "#432818",
-        "fontSize": "16",
-        "fontFamily": "inherit",
-        "fontWeight": "400",
-        "borderRadius": "8",
-        "marginTop": 16,
-        "marginBottom": 24,
-        "marginLeft": 0,
-        "marginRight": 0
-      }
-    },
-    {
-      "id": "step01-continue-button",
-      "type": "button-inline",
-      "position": 7,
-      "properties": {
-        "text": "✨ Quero Descobrir meu Estilo Agora! ✨",
-        "variant": "primary",
-        "size": "large",
-        "fullWidth": true,
-        "backgroundColor": "#B89B7A",
-        "textColor": "#ffffff",
-        "containerWidth": "full",
-        "spacing": "small",
-        "borderRadius": "12",
-        "fontWeight": "bold",
-        "fontSize": "text-lg",
-        "marginTop": 16,
-        "marginBottom": 16,
-        "requiresValidInput": true,
-        "targetInputId": "step01-name-input"
-      }
-    },
-    {
-      "id": "step01-privacy-notice",
-      "type": "text-inline",
-      "position": 8,
-      "properties": {
-        "content": "🛡️ Seu nome é necessário para personalizar sua experiência. Ao clicar, você concorda com nossa <a href=\"#\" class=\"text-[#B89B7A] hover:text-[#A1835D] underline\">política de privacidade</a>.",
-        "fontSize": "text-xs",
-        "textAlign": "text-center",
-        "color": "#9CA3AF",
-        "marginTop": 8,
-        "marginBottom": 24,
-        "containerWidth": "full",
-        "spacing": "small"
-      }
-    },
-    {
-      "id": "step01-footer",
-      "type": "legal-notice",
-      "position": 9,
-      "properties": {
-        "content": "© 2025 Gisele Galvão - Todos os direitos reservados",
-        "fontSize": "text-xs",
-        "textAlign": "text-center",
-        "color": "#9CA3AF",
-        "showPrivacyLink": false,
-        "showTermsLink": false,
-        "linkColor": "#B89B7A",
-        "marginTop": 32,
-        "marginBottom": 8,
-        "containerWidth": "full",
-        "spacing": "small"
+        "text": "Quero Descobrir meu Estilo Agora!",
+        "variant": "primary"
       }
     }
   ]

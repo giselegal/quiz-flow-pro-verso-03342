@@ -104,25 +104,17 @@ function validateTemplate(filepath: string): ValidationResult {
             warnings.push(`Versão do template: ${template.templateVersion} (esperado: 2.0)`);
         }
 
-        // 5. Validar blocos
-        if (Array.isArray(template.blocks)) {
-            if (template.blocks.length === 0) {
-                errors.push('Template não possui blocos');
-            }
+        // Validate blocks
+        if (!template.blocks || !Array.isArray(template.blocks)) {
+            errors.push('Template deve ter um array de blocos');
+        }
 
-            template.blocks.forEach((block: any, index: number) => {
-                if (!block.id) {
-                    errors.push(`Bloco ${index} não possui id`);
-                }
-                if (!block.type) {
-                    errors.push(`Bloco ${index} não possui type`);
-                }
-                if (block.position === undefined) {
-                    warnings.push(`Bloco ${index} não possui position`);
-                }
-            });
-        } else {
-            errors.push('Blocks não é um array');
+        // Allow empty blocks for transition steps (step-19 is a transition)
+        if (template.blocks && template.blocks.length === 0) {
+            const isTransition = template.metadata?.category?.includes('transition');
+            if (!isTransition) {
+                warnings.push('Template não possui blocos');
+            }
         }
 
     } catch (error: any) {

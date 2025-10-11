@@ -1,144 +1,105 @@
 {
-  "templateVersion": "1.0",
+  "templateVersion": "2.0",
+  "metadata": {
+    "id": "quiz-step-09",
+    "name": "Step step-09",
+    "description": "question step for quiz",
+    "category": "quiz-question",
+    "tags": [
+      "quiz",
+      "style",
+      "question"
+    ],
+    "createdAt": "2025-10-11T10:44:14.172Z",
+    "updatedAt": "2025-10-11T10:44:14.172Z"
+  },
   "layout": {
     "containerWidth": "full",
     "spacing": "small",
-    "backgroundColor": "transparent",
+    "backgroundColor": "#FAF9F7",
     "responsive": true
   },
-  "validation": {
-    "required": true,
-    "minAnswers": 1,
-    "maxAnswers": 3,
-    "validationMessage": "Selecione pelo menos uma opção!"
-  },
+  "validation": {},
   "analytics": {
-    "events": ["page_view", "option_selected", "validation_error", "completion"],
-    "trackingId": "step-09-quiz-question"
-  },
-  "metadata": {
-    "id": "quiz-step-09",
-    "name": "Q8 - Acessórios",
-    "description": "Questão sobre uso de acessórios",
-    "category": "quiz-question",
-    "tags": ["quiz", "style", "quiz-question"],
-    "createdAt": "2025-08-11T01:02:19.342Z",
-    "updatedAt": "2025-08-11T01:02:19.342Z"
+    "events": [
+      "page_view",
+      "step_completed"
+    ],
+    "trackingId": "step-09",
+    "utmParams": true,
+    "customEvents": [
+      "component_mounted",
+      "user_interaction"
+    ]
   },
   "blocks": [
     {
-      "id": "step09-header",
-      "type": "quiz-intro-header",
+      "id": "undefined-question",
+      "type": "text-inline",
       "position": 0,
       "properties": {
-        "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
-        "logoAlt": "Logo Gisele Galvão",
-        "logoWidth": 96,
-        "logoHeight": 96,
-        "progressValue": 43,
-        "progressTotal": 100,
-        "showProgress": true,
-        "containerWidth": "full",
-        "spacing": "small"
+        "content": "QUAL DESSES SAPATOS VOCÊ TEM OU MAIS GOSTA?",
+        "fontSize": "text-xl",
+        "fontWeight": "font-bold"
       }
     },
     {
-      "id": "step09-question-title",
-      "type": "text-inline",
-      "position": 1,
-      "properties": {
-        "content": "Q8 - ACESSÓRIOS",
-        "fontSize": "text-2xl",
-        "fontWeight": "font-bold",
-        "textAlign": "text-center",
-        "color": "#432818",
-        "containerWidth": "full",
-        "spacing": "small"
-      }
-    },
-    {
-      "id": "step09-question-counter",
-      "type": "text-inline",
-      "position": 2,
-      "properties": {
-        "content": "Questão 8 de 13",
-        "fontSize": "text-sm",
-        "textAlign": "text-center",
-        "color": "#6B7280",
-        "marginBottom": 24,
-        "containerWidth": "full",
-        "spacing": "small"
-      }
-    },
-    {
-      "id": "step09-options-grid",
+      "id": "undefined-options",
       "type": "options-grid",
-      "position": 3,
+      "position": 1,
       "properties": {
         "options": [
           {
-            "id": "9a",
-            "text": "Opção A - Descrição personalizada",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/11_hqmr8l.webp",
-            "value": "9a",
-            "category": "Natural",
-            "points": 1
+            "id": "natural",
+            "text": "Tênis nude casual e confortável",
+            "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735426/47_bi6vgf.webp",
+            "styleId": "natural"
           },
           {
-            "id": "9b",
-            "text": "Opção B - Descrição personalizada",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp",
-            "value": "9b",
-            "category": "Clássico",
-            "points": 2
+            "id": "classico",
+            "text": "Scarpin nude de salto baixo",
+            "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735427/48_ymo1ur.webp",
+            "styleId": "classico"
           },
           {
-            "id": "9c",
-            "text": "Opção C - Descrição personalizada",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_snhaym.webp",
-            "value": "9c",
-            "category": "Contemporâneo",
-            "points": 2
+            "id": "contemporaneo",
+            "text": "Sandália dourada com salto bloco",
+            "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735427/49_apcrwa.webp",
+            "styleId": "contemporaneo"
           },
           {
-            "id": "9d",
-            "text": "Opção D - Descrição personalizada",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp",
-            "value": "9d",
-            "category": "Elegante",
-            "points": 3
+            "id": "elegante",
+            "text": "Scarpin nude salto alto e fino",
+            "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735428/50_qexxxo.webp",
+            "styleId": "elegante"
+          },
+          {
+            "id": "romantico",
+            "text": "Sandália anabela off white",
+            "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735428/51_xbgntp.webp",
+            "styleId": "romantico"
+          },
+          {
+            "id": "sexy",
+            "text": "Sandália rosa de tiras finas",
+            "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735429/52_edlp0e.webp",
+            "styleId": "sexy"
+          },
+          {
+            "id": "dramatico",
+            "text": "Scarpin preto moderno com vinil transparente",
+            "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735429/53_bfdp6f.webp",
+            "styleId": "dramatico"
+          },
+          {
+            "id": "criativo",
+            "text": "Scarpin colorido estampado",
+            "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735430/54_xnilkc.webp",
+            "styleId": "criativo"
           }
         ],
-        "columns": 2,
-        "imageSize": 256,
-        "showImages": true,
-        "multipleSelection": true,
-        "minSelections": 1,
-        "maxSelections": 3,
-        "borderColor": "#E5E7EB",
-        "selectedBorderColor": "#B89B7A",
-        "hoverColor": "#F3E8D3",
-        "containerWidth": "full",
-        "spacing": "small",
-        "marginBottom": 16
-      }
-    },
-    {
-      "id": "step09-continue-button",
-      "type": "button-inline",
-      "position": 4,
-      "properties": {
-        "text": "Próxima Questão →",
-        "textWhenDisabled": "Selecione pelo menos 1 opção",
-        "variant": "primary",
-        "size": "large",
-        "fullWidth": true,
-        "backgroundColor": "#B89B7A",
-        "textColor": "#ffffff",
-        "enableOnSelection": true,
-        "containerWidth": "full",
-        "spacing": "small",
-        "marginTop": 24
+        "requiredSelections": 3,
+        "columns": 2
       }
     }
   ]
