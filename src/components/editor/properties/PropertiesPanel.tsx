@@ -78,36 +78,76 @@ const EnhancedPropertiesPanel: React.FC<EnhancedPropertiesPanelProps> = ({
     selectedBlock.type === 'quiz-header' ||
     selectedBlock.type === 'quiz-navigation';
 
+  // 🔍 DEBUG: Verificar dados chegando no painel
+  console.group('🔍 DEBUG PropertiesPanel');
+  console.log('selectedBlock:', selectedBlock);
+  console.log('selectedBlock.type:', selectedBlock?.type);
+  console.log('selectedBlock.properties:', selectedBlock?.properties);
+  console.log('isQuestionBlock:', isQuestionBlock);
+  console.groupEnd();
+
   if (isQuestionBlock) {
     // Adaptar Block para o formato esperado pelo QuestionPropertyEditor
+    // ✅ GARANTIR DEFAULTS COMPLETOS para evitar undefined
+
+    // Primeiro, fazer merge dos objetos aninhados
+    const mergedValidation = {
+      enabled: true,
+      message: 'Por favor, selecione uma opção',
+      ...(selectedBlock.properties?.validation || {})
+    };
+
+    const mergedScoring = {
+      enabled: false,
+      type: 'simple',
+      ...(selectedBlock.properties?.scoring || {})
+    };
+
     const questionBlock = {
       id: selectedBlock.id,
       type: selectedBlock.type,
       properties: {
-        question: selectedBlock.properties?.question || selectedBlock.properties?.text || '',
-        title: selectedBlock.properties?.title || '',
-        text: selectedBlock.properties?.text || selectedBlock.properties?.question || '',
-        description: selectedBlock.properties?.description || '',
-        options: selectedBlock.properties?.options || [],
-        multipleSelection: selectedBlock.properties?.multipleSelection || false,
-        requiredSelections: selectedBlock.properties?.requiredSelections || 1,
-        maxSelections: selectedBlock.properties?.maxSelections || 1,
-        showImages: selectedBlock.properties?.showImages || false,
-        columns: selectedBlock.properties?.columns || 2,
-        backgroundColor: selectedBlock.properties?.backgroundColor || '',
-        textAlign: selectedBlock.properties?.textAlign || 'left',
-        fontSize: selectedBlock.properties?.fontSize || '',
-        color: selectedBlock.properties?.color || '',
-        scoreValues: selectedBlock.properties?.scoreValues || {},
-        ...selectedBlock.properties
+        // ✅ Defaults seguros para todas as propriedades
+        question: '',
+        title: '',
+        text: '',
+        description: '',
+        options: [],
+        multipleSelection: false,
+        requiredSelections: 1,
+        maxSelections: 1,
+        showImages: true,
+        columns: 2,
+        required: true,
+        backgroundColor: '',
+        textAlign: 'left' as const,
+        fontSize: '',
+        color: '',
+        scoreValues: {},
+        // ⬇️ SOBRESCREVER com valores reais do bloco (se existirem)
+        ...selectedBlock.properties,
+        // ⬇️ Aplicar objetos aninhados merged
+        validation: mergedValidation,
+        scoring: mergedScoring
       },
       content: selectedBlock.content
     };
+
+    // 🔍 DEBUG: Verificar adaptação
+    console.log('🔍 questionBlock adaptado:', questionBlock);
+    console.log('🔍 questionBlock.properties.options:', questionBlock.properties.options);
+    console.log('🔍 questionBlock.properties.validation:', questionBlock.properties.validation);
+    console.log('🔍 questionBlock.properties.scoring:', questionBlock.properties.scoring);
+
+    // 🔍 DEBUG: Verificar adaptação
+    console.log('🔍 questionBlock adaptado:', questionBlock);
+    console.log('🔍 questionBlock.properties.options:', questionBlock.properties.options);
 
     return (
       <QuestionPropertyEditor
         block={questionBlock}
         onUpdate={(updates) => {
+          console.log('🔍 onUpdate chamado com:', updates);
           if (onUpdate) {
             // Converter de volta para formato Block
             onUpdate(updates);

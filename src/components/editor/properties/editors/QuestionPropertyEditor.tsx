@@ -175,12 +175,20 @@ export const QuestionPropertyEditor: React.FC<QuestionPropertyEditorProps> = ({
 
   const properties = block.properties || {};
 
+  // 🔍 DEBUG: Verificar dados recebidos
+  console.group('🔍 DEBUG QuestionPropertyEditor');
+  console.log('block:', block);
+  console.log('block.properties:', block.properties);
+  console.log('properties.options:', properties.options);
+  console.groupEnd();
+
   // Estado local para opções com drag & drop (futuro)
   const [localOptions, setLocalOptions] = useState<QuestionOption[]>(
     properties.options || []
   );
 
   useEffect(() => {
+    console.log('🔍 useEffect - Atualizando localOptions com:', properties.options);
     setLocalOptions(properties.options || []);
   }, [properties.options]);
 
@@ -198,9 +206,11 @@ export const QuestionPropertyEditor: React.FC<QuestionPropertyEditorProps> = ({
   }, [onUpdate, onValidate, properties]);
 
   const handleOptionUpdate = useCallback((index: number, updates: Partial<QuestionOption>) => {
+    console.log('🔍 handleOptionUpdate chamado:', { index, updates });
     const newOptions = [...localOptions];
     newOptions[index] = { ...newOptions[index], ...updates };
     setLocalOptions(newOptions);
+    console.log('🔍 Atualizando options para:', newOptions);
     handlePropertyChange('options', newOptions);
   }, [localOptions, handlePropertyChange]);
 
