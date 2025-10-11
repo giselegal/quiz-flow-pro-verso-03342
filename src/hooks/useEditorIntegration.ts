@@ -52,7 +52,7 @@ export const useEditorIntegration = (): UseEditorIntegrationReturn => {
   // Initialize integrated hooks
   const inlineEditor = useInlineEditor((blockId: string, changes: Partial<Block>) => {
     updateStepBlocks(
-      currentStepBlocks.map(block => 
+      currentStepBlocks.map((block: Block) => 
         block.id === blockId ? { ...block, ...changes } : block
       )
     );
@@ -101,7 +101,7 @@ export const useEditorIntegration = (): UseEditorIntegrationReturn => {
   }, [currentStepBlocks, updateStepBlocks]);
 
   const removeBlockFromCurrentStep = useCallback((blockId: string) => {
-    updateStepBlocks(currentStepBlocks.filter(block => block.id !== blockId));
+    updateStepBlocks(currentStepBlocks.filter((block: Block) => block.id !== blockId));
   }, [currentStepBlocks, updateStepBlocks]);
 
   const saveChanges = useCallback(async () => {

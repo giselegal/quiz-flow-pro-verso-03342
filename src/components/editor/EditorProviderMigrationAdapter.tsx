@@ -1,12 +1,14 @@
 /**
- * Migration Adapter - FASE 5 SIMPLIFICADO
+ * Migration Adapter - SPRINT 1 ATUALIZADO
+ * 
+ * Agora usa EditorProviderUnified consolidado
  */
 
 import React, { ReactNode } from 'react';
-import { OptimizedEditorProvider, useEditor as useOptimizedEditor } from './OptimizedEditorProvider';
+import { EditorProviderUnified, useEditor as useEditorUnified } from './EditorProviderUnified';
 import { UnifiedCRUDProvider } from '@/contexts';
 
-export type UnifiedEditorContextType = ReturnType<typeof useOptimizedEditor>;
+export type UnifiedEditorContextType = ReturnType<typeof useEditorUnified>;
 
 export const MigrationEditorProvider: React.FC<{
   children: ReactNode;
@@ -14,18 +16,22 @@ export const MigrationEditorProvider: React.FC<{
   quizId?: string;
   enableSupabase?: boolean;
   legacyMode?: boolean;
-}> = ({ children }) => {
+}> = ({ children, funnelId, quizId, enableSupabase = false }) => {
   return (
     <UnifiedCRUDProvider>
-      <OptimizedEditorProvider>
+      <EditorProviderUnified
+        funnelId={funnelId}
+        quizId={quizId}
+        enableSupabase={enableSupabase}
+      >
         {children}
-      </OptimizedEditorProvider>
+      </EditorProviderUnified>
     </UnifiedCRUDProvider>
   );
 };
 
 export const useUnifiedEditor = (): UnifiedEditorContextType => {
-  const context = useOptimizedEditor();
+  const context = useEditorUnified();
 
   if (!context) {
     throw new Error('useUnifiedEditor deve ser usado dentro de MigrationEditorProvider');
