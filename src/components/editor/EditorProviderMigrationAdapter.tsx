@@ -5,23 +5,28 @@
  */
 
 import React, { ReactNode } from 'react';
-import { EditorProviderUnified, useEditor as useEditorUnified } from './EditorProviderUnified';
+import { EditorProviderUnified, useEditor as useEditorUnified, EditorState } from './EditorProviderUnified';
 import { UnifiedCRUDProvider } from '@/contexts';
 
 export type UnifiedEditorContextType = ReturnType<typeof useEditorUnified>;
+
+// Re-export EditorState for compatibility
+export type { EditorState };
 
 export const MigrationEditorProvider: React.FC<{
   children: ReactNode;
   funnelId?: string;
   quizId?: string;
+  storageKey?: string;
   enableSupabase?: boolean;
   legacyMode?: boolean;
-}> = ({ children, funnelId, quizId, enableSupabase = false }) => {
+}> = ({ children, funnelId, quizId, storageKey, enableSupabase = false }) => {
   return (
     <UnifiedCRUDProvider>
       <EditorProviderUnified
         funnelId={funnelId}
         quizId={quizId}
+        storageKey={storageKey}
         enableSupabase={enableSupabase}
       >
         {children}

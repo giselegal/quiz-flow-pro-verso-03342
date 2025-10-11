@@ -13,7 +13,7 @@
 // ============================================================================
 
 // Provider principal otimizado (recomendado)
-export { OptimizedEditorProvider, useEditor as useOptimizedEditor, useEditorOptional } from './OptimizedEditorProvider';
+export { EditorProviderUnified as OptimizedEditorProvider, useEditor as useOptimizedEditor, useEditorOptional } from './EditorProviderUnified';
 
 // Hook unificado canônico
 export { useEditor, useEditorOptional as useUnifiedEditorOptional } from '@/hooks/useUnifiedEditor';

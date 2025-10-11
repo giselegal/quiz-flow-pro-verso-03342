@@ -17,14 +17,14 @@
  */
 
 import { useContext } from 'react';
-import { EditorContextValue } from '@/components/editor/OptimizedEditorProvider';
+import { EditorContextValue } from '@/components/editor/EditorProviderUnified';
 
 // ============================================================================
 // UNIFIED EDITOR CONTEXT TYPE
 // ============================================================================
 
 export interface UnifiedEditorContext extends EditorContextValue {
-    // Core functionality from OptimizedEditorProvider
+    // Core functionality from EditorProviderUnified
     state: EditorContextValue['state'];
     actions: EditorContextValue['actions'];
 
@@ -57,12 +57,12 @@ export interface UnifiedEditorContext extends EditorContextValue {
  * Detecta automaticamente qual provider está ativo e retorna o contexto apropriado
  */
 const detectActiveEditorContext = (): UnifiedEditorContext | null => {
-    // 1. Tentar OptimizedEditorProvider (preferência)
+    // 1. Tentar EditorProviderUnified (preferência)
     try {
-        const optimizedContext = require('@/components/editor/OptimizedEditorProvider').useEditor?.();
-        if (optimizedContext) {
+        const unifiedContext = require('@/components/editor/EditorProviderUnified').useEditor?.();
+        if (unifiedContext) {
             return {
-                ...optimizedContext,
+                ...unifiedContext,
                 legacy: {}
             };
         }
@@ -118,7 +118,8 @@ const detectActiveEditorContext = (): UnifiedEditorContext | null => {
                     selectedBlockId: null,
                     stepValidation: {},
                     isLoading: false,
-                    databaseMode: 'supabase' as const
+                    databaseMode: 'supabase' as const,
+                    isSupabaseEnabled: true
                 },
                 actions: {
                     setCurrentStep: () => { },

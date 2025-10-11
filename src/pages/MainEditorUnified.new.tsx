@@ -4,7 +4,7 @@ import { ErrorBoundary } from '../components/editor/ErrorBoundary';
 import { FunnelMasterProvider } from '@/providers/FunnelMasterProvider';
 import { LegacyCompatibilityWrapper } from '@/core/contexts/LegacyCompatibilityWrapper';
 import { FunnelContext } from '@/core/contexts/FunnelContext';
-import { EditorProvider } from '../components/editor/EditorProvider';
+import { EditorProvider } from '../components/editor/EditorProviderMigrationAdapter';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { useFunnelContext } from '@/hooks/useFunnelLoader';
 import FunnelFallback from '@/components/editor/FunnelFallback';
