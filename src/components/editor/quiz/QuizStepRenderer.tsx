@@ -1,6 +1,33 @@
 /**
  * QuizStepRenderer.tsx - Renderiza dinamicamente os blocos de cada etapa
  * Migrado para @dnd-kit para drag & drop moderno
+ * 
+ * @deprecated Este componente será removido no Sprint 4.
+ * Use UnifiedStepRenderer de @/components/editor/unified/UnifiedStepRenderer
+ * 
+ * Motivo: Funcionalidade consolidada no UnifiedStepRenderer oficial que:
+ * - Suporta 3 modos (preview | production | editable)
+ * - Lazy loading otimizado de steps
+ * - Chunk optimization
+ * - Performance superior
+ * 
+ * Migração:
+ * ```tsx
+ * // ANTES:
+ * import { QuizStepRenderer } from '@/components/editor/quiz/QuizStepRenderer';
+ * <QuizStepRenderer stepData={stepData} currentStep={step} isEditorMode={true} />
+ * 
+ * // DEPOIS:
+ * import { UnifiedStepRenderer } from '@/components/editor/unified/UnifiedStepRenderer';
+ * <UnifiedStepRenderer 
+ *   stepNumber={step} 
+ *   mode="editable"
+ *   blocks={stepData.blocks}
+ *   onUpdate={handleUpdate}
+ * />
+ * ```
+ * 
+ * Data de remoção prevista: Sprint 4 - Dia 2 (22/out/2024)
  */
 
 import { SortableContext, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable';
@@ -210,6 +237,15 @@ export const QuizStepRenderer: React.FC<QuizStepRendererProps> = ({
   className,
   // unused parameter
 }) => {
+  // ⚠️ AVISO DE DEPRECIAÇÃO
+  if (process.env.NODE_ENV === 'development') {
+    console.warn(
+      '⚠️ [DEPRECATED] QuizStepRenderer será removido no Sprint 4.\n' +
+      'Use UnifiedStepRenderer de @/components/editor/unified/UnifiedStepRenderer\n' +
+      'Veja documentação no topo do arquivo para guia de migração.'
+    );
+  }
+
   // ========================================
   // Estado e Hooks
   // ========================================
