@@ -1,0 +1,270 @@
+/**
+ * 🎨 DESIGN TOKENS
+ * 
+ * Sistema unificado de design tokens para toda a aplicação
+ * Consolida variáveis CSS de quiz.module.css, index.css e QuizEditorModular.css
+ * 
+ * Sprint 4 - Dia 4: CSS Optimization
+ */
+
+:root {
+    /* ============================
+     SPACING SYSTEM
+     ============================ */
+    --spacing-xs: 0.25rem;
+    /* 4px */
+    --spacing-sm: 0.5rem;
+    /* 8px */
+    --spacing-md: 1rem;
+    /* 16px */
+    --spacing-lg: 1.5rem;
+    /* 24px */
+    --spacing-xl: 2rem;
+    /* 32px */
+    --spacing-2xl: 3rem;
+    /* 48px */
+    --spacing-3xl: 4rem;
+    /* 64px */
+
+    /* Legacy aliases (manter compatibilidade) */
+    --global-gap: var(--spacing-xs);
+    --quiz-space-xs: var(--spacing-sm);
+    --quiz-space-sm: var(--spacing-md);
+    --quiz-space-md: var(--spacing-lg);
+    --quiz-space-lg: var(--spacing-xl);
+    --quiz-space-xl: var(--spacing-2xl);
+    --editor-spacing-xs: var(--spacing-xs);
+    --editor-spacing-sm: var(--spacing-sm);
+    --editor-spacing-md: 0.75rem;
+    /* valor específico do editor */
+    --editor-spacing-lg: var(--spacing-md);
+    --editor-spacing-xl: var(--spacing-lg);
+    --editor-spacing-2xl: var(--spacing-xl);
+
+    /* ============================
+     COLOR SYSTEM - SEMANTIC
+     ============================ */
+
+    /* Primary Colors */
+    --color-primary: #4F46E5;
+    /* Indigo-600 */
+    --color-primary-hover: #4338CA;
+    /* Indigo-700 */
+    --color-secondary: #7C3AED;
+    /* Violet-600 */
+    --color-secondary-hover: #6D28D9;
+    /* Violet-700 */
+
+    /* Accent Colors */
+    --color-accent: #06B6D4;
+    /* Cyan-500 */
+    --color-accent-hover: #0891B2;
+    /* Cyan-600 */
+
+    /* Status Colors */
+    --color-success: #059669;
+    /* Emerald-600 */
+    --color-warning: #EA580C;
+    /* Orange-600 */
+    --color-danger: #DC2626;
+    /* Red-600 */
+    --color-info: #0891B2;
+    /* Cyan-600 */
+
+    /* Neutral Colors */
+    --color-neutral: #6b7280;
+    /* Gray-500 */
+    --color-text: #1e293b;
+    /* Slate-800 */
+    --color-text-muted: #64748b;
+    /* Slate-500 */
+    --color-text-secondary: #6b4f43;
+    /* Brown-600 */
+
+    /* Background Colors */
+    --color-bg: #ffffff;
+    /* White */
+    --color-bg-surface: #f8fafc;
+    /* Slate-50 */
+    --color-bg-alt: #fafafa;
+    /* Gray-50 */
+
+    /* Border Colors */
+    --color-border: #e2e8f0;
+    /* Slate-200 */
+    --color-border-hover: #cbd5e1;
+    /* Slate-300 */
+
+    /* ============================
+     COLOR SYSTEM - QUIZ SPECIFIC
+     ============================ */
+    --quiz-primary: #b89b7a;
+    /* Tan/Beige */
+    --quiz-secondary: #432818;
+    /* Dark Brown */
+    --quiz-accent: #d4c4a0;
+    /* Light Tan */
+    --quiz-bg: #fefefe;
+    /* Off White */
+    --quiz-text: #432818;
+    /* Dark Brown */
+    --quiz-text-secondary: #6b4f43;
+    /* Medium Brown */
+    --quiz-border: #e5e7eb;
+    /* Gray-200 */
+    --quiz-border-hover: #d4c4b0;
+    /* Light Tan */
+    --quiz-success: #059669;
+    /* Emerald-600 */
+    --quiz-warning: #dc2626;
+    /* Red-600 */
+    --quiz-neutral: #6b7280;
+    /* Gray-500 */
+
+    /* ============================
+     COLOR SYSTEM - EDITOR
+     ============================ */
+    --editor-primary: var(--color-primary);
+    --editor-secondary: var(--color-secondary);
+    --editor-success: var(--color-success);
+    --editor-warning: var(--color-warning);
+    --editor-danger: var(--color-danger);
+    --editor-info: var(--color-info);
+    --editor-bg: var(--color-bg);
+    --editor-surface: var(--color-bg-surface);
+    --editor-border: var(--color-border);
+    --editor-text: var(--color-text);
+    --editor-text-muted: var(--color-text-muted);
+
+    /* ============================
+     TYPOGRAPHY
+     ============================ */
+
+    /* Font Families */
+    --font-family-base: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    --font-family-display: 'Playfair Display', serif;
+    --font-family-mono: 'Fira Code', 'Courier New', monospace;
+
+    /* Font Sizes */
+    --font-size-xs: 0.75rem;
+    /* 12px */
+    --font-size-sm: 0.875rem;
+    /* 14px */
+    --font-size-base: 1rem;
+    /* 16px */
+    --font-size-lg: 1.125rem;
+    /* 18px */
+    --font-size-xl: 1.25rem;
+    /* 20px */
+    --font-size-2xl: 1.5rem;
+    /* 24px */
+    --font-size-3xl: 1.875rem;
+    /* 30px */
+    --font-size-4xl: 2.25rem;
+    /* 36px */
+
+    /* Legacy aliases */
+    --quiz-font: var(--font-family-base);
+    --quiz-font-display: var(--font-family-display);
+    --quiz-text-title: var(--font-size-3xl);
+    --quiz-text-subtitle: var(--font-size-xl);
+    --quiz-text-body: var(--font-size-base);
+    --quiz-text-small: var(--font-size-sm);
+    --editor-font-xs: var(--font-size-xs);
+    --editor-font-sm: var(--font-size-sm);
+    --editor-font-base: var(--font-size-base);
+    --editor-font-lg: var(--font-size-lg);
+    --editor-font-xl: var(--font-size-xl);
+
+    /* Font Weights */
+    --font-weight-light: 300;
+    --font-weight-normal: 400;
+    --font-weight-medium: 500;
+    --font-weight-semibold: 600;
+    --font-weight-bold: 700;
+
+    /* Line Heights */
+    --line-height-tight: 1.2;
+    --line-height-snug: 1.3;
+    --line-height-normal: 1.5;
+    --line-height-relaxed: 1.6;
+    --line-height-loose: 1.8;
+
+    /* ============================
+     LAYOUT
+     ============================ */
+
+    /* Border Radius */
+    --radius-sm: 0.25rem;
+    /* 4px */
+    --radius-md: 0.5rem;
+    /* 8px */
+    --radius-lg: 0.75rem;
+    /* 12px */
+    --radius-xl: 1rem;
+    /* 16px */
+    --radius-2xl: 1.5rem;
+    /* 24px */
+    --radius-full: 9999px;
+    /* Full rounded */
+
+    /* Legacy aliases */
+    --quiz-radius: var(--radius-lg);
+    --global-radius: var(--radius-md);
+
+    /* Shadows */
+    --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.05);
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.15);
+    --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.2);
+    --shadow-xl: 0 20px 48px rgba(0, 0, 0, 0.25);
+
+    /* Legacy aliases */
+    --quiz-shadow-sm: var(--shadow-sm);
+    --quiz-shadow-md: var(--shadow-md);
+    --quiz-shadow-lg: var(--shadow-lg);
+    --editor-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+
+    /* Z-Index Scale */
+    --z-dropdown: 1000;
+    --z-sticky: 1020;
+    --z-fixed: 1030;
+    --z-modal-backdrop: 1040;
+    --z-modal: 1050;
+    --z-popover: 1060;
+    --z-tooltip: 1070;
+
+    /* Widths */
+    --width-full: 100%;
+    --width-screen: 100vw;
+    --width-container: 1280px;
+    --width-container-sm: 640px;
+    --width-container-md: 768px;
+    --width-container-lg: 1024px;
+    --width-container-xl: 1280px;
+
+    /* Legacy */
+    --global-width: 38rem;
+    /* 608px */
+
+    /* ============================
+     TRANSITIONS
+     ============================ */
+    --transition-fast: 100ms ease-in-out;
+    --transition-base: 150ms ease-in-out;
+    --transition-slow: 300ms ease-in-out;
+    --transition-slower: 500ms ease-in-out;
+
+    /* Legacy aliases */
+    --quiz-transition: var(--transition-base);
+    --quiz-transition-slow: var(--transition-slow);
+
+    /* ============================
+     BREAKPOINTS (for reference)
+     ============================ */
+    --breakpoint-sm: 640px;
+    --breakpoint-md: 768px;
+    --breakpoint-lg: 1024px;
+    --breakpoint-xl: 1280px;
+    --breakpoint-2xl: 1536px;
+}

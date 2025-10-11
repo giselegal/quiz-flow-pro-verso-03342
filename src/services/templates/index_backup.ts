@@ -1,1 +1,0 @@
-// Backup do arquivo original corrupto - será removido após correção

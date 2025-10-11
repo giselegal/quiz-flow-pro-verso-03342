@@ -3,41 +3,9 @@
  * 
  * Estilos para os componentes modulares do editor
  * Design consistente e responsivo
- * Variáveis CSS para fácil customização
+ * 
+ * Design tokens definidos em: src/styles/design-tokens.css
  */
-
-:root {
-    /* 🎯 Design System */
-    --editor-primary: #4F46E5;
-    --editor-secondary: #7C3AED;
-    --editor-success: #059669;
-    --editor-warning: #EA580C;
-    --editor-danger: #DC2626;
-    --editor-info: #0891B2;
-
-    /* 🎨 Colors */
-    --editor-bg: #ffffff;
-    --editor-surface: #f8fafc;
-    --editor-border: #e2e8f0;
-    --editor-text: #1e293b;
-    --editor-text-muted: #64748b;
-    --editor-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
-
-    /* 📏 Spacing */
-    --editor-spacing-xs: 0.25rem;
-    --editor-spacing-sm: 0.5rem;
-    --editor-spacing-md: 0.75rem;
-    --editor-spacing-lg: 1rem;
-    --editor-spacing-xl: 1.5rem;
-    --editor-spacing-2xl: 2rem;
-
-    /* 🔤 Typography */
-    --editor-font-xs: 0.75rem;
-    --editor-font-sm: 0.875rem;
-    --editor-font-base: 1rem;
-    --editor-font-lg: 1.125rem;
-    --editor-font-xl: 1.25rem;
-}
 
 /* 🏠 Main Container */
 .quiz-editor-main {

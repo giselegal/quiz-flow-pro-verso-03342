@@ -66,6 +66,9 @@ export default defineConfig({
   assetsInclude: ['**/*.svg', '**/*.png', '**/*.jpg', '**/*.jpeg', '**/*.gif'],
   build: {
     outDir: 'dist',
+    // CSS Optimization
+    cssMinify: 'lightningcss', // Minificador CSS ultra-rápido (mais eficiente que esbuild)
+    cssCodeSplit: true, // Separar CSS por chunk para lazy loading
     rollupOptions: {
       input: { main: path.resolve(__dirname, 'index.html') },
       external: [

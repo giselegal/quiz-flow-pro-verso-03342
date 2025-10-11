@@ -1,0 +1,79 @@
+
+> rest-express@1.0.0 build
+> vite build && esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outfile=dist/server.js
+
+vite v5.4.20 building for production...
+transforming...
+✓ 3412 modules transformed.
+rendering chunks...
+[plugin:vite:reporter] [plugin vite:reporter] 
+(!) /workspaces/quiz-quest-challenge-verse/src/services/templateLibraryService.ts is dynamically imported by /workspaces/quiz-quest-challenge-verse/src/services/UnifiedTemplateService.ts, /workspaces/quiz-quest-challenge-verse/src/services/UnifiedTemplateService.ts, /workspaces/quiz-quest-challenge-verse/src/utils/funnelNormalizer.ts but also statically imported by /workspaces/quiz-quest-challenge-verse/src/pages/TemplateDiagnosticPage.tsx, dynamic import will not move module into another chunk.
+
+[plugin:vite:reporter] [plugin vite:reporter] 
+(!) /workspaces/quiz-quest-challenge-verse/src/integrations/supabase/client.ts is dynamically imported by /workspaces/quiz-quest-challenge-verse/src/pages/dashboard/TemplateInvestigationPage.tsx, /workspaces/quiz-quest-challenge-verse/src/services/UnifiedTemplateService.ts but also statically imported by /workspaces/quiz-quest-challenge-verse/src/components/ai/AIOptimizationPanel.tsx, /workspaces/quiz-quest-challenge-verse/src/components/dashboard/ParticipantsTable.tsx, /workspaces/quiz-quest-challenge-verse/src/contexts/data/UserDataContext.tsx, /workspaces/quiz-quest-challenge-verse/src/core/funnel/services/TemplateService.ts, /workspaces/quiz-quest-challenge-verse/src/hooks/useQuizBackendIntegration.ts, /workspaces/quiz-quest-challenge-verse/src/hooks/useQuizRealTimeAnalytics.ts, /workspaces/quiz-quest-challenge-verse/src/hooks/useSecurityMonitor.ts, /workspaces/quiz-quest-challenge-verse/src/lib/supabase.ts, /workspaces/quiz-quest-challenge-verse/src/pages/dashboard/MeusFunisPageReal.tsx, /workspaces/quiz-quest-challenge-verse/src/providers/FunnelMasterProvider.tsx, /workspaces/quiz-quest-challenge-verse/src/services/FacebookMetricsService.ts, /workspaces/quiz-quest-challenge-verse/src/services/FunnelUnifiedService.ts, /workspaces/quiz-quest-challenge-verse/src/services/QuizEditorBridge.ts, /workspaces/quiz-quest-challenge-verse/src/services/SupabaseConfigurationStorage.ts, /workspaces/quiz-quest-challenge-verse/src/services/core/EnhancedUnifiedDataService.ts, /workspaces/quiz-quest-challenge-verse/src/services/core/UnifiedDataService.ts, /workspaces/quiz-quest-challenge-verse/src/services/quizResultsService.ts, /workspaces/quiz-quest-challenge-verse/src/services/quizSupabaseService.ts, /workspaces/quiz-quest-challenge-verse/src/services/userResponseService.ts, dynamic import will not move module into another chunk.
+
+[plugin:vite:reporter] [plugin vite:reporter] 
+(!) /workspaces/quiz-quest-challenge-verse/src/components/editor/blocks/BasicContainerBlock.tsx is dynamically imported by /workspaces/quiz-quest-challenge-verse/src/components/editor/blocks/EnhancedBlockRegistry.tsx, /workspaces/quiz-quest-challenge-verse/src/components/editor/blocks/EnhancedBlockRegistry.tsx, /workspaces/quiz-quest-challenge-verse/src/components/editor/blocks/EnhancedBlockRegistry.tsx, /workspaces/quiz-quest-challenge-verse/src/components/editor/blocks/EnhancedBlockRegistry.tsx but also statically imported by /workspaces/quiz-quest-challenge-verse/src/registry/UnifiedComponentRegistry.ts, dynamic import will not move module into another chunk.
+
+[plugin:vite:reporter] [plugin vite:reporter] 
+(!) /workspaces/quiz-quest-challenge-verse/src/components/editor/blocks/MentorSectionInlineBlock.tsx is dynamically imported by /workspaces/quiz-quest-challenge-verse/src/components/editor/blocks/EnhancedBlockRegistry.tsx, /workspaces/quiz-quest-challenge-verse/src/registry/UnifiedComponentRegistry.ts but also statically imported by /workspaces/quiz-quest-challenge-verse/src/components/editor/blocks/UniversalBlockRenderer.tsx, dynamic import will not move module into another chunk.
+
+[plugin:vite:reporter] [plugin vite:reporter] 
+(!) /workspaces/quiz-quest-challenge-verse/src/components/editor/blocks/TestimonialCardInlineBlock.tsx is dynamically imported by /workspaces/quiz-quest-challenge-verse/src/components/editor/blocks/EnhancedBlockRegistry.tsx, /workspaces/quiz-quest-challenge-verse/src/registry/UnifiedComponentRegistry.ts but also statically imported by /workspaces/quiz-quest-challenge-verse/src/components/editor/blocks/UniversalBlockRenderer.tsx, dynamic import will not move module into another chunk.
+
+[plugin:vite:reporter] [plugin vite:reporter] 
+(!) /workspaces/quiz-quest-challenge-verse/src/components/editor/blocks/TestimonialsCarouselInlineBlock.tsx is dynamically imported by /workspaces/quiz-quest-challenge-verse/src/components/editor/blocks/EnhancedBlockRegistry.tsx, /workspaces/quiz-quest-challenge-verse/src/registry/UnifiedComponentRegistry.ts but also statically imported by /workspaces/quiz-quest-challenge-verse/src/components/editor/blocks/UniversalBlockRenderer.tsx, dynamic import will not move module into another chunk.
+
+[plugin:vite:reporter] [plugin vite:reporter] 
+(!) /workspaces/quiz-quest-challenge-verse/src/components/editor/unified/InteractivePreviewEngine.tsx is dynamically imported by /workspaces/quiz-quest-challenge-verse/src/components/editor/unified/UnifiedPreviewEngine.tsx but also statically imported by /workspaces/quiz-quest-challenge-verse/src/components/editor/unified/index.ts, dynamic import will not move module into another chunk.
+
+[plugin:vite:reporter] [plugin vite:reporter] 
+(!) /workspaces/quiz-quest-challenge-verse/src/components/step-registry/ProductionStepsRegistry.tsx is dynamically imported by /workspaces/quiz-quest-challenge-verse/src/components/editor/unified/UnifiedStepRenderer.tsx, /workspaces/quiz-quest-challenge-verse/src/components/editor/unified/UnifiedStepRenderer.tsx, /workspaces/quiz-quest-challenge-verse/src/components/editor/unified/UnifiedStepRenderer.tsx, /workspaces/quiz-quest-challenge-verse/src/components/editor/unified/UnifiedStepRenderer.tsx, /workspaces/quiz-quest-challenge-verse/src/components/editor/unified/UnifiedStepRenderer.tsx, /workspaces/quiz-quest-challenge-verse/src/components/editor/unified/UnifiedStepRenderer.tsx, /workspaces/quiz-quest-challenge-verse/src/components/editor/unified/UnifiedStepRenderer.tsx, /workspaces/quiz-quest-challenge-verse/src/components/editor/unified/UnifiedStepRenderer.tsx, /workspaces/quiz-quest-challenge-verse/src/components/editor/unified/UnifiedStepRenderer.tsx, /workspaces/quiz-quest-challenge-verse/src/components/editor/unified/UnifiedStepRenderer.tsx, /workspaces/quiz-quest-challenge-verse/src/components/editor/unified/UnifiedStepRenderer.tsx, /workspaces/quiz-quest-challenge-verse/src/components/editor/unified/UnifiedStepRenderer.tsx, /workspaces/quiz-quest-challenge-verse/src/components/editor/unified/UnifiedStepRenderer.tsx, /workspaces/quiz-quest-challenge-verse/src/components/editor/unified/UnifiedStepRenderer.tsx, /workspaces/quiz-quest-challenge-verse/src/components/editor/unified/UnifiedStepRenderer.tsx, /workspaces/quiz-quest-challenge-verse/src/components/editor/unified/UnifiedStepRenderer.tsx, /workspaces/quiz-quest-challenge-verse/src/components/editor/unified/UnifiedStepRenderer.tsx, /workspaces/quiz-quest-challenge-verse/src/components/editor/unified/UnifiedStepRenderer.tsx, /workspaces/quiz-quest-challenge-verse/src/components/editor/unified/UnifiedStepRenderer.tsx, /workspaces/quiz-quest-challenge-verse/src/components/editor/unified/UnifiedStepRenderer.tsx, /workspaces/quiz-quest-challenge-verse/src/components/editor/unified/UnifiedStepRenderer.tsx but also statically imported by /workspaces/quiz-quest-challenge-verse/src/components/editor/unified/index.ts, dynamic import will not move module into another chunk.
+
+computing gzip size...
+dist/index.html                                          6.52 kB │ gzip:   2.55 kB
+dist/assets/feature-dashboard-Bi5L0nsm.css               3.43 kB │ gzip:   1.14 kB
+dist/assets/feature-editor-Bjv7L2pI.css                  7.83 kB │ gzip:   2.17 kB
+dist/assets/main-CgI3jK4S.css                          338.35 kB │ gzip:  47.81 kB
+dist/assets/vendor-ui-radix-BA32w1ww.js                  0.22 kB │ gzip:   0.18 kB
+dist/assets/stepEvents-BKmYafac.js                       1.26 kB │ gzip:   0.54 kB
+dist/assets/ContextMigrationDiagnostics-D73uI03i.js      2.70 kB │ gzip:   0.79 kB
+dist/assets/QuizEstiloPessoalPage-DMY5stHL.js            3.90 kB │ gzip:   1.20 kB
+dist/assets/SimpleFunnelTypesPage-BJrAlNRl.js            6.40 kB │ gzip:   1.12 kB
+dist/assets/QuizIntegratedPage-D_1fB6J2.js               7.19 kB │ gzip:   1.76 kB
+dist/assets/SupabaseFixTestPage-U73fSyrA.js              7.98 kB │ gzip:   2.06 kB
+dist/assets/NotFound-D9a9NnUw.js                         8.09 kB │ gzip:   1.61 kB
+dist/assets/QuizAIPage-B11am1Qf.js                      10.30 kB │ gzip:   1.70 kB
+dist/assets/TemplatesPage-BEa4Mpw1.js                   10.44 kB │ gzip:   2.33 kB
+dist/assets/ModernDashboardPage-B_iOUaOw.js             11.02 kB │ gzip:   1.67 kB
+dist/assets/QuizOptionsGridBlockConnected-CJ96QPJ0.js   12.71 kB │ gzip:   2.79 kB
+dist/assets/IndexedDBMigrationTestPage-DAhe32md.js      14.02 kB │ gzip:   3.12 kB
+dist/assets/index-8ahlMpuv.js                           14.08 kB │ gzip:   2.87 kB
+dist/assets/ModernAdminDashboard-C5lLc5Pz.js            14.23 kB │ gzip:   1.70 kB
+dist/assets/TemplateDiagnosticPage-Bj2fwOSo.js          15.89 kB │ gzip:   2.57 kB
+dist/assets/SystemDiagnosticPage-1f0GGq59.js            20.44 kB │ gzip:   3.25 kB
+dist/assets/AuthPage-Cf1HfG--.js                        21.42 kB │ gzip:   3.57 kB
+dist/assets/Home-DMU-G20L.js                            21.85 kB │ gzip:   3.87 kB
+dist/assets/UnifiedAdminLayout-BgtxP-g9.js              22.87 kB │ gzip:   4.04 kB
+dist/assets/Phase2Dashboard-DVBmg7bg.js                 24.60 kB │ gzip:   3.70 kB
+dist/assets/feature-templates-CXS4qH8-.js              106.54 kB │ gzip:  22.38 kB
+dist/assets/vendor-supabase-D5m_k7Vm.js                132.31 kB │ gzip:  35.80 kB
+dist/assets/vendor-ui-utils-CKdtFvnw.js                155.01 kB │ gzip:  46.40 kB
+dist/assets/main-Bwt4X1PL.js                           179.88 kB │ gzip:  33.62 kB
+dist/assets/feature-quiz-BsjFtnAw.js                   237.42 kB │ gzip:  46.69 kB
+dist/assets/vendor-other-CbEkjua1.js                   263.81 kB │ gzip:  90.66 kB
+dist/assets/vendor-charts-BEgVsrOs.js                  280.85 kB │ gzip:  64.75 kB
+dist/assets/feature-services-Dt8TzA70.js               349.80 kB │ gzip:  93.97 kB
+dist/assets/vendor-react-CQHpFs70.js                   533.44 kB │ gzip: 161.34 kB
+dist/assets/feature-dashboard-H04627R3.js              546.69 kB │ gzip:  69.77 kB
+dist/assets/feature-editor-CULCHFK-.js                 851.41 kB │ gzip: 179.58 kB
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 26.45s
+
+  dist/server.js  62.2kb
+
+⚡ Done in 17ms
