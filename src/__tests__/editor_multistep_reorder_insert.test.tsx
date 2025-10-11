@@ -1,15 +1,15 @@
 import React from 'react';
 import { describe, it, expect } from 'vitest';
 import { render, act, waitFor } from '@testing-library/react';
-import { EditorProvider, useEditor } from '@/components/editor/EditorProvider';
-import type { EditorState } from '@/components/editor/EditorProvider';
+import { EditorProvider as MigrationEditorProvider, useEditor } from '@/components/editor/EditorProviderMigrationAdapter';
+import type { EditorState } from '@/components/editor/EditorProviderMigrationAdapter';
 import type { Block } from '@/types/editor';
 
 // Probes reutilizáveis
 const ProviderHarness: React.FC<React.PropsWithChildren<{ initial?: Partial<EditorState> }>> = ({ initial, children }) => (
-    <EditorProvider initial={initial}>
+    <MigrationEditorProvider funnelId="test-funnel">
         {children}
-    </EditorProvider>
+    </MigrationEditorProvider>
 );
 
 const EditorActionsProbe: React.FC<{ onReady: (ctx: ReturnType<typeof useEditor>) => void }> = ({ onReady }) => {

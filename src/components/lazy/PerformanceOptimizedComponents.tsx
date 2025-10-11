@@ -25,7 +25,7 @@ const LazyModernUnifiedEditor = lazy(() =>
 );
 
 const LazyEditorProvider = lazy(() =>
-    import('@/components/editor/EditorProvider').then(module => ({
+    import('@/components/editor/EditorProviderMigrationAdapter').then(module => ({
         default: module.EditorProvider
     }))
 );
@@ -135,7 +135,7 @@ export const preloadCriticalComponents = () => {
     // Preload dos componentes mais usados após 2s de idle
     const preloadTimer = setTimeout(() => {
         import('@/pages/editor/ModernUnifiedEditor');
-        import('@/components/editor/EditorProvider');
+        import('@/components/editor/EditorProviderMigrationAdapter');
     }, 2000);
 
     return () => clearTimeout(preloadTimer);

@@ -1,7 +1,7 @@
 import React from 'react';
 import { describe, it, expect } from 'vitest';
 import { render, waitFor } from '@testing-library/react';
-import { EditorProvider, useEditor } from '@/components/editor/EditorProvider';
+import { EditorProvider, useEditor } from '@/components/editor/EditorProviderMigrationAdapter';
 import { createBlockFromComponent } from '@/utils/editorUtils';
 
 // Harness para executar ações e expor a ordem dos tipos no DOM
@@ -50,7 +50,7 @@ const Harness: React.FC = () => {
 describe('EditorProvider actions: reorder and insert-at-index', () => {
     it('reorders blocks and inserts between existing ones', async () => {
         const { getByTestId } = render(
-            <EditorProvider initial={{ currentStep: 1 }}>
+            <EditorProvider funnelId="test-funnel">
                 <Harness />
             </EditorProvider>
         );

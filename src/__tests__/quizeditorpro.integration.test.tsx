@@ -1,13 +1,13 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import React from 'react';
 import { render, act, waitFor } from '@testing-library/react';
-import { EditorProvider, useEditor } from '@/components/editor/EditorProvider';
-import type { EditorState } from '@/components/editor/EditorProvider';
+import { EditorProvider, useEditor } from '@/components/editor/EditorProviderMigrationAdapter';
+import type { EditorState } from '@/components/editor/EditorProviderMigrationAdapter';
 import type { Block } from '@/types/editor';
 
 // Helpers
 const ProviderHarness: React.FC<React.PropsWithChildren> = ({ children }) => (
-  <EditorProvider initial={{ stepBlocks: { 'step-1': [], 'step-2': [] } }}>
+  <EditorProvider funnelId="test-funnel">
     {children}
   </EditorProvider>
 );
