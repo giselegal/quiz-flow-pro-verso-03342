@@ -1,4 +1,28 @@
+/**
+ * ⚠️ ⚠️ ⚠️ DEPRECATED - NÃO USAR ⚠️ ⚠️ ⚠️
+ * 
+ * @deprecated Use UniversalBlockRenderer - Ver ANALISE_RENDERERS.md
+ * 
+ * Este renderer será removido em Sprint 4 (21/out/2025)
+ * 
+ * Migração:
+ * ```tsx
+ * // ANTES:
+ * import ComponentRenderer from '@/components/quiz/builder/preview/ComponentRenderer';
+ * 
+ * // DEPOIS:
+ * import UniversalBlockRenderer from '@/components/editor/blocks/UniversalBlockRenderer';
+ * ```
+ * 
+ * Motivo da deprecação:
+ * - Funcionalidade duplicada de UniversalBlockRenderer
+ * - Preview mode já é suportado por UniversalBlockRenderer
+ * 
+ * ---
+ */
+
 // @ts-nocheck
+import React, { useEffect } from 'react';
 import { QuizComponentData } from '@/types/quizBuilder';
 import { Card } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
@@ -18,6 +42,14 @@ const ComponentRenderer: React.FC<ComponentRendererProps> = ({
   onMove,
   isPreviewing = false,
 }) => {
+  // ⚠️ DEPRECATION WARNING
+  useEffect(() => {
+    console.warn(
+      '⚠️ DEPRECATED: ComponentRenderer (quiz/builder/preview) será removido em 21/out/2025. ' +
+      'Migre para UniversalBlockRenderer. Ver ANALISE_RENDERERS.md'
+    );
+  }, []);
+
   const data = component.data || {};
 
   const renderComponentContent = () => {

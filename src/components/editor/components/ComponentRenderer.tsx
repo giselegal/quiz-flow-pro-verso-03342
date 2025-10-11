@@ -1,4 +1,28 @@
+/**
+ * ⚠️ ⚠️ ⚠️ DEPRECATED - NÃO USAR ⚠️ ⚠️ ⚠️
+ * 
+ * @deprecated Use UniversalBlockRenderer - Ver ANALISE_RENDERERS.md
+ * 
+ * Este renderer será removido em Sprint 4 (21/out/2025)
+ * 
+ * Migração:
+ * ```tsx
+ * // ANTES:
+ * import { ComponentRenderer } from '@/components/editor/components/ComponentRenderer';
+ * 
+ * // DEPOIS:
+ * import UniversalBlockRenderer from '@/components/editor/blocks/UniversalBlockRenderer';
+ * ```
+ * 
+ * Motivo da deprecação:
+ * - Funcionalidade duplicada de UniversalBlockRenderer
+ * - Sistema de margem universal já está em UniversalBlockRenderer
+ * 
+ * ---
+ */
+
 // @ts-nocheck
+import React, { useEffect } from 'react';
 
 interface ComponentRendererProps {
   component: any;
@@ -6,6 +30,25 @@ interface ComponentRendererProps {
   onSelect?: () => void;
   onUpdate?: (updates: any) => void;
 }
+
+const ComponentRenderer: React.FC<ComponentRendererProps> = ({
+  component,
+  isSelected,
+  onSelect,
+  onUpdate,
+}) => {
+  // ⚠️ DEPRECATION WARNING
+  useEffect(() => {
+    console.warn(
+      '⚠️ DEPRECATED: ComponentRenderer (editor/components) será removido em 21/out/2025. ' +
+      'Migre para UniversalBlockRenderer. Ver ANALISE_RENDERERS.md'
+    );
+  }, []);
+
+  return null; // Placeholder após deprecation
+};
+
+export default ComponentRenderer;
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (value, type) => {

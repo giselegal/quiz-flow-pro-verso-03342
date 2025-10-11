@@ -1,4 +1,27 @@
 /**
+ * ⚠️ ⚠️ ⚠️ DEPRECATED - NÃO USAR ⚠️ ⚠️ ⚠️
+ * 
+ * @deprecated Use UniversalBlockRenderer - Ver ANALISE_RENDERERS.md
+ * 
+ * Este renderer será removido em Sprint 4 (21/out/2025)
+ * 
+ * Migração:
+ * ```tsx
+ * // ANTES:
+ * import BlockRenderer from '@/components/core/BlockRenderer';
+ * 
+ * // DEPOIS:
+ * import UniversalBlockRenderer from '@/components/editor/blocks/UniversalBlockRenderer';
+ * ```
+ * 
+ * Motivo da deprecação:
+ * - Funcionalidade duplicada de UniversalBlockRenderer
+ * - UniversalBlockRenderer possui cache LRU e lazy loading
+ * - UniversalBlockRenderer suporta 30+ tipos de blocos
+ * - Parte do plano de consolidação (Sprint 3 Week 2)
+ * 
+ * ---
+ * 
  * 🧩 BLOCK RENDERER - RENDERIZADOR UNIVERSAL DE BLOCOS
  * 
  * Componente unificado para renderizar todos os tipos de blocos do editor
@@ -8,7 +31,7 @@
  * ✅ Performance otimizada
  */
 
-import React, { memo, useCallback } from 'react';
+import React, { memo, useCallback, useEffect } from 'react';
 import { Block } from '@/types/editor';
 
 // Componentes específicos por tipo de bloco
@@ -33,6 +56,14 @@ const BlockRenderer: React.FC<BlockRendererProps> = ({
   onUpdate,
   showEditControls = true
 }) => {
+  // ⚠️ DEPRECATION WARNING
+  useEffect(() => {
+    console.warn(
+      '⚠️ DEPRECATED: BlockRenderer (components/core) será removido em 21/out/2025. ' +
+      'Migre para UniversalBlockRenderer. Ver ANALISE_RENDERERS.md'
+    );
+  }, []);
+
   const handleContentUpdate = useCallback((content: any) => {
     onUpdate({ content: { ...block.content, ...content } });
   }, [block.content, onUpdate]);
@@ -55,34 +86,34 @@ const BlockRenderer: React.FC<BlockRendererProps> = ({
     switch (block.type) {
       case 'headline':
         return <HeadlineBlock {...commonProps} />;
-      
+
       case 'text':
         return <TextBlock {...commonProps} />;
-      
+
       case 'button':
         return <ButtonBlock {...commonProps} />;
-      
+
       case 'image':
         return <ImageBlock {...commonProps} />;
-      
+
       case 'form-input':
         return (
           <div className="p-4 bg-white border border-gray-200 rounded-lg">
             <h3 className="text-lg font-semibold mb-4">Formulário</h3>
             <div className="space-y-3">
-              <input 
-                type="text" 
-                placeholder="Nome" 
+              <input
+                type="text"
+                placeholder="Nome"
                 className="w-full p-2 border rounded"
                 disabled={!isPreview}
               />
-              <input 
-                type="email" 
-                placeholder="E-mail" 
+              <input
+                type="email"
+                placeholder="E-mail"
                 className="w-full p-2 border rounded"
                 disabled={!isPreview}
               />
-              <button 
+              <button
                 className="w-full bg-blue-600 text-white p-2 rounded"
                 disabled={!isPreview}
               >
@@ -91,7 +122,7 @@ const BlockRenderer: React.FC<BlockRendererProps> = ({
             </div>
           </div>
         );
-      
+
       case 'quiz-question-inline':
         return (
           <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
@@ -113,7 +144,7 @@ const BlockRenderer: React.FC<BlockRendererProps> = ({
             )}
           </div>
         );
-      
+
       case 'options-grid':
         return (
           <div className="p-4 bg-gray-50 border border-gray-200 rounded-lg">
@@ -193,7 +224,7 @@ const BlockRenderer: React.FC<BlockRendererProps> = ({
 
       case 'container':
         return (
-          <div 
+          <div
             className="p-4 border-2 border-dashed border-gray-300 rounded-lg min-h-[100px]"
             style={{ backgroundColor: block.content?.backgroundColor || '#ffffff' }}
           >
@@ -206,7 +237,7 @@ const BlockRenderer: React.FC<BlockRendererProps> = ({
       case 'spacer':
       case 'spacer-inline':
         return (
-          <div 
+          <div
             className="w-full bg-gray-100 border border-gray-300 rounded"
             style={{ height: block.content?.height || '20px' }}
           >

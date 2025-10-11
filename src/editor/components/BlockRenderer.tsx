@@ -1,11 +1,33 @@
 /**
+ * ⚠️ ⚠️ ⚠️ DEPRECATED - NÃO USAR ⚠️ ⚠️ ⚠️
+ * 
+ * @deprecated Use UniversalBlockRenderer - Ver ANALISE_RENDERERS.md
+ * 
+ * Este renderer será removido em Sprint 4 (21/out/2025)
+ * 
+ * Migração:
+ * ```tsx
+ * // ANTES:
+ * import { BlockRenderer } from '@/editor/components/BlockRenderer';
+ * 
+ * // DEPOIS:
+ * import UniversalBlockRenderer from '@/components/editor/blocks/UniversalBlockRenderer';
+ * ```
+ * 
+ * Motivo da deprecação:
+ * - Funcionalidade duplicada de UniversalBlockRenderer
+ * - Registry separado (BlockComponentMap) descontinuado
+ * - UniversalBlockRenderer usa enhancedBlockRegistry (oficial)
+ * 
+ * ---
+ * 
  * 🎯 BLOCK RENDERER - Renderizador Universal
  * 
  * Componente que renderiza qualquer bloco baseado em JSON.
  * Consulta o BlockRegistry para obter o componente correto.
  */
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BlockData, BlockComponentProps } from '@/types/blockTypes';
 import { getBlockComponent } from '@/editor/registry/BlockComponentMap';
 import { cn } from '@/lib/utils';
@@ -58,6 +80,14 @@ export const BlockRenderer: React.FC<BlockRendererProps> = ({
     onMoveDown,
     className
 }) => {
+    // ⚠️ DEPRECATION WARNING
+    useEffect(() => {
+        console.warn(
+            '⚠️ DEPRECATED: BlockRenderer (editor/components) será removido em 21/out/2025. ' +
+            'Migre para UniversalBlockRenderer. Ver ANALISE_RENDERERS.md'
+        );
+    }, []);
+
     // Buscar componente no registry
     const Component = getBlockComponent(block.component);
 

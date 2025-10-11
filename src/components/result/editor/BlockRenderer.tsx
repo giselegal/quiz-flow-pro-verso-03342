@@ -1,4 +1,29 @@
+/**
+ * ⚠️ ⚠️ ⚠️ DEPRECATED - NÃO USAR ⚠️ ⚠️ ⚠️
+ * 
+ * @deprecated Use UniversalBlockRenderer - Ver ANALISE_RENDERERS.md
+ * 
+ * Este renderer será removido em Sprint 4 (21/out/2025)
+ * 
+ * Migração:
+ * ```tsx
+ * // ANTES:
+ * import BlockRenderer from '@/components/result/editor/BlockRenderer';
+ * 
+ * // DEPOIS:
+ * import UniversalBlockRenderer from '@/components/editor/blocks/UniversalBlockRenderer';
+ * ```
+ * 
+ * Motivo da deprecação:
+ * - Funcionalidade duplicada de UniversalBlockRenderer
+ * - Específico para result editor (caso de uso muito específico)
+ * - UniversalBlockRenderer é mais completo e performático
+ * 
+ * ---
+ */
+
 // @ts-nocheck
+import React, { useEffect } from 'react';
 import { Block, FAQItem } from '@/types/editor';
 import { StyleResult } from '@/types/quiz';
 
@@ -15,6 +40,14 @@ const BlockRenderer: React.FC<BlockRendererProps> = ({
   onUpdate,
   primaryStyle,
 }) => {
+  // ⚠️ DEPRECATION WARNING
+  useEffect(() => {
+    console.warn(
+      '⚠️ DEPRECATED: BlockRenderer (result/editor) será removido em 21/out/2025. ' +
+      'Migre para UniversalBlockRenderer. Ver ANALISE_RENDERERS.md'
+    );
+  }, []);
+
   const content = block.content || {};
 
   const handleContentChange = (key: string, value: any) => {
