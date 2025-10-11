@@ -1,0 +1,5 @@
+
+> rest-express@1.0.0 test
+> vitest --run --reporter=json
+
+ DEPRECATED  "environmentMatchGlobs" is deprecated. Use `test.projects` to define different configurations instead.

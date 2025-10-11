@@ -42,7 +42,7 @@ export default defineConfig({
     poolOptions: {
       forks: {
         minForks: 1,
-        maxForks: 1,
+        maxForks: 3, // ⬆️ Aumentado de 1 para 3 (Sprint 4 Dia 3 - Otimização)
         // Aumenta limite de memória para worker
         execArgv: ['--max-old-space-size=8192'],
       },
