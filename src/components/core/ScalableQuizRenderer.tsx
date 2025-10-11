@@ -4,7 +4,7 @@ import UniversalQuizStep from '@/components/universal/UniversalQuizStep';
 import { BlockPropertiesAPI } from '@/api/internal/BlockPropertiesAPI';
 import ScalableHybridTemplateService from '@/services/ScalableHybridTemplateService';
 import { QuizStepRouter } from '@/components/router/QuizStepRouter';
-import SpecializedStepRenderer from '@/components/specialized/SpecializedStepRenderer';
+import SpecializedStepAdapter from '@/components/adapters/SpecializedStepAdapter';
 import { getTemplateInfo } from '@/utils/funnelNormalizer';
 
 interface ScalableQuizRendererProps {
@@ -335,7 +335,7 @@ export const ScalableQuizRenderer = memo<ScalableQuizRendererProps>(({
                 if (isSpecialized) {
                     console.log(`🎯 ScalableQuizRenderer: Renderizando step ${currentStep} como ESPECIALIZADO`);
                     return (
-                        <SpecializedStepRenderer
+                        <SpecializedStepAdapter
                             stepNumber={currentStep}
                             data={stepData}
                             funnelId={funnelId}
