@@ -1,5 +1,13 @@
 /**
- * 🎯 OPTIMIZED EDITOR PROVIDER - FASE 4
+ * ⚠️ ⚠️ ⚠️ DEPRECATED - NÃO USAR ⚠️ ⚠️ ⚠️
+ * 
+ * @deprecated Use EditorProviderUnified - Ver ANALISE_EDITOR_PROVIDERS.md
+ * 
+ * Este provider foi consolidado em EditorProviderUnified (605 linhas vs 497).
+ * 
+ * ============================================================================
+ * 🎯 OPTIMIZED EDITOR PROVIDER - FASE 4 (DEPRECATED)
+ * ============================================================================
  * 
  * EditorProvider simplificado e otimizado:
  * ✅ Sistema único de persistência (Supabase via UnifiedCRUD)
@@ -13,6 +21,22 @@
  * ❌ unifiedQuizStorage
  * ❌ Múltiplos sistemas de save/load
  * ❌ Lógica duplicada de mapeamento
+ * 
+ * ============================================================================
+ * MIGRAÇÃO:
+ * ============================================================================
+ * 
+ * ```typescript
+ * // ANTES (deprecated)
+ * import { OptimizedEditorProvider, useEditor } from '@/components/editor/OptimizedEditorProvider';
+ * 
+ * // DEPOIS (recomendado)
+ * import { EditorProvider, useEditor } from '@/components/editor/EditorProviderMigrationAdapter';
+ * // ou diretamente:
+ * import { EditorProviderUnified, useEditor } from '@/components/editor/EditorProviderUnified';
+ * ```
+ * 
+ * Remoção prevista: Sprint 4 (01/nov/2025)
  */
 
 import * as React from 'react';
@@ -182,6 +206,15 @@ export const OptimizedEditorProvider: React.FC<OptimizedEditorProviderProps> = (
     storageKey = 'optimized-editor',
     initial = {}
 }) => {
+    // 🚨 Console warning para desenvolvedores
+    React.useEffect(() => {
+        console.warn(
+            '⚠️ DEPRECATED: OptimizedEditorProvider (497 linhas) será removido em 01/nov/2025. ' +
+            'Migre para EditorProviderUnified (605 linhas). ' +
+            'Ver ANALISE_EDITOR_PROVIDERS.md'
+        );
+    }, []);
+
     // ============================================================================
     // STATE MANAGEMENT
     // ============================================================================

@@ -1,3 +1,30 @@
+/**
+ * ⚠️ ⚠️ ⚠️ DEPRECATED - NÃO USAR ⚠️ ⚠️ ⚠️
+ * 
+ * @deprecated Use EditorProviderUnified - Ver ANALISE_EDITOR_PROVIDERS.md
+ * 
+ * Este provider foi consolidado em EditorProviderUnified (605 linhas vs 1557).
+ * 
+ * Migração:
+ * ```typescript
+ * // ANTES (deprecated)
+ * import { EditorProvider, useEditor } from '@/components/editor/EditorProvider';
+ * 
+ * // DEPOIS (recomendado)
+ * import { EditorProvider, useEditor } from '@/components/editor/EditorProviderMigrationAdapter';
+ * // ou diretamente:
+ * import { EditorProviderUnified, useEditor } from '@/components/editor/EditorProviderUnified';
+ * ```
+ * 
+ * Remoção prevista: Sprint 4 (01/nov/2025)
+ * 
+ * Problemas deste provider:
+ * - 1557 linhas (complexidade excessiva)
+ * - 3 sistemas de persistência simultâneos
+ * - Histórico via IndexedDB (overhead)
+ * - @ts-nocheck (type safety desabilitado)
+ */
+
 // @ts-nocheck
 import { getBlocksForStep, mergeStepBlocks, normalizeStepBlocks } from '@/config/quizStepsComplete';
 import { DraftPersistence } from '@/services/editor/DraftPersistence';
@@ -178,10 +205,19 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
   quizId,
   enableSupabase = false,
 }) => {
-  // �️ PROTEÇÃO INICIAL: Garantir que initial seja um objeto válido
+  // 🚨 Console warning para desenvolvedores
+  React.useEffect(() => {
+    console.warn(
+      '⚠️ DEPRECATED: EditorProvider (1557 linhas) será removido em 01/nov/2025. ' +
+      'Migre para EditorProviderUnified (605 linhas). ' +
+      'Ver ANALISE_EDITOR_PROVIDERS.md'
+    );
+  }, []);
+
+  // 🛡️ PROTEÇÃO INICIAL: Garantir que initial seja um objeto válido
   const safeInitial = initial && typeof initial === 'object' ? initial : {};
 
-  // �🔍 DEBUG: Log inicial dos parâmetros do EditorProvider
+  // 🔍 DEBUG: Log inicial dos parâmetros do EditorProvider
   useEffect(() => {
     console.log('🎯 EditorProvider - Inicialização com parâmetros:', {
       funnelId,
