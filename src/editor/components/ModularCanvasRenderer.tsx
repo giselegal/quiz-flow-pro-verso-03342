@@ -3,6 +3,36 @@
  * 
  * Renderiza steps decompostos em blocos modulares independentes.
  * Cada propriedade do step vira um bloco editável e reordenável.
+ * 
+ * @deprecated Este componente será removido no Sprint 4.
+ * Use AdvancedCanvasRenderer de @/components/editor/canvas/AdvancedCanvasRenderer
+ * 
+ * Motivo: Funcionalidade consolidada no AdvancedCanvasRenderer oficial que:
+ * - DnD moderno com @dnd-kit
+ * - Performance otimizada
+ * - Melhor gestão de estado
+ * - Features de editor completas
+ * 
+ * Migração:
+ * ```tsx
+ * // ANTES:
+ * import { ModularCanvasRenderer } from '@/editor/components/ModularCanvasRenderer';
+ * <ModularCanvasRenderer 
+ *   step={step}
+ *   isSelected={true}
+ *   onUpdateBlock={handleUpdate}
+ * />
+ * 
+ * // DEPOIS:
+ * import { AdvancedCanvasRenderer } from '@/components/editor/canvas/AdvancedCanvasRenderer';
+ * <AdvancedCanvasRenderer 
+ *   steps={steps}
+ *   selectedStep={step}
+ *   onUpdate={handleUpdate}
+ * />
+ * ```
+ * 
+ * Data de remoção prevista: Sprint 4 - Dia 2 (22/out/2024)
  */
 
 import React from 'react';
@@ -56,7 +86,16 @@ export const ModularCanvasRenderer: React.FC<ModularCanvasRendererProps> = ({
     onDuplicateStep,
     onDeleteStep,
 }) => {
-    // Decompor step em blocos
+    // ⚠️ AVISO DE DEPRECIAÇÃO
+    if (process.env.NODE_ENV === 'development') {
+        console.warn(
+            '⚠️ [DEPRECATED] ModularCanvasRenderer será removido no Sprint 4.\n' +
+            'Use AdvancedCanvasRenderer de @/components/editor/canvas/AdvancedCanvasRenderer\n' +
+            'Veja documentação no topo do arquivo para guia de migração.'
+        );
+    }
+
+    // Decompor step em blocos modulares
     const blocks = stepToBlocks(step);
 
     return (
