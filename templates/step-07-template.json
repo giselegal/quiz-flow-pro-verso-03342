@@ -1,144 +1,105 @@
 {
-  "templateVersion": "1.0",
+  "templateVersion": "2.0",
+  "metadata": {
+    "id": "quiz-step-07",
+    "name": "Step step-07",
+    "description": "question step for quiz",
+    "category": "quiz-question",
+    "tags": [
+      "quiz",
+      "style",
+      "question"
+    ],
+    "createdAt": "2025-10-11T10:44:14.171Z",
+    "updatedAt": "2025-10-11T10:44:14.171Z"
+  },
   "layout": {
     "containerWidth": "full",
     "spacing": "small",
-    "backgroundColor": "transparent",
+    "backgroundColor": "#FAF9F7",
     "responsive": true
   },
-  "validation": {
-    "required": true,
-    "minAnswers": 1,
-    "maxAnswers": 3,
-    "validationMessage": "Selecione pelo menos uma opção!"
-  },
+  "validation": {},
   "analytics": {
-    "events": ["page_view", "option_selected", "validation_error", "completion"],
-    "trackingId": "step-07-quiz-question"
-  },
-  "metadata": {
-    "id": "quiz-step-07",
-    "name": "Q6 - Textura",
-    "description": "Questão sobre texturas preferidas",
-    "category": "quiz-question",
-    "tags": ["quiz", "style", "quiz-question"],
-    "createdAt": "2025-08-11T01:02:19.342Z",
-    "updatedAt": "2025-08-11T01:02:19.342Z"
+    "events": [
+      "page_view",
+      "step_completed"
+    ],
+    "trackingId": "step-07",
+    "utmParams": true,
+    "customEvents": [
+      "component_mounted",
+      "user_interaction"
+    ]
   },
   "blocks": [
     {
-      "id": "step07-header",
-      "type": "quiz-intro-header",
+      "id": "undefined-question",
+      "type": "text-inline",
       "position": 0,
       "properties": {
-        "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
-        "logoAlt": "Logo Gisele Galvão",
-        "logoWidth": 96,
-        "logoHeight": 96,
-        "progressValue": 33,
-        "progressTotal": 100,
-        "showProgress": true,
-        "containerWidth": "full",
-        "spacing": "small"
+        "content": "QUAL CASACO É SEU FAVORITO?",
+        "fontSize": "text-xl",
+        "fontWeight": "font-bold"
       }
     },
     {
-      "id": "step07-question-title",
-      "type": "text-inline",
-      "position": 1,
-      "properties": {
-        "content": "Q6 - TEXTURA",
-        "fontSize": "text-2xl",
-        "fontWeight": "font-bold",
-        "textAlign": "text-center",
-        "color": "#432818",
-        "containerWidth": "full",
-        "spacing": "small"
-      }
-    },
-    {
-      "id": "step07-question-counter",
-      "type": "text-inline",
-      "position": 2,
-      "properties": {
-        "content": "Questão 6 de 13",
-        "fontSize": "text-sm",
-        "textAlign": "text-center",
-        "color": "#6B7280",
-        "marginBottom": 24,
-        "containerWidth": "full",
-        "spacing": "small"
-      }
-    },
-    {
-      "id": "step07-options-grid",
+      "id": "undefined-options",
       "type": "options-grid",
-      "position": 3,
+      "position": 1,
       "properties": {
         "options": [
           {
-            "id": "7a",
-            "text": "Opção A - Descrição personalizada",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/11_hqmr8l.webp",
-            "value": "7a",
-            "category": "Natural",
-            "points": 1
+            "id": "natural",
+            "text": "Cardigã bege confortável e casual",
+            "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735372/29_sdogoy.webp",
+            "styleId": "natural"
           },
           {
-            "id": "7b",
-            "text": "Opção B - Descrição personalizada",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp",
-            "value": "7b",
-            "category": "Clássico",
-            "points": 2
+            "id": "classico",
+            "text": "Blazer verde estruturado",
+            "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735372/30_nfth8k.webp",
+            "styleId": "classico"
           },
           {
-            "id": "7c",
-            "text": "Opção C - Descrição personalizada",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_snhaym.webp",
-            "value": "7c",
-            "category": "Contemporâneo",
-            "points": 2
+            "id": "contemporaneo",
+            "text": "Trench coat bege tradicional",
+            "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735372/31_tcmhcl.webp",
+            "styleId": "contemporaneo"
           },
           {
-            "id": "7d",
-            "text": "Opção D - Descrição personalizada",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp",
-            "value": "7d",
-            "category": "Elegante",
-            "points": 3
+            "id": "elegante",
+            "text": "Blazer branco refinado",
+            "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735377/32_h78pd8.webp",
+            "styleId": "elegante"
+          },
+          {
+            "id": "romantico",
+            "text": "Casaco pink vibrante e moderno",
+            "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735377/33_u8pldd.webp",
+            "styleId": "romantico"
+          },
+          {
+            "id": "sexy",
+            "text": "Jaqueta vinho de couro estilosa",
+            "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735377/34_peadir.webp",
+            "styleId": "sexy"
+          },
+          {
+            "id": "dramatico",
+            "text": "Jaqueta preta estilo rocker",
+            "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735379/35_pulzso.webp",
+            "styleId": "dramatico"
+          },
+          {
+            "id": "criativo",
+            "text": "Casaco estampado criativo e colorido",
+            "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735377/36_cympaq.webp",
+            "styleId": "criativo"
           }
         ],
-        "columns": 2,
-        "imageSize": 256,
-        "showImages": true,
-        "multipleSelection": true,
-        "minSelections": 1,
-        "maxSelections": 3,
-        "borderColor": "#E5E7EB",
-        "selectedBorderColor": "#B89B7A",
-        "hoverColor": "#F3E8D3",
-        "containerWidth": "full",
-        "spacing": "small",
-        "marginBottom": 16
-      }
-    },
-    {
-      "id": "step07-continue-button",
-      "type": "button-inline",
-      "position": 4,
-      "properties": {
-        "text": "Próxima Questão →",
-        "textWhenDisabled": "Selecione pelo menos 1 opção",
-        "variant": "primary",
-        "size": "large",
-        "fullWidth": true,
-        "backgroundColor": "#B89B7A",
-        "textColor": "#ffffff",
-        "enableOnSelection": true,
-        "containerWidth": "full",
-        "spacing": "small",
-        "marginTop": 24
+        "requiredSelections": 3,
+        "columns": 2
       }
     }
   ]

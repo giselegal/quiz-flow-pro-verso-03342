@@ -1,184 +1,105 @@
 {
-  "templateVersion": "1.0",
+  "templateVersion": "2.0",
+  "metadata": {
+    "id": "quiz-step-02",
+    "name": "Step step-02",
+    "description": "question step for quiz",
+    "category": "quiz-question",
+    "tags": [
+      "quiz",
+      "style",
+      "question"
+    ],
+    "createdAt": "2025-10-11T10:44:14.170Z",
+    "updatedAt": "2025-10-11T10:44:14.170Z"
+  },
   "layout": {
     "containerWidth": "full",
     "spacing": "small",
-    "backgroundColor": "transparent",
+    "backgroundColor": "#FAF9F7",
     "responsive": true
   },
-  "validation": {
-    "required": true,
-    "minAnswers": 1,
-    "maxAnswers": 3,
-    "validationMessage": "Selecione pelo menos uma opção!"
-  },
+  "validation": {},
   "analytics": {
-    "events": ["page_view", "option_selected", "validation_error", "completion"],
-    "trackingId": "step-02-quiz-question"
-  },
-  "metadata": {
-    "id": "quiz-step-02",
-    "name": "Q1 - Roupa Favorita",
-    "description": "Primeira questão sobre estilo de roupa",
-    "category": "quiz-question",
-    "tags": ["quiz", "style", "quiz-question"],
-    "createdAt": "2025-08-11T01:02:19.340Z",
-    "updatedAt": "2025-08-11T01:02:19.340Z"
+    "events": [
+      "page_view",
+      "step_completed"
+    ],
+    "trackingId": "step-02",
+    "utmParams": true,
+    "customEvents": [
+      "component_mounted",
+      "user_interaction"
+    ]
   },
   "blocks": [
     {
-      "id": "step02-header",
-      "type": "quiz-intro-header",
+      "id": "undefined-question",
+      "type": "text-inline",
       "position": 0,
       "properties": {
-        "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
-        "logoAlt": "Logo Gisele Galvão",
-        "logoWidth": 96,
-        "logoHeight": 96,
-        "progressValue": 10,
-        "progressTotal": 100,
-        "showProgress": true,
-        "containerWidth": "full",
-        "spacing": "small"
+        "content": "QUAL O SEU TIPO DE ROUPA FAVORITA?",
+        "fontSize": "text-xl",
+        "fontWeight": "font-bold"
       }
     },
     {
-      "id": "step02-question-title",
-      "type": "text-inline",
-      "position": 1,
-      "properties": {
-        "content": "Q1 - ROUPA FAVORITA",
-        "fontSize": "text-2xl",
-        "fontWeight": "font-bold",
-        "textAlign": "text-center",
-        "color": "#432818",
-        "containerWidth": "full",
-        "spacing": "small"
-      }
-    },
-    {
-      "id": "step02-question-counter",
-      "type": "text-inline",
-      "position": 2,
-      "properties": {
-        "content": "Questão 1 de 13",
-        "fontSize": "text-sm",
-        "textAlign": "text-center",
-        "color": "#6B7280",
-        "marginBottom": 24,
-        "containerWidth": "full",
-        "spacing": "small"
-      }
-    },
-    {
-      "id": "step02-options-grid",
+      "id": "undefined-options",
       "type": "options-grid",
-      "position": 3,
+      "position": 1,
       "properties": {
         "options": [
           {
-            "id": "1a",
-            "text": "Natural & Confortável",
-            "description": "Amo roupas confortáveis e práticas para o dia a dia",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/11_hqmr8l.webp",
-            "value": "1a",
-            "category": "Natural",
-            "points": 1
+            "id": "natural",
+            "text": "Conforto, leveza e praticidade no vestir",
+            "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/11_hqmr8l.webp",
+            "styleId": "natural"
           },
           {
-            "id": "1b",
-            "text": "Clássico & Elegante",
-            "description": "Prefiro peças atemporais e elegantes",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp",
-            "value": "1b",
-            "category": "Clássico",
-            "points": 2
+            "id": "classico",
+            "text": "Discrição, caimento clássico e sobriedade",
+            "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp",
+            "styleId": "classico"
           },
           {
-            "id": "1c",
-            "text": "Contemporâneo & Moderno",
-            "description": "Gosto de combinar moderno com clássico",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_snhaym.webp",
-            "value": "1c",
-            "category": "Contemporâneo",
-            "points": 2
+            "id": "contemporaneo",
+            "text": "Praticidade com um toque de estilo atual",
+            "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_snhaym.webp",
+            "styleId": "contemporaneo"
           },
           {
-            "id": "1d",
-            "text": "Elegante & Sofisticado",
-            "description": "Valorizo sofisticação e refinamento",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp",
-            "value": "1d",
-            "category": "Elegante",
-            "points": 3
+            "id": "elegante",
+            "text": "Elegância refinada, moderna e sem exageros",
+            "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp",
+            "styleId": "elegante"
           },
           {
-            "id": "1e",
-            "text": "Romântico & Delicado",
-            "description": "Adoro looks delicados e femininos",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/15_xezvcy.webp",
-            "value": "1e",
-            "category": "Romântico",
-            "points": 2
+            "id": "romantico",
+            "text": "Delicadeza em tecidos suaves e fluidos",
+            "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/15_xezvcy.webp",
+            "styleId": "romantico"
           },
           {
-            "id": "1f",
-            "text": "Sexy & Sedutor",
-            "description": "Prefiro roupas que valorizam minha silhueta",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735316/16_mpqpew.webp",
-            "value": "1f",
-            "category": "Sexy",
-            "points": 3
+            "id": "sexy",
+            "text": "Sensualidade com destaque para o corpo",
+            "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735316/16_mpqpew.webp",
+            "styleId": "sexy"
           },
           {
-            "id": "1g",
-            "text": "Dramático & Impactante",
-            "description": "Gosto de looks marcantes e impactantes",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735319/17_m5ogub.webp",
-            "value": "1g",
-            "category": "Dramático",
-            "points": 3
+            "id": "dramatico",
+            "text": "Impacto visual com peças estruturadas e assimétricas",
+            "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735319/17_m5ogub.webp",
+            "styleId": "dramatico"
           },
           {
-            "id": "1h",
-            "text": "Criativo & Único",
-            "description": "Amo experimentar cores e estampas ousadas",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/18_j8ipfb.webp",
-            "value": "1h",
-            "category": "Criativo",
-            "points": 4
+            "id": "criativo",
+            "text": "Mix criativo com formas ousadas e originais",
+            "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/18_j8ipfb.webp",
+            "styleId": "criativo"
           }
         ],
-        "columns": 2,
-        "imageSize": 256,
-        "showImages": true,
-        "multipleSelection": true,
-        "minSelections": 1,
-        "maxSelections": 3,
-        "borderColor": "#E5E7EB",
-        "selectedBorderColor": "#B89B7A",
-        "hoverColor": "#F3E8D3",
-        "containerWidth": "full",
-        "spacing": "small",
-        "marginBottom": 16
-      }
-    },
-    {
-      "id": "step02-continue-button",
-      "type": "button-inline",
-      "position": 4,
-      "properties": {
-        "text": "Próxima Questão →",
-        "textWhenDisabled": "Selecione pelo menos 1 opção",
-        "variant": "primary",
-        "size": "large",
-        "fullWidth": true,
-        "backgroundColor": "#B89B7A",
-        "textColor": "#ffffff",
-        "enableOnSelection": true,
-        "containerWidth": "full",
-        "spacing": "small",
-        "marginTop": 24
+        "requiredSelections": 3,
+        "columns": 2
       }
     }
   ]

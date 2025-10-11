@@ -1,71 +1,55 @@
 {
-  "templateVersion": "1.0",
+  "templateVersion": "2.0",
+  "metadata": {
+    "id": "quiz-step-15",
+    "name": "Step step-15",
+    "description": "strategic-question step for quiz",
+    "category": "quiz-strategic-question",
+    "tags": [
+      "quiz",
+      "style",
+      "strategic-question"
+    ],
+    "createdAt": "2025-10-11T10:44:14.173Z",
+    "updatedAt": "2025-10-11T10:44:14.173Z"
+  },
   "layout": {
     "containerWidth": "full",
     "spacing": "small",
-    "backgroundColor": "transparent",
+    "backgroundColor": "#FAF9F7",
     "responsive": true
   },
-  "validation": {
-    "required": true,
-    "minAnswers": 1,
-    "maxAnswers": 3,
-    "validationMessage": "Selecione pelo menos uma opção!"
-  },
+  "validation": {},
   "analytics": {
-    "events": ["page_view", "option_selected", "validation_error", "completion"],
-    "trackingId": "step-15-transition"
-  },
-  "metadata": {
-    "id": "quiz-step-15",
-    "name": "Transição",
-    "description": "Página de transição para resultado",
-    "category": "transition",
-    "tags": ["quiz", "style", "transition"],
-    "createdAt": "2025-08-11T01:02:19.344Z",
-    "updatedAt": "2025-08-11T01:02:19.344Z"
+    "events": [
+      "page_view",
+      "step_completed"
+    ],
+    "trackingId": "step-15",
+    "utmParams": true,
+    "customEvents": [
+      "component_mounted",
+      "user_interaction"
+    ]
   },
   "blocks": [
     {
-      "id": "step15-header",
-      "type": "quiz-intro-header",
+      "id": "undefined-question",
+      "type": "text-inline",
       "position": 0,
       "properties": {
-        "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
-        "logoAlt": "Logo Gisele Galvão",
-        "logoWidth": 96,
-        "logoHeight": 96,
-        "progressValue": 71,
-        "progressTotal": 100,
-        "showProgress": true,
-        "containerWidth": "full",
-        "spacing": "small"
+        "content": "Com que frequência você se pega pensando: \"Com que roupa eu vou?\" — mesmo com o guarda-roupa cheio?",
+        "fontSize": "text-xl",
+        "fontWeight": "font-bold"
       }
     },
     {
-      "id": "step15-title",
-      "type": "text-inline",
+      "id": "undefined-input",
+      "type": "form-input",
       "position": 1,
       "properties": {
-        "content": "ANALISANDO SEU ESTILO...",
-        "fontSize": "text-3xl",
-        "fontWeight": "font-bold",
-        "textAlign": "text-center",
-        "color": "#432818",
-        "containerWidth": "full",
-        "spacing": "small"
-      }
-    },
-    {
-      "id": "step15-loading",
-      "type": "loading-animation",
-      "position": 2,
-      "properties": {
-        "type": "spinner",
-        "color": "#B89B7A",
-        "size": "large",
-        "containerWidth": "full",
-        "spacing": "small"
+        "placeholder": "",
+        "inputType": "text"
       }
     }
   ]

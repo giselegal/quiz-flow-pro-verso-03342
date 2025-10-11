@@ -1,144 +1,55 @@
 {
-  "templateVersion": "1.0",
+  "templateVersion": "2.0",
+  "metadata": {
+    "id": "quiz-step-14",
+    "name": "Step step-14",
+    "description": "strategic-question step for quiz",
+    "category": "quiz-strategic-question",
+    "tags": [
+      "quiz",
+      "style",
+      "strategic-question"
+    ],
+    "createdAt": "2025-10-11T10:44:14.173Z",
+    "updatedAt": "2025-10-11T10:44:14.173Z"
+  },
   "layout": {
     "containerWidth": "full",
     "spacing": "small",
-    "backgroundColor": "transparent",
+    "backgroundColor": "#FAF9F7",
     "responsive": true
   },
-  "validation": {
-    "required": true,
-    "minAnswers": 1,
-    "maxAnswers": 3,
-    "validationMessage": "Selecione pelo menos uma opção!"
-  },
+  "validation": {},
   "analytics": {
-    "events": ["page_view", "option_selected", "validation_error", "completion"],
-    "trackingId": "step-14-quiz-question"
-  },
-  "metadata": {
-    "id": "quiz-step-14",
-    "name": "Q13 - Personalidade",
-    "description": "Questão final sobre personalidade",
-    "category": "quiz-question",
-    "tags": ["quiz", "style", "quiz-question"],
-    "createdAt": "2025-08-11T01:02:19.344Z",
-    "updatedAt": "2025-08-11T01:02:19.344Z"
+    "events": [
+      "page_view",
+      "step_completed"
+    ],
+    "trackingId": "step-14",
+    "utmParams": true,
+    "customEvents": [
+      "component_mounted",
+      "user_interaction"
+    ]
   },
   "blocks": [
     {
-      "id": "step14-header",
-      "type": "quiz-intro-header",
+      "id": "undefined-question",
+      "type": "text-inline",
       "position": 0,
       "properties": {
-        "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
-        "logoAlt": "Logo Gisele Galvão",
-        "logoWidth": 96,
-        "logoHeight": 96,
-        "progressValue": 67,
-        "progressTotal": 100,
-        "showProgress": true,
-        "containerWidth": "full",
-        "spacing": "small"
+        "content": "O que mais te desafia na hora de se vestir?",
+        "fontSize": "text-xl",
+        "fontWeight": "font-bold"
       }
     },
     {
-      "id": "step14-question-title",
-      "type": "text-inline",
+      "id": "undefined-input",
+      "type": "form-input",
       "position": 1,
       "properties": {
-        "content": "Q13 - PERSONALIDADE",
-        "fontSize": "text-2xl",
-        "fontWeight": "font-bold",
-        "textAlign": "text-center",
-        "color": "#432818",
-        "containerWidth": "full",
-        "spacing": "small"
-      }
-    },
-    {
-      "id": "step14-question-counter",
-      "type": "text-inline",
-      "position": 2,
-      "properties": {
-        "content": "Questão 13 de 13",
-        "fontSize": "text-sm",
-        "textAlign": "text-center",
-        "color": "#6B7280",
-        "marginBottom": 24,
-        "containerWidth": "full",
-        "spacing": "small"
-      }
-    },
-    {
-      "id": "step14-options-grid",
-      "type": "options-grid",
-      "position": 3,
-      "properties": {
-        "options": [
-          {
-            "id": "14a",
-            "text": "Opção A - Descrição personalizada",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/11_hqmr8l.webp",
-            "value": "14a",
-            "category": "Natural",
-            "points": 1
-          },
-          {
-            "id": "14b",
-            "text": "Opção B - Descrição personalizada",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp",
-            "value": "14b",
-            "category": "Clássico",
-            "points": 2
-          },
-          {
-            "id": "14c",
-            "text": "Opção C - Descrição personalizada",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_snhaym.webp",
-            "value": "14c",
-            "category": "Contemporâneo",
-            "points": 2
-          },
-          {
-            "id": "14d",
-            "text": "Opção D - Descrição personalizada",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp",
-            "value": "14d",
-            "category": "Elegante",
-            "points": 3
-          }
-        ],
-        "columns": 2,
-        "imageSize": 256,
-        "showImages": true,
-        "multipleSelection": true,
-        "minSelections": 1,
-        "maxSelections": 3,
-        "borderColor": "#E5E7EB",
-        "selectedBorderColor": "#B89B7A",
-        "hoverColor": "#F3E8D3",
-        "containerWidth": "full",
-        "spacing": "small",
-        "marginBottom": 16
-      }
-    },
-    {
-      "id": "step14-continue-button",
-      "type": "button-inline",
-      "position": 4,
-      "properties": {
-        "text": "Ver Resultado →",
-        "textWhenDisabled": "Selecione pelo menos 1 opção",
-        "variant": "primary",
-        "size": "large",
-        "fullWidth": true,
-        "backgroundColor": "#B89B7A",
-        "textColor": "#ffffff",
-        "enableOnSelection": true,
-        "containerWidth": "full",
-        "spacing": "small",
-        "marginTop": 24
+        "placeholder": "",
+        "inputType": "text"
       }
     }
   ]
