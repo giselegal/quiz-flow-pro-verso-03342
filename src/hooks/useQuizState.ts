@@ -19,6 +19,8 @@ import { mergeRuntimeFlags, type QuizRuntimeFlags } from '@/config/quizRuntimeFl
 import { stepIdVariants, normalizeStepId, getNextFromOrder, getPreviousFromOrder, safeGetStep } from '@/utils/quizStepIds';
 import { getPersonalizedStepTemplate } from '../templates/quiz21StepsSimplified';
 import { quizEditorBridge } from '@/services/QuizEditorBridge';
+import { useFeatureFlags } from './useFeatureFlags';
+import { useTemplateLoader } from './useTemplateLoader';
 // Note: STRATEGIC_ANSWER_TO_OFFER_KEY commented - not used
 // import { STRATEGIC_ANSWER_TO_OFFER_KEY } from '@/data/quizSteps';
 
@@ -81,7 +83,15 @@ export function useQuizState(funnelId?: string, externalSteps?: Record<string, a
   const autoAdvanceTimerRef = (globalThis as any).__quizAutoAdvanceTimerRef || { current: null as any };
   ; (globalThis as any).__quizAutoAdvanceTimerRef = autoAdvanceTimerRef;
 
-  // 🎯 NOVO: Carregar steps do bridge se tiver funnelId
+  // 🎯 FASE 2: Feature Flags e Template Loader
+  const { useJsonTemplates, enablePrefetch } = useFeatureFlags();
+  const {
+    loadQuizEstiloTemplate,
+    prefetchNextSteps,
+    isLoading: isLoadingTemplate,
+    error: templateError,
+    clearCache
+  } = useTemplateLoader();  // 🎯 NOVO: Carregar steps do bridge se tiver funnelId
   useEffect(() => {
     if (funnelId && !externalSteps) {
       setIsLoading(true);
@@ -100,6 +110,40 @@ export function useQuizState(funnelId?: string, externalSteps?: Record<string, a
 
   // Determinar source dos steps (prioridade: external > loaded > default)
   const stepsSource = externalSteps || loadedSteps || QUIZ_STEPS;
+
+  // 🎯 FASE 2: Carregar template JSON quando step mudar
+  useEffect(() => {
+    // Se não usar JSON ou tem externalSteps, pular
+    if (!useJsonTemplates || externalSteps || funnelId) {
+      return;
+    }
+
+    // Extrair número do step (ex: "step-01" -> 1)
+    const stepMatch = state.currentStep.match(/step-(\d+)/);
+    if (!stepMatch) return;
+
+    const stepNumber = parseInt(stepMatch[1], 10);
+
+    // Carregar template assíncrono
+    (async () => {
+      try {
+        console.log(`🔄 [useQuizState] Carregando JSON template para step ${stepNumber}...`);
+        const template = await loadQuizEstiloTemplate(stepNumber);
+
+        if (template) {
+          console.log(`✅ [useQuizState] Template ${stepNumber} carregado com sucesso`);
+
+          // Prefetch próximos steps se habilitado
+          if (enablePrefetch) {
+            prefetchNextSteps(stepNumber);
+          }
+        }
+      } catch (error) {
+        console.error(`❌ [useQuizState] Erro ao carregar template ${stepNumber}:`, error);
+        // Fallback silencioso - QUIZ_STEPS será usado
+      }
+    })();
+  }, [state.currentStep, useJsonTemplates, externalSteps, funnelId, loadQuizEstiloTemplate, prefetchNextSteps, enablePrefetch]);
 
   // (agora importado de util) normalizeStepId
 
@@ -324,7 +368,10 @@ export function useQuizState(funnelId?: string, externalSteps?: Record<string, a
     canGoBack,
     canGoForward,
     isCurrentStepComplete,
-    isLoading, // 🎯 NOVO: indicador de carregamento
+    isLoading, // Carregamento do bridge/funnelId
+    isLoadingTemplate, // 🎯 FASE 2: Carregamento de templates JSON
+    templateError, // 🎯 FASE 2: Erro no carregamento de templates
+    useJsonTemplates, // 🎯 FASE 2: Flag indicando se está usando JSON
 
     // Ações de navegação
     nextStep,
