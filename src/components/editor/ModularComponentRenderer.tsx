@@ -2,6 +2,32 @@
  * 🎯 COMPONENTE RENDERIZADOR MODULAR
  * 
  * Renderiza diferentes tipos de componentes dentro dos steps
+ * 
+ * @deprecated Este componente será removido no Sprint 4.
+ * Use UniversalBlockRenderer de @/components/editor/blocks/UniversalBlockRenderer
+ * 
+ * Motivo: Funcionalidade consolidada no UniversalBlockRenderer oficial que:
+ * - Suporta 30+ tipos de blocos
+ * - Cache LRU para performance
+ * - Registry de componentes enhanceds
+ * - Modos: editor | preview | production
+ * 
+ * Migração:
+ * ```tsx
+ * // ANTES:
+ * import { ModularComponentRenderer } from '@/components/editor/ModularComponentRenderer';
+ * <ModularComponentRenderer component={comp} isEditable={true} onUpdate={handleUpdate} />
+ * 
+ * // DEPOIS:
+ * import { UniversalBlockRenderer } from '@/components/editor/blocks/UniversalBlockRenderer';
+ * <UniversalBlockRenderer 
+ *   block={comp} 
+ *   mode="editor"
+ *   onUpdate={handleUpdate}
+ * />
+ * ```
+ * 
+ * Data de remoção prevista: Sprint 4 - Dia 2 (22/out/2024)
  */
 
 import React from 'react';
@@ -20,6 +46,15 @@ const ModularComponentRenderer: React.FC<ModularComponentRendererProps> = ({
     isEditable = false,
     onUpdate = () => { }
 }) => {
+    // ⚠️ AVISO DE DEPRECIAÇÃO
+    if (process.env.NODE_ENV === 'development') {
+        console.warn(
+            '⚠️ [DEPRECATED] ModularComponentRenderer será removido no Sprint 4.\n' +
+            'Use UniversalBlockRenderer de @/components/editor/blocks/UniversalBlockRenderer\n' +
+            'Veja documentação no topo do arquivo para guia de migração.'
+        );
+    }
+
     const handleUpdate = (field: string, value: any) => {
         onUpdate(component.id, { [field]: value });
     };
