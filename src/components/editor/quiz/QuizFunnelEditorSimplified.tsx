@@ -74,6 +74,12 @@ function createBlankStep(type: QuizStep['type']): EditableQuizStep {
 }
 
 const QuizFunnelEditorSimplified: React.FC<QuizFunnelEditorProps> = ({ funnelId, templateId }) => {
+    // 🚨 Console warning para desenvolvedores
+    console.warn(
+        '⚠️ DEPRECATED: QuizFunnelEditorSimplified será removido em 01/nov/2025. ' +
+        'Migre para QuizModularProductionEditor. Ver MIGRATION_EDITOR.md'
+    );
+
     const crud = useUnifiedCRUD();
     const [steps, setSteps] = useState<EditableQuizStep[]>([]);
     const [selectedId, setSelectedId] = useState<string>('');
