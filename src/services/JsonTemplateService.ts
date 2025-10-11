@@ -14,7 +14,7 @@
  */
 
 import { QuizStepAdapter } from '@/adapters/QuizStepAdapter';
-import type { QuizStep } from '@/types/quiz';
+import type { QuizStep } from '@/data/quizSteps';
 
 // ============================================================================
 // TIPOS
@@ -149,13 +149,29 @@ export class JsonTemplateService {
 
     /**
      * 💾 Salvar template JSON
+     * 
+     * TODO: Implementar conversão QuizStep → JSON quando toJSON for adicionado ao adapter
      */
     async saveTemplate(stepNumber: number, quizStep: QuizStep): Promise<void> {
         try {
             console.log(`💾 Salvando template step-${stepNumber}...`);
 
-            // 1. Converter para JSON
-            const jsonTemplate = QuizStepAdapter.toJSON(quizStep);            // 3. Salvar arquivo (simulado - em produção salvaria no servidor)
+            // 1. Converter para blocos JSON
+            const jsonBlocks = QuizStepAdapter.toJSONBlocks(quizStep);
+
+            // 2. Criar template JSON básico
+            const jsonTemplate = {
+                templateVersion: '1.0.0',
+                metadata: {
+                    id: quizStep.id || `step-${stepNumber}`,
+                    name: quizStep.title || `Step ${stepNumber}`,
+                    category: quizStep.type || 'question',
+                    tags: [],
+                },
+                blocks: jsonBlocks,
+            };
+
+            // 3. Salvar arquivo (simulado - em produção salvaria no servidor)
             const fileName = `quiz-estilo-step-${stepNumber}.json`;
             console.log(`✅ Template convertido: ${fileName}`);
             console.log('📄 JSON:', JSON.stringify(jsonTemplate, null, 2).slice(0, 200) + '...');
@@ -177,19 +193,19 @@ export class JsonTemplateService {
         }
     }
 
-  /**
-   * ✅ Validar template JSON
-   */
-  async validateTemplate(stepNumber: number): Promise<boolean> {
-    try {
-      const template = await this.getTemplate(stepNumber);
-      // Template já foi validado no fromJSON
-      return !!template && !!template.type;
-    } catch (error) {
-      console.error(`❌ Erro ao validar template step-${stepNumber}:`, error);
-      return false;
-    }
-  }    /**
+    /**
+     * ✅ Validar template JSON
+     */
+    async validateTemplate(stepNumber: number): Promise<boolean> {
+        try {
+            const template = await this.getTemplate(stepNumber);
+            // Template já foi validado no fromJSON
+            return !!template && !!template.type;
+        } catch (error) {
+            console.error(`❌ Erro ao validar template step-${stepNumber}:`, error);
+            return false;
+        }
+    }    /**
      * 📋 Listar todos os templates JSON disponíveis
      */
     async listTemplates(): Promise<number[]> {
@@ -267,16 +283,13 @@ export class JsonTemplateService {
 
             // Tentar carregar JSON
             const jsonTemplate = await this.loadJsonFile(stepNumber);
-            const quizStep = QuizStepAdapter.fromJson(jsonTemplate);
+            const quizStep = QuizStepAdapter.fromJSON(jsonTemplate);
 
-            // Validar
-            const isValid = QuizStepAdapter.validate(quizStep);
-            if (!isValid) {
+            // Template já foi validado durante conversão
+            if (!quizStep || !quizStep.type) {
                 console.warn(`⚠️ Template JSON inválido: step-${stepNumber}, usando fallback`);
                 return this.loadFallback(stepNumber, startTime);
-            }
-
-            // Cache
+            }            // Cache
             const loadTime = performance.now() - startTime;
             if (this.config.cacheEnabled) {
                 this.cache.set(stepNumber, {
@@ -316,10 +329,9 @@ export class JsonTemplateService {
         console.log(`🔄 Usando fallback QUIZ_STEPS: step-${stepNumber}`);
 
         // Import dinâmico para evitar dependency circular
-        const { QUIZ_STEPS } = await import('@/data/quiz-steps');
-        const fallbackStep = QUIZ_STEPS[stepNumber - 1];
-
-        if (!fallbackStep) {
+        const { QUIZ_STEPS } = await import('@/data/quizSteps');
+        const quizStepsArray = Object.values(QUIZ_STEPS);
+        const fallbackStep = quizStepsArray[stepNumber - 1]; if (!fallbackStep) {
             throw new Error(`No fallback available for step-${stepNumber}`);
         }
 
