@@ -11,7 +11,7 @@
       "question"
     ],
     "createdAt": "2025-10-11T10:44:14.172Z",
-    "updatedAt": "2025-10-11T10:44:14.172Z"
+    "updatedAt": "2025-10-11T22:35:51.534Z"
   },
   "layout": {
     "containerWidth": "full",
@@ -34,7 +34,7 @@
   },
   "blocks": [
     {
-      "id": "undefined-question",
+      "id": "step09-text-inline-1",
       "type": "text-inline",
       "position": 0,
       "properties": {
@@ -44,7 +44,7 @@
       }
     },
     {
-      "id": "undefined-options",
+      "id": "step09-options-grid-1",
       "type": "options-grid",
       "position": 1,
       "properties": {
@@ -53,49 +53,73 @@
             "id": "natural",
             "text": "Tênis nude casual e confortável",
             "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735426/47_bi6vgf.webp",
-            "styleId": "natural"
+            "styleId": "natural",
+            "scores": {
+              "Natural": 1
+            }
           },
           {
             "id": "classico",
             "text": "Scarpin nude de salto baixo",
             "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735427/48_ymo1ur.webp",
-            "styleId": "classico"
+            "styleId": "classico",
+            "scores": {
+              "Clássico": 1
+            }
           },
           {
             "id": "contemporaneo",
             "text": "Sandália dourada com salto bloco",
             "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735427/49_apcrwa.webp",
-            "styleId": "contemporaneo"
+            "styleId": "contemporaneo",
+            "scores": {
+              "Contemporâneo": 1
+            }
           },
           {
             "id": "elegante",
             "text": "Scarpin nude salto alto e fino",
             "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735428/50_qexxxo.webp",
-            "styleId": "elegante"
+            "styleId": "elegante",
+            "scores": {
+              "Elegante": 1
+            }
           },
           {
             "id": "romantico",
             "text": "Sandália anabela off white",
             "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735428/51_xbgntp.webp",
-            "styleId": "romantico"
+            "styleId": "romantico",
+            "scores": {
+              "Romântico": 1
+            }
           },
           {
             "id": "sexy",
             "text": "Sandália rosa de tiras finas",
             "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735429/52_edlp0e.webp",
-            "styleId": "sexy"
+            "styleId": "sexy",
+            "scores": {
+              "Sexy": 1
+            }
           },
           {
             "id": "dramatico",
             "text": "Scarpin preto moderno com vinil transparente",
             "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735429/53_bfdp6f.webp",
-            "styleId": "dramatico"
+            "styleId": "dramatico",
+            "scores": {
+              "Dramático": 1
+            }
           },
           {
             "id": "criativo",
             "text": "Scarpin colorido estampado",
             "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735430/54_xnilkc.webp",
-            "styleId": "criativo"
+            "styleId": "criativo",
+            "scores": {
+              "Criativo": 1
+            }
           }
         ],
         "requiredSelections": 3,

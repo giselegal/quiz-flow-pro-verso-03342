@@ -1,0 +1,98 @@
+{
+  "templateVersion": "2.0",
+  "metadata": {
+    "id": "quiz-step-03",
+    "name": "Step step-03",
+    "description": "question step for quiz",
+    "category": "quiz-question",
+    "tags": [
+      "quiz",
+      "style",
+      "question"
+    ],
+    "createdAt": "2025-10-11T10:44:14.170Z",
+    "updatedAt": "2025-10-11T22:08:41.675Z"
+  },
+  "layout": {
+    "containerWidth": "full",
+    "spacing": "small",
+    "backgroundColor": "#FAF9F7",
+    "responsive": true
+  },
+  "validation": {},
+  "analytics": {
+    "events": [
+      "page_view",
+      "step_completed"
+    ],
+    "trackingId": "step-03",
+    "utmParams": true,
+    "customEvents": [
+      "component_mounted",
+      "user_interaction"
+    ]
+  },
+  "blocks": [
+    {
+      "id": "step03-text-inline-1",
+      "type": "text-inline",
+      "position": 0,
+      "properties": {
+        "content": "RESUMA A SUA PERSONALIDADE:",
+        "fontSize": "text-xl",
+        "fontWeight": "font-bold"
+      }
+    },
+    {
+      "id": "step03-options-grid-1",
+      "type": "options-grid",
+      "position": 1,
+      "properties": {
+        "options": [
+          {
+            "id": "natural",
+            "text": "Informal, espontânea, alegre, essencialista",
+            "styleId": "natural"
+          },
+          {
+            "id": "classico",
+            "text": "Conservadora, séria, organizada",
+            "styleId": "classico"
+          },
+          {
+            "id": "contemporaneo",
+            "text": "Informada, ativa, prática",
+            "styleId": "contemporaneo"
+          },
+          {
+            "id": "elegante",
+            "text": "Exigente, sofisticada, seletiva",
+            "styleId": "elegante"
+          },
+          {
+            "id": "romantico",
+            "text": "Feminina, meiga, delicada, sensível",
+            "styleId": "romantico"
+          },
+          {
+            "id": "sexy",
+            "text": "Glamorosa, vaidosa, sensual",
+            "styleId": "sexy"
+          },
+          {
+            "id": "dramatico",
+            "text": "Cosmopolita, moderna e audaciosa",
+            "styleId": "dramatico"
+          },
+          {
+            "id": "criativo",
+            "text": "Exótica, aventureira, livre",
+            "styleId": "criativo"
+          }
+        ],
+        "requiredSelections": 3,
+        "columns": 2
+      }
+    }
+  ]
+}

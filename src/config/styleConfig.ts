@@ -15,7 +15,7 @@ export interface StyleConfig {
   description: string;
   category: string;
   keywords: string[];
-  specialTips: string[]; // ✅ Novo campo para dicas especiais
+  specialTips: string[]; // ✅ Perguntas persuasivas que geram desejo pela solução
   [key: string]: any; // Allow dynamic property access
 }
 
@@ -33,10 +33,10 @@ export const styleConfig: StyleConfigMap = {
     category: 'Conforto & Praticidade',
     keywords: ['conforto', 'praticidade', 'descontraído', 'autêntico', 'natural', 'casual'],
     specialTips: [
-      'Invista em peças de algodão, linho e malha.',
-      'Prefira cores neutras e terrosas.',
-      'Aposte em acessórios discretos e funcionais.',
-      'Mantenha um guarda-roupa versátil e confortável.',
+      'Você já se perguntou quais tecidos realmente refletem seu estilo?',
+      'Quais cores comunicam a sua essência de forma mais autêntica?',
+      'O que torna um acessório verdadeiramente marcante em um look?',
+      'E se o seu guarda‑roupa fosse tão versátil que funcionasse em qualquer ocasião?',
     ],
   },
   Clássico: {
@@ -47,10 +47,10 @@ export const styleConfig: StyleConfigMap = {
     category: 'Elegância Atemporal',
     keywords: ['elegância', 'sofisticação', 'atemporal', 'clássico', 'refinado', 'tradicional'],
     specialTips: [
-      'Invista em peças de alfaiataria e camisas bem cortadas.',
-      'Prefira cores sóbrias como azul-marinho, branco e preto.',
-      'Aposte em acessórios discretos e clássicos.',
-      'Mantenha um guarda-roupa organizado e atemporal.',
+      'Como criar um guarda-roupa que nunca sai de moda?',
+      'Quais peças de alfaiataria realmente fazem a diferença no seu visual?',
+      'Qual o segredo de uma paleta de cores verdadeiramente sofisticada?',
+      'E se você pudesse dominar a arte da elegância discreta?',
     ],
   },
   Contemporâneo: {
@@ -62,10 +62,10 @@ export const styleConfig: StyleConfigMap = {
     category: 'Equilíbrio & Modernidade',
     keywords: ['contemporâneo', 'equilibrado', 'prático', 'atual', 'versátil', 'funcional'],
     specialTips: [
-      'Invista em peças minimalistas com cortes modernos.',
-      'Prefira cores neutras com pontos de cor.',
-      'Aposte em acessórios geométricos e sofisticados.',
-      'Mantenha um guarda-roupa versátil e atualizado.',
+      'Como equilibrar perfeitamente o clássico e o moderno no seu visual?',
+      'Quais cortes minimalistas realmente valorizam a sua silhueta?',
+      'Quando adicionar um toque de cor estratégico faz toda a diferença?',
+      'E se o seu estilo se adaptasse perfeitamente a qualquer ambiente?',
     ],
   },
   Elegante: {
@@ -76,10 +76,10 @@ export const styleConfig: StyleConfigMap = {
     category: 'Refinamento & Qualidade',
     keywords: ['elegante', 'refinado', 'sofisticado', 'qualidade', 'luxo', 'distinto'],
     specialTips: [
-      'Invista em peças de tecidos nobres como seda e crepe.',
-      'Prefira cores clássicas como branco, preto, bege e off-white.',
-      'Aposte em acessórios finos e discretos.',
-      'Mantenha um guarda-roupa sofisticado e impecável.',
+      'Qual o segredo dos tecidos nobres que transformam completamente um look?',
+      'Como identificar peças de verdadeira qualidade e investimento?',
+      'Quais detalhes sutis comunicam refinamento instantâneo?',
+      'E se você dominasse a arte de se vestir com distinção natural?',
     ],
   },
   Romântico: {
@@ -90,10 +90,10 @@ export const styleConfig: StyleConfigMap = {
     category: 'Delicadeza & Feminilidade',
     keywords: ['romântico', 'delicado', 'feminino', 'suave', 'encantador', 'doce'],
     specialTips: [
-      'Invista em peças com rendas, laços e babados.',
-      'Prefira cores suaves e pastéis.',
-      'Aposte em acessórios delicados e femininos.',
-      'Mantenha um guarda-roupa leve e encantador.',
+      'Como realçar sua feminilidade com delicadeza e sofisticação?',
+      'Quais cores suaves realmente valorizam sua suavidade natural?',
+      'Quando rendas e detalhes românticos elevam o seu visual?',
+      'E se você pudesse expressar sua essência feminina com confiança?',
     ],
   },
   Sexy: {
@@ -104,10 +104,10 @@ export const styleConfig: StyleConfigMap = {
     category: 'Sensualidade & Confiança',
     keywords: ['sexy', 'sensual', 'confiante', 'ousado', 'sedutor', 'empoderado'],
     specialTips: [
-      'Invista em peças justas e decotadas na medida certa.',
-      'Prefira cores intensas como vermelho e preto.',
-      'Aposte em acessórios marcantes e sedutores.',
-      'Mantenha um guarda-roupa ousado e poderoso.',
+      'Como valorizar suas curvas com elegância e confiança?',
+      'Qual o equilíbrio perfeito entre sensualidade e sofisticação?',
+      'Quais cores intensificam seu poder de atração?',
+      'E se você pudesse dominar a arte da sensualidade empoderada?',
     ],
   },
   Dramático: {
@@ -118,10 +118,10 @@ export const styleConfig: StyleConfigMap = {
     category: 'Impacto & Presença',
     keywords: ['dramático', 'marcante', 'impactante', 'presença', 'ousado', 'statement'],
     specialTips: [
-      'Invista em peças estruturadas e de design arrojado.',
-      'Prefira cores contrastantes e vibrantes.',
-      'Aposte em acessórios grandes e de impacto.',
-      'Mantenha um guarda-roupa ousado e marcante.',
+      'Como criar looks que causam impacto memorável?',
+      'Quais peças estruturadas realmente comandam atenção?',
+      'Quando o contraste visual comunica poder e presença?',
+      'E se você pudesse dominar a arte de nunca passar despercebida?',
     ],
   },
   Criativo: {
@@ -132,10 +132,10 @@ export const styleConfig: StyleConfigMap = {
     category: 'Expressão & Individualidade',
     keywords: ['criativo', 'único', 'artístico', 'individual', 'expressivo', 'original'],
     specialTips: [
-      'Invista em peças diferentes e estampadas.',
-      'Prefira cores contrastantes e combinações inusitadas.',
-      'Aposte em acessórios criativos e divertidos.',
-      'Mantenha um guarda-roupa original e cheio de personalidade.',
+      'Como expressar sua individualidade através do seu visual?',
+      'Quais combinações inusitadas realmente funcionam com estilo?',
+      'Quando ousar com estampas e cores cria looks memoráveis?',
+      'E se você pudesse liberar toda a sua criatividade sem medo de errar?',
     ],
   },
 } as const;

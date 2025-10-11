@@ -1,0 +1,56 @@
+{
+  "templateVersion": "2.0",
+  "metadata": {
+    "id": "quiz-step-16",
+    "name": "Step step-16",
+    "description": "strategic-question step for quiz",
+    "category": "quiz-strategic-question",
+    "tags": [
+      "quiz",
+      "style",
+      "strategic-question"
+    ],
+    "createdAt": "2025-10-11T10:44:14.173Z",
+    "updatedAt": "2025-10-11T22:08:41.682Z"
+  },
+  "layout": {
+    "containerWidth": "full",
+    "spacing": "small",
+    "backgroundColor": "#FAF9F7",
+    "responsive": true
+  },
+  "validation": {},
+  "analytics": {
+    "events": [
+      "page_view",
+      "step_completed"
+    ],
+    "trackingId": "step-16",
+    "utmParams": true,
+    "customEvents": [
+      "component_mounted",
+      "user_interaction"
+    ]
+  },
+  "blocks": [
+    {
+      "id": "step16-text-inline-1",
+      "type": "text-inline",
+      "position": 0,
+      "properties": {
+        "content": "Pense no quanto você já gastou com roupas que não usa ou que não representam quem você é... Você acredita que um material estratégico ajudaria?",
+        "fontSize": "text-xl",
+        "fontWeight": "font-bold"
+      }
+    },
+    {
+      "id": "step16-form-input-1",
+      "type": "form-input",
+      "position": 1,
+      "properties": {
+        "placeholder": "",
+        "inputType": "text"
+      }
+    }
+  ]
+}

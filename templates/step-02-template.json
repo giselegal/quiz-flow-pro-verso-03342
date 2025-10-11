@@ -11,7 +11,7 @@
       "question"
     ],
     "createdAt": "2025-10-11T10:44:14.170Z",
-    "updatedAt": "2025-10-11T10:44:14.170Z"
+    "updatedAt": "2025-10-11T22:35:51.529Z"
   },
   "layout": {
     "containerWidth": "full",
@@ -34,7 +34,7 @@
   },
   "blocks": [
     {
-      "id": "undefined-question",
+      "id": "step02-text-inline-1",
       "type": "text-inline",
       "position": 0,
       "properties": {
@@ -44,7 +44,7 @@
       }
     },
     {
-      "id": "undefined-options",
+      "id": "step02-options-grid-1",
       "type": "options-grid",
       "position": 1,
       "properties": {
@@ -53,49 +53,73 @@
             "id": "natural",
             "text": "Conforto, leveza e praticidade no vestir",
             "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/11_hqmr8l.webp",
-            "styleId": "natural"
+            "styleId": "natural",
+            "scores": {
+              "Natural": 1
+            }
           },
           {
             "id": "classico",
             "text": "Discrição, caimento clássico e sobriedade",
             "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp",
-            "styleId": "classico"
+            "styleId": "classico",
+            "scores": {
+              "Clássico": 1
+            }
           },
           {
             "id": "contemporaneo",
             "text": "Praticidade com um toque de estilo atual",
             "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_snhaym.webp",
-            "styleId": "contemporaneo"
+            "styleId": "contemporaneo",
+            "scores": {
+              "Contemporâneo": 1
+            }
           },
           {
             "id": "elegante",
             "text": "Elegância refinada, moderna e sem exageros",
             "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp",
-            "styleId": "elegante"
+            "styleId": "elegante",
+            "scores": {
+              "Elegante": 1
+            }
           },
           {
             "id": "romantico",
             "text": "Delicadeza em tecidos suaves e fluidos",
             "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/15_xezvcy.webp",
-            "styleId": "romantico"
+            "styleId": "romantico",
+            "scores": {
+              "Romântico": 1
+            }
           },
           {
             "id": "sexy",
             "text": "Sensualidade com destaque para o corpo",
             "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735316/16_mpqpew.webp",
-            "styleId": "sexy"
+            "styleId": "sexy",
+            "scores": {
+              "Sexy": 1
+            }
           },
           {
             "id": "dramatico",
             "text": "Impacto visual com peças estruturadas e assimétricas",
             "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735319/17_m5ogub.webp",
-            "styleId": "dramatico"
+            "styleId": "dramatico",
+            "scores": {
+              "Dramático": 1
+            }
           },
           {
             "id": "criativo",
             "text": "Mix criativo com formas ousadas e originais",
             "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/18_j8ipfb.webp",
-            "styleId": "criativo"
+            "styleId": "criativo",
+            "scores": {
+              "Criativo": 1
+            }
           }
         ],
         "requiredSelections": 3,

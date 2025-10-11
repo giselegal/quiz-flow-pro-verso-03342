@@ -11,7 +11,7 @@
       "question"
     ],
     "createdAt": "2025-10-11T10:44:14.172Z",
-    "updatedAt": "2025-10-11T10:44:14.172Z"
+    "updatedAt": "2025-10-11T22:35:51.536Z"
   },
   "layout": {
     "containerWidth": "full",
@@ -34,7 +34,7 @@
   },
   "blocks": [
     {
-      "id": "undefined-question",
+      "id": "step11-text-inline-1",
       "type": "text-inline",
       "position": 0,
       "properties": {
@@ -44,7 +44,7 @@
       }
     },
     {
-      "id": "undefined-options",
+      "id": "step11-options-grid-1",
       "type": "options-grid",
       "position": 1,
       "properties": {
@@ -52,42 +52,66 @@
           {
             "id": "natural",
             "text": "São fáceis de cuidar",
-            "styleId": "natural"
+            "styleId": "natural",
+            "scores": {
+              "Natural": 1
+            }
           },
           {
             "id": "classico",
             "text": "São de excelente qualidade",
-            "styleId": "classico"
+            "styleId": "classico",
+            "scores": {
+              "Clássico": 1
+            }
           },
           {
             "id": "contemporaneo",
             "text": "São fáceis de cuidar e modernos",
-            "styleId": "contemporaneo"
+            "styleId": "contemporaneo",
+            "scores": {
+              "Contemporâneo": 1
+            }
           },
           {
             "id": "elegante",
             "text": "São sofisticados",
-            "styleId": "elegante"
+            "styleId": "elegante",
+            "scores": {
+              "Elegante": 1
+            }
           },
           {
             "id": "romantico",
             "text": "São delicados",
-            "styleId": "romantico"
+            "styleId": "romantico",
+            "scores": {
+              "Romântico": 1
+            }
           },
           {
             "id": "sexy",
             "text": "São perfeitos ao meu corpo",
-            "styleId": "sexy"
+            "styleId": "sexy",
+            "scores": {
+              "Sexy": 1
+            }
           },
           {
             "id": "dramatico",
             "text": "São diferentes, e trazem um efeito para minha roupa",
-            "styleId": "dramatico"
+            "styleId": "dramatico",
+            "scores": {
+              "Dramático": 1
+            }
           },
           {
             "id": "criativo",
             "text": "São exclusivos, criam identidade no look",
-            "styleId": "criativo"
+            "styleId": "criativo",
+            "scores": {
+              "Criativo": 1
+            }
           }
         ],
         "requiredSelections": 3,

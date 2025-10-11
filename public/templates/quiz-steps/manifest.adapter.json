@@ -1,10 +1,10 @@
 {
   "metaOverrides": {
-    "name": "Quiz Estilo Legacy (Edited) (Edited) (Edited)"
+    "name": "Quiz Estilo Legacy (Edited) (Edited) (Edited) (Edited) (Edited) (Edited) (Edited) (Edited)"
   },
   "order": [
-    "etapa-02-estilo-pessoal-continuacao",
     "etapa-01-estilo-pessoal",
+    "etapa-02-estilo-pessoal-continuacao",
     "etapa-03-transicao-personalidade",
     "etapa-04-personalidade-comportamento",
     "etapa-05-personalidade-decisoes",
@@ -16,6 +16,6 @@
     "etapa-11-transicao-demografica",
     "etapa-12-demografica-idade"
   ],
-  "updatedAt": "2025-10-07T16:06:21.854Z",
+  "updatedAt": "2025-10-11T13:43:50.858Z",
   "version": "1.0.0"
 }

@@ -1,0 +1,55 @@
+{
+  "templateVersion": "2.0",
+  "metadata": {
+    "id": "quiz-step-20",
+    "name": "{userName}, seu estilo predominante é:",
+    "description": "result step for quiz",
+    "category": "quiz-result",
+    "tags": [
+      "quiz",
+      "style",
+      "result"
+    ],
+    "createdAt": "2025-10-11T10:44:14.174Z",
+    "updatedAt": "2025-10-11T22:08:41.683Z"
+  },
+  "layout": {
+    "containerWidth": "full",
+    "spacing": "small",
+    "backgroundColor": "#FAF9F7",
+    "responsive": true
+  },
+  "validation": {},
+  "analytics": {
+    "events": [
+      "page_view",
+      "step_completed"
+    ],
+    "trackingId": "step-20",
+    "utmParams": true,
+    "customEvents": [
+      "component_mounted",
+      "user_interaction"
+    ]
+  },
+  "blocks": [
+    {
+      "id": "step20-result-display-1",
+      "type": "result-display",
+      "position": 0,
+      "properties": {
+        "showPercentage": true,
+        "percentageFormat": "{resultPercentage}%"
+      },
+      "content": {
+        "resultTemplate": {
+          "greeting": "Parabéns, {userName}!",
+          "title": "Seu estilo predominante é:",
+          "styleName": "{resultStyle}",
+          "percentage": "{resultPercentage}%",
+          "description": "Você tem {resultPercentage}% de afinidade com o estilo {resultStyle}"
+        }
+      }
+    }
+  ]
+}

@@ -11,7 +11,7 @@
       "question"
     ],
     "createdAt": "2025-10-11T10:44:14.171Z",
-    "updatedAt": "2025-10-11T10:44:14.171Z"
+    "updatedAt": "2025-10-11T22:35:51.532Z"
   },
   "layout": {
     "containerWidth": "full",
@@ -34,7 +34,7 @@
   },
   "blocks": [
     {
-      "id": "undefined-question",
+      "id": "step06-text-inline-1",
       "type": "text-inline",
       "position": 0,
       "properties": {
@@ -44,7 +44,7 @@
       }
     },
     {
-      "id": "undefined-options",
+      "id": "step06-options-grid-1",
       "type": "options-grid",
       "position": 1,
       "properties": {
@@ -53,49 +53,73 @@
             "id": "natural",
             "text": "Estampas clean, com poucas informações",
             "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735372/20_oh44vh.webp",
-            "styleId": "natural"
+            "styleId": "natural",
+            "scores": {
+              "Natural": 1
+            }
           },
           {
             "id": "classico",
             "text": "Estampas clássicas e atemporais",
             "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735368/21_o7wkte.webp",
-            "styleId": "classico"
+            "styleId": "classico",
+            "scores": {
+              "Clássico": 1
+            }
           },
           {
             "id": "contemporaneo",
             "text": "Atemporais, mas que tenham uma pegada atual e moderna",
             "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735369/22_siebw2.webp",
-            "styleId": "contemporaneo"
+            "styleId": "contemporaneo",
+            "scores": {
+              "Contemporâneo": 1
+            }
           },
           {
             "id": "elegante",
             "text": "Estampas clássicas e atemporais, mas sofisticadas",
             "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735371/23_bdfxrh.webp",
-            "styleId": "elegante"
+            "styleId": "elegante",
+            "scores": {
+              "Elegante": 1
+            }
           },
           {
             "id": "romantico",
             "text": "Estampas florais e/ou delicadas como bolinhas, borboletas e corações",
             "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735371/24_nptszu.webp",
-            "styleId": "romantico"
+            "styleId": "romantico",
+            "scores": {
+              "Romântico": 1
+            }
           },
           {
             "id": "sexy",
             "text": "Estampas de animal print, como onça, zebra e cobra",
             "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735371/25_motk6b.webp",
-            "styleId": "sexy"
+            "styleId": "sexy",
+            "scores": {
+              "Sexy": 1
+            }
           },
           {
             "id": "dramatico",
             "text": "Estampas geométricas, abstratas e exageradas como grandes poás",
             "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735371/26_dptanw.webp",
-            "styleId": "dramatico"
+            "styleId": "dramatico",
+            "scores": {
+              "Dramático": 1
+            }
           },
           {
             "id": "criativo",
             "text": "Estampas diferentes do usual, como africanas, xadrez grandes",
             "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735372/27_wxmklx.webp",
-            "styleId": "criativo"
+            "styleId": "criativo",
+            "scores": {
+              "Criativo": 1
+            }
           }
         ],
         "requiredSelections": 3,

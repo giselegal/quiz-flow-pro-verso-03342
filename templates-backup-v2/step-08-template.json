@@ -1,0 +1,124 @@
+{
+  "templateVersion": "2.0",
+  "metadata": {
+    "id": "quiz-step-08",
+    "name": "Step step-08",
+    "description": "question step for quiz",
+    "category": "quiz-question",
+    "tags": [
+      "quiz",
+      "style",
+      "question"
+    ],
+    "createdAt": "2025-10-11T10:44:14.171Z",
+    "updatedAt": "2025-10-11T22:09:33.845Z"
+  },
+  "layout": {
+    "containerWidth": "full",
+    "spacing": "small",
+    "backgroundColor": "#FAF9F7",
+    "responsive": true
+  },
+  "validation": {},
+  "analytics": {
+    "events": [
+      "page_view",
+      "step_completed"
+    ],
+    "trackingId": "step-08",
+    "utmParams": true,
+    "customEvents": [
+      "component_mounted",
+      "user_interaction"
+    ]
+  },
+  "blocks": [
+    {
+      "id": "step08-text-inline-1",
+      "type": "text-inline",
+      "position": 0,
+      "properties": {
+        "content": "QUAL SUA CALÇA FAVORITA?",
+        "fontSize": "text-xl",
+        "fontWeight": "font-bold"
+      }
+    },
+    {
+      "id": "step08-options-grid-1",
+      "type": "options-grid",
+      "position": 1,
+      "properties": {
+        "options": [
+          {
+            "id": "natural",
+            "text": "Calça fluida acetinada bege",
+            "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735419/38_iilv0l.webp",
+            "styleId": "natural",
+            "scores": {
+              "Natural": 3
+            }
+          },
+          {
+            "id": "classico",
+            "text": "Calça de alfaiataria cinza",
+            "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735417/39_arsswu.webp",
+            "styleId": "classico",
+            "scores": {
+              "Clássico": 3
+            }
+          },
+          {
+            "id": "contemporaneo",
+            "text": "Jeans reto e básico",
+            "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735419/40_beq52x.webp",
+            "styleId": "contemporaneo",
+            "scores": {
+              "Contemporâneo": 3
+            }
+          },
+          {
+            "id": "elegante",
+            "text": "Calça reta bege de tecido",
+            "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735419/41_hconq4.webp",
+            "styleId": "elegante",
+            "scores": {
+              "Elegante": 3
+            }
+          },
+          {
+            "id": "romantico",
+            "text": "Calça ampla rosa alfaiatada",
+            "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735420/42_q8xws1.webp",
+            "styleId": "romantico",
+            "scores": {
+              "Romântico": 3
+            }
+          },
+          {
+            "id": "sexy",
+            "text": "Legging preta de couro",
+            "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735424/43_ljy7sh.webp",
+            "styleId": "sexy",
+            "scores": {
+              "Sexy": 3
+            }
+          },
+          {
+            "id": "dramatico",
+            "text": "Calça reta preta de couro",
+            "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735424/44_nqgvoq.webp",
+            "styleId": "dramatico"
+          },
+          {
+            "id": "criativo",
+            "text": "Calça estampada floral leve e ampla",
+            "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735425/45_lp64m8.webp",
+            "styleId": "criativo"
+          }
+        ],
+        "requiredSelections": 3,
+        "columns": 2
+      }
+    }
+  ]
+}

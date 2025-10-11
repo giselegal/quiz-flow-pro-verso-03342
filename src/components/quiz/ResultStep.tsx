@@ -70,6 +70,7 @@ export default function ResultStep({
         if (!scores) return [];
 
         // Converter QuizScores para array de entradas (internamente sem acento)
+        // A ORDEM AQUI DEFINE O DESEMPATE: primeiro aparece = primeira escolha do usuário
         const scoresEntries = [
             ['natural', scores.natural],
             ['classico', scores.classico],
@@ -86,20 +87,29 @@ export default function ResultStep({
         if (totalPoints === 0) return [];
 
         // Ordenar estilos por pontuação e calcular porcentagens
+        // DESEMPATE: mantém ordem original (índice menor = escolhido primeiro)
         return scoresEntries
-            .map(([styleKey, score]) => {
+            .map(([styleKey, score], originalIndex) => {
                 const displayKey = resolveStyleId(styleKey); // chave canônica (acentuada se existir)
                 return {
                     key: styleKey,
                     displayKey: displayKey,
                     name: styleConfigGisele[displayKey]?.name || displayKey,
                     score,
-                    percentage: ((score / totalPoints) * 100)
+                    percentage: ((score / totalPoints) * 100),
+                    originalIndex // Preserva ordem original para desempate
                 };
             })
             .filter(style => style.score > 0)
-            .sort((a, b) => b.score - a.score)
-            .slice(0, 5); // Mostrar apenas os top 5
+            .sort((a, b) => {
+                // Ordenar por pontuação (decrescente)
+                if (b.score !== a.score) {
+                    return b.score - a.score;
+                }
+                // Em caso de EMPATE: menor índice (escolhido primeiro) vem antes
+                return a.originalIndex - b.originalIndex;
+            })
+            .slice(0, 3); // ✅ Mostrar apenas TOP 3 estilos
     };
 
     const stylesWithPercentages = processStylesWithPercentages();
@@ -116,12 +126,13 @@ export default function ResultStep({
         if (typeof window !== 'undefined' && (window as any).gtag) {
             (window as any).gtag('event', 'checkout_initiated', {
                 'event_category': 'ecommerce',
-                'event_label': `CTA_Click_${userProfile.resultStyle}`
+                'event_label': `CTA_Click_${userProfile.resultStyle}`,
+                'value': 497.00
             });
         }
 
-        // Aqui você pode adicionar o link real de checkout
-        window.open('https://pay.hotmart.com/seu-link-aqui', '_blank');
+        // Link da oferta: 5 Passos – Vista-se de Você
+        window.open('https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912', '_blank');
     };
 
     return (
@@ -137,13 +148,18 @@ export default function ResultStep({
                     {/* Celebração */}
                     <div className="text-5xl sm:text-6xl mb-4 animate-bounce">🎉</div>
 
-                    {/* Título Principal */}
-                    <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold playfair-display mb-2 text-[#deac6d] tracking-tight">
-                        {data.title?.replace('{userName}', userProfile.userName)}
+                    {/* Saudação Personalizada */}
+                    <p className="text-lg sm:text-xl text-gray-700 mb-2">
+                        Olá, <span className="font-semibold text-[#deac6d]">{userProfile.userName}</span>!
+                    </p>
+
+                    {/* Título com Hierarquia Clara */}
+                    <h1 className="text-xl sm:text-2xl md:text-3xl font-semibold text-[#5b4135] mb-3">
+                        Seu Estilo Predominante é:
                     </h1>
 
                     {/* Nome do Estilo */}
-                    <p className="text-xl sm:text-2xl md:text-3xl font-bold text-[#5b4135] playfair-display mb-6 md:mb-8">
+                    <p className="text-2xl sm:text-3xl md:text-4xl font-bold text-[#deac6d] playfair-display mb-6 md:mb-8">
                         {styleConfig.name}
                     </p>
 
@@ -173,15 +189,33 @@ export default function ResultStep({
 
                         {/* Coluna do Texto */}
                         <div className="order-1 md:order-2 text-left">
-                            <h3 className="text-lg sm:text-xl font-bold text-[#5b4135] mb-3 sm:mb-4">Seu Perfil de Estilo:</h3>
+                            {/* Parágrafo Introdutório Emocional */}
+                            <div className="mb-5 p-4 bg-gradient-to-br from-[#deac6d]/5 to-[#c19952]/5 rounded-lg border-l-4 border-[#deac6d]">
+                                <p className="text-sm sm:text-base text-gray-800 leading-relaxed italic">
+                                    Esse é o estilo que mais traduz a sua essência.
+                                    Ele revela muito sobre como você se conecta com o mundo
+                                    e a forma como expressa sua energia.
+                                </p>
+                            </div>
+
+                            {/* Description do styleConfig */}
                             <p className="text-sm sm:text-base md:text-lg mb-5 md:mb-6 text-gray-800 leading-relaxed tracking-normal">
                                 {styleConfig.description}
                             </p>
 
+                            {/* Transição para Estilos Complementares */}
+                            <div className="mb-4 text-center">
+                                <p className="text-base sm:text-lg font-semibold text-[#5b4135]">
+                                    Mas lembre-se: você não é só um estilo.
+                                </p>
+                            </div>
+
                             {/* Barras de Progresso ou Estilos Complementares */}
                             {stylesWithPercentages.length > 0 && (
                                 <div className="mb-6 p-4 bg-[#deac6d]/10 rounded-lg border border-[#deac6d]/20">
-                                    <h4 className="font-semibold text-[#5b4135] mb-3 sm:mb-4">Seu Perfil de Estilos:</h4>
+                                    <h4 className="font-semibold text-[#5b4135] mb-2 text-sm sm:text-base">
+                                        Além do <span className="text-[#deac6d]">{stylesWithPercentages[0].name}</span>, você também tem traços de:
+                                    </h4>
                                     <div className="space-y-2 sm:space-y-3">
                                         {stylesWithPercentages.map((style, index) => (
                                             <div key={style.key} className="relative">
@@ -215,6 +249,14 @@ export default function ResultStep({
                                 </div>
                             )}
 
+                            {/* Mensagem de Fechamento - Singularidade */}
+                            <div className="mb-6 p-4 bg-gradient-to-r from-[#deac6d]/10 to-[#c19952]/10 rounded-lg text-center border border-[#deac6d]/20">
+                                <p className="text-sm sm:text-base text-gray-800 leading-relaxed font-medium">
+                                    <span className="text-lg mr-1">✨</span>
+                                    <span className="italic">É a mistura desses elementos que torna a sua imagem única.</span>
+                                </p>
+                            </div>
+
                             {/* Fallback para estilos secundários caso não haja scores */}
                             {stylesWithPercentages.length === 0 && secondaryStyleNames && (
                                 <div className="mb-6 p-4 bg-[#deac6d]/10 rounded-lg border border-[#deac6d]/20">
@@ -239,10 +281,53 @@ export default function ResultStep({
                                     ))}
                                 </div>
                             </div>
+
+                            {/* Perguntas Persuasivas (specialTips) */}
+                            {styleConfig.specialTips && styleConfig.specialTips.length > 0 && (
+                                <div className="mb-6 p-4 bg-gradient-to-br from-[#deac6d]/5 to-[#c19952]/5 rounded-lg border border-[#deac6d]/30">
+                                    <h4 className="font-semibold text-[#5b4135] mb-3 sm:mb-4 text-base sm:text-lg">
+                                        💭 Você já se perguntou...
+                                    </h4>
+                                    <ul className="space-y-3">
+                                        {styleConfig.specialTips.map((tip: string, index: number) => (
+                                            <li key={index} className="text-sm sm:text-base text-gray-700 flex items-start leading-relaxed">
+                                                <span className="text-[#deac6d] mr-2 text-lg flex-shrink-0">❓</span>
+                                                <span className="italic">{tip}</span>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </div>
+                            )}
+
+                            {/* Texto de Transição + CTA Imediato (OTIMIZAÇÃO DE CONVERSÃO) */}
+                            <div className="mb-8 text-center">
+                                <div className="mb-6 p-5 bg-gradient-to-r from-[#deac6d]/10 to-[#c19952]/10 rounded-lg border border-[#deac6d]/20">
+                                    <p className="text-base sm:text-lg text-[#5b4135] font-semibold mb-2">
+                                        <span className="text-2xl mr-2">💡</span>
+                                        Decodifique sua Imagem de Sucesso em 5 Passos
+                                    </p>
+                                    <p className="text-sm sm:text-base text-gray-700">
+                                        Método completo: Autoconhecimento + estratégia visual 👇
+                                    </p>
+                                </div>
+
+                                {/* CTA Principal (MOVIDO PARA CIMA - após perguntas) */}
+                                <button
+                                    onClick={handleCTAClick}
+                                    className="bg-gradient-to-r from-[#deac6d] to-[#c19952] text-white py-4 px-8 rounded-lg shadow-xl transition-all duration-300 text-lg font-bold hover:scale-105 transform w-full sm:w-auto hover:shadow-2xl"
+                                    onMouseEnter={() => setIsButtonHovered(true)}
+                                    onMouseLeave={() => setIsButtonHovered(false)}
+                                >
+                                    <span className="flex items-center justify-center gap-3">
+                                        <ShoppingCart className={`w-6 h-6 transition-transform duration-300 ${isButtonHovered ? 'scale-110 animate-bounce' : ''}`} />
+                                        Quero Destravar Minha Imagem
+                                    </span>
+                                </button>
+                            </div>
                         </div>
                     </div>
 
-                    {/* Imagem do Guia + CTA primário reposicionado */}
+                    {/* Imagem do Guia (MOVIDA PARA BAIXO - após CTA) */}
                     <div className="mt-6 md:mt-8 text-center">
                         {guideImage.isLoading ? (
                             <div className="mx-auto max-w-md w-full rounded-lg shadow-md bg-gray-100 animate-pulse flex items-center justify-center min-h-[320px] sm:min-h-[360px] md:min-h-[400px]">
@@ -271,20 +356,6 @@ export default function ResultStep({
                                 )}
                             </div>
                         )}
-                        {/* CTA reposicionado */}
-                        <div className="mt-6">
-                            <button
-                                onClick={handleCTAClick}
-                                className="bg-gradient-to-r from-[#deac6d] to-[#c19952] text-white py-3 sm:py-4 px-6 sm:px-8 rounded-lg shadow-lg transition-all duration-300 text-base sm:text-lg font-semibold hover:scale-105 transform w-full sm:w-auto"
-                                onMouseEnter={() => setIsButtonHovered(true)}
-                                onMouseLeave={() => setIsButtonHovered(false)}
-                            >
-                                <span className="flex items-center justify-center gap-3">
-                                    <ShoppingCart className={`w-5 h-5 transition-transform duration-300 ${isButtonHovered ? 'scale-110' : ''}`} />
-                                    Quero Transformar Minha Imagem
-                                </span>
-                            </button>
-                        </div>
                     </div>
                 </div>
 

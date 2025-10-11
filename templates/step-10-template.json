@@ -11,7 +11,7 @@
       "question"
     ],
     "createdAt": "2025-10-11T10:44:14.172Z",
-    "updatedAt": "2025-10-11T10:44:14.172Z"
+    "updatedAt": "2025-10-11T22:35:51.535Z"
   },
   "layout": {
     "containerWidth": "full",
@@ -34,7 +34,7 @@
   },
   "blocks": [
     {
-      "id": "undefined-question",
+      "id": "step10-text-inline-1",
       "type": "text-inline",
       "position": 0,
       "properties": {
@@ -44,7 +44,7 @@
       }
     },
     {
-      "id": "undefined-options",
+      "id": "step10-options-grid-1",
       "type": "options-grid",
       "position": 1,
       "properties": {
@@ -53,49 +53,73 @@
             "id": "natural",
             "text": "Pequenos e discretos, às vezes nem uso",
             "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735479/56_htzoxy.png",
-            "styleId": "natural"
+            "styleId": "natural",
+            "scores": {
+              "Natural": 1
+            }
           },
           {
             "id": "classico",
             "text": "Brincos pequenos e discretos. Corrente fininha",
             "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735479/57_whzmff.png",
-            "styleId": "classico"
+            "styleId": "classico",
+            "scores": {
+              "Clássico": 1
+            }
           },
           {
             "id": "contemporaneo",
             "text": "Acessórios que elevem meu look com um toque moderno",
             "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735482/61_joafud.png",
-            "styleId": "contemporaneo"
+            "styleId": "contemporaneo",
+            "scores": {
+              "Contemporâneo": 1
+            }
           },
           {
             "id": "elegante",
             "text": "Acessórios sofisticados, joias ou semijoias",
             "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735482/60_vzsnps.png",
-            "styleId": "elegante"
+            "styleId": "elegante",
+            "scores": {
+              "Elegante": 1
+            }
           },
           {
             "id": "romantico",
             "text": "Peças delicadas e com um toque feminino",
             "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735482/59_dwaqrx.png",
-            "styleId": "romantico"
+            "styleId": "romantico",
+            "scores": {
+              "Romântico": 1
+            }
           },
           {
             "id": "sexy",
             "text": "Brincos longos, colares que valorizem minha beleza",
             "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735487/63_lwgokn.png",
-            "styleId": "sexy"
+            "styleId": "sexy",
+            "scores": {
+              "Sexy": 1
+            }
           },
           {
             "id": "dramatico",
             "text": "Acessórios pesados, que causem um impacto",
             "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735485/62_mno8wg.png",
-            "styleId": "dramatico"
+            "styleId": "dramatico",
+            "scores": {
+              "Dramático": 1
+            }
           },
           {
             "id": "criativo",
             "text": "Acessórios diferentes, grandes e marcantes",
             "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735480/58_njdjoh.png",
-            "styleId": "criativo"
+            "styleId": "criativo",
+            "scores": {
+              "Criativo": 1
+            }
           }
         ],
         "requiredSelections": 3,

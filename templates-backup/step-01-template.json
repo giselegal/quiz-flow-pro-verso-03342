@@ -1,0 +1,95 @@
+{
+  "templateVersion": "2.0",
+  "metadata": {
+    "id": "quiz-step-01",
+    "name": "<span style=\"color: #B89B7A; font-weight: 700;\" cl",
+    "description": "intro step for quiz",
+    "category": "quiz-intro",
+    "tags": [
+      "quiz",
+      "style",
+      "intro"
+    ],
+    "createdAt": "2025-10-11T10:44:14.169Z",
+    "updatedAt": "2025-10-11T22:08:41.674Z"
+  },
+  "layout": {
+    "containerWidth": "full",
+    "spacing": "small",
+    "backgroundColor": "#FAF9F7",
+    "responsive": true
+  },
+  "validation": {
+    "nameField": {
+      "required": true,
+      "minLength": 2,
+      "maxLength": 32,
+      "errorMessage": "Por favor, digite seu nome para continuar",
+      "realTimeValidation": true
+    }
+  },
+  "analytics": {
+    "events": [
+      "page_view",
+      "step_completed"
+    ],
+    "trackingId": "step-01",
+    "utmParams": true,
+    "customEvents": [
+      "component_mounted",
+      "user_interaction"
+    ]
+  },
+  "blocks": [
+    {
+      "id": "step01-quiz-intro-header-1",
+      "type": "quiz-intro-header",
+      "position": 0,
+      "properties": {
+        "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
+        "logoAlt": "Logo Gisele Galvão",
+        "showProgress": false
+      }
+    },
+    {
+      "id": "step01-text-inline-1",
+      "type": "text-inline",
+      "position": 1,
+      "properties": {
+        "content": "<span style=\"color: #B89B7A; font-weight: 700;\" class=\"playfair-display\">Chega</span> <span class=\"playfair-display\">de um guarda-roupa lotado e da sensação de que</span> <span style=\"color: #B89B7A; font-weight: 700;\" class=\"playfair-display\">nada combina com você.</span>",
+        "fontSize": "text-2xl",
+        "fontWeight": "font-bold",
+        "textAlign": "text-center"
+      }
+    },
+    {
+      "id": "step01-image-display-inline-1",
+      "type": "image-display-inline",
+      "position": 2,
+      "properties": {
+        "src": "https://res.cloudinary.com/dqljyf76t/image/upload/v1746838118/20250509_2137_Desordem_e_Reflex%C3%A3o_simple_compose_01jtvszf8sfaytz493z9f16rf2_z1c2up.png",
+        "alt": "Quiz image"
+      }
+    },
+    {
+      "id": "step01-form-input-1",
+      "type": "form-input",
+      "position": 3,
+      "properties": {
+        "label": "Como posso te chamar?",
+        "placeholder": "Digite seu primeiro nome aqui...",
+        "inputType": "text",
+        "required": true
+      }
+    },
+    {
+      "id": "step01-button-inline-1",
+      "type": "button-inline",
+      "position": 4,
+      "properties": {
+        "text": "Quero Descobrir meu Estilo Agora!",
+        "variant": "primary"
+      }
+    }
+  ]
+}

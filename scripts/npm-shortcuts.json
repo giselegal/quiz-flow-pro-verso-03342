@@ -1,0 +1,12 @@
+{
+    "scripts": {
+        "editor": "./scripts/open-editor.sh",
+        "tools": "./scripts/template-tools.sh",
+        "editor:open": "./scripts/open-editor.sh 1",
+        "quiz:open": "./scripts/open-editor.sh 2",
+        "editor:all": "./scripts/open-editor.sh 4",
+        "template:backup": "mkdir -p backups && cp src/templates/quiz21StepsComplete.ts backups/quiz21StepsComplete_$(date +%Y%m%d_%H%M%S).ts && echo '✅ Backup criado em backups/'",
+        "template:stats": "echo '📊 Estatísticas do Template:' && echo '─────────────────────────' && echo 'Linhas:' && wc -l src/templates/quiz21StepsComplete.ts && echo 'Steps:' && grep -c \"'step-\" src/templates/quiz21StepsComplete.ts && echo 'Blocos:' && grep -c \"type: '\" src/templates/quiz21StepsComplete.ts",
+        "template:validate": "echo '🧪 Validando template...' && node scripts/validate-template.js"
+    }
+}

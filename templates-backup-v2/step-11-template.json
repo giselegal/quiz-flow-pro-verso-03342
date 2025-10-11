@@ -1,0 +1,122 @@
+{
+  "templateVersion": "2.0",
+  "metadata": {
+    "id": "quiz-step-11",
+    "name": "Step step-11",
+    "description": "question step for quiz",
+    "category": "quiz-question",
+    "tags": [
+      "quiz",
+      "style",
+      "question"
+    ],
+    "createdAt": "2025-10-11T10:44:14.172Z",
+    "updatedAt": "2025-10-11T22:09:33.846Z"
+  },
+  "layout": {
+    "containerWidth": "full",
+    "spacing": "small",
+    "backgroundColor": "#FAF9F7",
+    "responsive": true
+  },
+  "validation": {},
+  "analytics": {
+    "events": [
+      "page_view",
+      "step_completed"
+    ],
+    "trackingId": "step-11",
+    "utmParams": true,
+    "customEvents": [
+      "component_mounted",
+      "user_interaction"
+    ]
+  },
+  "blocks": [
+    {
+      "id": "step11-text-inline-1",
+      "type": "text-inline",
+      "position": 0,
+      "properties": {
+        "content": "VOCÊ ESCOLHE CERTOS TECIDOS, PRINCIPALMENTE PORQUE ELES...",
+        "fontSize": "text-xl",
+        "fontWeight": "font-bold"
+      }
+    },
+    {
+      "id": "step11-options-grid-1",
+      "type": "options-grid",
+      "position": 1,
+      "properties": {
+        "options": [
+          {
+            "id": "natural",
+            "text": "São fáceis de cuidar",
+            "styleId": "natural",
+            "scores": {
+              "Natural": 2,
+              "Contemporâneo": 1
+            }
+          },
+          {
+            "id": "classico",
+            "text": "São de excelente qualidade",
+            "styleId": "classico",
+            "scores": {
+              "Clássico": 2,
+              "Elegante": 1
+            }
+          },
+          {
+            "id": "contemporaneo",
+            "text": "São fáceis de cuidar e modernos",
+            "styleId": "contemporaneo",
+            "scores": {
+              "Romântico": 2,
+              "Sexy": 1
+            }
+          },
+          {
+            "id": "elegante",
+            "text": "São sofisticados",
+            "styleId": "elegante",
+            "scores": {
+              "Dramático": 2,
+              "Criativo": 1
+            }
+          },
+          {
+            "id": "romantico",
+            "text": "São delicados",
+            "styleId": "romantico",
+            "scores": {
+              "Natural": 2,
+              "Criativo": 1
+            }
+          },
+          {
+            "id": "sexy",
+            "text": "São perfeitos ao meu corpo",
+            "styleId": "sexy",
+            "scores": {
+              "Elegante": 2,
+              "Contemporâneo": 1
+            }
+          },
+          {
+            "id": "dramatico",
+            "text": "São diferentes, e trazem um efeito para minha roupa",
+            "styleId": "dramatico"
+          },
+          {
+            "id": "criativo",
+            "text": "São exclusivos, criam identidade no look",
+            "styleId": "criativo"
+          }
+        ],
+        "requiredSelections": 3,
+        "columns": 2
+      }
+    }
+  ]
+}

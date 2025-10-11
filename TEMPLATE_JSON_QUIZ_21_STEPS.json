@@ -1,0 +1,375 @@
+{
+    "templateId": "quiz21StepsComplete",
+    "version": "2.0",
+    "createdAt": "2024-01-15",
+    "description": "Template completo do Quiz de Estilo Pessoal com 20 etapas",
+    "config": {
+        "globalConfig": {
+            "theme": {
+                "primaryColor": "#0066CC",
+                "secondaryColor": "#FF6B35",
+                "accentColor": "#4ECDC4"
+            },
+            "navigation": {
+                "allowBack": true,
+                "showProgress": true
+            },
+            "analytics": {
+                "enabled": true,
+                "trackingId": "quiz21-analytics"
+            }
+        },
+        "seo": {
+            "title": "Descubra Seu Estilo Pessoal - Quiz Completo",
+            "description": "Quiz completo para descobrir seu estilo pessoal único com 21 etapas otimizadas",
+            "keywords": [
+                "quiz",
+                "estilo pessoal",
+                "moda",
+                "personalização"
+            ]
+        },
+        "tracking": {
+            "googleAnalytics": "GA_MEASUREMENT_ID",
+            "facebookPixel": "FB_PIXEL_ID",
+            "customEvents": {
+                "quiz_start": "Quiz iniciado",
+                "quiz_complete": "Quiz finalizado"
+            }
+        }
+    },
+    "metadata": {
+        "totalSteps": 20,
+        "estimatedTime": "5-8 minutos",
+        "scoringQuestions": 10,
+        "strategicQuestions": 6,
+        "possibleStyles": 8
+    },
+    "styles": {
+        "available": [
+            "Natural",
+            "Clássico",
+            "Contemporâneo",
+            "Elegante",
+            "Romântico",
+            "Sexy",
+            "Dramático",
+            "Criativo"
+        ],
+        "scoring": {
+            "maxScore": 30,
+            "minScore": 0,
+            "questionsPerStyle": 10
+        }
+    },
+    "stepsStructure": [
+        {
+            "step": "step-1",
+            "stepNumber": 1,
+            "type": "intro",
+            "title": "Bem-vindo ao Quiz de Estilo Pessoal",
+            "description": "Coleta do nome do usuário para personalização",
+            "components": [
+                {
+                    "id": "step1-quiz-header",
+                    "type": "quiz-intro-header",
+                    "order": 0,
+                    "content": {
+                        "showLogo": true,
+                        "showProgress": false,
+                        "logoUrl": "https://res.cloudinary.com/.../LOGO_DA_MARCA_GISELE.webp"
+                    }
+                },
+                {
+                    "id": "step1-title",
+                    "type": "text",
+                    "order": 1,
+                    "content": {
+                        "text": "Chega de um guarda-roupa lotado..."
+                    },
+                    "properties": {
+                        "fontSize": "text-3xl md:text-4xl",
+                        "fontWeight": "font-bold",
+                        "textAlign": "center",
+                        "color": "#432818"
+                    }
+                },
+                {
+                    "id": "step1-form",
+                    "type": "form-container",
+                    "order": 10,
+                    "content": {
+                        "formFields": [
+                            {
+                                "id": "userName",
+                                "type": "text",
+                                "placeholder": "Digite seu nome",
+                                "required": true,
+                                "storeAsUserName": true
+                            }
+                        ],
+                        "submitButtonText": "Começar Quiz",
+                        "requiredMessage": "Por favor, digite seu nome"
+                    }
+                }
+            ],
+            "validation": {
+                "required": true,
+                "fields": [
+                    "userName"
+                ]
+            },
+            "navigation": {
+                "nextButton": "Começar Quiz",
+                "autoAdvance": false
+            }
+        },
+        {
+            "step": "step-2 até step-11",
+            "stepNumbers": [
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9,
+                10,
+                11
+            ],
+            "type": "scoring-question",
+            "title": "10 Perguntas de Estilo",
+            "description": "Perguntas que pontuam para os 8 estilos",
+            "component": "options-grid",
+            "settings": {
+                "requiredSelections": 3,
+                "autoAdvanceDelay": 1500,
+                "scoringEnabled": true
+            },
+            "exampleQuestion": {
+                "step": "step-2",
+                "question": "Quais peças você mais usa no dia a dia?",
+                "options": [
+                    {
+                        "id": "opt1",
+                        "text": "Jeans e t-shirt confortável",
+                        "imageUrl": "https://...",
+                        "scores": {
+                            "Natural": 3,
+                            "Contemporâneo": 1
+                        }
+                    },
+                    {
+                        "id": "opt2",
+                        "text": "Alfaiataria clássica",
+                        "imageUrl": "https://...",
+                        "scores": {
+                            "Clássico": 3,
+                            "Elegante": 2
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "step": "step-12",
+            "stepNumber": 12,
+            "type": "transition",
+            "title": "Você está indo muito bem!",
+            "description": "Transição motivacional entre seções",
+            "components": [
+                {
+                    "type": "text",
+                    "content": {
+                        "text": "Estamos quase lá! Mais algumas perguntas..."
+                    }
+                }
+            ],
+            "navigation": {
+                "autoAdvance": true,
+                "autoAdvanceDelay": 2000
+            }
+        },
+        {
+            "step": "step-13 até step-18",
+            "stepNumbers": [
+                13,
+                14,
+                15,
+                16,
+                17,
+                18
+            ],
+            "type": "strategic-question",
+            "title": "6 Perguntas Estratégicas",
+            "description": "Perguntas de contexto sem pontuação",
+            "component": "options-grid",
+            "settings": {
+                "requiredSelections": 1,
+                "autoAdvanceDelay": 0,
+                "scoringEnabled": false,
+                "manualAdvance": true
+            },
+            "purpose": "Coletar informações adicionais sobre preferências e contexto do usuário",
+            "exampleQuestions": [
+                "Qual seu objetivo principal com este quiz?",
+                "Como você descreveria seu estilo atual?",
+                "Qual sua faixa etária?",
+                "Qual ocasião você veste com mais frequência?",
+                "Qual seu nível de interesse em moda?",
+                "O que te motiva a renovar o guarda-roupa?"
+            ]
+        },
+        {
+            "step": "step-19",
+            "stepNumber": 19,
+            "type": "transition",
+            "title": "Preparando seus resultados...",
+            "description": "Transição final antes dos resultados",
+            "components": [
+                {
+                    "type": "loading-animation",
+                    "content": {
+                        "text": "Analisando suas respostas e calculando seu estilo predominante..."
+                    }
+                }
+            ],
+            "navigation": {
+                "autoAdvance": true,
+                "autoAdvanceDelay": 3000
+            }
+        },
+        {
+            "step": "step-20",
+            "stepNumber": 20,
+            "type": "result",
+            "title": "Seu Estilo Pessoal",
+            "description": "Tela de resultado personalizada com múltiplos componentes",
+            "components": [
+                {
+                    "id": "result-header",
+                    "type": "result-header-inline",
+                    "order": 0,
+                    "content": {
+                        "greeting": "Parabéns, {userName}!",
+                        "resultTitle": "Seu estilo predominante é:",
+                        "styleName": "{resultStyle}",
+                        "percentage": "{resultPercentage}%",
+                        "description": "Descrição detalhada do estilo {resultStyle}..."
+                    }
+                },
+                {
+                    "id": "style-images",
+                    "type": "image-gallery",
+                    "order": 1,
+                    "content": {
+                        "images": [
+                            {
+                                "url": "{stylePhotoUrl}",
+                                "alt": "Foto representativa do estilo {resultStyle}",
+                                "caption": "Inspiração visual"
+                            },
+                            {
+                                "url": "{styleGuideImageUrl}",
+                                "alt": "Material guia do estilo",
+                                "caption": "Guia de combinações"
+                            }
+                        ]
+                    }
+                },
+                {
+                    "id": "secondary-styles",
+                    "type": "secondary-styles",
+                    "order": 2,
+                    "content": {
+                        "title": "Seus estilos secundários:",
+                        "styles": [
+                            {
+                                "name": "{secondaryStyle1}",
+                                "percentage": "{secondaryPercentage1}%"
+                            },
+                            {
+                                "name": "{secondaryStyle2}",
+                                "percentage": "{secondaryPercentage2}%"
+                            }
+                        ]
+                    }
+                },
+                {
+                    "id": "fashion-ai",
+                    "type": "fashion-ai-generator",
+                    "order": 3,
+                    "content": {
+                        "title": "Looks personalizados para você",
+                        "description": "Gerados por IA com base no seu estilo",
+                        "engines": [
+                            "DALL-E 3",
+                            "Gemini",
+                            "Stable Diffusion"
+                        ],
+                        "totalLooks": 3
+                    }
+                }
+            ],
+            "personalization": {
+                "userName": "Do step-1 (storeAsUserName: true)",
+                "resultStyle": "Calculado automaticamente (maior score)",
+                "resultPercentage": "Score do estilo predominante / maxScore * 100",
+                "secondaryStyle1": "2º maior score",
+                "secondaryPercentage1": "Score do 2º estilo / maxScore * 100",
+                "secondaryStyle2": "3º maior score",
+                "secondaryPercentage2": "Score do 3º estilo / maxScore * 100",
+                "stylePhotoUrl": "URL da imagem do estilo predominante",
+                "styleGuideImageUrl": "URL do material guia"
+            },
+            "navigation": {
+                "nextButton": "Ver Ofertas",
+                "showDownloadButton": true
+            }
+        },
+        {
+            "step": "step-21",
+            "stepNumber": 21,
+            "type": "offer",
+            "title": "Continue sua jornada de estilo!",
+            "description": "CTA final com oferta de produtos/serviços",
+            "components": [
+                {
+                    "type": "cta-card",
+                    "content": {
+                        "title": "Quer aprofundar seu estilo?",
+                        "description": "Conheça nossa consultoria personalizada",
+                        "ctaButton": "Saiba Mais",
+                        "ctaUrl": "https://..."
+                    }
+                }
+            ],
+            "navigation": {
+                "nextButton": "Finalizar",
+                "showShareButtons": true
+            }
+        }
+    ],
+    "technicalDetails": {
+        "file": "src/templates/quiz21StepsComplete.ts",
+        "linesOfCode": 3742,
+        "export": "QUIZ_STYLE_21_STEPS_TEMPLATE",
+        "format": "Record<string, Block[]>",
+        "usedBy": [
+            "QuizModularProductionEditor",
+            "FunnelsContext",
+            "UniversalStepEditor",
+            "OptimizedEditorProvider",
+            "useQuizFlow"
+        ],
+        "editorUrl": "http://localhost:5173/editor?template=quiz21StepsComplete"
+    },
+    "notes": {
+        "isTestMode": "Variável IS_TEST controla se usa MINIMAL_TEST_TEMPLATE (3-4 questões) ou template completo",
+        "blockStructure": "Cada step é um array de blocos (Block[]) com id, type, order, content, properties",
+        "personalization": "Sistema de variáveis {userName}, {resultStyle}, etc. substituídas em runtime",
+        "scoring": "Steps 2-11 pontuam, steps 13-18 não pontuam",
+        "autoAdvance": "Steps 2-11 avançam automaticamente após 1.5s, steps 13-18 requerem clique manual"
+    }
+}
