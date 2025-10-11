@@ -73,6 +73,72 @@ export default defineConfig({
         /^https:\/\/deno\.land\/.*/,
         /^https:\/\/esm\.sh\/.*/
       ],
+      output: {
+        // Manual chunks para otimizar bundle splitting
+        manualChunks: (id) => {
+          // Vendor chunks - bibliotecas principais separadas
+          if (id.includes('node_modules')) {
+            // React core - usado em todas as páginas
+            if (id.includes('react') || id.includes('react-dom') || id.includes('react-router') || id.includes('wouter')) {
+              return 'vendor-react';
+            }
+
+            // Recharts - biblioteca de charts muito pesada (400KB)
+            if (id.includes('recharts')) {
+              return 'vendor-charts';
+            }
+
+            // Supabase - cliente de banco de dados
+            if (id.includes('@supabase') || id.includes('supabase-js')) {
+              return 'vendor-supabase';
+            }
+
+            // Radix UI - componentes de UI
+            if (id.includes('@radix-ui')) {
+              return 'vendor-ui-radix';
+            }
+
+            // Lucide - ícones
+            if (id.includes('lucide-react')) {
+              return 'vendor-ui-icons';
+            }
+
+            // Outras bibliotecas UI
+            if (id.includes('framer-motion') || id.includes('react-hook-form') || id.includes('zod')) {
+              return 'vendor-ui-utils';
+            }
+
+            // Restante das dependências
+            return 'vendor-other';
+          }
+
+          // Feature-based chunks - código próprio
+          // Editor (grande, usado apenas em /editor)
+          if (id.includes('/src/components/editor/') || id.includes('/src/editor/')) {
+            return 'feature-editor';
+          }
+
+          // Quiz (usado em páginas específicas)
+          if (id.includes('/src/components/quiz/') || id.includes('/src/quiz/')) {
+            return 'feature-quiz';
+          }
+
+          // Dashboard/Admin (usado apenas em admin)
+          if (id.includes('/src/pages/dashboard/') || id.includes('/src/components/dashboard/')) {
+            return 'feature-dashboard';
+          }
+
+          // Templates (usado em várias páginas)
+          if (id.includes('/src/templates/')) {
+            return 'feature-templates';
+          }
+
+          // Services - pode ser grande
+          if (id.includes('/src/services/')) {
+            return 'feature-services';
+          }
+        },
+      },
     },
   },
   optimizeDeps: {
