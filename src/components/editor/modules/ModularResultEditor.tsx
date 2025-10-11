@@ -1,3 +1,8 @@
+/**
+ * ⚠️ ⚠️ ⚠️ DEPRECATED - NÃO USAR ⚠️ ⚠️ ⚠️
+ * @deprecated Use QuizModularProductionEditor - Ver MIGRATION_EDITOR.md
+ */
+
 import React, { useState } from 'react';
 import { Editor, Frame, Element, useEditor } from '@craftjs/core';
 import { Layers } from '@craftjs/layers';

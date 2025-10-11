@@ -1,4 +1,9 @@
 /**
+ * ⚠️ ⚠️ ⚠️ DEPRECATED - NÃO USAR ⚠️ ⚠️ ⚠️
+ * @deprecated Use QuizModularProductionEditor - Ver MIGRATION_EDITOR.md
+ */
+
+/**
  * 🎯 QUIZ PRODUCTION EDITOR - Editor Split-Screen
  * 
  * Editor completo com preview em tempo real do funil de produção

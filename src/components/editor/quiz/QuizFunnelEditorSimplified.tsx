@@ -1,3 +1,9 @@
+/**
+ * ⚠️ ⚠️ ⚠️ DEPRECATED - NÃO USAR ⚠️ ⚠️ ⚠️
+ * 
+ * @deprecated Use QuizModularProductionEditor - Ver MIGRATION_EDITOR.md
+ */
+
 import React, { useEffect, useState, useCallback } from 'react';
 import { useUnifiedCRUD } from '@/contexts';
 import { Button } from '@/components/ui/button';

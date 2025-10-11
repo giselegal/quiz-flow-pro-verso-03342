@@ -1,4 +1,10 @@
 /**
+ * ⚠️ ⚠️ ⚠️ DEPRECATED - NÃO USAR ⚠️ ⚠️ ⚠️
+ * 
+ * @deprecated Use QuizModularProductionEditor - Ver MIGRATION_EDITOR.md
+ */
+
+/**
  * 🎯 UNIVERSAL STEP EDITOR - VERSÃO FUNCIONAL COM 4 COLUNAS
  * 
  * Editor visual universal com layout de 4 colunas e renderização real

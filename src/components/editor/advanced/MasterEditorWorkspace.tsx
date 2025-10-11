@@ -1,3 +1,8 @@
+/**
+ * ⚠️ ⚠️ ⚠️ DEPRECATED - NÃO USAR ⚠️ ⚠️ ⚠️
+ * @deprecated Use QuizModularProductionEditor - Ver MIGRATION_EDITOR.md
+ */
+
 import React, { useState } from 'react';
 import { Block } from '@/types/editor';
 import { InteractivePreviewEngine } from '../interactive/InteractivePreviewEngine';
@@ -10,12 +15,12 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
-import { 
-  Layout, 
-  Palette, 
-  Rocket, 
-  Save, 
-  Eye, 
+import {
+  Layout,
+  Palette,
+  Rocket,
+  Save,
+  Eye,
   Settings,
   Zap,
   BarChart3,
@@ -39,7 +44,7 @@ export const MasterEditorWorkspace: React.FC<MasterEditorWorkspaceProps> = ({
 }) => {
   const [activeTab, setActiveTab] = useState<WorkspaceTab>('editor');
   const [selectedBlockForStyling, setSelectedBlockForStyling] = useState<Block | null>(null);
-  
+
   const {
     integrationState,
     stepValidation,
@@ -51,15 +56,15 @@ export const MasterEditorWorkspace: React.FC<MasterEditorWorkspaceProps> = ({
   } = useEditorIntegration();
 
   const handleBlockStyleUpdate = (blockId: string, styles: any) => {
-    const updatedBlocks = currentStepBlocks.map(block => 
-      block.id === blockId 
-        ? { 
-            ...block, 
-            properties: { 
-              ...block.properties, 
-              customStyles: { ...block.properties?.customStyles, ...styles } 
-            }
+    const updatedBlocks = currentStepBlocks.map(block =>
+      block.id === blockId
+        ? {
+          ...block,
+          properties: {
+            ...block.properties,
+            customStyles: { ...block.properties?.customStyles, ...styles }
           }
+        }
         : block
     );
     updateStepBlocks(updatedBlocks);
@@ -71,15 +76,15 @@ export const MasterEditorWorkspace: React.FC<MasterEditorWorkspaceProps> = ({
         <div className={cn(
           'w-2 h-2 rounded-full',
           integrationState.syncStatus === 'syncing' ? 'bg-blue-500 animate-pulse' :
-          integrationState.syncStatus === 'success' ? 'bg-green-500' :
-          integrationState.syncStatus === 'error' ? 'bg-red-500' :
-          'bg-gray-400'
+            integrationState.syncStatus === 'success' ? 'bg-green-500' :
+              integrationState.syncStatus === 'error' ? 'bg-red-500' :
+                'bg-gray-400'
         )} />
         <span className="text-sm text-muted-foreground">
           {integrationState.syncStatus === 'syncing' ? 'Sincronizando...' :
-           integrationState.syncStatus === 'success' ? 'Salvo' :
-           integrationState.syncStatus === 'error' ? 'Erro ao salvar' :
-           integrationState.hasUnsavedChanges ? 'Alterações não salvas' : 'Tudo salvo'}
+            integrationState.syncStatus === 'success' ? 'Salvo' :
+              integrationState.syncStatus === 'error' ? 'Erro ao salvar' :
+                integrationState.hasUnsavedChanges ? 'Alterações não salvas' : 'Tudo salvo'}
         </span>
       </div>
 
@@ -89,7 +94,7 @@ export const MasterEditorWorkspace: React.FC<MasterEditorWorkspaceProps> = ({
         <Badge variant={integrationState.isDraftMode ? 'secondary' : 'default'}>
           {integrationState.isDraftMode ? 'Rascunho' : 'Publicado'}
         </Badge>
-        
+
         <Badge variant={integrationState.isInteractiveMode ? 'default' : 'outline'}>
           <Zap className="w-3 h-3 mr-1" />
           {integrationState.isInteractiveMode ? 'Modo Interativo' : 'Modo Visualização'}
@@ -112,7 +117,7 @@ export const MasterEditorWorkspace: React.FC<MasterEditorWorkspaceProps> = ({
           <Eye className="w-4 h-4 mr-1" />
           {integrationState.isInteractiveMode ? 'Visualizar' : 'Editar'}
         </Button>
-        
+
         {integrationState.hasUnsavedChanges && (
           <Button size="sm" onClick={saveChanges}>
             <Save className="w-4 h-4 mr-1" />
@@ -170,10 +175,10 @@ export const MasterEditorWorkspace: React.FC<MasterEditorWorkspaceProps> = ({
                           Selecione um bloco para personalizar seu estilo avançado
                         </p>
                       </div>
-                      
+
                       <div className="space-y-4">
                         {currentStepBlocks.map(block => (
-                          <Card 
+                          <Card
                             key={block.id}
                             className={cn(
                               'cursor-pointer transition-all hover:ring-2 hover:ring-primary/50',
@@ -224,7 +229,7 @@ export const MasterEditorWorkspace: React.FC<MasterEditorWorkspaceProps> = ({
                         Configure e publique seu funil para produção
                       </p>
                     </div>
-                    
+
                     <PublishingEngine
                       funnelId={funnelId}
                       onPublishComplete={(result) => {

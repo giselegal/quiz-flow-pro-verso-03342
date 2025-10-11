@@ -1,4 +1,9 @@
 // @ts-nocheck
+/**
+ * ⚠️ ⚠️ ⚠️ DEPRECATED - NÃO USAR ⚠️ ⚠️ ⚠️
+ * @deprecated Use QuizModularProductionEditor - Ver MIGRATION_EDITOR.md
+ */
+
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -142,13 +147,12 @@ export default function IntegratedQuizEditor({
         {/* Status de Conexão */}
         <div className="mb-6 text-center">
           <div
-            className={`inline-flex items-center px-3 py-1 rounded-full text-sm ${
-              connectionStatus === 'connected'
+            className={`inline-flex items-center px-3 py-1 rounded-full text-sm ${connectionStatus === 'connected'
                 ? 'bg-green-100 text-green-800'
                 : connectionStatus === 'error'
                   ? 'bg-red-100 text-red-800'
                   : 'bg-yellow-100 text-yellow-800'
-            }`}
+              }`}
           >
             <Database className="w-4 h-4 mr-2" />
             {connectionStatus === 'connected' && 'Sistema Online'}
@@ -454,13 +458,12 @@ export default function IntegratedQuizEditor({
                     <h3 className="font-medium text-blue-800 mb-2">Status da Conexão</h3>
                     <div className="flex items-center gap-2">
                       <div
-                        className={`w-3 h-3 rounded-full ${
-                          connectionStatus === 'connected'
+                        className={`w-3 h-3 rounded-full ${connectionStatus === 'connected'
                             ? 'bg-green-500'
                             : connectionStatus === 'error'
                               ? 'bg-red-500'
                               : 'bg-yellow-500'
-                        }`}
+                          }`}
                       />
                       <span className="text-blue-700">
                         {connectionStatus === 'connected' && 'Sistema funcionando normalmente'}

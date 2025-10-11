@@ -1,3 +1,8 @@
+/**
+ * ⚠️ ⚠️ ⚠️ DEPRECATED - NÃO USAR ⚠️ ⚠️ ⚠️
+ * @deprecated Use QuizModularProductionEditor - Ver MIGRATION_EDITOR.md
+ */
+
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -87,9 +92,8 @@ const SimpleEditor: React.FC = () => {
 
   const ComponentePreview = () => (
     <div
-      className={`min-h-screen ${config.layout.larguraMaxima} mx-auto px-4 py-${
-        config.layout.espacamento * 4
-      }`}
+      className={`min-h-screen ${config.layout.larguraMaxima} mx-auto px-4 py-${config.layout.espacamento * 4
+        }`}
       style={{
         backgroundColor: config.cores.fundo,
         color: config.cores.texto,

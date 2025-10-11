@@ -1,4 +1,9 @@
 /**
+ * ⚠️ ⚠️ ⚠️ DEPRECATED - NÃO USAR ⚠️ ⚠️ ⚠️
+ * @deprecated Use QuizModularProductionEditor - Ver MIGRATION_EDITOR.md
+ */
+
+/**
  * 🎯 QUIZ PAGE EDITOR - Editor para componentes do QuizPage
  * 
  * Funcionalidades:
@@ -16,13 +21,13 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
-import { 
-  Edit, 
-  Eye, 
-  Save, 
-  Undo, 
-  Redo, 
-  Settings, 
+import {
+  Edit,
+  Eye,
+  Save,
+  Undo,
+  Redo,
+  Settings,
   Palette,
   Type,
   Layout,
@@ -41,11 +46,11 @@ interface QuizPageEditorProps {
   onPreview?: (component: QuizPageComponent) => void;
 }
 
-export function QuizPageEditor({ 
-  funnelId, 
-  componentId, 
-  onSave, 
-  onPreview 
+export function QuizPageEditor({
+  funnelId,
+  componentId,
+  onSave,
+  onPreview
 }: QuizPageEditorProps) {
   const {
     funnel,
@@ -95,11 +100,11 @@ export function QuizPageEditor({
 
     try {
       await updateComponent(selectedComponent.id, updates);
-      
+
       // Atualizar estado local
       const updatedComponent = { ...selectedComponent, ...updates };
       setSelectedComponent(updatedComponent);
-      
+
       if (onSave) {
         onSave(updatedComponent);
       }
@@ -126,7 +131,7 @@ export function QuizPageEditor({
   const handleCreateVersion = async () => {
     const name = prompt('Nome da versão:');
     const description = prompt('Descrição da versão:');
-    
+
     if (name && description) {
       await createVersion(name, description);
     }
@@ -204,11 +209,10 @@ export function QuizPageEditor({
               {components.map((component) => (
                 <div
                   key={component.id}
-                  className={`p-3 rounded-lg cursor-pointer transition-colors ${
-                    selectedComponent?.id === component.id
+                  className={`p-3 rounded-lg cursor-pointer transition-colors ${selectedComponent?.id === component.id
                       ? 'bg-blue-100 border-blue-300'
                       : 'bg-white border border-gray-200 hover:bg-gray-50'
-                  }`}
+                    }`}
                   onClick={() => handleComponentSelect(component)}
                 >
                   <div className="flex items-center justify-between">

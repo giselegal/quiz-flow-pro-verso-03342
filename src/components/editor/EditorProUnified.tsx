@@ -1,5 +1,11 @@
 // @ts-nocheck
 /**
+ * ⚠️ ⚠️ ⚠️ DEPRECATED - NÃO USAR ⚠️ ⚠️ ⚠️
+ * 
+ * @deprecated Use QuizModularProductionEditor - Ver MIGRATION_EDITOR.md
+ */
+
+/**
  * 🚀 EDITOR PRO UNIFIED v3.0 - CONSOLIDAÇÃO FINAL + SISTEMAS ATIVOS
  * 
  * Consolida ModularEditorPro + funcionalidades IA otimizadas + Monitoramento

@@ -1,3 +1,8 @@
+/**
+ * ⚠️ ⚠️ ⚠️ DEPRECATED - NÃO USAR ⚠️ ⚠️ ⚠️
+ * @deprecated Use QuizModularProductionEditor - Ver MIGRATION_EDITOR.md
+ */
+
 export type EditorTab = 'quiz' | 'result' | 'sales';
 
 import { StyleResult } from '@/types/quiz';
