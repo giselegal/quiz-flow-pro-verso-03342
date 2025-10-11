@@ -1,5 +1,5 @@
 // @ts-nocheck
-import Testimonials from "@/components/quiz/result-pages/sales/Testimonials';
+import Testimonials from "@/components/quiz/result-pages/sales/Testimonials";
 
 /**
  * BLOCO EDITÁVEL: Grid de Depoimentos

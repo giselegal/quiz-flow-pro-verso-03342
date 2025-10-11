@@ -7,7 +7,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { ColorPicker } from "@/components/result/editor/ColorPicker';
+import { ColorPicker } from "@/components/result/editor/ColorPicker";
 
 interface StyleControlsProps {
   style: any;
