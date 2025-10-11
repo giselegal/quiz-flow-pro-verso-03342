@@ -40,7 +40,7 @@ export { default as Quiz21StepsNavigation } from './Quiz21StepsNavigation';
 /**
  * Container e Wrapper
  */
-export { default as QuizContainer } from './QuizContainer';
+export { QuizContainer } from './QuizContainer';
 export { default as QuizRunnerShell } from './QuizRunnerShell';
 export { default as ConnectedTemplateWrapper } from './ConnectedTemplateWrapper';
 
@@ -67,7 +67,7 @@ export { default as StrategicQuestionStep } from './StrategicQuestionStep';
  * Steps de Transição
  */
 export { default as TransitionStep } from './TransitionStep';
-export { default as MainTransition } from './MainTransition';
+export { MainTransition } from './MainTransition';
 
 /**
  * Step Final: Resultado
@@ -86,21 +86,21 @@ export { default as OfferStep } from './OfferStep';
 /**
  * Opções de resposta
  */
-export { default as QuizOption } from './QuizOption';
-export { default as QuizOptionImage } from './QuizOptionImage';
+export { QuizOption } from './QuizOption';
+export { QuizOptionImage } from './QuizOptionImage';
 
 /**
  * Navegação e Progresso
  */
-export { default as QuizProgress } from './QuizProgress';
-export { default as QuizHeader } from './QuizHeader';
+export { QuizProgress } from './QuizProgress';
+export { QuizHeader } from './QuizHeader';
 
 /**
  * Conteúdo e Perguntas
  */
-export { default as QuizContent } from './QuizContent';
-export { default as QuizContentWithTracking } from './QuizContentWithTracking';
-export { default as QuizQuestion } from './QuizQuestion';
+export { QuizContent } from './QuizContent';
+export { QuizContentWithTracking } from './QuizContentWithTracking';
+export { QuizQuestion } from './QuizQuestion';
 
 /**
  * Formulários
@@ -119,18 +119,18 @@ export { default as AccessibilityTip } from './AccessibilityTip';
 /**
  * Loading e Estados
  */
-export { default as QuizLoadingScreen } from './QuizLoadingScreen';
+export { QuizLoadingScreen } from './QuizLoadingScreen';
 export { default as LoadingManager } from './LoadingManager';
 
 /**
  * Error Handling
  */
-export { default as QuizErrorBoundary } from './QuizErrorBoundary';
+export { QuizErrorBoundary } from './QuizErrorBoundary';
 
 /**
  * Preview e Visualização
  */
-export { default as QuizPreview } from './QuizPreview';
+export { QuizPreview } from './QuizPreview';
 export { default as QuizOptimizedRenderer } from './QuizOptimizedRenderer';
 
 /**
@@ -147,12 +147,12 @@ export { default as QuizResultMetrics } from './QuizResultMetrics';
 /**
  * Data Viewer
  */
-export { default as QuizDataViewer } from './QuizDataViewer';
+export { QuizDataViewer } from './QuizDataViewer';
 
 /**
  * Resultados
  */
-export { default as QuizResults } from './QuizResults';
+export { QuizResults } from './QuizResults';
 
 // ========================================
 // SUB-MÓDULOS
@@ -165,10 +165,10 @@ export { default as QuizResults } from './QuizResults';
 export * from './builder';
 
 /**
- * Editor Components
+ * Editor Components (excluindo TemplateSelector para evitar conflito)
  * @see src/components/quiz/editor/
  */
-export * from './editor';
+export { QuizEditor, QuestionEditor, QuestionOptionEditor, QuizCategoryTab } from './editor';
 
 /**
  * Offer Components
@@ -212,7 +212,7 @@ export { default as Step2Direct } from './Step2Direct';
 /**
  * Strategic Questions
  */
-export { default as StrategicQuestions } from './StrategicQuestions';
+export { StrategicQuestions } from './StrategicQuestions';
 
 // ========================================
 // TIPOS E INTERFACES

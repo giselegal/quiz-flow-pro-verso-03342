@@ -15,11 +15,9 @@ export { default as FacebookMetricsDashboard } from './FacebookMetricsDashboard'
 export { default as WhatsAppRecoveryDashboard } from './WhatsAppRecoveryDashboard';
 
 // Components
-export { default as QuizFunnelCard } from './QuizFunnelCard';
+export { QuizFunnelCard } from './QuizFunnelCard';
 export { default as ParticipantsTable } from './ParticipantsTable';
 export { default as ReportGenerator } from './ReportGenerator';
 export { default as TemplateIcons } from './TemplateIcons';
 
 // Sub-modules
-export * from './core';
-export * from './layouts';

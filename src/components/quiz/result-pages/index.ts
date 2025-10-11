@@ -12,7 +12,6 @@ export { default as OfferCard } from './OfferCard';
 
 // Connected Components
 export { default as ConnectedQuizResultsBlock } from './ConnectedQuizResultsBlock';
-export { default as UnifiedQuizResultsRenderer } from './UnifiedQuizResultsRenderer';
+export { UnifiedQuizResultsRenderer } from './UnifiedQuizResultsRenderer';
 
 // Sales Components
-export * from './sales';

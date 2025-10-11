@@ -6,4 +6,4 @@
 
 export { default as QuizOfferHero } from './QuizOfferHero';
 export { default as QuizOfferCTA } from './QuizOfferCTA';
-export { default as EmbeddedQuizPreview } from './EmbeddedQuizPreview';
+export { EmbeddedQuizPreview } from './EmbeddedQuizPreview';

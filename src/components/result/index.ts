@@ -21,12 +21,12 @@
 /**
  * Hero Section - Seção principal do topo
  */
-export { default as HeroSection } from './HeroSection';
+export { HeroSection } from './HeroSection';
 
 /**
  * Pricing Section - Seção de preços
  */
-export { default as PricingSection } from './PricingSection';
+export { PricingSection } from './PricingSection';
 export { default as EnhancedPricingSection } from './EnhancedPricingSection';
 
 /**
@@ -42,7 +42,7 @@ export { default as BeforeAfterTransformation } from './BeforeAfterTransformatio
 /**
  * Bonus Carousel
  */
-export { default as BonusCarousel } from './BonusCarousel';
+export { BonusCarousel } from './BonusCarousel';
 
 // ========================================
 // ELEMENTOS DE CONFIANÇA/SEGURANÇA
@@ -60,7 +60,6 @@ export { default as SecurePurchaseElement } from './SecurePurchaseElement';
 /**
  * Drag & Drop Container
  */
-export { default as DragDropContainer } from './DragDropContainer';
 
 // ========================================
 // UTILITÁRIOS
@@ -93,7 +92,6 @@ export { default as EditResultPageButton } from './EditResultPageButton';
 /**
  * Block System Demo
  */
-export { default as BlockSystemDemo } from './BlockSystemDemo';
 
 // ========================================
 // SUB-MÓDULOS
