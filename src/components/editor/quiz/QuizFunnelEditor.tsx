@@ -1,3 +1,21 @@
+/**
+ * ⚠️ ⚠️ ⚠️ DEPRECATED - NÃO USAR ⚠️ ⚠️ ⚠️
+ * 
+ * Este editor foi DEPRECIADO em 11/out/2025 (Sprint 3).
+ * 
+ * 🚨 Use o editor oficial:
+ *    QuizModularProductionEditor
+ *    Localização: src/components/editor/quiz/QuizModularProductionEditor.tsx
+ *    Rota: /editor
+ * 
+ * 📋 Guia de migração: MIGRATION_EDITOR.md
+ * 
+ * ⏰ Este componente será REMOVIDO em 01/nov/2025
+ * 
+ * @deprecated Use QuizModularProductionEditor instead
+ * @see {@link file://./MIGRATION_EDITOR.md}
+ */
+
 import React, { useEffect, useState, useCallback, useMemo, useRef } from 'react';
 import { emitQuizEvent, setQuizAnalyticsNamespace } from '@/utils/quizAnalytics';
 import sanitizeHtml from '@/utils/sanitizeHtml';
@@ -234,6 +252,16 @@ function createBlankStep(type: QuizStep['type']): EditableQuizStep {
 }
 
 const QuizFunnelEditor: React.FC<QuizFunnelEditorProps> = ({ funnelId, templateId }) => {
+    // ⚠️ DEPRECATION WARNING
+    useEffect(() => {
+        console.warn(
+            '⚠️⚠️⚠️ DEPRECATED: QuizFunnelEditor foi depreciado em 11/out/2025.\n' +
+            '✅ Use QuizModularProductionEditor em vez disso.\n' +
+            '📋 Guia de migração: MIGRATION_EDITOR.md\n' +
+            '⏰ Este componente será removido em 01/nov/2025'
+        );
+    }, []);
+
     // Namespace analytics para não poluir produção
     useEffect(() => {
         setQuizAnalyticsNamespace('editor_preview');
