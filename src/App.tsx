@@ -61,6 +61,7 @@ const Phase2Dashboard = lazy(() => import('./pages/Phase2Dashboard'));
 const TemplatesPage = lazy(() => import('./pages/TemplatesPage'));
 const SystemDiagnosticPage = lazy(() => import('./pages/SystemDiagnosticPage'));
 const EditorTemplatesPage = lazy(() => import('./pages/editor-templates/index'));
+const EditorJsonTemplatesPage = lazy(() => import('./pages/editor-json-templates/index'));
 const FunnelTypesPage = lazy(() => import('./pages/SimpleFunnelTypesPage'));
 const SupabaseFixTestPage = lazy(() => import('./pages/SupabaseFixTestPage'));
 const IndexedDBMigrationTestPage = lazy(() => import('./pages/IndexedDBMigrationTestPage'));
@@ -237,6 +238,13 @@ function App() {
                         <Route path="/editor/templates">
                           <div data-testid="editor-templates-page">
                             <EditorTemplatesPage />
+                          </div>
+                        </Route>
+
+                        {/* Editor de Templates JSON - NOVO */}
+                        <Route path="/editor/json-templates">
+                          <div data-testid="editor-json-templates-page">
+                            <EditorJsonTemplatesPage />
                           </div>
                         </Route>
 
