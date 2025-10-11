@@ -47,7 +47,7 @@ const TemplateDiagnosticPage = lazy(() => import('./pages/TemplateDiagnosticPage
 
 // 🚀 EDITORES MODERNOS
 const QuizFunnelEditorSimplified = lazy(() => import('./components/editor/quiz/QuizFunnelEditorSimplified').then(module => ({ default: module.default })));
-const QuizFunnelEditorWYSIWYG = lazy(() => import('./components/editor/quiz/QuizFunnelEditorWYSIWYG').then(module => ({ default: module.default })));
+// QuizFunnelEditorWYSIWYG removed - deprecated in Sprint 4
 const QuizFunnelEditorWYSIWYG_Refactored = lazy(() => import('./components/editor/quiz/QuizFunnelEditorWYSIWYG_Refactored').then(module => ({ default: module.default })));
 const ModernUnifiedEditor = lazy(() => import('./pages/editor/ModernUnifiedEditor').then(module => ({ default: module.default })));
 const QuizModularProductionEditor = lazy(() => import('./components/editor/quiz/QuizModularProductionEditor').then(module => ({ default: module.default })));
