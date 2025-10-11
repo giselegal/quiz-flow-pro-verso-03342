@@ -762,3 +762,148 @@ export interface ValidationRule {
   value?: unknown;
   message: string;
 }
+
+// ============================================================================
+// 🎯 JSON TEMPLATES - FASE 2 ADDITIONS
+// ============================================================================
+
+/**
+ * Tipos de blocos específicos para templates JSON
+ * Adicionados para suportar todos os blocos dos templates quiz-estilo-step-*.json
+ */
+export type JsonBlockType =
+  // Offer blocks (Step 21)
+  | 'offer-header'
+  | 'offer-hero-section'
+  | 'offer-problem-section'
+  | 'offer-solution-section'
+  | 'offer-product-showcase'
+  | 'offer-guarantee-section'
+  | 'offer-faq-section'
+
+  // Loading/Animation blocks
+  | 'spinner'
+
+  // Data/Selection blocks
+  | 'category-points'
+  | 'input'
+  | 'selection'
+
+  // Quiz flow blocks
+  | 'strategic'
+  | 'transition'
+  | 'intro'
+  | 'question'
+  | 'result'
+  | 'offer'
+
+  // Utility
+  | 'none';
+
+/**
+ * Tipo combinado: BlockType + JsonBlockType
+ */
+export type UnifiedBlockType = BlockType | JsonBlockType;
+
+/**
+ * Helper para verificar se um tipo é um bloco JSON
+ */
+export function isJsonBlockType(type: string): type is JsonBlockType {
+  const jsonBlockTypes: JsonBlockType[] = [
+    'offer-header',
+    'offer-hero-section',
+    'offer-problem-section',
+    'offer-solution-section',
+    'offer-product-showcase',
+    'offer-guarantee-section',
+    'offer-faq-section',
+    'spinner',
+    'category-points',
+    'input',
+    'selection',
+    'strategic',
+    'transition',
+    'intro',
+    'question',
+    'result',
+    'offer',
+    'none',
+  ];
+
+  return jsonBlockTypes.includes(type as JsonBlockType);
+}
+
+/**
+ * Helper para verificar se um tipo é um bloco de Quiz
+ */
+export function isQuizBlockType(type: string): boolean {
+  return type.startsWith('quiz-') ||
+    ['question', 'intro', 'result', 'strategic', 'transition'].includes(type);
+}
+
+/**
+ * Helper para verificar se um tipo é um bloco de Offer
+ */
+export function isOfferBlockType(type: string): boolean {
+  return type.startsWith('offer-') || type === 'offer';
+}
+
+/**
+ * Helper para verificar se um tipo é inline
+ */
+export function isInlineBlockType(type: string): boolean {
+  return type.endsWith('-inline');
+}
+
+/**
+ * Helper para obter categoria de bloco baseado no tipo
+ */
+export function getBlockCategory(type: string): 'quiz' | 'offer' | 'layout' | 'content' | 'form' | 'media' | 'unknown' {
+  if (isQuizBlockType(type)) return 'quiz';
+  if (isOfferBlockType(type)) return 'offer';
+
+  if (['text', 'headline', 'button'].includes(type) || type.includes('text') || type.includes('button')) {
+    return 'content';
+  }
+
+  if (type.includes('form') || type.includes('input') || type === 'lead-form') {
+    return 'form';
+  }
+
+  if (type.includes('image') || type.includes('video') || type === 'media') {
+    return 'media';
+  }
+
+  if (type.includes('container') || type.includes('grid') || type.includes('column')) {
+    return 'layout';
+  }
+
+  return 'unknown';
+}
+
+/**
+ * Helper para validar tipo de bloco
+ */
+export function isValidBlockType(type: string): type is UnifiedBlockType {
+  // Verificar se é BlockType nativo ou JsonBlockType
+  return typeof type === 'string' && type.length > 0;
+}
+
+/**
+ * Metadata para blocos JSON
+ */
+export interface JsonBlockMetadata {
+  templateVersion: string;
+  category: string;
+  tags?: string[];
+  isDeprecated?: boolean;
+  replacedBy?: string;
+}
+
+/**
+ * Interface para bloco com metadata JSON
+ */
+export interface JsonBlock extends Block {
+  metadata?: JsonBlockMetadata;
+  source?: 'json' | 'typescript' | 'editor';
+}
