@@ -3,6 +3,10 @@ import { stepRegistry } from '@/components/step-registry/StepRegistry';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { cn } from '@/lib/utils';
 import { getPreloadSteps, getChunkForStep, PERFORMANCE_TARGETS } from './ChunkOptimization';
+// V3.0 Template Support
+import V3Renderer from '@/components/core/V3Renderer';
+import type { TemplateV3, UserData } from '@/types/template-v3.types';
+import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
 
 /**
  * 🎯 UNIFIED STEP RENDERER - FASE 3
@@ -119,10 +123,27 @@ export interface UnifiedStepRendererProps {
 /**
  * 🎯 SELETOR DE COMPONENTE OTIMIZADO
  * 
- * Determina se usa lazy loading ou registry baseado no modo e stepId
+ * Determina se usa lazy loading, registry ou V3Renderer baseado no modo e stepId
  */
 const useOptimizedStepComponent = (stepId: string, mode: RenderMode) => {
     return useMemo(() => {
+        // 🆕 V3.0: Verificar se step tem template v3.0
+        if (mode === 'production') {
+            try {
+                const template = QUIZ_STYLE_21_STEPS_TEMPLATE[stepId];
+                if (template && typeof template === 'object' && template.templateVersion === '3.0') {
+                    return {
+                        type: 'v3' as const,
+                        component: V3Renderer,
+                        isRegistry: false,
+                        template: template as TemplateV3
+                    };
+                }
+            } catch (error) {
+                console.warn(`Failed to check v3.0 template for ${stepId}:`, error);
+            }
+        }
+
         // Para modo production e stepIds conhecidos, usar lazy loading
         if (mode === 'production' && stepId in LazyStepComponents) {
             return {
@@ -301,7 +322,43 @@ export const UnifiedStepRenderer: React.FC<UnifiedStepRendererProps> = ({
         onNext, onPrevious, theme, isSelected, isEditable
     ]);
 
-    // 🎯 Renderizar baseado no modo
+    // � V3.0: Preparar userData para V3Renderer
+    const getUserData = useMemo((): UserData | undefined => {
+        if (!quizState) return undefined;
+
+        return {
+            userName: quizState.userName || 'Você',
+            styleName: quizState.resultStyle,
+            email: undefined, // Email não disponível no UnifiedStepRenderer
+            completedAt: new Date().toISOString(),
+        };
+    }, [quizState]);
+
+    // 🆕 V3.0: Callback de analytics
+    const handleAnalytics = (eventName: string, eventData?: any) => {
+        if (typeof window !== 'undefined') {
+            // Google Analytics 4
+            if ('gtag' in window) {
+                (window as any).gtag('event', eventName, {
+                    ...eventData,
+                    page_path: window.location.pathname,
+                    page_title: document.title,
+                });
+            }
+
+            // Facebook Pixel
+            if ('fbq' in window) {
+                (window as any).fbq('track', eventName, eventData);
+            }
+
+            // Log em desenvolvimento
+            if (process.env.NODE_ENV === 'development') {
+                console.log('📊 Analytics:', eventName, eventData);
+            }
+        }
+    };
+
+    // �🎯 Renderizar baseado no modo
     const renderStep = () => {
         // Wrapper base com estilos do modo
         const wrapperClasses = cn(
@@ -353,7 +410,16 @@ export const UnifiedStepRenderer: React.FC<UnifiedStepRendererProps> = ({
                         </div>
                     }
                 >
-                    {stepComponentInfo.type === 'lazy' ? (
+                    {stepComponentInfo.type === 'v3' ? (
+                        // 🆕 V3.0: Renderizar com V3Renderer
+                        <V3Renderer
+                            template={(stepComponentInfo as any).template}
+                            userData={getUserData}
+                            onAnalytics={handleAnalytics}
+                            mode="full"
+                            className="quiz-v3-content"
+                        />
+                    ) : stepComponentInfo.type === 'lazy' ? (
                         // Componente lazy (produção)
                         React.createElement(stepComponentInfo.component as React.ComponentType<any>, unifiedProps)
                     ) : (
