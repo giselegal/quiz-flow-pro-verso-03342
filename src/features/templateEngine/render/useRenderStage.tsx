@@ -1,5 +1,5 @@
 import React from 'react';
-import { TemplateDraft } from '../../../../server/templates/models';
+import { TemplateDraft } from '@/../server/templates/models';
 import { renderComponent } from './registry';
 
 export function useRenderStage(draft: TemplateDraft | undefined, stageId: string | undefined) {

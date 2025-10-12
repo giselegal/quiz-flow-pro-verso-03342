@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
-import { templateService } from '../../../server/templates/service';
-import { templateRepo } from '../../../server/templates/repo';
+import { templateService } from '@/../server/templates/service';
+import { templateRepo } from '@/../server/templates/repo';
 
 describe('Outcome interpolation', () => {
     it('substitui {{score}} no outcome final', () => {

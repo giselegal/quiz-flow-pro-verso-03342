@@ -5,7 +5,7 @@
  * Define a estrutura padrão que cada componente editável deve seguir.
  */
 
-import { QuizStep } from '../../../../data/quizSteps';
+import { QuizStep } from '@/data/quizSteps';
 
 /**
  * 📋 PROPS BASE PARA COMPONENTES EDITÁVEIS

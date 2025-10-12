@@ -1,6 +1,6 @@
 import { EditorBlock } from '@/types/editor';
 import { useCallback, useState } from 'react';
-import { generateSemanticId } from '../../../utils/semanticIdGenerator';
+import { generateSemanticId } from '@/utils/semanticIdGenerator';
 
 interface EditorState {
   blocks: EditorBlock[];

@@ -29,7 +29,7 @@ import {
   Wifi,
   WifiOff
 } from 'lucide-react';
-import { useUnifiedCollaboration } from '../../../hooks/core/useUnifiedCollaboration';
+import { useUnifiedCollaboration } from '@/hooks/core/useUnifiedCollaboration';
 
 interface CollaborationPanelProps {
   funnelId: string;

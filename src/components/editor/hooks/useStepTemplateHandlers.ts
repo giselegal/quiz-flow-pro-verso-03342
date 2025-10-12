@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { stepTemplateService } from '../../../services/stepTemplateService';
+import { stepTemplateService } from '@/services/stepTemplateService';
 
 // 🎯 FUNÇÃO PARA OBTER TEMPLATE DE ETAPA USANDO STEPTEMPLATE SERVICE
 export const getStepTemplate = (stepId: string) => {

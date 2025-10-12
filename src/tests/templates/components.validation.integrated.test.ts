@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
-import { validateTemplate } from '../../../server/templates/validation';
-import { ComponentKind } from '../../../server/templates/components';
-import { TemplateAggregate } from '../../../server/templates/models';
+import { validateTemplate } from '@/../server/templates/validation';
+import { ComponentKind } from '@/../server/templates/components';
+import { TemplateAggregate } from '@/../server/templates/models';
 
 // Cria draft mínimo com componente tipado inválido (QuestionSingle com <2 options)
 

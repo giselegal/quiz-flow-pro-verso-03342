@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import type { QuizStep } from '../../../data/quizSteps';
+import type { QuizStep } from '@/data/quizSteps';
 import { EditableField } from './EditableField';
 
 interface EditableIntroStepProps {

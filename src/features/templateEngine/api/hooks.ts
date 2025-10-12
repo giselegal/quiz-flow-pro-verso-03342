@@ -1,1 +1,1 @@
-export * from '../../../api/templates/hooks';
+export * from '@/api/templates/hooks';

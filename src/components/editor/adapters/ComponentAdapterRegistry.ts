@@ -7,7 +7,7 @@
  */
 
 import { EditorComponentAdapter, ExtendedEditorComponentAdapter, createAdapter } from './EditorComponentAdapter';
-import { QuizStep } from '../../../data/quizSteps';
+import { QuizStep } from '@/data/quizSteps';
 
 // Imports dos componentes de produção
 import IntroStep from '../../quiz/IntroStep';

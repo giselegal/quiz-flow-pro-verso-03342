@@ -5,7 +5,7 @@ import { diffProps } from '../utils/diffProps';
 import { getComponentSchema } from './componentPropSchemas';
 import { renderComponent } from '../render/registry';
 import { compareHistoryEntry } from '../utils/historyHashes';
-import type { TemplateDraftShared } from '../../../shared/templateEngineTypes';
+import type { TemplateDraftShared } from '@/shared/templateEngineTypes';
 
 interface Props { id: string; onBack: () => void; }
 

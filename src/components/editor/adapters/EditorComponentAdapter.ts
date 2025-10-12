@@ -5,7 +5,7 @@
  * com o sistema editável do editor. Parte da FASE 1 do plano de modularização.
  */
 
-import { QuizStep } from '../../../data/quizSteps';
+import { QuizStep } from '@/data/quizSteps';
 
 /**
  * 🎯 INTERFACE PRINCIPAL DO ADAPTER

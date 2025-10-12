@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import type { QuizStep } from '../../../data/quizSteps';
+import type { QuizStep } from '@/data/quizSteps';
 import { EditableField } from './EditableField';
 import { Plus, Trash2, Image } from 'lucide-react';
 import { Button } from '@/components/ui/button';

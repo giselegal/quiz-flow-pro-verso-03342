@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { templateService } from '../../../server/templates/service';
-import { templateRepo } from '../../../server/templates/repo';
+import { templateService } from '@/../server/templates/service';
+import { templateRepo } from '@/../server/templates/repo';
 
 let _slugCounter = 0;
 function setupBase() {

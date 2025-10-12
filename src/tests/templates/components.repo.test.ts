@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { createHeader, createQuestionMulti, ComponentKind, validateComponent } from '../../../server/templates/components';
-import { saveComponent, listComponents, getComponent, clearAllComponents, countComponents, deleteComponent } from '../../../server/templates/components.repo';
+import { createHeader, createQuestionMulti, ComponentKind, validateComponent } from '@/../server/templates/components';
+import { saveComponent, listComponents, getComponent, clearAllComponents, countComponents, deleteComponent } from '@/../server/templates/components.repo';
 
 describe('components repo', () => {
     beforeEach(() => {

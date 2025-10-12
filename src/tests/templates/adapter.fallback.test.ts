@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, afterEach } from 'vitest';
-import * as adapter from '../../../server/quiz-style/adapter';
-import { getAdapterMetrics } from '../../../server/quiz-style/metrics';
+import * as adapter from '@/../server/quiz-style/adapter';
+import { getAdapterMetrics } from '@/../server/quiz-style/metrics';
 
 // Testa comportamento do safeToTemplateDraft em modo fallback
 

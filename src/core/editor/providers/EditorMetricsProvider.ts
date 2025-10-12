@@ -20,9 +20,9 @@ import {
 } from '../interfaces/EditorInterfaces';
 
 // Importar serviços de monitoramento existentes
-import { MonitoringService } from '../../../services/core/MonitoringService';
-import { PerformanceMonitor } from '../../../utils/performanceMonitoring';
-import { RealTimeAnalytics } from '../../../services/realTimeAnalytics';
+import { MonitoringService } from '@/services/core/MonitoringService';
+import { PerformanceMonitor } from '@/utils/performanceMonitoring';
+import { RealTimeAnalytics } from '@/services/realTimeAnalytics';
 
 // ============================================================================
 // IMPLEMENTAÇÃO PRINCIPAL

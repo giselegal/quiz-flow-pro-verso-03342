@@ -21,7 +21,7 @@ export default [
       'public',
     ],
   },
-  
+
   // Base JavaScript configuration
   {
     files: ['**/*.{js,jsx,ts,tsx}'],
@@ -49,7 +49,7 @@ export default [
     rules: {
       // Base rules
       ...js.configs.recommended.rules,
-      
+
       // TypeScript rules
       '@typescript-eslint/no-unused-vars': [
         'warn',
@@ -66,16 +66,18 @@ export default [
       '@typescript-eslint/no-empty-function': 'warn',
       '@typescript-eslint/prefer-const': 'error',
       '@typescript-eslint/no-var-requires': 'warn',
-      
+
       // React Hooks rules
       ...reactHooks.configs.recommended.rules,
-      
+      'react-hooks/rules-of-hooks': 'error',
+      'react-hooks/exhaustive-deps': 'warn', // ⚠️ NOVO: Avisar sobre dependências faltantes
+
       // React Refresh rules
       'react-refresh/only-export-components': [
         'warn',
         { allowConstantExport: true },
       ],
-      
+
       // General code quality rules
       'no-console': ['warn', { allow: ['warn', 'error'] }],
       'no-debugger': 'warn',
@@ -84,29 +86,42 @@ export default [
       'no-unused-expressions': 'error',
       'no-unreachable': 'error',
       'no-constant-condition': 'warn',
-      
+
       // Best practices
       'prefer-const': 'error',
       'no-var': 'error',
       'object-shorthand': 'warn',
       'prefer-template': 'warn',
       'prefer-arrow-callback': 'warn',
-      
+
       // Formatting rules (should be handled by Prettier, but good fallbacks)
       'indent': 'off', // Let Prettier handle this
       'quotes': ['warn', 'single', { avoidEscape: true }],
       'semi': ['error', 'always'],
       'comma-dangle': ['warn', 'es5'],
-      
+
       // Import/Export rules
       'no-default-export': 'off',
       'import/prefer-default-export': 'off',
-      
+
+      // ⚠️ NOVO: Prevenir imports profundos (../../../)
+      'no-restricted-imports': [
+        'error',
+        {
+          patterns: [
+            {
+              group: ['../*/*/*/*', '../../../*', '../../../../*'],
+              message: '❌ Imports profundos não são permitidos. Use aliases @/ ao invés de ../../../. Exemplo: import { X } from "@/data/X"',
+            },
+          ],
+        },
+      ],
+
       // Performance rules
       'no-async-promise-executor': 'error',
       'no-await-in-loop': 'warn',
       'no-return-await': 'warn',
-      
+
       // Security rules
       'no-eval': 'error',
       'no-implied-eval': 'error',
@@ -114,7 +129,7 @@ export default [
       'no-script-url': 'error',
     },
   },
-  
+
   // Test files configuration
   {
     files: [
@@ -145,12 +160,12 @@ export default [
       '@typescript-eslint/no-explicit-any': 'off',
       '@typescript-eslint/no-non-null-assertion': 'off',
       'no-unused-expressions': 'off',
-      
+
       // Test-specific rules
       'no-only-tests/no-only-tests': 'off',
     },
   },
-  
+
   // Configuration files
   {
     files: [
@@ -172,7 +187,7 @@ export default [
       'no-undef': 'off',
     },
   },
-  
+
   // E2E test files
   {
     files: ['tests/e2e/**/*.{js,ts}'],
@@ -198,7 +213,7 @@ export default [
       'no-await-in-loop': 'off', // Common in E2E tests
     },
   },
-  
+
   // Development scripts
   {
     files: ['scripts/**/*.{js,ts}'],

@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
-import { validateTemplate } from '../../../server/templates/validation';
-import { toTemplateDraft } from '../../../server/quiz-style/adapter';
+import { validateTemplate } from '@/../server/templates/validation';
+import { toTemplateDraft } from '@/../server/quiz-style/adapter';
 
 // Testa as novas validações/warnings específicas do adapter legacy
 

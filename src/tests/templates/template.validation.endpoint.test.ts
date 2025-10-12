@@ -1,8 +1,8 @@
 // @vitest-environment node
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import express from 'express';
-import { templatesRouter } from '../../../server/templates/controller';
-import { templateService } from '../../../server/templates/service';
+import { templatesRouter } from '@/../server/templates/controller';
+import { templateService } from '@/../server/templates/service';
 import { AddressInfo } from 'net';
 
 // Testa GET /api/templates/:id/validation

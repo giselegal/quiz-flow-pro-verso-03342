@@ -1,1 +1,1 @@
-export * from '../../../api/templates/types';
+export * from '@/api/templates/types';

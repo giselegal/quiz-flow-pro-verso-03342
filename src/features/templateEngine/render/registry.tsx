@@ -1,6 +1,6 @@
 import React from 'react';
-import { TemplateDraft } from '../../../../server/templates/models';
-import { ComponentKind } from '../../../../server/templates/components';
+import { TemplateDraft } from '@/../server/templates/models';
+import { ComponentKind } from '@/../server/templates/components';
 
 // Tipagens locais para runtime de renderização
 export interface RenderContext {

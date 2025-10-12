@@ -2,7 +2,7 @@
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import express from 'express';
 import { AddressInfo } from 'net';
-import { componentsRouter } from '../../../server/templates/components.controller';
+import { componentsRouter } from '@/../server/templates/components.controller';
 
 // Usa servidor real efêmero e fetch global
 describe('components API', () => {

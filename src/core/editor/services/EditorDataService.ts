@@ -5,7 +5,7 @@
  * com os arquivos JSON reais das etapas (step-01-template.json, etc.)
  */
 
-import { FunnelStep } from '../../../types/quiz-schema';
+import { FunnelStep } from '@/types/quiz-schema';
 
 export type TemplateSource = 'template' | 'saved' | 'file';
 

@@ -3,7 +3,7 @@ import TemplateEngineEditorLayout from './TemplateEngineEditorLayout';
 import { useTemplateDraft, useUpdateMeta, useAddStage, useReorderStages, usePublish, useValidateDraft, useAddStageComponent, useRemoveStageComponent, useReorderStageComponents, useUpdateComponentProps, usePreviewStart, usePreviewAnswer, useTemplateHistory } from '../api/hooks';
 import { compareHistoryEntry } from '../utils/historyHashes';
 import { renderComponent } from '../render/registry';
-import { TemplateDraftShared } from '../../../shared/templateEngineTypes';
+import { TemplateDraftShared } from '@/shared/templateEngineTypes';
 import { getComponentSchema } from './componentPropSchemas';
 import { diffProps } from '../utils/diffProps';
 // Ajuste: evitar conflito de tipos TemplateDraft (frontend vs server). Vamos tratar draft como 'any' onde passamos para renderComponent.

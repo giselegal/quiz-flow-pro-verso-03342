@@ -5,7 +5,7 @@
  */
 
 // Importar tipos do editor principal
-import type { Block } from '../../../types/editor';
+import type { Block } from '@/types/editor';
 
 /**
  * Estado global do quiz

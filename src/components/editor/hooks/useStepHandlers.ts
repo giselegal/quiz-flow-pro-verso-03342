@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { generateSemanticId } from '../../../utils/semanticIdGenerator';
+import { generateSemanticId } from '@/utils/semanticIdGenerator';
 
 interface QuizStep {
   id: string;

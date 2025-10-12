@@ -1,4 +1,4 @@
-import { generateRealQuestionTemplates } from '../../../data/realQuizTemplates';
+import { generateRealQuestionTemplates } from '@/data/realQuizTemplates';
 
 /**
  * ETAPAS 2-11: QUESTÕES PRINCIPAIS (10 QUESTÕES)
