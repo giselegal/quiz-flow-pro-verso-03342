@@ -21,7 +21,7 @@ import type {
 // LAZY IMPORTS - Code splitting por section
 // ============================================================================
 
-const HeroSection = React.lazy(() => import('./HeroSection'));
+const HeroSection = React.lazy(() => import('./HeroSection').then(m => ({ default: m.HeroSection })));
 const StyleProfileSection = React.lazy(() => import('./StyleProfileSection'));
 const CTAButton = React.lazy(() => import('./CTAButton'));
 const TransformationSection = React.lazy(() => import('./TransformationSection'));

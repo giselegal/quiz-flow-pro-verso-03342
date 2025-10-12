@@ -250,7 +250,7 @@ const useV3Analytics = (
         onAnalytics('page_view', eventData);
 
         // Track pixel de visualização
-        if (template.analytics?.pixelId) {
+        if (template.analytics?.fbPixelId) {
             if (typeof window !== 'undefined' && (window as any).fbq) {
                 (window as any).fbq('track', 'ViewContent', {
                     content_name: template.metadata.name,

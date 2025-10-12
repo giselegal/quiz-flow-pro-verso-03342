@@ -34,11 +34,11 @@ export const UnifiedMetricCard: React.FC<UnifiedMetricCardProps> = ({
     color = 'blue'
 }) => {
     const colorClasses = {
-        green: 'border-green-200 bg-gradient-to-br from-green-50 to-green-100',
-        blue: 'border-blue-200 bg-gradient-to-br from-blue-50 to-blue-100',
-        brand: 'border-slate-200 bg-gradient-to-br from-slate-50 to-slate-100',
-        orange: 'border-orange-200 bg-gradient-to-br from-orange-50 to-orange-100',
-        red: 'border-red-200 bg-gradient-to-br from-red-50 to-red-100'
+        green: 'border-[#687ef7]/30 bg-gradient-to-br from-white to-[#687ef7]/5 shadow-lg hover:shadow-2xl hover:shadow-[#687ef7]/20 transition-all',
+        blue: 'border-[#d85dfb]/30 bg-gradient-to-br from-white to-[#d85dfb]/5 shadow-lg hover:shadow-2xl hover:shadow-[#d85dfb]/20 transition-all',
+        brand: 'border-[#432818]/20 bg-gradient-to-br from-[#FFE8D6] to-white shadow-lg hover:shadow-xl transition-all',
+        orange: 'border-[#8F7A6A]/30 bg-gradient-to-br from-[#FFE8D6]/50 to-white shadow-md hover:shadow-lg transition-all',
+        red: 'border-red-400/30 bg-gradient-to-br from-white to-red-50/30 shadow-lg hover:shadow-xl transition-all'
     };
 
     return (
@@ -48,20 +48,20 @@ export const UnifiedMetricCard: React.FC<UnifiedMetricCardProps> = ({
             className
         )}>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium text-gray-600">{title}</CardTitle>
-                <div className="text-gray-400">{icon}</div>
+                <CardTitle className="text-sm font-medium text-[#8F7A6A]">{title}</CardTitle>
+                <div className="text-[#687ef7]">{icon}</div>
             </CardHeader>
             <CardContent>
-                <div className="text-2xl font-bold text-gray-900">{value}</div>
+                <div className="text-3xl font-bold text-[#432818]">{value}</div>
                 {change && (
                     <div className={cn(
-                        "flex items-center text-xs mt-1",
-                        change.trend === 'up' && "text-green-600",
-                        change.trend === 'down' && "text-red-600",
-                        change.trend === 'neutral' && "text-gray-600"
+                        "flex items-center text-sm mt-2 font-medium",
+                        change.trend === 'up' && "text-[#687ef7]",
+                        change.trend === 'down' && "text-red-500",
+                        change.trend === 'neutral' && "text-[#8F7A6A]"
                     )}>
-                        {change.trend === 'up' && <ArrowUpRight className="w-3 h-3 mr-1" />}
-                        {change.trend === 'down' && <ArrowDownRight className="w-3 h-3 mr-1" />}
+                        {change.trend === 'up' && <ArrowUpRight className="w-4 h-4 mr-1" />}
+                        {change.trend === 'down' && <ArrowDownRight className="w-4 h-4 mr-1" />}
                         {change.value}
                     </div>
                 )}

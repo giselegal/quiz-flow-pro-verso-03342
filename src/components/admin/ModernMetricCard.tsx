@@ -23,44 +23,44 @@ interface ModernMetricCardProps {
 
 const colorVariants = {
     blue: {
-        gradient: 'from-blue-50 to-blue-100/50',
-        border: 'border-blue-200/50',
-        iconBg: 'bg-blue-200',
-        iconColor: 'text-blue-700',
-        titleColor: 'text-blue-800',
-        valueColor: 'text-blue-900',
+        gradient: 'from-white to-[#687ef7]/5',
+        border: 'border-[#687ef7]/30',
+        iconBg: 'bg-gradient-to-br from-[#687ef7]/20 to-[#d85dfb]/20',
+        iconColor: 'text-[#687ef7]',
+        titleColor: 'text-[#8F7A6A]',
+        valueColor: 'text-[#432818]',
     },
     green: {
-        gradient: 'from-green-50 to-green-100/50',
-        border: 'border-green-200/50',
-        iconBg: 'bg-green-200',
-        iconColor: 'text-green-700',
-        titleColor: 'text-green-800',
-        valueColor: 'text-green-900',
+        gradient: 'from-white to-[#687ef7]/5',
+        border: 'border-[#687ef7]/30',
+        iconBg: 'bg-gradient-to-br from-[#687ef7]/20 to-[#d85dfb]/20',
+        iconColor: 'text-[#687ef7]',
+        titleColor: 'text-[#8F7A6A]',
+        valueColor: 'text-[#432818]',
     },
     purple: {
-        gradient: 'from-purple-50 to-purple-100/50',
-        border: 'border-purple-200/50',
-        iconBg: 'bg-purple-200',
-        iconColor: 'text-purple-700',
-        titleColor: 'text-purple-800',
-        valueColor: 'text-purple-900',
+        gradient: 'from-white to-[#d85dfb]/5',
+        border: 'border-[#d85dfb]/30',
+        iconBg: 'bg-gradient-to-br from-[#d85dfb]/20 to-[#687ef7]/20',
+        iconColor: 'text-[#d85dfb]',
+        titleColor: 'text-[#8F7A6A]',
+        valueColor: 'text-[#432818]',
     },
     orange: {
-        gradient: 'from-orange-50 to-orange-100/50',
-        border: 'border-orange-200/50',
-        iconBg: 'bg-orange-200',
-        iconColor: 'text-orange-700',
-        titleColor: 'text-orange-800',
-        valueColor: 'text-orange-900',
+        gradient: 'from-[#FFE8D6]/50 to-white',
+        border: 'border-[#8F7A6A]/30',
+        iconBg: 'bg-gradient-to-br from-[#8F7A6A]/20 to-[#432818]/10',
+        iconColor: 'text-[#432818]',
+        titleColor: 'text-[#8F7A6A]',
+        valueColor: 'text-[#432818]',
     },
     red: {
-        gradient: 'from-red-50 to-red-100/50',
-        border: 'border-red-200/50',
-        iconBg: 'bg-red-200',
-        iconColor: 'text-red-700',
-        titleColor: 'text-red-800',
-        valueColor: 'text-red-900',
+        gradient: 'from-white to-red-50/30',
+        border: 'border-red-400/30',
+        iconBg: 'bg-gradient-to-br from-red-400/20 to-red-500/20',
+        iconColor: 'text-red-500',
+        titleColor: 'text-[#8F7A6A]',
+        valueColor: 'text-[#432818]',
     },
 };
 
@@ -89,9 +89,11 @@ export function ModernMetricCard({
     return (
         <Card
             className={cn(
-                'p-6 rounded-2xl bg-gradient-to-br shadow-lg hover:shadow-xl transition-all duration-300 border backdrop-blur-sm',
+                'p-6 rounded-2xl bg-gradient-to-br shadow-lg hover:shadow-2xl transition-all duration-300 border backdrop-blur-sm',
                 colorVariant.gradient,
                 colorVariant.border,
+                color === 'blue' && 'hover:shadow-[#687ef7]/20',
+                color === 'purple' && 'hover:shadow-[#d85dfb]/20',
                 className
             )}
         >
@@ -108,7 +110,7 @@ export function ModernMetricCard({
 
                     <div
                         className={cn(
-                            'w-12 h-12 rounded-full flex items-center justify-center shadow-sm',
+                            'w-14 h-14 rounded-2xl flex items-center justify-center shadow-lg',
                             colorVariant.iconBg
                         )}
                     >
@@ -119,8 +121,8 @@ export function ModernMetricCard({
                 </div>
 
                 {change && (
-                    <div className="flex items-center gap-1">
-                        <span className={cn('text-sm font-medium', trendColors[change.trend])}>
+                    <div className="flex items-center gap-1 mt-1">
+                        <span className={cn('text-sm font-semibold', trendColors[change.trend])}>
                             {trendIcons[change.trend]} {change.value}
                         </span>
                     </div>
