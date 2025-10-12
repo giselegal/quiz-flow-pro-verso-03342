@@ -460,6 +460,13 @@ const AdminDashboard: React.FC = () => {
                                         color="brand"
                                     />
                                     <QuickAction
+                                        title="🎯 Funil em Produção"
+                                        description="Ver Quiz de Estilo Pessoal (publicado)"
+                                        href="/admin/funil-atual"
+                                        icon={<Target className="w-5 h-5" />}
+                                        color="green"
+                                    />
+                                    <QuickAction
                                         title="📋 Modelos de Funis"
                                         description="Templates prontos: Quiz 21 Etapas, Lead Magnets e mais"
                                         href="/admin/modelos"
@@ -471,7 +478,7 @@ const AdminDashboard: React.FC = () => {
                                         description="Comece um novo funil de conversão"
                                         href="/editor"
                                         icon={<Edit className="w-5 h-5" />}
-                                        color="green"
+                                        color="orange"
                                     />
                                     <QuickAction
                                         title="Meus Funis"

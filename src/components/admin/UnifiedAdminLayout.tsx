@@ -37,7 +37,7 @@ const QuizModularProductionEditor = React.lazy(() => import('@/components/editor
 
 interface UnifiedAdminLayoutProps {
     children?: React.ReactNode;
-    currentView?: 'dashboard' | 'funnels' | 'analytics' | 'editor';
+    currentView?: 'dashboard' | 'funnels' | 'analytics' | 'editor' | 'current-funnel';
     funnelId?: string;
     className?: string;
 }
@@ -76,11 +76,12 @@ export const UnifiedAdminLayout: React.FC<UnifiedAdminLayoutProps> = ({
     // NAVIGATION HANDLERS
     // ========================================================================
 
-    const handleNavigateToView = (view: 'dashboard' | 'funnels' | 'analytics') => {
+    const handleNavigateToView = (view: 'dashboard' | 'funnels' | 'analytics' | 'current-funnel') => {
         const paths = {
             dashboard: '/admin/dashboard',
             funnels: '/admin/funnels',
-            analytics: '/admin/analytics'
+            analytics: '/admin/analytics',
+            'current-funnel': '/admin/funil-atual'
         };
 
         UnifiedRoutingService.navigate(paths[view]);
@@ -129,6 +130,9 @@ export const UnifiedAdminLayout: React.FC<UnifiedAdminLayoutProps> = ({
                 break;
             case 'analytics':
                 breadcrumbs.push({ label: 'Analytics', path: '/admin/analytics', active: true });
+                break;
+            case 'current-funnel':
+                breadcrumbs.push({ label: 'Funil em Produção', path: '/admin/funil-atual', active: true });
                 break;
             case 'editor':
                 breadcrumbs.push(
@@ -335,6 +339,28 @@ export const UnifiedAdminLayout: React.FC<UnifiedAdminLayoutProps> = ({
 
                     {/* Actions - Design Premium com Nova Identidade */}
                     <div className="flex items-center gap-3">
+                        {/* Botão Funil Atual */}
+                        <Button
+                            onClick={() => handleNavigateToView('current-funnel')}
+                            variant="outline"
+                            size="sm"
+                            className="backdrop-blur-sm shadow-sm glow-button"
+                            style={{
+                                backgroundColor: `${theme.colors.background}60`,
+                                borderColor: activeView === 'current-funnel' ? theme.colors.detailsMinor : `${theme.colors.detailsMinor}40`,
+                                color: theme.colors.text,
+                                background: activeView === 'current-funnel' 
+                                    ? `linear-gradient(135deg, ${theme.colors.buttons}20, ${theme.colors.detailsMinor}20)`
+                                    : `${theme.colors.background}60`,
+                                boxShadow: activeView === 'current-funnel'
+                                    ? `0 0 15px ${theme.colors.glowEffect}30`
+                                    : 'none'
+                            }}
+                        >
+                            <Target className="w-4 h-4 mr-2" />
+                            Funil Atual
+                        </Button>
+                        
                         <ThemeToggle size="sm" />
 
                         {/* User Identity */}

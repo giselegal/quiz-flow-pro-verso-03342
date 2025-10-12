@@ -1,5 +1,5 @@
 /**
- * 🎯 FUNIL ATUAL - PÁGINA ISOLADA
+ * 🎯 FUNIL ATUAL - PÁGINA UNIFICADA
  * 
  * Exibe APENAS o funil em produção (Quiz de Estilo Pessoal - Gisele Galvão)
  * Oculta todos os outros templates e modelos
@@ -10,6 +10,7 @@
  * - Métricas do funil atual
  * - Preview do quiz
  * - Link para publicação
+ * - Integrado com UnifiedAdminLayout
  */
 
 import React, { useState, useEffect } from 'react';
@@ -35,8 +36,11 @@ import {
     Settings,
     Layers,
     Info,
-    Sparkles
+    Sparkles,
+    Home,
+    ChevronRight
 } from 'lucide-react';
+import { Link } from 'wouter';
 import { EnhancedUnifiedDataService } from '@/services/core/EnhancedUnifiedDataService';
 
 // ============================================================================
@@ -187,6 +191,16 @@ const CurrentFunnelPage: React.FC = () => {
 
     return (
         <div className="space-y-6">
+            {/* Breadcrumbs */}
+            <nav className="flex items-center gap-2 text-sm text-gray-600 mb-4">
+                <Link href="/admin/dashboard" className="hover:text-gray-900 flex items-center gap-1">
+                    <Home className="w-4 h-4" />
+                    Dashboard
+                </Link>
+                <ChevronRight className="w-4 h-4" />
+                <span className="text-gray-900 font-medium">Funil em Produção</span>
+            </nav>
+
             {/* Header com Status */}
             <div className="flex items-start justify-between">
                 <div className="space-y-2">

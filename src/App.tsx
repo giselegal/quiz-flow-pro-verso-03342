@@ -26,6 +26,7 @@ import { QuizErrorBoundary } from './components/RouteErrorBoundary';
 import { EditorErrorBoundary } from './components/error/EditorErrorBoundary';
 import { EditorAccessControl } from '@/components/editor/EditorAccessControl';
 import { FunnelContext } from '@/core/contexts/FunnelContext';
+import { UnifiedAdminLayout } from '@/components/admin/UnifiedAdminLayout';
 // Novo Template Engine (feature flag controlada por VITE_USE_TEMPLATE_ENGINE)
 import { TemplateEnginePage } from '@/features/templateEngine';
 import { TemplateEnginePageWrapperOpen } from '@/features/templateEngine/components/TemplateEnginePage';
@@ -401,12 +402,14 @@ function App() {
 
 
 
-                        {/* 🎯 FUNIL ATUAL ISOLADO (Quiz de Estilo Pessoal) */}
+                        {/* 🎯 FUNIL ATUAL COM LAYOUT UNIFICADO (Quiz de Estilo Pessoal) */}
                         <Route path="/admin/funil-atual">
                           <div data-testid="current-funnel-page">
-                            <Suspense fallback={<EnhancedLoadingFallback message="Carregando funil atual..." />}>
-                              <CurrentFunnelPage />
-                            </Suspense>
+                            <UnifiedAdminLayout currentView="current-funnel">
+                              <Suspense fallback={<EnhancedLoadingFallback message="Carregando funil atual..." />}>
+                                <CurrentFunnelPage />
+                              </Suspense>
+                            </UnifiedAdminLayout>
                           </div>
                         </Route>
 
