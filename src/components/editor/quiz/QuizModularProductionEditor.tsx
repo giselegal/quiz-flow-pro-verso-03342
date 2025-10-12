@@ -386,10 +386,12 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
     // Evita loop infinito de carregamento: finaliza o loading após mount
     useEffect(() => {
         // Carregamento inicial: se houver ?template=, construir steps default
+        console.log('🎯 EDITOR: useEffect inicial disparado');
         try {
             const sp = new URLSearchParams(typeof window !== 'undefined' && window.location ? window.location.search : '');
             const templateId = sp.get('template');
             const funnelParam = sp.get('funnel') || undefined;
+            console.log('🔍 PARAMETROS:', { templateId, funnelParam, stepsExistentes: steps?.length || 0 });
 
             // 0) Se vier um funnelId, tentar carregar rascunho existente primeiro
             if (funnelParam && !steps?.length) {
@@ -436,7 +438,9 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
 
                             let loaded = false;
                             try {
+                                console.log('📥 Chamando QuizTemplateAdapter.convertLegacyTemplate()...');
                                 const unified = await QuizTemplateAdapter.convertLegacyTemplate();
+                                console.log('📦 Resultado:', { hasUnified: !!unified, stepsCount: unified?.steps?.length || 0 });
                                 if (unified && Array.isArray(unified.steps) && unified.steps.length >= 21) {
                                     // Guardar em estado local para consumo direto
                                     setUnifiedConfig({ runtime: unified.runtime, results: unified.results, ui: unified.ui, settings: unified.settings as any });
@@ -462,6 +466,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                                     setSelectedStepId(initialFromDoc[0]?.id || '');
                                     setFunnelId(funnelParam || `funnel-${templateId}-${Date.now()}`);
                                     loaded = true;
+                                    console.log('✅ Steps carregados com sucesso! Total:', initialFromDoc.length);
                                 }
                             } catch (e) {
                                 // Falha silenciosa: cair para o fallback legacy
@@ -470,6 +475,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
 
                             // 2) Fallback para template legacy (com personalização por funil, se houver)
                             if (!loaded) {
+                                console.log('🔄 Usando fallback: template legacy');
                                 const buildStepType = (idx: number): EditableQuizStep['type'] => {
                                     if (idx === 0) return 'intro';
                                     if (idx >= 1 && idx <= 10) return 'question';
@@ -497,12 +503,16 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                                 setSteps(initial);
                                 setSelectedStepId(initial[0]?.id || '');
                                 setFunnelId(funnelParam || `funnel-${templateId}-${Date.now()}`);
+                                console.log('✅ Fallback concluído! Total de steps:', initial.length);
                             }
                         })();
                     }
                 }
             }
-        } catch {/* ignore */ }
+        } catch (err) {
+            console.error('❌ Erro no useEffect:', err);
+        }
+        console.log('🏁 Finalizando useEffect, setIsLoading(false)');
         setIsLoading(false);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
