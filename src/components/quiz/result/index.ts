@@ -9,4 +9,9 @@ export { default as TestimonialCard } from './blocks/TestimonialCard';
 export { default as StyleCard } from './blocks/StyleCard';
 
 // Seções Completas
+export { default as HeroSection } from './sections/HeroSection';
+export { default as StyleProfileSection } from './sections/StyleProfileSection';
+export { default as TransformationSection } from './sections/TransformationSection';
+export { default as SocialProofSection } from './sections/SocialProofSection';
 export { default as OfferSection } from './sections/OfferSection';
+export { default as GuaranteeSection } from './sections/GuaranteeSection';
