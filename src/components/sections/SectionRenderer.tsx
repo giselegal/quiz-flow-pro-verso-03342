@@ -1,4 +1,3 @@
-// @ts-nocheck - Lazy loading com imports dinâmicos
 /**
  * Section Renderer
  * 
