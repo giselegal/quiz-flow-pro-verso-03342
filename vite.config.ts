@@ -145,8 +145,17 @@ export default defineConfig({
     },
   },
   optimizeDeps: {
-    include: ['react', 'react-dom'],
-    esbuildOptions: { target: 'es2020' },
+    include: [
+      'react',
+      'react-dom',
+      'react/jsx-runtime',
+      'react-router-dom',
+    ],
+    exclude: ['recharts'],
+    esbuildOptions: {
+      target: 'es2020',
+      loader: { '.js': 'jsx' },
+    },
   },
   define: { global: 'globalThis' },
   esbuild: { target: 'es2020' },
