@@ -18,12 +18,12 @@ const ModularTransitionStep = React.lazy(() => import('../../quiz-estilo/Modular
 const ModularResultStep = React.lazy(() => import('../../quiz-estilo/ModularResultStep'));
 const ModularOfferStep = React.lazy(() => import('../../quiz-estilo/ModularOfferStep'));
 
-const EditorIntroStep = React.lazy(() => import('../EditorIntroStep'));
-const EditorQuestionStep = React.lazy(() => import('../EditorQuestionStep'));
-const EditorStrategicQuestionStep = React.lazy(() => import('../EditorStrategicQuestionStep'));
-const EditorTransitionStep = React.lazy(() => import('../EditorTransitionStep'));
-const EditorResultStep = React.lazy(() => import('../EditorResultStep'));
-const EditorOfferStep = React.lazy(() => import('../EditorOfferStep'));
+const EditorIntroStep = React.lazy(() => import('../../quiz-estilo/EditorIntroStep'));
+const EditorQuestionStep = React.lazy(() => import('../../quiz-estilo/EditorQuestionStep'));
+const EditorStrategicQuestionStep = React.lazy(() => import('../../quiz-estilo/EditorStrategicQuestionStep'));
+const EditorTransitionStep = React.lazy(() => import('../../quiz-estilo/EditorTransitionStep'));
+const EditorResultStep = React.lazy(() => import('../../quiz-estilo/EditorResultStep'));
+const EditorOfferStep = React.lazy(() => import('../../quiz-estilo/EditorOfferStep'));
 
 export interface QuizEditorCanvasProps {
     steps: EditableQuizStep[];

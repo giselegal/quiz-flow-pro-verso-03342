@@ -30,6 +30,8 @@ import React, {
     useState
 } from 'react';
 import { supabase } from '@/integrations/supabase/client';
+import { AuthProvider } from '@/contexts/auth/AuthContext';
+import { ThemeProvider as CustomThemeProvider } from '@/contexts/ui/ThemeContext';
 
 // 🎯 CONSOLIDATED TYPES
 interface UnifiedFunnelData {
@@ -1005,7 +1007,11 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
 
     return (
         <SuperUnifiedContext.Provider value={contextValue}>
-            {children}
+            <CustomThemeProvider defaultTheme="light">
+                <AuthProvider>
+                    {children}
+                </AuthProvider>
+            </CustomThemeProvider>
         </SuperUnifiedContext.Provider>
     );
 };
@@ -1029,6 +1035,9 @@ export const useUnifiedAuth = () => {
         signUp
     };
 };
+
+// 🎯 ALIAS: useAuth (para compatibilidade total com AuthContext)
+export const useAuth = useUnifiedAuth;
 
 export const useUnifiedTheme = () => {
     const { state, setTheme, updateThemeColors } = useSuperUnified();
