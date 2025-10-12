@@ -410,35 +410,33 @@ return (
                         Transforme Sua Imagem, <span className="text-[#B89B7A]">Revele Sua Essência</span>
                     </h2>
                     <p className="text-gray-700 mb-6 md:mb-8 leading-relaxed max-w-3xl mx-auto text-base sm:text-lg">
-                        {/* ====================== SEÇÃO 3: PROVA SOCIAL ====================== */}
-                        <SocialProofSection
-                            title="Veja os Resultados de Quem Já Transformou Sua Imagem"
-                            testimonials={testimonials}
-                            stats={[]} // Sem stats por enquanto, apenas testimonials
-                        />          rating: 5
-                            },
-                        {
-                            name: "Julia Santos",
-                        role: "Designer",
-                        text: "Economizei muito dinheiro parando de comprar peças que não combinam comigo. Recomendo!",
-                        rating: 5
-                            }
-                        ].map((testimonial, idx) => (
-                        <div key={idx} className="bg-[#B89B7A]/5 p-6 rounded-lg">
-                            <div className="flex mb-3">
-                                {[...Array(testimonial.rating)].map((_, i) => (
-                                    <Star key={i} className="w-4 h-4 fill-[#B89B7A] text-[#B89B7A]" />
-                                ))}
+                        Seu estilo é uma ferramenta poderosa. Não se trata apenas de
+                        roupas, mas de comunicar quem você é e aspira ser. Com a
+                        orientação certa, você pode:
+                    </p>
+
+                    <div className="grid gap-4 sm:gap-6 sm:grid-cols-2 max-w-4xl mx-auto mb-6 md:mb-8">
+                        {[
+                            { text: "Construir looks com intenção e identidade visual", icon: "🎯" },
+                            { text: "Utilizar cores, modelagens e tecidos a seu favor", icon: "🎨" },
+                            { text: "Alinhar sua imagem aos seus objetivos profissionais", icon: "💼" },
+                            { text: "Desenvolver um guarda-roupa funcional e inteligente", icon: "👗" }
+                        ].map((item, idx) => (
+                            <div key={idx} className="flex items-center text-left p-4 bg-[#B89B7A]/5 rounded-lg">
+                                <span className="text-2xl mr-4">{item.icon}</span>
+                                <span className="text-gray-700">{item.text}</span>
                             </div>
-                            <p className="text-gray-700 mb-4 italic">"{testimonial.text}"</p>
-                            <div>
-                                <p className="font-semibold text-[#432818]">{testimonial.name}</p>
-                                <p className="text-sm text-gray-600">{testimonial.role}</p>
-                            </div>
-                        </div>
                         ))}
+                    </div>
                 </div>
             </div>
+
+            {/* ====================== SEÇÃO 3: PROVA SOCIAL ====================== */}
+            <SocialProofSection
+                title="Veja os Resultados de Quem Já Transformou Sua Imagem"
+                testimonials={testimonials}
+                stats={[]} // Sem stats por enquanto, apenas testimonials
+            />
 
             {/* ====================== SEÇÃO 4: OFERTA E PREÇO ====================== */}
             <OfferSection
@@ -469,4 +467,3 @@ return (
         </div>
     </div>
 );
-}
