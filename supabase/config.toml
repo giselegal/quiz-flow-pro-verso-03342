@@ -1,16 +1,1 @@
 project_id = "pwtjuuhchtbzttrzoutw"
-
-[functions.github-models-ai]
-verify_jwt = false
-
-[functions.security-monitor]
-verify_jwt = false
-
-[functions.csp-headers]
-verify_jwt = false
-
-[functions.rate-limiter]
-verify_jwt = false
-
-[functions.backup-system]
-verify_jwt = false

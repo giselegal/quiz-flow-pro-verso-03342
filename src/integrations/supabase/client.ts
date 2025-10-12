@@ -2,71 +2,16 @@
 import { createClient } from '@supabase/supabase-js';
 import type { Database } from './types';
 
-// Tentar múltiplas variáveis de ambiente comuns
-const env = (import.meta as any)?.env || {};
-const supabaseUrl = env.VITE_SUPABASE_URL as string | undefined;
-const supabaseAnonKey = (env.VITE_SUPABASE_ANON_KEY || env.VITE_SUPABASE_PUBLISHABLE_KEY) as string | undefined;
+const SUPABASE_URL = "https://pwtjuuhchtbzttrzoutw.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB3dGp1dWhjaHRienR0cnpvdXR3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIzNDQ0NjAsImV4cCI6MjA2NzkyMDQ2MH0.EP0qLHBZK8nyxcod0FEVRQln4R_yVSWEGQwuIbJfP_w";
 
-// Detecta ambiente de teste/CI para preferir stub e evitar acesso a localStorage/rede
-const isTestEnv = (
-  typeof process !== 'undefined' &&
-  (process.env.VITEST || process.env.NODE_ENV === 'test')
-) || (typeof (globalThis as any).vitest !== 'undefined');
+// Import the supabase client like this:
+// import { supabase } from "@/integrations/supabase/client";
 
-// Stub mínimo compatível com a API usada no app quando Supabase estiver desabilitado
-function createSupabaseStub() {
-  const ok = {
-    data: null,
-    error: null,
-    status: 200,
-  } as any;
-  const okUser = { data: { user: null }, error: null } as any;
-  const sub = { unsubscribe: () => { } };
-
-  // Builder encadeável e "thenable" para suportar await diretamente
-  const createQueryBuilder = () => {
-    const builder: any = {
-      select: (_sel?: any, _opts?: any) => builder,
-      insert: async (_values?: any) => ok,
-      upsert: async (_values?: any) => ok,
-      update: async (_values?: any) => ok,
-      delete: async () => ok,
-      eq: (_col: string, _val: any) => builder,
-      in: (_col: string, _vals: any[]) => builder,
-      ilike: (_col: string, _pat: string) => builder,
-      like: (_col: string, _pat: string) => builder,
-      order: (_col: string, _opts?: any) => builder,
-      limit: (_n: number) => builder,
-      range: (_from: number, _to: number) => builder,
-      single: async () => ok,
-      maybeSingle: async () => ok,
-      then: (resolve: any) => resolve(ok),
-      catch: (_reject: any) => ({ then: (resolve: any) => resolve(ok) }),
-    };
-    return builder;
-  };
-
-  return {
-    auth: {
-      onAuthStateChange: (_cb: any) => ({ data: { subscription: sub } }),
-      getSession: async () => ({ data: { session: null }, error: null }),
-      getUser: async () => okUser,
-      signInWithPassword: async () => ({ data: null, error: null } as any),
-      signOut: async () => ({ data: null, error: null } as any),
-    },
-    from: (_table?: string) => createQueryBuilder(),
-  } as unknown as ReturnType<typeof createClient<Database>>;
-}
-
-// Exporta cliente real sempre que as credenciais existirem (mesmo com DISABLE),
-// e usamos o interceptor de fetch (em main.tsx) para bloquear chamadas em dev/offline.
-export const supabase =
-  supabaseUrl && supabaseAnonKey && !isTestEnv && typeof window !== 'undefined' && typeof localStorage !== 'undefined'
-    ? createClient<Database>(supabaseUrl, supabaseAnonKey, {
-      auth: {
-        storage: localStorage,
-        persistSession: true,
-        autoRefreshToken: true,
-      },
-    })
-    : createSupabaseStub();
+export const supabase = createClient<Database>(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
+  auth: {
+    storage: localStorage,
+    persistSession: true,
+    autoRefreshToken: true,
+  }
+});
