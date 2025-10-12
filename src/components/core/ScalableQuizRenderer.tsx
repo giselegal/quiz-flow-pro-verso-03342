@@ -2,7 +2,7 @@ import { memo, useEffect, useState } from 'react';
 import { cn } from '@/lib/utils';
 import UniversalQuizStep from '@/components/universal/UniversalQuizStep';
 import { BlockPropertiesAPI } from '@/api/internal/BlockPropertiesAPI';
-import ScalableHybridTemplateService from '@/services/ScalableHybridTemplateService';
+import { masterTemplateService } from '@/services/templates/MasterTemplateService';
 import { QuizStepRouter } from '@/components/router/QuizStepRouter';
 import SpecializedStepAdapter from '@/components/adapters/SpecializedStepAdapter';
 import { getTemplateInfo } from '@/utils/funnelNormalizer';
@@ -17,10 +17,10 @@ interface ScalableQuizRendererProps {
 }
 
 /**
- * ScalableQuizRenderer - Sistema Escalável com HybridTemplateService
+ * ScalableQuizRenderer - Sistema Escalável com MasterTemplateService
  * 
  * 🚀 Recursos:
- * - ✅ Usa ScalableHybridTemplateService para configuração dinâmica
+ * - ✅ Usa MasterTemplateService para configuração dinâmica
  * - ✅ Suporta qualquer funil via JSON configs
  * - ✅ API conectada aos dados reais (questões, opções, imagens)
  * - ✅ Sistema de fallback inteligente
@@ -67,15 +67,8 @@ export const ScalableQuizRenderer = memo<ScalableQuizRendererProps>(({
                 // 2. Usar totalSteps do template (dinâmico)
                 let detectedSteps = (tpl && tpl.totalSteps) ? tpl.totalSteps : 1;
 
-                // 3. Fallback: tentar ScalableHybridTemplateService
-                try {
-                    const funnelStats = await ScalableHybridTemplateService.getFunnelStats(funnelId);
-                    if (funnelStats.stepCount && funnelStats.stepCount > 0) {
-                        detectedSteps = Math.max(detectedSteps, funnelStats.stepCount);
-                    }
-                } catch (hybridError) {
-                    console.warn('⚠️ ScalableHybridTemplateService não disponível:', hybridError);
-                }
+                // 3. Fallback removido - ScalableHybridTemplateService arquivado
+                // TODO: Implementar getFunnelStats em masterTemplateService se necessário
 
                 // 4. Carrega dados reais do quiz via BlockPropertiesAPI (opcional)
                 try {
@@ -115,20 +108,19 @@ export const ScalableQuizRenderer = memo<ScalableQuizRendererProps>(({
     useEffect(() => {
         const loadStepData = async () => {
             try {
-                // Carrega configuração do step via ScalableHybridTemplateService
-                const stepConfig = await ScalableHybridTemplateService.getStepConfig(funnelId, currentStep);
+                // Carrega configuração do step - ScalableHybridTemplateService arquivado
+                // TODO: Implementar getStepConfig em masterTemplateService
+                const stepConfig: any = null; // await masterTemplateService.getStepConfig(funnelId, currentStep);
 
                 // Combina com dados reais se disponível
                 let combinedData = stepConfig;
                 if (realQuizData && realQuizData.steps && realQuizData.steps[currentStep]) {
-                    combinedData = {
-                        ...stepConfig,
-                        ...realQuizData.steps[currentStep]
-                    };
+                    combinedData = stepConfig
+                        ? { ...stepConfig, ...realQuizData.steps[currentStep] }
+                        : realQuizData.steps[currentStep];
                 }
 
                 setStepData(combinedData);
-
             } catch (error) {
                 console.error(`❌ Erro ao carregar step ${currentStep}:`, error);
                 // Mantém dados anteriores em caso de erro
@@ -264,7 +256,7 @@ export const ScalableQuizRenderer = memo<ScalableQuizRendererProps>(({
                                 <div className="space-y-2">
                                     <p><strong>Funil:</strong> {funnelId}</p>
                                     <p><strong>Total Steps:</strong> {totalSteps}</p>
-                                    <p><strong>Sistema:</strong> ScalableHybridTemplateService</p>
+                                    <p><strong>Sistema:</strong> MasterTemplateService</p>
                                     <p><strong>Dados Reais:</strong> {realQuizData ? '✅' : '❌'}</p>
                                     <p><strong>Respostas:</strong></p>
                                     <pre className="text-xs overflow-auto max-h-40">

@@ -1,0 +1,183 @@
+{
+  "timestamp": "2025-10-12T21:59:19.610Z",
+  "stats": {
+    "analyzed": 10,
+    "archived": 7,
+    "kept": 3,
+    "usageMap": {
+      "src/services/OptimizedHybridTemplateService.ts": {
+        "usageCount": 0,
+        "usedIn": []
+      },
+      "src/services/ScalableHybridTemplateService.ts": {
+        "usageCount": 2,
+        "usedIn": [
+          {
+            "file": "src/components/core/ScalableQuizRenderer.tsx",
+            "count": 1
+          },
+          {
+            "file": "src/hooks/useStepConfig.ts",
+            "count": 1
+          }
+        ]
+      },
+      "src/services/AIEnhancedHybridTemplateService.ts": {
+        "usageCount": 4,
+        "usedIn": [
+          {
+            "file": "src/components/editor/PureBuilderProvider.tsx",
+            "count": 1
+          },
+          {
+            "file": "src/examples/AIEnhancedTemplateExamples.tsx",
+            "count": 1
+          },
+          {
+            "file": "src/hooks/useFunnelAI.ts",
+            "count": 1
+          },
+          {
+            "file": "src/utils/funnelAIActivator.ts",
+            "count": 1
+          }
+        ]
+      },
+      "src/services/ActivatedAnalytics.ts": {
+        "usageCount": 1,
+        "usedIn": [
+          {
+            "file": "src/hooks/useActivatedFeatures.ts",
+            "count": 1
+          }
+        ]
+      },
+      "src/services/unifiedAnalytics.ts": {
+        "usageCount": 2,
+        "usedIn": [
+          {
+            "file": "src/hooks/useDashboard.ts",
+            "count": 1
+          },
+          {
+            "file": "src/services/archived/ActivatedAnalytics.ts",
+            "count": 1
+          }
+        ]
+      },
+      "src/services/FunnelUnifiedServiceV2.ts": {
+        "usageCount": 0,
+        "usedIn": []
+      },
+      "src/services/correctedSchemaDrivenFunnelService.ts": {
+        "usageCount": 0,
+        "usedIn": []
+      },
+      "src/services/migratedContextualFunnelService.ts": {
+        "usageCount": 1,
+        "usedIn": [
+          {
+            "file": "src/components/editor/FunnelManager.tsx",
+            "count": 1
+          }
+        ]
+      },
+      "src/application/services/FunnelService.ts": {
+        "usageCount": 20,
+        "usedIn": [
+          {
+            "file": "src/application/hooks/useFunnel.ts",
+            "count": 1
+          },
+          {
+            "file": "src/application/index.ts",
+            "count": 2
+          },
+          {
+            "file": "src/components/editor/FunnelHeader.tsx",
+            "count": 1
+          },
+          {
+            "file": "src/components/editor/FunnelManager.tsx",
+            "count": 1
+          },
+          {
+            "file": "src/components/editor/status/SyncStatus.tsx",
+            "count": 1
+          },
+          {
+            "file": "src/components/editor/version/VersionManager.tsx",
+            "count": 1
+          },
+          {
+            "file": "src/context-backup-sprint1-20251010/UnifiedCRUDProvider.tsx",
+            "count": 1
+          },
+          {
+            "file": "src/contexts/data/UnifiedCRUDProvider.tsx",
+            "count": 1
+          },
+          {
+            "file": "src/hooks/editor/useContextualEditorPersistence.ts",
+            "count": 1
+          },
+          {
+            "file": "src/hooks/editor/useEditorAutoSave.ts",
+            "count": 1
+          },
+          {
+            "file": "src/hooks/editor/useEditorPersistence.ts",
+            "count": 1
+          },
+          {
+            "file": "src/hooks/useFunnelLoader.ts",
+            "count": 1
+          },
+          {
+            "file": "src/pages/admin/AnalyticsPage.tsx",
+            "count": 1
+          },
+          {
+            "file": "src/pages/admin/ConsolidatedOverviewPage.tsx",
+            "count": 1
+          },
+          {
+            "file": "src/services/EnhancedFunnelService.ts",
+            "count": 1
+          },
+          {
+            "file": "src/services/core/ServiceRegistry.ts",
+            "count": 1
+          },
+          {
+            "file": "src/services/index.ts",
+            "count": 1
+          },
+          {
+            "file": "src/services/pageConfigService.ts",
+            "count": 1
+          },
+          {
+            "file": "src/utils/testCRUDOperations.ts",
+            "count": 1
+          }
+        ]
+      },
+      "src/application/services/EditorService.ts": {
+        "usageCount": 3,
+        "usedIn": [
+          {
+            "file": "src/application/index.ts",
+            "count": 2
+          },
+          {
+            "file": "src/services/core/index.ts",
+            "count": 1
+          }
+        ]
+      }
+    }
+  },
+  "threshold": 3,
+  "note": "Apenas serviços com < 3 referências foram arquivados"
+}

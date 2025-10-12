@@ -1,4 +1,14 @@
 /**
+ * ⚠️ ARCHIVED - Sprint 3 (Low Usage)
+ * 
+ * Uso detectado: 2 referências
+ * Data: 2025-10-12
+ * 
+ * Este arquivo foi arquivado por ter baixo uso.
+ * Se precisar, pode ser restaurado de src/services/archived/
+ */
+
+/**
  * 🚀 UNIFIED ANALYTICS SERVICE - Simplified Version
  */
 

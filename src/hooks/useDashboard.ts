@@ -12,12 +12,12 @@
  */
 
 import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
-import {
-    unifiedAnalytics,
-    DashboardMetrics,
-    ParticipantDetails,
-    AnalyticsFilters
-} from '@/services/unifiedAnalytics';
+import { realDataAnalyticsService } from '@/services/core/RealDataAnalyticsService';
+
+// TODO: Migrar tipos de unifiedAnalytics (arquivado) para RealDataAnalyticsService
+type DashboardMetrics = any;
+type ParticipantDetails = any;
+type AnalyticsFilters = any;
 
 // ============================================================================
 // TYPES
@@ -197,7 +197,9 @@ export const useDashboard = (options: DashboardHookOptions = {}): DashboardHookR
         }));
 
         try {
-            const metrics = await unifiedAnalytics.getDashboardMetrics();
+            // TODO: Migrar para realDataAnalyticsService.getDashboardMetrics()
+            console.warn('getDashboardMetrics: unifiedAnalytics arquivado, retornando dados mock');
+            const metrics = null; // await realDataAnalyticsService.getDashboardMetrics();
             performanceTracker.current.recordCacheHit(); // Service handles caching
 
             setState(prev => ({
@@ -241,17 +243,19 @@ export const useDashboard = (options: DashboardHookOptions = {}): DashboardHookR
         }));
 
         try {
-            const result = await unifiedAnalytics.getParticipantsDetails();
+            // TODO: Migrar para realDataAnalyticsService.getParticipantsDetails()
+            console.warn('getParticipantsDetails: unifiedAnalytics arquivado, retornando dados mock');
+            const result: any = null; // await realDataAnalyticsService.getParticipantsDetails();
             performanceTracker.current.recordCacheHit();
 
             setState(prev => ({
                 ...prev,
-                participants: {
+                participants: result ? {
                     data: result.participants,
                     total: result.total,
                     totalPages: result.totalPages,
                     currentPage: result.currentPage
-                },
+                } : { data: [], total: 0, totalPages: 0, currentPage: 1 },
                 loading: { ...prev.loading, participants: false },
                 lastUpdated: { ...prev.lastUpdated, participants: new Date() }
             }));
@@ -290,7 +294,9 @@ export const useDashboard = (options: DashboardHookOptions = {}): DashboardHookR
         }));
 
         try {
-            const realTimeMetrics = await unifiedAnalytics.getRealTimeMetrics();
+            // TODO: Migrar para realDataAnalyticsService.getRealTimeMetrics()
+            console.warn('getRealTimeMetrics: unifiedAnalytics arquivado, retornando dados mock');
+            const realTimeMetrics = null; // await realDataAnalyticsService.getRealTimeMetrics();
             performanceTracker.current.recordCacheHit();
 
             setState(prev => ({

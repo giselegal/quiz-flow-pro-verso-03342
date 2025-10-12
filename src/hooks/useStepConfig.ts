@@ -5,7 +5,10 @@
  */
 
 import { useState, useEffect } from 'react';
-import ScalableHybridTemplateService, { ScalableStepConfig } from '@/services/ScalableHybridTemplateService';
+import { masterTemplateService } from '@/services/templates/MasterTemplateService';
+
+// TODO: Migrar para MasterTemplateService quando interface estiver pronta
+type ScalableStepConfig = any;
 
 export interface UseStepConfigOptions {
     funnelId: string;
@@ -35,7 +38,8 @@ export const useStepConfig = ({
         const loadConfig = async () => {
             try {
                 setIsLoading(true);
-                const stepConfig = await ScalableHybridTemplateService.getStepConfig(funnelId, stepNumber);
+                // TODO: Implementar getStepConfig no masterTemplateService
+                const stepConfig = null; // await masterTemplateService.getStepConfig(funnelId, stepNumber);
 
                 if (mounted) {
                     setConfig(stepConfig);
@@ -169,11 +173,11 @@ export const useStepConfig = ({
     };
 
     const saveOverride = async (changes: Partial<ScalableStepConfig>) => {
-        await ScalableHybridTemplateService.saveStepOverride(funnelId, stepNumber, changes);
-
-        // Recarregar configuração
-        const newConfig = await ScalableHybridTemplateService.getStepConfig(funnelId, stepNumber);
-        setConfig(newConfig);
+        // TODO: Implementar saveStepOverride no masterTemplateService
+        console.warn('saveOverride: Funcionalidade temporariamente desabilitada');
+        // await masterTemplateService.saveStepOverride(funnelId, stepNumber, changes);
+        // const newConfig = await masterTemplateService.getStepConfig(funnelId, stepNumber);
+        // setConfig(newConfig);
     };
 
     return {

@@ -1,0 +1,2518 @@
+{
+  "timestamp": "2025-10-12T21:56:10.256Z",
+  "summary": {
+    "totalServiceFiles": 109,
+    "totalServiceExports": 143,
+    "byCategory": {
+      "editor": [
+        {
+          "filePath": "src/application/services/EditorService.ts",
+          "services": [
+            "EditorService"
+          ],
+          "category": "editor",
+          "linesOfCode": 180,
+          "hasTests": false
+        },
+        {
+          "filePath": "src/services/core/EditorDashboardSyncService.ts",
+          "services": [
+            "EditorDashboardSyncService"
+          ],
+          "category": "editor",
+          "linesOfCode": 499,
+          "hasTests": false
+        },
+        {
+          "filePath": "src/services/core/UnifiedEditorService.ts",
+          "services": [
+            "getUnifiedEditorService"
+          ],
+          "category": "editor",
+          "linesOfCode": 266,
+          "hasTests": false
+        }
+      ],
+      "funnel": [
+        {
+          "filePath": "src/application/services/FunnelService.ts",
+          "services": [
+            "FunnelService"
+          ],
+          "category": "funnel",
+          "linesOfCode": 180,
+          "hasTests": false
+        },
+        {
+          "filePath": "src/services/EnhancedFunnelService.ts",
+          "services": [
+            "EnhancedFunnelService",
+            "enhancedFunnelService"
+          ],
+          "category": "funnel",
+          "linesOfCode": 156,
+          "hasTests": false
+        },
+        {
+          "filePath": "src/services/FunnelConfigPersistenceService.ts",
+          "services": [
+            "FunnelConfigPersistenceService",
+            "funnelConfigPersistenceService"
+          ],
+          "category": "funnel",
+          "linesOfCode": 468,
+          "hasTests": false
+        },
+        {
+          "filePath": "src/services/FunnelSyncService.ts",
+          "services": [
+            "funnelSyncService"
+          ],
+          "category": "funnel",
+          "linesOfCode": 596,
+          "hasTests": false
+        },
+        {
+          "filePath": "src/services/FunnelUnifiedService.ts",
+          "services": [
+            "FunnelUnifiedService",
+            "funnelUnifiedService"
+          ],
+          "category": "funnel",
+          "linesOfCode": 1303,
+          "hasTests": false
+        },
+        {
+          "filePath": "src/services/TemplateFunnelService.ts",
+          "services": [
+            "TemplateFunnelService",
+            "templateFunnelService"
+          ],
+          "category": "funnel",
+          "linesOfCode": 176,
+          "hasTests": false
+        },
+        {
+          "filePath": "src/services/contextualFunnelService.ts",
+          "services": [
+            "ContextualFunnelService",
+            "createContextualFunnelService",
+            "editorFunnelService",
+            "templatesFunnelService",
+            "myFunnelsFunnelService",
+            "previewFunnelService",
+            "devFunnelService"
+          ],
+          "category": "funnel",
+          "linesOfCode": 524,
+          "hasTests": false
+        },
+        {
+          "filePath": "src/services/core/ConsolidatedFunnelService.ts",
+          "services": [
+            "ConsolidatedFunnelService",
+            "consolidatedFunnelService"
+          ],
+          "category": "funnel",
+          "linesOfCode": 395,
+          "hasTests": false
+        },
+        {
+          "filePath": "src/services/core/ContextualFunnelService.ts",
+          "services": [
+            "ContextualFunnelService",
+            "createContextualFunnelService",
+            "editorFunnelService",
+            "templatesFunnelService",
+            "myFunnelsFunnelService",
+            "myTemplatesFunnelService",
+            "previewFunnelService"
+          ],
+          "category": "funnel",
+          "linesOfCode": 292,
+          "hasTests": false
+        },
+        {
+          "filePath": "src/services/core/EditorFunnelConsolidatedService.ts",
+          "services": [
+            "editorFunnelConsolidatedService"
+          ],
+          "category": "funnel",
+          "linesOfCode": 520,
+          "hasTests": false
+        },
+        {
+          "filePath": "src/services/correctedSchemaDrivenFunnelService.ts",
+          "services": [
+            "correctedSchemaDrivenFunnelService"
+          ],
+          "category": "funnel",
+          "linesOfCode": 46,
+          "hasTests": false
+        },
+        {
+          "filePath": "src/services/funnelComponentsService.ts",
+          "services": [
+            "funnelComponentsService"
+          ],
+          "category": "funnel",
+          "linesOfCode": 234,
+          "hasTests": false
+        },
+        {
+          "filePath": "src/services/funnelService.ts",
+          "services": [
+            "funnelApiService"
+          ],
+          "category": "funnel",
+          "linesOfCode": 565,
+          "hasTests": false
+        },
+        {
+          "filePath": "src/services/funnelSettingsService.ts",
+          "services": [
+            "FunnelSettingsService"
+          ],
+          "category": "funnel",
+          "linesOfCode": 236,
+          "hasTests": false
+        },
+        {
+          "filePath": "src/services/funnelValidationService.ts",
+          "services": [
+            "FunnelValidationService",
+            "funnelValidationService"
+          ],
+          "category": "funnel",
+          "linesOfCode": 239,
+          "hasTests": false
+        },
+        {
+          "filePath": "src/services/migratedContextualFunnelService.ts",
+          "services": [
+            "MigratedContextualFunnelService",
+            "createMigratedContextualFunnelService",
+            "migratedEditorFunnelService",
+            "migratedTemplatesFunnelService",
+            "migratedMyFunnelsFunnelService",
+            "migrateFromLegacyContextualService"
+          ],
+          "category": "funnel",
+          "linesOfCode": 920,
+          "hasTests": false
+        },
+        {
+          "filePath": "src/services/migratedFunnelValidationService.ts",
+          "services": [
+            "MigratedFunnelValidationService",
+            "migratedFunnelValidationService"
+          ],
+          "category": "funnel",
+          "linesOfCode": 472,
+          "hasTests": false
+        },
+        {
+          "filePath": "src/services/schemaDrivenFunnelService.ts",
+          "services": [
+            "schemaDrivenFunnelService"
+          ],
+          "category": "funnel",
+          "linesOfCode": 411,
+          "hasTests": false
+        }
+      ],
+      "other": [
+        {
+          "filePath": "src/application/services/QuizService.ts",
+          "services": [
+            "QuizService"
+          ],
+          "category": "other",
+          "linesOfCode": 169,
+          "hasTests": false
+        },
+        {
+          "filePath": "src/core/funnel/services/ComponentsService.ts",
+          "services": [
+            "ComponentsService",
+            "componentsService"
+          ],
+          "category": "other",
+          "linesOfCode": 344,
+          "hasTests": false
+        },
+        {
+          "filePath": "src/core/funnel/services/PersistenceService.ts",
+          "services": [
+            "PersistenceService",
+            "persistenceService"
+          ],
+          "category": "other",
+          "linesOfCode": 463,
+          "hasTests": false
+        },
+        {
+          "filePath": "src/core/funnel/services/PublishingService.ts",
+          "services": [
+            "PublishingService",
+            "publishingService"
+          ],
+          "category": "other",
+          "linesOfCode": 555,
+          "hasTests": false
+        },
+        {
+          "filePath": "src/core/funnel/services/SettingsService.ts",
+          "services": [
+            "SettingsService",
+            "settingsService"
+          ],
+          "category": "other",
+          "linesOfCode": 402,
+          "hasTests": false
+        },
+        {
+          "filePath": "src/hooks/loading/MasterLoadingService.ts",
+          "services": [
+            "MasterLoadingService",
+            "masterLoadingService"
+          ],
+          "category": "other",
+          "linesOfCode": 567,
+          "hasTests": false
+        },
+        {
+          "filePath": "src/services/AIEnhancedHybridTemplateService.ts",
+          "services": [],
+          "category": "other",
+          "linesOfCode": 921,
+          "hasTests": false
+        },
+        {
+          "filePath": "src/services/CollaborationService.ts",
+          "services": [
+            "collaborationService"
+          ],
+          "category": "other",
+          "linesOfCode": 468,
+          "hasTests": false
+        },
+        {
+          "filePath": "src/services/ComponentsService.ts",
+          "services": [
+            "ComponentsService"
+          ],
+          "category": "other",
+          "linesOfCode": 412,
+          "hasTests": false
+        },
+        {
+          "filePath": "src/services/ConfigurationService.ts",
+          "services": [
+            "ConfigurationService",
+            "configurationService"
+          ],
+          "category": "other",
+          "linesOfCode": 382,
+          "hasTests": false
+        },
+        {
+          "filePath": "src/services/FacebookMetricsService.ts",
+          "services": [
+            "FacebookMetricsService"
+          ],
+          "category": "other",
+          "linesOfCode": 378,
+          "hasTests": false
+        },
+        {
+          "filePath": "src/services/HybridTemplateService.ts",
+          "services": [],
+          "category": "other",
+          "linesOfCode": 455,
+          "hasTests": false
+        },
+        {
+          "filePath": "src/services/ImageMigrationService.ts",
+          "services": [
+            "imageMigrationService"
+          ],
+          "category": "other",
+          "linesOfCode": 584,
+          "hasTests": false
+        },
+        {
+          "filePath": "src/services/MigrationService.ts",
+          "services": [
+            "MigrationService"
+          ],
+          "category": "other",
+          "linesOfCode": 148,
+          "hasTests": false
+        },
+        {
+          "filePath": "src/services/MultiTenantService.ts",
+          "services": [
+            "MultiTenantService"
+          ],
+          "category": "other",
+          "linesOfCode": 171,
+          "hasTests": false
+        },
+        {
+          "filePath": "src/services/NotificationService.ts",
+          "services": [
+            "notificationService"
+          ],
+          "category": "other",
+          "linesOfCode": 506,
+          "hasTests": false
+        },
+        {
+          "filePath": "src/services/OptimizedHybridTemplateService.ts",
+          "services": [],
+          "category": "other",
+          "linesOfCode": 461,
+          "hasTests": false
+        },
+        {
+          "filePath": "src/services/PermissionService.ts",
+          "services": [
+            "permissionService"
+          ],
+          "category": "other",
+          "linesOfCode": 489,
+          "hasTests": false
+        },
+        {
+          "filePath": "src/services/PropertyExtractionService.ts",
+          "services": [
+            "PropertyExtractionService",
+            "propertyExtractionService"
+          ],
+          "category": "other",
+          "linesOfCode": 728,
+          "hasTests": false
+        },
+        {
+          "filePath": "src/services/Quiz21CompleteService.ts",
+          "services": [],
+          "category": "other",
+          "linesOfCode": 504,
+          "hasTests": false
+        },
+        {
+          "filePath": "src/services/QuizPageIntegrationService.ts",
+          "services": [
+            "QuizPageIntegrationService",
+            "quizPageIntegrationService"
+          ],
+          "category": "other",
+          "linesOfCode": 504,
+          "hasTests": false
+        },
+        {
+          "filePath": "src/services/ScalableHybridTemplateService.ts",
+          "services": [],
+          "category": "other",
+          "linesOfCode": 502,
+          "hasTests": false
+        },
+        {
+          "filePath": "src/services/TemplateRuntimeService.ts",
+          "services": [],
+          "category": "other",
+          "linesOfCode": 1,
+          "hasTests": false
+        },
+        {
+          "filePath": "src/services/UnifiedCRUDService.ts",
+          "services": [
+            "UnifiedCRUDService",
+            "unifiedCRUDService"
+          ],
+          "category": "other",
+          "linesOfCode": 1533,
+          "hasTests": false
+        },
+        {
+          "filePath": "src/services/UnifiedStorageService.ts",
+          "services": [],
+          "category": "other",
+          "linesOfCode": 709,
+          "hasTests": false
+        },
+        {
+          "filePath": "src/services/VersioningService.ts",
+          "services": [
+            "VersioningService",
+            "versioningService"
+          ],
+          "category": "other",
+          "linesOfCode": 65,
+          "hasTests": false
+        },
+        {
+          "filePath": "src/services/abTestService.ts",
+          "services": [
+            "ABTestService"
+          ],
+          "category": "other",
+          "linesOfCode": 468,
+          "hasTests": false
+        },
+        {
+          "filePath": "src/services/backup/BackupService.ts",
+          "services": [
+            "backupService"
+          ],
+          "category": "other",
+          "linesOfCode": 485,
+          "hasTests": false
+        },
+        {
+          "filePath": "src/services/canvasConfigurationService.ts",
+          "services": [],
+          "category": "other",
+          "linesOfCode": 39,
+          "hasTests": false
+        },
+        {
+          "filePath": "src/services/core/GlobalStateService.ts",
+          "services": [
+            "GlobalStateService",
+            "globalStateService"
+          ],
+          "category": "other",
+          "linesOfCode": 234,
+          "hasTests": false
+        },
+        {
+          "filePath": "src/services/core/MasterLoadingService.ts",
+          "services": [
+            "MasterLoadingService",
+            "getMasterLoadingService"
+          ],
+          "category": "other",
+          "linesOfCode": 712,
+          "hasTests": false
+        },
+        {
+          "filePath": "src/services/core/NavigationService.ts",
+          "services": [
+            "NavigationService",
+            "getNavigationService"
+          ],
+          "category": "other",
+          "linesOfCode": 698,
+          "hasTests": false
+        },
+        {
+          "filePath": "src/services/core/PropertyExtractionService.ts",
+          "services": [
+            "propertyExtractionService"
+          ],
+          "category": "other",
+          "linesOfCode": 321,
+          "hasTests": false
+        },
+        {
+          "filePath": "src/services/core/ResultCacheService.ts",
+          "services": [
+            "resultCacheService"
+          ],
+          "category": "other",
+          "linesOfCode": 224,
+          "hasTests": false
+        },
+        {
+          "filePath": "src/services/core/UnifiedRoutingService.ts",
+          "services": [
+            "UnifiedRoutingService"
+          ],
+          "category": "other",
+          "linesOfCode": 378,
+          "hasTests": false
+        },
+        {
+          "filePath": "src/services/editorService.ts",
+          "services": [],
+          "category": "other",
+          "linesOfCode": 40,
+          "hasTests": false
+        },
+        {
+          "filePath": "src/services/editorSupabaseService.ts",
+          "services": [],
+          "category": "other",
+          "linesOfCode": 269,
+          "hasTests": false
+        },
+        {
+          "filePath": "src/services/mediaUploadService.ts",
+          "services": [
+            "MediaUploadService"
+          ],
+          "category": "other",
+          "linesOfCode": 409,
+          "hasTests": false
+        },
+        {
+          "filePath": "src/services/monitoring/ErrorTrackingService.ts",
+          "services": [
+            "errorTrackingService"
+          ],
+          "category": "other",
+          "linesOfCode": 377,
+          "hasTests": false
+        },
+        {
+          "filePath": "src/services/monitoring/HealthCheckService.ts",
+          "services": [
+            "healthCheckService"
+          ],
+          "category": "other",
+          "linesOfCode": 301,
+          "hasTests": false
+        },
+        {
+          "filePath": "src/services/pageConfigService.ts",
+          "services": [
+            "pageConfigService"
+          ],
+          "category": "other",
+          "linesOfCode": 321,
+          "hasTests": false
+        },
+        {
+          "filePath": "src/services/publishService.ts",
+          "services": [
+            "PublishService"
+          ],
+          "category": "other",
+          "linesOfCode": 32,
+          "hasTests": false
+        },
+        {
+          "filePath": "src/services/quizBuilderService.ts",
+          "services": [],
+          "category": "other",
+          "linesOfCode": 224,
+          "hasTests": false
+        },
+        {
+          "filePath": "src/services/quizResultsService.ts",
+          "services": [
+            "quizResultsService"
+          ],
+          "category": "other",
+          "linesOfCode": 808,
+          "hasTests": false
+        },
+        {
+          "filePath": "src/services/quizService.ts",
+          "services": [],
+          "category": "other",
+          "linesOfCode": 52,
+          "hasTests": false
+        },
+        {
+          "filePath": "src/services/quizSupabaseService.ts",
+          "services": [
+            "quizSupabaseService"
+          ],
+          "category": "other",
+          "linesOfCode": 509,
+          "hasTests": false
+        },
+        {
+          "filePath": "src/services/reportService.ts",
+          "services": [
+            "ReportService"
+          ],
+          "category": "other",
+          "linesOfCode": 658,
+          "hasTests": false
+        },
+        {
+          "filePath": "src/services/resultService.ts",
+          "services": [],
+          "category": "other",
+          "linesOfCode": 77,
+          "hasTests": false
+        },
+        {
+          "filePath": "src/services/rollback/RollbackService.ts",
+          "services": [
+            "rollbackService"
+          ],
+          "category": "other",
+          "linesOfCode": 431,
+          "hasTests": false
+        },
+        {
+          "filePath": "src/services/sessionService.ts",
+          "services": [
+            "sessionService"
+          ],
+          "category": "other",
+          "linesOfCode": 101,
+          "hasTests": false
+        },
+        {
+          "filePath": "src/services/storage/HybridStorageService.ts",
+          "services": [],
+          "category": "other",
+          "linesOfCode": 308,
+          "hasTests": false
+        },
+        {
+          "filePath": "src/services/storage/IndexedDBService.ts",
+          "services": [
+            "indexedDBService"
+          ],
+          "category": "other",
+          "linesOfCode": 175,
+          "hasTests": false
+        },
+        {
+          "filePath": "src/services/templateThumbnailService.ts",
+          "services": [],
+          "category": "other",
+          "linesOfCode": 230,
+          "hasTests": false
+        },
+        {
+          "filePath": "src/services/userResponseService.ts",
+          "services": [
+            "userResponseService"
+          ],
+          "category": "other",
+          "linesOfCode": 481,
+          "hasTests": false
+        },
+        {
+          "filePath": "src/services/versioningService.ts",
+          "services": [
+            "VersioningService",
+            "versioningService"
+          ],
+          "category": "other",
+          "linesOfCode": 644,
+          "hasTests": false
+        },
+        {
+          "filePath": "src/utils/logging/LoggerService.ts",
+          "services": [],
+          "category": "other",
+          "linesOfCode": 362,
+          "hasTests": false
+        }
+      ],
+      "data": [
+        {
+          "filePath": "src/core/editor/services/EditorDataService.ts",
+          "services": [
+            "editorDataService"
+          ],
+          "category": "data",
+          "linesOfCode": 258,
+          "hasTests": false
+        },
+        {
+          "filePath": "src/services/EnhancedUnifiedDataService.ts",
+          "services": [
+            "EnhancedUnifiedDataService",
+            "enhancedUnifiedDataService"
+          ],
+          "category": "data",
+          "linesOfCode": 16,
+          "hasTests": false
+        },
+        {
+          "filePath": "src/services/core/EnhancedUnifiedDataService.ts",
+          "services": [
+            "EnhancedUnifiedDataService"
+          ],
+          "category": "data",
+          "linesOfCode": 475,
+          "hasTests": false
+        },
+        {
+          "filePath": "src/services/core/QuizDataService.ts",
+          "services": [
+            "QuizDataService"
+          ],
+          "category": "data",
+          "linesOfCode": 50,
+          "hasTests": false
+        },
+        {
+          "filePath": "src/services/core/UnifiedDataService.ts",
+          "services": [
+            "UnifiedDataService"
+          ],
+          "category": "data",
+          "linesOfCode": 763,
+          "hasTests": false
+        },
+        {
+          "filePath": "src/services/quizDataService.ts",
+          "services": [
+            "quizDataService"
+          ],
+          "category": "data",
+          "linesOfCode": 655,
+          "hasTests": false
+        }
+      ],
+      "storage": [
+        {
+          "filePath": "src/core/funnel/services/LocalStorageService.ts",
+          "services": [
+            "LocalStorageService",
+            "localStorageService"
+          ],
+          "category": "storage",
+          "linesOfCode": 563,
+          "hasTests": false
+        },
+        {
+          "filePath": "src/services/UnifiedBlockStorageService.ts",
+          "services": [
+            "UnifiedBlockStorageService"
+          ],
+          "category": "storage",
+          "linesOfCode": 330,
+          "hasTests": false
+        },
+        {
+          "filePath": "src/services/core/ContextualStorageService.ts",
+          "services": [
+            "ContextualStorageService"
+          ],
+          "category": "storage",
+          "linesOfCode": 173,
+          "hasTests": false
+        },
+        {
+          "filePath": "src/services/core/StorageCleanupService.ts",
+          "services": [
+            "storageCleanupService"
+          ],
+          "category": "storage",
+          "linesOfCode": 342,
+          "hasTests": false
+        },
+        {
+          "filePath": "src/services/core/StorageMigrationService.ts",
+          "services": [
+            "StorageMigrationService"
+          ],
+          "category": "storage",
+          "linesOfCode": 335,
+          "hasTests": false
+        },
+        {
+          "filePath": "src/services/core/StorageService.ts",
+          "services": [
+            "StorageService"
+          ],
+          "category": "storage",
+          "linesOfCode": 131,
+          "hasTests": false
+        },
+        {
+          "filePath": "src/utils/storage/IndexedDBStorageService.ts",
+          "services": [
+            "IndexedDBStorageService"
+          ],
+          "category": "storage",
+          "linesOfCode": 770,
+          "hasTests": false
+        },
+        {
+          "filePath": "src/utils/storage/StorageMigrationService.ts",
+          "services": [
+            "StorageMigrationService",
+            "storageMigrationService"
+          ],
+          "category": "storage",
+          "linesOfCode": 676,
+          "hasTests": false
+        },
+        {
+          "filePath": "src/utils/storage/StorageSyncService.ts",
+          "services": [
+            "StorageSyncService",
+            "storageSyncService"
+          ],
+          "category": "storage",
+          "linesOfCode": 632,
+          "hasTests": false
+        }
+      ],
+      "template": [
+        {
+          "filePath": "src/core/funnel/services/TemplateService.ts",
+          "services": [
+            "TemplateService",
+            "templateService"
+          ],
+          "category": "template",
+          "linesOfCode": 463,
+          "hasTests": false
+        },
+        {
+          "filePath": "src/services/JsonTemplateService.ts",
+          "services": [
+            "JsonTemplateService",
+            "jsonTemplateService"
+          ],
+          "category": "template",
+          "linesOfCode": 476,
+          "hasTests": false
+        },
+        {
+          "filePath": "src/services/TemplatesCacheService.ts",
+          "services": [
+            "TemplatesCacheService",
+            "templatesCacheService"
+          ],
+          "category": "template",
+          "linesOfCode": 466,
+          "hasTests": false
+        },
+        {
+          "filePath": "src/services/UnifiedTemplateService.ts",
+          "services": [
+            "unifiedTemplateService"
+          ],
+          "category": "template",
+          "linesOfCode": 581,
+          "hasTests": false
+        },
+        {
+          "filePath": "src/services/core/ConsolidatedTemplateService.ts",
+          "services": [
+            "ConsolidatedTemplateService",
+            "consolidatedTemplateService"
+          ],
+          "category": "template",
+          "linesOfCode": 494,
+          "hasTests": false
+        },
+        {
+          "filePath": "src/services/customTemplateService.ts",
+          "services": [
+            "customTemplateService"
+          ],
+          "category": "template",
+          "linesOfCode": 386,
+          "hasTests": false
+        },
+        {
+          "filePath": "src/services/stepTemplateService.ts",
+          "services": [
+            "stepTemplateService"
+          ],
+          "category": "template",
+          "linesOfCode": 235,
+          "hasTests": false
+        },
+        {
+          "filePath": "src/services/templateLibraryService.ts",
+          "services": [
+            "templateLibraryService"
+          ],
+          "category": "template",
+          "linesOfCode": 68,
+          "hasTests": false
+        },
+        {
+          "filePath": "src/services/templateService.ts",
+          "services": [
+            "supabaseTemplateService"
+          ],
+          "category": "template",
+          "linesOfCode": 48,
+          "hasTests": false
+        },
+        {
+          "filePath": "src/services/templates/MasterTemplateService.ts",
+          "services": [
+            "MasterTemplateService",
+            "masterTemplateService"
+          ],
+          "category": "template",
+          "linesOfCode": 129,
+          "hasTests": false
+        }
+      ],
+      "analytics": [
+        {
+          "filePath": "src/services/AnalyticsService.ts",
+          "services": [
+            "AnalyticsService",
+            "analyticsService"
+          ],
+          "category": "analytics",
+          "linesOfCode": 254,
+          "hasTests": false
+        },
+        {
+          "filePath": "src/services/core/QuizAnalyticsService.ts",
+          "services": [
+            "QuizAnalyticsService"
+          ],
+          "category": "analytics",
+          "linesOfCode": 99,
+          "hasTests": false
+        },
+        {
+          "filePath": "src/services/core/RealDataAnalyticsService.ts",
+          "services": [
+            "RealDataAnalyticsService",
+            "realDataAnalyticsService"
+          ],
+          "category": "analytics",
+          "linesOfCode": 402,
+          "hasTests": false
+        },
+        {
+          "filePath": "src/services/monitoring/AnalyticsService.ts",
+          "services": [
+            "analyticsService"
+          ],
+          "category": "analytics",
+          "linesOfCode": 346,
+          "hasTests": false
+        }
+      ],
+      "monitoring": [
+        {
+          "filePath": "src/services/MonitoringService.ts",
+          "services": [
+            "MonitoringService"
+          ],
+          "category": "monitoring",
+          "linesOfCode": 321,
+          "hasTests": false
+        },
+        {
+          "filePath": "src/services/core/MonitoringService.ts",
+          "services": [
+            "MonitoringService",
+            "monitoringService"
+          ],
+          "category": "monitoring",
+          "linesOfCode": 478,
+          "hasTests": false
+        }
+      ],
+      "validation": [
+        {
+          "filePath": "src/services/core/UnifiedValidationService.ts",
+          "services": [
+            "getUnifiedValidationService"
+          ],
+          "category": "validation",
+          "linesOfCode": 15,
+          "hasTests": false
+        }
+      ]
+    },
+    "duplicates": {
+      "Funnel": [
+        {
+          "serviceName": "FunnelService",
+          "filePath": "src/application/services/FunnelService.ts",
+          "linesOfCode": 180
+        },
+        {
+          "serviceName": "EnhancedFunnelService",
+          "filePath": "src/services/EnhancedFunnelService.ts",
+          "linesOfCode": 156
+        },
+        {
+          "serviceName": "FunnelUnifiedService",
+          "filePath": "src/services/FunnelUnifiedService.ts",
+          "linesOfCode": 1303
+        },
+        {
+          "serviceName": "ConsolidatedFunnelService",
+          "filePath": "src/services/core/ConsolidatedFunnelService.ts",
+          "linesOfCode": 395
+        }
+      ],
+      "Components": [
+        {
+          "serviceName": "ComponentsService",
+          "filePath": "src/core/funnel/services/ComponentsService.ts",
+          "linesOfCode": 344
+        },
+        {
+          "serviceName": "ComponentsService",
+          "filePath": "src/services/ComponentsService.ts",
+          "linesOfCode": 412
+        }
+      ],
+      "Template": [
+        {
+          "serviceName": "TemplateService",
+          "filePath": "src/core/funnel/services/TemplateService.ts",
+          "linesOfCode": 463
+        },
+        {
+          "serviceName": "ConsolidatedTemplateService",
+          "filePath": "src/services/core/ConsolidatedTemplateService.ts",
+          "linesOfCode": 494
+        }
+      ],
+      "MasterLoading": [
+        {
+          "serviceName": "MasterLoadingService",
+          "filePath": "src/hooks/loading/MasterLoadingService.ts",
+          "linesOfCode": 567
+        },
+        {
+          "serviceName": "MasterLoadingService",
+          "filePath": "src/services/core/MasterLoadingService.ts",
+          "linesOfCode": 712
+        }
+      ],
+      "analytics": [
+        {
+          "serviceName": "analyticsService",
+          "filePath": "src/services/AnalyticsService.ts",
+          "linesOfCode": 254
+        },
+        {
+          "serviceName": "analyticsService",
+          "filePath": "src/services/monitoring/AnalyticsService.ts",
+          "linesOfCode": 346
+        }
+      ],
+      "UnifiedData": [
+        {
+          "serviceName": "EnhancedUnifiedDataService",
+          "filePath": "src/services/EnhancedUnifiedDataService.ts",
+          "linesOfCode": 16
+        },
+        {
+          "serviceName": "EnhancedUnifiedDataService",
+          "filePath": "src/services/core/EnhancedUnifiedDataService.ts",
+          "linesOfCode": 475
+        }
+      ],
+      "Monitoring": [
+        {
+          "serviceName": "MonitoringService",
+          "filePath": "src/services/MonitoringService.ts",
+          "linesOfCode": 321
+        },
+        {
+          "serviceName": "MonitoringService",
+          "filePath": "src/services/core/MonitoringService.ts",
+          "linesOfCode": 478
+        }
+      ],
+      "propertyExtraction": [
+        {
+          "serviceName": "propertyExtractionService",
+          "filePath": "src/services/PropertyExtractionService.ts",
+          "linesOfCode": 728
+        },
+        {
+          "serviceName": "propertyExtractionService",
+          "filePath": "src/services/core/PropertyExtractionService.ts",
+          "linesOfCode": 321
+        }
+      ],
+      "Versioning": [
+        {
+          "serviceName": "VersioningService",
+          "filePath": "src/services/VersioningService.ts",
+          "linesOfCode": 65
+        },
+        {
+          "serviceName": "VersioningService",
+          "filePath": "src/services/versioningService.ts",
+          "linesOfCode": 644
+        }
+      ],
+      "versioning": [
+        {
+          "serviceName": "versioningService",
+          "filePath": "src/services/VersioningService.ts",
+          "linesOfCode": 65
+        },
+        {
+          "serviceName": "versioningService",
+          "filePath": "src/services/versioningService.ts",
+          "linesOfCode": 644
+        }
+      ],
+      "ContextualFunnel": [
+        {
+          "serviceName": "ContextualFunnelService",
+          "filePath": "src/services/contextualFunnelService.ts",
+          "linesOfCode": 524
+        },
+        {
+          "serviceName": "ContextualFunnelService",
+          "filePath": "src/services/core/ContextualFunnelService.ts",
+          "linesOfCode": 292
+        },
+        {
+          "serviceName": "MigratedContextualFunnelService",
+          "filePath": "src/services/migratedContextualFunnelService.ts",
+          "linesOfCode": 920
+        }
+      ],
+      "createContextualFunnel": [
+        {
+          "serviceName": "createContextualFunnelService",
+          "filePath": "src/services/contextualFunnelService.ts",
+          "linesOfCode": 524
+        },
+        {
+          "serviceName": "createContextualFunnelService",
+          "filePath": "src/services/core/ContextualFunnelService.ts",
+          "linesOfCode": 292
+        },
+        {
+          "serviceName": "createMigratedContextualFunnelService",
+          "filePath": "src/services/migratedContextualFunnelService.ts",
+          "linesOfCode": 920
+        }
+      ],
+      "editorFunnel": [
+        {
+          "serviceName": "editorFunnelService",
+          "filePath": "src/services/contextualFunnelService.ts",
+          "linesOfCode": 524
+        },
+        {
+          "serviceName": "editorFunnelService",
+          "filePath": "src/services/core/ContextualFunnelService.ts",
+          "linesOfCode": 292
+        },
+        {
+          "serviceName": "editorFunnelConsolidatedService",
+          "filePath": "src/services/core/EditorFunnelConsolidatedService.ts",
+          "linesOfCode": 520
+        }
+      ],
+      "templatesFunnel": [
+        {
+          "serviceName": "templatesFunnelService",
+          "filePath": "src/services/contextualFunnelService.ts",
+          "linesOfCode": 524
+        },
+        {
+          "serviceName": "templatesFunnelService",
+          "filePath": "src/services/core/ContextualFunnelService.ts",
+          "linesOfCode": 292
+        }
+      ],
+      "myFunnelsFunnel": [
+        {
+          "serviceName": "myFunnelsFunnelService",
+          "filePath": "src/services/contextualFunnelService.ts",
+          "linesOfCode": 524
+        },
+        {
+          "serviceName": "myFunnelsFunnelService",
+          "filePath": "src/services/core/ContextualFunnelService.ts",
+          "linesOfCode": 292
+        }
+      ],
+      "previewFunnel": [
+        {
+          "serviceName": "previewFunnelService",
+          "filePath": "src/services/contextualFunnelService.ts",
+          "linesOfCode": 524
+        },
+        {
+          "serviceName": "previewFunnelService",
+          "filePath": "src/services/core/ContextualFunnelService.ts",
+          "linesOfCode": 292
+        }
+      ],
+      "StorageMigration": [
+        {
+          "serviceName": "StorageMigrationService",
+          "filePath": "src/services/core/StorageMigrationService.ts",
+          "linesOfCode": 335
+        },
+        {
+          "serviceName": "StorageMigrationService",
+          "filePath": "src/utils/storage/StorageMigrationService.ts",
+          "linesOfCode": 676
+        }
+      ],
+      "FunnelValidation": [
+        {
+          "serviceName": "FunnelValidationService",
+          "filePath": "src/services/funnelValidationService.ts",
+          "linesOfCode": 239
+        },
+        {
+          "serviceName": "MigratedFunnelValidationService",
+          "filePath": "src/services/migratedFunnelValidationService.ts",
+          "linesOfCode": 472
+        }
+      ]
+    },
+    "recommendations": {
+      "toConsolidate": 18,
+      "toArchive": 57,
+      "targetServices": 30
+    }
+  },
+  "services": [
+    {
+      "filePath": "src/application/services/EditorService.ts",
+      "services": [
+        "EditorService"
+      ],
+      "category": "editor",
+      "linesOfCode": 180,
+      "hasTests": false
+    },
+    {
+      "filePath": "src/application/services/FunnelService.ts",
+      "services": [
+        "FunnelService"
+      ],
+      "category": "funnel",
+      "linesOfCode": 180,
+      "hasTests": false
+    },
+    {
+      "filePath": "src/application/services/QuizService.ts",
+      "services": [
+        "QuizService"
+      ],
+      "category": "other",
+      "linesOfCode": 169,
+      "hasTests": false
+    },
+    {
+      "filePath": "src/core/editor/services/EditorDataService.ts",
+      "services": [
+        "editorDataService"
+      ],
+      "category": "data",
+      "linesOfCode": 258,
+      "hasTests": false
+    },
+    {
+      "filePath": "src/core/funnel/services/ComponentsService.ts",
+      "services": [
+        "ComponentsService",
+        "componentsService"
+      ],
+      "category": "other",
+      "linesOfCode": 344,
+      "hasTests": false
+    },
+    {
+      "filePath": "src/core/funnel/services/LocalStorageService.ts",
+      "services": [
+        "LocalStorageService",
+        "localStorageService"
+      ],
+      "category": "storage",
+      "linesOfCode": 563,
+      "hasTests": false
+    },
+    {
+      "filePath": "src/core/funnel/services/PersistenceService.ts",
+      "services": [
+        "PersistenceService",
+        "persistenceService"
+      ],
+      "category": "other",
+      "linesOfCode": 463,
+      "hasTests": false
+    },
+    {
+      "filePath": "src/core/funnel/services/PublishingService.ts",
+      "services": [
+        "PublishingService",
+        "publishingService"
+      ],
+      "category": "other",
+      "linesOfCode": 555,
+      "hasTests": false
+    },
+    {
+      "filePath": "src/core/funnel/services/SettingsService.ts",
+      "services": [
+        "SettingsService",
+        "settingsService"
+      ],
+      "category": "other",
+      "linesOfCode": 402,
+      "hasTests": false
+    },
+    {
+      "filePath": "src/core/funnel/services/TemplateService.ts",
+      "services": [
+        "TemplateService",
+        "templateService"
+      ],
+      "category": "template",
+      "linesOfCode": 463,
+      "hasTests": false
+    },
+    {
+      "filePath": "src/hooks/loading/MasterLoadingService.ts",
+      "services": [
+        "MasterLoadingService",
+        "masterLoadingService"
+      ],
+      "category": "other",
+      "linesOfCode": 567,
+      "hasTests": false
+    },
+    {
+      "filePath": "src/services/AIEnhancedHybridTemplateService.ts",
+      "services": [],
+      "category": "other",
+      "linesOfCode": 921,
+      "hasTests": false
+    },
+    {
+      "filePath": "src/services/AnalyticsService.ts",
+      "services": [
+        "AnalyticsService",
+        "analyticsService"
+      ],
+      "category": "analytics",
+      "linesOfCode": 254,
+      "hasTests": false
+    },
+    {
+      "filePath": "src/services/CollaborationService.ts",
+      "services": [
+        "collaborationService"
+      ],
+      "category": "other",
+      "linesOfCode": 468,
+      "hasTests": false
+    },
+    {
+      "filePath": "src/services/ComponentsService.ts",
+      "services": [
+        "ComponentsService"
+      ],
+      "category": "other",
+      "linesOfCode": 412,
+      "hasTests": false
+    },
+    {
+      "filePath": "src/services/ConfigurationService.ts",
+      "services": [
+        "ConfigurationService",
+        "configurationService"
+      ],
+      "category": "other",
+      "linesOfCode": 382,
+      "hasTests": false
+    },
+    {
+      "filePath": "src/services/EnhancedFunnelService.ts",
+      "services": [
+        "EnhancedFunnelService",
+        "enhancedFunnelService"
+      ],
+      "category": "funnel",
+      "linesOfCode": 156,
+      "hasTests": false
+    },
+    {
+      "filePath": "src/services/EnhancedUnifiedDataService.ts",
+      "services": [
+        "EnhancedUnifiedDataService",
+        "enhancedUnifiedDataService"
+      ],
+      "category": "data",
+      "linesOfCode": 16,
+      "hasTests": false
+    },
+    {
+      "filePath": "src/services/FacebookMetricsService.ts",
+      "services": [
+        "FacebookMetricsService"
+      ],
+      "category": "other",
+      "linesOfCode": 378,
+      "hasTests": false
+    },
+    {
+      "filePath": "src/services/FunnelConfigPersistenceService.ts",
+      "services": [
+        "FunnelConfigPersistenceService",
+        "funnelConfigPersistenceService"
+      ],
+      "category": "funnel",
+      "linesOfCode": 468,
+      "hasTests": false
+    },
+    {
+      "filePath": "src/services/FunnelSyncService.ts",
+      "services": [
+        "funnelSyncService"
+      ],
+      "category": "funnel",
+      "linesOfCode": 596,
+      "hasTests": false
+    },
+    {
+      "filePath": "src/services/FunnelUnifiedService.ts",
+      "services": [
+        "FunnelUnifiedService",
+        "funnelUnifiedService"
+      ],
+      "category": "funnel",
+      "linesOfCode": 1303,
+      "hasTests": false
+    },
+    {
+      "filePath": "src/services/HybridTemplateService.ts",
+      "services": [],
+      "category": "other",
+      "linesOfCode": 455,
+      "hasTests": false
+    },
+    {
+      "filePath": "src/services/ImageMigrationService.ts",
+      "services": [
+        "imageMigrationService"
+      ],
+      "category": "other",
+      "linesOfCode": 584,
+      "hasTests": false
+    },
+    {
+      "filePath": "src/services/JsonTemplateService.ts",
+      "services": [
+        "JsonTemplateService",
+        "jsonTemplateService"
+      ],
+      "category": "template",
+      "linesOfCode": 476,
+      "hasTests": false
+    },
+    {
+      "filePath": "src/services/MigrationService.ts",
+      "services": [
+        "MigrationService"
+      ],
+      "category": "other",
+      "linesOfCode": 148,
+      "hasTests": false
+    },
+    {
+      "filePath": "src/services/MonitoringService.ts",
+      "services": [
+        "MonitoringService"
+      ],
+      "category": "monitoring",
+      "linesOfCode": 321,
+      "hasTests": false
+    },
+    {
+      "filePath": "src/services/MultiTenantService.ts",
+      "services": [
+        "MultiTenantService"
+      ],
+      "category": "other",
+      "linesOfCode": 171,
+      "hasTests": false
+    },
+    {
+      "filePath": "src/services/NotificationService.ts",
+      "services": [
+        "notificationService"
+      ],
+      "category": "other",
+      "linesOfCode": 506,
+      "hasTests": false
+    },
+    {
+      "filePath": "src/services/OptimizedHybridTemplateService.ts",
+      "services": [],
+      "category": "other",
+      "linesOfCode": 461,
+      "hasTests": false
+    },
+    {
+      "filePath": "src/services/PermissionService.ts",
+      "services": [
+        "permissionService"
+      ],
+      "category": "other",
+      "linesOfCode": 489,
+      "hasTests": false
+    },
+    {
+      "filePath": "src/services/PropertyExtractionService.ts",
+      "services": [
+        "PropertyExtractionService",
+        "propertyExtractionService"
+      ],
+      "category": "other",
+      "linesOfCode": 728,
+      "hasTests": false
+    },
+    {
+      "filePath": "src/services/Quiz21CompleteService.ts",
+      "services": [],
+      "category": "other",
+      "linesOfCode": 504,
+      "hasTests": false
+    },
+    {
+      "filePath": "src/services/QuizPageIntegrationService.ts",
+      "services": [
+        "QuizPageIntegrationService",
+        "quizPageIntegrationService"
+      ],
+      "category": "other",
+      "linesOfCode": 504,
+      "hasTests": false
+    },
+    {
+      "filePath": "src/services/ScalableHybridTemplateService.ts",
+      "services": [],
+      "category": "other",
+      "linesOfCode": 502,
+      "hasTests": false
+    },
+    {
+      "filePath": "src/services/TemplateFunnelService.ts",
+      "services": [
+        "TemplateFunnelService",
+        "templateFunnelService"
+      ],
+      "category": "funnel",
+      "linesOfCode": 176,
+      "hasTests": false
+    },
+    {
+      "filePath": "src/services/TemplateRuntimeService.ts",
+      "services": [],
+      "category": "other",
+      "linesOfCode": 1,
+      "hasTests": false
+    },
+    {
+      "filePath": "src/services/TemplatesCacheService.ts",
+      "services": [
+        "TemplatesCacheService",
+        "templatesCacheService"
+      ],
+      "category": "template",
+      "linesOfCode": 466,
+      "hasTests": false
+    },
+    {
+      "filePath": "src/services/UnifiedBlockStorageService.ts",
+      "services": [
+        "UnifiedBlockStorageService"
+      ],
+      "category": "storage",
+      "linesOfCode": 330,
+      "hasTests": false
+    },
+    {
+      "filePath": "src/services/UnifiedCRUDService.ts",
+      "services": [
+        "UnifiedCRUDService",
+        "unifiedCRUDService"
+      ],
+      "category": "other",
+      "linesOfCode": 1533,
+      "hasTests": false
+    },
+    {
+      "filePath": "src/services/UnifiedStorageService.ts",
+      "services": [],
+      "category": "other",
+      "linesOfCode": 709,
+      "hasTests": false
+    },
+    {
+      "filePath": "src/services/UnifiedTemplateService.ts",
+      "services": [
+        "unifiedTemplateService"
+      ],
+      "category": "template",
+      "linesOfCode": 581,
+      "hasTests": false
+    },
+    {
+      "filePath": "src/services/VersioningService.ts",
+      "services": [
+        "VersioningService",
+        "versioningService"
+      ],
+      "category": "other",
+      "linesOfCode": 65,
+      "hasTests": false
+    },
+    {
+      "filePath": "src/services/abTestService.ts",
+      "services": [
+        "ABTestService"
+      ],
+      "category": "other",
+      "linesOfCode": 468,
+      "hasTests": false
+    },
+    {
+      "filePath": "src/services/backup/BackupService.ts",
+      "services": [
+        "backupService"
+      ],
+      "category": "other",
+      "linesOfCode": 485,
+      "hasTests": false
+    },
+    {
+      "filePath": "src/services/canvasConfigurationService.ts",
+      "services": [],
+      "category": "other",
+      "linesOfCode": 39,
+      "hasTests": false
+    },
+    {
+      "filePath": "src/services/contextualFunnelService.ts",
+      "services": [
+        "ContextualFunnelService",
+        "createContextualFunnelService",
+        "editorFunnelService",
+        "templatesFunnelService",
+        "myFunnelsFunnelService",
+        "previewFunnelService",
+        "devFunnelService"
+      ],
+      "category": "funnel",
+      "linesOfCode": 524,
+      "hasTests": false
+    },
+    {
+      "filePath": "src/services/core/ConsolidatedFunnelService.ts",
+      "services": [
+        "ConsolidatedFunnelService",
+        "consolidatedFunnelService"
+      ],
+      "category": "funnel",
+      "linesOfCode": 395,
+      "hasTests": false
+    },
+    {
+      "filePath": "src/services/core/ConsolidatedTemplateService.ts",
+      "services": [
+        "ConsolidatedTemplateService",
+        "consolidatedTemplateService"
+      ],
+      "category": "template",
+      "linesOfCode": 494,
+      "hasTests": false
+    },
+    {
+      "filePath": "src/services/core/ContextualFunnelService.ts",
+      "services": [
+        "ContextualFunnelService",
+        "createContextualFunnelService",
+        "editorFunnelService",
+        "templatesFunnelService",
+        "myFunnelsFunnelService",
+        "myTemplatesFunnelService",
+        "previewFunnelService"
+      ],
+      "category": "funnel",
+      "linesOfCode": 292,
+      "hasTests": false
+    },
+    {
+      "filePath": "src/services/core/ContextualStorageService.ts",
+      "services": [
+        "ContextualStorageService"
+      ],
+      "category": "storage",
+      "linesOfCode": 173,
+      "hasTests": false
+    },
+    {
+      "filePath": "src/services/core/EditorDashboardSyncService.ts",
+      "services": [
+        "EditorDashboardSyncService"
+      ],
+      "category": "editor",
+      "linesOfCode": 499,
+      "hasTests": false
+    },
+    {
+      "filePath": "src/services/core/EditorFunnelConsolidatedService.ts",
+      "services": [
+        "editorFunnelConsolidatedService"
+      ],
+      "category": "funnel",
+      "linesOfCode": 520,
+      "hasTests": false
+    },
+    {
+      "filePath": "src/services/core/EnhancedUnifiedDataService.ts",
+      "services": [
+        "EnhancedUnifiedDataService"
+      ],
+      "category": "data",
+      "linesOfCode": 475,
+      "hasTests": false
+    },
+    {
+      "filePath": "src/services/core/GlobalStateService.ts",
+      "services": [
+        "GlobalStateService",
+        "globalStateService"
+      ],
+      "category": "other",
+      "linesOfCode": 234,
+      "hasTests": false
+    },
+    {
+      "filePath": "src/services/core/MasterLoadingService.ts",
+      "services": [
+        "MasterLoadingService",
+        "getMasterLoadingService"
+      ],
+      "category": "other",
+      "linesOfCode": 712,
+      "hasTests": false
+    },
+    {
+      "filePath": "src/services/core/MonitoringService.ts",
+      "services": [
+        "MonitoringService",
+        "monitoringService"
+      ],
+      "category": "monitoring",
+      "linesOfCode": 478,
+      "hasTests": false
+    },
+    {
+      "filePath": "src/services/core/NavigationService.ts",
+      "services": [
+        "NavigationService",
+        "getNavigationService"
+      ],
+      "category": "other",
+      "linesOfCode": 698,
+      "hasTests": false
+    },
+    {
+      "filePath": "src/services/core/PropertyExtractionService.ts",
+      "services": [
+        "propertyExtractionService"
+      ],
+      "category": "other",
+      "linesOfCode": 321,
+      "hasTests": false
+    },
+    {
+      "filePath": "src/services/core/QuizAnalyticsService.ts",
+      "services": [
+        "QuizAnalyticsService"
+      ],
+      "category": "analytics",
+      "linesOfCode": 99,
+      "hasTests": false
+    },
+    {
+      "filePath": "src/services/core/QuizDataService.ts",
+      "services": [
+        "QuizDataService"
+      ],
+      "category": "data",
+      "linesOfCode": 50,
+      "hasTests": false
+    },
+    {
+      "filePath": "src/services/core/RealDataAnalyticsService.ts",
+      "services": [
+        "RealDataAnalyticsService",
+        "realDataAnalyticsService"
+      ],
+      "category": "analytics",
+      "linesOfCode": 402,
+      "hasTests": false
+    },
+    {
+      "filePath": "src/services/core/ResultCacheService.ts",
+      "services": [
+        "resultCacheService"
+      ],
+      "category": "other",
+      "linesOfCode": 224,
+      "hasTests": false
+    },
+    {
+      "filePath": "src/services/core/StorageCleanupService.ts",
+      "services": [
+        "storageCleanupService"
+      ],
+      "category": "storage",
+      "linesOfCode": 342,
+      "hasTests": false
+    },
+    {
+      "filePath": "src/services/core/StorageMigrationService.ts",
+      "services": [
+        "StorageMigrationService"
+      ],
+      "category": "storage",
+      "linesOfCode": 335,
+      "hasTests": false
+    },
+    {
+      "filePath": "src/services/core/StorageService.ts",
+      "services": [
+        "StorageService"
+      ],
+      "category": "storage",
+      "linesOfCode": 131,
+      "hasTests": false
+    },
+    {
+      "filePath": "src/services/core/UnifiedDataService.ts",
+      "services": [
+        "UnifiedDataService"
+      ],
+      "category": "data",
+      "linesOfCode": 763,
+      "hasTests": false
+    },
+    {
+      "filePath": "src/services/core/UnifiedEditorService.ts",
+      "services": [
+        "getUnifiedEditorService"
+      ],
+      "category": "editor",
+      "linesOfCode": 266,
+      "hasTests": false
+    },
+    {
+      "filePath": "src/services/core/UnifiedRoutingService.ts",
+      "services": [
+        "UnifiedRoutingService"
+      ],
+      "category": "other",
+      "linesOfCode": 378,
+      "hasTests": false
+    },
+    {
+      "filePath": "src/services/core/UnifiedValidationService.ts",
+      "services": [
+        "getUnifiedValidationService"
+      ],
+      "category": "validation",
+      "linesOfCode": 15,
+      "hasTests": false
+    },
+    {
+      "filePath": "src/services/correctedSchemaDrivenFunnelService.ts",
+      "services": [
+        "correctedSchemaDrivenFunnelService"
+      ],
+      "category": "funnel",
+      "linesOfCode": 46,
+      "hasTests": false
+    },
+    {
+      "filePath": "src/services/customTemplateService.ts",
+      "services": [
+        "customTemplateService"
+      ],
+      "category": "template",
+      "linesOfCode": 386,
+      "hasTests": false
+    },
+    {
+      "filePath": "src/services/editorService.ts",
+      "services": [],
+      "category": "other",
+      "linesOfCode": 40,
+      "hasTests": false
+    },
+    {
+      "filePath": "src/services/editorSupabaseService.ts",
+      "services": [],
+      "category": "other",
+      "linesOfCode": 269,
+      "hasTests": false
+    },
+    {
+      "filePath": "src/services/funnelComponentsService.ts",
+      "services": [
+        "funnelComponentsService"
+      ],
+      "category": "funnel",
+      "linesOfCode": 234,
+      "hasTests": false
+    },
+    {
+      "filePath": "src/services/funnelService.ts",
+      "services": [
+        "funnelApiService"
+      ],
+      "category": "funnel",
+      "linesOfCode": 565,
+      "hasTests": false
+    },
+    {
+      "filePath": "src/services/funnelSettingsService.ts",
+      "services": [
+        "FunnelSettingsService"
+      ],
+      "category": "funnel",
+      "linesOfCode": 236,
+      "hasTests": false
+    },
+    {
+      "filePath": "src/services/funnelValidationService.ts",
+      "services": [
+        "FunnelValidationService",
+        "funnelValidationService"
+      ],
+      "category": "funnel",
+      "linesOfCode": 239,
+      "hasTests": false
+    },
+    {
+      "filePath": "src/services/mediaUploadService.ts",
+      "services": [
+        "MediaUploadService"
+      ],
+      "category": "other",
+      "linesOfCode": 409,
+      "hasTests": false
+    },
+    {
+      "filePath": "src/services/migratedContextualFunnelService.ts",
+      "services": [
+        "MigratedContextualFunnelService",
+        "createMigratedContextualFunnelService",
+        "migratedEditorFunnelService",
+        "migratedTemplatesFunnelService",
+        "migratedMyFunnelsFunnelService",
+        "migrateFromLegacyContextualService"
+      ],
+      "category": "funnel",
+      "linesOfCode": 920,
+      "hasTests": false
+    },
+    {
+      "filePath": "src/services/migratedFunnelValidationService.ts",
+      "services": [
+        "MigratedFunnelValidationService",
+        "migratedFunnelValidationService"
+      ],
+      "category": "funnel",
+      "linesOfCode": 472,
+      "hasTests": false
+    },
+    {
+      "filePath": "src/services/monitoring/AnalyticsService.ts",
+      "services": [
+        "analyticsService"
+      ],
+      "category": "analytics",
+      "linesOfCode": 346,
+      "hasTests": false
+    },
+    {
+      "filePath": "src/services/monitoring/ErrorTrackingService.ts",
+      "services": [
+        "errorTrackingService"
+      ],
+      "category": "other",
+      "linesOfCode": 377,
+      "hasTests": false
+    },
+    {
+      "filePath": "src/services/monitoring/HealthCheckService.ts",
+      "services": [
+        "healthCheckService"
+      ],
+      "category": "other",
+      "linesOfCode": 301,
+      "hasTests": false
+    },
+    {
+      "filePath": "src/services/pageConfigService.ts",
+      "services": [
+        "pageConfigService"
+      ],
+      "category": "other",
+      "linesOfCode": 321,
+      "hasTests": false
+    },
+    {
+      "filePath": "src/services/publishService.ts",
+      "services": [
+        "PublishService"
+      ],
+      "category": "other",
+      "linesOfCode": 32,
+      "hasTests": false
+    },
+    {
+      "filePath": "src/services/quizBuilderService.ts",
+      "services": [],
+      "category": "other",
+      "linesOfCode": 224,
+      "hasTests": false
+    },
+    {
+      "filePath": "src/services/quizDataService.ts",
+      "services": [
+        "quizDataService"
+      ],
+      "category": "data",
+      "linesOfCode": 655,
+      "hasTests": false
+    },
+    {
+      "filePath": "src/services/quizResultsService.ts",
+      "services": [
+        "quizResultsService"
+      ],
+      "category": "other",
+      "linesOfCode": 808,
+      "hasTests": false
+    },
+    {
+      "filePath": "src/services/quizService.ts",
+      "services": [],
+      "category": "other",
+      "linesOfCode": 52,
+      "hasTests": false
+    },
+    {
+      "filePath": "src/services/quizSupabaseService.ts",
+      "services": [
+        "quizSupabaseService"
+      ],
+      "category": "other",
+      "linesOfCode": 509,
+      "hasTests": false
+    },
+    {
+      "filePath": "src/services/reportService.ts",
+      "services": [
+        "ReportService"
+      ],
+      "category": "other",
+      "linesOfCode": 658,
+      "hasTests": false
+    },
+    {
+      "filePath": "src/services/resultService.ts",
+      "services": [],
+      "category": "other",
+      "linesOfCode": 77,
+      "hasTests": false
+    },
+    {
+      "filePath": "src/services/rollback/RollbackService.ts",
+      "services": [
+        "rollbackService"
+      ],
+      "category": "other",
+      "linesOfCode": 431,
+      "hasTests": false
+    },
+    {
+      "filePath": "src/services/schemaDrivenFunnelService.ts",
+      "services": [
+        "schemaDrivenFunnelService"
+      ],
+      "category": "funnel",
+      "linesOfCode": 411,
+      "hasTests": false
+    },
+    {
+      "filePath": "src/services/sessionService.ts",
+      "services": [
+        "sessionService"
+      ],
+      "category": "other",
+      "linesOfCode": 101,
+      "hasTests": false
+    },
+    {
+      "filePath": "src/services/stepTemplateService.ts",
+      "services": [
+        "stepTemplateService"
+      ],
+      "category": "template",
+      "linesOfCode": 235,
+      "hasTests": false
+    },
+    {
+      "filePath": "src/services/storage/HybridStorageService.ts",
+      "services": [],
+      "category": "other",
+      "linesOfCode": 308,
+      "hasTests": false
+    },
+    {
+      "filePath": "src/services/storage/IndexedDBService.ts",
+      "services": [
+        "indexedDBService"
+      ],
+      "category": "other",
+      "linesOfCode": 175,
+      "hasTests": false
+    },
+    {
+      "filePath": "src/services/templateLibraryService.ts",
+      "services": [
+        "templateLibraryService"
+      ],
+      "category": "template",
+      "linesOfCode": 68,
+      "hasTests": false
+    },
+    {
+      "filePath": "src/services/templateService.ts",
+      "services": [
+        "supabaseTemplateService"
+      ],
+      "category": "template",
+      "linesOfCode": 48,
+      "hasTests": false
+    },
+    {
+      "filePath": "src/services/templateThumbnailService.ts",
+      "services": [],
+      "category": "other",
+      "linesOfCode": 230,
+      "hasTests": false
+    },
+    {
+      "filePath": "src/services/templates/MasterTemplateService.ts",
+      "services": [
+        "MasterTemplateService",
+        "masterTemplateService"
+      ],
+      "category": "template",
+      "linesOfCode": 129,
+      "hasTests": false
+    },
+    {
+      "filePath": "src/services/userResponseService.ts",
+      "services": [
+        "userResponseService"
+      ],
+      "category": "other",
+      "linesOfCode": 481,
+      "hasTests": false
+    },
+    {
+      "filePath": "src/services/versioningService.ts",
+      "services": [
+        "VersioningService",
+        "versioningService"
+      ],
+      "category": "other",
+      "linesOfCode": 644,
+      "hasTests": false
+    },
+    {
+      "filePath": "src/utils/logging/LoggerService.ts",
+      "services": [],
+      "category": "other",
+      "linesOfCode": 362,
+      "hasTests": false
+    },
+    {
+      "filePath": "src/utils/storage/IndexedDBStorageService.ts",
+      "services": [
+        "IndexedDBStorageService"
+      ],
+      "category": "storage",
+      "linesOfCode": 770,
+      "hasTests": false
+    },
+    {
+      "filePath": "src/utils/storage/StorageMigrationService.ts",
+      "services": [
+        "StorageMigrationService",
+        "storageMigrationService"
+      ],
+      "category": "storage",
+      "linesOfCode": 676,
+      "hasTests": false
+    },
+    {
+      "filePath": "src/utils/storage/StorageSyncService.ts",
+      "services": [
+        "StorageSyncService",
+        "storageSyncService"
+      ],
+      "category": "storage",
+      "linesOfCode": 632,
+      "hasTests": false
+    }
+  ],
+  "duplicates": {
+    "Funnel": [
+      {
+        "serviceName": "FunnelService",
+        "filePath": "src/application/services/FunnelService.ts",
+        "linesOfCode": 180
+      },
+      {
+        "serviceName": "EnhancedFunnelService",
+        "filePath": "src/services/EnhancedFunnelService.ts",
+        "linesOfCode": 156
+      },
+      {
+        "serviceName": "FunnelUnifiedService",
+        "filePath": "src/services/FunnelUnifiedService.ts",
+        "linesOfCode": 1303
+      },
+      {
+        "serviceName": "ConsolidatedFunnelService",
+        "filePath": "src/services/core/ConsolidatedFunnelService.ts",
+        "linesOfCode": 395
+      }
+    ],
+    "Components": [
+      {
+        "serviceName": "ComponentsService",
+        "filePath": "src/core/funnel/services/ComponentsService.ts",
+        "linesOfCode": 344
+      },
+      {
+        "serviceName": "ComponentsService",
+        "filePath": "src/services/ComponentsService.ts",
+        "linesOfCode": 412
+      }
+    ],
+    "Template": [
+      {
+        "serviceName": "TemplateService",
+        "filePath": "src/core/funnel/services/TemplateService.ts",
+        "linesOfCode": 463
+      },
+      {
+        "serviceName": "ConsolidatedTemplateService",
+        "filePath": "src/services/core/ConsolidatedTemplateService.ts",
+        "linesOfCode": 494
+      }
+    ],
+    "MasterLoading": [
+      {
+        "serviceName": "MasterLoadingService",
+        "filePath": "src/hooks/loading/MasterLoadingService.ts",
+        "linesOfCode": 567
+      },
+      {
+        "serviceName": "MasterLoadingService",
+        "filePath": "src/services/core/MasterLoadingService.ts",
+        "linesOfCode": 712
+      }
+    ],
+    "analytics": [
+      {
+        "serviceName": "analyticsService",
+        "filePath": "src/services/AnalyticsService.ts",
+        "linesOfCode": 254
+      },
+      {
+        "serviceName": "analyticsService",
+        "filePath": "src/services/monitoring/AnalyticsService.ts",
+        "linesOfCode": 346
+      }
+    ],
+    "UnifiedData": [
+      {
+        "serviceName": "EnhancedUnifiedDataService",
+        "filePath": "src/services/EnhancedUnifiedDataService.ts",
+        "linesOfCode": 16
+      },
+      {
+        "serviceName": "EnhancedUnifiedDataService",
+        "filePath": "src/services/core/EnhancedUnifiedDataService.ts",
+        "linesOfCode": 475
+      }
+    ],
+    "Monitoring": [
+      {
+        "serviceName": "MonitoringService",
+        "filePath": "src/services/MonitoringService.ts",
+        "linesOfCode": 321
+      },
+      {
+        "serviceName": "MonitoringService",
+        "filePath": "src/services/core/MonitoringService.ts",
+        "linesOfCode": 478
+      }
+    ],
+    "propertyExtraction": [
+      {
+        "serviceName": "propertyExtractionService",
+        "filePath": "src/services/PropertyExtractionService.ts",
+        "linesOfCode": 728
+      },
+      {
+        "serviceName": "propertyExtractionService",
+        "filePath": "src/services/core/PropertyExtractionService.ts",
+        "linesOfCode": 321
+      }
+    ],
+    "Versioning": [
+      {
+        "serviceName": "VersioningService",
+        "filePath": "src/services/VersioningService.ts",
+        "linesOfCode": 65
+      },
+      {
+        "serviceName": "VersioningService",
+        "filePath": "src/services/versioningService.ts",
+        "linesOfCode": 644
+      }
+    ],
+    "versioning": [
+      {
+        "serviceName": "versioningService",
+        "filePath": "src/services/VersioningService.ts",
+        "linesOfCode": 65
+      },
+      {
+        "serviceName": "versioningService",
+        "filePath": "src/services/versioningService.ts",
+        "linesOfCode": 644
+      }
+    ],
+    "ContextualFunnel": [
+      {
+        "serviceName": "ContextualFunnelService",
+        "filePath": "src/services/contextualFunnelService.ts",
+        "linesOfCode": 524
+      },
+      {
+        "serviceName": "ContextualFunnelService",
+        "filePath": "src/services/core/ContextualFunnelService.ts",
+        "linesOfCode": 292
+      },
+      {
+        "serviceName": "MigratedContextualFunnelService",
+        "filePath": "src/services/migratedContextualFunnelService.ts",
+        "linesOfCode": 920
+      }
+    ],
+    "createContextualFunnel": [
+      {
+        "serviceName": "createContextualFunnelService",
+        "filePath": "src/services/contextualFunnelService.ts",
+        "linesOfCode": 524
+      },
+      {
+        "serviceName": "createContextualFunnelService",
+        "filePath": "src/services/core/ContextualFunnelService.ts",
+        "linesOfCode": 292
+      },
+      {
+        "serviceName": "createMigratedContextualFunnelService",
+        "filePath": "src/services/migratedContextualFunnelService.ts",
+        "linesOfCode": 920
+      }
+    ],
+    "editorFunnel": [
+      {
+        "serviceName": "editorFunnelService",
+        "filePath": "src/services/contextualFunnelService.ts",
+        "linesOfCode": 524
+      },
+      {
+        "serviceName": "editorFunnelService",
+        "filePath": "src/services/core/ContextualFunnelService.ts",
+        "linesOfCode": 292
+      },
+      {
+        "serviceName": "editorFunnelConsolidatedService",
+        "filePath": "src/services/core/EditorFunnelConsolidatedService.ts",
+        "linesOfCode": 520
+      }
+    ],
+    "templatesFunnel": [
+      {
+        "serviceName": "templatesFunnelService",
+        "filePath": "src/services/contextualFunnelService.ts",
+        "linesOfCode": 524
+      },
+      {
+        "serviceName": "templatesFunnelService",
+        "filePath": "src/services/core/ContextualFunnelService.ts",
+        "linesOfCode": 292
+      }
+    ],
+    "myFunnelsFunnel": [
+      {
+        "serviceName": "myFunnelsFunnelService",
+        "filePath": "src/services/contextualFunnelService.ts",
+        "linesOfCode": 524
+      },
+      {
+        "serviceName": "myFunnelsFunnelService",
+        "filePath": "src/services/core/ContextualFunnelService.ts",
+        "linesOfCode": 292
+      }
+    ],
+    "previewFunnel": [
+      {
+        "serviceName": "previewFunnelService",
+        "filePath": "src/services/contextualFunnelService.ts",
+        "linesOfCode": 524
+      },
+      {
+        "serviceName": "previewFunnelService",
+        "filePath": "src/services/core/ContextualFunnelService.ts",
+        "linesOfCode": 292
+      }
+    ],
+    "StorageMigration": [
+      {
+        "serviceName": "StorageMigrationService",
+        "filePath": "src/services/core/StorageMigrationService.ts",
+        "linesOfCode": 335
+      },
+      {
+        "serviceName": "StorageMigrationService",
+        "filePath": "src/utils/storage/StorageMigrationService.ts",
+        "linesOfCode": 676
+      }
+    ],
+    "FunnelValidation": [
+      {
+        "serviceName": "FunnelValidationService",
+        "filePath": "src/services/funnelValidationService.ts",
+        "linesOfCode": 239
+      },
+      {
+        "serviceName": "MigratedFunnelValidationService",
+        "filePath": "src/services/migratedFunnelValidationService.ts",
+        "linesOfCode": 472
+      }
+    ]
+  }
+}

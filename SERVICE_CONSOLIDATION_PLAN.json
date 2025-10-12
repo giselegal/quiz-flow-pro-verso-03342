@@ -1,0 +1,39 @@
+[
+  {
+    "priority": "HIGH",
+    "action": "Consolidar FunnelServices",
+    "target": "ConsolidatedFunnelService",
+    "toArchive": [
+      "FunnelService (v1)",
+      "FunnelUnifiedService",
+      "FunnelUnifiedServiceV2",
+      "EnhancedFunnelService",
+      "ContextualFunnelService (old)",
+      "MigratedContextualFunnelService"
+    ],
+    "estimatedTime": "2h"
+  },
+  {
+    "priority": "HIGH",
+    "action": "Consolidar TemplateServices",
+    "target": "MasterTemplateService + ConsolidatedTemplateService",
+    "toArchive": [
+      "HybridTemplateService",
+      "OptimizedHybridTemplateService",
+      "ScalableHybridTemplateService",
+      "AIEnhancedHybridTemplateService",
+      "JsonTemplateService (se não usado)"
+    ],
+    "estimatedTime": "1.5h"
+  },
+  {
+    "priority": "MEDIUM",
+    "action": "Consolidar DataServices",
+    "target": "EnhancedUnifiedDataService",
+    "toArchive": [
+      "UnifiedDataService (old)",
+      "QuizDataService (duplicado)"
+    ],
+    "estimatedTime": "1h"
+  }
+]

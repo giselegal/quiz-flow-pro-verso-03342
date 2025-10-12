@@ -1,3 +1,13 @@
+/**
+ * ⚠️ ARCHIVED - Sprint 3 (Low Usage)
+ * 
+ * Uso detectado: 0 referências
+ * Data: 2025-10-12
+ * 
+ * Este arquivo foi arquivado por ter baixo uso.
+ * Se precisar, pode ser restaurado de src/services/archived/
+ */
+
 // Simplified Corrected Schema Driven Funnel Service
 // Placeholder service to avoid complex type issues
 
