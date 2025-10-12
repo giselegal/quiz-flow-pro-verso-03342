@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 
 interface SimpleDecorativeBarBlockProps {
@@ -24,8 +23,8 @@ const SimpleDecorativeBarBlock: React.FC<SimpleDecorativeBarBlockProps> = ({
         <div
             onClick={onSelect}
             className={`p-4 ${isSelected && editMode
-                    ? 'border-2 border-blue-500 bg-blue-50'
-                    : 'border border-transparent'
+                ? 'border-2 border-blue-500 bg-blue-50'
+                : 'border border-transparent'
                 } cursor-pointer transition-all`}
         >
             <div className="flex justify-center">

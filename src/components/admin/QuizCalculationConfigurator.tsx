@@ -1,4 +1,3 @@
-// @ts-nocheck
 // QuizCalculationConfigurator suppressed for build compatibility
 // This component needs updating to use new QuizAnswer interface
 

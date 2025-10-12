@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { unifiedTemplateService } from '../services/UnifiedTemplateService';
 import type { Block } from '../types/editor';
 import { StorageService } from '@/services/core/StorageService';

@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { Section } from '@/types/resultPageConfig';
 
 export const createHeaderConfig = (): Section => ({

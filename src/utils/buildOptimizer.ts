@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * 🎯 BUILD OPTIMIZER
  * Sistema de otimização para reduzir build time e tamanho do bundle
@@ -42,7 +41,7 @@ class BuildOptimizer {
    */
   private applyProductionOptimizations() {
     logger.info('Applying production build optimizations');
-    
+
     // Remover console logs
     if (this.optimizations.removeConsoleInProduction) {
       this.removeConsoleLogs();
@@ -57,7 +56,7 @@ class BuildOptimizer {
    */
   private applyDevelopmentOptimizations() {
     logger.info('Applying development optimizations');
-    
+
     // Manter logs de debug
     // Habilitar hot reload otimizado
     this.setupHotReload();

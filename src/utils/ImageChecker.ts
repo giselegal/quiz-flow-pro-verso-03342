@@ -1,4 +1,3 @@
-// @ts-nocheck
 // Image checking and analysis utilities
 
 /**

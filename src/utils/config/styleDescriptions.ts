@@ -1,4 +1,3 @@
-// @ts-nocheck
 export const getStyleDescription = (styleType: string): string => {
   const descriptions: Record<string, string> = {
     Natural:
