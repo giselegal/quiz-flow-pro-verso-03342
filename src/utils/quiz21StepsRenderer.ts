@@ -22,7 +22,7 @@ export function loadStepBlocks(stepNumber: number): Block[] {
 
   console.log(`✅ Carregando etapa ${stepKey} com ${templateBlocks.length} blocos`);
 
-  return templateBlocks.map(templateBlock => {
+  return templateBlocks.map((templateBlock: any) => {
     const block: Block = {
       id: templateBlock.id,
       type: mapBlockType(templateBlock.type),

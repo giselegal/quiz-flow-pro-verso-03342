@@ -242,7 +242,7 @@ function discoverQuizStepProperties(stepKey: string): ComponentPropertySchema | 
   const categories = new Set<PropertyCategory>();
 
   // Extract properties from all blocks in the step
-  stepBlocks.forEach((block, index) => {
+  stepBlocks.forEach((block: any, index: number) => {
     console.log(`  📦 Bloco ${index + 1}: ${block.type} (ID: ${block.id})`);
 
     const blockProperties = extractPropertiesFromBlock(block);

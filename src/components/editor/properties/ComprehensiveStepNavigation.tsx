@@ -273,7 +273,7 @@ export const ComprehensiveStepNavigation: React.FC<ComprehensiveStepNavigationPr
       const blocks = QUIZ_STYLE_21_STEPS_TEMPLATE[stepKey] || [];
       const number = parseInt(stepKey.replace('step-', ''));
 
-      const propertyCount = blocks.reduce((total, block) => total + countBlockProperties(block), 0);
+      const propertyCount = blocks.reduce((total: number, block: Block) => total + countBlockProperties(block), 0);
       const isValid = blocks.every(validateBlock);
 
       return {

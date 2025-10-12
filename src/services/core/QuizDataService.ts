@@ -26,10 +26,10 @@ export class QuizDataService {
     return {
       stepNumber,
       totalBlocks: blocks.length,
-      hasForm: blocks.some(b => b.type === 'form-container'),
-      hasQuestion: blocks.some(b => b.type === 'options-grid'),
-      hasTransition: blocks.some(b => b.type === 'hero'),
-      blockTypes: [...new Set(blocks.map(b => b.type))],
+      hasForm: blocks.some((b: any) => b.type === 'form-container'),
+      hasQuestion: blocks.some((b: any) => b.type === 'options-grid'),
+      hasTransition: blocks.some((b: any) => b.type === 'hero'),
+      blockTypes: [...new Set(blocks.map((b: any) => b.type))],
     };
   }
 
@@ -41,8 +41,8 @@ export class QuizDataService {
 
     return {
       isValid: blocks.length > 0,
-      hasContent: blocks.some(b => b.content && Object.keys(b.content).length > 0),
-      hasProperties: blocks.some(b => b.properties && Object.keys(b.properties).length > 0),
+      hasContent: blocks.some((b: any) => b.content && Object.keys(b.content).length > 0),
+      hasProperties: blocks.some((b: any) => b.properties && Object.keys(b.properties).length > 0),
       errors: [],
     };
   }

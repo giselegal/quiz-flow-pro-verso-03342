@@ -44,9 +44,9 @@ export const generateTemplateThumbnail = async (
     ctx.fillRect(0, 0, THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT);
 
     // Extrair informações principais dos blocos
-    const titleBlock = blocks.find(b => b.type === 'text' || b.id.includes('title'));
-    const headerBlock = blocks.find(b => b.type === 'quiz-intro-header');
-    const inputBlock = blocks.find(b => b.type.includes('input'));
+    const titleBlock = blocks.find((b: any) => b.type === 'text' || b.id.includes('title'));
+    const headerBlock = blocks.find((b: any) => b.type === 'quiz-intro-header');
+    const inputBlock = blocks.find((b: any) => b.type.includes('input'));
 
     let yOffset = 20;
 

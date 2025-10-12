@@ -11,7 +11,7 @@ const DebugStep02: React.FC = () => {
 
   // Obtém o template da etapa 2 do template completo
   const step02Template = QUIZ_STYLE_21_STEPS_TEMPLATE['step-2'] || [];
-  const optionsBlock = step02Template.find(block => block.type === 'options-grid');
+  const optionsBlock = step02Template.find((block: any) => block.type === 'options-grid');
 
   const debugInfo = {
     template: {
