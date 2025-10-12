@@ -59,7 +59,7 @@ const CURRENT_FUNNEL = {
     totalSteps: 21,
     lastModified: new Date('2025-10-12'),
     url: '/quiz-estilo',
-    editorUrl: '/editor?funnelId=quiz-estilo-gisele-galvao', // Editor com funnelId específico
+    editorUrl: '/editor?template=quiz-estilo-21-steps', // Editor com template de 21 etapas (carrega estrutura completa)
     previewUrl: '/preview?slug=quiz-estilo',
     structure: {
         intro: 1,             // Etapa 1: Coleta de lead
