@@ -11,7 +11,7 @@
  * 2. Execute: npm run generate:templates
  * 3. Commit ambos: JSON + este arquivo TS
  * 
- * Gerado em: 2025-10-12T13:44:49.135Z
+ * Gerado em: 2025-10-12T15:47:42.757Z
  * Versão: 3.0.0
  */
 
@@ -3240,6 +3240,9 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any[]> = IS_TEST ? MIN
     }
   ],
 };
+
+// 📋 ALIAS para compatibilidade com código legado
+export const QUIZ_QUESTIONS_COMPLETE = QUIZ_STYLE_21_STEPS_TEMPLATE;
 
 
 // 🔧 SCHEMA DE PERSISTÊNCIA (preservado do arquivo original)

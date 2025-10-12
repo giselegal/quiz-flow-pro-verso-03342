@@ -39,6 +39,9 @@ const NotFound = lazy(() => import('./pages/NotFound'));
 // 🔍 PÁGINAS DE DIAGNÓSTICO - TEMPORÁRIAS
 const TemplateDiagnosticPage = lazy(() => import('./pages/TemplateDiagnosticPage'));
 
+// 🧪 TEMPLATE V3.0 TEST PAGE
+const TestV3Page = lazy(() => import('./pages/TestV3Page'));
+
 // 🚀 EDITOR OFICIAL ÚNICO
 const QuizModularProductionEditor = lazy(() => import('./components/editor/quiz/QuizModularProductionEditor').then(module => ({ default: module.default })));
 
@@ -418,6 +421,17 @@ function App() {
                                 <CurrentFunnelPage />
                               </Suspense>
                             </UnifiedAdminLayout>
+                          </div>
+                        </Route>
+
+                        {/* 🧪 TEMPLATE V3.0 TEST PAGE 
+                            Rota de teste isolada para template v3.0
+                            Carrega templates/step-20-v3.json e renderiza com SectionRenderer */}
+                        <Route path="/admin/test-v3">
+                          <div data-testid="test-v3-page">
+                            <Suspense fallback={<EnhancedLoadingFallback message="Carregando template v3.0..." />}>
+                              <TestV3Page />
+                            </Suspense>
                           </div>
                         </Route>
 
