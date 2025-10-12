@@ -243,18 +243,16 @@ function App() {
                                     <AuthPage />
                                 </Route>
 
-                                {/* 🏢 ADMIN DASHBOARDS */}
-                                <Route path="/admin/dashboard">
-                                    <div data-testid="admin-dashboard-page">
-                                        <ModernDashboardPage />
-                                    </div>
-                                </Route>
+                {/* 🏢 ADMIN DASHBOARDS - CONSOLIDADO */}
+                <Route path="/admin/dashboard">
+                    <RedirectRoute to="/admin" />
+                </Route>
 
-                                <Route path="/admin">
-                                    <div data-testid="modern-admin-dashboard-page">
-                                        <ModernAdminDashboard />
-                                    </div>
-                                </Route>
+                <Route path="/admin">
+                    <div data-testid="modern-admin-dashboard-page">
+                        <ModernAdminDashboard />
+                    </div>
+                </Route>
 
                                 <Route path="/dashboard">
                                     <div data-testid="phase2-dashboard-page">

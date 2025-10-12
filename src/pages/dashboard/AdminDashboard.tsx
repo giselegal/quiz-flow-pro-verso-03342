@@ -1,4 +1,14 @@
 /**
+ * ⚠️ DEPRECATED - ARQUIVO LEGACY
+ * 
+ * Este arquivo foi substituído por ConsolidatedOverviewPage.tsx
+ * As rotas /admin/dashboard foram redirecionadas para /admin no App.tsx
+ * ModernDashboardPage.tsx agora carrega ConsolidatedOverviewPage
+ * 
+ * TODO: Remover este arquivo após validação completa da migração
+ * 
+ * ---
+ * 
  * 🏆 ADMIN DASHBOARD CONSOLIDADO - FASE 6 OTIMIZADA
  * 
  * Dashboard principal otimizado usando sistema consolidado de APIs

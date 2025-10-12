@@ -11,10 +11,10 @@
   to = "/.netlify/functions/:splat"
   status = 200
 
-# Redirects admin legacy para dashboard
+# Redirect /admin/dashboard para /admin (consolidar)
 [[redirects]]
-  from = "/admin/*"
-  to = "/dashboard/:splat"
+  from = "/admin/dashboard"
+  to = "/admin"
   status = 301
 
 # Dashboard SPA

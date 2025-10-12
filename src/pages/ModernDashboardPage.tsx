@@ -21,8 +21,8 @@ import useMyTemplates from '@/hooks/useMyTemplates';
 import { Suspense, lazy } from 'react';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 
-// Páginas do Dashboard - ESPECÍFICAS
-const AdminDashboard = lazy(() => import('./dashboard/AdminDashboard'));
+// Páginas do Dashboard - CONSOLIDADO (usando ConsolidatedOverviewPage)
+const AdminDashboard = lazy(() => import('./admin/ConsolidatedOverviewPage'));
 // const OverviewPage = lazy(() => import('./dashboard/OverviewPage'));
 const AnalyticsPage = lazy(() => import('./dashboard/AnalyticsPage'));
 const RealTimePage = lazy(() => import('./dashboard/RealTimePage'));

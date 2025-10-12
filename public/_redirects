@@ -2,7 +2,8 @@
 # API routes primeiro
 /api/*  /.netlify/functions/:splat  200
 
-# Admin routes
+# Admin routes - Consolidação
+/admin/dashboard  /admin  301
 /admin/*  /index.html  200
 /dashboard*  /index.html  200
 
