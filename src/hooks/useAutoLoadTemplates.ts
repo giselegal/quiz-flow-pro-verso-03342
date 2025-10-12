@@ -11,7 +11,7 @@ export const useAutoLoadTemplates = (): {
   currentFunnelId: string | undefined; 
 } => {
   const editor = useEditor();
-  const activeStageId = editor?.activeStageId || 'step-1';
+  const activeStageId = editor?.stages?.[0]?.id || 'step-1';
   const { getTemplateBlocks, currentFunnelId } = useFunnels();
 
   useEffect(() => {

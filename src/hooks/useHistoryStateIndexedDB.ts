@@ -75,11 +75,12 @@ export const useHistoryStateIndexedDB = <T>(initialState: T, options: UseHistory
         if (enablePersistence && storageKey && storageManager) {
             try {
                 const saved = await storageManager.getItem(storageKey, namespace);
-                if (saved) {
+                if (saved && typeof saved === 'object') {
+                    const savedState = saved as Partial<HistoryState<T>>;
                     return {
-                        past: saved.past || [],
-                        present: saved.present || initialState,
-                        future: saved.future || [],
+                        past: savedState.past || [],
+                        present: savedState.present || initialState,
+                        future: savedState.future || [],
                     };
                 }
             } catch (error) {
@@ -146,7 +147,7 @@ export const useHistoryStateIndexedDB = <T>(initialState: T, options: UseHistory
         };
 
         if (persistDebounceMs && persistDebounceMs > 0) {
-            timer = window.setTimeout(save, persistDebounceMs);
+            timer = setTimeout(save, persistDebounceMs);
         } else {
             save();
         }
