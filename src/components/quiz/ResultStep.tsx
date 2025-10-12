@@ -454,110 +454,31 @@ export default function ResultStep({
                 </div>
 
                 {/* ====================== SEÇÃO 4: OFERTA E PREÇO ====================== */}
-                <div className="bg-gradient-to-br from-[#B89B7A]/10 to-[#a08966]/5 p-5 sm:p-6 md:p-8 rounded-lg shadow-lg mb-10 md:mb-12 border-2 border-[#B89B7A]/20">
-                    <div className="text-center">
-                        <h2 className="text-2xl sm:text-3xl font-bold text-[#432818] mb-2 tracking-tight">
-                            Método 5 Passos – Vista-se de Você
-                        </h2>
-                        <p className="text-sm text-gray-600 mb-1">Por Gisele Galvão | Consultora de Imagem e Branding Pessoal</p>
-                        <p className="text-base sm:text-lg text-gray-700 mb-6 md:mb-8">
-                            Autoconhecimento + estratégia visual para transformar sua imagem
-                        </p>
-
-                        {/* Countdown de urgência restaurado */}
-                        <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6 md:mb-8 max-w-md mx-auto">
-                            <div className="flex items-center justify-center gap-2 text-red-600">
-                                <Clock className="w-5 h-5" />
-                                <span className="font-semibold">Oferta expira ao sair desta página</span>
-                            </div>
-                        </div>
-
-                        {/* Componentes de valor */}
-                        <div className="bg-white p-5 sm:p-6 rounded-lg shadow-md border border-[#B89B7A]/20 max-w-lg mx-auto mb-6 md:mb-8">
-                            <h4 className="text-lg sm:text-xl font-semibold text-[#432818] mb-3 sm:mb-4">O Que Você Recebe Hoje</h4>
-
-                            <div className="space-y-3 mb-6 text-left">
-                                <div className="flex justify-between items-center p-2.5 sm:p-3 border-b border-gray-100 text-sm sm:text-base">
-                                    <span>✅ 31 Aulas Online (Acesso Imediato)</span>
-                                    <span className="font-medium">R$ 297,00</span>
-                                </div>
-                                <div className="flex justify-between items-center p-2.5 sm:p-3 border-b border-gray-100 text-sm sm:text-base">
-                                    <span>✅ Bônus: Guia de Visagismo Facial (PDF)</span>
-                                    <span className="font-medium">R$ 67,00</span>
-                                </div>
-                                <div className="flex justify-between items-center p-2.5 sm:p-3 border-b border-gray-100 text-sm sm:text-base">
-                                    <span>✅ Bônus: Peças-Chave + Inventário</span>
-                                    <span className="font-medium">R$ 83,00</span>
-                                </div>
-                                <div className="flex justify-between items-center p-2.5 sm:p-3 pt-4 font-bold text-base sm:text-lg border-t-2 border-[#B89B7A]">
-                                    <span>Valor Total</span>
-                                    <div className="relative">
-                                        <span className="line-through text-gray-500">R$ 447,00</span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div className="text-center p-4 bg-gradient-to-r from-[#B89B7A]/5 to-[#a08966]/5 rounded-lg border border-[#B89B7A]/20">
-                                <p className="text-[#B89B7A] uppercase font-bold text-sm mb-2">OFERTA ESPECIAL</p>
-                                <p className="text-4xl font-bold text-[#B89B7A] mb-1">R$ 97,00</p>
-                                <p className="text-sm text-gray-600">ou 8x de R$ 14,11</p>
-                                <div className="mt-3">
-                                    <span className="bg-red-100 text-red-600 px-3 py-1 rounded-full text-xs font-semibold">
-                                        🔥 78% de desconto - HOJE APENAS
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* CTA Principal */}
-                        <button
-                            onClick={handleCTAClick}
-                            className="bg-gradient-to-r from-[#B89B7A] to-[#a08966] text-white py-4 sm:py-6 px-6 sm:px-8 rounded-lg shadow-xl transition-all duration-300 text-lg sm:text-xl font-bold hover:scale-105 transform mb-4 w-full sm:w-auto"
-                            onMouseEnter={() => setIsButtonHovered(true)}
-                            onMouseLeave={() => setIsButtonHovered(false)}
-                        >
-                            <span className="flex items-center justify-center gap-3">
-                                <ShoppingCart className={`w-6 h-6 transition-transform duration-300 ${isButtonHovered ? 'scale-110' : ''}`} />
-                                ✨ Começar Minha Transformação Agora
-                            </span>
-                        </button>
-
-                        {/* Elementos de segurança */}
-                        <div className="flex items-center justify-center gap-6 text-sm text-gray-600 mt-4">
-                            <div className="flex items-center gap-2">
-                                <Shield className="w-4 h-4 text-[#B89B7A]" />
-                                <span>Compra Segura</span>
-                            </div>
-                            <div className="flex items-center gap-2">
-                                <Lock className="w-4 h-4 text-[#B89B7A]" />
-                                <span>Dados Protegidos</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <OfferSection
+                    title="Método 5 Passos – Vista-se de Você"
+                    subtitle="Por Gisele Galvão | Consultora de Imagem e Branding Pessoal"
+                    description="Autoconhecimento + estratégia visual para transformar sua imagem"
+                    features={offerFeatures}
+                    pricing={offerPricing}
+                    cta={{
+                        text: "✨ Começar Minha Transformação Agora",
+                        onClick: handleCTAClick
+                    }}
+                    countdown={{
+                        enabled: false // Removido countdown - usando mensagem estática
+                    }}
+                    urgencyNote="⚡ Esta é uma oferta exclusiva para você que completou o diagnóstico"
+                    returnPriceNote="O preço volta para R$ 447,00 quando você sair desta página"
+                />
 
                 {/* ====================== SEÇÃO 5: GARANTIA ====================== */}
-                <div className="bg-white p-5 sm:p-6 md:p-8 rounded-lg shadow-lg text-center">
-                    <div className="max-w-2xl mx-auto">
-                        <h3 className="text-xl sm:text-2xl font-bold text-[#432818] mb-4 tracking-tight">
-                            Garantia de Satisfação Total
-                        </h3>
-                        <div className="bg-[#B89B7A]/5 border border-[#B89B7A]/20 rounded-lg p-6 mb-6">
-                            <Shield className="w-12 h-12 text-[#B89B7A] mx-auto mb-4" />
-                            <p className="text-gray-700 text-base sm:text-lg leading-relaxed">
-                                Você tem <strong>7 dias</strong> para testar o guia. Se não ficar 100% satisfeita,
-                                devolvemos seu investimento sem perguntas.
-                            </p>
-                        </div>
-
-                        <p className="text-[#B89B7A] font-semibold">
-                            ⚡ Esta é uma oferta exclusiva para você que completou o diagnóstico
-                        </p>
-                        <p className="text-gray-600 text-sm mt-2">
-                            O preço volta para R$ 447,00 quando você sair desta página
-                        </p>
-                    </div>
-                </div>
+                <GuaranteeSection
+                    days={7}
+                    title="Garantia de Satisfação Total"
+                    description="Você tem 7 dias para testar o guia. Se não ficar 100% satisfeita, devolvemos seu investimento sem perguntas."
+                    urgencyNote="⚡ Esta é uma oferta exclusiva para você que completou o diagnóstico"
+                    returnPriceNote="O preço volta para R$ 447,00 quando você sair desta página"
+                />
             </div>
         </div>
     );
