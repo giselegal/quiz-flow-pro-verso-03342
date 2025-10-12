@@ -6,6 +6,13 @@ import type { QuizScores } from '../../hooks/useQuizState';
 import { useImageWithFallback } from '../../hooks/useImageWithFallback';
 import { ShoppingCart, Lock, Star, Shield, Clock } from 'lucide-react';
 
+// Componentes modulares
+import {
+    HeroSection,
+    OfferSection,
+    GuaranteeSection
+} from './result';
+
 interface ResultStepProps {
     data: QuizStep;
     userProfile: {
@@ -133,6 +140,20 @@ export default function ResultStep({
 
         // Link da oferta: 5 Passos – Vista-se de Você
         window.open('https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912', '_blank');
+    };
+
+    // Dados para a seção de oferta (componente modular)
+    const offerFeatures = [
+        { icon: '✅', label: '31 Aulas Online (Acesso Imediato)', value: 'R$ 297,00' },
+        { icon: '✅', label: 'Bônus: Guia de Visagismo Facial (PDF)', value: 'R$ 67,00' },
+        { icon: '✅', label: 'Bônus: Peças-Chave + Inventário', value: 'R$ 83,00' }
+    ];
+
+    const offerPricing = {
+        current: 97,
+        original: 447,
+        installments: { quantity: 8, value: 14.11 },
+        discount: 78
     };
 
     return (
