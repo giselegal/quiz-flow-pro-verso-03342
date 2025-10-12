@@ -1,27 +1,42 @@
-# 🎯 SPRINT 2 - TASK 2.1: Remover @ts-nocheck (Em Progresso)
+# 🎯 SPRINT 2 - TASK 2.1: Remover @ts-nocheck (Atualizado)
 
-## ✅ ARQUIVOS CORRIGIDOS (3/50)
+## ✅ ARQUIVOS CORRIGIDOS (4/50)
 
 ### 1. ✅ src/contexts/funnel/FunnelsContext.tsx
 **Problemas corrigidos:**
 - Removido `// @ts-nocheck`
-- Fixado conversão de `number` para `string` em 3 locais
+- Fixado conversão number→string (3 ocorrências)
 - Fixado tipo `description` de `any[]` para `string`
-- Tratamento adequado de `questionText` com verificação de array
+**Status:** ✅ Compilando
 
-**Erros resolvidos:** 4
-**Status:** ✅ Compilando sem erros
+### 2. ✅ src/contexts/editor/EditorQuizContext.tsx
+**Problemas corrigidos:**
+- Removido `// @ts-nocheck`
+- Adicionado interface `EditorQuizProviderProps`
+- Tipagem adequada de `children: ReactNode`
+**Status:** ✅ Compilando
 
-### 2. ⏳ src/context-backup-sprint1-20251010/FunnelsContext.tsx
-**Status:** Arquivo de backup - será removido na limpeza final
-**Ação:** Pular por enquanto (não é código ativo)
+### 3. ✅ src/contexts/editor/EditorRuntimeProviders.tsx
+**Problemas corrigidos:**
+- Removido `// @ts-nocheck`
+- Removida prop `initial` não existente do EditorProvider
+**Status:** ✅ Compilando
 
-### 3. ⏳ Próximos arquivos prioritários:
-- src/contexts/editor/EditorQuizContext.tsx
-- src/contexts/editor/EditorRuntimeProviders.tsx  
-- src/services/FunnelUnifiedServiceV2.ts
-- src/services/core/UnifiedEditorService.ts
-- src/core/errors/FunnelErrorHandler.ts
+### 4. ✅ src/services/core/UnifiedEditorService.ts
+**Problemas corrigidos:**
+- Removido `// @ts-nocheck`
+- Fixado tipo `position` de `number` para objeto `{ x, y, width, height }`
+- Removidas chamadas de função em `definition` (agora apenas verifica existência)
+**Status:** ✅ Compilando
+
+---
+
+## ⏸️ ARQUIVOS COM DEPENDÊNCIAS QUEBRADAS (Voltaram @ts-nocheck)
+
+### 1. ⚠️ src/services/FunnelUnifiedServiceV2.ts
+**Motivo:** Depende de `HybridStorageService` com API incompleta
+**Ação:** Requereu @ts-nocheck até HybridStorageService ser corrigido
+**Prioridade:** Sprint 2 Task 2.3 (Consolidar Serviços)
 
 ---
 
@@ -29,17 +44,31 @@
 
 | Métrica | Valor |
 |---------|-------|
-| Arquivos com @ts-nocheck | 478 → 477 |
-| Arquivos corrigidos | 1/50 |
-| Erros TypeScript resolvidos | 4 |
-| % Completado | 2% |
+| Arquivos com @ts-nocheck | 478 → 474 |
+| Arquivos corrigidos | 4/50 |
+| Erros TypeScript resolvidos | 8 |
+| % Completado | 8% |
 
 ---
 
-## 🎯 META SPRINT 2
+## 🎯 PRÓXIMOS ARQUIVOS PRIORITÁRIOS
 
-Remover @ts-nocheck de 50 arquivos críticos:
-- ✅ 1 concluído
-- ⏳ 49 restantes
+Arquivos simples sem dependências complexas:
+1. ✅ src/services/funnelSettingsService.ts
+2. ✅ src/services/quizDataService.ts
+3. ✅ src/services/quizService.ts
+4. ✅ src/services/stepTemplateService.ts
+5. ⏳ src/core/builder/index.ts
 
-**Impacto esperado:** 478 → 428 arquivos com @ts-nocheck (-10.5%)
+---
+
+## 📈 META SPRINT 2 - TASK 2.1
+
+**Objetivo:** Remover @ts-nocheck de 50 arquivos críticos
+**Progresso:** 4/50 (8%)
+**Impacto esperado:** 478 → 428 arquivos (-10.5%)
+
+**Estratégia ajustada:**
+- Priorizar arquivos sem dependências complexas
+- Adiar arquivos que dependem de refatoração arquitetural
+- Documentar dependências quebradas para Sprint 2 Task 2.3

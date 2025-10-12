@@ -1,4 +1,4 @@
-// @ts-nocheck
+// @ts-nocheck - Dependências de HybridStorageService incompletas
 /**
  * 🎯 FUNNEL UNIFIED SERVICE V2 - Com IndexedDB + LocalStorage
  * 

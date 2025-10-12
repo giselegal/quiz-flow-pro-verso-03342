@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { FunnelMasterProvider } from '@/providers/FunnelMasterProvider';
 import { EditorProvider } from '@/components/editor/EditorProviderMigrationAdapter';
@@ -61,7 +60,6 @@ export const EditorRuntimeProviders: React.FC<EditorRuntimeProvidersProps> = ({
                 funnelId={supabaseConfig.funnelId}
                 quizId={supabaseConfig.quizId}
                 storageKey={supabaseConfig.storageKey}
-                initial={initialStep ? { currentStep: initialStep } : undefined}
             >
                 <LegacyCompatibilityWrapper
                     enableWarnings={debugMode}

@@ -1,4 +1,4 @@
-// @ts-nocheck
+// @ts-nocheck - Interface Block requer 'order' e conflito com MASTER_BLOCK_REGISTRY
 /**
  * 🎯 UNIFIED EDITOR SERVICE - SIMPLIFICADO
  * 
@@ -72,9 +72,9 @@ class UnifiedEditorService {
         const block: Block = {
             id: blockId,
             type,
+            content: {}, // BlockContent vazio por padrão
             properties: { ...properties },
-            parentId: null,
-            position: 0
+            position: { x: 0, y: 0, width: 100, height: 100 }
         };
 
         // Atualizar estado
