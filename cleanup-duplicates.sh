@@ -8,7 +8,7 @@ echo "===================================="
 
 # Verificar se estamos no diretório correto
 if [[ ! -f "package.json" ]]; then
-    echo "❌ Erro: Execute este script na raiz do projeto"
+    echo "❌ Erro: Execute este script na raiz do projeto (quiz-flow-pro-verso)"
     exit 1
 fi
 

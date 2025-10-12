@@ -220,11 +220,11 @@ Adicione ao seu `~/.bashrc` ou `~/.zshrc`:
 
 ```bash
 # Aliases do Quiz
-alias qeditor='cd /workspaces/quiz-quest-challenge-verse && ./scripts/open-editor.sh'
-alias qtools='cd /workspaces/quiz-quest-challenge-verse && ./scripts/template-tools.sh'
-alias qvalidate='cd /workspaces/quiz-quest-challenge-verse && node scripts/validate-template.js'
-alias qbackup='cd /workspaces/quiz-quest-challenge-verse && cp src/templates/quiz21StepsComplete.ts backups/backup_$(date +%Y%m%d_%H%M%S).ts'
-alias qstats='cd /workspaces/quiz-quest-challenge-verse && wc -l src/templates/quiz21StepsComplete.ts'
+alias qeditor='cd /workspaces/quiz-flow-pro-verso && ./scripts/open-editor.sh'
+alias qtools='cd /workspaces/quiz-flow-pro-verso && ./scripts/template-tools.sh'
+alias qvalidate='cd /workspaces/quiz-flow-pro-verso && node scripts/validate-template.js'
+alias qbackup='cd /workspaces/quiz-flow-pro-verso && cp src/templates/quiz21StepsComplete.ts backups/backup_$(date +%Y%m%d_%H%M%S).ts'
+alias qstats='cd /workspaces/quiz-flow-pro-verso && wc -l src/templates/quiz21StepsComplete.ts'
 ```
 
 Depois de adicionar, execute: `source ~/.bashrc` (ou `source ~/.zshrc`)

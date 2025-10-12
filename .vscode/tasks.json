@@ -4,7 +4,7 @@
 		{
 			"label": "Executar servidor de desenvolvimento",
 			"type": "shell",
-			"command": "cd /workspaces/quiz-quest-challenge-verse && npm run dev",
+			"command": "cd /workspaces/quiz-flow-pro-verso && npm run dev",
 			"group": "build",
 			"isBackground": true,
 			"problemMatcher": []
