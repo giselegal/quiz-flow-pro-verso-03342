@@ -11,7 +11,7 @@
  * 2. Execute: npm run generate:templates
  * 3. Commit ambos: JSON + este arquivo TS
  * 
- * Gerado em: 2025-10-12T13:43:08.298Z
+ * Gerado em: 2025-10-12T13:44:49.135Z
  * Versão: 3.0.0
  */
 
@@ -95,7 +95,7 @@ const MINIMAL_TEST_TEMPLATE: Record<string, Block[]> = {
 };
 
 
-export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = IS_TEST ? MINIMAL_TEST_TEMPLATE : {
+export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any[]> = IS_TEST ? MINIMAL_TEST_TEMPLATE : {
   'step-01': [
     {
       "id": "step01-header",

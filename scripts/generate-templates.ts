@@ -330,7 +330,7 @@ async function main() {
         .join('\n\n');
 
     const fullCode = `${header}
-export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = IS_TEST ? MINIMAL_TEST_TEMPLATE : {
+export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any[]> = IS_TEST ? MINIMAL_TEST_TEMPLATE : {
 ${templateCode}
 };
 ${generateFileFooter()}`;
