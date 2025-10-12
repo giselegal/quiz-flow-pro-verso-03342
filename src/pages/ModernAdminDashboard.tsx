@@ -12,7 +12,7 @@ import { UnifiedAdminLayout } from '@/components/admin/UnifiedAdminLayout';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 
 // Lazy loading das páginas do dashboard - PÁGINAS REAIS COM DADOS DO SUPABASE
-const AdminOverview = React.lazy(() => import('./dashboard/AdminDashboard'));
+const AdminOverview = React.lazy(() => import('./admin/ConsolidatedOverviewPage'));
 const EnhancedAnalytics = React.lazy(() => import('@/components/dashboard/EnhancedRealTimeDashboard'));
 const ParticipantsPage = React.lazy(() => import('./dashboard/ParticipantsPage'));
 const FacebookMetrics = React.lazy(() => import('./dashboard/FacebookMetricsPage'));
