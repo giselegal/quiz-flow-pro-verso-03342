@@ -106,17 +106,28 @@ const CurrentFunnelPage: React.FC = () => {
             console.log('📊 Carregando métricas do funil atual...');
 
             const realTimeMetrics = await EnhancedUnifiedDataService.getRealTimeMetrics();
-            const analyticsData = await EnhancedUnifiedDataService.getAdvancedAnalytics({
-                funnel: CURRENT_FUNNEL.slug,
-                timeRange: '7d'
-            });
+
+            // getAdvancedAnalytics pode não estar disponível, usar fallback
+            let analyticsData: any = null;
+            try {
+                if (typeof (EnhancedUnifiedDataService as any).getAdvancedAnalytics === 'function') {
+                    analyticsData = await (EnhancedUnifiedDataService as any).getAdvancedAnalytics({
+                        funnel: CURRENT_FUNNEL.slug,
+                        timeRange: '7d'
+                    });
+                }
+            } catch (analyticsError) {
+                console.warn('⚠️ getAdvancedAnalytics não disponível, usando fallback');
+            }
 
             setMetrics({
                 realTime: realTimeMetrics,
-                analytics: analyticsData
-            });
-
-            console.log('✅ Métricas carregadas:', { realTimeMetrics, analyticsData });
+                analytics: analyticsData || {
+                    views: 0,
+                    completions: 0,
+                    conversionRate: 0
+                }
+            }); console.log('✅ Métricas carregadas:', { realTimeMetrics, analyticsData });
         } catch (err) {
             console.error('❌ Erro ao carregar métricas:', err);
             setError('Não foi possível carregar as métricas. Usando dados demo.');
