@@ -65,7 +65,7 @@ export const useFunnelNavigation = () => {
   // Tentativa de usar o contexto moderno
   let modern: any = null;
   try {
-    modern = useEditorModern();
+    modern = useEditor();
   } catch { }
 
   // Unificar via QuizFlowProvider
