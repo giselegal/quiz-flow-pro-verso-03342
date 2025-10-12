@@ -1,4 +1,3 @@
-// @ts-nocheck - Interface Block requer 'order' e conflito com MASTER_BLOCK_REGISTRY
 /**
  * 🎯 UNIFIED EDITOR SERVICE - SIMPLIFICADO
  * 
@@ -6,6 +5,8 @@
  * - Validação simplificada
  * - Operações básicas de bloco
  * - Interface limpa sem dependências problemáticas
+ * 
+ * Note: Interface Block requer 'order' - conflito com MASTER_BLOCK_REGISTRY sendo resolvido
  */
 
 import { Block, BlockType } from '@/types/editor';
@@ -61,7 +62,7 @@ class UnifiedEditorService {
         properties: Record<string, any> = {},
         editorId: string = 'default'
     ): Promise<Block> {
-        const definition = MASTER_BLOCK_REGISTRY.get(type);
+        const definition = MASTER_BLOCK_REGISTRY[type];
 
         if (!definition) {
             throw new Error(`Block type '${type}' not found in registry`);
@@ -74,7 +75,8 @@ class UnifiedEditorService {
             type,
             content: {}, // BlockContent vazio por padrão
             properties: { ...properties },
-            position: { x: 0, y: 0, width: 100, height: 100 }
+            position: { x: 0, y: 0, width: 100, height: 100 },
+            order: 0, // Propriedade obrigatória - será atualizado conforme necessário
         };
 
         // Atualizar estado
@@ -179,7 +181,7 @@ class UnifiedEditorService {
      */
     async validateBlock(block: Block): Promise<BlockValidationResult> {
         try {
-            const definition = MASTER_BLOCK_REGISTRY.get(block.type);
+            const definition = MASTER_BLOCK_REGISTRY[block.type];
 
             if (!definition) {
                 return {

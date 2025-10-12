@@ -19,35 +19,35 @@ export interface CollaborationState {
   session: CollaborationSession | null;
   isConnected: boolean;
   connectionError: string | null;
-  
+
   // Usuários
   users: CollaborationUser[];
   activeUsers: CollaborationUser[];
   currentUser: CollaborationUser | null;
-  
+
   // Permissões
   permissions: UserPermission[];
   canEdit: boolean;
   canDelete: boolean;
   canInvite: boolean;
   canManage: boolean;
-  
+
   // Notificações
   notifications: Notification[];
   unreadCount: number;
-  
+
   // Chat
   chatMessages: ChatMessage[];
   isChatOpen: boolean;
-  
+
   // Comentários
   comments: Comment[];
   selectedElementComments: Comment[];
-  
+
   // Presença
   presence: PresenceUpdate[];
   userCursors: Map<string, PresenceUpdate['cursor']>;
-  
+
   // Estados
   isLoading: boolean;
   isSaving: boolean;
@@ -60,29 +60,29 @@ export interface CollaborationActions {
   createSession: (funnelId: string) => Promise<CollaborationSession>;
   joinSession: (sessionId: string, user: Omit<CollaborationUser, 'isOnline' | 'lastSeen' | 'cursor'>) => Promise<boolean>;
   leaveSession: () => Promise<boolean>;
-  
+
   // Permissões
   grantPermission: (userId: string, roleId: string, expiresAt?: Date) => Promise<boolean>;
   revokePermission: (userId: string) => Promise<boolean>;
   createInvitation: (email: string, roleId: string, expiresInHours?: number) => Promise<any>;
-  
+
   // Mudanças
   trackChange: (type: CollaborationChange['type'], entityType: CollaborationChange['entityType'], entityId: string, changes: Record<string, any>) => Promise<void>;
   updateCursor: (stageId: string, blockId?: string, position?: { x: number; y: number }) => Promise<void>;
-  
+
   // Notificações
   markNotificationAsRead: (notificationId: string) => Promise<boolean>;
   markAllNotificationsAsRead: () => Promise<void>;
-  
+
   // Chat
   sendMessage: (message: string, replyTo?: string) => Promise<ChatMessage>;
   toggleChat: () => void;
-  
+
   // Comentários
   addComment: (stageId: string, blockId: string | undefined, content: string) => Promise<Comment>;
   resolveComment: (commentId: string) => Promise<boolean>;
   selectElement: (stageId: string, blockId?: string) => void;
-  
+
   // Sincronização
   sync: () => Promise<void>;
   resolveConflicts: () => Promise<void>;
@@ -95,7 +95,7 @@ export function useUnifiedCollaboration(
   userEmail: string,
   userAvatar?: string
 ): CollaborationState & CollaborationActions {
-  
+
   // Estados
   const [state, setState] = useState<CollaborationState>({
     session: null,
@@ -144,7 +144,7 @@ export function useUnifiedCollaboration(
     } else {
       stopAutoSync();
     }
-    
+
     return () => stopAutoSync();
   }, [state.isConnected]);
 
@@ -246,7 +246,7 @@ export function useUnifiedCollaboration(
         if (presence.isOnline) {
           updatedPresence.push(presence);
         }
-        
+
         return {
           ...prev,
           presence: updatedPresence
@@ -272,7 +272,7 @@ export function useUnifiedCollaboration(
    */
   const cleanup = () => {
     stopAutoSync();
-    
+
     // Remover listeners
     for (const [event, listener] of eventListenersRef.current) {
       notificationService.off(event, listener);
@@ -285,7 +285,7 @@ export function useUnifiedCollaboration(
    */
   const createSession = useCallback(async (funnelId: string): Promise<CollaborationSession> => {
     const session = await collaborationService.createSession(funnelId, userId);
-    
+
     // Adicionar usuário atual
     const currentUser: CollaborationUser = {
       id: userId,
@@ -298,7 +298,7 @@ export function useUnifiedCollaboration(
     };
 
     await collaborationService.addUserToSession(session.id, currentUser, 'owner');
-    
+
     setState(prev => ({
       ...prev,
       session,
@@ -315,12 +315,12 @@ export function useUnifiedCollaboration(
    * 👥 Entrar na sessão
    */
   const joinSession = useCallback(async (
-    sessionId: string, 
+    sessionId: string,
     user: Omit<CollaborationUser, 'isOnline' | 'lastSeen' | 'cursor'>
   ): Promise<boolean> => {
     try {
       const success = await collaborationService.addUserToSession(sessionId, user, 'editor');
-      
+
       if (success) {
         const session = collaborationService.sessions.get(sessionId);
         if (session) {
@@ -334,7 +334,7 @@ export function useUnifiedCollaboration(
           }));
         }
       }
-      
+
       return success;
     } catch (error) {
       console.error('❌ Erro ao entrar na sessão:', error);
@@ -347,10 +347,10 @@ export function useUnifiedCollaboration(
    */
   const leaveSession = useCallback(async (): Promise<boolean> => {
     if (!state.session) return false;
-    
+
     try {
       const success = await collaborationService.removeUserFromSession(state.session.id, userId);
-      
+
       if (success) {
         setState(prev => ({
           ...prev,
@@ -361,7 +361,7 @@ export function useUnifiedCollaboration(
           activeUsers: []
         }));
       }
-      
+
       return success;
     } catch (error) {
       console.error('❌ Erro ao sair da sessão:', error);
@@ -373,8 +373,8 @@ export function useUnifiedCollaboration(
    * 🔐 Conceder permissão
    */
   const grantPermission = useCallback(async (
-    userId: string, 
-    roleId: string, 
+    userId: string,
+    roleId: string,
     expiresAt?: Date
   ): Promise<boolean> => {
     return await permissionService.grantPermission(userId, funnelId, roleId, userId, expiresAt);
@@ -391,8 +391,8 @@ export function useUnifiedCollaboration(
    * 📧 Criar convite
    */
   const createInvitation = useCallback(async (
-    email: string, 
-    roleId: string, 
+    email: string,
+    roleId: string,
     expiresInHours: number = 72
   ) => {
     return await permissionService.createInvitation(funnelId, email, roleId, userId, expiresInHours);
@@ -408,10 +408,10 @@ export function useUnifiedCollaboration(
     changes: Record<string, any>
   ): Promise<void> => {
     if (!state.session) return;
-    
+
     try {
       setState(prev => ({ ...prev, isSaving: true }));
-      
+
       await collaborationService.trackChange(
         state.session.id,
         userId,
@@ -420,11 +420,11 @@ export function useUnifiedCollaboration(
         entityId,
         changes
       );
-      
-      setState(prev => ({ 
-        ...prev, 
-        isSaving: false, 
-        lastSync: new Date() 
+
+      setState(prev => ({
+        ...prev,
+        isSaving: false,
+        lastSync: new Date()
       }));
     } catch (error) {
       console.error('❌ Erro ao rastrear mudança:', error);
@@ -436,12 +436,12 @@ export function useUnifiedCollaboration(
    * 🎯 Atualizar cursor
    */
   const updateCursor = useCallback(async (
-    stageId: string, 
-    blockId?: string, 
+    stageId: string,
+    blockId?: string,
     position?: { x: number; y: number }
   ): Promise<void> => {
     if (!state.session) return;
-    
+
     const cursor = position ? { stageId, blockId, position } : undefined;
     await collaborationService.updateUserCursor(state.session.id, userId, cursor);
   }, [state.session, userId]);
@@ -451,17 +451,17 @@ export function useUnifiedCollaboration(
    */
   const markNotificationAsRead = useCallback(async (notificationId: string): Promise<boolean> => {
     const success = await notificationService.markNotificationAsRead(notificationId);
-    
+
     if (success) {
       setState(prev => ({
         ...prev,
-        notifications: prev.notifications.map(n => 
+        notifications: prev.notifications.map(n =>
           n.id === notificationId ? { ...n, read: true } : n
         ),
         unreadCount: Math.max(0, prev.unreadCount - 1)
       }));
     }
-    
+
     return success;
   }, []);
 
@@ -470,11 +470,11 @@ export function useUnifiedCollaboration(
    */
   const markAllNotificationsAsRead = useCallback(async (): Promise<void> => {
     const unreadNotifications = state.notifications.filter(n => !n.read);
-    
+
     for (const notification of unreadNotifications) {
       await notificationService.markNotificationAsRead(notification.id);
     }
-    
+
     setState(prev => ({
       ...prev,
       notifications: prev.notifications.map(n => ({ ...n, read: true })),
@@ -486,7 +486,7 @@ export function useUnifiedCollaboration(
    * 💬 Enviar mensagem
    */
   const sendMessage = useCallback(async (
-    message: string, 
+    message: string,
     replyTo?: string
   ): Promise<ChatMessage> => {
     return await notificationService.sendChatMessage(
@@ -510,8 +510,8 @@ export function useUnifiedCollaboration(
    * 💭 Adicionar comentário
    */
   const addComment = useCallback(async (
-    stageId: string, 
-    blockId: string | undefined, 
+    stageId: string,
+    blockId: string | undefined,
     content: string
   ): Promise<Comment> => {
     return await notificationService.addComment(
@@ -537,10 +537,10 @@ export function useUnifiedCollaboration(
    */
   const selectElement = useCallback((stageId: string, blockId?: string) => {
     setSelectedElement({ stageId, blockId });
-    
+
     // Carregar comentários do elemento
     const elementComments = notificationService.getComments(funnelId, stageId, blockId);
-    
+
     setState(prev => ({
       ...prev,
       selectedElementComments: elementComments
@@ -552,17 +552,17 @@ export function useUnifiedCollaboration(
    */
   const sync = useCallback(async (): Promise<void> => {
     if (!state.isConnected) return;
-    
+
     try {
       setState(prev => ({ ...prev, isSaving: true }));
-      
+
       // Aqui seria a lógica de sincronização com o servidor
       // Por enquanto, apenas atualizar timestamp
-      
-      setState(prev => ({ 
-        ...prev, 
-        isSaving: false, 
-        lastSync: new Date() 
+
+      setState(prev => ({
+        ...prev,
+        isSaving: false,
+        lastSync: new Date()
       }));
     } catch (error) {
       console.error('❌ Erro na sincronização:', error);
@@ -583,7 +583,7 @@ export function useUnifiedCollaboration(
    */
   const startAutoSync = useCallback(() => {
     if (syncIntervalRef.current) return;
-    
+
     syncIntervalRef.current = setInterval(() => {
       sync();
     }, 30000); // 30 segundos

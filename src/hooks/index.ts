@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * UNIFIED HOOKS INDEX - CONSOLIDATED SYSTEM
  *
@@ -24,7 +23,7 @@ export {
 
 // 🔥 NEW: Optimized Data Management
 export { useOptimizedQuizData } from './useOptimizedQuizData';
-export { useUserName } from '../context/UserDataContext';
+// Removido: useUserName - arquivo '../context/UserDataContext' não existe
 
 // 🎯 NEW: Core Quiz Hooks (Checklist Implementation)
 export { useQuizState } from './useQuizState';

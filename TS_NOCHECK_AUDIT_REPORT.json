@@ -1,0 +1,4783 @@
+{
+  "timestamp": "2025-10-12T22:10:38.797Z",
+  "summary": {
+    "total": 467,
+    "byCategory": {
+      "other": 26,
+      "api": 1,
+      "services": 25,
+      "components": 289,
+      "hooks": 16,
+      "core": 12,
+      "debug": 4,
+      "infrastructure": 2,
+      "pages": 12,
+      "utils": 80
+    },
+    "byPriority": {
+      "critical": 8,
+      "high": 19,
+      "medium": 381,
+      "low": 59
+    },
+    "byDifficulty": {
+      "easy": 401,
+      "medium": 57,
+      "hard": 9
+    }
+  },
+  "analyses": [
+    {
+      "path": "src/App-corrected.tsx",
+      "category": "other",
+      "priority": "low",
+      "estimatedErrors": 0,
+      "linesOfCode": 79,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/MegaSimpleApp.tsx",
+      "category": "other",
+      "priority": "low",
+      "estimatedErrors": 1,
+      "linesOfCode": 48,
+      "complexityRatio": 0.02,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/__tests__/PropertiesPanel.comprehensive.test.tsx",
+      "category": "other",
+      "priority": "low",
+      "estimatedErrors": 2,
+      "linesOfCode": 853,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/__tests__/PropertiesPanel.integration.test.tsx",
+      "category": "other",
+      "priority": "low",
+      "estimatedErrors": 0,
+      "linesOfCode": 395,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/__tests__/PropertiesPanel.visual.test.tsx",
+      "category": "other",
+      "priority": "low",
+      "estimatedErrors": 0,
+      "linesOfCode": 132,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/__tests__/integration/CleanArchitecture.test.tsx",
+      "category": "other",
+      "priority": "low",
+      "estimatedErrors": 0,
+      "linesOfCode": 219,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/adapters/__tests__/QuizStepAdapter.test.ts",
+      "category": "other",
+      "priority": "low",
+      "estimatedErrors": 5,
+      "linesOfCode": 714,
+      "complexityRatio": 0.01,
+      "difficulty": "medium"
+    },
+    {
+      "path": "src/api/admin/migrate.ts",
+      "category": "api",
+      "priority": "high",
+      "estimatedErrors": 6,
+      "linesOfCode": 70,
+      "complexityRatio": 0.09,
+      "difficulty": "medium"
+    },
+    {
+      "path": "src/application/services/EditorService.ts",
+      "category": "services",
+      "priority": "critical",
+      "estimatedErrors": 4,
+      "linesOfCode": 141,
+      "complexityRatio": 0.03,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/application/services/FunnelService.ts",
+      "category": "services",
+      "priority": "critical",
+      "estimatedErrors": 8,
+      "linesOfCode": 148,
+      "complexityRatio": 0.05,
+      "difficulty": "medium"
+    },
+    {
+      "path": "src/application/services/QuizService.ts",
+      "category": "services",
+      "priority": "critical",
+      "estimatedErrors": 7,
+      "linesOfCode": 140,
+      "complexityRatio": 0.05,
+      "difficulty": "medium"
+    },
+    {
+      "path": "src/components/QuizPageUser.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 35,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/QuizQuestion.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 3,
+      "linesOfCode": 46,
+      "complexityRatio": 0.07,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/admin/AdminLogin.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 103,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/admin/QuizCalculationConfigurator.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 12,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/admin/StepConfigurationPanel.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 452,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/ai/OptimizedAIFeatures.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 2,
+      "linesOfCode": 153,
+      "complexityRatio": 0.01,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/analytics/ABTestAlerts.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 1,
+      "linesOfCode": 482,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/analytics/ABTestAlerts_new.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 1,
+      "linesOfCode": 482,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/analytics/ABTestComparison.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 1,
+      "linesOfCode": 828,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/analytics/CreativeAnalyticsDashboardNew.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 1,
+      "linesOfCode": 591,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/analytics/CreativePerformanceDashboard.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 297,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/analytics/MetricCard.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 144,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/analytics/MetricsGrid.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 105,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/analytics/tabs/FunnelTab.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 3,
+      "linesOfCode": 218,
+      "complexityRatio": 0.01,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/analytics/tabs/ProgressTab.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 2,
+      "linesOfCode": 240,
+      "complexityRatio": 0.01,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/analytics/tabs/UsersTab.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 4,
+      "linesOfCode": 330,
+      "complexityRatio": 0.01,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/analytics/tabs/UtmTab.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 5,
+      "linesOfCode": 295,
+      "complexityRatio": 0.02,
+      "difficulty": "medium"
+    },
+    {
+      "path": "src/components/blocks/SpacerBlock.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 43,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/blocks/inline/BonusShowcaseBlock.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 94,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/blocks/inline/DividerInlineBlock.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 1,
+      "linesOfCode": 49,
+      "complexityRatio": 0.02,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/blocks/inline/HeadingBlock.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 1,
+      "linesOfCode": 105,
+      "complexityRatio": 0.01,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/blocks/inline/ImageDisplayInlineBlock.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 159,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/blocks/inline/LegalNoticeInline.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 120,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/blocks/inline/PricingCardInlineBlock.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 3,
+      "linesOfCode": 336,
+      "complexityRatio": 0.01,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/blocks/inline/ResultStyleCardBlock.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 56,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/blocks/inline/StyleCharacteristicsInlineBlock.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 65,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/blocks/offer/HeroSectionBlock.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 164,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/blocks/offer/SectionTitleBlock.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 121,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/blocks/quiz/ConnectedQuizResultsBlock.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 1,
+      "linesOfCode": 56,
+      "complexityRatio": 0.02,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/blocks/quiz/LoadingTransitionBlock.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 196,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/blocks/quiz/QuizBenefitsBlock.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 280,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/blocks/quiz/QuizIntroBlock.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 233,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/blocks/quiz/QuizNavigationBlock.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 264,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/blocks/quiz/QuizResultsBlockEditor.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 117,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/blocks/quiz/QuizTransitionBlock.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 296,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/blocks/quiz/StartButtonBlock.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 266,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/blocks/quiz/StrategicQuestionBlock.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 268,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/blocks/quiz/StyleResultsBlock.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 177,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/blocks/result/BeforeAfterTransformationBlock.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 96,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/blocks/result/BonusSectionBlock.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 111,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/blocks/result/FinalCTABlock.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 143,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/blocks/result/MotivationSectionBlock.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 98,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/blocks/result/TestimonialsBlock.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 126,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/blocks/simple/SimpleButtonInlineBlock.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 2,
+      "linesOfCode": 43,
+      "complexityRatio": 0.05,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/blocks/simple/SimpleDecorativeBarBlock.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 37,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/common/ErrorBoundary.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 39,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/dashboard/WhatsAppRecoveryDashboard.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 2,
+      "linesOfCode": 473,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/ComponentList.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 504,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/ComponentsPanel.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 67,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/DeleteBlockButton.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 77,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/EditBlockContent.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 2,
+      "linesOfCode": 85,
+      "complexityRatio": 0.02,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/EditorBlockItem.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 2,
+      "linesOfCode": 160,
+      "complexityRatio": 0.01,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/EditorProUnified.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 1,
+      "linesOfCode": 387,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/Step20Debug.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 47,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/StepPropertiesSection.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 243,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/StepsPanelRefactored.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 201,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/TestDeleteComponent.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 61,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/UnifiedEditorCore.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 2,
+      "linesOfCode": 260,
+      "complexityRatio": 0.01,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/blocks/AdvancedCTABlock.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 104,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/blocks/AdvancedCTAInlineBlock.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 118,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/blocks/AdvancedGalleryBlock.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 37,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/blocks/AdvancedPricingTableBlock.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 37,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/blocks/AlertBlock.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 1,
+      "linesOfCode": 105,
+      "complexityRatio": 0.01,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/blocks/AnimatedChartsBlock.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 37,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/blocks/AnimatedStatCounterBlock.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 1,
+      "linesOfCode": 211,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/blocks/ArgumentsBlock.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 2,
+      "linesOfCode": 104,
+      "complexityRatio": 0.02,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/blocks/AudioBlock.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 78,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/blocks/AudioPlayerInlineBlock.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 1,
+      "linesOfCode": 479,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/blocks/BasicTextBlock.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 70,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/blocks/BeforeAfterBlock.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 127,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/blocks/BeforeAfterInlineBlock.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 2,
+      "linesOfCode": 206,
+      "complexityRatio": 0.01,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/blocks/BenefitsBlock.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 79,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/blocks/BenefitsBlockEditor.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 101,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/blocks/BenefitsListBlock.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 1,
+      "linesOfCode": 102,
+      "complexityRatio": 0.01,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/blocks/BlockLoadingSkeleton.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 52,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/blocks/BonusBlock.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 2,
+      "linesOfCode": 130,
+      "complexityRatio": 0.02,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/blocks/BonusCarouselBlockEditor.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 3,
+      "linesOfCode": 113,
+      "complexityRatio": 0.03,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/blocks/BonusInlineBlock.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 1,
+      "linesOfCode": 132,
+      "complexityRatio": 0.01,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/blocks/ButtonBlock.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 12,
+      "linesOfCode": 133,
+      "complexityRatio": 0.09,
+      "difficulty": "medium"
+    },
+    {
+      "path": "src/components/editor/blocks/CTABlockEditor.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 76,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/blocks/CTAInlineBlock.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 1,
+      "linesOfCode": 239,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/blocks/CTASectionInlineBlock.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 1,
+      "linesOfCode": 185,
+      "complexityRatio": 0.01,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/blocks/CaktoQuizResult.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 21,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/blocks/CarouselBlock.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 1,
+      "linesOfCode": 115,
+      "complexityRatio": 0.01,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/blocks/ChartAreaBlock.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 1,
+      "linesOfCode": 90,
+      "complexityRatio": 0.01,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/blocks/ChartLevelBlock.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 1,
+      "linesOfCode": 96,
+      "complexityRatio": 0.01,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/blocks/CompareBlock.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 1,
+      "linesOfCode": 115,
+      "complexityRatio": 0.01,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/blocks/ComparisonInlineBlock.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 1,
+      "linesOfCode": 163,
+      "complexityRatio": 0.01,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/blocks/ComparisonTableBlock.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 83,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/blocks/ComparisonTableInlineBlock.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 1,
+      "linesOfCode": 117,
+      "complexityRatio": 0.01,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/blocks/ConfettiBlock.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 76,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/blocks/DynamicPricingBlock.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 96,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/blocks/EnhancedFallbackBlock.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 195,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/blocks/ExampleInlineBlock.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 1,
+      "linesOfCode": 290,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/blocks/FAQBlock.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 1,
+      "linesOfCode": 407,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/blocks/FAQSectionBlock.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 5,
+      "linesOfCode": 328,
+      "complexityRatio": 0.02,
+      "difficulty": "medium"
+    },
+    {
+      "path": "src/components/editor/blocks/FAQSectionInlineBlock.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 116,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/blocks/FallbackBlock.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 108,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/blocks/FinalCTABlock.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 168,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/blocks/FinalValuePropositionInlineBlock.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 1,
+      "linesOfCode": 166,
+      "complexityRatio": 0.01,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/blocks/GuaranteeBlockEditor.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 69,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/blocks/GuaranteeInlineBlock.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 1,
+      "linesOfCode": 146,
+      "complexityRatio": 0.01,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/blocks/HeaderBlock.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 13,
+      "linesOfCode": 145,
+      "complexityRatio": 0.09,
+      "difficulty": "medium"
+    },
+    {
+      "path": "src/components/editor/blocks/HeaderBlockEditor.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 78,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/blocks/HeadlineBlockEditor.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 87,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/blocks/HeroOfferBlock.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 37,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/blocks/HeroSectionBlockEditor.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 87,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/blocks/ImageBlock.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 4,
+      "linesOfCode": 126,
+      "complexityRatio": 0.03,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/blocks/ImageBlockEditor.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 75,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/blocks/ImageInlineBlock.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 198,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/blocks/InlineDemoLayoutBlock.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 2,
+      "linesOfCode": 320,
+      "complexityRatio": 0.01,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/blocks/InteractiveQuizBlock.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 1,
+      "linesOfCode": 87,
+      "complexityRatio": 0.01,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/blocks/InteractiveStatisticsBlock.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 37,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/blocks/LazyBlockLoader.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 2,
+      "linesOfCode": 223,
+      "complexityRatio": 0.01,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/blocks/ListBlock.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 2,
+      "linesOfCode": 103,
+      "complexityRatio": 0.02,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/blocks/LoaderBlock.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 1,
+      "linesOfCode": 132,
+      "complexityRatio": 0.01,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/blocks/LoaderInlineBlock.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 1,
+      "linesOfCode": 131,
+      "complexityRatio": 0.01,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/blocks/MarqueeBlock.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 1,
+      "linesOfCode": 114,
+      "complexityRatio": 0.01,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/blocks/MentorBlock.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 1,
+      "linesOfCode": 161,
+      "complexityRatio": 0.01,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/blocks/ModernResultPageBlock.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 205,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/blocks/NotificationInlineBlock.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 1,
+      "linesOfCode": 217,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/blocks/PainPointsGridBlock.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 37,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/blocks/PriceComparisonBlock.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 319,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/blocks/PricingBlockEditor.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 87,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/blocks/PricingInlineBlock.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 1,
+      "linesOfCode": 221,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/blocks/PricingSectionBlock.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 37,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/blocks/ProductCarouselBlock.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 90,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/blocks/ProductFeaturesGridBlock.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 37,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/blocks/ProductOfferBlock.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 3,
+      "linesOfCode": 148,
+      "complexityRatio": 0.02,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/blocks/ProgressBarStepBlock.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 94,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/blocks/ProgressInlineBlock.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 1,
+      "linesOfCode": 147,
+      "complexityRatio": 0.01,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/blocks/ProsConsBlock.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 231,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/blocks/QuizFunnelStep1Block.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 37,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/blocks/QuizOfferCountdownBlock.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 1,
+      "linesOfCode": 100,
+      "complexityRatio": 0.01,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/blocks/QuizOfferFAQBlock.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 2,
+      "linesOfCode": 114,
+      "complexityRatio": 0.02,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/blocks/QuizOfferFinalCTABlock.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 1,
+      "linesOfCode": 118,
+      "complexityRatio": 0.01,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/blocks/QuizOfferHeroBlock.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 1,
+      "linesOfCode": 107,
+      "complexityRatio": 0.01,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/blocks/QuizOfferPricingBlock.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 1,
+      "linesOfCode": 172,
+      "complexityRatio": 0.01,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/blocks/QuizOfferTestimonialsBlock.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 2,
+      "linesOfCode": 138,
+      "complexityRatio": 0.01,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/blocks/QuizProgressBlock.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 127,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/blocks/QuizQuestionBlockConfigurable.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 37,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/blocks/QuizResultCalculatedBlock.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 1,
+      "linesOfCode": 201,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/blocks/QuizResultHeaderBlock.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 1,
+      "linesOfCode": 105,
+      "complexityRatio": 0.01,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/blocks/QuizResultMainCardBlock.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 1,
+      "linesOfCode": 174,
+      "complexityRatio": 0.01,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/blocks/QuizResultSecondaryStylesBlock.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 1,
+      "linesOfCode": 148,
+      "complexityRatio": 0.01,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/blocks/QuizStartPageBlock.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 2,
+      "linesOfCode": 193,
+      "complexityRatio": 0.01,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/blocks/QuizStepBlock.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 432,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/blocks/QuizTitleBlock.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 2,
+      "linesOfCode": 126,
+      "complexityRatio": 0.02,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/blocks/QuoteBlock.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 1,
+      "linesOfCode": 94,
+      "complexityRatio": 0.01,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/blocks/ResultDescriptionBlock.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 1,
+      "linesOfCode": 89,
+      "complexityRatio": 0.01,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/blocks/ResultHeaderBlock.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 1,
+      "linesOfCode": 89,
+      "complexityRatio": 0.01,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/blocks/RichTextBlock.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 197,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/blocks/ScriptBlock.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 72,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/blocks/SocialProofBlock.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 2,
+      "linesOfCode": 161,
+      "complexityRatio": 0.01,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/blocks/SpacerBlock.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 68,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/blocks/SpacerInlineBlock.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 1,
+      "linesOfCode": 300,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/blocks/StyleCharacteristicsBlock.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 37,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/blocks/TermsBlock.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 1,
+      "linesOfCode": 91,
+      "complexityRatio": 0.01,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/blocks/TestimonialsCarouselBlock.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 37,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/blocks/TestimonialsGridBlock.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 192,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/blocks/TestimonialsRealBlock.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 37,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/blocks/TestimonialsRealInlineBlock.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 4,
+      "linesOfCode": 154,
+      "complexityRatio": 0.03,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/blocks/TextBlock.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 1,
+      "linesOfCode": 67,
+      "complexityRatio": 0.01,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/blocks/TransformationInlineBlock.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 1,
+      "linesOfCode": 170,
+      "complexityRatio": 0.01,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/blocks/UrgencyTimerBlock.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 1,
+      "linesOfCode": 152,
+      "complexityRatio": 0.01,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/blocks/UrgencyTimerInlineBlock.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 1,
+      "linesOfCode": 169,
+      "complexityRatio": 0.01,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/blocks/ValueAnchoringBlock.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 2,
+      "linesOfCode": 81,
+      "complexityRatio": 0.02,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/blocks/ValueStackBlock.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 156,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/blocks/ValueStackInlineBlock.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 1,
+      "linesOfCode": 209,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/blocks/VerticalCanvasHeaderBlock.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 115,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/blocks/VideoBlock.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 1,
+      "linesOfCode": 87,
+      "complexityRatio": 0.01,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/blocks/VideoPlayerBlock.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 87,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/blocks/VideoPlayerInlineBlock.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 1,
+      "linesOfCode": 420,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/blocks/unified/UnifiedFunnelHeroBlock.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 98,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/blocks/unified/UnifiedFunnelPainBlock.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 115,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/canvas/AdvancedCanvasRenderer.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 3,
+      "linesOfCode": 564,
+      "complexityRatio": 0.01,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/components/ComponentPalette.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 2,
+      "linesOfCode": 73,
+      "complexityRatio": 0.03,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/components/ComponentRenderer.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 2,
+      "linesOfCode": 97,
+      "complexityRatio": 0.02,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/components/ComponentsSidebar.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 86,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/core/EditorCore.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 5,
+      "linesOfCode": 674,
+      "complexityRatio": 0.01,
+      "difficulty": "medium"
+    },
+    {
+      "path": "src/components/editor/dnd/SortableBlockItem.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 1,
+      "linesOfCode": 104,
+      "complexityRatio": 0.01,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/editable-steps/EditableResultStep.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 5,
+      "linesOfCode": 50,
+      "complexityRatio": 0.1,
+      "difficulty": "medium"
+    },
+    {
+      "path": "src/components/editor/editable-steps/EditableStrategicQuestionStep.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 5,
+      "linesOfCode": 67,
+      "complexityRatio": 0.07,
+      "difficulty": "medium"
+    },
+    {
+      "path": "src/components/editor/funnel/FunnelStagesPanel.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 2,
+      "linesOfCode": 299,
+      "complexityRatio": 0.01,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/funnel/FunnelStagesPanelUnified.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 2,
+      "linesOfCode": 262,
+      "complexityRatio": 0.01,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/hooks/useBlockHandlers.ts",
+      "category": "hooks",
+      "priority": "high",
+      "estimatedErrors": 4,
+      "linesOfCode": 211,
+      "complexityRatio": 0.02,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/interactive/InteractiveQuizCanvas.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 5,
+      "linesOfCode": 272,
+      "complexityRatio": 0.02,
+      "difficulty": "medium"
+    },
+    {
+      "path": "src/components/editor/interactive/examples/QuizExemploCompleto.ts",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 3,
+      "linesOfCode": 811,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/navbar/FunnelNavbar.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 229,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/properties/__tests__/NoCodePropertiesPanel.component.test.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 17,
+      "linesOfCode": 203,
+      "complexityRatio": 0.08,
+      "difficulty": "hard"
+    },
+    {
+      "path": "src/components/editor/properties/__tests__/NoCodePropertiesPanel.interpolation.test.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 32,
+      "linesOfCode": 363,
+      "complexityRatio": 0.09,
+      "difficulty": "hard"
+    },
+    {
+      "path": "src/components/editor/properties/panels/IntroStepPanel.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 1,
+      "linesOfCode": 51,
+      "complexityRatio": 0.02,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/quiz/EditorQuizPreview.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 140,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/quiz/QuizConfigurationPanel.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 3,
+      "linesOfCode": 420,
+      "complexityRatio": 0.01,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/quiz/QuizQuestionBlock.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 6,
+      "linesOfCode": 325,
+      "complexityRatio": 0.02,
+      "difficulty": "medium"
+    },
+    {
+      "path": "src/components/editor/quiz/QuizStateController.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 2,
+      "linesOfCode": 221,
+      "complexityRatio": 0.01,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/quiz/components/QuizEditorCanvas.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 202,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/quiz-specific/IntegratedQuizEditor.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 5,
+      "linesOfCode": 503,
+      "complexityRatio": 0.01,
+      "difficulty": "medium"
+    },
+    {
+      "path": "src/components/editor/quiz-specific/IntegratedQuizEditorSimple.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 78,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/sidebars/TemplatesIASidebar.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 3,
+      "linesOfCode": 132,
+      "complexityRatio": 0.02,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/smart/SmartComponentLibrary.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 3,
+      "linesOfCode": 808,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/unified/CollaborationPanel.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 3,
+      "linesOfCode": 565,
+      "complexityRatio": 0.01,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/unified/UnifiedPreviewWithFallbacks.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 322,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/unified/UnifiedQuizStepLoader.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 73,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/unified/VersioningPanel.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 1,
+      "linesOfCode": 424,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/universal/UniversalStepEditor-original.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 8,
+      "linesOfCode": 505,
+      "complexityRatio": 0.02,
+      "difficulty": "medium"
+    },
+    {
+      "path": "src/components/editor/validation/BlockValidator.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 1,
+      "linesOfCode": 34,
+      "complexityRatio": 0.03,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/funnel-blocks/BeforeAfterSection.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 266,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/funnel-blocks/CountdownTimer.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 268,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/funnel-blocks/FeatureHighlight.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 319,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/funnel-blocks/GuaranteeSection.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 284,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/funnel-blocks/IntroPage.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 266,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/funnel-blocks/LoadingTransition.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 238,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/funnel-blocks/MentorSection.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 229,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/funnel-blocks/MotivationSection.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 164,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/funnel-blocks/PriceComparison.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 267,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/funnel-blocks/PrimaryStyleDisplay.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 130,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/funnel-blocks/QuizTransition.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 144,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/funnel-blocks/SalesOffer.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 245,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/funnel-blocks/StyleResultDisplay.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 222,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/funnel-blocks/data/styleQuizData.ts",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 540,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/funnel-blocks/steps/FunnelIntroStep.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 84,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/funnel-blocks/steps/ProcessingStep.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 176,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/lazy/LazyComponents.ts",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 259,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/quiz/CaktoQuizImplementation.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 36,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/quiz/CaktoQuizQuestion.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 52,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/quiz/CaktoQuizResult.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 1,
+      "linesOfCode": 2,
+      "complexityRatio": 0.5,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/quiz/QuestionComponent.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 144,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/quiz/QuizContent.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 2,
+      "linesOfCode": 57,
+      "complexityRatio": 0.04,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/quiz/QuizContentWithTracking.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 2,
+      "linesOfCode": 59,
+      "complexityRatio": 0.03,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/quiz/QuizDataViewer.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 2,
+      "linesOfCode": 297,
+      "complexityRatio": 0.01,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/quiz/QuizHeader.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 65,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/quiz/QuizOption.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 171,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/quiz/QuizOptionImage.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 82,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/quiz/QuizPreview.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 332,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/quiz/QuizProgress.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 21,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/quiz/QuizResults.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 33,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/quiz/builder/PropertiesPanel.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 1,
+      "linesOfCode": 123,
+      "complexityRatio": 0.01,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/quiz/builder/components/BuilderLayout.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 65,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/quiz/builder/components/BuilderToolbar.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 119,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/quiz/builder/components/PropertyPanel.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 1,
+      "linesOfCode": 124,
+      "complexityRatio": 0.01,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/quiz/builder/components/QuizOptionEditor.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 88,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/quiz/builder/components/QuizTemplateImporter.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 1,
+      "linesOfCode": 339,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/quiz/builder/components/StageList.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 1,
+      "linesOfCode": 117,
+      "complexityRatio": 0.01,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/quiz/builder/components/StageQuestionComponent.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 1,
+      "linesOfCode": 166,
+      "complexityRatio": 0.01,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/quiz/builder/components/StageResultComponent.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 116,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/quiz/builder/preview/ComponentRenderer.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 146,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/quiz/builder/properties/StyleProperties.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 87,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/quiz/components/QuizButton.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 95,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/quiz/components/QuizOptions.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 188,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/quiz/editor/QuestionEditor.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 2,
+      "linesOfCode": 109,
+      "complexityRatio": 0.02,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/quiz/editor/QuestionOptionEditor.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 2,
+      "linesOfCode": 143,
+      "complexityRatio": 0.01,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/quiz/editor/QuizCategoryTab.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 83,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/quiz/editor/QuizEditor.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 1,
+      "linesOfCode": 120,
+      "complexityRatio": 0.01,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/quiz/editor/TemplateSelector.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 277,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/quiz/result-pages/ConnectedQuizResultsBlock.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 1,
+      "linesOfCode": 18,
+      "complexityRatio": 0.06,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/quiz/result-pages/OfferCard.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 164,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/quiz/result-pages/ResultHeader.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 21,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/result/BeforeAfterTransformation.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 57,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/result/BonusSection.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 114,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/result/EnhancedPricingSection.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 3,
+      "linesOfCode": 311,
+      "complexityRatio": 0.01,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/result/editor/BlockRenderer.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 4,
+      "linesOfCode": 186,
+      "complexityRatio": 0.02,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/result/editor/ComponentRegistry.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 2,
+      "linesOfCode": 35,
+      "complexityRatio": 0.06,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/result/editor/ComponentToolbar.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 1,
+      "linesOfCode": 216,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/result/editor/ComponentsSidebar.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 52,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/result/editor/DraggableBlockList.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 84,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/result/editor/EditSectionOverlay.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 4,
+      "linesOfCode": 48,
+      "complexityRatio": 0.08,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/result/editor/EditableBlock.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 1,
+      "linesOfCode": 126,
+      "complexityRatio": 0.01,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/result/editor/EditableComponent.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 2,
+      "linesOfCode": 100,
+      "complexityRatio": 0.02,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/result/editor/EditableSection.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 2,
+      "linesOfCode": 22,
+      "complexityRatio": 0.09,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/result/editor/EditableSections.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 5,
+      "linesOfCode": 99,
+      "complexityRatio": 0.05,
+      "difficulty": "medium"
+    },
+    {
+      "path": "src/components/result/editor/EnhancedResultPageEditor.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 89,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/result/editor/GlobalStylesEditor.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 1,
+      "linesOfCode": 137,
+      "complexityRatio": 0.01,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/result/editor/PreviewPanel.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 2,
+      "linesOfCode": 43,
+      "complexityRatio": 0.05,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/result/editor/ResultPageBlockEditor.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 1,
+      "linesOfCode": 392,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/result/editor/ResultPageDuplicator.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 194,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/result/editor/ResultPageEditor.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 2,
+      "linesOfCode": 77,
+      "complexityRatio": 0.03,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/result/editor/ResultPageEditorWithControls.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 1,
+      "linesOfCode": 127,
+      "complexityRatio": 0.01,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/result/editor/ResultPageVisualEditor.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 61,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/result/editor/StyleSelector.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 1,
+      "linesOfCode": 2,
+      "complexityRatio": 0.5,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/result/editor/block-editors/BenefitsBlockEditor.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 1,
+      "linesOfCode": 92,
+      "complexityRatio": 0.01,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/result/editor/block-editors/SpacerBlockEditor.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 1,
+      "linesOfCode": 41,
+      "complexityRatio": 0.02,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/router/QuizStepRouter.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 237,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/sections/SectionRenderer.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 1,
+      "linesOfCode": 309,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/steps/Step20Result.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 258,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/templates/ImprovedQuizResultSalesPage.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 630,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/universal/EnhancedUniversalPropertiesPanel.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 1,
+      "linesOfCode": 526,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/config/blockDefinitions.ts",
+      "category": "other",
+      "priority": "low",
+      "estimatedErrors": 0,
+      "linesOfCode": 854,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/config/blockDefinitionsExamples.ts",
+      "category": "other",
+      "priority": "low",
+      "estimatedErrors": 0,
+      "linesOfCode": 321,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/config/enhancedPropertyConfigurations.ts",
+      "category": "other",
+      "priority": "low",
+      "estimatedErrors": 0,
+      "linesOfCode": 502,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/config/stepTemplatesMapping.new.ts",
+      "category": "other",
+      "priority": "low",
+      "estimatedErrors": 0,
+      "linesOfCode": 132,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/config/templateSources.ts",
+      "category": "other",
+      "priority": "low",
+      "estimatedErrors": 1,
+      "linesOfCode": 253,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/context-backup-sprint1-20251010/EditorQuizContext.tsx",
+      "category": "other",
+      "priority": "low",
+      "estimatedErrors": 1,
+      "linesOfCode": 4,
+      "complexityRatio": 0.25,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/context-backup-sprint1-20251010/EditorRuntimeProviders.tsx",
+      "category": "other",
+      "priority": "low",
+      "estimatedErrors": 0,
+      "linesOfCode": 72,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/context-backup-sprint1-20251010/FunnelsContext.tsx",
+      "category": "other",
+      "priority": "low",
+      "estimatedErrors": 9,
+      "linesOfCode": 743,
+      "complexityRatio": 0.01,
+      "difficulty": "medium"
+    },
+    {
+      "path": "src/context-backup-sprint1-20251010/PreviewContext.tsx",
+      "category": "other",
+      "priority": "low",
+      "estimatedErrors": 4,
+      "linesOfCode": 185,
+      "complexityRatio": 0.02,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/context-backup-sprint1-20251010/QuizContext.tsx",
+      "category": "other",
+      "priority": "low",
+      "estimatedErrors": 0,
+      "linesOfCode": 168,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/core/builder/examples.temp.ts",
+      "category": "core",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 1,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/core/editor/DynamicPropertiesPanel-backup.tsx",
+      "category": "core",
+      "priority": "medium",
+      "estimatedErrors": 28,
+      "linesOfCode": 1287,
+      "complexityRatio": 0.02,
+      "difficulty": "hard"
+    },
+    {
+      "path": "src/core/editor/InstantPublishingSystem.tsx",
+      "category": "core",
+      "priority": "medium",
+      "estimatedErrors": 29,
+      "linesOfCode": 591,
+      "complexityRatio": 0.05,
+      "difficulty": "hard"
+    },
+    {
+      "path": "src/core/editor/components/EditorComponents.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 2,
+      "linesOfCode": 636,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/core/editor/components/EditorMetricsDashboard.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 1,
+      "linesOfCode": 389,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/core/editor/components/FunnelEditor.tsx",
+      "category": "components",
+      "priority": "medium",
+      "estimatedErrors": 12,
+      "linesOfCode": 667,
+      "complexityRatio": 0.02,
+      "difficulty": "medium"
+    },
+    {
+      "path": "src/core/editor/examples/EditorExamples.tsx",
+      "category": "core",
+      "priority": "medium",
+      "estimatedErrors": 7,
+      "linesOfCode": 405,
+      "complexityRatio": 0.02,
+      "difficulty": "medium"
+    },
+    {
+      "path": "src/core/editor/examples/EditorMetricsIntegration.tsx",
+      "category": "core",
+      "priority": "medium",
+      "estimatedErrors": 3,
+      "linesOfCode": 262,
+      "complexityRatio": 0.01,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/core/editor/mocks/EditorMocks.ts",
+      "category": "core",
+      "priority": "medium",
+      "estimatedErrors": 5,
+      "linesOfCode": 807,
+      "complexityRatio": 0.01,
+      "difficulty": "medium"
+    },
+    {
+      "path": "src/core/editor/providers/EditorMetricsProvider.ts",
+      "category": "core",
+      "priority": "medium",
+      "estimatedErrors": 1,
+      "linesOfCode": 485,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/core/errors/FunnelErrorHandler.ts",
+      "category": "core",
+      "priority": "medium",
+      "estimatedErrors": 1,
+      "linesOfCode": 537,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/core/errors/FunnelErrorRecovery.ts",
+      "category": "core",
+      "priority": "medium",
+      "estimatedErrors": 2,
+      "linesOfCode": 655,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/core/errors/FunnelErrorUI.tsx",
+      "category": "core",
+      "priority": "medium",
+      "estimatedErrors": 1,
+      "linesOfCode": 578,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/core/migration/QuizTemplateAdapter.ts",
+      "category": "core",
+      "priority": "medium",
+      "estimatedErrors": 10,
+      "linesOfCode": 646,
+      "complexityRatio": 0.02,
+      "difficulty": "medium"
+    },
+    {
+      "path": "src/core/templates/UnifiedTemplateManager.ts",
+      "category": "core",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 10,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/data/caktoquizQuestions.ts",
+      "category": "other",
+      "priority": "low",
+      "estimatedErrors": 1,
+      "linesOfCode": 2,
+      "complexityRatio": 0.5,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/data/funnelStages.ts",
+      "category": "other",
+      "priority": "low",
+      "estimatedErrors": 0,
+      "linesOfCode": 304,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/data/styleQuizResults.ts",
+      "category": "other",
+      "priority": "low",
+      "estimatedErrors": 0,
+      "linesOfCode": 38,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/debug/direct-template-test.ts",
+      "category": "debug",
+      "priority": "low",
+      "estimatedErrors": 3,
+      "linesOfCode": 37,
+      "complexityRatio": 0.08,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/debug/template-debug.ts",
+      "category": "debug",
+      "priority": "low",
+      "estimatedErrors": 3,
+      "linesOfCode": 33,
+      "complexityRatio": 0.09,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/global-suppress.d.ts",
+      "category": "other",
+      "priority": "low",
+      "estimatedErrors": 5,
+      "linesOfCode": 17,
+      "complexityRatio": 0.29,
+      "difficulty": "medium"
+    },
+    {
+      "path": "src/global-typescript-disable.d.ts",
+      "category": "other",
+      "priority": "low",
+      "estimatedErrors": 8,
+      "linesOfCode": 16,
+      "complexityRatio": 0.5,
+      "difficulty": "medium"
+    },
+    {
+      "path": "src/hooks/core/useQuizPageEditor.ts",
+      "category": "hooks",
+      "priority": "high",
+      "estimatedErrors": 4,
+      "linesOfCode": 227,
+      "complexityRatio": 0.02,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/hooks/core/useUnifiedAnalytics.ts",
+      "category": "hooks",
+      "priority": "high",
+      "estimatedErrors": 1,
+      "linesOfCode": 355,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/hooks/core/useUnifiedCollaboration.ts",
+      "category": "hooks",
+      "priority": "high",
+      "estimatedErrors": 1,
+      "linesOfCode": 504,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/hooks/index.ts",
+      "category": "hooks",
+      "priority": "high",
+      "estimatedErrors": 0,
+      "linesOfCode": 87,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/hooks/useAutoLoadTemplates.ts",
+      "category": "hooks",
+      "priority": "high",
+      "estimatedErrors": 0,
+      "linesOfCode": 37,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/hooks/useBrandKit.ts",
+      "category": "hooks",
+      "priority": "high",
+      "estimatedErrors": 0,
+      "linesOfCode": 155,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/hooks/useConsolidatedEditor.ts",
+      "category": "hooks",
+      "priority": "high",
+      "estimatedErrors": 5,
+      "linesOfCode": 132,
+      "complexityRatio": 0.04,
+      "difficulty": "medium"
+    },
+    {
+      "path": "src/hooks/useFunnelNavigation.ts",
+      "category": "hooks",
+      "priority": "high",
+      "estimatedErrors": 5,
+      "linesOfCode": 226,
+      "complexityRatio": 0.02,
+      "difficulty": "medium"
+    },
+    {
+      "path": "src/hooks/useHistoryState.ts",
+      "category": "hooks",
+      "priority": "high",
+      "estimatedErrors": 6,
+      "linesOfCode": 161,
+      "complexityRatio": 0.04,
+      "difficulty": "medium"
+    },
+    {
+      "path": "src/hooks/useHistoryStateIndexedDB.ts",
+      "category": "hooks",
+      "priority": "high",
+      "estimatedErrors": 3,
+      "linesOfCode": 190,
+      "complexityRatio": 0.02,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/hooks/useIntegratedReusableComponents.ts",
+      "category": "hooks",
+      "priority": "high",
+      "estimatedErrors": 2,
+      "linesOfCode": 196,
+      "complexityRatio": 0.01,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/hooks/useOptimizedQuizData.ts",
+      "category": "hooks",
+      "priority": "high",
+      "estimatedErrors": 6,
+      "linesOfCode": 260,
+      "complexityRatio": 0.02,
+      "difficulty": "medium"
+    },
+    {
+      "path": "src/hooks/useOptimizedQuizEngine.ts",
+      "category": "hooks",
+      "priority": "high",
+      "estimatedErrors": 3,
+      "linesOfCode": 276,
+      "complexityRatio": 0.01,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/hooks/usePageConfig.ts",
+      "category": "hooks",
+      "priority": "high",
+      "estimatedErrors": 1,
+      "linesOfCode": 39,
+      "complexityRatio": 0.03,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/hooks/useWhatsAppCartRecovery.ts",
+      "category": "hooks",
+      "priority": "high",
+      "estimatedErrors": 2,
+      "linesOfCode": 290,
+      "complexityRatio": 0.01,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/infrastructure/supabase/repositories/SupabaseFunnelRepository.ts",
+      "category": "infrastructure",
+      "priority": "high",
+      "estimatedErrors": 15,
+      "linesOfCode": 430,
+      "complexityRatio": 0.03,
+      "difficulty": "hard"
+    },
+    {
+      "path": "src/infrastructure/supabase/repositories/SupabaseQuizRepository.ts",
+      "category": "infrastructure",
+      "priority": "high",
+      "estimatedErrors": 5,
+      "linesOfCode": 583,
+      "complexityRatio": 0.01,
+      "difficulty": "medium"
+    },
+    {
+      "path": "src/lib/schema-validation.ts",
+      "category": "other",
+      "priority": "low",
+      "estimatedErrors": 5,
+      "linesOfCode": 95,
+      "complexityRatio": 0.05,
+      "difficulty": "medium"
+    },
+    {
+      "path": "src/optimization/LazyLoadingSystem.tsx",
+      "category": "other",
+      "priority": "low",
+      "estimatedErrors": 0,
+      "linesOfCode": 12,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/optimization/TreeShakingAnalyzer.ts",
+      "category": "other",
+      "priority": "low",
+      "estimatedErrors": 0,
+      "linesOfCode": 11,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/optimization/index.ts",
+      "category": "other",
+      "priority": "low",
+      "estimatedErrors": 0,
+      "linesOfCode": 15,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/pages/admin/AnalyticsPage.tsx",
+      "category": "pages",
+      "priority": "low",
+      "estimatedErrors": 0,
+      "linesOfCode": 234,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/pages/admin/FuncionalidadesIAPage.tsx",
+      "category": "pages",
+      "priority": "low",
+      "estimatedErrors": 0,
+      "linesOfCode": 437,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/pages/admin/FunnelPanelPage.tsx",
+      "category": "pages",
+      "priority": "low",
+      "estimatedErrors": 5,
+      "linesOfCode": 1044,
+      "complexityRatio": 0,
+      "difficulty": "medium"
+    },
+    {
+      "path": "src/pages/admin/FunnelPanelPageWithUnifiedContext.tsx",
+      "category": "pages",
+      "priority": "low",
+      "estimatedErrors": 2,
+      "linesOfCode": 450,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/pages/admin/FunnelPanelPage_fixed.tsx",
+      "category": "pages",
+      "priority": "low",
+      "estimatedErrors": 1,
+      "linesOfCode": 495,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/pages/admin/FunnelPanelPage_unified.tsx",
+      "category": "pages",
+      "priority": "low",
+      "estimatedErrors": 2,
+      "linesOfCode": 434,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/pages/dashboard/AdvancedAnalyticsPage.tsx",
+      "category": "pages",
+      "priority": "low",
+      "estimatedErrors": 0,
+      "linesOfCode": 416,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/pages/dashboard/BackupPage.tsx",
+      "category": "pages",
+      "priority": "low",
+      "estimatedErrors": 0,
+      "linesOfCode": 408,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/pages/dashboard/MonitoringPage.tsx",
+      "category": "pages",
+      "priority": "low",
+      "estimatedErrors": 0,
+      "linesOfCode": 327,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/pages/dashboard/RealTimePage.tsx",
+      "category": "pages",
+      "priority": "low",
+      "estimatedErrors": 0,
+      "linesOfCode": 301,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/pages/editor/ModernUnifiedEditor.tsx",
+      "category": "pages",
+      "priority": "low",
+      "estimatedErrors": 9,
+      "linesOfCode": 110,
+      "complexityRatio": 0.08,
+      "difficulty": "medium"
+    },
+    {
+      "path": "src/pages/examples/EnhancedEditorIntegration.tsx",
+      "category": "pages",
+      "priority": "low",
+      "estimatedErrors": 1,
+      "linesOfCode": 395,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/services/ComponentsService.ts",
+      "category": "services",
+      "priority": "low",
+      "estimatedErrors": 18,
+      "linesOfCode": 341,
+      "complexityRatio": 0.05,
+      "difficulty": "hard"
+    },
+    {
+      "path": "src/services/FunnelAIAgent.ts",
+      "category": "services",
+      "priority": "low",
+      "estimatedErrors": 8,
+      "linesOfCode": 622,
+      "complexityRatio": 0.01,
+      "difficulty": "medium"
+    },
+    {
+      "path": "src/services/FunnelSyncService.ts",
+      "category": "services",
+      "priority": "low",
+      "estimatedErrors": 5,
+      "linesOfCode": 464,
+      "complexityRatio": 0.01,
+      "difficulty": "medium"
+    },
+    {
+      "path": "src/services/HotmartCartAbandonmentDetector.ts",
+      "category": "services",
+      "priority": "low",
+      "estimatedErrors": 9,
+      "linesOfCode": 462,
+      "complexityRatio": 0.02,
+      "difficulty": "medium"
+    },
+    {
+      "path": "src/services/MigrationService.ts",
+      "category": "services",
+      "priority": "low",
+      "estimatedErrors": 2,
+      "linesOfCode": 123,
+      "complexityRatio": 0.02,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/services/QuizPageIntegrationService.ts",
+      "category": "services",
+      "priority": "low",
+      "estimatedErrors": 1,
+      "linesOfCode": 448,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/services/WhatsAppCartRecoveryAgent.ts",
+      "category": "services",
+      "priority": "low",
+      "estimatedErrors": 8,
+      "linesOfCode": 418,
+      "complexityRatio": 0.02,
+      "difficulty": "medium"
+    },
+    {
+      "path": "src/services/__examples__/FunnelStorageExamples.ts",
+      "category": "services",
+      "priority": "low",
+      "estimatedErrors": 23,
+      "linesOfCode": 261,
+      "complexityRatio": 0.09,
+      "difficulty": "hard"
+    },
+    {
+      "path": "src/services/abTestService.ts",
+      "category": "services",
+      "priority": "low",
+      "estimatedErrors": 11,
+      "linesOfCode": 366,
+      "complexityRatio": 0.03,
+      "difficulty": "medium"
+    },
+    {
+      "path": "src/services/core/GlobalStateService.ts",
+      "category": "services",
+      "priority": "critical",
+      "estimatedErrors": 1,
+      "linesOfCode": 200,
+      "complexityRatio": 0.01,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/services/core/MasterLoadingService.ts",
+      "category": "services",
+      "priority": "critical",
+      "estimatedErrors": 5,
+      "linesOfCode": 569,
+      "complexityRatio": 0.01,
+      "difficulty": "medium"
+    },
+    {
+      "path": "src/services/core/UnifiedEditorService.ts",
+      "category": "services",
+      "priority": "critical",
+      "estimatedErrors": 0,
+      "linesOfCode": 219,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/services/core/UnifiedValidationService.ts",
+      "category": "services",
+      "priority": "critical",
+      "estimatedErrors": 0,
+      "linesOfCode": 12,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/services/core/index.ts",
+      "category": "services",
+      "priority": "critical",
+      "estimatedErrors": 11,
+      "linesOfCode": 207,
+      "complexityRatio": 0.05,
+      "difficulty": "medium"
+    },
+    {
+      "path": "src/services/improvedFunnelSystem.ts",
+      "category": "services",
+      "priority": "low",
+      "estimatedErrors": 1,
+      "linesOfCode": 403,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/services/mediaUploadService.ts",
+      "category": "services",
+      "priority": "low",
+      "estimatedErrors": 1,
+      "linesOfCode": 294,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/services/pageConfigService.ts",
+      "category": "services",
+      "priority": "low",
+      "estimatedErrors": 5,
+      "linesOfCode": 271,
+      "complexityRatio": 0.02,
+      "difficulty": "medium"
+    },
+    {
+      "path": "src/services/pageStructureValidator.ts",
+      "category": "services",
+      "priority": "low",
+      "estimatedErrors": 8,
+      "linesOfCode": 198,
+      "complexityRatio": 0.04,
+      "difficulty": "medium"
+    },
+    {
+      "path": "src/services/performanceOptimizer.ts",
+      "category": "services",
+      "priority": "low",
+      "estimatedErrors": 2,
+      "linesOfCode": 513,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/services/quizResultsService.ts",
+      "category": "services",
+      "priority": "low",
+      "estimatedErrors": 25,
+      "linesOfCode": 694,
+      "complexityRatio": 0.04,
+      "difficulty": "hard"
+    },
+    {
+      "path": "src/services/reportService.ts",
+      "category": "services",
+      "priority": "low",
+      "estimatedErrors": 2,
+      "linesOfCode": 583,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/services/templates/index.ts",
+      "category": "services",
+      "priority": "low",
+      "estimatedErrors": 0,
+      "linesOfCode": 9,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/tools/debug/ImageDiagnosticDebugger.tsx",
+      "category": "debug",
+      "priority": "low",
+      "estimatedErrors": 1,
+      "linesOfCode": 418,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/tools/debug/SafeQuizFunnelEditor.tsx",
+      "category": "debug",
+      "priority": "low",
+      "estimatedErrors": 1,
+      "linesOfCode": 46,
+      "complexityRatio": 0.02,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/utils/FunnelStageActivator.ts",
+      "category": "utils",
+      "priority": "medium",
+      "estimatedErrors": 4,
+      "linesOfCode": 306,
+      "complexityRatio": 0.01,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/utils/ImageChecker.ts",
+      "category": "utils",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 100,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/utils/TemplateJsonLoader.ts",
+      "category": "utils",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 162,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/utils/TemplateManager.ts",
+      "category": "utils",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 40,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/utils/abtest.ts",
+      "category": "utils",
+      "priority": "medium",
+      "estimatedErrors": 14,
+      "linesOfCode": 174,
+      "complexityRatio": 0.08,
+      "difficulty": "medium"
+    },
+    {
+      "path": "src/utils/analyticsHelpers.ts",
+      "category": "utils",
+      "priority": "medium",
+      "estimatedErrors": 9,
+      "linesOfCode": 170,
+      "complexityRatio": 0.05,
+      "difficulty": "medium"
+    },
+    {
+      "path": "src/utils/blockCompatibility.ts",
+      "category": "utils",
+      "priority": "medium",
+      "estimatedErrors": 3,
+      "linesOfCode": 67,
+      "complexityRatio": 0.04,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/utils/blockTypeMapping.ts",
+      "category": "utils",
+      "priority": "medium",
+      "estimatedErrors": 2,
+      "linesOfCode": 65,
+      "complexityRatio": 0.03,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/utils/blockUtils.ts",
+      "category": "utils",
+      "priority": "medium",
+      "estimatedErrors": 8,
+      "linesOfCode": 130,
+      "complexityRatio": 0.06,
+      "difficulty": "medium"
+    },
+    {
+      "path": "src/utils/brandDesignSystem.ts",
+      "category": "utils",
+      "priority": "medium",
+      "estimatedErrors": 1,
+      "linesOfCode": 212,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/utils/buildOptimizer.ts",
+      "category": "utils",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 94,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/utils/cleanStorage.ts",
+      "category": "utils",
+      "priority": "medium",
+      "estimatedErrors": 2,
+      "linesOfCode": 113,
+      "complexityRatio": 0.02,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/utils/componentCreator.ts",
+      "category": "utils",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 31,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/utils/config/headerDefaults.ts",
+      "category": "utils",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 14,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/utils/config/offerDefaults.ts",
+      "category": "utils",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 85,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/utils/config/styleDescriptions.ts",
+      "category": "utils",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 22,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/utils/config/styleImages.ts",
+      "category": "utils",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 20,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/utils/consoleManager.ts",
+      "category": "utils",
+      "priority": "medium",
+      "estimatedErrors": 10,
+      "linesOfCode": 152,
+      "complexityRatio": 0.07,
+      "difficulty": "medium"
+    },
+    {
+      "path": "src/utils/critical-css.ts",
+      "category": "utils",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 144,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/utils/dynamicIconImport.tsx",
+      "category": "utils",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 24,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/utils/enhancedFixBlurryImages.ts",
+      "category": "utils",
+      "priority": "medium",
+      "estimatedErrors": 2,
+      "linesOfCode": 91,
+      "complexityRatio": 0.02,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/utils/exportUtils.ts",
+      "category": "utils",
+      "priority": "medium",
+      "estimatedErrors": 2,
+      "linesOfCode": 29,
+      "complexityRatio": 0.07,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/utils/facebookPixel.ts",
+      "category": "utils",
+      "priority": "medium",
+      "estimatedErrors": 6,
+      "linesOfCode": 131,
+      "complexityRatio": 0.05,
+      "difficulty": "medium"
+    },
+    {
+      "path": "src/utils/facebookPixelDynamic.ts",
+      "category": "utils",
+      "priority": "medium",
+      "estimatedErrors": 5,
+      "linesOfCode": 77,
+      "complexityRatio": 0.06,
+      "difficulty": "medium"
+    },
+    {
+      "path": "src/utils/fixBlurryIntroQuizImages.ts",
+      "category": "utils",
+      "priority": "medium",
+      "estimatedErrors": 2,
+      "linesOfCode": 146,
+      "complexityRatio": 0.01,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/utils/fixMainRoutes.ts",
+      "category": "utils",
+      "priority": "medium",
+      "estimatedErrors": 1,
+      "linesOfCode": 11,
+      "complexityRatio": 0.09,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/utils/funnelMonitor.ts",
+      "category": "utils",
+      "priority": "medium",
+      "estimatedErrors": 1,
+      "linesOfCode": 22,
+      "complexityRatio": 0.05,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/utils/hotmartIntegration.ts",
+      "category": "utils",
+      "priority": "medium",
+      "estimatedErrors": 5,
+      "linesOfCode": 78,
+      "complexityRatio": 0.06,
+      "difficulty": "medium"
+    },
+    {
+      "path": "src/utils/hotmartWebhook.ts",
+      "category": "utils",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 354,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/utils/hotmartWebhookSimulator.ts",
+      "category": "utils",
+      "priority": "medium",
+      "estimatedErrors": 3,
+      "linesOfCode": 97,
+      "complexityRatio": 0.03,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/utils/iconMap.tsx",
+      "category": "utils",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 72,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/utils/imageManager.ts",
+      "category": "utils",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 226,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/utils/imageOptimizer/getLowQualityPlaceholder.ts",
+      "category": "utils",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 20,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/utils/imageOptimizer/getOptimizedImageUrl.ts",
+      "category": "utils",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 53,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/utils/imageUtils.ts",
+      "category": "utils",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 209,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/utils/images/blurry-image-fixer.ts",
+      "category": "utils",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 110,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/utils/images/caching.ts",
+      "category": "utils",
+      "priority": "medium",
+      "estimatedErrors": 1,
+      "linesOfCode": 78,
+      "complexityRatio": 0.01,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/utils/images/diagnostic.ts",
+      "category": "utils",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 157,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/utils/images/optimization-enhanced.ts",
+      "category": "utils",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 111,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/utils/images/optimization.ts",
+      "category": "utils",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 109,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/utils/images/preload-critical.ts",
+      "category": "utils",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 96,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/utils/images/preloading.ts",
+      "category": "utils",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 269,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/utils/images/types.ts",
+      "category": "utils",
+      "priority": "medium",
+      "estimatedErrors": 1,
+      "linesOfCode": 101,
+      "complexityRatio": 0.01,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/utils/inlineComponentUtils.ts",
+      "category": "utils",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 41,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/utils/inlineImageUtils.ts",
+      "category": "utils",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 72,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/utils/lazyRoutes.ts",
+      "category": "utils",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 25,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/utils/marginUtils.ts",
+      "category": "utils",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 58,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/utils/massFixBuildErrors.ts",
+      "category": "utils",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 14,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/utils/memoryLeakPrevention.ts",
+      "category": "utils",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 156,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/utils/mockResultData.ts",
+      "category": "utils",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 36,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/utils/performance/AdvancedMemoization.ts",
+      "category": "utils",
+      "priority": "medium",
+      "estimatedErrors": 12,
+      "linesOfCode": 343,
+      "complexityRatio": 0.03,
+      "difficulty": "medium"
+    },
+    {
+      "path": "src/utils/performance/LazyLoadingSystem.tsx",
+      "category": "utils",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 298,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/utils/performance/PerformanceDashboard.tsx",
+      "category": "utils",
+      "priority": "medium",
+      "estimatedErrors": 8,
+      "linesOfCode": 275,
+      "complexityRatio": 0.03,
+      "difficulty": "medium"
+    },
+    {
+      "path": "src/utils/performanceAnalyzer.ts",
+      "category": "utils",
+      "priority": "medium",
+      "estimatedErrors": 9,
+      "linesOfCode": 213,
+      "complexityRatio": 0.04,
+      "difficulty": "medium"
+    },
+    {
+      "path": "src/utils/performanceManager.ts",
+      "category": "utils",
+      "priority": "medium",
+      "estimatedErrors": 4,
+      "linesOfCode": 148,
+      "complexityRatio": 0.03,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/utils/performanceMonitoring.ts",
+      "category": "utils",
+      "priority": "medium",
+      "estimatedErrors": 5,
+      "linesOfCode": 257,
+      "complexityRatio": 0.02,
+      "difficulty": "medium"
+    },
+    {
+      "path": "src/utils/performanceOptimizations.ts",
+      "category": "utils",
+      "priority": "medium",
+      "estimatedErrors": 6,
+      "linesOfCode": 169,
+      "complexityRatio": 0.04,
+      "difficulty": "medium"
+    },
+    {
+      "path": "src/utils/performanceOptimizer.ts",
+      "category": "utils",
+      "priority": "medium",
+      "estimatedErrors": 14,
+      "linesOfCode": 328,
+      "complexityRatio": 0.04,
+      "difficulty": "medium"
+    },
+    {
+      "path": "src/utils/placeholderUtils.ts",
+      "category": "utils",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 52,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/utils/projectCleanup.ts",
+      "category": "utils",
+      "priority": "medium",
+      "estimatedErrors": 2,
+      "linesOfCode": 48,
+      "complexityRatio": 0.04,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/utils/quickBuildFix.ts",
+      "category": "utils",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 19,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/utils/quiz21EtapasLoader.ts",
+      "category": "utils",
+      "priority": "medium",
+      "estimatedErrors": 1,
+      "linesOfCode": 23,
+      "complexityRatio": 0.04,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/utils/resultPageDefaults.ts",
+      "category": "utils",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 189,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/utils/route-checker.ts",
+      "category": "utils",
+      "priority": "medium",
+      "estimatedErrors": 1,
+      "linesOfCode": 127,
+      "complexityRatio": 0.01,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/utils/routeChecker.ts",
+      "category": "utils",
+      "priority": "medium",
+      "estimatedErrors": 4,
+      "linesOfCode": 87,
+      "complexityRatio": 0.05,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/utils/saveDiagnostic.ts",
+      "category": "utils",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 14,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/utils/semanticIdGenerator.ts",
+      "category": "utils",
+      "priority": "medium",
+      "estimatedErrors": 13,
+      "linesOfCode": 250,
+      "complexityRatio": 0.05,
+      "difficulty": "medium"
+    },
+    {
+      "path": "src/utils/semanticIdMigration.ts",
+      "category": "utils",
+      "priority": "medium",
+      "estimatedErrors": 19,
+      "linesOfCode": 296,
+      "complexityRatio": 0.06,
+      "difficulty": "hard"
+    },
+    {
+      "path": "src/utils/siteHealthCheck.ts",
+      "category": "utils",
+      "priority": "medium",
+      "estimatedErrors": 2,
+      "linesOfCode": 57,
+      "complexityRatio": 0.04,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/utils/storage/IntegrationGuide.tsx",
+      "category": "utils",
+      "priority": "medium",
+      "estimatedErrors": 4,
+      "linesOfCode": 351,
+      "complexityRatio": 0.01,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/utils/storage/StorageMigrationService.ts",
+      "category": "utils",
+      "priority": "medium",
+      "estimatedErrors": 14,
+      "linesOfCode": 502,
+      "complexityRatio": 0.03,
+      "difficulty": "medium"
+    },
+    {
+      "path": "src/utils/storage/StorageSyncService.ts",
+      "category": "utils",
+      "priority": "medium",
+      "estimatedErrors": 10,
+      "linesOfCode": 454,
+      "complexityRatio": 0.02,
+      "difficulty": "medium"
+    },
+    {
+      "path": "src/utils/storage/StorageVersionManager.ts",
+      "category": "utils",
+      "priority": "medium",
+      "estimatedErrors": 6,
+      "linesOfCode": 481,
+      "complexityRatio": 0.01,
+      "difficulty": "medium"
+    },
+    {
+      "path": "src/utils/styleCalculation.ts",
+      "category": "utils",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 166,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/utils/styleUtils.ts",
+      "category": "utils",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 122,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/utils/testCRUDOperations.ts",
+      "category": "utils",
+      "priority": "medium",
+      "estimatedErrors": 3,
+      "linesOfCode": 73,
+      "complexityRatio": 0.04,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/utils/textHighlight.ts",
+      "category": "utils",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 75,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/utils/transformationImageUtils.ts",
+      "category": "utils",
+      "priority": "medium",
+      "estimatedErrors": 1,
+      "linesOfCode": 76,
+      "complexityRatio": 0.01,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/utils/validateDataSync.ts",
+      "category": "utils",
+      "priority": "medium",
+      "estimatedErrors": 2,
+      "linesOfCode": 88,
+      "complexityRatio": 0.02,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/utils/version.ts",
+      "category": "utils",
+      "priority": "medium",
+      "estimatedErrors": 0,
+      "linesOfCode": 14,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    }
+  ],
+  "candidates": [
+    {
+      "path": "src/hooks/index.ts",
+      "category": "hooks",
+      "priority": "high",
+      "estimatedErrors": 0,
+      "linesOfCode": 87,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/hooks/useAutoLoadTemplates.ts",
+      "category": "hooks",
+      "priority": "high",
+      "estimatedErrors": 0,
+      "linesOfCode": 37,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/hooks/useBrandKit.ts",
+      "category": "hooks",
+      "priority": "high",
+      "estimatedErrors": 0,
+      "linesOfCode": 155,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/services/core/UnifiedEditorService.ts",
+      "category": "services",
+      "priority": "critical",
+      "estimatedErrors": 0,
+      "linesOfCode": 219,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/services/core/UnifiedValidationService.ts",
+      "category": "services",
+      "priority": "critical",
+      "estimatedErrors": 0,
+      "linesOfCode": 12,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/hooks/core/useUnifiedAnalytics.ts",
+      "category": "hooks",
+      "priority": "high",
+      "estimatedErrors": 1,
+      "linesOfCode": 355,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/hooks/core/useUnifiedCollaboration.ts",
+      "category": "hooks",
+      "priority": "high",
+      "estimatedErrors": 1,
+      "linesOfCode": 504,
+      "complexityRatio": 0,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/hooks/usePageConfig.ts",
+      "category": "hooks",
+      "priority": "high",
+      "estimatedErrors": 1,
+      "linesOfCode": 39,
+      "complexityRatio": 0.03,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/services/core/GlobalStateService.ts",
+      "category": "services",
+      "priority": "critical",
+      "estimatedErrors": 1,
+      "linesOfCode": 200,
+      "complexityRatio": 0.01,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/hooks/useIntegratedReusableComponents.ts",
+      "category": "hooks",
+      "priority": "high",
+      "estimatedErrors": 2,
+      "linesOfCode": 196,
+      "complexityRatio": 0.01,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/hooks/useWhatsAppCartRecovery.ts",
+      "category": "hooks",
+      "priority": "high",
+      "estimatedErrors": 2,
+      "linesOfCode": 290,
+      "complexityRatio": 0.01,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/hooks/useHistoryStateIndexedDB.ts",
+      "category": "hooks",
+      "priority": "high",
+      "estimatedErrors": 3,
+      "linesOfCode": 190,
+      "complexityRatio": 0.02,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/hooks/useOptimizedQuizEngine.ts",
+      "category": "hooks",
+      "priority": "high",
+      "estimatedErrors": 3,
+      "linesOfCode": 276,
+      "complexityRatio": 0.01,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/application/services/EditorService.ts",
+      "category": "services",
+      "priority": "critical",
+      "estimatedErrors": 4,
+      "linesOfCode": 141,
+      "complexityRatio": 0.03,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/components/editor/hooks/useBlockHandlers.ts",
+      "category": "hooks",
+      "priority": "high",
+      "estimatedErrors": 4,
+      "linesOfCode": 211,
+      "complexityRatio": 0.02,
+      "difficulty": "easy"
+    },
+    {
+      "path": "src/hooks/core/useQuizPageEditor.ts",
+      "category": "hooks",
+      "priority": "high",
+      "estimatedErrors": 4,
+      "linesOfCode": 227,
+      "complexityRatio": 0.02,
+      "difficulty": "easy"
+    }
+  ],
+  "actionPlan": [
+    {
+      "phase": "Fase 1: Quick Wins",
+      "target": "Arquivos fáceis + alta prioridade",
+      "files": [
+        {
+          "path": "src/hooks/index.ts",
+          "category": "hooks",
+          "priority": "high",
+          "estimatedErrors": 0,
+          "linesOfCode": 87,
+          "complexityRatio": 0,
+          "difficulty": "easy"
+        },
+        {
+          "path": "src/hooks/useAutoLoadTemplates.ts",
+          "category": "hooks",
+          "priority": "high",
+          "estimatedErrors": 0,
+          "linesOfCode": 37,
+          "complexityRatio": 0,
+          "difficulty": "easy"
+        },
+        {
+          "path": "src/hooks/useBrandKit.ts",
+          "category": "hooks",
+          "priority": "high",
+          "estimatedErrors": 0,
+          "linesOfCode": 155,
+          "complexityRatio": 0,
+          "difficulty": "easy"
+        },
+        {
+          "path": "src/services/core/UnifiedEditorService.ts",
+          "category": "services",
+          "priority": "critical",
+          "estimatedErrors": 0,
+          "linesOfCode": 219,
+          "complexityRatio": 0,
+          "difficulty": "easy"
+        },
+        {
+          "path": "src/services/core/UnifiedValidationService.ts",
+          "category": "services",
+          "priority": "critical",
+          "estimatedErrors": 0,
+          "linesOfCode": 12,
+          "complexityRatio": 0,
+          "difficulty": "easy"
+        },
+        {
+          "path": "src/hooks/core/useUnifiedAnalytics.ts",
+          "category": "hooks",
+          "priority": "high",
+          "estimatedErrors": 1,
+          "linesOfCode": 355,
+          "complexityRatio": 0,
+          "difficulty": "easy"
+        },
+        {
+          "path": "src/hooks/core/useUnifiedCollaboration.ts",
+          "category": "hooks",
+          "priority": "high",
+          "estimatedErrors": 1,
+          "linesOfCode": 504,
+          "complexityRatio": 0,
+          "difficulty": "easy"
+        },
+        {
+          "path": "src/hooks/usePageConfig.ts",
+          "category": "hooks",
+          "priority": "high",
+          "estimatedErrors": 1,
+          "linesOfCode": 39,
+          "complexityRatio": 0.03,
+          "difficulty": "easy"
+        },
+        {
+          "path": "src/services/core/GlobalStateService.ts",
+          "category": "services",
+          "priority": "critical",
+          "estimatedErrors": 1,
+          "linesOfCode": 200,
+          "complexityRatio": 0.01,
+          "difficulty": "easy"
+        },
+        {
+          "path": "src/hooks/useIntegratedReusableComponents.ts",
+          "category": "hooks",
+          "priority": "high",
+          "estimatedErrors": 2,
+          "linesOfCode": 196,
+          "complexityRatio": 0.01,
+          "difficulty": "easy"
+        }
+      ],
+      "estimatedTime": "1-2h",
+      "impact": "ALTO"
+    },
+    {
+      "phase": "Fase 2: Critical Files",
+      "target": "Contexts e Services críticos restantes",
+      "files": [
+        {
+          "path": "src/application/services/FunnelService.ts",
+          "category": "services",
+          "priority": "critical",
+          "estimatedErrors": 8,
+          "linesOfCode": 148,
+          "complexityRatio": 0.05,
+          "difficulty": "medium"
+        },
+        {
+          "path": "src/application/services/QuizService.ts",
+          "category": "services",
+          "priority": "critical",
+          "estimatedErrors": 7,
+          "linesOfCode": 140,
+          "complexityRatio": 0.05,
+          "difficulty": "medium"
+        },
+        {
+          "path": "src/services/core/MasterLoadingService.ts",
+          "category": "services",
+          "priority": "critical",
+          "estimatedErrors": 5,
+          "linesOfCode": 569,
+          "complexityRatio": 0.01,
+          "difficulty": "medium"
+        },
+        {
+          "path": "src/services/core/index.ts",
+          "category": "services",
+          "priority": "critical",
+          "estimatedErrors": 11,
+          "linesOfCode": 207,
+          "complexityRatio": 0.05,
+          "difficulty": "medium"
+        }
+      ],
+      "estimatedTime": "2-3h",
+      "impact": "ALTO"
+    },
+    {
+      "phase": "Fase 3: High Priority",
+      "target": "Hooks e API principais",
+      "files": [
+        {
+          "path": "src/components/editor/hooks/useBlockHandlers.ts",
+          "category": "hooks",
+          "priority": "high",
+          "estimatedErrors": 4,
+          "linesOfCode": 211,
+          "complexityRatio": 0.02,
+          "difficulty": "easy"
+        },
+        {
+          "path": "src/hooks/core/useQuizPageEditor.ts",
+          "category": "hooks",
+          "priority": "high",
+          "estimatedErrors": 4,
+          "linesOfCode": 227,
+          "complexityRatio": 0.02,
+          "difficulty": "easy"
+        },
+        {
+          "path": "src/hooks/core/useUnifiedAnalytics.ts",
+          "category": "hooks",
+          "priority": "high",
+          "estimatedErrors": 1,
+          "linesOfCode": 355,
+          "complexityRatio": 0,
+          "difficulty": "easy"
+        },
+        {
+          "path": "src/hooks/core/useUnifiedCollaboration.ts",
+          "category": "hooks",
+          "priority": "high",
+          "estimatedErrors": 1,
+          "linesOfCode": 504,
+          "complexityRatio": 0,
+          "difficulty": "easy"
+        },
+        {
+          "path": "src/hooks/index.ts",
+          "category": "hooks",
+          "priority": "high",
+          "estimatedErrors": 0,
+          "linesOfCode": 87,
+          "complexityRatio": 0,
+          "difficulty": "easy"
+        },
+        {
+          "path": "src/hooks/useAutoLoadTemplates.ts",
+          "category": "hooks",
+          "priority": "high",
+          "estimatedErrors": 0,
+          "linesOfCode": 37,
+          "complexityRatio": 0,
+          "difficulty": "easy"
+        },
+        {
+          "path": "src/hooks/useBrandKit.ts",
+          "category": "hooks",
+          "priority": "high",
+          "estimatedErrors": 0,
+          "linesOfCode": 155,
+          "complexityRatio": 0,
+          "difficulty": "easy"
+        },
+        {
+          "path": "src/hooks/useHistoryStateIndexedDB.ts",
+          "category": "hooks",
+          "priority": "high",
+          "estimatedErrors": 3,
+          "linesOfCode": 190,
+          "complexityRatio": 0.02,
+          "difficulty": "easy"
+        },
+        {
+          "path": "src/hooks/useIntegratedReusableComponents.ts",
+          "category": "hooks",
+          "priority": "high",
+          "estimatedErrors": 2,
+          "linesOfCode": 196,
+          "complexityRatio": 0.01,
+          "difficulty": "easy"
+        },
+        {
+          "path": "src/hooks/useOptimizedQuizEngine.ts",
+          "category": "hooks",
+          "priority": "high",
+          "estimatedErrors": 3,
+          "linesOfCode": 276,
+          "complexityRatio": 0.01,
+          "difficulty": "easy"
+        },
+        {
+          "path": "src/hooks/usePageConfig.ts",
+          "category": "hooks",
+          "priority": "high",
+          "estimatedErrors": 1,
+          "linesOfCode": 39,
+          "complexityRatio": 0.03,
+          "difficulty": "easy"
+        },
+        {
+          "path": "src/hooks/useWhatsAppCartRecovery.ts",
+          "category": "hooks",
+          "priority": "high",
+          "estimatedErrors": 2,
+          "linesOfCode": 290,
+          "complexityRatio": 0.01,
+          "difficulty": "easy"
+        }
+      ],
+      "estimatedTime": "1-2h",
+      "impact": "MÉDIO"
+    },
+    {
+      "phase": "Fase 4: Medium Priority",
+      "target": "Components e Utils",
+      "files": [
+        {
+          "path": "src/components/QuizPageUser.tsx",
+          "category": "components",
+          "priority": "medium",
+          "estimatedErrors": 0,
+          "linesOfCode": 35,
+          "complexityRatio": 0,
+          "difficulty": "easy"
+        },
+        {
+          "path": "src/components/QuizQuestion.tsx",
+          "category": "components",
+          "priority": "medium",
+          "estimatedErrors": 3,
+          "linesOfCode": 46,
+          "complexityRatio": 0.07,
+          "difficulty": "easy"
+        },
+        {
+          "path": "src/components/admin/AdminLogin.tsx",
+          "category": "components",
+          "priority": "medium",
+          "estimatedErrors": 0,
+          "linesOfCode": 103,
+          "complexityRatio": 0,
+          "difficulty": "easy"
+        },
+        {
+          "path": "src/components/admin/QuizCalculationConfigurator.tsx",
+          "category": "components",
+          "priority": "medium",
+          "estimatedErrors": 0,
+          "linesOfCode": 12,
+          "complexityRatio": 0,
+          "difficulty": "easy"
+        },
+        {
+          "path": "src/components/admin/StepConfigurationPanel.tsx",
+          "category": "components",
+          "priority": "medium",
+          "estimatedErrors": 0,
+          "linesOfCode": 452,
+          "complexityRatio": 0,
+          "difficulty": "easy"
+        },
+        {
+          "path": "src/components/ai/OptimizedAIFeatures.tsx",
+          "category": "components",
+          "priority": "medium",
+          "estimatedErrors": 2,
+          "linesOfCode": 153,
+          "complexityRatio": 0.01,
+          "difficulty": "easy"
+        },
+        {
+          "path": "src/components/analytics/ABTestAlerts.tsx",
+          "category": "components",
+          "priority": "medium",
+          "estimatedErrors": 1,
+          "linesOfCode": 482,
+          "complexityRatio": 0,
+          "difficulty": "easy"
+        },
+        {
+          "path": "src/components/analytics/ABTestAlerts_new.tsx",
+          "category": "components",
+          "priority": "medium",
+          "estimatedErrors": 1,
+          "linesOfCode": 482,
+          "complexityRatio": 0,
+          "difficulty": "easy"
+        },
+        {
+          "path": "src/components/analytics/ABTestComparison.tsx",
+          "category": "components",
+          "priority": "medium",
+          "estimatedErrors": 1,
+          "linesOfCode": 828,
+          "complexityRatio": 0,
+          "difficulty": "easy"
+        },
+        {
+          "path": "src/components/analytics/CreativeAnalyticsDashboardNew.tsx",
+          "category": "components",
+          "priority": "medium",
+          "estimatedErrors": 1,
+          "linesOfCode": 591,
+          "complexityRatio": 0,
+          "difficulty": "easy"
+        },
+        {
+          "path": "src/components/analytics/CreativePerformanceDashboard.tsx",
+          "category": "components",
+          "priority": "medium",
+          "estimatedErrors": 0,
+          "linesOfCode": 297,
+          "complexityRatio": 0,
+          "difficulty": "easy"
+        },
+        {
+          "path": "src/components/analytics/MetricCard.tsx",
+          "category": "components",
+          "priority": "medium",
+          "estimatedErrors": 0,
+          "linesOfCode": 144,
+          "complexityRatio": 0,
+          "difficulty": "easy"
+        },
+        {
+          "path": "src/components/analytics/MetricsGrid.tsx",
+          "category": "components",
+          "priority": "medium",
+          "estimatedErrors": 0,
+          "linesOfCode": 105,
+          "complexityRatio": 0,
+          "difficulty": "easy"
+        },
+        {
+          "path": "src/components/analytics/tabs/FunnelTab.tsx",
+          "category": "components",
+          "priority": "medium",
+          "estimatedErrors": 3,
+          "linesOfCode": 218,
+          "complexityRatio": 0.01,
+          "difficulty": "easy"
+        },
+        {
+          "path": "src/components/analytics/tabs/ProgressTab.tsx",
+          "category": "components",
+          "priority": "medium",
+          "estimatedErrors": 2,
+          "linesOfCode": 240,
+          "complexityRatio": 0.01,
+          "difficulty": "easy"
+        }
+      ],
+      "estimatedTime": "1-2h",
+      "impact": "MÉDIO"
+    }
+  ]
+}

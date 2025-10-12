@@ -18,15 +18,15 @@ export interface AnalyticsState {
   collaborationMetrics: Metric[];
   versioningMetrics: Metric[];
   usageMetrics: Metric[];
-  
+
   // Eventos
   events: AnalyticsEvent[];
   recentEvents: AnalyticsEvent[];
-  
+
   // Alertas
   alerts: Alert[];
   activeAlerts: Alert[];
-  
+
   // Estados
   isLoading: boolean;
   lastUpdate: Date | null;
@@ -37,17 +37,17 @@ export interface AnalyticsActions {
   // Métricas
   recordMetric: (name: string, value: number, unit: string, category: Metric['category'], tags?: Record<string, string>) => Promise<void>;
   recordEvent: (type: string, properties?: Record<string, any>) => Promise<void>;
-  
+
   // Coleta de dados
   collectPerformanceMetrics: () => Promise<void>;
   collectCollaborationMetrics: () => Promise<void>;
   collectVersioningMetrics: () => Promise<void>;
   collectUsageMetrics: () => Promise<void>;
-  
+
   // Alertas
   createAlert: (type: Alert['type'], severity: Alert['severity'], title: string, message: string, threshold: number, currentValue: number) => Promise<void>;
   resolveAlert: (alertId: string) => Promise<void>;
-  
+
   // Utilitários
   refresh: () => Promise<void>;
   exportData: (format: 'json' | 'csv') => Promise<void>;
@@ -60,7 +60,7 @@ export function useUnifiedAnalytics(
   funnelId: string,
   userId: string
 ): AnalyticsState & AnalyticsActions {
-  
+
   const [state, setState] = useState<AnalyticsState>({
     performanceMetrics: [],
     collaborationMetrics: [],
@@ -99,16 +99,16 @@ export function useUnifiedAnalytics(
   const initializeAnalytics = async () => {
     try {
       setState(prev => ({ ...prev, isLoading: true, error: null }));
-      
+
       await refresh();
-      
+
       setState(prev => ({ ...prev, isLoading: false }));
     } catch (error) {
       console.error('❌ Erro ao inicializar analytics:', error);
-      setState(prev => ({ 
-        ...prev, 
-        isLoading: false, 
-        error: error instanceof Error ? error.message : 'Erro desconhecido' 
+      setState(prev => ({
+        ...prev,
+        isLoading: false,
+        error: error instanceof Error ? error.message : 'Erro desconhecido'
       }));
     }
   };
@@ -125,7 +125,7 @@ export function useUnifiedAnalytics(
   ): Promise<void> => {
     try {
       const metric = await analyticsService.recordMetric(name, value, unit, category, tags);
-      
+
       setState(prev => {
         const categoryMetrics = prev[`${category}Metrics` as keyof AnalyticsState] as Metric[];
         return {
@@ -148,7 +148,7 @@ export function useUnifiedAnalytics(
   ): Promise<void> => {
     try {
       const event = await analyticsService.recordEvent(type, userId, funnelId, properties);
-      
+
       setState(prev => ({
         ...prev,
         events: [...prev.events, event],
@@ -166,14 +166,14 @@ export function useUnifiedAnalytics(
   const collectPerformanceMetrics = useCallback(async (): Promise<void> => {
     try {
       const metrics = await analyticsService.collectPerformanceMetrics();
-      
+
       // Registrar métricas individuais
       for (const [key, value] of Object.entries(metrics)) {
         await recordMetric(
           key,
           value,
-          key.includes('Time') || key.includes('Latency') ? 'ms' : 
-          key.includes('Usage') || key.includes('Rate') ? '%' : 'count',
+          key.includes('Time') || key.includes('Latency') ? 'ms' :
+            key.includes('Usage') || key.includes('Rate') ? '%' : 'count',
           'performance',
           { source: 'system' }
         );
@@ -189,7 +189,7 @@ export function useUnifiedAnalytics(
   const collectCollaborationMetrics = useCallback(async (): Promise<void> => {
     try {
       const metrics = await analyticsService.collectCollaborationMetrics(funnelId);
-      
+
       // Registrar métricas individuais
       for (const [key, value] of Object.entries(metrics)) {
         await recordMetric(
@@ -211,7 +211,7 @@ export function useUnifiedAnalytics(
   const collectVersioningMetrics = useCallback(async (): Promise<void> => {
     try {
       const metrics = await analyticsService.collectVersioningMetrics(funnelId);
-      
+
       // Registrar métricas individuais
       for (const [key, value] of Object.entries(metrics)) {
         await recordMetric(
@@ -233,7 +233,7 @@ export function useUnifiedAnalytics(
   const collectUsageMetrics = useCallback(async (): Promise<void> => {
     try {
       const metrics = await analyticsService.collectUsageMetrics();
-      
+
       // Registrar métricas individuais
       for (const [key, value] of Object.entries(metrics)) {
         if (typeof value === 'number') {
@@ -264,7 +264,7 @@ export function useUnifiedAnalytics(
   ): Promise<void> => {
     try {
       const alert = await analyticsService.createAlert(type, severity, title, message, threshold, currentValue);
-      
+
       setState(prev => ({
         ...prev,
         alerts: [...prev.alerts, alert],
@@ -283,8 +283,8 @@ export function useUnifiedAnalytics(
     try {
       setState(prev => ({
         ...prev,
-        alerts: prev.alerts.map(alert => 
-          alert.id === alertId 
+        alerts: prev.alerts.map(alert =>
+          alert.id === alertId
             ? { ...alert, resolved: true, resolvedAt: new Date(), resolvedBy: userId }
             : alert
         ),
@@ -333,10 +333,10 @@ export function useUnifiedAnalytics(
       }));
     } catch (error) {
       console.error('❌ Erro ao atualizar analytics:', error);
-      setState(prev => ({ 
-        ...prev, 
-        isLoading: false, 
-        error: error instanceof Error ? error.message : 'Erro desconhecido' 
+      setState(prev => ({
+        ...prev,
+        isLoading: false,
+        error: error instanceof Error ? error.message : 'Erro desconhecido'
       }));
     }
   }, []);

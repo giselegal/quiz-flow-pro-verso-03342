@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * 🎯 UNIFIED VALIDATION SERVICE - SERVIÇO UNIFICADO DE VALIDAÇÃO
  * 
@@ -8,7 +7,7 @@
 export const getUnifiedValidationService = () => ({
   validateBlock: () => ({ isValid: true, errors: [] }),
   validateFunnel: () => ({ isValid: true, errors: [] }),
-  cleanup: () => {},
+  cleanup: () => { },
   getStats: () => ({})
 });
 

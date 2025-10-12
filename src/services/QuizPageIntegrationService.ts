@@ -410,8 +410,8 @@ export class QuizPageIntegrationService {
   async getAllQuizFunnels(): Promise<QuizPageFunnel[]> {
     try {
       const allFunnels = await unifiedCRUDService.getAllFunnels();
-      const quizFunnels = allFunnels.filter(funnel => 
-        funnel.type === 'quiz' || 
+      const quizFunnels = allFunnels.filter(funnel =>
+        funnel.type === 'quiz' ||
         funnel.id.includes('quiz') ||
         funnel.name.toLowerCase().includes('quiz')
       );
