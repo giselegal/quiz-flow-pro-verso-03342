@@ -35,10 +35,10 @@
 
 ### Categoria 1: Hooks Simples (12 arquivos) - PRIORIDADE MÁXIMA
 1. ⏳ src/hooks/index.ts
-2. ⚠️ src/hooks/useAutoLoadTemplates.ts (requereu @ts-nocheck - deps Editor)
-3. ⚠️ src/hooks/useBrandKit.ts (requereu @ts-nocheck - useUnifiedCRUDOptional)
-4. ⚠️ src/hooks/useConsolidatedEditor.ts (requereu @ts-nocheck - EditorContext)
-5. ⚠️ src/hooks/useFunnelNavigation.ts (requereu @ts-nocheck - useUnifiedCRUDOptional)
+2. ⚠️ src/hooks/useAutoLoadTemplates.ts (requer refactor - API incompatível)
+3. ✅ src/hooks/useBrandKit.ts
+4. ✅ src/hooks/useConsolidatedEditor.ts
+5. ✅ src/hooks/useFunnelNavigation.ts
 6. ⏳ src/hooks/useHistoryState.ts
 7. ⏳ src/hooks/useHistoryStateIndexedDB.ts
 8. ⏳ src/hooks/useIntegratedReusableComponents.ts
@@ -87,11 +87,11 @@
 
 | Categoria | Total | Corrigidos | % |
 |-----------|-------|------------|---|
-| Hooks Simples | 12 | 1 | 8% |
+| Hooks Simples | 12 | 4 | 33% |
 | Hooks Core | 3 | 0 | 0% |
 | Serviços | 15 | 0 | 0% |
 | Utils | 10 | 0 | 0% |
-| **TOTAL** | **40** | **1** | **2.5%** |
+| **TOTAL** | **40** | **4** | **10%** |
 
 ---
 

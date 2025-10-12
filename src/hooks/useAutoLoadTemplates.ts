@@ -8,7 +8,8 @@ import { useEffect } from 'react';
  * quando o usuário navega entre as etapas no editor
  */
 export const useAutoLoadTemplates = () => {
-  const { activeStageId } = useEditor();
+  const editor = useEditor();
+  const activeStageId = editor?.stages?.[0]?.id || 'step-1';
   const { getTemplateBlocks, currentFunnelId } = useFunnels();
 
   useEffect(() => {

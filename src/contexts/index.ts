@@ -12,6 +12,8 @@ export { AuthProvider, useAuth } from './auth/AuthContext';
 
 // ✏️ EDITOR
 export { EditorProvider, useEditor } from './editor/EditorContext';
+export { EditorContext } from './editor/EditorContext';
+export { MigrationEditorProvider, useUnifiedEditor } from '../components/editor/EditorProviderMigrationAdapter';
 // EditorDndContext.tsx está vazio - removido
 export { EditorQuizProvider, useEditorQuiz } from './editor/EditorQuizContext';
 export { EditorRuntimeProviders } from './editor/EditorRuntimeProviders';

@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * Consolidated Editor Hook - Replaces useEditor conflicts
  *
@@ -11,8 +10,8 @@
  */
 
 import { useContext } from 'react';
-import { EditorContext } from '../context/EditorContext';
-import { Block, BlockType } from '../types/editor';
+import { EditorContext } from '@/contexts';
+import { Block, BlockType } from '@/types/editor';
 
 // Compatibility interface for legacy useEditor consumers
 export interface LegacyEditorConfig {
