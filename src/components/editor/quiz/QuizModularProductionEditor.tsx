@@ -417,7 +417,9 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                         setSteps(initial);
                         setSelectedStepId(initial[0]?.id || '');
                         setFunnelId(funnelParam || `funnel-${templateId}-${Date.now()}`);
-                    } else if (templateId === 'quiz21StepsComplete') {
+                    } else if (templateId === 'quiz21StepsComplete' || templateId === 'quiz-estilo-21-steps') {
+                        // 🎯 Suporte para ambos os IDs de template
+                        console.log('🎯 Carregando template:', templateId);
                         // Isolar lógica assíncrona em IIFE para evitar await no escopo síncrono do useEffect
                         (async () => {
                             // 1) Tentar carregar via documento unificado (schema-driven)
