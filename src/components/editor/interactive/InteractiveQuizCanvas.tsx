@@ -6,6 +6,7 @@ import React, { memo, useCallback, useContext, useEffect, useMemo, useState } fr
 // import { QuizHeader } from './QuizHeader';
 import { QuizNavigation } from './QuizNavigation';
 import { QuizTheme } from './styles/QuizThemes';
+import { StorageService } from '@/services/core/StorageService';
 
 interface QuizAnswer {
   questionId: string;
@@ -57,7 +58,7 @@ export const InteractiveQuizCanvas: React.FC<InteractiveQuizCanvasProps> = memo(
     useEffect(() => {
       if (!isTestEnv) return;
       try {
-        const saved = localStorage.getItem('quiz-state');
+        const saved = StorageService.safeGetString('quiz-state');
         if (saved) {
           const parsed = JSON.parse(saved);
           if (Number(parsed?.currentStep)) setTestCurrentStep(Number(parsed.currentStep));
@@ -71,7 +72,7 @@ export const InteractiveQuizCanvas: React.FC<InteractiveQuizCanvasProps> = memo(
 
     // Carregar respostas do localStorage
     useEffect(() => {
-      const savedAnswers = localStorage.getItem('interactive-quiz-answers');
+      const savedAnswers = StorageService.safeGetString('interactive-quiz-answers');
       if (savedAnswers) {
         try {
           setQuizAnswers(JSON.parse(savedAnswers));
@@ -84,7 +85,7 @@ export const InteractiveQuizCanvas: React.FC<InteractiveQuizCanvasProps> = memo(
     // Salvar respostas no localStorage
     useEffect(() => {
       if (quizAnswers.length > 0) {
-        localStorage.setItem('interactive-quiz-answers', JSON.stringify(quizAnswers));
+        StorageService.safeSetJSON('interactive-quiz-answers', quizAnswers);
       }
     }, [quizAnswers]);
 
@@ -112,7 +113,7 @@ export const InteractiveQuizCanvas: React.FC<InteractiveQuizCanvasProps> = memo(
           setCurrentValidation({ success: false, errors: [{ code: 'required', message }] } as any);
           return;
         }
-        const existing = localStorage.getItem('quiz-state');
+        const existing = StorageService.safeGetString('quiz-state');
         const base = existing ? JSON.parse(existing) : { currentStep: 1, answers: {}, scores: {} };
         if (testCurrentStep === 1 && selectedOption) {
           base.answers['block-1'] = {
@@ -124,7 +125,7 @@ export const InteractiveQuizCanvas: React.FC<InteractiveQuizCanvasProps> = memo(
           };
         }
         setLoading(true);
-        localStorage.setItem('quiz-state', JSON.stringify(base));
+        StorageService.safeSetJSON('quiz-state', base);
         const delay = isTestEnv ? 0 : 1000;
         setTimeout(() => {
           setLoading(false);
@@ -191,7 +192,7 @@ export const InteractiveQuizCanvas: React.FC<InteractiveQuizCanvasProps> = memo(
                               setCurrentValidation({ success: true, errors: [] } as any);
                               // Persistir imediatamente em quiz-state
                               try {
-                                const existing = localStorage.getItem('quiz-state');
+                                const existing = StorageService.safeGetString('quiz-state');
                                 const base = existing
                                   ? JSON.parse(existing)
                                   : { currentStep: 1, answers: {}, scores: {} };
@@ -202,7 +203,7 @@ export const InteractiveQuizCanvas: React.FC<InteractiveQuizCanvasProps> = memo(
                                   timestamp: new Date().toISOString(),
                                   stepId: '1',
                                 };
-                                localStorage.setItem('quiz-state', JSON.stringify(base));
+                                StorageService.safeSetJSON('quiz-state', base);
                               } catch { }
                             }}
                             className={`px-3 py-2 border rounded ${selectedOption === opt.value ? 'ring-2 ring-blue-500' : ''

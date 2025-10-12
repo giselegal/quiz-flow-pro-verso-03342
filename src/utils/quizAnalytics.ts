@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { trackEvent } from './analytics';
+import { StorageService } from '@/services/core/StorageService';
 export type QuizAnalyticsEventType = 'step_view' | 'result_compute' | 'offer_view' | 'cta_click';
 
 interface BaseEvt { type: QuizAnalyticsEventType; ts: string; sessionId: string; userId?: string; }
@@ -66,7 +67,7 @@ function save(evts: QuizAnalyticsEvent[]) { try { localStorage.setItem(STORAGE_K
 function resolveUserId(): string | undefined {
     try {
         // Prioridade: localStorage userProfile.userId > localStorage.userId > sessionStorage.userId
-        const profileRaw = localStorage.getItem('userProfile');
+        const profileRaw = StorageService.safeGetString('userProfile');
         if (profileRaw) {
             const p = JSON.parse(profileRaw);
             if (p && typeof p === 'object') {
@@ -75,7 +76,7 @@ function resolveUserId(): string | undefined {
                 if (p.uid) return String(p.uid);
             }
         }
-        const direct = localStorage.getItem('userId') || sessionStorage.getItem('userId');
+        const direct = StorageService.safeGetString('userId') || sessionStorage.getItem('userId');
         if (direct) return direct;
     } catch { }
     return undefined;

@@ -1,3 +1,4 @@
+import { StorageService } from '@/services/core/StorageService';
 /**
  * 🚀 Logger unificado com níveis e desativação automática em produção.
  * - Em NODE_ENV==='production': apenas warn/error são emitidos
@@ -23,7 +24,7 @@ const DEFAULT_PROD_LEVEL: LogLevel = 'warn';
 function resolveMinLevel(): LogLevel {
     try {
         if (typeof window !== 'undefined') {
-            const stored = window.localStorage.getItem('log:level') as LogLevel | null;
+            const stored = window.StorageService.safeGetString('log:level') as LogLevel | null;
             if (stored && LEVEL_PRIORITY[stored] !== undefined) return stored;
         }
     } catch { }

@@ -117,6 +117,15 @@ export default [
         },
       ],
 
+      // ⚠️ NOVO: Prevenir uso direto de localStorage
+      'no-restricted-globals': [
+        'error',
+        {
+          name: 'localStorage',
+          message: '❌ Uso direto de localStorage não é permitido. Use StorageService.safeGetJSON/safeSetJSON ao invés. Exemplo: import { StorageService } from "@/services/core/StorageService"',
+        },
+      ],
+
       // Performance rules
       'no-async-promise-executor': 'error',
       'no-await-in-loop': 'warn',
@@ -225,6 +234,29 @@ export default [
     rules: {
       'no-console': 'off',
       '@typescript-eslint/no-var-requires': 'off',
+    },
+  },
+
+  // Storage infrastructure files (allowed to use localStorage directly)
+  {
+    files: [
+      '**/StorageService.ts',
+      '**/LocalStorageService.ts',
+      '**/LocalStorageAdapter.ts',
+      '**/LocalStorageManager.ts',
+      '**/UnifiedStorageService.ts',
+      '**/safeLocalStorage.ts',
+      '**/StorageMigrationService.ts',
+      '**/MigrationManager.ts',
+      '**/dataMigration.ts',
+      '**/storageOptimization.ts',
+      '**/cleanStorage.ts',
+      '**/localStorageMigration.ts',
+      '**/*Migration*.ts',
+      '**/context-backup-*/**',
+    ],
+    rules: {
+      'no-restricted-globals': 'off', // Allowed in storage infrastructure
     },
   },
 ];

@@ -8,6 +8,7 @@
  * - Error handling robusto
  */
 
+import { StorageService } from '@/services/core/StorageService';
 import {
   validateFunnelId,
   parseStepNumber,
@@ -34,7 +35,7 @@ export const getFunnelIdFromEnvOrStorage = (): string | null => {
     }
 
     // Segunda tentativa: localStorage
-    const fromLs = window.localStorage.getItem('editor:funnelId');
+    const fromLs = StorageService.safeGetString('editor:funnelId');
     if (fromLs) {
       const validation = validateFunnelId(fromLs);
       if (validation.isValid) {
@@ -43,7 +44,7 @@ export const getFunnelIdFromEnvOrStorage = (): string | null => {
       } else {
         console.warn('⚠️ FunnelId inválido no localStorage:', validation.error);
         // Remove ID inválido do localStorage
-        window.localStorage.removeItem('editor:funnelId');
+        StorageService.safeRemove('editor:funnelId');
       }
     }
 
@@ -80,7 +81,7 @@ export const saveFunnelIdToStorage = (funnelId: string): boolean => {
       return false;
     }
 
-    window.localStorage.setItem('editor:funnelId', validation.normalized!);
+    StorageService.safeSetString('editor:funnelId', validation.normalized!);
     console.log('✅ FunnelId válido salvo:', validation.normalized);
     return true;
   } catch (error) {

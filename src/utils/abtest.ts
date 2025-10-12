@@ -1,6 +1,7 @@
 // @ts-nocheck
 import { trackButtonClick } from './analytics';
 import { ABTestVariant, ABTestConfig } from '@/types/abtest';
+import { StorageService } from '@/services/core/StorageService';
 
 // Configuração do teste A/B para landing pages
 export const LANDING_PAGE_AB_TEST: ABTestConfig = {
@@ -173,10 +174,10 @@ export const logABTestView = (
       page: page,
     };
 
-    const existingLogs = localStorage.getItem('ab_test_views') || '[]';
+    const existingLogs = StorageService.safeGetString('ab_test_views') || '[]';
     const logs = JSON.parse(existingLogs);
     logs.push(logEntry);
-    localStorage.setItem('ab_test_views', JSON.stringify(logs));
+    StorageService.safeSetJSON('ab_test_views', logs);
   } catch (error) {
     console.error('Error logging AB test view:', error);
   }
@@ -197,10 +198,10 @@ export const logABTestConversion = (
       page: page,
     };
 
-    const existingLogs = localStorage.getItem('ab_test_conversions') || '[]';
+    const existingLogs = StorageService.safeGetString('ab_test_conversions') || '[]';
     const logs = JSON.parse(existingLogs);
     logs.push(logEntry);
-    localStorage.setItem('ab_test_conversions', JSON.stringify(logs));
+    StorageService.safeSetJSON('ab_test_conversions', logs);
   } catch (error) {
     console.error('Error logging AB test conversion:', error);
   }

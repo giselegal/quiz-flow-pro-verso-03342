@@ -27,6 +27,7 @@ import { QuizQuestion } from '@/types/quiz';
 import { toast } from '@/components/ui/use-toast';
 import { Loader2 } from 'lucide-react';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
+import { StorageService } from '@/services/core/StorageService';
 
 interface QuizTemplateImporterProps {
   isOpen: boolean;
@@ -174,7 +175,7 @@ const QuizTemplateImporter: React.FC<QuizTemplateImporterProps> = ({
 
         // Try to load existing results from localStorage
         try {
-          const savedResultConfig = localStorage.getItem('quiz_result_config_Elegante');
+          const savedResultConfig = StorageService.safeGetString('quiz_result_config_Elegante');
           if (savedResultConfig) {
             console.log('Found existing result configuration, integrating with builder state');
             // In a real implementation, we would merge the result config with the builder state

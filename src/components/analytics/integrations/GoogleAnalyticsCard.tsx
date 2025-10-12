@@ -13,6 +13,7 @@ import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
 import { Badge } from '@/components/ui/badge';
 import { toast } from '@/components/ui/use-toast';
+import { StorageService } from '@/services/core/StorageService';
 
 interface GoogleAnalyticsCardProps {
   initialId?: string;
@@ -28,8 +29,8 @@ export const GoogleAnalyticsCard: React.FC<GoogleAnalyticsCardProps> = ({
 
   const handleSaveGoogleAnalytics = () => {
     try {
-      localStorage.setItem('ga_id', googleAnalyticsId);
-      localStorage.setItem('ga_enabled', String(googleAnalyticsEnabled));
+      StorageService.safeSetString('ga_id', googleAnalyticsId);
+      StorageService.safeSetString('ga_enabled', String(googleAnalyticsEnabled));
       toast({
         title: 'Google Analytics settings saved',
         description: 'Your Google Analytics integration settings have been updated.',

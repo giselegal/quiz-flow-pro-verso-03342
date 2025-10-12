@@ -2,6 +2,7 @@ import { EditorProvider } from '@/components/editor/EditorProviderMigrationAdapt
 // import { Block } from '@/types/editor'; - removido pois não é usado
 import React, { useState } from 'react';
 import { InteractiveQuizCanvas } from '../InteractiveQuizCanvas';
+import { StorageService } from '@/services/core/StorageService';
 // import { calcularResultadoQuiz } from './QuizExemploCompleto'; - removido pois não é usado
 
 /**
@@ -35,7 +36,7 @@ export const QuizDemo: React.FC = () => {
     setQuizCompleto(false);
     setResultados(null);
     // Limpar localStorage
-    localStorage.removeItem('quiz-state');
+    StorageService.safeRemove('quiz-state');
     window.location.reload();
   };
 

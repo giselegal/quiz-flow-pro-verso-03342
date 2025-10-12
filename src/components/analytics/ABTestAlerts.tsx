@@ -24,6 +24,7 @@ import {
   Trash2,
 } from 'lucide-react';
 import { toast } from '@/components/ui/use-toast';
+import { StorageService } from '@/services/core/StorageService';
 
 interface ABTestMetrics {
   variant: 'A' | 'B';
@@ -93,13 +94,13 @@ const ABTestAlerts: React.FC<ABTestAlertsProps> = ({
 
   useEffect(() => {
     // Carregar configurações salvas
-    const savedConfig = localStorage.getItem('abtest_alert_config');
+    const savedConfig = StorageService.safeGetString('abtest_alert_config');
     if (savedConfig) {
       setConfig(JSON.parse(savedConfig));
     }
 
     // Carregar alertas salvos
-    const savedAlerts = localStorage.getItem('abtest_alerts');
+    const savedAlerts = StorageService.safeGetString('abtest_alerts');
     if (savedAlerts) {
       setAlerts(
         JSON.parse(savedAlerts).map((alert: any) => ({
@@ -119,12 +120,12 @@ const ABTestAlerts: React.FC<ABTestAlertsProps> = ({
 
   useEffect(() => {
     // Salvar configurações quando alteradas
-    localStorage.setItem('abtest_alert_config', JSON.stringify(config));
+    StorageService.safeSetJSON('abtest_alert_config', config);
   }, [config]);
 
   useEffect(() => {
     // Salvar alertas quando alterados
-    localStorage.setItem('abtest_alerts', JSON.stringify(alerts));
+    StorageService.safeSetJSON('abtest_alerts', alerts);
   }, [alerts]);
 
   const checkForAlerts = () => {

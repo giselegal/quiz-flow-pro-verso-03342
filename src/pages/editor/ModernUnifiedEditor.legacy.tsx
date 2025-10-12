@@ -32,6 +32,7 @@ import testCRUDOperations from '@/utils/testCRUDOperations';
 import FunnelTypeDetector from '@/components/editor/FunnelTypeDetector';
 const QuizFunnelEditor = React.lazy(() => import('../../components/editor/quiz/QuizFunnelEditor'));
 import type { FunnelType } from '@/services/FunnelTypesRegistry';
+import { StorageService } from '@/services/core/StorageService';
 
 function convertTemplateToEditorBlocks(templateData: Record<string, any[]>): any[] {
     const allBlocks: any[] = [];
@@ -278,8 +279,8 @@ const UnifiedEditorCore: React.FC<ModernUnifiedEditorProps> = ({ funnelId, templ
     const [detectedFunnelType, setDetectedFunnelType] = useState<FunnelType | null>(null);
     const [funnelData, setFunnelData] = useState<any>(null);
     const [isDetectingType, setIsDetectingType] = useState(false);
-    const [showOpsPanel, setShowOpsPanel] = useState<boolean>(() => { if (typeof window === 'undefined') return false; try { return localStorage.getItem('editor.showOpsPanel') === '1'; } catch { return false; } });
-    useEffect(() => { try { localStorage.setItem('editor.showOpsPanel', showOpsPanel ? '1' : '0'); } catch { } }, [showOpsPanel]);
+    const [showOpsPanel, setShowOpsPanel] = useState<boolean>(() => { if (typeof window === 'undefined') return false; try { return StorageService.safeGetString('editor.showOpsPanel') === '1'; } catch { return false; } });
+    useEffect(() => { try { StorageService.safeSetString('editor.showOpsPanel', showOpsPanel ? '1' : '0'); } catch { } }, [showOpsPanel]);
     const autosaveTimerRef = React.useRef<number | null>(null);
     useEffect(() => {
         if (extractedInfo.funnelId && !detectedFunnelType) { setIsDetectingType(true); }

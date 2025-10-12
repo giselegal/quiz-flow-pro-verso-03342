@@ -10,6 +10,7 @@ import { RemoteTransport } from './transports/RemoteTransport';
 import { DefaultFormatter } from './formatters/DefaultFormatter';
 import { JSONFormatter } from './formatters/JSONFormatter';
 import { DevelopmentFormatter } from './formatters/DevelopmentFormatter';
+import { StorageService } from '@/services/core/StorageService';
 
 export interface LogLevel {
     TRACE: 0;
@@ -211,7 +212,7 @@ class LoggerService {
         try {
             // Integration with auth system
             return (window as any).currentUserId ||
-                localStorage.getItem('currentUserId') ||
+                StorageService.safeGetString('currentUserId') ||
                 sessionStorage.getItem('currentUserId') ||
                 undefined;
         } catch {

@@ -15,6 +15,7 @@ import { getStyleConfig } from '@/config/styleConfig';
 import { getBestUserName } from '@/core/user/name';
 import { ResultDisplay } from '@/components/ui/ResultDisplay';
 import { ModularResultHeaderBlock } from '@/components/editor/modules';
+import { StorageService } from '@/services/core/StorageService';
 
 interface Step20FallbackTemplateProps {
   className?: string;
@@ -41,7 +42,7 @@ const Step20FallbackTemplate: React.FC<Step20FallbackTemplateProps> = ({
   const loadFallbackData = async () => {
     try {
       // Fonte 1: Tentar storage legado
-      const legacyResult = localStorage.getItem('quizResult');
+      const legacyResult = StorageService.safeGetString('quizResult');
       if (legacyResult) {
         const parsed = JSON.parse(legacyResult);
         if (parsed.primaryStyle) {

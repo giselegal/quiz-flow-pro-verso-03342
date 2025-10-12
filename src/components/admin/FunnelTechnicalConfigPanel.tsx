@@ -25,6 +25,7 @@ import {
 import { NoCodeConfigPanel } from '@/pages/admin/NoCodeConfigPage';
 import GlobalConfigPanel from '@/components/editor/GlobalConfigPanel';
 import StepNoCodeConnections from '@/components/editor/StepNoCodeConnections';
+import { StorageService } from '@/services/core/StorageService';
 
 interface FunnelTechnicalConfigPanelProps {
     funnelId?: string;
@@ -41,9 +42,9 @@ const FunnelTechnicalConfigPanel: React.FC<FunnelTechnicalConfigPanelProps> = ({
     const [isLoading, setIsLoading] = useState(false);
 
     // Verificar se há configurações salvas
-    const hasConnectionsConfig = localStorage.getItem('quiz-step-connections') !== null;
-    const hasNoCodeConfig = localStorage.getItem('quiz-nocode-config') !== null;
-    const hasGlobalConfig = localStorage.getItem('quiz-global-config') !== null;
+    const hasConnectionsConfig = StorageService.safeGetString('quiz-step-connections') !== null;
+    const hasNoCodeConfig = StorageService.safeGetString('quiz-nocode-config') !== null;
+    const hasGlobalConfig = StorageService.safeGetString('quiz-global-config') !== null;
 
     const configCount = [hasConnectionsConfig, hasNoCodeConfig, hasGlobalConfig].filter(Boolean).length;
 
@@ -52,9 +53,9 @@ const FunnelTechnicalConfigPanel: React.FC<FunnelTechnicalConfigPanelProps> = ({
         try {
             // Consolidar todas as configurações
             const allConfigs = {
-                connections: localStorage.getItem('quiz-step-connections'),
-                nocode: localStorage.getItem('quiz-nocode-config'),
-                global: localStorage.getItem('quiz-global-config')
+                connections: StorageService.safeGetString('quiz-step-connections'),
+                nocode: StorageService.safeGetString('quiz-nocode-config'),
+                global: StorageService.safeGetString('quiz-global-config')
             };
 
             // Callback para notificar mudanças
@@ -71,9 +72,9 @@ const FunnelTechnicalConfigPanel: React.FC<FunnelTechnicalConfigPanelProps> = ({
     };
 
     const resetAllConfigs = () => {
-        localStorage.removeItem('quiz-step-connections');
-        localStorage.removeItem('quiz-nocode-config');
-        localStorage.removeItem('quiz-global-config');
+        StorageService.safeRemove('quiz-step-connections');
+        StorageService.safeRemove('quiz-nocode-config');
+        StorageService.safeRemove('quiz-global-config');
         window.location.reload();
     };
 

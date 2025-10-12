@@ -98,6 +98,7 @@ import DuplicateBlockDialog from './components/DuplicateBlockDialog';
 // Cálculo real de resultado (produção)
 import { computeResult } from '@/utils/result/computeResult';
 import type { QuizFunnelSchema } from '@/types/quiz-schema';
+import { StorageService } from '@/services/core/StorageService';
 
 // Pré-visualizações especializadas (lazy) dos componentes finais de produção
 const StyleResultCard = React.lazy(() => import('@/components/editor/quiz/components/StyleResultCard').then(m => ({ default: m.StyleResultCard })));
@@ -315,7 +316,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
     // Configuração global de cabeçalho (logo + progresso) fixo
     const [headerConfig, setHeaderConfig] = useState(() => {
         try {
-            const raw = localStorage.getItem('quiz_editor_header_config_v1');
+            const raw = StorageService.safeGetString('quiz_editor_header_config_v1');
             if (raw) return JSON.parse(raw);
         } catch {/* ignore */ }
         return {
@@ -332,7 +333,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
             title: ''
         };
     });
-    useEffect(() => { try { localStorage.setItem('quiz_editor_header_config_v1', JSON.stringify(headerConfig)); } catch {/* ignore */ } }, [headerConfig]);
+    useEffect(() => { try { StorageService.safeSetJSON('quiz_editor_header_config_v1', headerConfig); } catch {/* ignore */ } }, [headerConfig]);
 
     // Componente de cabeçalho fixo
     const FixedProgressHeader: React.FC<{ config: any; steps: EditableQuizStep[]; currentStepId: string }> = ({ config, steps, currentStepId }) => {
@@ -378,7 +379,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
 
     useEffect(() => {
         try {
-            const raw = localStorage.getItem('quiz_editor_theme_overrides_v1');
+            const raw = StorageService.safeGetString('quiz_editor_theme_overrides_v1');
             if (raw) setThemeOverrides(JSON.parse(raw));
         } catch {/* ignore */ }
     }, []);
@@ -1459,12 +1460,12 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
     const [expandedContainers, setExpandedContainers] = useState<Set<string>>(new Set());
     useEffect(() => {
         try {
-            const raw = localStorage.getItem('quiz_editor_expanded_containers_v1');
+            const raw = StorageService.safeGetString('quiz_editor_expanded_containers_v1');
             if (raw) setExpandedContainers(new Set(JSON.parse(raw)));
         } catch {/* ignore */ }
     }, []);
     const persistExpanded = (next: Set<string>) => {
-        try { localStorage.setItem('quiz_editor_expanded_containers_v1', JSON.stringify(Array.from(next))); } catch {/* ignore */ }
+        try { StorageService.safeSetJSON('quiz_editor_expanded_containers_v1', Array.from(next)); } catch {/* ignore */ }
     };
     const toggleContainer = useCallback((id: string) => {
         setExpandedContainers(prev => {
@@ -1969,7 +1970,7 @@ const LivePreviewContainer: React.FC<LivePreviewContainerProps> = ({ funnelId, s
             const sp = new URLSearchParams(typeof window !== 'undefined' ? window.location.search : '');
             const q = sp.get('preview');
             if (q === 'live' || q === 'production') return q;
-            const stored = typeof window !== 'undefined' ? window.localStorage.getItem('editor_preview_mode') : null;
+            const stored = typeof window !== 'undefined' ? window.StorageService.safeGetString('editor_preview_mode') : null;
             if (stored === 'live' || stored === 'production') return stored;
         } catch {/* ignore */ }
         return 'live';
@@ -1986,7 +1987,7 @@ const LivePreviewContainer: React.FC<LivePreviewContainerProps> = ({ funnelId, s
 
     // Persistir preferência de modo
     React.useEffect(() => {
-        try { window.localStorage.setItem('editor_preview_mode', mode); } catch {/* ignore */ }
+        try { window.StorageService.safeSetString('editor_preview_mode', mode); } catch {/* ignore */ }
     }, [mode]);
 
     return (

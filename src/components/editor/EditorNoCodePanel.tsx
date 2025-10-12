@@ -14,6 +14,7 @@ import {
 import StepNoCodeConnections from './StepNoCodeConnections';
 import { NoCodeConfigPanel } from '@/pages/admin/NoCodeConfigPage';
 import GlobalConfigPanel from './GlobalConfigPanel';
+import { StorageService } from '@/services/core/StorageService';
 
 interface EditorNoCodePanelProps {
     className?: string;
@@ -24,8 +25,8 @@ const EditorNoCodePanel: React.FC<EditorNoCodePanelProps> = ({ className = '' })
     const [activeTab, setActiveTab] = useState('connections');
 
     // Verificar se há configurações salvas
-    const hasConnectionsConfig = localStorage.getItem('quiz-step-connections') !== null;
-    const hasNoCodeConfig = localStorage.getItem('quiz-nocode-config') !== null;
+    const hasConnectionsConfig = StorageService.safeGetString('quiz-step-connections') !== null;
+    const hasNoCodeConfig = StorageService.safeGetString('quiz-nocode-config') !== null;
 
     return (
         <Sheet open={isOpen} onOpenChange={setIsOpen}>
@@ -196,7 +197,7 @@ const EditorNoCodePanel: React.FC<EditorNoCodePanelProps> = ({ className = '' })
                                     <Button
                                         onClick={() => {
                                             // Abrir preview do fluxo
-                                            const connections = localStorage.getItem('quiz-step-connections');
+                                            const connections = StorageService.safeGetString('quiz-step-connections');
                                             if (connections) {
                                                 window.open('/step/1?preview=true', '_blank');
                                             }

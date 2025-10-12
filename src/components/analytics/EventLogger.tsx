@@ -3,6 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
+import { StorageService } from '@/services/core/StorageService';
   Trash2,
   RefreshCcw,
   Info,
@@ -26,7 +27,7 @@ export const EventLogger: React.FC = () => {
 
   const loadEvents = () => {
     try {
-      const eventsJson = localStorage.getItem('fb_pixel_event_log');
+      const eventsJson = StorageService.safeGetString('fb_pixel_event_log');
       const loadedEvents = eventsJson ? JSON.parse(eventsJson) : [];
       setEvents(loadedEvents);
     } catch (error) {
@@ -47,7 +48,7 @@ export const EventLogger: React.FC = () => {
   }, []);
 
   const clearEvents = () => {
-    localStorage.removeItem('fb_pixel_event_log');
+    StorageService.safeRemove('fb_pixel_event_log');
     setEvents([]);
   };
 

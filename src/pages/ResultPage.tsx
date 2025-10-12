@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import sanitizeHtml from '@/utils/sanitizeHtml';
 import { styleConfigGisele } from '@/data/styles';
+import { StorageService } from '@/services/core/StorageService';
 
 interface PersistedResultPayload {
     userName?: string;
@@ -32,15 +33,15 @@ const ResultPage: React.FC = () => {
     // Carregar dados persistidos (ex: localStorage) – pode ser substituído por API futura.
     useEffect(() => {
         try {
-            const raw = localStorage.getItem('quizResultPayload');
+            const raw = StorageService.safeGetString('quizResultPayload');
             if (raw) {
                 setResult(JSON.parse(raw));
             } else {
                 // Fallback minimalista (compatível com stub anterior)
-                setResult({ userName: localStorage.getItem('quizUserName') || 'Visitante' });
+                setResult({ userName: StorageService.safeGetString('quizUserName') || 'Visitante' });
             }
             // Recuperar offer serializada (salva pelo fluxo do editor quando finaliza simulação futuramente)
-            const offerRaw = localStorage.getItem('quizSelectedOffer');
+            const offerRaw = StorageService.safeGetString('quizSelectedOffer');
             if (offerRaw) setOffer(JSON.parse(offerRaw));
         } catch (e) {
             console.warn('Falha ao carregar resultado persistido:', e);

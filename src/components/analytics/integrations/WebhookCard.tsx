@@ -13,6 +13,7 @@ import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
 import { Badge } from '@/components/ui/badge';
 import { toast } from '@/components/ui/use-toast';
+import { StorageService } from '@/services/core/StorageService';
 
 interface WebhookCardProps {
   initialUrl?: string;
@@ -28,8 +29,8 @@ export const WebhookCard: React.FC<WebhookCardProps> = ({
 
   const handleSaveWebhook = () => {
     try {
-      localStorage.setItem('webhook_url', webhookUrl);
-      localStorage.setItem('webhook_enabled', String(webhookEnabled));
+      StorageService.safeSetString('webhook_url', webhookUrl);
+      StorageService.safeSetString('webhook_enabled', String(webhookEnabled));
       toast({
         title: 'Webhook settings saved',
         description: 'Your webhook integration settings have been updated.',

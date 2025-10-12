@@ -1,5 +1,6 @@
 // @ts-nocheck
 import { getAnalyticsEvents } from './analytics';
+import { StorageService } from '@/services/core/StorageService';
 
 // Get cached metrics or calculate if not in cache
 export const getCachedMetrics = (timeRange: '7d' | '30d' | 'all') => {
@@ -77,9 +78,9 @@ const getDefaultMetrics = () => {
 
 export const resetMetricsCache = () => {
   try {
-    localStorage.removeItem('analytics_metrics_cache_7d');
-    localStorage.removeItem('analytics_metrics_cache_30d');
-    localStorage.removeItem('analytics_metrics_cache_all');
+    StorageService.safeRemove('analytics_metrics_cache_7d');
+    StorageService.safeRemove('analytics_metrics_cache_30d');
+    StorageService.safeRemove('analytics_metrics_cache_all');
     console.log('Metrics cache reset');
   } catch (error) {
     console.error('Error resetting metrics cache:', error);

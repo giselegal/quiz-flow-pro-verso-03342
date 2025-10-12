@@ -8,13 +8,14 @@
  */
 
 import { initializePhase5Data, getPhase5Data } from '../services/phase5DataSimulator';
+import { StorageService } from '@/services/core/StorageService';
 
 export function initPhase5() {
     try {
         console.log('🚀 Inicializando Fase 5...');
 
         // Verificar se já existem dados
-        const existingData = localStorage.getItem('phase5_simulated_data');
+        const existingData = StorageService.safeGetString('phase5_simulated_data');
         if (existingData) {
             console.log('✅ Dados da Fase 5 já existem. Carregando...');
             const data = getPhase5Data();

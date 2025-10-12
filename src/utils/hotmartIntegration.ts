@@ -1,5 +1,6 @@
 // @ts-nocheck
 import { trackSaleConversion } from '@/utils/analytics';
+import { StorageService } from '@/services/core/StorageService';
 
 // Declare window interface extensions
 declare global {
@@ -56,7 +57,7 @@ export const handleAffiliateTracking = (source: string) => {
   if (typeof window === 'undefined') return;
 
   try {
-    localStorage.setItem('affiliate_source', source);
+    StorageService.safeSetString('affiliate_source', source);
     console.log(`[Hotmart Integration] Affiliate source stored: ${source}`);
   } catch (error) {
     console.error('[Hotmart Integration] Error storing affiliate source:', error);
@@ -68,7 +69,7 @@ export const getAffiliateSource = () => {
   if (typeof window === 'undefined') return null;
 
   try {
-    return localStorage.getItem('affiliate_source');
+    return StorageService.safeGetString('affiliate_source');
   } catch (error) {
     console.error('[Hotmart Integration] Error retrieving affiliate source:', error);
     return null;

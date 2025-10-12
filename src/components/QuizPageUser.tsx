@@ -17,7 +17,7 @@ const UserQuizPage: React.FC = () => {
         '';
     } catch {
       try {
-        userName = localStorage.getItem('userName') || '';
+        userName = StorageService.safeGetString('userName') || '';
       } catch {
         userName = '';
       }

@@ -1,5 +1,6 @@
 // @ts-nocheck
 import { ImageCacheEntry } from './types';
+import { StorageService } from '@/services/core/StorageService';
 
 const IMAGE_CACHE_KEY = 'image_cache';
 
@@ -45,7 +46,7 @@ export const addToCache = (url: string, metadata: any): ImageCacheEntry => {
   try {
     const cache = getImageCache();
     cache[url] = cacheEntry;
-    localStorage.setItem('image_cache', JSON.stringify(cache));
+    StorageService.safeSetJSON('image_cache', cache);
   } catch (error) {
     console.warn('Could not save to cache:', error);
   }

@@ -6,6 +6,7 @@ import { ContentContainer } from './shared/ContentContainer';
 import { Card, CardContent } from '@/components/ui/card';
 import { ArrowRight, Sparkles, Users, Award } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { StorageService } from '@/services/core/StorageService';
 
 interface QuizIntroProps {
   onStart: (userName: string) => void;
@@ -23,7 +24,7 @@ const QuizIntro: React.FC<QuizIntroProps> = ({ onStart, globalStyles = {} }) => 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (userName.trim()) {
-      localStorage.setItem('userName', userName.trim());
+      StorageService.safeSetString('userName', userName.trim());
       onStart(userName.trim());
     }
   };

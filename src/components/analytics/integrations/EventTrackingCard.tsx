@@ -13,6 +13,7 @@ import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Badge } from '@/components/ui/badge';
 import { toast } from '@/components/ui/use-toast';
+import { StorageService } from '@/services/core/StorageService';
 
 interface EventTrackingCardProps {
   initialEnabled?: boolean;
@@ -21,7 +22,7 @@ interface EventTrackingCardProps {
 export const EventTrackingCard: React.FC<EventTrackingCardProps> = ({ initialEnabled = false }) => {
   const [trackingEnabled, setTrackingEnabled] = useState(() => {
     try {
-      const stored = localStorage.getItem('event_tracking_enabled');
+      const stored = StorageService.safeGetString('event_tracking_enabled');
       return stored !== null ? stored === 'true' : initialEnabled;
     } catch (e) {
       return initialEnabled;
@@ -30,7 +31,7 @@ export const EventTrackingCard: React.FC<EventTrackingCardProps> = ({ initialEna
 
   const [trackButtons, setTrackButtons] = useState(() => {
     try {
-      const stored = localStorage.getItem('track_buttons');
+      const stored = StorageService.safeGetString('track_buttons');
       return stored !== null ? stored === 'true' : true;
     } catch (e) {
       return true;
@@ -39,7 +40,7 @@ export const EventTrackingCard: React.FC<EventTrackingCardProps> = ({ initialEna
 
   const [trackLinks, setTrackLinks] = useState(() => {
     try {
-      const stored = localStorage.getItem('track_links');
+      const stored = StorageService.safeGetString('track_links');
       return stored !== null ? stored === 'true' : true;
     } catch (e) {
       return true;
@@ -48,7 +49,7 @@ export const EventTrackingCard: React.FC<EventTrackingCardProps> = ({ initialEna
 
   const [trackImages, setTrackImages] = useState(() => {
     try {
-      const stored = localStorage.getItem('track_images');
+      const stored = StorageService.safeGetString('track_images');
       return stored !== null ? stored === 'true' : false;
     } catch (e) {
       return false;
@@ -58,10 +59,10 @@ export const EventTrackingCard: React.FC<EventTrackingCardProps> = ({ initialEna
   // Load settings from localStorage
   useEffect(() => {
     try {
-      const storedTrackingEnabled = localStorage.getItem('event_tracking_enabled');
-      const storedTrackButtons = localStorage.getItem('track_buttons');
-      const storedTrackLinks = localStorage.getItem('track_links');
-      const storedTrackImages = localStorage.getItem('track_images');
+      const storedTrackingEnabled = StorageService.safeGetString('event_tracking_enabled');
+      const storedTrackButtons = StorageService.safeGetString('track_buttons');
+      const storedTrackLinks = StorageService.safeGetString('track_links');
+      const storedTrackImages = StorageService.safeGetString('track_images');
 
       if (storedTrackingEnabled !== null) setTrackingEnabled(storedTrackingEnabled === 'true');
       if (storedTrackButtons !== null) setTrackButtons(storedTrackButtons === 'true');
@@ -74,10 +75,10 @@ export const EventTrackingCard: React.FC<EventTrackingCardProps> = ({ initialEna
 
   const handleSaveSettings = () => {
     try {
-      localStorage.setItem('event_tracking_enabled', String(trackingEnabled));
-      localStorage.setItem('track_buttons', String(trackButtons));
-      localStorage.setItem('track_links', String(trackLinks));
-      localStorage.setItem('track_images', String(trackImages));
+      StorageService.safeSetString('event_tracking_enabled', String(trackingEnabled));
+      StorageService.safeSetString('track_buttons', String(trackButtons));
+      StorageService.safeSetString('track_links', String(trackLinks));
+      StorageService.safeSetString('track_images', String(trackImages));
 
       toast({
         title: 'Configurações de rastreamento salvas',

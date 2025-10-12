@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Copy, ArrowRightCircle, Trash2 } from 'lucide-react';
 import DynamicPropertiesForm from '../components/DynamicPropertiesForm';
+import { StorageService } from '@/services/core/StorageService';
 
 // Tipagens locais (mantêm o componente independente do arquivo gigante)
 export interface BlockComponent { id: string; type: string; order: number; parentId?: string | null; properties: Record<string, any>; content: Record<string, any>; }
@@ -113,7 +114,7 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
         // Persistência local opcional (para sessões do editor)
         try {
             const payload = JSON.stringify({ tieBreak, weights });
-            localStorage.setItem('quiz_editor_runtime_scoring_v1', payload);
+            StorageService.safeSetString('quiz_editor_runtime_scoring_v1', payload);
         } catch {/* ignore */ }
     }, [tieBreak, weightsText, onRuntimeScoringChange]);
 

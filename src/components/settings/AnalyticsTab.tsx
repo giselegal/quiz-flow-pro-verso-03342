@@ -7,6 +7,7 @@ import { Switch } from '@/components/ui/switch';
 import { toast } from '@/components/ui/use-toast';
 import { Link } from 'wouter';
 import { BarChartHorizontal } from 'lucide-react';
+import { StorageService } from '@/services/core/StorageService';
 
 export const AnalyticsTab: React.FC = () => {
   const [pixelId, setPixelId] = useState(() => {
@@ -25,8 +26,8 @@ export const AnalyticsTab: React.FC = () => {
   const handleSavePixelSettings = () => {
     // In a real application, this would save to a backend
     // Here we're just simulating with localStorage
-    localStorage.setItem('fb_pixel_id', pixelId);
-    localStorage.setItem('tracking_enabled', String(trackingEnabled));
+    StorageService.safeSetString('fb_pixel_id', pixelId);
+    StorageService.safeSetString('tracking_enabled', String(trackingEnabled));
 
     toast({
       title: 'Settings saved',

@@ -41,6 +41,7 @@ import OptimizedAIFeatures from '@/components/ai/OptimizedAIFeatures';
 // System Status (production ready)
 import SystemStatus from '@/components/system/SystemStatus';
 import { type FunnelTemplate } from '@/services/FunnelAIAgent';
+import { StorageService } from '@/services/core/StorageService';
 
 /**
  * @deprecated EditorProUnified será removido após consolidação do pivot para QuizFunnelEditor.
@@ -58,7 +59,7 @@ interface EditorProUnifiedProps {
  */
 const useResizableColumns = () => {
   const [columnWidths, setColumnWidths] = useState(() => {
-    const saved = localStorage.getItem('editor-column-widths');
+    const saved = StorageService.safeGetString('editor-column-widths');
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
@@ -81,7 +82,7 @@ const useResizableColumns = () => {
 
     setColumnWidths(prev => {
       const newWidths = { ...prev, [column]: clampedWidth };
-      localStorage.setItem('editor-column-widths', JSON.stringify(newWidths));
+      StorageService.safeSetJSON('editor-column-widths', newWidths);
       return newWidths;
     });
   }, []);
@@ -272,7 +273,7 @@ export const EditorProUnified: React.FC<EditorProUnifiedProps> = ({
       document.documentElement.style.setProperty('--primary-color', designConfig.primary);
       document.documentElement.style.setProperty('--secondary-color', designConfig.secondary);
 
-      localStorage.setItem('builder-design-config', JSON.stringify(designConfig));
+      StorageService.safeSetJSON('builder-design-config', designConfig);
     }
 
     // Builder System já tem templates pré-carregados
@@ -290,7 +291,7 @@ export const EditorProUnified: React.FC<EditorProUnifiedProps> = ({
       builderSystem: true
     };
 
-    localStorage.setItem('builder-generated-steps', JSON.stringify(stepsConfig));
+    StorageService.safeSetJSON('builder-generated-steps', stepsConfig);
 
     addNotification(`Builder System: ${steps.length} steps otimizados!`);
   }, [addNotification]);

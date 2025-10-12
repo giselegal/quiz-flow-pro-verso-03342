@@ -11,6 +11,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import {
+import { StorageService } from '@/services/core/StorageService';
     CheckCircle,
     AlertTriangle,
     Trash2,
@@ -52,7 +53,7 @@ const FunnelManager: React.FC = () => {
             setTotalFunnelKeys(funnelKeys.length);
 
             // Verificar funil ativo
-            const activeFunnelData = localStorage.getItem('active-funnel-main');
+            const activeFunnelData = StorageService.safeGetString('active-funnel-main');
             if (activeFunnelData) {
                 try {
                     const funnel = JSON.parse(activeFunnelData);
@@ -73,7 +74,7 @@ const FunnelManager: React.FC = () => {
             }
 
             // Verificar última limpeza
-            const cleanup = localStorage.getItem('funnel-cleanup-timestamp');
+            const cleanup = StorageService.safeGetString('funnel-cleanup-timestamp');
             setLastCleanup(cleanup);
 
         } catch (error) {
@@ -177,8 +178,8 @@ const FunnelManager: React.FC = () => {
                 }
             };
 
-            localStorage.setItem('active-funnel-main', JSON.stringify(activeFunnelData));
-            localStorage.setItem('funnel-cleanup-timestamp', new Date().toISOString());
+            StorageService.safeSetJSON('active-funnel-main', activeFunnelData);
+            StorageService.safeSetString('funnel-cleanup-timestamp', new Date().toISOString());
 
             // Verificar resultado
             checkFunnelStatus();

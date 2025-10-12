@@ -9,6 +9,7 @@ import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useToast } from '@/components/ui/use-toast';
 import {
+import { StorageService } from '@/services/core/StorageService';
     Plus,
     ArrowRight,
     Settings,
@@ -69,7 +70,7 @@ const StepNoCodeConnections: React.FC<StepNoCodeConnectionsProps> = ({ onClose }
 
     // Carregar configuração salva
     useEffect(() => {
-        const savedConfig = localStorage.getItem('quiz-step-connections');
+        const savedConfig = StorageService.safeGetString('quiz-step-connections');
         if (savedConfig) {
             try {
                 const parsed = JSON.parse(savedConfig);
@@ -174,7 +175,7 @@ const StepNoCodeConnections: React.FC<StepNoCodeConnectionsProps> = ({ onClose }
     };
 
     const saveConfiguration = () => {
-        localStorage.setItem('quiz-step-connections', JSON.stringify(flowConfig));
+        StorageService.safeSetJSON('quiz-step-connections', flowConfig);
 
         toast({
             title: "Configuração salva!",

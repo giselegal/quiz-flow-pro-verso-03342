@@ -50,7 +50,7 @@ export const QuizResultMetrics: React.FC = () => {
 
   const loadMetrics = () => {
     try {
-      const stored = localStorage.getItem('quiz-metrics');
+      const stored = StorageService.safeGetString('quiz-metrics');
       if (stored) {
         setMetrics(JSON.parse(stored));
       } else {
@@ -75,7 +75,7 @@ export const QuizResultMetrics: React.FC = () => {
       }
     };
     setMetrics(initialMetrics);
-    localStorage.setItem('quiz-metrics', JSON.stringify(initialMetrics));
+    StorageService.safeSetJSON('quiz-metrics', initialMetrics);
   };
 
   const recordCalculationAttempt = () => {
@@ -86,7 +86,7 @@ export const QuizResultMetrics: React.FC = () => {
       lastCalculationTime: Date.now()
     };
     setMetrics(updated);
-    localStorage.setItem('quiz-metrics', JSON.stringify(updated));
+    StorageService.safeSetJSON('quiz-metrics', updated);
 
     // Emitir evento customizado para tracking
     window.dispatchEvent(new CustomEvent('quiz-calculation-started', {
@@ -105,7 +105,7 @@ export const QuizResultMetrics: React.FC = () => {
       dataQuality: calculateDataQuality()
     };
     setMetrics(updated);
-    localStorage.setItem('quiz-metrics', JSON.stringify(updated));
+    StorageService.safeSetJSON('quiz-metrics', updated);
   };
 
   // Expor função para uso em outros componentes
@@ -117,7 +117,7 @@ export const QuizResultMetrics: React.FC = () => {
         failedCalculations: current.failedCalculations + 1
       };
       setMetrics(updated);
-      localStorage.setItem('quiz-metrics', JSON.stringify(updated));
+      StorageService.safeSetJSON('quiz-metrics', updated);
 
       // Log para debugging
       console.error('❌ [Metrics] Cálculo falhou:', error);
@@ -172,7 +172,7 @@ export const QuizResultMetrics: React.FC = () => {
   };
 
   const resetMetrics = () => {
-    localStorage.removeItem('quiz-metrics');
+    StorageService.safeRemove('quiz-metrics');
     initializeMetrics();
   };
 

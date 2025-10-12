@@ -1,6 +1,7 @@
 // Teste da migração do FunnelUnifiedService para IndexedDB
 import React from 'react';
 import { FunnelContext } from '@/core/contexts/FunnelContext';
+import { StorageService } from '@/services/core/StorageService';
 
 const IndexedDBMigrationTestPage: React.FC = () => {
     const [testResults, setTestResults] = React.useState<string[]>([]);
@@ -88,7 +89,7 @@ const IndexedDBMigrationTestPage: React.FC = () => {
             }
 
             // 5. Verificar status da migração
-            const migrationStatus = localStorage.getItem('funnel_unified_migration_completed');
+            const migrationStatus = StorageService.safeGetString('funnel_unified_migration_completed');
             if (migrationStatus) {
                 addLog(`✅ Migração marcada como concluída em: ${new Date(migrationStatus).toLocaleString()}`);
             } else {

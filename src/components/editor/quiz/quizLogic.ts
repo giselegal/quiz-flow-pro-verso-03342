@@ -1,4 +1,5 @@
 import { QUIZ_STEPS, type QuizStep } from '@/data/quizSteps';
+import { StorageService } from '@/services/core/StorageService';
 
 export interface ComputeResultOutput {
     primary?: string;
@@ -98,7 +99,7 @@ export function persistResultPayload(userName: string, primary?: string, seconda
             secondaryStyles: secondary,
             timestamp: new Date().toISOString()
         };
-        localStorage.setItem('quizResultPayload', JSON.stringify(payload));
+        StorageService.safeSetJSON('quizResultPayload', payload);
         return true;
     } catch {
         return false;
@@ -107,7 +108,7 @@ export function persistResultPayload(userName: string, primary?: string, seconda
 
 export function persistOffer(offer: any) {
     try {
-        localStorage.setItem('quizSelectedOffer', JSON.stringify(offer));
+        StorageService.safeSetJSON('quizSelectedOffer', offer);
         return true;
     } catch {
         return false;

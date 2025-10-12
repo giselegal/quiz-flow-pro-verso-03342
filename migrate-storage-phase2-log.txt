@@ -1,0 +1,75 @@
+🔧 FASE 2: Migrando componentes e páginas
+
+────────────────────────────────────────────────────────────────────────────────
+
+📂 src/components
+
+✅ src/components/QuizIntro.tsx → 1 migrações
+✅ src/components/QuizPageUser.tsx → 1 migrações
+✅ src/components/admin/BrandKitManager.tsx → 2 migrações
+✅ src/components/admin/FunnelManager.tsx → 3 migrações
+✅ src/components/admin/FunnelTechnicalConfigPanel.tsx → 2 migrações
+✅ src/components/admin/MigrationPanel.tsx → 1 migrações
+✅ src/components/analytics/ABTestAlerts.tsx → 2 migrações
+✅ src/components/analytics/ABTestAlerts_new.tsx → 2 migrações
+✅ src/components/analytics/EventLogger.tsx → 2 migrações
+✅ src/components/analytics/integrations/EventTrackingCard.tsx → 2 migrações
+✅ src/components/analytics/integrations/GoogleAnalyticsCard.tsx → 1 migrações
+✅ src/components/analytics/integrations/WebhookCard.tsx → 1 migrações
+✅ src/components/dev/AnalyticsDebugPanel.tsx → 1 migrações
+✅ src/components/editor/EditorNoCodePanel.tsx → 1 migrações
+✅ src/components/editor/EditorProUnified.tsx → 2 migrações
+✅ src/components/editor/StepNoCodeConnections.tsx → 2 migrações
+✅ src/components/editor/blocks/ButtonInlineBlock.tsx → 1 migrações
+✅ src/components/editor/blocks/ProductionBlockBoundary.tsx → 2 migrações
+✅ src/components/editor/blocks/ResultHeaderBlock.tsx → 1 migrações
+✅ src/components/editor/hooks/useBlockHandlers.ts → 1 migrações
+✅ src/components/editor/interactive/InteractiveQuizCanvas.tsx → 2 migrações
+✅ src/components/editor/interactive/examples/QuizDemo.tsx → 1 migrações
+✅ src/components/editor/quiz/QuizFunnelEditor.tsx → 1 migrações
+✅ src/components/editor/quiz/QuizModularProductionEditor.tsx → 3 migrações
+✅ src/components/editor/quiz/components/PropertiesPanel.tsx → 1 migrações
+✅ src/components/editor/quiz/quizLogic.ts → 1 migrações
+✅ src/components/lovable/LovableWindowActivator.tsx → 1 migrações
+✅ src/components/quiz/QuizContent.tsx → 1 migrações
+✅ src/components/quiz/QuizContentWithTracking.tsx → 1 migrações
+✅ src/components/quiz/QuizResultMetrics.tsx → 3 migrações
+✅ src/components/quiz/Step20FallbackTemplate.tsx → 1 migrações
+✅ src/components/quiz/builder/components/QuizTemplateImporter.tsx → 1 migrações
+✅ src/components/result/PerformanceMonitor.tsx → 2 migrações
+✅ src/components/settings/AnalyticsTab.tsx → 1 migrações
+
+📂 src/pages
+
+✅ src/pages/IndexedDBMigrationTestPage.tsx → 1 migrações
+✅ src/pages/ResultPage.tsx → 1 migrações
+✅ src/pages/SupabaseFixTestPage.tsx → 3 migrações
+✅ src/pages/editor/ModernUnifiedEditor.legacy.tsx → 2 migrações
+
+📂 src/utils
+
+✅ src/utils/FeatureFlagManager.ts → 2 migrações
+✅ src/utils/abtest.ts → 2 migrações
+✅ src/utils/analyticsHelpers.ts → 1 migrações
+✅ src/utils/debugLogger.ts → 1 migrações
+✅ src/utils/funnelIdentity.ts → 3 migrações
+✅ src/utils/hotmartIntegration.ts → 2 migrações
+✅ src/utils/hotmartWebhook.ts → 1 migrações
+✅ src/utils/images/caching.ts → 1 migrações
+✅ src/utils/initPhase5.ts → 1 migrações
+✅ src/utils/logger.ts → 1 migrações
+✅ src/utils/logging/LoggerService.ts → 1 migrações
+✅ src/utils/migration/MigrationScripts.ts → 1 migrações
+✅ src/utils/mockResultData.ts → 2 migrações
+✅ src/utils/quizAnalytics.ts → 1 migrações
+
+────────────────────────────────────────────────────────────────────────────────
+
+📊 RESULTADO FASE 2:
+
+  Arquivos processados: 1761
+  Arquivos modificados: 52
+  Migrações aplicadas: 78
+  Imports adicionados: 49
+  Ignorados: 10
+  Erros: 0

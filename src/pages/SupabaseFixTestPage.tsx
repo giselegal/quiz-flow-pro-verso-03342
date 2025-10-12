@@ -1,4 +1,5 @@
 import React from 'react';
+import { StorageService } from '@/services/core/StorageService';
 
 const SupabaseFixTestPage: React.FC = () => {
     const addLog = (message: string, type: 'info' | 'success' | 'error' | 'warning' = 'info') => {
@@ -29,9 +30,9 @@ const SupabaseFixTestPage: React.FC = () => {
                 name: 'Teste LocalStorage',
                 data: { example: true }
             };
-            localStorage.setItem('test-funnel', JSON.stringify(testData));
-            const retrieved = JSON.parse(localStorage.getItem('test-funnel') || '');
-            localStorage.removeItem('test-funnel');
+            StorageService.safeSetJSON('test-funnel', testData);
+            const retrieved = StorageService.safeGetJSON('test-funnel');
+            StorageService.safeRemove('test-funnel');
 
             if (retrieved && retrieved.id === testData.id) {
                 addLog('✅ LocalStorage funcionando corretamente', 'success');

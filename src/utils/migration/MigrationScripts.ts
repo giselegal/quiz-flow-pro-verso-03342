@@ -6,6 +6,7 @@
 
 import { migrationManager, quickMigrate } from '../storage/MigrationManager';
 import { advancedStorage } from '../storage/AdvancedStorageSystem';
+import { StorageService } from '@/services/core/StorageService';
 
 /**
  * Script 1: Análise detalhada do localStorage atual
@@ -238,7 +239,7 @@ export async function runIntegrityTest() {
 
         // Teste 2: Migração
         console.log('2️⃣ Testando migração...');
-        localStorage.setItem('test_migrate', JSON.stringify({ value: 'test' }));
+        StorageService.safeSetJSON('test_migrate', { value: 'test' });
         const migrationResult = await quickMigrate(true, false);
         results.migrationTest = migrationResult.success;
 

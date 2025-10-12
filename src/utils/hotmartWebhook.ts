@@ -5,6 +5,7 @@
 // Database operations are now handled by server-side API
 import { trackSaleConversion } from './analytics';
 import { generateSemanticId } from './semanticIdGenerator';
+import { StorageService } from '@/services/core/StorageService';
 
 // Interfaces para dados do webhook Hotmart
 export interface HotmartBuyer {
@@ -289,7 +290,7 @@ export class HotmartWebhookManager {
   // Recuperar parâmetros UTM armazenados
   private getStoredUTMParameters(): Record<string, string> {
     try {
-      return JSON.parse(localStorage.getItem('utm_parameters') || '{}');
+      return StorageService.safeGetJSON('utm_parameters');
     } catch {
       return {};
     }

@@ -34,6 +34,7 @@ import QuizAppConnected from '@/components/quiz/QuizAppConnected';
 import { useBlockRegistry } from '@/runtime/quiz/blocks/BlockRegistry';
 import { BlockRegistryProvider, DEFAULT_BLOCK_DEFINITIONS } from '@/runtime/quiz/blocks/BlockRegistry';
 import { BlockRegistryProvider as BRP, useBlockRegistry as useBR } from '@/runtime/quiz/blocks/BlockRegistry';
+import { StorageService } from '@/services/core/StorageService';
 
 /**
  * QuizFunnelEditor
@@ -479,7 +480,7 @@ const QuizFunnelEditor: React.FC<QuizFunnelEditorProps> = ({ funnelId, templateI
                 secondaryStyles: simState.secondaryStyles,
                 timestamp: new Date().toISOString()
             };
-            localStorage.setItem('quizResultPayload', JSON.stringify(payload));
+            StorageService.safeSetJSON('quizResultPayload', payload);
         } catch (e) {
             console.warn('Falha ao persistir quizResultPayload', e);
         }
@@ -937,7 +938,7 @@ const QuizFunnelEditor: React.FC<QuizFunnelEditorProps> = ({ funnelId, templateI
                 // Persistir oferta selecionada para ResultPage
                 if (offer) {
                     try {
-                        localStorage.setItem('quizSelectedOffer', JSON.stringify(offer));
+                        StorageService.safeSetJSON('quizSelectedOffer', offer);
                     } catch (e) {
                         console.warn('Falha ao persistir quizSelectedOffer', e);
                     }

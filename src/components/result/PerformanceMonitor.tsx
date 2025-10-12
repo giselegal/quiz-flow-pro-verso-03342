@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { StorageService } from '@/services/core/StorageService';
 
 // Tipos para o monitoramento de desempenho
 interface PerformanceMetrics {
@@ -30,8 +31,8 @@ const PerformanceMonitor: React.FC = () => {
     const pageLoadTime = Date.now();
 
     // Verifica se há informações sobre pré-carregamento
-    const preloadedResults = localStorage.getItem('preloadedResults') === 'true';
-    const quizCompletedAt = parseInt(localStorage.getItem('quizCompletedAt') || '0', 10);
+    const preloadedResults = StorageService.safeGetString('preloadedResults') === 'true';
+    const quizCompletedAt = parseInt(StorageService.safeGetString('quizCompletedAt') || '0', 10);
 
     // Aguarda até que a página esteja completamente carregada para coletar métricas
     window.addEventListener('load', () => {
@@ -71,7 +72,7 @@ const PerformanceMonitor: React.FC = () => {
       console.log('===============================');
 
       // Limpa os dados de timestamp para não afetar futuras visitas
-      localStorage.removeItem('quizCompletedAt');
+      StorageService.safeRemove('quizCompletedAt');
     });
   }, []);
 

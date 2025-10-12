@@ -13,6 +13,7 @@ import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
+import { StorageService } from '@/services/core/StorageService';
     Palette,
     Type,
     Image as ImageIcon,
@@ -93,7 +94,7 @@ const BrandKitManager: React.FC<BrandKitManagerProps> = ({
 
     // Carregar brand kit salvo
     useEffect(() => {
-        const saved = localStorage.getItem('brand-kit-config');
+        const saved = StorageService.safeGetString('brand-kit-config');
         if (saved) {
             try {
                 setBrandKit(JSON.parse(saved));
@@ -142,7 +143,7 @@ const BrandKitManager: React.FC<BrandKitManagerProps> = ({
     const handleSave = async () => {
         setIsLoading(true);
         try {
-            localStorage.setItem('brand-kit-config', JSON.stringify(brandKit));
+            StorageService.safeSetJSON('brand-kit-config', brandKit);
             onBrandUpdate?.(brandKit);
             setHasChanges(false);
 

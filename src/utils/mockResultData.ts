@@ -1,3 +1,4 @@
+import { StorageService } from '@/services/core/StorageService';
 // @ts-nocheck
 // Mock data para testar o componente de resultado
 export const mockQuizResult = {
@@ -29,13 +30,13 @@ export const mockQuizResult = {
 
 // Função para carregar dados mock no localStorage
 export const loadMockData = () => {
-  localStorage.setItem('quizResult', JSON.stringify(mockQuizResult));
+  StorageService.safeSetJSON('quizResult', mockQuizResult);
   console.log('Dados mock carregados:', mockQuizResult);
 };
 
 // Função para limpar dados mock
 export const clearMockData = () => {
-  localStorage.removeItem('quizResult');
-  localStorage.removeItem('strategicAnswers');
+  StorageService.safeRemove('quizResult');
+  StorageService.safeRemove('strategicAnswers');
   console.log('Dados mock limpos');
 };

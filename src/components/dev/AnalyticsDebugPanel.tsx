@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { analyticsService } from '@/services/AnalyticsService';
+import { StorageService } from '@/services/core/StorageService';
 
 interface AnalyticsDebugPanelProps {
     autoRefreshMs?: number;
@@ -32,7 +33,7 @@ export const AnalyticsDebugPanel: React.FC<AnalyticsDebugPanelProps> = ({ autoRe
     useEffect(() => {
         // Captura eventos brutos (não temos getter público completo; reutilizamos storage snapshot)
         try {
-            const raw = localStorage.getItem('analytics.v1');
+            const raw = StorageService.safeGetString('analytics.v1');
             if (raw) {
                 const parsed = JSON.parse(raw);
                 if (Array.isArray(parsed.events)) {

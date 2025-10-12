@@ -2,6 +2,7 @@
 import type { BlockComponentProps } from '@/types/blocks';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/contexts';
+import { StorageService } from '@/services/core/StorageService';
 
 interface ResultHeaderBlockProps {
   title?: string;
@@ -64,7 +65,7 @@ const ResultHeaderBlock: React.FC<ResultHeaderBlockProps> = ({
   className,
 }) => {
   const { user } = useAuth();
-  const userName = (user as any)?.userName || localStorage.getItem('userName') || '';
+  const userName = (user as any)?.userName || StorageService.safeGetString('userName') || '';
 
   return (
     <div

@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { StorageService } from '@/services/core/StorageService';
 
 /**
  * 🎯 COMPONENTE PARA FORÇAR ATIVAÇÃO DA JANELA LOVABLE
@@ -95,9 +96,9 @@ export const LovableWindowActivator: React.FC = () => {
         (window as any).LOVABLE_FORCE_WINDOW = true;
 
         // 7. Local Storage para persistência
-        localStorage.setItem('lovable-window-preview', 'active');
-        localStorage.setItem('lovable-auto-open', 'true');
-        localStorage.setItem('lovable-last-activation', Date.now().toString());
+        StorageService.safeSetString('lovable-window-preview', 'active');
+        StorageService.safeSetString('lovable-auto-open', 'true');
+        StorageService.safeSetString('lovable-last-activation', Date.now().toString());
 
         // 8. Força abertura com menor impacto no main thread
         const dispatchImmediateOpen = () => {

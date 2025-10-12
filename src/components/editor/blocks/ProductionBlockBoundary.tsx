@@ -1,6 +1,7 @@
 import React, { Component, ErrorInfo, ReactNode } from 'react';
 import { AlertTriangle, RefreshCw, Bug } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { StorageService } from '@/services/core/StorageService';
 
 interface Props {
   children: ReactNode;
@@ -95,7 +96,7 @@ export class ProductionBlockBoundary extends Component<Props, State> {
 
     // Armazenar em localStorage para debug
     try {
-      const existingErrors = JSON.parse(localStorage.getItem('editor_errors') || '[]');
+      const existingErrors = StorageService.safeGetJSON('editor_errors');
       existingErrors.push(errorData);
 
       // Manter apenas os últimos 10 erros
@@ -103,7 +104,7 @@ export class ProductionBlockBoundary extends Component<Props, State> {
         existingErrors.shift();
       }
 
-      localStorage.setItem('editor_errors', JSON.stringify(existingErrors));
+      StorageService.safeSetJSON('editor_errors', existingErrors);
     } catch (storageError) {
       console.warn('Não foi possível salvar erro no localStorage:', storageError);
     }

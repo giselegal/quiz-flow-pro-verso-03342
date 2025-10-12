@@ -631,10 +631,10 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
               } catch {
                 // Fallback silencioso caso StorageService não esteja disponível
                 try {
-                  localStorage.setItem('quiz_start_time', Date.now().toString());
-                  localStorage.setItem('quiz_start_tracked', 'true');
-                  localStorage.setItem('userName', userName);
-                  localStorage.setItem('quizUserName', userName);
+                  StorageService.safeSetString('quiz_start_time', Date.now().toString());
+                  StorageService.safeSetString('quiz_start_tracked', 'true');
+                  StorageService.safeSetString('userName', userName);
+                  StorageService.safeSetString('quizUserName', userName);
                   try {
                     window.dispatchEvent(
                       new CustomEvent('quiz-user-name-updated', { detail: { userName, source: 'ButtonInlineBlock:fallback' } })

@@ -1,3 +1,4 @@
+import { StorageService } from '@/services/core/StorageService';
 /**
  * 🎛️ SISTEMA DE FEATURE FLAGS
  *
@@ -49,8 +50,8 @@ export class FeatureFlagManager {
 
     return {
       environment,
-      userId: localStorage.getItem('user_id') || undefined,
-      experimentGroups: JSON.parse(localStorage.getItem('experiment_groups') || '[]'),
+      userId: StorageService.safeGetString('user_id') || undefined,
+      experimentGroups: StorageService.safeGetJSON('experiment_groups'),
     };
   }
 

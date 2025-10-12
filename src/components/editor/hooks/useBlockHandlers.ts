@@ -2,6 +2,7 @@
 import { useCallback } from 'react';
 import type { BlockData } from '@/types/blocks';
 import { useToast } from '@/hooks/use-toast';
+import { StorageService } from '@/services/core/StorageService';
 
 export // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (value, type) => {
@@ -173,8 +174,8 @@ const useBlockHandlers = (
 
       // 🧹 LIMPEZA ADICIONAL: Remover dados corrompidos do localStorage
       try {
-        localStorage.removeItem('editorConfig');
-        localStorage.removeItem('quiz-blocks');
+        StorageService.safeRemove('editorConfig');
+        StorageService.safeRemove('quiz-blocks');
         console.log('🗑️ Cache local limpo');
       } catch (error) {
         console.warn('⚠️ Erro ao limpar cache local:', error);

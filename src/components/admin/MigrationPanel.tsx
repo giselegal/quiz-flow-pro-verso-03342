@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { AlertTriangle, CheckCircle, Play, RefreshCw, XCircle } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import { StorageService } from '@/services/core/StorageService';
 
 interface MigrationStatus {
   hasSchema: boolean;
@@ -42,7 +43,7 @@ export function MigrationPanel() {
       const response = await fetch('/api/admin/migrate', {
         method: 'GET',
         headers: {
-          Authorization: `Bearer ${localStorage.getItem('admin_token') || 'dev-token'}`,
+          Authorization: `Bearer ${StorageService.safeGetString('admin_token') || 'dev-token'}`,
           'Content-Type': 'application/json',
         },
       });
@@ -67,7 +68,7 @@ export function MigrationPanel() {
       const response = await fetch('/api/admin/migrate', {
         method: 'POST',
         headers: {
-          Authorization: `Bearer ${localStorage.getItem('admin_token') || 'dev-token'}`,
+          Authorization: `Bearer ${StorageService.safeGetString('admin_token') || 'dev-token'}`,
           'Content-Type': 'application/json',
         },
       });
