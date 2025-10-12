@@ -53,6 +53,7 @@ const ContextMigrationDiagnostics = lazy(() => import('./pages/ContextMigrationD
 // 🏢 LAYOUT ADMINISTRATIVO E DASHBOARD MODERNO
 const ModernDashboardPage = lazy(() => import('./pages/ModernDashboardPage'));
 const ModernAdminDashboard = lazy(() => import('./pages/ModernAdminDashboard'));
+const CurrentFunnelPage = lazy(() => import('./pages/dashboard/CurrentFunnelPage'));
 
 // 🚀 PHASE 2 ENTERPRISE DASHBOARD
 const Phase2Dashboard = lazy(() => import('./pages/Phase2Dashboard'));
@@ -399,6 +400,15 @@ function App() {
                         </Route>
 
 
+
+                        {/* 🎯 FUNIL ATUAL ISOLADO (Quiz de Estilo Pessoal) */}
+                        <Route path="/admin/funil-atual">
+                          <div data-testid="current-funnel-page">
+                            <Suspense fallback={<EnhancedLoadingFallback message="Carregando funil atual..." />}>
+                              <CurrentFunnelPage />
+                            </Suspense>
+                          </div>
+                        </Route>
 
                         {/* 🎯 ADMIN DASHBOARD CONSOLIDADO */}
                         <Route path="/admin">
