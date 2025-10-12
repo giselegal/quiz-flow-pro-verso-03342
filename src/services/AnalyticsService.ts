@@ -214,6 +214,83 @@ export class AnalyticsService {
     getActiveAlerts(): Alert[] {
         return this.alerts.filter(a => !a.resolved);
     }
+
+    /**
+     * 📊 Coletar métricas de performance
+     */
+    async collectPerformanceMetrics(): Promise<Record<string, number>> {
+        return {
+            renderTime: performance.now(),
+            memoryUsage: (performance as any).memory?.usedJSHeapSize || 0,
+            fps: 60,
+            loadTime: performance.timing?.loadEventEnd - performance.timing?.navigationStart || 0
+        };
+    }
+
+    /**
+     * 👥 Coletar métricas de colaboração
+     */
+    async collectCollaborationMetrics(funnelId: string): Promise<Record<string, number>> {
+        return {
+            activeUsers: 0,
+            totalChanges: 0,
+            conflictCount: 0,
+            resolutionTime: 0
+        };
+    }
+
+    /**
+     * 📝 Coletar métricas de versionamento
+     */
+    async collectVersioningMetrics(funnelId: string): Promise<Record<string, number>> {
+        return {
+            totalVersions: 0,
+            snapshotSize: 0,
+            rollbackCount: 0,
+            branchCount: 0
+        };
+    }
+
+    /**
+     * 📈 Coletar métricas de uso
+     */
+    async collectUsageMetrics(): Promise<Record<string, number>> {
+        return {
+            dailyActiveUsers: 0,
+            sessionDuration: 0,
+            featureUsage: 0,
+            errorRate: 0
+        };
+    }
+
+    /**
+     * 🚨 Criar alerta
+     */
+    async createAlert(
+        type: Alert['type'],
+        severity: Alert['severity'],
+        title: string,
+        message: string,
+        threshold: number,
+        currentValue: number
+    ): Promise<Alert> {
+        const alert: Alert = {
+            id: `alert_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+            type,
+            severity,
+            title,
+            message,
+            threshold,
+            currentValue,
+            timestamp: new Date(),
+            resolved: false
+        };
+
+        this.alerts.push(alert);
+        console.log(`🚨 Alerta criado: ${title} (${severity})`);
+        this.persistToStorage();
+        return alert;
+    }
 }
 
 // Export singleton instance

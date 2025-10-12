@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * 📊 USE UNIFIED ANALYTICS - Hook de Analytics e Monitoramento
  * 
@@ -171,7 +170,7 @@ export function useUnifiedAnalytics(
       for (const [key, value] of Object.entries(metrics)) {
         await recordMetric(
           key,
-          value,
+          value as number,
           key.includes('Time') || key.includes('Latency') ? 'ms' :
             key.includes('Usage') || key.includes('Rate') ? '%' : 'count',
           'performance',
@@ -194,7 +193,7 @@ export function useUnifiedAnalytics(
       for (const [key, value] of Object.entries(metrics)) {
         await recordMetric(
           key,
-          value,
+          value as number,
           key.includes('Rate') || key.includes('Duration') ? 'min' : 'count',
           'collaboration',
           { funnelId }
@@ -216,7 +215,7 @@ export function useUnifiedAnalytics(
       for (const [key, value] of Object.entries(metrics)) {
         await recordMetric(
           key,
-          value,
+          value as number,
           key.includes('Ratio') ? '%' : key.includes('Storage') ? 'MB' : 'count',
           'versioning',
           { funnelId }
