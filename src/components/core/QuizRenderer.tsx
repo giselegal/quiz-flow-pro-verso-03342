@@ -1,13 +1,16 @@
 import UniversalBlockRenderer from '@/components/editor/blocks/UniversalBlockRenderer';
 import { useQuizFlow } from '@/hooks/core/useQuizFlow';
 import { Block } from '@/types/editor';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState, useCallback } from 'react';
 import { cn } from '@/lib/utils';
 // Validação centralizada cobre regras por etapa
 import { useCentralizedStepValidation } from '@/hooks/useCentralizedStepValidation';
 import { useStepNavigationStore } from '@/stores/useStepNavigationStore';
 import { StorageService } from '@/services/core/StorageService';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
+// V3.0 Template Support
+import V3Renderer from './V3Renderer';
+import type { TemplateV3, UserData } from '@/types/template-v3.types';
 
 interface QuizRendererProps {
   mode?: 'production' | 'preview' | 'editor';
@@ -220,6 +223,71 @@ export const QuizRenderer: React.FC<QuizRendererProps> = React.memo(({
   // Memoizar o wrapper de stepBlocks por chave de etapa para estabilidade de identidade
   const validationBlocks = useMemo(() => ({ [`step-${currentStep}`]: stableStepBlocks } as any), [currentStep, stableStepBlocks]);
 
+  // 🆕 V3.0: Helper para obter dados do usuário do quiz
+  const getUserData = useCallback((): UserData | undefined => {
+    try {
+      // Buscar resultado do quiz do storage
+      const result = StorageService.safeGetJSON('quizResult');
+      const userName = StorageService.safeGetString('userName') ||
+        StorageService.safeGetString('quizUserName') ||
+        'Você';
+
+      if (!result || !result.primaryStyle) {
+        return {
+          userName,
+          styleName: 'Neutro',
+          email: StorageService.safeGetString('userEmail') || undefined,
+        };
+      }
+
+      return {
+        userName,
+        styleName: result.primaryStyle?.style || result.primaryStyle?.category || 'Neutro',
+        email: StorageService.safeGetString('userEmail') || undefined,
+        completedAt: result.completedAt || new Date().toISOString(),
+      };
+    } catch (error) {
+      console.error('Error getting user data:', error);
+      return undefined;
+    }
+  }, []);
+
+  // 🆕 V3.0: Handler para analytics
+  const handleAnalytics = useCallback((eventName: string, data: Record<string, any>) => {
+    try {
+      // Google Analytics 4
+      if (typeof window !== 'undefined' && (window as any).gtag) {
+        (window as any).gtag('event', eventName, {
+          ...data,
+          page_path: window.location.pathname,
+          page_title: document.title,
+        });
+      }
+
+      // Facebook Pixel
+      if (typeof window !== 'undefined' && (window as any).fbq) {
+        if (eventName.includes('cta_') && eventName.includes('_click')) {
+          (window as any).fbq('track', 'Lead', data);
+        }
+      }
+
+      // Console em dev
+      if (process.env.NODE_ENV === 'development') {
+        console.log('📊 Analytics:', eventName, data);
+      }
+    } catch (error) {
+      console.error('Analytics error:', error);
+    }
+  }, []);
+
+  // 🆕 V3.0: Verificar se deve usar v3 renderer
+  const shouldUseV3Renderer = useMemo(() => {
+    const stepNum = currentStepOverride ?? currentStep;
+    // Por enquanto, apenas step 20 (resultado)
+    // No futuro: step 21 (thank you/upsell)
+    return stepNum === 20 && mode === 'production';
+  }, [currentStep, currentStepOverride, mode]);
+
   // ✅ Validação centralizada (alinha com EditorPro)
   useCentralizedStepValidation({
     currentStep,
@@ -347,6 +415,29 @@ export const QuizRenderer: React.FC<QuizRendererProps> = React.memo(({
           <p className="text-gray-600">Analisando suas respostas...</p>
         </div>
       );
+    }
+
+    // 🆕 V3.0: Se for step 20 em produção, tentar usar V3Renderer
+    if (shouldUseV3Renderer) {
+      try {
+        // Carregar template v3.0 dinamicamente
+        const templateV3 = require('@/templates/step-20-v3.json') as TemplateV3;
+
+        if (templateV3 && templateV3.templateVersion === '3.0') {
+          return (
+            <V3Renderer
+              template={templateV3}
+              userData={getUserData()}
+              onAnalytics={handleAnalytics}
+              mode="full"
+              className="quiz-v3-content"
+            />
+          );
+        }
+      } catch (error) {
+        console.warn('Failed to load v3 template, falling back to v2:', error);
+        // Fallback para renderização v2.0
+      }
     }
 
     // Se conteúdo customizado foi passado (modo edição), usar ele dentro do mesmo wrapper
