@@ -6,7 +6,7 @@ import React from 'react';
 import { Input } from '@/components/ui/input';
 import { useLocation } from 'wouter';
 // TemplateManager import removed - commented out to prevent unused import error
-import OPTIMIZED_FUNNEL_CONFIG from '@/config/optimized21StepsFunnel';
+import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
 import { publishFunnel } from '@/services/funnelPublishing';
 import { AdminBreadcrumbs } from '@/components/admin/AdminBreadcrumbs';
 import { useMyFunnelsPersistence } from '@/hooks/editor/useContextualEditorPersistence';
@@ -171,7 +171,12 @@ const MyFunnelsPage: React.FC = () => {
                 description: 'Funil otimizado de 21 etapas para quiz',
                 isPublished: false,
                 version: 1,
-                settings: OPTIMIZED_FUNNEL_CONFIG,
+                settings: {
+                  steps: QUIZ_STYLE_21_STEPS_TEMPLATE,
+                  metadata: {
+                    collectUserName: true
+                  }
+                },
                 pages: []
             };
 

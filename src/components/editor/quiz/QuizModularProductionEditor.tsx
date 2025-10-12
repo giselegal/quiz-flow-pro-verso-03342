@@ -1970,7 +1970,7 @@ const LivePreviewContainer: React.FC<LivePreviewContainerProps> = ({ funnelId, s
             const sp = new URLSearchParams(typeof window !== 'undefined' ? window.location.search : '');
             const q = sp.get('preview');
             if (q === 'live' || q === 'production') return q;
-            const stored = typeof window !== 'undefined' ? window.StorageService.safeGetString('editor_preview_mode') : null;
+            const stored = typeof window !== 'undefined' ? StorageService.safeGetString('editor_preview_mode') : null;
             if (stored === 'live' || stored === 'production') return stored;
         } catch {/* ignore */ }
         return 'live';
@@ -1987,7 +1987,7 @@ const LivePreviewContainer: React.FC<LivePreviewContainerProps> = ({ funnelId, s
 
     // Persistir preferência de modo
     React.useEffect(() => {
-        try { window.StorageService.safeSetString('editor_preview_mode', mode); } catch {/* ignore */ }
+        try { StorageService.safeSetString('editor_preview_mode', mode); } catch {/* ignore */ }
     }, [mode]);
 
     return (

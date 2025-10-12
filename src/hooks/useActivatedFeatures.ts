@@ -3,7 +3,7 @@
  */
 
 import { useState, useEffect } from 'react';
-import { activatedAnalytics } from '@/services/ActivatedAnalytics';
+// import { activatedAnalytics } from '@/services/ActivatedAnalytics';
 
 export const useActivatedFeatures = () => {
   const [features, setFeatures] = useState({
@@ -31,7 +31,8 @@ export const useActivatedFeatures = () => {
   const loadAIInsights = async () => {
     setIsLoading(true);
     try {
-      const data = await activatedAnalytics.getAIPoweredInsights();
+      // const data = await activatedAnalytics.getAIPoweredInsights();
+      const data = { message: 'AI Insights placeholder' };
       setInsights(data);
     } catch (error) {
       console.error('Failed to load AI insights:', error);

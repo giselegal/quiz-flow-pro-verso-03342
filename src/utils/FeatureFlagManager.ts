@@ -51,7 +51,7 @@ export class FeatureFlagManager {
     return {
       environment,
       userId: StorageService.safeGetString('user_id') || undefined,
-      experimentGroups: StorageService.safeGetJSON('experiment_groups'),
+      experimentGroups: StorageService.safeGetJSON('experiment_groups') || undefined,
     };
   }
 

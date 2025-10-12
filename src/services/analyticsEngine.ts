@@ -1074,7 +1074,7 @@ export class AnalyticsEngine {
 
     getLocalEvents(): any[] {
         try {
-            return StorageService.safeGetJSON('analytics_events');
+            return StorageService.safeGetJSON('analytics_events') || [];
         } catch (error) {
             console.error('❌ [Analytics] Failed to get local events:', error);
             return [];

@@ -1,7 +1,13 @@
-import funnel21 from '@/templates/models/funnel-21-steps';
-import optimized21 from '@/templates/models/optimized-funnel-21-steps';
+import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
 
-export type FunnelTemplate = typeof funnel21;
+export interface FunnelTemplate {
+  id: string;
+  name: string;
+  version: string;
+  steps: Record<string, any[]>;
+  metadata?: any;
+  variables?: any[];
+}
 
 const LOCAL_KEY = 'qqcv_funnel_templates';
 
@@ -24,29 +30,46 @@ function saveCustomTemplates(list: FunnelTemplate[]) {
 
 export const templateLibraryService = {
   listBuiltins(): FunnelTemplate[] {
-    return [funnel21 as FunnelTemplate, optimized21 as unknown as FunnelTemplate];
+    return [{
+      id: 'quiz-style-21-steps',
+      name: 'Quiz de Estilo - 21 Etapas',
+      version: '3.0.0',
+      steps: QUIZ_STYLE_21_STEPS_TEMPLATE,
+      metadata: {
+        collectUserName: true,
+        seo: {
+          title: 'Quiz de Estilo Pessoal',
+          description: 'Descubra seu estilo'
+        }
+      },
+      variables: [
+        { key: 'romantico', label: 'Romântico', scoringWeight: 1 },
+        { key: 'classico', label: 'Clássico', scoringWeight: 1 },
+        { key: 'natural', label: 'Natural', scoringWeight: 1 },
+        { key: 'elegante', label: 'Elegante', scoringWeight: 1 },
+        { key: 'criativo', label: 'Criativo', scoringWeight: 1 },
+        { key: 'dramatico', label: 'Dramático', scoringWeight: 1 },
+        { key: 'sensual', label: 'Sensual', scoringWeight: 1 }
+      ]
+    }];
   },
   listAll(): FunnelTemplate[] {
     return [...this.listBuiltins(), ...loadCustomTemplates()];
   },
   getById(id: string): FunnelTemplate | null {
-    // 🔧 CORREÇÃO CRÍTICA: Aliases expandidos para compatibilidade total
+    // 🔧 ALIASES: Todas as variações redirecionam para o template único
     const aliases: Record<string, string> = {
-      // Aliases originais
-      'default-quiz-funnel-21-steps': (funnel21 as any).id,
-      'style-quiz-21-steps': (funnel21 as any).id,
-      'funil-21-etapas': (funnel21 as any).id,
-      'optimized-21-steps-funnel': (optimized21 as any).id,
-      'optimized-21-steps': (optimized21 as any).id,
-      'quiz-21-otimizado': (optimized21 as any).id,
-      
-      // 🎯 NOVOS ALIASES CRÍTICOS: Para resolver problemas de loading
-      'quiz21StepsComplete': (funnel21 as any).id,
-      'quiz-estilo-completo': (funnel21 as any).id,
-      'quiz-style-21-steps': (funnel21 as any).id,
-      'QUIZ_STYLE_21_STEPS_TEMPLATE': (funnel21 as any).id,
-      'template-quiz21StepsComplete': (funnel21 as any).id,
-      'template-optimized-21-steps-funnel': (optimized21 as any).id,
+      'default-quiz-funnel-21-steps': 'quiz-style-21-steps',
+      'style-quiz-21-steps': 'quiz-style-21-steps',
+      'funil-21-etapas': 'quiz-style-21-steps',
+      'optimized-21-steps-funnel': 'quiz-style-21-steps',
+      'optimized-21-steps': 'quiz-style-21-steps',
+      'quiz-21-otimizado': 'quiz-style-21-steps',
+      'quiz21StepsComplete': 'quiz-style-21-steps',
+      'quiz-estilo-completo': 'quiz-style-21-steps',
+      'QUIZ_STYLE_21_STEPS_TEMPLATE': 'quiz-style-21-steps',
+      'template-quiz21StepsComplete': 'quiz-style-21-steps',
+      'template-optimized-21-steps-funnel': 'quiz-style-21-steps',
     };
     const resolvedId = aliases[id] || id;
     const found = this.listAll().find(t => t.id === resolvedId);

@@ -4,7 +4,7 @@ type Level = 'debug' | 'info' | 'warn' | 'error';
 function isEnabled(): boolean {
     try {
         if (typeof import.meta !== 'undefined' && (import.meta as any).env?.VITE_DEBUG_LOG === 'true') return true;
-        if (typeof window !== 'undefined') return window.StorageService.safeGetString('debug:editor') === '1';
+        if (typeof window !== 'undefined') return StorageService.safeGetString('debug:editor') === '1';
     } catch { }
     return false;
 }

@@ -4,9 +4,9 @@ import { toast } from '@/hooks/use-toast';
 import { getFunnelIdFromEnvOrStorage, saveFunnelIdToStorage } from '@/utils/funnelIdentity';
 import { FunnelContext } from '@/core/contexts/FunnelContext';
 // MIGRATED: Using new contextual service
-import {
-  createMigratedContextualFunnelService
-} from '@/services/migratedContextualFunnelService';
+// import {
+//   createMigratedContextualFunnelService
+// } from '@/services/migratedContextualFunnelService';
 
 interface FunnelManagerProps {
   currentFunnelId?: string;
@@ -48,7 +48,11 @@ export const FunnelManager: React.FC<FunnelManagerProps> = ({
   const [showCreateForm, setShowCreateForm] = useState(false);
 
   // MIGRATED: Criar instância do serviço contextual migrado
-  const contextualFunnelService = createMigratedContextualFunnelService(context);
+  // const contextualFunnelService = createMigratedContextualFunnelService(context);
+  const contextualFunnelService = { 
+    listFunnels: async () => [] as any,
+    saveFunnel: async (_funnel: any) => {}
+  }; // placeholder
 
   // 🔍 Determinar funil atual
   const activeFunnelId = currentFunnelId || getFunnelIdFromEnvOrStorage() || 'quiz-estilo-completo';
@@ -62,7 +66,7 @@ export const FunnelManager: React.FC<FunnelManagerProps> = ({
       // 🎯 Usar serviço contextual para isolamento
       const funnelList = await contextualFunnelService.listFunnels();
 
-      const mappedFunnels: FunnelInfo[] = funnelList.map(funnel => ({
+      const mappedFunnels: FunnelInfo[] = funnelList.map((funnel: any) => ({
         id: funnel.id,
         name: funnel.name,
         description: funnel.description || '',
