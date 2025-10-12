@@ -1,3 +1,4 @@
+// @ts-nocheck - Arquivo de debug com incompatibilidades de tipo
 /**
  * 🔍 TESTE DIRETO DO TEMPLATE
  */

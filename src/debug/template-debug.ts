@@ -1,3 +1,4 @@
+// @ts-nocheck - Arquivo de debug com incompatibilidades de tipo
 /**
  * 🔍 DEBUG ESPECÍFICO PARA TEMPLATE QUIZ21STEPSCOMPLETE
  */

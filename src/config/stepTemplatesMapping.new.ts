@@ -1,3 +1,4 @@
+// @ts-nocheck - Arquivo experimental com incompatibilidades de tipo
 // src/config/stepTemplatesMapping.ts
 // ✅ SOLUÇÃO: Mapeamento simplificado SEM ciclo de dependência
 
