@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * 🔄 CONSOLIDATION UPDATE:
  * - SchemaValidationError agora usa tipos unificados de @/types/core  
