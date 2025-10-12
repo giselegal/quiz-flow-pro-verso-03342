@@ -1,6 +1,5 @@
-// @ts-nocheck
-import { useState, useCallback, useMemo, useRef } from 'react';
-import { QuizAnswer, QuizResult, StyleResult } from '@/types/quiz';
+import { useState, useCallback, useMemo, useRef, useEffect } from 'react';
+import type { QuizResult } from '@/types/quiz';
 import { StorageService } from '@/services/core/StorageService';
 
 /**
@@ -329,7 +328,7 @@ export const useOptimizedQuizEngine = (options = DEFAULT_OPTIONS) => {
   }, [state, isCacheValid]);
 
   // Cleanup on unmount
-  React.useEffect(() => {
+  useEffect(() => {
     return () => {
       if (debounceRef.current) {
         clearTimeout(debounceRef.current);

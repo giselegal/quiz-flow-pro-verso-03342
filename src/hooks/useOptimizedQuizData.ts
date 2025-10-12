@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * Optimized Quiz Data Hook - Replaces localStorage with Supabase for critical data
  *
@@ -11,9 +10,9 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import useOptimizedScheduler from '@/hooks/useOptimizedScheduler';
-import { useUserData } from '../context/UserDataContext';
-import { supabase } from '../integrations/supabase/client';
-import { QuizSession } from '../types/unified-schema';
+import { useUserData } from '@/contexts/UserDataContext';
+import { supabase } from '@/integrations/supabase/client';
+import type { QuizSession } from '@/types/unified-schema';
 import { StorageService } from '@/services/core/StorageService';
 
 interface QuizAnswer {

@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * 🚀 USE HISTORY STATE WITH INDEXEDDB
  *
@@ -33,7 +32,18 @@ export interface UseHistoryStateOptions {
     compression?: boolean;
 }
 
-export const useHistoryStateIndexedDB = <T>(initialState: T, options: UseHistoryStateOptions = {}) => {
+export const useHistoryStateIndexedDB = <T>(initialState: T, options: UseHistoryStateOptions = {}): {
+    state: T;
+    setState: (newState: T | ((prev: T) => T)) => void;
+    undo: () => void;
+    redo: () => void;
+    reset: (resetState?: T) => void;
+    canUndo: boolean;
+    canRedo: boolean;
+    history: HistoryState<T>;
+    storageReady: boolean;
+    clearHistory: () => void;
+} => {
     const {
         historyLimit = 50,
         storageKey,
@@ -108,8 +118,8 @@ export const useHistoryStateIndexedDB = <T>(initialState: T, options: UseHistory
                 ? serialize(history as any)
                 : history;
 
-        let timer: number | null = null;
-        const save = async () => {
+        let timer: NodeJS.Timeout | null = null;
+        const save = async (): Promise<void> => {
             try {
                 await storageManager.setItem(storageKey, toPersist, {
                     namespace,

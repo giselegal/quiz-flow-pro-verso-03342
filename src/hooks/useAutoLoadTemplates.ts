@@ -1,5 +1,4 @@
-// @ts-nocheck
-import { useEditor } from '@/components/editor/EditorProviderMigrationAdapter';
+import { useEditor } from '@/hooks/useUnifiedEditor';
 import { useFunnels } from '@/contexts';
 import { useEffect } from 'react';
 
@@ -7,9 +6,12 @@ import { useEffect } from 'react';
  * Hook para carregar automaticamente os templates das etapas
  * quando o usuário navega entre as etapas no editor
  */
-export const useAutoLoadTemplates = () => {
+export const useAutoLoadTemplates = (): { 
+  activeStageId: string; 
+  currentFunnelId: string | undefined; 
+} => {
   const editor = useEditor();
-  const activeStageId = editor?.stages?.[0]?.id || 'step-1';
+  const activeStageId = editor?.activeStageId || 'step-1';
   const { getTemplateBlocks, currentFunnelId } = useFunnels();
 
   useEffect(() => {

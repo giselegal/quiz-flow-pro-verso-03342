@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * 🤖 HOOK PARA WHATSAPP CART RECOVERY
  * 
@@ -7,13 +6,15 @@
  */
 
 import { useState, useCallback, useEffect } from 'react';
-import {
+import type {
   WhatsAppCartRecoveryAgent,
   WhatsAppConfig,
   CartAbandonmentData,
+} from '@/services/WhatsAppCartRecoveryAgent';
+import {
   initializeWhatsAppAgent,
   getWhatsAppAgent
-} from '../services/WhatsAppCartRecoveryAgent';
+} from '@/services/WhatsAppCartRecoveryAgent';
 
 // Mock interfaces for compatibility
 interface WhatsAppRecoveryStats {

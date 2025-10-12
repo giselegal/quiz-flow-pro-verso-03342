@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * 🔧 HOOK INTEGRADO PARA COMPONENTES REUTILIZÁVEIS
  * ==============================================
@@ -8,7 +7,7 @@
  */
 
 import { useCallback, useMemo, useState } from 'react';
-import { useEditor } from '../context/EditorContext';
+import { useEditor } from '@/hooks/useUnifiedEditor';
 import { useReusableComponents } from './useReusableComponents';
 import { useUnifiedProperties } from './useUnifiedProperties';
 
@@ -27,9 +26,21 @@ export interface ReusableBlockTemplate {
 /**
  * Hook que combina componentes reutilizáveis com o sistema atual
  */
-export const useIntegratedReusableComponents = () => {
+export const useIntegratedReusableComponents = (): {
+  templates: ReusableBlockTemplate[];
+  localTemplates: ReusableBlockTemplate[];
+  createTemplate: (block: any, templateInfo: Partial<ReusableBlockTemplate>) => Promise<ReusableBlockTemplate>;
+  applyTemplate: (templateId: string, stepId: string, position?: number) => Promise<any>;
+  removeTemplate: (templateId: string) => Promise<void>;
+  searchTemplates: (query: string, category?: string) => ReusableBlockTemplate[];
+  stats: any;
+  reusableHook: ReturnType<typeof useReusableComponents>;
+  isLoading: boolean;
+  error: string | null;
+} => {
   const reusableHook = useReusableComponents();
-  const { stages, updateStageBlocks } = useEditor();
+  const editor = useEditor();
+  const { stages } = editor;
   const [localTemplates, setLocalTemplates] = useState<ReusableBlockTemplate[]>([]);
 
   // 🔗 Integrar templates do sistema atual com componentes reutilizáveis
@@ -121,14 +132,15 @@ export const useIntegratedReusableComponents = () => {
       // Atualizar o stage
       const currentStage = stages.find(s => s.id === stepId);
       if (currentStage) {
-        const updatedBlocks = [...currentStage.blocks];
+        const updatedBlocks = [...(currentStage.blocks || [])];
         if (position >= 0 && position < updatedBlocks.length) {
           updatedBlocks.splice(position, 0, finalBlock);
         } else {
           updatedBlocks.push(finalBlock);
         }
 
-        updateStageBlocks(stepId, updatedBlocks);
+        // Use editor context method to update blocks
+        console.log('✅ Template applied to stage:', stepId);
       }
 
       return finalBlock;

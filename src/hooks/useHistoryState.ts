@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { useCallback, useEffect, useState } from 'react';
 import { FunnelContext } from '@/core/contexts/FunnelContext';
 import { useUnifiedCRUDOptional } from '@/contexts';
@@ -22,13 +21,24 @@ export interface UseHistoryStateOptions {
   serialize?: (present: any) => any;
 }
 
-export const useHistoryState = <T>(initialState: T, options: UseHistoryStateOptions = {}) => {
-  // Determinar contexto ativo (fallback EDITOR) no topo do hook
+export const useHistoryState = <T>(initialState: T, options: UseHistoryStateOptions = {}): {
+  present: T;
+  setPresent: (newStateOrUpdater: T | ((prev: T) => T)) => void;
+  undo: () => void;
+  redo: () => void;
+  reset: () => void;
+  canUndo: boolean;
+  canRedo: boolean;
+  getPresent: () => T;
+  history: HistoryState<T>;
+} => {
   let activeContext: FunnelContext = FunnelContext.EDITOR;
   try {
     const crud = useUnifiedCRUDOptional();
     if (crud?.funnelContext) activeContext = crud.funnelContext;
-  } catch { }
+  } catch { 
+    // Fallback to default context
+  }
   const {
     historyLimit = 50,
     storageKey,
@@ -77,8 +87,8 @@ export const useHistoryState = <T>(initialState: T, options: UseHistoryStateOpti
         ? serialize(history as any)
         : history;
 
-    let timer: number | null = null;
-    const save = () => {
+    let timer: NodeJS.Timeout | null = null;
+    const save = (): void => {
       try {
         const serialized = JSON.stringify(toPersist);
         // Guardar: evita salvar estados grandes demais
@@ -103,7 +113,7 @@ export const useHistoryState = <T>(initialState: T, options: UseHistoryStateOpti
     };
 
     if (persistDebounceMs && persistDebounceMs > 0) {
-      timer = window.setTimeout(save, persistDebounceMs);
+      timer = setTimeout(save, persistDebounceMs);
     } else {
       save();
     }
@@ -113,7 +123,7 @@ export const useHistoryState = <T>(initialState: T, options: UseHistoryStateOpti
         clearTimeout(timer);
       }
     };
-  }, [history, storageKey, enablePersistence, persistPresentOnly, persistDebounceMs, serialize]);
+  }, [history, storageKey, enablePersistence, persistPresentOnly, persistDebounceMs, serialize, activeContext]);
 
   const setPresent = useCallback(
     (newStateOrUpdater: T | ((prev: T) => T)) => {
