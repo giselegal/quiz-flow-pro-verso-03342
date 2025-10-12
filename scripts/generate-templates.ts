@@ -333,6 +333,9 @@ async function main() {
 export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any[]> = IS_TEST ? MINIMAL_TEST_TEMPLATE : {
 ${templateCode}
 };
+
+// 📋 ALIAS para compatibilidade com código legado
+export const QUIZ_QUESTIONS_COMPLETE = QUIZ_STYLE_21_STEPS_TEMPLATE;
 ${generateFileFooter()}`;
 
     // Escrever arquivo
