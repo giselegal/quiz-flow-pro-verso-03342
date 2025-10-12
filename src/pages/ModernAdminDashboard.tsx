@@ -18,6 +18,7 @@ const ParticipantsPage = React.lazy(() => import('./dashboard/ParticipantsPage')
 const FacebookMetrics = React.lazy(() => import('./dashboard/FacebookMetricsPage'));
 const MeusFunisReal = React.lazy(() => import('./dashboard/MeusFunisPageReal'));
 const TemplatesReal = React.lazy(() => import('./dashboard/TemplatesPage'));
+const CurrentFunnelPage = React.lazy(() => import('./dashboard/CurrentFunnelPage'));
 const TemplatesFunisPage = React.lazy(() => import('./dashboard/TemplatesFunisPage'));
 const ModelosFunisPage = React.lazy(() => import('./dashboard/ModelosFunisPage'));
 const TemplatePreviewPage = React.lazy(() => import('./dashboard/TemplatePreviewPage'));
@@ -167,6 +168,12 @@ const ModernAdminDashboard: React.FC = () => {
             <Route path="/admin/funnels">
               <MeusFunisReal />
             </Route>
+
+            {/* 🎯 FUNIL ATUAL - Página dedicada ao funil de produção */}
+            <Route path="/admin/funil-atual">
+              <CurrentFunnelPage />
+            </Route>
+
             <Route path="/admin/templates">
               <TemplatesReal />
             </Route>

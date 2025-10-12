@@ -400,9 +400,8 @@ function App() {
                           )}
                         </Route>
 
-
-
-                        {/* 🎯 FUNIL ATUAL COM LAYOUT UNIFICADO (Quiz de Estilo Pessoal) */}
+                        {/* 🎯 FUNIL ATUAL COM LAYOUT UNIFICADO (Quiz de Estilo Pessoal) 
+                            IMPORTANTE: Deve vir ANTES de /admin e /admin/* para não ser capturado pelo wildcard */}
                         <Route path="/admin/funil-atual">
                           <div data-testid="current-funnel-page">
                             <UnifiedAdminLayout currentView="current-funnel">
@@ -413,7 +412,8 @@ function App() {
                           </div>
                         </Route>
 
-                        {/* 🎯 ADMIN DASHBOARD CONSOLIDADO */}
+                        {/* 🎯 ADMIN DASHBOARD CONSOLIDADO 
+                            IMPORTANTE: Rotas genéricas (/admin, /admin/*) devem vir POR ÚLTIMO */}
                         <Route path="/admin">
                           <div data-testid="modern-admin-dashboard">
                             <ModernAdminDashboard />
