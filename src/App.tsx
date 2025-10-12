@@ -137,15 +137,18 @@ function App() {
                             {(() => {
                               // 🔓 Bypass inline adicional: se ?template= estiver presente e ambiente for dev-like, renderiza direto
                               try {
-                                const hasTemplate = typeof window !== 'undefined' && new URLSearchParams(window.location.search).has('template');
+                                const searchParams = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
+                                const hasTemplate = searchParams?.has('template');
+                                const funnelId = searchParams?.get('funnelId') || undefined;
                                 const disableAnon = (import.meta as any).env?.VITE_DISABLE_EDITOR_ANON === 'true';
+
                                 if (hasTemplate && !disableAnon) {
                                   return (
                                     <div data-testid="quiz-modular-production-editor-page-anon">
                                       <div className="px-3 py-2 text-xs text-amber-700 bg-amber-50 border border-amber-200 rounded mb-2">
                                         Modo desenvolvedor: acesso ao editor sem login habilitado via parâmetro de template.
                                       </div>
-                                      <UnifiedCRUDProvider autoLoad={true} context={FunnelContext.EDITOR}>
+                                      <UnifiedCRUDProvider autoLoad={true} context={FunnelContext.EDITOR} funnelId={funnelId}>
                                         <Suspense fallback={<EnhancedLoadingFallback message="Carregando editor modular..." />}>
                                           <QuizModularProductionEditor />
                                         </Suspense>
@@ -154,10 +157,16 @@ function App() {
                                   );
                                 }
                               } catch { /* ignore */ }
+
+                              // Extrair funnelId da query string (se presente)
+                              const funnelIdFromUrl = typeof window !== 'undefined'
+                                ? new URLSearchParams(window.location.search).get('funnelId') || undefined
+                                : undefined;
+
                               return (
                                 <EditorAccessControl feature="editor" requiredPlan="free">
                                   <div data-testid="quiz-modular-production-editor-page">
-                                    <UnifiedCRUDProvider autoLoad={true} context={FunnelContext.EDITOR}>
+                                    <UnifiedCRUDProvider autoLoad={true} context={FunnelContext.EDITOR} funnelId={funnelIdFromUrl}>
                                       <Suspense fallback={<EnhancedLoadingFallback message="Carregando editor modular..." />}>
                                         <QuizModularProductionEditor />
                                       </Suspense>
