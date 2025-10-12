@@ -30,7 +30,7 @@ export { PreviewProvider, usePreview } from './ui/PreviewContext';
 export { ScrollSyncProvider, useScrollSync } from './ui/ScrollSyncContext';
 
 // 💾 DATA
-export { default as UnifiedCRUDProvider, useUnifiedCRUD } from './data/UnifiedCRUDProvider';
+export { default as UnifiedCRUDProvider, useUnifiedCRUD, useUnifiedCRUDOptional } from './data/UnifiedCRUDProvider';
 export { UserDataProvider, useUserData } from './data/UserDataContext';
 export { StepsProvider, useSteps } from './data/StepsContext';
 
