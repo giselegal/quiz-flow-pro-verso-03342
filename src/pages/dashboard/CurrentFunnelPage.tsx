@@ -59,7 +59,7 @@ const CURRENT_FUNNEL = {
     totalSteps: 21,
     lastModified: new Date('2025-10-12'),
     url: '/quiz-estilo',
-    editorUrl: '/editor/quiz-estilo-modular',
+    editorUrl: '/editor', // Rota oficial unificada do editor
     previewUrl: '/preview?slug=quiz-estilo',
     structure: {
         intro: 1,             // Etapa 1: Coleta de lead
