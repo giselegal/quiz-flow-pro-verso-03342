@@ -9,6 +9,8 @@
     "analisar-etapas": "node scripts/analisador-etapas.mjs",
     "analisar-pontuacao": "node scripts/analisador-pontuacao.mjs",
     "verificar-schema": "node scripts/verificador-schema-hooks.mjs",
+    "generate:templates": "tsx scripts/generate-templates.ts",
+    "prebuild": "npm run generate:templates",
     "dev": "vite --host 0.0.0.0",
     "dev:server": "cross-env NODE_ENV=development tsx server/index.ts",
     "dev:full": "concurrently \"npm run dev\" \"npm run dev:server\"",
