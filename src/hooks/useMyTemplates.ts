@@ -8,6 +8,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { FunnelContext, generateContextualStorageKey } from '@/core/contexts/FunnelContext';
 import { safeGetItem, safeSetItem } from '@/utils/contextualStorage';
+import { StorageService } from '@/services/core/StorageService';
 
 export interface UserTemplate {
     id: string;
@@ -68,7 +69,7 @@ export const useMyTemplates = () => {
                         safeSetItem(TEMPLATES_LIST_KEY_NEW, JSON.stringify(legacyIds), CTX);
                     } catch { }
                 } else {
-                    const legacyTemplatesStr = localStorage.getItem('saved-templates');
+                    const legacyTemplatesStr = StorageService.safeGetString('saved-templates');
                     if (legacyTemplatesStr) {
                         try {
                             const legacyTemplates = JSON.parse(legacyTemplatesStr);
@@ -260,7 +261,7 @@ export const useMyTemplates = () => {
     const migrateLegacyTemplates = useCallback(async (currentTemplates: UserTemplate[]): Promise<void> => {
         try {
             // Verificar se há templates no formato antigo
-            const legacyTemplatesStr = localStorage.getItem('saved-templates');
+            const legacyTemplatesStr = StorageService.safeGetString('saved-templates');
             if (!legacyTemplatesStr) return;
 
             const legacyTemplates = JSON.parse(legacyTemplatesStr);
@@ -304,7 +305,7 @@ export const useMyTemplates = () => {
             safeSetItem(TEMPLATES_LIST_KEY_NEW, JSON.stringify(currentIds), CTX);
 
             // Remover dados legados (comentado por segurança)
-            // localStorage.removeItem('saved-templates');
+            // StorageService.safeRemove('saved-templates');
 
             console.log(`✅ ${legacyTemplates.length} templates migrados para MY_TEMPLATES`);
         } catch (error) {

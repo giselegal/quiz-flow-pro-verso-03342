@@ -1,5 +1,6 @@
 import { useCallback, useMemo } from 'react';
 import { PropertyType, PropertyCategory, UnifiedProperty, UnifiedBlock } from './useUnifiedProperties';
+import { StorageService } from '@/services/core/StorageService';
 
 /**
  * 🚀 Hook otimizado para propriedades unificadas
@@ -25,12 +26,12 @@ const propertiesCache = new Map<string, UnifiedProperty[]>();
 const loadNoCodeConfiguration = () => {
     try {
         // Configurações gerais NoCode
-        const noCodeConfig = localStorage.getItem('quiz-nocode-config');
-        const globalConfig = localStorage.getItem('quiz-global-config');
+        const noCodeConfig = StorageService.safeGetString('quiz-nocode-config');
+        const globalConfig = StorageService.safeGetString('quiz-global-config');
 
         // Configurações específicas por tipo de bloco/resultado
-        const resultConfig = localStorage.getItem('quiz-result-config');
-        const step20Config = localStorage.getItem('step20-configuration');
+        const resultConfig = StorageService.safeGetString('quiz-result-config');
+        const step20Config = StorageService.safeGetString('step20-configuration');
 
         // Configurações específicas por estilo (para blocos de resultado)
         const styleConfigs: Record<string, any> = {};

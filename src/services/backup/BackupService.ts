@@ -1,3 +1,4 @@
+import { StorageService } from '@/services/core/StorageService';
 /**
  * 💾 BACKUP SERVICE - Phase 4 Implementation
  * Automated backup and recovery system
@@ -454,7 +455,7 @@ class BackupService {
           restorePoints: this.restorePoints.slice(0, 20),
           config: this.config
         };
-        localStorage.setItem('backup_service', JSON.stringify(data));
+        StorageService.safeSetJSON('backup_service', data);
       } catch (error) {
         console.warn('Failed to persist backup data:', error);
       }
@@ -467,7 +468,7 @@ class BackupService {
   private loadPersistedData() {
     if (typeof window !== 'undefined') {
       try {
-        const saved = localStorage.getItem('backup_service');
+        const saved = StorageService.safeGetString('backup_service');
         if (saved) {
           const data = JSON.parse(saved);
           this.backups = data.backups || [];

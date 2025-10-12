@@ -3,6 +3,7 @@ import { useQuizLogic } from '../../hooks/useQuizLogic';
 import { useToast } from '@/components/ui/use-toast';
 import { QuizResult, StyleResult } from '@/types/quiz';
 import { QuizFlowProvider } from '@/contexts';
+import { StorageService } from '@/services/core/StorageService';
 
 // Define the context type
 type QuizContextType = ReturnType<typeof useQuizLogic> & {
@@ -74,7 +75,7 @@ export const QuizProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       console.log('Results submitted:', results);
       // Persistência local para compatibilidade com componentes que leem quizResult
       try {
-        localStorage.setItem('quizResult', JSON.stringify(results));
+        StorageService.safeSetJSON('quizResult', results);
         window.dispatchEvent(new Event('quiz-result-updated'));
       } catch (e) {
         console.debug('QuizProvider: falha ao persistir quizResult localmente', e);
@@ -125,7 +126,7 @@ export const useQuiz = () => {
     secondaryStyles: StyleResult[];
   } | null => {
     try {
-      const savedResult = localStorage.getItem('quizResult');
+      const savedResult = StorageService.safeGetString('quizResult');
       if (savedResult) {
         const parsedResult = JSON.parse(savedResult);
         return {
@@ -178,7 +179,7 @@ export const useQuiz = () => {
         console.log('Results submitted:', results);
         // Persistência local + evento para compatibilidade
         try {
-          localStorage.setItem('quizResult', JSON.stringify(results));
+          StorageService.safeSetJSON('quizResult', results);
           window.dispatchEvent(new Event('quiz-result-updated'));
         } catch (e) {
           console.debug('useQuiz: falha ao persistir quizResult localmente', e);

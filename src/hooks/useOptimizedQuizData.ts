@@ -14,6 +14,7 @@ import useOptimizedScheduler from '@/hooks/useOptimizedScheduler';
 import { useUserData } from '../context/UserDataContext';
 import { supabase } from '../integrations/supabase/client';
 import { QuizSession } from '../types/unified-schema';
+import { StorageService } from '@/services/core/StorageService';
 
 interface QuizAnswer {
   questionId: string;
@@ -108,7 +109,7 @@ export const useOptimizedQuizData = (): QuizDataHookReturn => {
       if (newBuffer.length >= 10) {
         debounce('optimized-click-flush', () => {
           const recentClicks = newBuffer.slice(-50);
-          localStorage.setItem('recent_clicks', JSON.stringify(recentClicks));
+          StorageService.safeSetJSON('recent_clicks', recentClicks);
           setClickBuffer([]);
         }, 1000);
 
@@ -216,8 +217,8 @@ export const useOptimizedQuizData = (): QuizDataHookReturn => {
         setCurrentSession(session);
 
         // Clean up old localStorage data
-        localStorage.removeItem('current_quiz_session');
-        localStorage.removeItem('quiz_start_time');
+        StorageService.safeRemove('current_quiz_session');
+        StorageService.safeRemove('quiz_start_time');
       } catch (err) {
         setError('Erro ao iniciar sessão');
         console.error('Error starting session:', err);
@@ -240,7 +241,7 @@ export const useOptimizedQuizData = (): QuizDataHookReturn => {
       setCurrentSession(null);
 
       // Clear any remaining localStorage
-      localStorage.removeItem('recent_clicks');
+      StorageService.safeRemove('recent_clicks');
     } catch (err) {
       console.error('Error ending session:', err);
     }

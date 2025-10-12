@@ -20,6 +20,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useLocation, useRoute } from 'wouter';
+import { StorageService } from '@/services/core/StorageService';
 
 // =============================================================================
 // TYPES AND INTERFACES
@@ -201,7 +202,7 @@ export const DEFAULT_GUARDS: NavigationGuard[] = [
         id: 'unsaved-changes',
         condition: () => {
             // Check if there are unsaved changes in editor
-            const hasUnsavedChanges = localStorage.getItem('editor-unsaved-changes') === 'true';
+            const hasUnsavedChanges = StorageService.safeGetString('editor-unsaved-changes') === 'true';
             return !hasUnsavedChanges;
         },
         message: 'You have unsaved changes. Are you sure you want to leave?',
@@ -209,14 +210,14 @@ export const DEFAULT_GUARDS: NavigationGuard[] = [
             console.log('Navigation blocked due to unsaved changes:', targetPath);
         },
         onAllow: (_targetPath) => {
-            localStorage.removeItem('editor-unsaved-changes');
+            StorageService.safeRemove('editor-unsaved-changes');
         }
     },
     {
         id: 'auth-required',
         condition: () => {
             // Check if user is authenticated
-            const isAuthenticated = localStorage.getItem('auth-token') !== null;
+            const isAuthenticated = StorageService.safeGetString('auth-token') !== null;
             return isAuthenticated;
         },
         message: 'Authentication required to access this page.',

@@ -1,3 +1,4 @@
+import { StorageService } from '@/services/core/StorageService';
 /**
  * 🔄 ROLLBACK SERVICE - Phase 4 Implementation
  * Blue-Green Deployment & Rollback Strategy
@@ -400,7 +401,7 @@ class RollbackService {
           activeVersion: this.activeVersion,
           config: this.config
         };
-        localStorage.setItem('rollback_service', JSON.stringify(data));
+        StorageService.safeSetJSON('rollback_service', data);
       } catch (error) {
         console.warn('Failed to persist rollback data:', error);
       }
@@ -413,7 +414,7 @@ class RollbackService {
   private loadPersistedData() {
     if (typeof window !== 'undefined') {
       try {
-        const saved = localStorage.getItem('rollback_service');
+        const saved = StorageService.safeGetString('rollback_service');
         if (saved) {
           const data = JSON.parse(saved);
           this.deployments = data.deployments || [];

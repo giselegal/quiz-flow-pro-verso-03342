@@ -18,6 +18,7 @@ import {
 } from '../utils/improvedFunnelSystem';
 import { advancedFunnelStorage } from './AdvancedFunnelStorage';
 import { funnelDataMigration } from './FunnelDataMigration';
+import { StorageService } from '@/services/core/StorageService';
 
 // ============================================================================
 // LEGACY TYPES - COMPATIBILIDADE TOTAL
@@ -128,7 +129,7 @@ class MigratedFunnelLocalStore {
 
     list(): FunnelItem[] {
         try {
-            const raw = localStorage.getItem('qqcv_funnels');
+            const raw = StorageService.safeGetString('qqcv_funnels');
             const arr = raw ? JSON.parse(raw) : [];
 
             return Array.isArray(arr) ? arr.map(f => ({
@@ -194,7 +195,7 @@ class MigratedFunnelLocalStore {
                 }
             }
 
-            localStorage.setItem('qqcv_funnels', JSON.stringify(list));
+            StorageService.safeSetJSON('qqcv_funnels', list);
 
             // Invalidar cache
             this.cache.clear();

@@ -1,6 +1,7 @@
 import { toast } from '@/components/ui/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { useCallback, useState } from 'react';
+import { StorageService } from '@/services/core/StorageService';
 
 export interface QuizData {
   id?: string;
@@ -85,10 +86,10 @@ export const useSupabaseQuizEditor = () => {
       };
 
       // Salvar no localStorage como backup
-      const existingQuizzes = JSON.parse(localStorage.getItem('saved_quizzes') || '[]');
+      const existingQuizzes = StorageService.safeGetJSON('saved_quizzes');
       const updatedQuizzes = existingQuizzes.filter((q: any) => q.id !== quizId);
       updatedQuizzes.push(fullQuizData);
-      localStorage.setItem('saved_quizzes', JSON.stringify(updatedQuizzes));
+      StorageService.safeSetJSON('saved_quizzes', updatedQuizzes);
 
       toast({
         title: 'Quiz salvo com sucesso!',
@@ -115,7 +116,7 @@ export const useSupabaseQuizEditor = () => {
 
     try {
       // Carregar do localStorage
-      const savedQuizzes = JSON.parse(localStorage.getItem('saved_quizzes') || '[]');
+      const savedQuizzes = StorageService.safeGetJSON('saved_quizzes');
       const quiz = savedQuizzes.find((q: any) => q.id === quizId);
 
       if (!quiz) {
@@ -140,7 +141,7 @@ export const useSupabaseQuizEditor = () => {
   const loadAllQuizzes = useCallback(async (): Promise<SavedQuiz[]> => {
     try {
       // Carregar do localStorage
-      const savedQuizzes = JSON.parse(localStorage.getItem('saved_quizzes') || '[]');
+      const savedQuizzes = StorageService.safeGetJSON('saved_quizzes');
 
       return savedQuizzes.map((quiz: any) => ({
         id: quiz.id,
@@ -158,9 +159,9 @@ export const useSupabaseQuizEditor = () => {
   // Deletar quiz
   const deleteQuiz = useCallback(async (quizId: string): Promise<boolean> => {
     try {
-      const savedQuizzes = JSON.parse(localStorage.getItem('saved_quizzes') || '[]');
+      const savedQuizzes = StorageService.safeGetJSON('saved_quizzes');
       const updatedQuizzes = savedQuizzes.filter((q: any) => q.id !== quizId);
-      localStorage.setItem('saved_quizzes', JSON.stringify(updatedQuizzes));
+      StorageService.safeSetJSON('saved_quizzes', updatedQuizzes);
 
       toast({
         title: 'Quiz removido',

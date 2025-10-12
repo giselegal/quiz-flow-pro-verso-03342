@@ -16,6 +16,7 @@
 import { VersionChange, VersionSnapshot } from './versioningService';
 import { UnifiedFunnel, UnifiedStage } from './UnifiedCRUDService';
 import { Block } from '@/types/editor';
+import { StorageService } from '@/services/core/StorageService';
 
 // =============================================================================
 // TIPOS E INTERFACES
@@ -139,7 +140,7 @@ export class HistoryManager {
    */
   private async loadPersistedHistory(): Promise<void> {
     try {
-      const savedHistory = localStorage.getItem('history:entries');
+      const savedHistory = StorageService.safeGetString('history:entries');
       if (savedHistory) {
         const parsed = JSON.parse(savedHistory);
         Object.entries(parsed).forEach(([id, entryData]) => {
@@ -158,7 +159,7 @@ export class HistoryManager {
   private async persistHistory(): Promise<void> {
     try {
       const historyData = Object.fromEntries(this.history.entries());
-      localStorage.setItem('history:entries', JSON.stringify(historyData));
+      StorageService.safeSetJSON('history:entries', historyData);
       console.log('💾 Histórico persistido com sucesso');
     } catch (error) {
       console.error('❌ Erro ao persistir histórico:', error);
@@ -544,7 +545,7 @@ export class HistoryManager {
    */
   clearAll(): void {
     this.history.clear();
-    localStorage.removeItem('history:entries');
+    StorageService.safeRemove('history:entries');
     console.log('🧹 Todo o histórico foi limpo');
   }
 }

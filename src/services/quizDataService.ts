@@ -1,5 +1,6 @@
 import { QuizResult, StyleType } from '@/types/quiz';
 import { trackPixelEvent } from '../utils/facebookPixel';
+import { StorageService } from '@/services/core/StorageService';
 
 export interface QuizSession {
   sessionId: string;
@@ -254,7 +255,7 @@ class QuizDataService {
   // Carregar sessão do localStorage
   loadSession(): QuizSession | null {
     try {
-      const savedSession = localStorage.getItem('current_quiz_session');
+      const savedSession = StorageService.safeGetString('current_quiz_session');
       if (savedSession) {
         this.currentSession = JSON.parse(savedSession);
         return this.currentSession;
@@ -268,7 +269,7 @@ class QuizDataService {
   // Obter todas as sessões completas
   getAllCompletedSessions(): QuizSession[] {
     try {
-      const sessions = localStorage.getItem('completed_quiz_sessions');
+      const sessions = StorageService.safeGetString('completed_quiz_sessions');
       return sessions ? JSON.parse(sessions) : [];
     } catch (error) {
       console.error('Error loading completed sessions:', error);
@@ -306,9 +307,9 @@ class QuizDataService {
   clearAllData(): void {
     this.currentSession = null;
     this.clickEventBuffer = [];
-    localStorage.removeItem('current_quiz_session');
-    localStorage.removeItem('completed_quiz_sessions');
-    localStorage.removeItem('quiz_analytics_events');
+    StorageService.safeRemove('current_quiz_session');
+    StorageService.safeRemove('completed_quiz_sessions');
+    StorageService.safeRemove('quiz_analytics_events');
     console.log('All quiz data cleared');
   }
 
@@ -343,7 +344,7 @@ class QuizDataService {
 
   private saveSessionToStorage(): void {
     if (this.currentSession) {
-      localStorage.setItem('current_quiz_session', JSON.stringify(this.currentSession));
+      StorageService.safeSetJSON('current_quiz_session', this.currentSession);
     }
   }
 
@@ -355,7 +356,7 @@ class QuizDataService {
 
     // Manter apenas últimas 10 sessões
     const recentSessions = completedSessions.slice(-10);
-    localStorage.setItem('completed_quiz_sessions', JSON.stringify(recentSessions));
+    StorageService.safeSetJSON('completed_quiz_sessions', recentSessions);
   }
 
   private isImportantClick(elementType: string): boolean {
@@ -443,7 +444,7 @@ class QuizDataService {
 
     // Salvar UTM no localStorage
     if (Object.keys(this.utmParameters).length > 0) {
-      localStorage.setItem('quiz_utm_parameters', JSON.stringify(this.utmParameters));
+      StorageService.safeSetJSON('quiz_utm_parameters', this.utmParameters);
       console.log('UTM parameters captured:', this.utmParameters);
     }
   }
@@ -485,7 +486,7 @@ class QuizDataService {
   private trackEvent(eventName: string, data: Record<string, any>): void {
     try {
       // Salvar em localStorage para analytics
-      const events = JSON.parse(localStorage.getItem('quiz_analytics_events') || '[]');
+      const events = StorageService.safeGetJSON('quiz_analytics_events');
       const event = {
         eventName,
         data: {
@@ -501,7 +502,7 @@ class QuizDataService {
 
       // Manter apenas os últimos 100 eventos
       const recentEvents = events.slice(-100);
-      localStorage.setItem('quiz_analytics_events', JSON.stringify(recentEvents));
+      StorageService.safeSetJSON('quiz_analytics_events', recentEvents);
 
       // Enviar para Facebook Pixel e Google Analytics
       this.trackFacebookPixelEvent(eventName, data);

@@ -1,6 +1,7 @@
 // src/hooks/useFeatureFlags.ts
 
 import { useState, useEffect } from 'react';
+import { StorageService } from '@/services/core/StorageService';
 
 interface FeatureFlags {
     useJsonTemplates: boolean;
@@ -52,7 +53,7 @@ export function useFeatureFlags(): FeatureFlags {
  */
 function loadFromLocalStorage(): Partial<FeatureFlags> {
     try {
-        const stored = localStorage.getItem('featureFlags');
+        const stored = StorageService.safeGetString('featureFlags');
         if (stored) {
             return JSON.parse(stored);
         }
@@ -116,10 +117,10 @@ function simpleHash(str: string): number {
  */
 export function setFeatureFlag(flag: keyof FeatureFlags, value: boolean) {
     try {
-        const stored = localStorage.getItem('featureFlags');
+        const stored = StorageService.safeGetString('featureFlags');
         const flags = stored ? JSON.parse(stored) : {};
         flags[flag] = value;
-        localStorage.setItem('featureFlags', JSON.stringify(flags));
+        StorageService.safeSetJSON('featureFlags', flags);
         console.log(`✅ Feature flag '${flag}' definida como ${value}`);
         window.location.reload(); // Reload para aplicar
     } catch (err) {
@@ -131,7 +132,7 @@ export function setFeatureFlag(flag: keyof FeatureFlags, value: boolean) {
  * Utilitário para debug - mostrar flags atuais
  */
 export function debugFeatureFlags() {
-    const stored = localStorage.getItem('featureFlags');
+    const stored = StorageService.safeGetString('featureFlags');
     console.log('🚩 Feature Flags:');
     console.log('  - Env VITE_USE_JSON_TEMPLATES:', import.meta.env.VITE_USE_JSON_TEMPLATES);
     console.log('  - Env VITE_JSON_TEMPLATES_ROLLOUT:', import.meta.env.VITE_JSON_TEMPLATES_ROLLOUT);

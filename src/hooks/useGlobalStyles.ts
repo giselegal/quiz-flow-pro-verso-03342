@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { createGlobalStyles } from '@/utils/config/globalStyles';
+import { StorageService } from '@/services/core/StorageService';
 
 interface GlobalStyles {
   primaryColor?: string;
@@ -17,7 +18,7 @@ export const useGlobalStyles = () => {
 
     // Tentar carregar do localStorage
     try {
-      const saved = localStorage.getItem('globalStyles');
+      const saved = StorageService.safeGetString('globalStyles');
       if (saved) {
         return { ...defaultStyles, ...JSON.parse(saved) };
       }
@@ -34,7 +35,7 @@ export const useGlobalStyles = () => {
 
     // Salvar no localStorage
     try {
-      localStorage.setItem('globalStyles', JSON.stringify(updatedStyles));
+      StorageService.safeSetJSON('globalStyles', updatedStyles);
     } catch (error) {
       console.warn('Erro ao salvar estilos:', error);
     }

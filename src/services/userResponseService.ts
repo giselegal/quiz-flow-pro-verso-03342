@@ -61,7 +61,7 @@ export const userResponseService = {
       return {
         success: false,
         sent: 0,
-        remaining: (JSON.parse(localStorage.getItem('quiz_pending_responses') || '[]') as any[])
+        remaining: (StorageService.safeGetJSON('quiz_pending_responses') as any[])
           .length,
       };
 

@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { StorageService } from '@/services/core/StorageService';
 
 export interface ABTestVariation {
   id: string;
@@ -39,7 +40,7 @@ export const useABTest = (type: 'result' | 'sales') => {
         setIsLoading(true);
 
         // Carregar testes A/B do localStorage (em produção seria uma API)
-        const storedTests = localStorage.getItem('ab_tests');
+        const storedTests = StorageService.safeGetString('ab_tests');
         if (!storedTests) {
           setIsLoading(false);
           return;

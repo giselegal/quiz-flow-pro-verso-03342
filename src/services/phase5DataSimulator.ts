@@ -1,3 +1,4 @@
+import { StorageService } from '@/services/core/StorageService';
 /**
  * 🎯 FASE 5: SIMULAÇÃO DE DADOS LOCAIS
  * 
@@ -323,7 +324,7 @@ export function initializePhase5Data(): SimulatedDataStructure {
     generateResults();
 
     // Store in localStorage for persistence
-    localStorage.setItem('phase5_simulated_data', JSON.stringify(simulatedData));
+    StorageService.safeSetJSON('phase5_simulated_data', simulatedData);
 
     console.log('✅ Dados da Fase 5 inicializados:', {
         funnels: simulatedData.funnels.length,
@@ -338,7 +339,7 @@ export function initializePhase5Data(): SimulatedDataStructure {
 
 // Get stored data or initialize if not present
 export function getPhase5Data(): SimulatedDataStructure {
-    const stored = localStorage.getItem('phase5_simulated_data');
+    const stored = StorageService.safeGetString('phase5_simulated_data');
     if (stored) {
         try {
             const data = JSON.parse(stored) as SimulatedDataStructure;

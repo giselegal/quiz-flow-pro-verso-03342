@@ -82,7 +82,7 @@ export const ResultOrchestrator = {
                 total,
                 primary: (payload as any)?.primaryStyle,
             };
-            localStorage.setItem('debug_orchestrator_last', JSON.stringify(debug));
+            StorageService.safeSetJSON('debug_orchestrator_last', debug);
         } catch { /* noop */ }
         // persist local
         ResultEngine.persist(payload);

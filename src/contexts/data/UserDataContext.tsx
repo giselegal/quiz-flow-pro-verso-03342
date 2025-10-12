@@ -8,6 +8,7 @@
 import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import { supabase } from '../../integrations/supabase/client';
 import { QuizUser, QuizSession, InsertQuizUser, InsertQuizSession } from '../../types/unified-schema';
+import { StorageService } from '@/services/core/StorageService';
 
 interface UserDataContextType {
   // User information (previously in localStorage as userName, userEmail)
@@ -71,8 +72,8 @@ export const UserDataProvider: React.FC<UserDataProviderProps> = ({ children }) 
       }
 
       // Try to recover user from localStorage as fallback (migration period)
-      const storedUserName = localStorage.getItem('userName');
-      const storedUserEmail = localStorage.getItem('userEmail');
+      const storedUserName = StorageService.safeGetString('userName');
+      const storedUserEmail = StorageService.safeGetString('userEmail');
 
       if (storedUserName || storedUserEmail) {
         const userData: Partial<InsertQuizUser> = {
@@ -85,8 +86,8 @@ export const UserDataProvider: React.FC<UserDataProviderProps> = ({ children }) 
         if (user) {
           setCurrentUser(user);
           // Clean up localStorage after successful migration
-          localStorage.removeItem('userName');
-          localStorage.removeItem('userEmail');
+          StorageService.safeRemove('userName');
+          StorageService.safeRemove('userEmail');
         }
       }
     } catch (err) {
@@ -178,10 +179,10 @@ export const UserDataProvider: React.FC<UserDataProviderProps> = ({ children }) 
     setUtmParameters(null);
 
     // Clean up any remaining localStorage items (migration period)
-    localStorage.removeItem('userName');
-    localStorage.removeItem('userEmail');
-    localStorage.removeItem('current_quiz_session');
-    localStorage.removeItem('quiz_utm_parameters');
+    StorageService.safeRemove('userName');
+    StorageService.safeRemove('userEmail');
+    StorageService.safeRemove('current_quiz_session');
+    StorageService.safeRemove('quiz_utm_parameters');
   };
 
   const value: UserDataContextType = {

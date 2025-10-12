@@ -18,6 +18,7 @@ import { Block, BlockType } from '@/types/editor';
 import { toast } from '@/hooks/use-toast';
 import { versioningService } from './versioningService';
 import { historyManager } from './HistoryManager';
+import { StorageService } from '@/services/core/StorageService';
 
 // Tipos principais
 export interface UnifiedFunnel {
@@ -149,7 +150,7 @@ export class UnifiedCRUDService {
   private async loadPersistedData(): Promise<void> {
     try {
       // Tentar carregar do localStorage primeiro
-      const savedData = localStorage.getItem('unifiedEditor:funnels');
+      const savedData = StorageService.safeGetString('unifiedEditor:funnels');
       if (savedData) {
         const parsed = JSON.parse(savedData);
         Object.entries(parsed).forEach(([id, funnelData]) => {
@@ -220,7 +221,7 @@ export class UnifiedCRUDService {
   private async persistData(): Promise<void> {
     try {
       const data = Object.fromEntries(this.funnels.entries());
-      localStorage.setItem('unifiedEditor:funnels', JSON.stringify(data));
+      StorageService.safeSetJSON('unifiedEditor:funnels', data);
       
       // Sync com Supabase
       await this.syncToSupabase(data);
@@ -1479,7 +1480,7 @@ export class UnifiedCRUDService {
     this.operations.length = 0;
     this.autoSaveTimeouts.forEach(timeout => clearTimeout(timeout));
     this.autoSaveTimeouts.clear();
-    localStorage.removeItem('unifiedEditor:funnels');
+    StorageService.safeRemove('unifiedEditor:funnels');
     console.log('🧹 Cache do UnifiedCRUDService limpo');
   }
 

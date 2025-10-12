@@ -7,6 +7,7 @@
 
 import { UnifiedDataService, UnifiedFunnel } from './UnifiedDataService';
 import { toast } from '@/hooks/use-toast';
+import { StorageService } from '@/services/core/StorageService';
 
 // ============================================================================
 // INTERFACES
@@ -418,7 +419,7 @@ class EditorDashboardSyncServiceImpl {
     private getUnsyncedChanges(): any[] {
         // Implementação para detectar mudanças locais não sincronizadas
         try {
-            const localChanges = localStorage.getItem('editor_unsynced_changes');
+            const localChanges = StorageService.safeGetString('editor_unsynced_changes');
             return localChanges ? JSON.parse(localChanges) : [];
         } catch {
             return [];

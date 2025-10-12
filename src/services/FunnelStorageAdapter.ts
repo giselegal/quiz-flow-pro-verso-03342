@@ -8,6 +8,7 @@
 
 import { advancedFunnelStorage } from './AdvancedFunnelStorage';
 import { funnelDataMigration } from './FunnelDataMigration';
+import { StorageService } from '@/services/core/StorageService';
 
 // ============================================================================
 // LEGACY TYPES - MANTÉM COMPATIBILIDADE
@@ -91,7 +92,7 @@ export const funnelLocalStore = {
     list(): FunnelItem[] {
         // SYNCHRONOUS FALLBACK - tries to use localStorage if available
         try {
-            const raw = localStorage.getItem('qqcv_funnels');
+            const raw = StorageService.safeGetString('qqcv_funnels');
             const arr = raw ? JSON.parse(raw) : [];
             return Array.isArray(arr) ? arr.map(f => ({
                 id: f.id,
@@ -126,7 +127,7 @@ export const funnelLocalStore = {
     saveList(list: FunnelItem[]) {
         // LEGACY METHOD - saves to localStorage for compatibility
         try {
-            localStorage.setItem('qqcv_funnels', JSON.stringify(list));
+            StorageService.safeSetJSON('qqcv_funnels', list);
         } catch (error) {
             console.error('[StorageAdapter] Failed to save list to localStorage', error);
         }

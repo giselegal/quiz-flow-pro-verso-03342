@@ -16,6 +16,7 @@
 
 import { UnifiedFunnel, UnifiedStage } from './UnifiedCRUDService';
 import { Block } from '@/types/editor';
+import { StorageService } from '@/services/core/StorageService';
 
 // =============================================================================
 // TIPOS E INTERFACES
@@ -134,7 +135,7 @@ export class VersioningService {
    */
   private async loadPersistedSnapshots(): Promise<void> {
     try {
-      const savedSnapshots = localStorage.getItem('versioning:snapshots');
+      const savedSnapshots = StorageService.safeGetString('versioning:snapshots');
       if (savedSnapshots) {
         const parsed = JSON.parse(savedSnapshots);
         Object.entries(parsed).forEach(([id, snapshotData]) => {
@@ -143,7 +144,7 @@ export class VersioningService {
         console.log(`📥 ${this.snapshots.size} snapshots carregados`);
       }
 
-      const savedChanges = localStorage.getItem('versioning:changes');
+      const savedChanges = StorageService.safeGetString('versioning:changes');
       if (savedChanges) {
         const parsed = JSON.parse(savedChanges);
         Object.entries(parsed).forEach(([snapshotId, changesData]) => {
@@ -162,10 +163,10 @@ export class VersioningService {
   private async persistSnapshots(): Promise<void> {
     try {
       const snapshotsData = Object.fromEntries(this.snapshots.entries());
-      localStorage.setItem('versioning:snapshots', JSON.stringify(snapshotsData));
+      StorageService.safeSetJSON('versioning:snapshots', snapshotsData);
       
       const changesData = Object.fromEntries(this.changes.entries());
-      localStorage.setItem('versioning:changes', JSON.stringify(changesData));
+      StorageService.safeSetJSON('versioning:changes', changesData);
       
       console.log('💾 Snapshots persistidos com sucesso');
     } catch (error) {
@@ -631,8 +632,8 @@ export class VersioningService {
   clearAll(): void {
     this.snapshots.clear();
     this.changes.clear();
-    localStorage.removeItem('versioning:snapshots');
-    localStorage.removeItem('versioning:changes');
+    StorageService.safeRemove('versioning:snapshots');
+    StorageService.safeRemove('versioning:changes');
     console.log('🧹 Todos os snapshots e mudanças foram limpos');
   }
 }

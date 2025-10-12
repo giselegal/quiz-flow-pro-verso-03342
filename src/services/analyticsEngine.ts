@@ -9,6 +9,7 @@
  */
 
 import { getLogger } from '@/utils/logging';
+import { StorageService } from '@/services/core/StorageService';
 
 const logger = getLogger();
 
@@ -1062,9 +1063,9 @@ export class AnalyticsEngine {
 
     private saveEventLocally(event: any): void {
         try {
-            const localEvents = JSON.parse(localStorage.getItem('analytics_events') || '[]');
+            const localEvents = StorageService.safeGetJSON('analytics_events');
             localEvents.push(event);
-            localStorage.setItem('analytics_events', JSON.stringify(localEvents));
+            StorageService.safeSetJSON('analytics_events', localEvents);
             console.log('💾 [Analytics] Event saved locally');
         } catch (error) {
             console.error('❌ [Analytics] Failed to save event locally:', error);
@@ -1073,7 +1074,7 @@ export class AnalyticsEngine {
 
     getLocalEvents(): any[] {
         try {
-            return JSON.parse(localStorage.getItem('analytics_events') || '[]');
+            return StorageService.safeGetJSON('analytics_events');
         } catch (error) {
             console.error('❌ [Analytics] Failed to get local events:', error);
             return [];
@@ -1082,7 +1083,7 @@ export class AnalyticsEngine {
 
     clearLocalEvents(): void {
         try {
-            localStorage.removeItem('analytics_events');
+            StorageService.safeRemove('analytics_events');
             console.log('🗑️ [Analytics] Local events cleared');
         } catch (error) {
             console.error('❌ [Analytics] Failed to clear local events:', error);

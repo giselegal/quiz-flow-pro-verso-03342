@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { StorageService } from '@/services/core/StorageService';
 
 export interface UtmParameters {
   source?: string;
@@ -19,7 +20,7 @@ export const useUtmParameters = () => {
 
   useEffect(() => {
     // Carregar configuração de domínio do localStorage, se disponível
-    const savedDomain = localStorage.getItem('domain_base');
+    const savedDomain = StorageService.safeGetString('domain_base');
     if (savedDomain) {
       setDomainBase(savedDomain);
     }
@@ -91,11 +92,11 @@ export const useUtmParameters = () => {
 
       // Armazenar parâmetros UTM no localStorage para persistência
       if (Object.keys(utmParams).length > 0) {
-        localStorage.setItem('utm_parameters', JSON.stringify(utmParams));
+        StorageService.safeSetJSON('utm_parameters', utmParams);
         console.log('UTM parameters captured:', utmParams);
       } else {
         // Tentar recuperar parâmetros do localStorage se não houver na URL
-        const storedUtmParams = localStorage.getItem('utm_parameters');
+        const storedUtmParams = StorageService.safeGetString('utm_parameters');
         if (storedUtmParams) {
           return JSON.parse(storedUtmParams);
         }
@@ -159,7 +160,7 @@ export const useUtmParameters = () => {
    */
   const setBaseDomain = (domain: string) => {
     setDomainBase(domain);
-    localStorage.setItem('domain_base', domain);
+    StorageService.safeSetString('domain_base', domain);
   };
 
   /**

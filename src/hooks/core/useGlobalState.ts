@@ -19,6 +19,7 @@
 import { useEffect, useRef, useMemo } from 'react';
 import { create } from 'zustand';
 import { devtools, subscribeWithSelector } from 'zustand/middleware';
+import { StorageService } from '@/services/core/StorageService';
 
 // =============================================================================
 // TYPES AND INTERFACES
@@ -199,7 +200,7 @@ const useGlobalStore = create<GlobalStore>()(
       loadConfig: async () => {
         set({ isLoading: true });
         try {
-          const savedConfig = localStorage.getItem('global-app-config');
+          const savedConfig = StorageService.safeGetString('global-app-config');
           if (savedConfig) {
             const parsedConfig = JSON.parse(savedConfig);
             set((_state) => ({
@@ -217,7 +218,7 @@ const useGlobalStore = create<GlobalStore>()(
       saveConfig: async () => {
         try {
           const { config } = get();
-          localStorage.setItem('global-app-config', JSON.stringify(config));
+          StorageService.safeSetJSON('global-app-config', config);
         } catch (error) {
           console.error('Failed to save global config:', error);
         }

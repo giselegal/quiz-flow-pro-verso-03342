@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useQuizResult } from './useQuizResult';
+import { StorageService } from '@/services/core/StorageService';
 
 // Interface para dados do usuário
 export interface UserData {
@@ -87,7 +88,7 @@ export const useDynamicData = (): DynamicContextData => {
   useEffect(() => {
     // Carregar dados do usuário do localStorage ou API
     try {
-      const savedUserData = localStorage.getItem('userData');
+      const savedUserData = StorageService.safeGetString('userData');
       if (savedUserData) {
         setUserData(JSON.parse(savedUserData));
       }

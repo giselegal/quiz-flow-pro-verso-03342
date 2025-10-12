@@ -1,3 +1,4 @@
+import { StorageService } from '@/services/core/StorageService';
 /**
  * 🚨 ERROR TRACKING SERVICE - Phase 3 Implementation
  * Sentry-like error tracking with structured logging
@@ -171,7 +172,7 @@ class ErrorTrackingService {
     // Salvar no localStorage para persistência
     if (typeof window !== 'undefined') {
       try {
-        localStorage.setItem('error_tracking', JSON.stringify(this.errors.slice(0, 100)));
+        StorageService.safeSetJSON('error_tracking', this.errors.slice(0, 100));
       } catch (e) {
         // Ignorar se localStorage estiver cheio
       }
@@ -272,7 +273,7 @@ class ErrorTrackingService {
 
     if (typeof window !== 'undefined') {
       try {
-        localStorage.setItem('error_tracking', JSON.stringify(this.errors.slice(0, 100)));
+        StorageService.safeSetJSON('error_tracking', this.errors.slice(0, 100));
       } catch (e) {
         // Ignorar
       }
@@ -365,7 +366,7 @@ export const errorTrackingService = ErrorTrackingService.getInstance();
 // Carregar erros persistidos
 if (typeof window !== 'undefined') {
   try {
-    const saved = localStorage.getItem('error_tracking');
+    const saved = StorageService.safeGetString('error_tracking');
     if (saved) {
       const errors = JSON.parse(saved);
       (errorTrackingService as any).errors = errors;

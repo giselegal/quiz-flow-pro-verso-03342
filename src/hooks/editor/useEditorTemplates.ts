@@ -1,6 +1,7 @@
 import { useCallback } from 'react';
 import { EditorConfig } from '@/types/editor';
 import { EditorTemplateActions } from '@/types/editorActions';
+import { StorageService } from '@/services/core/StorageService';
 
 export const useEditorTemplates = (
   config: EditorConfig,
@@ -9,9 +10,9 @@ export const useEditorTemplates = (
   const saveAsTemplate = useCallback(
     (name: string) => {
       try {
-        const templates = JSON.parse(localStorage.getItem('editor_templates') || '{}');
+        const templates = StorageService.safeGetJSON('editor_templates');
         templates[name] = config;
-        localStorage.setItem('editor_templates', JSON.stringify(templates));
+        StorageService.safeSetJSON('editor_templates', templates);
       } catch (error) {
         console.error('Error saving template:', error);
       }
@@ -22,7 +23,7 @@ export const useEditorTemplates = (
   const loadTemplate = useCallback(
     (name: string): boolean => {
       try {
-        const templates = JSON.parse(localStorage.getItem('editor_templates') || '{}');
+        const templates = StorageService.safeGetJSON('editor_templates');
         if (templates[name]) {
           setConfig(templates[name]);
           return true;

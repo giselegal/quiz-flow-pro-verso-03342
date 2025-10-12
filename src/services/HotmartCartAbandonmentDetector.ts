@@ -8,6 +8,7 @@
 
 import { hotmartWebhookManager, HotmartWebhookData } from '../utils/hotmartWebhook';
 import { getWhatsAppAgent } from './WhatsAppCartRecoveryAgent';
+import { StorageService } from '@/services/core/StorageService';
 
 // ============================================================================
 // TIPOS E INTERFACES
@@ -260,12 +261,12 @@ export class HotmartCartAbandonmentDetector {
   private async saveAbandonmentEvent(event: CartAbandonmentEvent): Promise<void> {
     try {
       // Salvar no localStorage
-      const events = JSON.parse(localStorage.getItem('cart_abandonment_events') || '[]');
+      const events = StorageService.safeGetJSON('cart_abandonment_events');
       events.push({
         ...event,
         abandonedAt: event.abandonedAt.toISOString()
       });
-      localStorage.setItem('cart_abandonment_events', JSON.stringify(events));
+      StorageService.safeSetJSON('cart_abandonment_events', events);
 
       // TODO: Salvar no Supabase
       // await supabase.from('cart_abandonment_events').insert(event);
@@ -285,7 +286,7 @@ export class HotmartCartAbandonmentDetector {
     topAbandonedProducts: Array<{ productName: string; count: number }>;
   } {
     try {
-      const events = JSON.parse(localStorage.getItem('cart_abandonment_events') || '[]');
+      const events = StorageService.safeGetJSON('cart_abandonment_events');
       
       const totalDetected = events.length;
       const totalRecovered = events.filter((e: any) => e.status === 'recovered').length;

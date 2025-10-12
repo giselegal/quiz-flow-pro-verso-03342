@@ -1,11 +1,12 @@
 import { useAuth } from '@/contexts';
 import { useEffect, useMemo, useState } from 'react';
+import { StorageService } from '@/services/core/StorageService';
 
 /**
  * 🎯 Hook para buscar nome do usuário dinamicamente
  * Prioridades:
- * 1. localStorage.getItem('quizUserName') - Nome preenchido no quiz
- * 2. localStorage.getItem('userName') - Fallback geral
+ * 1. StorageService.safeGetString('quizUserName') - Nome preenchido no quiz
+ * 2. StorageService.safeGetString('userName') - Fallback geral
  * 3. AuthContext user.name - Usuário logado
  * 4. AuthContext user.email - Email como fallback
  * 5. 'Usuário' - Fallback final
@@ -17,10 +18,10 @@ export const useUserName = (): string => {
   const compute = useMemo(() => {
     return () => {
       // Prioridade 1: Nome do quiz
-      const quizUserName = localStorage.getItem('quizUserName');
+      const quizUserName = StorageService.safeGetString('quizUserName');
       if (quizUserName && quizUserName.trim()) return quizUserName.trim();
       // Prioridade 2: Nome geral
-      const storedUserName = localStorage.getItem('userName');
+      const storedUserName = StorageService.safeGetString('userName');
       if (storedUserName && storedUserName.trim()) return storedUserName.trim();
       // Prioridade 3: Usuário autenticado
       if (user?.name && user.name.trim()) return user.name.trim();

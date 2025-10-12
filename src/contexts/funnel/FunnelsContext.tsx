@@ -1,5 +1,6 @@
 import React, { createContext, useCallback, useContext, useEffect, useState } from 'react';
 import { supabase } from '../../lib/supabase';
+import { StorageService } from '@/services/core/StorageService';
 import {
   QUIZ_QUESTIONS_COMPLETE,
   QUIZ_STYLE_21_STEPS_TEMPLATE,
@@ -98,8 +99,8 @@ const FUNNEL_TEMPLATES: Record<
       const stepId = `step-${stepNumber}`;
       const questionData =
         QUIZ_QUESTIONS_COMPLETE[String(stepNumber) as keyof typeof QUIZ_QUESTIONS_COMPLETE];
-      const questionText = Array.isArray(questionData) 
-        ? (questionData[0] || 'Pergunta') 
+      const questionText = Array.isArray(questionData)
+        ? (questionData[0] || 'Pergunta')
         : String(questionData || 'Pergunta');
 
       return {
@@ -233,8 +234,8 @@ const FUNNEL_TEMPLATES: Record<
       const stepId = `step-${stepNumber}`;
       const questionData =
         QUIZ_QUESTIONS_COMPLETE[String(stepNumber) as keyof typeof QUIZ_QUESTIONS_COMPLETE];
-      const questionText = Array.isArray(questionData) 
-        ? (questionData[0] || 'Pergunta') 
+      const questionText = Array.isArray(questionData)
+        ? (questionData[0] || 'Pergunta')
         : String(questionData || 'Pergunta');
 
       return {
@@ -464,8 +465,8 @@ const FUNNEL_TEMPLATES: Record<
       const stepId = `step-${stepNumber}`;
       const questionData =
         QUIZ_QUESTIONS_COMPLETE[String(stepNumber) as keyof typeof QUIZ_QUESTIONS_COMPLETE];
-      const questionText = Array.isArray(questionData) 
-        ? (questionData[0] || 'Pergunta') 
+      const questionText = Array.isArray(questionData)
+        ? (questionData[0] || 'Pergunta')
         : String(questionData || 'Pergunta');
 
       return {
@@ -529,7 +530,7 @@ export const FunnelsProvider: React.FC<FunnelsProviderProps> = ({ children, debu
       }
 
       // Segundo, tentar obter do localStorage
-      const funnelFromStorage = localStorage.getItem('editor:funnelId');
+      const funnelFromStorage = StorageService.safeGetString('editor:funnelId');
       if (funnelFromStorage) {
         console.log('🔍 FunnelsContext: funnelId do localStorage:', funnelFromStorage);
         return funnelFromStorage;

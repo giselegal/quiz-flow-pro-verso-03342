@@ -1,4 +1,5 @@
 import { quizSupabaseService } from '@/services/quizSupabaseService';
+import { StorageService } from '@/services/core/StorageService';
 
 const isBrowser = typeof window !== 'undefined';
 const OFFLINE = import.meta.env.VITE_DISABLE_SUPABASE === 'true';
@@ -13,7 +14,7 @@ function isValidUUID(value: string | null | undefined): value is string {
 export const sessionService = {
   getSessionId(): string | null {
     if (!isBrowser) return null;
-    return localStorage.getItem('quiz_session_id');
+    return StorageService.safeGetString('quiz_session_id');
   },
 
   isUUIDSession(): boolean {
@@ -22,18 +23,18 @@ export const sessionService = {
 
   ensureLocalSessionId(): string {
     if (!isBrowser) return 'session_local';
-    const current = localStorage.getItem('quiz_session_id');
+    const current = StorageService.safeGetString('quiz_session_id');
     if (current) return current;
     const localId = `session_${Date.now()}_${Math.random().toString(36).slice(2, 10)}`;
-    localStorage.setItem('quiz_session_id', localId);
-    localStorage.setItem('quiz_session_is_uuid', 'false');
+    StorageService.safeSetString('quiz_session_id', localId);
+    StorageService.safeSetString('quiz_session_is_uuid', 'false');
     return localId;
   },
 
   setUUIDSessionId(uuid: string) {
     if (!isBrowser) return;
-    localStorage.setItem('quiz_session_id', uuid);
-    localStorage.setItem('quiz_session_is_uuid', String(isValidUUID(uuid)));
+    StorageService.safeSetString('quiz_session_id', uuid);
+    StorageService.safeSetString('quiz_session_is_uuid', String(isValidUUID(uuid)));
   },
 
   async startQuizSession(params: {

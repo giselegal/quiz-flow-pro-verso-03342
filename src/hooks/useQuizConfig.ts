@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { StorageService } from '@/services/core/StorageService';
 
 // Tipos para configuração do quiz editável
 export interface QuizStep {
@@ -47,7 +48,7 @@ export const useQuizConfig = () => {
   // Carrega configurações do localStorage (salvas pelo editor)
   const loadQuizConfig = () => {
     try {
-      const savedConfig = localStorage.getItem('quiz_funnel_config');
+      const savedConfig = StorageService.safeGetString('quiz_funnel_config');
       if (savedConfig) {
         const config = JSON.parse(savedConfig);
         setQuizConfig(config);

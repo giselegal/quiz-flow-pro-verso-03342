@@ -14,6 +14,7 @@ import { FunnelErrorCode } from '../core/errors/FunnelErrorCodes';
 import { FunnelError } from '../core/errors/FunnelError';
 import { globalFunnelErrorHandler } from '../core/errors/FunnelErrorHandler';
 import { globalFunnelRecovery } from '../core/errors/FunnelErrorRecovery';
+import { StorageService } from '@/services/core/StorageService';
 
 // ============================================================================
 // TYPES AND INTERFACES
@@ -155,7 +156,7 @@ class FunnelSyncService {
 
     private loadSyncQueue(): void {
         try {
-            const stored = localStorage.getItem('qqcv_sync_queue');
+            const stored = StorageService.safeGetString('qqcv_sync_queue');
             if (stored) {
                 this.syncQueue = JSON.parse(stored);
                 console.log('[FunnelSync] Loaded queue', { items: this.syncQueue.length });
@@ -177,7 +178,7 @@ class FunnelSyncService {
 
     private saveSyncQueue(): void {
         try {
-            localStorage.setItem('qqcv_sync_queue', JSON.stringify(this.syncQueue));
+            StorageService.safeSetJSON('qqcv_sync_queue', this.syncQueue);
         } catch (error) {
             const funnelError = new FunnelError(
                 FunnelErrorCode.STORAGE_ERROR,
