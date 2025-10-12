@@ -435,10 +435,13 @@ export default function ResultStep({
                 {/* ====================== SEÇÃO 4: OFERTA E PREÇO ====================== */}
                 <div className="bg-gradient-to-br from-[#B89B7A]/10 to-[#a08966]/5 p-5 sm:p-6 md:p-8 rounded-lg shadow-lg mb-10 md:mb-12 border-2 border-[#B89B7A]/20">
                     <div className="text-center">
-                        <h2 className="text-2xl sm:text-3xl font-bold text-[#432818] mb-4 tracking-tight">
-                            O Guia de Estilo Completo
+                        <h2 className="text-2xl sm:text-3xl font-bold text-[#432818] mb-2 tracking-tight">
+                            Método 5 Passos – Vista-se de Você
                         </h2>
-                        <p className="text-base sm:text-lg text-gray-700 mb-6 md:mb-8">Especialmente criado para o seu estilo {styleConfig.name}</p>
+                        <p className="text-sm text-gray-600 mb-1">Por Gisele Galvão | Consultora de Imagem e Branding Pessoal</p>
+                        <p className="text-base sm:text-lg text-gray-700 mb-6 md:mb-8">
+                            Autoconhecimento + estratégia visual para transformar sua imagem
+                        </p>
 
                         {/* Countdown de urgência restaurado */}
                         <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6 md:mb-8 max-w-md mx-auto">
@@ -454,32 +457,32 @@ export default function ResultStep({
 
                             <div className="space-y-3 mb-6 text-left">
                                 <div className="flex justify-between items-center p-2.5 sm:p-3 border-b border-gray-100 text-sm sm:text-base">
-                                    <span>✅ Guia Principal de Estilo {styleConfig.name}</span>
-                                    <span className="font-medium">R$ 79,00</span>
+                                    <span>✅ 31 Aulas Online (Acesso Imediato)</span>
+                                    <span className="font-medium">R$ 297,00</span>
                                 </div>
                                 <div className="flex justify-between items-center p-2.5 sm:p-3 border-b border-gray-100 text-sm sm:text-base">
-                                    <span>✅ Bônus: Peças-chave do seu tipo</span>
+                                    <span>✅ Bônus: Guia de Visagismo Facial (PDF)</span>
                                     <span className="font-medium">R$ 67,00</span>
                                 </div>
                                 <div className="flex justify-between items-center p-2.5 sm:p-3 border-b border-gray-100 text-sm sm:text-base">
-                                    <span>✅ Bônus: Guia de Cores Personalizadas</span>
-                                    <span className="font-medium">R$ 49,00</span>
+                                    <span>✅ Bônus: Peças-Chave + Inventário</span>
+                                    <span className="font-medium">R$ 83,00</span>
                                 </div>
                                 <div className="flex justify-between items-center p-2.5 sm:p-3 pt-4 font-bold text-base sm:text-lg border-t-2 border-[#B89B7A]">
                                     <span>Valor Total</span>
                                     <div className="relative">
-                                        <span className="line-through text-gray-500">R$ 195,00</span>
+                                        <span className="line-through text-gray-500">R$ 447,00</span>
                                     </div>
                                 </div>
                             </div>
 
-                            <div className="text-center p-4 bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg border border-[#B89B7A]/20">
-                                <p className="text-[#B89B7A] uppercase font-bold text-sm mb-2">OFERTA ESPECIAL {styleConfig.name.toUpperCase()}</p>
-                                <p className="text-4xl font-bold text-[#B89B7A] mb-1">R$ 39,00</p>
-                                <p className="text-sm text-gray-600">ou 5x de R$ 8,83</p>
+                            <div className="text-center p-4 bg-gradient-to-r from-[#B89B7A]/5 to-[#a08966]/5 rounded-lg border border-[#B89B7A]/20">
+                                <p className="text-[#B89B7A] uppercase font-bold text-sm mb-2">OFERTA ESPECIAL</p>
+                                <p className="text-4xl font-bold text-[#B89B7A] mb-1">R$ 97,00</p>
+                                <p className="text-sm text-gray-600">ou 8x de R$ 14,11</p>
                                 <div className="mt-3">
                                     <span className="bg-red-100 text-red-600 px-3 py-1 rounded-full text-xs font-semibold">
-                                        🔥 80% de desconto - HOJE APENAS
+                                        🔥 78% de desconto - HOJE APENAS
                                     </span>
                                 </div>
                             </div>
@@ -494,7 +497,7 @@ export default function ResultStep({
                         >
                             <span className="flex items-center justify-center gap-3">
                                 <ShoppingCart className={`w-6 h-6 transition-transform duration-300 ${isButtonHovered ? 'scale-110' : ''}`} />
-                                GARANTIR MEU GUIA {styleConfig.name.toUpperCase()} AGORA
+                                ✨ Começar Minha Transformação Agora
                             </span>
                         </button>
 
@@ -527,10 +530,10 @@ export default function ResultStep({
                         </div>
 
                         <p className="text-[#B89B7A] font-semibold">
-                            ⚡ Esta é uma oferta exclusiva para o seu estilo {styleConfig.name}
+                            ⚡ Esta é uma oferta exclusiva para você que completou o diagnóstico
                         </p>
                         <p className="text-gray-600 text-sm mt-2">
-                            O preço volta para R$ 195,00 quando você sair desta página
+                            O preço volta para R$ 447,00 quando você sair desta página
                         </p>
                     </div>
                 </div>
