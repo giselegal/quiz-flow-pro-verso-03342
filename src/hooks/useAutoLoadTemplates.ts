@@ -10,9 +10,8 @@ export const useAutoLoadTemplates = (): {
   activeStageId: string; 
   currentFunnelId: string | undefined; 
 } => {
-  const editor = useEditor();
-  const activeStageId = editor?.stages?.[0]?.id || 'step-1';
   const { getTemplateBlocks, currentFunnelId } = useFunnels();
+  const activeStageId = 'step-1'; // Simplified - uses current step
 
   useEffect(() => {
     if (!activeStageId || !currentFunnelId) return;

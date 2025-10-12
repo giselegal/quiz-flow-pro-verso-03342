@@ -53,6 +53,48 @@ export type Database = {
         }
         Relationships: []
       }
+      active_user_sessions: {
+        Row: {
+          current_page: string | null
+          funnel_id: string | null
+          id: string
+          ip_address: string | null
+          is_active: boolean | null
+          last_activity: string | null
+          metadata: Json | null
+          session_token: string
+          started_at: string | null
+          user_agent: string | null
+          user_id: string | null
+        }
+        Insert: {
+          current_page?: string | null
+          funnel_id?: string | null
+          id?: string
+          ip_address?: string | null
+          is_active?: boolean | null
+          last_activity?: string | null
+          metadata?: Json | null
+          session_token: string
+          started_at?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          current_page?: string | null
+          funnel_id?: string | null
+          id?: string
+          ip_address?: string | null
+          is_active?: boolean | null
+          last_activity?: string | null
+          metadata?: Json | null
+          session_token?: string
+          started_at?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       admin_goals: {
         Row: {
           achieved: boolean | null
@@ -933,6 +975,57 @@ export type Database = {
         }
         Relationships: []
       }
+      session_analytics: {
+        Row: {
+          abandoned_sessions: number | null
+          average_duration_seconds: number | null
+          bounce_rate: number | null
+          completed_sessions: number | null
+          conversion_rate: number | null
+          created_at: string | null
+          date: string
+          funnel_id: string | null
+          id: string
+          metadata: Json | null
+          total_revenue: number | null
+          total_sessions: number | null
+          unique_users: number | null
+          updated_at: string | null
+        }
+        Insert: {
+          abandoned_sessions?: number | null
+          average_duration_seconds?: number | null
+          bounce_rate?: number | null
+          completed_sessions?: number | null
+          conversion_rate?: number | null
+          created_at?: string | null
+          date: string
+          funnel_id?: string | null
+          id?: string
+          metadata?: Json | null
+          total_revenue?: number | null
+          total_sessions?: number | null
+          unique_users?: number | null
+          updated_at?: string | null
+        }
+        Update: {
+          abandoned_sessions?: number | null
+          average_duration_seconds?: number | null
+          bounce_rate?: number | null
+          completed_sessions?: number | null
+          conversion_rate?: number | null
+          created_at?: string | null
+          date?: string
+          funnel_id?: string | null
+          id?: string
+          metadata?: Json | null
+          total_revenue?: number | null
+          total_sessions?: number | null
+          unique_users?: number | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       system_health_metrics: {
         Row: {
           id: string
@@ -1011,6 +1104,45 @@ export type Database = {
           slug?: string
           updated_at?: string
           user_id?: string
+        }
+        Relationships: []
+      }
+      user_activities: {
+        Row: {
+          activity_description: string
+          activity_type: string
+          created_at: string | null
+          entity_id: string | null
+          entity_type: string | null
+          id: string
+          ip_address: string | null
+          metadata: Json | null
+          user_agent: string | null
+          user_id: string | null
+        }
+        Insert: {
+          activity_description: string
+          activity_type: string
+          created_at?: string | null
+          entity_id?: string | null
+          entity_type?: string | null
+          id?: string
+          ip_address?: string | null
+          metadata?: Json | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          activity_description?: string
+          activity_type?: string
+          created_at?: string | null
+          entity_id?: string | null
+          entity_type?: string | null
+          id?: string
+          ip_address?: string | null
+          metadata?: Json | null
+          user_agent?: string | null
+          user_id?: string | null
         }
         Relationships: []
       }

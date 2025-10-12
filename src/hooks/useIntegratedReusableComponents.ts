@@ -44,8 +44,8 @@ export const useIntegratedReusableComponents = (): {
         properties: comp.default_properties,
         category: (comp.category as 'quiz' | 'result' | 'offer' | 'utility') || 'utility',
         tags: [],
-        usage_count: comp.usage_count || 0,
-        created_at: comp.created_at || undefined,
+        usage_count: 0,
+        created_at: undefined,
       })) || [];
 
     return [...localTemplates, ...systemComponents];
