@@ -1,4 +1,3 @@
-// @ts-nocheck - Contexto com incompatibilidades de tipo temporárias
 import React, { createContext, useCallback, useContext, useEffect, useState } from 'react';
 import { supabase } from '../../lib/supabase';
 import {
@@ -97,8 +96,11 @@ const FUNNEL_TEMPLATES: Record<
     defaultSteps: Object.keys(QUIZ_QUESTIONS_COMPLETE).map(stepNum => {
       const stepNumber = parseInt(stepNum);
       const stepId = `step-${stepNumber}`;
-      const questionText =
-        QUIZ_QUESTIONS_COMPLETE[stepNumber as keyof typeof QUIZ_QUESTIONS_COMPLETE];
+      const questionData =
+        QUIZ_QUESTIONS_COMPLETE[String(stepNumber) as keyof typeof QUIZ_QUESTIONS_COMPLETE];
+      const questionText = Array.isArray(questionData) 
+        ? (questionData[0] || 'Pergunta') 
+        : String(questionData || 'Pergunta');
 
       return {
         id: stepId,
@@ -229,8 +231,11 @@ const FUNNEL_TEMPLATES: Record<
     defaultSteps: Object.keys(QUIZ_QUESTIONS_COMPLETE).map(stepNum => {
       const stepNumber = parseInt(stepNum);
       const stepId = `step-${stepNumber}`;
-      const questionText =
-        QUIZ_QUESTIONS_COMPLETE[stepNumber as keyof typeof QUIZ_QUESTIONS_COMPLETE];
+      const questionData =
+        QUIZ_QUESTIONS_COMPLETE[String(stepNumber) as keyof typeof QUIZ_QUESTIONS_COMPLETE];
+      const questionText = Array.isArray(questionData) 
+        ? (questionData[0] || 'Pergunta') 
+        : String(questionData || 'Pergunta');
 
       return {
         id: stepId,
@@ -457,8 +462,11 @@ const FUNNEL_TEMPLATES: Record<
     defaultSteps: Object.keys(QUIZ_QUESTIONS_COMPLETE).map(stepNum => {
       const stepNumber = parseInt(stepNum);
       const stepId = `step-${stepNumber}`;
-      const questionText =
-        QUIZ_QUESTIONS_COMPLETE[stepNumber as keyof typeof QUIZ_QUESTIONS_COMPLETE];
+      const questionData =
+        QUIZ_QUESTIONS_COMPLETE[String(stepNumber) as keyof typeof QUIZ_QUESTIONS_COMPLETE];
+      const questionText = Array.isArray(questionData) 
+        ? (questionData[0] || 'Pergunta') 
+        : String(questionData || 'Pergunta');
 
       return {
         id: stepId,
