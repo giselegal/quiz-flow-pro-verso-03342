@@ -67,10 +67,7 @@ export const ScalableQuizRenderer = memo<ScalableQuizRendererProps>(({
                 // 2. Usar totalSteps do template (dinâmico)
                 let detectedSteps = (tpl && tpl.totalSteps) ? tpl.totalSteps : 1;
 
-                // 3. Fallback removido - ScalableHybridTemplateService arquivado
-                // TODO: Implementar getFunnelStats em masterTemplateService se necessário
-
-                // 4. Carrega dados reais do quiz via BlockPropertiesAPI (opcional)
+                // 3. Carrega dados reais do quiz via BlockPropertiesAPI (opcional)
                 try {
                     const blockApi = new BlockPropertiesAPI();
                     if (tpl?.baseId) {
@@ -108,8 +105,7 @@ export const ScalableQuizRenderer = memo<ScalableQuizRendererProps>(({
     useEffect(() => {
         const loadStepData = async () => {
             try {
-                // Carrega configuração do step - ScalableHybridTemplateService arquivado
-                // TODO: Implementar getStepConfig em masterTemplateService
+                // TODO: Implementar getStepConfig em masterTemplateService para configuração dinâmica
                 const stepConfig: any = null; // await masterTemplateService.getStepConfig(funnelId, currentStep);
 
                 // Combina com dados reais se disponível
@@ -197,7 +193,7 @@ export const ScalableQuizRenderer = memo<ScalableQuizRendererProps>(({
                         <div className="text-xs text-stone-400 text-center">
                             <p>Funil: {funnelId}</p>
                             <p>Modo: {mode}</p>
-                            <p>Sistema: HybridTemplateService</p>
+                            <p>Sistema: MasterTemplateService</p>
                         </div>
                     )}
                 </div>
@@ -400,7 +396,7 @@ export const ScalableQuizRenderer = memo<ScalableQuizRendererProps>(({
                 <div className="mt-6 pt-4 border-t border-stone-200 text-xs text-stone-500 text-center">
                     <div className="space-x-4">
                         <span>🚀 Sistema Escalável</span>
-                        <span>📊 HybridTemplateService</span>
+                        <span>📊 MasterTemplateService</span>
                         <span>🔧 JSON Configurável</span>
                         {realQuizData && <span>✅ Dados Reais</span>}
                         <span>⚡ Funil: {funnelId}</span>
