@@ -345,7 +345,14 @@ class CollaborationService {
   }
 
   /**
-   * 📊 Obter estatísticas da sessão
+   * � Obter sessão por ID
+   */
+  getSession(sessionId: string): CollaborationSession | undefined {
+    return this.sessions.get(sessionId);
+  }
+
+  /**
+   * �📊 Obter estatísticas da sessão
    */
   getSessionStats(sessionId: string) {
     const session = this.sessions.get(sessionId);

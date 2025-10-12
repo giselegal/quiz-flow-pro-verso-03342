@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * 🚀 USE UNIFIED COLLABORATION - Hook de Colaboração em Tempo Real
  *
@@ -322,7 +321,7 @@ export function useUnifiedCollaboration(
       const success = await collaborationService.addUserToSession(sessionId, user, 'editor');
 
       if (success) {
-        const session = collaborationService.sessions.get(sessionId);
+        const session = collaborationService.getSession(sessionId);
         if (session) {
           setState(prev => ({
             ...prev,

@@ -32,6 +32,14 @@ export interface GlobalAppConfig {
   performanceMode: 'normal' | 'high' | 'ultra';
   autoSave: boolean;
   autoSaveInterval: number;
+  // Propriedades adicionais usadas por GlobalStateService
+  version?: string;
+  environment?: string;
+  features?: {
+    analytics?: boolean;
+    debugging?: boolean;
+    performance?: boolean;
+  };
 }
 
 export interface GlobalUIState {
@@ -41,6 +49,9 @@ export interface GlobalUIState {
   viewMode: 'desktop' | 'tablet' | 'mobile';
   currentRoute: string;
   isFullscreen: boolean;
+  // Propriedades adicionais usadas por GlobalStateService
+  loading?: boolean;
+  currentView?: string;
 }
 
 export interface GlobalFunnelState {
@@ -48,6 +59,9 @@ export interface GlobalFunnelState {
   activeFunnel: any | null;
   funnelHistory: string[];
   recentFunnels: Array<{ id: string; name: string; lastAccessed: Date }>;
+  // Propriedades adicionais usadas por GlobalStateService
+  currentFunnelId?: string | null;
+  editMode?: boolean;
 }
 
 export interface GlobalNotificationState {

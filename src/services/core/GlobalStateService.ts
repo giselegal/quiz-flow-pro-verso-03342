@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * 🎯 GLOBAL STATE SERVICE - SIMPLIFICADO
  * 
@@ -190,6 +189,12 @@ export class GlobalStateService extends EventEmitter {
     private createDefaultState(): StateCache {
         return {
             config: {
+                theme: 'light',
+                language: 'pt-BR',
+                debugMode: false,
+                performanceMode: 'normal',
+                autoSave: true,
+                autoSaveInterval: 30000,
                 version: '1.0.0',
                 environment: 'development',
                 features: {
@@ -199,11 +204,20 @@ export class GlobalStateService extends EventEmitter {
                 }
             },
             ui: {
-                loading: false,
                 sidebarOpen: true,
+                propertiesPanelOpen: false,
+                previewMode: false,
+                viewMode: 'desktop',
+                currentRoute: '/',
+                isFullscreen: false,
+                loading: false,
                 currentView: 'dashboard'
             },
             funnel: {
+                activeFunnelId: null,
+                activeFunnel: null,
+                funnelHistory: [],
+                recentFunnels: [],
                 currentFunnelId: null,
                 editMode: false
             },
