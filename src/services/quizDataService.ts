@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { QuizResult, StyleType } from '@/types/quiz';
 import { trackPixelEvent } from '../utils/facebookPixel';
 
