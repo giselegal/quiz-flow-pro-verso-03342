@@ -420,8 +420,9 @@ export const QuizRenderer: React.FC<QuizRendererProps> = React.memo(({
     // 🆕 V3.0: Se for step 20 em produção, tentar usar V3Renderer
     if (shouldUseV3Renderer) {
       try {
-        // Carregar template v3.0 dinamicamente
-        const templateV3 = require('@/templates/step-20-v3.json') as TemplateV3;
+        // Carregar template v3.0 do arquivo gerado
+        const allTemplates = require('@/templates/quiz21StepsComplete');
+        const templateV3 = allTemplates.QUIZ_STYLE_21_STEPS_TEMPLATE['step-20'] as TemplateV3;
 
         if (templateV3 && templateV3.templateVersion === '3.0') {
           return (

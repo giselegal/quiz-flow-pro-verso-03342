@@ -81,31 +81,42 @@ function convertBlock(jsonBlock: JsonBlock): TsBlock {
 }
 
 /**
- * Processa um arquivo JSON de template
+ * Processa um arquivo JSON de template (v2.0 ou v3.0)
  */
-function processTemplateFile(filePath: string): { stepId: string; blocks: TsBlock[] } | null {
+function processTemplateFile(filePath: string): { stepId: string; data: any } | null {
     try {
         const content = fs.readFileSync(filePath, 'utf8');
-        const jsonTemplate: JsonTemplate = JSON.parse(content);
+        const jsonTemplate: any = JSON.parse(content);
 
-        // Extrair número do step do nome do arquivo
+        // Extrair identificador do step do nome do arquivo
         const fileName = path.basename(filePath);
-        const match = fileName.match(/step-(\d+)-template\.json/);
+
+        // Suportar padrões: step-XX-template.json e step-XX-v3.json
+        const matchV2 = fileName.match(/step-(\d+)-template\.json/);
+        const matchV3 = fileName.match(/step-(\d+)-v3\.json/);
+        const match = matchV2 || matchV3;
 
         if (!match) {
-            log(`⚠️  Arquivo ${fileName} não segue padrão step-XX-template.json`, colors.yellow);
+            log(`⚠️  Arquivo ${fileName} não segue padrão esperado`, colors.yellow);
             return null;
         }
 
         const stepNum = match[1];
         const stepId = `step-${stepNum}`;
 
-        // Converter blocos
-        const blocks = jsonTemplate.blocks.map(convertBlock);
+        // Detectar versão do template
+        const templateVersion = jsonTemplate.templateVersion || '2.0';
 
-        log(`  ✓ ${stepId}: ${blocks.length} blocos`, colors.green);
-
-        return { stepId, blocks };
+        if (templateVersion === '3.0') {
+            // Template v3.0: preservar estrutura completa (sections)
+            log(`  ✓ ${stepId} (v3.0): ${jsonTemplate.sections?.length || 0} seções`, colors.green);
+            return { stepId, data: jsonTemplate };
+        } else {
+            // Template v2.0: converter blocos (comportamento original)
+            const blocks = jsonTemplate.blocks.map(convertBlock);
+            log(`  ✓ ${stepId} (v2.0): ${blocks.length} blocos`, colors.green);
+            return { stepId, data: blocks };
+        }
     } catch (error) {
         log(`❌ Erro ao processar ${filePath}: ${error}`, colors.red);
         return null;
@@ -113,17 +124,17 @@ function processTemplateFile(filePath: string): { stepId: string; blocks: TsBloc
 }
 
 /**
- * Gera o código TypeScript para um step
+ * Gera o código TypeScript para um step (v2.0 ou v3.0)
  */
-function generateStepCode(stepId: string, blocks: TsBlock[]): string {
-    const blocksJson = JSON.stringify(blocks, null, 2);
+function generateStepCode(stepId: string, data: any): string {
+    const dataJson = JSON.stringify(data, null, 2);
     // Indentar corretamente (2 espaços)
-    const indentedBlocks = blocksJson
+    const indentedData = dataJson
         .split('\n')
         .map(line => '  ' + line)
         .join('\n');
 
-    return `  '${stepId}': ${indentedBlocks.trim()},`;
+    return `  '${stepId}': ${indentedData.trim()},`;
 }
 
 /**
@@ -289,34 +300,45 @@ async function main() {
     }
 
     const files = fs.readdirSync(templatesDir)
-        .filter(f => f.endsWith('-template.json'))
+        .filter(f => f.endsWith('-template.json') || f.endsWith('-v3.json'))
         .sort(); // Garantir ordem
 
     if (files.length === 0) {
-        log(`❌ Nenhum arquivo *-template.json encontrado em ${templatesDir}`, colors.red);
+        log(`❌ Nenhum arquivo de template encontrado em ${templatesDir}`, colors.red);
         process.exit(1);
     }
 
     log(`📋 Encontrados ${files.length} arquivos JSON\n`, colors.blue);
 
     // Processar cada arquivo
-    const templateRecord: Record<string, TsBlock[]> = {};
+    const templateRecord: Record<string, any> = {};
     let successCount = 0;
     let errorCount = 0;
+    let v2Count = 0;
+    let v3Count = 0;
 
     for (const file of files) {
         const filePath = path.join(templatesDir, file);
         const result = processTemplateFile(filePath);
 
         if (result) {
-            templateRecord[result.stepId] = result.blocks;
+            templateRecord[result.stepId] = result.data;
             successCount++;
+
+            // Contar versões
+            if (Array.isArray(result.data)) {
+                v2Count++;
+            } else if (result.data.templateVersion === '3.0') {
+                v3Count++;
+            }
         } else {
             errorCount++;
         }
     }
 
     log(`\n✅ Processados: ${successCount} templates`, colors.green);
+    log(`   • v2.0 (blocos): ${v2Count}`, colors.cyan);
+    log(`   • v3.0 (seções): ${v3Count}`, colors.cyan);
     if (errorCount > 0) {
         log(`⚠️  Erros: ${errorCount} arquivos`, colors.yellow);
     }
@@ -326,11 +348,11 @@ async function main() {
 
     const header = generateFileHeader();
     const templateCode = Object.entries(templateRecord)
-        .map(([stepId, blocks]) => generateStepCode(stepId, blocks))
+        .map(([stepId, data]) => generateStepCode(stepId, data))
         .join('\n\n');
 
     const fullCode = `${header}
-export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any[]> = IS_TEST ? MINIMAL_TEST_TEMPLATE : {
+export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIMAL_TEST_TEMPLATE : {
 ${templateCode}
 };
 
@@ -347,9 +369,27 @@ ${generateFileFooter()}`;
     // Estatísticas
     const stats = fs.statSync(outputFile);
     const sizeKB = (stats.size / 1024).toFixed(2);
+
+    // Contar blocos total (apenas v2.0)
+    const v2Templates = Object.values(templateRecord).filter(data => Array.isArray(data));
+    const totalBlocks = v2Templates.reduce((sum, blocks) => sum + blocks.length, 0);
+
+    // Contar seções total (apenas v3.0)
+    const v3Templates = Object.values(templateRecord).filter(data =>
+        data && typeof data === 'object' && data.templateVersion === '3.0'
+    );
+    const totalSections = v3Templates.reduce((sum, template) =>
+        sum + (template.sections?.length || 0), 0
+    );
+
     log(`\n📊 Estatísticas:`, colors.blue);
     log(`   • Templates: ${Object.keys(templateRecord).length}`, colors.cyan);
-    log(`   • Blocos total: ${Object.values(templateRecord).reduce((sum, blocks) => sum + blocks.length, 0)}`, colors.cyan);
+    if (totalBlocks > 0) {
+        log(`   • Blocos v2.0: ${totalBlocks}`, colors.cyan);
+    }
+    if (totalSections > 0) {
+        log(`   • Seções v3.0: ${totalSections}`, colors.cyan);
+    }
     log(`   • Tamanho arquivo: ${sizeKB} KB`, colors.cyan);
 
     log(`\n✨ Concluído!`, colors.bright);

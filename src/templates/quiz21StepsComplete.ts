@@ -11,7 +11,7 @@
  * 2. Execute: npm run generate:templates
  * 3. Commit ambos: JSON + este arquivo TS
  * 
- * Gerado em: 2025-10-12T23:29:34.044Z
+ * Gerado em: 2025-10-12T23:41:16.926Z
  * Versão: 3.0.0
  */
 
@@ -95,7 +95,7 @@ const MINIMAL_TEST_TEMPLATE: Record<string, Block[]> = {
 };
 
 
-export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any[]> = IS_TEST ? MINIMAL_TEST_TEMPLATE : {
+export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIMAL_TEST_TEMPLATE : {
   'step-01': [
     {
       "id": "step01-header",
@@ -2938,91 +2938,554 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any[]> = IS_TEST ? MIN
     }
   ],
 
-  'step-20': [
-    {
-      "id": "step20-header",
-      "type": "quiz-intro-header",
-      "order": 0,
-      "content": {},
-      "properties": {
-        "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
-        "logoAlt": "Logo Gisele Galvão",
-        "logoWidth": 96,
-        "logoHeight": 96,
-        "progressValue": 95,
-        "progressTotal": 100,
-        "showProgress": true,
-        "containerWidth": "full",
-        "spacing": "small"
-      }
+  'step-20': {
+    "templateVersion": "3.0",
+    "metadata": {
+      "id": "step-20-resultado-v3",
+      "name": "Página de Resultado - 5 Passos Vista-se de Você",
+      "description": "Página completa de resultado do quiz com oferta integrada",
+      "category": "quiz-result",
+      "tags": [
+        "quiz",
+        "style",
+        "result",
+        "offer",
+        "conversion"
+      ],
+      "createdAt": "2025-10-11T10:44:14.174Z",
+      "updatedAt": "2025-10-11T23:30:00.000Z",
+      "author": "Gisele Galvão - Branding & Imagem Pessoal"
     },
-    {
-      "id": "step20-title",
-      "type": "text-inline",
-      "order": 1,
-      "content": {
-        "0": "R",
-        "1": "E",
-        "2": "C",
-        "3": "E",
-        "4": "B",
-        "5": "A",
-        "6": " ",
-        "7": "S",
-        "8": "E",
-        "9": "U",
-        "10": " ",
-        "11": "G",
-        "12": "U",
-        "13": "I",
-        "14": "A",
-        "15": " ",
-        "16": "D",
-        "17": "E",
-        "18": " ",
-        "19": "E",
-        "20": "S",
-        "21": "T",
-        "22": "I",
-        "23": "L",
-        "24": "O",
-        "25": " ",
-        "26": "C",
-        "27": "O",
-        "28": "M",
-        "29": "P",
-        "30": "L",
-        "31": "E",
-        "32": "T",
-        "33": "O"
+    "offer": {
+      "productName": "5 Passos – Vista-se de Você",
+      "mentor": "Gisele Galvão",
+      "mentorTitle": "Consultora de Imagem e Branding Pessoal",
+      "description": "Uma metodologia de autoconhecimento, imagem estratégica e transformação pessoal, criada para te guiar da confusão diante do espelho à clareza de uma imagem que comunica quem você realmente é.",
+      "pricing": {
+        "originalPrice": 447,
+        "salePrice": 97,
+        "currency": "BRL",
+        "installments": {
+          "count": 8,
+          "value": 14.11
+        },
+        "discount": {
+          "percentage": 78,
+          "label": "78% de desconto"
+        }
       },
-      "properties": {
-        "content": "RECEBA SEU GUIA DE ESTILO COMPLETO",
-        "fontSize": "text-2xl",
-        "fontWeight": "font-bold",
-        "textAlign": "text-center",
-        "color": "#432818",
-        "containerWidth": "full",
-        "spacing": "small"
+      "links": {
+        "checkout": "https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912",
+        "salesPage": null
+      },
+      "guarantee": {
+        "days": 7,
+        "description": "Se não fizer sentido pra você, o reembolso é simples e sem perguntas."
+      },
+      "features": {
+        "totalLessons": 31,
+        "accessType": "Acesso imediato",
+        "format": "Online"
       }
     },
-    {
-      "id": "step20-form",
-      "type": "lead-form",
-      "order": 2,
-      "content": {},
-      "properties": {
-        "fields": [
-          "name",
-          "email",
-          "phone"
-        ],
-        "submitText": "Receber Guia Gratuito",
-        "containerWidth": "full",
-        "spacing": "small"
+    "theme": {
+      "colors": {
+        "primary": "#B89B7A",
+        "secondary": "#432818",
+        "background": "#fffaf7",
+        "text": "#432818",
+        "accent": "#a08966",
+        "success": "#2d5f3f",
+        "warning": "#d97706"
+      },
+      "fonts": {
+        "heading": "Playfair Display",
+        "body": "Inter",
+        "fallback": "system-ui, -apple-system, sans-serif"
+      },
+      "spacing": {
+        "section": "3rem",
+        "block": "1.5rem"
+      },
+      "borderRadius": {
+        "small": "0.5rem",
+        "medium": "0.75rem",
+        "large": "1rem"
       }
+    },
+    "layout": {
+      "containerWidth": "full",
+      "maxWidth": "1280px",
+      "spacing": "comfortable",
+      "backgroundColor": "#fffaf7",
+      "responsive": true
+    },
+    "sections": [
+      {
+        "id": "hero",
+        "type": "HeroSection",
+        "enabled": true,
+        "order": 1,
+        "title": "Comemoração e Apresentação do Estilo",
+        "props": {
+          "showCelebration": true,
+          "celebrationEmoji": "🎉",
+          "celebrationAnimation": "bounce",
+          "greetingFormat": "Olá, {userName}!",
+          "titleFormat": "Seu Estilo Predominante é:",
+          "styleNameDisplay": "{styleName}",
+          "colors": {
+            "greeting": "text",
+            "greetingHighlight": "primary",
+            "title": "secondary",
+            "styleName": "primary"
+          },
+          "spacing": {
+            "padding": "3rem 1.5rem",
+            "marginBottom": "2.5rem"
+          }
+        }
+      },
+      {
+        "id": "style-profile",
+        "type": "StyleProfileSection",
+        "enabled": true,
+        "order": 2,
+        "title": "Perfil Completo de Estilo",
+        "props": {
+          "layout": "two-column",
+          "imagePosition": "left",
+          "showStyleImage": true,
+          "styleImage": {
+            "aspectRatio": "4/5",
+            "showDecorations": true,
+            "decorationColor": "primary",
+            "fallbackEnabled": true
+          },
+          "showIntroText": true,
+          "introText": {
+            "enabled": true,
+            "text": "Esse é o estilo que mais traduz a sua essência. Ele revela muito sobre como você se conecta com o mundo e a forma como expressa sua energia.",
+            "style": "italic",
+            "background": "primary/5",
+            "borderLeft": true
+          },
+          "showDescription": true,
+          "showTransitionText": true,
+          "transitionText": "Mas lembre-se: você não é só um estilo.",
+          "showProgressBars": true,
+          "progressBars": {
+            "topCount": 3,
+            "showPercentage": true,
+            "percentageFormat": "{percentage}%",
+            "animationDelay": 200,
+            "colors": {
+              "primary": "primary to accent",
+              "secondary": "primary/80 to accent/80",
+              "tertiary": "primary/60 to accent/60"
+            },
+            "titleFormat": "Além do {primaryStyle}, você também tem traços de:"
+          },
+          "showKeywords": true,
+          "keywords": {
+            "title": "Palavras que te definem:",
+            "tagColor": "primary",
+            "tagStyle": "rounded-full"
+          },
+          "showPersuasiveQuestions": true,
+          "persuasiveQuestions": {
+            "title": "💭 Você já se perguntou...",
+            "icon": "❓",
+            "style": "italic",
+            "background": "primary/5",
+            "border": "primary/30"
+          },
+          "showClosingMessage": true,
+          "closingMessage": {
+            "text": "✨ É a mistura desses elementos que torna a sua imagem única.",
+            "style": "italic",
+            "fontWeight": "medium",
+            "background": "gradient primary/10 to accent/10",
+            "textAlign": "center"
+          },
+          "showGuideImage": true,
+          "guideImage": {
+            "position": "below",
+            "aspectRatio": "4/5",
+            "maxWidth": "28rem",
+            "centered": true
+          }
+        }
+      },
+      {
+        "id": "cta-primary",
+        "type": "CTAButton",
+        "enabled": true,
+        "order": 3,
+        "title": "CTA Principal (Após Perguntas Persuasivas)",
+        "props": {
+          "text": "Quero Dominar Meu Estilo em 5 Passos",
+          "icon": "ShoppingCart",
+          "iconAnimation": "bounce-on-hover",
+          "style": "gradient",
+          "colors": {
+            "from": "primary",
+            "to": "accent"
+          },
+          "size": "large",
+          "fullWidthMobile": true,
+          "position": "after-questions",
+          "showTransition": true,
+          "transition": {
+            "title": "💡 Decodifique sua Imagem de Sucesso em 5 Passos",
+            "subtitle": "Método completo: Autoconhecimento + estratégia visual 👇",
+            "background": "gradient primary/10 to accent/10",
+            "border": "primary/20"
+          },
+          "analytics": {
+            "eventName": "cta_primary_click",
+            "category": "conversion",
+            "label": "after_questions"
+          }
+        }
+      },
+      {
+        "id": "transformation",
+        "type": "TransformationSection",
+        "enabled": true,
+        "order": 4,
+        "title": "Transformação e Valor",
+        "props": {
+          "mainTitle": "Transforme Sua Imagem, Revele Sua Essência",
+          "highlightWords": [
+            "Revele Sua Essência"
+          ],
+          "highlightColor": "primary",
+          "subtitle": "Seu estilo é uma ferramenta poderosa. Não se trata apenas de roupas, mas de comunicar quem você é e aspira ser.",
+          "layout": "grid-2x2",
+          "benefits": [
+            {
+              "icon": "🎯",
+              "text": "Clareza de estilo para se vestir com facilidade todos os dias"
+            },
+            {
+              "icon": "🎨",
+              "text": "Cores e formas que comunicam quem você é e o que você quer"
+            },
+            {
+              "icon": "💼",
+              "text": "Imagem que chega primeiro: autoridade sem perder autenticidade"
+            },
+            {
+              "icon": "👗",
+              "text": "Guarda-roupa estratégico que conversa entre si"
+            }
+          ],
+          "benefitStyle": {
+            "background": "primary/5",
+            "iconSize": "2xl",
+            "textAlign": "left",
+            "padding": "1rem"
+          }
+        }
+      },
+      {
+        "id": "method-steps",
+        "type": "MethodStepsSection",
+        "enabled": true,
+        "order": 5,
+        "title": "O Método 5 Passos",
+        "props": {
+          "sectionTitle": "O que você vai aprender no Método 5 Passos",
+          "steps": [
+            {
+              "number": 1,
+              "icon": "🪞",
+              "title": "Passo 1 — Estilo de Ser",
+              "description": "Descubra seus 3 estilos predominantes e entenda como traduzir sua personalidade no vestir. Você vai aprender a reconhecer o que te representa e como alinhar sua imagem à sua essência — sem regras, apenas consciência."
+            },
+            {
+              "number": 2,
+              "icon": "🎨",
+              "title": "Passo 2 — Cores",
+              "description": "As cores são uma linguagem emocional. Você vai aprender como escolher tons que valorizam sua beleza natural, comunicar autoridade, leveza ou proximidade — e criar harmonia entre cor, textura e intenção."
+            },
+            {
+              "number": 3,
+              "icon": "🧍‍♀️",
+              "title": "Passo 3 — Biotipo",
+              "description": "Entenda as linhas e proporções do seu corpo e como se vestir para equilibrar formas, valorizar o que ama e acolher o que deseja transformar. Um olhar sem crítica, com amor e propósito."
+            },
+            {
+              "number": 4,
+              "icon": "🧹",
+              "title": "Passo 4 — Detox do Guarda-Roupa",
+              "description": "Um processo de autoconhecimento através do desapego. Você vai aprender a manter apenas o que faz sentido, o que representa a mulher que você é hoje — criando um espaço leve, organizado e inspirador."
+            },
+            {
+              "number": 5,
+              "icon": "👗",
+              "title": "Passo 5 — Guarda-Roupa de Sucesso",
+              "description": "O encerramento prático do método. Aqui você aprende a montar um guarda-roupa funcional e inteligente, com peças-chave, terceira peça, combinações rápidas e looks que comunicam confiança e autenticidade todos os dias."
+            }
+          ],
+          "stepStyle": {
+            "layout": "card",
+            "background": "white",
+            "border": "primary/20",
+            "padding": "1.5rem",
+            "iconColor": "primary",
+            "titleColor": "secondary",
+            "descriptionColor": "text"
+          }
+        }
+      },
+      {
+        "id": "bonus",
+        "type": "BonusSection",
+        "enabled": true,
+        "order": 6,
+        "title": "Bônus Exclusivos",
+        "props": {
+          "sectionTitle": "💎 Bônus Exclusivos",
+          "items": [
+            {
+              "title": "Guia de Visagismo Facial (PDF)",
+              "description": "Descubra os melhores cortes, cores e acessórios para realçar seu rosto.",
+              "icon": "📄",
+              "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911666/C%C3%B3pia_de_Template_Dossi%C3%AA_Completo_2024_15_-_Copia_ssrhu3.webp"
+            },
+            {
+              "title": "Peças-Chave do Guarda-Roupa de Sucesso (PDF)",
+              "description": "Lista completa e adaptável ao seu estilo.",
+              "icon": "📄",
+              "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1758849943/Detox_Guarda-roupa_fnjehu.jpg"
+            },
+            {
+              "title": "Inventário do Guarda-Roupa (Planilha)",
+              "description": "Para manter tudo prático, leve e funcional.",
+              "icon": "📊",
+              "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1758849943/Invent%C3%A1rio_do_Guada-Roupa_m92ilf.jpg"
+            }
+          ],
+          "layout": "grid-3",
+          "cardStyle": {
+            "background": "primary/5",
+            "border": "primary/20",
+            "padding": "1.5rem"
+          }
+        }
+      },
+      {
+        "id": "social-proof",
+        "type": "SocialProofSection",
+        "enabled": true,
+        "order": 7,
+        "title": "Transformações Reais",
+        "props": {
+          "sectionTitle": "Veja os Resultados de Quem Já Transformou Sua Imagem",
+          "layout": "grid-3",
+          "testimonials": [
+            {
+              "name": "Maria Silva",
+              "role": "Advogada",
+              "text": "Finalmente descobri como me vestir com elegância e profissionalismo. Meu guarda-roupa nunca fez tanto sentido!",
+              "rating": 5,
+              "image": null,
+              "verified": true
+            },
+            {
+              "name": "Ana Costa",
+              "role": "Empresária",
+              "text": "O método me ajudou a encontrar meu estilo pessoal. Agora me sinto confiante em qualquer ocasião.",
+              "rating": 5,
+              "image": null,
+              "verified": true
+            },
+            {
+              "name": "Julia Santos",
+              "role": "Designer",
+              "text": "Economizei muito dinheiro parando de comprar peças que não combinam comigo. Recomendo!",
+              "rating": 5,
+              "image": null,
+              "verified": true
+            }
+          ],
+          "cardStyle": {
+            "background": "primary/5",
+            "padding": "1.5rem",
+            "showStars": true,
+            "starColor": "primary"
+          }
+        }
+      },
+      {
+        "id": "offer",
+        "type": "OfferSection",
+        "enabled": true,
+        "order": 8,
+        "title": "Oferta Principal",
+        "props": {
+          "layout": "centered-card",
+          "maxWidth": "42rem",
+          "showUrgency": false,
+          "pricing": {
+            "showOriginalPrice": true,
+            "originalPrice": 447,
+            "salePrice": 97,
+            "installments": {
+              "show": true,
+              "count": 8,
+              "value": 14.11
+            },
+            "discount": {
+              "show": true,
+              "percentage": 78,
+              "label": "78% de desconto",
+              "style": "badge",
+              "color": "success"
+            }
+          },
+          "includes": {
+            "title": "O Que Você Recebe Hoje",
+            "items": [
+              {
+                "icon": "✅",
+                "text": "Acesso imediato às 31 aulas",
+                "highlight": false
+              },
+              {
+                "icon": "✅",
+                "text": "Método completo 5 Passos",
+                "highlight": true
+              },
+              {
+                "icon": "✅",
+                "text": "3 Bônus Exclusivos (PDFs + Planilha)",
+                "highlight": false
+              },
+              {
+                "icon": "✅",
+                "text": "Garantia de 7 dias",
+                "highlight": false
+              }
+            ]
+          },
+          "background": {
+            "type": "gradient",
+            "from": "primary/10",
+            "to": "accent/5"
+          }
+        }
+      },
+      {
+        "id": "cta-secondary",
+        "type": "CTAButton",
+        "enabled": true,
+        "order": 9,
+        "title": "CTA Secundário (Após Oferta)",
+        "props": {
+          "text": "Começar Minha Transformação Agora",
+          "icon": "ShoppingCart",
+          "iconAnimation": "bounce-on-hover",
+          "style": "gradient",
+          "colors": {
+            "from": "primary",
+            "to": "accent"
+          },
+          "size": "xlarge",
+          "fullWidthMobile": true,
+          "showTransition": false,
+          "analytics": {
+            "eventName": "cta_secondary_click",
+            "category": "conversion",
+            "label": "after_offer"
+          }
+        }
+      },
+      {
+        "id": "guarantee",
+        "type": "GuaranteeSection",
+        "enabled": true,
+        "order": 10,
+        "title": "Garantia",
+        "props": {
+          "days": 7,
+          "icon": "🕊️",
+          "title": "Garantia de Satisfação Total",
+          "description": "Você tem 7 dias para experimentar o método. Se não fizer sentido pra você, o reembolso é simples e sem perguntas.",
+          "badgeText": "Compra 100% Segura",
+          "background": {
+            "type": "solid",
+            "color": "primary/5"
+          },
+          "border": {
+            "show": true,
+            "color": "primary/20"
+          },
+          "layout": "centered",
+          "iconSize": "3xl"
+        }
+      },
+      {
+        "id": "cta-final",
+        "type": "CTAButton",
+        "enabled": true,
+        "order": 11,
+        "title": "CTA Final (Após Garantia)",
+        "props": {
+          "text": "Garantir Minha Vaga com 7 Dias de Garantia",
+          "icon": "ShoppingCart",
+          "iconAnimation": "bounce-on-hover",
+          "style": "gradient",
+          "colors": {
+            "from": "primary",
+            "to": "accent"
+          },
+          "size": "large",
+          "fullWidthMobile": true,
+          "showTransition": false,
+          "analytics": {
+            "eventName": "cta_final_click",
+            "category": "conversion",
+            "label": "after_guarantee"
+          }
+        }
+      }
+    ],
+    "validation": {
+      "required": [
+        "userName",
+        "styleName",
+        "scores"
+      ],
+      "optional": [
+        "secondaryStyles",
+        "keywords",
+        "specialTips"
+      ]
+    },
+    "analytics": {
+      "events": [
+        "page_view",
+        "step_completed",
+        "cta_primary_click",
+        "cta_secondary_click",
+        "cta_final_click",
+        "section_viewed",
+        "offer_viewed"
+      ],
+      "trackingId": "step-20-v3",
+      "utmParams": true,
+      "customEvents": [
+        "component_mounted",
+        "user_interaction",
+        "scroll_depth",
+        "time_on_page"
+      ],
+      "pixelId": "PIXEL_CHECKOUT_PRIMARY"
     }
-  ],
+  },
 
   'step-21': [
     {
