@@ -28,7 +28,8 @@ export default defineConfig({
   },
   server: {
     host: '0.0.0.0',
-    port: 8080,
+    // Porta do servidor Vite em dev. Mantemos 5173 (padrão) para alinhar com HMR e com o redirecionador 8080 -> 5173
+    port: 5173,
     open: false,
     cors: true,
     strictPort: true,

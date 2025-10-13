@@ -337,8 +337,13 @@ app.post('/api/live-update', (req, res) => {
 });
 
 // SPA Fallback - CRÍTICO: deve ser o último middleware
-// Qualquer rota que não seja API serve o index.html
-app.get('*', (req, res) => {
+// Qualquer rota que NÃO seja API e NÃO pareça um asset serve o index.html
+app.get('*', (req, res, next) => {
+  const url = req.url || '';
+  // Não interceptar APIs
+  if (url.startsWith('/api')) return next();
+  // Não interceptar arquivos estáticos ou com extensão (ex: .js, .css, .png)
+  if (/\.[a-zA-Z0-9]{2,8}(\?.*)?$/.test(url)) return next();
   const indexPath = path.join(__dirname, '../dist/index.html');
   console.log(`🔄 SPA Fallback: ${req.url} → index.html`);
   res.sendFile(indexPath);
