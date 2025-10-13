@@ -11,11 +11,11 @@ export const LogoutButton: React.FC<LogoutButtonProps> = ({
   variant = 'ghost',
   size = 'default',
 }) => {
-  const { logout, isLoading } = useAuth();
+  const { signOut, isLoading } = useAuth();
 
   const handleLogout = async () => {
     try {
-      await logout();
+      await signOut();
       window.location.href = '/auth';
     } catch (error) {
       console.error('Logout error:', error);
