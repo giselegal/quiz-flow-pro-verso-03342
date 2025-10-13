@@ -21,6 +21,7 @@ import type {
 // LAZY IMPORTS - Code splitting por section
 // ============================================================================
 
+// Result sections (existentes)
 const HeroSection = React.lazy(() => import('./HeroSection').then(m => ({ default: m.HeroSection })));
 const StyleProfileSection = React.lazy(() => import('./StyleProfileSection'));
 const CTAButton = React.lazy(() => import('./CTAButton'));
@@ -30,6 +31,21 @@ const BonusSection = React.lazy(() => import('./BonusSection'));
 const SocialProofSection = React.lazy(() => import('./SocialProofSection'));
 const OfferSection = React.lazy(() => import('./OfferSection'));
 const GuaranteeSection = React.lazy(() => import('./GuaranteeSection'));
+
+// Intro sections (novos)
+const IntroHeroSection = React.lazy(() => import('./intro').then(m => ({ default: m.IntroHeroSection })));
+const WelcomeFormSection = React.lazy(() => import('./intro').then(m => ({ default: m.WelcomeFormSection })));
+
+// Question sections (novos)
+const QuestionHeroSection = React.lazy(() => import('./questions').then(m => ({ default: m.QuestionHeroSection })));
+const OptionsGridSection = React.lazy(() => import('./questions').then(m => ({ default: m.OptionsGridSection })));
+
+// Transition sections (novos)
+const TransitionHeroSection = React.lazy(() => import('./transitions').then(m => ({ default: m.TransitionHeroSection })));
+
+// Offer sections (novos)
+const OfferHeroSection = React.lazy(() => import('./offer').then(m => ({ default: m.OfferHeroSection })));
+const PricingSection = React.lazy(() => import('./offer').then(m => ({ default: m.PricingSection })));
 
 // ============================================================================
 // TYPES
@@ -62,16 +78,32 @@ interface SectionRendererProps {
 /**
  * Mapeamento de section types para componentes React
  */
-const SECTION_COMPONENT_MAP: Record<SectionType, React.ComponentType<any>> = {
-    HeroSection,
-    StyleProfileSection,
-    CTAButton,
-    TransformationSection,
-    MethodStepsSection,
-    BonusSection,
-    SocialProofSection,
-    OfferSection,
-    GuaranteeSection,
+const SECTION_COMPONENT_MAP: Record<string, React.ComponentType<any>> = {
+    // Result sections (existentes)
+    'HeroSection': HeroSection,
+    'StyleProfileSection': StyleProfileSection,
+    'CTAButton': CTAButton,
+    'TransformationSection': TransformationSection,
+    'MethodStepsSection': MethodStepsSection,
+    'BonusSection': BonusSection,
+    'SocialProofSection': SocialProofSection,
+    'OfferSection': OfferSection,
+    'GuaranteeSection': GuaranteeSection,
+
+    // Intro sections (novos)
+    'intro-hero': IntroHeroSection,
+    'welcome-form': WelcomeFormSection,
+
+    // Question sections (novos)
+    'question-hero': QuestionHeroSection,
+    'options-grid': OptionsGridSection,
+
+    // Transition sections (novos)
+    'transition-hero': TransitionHeroSection,
+
+    // Offer sections (novos)
+    'offer-hero': OfferHeroSection,
+    'pricing': PricingSection,
 };
 
 // ============================================================================
