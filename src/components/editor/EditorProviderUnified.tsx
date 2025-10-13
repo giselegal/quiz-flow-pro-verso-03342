@@ -149,10 +149,12 @@ class UnifiedHistory {
 
 const EditorContext = createContext<EditorContextValue | undefined>(undefined);
 
-export const useEditor = (): EditorContextValue => {
+export function useEditor(): EditorContextValue;
+export function useEditor(options: { optional: true }): EditorContextValue | undefined;
+export function useEditor(options?: { optional?: boolean }): EditorContextValue | undefined {
     const context = useContext(EditorContext);
 
-    if (!context) {
+    if (!context && !options?.optional) {
         console.error('❌ useEditor called outside EditorProviderUnified:', {
             location: typeof window !== 'undefined' ? window.location.href : 'ssr',
             timestamp: new Date().toISOString(),
@@ -161,18 +163,14 @@ export const useEditor = (): EditorContextValue => {
     }
 
     return context;
-};
+}
 
 // Alias para compatibilidade
 export const useOptimizedEditor = useEditor;
 
-// Hook opcional que não lança erro
+// Hook opcional que não lança erro (deprecated - use useEditor({ optional: true }))
 export const useEditorOptional = (): EditorContextValue | undefined => {
-    try {
-        return useContext(EditorContext);
-    } catch {
-        return undefined;
-    }
+    return useEditor({ optional: true });
 };
 
 // ============================================================================
