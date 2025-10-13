@@ -58,7 +58,7 @@ describe('CanvasArea - Hook Conditional Fix', () => {
     beforeEach(() => {
         // Reset mocks
         vi.clearAllMocks();
-        
+
         // Setup default mock return
         mockUseVirtualBlocks.mockReturnValue({
             visible: [],
