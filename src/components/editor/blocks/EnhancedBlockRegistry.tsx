@@ -106,6 +106,7 @@ export const ENHANCED_BLOCK_REGISTRY: Record<string, ComponentType<any>> = {
     'step20-complete-template': Step20CompleteTemplateBlock,
 
     // ✅ STEP 21 - OFERTA
+    'offer-hero': OfferHeroSection, // ✅ NOVO - Section para offer-hero
     'urgency-timer-inline': lazy(() => import('@/components/editor/blocks/UrgencyTimerInlineBlock')),
     'before-after-inline': lazy(() => import('@/components/editor/blocks/BeforeAfterInlineBlock')),
     bonus: lazy(() => import('@/components/editor/blocks/BonusBlock')),
