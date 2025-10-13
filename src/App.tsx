@@ -34,8 +34,11 @@ import { EditorErrorBoundary } from './components/error/EditorErrorBoundary';
 import { EnhancedLoadingFallback } from './components/ui/enhanced-loading-fallback';
 import { serviceManager } from './services/core/UnifiedServiceManager';
 
-// 🚀 NOVO: Super Unified Provider
+// 🚀 FASE 2: Consolidated Provider (único provider necessário)
+import { ConsolidatedProvider } from '@/providers';
 import SuperUnifiedProvider from '@/providers/SuperUnifiedProvider';
+import { UnifiedCRUDProvider } from '@/contexts/data/UnifiedCRUDProvider';
+import { FunnelContext } from '@/core/contexts/FunnelContext';
 
 // 🏠 PÁGINAS ESSENCIAIS
 const Home = lazy(() => import('./pages/Home'));
@@ -47,12 +50,10 @@ const TemplateDiagnosticPage = lazy(() => import('./pages/TemplateDiagnosticPage
 
 // 🚀 EDITORES MODERNOS
 const QuizFunnelEditorSimplified = lazy(() => import('./components/editor/quiz/QuizFunnelEditorSimplified').then(module => ({ default: module.default })));
-// QuizFunnelEditorWYSIWYG removed - deprecated in Sprint 4
 const QuizFunnelEditorWYSIWYG_Refactored = lazy(() => import('./components/editor/quiz/QuizFunnelEditorWYSIWYG_Refactored').then(module => ({ default: module.default })));
 const ModernUnifiedEditor = lazy(() => import('./pages/editor/ModernUnifiedEditor').then(module => ({ default: module.default })));
 const QuizModularProductionEditor = lazy(() => import('./components/editor/quiz/QuizModularProductionEditor').then(module => ({ default: module.default })));
-import { UnifiedCRUDProvider } from '@/contexts';
-import { FunnelContext } from '@/core/contexts/FunnelContext';
+
 
 // 🧪 PÁGINAS DE QUIZ
 const QuizEstiloPessoalPage = lazy(() => import('./pages/QuizEstiloPessoalPage'));

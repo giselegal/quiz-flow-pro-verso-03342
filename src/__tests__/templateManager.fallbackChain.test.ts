@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { TemplateManager } from '@/utils/TemplateManager';
 import { unifiedTemplateService } from '@/services/UnifiedTemplateService';
