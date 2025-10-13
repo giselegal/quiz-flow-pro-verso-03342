@@ -241,6 +241,15 @@ function App() {
                                     </QuizErrorBoundary>
                                 </Route>
 
+                                {/* 🎨 TEMPLATES */}
+                                <Route path="/templates">
+                                    <TemplatesPage />
+                                </Route>
+
+                                <Route path="/funnel-types">
+                                    <FunnelTypesPage />
+                                </Route>
+
                                 <Route path="/resultado">
                                     <QuizErrorBoundary>
                                         <QuizEstiloPessoalPage />
