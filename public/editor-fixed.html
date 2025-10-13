@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>✅ Editor Corrigido - Instruções</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 800px;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .status {
+            background: #d4edda;
+            border-left: 4px solid #28a745;
+            padding: 20px;
+            margin-bottom: 30px;
+            border-radius: 4px;
+        }
+
+        .status h2 {
+            color: #155724;
+            margin-bottom: 10px;
+            font-size: 1.5em;
+        }
+
+        .status ul {
+            color: #155724;
+            margin-left: 20px;
+        }
+
+        .status li {
+            margin: 8px 0;
+        }
+
+        .steps {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 20px;
+            margin-bottom: 30px;
+            border-radius: 4px;
+        }
+
+        .steps h2 {
+            color: #856404;
+            margin-bottom: 15px;
+            font-size: 1.5em;
+        }
+
+        .steps ol {
+            color: #856404;
+            margin-left: 20px;
+        }
+
+        .steps li {
+            margin: 12px 0;
+            line-height: 1.6;
+        }
+
+        .steps code {
+            background: #f8f9fa;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            flex: 1;
+            min-width: 200px;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            text-align: center;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+            transform: translateY(-2px);
+        }
+
+        .warning {
+            background: #f8d7da;
+            border-left: 4px solid #dc3545;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+            color: #721c24;
+        }
+
+        .warning strong {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 1.1em;
+        }
+
+        @media (max-width: 600px) {
+            .header h1 {
+                font-size: 1.8em;
+            }
+
+            .buttons {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>✅ Problema Resolvido!</h1>
+            <p>O erro do Recharts foi corrigido</p>
+        </div>
+
+        <div class="content">
+            <div class="status">
+                <h2>🎉 O que foi feito:</h2>
+                <ul>
+                    <li>✅ Corrigido erro "Cannot access 'A' before initialization" no Recharts</li>
+                    <li>✅ Atualizado vite.config.ts para incluir Recharts em optimizeDeps</li>
+                    <li>✅ Limpado cache do Vite (node_modules/.vite)</li>
+                    <li>✅ Servidor reiniciado e rodando em http://localhost:8080</li>
+                </ul>
+            </div>
+
+            <div class="steps">
+                <h2>⚠️ IMPORTANTE - Limpe o cache do navegador:</h2>
+                <p style="margin-bottom: 15px;">O navegador pode estar usando arquivos antigos em cache. Siga estes
+                    passos:</p>
+                <ol>
+                    <li>Abra o <strong>DevTools</strong> pressionando <code>F12</code></li>
+                    <li>Clique na aba <strong>"Application"</strong> (ou "Aplicativo")</li>
+                    <li>Na barra lateral esquerda, encontre:
+                        <ul style="margin-top: 8px;">
+                            <li>🗑️ <strong>Local Storage</strong> → Clique com botão direito → "Clear"</li>
+                            <li>🗑️ <strong>Session Storage</strong> → Clique com botão direito → "Clear"</li>
+                            <li>🗑️ <strong>Cache Storage</strong> → Clique com botão direito → "Delete"</li>
+                        </ul>
+                    </li>
+                    <li>Feche o DevTools</li>
+                    <li>Recarregue a página com <code>CTRL + SHIFT + R</code> (Windows/Linux) ou
+                        <code>CMD + SHIFT + R</code> (Mac)</li>
+                </ol>
+            </div>
+
+            <div class="warning">
+                <strong>💡 Alternativa Rápida:</strong>
+                Se não quiser limpar o cache, abra o editor em modo anônimo/privado primeiro para testar!
+            </div>
+
+            <div class="buttons">
+                <a href="/editor" class="btn btn-primary" target="_blank">
+                    🚀 Abrir Editor
+                </a>
+                <a href="/" class="btn btn-secondary" target="_blank">
+                    🏠 Ir para Home
+                </a>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
