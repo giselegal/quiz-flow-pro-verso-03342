@@ -35,7 +35,9 @@ export const MigrationEditorProvider: React.FC<{
   );
 };
 
-export const useUnifiedEditor = (options?: { optional?: boolean }): UnifiedEditorContextType | undefined => {
+export function useUnifiedEditor(): UnifiedEditorContextType;
+export function useUnifiedEditor(options: { optional: true }): UnifiedEditorContextType | undefined;
+export function useUnifiedEditor(options?: { optional?: boolean }): UnifiedEditorContextType | undefined {
   const context = useEditorUnified();
 
   if (!context && !options?.optional) {
@@ -43,7 +45,7 @@ export const useUnifiedEditor = (options?: { optional?: boolean }): UnifiedEdito
   }
 
   return context;
-};
+}
 
 export const useEditor = useUnifiedEditor;
 export const EditorProvider = MigrationEditorProvider;
