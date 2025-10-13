@@ -24,7 +24,6 @@
  */
 export { default as QuizApp } from './QuizApp';
 export { default as QuizAppConnected } from './QuizAppConnected';
-export { default as QuizAppDirect } from './QuizAppDirect';
 
 /**
  * Provider de contexto para Quiz com 21 steps
@@ -203,11 +202,6 @@ export { default as CaktoQuizResult } from './CaktoQuizResult';
  * Step 20 Fallback
  */
 export { default as Step20FallbackTemplate } from './Step20FallbackTemplate';
-
-/**
- * Step 2 Direct
- */
-export { default as Step2Direct } from './Step2Direct';
 
 /**
  * Strategic Questions
