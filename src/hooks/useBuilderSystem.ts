@@ -87,8 +87,8 @@ export const useBuilderSystem = (config: Partial<BuilderSystemConfig> = {}) => {
 
   // 🎯 CRIAR QUIZ COM IA
   const createWithAI = useCallback(async (prompt: string, type: string = 'quiz') => {
-    if (!aiOrchestrator || !state.isInitialized) {
-      throw new Error('AI Orchestrator não disponível');
+    if (!state.isInitialized) {
+      throw new Error('Builder System não inicializado');
     }
 
     setState(prev => ({ ...prev, isGenerating: true, error: null }));
@@ -96,17 +96,17 @@ export const useBuilderSystem = (config: Partial<BuilderSystemConfig> = {}) => {
     try {
       logger.info('🤖 Builder System: Criando com IA', { prompt, type });
 
-      const result = { 
-        funnel: { 
-          steps: Array.from({ length: 21 }, (_, i) => ({ 
-            id: i + 1, 
-            title: `${prompt} - Etapa ${i + 1}` 
-          })) 
-        }, 
-        layout: {}, 
-        css: '',
-        aiContent: { content: `Quiz gerado por IA: ${prompt}` }
-      };
+      // Usar QuizBuilderFacade para criar quiz real
+      const { QuizBuilderFacade } = await import('@/core/builder/index');
+      let result;
+
+      if (type === 'quiz') {
+        result = QuizBuilderFacade.createCompleteQuiz(prompt);
+      } else if (type === 'landing') {
+        result = QuizBuilderFacade.createLandingPage(prompt);
+      } else {
+        result = QuizBuilderFacade.createLeadQualification(prompt);
+      }
 
       setState(prev => ({ 
         ...prev, 
@@ -117,30 +117,31 @@ export const useBuilderSystem = (config: Partial<BuilderSystemConfig> = {}) => {
       return result;
 
     } catch (error) {
+      logger.error('❌ Builder System: Erro na geração', error);
       setState(prev => ({ 
         ...prev, 
         isGenerating: false,
-        error: error instanceof Error ? error.message : 'Erro na geração IA'
+        error: error instanceof Error ? error.message : 'Erro na geração'
       }));
       throw error;
     }
-  }, [aiOrchestrator, state.isInitialized]);
+  }, [state.isInitialized]);
 
   // 🎨 APLICAR PRESET
   const applyPreset = useCallback(async (presetName: string) => {
-    const availablePresets = ['quiz-product-recommendation', 'lead-magnet-quiz', 'customer-satisfaction'];
-    if (!availablePresets.includes(presetName)) {
-      throw new Error(`Preset "${presetName}" não encontrado`);
-    }
-
     setState(prev => ({ ...prev, isGenerating: true, error: null }));
 
     try {
-      const result = { 
-        funnel: { steps: Array.from({ length: 21 }, (_, i) => ({ id: i + 1, title: `${presetName} - Etapa ${i + 1}` })) }, 
-        layout: {}, 
-        css: '' 
-      };
+      logger.info('🎨 Builder System: Aplicando preset', presetName);
+
+      const { BUILDER_PRESETS } = await import('@/core/builder/index');
+      const presetFn = BUILDER_PRESETS[presetName as keyof typeof BUILDER_PRESETS];
+
+      if (!presetFn) {
+        throw new Error(`Preset "${presetName}" não encontrado`);
+      }
+
+      const result = presetFn();
 
       setState(prev => ({ 
         ...prev, 
@@ -148,8 +149,11 @@ export const useBuilderSystem = (config: Partial<BuilderSystemConfig> = {}) => {
         currentTemplate: presetName
       }));
 
+      logger.info('✅ Builder System: Preset aplicado com sucesso');
       return result;
+      
     } catch (error) {
+      logger.error('❌ Builder System: Erro ao aplicar preset', error);
       setState(prev => ({ 
         ...prev, 
         isGenerating: false,
@@ -166,26 +170,30 @@ export const useBuilderSystem = (config: Partial<BuilderSystemConfig> = {}) => {
     steps: number;
     theme?: string;
   }) => {
-    if (!templateEngine) {
-      throw new Error('Template Engine não disponível');
-    }
-
     setState(prev => ({ ...prev, isGenerating: true, error: null }));
 
     try {
       logger.info('🎯 Builder System: Gerando template personalizado', requirements);
 
-      const template = {
-        funnel: { 
-          steps: Array.from({ length: requirements.steps }, (_, i) => ({ 
-            id: i + 1, 
-            title: `${requirements.name} - Etapa ${i + 1}`,
-            type: requirements.type
-          })) 
-        }, 
-        layout: { theme: requirements.theme || 'modern-blue' }, 
-        css: `/* Tema: ${requirements.theme || 'modern-blue'} */` 
-      };
+      const { FunnelBuilder, UIBuilder } = await import('@/core/builder/index');
+
+      // Criar funil com número de steps customizado
+      const funnelBuilder = new FunnelBuilder(requirements.name);
+      
+      // Adicionar steps conforme solicitado
+      for (let i = 0; i < requirements.steps; i++) {
+        funnelBuilder.addStep(`Etapa ${i + 1}`).complete();
+      }
+
+      const funnel = funnelBuilder
+        .withSettings({ theme: requirements.theme || 'modern-blue' })
+        .autoConnect()
+        .optimize()
+        .build();
+
+      const layout = new UIBuilder(`${requirements.name} Layout`, 'single-column')
+        .withTheme((requirements.theme || 'modern-blue') as any)
+        .build();
 
       setState(prev => ({ 
         ...prev, 
@@ -193,7 +201,9 @@ export const useBuilderSystem = (config: Partial<BuilderSystemConfig> = {}) => {
         currentTemplate: requirements.name
       }));
 
-      return template;
+      logger.info('✅ Builder System: Template personalizado gerado');
+
+      return { funnel, layout, css: `/* Tema: ${requirements.theme || 'modern-blue'} */` };
 
     } catch (error) {
       logger.error('❌ Builder System: Erro ao gerar template', error);
@@ -204,7 +214,7 @@ export const useBuilderSystem = (config: Partial<BuilderSystemConfig> = {}) => {
       }));
       throw error;
     }
-  }, [templateEngine]);
+  }, []);
 
   // 🔄 OTIMIZAR AUTOMATICAMENTE
   const optimizeAutomatically = useCallback(async (funnelData: any) => {

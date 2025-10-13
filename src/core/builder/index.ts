@@ -5,6 +5,8 @@
 import type { FunnelConfig } from './FunnelBuilder';
 import type { LayoutConfig } from './UIBuilder';
 import type { ValidationResult, ValidationError, ValidationWarning } from './ComponentBuilder';
+import { FunnelBuilder } from './FunnelBuilder';
+import { UIBuilder } from './UIBuilder';
 
 // ✨ EXPORTS LIMPOS - Removendo imports não utilizados para corrigir build errors
 export type {
@@ -23,44 +25,95 @@ export type {
 
 // ✨ FACTORY FUNCTIONS ATIVAS (apenas as utilizadas)
 export { COMPONENT_TEMPLATES } from './ComponentBuilder';
-export { FUNNEL_TEMPLATES } from './FunnelBuilder';
-export { LAYOUT_TEMPLATES, THEME_PRESETS } from './UIBuilder';
+export { FUNNEL_TEMPLATES, FunnelBuilder } from './FunnelBuilder';
+export { LAYOUT_TEMPLATES, THEME_PRESETS, UIBuilder } from './UIBuilder';
 
 // ✨ BUILDER FACADE - Interface unificada para uso simples
+
 export class QuizBuilderFacade {
     /**
      * Cria um quiz completo com layout otimizado
      */
     static createCompleteQuiz(name: string): { funnel: FunnelConfig; layout: LayoutConfig; css: string } {
-        // Placeholder implementation - will be replaced with actual builders
-        return {
-            funnel: {} as FunnelConfig,
-            layout: {} as LayoutConfig,
-            css: ''
-        };
+        const funnel = new FunnelBuilder(name)
+            .fromTemplate('product-quiz')
+            .withTheme('modern-blue')
+            .withSettings({ showProgress: true, autoAdvance: true })
+            .autoConnect()
+            .optimize()
+            .build();
+
+        const layout = new UIBuilder(`${name} Layout`, 'single-column')
+            .withTheme('modern-blue')
+            .withGrid({ maxWidth: '600px', gap: '2rem' })
+            .build();
+
+        const css = this.generateCSS(layout);
+
+        return { funnel, layout, css };
     }
 
     /**
      * Cria uma landing page otimizada para conversão
      */
-    static createLandingPage(name: string): { layout: LayoutConfig; css: string } {
-        // Placeholder implementation - will be replaced with actual builders
-        return {
-            layout: {} as LayoutConfig,
-            css: ''
-        };
+    static createLandingPage(name: string): { funnel: FunnelConfig; layout: LayoutConfig; css: string } {
+        const funnel = new FunnelBuilder(name)
+            .addStep('Hero').complete()
+            .withTheme('warm-orange')
+            .autoConnect()
+            .build();
+
+        const layout = new UIBuilder(`${name} Landing`, 'single-column')
+            .withTheme('warm-orange')
+            .withGrid({ maxWidth: '100%', padding: '0' })
+            .build();
+
+        const css = this.generateCSS(layout);
+
+        return { funnel, layout, css };
     }
 
     /**
      * Cria um funil de qualificação de leads
      */
     static createLeadQualification(name: string): { funnel: FunnelConfig; layout: LayoutConfig; css: string } {
-        // Placeholder implementation - will be replaced with actual builders
-        return {
-            funnel: {} as FunnelConfig,
-            layout: {} as LayoutConfig,
-            css: ''
-        };
+        const funnel = new FunnelBuilder(name)
+            .fromTemplate('lead-qualification')
+            .withTheme('minimal-gray')
+            .withSettings({ saveProgress: true, showProgress: true })
+            .withAnalytics({ trackingEnabled: true })
+            .autoConnect()
+            .optimize()
+            .build();
+
+        const layout = new UIBuilder(`${name} Layout`, 'two-column')
+            .withTheme('minimal-gray')
+            .withGrid({ columns: 2, gap: '3rem' })
+            .build();
+
+        const css = this.generateCSS(layout);
+
+        return { funnel, layout, css };
+    }
+
+    /**
+     * Gera CSS a partir do layout
+     */
+    static generateCSS(layout: LayoutConfig): string {
+        const { theme } = layout;
+        return `
+/* Tema: ${theme.name} */
+:root {
+    --primary-500: ${theme.colors.primary[500]};
+    --primary-600: ${theme.colors.primary[600]};
+    --spacing-unit: ${theme.spacing.unit}px;
+}
+
+body {
+    font-family: ${theme.typography.fontFamily.primary};
+    line-height: ${theme.typography.lineHeight.normal};
+}
+        `.trim();
     }
 }
 
@@ -147,12 +200,18 @@ export const BUILDER_PRESETS = {
     'quiz-product-recommendation': () => QuizBuilderFacade.createCompleteQuiz('Recomendação de Produto'),
     'lead-magnet-quiz': () => QuizBuilderFacade.createLeadQualification('Quiz Lead Magnet'),
     'customer-satisfaction': () => {
-        // Placeholder implementation - will be replaced with actual builders
-        return {
-            funnel: {} as FunnelConfig,
-            layout: {} as LayoutConfig,
-            css: ''
-        };
+        const funnel = new FunnelBuilder('Pesquisa de Satisfação')
+            .fromTemplate('customer-satisfaction')
+            .withTheme('modern-blue')
+            .autoConnect()
+            .optimize()
+            .build();
+
+        const layout = new UIBuilder('Satisfação Layout', 'single-column')
+            .withTheme('modern-blue')
+            .build();
+
+        return { funnel, layout, css: QuizBuilderFacade.generateCSS(layout) };
     },
     'landing-page-hero': () => QuizBuilderFacade.createLandingPage('Landing Page Principal')
 };
