@@ -96,7 +96,32 @@ export const useBuilderSystem = (config: Partial<BuilderSystemConfig> = {}) => {
     try {
       logger.info('🤖 Builder System: Criando com IA', { prompt, type });
 
-      // Usar QuizBuilderFacade para criar quiz real
+      // Tentar usar Edge Function primeiro
+      try {
+        const response = await fetch(
+          `https://pwtjuuhchtbzttrzoutw.supabase.co/functions/v1/ai-quiz-generator`,
+          {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ prompt, quizType: type })
+          }
+        );
+
+        const data = await response.json();
+        if (data.success && data.quiz) {
+          setState(prev => ({ 
+            ...prev, 
+            isGenerating: false,
+            currentTemplate: type
+          }));
+          logger.info('✅ Builder System: Quiz gerado via IA Edge Function');
+          return data.quiz;
+        }
+      } catch (edgeFnError) {
+        logger.warn('⚠️ Edge Function falhou, usando fallback local', edgeFnError);
+      }
+
+      // Fallback: Usar QuizBuilderFacade local
       const { QuizBuilderFacade } = await import('@/core/builder/index');
       let result;
 
@@ -217,11 +242,31 @@ export const useBuilderSystem = (config: Partial<BuilderSystemConfig> = {}) => {
   }, []);
 
   // 🔄 OTIMIZAR AUTOMATICAMENTE
-  const optimizeAutomatically = useCallback(async (funnelData: any) => {
+  const optimizeAutomatically = useCallback(async (funnelData: any, userBehaviorData?: any) => {
     if (!builderConfig.autoOptimization) return funnelData;
 
     try {
       logger.info('🔄 Builder System: Otimização automática');
+      
+      const response = await fetch(
+        `https://pwtjuuhchtbzttrzoutw.supabase.co/functions/v1/ai-optimization-engine`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            action: 'optimize',
+            funnelConfig: funnelData,
+            userBehaviorData: userBehaviorData || {}
+          })
+        }
+      );
+
+      const data = await response.json();
+      if (data.success) {
+        logger.info('✅ Otimização IA concluída:', data.suggestions);
+        return { ...funnelData, aiSuggestions: data.suggestions };
+      }
+      
       return funnelData;
     } catch (error) {
       logger.error('❌ Builder System: Erro na otimização', error);

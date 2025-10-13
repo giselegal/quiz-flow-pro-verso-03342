@@ -1,1 +1,7 @@
 project_id = "pwtjuuhchtbzttrzoutw"
+
+[functions.ai-optimization-engine]
+verify_jwt = false
+
+[functions.ai-quiz-generator]
+verify_jwt = false

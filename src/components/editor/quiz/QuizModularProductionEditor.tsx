@@ -1653,12 +1653,41 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
     // Handler para quando um quiz é criado pelo Builder System
     const handleBuilderQuizCreated = useCallback((quizData: any) => {
         console.log('🎯 Quiz criado pelo Builder System:', quizData);
-        toast({
-            title: 'Quiz Criado!',
-            description: 'Template do Builder System aplicado com sucesso.',
-        });
-        // TODO: Converter quizData (FunnelConfig) para steps do editor
-        // Por enquanto apenas mostra toast de sucesso
+        
+        try {
+            // Converter FunnelConfig para EditableQuizStep[]
+            const convertedSteps: EditableQuizStep[] = quizData.steps.map((step: any, index: number) => ({
+                id: `step-${index + 1}`,
+                title: step.title || `Etapa ${index + 1}`,
+                type: step.stepType || 'question',
+                order: index,
+                blocks: step.blocks?.map((block: any, blockIndex: number) => ({
+                    id: `block-${index}-${blockIndex}`,
+                    type: block.type,
+                    content: block.content || {},
+                    properties: block.properties || {},
+                    order: blockIndex
+                })) || []
+            }));
+
+            setSteps(convertedSteps);
+            if (convertedSteps.length > 0) {
+                setSelectedStepId(convertedSteps[0].id);
+            }
+            setIsDirty(true);
+
+            toast({
+                title: '✅ Quiz criado',
+                description: `${convertedSteps.length} etapas geradas pelo Builder System`,
+            });
+        } catch (error) {
+            console.error('❌ Erro ao converter quiz do builder:', error);
+            toast({
+                title: 'Erro',
+                description: 'Falha ao converter quiz gerado',
+                variant: 'destructive'
+            });
+        }
     }, [toast]);
 
     // Publicar
