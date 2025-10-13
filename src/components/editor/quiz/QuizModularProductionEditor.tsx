@@ -85,6 +85,7 @@ import { BlockComponent as EditorBlockComponent, EditableQuizStep as EditorEdita
 import { buildFashionStyle21Steps } from '@/templates/fashionStyle21PtBR';
 import { QUIZ_STYLE_21_STEPS_TEMPLATE, getPersonalizedStepTemplate } from '@/templates/quiz21StepsComplete';
 import { QuizTemplateAdapter } from '@/core/migration/QuizTemplateAdapter';
+import { safeGetTemplateBlocks } from '@/utils/templateConverter';
 import type { StepType } from '@/types/quiz-schema';
 import { useSelectionClipboard } from './hooks/useSelectionClipboard';
 import { useVirtualBlocks } from './hooks/useVirtualBlocks';
@@ -399,9 +400,13 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
             if (funnelParam && !steps?.length) {
                 (async () => {
                     try {
-                        const draft = await quizEditorBridge.loadFunnelForEdit(funnelParam);
-                        if (draft && Array.isArray(draft.steps) && draft.steps.length > 0) {
-                            setSteps(draft.steps as any);
+                    const draft = await quizEditorBridge.loadFunnelForEdit(funnelParam);
+                    if (draft && Array.isArray(draft.steps) && draft.steps.length > 0) {
+                        const validSteps = draft.steps.map((step: any) => ({
+                            ...step,
+                            blocks: Array.isArray(step.blocks) ? step.blocks : []
+                        }));
+                        setSteps(validSteps as any);
                             setSelectedStepId(draft.steps[0]?.id || '');
                             setFunnelId(draft.id || funnelParam);
                             const { runtime, results, ui, settings } = (draft as any);
@@ -436,15 +441,18 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                         };
 
                         const initial: EditableQuizStep[] = Array.from({ length: 21 }).map((_, idx) => {
-                            const stepId = `step-${idx + 1}`;
-                            const blocks = (funnelParam
-                                ? getPersonalizedStepTemplate(stepId, funnelParam)
-                                : (QUIZ_STYLE_21_STEPS_TEMPLATE as any)[stepId]) || [];
+                            const stepId = `step-${String(idx + 1).padStart(2, '0')}`;
+                            const blocks = safeGetTemplateBlocks(
+                                stepId,
+                                QUIZ_STYLE_21_STEPS_TEMPLATE,
+                                funnelParam
+                            );
+                            
                             return {
                                 id: stepId,
                                 type: buildStepType(idx),
                                 order: idx + 1,
-                                blocks: blocks as any,
+                                blocks: blocks,
                                 nextStep: undefined
                             } as EditableQuizStep;
                         });
@@ -1661,13 +1669,15 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                 title: step.title || `Etapa ${index + 1}`,
                 type: step.stepType || 'question',
                 order: index,
-                blocks: step.blocks?.map((block: any, blockIndex: number) => ({
-                    id: `block-${index}-${blockIndex}`,
-                    type: block.type,
-                    content: block.content || {},
-                    properties: block.properties || {},
-                    order: blockIndex
-                })) || []
+                blocks: Array.isArray(step.blocks)
+                    ? step.blocks.map((block: any, blockIndex: number) => ({
+                        id: `block-${index}-${blockIndex}`,
+                        type: block.type,
+                        content: block.content || {},
+                        properties: block.properties || {},
+                        order: blockIndex
+                    }))
+                    : []
             }));
 
             setSteps(convertedSteps);

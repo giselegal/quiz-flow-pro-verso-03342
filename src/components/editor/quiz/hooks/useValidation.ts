@@ -106,7 +106,8 @@ export function useValidation(steps: QuizStep[], debounceMs = 300): ValidationRe
         const all: ValidationError[] = [];
         for (const step of stepsRef.current) {
             all.push(...validateStep(step));
-            for (const block of step.blocks) {
+            const blocks = Array.isArray(step.blocks) ? step.blocks : [];
+            for (const block of blocks) {
                 all.push(...validateBlock(step, block));
             }
         }
@@ -122,7 +123,12 @@ export function useValidation(steps: QuizStep[], debounceMs = 300): ValidationRe
         schedule();
         return () => clearTimeout(timeoutRef.current);
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [JSON.stringify(steps.map(s => ({ id: s.id, blocks: (s as any).blocks?.map((b: any) => ({ id: b.id, t: b.type, c: b.content, p: b.properties })) })))]);
+    }, [JSON.stringify(steps.map(s => ({ 
+        id: s.id, 
+        blocks: Array.isArray(s.blocks) 
+            ? s.blocks.map((b: any) => ({ id: b.id, t: b.type, c: b.content, p: b.properties }))
+            : []
+    })))]);
 
     const byStep: Record<string, ValidationError[]> = {};
     const byBlock: Record<string, ValidationError[]> = {};
