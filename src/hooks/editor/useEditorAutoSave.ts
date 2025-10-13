@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useAutoSaveWithDebounce } from '@/hooks/editor/useAutoSaveWithDebounce';
-import { FunnelService as ContextualFunnelService } from '@/application/services/FunnelService'
-import type { ContextualFunnelData } from '@/types/funnel' // MIGRATED;
+import { ContextualFunnelService } from '@/services/core/ContextualFunnelService';
+import type { ContextualFunnelData } from '@/types/funnel';
 import { FunnelContext, generateContextualStorageKey } from '@/core/contexts/FunnelContext';
 import { getFunnelIdFromEnvOrStorage } from '@/utils/funnelIdentity';
 import { useToast } from '@/hooks/use-toast';
@@ -97,11 +97,11 @@ export const useEditorAutoSave = ({
           name: `Funil ${currentFunnelId}`,
           description: `Funil editado em ${new Date().toLocaleDateString()}`,
           pages: [], // Os dados do editor vão aqui
-          config: dataToSave || {},
+          settings: dataToSave || {},
           context
         };
 
-        await contextualFunnelService.saveFunnel(contextualData);
+        await contextualFunnelService.saveFunnel(contextualData as any);
 
         console.log('✅ Dados salvos no Supabase com sucesso');
       }

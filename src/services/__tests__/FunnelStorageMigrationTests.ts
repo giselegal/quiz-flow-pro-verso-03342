@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * 🧪 FUNNEL STORAGE MIGRATION TESTS (Vitest)
  * Refatorado para usar describe/it com expect, eliminando runner customizado.

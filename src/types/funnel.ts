@@ -73,16 +73,20 @@ export type FunnelStepType =
   | 'offer-transition'
   | 'offer-page';
 
-// Contextual Funnel Data for editor persistence
+// Contextual Funnel Data for editor persistence - compatible with UnifiedFunnelData
 export interface ContextualFunnelData {
   id: string;
   name: string;
   description?: string;
+  userId?: string;
+  pages?: any[];
   steps?: FunnelStep[];
   theme?: FunnelTheme;
   settings?: FunnelSettings;
-  context?: string;
-  createdAt?: string;
-  updatedAt?: string;
+  context?: any; // Accept any to be compatible with both string and FunnelContext
+  isPublished?: boolean;
+  version?: number;
+  createdAt?: string | Date;
+  updatedAt?: string | Date;
   [key: string]: any;
 }

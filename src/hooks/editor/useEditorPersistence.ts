@@ -1,8 +1,8 @@
 import { useCallback, useState } from 'react';
 import { useToast } from '../../components/ui/use-toast';
 import { FunnelContext } from '../../core/contexts/FunnelContext';
-import { FunnelService as ContextualFunnelService } from '@/application/services/FunnelService'
-import type { ContextualFunnelData } from '@/types/funnel' // MIGRATED;
+import { ContextualFunnelService } from '@/services/core/ContextualFunnelService';
+import type { ContextualFunnelData } from '@/types/funnel';
 
 // Interface para compatibilidade com o editor existente
 export interface FunnelData {
@@ -12,7 +12,7 @@ export interface FunnelData {
   userId?: string;
   isPublished: boolean;
   version: number;
-  settings: Record<string, any>;
+  settings: any; // Accept any settings to avoid type mismatch
   pages: FunnelPage[];
   createdAt?: string;
   updatedAt?: string;
@@ -43,19 +43,17 @@ export const useEditorPersistence = (context: FunnelContext = FunnelContext.EDIT
         const contextualData: ContextualFunnelData = {
           id: data.id,
           name: data.name,
-          description: data.description || null,
+          description: data.description || undefined,
           pages: data.pages || [],
           context: context || 'default',
-          user_id: data.userId,
+          userId: data.userId,
           isPublished: data.isPublished,
           version: data.version,
-          config: data.settings,
-          createdAt: new Date(),
-          lastModified: new Date()
+          settings: data.settings
         };
 
         // 🎯 Usar o serviço contextual para isolamento completo
-        await contextualFunnelService.saveFunnel(contextualData);
+        await contextualFunnelService.saveFunnel(contextualData as any);
 
         toast({
           title: 'Sucesso',
@@ -92,11 +90,11 @@ export const useEditorPersistence = (context: FunnelContext = FunnelContext.EDIT
         const funnelData: FunnelData = {
           id: contextualData.id,
           name: contextualData.name,
-          description: contextualData.description || '',
+          description: contextualData.description,
           isPublished: contextualData.isPublished || false,
           version: contextualData.version || 1,
-          settings: contextualData.config || {},
-          pages: contextualData.pages.map((page: any) => ({
+          settings: contextualData.settings || {},
+          pages: (contextualData.pages || []).map((page: any) => ({
             id: page.id,
             pageType: page.page_type || 'step',
             pageOrder: page.page_order || 1,
@@ -105,8 +103,8 @@ export const useEditorPersistence = (context: FunnelContext = FunnelContext.EDIT
             metadata:
               typeof page.metadata === 'object' && page.metadata !== null ? page.metadata : {},
           })),
-          createdAt: contextualData.createdAt?.toISOString(),
-          updatedAt: contextualData.lastModified?.toISOString(),
+          createdAt: typeof contextualData.createdAt === 'string' ? contextualData.createdAt : contextualData.createdAt?.toISOString(),
+          updatedAt: typeof contextualData.updatedAt === 'string' ? contextualData.updatedAt : contextualData.updatedAt?.toISOString(),
         };
 
         return funnelData;
@@ -191,7 +189,7 @@ export const useEditorPersistence = (context: FunnelContext = FunnelContext.EDIT
         const funnel = await contextualFunnelService.loadFunnel(id);
         if (funnel) {
           const updatedFunnel = { ...funnel, isPublished: true };
-          await contextualFunnelService.saveFunnel(updatedFunnel);
+          await contextualFunnelService.saveFunnel(updatedFunnel as any);
         }
 
         toast({

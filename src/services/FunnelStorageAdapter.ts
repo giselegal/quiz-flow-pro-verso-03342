@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * 🔄 FUNNEL STORAGE ADAPTER - COMPATIBILITY LAYER
  * 

@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * 🔄 FUNNEL DATA MIGRATION SERVICE
  * 

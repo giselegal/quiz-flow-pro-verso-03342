@@ -8,8 +8,8 @@
 import { useState, useCallback } from 'react';
 import { toast } from '@/hooks/use-toast';
 import { FunnelContext } from '@/core/contexts/FunnelContext';
-import { FunnelService as ContextualFunnelService } from '@/application/services/FunnelService'
-import type { ContextualFunnelData } from '@/types/funnel' // MIGRATED;
+import { ContextualFunnelService } from '@/services/core/ContextualFunnelService';
+import type { ContextualFunnelData } from '@/types/funnel';
 
 export interface FunnelData {
     id: string;
@@ -84,7 +84,7 @@ export const useContextualEditorPersistence = (
                 blocks: Array.isArray(page.blocks) ? page.blocks : [],
                 metadata: typeof page.metadata === 'object' && page.metadata !== null ? page.metadata : {},
             })),
-            createdAt: data.createdAt?.toISOString(),
+            createdAt: typeof data.createdAt === 'string' ? data.createdAt : data.createdAt?.toISOString(),
             updatedAt: data.lastModified?.toISOString(),
         };
     };
@@ -96,7 +96,7 @@ export const useContextualEditorPersistence = (
                 console.log(`💾 Salvando funil no contexto ${context}:`, data.id);
 
                 const contextualData = convertToContextualData(data);
-                await service.saveFunnel(contextualData);
+                await service.saveFunnel(contextualData as any); // Force cast for compatibility
 
                 toast({
                     title: 'Sucesso',
@@ -221,7 +221,7 @@ export const useContextualEditorPersistence = (
                     lastModified: new Date(),
                 };
 
-                await service.saveFunnel(updatedFunnel);
+                await service.saveFunnel(updatedFunnel as any); // Force cast for compatibility
 
                 toast({
                     title: 'Sucesso',

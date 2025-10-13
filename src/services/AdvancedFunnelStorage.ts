@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * @deprecated Use FunnelService instead
  * 

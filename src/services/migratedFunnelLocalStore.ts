@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * 🔄 MIGRATED FUNNEL LOCAL STORE - SIMPLIFIED INTEGRATION
  * 

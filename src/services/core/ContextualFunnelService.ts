@@ -100,12 +100,21 @@ export class ContextualFunnelService {
         return funnel;
       }
 
+      console.warn(`⚠️ [ContextualFunnel] Funil não encontrado: ${contextualId}`);
+      
       // Tentar migrar dados legados
       return await this.tryMigrateLegacyFunnel(funnelId);
     } catch (error) {
       console.error('[ContextualFunnel] Erro ao carregar:', error);
       return null;
     }
+  }
+
+  /**
+   * Alias para compatibilidade (loadFunnel = getFunnel)
+   */
+  async loadFunnel(funnelId: string): Promise<UnifiedFunnelData | null> {
+    return this.getFunnel(funnelId);
   }
 
   /**
