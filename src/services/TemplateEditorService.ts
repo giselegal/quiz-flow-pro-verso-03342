@@ -306,7 +306,7 @@ export class TemplateEditorService {
         const errors: Array<{ stepId: string; errors: string[] }> = [];
 
         for (const stepId in master.steps) {
-            const step = master.steps[stepId];
+            const step = master.steps[stepId] as any; // Steps do master podem ter propriedades extras
             const stepErrors: string[] = [];
 
             // Validar estrutura básica
