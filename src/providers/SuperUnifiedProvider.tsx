@@ -30,8 +30,6 @@ import React, {
     useState
 } from 'react';
 import { supabase } from '@/integrations/supabase/client';
-import { AuthProvider } from '@/contexts/auth/AuthContext';
-import { ThemeProvider as CustomThemeProvider } from '@/contexts/ui/ThemeContext';
 
 // 🎯 CONSOLIDATED TYPES
 interface UnifiedFunnelData {
@@ -994,24 +992,21 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
         toggleFeature, isFeatureEnabled
     ]);
 
-    if (debugMode) {
-        console.log('🚀 SuperUnifiedProvider state update:', {
-            funnelsCount: state.funnels.length,
-            currentFunnel: state.currentFunnel?.name,
-            isAuthenticated: state.auth.isAuthenticated,
-            theme: state.theme.theme,
-            performance: state.performance,
-            cacheStats: getCacheStats()
-        });
-    }
+    // ✅ Debug apenas quando necessário (não a cada render)
+    useEffect(() => {
+        if (debugMode) {
+            console.log('🚀 SuperUnifiedProvider initialized:', {
+                funnelsCount: state.funnels.length,
+                currentFunnel: state.currentFunnel?.name,
+                isAuthenticated: state.auth.isAuthenticated,
+                theme: state.theme.theme
+            });
+        }
+    }, [debugMode]); // Só executa uma vez no mount
 
     return (
         <SuperUnifiedContext.Provider value={contextValue}>
-            <CustomThemeProvider defaultTheme="light">
-                <AuthProvider>
-                    {children}
-                </AuthProvider>
-            </CustomThemeProvider>
+            {children}
         </SuperUnifiedContext.Provider>
     );
 };
