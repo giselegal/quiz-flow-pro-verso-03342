@@ -11,7 +11,7 @@
  * 2. Execute: npm run generate:templates
  * 3. Commit ambos: JSON + este arquivo TS
  * 
- * Gerado em: 2025-10-13T00:26:03.448Z
+ * Gerado em: 2025-10-13T00:41:17.054Z
  * Versão: 3.0.0
  */
 
@@ -96,2847 +96,3436 @@ const MINIMAL_TEST_TEMPLATE: Record<string, Block[]> = {
 
 
 export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIMAL_TEST_TEMPLATE : {
-  'step-01': [
-    {
-      "id": "step01-header",
-      "type": "quiz-intro-header",
-      "order": 0,
-      "content": {},
-      "properties": {
-        "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
-        "logoAlt": "Logo Gisele Galvão",
-        "logoWidth": 96,
-        "logoHeight": 96,
-        "progressValue": 0,
-        "progressMax": 100,
-        "showProgress": false,
-        "showBackButton": false,
-        "containerWidth": "full",
-        "spacing": "small"
-      }
+  'step-01': {
+    "templateVersion": "3.0",
+    "metadata": {
+      "id": "step-01-intro-v3",
+      "name": "Introdução - Bem-vindo ao Quiz de Estilo",
+      "description": "Página inicial do quiz com apresentação e coleta do nome do usuário",
+      "category": "intro",
+      "tags": [
+        "quiz",
+        "style",
+        "intro",
+        "welcome",
+        "name-input"
+      ],
+      "createdAt": "2025-01-13T00:00:00.000Z",
+      "updatedAt": "2025-01-13T00:00:00.000Z",
+      "author": "Quiz Flow Pro",
+      "version": "3.0.0"
     },
-    {
-      "id": "intro-decorative-bar",
-      "type": "decorative-bar-inline",
-      "order": 1,
-      "content": {},
-      "properties": {
-        "width": "100%",
-        "height": 4,
-        "color": "#B89B7A",
-        "backgroundColor": "#B89B7A",
-        "marginTop": 0,
-        "marginBottom": 24,
-        "containerWidth": "full"
-      }
-    },
-    {
-      "id": "intro-main-title",
-      "type": "text-inline",
-      "order": 2,
-      "content": {
-        "0": "<",
-        "1": "s",
-        "2": "p",
-        "3": "a",
-        "4": "n",
-        "5": " ",
-        "6": "s",
-        "7": "t",
-        "8": "y",
-        "9": "l",
-        "10": "e",
-        "11": "=",
-        "12": "\"",
-        "13": "c",
-        "14": "o",
-        "15": "l",
-        "16": "o",
-        "17": "r",
-        "18": ":",
-        "19": " ",
-        "20": "#",
-        "21": "B",
-        "22": "8",
-        "23": "9",
-        "24": "B",
-        "25": "7",
-        "26": "A",
-        "27": "\"",
-        "28": ">",
-        "29": "C",
-        "30": "h",
-        "31": "e",
-        "32": "g",
-        "33": "a",
-        "34": "<",
-        "35": "/",
-        "36": "s",
-        "37": "p",
-        "38": "a",
-        "39": "n",
-        "40": ">",
-        "41": " ",
-        "42": "d",
-        "43": "e",
-        "44": " ",
-        "45": "u",
-        "46": "m",
-        "47": " ",
-        "48": "g",
-        "49": "u",
-        "50": "a",
-        "51": "r",
-        "52": "d",
-        "53": "a",
-        "54": "-",
-        "55": "r",
-        "56": "o",
-        "57": "u",
-        "58": "p",
-        "59": "a",
-        "60": " ",
-        "61": "l",
-        "62": "o",
-        "63": "t",
-        "64": "a",
-        "65": "d",
-        "66": "o",
-        "67": " ",
-        "68": "e",
-        "69": " ",
-        "70": "d",
-        "71": "a",
-        "72": " ",
-        "73": "s",
-        "74": "e",
-        "75": "n",
-        "76": "s",
-        "77": "a",
-        "78": "ç",
-        "79": "ã",
-        "80": "o",
-        "81": " ",
-        "82": "d",
-        "83": "e",
-        "84": " ",
-        "85": "q",
-        "86": "u",
-        "87": "e",
-        "88": " ",
-        "89": "n",
-        "90": "a",
-        "91": "d",
-        "92": "a",
-        "93": " ",
-        "94": "c",
-        "95": "o",
-        "96": "m",
-        "97": "b",
-        "98": "i",
-        "99": "n",
-        "100": "a",
-        "101": " ",
-        "102": "c",
-        "103": "o",
-        "104": "m",
-        "105": " ",
-        "106": "<",
-        "107": "s",
-        "108": "p",
-        "109": "a",
-        "110": "n",
-        "111": " ",
-        "112": "s",
-        "113": "t",
-        "114": "y",
-        "115": "l",
-        "116": "e",
-        "117": "=",
-        "118": "\"",
-        "119": "c",
-        "120": "o",
-        "121": "l",
-        "122": "o",
-        "123": "r",
-        "124": ":",
-        "125": " ",
-        "126": "#",
-        "127": "B",
-        "128": "8",
-        "129": "9",
-        "130": "B",
-        "131": "7",
-        "132": "A",
-        "133": "\"",
-        "134": ">",
-        "135": "V",
-        "136": "o",
-        "137": "c",
-        "138": "ê",
-        "139": "<",
-        "140": "/",
-        "141": "s",
-        "142": "p",
-        "143": "a",
-        "144": "n",
-        "145": ">",
-        "146": "."
+    "theme": {
+      "colors": {
+        "primary": "#B89B7A",
+        "primaryHover": "#A68B6A",
+        "primaryLight": "#F3E8D3",
+        "secondary": "#432818",
+        "background": "#FAF9F7",
+        "text": "#1F2937",
+        "border": "#E5E7EB"
       },
-      "properties": {
-        "content": "<span style=\"color: #B89B7A\">Chega</span> de um guarda-roupa lotado e da sensação de que nada combina com <span style=\"color: #B89B7A\">Você</span>.",
-        "fontSize": "text-2xl",
-        "fontWeight": "font-bold",
-        "textAlign": "text-center",
-        "color": "#432818",
-        "marginBottom": 16,
-        "containerWidth": "full",
-        "spacing": "small"
-      }
-    },
-    {
-      "id": "intro-image",
-      "type": "image-display-inline",
-      "order": 3,
-      "content": {},
-      "properties": {
-        "src": "https://res.cloudinary.com/der8kogzu/image/upload/f_avif,q_85,w_300,c_limit/v1752443943/Gemini_Generated_Image_i5cst6i5cst6i5cs_fpoukb.avif",
-        "alt": "Descubra seu estilo predominante",
-        "width": 300,
-        "height": 204,
-        "containerPosition": "center",
-        "marginBottom": 16,
-        "containerWidth": "full"
-      }
-    },
-    {
-      "id": "intro-subtitle",
-      "type": "text-inline",
-      "order": 4,
-      "content": {
-        "0": "D",
-        "1": "e",
-        "2": "s",
-        "3": "c",
-        "4": "u",
-        "5": "b",
-        "6": "r",
-        "7": "a",
-        "8": " ",
-        "9": "s",
-        "10": "e",
-        "11": "u",
-        "12": " ",
-        "13": "<",
-        "14": "s",
-        "15": "t",
-        "16": "r",
-        "17": "o",
-        "18": "n",
-        "19": "g",
-        "20": ">",
-        "21": "E",
-        "22": "S",
-        "23": "T",
-        "24": "I",
-        "25": "L",
-        "26": "O",
-        "27": " ",
-        "28": "P",
-        "29": "R",
-        "30": "E",
-        "31": "D",
-        "32": "O",
-        "33": "M",
-        "34": "I",
-        "35": "N",
-        "36": "A",
-        "37": "N",
-        "38": "T",
-        "39": "E",
-        "40": "<",
-        "41": "/",
-        "42": "s",
-        "43": "t",
-        "44": "r",
-        "45": "o",
-        "46": "n",
-        "47": "g",
-        "48": ">",
-        "49": " ",
-        "50": "e",
-        "51": "m",
-        "52": " ",
-        "53": "a",
-        "54": "p",
-        "55": "e",
-        "56": "n",
-        "57": "a",
-        "58": "s",
-        "59": " ",
-        "60": "a",
-        "61": "l",
-        "62": "g",
-        "63": "u",
-        "64": "n",
-        "65": "s",
-        "66": " ",
-        "67": "m",
-        "68": "i",
-        "69": "n",
-        "70": "u",
-        "71": "t",
-        "72": "o",
-        "73": "s",
-        "74": "!"
+      "fonts": {
+        "heading": "Playfair Display, serif",
+        "body": "Inter, sans-serif"
       },
-      "properties": {
-        "content": "Descubra seu <strong>ESTILO PREDOMINANTE</strong> em apenas alguns minutos!",
-        "fontSize": "text-lg",
-        "fontWeight": "font-medium",
-        "textAlign": "text-center",
-        "color": "#432818",
-        "marginBottom": 24,
-        "containerWidth": "full",
-        "spacing": "small"
+      "spacing": {
+        "sm": 8,
+        "md": 16,
+        "lg": 24,
+        "xl": 32
+      },
+      "borderRadius": {
+        "sm": 4,
+        "md": 8,
+        "lg": 12,
+        "xl": 16
       }
     },
-    {
-      "id": "intro-lead-form",
-      "type": "lead-form",
-      "order": 5,
-      "content": {},
-      "properties": {
-        "showNameField": true,
-        "showEmailField": false,
-        "showPhoneField": false,
-        "nameLabel": "Como posso te chamar?",
-        "namePlaceholder": "Digite seu primeiro nome aqui...",
-        "submitText": "Quero Descobrir meu Estilo Agora!",
-        "loadingText": "Digite seu nome para continuar",
-        "successText": "Perfeito! Vamos descobrir seu estilo!",
-        "requiredFields": "name",
-        "backgroundColor": "#FFFFFF",
-        "borderColor": "#B89B7A",
-        "textColor": "#432818",
-        "primaryColor": "#B89B7A",
-        "marginTop": 0,
-        "marginBottom": 16,
-        "fieldSpacing": 6
+    "sections": [
+      {
+        "type": "intro-hero",
+        "id": "intro-hero-01",
+        "content": {
+          "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
+          "logoAlt": "Logo Gisele Galvão - Consultoria de Estilo",
+          "logoWidth": 96,
+          "logoHeight": 96,
+          "title": "<span style=\"color: #B89B7A\">Chega</span> de um guarda-roupa lotado e da sensação de que nada combina com <span style=\"color: #B89B7A\">Você</span>.",
+          "subtitle": "Descubra seu <strong>ESTILO PREDOMINANTE</strong> em apenas alguns minutos!",
+          "imageUrl": "https://res.cloudinary.com/der8kogzu/image/upload/f_avif,q_85,w_300,c_limit/v1752443943/Gemini_Generated_Image_i5cst6i5cst6i5cs_fpoukb.avif",
+          "imageAlt": "Descubra seu estilo predominante",
+          "description": "Um quiz personalizado que vai revelar qual estilo te representa e como valorizar sua essência através das roupas.",
+          "showProgress": false,
+          "progressValue": 0
+        },
+        "style": {
+          "backgroundColor": "#FAF9F7",
+          "textColor": "#432818",
+          "padding": 24
+        },
+        "animation": {
+          "type": "fade",
+          "duration": 500,
+          "delay": 0,
+          "easing": "ease-out"
+        }
+      },
+      {
+        "type": "welcome-form",
+        "id": "intro-form-01",
+        "content": {
+          "questionText": "Antes de começarmos, como posso te chamar?",
+          "nameLabel": "Seu primeiro nome",
+          "namePlaceholder": "Digite seu primeiro nome aqui...",
+          "submitText": "Quero Descobrir meu Estilo Agora!",
+          "loadingText": "Preparando seu quiz personalizado...",
+          "successText": "Perfeito! Vamos descobrir seu estilo!",
+          "showNameField": true,
+          "showEmailField": false,
+          "requiredFields": "name",
+          "validationMessage": "Por favor, digite seu nome para continuar"
+        },
+        "style": {
+          "backgroundColor": "transparent",
+          "padding": 16
+        },
+        "animation": {
+          "type": "slideUp",
+          "duration": 400,
+          "delay": 200,
+          "easing": "ease-out"
+        }
       }
+    ],
+    "validation": {
+      "required": [
+        "userName"
+      ],
+      "rules": {
+        "userName": {
+          "minLength": 2,
+          "maxLength": 50,
+          "pattern": "^[a-zA-ZÀ-ÿ\\s]+$",
+          "errorMessage": "Por favor, digite um nome válido (apenas letras)"
+        }
+      }
+    },
+    "navigation": {
+      "nextStep": "step-02",
+      "prevStep": null,
+      "allowBack": false,
+      "requiresUserInput": true,
+      "autoAdvance": false
+    },
+    "analytics": {
+      "events": [
+        "page_view",
+        "section_view",
+        "field_focus",
+        "form_submit",
+        "validation_error"
+      ],
+      "trackingId": "step-01-intro-v3",
+      "fbPixelId": null,
+      "gaTrackingId": null
+    },
+    "seo": {
+      "title": "Quiz de Estilo Pessoal - Descubra seu Estilo Predominante",
+      "description": "Descubra qual estilo te representa em apenas alguns minutos. Quiz personalizado de consultoria de estilo por Gisele Galvão.",
+      "keywords": [
+        "quiz de estilo",
+        "estilo pessoal",
+        "consultoria de estilo",
+        "guarda-roupa",
+        "moda feminina"
+      ]
     }
-  ],
+  },
 
-  'step-02': [
-    {
-      "id": "step02-header",
-      "type": "quiz-intro-header",
-      "order": 0,
-      "content": {},
-      "properties": {
-        "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
-        "logoAlt": "Logo Gisele Galvão",
-        "logoWidth": 96,
-        "logoHeight": 96,
-        "progressValue": 10,
-        "progressTotal": 100,
-        "showProgress": true,
-        "containerWidth": "full",
-        "spacing": "small"
-      }
+  'step-02': {
+    "templateVersion": "3.0",
+    "metadata": {
+      "id": "step-02-question-v3",
+      "name": "Q1 - Roupa Favorita",
+      "description": "Primeira questão sobre preferências de estilo de roupa",
+      "category": "quiz-question",
+      "tags": [
+        "quiz",
+        "style",
+        "question",
+        "roupa",
+        "preferencias"
+      ],
+      "questionNumber": 1,
+      "totalQuestions": 13,
+      "createdAt": "2025-01-13T00:00:00.000Z",
+      "updatedAt": "2025-01-13T00:00:00.000Z",
+      "author": "Quiz Flow Pro",
+      "version": "3.0.0"
     },
-    {
-      "id": "step02-question-title",
-      "type": "text-inline",
-      "order": 1,
-      "content": {
-        "0": "Q",
-        "1": "1",
-        "2": " ",
-        "3": "-",
-        "4": " ",
-        "5": "R",
-        "6": "O",
-        "7": "U",
-        "8": "P",
-        "9": "A",
-        "10": " ",
-        "11": "F",
-        "12": "A",
-        "13": "V",
-        "14": "O",
-        "15": "R",
-        "16": "I",
-        "17": "T",
-        "18": "A"
+    "theme": {
+      "colors": {
+        "primary": "#B89B7A",
+        "primaryHover": "#A68B6A",
+        "primaryLight": "#F3E8D3",
+        "secondary": "#432818",
+        "background": "#FAF9F7",
+        "text": "#1F2937",
+        "border": "#E5E7EB",
+        "selected": "#B89B7A",
+        "hover": "#F3E8D3"
       },
-      "properties": {
-        "content": "Q1 - ROUPA FAVORITA",
-        "fontSize": "text-2xl",
-        "fontWeight": "font-bold",
-        "textAlign": "text-center",
-        "color": "#432818",
-        "containerWidth": "full",
-        "spacing": "small"
-      }
-    },
-    {
-      "id": "step02-question-counter",
-      "type": "text-inline",
-      "order": 2,
-      "content": {
-        "0": "Q",
-        "1": "u",
-        "2": "e",
-        "3": "s",
-        "4": "t",
-        "5": "ã",
-        "6": "o",
-        "7": " ",
-        "8": "1",
-        "9": " ",
-        "10": "d",
-        "11": "e",
-        "12": " ",
-        "13": "1",
-        "14": "3"
+      "fonts": {
+        "heading": "Playfair Display, serif",
+        "body": "Inter, sans-serif"
       },
-      "properties": {
-        "content": "Questão 1 de 13",
-        "fontSize": "text-sm",
-        "textAlign": "text-center",
-        "color": "#6B7280",
-        "marginBottom": 24,
-        "containerWidth": "full",
-        "spacing": "small"
+      "spacing": {
+        "sm": 8,
+        "md": 16,
+        "lg": 24,
+        "xl": 32
+      },
+      "borderRadius": {
+        "sm": 4,
+        "md": 8,
+        "lg": 12,
+        "xl": 16
       }
     },
-    {
-      "id": "step02-options-grid",
-      "type": "options-grid",
-      "order": 3,
-      "content": {},
-      "properties": {
-        "options": [
-          {
-            "id": "2a",
-            "text": "Opção A - Descrição personalizada",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/11_hqmr8l.webp",
-            "value": "2a",
-            "category": "Natural",
-            "points": 1
-          },
-          {
-            "id": "2b",
-            "text": "Opção B - Descrição personalizada",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp",
-            "value": "2b",
-            "category": "Clássico",
-            "points": 2
-          },
-          {
-            "id": "2c",
-            "text": "Opção C - Descrição personalizada",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_snhaym.webp",
-            "value": "2c",
-            "category": "Contemporâneo",
-            "points": 2
-          },
-          {
-            "id": "2d",
-            "text": "Opção D - Descrição personalizada",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp",
-            "value": "2d",
-            "category": "Elegante",
-            "points": 3
-          }
-        ],
-        "columns": 2,
-        "imageSize": 256,
-        "showImages": true,
-        "multipleSelection": true,
-        "minSelections": 3,
-        "maxSelections": 3,
-        "borderColor": "#E5E7EB",
-        "selectedBorderColor": "#B89B7A",
-        "hoverColor": "#F3E8D3",
-        "containerWidth": "full",
-        "spacing": "small",
-        "marginBottom": 16,
-        "validationMessage": "Selecione 3 opções para continuar",
-        "autoAdvance": true,
-        "autoAdvanceOnComplete": true,
-        "autoAdvanceDelay": 1500
+    "sections": [
+      {
+        "type": "question-hero",
+        "id": "question-hero-02",
+        "content": {
+          "questionNumber": "Q1 - ROUPA FAVORITA",
+          "questionText": "Qual tipo de roupa você mais se identifica?",
+          "currentQuestion": 1,
+          "totalQuestions": 13,
+          "progressValue": 10,
+          "showProgress": true,
+          "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
+          "logoAlt": "Logo Gisele Galvão"
+        },
+        "style": {
+          "backgroundColor": "transparent",
+          "padding": 16
+        },
+        "animation": {
+          "type": "fade",
+          "duration": 300,
+          "delay": 0,
+          "easing": "ease-out"
+        }
+      },
+      {
+        "type": "options-grid",
+        "id": "options-grid-02",
+        "content": {
+          "options": [
+            {
+              "id": "2a",
+              "text": "Vestidos fluidos e confortáveis",
+              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/11_hqmr8l.webp",
+              "value": "2a",
+              "category": "Natural",
+              "points": 1
+            },
+            {
+              "id": "2b",
+              "text": "Blazers estruturados e calças alfaiataria",
+              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp",
+              "value": "2b",
+              "category": "Clássico",
+              "points": 2
+            },
+            {
+              "id": "2c",
+              "text": "Peças modernas com toque minimalista",
+              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_snhaym.webp",
+              "value": "2c",
+              "category": "Contemporâneo",
+              "points": 2
+            },
+            {
+              "id": "2d",
+              "text": "Vestidos sofisticados e acessórios marcantes",
+              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp",
+              "value": "2d",
+              "category": "Elegante",
+              "points": 3
+            }
+          ],
+          "columns": 2,
+          "multipleSelection": true,
+          "minSelections": 3,
+          "maxSelections": 3,
+          "showImages": true,
+          "imageSize": 256,
+          "autoAdvance": true,
+          "autoAdvanceDelay": 1500,
+          "validationMessage": "Selecione 3 opções para continuar"
+        },
+        "style": {
+          "backgroundColor": "transparent",
+          "padding": 16
+        },
+        "animation": {
+          "type": "slideUp",
+          "duration": 300,
+          "delay": 100,
+          "easing": "ease-out"
+        }
+      }
+    ],
+    "validation": {
+      "required": [
+        "selectedOptions"
+      ],
+      "rules": {
+        "selectedOptions": {
+          "minItems": 3,
+          "maxItems": 3,
+          "errorMessage": "Por favor, selecione exatamente 3 opções"
+        }
       }
     },
-    {
-      "id": "step02-continue-button",
-      "type": "button-inline",
-      "order": 4,
-      "content": {},
-      "properties": {
-        "text": "Próxima Questão →",
-        "textWhenDisabled": "Selecione 3 opções para continuar",
-        "variant": "primary",
-        "size": "large",
-        "fullWidth": true,
-        "backgroundColor": "#B89B7A",
-        "textColor": "#ffffff",
-        "enableOnSelection": true,
-        "containerWidth": "full",
-        "spacing": "small",
-        "marginTop": 24,
-        "requiresValidSelection": true
+    "navigation": {
+      "nextStep": "step-03",
+      "prevStep": "step-01",
+      "allowBack": true,
+      "requiresUserInput": true,
+      "autoAdvance": true,
+      "autoAdvanceDelay": 1500
+    },
+    "analytics": {
+      "events": [
+        "page_view",
+        "section_view",
+        "option_selected",
+        "validation_error",
+        "completion"
+      ],
+      "trackingId": "step-02-question-v3",
+      "fbPixelId": null,
+      "gaTrackingId": null
+    },
+    "scoring": {
+      "method": "points",
+      "categories": [
+        "Natural",
+        "Clássico",
+        "Contemporâneo",
+        "Elegante"
+      ],
+      "options": {
+        "2a": {
+          "category": "Natural",
+          "points": 1
+        },
+        "2b": {
+          "category": "Clássico",
+          "points": 2
+        },
+        "2c": {
+          "category": "Contemporâneo",
+          "points": 2
+        },
+        "2d": {
+          "category": "Elegante",
+          "points": 3
+        }
       }
     }
-  ],
+  },
 
-  'step-03': [
-    {
-      "id": "step03-header",
-      "type": "quiz-intro-header",
-      "order": 0,
-      "content": {},
-      "properties": {
-        "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
-        "logoAlt": "Logo Gisele Galvão",
-        "logoWidth": 96,
-        "logoHeight": 96,
-        "progressValue": 14,
-        "progressTotal": 100,
-        "showProgress": true,
-        "containerWidth": "full",
-        "spacing": "small"
-      }
+  'step-03': {
+    "templateVersion": "3.0",
+    "metadata": {
+      "id": "step-03-question-v3",
+      "name": "Q2 - Nome pessoal",
+      "description": "Questão 2 sobre preferências de estilo",
+      "category": "quiz-question",
+      "tags": [
+        "quiz",
+        "style",
+        "question"
+      ],
+      "questionNumber": 2,
+      "totalQuestions": 13,
+      "createdAt": "2025-10-13T00:32:31.714Z",
+      "updatedAt": "2025-10-13T00:32:31.714Z",
+      "author": "Quiz Flow Pro",
+      "version": "3.0.0"
     },
-    {
-      "id": "step03-question-title",
-      "type": "text-inline",
-      "order": 1,
-      "content": {
-        "0": "Q",
-        "1": "2",
-        "2": " ",
-        "3": "-",
-        "4": " ",
-        "5": "N",
-        "6": "O",
-        "7": "M",
-        "8": "E",
-        "9": " ",
-        "10": "P",
-        "11": "E",
-        "12": "S",
-        "13": "S",
-        "14": "O",
-        "15": "A",
-        "16": "L"
+    "theme": {
+      "colors": {
+        "primary": "#B89B7A",
+        "primaryHover": "#A68B6A",
+        "primaryLight": "#F3E8D3",
+        "secondary": "#432818",
+        "background": "#FAF9F7",
+        "text": "#1F2937",
+        "border": "#E5E7EB",
+        "selected": "#B89B7A",
+        "hover": "#F3E8D3"
       },
-      "properties": {
-        "content": "Q2 - NOME PESSOAL",
-        "fontSize": "text-2xl",
-        "fontWeight": "font-bold",
-        "textAlign": "text-center",
-        "color": "#432818",
-        "containerWidth": "full",
-        "spacing": "small"
-      }
-    },
-    {
-      "id": "step03-question-counter",
-      "type": "text-inline",
-      "order": 2,
-      "content": {
-        "0": "Q",
-        "1": "u",
-        "2": "e",
-        "3": "s",
-        "4": "t",
-        "5": "ã",
-        "6": "o",
-        "7": " ",
-        "8": "2",
-        "9": " ",
-        "10": "d",
-        "11": "e",
-        "12": " ",
-        "13": "1",
-        "14": "3"
+      "fonts": {
+        "heading": "Playfair Display, serif",
+        "body": "Inter, sans-serif"
       },
-      "properties": {
-        "content": "Questão 2 de 13",
-        "fontSize": "text-sm",
-        "textAlign": "text-center",
-        "color": "#6B7280",
-        "marginBottom": 24,
-        "containerWidth": "full",
-        "spacing": "small"
+      "spacing": {
+        "sm": 8,
+        "md": 16,
+        "lg": 24,
+        "xl": 32
+      },
+      "borderRadius": {
+        "sm": 4,
+        "md": 8,
+        "lg": 12,
+        "xl": 16
       }
     },
-    {
-      "id": "step03-options-grid",
-      "type": "options-grid",
-      "order": 3,
-      "content": {},
-      "properties": {
-        "options": [
-          {
-            "id": "3a",
-            "text": "Opção A - Descrição personalizada",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/11_hqmr8l.webp",
-            "value": "3a",
-            "category": "Natural",
-            "points": 1
-          },
-          {
-            "id": "3b",
-            "text": "Opção B - Descrição personalizada",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp",
-            "value": "3b",
-            "category": "Clássico",
-            "points": 2
-          },
-          {
-            "id": "3c",
-            "text": "Opção C - Descrição personalizada",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_snhaym.webp",
-            "value": "3c",
-            "category": "Contemporâneo",
-            "points": 2
-          },
-          {
-            "id": "3d",
-            "text": "Opção D - Descrição personalizada",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp",
-            "value": "3d",
-            "category": "Elegante",
-            "points": 3
-          }
-        ],
-        "columns": 2,
-        "imageSize": 256,
-        "showImages": true,
-        "multipleSelection": true,
-        "minSelections": 3,
-        "maxSelections": 3,
-        "borderColor": "#E5E7EB",
-        "selectedBorderColor": "#B89B7A",
-        "hoverColor": "#F3E8D3",
-        "containerWidth": "full",
-        "spacing": "small",
-        "marginBottom": 16,
-        "validationMessage": "Selecione 3 opções para continuar",
-        "autoAdvance": true,
-        "autoAdvanceOnComplete": true,
-        "autoAdvanceDelay": 1500
+    "sections": [
+      {
+        "type": "question-hero",
+        "id": "question-hero-03",
+        "content": {
+          "questionNumber": "Q2 - NOME PESSOAL",
+          "questionText": "Como você prefere que as pessoas te chamem no dia a dia?",
+          "currentQuestion": 2,
+          "totalQuestions": 13,
+          "progressValue": 14,
+          "showProgress": true,
+          "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
+          "logoAlt": "Logo Gisele Galvão"
+        },
+        "style": {
+          "backgroundColor": "transparent",
+          "padding": 16
+        },
+        "animation": {
+          "type": "fade",
+          "duration": 300,
+          "delay": 0,
+          "easing": "ease-out"
+        }
+      },
+      {
+        "type": "options-grid",
+        "id": "options-grid-03",
+        "content": {
+          "options": [
+            {
+              "id": "3a",
+              "text": "Opção A para Q2",
+              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/11_hqmr8l.webp",
+              "value": "3a",
+              "category": "Natural",
+              "points": 1
+            },
+            {
+              "id": "3b",
+              "text": "Opção B para Q2",
+              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp",
+              "value": "3b",
+              "category": "Clássico",
+              "points": 2
+            },
+            {
+              "id": "3c",
+              "text": "Opção C para Q2",
+              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_snhaym.webp",
+              "value": "3c",
+              "category": "Contemporâneo",
+              "points": 2
+            },
+            {
+              "id": "3d",
+              "text": "Opção D para Q2",
+              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp",
+              "value": "3d",
+              "category": "Elegante",
+              "points": 3
+            }
+          ],
+          "columns": 2,
+          "multipleSelection": true,
+          "minSelections": 3,
+          "maxSelections": 3,
+          "showImages": true,
+          "imageSize": 256,
+          "autoAdvance": true,
+          "autoAdvanceDelay": 1500,
+          "validationMessage": "Selecione 3 opções para continuar"
+        },
+        "style": {
+          "backgroundColor": "transparent",
+          "padding": 16
+        },
+        "animation": {
+          "type": "slideUp",
+          "duration": 300,
+          "delay": 100,
+          "easing": "ease-out"
+        }
+      }
+    ],
+    "validation": {
+      "required": [
+        "selectedOptions"
+      ],
+      "rules": {
+        "selectedOptions": {
+          "minItems": 3,
+          "maxItems": 3,
+          "errorMessage": "Por favor, selecione exatamente 3 opções"
+        }
       }
     },
-    {
-      "id": "step03-continue-button",
-      "type": "button-inline",
-      "order": 4,
-      "content": {},
-      "properties": {
-        "text": "Próxima Questão →",
-        "textWhenDisabled": "Selecione 3 opções para continuar",
-        "variant": "primary",
-        "size": "large",
-        "fullWidth": true,
-        "backgroundColor": "#B89B7A",
-        "textColor": "#ffffff",
-        "enableOnSelection": true,
-        "containerWidth": "full",
-        "spacing": "small",
-        "marginTop": 24,
-        "requiresValidSelection": true
+    "navigation": {
+      "nextStep": "step-04",
+      "prevStep": "step-02",
+      "allowBack": true,
+      "requiresUserInput": true,
+      "autoAdvance": true,
+      "autoAdvanceDelay": 1500
+    },
+    "analytics": {
+      "events": [
+        "page_view",
+        "section_view",
+        "option_selected",
+        "validation_error",
+        "completion"
+      ],
+      "trackingId": "step-03-question-v3"
+    },
+    "scoring": {
+      "method": "points",
+      "categories": [
+        "Natural",
+        "Clássico",
+        "Contemporâneo",
+        "Elegante"
+      ],
+      "options": {
+        "3a": {
+          "category": "Natural",
+          "points": 1
+        },
+        "3b": {
+          "category": "Clássico",
+          "points": 2
+        },
+        "3c": {
+          "category": "Contemporâneo",
+          "points": 2
+        },
+        "3d": {
+          "category": "Elegante",
+          "points": 3
+        }
       }
     }
-  ],
+  },
 
-  'step-04': [
-    {
-      "id": "step04-header",
-      "type": "quiz-intro-header",
-      "order": 0,
-      "content": {},
-      "properties": {
-        "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
-        "logoAlt": "Logo Gisele Galvão",
-        "logoWidth": 96,
-        "logoHeight": 96,
-        "progressValue": 19,
-        "progressTotal": 100,
-        "showProgress": true,
-        "containerWidth": "full",
-        "spacing": "small"
-      }
+  'step-04': {
+    "templateVersion": "3.0",
+    "metadata": {
+      "id": "step-04-question-v3",
+      "name": "Q3 - Estilo pessoal",
+      "description": "Questão 3 sobre preferências de estilo",
+      "category": "quiz-question",
+      "tags": [
+        "quiz",
+        "style",
+        "question"
+      ],
+      "questionNumber": 3,
+      "totalQuestions": 13,
+      "createdAt": "2025-10-13T00:32:31.720Z",
+      "updatedAt": "2025-10-13T00:32:31.720Z",
+      "author": "Quiz Flow Pro",
+      "version": "3.0.0"
     },
-    {
-      "id": "step04-question-title",
-      "type": "text-inline",
-      "order": 1,
-      "content": {
-        "0": "Q",
-        "1": "3",
-        "2": " ",
-        "3": "-",
-        "4": " ",
-        "5": "E",
-        "6": "S",
-        "7": "T",
-        "8": "I",
-        "9": "L",
-        "10": "O",
-        "11": " ",
-        "12": "P",
-        "13": "E",
-        "14": "S",
-        "15": "S",
-        "16": "O",
-        "17": "A",
-        "18": "L"
+    "theme": {
+      "colors": {
+        "primary": "#B89B7A",
+        "primaryHover": "#A68B6A",
+        "primaryLight": "#F3E8D3",
+        "secondary": "#432818",
+        "background": "#FAF9F7",
+        "text": "#1F2937",
+        "border": "#E5E7EB",
+        "selected": "#B89B7A",
+        "hover": "#F3E8D3"
       },
-      "properties": {
-        "content": "Q3 - ESTILO PESSOAL",
-        "fontSize": "text-2xl",
-        "fontWeight": "font-bold",
-        "textAlign": "text-center",
-        "color": "#432818",
-        "containerWidth": "full",
-        "spacing": "small"
-      }
-    },
-    {
-      "id": "step04-question-counter",
-      "type": "text-inline",
-      "order": 2,
-      "content": {
-        "0": "Q",
-        "1": "u",
-        "2": "e",
-        "3": "s",
-        "4": "t",
-        "5": "ã",
-        "6": "o",
-        "7": " ",
-        "8": "3",
-        "9": " ",
-        "10": "d",
-        "11": "e",
-        "12": " ",
-        "13": "1",
-        "14": "3"
+      "fonts": {
+        "heading": "Playfair Display, serif",
+        "body": "Inter, sans-serif"
       },
-      "properties": {
-        "content": "Questão 3 de 13",
-        "fontSize": "text-sm",
-        "textAlign": "text-center",
-        "color": "#6B7280",
-        "marginBottom": 24,
-        "containerWidth": "full",
-        "spacing": "small"
+      "spacing": {
+        "sm": 8,
+        "md": 16,
+        "lg": 24,
+        "xl": 32
+      },
+      "borderRadius": {
+        "sm": 4,
+        "md": 8,
+        "lg": 12,
+        "xl": 16
       }
     },
-    {
-      "id": "step04-options-grid",
-      "type": "options-grid",
-      "order": 3,
-      "content": {},
-      "properties": {
-        "options": [
-          {
-            "id": "4a",
-            "text": "Opção A - Descrição personalizada",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/11_hqmr8l.webp",
-            "value": "4a",
-            "category": "Natural",
-            "points": 1
-          },
-          {
-            "id": "4b",
-            "text": "Opção B - Descrição personalizada",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp",
-            "value": "4b",
-            "category": "Clássico",
-            "points": 2
-          },
-          {
-            "id": "4c",
-            "text": "Opção C - Descrição personalizada",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_snhaym.webp",
-            "value": "4c",
-            "category": "Contemporâneo",
-            "points": 2
-          },
-          {
-            "id": "4d",
-            "text": "Opção D - Descrição personalizada",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp",
-            "value": "4d",
-            "category": "Elegante",
-            "points": 3
-          }
-        ],
-        "columns": 2,
-        "imageSize": 256,
-        "showImages": true,
-        "multipleSelection": true,
-        "minSelections": 3,
-        "maxSelections": 3,
-        "borderColor": "#E5E7EB",
-        "selectedBorderColor": "#B89B7A",
-        "hoverColor": "#F3E8D3",
-        "containerWidth": "full",
-        "spacing": "small",
-        "marginBottom": 16,
-        "validationMessage": "Selecione 3 opções para continuar",
-        "autoAdvance": true,
-        "autoAdvanceOnComplete": true,
-        "autoAdvanceDelay": 1500
+    "sections": [
+      {
+        "type": "question-hero",
+        "id": "question-hero-04",
+        "content": {
+          "questionNumber": "Q3 - ESTILO PESSOAL",
+          "questionText": "Qual palavra melhor descreve seu estilo?",
+          "currentQuestion": 3,
+          "totalQuestions": 13,
+          "progressValue": 19,
+          "showProgress": true,
+          "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
+          "logoAlt": "Logo Gisele Galvão"
+        },
+        "style": {
+          "backgroundColor": "transparent",
+          "padding": 16
+        },
+        "animation": {
+          "type": "fade",
+          "duration": 300,
+          "delay": 0,
+          "easing": "ease-out"
+        }
+      },
+      {
+        "type": "options-grid",
+        "id": "options-grid-04",
+        "content": {
+          "options": [
+            {
+              "id": "4a",
+              "text": "Opção A para Q3",
+              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/11_hqmr8l.webp",
+              "value": "4a",
+              "category": "Natural",
+              "points": 1
+            },
+            {
+              "id": "4b",
+              "text": "Opção B para Q3",
+              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp",
+              "value": "4b",
+              "category": "Clássico",
+              "points": 2
+            },
+            {
+              "id": "4c",
+              "text": "Opção C para Q3",
+              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_snhaym.webp",
+              "value": "4c",
+              "category": "Contemporâneo",
+              "points": 2
+            },
+            {
+              "id": "4d",
+              "text": "Opção D para Q3",
+              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp",
+              "value": "4d",
+              "category": "Elegante",
+              "points": 3
+            }
+          ],
+          "columns": 2,
+          "multipleSelection": true,
+          "minSelections": 3,
+          "maxSelections": 3,
+          "showImages": true,
+          "imageSize": 256,
+          "autoAdvance": true,
+          "autoAdvanceDelay": 1500,
+          "validationMessage": "Selecione 3 opções para continuar"
+        },
+        "style": {
+          "backgroundColor": "transparent",
+          "padding": 16
+        },
+        "animation": {
+          "type": "slideUp",
+          "duration": 300,
+          "delay": 100,
+          "easing": "ease-out"
+        }
+      }
+    ],
+    "validation": {
+      "required": [
+        "selectedOptions"
+      ],
+      "rules": {
+        "selectedOptions": {
+          "minItems": 3,
+          "maxItems": 3,
+          "errorMessage": "Por favor, selecione exatamente 3 opções"
+        }
       }
     },
-    {
-      "id": "step04-continue-button",
-      "type": "button-inline",
-      "order": 4,
-      "content": {},
-      "properties": {
-        "text": "Próxima Questão →",
-        "textWhenDisabled": "Selecione 3 opções para continuar",
-        "variant": "primary",
-        "size": "large",
-        "fullWidth": true,
-        "backgroundColor": "#B89B7A",
-        "textColor": "#ffffff",
-        "enableOnSelection": true,
-        "containerWidth": "full",
-        "spacing": "small",
-        "marginTop": 24,
-        "requiresValidSelection": true
+    "navigation": {
+      "nextStep": "step-05",
+      "prevStep": "step-03",
+      "allowBack": true,
+      "requiresUserInput": true,
+      "autoAdvance": true,
+      "autoAdvanceDelay": 1500
+    },
+    "analytics": {
+      "events": [
+        "page_view",
+        "section_view",
+        "option_selected",
+        "validation_error",
+        "completion"
+      ],
+      "trackingId": "step-04-question-v3"
+    },
+    "scoring": {
+      "method": "points",
+      "categories": [
+        "Natural",
+        "Clássico",
+        "Contemporâneo",
+        "Elegante"
+      ],
+      "options": {
+        "4a": {
+          "category": "Natural",
+          "points": 1
+        },
+        "4b": {
+          "category": "Clássico",
+          "points": 2
+        },
+        "4c": {
+          "category": "Contemporâneo",
+          "points": 2
+        },
+        "4d": {
+          "category": "Elegante",
+          "points": 3
+        }
       }
     }
-  ],
+  },
 
-  'step-05': [
-    {
-      "id": "step05-header",
-      "type": "quiz-intro-header",
-      "order": 0,
-      "content": {},
-      "properties": {
-        "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
-        "logoAlt": "Logo Gisele Galvão",
-        "logoWidth": 96,
-        "logoHeight": 96,
-        "progressValue": 24,
-        "progressTotal": 100,
-        "showProgress": true,
-        "containerWidth": "full",
-        "spacing": "small"
-      }
+  'step-05': {
+    "templateVersion": "3.0",
+    "metadata": {
+      "id": "step-05-question-v3",
+      "name": "Q4 - Ocasiões",
+      "description": "Questão 4 sobre preferências de estilo",
+      "category": "quiz-question",
+      "tags": [
+        "quiz",
+        "style",
+        "question"
+      ],
+      "questionNumber": 4,
+      "totalQuestions": 13,
+      "createdAt": "2025-10-13T00:32:31.721Z",
+      "updatedAt": "2025-10-13T00:32:31.721Z",
+      "author": "Quiz Flow Pro",
+      "version": "3.0.0"
     },
-    {
-      "id": "step05-question-title",
-      "type": "text-inline",
-      "order": 1,
-      "content": {
-        "0": "Q",
-        "1": "4",
-        "2": " ",
-        "3": "-",
-        "4": " ",
-        "5": "O",
-        "6": "C",
-        "7": "A",
-        "8": "S",
-        "9": "I",
-        "10": "Õ",
-        "11": "E",
-        "12": "S"
+    "theme": {
+      "colors": {
+        "primary": "#B89B7A",
+        "primaryHover": "#A68B6A",
+        "primaryLight": "#F3E8D3",
+        "secondary": "#432818",
+        "background": "#FAF9F7",
+        "text": "#1F2937",
+        "border": "#E5E7EB",
+        "selected": "#B89B7A",
+        "hover": "#F3E8D3"
       },
-      "properties": {
-        "content": "Q4 - OCASIÕES",
-        "fontSize": "text-2xl",
-        "fontWeight": "font-bold",
-        "textAlign": "text-center",
-        "color": "#432818",
-        "containerWidth": "full",
-        "spacing": "small"
-      }
-    },
-    {
-      "id": "step05-question-counter",
-      "type": "text-inline",
-      "order": 2,
-      "content": {
-        "0": "Q",
-        "1": "u",
-        "2": "e",
-        "3": "s",
-        "4": "t",
-        "5": "ã",
-        "6": "o",
-        "7": " ",
-        "8": "4",
-        "9": " ",
-        "10": "d",
-        "11": "e",
-        "12": " ",
-        "13": "1",
-        "14": "3"
+      "fonts": {
+        "heading": "Playfair Display, serif",
+        "body": "Inter, sans-serif"
       },
-      "properties": {
-        "content": "Questão 4 de 13",
-        "fontSize": "text-sm",
-        "textAlign": "text-center",
-        "color": "#6B7280",
-        "marginBottom": 24,
-        "containerWidth": "full",
-        "spacing": "small"
+      "spacing": {
+        "sm": 8,
+        "md": 16,
+        "lg": 24,
+        "xl": 32
+      },
+      "borderRadius": {
+        "sm": 4,
+        "md": 8,
+        "lg": 12,
+        "xl": 16
       }
     },
-    {
-      "id": "step05-options-grid",
-      "type": "options-grid",
-      "order": 3,
-      "content": {},
-      "properties": {
-        "options": [
-          {
-            "id": "5a",
-            "text": "Opção A - Descrição personalizada",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/11_hqmr8l.webp",
-            "value": "5a",
-            "category": "Natural",
-            "points": 1
-          },
-          {
-            "id": "5b",
-            "text": "Opção B - Descrição personalizada",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp",
-            "value": "5b",
-            "category": "Clássico",
-            "points": 2
-          },
-          {
-            "id": "5c",
-            "text": "Opção C - Descrição personalizada",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_snhaym.webp",
-            "value": "5c",
-            "category": "Contemporâneo",
-            "points": 2
-          },
-          {
-            "id": "5d",
-            "text": "Opção D - Descrição personalizada",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp",
-            "value": "5d",
-            "category": "Elegante",
-            "points": 3
-          }
-        ],
-        "columns": 2,
-        "imageSize": 256,
-        "showImages": true,
-        "multipleSelection": true,
-        "minSelections": 3,
-        "maxSelections": 3,
-        "borderColor": "#E5E7EB",
-        "selectedBorderColor": "#B89B7A",
-        "hoverColor": "#F3E8D3",
-        "containerWidth": "full",
-        "spacing": "small",
-        "marginBottom": 16,
-        "validationMessage": "Selecione 3 opções para continuar",
-        "autoAdvance": true,
-        "autoAdvanceOnComplete": true,
-        "autoAdvanceDelay": 1500
+    "sections": [
+      {
+        "type": "question-hero",
+        "id": "question-hero-05",
+        "content": {
+          "questionNumber": "Q4 - OCASIÕES",
+          "questionText": "Para quais ocasiões você mais compra roupas?",
+          "currentQuestion": 4,
+          "totalQuestions": 13,
+          "progressValue": 24,
+          "showProgress": true,
+          "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
+          "logoAlt": "Logo Gisele Galvão"
+        },
+        "style": {
+          "backgroundColor": "transparent",
+          "padding": 16
+        },
+        "animation": {
+          "type": "fade",
+          "duration": 300,
+          "delay": 0,
+          "easing": "ease-out"
+        }
+      },
+      {
+        "type": "options-grid",
+        "id": "options-grid-05",
+        "content": {
+          "options": [
+            {
+              "id": "5a",
+              "text": "Opção A para Q4",
+              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/11_hqmr8l.webp",
+              "value": "5a",
+              "category": "Natural",
+              "points": 1
+            },
+            {
+              "id": "5b",
+              "text": "Opção B para Q4",
+              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp",
+              "value": "5b",
+              "category": "Clássico",
+              "points": 2
+            },
+            {
+              "id": "5c",
+              "text": "Opção C para Q4",
+              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_snhaym.webp",
+              "value": "5c",
+              "category": "Contemporâneo",
+              "points": 2
+            },
+            {
+              "id": "5d",
+              "text": "Opção D para Q4",
+              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp",
+              "value": "5d",
+              "category": "Elegante",
+              "points": 3
+            }
+          ],
+          "columns": 2,
+          "multipleSelection": true,
+          "minSelections": 3,
+          "maxSelections": 3,
+          "showImages": true,
+          "imageSize": 256,
+          "autoAdvance": true,
+          "autoAdvanceDelay": 1500,
+          "validationMessage": "Selecione 3 opções para continuar"
+        },
+        "style": {
+          "backgroundColor": "transparent",
+          "padding": 16
+        },
+        "animation": {
+          "type": "slideUp",
+          "duration": 300,
+          "delay": 100,
+          "easing": "ease-out"
+        }
+      }
+    ],
+    "validation": {
+      "required": [
+        "selectedOptions"
+      ],
+      "rules": {
+        "selectedOptions": {
+          "minItems": 3,
+          "maxItems": 3,
+          "errorMessage": "Por favor, selecione exatamente 3 opções"
+        }
       }
     },
-    {
-      "id": "step05-continue-button",
-      "type": "button-inline",
-      "order": 4,
-      "content": {},
-      "properties": {
-        "text": "Próxima Questão →",
-        "textWhenDisabled": "Selecione 3 opções para continuar",
-        "variant": "primary",
-        "size": "large",
-        "fullWidth": true,
-        "backgroundColor": "#B89B7A",
-        "textColor": "#ffffff",
-        "enableOnSelection": true,
-        "containerWidth": "full",
-        "spacing": "small",
-        "marginTop": 24,
-        "requiresValidSelection": true
+    "navigation": {
+      "nextStep": "step-06",
+      "prevStep": "step-04",
+      "allowBack": true,
+      "requiresUserInput": true,
+      "autoAdvance": true,
+      "autoAdvanceDelay": 1500
+    },
+    "analytics": {
+      "events": [
+        "page_view",
+        "section_view",
+        "option_selected",
+        "validation_error",
+        "completion"
+      ],
+      "trackingId": "step-05-question-v3"
+    },
+    "scoring": {
+      "method": "points",
+      "categories": [
+        "Natural",
+        "Clássico",
+        "Contemporâneo",
+        "Elegante"
+      ],
+      "options": {
+        "5a": {
+          "category": "Natural",
+          "points": 1
+        },
+        "5b": {
+          "category": "Clássico",
+          "points": 2
+        },
+        "5c": {
+          "category": "Contemporâneo",
+          "points": 2
+        },
+        "5d": {
+          "category": "Elegante",
+          "points": 3
+        }
       }
     }
-  ],
+  },
 
-  'step-06': [
-    {
-      "id": "step06-header",
-      "type": "quiz-intro-header",
-      "order": 0,
-      "content": {},
-      "properties": {
-        "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
-        "logoAlt": "Logo Gisele Galvão",
-        "logoWidth": 96,
-        "logoHeight": 96,
-        "progressValue": 29,
-        "progressTotal": 100,
-        "showProgress": true,
-        "containerWidth": "full",
-        "spacing": "small"
-      }
+  'step-06': {
+    "templateVersion": "3.0",
+    "metadata": {
+      "id": "step-06-question-v3",
+      "name": "Q5 - Cores favoritas",
+      "description": "Questão 5 sobre preferências de estilo",
+      "category": "quiz-question",
+      "tags": [
+        "quiz",
+        "style",
+        "question"
+      ],
+      "questionNumber": 5,
+      "totalQuestions": 13,
+      "createdAt": "2025-10-13T00:32:31.723Z",
+      "updatedAt": "2025-10-13T00:32:31.723Z",
+      "author": "Quiz Flow Pro",
+      "version": "3.0.0"
     },
-    {
-      "id": "step06-question-title",
-      "type": "text-inline",
-      "order": 1,
-      "content": {
-        "0": "Q",
-        "1": "5",
-        "2": " ",
-        "3": "-",
-        "4": " ",
-        "5": "C",
-        "6": "O",
-        "7": "R",
-        "8": "E",
-        "9": "S"
+    "theme": {
+      "colors": {
+        "primary": "#B89B7A",
+        "primaryHover": "#A68B6A",
+        "primaryLight": "#F3E8D3",
+        "secondary": "#432818",
+        "background": "#FAF9F7",
+        "text": "#1F2937",
+        "border": "#E5E7EB",
+        "selected": "#B89B7A",
+        "hover": "#F3E8D3"
       },
-      "properties": {
-        "content": "Q5 - CORES",
-        "fontSize": "text-2xl",
-        "fontWeight": "font-bold",
-        "textAlign": "text-center",
-        "color": "#432818",
-        "containerWidth": "full",
-        "spacing": "small"
-      }
-    },
-    {
-      "id": "step06-question-counter",
-      "type": "text-inline",
-      "order": 2,
-      "content": {
-        "0": "Q",
-        "1": "u",
-        "2": "e",
-        "3": "s",
-        "4": "t",
-        "5": "ã",
-        "6": "o",
-        "7": " ",
-        "8": "5",
-        "9": " ",
-        "10": "d",
-        "11": "e",
-        "12": " ",
-        "13": "1",
-        "14": "3"
+      "fonts": {
+        "heading": "Playfair Display, serif",
+        "body": "Inter, sans-serif"
       },
-      "properties": {
-        "content": "Questão 5 de 13",
-        "fontSize": "text-sm",
-        "textAlign": "text-center",
-        "color": "#6B7280",
-        "marginBottom": 24,
-        "containerWidth": "full",
-        "spacing": "small"
+      "spacing": {
+        "sm": 8,
+        "md": 16,
+        "lg": 24,
+        "xl": 32
+      },
+      "borderRadius": {
+        "sm": 4,
+        "md": 8,
+        "lg": 12,
+        "xl": 16
       }
     },
-    {
-      "id": "step06-options-grid",
-      "type": "options-grid",
-      "order": 3,
-      "content": {},
-      "properties": {
-        "options": [
-          {
-            "id": "6a",
-            "text": "Opção A - Descrição personalizada",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/11_hqmr8l.webp",
-            "value": "6a",
-            "category": "Natural",
-            "points": 1
-          },
-          {
-            "id": "6b",
-            "text": "Opção B - Descrição personalizada",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp",
-            "value": "6b",
-            "category": "Clássico",
-            "points": 2
-          },
-          {
-            "id": "6c",
-            "text": "Opção C - Descrição personalizada",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_snhaym.webp",
-            "value": "6c",
-            "category": "Contemporâneo",
-            "points": 2
-          },
-          {
-            "id": "6d",
-            "text": "Opção D - Descrição personalizada",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp",
-            "value": "6d",
-            "category": "Elegante",
-            "points": 3
-          }
-        ],
-        "columns": 2,
-        "imageSize": 256,
-        "showImages": true,
-        "multipleSelection": true,
-        "minSelections": 3,
-        "maxSelections": 3,
-        "borderColor": "#E5E7EB",
-        "selectedBorderColor": "#B89B7A",
-        "hoverColor": "#F3E8D3",
-        "containerWidth": "full",
-        "spacing": "small",
-        "marginBottom": 16,
-        "validationMessage": "Selecione 3 opções para continuar",
-        "autoAdvance": true,
-        "autoAdvanceOnComplete": true,
-        "autoAdvanceDelay": 1500
+    "sections": [
+      {
+        "type": "question-hero",
+        "id": "question-hero-06",
+        "content": {
+          "questionNumber": "Q5 - CORES FAVORITAS",
+          "questionText": "Quais cores mais aparecem no seu guarda-roupa?",
+          "currentQuestion": 5,
+          "totalQuestions": 13,
+          "progressValue": 29,
+          "showProgress": true,
+          "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
+          "logoAlt": "Logo Gisele Galvão"
+        },
+        "style": {
+          "backgroundColor": "transparent",
+          "padding": 16
+        },
+        "animation": {
+          "type": "fade",
+          "duration": 300,
+          "delay": 0,
+          "easing": "ease-out"
+        }
+      },
+      {
+        "type": "options-grid",
+        "id": "options-grid-06",
+        "content": {
+          "options": [
+            {
+              "id": "6a",
+              "text": "Opção A para Q5",
+              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/11_hqmr8l.webp",
+              "value": "6a",
+              "category": "Natural",
+              "points": 1
+            },
+            {
+              "id": "6b",
+              "text": "Opção B para Q5",
+              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp",
+              "value": "6b",
+              "category": "Clássico",
+              "points": 2
+            },
+            {
+              "id": "6c",
+              "text": "Opção C para Q5",
+              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_snhaym.webp",
+              "value": "6c",
+              "category": "Contemporâneo",
+              "points": 2
+            },
+            {
+              "id": "6d",
+              "text": "Opção D para Q5",
+              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp",
+              "value": "6d",
+              "category": "Elegante",
+              "points": 3
+            }
+          ],
+          "columns": 2,
+          "multipleSelection": true,
+          "minSelections": 3,
+          "maxSelections": 3,
+          "showImages": true,
+          "imageSize": 256,
+          "autoAdvance": true,
+          "autoAdvanceDelay": 1500,
+          "validationMessage": "Selecione 3 opções para continuar"
+        },
+        "style": {
+          "backgroundColor": "transparent",
+          "padding": 16
+        },
+        "animation": {
+          "type": "slideUp",
+          "duration": 300,
+          "delay": 100,
+          "easing": "ease-out"
+        }
+      }
+    ],
+    "validation": {
+      "required": [
+        "selectedOptions"
+      ],
+      "rules": {
+        "selectedOptions": {
+          "minItems": 3,
+          "maxItems": 3,
+          "errorMessage": "Por favor, selecione exatamente 3 opções"
+        }
       }
     },
-    {
-      "id": "step06-continue-button",
-      "type": "button-inline",
-      "order": 4,
-      "content": {},
-      "properties": {
-        "text": "Próxima Questão →",
-        "textWhenDisabled": "Selecione 3 opções para continuar",
-        "variant": "primary",
-        "size": "large",
-        "fullWidth": true,
-        "backgroundColor": "#B89B7A",
-        "textColor": "#ffffff",
-        "enableOnSelection": true,
-        "containerWidth": "full",
-        "spacing": "small",
-        "marginTop": 24,
-        "requiresValidSelection": true
+    "navigation": {
+      "nextStep": "step-07",
+      "prevStep": "step-05",
+      "allowBack": true,
+      "requiresUserInput": true,
+      "autoAdvance": true,
+      "autoAdvanceDelay": 1500
+    },
+    "analytics": {
+      "events": [
+        "page_view",
+        "section_view",
+        "option_selected",
+        "validation_error",
+        "completion"
+      ],
+      "trackingId": "step-06-question-v3"
+    },
+    "scoring": {
+      "method": "points",
+      "categories": [
+        "Natural",
+        "Clássico",
+        "Contemporâneo",
+        "Elegante"
+      ],
+      "options": {
+        "6a": {
+          "category": "Natural",
+          "points": 1
+        },
+        "6b": {
+          "category": "Clássico",
+          "points": 2
+        },
+        "6c": {
+          "category": "Contemporâneo",
+          "points": 2
+        },
+        "6d": {
+          "category": "Elegante",
+          "points": 3
+        }
       }
     }
-  ],
+  },
 
-  'step-07': [
-    {
-      "id": "step07-header",
-      "type": "quiz-intro-header",
-      "order": 0,
-      "content": {},
-      "properties": {
-        "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
-        "logoAlt": "Logo Gisele Galvão",
-        "logoWidth": 96,
-        "logoHeight": 96,
-        "progressValue": 33,
-        "progressTotal": 100,
-        "showProgress": true,
-        "containerWidth": "full",
-        "spacing": "small"
-      }
+  'step-07': {
+    "templateVersion": "3.0",
+    "metadata": {
+      "id": "step-07-question-v3",
+      "name": "Q6 - Acessórios",
+      "description": "Questão 6 sobre preferências de estilo",
+      "category": "quiz-question",
+      "tags": [
+        "quiz",
+        "style",
+        "question"
+      ],
+      "questionNumber": 6,
+      "totalQuestions": 13,
+      "createdAt": "2025-10-13T00:32:31.723Z",
+      "updatedAt": "2025-10-13T00:32:31.723Z",
+      "author": "Quiz Flow Pro",
+      "version": "3.0.0"
     },
-    {
-      "id": "step07-question-title",
-      "type": "text-inline",
-      "order": 1,
-      "content": {
-        "0": "Q",
-        "1": "6",
-        "2": " ",
-        "3": "-",
-        "4": " ",
-        "5": "T",
-        "6": "E",
-        "7": "X",
-        "8": "T",
-        "9": "U",
-        "10": "R",
-        "11": "A"
+    "theme": {
+      "colors": {
+        "primary": "#B89B7A",
+        "primaryHover": "#A68B6A",
+        "primaryLight": "#F3E8D3",
+        "secondary": "#432818",
+        "background": "#FAF9F7",
+        "text": "#1F2937",
+        "border": "#E5E7EB",
+        "selected": "#B89B7A",
+        "hover": "#F3E8D3"
       },
-      "properties": {
-        "content": "Q6 - TEXTURA",
-        "fontSize": "text-2xl",
-        "fontWeight": "font-bold",
-        "textAlign": "text-center",
-        "color": "#432818",
-        "containerWidth": "full",
-        "spacing": "small"
-      }
-    },
-    {
-      "id": "step07-question-counter",
-      "type": "text-inline",
-      "order": 2,
-      "content": {
-        "0": "Q",
-        "1": "u",
-        "2": "e",
-        "3": "s",
-        "4": "t",
-        "5": "ã",
-        "6": "o",
-        "7": " ",
-        "8": "6",
-        "9": " ",
-        "10": "d",
-        "11": "e",
-        "12": " ",
-        "13": "1",
-        "14": "3"
+      "fonts": {
+        "heading": "Playfair Display, serif",
+        "body": "Inter, sans-serif"
       },
-      "properties": {
-        "content": "Questão 6 de 13",
-        "fontSize": "text-sm",
-        "textAlign": "text-center",
-        "color": "#6B7280",
-        "marginBottom": 24,
-        "containerWidth": "full",
-        "spacing": "small"
+      "spacing": {
+        "sm": 8,
+        "md": 16,
+        "lg": 24,
+        "xl": 32
+      },
+      "borderRadius": {
+        "sm": 4,
+        "md": 8,
+        "lg": 12,
+        "xl": 16
       }
     },
-    {
-      "id": "step07-options-grid",
-      "type": "options-grid",
-      "order": 3,
-      "content": {},
-      "properties": {
-        "options": [
-          {
-            "id": "7a",
-            "text": "Opção A - Descrição personalizada",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/11_hqmr8l.webp",
-            "value": "7a",
-            "category": "Natural",
-            "points": 1
-          },
-          {
-            "id": "7b",
-            "text": "Opção B - Descrição personalizada",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp",
-            "value": "7b",
-            "category": "Clássico",
-            "points": 2
-          },
-          {
-            "id": "7c",
-            "text": "Opção C - Descrição personalizada",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_snhaym.webp",
-            "value": "7c",
-            "category": "Contemporâneo",
-            "points": 2
-          },
-          {
-            "id": "7d",
-            "text": "Opção D - Descrição personalizada",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp",
-            "value": "7d",
-            "category": "Elegante",
-            "points": 3
-          }
-        ],
-        "columns": 2,
-        "imageSize": 256,
-        "showImages": true,
-        "multipleSelection": true,
-        "minSelections": 3,
-        "maxSelections": 3,
-        "borderColor": "#E5E7EB",
-        "selectedBorderColor": "#B89B7A",
-        "hoverColor": "#F3E8D3",
-        "containerWidth": "full",
-        "spacing": "small",
-        "marginBottom": 16,
-        "validationMessage": "Selecione 3 opções para continuar",
-        "autoAdvance": true,
-        "autoAdvanceOnComplete": true,
-        "autoAdvanceDelay": 1500
+    "sections": [
+      {
+        "type": "question-hero",
+        "id": "question-hero-07",
+        "content": {
+          "questionNumber": "Q6 - ACESSÓRIOS",
+          "questionText": "Que tipo de acessórios você mais usa?",
+          "currentQuestion": 6,
+          "totalQuestions": 13,
+          "progressValue": 33,
+          "showProgress": true,
+          "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
+          "logoAlt": "Logo Gisele Galvão"
+        },
+        "style": {
+          "backgroundColor": "transparent",
+          "padding": 16
+        },
+        "animation": {
+          "type": "fade",
+          "duration": 300,
+          "delay": 0,
+          "easing": "ease-out"
+        }
+      },
+      {
+        "type": "options-grid",
+        "id": "options-grid-07",
+        "content": {
+          "options": [
+            {
+              "id": "7a",
+              "text": "Opção A para Q6",
+              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/11_hqmr8l.webp",
+              "value": "7a",
+              "category": "Natural",
+              "points": 1
+            },
+            {
+              "id": "7b",
+              "text": "Opção B para Q6",
+              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp",
+              "value": "7b",
+              "category": "Clássico",
+              "points": 2
+            },
+            {
+              "id": "7c",
+              "text": "Opção C para Q6",
+              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_snhaym.webp",
+              "value": "7c",
+              "category": "Contemporâneo",
+              "points": 2
+            },
+            {
+              "id": "7d",
+              "text": "Opção D para Q6",
+              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp",
+              "value": "7d",
+              "category": "Elegante",
+              "points": 3
+            }
+          ],
+          "columns": 2,
+          "multipleSelection": true,
+          "minSelections": 3,
+          "maxSelections": 3,
+          "showImages": true,
+          "imageSize": 256,
+          "autoAdvance": true,
+          "autoAdvanceDelay": 1500,
+          "validationMessage": "Selecione 3 opções para continuar"
+        },
+        "style": {
+          "backgroundColor": "transparent",
+          "padding": 16
+        },
+        "animation": {
+          "type": "slideUp",
+          "duration": 300,
+          "delay": 100,
+          "easing": "ease-out"
+        }
+      }
+    ],
+    "validation": {
+      "required": [
+        "selectedOptions"
+      ],
+      "rules": {
+        "selectedOptions": {
+          "minItems": 3,
+          "maxItems": 3,
+          "errorMessage": "Por favor, selecione exatamente 3 opções"
+        }
       }
     },
-    {
-      "id": "step07-continue-button",
-      "type": "button-inline",
-      "order": 4,
-      "content": {},
-      "properties": {
-        "text": "Próxima Questão →",
-        "textWhenDisabled": "Selecione 3 opções para continuar",
-        "variant": "primary",
-        "size": "large",
-        "fullWidth": true,
-        "backgroundColor": "#B89B7A",
-        "textColor": "#ffffff",
-        "enableOnSelection": true,
-        "containerWidth": "full",
-        "spacing": "small",
-        "marginTop": 24,
-        "requiresValidSelection": true
+    "navigation": {
+      "nextStep": "step-08",
+      "prevStep": "step-06",
+      "allowBack": true,
+      "requiresUserInput": true,
+      "autoAdvance": true,
+      "autoAdvanceDelay": 1500
+    },
+    "analytics": {
+      "events": [
+        "page_view",
+        "section_view",
+        "option_selected",
+        "validation_error",
+        "completion"
+      ],
+      "trackingId": "step-07-question-v3"
+    },
+    "scoring": {
+      "method": "points",
+      "categories": [
+        "Natural",
+        "Clássico",
+        "Contemporâneo",
+        "Elegante"
+      ],
+      "options": {
+        "7a": {
+          "category": "Natural",
+          "points": 1
+        },
+        "7b": {
+          "category": "Clássico",
+          "points": 2
+        },
+        "7c": {
+          "category": "Contemporâneo",
+          "points": 2
+        },
+        "7d": {
+          "category": "Elegante",
+          "points": 3
+        }
       }
     }
-  ],
+  },
 
-  'step-08': [
-    {
-      "id": "step08-header",
-      "type": "quiz-intro-header",
-      "order": 0,
-      "content": {},
-      "properties": {
-        "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
-        "logoAlt": "Logo Gisele Galvão",
-        "logoWidth": 96,
-        "logoHeight": 96,
-        "progressValue": 38,
-        "progressTotal": 100,
-        "showProgress": true,
-        "containerWidth": "full",
-        "spacing": "small"
-      }
+  'step-08': {
+    "templateVersion": "3.0",
+    "metadata": {
+      "id": "step-08-question-v3",
+      "name": "Q7 - Conforto",
+      "description": "Questão 7 sobre preferências de estilo",
+      "category": "quiz-question",
+      "tags": [
+        "quiz",
+        "style",
+        "question"
+      ],
+      "questionNumber": 7,
+      "totalQuestions": 13,
+      "createdAt": "2025-10-13T00:32:31.723Z",
+      "updatedAt": "2025-10-13T00:32:31.723Z",
+      "author": "Quiz Flow Pro",
+      "version": "3.0.0"
     },
-    {
-      "id": "step08-question-title",
-      "type": "text-inline",
-      "order": 1,
-      "content": {
-        "0": "Q",
-        "1": "7",
-        "2": " ",
-        "3": "-",
-        "4": " ",
-        "5": "S",
-        "6": "I",
-        "7": "L",
-        "8": "H",
-        "9": "U",
-        "10": "E",
-        "11": "T",
-        "12": "A"
+    "theme": {
+      "colors": {
+        "primary": "#B89B7A",
+        "primaryHover": "#A68B6A",
+        "primaryLight": "#F3E8D3",
+        "secondary": "#432818",
+        "background": "#FAF9F7",
+        "text": "#1F2937",
+        "border": "#E5E7EB",
+        "selected": "#B89B7A",
+        "hover": "#F3E8D3"
       },
-      "properties": {
-        "content": "Q7 - SILHUETA",
-        "fontSize": "text-2xl",
-        "fontWeight": "font-bold",
-        "textAlign": "text-center",
-        "color": "#432818",
-        "containerWidth": "full",
-        "spacing": "small"
-      }
-    },
-    {
-      "id": "step08-question-counter",
-      "type": "text-inline",
-      "order": 2,
-      "content": {
-        "0": "Q",
-        "1": "u",
-        "2": "e",
-        "3": "s",
-        "4": "t",
-        "5": "ã",
-        "6": "o",
-        "7": " ",
-        "8": "7",
-        "9": " ",
-        "10": "d",
-        "11": "e",
-        "12": " ",
-        "13": "1",
-        "14": "3"
+      "fonts": {
+        "heading": "Playfair Display, serif",
+        "body": "Inter, sans-serif"
       },
-      "properties": {
-        "content": "Questão 7 de 13",
-        "fontSize": "text-sm",
-        "textAlign": "text-center",
-        "color": "#6B7280",
-        "marginBottom": 24,
-        "containerWidth": "full",
-        "spacing": "small"
+      "spacing": {
+        "sm": 8,
+        "md": 16,
+        "lg": 24,
+        "xl": 32
+      },
+      "borderRadius": {
+        "sm": 4,
+        "md": 8,
+        "lg": 12,
+        "xl": 16
       }
     },
-    {
-      "id": "step08-options-grid",
-      "type": "options-grid",
-      "order": 3,
-      "content": {},
-      "properties": {
-        "options": [
-          {
-            "id": "8a",
-            "text": "Opção A - Descrição personalizada",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/11_hqmr8l.webp",
-            "value": "8a",
-            "category": "Natural",
-            "points": 1
-          },
-          {
-            "id": "8b",
-            "text": "Opção B - Descrição personalizada",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp",
-            "value": "8b",
-            "category": "Clássico",
-            "points": 2
-          },
-          {
-            "id": "8c",
-            "text": "Opção C - Descrição personalizada",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_snhaym.webp",
-            "value": "8c",
-            "category": "Contemporâneo",
-            "points": 2
-          },
-          {
-            "id": "8d",
-            "text": "Opção D - Descrição personalizada",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp",
-            "value": "8d",
-            "category": "Elegante",
-            "points": 3
-          }
-        ],
-        "columns": 2,
-        "imageSize": 256,
-        "showImages": true,
-        "multipleSelection": true,
-        "minSelections": 3,
-        "maxSelections": 3,
-        "borderColor": "#E5E7EB",
-        "selectedBorderColor": "#B89B7A",
-        "hoverColor": "#F3E8D3",
-        "containerWidth": "full",
-        "spacing": "small",
-        "marginBottom": 16,
-        "validationMessage": "Selecione 3 opções para continuar",
-        "autoAdvance": true,
-        "autoAdvanceOnComplete": true,
-        "autoAdvanceDelay": 1500
+    "sections": [
+      {
+        "type": "question-hero",
+        "id": "question-hero-08",
+        "content": {
+          "questionNumber": "Q7 - CONFORTO",
+          "questionText": "O que é mais importante para você ao escolher uma roupa?",
+          "currentQuestion": 7,
+          "totalQuestions": 13,
+          "progressValue": 38,
+          "showProgress": true,
+          "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
+          "logoAlt": "Logo Gisele Galvão"
+        },
+        "style": {
+          "backgroundColor": "transparent",
+          "padding": 16
+        },
+        "animation": {
+          "type": "fade",
+          "duration": 300,
+          "delay": 0,
+          "easing": "ease-out"
+        }
+      },
+      {
+        "type": "options-grid",
+        "id": "options-grid-08",
+        "content": {
+          "options": [
+            {
+              "id": "8a",
+              "text": "Opção A para Q7",
+              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/11_hqmr8l.webp",
+              "value": "8a",
+              "category": "Natural",
+              "points": 1
+            },
+            {
+              "id": "8b",
+              "text": "Opção B para Q7",
+              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp",
+              "value": "8b",
+              "category": "Clássico",
+              "points": 2
+            },
+            {
+              "id": "8c",
+              "text": "Opção C para Q7",
+              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_snhaym.webp",
+              "value": "8c",
+              "category": "Contemporâneo",
+              "points": 2
+            },
+            {
+              "id": "8d",
+              "text": "Opção D para Q7",
+              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp",
+              "value": "8d",
+              "category": "Elegante",
+              "points": 3
+            }
+          ],
+          "columns": 2,
+          "multipleSelection": true,
+          "minSelections": 3,
+          "maxSelections": 3,
+          "showImages": true,
+          "imageSize": 256,
+          "autoAdvance": true,
+          "autoAdvanceDelay": 1500,
+          "validationMessage": "Selecione 3 opções para continuar"
+        },
+        "style": {
+          "backgroundColor": "transparent",
+          "padding": 16
+        },
+        "animation": {
+          "type": "slideUp",
+          "duration": 300,
+          "delay": 100,
+          "easing": "ease-out"
+        }
+      }
+    ],
+    "validation": {
+      "required": [
+        "selectedOptions"
+      ],
+      "rules": {
+        "selectedOptions": {
+          "minItems": 3,
+          "maxItems": 3,
+          "errorMessage": "Por favor, selecione exatamente 3 opções"
+        }
       }
     },
-    {
-      "id": "step08-continue-button",
-      "type": "button-inline",
-      "order": 4,
-      "content": {},
-      "properties": {
-        "text": "Próxima Questão →",
-        "textWhenDisabled": "Selecione 3 opções para continuar",
-        "variant": "primary",
-        "size": "large",
-        "fullWidth": true,
-        "backgroundColor": "#B89B7A",
-        "textColor": "#ffffff",
-        "enableOnSelection": true,
-        "containerWidth": "full",
-        "spacing": "small",
-        "marginTop": 24,
-        "requiresValidSelection": true
+    "navigation": {
+      "nextStep": "step-09",
+      "prevStep": "step-07",
+      "allowBack": true,
+      "requiresUserInput": true,
+      "autoAdvance": true,
+      "autoAdvanceDelay": 1500
+    },
+    "analytics": {
+      "events": [
+        "page_view",
+        "section_view",
+        "option_selected",
+        "validation_error",
+        "completion"
+      ],
+      "trackingId": "step-08-question-v3"
+    },
+    "scoring": {
+      "method": "points",
+      "categories": [
+        "Natural",
+        "Clássico",
+        "Contemporâneo",
+        "Elegante"
+      ],
+      "options": {
+        "8a": {
+          "category": "Natural",
+          "points": 1
+        },
+        "8b": {
+          "category": "Clássico",
+          "points": 2
+        },
+        "8c": {
+          "category": "Contemporâneo",
+          "points": 2
+        },
+        "8d": {
+          "category": "Elegante",
+          "points": 3
+        }
       }
     }
-  ],
+  },
 
-  'step-09': [
-    {
-      "id": "step09-header",
-      "type": "quiz-intro-header",
-      "order": 0,
-      "content": {},
-      "properties": {
-        "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
-        "logoAlt": "Logo Gisele Galvão",
-        "logoWidth": 96,
-        "logoHeight": 96,
-        "progressValue": 43,
-        "progressTotal": 100,
-        "showProgress": true,
-        "containerWidth": "full",
-        "spacing": "small"
-      }
+  'step-09': {
+    "templateVersion": "3.0",
+    "metadata": {
+      "id": "step-09-question-v3",
+      "name": "Q8 - Inspiração",
+      "description": "Questão 8 sobre preferências de estilo",
+      "category": "quiz-question",
+      "tags": [
+        "quiz",
+        "style",
+        "question"
+      ],
+      "questionNumber": 8,
+      "totalQuestions": 13,
+      "createdAt": "2025-10-13T00:32:31.724Z",
+      "updatedAt": "2025-10-13T00:32:31.724Z",
+      "author": "Quiz Flow Pro",
+      "version": "3.0.0"
     },
-    {
-      "id": "step09-question-title",
-      "type": "text-inline",
-      "order": 1,
-      "content": {
-        "0": "Q",
-        "1": "8",
-        "2": " ",
-        "3": "-",
-        "4": " ",
-        "5": "A",
-        "6": "C",
-        "7": "E",
-        "8": "S",
-        "9": "S",
-        "10": "Ó",
-        "11": "R",
-        "12": "I",
-        "13": "O",
-        "14": "S"
+    "theme": {
+      "colors": {
+        "primary": "#B89B7A",
+        "primaryHover": "#A68B6A",
+        "primaryLight": "#F3E8D3",
+        "secondary": "#432818",
+        "background": "#FAF9F7",
+        "text": "#1F2937",
+        "border": "#E5E7EB",
+        "selected": "#B89B7A",
+        "hover": "#F3E8D3"
       },
-      "properties": {
-        "content": "Q8 - ACESSÓRIOS",
-        "fontSize": "text-2xl",
-        "fontWeight": "font-bold",
-        "textAlign": "text-center",
-        "color": "#432818",
-        "containerWidth": "full",
-        "spacing": "small"
-      }
-    },
-    {
-      "id": "step09-question-counter",
-      "type": "text-inline",
-      "order": 2,
-      "content": {
-        "0": "Q",
-        "1": "u",
-        "2": "e",
-        "3": "s",
-        "4": "t",
-        "5": "ã",
-        "6": "o",
-        "7": " ",
-        "8": "8",
-        "9": " ",
-        "10": "d",
-        "11": "e",
-        "12": " ",
-        "13": "1",
-        "14": "3"
+      "fonts": {
+        "heading": "Playfair Display, serif",
+        "body": "Inter, sans-serif"
       },
-      "properties": {
-        "content": "Questão 8 de 13",
-        "fontSize": "text-sm",
-        "textAlign": "text-center",
-        "color": "#6B7280",
-        "marginBottom": 24,
-        "containerWidth": "full",
-        "spacing": "small"
+      "spacing": {
+        "sm": 8,
+        "md": 16,
+        "lg": 24,
+        "xl": 32
+      },
+      "borderRadius": {
+        "sm": 4,
+        "md": 8,
+        "lg": 12,
+        "xl": 16
       }
     },
-    {
-      "id": "step09-options-grid",
-      "type": "options-grid",
-      "order": 3,
-      "content": {},
-      "properties": {
-        "options": [
-          {
-            "id": "9a",
-            "text": "Opção A - Descrição personalizada",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/11_hqmr8l.webp",
-            "value": "9a",
-            "category": "Natural",
-            "points": 1
-          },
-          {
-            "id": "9b",
-            "text": "Opção B - Descrição personalizada",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp",
-            "value": "9b",
-            "category": "Clássico",
-            "points": 2
-          },
-          {
-            "id": "9c",
-            "text": "Opção C - Descrição personalizada",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_snhaym.webp",
-            "value": "9c",
-            "category": "Contemporâneo",
-            "points": 2
-          },
-          {
-            "id": "9d",
-            "text": "Opção D - Descrição personalizada",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp",
-            "value": "9d",
-            "category": "Elegante",
-            "points": 3
-          }
-        ],
-        "columns": 2,
-        "imageSize": 256,
-        "showImages": true,
-        "multipleSelection": true,
-        "minSelections": 3,
-        "maxSelections": 3,
-        "borderColor": "#E5E7EB",
-        "selectedBorderColor": "#B89B7A",
-        "hoverColor": "#F3E8D3",
-        "containerWidth": "full",
-        "spacing": "small",
-        "marginBottom": 16,
-        "validationMessage": "Selecione 3 opções para continuar",
-        "autoAdvance": true,
-        "autoAdvanceOnComplete": true,
-        "autoAdvanceDelay": 1500
+    "sections": [
+      {
+        "type": "question-hero",
+        "id": "question-hero-09",
+        "content": {
+          "questionNumber": "Q8 - INSPIRAÇÃO",
+          "questionText": "Onde você busca inspiração de moda?",
+          "currentQuestion": 8,
+          "totalQuestions": 13,
+          "progressValue": 43,
+          "showProgress": true,
+          "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
+          "logoAlt": "Logo Gisele Galvão"
+        },
+        "style": {
+          "backgroundColor": "transparent",
+          "padding": 16
+        },
+        "animation": {
+          "type": "fade",
+          "duration": 300,
+          "delay": 0,
+          "easing": "ease-out"
+        }
+      },
+      {
+        "type": "options-grid",
+        "id": "options-grid-09",
+        "content": {
+          "options": [
+            {
+              "id": "9a",
+              "text": "Opção A para Q8",
+              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/11_hqmr8l.webp",
+              "value": "9a",
+              "category": "Natural",
+              "points": 1
+            },
+            {
+              "id": "9b",
+              "text": "Opção B para Q8",
+              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp",
+              "value": "9b",
+              "category": "Clássico",
+              "points": 2
+            },
+            {
+              "id": "9c",
+              "text": "Opção C para Q8",
+              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_snhaym.webp",
+              "value": "9c",
+              "category": "Contemporâneo",
+              "points": 2
+            },
+            {
+              "id": "9d",
+              "text": "Opção D para Q8",
+              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp",
+              "value": "9d",
+              "category": "Elegante",
+              "points": 3
+            }
+          ],
+          "columns": 2,
+          "multipleSelection": true,
+          "minSelections": 3,
+          "maxSelections": 3,
+          "showImages": true,
+          "imageSize": 256,
+          "autoAdvance": true,
+          "autoAdvanceDelay": 1500,
+          "validationMessage": "Selecione 3 opções para continuar"
+        },
+        "style": {
+          "backgroundColor": "transparent",
+          "padding": 16
+        },
+        "animation": {
+          "type": "slideUp",
+          "duration": 300,
+          "delay": 100,
+          "easing": "ease-out"
+        }
+      }
+    ],
+    "validation": {
+      "required": [
+        "selectedOptions"
+      ],
+      "rules": {
+        "selectedOptions": {
+          "minItems": 3,
+          "maxItems": 3,
+          "errorMessage": "Por favor, selecione exatamente 3 opções"
+        }
       }
     },
-    {
-      "id": "step09-continue-button",
-      "type": "button-inline",
-      "order": 4,
-      "content": {},
-      "properties": {
-        "text": "Próxima Questão →",
-        "textWhenDisabled": "Selecione 3 opções para continuar",
-        "variant": "primary",
-        "size": "large",
-        "fullWidth": true,
-        "backgroundColor": "#B89B7A",
-        "textColor": "#ffffff",
-        "enableOnSelection": true,
-        "containerWidth": "full",
-        "spacing": "small",
-        "marginTop": 24,
-        "requiresValidSelection": true
+    "navigation": {
+      "nextStep": "step-10",
+      "prevStep": "step-08",
+      "allowBack": true,
+      "requiresUserInput": true,
+      "autoAdvance": true,
+      "autoAdvanceDelay": 1500
+    },
+    "analytics": {
+      "events": [
+        "page_view",
+        "section_view",
+        "option_selected",
+        "validation_error",
+        "completion"
+      ],
+      "trackingId": "step-09-question-v3"
+    },
+    "scoring": {
+      "method": "points",
+      "categories": [
+        "Natural",
+        "Clássico",
+        "Contemporâneo",
+        "Elegante"
+      ],
+      "options": {
+        "9a": {
+          "category": "Natural",
+          "points": 1
+        },
+        "9b": {
+          "category": "Clássico",
+          "points": 2
+        },
+        "9c": {
+          "category": "Contemporâneo",
+          "points": 2
+        },
+        "9d": {
+          "category": "Elegante",
+          "points": 3
+        }
       }
     }
-  ],
+  },
 
-  'step-10': [
-    {
-      "id": "step10-header",
-      "type": "quiz-intro-header",
-      "order": 0,
-      "content": {},
-      "properties": {
-        "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
-        "logoAlt": "Logo Gisele Galvão",
-        "logoWidth": 96,
-        "logoHeight": 96,
-        "progressValue": 48,
-        "progressTotal": 100,
-        "showProgress": true,
-        "containerWidth": "full",
-        "spacing": "small"
-      }
+  'step-10': {
+    "templateVersion": "3.0",
+    "metadata": {
+      "id": "step-10-question-v3",
+      "name": "Q9 - Sapatos",
+      "description": "Questão 9 sobre preferências de estilo",
+      "category": "quiz-question",
+      "tags": [
+        "quiz",
+        "style",
+        "question"
+      ],
+      "questionNumber": 9,
+      "totalQuestions": 13,
+      "createdAt": "2025-10-13T00:32:31.724Z",
+      "updatedAt": "2025-10-13T00:32:31.724Z",
+      "author": "Quiz Flow Pro",
+      "version": "3.0.0"
     },
-    {
-      "id": "step10-question-title",
-      "type": "text-inline",
-      "order": 1,
-      "content": {
-        "0": "Q",
-        "1": "9",
-        "2": " ",
-        "3": "-",
-        "4": " ",
-        "5": "I",
-        "6": "N",
-        "7": "S",
-        "8": "P",
-        "9": "I",
-        "10": "R",
-        "11": "A",
-        "12": "Ç",
-        "13": "Ã",
-        "14": "O"
+    "theme": {
+      "colors": {
+        "primary": "#B89B7A",
+        "primaryHover": "#A68B6A",
+        "primaryLight": "#F3E8D3",
+        "secondary": "#432818",
+        "background": "#FAF9F7",
+        "text": "#1F2937",
+        "border": "#E5E7EB",
+        "selected": "#B89B7A",
+        "hover": "#F3E8D3"
       },
-      "properties": {
-        "content": "Q9 - INSPIRAÇÃO",
-        "fontSize": "text-2xl",
-        "fontWeight": "font-bold",
-        "textAlign": "text-center",
-        "color": "#432818",
-        "containerWidth": "full",
-        "spacing": "small"
-      }
-    },
-    {
-      "id": "step10-question-counter",
-      "type": "text-inline",
-      "order": 2,
-      "content": {
-        "0": "Q",
-        "1": "u",
-        "2": "e",
-        "3": "s",
-        "4": "t",
-        "5": "ã",
-        "6": "o",
-        "7": " ",
-        "8": "9",
-        "9": " ",
-        "10": "d",
-        "11": "e",
-        "12": " ",
-        "13": "1",
-        "14": "3"
+      "fonts": {
+        "heading": "Playfair Display, serif",
+        "body": "Inter, sans-serif"
       },
-      "properties": {
-        "content": "Questão 9 de 13",
-        "fontSize": "text-sm",
-        "textAlign": "text-center",
-        "color": "#6B7280",
-        "marginBottom": 24,
-        "containerWidth": "full",
-        "spacing": "small"
+      "spacing": {
+        "sm": 8,
+        "md": 16,
+        "lg": 24,
+        "xl": 32
+      },
+      "borderRadius": {
+        "sm": 4,
+        "md": 8,
+        "lg": 12,
+        "xl": 16
       }
     },
-    {
-      "id": "step10-options-grid",
-      "type": "options-grid",
-      "order": 3,
-      "content": {},
-      "properties": {
-        "options": [
-          {
-            "id": "10a",
-            "text": "Opção A - Descrição personalizada",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/11_hqmr8l.webp",
-            "value": "10a",
-            "category": "Natural",
-            "points": 1
-          },
-          {
-            "id": "10b",
-            "text": "Opção B - Descrição personalizada",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp",
-            "value": "10b",
-            "category": "Clássico",
-            "points": 2
-          },
-          {
-            "id": "10c",
-            "text": "Opção C - Descrição personalizada",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_snhaym.webp",
-            "value": "10c",
-            "category": "Contemporâneo",
-            "points": 2
-          },
-          {
-            "id": "10d",
-            "text": "Opção D - Descrição personalizada",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp",
-            "value": "10d",
-            "category": "Elegante",
-            "points": 3
-          }
-        ],
-        "columns": 2,
-        "imageSize": 256,
-        "showImages": true,
-        "multipleSelection": true,
-        "minSelections": 3,
-        "maxSelections": 3,
-        "borderColor": "#E5E7EB",
-        "selectedBorderColor": "#B89B7A",
-        "hoverColor": "#F3E8D3",
-        "containerWidth": "full",
-        "spacing": "small",
-        "marginBottom": 16,
-        "validationMessage": "Selecione 3 opções para continuar",
-        "autoAdvance": true,
-        "autoAdvanceOnComplete": true,
-        "autoAdvanceDelay": 1500
+    "sections": [
+      {
+        "type": "question-hero",
+        "id": "question-hero-10",
+        "content": {
+          "questionNumber": "Q9 - SAPATOS",
+          "questionText": "Qual tipo de sapato você mais usa no dia a dia?",
+          "currentQuestion": 9,
+          "totalQuestions": 13,
+          "progressValue": 48,
+          "showProgress": true,
+          "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
+          "logoAlt": "Logo Gisele Galvão"
+        },
+        "style": {
+          "backgroundColor": "transparent",
+          "padding": 16
+        },
+        "animation": {
+          "type": "fade",
+          "duration": 300,
+          "delay": 0,
+          "easing": "ease-out"
+        }
+      },
+      {
+        "type": "options-grid",
+        "id": "options-grid-10",
+        "content": {
+          "options": [
+            {
+              "id": "10a",
+              "text": "Opção A para Q9",
+              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/11_hqmr8l.webp",
+              "value": "10a",
+              "category": "Natural",
+              "points": 1
+            },
+            {
+              "id": "10b",
+              "text": "Opção B para Q9",
+              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp",
+              "value": "10b",
+              "category": "Clássico",
+              "points": 2
+            },
+            {
+              "id": "10c",
+              "text": "Opção C para Q9",
+              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_snhaym.webp",
+              "value": "10c",
+              "category": "Contemporâneo",
+              "points": 2
+            },
+            {
+              "id": "10d",
+              "text": "Opção D para Q9",
+              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp",
+              "value": "10d",
+              "category": "Elegante",
+              "points": 3
+            }
+          ],
+          "columns": 2,
+          "multipleSelection": true,
+          "minSelections": 3,
+          "maxSelections": 3,
+          "showImages": true,
+          "imageSize": 256,
+          "autoAdvance": true,
+          "autoAdvanceDelay": 1500,
+          "validationMessage": "Selecione 3 opções para continuar"
+        },
+        "style": {
+          "backgroundColor": "transparent",
+          "padding": 16
+        },
+        "animation": {
+          "type": "slideUp",
+          "duration": 300,
+          "delay": 100,
+          "easing": "ease-out"
+        }
+      }
+    ],
+    "validation": {
+      "required": [
+        "selectedOptions"
+      ],
+      "rules": {
+        "selectedOptions": {
+          "minItems": 3,
+          "maxItems": 3,
+          "errorMessage": "Por favor, selecione exatamente 3 opções"
+        }
       }
     },
-    {
-      "id": "step10-continue-button",
-      "type": "button-inline",
-      "order": 4,
-      "content": {},
-      "properties": {
-        "text": "Próxima Questão →",
-        "textWhenDisabled": "Selecione 3 opções para continuar",
-        "variant": "primary",
-        "size": "large",
-        "fullWidth": true,
-        "backgroundColor": "#B89B7A",
-        "textColor": "#ffffff",
-        "enableOnSelection": true,
-        "containerWidth": "full",
-        "spacing": "small",
-        "marginTop": 24,
-        "requiresValidSelection": true
+    "navigation": {
+      "nextStep": "step-11",
+      "prevStep": "step-09",
+      "allowBack": true,
+      "requiresUserInput": true,
+      "autoAdvance": true,
+      "autoAdvanceDelay": 1500
+    },
+    "analytics": {
+      "events": [
+        "page_view",
+        "section_view",
+        "option_selected",
+        "validation_error",
+        "completion"
+      ],
+      "trackingId": "step-10-question-v3"
+    },
+    "scoring": {
+      "method": "points",
+      "categories": [
+        "Natural",
+        "Clássico",
+        "Contemporâneo",
+        "Elegante"
+      ],
+      "options": {
+        "10a": {
+          "category": "Natural",
+          "points": 1
+        },
+        "10b": {
+          "category": "Clássico",
+          "points": 2
+        },
+        "10c": {
+          "category": "Contemporâneo",
+          "points": 2
+        },
+        "10d": {
+          "category": "Elegante",
+          "points": 3
+        }
       }
     }
-  ],
+  },
 
-  'step-11': [
-    {
-      "id": "step11-header",
-      "type": "quiz-intro-header",
-      "order": 0,
-      "content": {},
-      "properties": {
-        "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
-        "logoAlt": "Logo Gisele Galvão",
-        "logoWidth": 96,
-        "logoHeight": 96,
-        "progressValue": 52,
-        "progressTotal": 100,
-        "showProgress": true,
-        "containerWidth": "full",
-        "spacing": "small"
-      }
+  'step-11': {
+    "templateVersion": "3.0",
+    "metadata": {
+      "id": "step-11-question-v3",
+      "name": "Q10 - Peças-chave",
+      "description": "Questão 10 sobre preferências de estilo",
+      "category": "quiz-question",
+      "tags": [
+        "quiz",
+        "style",
+        "question"
+      ],
+      "questionNumber": 10,
+      "totalQuestions": 13,
+      "createdAt": "2025-10-13T00:32:31.725Z",
+      "updatedAt": "2025-10-13T00:32:31.725Z",
+      "author": "Quiz Flow Pro",
+      "version": "3.0.0"
     },
-    {
-      "id": "step11-question-title",
-      "type": "text-inline",
-      "order": 1,
-      "content": {
-        "0": "Q",
-        "1": "1",
-        "2": "0",
-        "3": " ",
-        "4": "-",
-        "5": " ",
-        "6": "C",
-        "7": "O",
-        "8": "N",
-        "9": "F",
-        "10": "O",
-        "11": "R",
-        "12": "T",
-        "13": "O"
+    "theme": {
+      "colors": {
+        "primary": "#B89B7A",
+        "primaryHover": "#A68B6A",
+        "primaryLight": "#F3E8D3",
+        "secondary": "#432818",
+        "background": "#FAF9F7",
+        "text": "#1F2937",
+        "border": "#E5E7EB",
+        "selected": "#B89B7A",
+        "hover": "#F3E8D3"
       },
-      "properties": {
-        "content": "Q10 - CONFORTO",
-        "fontSize": "text-2xl",
-        "fontWeight": "font-bold",
-        "textAlign": "text-center",
-        "color": "#432818",
-        "containerWidth": "full",
-        "spacing": "small"
-      }
-    },
-    {
-      "id": "step11-question-counter",
-      "type": "text-inline",
-      "order": 2,
-      "content": {
-        "0": "Q",
-        "1": "u",
-        "2": "e",
-        "3": "s",
-        "4": "t",
-        "5": "ã",
-        "6": "o",
-        "7": " ",
-        "8": "1",
-        "9": "0",
-        "10": " ",
-        "11": "d",
-        "12": "e",
-        "13": " ",
-        "14": "1",
-        "15": "3"
+      "fonts": {
+        "heading": "Playfair Display, serif",
+        "body": "Inter, sans-serif"
       },
-      "properties": {
-        "content": "Questão 10 de 13",
-        "fontSize": "text-sm",
-        "textAlign": "text-center",
-        "color": "#6B7280",
-        "marginBottom": 24,
-        "containerWidth": "full",
-        "spacing": "small"
+      "spacing": {
+        "sm": 8,
+        "md": 16,
+        "lg": 24,
+        "xl": 32
+      },
+      "borderRadius": {
+        "sm": 4,
+        "md": 8,
+        "lg": 12,
+        "xl": 16
       }
     },
-    {
-      "id": "step11-options-grid",
-      "type": "options-grid",
-      "order": 3,
-      "content": {},
-      "properties": {
-        "options": [
-          {
-            "id": "11a",
-            "text": "Opção A - Descrição personalizada",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/11_hqmr8l.webp",
-            "value": "11a",
-            "category": "Natural",
-            "points": 1
-          },
-          {
-            "id": "11b",
-            "text": "Opção B - Descrição personalizada",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp",
-            "value": "11b",
-            "category": "Clássico",
-            "points": 2
-          },
-          {
-            "id": "11c",
-            "text": "Opção C - Descrição personalizada",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_snhaym.webp",
-            "value": "11c",
-            "category": "Contemporâneo",
-            "points": 2
-          },
-          {
-            "id": "11d",
-            "text": "Opção D - Descrição personalizada",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp",
-            "value": "11d",
-            "category": "Elegante",
-            "points": 3
-          }
-        ],
-        "columns": 2,
-        "imageSize": 256,
-        "showImages": true,
-        "multipleSelection": true,
-        "minSelections": 3,
-        "maxSelections": 3,
-        "borderColor": "#E5E7EB",
-        "selectedBorderColor": "#B89B7A",
-        "hoverColor": "#F3E8D3",
-        "containerWidth": "full",
-        "spacing": "small",
-        "marginBottom": 16,
-        "validationMessage": "Selecione 3 opções para continuar",
-        "autoAdvance": true,
-        "autoAdvanceOnComplete": true,
-        "autoAdvanceDelay": 1500
+    "sections": [
+      {
+        "type": "question-hero",
+        "id": "question-hero-11",
+        "content": {
+          "questionNumber": "Q10 - PEÇAS-CHAVE",
+          "questionText": "Qual peça você não pode viver sem?",
+          "currentQuestion": 10,
+          "totalQuestions": 13,
+          "progressValue": 52,
+          "showProgress": true,
+          "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
+          "logoAlt": "Logo Gisele Galvão"
+        },
+        "style": {
+          "backgroundColor": "transparent",
+          "padding": 16
+        },
+        "animation": {
+          "type": "fade",
+          "duration": 300,
+          "delay": 0,
+          "easing": "ease-out"
+        }
+      },
+      {
+        "type": "options-grid",
+        "id": "options-grid-11",
+        "content": {
+          "options": [
+            {
+              "id": "11a",
+              "text": "Opção A para Q10",
+              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/11_hqmr8l.webp",
+              "value": "11a",
+              "category": "Natural",
+              "points": 1
+            },
+            {
+              "id": "11b",
+              "text": "Opção B para Q10",
+              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp",
+              "value": "11b",
+              "category": "Clássico",
+              "points": 2
+            },
+            {
+              "id": "11c",
+              "text": "Opção C para Q10",
+              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_snhaym.webp",
+              "value": "11c",
+              "category": "Contemporâneo",
+              "points": 2
+            },
+            {
+              "id": "11d",
+              "text": "Opção D para Q10",
+              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp",
+              "value": "11d",
+              "category": "Elegante",
+              "points": 3
+            }
+          ],
+          "columns": 2,
+          "multipleSelection": true,
+          "minSelections": 3,
+          "maxSelections": 3,
+          "showImages": true,
+          "imageSize": 256,
+          "autoAdvance": true,
+          "autoAdvanceDelay": 1500,
+          "validationMessage": "Selecione 3 opções para continuar"
+        },
+        "style": {
+          "backgroundColor": "transparent",
+          "padding": 16
+        },
+        "animation": {
+          "type": "slideUp",
+          "duration": 300,
+          "delay": 100,
+          "easing": "ease-out"
+        }
+      }
+    ],
+    "validation": {
+      "required": [
+        "selectedOptions"
+      ],
+      "rules": {
+        "selectedOptions": {
+          "minItems": 3,
+          "maxItems": 3,
+          "errorMessage": "Por favor, selecione exatamente 3 opções"
+        }
       }
     },
-    {
-      "id": "step11-continue-button",
-      "type": "button-inline",
-      "order": 4,
-      "content": {},
-      "properties": {
-        "text": "Próxima Questão →",
-        "textWhenDisabled": "Selecione 3 opções para continuar",
-        "variant": "primary",
-        "size": "large",
-        "fullWidth": true,
-        "backgroundColor": "#B89B7A",
-        "textColor": "#ffffff",
-        "enableOnSelection": true,
-        "containerWidth": "full",
-        "spacing": "small",
-        "marginTop": 24,
-        "requiresValidSelection": true
+    "navigation": {
+      "nextStep": "step-12",
+      "prevStep": "step-10",
+      "allowBack": true,
+      "requiresUserInput": true,
+      "autoAdvance": true,
+      "autoAdvanceDelay": 1500
+    },
+    "analytics": {
+      "events": [
+        "page_view",
+        "section_view",
+        "option_selected",
+        "validation_error",
+        "completion"
+      ],
+      "trackingId": "step-11-question-v3"
+    },
+    "scoring": {
+      "method": "points",
+      "categories": [
+        "Natural",
+        "Clássico",
+        "Contemporâneo",
+        "Elegante"
+      ],
+      "options": {
+        "11a": {
+          "category": "Natural",
+          "points": 1
+        },
+        "11b": {
+          "category": "Clássico",
+          "points": 2
+        },
+        "11c": {
+          "category": "Contemporâneo",
+          "points": 2
+        },
+        "11d": {
+          "category": "Elegante",
+          "points": 3
+        }
       }
     }
-  ],
+  },
 
-  'step-12': [
-    {
-      "id": "step12-header",
-      "type": "quiz-intro-header",
-      "order": 0,
-      "content": {},
-      "properties": {
-        "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
-        "logoAlt": "Logo Gisele Galvão",
-        "logoWidth": 96,
-        "logoHeight": 96,
-        "progressValue": 57,
-        "progressTotal": 100,
-        "showProgress": true,
-        "containerWidth": "full",
-        "spacing": "small"
-      }
+  'step-12': {
+    "templateVersion": "3.0",
+    "metadata": {
+      "id": "step-12-transition-v3",
+      "name": "Transição Mid-Quiz",
+      "description": "Página de transição no meio do quiz com mensagem motivacional",
+      "category": "transition",
+      "tags": [
+        "quiz",
+        "transition",
+        "loading",
+        "mid-quiz"
+      ],
+      "createdAt": "2025-01-13T00:00:00.000Z",
+      "updatedAt": "2025-01-13T00:00:00.000Z",
+      "author": "Quiz Flow Pro",
+      "version": "3.0.0"
     },
-    {
-      "id": "step12-question-title",
-      "type": "text-inline",
-      "order": 1,
-      "content": {
-        "0": "Q",
-        "1": "1",
-        "2": "1",
-        "3": " ",
-        "4": "-",
-        "5": " ",
-        "6": "T",
-        "7": "E",
-        "8": "N",
-        "9": "D",
-        "10": "Ê",
-        "11": "N",
-        "12": "C",
-        "13": "I",
-        "14": "A",
-        "15": "S"
+    "theme": {
+      "colors": {
+        "primary": "#B89B7A",
+        "secondary": "#432818",
+        "background": "#FAF9F7",
+        "text": "#1F2937"
       },
-      "properties": {
-        "content": "Q11 - TENDÊNCIAS",
-        "fontSize": "text-2xl",
-        "fontWeight": "font-bold",
-        "textAlign": "text-center",
-        "color": "#432818",
-        "containerWidth": "full",
-        "spacing": "small"
-      }
-    },
-    {
-      "id": "step12-question-counter",
-      "type": "text-inline",
-      "order": 2,
-      "content": {
-        "0": "Q",
-        "1": "u",
-        "2": "e",
-        "3": "s",
-        "4": "t",
-        "5": "ã",
-        "6": "o",
-        "7": " ",
-        "8": "1",
-        "9": "1",
-        "10": " ",
-        "11": "d",
-        "12": "e",
-        "13": " ",
-        "14": "1",
-        "15": "3"
+      "fonts": {
+        "heading": "Playfair Display, serif",
+        "body": "Inter, sans-serif"
       },
-      "properties": {
-        "content": "Questão 11 de 13",
-        "fontSize": "text-sm",
-        "textAlign": "text-center",
-        "color": "#6B7280",
-        "marginBottom": 24,
-        "containerWidth": "full",
-        "spacing": "small"
+      "spacing": {
+        "sm": 8,
+        "md": 16,
+        "lg": 24,
+        "xl": 32
+      },
+      "borderRadius": {
+        "sm": 4,
+        "md": 8,
+        "lg": 12,
+        "xl": 16
       }
     },
-    {
-      "id": "step12-options-grid",
-      "type": "options-grid",
-      "order": 3,
-      "content": {},
-      "properties": {
-        "options": [
-          {
-            "id": "12a",
-            "text": "Opção A - Descrição personalizada",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/11_hqmr8l.webp",
-            "value": "12a",
-            "category": "Natural",
-            "points": 1
-          },
-          {
-            "id": "12b",
-            "text": "Opção B - Descrição personalizada",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp",
-            "value": "12b",
-            "category": "Clássico",
-            "points": 2
-          },
-          {
-            "id": "12c",
-            "text": "Opção C - Descrição personalizada",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_snhaym.webp",
-            "value": "12c",
-            "category": "Contemporâneo",
-            "points": 2
-          },
-          {
-            "id": "12d",
-            "text": "Opção D - Descrição personalizada",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp",
-            "value": "12d",
-            "category": "Elegante",
-            "points": 3
-          }
-        ],
-        "columns": 2,
-        "imageSize": 256,
-        "showImages": true,
-        "multipleSelection": true,
-        "minSelections": 1,
-        "maxSelections": 3,
-        "borderColor": "#E5E7EB",
-        "selectedBorderColor": "#B89B7A",
-        "hoverColor": "#F3E8D3",
-        "containerWidth": "full",
-        "spacing": "small",
-        "marginBottom": 16
+    "sections": [
+      {
+        "type": "transition-hero",
+        "id": "transition-hero-12",
+        "content": {
+          "title": "Analisando suas respostas...",
+          "subtitle": "Estamos montando seu perfil de estilo personalizado",
+          "message": "Continue para descobrir ainda mais sobre seu estilo único!",
+          "autoAdvanceDelay": 3000
+        },
+        "style": {
+          "backgroundColor": "#FAF9F7",
+          "textColor": "#432818",
+          "padding": 32
+        },
+        "animation": {
+          "type": "scale",
+          "duration": 500,
+          "delay": 0,
+          "easing": "ease-out"
+        }
       }
+    ],
+    "navigation": {
+      "nextStep": "step-13",
+      "prevStep": "step-11",
+      "allowBack": false,
+      "requiresUserInput": false,
+      "autoAdvance": true,
+      "autoAdvanceDelay": 3000
     },
-    {
-      "id": "step12-continue-button",
-      "type": "button-inline",
-      "order": 4,
-      "content": {},
-      "properties": {
-        "text": "Próxima Questão →",
-        "textWhenDisabled": "Selecione pelo menos 1 opção",
-        "variant": "primary",
-        "size": "large",
-        "fullWidth": true,
-        "backgroundColor": "#B89B7A",
-        "textColor": "#ffffff",
-        "enableOnSelection": true,
-        "containerWidth": "full",
-        "spacing": "small",
-        "marginTop": 24
-      }
+    "analytics": {
+      "events": [
+        "page_view",
+        "section_view",
+        "auto_advance"
+      ],
+      "trackingId": "step-12-transition-v3",
+      "fbPixelId": null,
+      "gaTrackingId": null
     }
-  ],
+  },
 
-  'step-13': [
-    {
-      "id": "step13-header",
-      "type": "quiz-intro-header",
-      "order": 0,
-      "content": {},
-      "properties": {
-        "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
-        "logoAlt": "Logo Gisele Galvão",
-        "logoWidth": 96,
-        "logoHeight": 96,
-        "progressValue": 62,
-        "progressTotal": 100,
-        "showProgress": true,
-        "containerWidth": "full",
-        "spacing": "small"
-      }
+  'step-13': {
+    "templateVersion": "3.0",
+    "metadata": {
+      "id": "step-13-strategic-v3",
+      "name": "Q11 - Objetivos (Estratégica)",
+      "description": "Questão estratégica 1 sobre objetivos e resultados",
+      "category": "strategic-question",
+      "tags": [
+        "quiz",
+        "style",
+        "strategic",
+        "goals"
+      ],
+      "questionNumber": 11,
+      "totalQuestions": 13,
+      "createdAt": "2025-10-13T00:33:47.492Z",
+      "updatedAt": "2025-10-13T00:33:47.492Z",
+      "author": "Quiz Flow Pro",
+      "version": "3.0.0"
     },
-    {
-      "id": "step13-question-title",
-      "type": "text-inline",
-      "order": 1,
-      "content": {
-        "0": "Q",
-        "1": "1",
-        "2": "2",
-        "3": " ",
-        "4": "-",
-        "5": " ",
-        "6": "I",
-        "7": "N",
-        "8": "V",
-        "9": "E",
-        "10": "S",
-        "11": "T",
-        "12": "I",
-        "13": "M",
-        "14": "E",
-        "15": "N",
-        "16": "T",
-        "17": "O"
+    "theme": {
+      "colors": {
+        "primary": "#B89B7A",
+        "primaryHover": "#A68B6A",
+        "primaryLight": "#F3E8D3",
+        "secondary": "#432818",
+        "background": "#FAF9F7",
+        "text": "#1F2937",
+        "border": "#E5E7EB",
+        "selected": "#B89B7A",
+        "hover": "#F3E8D3"
       },
-      "properties": {
-        "content": "Q12 - INVESTIMENTO",
-        "fontSize": "text-2xl",
-        "fontWeight": "font-bold",
-        "textAlign": "text-center",
-        "color": "#432818",
-        "containerWidth": "full",
-        "spacing": "small"
-      }
-    },
-    {
-      "id": "step13-question-counter",
-      "type": "text-inline",
-      "order": 2,
-      "content": {
-        "0": "Q",
-        "1": "u",
-        "2": "e",
-        "3": "s",
-        "4": "t",
-        "5": "ã",
-        "6": "o",
-        "7": " ",
-        "8": "1",
-        "9": "2",
-        "10": " ",
-        "11": "d",
-        "12": "e",
-        "13": " ",
-        "14": "1",
-        "15": "3"
+      "fonts": {
+        "heading": "Playfair Display, serif",
+        "body": "Inter, sans-serif"
       },
-      "properties": {
-        "content": "Questão 12 de 13",
-        "fontSize": "text-sm",
-        "textAlign": "text-center",
-        "color": "#6B7280",
-        "marginBottom": 24,
-        "containerWidth": "full",
-        "spacing": "small"
+      "spacing": {
+        "sm": 8,
+        "md": 16,
+        "lg": 24,
+        "xl": 32
+      },
+      "borderRadius": {
+        "sm": 4,
+        "md": 8,
+        "lg": 12,
+        "xl": 16
       }
     },
-    {
-      "id": "step13-options-grid",
-      "type": "options-grid",
-      "order": 3,
-      "content": {},
-      "properties": {
-        "options": [
-          {
-            "id": "13a",
-            "text": "Opção A - Descrição personalizada",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/11_hqmr8l.webp",
-            "value": "13a",
-            "category": "Natural",
-            "points": 1
-          },
-          {
-            "id": "13b",
-            "text": "Opção B - Descrição personalizada",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp",
-            "value": "13b",
-            "category": "Clássico",
-            "points": 2
-          },
-          {
-            "id": "13c",
-            "text": "Opção C - Descrição personalizada",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_snhaym.webp",
-            "value": "13c",
-            "category": "Contemporâneo",
-            "points": 2
-          },
-          {
-            "id": "13d",
-            "text": "Opção D - Descrição personalizada",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp",
-            "value": "13d",
-            "category": "Elegante",
-            "points": 3
-          }
-        ],
-        "columns": 2,
-        "imageSize": 256,
-        "showImages": true,
-        "multipleSelection": false,
-        "minSelections": 1,
-        "maxSelections": 1,
-        "borderColor": "#E5E7EB",
-        "selectedBorderColor": "#B89B7A",
-        "hoverColor": "#F3E8D3",
-        "containerWidth": "full",
-        "spacing": "small",
-        "marginBottom": 16,
-        "validationMessage": "Selecione uma opção para continuar",
-        "autoAdvance": false,
-        "autoAdvanceOnComplete": false,
-        "autoAdvanceDelay": 0
+    "sections": [
+      {
+        "type": "question-hero",
+        "id": "question-hero-13",
+        "content": {
+          "questionNumber": "Q11 - OBJETIVOS",
+          "questionText": "Qual é o seu principal objetivo com seu guarda-roupa?",
+          "currentQuestion": 11,
+          "totalQuestions": 13,
+          "progressValue": 57,
+          "showProgress": true,
+          "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
+          "logoAlt": "Logo Gisele Galvão"
+        },
+        "style": {
+          "backgroundColor": "transparent",
+          "padding": 16
+        },
+        "animation": {
+          "type": "fade",
+          "duration": 300,
+          "delay": 0,
+          "easing": "ease-out"
+        }
+      },
+      {
+        "type": "options-grid",
+        "id": "options-grid-13",
+        "content": {
+          "options": [
+            {
+              "id": "13a",
+              "text": "Opção A para Q11",
+              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/11_hqmr8l.webp",
+              "value": "13a",
+              "category": "Natural",
+              "points": 1
+            },
+            {
+              "id": "13b",
+              "text": "Opção B para Q11",
+              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp",
+              "value": "13b",
+              "category": "Clássico",
+              "points": 2
+            },
+            {
+              "id": "13c",
+              "text": "Opção C para Q11",
+              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_snhaym.webp",
+              "value": "13c",
+              "category": "Contemporâneo",
+              "points": 2
+            },
+            {
+              "id": "13d",
+              "text": "Opção D para Q11",
+              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp",
+              "value": "13d",
+              "category": "Elegante",
+              "points": 3
+            }
+          ],
+          "columns": 2,
+          "multipleSelection": true,
+          "minSelections": 3,
+          "maxSelections": 3,
+          "showImages": true,
+          "imageSize": 256,
+          "autoAdvance": true,
+          "autoAdvanceDelay": 1500,
+          "validationMessage": "Selecione 3 opções para continuar"
+        },
+        "style": {
+          "backgroundColor": "transparent",
+          "padding": 16
+        },
+        "animation": {
+          "type": "slideUp",
+          "duration": 300,
+          "delay": 100,
+          "easing": "ease-out"
+        }
+      }
+    ],
+    "validation": {
+      "required": [
+        "selectedOptions"
+      ],
+      "rules": {
+        "selectedOptions": {
+          "minItems": 3,
+          "maxItems": 3,
+          "errorMessage": "Por favor, selecione exatamente 3 opções"
+        }
       }
     },
-    {
-      "id": "step13-continue-button",
-      "type": "button-inline",
-      "order": 4,
-      "content": {},
-      "properties": {
-        "text": "Continuar →",
-        "textWhenDisabled": "Selecione uma opção para continuar",
-        "variant": "primary",
-        "size": "large",
-        "fullWidth": true,
-        "backgroundColor": "#B89B7A",
-        "textColor": "#ffffff",
-        "enableOnSelection": true,
-        "containerWidth": "full",
-        "spacing": "small",
-        "marginTop": 24,
-        "requiresValidSelection": true
+    "navigation": {
+      "nextStep": "step-14",
+      "prevStep": "step-12",
+      "allowBack": true,
+      "requiresUserInput": true,
+      "autoAdvance": true,
+      "autoAdvanceDelay": 1500
+    },
+    "analytics": {
+      "events": [
+        "page_view",
+        "section_view",
+        "option_selected",
+        "validation_error",
+        "completion"
+      ],
+      "trackingId": "step-13-strategic-v3"
+    },
+    "scoring": {
+      "method": "points",
+      "categories": [
+        "Natural",
+        "Clássico",
+        "Contemporâneo",
+        "Elegante"
+      ],
+      "options": {
+        "13a": {
+          "category": "Natural",
+          "points": 1
+        },
+        "13b": {
+          "category": "Clássico",
+          "points": 2
+        },
+        "13c": {
+          "category": "Contemporâneo",
+          "points": 2
+        },
+        "13d": {
+          "category": "Elegante",
+          "points": 3
+        }
       }
+    },
+    "strategic": {
+      "isStrategic": true,
+      "weight": 1.5,
+      "impactsOffer": false
     }
-  ],
+  },
 
-  'step-14': [
-    {
-      "id": "step14-header",
-      "type": "quiz-intro-header",
-      "order": 0,
-      "content": {},
-      "properties": {
-        "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
-        "logoAlt": "Logo Gisele Galvão",
-        "logoWidth": 96,
-        "logoHeight": 96,
-        "progressValue": 67,
-        "progressTotal": 100,
-        "showProgress": true,
-        "containerWidth": "full",
-        "spacing": "small"
-      }
+  'step-14': {
+    "templateVersion": "3.0",
+    "metadata": {
+      "id": "step-14-strategic-v3",
+      "name": "Q12 - Desafios (Estratégica)",
+      "description": "Questão estratégica 2 sobre objetivos e resultados",
+      "category": "strategic-question",
+      "tags": [
+        "quiz",
+        "style",
+        "strategic",
+        "goals"
+      ],
+      "questionNumber": 12,
+      "totalQuestions": 13,
+      "createdAt": "2025-10-13T00:33:47.497Z",
+      "updatedAt": "2025-10-13T00:33:47.497Z",
+      "author": "Quiz Flow Pro",
+      "version": "3.0.0"
     },
-    {
-      "id": "step14-question-title",
-      "type": "text-inline",
-      "order": 1,
-      "content": {
-        "0": "Q",
-        "1": "1",
-        "2": "3",
-        "3": " ",
-        "4": "-",
-        "5": " ",
-        "6": "P",
-        "7": "E",
-        "8": "R",
-        "9": "S",
-        "10": "O",
-        "11": "N",
-        "12": "A",
-        "13": "L",
-        "14": "I",
-        "15": "D",
-        "16": "A",
-        "17": "D",
-        "18": "E"
+    "theme": {
+      "colors": {
+        "primary": "#B89B7A",
+        "primaryHover": "#A68B6A",
+        "primaryLight": "#F3E8D3",
+        "secondary": "#432818",
+        "background": "#FAF9F7",
+        "text": "#1F2937",
+        "border": "#E5E7EB",
+        "selected": "#B89B7A",
+        "hover": "#F3E8D3"
       },
-      "properties": {
-        "content": "Q13 - PERSONALIDADE",
-        "fontSize": "text-2xl",
-        "fontWeight": "font-bold",
-        "textAlign": "text-center",
-        "color": "#432818",
-        "containerWidth": "full",
-        "spacing": "small"
-      }
-    },
-    {
-      "id": "step14-question-counter",
-      "type": "text-inline",
-      "order": 2,
-      "content": {
-        "0": "Q",
-        "1": "u",
-        "2": "e",
-        "3": "s",
-        "4": "t",
-        "5": "ã",
-        "6": "o",
-        "7": " ",
-        "8": "1",
-        "9": "3",
-        "10": " ",
-        "11": "d",
-        "12": "e",
-        "13": " ",
-        "14": "1",
-        "15": "3"
+      "fonts": {
+        "heading": "Playfair Display, serif",
+        "body": "Inter, sans-serif"
       },
-      "properties": {
-        "content": "Questão 13 de 13",
-        "fontSize": "text-sm",
-        "textAlign": "text-center",
-        "color": "#6B7280",
-        "marginBottom": 24,
-        "containerWidth": "full",
-        "spacing": "small"
+      "spacing": {
+        "sm": 8,
+        "md": 16,
+        "lg": 24,
+        "xl": 32
+      },
+      "borderRadius": {
+        "sm": 4,
+        "md": 8,
+        "lg": 12,
+        "xl": 16
       }
     },
-    {
-      "id": "step14-options-grid",
-      "type": "options-grid",
-      "order": 3,
-      "content": {},
-      "properties": {
-        "options": [
-          {
-            "id": "14a",
-            "text": "Opção A - Descrição personalizada",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/11_hqmr8l.webp",
-            "value": "14a",
-            "category": "Natural",
-            "points": 1
-          },
-          {
-            "id": "14b",
-            "text": "Opção B - Descrição personalizada",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp",
-            "value": "14b",
-            "category": "Clássico",
-            "points": 2
-          },
-          {
-            "id": "14c",
-            "text": "Opção C - Descrição personalizada",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_snhaym.webp",
-            "value": "14c",
-            "category": "Contemporâneo",
-            "points": 2
-          },
-          {
-            "id": "14d",
-            "text": "Opção D - Descrição personalizada",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp",
-            "value": "14d",
-            "category": "Elegante",
-            "points": 3
-          }
-        ],
-        "columns": 2,
-        "imageSize": 256,
-        "showImages": true,
-        "multipleSelection": false,
-        "minSelections": 1,
-        "maxSelections": 1,
-        "borderColor": "#E5E7EB",
-        "selectedBorderColor": "#B89B7A",
-        "hoverColor": "#F3E8D3",
-        "containerWidth": "full",
-        "spacing": "small",
-        "marginBottom": 16,
-        "validationMessage": "Selecione uma opção para continuar",
-        "autoAdvance": false,
-        "autoAdvanceOnComplete": false,
-        "autoAdvanceDelay": 0
+    "sections": [
+      {
+        "type": "question-hero",
+        "id": "question-hero-14",
+        "content": {
+          "questionNumber": "Q12 - DESAFIOS",
+          "questionText": "Qual é o seu maior desafio ao se vestir?",
+          "currentQuestion": 12,
+          "totalQuestions": 13,
+          "progressValue": 62,
+          "showProgress": true,
+          "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
+          "logoAlt": "Logo Gisele Galvão"
+        },
+        "style": {
+          "backgroundColor": "transparent",
+          "padding": 16
+        },
+        "animation": {
+          "type": "fade",
+          "duration": 300,
+          "delay": 0,
+          "easing": "ease-out"
+        }
+      },
+      {
+        "type": "options-grid",
+        "id": "options-grid-14",
+        "content": {
+          "options": [
+            {
+              "id": "14a",
+              "text": "Opção A para Q12",
+              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/11_hqmr8l.webp",
+              "value": "14a",
+              "category": "Natural",
+              "points": 1
+            },
+            {
+              "id": "14b",
+              "text": "Opção B para Q12",
+              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp",
+              "value": "14b",
+              "category": "Clássico",
+              "points": 2
+            },
+            {
+              "id": "14c",
+              "text": "Opção C para Q12",
+              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_snhaym.webp",
+              "value": "14c",
+              "category": "Contemporâneo",
+              "points": 2
+            },
+            {
+              "id": "14d",
+              "text": "Opção D para Q12",
+              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp",
+              "value": "14d",
+              "category": "Elegante",
+              "points": 3
+            }
+          ],
+          "columns": 2,
+          "multipleSelection": true,
+          "minSelections": 3,
+          "maxSelections": 3,
+          "showImages": true,
+          "imageSize": 256,
+          "autoAdvance": true,
+          "autoAdvanceDelay": 1500,
+          "validationMessage": "Selecione 3 opções para continuar"
+        },
+        "style": {
+          "backgroundColor": "transparent",
+          "padding": 16
+        },
+        "animation": {
+          "type": "slideUp",
+          "duration": 300,
+          "delay": 100,
+          "easing": "ease-out"
+        }
+      }
+    ],
+    "validation": {
+      "required": [
+        "selectedOptions"
+      ],
+      "rules": {
+        "selectedOptions": {
+          "minItems": 3,
+          "maxItems": 3,
+          "errorMessage": "Por favor, selecione exatamente 3 opções"
+        }
       }
     },
-    {
-      "id": "step14-continue-button",
-      "type": "button-inline",
-      "order": 4,
-      "content": {},
-      "properties": {
-        "text": "Continuar →",
-        "textWhenDisabled": "Selecione uma opção para continuar",
-        "variant": "primary",
-        "size": "large",
-        "fullWidth": true,
-        "backgroundColor": "#B89B7A",
-        "textColor": "#ffffff",
-        "enableOnSelection": true,
-        "containerWidth": "full",
-        "spacing": "small",
-        "marginTop": 24,
-        "requiresValidSelection": true
+    "navigation": {
+      "nextStep": "step-15",
+      "prevStep": "step-13",
+      "allowBack": true,
+      "requiresUserInput": true,
+      "autoAdvance": true,
+      "autoAdvanceDelay": 1500
+    },
+    "analytics": {
+      "events": [
+        "page_view",
+        "section_view",
+        "option_selected",
+        "validation_error",
+        "completion"
+      ],
+      "trackingId": "step-14-strategic-v3"
+    },
+    "scoring": {
+      "method": "points",
+      "categories": [
+        "Natural",
+        "Clássico",
+        "Contemporâneo",
+        "Elegante"
+      ],
+      "options": {
+        "14a": {
+          "category": "Natural",
+          "points": 1
+        },
+        "14b": {
+          "category": "Clássico",
+          "points": 2
+        },
+        "14c": {
+          "category": "Contemporâneo",
+          "points": 2
+        },
+        "14d": {
+          "category": "Elegante",
+          "points": 3
+        }
       }
+    },
+    "strategic": {
+      "isStrategic": true,
+      "weight": 1.5,
+      "impactsOffer": false
     }
-  ],
+  },
 
-  'step-15': [
-    {
-      "id": "step15-header",
-      "type": "quiz-intro-header",
-      "order": 0,
-      "content": {},
-      "properties": {
-        "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
-        "logoAlt": "Logo Gisele Galvão",
-        "logoWidth": 96,
-        "logoHeight": 96,
-        "progressValue": 71,
-        "progressTotal": 100,
-        "showProgress": true,
-        "containerWidth": "full",
-        "spacing": "small"
-      }
+  'step-15': {
+    "templateVersion": "3.0",
+    "metadata": {
+      "id": "step-15-strategic-v3",
+      "name": "Q13 - Prioridades (Estratégica)",
+      "description": "Questão estratégica 3 sobre objetivos e resultados",
+      "category": "strategic-question",
+      "tags": [
+        "quiz",
+        "style",
+        "strategic",
+        "goals"
+      ],
+      "questionNumber": 13,
+      "totalQuestions": 13,
+      "createdAt": "2025-10-13T00:33:47.497Z",
+      "updatedAt": "2025-10-13T00:33:47.497Z",
+      "author": "Quiz Flow Pro",
+      "version": "3.0.0"
     },
-    {
-      "id": "step15-title",
-      "type": "text-inline",
-      "order": 1,
-      "content": {
-        "0": "A",
-        "1": "N",
-        "2": "A",
-        "3": "L",
-        "4": "I",
-        "5": "S",
-        "6": "A",
-        "7": "N",
-        "8": "D",
-        "9": "O",
-        "10": " ",
-        "11": "S",
-        "12": "E",
-        "13": "U",
-        "14": " ",
-        "15": "E",
-        "16": "S",
-        "17": "T",
-        "18": "I",
-        "19": "L",
-        "20": "O",
-        "21": ".",
-        "22": ".",
-        "23": "."
+    "theme": {
+      "colors": {
+        "primary": "#B89B7A",
+        "primaryHover": "#A68B6A",
+        "primaryLight": "#F3E8D3",
+        "secondary": "#432818",
+        "background": "#FAF9F7",
+        "text": "#1F2937",
+        "border": "#E5E7EB",
+        "selected": "#B89B7A",
+        "hover": "#F3E8D3"
       },
-      "properties": {
-        "content": "ANALISANDO SEU ESTILO...",
-        "fontSize": "text-3xl",
-        "fontWeight": "font-bold",
-        "textAlign": "text-center",
-        "color": "#432818",
-        "containerWidth": "full",
-        "spacing": "small"
+      "fonts": {
+        "heading": "Playfair Display, serif",
+        "body": "Inter, sans-serif"
+      },
+      "spacing": {
+        "sm": 8,
+        "md": 16,
+        "lg": 24,
+        "xl": 32
+      },
+      "borderRadius": {
+        "sm": 4,
+        "md": 8,
+        "lg": 12,
+        "xl": 16
       }
     },
-    {
-      "id": "step15-loading",
-      "type": "loading-animation",
-      "order": 2,
-      "content": {},
-      "properties": {
-        "type": "spinner",
-        "color": "#B89B7A",
-        "size": "large",
-        "containerWidth": "full",
-        "spacing": "small"
+    "sections": [
+      {
+        "type": "question-hero",
+        "id": "question-hero-15",
+        "content": {
+          "questionNumber": "Q13 - PRIORIDADES",
+          "questionText": "O que você prioriza ao escolher uma roupa?",
+          "currentQuestion": 13,
+          "totalQuestions": 13,
+          "progressValue": 67,
+          "showProgress": true,
+          "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
+          "logoAlt": "Logo Gisele Galvão"
+        },
+        "style": {
+          "backgroundColor": "transparent",
+          "padding": 16
+        },
+        "animation": {
+          "type": "fade",
+          "duration": 300,
+          "delay": 0,
+          "easing": "ease-out"
+        }
+      },
+      {
+        "type": "options-grid",
+        "id": "options-grid-15",
+        "content": {
+          "options": [
+            {
+              "id": "15a",
+              "text": "Opção A para Q13",
+              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/11_hqmr8l.webp",
+              "value": "15a",
+              "category": "Natural",
+              "points": 1
+            },
+            {
+              "id": "15b",
+              "text": "Opção B para Q13",
+              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp",
+              "value": "15b",
+              "category": "Clássico",
+              "points": 2
+            },
+            {
+              "id": "15c",
+              "text": "Opção C para Q13",
+              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_snhaym.webp",
+              "value": "15c",
+              "category": "Contemporâneo",
+              "points": 2
+            },
+            {
+              "id": "15d",
+              "text": "Opção D para Q13",
+              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp",
+              "value": "15d",
+              "category": "Elegante",
+              "points": 3
+            }
+          ],
+          "columns": 2,
+          "multipleSelection": true,
+          "minSelections": 3,
+          "maxSelections": 3,
+          "showImages": true,
+          "imageSize": 256,
+          "autoAdvance": true,
+          "autoAdvanceDelay": 1500,
+          "validationMessage": "Selecione 3 opções para continuar"
+        },
+        "style": {
+          "backgroundColor": "transparent",
+          "padding": 16
+        },
+        "animation": {
+          "type": "slideUp",
+          "duration": 300,
+          "delay": 100,
+          "easing": "ease-out"
+        }
       }
+    ],
+    "validation": {
+      "required": [
+        "selectedOptions"
+      ],
+      "rules": {
+        "selectedOptions": {
+          "minItems": 3,
+          "maxItems": 3,
+          "errorMessage": "Por favor, selecione exatamente 3 opções"
+        }
+      }
+    },
+    "navigation": {
+      "nextStep": "step-16",
+      "prevStep": "step-14",
+      "allowBack": true,
+      "requiresUserInput": true,
+      "autoAdvance": true,
+      "autoAdvanceDelay": 1500
+    },
+    "analytics": {
+      "events": [
+        "page_view",
+        "section_view",
+        "option_selected",
+        "validation_error",
+        "completion"
+      ],
+      "trackingId": "step-15-strategic-v3"
+    },
+    "scoring": {
+      "method": "points",
+      "categories": [
+        "Natural",
+        "Clássico",
+        "Contemporâneo",
+        "Elegante"
+      ],
+      "options": {
+        "15a": {
+          "category": "Natural",
+          "points": 1
+        },
+        "15b": {
+          "category": "Clássico",
+          "points": 2
+        },
+        "15c": {
+          "category": "Contemporâneo",
+          "points": 2
+        },
+        "15d": {
+          "category": "Elegante",
+          "points": 3
+        }
+      }
+    },
+    "strategic": {
+      "isStrategic": true,
+      "weight": 1.5,
+      "impactsOffer": false
     }
-  ],
+  },
 
-  'step-16': [
-    {
-      "id": "step16-header",
-      "type": "quiz-intro-header",
-      "order": 0,
-      "content": {},
-      "properties": {
-        "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
-        "logoAlt": "Logo Gisele Galvão",
-        "logoWidth": 96,
-        "logoHeight": 96,
-        "progressValue": 76,
-        "progressTotal": 100,
-        "showProgress": true,
-        "containerWidth": "full",
-        "spacing": "small"
-      }
+  'step-16': {
+    "templateVersion": "3.0",
+    "metadata": {
+      "id": "step-16-strategic-v3",
+      "name": "Q14 - Investimento (Estratégica)",
+      "description": "Questão estratégica 4 sobre objetivos e resultados",
+      "category": "strategic-question",
+      "tags": [
+        "quiz",
+        "style",
+        "strategic",
+        "goals"
+      ],
+      "questionNumber": 14,
+      "totalQuestions": 13,
+      "createdAt": "2025-10-13T00:33:47.498Z",
+      "updatedAt": "2025-10-13T00:33:47.498Z",
+      "author": "Quiz Flow Pro",
+      "version": "3.0.0"
     },
-    {
-      "id": "step16-title",
-      "type": "text-inline",
-      "order": 1,
-      "content": {
-        "0": "P",
-        "1": "R",
-        "2": "E",
-        "3": "P",
-        "4": "A",
-        "5": "R",
-        "6": "A",
-        "7": "N",
-        "8": "D",
-        "9": "O",
-        "10": " ",
-        "11": "S",
-        "12": "E",
-        "13": "U",
-        "14": " ",
-        "15": "R",
-        "16": "E",
-        "17": "S",
-        "18": "U",
-        "19": "L",
-        "20": "T",
-        "21": "A",
-        "22": "D",
-        "23": "O",
-        "24": " ",
-        "25": "P",
-        "26": "E",
-        "27": "R",
-        "28": "S",
-        "29": "O",
-        "30": "N",
-        "31": "A",
-        "32": "L",
-        "33": "I",
-        "34": "Z",
-        "35": "A",
-        "36": "D",
-        "37": "O",
-        "38": ".",
-        "39": ".",
-        "40": "."
+    "theme": {
+      "colors": {
+        "primary": "#B89B7A",
+        "primaryHover": "#A68B6A",
+        "primaryLight": "#F3E8D3",
+        "secondary": "#432818",
+        "background": "#FAF9F7",
+        "text": "#1F2937",
+        "border": "#E5E7EB",
+        "selected": "#B89B7A",
+        "hover": "#F3E8D3"
       },
-      "properties": {
-        "content": "PREPARANDO SEU RESULTADO PERSONALIZADO...",
-        "fontSize": "text-2xl",
-        "fontWeight": "font-bold",
-        "textAlign": "text-center",
-        "color": "#432818",
-        "containerWidth": "full",
-        "spacing": "small"
+      "fonts": {
+        "heading": "Playfair Display, serif",
+        "body": "Inter, sans-serif"
+      },
+      "spacing": {
+        "sm": 8,
+        "md": 16,
+        "lg": 24,
+        "xl": 32
+      },
+      "borderRadius": {
+        "sm": 4,
+        "md": 8,
+        "lg": 12,
+        "xl": 16
       }
     },
-    {
-      "id": "step16-progress-bar",
-      "type": "progress-bar",
-      "order": 2,
-      "content": {},
-      "properties": {
-        "value": 100,
-        "animated": true,
-        "color": "#B89B7A",
-        "containerWidth": "full",
-        "spacing": "small"
+    "sections": [
+      {
+        "type": "question-hero",
+        "id": "question-hero-16",
+        "content": {
+          "questionNumber": "Q14 - INVESTIMENTO",
+          "questionText": "Onde você prefere investir mais?",
+          "currentQuestion": 14,
+          "totalQuestions": 13,
+          "progressValue": 71,
+          "showProgress": true,
+          "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
+          "logoAlt": "Logo Gisele Galvão"
+        },
+        "style": {
+          "backgroundColor": "transparent",
+          "padding": 16
+        },
+        "animation": {
+          "type": "fade",
+          "duration": 300,
+          "delay": 0,
+          "easing": "ease-out"
+        }
+      },
+      {
+        "type": "options-grid",
+        "id": "options-grid-16",
+        "content": {
+          "options": [
+            {
+              "id": "16a",
+              "text": "Opção A para Q14",
+              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/11_hqmr8l.webp",
+              "value": "16a",
+              "category": "Natural",
+              "points": 1
+            },
+            {
+              "id": "16b",
+              "text": "Opção B para Q14",
+              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp",
+              "value": "16b",
+              "category": "Clássico",
+              "points": 2
+            },
+            {
+              "id": "16c",
+              "text": "Opção C para Q14",
+              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_snhaym.webp",
+              "value": "16c",
+              "category": "Contemporâneo",
+              "points": 2
+            },
+            {
+              "id": "16d",
+              "text": "Opção D para Q14",
+              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp",
+              "value": "16d",
+              "category": "Elegante",
+              "points": 3
+            }
+          ],
+          "columns": 2,
+          "multipleSelection": true,
+          "minSelections": 3,
+          "maxSelections": 3,
+          "showImages": true,
+          "imageSize": 256,
+          "autoAdvance": true,
+          "autoAdvanceDelay": 1500,
+          "validationMessage": "Selecione 3 opções para continuar"
+        },
+        "style": {
+          "backgroundColor": "transparent",
+          "padding": 16
+        },
+        "animation": {
+          "type": "slideUp",
+          "duration": 300,
+          "delay": 100,
+          "easing": "ease-out"
+        }
       }
+    ],
+    "validation": {
+      "required": [
+        "selectedOptions"
+      ],
+      "rules": {
+        "selectedOptions": {
+          "minItems": 3,
+          "maxItems": 3,
+          "errorMessage": "Por favor, selecione exatamente 3 opções"
+        }
+      }
+    },
+    "navigation": {
+      "nextStep": "step-17",
+      "prevStep": "step-15",
+      "allowBack": true,
+      "requiresUserInput": true,
+      "autoAdvance": true,
+      "autoAdvanceDelay": 1500
+    },
+    "analytics": {
+      "events": [
+        "page_view",
+        "section_view",
+        "option_selected",
+        "validation_error",
+        "completion"
+      ],
+      "trackingId": "step-16-strategic-v3"
+    },
+    "scoring": {
+      "method": "points",
+      "categories": [
+        "Natural",
+        "Clássico",
+        "Contemporâneo",
+        "Elegante"
+      ],
+      "options": {
+        "16a": {
+          "category": "Natural",
+          "points": 1
+        },
+        "16b": {
+          "category": "Clássico",
+          "points": 2
+        },
+        "16c": {
+          "category": "Contemporâneo",
+          "points": 2
+        },
+        "16d": {
+          "category": "Elegante",
+          "points": 3
+        }
+      }
+    },
+    "strategic": {
+      "isStrategic": true,
+      "weight": 1.5,
+      "impactsOffer": false
     }
-  ],
+  },
 
-  'step-17': [
-    {
-      "id": "step17-header",
-      "type": "quiz-intro-header",
-      "order": 0,
-      "content": {},
-      "properties": {
-        "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
-        "logoAlt": "Logo Gisele Galvão",
-        "logoWidth": 96,
-        "logoHeight": 96,
-        "progressValue": 81,
-        "progressTotal": 100,
-        "showProgress": true,
-        "containerWidth": "full",
-        "spacing": "small"
-      }
+  'step-17': {
+    "templateVersion": "3.0",
+    "metadata": {
+      "id": "step-17-strategic-v3",
+      "name": "Q15 - Transformação (Estratégica)",
+      "description": "Questão estratégica 5 sobre objetivos e resultados",
+      "category": "strategic-question",
+      "tags": [
+        "quiz",
+        "style",
+        "strategic",
+        "goals"
+      ],
+      "questionNumber": 15,
+      "totalQuestions": 13,
+      "createdAt": "2025-10-13T00:33:47.498Z",
+      "updatedAt": "2025-10-13T00:33:47.498Z",
+      "author": "Quiz Flow Pro",
+      "version": "3.0.0"
     },
-    {
-      "id": "step17-result-title",
-      "type": "text-inline",
-      "order": 1,
-      "content": {
-        "0": "S",
-        "1": "E",
-        "2": "U",
-        "3": " ",
-        "4": "E",
-        "5": "S",
-        "6": "T",
-        "7": "I",
-        "8": "L",
-        "9": "O",
-        "10": " ",
-        "11": "P",
-        "12": "E",
-        "13": "S",
-        "14": "S",
-        "15": "O",
-        "16": "A",
-        "17": "L",
-        "18": " ",
-        "19": "É",
-        "20": ":"
+    "theme": {
+      "colors": {
+        "primary": "#B89B7A",
+        "primaryHover": "#A68B6A",
+        "primaryLight": "#F3E8D3",
+        "secondary": "#432818",
+        "background": "#FAF9F7",
+        "text": "#1F2937",
+        "border": "#E5E7EB",
+        "selected": "#B89B7A",
+        "hover": "#F3E8D3"
       },
-      "properties": {
-        "content": "SEU ESTILO PESSOAL É:",
-        "fontSize": "text-2xl",
-        "fontWeight": "font-bold",
-        "textAlign": "text-center",
-        "color": "#432818",
-        "containerWidth": "full",
-        "spacing": "small"
+      "fonts": {
+        "heading": "Playfair Display, serif",
+        "body": "Inter, sans-serif"
+      },
+      "spacing": {
+        "sm": 8,
+        "md": 16,
+        "lg": 24,
+        "xl": 32
+      },
+      "borderRadius": {
+        "sm": 4,
+        "md": 8,
+        "lg": 12,
+        "xl": 16
       }
     },
-    {
-      "id": "step17-result-card",
-      "type": "result-card",
-      "order": 2,
-      "content": {},
-      "properties": {
-        "title": "Estilo Elegante",
-        "description": "Você tem preferência por peças clássicas e refinadas...",
-        "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp",
-        "containerWidth": "full",
-        "spacing": "small"
+    "sections": [
+      {
+        "type": "question-hero",
+        "id": "question-hero-17",
+        "content": {
+          "questionNumber": "Q15 - TRANSFORMAÇÃO",
+          "questionText": "O que você mais gostaria de mudar?",
+          "currentQuestion": 15,
+          "totalQuestions": 13,
+          "progressValue": 76,
+          "showProgress": true,
+          "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
+          "logoAlt": "Logo Gisele Galvão"
+        },
+        "style": {
+          "backgroundColor": "transparent",
+          "padding": 16
+        },
+        "animation": {
+          "type": "fade",
+          "duration": 300,
+          "delay": 0,
+          "easing": "ease-out"
+        }
+      },
+      {
+        "type": "options-grid",
+        "id": "options-grid-17",
+        "content": {
+          "options": [
+            {
+              "id": "17a",
+              "text": "Opção A para Q15",
+              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/11_hqmr8l.webp",
+              "value": "17a",
+              "category": "Natural",
+              "points": 1
+            },
+            {
+              "id": "17b",
+              "text": "Opção B para Q15",
+              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp",
+              "value": "17b",
+              "category": "Clássico",
+              "points": 2
+            },
+            {
+              "id": "17c",
+              "text": "Opção C para Q15",
+              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_snhaym.webp",
+              "value": "17c",
+              "category": "Contemporâneo",
+              "points": 2
+            },
+            {
+              "id": "17d",
+              "text": "Opção D para Q15",
+              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp",
+              "value": "17d",
+              "category": "Elegante",
+              "points": 3
+            }
+          ],
+          "columns": 2,
+          "multipleSelection": true,
+          "minSelections": 3,
+          "maxSelections": 3,
+          "showImages": true,
+          "imageSize": 256,
+          "autoAdvance": true,
+          "autoAdvanceDelay": 1500,
+          "validationMessage": "Selecione 3 opções para continuar"
+        },
+        "style": {
+          "backgroundColor": "transparent",
+          "padding": 16
+        },
+        "animation": {
+          "type": "slideUp",
+          "duration": 300,
+          "delay": 100,
+          "easing": "ease-out"
+        }
+      }
+    ],
+    "validation": {
+      "required": [
+        "selectedOptions"
+      ],
+      "rules": {
+        "selectedOptions": {
+          "minItems": 3,
+          "maxItems": 3,
+          "errorMessage": "Por favor, selecione exatamente 3 opções"
+        }
       }
     },
-    {
-      "id": "step17-continue-button",
-      "type": "button-inline",
-      "order": 3,
-      "content": {},
-      "properties": {
-        "text": "Continuar →",
-        "variant": "primary",
-        "size": "large",
-        "fullWidth": true,
-        "backgroundColor": "#B89B7A",
-        "textColor": "#ffffff",
-        "containerWidth": "full",
-        "spacing": "small",
-        "marginTop": 24,
-        "enableOnSelection": true,
-        "requiresValidSelection": true,
-        "textWhenDisabled": "Selecione uma opção para continuar"
+    "navigation": {
+      "nextStep": "step-18",
+      "prevStep": "step-16",
+      "allowBack": true,
+      "requiresUserInput": true,
+      "autoAdvance": true,
+      "autoAdvanceDelay": 1500
+    },
+    "analytics": {
+      "events": [
+        "page_view",
+        "section_view",
+        "option_selected",
+        "validation_error",
+        "completion"
+      ],
+      "trackingId": "step-17-strategic-v3"
+    },
+    "scoring": {
+      "method": "points",
+      "categories": [
+        "Natural",
+        "Clássico",
+        "Contemporâneo",
+        "Elegante"
+      ],
+      "options": {
+        "17a": {
+          "category": "Natural",
+          "points": 1
+        },
+        "17b": {
+          "category": "Clássico",
+          "points": 2
+        },
+        "17c": {
+          "category": "Contemporâneo",
+          "points": 2
+        },
+        "17d": {
+          "category": "Elegante",
+          "points": 3
+        }
       }
+    },
+    "strategic": {
+      "isStrategic": true,
+      "weight": 1.5,
+      "impactsOffer": false
     }
-  ],
+  },
 
-  'step-18': [
-    {
-      "id": "step18-header",
-      "type": "quiz-intro-header",
-      "order": 0,
-      "content": {},
-      "properties": {
-        "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
-        "logoAlt": "Logo Gisele Galvão",
-        "logoWidth": 96,
-        "logoHeight": 96,
-        "progressValue": 86,
-        "progressTotal": 100,
-        "showProgress": true,
-        "containerWidth": "full",
-        "spacing": "small"
-      }
+  'step-18': {
+    "templateVersion": "3.0",
+    "metadata": {
+      "id": "step-18-strategic-v3",
+      "name": "Q16 - Resultado (Estratégica)",
+      "description": "Questão estratégica 6 sobre objetivos e resultados",
+      "category": "strategic-question",
+      "tags": [
+        "quiz",
+        "style",
+        "strategic",
+        "goals"
+      ],
+      "questionNumber": 16,
+      "totalQuestions": 13,
+      "createdAt": "2025-10-13T00:33:47.498Z",
+      "updatedAt": "2025-10-13T00:33:47.498Z",
+      "author": "Quiz Flow Pro",
+      "version": "3.0.0"
     },
-    {
-      "id": "step18-result-title",
-      "type": "text-inline",
-      "order": 1,
-      "content": {
-        "0": "S",
-        "1": "E",
-        "2": "U",
-        "3": " ",
-        "4": "E",
-        "5": "S",
-        "6": "T",
-        "7": "I",
-        "8": "L",
-        "9": "O",
-        "10": " ",
-        "11": "P",
-        "12": "E",
-        "13": "S",
-        "14": "S",
-        "15": "O",
-        "16": "A",
-        "17": "L",
-        "18": " ",
-        "19": "É",
-        "20": ":"
+    "theme": {
+      "colors": {
+        "primary": "#B89B7A",
+        "primaryHover": "#A68B6A",
+        "primaryLight": "#F3E8D3",
+        "secondary": "#432818",
+        "background": "#FAF9F7",
+        "text": "#1F2937",
+        "border": "#E5E7EB",
+        "selected": "#B89B7A",
+        "hover": "#F3E8D3"
       },
-      "properties": {
-        "content": "SEU ESTILO PESSOAL É:",
-        "fontSize": "text-2xl",
-        "fontWeight": "font-bold",
-        "textAlign": "text-center",
-        "color": "#432818",
-        "containerWidth": "full",
-        "spacing": "small"
+      "fonts": {
+        "heading": "Playfair Display, serif",
+        "body": "Inter, sans-serif"
+      },
+      "spacing": {
+        "sm": 8,
+        "md": 16,
+        "lg": 24,
+        "xl": 32
+      },
+      "borderRadius": {
+        "sm": 4,
+        "md": 8,
+        "lg": 12,
+        "xl": 16
       }
     },
-    {
-      "id": "step18-result-card",
-      "type": "result-card",
-      "order": 2,
-      "content": {},
-      "properties": {
-        "title": "Estilo Elegante",
-        "description": "Você tem preferência por peças clássicas e refinadas...",
-        "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp",
-        "containerWidth": "full",
-        "spacing": "small"
+    "sections": [
+      {
+        "type": "question-hero",
+        "id": "question-hero-18",
+        "content": {
+          "questionNumber": "Q16 - RESULTADO",
+          "questionText": "Qual resultado você mais gostaria de alcançar?",
+          "currentQuestion": 16,
+          "totalQuestions": 13,
+          "progressValue": 81,
+          "showProgress": true,
+          "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
+          "logoAlt": "Logo Gisele Galvão"
+        },
+        "style": {
+          "backgroundColor": "transparent",
+          "padding": 16
+        },
+        "animation": {
+          "type": "fade",
+          "duration": 300,
+          "delay": 0,
+          "easing": "ease-out"
+        }
+      },
+      {
+        "type": "options-grid",
+        "id": "options-grid-18",
+        "content": {
+          "options": [
+            {
+              "id": "18a",
+              "text": "Opção A para Q16",
+              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/11_hqmr8l.webp",
+              "value": "18a",
+              "category": "Natural",
+              "points": 1
+            },
+            {
+              "id": "18b",
+              "text": "Opção B para Q16",
+              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp",
+              "value": "18b",
+              "category": "Clássico",
+              "points": 2
+            },
+            {
+              "id": "18c",
+              "text": "Opção C para Q16",
+              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_snhaym.webp",
+              "value": "18c",
+              "category": "Contemporâneo",
+              "points": 2
+            },
+            {
+              "id": "18d",
+              "text": "Opção D para Q16",
+              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp",
+              "value": "18d",
+              "category": "Elegante",
+              "points": 3
+            }
+          ],
+          "columns": 2,
+          "multipleSelection": true,
+          "minSelections": 3,
+          "maxSelections": 3,
+          "showImages": true,
+          "imageSize": 256,
+          "autoAdvance": true,
+          "autoAdvanceDelay": 1500,
+          "validationMessage": "Selecione 3 opções para continuar"
+        },
+        "style": {
+          "backgroundColor": "transparent",
+          "padding": 16
+        },
+        "animation": {
+          "type": "slideUp",
+          "duration": 300,
+          "delay": 100,
+          "easing": "ease-out"
+        }
+      }
+    ],
+    "validation": {
+      "required": [
+        "selectedOptions"
+      ],
+      "rules": {
+        "selectedOptions": {
+          "minItems": 3,
+          "maxItems": 3,
+          "errorMessage": "Por favor, selecione exatamente 3 opções"
+        }
       }
     },
-    {
-      "id": "step18-continue-button",
-      "type": "button-inline",
-      "order": 3,
-      "content": {},
-      "properties": {
-        "text": "Ver Mais →",
-        "variant": "primary",
-        "size": "large",
-        "fullWidth": true,
-        "backgroundColor": "#B89B7A",
-        "textColor": "#ffffff",
-        "containerWidth": "full",
-        "spacing": "small",
-        "marginTop": 24
+    "navigation": {
+      "nextStep": "step-19",
+      "prevStep": "step-17",
+      "allowBack": true,
+      "requiresUserInput": true,
+      "autoAdvance": true,
+      "autoAdvanceDelay": 1500
+    },
+    "analytics": {
+      "events": [
+        "page_view",
+        "section_view",
+        "option_selected",
+        "validation_error",
+        "completion"
+      ],
+      "trackingId": "step-18-strategic-v3"
+    },
+    "scoring": {
+      "method": "points",
+      "categories": [
+        "Natural",
+        "Clássico",
+        "Contemporâneo",
+        "Elegante"
+      ],
+      "options": {
+        "18a": {
+          "category": "Natural",
+          "points": 1
+        },
+        "18b": {
+          "category": "Clássico",
+          "points": 2
+        },
+        "18c": {
+          "category": "Contemporâneo",
+          "points": 2
+        },
+        "18d": {
+          "category": "Elegante",
+          "points": 3
+        }
       }
+    },
+    "strategic": {
+      "isStrategic": true,
+      "weight": 1.5,
+      "impactsOffer": true
     }
-  ],
+  },
 
-  'step-19': [
-    {
-      "id": "step19-header",
-      "type": "quiz-intro-header",
-      "order": 0,
-      "content": {},
-      "properties": {
-        "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
-        "logoAlt": "Logo Gisele Galvão",
-        "logoWidth": 96,
-        "logoHeight": 96,
-        "progressValue": 90,
-        "progressTotal": 100,
-        "showProgress": true,
-        "containerWidth": "full",
-        "spacing": "small"
-      }
+  'step-19': {
+    "templateVersion": "3.0",
+    "metadata": {
+      "id": "step-19-transition-v3",
+      "name": "Transição Pré-Resultado",
+      "description": "Página de transição antes da exibição do resultado final",
+      "category": "transition-result",
+      "tags": [
+        "quiz",
+        "transition",
+        "loading",
+        "result",
+        "pre-result"
+      ],
+      "createdAt": "2025-01-13T00:00:00.000Z",
+      "updatedAt": "2025-01-13T00:00:00.000Z",
+      "author": "Quiz Flow Pro",
+      "version": "3.0.0"
     },
-    {
-      "id": "step19-result-title",
-      "type": "text-inline",
-      "order": 1,
-      "content": {
-        "0": "S",
-        "1": "E",
-        "2": "U",
-        "3": " ",
-        "4": "E",
-        "5": "S",
-        "6": "T",
-        "7": "I",
-        "8": "L",
-        "9": "O",
-        "10": " ",
-        "11": "P",
-        "12": "E",
-        "13": "S",
-        "14": "S",
-        "15": "O",
-        "16": "A",
-        "17": "L",
-        "18": " ",
-        "19": "É",
-        "20": ":"
+    "theme": {
+      "colors": {
+        "primary": "#B89B7A",
+        "secondary": "#432818",
+        "background": "#FAF9F7",
+        "text": "#1F2937"
       },
-      "properties": {
-        "content": "SEU ESTILO PESSOAL É:",
-        "fontSize": "text-2xl",
-        "fontWeight": "font-bold",
-        "textAlign": "text-center",
-        "color": "#432818",
-        "containerWidth": "full",
-        "spacing": "small"
+      "fonts": {
+        "heading": "Playfair Display, serif",
+        "body": "Inter, sans-serif"
+      },
+      "spacing": {
+        "sm": 8,
+        "md": 16,
+        "lg": 24,
+        "xl": 32
+      },
+      "borderRadius": {
+        "sm": 4,
+        "md": 8,
+        "lg": 12,
+        "xl": 16
       }
     },
-    {
-      "id": "step19-result-card",
-      "type": "result-card",
-      "order": 2,
-      "content": {},
-      "properties": {
-        "title": "Estilo Elegante",
-        "description": "Você tem preferência por peças clássicas e refinadas...",
-        "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp",
-        "containerWidth": "full",
-        "spacing": "small"
+    "sections": [
+      {
+        "type": "transition-hero",
+        "id": "transition-hero-19",
+        "content": {
+          "title": "Calculando seu estilo predominante...",
+          "subtitle": "Preparando seu resultado personalizado",
+          "message": "Em instantes você descobrirá qual estilo te representa e como valorizar sua essência!",
+          "autoAdvanceDelay": 3000
+        },
+        "style": {
+          "backgroundColor": "#FAF9F7",
+          "textColor": "#432818",
+          "padding": 32
+        },
+        "animation": {
+          "type": "scale",
+          "duration": 500,
+          "delay": 0,
+          "easing": "ease-out"
+        }
       }
+    ],
+    "navigation": {
+      "nextStep": "step-20",
+      "prevStep": "step-18",
+      "allowBack": false,
+      "requiresUserInput": false,
+      "autoAdvance": true,
+      "autoAdvanceDelay": 3000
     },
-    {
-      "id": "step19-continue-button",
-      "type": "button-inline",
-      "order": 3,
-      "content": {},
-      "properties": {
-        "text": "Continuar →",
-        "variant": "primary",
-        "size": "large",
-        "fullWidth": true,
-        "backgroundColor": "#B89B7A",
-        "textColor": "#ffffff",
-        "containerWidth": "full",
-        "spacing": "small",
-        "marginTop": 24
-      }
+    "analytics": {
+      "events": [
+        "page_view",
+        "section_view",
+        "auto_advance",
+        "result_preview"
+      ],
+      "trackingId": "step-19-transition-v3",
+      "fbPixelId": null,
+      "gaTrackingId": null
     }
-  ],
+  },
 
   'step-20': {
     "templateVersion": "3.0",
@@ -3487,221 +4076,185 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
     }
   },
 
-  'step-21': [
-    {
-      "id": "offer-header",
-      "type": "offer-header",
-      "order": 0,
-      "content": {},
-      "properties": {
-        "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
-        "logoAlt": "Logo Gisele Galvão",
-        "logoWidth": 180,
-        "logoHeight": 80,
-        "isSticky": true,
-        "backgroundColor": "rgba(255, 255, 255, 0.9)",
-        "backdropBlur": true,
-        "containerWidth": "full",
-        "spacing": "small"
+  'step-21': {
+    "templateVersion": "3.0",
+    "metadata": {
+      "id": "step-21-offer-v3",
+      "name": "Oferta Final - 5 Passos Vista-se de Você",
+      "description": "Página de oferta final do produto após resultado do quiz",
+      "category": "offer",
+      "tags": [
+        "quiz",
+        "offer",
+        "conversion",
+        "product",
+        "cta"
+      ],
+      "createdAt": "2025-01-13T00:00:00.000Z",
+      "updatedAt": "2025-01-13T00:00:00.000Z",
+      "author": "Quiz Flow Pro",
+      "version": "3.0.0"
+    },
+    "offer": {
+      "productName": "5 Passos – Vista-se de Você",
+      "mentorName": "Gisele Galvão",
+      "pricing": {
+        "originalPrice": 447,
+        "salePrice": 97,
+        "currency": "R$",
+        "installments": {
+          "count": 8,
+          "value": 14.11
+        }
+      },
+      "links": {
+        "checkout": "https://pay.kiwify.com.br/DkYC1Aj",
+        "sales": "https://giselegaviao.com/5passos"
+      },
+      "guarantee": {
+        "days": 7,
+        "description": "Garantia incondicional de 7 dias. Se não gostar, devolvemos 100% do seu investimento."
+      },
+      "features": [
+        "5 módulos completos sobre estilo pessoal",
+        "Acesso vitalício ao conteúdo",
+        "Suporte direto com Gisele Galvão",
+        "Materiais bônus exclusivos",
+        "Comunidade privada de alunas",
+        "Certificado de conclusão"
+      ]
+    },
+    "theme": {
+      "colors": {
+        "primary": "#B89B7A",
+        "primaryHover": "#A68B6A",
+        "primaryLight": "#F3E8D3",
+        "secondary": "#432818",
+        "background": "#FAF9F7",
+        "text": "#1F2937",
+        "border": "#E5E7EB"
+      },
+      "fonts": {
+        "heading": "Playfair Display, serif",
+        "body": "Inter, sans-serif"
+      },
+      "spacing": {
+        "sm": 8,
+        "md": 16,
+        "lg": 24,
+        "xl": 32
+      },
+      "borderRadius": {
+        "sm": 4,
+        "md": 8,
+        "lg": 12,
+        "xl": 16
       }
     },
-    {
-      "id": "hero-section",
-      "type": "offer-hero-section",
-      "order": 1,
-      "content": {},
-      "properties": {
-        "badgeText": "3000+ mulheres transformadas",
-        "badgeIcon": "Award",
-        "title": "Etapa 21:",
-        "titleHighlight": "Oferta Exclusiva",
-        "titleSuffix": "Para Seu Estilo!",
-        "subtitle": "Leve sua transformação de estilo para o próximo nível com nosso **Guia Completo personalizado** para seu resultado",
-        "heroImageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1745193445/4fb35a75-02dd-40b9-adae-854e90228675_ibkrmt.webp",
-        "heroImageAlt": "Transformação de guarda-roupa",
-        "heroImageWidth": 600,
-        "heroImageHeight": 400,
-        "ctaText": "Sim! Quero Garantir Meu Acesso",
-        "ctaIcon": "ArrowRight",
-        "ctaUrl": "https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912",
-        "trustElements": [
-          {
-            "icon": "Lock",
-            "text": "100% Seguro"
-          },
-          {
-            "icon": "Shield",
-            "text": "7 Dias Garantia"
-          }
-        ],
-        "containerWidth": "full",
-        "spacing": "large"
-      }
-    },
-    {
-      "id": "problem-section",
-      "type": "offer-problem-section",
-      "order": 2,
-      "content": {},
-      "properties": {
-        "title": "Você se identifica com isso?",
-        "problems": [
-          "**Guarda-roupa cheio** mas nunca tem o que vestir?",
-          "**Compra peças** que nunca combinam com nada?",
-          "**Sente que \"nada fica bom\"** em você?"
-        ],
-        "highlightText": "Isso acontece porque você ainda não descobriu seu **estilo predominante**.",
-        "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1745193445/4fb35a75-02dd-40b9-adae-854e90228675_ibkrmt.webp",
-        "imageAlt": "Frustração com guarda-roupa",
-        "imageWidth": 500,
-        "imageHeight": 350,
-        "layout": "side-by-side",
-        "containerWidth": "full",
-        "spacing": "large"
-      }
-    },
-    {
-      "id": "solution-section",
-      "type": "offer-solution-section",
-      "order": 3,
-      "content": {},
-      "properties": {
-        "title": "A Solução: Quiz de Estilo",
-        "description": "Método preciso para identificar seu estilo entre os **7 estilos universais** + guia personalizado completo.",
-        "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1746650306/oie_1_gcozz9.webp",
-        "imageAlt": "Quiz de Estilo",
-        "imageWidth": 400,
-        "imageHeight": 300,
-        "ctaText": "Fazer o Quiz Agora",
-        "ctaIcon": "ShoppingBag",
-        "ctaUrl": "https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912",
-        "showCountdown": true,
-        "countdownInitial": {
-          "hours": 1,
-          "minutes": 59,
-          "seconds": 59
+    "sections": [
+      {
+        "type": "offer-hero",
+        "id": "offer-hero-21",
+        "content": {
+          "title": "{userName}, Transforme Seu Guarda-Roupa e Sua Confiança Hoje!",
+          "subtitle": "Oferta exclusiva para quem completou o quiz de estilo",
+          "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
+          "imageAlt": "5 Passos - Vista-se de Você",
+          "description": "Descubra como valorizar seu estilo único e se sentir confiante em qualquer ocasião com o método exclusivo 5 Passos.",
+          "urgencyMessage": "Oferta por tempo limitado!"
         },
-        "containerWidth": "full",
-        "spacing": "large"
-      }
-    },
-    {
-      "id": "product-showcase",
-      "type": "offer-product-showcase",
-      "order": 4,
-      "content": {},
-      "properties": {
-        "title": "Transformação Completa",
-        "subtitle": "Tudo que você precisa para descobrir e aplicar seu estilo",
-        "products": [
-          {
-            "id": "main-guide",
-            "title": "Guia Personalizado",
-            "description": "Para seu estilo específico",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1745071347/MOCKUP_TABLETE_-_GUIA_DE_IMAGEM_E_ESTILO_ncctzi.webp",
-            "imageAlt": "Guia Personalizado",
-            "imageWidth": 250,
-            "imageHeight": 312
-          },
-          {
-            "id": "bonus-key-pieces",
-            "title": "Bônus: Peças-Chave",
-            "description": "Guarda-roupa funcional",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911687/C%C3%B3pia_de_MOCKUPS_12_w8fwrn.webp",
-            "imageAlt": "Bônus Peças-Chave",
-            "imageWidth": 250,
-            "imageHeight": 312
-          },
-          {
-            "id": "bonus-visagism",
-            "title": "Bônus: Visagismo",
-            "description": "Valorize seus traços",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1745515076/C%C3%B3pia_de_MOCKUPS_10_-_Copia_bvoccn.webp",
-            "imageAlt": "Bônus Visagismo",
-            "imageWidth": 250,
-            "imageHeight": 312
-          }
-        ],
-        "pricing": {
-          "installments": {
-            "quantity": 5,
-            "amount": "8,83"
-          },
-          "fullPrice": "39,90",
-          "discount": "77% OFF",
-          "savings": "R$ 135,10",
-          "limitedOffer": true
+        "style": {
+          "backgroundColor": "#FAF9F7",
+          "textColor": "#432818",
+          "padding": 24
         },
-        "finalCtaText": "Garantir Minha Transformação",
-        "finalCtaIcon": "ShoppingCart",
-        "finalCtaUrl": "https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912",
-        "containerWidth": "full",
-        "spacing": "large"
+        "animation": {
+          "type": "scale",
+          "duration": 500,
+          "delay": 0,
+          "easing": "ease-out"
+        }
+      },
+      {
+        "type": "pricing",
+        "id": "pricing-21",
+        "content": {
+          "pricing": {
+            "originalPrice": 447,
+            "salePrice": 97,
+            "currency": "R$",
+            "installments": {
+              "count": 8,
+              "value": 14.11
+            }
+          },
+          "title": "Investimento que Transforma",
+          "subtitle": "Desconto exclusivo para participantes do quiz",
+          "ctaText": "Quero Transformar Meu Estilo Agora!",
+          "ctaUrl": "https://pay.kiwify.com.br/DkYC1Aj",
+          "features": [
+            "✓ 5 módulos completos sobre estilo pessoal",
+            "✓ Acesso vitalício ao conteúdo",
+            "✓ Suporte direto com Gisele Galvão",
+            "✓ Materiais bônus exclusivos",
+            "✓ Comunidade privada de alunas",
+            "✓ Certificado de conclusão",
+            "✓ Garantia de 7 dias"
+          ]
+        },
+        "style": {
+          "backgroundColor": "#FFFFFF",
+          "padding": 24
+        },
+        "animation": {
+          "type": "slideUp",
+          "duration": 500,
+          "delay": 200,
+          "easing": "ease-out"
+        }
       }
+    ],
+    "navigation": {
+      "nextStep": null,
+      "prevStep": "step-20",
+      "allowBack": true,
+      "requiresUserInput": false,
+      "autoAdvance": false
     },
-    {
-      "id": "guarantee-section",
-      "type": "offer-guarantee-section",
-      "order": 5,
-      "content": {},
-      "properties": {
-        "title": "7 Dias de Garantia",
-        "description": "Se não ficar satisfeita, devolvemos **100% do seu dinheiro**. Sem perguntas.",
-        "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744916216/C%C3%B3pia_de_01._P%C3%A1gina_-_Produto_de_Entrada_2_hamaox.webp",
-        "imageAlt": "Garantia 7 dias",
-        "imageWidth": 200,
-        "imageHeight": 200,
-        "layout": "centered",
-        "containerWidth": "full",
-        "spacing": "large"
-      }
-    },
-    {
-      "id": "faq-section",
-      "type": "offer-faq-section",
-      "order": 6,
-      "content": {},
-      "properties": {
-        "title": "Perguntas Frequentes",
-        "questions": [
-          {
-            "question": "Quanto tempo leva para fazer o quiz?",
-            "answer": "O quiz leva apenas alguns minutos para ser completado. São perguntas simples e objetivas sobre suas preferências e estilo de vida."
-          },
-          {
-            "question": "Como recebo os materiais após a compra?",
-            "answer": "Imediatamente após a confirmação do pagamento, você receberá um e-mail com as instruções de acesso a todos os materiais."
-          },
-          {
-            "question": "Os guias servem para qualquer tipo físico?",
-            "answer": "Sim! Os guias foram desenvolvidos considerando a diversidade de tipos físicos. O mais importante é o seu estilo predominante, e as orientações são adaptáveis para valorizar seu corpo único."
-          },
-          {
-            "question": "Preciso ter conhecimento prévio sobre moda?",
-            "answer": "Não! Os guias foram criados justamente para quem quer aprender do zero ou aprimorar seus conhecimentos sobre estilo pessoal. Tudo é explicado de forma clara e didática."
-          },
-          {
-            "question": "Posso acessar os materiais pelo celular?",
-            "answer": "Sim! Todos os materiais são digitais e podem ser acessados por qualquer dispositivo: computador, tablet ou smartphone."
-          },
-          {
-            "question": "E se eu não gostar do conteúdo?",
-            "answer": "Você tem 7 dias de garantia incondicional. Se não ficar satisfeita, basta solicitar o reembolso e devolveremos 100% do seu investimento."
-          },
-          {
-            "question": "Quanto tempo terei acesso aos materiais?",
-            "answer": "O acesso é vitalício! Você poderá consultar os guias sempre que precisar, sem prazo de expiração."
-          },
-          {
-            "question": "Os guias funcionam para qualquer idade?",
-            "answer": "Absolutamente! Os princípios de estilo pessoal são atemporais e adaptáveis para mulheres de todas as idades. O importante é expressar sua essência, independente da sua fase de vida."
+    "analytics": {
+      "events": [
+        "page_view",
+        "section_view",
+        "cta_click",
+        "offer_viewed"
+      ],
+      "trackingId": "step-21-offer-v3",
+      "fbPixelId": null,
+      "gaTrackingId": null,
+      "conversionEvents": [
+        {
+          "event": "ViewContent",
+          "params": {
+            "content_name": "5 Passos Vista-se de Você",
+            "content_category": "Offer",
+            "value": 97,
+            "currency": "BRL"
           }
-        ],
-        "containerWidth": "full",
-        "spacing": "large"
-      }
+        }
+      ]
+    },
+    "seo": {
+      "title": "Oferta Exclusiva - 5 Passos Vista-se de Você",
+      "description": "Transforme seu guarda-roupa e sua confiança com o método exclusivo 5 Passos. Oferta especial para participantes do quiz.",
+      "keywords": [
+        "consultoria de estilo",
+        "guarda-roupa",
+        "transformação pessoal",
+        "moda feminina",
+        "estilo pessoal"
+      ]
     }
-  ],
+  },
 };
 
 // 📋 ALIAS para compatibilidade com código legado
