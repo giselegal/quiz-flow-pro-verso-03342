@@ -389,7 +389,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
     funnelId: initialFunnelId
 }) => {
     console.log('✅ QuizModularProductionEditor: Component rendering', { initialFunnelId });
-    
+
     // ======================
     // Larguras redimensionáveis dos painéis (persistidas)
     // ======================
