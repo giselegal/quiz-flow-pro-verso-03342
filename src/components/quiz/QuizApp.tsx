@@ -55,6 +55,9 @@ export default function QuizApp({ funnelId, externalSteps }: QuizAppProps) {
 
     const currentStepId = getStepIdFromCurrentStep(state.currentStep);
 
+    // 🔍 DEBUG: Verificar stepId
+    console.log('🎯 [QuizApp] currentStepId:', currentStepId, '| state.currentStep:', state.currentStep);
+
     // Preparar quiz state para UnifiedStepRenderer
     const unifiedQuizState = {
         currentStep: parseInt(state.currentStep.replace('step-', '')) || 1,
