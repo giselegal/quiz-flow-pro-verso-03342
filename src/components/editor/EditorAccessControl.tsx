@@ -64,15 +64,6 @@ export const EditorAccessControl: React.FC<EditorAccessControlProps> = ({
     );
   } catch { /* ignore */ }
 
-  // Implementar hasPermission básico (SuperUnifiedProvider não tem hasPermission)
-  const hasPermission = (action: string): boolean => {
-    if (!profile) return false;
-    const role = profile.role || 'user';
-    if (role === 'admin') return true;
-    if (role === 'editor' && action.startsWith('editor')) return true;
-    return false;
-  };
-
   if (!profile && allowAnonymousDev) {
     return (
       <>

@@ -427,10 +427,29 @@ class QuizEditorBridge {
                 // Converter sections[] para blocks[]
                 const blocks = BlocksToJSONv3Adapter.jsonv3ToBlocks(v3Template);
 
-                // Converter blocks[] para QuizStep
-                const stepData = convertBlocksToStep(blocks, stepId);
+                // Converter Block[] para EditableBlock[] (adaptar formato)
+                const editableBlocks = blocks.map((b, idx) => ({
+                    id: b.id,
+                    type: b.type,
+                    order: b.order ?? idx,
+                    properties: b.properties || {},
+                    content: b.content || {}
+                }));
 
-                steps[stepId] = stepData;
+                // Inferir tipo do step baseado no stepId ou usar fallback
+                const fallbackStep = QUIZ_STEPS[stepId];
+                const stepType = fallbackStep?.type || 'question';
+
+                // Converter blocks[] para QuizStep
+                const stepData = convertBlocksToStep(stepId, stepType, editableBlocks);
+
+                // Mesclar com fallback para garantir propriedades obrigatórias
+                steps[stepId] = {
+                    ...fallbackStep,
+                    ...stepData,
+                    type: stepType // garantir type definido
+                } as QuizStep;
+
                 console.log(`✅ Template ${stepId} carregado do JSON v3.0`);
             } catch (error) {
                 // Fallback para QUIZ_STEPS hardcoded
@@ -564,8 +583,20 @@ class QuizEditorBridge {
         // Converter JSON v3.0 → Blocks
         const blocks = BlocksToJSONv3Adapter.jsonv3ToBlocks(json);
 
-        // Converter Blocks → QuizStep (com step ID e inferência)
-        const quizStep = convertBlocksToStep(blocks as any, json.metadata.id as any, 'infer' as any);
+        // Inferir tipo do step do category ou do ID
+        const categoryMap: Record<string, QuizStep['type']> = {
+            'intro': 'intro',
+            'question': 'question',
+            'strategic': 'strategic-question',
+            'transition': 'transition',
+            'result': 'result',
+            'offer': 'offer'
+        };
+
+        const stepType = categoryMap[json.metadata.category] || 'question';
+
+        // Converter blocks[] para QuizStep
+        const quizStep = convertBlocksToStep(json.metadata.id, stepType, blocks as any);
 
         // Criar EditorQuizStep com type garantido
         const editorStep: EditorQuizStep = {

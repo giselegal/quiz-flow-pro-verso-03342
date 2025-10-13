@@ -268,13 +268,11 @@ export class BlocksToJSONv3Adapter {
         return blocks.some(b => {
             const type = b.type as string;
             return type === 'form-input' ||
-                   type === 'options-grid' ||
-                   type === 'question-card' ||
-                   type === 'question-multi-choice';
+                type === 'options-grid' ||
+                type.includes('quiz-options') ||
+                type.includes('form');
         });
-    }
-
-    /**
+    }    /**
      * 🔄 Conversão completa: QuizStep → JSON v3.0
      */
     static quizStepToJSONv3(step: QuizStep, stepId: string): JSONv3Template {
