@@ -11,9 +11,8 @@
 
 import type { QuizStep } from '@/data/quizSteps';
 import type { Block } from '@/types/editor';
-import type { JSONv3Template } from '@/templates/types/jsonv3Types';
+import { BlocksToJSONv3Adapter, type JSONv3Template } from './BlocksToJSONv3Adapter';
 import { QuizStepAdapter } from './QuizStepAdapter';
-import { BlocksToJSONv3Adapter } from './BlocksToJSONv3Adapter';
 
 /**
  * 🎯 SCHEMA UNIFICADO
@@ -56,14 +55,23 @@ export class UnifiedQuizStepAdapter {
    * QuizStep → UnifiedQuizStep
    */
   static fromQuizStep(quizStep: QuizStep, stepId: string): UnifiedQuizStep {
-    // Usar QuizStepAdapter para converter QuizStep → Blocks
-    const blocks = QuizStepAdapter.toBlocks(quizStep);
+    // Usar QuizStepAdapter para converter QuizStep → JSON Blocks
+    const jsonBlocks = QuizStepAdapter.toJSONBlocks(quizStep);
+    
+    // Converter JSONBlock[] para Block[]
+    const blocks: Block[] = jsonBlocks.map((block: any, index: number) => ({
+      id: block.id,
+      type: block.type as any,
+      order: block.position || index,
+      content: block.properties || {},
+      properties: block.properties || {}
+    }));
     
     // Extrair sections dos blocks
-    const sections = blocks.map(block => ({
-      type: block.type,
-      content: block.content || block.properties || {},
-      style: (block.content as any)?.style || (block.properties as any)?.style
+    const sections = blocks.map((block: Block) => ({
+      type: block.type as string,
+      content: block.content || {},
+      style: (block.content as any)?.style
     }));
     
     return {
@@ -86,8 +94,8 @@ export class UnifiedQuizStepAdapter {
    * Block[] → UnifiedQuizStep
    */
   static fromBlocks(blocks: Block[], stepId: string): UnifiedQuizStep {
-    const sections = blocks.map(block => ({
-      type: block.type,
+    const sections = blocks.map((block: Block) => ({
+      type: block.type as string,
       content: block.content || block.properties || {},
       style: (block.content as any)?.style || (block.properties as any)?.style
     }));
@@ -117,16 +125,19 @@ export class UnifiedQuizStepAdapter {
     // Converter JSON → Blocks usando BlocksToJSONv3Adapter
     const blocks = BlocksToJSONv3Adapter.jsonv3ToBlocks(json);
     
-    const sections = json.sections.map(section => ({
+    const sections = json.sections.map((section: any) => ({
       type: section.type,
       content: section.content,
       style: section.style
     }));
     
+    // Inferir tipo baseado na categoria
+    const inferredType = this.categoryToStepType(json.metadata.category);
+    
     return {
       id: json.metadata.id,
       stepNumber: this.extractStepNumber(json.metadata.id),
-      type: json.metadata.stepType as QuizStep['type'],
+      type: inferredType,
       sections,
       metadata: {
         version: json.templateVersion,
@@ -141,6 +152,18 @@ export class UnifiedQuizStepAdapter {
   }
   
   /**
+   * Converter categoria JSON para tipo QuizStep
+   */
+  private static categoryToStepType(category: string): QuizStep['type'] {
+    if (category.includes('intro')) return 'intro';
+    if (category.includes('question')) return 'question';
+    if (category.includes('transition')) return 'transition';
+    if (category.includes('result')) return 'result';
+    if (category.includes('offer')) return 'offer';
+    return 'intro';
+  }
+  
+  /**
    * UnifiedQuizStep → QuizStep
    */
   static toQuizStep(unified: UnifiedQuizStep): QuizStep {
@@ -149,9 +172,9 @@ export class UnifiedQuizStepAdapter {
       return unified.raw.quizStep;
     }
     
-    // Caso contrário, usar blocks para reconstruir
-    const blocks = unified.raw.blocks || this.sectionsToBlocks(unified.sections);
-    return QuizStepAdapter.fromBlocks(blocks, unified.id);
+    // Caso contrário, usar JSON para reconstruir
+    const json = this.toJSON(unified);
+    return QuizStepAdapter.fromJSON(json as any);
   }
   
   /**

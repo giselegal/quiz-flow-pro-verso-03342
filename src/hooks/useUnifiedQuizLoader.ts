@@ -54,18 +54,12 @@ export function useUnifiedQuizLoader(
       
       switch (source) {
         case 'database':
-          // Carregar do Supabase
-          const { data, error: dbError } = await supabase
-            .from('quiz_production')
-            .select('steps')
-            .eq('funnel_id', funnelId)
-            .single();
-          
-          if (dbError) throw dbError;
-          
-          const quizStep = data?.steps?.[stepId];
-          if (quizStep) {
-            unifiedStep = UnifiedQuizStepAdapter.fromQuizStep(quizStep, stepId);
+          // Carregar do Supabase (quando tabela quiz_production for criada)
+          // TODO: Implementar após criar tabela quiz_production
+          console.warn('Database source not yet implemented - falling back to hardcoded');
+          const hardcodedFallback = QUIZ_STEPS[stepId];
+          if (hardcodedFallback) {
+            unifiedStep = UnifiedQuizStepAdapter.fromQuizStep(hardcodedFallback, stepId);
           }
           break;
         
