@@ -108,9 +108,103 @@ const OfferMap = React.lazy(() => import('@/components/editor/quiz/components/Of
 
 // Tipos centrais importados de ./types (removidas definições locais duplicadas)
 
+// Import da biblioteca de componentes do registry
+import { AVAILABLE_COMPONENTS } from '@/components/editor/blocks/EnhancedBlockRegistry';
 
-// Biblioteca de componentes disponíveis
-const COMPONENT_LIBRARY: ComponentLibraryItem[] = [
+/**
+ * Mapeia categorias para ícones React
+ */
+const getCategoryIcon = (category: string): React.ReactNode => {
+    const iconMap: Record<string, React.ReactNode> = {
+        layout: <Layout className="w-4 h-4" />,
+        content: <Type className="w-4 h-4" />,
+        visual: <ImageIcon className="w-4 h-4" />,
+        quiz: <List className="w-4 h-4" />,
+        forms: <Type className="w-4 h-4" />,
+        action: <MousePointer className="w-4 h-4" />,
+        result: <CheckCircle className="w-4 h-4" />,
+        offer: <ArrowRightCircle className="w-4 h-4" />,
+        navigation: <Layout className="w-4 h-4" />,
+        ai: <Settings className="w-4 h-4" />,
+        advanced: <Settings className="w-4 h-4" />,
+    };
+    return iconMap[category] || <Layout className="w-4 h-4" />;
+};
+
+/**
+ * Converte AVAILABLE_COMPONENTS do registry para o formato ComponentLibraryItem do editor
+ */
+const COMPONENT_LIBRARY: ComponentLibraryItem[] = AVAILABLE_COMPONENTS.map(comp => ({
+    type: comp.type,
+    label: comp.label,
+    icon: getCategoryIcon(comp.category),
+    category: comp.category as ComponentLibraryItem['category'],
+    defaultProps: {
+        // Props padrão baseados no tipo
+        ...(comp.type.includes('text') && {
+            text: comp.label,
+            fontSize: '16px',
+            color: '#432818',
+            textAlign: 'left'
+        }),
+        ...(comp.type.includes('heading') && {
+            text: comp.label,
+            level: 2,
+            fontSize: '24px',
+            color: '#432818',
+            textAlign: 'center'
+        }),
+        ...(comp.type.includes('button') && {
+            text: 'Continuar',
+            backgroundColor: '#B89B7A',
+            textColor: '#FFFFFF',
+            action: 'next-step'
+        }),
+        ...(comp.type.includes('image') && {
+            src: INLINE_IMG_PLACEHOLDER,
+            alt: 'Imagem',
+            width: '100%',
+            borderRadius: '8px'
+        }),
+        ...(comp.type.includes('container') && {
+            backgroundColor: '#F8F9FA',
+            padding: '16px',
+            borderRadius: '8px'
+        }),
+        ...(comp.type.includes('form-input') && {
+            label: 'Campo',
+            placeholder: 'Digite aqui...',
+            required: true
+        }),
+        ...(comp.type === 'quiz-options' && {
+            options: [
+                { id: 'opt1', text: 'Opção 1' },
+                { id: 'opt2', text: 'Opção 2' }
+            ],
+            multiSelect: true,
+            requiredSelections: 1,
+            maxSelections: 3,
+            autoAdvance: true,
+            showImages: true,
+            layout: 'auto'
+        }),
+        ...(comp.type === 'progress-header' && {
+            showLogo: true,
+            logoUrl: BRAND_LOGO_URL,
+            logoWidth: '120px',
+            progressEnabled: true,
+            progressPercent: 0,
+            autoProgress: true,
+            barHeight: '4px',
+            barColor: '#b3a26aff',
+            barBackground: '#E5E7EB'
+        }),
+    }
+}));
+
+// ⚠️ LEGACY COMPONENT_LIBRARY (mantido comentado para referência)
+// Foi substituído pela versão dinâmica acima que usa o registry
+const COMPONENT_LIBRARY_LEGACY: ComponentLibraryItem[] = [
     {
         type: 'text',
         label: 'Texto',
@@ -420,13 +514,13 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                         }
                     } catch (e) {
                         console.warn('🔄 Falha ao carregar funnel, usando template quiz21StepsComplete como fallback', e);
-                        
+
                         // Forçar carregamento do template como fallback
                         const initial: EditorEditableQuizStep[] = Array.from({ length: 21 }).map((_, idx) => {
                             const stepNumber = idx + 1;
                             const stepId = `step-${stepNumber.toString().padStart(2, '0')}`;
                             const blocks = safeGetTemplateBlocks(stepId, QUIZ_STYLE_21_STEPS_TEMPLATE, funnelParam);
-                            
+
                             // Determinar tipo de step baseado no índice (mesmo padrão usado abaixo)
                             const getStepType = (index: number): 'intro' | 'question' | 'strategic-question' | 'transition' | 'transition-result' | 'result' | 'offer' => {
                                 if (index === 0) return 'intro';
@@ -437,7 +531,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                                 if (index === 19) return 'result';
                                 return 'offer'; // index === 20
                             };
-                            
+
                             return {
                                 id: stepId,
                                 type: getStepType(idx),
@@ -446,7 +540,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                                 nextStep: stepNumber < 21 ? `step-${(stepNumber + 1).toString().padStart(2, '0')}` : undefined
                             };
                         });
-                        
+
                         console.log(`✅ Template fallback carregado: ${initial.length} steps, ${initial.reduce((sum, s) => sum + s.blocks.length, 0)} blocos totais`);
                         setSteps(initial);
                         setSelectedStepId(initial[0]?.id || '');
@@ -482,7 +576,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                                 QUIZ_STYLE_21_STEPS_TEMPLATE,
                                 funnelParam
                             );
-                            
+
                             return {
                                 id: stepId,
                                 type: buildStepType(idx),
@@ -506,18 +600,18 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
         setIsLoading(false);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
-    
+
     // ✅ FASE 3: FALLBACK Empty State - Mostrar mensagem se nenhum step foi carregado
     useEffect(() => {
         if (!isLoading && (!steps || steps.length === 0)) {
             console.error('❌ EDITOR VAZIO: Nenhuma etapa carregada após useEffect inicial!');
-            console.log('📊 Debug info:', { 
-                hasSteps: !!steps, 
-                stepsLength: steps?.length, 
+            console.log('📊 Debug info:', {
+                hasSteps: !!steps,
+                stepsLength: steps?.length,
                 isLoading,
                 url: typeof window !== 'undefined' ? window.location.href : 'N/A'
             });
-            
+
             // Criar etapa vazia padrão para não deixar editor completamente vazio
             const fallbackStep: EditableQuizStep = {
                 id: 'step-01',
@@ -549,13 +643,13 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                 }],
                 nextStep: undefined
             };
-            
+
             setSteps([fallbackStep]);
             setSelectedStepId('step-01');
             console.log('✅ Fallback step criado para evitar editor vazio');
         }
     }, [isLoading, steps]);
-    
+
     const [validationErrors, setValidationErrors] = useState<string[]>([]);
     // Undo/Redo via hook
     const { canUndo, canRedo, init: initHistory, push: pushHistory, undo, redo } = useEditorHistory<EditableQuizStep[]>();
@@ -1746,7 +1840,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
     // Handler para quando um quiz é criado pelo Builder System
     const handleBuilderQuizCreated = useCallback((quizData: any) => {
         console.log('🎯 Quiz criado pelo Builder System:', quizData);
-        
+
         try {
             // Converter FunnelConfig para EditableQuizStep[]
             const convertedSteps: EditableQuizStep[] = quizData.steps.map((step: any, index: number) => ({

@@ -41,5 +41,5 @@ export interface ComponentLibraryItem {
     icon: React.ReactNode;
     defaultProps: Record<string, any>;
     defaultContent?: Record<string, any>;
-    category: 'layout' | 'content' | 'interactive' | 'media';
+    category: 'layout' | 'content' | 'interactive' | 'media' | 'visual' | 'quiz' | 'forms' | 'action' | 'result' | 'offer' | 'navigation' | 'ai' | 'advanced';
 }

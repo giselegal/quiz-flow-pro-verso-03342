@@ -293,56 +293,102 @@ export const getEnhancedBlockComponent = (type: string) => {
 
 /**
  * Lista de componentes disponíveis para a sidebar do editor
- * Organizada por categorias para facilitar a navegação
+ * Organizada por categorias - APENAS COMPONENTES 100% EDITÁVEIS
+ * Versão otimizada sem duplicações
  */
 export const AVAILABLE_COMPONENTS = [
-    // ✅ STEP 01 - COMPONENTES BÁSICOS
-    { type: 'quiz-intro-header', label: 'Cabeçalho Quiz', category: 'step01' },
-    { type: 'decorative-bar', label: 'Barra Decorativa', category: 'step01' },
-    { type: 'text', label: 'Texto', category: 'step01' },
-    { type: 'image', label: 'Imagem', category: 'step01' },
-    { type: 'form-input', label: 'Campo de Nome', category: 'step01' },
-    { type: 'button', label: 'Botão', category: 'step01' },
-    { type: 'legal-notice', label: 'Aviso Legal', category: 'step01' },
+    // ============================================================================
+    // 🏗️ COMPONENTES ESTRUTURAIS (Layout & Containers)
+    // ============================================================================
+    { type: 'container', label: 'Container', category: 'layout', description: 'Container flexível com padding e estilos personalizáveis' },
+    { type: 'section', label: 'Seção', category: 'layout', description: 'Seção para agrupar conteúdo' },
 
-    // ✅ COMPONENTES UNIVERSAIS
-    { type: 'text-inline', label: 'Texto Inline', category: 'content' },
-    { type: 'options-grid', label: 'Opções em Grid', category: 'quiz' },
-    { type: 'button-inline', label: 'Botão Inline', category: 'action' },
-    { type: 'lead-form', label: 'Formulário Lead', category: 'conversion' },
-    { type: 'image-display-inline', label: 'Imagem Display', category: 'content' },
-    { type: 'result-card', label: 'Card de Resultado', category: 'quiz' },
-    { type: 'loading-animation', label: 'Animação de Loading', category: 'ui' },
-    { type: 'progress-bar', label: 'Barra de Progresso', category: 'ui' },
-    { type: 'heading', label: 'Título', category: 'content' },
-    { type: 'container', label: 'Container', category: 'layout' },
+    // ============================================================================
+    // 📝 COMPONENTES DE CONTEÚDO (Text & Media)
+    // ============================================================================
+    { type: 'heading', label: 'Título (H1-H6)', category: 'content', description: 'Títulos com níveis hierárquicos editáveis' },
+    { type: 'text-inline', label: 'Texto', category: 'content', description: 'Parágrafo de texto com formatação completa' },
+    { type: 'image-inline', label: 'Imagem', category: 'content', description: 'Imagem com URL, alt, dimensões e estilos' },
+    { type: 'image-display-inline', label: 'Imagem Display', category: 'content', description: 'Imagem otimizada para exibição' },
 
-    // ✅ COMPONENTES AVANÇADOS
-    { type: 'connected-template-wrapper', label: 'Template Wrapper Conectado', category: 'advanced' },
-    { type: 'connected-lead-form', label: 'Formulário Conectado', category: 'advanced' },
-    { type: 'quiz-navigation', label: 'Navegação Premium', category: 'advanced' },
-    { type: 'style-cards-grid', label: 'Grid de Estilos', category: 'advanced' },
-    { type: 'style-card-inline', label: 'Card de Estilo (Único)', category: 'advanced' },
-    { type: 'gradient-animation', label: 'Gradiente Animado', category: 'advanced' },
+    // ============================================================================
+    // 🎨 COMPONENTES VISUAIS (Decoração)
+    // ============================================================================
+    { type: 'decorative-bar', label: 'Barra Decorativa', category: 'visual', description: 'Linha decorativa horizontal' },
+    { type: 'gradient-animation', label: 'Gradiente Animado', category: 'visual', description: 'Fundo com gradiente animado' },
 
-    // ✅ COMPONENTES DE RESULTADO
-    { type: 'urgency-timer-inline', label: 'Timer de Urgência', category: 'result' },
-    { type: 'before-after-inline', label: 'Antes e Depois', category: 'result' },
-    { type: 'result-header-inline', label: 'Cabeçalho de Resultado', category: 'result' },
-    // Novo: bloco de vendas
-    { type: 'sales-hero', label: 'Sales Hero', category: 'result' },
-    { type: 'bonus', label: 'Bônus (Seção)', category: 'result' },
-    { type: 'testimonials', label: 'Depoimentos', category: 'result' },
-    { type: 'testimonial-card-inline', label: 'Depoimento Individual', category: 'result' },
-    { type: 'testimonials-carousel-inline', label: 'Carrossel de Depoimentos', category: 'result' },
-    { type: 'value-anchoring', label: 'Ancoragem de Valor', category: 'result' },
-    { type: 'secure-purchase', label: 'Compra Segura', category: 'result' },
-    { type: 'mentor-section-inline', label: 'Seção da Mentora', category: 'result' },
-    { type: 'guarantee', label: 'Garantia', category: 'result' },
-    { type: 'benefits', label: 'Lista de Benefícios', category: 'result' },
+    // ============================================================================
+    // 🎯 COMPONENTES DE QUIZ (Interação)
+    // ============================================================================
+    { type: 'quiz-intro-header', label: 'Header do Quiz', category: 'quiz', description: 'Cabeçalho com logo e título do quiz' },
+    { type: 'options-grid', label: 'Grid de Opções', category: 'quiz', description: 'Grade de opções selecionáveis com imagens' },
+    { type: 'question-hero', label: 'Hero de Pergunta', category: 'quiz', description: 'Seção hero para perguntas do quiz' },
+    { type: 'strategic-question', label: 'Pergunta Estratégica', category: 'quiz', description: 'Pergunta com design especial' },
+    { type: 'transition-hero', label: 'Hero de Transição', category: 'quiz', description: 'Tela de transição entre etapas' },
+    { type: 'progress-bar', label: 'Barra de Progresso', category: 'quiz', description: 'Indicador visual de progresso' },
+    { type: 'loading-animation', label: 'Animação de Loading', category: 'quiz', description: 'Loader animado' },
 
+    // ============================================================================
+    // 📋 COMPONENTES DE FORMULÁRIO (Input & Forms)
+    // ============================================================================
+    { type: 'form-input', label: 'Campo de Texto', category: 'forms', description: 'Input de texto com label e validação' },
+    { type: 'lead-form', label: 'Formulário de Lead', category: 'forms', description: 'Formulário completo de captura' },
+    { type: 'connected-lead-form', label: 'Formulário Conectado', category: 'forms', description: 'Formulário com integração de dados' },
+
+    // ============================================================================
+    // 🔘 COMPONENTES DE AÇÃO (Buttons & CTAs)
+    // ============================================================================
+    { type: 'button-inline', label: 'Botão', category: 'action', description: 'Botão com texto, cores e ação personalizáveis' },
+    { type: 'legal-notice', label: 'Aviso Legal', category: 'action', description: 'Texto legal com checkbox' },
+
+    // ============================================================================
+    // 📊 COMPONENTES DE RESULTADO (Step 20)
+    // ============================================================================
+    { type: 'result-card', label: 'Card de Resultado', category: 'result', description: 'Card com resultado do quiz' },
+    { type: 'result-header-inline', label: 'Header de Resultado', category: 'result', description: 'Cabeçalho da página de resultado' },
+    { type: 'style-card-inline', label: 'Card de Estilo', category: 'result', description: 'Card individual de estilo' },
+    { type: 'style-cards-grid', label: 'Grid de Estilos', category: 'result', description: 'Grade de cards de estilo' },
+
+    // 🆕 Step 20 - Módulos Especializados
+    { type: 'step20-result-header', label: 'Step20: Header', category: 'result', description: 'Header modular do resultado' },
+    { type: 'step20-style-reveal', label: 'Step20: Revelação de Estilo', category: 'result', description: 'Animação de revelação' },
+    { type: 'step20-user-greeting', label: 'Step20: Saudação', category: 'result', description: 'Saudação personalizada' },
+    { type: 'step20-compatibility', label: 'Step20: Compatibilidade', category: 'result', description: 'Análise de compatibilidade' },
+    { type: 'step20-secondary-styles', label: 'Step20: Estilos Secundários', category: 'result', description: 'Grid de estilos secundários' },
+    { type: 'step20-personalized-offer', label: 'Step20: Oferta Personalizada', category: 'result', description: 'CTA com oferta baseada no resultado' },
+    { type: 'step20-complete-template', label: 'Step20: Template Completo', category: 'result', description: 'Template completo da Step 20' },
+
+    // ============================================================================
+    // 💰 COMPONENTES DE OFERTA/VENDAS (Step 21)
+    // ============================================================================
+    { type: 'offer-hero', label: 'Hero de Oferta', category: 'offer', description: 'Seção hero da página de oferta' },
+    { type: 'sales-hero', label: 'Sales Hero', category: 'offer', description: 'Hero de vendas com proposta de valor' },
+    { type: 'urgency-timer-inline', label: 'Timer de Urgência', category: 'offer', description: 'Contador regressivo' },
+    { type: 'before-after-inline', label: 'Antes e Depois', category: 'offer', description: 'Comparação antes/depois' },
+    { type: 'value-anchoring', label: 'Ancoragem de Valor', category: 'offer', description: 'Comparação de valores' },
+    { type: 'bonus', label: 'Seção de Bônus', category: 'offer', description: 'Lista de bônus inclusos' },
+    { type: 'testimonials', label: 'Grade de Depoimentos', category: 'offer', description: 'Grid de depoimentos' },
+    { type: 'testimonial-card-inline', label: 'Depoimento Individual', category: 'offer', description: 'Card único de depoimento' },
+    { type: 'testimonials-carousel-inline', label: 'Carrossel de Depoimentos', category: 'offer', description: 'Slider de depoimentos' },
+    { type: 'guarantee', label: 'Garantia', category: 'offer', description: 'Seção de garantia' },
+    { type: 'secure-purchase', label: 'Compra Segura', category: 'offer', description: 'Selos de segurança' },
+    { type: 'benefits', label: 'Lista de Benefícios', category: 'offer', description: 'Lista de benefícios do produto' },
+    { type: 'mentor-section-inline', label: 'Seção da Mentora', category: 'offer', description: 'Apresentação da mentora/autoridade' },
+
+    // ============================================================================
+    // 🧭 COMPONENTES DE NAVEGAÇÃO
+    // ============================================================================
+    { type: 'quiz-navigation', label: 'Navegação do Quiz', category: 'navigation', description: 'Barra de navegação premium' },
+
+    // ============================================================================
     // 🤖 COMPONENTES DE IA
-    { type: 'fashion-ai-generator', label: 'Gerador de IA Fashion', category: 'ai' },
+    // ============================================================================
+    { type: 'fashion-ai-generator', label: 'Gerador de IA Fashion', category: 'ai', description: 'Geração de estilos com IA' },
+
+    // ============================================================================
+    // 🔧 COMPONENTES AVANÇADOS (Templates & Wrappers)
+    // ============================================================================
+    { type: 'connected-template-wrapper', label: 'Template Wrapper', category: 'advanced', description: 'Wrapper conectado para templates' },
 ];
 
 /**
