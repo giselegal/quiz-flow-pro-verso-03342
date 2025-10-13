@@ -17,7 +17,7 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
 }) => {
   console.log('🔒 ProtectedRoute: INICIANDO para path:', path);
 
-  const { user, loading } = useAuth();
+  const { user, isLoading } = useAuth();
   const [, setLocation] = useLocation();
 
   // Allow access during development (multiple checks for robustness)
@@ -34,7 +34,7 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
     userDetails: user ? 'Logado' : 'Não logado',
     isDevelopment,
     requireAuth,
-    loading,
+    isLoading,
     hostname: window.location.hostname,
     env: import.meta.env.MODE,
     devCheck: import.meta.env.DEV,
@@ -46,7 +46,7 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
     <Route path={path}>
       {() => {
         // Show loading while checking authentication
-        if (requireAuth && loading) {
+        if (requireAuth && isLoading) {
           return (
             <div className="min-h-screen flex items-center justify-center">
               <div className="text-center">

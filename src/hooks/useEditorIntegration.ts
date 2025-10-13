@@ -35,7 +35,13 @@ interface UseEditorIntegrationReturn {
 }
 
 export const useEditorIntegration = (): UseEditorIntegrationReturn => {
-  const { state } = useEditor();
+  const editorContext = useEditor({ optional: true });
+  
+  if (!editorContext) {
+    throw new Error('useEditorIntegration must be used within EditorProvider');
+  }
+  
+  const { state } = editorContext;
   const { currentStep, stepBlocks } = state;
 
   const [integrationState, setIntegrationState] = useState<EditorIntegrationState>({

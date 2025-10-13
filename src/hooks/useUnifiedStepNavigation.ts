@@ -45,7 +45,13 @@ export interface UseUnifiedStepNavigationReturn {
 }
 
 export const useUnifiedStepNavigation = (): UseUnifiedStepNavigationReturn => {
-    const { state, actions } = useEditor();
+    const editorContext = useEditor({ optional: true });
+    
+    if (!editorContext) {
+        throw new Error('useUnifiedStepNavigation must be used within EditorProvider');
+    }
+    
+    const { state, actions } = editorContext;
     const { currentStep, stepBlocks, stepValidation, isLoading } = state;
     const { setCurrentStep } = actions;
 

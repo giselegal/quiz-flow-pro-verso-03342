@@ -13,7 +13,9 @@ interface EditorToolbarProps {
 }
 
 export const EditorToolbar: React.FC<EditorToolbarProps> = ({ className = '' }) => {
-  const { state } = useEditor();
+  const editorContext = useEditor({ optional: true });
+  if (!editorContext) return null;
+  const { state } = editorContext;
   const [viewportSize, setViewportSize] = useState<'sm' | 'md' | 'lg' | 'xl'>('lg');
 
   const totalBlocks = useMemo(() => {

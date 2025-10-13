@@ -11,7 +11,9 @@ interface ResultPageBuilderProps {
 }
 
 export const ResultPageBuilder: React.FC<ResultPageBuilderProps> = ({ primaryStyle }) => {
-  const { actions, state } = useEditor();
+  const editorContext = useEditor({ optional: true });
+  if (!editorContext) return null;
+  const { actions, state } = editorContext;
   const [selectedComponent, setSelectedComponent] = React.useState<string | null>(null);
 
   const currentStepKey = `step-${state.currentStep}`;

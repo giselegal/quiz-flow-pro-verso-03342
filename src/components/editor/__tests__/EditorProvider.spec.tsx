@@ -6,12 +6,14 @@ import { describe, expect, it } from 'vitest';
 
 // Helper consumer to expose context actions/state to the test via refs
 const ConsumerBridge = ({ actionsRef, stateRef }: any) => {
-  const ctx = useEditor();
+  const ctx = useEditor({ optional: true });
   // keep refs updated
   React.useEffect(() => {
-    actionsRef.current = ctx.actions;
-    stateRef.current = ctx.state;
-  }, [ctx]);
+    if (ctx) {
+      actionsRef.current = ctx.actions;
+      stateRef.current = ctx.state;
+    }
+  }, [ctx, actionsRef, stateRef]);
   return null;
 };
 

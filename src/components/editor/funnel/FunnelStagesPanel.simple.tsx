@@ -3,7 +3,9 @@ import { Button } from '@/components/ui/button';
 import { useEditor } from '@/components/editor/EditorProviderMigrationAdapter';
 
 const FunnelStagesPanel: React.FC = () => {
-  const { state, actions } = useEditor();
+  const editorContext = useEditor({ optional: true });
+  if (!editorContext) return null;
+  const { state, actions } = editorContext;
   const stages = [{ 
     id: 'step-1', 
     name: 'Step 1', 

@@ -18,7 +18,11 @@ export const EditorAccessControl: React.FC<EditorAccessControlProps> = ({
   requiredPlan = 'free',
   feature = 'editor',
 }) => {
-  const { profile, hasPermission } = useAuth();
+  const { user } = useAuth();
+  const profile = user?.user_metadata;
+  const hasPermission = (permission: string) => {
+    return user?.app_metadata?.permissions?.includes(permission) ?? false;
+  };
 
   // 🚧 Bypass controlado: permitir acesso anônimo quando abrindo via ?template=
   // Útil para testes rápidos do editor sem exigir login localmente ou em build preview.
@@ -129,7 +133,8 @@ export const EditorAccessControl: React.FC<EditorAccessControlProps> = ({
 
 // Componente para mostrar informações do plano do usuário
 export const UserPlanInfo: React.FC = () => {
-  const { profile } = useAuth();
+  const { user } = useAuth();
+  const profile = user?.user_metadata;
 
   if (!profile) return null;
 

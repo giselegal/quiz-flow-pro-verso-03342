@@ -25,7 +25,8 @@ interface CollaborationStatusProps {
 }
 
 export const CollaborationStatus: React.FC<CollaborationStatusProps> = ({ projectId }) => {
-  const { profile } = useAuth();
+  const { user } = useAuth();
+  const profile = user?.user_metadata;
   const [collaborators, setCollaborators] = useState<Collaborator[]>([]);
   const [isConnected] = useState(true);
   const { schedule, cancelAll } = useOptimizedScheduler();

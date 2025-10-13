@@ -24,7 +24,8 @@ interface Project {
 }
 
 export const ProjectWorkspace: React.FC = () => {
-  const { profile } = useAuth();
+  const { user } = useAuth();
+  const profile = user?.user_metadata;
   const [projects, setProjects] = useState<Project[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(true);

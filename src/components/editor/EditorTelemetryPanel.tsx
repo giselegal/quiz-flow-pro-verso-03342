@@ -10,7 +10,9 @@ interface EditorTelemetryPanelProps {
  * Exibe informações básicas sobre o estado atual do editor
  */
 export const EditorTelemetryPanel: React.FC<EditorTelemetryPanelProps> = ({ quizId }) => {
-  const { state } = useEditor();
+  const editorContext = useEditor({ optional: true });
+  if (!editorContext) return null;
+  const { state } = editorContext;
   
   return (
     <div className="fixed bottom-4 right-4 z-40 bg-white/90 dark:bg-gray-800/90 p-3 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 text-xs font-mono max-w-xs overflow-hidden">

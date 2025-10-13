@@ -78,7 +78,9 @@ const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
 }) => {
   // 🚀 Usar contexto de preview em vez de prop
   const { isPreviewing } = usePreview();
-  const { state: editorState } = useEditor();
+  const editorContext = useEditor({ optional: true });
+  if (!editorContext) return null;
+  const { state: editorState } = editorContext;
   const stepNumberRaw = editorState?.currentStep ?? 'default';
   const numericStep = typeof stepNumberRaw === 'number' ? stepNumberRaw : Number(stepNumberRaw) || 0;
 

@@ -3,7 +3,9 @@ import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
 import React from 'react';
 
 const DebugStep02: React.FC = () => {
-  const { state, actions } = useEditor();
+  const editorContext = useEditor({ optional: true });
+  if (!editorContext) return null;
+  const { state, actions } = editorContext;
   const computed = { currentBlocks: [], selectedBlock: { id: 'mock-id' } };
   const stageActions = { setActiveStage: () => {} };
   const blockActions = { addBlock: async (type: string) => 'new-id' };

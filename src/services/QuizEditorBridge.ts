@@ -526,13 +526,13 @@ class QuizEditorBridge {
         const blocks = BlocksToJSONv3Adapter.jsonv3ToBlocks(json);
 
         // Converter Blocks → QuizStep (com step ID e inferência)
-        const quizStep = convertBlocksToStep(blocks as any, json.metadata.id, 'infer');
+        const quizStep = convertBlocksToStep(blocks as any, json.metadata.id as any, 'infer' as any);
 
         // Criar EditorQuizStep com type garantido
         const editorStep: EditorQuizStep = {
             id: json.metadata.id,
             order: this.extractStepOrder(json.metadata.id),
-            type: quizStep.type || 'intro',
+            type: (quizStep.type || 'intro') as any,
             ...quizStep,
         };
 

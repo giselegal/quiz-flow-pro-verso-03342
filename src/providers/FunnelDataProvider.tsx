@@ -28,7 +28,9 @@ interface FunnelDataProviderWrapperProps {
 export const FunnelDataProviderWrapper: React.FC<FunnelDataProviderWrapperProps> = ({
     children
 }) => {
-    const { state, actions } = useEditor();
+    const editorContext = useEditor({ optional: true });
+    if (!editorContext) return <>{children}</>;
+    const { state, actions } = editorContext;
     const funnelsContext = useFunnels();
 
     // 🔍 DEBUG: Log do estado do FunnelDataProvider

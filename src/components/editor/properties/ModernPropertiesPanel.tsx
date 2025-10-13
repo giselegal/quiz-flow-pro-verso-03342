@@ -399,7 +399,9 @@ export const ModernPropertiesPanel: React.FC<ModernPropertiesPanelProps> = ({
   onDelete,
   onDuplicate
 }) => {
-  const { actions } = useEditor();
+  const editorContext = useEditor({ optional: true });
+  if (!editorContext) return null;
+  const { actions } = editorContext;
 
   // Descobrir propriedades usando sistema existente
   const discoveredProperties = React.useMemo(() => {

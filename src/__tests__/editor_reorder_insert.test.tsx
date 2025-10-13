@@ -6,7 +6,9 @@ import { createBlockFromComponent } from '@/utils/editorUtils';
 
 // Harness para executar ações e expor a ordem dos tipos no DOM
 const Harness: React.FC = () => {
-    const { state, actions } = useEditor();
+    const editorContext = useEditor({ optional: true });
+    if (!editorContext) return <div data-testid="phase">no-context</div>;
+    const { state, actions } = editorContext;
 
     const [phase, setPhase] = React.useState<'idle' | 'done'>('idle');
 

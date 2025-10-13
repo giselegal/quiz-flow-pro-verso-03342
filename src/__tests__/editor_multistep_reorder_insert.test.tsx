@@ -19,7 +19,9 @@ const EditorActionsProbe: React.FC<{ onReady: (ctx: ReturnType<typeof useEditor>
 };
 
 const EditorStateProbe: React.FC<{ onUpdate: (s: EditorState) => void }> = ({ onUpdate }) => {
-    const { state } = useEditor();
+    const editorContext = useEditor({ optional: true });
+    if (!editorContext) return null;
+    const { state } = editorContext;
     React.useEffect(() => { onUpdate(state); }, [state]);
     return null;
 };

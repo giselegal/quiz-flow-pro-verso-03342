@@ -259,7 +259,9 @@ const blockCategories: BlockCategory[] = [
 ];
 
 export const ComponentsSidebar: React.FC = () => {
-  const { actions, state } = useEditor();
+  const editorContext = useEditor({ optional: true });
+  if (!editorContext) return null;
+  const { actions, state } = editorContext;
 
   const handleAddBlock = (type: BlockType) => {
     const stepKey = `step-${state.currentStep}`;

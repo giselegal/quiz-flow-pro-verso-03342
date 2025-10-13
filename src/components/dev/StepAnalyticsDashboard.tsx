@@ -10,7 +10,9 @@ interface StepAnalyticsDashboardProps {
  * Exibe informações detalhadas sobre o estado atual do editor e métricas por etapa
  */
 export const StepAnalyticsDashboard: React.FC<StepAnalyticsDashboardProps> = ({ totalSteps }) => {
-  const { state } = useEditor();
+  const editorContext = useEditor({ optional: true });
+  if (!editorContext) return null;
+  const { state } = editorContext;
   
   // Calcular métricas por etapa
   const stepMetrics = React.useMemo(() => {

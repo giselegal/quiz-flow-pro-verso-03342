@@ -80,7 +80,9 @@ export const EditableEditorHeader: React.FC<EditableEditorHeaderProps> = ({
   customTitle,
   onSave,
 }) => {
-  const { state, actions } = useEditor();
+  const editorContext = useEditor({ optional: true });
+  if (!editorContext) return null;
+  const { state, actions } = editorContext;
   const [mode, setMode] = useState<'edit' | 'preview'>('edit');
   const { toast } = useToast();
   const fileInputRef = useRef<HTMLInputElement | null>(null);

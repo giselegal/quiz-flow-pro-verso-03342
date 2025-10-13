@@ -11,7 +11,7 @@ export const LogoutButton: React.FC<LogoutButtonProps> = ({
   variant = 'ghost',
   size = 'default',
 }) => {
-  const { logout, loading } = useAuth();
+  const { logout, isLoading } = useAuth();
 
   const handleLogout = async () => {
     try {
@@ -23,7 +23,7 @@ export const LogoutButton: React.FC<LogoutButtonProps> = ({
   };
 
   return (
-    <Button variant={variant} size={size} onClick={handleLogout} disabled={loading}>
+    <Button variant={variant} size={size} onClick={handleLogout} disabled={isLoading}>
       <LogOut className="h-4 w-4 mr-2" />
       Sair
     </Button>

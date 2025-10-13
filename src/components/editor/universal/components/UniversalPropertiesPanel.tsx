@@ -24,7 +24,9 @@ const UniversalPropertiesPanel: React.FC<UniversalPropertiesPanelProps> = ({
     onSave,
     className = ''
 }) => {
-    const { actions } = useEditor();
+    const editorContext = useEditor({ optional: true });
+    if (!editorContext) return null;
+    const { actions } = editorContext;
 
     // Encontrar o bloco selecionado
     const selectedBlockData = useMemo(() => {

@@ -59,7 +59,9 @@ const step20Components: Step20Component[] = [
 ];
 
 export const Step20ComponentsButton: React.FC = () => {
-  const { state, actions } = useEditor();
+  const editorContext = useEditor({ optional: true });
+  if (!editorContext) return null;
+  const { state, actions } = editorContext;
 
   // Detectar se estamos na etapa 20
   const isStep20 = state.currentStep === 20 ||

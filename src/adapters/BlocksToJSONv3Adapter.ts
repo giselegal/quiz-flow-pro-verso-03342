@@ -265,11 +265,13 @@ export class BlocksToJSONv3Adapter {
      * 🔍 Verificar se requer input do usuário
      */
     private static requiresUserInput(blocks: Block[]): boolean {
-        return blocks.some(b =>
-            b.type === 'form-input' ||
-            b.type === 'options-grid' ||
-            b.type === 'quiz-question'
-        );
+        return blocks.some(b => {
+            const type = b.type as string;
+            return type === 'form-input' ||
+                   type === 'options-grid' ||
+                   type === 'question-card' ||
+                   type === 'question-multi-choice';
+        });
     }
 
     /**

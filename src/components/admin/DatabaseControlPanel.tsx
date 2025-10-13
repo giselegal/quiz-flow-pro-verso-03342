@@ -5,7 +5,9 @@ import { Badge } from '@/components/ui/badge';
 import { useEditor } from '@/components/editor/EditorProviderMigrationAdapter';
 
 export const DatabaseControlPanel: React.FC = () => {
-  const { state } = useEditor();
+  const editorContext = useEditor({ optional: true });
+  if (!editorContext) return null;
+  const { state } = editorContext;
   const databaseMode: 'local' | 'supabase' = 'supabase';
   const connectionStatus = 'connected' as const;
 
