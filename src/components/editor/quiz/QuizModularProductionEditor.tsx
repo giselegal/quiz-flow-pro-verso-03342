@@ -16,7 +16,7 @@
  */
 
 
-le.log('📦 QuizModularProductionEditor: Module loading...');
+console.log('📦 QuizModularProductionEditor: Module loading...');
 
 import React, { useState, useCallback, useEffect, useMemo, Suspense, useRef } from 'react';
 import '@/styles/globals.css'; // garante estilos de produção (quiz-option*, quiz-options-*)
