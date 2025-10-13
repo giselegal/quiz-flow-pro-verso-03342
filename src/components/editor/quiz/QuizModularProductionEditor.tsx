@@ -400,22 +400,57 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
             if (funnelParam && !steps?.length) {
                 (async () => {
                     try {
-                    const draft = await quizEditorBridge.loadFunnelForEdit(funnelParam);
-                    if (draft && Array.isArray(draft.steps) && draft.steps.length > 0) {
-                        const validSteps = draft.steps.map((step: any) => ({
-                            ...step,
-                            blocks: Array.isArray(step.blocks) ? step.blocks : []
-                        }));
-                        setSteps(validSteps as any);
+                        const draft = await quizEditorBridge.loadFunnelForEdit(funnelParam);
+                        if (draft && Array.isArray(draft.steps) && draft.steps.length > 0) {
+                            const validSteps = draft.steps.map((step: any) => ({
+                                ...step,
+                                blocks: Array.isArray(step.blocks) ? step.blocks : []
+                            }));
+                            setSteps(validSteps as any);
                             setSelectedStepId(draft.steps[0]?.id || '');
                             setFunnelId(draft.id || funnelParam);
                             const { runtime, results, ui, settings } = (draft as any);
                             setUnifiedConfig({ runtime, results, ui, settings });
                             setIsLoading(false);
                             return; // sucesso – não continuar fallback
+                        } else {
+                            // ✅ FASE 4: FALLBACK - Funnel não encontrado, carregar template padrão
+                            console.warn(`⚠️ Funnel ${funnelParam} não encontrado ou vazio, carregando template padrão quiz21StepsComplete`);
+                            throw new Error('Funnel not found, using template fallback');
                         }
                     } catch (e) {
-                        console.warn('Falha ao carregar rascunho do funil, seguindo para fallback de template', e);
+                        console.warn('🔄 Falha ao carregar funnel, usando template quiz21StepsComplete como fallback', e);
+                        
+                        // Forçar carregamento do template como fallback
+                        const initial: EditorEditableQuizStep[] = Array.from({ length: 21 }).map((_, idx) => {
+                            const stepNumber = idx + 1;
+                            const stepId = `step-${stepNumber.toString().padStart(2, '0')}`;
+                            const blocks = safeGetTemplateBlocks(stepId, QUIZ_STYLE_21_STEPS_TEMPLATE, funnelParam);
+                            
+                            // Determinar tipo de step baseado no índice (mesmo padrão usado abaixo)
+                            const getStepType = (index: number): 'intro' | 'question' | 'strategic-question' | 'transition' | 'transition-result' | 'result' | 'offer' => {
+                                if (index === 0) return 'intro';
+                                if (index >= 1 && index <= 10) return 'question';
+                                if (index === 11) return 'transition';
+                                if (index >= 12 && index <= 17) return 'strategic-question';
+                                if (index === 18) return 'transition-result';
+                                if (index === 19) return 'result';
+                                return 'offer'; // index === 20
+                            };
+                            
+                            return {
+                                id: stepId,
+                                type: getStepType(idx),
+                                order: stepNumber,
+                                blocks,
+                                nextStep: stepNumber < 21 ? `step-${(stepNumber + 1).toString().padStart(2, '0')}` : undefined
+                            };
+                        });
+                        
+                        console.log(`✅ Template fallback carregado: ${initial.length} steps, ${initial.reduce((sum, s) => sum + s.blocks.length, 0)} blocos totais`);
+                        setSteps(initial);
+                        setSelectedStepId(initial[0]?.id || '');
+                        setIsLoading(false);
                     }
                 })();
             }
@@ -471,6 +506,56 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
         setIsLoading(false);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
+    
+    // ✅ FASE 3: FALLBACK Empty State - Mostrar mensagem se nenhum step foi carregado
+    useEffect(() => {
+        if (!isLoading && (!steps || steps.length === 0)) {
+            console.error('❌ EDITOR VAZIO: Nenhuma etapa carregada após useEffect inicial!');
+            console.log('📊 Debug info:', { 
+                hasSteps: !!steps, 
+                stepsLength: steps?.length, 
+                isLoading,
+                url: typeof window !== 'undefined' ? window.location.href : 'N/A'
+            });
+            
+            // Criar etapa vazia padrão para não deixar editor completamente vazio
+            const fallbackStep: EditableQuizStep = {
+                id: 'step-01',
+                type: 'intro',
+                order: 1,
+                blocks: [{
+                    id: 'block-welcome',
+                    type: 'heading',
+                    content: { text: '⚠️ Template não carregado' },
+                    properties: {
+                        level: 2,
+                        fontSize: '24px',
+                        color: '#432818',
+                        textAlign: 'center'
+                    },
+                    order: 0,
+                    parentId: null
+                }, {
+                    id: 'block-instructions',
+                    type: 'text',
+                    content: { text: 'Adicione componentes usando a biblioteca à direita →' },
+                    properties: {
+                        fontSize: '16px',
+                        color: '#6B7280',
+                        textAlign: 'center'
+                    },
+                    order: 1,
+                    parentId: null
+                }],
+                nextStep: undefined
+            };
+            
+            setSteps([fallbackStep]);
+            setSelectedStepId('step-01');
+            console.log('✅ Fallback step criado para evitar editor vazio');
+        }
+    }, [isLoading, steps]);
+    
     const [validationErrors, setValidationErrors] = useState<string[]>([]);
     // Undo/Redo via hook
     const { canUndo, canRedo, init: initHistory, push: pushHistory, undo, redo } = useEditorHistory<EditableQuizStep[]>();

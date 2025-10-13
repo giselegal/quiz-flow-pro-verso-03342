@@ -50,9 +50,31 @@ export function convertTemplateToBlocks(template: any): BlockComponent[] {
  */
 export function safeGetTemplateBlocks(stepId: string, template: any, funnelId?: string): BlockComponent[] {
   try {
-    // Try to get the specific step
     const stepTemplate = template[stepId];
-    return convertTemplateToBlocks(stepTemplate);
+    
+    if (!stepTemplate) {
+      console.warn(`⚠️ No template found for ${stepId}`);
+      return [];
+    }
+    
+    // ✅ FASE 1: Detectar formato v3.0 com sections
+    if (stepTemplate?.sections && Array.isArray(stepTemplate.sections)) {
+      console.log(`✅ Template v3.0 detectado para ${stepId}, convertendo ${stepTemplate.sections.length} sections`);
+      const blocks = convertTemplateToBlocks(stepTemplate);
+      console.log(`✅ Convertidos ${blocks.length} blocos para ${stepId}`);
+      return blocks;
+    }
+    
+    // ✅ Detectar array direto (formato legacy)
+    if (Array.isArray(stepTemplate)) {
+      console.log(`✅ Template legacy (array) detectado para ${stepId}, ${stepTemplate.length} blocks`);
+      const blocks = convertTemplateToBlocks(stepTemplate);
+      console.log(`✅ Convertidos ${blocks.length} blocos para ${stepId}`);
+      return blocks;
+    }
+    
+    console.warn(`⚠️ Formato não reconhecido para ${stepId}:`, stepTemplate);
+    return [];
   } catch (error) {
     console.error(`❌ Error converting template for ${stepId}:`, error);
     return [];

@@ -1,0 +1,125 @@
+{
+  "templateVersion": "3.0",
+  "templateId": "quiz-estilo-21-steps",
+  "name": "Quiz de Estilo Pessoal - 21 Etapas",
+  "description": "Template completo para quiz de estilo pessoal com 21 etapas progressivas",
+  "metadata": {
+    "createdAt": "2025-01-13",
+    "updatedAt": "2025-01-13",
+    "author": "Sistema",
+    "version": "3.0.0"
+  },
+  "steps": {
+    "step-01": {
+      "type": "intro",
+      "title": "Bem-vinda ao Quiz",
+      "redirectPath": "/quiz-estilo/step-01"
+    },
+    "step-02": {
+      "type": "question",
+      "title": "Pergunta 1",
+      "redirectPath": "/quiz-estilo/step-02"
+    },
+    "step-03": {
+      "type": "question",
+      "title": "Pergunta 2",
+      "redirectPath": "/quiz-estilo/step-03"
+    },
+    "step-04": {
+      "type": "question",
+      "title": "Pergunta 3",
+      "redirectPath": "/quiz-estilo/step-04"
+    },
+    "step-05": {
+      "type": "question",
+      "title": "Pergunta 4",
+      "redirectPath": "/quiz-estilo/step-05"
+    },
+    "step-06": {
+      "type": "question",
+      "title": "Pergunta 5",
+      "redirectPath": "/quiz-estilo/step-06"
+    },
+    "step-07": {
+      "type": "question",
+      "title": "Pergunta 6",
+      "redirectPath": "/quiz-estilo/step-07"
+    },
+    "step-08": {
+      "type": "question",
+      "title": "Pergunta 7",
+      "redirectPath": "/quiz-estilo/step-08"
+    },
+    "step-09": {
+      "type": "question",
+      "title": "Pergunta 8",
+      "redirectPath": "/quiz-estilo/step-09"
+    },
+    "step-10": {
+      "type": "question",
+      "title": "Pergunta 9",
+      "redirectPath": "/quiz-estilo/step-10"
+    },
+    "step-11": {
+      "type": "question",
+      "title": "Pergunta 10",
+      "redirectPath": "/quiz-estilo/step-11"
+    },
+    "step-12": {
+      "type": "transition",
+      "title": "Transição",
+      "redirectPath": "/quiz-estilo/step-12"
+    },
+    "step-13": {
+      "type": "strategic-question",
+      "title": "Pergunta Estratégica 1",
+      "redirectPath": "/quiz-estilo/step-13"
+    },
+    "step-14": {
+      "type": "strategic-question",
+      "title": "Pergunta Estratégica 2",
+      "redirectPath": "/quiz-estilo/step-14"
+    },
+    "step-15": {
+      "type": "strategic-question",
+      "title": "Pergunta Estratégica 3",
+      "redirectPath": "/quiz-estilo/step-15"
+    },
+    "step-16": {
+      "type": "strategic-question",
+      "title": "Pergunta Estratégica 4",
+      "redirectPath": "/quiz-estilo/step-16"
+    },
+    "step-17": {
+      "type": "strategic-question",
+      "title": "Pergunta Estratégica 5",
+      "redirectPath": "/quiz-estilo/step-17"
+    },
+    "step-18": {
+      "type": "strategic-question",
+      "title": "Pergunta Estratégica 6",
+      "redirectPath": "/quiz-estilo/step-18"
+    },
+    "step-19": {
+      "type": "transition-result",
+      "title": "Calculando Resultado",
+      "redirectPath": "/quiz-estilo/step-19"
+    },
+    "step-20": {
+      "type": "result",
+      "title": "Seu Resultado",
+      "redirectPath": "/quiz-estilo/step-20"
+    },
+    "step-21": {
+      "type": "offer",
+      "title": "Oferta Personalizada",
+      "redirectPath": "/quiz-estilo/step-21"
+    }
+  },
+  "settings": {
+    "autoAdvance": true,
+    "showProgress": true,
+    "progressType": "bar",
+    "allowBack": false
+  }
+}
