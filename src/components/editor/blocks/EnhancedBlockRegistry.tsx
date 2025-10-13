@@ -32,8 +32,34 @@ const TransitionHeroSection = lazy(() => import('@/components/sections/transitio
 const OfferHeroSection = lazy(() => import('@/components/sections/offer').then(m => ({ default: m.OfferHeroSection })));
 const StrategicQuestionBlock = lazy(() => import('@/components/editor/blocks/StrategicQuestionBlock'));
 
+// Componentes legados (runtime otimizado - auto-contidos e performáticos)
+import IntroStep from '@/components/quiz/IntroStep';
+import QuestionStep from '@/components/quiz/QuestionStep';
+import StrategicQuestionStep from '@/components/quiz/StrategicQuestionStep';
+import TransitionStep from '@/components/quiz/TransitionStep';
+import ResultStep from '@/components/quiz/ResultStep';
+
 // 🎯 REGISTRY COMPLETO - 150+ COMPONENTES MAPEADOS
 export const ENHANCED_BLOCK_REGISTRY: Record<string, ComponentType<any>> = {
+    // ============================================================================
+    // 🏆 COMPONENTES LEGADOS (Runtime Otimizado)
+    // Componentes auto-contidos e performáticos usados no quiz em produção
+    // ============================================================================
+    'intro-step': IntroStep,
+    'intro-step-legacy': IntroStep,
+    'question-step': QuestionStep,
+    'question-step-legacy': QuestionStep,
+    'strategic-question-step': StrategicQuestionStep,
+    'strategic-question-legacy': StrategicQuestionStep,
+    'transition-step': TransitionStep,
+    'transition-step-legacy': TransitionStep,
+    'result-step': ResultStep,
+    'result-step-legacy': ResultStep,
+
+    // ============================================================================
+    // 📦 COMPONENTES MODULARES (Editor e Casos Avançados)
+    // ============================================================================
+
     // ✅ STEP 01 - COMPONENTES BÁSICOS
     // Preferir versões estáticas para tipos críticos usados no template
     'quiz-intro-header': QuizIntroHeaderBlock,
@@ -136,7 +162,8 @@ export const ENHANCED_BLOCK_REGISTRY: Record<string, ComponentType<any>> = {
 
     // ✅ BLOCOS DE OFERTA
     benefits: lazy(() => import('@/components/editor/blocks/BenefitsListBlock')),
-    'benefits-list': lazy(() => import('@/components/editor/blocks/BenefitsListBlock')),
+    'benefits-list': lazy(() => import('@/components/editor/blocks/Bene
+        fitsListBlock')),
     testimonials: lazy(() => import('@/components/editor/blocks/TestimonialsBlock')),
     'testimonials-grid': lazy(() => import('@/components/editor/blocks/TestimonialsBlock')),
     guarantee: lazy(() => import('@/components/editor/blocks/GuaranteeBlock')),
