@@ -1659,4 +1659,593 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
       { key: 'marginRight', label: 'Margem Direita (px)', type: 'number', group: 'spacing' },
     ],
   },
+
+  // ============================================================================
+  // 🤖 SCHEMAS GERADOS AUTOMATICAMENTE - 52 COMPONENTES
+  // Data: 2025-10-13 - Adicionados schemas para componentes sem configuração
+  // ============================================================================
+
+  'container': {
+    label: 'Container',
+    fields: [
+      { key: 'backgroundColor', label: 'Cor de Fundo', type: 'color', group: 'style', defaultValue: '#ffffff' },
+      { key: 'padding', label: 'Espaçamento Interno', type: 'text', group: 'layout', defaultValue: '1rem' },
+      { key: 'maxWidth', label: 'Largura Máxima', type: 'text', group: 'layout', defaultValue: '1200px' },
+      { key: 'borderRadius', label: 'Borda Arredondada', type: 'text', group: 'style', defaultValue: '0px' },
+      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
+    ]
+  },
+
+  'section': {
+    label: 'Section',
+    fields: [
+      { key: 'backgroundColor', label: 'Cor de Fundo', type: 'color', group: 'style', defaultValue: '#ffffff' },
+      { key: 'padding', label: 'Espaçamento Interno', type: 'text', group: 'layout', defaultValue: '1rem' },
+      { key: 'maxWidth', label: 'Largura Máxima', type: 'text', group: 'layout', defaultValue: '1200px' },
+      { key: 'borderRadius', label: 'Borda Arredondada', type: 'text', group: 'style', defaultValue: '0px' },
+      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
+    ]
+  },
+
+  'box': {
+    label: 'Box',
+    fields: [
+      { key: 'backgroundColor', label: 'Cor de Fundo', type: 'color', group: 'style', defaultValue: '#ffffff' },
+      { key: 'padding', label: 'Espaçamento Interno', type: 'text', group: 'layout', defaultValue: '1rem' },
+      { key: 'maxWidth', label: 'Largura Máxima', type: 'text', group: 'layout', defaultValue: '1200px' },
+      { key: 'borderRadius', label: 'Borda Arredondada', type: 'text', group: 'style', defaultValue: '0px' },
+      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
+    ]
+  },
+
+  'legal-notice': {
+    label: 'Aviso Legal',
+    fields: [
+      { key: 'content', label: 'Conteúdo', type: 'textarea', group: 'content', required: true },
+      { key: 'fontSize', label: 'Tamanho da Fonte', type: 'text', group: 'style', defaultValue: '0.875rem' },
+      { key: 'fontWeight', label: 'Peso da Fonte', type: 'select', group: 'style', options: [{ label: 'Normal', value: 'normal' }, { label: 'Negrito', value: 'bold' }], defaultValue: 'normal' },
+      { key: 'color', label: 'Cor do Texto', type: 'color', group: 'style', defaultValue: '#6b7280' },
+      { key: 'textAlign', label: 'Alinhamento', type: 'select', group: 'style', options: [{ label: 'Esquerda', value: 'left' }, { label: 'Centro', value: 'center' }, { label: 'Direita', value: 'right' }], defaultValue: 'center' },
+      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
+    ]
+  },
+
+  'legal-notice-inline': {
+    label: 'Aviso Legal Inline',
+    fields: [
+      { key: 'content', label: 'Conteúdo', type: 'textarea', group: 'content', required: true },
+      { key: 'fontSize', label: 'Tamanho da Fonte', type: 'text', group: 'style', defaultValue: '0.875rem' },
+      { key: 'fontWeight', label: 'Peso da Fonte', type: 'select', group: 'style', options: [{ label: 'Normal', value: 'normal' }, { label: 'Negrito', value: 'bold' }], defaultValue: 'normal' },
+      { key: 'color', label: 'Cor do Texto', type: 'color', group: 'style', defaultValue: '#6b7280' },
+      { key: 'textAlign', label: 'Alinhamento', type: 'select', group: 'style', options: [{ label: 'Esquerda', value: 'left' }, { label: 'Centro', value: 'center' }, { label: 'Direita', value: 'right' }], defaultValue: 'center' },
+      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
+    ]
+  },
+
+  'headline-inline': {
+    label: 'Título Inline',
+    fields: [
+      { key: 'content', label: 'Conteúdo', type: 'text', group: 'content', required: true },
+      { key: 'level', label: 'Nível', type: 'select', group: 'content', options: [{ label: 'H1', value: 'h1' }, { label: 'H2', value: 'h2' }, { label: 'H3', value: 'h3' }, { label: 'H4', value: 'h4' }], defaultValue: 'h2' },
+      { key: 'fontSize', label: 'Tamanho da Fonte', type: 'text', group: 'style', defaultValue: '2rem' },
+      { key: 'fontWeight', label: 'Peso da Fonte', type: 'select', group: 'style', options: [{ label: 'Normal', value: 'normal' }, { label: 'Negrito', value: 'bold' }], defaultValue: 'bold' },
+      { key: 'color', label: 'Cor do Texto', type: 'color', group: 'style', defaultValue: '#000000' },
+      { key: 'textAlign', label: 'Alinhamento', type: 'select', group: 'style', options: [{ label: 'Esquerda', value: 'left' }, { label: 'Centro', value: 'center' }, { label: 'Direita', value: 'right' }], defaultValue: 'left' },
+      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
+    ]
+  },
+
+  'button-inline-fixed': {
+    label: 'Botão Inline Fixo',
+    fields: [
+      { key: 'text', label: 'Texto do Botão', type: 'text', group: 'content', required: true, defaultValue: 'Clique aqui' },
+      { key: 'url', label: 'URL de Destino', type: 'text', group: 'content', defaultValue: '#' },
+      { key: 'backgroundColor', label: 'Cor de Fundo', type: 'color', group: 'style', defaultValue: '#3b82f6' },
+      { key: 'textColor', label: 'Cor do Texto', type: 'color', group: 'style', defaultValue: '#ffffff' },
+      { key: 'borderRadius', label: 'Borda Arredondada', type: 'text', group: 'style', defaultValue: '0.5rem' },
+      { key: 'padding', label: 'Espaçamento Interno', type: 'text', group: 'style', defaultValue: '0.75rem 1.5rem' },
+      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
+    ]
+  },
+
+  'cta-inline': {
+    label: 'CTA Inline',
+    fields: [
+      { key: 'text', label: 'Texto do Botão', type: 'text', group: 'content', required: true, defaultValue: 'Clique aqui' },
+      { key: 'url', label: 'URL de Destino', type: 'text', group: 'content', defaultValue: '#' },
+      { key: 'backgroundColor', label: 'Cor de Fundo', type: 'color', group: 'style', defaultValue: '#3b82f6' },
+      { key: 'textColor', label: 'Cor do Texto', type: 'color', group: 'style', defaultValue: '#ffffff' },
+      { key: 'borderRadius', label: 'Borda Arredondada', type: 'text', group: 'style', defaultValue: '0.5rem' },
+      { key: 'padding', label: 'Espaçamento Interno', type: 'text', group: 'style', defaultValue: '0.75rem 1.5rem' },
+      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
+    ]
+  },
+
+  'quiz-offer-cta-inline': {
+    label: 'CTA de Oferta Quiz',
+    fields: [
+      { key: 'text', label: 'Texto do Botão', type: 'text', group: 'content', required: true, defaultValue: 'Clique aqui' },
+      { key: 'url', label: 'URL de Destino', type: 'text', group: 'content', defaultValue: '#' },
+      { key: 'backgroundColor', label: 'Cor de Fundo', type: 'color', group: 'style', defaultValue: '#3b82f6' },
+      { key: 'textColor', label: 'Cor do Texto', type: 'color', group: 'style', defaultValue: '#ffffff' },
+      { key: 'borderRadius', label: 'Borda Arredondada', type: 'text', group: 'style', defaultValue: '0.5rem' },
+      { key: 'padding', label: 'Espaçamento Interno', type: 'text', group: 'style', defaultValue: '0.75rem 1.5rem' },
+      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
+    ]
+  },
+
+  'quiz-navigation': {
+    label: 'Navegação do Quiz',
+    fields: [
+      { key: 'showProgressBar', label: 'Mostrar Barra de Progresso', type: 'boolean', group: 'content', defaultValue: true },
+      { key: 'showStepNumber', label: 'Mostrar Número do Step', type: 'boolean', group: 'content', defaultValue: true },
+      { key: 'backButtonText', label: 'Texto Botão Voltar', type: 'text', group: 'content', defaultValue: 'Voltar' },
+      { key: 'nextButtonText', label: 'Texto Botão Avançar', type: 'text', group: 'content', defaultValue: 'Próximo' },
+      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
+    ]
+  },
+
+  'progress-bar': {
+    label: 'Barra de Progresso',
+    fields: [
+      { key: 'value', label: 'Valor (%)', type: 'range', group: 'content', min: 0, max: 100, defaultValue: 0 },
+      { key: 'showLabel', label: 'Mostrar Rótulo', type: 'boolean', group: 'content', defaultValue: true },
+      { key: 'color', label: 'Cor da Barra', type: 'color', group: 'style', defaultValue: '#3b82f6' },
+      { key: 'backgroundColor', label: 'Cor de Fundo', type: 'color', group: 'style', defaultValue: '#e5e7eb' },
+      { key: 'height', label: 'Altura', type: 'text', group: 'style', defaultValue: '8px' },
+      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
+    ]
+  },
+
+  'progress-inline': {
+    label: 'Progresso Inline',
+    fields: [
+      { key: 'value', label: 'Valor (%)', type: 'range', group: 'content', min: 0, max: 100, defaultValue: 0 },
+      { key: 'showLabel', label: 'Mostrar Rótulo', type: 'boolean', group: 'content', defaultValue: true },
+      { key: 'color', label: 'Cor da Barra', type: 'color', group: 'style', defaultValue: '#3b82f6' },
+      { key: 'backgroundColor', label: 'Cor de Fundo', type: 'color', group: 'style', defaultValue: '#e5e7eb' },
+      { key: 'height', label: 'Altura', type: 'text', group: 'style', defaultValue: '8px' },
+      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
+    ]
+  },
+
+  'loader-inline': {
+    label: 'Carregamento Inline',
+    fields: [
+      { key: 'size', label: 'Tamanho', type: 'select', group: 'style', options: [{ label: 'Pequeno', value: 'sm' }, { label: 'Médio', value: 'md' }, { label: 'Grande', value: 'lg' }], defaultValue: 'md' },
+      { key: 'color', label: 'Cor', type: 'color', group: 'style', defaultValue: '#3b82f6' },
+      { key: 'text', label: 'Texto de Carregamento', type: 'text', group: 'content', defaultValue: 'Carregando...' },
+      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
+    ]
+  },
+
+  'loading-animation': {
+    label: 'Animação de Carregamento',
+    fields: [
+      { key: 'type', label: 'Tipo de Animação', type: 'select', group: 'style', options: [{ label: 'Spinner', value: 'spinner' }, { label: 'Dots', value: 'dots' }, { label: 'Pulse', value: 'pulse' }], defaultValue: 'spinner' },
+      { key: 'color', label: 'Cor', type: 'color', group: 'style', defaultValue: '#3b82f6' },
+      { key: 'text', label: 'Texto', type: 'text', group: 'content', defaultValue: 'Carregando...' },
+      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
+    ]
+  },
+
+  'decorative-bar': {
+    label: 'Barra Decorativa',
+    fields: [
+      { key: 'color', label: 'Cor', type: 'color', group: 'style', defaultValue: '#3b82f6' },
+      { key: 'height', label: 'Altura', type: 'text', group: 'style', defaultValue: '4px' },
+      { key: 'width', label: 'Largura', type: 'text', group: 'style', defaultValue: '100%' },
+      { key: 'opacity', label: 'Opacidade', type: 'range', group: 'style', min: 0, max: 100, defaultValue: 100 },
+      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
+    ]
+  },
+
+  'guarantee-badge': {
+    label: 'Selo de Garantia',
+    fields: [
+      { key: 'text', label: 'Texto', type: 'text', group: 'content', defaultValue: 'Garantia' },
+      { key: 'days', label: 'Dias de Garantia', type: 'number', group: 'content', defaultValue: 7 },
+      { key: 'color', label: 'Cor', type: 'color', group: 'style', defaultValue: '#10b981' },
+      { key: 'size', label: 'Tamanho', type: 'select', group: 'style', options: [{ label: 'Pequeno', value: 'sm' }, { label: 'Médio', value: 'md' }, { label: 'Grande', value: 'lg' }], defaultValue: 'md' },
+      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
+    ]
+  },
+
+  'gradient-animation': {
+    label: 'Gradiente Animado',
+    fields: [
+      { key: 'colorStart', label: 'Cor Inicial', type: 'color', group: 'style', defaultValue: '#3b82f6' },
+      { key: 'colorEnd', label: 'Cor Final', type: 'color', group: 'style', defaultValue: '#8b5cf6' },
+      { key: 'direction', label: 'Direção', type: 'select', group: 'style', options: [{ label: 'Horizontal', value: 'horizontal' }, { label: 'Vertical', value: 'vertical' }, { label: 'Diagonal', value: 'diagonal' }], defaultValue: 'horizontal' },
+      { key: 'speed', label: 'Velocidade', type: 'select', group: 'style', options: [{ label: 'Lenta', value: 'slow' }, { label: 'Normal', value: 'normal' }, { label: 'Rápida', value: 'fast' }], defaultValue: 'normal' },
+      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
+    ]
+  },
+
+  // Quiz Components (18 tipos)
+  'quiz-advanced-question': {
+    label: 'Pergunta Avançada do Quiz',
+    fields: [
+      { key: 'title', label: 'Título', type: 'text', group: 'content' },
+      { key: 'description', label: 'Descrição', type: 'textarea', group: 'content' },
+      { key: 'backgroundColor', label: 'Cor de Fundo', type: 'color', group: 'style', defaultValue: '#ffffff' },
+      { key: 'textColor', label: 'Cor do Texto', type: 'color', group: 'style', defaultValue: '#000000' },
+      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
+    ]
+  },
+
+  'quiz-button': {
+    label: 'Botão do Quiz',
+    fields: [
+      { key: 'text', label: 'Texto', type: 'text', group: 'content', defaultValue: 'Continuar' },
+      { key: 'backgroundColor', label: 'Cor de Fundo', type: 'color', group: 'style', defaultValue: '#3b82f6' },
+      { key: 'textColor', label: 'Cor do Texto', type: 'color', group: 'style', defaultValue: '#ffffff' },
+      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
+    ]
+  },
+
+  'quiz-form': {
+    label: 'Formulário do Quiz',
+    fields: [
+      { key: 'title', label: 'Título', type: 'text', group: 'content' },
+      { key: 'placeholder', label: 'Placeholder', type: 'text', group: 'content', defaultValue: 'Digite aqui...' },
+      { key: 'required', label: 'Campo Obrigatório', type: 'boolean', group: 'content', defaultValue: true },
+      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
+    ]
+  },
+
+  'quiz-image': {
+    label: 'Imagem do Quiz',
+    fields: [
+      { key: 'src', label: 'URL da Imagem', type: 'text', group: 'content', required: true },
+      { key: 'alt', label: 'Texto Alternativo', type: 'text', group: 'content', defaultValue: 'Imagem' },
+      { key: 'width', label: 'Largura', type: 'text', group: 'style', defaultValue: '100%' },
+      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
+    ]
+  },
+
+  'quiz-intro': {
+    label: 'Introdução do Quiz',
+    fields: [
+      { key: 'title', label: 'Título', type: 'text', group: 'content' },
+      { key: 'subtitle', label: 'Subtítulo', type: 'text', group: 'content' },
+      { key: 'description', label: 'Descrição', type: 'textarea', group: 'content' },
+      { key: 'backgroundColor', label: 'Cor de Fundo', type: 'color', group: 'style', defaultValue: '#ffffff' },
+      { key: 'textColor', label: 'Cor do Texto', type: 'color', group: 'style', defaultValue: '#000000' },
+      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
+    ]
+  },
+
+  'quiz-options-inline': {
+    label: 'Opções do Quiz Inline',
+    fields: [
+      { key: 'title', label: 'Título', type: 'text', group: 'content' },
+      { key: 'columns', label: 'Colunas', type: 'select', group: 'layout', options: [{ label: '1', value: 1 }, { label: '2', value: 2 }, { label: '3', value: 3 }, { label: '4', value: 4 }], defaultValue: 2 },
+      { key: 'backgroundColor', label: 'Cor de Fundo', type: 'color', group: 'style', defaultValue: '#ffffff' },
+      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
+    ]
+  },
+
+  'quiz-personal-info-inline': {
+    label: 'Informações Pessoais Inline',
+    fields: [
+      { key: 'title', label: 'Título', type: 'text', group: 'content', defaultValue: 'Suas Informações' },
+      { key: 'fields', label: 'Campos', type: 'json', group: 'content', description: 'Array de campos do formulário' },
+      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
+    ]
+  },
+
+  'quiz-processing': {
+    label: 'Processamento do Quiz',
+    fields: [
+      { key: 'title', label: 'Título', type: 'text', group: 'content', defaultValue: 'Processando suas respostas...' },
+      { key: 'description', label: 'Descrição', type: 'textarea', group: 'content' },
+      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
+    ]
+  },
+
+  'quiz-progress': {
+    label: 'Progresso do Quiz',
+    fields: [
+      { key: 'currentStep', label: 'Step Atual', type: 'number', group: 'content', defaultValue: 1 },
+      { key: 'totalSteps', label: 'Total de Steps', type: 'number', group: 'content', defaultValue: 21 },
+      { key: 'showPercentage', label: 'Mostrar Percentual', type: 'boolean', group: 'content', defaultValue: true },
+      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
+    ]
+  },
+
+  'quiz-question-inline': {
+    label: 'Pergunta Inline',
+    fields: [
+      { key: 'question', label: 'Pergunta', type: 'text', group: 'content', required: true },
+      { key: 'description', label: 'Descrição', type: 'textarea', group: 'content' },
+      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
+    ]
+  },
+
+  'quiz-result-header': {
+    label: 'Cabeçalho de Resultado',
+    fields: [
+      { key: 'title', label: 'Título', type: 'text', group: 'content' },
+      { key: 'subtitle', label: 'Subtítulo', type: 'text', group: 'content' },
+      { key: 'backgroundColor', label: 'Cor de Fundo', type: 'color', group: 'style', defaultValue: '#ffffff' },
+      { key: 'textColor', label: 'Cor do Texto', type: 'color', group: 'style', defaultValue: '#000000' },
+      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
+    ]
+  },
+
+  'quiz-result-secondary': {
+    label: 'Resultado Secundário',
+    fields: [
+      { key: 'title', label: 'Título', type: 'text', group: 'content' },
+      { key: 'items', label: 'Itens', type: 'json', group: 'content', description: 'Array de itens secundários' },
+      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
+    ]
+  },
+
+  'quiz-result-style': {
+    label: 'Estilo de Resultado',
+    fields: [
+      { key: 'styleName', label: 'Nome do Estilo', type: 'text', group: 'content' },
+      { key: 'description', label: 'Descrição', type: 'textarea', group: 'content' },
+      { key: 'image', label: 'Imagem', type: 'text', group: 'content', description: 'URL da imagem' },
+      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
+    ]
+  },
+
+  'quiz-results': {
+    label: 'Resultados do Quiz',
+    fields: [
+      { key: 'title', label: 'Título', type: 'text', group: 'content', defaultValue: 'Seus Resultados' },
+      { key: 'results', label: 'Resultados', type: 'json', group: 'content', description: 'Array de resultados' },
+      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
+    ]
+  },
+
+  'quiz-start-page-inline': {
+    label: 'Página Inicial Inline',
+    fields: [
+      { key: 'title', label: 'Título', type: 'text', group: 'content', defaultValue: 'Bem-vindo!' },
+      { key: 'description', label: 'Descrição', type: 'textarea', group: 'content' },
+      { key: 'buttonText', label: 'Texto do Botão', type: 'text', group: 'content', defaultValue: 'Começar' },
+      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
+    ]
+  },
+
+  'quiz-style-question': {
+    label: 'Pergunta de Estilo',
+    fields: [
+      { key: 'question', label: 'Pergunta', type: 'text', group: 'content', required: true },
+      { key: 'styles', label: 'Estilos', type: 'json', group: 'content', description: 'Array de opções de estilo' },
+      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
+    ]
+  },
+
+  'quiz-text': {
+    label: 'Texto do Quiz',
+    fields: [
+      { key: 'content', label: 'Conteúdo', type: 'textarea', group: 'content', required: true },
+      { key: 'fontSize', label: 'Tamanho da Fonte', type: 'text', group: 'style', defaultValue: '1rem' },
+      { key: 'textAlign', label: 'Alinhamento', type: 'select', group: 'style', options: [{ label: 'Esquerda', value: 'left' }, { label: 'Centro', value: 'center' }, { label: 'Direita', value: 'right' }], defaultValue: 'left' },
+      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
+    ]
+  },
+
+  'quiz-transition': {
+    label: 'Transição do Quiz',
+    fields: [
+      { key: 'title', label: 'Título', type: 'text', group: 'content', defaultValue: 'Analisando suas respostas...' },
+      { key: 'description', label: 'Descrição', type: 'textarea', group: 'content' },
+      { key: 'duration', label: 'Duração (ms)', type: 'number', group: 'behavior', defaultValue: 3000 },
+      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
+    ]
+  },
+
+  // Result & Sales Components
+  'modular-result-header': {
+    label: 'Cabeçalho Modular de Resultado',
+    fields: [
+      { key: 'title', label: 'Título', type: 'text', group: 'content' },
+      { key: 'subtitle', label: 'Subtítulo', type: 'text', group: 'content' },
+      { key: 'userName', label: 'Nome do Usuário', type: 'text', group: 'content', description: 'Variável: {{userName}}' },
+      { key: 'backgroundColor', label: 'Cor de Fundo', type: 'color', group: 'style', defaultValue: '#ffffff' },
+      { key: 'textColor', label: 'Cor do Texto', type: 'color', group: 'style', defaultValue: '#000000' },
+      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
+    ]
+  },
+
+  'result-card': {
+    label: 'Card de Resultado',
+    fields: [
+      { key: 'title', label: 'Título', type: 'text', group: 'content' },
+      { key: 'description', label: 'Descrição', type: 'textarea', group: 'content' },
+      { key: 'image', label: 'Imagem', type: 'text', group: 'content', description: 'URL da imagem' },
+      { key: 'backgroundColor', label: 'Cor de Fundo', type: 'color', group: 'style', defaultValue: '#ffffff' },
+      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
+    ]
+  },
+
+  'style-results': {
+    label: 'Resultados de Estilo',
+    fields: [
+      { key: 'mainStyle', label: 'Estilo Principal', type: 'text', group: 'content' },
+      { key: 'secondaryStyles', label: 'Estilos Secundários', type: 'json', group: 'content', description: 'Array de estilos' },
+      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
+    ]
+  },
+
+  'options-grid-inline': {
+    label: 'Grid de Opções Inline',
+    fields: [
+      { key: 'options', label: 'Opções', type: 'json', group: 'content', description: 'Array de opções', required: true },
+      { key: 'columns', label: 'Colunas', type: 'select', group: 'layout', options: [{ label: '2', value: 2 }, { label: '3', value: 3 }, { label: '4', value: 4 }], defaultValue: 3 },
+      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
+    ]
+  },
+
+  'benefits-list': {
+    label: 'Lista de Benefícios',
+    fields: [
+      { key: 'title', label: 'Título', type: 'text', group: 'content', defaultValue: 'Benefícios' },
+      { key: 'benefits', label: 'Benefícios', type: 'json', group: 'content', description: 'Array de benefícios', required: true },
+      { key: 'iconColor', label: 'Cor do Ícone', type: 'color', group: 'style', defaultValue: '#10b981' },
+      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
+    ]
+  },
+
+  'bonus-inline': {
+    label: 'Bônus Inline',
+    fields: [
+      { key: 'title', label: 'Título', type: 'text', group: 'content' },
+      { key: 'description', label: 'Descrição', type: 'textarea', group: 'content' },
+      { key: 'value', label: 'Valor', type: 'text', group: 'content', description: 'Ex: R$ 197' },
+      { key: 'image', label: 'Imagem', type: 'text', group: 'content', description: 'URL da imagem' },
+      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
+    ]
+  },
+
+  'personalized-hook-inline': {
+    label: 'Gancho Personalizado',
+    fields: [
+      { key: 'title', label: 'Título', type: 'text', group: 'content' },
+      { key: 'message', label: 'Mensagem', type: 'textarea', group: 'content' },
+      { key: 'userName', label: 'Nome do Usuário', type: 'text', group: 'content', description: 'Variável: {{userName}}' },
+      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
+    ]
+  },
+
+  'final-value-proposition-inline': {
+    label: 'Proposta de Valor Final',
+    fields: [
+      { key: 'title', label: 'Título', type: 'text', group: 'content', defaultValue: 'Por que escolher?' },
+      { key: 'reasons', label: 'Razões', type: 'json', group: 'content', description: 'Array de razões' },
+      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
+    ]
+  },
+
+  'testimonials-grid': {
+    label: 'Grid de Depoimentos',
+    fields: [
+      { key: 'title', label: 'Título', type: 'text', group: 'content', defaultValue: 'Depoimentos' },
+      { key: 'testimonials', label: 'Depoimentos', type: 'json', group: 'content', description: 'Array de depoimentos', required: true },
+      { key: 'columns', label: 'Colunas', type: 'select', group: 'layout', options: [{ label: '1', value: 1 }, { label: '2', value: 2 }, { label: '3', value: 3 }], defaultValue: 2 },
+      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
+    ]
+  },
+
+  // Step 20 Modular Blocks (7 tipos)
+  'step20-compatibility': {
+    label: 'Step 20 - Compatibilidade',
+    fields: [
+      { key: 'title', label: 'Título', type: 'text', group: 'content', defaultValue: 'Compatibilidade de Estilos' },
+      { key: 'mainStyle', label: 'Estilo Principal', type: 'text', group: 'content' },
+      { key: 'compatibleStyles', label: 'Estilos Compatíveis', type: 'json', group: 'content', description: 'Array de estilos' },
+      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
+    ]
+  },
+
+  'step20-complete-template': {
+    label: 'Step 20 - Template Completo',
+    fields: [
+      { key: 'sections', label: 'Seções', type: 'json', group: 'content', description: 'Array de seções do template' },
+      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
+    ]
+  },
+
+  'step20-personalized-offer': {
+    label: 'Step 20 - Oferta Personalizada',
+    fields: [
+      { key: 'title', label: 'Título', type: 'text', group: 'content', defaultValue: 'Oferta Especial Para Você' },
+      { key: 'description', label: 'Descrição', type: 'textarea', group: 'content' },
+      { key: 'price', label: 'Preço', type: 'text', group: 'content', defaultValue: 'R$ 197' },
+      { key: 'discount', label: 'Desconto', type: 'text', group: 'content', description: 'Ex: 50% OFF' },
+      { key: 'ctaText', label: 'Texto do CTA', type: 'text', group: 'content', defaultValue: 'Quero garantir' },
+      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
+    ]
+  },
+
+  'step20-result-header': {
+    label: 'Step 20 - Cabeçalho de Resultado',
+    fields: [
+      { key: 'title', label: 'Título', type: 'text', group: 'content' },
+      { key: 'subtitle', label: 'Subtítulo', type: 'text', group: 'content' },
+      { key: 'userName', label: 'Nome do Usuário', type: 'text', group: 'content', description: 'Variável: {{userName}}' },
+      { key: 'mainStyle', label: 'Estilo Principal', type: 'text', group: 'content', description: 'Variável: {{mainStyle}}' },
+      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
+    ]
+  },
+
+  'step20-secondary-styles': {
+    label: 'Step 20 - Estilos Secundários',
+    fields: [
+      { key: 'title', label: 'Título', type: 'text', group: 'content', defaultValue: 'Estilos Complementares' },
+      { key: 'styles', label: 'Estilos', type: 'json', group: 'content', description: 'Array de estilos secundários' },
+      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
+    ]
+  },
+
+  'step20-style-reveal': {
+    label: 'Step 20 - Revelação de Estilo',
+    fields: [
+      { key: 'title', label: 'Título', type: 'text', group: 'content', defaultValue: 'Seu Estilo é...' },
+      { key: 'styleName', label: 'Nome do Estilo', type: 'text', group: 'content' },
+      { key: 'description', label: 'Descrição', type: 'textarea', group: 'content' },
+      { key: 'image', label: 'Imagem', type: 'text', group: 'content', description: 'URL da imagem' },
+      { key: 'animationDuration', label: 'Duração da Animação (ms)', type: 'number', group: 'behavior', defaultValue: 2000 },
+      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
+    ]
+  },
+
+  'step20-user-greeting': {
+    label: 'Step 20 - Saudação ao Usuário',
+    fields: [
+      { key: 'greeting', label: 'Saudação', type: 'text', group: 'content', defaultValue: 'Olá, {{userName}}!' },
+      { key: 'message', label: 'Mensagem', type: 'textarea', group: 'content' },
+      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
+    ]
+  },
+
+  // AI Components
+  'fashion-ai-generator': {
+    label: 'Gerador de IA Fashion',
+    fields: [
+      { key: 'title', label: 'Título', type: 'text', group: 'content', defaultValue: 'Gerador de Looks com IA' },
+      { key: 'description', label: 'Descrição', type: 'textarea', group: 'content' },
+      { key: 'buttonText', label: 'Texto do Botão', type: 'text', group: 'content', defaultValue: 'Gerar Look com IA' },
+      { key: 'apiEndpoint', label: 'Endpoint da API', type: 'text', group: 'config', description: 'URL do endpoint de IA' },
+      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
+    ]
+  },
+
+  // Sales & Marketing Components
+  'sales-hero': {
+    label: 'Hero de Vendas',
+    fields: [
+      { key: 'headline', label: 'Headline Principal', type: 'text', group: 'content', required: true, defaultValue: 'Transforme Seu Estilo' },
+      { key: 'subheadline', label: 'Subheadline', type: 'textarea', group: 'content', defaultValue: 'Descubra o método comprovado' },
+      { key: 'ctaText', label: 'Texto do CTA', type: 'text', group: 'content', defaultValue: 'Quero começar agora' },
+      { key: 'ctaUrl', label: 'URL do CTA', type: 'text', group: 'content', defaultValue: '#' },
+      { key: 'backgroundImage', label: 'Imagem de Fundo', type: 'text', group: 'style', description: 'URL da imagem de fundo' },
+      { key: 'backgroundColor', label: 'Cor de Fundo', type: 'color', group: 'style', defaultValue: '#ffffff' },
+      { key: 'textColor', label: 'Cor do Texto', type: 'color', group: 'style', defaultValue: '#000000' },
+      { key: 'overlay', label: 'Overlay', type: 'boolean', group: 'style', defaultValue: true, description: 'Adicionar overlay escuro sobre a imagem' },
+      { key: 'overlayOpacity', label: 'Opacidade do Overlay', type: 'range', group: 'style', min: 0, max: 100, defaultValue: 50 },
+      { key: 'minHeight', label: 'Altura Mínima', type: 'text', group: 'layout', defaultValue: '600px' },
+      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
+    ]
+  },
+
+  'secondary-styles': {
+    label: 'Estilos Secundários',
+    fields: [
+      { key: 'title', label: 'Título', type: 'text', group: 'content', defaultValue: 'Outros Estilos Para Você' },
+      { key: 'description', label: 'Descrição', type: 'textarea', group: 'content' },
+      { key: 'styles', label: 'Lista de Estilos', type: 'json', group: 'content', description: 'Array com [{name, description, image, compatibility}]', required: true },
+      { key: 'showCompatibility', label: 'Mostrar Compatibilidade', type: 'boolean', group: 'content', defaultValue: true },
+      { key: 'columns', label: 'Colunas', type: 'select', group: 'layout', options: [{ label: '2 Colunas', value: 2 }, { label: '3 Colunas', value: 3 }, { label: '4 Colunas', value: 4 }], defaultValue: 3 },
+      { key: 'cardBackgroundColor', label: 'Cor de Fundo dos Cards', type: 'color', group: 'style', defaultValue: '#ffffff' },
+      { key: 'cardBorderColor', label: 'Cor da Borda dos Cards', type: 'color', group: 'style', defaultValue: '#e5e7eb' },
+      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
+    ]
+  },
 };
