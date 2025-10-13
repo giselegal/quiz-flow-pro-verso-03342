@@ -1613,13 +1613,34 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
             previewCacheRef.current.set(id, { key, node });
             return node;
         }
-        // Fallback para tipos não suportados
-        node = (
-            <div className="border border-dashed border-amber-300 bg-amber-50 rounded p-3 text-center">
-                <span className="text-xs italic text-amber-700">Tipo: {type}</span>
-                <div className="text-[10px] text-amber-600 mt-1">(Preview em desenvolvimento)</div>
-            </div>
-        );
+        // Fallback: usar EnhancedBlockRenderer para tipos não suportados nativamente
+        // Importamos dinamicamente o componente do registry
+        const { getEnhancedBlockComponent } = require('@/components/editor/blocks/EnhancedBlockRegistry');
+        const EnhancedComponent = getEnhancedBlockComponent(type);
+
+        if (EnhancedComponent) {
+            // Componente existe no registry - renderizar com props básicas
+            node = (
+                <div className="relative">
+                    <EnhancedComponent
+                        block={block}
+                        properties={properties || {}}
+                        content={content || {}}
+                        isSelected={false}
+                        isPreviewing={true}
+                        isEditor={false}
+                    />
+                </div>
+            );
+        } else {
+            // Componente realmente não existe - mostrar placeholder
+            node = (
+                <div className="border border-dashed border-amber-300 bg-amber-50 rounded p-3 text-center">
+                    <span className="text-xs italic text-amber-700">Tipo: {type}</span>
+                    <div className="text-[10px] text-amber-600 mt-1">(Componente não encontrado no registry)</div>
+                </div>
+            );
+        }
         previewCacheRef.current.set(id, { key, node });
         return node;
     };
