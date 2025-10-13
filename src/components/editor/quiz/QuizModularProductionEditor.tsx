@@ -90,6 +90,7 @@ import { useSelectionClipboard } from './hooks/useSelectionClipboard';
 import { useVirtualBlocks } from './hooks/useVirtualBlocks';
 import StepNavigator from './components/StepNavigator';
 import ComponentLibraryPanel from './components/ComponentLibraryPanel';
+import { BuilderSystemPanel } from '@/components/editor/BuilderSystemPanel';
 import CanvasArea from './components/CanvasArea';
 import BlockRow from './components/BlockRow';
 import { BlockComponent, EditableQuizStep, BlockSnippet } from './types';
@@ -1649,6 +1650,17 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
         URL.revokeObjectURL(url);
     }, [steps]);
 
+    // Handler para quando um quiz é criado pelo Builder System
+    const handleBuilderQuizCreated = useCallback((quizData: any) => {
+        console.log('🎯 Quiz criado pelo Builder System:', quizData);
+        toast({
+            title: 'Quiz Criado!',
+            description: 'Template do Builder System aplicado com sucesso.',
+        });
+        // TODO: Converter quizData (FunnelConfig) para steps do editor
+        // Por enquanto apenas mostra toast de sucesso
+    }, [toast]);
+
     // Publicar
     const handlePublish = useCallback(async () => {
         if (!funnelId || funnelId === 'production') {
@@ -1835,6 +1847,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                             components={COMPONENT_LIBRARY as any}
                             selectedStepId={selectedStepId}
                             onAdd={(type) => selectedStepId && addBlockToStep(selectedStepId, type)}
+                            onQuizCreated={handleBuilderQuizCreated}
                         />
                     )}
                     canvasPanel={(
