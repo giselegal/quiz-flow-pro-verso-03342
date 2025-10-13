@@ -30,6 +30,9 @@ import {
     validateFormInput
 } from '@/utils/quizValidationUtils';
 
+// ✅ FASE 7: Adaptador bidirecional Blocks ↔ JSON v3.0
+import { BlocksToJSONv3Adapter, type JSONv3Template } from '@/adapters/BlocksToJSONv3Adapter';
+
 interface EditorQuizStep extends QuizStep {
     id: string;
     order: number;
@@ -476,6 +479,155 @@ class QuizEditorBridge {
             errors,
             warnings
         };
+    }
+
+    /**
+     * 📤 NOVO: Exportar funil para JSON v3.0
+     * ✅ FASE 7: Conversão bidirecional Blocks → JSON v3.0
+     */
+    async exportToJSONv3(funnelId: string): Promise<Record<string, JSONv3Template>> {
+        console.log('📤 Exportando funil para JSON v3.0:', funnelId);
+
+        const funnel = await this.loadFunnelForEdit(funnelId);
+        const templates: Record<string, JSONv3Template> = {};
+
+        for (const step of funnel.steps) {
+            try {
+                // Converter blocks do step para JSON v3.0
+                const blocks = convertStepToBlocks(step as any);
+                const jsonTemplate = BlocksToJSONv3Adapter.blocksToJSONv3(
+                    blocks as any,
+                    step.id,
+                    {
+                        name: step.title || step.id,
+                        description: `Exported from editor`,
+                    }
+                );
+
+                templates[step.id] = jsonTemplate;
+                console.log(`✅ Step ${step.id} exportado`);
+            } catch (error) {
+                console.error(`❌ Erro ao exportar ${step.id}:`, error);
+            }
+        }
+
+        console.log(`✅ ${Object.keys(templates).length} steps exportados para JSON v3.0`);
+        return templates;
+    }
+
+    /**
+     * 📥 NOVO: Importar template JSON v3.0 para o editor
+     * ✅ FASE 7: Permite carregar templates existentes
+     */
+    async importFromJSONv3(json: JSONv3Template, funnelId?: string): Promise<EditorQuizStep> {
+        console.log('📥 Importando template JSON v3.0:', json.metadata.id);
+
+        // Converter JSON v3.0 → Blocks
+        const blocks = BlocksToJSONv3Adapter.jsonv3ToBlocks(json);
+
+        // Converter Blocks → QuizStep (com step ID e inferência)
+        const quizStep = convertBlocksToStep(blocks as any, json.metadata.id, 'infer');
+
+        // Criar EditorQuizStep com type garantido
+        const editorStep: EditorQuizStep = {
+            id: json.metadata.id,
+            order: this.extractStepOrder(json.metadata.id),
+            type: quizStep.type || 'intro',
+            ...quizStep,
+        };
+
+        console.log('✅ Template importado:', editorStep.id);
+        return editorStep;
+    }
+
+    /**
+     * 🗑️ NOVO: Validar exclusão de step (cascade validation)
+     * ✅ FASE 7: Evita nextStep quebrado
+     */
+    validateStepDeletion(stepId: string, funnel: QuizFunnelData): {
+        canDelete: boolean;
+        references: string[];
+        errors: string[]
+    } {
+        console.log('🔍 Validando exclusão de step:', stepId);
+
+        const references: string[] = [];
+        const errors: string[] = [];
+
+        // Verificar se algum step aponta para este via nextStep
+        for (const step of funnel.steps) {
+            if (step.nextStep === stepId) {
+                references.push(step.id);
+            }
+        }
+
+        if (references.length > 0) {
+            errors.push(
+                `Step ${stepId} está referenciado por ${references.length} step(s): ${references.join(', ')}`
+            );
+            errors.push('Atualize os nextStep antes de deletar.');
+        }
+
+        // Verificar se é step intermediário crítico
+        const stepIndex = funnel.steps.findIndex(s => s.id === stepId);
+        if (stepIndex > 0 && stepIndex < funnel.steps.length - 1) {
+            const prevStep = funnel.steps[stepIndex - 1];
+            const nextStep = funnel.steps[stepIndex + 1];
+
+            console.warn(`⚠️ Deletando step intermediário. Será necessário religar ${prevStep.id} → ${nextStep.id}`);
+        }
+
+        return {
+            canDelete: errors.length === 0,
+            references,
+            errors,
+        };
+    }
+
+    /**
+     * 🔧 Helper: Extrair ordem do step baseado no ID
+     */
+    private extractStepOrder(stepId: string): number {
+        const match = stepId.match(/step-(\d+)/);
+        return match ? parseInt(match[1]) : 999;
+    }
+
+    /**
+     * 📥 NOVO: Importar todos os templates JSON v3.0 para criar funil
+     * ✅ FASE 7: Batch import
+     */
+    async importAllJSONv3Templates(templates: Record<string, JSONv3Template>, funnelName: string): Promise<QuizFunnelData> {
+        console.log('📥 Importando múltiplos templates JSON v3.0:', Object.keys(templates).length);
+
+        const steps: EditorQuizStep[] = [];
+
+        for (const [stepId, template] of Object.entries(templates)) {
+            try {
+                const editorStep = await this.importFromJSONv3(template);
+                steps.push(editorStep);
+            } catch (error) {
+                console.error(`❌ Erro ao importar ${stepId}:`, error);
+            }
+        }
+
+        // Ordenar steps
+        steps.sort((a, b) => a.order - b.order);
+
+        const funnel: QuizFunnelData = {
+            id: `imported-${Date.now()}`,
+            name: funnelName,
+            slug: 'imported-funnel',
+            steps,
+            isPublished: false,
+            version: 1,
+        };
+
+        // Salvar como draft
+        const draftId = await this.saveDraft(funnel);
+        funnel.id = draftId;
+
+        console.log(`✅ ${steps.length} templates importados para funil ${draftId}`);
+        return funnel;
     }
 }
 
