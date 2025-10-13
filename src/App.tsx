@@ -163,7 +163,7 @@ function App() {
                                     <div data-testid="editor-templates-page">
                                         <EditorTemplatesPage />
                                     </div>
-                                </Route>
+                                </Route>scm-history-item:%5Cworkspaces%5Cquiz-flow-pro-verso?%7B%22repositoryId%22%3A%22scm0%22%2C%22historyItemId%22%3A%22f9aa3140421a0ce216624f02d3344f4ff0bb0f96%22%2C%22historyItemParentId%22%3A%22ea91dcd9f988cc7a8588c83467ef621dbd141c45%22%2C%22historyItemDisplayId%22%3A%22f9aa314%22%7D
 
                                 <Route path="/editor/:funnelId">
                                     {(params) => (
