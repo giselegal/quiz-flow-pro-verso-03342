@@ -1027,7 +1027,10 @@ export const useUnifiedAuth = () => {
         ...state.auth,
         signIn,
         signOut,
-        signUp
+        logout: signOut, // ✅ Alias para compatibilidade
+        signUp,
+        login: signIn, // ✅ Alias para compatibilidade
+        signup: signUp // ✅ Alias para compatibilidade
     };
 };
 

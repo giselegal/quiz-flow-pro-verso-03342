@@ -8,7 +8,10 @@
 
 // 🔐 AUTH
 export { AdminAuthProvider, useAdminAuth } from './auth/AdminAuthContext';
-export { AuthProvider, useAuth } from './auth/AuthContext';
+export { AuthProvider, useAuth as useAuthLegacy } from './auth/AuthContext';
+
+// 🚀 SUPER UNIFIED (Auth consolidado)
+export { useAuth, useUnifiedAuth } from '@/providers/SuperUnifiedProvider';
 
 // ✏️ EDITOR
 export { EditorProvider, useEditor } from './editor/EditorContext';
